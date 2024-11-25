@@ -1,5 +1,6 @@
 <script setup lang="ts">
     const title = 'Check dwelling compliance';
+    const store = useEcaasStore();
 </script>
 
 <template>
@@ -13,7 +14,9 @@
                 <NuxtLink to="/dwelling-details">Dwelling details</NuxtLink>
             </template>
             <template #status>
-                <gv-tag colour="grey">Not started</gv-tag>
+                <client-only>
+                    <gv-tag colour="grey">{{ store.getSectionStatus('dwellingDetails') }}</gv-tag>
+                </client-only>
             </template>
         </gv-task-list-item>
     </gv-task-list>

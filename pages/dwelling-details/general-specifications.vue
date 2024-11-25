@@ -1,19 +1,21 @@
-<script setup>
+<script setup lang="ts">
     import { useEcaasStore } from '~/stores/ecaasStore';
 
-    const store = useEcaasStore();
     const title = 'General specifications';
+    const store = useEcaasStore();
 
     const model = ref({
-        ...store.dwellingDetails.generalSpecifications
+        ...store.dwellingDetails.generalSpecifications.data
     });
 
-    const saveForm = async (fields) => {
+    const saveForm = async (fields: typeof model.value) => {
         store.$patch({
             dwellingDetails: {
                 generalSpecifications: {
-                    typeOfResidence: fields.typeOfResidence,
-                    status: 'Complete'
+                    complete: true,
+                    data: {
+                        typeOfResidence: fields.typeOfResidence
+                    }
                 }
             }
         });

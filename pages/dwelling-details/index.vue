@@ -1,6 +1,7 @@
 <script setup lang="ts">
-    const title = 'Dwelling details';
+    import FormStatus from '~/constants/formStatus';
 
+    const title = 'Dwelling details';
     const store = useEcaasStore();
 </script>
 
@@ -19,7 +20,11 @@
                     <NuxtLink to="/dwelling-details/general-specifications">General specifications</NuxtLink>
                 </template>
                 <template #status>
-                    <gv-tag colour="grey">{{ store.dwellingDetails.generalSpecifications.status }}</gv-tag>
+                    <client-only>
+                        <gv-tag colour="grey">
+                            {{ store.dwellingDetails.generalSpecifications.complete ? FormStatus.Complete : FormStatus.NotStarted }}
+                        </gv-tag>
+                    </client-only>
                 </template>
             </gv-task-list-item>
         </gv-task-list>
