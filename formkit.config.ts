@@ -3,7 +3,7 @@ import GovButton from './components/GovButton.vue';
 import GovRadios from './components/GovRadios.vue';
 import type { FormKitInputs, FormKitOptionsProp } from '@formkit/inputs';
 import GovDropdown from './components/GovDropdown.vue';
-import GovInput from './components/GovInput.vue';
+import GovInputInt from './components/GovInputInt.vue';
 
 
 // Enable TypeScript support for custom inputs
@@ -35,9 +35,9 @@ export default defineFormKitConfig(() => {
                 type: 'input',
                 component: GovDropdown
             },
-            govInput: {
+            govInputInt: {
                 type: 'input',
-                component: GovInput
+                component: GovInputInt
             }
         }
     };

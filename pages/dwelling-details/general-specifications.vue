@@ -55,7 +55,7 @@
         />
 
         <FormKit
-            type="govInput"
+            type="govInputInt"
             label="Number of stories in dwelling"
             name="storiesInDwelling"
             validation="required | number"
