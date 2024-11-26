@@ -15,7 +15,18 @@ declare module '@formkit/inputs' {
         },
         'govButton': {
             type: 'govButton'
+        },
+        'govDropdown': {
+            type: 'govDropdown',
+            options: FormKitOptionsProp
+        },
+        'govInputInt': {
+            type: 'govInputInt'
+        },
+        'govInputMeters': {
+            type: 'govInputMeters'
         }
+
     }
 }
 
