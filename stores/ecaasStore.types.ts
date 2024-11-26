@@ -14,6 +14,8 @@ export interface GeneralSpecifications {
     storiesInDwelling?: number;
     levelOfShelter?: string;
     numOfShelteredSides?: number;
+    cookingFuelType?: string;
+
 }   
 
 export interface EcaasForm<T> {

@@ -99,6 +99,18 @@ const saveForm = async (fields: typeof model.value) => {
       validation="required | number"
     />
 
+    <FormKit
+      type="govRadios"
+      :options="{
+        electricity: 'Electricity',
+        mainsGas: 'Mains gas',
+
+      }"
+      label="Cooking fuel type"
+      name="cookingFuelType"
+      validation="required"
+    />
+
     <FormKit type="govButton" label="Save and continue" />
   </FormKit>
 </template>
