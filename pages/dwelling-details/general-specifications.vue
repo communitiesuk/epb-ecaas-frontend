@@ -17,7 +17,8 @@ const saveForm = async (fields: typeof model.value) => {
           weatherDataLocation: fields.weatherDataLocation,
           storiesInDwelling: fields.storiesInDwelling,
           sizeGroundFloorArea: fields.sizeGroundFloorArea,
-          numOfBedrooms: fields.numOfBedrooms
+          numOfBedrooms: fields.numOfBedrooms,
+          levelOfShelter: fields.typeOfResidence
         },
         complete: true,
       },
@@ -76,6 +77,19 @@ const saveForm = async (fields: typeof model.value) => {
       label="Number of stories in dwelling"
       name="storiesInDwelling"
       validation="required | number"
+    />
+
+    <FormKit
+      type="govRadios"
+      :options="{
+        verySheltered: 'Very sheltered',
+        sheltered: 'Sheltered',
+        normal: 'Normal',
+        exposed: 'Exposed'
+      }"
+      label="Shelter"
+      name="levelOfShelter"
+      validation="required"
     />
 
     <FormKit type="govButton" label="Save and continue" />

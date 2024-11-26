@@ -12,7 +12,8 @@ export interface GeneralSpecifications {
     sizeGroundFloorArea?: number;
     numOfBedrooms?: number;
     storiesInDwelling?: number;
-}
+    levelOfShelter?: string;
+}   
 
 export interface EcaasForm<T> {
     complete?: boolean;
