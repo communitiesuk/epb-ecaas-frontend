@@ -12,10 +12,12 @@
         store.$patch({
             dwellingDetails: {
                 generalSpecifications: {
-                    complete: true,
-                    data: {
-                        typeOfResidence: fields.typeOfResidence
-                    }
+                    typeOfResidence: fields.typeOfResidence,
+                    status: 'Complete',  
+                    weatherDataLocation: fields.weatherDataLocation,
+                    status:'Complete',
+                    storiesInDwelling: fields.storiesInDwelling,
+                    status:'Complete',
                 }
             }
         });
@@ -40,6 +42,25 @@
             name="typeOfResidence"
             validation="required"
         />
+        <FormKit
+            type="govDropdown"
+            label="Weather data location"
+            name="weatherDataLocation"
+            :options="{
+                london: 'London',
+                manchester: 'Manchester',
+                york: 'York'
+            }"
+            validation="required"
+        />
+
+        <FormKit
+            type="govInput"
+            label="Number of stories in dwelling"
+            name="storiesInDwelling"
+            validation="required | number"
+            />
+            
         <FormKit type="govButton" label="Save and continue" />
     </FormKit>
 </template>
