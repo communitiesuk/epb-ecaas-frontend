@@ -15,10 +15,15 @@ const saveForm = async (fields: typeof model.value) => {
         data: {
           typeOfResidence: fields.typeOfResidence,
           weatherDataLocation: fields.weatherDataLocation,
-          storiesInDwelling: fields.storiesInDwelling,
           sizeGroundFloorArea: fields.sizeGroundFloorArea,
           numOfBedrooms: fields.numOfBedrooms,
-          levelOfShelter: fields.typeOfResidence
+          storiesInDwelling: fields.storiesInDwelling,
+          levelOfShelter: fields.levelOfShelter,
+          numOfShelteredSides: fields.numOfShelteredSides,
+          heatingControlType: fields.heatingControlType,
+          cookingFuelType: fields.cookingFuelType,
+          coldWaterSource: fields.coldWaterSource
+
         },
         complete: true,
       },
@@ -102,12 +107,36 @@ const saveForm = async (fields: typeof model.value) => {
     <FormKit
       type="govRadios"
       :options="{
+        seperateTempControl: 'Separate temperature control',
+        seperateTempAndTimeControl: 'Separate temperature and time control ',
+      }"
+      label="Heating control type"
+      name="heatingControlType"
+      validation="required"
+    />
+
+    <FormKit
+      type="govRadios"
+      :options="{
         electricity: 'Electricity',
         mainsGas: 'Mains gas',
 
       }"
       label="Cooking fuel type"
       name="cookingFuelType"
+      validation="required"
+    />
+
+
+    <FormKit
+      type="govRadios"
+      :options="{
+        mainsWater: 'Mains water',
+        headerTank: 'Header tank',
+
+      }"
+      label="Cold water source"
+      name="coldWaterSource"
       validation="required"
     />
 

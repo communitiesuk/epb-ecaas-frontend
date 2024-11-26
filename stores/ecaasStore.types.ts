@@ -14,7 +14,9 @@ export interface GeneralSpecifications {
     storiesInDwelling?: number;
     levelOfShelter?: string;
     numOfShelteredSides?: number;
+    heatingControlType?: string;
     cookingFuelType?: string;
+    coldWaterSource?: string;
 
 }   
 
