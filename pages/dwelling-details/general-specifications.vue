@@ -60,6 +60,13 @@
             name="storiesInDwelling"
             validation="required | number"
             />
+
+        <FormKit
+            type="govInputMeters"
+            label="Size of ground floor area"
+            name="sizeGroundFloorArea"
+            validation="required | number"
+            />
             
         <FormKit type="govButton" label="Save and continue" />
     </FormKit>
