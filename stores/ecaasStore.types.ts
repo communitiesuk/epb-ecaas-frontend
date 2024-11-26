@@ -10,6 +10,7 @@ export interface GeneralSpecifications {
     typeOfResidence: string;
     weatherDataLocation: string;
     sizeGroundFloorArea?: number;
+    numOfBedrooms?: number;
     storiesInDwelling?: number;
 }
 
