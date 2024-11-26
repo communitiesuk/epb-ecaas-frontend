@@ -6,8 +6,9 @@ const props = defineProps({
 const {
   attrs: { options },
   node: { name },
-  label,
+  label, help
 } = props.context;
+
 
 function handleInput(e) {
   props.context.node.input(e.target.value);
@@ -16,15 +17,17 @@ function handleInput(e) {
 
 <template>
   <div :class="`govuk-form-group ${props.context.state.invalid &&
-      props.context.messages.rule_required &&
-      props.context.messages.rule_required.visible
-      ? 'govuk-form-group--error'
-      : ''
+    props.context.messages.rule_required &&
+    props.context.messages.rule_required.visible
+    ? 'govuk-form-group--error'
+    : ''
     }`">
     <label class="govuk-label govuk-label--m" :for="name">
       {{ label }}
     </label>
-
+    <div id="event-name-hint" class="govuk-hint">
+      {{ help }}
+    </div>
     <p v-if="props.context.state.invalid" class="govuk-error-message">
       {{ props.context.messages.rule_required.value }}
     </p>

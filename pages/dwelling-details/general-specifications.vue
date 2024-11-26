@@ -54,6 +54,7 @@ const saveForm = async (fields: typeof model.value) => {
         york: 'York',
       }"
       validation="required"
+      help="The location nearest to your planned site"
     />
 
     <FormKit
