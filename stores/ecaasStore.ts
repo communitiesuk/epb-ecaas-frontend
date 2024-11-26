@@ -1,6 +1,6 @@
-import { defineStore } from "pinia";
-import type { EcaasState } from "./ecaasStore.types";
-import FormStatus from "~/constants/formStatus";
+import { defineStore } from 'pinia';
+import type { EcaasState } from './ecaasStore.types';
+import FormStatus from '~/constants/formStatus';
 
 type Section = keyof EcaasState;
 
@@ -8,9 +8,7 @@ export const useEcaasStore = defineStore('ecaas', {
     state: (): EcaasState => ({
         dwellingDetails: {
             generalSpecifications: {
-                data: {
-                    typeOfResidence: ''
-                }
+                data: {}
             }
         }
     }),

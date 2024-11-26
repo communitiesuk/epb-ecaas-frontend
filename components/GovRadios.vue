@@ -1,32 +1,40 @@
 <script setup>
-    const props = defineProps({
-        context: Object
-    });
+	const props = defineProps({
+		context: Object
+	});
 
-    const { attrs: { options }, node: { name }, label } = props.context;
+	const { attrs: { options }, node: { name }, label } = props.context;
 
-    function handleInput(e) {
-        props.context.node.input(e.target.value);
-    }
+	function handleInput(e) {
+		props.context.node.input(e.target.value);
+	}
 </script>
 
 <template>
-    <gv-radios
-        @input="handleInput"
-        v-model="props.context._value"
-        :legend="label"
-        size="small"
-        legendClass="govuk-fieldset__legend--m"
-        :formGroupClass="`govuk-form-group ${props.context.state.invalid && props.context.messages.rule_required && props.context.messages.rule_required.visible ? 'govuk-form-group--error' : ''}`"
-    >
-        <p v-if="props.context.state.invalid" class="govuk-error-message">{{ props.context.messages.rule_required.value }}</p>
-        <gv-radio
-            v-for="key in Object.keys(options)"
-            :id="`${name}_${key}`"
-            :name="`${name}_${key}`"
-            :value="key"
-        >
-            {{ options[key] }}
-        </gv-radio>
-    </gv-radios>
+	<div :class="`govuk-form-group ${props.context.state.invalid ? 'govuk-form-group--error' : ''}`">
+		<fieldset class="govuk-fieldset">
+			<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+				{{ label }}
+			</legend>
+			<p v-if="props.context.state.invalid" class="govuk-error-message">
+				<span class="govuk-visually-hidden">Error:</span> {{ props.context.messages.rule_required.value }}
+			</p>
+			<div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
+				<div class="govuk-radios__item" v-for="key in Object.keys(options)">
+					<input
+						class="govuk-radios__input"
+						type="radio"
+						:id="`${name}_${key}`"
+						:name="name"
+						:value="key"
+						:checked="props.context._value == key"
+						@change="handleInput"
+					/>
+					<label class="govuk-label govuk-radios__label" :for="`${name}_${key}`">
+						{{ options[key] }}
+					</label>
+				</div>
+			</div>
+		</fieldset>
+	</div>
 </template>

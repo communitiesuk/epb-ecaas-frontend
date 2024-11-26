@@ -14,19 +14,18 @@
         <div>
             <h2 class="govuk-heading-m">Sections to complete</h2>
         </div>
-        <gv-task-list>
-            <gv-task-list-item>
-                <template #default>
-                    <NuxtLink to="/dwelling-details/general-specifications">General specifications</NuxtLink>
-                </template>
-                <template #status>
-                    <client-only>
-                        <gv-tag colour="grey">
-                            {{ store.dwellingDetails.generalSpecifications.complete ? FormStatus.Complete : FormStatus.NotStarted }}
-                        </gv-tag>
-                    </client-only>
-                </template>
-            </gv-task-list-item>
-        </gv-task-list>
+        <GovTaskList
+            :items="[{
+                id: 'generalSpecifications',
+                title: 'General specifications',
+                href: '/dwelling-details/general-specifications',
+                status: {
+                    tag: {
+                        text: store.dwellingDetails.generalSpecifications.complete ? FormStatus.Complete : FormStatus.NotStarted,
+                        classes: 'govuk-tag--grey'
+                    }
+                }
+            }]"
+        />
     </div>
 </template>

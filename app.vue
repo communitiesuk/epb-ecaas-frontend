@@ -1,9 +1,9 @@
 <template>
-    <gv-header service-name="Check dwelling compliance" />
+    <GovHeader service-name="Check dwelling compliance" />
     <div class="govuk-width-container">
-        <gv-phase-banner tag="ALPHA" tagColor="blue">
+        <GovPhaseBanner tag="ALPHA">
             This is a new service - your feedback will help us to improve it.
-        </gv-phase-banner>
+        </GovPhaseBanner>
         <main class="govuk-main-wrapper">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
@@ -14,5 +14,5 @@
             </div>
         </main>
     </div>
-    <gv-footer />
+    <GovFooter />
 </template>

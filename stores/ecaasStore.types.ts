@@ -7,8 +7,8 @@ export interface DwellingDetails {
 }
 
 export interface GeneralSpecifications {
-    typeOfResidence: string;
-    weatherDataLocation: string;
+    typeOfResidence?: string;
+    weatherDataLocation?: string;
     sizeGroundFloorArea?: number;
     numOfBedrooms?: number;
     storiesInDwelling?: number;

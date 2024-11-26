@@ -1,17 +1,17 @@
 <script setup>
-    const props = defineProps({
-        context: Object
-    });
+	const props = defineProps({
+		context: Object
+	});
 
-    const { label } = props.context;
+	const { label } = props.context;
 
-    const handleClick = () => {
-        props.context.node.submit();
-    }
+	const handleClick = () => {
+		props.context.node.submit();
+	}
 </script>
 
 <template>
-    <gv-button @click="handleClick">
-        {{ label }}
-    </gv-button>
+	<button type="submit" class="govuk-button" data-module="govuk-button" @click="handleClick">
+		{{ label }}
+	</button>
 </template>
