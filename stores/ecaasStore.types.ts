@@ -8,6 +8,9 @@ export interface DwellingDetails {
 
 export interface GeneralSpecifications {
     typeOfResidence: string;
+    weatherDataLocation: string;
+    sizeGroundFloorArea?: number;
+    storiesInDwelling?: number;
 }
 
 export interface EcaasForm<T> {
