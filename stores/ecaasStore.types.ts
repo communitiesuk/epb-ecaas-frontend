@@ -13,6 +13,7 @@ export interface GeneralSpecifications {
     numOfBedrooms?: number;
     storiesInDwelling?: number;
     levelOfShelter?: string;
+    numOfShelteredSides?: number;
 }   
 
 export interface EcaasForm<T> {

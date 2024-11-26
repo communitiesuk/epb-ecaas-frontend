@@ -92,6 +92,13 @@ const saveForm = async (fields: typeof model.value) => {
       validation="required"
     />
 
+    <FormKit
+      type="govInputInt"
+      label="Number of sheltered sides"
+      name="numOfShelteredSides"
+      validation="required | number"
+    />
+
     <FormKit type="govButton" label="Save and continue" />
   </FormKit>
 </template>
