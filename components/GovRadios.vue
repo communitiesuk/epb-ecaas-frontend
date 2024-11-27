@@ -27,6 +27,7 @@
 					<input
 						class="govuk-radios__input"
 						type="radio"
+						checked="checked"
 						:id="`${name}_${key}`"
 						:name="name"
 						:value="key"
