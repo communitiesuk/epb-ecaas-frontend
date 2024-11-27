@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import FormStatus from '~/constants/formStatus';
+    import formStatus from '~/constants/formStatus';
 
     const title = 'Dwelling details';
     const store = useEcaasStore();
@@ -20,10 +20,7 @@
                 title: 'General specifications',
                 href: '/dwelling-details/general-specifications',
                 status: {
-                    tag: {
-                        text: store.dwellingDetails.generalSpecifications.complete ? FormStatus.Complete : FormStatus.NotStarted,
-                        classes: 'govuk-tag--grey'
-                    }
+                    tag: store.dwellingDetails.generalSpecifications.complete ? formStatus.complete : formStatus.notStarted
                 }
             }]"
         />

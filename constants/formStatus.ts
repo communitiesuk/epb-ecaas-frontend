@@ -1,7 +1,24 @@
-enum FormStatus {
-    NotStarted = 'Not started',
-    InProgress = 'In progress',
-    Complete = 'Complete'
+import type { GovTagProps } from "~/common.types";
+
+interface FormStatus {
+	readonly notStarted: GovTagProps;
+	readonly inProgress: GovTagProps;
+	readonly complete: GovTagProps;
 }
 
-export default FormStatus;
+const formStatus: FormStatus = {
+	notStarted: {
+		text: 'Not started',
+		color: 'grey'
+	},
+	inProgress: {
+		text: 'In progress',
+		color: 'yellow'
+	},
+	complete: {
+		text: 'Complete',
+		color: 'green'
+	}
+}
+
+export default formStatus;

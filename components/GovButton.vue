@@ -4,14 +4,10 @@
 	});
 
 	const { label } = props.context;
-
-	const handleClick = () => {
-		props.context.node.submit();
-	}
 </script>
 
 <template>
-	<button type="submit" class="govuk-button" data-module="govuk-button" @click="handleClick">
+	<button type="submit" class="govuk-button" data-module="govuk-button">
 		{{ label }}
 	</button>
 </template>

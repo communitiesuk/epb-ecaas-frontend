@@ -14,10 +14,7 @@
             title: 'Dwelling details',
             href: '/dwelling-details',
             status: {
-                tag: {
-                    text: store.getSectionStatus('dwellingDetails'),
-                    classes: 'govuk-tag--grey'
-                }
+                tag: store.getSectionStatus('dwellingDetails')
             }
         }]"
     />

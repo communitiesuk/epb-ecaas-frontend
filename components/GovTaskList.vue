@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import type { GovTagProps } from './GovTag.vue';
+	import type { GovTagProps } from '~/common.types';
 
 	interface GovTaskListItemStatus {
 		tag: GovTagProps;
@@ -10,7 +10,7 @@
 		title: string;
 		status: GovTaskListItemStatus;
 		href?: string;
-	};
+	}
 
 	defineProps<{
 		items: Array<GovTaskListItemProps>
@@ -27,7 +27,7 @@
 			</div>
 			<div class="govuk-task-list__status" :id="`${item.id}-status`">
 				<ClientOnly>
-					<GovTag :text="item.status.tag.text" :classes="item.status.tag.classes" />
+					<GovTag :text="item.status.tag.text" :color="item.status.tag.color" />
 				</ClientOnly>
 			</div>
 		</li>

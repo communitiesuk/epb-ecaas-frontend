@@ -1,14 +1,11 @@
 <script setup lang="ts">
-	export interface GovTagProps {
-		text: string;
-		classes?: string;
-	}
+	import type { GovTagProps } from '~/common.types';
 
 	defineProps<GovTagProps>();
 </script>
 
 <template>
-	<strong :class="`govuk-tag ${classes}`">
+	<strong :class="`govuk-tag ${color ? `govuk-tag--${color}` : ''}`">
 		{{ text }}
 	</strong>
 </template>
