@@ -1,4 +1,8 @@
 <script setup>
+	import { useMounted } from '~/composables/mounted';
+	
+	const { mounted } = useMounted();
+
 	const props = defineProps({
 		context: Object,
 	});
@@ -35,7 +39,7 @@
 			:id="name"
 			:name="name"
 			@input="handleInput"
-			:value="props.context._value"
+			:value="mounted ? props.context._value : ''"
 		>
 			<option v-for="key in Object.keys(options)" :id="`${name}_${key}`" :name="`${name}_${key}`" :value="key">
 				{{ options[key] }}

@@ -1,4 +1,8 @@
 <script setup>
+	import { useMounted } from '~/composables/mounted';
+
+	const { mounted } = useMounted();
+
 	const props = defineProps({
 		context: Object,
 	});
@@ -32,7 +36,7 @@
 				:id="name"
 				:name="name"
 				type="number"
-				:value="props.context._value"
+				:value="mounted ? props.context._value : ''"
 			/>
 		</div>
 	</div>

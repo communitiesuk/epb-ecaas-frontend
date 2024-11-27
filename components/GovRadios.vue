@@ -1,9 +1,18 @@
 <script setup>
+	import { useMounted } from '~/composables/mounted';
+
+	const { mounted } = useMounted();
+
 	const props = defineProps({
 		context: Object
 	});
-
-	const { attrs: { options }, node: { name }, label, help} = props.context;
+	
+	const {
+		attrs: { options },
+		node: { name },
+		label,
+		help
+	} = props.context;
 
 	function handleInput(e) {
 		props.context.node.input(e.target.value);
@@ -30,7 +39,7 @@
 						:id="`${name}_${key}`"
 						:name="name"
 						:value="key"
-						:checked="props.context._value == key"
+						:checked="mounted ? props.context._value == key : false"
 						@change="handleInput"
 					/>
 					<label class="govuk-label govuk-radios__label" :for="`${name}_${key}`">
