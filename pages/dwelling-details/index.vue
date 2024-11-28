@@ -3,12 +3,17 @@
 
     const title = 'Dwelling details';
     const store = useEcaasStore();
+
+    import Breadcrumbs from '../../components/GovBreadcrumbs.vue';
+
+
 </script>
 
 <template>
     <Head>
         <Title>{{ title }}</Title>
     </Head>
+    <Breadcrumbs :currentPageId="'dwellingDetails'" />
     <h1 class="govuk-heading-l">{{ title }}</h1>
     <div>
         <div>
