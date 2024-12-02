@@ -1,6 +1,5 @@
 <script setup lang="ts">
 	import { useEcaasStore } from '~/stores/ecaasStore';
-	import Breadcrumbs from '../../components/GovBreadcrumbs.vue';
 
 	const title = "General specifications";
 	const store = useEcaasStore();
@@ -40,7 +39,6 @@
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
-	<Breadcrumbs :currentPageId="'generalSpecifications'" />
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<FormKit type="form" v-model="model" @submit="saveForm" @submit-invalid="handleInvalidSubmit" :actions="false" :incomplete-message="false">
 		<GovErrorSummary :error-list="errorMessages" test-id="generalSpecificationsErrorSummary"/>

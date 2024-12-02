@@ -1,47 +1,34 @@
-    <template>
-      <nav class="govuk-breadcrumbs" aria-label="Breadcrumb">
-        <ol class="govuk-breadcrumbs__list">
-          <li v-for="(page, index) in pages" :key="page.id" class="govuk-breadcrumbs__list-item">
-            <a v-if="index !== pages.length - 1" class="govuk-breadcrumbs__link" :href="page.url">{{ page.title }}</a>
-            <a v-else>{{ page.title }}</a>
-          </li>
-        </ol>
-      </nav>
-    </template>
-
-
 <script setup lang="ts">
-import pagesData from '../data/pages';
-import type { Page } from '../data/pages'
+	import pagesData, { type Page } from '../data/pages';
 
-const props = defineProps({
-  currentPageId: {
-    type: String,
-    required: true,
-  }
-})
+	const getBreadcrumbs = (id: string | undefined, breadcrumbs: Array<Page>): Array<Page> => {
+		const currentPage = pagesData.find(page => page.id === id);
 
-const pages = computed((): Array<Page> => {
-  const currentPage = pagesData.find((page: Page) => page.id === props.currentPageId);
-  if (!currentPage) return [];
+		if (!currentPage) {
+			return breadcrumbs;
+		}
 
-  const pagesArray = [];
-  let current: any = currentPage;
+		breadcrumbs.unshift(currentPage);
+		return getBreadcrumbs(currentPage.parentId, breadcrumbs);
+	};
 
+	const pages = computed(() => {
+		const route = useRoute();
+		const currentPage = pagesData.find(page => page.url === route.path);
 
-  while (current) {
-    pagesArray.unshift({
-      id: current.id,
-      title: current.title,
-      url: current.url,
-    });
-    current = current.parentId
-      ? pagesData.find((page: Page) => page.id === current.parentId)
-      : null;
-  }
-  return pagesArray;
-}
-
-)
-
+		return currentPage ? getBreadcrumbs(currentPage.id, []) : [];
+	});
 </script>
+
+<template>
+	<nav class="govuk-breadcrumbs govuk-!-margin-top-0 govuk-!-margin-bottom-7" aria-label="Breadcrumb" v-if="pages.length > 1">
+		<ol class="govuk-breadcrumbs__list">
+			<li v-for="(page, index) in pages" :key="page.id" class="govuk-breadcrumbs__list-item">
+				<NuxtLink v-if="index !== pages.length - 1" class="govuk-breadcrumbs__link" :to="page.url">
+					{{ page.title }}
+				</NuxtLink>
+				<span v-else>{{ page.title }}</span>
+			</li>
+		</ol>
+	</nav>
+</template>
