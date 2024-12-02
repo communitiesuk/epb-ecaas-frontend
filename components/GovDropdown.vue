@@ -1,17 +1,17 @@
 <script setup>
-	import { useMounted } from '~/composables/mounted';
-	
-	const { mounted } = useMounted();
-
 	const props = defineProps({
-		context: Object,
+		context: Object
 	});
 
 	const {
-		attrs: { options },
+		id,
 		node: { name },
-		label, help
+		attrs: { options },
+		label,
+		help
 	} = props.context;
+
+	const { mounted } = useMounted();
 
 	function handleInput(e) {
 		props.context.node.input(e.target.value);
@@ -25,23 +25,24 @@
 		? 'govuk-form-group--error'
 		: ''
 		}`">
-		<label class="govuk-label govuk-label--m" :for="name">
+		<label class="govuk-label govuk-label--m" :for="id">
 			{{ label }}
 		</label>
 		<div id="event-name-hint" class="govuk-hint">
 			{{ help }}
 		</div>
-		<p v-if="props.context.state.invalid" class="govuk-error-message">
+		<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 			{{ props.context.messages.rule_required.value }}
 		</p>
 		<select
 			class="govuk-select"
-			:id="name"
+			:id="id"
 			:name="name"
 			@input="handleInput"
 			:value="mounted ? props.context._value : ''"
+			:data-testid="id"
 		>
-			<option v-for="key in Object.keys(options)" :id="`${name}_${key}`" :name="`${name}_${key}`" :value="key">
+			<option v-for="key in Object.keys(options)" :value="key">
 				{{ options[key] }}
 			</option>
 		</select>

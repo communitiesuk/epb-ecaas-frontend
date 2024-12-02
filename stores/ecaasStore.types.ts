@@ -3,10 +3,10 @@ export interface EcaasState {
 }
 
 export interface DwellingDetails {
-    generalSpecifications: EcaasForm<GeneralSpecifications>;
+    generalSpecifications: EcaasForm<GeneralSpecificationsData>;
 }
 
-export interface GeneralSpecifications {
+export interface GeneralSpecificationsData {
     typeOfResidence?: string;
     weatherDataLocation?: string;
     sizeGroundFloorArea?: number;

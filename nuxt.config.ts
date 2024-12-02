@@ -37,7 +37,8 @@ export default defineNuxtConfig({
 	modules: [
 		'@formkit/nuxt',
 		'@pinia/nuxt',
-		'pinia-plugin-persistedstate/nuxt'
+		'pinia-plugin-persistedstate/nuxt',
+		'@nuxt/test-utils/module'
 	],
 	formkit: {
 		autoImport: true,
