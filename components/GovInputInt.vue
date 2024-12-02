@@ -27,17 +27,18 @@
 			{{ label }}
 		</label>
 		<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
-			{{ props.context.messages.rule_required?.value }}
+			<span class="govuk-visually-hidden">Error:</span> {{ props.context.messages.rule_required?.value }}
 		</p>
 		<div class="govuk-input__wrapper">
 			<input
 				@input="handleInput"
-				class="govuk-input govuk-input--width-5"
+				:class="`govuk-input govuk-input--width-5 ${props.context.state.invalid ? 'govuk-input--error' : ''}`"
 				:id="id"
 				:name="name"
 				type="number"
 				:value="mounted ? props.context._value : ''"
 				:data-testid="id"
+				:aria-describedby="props.context.state.invalid ? `${id}_error` : ''"
 			/>
 		</div>
 	</div>

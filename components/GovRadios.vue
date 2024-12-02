@@ -20,7 +20,7 @@
 
 <template>
 	<div :class="`govuk-form-group ${props.context.state.invalid ? 'govuk-form-group--error' : ''}`">
-		<fieldset class="govuk-fieldset">
+		<fieldset :id="id" class="govuk-fieldset" :aria-describedby="props.context.state.invalid ? `${id}_error` : ''">
 			<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
 				{{ label }}
 			</legend>

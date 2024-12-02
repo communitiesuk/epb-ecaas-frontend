@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { useEcaasStore } from "~/stores/ecaasStore";
+	import { useEcaasStore } from '~/stores/ecaasStore';
 	import Breadcrumbs from '../../components/GovBreadcrumbs.vue';
 
 	const title = "General specifications";
@@ -32,6 +32,8 @@
 
 		navigateTo("/dwelling-details");
 	};
+
+	const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
@@ -40,7 +42,8 @@
 	</Head>
 	<Breadcrumbs :currentPageId="'generalSpecifications'" />
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<FormKit type="form" v-model="model" @submit="saveForm" :actions="false" :incomplete-message="false">
+	<FormKit type="form" v-model="model" @submit="saveForm" @submit-invalid="handleInvalidSubmit" :actions="false" :incomplete-message="false">
+		<GovErrorSummary :error-list="errorMessages" test-id="generalSpecificationsErrorSummary"/>
 		<FormKit
 			type="govRadios"
 			:options="{

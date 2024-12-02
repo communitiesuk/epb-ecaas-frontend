@@ -32,15 +32,16 @@
 			{{ help }}
 		</div>
 		<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
-			{{ props.context.messages.rule_required.value }}
+			<span class="govuk-visually-hidden">Error:</span> {{ props.context.messages.rule_required.value }}
 		</p>
 		<select
-			class="govuk-select"
+			:class="`govuk-select ${props.context.state.invalid ? 'govuk-select--error' : ''}`"
 			:id="id"
 			:name="name"
 			@input="handleInput"
 			:value="mounted ? props.context._value : ''"
 			:data-testid="id"
+			:aria-describedby="props.context.state.invalid ? `${id}_error` : ''"
 		>
 			<option v-for="key in Object.keys(options)" :value="key">
 				{{ options[key] }}

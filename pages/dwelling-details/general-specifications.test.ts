@@ -94,4 +94,14 @@ describe('General specifications', () => {
 		expect((await screen.findByTestId('cookingFuelType_error'))).toBeDefined();
 		expect((await screen.findByTestId('coldWaterSource_error'))).toBeDefined();
 	});
+
+	it('error summary is displayed when an invalid form in submitted', async () => {
+		const user = userEvent.setup();
+
+		await renderSuspended(GeneralSpecifications);
+
+		await user.click(screen.getByRole('button'));
+
+		expect((await screen.findByTestId('generalSpecificationsErrorSummary'))).toBeDefined();
+	});
 });
