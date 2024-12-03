@@ -17,7 +17,7 @@ export interface GeneralSpecificationsData {
     heatingControlType?: string;
     cookingFuelType?: string;
     coldWaterSource?: string;
-
+	numOfADFWetRooms?: number;
 }   
 
 export interface EcaasForm<T> {

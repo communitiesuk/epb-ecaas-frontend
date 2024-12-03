@@ -22,7 +22,8 @@
 						numOfShelteredSides: fields.numOfShelteredSides,
 						heatingControlType: fields.heatingControlType,
 						cookingFuelType: fields.cookingFuelType,
-						coldWaterSource: fields.coldWaterSource
+						coldWaterSource: fields.coldWaterSource,
+						numOfADFWetRooms: fields.numOfADFWetRooms
 					},
 					complete: true,
 				},
@@ -139,6 +140,13 @@
 			id="coldWaterSource"
 			name="coldWaterSource"
 			validation="required"
+		/>
+		<FormKit
+			type="govInputInt"
+			label="Number of ADF wet rooms"
+			id="numOfADFWetRooms"
+			name="numOfADFWetRooms"
+			validation="required | number"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
