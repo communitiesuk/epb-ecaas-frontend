@@ -4,6 +4,7 @@ export interface EcaasState {
 
 export interface DwellingDetails {
     generalSpecifications: EcaasForm<GeneralSpecificationsData>;
+	appliancesAndElectricity: EcaasForm<AppliancesAndElectricity>;
 }
 
 export interface GeneralSpecificationsData {
@@ -18,7 +19,10 @@ export interface GeneralSpecificationsData {
     cookingFuelType?: string;
     coldWaterSource?: string;
 	numOfADFWetRooms?: number;
-}   
+}
+
+export interface AppliancesAndElectricity {
+}
 
 export interface EcaasForm<T> {
     complete?: boolean;

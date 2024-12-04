@@ -2,42 +2,50 @@ import { defineStore } from 'pinia';
 import type { EcaasState } from './ecaasStore.types';
 import formStatus from '~/constants/formStatus';
 import type { GovTagProps } from '~/common.types';
+import type { Page } from '~/data/pages';
 
 type Section = keyof EcaasState;
 
 export const useEcaasStore = defineStore('ecaas', {
     state: (): EcaasState => ({
         dwellingDetails: {
-            generalSpecifications: {
-                data: {}
-            }
+            generalSpecifications: { data: {} },
+			appliancesAndElectricity: { data: {} }
         }
     }),
     getters: {
-        getSectionStatus: (state) => {
-            return (section: Section): GovTagProps => {
-                const subsections = state[section];
+		getStatus: (state) => {
+			return (page: Page): GovTagProps => {
+				const section = (page.id in state ? page.id : page.parentId) as Section;
+				
+				const subsections = state[section];
+				type Subsection = keyof typeof subsections;
 
-                type SectionForm = keyof typeof subsections;
-                const sectionForms = Object.keys(subsections) as Array<SectionForm>;
+				if (page.id in state) {
+					const subsectionList = Object.keys(subsections) as Array<Subsection>;
 
-                let status = formStatus.notStarted;
-                let complete = 0;
+					let status = formStatus.notStarted;
+					let complete = 0;
 
-                sectionForms.forEach(form => {
-                    if (subsections[form].complete) {
-                        status = formStatus.inProgress;
-                        complete++;
-                    }
+					subsectionList.forEach(subsection => {
+						if (subsections[subsection].complete) {
+							status = formStatus.inProgress;
+							complete++;
+						}
 
-                    if (complete === sectionForms.length) {
-                        status = formStatus.complete;
-                    }
-                });
+						if (complete === subsectionList.length) {
+							status = formStatus.complete;
+						}
+					});
 
-                return status;
-            };
-        }
+					return status;
+				}
+
+				const subsection = subsections[page.id as Subsection];
+
+				return subsection?.complete ? formStatus.complete : formStatus.notStarted;
+			};
+		}
     },
     persist: {
         storage: piniaPluginPersistedstate.localStorage()
