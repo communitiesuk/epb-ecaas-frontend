@@ -1,8 +1,9 @@
 <script setup lang="ts">
     const title = 'Check dwelling compliance';
 	
-	const { createTaskListFromPages } = useTaskList();
-	const taskList = createTaskListFromPages();
+	const page = usePage();
+	const { createTaskList } = useTaskList();
+	const taskList = createTaskList(page);
 </script>
 
 <template>

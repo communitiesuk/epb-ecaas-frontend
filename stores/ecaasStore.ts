@@ -41,9 +41,12 @@ export const useEcaasStore = defineStore('ecaas', {
 					return status;
 				}
 
-				const subsection = subsections[page.id as Subsection];
+				if (subsections && page.id in subsections) {
+					const subsection = subsections[page.id as Subsection];
+					return subsection?.complete ? formStatus.complete : formStatus.notStarted;
+				}
 
-				return subsection?.complete ? formStatus.complete : formStatus.notStarted;
+				return formStatus.notStarted;
 			};
 		}
     },
