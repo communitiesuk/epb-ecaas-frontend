@@ -26,11 +26,12 @@ function isOpen(index: number) {
 				</span>
 				<span v-if="isOpen(index)">
 					<span class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--up" style="float: right"></span>
-					<div class="govuk-inset-text"   style="border-left-width: 1.5px">
+				
+					<div class="govuk-inset-text"   style="border-left-width: 1.5px"	>
 						<div v-for="page in pagesData">
 							<span v-if="page.parentId === parentPage.id" class="govuk-body-s">
-								<div style="margin-bottom: 14px;">
-								<NuxtLink class="govuk-link":to="page.url">{{
+								<div style="margin-bottom: 14px" >
+								<NuxtLink  class="govuk-link" @click.stop :to="page.url">{{
 									page.title
 								}}</NuxtLink>
 								</div>
