@@ -17,6 +17,16 @@
 	}>();
 </script>
 
+<style scoped lang="scss">
+	.govuk-task-list {
+		margin-bottom: 0;
+	}
+
+	.govuk-task-list__item:first-child {
+		border-top: none;
+	}
+</style>
+
 <template>
 	<ul class="govuk-task-list">
 		<li class="govuk-task-list__item govuk-task-list__item--with-link" v-for="item in items">
