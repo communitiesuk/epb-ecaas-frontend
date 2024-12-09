@@ -1,6 +1,9 @@
 <script setup lang="ts">
     const title = 'Check dwelling compliance';
-    const store = useEcaasStore();
+	
+	const page = usePage();
+	const { createTaskList } = useTaskList();
+	const taskList = createTaskList(page);
 </script>
 
 <template>
@@ -8,14 +11,5 @@
         <Title>{{ title }}</Title>
     </Head>
     <h1 class="govuk-heading-l">{{ title }}</h1>
-    <GovTaskList
-        :items="[{
-            id: 'dwellingDetails',
-            title: 'Dwelling details',
-            href: '/dwelling-details',
-            status: {
-                tag: store.getSectionStatus('dwellingDetails')
-            }
-        }]"
-    />
+    <GovTaskList :items="taskList" />
 </template>

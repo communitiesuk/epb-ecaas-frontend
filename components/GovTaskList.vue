@@ -5,11 +5,11 @@
 		tag: GovTagProps;
 	}
 
-	interface GovTaskListItemProps {
+	export interface GovTaskListItemProps {
 		id: string;
 		title: string;
 		status: GovTaskListItemStatus;
-		href?: string;
+		url?: string;
 	}
 
 	defineProps<{
@@ -21,7 +21,7 @@
 	<ul class="govuk-task-list">
 		<li class="govuk-task-list__item govuk-task-list__item--with-link" v-for="item in items">
 			<div class="govuk-task-list__name-and-hint">
-				<NuxtLink :to="item.href" class="govuk-link govuk-task-list__link" :aria-describedby="item.id">
+				<NuxtLink :to="item.url" class="govuk-link govuk-task-list__link" :aria-describedby="item.id">
 					{{ item.title }}
 				</NuxtLink>
 			</div>

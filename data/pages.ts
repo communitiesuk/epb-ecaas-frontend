@@ -78,7 +78,7 @@ const pagesData: Array<Page> = [
 	},
 	{
 		id: 'livingSpace',
-		title: 'Living Space',
+		title: 'Living Space Fabric',
 		url: '/living-space',
 		parentId: 'overview'
 	},
@@ -126,7 +126,7 @@ const pagesData: Array<Page> = [
 	},
 	{
 		id: 'restOfDwelling',
-		title: 'Rest of Dwelling',
+		title: 'Rest of dwelling fabric',
 		url: '/rest-of-dwelling',
 		parentId: 'overview'
 	},
@@ -228,7 +228,7 @@ const pagesData: Array<Page> = [
 	},
 	{
 		id: 'pvStorage',
-		title: 'PV storage',
+		title: 'PV and energy storage',
 		url: '/pv-storage',
 		parentId: 'overview'
 	},
