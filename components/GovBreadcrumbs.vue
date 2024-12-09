@@ -21,7 +21,7 @@
 </script>
 
 <template>
-	<nav class="govuk-breadcrumbs govuk-!-margin-top-0 govuk-!-margin-bottom-7" aria-label="Breadcrumb" v-if="pages.length > 1">
+	<nav class="govuk-breadcrumbs govuk-!-margin-top-0 govuk-!-margin-bottom-6" aria-label="Breadcrumb" v-if="pages.length > 1">
 		<ol class="govuk-breadcrumbs__list">
 			<li v-for="(page, index) in pages" :key="page.id" class="govuk-breadcrumbs__list-item">
 				<NuxtLink v-if="index !== pages.length - 1" class="govuk-breadcrumbs__link" :to="page.url">

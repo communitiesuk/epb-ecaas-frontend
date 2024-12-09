@@ -25,6 +25,13 @@ export default defineNuxtConfig({
 	},
 	css: ['~/assets/scss/main.scss'],
 	vite: {
+		css: {
+			preprocessorOptions: {
+				scss: {
+					additionalData: '@use "node_modules/govuk-frontend/dist/govuk/settings" as *;'
+				}
+			}
+		},
 		plugins: [
 			viteStaticCopy({
 				targets: [{
