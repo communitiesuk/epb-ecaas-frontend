@@ -16,44 +16,62 @@
 	}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+	@use "sass:map";
+
 	.accordion-nav {
 		width: 100%;
-		max-width: 250px;
-		float: right;
+
+		@media (min-width: map.get($govuk-breakpoints, "tablet")) {
+			max-width: 250px;
+			float: right;
+		}
 	}
 
-	.accordion-nav-heading {
+	.govuk-accordion__section-button {
 		display: flex;
 		width: 100%;
 		justify-content: space-between;
 		background: transparent;
 		border: none;
+		margin-bottom: 0;
 	}
 
-	.accordion-nav-list {
+	.govuk-accordion__section-heading-text {
+		margin: 0;
+		color: map.get($govuk-colours, "blue")
+	}
+
+	.govuk-accordion__section-toggle {
+		margin: 0;
+		font-size: 0rem;
+	}
+
+	.govuk-inset-text {
 		list-style-type: none;
-		margin-top: 20px;
-		border-left-width: 1.5px;
-	}
-
-	.accordion-nav-link {
-		margin-bottom: 14px;
+		margin: 10px 0;
+		border-left-width: 1px;
 	}
 </style>
 
 <template>
 	<nav class="accordion-nav">
-		<div v-for="(parentPage, index) in parentPages" :key="parentPage.id" class="app-subnav__section govuk-list">
-			<button class="govuk-accordion__section-toggle accordion-nav-heading" @click="toggle(index)">
-				<span class="govuk-accordion__section-toggle-text govuk-!-font-size-16 govuk-!-font-weight-bold">{{ parentPage.title }}</span>
-				<span v-if="isOpen(index)" class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--up"></span>
-				<span v-else class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
+		<div v-for="(parentPage, index) in parentPages" :key="parentPage.id">
+			<button class="govuk-accordion__section-button" @click="toggle(index)">
+				<span class="govuk-accordion__section-heading-text govuk-!-font-size-16">
+					<span class="govuk-accordion__section-heading-text-focus">
+						{{ parentPage.title }}
+					</span>
+				</span>
+				<span class="govuk-accordion__section-toggle">
+					<span v-if="isOpen(index)" class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--up"></span>
+					<span v-else class="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
+				</span>
 			</button>
-			<ul v-if="isOpen(index)" class="govuk-inset-text accordion-nav-list">
+			<ul v-if="isOpen(index)" class="govuk-inset-text">
 				<template v-for="page in pagesData" >
 					<li v-if="page.parentId === parentPage.id">
-						<NuxtLink class="govuk-link govuk-body-s accordion-nav-link" @click.stop :to="page.url">
+						<NuxtLink class="govuk-link govuk-body-s" @click.stop :to="page.url">
 							{{ page.title }}
 						</NuxtLink>
 					</li>
