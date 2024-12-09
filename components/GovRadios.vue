@@ -20,11 +20,15 @@
 
 <template>
 	<div :class="`govuk-form-group ${props.context.state.invalid ? 'govuk-form-group--error' : ''}`">
-		<fieldset :id="id" class="govuk-fieldset" :aria-describedby="props.context.state.invalid ? `${id}_error` : ''">
+		<fieldset
+			:id="id"
+			class="govuk-fieldset"
+			:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
+		>
 			<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
 				{{ label }}
 			</legend>
-			<div id="event-name-hint" class="govuk-hint">
+			<div :id="`${id}_hint`" class="govuk-hint" v-if="help">
 				{{ help }}
 			</div>
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
@@ -41,10 +45,14 @@
 						:checked="mounted ? props.context._value == key : false"
 						@change="handleInput"
 						:data-testid="`${id}_${key}`"
+						:aria-describedby="typeof options[key] === 'object' ? `${id}_${key}_hint` : ''"
 					/>
 					<label class="govuk-label govuk-radios__label" :for="`${id}_${key}`">
-						{{ options[key] }}
+						{{ typeof options[key] === 'object' ? options[key].label : options[key] }}
 					</label>
+					<div :id="`${id}_${key}_hint`" class="govuk-hint govuk-radios__hint" v-if="(typeof options[key] === 'object')">
+						{{ options[key].hint }}
+					</div>
 				</div>
 			</div>
 		</fieldset>

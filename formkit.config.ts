@@ -6,12 +6,17 @@ import GovDropdown from './components/GovDropdown.vue';
 import GovInputInt from './components/GovInputInt.vue';
 import GovInputMeters from './components/GovInputMeters.vue';
 
+type GovRadioOption = {
+	label: string;
+	hint?: string;
+}
+
 // Enable TypeScript support for custom inputs
 declare module '@formkit/inputs' {
     interface FormKitInputProps<Props extends FormKitInputs<Props>> {
         'govRadios': {
             type: 'govRadios',
-            options: FormKitOptionsProp
+            options: Record<string, string | GovRadioOption>
         },
         'govButton': {
             type: 'govButton'

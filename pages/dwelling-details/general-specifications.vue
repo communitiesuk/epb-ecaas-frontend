@@ -100,6 +100,7 @@
 			id="levelOfShelter"
 			name="levelOfShelter"
 			validation="required"
+			help="Exposure level of the dwelling"
 		/>
 		<FormKit
 			type="govInputInt"
@@ -111,8 +112,14 @@
 		<FormKit
 			type="govRadios"
 			:options="{
-				seperateTempControl: 'Separate temperature control',
-				seperateTempAndTimeControl: 'Separate temperature and time control ',
+				seperateTempControl: {
+					label: 'Separate temperature control',
+					hint: 'Both living and rest of dwelling zones follow the same schedule but have different temperature set points.'
+				},
+				seperateTempAndTimeControl: {
+					label: 'Separate temperature and time control',
+					hint: 'Each zone has heating schedule and temperature set points.'
+				},
 			}"
 			label="Heating control type"
 			id="heatingControlType"
@@ -132,7 +139,7 @@
 		/>
 		<FormKit
 			type="govRadios"
-				:options="{
+			:options="{
 				mainsWater: 'Mains water',
 				headerTank: 'Header tank',
 			}"
@@ -147,6 +154,7 @@
 			id="numOfADFWetRooms"
 			name="numOfADFWetRooms"
 			validation="required | number"
+			help="Rooms used for domestic activities such as kitchen and bathroom that create a large amount of airborne moisture."
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>

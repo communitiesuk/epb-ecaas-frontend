@@ -6,7 +6,8 @@
 	const {
 		id,
 		node: { name },
-		label
+		label,
+		help
 	} = props.context;
 
 	const { mounted } = useMounted();
@@ -26,6 +27,9 @@
 		<label class="govuk-label govuk-label--m" :for="id">
 			{{ label }}
 		</label>
+		<div :id="`${id}_hint`" class="govuk-hint" v-if="help">
+			{{ help }}
+		</div>
 		<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 			<span class="govuk-visually-hidden">Error:</span> {{ props.context.messages.rule_required?.value }}
 		</p>
@@ -38,7 +42,7 @@
 				type="number"
 				:value="mounted ? props.context._value : ''"
 				:data-testid="id"
-				:aria-describedby="props.context.state.invalid ? `${id}_error` : ''"
+				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 			/>
 		</div>
 	</div>
