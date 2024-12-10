@@ -4,7 +4,7 @@ export interface EcaasState {
 
 export interface DwellingDetails {
     generalSpecifications: EcaasForm<GeneralSpecificationsData>;
-	appliancesAndElectricity: EcaasForm<AppliancesAndElectricity>;
+	appliancesAndElectricity: EcaasForm<AppliancesAndElectricityData>;
 }
 
 export interface GeneralSpecificationsData {
@@ -21,7 +21,15 @@ export interface GeneralSpecificationsData {
 	numOfADFWetRooms?: number;
 }
 
-export interface AppliancesAndElectricity {
+export interface AppliancesAndElectricityData {
+	fridgeFreezerEnergyRating?: string;
+	dishwasherEnergyRating?: string;
+	ovenCookerEnergyRating?: string;
+	washingMachineEnergyRating?: string;
+	tumbleDryerEnergyRating?: string;
+	electricVehicleCharger?: string;
+	electricityGridConnection?: string;
+	electricityTariff?: string;
 }
 
 export interface EcaasForm<T> {

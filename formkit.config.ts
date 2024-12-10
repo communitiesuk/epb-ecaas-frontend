@@ -5,6 +5,7 @@ import type { FormKitInputs, FormKitOptionsProp } from '@formkit/inputs';
 import GovDropdown from './components/GovDropdown.vue';
 import GovInputInt from './components/GovInputInt.vue';
 import GovInputMeters from './components/GovInputMeters.vue';
+import type { GovDetailsProps } from './components/GovDetails.vue';
 
 type GovRadioOption = {
 	label: string;
@@ -17,6 +18,7 @@ declare module '@formkit/inputs' {
         'govRadios': {
             type: 'govRadios',
             options: Record<string, string | GovRadioOption>
+			details?: GovDetailsProps
         },
         'govButton': {
             type: 'govButton'

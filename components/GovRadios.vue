@@ -6,7 +6,7 @@
 	const {
 		id,
 		node: { name },
-		attrs: { options },
+		attrs: { options, details },
 		label,
 		help
 	} = props.context;
@@ -31,6 +31,7 @@
 			<div :id="`${id}_hint`" class="govuk-hint" v-if="help">
 				{{ help }}
 			</div>
+			<GovDetails v-if="details" :summary-text="details.summaryText" :text="details.text" classes="govuk-!-margin-bottom-4" />
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ props.context.messages.rule_required.value }}
 			</p>

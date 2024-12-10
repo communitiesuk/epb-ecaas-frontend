@@ -42,6 +42,7 @@
 			:data-testid="id"
 			:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 		>
+			<option value="">Select</option>
 			<option v-for="key in Object.keys(options)" :value="key">
 				{{ options[key] }}
 			</option>

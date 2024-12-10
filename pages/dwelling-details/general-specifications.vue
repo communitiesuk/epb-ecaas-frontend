@@ -1,6 +1,4 @@
 <script setup lang="ts">
-	import { useEcaasStore } from '~/stores/ecaasStore';
-
 	const title = "General specifications";
 	const store = useEcaasStore();
 
