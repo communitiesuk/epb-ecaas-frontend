@@ -34,17 +34,10 @@ export default defineNuxtConfig({
 		},
 		plugins: [
 			viteStaticCopy({
-				targets: [
-					{
-						src: 'node_modules/govuk-frontend/dist/govuk/assets/*',
-						dest: 'assets'
-					},
-					// for amplify hosting
-					{
-						src: 'node_modules/govuk-frontend/dist/govuk/assets/*',
-						dest: '.amplify-hosting/static/assets'
-					}
-				]
+				targets: [{
+					src: 'node_modules/govuk-frontend/dist/govuk/assets/*',
+					dest: 'assets'
+				}]
 			})
 		]
 	},
