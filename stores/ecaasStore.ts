@@ -3,6 +3,7 @@ import type { EcaasState } from './ecaasStore.types';
 import formStatus from '~/constants/formStatus';
 import type { GovTagProps } from '~/common.types';
 import type { Page } from '~/data/pages';
+import merge from 'deepmerge';
 
 type Section = keyof EcaasState;
 
@@ -15,6 +16,16 @@ export const useEcaasStore = defineStore('ecaas', {
 			shading: { data: {} }
         }
     }),
+	actions: {
+		async fetchState() {
+			const resp = await useFetch('/api/getState');
+
+			if (resp.data.value) {
+				const state = merge(this.$state, resp.data.value);
+				this.$patch(state);
+			}
+		}
+	},
     getters: {
 		getStatus: (state) => {
 			return (page: Page): GovTagProps => {
@@ -51,8 +62,5 @@ export const useEcaasStore = defineStore('ecaas', {
 				return formStatus.notStarted;
 			};
 		}
-    },
-    persist: {
-        storage: piniaPluginPersistedstate.localStorage()
     }
 });

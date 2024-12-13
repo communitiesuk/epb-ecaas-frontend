@@ -32,7 +32,6 @@ export default defineNuxtConfig({
 					additionalData: `
 						@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
 						@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`
-
 				}
 			}
 		},
@@ -48,7 +47,6 @@ export default defineNuxtConfig({
 	modules: [
 		'@formkit/nuxt',
 		'@pinia/nuxt',
-		'pinia-plugin-persistedstate/nuxt',
 		'@nuxt/test-utils/module'
 	],
 	formkit: {
