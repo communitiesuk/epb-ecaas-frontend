@@ -36,9 +36,7 @@
 				</NuxtLink>
 			</div>
 			<div class="govuk-task-list__status" :id="`${item.id}-status`">
-				<ClientOnly>
-					<GovTag :text="item.status.tag.text" :color="item.status.tag.color" />
-				</ClientOnly>
+				<GovTag :text="item.status.tag.text" :color="item.status.tag.color" />
 			</div>
 		</li>
 	</ul>
