@@ -9,6 +9,9 @@ dist
 # Amplify builds
 .amplify-hosting
 
+# GOV.UK assets copied into public dir
+public/assets
+
 # Node dependencies
 node_modules
 
