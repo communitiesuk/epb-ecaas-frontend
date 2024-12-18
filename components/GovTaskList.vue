@@ -19,7 +19,7 @@
 
 <template>
 	<ul class="govuk-task-list">
-		<li v-for="item in items" class="govuk-task-list__item govuk-task-list__item--with-link">
+		<li v-for="item in items" :key="item.id" class="govuk-task-list__item govuk-task-list__item--with-link">
 			<div class="govuk-task-list__name-and-hint">
 				<NuxtLink :to="item.url" class="govuk-link govuk-task-list__link" :aria-describedby="item.id">
 					{{ item.title }}

@@ -1,6 +1,11 @@
 <script setup>
 	const props = defineProps({
-		context: Object
+		context: {
+			type: Object,
+			default() {
+				return {};
+			}
+		}
 	});
 	
 	const {
@@ -36,7 +41,7 @@
 				<span class="govuk-visually-hidden">Error:</span> {{ props.context.messages.rule_required.value }}
 			</p>
 			<div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
-				<div v-for="key in Object.keys(options)" class="govuk-radios__item">
+				<div v-for="key in Object.keys(options)" :key="key" class="govuk-radios__item">
 					<input
 						:id="`${id}_${key}`"
 						class="govuk-radios__input"

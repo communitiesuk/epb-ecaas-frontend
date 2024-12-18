@@ -1,6 +1,11 @@
 <script setup>
 	const props = defineProps({
-		context: Object
+		context: {
+			type: Object,
+			default() {
+				return {};
+			}
+		}
 	});
 
 	const {

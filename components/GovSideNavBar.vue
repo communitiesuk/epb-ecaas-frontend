@@ -31,7 +31,7 @@
 				</span>
 			</button>
 			<ul v-if="isOpen(index)" class="govuk-inset-text">
-				<template v-for="page in pagesData" >
+				<template v-for="page in pagesData" :key="page.id">
 					<li v-if="page.parentId === parentPage.id">
 						<NuxtLink class="govuk-link govuk-body-s" :to="page.url" @click.stop>
 							{{ page.title }}

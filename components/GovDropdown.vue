@@ -1,6 +1,11 @@
 <script setup>
 	const props = defineProps({
-		context: Object
+		context: {
+			type: Object,
+			default() {
+				return {};
+			}
+		}
 	});
 
 	const {
@@ -44,7 +49,7 @@
 			@input="handleInput"
 		>
 			<option value="">Select</option>
-			<option v-for="key in Object.keys(options)" :value="key">
+			<option v-for="key in Object.keys(options)" :key="key" :value="key">
 				{{ options[key] }}
 			</option>
 		</select>

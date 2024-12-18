@@ -30,7 +30,7 @@
 			</h2>
 			<div class="govuk-error-summary__body">
 				<ul class="govuk-list govuk-error-summary__list">
-					<li v-for="error in errorList">
+					<li v-for="error in errorList" :key="error.id">
 						<a :href="`#${error.id}`" :onclick="navigateToField(error.id)">{{ error.text }}</a>
 					</li>
 				</ul>
