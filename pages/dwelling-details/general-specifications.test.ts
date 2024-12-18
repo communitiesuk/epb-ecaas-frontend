@@ -24,7 +24,7 @@ const state: GeneralSpecificationsData = {
 };
 
 describe('General specifications', () => {
-	let store = useEcaasStore();
+	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();

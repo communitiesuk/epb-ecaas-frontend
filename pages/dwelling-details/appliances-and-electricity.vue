@@ -44,63 +44,64 @@
 	<Head>
 		<Title>Appliances and electricity</Title>
 	</Head>
-	<FormKit type="form" v-model="model" @submit="saveForm" @submit-invalid="handleInvalidSubmit" :actions="false" :incomplete-message="false">
+	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm" @submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="appliancesAndElectricityErrorSummary"/>
 		<h2 class="govuk-heading-l">Appliances</h2>
 		<FormKit
+			id="fridgeFreezerEnergyRating"
 			type="govDropdown"
 			label="Fridge/freezer energy rating"
-			id="fridgeFreezerEnergyRating"
 			name="fridgeFreezerEnergyRating"
 			:options="energyRatingOptions"
 			validation="required"
 		/>
 		<FormKit
+			id="dishwasherEnergyRating"
 			type="govDropdown"
 			label="Dishwasher energy rating"
-			id="dishwasherEnergyRating"
 			name="dishwasherEnergyRating"
 			:options="energyRatingOptions"
 			validation="required"
 		/>
 		<FormKit
+			id="ovenCookerEnergyRating"
 			type="govDropdown"
 			label="Oven/cooker energy rating"
-			id="ovenCookerEnergyRating"
 			name="ovenCookerEnergyRating"
 			:options="energyRatingOptions"
 			validation="required"
 		/>
 		<FormKit
+			id="washingMachineEnergyRating"
 			type="govDropdown"
 			label="Washing machine energy rating"
-			id="washingMachineEnergyRating"
 			name="washingMachineEnergyRating"
 			:options="energyRatingOptions"
 			validation="required"
 		/>
 		<FormKit
+			id="tumbleDryerEnergyRating"
 			type="govDropdown"
 			label="Tumble dryer energy rating"
-			id="tumbleDryerEnergyRating"
 			name="tumbleDryerEnergyRating"
 			:options="energyRatingOptions"
 			validation="required"
 		/>
 		<FormKit
+			id="electricVehicleCharger"
 			type="govDropdown"
 			:options="{
 				yes: 'Yes',
 				no: 'No'
 			}"
 			label="Electric vehicle charger"
-			id="electricVehicleCharger"
 			name="electricVehicleCharger"
 			validation="required"
 		/>
-		<hr class="govuk-!-margin-bottom-6" />
+		<hr class="govuk-!-margin-bottom-6" >
 		<h2 class="govuk-heading-l">Electricity</h2>
 		<FormKit
+			id="electricityGridConnection"
 			type="govRadios"
 			:options="{
 				onePhase: '1 phase',
@@ -108,7 +109,6 @@
 				none: 'None'
 			}"
 			label="Electricity grid connection"
-			id="electricityGridConnection"
 			name="electricityGridConnection"
 			validation="required"
 			:details="{
@@ -117,13 +117,13 @@
 			}"
 		/>
 		<FormKit
+			id="electricityTariff"
 			type="govRadios"
 			:options="{
 				standardTariff: 'Standard tariff',
 				sevenHourTariffControl: '7 hour tariff control'
 			}"
 			label="Electricity tariff"
-			id="electricityTariff"
 			name="electricityTariff"
 			validation="required"
 		/>

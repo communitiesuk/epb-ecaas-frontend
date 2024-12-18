@@ -39,23 +39,23 @@
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<FormKit type="form" v-model="model" @submit="saveForm" @submit-invalid="handleInvalidSubmit" :actions="false" :incomplete-message="false">
+	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm" @submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="generalSpecificationsErrorSummary"/>
 		<FormKit
+			id="typeOfResidence"
 			type="govRadios"
 			:options="{
 				house: 'House',
 				flat: 'Flat',
 			}"
 			label="Type of residence"
-			id="typeOfResidence"
 			name="typeOfResidence"
 			validation="required"
 		/>
 		<FormKit
+			id="weatherDataLocation"
 			type="govDropdown"
 			label="Weather data location"
-			id="weatherDataLocation"
 			name="weatherDataLocation"
 			:options="{
 				london: 'London',
@@ -66,27 +66,28 @@
 			help="The location nearest to your planned site"
 		/>
 		<FormKit
+			id="sizeGroundFloorArea"
 			type="govInputMeters"
 			label="Size of ground floor area"
-			id="sizeGroundFloorArea"
 			name="sizeGroundFloorArea"
 			validation="required | number"
 		/>
 		<FormKit
+			id="numOfBedrooms"
 			type="govInputInt"
 			label="Number of bedrooms"
-			id="numOfBedrooms"
 			name="numOfBedrooms"
 			validation="required | number"
 		/>
 		<FormKit
+			id="storiesInDwelling"
 			type="govInputInt"
 			label="Number of stories in dwelling"
-			id="storiesInDwelling"
 			name="storiesInDwelling"
 			validation="required | number"
 		/>
 		<FormKit
+			id="levelOfShelter"
 			type="govRadios"
 			:options="{
 				verySheltered: 'Very sheltered',
@@ -95,19 +96,19 @@
 				exposed: 'Exposed'
 			}"
 			label="Shelter"
-			id="levelOfShelter"
 			name="levelOfShelter"
 			validation="required"
 			help="Exposure level of the dwelling"
 		/>
 		<FormKit
+			id="numOfShelteredSides"
 			type="govInputInt"
 			label="Number of sheltered sides"
-			id="numOfShelteredSides"
 			name="numOfShelteredSides"
 			validation="required | number"
 		/>
 		<FormKit
+			id="heatingControlType"
 			type="govRadios"
 			:options="{
 				seperateTempControl: {
@@ -120,36 +121,35 @@
 				},
 			}"
 			label="Heating control type"
-			id="heatingControlType"
 			name="heatingControlType"
 			validation="required"
 		/>
 		<FormKit
+			id="cookingFuelType"
 			type="govRadios"
 			:options="{
 				electricity: 'Electricity',
 				mainsGas: 'Mains gas',
 			}"
 			label="Cooking fuel type"
-			id="cookingFuelType"
 			name="cookingFuelType"
 			validation="required"
 		/>
 		<FormKit
+			id="coldWaterSource"
 			type="govRadios"
 			:options="{
 				mainsWater: 'Mains water',
 				headerTank: 'Header tank',
 			}"
 			label="Cold water source"
-			id="coldWaterSource"
 			name="coldWaterSource"
 			validation="required"
 		/>
 		<FormKit
+			id="numOfADFWetRooms"
 			type="govInputInt"
 			label="Number of ADF wet rooms"
-			id="numOfADFWetRooms"
 			name="numOfADFWetRooms"
 			validation="required | number"
 			help="Rooms used for domestic activities such as kitchen and bathroom that create a large amount of airborne moisture."

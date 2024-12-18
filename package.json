@@ -6,12 +6,15 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "test": "vitest"
   },
   "dependencies": {
     "@formkit/nuxt": "^1.6.9",
+    "@nuxt/eslint": "^0.7.3",
     "@pinia/nuxt": "^0.7.0",
     "aws-amplify": "^6.10.3",
     "nuxt": "^3.14.1592",

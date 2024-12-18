@@ -28,7 +28,7 @@
 			<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
 				{{ label }}
 			</legend>
-			<div :id="`${id}_hint`" class="govuk-hint" v-if="help">
+			<div v-if="help" :id="`${id}_hint`" class="govuk-hint">
 				{{ help }}
 			</div>
 			<GovDetails v-if="details" :summary-text="details.summaryText" :text="details.text" classes="govuk-!-margin-bottom-4" />
@@ -36,22 +36,22 @@
 				<span class="govuk-visually-hidden">Error:</span> {{ props.context.messages.rule_required.value }}
 			</p>
 			<div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
-				<div class="govuk-radios__item" v-for="key in Object.keys(options)">
+				<div v-for="key in Object.keys(options)" class="govuk-radios__item">
 					<input
+						:id="`${id}_${key}`"
 						class="govuk-radios__input"
 						type="radio"
-						:id="`${id}_${key}`"
 						:name="name"
 						:value="key"
 						:checked="mounted ? props.context._value == key : false"
-						@change="handleInput"
 						:data-testid="`${id}_${key}`"
 						:aria-describedby="typeof options[key] === 'object' ? `${id}_${key}_hint` : ''"
-					/>
+						@change="handleInput"
+					>
 					<label class="govuk-label govuk-radios__label" :for="`${id}_${key}`">
 						{{ typeof options[key] === 'object' ? options[key].label : options[key] }}
 					</label>
-					<div :id="`${id}_${key}_hint`" class="govuk-hint govuk-radios__hint" v-if="(typeof options[key] === 'object')">
+					<div v-if="(typeof options[key] === 'object')" :id="`${id}_${key}_hint`" class="govuk-hint govuk-radios__hint">
 						{{ options[key].hint }}
 					</div>
 				</div>

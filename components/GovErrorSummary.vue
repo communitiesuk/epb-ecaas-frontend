@@ -23,7 +23,7 @@
 </script>
 
 <template>
-	<div class="govuk-error-summary" data-module="govuk-error-summary" v-if="errorList && errorList.length" :data-testid="testId">
+	<div v-if="errorList && errorList.length" class="govuk-error-summary" data-module="govuk-error-summary" :data-testid="testId">
 		<div role="alert">
 			<h2 class="govuk-error-summary__title">
 				{{ title ?? 'There is a problem' }}

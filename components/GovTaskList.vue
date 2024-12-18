@@ -17,6 +17,23 @@
 	}>();
 </script>
 
+<template>
+	<ul class="govuk-task-list">
+		<li v-for="item in items" class="govuk-task-list__item govuk-task-list__item--with-link">
+			<div class="govuk-task-list__name-and-hint">
+				<NuxtLink :to="item.url" class="govuk-link govuk-task-list__link" :aria-describedby="item.id">
+					{{ item.title }}
+				</NuxtLink>
+			</div>
+			<div :id="`${item.id}-status`" class="govuk-task-list__status">
+				<ClientOnly>
+					<GovTag :text="item.status.tag.text" :color="item.status.tag.color" />
+				</ClientOnly>
+			</div>
+		</li>
+	</ul>
+</template>
+
 <style scoped lang="scss">
 	.govuk-task-list {
 		margin-bottom: 0;
@@ -26,20 +43,3 @@
 		border-top: none;
 	}
 </style>
-
-<template>
-	<ul class="govuk-task-list">
-		<li class="govuk-task-list__item govuk-task-list__item--with-link" v-for="item in items">
-			<div class="govuk-task-list__name-and-hint">
-				<NuxtLink :to="item.url" class="govuk-link govuk-task-list__link" :aria-describedby="item.id">
-					{{ item.title }}
-				</NuxtLink>
-			</div>
-			<div class="govuk-task-list__status" :id="`${item.id}-status`">
-				<ClientOnly>
-					<GovTag :text="item.status.tag.text" :color="item.status.tag.color" />
-				</ClientOnly>
-			</div>
-		</li>
-	</ul>
-</template>

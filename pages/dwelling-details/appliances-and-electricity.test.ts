@@ -21,7 +21,7 @@ const state: AppliancesAndElectricityData = {
 };
 
 describe('Appliances and electricity', () => {
-	let store = useEcaasStore();
+	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
