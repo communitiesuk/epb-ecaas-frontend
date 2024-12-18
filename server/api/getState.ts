@@ -1,6 +1,7 @@
 import { createStorage } from "unstorage";
-import fsDriver from "unstorage/drivers/fs";
+// import fsDriver from "unstorage/drivers/fs";
 import { EcaasState } from "~/stores/ecaasStore.types";
+import amplifyDataDriver from "../utils/amplifyKvStore";
 
 export default defineEventHandler(async (event) => {
 	// Read session Id from cookie
@@ -9,8 +10,11 @@ export default defineEventHandler(async (event) => {
 	// If session exists, create storage and return existing state
 	if (sessionId) {
 		const storage = createStorage({
-			driver: fsDriver({ base: './tmp' })
+			driver: amplifyDataDriver({})
 		});
+		// const storage = createStorage({
+		// 	driver: fsDriver({ base: './tmp' })
+		// });
 
 		return await storage.getItem<EcaasState>(sessionId);
 	}

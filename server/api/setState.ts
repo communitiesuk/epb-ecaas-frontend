@@ -1,5 +1,6 @@
 import { createStorage } from "unstorage";
-import fsDriver from "unstorage/drivers/fs";
+// import fsDriver from "unstorage/drivers/fs";
+import amplifyDataDriver from "../utils/amplifyKvStore";
 import { EcaasState } from "~/stores/ecaasStore.types";
 import { v4 as uuidv4 } from 'uuid';
 import merge from 'deepmerge';
@@ -13,8 +14,11 @@ export default defineEventHandler(async (event) => {
 
 	// Create storage
 	const storage = createStorage({
-		driver: fsDriver({ base: './tmp' })
+		driver: amplifyDataDriver({})
 	});
+	// const storage = createStorage({
+	// 	driver: fsDriver({ base: './tmp' })
+	// });
 	
 	// If session exists, read state from storage
 	if (sessionId) {
