@@ -66,12 +66,8 @@
 			help="The location nearest to your planned site"
 		/>
 		<FormKit
-<<<<<<< Updated upstream
 			id="sizeGroundFloorArea"
-			type="govInputMeters"
-=======
 			type="govInputWithSuffix"
->>>>>>> Stashed changes
 			label="Size of ground floor area"
 			name="sizeGroundFloorArea"
 			validation="required | number"
