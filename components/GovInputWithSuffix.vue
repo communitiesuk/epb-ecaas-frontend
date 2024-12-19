@@ -12,7 +12,8 @@
 		id,
 		node: { name },
 		label,
-		help
+		help, 
+		suffixIcon
 	} = props.context;
 
 	const { mounted } = useMounted();
@@ -48,9 +49,8 @@
 				:value="mounted ? props.context._value : ''"
 				:data-testId="id"
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
-				@input="handleInput"
-			>
-			<div class="govuk-input__suffix" aria-hidden="true">m2</div>
+			/>
+			<div class="govuk-input__suffix" aria-hidden="true">{{suffixIcon}}</div>
 		</div>
 	</div>
 </template>

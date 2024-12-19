@@ -4,8 +4,9 @@ import GovRadios from './components/GovRadios.vue';
 import type { FormKitInputs, FormKitOptionsProp } from '@formkit/inputs';
 import GovDropdown from './components/GovDropdown.vue';
 import GovInputInt from './components/GovInputInt.vue';
-import GovInputMeters from './components/GovInputMeters.vue';
+import GovInputWithSuffix from './components/GovInputWithSuffix.vue';
 import type { GovDetailsProps } from './components/GovDetails.vue';
+
 
 type GovRadioOption = {
 	label: string;
@@ -30,8 +31,8 @@ declare module '@formkit/inputs' {
         'govInputInt': {
             type: 'govInputInt'
         },
-        'govInputMeters': {
-            type: 'govInputMeters'
+        'govInputWithSuffix': {
+            type: 'govInputWithSuffix'
         }
 
     }
@@ -57,10 +58,10 @@ export default defineFormKitConfig(() => {
                 type: 'input',
                 component: GovInputInt
             },
-            govInputMeters: {
-                type: 'input',
-                component: GovInputMeters
-            }
+            govInputWithSuffix: {
+              type: "input",
+              component: GovInputWithSuffix
+            },
         }
     };
 })
