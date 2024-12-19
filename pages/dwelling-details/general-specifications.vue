@@ -66,11 +66,16 @@
 			help="The location nearest to your planned site"
 		/>
 		<FormKit
+<<<<<<< Updated upstream
 			id="sizeGroundFloorArea"
 			type="govInputMeters"
+=======
+			type="govInputWithSuffix"
+>>>>>>> Stashed changes
 			label="Size of ground floor area"
 			name="sizeGroundFloorArea"
 			validation="required | number"
+			suffixIcon="m2"
 		/>
 		<FormKit
 			id="numOfBedrooms"
@@ -123,6 +128,7 @@
 			label="Heating control type"
 			name="heatingControlType"
 			validation="required"
+			help="both living and rest of dwelling zones follow the same schedule but have different temperature set points./each zone has heating schedule and temperature set points."
 		/>
 		<FormKit
 			id="cookingFuelType"
