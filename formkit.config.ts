@@ -5,6 +5,7 @@ import type { FormKitInputs, FormKitOptionsProp } from '@formkit/inputs';
 import GovDropdown from './components/GovDropdown.vue';
 import GovInputInt from './components/GovInputInt.vue';
 import GovInputWithSuffix from './components/GovInputWithSuffix.vue';
+import GovCheckboxToggled from './components/GovCheckboxToggled.vue'
 import type { GovDetailsProps } from './components/GovDetails.vue';
 
 
@@ -33,6 +34,10 @@ declare module '@formkit/inputs' {
         },
         'govInputWithSuffix': {
             type: 'govInputWithSuffix'
+        },
+        'govCheckboxToggled': {
+            type: 'govCheckboxToggled',
+            options: Array<string> 
         }
 
     }
@@ -62,6 +67,10 @@ export default defineFormKitConfig(() => {
               type: "input",
               component: GovInputWithSuffix
             },
+            govCheckboxToggled: {
+                type: "input",
+                component: GovCheckboxToggled
+            }
         }
     };
 })
