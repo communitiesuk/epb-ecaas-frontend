@@ -26,6 +26,10 @@ const handleChange = (value: string) => {
     optionSelected.value = value;
   }
 };
+
+function handleInput(e:any) {
+		props.context.node.input(e.target.value);
+	}
 </script>
 
 <template>
@@ -62,7 +66,7 @@ const handleChange = (value: string) => {
               type="checkbox"
               :value="option"
               :checked="optionSelected === option"
-              @change="handleChange(option)"
+              @change="handleChange(option), handleInput"
             />
             <label class="govuk-label govuk-checkboxes__label" :for="id">{{ option }}</label>
           </div>

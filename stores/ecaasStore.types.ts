@@ -5,6 +5,7 @@ export interface EcaasState {
 export interface DwellingDetails {
     generalSpecifications: EcaasForm<GeneralSpecificationsData>;
 	appliancesAndElectricity: EcaasForm<AppliancesAndElectricityData>;
+    hotWaterDistribution: EcaasForm<HotWaterDistributionData>
 }
 
 export interface GeneralSpecificationsData {
@@ -30,6 +31,21 @@ export interface AppliancesAndElectricityData {
 	electricVehicleCharger?: string;
 	electricityGridConnection?: string;
 	electricityTariff?: string;
+}
+
+export interface HotWaterDistributionData {
+    lengthInternal?: number,
+    internalDiameterInternal?: number,
+    externalDiameterInternal?: number,
+    insulationThicknessInternal?: number,
+    insulationThermalConductivityInternal?: number,
+    lengthExternal?: number,
+    internalDiameterExternal?: number,
+    externalDiameterExternal?: number,
+    insulationThicknessExternal?: number,
+    insulationThermalConductivityExternal?: number,
+    pipeContents?: string,
+    surfaceReflectivity?: string
 }
 
 export interface EcaasForm<T> {
