@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { summarySectionData } from "~/pages/dwelling-details/summary.vue";
 import pagesData, { type Page } from "~/data/pages";
 import { ref } from "vue";
-defineProps<{ sectionSummary?: any }>();
+
+defineProps<{ summarySection?: summarySectionData[]}>();
 
 function formatData(value: string | undefined) {
 	if (value === undefined) {
@@ -36,14 +38,14 @@ function selectTab(index: number) {
 
 	<div class="govuk-tabs" data-module="govuk-tabs">
 		<ul class="govuk-tabs__list">
-			<li v-for="(section, index) in sectionSummary" :key="index" class="govuk-tabs__list-item"
+			<li v-for="(section, index) in summarySection" :key="index" class="govuk-tabs__list-item"
 				:class="{ 'govuk-tabs__list-item--selected': currentTab === index }">
 				<NuxtLink class="govuk-tabs__tab" :to="`#tab-${index}`" @click.prevent="selectTab(index)">{{ section.label }}
 				</NuxtLink>
 			</li>
 		</ul>
 
-		<div v-for="(section, index) in sectionSummary" :key="index" class="govuk-tabs__panel" :id="`tab-${index}`"
+		<div v-for="(section, index) in summarySection" :key="index" class="govuk-tabs__panel" :id="`tab-${index}`"
 			:class="{ 'govuk-tabs__panel--hidden': currentTab !== index }">
 			<h2 class="govuk-heading-m">{{ section.label }}</h2>
 			<dl class="govuk-summary-list">

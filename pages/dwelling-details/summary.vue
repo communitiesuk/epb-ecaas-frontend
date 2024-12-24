@@ -13,12 +13,12 @@ type summaryData = {
 };
 
 
-interface summarySection {
+export interface summarySectionData {
 	label: string,
 	data: summaryData
 }
 
-const generalSpecificationsSummary = {
+const generalSpecificationsSummary: summarySectionData = {
 	label: "General specifications",
 	data: {
 		"Type of residence": generalSpecificationsData.typeOfResidence,
@@ -59,7 +59,7 @@ const shadingSummary = {
 
 }
 
-const forms: summarySection[] = [generalSpecificationsSummary, appliancesAndElectricitySummary, hotWaterDistributionSummary, shadingSummary]
+const forms: summarySectionData[] = [generalSpecificationsSummary, appliancesAndElectricitySummary, hotWaterDistributionSummary, shadingSummary]
 </script>
 
 <template>
@@ -67,7 +67,7 @@ const forms: summarySection[] = [generalSpecificationsSummary, appliancesAndElec
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovSummaryCard :sectionSummary="forms">
+	<GovSummaryCard :summarySection="forms">
 	</GovSummaryCard>
 	<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 </template>
