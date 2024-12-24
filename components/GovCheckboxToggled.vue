@@ -17,6 +17,9 @@ const {
   attrs: { options },
 } = props.context;
 
+const { mounted } = useMounted();
+console.log(props.context._value, "value")
+
 const optionSelected = ref<string | null>(null);
 
 const handleChange = (value: string) => {
@@ -27,9 +30,6 @@ const handleChange = (value: string) => {
   }
 };
 
-function handleInput(e:any) {
-		props.context.node.input(e.target.value);
-	}
 </script>
 
 <template>
@@ -64,9 +64,9 @@ function handleInput(e:any) {
               :id="id"
               :name="name"
               type="checkbox"
-              :value="option"
+              :value="mounted ? optionSelected = props.context._value : ''"
               :checked="optionSelected === option"
-              @change="handleChange(option), handleInput"
+              @change="handleChange(option)"
             />
             <label class="govuk-label govuk-checkboxes__label" :for="id">{{ option }}</label>
           </div>
