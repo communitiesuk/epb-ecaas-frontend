@@ -2,7 +2,7 @@
 	import pagesData, { type Page } from "~/data/pages";
 
 	const parentPages: Array<Page> = pagesData.filter(
-		(page) => page.parentId === "overview"
+		(page) => page.parentId === "taskList"
 	);
 
 	const openStates = ref(Array(parentPages.length).fill(true));

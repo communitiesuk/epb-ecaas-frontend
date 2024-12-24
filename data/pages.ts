@@ -7,15 +7,15 @@ export interface Page {
 
 const pagesData: Array<Page> = [
 	{
-		id: 'overview',
-		title: 'Overview',
+		id: 'taskList',
+		title: 'Task List',
 		url: '/',
 	},
 	{
 		id: 'dwellingDetails',
 		title: 'Dwelling details',
 		url: '/dwelling-details',
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'generalSpecifications',
@@ -51,7 +51,7 @@ const pagesData: Array<Page> = [
 		id: 'infiltrationAndVentilation',
 		title: 'Infiltration and ventilation',
 		url: '/infiltration-and-ventilation',
-		parentId: 'overview'
+		parentId: 'taskList'
 	},{
 		id: 'infiltration',
 		title: 'Infiltration',
@@ -80,7 +80,7 @@ const pagesData: Array<Page> = [
 		id: 'livingSpace',
 		title: 'Living Space Fabric',
 		url: '/living-space',
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'livingSpaceZoneParameters',
@@ -128,7 +128,7 @@ const pagesData: Array<Page> = [
 		id: 'restOfDwelling',
 		title: 'Rest of dwelling fabric',
 		url: '/rest-of-dwelling',
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'restOfDwellingZoneParameters',
@@ -176,7 +176,7 @@ const pagesData: Array<Page> = [
 		id: 'heatingSystems',
 		title: 'Heating systems',
 		url: '/heating-systems',
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'heatSource',
@@ -206,7 +206,7 @@ const pagesData: Array<Page> = [
 		id: 'hotWaterOutlets',
 		title: 'Hot water outlets',
 		url: '/hot-water-outlets',
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'wasteWaterRecoverySystems',
@@ -230,7 +230,7 @@ const pagesData: Array<Page> = [
 		id: 'pvStorage',
 		title: 'PV and energy storage',
 		url: '/pv-storage',
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'solarPvArray',
@@ -260,7 +260,7 @@ const pagesData: Array<Page> = [
 		id: 'cooling',
 		title: 'Cooling',
 		url: '/cooling',
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'airConditioning',
