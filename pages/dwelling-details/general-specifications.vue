@@ -32,6 +32,8 @@
 	};
 
 	const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+
+
 </script>
 
 <template>
@@ -71,7 +73,7 @@
 			label="Size of ground floor area"
 			name="sizeGroundFloorArea"
 			validation="required | number"
-			suffixIcon="m2"
+		  suffix="m2"
 		/>
 		<FormKit
 			id="numOfBedrooms"

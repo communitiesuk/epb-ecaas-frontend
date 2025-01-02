@@ -1,35 +1,35 @@
-
 <script setup lang="ts">
 import { ref } from 'vue';
+
 const props = defineProps({
-  context: {
-			type: Object,
-			default() {
-				return {};
-			}
-		}
+	context: {
+		type: Object,
+		default() {
+			return {};
+		},
+	},
 });
 
 const {
-  id,
-  node: { name },
-  label,
-  attrs: { options },
+	id,
+	node: { name },
+	label,
+	attrs: { options },
 } = props.context;
 
-const optionSelected = ref<string | null>(null);
+
+const optionSelected = ref<string | null>(props.context.value || null);
 
 const handleChange = (value: string) => {
-  if (optionSelected.value === value) {
-    optionSelected.value = null;
-  } else {
-    optionSelected.value = value;
-  }
+
+	if (optionSelected.value === value) {
+		optionSelected.value = null;
+	} else {
+		optionSelected.value = value;
+	}
+	props.context.node.input(optionSelected.value);
 };
 
-function handleInput(e:any) {
-		props.context.node.input(e.target.value);
-	}
 </script>
 
 <template>
