@@ -17,6 +17,7 @@ const {
 	attrs: { options },
 } = props.context;
 
+const { mounted } = useMounted()
 
 const optionSelected = ref<string | null>(props.context.value || null);
 
@@ -65,8 +66,8 @@ const handleChange = (value: string) => {
               :name="name"
               type="checkbox"
               :value="option"
-              :checked="optionSelected === option"
-              @change="handleChange(option), handleInput"
+              :checked="mounted ? optionSelected === option: false"
+              @change="handleChange(option)"
             />
             <label class="govuk-label govuk-checkboxes__label" :for="id">{{ option }}</label>
           </div>
