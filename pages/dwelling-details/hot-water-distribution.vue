@@ -77,7 +77,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="lengthInternal"
       name="lengthInternal"
       validation="required | number"
-      suffixIcon="m"
+      suffix="m"
     />
 
     <FormKit
@@ -86,7 +86,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="internalDiameterInternal"
       name="internalDiameterInternal"
       validation="required | number"
-      suffixIcon="mm"
+      suffix="mm"
     />
     <FormKit
       type="govInputWithSuffix"
@@ -94,7 +94,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="externalDiameterInternal"
       name="externalDiameterInternal"
       validation="required | number"
-      suffixIcon="mm"
+      suffix="mm"
     />
     <FormKit
       type="govInputWithSuffix"
@@ -102,7 +102,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="insulationThicknessInternal"
       name="insulationThicknessInternal"
       validation="required | number"
-      suffixIcon="mm"
+      suffix="mm"
     />
     <FormKit
       type="govInputWithSuffix"
@@ -110,7 +110,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="insulationThermalConductivityInternal"
       name="insulationThermalConductivityInternal"
       validation="required | number"
-      suffixIcon="W/m.K"
+      suffix="W/m.K"
     />
 
     <h2 class="govuk-heading-l h2">{{ title }} - external</h2>
@@ -127,7 +127,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="lengthExternal"
       name="lengthExternal"
       validation="required | number"
-      suffixIcon="m"
+      suffix="m"
     />
 
     <FormKit
@@ -136,7 +136,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="internalDiameterExternal"
       name="internalDiameterExternal"
       validation="required | number"
-      suffixIcon="mm"
+      suffix="mm"
     />
     <FormKit
       type="govInputWithSuffix"
@@ -144,7 +144,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="externalDiameterExternal"
       name="externalDiameterExternal"
       validation="required | number"
-      suffixIcon="mm"
+      suffix="mm"
     />
     <FormKit
       type="govInputWithSuffix"
@@ -152,7 +152,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="insulationThicknessExternal"
       name="insulationThicknessExternal"
       validation="required | number"
-      suffixIcon="mm"
+      suffix="mm"
     />
     <FormKit
       type="govInputWithSuffix"
@@ -160,7 +160,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="insulationThermalConductivityExternal"
       name="insulationThermalConductivityExternal"
       validation="required | number"
-      suffixIcon="W/m.K"
+      suffix="W/m.K"
     />
     <FormKit
       type="govRadios"
