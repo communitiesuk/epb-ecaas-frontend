@@ -5,7 +5,7 @@ import { ref } from "vue";
 
 defineProps<{ summarySection?: summarySectionData[]}>();
 
-function formatData(value: string | undefined) {
+function formatData(value: string | number | boolean | undefined) {
 	if (value === undefined) {
 		return "";
 	}
@@ -40,7 +40,7 @@ function selectTab(index: number) {
 		<ul class="govuk-tabs__list">
 			<li v-for="(section, index) in summarySection" :key="index" class="govuk-tabs__list-item"
 				:class="{ 'govuk-tabs__list-item--selected': currentTab === index }">
-				<NuxtLink class="govuk-tabs__tab" :to="`#tab-${index}`" @click.prevent="selectTab(index)">{{ section.label }}
+				<NuxtLink class="govuk-tabs__tab" :to="`#tab-${index}`" @click="selectTab(index)" >{{ section.label }}
 				</NuxtLink>
 			</li>
 		</ul>
