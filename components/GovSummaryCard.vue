@@ -1,60 +1,39 @@
 <script setup lang="ts">
-import type { summarySectionData } from "~/pages/dwelling-details/summary.vue";
-import pagesData, { type Page } from "~/data/pages";
-import { ref } from "vue";
+	import pagesData from "~/data/pages";
+	import type { SummaryData } from "./GovSummaryList.vue";
+	import type { TabItem } from "./GovTabs.vue";
 
-defineProps<{ summarySection?: summarySectionData[]}>();
-
-function formatData(value: string | number | boolean | undefined) {
-	if (value === undefined) {
-		return "";
+	export interface SummarySection {
+		id: string;
+		label: string;
+		data: SummaryData;
 	}
-	if (typeof value == "string") {
-		const formattedString = value.split(/(?=[A-Z])/).join(" ");
-		return (
-			formattedString.charAt(0).toUpperCase() +
-			formattedString.slice(1).toLowerCase()
-		);
+
+	const props = defineProps<{ summarySections?: SummarySection[] }>();
+
+	const tabItems: TabItem[] = props.summarySections?.map(x => {
+		return {
+			id: x.id,
+			label: x.label
+		};
+	}) || [];
+
+	function getUrl(pageId: string) {
+		const page = pagesData.find(p => pageId === p.id);
+		return page?.url;
 	}
-	return value;
-}
-function getUrl(value: string) {
-	const page: Page | undefined = pagesData.find((page) => {
-		return value === page.title;
-	})
-	return page?.url
-}
-
-const currentTab = ref(0)
-
-function selectTab(index: number) {
-	currentTab.value = index
-}
-
 </script>
 
-
 <template>
-
-	<div class="govuk-tabs" data-module="govuk-tabs">
-		<ul class="govuk-tabs__list">
-			<li v-for="(section, index) in summarySection" :key="index" class="govuk-tabs__list-item"
-				:class="{ 'govuk-tabs__list-item--selected': currentTab === index }">
-				<NuxtLink class="govuk-tabs__tab" :to="`#tab-${index}`" @click="selectTab(index)" >{{ section.label }}
-				</NuxtLink>
-			</li>
-		</ul>
-
-		<div v-for="(section, index) in summarySection" :key="index" class="govuk-tabs__panel" :id="`tab-${index}`"
-			:class="{ 'govuk-tabs__panel--hidden': currentTab !== index }">
+	<GovTabs :items="tabItems" v-slot="tabProps">
+		<GovTabPanel v-for="(section, index) in summarySections"
+			:key="index"
+			:selected="tabProps.currentTab === index"
+			:id="section.id"
+		>
 			<h2 class="govuk-heading-m">{{ section.label }}</h2>
-			<dl class="govuk-summary-list">
-				<div v-for="(value, key) in section.data" :key="key" class="govuk-summary-list__row">
-					<dt class="govuk-summary-list__key">{{ key }}</dt>
-					<dd class="govuk-summary-list__value">{{ formatData(value) }}</dd>
-				</div>
-			</dl>
-			<NuxtLink class="govuk-link" :to="getUrl(section.label)">Edit</NuxtLink>
-		</div>
-	</div>
+			<GovSummaryList :data="section.data" />
+			<NuxtLink class="govuk-link" :to="getUrl(section.id)">Edit</NuxtLink>
+		</GovTabPanel>
+	</GovTabs>
 </template>

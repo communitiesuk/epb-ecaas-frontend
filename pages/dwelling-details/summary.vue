@@ -1,73 +1,76 @@
 <script setup lang="ts">
-const title = "Dwelling details summary";
-const store = useEcaasStore();
+	import type { SummarySection } from '~/components/GovSummaryCard.vue';
 
-const generalSpecificationsData: GeneralSpecificationsData = store.dwellingDetails.generalSpecifications.data;
-const appliancesAndElectricityData: AppliancesAndElectricityData = store.dwellingDetails.appliancesAndElectricity.data;
+	definePageMeta({ layout: false });
 
-// unsure about types here
-// multiple objects or just one object with nested objects 
+	const title = "Dwelling details summary";
+	const store = useEcaasStore();
 
-type summaryData = {
-	[key: string]: string | number | boolean | undefined;
-};
+	const generalSpecificationsData = store.dwellingDetails.generalSpecifications.data;
+	const appliancesAndElectricityData = store.dwellingDetails.appliancesAndElectricity.data;
 
+	const generalSpecificationsSummary: SummarySection = {
+		id: 'generalSpecifications',
+		label: "General specifications",
+		data: {
+			"Type of residence": generalSpecificationsData.typeOfResidence,
+			"Weather data location": generalSpecificationsData.weatherDataLocation,
+			"Size of ground floor area": generalSpecificationsData.sizeGroundFloorArea ?
+				`${generalSpecificationsData.sizeGroundFloorArea} m²` : undefined,
+			"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
+			"Number of stories in dwelling": generalSpecificationsData.storiesInDwelling,
+			"Shelter": generalSpecificationsData.levelOfShelter,
+			"Separate temperature control": generalSpecificationsData.heatingControlType,
+			"Cooking fuel type": generalSpecificationsData.cookingFuelType,
+			"Cold water source": generalSpecificationsData.coldWaterSource,
+			"Number of ADF wet rooms": generalSpecificationsData.numOfADFWetRooms
+		}
+	};
 
-export interface summarySectionData {
-	label: string,
-	data: summaryData
-}
+	const appliancesAndElectricitySummary: SummarySection = {
+		id: 'appliancesAndElectricity',
+		label: "Appliances and electricity",
+		data: {
+			"Fridge/freezer energy rating": appliancesAndElectricityData.fridgeFreezerEnergyRating,
+			"Dishwasher energy rating": appliancesAndElectricityData.dishwasherEnergyRating,
+			"Oven/cooker energy rating": appliancesAndElectricityData.ovenCookerEnergyRating,
+			"Washing machine energy rating": appliancesAndElectricityData.washingMachineEnergyRating,
+			"Tumble dryer energy rating": appliancesAndElectricityData.tumbleDryerEnergyRating,
+			"Electric vehicle charger": appliancesAndElectricityData.electricVehicleCharger,
+			"Electricity grid connection": appliancesAndElectricityData.electricityGridConnection,
+			"Electricity tariff": appliancesAndElectricityData.electricityTariff
+		}
+	};
 
-const generalSpecificationsSummary: summarySectionData = {
-	label: "General specifications",
-	data: {
-		"Type of residence": generalSpecificationsData.typeOfResidence,
-		"Weather data location": generalSpecificationsData.weatherDataLocation,
-		"Size of ground floor area": generalSpecificationsData.sizeGroundFloorArea + " m²",
-		"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
-		"Number of stories in dwelling": generalSpecificationsData.storiesInDwelling,
-		"Shelter": generalSpecificationsData.levelOfShelter,
-		"Separate temperature control": generalSpecificationsData.heatingControlType,
-		"Cooking fuel type": generalSpecificationsData.cookingFuelType,
-		"Cold water source": generalSpecificationsData.coldWaterSource,
-		"Number of ADF wet rooms": generalSpecificationsData.numOfADFWetRooms
+	const hotWaterDistributionSummary: SummarySection = {
+		id: 'hotWaterDistribution',
+		label: "Hot water distribution",
+		data: {}
 	}
-};
 
-const appliancesAndElectricitySummary = {
-	label: "Appliances and electricity",
-	data: {
-		"Fridge/freezer energy rating": appliancesAndElectricityData.fridgeFreezerEnergyRating,
-		"Dishwasher energy rating": appliancesAndElectricityData.dishwasherEnergyRating,
-		"Oven/cooker energy rating": appliancesAndElectricityData.ovenCookerEnergyRating,
-		"Washing machine energy rating": appliancesAndElectricityData.washingMachineEnergyRating,
-		"Tumble dryer energy rating": appliancesAndElectricityData.tumbleDryerEnergyRating,
-		"Electric vehicle charger": appliancesAndElectricityData.electricVehicleCharger,
-		"Electricity grid connection": appliancesAndElectricityData.electricityGridConnection,
-		"Electricity tariff": appliancesAndElectricityData.electricityTariff
+	const shadingSummary: SummarySection = {
+		id: 'shading',
+		label: "Shading",
+		data: {}
 	}
-};
 
-const hotWaterDistributionSummary = {
-	label: "Hot water distribution",
-	data: {}
-}
-
-const shadingSummary = {
-	label: "Shading",
-	data: {}
-
-}
-
-const forms: summarySectionData[] = [generalSpecificationsSummary, appliancesAndElectricitySummary, hotWaterDistributionSummary, shadingSummary]
+	const summarySections: SummarySection[] = [
+		generalSpecificationsSummary,
+		appliancesAndElectricitySummary,
+		hotWaterDistributionSummary,
+		shadingSummary
+	];
 </script>
 
 <template>
-	<Head>
-		<Title>{{ title }}</Title>
-	</Head>
-	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovSummaryCard :summarySection="forms">
-	</GovSummaryCard>
-	<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
+	<div>
+		<NuxtLayout name="one-column">
+			<Head>
+				<Title>{{ title }}</Title>
+			</Head>
+			<h1 class="govuk-heading-l">{{ title }}</h1>
+			<GovSummaryCard :summarySections="summarySections" />
+			<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
+		</NuxtLayout>
+	</div>
 </template>
