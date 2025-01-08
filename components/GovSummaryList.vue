@@ -7,10 +7,10 @@
 
 	function formatData(value: string | number | boolean | undefined) {
 		if (value === undefined) {
-			return "";
+			return '';
 		}
 
-		if (typeof value == "string") {
+		if (typeof value == 'string') {
 			const formattedString = value.split(/(?=[A-Z])/).join(" ");
 
 			return (
@@ -27,7 +27,7 @@
 	<dl class="govuk-summary-list">
 		<div v-for="(value, key) in data" :key="key" class="govuk-summary-list__row">
 			<dt class="govuk-summary-list__key">{{ key }}</dt>
-			<dd class="govuk-summary-list__value">{{ value }}</dd>
+			<dd class="govuk-summary-list__value">{{ formatData(value) }}</dd>
 		</div>
 	</dl>
 </template>
