@@ -13,7 +13,7 @@
 		node: { name },
 		label,
 		help, 
-		attrs: { suffix}
+		suffixIcon
 	} = props.context;
 
 	const { mounted } = useMounted();
@@ -51,7 +51,7 @@
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 				@change="handleInput"
 			/>
-			<div class="govuk-input__suffix" aria-hidden="true">{{ suffix }}</div>
+			<div class="govuk-input__suffix" aria-hidden="true">{{suffixIcon}}</div>
 		</div>
 	</div>
 </template>

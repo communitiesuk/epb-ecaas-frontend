@@ -1,6 +1,3 @@
-<script setup lang="ts">
-</script>
-
 <template>
     <GovHeader service-name="Check dwelling compliance" />
     <div class="govuk-width-container">
@@ -14,12 +11,9 @@
 				</div>
 			</div>
             <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-                    <NuxtPage />
-                </div>
-                <div class="govuk-grid-column-one-third">
-                    <GovSideNavBar />    
-                </div>
+				<NuxtLayout>
+					<NuxtPage />
+				</NuxtLayout>
             </div>
         </main>
     </div>

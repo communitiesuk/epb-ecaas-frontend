@@ -1,8 +1,8 @@
 <script setup lang="ts">
-	import pagesData, { type Page } from "~/data/pages";
+	import pagesData, { PageType, type Page } from "~/data/pages";
 
 	const parentPages: Array<Page> = pagesData.filter(
-		(page) => page.parentId === "taskList"
+		(page) => page.type === PageType.Section
 	);
 
 	const openStates = ref(Array(parentPages.length).fill(true));
