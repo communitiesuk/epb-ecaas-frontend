@@ -63,7 +63,7 @@ const pagesData: Array<Page> = [
 	{
 		id: 'shadingEdit',
 		title: 'Edit',
-		url: '/dwelling-details/shading/:distribution',
+		url: '/dwelling-details/shading/:shading',
 		type: PageType.Task,
 		parentId: 'shading'
 	},
