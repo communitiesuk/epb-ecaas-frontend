@@ -54,6 +54,20 @@ const pagesData: Array<Page> = [
 		parentId: 'dwellingDetails'
 	},
 	{
+		id: 'shadingCreate',
+		title: 'Create',
+		url: '/dwelling-details/shading/create',
+		type: PageType.Task,
+		parentId: 'shading'
+	},
+	{
+		id: 'shadingEdit',
+		title: 'Edit',
+		url: '/dwelling-details/shading/:distribution',
+		type: PageType.Task,
+		parentId: 'shading'
+	},
+	{
 		id: 'dwellingDetailsSummary',
 		title: 'Summary',
 		url: '/dwelling-details/summary',

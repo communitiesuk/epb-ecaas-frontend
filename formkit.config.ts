@@ -1,5 +1,5 @@
 import { defineFormKitConfig } from '@formkit/vue';
-import GovButton from './components/GovButton.vue';
+import GovFormButton from './components/GovFormButton.vue';
 import GovRadios from './components/GovRadios.vue';
 import type { FormKitInputs, FormKitOptionsProp } from '@formkit/inputs';
 import GovDropdown from './components/GovDropdown.vue';
@@ -51,7 +51,7 @@ export default defineFormKitConfig(() => {
             },
             govButton: {
                 type: 'input',
-                component: GovButton
+                component: GovFormButton
             },
             govDropdown: {
                 type: 'input',
