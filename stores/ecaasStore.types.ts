@@ -5,6 +5,7 @@ export interface EcaasState {
 export interface DwellingDetails {
     generalSpecifications: EcaasForm<GeneralSpecificationsData>;
 	appliancesAndElectricity: EcaasForm<AppliancesAndElectricityData>;
+	shading: EcaasForm<ShadingData>;
 }
 
 export interface GeneralSpecificationsData {
@@ -30,6 +31,19 @@ export interface AppliancesAndElectricityData {
 	electricVehicleCharger?: string;
 	electricityGridConnection?: string;
 	electricityTariff?: string;
+}
+
+export interface ShadingDistribution {
+	name: string;
+	length: number;
+	diameter: number;
+	thickness: number;
+	thermalConductivity: number;
+	surfaceReflectivity: boolean;
+}
+
+export interface ShadingData {
+	distributions?: ShadingDistribution[]
 }
 
 export interface EcaasForm<T> {

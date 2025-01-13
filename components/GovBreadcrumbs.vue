@@ -14,7 +14,21 @@
 
 	const pages = computed(() => {
 		const route = useRoute();
-		const currentPage = pagesData.find(page => page.url === route.path);
+		const params = Object.keys(route.params);
+
+		let path = route.path;
+		let currentPage = pagesData.find(page => page.url === path);
+
+		if (!currentPage && params.length) {
+			const segments = route.path.split('/');
+			segments.splice(segments.length - params.length, 1);
+
+			params.forEach(p => segments.push(`:${p}`));
+
+			path = segments.join('/');
+
+			currentPage = pagesData.find(page => page.url === path);
+		}
 
 		return currentPage ? getBreadcrumbs(currentPage.id, []) : [];
 	});
