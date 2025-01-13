@@ -14,6 +14,10 @@
 		label,
 		help
 	} = props.context;
+
+	function handleInput(e) {
+		props.context.node.input(e.target.value);
+	}
 </script>
 
 <template>
@@ -26,6 +30,6 @@
 		<div :id="`${id}_hint`" class="govuk-hint">
 			{{ help }}
 		</div>
-		<input class="govuk-input govuk-input--width-10" :id="id" :name="name" type="text">
+		<input class="govuk-input govuk-input--width-10" :id="id" :name="name" type="text" @input="handleInput" >
 	</div>
 </template>

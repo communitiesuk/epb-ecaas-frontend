@@ -11,20 +11,15 @@ const saveForm = (fields: typeof model.value) => {
     dwellingDetails: {
       hotWaterDistribution: {
         data: {
-          lengthInternal: fields.lengthInternal,
-          internalDiameterInternal: fields.internalDiameterInternal,
-          externalDiameterInternal: fields.externalDiameterInternal,
-          insulationThicknessInternal: fields.insulationThicknessInternal,
-          insulationThermalConductivityInternal:
-            fields.insulationThermalConductivityInternal,
-          lengthExternal: fields.lengthExternal,
-          internalDiameterExternal: fields.internalDiameterExternal,
-          externalDiameterExternal: fields.externalDiameterExternal,
-          insulationThicknessExternal: fields.insulationThicknessExternal,
-          insulationThermalConductivityExternal:
-            fields.insulationThermalConductivityExternal,
-          pipeContents: fields.pipeContents,
-          surfaceReflectivity: fields.surfaceReflectivity,
+			name: fields.name,
+			length: fields.length,
+			internalDiameter: fields.internalDiameter,
+			externalDiameter: fields.externalDiameter,
+			insulationThickness: fields.insulationThickness,
+			insulationThermalConductivity:
+            fields.insulationThermalConductivity,
+			pipeContents: fields.pipeContents,
+			surfaceReflectivity: fields.surfaceReflectivity,
         },
         complete: true,
       },
@@ -83,8 +78,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
     <FormKit
       type="govInputWithSuffix"
       label="Length"
-      id="lengthExternal"
-      name="lengthExternal"
+      id="length"
+      name="length"
       validation="required | number"
       suffixIcon="m"
     />
@@ -92,32 +87,32 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
     <FormKit
       type="govInputWithSuffix"
       label="Internal diameter"
-      id="internalDiameterExternal"
-      name="internalDiameterExternal"
+      id="internalDiameter"
+      name="internalDiameter"
       validation="number"
       suffixIcon="mm"
     />
     <FormKit
       type="govInputWithSuffix"
       label="External diameter"
-      id="externalDiameterExternal"
-      name="externalDiameterExternal"
+      id="externalDiameter"
+      name="externalDiameter"
       validation="number"
       suffixIcon="mm"
     />
     <FormKit
       type="govInputWithSuffix"
       label="Insulation thickness"
-      id="insulationThicknessExternal"
-      name="insulationThicknessExternal"
+      id="insulationThickness"
+      name="insulationThickness"
       validation="number"
       suffixIcon="mm"
     />
     <FormKit
       type="govInputWithSuffix"
       label="Insulation thermal conductivity"
-      id="insulationThermalConductivityExternal"
-      name="insulationThermalConductivityExternal"
+      id="insulationThermalConductivity"
+      name="insulationThermalConductivity"
       validation="number"
       suffixIcon="W/m.K"
     />
