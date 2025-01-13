@@ -5,7 +5,8 @@ export interface EcaasState {
 export interface DwellingDetails {
     generalSpecifications: EcaasForm<GeneralSpecificationsData>;
 	appliancesAndElectricity: EcaasForm<AppliancesAndElectricityData>;
-    hotWaterDistribution: EcaasForm<HotWaterDistributionData>
+    hotWaterDistribution: EcaasForm<HotWaterDistributionData>;
+	shading: EcaasForm<ShadingData>;
 }
 
 export interface GeneralSpecificationsData {
@@ -46,6 +47,19 @@ export interface HotWaterDistributionData {
     insulationThermalConductivityExternal?: number,
     pipeContents?: string,
     surfaceReflectivity?: string
+}
+
+export interface ShadingDistribution {
+	name: string;
+	length: number;
+	diameter: number;
+	thickness: number;
+	thermalConductivity: number;
+	surfaceReflectivity: boolean;
+}
+
+export interface ShadingData {
+	distributions?: ShadingDistribution[]
 }
 
 export interface EcaasForm<T> {

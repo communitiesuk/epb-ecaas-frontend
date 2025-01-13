@@ -1,18 +1,16 @@
-<script setup>
-	const props = defineProps({
-		context: {
-			type: Object,
-			default() {
-				return {};
-			}
-		}
-	});
-
-	const { label } = props.context;
+<script setup lang="ts">
+	defineProps<{
+		href: string;
+		secondary?: boolean;
+	}>();
 </script>
 
 <template>
-	<button type="submit" class="govuk-button" data-module="govuk-button">
-		{{ label }}
-	</button>
+	<NuxtLink
+		:href="href" role="button"
+		:class="`govuk-button ${secondary ? 'govuk-button--secondary' : ''}`"
+		data-module="govuk-button"
+	>
+		<slot />
+	</NuxtLink>
 </template>

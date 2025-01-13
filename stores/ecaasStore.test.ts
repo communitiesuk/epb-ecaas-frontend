@@ -40,6 +40,9 @@ describe('Ecaas Store', () => {
 				},
 				appliancesAndElectricity: {
 					complete: true
+				},
+				shading: {
+					complete: true
 				}
 			}
 		});
