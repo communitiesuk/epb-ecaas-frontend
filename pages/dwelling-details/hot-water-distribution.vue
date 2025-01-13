@@ -12,6 +12,7 @@ const saveForm = (fields: typeof model.value) => {
       hotWaterDistribution: {
         data: {
 			name: fields.name,
+			type: fields.type,
 			length: fields.length,
 			internalDiameter: fields.internalDiameter,
 			externalDiameter: fields.externalDiameter,
@@ -74,7 +75,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		name="name"
 		validation="required"
 	/>
-
+	<FormKit
+      type="govRadios"
+      :options="{
+        internal: 'Internal',
+        external: 'External',
+      }"
+      label="Type"
+      id="type"
+      name="type"
+	  validation="required"
+    />
     <FormKit
       type="govInputWithSuffix"
       label="Length"
