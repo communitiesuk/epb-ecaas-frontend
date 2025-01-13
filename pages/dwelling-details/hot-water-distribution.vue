@@ -50,7 +50,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
   <Head>
     <Title>{{ title }}</Title>
   </Head>
-  <h1 class="govuk-heading-l">{{ title }} - internal</h1>
+  <h1 class="govuk-heading-l">{{ title }}</h1>
   <FormKit
     v-model="model"
     type="form"
@@ -71,55 +71,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       classes="govuk-!-margin-bottom-4"
     />
 
-    <FormKit
-      type="govInputWithSuffix"
-      label="Length"
-      id="lengthInternal"
-      name="lengthInternal"
-      validation="required | number"
-      suffix="m"
-    />
-
-    <FormKit
-      type="govInputWithSuffix"
-      label="Internal diameter"
-      id="internalDiameterInternal"
-      name="internalDiameterInternal"
-      validation="required | number"
-      suffix="mm"
-    />
-    <FormKit
-      type="govInputWithSuffix"
-      label="External diameter"
-      id="externalDiameterInternal"
-      name="externalDiameterInternal"
-      validation="required | number"
-      suffix="mm"
-    />
-    <FormKit
-      type="govInputWithSuffix"
-      label="Insulation thickness"
-      id="insulationThicknessInternal"
-      name="insulationThicknessInternal"
-      validation="required | number"
-      suffix="mm"
-    />
-    <FormKit
-      type="govInputWithSuffix"
-      label="Insulation thermal conductivity"
-      id="insulationThermalConductivityInternal"
-      name="insulationThermalConductivityInternal"
-      validation="required | number"
-      suffix="W/m.K"
-    />
-
-    <h2 class="govuk-heading-l h2">{{ title }} - external</h2>
-    <GovDetails
-      class="summary-text"
-      :summary-text="`Typical input values`"
-      :text="`Length = 20m\nInternal diameter = 22mm\nExternal diameter = 25mm\nInsulation thickness = 20mm\nInsulation thermal conductivity = 0.035W/m.K`"
-      classes="govuk-!-margin-bottom-4"
-    />
+	<FormKit
+  		type="govInputText"
+		label="Name"
+		help="Name this pipework so it can be identified later"
+		id="name"
+		name="name"
+		validation="required"
+	/>
 
     <FormKit
       type="govInputWithSuffix"
@@ -127,7 +86,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="lengthExternal"
       name="lengthExternal"
       validation="required | number"
-      suffix="m"
+      suffixIcon="m"
     />
 
     <FormKit
@@ -135,54 +94,53 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       label="Internal diameter"
       id="internalDiameterExternal"
       name="internalDiameterExternal"
-      validation="required | number"
-      suffix="mm"
+      validation="number"
+      suffixIcon="mm"
     />
     <FormKit
       type="govInputWithSuffix"
       label="External diameter"
       id="externalDiameterExternal"
       name="externalDiameterExternal"
-      validation="required | number"
-      suffix="mm"
+      validation="number"
+      suffixIcon="mm"
     />
     <FormKit
       type="govInputWithSuffix"
       label="Insulation thickness"
       id="insulationThicknessExternal"
       name="insulationThicknessExternal"
-      validation="required | number"
-      suffix="mm"
+      validation="number"
+      suffixIcon="mm"
     />
     <FormKit
       type="govInputWithSuffix"
       label="Insulation thermal conductivity"
       id="insulationThermalConductivityExternal"
       name="insulationThermalConductivityExternal"
-      validation="required | number"
-      suffix="W/m.K"
+      validation="number"
+      suffixIcon="W/m.K"
     />
     <FormKit
       type="govRadios"
       :options="{
-        none: 'None',
         air: 'Air',
         water: 'Water',
       }"
       label="Pipe contents"
       id="pipeContents"
       name="pipeContents"
-      validation="required"
     />
     <FormKit
-      type="govCheckboxToggled"
+      type="govRadios"
       label="Surface reflectivity"
       id="surfaceReflectivity"
       name="surfaceReflectivity"
-      :options="['Yes', 'No']"
-      validation="required"
+      :options="{
+		yes: 'Yes',
+		no: 'No'
+	  }"
     />
-
     <FormKit type="govButton" label="Save and continue" />
   </FormKit>
 </template>

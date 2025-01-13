@@ -7,6 +7,7 @@ import GovInputInt from './components/GovInputInt.vue';
 import GovInputWithSuffix from './components/GovInputWithSuffix.vue';
 import GovCheckboxes from './components/GovCheckboxes.vue'
 import type { GovDetailsProps } from './components/GovDetails.vue';
+import GovInputText from './components/GovInputText.vue';
 
 type GovRadioOption = {
 	label: string;
@@ -37,7 +38,10 @@ declare module '@formkit/inputs' {
         'govCheckboxes': {
             type: 'govCheckboxes',
             options: Array<string> 
-        }
+        },
+		'govInputText': {
+			type: 'govInputText'
+		}
     }
 }
 
@@ -68,7 +72,11 @@ export default defineFormKitConfig(() => {
             govCheckboxes: {
                 type: "input",
                 component: GovCheckboxes
-            }
+            },
+			govInputText: {
+				type: "input",
+				component: GovInputText
+			}
         }
     };
 })
