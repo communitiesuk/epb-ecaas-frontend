@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 	const props = defineProps({
 		context: {
 			type: Object,
@@ -30,6 +30,13 @@
 		<div :id="`${id}_hint`" class="govuk-hint">
 			{{ help }}
 		</div>
-		<input class="govuk-input govuk-input--width-10" :id="id" :name="name" type="text" @input="handleInput" >
+		<input
+			class="govuk-input govuk-input--width-10"
+			:id="id"
+			:name="name"
+			type="text"
+			:value="props.context._value"
+			@input="handleInput"
+		/>
 	</div>
 </template>

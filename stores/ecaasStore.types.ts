@@ -35,14 +35,14 @@ export interface AppliancesAndElectricityData {
 }
 
 export interface HotWaterDistributionData {
-    name: String,
-    length: number,
-    internalDiameter?: number,
-    externalDiameter?: number,
-    insulationThickness?: number,
-    insulationThermalConductivity?: number,
-    pipeContents?: string,
-    surfaceReflectivity?: boolean
+    name: String;
+    length: number;
+    internalDiameter?: number;
+    externalDiameter?: number;
+    insulationThickness?: number;
+    insulationThermalConductivity?: number;
+    pipeContents?: string;
+    surfaceReflectivity?: string;
 }
 
 export interface ShadingDistribution {
@@ -51,7 +51,7 @@ export interface ShadingDistribution {
 	diameter: number;
 	thickness: number;
 	thermalConductivity: number;
-	surfaceReflectivity: boolean;
+	surfaceReflectivity: string;
 }
 
 export interface ShadingData {
