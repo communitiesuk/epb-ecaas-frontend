@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@formkit/nuxt": "^1.6.9",
-    "@nuxt/eslint": "^0.7.3",
     "@pinia/nuxt": "^0.7.0",
     "aws-amplify": "^6.10.3",
     "nuxt": "^3.14.1592",
@@ -26,6 +25,7 @@
   "devDependencies": {
     "@aws-amplify/backend": "^1.9.0",
     "@aws-amplify/backend-cli": "^1.4.3",
+    "eslint": "^9.18.0",
     "@formkit/inputs": "^1.6.9",
     "@nuxt/test-utils": "^3.14.4",
     "@pinia/testing": "^0.1.7",
