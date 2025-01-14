@@ -23,8 +23,7 @@
 	}
 </script>
 <template>
-	<div
-:class="`govuk-form-group ${props.context.state.invalid &&
+	<div :class="`govuk-form-group ${props.context.state.invalid &&
 			props.context.messages.rule_required &&
 			props.context.messages.rule_required.visible
 			? 'govuk-form-group--error'
