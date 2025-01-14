@@ -45,16 +45,10 @@ export default defineNuxtConfig({
 		'@formkit/nuxt',
 		'@pinia/nuxt',
 		'pinia-plugin-persistedstate/nuxt',
-		'@nuxt/test-utils/module',
-		'@nuxt/eslint'
+		'@nuxt/test-utils/module'
 	],
 	formkit: {
 		autoImport: true,
 		configFile: './formkit.config.ts'
-	},
-	eslint: {
-		config: {
-			stylistic: true
-		}
 	}
 });

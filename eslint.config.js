@@ -4,7 +4,7 @@ export default [
   js.configs.recommended,
   // Your custom configs here
   {
-    ignores: [".nuxt/dev/index.mjs"],
+    ignores: [".nuxt/*"],
   },
   {
     rules: {
