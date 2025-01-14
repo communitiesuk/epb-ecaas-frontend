@@ -11,7 +11,7 @@ const saveForm = (fields: typeof model.value) => {
     dwellingDetails: {
       hotWaterDistribution: {
         data: {
-			name: fields.name,
+      name: fields.name,
 			location: fields.location,
 			length: fields.length,
 			internalDiameter: fields.internalDiameter,
@@ -68,12 +68,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
     />
 
 	<FormKit
-  		type="govInputText"
+  	type="govInputText"
 		label="Name"
 		help="Name this pipework so it can be identified later"
 		id="name"
 		name="name"
-		validation="required"
+    validation="required"
 	/>
 	<FormKit
       type="govRadios"
@@ -84,7 +84,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       label="Location"
       id="location"
       name="location"
-	  validation="required"
+      validation="required"
     />
     <FormKit
       type="govInputWithSuffix"

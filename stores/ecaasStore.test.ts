@@ -43,6 +43,9 @@ describe('Ecaas Store', () => {
 				},
 				shading: {
 					complete: true
+				},
+				hotWaterDistribution: {
+					complete: true
 				}
 			}
 		});

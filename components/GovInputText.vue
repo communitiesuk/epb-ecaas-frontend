@@ -46,6 +46,7 @@
 			:value="props.context._value"
 			:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 			@input="handleInput"
+      :data-testid="id"
 		/>
 	</div>
 </template>
