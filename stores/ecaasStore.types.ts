@@ -35,9 +35,9 @@ export interface AppliancesAndElectricityData {
 }
 
 export interface HotWaterDistributionData {
-    name: String;
-    length: number;
-	type: string;
+    name?: String;
+    length?: number;
+	location?: string;
     internalDiameter?: number;
     externalDiameter?: number;
     insulationThickness?: number;

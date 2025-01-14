@@ -12,7 +12,7 @@ const saveForm = (fields: typeof model.value) => {
       hotWaterDistribution: {
         data: {
 			name: fields.name,
-			type: fields.type,
+			location: fields.location,
 			length: fields.length,
 			internalDiameter: fields.internalDiameter,
 			externalDiameter: fields.externalDiameter,
@@ -81,9 +81,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
         internal: 'Internal',
         external: 'External',
       }"
-      label="Type"
-      id="type"
-      name="type"
+      label="Location"
+      id="location"
+      name="location"
 	  validation="required"
     />
     <FormKit
