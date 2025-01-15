@@ -71,7 +71,7 @@
 			label="Size of ground floor area"
 			name="sizeGroundFloorArea"
 			validation="required | number"
-			suffixIcon="m2"
+			suffixText="m2"
 		/>
 		<FormKit
 			id="numOfBedrooms"

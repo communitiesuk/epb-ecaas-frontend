@@ -33,7 +33,8 @@ declare module '@formkit/inputs' {
             type: 'govInputInt'
         },
         'govInputWithSuffix': {
-            type: 'govInputWithSuffix'
+            type: 'govInputWithSuffix',
+			suffixText: string
         },
         'govCheckboxes': {
             type: 'govCheckboxes',

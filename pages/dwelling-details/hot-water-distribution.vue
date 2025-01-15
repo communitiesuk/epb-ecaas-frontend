@@ -92,7 +92,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="length"
       name="length"
       validation="required | number"
-      suffixIcon="m"
+      suffixText="m"
     />
 
     <FormKit
@@ -101,7 +101,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="internalDiameter"
       name="internalDiameter"
       validation="number"
-      suffixIcon="mm"
+      suffixText="mm"
     />
     <FormKit
       type="govInputWithSuffix"
@@ -109,7 +109,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="externalDiameter"
       name="externalDiameter"
       validation="number"
-      suffixIcon="mm"
+      suffixText="mm"
     />
     <FormKit
       type="govInputWithSuffix"
@@ -117,7 +117,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="insulationThickness"
       name="insulationThickness"
       validation="number"
-      suffixIcon="mm"
+      suffixText="mm"
     />
     <FormKit
       type="govInputWithSuffix"
@@ -125,7 +125,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="insulationThermalConductivity"
       name="insulationThermalConductivity"
       validation="number"
-      suffixIcon="W/m.K"
+      suffixText="W/m.K"
     />
     <FormKit
       type="govRadios"
