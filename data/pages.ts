@@ -47,6 +47,20 @@ const pagesData: Array<Page> = [
 		parentId: 'dwellingDetails'
 	},
 	{
+		id: 'hotWaterDistributionCreate',
+		title: 'Hot water distribution',
+		url: '/dwelling-details/hot-water-distribution/create',
+		type: PageType.Task,
+		parentId: 'hotWaterDistribution'
+	},
+	{
+		id: 'hotWaterDistributionEdit',
+		title: 'Hot water distribution',
+		url: '/dwelling-details/hot-water-distribution/:distribution',
+		type: PageType.Task,
+		parentId: 'hotWaterDistribution'
+	},
+	{
 		id: 'shading',
 		title: 'Shading',
 		url: '/dwelling-details/shading',

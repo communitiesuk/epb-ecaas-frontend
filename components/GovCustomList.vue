@@ -38,23 +38,25 @@
 </style>
 
 <template>
-	<div class="custom-list">
-		<div class="custom-list__header">
-			<h2 class="govuk-heading-m govuk-!-margin-0">{{ title }}</h2>
-			<NuxtLink class="govuk-link" :href="`${formUrl}/create`">Add more</NuxtLink>
+	<ClientOnly>
+		<div class="custom-list">
+			<div class="custom-list__header">
+				<h2 class="govuk-heading-m govuk-!-margin-0">{{ title }}</h2>
+				<NuxtLink class="govuk-link" :href="`${formUrl}/create`">{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
+			</div>
+				<div class="custom-list__body" v-if="items" data-testid="customListItems">
+					<table class="govuk-table govuk-!-margin-0">
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row" v-for="(item, index) in items">
+								<th scope="row" class="govuk-table__header">{{ item }}</th>
+								<td class="govuk-table__cell">
+									<NuxtLink class="govuk-link custom-list__action-link" :href="`${formUrl}/${index}`">Edit</NuxtLink>
+									<a href="#" class="govuk-link custom-list__action-link" @click="handleRemove(index, $event)" :data-testid="`customListItemRemove_${index}`">Remove</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 		</div>
-		<div class="custom-list__body" v-if="items" data-testid="customListItems">
-			<table class="govuk-table govuk-!-margin-0">
-				<tbody class="govuk-table__body">
-					<tr class="govuk-table__row" v-for="(item, index) in items">
-						<th scope="row" class="govuk-table__header">{{ item }}</th>
-						<td class="govuk-table__cell">
-							<NuxtLink class="govuk-link custom-list__action-link" :href="`${formUrl}/${index}`">Edit</NuxtLink>
-							<a href="#" class="govuk-link custom-list__action-link" @click="handleRemove(index, $event)" :data-testid="`customListItemRemove_${index}`">Remove</a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+	</ClientOnly>
 </template>

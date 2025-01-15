@@ -1,33 +1,62 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
+
 const title = "Hot water distribution";
 const store = useEcaasStore();
+const route = useRoute();
 
-const model = ref({
-  ...store.dwellingDetails.hotWaterDistribution.data,
-});
+let model: Ref<HotWaterDistributionData>;
 
-const saveForm = (fields: typeof model.value) => {
-  store.$patch({
-    dwellingDetails: {
-      hotWaterDistribution: {
-        data: {
-      name: fields.name,
-			location: fields.location,
-			length: fields.length,
-			internalDiameter: fields.internalDiameter,
-			externalDiameter: fields.externalDiameter,
-			insulationThickness: fields.insulationThickness,
-			insulationThermalConductivity:
+if (route.params.distribution && route.params.distribution !== 'create') {
+	const index = parseInt(route.params.distribution as string);
+	const distribution = store.dwellingDetails.hotWaterDistribution.data.distributions?.[index];
+
+	model = ref({
+		...distribution!
+	});
+}
+
+const saveForm = (fields: HotWaterDistributionData) => {
+  
+  store.$patch((state) => {
+		if (!state.dwellingDetails.hotWaterDistribution.data.distributions) {
+			state.dwellingDetails.hotWaterDistribution.data.distributions = []
+		}
+
+    const index = parseInt(route.params.distribution as string);
+    if (route.params.distribution && route.params.distribution !== 'create') {
+      state.dwellingDetails.hotWaterDistribution.data.distributions[index] = {
+        name: fields.name,
+        location: fields.location,
+        length: fields.length,
+        internalDiameter: fields.internalDiameter,
+        externalDiameter: fields.externalDiameter,
+        insulationThickness: fields.insulationThickness,
+        insulationThermalConductivity:
             fields.insulationThermalConductivity,
-			pipeContents: fields.pipeContents,
-			surfaceReflectivity: fields.surfaceReflectivity,
-        },
-        complete: true,
-      },
-    },
-  });
-  navigateTo("/dwelling-details");
-};
+        pipeContents: fields.pipeContents,
+        surfaceReflectivity: fields.surfaceReflectivity,  
+      }
+    } else {
+        state.dwellingDetails.hotWaterDistribution.data.distributions.push({
+          name: fields.name,
+          location: fields.location,
+          length: fields.length,
+          internalDiameter: fields.internalDiameter,
+          externalDiameter: fields.externalDiameter,
+          insulationThickness: fields.insulationThickness,
+          insulationThermalConductivity:
+              fields.insulationThermalConductivity,
+          pipeContents: fields.pipeContents,
+          surfaceReflectivity: fields.surfaceReflectivity,
+		    })
+    }
+
+		state.dwellingDetails.hotWaterDistribution.complete = true
+	})
+
+	navigateTo("/dwelling-details/hot-water-distribution");
+}
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -48,8 +77,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
   </Head>
   <h1 class="govuk-heading-l">{{ title }}</h1>
   <FormKit
-    v-model="model"
     type="form"
+	  v-model:HotWaterDistributionData="model"
     :actions="false"
     :incomplete-message="false"
     @submit="saveForm"
@@ -68,12 +97,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
     />
 
 	<FormKit
-  	type="govInputText"
+		type="govInputText"
 		label="Name"
 		help="Name this pipework so it can be identified later"
 		id="name"
 		name="name"
-    validation="required"
+		validation="required"
 	/>
 	<FormKit
       type="govRadios"
