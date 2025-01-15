@@ -15,6 +15,8 @@
 		help
 	} = props.context;
 
+	const { mounted } = useMounted();
+
 	function handleInput(e) {
 		props.context.node.input(e.target.value);
 	}
@@ -32,7 +34,7 @@
 				{{ label }}
 			</label>
 		</h1>
-		<div :id="`${id}_hint`" class="govuk-hint">
+		<div v-if="help" :id="`${id}_hint`" class="govuk-hint">
 			{{ help }}
 		</div>
 		<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
@@ -43,10 +45,10 @@
 			:id="id"
 			:name="name"
 			type="text"
-			:value="props.context._value"
+			:value="mounted ? props.context._value : ''"
 			:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
-			@input="handleInput"
-      :data-testid="id"
+			@change="handleInput"
+      		:data-testid="id"
 		/>
 	</div>
 </template>
