@@ -9,6 +9,7 @@ let model: Ref<HotWaterDistributionData>;
 
 if (route.params.distribution && route.params.distribution !== 'create') {
 	const index = parseInt(route.params.distribution as string);
+
 	const distribution = store.dwellingDetails.hotWaterDistribution.data.distributions?.[index];
 
 	model = ref({
@@ -17,40 +18,40 @@ if (route.params.distribution && route.params.distribution !== 'create') {
 }
 
 const saveForm = (fields: HotWaterDistributionData) => {
-  
-  store.$patch((state) => {
+	store.$patch((state) => {
 		if (!state.dwellingDetails.hotWaterDistribution.data.distributions) {
 			state.dwellingDetails.hotWaterDistribution.data.distributions = []
 		}
 
-    const index = parseInt(route.params.distribution as string);
-    if (route.params.distribution && route.params.distribution !== 'create') {
-      state.dwellingDetails.hotWaterDistribution.data.distributions[index] = {
-        name: fields.name,
-        location: fields.location,
-        length: fields.length,
-        internalDiameter: fields.internalDiameter,
-        externalDiameter: fields.externalDiameter,
-        insulationThickness: fields.insulationThickness,
-        insulationThermalConductivity:
-            fields.insulationThermalConductivity,
-        pipeContents: fields.pipeContents,
-        surfaceReflectivity: fields.surfaceReflectivity,  
-      }
-    } else {
-        state.dwellingDetails.hotWaterDistribution.data.distributions.push({
-          name: fields.name,
-          location: fields.location,
-          length: fields.length,
-          internalDiameter: fields.internalDiameter,
-          externalDiameter: fields.externalDiameter,
-          insulationThickness: fields.insulationThickness,
-          insulationThermalConductivity:
-              fields.insulationThermalConductivity,
-          pipeContents: fields.pipeContents,
-          surfaceReflectivity: fields.surfaceReflectivity,
-		    })
-    }
+		const index = parseInt(route.params.distribution as string);
+
+		if (route.params.distribution && route.params.distribution !== 'create') {
+			state.dwellingDetails.hotWaterDistribution.data.distributions[index] = {
+				name: fields.name,
+				location: fields.location,
+				length: fields.length,
+				internalDiameter: fields.internalDiameter,
+				externalDiameter: fields.externalDiameter,
+				insulationThickness: fields.insulationThickness,
+				insulationThermalConductivity:
+					fields.insulationThermalConductivity,
+				pipeContents: fields.pipeContents,
+				surfaceReflectivity: fields.surfaceReflectivity,
+			}
+		} else {
+			state.dwellingDetails.hotWaterDistribution.data.distributions.push({
+				name: fields.name,
+				location: fields.location,
+				length: fields.length,
+				internalDiameter: fields.internalDiameter,
+				externalDiameter: fields.externalDiameter,
+				insulationThickness: fields.insulationThickness,
+				insulationThermalConductivity:
+					fields.insulationThermalConductivity,
+				pipeContents: fields.pipeContents,
+				surfaceReflectivity: fields.surfaceReflectivity,
+			})
+		}
 
 		state.dwellingDetails.hotWaterDistribution.complete = true
 	})
@@ -77,12 +78,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
   </Head>
   <h1 class="govuk-heading-l">{{ title }}</h1>
   <FormKit
-    type="form"
-	  v-model:HotWaterDistributionData="model"
-    :actions="false"
-    :incomplete-message="false"
-    @submit="saveForm"
-    @submit-invalid="handleInvalidSubmit"
+	type="form"
+	v-model="model"
+	:actions="false"
+	:incomplete-message="false"
+	@submit="saveForm"
+	@submit-invalid="handleInvalidSubmit"
   >
     <GovErrorSummary
       :error-list="errorMessages"
