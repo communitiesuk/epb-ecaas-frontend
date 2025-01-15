@@ -15,14 +15,14 @@
 	@use "sass:map";
 
 	.task-list-container {
-		border: 1px solid map-get($govuk-colours, "mid-grey");
+		border: 1px solid map.get($govuk-colours, "mid-grey");
 	}
 
 	.task-list-container__heading {
 		margin: 0;
 		padding: 20px;
 		text-decoration: underline;
-		background: map-get($govuk-colours, "light-grey");
+		background: map.get($govuk-colours, "light-grey");
 		font-size: 1.2rem;
 	}
 

@@ -13,8 +13,10 @@
 </script>
 
 <style scoped lang="scss">
+	@use "sass:map";
+	
 	.custom-list {
-		border: 1px solid $govuk-border-colour;
+		border: 1px solid map.get($govuk-colours, "mid-grey");
 		margin-bottom: 30px;
 	}
 
