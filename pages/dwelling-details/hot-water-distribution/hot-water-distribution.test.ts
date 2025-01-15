@@ -3,7 +3,6 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime'
 import { userEvent } from '@testing-library/user-event'
 import HotWaterDistribution from './[distribution].vue'
 import type { HotWaterDistributionData } from '~/stores/ecaasStore.types'
-import { useRoute } from 'vue-router';
 
 const navigateToMock = vi.hoisted(() => vi.fn())
 mockNuxtImport('navigateTo', () => {
@@ -52,19 +51,6 @@ describe('Hot water distribution', () => {
 	})
 
 	it('form is prepopulated when data exists in state', async () => {
-		vi.mock('vue-router', () => ({
-			useRoute: vi.fn()
-		}));
-
-		const route = useRoute();
-
-		vi.mocked(useRoute).mockReturnValue({
-			...route,
-			params: {
-				distribution: '0'
-			}
-		});
-
 		store.$patch({
 			dwellingDetails: {
 				hotWaterDistribution: {
@@ -75,7 +61,11 @@ describe('Hot water distribution', () => {
 			}
 		});
 
-		await renderSuspended(HotWaterDistribution);
+		await renderSuspended(HotWaterDistribution, {
+			route: {
+				params: { distribution: '0' }
+			}
+		});
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Pipework Kitchen Sink');
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);

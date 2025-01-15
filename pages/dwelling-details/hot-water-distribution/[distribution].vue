@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-
 const title = "Hot water distribution";
 const store = useEcaasStore();
 const route = useRoute();
