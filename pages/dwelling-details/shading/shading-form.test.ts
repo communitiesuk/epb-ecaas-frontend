@@ -21,6 +21,7 @@ describe('shading form', () => {
         await renderSuspended(ShadingForm)
 
         await user.type(screen.getByTestId('name'), 'Cherry tree back garden')
+        await user.tab()
         await user.click(screen.getByRole('button'))
 
         const { data, complete } = store.dwellingDetails.shading
@@ -86,11 +87,21 @@ describe('shading form', () => {
         });
         await user.clear(screen.getByTestId('name'))
         await user.type(screen.getByTestId('name'), 'Wall')
+        await user.tab()
         await user.click(screen.getByRole('button'))
 
         const { data } = store.dwellingDetails.shading
 
         expect(data.shadingObjects?.[0]).toEqual(shading_1)
         expect(data.shadingObjects?.[1]).toEqual({name: "Wall"})
+    })
+
+    it('validation error is shown when submitting empty form', async () => {
+        await renderSuspended(ShadingForm)
+
+        await user.click(screen.getByRole('button'))
+
+        const error = await screen.findByTestId('name_error');
+        expect(await error).toBeDefined();
     })
 })

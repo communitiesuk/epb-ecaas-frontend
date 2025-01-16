@@ -48,6 +48,7 @@
 			help="Name this shading so it can be identified later"
 			id="name"
 			name="name"
+			validation="required"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
