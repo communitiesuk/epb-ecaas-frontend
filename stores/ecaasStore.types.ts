@@ -6,7 +6,7 @@ export interface DwellingDetails {
     generalSpecifications: EcaasForm<GeneralSpecificationsData>;
 	appliancesAndElectricity: EcaasForm<AppliancesAndElectricityData>;
     hotWaterDistribution: EcaasForm<HotWaterDistribution>;
-	shading: EcaasForm<ShadingData>;
+	shading: EcaasForm<Shading>;
 }
 
 export interface GeneralSpecificationsData {
@@ -50,17 +50,12 @@ export interface HotWaterDistribution {
     distributions?: HotWaterDistributionData[]
 }
 
-export interface ShadingDistribution {
+export type ShadingObject = {
 	name: string;
-	length: number;
-	diameter: number;
-	thickness: number;
-	thermalConductivity: number;
-	surfaceReflectivity: string;
 }
 
-export interface ShadingData {
-	distributions?: ShadingDistribution[]
+export interface Shading {
+	shadingObjects?: ShadingObject[]
 }
 
 export interface EcaasForm<T> {

@@ -3,16 +3,16 @@
 	const page = usePage();
 	const store = useEcaasStore();
 
-	const { distributions = [] } = store.dwellingDetails.shading.data;
+	const { shadingObjects = [] } = store.dwellingDetails.shading.data;
 
 	function handleRemove(index: number) {
-		distributions.splice(index, 1);
+		shadingObjects.splice(index, 1);
 
 		store.$patch({
 			dwellingDetails: {
 				shading: {
 					data: {
-						distributions: distributions.length ? distributions : undefined
+						shadingObjects: shadingObjects.length ? shadingObjects : undefined
 					}
 				}
 			}
@@ -28,7 +28,7 @@
 	<GovCustomList
 		title="Shading"
 		:form-url="page?.url!"
-		:items="store.dwellingDetails.shading.data.distributions?.map(x => x.name)"
+		:items="store.dwellingDetails.shading.data.shadingObjects?.map(x => x.name)"
 		v-on:remove="handleRemove"
 	/>
 	<GovButton href="/dwelling-details" secondary>Return to overview</GovButton>

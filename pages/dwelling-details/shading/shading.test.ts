@@ -17,13 +17,8 @@ describe('shading', () => {
 			dwellingDetails: {
 				shading: {
 					data: {
-						distributions: [{
+						shadingObjects: [{
 							name: 'Shading 1',
-							length: 20,
-							diameter: 22,
-							thickness: 20,
-							thermalConductivity: 0.035,
-							surfaceReflectivity: false
 						}]
 					}
 				}
