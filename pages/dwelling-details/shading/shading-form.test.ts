@@ -59,4 +59,27 @@ describe('shading form', () => {
 
         expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Small Tree');
     })
+
+    it('shading data is saved to correct shading object in store state when form is valid', async () => {
+        const shading_1: ShadingObject = {
+            name: "Big Tree"
+        };
+        const shading_2: ShadingObject = {
+            name: "Small Tree"
+        };
+
+        await renderSuspended(ShadingForm, {
+            route: {
+                params: { shading: '1' }
+            }
+        });
+        await user.clear(screen.getByTestId('name'))
+        await user.type(screen.getByTestId('name'), 'Wall')
+        await user.click(screen.getByRole('button'))
+
+        const { data } = store.dwellingDetails.shading
+
+        expect(data.shadingObjects?.[0]).toEqual(shading_1)
+        expect(data.shadingObjects?.[1]).toEqual({name: "Wall"})
+    })
 })

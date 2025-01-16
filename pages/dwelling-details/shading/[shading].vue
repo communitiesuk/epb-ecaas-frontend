@@ -21,7 +21,14 @@
 				state.dwellingDetails.shading.data.shadingObjects = []
 			}
 
-			state.dwellingDetails.shading.data.shadingObjects?.push({name: fields.name})
+			const index = parseInt(route.params.shading as string);
+
+			if (route.params.shading && route.params.shading !== 'create') {
+				state.dwellingDetails.shading.data.shadingObjects[index] = { name: fields.name }
+			} else {
+				state.dwellingDetails.shading.data.shadingObjects?.push({name: fields.name})
+			}
+
 			state.dwellingDetails.shading.complete = true
 		})
 
