@@ -1,12 +1,19 @@
 <script setup lang="ts">
 	const title = "Distant shading";
 	const store = useEcaasStore();
+	const route = useRoute();
 
-	const shading = store.dwellingDetails.shading.data.shadingObjects?.[0];
+	let model: Ref<ShadingObject>;
 
-	let model: Ref<ShadingObject> = ref({
-		  ...shading!
-	  });
+	if (route.params.shading && route.params.shading !== 'create') {
+		const index = parseInt(route.params.shading as string);
+
+		const shading = store.dwellingDetails.shading.data.shadingObjects?.[index];
+
+		model = ref({
+			...shading!
+		});
+	}
 
 	const saveForm = (fields: ShadingObject) => {
 		store.$patch((state) => {

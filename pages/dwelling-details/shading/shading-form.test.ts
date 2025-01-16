@@ -22,9 +22,41 @@ describe('shading form', () => {
         const { data, complete } = store.dwellingDetails.shading
 
         const expected_shading: ShadingObject = {name: 'Cherry tree back garden'}
-        console.log({store: store.dwellingDetails.shading})
+
         expect(complete).toBe(true)
         expect(data.shadingObjects?.[0]).toEqual(expected_shading)
         expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details/shading')
+    })
+
+    it('form is prepopulated correctly when data exists in state', async () => {
+        const shading_1: ShadingObject = {
+            name: "Big Tree"
+        };
+        const shading_2: ShadingObject = {
+            name: "Small Tree"
+        };
+
+        store.$patch({dwellingDetails: {
+            shading: {
+                data: {
+                    shadingObjects: [shading_1, shading_2]
+                }
+            }
+        }})
+
+        await renderSuspended(ShadingForm, {
+            route: {
+                params: { shading: '0' }
+            }
+        });
+        expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Big Tree');
+
+        await renderSuspended(ShadingForm, {
+            route: {
+                params: { shading: '1' }
+            }
+        });
+
+        expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Small Tree');
     })
 })
