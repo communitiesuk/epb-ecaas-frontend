@@ -13,6 +13,10 @@ describe('shading form', () => {
 	    return navigateToMock
     })
 
+    afterEach(() => {
+		store.$reset()
+	})
+
     it('data is saved to store state when form is valid', async () => {
         await renderSuspended(ShadingForm)
 
@@ -56,17 +60,24 @@ describe('shading form', () => {
                 params: { shading: '1' }
             }
         });
-
         expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Small Tree');
     })
 
-    it('shading data is saved to correct shading object in store state when form is valid', async () => {
+    it('data is saved to correct object in store state when form is valid', async () => {
         const shading_1: ShadingObject = {
             name: "Big Tree"
         };
         const shading_2: ShadingObject = {
             name: "Small Tree"
         };
+
+        store.$patch({dwellingDetails: {
+            shading: {
+                data: {
+                    shadingObjects: [shading_1, shading_2]
+                }
+            }
+        }})
 
         await renderSuspended(ShadingForm, {
             route: {
