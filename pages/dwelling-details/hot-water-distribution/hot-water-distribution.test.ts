@@ -29,7 +29,7 @@ describe('Hot water distribution', () => {
 		store.$reset()
 	})
 
-	it.skip('data is saved to store state when form is valid', async () => {
+	it('data is saved to store state when form is valid', async () => {
 		await renderSuspended(HotWaterDistribution)
 
 		await user.type(screen.getByTestId('name'), 'Pipework Kitchen Sink')
@@ -45,9 +45,9 @@ describe('Hot water distribution', () => {
 
 		const { data, complete } = store.dwellingDetails.hotWaterDistribution
 
-		expect(data).toEqual(state)
+		expect(data.distributions?.[0]).toEqual(state)
 		expect(complete).toBe(true)
-		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details')
+		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details/hot-water-distribution')
 	})
 
 	it('form is prepopulated when data exists in state', async () => {
