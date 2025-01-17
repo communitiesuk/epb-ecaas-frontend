@@ -13,13 +13,13 @@ describe('shading form', () => {
 	const shading1: ShadingObject = {
 		name: "Big Tree",
 		direction: 30,
-		objectType: "obstacle"
+		objectType: "obstacle",
+		height: 3
 	};
 
 	const shading2: ShadingObject = {
 		...shading1,
-		name: 'Small Tree',
-		objectType: "obstacle"
+		name: 'Small Tree'
 	};
 
 	mockNuxtImport('navigateTo', () => {
@@ -36,6 +36,7 @@ describe('shading form', () => {
 		await user.type(screen.getByTestId('name'), 'Big Tree');
 		await user.type(screen.getByTestId('direction'), '30');
 		await user.click(screen.getByTestId('objectType_obstacle'));
+		await user.type(screen.getByTestId('height'), '3'),
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
@@ -64,6 +65,7 @@ describe('shading form', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Big Tree');
 		expect((await screen.findByTestId('direction') as HTMLInputElement).value).toBe('30');
 		expect(((await screen.findByTestId('objectType_obstacle')).hasAttribute('checked'))).toBe(true);
+		expect((await screen.findByTestId('height') as HTMLInputElement).value).toBe('3');
 
 		await renderSuspended(ShadingForm, {
 			route: {
@@ -107,11 +109,12 @@ describe('shading form', () => {
 		const nameErrorMessage = await screen.findByTestId('name_error');
 		const directionErrorMessage = await screen.findByTestId('direction_error');
 		const objectTypeErrorMessage = await screen.findByTestId('objectType_error');
-
+		const heightErrorMessage = await screen.findByTestId('height_error');
 
 		expect(nameErrorMessage).toBeDefined();
 		expect(directionErrorMessage).toBeDefined();
 		expect(objectTypeErrorMessage).toBeDefined();
+		expect(heightErrorMessage).toBeDefined();
 	});
 
 	it('error summary is displayed when an invalid form in submitted', async () => {

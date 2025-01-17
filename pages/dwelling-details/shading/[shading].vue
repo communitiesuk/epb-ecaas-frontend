@@ -23,10 +23,18 @@ const saveForm = (fields: ShadingObject) => {
 
 		const index = parseInt(route.params.shading as string);
 
+		const shading = {
+			name: fields.name,
+			direction:
+			fields.direction,
+			objectType: fields.objectType,
+			height: fields.height
+		};
+
 		if (route.params.shading && route.params.shading !== 'create') {
-			state.dwellingDetails.shading.data.shadingObjects[index] = { name: fields.name, direction: fields.direction, objectType: fields.objectType };
+			state.dwellingDetails.shading.data.shadingObjects[index] = shading;
 		} else {
-			state.dwellingDetails.shading.data.shadingObjects?.push({ name: fields.name, direction: fields.direction, objectType: fields.objectType });
+			state.dwellingDetails.shading.data.shadingObjects?.push(shading);
 		}
 
 		state.dwellingDetails.shading.complete = true;
@@ -95,6 +103,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       	}"
 		validation="required"
 	/>
+  <FormKit
+    id="height"
+    type="govInputWithSuffix"
+    label="Height"
+    suffixText="m"
+    name="height"
+    validation="required | number"
+  />
     <FormKit
       type="govButton"
       label="Save and continue"
