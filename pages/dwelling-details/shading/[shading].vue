@@ -34,6 +34,7 @@
 
 		navigateTo("/dwelling-details/shading");
 	}
+	const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
@@ -41,7 +42,10 @@
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<FormKit type="form" v-model="model" :actions="false" @submit="saveForm">
+	<FormKit type="form" v-model="model" :actions="false" @submit="saveForm" @submit-invalid="handleInvalidSubmit"
+	>
+		<GovErrorSummary :error-list="errorMessages" test-id="ShadingErrorSummary"
+		/>
 		<FormKit
 			type="govInputText"
 			label="Name"

@@ -96,12 +96,20 @@ describe('shading form', () => {
         expect(data.shadingObjects?.[1]).toEqual({name: "Wall"})
     })
 
-    it('validation error is shown when submitting empty form', async () => {
+    it('required error messages are displayed when empty form is submitted', async () => {
         await renderSuspended(ShadingForm)
 
         await user.click(screen.getByRole('button'))
 
-        const error = await screen.findByTestId('name_error');
-        expect(await error).toBeDefined();
+        const error_message = await screen.findByTestId('name_error');
+        expect(await error_message).toBeDefined();
     })
+
+    it('error summary is displayed when an invalid form in submitted', async () => {
+            await renderSuspended(ShadingForm);
+
+            await user.click(screen.getByRole('button'));
+
+            expect((await screen.findByTestId('ShadingErrorSummary'))).toBeDefined();
+        });
 })
