@@ -53,6 +53,7 @@ export interface HotWaterDistribution {
 export type ShadingObject = {
 	name: string;
     direction: number;
+    objectType: string;
 }
 
 export interface Shading {

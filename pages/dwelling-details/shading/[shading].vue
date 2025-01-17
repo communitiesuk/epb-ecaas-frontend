@@ -24,9 +24,9 @@ const saveForm = (fields: ShadingObject) => {
 		const index = parseInt(route.params.shading as string);
 
 		if (route.params.shading && route.params.shading !== 'create') {
-			state.dwellingDetails.shading.data.shadingObjects[index] = { name: fields.name, direction: fields.direction };
+			state.dwellingDetails.shading.data.shadingObjects[index] = { name: fields.name, direction: fields.direction, objectType: fields.objectType };
 		} else {
-			state.dwellingDetails.shading.data.shadingObjects?.push({ name: fields.name, direction: fields.direction });
+			state.dwellingDetails.shading.data.shadingObjects?.push({ name: fields.name, direction: fields.direction, objectType: fields.objectType });
 		}
 
 		state.dwellingDetails.shading.complete = true;
@@ -78,11 +78,22 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       id="direction"
       type="govInputWithSuffix"
       label="Direction"
-      help="What direction is the shading coming from?"
+      help="What direction is the shading coming from (in degrees)?"
       name="direction"
       validation="required | number"
-	  suffixText="degrees"
+	  suffixText="&deg"
     />
+	<FormKit
+  		id="objectType"
+		type="govRadios"
+		label="Object Type"
+		name="objectType"
+		:options="{
+			obstacle: 'Obstacle',
+			overhang: 'Overhang',
+      	}"
+		validation="required"
+	/>
     <FormKit
       type="govButton"
       label="Save and continue"

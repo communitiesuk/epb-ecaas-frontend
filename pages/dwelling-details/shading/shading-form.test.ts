@@ -12,12 +12,14 @@ describe('shading form', () => {
 
 	const shading1: ShadingObject = {
 		name: "Big Tree",
-		direction: 30
+		direction: 30,
+		objectType: "obstacle"
 	};
 
 	const shading2: ShadingObject = {
 		...shading1,
-		name: 'Small Tree'
+		name: 'Small Tree',
+		objectType: "obstacle"
 	};
 
 	mockNuxtImport('navigateTo', () => {
@@ -31,20 +33,16 @@ describe('shading form', () => {
 	it('data is saved to store state when form is valid', async () => {
 		await renderSuspended(ShadingForm);
 
-		await user.type(screen.getByTestId('name'), 'Cherry tree back garden');
+		await user.type(screen.getByTestId('name'), 'Big Tree');
 		await user.type(screen.getByTestId('direction'), '30');
+		await user.click(screen.getByTestId('objectType_obstacle'));
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
 		const { data, complete } = store.dwellingDetails.shading;
 
-		const expected_shading: ShadingObject = {
-			name: 'Cherry tree back garden',
-			direction: 30,
-		};
-
 		expect(complete).toBe(true);
-		expect(data.shadingObjects?.[0]).toEqual(expected_shading);
+		expect(data.shadingObjects?.[0]).toEqual(shading1);
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details/shading');
 	});
 
@@ -65,6 +63,7 @@ describe('shading form', () => {
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Big Tree');
 		expect((await screen.findByTestId('direction') as HTMLInputElement).value).toBe('30');
+		expect(((await screen.findByTestId('objectType_obstacle')).hasAttribute('checked'))).toBe(true);
 
 		await renderSuspended(ShadingForm, {
 			route: {
@@ -107,9 +106,12 @@ describe('shading form', () => {
 
 		const nameErrorMessage = await screen.findByTestId('name_error');
 		const directionErrorMessage = await screen.findByTestId('direction_error');
+		const objectTypeErrorMessage = await screen.findByTestId('objectType_error');
+
 
 		expect(nameErrorMessage).toBeDefined();
 		expect(directionErrorMessage).toBeDefined();
+		expect(objectTypeErrorMessage).toBeDefined();
 	});
 
 	it('error summary is displayed when an invalid form in submitted', async () => {
