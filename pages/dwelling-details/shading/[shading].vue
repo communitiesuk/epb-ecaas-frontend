@@ -110,6 +110,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
     suffixText="m"
     name="height"
     validation="required | number"
+    help="How high is the object or obstacle?"
   />
     <FormKit
       type="govButton"
