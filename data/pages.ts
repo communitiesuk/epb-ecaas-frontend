@@ -48,14 +48,14 @@ const pagesData: Array<Page> = [
 	},
 	{
 		id: 'hotWaterDistributionCreate',
-		title: 'Hot water distribution',
+		title: 'Create',
 		url: '/dwelling-details/hot-water-distribution/create',
 		type: PageType.Task,
 		parentId: 'hotWaterDistribution'
 	},
 	{
 		id: 'hotWaterDistributionEdit',
-		title: 'Hot water distribution',
+		title: 'Edit',
 		url: '/dwelling-details/hot-water-distribution/:distribution',
 		type: PageType.Task,
 		parentId: 'hotWaterDistribution'

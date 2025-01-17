@@ -4,11 +4,17 @@
 		formUrl: string;
 		items?: string[];
 		onRemove?: (index: number) => void;
+		onDuplicate?: (index: number) => void;
 	}>();
 
 	function handleRemove(index: number, e: MouseEvent) {
 		e.preventDefault();
 		props.onRemove?.(index);
+	}
+
+	function handleDuplicate(index: number, e: MouseEvent) {
+		e.preventDefault();
+		props.onDuplicate?.(index);
 	}
 </script>
 
@@ -47,10 +53,11 @@
 				<div class="custom-list__body" v-if="items" data-testid="customListItems">
 					<table class="govuk-table govuk-!-margin-0">
 						<tbody class="govuk-table__body">
-							<tr class="govuk-table__row" v-for="(item, index) in items">
+							<tr class="govuk-table__row" v-for="(item, index) in items" data-testid="customListItem">
 								<th scope="row" class="govuk-table__header">{{ item }}</th>
 								<td class="govuk-table__cell">
 									<NuxtLink class="govuk-link custom-list__action-link" :href="`${formUrl}/${index}`">Edit</NuxtLink>
+									<a v-if="onDuplicate" href="#" class="govuk-link custom-list__action-link" @click="handleDuplicate(index, $event)" :data-testid="`customListItemDuplicate_${index}`">Duplicate</a>
 									<a href="#" class="govuk-link custom-list__action-link" @click="handleRemove(index, $event)" :data-testid="`customListItemRemove_${index}`">Remove</a>
 								</td>
 							</tr>

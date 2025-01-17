@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	const title = "Hot water distributions";
+	const title = "Hot water distribution";
 	const page = usePage();
 	const store = useEcaasStore();
 
@@ -18,6 +18,20 @@
 			}
 		});
 	}
+
+	function handleDuplicate(index: number) {
+		const distribution = distributions[index];
+		const duplicates = distributions.filter(d => d.name.startsWith(distribution.name));
+
+		if (distribution) {
+			store.$patch((state) => {
+				state.dwellingDetails.hotWaterDistribution.data.distributions?.push({
+					...distribution,
+					name: `${distribution.name} (${duplicates.length})`
+				});
+			})
+		}
+	}
 </script>
 
 <template>
@@ -26,10 +40,11 @@
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
     <GovCustomList
-        title="Shading"
+        title="Hot water distribution"
         :form-url="page?.url!"
         :items="store.dwellingDetails.hotWaterDistribution.data.distributions?.map(x => x.name)"
         v-on:remove="handleRemove"
+		v-on:duplicate="handleDuplicate"
     />
 	<GovButton href="/dwelling-details" secondary>Return to overview</GovButton>
 </template>
