@@ -37,6 +37,16 @@ const saveForm = (fields: ShadingObject) => {
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
+<style scoped lang="scss">
+.summary-text {
+  white-space: pre-wrap;
+}
+
+.h2 {
+  padding-top: 40px;
+}
+</style>
+
 <template>
   <Head>
     <Title>{{ title }}</Title>
@@ -48,6 +58,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
     v-model="model"
     type="form"
     :actions="false"
+	:incomplete-message="false"
     @submit="saveForm"
     @submit-invalid="handleInvalidSubmit"
   >
