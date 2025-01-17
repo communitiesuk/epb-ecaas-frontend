@@ -34,7 +34,7 @@ export interface AppliancesAndElectricityData {
 	electricityTariff?: string;
 }
 
-export type HotWaterDistributionData = {
+export interface HotWaterDistributionData {
     name: string;
     length: number;
 	location: string;
@@ -52,6 +52,7 @@ export interface HotWaterDistribution {
 
 export type ShadingObject = {
 	name: string;
+    direction: number;
 }
 
 export interface Shading {

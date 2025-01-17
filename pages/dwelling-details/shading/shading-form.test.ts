@@ -9,6 +9,17 @@ describe('shading form', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 	const navigateToMock = vi.hoisted(() => vi.fn());
+
+	const shading1: ShadingObject = {
+		name: "Big Tree",
+		direction: 30
+	};
+
+	const shading2: ShadingObject = {
+		...shading1,
+		name: 'Small Tree'
+	};
+
 	mockNuxtImport('navigateTo', () => {
 	    return navigateToMock;
 	});
@@ -21,12 +32,16 @@ describe('shading form', () => {
 		await renderSuspended(ShadingForm);
 
 		await user.type(screen.getByTestId('name'), 'Cherry tree back garden');
+		await user.type(screen.getByTestId('direction'), '30');
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
 		const { data, complete } = store.dwellingDetails.shading;
 
-		const expected_shading: ShadingObject = {name: 'Cherry tree back garden'};
+		const expected_shading: ShadingObject = {
+			name: 'Cherry tree back garden',
+			direction: 30,
+		};
 
 		expect(complete).toBe(true);
 		expect(data.shadingObjects?.[0]).toEqual(expected_shading);
@@ -34,17 +49,10 @@ describe('shading form', () => {
 	});
 
 	it('form is prepopulated correctly when data exists in state', async () => {
-		const shading_1: ShadingObject = {
-			name: "Big Tree"
-		};
-		const shading_2: ShadingObject = {
-			name: "Small Tree"
-		};
-
 		store.$patch({dwellingDetails: {
 			shading: {
 				data: {
-					shadingObjects: [shading_1, shading_2]
+					shadingObjects: [shading1, shading2]
 				}
 			}
 		}});
@@ -54,28 +62,24 @@ describe('shading form', () => {
 				params: { shading: '0' }
 			}
 		});
+
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Big Tree');
+		expect((await screen.findByTestId('direction') as HTMLInputElement).value).toBe('30');
 
 		await renderSuspended(ShadingForm, {
 			route: {
 				params: { shading: '1' }
 			}
 		});
+
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Small Tree');
 	});
 
 	it('data is saved to correct object in store state when form is valid', async () => {
-		const shading_1: ShadingObject = {
-			name: "Big Tree"
-		};
-		const shading_2: ShadingObject = {
-			name: "Small Tree"
-		};
-
 		store.$patch({dwellingDetails: {
 			shading: {
 				data: {
-					shadingObjects: [shading_1, shading_2]
+					shadingObjects: [shading1, shading2]
 				}
 			}
 		}});
@@ -92,8 +96,8 @@ describe('shading form', () => {
 
 		const { data } = store.dwellingDetails.shading;
 
-		expect(data.shadingObjects?.[0]).toEqual(shading_1);
-		expect(data.shadingObjects?.[1]).toEqual({name: "Wall"});
+		expect(data.shadingObjects?.[0]).toEqual(shading1);
+		expect(data.shadingObjects?.[1].name).toBe('Wall');
 	});
 
 	it('required error messages are displayed when empty form is submitted', async () => {
@@ -101,8 +105,11 @@ describe('shading form', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		const error_message = await screen.findByTestId('name_error');
-		expect(await error_message).toBeDefined();
+		const nameErrorMessage = await screen.findByTestId('name_error');
+		const directionErrorMessage = await screen.findByTestId('direction_error');
+
+		expect(nameErrorMessage).toBeDefined();
+		expect(directionErrorMessage).toBeDefined();
 	});
 
 	it('error summary is displayed when an invalid form in submitted', async () => {

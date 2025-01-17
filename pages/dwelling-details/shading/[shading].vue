@@ -24,9 +24,9 @@ const saveForm = (fields: ShadingObject) => {
 		const index = parseInt(route.params.shading as string);
 
 		if (route.params.shading && route.params.shading !== 'create') {
-			state.dwellingDetails.shading.data.shadingObjects[index] = { name: fields.name };
+			state.dwellingDetails.shading.data.shadingObjects[index] = { name: fields.name, direction: fields.direction };
 		} else {
-			state.dwellingDetails.shading.data.shadingObjects?.push({name: fields.name});
+			state.dwellingDetails.shading.data.shadingObjects?.push({ name: fields.name, direction: fields.direction });
 		}
 
 		state.dwellingDetails.shading.complete = true;
@@ -73,6 +73,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       help="Name this shading so it can be identified later"
       name="name"
       validation="required"
+    />
+	<FormKit
+      id="direction"
+      type="govInputWithSuffix"
+      label="Direction"
+      help="What direction is the shading coming from?"
+      name="direction"
+      validation="required | number"
+	  suffixText="degrees"
     />
     <FormKit
       type="govButton"
