@@ -55,6 +55,7 @@ export type ShadingObject = {
     direction: number;
     objectType: string;
     height: number;
+    distance: number;
 }
 
 export interface Shading {

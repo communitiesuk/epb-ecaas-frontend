@@ -28,7 +28,8 @@ const saveForm = (fields: ShadingObject) => {
 			direction:
 			fields.direction,
 			objectType: fields.objectType,
-			height: fields.height
+			height: fields.height,
+			distance: fields.distance
 		};
 
 		if (route.params.shading && route.params.shading !== 'create') {
@@ -111,6 +112,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
     name="height"
     validation="required | number"
     help="How high is the object or obstacle?"
+  />
+  <FormKit
+    id="distance"
+    type="govInputWithSuffix"
+    label="Distance"
+    suffixText="m"
+    name="distance"
+    validation="required | number"
+    help="How far away is the object or obstacle?"
   />
     <FormKit
       type="govButton"
