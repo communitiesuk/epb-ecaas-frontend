@@ -87,6 +87,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
   		id="objectType"
 		type="govRadios"
 		label="Object Type"
+		help="What is causing the shading?"
 		name="objectType"
 		:options="{
 			obstacle: 'Obstacle',
