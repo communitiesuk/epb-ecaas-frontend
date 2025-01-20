@@ -18,6 +18,20 @@ function handleRemove(index: number) {
 		}
 	});
 }
+
+function handleDuplicate(index: number) {
+		const shading = shadingObjects[index];
+		const duplicates = shadingObjects.filter(s => s.name.startsWith(shading.name));
+
+		if (shading) {
+			store.$patch((state) => {
+				state.dwellingDetails.shading.data.shadingObjects?.push({
+					...shading,
+					name: `${shading.name} (${duplicates.length})`
+				});
+			})
+		}
+	}
 </script>
 
 <template>
@@ -31,7 +45,8 @@ function handleRemove(index: number) {
     title="Shading"
     :form-url="page?.url!"
     :items="store.dwellingDetails.shading.data.shadingObjects?.map(x => x.name)"
-    @remove="handleRemove"
+    v-on:remove="handleRemove"
+    v-on:duplicate="handleDuplicate"
   />
   <GovButton
     href="/dwelling-details"

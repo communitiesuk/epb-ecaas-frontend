@@ -67,4 +67,23 @@ describe('shading', () => {
 		expect(within(populatedList).getByText('Cherry Tree')).toBeDefined();
 		expect(within(populatedList).queryByText('Apple Tree')).toBeNull();
 	});
+
+	it('shading is duplicated when duplicate link is clicked', async () => {
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: {
+						shadingObjects: [shading1]
+					}
+				}
+			}
+		});
+
+		await renderSuspended(Shading);
+
+		await userEvent.click(screen.getByTestId('customListItemDuplicate_0'));
+
+		expect(screen.queryAllByTestId('customListItem').length).toBe(2);
+		expect(screen.getByText('Cherry Tree (1)')).toBeDefined();
+	})
 });
