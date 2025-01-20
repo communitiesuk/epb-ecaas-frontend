@@ -23,7 +23,7 @@ describe('Hot water distribution', () => {
 		store.$reset();
 	});
 
-	it('removes distribution from list when remove link is clicked', async () => {
+	it('distribution is removed when remove link is clicked', async () => {
 		store.$patch({
 			dwellingDetails: {
 				hotWaterDistribution: {
@@ -60,6 +60,6 @@ describe('Hot water distribution', () => {
 		await user.click(screen.getByTestId('customListItemDuplicate_0'));
 
 		expect(screen.queryAllByTestId('customListItem').length).toBe(2);
-		expect(screen.queryByText('Pipework Kitchen Sink (1)')).toBeDefined();
+		expect(screen.getByText('Pipework Kitchen Sink (1)')).toBeDefined();
 	});
 });
