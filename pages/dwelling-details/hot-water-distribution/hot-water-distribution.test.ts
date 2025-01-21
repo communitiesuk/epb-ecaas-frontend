@@ -3,21 +3,27 @@ import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import HotWaterDistribution from './index.vue';
 
-const state: HotWaterDistributionData = {
-	name: 'Pipework Kitchen Sink',
-	length: 3,
-	location: 'internal',
-	internalDiameter: 30,
-	externalDiameter: 33,
-	insulationThickness: 10,
-	insulationThermalConductivity: 35,
-	pipeContents: 'air',
-	surfaceReflectivity: 'yes',
-}
-
 describe('Hot water distribution', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
+
+	const distribution1: HotWaterDistributionData = {
+		name: 'Pipework Kitchen Sink',
+		length: 3,
+		location: 'internal',
+		internalDiameter: 30,
+		externalDiameter: 33,
+		insulationThickness: 10,
+		insulationThermalConductivity: 35,
+		pipeContents: 'air',
+		surfaceReflectivity: 'yes',
+	}
+
+	const distribution2: HotWaterDistributionData = {
+		name: 'Pipework Kitchen',
+		length: 4,
+		location: 'internal',
+	}
 
 	afterEach(() => {
 		store.$reset();
@@ -28,7 +34,7 @@ describe('Hot water distribution', () => {
 			dwellingDetails: {
 				hotWaterDistribution: {
 					data: {
-						distributions: [state]
+						distributions: [distribution1]
 					}
 				}
 			}
@@ -49,7 +55,7 @@ describe('Hot water distribution', () => {
 			dwellingDetails: {
 				hotWaterDistribution: {
 					data: {
-						distributions: [state]
+						distributions: [distribution1, distribution2]
 					}
 				}
 			}
@@ -58,8 +64,12 @@ describe('Hot water distribution', () => {
 		await renderSuspended(HotWaterDistribution);
 
 		await user.click(screen.getByTestId('customListItemDuplicate_0'));
+		await user.click(screen.getByTestId('customListItemDuplicate_0'));
+		await user.click(screen.getByTestId('customListItemDuplicate_1'));
 
-		expect(screen.queryAllByTestId('customListItem').length).toBe(2);
+		expect(screen.queryAllByTestId('customListItem').length).toBe(5);
 		expect(screen.getByText('Pipework Kitchen Sink (1)')).toBeDefined();
+		expect(screen.getByText('Pipework Kitchen Sink (2)')).toBeDefined();
+		expect(screen.getByText('Pipework Kitchen (1)')).toBeDefined();
 	});
 });

@@ -21,6 +21,11 @@ describe('shading', () => {
 		name: 'Apple Tree'
 	};
 
+	const shading3: ShadingObject = {
+		...shading1,
+		name: 'Cherry Tree out front'
+	};
+
 	afterEach(() => {
 		store.$reset();
 	});
@@ -73,7 +78,7 @@ describe('shading', () => {
 			dwellingDetails: {
 				shading: {
 					data: {
-						shadingObjects: [shading1]
+						shadingObjects: [shading1, shading3]
 					}
 				}
 			}
@@ -82,8 +87,16 @@ describe('shading', () => {
 		await renderSuspended(Shading);
 
 		await userEvent.click(screen.getByTestId('customListItemDuplicate_0'));
+		await userEvent.click(screen.getByTestId('customListItemDuplicate_0'));
+		await userEvent.click(screen.getByTestId('customListItemDuplicate_2'));
+		await userEvent.click(screen.getByTestId('customListItemDuplicate_2'));
 
-		expect(screen.queryAllByTestId('customListItem').length).toBe(2);
+		expect(screen.queryAllByTestId('customListItem').length).toBe(6);
+		expect(screen.getByText('Cherry Tree')).toBeDefined();
 		expect(screen.getByText('Cherry Tree (1)')).toBeDefined();
+		expect(screen.getByText('Cherry Tree (2)')).toBeDefined();
+		expect(screen.getByText('Cherry Tree (1) (1)')).toBeDefined();
+		expect(screen.getByText('Cherry Tree (1) (2)')).toBeDefined();
 	})
 });
+
