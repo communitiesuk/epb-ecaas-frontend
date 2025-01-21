@@ -49,6 +49,31 @@ describe('shading form', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details/shading');
 	});
 
+	it('data is saved to correct object in store state when form is valid', async () => {
+		store.$patch({dwellingDetails: {
+			shading: {
+				data: {
+					shadingObjects: [shading1, shading2]
+				}
+			}
+		}});
+
+		await renderSuspended(ShadingForm, {
+			route: {
+				params: { shading: '1' }
+			}
+		});
+		await user.clear(screen.getByTestId('name'));
+		await user.type(screen.getByTestId('name'), 'Wall');
+		await user.tab();
+		await user.click(screen.getByRole('button'));
+
+		const { data } = store.dwellingDetails.shading;
+
+		expect(data.shadingObjects?.[0]).toEqual(shading1);
+		expect(data.shadingObjects?.[1].name).toBe('Wall');
+	});
+
 	it('form is prepopulated correctly when data exists in state', async () => {
 		store.$patch({dwellingDetails: {
 			shading: {
@@ -78,31 +103,6 @@ describe('shading form', () => {
 		});
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Small Tree');
-	});
-
-	it('data is saved to correct object in store state when form is valid', async () => {
-		store.$patch({dwellingDetails: {
-			shading: {
-				data: {
-					shadingObjects: [shading1, shading2]
-				}
-			}
-		}});
-
-		await renderSuspended(ShadingForm, {
-			route: {
-				params: { shading: '1' }
-			}
-		});
-		await user.clear(screen.getByTestId('name'));
-		await user.type(screen.getByTestId('name'), 'Wall');
-		await user.tab();
-		await user.click(screen.getByRole('button'));
-
-		const { data } = store.dwellingDetails.shading;
-
-		expect(data.shadingObjects?.[0]).toEqual(shading1);
-		expect(data.shadingObjects?.[1].name).toBe('Wall');
 	});
 
 	it('required error messages are displayed when empty form is submitted', async () => {
