@@ -21,11 +21,10 @@ function handleRemove(index: number) {
 
 function handleDuplicate(index: number) {
 		const shading = shadingObjects[index];
-		const name_pattern = shading.name.replaceAll("(", "\\(").replaceAll(")", "\\)");
-		const duplicate_pattern = new RegExp(String.raw`^${name_pattern}( \([0-9]+\))?$`);
-		const duplicates = shadingObjects.filter(s => s.name.match(duplicate_pattern));
 
 		if (shading) {
+			const duplicates = shadingObjects.filter(s => s.name.match(duplicateNamePattern(shading.name)));
+
 			store.$patch((state) => {
 				state.dwellingDetails.shading.data.shadingObjects?.push({
 					...shading,

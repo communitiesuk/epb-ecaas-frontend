@@ -21,11 +21,10 @@
 
 	function handleDuplicate(index: number) {
 		const distribution = distributions[index];
-		const name_pattern = distribution.name.replaceAll("(", "\\(").replaceAll(")", "\\)");
-		const duplicate_name_pattern = new RegExp(String.raw`^${name_pattern}( \([0-9]+\))?$`);
-		const duplicates = distributions.filter(d => d.name.match(duplicate_name_pattern));
 
 		if (distribution) {
+			const duplicates = distributions.filter(d => d.name.match(duplicateNamePattern(distribution.name)));
+
 			store.$patch((state) => {
 				state.dwellingDetails.hotWaterDistribution.data.distributions?.push({
 					...distribution,

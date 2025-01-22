@@ -1,7 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom'
-
 import Shading from './index.vue';
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 
