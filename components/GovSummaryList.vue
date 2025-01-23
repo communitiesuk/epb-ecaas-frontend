@@ -21,11 +21,27 @@
 
 		return value;
 	}
+
+  function hyphenate(value: string | number | boolean | undefined) {
+    if (value === undefined) {
+      return '';
+    }
+
+    if (typeof value == 'string') {
+      const formattedString = value.replaceAll(" ","-");
+
+      return (
+          formattedString.toLowerCase()
+      );
+    }
+
+    return value;
+  }
 </script>
 
 <template>
 	<dl class="govuk-summary-list">
-		<div v-for="(value, key) in data" :key="key" class="govuk-summary-list__row">
+		<div v-for="(value, key) in data" :key="key" :data-testid="`summary-${hyphenate(key)}`" class="govuk-summary-list__row">
 			<dt class="govuk-summary-list__key">{{ key }}</dt>
 			<dd class="govuk-summary-list__value">{{ formatData(value) }}</dd>
 		</div>

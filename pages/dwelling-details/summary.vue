@@ -20,7 +20,8 @@
 			"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
 			"Number of stories in dwelling": generalSpecificationsData.storiesInDwelling,
 			"Shelter": generalSpecificationsData.levelOfShelter,
-			"Separate temperature control": generalSpecificationsData.heatingControlType,
+			"Number of sheltered sides": generalSpecificationsData.numOfShelteredSides,
+			"Heating control type": generalSpecificationsData.heatingControlType,
 			"Cooking fuel type": generalSpecificationsData.cookingFuelType,
 			"Cold water source": generalSpecificationsData.coldWaterSource,
 			"Number of ADF wet rooms": generalSpecificationsData.numOfADFWetRooms
