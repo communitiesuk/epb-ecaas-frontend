@@ -8,6 +8,7 @@
 
 	const generalSpecificationsData = store.dwellingDetails.generalSpecifications.data;
 	const appliancesAndElectricityData = store.dwellingDetails.appliancesAndElectricity.data;
+	const hotWaterDistributionData = store.dwellingDetails.hotWaterDistribution.data;
 
 	const generalSpecificationsSummary: SummarySection = {
 		id: 'generalSpecifications',
@@ -46,7 +47,19 @@
 	const hotWaterDistributionSummary: SummarySection = {
 		id: 'hotWaterDistribution',
 		label: "Hot water distribution",
-		data: {}
+		data: hotWaterDistributionData.distributions?.map(d => {
+			return {
+				"Name": d.name,
+				"Location": d.location,
+				"Length": d.length,
+				"Internal diameter": d.internalDiameter,
+				"External diameter": d.externalDiameter,
+				"Insulation thickness": d.insulationThickness,
+				"Insulation thermal conductivity": d.insulationThermalConductivity,
+				"Reflective insulation": d.surfaceReflectivity,
+				"Pipe contents": d.pipeContents
+			}
+		}) || []
 	}
 
 	const shadingSummary: SummarySection = {

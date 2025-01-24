@@ -6,7 +6,7 @@
 	export interface SummarySection {
 		id: string;
 		label: string;
-		data: SummaryData;
+		data: SummaryData | SummaryData[];
 	}
 
 	const props = defineProps<{ summarySections?: SummarySection[] }>();
@@ -33,8 +33,20 @@
 			:data-testId="section.id"
 		>
 			<h2 class="govuk-heading-m">{{ section.label }}</h2>
-			<GovSummaryList :data="section.data" />
-			<NuxtLink class="govuk-link" :to="getUrl(section.id)">Edit</NuxtLink>
+			
+			<template v-if="!Array.isArray(section.data)">
+				<GovSummaryList :data="section.data" />
+				<NuxtLink class="govuk-link" :to="getUrl(section.id)">Edit</NuxtLink>
+			</template>
+			
+			<template v-if="Array.isArray(section.data)">
+				<GovAccordion>
+					<GovAccordionSection v-for="(entry, index) in section.data" :title="(entry.Name as string)" :index="index">
+						<GovSummaryList :data="entry" />
+						<NuxtLink class="govuk-link" :to="`${getUrl(section.id)}/${index}`">Edit</NuxtLink>
+					</GovAccordionSection>
+				</GovAccordion>
+			</template>
 		</GovTabPanel>
 	</GovTabs>
 </template>
