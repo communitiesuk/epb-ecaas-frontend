@@ -1,9 +1,7 @@
-
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
-import { mount } from '@vue/test-utils';
 import hyphenate from '~/utils/test-utils';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -69,7 +67,7 @@ it('should select the clicked tab', async () => {
 
   const summaryPage = await renderSuspended(Summary);
 
-  await user.click(screen.getByRole('link', {name: 'General specifications'}));
+  await user.click(screen.getByRole('link', {name: 'General specifications'}))
 
   expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#generalSpecifications">General specifications</a></li>`);
   expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item"><a class="govuk-tabs__tab" href="#appliancesAndElectricity">Appliances and electricity</a></li>`);
@@ -89,9 +87,9 @@ it('should display the correct data for the general specification section', asyn
     }
   });
 
-const user = userEvent.setup();
+userEvent.setup();
 
-const summaryPage = await renderSuspended(Summary);
+await renderSuspended(Summary);
 
 const expectedResult = {
       "Type of residence": 'House',
@@ -108,10 +106,10 @@ const expectedResult = {
   };
 
   for (const [key, value] of Object.entries(expectedResult)) {
-      const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`)).getHTML();
-      expect(lineResult).toContain(`${key}`);
-      expect(lineResult).toContain(`${value}`);
-  }
+    const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`))
+    expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+    expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+	}
 })
 
 it('should display the correct data for the appliances and electricity section', async () => {
@@ -123,9 +121,10 @@ it('should display the correct data for the appliances and electricity section',
     }
   });
 
-const user = userEvent.setup();
+  userEvent.setup();
 
-const summaryPage = await renderSuspended(Summary);
+ await renderSuspended(Summary);
+
 
 const expectedResult = {
   "Fridge/freezer energy rating": 'A',
@@ -139,9 +138,23 @@ const expectedResult = {
 };
 
   for (const [key, value] of Object.entries(expectedResult)) {
-      const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`)).getHTML();
-      expect(lineResult).toContain(`${key}`);
-      expect(lineResult).toContain(`${value}`);
+    const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`))
+    expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+    expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+
   }
 })
+it('should navigate to overview page when return to table button is clicked', async () => {
+  
+  const user = userEvent.setup();
+	
+  const summaryPage = await renderSuspended(Summary);
+
+	const editButton = screen.getByTestId('generalSpecifications').querySelector("a")?.getHTML()
+	
+	// editButton == 'Edit' 
+	// unsure how to proceed once we have the editButton
+
+})
+
 })

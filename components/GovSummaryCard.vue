@@ -30,6 +30,7 @@
 			:key="index"
 			:selected="tabProps.currentTab === index"
 			:id="section.id"
+			:data-testId="section.id"
 		>
 			<h2 class="govuk-heading-m">{{ section.label }}</h2>
 			<GovSummaryList :data="section.data" />
