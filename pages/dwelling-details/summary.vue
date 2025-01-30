@@ -9,6 +9,7 @@
 	const generalSpecificationsData = store.dwellingDetails.generalSpecifications.data;
 	const appliancesAndElectricityData = store.dwellingDetails.appliancesAndElectricity.data;
 	const hotWaterDistributionData = store.dwellingDetails.hotWaterDistribution.data;
+	const shadingData = store.dwellingDetails.shading.data;
 
 	const generalSpecificationsSummary: SummarySection = {
 		id: 'generalSpecifications',
@@ -65,7 +66,15 @@
 	const shadingSummary: SummarySection = {
 		id: 'shading',
 		label: "Shading",
-		data: {}
+		data: shadingData.shadingObjects?.map(s => {
+			return {
+				"Name": s.name,
+				"Shading direction": s.direction,
+				"Shading type": s.objectType,
+				"Height": s.height,
+				"Distace": s.distance
+			}
+		}) || []
 	}
 
 	const summarySections: SummarySection[] = [
