@@ -72,7 +72,7 @@ const shadingSummary: SummarySection = {
 			"Shading direction": s.direction,
 			"Shading type": s.objectType,
 			"Height": s.height,
-			"Distace": s.distance
+			"Distance": s.distance
 		};
 	}) || []
 };

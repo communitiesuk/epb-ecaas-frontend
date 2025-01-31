@@ -11,7 +11,9 @@ mockNuxtImport('navigateTo', () => {
 
 interface DwellingDetailSummary {
 	generalSpecifications: GeneralSpecificationsData,
-	appliancesAndElectricity: AppliancesAndElectricityData
+	appliancesAndElectricity: AppliancesAndElectricityData,
+	hotWaterDistribution: HotWaterDistribution,
+	shading: Shading
 }
 
 const state: DwellingDetailSummary = {
@@ -28,7 +30,7 @@ const state: DwellingDetailSummary = {
 		coldWaterSource: 'mainsWater',
 		numOfADFWetRooms: 2
 	},
-	appliancesAndElectricity:{
+	appliancesAndElectricity: {
 		fridgeFreezerEnergyRating: 'a',
 		dishwasherEnergyRating: 'b',
 		ovenCookerEnergyRating: 'c',
@@ -38,6 +40,28 @@ const state: DwellingDetailSummary = {
 		electricityGridConnection: 'none',
 		electricityTariff: 'standardTariff'
 	},
+	hotWaterDistribution: {
+		distributions: [{
+			name: 'Pipework 1',
+			location: 'internal',
+			length: 20,
+			internalDiameter: 22,
+			externalDiameter: 22,
+			insulationThickness: 19,
+			insulationThermalConductivity: 0.035,
+			surfaceReflectivity: 'no',
+			pipeContents: 'water'
+		}]
+	},
+	shading: {
+		shadingObjects: [{
+			name: 'Shading 1',
+			direction: 90,
+			objectType: 'obstacle',
+			height: 1,
+			distance: 4
+		}]
+	}
 };
 
 describe('Dwelling details summary', () => {
@@ -46,7 +70,6 @@ describe('Dwelling details summary', () => {
 	afterEach(() => {
 		store.$reset();
 	});
-
 
 	it('should contain the correct tabs for dwelling details', async () => {
 		await renderSuspended(Summary);
@@ -59,7 +82,6 @@ describe('Dwelling details summary', () => {
 	});
 
 	it('should select the clicked tab', async () => {
-
 		const user = userEvent.setup();
 
 		const summaryPage = await renderSuspended(Summary);
@@ -122,7 +144,6 @@ describe('Dwelling details summary', () => {
 
 		await renderSuspended(Summary);
 
-
 		const expectedResult = {
 			"Fridge/freezer energy rating": 'A',
 			"Dishwasher energy rating": 'B',
@@ -138,20 +159,134 @@ describe('Dwelling details summary', () => {
 			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
-
 		}
 	});
 
-	/*it('should navigate to overview page when return to table button is clicked', async () => {
-  
-		const user = userEvent.setup();
-	
-		const summaryPage = await renderSuspended(Summary);
+	it('should display hot water distributions in a collapsed accordion', async () => {
+		store.$patch({
+			dwellingDetails: {
+				hotWaterDistribution: {
+					data: state.hotWaterDistribution
+				}
+			}
+		});
 
-		const editButton = screen.getByTestId('generalSpecifications').querySelector("a")?.getHTML();
-	
-		// editButton == 'Edit' 
-		// unsure how to proceed once we have the editButton
+		userEvent.setup();
 
-	});*/
+		await renderSuspended(Summary);
+
+		const distributionHeading = await screen.findByTestId('hotWaterDistribution_0_heading');
+		const distributionToggle = await screen.findByTestId('hotWaterDistribution_0_toggle');
+		const distributionContent = await screen.findByTestId('hotWaterDistribution_0_content');
+
+		expect(distributionHeading.textContent).toBe('Pipework 1');
+		expect(distributionToggle.textContent).toBe('Show');
+		expect(distributionContent.style.display).toBe('');
+	});
+
+	it('should display hot water distribution data when accordion item is expanded', async () => {
+		store.$patch({
+			dwellingDetails: {
+				hotWaterDistribution: {
+					data: state.hotWaterDistribution
+				}
+			}
+		});
+
+		userEvent.setup();
+
+		await renderSuspended(Summary);
+
+		const distributionButton = await screen.findByTestId('hotWaterDistribution_0');
+
+		await userEvent.click(distributionButton);
+
+		const distributionHeading = await screen.findByTestId('hotWaterDistribution_0_heading');
+		const distributionToggle = await screen.findByTestId('hotWaterDistribution_0_toggle');
+		const distributionContent = await screen.findByTestId('hotWaterDistribution_0_content');
+
+		const expectedResult = {
+			"Name": 'Pipework 1',
+			"Location": 'Internal',
+			"Length": '30',
+			"Internal diameter": '22',
+			"External diameter": '22',
+			"Insulation thickness": '19',
+			"Insulation thermal conductivity": '0.035',
+			"Reflective insulation": 'No',
+			"Pipe contents": 'Water'
+		};
+
+		expect(distributionHeading.textContent).toBe('Pipework 1');
+		expect(distributionToggle.textContent).toBe('Hide');
+		expect(distributionContent.style.display).toBe('block');
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+		}
+	});
+
+	it('should display shading objects in a collapsed accordion', async () => {
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: state.shading
+				}
+			}
+		});
+
+		userEvent.setup();
+
+		await renderSuspended(Summary);
+
+		const shadingHeading = await screen.findByTestId('shading_0_heading');
+		const shadingToggle = await screen.findByTestId('shading_0_toggle');
+		const shadingContent = await screen.findByTestId('shading_0_content');
+
+		expect(shadingHeading.textContent).toBe('Shading 1');
+		expect(shadingToggle.textContent).toBe('Show');
+		expect(shadingContent.style.display).toBe('');
+	});
+
+	it('should display shading data when accordion item is expanded', async () => {
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: state.shading
+				}
+			}
+		});
+
+		userEvent.setup();
+
+		await renderSuspended(Summary);
+
+		const shadingButton = await screen.findByTestId('shading_0');
+
+		await userEvent.click(shadingButton);
+
+		const shadingHeading = await screen.findByTestId('shading_0_heading');
+		const shadingToggle = await screen.findByTestId('shading_0_toggle');
+		const shadingContent = await screen.findByTestId('shading_0_content');
+
+		const expectedResult = {
+			"Name": 'Shading 1',
+			"Shading direction": '90',
+			"Shading type": 'Obstacle',
+			"Height": '1',
+			"Distance": '4'
+		};
+
+		expect(shadingHeading.textContent).toBe('Shading 1');
+		expect(shadingToggle.textContent).toBe('Hide');
+		expect(shadingContent.style.display).toBe('block');
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+		}
+	});
 });

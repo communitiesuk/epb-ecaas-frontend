@@ -42,9 +42,15 @@ function getUrl(pageId: string) {
 			
 			<template v-if="Array.isArray(section.data)">
 				<GovAccordion>
-					<GovAccordionSection v-for="(entry, entryIndex) in section.data" :key="`${section.id}_${entryIndex}`" :title="(entry.Name as string)" :index="index">
+					<GovAccordionSection
+						v-for="(entry, entryIndex) in section.data"
+						:id="`${section.id}_${entryIndex}`"
+						:key="`${section.id}_${entryIndex}`"
+						:title="(entry.Name as string)"
+						:index="index"
+					>
 						<GovSummaryList :data="entry" />
-						<NuxtLink class="govuk-link" :to="`${getUrl(section.id)}/${index}`">Edit</NuxtLink>
+						<NuxtLink class="govuk-link" :to="`${getUrl(section.id)}/${entryIndex}`">Edit</NuxtLink>
 					</GovAccordionSection>
 				</GovAccordion>
 			</template>

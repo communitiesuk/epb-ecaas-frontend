@@ -1,5 +1,6 @@
 <script setup lang="ts">
 defineProps<{
+	id?: string;
 	title: string;
 	index: number;
 }>();
@@ -12,13 +13,13 @@ const toggle = () => expanded.value = !expanded.value;
 	<div class="govuk-accordion__section">
 		<div class="govuk-accordion__section-header">
 			<h2 class="govuk-accordion__section-heading">
-				<button type="button" class="govuk-accordion__section-button" :aria-controls="`accordion-content-${index}`" :aria-expanded="expanded" @click="toggle">
+				<button type="button" class="govuk-accordion__section-button" :data-testid="id" :aria-controls="`accordion-content-${index}`" :aria-expanded="expanded" @click="toggle">
 					<span class="govuk-accordion__section-heading-text govuk-heading-s">
-						<span class="govuk-accordion__section-heading-text-focus">
+						<span class="govuk-accordion__section-heading-text-focus" :data-testid="`${id}_heading`">
 							{{ title }}
 						</span>
 					</span>
-					<span class="govuk-accordion__section-toggle" data-nosnippet="">
+					<span class="govuk-accordion__section-toggle" data-nosnippet="" :data-testid="`${id}_toggle`">
 						<span class="govuk-accordion__section-toggle-focus">
 							<span class="govuk-accordion-nav__chevron" :class="!expanded ? 'govuk-accordion-nav__chevron--down' : ''" />
 							<span class="govuk-accordion__section-toggle-text">{{ expanded ? 'Hide' : 'Show' }}</span>
@@ -27,7 +28,7 @@ const toggle = () => expanded.value = !expanded.value;
 				</button>
 			</h2>
 		</div>
-		<div :id="`accordion-content-${index}`" class="govuk-accordion__section-content" :style="expanded ? 'display: block' : ''">
+		<div :id="`accordion-content-${index}`" class="govuk-accordion__section-content" :style="expanded ? 'display: block' : ''" :data-testid="`${id}_content`">
 			<slot />
 		</div>
 	</div>
