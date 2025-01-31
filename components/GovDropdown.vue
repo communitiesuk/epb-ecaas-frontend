@@ -1,34 +1,35 @@
 <script setup>
-	const props = defineProps({
-		context: {
-			type: Object,
-			default() {
-				return {};
-			}
+const props = defineProps({
+	context: {
+		type: Object,
+		default() {
+			return {};
 		}
-	});
-
-	const {
-		id,
-		node: { name },
-		attrs: { options },
-		label,
-		help
-	} = props.context;
-
-	const { mounted } = useMounted();
-
-	function handleInput(e) {
-		props.context.node.input(e.target.value);
 	}
+});
+
+const {
+	id,
+	node: { name },
+	attrs: { options },
+	label,
+	help
+} = props.context;
+
+const { mounted } = useMounted();
+
+function handleInput(e) {
+	props.context.node.input(e.target.value);
+}
 </script>
 
 <template>
 	<div
-:class="`govuk-form-group ${props.context.state.invalid &&
-		props.context.messages.rule_required &&
-		props.context.messages.rule_required.visible
-		? 'govuk-form-group--error' : '' }`"
+		:class="`govuk-form-group ${props.context.state.invalid &&
+			props.context.messages.rule_required &&
+			props.context.messages.rule_required.visible
+			? 'govuk-form-group--error' : ''
+		}`"
 	>
 		<label class="govuk-label govuk-label--m" :for="id">
 			{{ label }}

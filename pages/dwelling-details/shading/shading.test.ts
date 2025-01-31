@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom'
+import {within} from '@testing-library/dom';
 import Shading from './index.vue';
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 
@@ -96,6 +96,6 @@ describe('shading', () => {
 		expect(screen.getByText('Cherry Tree (2)')).toBeDefined();
 		expect(screen.getByText('Cherry Tree (1) (1)')).toBeDefined();
 		expect(screen.getByText('Cherry Tree (1) (2)')).toBeDefined();
-	})
+	});
 });
 

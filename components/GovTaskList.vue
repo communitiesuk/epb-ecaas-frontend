@@ -1,20 +1,20 @@
 <script setup lang="ts">
-	import type { GovTagProps } from '~/common.types';
+import type { GovTagProps } from '~/common.types';
 
-	interface GovTaskListItemStatus {
-		tag: GovTagProps;
-	}
+interface GovTaskListItemStatus {
+	tag: GovTagProps;
+}
 
-	export interface GovTaskListItemProps {
-		id: string;
-		title: string;
-		status: GovTaskListItemStatus;
-		url?: string;
-	}
+export interface GovTaskListItemProps {
+	id: string;
+	title: string;
+	status: GovTaskListItemStatus;
+	url?: string;
+}
 
-	defineProps<{
-		items: Array<GovTaskListItemProps>
-	}>();
+defineProps<{
+	items: Array<GovTaskListItemProps>
+}>();
 </script>
 
 <template>

@@ -1,26 +1,26 @@
 <script setup>
-	const props = defineProps({
-		context: {
-			type: Object,
-			default() {
-				return {};
-			}
+const props = defineProps({
+	context: {
+		type: Object,
+		default() {
+			return {};
 		}
-	});
-	
-	const {
-		id,
-		node: { name },
-		attrs: { options, details },
-		label,
-		help
-	} = props.context;
-
-	const { mounted } = useMounted();
-
-	function handleInput(e) {
-		props.context.node.input(e.target.value);
 	}
+});
+	
+const {
+	id,
+	node: { name },
+	attrs: { options, details },
+	label,
+	help
+} = props.context;
+
+const { mounted } = useMounted();
+
+function handleInput(e) {
+	props.context.node.input(e.target.value);
+}
 </script>
 
 <template>

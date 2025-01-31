@@ -17,13 +17,13 @@ describe('Hot water distribution', () => {
 		insulationThermalConductivity: 35,
 		pipeContents: 'air',
 		surfaceReflectivity: 'yes',
-	}
+	};
 
 	const distribution2: HotWaterDistributionData = {
 		name: 'Pipework Kitchen',
 		length: 4,
 		location: 'internal',
-	}
+	};
 
 	afterEach(() => {
 		store.$reset();

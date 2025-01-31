@@ -1,7 +1,7 @@
 <script setup lang="ts">
-	import type { GovTagProps } from '~/common.types';
+import type { GovTagProps } from '~/common.types';
 
-	defineProps<GovTagProps>();
+defineProps<GovTagProps>();
 </script>
 
 <template>

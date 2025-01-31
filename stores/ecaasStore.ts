@@ -7,15 +7,15 @@ import type { Page } from '~/data/pages';
 type Section = keyof EcaasState;
 
 export const useEcaasStore = defineStore('ecaas', {
-    state: (): EcaasState => ({
-        dwellingDetails: {
-            generalSpecifications: { data: {} },
+	state: (): EcaasState => ({
+		dwellingDetails: {
+			generalSpecifications: { data: {} },
 			appliancesAndElectricity: { data: {} },
 			hotWaterDistribution: { data: {} },
 			shading: { data: {} }
-        }
-    }),
-    getters: {
+		}
+	}),
+	getters: {
 		getStatus: (state) => {
 			return (page: Page): GovTagProps => {
 				const section = (page.id in state ? page.id : page.parentId) as Section;
@@ -51,8 +51,8 @@ export const useEcaasStore = defineStore('ecaas', {
 				return formStatus.notStarted;
 			};
 		}
-    },
-    persist: {
-        storage: piniaPluginPersistedstate.localStorage()
-    }
+	},
+	persist: {
+		storage: piniaPluginPersistedstate.localStorage()
+	}
 });

@@ -1,25 +1,25 @@
 export interface EcaasState {
-    dwellingDetails: DwellingDetails;
+	dwellingDetails: DwellingDetails;
 }
 
 export interface DwellingDetails {
-    generalSpecifications: EcaasForm<GeneralSpecificationsData>;
+	generalSpecifications: EcaasForm<GeneralSpecificationsData>;
 	appliancesAndElectricity: EcaasForm<AppliancesAndElectricityData>;
-    hotWaterDistribution: EcaasForm<HotWaterDistribution>;
+	hotWaterDistribution: EcaasForm<HotWaterDistribution>;
 	shading: EcaasForm<Shading>;
 }
 
 export interface GeneralSpecificationsData {
-    typeOfResidence?: string;
-    weatherDataLocation?: string;
-    sizeGroundFloorArea?: number;
-    numOfBedrooms?: number;
-    storiesInDwelling?: number;
-    levelOfShelter?: string;
-    numOfShelteredSides?: number;
-    heatingControlType?: string;
-    cookingFuelType?: string;
-    coldWaterSource?: string;
+	typeOfResidence?: string;
+	weatherDataLocation?: string;
+	sizeGroundFloorArea?: number;
+	numOfBedrooms?: number;
+	storiesInDwelling?: number;
+	levelOfShelter?: string;
+	numOfShelteredSides?: number;
+	heatingControlType?: string;
+	cookingFuelType?: string;
+	coldWaterSource?: string;
 	numOfADFWetRooms?: number;
 }
 
@@ -34,35 +34,35 @@ export interface AppliancesAndElectricityData {
 	electricityTariff?: string;
 }
 
-export interface HotWaterDistributionData {
-    name: string;
-    length: number;
+export type HotWaterDistributionData = {
+	name: string;
+	length: number;
 	location: string;
-    internalDiameter?: number;
-    externalDiameter?: number;
-    insulationThickness?: number;
-    insulationThermalConductivity?: number;
-    pipeContents?: string;
-    surfaceReflectivity?: string;
-}
+	internalDiameter?: number;
+	externalDiameter?: number;
+	insulationThickness?: number;
+	insulationThermalConductivity?: number;
+	pipeContents?: string;
+	surfaceReflectivity?: string;
+};
 
 export interface HotWaterDistribution {
-    distributions?: HotWaterDistributionData[]
+	distributions?: HotWaterDistributionData[]
 }
 
 export type ShadingObject = {
 	name: string;
-    direction: number;
-    objectType: string;
-    height: number;
-    distance: number;
-}
+	direction: number;
+	objectType: string;
+	height: number;
+	distance: number;
+};
 
 export interface Shading {
 	shadingObjects?: ShadingObject[]
 }
 
 export interface EcaasForm<T> {
-    complete?: boolean;
-    data: T;
+	complete?: boolean;
+	data: T;
 }

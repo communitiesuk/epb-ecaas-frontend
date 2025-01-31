@@ -1,43 +1,43 @@
 <script setup lang="ts">
-	const store = useEcaasStore();
+const store = useEcaasStore();
 
-	const model = ref({
-		...store.dwellingDetails.appliancesAndElectricity.data
+const model = ref({
+	...store.dwellingDetails.appliancesAndElectricity.data
+});
+
+const energyRatingOptions = {
+	a: 'A',
+	b: 'B',
+	c: 'C',
+	d: 'D',
+	e: 'E',
+	f: 'F',
+	na: 'N/A'
+};
+
+const saveForm = (fields: typeof model.value) => {
+	store.$patch({
+		dwellingDetails: {
+			appliancesAndElectricity: {
+				data: {
+					fridgeFreezerEnergyRating: fields.fridgeFreezerEnergyRating,
+					dishwasherEnergyRating: fields.dishwasherEnergyRating,
+					ovenCookerEnergyRating: fields.ovenCookerEnergyRating,
+					washingMachineEnergyRating: fields.washingMachineEnergyRating,
+					tumbleDryerEnergyRating: fields.tumbleDryerEnergyRating,
+					electricVehicleCharger: fields.electricVehicleCharger,
+					electricityGridConnection: fields.electricityGridConnection,
+					electricityTariff: fields.electricityTariff
+				},
+				complete: true,
+			},
+		},
 	});
 
-	const energyRatingOptions = {
-		a: 'A',
-		b: 'B',
-		c: 'C',
-		d: 'D',
-		e: 'E',
-		f: 'F',
-		na: 'N/A'
-	};
+	navigateTo("/dwelling-details");
+};
 
-	const saveForm = (fields: typeof model.value) => {
-		store.$patch({
-			dwellingDetails: {
-				appliancesAndElectricity: {
-					data: {
-						fridgeFreezerEnergyRating: fields.fridgeFreezerEnergyRating,
-						dishwasherEnergyRating: fields.dishwasherEnergyRating,
-						ovenCookerEnergyRating: fields.ovenCookerEnergyRating,
-						washingMachineEnergyRating: fields.washingMachineEnergyRating,
-						tumbleDryerEnergyRating: fields.tumbleDryerEnergyRating,
-						electricVehicleCharger: fields.electricVehicleCharger,
-						electricityGridConnection: fields.electricityGridConnection,
-						electricityTariff: fields.electricityTariff
-					},
-					complete: true,
-				},
-			},
-		});
-
-		navigateTo("/dwelling-details");
-	};
-
-	const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

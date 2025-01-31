@@ -1,14 +1,14 @@
 <script setup>
-	const props = defineProps({
-		context: {
-			type: Object,
-			default() {
-				return {};
-			}
+const props = defineProps({
+	context: {
+		type: Object,
+		default() {
+			return {};
 		}
-	});
+	}
+});
 
-	const { label } = props.context;
+const { label } = props.context;
 </script>
 
 <template>

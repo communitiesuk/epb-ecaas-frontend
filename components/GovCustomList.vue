@@ -1,22 +1,47 @@
 <script setup lang="ts">
-	const props = defineProps<{
-		title: string;
-		formUrl: string;
-		items?: string[];
-		onRemove?: (index: number) => void;
-		onDuplicate?: (index: number) => void;
-	}>();
+const props = defineProps<{
+	title: string;
+	formUrl: string;
+	items?: string[];
+	onRemove?: (index: number) => void;
+	onDuplicate?: (index: number) => void;
+}>();
 
-	function handleRemove(index: number, e: MouseEvent) {
-		e.preventDefault();
-		props.onRemove?.(index);
-	}
+function handleRemove(index: number, e: MouseEvent) {
+	e.preventDefault();
+	props.onRemove?.(index);
+}
 
-	function handleDuplicate(index: number, e: MouseEvent) {
-		e.preventDefault();
-		props.onDuplicate?.(index);
-	}
+function handleDuplicate(index: number, e: MouseEvent) {
+	e.preventDefault();
+	props.onDuplicate?.(index);
+}
 </script>
+
+<template>
+	<ClientOnly>
+		<div class="custom-list">
+			<div class="custom-list__header">
+				<h2 class="govuk-heading-m govuk-!-margin-0">{{ title }}</h2>
+				<NuxtLink class="govuk-link" :href="`${formUrl}/create`">{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
+			</div>
+			<div v-if="items" class="custom-list__body" data-testid="customListItems">
+				<table class="govuk-table govuk-!-margin-0">
+					<tbody class="govuk-table__body">
+						<tr v-for="(item, index) in items" :key="index" class="govuk-table__row" data-testid="customListItem">
+							<th scope="row" class="govuk-table__header">{{ item }}</th>
+							<td class="govuk-table__cell">
+								<NuxtLink class="govuk-link custom-list__action-link" :href="`${formUrl}/${index}`">Edit</NuxtLink>
+								<a v-if="onDuplicate" href="#" class="govuk-link custom-list__action-link" :data-testid="`customListItemDuplicate_${index}`" @click="handleDuplicate(index, $event)">Duplicate</a>
+								<a href="#" class="govuk-link custom-list__action-link" :data-testid="`customListItemRemove_${index}`" @click="handleRemove(index, $event)">Remove</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</ClientOnly>
+</template>
 
 <style scoped lang="scss">
 	@use "sass:map";
@@ -42,28 +67,3 @@
 		margin-right: 25px;
 	}
 </style>
-
-<template>
-	<ClientOnly>
-		<div class="custom-list">
-			<div class="custom-list__header">
-				<h2 class="govuk-heading-m govuk-!-margin-0">{{ title }}</h2>
-				<NuxtLink class="govuk-link" :href="`${formUrl}/create`">{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
-			</div>
-				<div class="custom-list__body" v-if="items" data-testid="customListItems">
-					<table class="govuk-table govuk-!-margin-0">
-						<tbody class="govuk-table__body">
-							<tr class="govuk-table__row" v-for="(item, index) in items" data-testid="customListItem">
-								<th scope="row" class="govuk-table__header">{{ item }}</th>
-								<td class="govuk-table__cell">
-									<NuxtLink class="govuk-link custom-list__action-link" :href="`${formUrl}/${index}`">Edit</NuxtLink>
-									<a v-if="onDuplicate" href="#" class="govuk-link custom-list__action-link" @click="handleDuplicate(index, $event)" :data-testid="`customListItemDuplicate_${index}`">Duplicate</a>
-									<a href="#" class="govuk-link custom-list__action-link" @click="handleRemove(index, $event)" :data-testid="`customListItemRemove_${index}`">Remove</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-		</div>
-	</ClientOnly>
-</template>

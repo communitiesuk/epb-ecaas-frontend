@@ -24,7 +24,7 @@ describe('shading form', () => {
 	};
 
 	mockNuxtImport('navigateTo', () => {
-	    return navigateToMock;
+		return navigateToMock;
 	});
 
 	afterEach(() => {

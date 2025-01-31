@@ -1,8 +1,8 @@
 <script setup lang="ts">
-	defineProps<{
-		id: string;
-		selected: boolean;
-	}>();
+defineProps<{
+	id: string;
+	selected: boolean;
+}>();
 </script>
 
 <template>

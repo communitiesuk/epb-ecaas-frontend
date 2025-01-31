@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	defineProps<{ serviceName?: string; }>();
+defineProps<{ serviceName?: string; }>();
 </script>
 
 <template>
@@ -8,7 +8,7 @@
 			<div class="govuk-header__logo">
 				<a href="#" class="govuk-header__link govuk-header__link--homepage">
 					<svg
-focusable="false" role="img" class="govuk-header__logotype" xmlns="http://www.w3.org/2000/svg"
+						focusable="false" role="img" class="govuk-header__logotype" xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 148 30" height="30" width="148" aria-label="GOV.UK">
 						<title>GOV.UK</title>
 						<path

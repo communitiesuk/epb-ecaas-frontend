@@ -1,25 +1,25 @@
 <script setup lang="ts">
-	defineProps<{
-		title?: string;
-		errorList?: Array<{
-			id: string;
-			text: string | undefined;
-		}>;
-		testId?: string;
-	}>();
+defineProps<{
+	title?: string;
+	errorList?: Array<{
+		id: string;
+		text: string | undefined;
+	}>;
+	testId?: string;
+}>();
 
-	const navigateToField = (id: string) => (e: Event) => {
-		e.preventDefault();
+const navigateToField = (id: string) => (e: Event) => {
+	e.preventDefault();
 
-		const label = document.querySelector(`label[for="${id}"]`);
+	const label = document.querySelector(`label[for="${id}"]`);
 
-		if (label) {
-			label.scrollIntoView();
-			return;
-		}
+	if (label) {
+		label.scrollIntoView();
+		return;
+	}
 
-		document.getElementById(id)?.scrollIntoView();
-	};
+	document.getElementById(id)?.scrollIntoView();
+};
 </script>
 
 <template>

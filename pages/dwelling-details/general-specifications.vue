@@ -1,37 +1,37 @@
 <script setup lang="ts">
-	const title = "General specifications";
-	const store = useEcaasStore();
+const title = "General specifications";
+const store = useEcaasStore();
 
-	const model = ref({
-		...store.dwellingDetails.generalSpecifications.data
+const model = ref({
+	...store.dwellingDetails.generalSpecifications.data
+});
+
+const saveForm = (fields: typeof model.value) => {
+	store.$patch({
+		dwellingDetails: {
+			generalSpecifications: {
+				data: {
+					typeOfResidence: fields.typeOfResidence,
+					weatherDataLocation: fields.weatherDataLocation,
+					sizeGroundFloorArea: fields.sizeGroundFloorArea,
+					numOfBedrooms: fields.numOfBedrooms,
+					storiesInDwelling: fields.storiesInDwelling,
+					levelOfShelter: fields.levelOfShelter,
+					numOfShelteredSides: fields.numOfShelteredSides,
+					heatingControlType: fields.heatingControlType,
+					cookingFuelType: fields.cookingFuelType,
+					coldWaterSource: fields.coldWaterSource,
+					numOfADFWetRooms: fields.numOfADFWetRooms
+				},
+				complete: true,
+			},
+		},
 	});
 
-	const saveForm = (fields: typeof model.value) => {
-		store.$patch({
-			dwellingDetails: {
-				generalSpecifications: {
-					data: {
-						typeOfResidence: fields.typeOfResidence,
-						weatherDataLocation: fields.weatherDataLocation,
-						sizeGroundFloorArea: fields.sizeGroundFloorArea,
-						numOfBedrooms: fields.numOfBedrooms,
-						storiesInDwelling: fields.storiesInDwelling,
-						levelOfShelter: fields.levelOfShelter,
-						numOfShelteredSides: fields.numOfShelteredSides,
-						heatingControlType: fields.heatingControlType,
-						cookingFuelType: fields.cookingFuelType,
-						coldWaterSource: fields.coldWaterSource,
-						numOfADFWetRooms: fields.numOfADFWetRooms
-					},
-					complete: true,
-				},
-			},
-		});
+	navigateTo("/dwelling-details");
+};
 
-		navigateTo("/dwelling-details");
-	};
-
-	const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
@@ -71,7 +71,7 @@
 			label="Size of ground floor area"
 			name="sizeGroundFloorArea"
 			validation="required | number"
-			suffixText="m2"
+			suffix-text="m2"
 		/>
 		<FormKit
 			id="numOfBedrooms"

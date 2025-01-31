@@ -1,88 +1,88 @@
 <script setup lang="ts">
-	import type { SummarySection } from '~/components/GovSummaryCard.vue';
+import type { SummarySection } from '~/components/GovSummaryCard.vue';
 
-	definePageMeta({ layout: false });
+definePageMeta({ layout: false });
 
-	const title = "Dwelling details summary";
-	const store = useEcaasStore();
+const title = "Dwelling details summary";
+const store = useEcaasStore();
 
-	const generalSpecificationsData = store.dwellingDetails.generalSpecifications.data;
-	const appliancesAndElectricityData = store.dwellingDetails.appliancesAndElectricity.data;
-	const hotWaterDistributionData = store.dwellingDetails.hotWaterDistribution.data;
-	const shadingData = store.dwellingDetails.shading.data;
+const generalSpecificationsData = store.dwellingDetails.generalSpecifications.data;
+const appliancesAndElectricityData = store.dwellingDetails.appliancesAndElectricity.data;
+const hotWaterDistributionData = store.dwellingDetails.hotWaterDistribution.data;
+const shadingData = store.dwellingDetails.shading.data;
 
-	const generalSpecificationsSummary: SummarySection = {
-		id: 'generalSpecifications',
-		label: "General specifications",
-		data: {
-			"Type of residence": generalSpecificationsData.typeOfResidence,
-			"Weather data location": generalSpecificationsData.weatherDataLocation,
-			"Size of ground floor area": generalSpecificationsData.sizeGroundFloorArea ?
-				`${generalSpecificationsData.sizeGroundFloorArea} m²` : undefined,
-			"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
-			"Number of stories in dwelling": generalSpecificationsData.storiesInDwelling,
-			"Shelter": generalSpecificationsData.levelOfShelter,
-			"Number of sheltered sides": generalSpecificationsData.numOfShelteredSides,
-			"Heating control type": generalSpecificationsData.heatingControlType,
-			"Cooking fuel type": generalSpecificationsData.cookingFuelType,
-			"Cold water source": generalSpecificationsData.coldWaterSource,
-			"Number of ADF wet rooms": generalSpecificationsData.numOfADFWetRooms
-		}
-	};
-
-	const appliancesAndElectricitySummary: SummarySection = {
-		id: 'appliancesAndElectricity',
-		label: "Appliances and electricity",
-		data: {
-			"Fridge/freezer energy rating": appliancesAndElectricityData.fridgeFreezerEnergyRating,
-			"Dishwasher energy rating": appliancesAndElectricityData.dishwasherEnergyRating,
-			"Oven/cooker energy rating": appliancesAndElectricityData.ovenCookerEnergyRating,
-			"Washing machine energy rating": appliancesAndElectricityData.washingMachineEnergyRating,
-			"Tumble dryer energy rating": appliancesAndElectricityData.tumbleDryerEnergyRating,
-			"Electric vehicle charger": appliancesAndElectricityData.electricVehicleCharger,
-			"Electricity grid connection": appliancesAndElectricityData.electricityGridConnection,
-			"Electricity tariff": appliancesAndElectricityData.electricityTariff
-		}
-	};
-
-	const hotWaterDistributionSummary: SummarySection = {
-		id: 'hotWaterDistribution',
-		label: "Hot water distribution",
-		data: hotWaterDistributionData.distributions?.map(d => {
-			return {
-				"Name": d.name,
-				"Location": d.location,
-				"Length": d.length,
-				"Internal diameter": d.internalDiameter,
-				"External diameter": d.externalDiameter,
-				"Insulation thickness": d.insulationThickness,
-				"Insulation thermal conductivity": d.insulationThermalConductivity,
-				"Reflective insulation": d.surfaceReflectivity,
-				"Pipe contents": d.pipeContents
-			}
-		}) || []
+const generalSpecificationsSummary: SummarySection = {
+	id: 'generalSpecifications',
+	label: "General specifications",
+	data: {
+		"Type of residence": generalSpecificationsData.typeOfResidence,
+		"Weather data location": generalSpecificationsData.weatherDataLocation,
+		"Size of ground floor area": generalSpecificationsData.sizeGroundFloorArea ?
+			`${generalSpecificationsData.sizeGroundFloorArea} m²` : undefined,
+		"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
+		"Number of stories in dwelling": generalSpecificationsData.storiesInDwelling,
+		"Shelter": generalSpecificationsData.levelOfShelter,
+		"Number of sheltered sides": generalSpecificationsData.numOfShelteredSides,
+		"Heating control type": generalSpecificationsData.heatingControlType,
+		"Cooking fuel type": generalSpecificationsData.cookingFuelType,
+		"Cold water source": generalSpecificationsData.coldWaterSource,
+		"Number of ADF wet rooms": generalSpecificationsData.numOfADFWetRooms
 	}
+};
 
-	const shadingSummary: SummarySection = {
-		id: 'shading',
-		label: "Shading",
-		data: shadingData.shadingObjects?.map(s => {
-			return {
-				"Name": s.name,
-				"Shading direction": s.direction,
-				"Shading type": s.objectType,
-				"Height": s.height,
-				"Distace": s.distance
-			}
-		}) || []
+const appliancesAndElectricitySummary: SummarySection = {
+	id: 'appliancesAndElectricity',
+	label: "Appliances and electricity",
+	data: {
+		"Fridge/freezer energy rating": appliancesAndElectricityData.fridgeFreezerEnergyRating,
+		"Dishwasher energy rating": appliancesAndElectricityData.dishwasherEnergyRating,
+		"Oven/cooker energy rating": appliancesAndElectricityData.ovenCookerEnergyRating,
+		"Washing machine energy rating": appliancesAndElectricityData.washingMachineEnergyRating,
+		"Tumble dryer energy rating": appliancesAndElectricityData.tumbleDryerEnergyRating,
+		"Electric vehicle charger": appliancesAndElectricityData.electricVehicleCharger,
+		"Electricity grid connection": appliancesAndElectricityData.electricityGridConnection,
+		"Electricity tariff": appliancesAndElectricityData.electricityTariff
 	}
+};
 
-	const summarySections: SummarySection[] = [
-		generalSpecificationsSummary,
-		appliancesAndElectricitySummary,
-		hotWaterDistributionSummary,
-		shadingSummary
-	];
+const hotWaterDistributionSummary: SummarySection = {
+	id: 'hotWaterDistribution',
+	label: "Hot water distribution",
+	data: hotWaterDistributionData.distributions?.map(d => {
+		return {
+			"Name": d.name,
+			"Location": d.location,
+			"Length": d.length,
+			"Internal diameter": d.internalDiameter,
+			"External diameter": d.externalDiameter,
+			"Insulation thickness": d.insulationThickness,
+			"Insulation thermal conductivity": d.insulationThermalConductivity,
+			"Reflective insulation": d.surfaceReflectivity,
+			"Pipe contents": d.pipeContents
+		};
+	}) || []
+};
+
+const shadingSummary: SummarySection = {
+	id: 'shading',
+	label: "Shading",
+	data: shadingData.shadingObjects?.map(s => {
+		return {
+			"Name": s.name,
+			"Shading direction": s.direction,
+			"Shading type": s.objectType,
+			"Height": s.height,
+			"Distace": s.distance
+		};
+	}) || []
+};
+
+const summarySections: SummarySection[] = [
+	generalSpecificationsSummary,
+	appliancesAndElectricitySummary,
+	hotWaterDistributionSummary,
+	shadingSummary
+];
 </script>
 
 <template>
@@ -92,7 +92,7 @@
 				<Title>{{ title }}</Title>
 			</Head>
 			<h1 class="govuk-heading-l">{{ title }}</h1>
-			<GovSummaryCard :summarySections="summarySections" />
+			<GovSummaryCard :summary-sections="summarySections" />
 			<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 		</NuxtLayout>
 	</div>

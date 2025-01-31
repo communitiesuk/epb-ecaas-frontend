@@ -1,35 +1,37 @@
 <script setup>
-	const props = defineProps({
-		context: {
-			type: Object,
-			default() {
-				return {};
-			}
+const props = defineProps({
+	context: {
+		type: Object,
+		default() {
+			return {};
 		}
-	});
-
-	const {
-		id,
-		node: { name },
-		attrs: { suffixText },
-		label,
-		help,
-	} = props.context;
-
-	const { mounted } = useMounted();
-
-	function handleInput(e) {
-		const value = e.target.value ? parseFloat(e.target.value) : '';
-		props.context.node.input(value);
 	}
+});
+
+const {
+	id,
+	node: { name },
+	attrs: { suffixText },
+	label,
+	help,
+} = props.context;
+
+const { mounted } = useMounted();
+
+function handleInput(e) {
+	const value = e.target.value ? parseFloat(e.target.value) : '';
+	props.context.node.input(value);
+}
 </script>
+
 <template>
 	<div
-:class="`govuk-form-group ${props.context.state.invalid &&
-		props.context.messages.rule_required &&
-		props.context.messages.rule_required.visible
-		? 'govuk-form-group--error'
-		: ''}`"
+		:class="`govuk-form-group ${props.context.state.invalid &&
+			props.context.messages.rule_required &&
+			props.context.messages.rule_required.visible
+			? 'govuk-form-group--error'
+			: ''
+		}`"
 	>
 		<label class="govuk-label govuk-label--m" :for="id">
 			{{ label }}
@@ -50,7 +52,7 @@
 				:data-testId="id"
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 				@change="handleInput"
-			/>
+			>
 			<div class="govuk-input__suffix" aria-hidden="true">{{suffixText}}</div>
 		</div>
 	</div>

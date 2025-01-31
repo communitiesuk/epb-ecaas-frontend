@@ -1,25 +1,27 @@
 <script setup lang="ts">
-	export interface TabItem {
-		id: string;
-		label: string;
-	};
+export interface TabItem {
+	id: string;
+	label: string;
+};
 
-	defineProps<{
-		items: TabItem[]
-	}>();
+defineProps<{
+	items: TabItem[]
+}>();
 
-	const currentTab = ref(0);
+const currentTab = ref(0);
 
-	function selectTab(index: number, e: MouseEvent) {
-		e.preventDefault();
-		currentTab.value = index;
-	}
+function selectTab(index: number, e: MouseEvent) {
+	e.preventDefault();
+	currentTab.value = index;
+}
 </script>
 
 <template>
 	<div class="govuk-tabs" data-module="govuk-tabs">
 		<ul class="govuk-tabs__list">
-			<li v-for="(item, index) in items"
+			<li
+				v-for="(item, index) in items"
+				:key="item.id"
 				class="govuk-tabs__list-item"
 				:class="{ 'govuk-tabs__list-item--selected': currentTab === index }"
 			>
@@ -29,6 +31,6 @@
 			</li>
 		</ul>
 
-		<slot :currentTab="currentTab" />
+		<slot :current-tab="currentTab" />
 	</div>
 </template>

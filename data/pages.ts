@@ -353,6 +353,6 @@ const pagesData: Array<Page> = [
 		type: PageType.Summary,
 		parentId: 'cooling'
 	}
-]
+];
 
 export default pagesData;

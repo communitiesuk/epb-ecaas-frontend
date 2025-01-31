@@ -1,11 +1,11 @@
 <script setup lang="ts">
-	export interface GovDetailsProps {
-		summaryText: string;
-		text: string;
-		classes?: string;
-	}
+export interface GovDetailsProps {
+	summaryText: string;
+	text: string;
+	classes?: string;
+}
 
-	defineProps<GovDetailsProps>();
+defineProps<GovDetailsProps>();
 </script>
 
 <template>

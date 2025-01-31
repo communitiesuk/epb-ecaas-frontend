@@ -1,8 +1,8 @@
 <script setup lang="ts">
-	const page = usePage();
+const page = usePage();
 
-	const { createTaskList } = useTaskList();
-	const taskList = createTaskList(page);
+const { createTaskList } = useTaskList();
+const taskList = createTaskList(page);
 </script>
 
 <template>

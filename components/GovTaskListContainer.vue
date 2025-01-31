@@ -1,14 +1,14 @@
 <script setup lang="ts">
-	defineProps<{ heading: string }>();
+defineProps<{ heading: string }>();
 </script>
 
 <template>
 	<div class="task-list-container">
-        <h2 class="task-list-container__heading govuk-heading-m">{{ heading }}</h2>
+		<h2 class="task-list-container__heading govuk-heading-m">{{ heading }}</h2>
 		<div class="task-list-container__tasks">
 			<slot />
 		</div>
-    </div>
+	</div>
 </template>
 
 <style scoped lang="scss">

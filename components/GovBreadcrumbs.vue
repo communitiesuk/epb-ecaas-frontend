@@ -1,37 +1,37 @@
 <script setup lang="ts">
-	import pagesData, { type Page } from '../data/pages';
+import pagesData, { type Page } from '../data/pages';
 
-	const getBreadcrumbs = (id: string | undefined, breadcrumbs: Array<Page>): Array<Page> => {
-		const currentPage = pagesData.find(page => page.id === id);
+const getBreadcrumbs = (id: string | undefined, breadcrumbs: Array<Page>): Array<Page> => {
+	const currentPage = pagesData.find(page => page.id === id);
 
-		if (!currentPage) {
-			return breadcrumbs;
-		}
+	if (!currentPage) {
+		return breadcrumbs;
+	}
 
-		breadcrumbs.unshift(currentPage);
-		return getBreadcrumbs(currentPage.parentId, breadcrumbs);
-	};
+	breadcrumbs.unshift(currentPage);
+	return getBreadcrumbs(currentPage.parentId, breadcrumbs);
+};
 
-	const pages = computed(() => {
-		const route = useRoute();
-		const params = Object.keys(route.params);
+const pages = computed(() => {
+	const route = useRoute();
+	const params = Object.keys(route.params);
 
-		let path = route.path;
-		let currentPage = pagesData.find(page => page.url === path);
+	let path = route.path;
+	let currentPage = pagesData.find(page => page.url === path);
 
-		if (!currentPage && params.length) {
-			const segments = route.path.split('/');
-			segments.splice(segments.length - params.length, 1);
+	if (!currentPage && params.length) {
+		const segments = route.path.split('/');
+		segments.splice(segments.length - params.length, 1);
 
-			params.forEach(p => segments.push(`:${p}`));
+		params.forEach(p => segments.push(`:${p}`));
 
-			path = segments.join('/');
+		path = segments.join('/');
 
-			currentPage = pagesData.find(page => page.url === path);
-		}
+		currentPage = pagesData.find(page => page.url === path);
+	}
 
-		return currentPage ? getBreadcrumbs(currentPage.id, []) : [];
-	});
+	return currentPage ? getBreadcrumbs(currentPage.id, []) : [];
+});
 </script>
 
 <template>

@@ -1,17 +1,17 @@
 function hyphenate(value: string | undefined) {
-    if (value === undefined) {
-      return '';
-    }
+	if (value === undefined) {
+		return '';
+	}
 
-    if (typeof value == 'string') {
-      const formattedString = value.replaceAll(" ","-");
+	if (typeof value == 'string') {
+		const formattedString = value.replaceAll(" ","-");
 
-      return (
-          formattedString.toLowerCase()
-      );
-    }
+		return (
+			formattedString.toLowerCase()
+		);
+	}
 
-    return value;
-  }
+	return value;
+}
 
-export default hyphenate
+export default hyphenate;

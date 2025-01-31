@@ -1,19 +1,19 @@
 <script setup lang="ts">
-	import pagesData, { PageType, type Page } from "~/data/pages";
+import pagesData, { PageType, type Page } from "~/data/pages";
 
-	const parentPages: Array<Page> = pagesData.filter(
-		(page) => page.type === PageType.Section
-	);
+const parentPages: Array<Page> = pagesData.filter(
+	(page) => page.type === PageType.Section
+);
 
-	const openStates = ref(Array(parentPages.length).fill(true));
+const openStates = ref(Array(parentPages.length).fill(true));
 
-	function toggle(index: number) {
-		openStates.value[index] = !openStates.value[index];
-	}
+function toggle(index: number) {
+	openStates.value[index] = !openStates.value[index];
+}
 
-	function isOpen(index: number) {
-		return openStates.value[index];
-	}
+function isOpen(index: number) {
+	return openStates.value[index];
+}
 </script>
 
 <template>
