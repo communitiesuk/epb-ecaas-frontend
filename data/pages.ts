@@ -14,8 +14,8 @@ export interface Page {
 
 const pagesData: Array<Page> = [
 	{
-		id: 'overview',
-		title: 'Overview',
+		id: 'taskList',
+		title: 'Task list',
 		url: '/',
 	},
 	{
@@ -23,7 +23,7 @@ const pagesData: Array<Page> = [
 		title: 'Dwelling details',
 		url: '/dwelling-details',
 		type: PageType.Section,
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'generalSpecifications',
@@ -93,7 +93,7 @@ const pagesData: Array<Page> = [
 		title: 'Infiltration and ventilation',
 		url: '/infiltration-and-ventilation',
 		type: PageType.Section,
-		parentId: 'overview'
+		parentId: 'taskList'
 	},{
 		id: 'infiltration',
 		title: 'Infiltration',
@@ -127,7 +127,7 @@ const pagesData: Array<Page> = [
 		title: 'Living Space Fabric',
 		url: '/living-space',
 		type: PageType.Section,
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'livingSpaceZoneParameters',
@@ -183,7 +183,7 @@ const pagesData: Array<Page> = [
 		title: 'Rest of dwelling fabric',
 		url: '/rest-of-dwelling',
 		type: PageType.Section,
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'restOfDwellingZoneParameters',
@@ -239,7 +239,7 @@ const pagesData: Array<Page> = [
 		title: 'Heating systems',
 		url: '/heating-systems',
 		type: PageType.Section,
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'heatSource',
@@ -274,7 +274,7 @@ const pagesData: Array<Page> = [
 		title: 'Hot water outlets',
 		url: '/hot-water-outlets',
 		type: PageType.Section,
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'wasteWaterRecoverySystems',
@@ -302,7 +302,7 @@ const pagesData: Array<Page> = [
 		title: 'PV and energy storage',
 		url: '/pv-storage',
 		type: PageType.Section,
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'solarPvArray',
@@ -337,7 +337,7 @@ const pagesData: Array<Page> = [
 		title: 'Cooling',
 		url: '/cooling',
 		type: PageType.Section,
-		parentId: 'overview'
+		parentId: 'taskList'
 	},
 	{
 		id: 'airConditioning',
