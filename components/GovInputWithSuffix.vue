@@ -11,7 +11,7 @@ const props = defineProps({
 const {
 	id,
 	node: { name },
-	attrs: { suffixText },
+	attrs,
 	label,
 	help,
 } = props.context;
@@ -53,7 +53,7 @@ function handleInput(e) {
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 				@change="handleInput"
 			>
-			<div class="govuk-input__suffix" aria-hidden="true">{{suffixText}}</div>
+			<div class="govuk-input__suffix" aria-hidden="true">{{attrs['suffix-text']}}</div>
 		</div>
 	</div>
 </template>
