@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
-import hyphenate from '../../utils/hyphenate'
+import hyphenate from '../../utils/hyphenate';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {

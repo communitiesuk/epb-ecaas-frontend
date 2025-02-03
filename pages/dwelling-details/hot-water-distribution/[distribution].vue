@@ -91,7 +91,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Name this pipework so it can be identified later"
 			name="name"
-			validation="required"
+			validation="required | length:1,50"
 		/>
 		<FormKit
 			id="location"

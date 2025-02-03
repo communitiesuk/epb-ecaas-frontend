@@ -23,14 +23,7 @@ function handleInput(e) {
 </script>
 
 <template>
-	<div
-		:class="`govuk-form-group ${props.context.state.invalid &&
-			props.context.messages.rule_required &&
-			props.context.messages.rule_required.visible
-			? 'govuk-form-group--error'
-			: ''
-		}`"
-	>
+	<div :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
 		<h1 class="govuk-label-wrapper">
 			<label class="govuk-label govuk-label--m" :for="id">
 				{{ label }}
@@ -40,7 +33,7 @@ function handleInput(e) {
 			{{ help }}
 		</div>
 		<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
-			<span class="govuk-visually-hidden">Error:</span> {{ props.context.messages.rule_required?.value }}
+			<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 		</p>
 		<input
 			:id="id"

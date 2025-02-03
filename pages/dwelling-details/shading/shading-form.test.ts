@@ -63,6 +63,8 @@ describe('shading form', () => {
 				params: { shading: '1' }
 			}
 		});
+
+		await user.tab();
 		await user.clear(screen.getByTestId('name'));
 		await user.type(screen.getByTestId('name'), 'Wall');
 		await user.tab();

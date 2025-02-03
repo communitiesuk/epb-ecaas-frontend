@@ -24,7 +24,7 @@ function handleInput(e) {
 </script>
 
 <template>
-	<div :class="`govuk-form-group ${props.context.state.invalid ? 'govuk-form-group--error' : ''}`">
+	<div :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
 		<fieldset
 			:id="id"
 			class="govuk-fieldset"
@@ -38,7 +38,7 @@ function handleInput(e) {
 			</div>
 			<GovDetails v-if="details" :summary-text="details.summaryText" :text="details.text" classes="govuk-!-margin-bottom-4" />
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
-				<span class="govuk-visually-hidden">Error:</span> {{ props.context.messages.rule_required.value }}
+				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>
 			<div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
 				<div v-for="key in Object.keys(options)" :key="key" class="govuk-radios__item">

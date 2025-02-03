@@ -35,14 +35,7 @@ const handleChange = (value: string) => {
 </script>
 
 <template>
-	<div
-		:class="`govuk-form-group ${props.context.state.invalid &&
-			props.context.messages.rule_required &&
-			props.context.messages.rule_required.visible
-			? 'govuk-form-group--error'
-			: ''
-		}`"
-	>
+	<div :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
 		<div class="govuk-form-group">
 			<fieldset class="govuk-fieldset">
 				<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -55,7 +48,7 @@ const handleChange = (value: string) => {
 				</div>
 				<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 					<span class="govuk-visually-hidden">Error:</span>
-					{{ props.context.messages.rule_required.value }}
+					{{ getErrorMessage(props.context) }}
 				</p>
 				<div class="govuk-checkboxes" data-module="govuk-checkboxes">
 					<div v-for="(option, index) in options" :key="option" class="govuk-checkboxes__item">
