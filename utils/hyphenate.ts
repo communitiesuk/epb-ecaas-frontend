@@ -2,16 +2,10 @@ function hyphenate(value: string | undefined) {
 	if (value === undefined) {
 		return '';
 	}
+	const formattedString = value.trim().replaceAll(" ","-");
 
-	if (typeof value == 'string') {
-		const formattedString = value.trim().replaceAll(" ","-");
-
-		return (
-			formattedString.toLowerCase()
-		);
+	return formattedString.toLowerCase();
 	}
 
-}
-
-export default hyphenate;
+	export default hyphenate;
 
