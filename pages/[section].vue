@@ -10,9 +10,7 @@ const taskList = createTaskList(page);
 		<Title>{{ page?.title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ page?.title }}</h1>
-	<GovTaskListContainer heading="Sections to complete">
-		<GovTaskList :items="taskList" />
-	</GovTaskListContainer>
+	<GovTaskList :items="taskList" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
