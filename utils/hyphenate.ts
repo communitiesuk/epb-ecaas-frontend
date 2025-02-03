@@ -4,14 +4,14 @@ function hyphenate(value: string | undefined) {
 	}
 
 	if (typeof value == 'string') {
-		const formattedString = value.replaceAll(" ","-");
+		const formattedString = value.trim().replaceAll(" ","-");
 
 		return (
 			formattedString.toLowerCase()
 		);
 	}
 
-	return value;
 }
 
 export default hyphenate;
+
