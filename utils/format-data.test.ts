@@ -9,9 +9,11 @@ describe("formatData utils function" , () => {
 
 	it("should return string with spaces in correct the position", () => {
     expect(formatData("seperateTempAndTimeControl")).toBe("Seperate temp and time control")
+    expect(formatData("Shading 1")).toBe("Shading 1")
   })
 
-	it("should return handle numbers", () => {
+	it("should handle numbers", () => {
     expect(formatData(2)).toBe(2)
+    expect(formatData(3.4)).toBe(3.4)
   })
 }) 
