@@ -30,6 +30,7 @@
     "@nuxt/test-utils": "^3.14.4",
     "@pinia/testing": "^0.1.7",
     "@stylistic/eslint-plugin": "^3.0.1",
+    "@tauri-apps/cli": "^2.2.7",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/user-event": "^14.5.2",
     "@testing-library/vue": "^8.1.0",
