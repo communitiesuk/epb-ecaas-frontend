@@ -10,11 +10,10 @@ export interface DwellingDetails {
 }
 
 export interface GeneralSpecificationsData {
-	typeOfResidence?: string;
-	weatherDataLocation?: string;
-	sizeGroundFloorArea?: number;
+	typeOfDwelling?: string;
+	storeysInDwelling?: number;
+	storeyOfFlat?: number;
 	numOfBedrooms?: number;
-	storiesInDwelling?: number;
 	levelOfShelter?: string;
 	numOfShelteredSides?: number;
 	heatingControlType?: string;

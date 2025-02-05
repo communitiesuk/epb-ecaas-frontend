@@ -10,11 +10,9 @@ mockNuxtImport('navigateTo', () => {
 });
 
 const state: GeneralSpecificationsData = {
-	typeOfResidence: 'house',
-	weatherDataLocation: 'manchester',
-	sizeGroundFloorArea: 50,
+	typeOfDwelling: 'house',
+	storeysInDwelling: 2,
 	numOfBedrooms: 3,
-	storiesInDwelling: 2,
 	levelOfShelter: 'normal',
 	numOfShelteredSides: 0,
 	heatingControlType: 'seperateTempControl',
@@ -35,11 +33,9 @@ describe('General specifications', () => {
 
 		await renderSuspended(GeneralSpecifications);
 
-		await user.click(screen.getByTestId('typeOfResidence_house'));
-		await user.selectOptions(screen.getByTestId('weatherDataLocation'), 'manchester');
-		await user.type(screen.getByTestId('sizeGroundFloorArea'), '50');
+		await user.click(screen.getByTestId('typeOfDwelling_house'));
+		await user.type(screen.getByTestId('storeysInDwelling'), '2');
 		await user.type(screen.getByTestId('numOfBedrooms'), '3');
-		await user.type(screen.getByTestId('storiesInDwelling'), '2');
 		await user.click(screen.getByTestId('levelOfShelter_normal'));
 		await user.type(screen.getByTestId('numOfShelteredSides'), '0');
 		await user.click(screen.getByTestId('heatingControlType_seperateTempControl'));
@@ -66,11 +62,9 @@ describe('General specifications', () => {
 
 		await renderSuspended(GeneralSpecifications);
 		
-		expect((await screen.findByTestId('typeOfResidence_house')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('weatherDataLocation') as HTMLInputElement).value).toBe('manchester');
-		expect((await screen.findByTestId('sizeGroundFloorArea') as HTMLInputElement).value).toBe('50');
+		expect((await screen.findByTestId('typeOfDwelling_house')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('storeysInDwelling') as HTMLInputElement).value).toBe('2');
 		expect((await screen.findByTestId('numOfBedrooms') as HTMLInputElement).value).toBe('3');
-		expect((await screen.findByTestId('storiesInDwelling') as HTMLInputElement).value).toBe('2');
 		expect((await screen.findByTestId('levelOfShelter_normal')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('numOfShelteredSides') as HTMLInputElement).value).toBe('0');
 		expect((await screen.findByTestId('heatingControlType_seperateTempControl')).hasAttribute('checked')).toBe(true);
@@ -86,11 +80,9 @@ describe('General specifications', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		expect((await screen.findByTestId('typeOfResidence_error'))).toBeDefined();
-		expect((await screen.findByTestId('weatherDataLocation_error'))).toBeDefined();
-		expect((await screen.findByTestId('sizeGroundFloorArea_error'))).toBeDefined();
+		expect((await screen.findByTestId('typeOfDwelling_error'))).toBeDefined();
+		expect((await screen.findByTestId('storeysInDwelling_error'))).toBeDefined();
 		expect((await screen.findByTestId('numOfBedrooms_error'))).toBeDefined();
-		expect((await screen.findByTestId('storiesInDwelling_error'))).toBeDefined();
 		expect((await screen.findByTestId('levelOfShelter_error'))).toBeDefined();
 		expect((await screen.findByTestId('numOfShelteredSides_error'))).toBeDefined();
 		expect((await screen.findByTestId('heatingControlType_error'))).toBeDefined();

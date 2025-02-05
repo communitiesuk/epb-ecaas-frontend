@@ -11,11 +11,10 @@ const saveForm = (fields: typeof model.value) => {
 		dwellingDetails: {
 			generalSpecifications: {
 				data: {
-					typeOfResidence: fields.typeOfResidence,
-					weatherDataLocation: fields.weatherDataLocation,
-					sizeGroundFloorArea: fields.sizeGroundFloorArea,
+					typeOfDwelling: fields.typeOfDwelling,
+					storeysInDwelling: fields.storeysInDwelling,
+					storeyOfFlat: fields.storeyOfFlat,
 					numOfBedrooms: fields.numOfBedrooms,
-					storiesInDwelling: fields.storiesInDwelling,
 					levelOfShelter: fields.levelOfShelter,
 					numOfShelteredSides: fields.numOfShelteredSides,
 					heatingControlType: fields.heatingControlType,
@@ -42,36 +41,33 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm" @submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="generalSpecificationsErrorSummary"/>
 		<FormKit
-			id="typeOfResidence"
+			id="typeOfDwelling"
 			type="govRadios"
 			:options="{
 				house: 'House',
 				flat: 'Flat',
 			}"
-			label="Type of residence"
-			name="typeOfResidence"
+			label="Type of dwelling"
+			name="typeOfDwelling"
 			validation="required"
+			help="The broad dwelling type classification."
 		/>
 		<FormKit
-			id="weatherDataLocation"
-			type="govDropdown"
-			label="Weather data location"
-			name="weatherDataLocation"
-			:options="{
-				london: 'London',
-				manchester: 'Manchester',
-				york: 'York',
-			}"
-			validation="required"
-			help="The location nearest to your planned site"
+			id="storeysInDwelling"
+			type="govInputInt"
+			label="Number of storeys in building"
+			name="storeysInDwelling"
+			validation="required | number | max:250"
+			help="Number of storeys in the building. For houses this will be the same as the number of storeys in the dwelling, for flats, this will be the total number of storeys of the whole building that the flat is part of."
 		/>
 		<FormKit
-			id="sizeGroundFloorArea"
-			type="govInputWithSuffix"
-			label="Size of ground floor area"
-			name="sizeGroundFloorArea"
-			validation="required | number"
-			suffix-text="m2"
+			v-if="model.typeOfDwelling === 'flat'"
+			id="storeyOfFlat"
+			type="govInputInt"
+			label="Storey of flat"
+			name="storeyOfFlat"
+			validation="required | number | min:-50 | max:199"
+			help="The vertical position of the flat expressed by the storey it is on. 0 represents the ground floor."
 		/>
 		<FormKit
 			id="numOfBedrooms"
@@ -79,13 +75,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of bedrooms"
 			name="numOfBedrooms"
 			validation="required | number"
-		/>
-		<FormKit
-			id="storiesInDwelling"
-			type="govInputInt"
-			label="Number of stories in dwelling"
-			name="storiesInDwelling"
-			validation="required | number"
+			help="Number of bedrooms in dwelling. Affects predicted occupancy."
 		/>
 		<FormKit
 			id="levelOfShelter"
