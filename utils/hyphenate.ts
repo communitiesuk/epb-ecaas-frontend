@@ -5,7 +5,7 @@ function hyphenate(value: string | undefined) {
 	const formattedString = value.trim().replaceAll(" ","-");
 
 	return formattedString.toLowerCase();
-	}
+}
 
-	export default hyphenate;
+export default hyphenate;
 

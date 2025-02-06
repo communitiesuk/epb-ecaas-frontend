@@ -15,4 +15,4 @@ function formatData(value: string | number | boolean | undefined) {
 	return value;
 }
 
-export default formatData
+export default formatData;
