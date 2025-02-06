@@ -14,12 +14,11 @@ export interface GeneralSpecificationsData {
 	storeysInDwelling?: number;
 	storeyOfFlat?: number;
 	numOfBedrooms?: number;
-	levelOfShelter?: string;
-	numOfShelteredSides?: number;
+	latitude?: number;
+	longitude?: number;
+	partGCompliance?: string;
+	coolingRequired?: string;
 	heatingControlType?: string;
-	cookingFuelType?: string;
-	coldWaterSource?: string;
-	numOfADFWetRooms?: number;
 }
 
 export interface AppliancesAndElectricityData {

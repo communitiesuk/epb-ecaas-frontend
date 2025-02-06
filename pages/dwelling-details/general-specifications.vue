@@ -15,12 +15,11 @@ const saveForm = (fields: typeof model.value) => {
 					storeysInDwelling: fields.storeysInDwelling,
 					storeyOfFlat: fields.storeyOfFlat,
 					numOfBedrooms: fields.numOfBedrooms,
-					levelOfShelter: fields.levelOfShelter,
-					numOfShelteredSides: fields.numOfShelteredSides,
+					latitude: fields.latitude,
+					longitude: fields.longitude,
+					partGCompliance: fields.partGCompliance,
+					coolingRequired: fields.coolingRequired,
 					heatingControlType: fields.heatingControlType,
-					cookingFuelType: fields.cookingFuelType,
-					coldWaterSource: fields.coldWaterSource,
-					numOfADFWetRooms: fields.numOfADFWetRooms
 				},
 				complete: true,
 			},
@@ -57,7 +56,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputInt"
 			label="Number of storeys in building"
 			name="storeysInDwelling"
-			validation="required | number | max:250"
+			validation="required | number | min:1 | max:250"
 			help="Number of storeys in the building. For houses this will be the same as the number of storeys in the dwelling, for flats, this will be the total number of storeys of the whole building that the flat is part of."
 		/>
 		<FormKit
@@ -74,29 +73,50 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputInt"
 			label="Number of bedrooms"
 			name="numOfBedrooms"
-			validation="required | number"
+			validation="required | number | min:1 | max:5"
 			help="Number of bedrooms in dwelling. Affects predicted occupancy."
 		/>
 		<FormKit
-			id="levelOfShelter"
-			type="govRadios"
-			:options="{
-				verySheltered: 'Very sheltered',
-				sheltered: 'Sheltered',
-				normal: 'Normal',
-				exposed: 'Exposed'
-			}"
-			label="Shelter"
-			name="levelOfShelter"
-			validation="required"
-			help="Exposure level of the dwelling"
+			id="latitude"
+			type="govInputWithSuffix"
+			suffix-text="degrees"
+			label="Latitude"
+			name="latitude"
+			validation="required | number | min:-180 | max:180"
+			help="Latitude of weather station, angle from south, in degrees (single value)"
 		/>
 		<FormKit
-			id="numOfShelteredSides"
-			type="govInputInt"
-			label="Number of sheltered sides"
-			name="numOfShelteredSides"
-			validation="required | number"
+			id="longitude"
+			type="govInputWithSuffix"
+			suffix-text="degrees"
+			label="Longitude"
+			name="longitude"
+			validation="required | number | min:-180 | max:180"
+			help="Longitude of weather station, angle from south, in degrees (single value)"
+		/>
+		<FormKit
+			id="partGCompliance"
+			type="govRadios"
+			:options="{
+				yes: 'Yes',
+				no: 'No',
+			}"
+			label="Part G compliance"
+			name="partGCompliance"
+			validation="required"
+			help="Is this dwelling compliant with part G regulations? Affects predicted hot water demand"
+		/>
+		<FormKit
+			id="coolingRequired"
+			type="govRadios"
+			:options="{
+				yes: 'Yes',
+				no: 'No',
+			}"
+			label="Cooling required"
+			name="coolingRequired"
+			validation="required"
+			help="Is cooling required for this dwelling? This affects space cooling of notional building"
 		/>
 		<FormKit
 			id="heatingControlType"
@@ -104,47 +124,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="{
 				seperateTempControl: {
 					label: 'Separate temperature control',
-					hint: 'Both living and rest of dwelling zones follow the same schedule but have different temperature set points.'
 				},
 				seperateTempAndTimeControl: {
 					label: 'Separate temperature and time control',
-					hint: 'Each zone has heating schedule and temperature set points.'
 				},
 			}"
 			label="Heating control type"
 			name="heatingControlType"
 			validation="required"
-			help="both living and rest of dwelling zones follow the same schedule but have different temperature set points./each zone has heating schedule and temperature set points."
-		/>
-		<FormKit
-			id="cookingFuelType"
-			type="govRadios"
-			:options="{
-				electricity: 'Electricity',
-				mainsGas: 'Mains gas',
-			}"
-			label="Cooking fuel type"
-			name="cookingFuelType"
-			validation="required"
-		/>
-		<FormKit
-			id="coldWaterSource"
-			type="govRadios"
-			:options="{
-				mainsWater: 'Mains water',
-				headerTank: 'Header tank',
-			}"
-			label="Cold water source"
-			name="coldWaterSource"
-			validation="required"
-		/>
-		<FormKit
-			id="numOfADFWetRooms"
-			type="govInputInt"
-			label="Number of ADF wet rooms"
-			name="numOfADFWetRooms"
-			validation="required | number"
-			help="Rooms used for domestic activities such as kitchen and bathroom that create a large amount of airborne moisture."
+			help="Determines whether living-room and rest-of-dwelling have differing set-points/heating schedules"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
