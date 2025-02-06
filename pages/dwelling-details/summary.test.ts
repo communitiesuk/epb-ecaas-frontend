@@ -18,17 +18,14 @@ interface DwellingDetailSummary {
 
 const state: DwellingDetailSummary = {
 	generalSpecifications: {
-		typeOfResidence: 'house',
-		weatherDataLocation: 'manchester',
-		sizeGroundFloorArea: 50,
+		typeOfDwelling: 'house',
+		storeysInDwelling: 2,
 		numOfBedrooms: 3,
-		storiesInDwelling: 2,
-		levelOfShelter: 'normal',
-		numOfShelteredSides: 0,
+		latitude: 0,
+		longitude: 0,
+		partGCompliance: "yes",
+		coolingRequired: "no",
 		heatingControlType: 'seperateTempControl',
-		cookingFuelType: 'electricity',
-		coldWaterSource: 'mainsWater',
-		numOfADFWetRooms: 2
 	},
 	appliancesAndElectricity: {
 		fridgeFreezerEnergyRating: 'a',
@@ -111,17 +108,14 @@ describe('Dwelling details summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Type of residence": 'House',
-			"Weather data location": 'Manchester',
-			"Size of ground floor area": 50,
+			"Type of dwelling": "House",
+			"Number of storeys in building": 2,
 			"Number of bedrooms": 3,
-			"Number of stories in dwelling": 2,
-			"Shelter": 'Normal',
-			"Number of sheltered sides": 0,
-			"Heating control type": "Seperate temp control",
-			"Cooking fuel type": "Electricity" ,
-			"Cold water source": 'Mains water',
-			"Number of ADF wet rooms": 2
+			"Latitude": 0,
+			"Longitude": 0,
+			"Part G compliance": "yes",
+			"Cooling required": "no",
+			"Heating control type": "seperateTempControl"
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

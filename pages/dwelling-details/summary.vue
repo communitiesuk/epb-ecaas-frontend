@@ -15,18 +15,15 @@ const generalSpecificationsSummary: SummarySection = {
 	id: 'generalSpecifications',
 	label: "General specifications",
 	data: {
-		"Type of residence": generalSpecificationsData.typeOfResidence,
-		"Weather data location": generalSpecificationsData.weatherDataLocation,
-		"Size of ground floor area": generalSpecificationsData.sizeGroundFloorArea ?
-			`${generalSpecificationsData.sizeGroundFloorArea} m²` : undefined,
+		"Type of dwelling": generalSpecificationsData.typeOfDwelling,
+		"Number of storeys in building": generalSpecificationsData.storeysInDwelling,
+		"Storey of flat": generalSpecificationsData.storeyOfFlat,
 		"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
-		"Number of stories in dwelling": generalSpecificationsData.storiesInDwelling,
-		"Shelter": generalSpecificationsData.levelOfShelter,
-		"Number of sheltered sides": generalSpecificationsData.numOfShelteredSides,
-		"Heating control type": generalSpecificationsData.heatingControlType,
-		"Cooking fuel type": generalSpecificationsData.cookingFuelType,
-		"Cold water source": generalSpecificationsData.coldWaterSource,
-		"Number of ADF wet rooms": generalSpecificationsData.numOfADFWetRooms
+		"Latitude": generalSpecificationsData.latitude,
+		"Longitude": generalSpecificationsData.longitude,
+		"Part G compliance": generalSpecificationsData.partGCompliance,
+		"Cooling required": generalSpecificationsData.coolingRequired,
+		"Heating control type": generalSpecificationsData.heatingControlType
 	}
 };
 
