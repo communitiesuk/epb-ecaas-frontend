@@ -29,12 +29,6 @@ const saveForm = (fields: HotWaterDistributionData) => {
 				location: fields.location,
 				length: fields.length,
 				internalDiameter: fields.internalDiameter,
-				externalDiameter: fields.externalDiameter,
-				insulationThickness: fields.insulationThickness,
-				insulationThermalConductivity:
-					fields.insulationThermalConductivity,
-				pipeContents: fields.pipeContents,
-				surfaceReflectivity: fields.surfaceReflectivity,
 			};
 		} else {
 			state.hotWaterOutlets.hotWaterDistribution.data.distributions.push({
@@ -42,12 +36,6 @@ const saveForm = (fields: HotWaterDistributionData) => {
 				location: fields.location,
 				length: fields.length,
 				internalDiameter: fields.internalDiameter,
-				externalDiameter: fields.externalDiameter,
-				insulationThickness: fields.insulationThickness,
-				insulationThermalConductivity:
-					fields.insulationThermalConductivity,
-				pipeContents: fields.pipeContents,
-				surfaceReflectivity: fields.surfaceReflectivity,
 			});
 		}
 
@@ -89,7 +77,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Name this pipework so it can be identified later"
+			help="Provide a name for this hot water distribution so it can be identified later "
 			name="name"
 			validation="required | length:1,50"
 		/>
@@ -101,6 +89,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				external: 'External',
 			}"
 			label="Location"
+			help="The location of the pipe"
 			name="location"
 			validation="required"
 		/>
@@ -108,8 +97,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="length"
 			type="govInputWithSuffix"
 			label="Length"
+			help="Total length of distribution pipework - pipework serving multiple tapping points should be counted once for each tapping point"
 			name="length"
-			validation="required | number"
+			validation="required | number | min:0 | max:200"
 			suffix-text="m"
 		/>
 
@@ -120,50 +110,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="internalDiameter"
 			validation="number"
 			suffix-text="mm"
-		/>
-		<FormKit
-			id="externalDiameter"
-			type="govInputWithSuffix"
-			label="External diameter"
-			name="externalDiameter"
-			validation="number"
-			suffix-text="mm"
-		/>
-		<FormKit
-			id="insulationThickness"
-			type="govInputWithSuffix"
-			label="Insulation thickness"
-			name="insulationThickness"
-			validation="number"
-			suffix-text="mm"
-		/>
-		<FormKit
-			id="insulationThermalConductivity"
-			type="govInputWithSuffix"
-			label="Insulation thermal conductivity"
-			name="insulationThermalConductivity"
-			validation="number"
-			suffix-text="W/m.K"
-		/>
-		<FormKit
-			id="pipeContents"
-			type="govRadios"
-			:options="{
-				air: 'Air',
-				water: 'Water',
-			}"
-			label="Pipe contents"
-			name="pipeContents"
-		/>
-		<FormKit
-			id="surfaceReflectivity"
-			type="govRadios"
-			label="Surface reflectivity"
-			name="surfaceReflectivity"
-			:options="{
-				yes: 'Yes',
-				no: 'No'
-			}"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>

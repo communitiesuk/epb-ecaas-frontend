@@ -12,11 +12,6 @@ describe('Hot water distribution', () => {
 		length: 3,
 		location: 'internal',
 		internalDiameter: 30,
-		externalDiameter: 33,
-		insulationThickness: 10,
-		insulationThermalConductivity: 35,
-		pipeContents: 'air',
-		surfaceReflectivity: 'yes',
 	};
 
 	const distribution2: HotWaterDistributionData = {

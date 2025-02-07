@@ -13,12 +13,7 @@ const state: HotWaterDistributionData = {
 	name: 'Pipework Kitchen Sink',
 	length: 3,
 	location: 'internal',
-	internalDiameter: 30,
-	externalDiameter: 33,
-	insulationThickness: 10,
-	insulationThermalConductivity: 35,
-	pipeContents: 'air',
-	surfaceReflectivity: 'yes',
+	internalDiameter: 30
 };
 
 describe('Hot water distribution form', () => {
@@ -36,11 +31,7 @@ describe('Hot water distribution form', () => {
 		await user.click(screen.getByTestId('location_internal'));
 		await user.type(screen.getByTestId('length'), '3');
 		await user.type(screen.getByTestId('internalDiameter'), '30');
-		await user.type(screen.getByTestId('externalDiameter'), '33');
-		await user.type(screen.getByTestId('insulationThickness'), '10');
-		await user.type(screen.getByTestId('insulationThermalConductivity'), '35');
-		await user.click(screen.getByTestId('pipeContents_air'));
-		await user.click(screen.getByTestId('surfaceReflectivity_yes'));
+		await user.tab();
 		await user.click(screen.getByRole('button'));
 
 		const { data, complete } = store.hotWaterOutlets.hotWaterDistribution;
@@ -71,11 +62,7 @@ describe('Hot water distribution form', () => {
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('3');
 		expect((await screen.findByTestId('internalDiameter') as HTMLInputElement).value).toBe('30');
-		expect((await screen.findByTestId('externalDiameter') as HTMLInputElement).value).toBe('33');
-		expect((await screen.findByTestId('insulationThickness') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('insulationThermalConductivity') as HTMLInputElement).value).toBe('35');
-		expect((await screen.findByTestId('pipeContents_air')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('surfaceReflectivity_yes')).hasAttribute('checked')).toBe(true);
+
 	});
 
 	it('required error messages are displayed when empty form is submitted', async () => {

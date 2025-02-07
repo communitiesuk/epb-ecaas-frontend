@@ -19,12 +19,7 @@ const state: HotWaterOutletSummary = {
 			name: 'Pipework 1',
 			location: 'internal',
 			length: 20,
-			internalDiameter: 22,
-			externalDiameter: 22,
-			insulationThickness: 19,
-			insulationThermalConductivity: 0.035,
-			surfaceReflectivity: 'no',
-			pipeContents: 'water'
+			internalDiameter: 22
 		}]
 	}
 };
@@ -101,12 +96,7 @@ describe('Hot water outlet summary', () => {
 			"Name": 'Pipework 1',
 			"Location": 'Internal',
 			"Length": '30',
-			"Internal diameter": '22',
-			"External diameter": '22',
-			"Insulation thickness": '19',
-			"Insulation thermal conductivity": '0.035',
-			"Reflective insulation": 'No',
-			"Pipe contents": 'Water'
+			"Internal diameter": '22'
 		};
 
 		expect(distributionHeading.textContent).toBe('Pipework 1');

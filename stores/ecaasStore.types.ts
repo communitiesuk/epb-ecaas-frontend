@@ -58,11 +58,6 @@ export type HotWaterDistributionData = {
 	length: number;
 	location: string;
 	internalDiameter?: number;
-	externalDiameter?: number;
-	insulationThickness?: number;
-	insulationThermalConductivity?: number;
-	pipeContents?: string;
-	surfaceReflectivity?: string;
 };
 
 export interface HotWaterDistribution {

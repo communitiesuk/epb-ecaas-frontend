@@ -16,12 +16,7 @@ const hotWaterDistributionSummary: SummarySection = {
 			"Name": d.name,
 			"Location": d.location,
 			"Length": d.length,
-			"Internal diameter": d.internalDiameter,
-			"External diameter": d.externalDiameter,
-			"Insulation thickness": d.insulationThickness,
-			"Insulation thermal conductivity": d.insulationThermalConductivity,
-			"Reflective insulation": d.surfaceReflectivity,
-			"Pipe contents": d.pipeContents
+			"Internal diameter": d.internalDiameter
 		};
 	}) || []
 };
