@@ -10,7 +10,7 @@ export const useEcaasStore = defineStore('ecaas', {
 	state: (): EcaasState => ({
 		dwellingDetails: {
 			generalSpecifications: { data: {} },
-			appliancesAndElectricity: { data: {} },
+			appliances: { data: {} },
 			shading: { data: {} }
 		},
 		hotWaterOutlets: {

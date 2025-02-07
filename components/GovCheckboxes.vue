@@ -18,7 +18,7 @@ const {
 
 const { mounted } = useMounted();
 
-const optionsSelectedValues = props.context.value ? JSON.parse(props.context.value) : [];
+const optionsSelectedValues = props.context._value || [];
 const optionsSelected = ref<string[]>(optionsSelectedValues);
 
 const handleChange = (value: string) => {
@@ -38,10 +38,8 @@ const handleChange = (value: string) => {
 	<div :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
 		<div class="govuk-form-group">
 			<fieldset class="govuk-fieldset">
-				<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-					<h1 class="govuk-fieldset__heading">
-						{{ label }}
-					</h1>
+				<legend v-if="label" class="govuk-fieldset__legend govuk-fieldset__legend--m">
+					{{ label }}
 				</legend>
 				<div v-if="help" :id="`${id}_hint`" class="govuk-hint">
 					{{ help }}
@@ -51,17 +49,18 @@ const handleChange = (value: string) => {
 					{{ getErrorMessage(props.context) }}
 				</p>
 				<div class="govuk-checkboxes" data-module="govuk-checkboxes">
-					<div v-for="(option, index) in options" :key="option" class="govuk-checkboxes__item">
+					<div v-for="key in Object.keys(options)" :key="key" class="govuk-checkboxes__item">
 						<input
-							:id="`${id}_${index}`"
+							:id="`${id}_${key}`"
 							class="govuk-checkboxes__input"
 							:name="name"
 							type="checkbox"
-							:value="option"
-							:checked="mounted ? optionsSelected.includes(option) : false"
-							@change="handleChange(option)"
+							:value="key"
+							:checked="mounted ? optionsSelected.includes(key) : false"
+							:data-testid="`${id}_${key}`"
+							@change="handleChange(key)"
 						>
-						<label class="govuk-label govuk-checkboxes__label" :for="`${id}_${index}`">{{ option }}</label>
+						<label class="govuk-label govuk-checkboxes__label" :for="`${id}_${key}`">{{ options[key] }}</label>
 					</div>
 				</div>
 			</fieldset>

@@ -5,7 +5,7 @@ export interface EcaasState {
 
 export interface DwellingDetails {
 	generalSpecifications: EcaasForm<GeneralSpecificationsData>;
-	appliancesAndElectricity: EcaasForm<AppliancesAndElectricityData>;
+	appliances: EcaasForm<AppliancesData>;
 	shading: EcaasForm<Shading>;
 }
 
@@ -21,15 +21,8 @@ export interface GeneralSpecificationsData {
 	heatingControlType?: string;
 }
 
-export interface AppliancesAndElectricityData {
-	fridgeFreezerEnergyRating?: string;
-	dishwasherEnergyRating?: string;
-	ovenCookerEnergyRating?: string;
-	washingMachineEnergyRating?: string;
-	tumbleDryerEnergyRating?: string;
-	electricVehicleCharger?: string;
-	electricityGridConnection?: string;
-	electricityTariff?: string;
+export interface AppliancesData {
+	appliances?: string[];
 }
 
 export type ShadingObject = {

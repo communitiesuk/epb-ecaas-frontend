@@ -38,7 +38,8 @@ declare module '@formkit/inputs' {
 		},
 		'govCheckboxes': {
 			type: 'govCheckboxes',
-			options: Array<string> 
+			options: FormKitOptionsProp,
+			help?: string
 		},
 		'govInputText': {
 			type: 'govInputText'

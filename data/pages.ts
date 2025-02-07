@@ -33,9 +33,9 @@ const pagesData: Array<Page> = [
 		parentId: 'dwellingDetails'
 	},
 	{
-		id: 'appliancesAndElectricity',
-		title: 'Appliances and electricity',
-		url: '/dwelling-details/appliances-and-electricity',
+		id: 'appliances',
+		title: 'Appliances',
+		url: '/dwelling-details/appliances',
 		type: PageType.Task,
 		parentId: 'dwellingDetails'
 	},

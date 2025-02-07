@@ -41,7 +41,7 @@ describe('Ecaas Store', () => {
 				generalSpecifications: {
 					complete: true
 				},
-				appliancesAndElectricity: {
+				appliances: {
 					complete: true
 				},
 				shading: {

@@ -7,7 +7,7 @@ const title = "Dwelling details summary";
 const store = useEcaasStore();
 
 const generalSpecificationsData = store.dwellingDetails.generalSpecifications.data;
-const appliancesAndElectricityData = store.dwellingDetails.appliancesAndElectricity.data;
+const appliancesData = store.dwellingDetails.appliances.data;
 const shadingData = store.dwellingDetails.shading.data;
 
 const generalSpecificationsSummary: SummarySection = {
@@ -27,17 +27,10 @@ const generalSpecificationsSummary: SummarySection = {
 };
 
 const appliancesAndElectricitySummary: SummarySection = {
-	id: 'appliancesAndElectricity',
-	label: "Appliances and electricity",
+	id: 'appliances',
+	label: "Appliances",
 	data: {
-		"Fridge/freezer energy rating": appliancesAndElectricityData.fridgeFreezerEnergyRating,
-		"Dishwasher energy rating": appliancesAndElectricityData.dishwasherEnergyRating,
-		"Oven/cooker energy rating": appliancesAndElectricityData.ovenCookerEnergyRating,
-		"Washing machine energy rating": appliancesAndElectricityData.washingMachineEnergyRating,
-		"Tumble dryer energy rating": appliancesAndElectricityData.tumbleDryerEnergyRating,
-		"Electric vehicle charger": appliancesAndElectricityData.electricVehicleCharger,
-		"Electricity grid connection": appliancesAndElectricityData.electricityGridConnection,
-		"Electricity tariff": appliancesAndElectricityData.electricityTariff
+		"Appliances": appliancesData.appliances
 	}
 };
 

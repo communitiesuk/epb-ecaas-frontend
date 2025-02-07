@@ -11,7 +11,7 @@ mockNuxtImport('navigateTo', () => {
 
 interface DwellingDetailSummary {
 	generalSpecifications: GeneralSpecificationsData,
-	appliancesAndElectricity: AppliancesAndElectricityData,
+	appliances: AppliancesData,
 	shading: Shading
 }
 
@@ -24,17 +24,21 @@ const state: DwellingDetailSummary = {
 		longitude: 0,
 		partGCompliance: "yes",
 		coolingRequired: "no",
-		heatingControlType: 'seperateTempControl',
+		heatingControlType: 'seperateTempControl'
 	},
-	appliancesAndElectricity: {
-		fridgeFreezerEnergyRating: 'a',
-		dishwasherEnergyRating: 'b',
-		ovenCookerEnergyRating: 'c',
-		washingMachineEnergyRating: 'd',
-		tumbleDryerEnergyRating: 'e',
-		electricVehicleCharger: 'no',
-		electricityGridConnection: 'none',
-		electricityTariff: 'standardTariff'
+	appliances: {
+		appliances: [
+			'fridge',
+			'freezer',
+			'fridgeFreezer',
+			'dishwasher',
+			'oven',
+			'washingMachine',
+			'tumbleDryer',
+			'hobs',
+			'kettle',
+			'microwave'
+		]
 	},
 	shading: {
 		shadingObjects: [{
@@ -58,7 +62,7 @@ describe('Dwelling details summary', () => {
 		await renderSuspended(Summary);
   
 		expect(screen.getByRole('link', {name: 'General specifications'}));
-		expect(screen.getByRole('link', {name: 'Appliances and electricity'}));
+		expect(screen.getByRole('link', {name: 'Appliances'}));
 		expect(screen.getByRole('link', {name: 'Shading'}));
 
 	});
@@ -71,11 +75,11 @@ describe('Dwelling details summary', () => {
 		await user.click(screen.getByRole('link', {name: 'General specifications'}));
 
 		expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#generalSpecifications">General specifications</a></li>`);
-		expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item"><a class="govuk-tabs__tab" href="#appliancesAndElectricity">Appliances and electricity</a></li>`);
+		expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item"><a class="govuk-tabs__tab" href="#appliances">Appliances</a></li>`);
 
-		await user.click(screen.getByRole('link', {name: 'Appliances and electricity'}));
+		await user.click(screen.getByRole('link', {name: 'Appliances'}));
 
-		expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#appliancesAndElectricity">Appliances and electricity</a></li>`);
+		expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#appliances">Appliances</a></li>`);
 		expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item"><a class="govuk-tabs__tab" href="#generalSpecifications">General specifications</a></li>`);
 	});
 
@@ -110,11 +114,11 @@ describe('Dwelling details summary', () => {
 		}
 	});
 
-	it('should display the correct data for the appliances and electricity section', async () => {
+	it('should display the correct data for the appliances section', async () => {
 		store.$patch({
 			dwellingDetails: {
-				appliancesAndElectricity: {
-					data: state.appliancesAndElectricity
+				appliances: {
+					data: state.appliances
 				}
 			}
 		});
@@ -124,20 +128,28 @@ describe('Dwelling details summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Fridge/freezer energy rating": 'A',
-			"Dishwasher energy rating": 'B',
-			"Oven/cooker energy rating": 'C',
-			"Washing machine energy rating": 'D',
-			"Tumble dryer energy rating": 'E',
-			"Electric vehicle charger": 'No',
-			"Electricity grid connection": 'None',
-			"Electricity tariff": 'Standard tariff'
+			"Appliances": [
+				'Fridge',
+				'Freezer',
+				'Fridge freezer',
+				'Dishwasher',
+				'Oven',
+				'Washing machine',
+				'Tumble dryer',
+				'Hobs',
+				'Kettle',
+				'Microwave'
+			]
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			const lineValues = Array.from(lineResult.querySelectorAll("li").values().map(v => v.textContent));
+
+			const result = value.every(v => lineValues.includes(v));
+
 			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			expect(result).toBe(true);
 		}
 	});
 
