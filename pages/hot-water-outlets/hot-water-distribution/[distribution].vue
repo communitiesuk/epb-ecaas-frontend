@@ -8,7 +8,7 @@ let model: Ref<HotWaterDistributionData>;
 if (route.params.distribution && route.params.distribution !== 'create') {
 	const index = parseInt(route.params.distribution as string);
 
-	const distribution = store.dwellingDetails.hotWaterDistribution.data.distributions?.[index];
+	const distribution = store.hotWaterOutlets.hotWaterDistribution.data.distributions?.[index];
 
 	model = ref({
 		...distribution!
@@ -17,14 +17,14 @@ if (route.params.distribution && route.params.distribution !== 'create') {
 
 const saveForm = (fields: HotWaterDistributionData) => {
 	store.$patch((state) => {
-		if (!state.dwellingDetails.hotWaterDistribution.data.distributions) {
-			state.dwellingDetails.hotWaterDistribution.data.distributions = [];
+		if (!state.hotWaterOutlets.hotWaterDistribution.data.distributions) {
+			state.hotWaterOutlets.hotWaterDistribution.data.distributions = [];
 		}
 
 		const index = parseInt(route.params.distribution as string);
 
 		if (route.params.distribution && route.params.distribution !== 'create') {
-			state.dwellingDetails.hotWaterDistribution.data.distributions[index] = {
+			state.hotWaterOutlets.hotWaterDistribution.data.distributions[index] = {
 				name: fields.name,
 				location: fields.location,
 				length: fields.length,
@@ -37,7 +37,7 @@ const saveForm = (fields: HotWaterDistributionData) => {
 				surfaceReflectivity: fields.surfaceReflectivity,
 			};
 		} else {
-			state.dwellingDetails.hotWaterDistribution.data.distributions.push({
+			state.hotWaterOutlets.hotWaterDistribution.data.distributions.push({
 				name: fields.name,
 				location: fields.location,
 				length: fields.length,
@@ -51,10 +51,10 @@ const saveForm = (fields: HotWaterDistributionData) => {
 			});
 		}
 
-		state.dwellingDetails.hotWaterDistribution.complete = true;
+		state.hotWaterOutlets.hotWaterDistribution.complete = true;
 	});
 
-	navigateTo("/dwelling-details/hot-water-distribution");
+	navigateTo("/hot-water-outlets/hot-water-distribution");
 };
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

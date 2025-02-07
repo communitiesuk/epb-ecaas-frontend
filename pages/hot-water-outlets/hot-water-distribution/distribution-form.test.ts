@@ -43,16 +43,16 @@ describe('Hot water distribution form', () => {
 		await user.click(screen.getByTestId('surfaceReflectivity_yes'));
 		await user.click(screen.getByRole('button'));
 
-		const { data, complete } = store.dwellingDetails.hotWaterDistribution;
+		const { data, complete } = store.hotWaterOutlets.hotWaterDistribution;
 
 		expect(data.distributions?.[0]).toEqual(state);
 		expect(complete).toBe(true);
-		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details/hot-water-distribution');
+		expect(navigateToMock).toHaveBeenCalledWith('/hot-water-outlets/hot-water-distribution');
 	});
 
 	it('form is prepopulated when data exists in state', async () => {
 		store.$patch({
-			dwellingDetails: {
+			hotWaterOutlets: {
 				hotWaterDistribution: {
 					data: {
 						distributions: [state]

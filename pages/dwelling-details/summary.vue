@@ -8,7 +8,6 @@ const store = useEcaasStore();
 
 const generalSpecificationsData = store.dwellingDetails.generalSpecifications.data;
 const appliancesAndElectricityData = store.dwellingDetails.appliancesAndElectricity.data;
-const hotWaterDistributionData = store.dwellingDetails.hotWaterDistribution.data;
 const shadingData = store.dwellingDetails.shading.data;
 
 const generalSpecificationsSummary: SummarySection = {
@@ -42,24 +41,6 @@ const appliancesAndElectricitySummary: SummarySection = {
 	}
 };
 
-const hotWaterDistributionSummary: SummarySection = {
-	id: 'hotWaterDistribution',
-	label: "Hot water distribution",
-	data: hotWaterDistributionData.distributions?.map(d => {
-		return {
-			"Name": d.name,
-			"Location": d.location,
-			"Length": d.length,
-			"Internal diameter": d.internalDiameter,
-			"External diameter": d.externalDiameter,
-			"Insulation thickness": d.insulationThickness,
-			"Insulation thermal conductivity": d.insulationThermalConductivity,
-			"Reflective insulation": d.surfaceReflectivity,
-			"Pipe contents": d.pipeContents
-		};
-	}) || []
-};
-
 const shadingSummary: SummarySection = {
 	id: 'shading',
 	label: "Shading",
@@ -77,7 +58,6 @@ const shadingSummary: SummarySection = {
 const summarySections: SummarySection[] = [
 	generalSpecificationsSummary,
 	appliancesAndElectricitySummary,
-	hotWaterDistributionSummary,
 	shadingSummary
 ];
 </script>

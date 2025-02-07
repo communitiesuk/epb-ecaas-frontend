@@ -11,31 +11,35 @@ export const useEcaasStore = defineStore('ecaas', {
 		dwellingDetails: {
 			generalSpecifications: { data: {} },
 			appliancesAndElectricity: { data: {} },
-			hotWaterDistribution: { data: {} },
 			shading: { data: {} }
+		},
+		hotWaterOutlets: {
+			hotWaterDistribution: { data: {} }
 		}
 	}),
 	getters: {
 		getStatus: (state) => {
 			return (page: Page): GovTagProps => {
-				const section = (page.id in state ? page.id : page.parentId) as Section;
+				const sectionName = (page.id in state ? page.id : page.parentId) as Section;
 				
-				const subsections = state[section];
-				type Subsection = keyof typeof subsections;
+				const section = state[sectionName]; 
 
 				if (page.id in state) {
-					const subsectionList = Object.keys(subsections) as Array<Subsection>;
 
 					let status = formStatus.notStarted;
 					let complete = 0;
 
-					subsectionList.forEach(subsection => {
-						if (subsections[subsection].complete) {
+					const entries = Object.entries(section);
+
+					entries.forEach(entry => {
+						const form = entry[1] as EcaasForm<typeof entry[1]>;
+
+						if (form.complete) {
 							status = formStatus.inProgress;
 							complete++;
 						}
 
-						if (complete === subsectionList.length) {
+						if (complete === entries.length) {
 							status = formStatus.complete;
 						}
 					});
@@ -43,9 +47,11 @@ export const useEcaasStore = defineStore('ecaas', {
 					return status;
 				}
 
-				if (subsections && page.id in subsections) {
-					const subsection = subsections[page.id as Subsection];
-					return subsection?.complete ? formStatus.complete : formStatus.notStarted;
+				if (section && page.id in section) {
+					const entry = Object.entries(section).find(x => x[0] === page.id)!;
+					const form = entry[1] as EcaasForm<typeof entry[1]>;
+
+					return form.complete ? formStatus.complete : formStatus.notStarted;
 				}
 
 				return formStatus.notStarted;

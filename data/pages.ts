@@ -40,27 +40,6 @@ const pagesData: Array<Page> = [
 		parentId: 'dwellingDetails'
 	},
 	{
-		id: 'hotWaterDistribution',
-		title: 'Hot water distribution',
-		url: '/dwelling-details/hot-water-distribution',
-		type: PageType.Task,
-		parentId: 'dwellingDetails'
-	},
-	{
-		id: 'hotWaterDistributionCreate',
-		title: 'Create',
-		url: '/dwelling-details/hot-water-distribution/create',
-		type: PageType.Task,
-		parentId: 'hotWaterDistribution'
-	},
-	{
-		id: 'hotWaterDistributionEdit',
-		title: 'Edit',
-		url: '/dwelling-details/hot-water-distribution/:distribution',
-		type: PageType.Task,
-		parentId: 'hotWaterDistribution'
-	},
-	{
 		id: 'shading',
 		title: 'Shading',
 		url: '/dwelling-details/shading',
@@ -289,6 +268,27 @@ const pagesData: Array<Page> = [
 		url: '/hot-water-outlets/hot-water-outlets',
 		type: PageType.Task,
 		parentId: 'hotWaterOutlets'
+	},
+	{
+		id: 'hotWaterDistribution',
+		title: 'Hot water distribution',
+		url: '/hot-water-outlets/hot-water-distribution',
+		type: PageType.Task,
+		parentId: 'hotWaterOutlets'
+	},
+	{
+		id: 'hotWaterDistributionCreate',
+		title: 'Create',
+		url: '/hot-water-outlets/hot-water-distribution/create',
+		type: PageType.Task,
+		parentId: 'hotWaterDistribution'
+	},
+	{
+		id: 'hotWaterDistributionEdit',
+		title: 'Edit',
+		url: '/hot-water-outlets/hot-water-distribution/:distribution',
+		type: PageType.Task,
+		parentId: 'hotWaterDistribution'
 	},
 	{
 		id: 'hotWaterOutletsSummary',

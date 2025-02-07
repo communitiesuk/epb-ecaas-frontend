@@ -31,7 +31,7 @@ describe('Hot water distribution', () => {
 
 	it('distribution is removed when remove link is clicked', async () => {
 		store.$patch({
-			dwellingDetails: {
+			hotWaterOutlets: {
 				hotWaterDistribution: {
 					data: {
 						distributions: [distribution1]
@@ -52,7 +52,7 @@ describe('Hot water distribution', () => {
 
 	it('duplicates distribution in list when duplicate link is clicked', async () => {
 		store.$patch({
-			dwellingDetails: {
+			hotWaterOutlets: {
 				hotWaterDistribution: {
 					data: {
 						distributions: [distribution1, distribution2]

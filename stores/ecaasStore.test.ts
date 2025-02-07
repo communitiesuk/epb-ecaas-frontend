@@ -21,6 +21,9 @@ describe('Ecaas Store', () => {
 			dwellingDetails: {
 				generalSpecifications: {
 					complete: true
+				},
+				appliancesAndElectricity: {
+					complete: false
 				}
 			}
 		});
@@ -42,9 +45,6 @@ describe('Ecaas Store', () => {
 					complete: true
 				},
 				shading: {
-					complete: true
-				},
-				hotWaterDistribution: {
 					complete: true
 				}
 			}

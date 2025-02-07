@@ -3,13 +3,13 @@ const title = "Hot water distribution";
 const page = usePage();
 const store = useEcaasStore();
 
-const { distributions = [] } = store.dwellingDetails.hotWaterDistribution.data;
+const { distributions = [] } = store.hotWaterOutlets.hotWaterDistribution.data;
 
 function handleRemove(index: number) {
 	distributions.splice(index, 1);
 
 	store.$patch({
-		dwellingDetails: {
+		hotWaterOutlets: {
 			hotWaterDistribution: {
 				data: {
 					distributions: distributions.length ? distributions : undefined
@@ -26,7 +26,7 @@ function handleDuplicate(index: number) {
 		const duplicates = distributions.filter(d => d.name.match(duplicateNamePattern(distribution.name)));
 
 		store.$patch((state) => {
-			state.dwellingDetails.hotWaterDistribution.data.distributions?.push({
+			state.hotWaterOutlets.hotWaterDistribution.data.distributions?.push({
 				...distribution,
 				name: `${distribution.name} (${duplicates.length})`
 			});
@@ -43,9 +43,9 @@ function handleDuplicate(index: number) {
 	<GovCustomList
 		title="Hot water distribution"
 		:form-url="page?.url!"
-		:items="store.dwellingDetails.hotWaterDistribution.data.distributions?.map(x => x.name)"
+		:items="store.hotWaterOutlets.hotWaterDistribution.data.distributions?.map(x => x.name)"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
-	<GovButton href="/dwelling-details" secondary>Return to overview</GovButton>
+	<GovButton href="/hot-water-outlets" secondary>Return to overview</GovButton>
 </template>

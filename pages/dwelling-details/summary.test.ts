@@ -12,7 +12,6 @@ mockNuxtImport('navigateTo', () => {
 interface DwellingDetailSummary {
 	generalSpecifications: GeneralSpecificationsData,
 	appliancesAndElectricity: AppliancesAndElectricityData,
-	hotWaterDistribution: HotWaterDistribution,
 	shading: Shading
 }
 
@@ -37,19 +36,6 @@ const state: DwellingDetailSummary = {
 		electricityGridConnection: 'none',
 		electricityTariff: 'standardTariff'
 	},
-	hotWaterDistribution: {
-		distributions: [{
-			name: 'Pipework 1',
-			location: 'internal',
-			length: 20,
-			internalDiameter: 22,
-			externalDiameter: 22,
-			insulationThickness: 19,
-			insulationThermalConductivity: 0.035,
-			surfaceReflectivity: 'no',
-			pipeContents: 'water'
-		}]
-	},
 	shading: {
 		shadingObjects: [{
 			name: 'Shading 1',
@@ -73,7 +59,6 @@ describe('Dwelling details summary', () => {
   
 		expect(screen.getByRole('link', {name: 'General specifications'}));
 		expect(screen.getByRole('link', {name: 'Appliances and electricity'}));
-		expect(screen.getByRole('link', {name: 'Hot water distribution'}));
 		expect(screen.getByRole('link', {name: 'Shading'}));
 
 	});
@@ -148,72 +133,6 @@ describe('Dwelling details summary', () => {
 			"Electricity grid connection": 'None',
 			"Electricity tariff": 'Standard tariff'
 		};
-
-		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
-		}
-	});
-
-	it('should display hot water distributions in a collapsed accordion', async () => {
-		store.$patch({
-			dwellingDetails: {
-				hotWaterDistribution: {
-					data: state.hotWaterDistribution
-				}
-			}
-		});
-
-		userEvent.setup();
-
-		await renderSuspended(Summary);
-
-		const distributionHeading = await screen.findByTestId('hotWaterDistribution_0_heading');
-		const distributionToggle = await screen.findByTestId('hotWaterDistribution_0_toggle');
-		const distributionContent = await screen.findByTestId('hotWaterDistribution_0_content');
-
-		expect(distributionHeading.textContent).toBe('Pipework 1');
-		expect(distributionToggle.textContent).toBe('Show');
-		expect(distributionContent.style.display).toBe('');
-	});
-
-	it('should display hot water distribution data when accordion item is expanded', async () => {
-		store.$patch({
-			dwellingDetails: {
-				hotWaterDistribution: {
-					data: state.hotWaterDistribution
-				}
-			}
-		});
-
-		userEvent.setup();
-
-		await renderSuspended(Summary);
-
-		const distributionButton = await screen.findByTestId('hotWaterDistribution_0');
-
-		await userEvent.click(distributionButton);
-
-		const distributionHeading = await screen.findByTestId('hotWaterDistribution_0_heading');
-		const distributionToggle = await screen.findByTestId('hotWaterDistribution_0_toggle');
-		const distributionContent = await screen.findByTestId('hotWaterDistribution_0_content');
-
-		const expectedResult = {
-			"Name": 'Pipework 1',
-			"Location": 'Internal',
-			"Length": '30',
-			"Internal diameter": '22',
-			"External diameter": '22',
-			"Insulation thickness": '19',
-			"Insulation thermal conductivity": '0.035',
-			"Reflective insulation": 'No',
-			"Pipe contents": 'Water'
-		};
-
-		expect(distributionHeading.textContent).toBe('Pipework 1');
-		expect(distributionToggle.textContent).toBe('Hide');
-		expect(distributionContent.style.display).toBe('block');
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
