@@ -3,10 +3,16 @@ export interface EcaasState {
 	hotWaterOutlets: HotWaterOutlets;
 }
 
+export interface EcaasForm<T> {
+	complete?: boolean;
+	data: T;
+}
+
 export interface DwellingDetails {
 	generalSpecifications: EcaasForm<GeneralSpecificationsData>;
 	appliances: EcaasForm<AppliancesData>;
 	shading: EcaasForm<Shading>;
+	externalFactors: EcaasForm<ExternalFactorsData>;
 }
 
 export interface GeneralSpecificationsData {
@@ -37,9 +43,11 @@ export interface Shading {
 	shadingObjects?: ShadingObject[]
 }
 
-export interface EcaasForm<T> {
-	complete?: boolean;
-	data: T;
+export interface ExternalFactorsData {
+	altitude?: number;
+	typeOfExposure?: string;
+	terrainType?: string;
+	noiseNuisance?: string;
 }
 
 export interface HotWaterOutlets {

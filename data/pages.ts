@@ -47,6 +47,13 @@ const pagesData: Array<Page> = [
 		parentId: 'dwellingDetails'
 	},
 	{
+		id: 'externalFactors',
+		title: 'External factors',
+		url: '/dwelling-details/external-factors',
+		type: PageType.Task,
+		parentId: 'dwellingDetails'
+	},
+	{
 		id: 'shadingCreate',
 		title: 'Create',
 		url: '/dwelling-details/shading/create',

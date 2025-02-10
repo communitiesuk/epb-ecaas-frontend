@@ -9,6 +9,7 @@ const store = useEcaasStore();
 const generalSpecificationsData = store.dwellingDetails.generalSpecifications.data;
 const appliancesData = store.dwellingDetails.appliances.data;
 const shadingData = store.dwellingDetails.shading.data;
+const externalFactors = store.dwellingDetails.externalFactors.data;
 
 const generalSpecificationsSummary: SummarySection = {
 	id: 'generalSpecifications',
@@ -48,10 +49,22 @@ const shadingSummary: SummarySection = {
 	}) || []
 };
 
+const externalFactorsSummary: SummarySection = {
+	id: 'externalFactors',
+	label: 'External factors',
+	data: {
+		"Altitude": externalFactors.altitude,
+		"Type of exposure": externalFactors.typeOfExposure,
+		"Terrain type": externalFactors.terrainType,
+		"Noise nuisance": externalFactors.noiseNuisance
+	}
+};
+
 const summarySections: SummarySection[] = [
 	generalSpecificationsSummary,
 	appliancesAndElectricitySummary,
-	shadingSummary
+	shadingSummary,
+	externalFactorsSummary
 ];
 </script>
 

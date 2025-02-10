@@ -11,7 +11,8 @@ export const useEcaasStore = defineStore('ecaas', {
 		dwellingDetails: {
 			generalSpecifications: { data: {} },
 			appliances: { data: {} },
-			shading: { data: {} }
+			shading: { data: {} },
+			externalFactors: { data: {} }
 		},
 		hotWaterOutlets: {
 			hotWaterDistribution: { data: {} }

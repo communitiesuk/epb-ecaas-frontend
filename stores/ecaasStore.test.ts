@@ -46,6 +46,9 @@ describe('Ecaas Store', () => {
 				},
 				shading: {
 					complete: true
+				},
+				externalFactors: {
+					complete: true
 				}
 			}
 		});

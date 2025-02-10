@@ -12,7 +12,8 @@ mockNuxtImport('navigateTo', () => {
 interface DwellingDetailSummary {
 	generalSpecifications: GeneralSpecificationsData,
 	appliances: AppliancesData,
-	shading: Shading
+	shading: Shading,
+	externalFactors: ExternalFactorsData
 }
 
 const state: DwellingDetailSummary = {
@@ -48,6 +49,12 @@ const state: DwellingDetailSummary = {
 			height: 1,
 			distance: 4
 		}]
+	},
+	externalFactors: {
+		altitude: 3,
+		typeOfExposure: 'Shielded',
+		terrainType: 'Suburban',
+		noiseNuisance: 'No'
 	}
 };
 
@@ -102,9 +109,9 @@ describe('Dwelling details summary', () => {
 			"Number of bedrooms": 3,
 			"Latitude": 0,
 			"Longitude": 0,
-			"Part G compliance": "yes",
-			"Cooling required": "no",
-			"Heating control type": "seperateTempControl"
+			"Part G compliance": "Yes",
+			"Cooling required": "No",
+			"Heating control type": "Separate temperature control"
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -207,6 +214,33 @@ describe('Dwelling details summary', () => {
 		expect(shadingHeading.textContent).toBe('Shading 1');
 		expect(shadingToggle.textContent).toBe('Hide');
 		expect(shadingContent.style.display).toBe('block');
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+		}
+	});
+
+	it('should display the correct data for the external factors section', async () => {
+		store.$patch({
+			dwellingDetails: {
+				externalFactors: {
+					data: state.externalFactors
+				}
+			}
+		});
+
+		userEvent.setup();
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Altitude": 3,
+			"Type of exposure": "Shielded",
+			"Terrain type": "Suburban",
+			"Noise nuisance": "No"
+		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
