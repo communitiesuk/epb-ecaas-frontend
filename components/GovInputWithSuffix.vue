@@ -41,6 +41,7 @@ function handleInput(e) {
 				:class="`govuk-input govuk-input--width-5 ${props.context.state.invalid ? 'govuk-input--error' : ''}`"
 				:name="name"
 				type="number"
+				step="any"
 				:value="mounted ? props.context._value : ''"
 				:data-testId="id"
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"

@@ -38,7 +38,7 @@ const saveForm = (fields: HotWaterDistributionData) => {
 				internalDiameter: fields.internalDiameter,
 			});
 		}
-
+		
 		state.hotWaterOutlets.hotWaterDistribution.complete = true;
 	});
 
@@ -69,7 +69,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovDetails
 			class="summary-text"
 			:summary-text="`Typical input values`"
-			:text="`Length = 20m\nInternal diameter = 22mm\nExternal diameter = 25mm\nInsulation thickness = 20mm\nInsulation thermal conductivity = 0.035W/m.K`"
+			:text="`Length = 20m\nInternal diameter = 0.022m`"
 			classes="govuk-!-margin-bottom-4"
 		/>
 
@@ -102,14 +102,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max:200"
 			suffix-text="m"
 		/>
-
 		<FormKit
 			id="internalDiameter"
 			type="govInputWithSuffix"
 			label="Internal diameter"
+			help="Internal diameter of the pipe"
 			name="internalDiameter"
-			validation="number"
-			suffix-text="mm"
+			validation="number| min:0.005 | max:0.1"
+			suffix-text="m"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>

@@ -13,7 +13,7 @@ const state: HotWaterDistributionData = {
 	name: 'Pipework Kitchen Sink',
 	length: 3,
 	location: 'internal',
-	internalDiameter: 30
+	internalDiameter: 0.09
 };
 
 describe('Hot water distribution form', () => {
@@ -30,10 +30,12 @@ describe('Hot water distribution form', () => {
 		await user.type(screen.getByTestId('name'), 'Pipework Kitchen Sink');
 		await user.click(screen.getByTestId('location_internal'));
 		await user.type(screen.getByTestId('length'), '3');
-		await user.type(screen.getByTestId('internalDiameter'), '30');
+		await user.type(screen.getByTestId('internalDiameter'), '0.09');
+		
 		await user.tab();
+		
 		await user.click(screen.getByRole('button'));
-
+		
 		const { data, complete } = store.hotWaterOutlets.hotWaterDistribution;
 
 		expect(data.distributions?.[0]).toEqual(state);
@@ -61,7 +63,7 @@ describe('Hot water distribution form', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Pipework Kitchen Sink');
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('3');
-		expect((await screen.findByTestId('internalDiameter') as HTMLInputElement).value).toBe('30');
+		expect((await screen.findByTestId('internalDiameter') as HTMLInputElement).value).toBe('0.09');
 
 	});
 
