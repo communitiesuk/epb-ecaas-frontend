@@ -48,6 +48,7 @@ function handleDuplicate(floorType: FloorType, index: number) {
 		@duplicate="(index: number) => handleDuplicate('groundFloor', index)"
 	/>
 	<GovCustomList
+	 id="internal"
 		title="Internal floor"
 		:form-url="`${page?.url!}/internal`"
 		:items="store.livingSpaceFabric.floors.data?.internalFloor?.data.map(x => x.name)"
@@ -55,6 +56,7 @@ function handleDuplicate(floorType: FloorType, index: number) {
 		@duplicate="(index: number) => handleDuplicate('internalFloor', index)"
 	/>
 	<GovCustomList
+		id="exposed"
 		title="Exposed floor"
 		:form-url="`${page?.url!}/exposed`"
 		:items="store.livingSpaceFabric.floors.data?.exposedFloor?.data.map(x => x.name)"
