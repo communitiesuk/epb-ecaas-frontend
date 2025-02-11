@@ -41,6 +41,7 @@ function handleDuplicate(index: number) {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovCustomList
+		id="hotwater"
 		title="Hot water distribution"
 		:form-url="page?.url!"
 		:items="store.hotWaterOutlets.hotWaterDistribution.data.distributions?.map(x => x.name)"

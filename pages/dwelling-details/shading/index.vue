@@ -43,6 +43,7 @@ function handleDuplicate(index: number) {
 		{{ title }}
 	</h1>
 	<GovCustomList
+		id="shading"
 		title="Shading"
 		:form-url="page?.url!"
 		:items="store.dwellingDetails.shading.data.shadingObjects?.map(x => x.name)"

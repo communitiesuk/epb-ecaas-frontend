@@ -40,6 +40,7 @@ function handleDuplicate(floorType: FloorType, index: number) {
 		{{ title }}
 	</h1>
 	<GovCustomList
+		id="ground"
 		title="Ground floor"
 		:form-url="`${page?.url!}/ground`"
 		:items="store.livingSpaceFabric.floors.data?.groundFloor?.data.map(x => x.name)"

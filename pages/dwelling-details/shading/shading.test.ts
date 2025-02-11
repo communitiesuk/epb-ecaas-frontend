@@ -44,11 +44,11 @@ describe('shading', () => {
 
 		await renderSuspended(Shading);
 
-		expect(screen.getAllByTestId('customListItems')).toBeDefined();
+		expect(screen.getAllByTestId('shading_items')).toBeDefined();
 
-		await user.click(screen.getByTestId('customListItemRemove_0'));
+		await user.click(screen.getByTestId('shading_remove_0'));
 
-		expect(screen.queryByTestId('customListItems')).toBeNull();
+		expect(screen.queryByTestId('shading_items')).toBeNull();
 	});
 
 	it('only second shading object is removed when corresponding remove link is clicked', async () => {
@@ -65,9 +65,9 @@ describe('shading', () => {
 		});
 
 		await renderSuspended(Shading);
-		await user.click(screen.getByTestId('customListItemRemove_1'));
+		await user.click(screen.getByTestId('shading_remove_1'));
 
-		const populatedList = screen.getByTestId('customListItems');
+		const populatedList = screen.getByTestId('shading_items');
 		expect(within(populatedList).getByText('Cherry Tree')).toBeDefined();
 		expect(within(populatedList).queryByText('Apple Tree')).toBeNull();
 	});
@@ -85,12 +85,12 @@ describe('shading', () => {
 
 		await renderSuspended(Shading);
 
-		await userEvent.click(screen.getByTestId('customListItemDuplicate_0'));
-		await userEvent.click(screen.getByTestId('customListItemDuplicate_0'));
-		await userEvent.click(screen.getByTestId('customListItemDuplicate_2'));
-		await userEvent.click(screen.getByTestId('customListItemDuplicate_2'));
+		await userEvent.click(screen.getByTestId('shading_duplicate_0'));
+		await userEvent.click(screen.getByTestId('shading_duplicate_0'));
+		await userEvent.click(screen.getByTestId('shading_duplicate_2'));
+		await userEvent.click(screen.getByTestId('shading_duplicate_2'));
 
-		expect(screen.queryAllByTestId('customListItem').length).toBe(6);
+		expect(screen.queryAllByTestId('shading_item').length).toBe(6);
 		expect(screen.getByText('Cherry Tree')).toBeDefined();
 		expect(screen.getByText('Cherry Tree (1)')).toBeDefined();
 		expect(screen.getByText('Cherry Tree (2)')).toBeDefined();

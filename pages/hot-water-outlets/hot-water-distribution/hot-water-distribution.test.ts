@@ -37,12 +37,12 @@ describe('Hot water distribution', () => {
 
 		await renderSuspended(HotWaterDistribution);
 
-		const populatedList = screen.queryByTestId('customListItems');
+		const populatedList = screen.queryByTestId('hotwater_items');
 
-		await user.click(screen.getByTestId('customListItemRemove_0'));
+		await user.click(screen.getByTestId('hotwater_remove_0'));
 
 		expect(populatedList).toBeDefined();
-		expect(screen.queryByTestId('customListItems')).toBeNull();
+		expect(screen.queryByTestId('hotwater_items')).toBeNull();
 	});
 
 	it('duplicates distribution in list when duplicate link is clicked', async () => {
@@ -58,11 +58,11 @@ describe('Hot water distribution', () => {
 
 		await renderSuspended(HotWaterDistribution);
 
-		await user.click(screen.getByTestId('customListItemDuplicate_0'));
-		await user.click(screen.getByTestId('customListItemDuplicate_0'));
-		await user.click(screen.getByTestId('customListItemDuplicate_1'));
+		await user.click(screen.getByTestId('hotwater_duplicate_0'));
+		await user.click(screen.getByTestId('hotwater_duplicate_0'));
+		await user.click(screen.getByTestId('hotwater_duplicate_1'));
 
-		expect(screen.queryAllByTestId('customListItem').length).toBe(5);
+		expect(screen.queryAllByTestId('hotwater_item').length).toBe(5);
 		expect(screen.getByText('Pipework Kitchen Sink (1)')).toBeDefined();
 		expect(screen.getByText('Pipework Kitchen Sink (2)')).toBeDefined();
 		expect(screen.getByText('Pipework Kitchen (1)')).toBeDefined();
