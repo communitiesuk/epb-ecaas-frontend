@@ -137,23 +137,37 @@ const pagesData: Array<Page> = [
 		parentId: 'livingSpace'
 	},
 	{
-		id: 'livingSpaceWindowsAndDoors',
-		title: 'Windows and doors',
-		url: '/living-space/windows-and-doors',
+		id: 'livingSpaceCeilingsAndRoofs',
+		title: 'Ceilings and roofs',
+		url: '/living-space/ceilings-and-roofs',
 		type: PageType.Task,
 		parentId: 'livingSpace'
 	},
 	{
-		id: 'livingSpaceRoofAndCeiling',
-		title: 'Roof and ceiling',
-		url: '/living-space/roof-and-ceiling',
+		id: 'livingSpaceDoors',
+		title: 'Doors',
+		url: '/living-space/doors',
 		type: PageType.Task,
 		parentId: 'livingSpace'
 	},
 	{
-		id: 'livingSpaceThermalBridges',
-		title: 'Thermal Bridges',
-		url: '/living-space/thermal-bridges',
+		id: 'livingSpaceWindows',
+		title: 'Windows',
+		url: '/living-space/windows',
+		type: PageType.Task,
+		parentId: 'livingSpace'
+	},
+	{
+		id: 'livingSpaceThermalBridging',
+		title: 'Thermal Bridging',
+		url: '/living-space/thermal-bridging',
+		type: PageType.Task,
+		parentId: 'livingSpace'
+	},
+	{
+		id: 'livingSpaceLighting',
+		title: 'Lighting',
+		url: '/living-space/lighting',
 		type: PageType.Task,
 		parentId: 'livingSpace'
 	},
