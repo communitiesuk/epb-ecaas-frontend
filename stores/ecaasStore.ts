@@ -16,6 +16,15 @@ export const useEcaasStore = defineStore('ecaas', {
 		},
 		hotWaterOutlets: {
 			hotWaterDistribution: { data: {} }
+		},
+		livingSpaceFabric: {
+			floors: {
+				data: {
+					groundFloor: { data: [] },
+					internalFloor: { data: [] },
+					exposedFloor: { data: [] }
+				},
+			}
 		}
 	}),
 	getters: {
@@ -24,7 +33,6 @@ export const useEcaasStore = defineStore('ecaas', {
 				const sectionName = (page.id in state ? page.id : page.parentId) as Section;
 				
 				const section = state[sectionName]; 
-
 				if (page.id in state) {
 
 					let status = formStatus.notStarted;

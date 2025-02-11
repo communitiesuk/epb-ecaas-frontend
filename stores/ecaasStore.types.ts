@@ -1,6 +1,7 @@
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
 	hotWaterOutlets: HotWaterOutlets;
+	livingSpaceFabric: LivingSpaceFabric;
 }
 
 export interface EcaasForm<T> {
@@ -46,6 +47,35 @@ export interface Shading {
 export interface ExternalFactorsData {
 	altitude?: number;
 	typeOfExposure?: string;
+	terrainType?: string;
+	noiseNuisance?: string;
+}
+export interface LivingSpaceFabric {
+	floors: EcaasForm<FloorsData>;
+}
+
+export type InternalFloorData = {
+	name: string 
+};
+
+export type ExposedFloorData = {
+	name: string 
+};
+
+export type GroundFloorData = {
+	name: string;
+};
+
+export interface FloorsData {
+	groundFloor: EcaasForm<GroundFloorData[]>,
+	internalFloor: EcaasForm<InternalFloorData[]>,
+	exposedFloor: EcaasForm<ExposedFloorData[]>
+}
+
+export interface ExternalFactorsData {
+	altitude?: number;
+	typeOfExposure?: string;
+	required?: boolean;
 	terrainType?: string;
 	noiseNuisance?: string;
 }

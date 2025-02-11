@@ -130,6 +130,48 @@ const pagesData: Array<Page> = [
 		parentId: 'livingSpace'
 	},
 	{
+		id: 'livingSpaceGroundFloorsCreate',
+		title: 'Ground floor',
+		url: '/living-space/floors/ground/create',
+		type: PageType.Task,
+		parentId: 'livingSpaceFloors'
+	},
+	{
+		id: 'livingSpaceGroundFloorsEdit',
+		title: 'Ground floor',
+		url: '/living-space/floors/ground/:ground-floor',
+		type: PageType.Task,
+		parentId: 'livingSpaceFloors'
+	},
+	{
+		id: 'livingSpaceInternalFloorsCreate',
+		title: 'Internal floor',
+		url: '/living-space/floors/internal/create',
+		type: PageType.Task,
+		parentId: 'livingSpaceFloors'
+	},
+	{
+		id: 'livingSpaceInternalFloorsEdit',
+		title: 'Internal floor',
+		url: '/living-space/floors/internal/:internal-floor',
+		type: PageType.Task,
+		parentId: 'livingSpaceFloors'
+	},
+	{
+		id: 'livingSpaceExposedFloorsCreate',
+		title: 'Exposed floor',
+		url: '/living-space/floors/exposed/create',
+		type: PageType.Task,
+		parentId: 'livingSpaceFloors'
+	},
+	{
+		id: 'livingSpaceExposedFloorsEdit',
+		title: 'Exposed floor',
+		url: '/living-space/floors/exposed/:exposed-floor',
+		type: PageType.Task,
+		parentId: 'livingSpaceFloors'
+	},
+	{
 		id: 'livingSpaceWalls',
 		title: 'Walls',
 		url: '/living-space/walls',
