@@ -62,9 +62,9 @@ const externalFactorsSummary: SummarySection = {
 
 const summarySections: SummarySection[] = [
 	generalSpecificationsSummary,
-	appliancesAndElectricitySummary,
+	externalFactorsSummary,
 	shadingSummary,
-	externalFactorsSummary
+	appliancesAndElectricitySummary
 ];
 </script>
 

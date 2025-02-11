@@ -33,9 +33,9 @@ const pagesData: Array<Page> = [
 		parentId: 'dwellingDetails'
 	},
 	{
-		id: 'appliances',
-		title: 'Appliances',
-		url: '/dwelling-details/appliances',
+		id: 'externalFactors',
+		title: 'External factors',
+		url: '/dwelling-details/external-factors',
 		type: PageType.Task,
 		parentId: 'dwellingDetails'
 	},
@@ -47,9 +47,9 @@ const pagesData: Array<Page> = [
 		parentId: 'dwellingDetails'
 	},
 	{
-		id: 'externalFactors',
-		title: 'External factors',
-		url: '/dwelling-details/external-factors',
+		id: 'appliances',
+		title: 'Appliances',
+		url: '/dwelling-details/appliances',
 		type: PageType.Task,
 		parentId: 'dwellingDetails'
 	},
