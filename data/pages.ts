@@ -201,7 +201,7 @@ const pagesData: Array<Page> = [
 	},
 	{
 		id: 'livingSpaceThermalBridging',
-		title: 'Thermal Bridging',
+		title: 'Thermal bridging',
 		url: '/living-space/thermal-bridging',
 		type: PageType.Task,
 		parentId: 'livingSpace'
