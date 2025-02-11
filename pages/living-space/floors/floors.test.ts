@@ -195,3 +195,98 @@ expect(screen.getByText('internal1 name (1) (1)')).toBeDefined();
 expect(screen.getByText('internal1 name (1) (2)')).toBeDefined();
 })
 })
+
+describe('exposed floors', () => {
+  const store = useEcaasStore();
+  const user = userEvent.setup()
+
+  const exposed1: ExposedFloorData = {
+  name: "exposed1 name"
+  }
+
+  const exposed2: ExposedFloorData = {
+  name: "exposed2 name"
+  }
+
+  const exposed3: ExposedFloorData = {
+  name: "exposed3 name"
+  }
+
+  afterEach(() => {
+    store.$reset();
+  })
+
+  it('exposed floor is removed when remove link is clicked', async () => {
+
+    store.$patch({
+      livingSpaceFabric: {
+        floors: {
+          data: {
+            exposedFloor: {
+              data:[exposed1]
+            }
+             
+          }
+        }
+      }
+    });
+    await renderSuspended(Floors)
+	
+
+		expect(screen.getAllByTestId('exposed_items')).toBeDefined();
+
+		await user.click(screen.getByTestId('exposed_remove_0'));
+
+		expect(screen.queryByTestId('exposed_items')).toBeNull();
+	});
+
+  it('should only remove the exposed floor object thats is clicked', async () => {
+
+    store.$patch({
+      livingSpaceFabric: {
+        floors: {
+          data: {
+            exposedFloor: {
+              data:[exposed1, exposed2, exposed3]
+            }
+          }
+        }
+      }
+    });
+
+    await renderSuspended(Floors)
+		await user.click(screen.getByTestId('exposed_remove_1'));
+    const populatedList = screen.getByTestId('exposed_items')
+    expect(within(populatedList).getByText('exposed1 name')).toBeDefined();
+    expect(within(populatedList).getByText('exposed3 name')).toBeDefined();
+    expect(within(populatedList).queryByText('exposed2 name')).toBeNull();
+
+  })
+it('shading is duplicated when duplicate link is clicked', async () => {
+	
+  store.$patch({
+    livingSpaceFabric: {
+      floors: {
+        data: {
+          exposedFloor: {
+            data:[exposed1, exposed2]
+          }
+        }
+      }
+    }
+  });
+
+  await renderSuspended(Floors);
+  await userEvent.click(screen.getByTestId('exposed_duplicate_0'))
+  await userEvent.click(screen.getByTestId('exposed_duplicate_0'))
+  await userEvent.click(screen.getByTestId('exposed_duplicate_2'))
+  await userEvent.click(screen.getByTestId('exposed_duplicate_2'))
+
+expect(screen.queryAllByTestId('exposed_item').length).toBe(6)
+expect(screen.getByText('exposed1 name')).toBeDefined();
+expect(screen.getByText('exposed1 name (1)')).toBeDefined();
+expect(screen.getByText('exposed1 name (2)')).toBeDefined();
+expect(screen.getByText('exposed1 name (1) (1)')).toBeDefined();
+expect(screen.getByText('exposed1 name (1) (2)')).toBeDefined();
+})
+})
