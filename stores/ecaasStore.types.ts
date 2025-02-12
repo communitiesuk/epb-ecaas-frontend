@@ -55,15 +55,27 @@ export interface LivingSpaceFabric {
 }
 
 export type InternalFloorData = {
-	name: string 
+	name: string; 
 };
 
 export type ExposedFloorData = {
-	name: string 
+	name: string; 
 };
 
 export type GroundFloorData = {
 	name: string;
+	surfaceAreaInZone: number;
+	surfaceAreaAllZones: number;
+	pitch: number;
+	uValue: number;
+	kappaValue: number;
+	massDistributionClass: string;
+	perimeter: number;
+	psiOfWallJunction: number;
+	typeOfGroundFloor: string;
+	edgeInsulationType?: string;
+	edgeInsulationWidth?: number;
+	edgeInsulationThermalResistance?: number;
 };
 
 export interface FloorsData {
