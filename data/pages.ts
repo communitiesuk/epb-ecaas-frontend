@@ -110,7 +110,7 @@ const pagesData: Array<Page> = [
 	},
 	{
 		id: 'livingSpace',
-		title: 'Living Space Fabric',
+		title: 'Living space fabric',
 		url: '/living-space',
 		type: PageType.Section,
 		parentId: 'taskList'
