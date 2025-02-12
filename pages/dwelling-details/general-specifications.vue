@@ -73,7 +73,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputInt"
 			label="Number of bedrooms"
 			name="numOfBedrooms"
-			validation="required | number | min:1 | max:5"
+			validation="required | number | min:1"
 			help="Number of bedrooms in dwelling. Affects predicted occupancy."
 		/>
 		<FormKit
@@ -82,7 +82,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="degrees"
 			label="Latitude"
 			name="latitude"
-			validation="required | number | min:-180 | max:180"
+			validation="required | number | min:-90 | max:90"
 			help="Latitude of weather station, angle from south, in degrees (single value)"
 		/>
 		<FormKit
@@ -92,7 +92,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Longitude"
 			name="longitude"
 			validation="required | number | min:-180 | max:180"
-			help="Longitude of weather station, angle from south, in degrees (single value)"
+			help="Longitude of weather station, angle from west, in degrees (single value)"
 		/>
 		<FormKit
 			id="partGCompliance"
