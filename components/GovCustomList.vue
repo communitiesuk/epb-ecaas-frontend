@@ -27,11 +27,11 @@ function handleDuplicate(index: number, e: MouseEvent) {
 				<NuxtLink class="govuk-link" :href="`${formUrl}/create`">{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
 			</div>
 			<div v-if="items && items.length" class="custom-list__body" :data-testid="`${id}_items`">
-				<table class="govuk-table govuk-!-margin-0">
+				<table class="govuk-table govuk-!-margin-0 custom-list__table">
 					<tbody class="govuk-table__body">
 						<tr v-for="(item, index) in items" :key="index" class="govuk-table__row" :data-testid="`${id}_item`">
-							<th scope="row" class="govuk-table__header">{{ item }}</th>
-							<td class="govuk-table__cell">
+							<th scope="row" class="govuk-table__header custom-list__table-header">{{ item }}</th>
+							<td class="govuk-table__cell govuk-!-text-align-right">
 								<NuxtLink class="govuk-link custom-list__action-link" :href="`${formUrl}/${index}`">Edit</NuxtLink>
 								<a v-if="onDuplicate" href="#" class="govuk-link custom-list__action-link" :data-testid="`${id}_duplicate_${index}`" @click="handleDuplicate(index, $event)">Duplicate</a>
 								<a href="#" class="govuk-link custom-list__action-link" :data-testid="`${id}_remove_${index}`" @click="handleRemove(index, $event)">Remove</a>
@@ -65,6 +65,17 @@ function handleDuplicate(index: number, e: MouseEvent) {
 	}
 
 	.custom-list__action-link {
-		margin-right: 25px;
+		margin-left: 25px;
 	}
+
+	.custom-list__table-header {
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.custom-list__table {
+		table-layout: fixed;
+	}
+
 </style>
