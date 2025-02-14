@@ -3,22 +3,15 @@ const title = "Distant shading";
 const store = useEcaasStore();
 const route = useRoute();
 
-let model: Ref<ShadingObject>;
-
-if (route.params.shading && route.params.shading !== 'create') {
-	const index = parseInt(route.params.shading as string);
-
-	const shading = store.dwellingDetails.shading.data.shadingObjects?.[index];
-
-	model = ref({
-		...shading!
-	});
-}
+const shading = useItemToEdit('shading', store.dwellingDetails.shading.data.shadingObjects);
+const model: Ref<ShadingObject> = ref(shading!);
 
 const saveForm = (fields: ShadingObject) => {
 	store.$patch((state) => {
-		if (!state.dwellingDetails.shading.data.shadingObjects) {
-			state.dwellingDetails.shading.data.shadingObjects = [];
+		const { data } = state.dwellingDetails.shading;
+
+		if (!data.shadingObjects) {
+			data.shadingObjects = [];
 		}
 
 		const index = parseInt(route.params.shading as string);
@@ -33,9 +26,9 @@ const saveForm = (fields: ShadingObject) => {
 		};
 
 		if (route.params.shading && route.params.shading !== 'create') {
-			state.dwellingDetails.shading.data.shadingObjects[index] = shading;
+			data.shadingObjects[index] = shading;
 		} else {
-			state.dwellingDetails.shading.data.shadingObjects?.push(shading);
+			data.shadingObjects?.push(shading);
 		}
 
 		state.dwellingDetails.shading.complete = true;

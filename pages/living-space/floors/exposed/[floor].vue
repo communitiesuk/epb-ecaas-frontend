@@ -6,23 +6,24 @@ let model: Ref<ExposedFloorData>;
 
 const saveForm = (fields: ExposedFloorData) => {
 	store.$patch((state) => {
-		if (!state.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor?.data) {
-			state.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor = { data: [] };
+		const { livingSpaceFloors } = state.livingSpaceFabric;
+
+		if (!livingSpaceFloors.livingSpaceExposedFloor?.data) {
+			livingSpaceFloors.livingSpaceExposedFloor = { data: [] };
 		}
 
-		const index = parseInt(route.params.floor as string);
-		const floor = {
-			name: fields.name,
-
+		const floor: ExposedFloorData = {
+			name: fields.name
 		};
 
 		if (route.params.floor && route.params.floor !== 'create') {
-			state.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor.data[index] = floor;
+			const index = parseInt(route.params.floor as string);
+			livingSpaceFloors.livingSpaceExposedFloor.data[index] = floor;
 		} else {
-			state.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor.data.push(floor);
+			livingSpaceFloors.livingSpaceExposedFloor.data.push(floor);
 		}
 
-		state.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor.complete = true;
+		livingSpaceFloors.livingSpaceExposedFloor.complete = true;
 	});
 
 	navigateTo("/living-space/floors");
@@ -51,5 +52,4 @@ const saveForm = (fields: ExposedFloorData) => {
 			label="Save and continue"
 		/>
 	</FormKit>
-
 </template>

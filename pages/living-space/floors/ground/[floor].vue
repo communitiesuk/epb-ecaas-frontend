@@ -2,17 +2,18 @@
 const store = useEcaasStore();
 const route = useRoute();
 
-let model: Ref<GroundFloorData>;
+const floorData = useItemToEdit('floor', store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data);
+const model: Ref<GroundFloorData> = ref(floorData!);
 
 const saveForm = (fields: GroundFloorData) => {
-
 	store.$patch((state) => {
-		if (!state.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data) {
-			state.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data = [];
+		const { livingSpaceFloors } = state.livingSpaceFabric;
+
+		if (!livingSpaceFloors.livingSpaceGroundFloor.data) {
+			livingSpaceFloors.livingSpaceGroundFloor.data = [];
 		}
 
-		const index = parseInt(route.params.floor as string);
-		const floor = {
+		const floor: GroundFloorData = {
 			name: fields.name,
 			surfaceAreaInZone: fields.surfaceAreaInZone,
 			surfaceAreaAllZones: fields.surfaceAreaAllZones,
@@ -29,17 +30,17 @@ const saveForm = (fields: GroundFloorData) => {
 		};
 
 		if (route.params.floor && route.params.floor !== 'create') {
-			state.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data[index] = floor;
+			const index = parseInt(route.params.floor as string);
+			livingSpaceFloors.livingSpaceGroundFloor.data[index] = floor;
 		} else {
-			state.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data.push(floor);
+			livingSpaceFloors.livingSpaceGroundFloor.data.push(floor);
 		}
 
-		state.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.complete = true;
+		livingSpaceFloors.livingSpaceGroundFloor.complete = true;
 	});
 
 	navigateTo("/living-space/floors");
 };
-
 </script>
 
 <template>
@@ -181,11 +182,9 @@ const saveForm = (fields: GroundFloorData) => {
 			label="Edge insulation thermal resistance "
 			name="edgeInsulationThermalResistance"
 		/>
-
 		<FormKit
 			type="govButton"
 			label="Save and continue"
 		/>
-	
 	</FormKit>
 </template>

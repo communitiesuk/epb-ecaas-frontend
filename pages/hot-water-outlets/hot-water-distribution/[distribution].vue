@@ -3,40 +3,29 @@ const title = "Hot water distribution";
 const store = useEcaasStore();
 const route = useRoute();
 
-let model: Ref<HotWaterDistributionData>;
-
-if (route.params.distribution && route.params.distribution !== 'create') {
-	const index = parseInt(route.params.distribution as string);
-
-	const distribution = store.hotWaterOutlets.hotWaterDistribution.data.distributions?.[index];
-
-	model = ref({
-		...distribution!
-	});
-}
+const distributionData = useItemToEdit('distribution', store.hotWaterOutlets.hotWaterDistribution.data.distributions);
+const model: Ref<HotWaterDistributionData> = ref(distributionData!);
 
 const saveForm = (fields: HotWaterDistributionData) => {
 	store.$patch((state) => {
-		if (!state.hotWaterOutlets.hotWaterDistribution.data.distributions) {
-			state.hotWaterOutlets.hotWaterDistribution.data.distributions = [];
+		const { data } = state.hotWaterOutlets.hotWaterDistribution;
+
+		if (!data.distributions) {
+			data.distributions = [];
 		}
 
-		const index = parseInt(route.params.distribution as string);
+		const distribution: HotWaterDistributionData = {
+			name: fields.name,
+			location: fields.location,
+			length: fields.length,
+			internalDiameter: fields.internalDiameter,
+		};
 
 		if (route.params.distribution && route.params.distribution !== 'create') {
-			state.hotWaterOutlets.hotWaterDistribution.data.distributions[index] = {
-				name: fields.name,
-				location: fields.location,
-				length: fields.length,
-				internalDiameter: fields.internalDiameter,
-			};
+			const index = parseInt(route.params.distribution as string);
+			data.distributions[index] = distribution;
 		} else {
-			state.hotWaterOutlets.hotWaterDistribution.data.distributions.push({
-				name: fields.name,
-				location: fields.location,
-				length: fields.length,
-				internalDiameter: fields.internalDiameter,
-			});
+			data.distributions.push(distribution);
 		}
 		
 		state.hotWaterOutlets.hotWaterDistribution.complete = true;
