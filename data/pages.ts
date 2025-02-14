@@ -109,7 +109,7 @@ const pagesData: Array<Page> = [
 		parentId: 'infiltrationAndVentilation'
 	},
 	{
-		id: 'livingSpace',
+		id: 'livingSpaceFabric',
 		title: 'Living space fabric',
 		url: '/living-space',
 		type: PageType.Section,
@@ -120,54 +120,33 @@ const pagesData: Array<Page> = [
 		title: 'Zone parameters',
 		url: '/living-space/zone-parameters',
 		type: PageType.Task,
-		parentId: 'livingSpace'
+		parentId: 'livingSpaceFabric'
 	},
 	{
 		id: 'livingSpaceFloors',
 		title: 'Floors',
 		url: '/living-space/floors',
-		type: PageType.Task,
-		parentId: 'livingSpace'
+		type: PageType.Section,
+		parentId: 'livingSpaceFabric'
 	},
 	{
-		id: 'livingSpaceGroundFloorsCreate',
+		id: 'livingSpaceGroundFloor',
 		title: 'Ground floor',
-		url: '/living-space/floors/ground/create',
+		url: '/living-space/floors/ground/:floor',
 		type: PageType.Task,
 		parentId: 'livingSpaceFloors'
 	},
 	{
-		id: 'livingSpaceGroundFloorsEdit',
-		title: 'Ground floor',
-		url: '/living-space/floors/ground/:ground-floor',
-		type: PageType.Task,
-		parentId: 'livingSpaceFloors'
-	},
-	{
-		id: 'livingSpaceInternalFloorsCreate',
+		id: 'livingSpaceInternalFloorEdit',
 		title: 'Internal floor',
-		url: '/living-space/floors/internal/create',
+		url: '/living-space/floors/internal/:floor',
 		type: PageType.Task,
 		parentId: 'livingSpaceFloors'
 	},
 	{
-		id: 'livingSpaceInternalFloorsEdit',
-		title: 'Internal floor',
-		url: '/living-space/floors/internal/:internal-floor',
-		type: PageType.Task,
-		parentId: 'livingSpaceFloors'
-	},
-	{
-		id: 'livingSpaceExposedFloorsCreate',
+		id: 'livingSpaceExposedFloorEdit',
 		title: 'Exposed floor',
-		url: '/living-space/floors/exposed/create',
-		type: PageType.Task,
-		parentId: 'livingSpaceFloors'
-	},
-	{
-		id: 'livingSpaceExposedFloorsEdit',
-		title: 'Exposed floor',
-		url: '/living-space/floors/exposed/:exposed-floor',
+		url: '/living-space/floors/exposed/:floor',
 		type: PageType.Task,
 		parentId: 'livingSpaceFloors'
 	},
@@ -176,49 +155,49 @@ const pagesData: Array<Page> = [
 		title: 'Walls',
 		url: '/living-space/walls',
 		type: PageType.Task,
-		parentId: 'livingSpace'
+		parentId: 'livingSpaceFabric'
 	},
 	{
 		id: 'livingSpaceCeilingsAndRoofs',
 		title: 'Ceilings and roofs',
 		url: '/living-space/ceilings-and-roofs',
 		type: PageType.Task,
-		parentId: 'livingSpace'
+		parentId: 'livingSpaceFabric'
 	},
 	{
 		id: 'livingSpaceDoors',
 		title: 'Doors',
 		url: '/living-space/doors',
 		type: PageType.Task,
-		parentId: 'livingSpace'
+		parentId: 'livingSpaceFabric'
 	},
 	{
 		id: 'livingSpaceWindows',
 		title: 'Windows',
 		url: '/living-space/windows',
 		type: PageType.Task,
-		parentId: 'livingSpace'
+		parentId: 'livingSpaceFabric'
 	},
 	{
 		id: 'livingSpaceThermalBridging',
 		title: 'Thermal bridging',
 		url: '/living-space/thermal-bridging',
 		type: PageType.Task,
-		parentId: 'livingSpace'
+		parentId: 'livingSpaceFabric'
 	},
 	{
 		id: 'livingSpaceLighting',
 		title: 'Lighting',
 		url: '/living-space/lighting',
 		type: PageType.Task,
-		parentId: 'livingSpace'
+		parentId: 'livingSpaceFabric'
 	},
 	{
 		id: 'livingSpaceSummary',
 		title: 'Summary',
 		url: '/living-space/summary',
 		type: PageType.Summary,
-		parentId: 'livingSpace'
+		parentId: 'livingSpaceFabric'
 	},
 	{
 		id: 'restOfDwelling',

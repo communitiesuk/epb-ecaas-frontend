@@ -51,7 +51,13 @@ export interface ExternalFactorsData {
 	noiseNuisance?: string;
 }
 export interface LivingSpaceFabric {
-	floors: EcaasForm<FloorsData>;
+	livingSpaceFloors: FloorsData;
+}
+
+export interface FloorsData {
+	livingSpaceGroundFloor: EcaasForm<GroundFloorData[]>,
+	livingSpaceInternalFloor?: EcaasForm<InternalFloorData[]>,
+	livingSpaceExposedFloor?: EcaasForm<ExposedFloorData[]>
 }
 
 export type InternalFloorData = {
@@ -77,12 +83,6 @@ export type GroundFloorData = {
 	edgeInsulationWidth?: number;
 	edgeInsulationThermalResistance?: number;
 };
-
-export interface FloorsData {
-	groundFloor: EcaasForm<GroundFloorData[]>,
-	internalFloor: EcaasForm<InternalFloorData[]>,
-	exposedFloor: EcaasForm<ExposedFloorData[]>
-}
 
 export interface ExternalFactorsData {
 	altitude?: number;

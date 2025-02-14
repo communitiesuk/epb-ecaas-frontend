@@ -6,8 +6,8 @@ let model: Ref<ExposedFloorData>;
 
 const saveForm = (fields: ExposedFloorData) => {
 	store.$patch((state) => {
-		if (!state.livingSpaceFabric.floors.data.exposedFloor.data) {
-			state.livingSpaceFabric.floors.data.exposedFloor.data = [];
+		if (!state.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor?.data) {
+			state.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor = { data: [] };
 		}
 
 		const index = parseInt(route.params.floor as string);
@@ -17,12 +17,12 @@ const saveForm = (fields: ExposedFloorData) => {
 		};
 
 		if (route.params.floor && route.params.floor !== 'create') {
-			state.livingSpaceFabric.floors.data.exposedFloor.data[index] = floor;
+			state.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor.data[index] = floor;
 		} else {
-			state.livingSpaceFabric.floors.data.exposedFloor.data.push(floor);
+			state.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor.data.push(floor);
 		}
 
-		state.livingSpaceFabric.floors.data.exposedFloor.complete = true;
+		state.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor.complete = true;
 	});
 
 	navigateTo("/living-space/floors");

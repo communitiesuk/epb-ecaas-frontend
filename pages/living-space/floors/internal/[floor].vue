@@ -6,8 +6,8 @@ let model: Ref<InternalFloorData>;
 
 const saveForm = (fields: InternalFloorData) => {
 	store.$patch((state) => {
-		if (!state.livingSpaceFabric.floors.data.internalFloor.data) {
-			state.livingSpaceFabric.floors.data.internalFloor.data = [];
+		if (!state.livingSpaceFabric.livingSpaceFloors.livingSpaceInternalFloor?.data) {
+			state.livingSpaceFabric.livingSpaceFloors.livingSpaceInternalFloor = { data: [] };
 		}
 
 		const index = parseInt(route.params.floor as string);
@@ -17,12 +17,12 @@ const saveForm = (fields: InternalFloorData) => {
 		};
 
 		if (route.params.floor && route.params.floor !== 'create') {
-			state.livingSpaceFabric.floors.data.internalFloor.data[index] = floor;
+			state.livingSpaceFabric.livingSpaceFloors.livingSpaceInternalFloor.data[index] = floor;
 		} else {
-			state.livingSpaceFabric.floors.data.internalFloor.data.push(floor);
+			state.livingSpaceFabric.livingSpaceFloors.livingSpaceInternalFloor.data.push(floor);
 		}
 
-		state.livingSpaceFabric.floors.data.internalFloor.complete = true;
+		state.livingSpaceFabric.livingSpaceFloors.livingSpaceInternalFloor.complete = true;
 	});
 
 	navigateTo("/living-space/floors");

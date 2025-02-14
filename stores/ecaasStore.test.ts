@@ -22,7 +22,7 @@ describe('Ecaas Store', () => {
 				generalSpecifications: {
 					complete: true
 				},
-				appliancesAndElectricity: {
+				appliances: {
 					complete: false
 				}
 			}
@@ -78,6 +78,24 @@ describe('Ecaas Store', () => {
 		});
 
 		const page = pagesData.find(p => p.id === 'generalSpecifications');
+		const status = store.getStatus(page!);
+
+		expect(status).toBe(formStatus.complete);
+	});
+
+	it('getStatus of subsection returns complete status when required forms are complete', () => {
+		const store = useEcaasStore();
+		store.$patch({
+			livingSpaceFabric: {
+				livingSpaceFloors: {
+					livingSpaceGroundFloor: {
+						complete: true
+					}
+				}
+			}
+		});
+
+		const page = pagesData.find(p => p.id === 'livingSpaceFloors');
 		const status = store.getStatus(page!);
 
 		expect(status).toBe(formStatus.complete);

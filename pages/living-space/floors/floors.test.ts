@@ -4,7 +4,6 @@ import Floors from './index.vue';
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
 
-
 describe('ground floors', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
@@ -53,21 +52,17 @@ describe('ground floors', () => {
 	});
 
 	it('ground floor is removed when remove link is clicked', async () => {
-
 		store.$patch({
 			livingSpaceFabric: {
-				floors: {
-					data: {
-						groundFloor: {
-							data:[ground1]
-						}
-             
+				livingSpaceFloors: {
+					livingSpaceGroundFloor: {
+						data:[ground1]
 					}
 				}
 			}
 		});
+
 		await renderSuspended(Floors);
-	
 
 		expect(screen.getAllByTestId('ground_items')).toBeDefined();
 
@@ -77,14 +72,11 @@ describe('ground floors', () => {
 	});
 
 	it('should only remove the ground floor object thats is clicked', async () => {
-
 		store.$patch({
 			livingSpaceFabric: {
-				floors: {
-					data: {
-						groundFloor: {
-							data:[ground1, ground2, ground3]
-						}
+				livingSpaceFloors: {
+					livingSpaceGroundFloor: {
+						data:[ground1, ground2, ground3]
 					}
 				}
 			}
@@ -92,22 +84,20 @@ describe('ground floors', () => {
 
 		await renderSuspended(Floors);
 		await user.click(screen.getByTestId('ground_remove_1'));
+
 		const populatedList = screen.getByTestId('ground_items');
+
 		expect(within(populatedList).getByText('ground1 name')).toBeDefined();
 		expect(within(populatedList).getByText('ground3 name')).toBeDefined();
 		expect(within(populatedList).queryByText('ground2 name')).toBeNull();
 
 	});
-
-	it('shading is duplicated when duplicate link is clicked', async () => {
-	
+	it('floor is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			livingSpaceFabric: {
-				floors: {
-					data: {
-						groundFloor: {
-							data:[ground1, ground2]
-						}
+				livingSpaceFloors: {
+					livingSpaceGroundFloor: {
+						data:[ground1, ground2]
 					}
 				}
 			}
@@ -150,21 +140,17 @@ describe('internal floors', () => {
 	});
 
 	it('internal floor is removed when remove link is clicked', async () => {
-
 		store.$patch({
 			livingSpaceFabric: {
-				floors: {
-					data: {
-						internalFloor: {
-							data:[internal1]
-						}
-             
+				livingSpaceFloors: {
+					livingSpaceInternalFloor: {
+						data:[internal1]
 					}
 				}
 			}
 		});
+
 		await renderSuspended(Floors);
-	
 
 		expect(screen.getAllByTestId('internal_items')).toBeDefined();
 
@@ -174,14 +160,11 @@ describe('internal floors', () => {
 	});
 
 	it('should only remove the internal floor object thats is clicked', async () => {
-
 		store.$patch({
 			livingSpaceFabric: {
-				floors: {
-					data: {
-						internalFloor: {
-							data:[internal1, internal2, internal3]
-						}
+				livingSpaceFloors: {
+					livingSpaceInternalFloor: {
+						data:[internal1, internal2, internal3]
 					}
 				}
 			}
@@ -189,22 +172,21 @@ describe('internal floors', () => {
 
 		await renderSuspended(Floors);
 		await user.click(screen.getByTestId('internal_remove_1'));
+
 		const populatedList = screen.getByTestId('internal_items');
+
 		expect(within(populatedList).getByText('internal1 name')).toBeDefined();
 		expect(within(populatedList).getByText('internal3 name')).toBeDefined();
 		expect(within(populatedList).queryByText('internal2 name')).toBeNull();
 
 	});
 
-	it('shading is duplicated when duplicate link is clicked', async () => {
-	
+	it('floor is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			livingSpaceFabric: {
-				floors: {
-					data: {
-						internalFloor: {
-							data:[internal1, internal2]
-						}
+				livingSpaceFloors: {
+					livingSpaceInternalFloor: {
+						data:[internal1, internal2]
 					}
 				}
 			}
@@ -246,21 +228,17 @@ describe('exposed floors', () => {
 	});
 
 	it('exposed floor is removed when remove link is clicked', async () => {
-
 		store.$patch({
 			livingSpaceFabric: {
-				floors: {
-					data: {
-						exposedFloor: {
-							data:[exposed1]
-						}
-             
+				livingSpaceFloors: {
+					livingSpaceExposedFloor: {
+						data:[exposed1]
 					}
 				}
 			}
 		});
+
 		await renderSuspended(Floors);
-	
 
 		expect(screen.getAllByTestId('exposed_items')).toBeDefined();
 
@@ -270,14 +248,11 @@ describe('exposed floors', () => {
 	});
 
 	it('should only remove the exposed floor object thats is clicked', async () => {
-
 		store.$patch({
 			livingSpaceFabric: {
-				floors: {
-					data: {
-						exposedFloor: {
-							data:[exposed1, exposed2, exposed3]
-						}
+				livingSpaceFloors: {
+					livingSpaceExposedFloor: {
+						data:[exposed1, exposed2, exposed3]
 					}
 				}
 			}
@@ -286,21 +261,18 @@ describe('exposed floors', () => {
 		await renderSuspended(Floors);
 		await user.click(screen.getByTestId('exposed_remove_1'));
 		const populatedList = screen.getByTestId('exposed_items');
+
 		expect(within(populatedList).getByText('exposed1 name')).toBeDefined();
 		expect(within(populatedList).getByText('exposed3 name')).toBeDefined();
 		expect(within(populatedList).queryByText('exposed2 name')).toBeNull();
 
 	});
-
-	it('shading is duplicated when duplicate link is clicked', async () => {
-	
+	it('floor is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			livingSpaceFabric: {
-				floors: {
-					data: {
-						exposedFloor: {
-							data:[exposed1, exposed2]
-						}
+				livingSpaceFloors: {
+					livingSpaceExposedFloor: {
+						data:[exposed1, exposed2]
 					}
 				}
 			}

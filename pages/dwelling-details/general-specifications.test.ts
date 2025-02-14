@@ -20,7 +20,7 @@ const state: GeneralSpecificationsData = {
 	heatingControlType: 'seperateTempControl',
 };
 
-const state_with_flat: GeneralSpecificationsData = {
+const stateWithFlat: GeneralSpecificationsData = {
 	typeOfDwelling: 'flat',
 	storeysInDwelling: 7,
 	storeyOfFlat: 3,
@@ -40,6 +40,7 @@ describe('General specifications', () => {
 	});
 
 	describe('When the dwelling type is a house', () => {
+
 		it('data is saved to store state when form is valid', async () => {
 			const user = userEvent.setup();
 	
@@ -114,7 +115,6 @@ describe('General specifications', () => {
 		});
 	});
 
-
 	describe('When the type of dwelling is a flat', () => {
 
 		it('data is saved to store state when form is valid', async () => {
@@ -135,7 +135,7 @@ describe('General specifications', () => {
 
 			const { data, complete } = store.dwellingDetails.generalSpecifications;
 			
-			expect(data).toEqual(state_with_flat);
+			expect(data).toEqual(stateWithFlat);
 			expect(complete).toBe(true);
 			expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details');
 		});
@@ -144,7 +144,7 @@ describe('General specifications', () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
-						data: state_with_flat
+						data: stateWithFlat
 					}
 				}
 			});
