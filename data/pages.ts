@@ -137,14 +137,14 @@ const pagesData: Array<Page> = [
 		parentId: 'livingSpaceFloors'
 	},
 	{
-		id: 'livingSpaceInternalFloorEdit',
+		id: 'livingSpaceInternalFloor',
 		title: 'Internal floor',
 		url: '/living-space/floors/internal/:floor',
 		type: PageType.Task,
 		parentId: 'livingSpaceFloors'
 	},
 	{
-		id: 'livingSpaceExposedFloorEdit',
+		id: 'livingSpaceExposedFloor',
 		title: 'Exposed floor',
 		url: '/living-space/floors/exposed/:floor',
 		type: PageType.Task,
