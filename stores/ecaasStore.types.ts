@@ -82,6 +82,18 @@ export type GroundFloorData = {
 	edgeInsulationType?: string;
 	edgeInsulationWidth?: number;
 	edgeInsulationThermalResistance?: number;
+	heightOfFloorUpperSurface?: number;
+	thicknessOfSurroundingWalls?: number;
+	underfloorSpaceThermalResistance?: number;
+	wallsAboveGroundThermalTransmittance?: number;
+	ventilationOpeningsArea?: number;
+	basementFloorDepth?: number;
+	thermalResistanceOfBasementWalls?: number;
+	thermalResistanceOfFloorAboveBasement?: number;
+	thermalResistanceOfWallsAboveGround?: number;
+	thicknessOfWalls?: number;
+	depthOfBasementFloorBelowGround?: number;
+	heightOfBasementWallsAboveGround?: number
 };
 
 export interface ExternalFactorsData {

@@ -27,6 +27,18 @@ const saveForm = (fields: GroundFloorData) => {
 			edgeInsulationType: fields.edgeInsulationType,
 			edgeInsulationWidth: fields.edgeInsulationWidth,
 			edgeInsulationThermalResistance: fields.edgeInsulationThermalResistance,
+			heightOfFloorUpperSurface: fields.heightOfFloorUpperSurface,
+			thicknessOfSurroundingWalls: fields.thicknessOfSurroundingWalls,
+			underfloorSpaceThermalResistance: fields.underfloorSpaceThermalResistance,
+			wallsAboveGroundThermalTransmittance: fields.wallsAboveGroundThermalTransmittance,
+			ventilationOpeningsArea: fields.ventilationOpeningsArea,
+			basementFloorDepth: fields.basementFloorDepth,
+			thermalResistanceOfBasementWalls: fields.thermalResistanceOfBasementWalls,
+			thermalResistanceOfFloorAboveBasement: fields.thermalResistanceOfBasementWalls,
+			thermalResistanceOfWallsAboveGround: fields.thermalResistanceOfWallsAboveGround,
+			thicknessOfWalls: fields.thicknessOfWalls,
+			depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
+			heightOfBasementWallsAboveGround: fields.heightOfBasementWallsAboveGround
 		};
 
 		if (route.params.floor && route.params.floor !== 'create') {
@@ -41,6 +53,8 @@ const saveForm = (fields: GroundFloorData) => {
 
 	navigateTo("/living-space/floors");
 };
+
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
@@ -50,7 +64,9 @@ const saveForm = (fields: GroundFloorData) => {
 		:actions="false"
 		:incomplete-message="false"
 		@submit="saveForm"
+		@submit-invalid="handleInvalidSubmit"
 	>
+		<GovErrorSummary :error-list="errorMessages" test-id="groundFloorErrorSummary"/>
 		<FormKit
 			id="name"
 			type="govInputText"
@@ -99,7 +115,7 @@ const saveForm = (fields: GroundFloorData) => {
 			id="kappaValue"
 			type="govInputWithSuffix"
 			suffix-text="J/m2.K"
-			label="Kappa value"
+			label="Areal heat capacity"
 			help="This is the total heat capacity of all the construction layers, that is, the sum of the heat capacities of each individual layers"
 			name="kappaValue"
 			validation="required | number | min:100 | max:5000000"
@@ -153,35 +169,164 @@ const saveForm = (fields: GroundFloorData) => {
 			validation="required"
 		/>
 
-		<FormKit
-			v-if="model.typeOfGroundFloor === 'slabWithEdgeInsulation'"
-			id="edgeInsulationType"
-			type="govRadios"
-			:options="{
-				horizontal: 'Horizontal',
-				vertical: 'Vertical',
-			}"
-			label="Edge insulation type"
-			name="edgeInsulationType"
-		/>
-		<FormKit
-			v-if="model.typeOfGroundFloor === 'slabWithEdgeInsulation'"
-			id="edgeInsulationWidth"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Edge insulation width"
-			help="Width not thickness"
-			name="edgeInsulationWidth"
-			validation="required | number | min:0 | max:100"
-		/>
-		<FormKit
-			v-if="model.typeOfGroundFloor === 'slabWithEdgeInsulation'"
-			id="edgeInsulationThermalResistance"
-			type="govInputWithSuffix"
-			suffix-text="m2·K/W"
-			label="Edge insulation thermal resistance "
-			name="edgeInsulationThermalResistance"
-		/>
+		<template v-if="model.typeOfGroundFloor === 'slabWithEdgeInsulation'">
+			<FormKit
+				id="edgeInsulationType"
+				type="govRadios"
+				:options="{
+					horizontal: 'Horizontal',
+					vertical: 'Vertical',
+				}"
+				label="Edge insulation type"
+				name="edgeInsulationType"
+				validation="required"
+			/>
+			<FormKit
+				id="edgeInsulationWidth"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Edge insulation width"
+				help="Width not thickness"
+				name="edgeInsulationWidth"
+				validation="required | number | min:0 | max:100"
+			/>
+			<FormKit
+				id="edgeInsulationThermalResistance"
+				type="govInputWithSuffix"
+				suffix-text="m2·K/W"
+				label="Edge insulation thermal resistance "
+				name="edgeInsulationThermalResistance"
+				validation="required"
+			/>
+		</template>
+		
+		<template v-if="model.typeOfGroundFloor === 'suspendedFloor'">
+			<FormKit
+				id="heightOfFloorUpperSurface"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Height of the floor upper surface"
+				help="Height of the floor upper surface, use an average value if it varies."
+				name="heightOfFloorUpperSurface"
+				validation="required | number | min:0 | max:100"
+			/>
+			<FormKit
+				id="thicknessOfSurroundingWalls"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Thickness of walls at the edge of the floor"
+				help="Ground floor external periodic heat transfer coefficient, equations as defined in BS EN ISO 13370:2017 Annex H, H.4.2 External temperature variation for ground floor slab. See other sections of the standard for other floor types."
+				name="thicknessOfSurroundingWalls"
+				validation="required | number | min:0 | max:100"
+			/>
+			<FormKit
+				id="underfloorSpaceThermalResistance"
+				type="govInputWithSuffix"
+				suffix-text="m2·K/W"
+				label="Thermal resistance of insulation on base of underfloor space"
+				help="Thermal resistance of insulation on base of underfloor space."
+				name="underfloorSpaceThermalResistance"
+				validation="required | number"
+			/>
+			<FormKit
+				id="wallsAboveGroundThermalTransmittance"
+				type="govInputWithSuffix"
+				suffix-text="W/(m2·K)"
+				label="Thermal transmittance of walls above ground"
+				help="in accordance with ISO 6946"
+				name="underfloorSpaceThermalResistance"
+				validation="required | number"
+			/>
+			<FormKit
+				id="ventilationOpeningsArea"
+				type="govInputWithSuffix"
+				suffix-text="m2/m"
+				label="Area of ventilation openings per perimeter"
+				name="ventilationOpeningsArea"
+				validation="required | number"
+			/>
+		</template>
+
+		<template v-if="model.typeOfGroundFloor === 'heatedBasement'">
+			<FormKit
+				id="thicknessOfSurroundingWalls"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Thickness of walls at the edge of the floor"
+				help="Ground floor external periodic heat transfer coefficient, equations as defined in BS EN ISO 13370:2017 Annex H, H.4.2 External temperature variation for ground floor slab. See other sections of the standard for other floor types."
+				name="thicknessOfSurroundingWalls"
+				validation="required | number | min:0 | max:100"
+			/>
+			<FormKit
+				id="basementFloorDepth"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Depth of basement floor below ground level"
+				name="basementFloorDepth"
+				validation="required | number"
+			/>
+			<FormKit
+				id="thermalResistanceOfBasementWalls"
+				type="govInputWithSuffix"
+				suffix-text="m2·K/W"
+				label="Thermal resistance of walls of basement"
+				name="thermalResistanceOfBasementWalls"
+				validation="required | number"
+			/>
+		</template>
+
+		<template v-if="model.typeOfGroundFloor === 'unheatedBasement'">
+			<FormKit
+				id="thermalResistanceOfFloorAboveBasement"
+				type="govInputWithSuffix"
+				suffix-text="W/(m2·K)"
+				label="Thermal transmittance of floor above basement"
+				help="in accordance with ISO 6946"
+				name="thermalResistanceOfFloorAboveBasement"
+				validation="required | number"
+			/>
+			<FormKit
+				id="thermalResistanceOfWallsAboveGround"
+				type="govInputWithSuffix"
+				suffix-text="W/(m2·K)"
+				label="Thermal transmittance of walls above ground"
+				name="thermalResistanceOfWallsAboveGround"
+				validation="required | number"
+			/>
+			<FormKit
+				id="thermalResistanceOfBasementWalls"
+				type="govInputWithSuffix"
+				suffix-text="W/(m2·K)"
+				label="Thermal transmittance of walls of the basement"
+				name="thermalResistanceOfBasementWalls"
+				validation="required | number"
+			/>
+			<FormKit
+				id="thicknessOfWalls"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Thickness of walls"
+				name="thicknessOfWalls"
+				validation="required | number"
+			/>
+			<FormKit
+				id="depthOfBasementFloorBelowGround"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Depth of basement floor below ground level"
+				name="depthOfBasementFloorBelowGround"
+				validation="required | number"
+			/>
+			<FormKit
+				id="heightOfBasementWallsAboveGround"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Height of the basement walls above ground level"
+				name="heightOfBasementWallsAboveGround"
+				validation="required | number"
+			/>
+		</template>
+
 		<FormKit
 			type="govButton"
 			label="Save and continue"
