@@ -72,7 +72,8 @@ export type GroundFloorData = {
 	name: string;
 	surfaceAreaInZone: number;
 	surfaceAreaAllZones: number;
-	pitch: number;
+	pitchOption: string;
+	pitch?: number;
 	uValue: number;
 	kappaValue: number;
 	massDistributionClass: string;

@@ -16,6 +16,7 @@ describe('ground floor', () => {
 		name: "Ground 1",
 		surfaceAreaInZone: 5,
 		surfaceAreaAllZones: 0,
+		pitchOption: '0',
 		pitch: 0,
 		uValue: 1,
 		kappaValue: 100,
@@ -35,7 +36,7 @@ describe('ground floor', () => {
 		await user.type(screen.getByTestId('name'), 'Ground 1');
 		await user.type(screen.getByTestId('surfaceAreaInZone'), '5');
 		await user.type(screen.getByTestId('surfaceAreaAllZones'), '0');
-		await user.type(screen.getByTestId('pitch'), '0');
+		await user.click(screen.getByTestId('pitchOption_0'));
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.type(screen.getByTestId('kappaValue'), '100');
 		await user.click(screen.getByTestId('massDistributionClass_internal'));
@@ -71,7 +72,7 @@ describe('ground floor', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Ground 1');
 		expect((await screen.findByTestId('surfaceAreaInZone') as HTMLInputElement).value).toBe('5');
 		expect((await screen.findByTestId('surfaceAreaAllZones') as HTMLInputElement).value).toBe('0');
-		expect((await screen.findByTestId('pitch') as HTMLInputElement).value).toBe('0');
+		expect((await screen.findByTestId('pitchOption_0')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('kappaValue') as HTMLInputElement).value).toBe('100');
 		expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
@@ -88,7 +89,7 @@ describe('ground floor', () => {
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('surfaceAreaInZone_error'))).toBeDefined();
 		expect((await screen.findByTestId('surfaceAreaAllZones_error'))).toBeDefined();
-		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
+		expect((await screen.findByTestId('pitchOption_error'))).toBeDefined();
 		expect((await screen.findByTestId('uValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();
@@ -152,5 +153,14 @@ describe('ground floor', () => {
 		expect((await screen.findByTestId('thicknessOfWalls_error'))).toBeDefined();
 		expect((await screen.findByTestId('depthOfBasementFloorBelowGround_error'))).toBeDefined();
 		expect((await screen.findByTestId('heightOfBasementWallsAboveGround_error'))).toBeDefined();
+	});
+
+	it('requires pitch when custom pitch option is selected', async () => {
+		await renderSuspended(GroundFloor);
+
+		await user.click(screen.getByTestId('pitchOption_custom'));
+		await user.click(screen.getByRole('button'));
+
+		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
 	});
 });
