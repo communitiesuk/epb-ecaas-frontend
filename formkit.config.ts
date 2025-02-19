@@ -3,6 +3,7 @@ import GovFormButton from './components/GovFormButton.vue';
 import GovRadios from './components/GovRadios.vue';
 import type { FormKitInputs, FormKitOptionsProp } from '@formkit/inputs';
 import GovDropdown from './components/GovDropdown.vue';
+import GovInputFloat from './components/GovInputFloat.vue';
 import GovInputInt from './components/GovInputInt.vue';
 import GovInputWithSuffix from './components/GovInputWithSuffix.vue';
 import GovCheckboxes from './components/GovCheckboxes.vue';
@@ -28,6 +29,9 @@ declare module '@formkit/inputs' {
 		'govDropdown': {
 			type: 'govDropdown',
 			options: FormKitOptionsProp
+		},
+		'govInputFloat': {
+			type: 'GovInputFloat'
 		},
 		'govInputInt': {
 			type: 'govInputInt'
@@ -62,6 +66,10 @@ export default defineFormKitConfig(() => {
 			govDropdown: {
 				type: 'input',
 				component: GovDropdown
+			},
+			govInputFloat: {
+				type: 'input',
+				component: GovInputFloat
 			},
 			govInputInt: {
 				type: 'input',
