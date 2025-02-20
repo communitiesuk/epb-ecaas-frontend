@@ -110,7 +110,7 @@ export type GroundFloorData = {
 };
 
 export interface WallsData {
-	externalWalls: EcaasForm<ExternalFactorsData[]>;
+	externalWalls: EcaasForm<ExternalWallData[]>;
 	internalWalls: EcaasForm<InternalWallData[]>;
 	wallsToUnheatedSpace?: EcaasForm<WallsToUnheatedSpaceData[]>;
 	partyWalls?: EcaasForm<PartyWallData[]>;
@@ -119,6 +119,17 @@ export interface WallsData {
 
 export type ExternalWallData = {
 	name: string;
+	pitchOption: string;
+	pitch?: number;
+	orientation: number;
+	height: number;
+	width: number;
+	elevationalHeight: number;
+	surfaceArea: number;
+	solarAbsorbtion: number;
+	uValue: number;
+	kappaValue: number;
+	massDistributionClass: string;
 };
 
 export type InternalWallData = {

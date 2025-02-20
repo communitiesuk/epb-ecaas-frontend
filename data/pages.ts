@@ -158,6 +158,13 @@ const pagesData: Array<Page> = [
 		parentId: 'livingSpaceFabric'
 	},
 	{
+		id: 'livingSpaceExternalWall',
+		title: 'External wall',
+		url: '/living-space/walls/ground/:wall',
+		type: PageType.Task,
+		parentId: 'livingSpaceWalls'
+	},
+	{
 		id: 'livingSpaceCeilingsAndRoofs',
 		title: 'Ceilings and roofs',
 		url: '/living-space/ceilings-and-roofs',
