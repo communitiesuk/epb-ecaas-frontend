@@ -126,7 +126,7 @@ const pagesData: Array<Page> = [
 		id: 'livingSpaceFloors',
 		title: 'Floors',
 		url: '/living-space/floors',
-		type: PageType.Section,
+		type: PageType.Task,
 		parentId: 'livingSpaceFabric'
 	},
 	{
