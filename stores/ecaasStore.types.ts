@@ -62,7 +62,15 @@ export interface FloorsData {
 }
 
 export type InternalFloorData = {
-	name: string; 
+	name: string;
+	typeOfInternalFloor: string;
+	surfaceAreaOfElement: number;
+	uValue: number;
+	kappaValue: number;
+	massDistributionClass: string;
+	pitchOption: string;
+	pitch?: number;
+	thermalResistanceOfAdjacentUnheatedSpace?: 0;
 };
 
 export type ExposedFloorData = {
