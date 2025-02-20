@@ -52,6 +52,7 @@ export interface ExternalFactorsData {
 }
 export interface LivingSpaceFabric {
 	livingSpaceFloors: FloorsData;
+	livingSpaceWalls: WallsData;
 }
 
 export interface FloorsData {
@@ -106,6 +107,31 @@ export type GroundFloorData = {
 	thicknessOfWalls?: number;
 	depthOfBasementFloorBelowGround?: number;
 	heightOfBasementWallsAboveGround?: number
+};
+
+export interface WallsData {
+	externalWalls: EcaasForm<ExternalFactorsData[]>;
+	internalWalls: EcaasForm<InternalWallData[]>;
+	wallsToUnheatedSpace?: EcaasForm<WallsToUnheatedSpaceData[]>;
+	partyWalls?: EcaasForm<PartyWallData[]>;
+}
+
+
+export type ExternalWallData = {
+	name: string;
+};
+
+export type InternalWallData = {
+	name: string;
+	
+};
+export type WallsToUnheatedSpaceData = {
+	name: string;
+	
+};
+export type PartyWallData = {
+	name: string;
+	
 };
 
 export interface ExternalFactorsData {

@@ -18,7 +18,14 @@ function getInitialState(): EcaasState {
 		livingSpaceFabric: {
 			livingSpaceFloors: {
 				livingSpaceGroundFloor: { data: [] }
+			},
+			livingSpaceWalls: {
+				externalWalls: {data: []},
+				internalWalls: {data: []},
+				wallsToUnheatedSpace: {data: []},
+				partyWalls: {data: []}
 			}
+
 		}
 	};
 }
