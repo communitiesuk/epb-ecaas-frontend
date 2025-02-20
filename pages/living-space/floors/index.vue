@@ -24,7 +24,7 @@ function handleDuplicate<T extends FloorData>(floorType: FloorType, index: numbe
 	const floor = floors?.[index];
     
 	if (floor) {
-		const duplicates = floors.filter(s => s.name.match(duplicateNamePattern(floor.name)));
+		const duplicates = floors.filter(f => f.name.match(duplicateNamePattern(floor.name)));
 
 		store.$patch((state) => {
 			const newFloor = {
