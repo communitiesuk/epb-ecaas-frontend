@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const title = "Ground floor";
 const store = useEcaasStore();
 const route = useRoute();
 
@@ -35,7 +36,7 @@ const saveForm = (fields: GroundFloorData) => {
 			ventilationOpeningsArea: fields.ventilationOpeningsArea,
 			basementFloorDepth: fields.basementFloorDepth,
 			thermalResistanceOfBasementWalls: fields.thermalResistanceOfBasementWalls,
-			thermalResistanceOfFloorAboveBasement: fields.thermalResistanceOfBasementWalls,
+			thermalResistanceOfFloorAboveBasement: fields.thermalResistanceOfFloorAboveBasement,
 			thermalResistanceOfWallsAboveGround: fields.thermalResistanceOfWallsAboveGround,
 			thicknessOfWalls: fields.thicknessOfWalls,
 			depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
@@ -59,6 +60,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
+	<Head>
+		<Title>{{ title }}</Title>
+	</Head>
+	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -102,7 +107,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				custom: 'Custom'
 			}"
 			label="Pitch"
-			help="Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down"
+			help="Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down."
 			name="pitchOption"
 			validation="required"
 		/>
@@ -246,7 +251,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				suffix-text="W/(m2·K)"
 				label="Thermal transmittance of walls above ground"
 				help="in accordance with ISO 6946"
-				name="underfloorSpaceThermalResistance"
+				name="wallsAboveGroundThermalTransmittance"
 				validation="required | number"
 			/>
 			<FormKit
