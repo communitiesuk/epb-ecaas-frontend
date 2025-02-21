@@ -53,6 +53,7 @@ export interface ExternalFactorsData {
 export interface LivingSpaceFabric {
 	livingSpaceFloors: FloorsData;
 	livingSpaceWalls: WallsData;
+	livingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
 }
 
 export interface FloorsData {
@@ -166,6 +167,19 @@ export type PartyWallData = {
 	uValue: number;
 	kappaValue: number;
 	massDistributionClass: string;
+};
+
+export interface CeilingsAndRoofsData {
+	livingSpaceCeilings: EcaasForm<CeilingData[]>;
+	livingSpaceRoofs: EcaasForm<RoofData[]>;
+}
+
+export type CeilingData = {
+	name: string;
+};
+
+export type RoofData = {
+	name: string;
 };
 
 export interface HotWaterOutlets {

@@ -97,6 +97,10 @@ describe('Ecaas Store', () => {
 					livingSpaceInternalWall: {complete: true},
 					livingSpaceWallToUnheatedSpace: {complete: true},
 					livingSpacePartyWall: {complete: true}
+				},
+				livingSpaceCeilingsAndRoofs: {
+					livingSpaceCeilings: {complete: true},
+					livingSpaceRoofs: {complete: true}
 				}
 			}
 		});

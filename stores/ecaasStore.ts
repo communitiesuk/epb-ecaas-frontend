@@ -24,8 +24,11 @@ function getInitialState(): EcaasState {
 				livingSpaceInternalWall: {data: []},
 				livingSpaceWallToUnheatedSpace: {data: []},
 				livingSpacePartyWall: {data: []}
+			},
+			livingSpaceCeilingsAndRoofs: {
+				livingSpaceCeilings: { data: [] },
+				livingSpaceRoofs: { data: [] }
 			}
-
 		}
 	};
 }

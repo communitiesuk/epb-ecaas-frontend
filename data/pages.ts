@@ -190,8 +190,22 @@ const pagesData: Array<Page> = [
 		id: 'livingSpaceCeilingsAndRoofs',
 		title: 'Ceilings and roofs',
 		url: '/living-space/ceilings-and-roofs',
-		type: PageType.Task,
+		type: PageType.TaskGroup,
 		parentId: 'livingSpaceFabric'
+	},
+	{
+		id: 'livingSpaceCeilings',
+		title: 'Ceiling',
+		url: '/living-space/ceilings-and-roofs/ceilings/:ceiling',
+		type: PageType.Task,
+		parentId: 'livingSpaceCeilingsAndRoofs'
+	},
+	{
+		id: 'livingSpaceRoofs',
+		title: 'Roof',
+		url: '/living-space/ceilings-and-roofs/roofs/:roof',
+		type: PageType.Task,
+		parentId: 'livingSpaceCeilingsAndRoofs'
 	},
 	{
 		id: 'livingSpaceDoors',
