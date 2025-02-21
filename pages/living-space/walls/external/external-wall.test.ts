@@ -14,8 +14,8 @@ describe('external wall', () => {
 
 	const state: ExternalWallData = {
 		name: "External wall 1",
-		pitchOption: '0',
-		pitch: 0,
+		pitchOption: '90',
+		pitch: 90,
 		orientation: 0,
 		height: 0.5,
 		width: 20,
@@ -35,7 +35,7 @@ describe('external wall', () => {
 		await renderSuspended(ExternalWall);
 
 		await user.type(screen.getByTestId('name'), 'External wall 1');
-		await user.click(screen.getByTestId('pitchOption_0'));
+		await user.click(screen.getByTestId('pitchOption_90'));
 		await user.type(screen.getByTestId('orientation'), '0');
 		await user.type(screen.getByTestId('height'), '0.5');
 		await user.type(screen.getByTestId('width'), '20'); 
@@ -73,7 +73,7 @@ describe('external wall', () => {
 		});
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('External wall 1');
-		expect((await screen.findByTestId('pitchOption_0')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('orientation') as HTMLInputElement).value).toBe('0');
 		expect((await screen.findByTestId('height') as HTMLInputElement).value).toBe('0.5');
 		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('20');

@@ -17,7 +17,7 @@ const saveForm = (fields: ExternalWallData) => {
 		const wall: ExternalWallData = {
 			name: fields.name,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '0' ? 0 : fields.pitch,
+			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
 			orientation: fields.orientation,
 			height: fields.height,
 			width: fields.width,
@@ -73,7 +73,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="pitchOption"
 			type="govRadios"
 			:options="{
-				'0': '0',
+				'90': '90',
 				custom: 'Custom'
 			}"
 			label="Pitch"
