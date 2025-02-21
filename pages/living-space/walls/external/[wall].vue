@@ -156,7 +156,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="J/m2.K"
 			label="Areal heat capacity"
-			help="This is the total heat capacity of all the construction layers, that is, the sum of the heat capacities of each individual layers"
+			help="Effective areal heat capacity or kappa value. This is the total heat capacity of all the construction layers, that is, the sum of the heat capacities of each individual layers. (Note that this is different to the effectiveness thickness definition of areal heat capacity used in SAP10 and in other monthly models.)"
 			name="kappaValue"
 			validation="required | number | min:100 | max:5000000"
 		/>
