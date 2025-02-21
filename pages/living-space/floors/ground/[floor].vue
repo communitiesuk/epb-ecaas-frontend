@@ -77,7 +77,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Give this element a name so it can be identified later "
+			help="Give this element a name so it can be identified later."
 			name="name"
 			validation="required"
 		/>

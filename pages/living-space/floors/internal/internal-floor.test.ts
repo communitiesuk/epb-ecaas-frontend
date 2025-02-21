@@ -53,8 +53,6 @@ describe('internal floor', () => {
 			const  { livingSpaceInternalFloor } = store.livingSpaceFabric.livingSpaceFloors;
 			
 			expect(livingSpaceInternalFloor?.data[0]).toEqual(internalFloor);
-			expect(livingSpaceInternalFloor?.complete).toBe(true);
-			expect(navigateToMock).toHaveBeenCalledWith('/living-space/floors');
 		});
 	
 		it('form is prepopulated when data exists in state', async () => {

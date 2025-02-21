@@ -124,7 +124,6 @@ export interface WallsData {
 	livingSpacePartyWall?: EcaasForm<PartyWallData[]>;
 }
 
-
 export type ExternalWallData = {
 	name: string;
 	pitchOption: string;
@@ -142,12 +141,18 @@ export type ExternalWallData = {
 
 export type InternalWallData = {
 	name: string;
-	
+	surfaceAreaOfElement: number;
+	uValue: number;
+	kappaValue: number;
+	massDistributionClass: string;
+	pitchOption: string;
+	pitch: number;
 };
+
 export type WallsToUnheatedSpaceData = {
 	name: string;
-	
 };
+
 export type PartyWallData = {
 	name: string;
 	pitchOption: string;
@@ -162,14 +167,6 @@ export type PartyWallData = {
 	kappaValue: number;
 	massDistributionClass: string;
 };
-
-export interface ExternalFactorsData {
-	altitude?: number;
-	typeOfExposure?: string;
-	required?: boolean;
-	terrainType?: string;
-	noiseNuisance?: string;
-}
 
 export interface HotWaterOutlets {
 	hotWaterDistribution: EcaasForm<HotWaterDistribution>;
