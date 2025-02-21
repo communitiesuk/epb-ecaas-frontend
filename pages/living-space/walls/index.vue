@@ -49,7 +49,7 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 		{{ title }}
 	</h1>
 	<GovCustomList
-		id="externalWall"
+		id="external"
 		title="External wall"
 		:form-url="`${page?.url!}/external`"
 		:items="store.livingSpaceFabric.livingSpaceWalls.livingSpaceExternalWall?.data.map(x => x.name)"
@@ -57,7 +57,7 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 		@duplicate="(index: number) => handleDuplicate('livingSpaceExternalWall', index)"
 	/>
 	<GovCustomList
-		id="internalWall"
+		id="internal"
 		title="Internal wall"
 		:form-url="`${page?.url!}/internal`"
 		:items="store.livingSpaceFabric.livingSpaceWalls.livingSpaceInternalWall?.data.map(x => x.name)"
@@ -65,15 +65,15 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 		@duplicate="(index: number) => handleDuplicate('livingSpaceInternalWall', index)"
 	/>
 	<GovCustomList
-		id="wallToUnheatedSpace"
+		id="toHeatedSpace"
 		title="Wall to unheated space"
-		:form-url="`${page?.url!}/unheated-space`"
+		:form-url="`${page?.url!}/wall-to-unheated-space`"
 		:items="store.livingSpaceFabric.livingSpaceWalls.livingSpaceWallToUnheatedSpace?.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('livingSpaceWallToUnheatedSpace', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceWallToUnheatedSpace', index)"
 	/>
 	<GovCustomList
-		id="partyWall"
+		id="party"
 		title="Party wall"
 		:form-url="`${page?.url!}/party`"
 		:items="store.livingSpaceFabric.livingSpaceWalls.livingSpacePartyWall?.data.map(x => x.name)"
