@@ -150,7 +150,17 @@ export type WallsToUnheatedSpaceData = {
 };
 export type PartyWallData = {
 	name: string;
-	
+	pitchOption: string;
+	pitch?: number;
+	orientation: number;
+	height: number;
+	width: number;
+	elevationalHeight: number;
+	surfaceArea: number;
+	solarAbsorbtion: number;
+	uValue: number;
+	kappaValue: number;
+	massDistributionClass: string;
 };
 
 export interface ExternalFactorsData {
