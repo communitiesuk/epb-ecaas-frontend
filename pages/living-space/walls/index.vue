@@ -52,33 +52,33 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 		id="externalWall"
 		title="External wall"
 		:form-url="`${page?.url!}/external`"
-		:items="store.livingSpaceFabric.livingSpaceWalls.externalWalls?.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('externalWalls', index)"
-		@duplicate="(index: number) => handleDuplicate('externalWalls', index)"
+		:items="store.livingSpaceFabric.livingSpaceWalls.livingSpaceExternalWall?.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('livingSpaceExternalWall', index)"
+		@duplicate="(index: number) => handleDuplicate('livingSpaceExternalWall', index)"
 	/>
 	<GovCustomList
 		id="internalWall"
 		title="Internal wall"
 		:form-url="`${page?.url!}/internal`"
-		:items="store.livingSpaceFabric.livingSpaceWalls.internalWalls?.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('internalWalls', index)"
-		@duplicate="(index: number) => handleDuplicate('internalWalls', index)"
+		:items="store.livingSpaceFabric.livingSpaceWalls.livingSpaceInternalWall?.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('livingSpaceInternalWall', index)"
+		@duplicate="(index: number) => handleDuplicate('livingSpaceInternalWall', index)"
 	/>
 	<GovCustomList
 		id="wallToUnheatedSpace"
 		title="Wall to unheated space"
 		:form-url="`${page?.url!}/unheated-space`"
-		:items="store.livingSpaceFabric.livingSpaceWalls.wallsToUnheatedSpace?.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('wallsToUnheatedSpace', index)"
-		@duplicate="(index: number) => handleDuplicate('wallsToUnheatedSpace', index)"
+		:items="store.livingSpaceFabric.livingSpaceWalls.livingSpaceWallToUnheatedSpace?.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('livingSpaceWallToUnheatedSpace', index)"
+		@duplicate="(index: number) => handleDuplicate('livingSpaceWallToUnheatedSpace', index)"
 	/>
 	<GovCustomList
 		id="partyWall"
 		title="Party wall"
 		:form-url="`${page?.url!}/party`"
-		:items="store.livingSpaceFabric.livingSpaceWalls.partyWalls?.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('partyWalls', index)"
-		@duplicate="(index: number) => handleDuplicate('partyWalls', index)"
+		:items="store.livingSpaceFabric.livingSpaceWalls.livingSpacePartyWall?.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('livingSpacePartyWall', index)"
+		@duplicate="(index: number) => handleDuplicate('livingSpacePartyWall', index)"
 	/>
 	<GovButton
 		href="/living-space"

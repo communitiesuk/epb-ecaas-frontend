@@ -1,7 +1,8 @@
 export enum PageType {
 	Section,
 	Task,
-	Summary
+	TaskGroup,
+	Summary,
 };
 
 export interface Page {
@@ -126,7 +127,7 @@ const pagesData: Array<Page> = [
 		id: 'livingSpaceFloors',
 		title: 'Floors',
 		url: '/living-space/floors',
-		type: PageType.Task,
+		type: PageType.TaskGroup,
 		parentId: 'livingSpaceFabric'
 	},
 	{
@@ -154,13 +155,34 @@ const pagesData: Array<Page> = [
 		id: 'livingSpaceWalls',
 		title: 'Walls',
 		url: '/living-space/walls',
-		type: PageType.Task,
+		type: PageType.TaskGroup,
 		parentId: 'livingSpaceFabric'
 	},
 	{
 		id: 'livingSpaceExternalWall',
 		title: 'External wall',
-		url: '/living-space/walls/ground/:wall',
+		url: '/living-space/walls/external/:wall',
+		type: PageType.Task,
+		parentId: 'livingSpaceWalls'
+	},
+	{
+		id: 'livingSpaceInternalWall',
+		title: 'Internal wall',
+		url: '/living-space/walls/internal/:wall',
+		type: PageType.Task,
+		parentId: 'livingSpaceWalls'
+	},
+	{
+		id: 'livingSpaceWallToUnheatedSpace',
+		title: 'Wall to unheated space',
+		url: '/living-space/walls/wall-to-unheated-space/:wall',
+		type: PageType.Task,
+		parentId: 'livingSpaceWalls'
+	},
+	{
+		id: 'livingSpacePartyWall',
+		title: 'Party wall',
+		url: '/living-space/walls/party/:wall',
 		type: PageType.Task,
 		parentId: 'livingSpaceWalls'
 	},

@@ -20,10 +20,10 @@ function getInitialState(): EcaasState {
 				livingSpaceGroundFloor: { data: [] }
 			},
 			livingSpaceWalls: {
-				externalWalls: {data: []},
-				internalWalls: {data: []},
-				wallsToUnheatedSpace: {data: []},
-				partyWalls: {data: []}
+				livingSpaceExternalWall: {data: []},
+				livingSpaceInternalWall: {data: []},
+				livingSpaceWallToUnheatedSpace: {data: []},
+				livingSpacePartyWall: {data: []}
 			}
 
 		}
@@ -46,6 +46,10 @@ export const useEcaasStore = defineStore('ecaas', {
 						return getTaskStatus(entry[1]);
 					}
 					
+					if (page.type === PageType.TaskGroup) {
+						return getSectionStatus(entry[1]);
+					}
+
 					if (page.type === PageType.Section) {
 						return getSectionStatus(entry[1]);
 					}

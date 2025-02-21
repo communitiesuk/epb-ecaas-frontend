@@ -70,6 +70,19 @@ export function getSectionStatus(section: object): GovTagProps {
 			}
 		}
 
+		if (taskPage?.type === PageType.TaskGroup) {
+			const taskGroupStatus = getSectionStatus(task[1]);
+
+			if (taskGroupStatus === formStatus.complete) {
+				status = formStatus.inProgress;
+				complete++;
+			}
+
+			if (complete === tasks.length) {
+				status = formStatus.complete;
+			}
+		}
+
 		if (taskPage?.type === PageType.Section) {
 			status = getSectionStatus(task[1]);
 		}

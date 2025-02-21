@@ -48,7 +48,7 @@ describe('external wall', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		const { data = [], complete = false} = store.livingSpaceFabric.livingSpaceWalls.externalWalls || {};
+		const { data = [], complete = false} = store.livingSpaceFabric.livingSpaceWalls.livingSpaceExternalWall || {};
 		
 		expect(data[0]).toEqual(state);
 		expect(complete).toBe(true);
@@ -59,7 +59,7 @@ describe('external wall', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWalls: {
-					externalWalls: {
+					livingSpaceExternalWall: {
 						data: [state]
 					}
 				}

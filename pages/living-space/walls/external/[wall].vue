@@ -3,15 +3,15 @@ const title = "External wall";
 const store = useEcaasStore();
 const route = useRoute();
 
-const wallData = useItemToEdit('wall', store.livingSpaceFabric.livingSpaceWalls.externalWalls?.data);
+const wallData = useItemToEdit('wall', store.livingSpaceFabric.livingSpaceWalls.livingSpaceExternalWall?.data);
 const model: Ref<ExternalWallData> = ref(wallData!);
 
 const saveForm = (fields: ExternalWallData) => {
 	store.$patch((state) => {
 		const { livingSpaceWalls } = state.livingSpaceFabric;
 
-		if (!livingSpaceWalls.externalWalls?.data) {
-			livingSpaceWalls.externalWalls = { data: [] };
+		if (!livingSpaceWalls.livingSpaceExternalWall?.data) {
+			livingSpaceWalls.livingSpaceExternalWall = { data: [] };
 		}
 
 		const wall: ExternalWallData = {
@@ -31,12 +31,12 @@ const saveForm = (fields: ExternalWallData) => {
 
 		if (route.params.wall && route.params.wall !== 'create') {
 			const index = parseInt(route.params.wall as string);
-			livingSpaceWalls.externalWalls.data[index] = wall;
+			livingSpaceWalls.livingSpaceExternalWall.data[index] = wall;
 		} else {
-			livingSpaceWalls.externalWalls.data.push(wall);
+			livingSpaceWalls.livingSpaceExternalWall.data.push(wall);
 		}
 
-		livingSpaceWalls.externalWalls.complete = true;
+		livingSpaceWalls.livingSpaceExternalWall.complete = true;
 	});
 
 	navigateTo("/living-space/walls");
