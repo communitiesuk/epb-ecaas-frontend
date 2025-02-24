@@ -197,6 +197,18 @@ export type CeilingData = {
 
 export type RoofData = {
 	name: string;
+	typeOfRoof: string;
+	pitchOption?: string;
+	pitch: number;
+	orientation: number;
+	height: number;
+	width: number;
+	elevationalHeightOfElement: number;
+	surfaceArea: number;
+	solarAbsorbtionCoefficient: number;
+	uValue: number;
+	kappaValue: number;
+	massDistributionClass: string;
 };
 
 export interface DoorsData {
