@@ -217,21 +217,21 @@ const pagesData: Array<Page> = [
 	{
 		id: 'livingSpaceExternalUnglazedDoor',
 		title: 'External unglazed door',
-		url: '/living-space/doors/external-unglazed-door/:door',
+		url: '/living-space/doors/external-unglazed/:door',
 		type: PageType.Task,
 		parentId: 'livingSpaceDoors'
 	},
 	{
 		id: 'livingSpaceExternalGlazedDoor',
 		title: 'External glazed door',
-		url: '/living-space/doors/external-glazed-door/:door',
+		url: '/living-space/doors/external-glazed/:door',
 		type: PageType.Task,
 		parentId: 'livingSpaceDoors'
 	},
 	{
 		id: 'livingSpaceInternalDoor',
 		title: 'Internal door',
-		url: '/living-space/doors/internal-door/:door',
+		url: '/living-space/doors/internal/:door',
 		type: PageType.Task,
 		parentId: 'livingSpaceDoors'
 	},

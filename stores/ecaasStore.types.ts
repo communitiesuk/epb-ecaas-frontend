@@ -207,6 +207,17 @@ export interface DoorsData {
 
 export type ExternalUnglazedDoorData = {
 	name: string;
+	pitchOption: string;
+	pitch?: number;
+	orientation: number;
+	height: number;
+	width: number;
+	elevationalHeight: number;
+	surfaceArea: number;
+	solarAbsorbtion: number;
+	uValue: number;
+	kappaValue: number;
+	massDistributionClass: string;
 };
 
 export type ExternalGlazedDoorData = {

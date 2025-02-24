@@ -48,7 +48,7 @@ function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) 
 	<GovCustomList
 		id="externalUnglazed"
 		title="External unglazed door"
-		:form-url="`${page?.url!}/external-unglazed-door`"
+		:form-url="`${page?.url!}/external-unglazed`"
 		:items="store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalUnglazedDoor.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('livingSpaceExternalUnglazedDoor', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceExternalUnglazedDoor', index)"
@@ -56,7 +56,7 @@ function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) 
 	<GovCustomList
 		id="externalGlazed"
 		title="External glazed door"
-		:form-url="`${page?.url!}/external-glazed-door`"
+		:form-url="`${page?.url!}/external-glazed`"
 		:items="store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalGlazedDoor.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('livingSpaceExternalGlazedDoor', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceExternalGlazedDoor', index)"
@@ -64,7 +64,7 @@ function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) 
 	<GovCustomList
 		id="internal"
 		title="Internal door"
-		:form-url="`${page?.url!}/internal-door`"
+		:form-url="`${page?.url!}/internal`"
 		:items="store.livingSpaceFabric.livingSpaceDoors.livingSpaceInternalDoor.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('livingSpaceInternalDoor', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceInternalDoor', index)"
