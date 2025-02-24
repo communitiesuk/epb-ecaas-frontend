@@ -28,6 +28,11 @@ function getInitialState(): EcaasState {
 			livingSpaceCeilingsAndRoofs: {
 				livingSpaceCeilings: { data: [] },
 				livingSpaceRoofs: { data: [] }
+			},
+			livingSpaceDoors: {
+				livingSpaceExternalUnglazedDoor: { data: [] },
+				livingSpaceExternalGlazedDoor: { data: [] },
+				livingSpaceInternalDoor: { data: [] }
 			}
 		}
 	};

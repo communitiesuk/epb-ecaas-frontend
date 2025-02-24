@@ -211,8 +211,29 @@ const pagesData: Array<Page> = [
 		id: 'livingSpaceDoors',
 		title: 'Doors',
 		url: '/living-space/doors',
-		type: PageType.Task,
+		type: PageType.TaskGroup,
 		parentId: 'livingSpaceFabric'
+	},
+	{
+		id: 'livingSpaceExternalUnglazedDoor',
+		title: 'External unglazed door',
+		url: '/living-space/doors/external-unglazed-door/:door',
+		type: PageType.Task,
+		parentId: 'livingSpaceDoors'
+	},
+	{
+		id: 'livingSpaceExternalGlazedDoor',
+		title: 'External glazed door',
+		url: '/living-space/doors/external-glazed-door/:door',
+		type: PageType.Task,
+		parentId: 'livingSpaceDoors'
+	},
+	{
+		id: 'livingSpaceInternalDoor',
+		title: 'Internal door',
+		url: '/living-space/doors/internal-door/:door',
+		type: PageType.Task,
+		parentId: 'livingSpaceDoors'
 	},
 	{
 		id: 'livingSpaceWindows',

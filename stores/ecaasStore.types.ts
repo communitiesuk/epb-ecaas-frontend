@@ -54,6 +54,7 @@ export interface LivingSpaceFabric {
 	livingSpaceFloors: FloorsData;
 	livingSpaceWalls: WallsData;
 	livingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
+	livingSpaceDoors: DoorsData;
 }
 
 export interface FloorsData {
@@ -195,6 +196,24 @@ export type CeilingData = {
 };
 
 export type RoofData = {
+	name: string;
+};
+
+export interface DoorsData {
+	livingSpaceExternalUnglazedDoor: EcaasForm<ExternalUnglazedDoorData[]>;
+	livingSpaceExternalGlazedDoor: EcaasForm<ExternalGlazedDoorData[]>;
+	livingSpaceInternalDoor: EcaasForm<InternalDoorData[]>;
+};
+
+export type ExternalUnglazedDoorData = {
+	name: string;
+};
+
+export type ExternalGlazedDoorData = {
+	name: string;
+};
+
+export type InternalDoorData = {
 	name: string;
 };
 
