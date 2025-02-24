@@ -152,6 +152,14 @@ export type InternalWallData = {
 
 export type WallsToUnheatedSpaceData = {
 	name: string;
+	surfaceAreaOfElement: number;
+	uValue: number;
+	arealHeatCapacity: number;
+	massDistributionClass: string;
+	pitchOption: string;
+	pitch?: number;
+	thermalResistanceOfAdjacentUnheatedSpace: number;
+
 };
 
 export type PartyWallData = {
