@@ -183,7 +183,15 @@ export interface CeilingsAndRoofsData {
 }
 
 export type CeilingData = {
+	type: string;
 	name: string;
+	surfaceArea: number;
+	uValue: number;
+	kappaValue: number;
+	massDistributionClass: string;
+	pitchOption: string;
+	pitch?: number;
+	thermalResistanceOfAdjacentUnheatedSpace?: number;
 };
 
 export type RoofData = {
