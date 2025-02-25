@@ -246,8 +246,22 @@ const pagesData: Array<Page> = [
 		id: 'livingSpaceThermalBridging',
 		title: 'Thermal bridging',
 		url: '/living-space/thermal-bridging',
-		type: PageType.Task,
+		type: PageType.TaskGroup,
 		parentId: 'livingSpaceFabric'
+	},
+	{
+		id: 'livingSpaceLinearThermalBridges',
+		title: 'Linear thermal bridges',
+		url: '/living-space/thermal-bridging/linear',
+		type: PageType.Task,
+		parentId: 'livingSpaceThermalBridging'
+	},
+	{
+		id: 'livingSpacePointThermalBridges',
+		title: 'Point thermal bridges',
+		url: '/living-space/thermal-bridging/point',
+		type: PageType.Task,
+		parentId: 'livingSpaceThermalBridging'
 	},
 	{
 		id: 'livingSpaceLighting',

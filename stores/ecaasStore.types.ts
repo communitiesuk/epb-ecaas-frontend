@@ -56,6 +56,7 @@ export interface LivingSpaceFabric {
 	livingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
 	livingSpaceDoors: DoorsData;
 	livingSpaceWindows: EcaasForm<WindowData[]>;
+	livingSpaceThermalBridging: ThermalBridgingData;
 }
 
 export interface FloorsData {
@@ -251,6 +252,19 @@ export type InternalDoorData = {
 export interface WindowData {
 	name: string;
 }
+
+export interface ThermalBridgingData {
+	livingSpaceLinearThermalBridges: EcaasForm<LinearThermalBridgeData[]>;
+	livingSpacePointThermalBridges: EcaasForm<PointThermalBridgeData[]>;
+}
+
+export type LinearThermalBridgeData = {
+	name: string;
+};
+
+export type PointThermalBridgeData = {
+	name: string;
+};
 
 export interface HotWaterOutlets {
 	hotWaterDistribution: EcaasForm<HotWaterDistribution>;

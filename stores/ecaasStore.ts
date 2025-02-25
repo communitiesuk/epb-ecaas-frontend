@@ -34,7 +34,11 @@ function getInitialState(): EcaasState {
 				livingSpaceExternalGlazedDoor: { data: [] },
 				livingSpaceInternalDoor: { data: [] }
 			},
-			livingSpaceWindows: { data: [] }
+			livingSpaceWindows: { data: [] },
+			livingSpaceThermalBridging: {
+				livingSpaceLinearThermalBridges: { data: [] },
+				livingSpacePointThermalBridges: { data: [] }
+			}
 		}
 	};
 }

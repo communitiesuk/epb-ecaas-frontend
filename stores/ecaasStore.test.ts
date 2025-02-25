@@ -107,7 +107,11 @@ describe('Ecaas Store', () => {
 					livingSpaceExternalGlazedDoor: {complete: true},
 					livingSpaceInternalDoor: {complete: true}
 				},
-				livingSpaceWindows: {complete: true}
+				livingSpaceWindows: {complete: true},
+				livingSpaceThermalBridging: {
+					livingSpaceLinearThermalBridges: {complete: true},
+					livingSpacePointThermalBridges: {complete: true}
+				}
 			}
 		});
 
