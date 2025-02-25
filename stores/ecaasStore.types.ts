@@ -237,7 +237,15 @@ export type ExternalGlazedDoorData = {
 };
 
 export type InternalDoorData = {
+	typeOfCeiling: string;
 	name: string;
+	surfaceArea: number;
+	uValue: number;
+	kappaValue: number;
+	massDistributionClass: string;
+	pitchOption: string;
+	pitch?: number;
+	thermalResistanceOfAdjacentUnheatedSpace?: number;
 };
 
 export interface HotWaterOutlets {
