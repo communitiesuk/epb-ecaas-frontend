@@ -63,7 +63,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Give this element a name so it can be identified later "
+			help="Give this element a name so it can be identified later"
 			name="name"
 			validation="required"
 		/>
@@ -71,7 +71,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="surfaceAreaOfElement"
 			type="govInputWithSuffix"
 			suffix-text="m2"
-			lable="Surface area of element"
+			label="Surface area of element"
 			help="Net area of the building element"
 			name="surfaceAreaOfElement"
 			validation="required | number | min:0 | max:10000"
@@ -79,9 +79,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="uValue"
 			type="govInputWithSuffix"
-			suffix-text="W / m2 K"
-			lable="U-value"
-			help="Steady-state thermal transmittance of the building element "
+			suffix-text="W/(m2.K)"
+			label="U-value"
+			help="Steady-state thermal transmittance of the building element"
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
 		/>
