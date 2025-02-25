@@ -55,6 +55,7 @@ export interface LivingSpaceFabric {
 	livingSpaceWalls: WallsData;
 	livingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
 	livingSpaceDoors: DoorsData;
+	livingSpaceWindows: EcaasForm<WindowData[]>;
 }
 
 export interface FloorsData {
@@ -160,7 +161,6 @@ export type WallsToUnheatedSpaceData = {
 	pitchOption: string;
 	pitch?: number;
 	thermalResistanceOfAdjacentUnheatedSpace: number;
-
 };
 
 export type PartyWallData = {
@@ -190,8 +190,8 @@ export type CeilingData = {
 	uValue: number;
 	kappaValue: number;
 	massDistributionClass: string;
-	pitchOption: string;
-	pitch?: number;
+	pitchOption?: string;
+	pitch: number;
 	thermalResistanceOfAdjacentUnheatedSpace?: number;
 };
 
@@ -247,6 +247,10 @@ export type InternalDoorData = {
 	pitch?: number;
 	thermalResistanceOfAdjacentUnheatedSpace?: number;
 };
+
+export interface WindowData {
+	name: string;
+}
 
 export interface HotWaterOutlets {
 	hotWaterDistribution: EcaasForm<HotWaterDistribution>;
