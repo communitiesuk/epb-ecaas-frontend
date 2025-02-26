@@ -28,7 +28,7 @@ declare module '@formkit/inputs' {
 		},
 		'govDropdown': {
 			type: 'govDropdown',
-			options: FormKitOptionsProp
+			options: FormKitOptionsProp | FormKitOptionsProp[]
 		},
 		'govInputFloat': {
 			type: 'GovInputFloat'

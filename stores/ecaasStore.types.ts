@@ -260,6 +260,9 @@ export interface ThermalBridgingData {
 
 export type LinearThermalBridgeData = {
 	name: string;
+	typeOfThermalBridge: string;
+	linearThermalTransmittance: number;
+	length: number;
 };
 
 export type PointThermalBridgeData = {

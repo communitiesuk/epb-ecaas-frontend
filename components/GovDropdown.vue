@@ -36,7 +36,7 @@ function handleInput(e) {
 		</p>
 		<select
 			:id="id"
-			:class="`govuk-select ${props.context.state.invalid ? 'govuk-select--error' : ''}`"
+			:class="`govuk-select govuk-input--width-10 ${props.context.state.invalid ? 'govuk-select--error' : ''}`"
 			:name="name"
 			:value="mounted ? props.context._value : ''"
 			:data-testid="id"
@@ -44,9 +44,24 @@ function handleInput(e) {
 			@input="handleInput"
 		>
 			<option value="">Select</option>
-			<option v-for="key in Object.keys(options)" :key="key" :value="key">
-				{{ options[key] }}
-			</option>
+			<template v-if="Array.isArray(options)">
+				<optgroup v-for="(opts, index) in options" :key="index" label="--">
+					<option v-for="key in Object.keys(opts)" :key="key" :value="key">
+						{{ opts[key] }}
+					</option>
+				</optgroup>
+			</template>
+			<template v-if="!Array.isArray(options)">
+				<option v-for="key in Object.keys(options)" :key="key" :value="key">
+					{{ options[key] }}
+				</option>
+			</template>
 		</select>
 	</div>
 </template>
+
+<style scoped lang="scss">
+	.govuk-select {
+		max-width: 11.5em;
+	}
+</style>
