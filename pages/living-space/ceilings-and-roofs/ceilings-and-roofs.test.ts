@@ -9,15 +9,36 @@ describe('ceilings', () => {
 	const user = userEvent.setup();
 
 	const ceiling1: CeilingData = {
-		name: "Ceiling 1"
+		type: 'heated',
+		name: "Ceiling 1",
+		surfaceArea: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitchOption: '180',
+		pitch: 180
 	};
 
 	const ceiling2: CeilingData = {
-		name: "Ceiling 2"
+		type: 'heated',
+		name: "Ceiling 2",
+		surfaceArea: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitchOption: '180',
+		pitch: 180
 	};
 
 	const ceiling3: CeilingData = {
-		name: "Ceiling 3"
+		type: 'heated',
+		name: "Ceiling 3",
+		surfaceArea: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitchOption: '180',
+		pitch: 180
 	};
 
 	afterEach(() => {
@@ -96,15 +117,51 @@ describe('roofs', () => {
 	const user = userEvent.setup();
 
 	const roof1: RoofData = {
-		name: "Roof 1"
+		name: "Roof 1",
+		typeOfRoof: 'flat',
+		pitchOption: '180',
+		pitch: 180,
+		orientation: 0,
+		height: 1,
+		width: 1,
+		elevationalHeightOfElement: 2,
+		surfaceArea: 1,
+		solarAbsorbtionCoefficient: 0.5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
 	};
 
 	const roof2: RoofData = {
-		name: "Roof 2"
+		name: "Roof 2",
+		typeOfRoof: 'flat',
+		pitchOption: '180',
+		pitch: 180,
+		orientation: 0,
+		height: 1,
+		width: 1,
+		elevationalHeightOfElement: 2,
+		surfaceArea: 1,
+		solarAbsorbtionCoefficient: 0.5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
 	};
 
 	const roof3: RoofData = {
-		name: "Roof 3"
+		name: "Roof 3",
+		typeOfRoof: 'flat',
+		pitchOption: '180',
+		pitch: 180,
+		orientation: 0,
+		height: 1,
+		width: 1,
+		elevationalHeightOfElement: 2,
+		surfaceArea: 1,
+		solarAbsorbtionCoefficient: 0.5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
 	};
 
 	afterEach(() => {
