@@ -55,7 +55,7 @@ export interface LivingSpaceFabric {
 	livingSpaceWalls: WallsData;
 	livingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
 	livingSpaceDoors: DoorsData;
-	livingSpaceWindows: EcaasForm<WindowData[]>;
+	livingSpaceWindows: EcaasForm<Window>;
 	livingSpaceThermalBridging: ThermalBridgingData;
 }
 
@@ -235,6 +235,34 @@ export type ExternalUnglazedDoorData = {
 
 export type ExternalGlazedDoorData = {
 	name: string;
+	orientation: number;
+	surfaceArea: number;
+	height: number;
+	width: number;
+	uValue: number;
+	pitchOption: string;
+	pitch?: number;
+	solarTransmittence: number;
+	elevationalHeight: number;
+	midHeight: number;
+	numberOpenableParts: string;
+	frameToOpeningRatio?: number;
+	maximumOpenableArea?: number;
+	heightOpenableArea?: number;
+	midHeightOpenablePart1?: number;
+	midHeightOpenablePart2?: number;
+	midHeightOpenablePart3?: number;
+	midHeightOpenablePart4?: number;
+	overhangDepth?: number;
+	overhangDistance?: number;
+	sideFinRightDepth?: number;
+	sideFinRightDistance?: number;
+	sideFinLeftDepth?: number;
+	sideFinLeftDistance?: number;
+	type: string;
+	curtainsControlObject?: string;
+	thermalResistivityIncrease: number;
+	solarTransmittenceReduction: number;
 };
 
 export type InternalDoorData = {
@@ -249,8 +277,40 @@ export type InternalDoorData = {
 	thermalResistanceOfAdjacentUnheatedSpace?: number;
 };
 
-export interface WindowData {
+export type WindowObject = {
 	name: string;
+	orientation: number;
+	surfaceArea: number;
+	height: number;
+	width: number;
+	uValue: number;
+	pitchOption: string;
+	pitch?: number;
+	solarTransmittence: number;
+	elevationalHeight: number;
+	midHeight: number;
+	numberOpenableParts: string;
+	frameToOpeningRatio?: number;
+	maximumOpenableArea?: number;
+	heightOpenableArea?: number;
+	midHeightOpenablePart1?: number;
+	midHeightOpenablePart2?: number;
+	midHeightOpenablePart3?: number;
+	midHeightOpenablePart4?: number;
+	overhangDepth?: number;
+	overhangDistance?: number;
+	sideFinRightDepth?: number;
+	sideFinRightDistance?: number;
+	sideFinLeftDepth?: number;
+	sideFinLeftDistance?: number;
+	type: string;
+	curtainsControlObject?: string;
+	thermalResistivityIncrease: number;
+	solarTransmittenceReduction: number;
+};
+
+export interface Window {
+	windowObjects?: WindowObject[]
 }
 
 export interface ThermalBridgingData {
