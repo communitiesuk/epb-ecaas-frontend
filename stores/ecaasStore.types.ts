@@ -253,16 +253,6 @@ export type ExternalGlazedDoorData = {
 	midHeightOpenablePart2?: number;
 	midHeightOpenablePart3?: number;
 	midHeightOpenablePart4?: number;
-	overhangDepth?: number;
-	overhangDistance?: number;
-	sideFinRightDepth?: number;
-	sideFinRightDistance?: number;
-	sideFinLeftDepth?: number;
-	sideFinLeftDistance?: number;
-	type: string;
-	curtainsControlObject?: string;
-	thermalResistivityIncrease: number;
-	solarTransmittenceReduction: number;
 };
 
 export type InternalDoorData = {

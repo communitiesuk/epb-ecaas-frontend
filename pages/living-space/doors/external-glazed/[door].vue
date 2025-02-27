@@ -1,20 +1,20 @@
 <script setup lang="ts">
-const title = "Window";
+const title = "External glazed door";
 const store = useEcaasStore();
 const route = useRoute();
 
-const window = useItemToEdit('window', store.livingSpaceFabric.livingSpaceWindows.data.windowObjects);
-const model: Ref<WindowObject> = ref(window!);
+const doorData = useItemToEdit('door', store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalGlazedDoor?.data);
+const model: Ref<ExternalGlazedDoorData> = ref(doorData!);
 
-const saveForm = (fields: WindowObject) => {
+const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
-		const { data } = state.livingSpaceFabric.livingSpaceWindows;
+		const { livingSpaceDoors } = state.livingSpaceFabric;
 
-		if (!data.windowObjects) {
-			data.windowObjects = [];
+		if (!livingSpaceDoors.livingSpaceExternalGlazedDoor?.data) {
+			livingSpaceDoors.livingSpaceExternalGlazedDoor = { data: [] };
 		}
 
-		const window: WindowObject = {
+		const door: ExternalGlazedDoorData = {
 			name: fields.name,
 			orientation: fields.orientation,
 			surfaceArea: fields.surfaceArea,
@@ -34,29 +34,19 @@ const saveForm = (fields: WindowObject) => {
 			midHeightOpenablePart2: fields.midHeightOpenablePart2,
 			midHeightOpenablePart3: fields.midHeightOpenablePart3,
 			midHeightOpenablePart4: fields.midHeightOpenablePart4,
-			overhangDepth: fields.overhangDepth,
-			overhangDistance: fields.overhangDistance,
-			sideFinRightDepth: fields.sideFinRightDepth,
-			sideFinRightDistance: fields.sideFinRightDistance,
-			sideFinLeftDepth: fields.sideFinLeftDepth,
-			sideFinLeftDistance: fields.sideFinLeftDistance,
-			type: fields.type,
-			curtainsControlObject: fields.curtainsControlObject,
-			thermalResistivityIncrease: fields.thermalResistivityIncrease,
-			solarTransmittenceReduction: fields.solarTransmittenceReduction,
 		};
 
-		if (route.params.window && route.params.window !== 'create') {
-			const index = parseInt(route.params.window as string);
-			data.windowObjects[index] = window;
+		if (route.params.door && route.params.door !== 'create') {
+			const index = parseInt(route.params.door as string);
+			livingSpaceDoors.livingSpaceExternalGlazedDoor.data[index] = door;
 		} else {
-			data.windowObjects?.push(window);
+			livingSpaceDoors.livingSpaceExternalGlazedDoor.data.push(door);
 		}
 
-		state.livingSpaceFabric.livingSpaceWindows.complete = true;
+		livingSpaceDoors.livingSpaceExternalGlazedDoor.complete = true;
 	});
 
-	navigateTo("/living-space/windows");
+	navigateTo("/living-space/doors");
 };
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -77,7 +67,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit"
 	>
-		<GovErrorSummary :error-list="errorMessages" test-id="windowErrorSummary"/>
+		<GovErrorSummary :error-list="errorMessages" test-id="externalGlazedDoorErrorSummary"/>
 		<FormKit
 			id="name"
 			type="govInputText"
@@ -257,130 +247,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</template>
 			</template>
 		</template>
-		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-		<table class="govuk-table">
-			<caption class="govuk-table__caption govuk-table__caption--m govuk-!-margin-bottom-6">Window shading</caption>
-			<thead class="govuk-table__head">
-				<tr class="govuk-table__row">
-					<th scope="col" class="govuk-!-text-align-left">Type of shading</th>
-					<th scope="col" class="govuk-!-text-align-left">Depth</th>
-					<th scope="col" class="govuk-!-text-align-left">Distance</th>
-				</tr>
-			</thead>
-			<tbody class="govuk-table__body">
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-!-text-align-left">Overhang</th>
-					<td>
-						<FormKit
-							id="overhangDepth"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="overhangDepth"
-							validation="number0"
-						/>
-					</td>
-					<td>
-						<FormKit
-							id="overhangDistance"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="overhangDistance"
-							validation="number0"
-						/>
-					</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-!-text-align-left">Side fin right</th>
-					<td>
-						<FormKit
-							id="sideFinRightDepth"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="sideFinRightDepth"
-							validation="number0"
-						/>
-					</td>
-					<td>
-						<FormKit
-							id="sideFinRightDistance"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="sideFinRightDistance"
-							validation="number0"
-						/>
-					</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-!-text-align-left">Side fin left</th>
-					<td>
-						<FormKit
-							id="sideFinLeftDepth"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="sideFinLeftDepth"
-							validation="number0"
-						/>
-					</td>
-					<td>
-						<FormKit
-							id="sideFinLeftDistance"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="sideFinLeftDistance"
-							validation="number0"
-						/>
-					</td>
-				</tr>
-			</tbody>
-
-		</table>
-		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-		<h2 class="govuk-heading-m">
-			Curtains and blinds
-		</h2>
-		<FormKit
-			id="type"
-			type="govRadios"
-			:options="{
-				curtains: 'Curtains',
-				blinds: 'Blinds',
-			}"
-			label="Type"
-			help="Determines behaviour (curtains are scheduled, blinds respond to sunlight)"
-			name="type"
-			validation="required"
-		/>
-		<FormKit
-			v-if="model.type === 'curtains'"
-			id="curtainsControlObject"
-			type="govRadios"
-			:options="{
-				motorised: 'Auto motorised',
-				manual: 'Manual',
-			}"
-			label="Curtains control object reference"
-			help="Reference to an OnOffTimeControl object that determines when curtains should open"
-			name="curtainsControlObject"
-			validation="required"
-		/>
-		<FormKit
-			id="thermalResistivityIncrease"
-			type="govInputWithSuffix"
-			suffix-text="W / (m2.K)"
-			label="Thermal resistivity increase"
-			help="Additional thermal resistivity applied to window when curtain/blind is closed"
-			name="thermalResistivityIncrease"
-			validation="required | number | min:0 | max:100"
-		/>
-		<FormKit
-			id="solarTransmittenceReduction"
-			type="govInputFloat"
-			label="Solar transmittance reduction"
-			help="Proportion of solar energy allowed through the window which is allowed into the zone when curtain/blind is closed (ie this is an additional reduction in transmission after the initial reduction by the window). Decimal 0-1"
-			name="solarTransmittenceReduction"
-			validation="required | number | min:0 | max:1"
-		/>
 
 		<FormKit
 			type="govButton"
