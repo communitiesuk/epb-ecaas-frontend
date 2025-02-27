@@ -317,6 +317,7 @@ export type LinearThermalBridgeData = {
 
 export type PointThermalBridgeData = {
 	name: string;
+	heatTransferCoefficient: number;
 };
 
 export interface HotWaterOutlets {
