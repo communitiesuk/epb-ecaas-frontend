@@ -3,13 +3,10 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - touch ~/.bash_profile
-      - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+      - n 22
 
   build:
     commands:
-      - nvm install 22
-      - nvm use node
       - node -v
       - npm -v
       - npm install
