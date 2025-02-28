@@ -1,0 +1,13 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - bash ./scripts/assume_role.sh arn:aws:iam::$AWS_ACCOUNT_ID:role/ci-server ci_server
+      - export AWS_PROFILE=ci_server
+
+      - aws lambda update-function-code --function-name front-end-lambda --zip-file fileb://$CODEBUILD_SRC_DIR/bootstrap.zip
+
+  post_build:
+    commands:
+      - echo "Running post_build commands"

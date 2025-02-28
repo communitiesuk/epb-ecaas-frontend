@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+      - \. "$HOME/.nvm/nvm.sh"
+      - nvm install 22
+      - node -v
+      - nvm current
+      - npm -v
+      - npm run build
+      - zip -r bootstrap.zip .output/server
+
+  post_build:
+    commands:
+      - echo "Running post_build commands"
+
+artifacts:
+  files:
+    - bootstrap.zip
+  discard-paths: yes

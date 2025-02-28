@@ -55,5 +55,8 @@ export default defineNuxtConfig({
 	formkit: {
 		autoImport: true,
 		configFile: './formkit.config.ts'
+	},
+	nitro: {
+		preset: 'aws-lambda',
 	}
 });
