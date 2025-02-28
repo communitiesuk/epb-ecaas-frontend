@@ -3,6 +3,11 @@ version: 0.2
 phases:
   build:
     commands:
+      - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+      - source ~/.bash_profile
+      - nvm list
+      - nvm install 22
+      - nvm use node
       - node -v
       - npm -v
       - npm install
