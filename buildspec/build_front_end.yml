@@ -8,6 +8,7 @@ phases:
       - node -v
       - $HOME/.nvm/nvm.sh current
       - npm -v
+      - npm install
       - npm run build
       - zip -r bootstrap.zip .output/server
 
