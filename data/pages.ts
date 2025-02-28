@@ -243,6 +243,20 @@ const pagesData: Array<Page> = [
 		parentId: 'livingSpaceFabric'
 	},
 	{
+		id: 'windowsCreate',
+		title: 'Create',
+		url: '/living-space/windows/create',
+		type: PageType.Task,
+		parentId: 'livingSpaceWindows'
+	},
+	{
+		id: 'windowsEdit',
+		title: 'Edit',
+		url: '/living-space/windows/:window',
+		type: PageType.Task,
+		parentId: 'livingSpaceWindows'
+	},
+	{
 		id: 'livingSpaceThermalBridging',
 		title: 'Thermal bridging',
 		url: '/living-space/thermal-bridging',
