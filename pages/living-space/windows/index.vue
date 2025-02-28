@@ -54,6 +54,6 @@ function handleDuplicate(index: number) {
 		href="/living-space"
 		secondary
 	>
-		Return to living space overview
+		Return to overview
 	</GovButton>
 </template>
