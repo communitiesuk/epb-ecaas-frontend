@@ -28,7 +28,7 @@ export default defineNuxtConfig({
 		css: {
 			preprocessorOptions: {
 				scss: {
-					quietDeps: true,
+					silenceDeprecations: ['mixed-decls', 'global-builtin', 'slash-div', 'import'],
 					additionalData: `
 						@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
 						@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`
