@@ -4,8 +4,10 @@ phases:
   build:
     commands:
       - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-      - $HOME/.nvm/nvm.sh install 22
-      - $HOME/.nvm/nvm.sh use 22
+      # configure shell so we can use "nvm" command
+      - . "$HOME/.nvm/nvm.sh"
+      - nvm install 22
+      - nvm use 22
       - node -v
       - $HOME/.nvm/nvm.sh current
       - npm -v
