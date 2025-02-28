@@ -266,14 +266,14 @@ const pagesData: Array<Page> = [
 	{
 		id: 'livingSpaceLinearThermalBridges',
 		title: 'Linear thermal bridges',
-		url: '/living-space/thermal-bridging/linear',
+		url: '/living-space/thermal-bridging/linear/:bridging',
 		type: PageType.Task,
 		parentId: 'livingSpaceThermalBridging'
 	},
 	{
 		id: 'livingSpacePointThermalBridges',
 		title: 'Point thermal bridges',
-		url: '/living-space/thermal-bridging/point',
+		url: '/living-space/thermal-bridging/point/:bridging',
 		type: PageType.Task,
 		parentId: 'livingSpaceThermalBridging'
 	},
