@@ -4,10 +4,9 @@ phases:
   build:
     commands:
       - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-      - \. "$HOME/.nvm/nvm.sh"
-      - nvm install 22
+      - $HOME/.nvm/nvm.sh install 22
       - node -v
-      - nvm current
+      - $HOME/.nvm/nvm.sh current
       - npm -v
       - npm run build
       - zip -r bootstrap.zip .output/server
