@@ -12,9 +12,9 @@ phases:
       - npm install
       - npm run build
       - cd .output/server
-      - zip -r bootstrap.zip .
+      - zip -r nuxt-lambda.zip .
       - cd ../../
-      - mv .output/server/nuxt-lambda.zip bootstrap.zip
+      - mv .output/server/nuxt-lambda.zip nuxt-lambda.zip
 
   post_build:
     commands:
@@ -22,5 +22,5 @@ phases:
 
 artifacts:
   files:
-    - bootstrap.zip
+    - nuxt-lambda.zip
   discard-paths: yes
