@@ -100,7 +100,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m2"
 			label="Surface area"
-			help="Net area of the opaque building element (i.e. minus any windows / doors / etc.) If the element is not square or rectangular the area might not be equal to width x height, hence the need to ask for this in addition to width and height"
+			help="Net area of the building element. For non-rectangular windows, use the area of the window based on its shape"
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
@@ -349,7 +349,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Type"
 			help="Determines behaviour (curtains are scheduled, blinds respond to sunlight)"
 			name="type"
-			validation="required"
 		/>
 		<FormKit
 			v-if="model.type === 'curtains'"
@@ -362,7 +361,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Curtains control object reference"
 			help="Reference to an OnOffTimeControl object that determines when curtains should open"
 			name="curtainsControlObject"
-			validation="required"
 		/>
 		<FormKit
 			id="thermalResistivityIncrease"
@@ -371,7 +369,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Thermal resistivity increase"
 			help="Additional thermal resistivity applied to window when curtain/blind is closed"
 			name="thermalResistivityIncrease"
-			validation="required | number | min:0 | max:100"
+			validation="number | min:0 | max:100"
 		/>
 		<FormKit
 			id="solarTransmittenceReduction"
@@ -379,7 +377,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Solar transmittance reduction"
 			help="Proportion of solar energy allowed through the window which is allowed into the zone when curtain/blind is closed (ie this is an additional reduction in transmission after the initial reduction by the window). Decimal 0-1"
 			name="solarTransmittenceReduction"
-			validation="required | number | min:0 | max:1"
+			validation="number | min:0 | max:1"
 		/>
 
 		<FormKit

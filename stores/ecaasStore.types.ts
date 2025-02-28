@@ -293,10 +293,10 @@ export type WindowObject = {
 	sideFinRightDistance?: number;
 	sideFinLeftDepth?: number;
 	sideFinLeftDistance?: number;
-	type: string;
+	type?: string;
 	curtainsControlObject?: string;
-	thermalResistivityIncrease: number;
-	solarTransmittenceReduction: number;
+	thermalResistivityIncrease?: number;
+	solarTransmittenceReduction?: number;
 };
 
 export interface Window {

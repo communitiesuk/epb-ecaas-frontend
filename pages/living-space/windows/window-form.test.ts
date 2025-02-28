@@ -128,10 +128,10 @@ describe('window', () => {
 		expect((await screen.findByTestId('elevationalHeight_error'))).toBeDefined();
 		expect((await screen.findByTestId('midHeight_error'))).toBeDefined();
 		expect((await screen.findByTestId('numberOpenableParts_error'))).toBeDefined();
-		expect((await screen.findByTestId('type_error'))).toBeDefined();
-		expect((await screen.findByTestId('thermalResistivityIncrease_error'))).toBeDefined();
-		expect((await screen.findByTestId('solarTransmittenceReduction_error'))).toBeDefined();
 
+		expect((await screen.queryByTestId('type_error'))).toBeNull();
+		expect((await screen.queryByTestId('thermalResistivityIncrease_error'))).toBeNull();
+		expect((await screen.queryByTestId('solarTransmittenceReduction_error'))).toBeNull();
 		expect((await screen.queryByTestId('overhangDepth_error'))).toBeNull();
 		expect((await screen.queryByTestId('overhangDistance_error'))).toBeNull();
 		expect((await screen.queryByTestId('sideFinRightDepth_error'))).toBeNull();
@@ -185,12 +185,12 @@ describe('window', () => {
 		expect((await screen.queryByTestId('midHeightOpenablePart4_error'))).toBeNull();
 	});
 
-	it('requires curtainsControlObject when the curtains option is selected', async () => {
+	it('displays curtainsControlObject when the curtains option is selected', async () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId('type_curtains'));
-		await user.click(screen.getByRole('button'));
+		await user.tab();
     
-		expect((await screen.findByTestId('curtainsControlObject_error'))).toBeDefined();
+		expect((await screen.getByTestId('curtainsControlObject_motorised'))).toBeDefined();
 	});
 });
