@@ -11,7 +11,10 @@ phases:
       - npm -v
       - npm install
       - npm run build
-      - zip -r bootstrap.zip .output/server
+      - cd .output/server
+      - zip -r bootstrap.zip .
+      - cd ../../
+      - mv .output/server/nuxt-lambda.zip bootstrap.zip
 
   post_build:
     commands:
