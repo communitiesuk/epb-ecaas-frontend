@@ -3,6 +3,7 @@ version: 0.2
 phases:
   build:
     commands:
+      - touch ~/.bash_profile
       - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
       - source ~/.bash_profile
       - nvm list
