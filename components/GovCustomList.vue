@@ -67,15 +67,4 @@ function handleDuplicate(index: number, e: MouseEvent) {
 	.custom-list__action-link {
 		margin-left: 25px;
 	}
-
-	.custom-list__table-header {
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: nowrap;
-	}
-
-	.custom-list__table {
-		table-layout: fixed;
-	}
-
 </style>

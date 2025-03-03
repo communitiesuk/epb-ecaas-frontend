@@ -13,7 +13,7 @@ describe('linear thermal bridges', () => {
 	const user = userEvent.setup();
 
 	const state: LinearThermalBridgeData = {
-		name: 'Linear 1',
+		name: 'E1: Steel lintel with perforated steel base plate',
 		typeOfThermalBridge: 'e1',
 		linearThermalTransmittance: 1,
 		length: 2
@@ -24,7 +24,6 @@ describe('linear thermal bridges', () => {
 	});
 
 	const populateValidForm = async () => {
-		await user.type(screen.getByTestId('name'), 'Linear 1');
 		await user.selectOptions(screen.getByTestId('typeOfThermalBridge'), 'e1');
 		await user.type(screen.getByTestId('linearThermalTransmittance'), '1');
 		await user.type(screen.getByTestId('length'), '2');
@@ -59,7 +58,6 @@ describe('linear thermal bridges', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Linear 1');
 		expect((await screen.findByTestId('typeOfThermalBridge') as HTMLSelectElement).value).toBe('e1');
 		expect((await screen.findByTestId('linearThermalTransmittance') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('2');
@@ -70,7 +68,6 @@ describe('linear thermal bridges', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('typeOfThermalBridge_error'))).toBeDefined();
 		expect((await screen.findByTestId('linearThermalTransmittance_error'))).toBeDefined();
 		expect((await screen.findByTestId('length_error'))).toBeDefined();
