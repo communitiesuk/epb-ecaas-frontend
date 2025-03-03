@@ -57,6 +57,8 @@ export interface LivingSpaceFabric {
 	livingSpaceDoors: DoorsData;
 	livingSpaceWindows: EcaasForm<Window>;
 	livingSpaceThermalBridging: ThermalBridgingData;
+	livingSpaceZoneParameters: EcaasForm<LivingSpaceZoneParametersData>;
+
 }
 
 export interface FloorsData {
@@ -319,6 +321,25 @@ export type PointThermalBridgeData = {
 	name: string;
 	heatTransferCoefficient: number;
 };
+
+export type LivingSpaceZoneParametersData = {
+	area?: number;
+	volume?: number;
+	spaceHeatingSystemForThisZone?: SpaceHeatingSystemData[];
+	spaceCoolingSystemForThisZone?: SpaceCoolingSystemData[];
+	spaceHeatControlSystemForThisZone?: SpaceHeatControlSystemData[];
+}
+
+export type SpaceHeatingSystemData= {
+name:string
+}
+export type SpaceCoolingSystemData = {
+name:string
+}
+export type SpaceHeatControlSystemData = {
+	name:string
+	}
+
 
 export interface HotWaterOutlets {
 	hotWaterDistribution: EcaasForm<HotWaterDistribution>;
