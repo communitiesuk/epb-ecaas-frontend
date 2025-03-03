@@ -20,12 +20,12 @@ defineProps<{ data: SummaryData; }>();
 					<template v-if="Array.isArray(value)">
 						<ul>
 							<li v-for="item in value" :key="item">
-								{{ formatData(item) }}
+								{{ formatData(item, true) }}
 							</li>
 						</ul>
 					</template>
 					<template v-if="!Array.isArray(value)">
-						{{ formatData(value) }}
+						{{ formatData(value, true) }}
 					</template>
 				</dd>
 			</div>
