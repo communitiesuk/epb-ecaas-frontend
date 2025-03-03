@@ -8,7 +8,8 @@ frontend:
       commands:
         - cp -a node_modules/govuk-frontend/dist/govuk/assets public/assets
         - npm run build
-        - echo "BUILD_FOR_AWS_AMPLIFY=1" >> backend/.env
+        - ls -al
+        - echo "BUILD_FOR_AWS_AMPLIFY=1" >> .env
   artifacts:
     baseDirectory: .amplify-hosting
     files:
