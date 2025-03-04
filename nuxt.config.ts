@@ -57,6 +57,6 @@ export default defineNuxtConfig({
 		configFile: './formkit.config.ts'
 	},
 	nitro: {
-		preset: process.env.BUILD_FOR_AWS_AMPLIFY ? undefined : 'aws-lambda',
+		preset: process.env.BUILD_FOR_AWS_LAMBDA ? 'aws-lambda' : undefined,
 	}
 });
