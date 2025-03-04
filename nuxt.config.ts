@@ -56,7 +56,11 @@ export default defineNuxtConfig({
 		autoImport: true,
 		configFile: './formkit.config.ts'
 	},
-	nitro: {
-		preset: process.env.BUILD_FOR_AWS_LAMBDA ? 'aws-lambda' : undefined,
-	}
+	nitro: process.env.BUILD_FOR_AWS_LAMBDA ? {
+		preset: 'aws-lambda',
+		serveStatic: true,
+		output: {
+			publicDir: '.output/server'
+		}
+	} : undefined
 });
