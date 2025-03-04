@@ -44,15 +44,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
       test-id="zoneParametersErrorSummary"
     />
     <h2 class="govuk-heading-l govuk-!-margin-bottom-3">Zone Parameters</h2>
-    <div class="govuk-details__link">
+    <!-- <div class="govuk-details__link">
       <NuxtLink class="govuk-link" :href="``">Guidance</NuxtLink>
-    </div>
-    <GovDetails
+    </div> -->
+    <!-- <GovDetails
       class="summary-text"
       :summary-text="`Example values`"
       :text="``"
       classes="govuk-!-margin-bottom-4"
-    />
+    /> -->
+    <!-- {{{{{{{{{{   Guidance and example value to be added at a later date   }}}}}}}}}}}} -->
     <FormKit
       id="area"
       type="govInputWithSuffix"
