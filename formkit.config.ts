@@ -1,3 +1,4 @@
+import GovStoredList from './components/GovStoredList.vue';
 import { defineFormKitConfig } from '@formkit/vue';
 import GovFormButton from './components/GovFormButton.vue';
 import GovRadios from './components/GovRadios.vue';
@@ -28,7 +29,7 @@ declare module '@formkit/inputs' {
 		},
 		'govDropdown': {
 			type: 'govDropdown',
-			options: FormKitOptionsProp
+			options: FormKitOptionsProp | FormKitOptionsProp[]
 		},
 		'govInputFloat': {
 			type: 'GovInputFloat'
@@ -47,6 +48,9 @@ declare module '@formkit/inputs' {
 		},
 		'govInputText': {
 			type: 'govInputText'
+		}, 
+		'govStoredList': {
+			type: 'govStoredList'
 		}
 	}
 }
@@ -86,7 +90,12 @@ export default defineFormKitConfig(() => {
 			govInputText: {
 				type: "input",
 				component: GovInputText
+			},
+			govStoredList: {
+				type: "input",
+				component: GovStoredList
 			}
+
 		}
 	};
 });

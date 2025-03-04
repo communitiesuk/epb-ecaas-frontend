@@ -74,9 +74,11 @@ bun run preview
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
 
+
 ## Running as a [Tauri](https://v2.tauri.app) app
 
 ```sh
 npm ci
 npx tauri dev
 ```
+

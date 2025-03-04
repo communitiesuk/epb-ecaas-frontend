@@ -8,16 +8,76 @@ describe('windows', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const window1: WindowData = {
+	const window1: WindowObject = {
 		name: "Window 1",
+		orientation: 1,
+		surfaceArea: 1,
+		height: 1,
+		width: 1,
+		uValue: 1,
+		pitchOption: '90',
+		pitch: 90,
+		solarTransmittence: 0.1,
+		elevationalHeight: 1,
+		midHeight: 1,
+		numberOpenableParts: "none",
+		overhangDepth: 1,
+		overhangDistance: 1,
+		sideFinRightDepth: 1,
+		sideFinRightDistance: 1,
+		sideFinLeftDepth: 1,
+		sideFinLeftDistance: 1,
+		type: "blinds",
+		thermalResistivityIncrease: 1,
+		solarTransmittenceReduction: 0.1,
 	};
 
-	const window2: WindowData = {
+	const window2: WindowObject = {
 		name: "Window 2",
+		orientation: 1,
+		surfaceArea: 1,
+		height: 1,
+		width: 1,
+		uValue: 1,
+		pitchOption: '90',
+		pitch: 90,
+		solarTransmittence: 0.1,
+		elevationalHeight: 1,
+		midHeight: 1,
+		numberOpenableParts: "none",
+		overhangDepth: 1,
+		overhangDistance: 1,
+		sideFinRightDepth: 1,
+		sideFinRightDistance: 1,
+		sideFinLeftDepth: 1,
+		sideFinLeftDistance: 1,
+		type: "blinds",
+		thermalResistivityIncrease: 1,
+		solarTransmittenceReduction: 0.1,
 	};
 
-	const window3: WindowData = {
+	const window3: WindowObject = {
 		name: "Window 3",
+		orientation: 1,
+		surfaceArea: 1,
+		height: 1,
+		width: 1,
+		uValue: 1,
+		pitchOption: '90',
+		pitch: 90,
+		solarTransmittence: 0.1,
+		elevationalHeight: 1,
+		midHeight: 1,
+		numberOpenableParts: "none",
+		overhangDepth: 1,
+		overhangDistance: 1,
+		sideFinRightDepth: 1,
+		sideFinRightDistance: 1,
+		sideFinLeftDepth: 1,
+		sideFinLeftDistance: 1,
+		type: "blinds",
+		thermalResistivityIncrease: 1,
+		solarTransmittenceReduction: 0.1,
 	};
 
 	afterEach(() => {
@@ -28,7 +88,9 @@ describe('windows', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWindows: {
-					data:[window1]
+					data: {
+						windowObjects:[window1]
+					}
 				}
 			}
 		});
@@ -46,7 +108,7 @@ describe('windows', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWindows: {
-					data:[window1, window2, window3]
+					data:{windowObjects: [window1, window2, window3]}
 				}
 			}
 		});
@@ -65,7 +127,7 @@ describe('windows', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWindows: {
-					data:[window1, window2]
+					data:{windowObjects: [window1, window2]}
 				}
 			}
 		});

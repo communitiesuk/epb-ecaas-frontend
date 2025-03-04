@@ -10,41 +10,44 @@ describe('ground floors', () => {
 
 	const ground1: GroundFloorData = {
 		name: "ground1 name",
-		surfaceAreaInZone: 0,
+		surfaceAreaInZone: 5,
 		surfaceAreaAllZones: 0,
+		pitchOption: '0',
 		pitch: 0,
-		uValue: 0,
-		kappaValue: 0,
-		massDistributionClass: "",
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		typeOfGroundFloor: ""
+		typeOfGroundFloor: 'slabNoEdgeInsulation'
 	};
 
 	const ground2: GroundFloorData = {
 		name: "ground2 name",
-		surfaceAreaInZone: 0,
+		surfaceAreaInZone: 5,
 		surfaceAreaAllZones: 0,
+		pitchOption: '0',
 		pitch: 0,
-		uValue: 0,
-		kappaValue: 0,
-		massDistributionClass: "",
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		typeOfGroundFloor: ""
+		typeOfGroundFloor: 'slabNoEdgeInsulation'
 	};
 
 	const ground3: GroundFloorData = {
 		name: "ground3 name",
-		surfaceAreaInZone: 0,
+		surfaceAreaInZone: 5,
 		surfaceAreaAllZones: 0,
+		pitchOption: '0',
 		pitch: 0,
-		uValue: 0,
-		kappaValue: 0,
-		massDistributionClass: "",
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		typeOfGroundFloor: ""
+		typeOfGroundFloor: 'slabNoEdgeInsulation'
 	};
 
 	afterEach(() => {
@@ -124,15 +127,36 @@ describe('internal floors', () => {
 	const user = userEvent.setup();
 
 	const internal1: InternalFloorData = {
-		name: "internal1 name"
+		typeOfInternalFloor: 'heatedSpace',
+		name: "internal1 name",
+		surfaceAreaOfElement: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitchOption: '0',
+		pitch: 0
 	};
 
 	const internal2: InternalFloorData = {
-		name: "internal2 name"
+		typeOfInternalFloor: 'heatedSpace',
+		name: "internal2 name",
+		surfaceAreaOfElement: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitchOption: '0',
+		pitch: 0
 	};
 
 	const internal3: InternalFloorData = {
-		name: "internal3 name"
+		typeOfInternalFloor: 'heatedSpace',
+		name: "internal3 name",
+		surfaceAreaOfElement: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitchOption: '0',
+		pitch: 0
 	};
 
 	afterEach(() => {
@@ -212,15 +236,48 @@ describe('exposed floors', () => {
 	const user = userEvent.setup();
 
 	const exposed1: ExposedFloorData = {
-		name: "exposed1 name"
+		name: "exposed1 name",
+		pitchOption: '0',
+		pitch: 0,
+		orientation: 0,
+		height: 0.5,
+		width: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorbtion: 0.1,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
 	};
 
 	const exposed2: ExposedFloorData = {
-		name: "exposed2 name"
+		name: "exposed2 name",
+		pitchOption: '0',
+		pitch: 0,
+		orientation: 0,
+		height: 0.5,
+		width: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorbtion: 0.1,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
 	};
 
 	const exposed3: ExposedFloorData = {
-		name: "exposed3 name"
+		name: "exposed3 name",
+		pitchOption: '0',
+		pitch: 0,
+		orientation: 0,
+		height: 0.5,
+		width: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorbtion: 0.1,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
 	};
 
 	afterEach(() => {

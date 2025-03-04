@@ -9,14 +9,19 @@ describe('linear thermal bridges', () => {
 	const user = userEvent.setup();
 
 	const linear1: LinearThermalBridgeData = {
-		name: "Linear 1"
+		name: "Linear 1",
+		typeOfThermalBridge: 'e1',
+		linearThermalTransmittance: 1,
+		length: 2
 	};
 
 	const linear2: LinearThermalBridgeData = {
+		...linear1,
 		name: "Linear 2"
 	};
 
 	const linear3: LinearThermalBridgeData = {
+		...linear1,
 		name: "Linear 3"
 	};
 
@@ -96,14 +101,17 @@ describe('point thermal bridges', () => {
 	const user = userEvent.setup();
 
 	const point1: PointThermalBridgeData = {
-		name: "Point 1"
+		name: "Point 1",
+		heatTransferCoefficient: 1
 	};
 
 	const point2: PointThermalBridgeData = {
+		...point1,
 		name: "Point 2"
 	};
 
 	const point3: PointThermalBridgeData = {
+		...point1,
 		name: "Point 3"
 	};
 

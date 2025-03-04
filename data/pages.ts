@@ -243,6 +243,20 @@ const pagesData: Array<Page> = [
 		parentId: 'livingSpaceFabric'
 	},
 	{
+		id: 'windowsCreate',
+		title: 'Create',
+		url: '/living-space/windows/create',
+		type: PageType.Task,
+		parentId: 'livingSpaceWindows'
+	},
+	{
+		id: 'windowsEdit',
+		title: 'Edit',
+		url: '/living-space/windows/:window',
+		type: PageType.Task,
+		parentId: 'livingSpaceWindows'
+	},
+	{
 		id: 'livingSpaceThermalBridging',
 		title: 'Thermal bridging',
 		url: '/living-space/thermal-bridging',
@@ -252,14 +266,14 @@ const pagesData: Array<Page> = [
 	{
 		id: 'livingSpaceLinearThermalBridges',
 		title: 'Linear thermal bridges',
-		url: '/living-space/thermal-bridging/linear',
+		url: '/living-space/thermal-bridging/linear/:bridging',
 		type: PageType.Task,
 		parentId: 'livingSpaceThermalBridging'
 	},
 	{
 		id: 'livingSpacePointThermalBridges',
 		title: 'Point thermal bridges',
-		url: '/living-space/thermal-bridging/point',
+		url: '/living-space/thermal-bridging/point/:bridging',
 		type: PageType.Task,
 		parentId: 'livingSpaceThermalBridging'
 	},

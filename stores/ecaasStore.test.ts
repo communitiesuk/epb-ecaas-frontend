@@ -111,7 +111,8 @@ describe('Ecaas Store', () => {
 				livingSpaceThermalBridging: {
 					livingSpaceLinearThermalBridges: {complete: true},
 					livingSpacePointThermalBridges: {complete: true}
-				}
+				}, 
+				livingSpaceZoneParameters: {complete: true}
 			}
 		});
 
