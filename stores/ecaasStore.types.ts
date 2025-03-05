@@ -110,16 +110,16 @@ export type GroundFloorData = {
 	edgeInsulationWidth?: number;
 	edgeInsulationThermalResistance?: number;
 	heightOfFloorUpperSurface?: number;
-	thicknessOfSurroundingWalls?: number;
 	underfloorSpaceThermalResistance?: number;
-	wallsAboveGroundThermalTransmittance?: number;
+	thermalTransmittanceOfWallsAboveGround?: number;
 	ventilationOpeningsArea?: number;
-	basementFloorDepth?: number;
+	depthOfBasementFloorBelowGround?: number;
 	thermalResistanceOfBasementWalls?: number;
 	thermalResistanceOfFloorAboveBasement?: number;
 	thermalResistanceOfWallsAboveGround?: number;
+	thermalTransmittanceOfFloorAboveBasement?: number;
+	thermalTransmittanceOfBasementWalls?: number;
 	thicknessOfWalls?: number;
-	depthOfBasementFloorBelowGround?: number;
 	heightOfBasementWallsAboveGround?: number
 };
 

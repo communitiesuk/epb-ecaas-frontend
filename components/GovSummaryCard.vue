@@ -1,13 +1,7 @@
 <script setup lang="ts">
-import pagesData from "~/data/pages";
-import type { SummaryData } from "./GovSummaryList.vue";
 import type { TabItem } from "./GovTabs.vue";
-
-export interface SummarySection {
-	id: string;
-	label: string;
-	data: SummaryData | SummaryData[];
-}
+import type { SummarySection } from "~/common.types";
+import { getUrl } from "#imports";
 
 const props = defineProps<{ summarySections?: SummarySection[] }>();
 
@@ -17,11 +11,6 @@ const tabItems: TabItem[] = props.summarySections?.map(x => {
 		label: x.label
 	};
 }) || [];
-
-function getUrl(pageId: string) {
-	const page = pagesData.find(p => pageId === p.id);
-	return page?.url;
-}
 </script>
 
 <template>
@@ -34,26 +23,9 @@ function getUrl(pageId: string) {
 			:data-testId="section.id"
 		>
 			<h2 class="govuk-heading-m">{{ section.label }}</h2>
-			
-			<template v-if="!Array.isArray(section.data)">
-				<GovSummaryList :data="section.data" />
-				<NuxtLink class="govuk-link" :to="getUrl(section.id)">Edit</NuxtLink>
-			</template>
-			
-			<template v-if="Array.isArray(section.data)">
-				<GovAccordion>
-					<GovAccordionSection
-						v-for="(entry, entryIndex) in section.data"
-						:id="`${section.id}_${entryIndex}`"
-						:key="`${section.id}_${entryIndex}`"
-						:title="(entry.Name as string)"
-						:index="index"
-					>
-						<GovSummaryList :data="entry" />
-						<NuxtLink class="govuk-link" :to="`${getUrl(section.id)}/${entryIndex}`">Edit</NuxtLink>
-					</GovAccordionSection>
-				</GovAccordion>
-			</template>
+
+			<GovSummaryList :data="section.data" />
+			<NuxtLink class="govuk-link" :to="getUrl(section.id)">Edit</NuxtLink>
 		</GovTabPanel>
 	</GovTabs>
 </template>

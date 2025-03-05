@@ -30,16 +30,16 @@ const saveForm = (fields: GroundFloorData) => {
 			edgeInsulationWidth: fields.edgeInsulationWidth,
 			edgeInsulationThermalResistance: fields.edgeInsulationThermalResistance,
 			heightOfFloorUpperSurface: fields.heightOfFloorUpperSurface,
-			thicknessOfSurroundingWalls: fields.thicknessOfSurroundingWalls,
+			thicknessOfWalls: fields.thicknessOfWalls,
 			underfloorSpaceThermalResistance: fields.underfloorSpaceThermalResistance,
-			wallsAboveGroundThermalTransmittance: fields.wallsAboveGroundThermalTransmittance,
+			thermalTransmittanceOfWallsAboveGround: fields.thermalTransmittanceOfWallsAboveGround,
 			ventilationOpeningsArea: fields.ventilationOpeningsArea,
-			basementFloorDepth: fields.basementFloorDepth,
+			depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
 			thermalResistanceOfBasementWalls: fields.thermalResistanceOfBasementWalls,
 			thermalResistanceOfFloorAboveBasement: fields.thermalResistanceOfFloorAboveBasement,
 			thermalResistanceOfWallsAboveGround: fields.thermalResistanceOfWallsAboveGround,
-			thicknessOfWalls: fields.thicknessOfWalls,
-			depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
+			thermalTransmittanceOfBasementWalls: fields.thermalTransmittanceOfBasementWalls,
+			thermalTransmittanceOfFloorAboveBasement: fields.thermalTransmittanceOfFloorAboveBasement,
 			heightOfBasementWallsAboveGround: fields.heightOfBasementWallsAboveGround
 		};
 
@@ -228,12 +228,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | number | min:0 | max:100"
 			/>
 			<FormKit
-				id="thicknessOfSurroundingWalls"
+				id="thicknessOfWalls"
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Thickness of walls at the edge of the floor"
 				help="Ground floor external periodic heat transfer coefficient, equations as defined in BS EN ISO 13370:2017 Annex H, H.4.2 External temperature variation for ground floor slab. See other sections of the standard for other floor types."
-				name="thicknessOfSurroundingWalls"
+				name="thicknessOfWalls"
 				validation="required | number | min:0 | max:100"
 			/>
 			<FormKit
@@ -246,12 +246,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | number"
 			/>
 			<FormKit
-				id="wallsAboveGroundThermalTransmittance"
+				id="thermalTransmittanceOfWallsAboveGround"
 				type="govInputWithSuffix"
 				suffix-text="W/(m2·K)"
 				label="Thermal transmittance of walls above ground"
 				help="in accordance with ISO 6946"
-				name="wallsAboveGroundThermalTransmittance"
+				name="thermalTransmittanceOfWallsAboveGround"
 				validation="required | number"
 			/>
 			<FormKit
@@ -266,20 +266,20 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 		<template v-if="model.typeOfGroundFloor === 'heatedBasement'">
 			<FormKit
-				id="thicknessOfSurroundingWalls"
+				id="thicknessOfWalls"
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Thickness of walls at the edge of the floor"
 				help="Ground floor external periodic heat transfer coefficient, equations as defined in BS EN ISO 13370:2017 Annex H, H.4.2 External temperature variation for ground floor slab. See other sections of the standard for other floor types."
-				name="thicknessOfSurroundingWalls"
+				name="thicknessOfWalls"
 				validation="required | number | min:0 | max:100"
 			/>
 			<FormKit
-				id="basementFloorDepth"
+				id="depthOfBasementFloorBelowGround"
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Depth of basement floor below ground level"
-				name="basementFloorDepth"
+				name="depthOfBasementFloorBelowGround"
 				validation="required | number"
 			/>
 			<FormKit
@@ -294,28 +294,28 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 		<template v-if="model.typeOfGroundFloor === 'unheatedBasement'">
 			<FormKit
-				id="thermalResistanceOfFloorAboveBasement"
+				id="thermalTransmittanceOfFloorAboveBasement"
 				type="govInputWithSuffix"
 				suffix-text="W/(m2·K)"
 				label="Thermal transmittance of floor above basement"
 				help="in accordance with ISO 6946"
-				name="thermalResistanceOfFloorAboveBasement"
+				name="thermalTransmittanceOfFloorAboveBasement"
 				validation="required | number"
 			/>
 			<FormKit
-				id="thermalResistanceOfWallsAboveGround"
+				id="thermalTransmittanceOfWallsAboveGround"
 				type="govInputWithSuffix"
 				suffix-text="W/(m2·K)"
 				label="Thermal transmittance of walls above ground"
-				name="thermalResistanceOfWallsAboveGround"
+				name="thermalTransmittanceOfWallsAboveGround"
 				validation="required | number"
 			/>
 			<FormKit
-				id="thermalResistanceOfBasementWalls"
+				id="thermalTransmittanceOfBasementWalls"
 				type="govInputWithSuffix"
 				suffix-text="W/(m2·K)"
 				label="Thermal transmittance of walls of the basement"
-				name="thermalResistanceOfBasementWalls"
+				name="thermalTransmittanceOfBasementWalls"
 				validation="required | number"
 			/>
 			<FormKit

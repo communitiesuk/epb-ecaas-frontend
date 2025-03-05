@@ -160,68 +160,6 @@ describe('Dwelling details summary', () => {
 		}
 	});
 
-	it('should display shading objects in a collapsed accordion', async () => {
-		store.$patch({
-			dwellingDetails: {
-				shading: {
-					data: state.shading
-				}
-			}
-		});
-
-		userEvent.setup();
-
-		await renderSuspended(Summary);
-
-		const shadingHeading = await screen.findByTestId('shading_0_heading');
-		const shadingToggle = await screen.findByTestId('shading_0_toggle');
-		const shadingContent = await screen.findByTestId('shading_0_content');
-
-		expect(shadingHeading.textContent).toBe('Shading 1');
-		expect(shadingToggle.textContent).toBe('Show');
-		expect(shadingContent.style.display).toBe('');
-	});
-
-	it('should display shading data when accordion item is expanded', async () => {
-		store.$patch({
-			dwellingDetails: {
-				shading: {
-					data: state.shading
-				}
-			}
-		});
-
-		userEvent.setup();
-
-		await renderSuspended(Summary);
-
-		const shadingButton = await screen.findByTestId('shading_0');
-
-		await userEvent.click(shadingButton);
-
-		const shadingHeading = await screen.findByTestId('shading_0_heading');
-		const shadingToggle = await screen.findByTestId('shading_0_toggle');
-		const shadingContent = await screen.findByTestId('shading_0_content');
-
-		const expectedResult = {
-			"Name": 'Shading 1',
-			"Shading direction": '90',
-			"Shading type": 'Obstacle',
-			"Height": '1',
-			"Distance": '4'
-		};
-
-		expect(shadingHeading.textContent).toBe('Shading 1');
-		expect(shadingToggle.textContent).toBe('Hide');
-		expect(shadingContent.style.display).toBe('block');
-
-		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
-		}
-	});
-
 	it('should display the correct data for the external factors section', async () => {
 		store.$patch({
 			dwellingDetails: {

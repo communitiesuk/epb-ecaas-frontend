@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SummarySection } from '~/components/GovSummaryCard.vue';
+import type { SummarySection } from '~/common.types';
 
 definePageMeta({ layout: false });
 

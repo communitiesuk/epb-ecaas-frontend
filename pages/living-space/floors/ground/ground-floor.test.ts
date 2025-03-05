@@ -38,26 +38,26 @@ describe('ground floor', () => {
 		...groundFloor,
 		typeOfGroundFloor: 'suspendedFloor',
 		heightOfFloorUpperSurface: 0,
-		thicknessOfSurroundingWalls: 0,
+		thicknessOfWalls: 0,
 		underfloorSpaceThermalResistance: 0,
-		wallsAboveGroundThermalTransmittance: 0,
+		thermalTransmittanceOfWallsAboveGround: 0,
 		ventilationOpeningsArea: 0
 	};
 
 	const groundFloorWithHeatedBasement: GroundFloorData = {
 		...groundFloor,
 		typeOfGroundFloor: 'heatedBasement',
-		thicknessOfSurroundingWalls: 0,
-		basementFloorDepth: 0,
+		thicknessOfWalls: 0,
+		depthOfBasementFloorBelowGround: 0,
 		thermalResistanceOfBasementWalls: 0
 	};
 
 	const groundFloorWithUnheatedBasement: GroundFloorData = {
 		...groundFloor,
 		typeOfGroundFloor: 'unheatedBasement',
-		thermalResistanceOfFloorAboveBasement: 0,
-		thermalResistanceOfWallsAboveGround: 0,
-		thermalResistanceOfBasementWalls: 0,
+		thermalTransmittanceOfFloorAboveBasement: 0,
+		thermalTransmittanceOfWallsAboveGround: 0,
+		thermalTransmittanceOfBasementWalls: 0,
 		thicknessOfWalls: 0,
 		depthOfBasementFloorBelowGround: 0,
 		heightOfBasementWallsAboveGround: 0
@@ -198,9 +198,9 @@ describe('ground floor', () => {
 			await populateValidForm();
 			await user.click(screen.getByTestId('typeOfGroundFloor_suspendedFloor'));
 			await user.type(screen.getByTestId('heightOfFloorUpperSurface'), '0');
-			await user.type(screen.getByTestId('thicknessOfSurroundingWalls'), '0');
+			await user.type(screen.getByTestId('thicknessOfWalls'), '0');
 			await user.type(screen.getByTestId('underfloorSpaceThermalResistance'), '0');
-			await user.type(screen.getByTestId('wallsAboveGroundThermalTransmittance'), '0');
+			await user.type(screen.getByTestId('thermalTransmittanceOfWallsAboveGround'), '0');
 			await user.type(screen.getByTestId('ventilationOpeningsArea'), '0');
 			await user.tab();
 			await user.click(screen.getByRole('button'));
@@ -230,9 +230,9 @@ describe('ground floor', () => {
 	
 			expect((await screen.findByTestId('typeOfGroundFloor_suspendedFloor')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('heightOfFloorUpperSurface') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('thicknessOfSurroundingWalls') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('underfloorSpaceThermalResistance') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('wallsAboveGroundThermalTransmittance') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('ventilationOpeningsArea') as HTMLInputElement).value).toBe('0');
 		});
 			
@@ -243,9 +243,9 @@ describe('ground floor', () => {
 			await user.click(screen.getByRole('button'));
 
 			expect((await screen.findByTestId('heightOfFloorUpperSurface_error'))).toBeDefined();
-			expect((await screen.findByTestId('thicknessOfSurroundingWalls_error'))).toBeDefined();
+			expect((await screen.findByTestId('thicknessOfWalls_error'))).toBeDefined();
 			expect((await screen.findByTestId('underfloorSpaceThermalResistance_error'))).toBeDefined();
-			expect((await screen.findByTestId('wallsAboveGroundThermalTransmittance_error'))).toBeDefined();
+			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround_error'))).toBeDefined();
 			expect((await screen.findByTestId('ventilationOpeningsArea_error'))).toBeDefined();
 		});
 	});
@@ -256,8 +256,8 @@ describe('ground floor', () => {
 	
 			await populateValidForm();
 			await user.click(screen.getByTestId('typeOfGroundFloor_heatedBasement'));
-			await user.type(screen.getByTestId('thicknessOfSurroundingWalls'), '0');
-			await user.type(screen.getByTestId('basementFloorDepth'), '0');
+			await user.type(screen.getByTestId('thicknessOfWalls'), '0');
+			await user.type(screen.getByTestId('depthOfBasementFloorBelowGround'), '0');
 			await user.type(screen.getByTestId('thermalResistanceOfBasementWalls'), '0');
 			await user.tab();
 			await user.click(screen.getByRole('button'));
@@ -286,8 +286,8 @@ describe('ground floor', () => {
 			});
 	
 			expect((await screen.findByTestId('typeOfGroundFloor_heatedBasement')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('thicknessOfSurroundingWalls') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('basementFloorDepth') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId('depthOfBasementFloorBelowGround') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('thermalResistanceOfBasementWalls') as HTMLInputElement).value).toBe('0');
 		});
 			
@@ -297,8 +297,8 @@ describe('ground floor', () => {
 			await user.click(screen.getByTestId('typeOfGroundFloor_heatedBasement'));
 			await user.click(screen.getByRole('button'));
 
-			expect((await screen.findByTestId('thicknessOfSurroundingWalls_error'))).toBeDefined();
-			expect((await screen.findByTestId('basementFloorDepth_error'))).toBeDefined();
+			expect((await screen.findByTestId('thicknessOfWalls_error'))).toBeDefined();
+			expect((await screen.findByTestId('depthOfBasementFloorBelowGround_error'))).toBeDefined();
 			expect((await screen.findByTestId('thermalResistanceOfBasementWalls_error'))).toBeDefined();
 		});
 	});
@@ -309,9 +309,9 @@ describe('ground floor', () => {
 	
 			await populateValidForm();
 			await user.click(screen.getByTestId('typeOfGroundFloor_unheatedBasement'));
-			await user.type(screen.getByTestId('thermalResistanceOfFloorAboveBasement'), '0');
-			await user.type(screen.getByTestId('thermalResistanceOfWallsAboveGround'), '0');
-			await user.type(screen.getByTestId('thermalResistanceOfBasementWalls'), '0');
+			await user.type(screen.getByTestId('thermalTransmittanceOfFloorAboveBasement'), '0');
+			await user.type(screen.getByTestId('thermalTransmittanceOfWallsAboveGround'), '0');
+			await user.type(screen.getByTestId('thermalTransmittanceOfBasementWalls'), '0');
 			await user.type(screen.getByTestId('thicknessOfWalls'), '0');
 			await user.type(screen.getByTestId('depthOfBasementFloorBelowGround'), '0');
 			await user.type(screen.getByTestId('heightOfBasementWallsAboveGround'), '0');
@@ -342,9 +342,9 @@ describe('ground floor', () => {
 			});
 	
 			expect((await screen.findByTestId('typeOfGroundFloor_unheatedBasement')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('thermalResistanceOfFloorAboveBasement') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('thermalResistanceOfWallsAboveGround') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('thermalResistanceOfBasementWalls') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId('thermalTransmittanceOfFloorAboveBasement') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId('thermalTransmittanceOfBasementWalls') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('depthOfBasementFloorBelowGround') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('heightOfBasementWallsAboveGround') as HTMLInputElement).value).toBe('0');
@@ -356,9 +356,9 @@ describe('ground floor', () => {
 			await user.click(screen.getByTestId('typeOfGroundFloor_unheatedBasement'));
 			await user.click(screen.getByRole('button'));
 
-			expect((await screen.findByTestId('thermalResistanceOfFloorAboveBasement_error'))).toBeDefined();
-			expect((await screen.findByTestId('thermalResistanceOfWallsAboveGround_error'))).toBeDefined();
-			expect((await screen.findByTestId('thermalResistanceOfBasementWalls_error'))).toBeDefined();
+			expect((await screen.findByTestId('thermalTransmittanceOfFloorAboveBasement_error'))).toBeDefined();
+			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround_error'))).toBeDefined();
+			expect((await screen.findByTestId('thermalTransmittanceOfBasementWalls_error'))).toBeDefined();
 			expect((await screen.findByTestId('thicknessOfWalls_error'))).toBeDefined();
 			expect((await screen.findByTestId('depthOfBasementFloorBelowGround_error'))).toBeDefined();
 			expect((await screen.findByTestId('heightOfBasementWallsAboveGround_error'))).toBeDefined();

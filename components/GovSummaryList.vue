@@ -6,34 +6,72 @@ export type SummaryData = {
 	[key: string]: string | number | boolean | string[] | undefined;
 };
 
-defineProps<{ data: SummaryData; }>();
+defineProps<{ data: SummaryData | SummaryData[]; }>();
 </script>
 
 <template>
-	<dl class="govuk-summary-list">
-		<template v-if="!Array.isArray(data)">
-			<div
-				v-for="(value, key) in data" :key="key" :data-testid="`summary-${hyphenate(key as string)}`"
-				class="govuk-summary-list__row">
-				<dt class="govuk-summary-list__key">{{ key }}</dt>
-				<dd class="govuk-summary-list__value">
-					<template v-if="Array.isArray(value)">
-						<ul>
-							<li v-for="item in value" :key="item">
-								{{ formatData(item, true) }}
-							</li>
-						</ul>
-					</template>
-					<template v-if="!Array.isArray(value)">
-						{{ formatData(value, true) }}
-					</template>
-				</dd>
-			</div>
-		</template>
-	</dl>
+	<div class="govuk-summary-list-container">
+		<dl class="govuk-summary-list" :class="Array.isArray(data) && data.length > 3 ? 'govuk-summary-list--overflow' : ''">
+			<template v-if="!Array.isArray(data)">
+				<div
+					v-for="(value, key) in data" :key="key" :data-testid="`summary-${hyphenate(key as string)}`"
+					class="govuk-summary-list__row">
+					<dt class="govuk-summary-list__key">{{ key }}</dt>
+					<dd class="govuk-summary-list__value">
+						<template v-if="Array.isArray(value)">
+							<ul>
+								<li v-for="item in value" :key="item">
+									{{ formatData(item, true) }}
+								</li>
+							</ul>
+						</template>
+						<template v-if="!Array.isArray(value)">
+							{{ formatData(value, true) }}
+						</template>
+					</dd>
+				</div>
+			</template>
+			<template v-if="Array.isArray(data) && data.length">
+				<template v-for="(key, keyIndex) in Object.keys(data[0])" :key="key">
+					<div v-if="data.some(x => !!x[key])" class="govuk-summary-list__row">
+						<dt class="govuk-summary-list__key" >{{ key }}</dt>
+						<template v-for="(entry, index) in data" :key="`entry-${key}-${index}`">
+							<template v-for="(entryProp, entryKey) in entry" :key="`prop-${entryKey}-${index}`">
+								<dd v-if="entryKey === key" class="govuk-summary-list__value" :class="keyIndex === 0 ? 'govuk-!-font-weight-bold' : ''">
+									<template v-if="Array.isArray(entryProp)">
+										<ul>
+											<li v-for="item in entryProp" :key="item">
+												{{ formatData(item, true) }}
+											</li>
+										</ul>
+									</template>
+									<template v-if="!Array.isArray(entryProp)">
+										{{ formatData(entryProp, true) }}
+									</template>
+								</dd>
+							</template>
+						</template>
+					</div>
+				</template>
+			</template>
+		</dl>
+	</div>
 </template>
 
 <style lang="scss" scoped>
+	.govuk-summary-list-container {
+		overflow-x: auto;
+		margin-bottom: 20px;
+	}
+
+	.govuk-summary-list--overflow {
+		width: max-content;
+	}
+
+	.govuk-summary-list__key {
+		width: 200px
+	}
+
 	.govuk-summary-list__value ul {
 		padding: 0;
 		margin: 0;
