@@ -55,7 +55,7 @@ function handleDuplicate(index: number) {
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
-	<GovButton href="/infiltration-ventilation" secondary>
+	<GovButton href="/infiltration-and-ventilation" secondary>
 		Return to overview
 	</GovButton>
 </template>
