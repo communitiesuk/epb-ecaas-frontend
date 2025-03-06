@@ -9,7 +9,7 @@ phases:
       # pause to avoid conflict
       # TODO - can we check state instead?
       - sleep 10
-      - aws s3 sync public s3://epb-ecaas-front-end-s3-bucket
+      - aws s3 sync $CODEBUILD_SRC_DIR_build_frontend_output/public s3://epb-ecaas-front-end-s3-bucket
       - sleep 1
       - ls -al
       - ls -al $CODEBUILD_SRC_DIR_build_frontend_output
