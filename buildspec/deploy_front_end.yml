@@ -10,7 +10,7 @@ phases:
       # TODO - can we check state instead?
       - sleep 10
       - ls -al $CODEBUILD_SRC_DIR_build_frontend_output
-      - aws s3 sync $CODEBUILD_SRC_DIR_build_frontend_output/public s3://epb-ecaas-front-end-s3-bucket
+      - aws s3 sync $CODEBUILD_SRC_DIR_build_frontend_output s3://epb-ecaas-front-end-s3-bucket --exclude "nuxt-lambda*"
       - sleep 1
       - aws lambda update-function-code --function-name front-end-lambda --zip-file fileb://$CODEBUILD_SRC_DIR_build_frontend_output/nuxt-lambda.zip
   post_build:
