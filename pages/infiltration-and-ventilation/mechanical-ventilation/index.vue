@@ -39,6 +39,7 @@ function handleDuplicate(index: number) {
 </script>
 
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
