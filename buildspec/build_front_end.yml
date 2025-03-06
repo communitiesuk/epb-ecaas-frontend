@@ -16,7 +16,7 @@ phases:
       - zip -r nuxt-lambda.zip .
       - cd ../..
       - mv .output/server/nuxt-lambda.zip nuxt-lambda.zip
-      - cp -r .output/public/ public
+      - rsync -Hav .output/public/ ./public/
 
   post_build:
     commands:
