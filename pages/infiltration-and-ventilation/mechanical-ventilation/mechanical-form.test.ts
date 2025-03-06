@@ -15,7 +15,7 @@ describe('mechanical ventilation form', () => {
 		supplyAirTemperatureControl: 'odaComp',
 		airFlowRate: 12,
 		mvhrLocation: 'inside',
-		mvhrEfficiency: 1,
+		mvhrEfficiency: 0.2,
 		ductworkCrossSectionalShape: 'circular',
 		ductTape: 'intake',
 		internalDiameterOfDuctwork: 300,
@@ -61,7 +61,7 @@ describe('mechanical ventilation form', () => {
 		await user.click(screen.getByTestId('supplyAirTemperatureControl_odaComp'));
 		await user.type(screen.getByTestId('airFlowRate'),'12' );
 		await user.click(screen.getByTestId('mvhrLocation_inside'));
-		await user.type(screen.getByTestId('mvhrEfficiency'), '1');
+		await user.type(screen.getByTestId('mvhrEfficiency'), '0.2');
 		await user.click(screen.getByTestId('ductworkCrossSectionalShape_circular'));
 		await user.click(screen.getByTestId('ductTape_intake'));
 		await user.type(screen.getByTestId('internalDiameterOfDuctwork'), '300');
@@ -145,7 +145,7 @@ describe('mechanical ventilation form', () => {
 		expect(((await screen.findByTestId('supplyAirTemperatureControl_odaComp')) as HTMLInputElement).checked).toBe(true);
 		expect((await screen.findByTestId('airFlowRate') as HTMLInputElement).value).toBe('12');
 		expect(((await screen.findByTestId('mvhrLocation_inside')) as HTMLInputElement).checked).toBe(true);
-		expect((await screen.findByTestId('mvhrEfficiency') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId('mvhrEfficiency') as HTMLInputElement).value).toBe('0.2');
 		expect(((await screen.findByTestId('ductworkCrossSectionalShape_circular')) as HTMLInputElement).checked).toBe(true);
 		expect(((await screen.findByTestId('ductTape_intake')) as HTMLInputElement).checked).toBe(true);
 		expect((await screen.findByTestId('internalDiameterOfDuctwork') as HTMLInputElement).value).toBe('300');

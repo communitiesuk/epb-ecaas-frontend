@@ -140,11 +140,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			/>
 			<FormKit
 				id="mvhrEfficiency"
-				type="govInputInt"
+				type="govInputFloat"
 				label="MVHR efficiency"
 				help="Heat recovery efficiency (0 to 1) allowing for in-use factor"
 				name="mvhrEfficiency"
-				validation="required | number | min:0 | max:1"
+				validation="required | min:0 | max:1"
 			/>
 			<h2 class="govuk-heading-l custom-govuk__heading__padding ">
 				{{ ductworkTitle }}
