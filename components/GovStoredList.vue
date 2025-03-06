@@ -17,15 +17,15 @@ const {
 	link
 } = props.context;
 
-let options: any = computed(() => {
+const options: any = computed(() => {
 	if(list) {
 		return list.map((item: any) => ({
 			id: item.id,
 			label: item.name
-		}))
+		}));
 	}
-	return {}
-})
+	return {};
+});
 
 </script>
 
