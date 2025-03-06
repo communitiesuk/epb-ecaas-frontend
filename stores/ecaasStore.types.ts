@@ -2,6 +2,7 @@ export interface EcaasState {
 	dwellingDetails: DwellingDetails;
 	hotWaterOutlets: HotWaterOutlets;
 	livingSpaceFabric: LivingSpaceFabric;
+	infiltrationAndVentilation: InfiltrationAndVentilation;
 }
 
 export interface EcaasForm<T> {
@@ -328,17 +329,17 @@ export type LivingSpaceZoneParametersData = {
 	spaceHeatingSystemForThisZone?: SpaceHeatingSystemData[];
 	spaceCoolingSystemForThisZone?: SpaceCoolingSystemData[];
 	spaceHeatControlSystemForThisZone?: SpaceHeatControlSystemData[];
-}
+};
 
 export type SpaceHeatingSystemData= {
-name:string
-}
+	name:string
+};
 export type SpaceCoolingSystemData = {
-name:string
-}
+	name:string
+};
 export type SpaceHeatControlSystemData = {
 	name:string
-	}
+};
 
 
 export interface HotWaterOutlets {
@@ -355,3 +356,28 @@ export type HotWaterDistributionData = {
 export interface HotWaterDistribution {
 	distributions?: HotWaterDistributionData[]
 }
+
+export interface InfiltrationAndVentilation {
+	InfilAndVentMechanicalVentilation: EcaasForm<MechanicalVentilation>
+}
+
+export interface MechanicalVentilation {
+	mechanicalVentilationObjects?: MechanicalVentilationObject[]
+}
+export type MechanicalVentilationObject = {
+	name: string;
+	typeOfMechanicalVentilationOptions: string;
+	controlForSupplyAirflow: string;
+	supplyAirTemperatureControl: string;
+	airFlowRate: number;
+	mvhrLocation?: string;
+	mvhrEfficiency?: number;
+	ductworkCrossSectionalShape?: string;
+	ductTape?: string;
+	internalDiameterOfDuctwork?: number;
+	externalDiameterOfDuctwork?: number;
+	insulationThickness?: number;
+	lengthOfDucwork?: number;
+	thermalInsulationConductivityOfDuctwork?: number;
+	surfaceReflectivity?: string;
+};

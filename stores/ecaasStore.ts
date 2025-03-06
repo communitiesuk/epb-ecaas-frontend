@@ -12,6 +12,9 @@ function getInitialState(): EcaasState {
 			shading: { data: {} },
 			externalFactors: { data: {} }
 		},
+		infiltrationAndVentilation: {
+			InfilAndVentMechanicalVentilation: { data: {} }
+		},
 		hotWaterOutlets: {
 			hotWaterDistribution: { data: {} }
 		},
@@ -39,7 +42,7 @@ function getInitialState(): EcaasState {
 				livingSpaceLinearThermalBridges: { data: [] },
 				livingSpacePointThermalBridges: { data: [] }
 			}, 
-			 livingSpaceZoneParameters: { data: {}},
+			livingSpaceZoneParameters: { data: {}},
 		}
 	};
 }
