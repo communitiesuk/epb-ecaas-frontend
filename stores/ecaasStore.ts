@@ -13,7 +13,7 @@ function getInitialState(): EcaasState {
 			externalFactors: { data: {} }
 		},
 		infiltrationAndVentilation: {
-			InfilAndVentMechanicalVentilation: { data: {} }
+			mechanicalVentilation: { data: {} },
 		},
 		hotWaterOutlets: {
 			hotWaterDistribution: { data: {} }

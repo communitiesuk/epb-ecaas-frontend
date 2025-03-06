@@ -4,14 +4,14 @@ const title = "Mechanical ventilation";
 const store = useEcaasStore();
 
 const { mechanicalVentilationObjects = [] } =
-  store.infiltrationAndVentilation.InfilAndVentMechanicalVentilation.data;
+	store.infiltrationAndVentilation.mechanicalVentilation.data;
 
 function handleRemove(index: number) {
 	mechanicalVentilationObjects.splice(index, 1);
 
 	store.$patch({
 		infiltrationAndVentilation: {
-			InfilAndVentMechanicalVentilation: {
+			mechanicalVentilation: {
 				data: {
 					mechanicalVentilationObjects: mechanicalVentilationObjects.length
 						? mechanicalVentilationObjects
@@ -28,7 +28,7 @@ function handleDuplicate(index: number) {
 		const duplicates = mechanicalVentilationObjects.filter(s => s.name.match(duplicateNamePattern(mechanicalVentilation.name)));
 
 		store.$patch((state) => {
-			state.infiltrationAndVentilation.InfilAndVentMechanicalVentilation.data.mechanicalVentilationObjects?.push({
+			state.infiltrationAndVentilation.mechanicalVentilation.data.mechanicalVentilationObjects?.push({
 				...mechanicalVentilation,
 				name: `${mechanicalVentilation.name} (${duplicates.length})`
 			});
@@ -46,15 +46,8 @@ function handleDuplicate(index: number) {
 		{{ title }}
 	</h1>
 	<GovCustomList
-		id="mechanicalVentilation"
-		title="Mechanical Ventilation"
-		:form-url="page?.url!"
-		:items="
-			store.infiltrationAndVentilation.InfilAndVentMechanicalVentilation.data.mechanicalVentilationObjects?.map(
-				x => x.name)"
-		@remove="handleRemove"
-		@duplicate="handleDuplicate"
-	/>
+		id="mechanicalVentilation" title="Mechanical Ventilation" :form-url="page?.url!" :items="store.infiltrationAndVentilation.mechanicalVentilation.data.mechanicalVentilationObjects?.map(
+			x => x.name)" @remove="handleRemove" @duplicate="handleDuplicate" />
 	<GovButton href="/infiltration-and-ventilation" secondary>
 		Return to overview
 	</GovButton>

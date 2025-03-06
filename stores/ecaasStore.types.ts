@@ -358,7 +358,7 @@ export interface HotWaterDistribution {
 }
 
 export interface InfiltrationAndVentilation {
-	InfilAndVentMechanicalVentilation: EcaasForm<MechanicalVentilation>
+	mechanicalVentilation: EcaasForm<MechanicalVentilation>
 }
 
 export interface MechanicalVentilation {

@@ -6,12 +6,12 @@ const ductworkTitle = "Ductwork";
 const store = useEcaasStore();
 const route = useRoute();
 
-const mechanicalVentilation = useItemToEdit('mechanical', store.infiltrationAndVentilation.InfilAndVentMechanicalVentilation.data.mechanicalVentilationObjects);
+const mechanicalVentilation = useItemToEdit('mechanical', store.infiltrationAndVentilation.mechanicalVentilation.data.mechanicalVentilationObjects);
 const model: Ref<MechanicalVentilationObject> = ref(mechanicalVentilation!);
 
 const saveForm = (fields: MechanicalVentilationObject) => {
 	store.$patch((state) => {
-		const { data } = state.infiltrationAndVentilation.InfilAndVentMechanicalVentilation;
+		const { data } = state.infiltrationAndVentilation.mechanicalVentilation;
 
 		if (!data.mechanicalVentilationObjects) {
 			data.mechanicalVentilationObjects = [];
@@ -36,14 +36,14 @@ const saveForm = (fields: MechanicalVentilationObject) => {
 			surfaceReflectivity: fields.surfaceReflectivity,
 		};
 
-		
+
 		if (route.params.mechanical && route.params.mechanical !== 'create') {
 			data.mechanicalVentilationObjects[index] = mechanicalVentilation;
 		} else {
 			data.mechanicalVentilationObjects?.push(mechanicalVentilation);
 		}
 
-		state.infiltrationAndVentilation.InfilAndVentMechanicalVentilation.complete = true;
+		state.infiltrationAndVentilation.mechanicalVentilation.complete = true;
 	});
 
 	navigateTo("/infiltration-and-ventilation/mechanical-ventilation");
