@@ -93,14 +93,14 @@ const pagesData: Array<Page> = [
 		title: 'Create',
 		url: '/infiltration-and-ventilation/mechanical-ventilation/create',
 		type: PageType.Task,
-		parentId: 'infiltrationAndVentilation'
+		parentId: 'mechanicalVentilation'
 	},
 	{
 		id: 'mechanicalVentilationEdit',
 		title: 'Edit',
 		url: '/infiltration-and-ventilation/mechanical-ventilation/:mechanical',
 		type: PageType.Task,
-		parentId: 'infiltrationAndVentilation'
+		parentId: 'mechanicalVentilation'
 	},
 	{
 		id: 'vents',
