@@ -8,7 +8,12 @@ phases:
       - aws lambda update-function-configuration --function-name front-end-lambda --environment Variables={NUXT_APP_CDN_URL=https://dimijf1zo5k0x.cloudfront.net/static}
       # pause to avoid conflict
       # TODO - can we check state instead?
-      - sleep 30
+      - sleep 10
+      - aws s3 sync public s3://epb-ecaas-front-end-s3-bucket
+      - sleep 1
+      - ls -al
+      - ls -al public
+      - ls -al server
       - aws lambda update-function-code --function-name front-end-lambda --zip-file fileb://$CODEBUILD_SRC_DIR_build_frontend_output/nuxt-lambda.zip
   post_build:
     commands:
