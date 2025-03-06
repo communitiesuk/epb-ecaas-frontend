@@ -6,12 +6,14 @@ export type SummaryData = {
 	[key: string]: string | number | boolean | string[] | undefined;
 };
 
-defineProps<{ data: SummaryData | SummaryData[]; }>();
+const props = defineProps<{ data: SummaryData | SummaryData[]; }>();
+
+const overflow = Array.isArray(props.data) && props.data.length > 3;
 </script>
 
 <template>
-	<div class="govuk-summary-list-container">
-		<dl class="govuk-summary-list" :class="Array.isArray(data) && data.length > 3 ? 'govuk-summary-list--overflow' : ''">
+	<div :class="overflow ? 'govuk-summary-list-overflow' : ''">
+		<dl class="govuk-summary-list">
 			<template v-if="!Array.isArray(data)">
 				<div
 					v-for="(value, key) in data" :key="key" :data-testid="`summary-${hyphenate(key as string)}`"
@@ -59,13 +61,13 @@ defineProps<{ data: SummaryData | SummaryData[]; }>();
 </template>
 
 <style lang="scss" scoped>
-	.govuk-summary-list-container {
+	.govuk-summary-list-overflow {
 		overflow-x: auto;
 		margin-bottom: 20px;
-	}
 
-	.govuk-summary-list--overflow {
-		width: max-content;
+		.govuk-summary-list {
+			width: max-content;
+		}
 	}
 
 	.govuk-summary-list__key {
