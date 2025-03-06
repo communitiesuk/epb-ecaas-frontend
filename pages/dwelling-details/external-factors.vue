@@ -68,7 +68,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Terrain Type"
 			name="terrainType"
 			validation="required"
-			help="he type of surrounding landscape or environment. Terrain class helps determine how external conditions, such as wind speed and turbulence, will impact ventilation and airflow around a building."
+			help="The type of surrounding landscape or environment. Terrain class helps determine how external conditions, such as wind speed and turbulence, will impact ventilation and airflow around a building."
 		/>
 		<FormKit
 			id="noiseNuisance"
