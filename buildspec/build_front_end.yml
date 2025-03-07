@@ -16,10 +16,7 @@ phases:
       - zip -r nuxt-lambda.zip .
       - cd ../..
       - mv .output/server/nuxt-lambda.zip nuxt-lambda.zip
-      - ls -al .output/public/
-      - rsync -Hav .output/public/assets ./_assets/
       - rsync -Hav .output/public/ ./static/
-      - ls -la
 
   post_build:
     commands:
@@ -29,4 +26,3 @@ artifacts:
   files:
     - nuxt-lambda.zip
     - 'static/**/*'
-    - '_assets/**/*'

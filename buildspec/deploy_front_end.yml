@@ -7,7 +7,7 @@ phases:
       - export AWS_PROFILE=ci_server
       - ls -al $CODEBUILD_SRC_DIR_build_frontend_output
       - aws s3 sync --delete $CODEBUILD_SRC_DIR_build_frontend_output s3://epb-ecaas-front-end-s3-bucket --exclude "nuxt-lambda*"
-      - aws s3 sync --delete $CODEBUILD_SRC_DIR_build_frontend_output/_assets/ s3://epb-ecaas-front-end-s3-bucket/assets/
+      # - aws s3 sync --delete $CODEBUILD_SRC_DIR_build_frontend_output/_assets/ s3://epb-ecaas-front-end-s3-bucket/assets/
       - aws lambda update-function-code --function-name front-end-lambda --zip-file fileb://$CODEBUILD_SRC_DIR_build_frontend_output/nuxt-lambda.zip
   post_build:
     commands:
