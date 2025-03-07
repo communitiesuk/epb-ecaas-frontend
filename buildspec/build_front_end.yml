@@ -16,7 +16,7 @@ phases:
       - zip -r nuxt-lambda.zip .
       - cd ../..
       - mv .output/server/nuxt-lambda.zip nuxt-lambda.zip
-      - rsync -Hav .output/public/ ./public/
+      - rsync -Hav .output/public/ ./static/
 
   post_build:
     commands:
@@ -25,5 +25,4 @@ phases:
 artifacts:
   files:
     - nuxt-lambda.zip
-    - 'public/**/*'
-  discard-paths: yes
+    - 'static/**/*'
