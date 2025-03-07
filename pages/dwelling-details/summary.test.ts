@@ -21,8 +21,6 @@ const state: DwellingDetailSummary = {
 		typeOfDwelling: 'house',
 		storeysInDwelling: 2,
 		numOfBedrooms: 3,
-		latitude: 0,
-		longitude: 0,
 		partGCompliance: "yes",
 		coolingRequired: "no",
 		heatingControlType: 'seperateTempControl'
@@ -107,8 +105,6 @@ describe('Dwelling details summary', () => {
 			"Type of dwelling": "House",
 			"Number of storeys in building": 2,
 			"Number of bedrooms": 3,
-			"Latitude": 0,
-			"Longitude": 0,
 			"Part G compliance": "Yes",
 			"Cooling required": "No",
 			"Heating control type": "Separate temperature control"

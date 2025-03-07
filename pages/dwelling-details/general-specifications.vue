@@ -15,8 +15,6 @@ const saveForm = (fields: typeof model.value) => {
 					storeysInDwelling: fields.storeysInDwelling,
 					storeyOfFlat: fields.storeyOfFlat,
 					numOfBedrooms: fields.numOfBedrooms,
-					latitude: fields.latitude,
-					longitude: fields.longitude,
 					partGCompliance: fields.partGCompliance,
 					coolingRequired: fields.coolingRequired,
 					heatingControlType: fields.heatingControlType,
@@ -75,24 +73,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="numOfBedrooms"
 			validation="required | number | min:1"
 			help="Number of bedrooms in dwelling. Affects predicted occupancy."
-		/>
-		<FormKit
-			id="latitude"
-			type="govInputWithSuffix"
-			suffix-text="degrees"
-			label="Latitude"
-			name="latitude"
-			validation="required | number | min:-90 | max:90"
-			help="Latitude of weather station, angle from south, in degrees (single value)"
-		/>
-		<FormKit
-			id="longitude"
-			type="govInputWithSuffix"
-			suffix-text="degrees"
-			label="Longitude"
-			name="longitude"
-			validation="required | number | min:-180 | max:180"
-			help="Longitude of weather station, angle from west, in degrees (single value)"
 		/>
 		<FormKit
 			id="partGCompliance"

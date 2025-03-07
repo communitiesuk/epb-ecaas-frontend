@@ -13,8 +13,6 @@ const state: GeneralSpecificationsData = {
 	typeOfDwelling: 'house',
 	storeysInDwelling: 2,
 	numOfBedrooms: 3,
-	latitude: 0,
-	longitude: 0,
 	partGCompliance: "yes",
 	coolingRequired: "no",
 	heatingControlType: 'seperateTempControl',
@@ -25,8 +23,6 @@ const stateWithFlat: GeneralSpecificationsData = {
 	storeysInDwelling: 7,
 	storeyOfFlat: 3,
 	numOfBedrooms: 3,
-	latitude: 0,
-	longitude: 0,
 	partGCompliance: "yes",
 	coolingRequired: "no",
 	heatingControlType: 'seperateTempControl',
@@ -49,8 +45,6 @@ describe('General specifications', () => {
 			await user.click(screen.getByTestId('typeOfDwelling_house'));
 			await user.type(screen.getByTestId('storeysInDwelling'), '2');
 			await user.type(screen.getByTestId('numOfBedrooms'), '3');
-			await user.type(screen.getByTestId('latitude'), '0');
-			await user.type(screen.getByTestId('longitude'), '0');
 			await user.click(screen.getByTestId('partGCompliance_yes'));
 			await user.click(screen.getByTestId('coolingRequired_no'));
 			await user.click(screen.getByTestId('heatingControlType_seperateTempControl'));
@@ -78,8 +72,6 @@ describe('General specifications', () => {
 			expect((await screen.findByTestId('storeysInDwelling') as HTMLInputElement).value).toBe('2');
 			expect((await screen.queryByTestId('storeyOfFlat') as HTMLInputElement)).toBe(null);
 			expect((await screen.findByTestId('numOfBedrooms') as HTMLInputElement).value).toBe('3');
-			expect((await screen.findByTestId('latitude') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('longitude') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('partGCompliance_yes')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('coolingRequired_no')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('heatingControlType_seperateTempControl')).hasAttribute('checked')).toBe(true);
@@ -95,8 +87,6 @@ describe('General specifications', () => {
 			expect((await screen.findByTestId('typeOfDwelling_error'))).toBeDefined();
 			expect((await screen.findByTestId('storeysInDwelling_error'))).toBeDefined();
 			expect((await screen.findByTestId('numOfBedrooms_error'))).toBeDefined();
-			expect((await screen.findByTestId('latitude_error'))).toBeDefined();
-			expect((await screen.findByTestId('longitude_error'))).toBeDefined();
 			expect((await screen.findByTestId('partGCompliance_error'))).toBeDefined();
 			expect((await screen.findByTestId('coolingRequired_error'))).toBeDefined();
 			expect((await screen.findByTestId('heatingControlType_error'))).toBeDefined();
@@ -126,8 +116,6 @@ describe('General specifications', () => {
 			await user.type(screen.getByTestId('storeysInDwelling'), '7');
 			await user.type(screen.getByTestId('storeyOfFlat'), '3');
 			await user.type(screen.getByTestId('numOfBedrooms'), '3');
-			await user.type(screen.getByTestId('latitude'), '0');
-			await user.type(screen.getByTestId('longitude'), '0');
 			await user.click(screen.getByTestId('partGCompliance_yes'));
 			await user.click(screen.getByTestId('coolingRequired_no'));
 			await user.click(screen.getByTestId('heatingControlType_seperateTempControl'));
@@ -155,8 +143,6 @@ describe('General specifications', () => {
 			expect((await screen.findByTestId('storeysInDwelling') as HTMLInputElement).value).toBe('7');
 			expect((await screen.findByTestId('storeyOfFlat') as HTMLInputElement).value).toBe('3');
 			expect((await screen.findByTestId('numOfBedrooms') as HTMLInputElement).value).toBe('3');
-			expect((await screen.findByTestId('latitude') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('longitude') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('partGCompliance_yes')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('coolingRequired_no')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('heatingControlType_seperateTempControl')).hasAttribute('checked')).toBe(true);

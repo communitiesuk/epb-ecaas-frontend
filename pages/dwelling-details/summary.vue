@@ -20,8 +20,6 @@ const generalSpecificationsSummary: SummarySection = {
 		"Number of storeys in building": generalSpecificationsData.storeysInDwelling,
 		"Storey of flat": generalSpecificationsData.storeyOfFlat,
 		"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
-		"Latitude": generalSpecificationsData.latitude,
-		"Longitude": generalSpecificationsData.longitude,
 		"Part G compliance": generalSpecificationsData.partGCompliance,
 		"Cooling required": generalSpecificationsData.coolingRequired,
 		"Heating control type": generalSpecificationsData.heatingControlType

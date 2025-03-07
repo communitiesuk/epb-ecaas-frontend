@@ -22,8 +22,6 @@ export interface GeneralSpecificationsData {
 	storeysInDwelling?: number;
 	storeyOfFlat?: number;
 	numOfBedrooms?: number;
-	latitude?: number;
-	longitude?: number;
 	partGCompliance?: string;
 	coolingRequired?: string;
 	heatingControlType?: string;
