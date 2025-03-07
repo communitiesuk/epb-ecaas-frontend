@@ -17,7 +17,6 @@ const saveForm = (fields: typeof model.value) => {
 					numOfBedrooms: fields.numOfBedrooms,
 					partGCompliance: fields.partGCompliance,
 					coolingRequired: fields.coolingRequired,
-					heatingControlType: fields.heatingControlType,
 				},
 				complete: true,
 			},
@@ -97,22 +96,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="coolingRequired"
 			validation="required"
 			help="Is cooling required for this dwelling? This affects space cooling of notional building"
-		/>
-		<FormKit
-			id="heatingControlType"
-			type="govRadios"
-			:options="{
-				seperateTempControl: {
-					label: 'Separate temperature control',
-				},
-				seperateTempAndTimeControl: {
-					label: 'Separate temperature and time control',
-				},
-			}"
-			label="Heating control type"
-			name="heatingControlType"
-			validation="required"
-			help="Determines whether living-room and rest-of-dwelling have differing set-points/heating schedules"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>

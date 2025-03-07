@@ -24,7 +24,6 @@ export interface GeneralSpecificationsData {
 	numOfBedrooms?: number;
 	partGCompliance?: string;
 	coolingRequired?: string;
-	heatingControlType?: string;
 }
 
 export interface AppliancesData {
@@ -319,6 +318,7 @@ export type PointThermalBridgeData = {
 export type LivingSpaceZoneParametersData = {
 	area?: number;
 	volume?: number;
+	heatingControlType?: string;
 	spaceHeatingSystemForThisZone?: SpaceHeatingSystemData[];
 	spaceCoolingSystemForThisZone?: SpaceCoolingSystemData[];
 	spaceHeatControlSystemForThisZone?: SpaceHeatControlSystemData[];

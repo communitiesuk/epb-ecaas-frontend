@@ -11,6 +11,7 @@ const saveForm = (fields: typeof model.value) => {
 				data: {
 					area: fields.area,
 					volume: fields.volume,
+          heatingControlType: fields.heatingControlType,
 					spaceHeatingSystemForThisZone: fields.spaceHeatingSystemForThisZone,
 					spaceCoolingSystemForThisZone: fields.spaceCoolingSystemForThisZone,
 					spaceHeatControlSystemForThisZone:
@@ -72,6 +73,23 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 
 		/>
+
+    <FormKit
+        id="heatingControlType"
+        type="govRadios"
+        :options="{
+				seperateTempControl: {
+					label: 'Separate temperature control',
+				},
+				seperateTempAndTimeControl: {
+					label: 'Separate temperature and time control',
+				},
+			}"
+        label="Heating control type"
+        name="heatingControlType"
+        validation="required"
+        help="Determines whether living-room and rest-of-dwelling have differing set-points/heating schedules"
+    />
 
 		<FormKit
 			id="spaceHeatingSystem"
