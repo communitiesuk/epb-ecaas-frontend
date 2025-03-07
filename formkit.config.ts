@@ -1,7 +1,7 @@
-import GovStoredList from './components/GovStoredList.vue';
+import GovStoredList, { type GovStoredListOption } from './components/GovStoredList.vue';
 import { defineFormKitConfig } from '@formkit/vue';
 import GovFormButton from './components/GovFormButton.vue';
-import GovRadios from './components/GovRadios.vue';
+import GovRadios, { type GovRadioOption } from './components/GovRadios.vue';
 import type { FormKitInputs, FormKitOptionsProp } from '@formkit/inputs';
 import GovDropdown from './components/GovDropdown.vue';
 import GovInputFloat from './components/GovInputFloat.vue';
@@ -10,11 +10,6 @@ import GovInputWithSuffix from './components/GovInputWithSuffix.vue';
 import GovCheckboxes from './components/GovCheckboxes.vue';
 import type { GovDetailsProps } from './components/GovDetails.vue';
 import GovInputText from './components/GovInputText.vue';
-
-type GovRadioOption = {
-	label: string;
-	hint?: string;
-};
 
 // Enable TypeScript support for custom inputs
 declare module '@formkit/inputs' {
@@ -50,7 +45,8 @@ declare module '@formkit/inputs' {
 			type: 'govInputText'
 		}, 
 		'govStoredList': {
-			type: 'govStoredList'
+			type: 'govStoredList',
+			options: GovStoredListOption[]
 		}
 	}
 }

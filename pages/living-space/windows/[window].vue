@@ -4,9 +4,9 @@ const store = useEcaasStore();
 const route = useRoute();
 
 const window = useItemToEdit('window', store.livingSpaceFabric.livingSpaceWindows.data);
-const model: Ref<WindowObject> = ref(window!);
+const model: Ref<WindowData> = ref(window!);
 
-const saveForm = (fields: WindowObject) => {
+const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
 		const { livingSpaceWindows } = state.livingSpaceFabric;
 
@@ -14,7 +14,7 @@ const saveForm = (fields: WindowObject) => {
 			livingSpaceWindows.data = [];
 		}
 
-		const window: WindowObject = {
+		const window: WindowData = {
 			name: fields.name,
 			orientation: fields.orientation,
 			surfaceArea: fields.surfaceArea,
@@ -336,9 +336,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 		</table>
 		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-		<h2 class="govuk-heading-m">
-			Curtains and blinds
-		</h2>
+		<h2 class="govuk-heading-m">Curtains and blinds</h2>
+		<p class="govuk-caption-m govuk-!-font-weight-bold">OPTIONAL SECTION</p>
 		<FormKit
 			id="type"
 			type="govRadios"

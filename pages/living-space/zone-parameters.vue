@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { getUrl } from '#imports';
+
 const store = useEcaasStore();
 
 const model = ref({
@@ -11,11 +13,10 @@ const saveForm = (fields: typeof model.value) => {
 				data: {
 					area: fields.area,
 					volume: fields.volume,
-          heatingControlType: fields.heatingControlType,
+					heatingControlType: fields.heatingControlType,
 					spaceHeatingSystemForThisZone: fields.spaceHeatingSystemForThisZone,
 					spaceCoolingSystemForThisZone: fields.spaceCoolingSystemForThisZone,
-					spaceHeatControlSystemForThisZone:
-            fields.spaceHeatControlSystemForThisZone,
+					spaceHeatControlSystemForThisZone: fields.spaceHeatControlSystemForThisZone,
 				},
 				complete: true,
 			},
@@ -71,13 +72,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="volume"
 			help="Volume of the zone"
 			validation="required"
-
 		/>
 
-    <FormKit
-        id="heatingControlType"
-        type="govRadios"
-        :options="{
+		<FormKit
+			id="heatingControlType"
+			type="govRadios"
+			:options="{
 				seperateTempControl: {
 					label: 'Separate temperature control',
 				},
@@ -85,11 +85,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					label: 'Separate temperature and time control',
 				},
 			}"
-        label="Heating control type"
-        name="heatingControlType"
-        validation="required"
-        help="Determines whether living-room and rest-of-dwelling have differing set-points/heating schedules"
-    />
+			label="Heating control type"
+			name="heatingControlType"
+			validation="required"
+			help="Determines whether living-room and rest-of-dwelling have differing set-points/heating schedules"
+		/>
 
 		<FormKit
 			id="spaceHeatingSystem"
@@ -97,14 +97,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Space heating system for this zone"
 			name="spaceHeatingSystem"
 			help="Select a space heating system that has already been added to the calculation"
-			:list="
-				(
-					store.livingSpaceFabric.livingSpaceZoneParameters.data
-						?.spaceHeatingSystemForThisZone ?? []
-				).map((system) => system.name)
-			"
-			validation="required"
-			link="/space-heating"
+			:options="[]"
+			:link="getUrl('heatingSystems')"
 		/>
 
 		<FormKit
@@ -113,14 +107,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Space cooling system for this zone"
 			name="spaceCoolingSystem"
 			help="Select a space cooling system that has already been added to the calculation"
-			:list="
-				(
-					store.livingSpaceFabric.livingSpaceZoneParameters.data
-						?.spaceCoolingSystemForThisZone ?? []
-				).map((system) => system.name)
-			"
-			validation="required"
-			link="/space-cooling"
+			:options="[]"
+			:link="getUrl('cooling')"
 		/>
 		<FormKit
 			id="spaceHeatControlSystem"
@@ -128,14 +116,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Space heat control system for this zone"
 			name="spaceHeatControlSystem"
 			help="Select a space heat control system that has already been added to the calculation"
-			:list="
-				(
-					store.livingSpaceFabric.livingSpaceZoneParameters.data
-						.spaceHeatControlSystemForThisZone ?? []
-				).map((system) => system.name)
-			"
-			validation="required"
-			link="/space-heat-control"
+			:options="[]"
+			link="/"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
@@ -145,9 +127,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 @use "sass:map";
 
 .govuk-details__link {
-  color: #1d70b8;
-  font-size: 1.1875rem;
-  line-height: 1.3157894737;
-  padding-bottom: 1em;
+	color: #1d70b8;
+	font-size: 1.1875rem;
+	line-height: 1.3157894737;
+	padding-bottom: 1em;
 }
 </style>

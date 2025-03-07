@@ -1,4 +1,11 @@
-<script setup>
+<script setup lang="ts">
+import { showErrorState, getErrorMessage } from '#imports';
+
+export type GovRadioOption = {
+	label: string;
+	hint?: string;
+};
+
 const props = defineProps({
 	context: {
 		type: Object,
@@ -18,8 +25,9 @@ const {
 
 const { mounted } = useMounted();
 
-function handleInput(e) {
-	props.context.node.input(e.target.value);
+function handleInput(e: Event) {
+	const target = e.target as HTMLInputElement;
+	props.context.node.input(target.value);
 }
 </script>
 

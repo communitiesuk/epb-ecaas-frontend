@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import formatData from '~/utils/format-data';
+
+export type GovStoredListOption = {
+	id: string;
+	name: string;
+};
+
 const props = defineProps({
 	context: {
 		type: Object,
@@ -12,20 +18,9 @@ const props = defineProps({
 const {
 	id,
 	label,
-	list,
 	help,
-	link
+	attrs: { link, options }
 } = props.context;
-
-const options: any = computed(() => {
-	if(list) {
-		return list.map((item: any) => ({
-			id: item.id,
-			label: item.name
-		}));
-	}
-	return {};
-});
 
 </script>
 
@@ -43,7 +38,7 @@ const options: any = computed(() => {
 			</ul>
 			<div v-else>
 				<p class="govuk-body govuk-error-message">No {{ formatData(id, false) }} has been added.</p>
-				<NuxtLink class="govuk-link custom-add-list-item__link " :href="`${link}`">
+				<NuxtLink class="govuk-link custom-add-list-item__link" :to="link">
 					Click here to add a {{ formatData(id, false) }}
 				</NuxtLink>
 			</div>
