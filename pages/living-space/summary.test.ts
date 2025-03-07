@@ -2,12 +2,18 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
-import type { CeilingsAndRoofsData, DoorsData, FloorsData, ThermalBridgingData, WallsData, WindowData } from '~/stores/ecaasStore.types';
+import type { CeilingsAndRoofsData, DoorsData, FloorsData, LivingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData } from '~/stores/ecaasStore.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
+
+const zoneParametersData: LivingSpaceZoneParametersData = {
+	area: 10,
+	volume: 10,
+	heatingControlType: 'seperateTempControl'
+};
 
 const floorsData: FloorsData = {
 	livingSpaceGroundFloor: {
@@ -239,6 +245,38 @@ describe('Living space fabric summary', () => {
 
 	afterEach(() => {
 		store.$reset();
+	});
+
+	describe('Living space zone parameters', () => {
+		it('should contain the correct tabs for living space zone parameters', async () => {
+			await renderSuspended(Summary);
+	  
+			expect(screen.getByRole('link', {name: 'Zone parameters'}));
+		});
+
+		it('should display the correct data for the ground floor section', async () => {
+			store.$patch({
+				livingSpaceFabric: {
+					livingSpaceZoneParameters: {
+						data: zoneParametersData
+					}
+				}
+			});
+	
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Area": 10,
+				"Volume": 10,
+				"Heating control type": 'Seperate temp control'
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
 	});
 
 	describe('Living space floors', () => {

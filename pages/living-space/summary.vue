@@ -7,6 +7,18 @@ const store = useEcaasStore();
 
 definePageMeta({ layout: false });
 
+const zoneParametersData = store.livingSpaceFabric.livingSpaceZoneParameters.data;
+
+const zoneParametersSummary: SummarySection = {
+	id: 'livingSpaceZoneParameters',
+	label: 'Zone parameters',
+	data: {
+		"Area": zoneParametersData.area,
+		"Volume": zoneParametersData.volume,
+		"Heating control type": zoneParametersData.heatingControlType
+	}
+};
+
 const groundFloorData = store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data;
 const internalFloorData = store.livingSpaceFabric.livingSpaceFloors.livingSpaceInternalFloor?.data;
 const exposedFloorData = store.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor?.data;
@@ -369,6 +381,10 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<Title>{{ title }}</Title>
 			</Head>
 			<h1 class="govuk-heading-l">{{ title }}</h1>
+			<GovTabs v-slot="tabProps" :items="getTabItems([zoneParametersSummary])">
+				<GovSummaryTab :summary="zoneParametersSummary" :selected="tabProps.currentTab === 0" />
+			</GovTabs>
+
 			<GovTabs v-slot="tabProps" :items="getTabItems(floorSummarySections)">
 				<GovSummaryTab :summary="groundFloorSummary" :selected="tabProps.currentTab === 0">
 					<template #empty>
