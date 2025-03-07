@@ -67,4 +67,7 @@ function handleDuplicate(index: number, e: MouseEvent) {
 	.custom-list__action-link {
 		margin-left: 25px;
 	}
+	.custom-list__table-header {
+		overflow-wrap: anywhere;
+	}
 </style>

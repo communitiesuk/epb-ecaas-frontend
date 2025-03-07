@@ -2,6 +2,7 @@ export interface EcaasState {
 	dwellingDetails: DwellingDetails;
 	hotWaterOutlets: HotWaterOutlets;
 	livingSpaceFabric: LivingSpaceFabric;
+	infiltrationAndVentilation: InfiltrationAndVentilation;
 }
 
 export interface EcaasForm<T> {
@@ -21,11 +22,8 @@ export interface GeneralSpecificationsData {
 	storeysInDwelling?: number;
 	storeyOfFlat?: number;
 	numOfBedrooms?: number;
-	latitude?: number;
-	longitude?: number;
 	partGCompliance?: string;
 	coolingRequired?: string;
-	heatingControlType?: string;
 }
 
 export interface AppliancesData {
@@ -55,10 +53,9 @@ export interface LivingSpaceFabric {
 	livingSpaceWalls: WallsData;
 	livingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
 	livingSpaceDoors: DoorsData;
-	livingSpaceWindows: EcaasForm<Window>;
+	livingSpaceWindows: EcaasForm<WindowData[]>;
 	livingSpaceThermalBridging: ThermalBridgingData;
 	livingSpaceZoneParameters: EcaasForm<LivingSpaceZoneParametersData>;
-
 }
 
 export interface FloorsData {
@@ -110,16 +107,16 @@ export type GroundFloorData = {
 	edgeInsulationWidth?: number;
 	edgeInsulationThermalResistance?: number;
 	heightOfFloorUpperSurface?: number;
-	thicknessOfSurroundingWalls?: number;
 	underfloorSpaceThermalResistance?: number;
-	wallsAboveGroundThermalTransmittance?: number;
+	thermalTransmittanceOfWallsAboveGround?: number;
 	ventilationOpeningsArea?: number;
-	basementFloorDepth?: number;
+	depthOfBasementFloorBelowGround?: number;
 	thermalResistanceOfBasementWalls?: number;
 	thermalResistanceOfFloorAboveBasement?: number;
 	thermalResistanceOfWallsAboveGround?: number;
+	thermalTransmittanceOfFloorAboveBasement?: number;
+	thermalTransmittanceOfBasementWalls?: number;
 	thicknessOfWalls?: number;
-	depthOfBasementFloorBelowGround?: number;
 	heightOfBasementWallsAboveGround?: number
 };
 
@@ -269,7 +266,7 @@ export type InternalDoorData = {
 	thermalResistanceOfAdjacentUnheatedSpace?: number;
 };
 
-export type WindowObject = {
+export type WindowData = {
 	name: string;
 	orientation: number;
 	surfaceArea: number;
@@ -301,10 +298,6 @@ export type WindowObject = {
 	solarTransmittenceReduction?: number;
 };
 
-export interface Window {
-	windowObjects?: WindowObject[]
-}
-
 export interface ThermalBridgingData {
 	livingSpaceLinearThermalBridges: EcaasForm<LinearThermalBridgeData[]>;
 	livingSpacePointThermalBridges: EcaasForm<PointThermalBridgeData[]>;
@@ -325,24 +318,24 @@ export type PointThermalBridgeData = {
 export type LivingSpaceZoneParametersData = {
 	area?: number;
 	volume?: number;
+	heatingControlType?: string;
 	spaceHeatingSystemForThisZone?: SpaceHeatingSystemData[];
 	spaceCoolingSystemForThisZone?: SpaceCoolingSystemData[];
 	spaceHeatControlSystemForThisZone?: SpaceHeatControlSystemData[];
-}
+};
 
 export type SpaceHeatingSystemData= {
-name:string
-}
+	name:string
+};
 export type SpaceCoolingSystemData = {
-name:string
-}
+	name:string
+};
 export type SpaceHeatControlSystemData = {
 	name:string
-	}
-
+};
 
 export interface HotWaterOutlets {
-	hotWaterDistribution: EcaasForm<HotWaterDistribution>;
+	hotWaterDistribution: EcaasForm<HotWaterDistributionData[]>;
 }
 
 export type HotWaterDistributionData = {
@@ -352,6 +345,27 @@ export type HotWaterDistributionData = {
 	internalDiameter?: number;
 };
 
-export interface HotWaterDistribution {
-	distributions?: HotWaterDistributionData[]
+export interface InfiltrationAndVentilation {
+	mechanicalVentilation: EcaasForm<MechanicalVentilation>
 }
+
+export interface MechanicalVentilation {
+	mechanicalVentilationObjects?: MechanicalVentilationObject[]
+}
+export type MechanicalVentilationObject = {
+	name: string;
+	typeOfMechanicalVentilationOptions: string;
+	controlForSupplyAirflow: string;
+	supplyAirTemperatureControl: string;
+	airFlowRate: number;
+	mvhrLocation?: string;
+	mvhrEfficiency?: number;
+	ductworkCrossSectionalShape?: string;
+	ductTape?: string;
+	internalDiameterOfDuctwork?: number;
+	externalDiameterOfDuctwork?: number;
+	insulationThickness?: number;
+	lengthOfDucwork?: number;
+	thermalInsulationConductivityOfDuctwork?: number;
+	surfaceReflectivity?: string;
+};

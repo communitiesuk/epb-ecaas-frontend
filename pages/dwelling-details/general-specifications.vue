@@ -15,11 +15,8 @@ const saveForm = (fields: typeof model.value) => {
 					storeysInDwelling: fields.storeysInDwelling,
 					storeyOfFlat: fields.storeyOfFlat,
 					numOfBedrooms: fields.numOfBedrooms,
-					latitude: fields.latitude,
-					longitude: fields.longitude,
 					partGCompliance: fields.partGCompliance,
 					coolingRequired: fields.coolingRequired,
-					heatingControlType: fields.heatingControlType,
 				},
 				complete: true,
 			},
@@ -77,24 +74,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Number of bedrooms in dwelling. Affects predicted occupancy."
 		/>
 		<FormKit
-			id="latitude"
-			type="govInputWithSuffix"
-			suffix-text="degrees"
-			label="Latitude"
-			name="latitude"
-			validation="required | number | min:-90 | max:90"
-			help="Latitude of weather station, angle from south, in degrees (single value)"
-		/>
-		<FormKit
-			id="longitude"
-			type="govInputWithSuffix"
-			suffix-text="degrees"
-			label="Longitude"
-			name="longitude"
-			validation="required | number | min:-180 | max:180"
-			help="Longitude of weather station, angle from west, in degrees (single value)"
-		/>
-		<FormKit
 			id="partGCompliance"
 			type="govRadios"
 			:options="{
@@ -117,22 +96,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="coolingRequired"
 			validation="required"
 			help="Is cooling required for this dwelling? This affects space cooling of notional building"
-		/>
-		<FormKit
-			id="heatingControlType"
-			type="govRadios"
-			:options="{
-				seperateTempControl: {
-					label: 'Separate temperature control',
-				},
-				seperateTempAndTimeControl: {
-					label: 'Separate temperature and time control',
-				},
-			}"
-			label="Heating control type"
-			name="heatingControlType"
-			validation="required"
-			help="Determines whether living-room and rest-of-dwelling have differing set-points/heating schedules"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>

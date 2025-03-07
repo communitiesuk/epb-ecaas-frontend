@@ -3,15 +3,15 @@ const title = "Hot water distribution";
 const store = useEcaasStore();
 const route = useRoute();
 
-const distributionData = useItemToEdit('distribution', store.hotWaterOutlets.hotWaterDistribution.data.distributions);
+const distributionData = useItemToEdit('distribution', store.hotWaterOutlets.hotWaterDistribution.data);
 const model: Ref<HotWaterDistributionData> = ref(distributionData!);
 
 const saveForm = (fields: HotWaterDistributionData) => {
 	store.$patch((state) => {
-		const { data } = state.hotWaterOutlets.hotWaterDistribution;
+		const { hotWaterDistribution } = state.hotWaterOutlets;
 
-		if (!data.distributions) {
-			data.distributions = [];
+		if (!hotWaterDistribution.data) {
+			hotWaterDistribution.data = [];
 		}
 
 		const distribution: HotWaterDistributionData = {
@@ -23,9 +23,9 @@ const saveForm = (fields: HotWaterDistributionData) => {
 
 		if (route.params.distribution && route.params.distribution !== 'create') {
 			const index = parseInt(route.params.distribution as string);
-			data.distributions[index] = distribution;
+			hotWaterDistribution.data[index] = distribution;
 		} else {
-			data.distributions.push(distribution);
+			hotWaterDistribution.data.push(distribution);
 		}
 		
 		state.hotWaterOutlets.hotWaterDistribution.complete = true;

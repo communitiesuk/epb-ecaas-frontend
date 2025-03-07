@@ -3,15 +3,15 @@ const title = "Window";
 const store = useEcaasStore();
 const route = useRoute();
 
-const window = useItemToEdit('window', store.livingSpaceFabric.livingSpaceWindows.data.windowObjects);
+const window = useItemToEdit('window', store.livingSpaceFabric.livingSpaceWindows.data);
 const model: Ref<WindowObject> = ref(window!);
 
 const saveForm = (fields: WindowObject) => {
 	store.$patch((state) => {
-		const { data } = state.livingSpaceFabric.livingSpaceWindows;
+		const { livingSpaceWindows } = state.livingSpaceFabric;
 
-		if (!data.windowObjects) {
-			data.windowObjects = [];
+		if (!livingSpaceWindows.data) {
+			livingSpaceWindows.data = [];
 		}
 
 		const window: WindowObject = {
@@ -48,9 +48,9 @@ const saveForm = (fields: WindowObject) => {
 
 		if (route.params.window && route.params.window !== 'create') {
 			const index = parseInt(route.params.window as string);
-			data.windowObjects[index] = window;
+			livingSpaceWindows.data[index] = window;
 		} else {
-			data.windowObjects?.push(window);
+			livingSpaceWindows.data.push(window);
 		}
 
 		state.livingSpaceFabric.livingSpaceWindows.complete = true;

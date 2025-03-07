@@ -74,6 +74,6 @@ function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) 
 		href="/living-space"
 		secondary
 	>
-		Return to living space overview
+		Return to overview
 	</GovButton>
 </template>

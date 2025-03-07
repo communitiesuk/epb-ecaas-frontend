@@ -3,30 +3,29 @@ const title = "Windows";
 const page = usePage();
 const store = useEcaasStore();
 
-const { windowObjects = [] } = store.livingSpaceFabric.livingSpaceWindows.data;
+const { data = [] } = store.livingSpaceFabric.livingSpaceWindows;
 
 function handleRemove(index: number) {
-	windowObjects.splice(index, 1);
+	data.splice(index, 1);
 
 	store.$patch({
 		livingSpaceFabric: {
 			livingSpaceWindows: {
-				data: {
-					windowObjects: windowObjects.length ? windowObjects : undefined
-				}
+				data,
+				complete: data.length > 0
 			}
 		}
 	});
 }
 
 function handleDuplicate(index: number) {
-	const window = windowObjects[index];
+	const window = data[index];
 
 	if (window) {
-		const duplicates = windowObjects.filter(s => s.name.match(duplicateNamePattern(window.name)));
+		const duplicates = data.filter(s => s.name.match(duplicateNamePattern(window.name)));
 
 		store.$patch((state) => {
-			state.livingSpaceFabric.livingSpaceWindows.data.windowObjects?.push({
+			state.livingSpaceFabric.livingSpaceWindows.data.push({
 				...window,
 				name: `${window.name} (${duplicates.length})`
 			});
@@ -46,7 +45,7 @@ function handleDuplicate(index: number) {
 		id="windows"
 		title="Window"
 		:form-url="page?.url!"
-		:items="store.livingSpaceFabric.livingSpaceWindows.data.windowObjects?.map(x => x.name)"
+		:items="store.livingSpaceFabric.livingSpaceWindows.data.map(x => x.name)"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>

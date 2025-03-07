@@ -82,16 +82,30 @@ const pagesData: Array<Page> = [
 		type: PageType.Section,
 		parentId: 'taskList'
 	},{
-		id: 'infiltration',
-		title: 'Infiltration',
-		url: '/infiltration-and-ventilation/infiltration',
+		id: 'mechanicalVentilation',
+		title: 'Mechanical ventilation',
+		url: '/infiltration-and-ventilation/mechanical-ventilation',
 		type: PageType.Task,
 		parentId: 'infiltrationAndVentilation'
 	},
 	{
-		id: 'chimneysAndFlues',
-		title: 'Chimneys and flues',
-		url: '/infiltration-and-ventilation/chimneys-and-flues',
+		id: 'mechanicalVentilationCreate',
+		title: 'Create',
+		url: '/infiltration-and-ventilation/mechanical-ventilation/create',
+		type: PageType.Task,
+		parentId: 'mechanicalVentilation'
+	},
+	{
+		id: 'mechanicalVentilationEdit',
+		title: 'Edit',
+		url: '/infiltration-and-ventilation/mechanical-ventilation/:mechanical',
+		type: PageType.Task,
+		parentId: 'mechanicalVentilation'
+	},
+	{
+		id: 'vents',
+		title: 'Vents',
+		url: '/infiltration-and-ventilation/vents',
 		type: PageType.Task,
 		parentId: 'infiltrationAndVentilation'
 	},
@@ -99,6 +113,20 @@ const pagesData: Array<Page> = [
 		id: 'ventilation',
 		title: 'Ventilation',
 		url: '/infiltration-and-ventilation/ventilation',
+		type: PageType.Task,
+		parentId: 'infiltrationAndVentilation'
+	},
+	{
+		id: 'airPermeablity',
+		title: 'Air Permeablity',
+		url: '/infiltration-and-ventilation/air-permeability',
+		type: PageType.Task,
+		parentId: 'infiltrationAndVentilation'
+	},
+	{
+		id: 'combustionAppliances',
+		title: 'Combustion Appliances',
+		url: '/infiltration-and-ventilation/combustion-appliances',
 		type: PageType.Task,
 		parentId: 'infiltrationAndVentilation'
 	},

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { SummarySection } from '~/components/GovSummaryCard.vue';
+import type { SummarySection } from '~/common.types';
+import { getTabItems, getUrl } from '#imports';
 
 definePageMeta({ layout: false });
 
@@ -33,7 +34,16 @@ const summarySections: SummarySection[] = [
 				<Title>{{ title }}</Title>
 			</Head>
 			<h1 class="govuk-heading-l">{{ title }}</h1>
-			<GovSummaryCard :summary-sections="summarySections" />
+			<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
+				<GovSummaryTab :summary="hotWaterDistributionSummary" :selected="tabProps.currentTab === 0">
+					<template #empty>
+						<h2 class="govuk-heading-m">No distributions added</h2>
+						<NuxtLink class="govuk-link" :to="`${getUrl(hotWaterDistributionSummary.id)}/create`">
+							Add distributions
+						</NuxtLink>
+					</template>
+				</GovSummaryTab>
+			</GovTabs>
 			<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 		</NuxtLayout>
 	</div>

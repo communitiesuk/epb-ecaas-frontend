@@ -3,30 +3,29 @@ const title = "Hot water distribution";
 const page = usePage();
 const store = useEcaasStore();
 
-const { distributions = [] } = store.hotWaterOutlets.hotWaterDistribution.data;
+const { data = [] } = store.hotWaterOutlets.hotWaterDistribution;
 
 function handleRemove(index: number) {
-	distributions.splice(index, 1);
+	data.splice(index, 1);
 
 	store.$patch({
 		hotWaterOutlets: {
 			hotWaterDistribution: {
-				data: {
-					distributions: distributions.length ? distributions : undefined
-				}
+				data,
+				complete: data.length > 0
 			}
 		}
 	});
 }
 
 function handleDuplicate(index: number) {
-	const distribution = distributions[index];
+	const distribution = data[index];
 
 	if (distribution) {
-		const duplicates = distributions.filter(d => d.name.match(duplicateNamePattern(distribution.name)));
+		const duplicates = data.filter(d => d.name.match(duplicateNamePattern(distribution.name)));
 
 		store.$patch((state) => {
-			state.hotWaterOutlets.hotWaterDistribution.data.distributions?.push({
+			state.hotWaterOutlets.hotWaterDistribution.data.push({
 				...distribution,
 				name: `${distribution.name} (${duplicates.length})`
 			});
@@ -44,7 +43,7 @@ function handleDuplicate(index: number) {
 		id="hotwater"
 		title="Hot water distribution"
 		:form-url="page?.url!"
-		:items="store.hotWaterOutlets.hotWaterDistribution.data.distributions?.map(x => x.name)"
+		:items="store.hotWaterOutlets.hotWaterDistribution.data.map(x => x.name)"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
