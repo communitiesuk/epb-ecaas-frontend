@@ -16,6 +16,7 @@ phases:
       - zip -r nuxt-lambda.zip .
       - cd ../..
       - mv .output/server/nuxt-lambda.zip nuxt-lambda.zip
+      - rsync -Hav ./node_modules/govuk-frontend/dist/govuk/assets/ ./_assets/
       - rsync -Hav .output/public/ ./static/
 
   post_build:
@@ -26,3 +27,4 @@ artifacts:
   files:
     - nuxt-lambda.zip
     - 'static/**/*'
+    - '_assets/**/*'
