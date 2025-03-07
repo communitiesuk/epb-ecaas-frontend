@@ -24,7 +24,7 @@ const saveForm = (fields: CeilingData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '180' ? 180 : fields.pitch,
+			pitch: fields.pitchOption === '0' ? 0 : fields.pitch,
 			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 		};
 
@@ -106,7 +106,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				id="pitchOption"
 				type="govRadios"
 				:options="{
-					'180': '180',
+					'0': '0',
 					custom: 'Custom'
 				}"
 				label="Pitch"

@@ -19,7 +19,7 @@ const saveForm = (fields: ExposedFloorData) => {
 		const floor: ExposedFloorData = {
 			name: fields.name,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '0' ? 0 : fields.pitch,
+			pitch: fields.pitchOption === '180' ? 180 : fields.pitch,
 			orientation: fields.orientation,
 			height: fields.height,
 			width: fields.width,
@@ -75,7 +75,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="pitchOption"
 			type="govRadios"
 			:options="{
-				'0': '0',
+				'180': '180',
 				custom: 'Custom'
 			}"
 			label="Pitch"
