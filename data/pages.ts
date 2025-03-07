@@ -271,15 +271,8 @@ const pagesData: Array<Page> = [
 		parentId: 'livingSpaceFabric'
 	},
 	{
-		id: 'windowsCreate',
-		title: 'Create',
-		url: '/living-space/windows/create',
-		type: PageType.Task,
-		parentId: 'livingSpaceWindows'
-	},
-	{
-		id: 'windowsEdit',
-		title: 'Edit',
+		id: 'livingSpaceWindow',
+		title: 'Window',
 		url: '/living-space/windows/:window',
 		type: PageType.Task,
 		parentId: 'livingSpaceWindows'

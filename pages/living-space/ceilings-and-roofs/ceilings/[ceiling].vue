@@ -101,7 +101,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | number | min:0.01 | max:10"
 			/>
 			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
-      <MassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+			<MassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 			<FormKit
 				id="pitchOption"
 				type="govRadios"

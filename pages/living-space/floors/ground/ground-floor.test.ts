@@ -16,8 +16,8 @@ describe('ground floor', () => {
 		name: "Ground 1",
 		surfaceAreaInZone: 5,
 		surfaceAreaAllZones: 0,
-		pitchOption: '0',
-		pitch: 0,
+		pitchOption: '180',
+		pitch: 180,
 		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: 'internal',
@@ -71,7 +71,7 @@ describe('ground floor', () => {
 		await user.type(screen.getByTestId('name'), 'Ground 1');
 		await user.type(screen.getByTestId('surfaceAreaInZone'), '5');
 		await user.type(screen.getByTestId('surfaceAreaAllZones'), '0');
-		await user.click(screen.getByTestId('pitchOption_0'));
+		await user.click(screen.getByTestId('pitchOption_180'));
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.type(screen.getByTestId('kappaValue'), '100');
 		await user.click(screen.getByTestId('massDistributionClass_internal'));
@@ -112,7 +112,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Ground 1');
 			expect((await screen.findByTestId('surfaceAreaInZone') as HTMLInputElement).value).toBe('5');
 			expect((await screen.findByTestId('surfaceAreaAllZones') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('pitchOption_0')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('pitchOption_180')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 			expect((await screen.findByTestId('kappaValue') as HTMLInputElement).value).toBe('100');
 			expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);

@@ -171,7 +171,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="W/(m2.K)"
 		/>
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
-    <MassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<MassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
 			type="govButton"
 			label="Save and continue"

@@ -19,8 +19,8 @@ describe('ceiling', () => {
 		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: 'internal',
-		pitchOption: '180',
-		pitch: 180
+		pitchOption: '0',
+		pitch: 0
 	};
 
 	const internalFloorWithUnheated: CeilingData = {
@@ -39,7 +39,7 @@ describe('ceiling', () => {
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.type(screen.getByTestId('kappaValue'), '100');
 		await user.click(screen.getByTestId('massDistributionClass_internal'));
-		await user.click(screen.getByTestId('pitchOption_180'));
+		await user.click(screen.getByTestId('pitchOption_0'));
 	};
 	
 	describe('when type of ceiling is heated space', () => {
@@ -78,7 +78,7 @@ describe('ceiling', () => {
 			expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 			expect((await screen.findByTestId('kappaValue') as HTMLInputElement).value).toBe('100');
 			expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('pitchOption_180')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('pitchOption_0')).hasAttribute('checked')).toBe(true);
 		});
 
 		it('requires additional fields when heated space is selected', async () => {
