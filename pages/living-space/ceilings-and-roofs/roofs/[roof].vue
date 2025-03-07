@@ -158,14 +158,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			suffix-text="m2"
 		/>
-		<FormKit
-			id="solarAbsorbtionCoefficient"
-			type="govInputFloat"
-			label="Solar absorption coefficient"
-			help="Solar absorption coefficient at the external surface (dimensionless), the proportion of solar radiation which is absorbed. Decimal between 0-1."
-			name="solarAbsorbtionCoefficient"
-			validation="required | number | min:0.01 | max:1"
-		/>
+		<FieldsSolarAbsorptionCoefficient id="solarAbsorbtionCoefficient" name="solarAbsorbtionCoefficient" />
 		<FormKit
 			id="uValue"
 			type="govInputWithSuffix"
