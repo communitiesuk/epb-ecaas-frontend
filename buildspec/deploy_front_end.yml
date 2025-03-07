@@ -5,13 +5,7 @@ phases:
     commands:
       - bash ./scripts/assume_role.sh arn:aws:iam::$AWS_ACCOUNT_ID:role/ci-server ci_server
       - export AWS_PROFILE=ci_server
-      - aws lambda update-function-configuration --function-name front-end-lambda --environment Variables={NUXT_APP_CDN_URL=https://dimijf1zo5k0x.cloudfront.net/static}
-      # pause to avoid conflict
-      # TODO - can we check state instead?
-      - sleep 10
-      - ls -al $CODEBUILD_SRC_DIR_build_frontend_output
       - aws s3 sync --delete $CODEBUILD_SRC_DIR_build_frontend_output s3://epb-ecaas-front-end-s3-bucket --exclude "nuxt-lambda*"
-      - sleep 1
       - aws lambda update-function-code --function-name front-end-lambda --zip-file fileb://$CODEBUILD_SRC_DIR_build_frontend_output/nuxt-lambda.zip
   post_build:
     commands:
