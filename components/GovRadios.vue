@@ -36,7 +36,9 @@ function handleInput(e) {
 			<div v-if="help" :id="`${id}_hint`" class="govuk-hint">
 				{{ help }}
 			</div>
-			<GovDetails v-if="details" :summary-text="details.summaryText" :text="details.text" classes="govuk-!-margin-bottom-4" />
+			<GovDetails v-if="details" :summary-text="details.summaryText" classes="govuk-!-margin-bottom-4">
+				{{ details.text }}
+			</GovDetails>
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>

@@ -151,15 +151,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
 		/>
-		<FormKit
-			id="kappaValue"
-			type="govInputWithSuffix"
-			suffix-text="J/m2.K"
-			label="Areal heat capacity"
-			help="This is the total heat capacity of all the construction layers, that is, the sum of the heat capacities of each individual layers"
-			name="kappaValue"
-			validation="required | number | min:100 | max:5000000"
-		/>
+		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
 		<FormKit
 			id="massDistributionClass"
 			type="govRadios"

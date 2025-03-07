@@ -58,9 +58,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovDetails
 			class="summary-text"
 			:summary-text="`Typical input values`"
-			:text="`Length = 20m\nInternal diameter = 0.022m`"
-			classes="govuk-!-margin-bottom-4"
-		/>
+			classes="govuk-!-margin-bottom-4">
+			Length = 20m<br>
+			Internal diameter = 0.022m
+		</GovDetails>
 
 		<FormKit
 			id="name"

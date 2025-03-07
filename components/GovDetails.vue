@@ -1,7 +1,6 @@
 <script setup lang="ts">
 export interface GovDetailsProps {
 	summaryText: string;
-	text: string;
 	classes?: string;
 }
 
@@ -16,7 +15,7 @@ defineProps<GovDetailsProps>();
 			</span>
 		</summary>
 		<div class="govuk-details__text">
-			{{ text }}
+			<slot />
 		</div>
 	</details>
 </template>

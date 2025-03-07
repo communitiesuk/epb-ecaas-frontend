@@ -95,15 +95,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | number | min:0.01 | max:10"
 				suffix-text="W/(m2.K)"
 			/>
-			<FormKit
-				id="kappaValue"
-				type="govInputWithSuffix"
-				suffix-text="J/m2.K"
-				label="Areal heat capacity"
-				help="Effective areal heat capacity or kappa value. This is the total heat capacity of all the construction layers, that is, the sum of the heat capacities of each individual layers. (Note that this is different to the effectiveness thickness definition of areal heat capacity used in SAP10 and in other monthly models.)"
-				name="kappaValue"
-				validation="required | number | min:100 | max:5000000"
-			/>
+			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
 			<FormKit
 				id="massDistributionClass"
 				type="govRadios"
