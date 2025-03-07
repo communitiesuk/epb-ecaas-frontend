@@ -294,7 +294,7 @@ const windowData = store.livingSpaceFabric.livingSpaceWindows.data;
 const windowSummary: SummarySection = {
 	id: 'livingSpaceWindows',
 	label: 'Windows',
-	data: windowData.windowObjects?.map(x => {
+	data: windowData.map(x => {
 		return {
 			"Name": x.name,
 			"Orientation": x.orientation,

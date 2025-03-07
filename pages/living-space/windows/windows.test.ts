@@ -88,9 +88,7 @@ describe('windows', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWindows: {
-					data: {
-						windowObjects:[window1]
-					}
+					data: [window1]
 				}
 			}
 		});
@@ -108,7 +106,7 @@ describe('windows', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWindows: {
-					data:{windowObjects: [window1, window2, window3]}
+					data: [window1, window2, window3]
 				}
 			}
 		});
@@ -127,7 +125,7 @@ describe('windows', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWindows: {
-					data:{windowObjects: [window1, window2]}
+					data: [window1, window2]
 				}
 			}
 		});

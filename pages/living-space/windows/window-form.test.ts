@@ -12,7 +12,7 @@ describe('window', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const state: WindowObject = {
+	const state: WindowData = {
 		name: "Window 1",
 		orientation: 1,
 		surfaceArea: 1,
@@ -68,7 +68,7 @@ describe('window', () => {
 
 		const { data, complete } = store.livingSpaceFabric.livingSpaceWindows;
 		
-		expect(data.windowObjects?.[0]).toEqual(state);
+		expect(data[0]).toEqual(state);
 		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/windows');
 	});
@@ -77,9 +77,7 @@ describe('window', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWindows: {
-					data: {
-						windowObjects:[state]
-					}
+					data: [state]
 				}
 			}
 		});
