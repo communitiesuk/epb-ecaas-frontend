@@ -16,7 +16,7 @@ function getInitialState(): EcaasState {
 			mechanicalVentilation: { data: {} },
 		},
 		hotWaterOutlets: {
-			hotWaterDistribution: { data: {} },
+			hotWaterDistribution: { data: [] },
 		},
 		livingSpaceFabric: {
 			livingSpaceFloors: {

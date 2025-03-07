@@ -11,7 +11,7 @@ function handleRemove(index: number) {
 	store.$patch({
 		livingSpaceFabric: {
 			livingSpaceWindows: {
-				data: data.length ? data : undefined,
+				data,
 				complete: data.length > 0
 			}
 		}
@@ -45,7 +45,7 @@ function handleDuplicate(index: number) {
 		id="windows"
 		title="Window"
 		:form-url="page?.url!"
-		:items="store.livingSpaceFabric.livingSpaceWindows.data?.map(x => x.name)"
+		:items="store.livingSpaceFabric.livingSpaceWindows.data.map(x => x.name)"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>

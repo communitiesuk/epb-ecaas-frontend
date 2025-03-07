@@ -337,7 +337,7 @@ export type SpaceHeatControlSystemData = {
 };
 
 export interface HotWaterOutlets {
-	hotWaterDistribution: EcaasForm<HotWaterDistribution>;
+	hotWaterDistribution: EcaasForm<HotWaterDistributionData[]>;
 }
 
 export type HotWaterDistributionData = {
@@ -346,10 +346,6 @@ export type HotWaterDistributionData = {
 	location: string;
 	internalDiameter?: number;
 };
-
-export interface HotWaterDistribution {
-	distributions?: HotWaterDistributionData[]
-}
 
 export interface InfiltrationAndVentilation {
 	mechanicalVentilation: EcaasForm<MechanicalVentilation>

@@ -38,7 +38,7 @@ describe('Hot water distribution form', () => {
 		
 		const { data, complete } = store.hotWaterOutlets.hotWaterDistribution;
 
-		expect(data.distributions?.[0]).toEqual(state);
+		expect(data[0]).toEqual(state);
 		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/hot-water-outlets/hot-water-distribution');
 	});
@@ -47,9 +47,7 @@ describe('Hot water distribution form', () => {
 		store.$patch({
 			hotWaterOutlets: {
 				hotWaterDistribution: {
-					data: {
-						distributions: [state]
-					}
+					data: [state]
 				}
 			}
 		});

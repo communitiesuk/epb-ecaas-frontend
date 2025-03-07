@@ -28,9 +28,7 @@ describe('Hot water distribution', () => {
 		store.$patch({
 			hotWaterOutlets: {
 				hotWaterDistribution: {
-					data: {
-						distributions: [distribution1]
-					}
+					data: [distribution1]
 				}
 			}
 		});
@@ -49,9 +47,7 @@ describe('Hot water distribution', () => {
 		store.$patch({
 			hotWaterOutlets: {
 				hotWaterDistribution: {
-					data: {
-						distributions: [distribution1, distribution2]
-					}
+					data: [distribution1, distribution2]
 				}
 			}
 		});
