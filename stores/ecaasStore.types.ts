@@ -348,6 +348,7 @@ export type HotWaterDistributionData = {
 export interface InfiltrationAndVentilation {
 	mechanicalVentilation: EcaasForm<MechanicalVentilation>;
 	vents: EcaasForm<VentData[]>;
+	combustionAppliances: CombustionAppliancesData;
 	ventilation: EcaasForm<VentilationData>;
 }
 
@@ -381,6 +382,39 @@ export type VentData = {
 	pressureDifference: number;
 	orientation: number;
 	pitch: number;
+};
+
+export interface CombustionAppliancesData {
+	openFireplace: EcaasForm<OpenFireplaceData[]>
+	closedFireplaceWithFan: EcaasForm<ClosedFireplaceWithFanData[]>
+	openGasFlueBalancer: EcaasForm<OpenGasFlueBalancerData[]>
+	openGasKitchenStove: EcaasForm<OpenGasKitchenStoveData[]>
+	openGasFire: EcaasForm<OpenGasFireData[]>
+	closedFire: EcaasForm<ClosedFireData[]>
+}
+
+export type OpenFireplaceData = {
+	name: string;
+};
+
+export type ClosedFireplaceWithFanData = {
+	name: string;
+};
+
+export type OpenGasFlueBalancerData = {
+	name: string;
+};
+
+export type OpenGasKitchenStoveData = {
+	name: string;
+};
+
+export type OpenGasFireData = {
+	name: string;
+};
+
+export type ClosedFireData = {
+	name: string;
 };
 
 export interface VentilationData {

@@ -15,6 +15,14 @@ function getInitialState(): EcaasState {
 		infiltrationAndVentilation: {
 			mechanicalVentilation: { data: {} },
 			vents: { data: [] },
+			combustionAppliances: {
+				openFireplace: { data: [] },
+				closedFireplaceWithFan: { data: [] },
+				openGasFlueBalancer: { data: [] },
+				openGasKitchenStove: { data: [] },
+				openGasFire: { data: [] },
+				closedFire: { data: [] },
+			},
 			ventilation: { data: {} }
 		},
 		hotWaterOutlets: {
