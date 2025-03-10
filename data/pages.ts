@@ -3,6 +3,7 @@ export enum PageType {
 	Task,
 	TaskGroup,
 	Summary,
+	Content
 };
 
 export interface Page {
@@ -234,6 +235,13 @@ const pagesData: Array<Page> = [
 		url: '/living-space/walls/external/:wall',
 		type: PageType.Task,
 		parentId: 'livingSpaceWalls'
+	},
+	{
+		id: 'calculatingDistantShading',
+		title: 'Calculating distant shading',
+		url: '/living-space/walls/external/calculating-distant-shading',
+		type: PageType.Content,
+		parentId: 'livingSpaceExternalWall'
 	},
 	{
 		id: 'livingSpaceInternalWall',
