@@ -15,8 +15,8 @@ describe('roof', () => {
 	const roof: RoofData = {
 		name: "Roof 1",
 		typeOfRoof: 'flat',
-		pitchOption: '180',
-		pitch: 180,
+		pitchOption: '0',
+		pitch: 0,
 		orientation: 0,
 		height: 1,
 		width: 1,
@@ -35,7 +35,7 @@ describe('roof', () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Roof 1');
 		await user.click(screen.getByTestId('typeOfRoof_flat'));
-		await user.click(screen.getByTestId('pitchOption_180'));
+		await user.click(screen.getByTestId('pitchOption_0'));
 		await user.type(screen.getByTestId('orientation'), '0');
 		await user.type(screen.getByTestId('height'), '1');
 		await user.type(screen.getByTestId('width'), '1');
@@ -77,7 +77,7 @@ describe('roof', () => {
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Roof 1');
 		expect((await screen.findByTestId('typeOfRoof_flat')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('pitchOption_180')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('pitchOption_0')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('orientation') as HTMLInputElement).value).toBe('0');
 		expect((await screen.findByTestId('height') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('1');
