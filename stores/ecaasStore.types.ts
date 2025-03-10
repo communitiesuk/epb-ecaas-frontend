@@ -346,7 +346,8 @@ export type HotWaterDistributionData = {
 };
 
 export interface InfiltrationAndVentilation {
-	mechanicalVentilation: EcaasForm<MechanicalVentilation>
+	mechanicalVentilation: EcaasForm<MechanicalVentilation>;
+	vents: EcaasForm<VentData[]>;
 }
 
 export interface MechanicalVentilation {
@@ -368,4 +369,8 @@ export type MechanicalVentilationObject = {
 	lengthOfDucwork?: number;
 	thermalInsulationConductivityOfDuctwork?: number;
 	surfaceReflectivity?: string;
+};
+
+export type VentData = {
+	name: string;
 };

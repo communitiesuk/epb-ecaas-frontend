@@ -8,7 +8,7 @@ describe('windows', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const window1: WindowObject = {
+	const window1: WindowData = {
 		name: "Window 1",
 		orientation: 1,
 		surfaceArea: 1,
@@ -32,7 +32,7 @@ describe('windows', () => {
 		solarTransmittenceReduction: 0.1,
 	};
 
-	const window2: WindowObject = {
+	const window2: WindowData = {
 		name: "Window 2",
 		orientation: 1,
 		surfaceArea: 1,
@@ -56,7 +56,7 @@ describe('windows', () => {
 		solarTransmittenceReduction: 0.1,
 	};
 
-	const window3: WindowObject = {
+	const window3: WindowData = {
 		name: "Window 3",
 		orientation: 1,
 		surfaceArea: 1,
@@ -121,6 +121,7 @@ describe('windows', () => {
 		expect(within(populatedList).queryByText('Window 2')).toBeNull();
 
 	});
+	
 	it('window is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			livingSpaceFabric: {
