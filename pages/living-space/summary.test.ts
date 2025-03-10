@@ -122,7 +122,7 @@ const wallsData: WallsData = {
 const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 	livingSpaceCeilings: {
 		data: [{
-			type: 'heated',
+			type: 'heatedSpace',
 			name: "Ceiling 1",
 			surfaceArea: 5,
 			uValue: 1,
@@ -554,7 +554,7 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type of ceiling": 'heated',
+				"Type of ceiling": 'Heated space',
 				"Name": 'Ceiling 1',
 				"Surface area": 5,
 				"U-value": 1,

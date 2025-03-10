@@ -65,8 +65,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="type"
 			type="govRadios"
 			:options="{
-				heated: 'Ceiling to heated space ',
-				unheated: 'Ceiling to unheated space',
+				heatedSpace: 'Ceiling to heated space ',
+				unheatedSpace: 'Ceiling to unheated space',
 			}"
 			label="Type of ceiling"
 			help="This affects what inputs are necessary"
@@ -124,7 +124,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			/>
 		</template>
 		<FormKit
-			v-if="model.type === 'unheated'"
+			v-if="model.type === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="m2·K/W"

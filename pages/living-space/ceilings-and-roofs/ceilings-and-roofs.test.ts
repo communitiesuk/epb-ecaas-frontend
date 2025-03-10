@@ -9,7 +9,7 @@ describe('ceilings', () => {
 	const user = userEvent.setup();
 
 	const ceiling1: CeilingData = {
-		type: 'heated',
+		type: 'heatedSpace',
 		name: "Ceiling 1",
 		surfaceArea: 5,
 		uValue: 1,
@@ -20,7 +20,7 @@ describe('ceilings', () => {
 	};
 
 	const ceiling2: CeilingData = {
-		type: 'heated',
+		type: 'heatedSpace',
 		name: "Ceiling 2",
 		surfaceArea: 5,
 		uValue: 1,
@@ -31,7 +31,7 @@ describe('ceilings', () => {
 	};
 
 	const ceiling3: CeilingData = {
-		type: 'heated',
+		type: 'heatedSpace',
 		name: "Ceiling 3",
 		surfaceArea: 5,
 		uValue: 1,

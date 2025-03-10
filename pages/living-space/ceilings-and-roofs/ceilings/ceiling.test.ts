@@ -13,7 +13,7 @@ describe('ceiling', () => {
 	const user = userEvent.setup();
 
 	const internalFloor: CeilingData = {
-		type: 'heated',
+		type: 'heatedSpace',
 		name: "Ceiling 1",
 		surfaceArea: 5,
 		uValue: 1,
@@ -25,7 +25,7 @@ describe('ceiling', () => {
 
 	const internalFloorWithUnheated: CeilingData = {
 		...internalFloor,
-		type: 'unheated',
+		type: 'unheatedSpace',
 		thermalResistanceOfAdjacentUnheatedSpace: 0
 	};
 
@@ -46,7 +46,7 @@ describe('ceiling', () => {
 		it('data is saved to store state when form is valid', async () => {
 			await renderSuspended(Ceiling);
 	
-			await user.click(screen.getByTestId('type_heated'));
+			await user.click(screen.getByTestId('type_heatedSpace'));
 			await populateValidForm();
 			await user.click(screen.getByRole('button'));
 	
@@ -72,7 +72,7 @@ describe('ceiling', () => {
 				}
 			});
 	
-			expect((await screen.findByTestId('type_heated')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('type_heatedSpace')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Ceiling 1');
 			expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('5');
 			expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
@@ -84,7 +84,7 @@ describe('ceiling', () => {
 		it('requires additional fields when heated space is selected', async () => {
 			await renderSuspended(Ceiling);
 	
-			await user.click(screen.getByTestId('type_heated'));
+			await user.click(screen.getByTestId('type_heatedSpace'));
 			await user.click(screen.getByRole('button'));
 	
 			expect((await screen.findByTestId('name_error'))).toBeDefined();
@@ -100,7 +100,7 @@ describe('ceiling', () => {
 		it('data is saved to store state when form is valid', async () => {
 			await renderSuspended(Ceiling);
 	
-			await user.click(screen.getByTestId('type_unheated'));
+			await user.click(screen.getByTestId('type_unheatedSpace'));
 			await populateValidForm();
 			await user.type(screen.getByTestId('thermalResistanceOfAdjacentUnheatedSpace'), '0');
 			await user.tab();
@@ -128,14 +128,14 @@ describe('ceiling', () => {
 				}
 			});
 
-			expect((await screen.findByTestId('type_unheated')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('type_unheatedSpace')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('thermalResistanceOfAdjacentUnheatedSpace') as HTMLInputElement).value).toBe('0');
 		});
 
 		it('requires additional fields when heated space is selected', async () => {
 			await renderSuspended(Ceiling);
 	
-			await user.click(screen.getByTestId('type_unheated'));
+			await user.click(screen.getByTestId('type_unheatedSpace'));
 			await user.click(screen.getByRole('button'));
 	
 			expect((await screen.findByTestId('thermalResistanceOfAdjacentUnheatedSpace_error'))).toBeDefined();
@@ -161,7 +161,7 @@ describe('ceiling', () => {
 	it('requires pitch when custom pitch option is selected', async () => {
 		await renderSuspended(Ceiling);
 
-		await user.click(screen.getByTestId('type_heated'));
+		await user.click(screen.getByTestId('type_heatedSpace'));
 		await user.click(screen.getByTestId('pitchOption_custom'));
 		await user.click(screen.getByRole('button'));
 
@@ -171,7 +171,7 @@ describe('ceiling', () => {
 	it('saves custom pitch when custom pitch option is selected', async () => {
 		await renderSuspended(Ceiling);
 
-		await user.click(screen.getByTestId('type_heated'));
+		await user.click(screen.getByTestId('type_heatedSpace'));
 		await populateValidForm();
 		await user.click(screen.getByTestId('pitchOption_custom'));
 		await user.type(screen.getByTestId('pitch'), '90');
@@ -186,7 +186,7 @@ describe('ceiling', () => {
 	it('navigates to ceilings and roofs page when valid form is completed', async () => {
 		await renderSuspended(Ceiling);
 	
-		await user.click(screen.getByTestId('type_heated'));
+		await user.click(screen.getByTestId('type_heatedSpace'));
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
