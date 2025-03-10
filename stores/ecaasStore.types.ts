@@ -348,6 +348,7 @@ export type HotWaterDistributionData = {
 export interface InfiltrationAndVentilation {
 	mechanicalVentilation: EcaasForm<MechanicalVentilation>;
 	vents: EcaasForm<VentData[]>;
+	ventilation: EcaasForm<VentilationData>;
 }
 
 export interface MechanicalVentilation {
@@ -381,3 +382,9 @@ export type VentData = {
 	orientation: number;
 	pitch: number;
 };
+
+export interface VentilationData {
+	zoneElevationalLevelAtBase?: number;
+	crossVentFactor?: string;
+	maxRequiredAirChangeRate?: number;
+}

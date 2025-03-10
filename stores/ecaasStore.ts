@@ -14,7 +14,8 @@ function getInitialState(): EcaasState {
 		},
 		infiltrationAndVentilation: {
 			mechanicalVentilation: { data: {} },
-			vents: { data: [] }
+			vents: { data: [] },
+			ventilation: { data: {} }
 		},
 		hotWaterOutlets: {
 			hotWaterDistribution: { data: [] },
