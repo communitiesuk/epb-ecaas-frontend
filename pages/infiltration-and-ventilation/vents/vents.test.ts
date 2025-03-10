@@ -9,14 +9,23 @@ describe('vents', () => {
 	const user = userEvent.setup();
 
 	const vent1: VentData = {
-		name: 'Vent 1'
+		name: 'Vent 1',
+		typeOfVent: 'trickle',
+		effectiveVentilationArea: 10,
+		openingRatio: 1,
+		airFlowAtMidHeightLevel: 1,
+		pressureDifference: 1,
+		orientation: 0,
+		pitch: 0
 	};
 
 	const vent2: VentData = {
+		...vent1,
 		name: 'Vent 2'
 	};
 
 	const vent3: VentData = {
+		...vent1,
 		name: 'Vent 3'
 	};
 

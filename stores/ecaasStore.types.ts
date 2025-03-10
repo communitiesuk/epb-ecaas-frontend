@@ -373,4 +373,11 @@ export type MechanicalVentilationObject = {
 
 export type VentData = {
 	name: string;
+	typeOfVent: string;
+	effectiveVentilationArea: number;
+	openingRatio: number;
+	airFlowAtMidHeightLevel: number;
+	pressureDifference: number;
+	orientation: number;
+	pitch: number;
 };
