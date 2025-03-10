@@ -3,32 +3,31 @@ const title = "Distant shading";
 const store = useEcaasStore();
 const route = useRoute();
 
-const shading = useItemToEdit('shading', store.dwellingDetails.shading.data.shadingObjects);
-const model: Ref<ShadingObject> = ref(shading!);
+const shading = useItemToEdit('shading', store.dwellingDetails.shading.data);
+const model: Ref<ShadingData> = ref(shading!);
 
-const saveForm = (fields: ShadingObject) => {
+const saveForm = (fields: ShadingData) => {
 	store.$patch((state) => {
-		const { data } = state.dwellingDetails.shading;
+		const { shading } = state.dwellingDetails;
 
-		if (!data.shadingObjects) {
-			data.shadingObjects = [];
+		if (!shading.data) {
+			shading.data = [];
 		}
 
-		const index = parseInt(route.params.shading as string);
-
-		const shading = {
+		const shadingItem: ShadingData = {
 			name: fields.name,
-			direction:
-			fields.direction,
+			startAngle: fields.startAngle,
+			endAngle: fields.endAngle,
 			objectType: fields.objectType,
 			height: fields.height,
 			distance: fields.distance
 		};
 
 		if (route.params.shading && route.params.shading !== 'create') {
-			data.shadingObjects[index] = shading;
+			const index = parseInt(route.params.shading as string);
+			shading.data[index] = shadingItem;
 		} else {
-			data.shadingObjects?.push(shading);
+			shading.data.push(shadingItem);
 		}
 
 		state.dwellingDetails.shading.complete = true;
@@ -67,19 +66,28 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<FormKit
-			id="direction"
+			id="startAngle"
 			type="govInputWithSuffix"
-			label="Direction"
-			help="What direction is the shading coming from (in degrees)?"
-			name="direction"
-			validation="required | number"
+			label="Shading start angle"
+			help="Absolute start angle from compass North of the segment."
+			name="startAngle"
+			validation="required | number | min:0 | max:360"
+			suffix-text="&deg"
+		/>
+		<FormKit
+			id="endAngle"
+			type="govInputWithSuffix"
+			label="Shading end angle"
+			help="Absolute end angle from compass North of the segment clockwise from the start angle. (E.g. the end angle must be greater than the start angle)."
+			name="endAngle"
+			validation="required | number | min:0 | max:360"
 			suffix-text="&deg"
 		/>
 		<FormKit
 			id="objectType"
 			type="govRadios"
 			label="Object Type"
-			help="What is causing the shading?"
+			help="Select what type of object is causing the shading"
 			name="objectType"
 			:options="{
 				obstacle: 'Obstacle',
@@ -94,7 +102,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m"
 			name="height"
 			validation="required | number"
-			help="How high is the object or obstacle?"
+			help="Enter the height of the object causing the shading"
 		/>
 		<FormKit
 			id="distance"
@@ -103,7 +111,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m"
 			name="distance"
 			validation="required | number"
-			help="How far away is the object or obstacle?"
+			help="Provide the distance from the dwelling to the shading object"
 		/>
 		<FormKit
 			type="govButton"

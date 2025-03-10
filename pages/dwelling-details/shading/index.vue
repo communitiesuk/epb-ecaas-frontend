@@ -3,30 +3,29 @@ const title = "Distant shading";
 const page = usePage();
 const store = useEcaasStore();
 
-const { shadingObjects = [] } = store.dwellingDetails.shading.data;
+const { data = [] } = store.dwellingDetails.shading;
 
 function handleRemove(index: number) {
-	shadingObjects.splice(index, 1);
+	data.splice(index, 1);
 
 	store.$patch({
 		dwellingDetails: {
 			shading: {
-				data: {
-					shadingObjects: shadingObjects.length ? shadingObjects : undefined
-				}
+				data,
+				complete: data.length > 0
 			}
 		}
 	});
 }
 
 function handleDuplicate(index: number) {
-	const shading = shadingObjects[index];
+	const shading = data[index];
 
 	if (shading) {
-		const duplicates = shadingObjects.filter(s => s.name.match(duplicateNamePattern(shading.name)));
+		const duplicates = data.filter(s => s.name.match(duplicateNamePattern(shading.name)));
 
 		store.$patch((state) => {
-			state.dwellingDetails.shading.data.shadingObjects?.push({
+			state.dwellingDetails.shading.data.push({
 				...shading,
 				name: `${shading.name} (${duplicates.length})`
 			});
@@ -46,7 +45,7 @@ function handleDuplicate(index: number) {
 		id="shading"
 		title="Shading"
 		:form-url="page?.url!"
-		:items="store.dwellingDetails.shading.data.shadingObjects?.map(x => x.name)"
+		:items="store.dwellingDetails.shading.data.map(x => x.name)"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>

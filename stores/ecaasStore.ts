@@ -9,7 +9,7 @@ function getInitialState(): EcaasState {
 		dwellingDetails: {
 			generalSpecifications: { data: {} },
 			appliances: { data: {} },
-			shading: { data: {} },
+			shading: { data: [] },
 			externalFactors: { data: {} },
 		},
 		infiltrationAndVentilation: {

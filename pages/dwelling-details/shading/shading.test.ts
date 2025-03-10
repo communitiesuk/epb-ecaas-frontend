@@ -7,20 +7,21 @@ import { renderSuspended } from "@nuxt/test-utils/runtime";
 describe('shading', () => {
 	const store = useEcaasStore();
 
-	const shading1: ShadingObject = {
+	const shading1: ShadingData = {
 		name: "Cherry Tree",
-		direction: 30,
+		startAngle: 10,
+		endAngle: 20,
 		objectType: "obstacle",
 		height: 3,
 		distance: 2
 	};
 
-	const shading2: ShadingObject = {
+	const shading2: ShadingData = {
 		...shading1,
 		name: 'Apple Tree'
 	};
 
-	const shading3: ShadingObject = {
+	const shading3: ShadingData = {
 		...shading1,
 		name: 'Cherry Tree out front'
 	};
@@ -35,9 +36,7 @@ describe('shading', () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
-					data: {
-						shadingObjects: [shading1]
-					}
+					data: [shading1]
 				}
 			}
 		});
@@ -57,9 +56,7 @@ describe('shading', () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
-					data: {
-						shadingObjects: [shading1, shading2]
-					}
+					data: [shading1, shading2]
 				}
 			}
 		});
@@ -76,9 +73,7 @@ describe('shading', () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
-					data: {
-						shadingObjects: [shading1, shading3]
-					}
+					data: [shading1, shading3]
 				}
 			}
 		});

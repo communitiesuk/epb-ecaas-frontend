@@ -13,7 +13,7 @@ export interface EcaasForm<T> {
 export interface DwellingDetails {
 	generalSpecifications: EcaasForm<GeneralSpecificationsData>;
 	appliances: EcaasForm<AppliancesData>;
-	shading: EcaasForm<Shading>;
+	shading: EcaasForm<ShadingData[]>;
 	externalFactors: EcaasForm<ExternalFactorsData>;
 }
 
@@ -30,17 +30,14 @@ export interface AppliancesData {
 	appliances?: string[];
 }
 
-export type ShadingObject = {
+export type ShadingData = {
 	name: string;
-	direction: number;
+	startAngle: number;
+	endAngle: number;
 	objectType: string;
 	height: number;
 	distance: number;
 };
-
-export interface Shading {
-	shadingObjects?: ShadingObject[]
-}
 
 export interface ExternalFactorsData {
 	altitude?: number;
