@@ -299,13 +299,6 @@ const pagesData: Array<Page> = [
 		parentId: 'livingSpaceThermalBridging'
 	},
 	{
-		id: 'livingSpaceLighting',
-		title: 'Lighting',
-		url: '/living-space/lighting',
-		type: PageType.Task,
-		parentId: 'livingSpaceFabric'
-	},
-	{
 		id: 'livingSpaceSummary',
 		title: 'Summary',
 		url: '/living-space/summary',
