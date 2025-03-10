@@ -14,6 +14,7 @@ amplifyconfiguration*
 
 # GOV.UK assets copied into public dir
 public/assets
+public/static/assets
 
 # Node dependencies
 node_modules
