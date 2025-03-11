@@ -134,42 +134,42 @@ const pagesData: Array<Page> = [
 	{
 		id: 'combustionAppliancesOpenFireplace',
 		title: 'Open fireplace',
-		url: '/infiltration-and-ventilation/combustion-appliances/open-fireplace/:combustion-appliance',
+		url: '/infiltration-and-ventilation/combustion-appliances/open-fireplace/:combustion',
 		type: PageType.Task,
 		parentId: 'combustionAppliances'
 	},
 	{
 		id: 'combustionAppliancesClosedFireplaceWithFan',
 		title: 'Closed fireplace with fan',
-		url: '/infiltration-and-ventilation/combustion-appliances/closed-fireplace-with-fan/:combustion-appliance',
+		url: '/infiltration-and-ventilation/combustion-appliances/closed-fireplace-with-fan/:combustion',
 		type: PageType.Task,
 		parentId: 'combustionAppliances'
 	},
 	{
 		id: 'combustionAppliancesOpenGasFlueBalancer',
 		title: 'Open gas flue balancer',
-		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-flue-balancer/:combustion-appliance',
+		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-flue-balancer/:combustion',
 		type: PageType.Task,
 		parentId: 'combustionAppliances'
 	},
 	{
 		id: 'combustionAppliancesOpenGasKitchenStove',
 		title: 'Open gas kitchen stove',
-		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-kitchen-stove/:combustion-appliance',
+		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-kitchen-stove/:combustion',
 		type: PageType.Task,
 		parentId: 'combustionAppliances'
 	},
 	{
 		id: 'combustionAppliancesOpenGasFire',
 		title: 'Open gas fire',
-		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-fire/:combustion-appliance',
+		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-fire/:combustion',
 		type: PageType.Task,
 		parentId: 'combustionAppliances'
 	},
 	{
 		id: 'combustionAppliancesClosedFire',
 		title: 'Closed fire',
-		url: '/infiltration-and-ventilation/combustion-appliances/closed-fire/:combustion-appliance',
+		url: '/infiltration-and-ventilation/combustion-appliances/closed-fire/:combustion',
 		type: PageType.Task,
 		parentId: 'combustionAppliances'
 	},
