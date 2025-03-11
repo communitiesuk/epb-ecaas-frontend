@@ -47,7 +47,7 @@ function handleDuplicate(index: number) {
 		{{ title }}
 	</h1>
 	<GovCustomList
-		id="mechanicalVentilation" title="Mechanical Ventilation" :form-url="page?.url!" :items="store.infiltrationAndVentilation.mechanicalVentilation.data.mechanicalVentilationObjects?.map(
+		id="mechanicalVentilation" title="Mechanical ventilation" :form-url="page?.url!" :items="store.infiltrationAndVentilation.mechanicalVentilation.data.mechanicalVentilationObjects?.map(
 			x => x.name)" @remove="handleRemove" @duplicate="handleDuplicate" />
 	<GovButton href="/infiltration-and-ventilation" secondary>
 		Return to overview

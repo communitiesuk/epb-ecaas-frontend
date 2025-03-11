@@ -119,7 +119,7 @@ const pagesData: Array<Page> = [
 	},
 	{
 		id: 'airPermeability',
-		title: 'Air Permeability',
+		title: 'Air permeability',
 		url: '/infiltration-and-ventilation/air-permeability',
 		type: PageType.Task,
 		parentId: 'infiltrationAndVentilation'
