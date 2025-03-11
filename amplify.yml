@@ -6,9 +6,9 @@ frontend:
         - npm ci
     build:
       commands:
-        - cp -a node_modules/govuk-frontend/dist/govuk/assets public
-        - cp -a public public/static
-        - npm run build
+        - echo "BUILD_FOR_AWS_AMPLIFY=1" >> .env
+        - cp -a node_modules/govuk-frontend/dist/govuk/assets public/assets
+        - BUILD_FOR_AWS_AMPLIFY=1 npm run build
   artifacts:
     baseDirectory: .amplify-hosting
     files:
