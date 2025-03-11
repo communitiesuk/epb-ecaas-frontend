@@ -6,7 +6,8 @@ frontend:
         - npm ci
     build:
       commands:
-        - rsync -Hav ./node_modules/govuk-frontend/dist/govuk/assets ./public/static/assets
+        - mkdir -p ./public/static/assets
+        - cp -a node_modules/govuk-frontend/dist/govuk/assets public/static/assets
         - npm run build
   artifacts:
     baseDirectory: .amplify-hosting
