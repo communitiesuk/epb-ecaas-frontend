@@ -144,7 +144,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="psiOfWallJunction"
 			type="govInputWithSuffix"
-			suffix-text="m"
+			suffix-text="W / m.K"
 			label="Psi of wall junction"
 			help="Linear thermal transmittance of the junction between the floor and the walls"
 			name="psiOfWallJunction"
