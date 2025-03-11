@@ -17,6 +17,7 @@ const saveForm = (fields: OpenFireplaceData) => {
 
 		const appliance: OpenFireplaceData = {
 			name: fields.name,
+			airSupplyToAppliance: fields.airSupplyToAppliance
 		};
 
 		if (route.params.combustion && route.params.combustion !== 'create') {
@@ -56,6 +57,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Provide a name for this open fireplace so that it can be identified later."
 			name="name"
 			validation="required"
+		/>
+		<FormKit
+			id="airSupplyToAppliance"
+			type="govRadios"
+			label="Air supply to appliance"
+			name="airSupplyToAppliance"
+			validation="required"
+			:options="{ roomAir: 'Room Air', outside: 'Outside' }"
 		/>
 
 		<FormKit

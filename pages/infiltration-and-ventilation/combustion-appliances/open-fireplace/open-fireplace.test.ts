@@ -14,6 +14,7 @@ describe('open fireplace', () => {
 
 	const openFireplace: OpenFireplaceData = {
 		name: 'Open fireplace 1',
+		airSupplyToAppliance: 'roomAir',
 	};
 
 	afterEach(() => {
@@ -24,6 +25,7 @@ describe('open fireplace', () => {
 		await renderSuspended(OpenFireplace);
 
 		await user.type(screen.getByTestId('name'), 'Open fireplace 1');
+		await user.click(screen.getByTestId('airSupplyToAppliance_roomAir'));
 
 		await user.tab();
 		await user.click(screen.getByRole('button'));

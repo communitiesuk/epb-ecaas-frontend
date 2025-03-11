@@ -392,6 +392,7 @@ export interface CombustionAppliancesData {
 
 export type OpenFireplaceData = {
 	name: string;
+	airSupplyToAppliance: string;
 };
 
 export type ClosedFireplaceWithFanData = {
