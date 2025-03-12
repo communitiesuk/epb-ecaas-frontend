@@ -386,11 +386,11 @@ export type VentData = {
 
 export interface CombustionAppliancesData {
 	openFireplace: EcaasForm<CombustionApplianceData[]>
-	closedFireplaceWithFan: EcaasForm<ClosedFireplaceWithFanData[]>
-	openGasFlueBalancer: EcaasForm<OpenGasFlueBalancerData[]>
-	openGasKitchenStove: EcaasForm<OpenGasKitchenStoveData[]>
-	openGasFire: EcaasForm<OpenGasFireData[]>
-	closedFire: EcaasForm<ClosedFireData[]>
+	closedFireplaceWithFan: EcaasForm<CombustionApplianceData[]>
+	openGasFlueBalancer: EcaasForm<CombustionApplianceData[]>
+	openGasKitchenStove: EcaasForm<CombustionApplianceData[]>
+	openGasFire: EcaasForm<CombustionApplianceData[]>
+	closedFire: EcaasForm<CombustionApplianceData[]>
 }
 
 export type CombustionApplianceData = {
@@ -398,26 +398,6 @@ export type CombustionApplianceData = {
 	airSupplyToAppliance: string;
 	exhaustMethodFromAppliance: string;
 	typeOfFuel: string;
-};
-
-export type ClosedFireplaceWithFanData = {
-	name: string;
-};
-
-export type OpenGasFlueBalancerData = {
-	name: string;
-};
-
-export type OpenGasKitchenStoveData = {
-	name: string;
-};
-
-export type OpenGasFireData = {
-	name: string;
-};
-
-export type ClosedFireData = {
-	name: string;
 };
 
 export interface VentilationData {
