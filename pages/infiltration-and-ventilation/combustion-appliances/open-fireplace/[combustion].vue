@@ -60,40 +60,9 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
-		<FormKit
-			id="airSupplyToAppliance"
-			type="govRadios"
-			label="Air supply to appliance"
-			name="airSupplyToAppliance"
-			validation="required"
-			:options="{ roomAir: 'Room air', outside: 'Outside' }"
-		/>
-		<FormKit
-			id="exhaustMethodFromAppliance"
-			type="govRadios"
-			label="Exhaust method from appliance"
-			name="exhaustMethodFromAppliance"
-			validation="required"
-			:options="{
-				intoRoom: 'Into room',
-				intoSeparateDuct: 'Into separate duct',
-				intoMechanicalVent: 'Into mechanical vent',
-			}"
-		/>
-		<FormKit
-			id="typeOfFuel"
-			type="govRadios"
-			label="Type of fuel"
-			name="typeOfFuel"
-			validation="required"
-			:options="{
-				wood: 'Wood',
-				oil: 'Oil',
-				gas: 'Gas',
-				coal: 'Coal'
-			}"
-		/>
-
+		<FieldsAirSupplyToAppliance id="airSupplyToAppliance" name="airSupplyToAppliance"/>
+		<FieldsExhaustMethodFromAppliance id="exhaustMethodFromAppliance" name="exhaustMethodFromAppliance"/>
+		<FieldsTypeOfFuel id="typeOfFuel" name="typeOfFuel"/>
 		<FormKit
 			type="govButton"
 			label="Save and continue"
