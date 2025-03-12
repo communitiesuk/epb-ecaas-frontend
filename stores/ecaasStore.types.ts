@@ -347,6 +347,7 @@ export interface InfiltrationAndVentilation {
 	vents: EcaasForm<VentData[]>;
 	combustionAppliances: CombustionAppliancesData;
 	ventilation: EcaasForm<VentilationData>;
+	airPermeability: EcaasForm<AirPermeabilityData>;
 }
 
 export interface MechanicalVentilation {
@@ -421,4 +422,11 @@ export interface VentilationData {
 	zoneElevationalLevelAtBase?: number;
 	crossVentFactor?: string;
 	maxRequiredAirChangeRate?: number;
+}
+
+export interface AirPermeabilityData {
+	zoneHeight?: number;
+	zoneEnvelopeArea?: number;
+	testPressure?: number;
+	airTightnessTestResult?: number;
 }

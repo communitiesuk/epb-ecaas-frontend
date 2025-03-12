@@ -23,7 +23,8 @@ function getInitialState(): EcaasState {
 				openGasFire: { data: [] },
 				closedFire: { data: [] },
 			},
-			ventilation: { data: {} }
+			ventilation: { data: {} },
+			airPermeability: { data: {} }
 		},
 		hotWaterOutlets: {
 			hotWaterDistribution: { data: [] },
