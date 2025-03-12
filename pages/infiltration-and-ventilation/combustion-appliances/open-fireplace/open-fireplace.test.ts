@@ -57,5 +57,8 @@ describe('open fireplace', () => {
 		});
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Open fireplace 1');
+		expect((await screen.findByTestId('airSupplyToAppliance_roomAir')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('exhaustMethodFromAppliance_intoSeparateDuct')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('typeOfFuel_coal')).hasAttribute('checked')).toBe(true);
 	});
 });
