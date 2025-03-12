@@ -17,7 +17,9 @@ const saveForm = (fields: OpenFireplaceData) => {
 
 		const appliance: OpenFireplaceData = {
 			name: fields.name,
-			airSupplyToAppliance: fields.airSupplyToAppliance
+			airSupplyToAppliance: fields.airSupplyToAppliance,
+			exhaustMethodFromAppliance: fields.exhaustMethodFromAppliance,
+			typeOfFuel: fields.typeOfFuel,
 		};
 
 		if (route.params.combustion && route.params.combustion !== 'create') {
@@ -64,7 +66,32 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Air supply to appliance"
 			name="airSupplyToAppliance"
 			validation="required"
-			:options="{ roomAir: 'Room Air', outside: 'Outside' }"
+			:options="{ roomAir: 'Room air', outside: 'Outside' }"
+		/>
+		<FormKit
+			id="exhaustMethodFromAppliance"
+			type="govRadios"
+			label="Exhaust method from appliance"
+			name="exhaustMethodFromAppliance"
+			validation="required"
+			:options="{
+				intoRoom: 'Into room',
+				intoSeparateDuct: 'Into separate duct',
+				intoMechanicalVent: 'Into mechanical vent',
+			}"
+		/>
+		<FormKit
+			id="typeOfFuel"
+			type="govRadios"
+			label="Type of fuel"
+			name="typeOfFuel"
+			validation="required"
+			:options="{
+				wood: 'Wood',
+				oil: 'Oil',
+				gas: 'Gas',
+				coal: 'Coal'
+			}"
 		/>
 
 		<FormKit

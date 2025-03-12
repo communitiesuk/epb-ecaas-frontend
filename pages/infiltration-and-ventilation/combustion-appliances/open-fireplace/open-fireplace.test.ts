@@ -15,6 +15,8 @@ describe('open fireplace', () => {
 	const openFireplace: OpenFireplaceData = {
 		name: 'Open fireplace 1',
 		airSupplyToAppliance: 'roomAir',
+		exhaustMethodFromAppliance: 'intoSeparateDuct',
+		typeOfFuel: 'coal',
 	};
 
 	afterEach(() => {
@@ -26,6 +28,8 @@ describe('open fireplace', () => {
 
 		await user.type(screen.getByTestId('name'), 'Open fireplace 1');
 		await user.click(screen.getByTestId('airSupplyToAppliance_roomAir'));
+		await user.click(screen.getByTestId('exhaustMethodFromAppliance_intoSeparateDuct'));
+		await user.click(screen.getByTestId('typeOfFuel_coal'));
 
 		await user.tab();
 		await user.click(screen.getByRole('button'));
