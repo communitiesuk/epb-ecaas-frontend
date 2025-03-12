@@ -1,6 +1,6 @@
 import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import {screen} from '@testing-library/vue';
-import OpenFireplace from './[appliance].vue';
+import OpenFireplace from './[combustion].vue';
 import userEvent from "@testing-library/user-event";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
