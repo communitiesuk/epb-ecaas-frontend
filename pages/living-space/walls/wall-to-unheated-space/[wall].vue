@@ -3,7 +3,7 @@
 const title = "Wall to unheated space";
 const store = useEcaasStore();
 const route = useRoute();
- 
+
 const wallData = useItemToEdit('wall', store.livingSpaceFabric.livingSpaceWalls.livingSpaceWallToUnheatedSpace?.data);
 const model: Ref<WallsToUnheatedSpaceData> = ref(wallData!);
 
@@ -12,14 +12,14 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 		const {livingSpaceWalls} = state.livingSpaceFabric;
 
 		if (!livingSpaceWalls.livingSpaceWallToUnheatedSpace?.data) {
-			livingSpaceWalls.livingSpaceWallToUnheatedSpace = { data: [] };
+			livingSpaceWalls.livingSpaceWallToUnheatedSpace = {data: []};
 		}
 
 		const wall: WallsToUnheatedSpaceData = {
-			name:fields.name,
+			name: fields.name,
 			surfaceAreaOfElement: fields.surfaceAreaOfElement,
 			uValue: fields.uValue,
-			arealHeatCapacity : fields.arealHeatCapacity,
+			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
@@ -41,7 +41,7 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 };
 
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -64,7 +64,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Give this element a name so it can be identified later"
+			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
 		/>
@@ -86,8 +86,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
 		/>
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
+		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
 			id="pitchOption"
 			type="govRadios"

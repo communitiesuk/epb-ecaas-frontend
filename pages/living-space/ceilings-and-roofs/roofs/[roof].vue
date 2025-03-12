@@ -9,10 +9,10 @@ const model: Ref<RoofData> = ref(roofData!);
 
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
-		const { livingSpaceCeilingsAndRoofs } = state.livingSpaceFabric;
-		
+		const {livingSpaceCeilingsAndRoofs} = state.livingSpaceFabric;
+
 		if (!livingSpaceCeilingsAndRoofs.livingSpaceRoofs?.data) {
-			livingSpaceCeilingsAndRoofs.livingSpaceRoofs = { data: [] };
+			livingSpaceCeilingsAndRoofs.livingSpaceRoofs = {data: []};
 		}
 
 		const roof: RoofData = {
@@ -44,7 +44,7 @@ const saveForm = (fields: RoofData) => {
 	navigateTo("/living-space/ceilings-and-roofs");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -65,7 +65,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Give this element a name so it can be identified later."
+			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
 		/>
@@ -159,7 +159,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			suffix-text="m2"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorbtionCoefficient" name="solarAbsorbtionCoefficient" />
+		<FieldsSolarAbsorptionCoefficient id="solarAbsorbtionCoefficient" name="solarAbsorbtionCoefficient"/>
 		<FormKit
 			id="uValue"
 			type="govInputWithSuffix"
@@ -169,7 +169,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10"
 			suffix-text="W/(m2.K)"
 		/>
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
+		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
 			type="govButton"

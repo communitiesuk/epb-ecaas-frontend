@@ -9,7 +9,7 @@ const model: Ref<GroundFloorData> = ref(floorData!);
 
 const saveForm = (fields: GroundFloorData) => {
 	store.$patch((state) => {
-		const { livingSpaceFloors } = state.livingSpaceFabric;
+		const {livingSpaceFloors} = state.livingSpaceFabric;
 
 		if (!livingSpaceFloors.livingSpaceGroundFloor.data) {
 			livingSpaceFloors.livingSpaceGroundFloor.data = [];
@@ -57,7 +57,7 @@ const saveForm = (fields: GroundFloorData) => {
 	navigateTo("/living-space/floors");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -78,7 +78,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Give this element a name so it can be identified later."
+			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
 		/>
@@ -129,7 +129,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
 		/>
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
+		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
 			id="perimeter"
@@ -195,7 +195,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required"
 			/>
 		</template>
-		
+
 		<template v-if="model.typeOfGroundFloor === 'suspendedFloor'">
 			<FormKit
 				id="heightOfFloorUpperSurface"

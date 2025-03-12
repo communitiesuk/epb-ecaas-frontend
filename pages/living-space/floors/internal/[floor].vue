@@ -9,10 +9,10 @@ const model: Ref<InternalFloorData> = ref(floorData!);
 
 const saveForm = (fields: InternalFloorData) => {
 	store.$patch((state) => {
-		const { livingSpaceFloors } = state.livingSpaceFabric;
-		
+		const {livingSpaceFloors} = state.livingSpaceFabric;
+
 		if (!livingSpaceFloors.livingSpaceInternalFloor?.data) {
-			livingSpaceFloors.livingSpaceInternalFloor = { data: [] };
+			livingSpaceFloors.livingSpaceInternalFloor = {data: []};
 		}
 
 		const floor: InternalFloorData = {
@@ -40,7 +40,7 @@ const saveForm = (fields: InternalFloorData) => {
 	navigateTo("/living-space/floors");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -74,7 +74,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				id="name"
 				type="govInputText"
 				label="Name"
-				help="Give this element a name so it can be identified later."
+				help="Provide a name for this element so that it can be identified later"
 				name="name"
 				validation="required"
 			/>
@@ -96,7 +96,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | number | min:0.01 | max:10"
 				suffix-text="W/(m2.K)"
 			/>
-			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
+			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 			<FormKit
 				id="pitchOption"

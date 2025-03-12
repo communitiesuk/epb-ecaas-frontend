@@ -1,6 +1,6 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import {renderSuspended} from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import {screen, within } from '@testing-library/vue';
+import {screen, within} from '@testing-library/vue';
 import CombustionAppliances from './index.vue';
 import {expect} from "vitest";
 
@@ -8,15 +8,15 @@ describe('open fireplace', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const openFireplace1: OpenFireplaceData = {
+	const openFireplace1: CombustionApplianceData = {
 		name: 'Open fireplace 1'
 	};
 
-	const openFireplace2: OpenFireplaceData = {
+	const openFireplace2: CombustionApplianceData = {
 		name: 'Open fireplace 2'
 	};
 
-	const openFireplace3: OpenFireplaceData = {
+	const openFireplace3: CombustionApplianceData = {
 		name: 'Open fireplace 3'
 	};
 

@@ -8,10 +8,10 @@ const model: Ref<ExternalGlazedDoorData> = ref(doorData!);
 
 const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
-		const { livingSpaceDoors } = state.livingSpaceFabric;
+		const {livingSpaceDoors} = state.livingSpaceFabric;
 
 		if (!livingSpaceDoors.livingSpaceExternalGlazedDoor?.data) {
-			livingSpaceDoors.livingSpaceExternalGlazedDoor = { data: [] };
+			livingSpaceDoors.livingSpaceExternalGlazedDoor = {data: []};
 		}
 
 		const door: ExternalGlazedDoorData = {
@@ -49,7 +49,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 	navigateTo("/living-space/doors");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -72,7 +72,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Give this element a name so it can be identified later "
+			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
 		/>

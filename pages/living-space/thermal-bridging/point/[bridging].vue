@@ -8,10 +8,10 @@ const model: Ref<PointThermalBridgeData> = ref(thermalBridgeData!);
 
 const saveForm = (fields: PointThermalBridgeData) => {
 	store.$patch((state) => {
-		const { livingSpaceThermalBridging } = state.livingSpaceFabric;
-		
+		const {livingSpaceThermalBridging} = state.livingSpaceFabric;
+
 		if (!livingSpaceThermalBridging.livingSpacePointThermalBridges?.data) {
-			livingSpaceThermalBridging.livingSpacePointThermalBridges = { data: [] };
+			livingSpaceThermalBridging.livingSpacePointThermalBridges = {data: []};
 		}
 
 		const thermalBridge: PointThermalBridgeData = {
@@ -32,7 +32,7 @@ const saveForm = (fields: PointThermalBridgeData) => {
 	navigateTo("/living-space/thermal-bridging");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -53,7 +53,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Give this element a name so it can be identified later."
+			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
 		/>

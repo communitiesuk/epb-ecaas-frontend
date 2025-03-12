@@ -8,7 +8,7 @@ const model: Ref<HotWaterDistributionData> = ref(distributionData!);
 
 const saveForm = (fields: HotWaterDistributionData) => {
 	store.$patch((state) => {
-		const { hotWaterDistribution } = state.hotWaterOutlets;
+		const {hotWaterDistribution} = state.hotWaterOutlets;
 
 		if (!hotWaterDistribution.data) {
 			hotWaterDistribution.data = [];
@@ -27,14 +27,14 @@ const saveForm = (fields: HotWaterDistributionData) => {
 		} else {
 			hotWaterDistribution.data.push(distribution);
 		}
-		
+
 		state.hotWaterOutlets.hotWaterDistribution.complete = true;
 	});
 
 	navigateTo("/hot-water-outlets/hot-water-distribution");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -67,7 +67,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Provide a name for this hot water distribution so it can be identified later "
+			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required | length:1,50"
 		/>
@@ -101,7 +101,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="number| min:0.005 | max:0.1"
 			suffix-text="m"
 		/>
-		<FormKit type="govButton" label="Save and continue" />
+		<FormKit type="govButton" label="Save and continue"/>
 	</FormKit>
 </template>
 

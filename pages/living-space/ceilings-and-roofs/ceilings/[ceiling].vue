@@ -9,10 +9,10 @@ const model: Ref<CeilingData> = ref(ceilingData!);
 
 const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
-		const { livingSpaceCeilingsAndRoofs } = state.livingSpaceFabric;
+		const {livingSpaceCeilingsAndRoofs} = state.livingSpaceFabric;
 
 		if (!livingSpaceCeilingsAndRoofs.livingSpaceCeilings?.data) {
-			livingSpaceCeilingsAndRoofs.livingSpaceCeilings = { data: [] };
+			livingSpaceCeilingsAndRoofs.livingSpaceCeilings = {data: []};
 		}
 
 		const ceiling: CeilingData = {
@@ -40,7 +40,7 @@ const saveForm = (fields: CeilingData) => {
 	navigateTo("/living-space/ceilings-and-roofs");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -77,7 +77,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				id="name"
 				type="govInputText"
 				label="Name"
-				help="Give this element a name so it can be identified later "
+				help="Provide a name for this element so that it can be identified later"
 				name="name"
 				validation="required"
 			/>
@@ -99,7 +99,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				name="uValue"
 				validation="required | number | min:0.01 | max:10"
 			/>
-			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
+			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 			<FormKit
 				id="pitchOption"

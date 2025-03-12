@@ -45,6 +45,7 @@ export interface ExternalFactorsData {
 	terrainType?: string;
 	noiseNuisance?: string;
 }
+
 export interface LivingSpaceFabric {
 	livingSpaceFloors: FloorsData;
 	livingSpaceWalls: WallsData;
@@ -74,7 +75,7 @@ export type InternalFloorData = {
 };
 
 export type ExposedFloorData = {
-	name: string; 
+	name: string;
 	pitchOption: string;
 	pitch?: number;
 	orientation: number;
@@ -321,14 +322,14 @@ export type LivingSpaceZoneParametersData = {
 	spaceHeatControlSystemForThisZone?: SpaceHeatControlSystemData[];
 };
 
-export type SpaceHeatingSystemData= {
-	name:string
+export type SpaceHeatingSystemData = {
+	name: string
 };
 export type SpaceCoolingSystemData = {
-	name:string
+	name: string
 };
 export type SpaceHeatControlSystemData = {
-	name:string
+	name: string
 };
 
 export interface HotWaterOutlets {
@@ -353,6 +354,7 @@ export interface InfiltrationAndVentilation {
 export interface MechanicalVentilation {
 	mechanicalVentilationObjects?: MechanicalVentilationObject[]
 }
+
 export type MechanicalVentilationObject = {
 	name: string;
 	typeOfMechanicalVentilationOptions: string;
@@ -383,7 +385,7 @@ export type VentData = {
 };
 
 export interface CombustionAppliancesData {
-	openFireplace: EcaasForm<OpenFireplaceData[]>
+	openFireplace: EcaasForm<CombustionApplianceData[]>
 	closedFireplaceWithFan: EcaasForm<ClosedFireplaceWithFanData[]>
 	openGasFlueBalancer: EcaasForm<OpenGasFlueBalancerData[]>
 	openGasKitchenStove: EcaasForm<OpenGasKitchenStoveData[]>
@@ -391,7 +393,7 @@ export interface CombustionAppliancesData {
 	closedFire: EcaasForm<ClosedFireData[]>
 }
 
-export type OpenFireplaceData = {
+export type CombustionApplianceData = {
 	name: string;
 	airSupplyToAppliance: string;
 	exhaustMethodFromAppliance: string;

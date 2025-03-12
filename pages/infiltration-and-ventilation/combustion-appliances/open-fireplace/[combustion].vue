@@ -5,9 +5,9 @@ const store = useEcaasStore();
 const route = useRoute();
 
 const applianceData = useItemToEdit('combustion', store.infiltrationAndVentilation.combustionAppliances.openFireplace.data);
-const model: Ref<OpenFireplaceData> = ref(applianceData!);
+const model: Ref<CombustionApplianceData> = ref(applianceData!);
 
-const saveForm = (fields: OpenFireplaceData) => {
+const saveForm = (fields: CombustionApplianceData) => {
 	store.$patch((state) => {
 		const {combustionAppliances} = state.infiltrationAndVentilation;
 
@@ -15,7 +15,7 @@ const saveForm = (fields: OpenFireplaceData) => {
 			combustionAppliances.openFireplace.data = [];
 		}
 
-		const appliance: OpenFireplaceData = {
+		const appliance: CombustionApplianceData = {
 			name: fields.name,
 			airSupplyToAppliance: fields.airSupplyToAppliance,
 			exhaustMethodFromAppliance: fields.exhaustMethodFromAppliance,
@@ -56,7 +56,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Provide a name for this open fireplace so that it can be identified later."
+			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
 		/>

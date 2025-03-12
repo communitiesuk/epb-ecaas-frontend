@@ -8,7 +8,7 @@ const model: Ref<ShadingData> = ref(shading!);
 
 const saveForm = (fields: ShadingData) => {
 	store.$patch((state) => {
-		const { shading } = state.dwellingDetails;
+		const {shading} = state.dwellingDetails;
 
 		if (!shading.data) {
 			shading.data = [];
@@ -35,7 +35,7 @@ const saveForm = (fields: ShadingData) => {
 
 	navigateTo("/dwelling-details/shading");
 };
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -46,7 +46,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		{{ title }}
 	</h1>
 	<p class="govuk-body">
-		<a href="/living-space/walls/external/calculating-distant-shading" target="_blank" class="govuk-link">Shading guidance (opens in another window)</a>
+		<a href="/living-space/walls/external/calculating-distant-shading" target="_blank" class="govuk-link">Shading
+			guidance (opens in another window)</a>
 	</p>
 	<FormKit
 		v-model="model"
@@ -64,7 +65,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Name this shading so it can be identified later"
+			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
 		/>

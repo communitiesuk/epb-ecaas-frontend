@@ -12,7 +12,7 @@ describe('open fireplace', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const openFireplace: OpenFireplaceData = {
+	const openFireplace: CombustionApplianceData = {
 		name: 'Open fireplace 1',
 		airSupplyToAppliance: 'roomAir',
 		exhaustMethodFromAppliance: 'intoSeparateDuct',
@@ -34,7 +34,7 @@ describe('open fireplace', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const { data, complete } = store.infiltrationAndVentilation.combustionAppliances.openFireplace;
+		const {data, complete} = store.infiltrationAndVentilation.combustionAppliances.openFireplace;
 
 		expect(data[0]).toEqual(openFireplace);
 		expect(complete).toBe(true);

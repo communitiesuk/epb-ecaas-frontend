@@ -9,10 +9,10 @@ const model: Ref<ExternalUnglazedDoorData> = ref(doorData!);
 
 const saveForm = (fields: ExternalUnglazedDoorData) => {
 	store.$patch((state) => {
-		const { livingSpaceDoors } = state.livingSpaceFabric;
+		const {livingSpaceDoors} = state.livingSpaceFabric;
 
 		if (!livingSpaceDoors.livingSpaceExternalUnglazedDoor?.data) {
-			livingSpaceDoors.livingSpaceExternalUnglazedDoor = { data: [] };
+			livingSpaceDoors.livingSpaceExternalUnglazedDoor = {data: []};
 		}
 
 		const door: ExternalUnglazedDoorData = {
@@ -43,7 +43,7 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 	navigateTo("/living-space/doors");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -66,7 +66,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Give this element a name so it can be identified later "
+			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
 		/>
@@ -135,7 +135,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorbtion" name="solarAbsorbtion" />
+		<FieldsSolarAbsorptionCoefficient id="solarAbsorbtion" name="solarAbsorbtion"/>
 		<FormKit
 			id="uValue"
 			type="govInputWithSuffix"
@@ -145,7 +145,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
 		/>
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
+		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
 			type="govButton"

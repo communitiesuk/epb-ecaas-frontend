@@ -9,10 +9,10 @@ const model: Ref<InternalWallData> = ref(wallData!);
 
 const saveForm = (fields: InternalWallData) => {
 	store.$patch((state) => {
-		const { livingSpaceWalls } = state.livingSpaceFabric;
-		
+		const {livingSpaceWalls} = state.livingSpaceFabric;
+
 		if (!livingSpaceWalls.livingSpaceInternalWall.data) {
-			livingSpaceWalls.livingSpaceInternalWall = { data: [] };
+			livingSpaceWalls.livingSpaceInternalWall = {data: []};
 		}
 
 		const wall: InternalWallData = {
@@ -38,7 +38,7 @@ const saveForm = (fields: InternalWallData) => {
 	navigateTo("/living-space/walls");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -58,7 +58,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Give this element a name so it can be identified later"
+			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
 		/>
@@ -80,7 +80,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10"
 			suffix-text="W/(m2.K)"
 		/>
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
+		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
 			id="pitchOption"

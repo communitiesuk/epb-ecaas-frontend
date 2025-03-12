@@ -8,8 +8,8 @@ const model: Ref<VentData> = ref(ventData!);
 
 const saveForm = (fields: VentData) => {
 	store.$patch((state) => {
-		const { vents } = state.infiltrationAndVentilation;
-		
+		const {vents} = state.infiltrationAndVentilation;
+
 		if (!vents.data) {
 			vents.data = [];
 		}
@@ -38,7 +38,7 @@ const saveForm = (fields: VentData) => {
 	navigateTo("/infiltration-and-ventilation/vents");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
@@ -58,7 +58,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name"
 			type="govInputText"
 			label="Name"
-			help="Provide a name for this vent so it can be identified later."
+			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
 		/>
