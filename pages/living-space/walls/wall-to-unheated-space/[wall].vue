@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import MassDistributionClass from "~/components/fields/MassDistributionClass.vue";
 
 const title = "Wall to unheated space";
 const store = useEcaasStore();
@@ -88,7 +87,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10"
 		/>
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity" />
-		<MassDistributionClass id="massDistributionClass" name="massDistributionClass" />
+		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		<FormKit
 			id="pitchOption"
 			type="govRadios"
