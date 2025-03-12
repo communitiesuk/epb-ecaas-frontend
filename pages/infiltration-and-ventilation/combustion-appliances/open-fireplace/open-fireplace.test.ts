@@ -61,4 +61,15 @@ describe('open fireplace', () => {
 		expect((await screen.findByTestId('exhaustMethodFromAppliance_intoSeparateDuct')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('typeOfFuel_coal')).hasAttribute('checked')).toBe(true);
 	});
+
+	it('required error messages are displayed when empty form is submitted', async () => {
+		await renderSuspended(OpenFireplace);
+
+		await user.click(screen.getByRole('button'));
+
+		expect((await screen.findByTestId('name_error'))).toBeDefined();
+		expect((await screen.findByTestId('airSupplyToAppliance_error'))).toBeDefined();
+		expect((await screen.findByTestId('exhaustMethodFromAppliance_error'))).toBeDefined();
+		expect((await screen.findByTestId('typeOfFuel_error'))).toBeDefined();
+	});
 });
