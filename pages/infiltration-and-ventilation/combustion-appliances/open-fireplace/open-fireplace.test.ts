@@ -1,5 +1,5 @@
 import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
-import { screen } from '@testing-library/vue';
+import {screen} from '@testing-library/vue';
 import OpenFireplace from './[appliance].vue';
 import userEvent from "@testing-library/user-event";
 
@@ -34,8 +34,28 @@ describe('open fireplace', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const  { data } = store.infiltrationAndVentilation.combustionAppliances.openFireplace;
+		const {data} = store.infiltrationAndVentilation.combustionAppliances.openFireplace;
 
 		expect(data[0]).toEqual(openFireplace);
+	});
+
+	it('form is prepopulated when data exists in state', async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				combustionAppliances: {
+					openFireplace: {
+						data: [openFireplace]
+					}
+				}
+			}
+		});
+
+		await renderSuspended(OpenFireplace, {
+			route: {
+				params: {combustion: '0'}
+			}
+		});
+
+		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Open fireplace 1');
 	});
 });

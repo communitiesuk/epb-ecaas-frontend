@@ -9,9 +9,9 @@ const model: Ref<OpenFireplaceData> = ref(applianceData!);
 
 const saveForm = (fields: OpenFireplaceData) => {
 	store.$patch((state) => {
-		const { combustionAppliances } = state.infiltrationAndVentilation;
+		const {combustionAppliances} = state.infiltrationAndVentilation;
 
-		if(!combustionAppliances.openFireplace.data) {
+		if (!combustionAppliances.openFireplace.data) {
 			combustionAppliances.openFireplace.data = [];
 		}
 
@@ -35,7 +35,7 @@ const saveForm = (fields: OpenFireplaceData) => {
 	navigateTo("/infiltration-and-ventilation/combustion-appliances");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
 <template>
