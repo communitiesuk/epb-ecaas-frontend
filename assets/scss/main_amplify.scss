@@ -1,7 +1,5 @@
 @use "../../node_modules/govuk-frontend/dist/govuk/index" with (
-    $govuk-suppressed-warnings: (
-        "legacy-organisation-colours"
-    )
+	$govuk-new-organisation-colours: true
 );
 
 img {
