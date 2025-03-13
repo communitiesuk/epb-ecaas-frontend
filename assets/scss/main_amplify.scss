@@ -1,4 +1,8 @@
-@use "../../node_modules/govuk-frontend/dist/govuk/index";
+@use "../../node_modules/govuk-frontend/dist/govuk/index" with (
+    $govuk-suppressed-warnings: (
+        "legacy-organisation-colours"
+    )
+);
 
 img {
 	max-width: 100%;
