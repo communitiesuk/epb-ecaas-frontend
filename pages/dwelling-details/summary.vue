@@ -21,8 +21,7 @@ const generalSpecificationsSummary: SummarySection = {
 		"Storey of flat": generalSpecificationsData.storeyOfFlat,
 		"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
 		"Part G compliance": generalSpecificationsData.partGCompliance,
-		"Cooling required": generalSpecificationsData.coolingRequired,
-		"Heating control type": generalSpecificationsData.heatingControlType
+		"Cooling required": generalSpecificationsData.coolingRequired
 	}
 };
 
@@ -37,10 +36,11 @@ const appliancesAndElectricitySummary: SummarySection = {
 const shadingSummary: SummarySection = {
 	id: 'shading',
 	label: "Shading",
-	data: shadingData.shadingObjects?.map(s => {
+	data: shadingData.map(s => {
 		return {
 			"Name": s.name,
-			"Shading direction": s.direction,
+			"Shading start angle": s.startAngle,
+			"Shading end angle": s.endAngle,
 			"Shading type": s.objectType,
 			"Height": s.height,
 			"Distance": s.distance

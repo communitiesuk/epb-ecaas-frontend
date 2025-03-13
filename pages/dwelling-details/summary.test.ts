@@ -12,7 +12,7 @@ mockNuxtImport('navigateTo', () => {
 interface DwellingDetailSummary {
 	generalSpecifications: GeneralSpecificationsData,
 	appliances: AppliancesData,
-	shading: Shading,
+	shading: ShadingData[],
 	externalFactors: ExternalFactorsData
 }
 
@@ -23,7 +23,6 @@ const state: DwellingDetailSummary = {
 		numOfBedrooms: 3,
 		partGCompliance: "yes",
 		coolingRequired: "no",
-		heatingControlType: 'seperateTempControl'
 	},
 	appliances: {
 		appliances: [
@@ -39,15 +38,14 @@ const state: DwellingDetailSummary = {
 			'microwave'
 		]
 	},
-	shading: {
-		shadingObjects: [{
-			name: 'Shading 1',
-			direction: 90,
-			objectType: 'obstacle',
-			height: 1,
-			distance: 4
-		}]
-	},
+	shading: [{
+		name: 'Shading 1',
+		startAngle: 0,
+		endAngle: 90,
+		objectType: 'obstacle',
+		height: 1,
+		distance: 4
+	}],
 	externalFactors: {
 		altitude: 3,
 		typeOfExposure: 'Shielded',
@@ -106,8 +104,7 @@ describe('Dwelling details summary', () => {
 			"Number of storeys in building": 2,
 			"Number of bedrooms": 3,
 			"Part G compliance": "Yes",
-			"Cooling required": "No",
-			"Heating control type": "Separate temperature control"
+			"Cooling required": "No"
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
