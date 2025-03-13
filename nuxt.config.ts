@@ -12,11 +12,11 @@ export default defineNuxtConfig({
 				{ name: 'theme-color', content: '#0b0c0c' }
 			],
 			link: [
-				{ rel: 'icon', sizes: '48x48', href: '/assets/images/favicon.ico' },
-				{ rel: 'icon', sizes: 'any', href: '/assets/images/favicon.svg', type: 'image/svg+xml' },
-				{ rel: 'mask-icon', href: '/assets/images/govuk-icon-mask.svg', color: '#0b0c0c' },
-				{ rel: 'apple-touch-icon', href: '/assets/images/govuk-icon-180.png' },
-				{ rel: 'manifest', href: '/assets/manifest.json' }
+				{ rel: 'icon', sizes: '48x48', href: '/static/assets/images/favicon.ico' },
+				{ rel: 'icon', sizes: 'any', href: '/static/assets/images/favicon.svg', type: 'image/svg+xml' },
+				{ rel: 'mask-icon', href: '/static/assets/images/govuk-icon-mask.svg', color: '#0b0c0c' },
+				{ rel: 'apple-touch-icon', href: '/static/assets/images/govuk-icon-180.png' },
+				{ rel: 'manifest', href: '/static/assets/manifest.json' }
 			],
 			bodyAttrs: {
 				class: 'govuk-template__body js-enabled govuk-frontend-supported'
