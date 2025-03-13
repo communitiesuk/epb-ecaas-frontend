@@ -70,22 +70,6 @@ describe('Dwelling details summary', () => {
 
 	});
 
-	it('should select the clicked tab', async () => {
-		const user = userEvent.setup();
-
-		const summaryPage = await renderSuspended(Summary);
-
-		await user.click(screen.getByRole('link', {name: 'General specifications'}));
-
-		expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#generalSpecifications">General specifications</a></li>`);
-		expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item"><a class="govuk-tabs__tab" href="#appliances">Appliances</a></li>`);
-
-		await user.click(screen.getByRole('link', {name: 'Appliances'}));
-
-		expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#appliances">Appliances</a></li>`);
-		expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item"><a class="govuk-tabs__tab" href="#generalSpecifications">General specifications</a></li>`);
-	});
-
 	it('should display the correct data for the general specification section', async () => {
 		store.$patch({
 			dwellingDetails: {

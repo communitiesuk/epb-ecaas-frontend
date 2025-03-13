@@ -12,7 +12,7 @@ const hotWaterDistributionData = store.hotWaterOutlets.hotWaterDistribution.data
 const hotWaterDistributionSummary: SummarySection = {
 	id: 'hotWaterDistribution',
 	label: "Hot water distribution",
-	data: hotWaterDistributionData.distributions?.map(d => {
+	data: hotWaterDistributionData.map(d => {
 		return {
 			"Name": d.name,
 			"Location": d.location,

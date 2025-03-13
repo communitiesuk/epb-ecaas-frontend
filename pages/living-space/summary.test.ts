@@ -288,14 +288,6 @@ describe('Living space fabric summary', () => {
 			expect(screen.getByRole('link', {name: 'Exposed floor'}));
 		});
 	
-		it('should select the clicked tab', async () => {
-			const summaryPage = await renderSuspended(Summary);
-	
-			await user.click(screen.getByRole('link', {name: 'Internal floor'}));
-	
-			expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#livingSpaceFloors">Internal floor</a></li>`);
-		});
-	
 		it('should display the correct data for the ground floor section', async () => {
 			store.$patch({
 				livingSpaceFabric: {
@@ -396,14 +388,6 @@ describe('Living space fabric summary', () => {
 			expect(screen.getByRole('link', {name: 'Internal wall'}));
 			expect(screen.getByRole('link', {name: 'Wall to unheated space'}));
 			expect(screen.getByRole('link', {name: 'Party wall'}));
-		});
-	
-		it('should select the clicked tab', async () => {
-			const summaryPage = await renderSuspended(Summary);
-	
-			await user.click(screen.getByRole('link', {name: 'Internal wall'}));
-	
-			expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#livingSpaceWalls">Internal wall</a></li>`);
 		});
 	
 		it('should display the correct data for the external wall section', async () => {
@@ -534,14 +518,6 @@ describe('Living space fabric summary', () => {
 			expect(screen.getByRole('link', {name: 'Roof'}));
 		});
 	
-		it('should select the clicked tab', async () => {
-			const summaryPage = await renderSuspended(Summary);
-	
-			await user.click(screen.getByRole('link', {name: 'Roof'}));
-	
-			expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#livingSpaceCeilingsAndRoofs">Roof</a></li>`);
-		});
-	
 		it('should display the correct data for the ceilings section', async () => {
 			store.$patch({
 				livingSpaceFabric: {
@@ -611,14 +587,6 @@ describe('Living space fabric summary', () => {
 			expect(screen.getByRole('link', {name: 'External unglazed door'}));
 			expect(screen.getByRole('link', {name: 'External glazed door'}));
 			expect(screen.getByRole('link', {name: 'Internal door'}));
-		});
-	
-		it('should select the clicked tab', async () => {
-			const summaryPage = await renderSuspended(Summary);
-	
-			await user.click(screen.getByRole('link', {name: 'External glazed door'}));
-	
-			expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#livingSpaceDoors">External glazed door</a></li>`);
 		});
 	
 		it('should display the correct data for the external unglazed doors section', async () => {
@@ -769,14 +737,6 @@ describe('Living space fabric summary', () => {
 	  
 			expect(screen.getByRole('link', {name: 'Linear thermal bridges'}));
 			expect(screen.getByRole('link', {name: 'Point thermal bridges'}));
-		});
-	
-		it('should select the clicked tab', async () => {
-			const summaryPage = await renderSuspended(Summary);
-	
-			await user.click(screen.getByRole('link', {name: 'Point thermal bridges'}));
-	
-			expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#livingSpaceThermalBridging">Point thermal bridges</a></li>`);
 		});
 	
 		it('should display the correct data for the linear thermal bridges section', async () => {

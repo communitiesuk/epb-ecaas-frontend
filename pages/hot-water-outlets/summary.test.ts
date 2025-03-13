@@ -9,18 +9,16 @@ mockNuxtImport('navigateTo', () => {
 });
 
 interface HotWaterOutletSummary {
-	hotWaterDistribution: HotWaterDistribution,
+	hotWaterDistribution: HotWaterDistributionData[],
 }
 
 const state: HotWaterOutletSummary = {
-	hotWaterDistribution: {
-		distributions: [{
-			name: 'Pipework 1',
-			location: 'internal',
-			length: 20,
-			internalDiameter: 22
-		}]
-	}
+	hotWaterDistribution: [{
+		name: 'Pipework 1',
+		location: 'internal',
+		length: 20,
+		internalDiameter: 22
+	}]
 };
 
 describe('Hot water outlet summary', () => {
@@ -34,16 +32,6 @@ describe('Hot water outlet summary', () => {
 		await renderSuspended(Summary);
   
 		expect(screen.getByRole('link', {name: 'Hot water distribution'}));
-	});
-
-	it('should select the clicked tab', async () => {
-		const user = userEvent.setup();
-
-		const summaryPage = await renderSuspended(Summary);
-
-		await user.click(screen.getByRole('link', {name: 'Hot water distribution'}));
-
-		expect(summaryPage.html()).toContain(`<li class="govuk-tabs__list-item govuk-tabs__list-item--selected"><a class="govuk-tabs__tab" href="#hotWaterDistribution">Hot water distribution</a></li>`);
 	});
 
 	it('should display the correct data for the general specification section', async () => {

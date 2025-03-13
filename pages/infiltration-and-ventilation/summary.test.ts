@@ -44,6 +44,48 @@ const airPermeabilityData: AirPermeabilityData = {
 	airTightnessTestResult: 1
 };
 
+const openFireplaceData: CombustionApplianceData = {
+	name: 'Open fireplace 1',
+	airSupplyToAppliance: 'roomAir',
+	exhaustMethodFromAppliance: 'intoSeparateDuct',
+	typeOfFuel: 'coal'
+};
+
+const closedFireplaceWithFanData: CombustionApplianceData = {
+	name: 'Closed fireplace',
+	airSupplyToAppliance: 'roomAir',
+	exhaustMethodFromAppliance: 'intoSeparateDuct',
+	typeOfFuel: 'wood'
+};
+
+const openGasFlueBalancerData: CombustionApplianceData = {
+	name: 'Open gas flue balancer 1',
+	airSupplyToAppliance: 'outside',
+	exhaustMethodFromAppliance: 'intoRoom',
+	typeOfFuel: 'gas'
+};
+
+const openGasKitchenStoveData: CombustionApplianceData = {
+	name: 'Open gas kitchen stove 1',
+	airSupplyToAppliance: 'outside',
+	exhaustMethodFromAppliance: 'intoRoom',
+	typeOfFuel: 'oil',
+};
+
+const openGasFireData: CombustionApplianceData = {
+	name: 'Open gas fire 1',
+	airSupplyToAppliance: 'outside',
+	exhaustMethodFromAppliance: 'intoMechanicalVent',
+	typeOfFuel: 'oil'
+};
+
+const closedFireData: CombustionApplianceData = {
+	name: 'Closed fire 1',
+	airSupplyToAppliance: 'outside',
+	exhaustMethodFromAppliance: 'intoMechanicalVent',
+	typeOfFuel: 'coal'
+};
+
 describe('Infiltration and ventilation summary', () => {
 	const store = useEcaasStore();
 
@@ -172,5 +214,180 @@ describe('Infiltration and ventilation summary', () => {
 			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 		}
+	});
+
+	describe('Combustion appliances', () => {
+		it('should contain the correct tabs for combustion appliances', async () => {
+			await renderSuspended(Summary);
+		
+			expect(screen.getByRole('link', {name: 'Open fireplace'}));
+			expect(screen.getByRole('link', {name: 'Closed fireplace with fan'}));
+			expect(screen.getByRole('link', {name: 'Open gas flue balancer'}));
+			expect(screen.getByRole('link', {name: 'Open gas kitchen stove'}));
+			expect(screen.getByRole('link', {name: 'Open gas fire'}));
+			expect(screen.getByRole('link', {name: 'Closed fire'}));
+		});
+
+		it('should display the correct data for the open fireplace section', async () => {
+			store.$patch({
+				infiltrationAndVentilation: {
+					combustionAppliances: {
+						openFireplace: {
+							data: [openFireplaceData]
+						}
+					}
+				}
+			});
+	
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": 'Open fireplace 1',
+				"Air supply to appliance": 'Room air',
+				"Exhaust method from appliance": 'Into separate duct',
+				"Type of fuel": 'coal'
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
+
+		it('should display the correct data for the closed fireplace with fan section', async () => {
+			store.$patch({
+				infiltrationAndVentilation: {
+					combustionAppliances: {
+						closedFireplaceWithFan: {
+							data: [closedFireplaceWithFanData]
+						}
+					}
+				}
+			});
+	
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": 'Closed fireplace',
+				"Air supply to appliance": 'Room air',
+				"Exhaust method from appliance": 'Into separate duct',
+				"Type of fuel": 'wood'
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
+
+		it('should display the correct data for the open gas flue balancer section', async () => {
+			store.$patch({
+				infiltrationAndVentilation: {
+					combustionAppliances: {
+						openGasFlueBalancer: {
+							data: [openGasFlueBalancerData]
+						}
+					}
+				}
+			});
+	
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": 'Open gas flue balancer 1',
+				"Air supply to appliance": 'Outside',
+				"Exhaust method from appliance": 'Into room',
+				"Type of fuel": 'gas'
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
+
+		it('should display the correct data for the open gas kitchen stove section', async () => {
+			store.$patch({
+				infiltrationAndVentilation: {
+					combustionAppliances: {
+						openGasKitchenStove: {
+							data: [openGasKitchenStoveData]
+						}
+					}
+				}
+			});
+	
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": 'Open gas kitchen stove 1',
+				"Air supply to appliance": 'Outside',
+				"Exhaust method from appliance": 'Into room',
+				"Type of fuel": 'oil'
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
+
+		it('should display the correct data for the open gas fire section', async () => {
+			store.$patch({
+				infiltrationAndVentilation: {
+					combustionAppliances: {
+						openGasFire: {
+							data: [openGasFireData]
+						}
+					}
+				}
+			});
+	
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": 'Open gas fire 1',
+				"Air supply to appliance": 'Outside',
+				"Exhaust method from appliance": 'Into mechanical vent',
+				"Type of fuel": 'oil'
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
+
+		it('should display the correct data for the closed fire section', async () => {
+			store.$patch({
+				infiltrationAndVentilation: {
+					combustionAppliances: {
+						closedFire: {
+							data: [closedFireData]
+						}
+					}
+				}
+			});
+	
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": 'Closed fire 1',
+				"Air supply to appliance": 'Outside',
+				"Exhaust method from appliance": 'Into mechanical vent',
+				"Type of fuel": 'coal'
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
 	});
 });

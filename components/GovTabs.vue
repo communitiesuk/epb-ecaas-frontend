@@ -18,19 +18,32 @@ function selectTab(index: number, e: MouseEvent) {
 
 <template>
 	<div class="govuk-tabs" data-module="govuk-tabs">
-		<ul class="govuk-tabs__list">
-			<li
-				v-for="(item, index) in items"
-				:key="item.id"
-				class="govuk-tabs__list-item"
-				:class="{ 'govuk-tabs__list-item--selected': currentTab === index }"
-			>
-				<a class="govuk-tabs__tab" :href="`#${item.id}`" @click="selectTab(index, $event)">
-					{{ item.label }}
-				</a>
-			</li>
-		</ul>
+		<div class="govuk-tabs__list-container">
+			<ul class="govuk-tabs__list">
+				<li
+					v-for="(item, index) in items"
+					:key="item.id"
+					class="govuk-tabs__list-item"
+					:class="{ 'govuk-tabs__list-item--selected': currentTab === index }"
+				>
+					<a class="govuk-tabs__tab" :href="`#${item.id}`" @click="selectTab(index, $event)">
+						{{ item.label }}
+					</a>
+				</li>
+			</ul>
+		</div>
 
 		<slot :current-tab="currentTab" />
 	</div>
 </template>
+
+<style scoped lang="scss">
+	.govuk-tabs__list-container {
+		overflow-x: auto;
+		padding-top: 5px;
+	}
+
+	.govuk-tabs__list {
+		min-width: max-content;
+	}
+</style>
