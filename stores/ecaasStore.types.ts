@@ -334,8 +334,32 @@ export type SpaceHeatControlSystemData = {
 };
 
 export interface DomesticHotWater {
+	hotWaterOutlets: HotWaterOutlets;
 	pipework: EcaasForm<PipeworkData[]>;
 }
+
+export interface HotWaterOutlets {
+	mixedShower: EcaasForm<MixedShowerData[]>;
+	electricShower: EcaasForm<ElectricShowerData[]>;
+	bath: EcaasForm<BathData[]>;
+	otherOutlets: EcaasForm<OtherHotWaterOutletData[]>;
+}
+
+export type MixedShowerData = {
+	name: string;
+};
+
+export type ElectricShowerData = {
+	name: string;
+};
+
+export type BathData = {
+	name: string;
+};
+
+export type OtherHotWaterOutletData = {
+	name: string;
+};
 
 export type PipeworkData = {
 	name: string;

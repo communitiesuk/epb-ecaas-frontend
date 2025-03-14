@@ -27,6 +27,12 @@ function getInitialState(): EcaasState {
 			airPermeability: { data: {} }
 		},
 		domesticHotWater: {
+			hotWaterOutlets: {
+				mixedShower: { data: [] },
+				electricShower: { data: [] },
+				bath: { data: [] },
+				otherOutlets: { data: [] }
+			},
 			pipework: { data: [] },
 		},
 		livingSpaceFabric: {
