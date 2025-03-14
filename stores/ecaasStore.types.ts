@@ -3,6 +3,7 @@ export interface EcaasState {
 	hotWaterOutlets: HotWaterOutlets;
 	livingSpaceFabric: LivingSpaceFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
+	heatingSystems: HeatingSystems;
 }
 
 export interface EcaasForm<T> {
@@ -411,4 +412,16 @@ export interface AirPermeabilityData {
 	zoneEnvelopeArea?: number;
 	testPressure?: number;
 	airTightnessTestResult?: number;
+}
+
+export interface HeatingSystems {
+	energySupply: EcaasForm<EnergySupplyData>;
+}
+
+export interface EnergySupplyData {
+	fuelType?: string[];
+	co2PerKwh?: number;
+	co2PerKwhIncludingOutOfScope?: number;
+	kwhPerKwhDelivered?: number;
+	exported?: string;
 }

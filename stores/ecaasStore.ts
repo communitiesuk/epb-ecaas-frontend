@@ -54,6 +54,9 @@ function getInitialState(): EcaasState {
 				livingSpacePointThermalBridges: { data: [] }
 			}, 
 			livingSpaceZoneParameters: { data: {} },
+		},
+		heatingSystems: {
+			energySupply: { data: {} }
 		}
 	};
 }
