@@ -419,28 +419,28 @@ const pagesData: Array<Page> = [
 		parentId: 'taskList'
 	},
 	{
-		id: 'heatSource',
-		title: 'Heat source',
-		url: '/heating-systems/heat-source',
+		id: 'energySupply',
+		title: 'Energy supply',
+		url: '/heating-systems/energy-supply',
 		type: PageType.Task,
 		parentId: 'heatingSystems'
 	},
 	{
-		id: 'spaceHeating',
-		title: 'Space heating',
-		url: '/heating-systems/space-heating',
+		id: 'heatGeneration',
+		title: 'Heat generation',
+		url: '/heating-systems/heat-generation',
 		type: PageType.Task,
 		parentId: 'heatingSystems'
 	},
 	{
-		id: 'waterHeating',
-		title: 'Water heating',
-		url: '/heating-systems/water-heating',
+		id: 'heatEmitting',
+		title: 'Heat emitting',
+		url: '/heating-systems/heat-emitting',
 		type: PageType.Task,
 		parentId: 'heatingSystems'
 	},
 	{
-		id: 'heatSourceSummary',
+		id: 'heatingSystemsSummary',
 		title: 'Summary',
 		url: '/heating-systems/summary',
 		type: PageType.Summary,
