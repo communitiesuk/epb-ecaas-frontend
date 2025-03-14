@@ -26,8 +26,8 @@ function getInitialState(): EcaasState {
 			ventilation: { data: {} },
 			airPermeability: { data: {} }
 		},
-		hotWaterOutlets: {
-			hotWaterDistribution: { data: [] },
+		domesticHotWater: {
+			pipework: { data: [] },
 		},
 		livingSpaceFabric: {
 			livingSpaceFloors: {

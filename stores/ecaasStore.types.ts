@@ -1,6 +1,6 @@
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
-	hotWaterOutlets: HotWaterOutlets;
+	domesticHotWater: DomesticHotWater;
 	livingSpaceFabric: LivingSpaceFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
 	heatingSystems: HeatingSystems;
@@ -333,11 +333,11 @@ export type SpaceHeatControlSystemData = {
 	name: string
 };
 
-export interface HotWaterOutlets {
-	hotWaterDistribution: EcaasForm<HotWaterDistributionData[]>;
+export interface DomesticHotWater {
+	pipework: EcaasForm<PipeworkData[]>;
 }
 
-export type HotWaterDistributionData = {
+export type PipeworkData = {
 	name: string;
 	length: number;
 	location: string;

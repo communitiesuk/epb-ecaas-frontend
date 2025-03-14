@@ -4,15 +4,15 @@ import { getTabItems, getUrl } from '#imports';
 
 definePageMeta({ layout: false });
 
-const title = "Hot water outlets";
+const title = "Domestic hot water";
 const store = useEcaasStore();
 
-const hotWaterDistributionData = store.hotWaterOutlets.hotWaterDistribution.data;
+const pipeworkData = store.domesticHotWater.pipework.data;
 
-const hotWaterDistributionSummary: SummarySection = {
-	id: 'hotWaterDistribution',
-	label: "Hot water distribution",
-	data: hotWaterDistributionData.map(d => {
+const pipeworkSummary: SummarySection = {
+	id: 'pipework',
+	label: "Pipework",
+	data: pipeworkData.map(d => {
 		return {
 			"Name": d.name,
 			"Location": d.location,
@@ -23,7 +23,7 @@ const hotWaterDistributionSummary: SummarySection = {
 };
 
 const summarySections: SummarySection[] = [
-	hotWaterDistributionSummary
+	pipeworkSummary
 ];
 </script>
 
@@ -35,11 +35,11 @@ const summarySections: SummarySection[] = [
 			</Head>
 			<h1 class="govuk-heading-l">{{ title }}</h1>
 			<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
-				<GovSummaryTab :summary="hotWaterDistributionSummary" :selected="tabProps.currentTab === 0">
+				<GovSummaryTab :summary="pipeworkSummary" :selected="tabProps.currentTab === 0">
 					<template #empty>
-						<h2 class="govuk-heading-m">No distributions added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(hotWaterDistributionSummary.id)}/create`">
-							Add distributions
+						<h2 class="govuk-heading-m">No pipework added</h2>
+						<NuxtLink class="govuk-link" :to="`${getUrl(pipeworkSummary.id)}/create`">
+							Add pipework
 						</NuxtLink>
 					</template>
 				</GovSummaryTab>

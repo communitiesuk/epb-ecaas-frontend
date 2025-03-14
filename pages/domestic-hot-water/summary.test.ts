@@ -2,43 +2,38 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
+import type { PipeworkData } from '~/stores/ecaasStore.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
-interface HotWaterOutletSummary {
-	hotWaterDistribution: HotWaterDistributionData[],
-}
-
-const state: HotWaterOutletSummary = {
-	hotWaterDistribution: [{
-		name: 'Pipework 1',
-		location: 'internal',
-		length: 20,
-		internalDiameter: 22
-	}]
+const pipework: PipeworkData = {
+	name: 'Pipework 1',
+	location: 'internal',
+	length: 20,
+	internalDiameter: 22
 };
 
-describe('Hot water outlet summary', () => {
+describe('Domestic hot water summary', () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	it('should contain the correct tabs for hot water outlet details', async () => {
+	it('should contain the correct tabs for pipework details', async () => {
 		await renderSuspended(Summary);
   
-		expect(screen.getByRole('link', {name: 'Hot water distribution'}));
+		expect(screen.getByRole('link', {name: 'Pipework'}));
 	});
 
-	it('should display the correct data for the general specification section', async () => {
+	it('should display the correct data for the pipework section', async () => {
 		store.$patch({
-			hotWaterOutlets: {
-				hotWaterDistribution: {
-					data: state.hotWaterDistribution
+			domesticHotWater: {
+				pipework: {
+					data: [pipework]
 				}
 			}
 		});

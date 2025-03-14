@@ -111,6 +111,13 @@ const pagesData: Array<Page> = [
 		parentId: 'infiltrationAndVentilation'
 	},
 	{
+		id: 'vent',
+		title: 'Vent',
+		url: '/infiltration-and-ventilation/vents/:vent',
+		type: PageType.Task,
+		parentId: 'vents'
+	},
+	{
 		id: 'ventilation',
 		title: 'Ventilation',
 		url: '/infiltration-and-ventilation/ventilation',
@@ -447,53 +454,53 @@ const pagesData: Array<Page> = [
 		parentId: 'heatingSystems'
 	},
 	{
-		id: 'hotWaterOutlets',
-		title: 'Hot water outlets',
-		url: '/hot-water-outlets',
+		id: 'domesticHotWater',
+		title: 'Domestic hot water',
+		url: '/domestic-hot-water',
 		type: PageType.Section,
 		parentId: 'taskList'
 	},
 	{
-		id: 'wasteWaterRecoverySystems',
-		title: 'Waste water recovery systems',
-		url: '/hot-water-outlets/waste-water-recovery-systems',
+		id: 'waterHeating',
+		title: 'Water heating',
+		url: '/domestic-hot-water/water-heating',
 		type: PageType.Task,
-		parentId: 'hotWaterOutlets'
+		parentId: 'domesticHotWater'
 	},
 	{
-		id: 'hotWaterOutletsHotWaterOutlets',
+		id: 'hotWaterOutlets',
 		title: 'Hot water outlets',
-		url: '/hot-water-outlets/hot-water-outlets',
+		url: '/domestic-hot-water/hot-water-outlets',
 		type: PageType.Task,
-		parentId: 'hotWaterOutlets'
+		parentId: 'domesticHotWater'
 	},
 	{
-		id: 'hotWaterDistribution',
-		title: 'Hot water distribution',
-		url: '/hot-water-outlets/hot-water-distribution',
+		id: 'pipework',
+		title: 'Pipework',
+		url: '/domestic-hot-water/pipework',
 		type: PageType.Task,
-		parentId: 'hotWaterOutlets'
+		parentId: 'domesticHotWater'
 	},
 	{
-		id: 'hotWaterDistributionCreate',
-		title: 'Create',
-		url: '/hot-water-outlets/hot-water-distribution/create',
+		id: 'pipe',
+		title: 'Pipework',
+		url: '/domestic-hot-water/pipework/:pipe',
 		type: PageType.Task,
-		parentId: 'hotWaterDistribution'
+		parentId: 'pipework'
 	},
 	{
-		id: 'hotWaterDistributionEdit',
-		title: 'Edit',
-		url: '/hot-water-outlets/hot-water-distribution/:distribution',
+		id: 'wwhrs',
+		title: 'WWHRS',
+		url: '/domestic-hot-water/wwhrs',
 		type: PageType.Task,
-		parentId: 'hotWaterDistribution'
+		parentId: 'domesticHotWater'
 	},
 	{
-		id: 'hotWaterOutletsSummary',
+		id: 'domesticHotWaterSummary',
 		title: 'Summary',
-		url: '/hot-water-outlets/summary',
+		url: '/domestic-hot-water/summary',
 		type: PageType.Summary,
-		parentId: 'hotWaterOutlets'
+		parentId: 'domesticHotWater'
 	},
 	{
 		id: 'pvStorage',

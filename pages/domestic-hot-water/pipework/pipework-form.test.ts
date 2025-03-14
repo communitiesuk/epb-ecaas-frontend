@@ -1,22 +1,22 @@
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
-import HotWaterDistributionForm from './[distribution].vue';
-import type { HotWaterDistributionData } from '~/stores/ecaasStore.types';
+import PipeworkForm from './[pipe].vue';
+import type { PipeworkData } from '~/stores/ecaasStore.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
-const state: HotWaterDistributionData = {
+const state: PipeworkData = {
 	name: 'Pipework Kitchen Sink',
 	length: 3,
 	location: 'internal',
 	internalDiameter: 0.09
 };
 
-describe('Hot water distribution form', () => {
+describe('Pipework form', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -25,7 +25,7 @@ describe('Hot water distribution form', () => {
 	});
 
 	it('data is saved to store state when form is valid', async () => {
-		await renderSuspended(HotWaterDistributionForm);
+		await renderSuspended(PipeworkForm);
 
 		await user.type(screen.getByTestId('name'), 'Pipework Kitchen Sink');
 		await user.click(screen.getByTestId('location_internal'));
@@ -36,25 +36,25 @@ describe('Hot water distribution form', () => {
 		
 		await user.click(screen.getByRole('button'));
 		
-		const { data, complete } = store.hotWaterOutlets.hotWaterDistribution;
+		const { data, complete } = store.domesticHotWater.pipework;
 
 		expect(data[0]).toEqual(state);
 		expect(complete).toBe(true);
-		expect(navigateToMock).toHaveBeenCalledWith('/hot-water-outlets/hot-water-distribution');
+		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/pipework');
 	});
 
 	it('form is prepopulated when data exists in state', async () => {
 		store.$patch({
-			hotWaterOutlets: {
-				hotWaterDistribution: {
+			domesticHotWater: {
+				pipework: {
 					data: [state]
 				}
 			}
 		});
 
-		await renderSuspended(HotWaterDistributionForm, {
+		await renderSuspended(PipeworkForm, {
 			route: {
-				params: { distribution: '0' }
+				params: { pipe: '0' }
 			}
 		});
 
@@ -66,7 +66,7 @@ describe('Hot water distribution form', () => {
 	});
 
 	it('required error messages are displayed when empty form is submitted', async () => {
-		await renderSuspended(HotWaterDistributionForm);
+		await renderSuspended(PipeworkForm);
 
 		await user.click(screen.getByRole('button'));
 
@@ -76,10 +76,10 @@ describe('Hot water distribution form', () => {
 	});
 
 	it('error summary is displayed when an invalid form in submitted', async () => {
-		await renderSuspended(HotWaterDistributionForm);
+		await renderSuspended(PipeworkForm);
 
 		await user.click(screen.getByRole('button'));
 
-		expect((await screen.findByTestId('hotWaterDistributionErrorSummary'))).toBeDefined();
+		expect((await screen.findByTestId('pipeworkErrorSummary'))).toBeDefined();
 	});
 });

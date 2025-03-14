@@ -1,37 +1,37 @@
 <script setup lang="ts">
-const title = "Hot water distribution";
+const title = "Pipework";
 const store = useEcaasStore();
 const route = useRoute();
 
-const distributionData = useItemToEdit('distribution', store.hotWaterOutlets.hotWaterDistribution.data);
-const model: Ref<HotWaterDistributionData> = ref(distributionData!);
+const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.data);
+const model: Ref<PipeworkData> = ref(pipeworkData!);
 
-const saveForm = (fields: HotWaterDistributionData) => {
+const saveForm = (fields: PipeworkData) => {
 	store.$patch((state) => {
-		const {hotWaterDistribution} = state.hotWaterOutlets;
+		const {pipework} = state.domesticHotWater;
 
-		if (!hotWaterDistribution.data) {
-			hotWaterDistribution.data = [];
+		if (!pipework.data) {
+			pipework.data = [];
 		}
 
-		const distribution: HotWaterDistributionData = {
+		const pipeworkItem: PipeworkData = {
 			name: fields.name,
 			location: fields.location,
 			length: fields.length,
 			internalDiameter: fields.internalDiameter,
 		};
 
-		if (route.params.distribution && route.params.distribution !== 'create') {
-			const index = parseInt(route.params.distribution as string);
-			hotWaterDistribution.data[index] = distribution;
+		if (route.params.pipework && route.params.pipework !== 'create') {
+			const index = parseInt(route.params.pipework as string);
+			pipework.data[index] = pipeworkItem;
 		} else {
-			hotWaterDistribution.data.push(distribution);
+			pipework.data.push(pipeworkItem);
 		}
 
-		state.hotWaterOutlets.hotWaterDistribution.complete = true;
+		state.domesticHotWater.pipework.complete = true;
 	});
 
-	navigateTo("/hot-water-outlets/hot-water-distribution");
+	navigateTo("/domestic-hot-water/pipework");
 };
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
@@ -52,7 +52,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 	>
 		<GovErrorSummary
 			:error-list="errorMessages"
-			test-id="hotWaterDistributionErrorSummary"
+			test-id="pipeworkErrorSummary"
 		/>
 
 		<GovDetails
