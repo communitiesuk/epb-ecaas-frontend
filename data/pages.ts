@@ -482,6 +482,20 @@ const pagesData: Array<Page> = [
 		parentId: 'hotWaterOutlets'
 	},
 	{
+		id: 'electricShower',
+		title: 'Electric shower',
+		url: '/domestic-hot-water/hot-water-outlets/electric-shower/:shower',
+		type: PageType.Task,
+		parentId: 'hotWaterOutlets'
+	},
+	{
+		id: 'bath',
+		title: 'Bath',
+		url: '/domestic-hot-water/hot-water-outlets/bath/:bath',
+		type: PageType.Task,
+		parentId: 'hotWaterOutlets'
+	},
+	{
 		id: 'pipework',
 		title: 'Pipework',
 		url: '/domestic-hot-water/pipework',

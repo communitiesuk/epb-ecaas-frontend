@@ -357,6 +357,8 @@ export type ElectricShowerData = {
 
 export type BathData = {
 	name: string;
+	size: number;
+	flowRate: number;
 };
 
 export type OtherHotWaterOutletData = {
