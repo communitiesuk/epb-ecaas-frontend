@@ -363,6 +363,7 @@ export type BathData = {
 
 export type OtherHotWaterOutletData = {
 	name: string;
+	flowRate: number;
 };
 
 export type PipeworkData = {

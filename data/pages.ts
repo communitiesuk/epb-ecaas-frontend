@@ -471,7 +471,7 @@ const pagesData: Array<Page> = [
 		id: 'hotWaterOutlets',
 		title: 'Hot water outlets',
 		url: '/domestic-hot-water/hot-water-outlets',
-		type: PageType.Task,
+		type: PageType.TaskGroup,
 		parentId: 'domesticHotWater'
 	},
 	{
@@ -492,6 +492,13 @@ const pagesData: Array<Page> = [
 		id: 'bath',
 		title: 'Bath',
 		url: '/domestic-hot-water/hot-water-outlets/bath/:bath',
+		type: PageType.Task,
+		parentId: 'hotWaterOutlets'
+	},
+	{
+		id: 'otherOutlets',
+		title: 'Other outlet',
+		url: '/domestic-hot-water/hot-water-outlets/other/:outlet',
 		type: PageType.Task,
 		parentId: 'hotWaterOutlets'
 	},
