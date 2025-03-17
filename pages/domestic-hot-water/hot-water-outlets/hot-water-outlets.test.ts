@@ -10,14 +10,17 @@ describe('hot water outlets', () => {
 		const user = userEvent.setup();
 
 		const mixedShower1: MixedShowerData = {
-			name: "Mixed shower 1"
+			name: "Mixed shower 1",
+			flowRate: 10
 		};
 
 		const mixedShower2: MixedShowerData = {
-			name: "Mixed shower 2"
+			...mixedShower1,
+			name: "Mixed shower 2",
 		};
 
 		const mixedShower3: MixedShowerData = {
+			...mixedShower1,
 			name: "Mixed shower 3"
 		};
 

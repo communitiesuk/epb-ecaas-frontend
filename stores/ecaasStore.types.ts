@@ -347,6 +347,7 @@ export interface HotWaterOutlets {
 
 export type MixedShowerData = {
 	name: string;
+	flowRate: number;
 };
 
 export type ElectricShowerData = {
