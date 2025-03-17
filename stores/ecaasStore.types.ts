@@ -352,6 +352,7 @@ export type MixedShowerData = {
 
 export type ElectricShowerData = {
 	name: string;
+	ratedPower: number;
 };
 
 export type BathData = {
