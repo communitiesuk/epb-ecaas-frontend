@@ -1,6 +1,6 @@
 import { createPinia, setActivePinia } from 'pinia';
 import formStatus from '~/constants/formStatus';
-import pagesData from '~/data/pages';
+import pagesData from '~/data/pages/pages';
 
 describe('Ecaas Store', () => {
 	beforeEach(() => {

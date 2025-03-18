@@ -1,4 +1,4 @@
-import { PageType, type Page } from "../pages.types";
+import { PageType, type Page } from "./pages.types";
 
 const infiltrationAndVentilationPages: Array<Page> = [
 	{

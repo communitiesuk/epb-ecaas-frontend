@@ -1,4 +1,4 @@
-import pagesData from "~/data/pages";
+import pagesData from "~/data/pages/pages";
 
 /**
  * Returns page object from page data based on the current route path.

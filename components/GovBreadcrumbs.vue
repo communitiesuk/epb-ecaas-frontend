@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import pagesData, { type Page } from '../data/pages';
+import pagesData, { type Page } from '../data/pages/pages';
 
 const getBreadcrumbs = (id: string | undefined, breadcrumbs: Array<Page>): Array<Page> => {
 	const currentPage = pagesData.find(page => page.id === id);

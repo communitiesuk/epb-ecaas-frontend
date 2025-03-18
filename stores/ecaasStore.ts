@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import type { EcaasState } from "./ecaasStore.types";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
-import { PageType, type Page } from "~/data/pages.types";
+import { PageType, type Page } from "~/data/pages/pages.types";
 
 function getInitialState(): EcaasState {
 	return {
