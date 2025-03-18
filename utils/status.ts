@@ -1,6 +1,7 @@
 import type { GovTagProps } from "~/common.types";
 import formStatus from "~/constants/formStatus";
-import pagesData, { PageType } from "~/data/pages";
+import pagesData from "~/data/pages";
+import { PageType } from "~/data/pages.types";
 
 /**
  * Traverses an object to find a nested object with a given pageId / property name

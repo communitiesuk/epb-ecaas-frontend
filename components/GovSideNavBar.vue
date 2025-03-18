@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import pagesData, { PageType, type Page } from "~/data/pages";
+import pagesData from '~/data/pages';
+import { PageType, type Page } from '~/data/pages.types';
 
 const parentPages: Array<Page> = pagesData.filter(
 	(page) => page.type === PageType.Section
