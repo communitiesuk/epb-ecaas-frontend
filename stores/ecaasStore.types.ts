@@ -445,6 +445,7 @@ export interface AirPermeabilityData {
 
 export interface HeatingSystems {
 	energySupply: EcaasForm<EnergySupplyData>;
+	heatEmitting: HeatEmitting;
 }
 
 export interface EnergySupplyData {
@@ -454,3 +455,24 @@ export interface EnergySupplyData {
 	kwhPerKwhDelivered?: number;
 	exported?: string;
 }
+
+export interface HeatEmitting {
+	wetDistribution: EcaasForm<WetDistributionData[]>;
+	instantElectricHeater: EcaasForm<InstantElectricStorageData[]>;
+	electricStorageHeater: EcaasForm<ElectricStorageHeaterData[]>;
+	warmAirHeatPump: EcaasForm<WarmAirHeatPumpData[]>;
+}
+
+export type ElectricStorageHeaterData = {
+
+}
+export type InstantElectricStorageData = {
+
+}
+export type WarmAirHeatPumpData = {
+
+}
+export type WetDistributionData = {
+
+}
+
