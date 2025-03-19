@@ -1,2 +1,4 @@
 <script setup></script>
-<template></template>
+<template>
+	<div/>
+</template>
