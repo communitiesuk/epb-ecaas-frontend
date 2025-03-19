@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { HeatPumpData } from '~/stores/ecaasStore.types';
+import type {BoilerData, HeatPumpData} from '~/stores/ecaasStore.types';
 
 const title = "Heat generation";
 const page = usePage();
 const store = useEcaasStore();
 
 type HeatGenerationType = keyof typeof store.heatingSystems.heatGeneration;
-interface HeatGenerationData extends HeatPumpData {};
+interface HeatGenerationData extends HeatPumpData, BoilerData {};
 
 function handleRemove(outletType: HeatGenerationType, index: number) {
 	const outlets = store.heatingSystems.heatGeneration[outletType]?.data;
@@ -54,6 +54,14 @@ function handleDuplicate<T extends HeatGenerationData>(outletType: HeatGeneratio
 		:items="store.heatingSystems.heatGeneration.heatPump.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('heatPump', index)"
 		@duplicate="(index: number) => handleDuplicate('heatPump', index)"
+	/>
+	<GovCustomList
+		id="boiler"
+		title="Boiler"
+		:form-url="`${page?.url!}/boiler`"
+		:items="store.heatingSystems.heatGeneration.boiler.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('boiler', index)"
+		@duplicate="(index: number) => handleDuplicate('boiler', index)"
 	/>
 	<GovButton
 		href="/heating-systems"

@@ -94,4 +94,95 @@ describe('heat generation', () => {
 			expect(screen.getByText('Heat pump 1 (1) (2)')).toBeDefined();
 		});
 	});
+
+	describe('boiler', () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+
+		const boiler1: BoilerData = {
+			name: "boiler 1"
+		};
+
+		const boiler2: BoilerData = {
+			...boiler1,
+			name: "boiler 2",
+		};
+
+		const boiler3: BoilerData = {
+			...boiler1,
+			name: "boiler 3"
+		};
+
+		afterEach(() => {
+			store.$reset();
+		});
+
+		it('boiler is removed when remove link is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						boiler: {
+							data: [boiler1]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+
+			expect(screen.getAllByTestId('boiler_items')).toBeDefined();
+
+			await user.click(screen.getByTestId('boiler_remove_0'));
+
+			expect(screen.queryByTestId('boiler_items')).toBeNull();
+		});
+
+		it('should only remove the boiler thats is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						boiler: {
+							data:[boiler1, boiler2, boiler3]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+			await user.click(screen.getByTestId('boiler_remove_1'));
+
+			const populatedList = screen.getByTestId('boiler_items');
+
+			expect(within(populatedList).getByText('boiler 1')).toBeDefined();
+			expect(within(populatedList).getByText('boiler 3')).toBeDefined();
+			expect(within(populatedList).queryByText('boiler 2')).toBeNull();
+
+		});
+
+		it('Boiler is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						boiler: {
+							data: [boiler1, boiler2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+			await userEvent.click(screen.getByTestId('boiler_duplicate_0'));
+			await userEvent.click(screen.getByTestId('boiler_duplicate_0'));
+			await userEvent.click(screen.getByTestId('boiler_duplicate_2'));
+			await userEvent.click(screen.getByTestId('boiler_duplicate_2'));
+
+			expect(screen.queryAllByTestId('boiler_item').length).toBe(6);
+			expect(screen.getByText('boiler 1')).toBeDefined();
+			expect(screen.getByText('boiler 1 (1)')).toBeDefined();
+			expect(screen.getByText('boiler 1 (2)')).toBeDefined();
+			expect(screen.getByText('boiler 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('boiler 1 (1) (2)')).toBeDefined();
+		});
+	});
 });
+

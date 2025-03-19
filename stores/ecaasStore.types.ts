@@ -451,9 +451,14 @@ export interface HeatingSystems {
 
 export interface HeatGeneration {
 	heatPump: EcaasForm<HeatPumpData[]>;
+	boiler: EcaasForm<BoilerData[]>;
 }
 
 export type HeatPumpData = {
+	name: string;
+};
+
+export type BoilerData = {
 	name: string;
 };
 
