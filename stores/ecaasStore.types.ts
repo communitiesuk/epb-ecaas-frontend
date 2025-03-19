@@ -464,15 +464,15 @@ export interface HeatEmitting {
 }
 
 export type ElectricStorageHeaterData = {
-
-}
+	name: string,
+};
 export type InstantElectricStorageData = {
-
-}
+	name: string,
+};
 export type WarmAirHeatPumpData = {
-
-}
+	name: string,
+};
 export type WetDistributionData = {
-
-}
+	name: string
+};
 
