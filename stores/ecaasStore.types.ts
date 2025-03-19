@@ -334,9 +334,58 @@ export type SpaceHeatControlSystemData = {
 };
 
 export interface DomesticHotWater {
+	waterHeating: WaterHeating;
 	hotWaterOutlets: HotWaterOutlets;
 	pipework: EcaasForm<PipeworkData[]>;
 }
+
+export interface WaterHeating {
+	storageTank: EcaasForm<StorageTankData[]>;
+	immersionHeater: EcaasForm<ImmersionHeaterData[]>;
+	solarThermal: EcaasForm<SolarThermalData[]>;
+	pointOfUse: EcaasForm<PointOfUseData[]>;
+	heatPump: EcaasForm<HeatPumpData[]>;
+	combiBoiler: EcaasForm<CombiBoilerData[]>;
+	heatBattery: EcaasForm<HeatBatteryData[]>;
+	smartHotWaterTank: EcaasForm<SmartHotWaterTankData[]>;
+	heatInterfaceUnit: EcaasForm<HeatInterfaceUnitData[]>;
+}
+
+export type StorageTankData = {
+	name: string;
+};
+
+export type ImmersionHeaterData = {
+	name: string;
+};
+
+export type SolarThermalData = {
+	name: string;
+};
+
+export type PointOfUseData = {
+	name: string;
+};
+
+export type HeatPumpData = {
+	name: string;
+};
+
+export type CombiBoilerData = {
+	name: string;
+};
+
+export type HeatBatteryData = {
+	name: string;
+};
+
+export type SmartHotWaterTankData = {
+	name: string;
+};
+
+export type HeatInterfaceUnitData = {
+	name: string;
+};
 
 export interface HotWaterOutlets {
 	mixedShower: EcaasForm<MixedShowerData[]>;

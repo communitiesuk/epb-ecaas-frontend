@@ -27,6 +27,17 @@ function getInitialState(): EcaasState {
 			airPermeability: { data: {} }
 		},
 		domesticHotWater: {
+			waterHeating: {
+				storageTank: { data: [] },
+				immersionHeater: { data: [] },
+				solarThermal: { data: [] },
+				pointOfUse: { data: [] },
+				heatPump: { data: [] },
+				combiBoiler: { data: [] },
+				heatBattery: { data: [] },
+				smartHotWaterTank: { data: [] },
+				heatInterfaceUnit: { data: [] }
+			},
 			hotWaterOutlets: {
 				mixedShower: { data: [] },
 				electricShower: { data: [] },

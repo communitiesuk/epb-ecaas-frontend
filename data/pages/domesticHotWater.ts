@@ -12,8 +12,71 @@ const domesticHotWaterPages: Array<Page> = [
 		id: 'waterHeating',
 		title: 'Water heating',
 		url: '/domestic-hot-water/water-heating',
-		type: PageType.Task,
+		type: PageType.TaskGroup,
 		parentId: 'domesticHotWater'
+	},
+	{
+		id: 'storageTank',
+		title: 'Storage tank',
+		url: '/domestic-hot-water/water-heating/storage-tank/:storageTank',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'immersionHeater',
+		title: 'Immersion heater',
+		url: '/domestic-hot-water/water-heating/immersion-heater/:immersionHeater',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'solarThermal',
+		title: 'Solar thermal',
+		url: '/domestic-hot-water/water-heating/solar-thermal/:solarThermal',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'pointOfUse',
+		title: 'Point of use',
+		url: '/domestic-hot-water/water-heating/point-of-use/:pointOfUse',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'heatPump',
+		title: 'Heat pump',
+		url: '/domestic-hot-water/water-heating/heat-pump/:heatPump',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'combiBoiler',
+		title: 'Combi boiler',
+		url: '/domestic-hot-water/water-heating/combi-boiler/:combiBoiler',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'heatBattery',
+		title: 'Heat battery',
+		url: '/domestic-hot-water/water-heating/heat-battery/:heatBattery',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'smartHotWaterTank',
+		title: 'Smart hot water tank',
+		url: '/domestic-hot-water/water-heating/smart-hot-water-tank/:smartHotWaterTank',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'heatInterfaceUnit',
+		title: 'Heat interface unit',
+		url: '/domestic-hot-water/water-heating/heat-interface-unit/:heatInterfaceUnit',
+		type: PageType.Task,
+		parentId: 'waterHeating'
 	},
 	{
 		id: 'hotWaterOutlets',

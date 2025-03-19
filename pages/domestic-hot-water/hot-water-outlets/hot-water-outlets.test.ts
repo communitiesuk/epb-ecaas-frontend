@@ -101,14 +101,17 @@ describe('hot water outlets', () => {
 		const user = userEvent.setup();
 
 		const electricShower1: ElectricShowerData = {
-			name: "Electric shower 1"
+			name: "Electric shower 1",
+			ratedPower: 10
 		};
 
 		const electricShower2: ElectricShowerData = {
+			...electricShower1,
 			name: "Electric shower 2"
 		};
 
 		const electricShower3: ElectricShowerData = {
+			...electricShower1,
 			name: "Electric shower 3"
 		};
 
@@ -189,14 +192,18 @@ describe('hot water outlets', () => {
 		const user = userEvent.setup();
 
 		const bath1: BathData = {
-			name: "Bath 1"
+			name: "Bath 1",
+			size: 100,
+			flowRate: 10
 		};
 
 		const bath2: BathData = {
+			...bath1,
 			name: "Bath 2"
 		};
 
 		const bath3: BathData = {
+			...bath1,
 			name: "Bath 3"
 		};
 
@@ -277,14 +284,17 @@ describe('hot water outlets', () => {
 		const user = userEvent.setup();
 
 		const basinTap1: OtherHotWaterOutletData = {
-			name: "Basin tap 1"
+			name: "Basin tap 1",
+			flowRate: 10
 		};
 
 		const basinTap2: OtherHotWaterOutletData = {
+			...basinTap1,
 			name: "Basin tap 2"
 		};
 
 		const basinTap3: OtherHotWaterOutletData = {
+			...basinTap1,
 			name: "Basin tap 3"
 		};
 
