@@ -22,7 +22,7 @@ const saveForm = (fields: InternalWallData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '0' ? 0 : fields.pitch
+			pitch: fields.pitchOption === '90' ? 90 : fields.pitch
 		};
 
 		if (route.params.wall && route.params.wall !== 'create') {
@@ -63,6 +63,26 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required"
 		/>
 		<FormKit
+			id="pitchOption"
+			type="govRadios"
+			:options="{
+				'90': '90',
+				custom: 'Custom'
+			}"
+			label="Pitch"
+			help="Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down."
+			name="pitchOption"
+			validation="required"
+		/>
+		<FormKit
+			v-if="model.pitchOption === 'custom'"
+			id="pitch"
+			type="govInputWithSuffix"
+			suffix-text="degrees"
+			name="pitch"
+			validation="required | number"
+		/>
+		<FormKit
 			id="surfaceAreaOfElement"
 			type="govInputWithSuffix"
 			label="Surface area of element"
@@ -82,26 +102,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		/>
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
-		<FormKit
-			id="pitchOption"
-			type="govRadios"
-			:options="{
-				'0': '0',
-				custom: 'Custom'
-			}"
-			label="Pitch"
-			help="Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down."
-			name="pitchOption"
-			validation="required"
-		/>
-		<FormKit
-			v-if="model.pitchOption === 'custom'"
-			id="pitch"
-			type="govInputWithSuffix"
-			suffix-text="degrees"
-			name="pitch"
-			validation="required | number"
-		/>
 		<FormKit
 			type="govButton"
 			label="Save and continue"

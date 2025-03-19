@@ -18,8 +18,8 @@ describe('internal wall', () => {
 		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: 'internal',
-		pitchOption: '0',
-		pitch: 0
+		pitchOption: '90',
+		pitch: 90
 	};
 
 	afterEach(() => {
@@ -32,7 +32,7 @@ describe('internal wall', () => {
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.type(screen.getByTestId('kappaValue'), '100');
 		await user.click(screen.getByTestId('massDistributionClass_internal'));
-		await user.click(screen.getByTestId('pitchOption_0'));
+		await user.click(screen.getByTestId('pitchOption_90'));
 	};
 	
 	it('data is saved to store state when form is valid', async () => {
@@ -68,7 +68,7 @@ describe('internal wall', () => {
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('kappaValue') as HTMLInputElement).value).toBe('100');
 		expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('pitchOption_0')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
 	});
 
 	it('required error messages are displayed when empty form is submitted', async () => {
@@ -106,13 +106,13 @@ describe('internal wall', () => {
 
 		await populateValidForm();
 		await user.click(screen.getByTestId('pitchOption_custom'));
-		await user.type(screen.getByTestId('pitch'), '90');
+		await user.type(screen.getByTestId('pitch'), '100');
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
 		const { livingSpaceInternalWall } = store.livingSpaceFabric.livingSpaceWalls;
 		
-		expect(livingSpaceInternalWall?.data[0].pitch).toEqual(90);
+		expect(livingSpaceInternalWall?.data[0].pitch).toEqual(100);
 	});
 
 	it('navigates to walls page when valid form is completed', async () => {

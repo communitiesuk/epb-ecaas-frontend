@@ -69,26 +69,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required"
 		/>
 		<FormKit
-			id="surfaceAreaOfElement"
-			type="govInputWithSuffix"
-			suffix-text="m2"
-			label="Surface area of element"
-			help="Net area of the building element"
-			name="surfaceAreaOfElement"
-			validation="required | number | min:0 | max:10000"
-		/>
-		<FormKit
-			id="uValue"
-			type="govInputWithSuffix"
-			suffix-text="W/(m2.K)"
-			label="U-value"
-			help="Steady-state thermal transmittance of the building element"
-			name="uValue"
-			validation="required | number | min:0.01 | max:10"
-		/>
-		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
-		<FormKit
 			id="pitchOption"
 			type="govRadios"
 			:options="{
@@ -108,6 +88,26 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="pitch"
 			validation="required | number | min:0 | max:180"
 		/>
+		<FormKit
+			id="surfaceAreaOfElement"
+			type="govInputWithSuffix"
+			suffix-text="m2"
+			label="Surface area of element"
+			help="Net area of the building element"
+			name="surfaceAreaOfElement"
+			validation="required | number | min:0 | max:10000"
+		/>
+		<FormKit
+			id="uValue"
+			type="govInputWithSuffix"
+			suffix-text="W/(m2.K)"
+			label="U-value"
+			help="Steady-state thermal transmittance of the building element"
+			name="uValue"
+			validation="required | number | min:0.01 | max:10"
+		/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
+		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
