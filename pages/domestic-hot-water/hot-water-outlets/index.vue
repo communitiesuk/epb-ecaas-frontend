@@ -29,12 +29,12 @@ function handleDuplicate<T extends HotWaterOutletData>(outletType: HotWaterOutle
 		const duplicates = outlets.filter(f => f.name.match(duplicateNamePattern(outlet.name)));
 
 		store.$patch((state) => {
-			const newDoor = {
+			const newItem = {
 				...outlet,
 				name: `${outlet.name} (${duplicates.length})`
 			} as T;
 
-			state.domesticHotWater.hotWaterOutlets[outletType]!.data.push(newDoor);
+			state.domesticHotWater.hotWaterOutlets[outletType]!.data.push(newItem);
 		});
 	}
 }
