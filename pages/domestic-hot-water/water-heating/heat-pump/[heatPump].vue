@@ -4,9 +4,9 @@ const store = useEcaasStore();
 const route = useRoute();
 
 const heatPumpData = useItemToEdit('heatPump', store.domesticHotWater.waterHeating.heatPump.data);
-const model: Ref<HeatPumpData> = ref(heatPumpData!);
+const model: Ref<HotWaterHeatPumpData> = ref(heatPumpData!);
 
-const saveForm = (fields: HeatPumpData) => {
+const saveForm = (fields: HotWaterHeatPumpData) => {
 	store.$patch((state) => {
 		const {heatPump} = state.domesticHotWater.waterHeating;
 
@@ -14,7 +14,7 @@ const saveForm = (fields: HeatPumpData) => {
 			heatPump.data = [];
 		}
 
-		const heatPumpItem: HeatPumpData = {
+		const heatPumpItem: HotWaterHeatPumpData = {
 			name: fields.name
 		};
 

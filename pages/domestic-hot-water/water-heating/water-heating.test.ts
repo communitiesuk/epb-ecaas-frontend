@@ -2,7 +2,7 @@ import { renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
 import WaterHeating from './index.vue';
-import type { CombiBoilerData, HeatBatteryData, HeatInterfaceUnitData, HeatPumpData, ImmersionHeaterData, PointOfUseData, SmartHotWaterTankData, SolarThermalData, StorageTankData } from "~/stores/ecaasStore.types";
+import type { CombiBoilerData, HeatBatteryData, HeatInterfaceUnitData, HotWaterHeatPumpData, ImmersionHeaterData, PointOfUseData, SmartHotWaterTankData, SolarThermalData, StorageTankData } from "~/stores/ecaasStore.types";
 
 describe('water heating', () => {
 
@@ -266,16 +266,16 @@ describe('water heating', () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
-		const heatPump1: HeatPumpData = {
+		const heatPump1: HotWaterHeatPumpData = {
 			name: "Heat pump 1"
 		};
 
-		const heatPump2: HeatPumpData = {
+		const heatPump2: HotWaterHeatPumpData = {
 			...heatPump1,
 			name: "Heat pump 2",
 		};
 
-		const heatPump3: HeatPumpData = {
+		const heatPump3: HotWaterHeatPumpData = {
 			...heatPump1,
 			name: "Heat pump 3"
 		};
