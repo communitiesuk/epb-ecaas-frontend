@@ -69,4 +69,11 @@ function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingT
 		:items="store.heatingSystems.heatEmitting.warmAirHeatPump.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('warmAirHeatPump', index)"
 		@duplicate="(index: number) => handleDuplicate('warmAirHeatPump', index)" />
+
+	<GovButton
+		href="/heating-systems"
+		secondary
+	>
+		Return to overview
+	</GovButton>
 </template>
