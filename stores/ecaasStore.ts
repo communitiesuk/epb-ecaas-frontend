@@ -65,10 +65,16 @@ function getInitialState(): EcaasState {
 			heatGeneration: {
 				heatPump: { data: []}
 			},
-			energySupply: { data: {} }
+			energySupply: { data: {} },
+			heatEmitting: {
+				wetDistribution: { data: []},
+				instantElectricHeater: { data: [] },
+				electricStorageHeater: { data: [] },
+				warmAirHeatPump: { data: [] },
+			},
 		}
 	};
-}
+}	
 
 export const useEcaasStore = defineStore("ecaas", {
 	state: getInitialState,
