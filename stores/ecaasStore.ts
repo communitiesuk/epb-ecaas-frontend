@@ -62,6 +62,9 @@ function getInitialState(): EcaasState {
 			livingSpaceZoneParameters: { data: {} },
 		},
 		heatingSystems: {
+			heatGeneration: {
+				heatPump: { data: []}
+			},
 			energySupply: { data: {} }
 		}
 	};

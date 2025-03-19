@@ -23,6 +23,13 @@ const heatingSystemsPages: Array<Page> = [
 		parentId: 'heatingSystems'
 	},
 	{
+		id: 'heatPump',
+		title: 'Heat pump',
+		url: '/heating-systems/heat-generation/heat-pump',
+		type: PageType.Task,
+		parentId: 'heatGeneration'
+	},
+	{
 		id: 'heatEmitting',
 		title: 'Heat emitting',
 		url: '/heating-systems/heat-emitting',

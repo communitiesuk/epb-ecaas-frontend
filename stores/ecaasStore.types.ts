@@ -444,9 +444,18 @@ export interface AirPermeabilityData {
 }
 
 export interface HeatingSystems {
+	heatGeneration: HeatGeneration,
 	energySupply: EcaasForm<EnergySupplyData>;
 	heatEmitting: HeatEmitting;
 }
+
+export interface HeatGeneration {
+	heatPump: EcaasForm<HeatPumpData[]>;
+}
+
+export type HeatPumpData = {
+	name: string;
+};
 
 export interface EnergySupplyData {
 	fuelType?: string[];
