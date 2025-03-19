@@ -23,7 +23,7 @@ defineProps<{
 				Intermediate colour
 			</p>
 			<p>
-				<span class="govuk-!-font-weight-bold">0.3</span><br>
+				<span class="govuk-!-font-weight-bold">0.9</span><br>
 				Dark colour
 			</p>
 		</GovDetails>
