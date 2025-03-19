@@ -26,8 +26,36 @@ const heatingSystemsPages: Array<Page> = [
 		id: 'heatEmitting',
 		title: 'Heat emitting',
 		url: '/heating-systems/heat-emitting',
-		type: PageType.Task,
+		type: PageType.TaskGroup,
 		parentId: 'heatingSystems'
+	},
+	{
+		id: 'wetDistribution',
+		title: 'Wet distribution',
+		url: '/heating-systems/heat-emitting/wet-distribution/:distribution',
+		type: PageType.Task,
+		parentId: 'heatEmitting'
+	},
+	{
+		id: 'instantElectricHeater',
+		title: 'Instant electric heater',
+		url: '/heating-systems/heat-emitting/instant-electric-heater/:heater',
+		type: PageType.Task,
+		parentId: 'heatEmitting'
+	},
+	{
+		id: 'electricStorageHeater',
+		title: 'Electric storage heater',
+		url: '/heating-systems/heat-emitting/electric-storage-heater/:heater',
+		type: PageType.Task,
+		parentId: 'heatEmitting'
+	},
+	{
+		id: 'warmAirHeatPump',
+		title: 'Warm air heat pump',
+		url: '/heating-systems/heat-emitting/warm-air-heat-pump/:pump',
+		type: PageType.Task,
+		parentId: 'heatEmitting'
 	},
 	{
 		id: 'heatingSystemsSummary',
@@ -35,7 +63,7 @@ const heatingSystemsPages: Array<Page> = [
 		url: '/heating-systems/summary',
 		type: PageType.Summary,
 		parentId: 'heatingSystems'
-	}
+	},
 ];
 
 export default heatingSystemsPages;
