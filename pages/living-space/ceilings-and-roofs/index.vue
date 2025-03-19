@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = "Celings and roofs";
+const title = "Ceilings and roofs";
 const page = usePage();
 const store = useEcaasStore();
 
