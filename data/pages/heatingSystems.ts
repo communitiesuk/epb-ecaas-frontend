@@ -44,6 +44,13 @@ const heatingSystemsPages: Array<Page> = [
 		parentId: 'heatGeneration'
 	},
 	{
+		id: 'heatNetwork',
+		title: 'Heat network',
+		url: '/heating-systems/heat-generation/heat-network',
+		type: PageType.Task,
+		parentId: 'heatGeneration'
+	},
+	{
 		id: 'heatEmitting',
 		title: 'Heat emitting',
 		url: '/heating-systems/heat-emitting',

@@ -274,5 +274,95 @@ describe('heat generation', () => {
 			expect(screen.getByText('heatBattery 1 (1) (2)')).toBeDefined();
 		});
 	});
+
+	describe('heat network', () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+
+		const heatNetwork1: HeatNetwork = {
+			name: "heatNetwork 1"
+		};
+
+		const heatNetwork2: HeatNetworky = {
+			...heatNetwork1,
+			name: "heatNetwork 2",
+		};
+
+		const heatNetwork3: HeatNetworkData = {
+			...heatNetwork1,
+			name: "heatNetwork 3"
+		};
+
+		afterEach(() => {
+			store.$reset();
+		});
+
+		it('heat network is removed when remove link is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatNetwork: {
+							data: [heatNetwork1]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+
+			expect(screen.getAllByTestId('heatNetwork_items')).toBeDefined();
+
+			await user.click(screen.getByTestId('heatNetwork_remove_0'));
+
+			expect(screen.queryByTestId('heatNetwork_items')).toBeNull();
+		});
+
+		it('should only remove the heat network that is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatNetwork: {
+							data:[heatNetwork1, heatNetwork2, heatNetwork3]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+			await user.click(screen.getByTestId('heatNetwork_remove_1'));
+
+			const populatedList = screen.getByTestId('heatNetwork_items');
+
+			expect(within(populatedList).getByText('heatNetwork 1')).toBeDefined();
+			expect(within(populatedList).getByText('heatNetwork 3')).toBeDefined();
+			expect(within(populatedList).queryByText('heatNetwork 2')).toBeNull();
+
+		});
+
+		it('heat network is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatNetwork: {
+							data: [heatNetwork1, heatNetwork2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+			await userEvent.click(screen.getByTestId('heatNetwork_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatNetwork_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatNetwork_duplicate_2'));
+			await userEvent.click(screen.getByTestId('heatNetwork_duplicate_2'));
+
+			expect(screen.queryAllByTestId('heatNetwork_item').length).toBe(6);
+			expect(screen.getByText('heatNetwork 1')).toBeDefined();
+			expect(screen.getByText('heatNetwork 1 (1)')).toBeDefined();
+			expect(screen.getByText('heatNetwork 1 (2)')).toBeDefined();
+			expect(screen.getByText('heatNetwork 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('heatNetwork 1 (1) (2)')).toBeDefined();
+		});
+	});
 });
 

@@ -77,6 +77,7 @@ function getInitialState(): EcaasState {
 				heatPump: { data: [] },
 				boiler: { data: [] },
 				heatBattery: { data: [] },
+				heatNetwork: { data: [] },
 			},
 			energySupply: { data: {} },
 			heatEmitting: {
