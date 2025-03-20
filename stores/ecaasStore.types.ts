@@ -346,7 +346,7 @@ export interface WaterHeating {
 	pointOfUse: EcaasForm<PointOfUseData[]>;
 	heatPump: EcaasForm<HotWaterHeatPumpData[]>;
 	combiBoiler: EcaasForm<CombiBoilerData[]>;
-	heatBattery: EcaasForm<HeatBatteryData[]>;
+	heatBattery: EcaasForm<WaterHeatingHeatBatteryData[]>;
 	smartHotWaterTank: EcaasForm<SmartHotWaterTankData[]>;
 	heatInterfaceUnit: EcaasForm<HeatInterfaceUnitData[]>;
 }
@@ -375,7 +375,7 @@ export type CombiBoilerData = {
 	name: string;
 };
 
-export type HeatBatteryData = {
+export type WaterHeatingHeatBatteryData = {
 	name: string;
 };
 
@@ -497,7 +497,7 @@ export interface HeatingSystems {
 export interface HeatGeneration {
 	heatPump: EcaasForm<HeatPumpData[]>;
 	boiler: EcaasForm<BoilerData[]>;
-	heatBattery: EcaasForm<HeatBatterData[]>;
+	heatBattery: EcaasForm<HeatBatteryData[]>;
 }
 
 export type HeatPumpData = {
