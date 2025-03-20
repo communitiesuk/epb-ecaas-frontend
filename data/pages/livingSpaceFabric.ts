@@ -142,8 +142,22 @@ const livingSpaceFabricPages: Array<Page> = [
 		parentId: 'livingSpaceFabric'
 	},
 	{
-		id: 'livingSpaceWindow',
-		title: 'Window',
+		id: 'windowShadingGuidance',
+		title: 'Window Shading: Modelling Overhangs and Side Fins',
+		url: '/living-space/windows/window-shading/guidance',
+		type: PageType.Content,
+		parentId: 'livingSpaceWindows'
+	},
+	{
+		id: 'livingSpaceWindowCreate',
+		title: 'Create',
+		url: '/living-space/windows/create',
+		type: PageType.Task,
+		parentId: 'livingSpaceWindows'
+	},
+	{
+		id: 'livingSpaceWindowEdit',
+		title: 'Edit',
 		url: '/living-space/windows/:window',
 		type: PageType.Task,
 		parentId: 'livingSpaceWindows'
