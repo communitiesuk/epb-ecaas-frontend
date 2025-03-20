@@ -12,8 +12,7 @@ const saveForm = (fields: ExposedFloorData) => {
 
 		const floor: ExposedFloorData = {
 			name: fields.name,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '180' ? 180 : fields.pitch,
+			pitch: 180,
 			orientation: fields.orientation,
 			height: fields.height,
 			width: fields.width,
@@ -61,26 +60,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
-		/>
-		<FormKit
-			id="pitchOption"
-			type="govRadios"
-			:options="{
-				'180': '180',
-				custom: 'Custom'
-			}"
-			label="Pitch"
-			help="Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down"
-			name="pitchOption"
-			validation="required"
-		/>
-		<FormKit
-			v-if="model.pitchOption === 'custom'"
-			id="pitch"
-			type="govInputWithSuffix"
-			suffix-text="degrees"
-			name="pitch"
-			validation="required | number | min:0 | max:180"
 		/>
 		<FormKit
 			id="orientation"

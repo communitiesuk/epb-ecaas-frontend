@@ -14,8 +14,7 @@ const saveForm = (fields: GroundFloorData) => {
 			name: fields.name,
 			surfaceAreaInZone: fields.surfaceAreaInZone,
 			surfaceAreaAllZones: fields.surfaceAreaAllZones,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '180' ? 180 : fields.pitch,
+			pitch: 180,
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
@@ -90,26 +89,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Surface area of element as a whole (across all zones)"
 			help="Total area of the building element across entire dwelling; if the floor is divided among several zones, this is the total area across all zone"
 			name="surfaceAreaAllZones"
-			validation="required | number"
-		/>
-		<FormKit
-			id="pitchOption"
-			type="govRadios"
-			:options="{
-				'180': '180',
-				custom: 'Custom'
-			}"
-			label="Pitch"
-			help="Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down."
-			name="pitchOption"
-			validation="required"
-		/>
-		<FormKit
-			v-if="model.pitchOption === 'custom'"
-			id="pitch"
-			type="govInputWithSuffix"
-			suffix-text="degrees"
-			name="pitch"
 			validation="required | number"
 		/>
 		<FormKit

@@ -70,15 +70,13 @@ export type InternalFloorData = {
 	uValue: number;
 	kappaValue: number;
 	massDistributionClass: string;
-	pitchOption: string;
-	pitch?: number;
+	pitch: number;
 	thermalResistanceOfAdjacentUnheatedSpace?: 0;
 };
 
 export type ExposedFloorData = {
 	name: string;
-	pitchOption: string;
-	pitch?: number;
+	pitch: number;
 	orientation: number;
 	height: number;
 	width: number;
@@ -94,8 +92,7 @@ export type GroundFloorData = {
 	name: string;
 	surfaceAreaInZone: number;
 	surfaceAreaAllZones: number;
-	pitchOption: string;
-	pitch?: number;
+	pitch: number;
 	uValue: number;
 	kappaValue: number;
 	massDistributionClass: string;

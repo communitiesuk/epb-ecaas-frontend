@@ -17,8 +17,7 @@ const saveForm = (fields: InternalFloorData) => {
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '180' ? 180 : fields.pitch,
+			pitch: 180,
 			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace
 		};
 
@@ -90,26 +89,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
-			<FormKit
-				id="pitchOption"
-				type="govRadios"
-				:options="{
-					'180': '180',
-					custom: 'Custom'
-				}"
-				label="Pitch"
-				help="Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down."
-				name="pitchOption"
-				validation="required"
-			/>
-			<FormKit
-				v-if="model.pitchOption === 'custom'"
-				id="pitch"
-				type="govInputWithSuffix"
-				suffix-text="degrees"
-				name="pitch"
-				validation="required | number"
-			/>
 		</template>
 		<FormKit
 			v-if="model.typeOfInternalFloor === 'unheatedSpace'"

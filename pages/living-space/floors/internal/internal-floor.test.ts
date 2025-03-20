@@ -19,7 +19,6 @@ describe('internal floor', () => {
 		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: 'internal',
-		pitchOption: '180',
 		pitch: 180
 	};
 
@@ -39,7 +38,6 @@ describe('internal floor', () => {
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.type(screen.getByTestId('kappaValue'), '100');
 		await user.click(screen.getByTestId('massDistributionClass_internal'));
-		await user.click(screen.getByTestId('pitchOption_180'));
 	};
 	
 	describe('when type of internal floor is heated space', () => {
@@ -78,7 +76,6 @@ describe('internal floor', () => {
 			expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 			expect((await screen.findByTestId('kappaValue') as HTMLInputElement).value).toBe('100');
 			expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('pitchOption_180')).hasAttribute('checked')).toBe(true);
 		});
 
 		it('requires additional fields when heated space is selected', async () => {
@@ -92,7 +89,6 @@ describe('internal floor', () => {
 			expect((await screen.findByTestId('uValue_error'))).toBeDefined();
 			expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();
 			expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();
-			expect((await screen.findByTestId('pitchOption_error'))).toBeDefined();
 		});
 	});
 	
@@ -156,31 +152,6 @@ describe('internal floor', () => {
 		await user.click(screen.getByRole('button'));
 
 		expect((await screen.findByTestId('internalFloorErrorSummary'))).toBeDefined();
-	});
-
-	it('requires pitch when custom pitch option is selected', async () => {
-		await renderSuspended(InternalFloor);
-
-		await user.click(screen.getByTestId('typeOfInternalFloor_heatedSpace'));
-		await user.click(screen.getByTestId('pitchOption_custom'));
-		await user.click(screen.getByRole('button'));
-
-		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
-	});
-
-	it('saves custom pitch when custom pitch option is selected', async () => {
-		await renderSuspended(InternalFloor);
-
-		await user.click(screen.getByTestId('typeOfInternalFloor_heatedSpace'));
-		await populateValidForm();
-		await user.click(screen.getByTestId('pitchOption_custom'));
-		await user.type(screen.getByTestId('pitch'), '90');
-		await user.tab();
-		await user.click(screen.getByRole('button'));
-
-		const { livingSpaceInternalFloor } = store.livingSpaceFabric.livingSpaceFloors;
-		
-		expect(livingSpaceInternalFloor?.data[0].pitch).toEqual(90);
 	});
 
 	it('navigates to floors page when valid form is completed', async () => {
