@@ -19,7 +19,7 @@ const saveForm = (fields: PartyWallData) => {
 			width: fields.width,
 			elevationalHeight: fields.elevationalHeight,
 			surfaceArea: fields.surfaceArea,
-			solarAbsorbtion: fields.solarAbsorbtion,
+			solarAbsorbtion: 0,
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass
@@ -119,7 +119,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorbtion" name="solarAbsorbtion"/>
 		<FormKit
 			id="uValue"
 			type="govInputWithSuffix"

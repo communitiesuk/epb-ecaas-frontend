@@ -21,7 +21,7 @@ describe('party wall', () => {
 		width: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorbtion: 0.1,
+		solarAbsorbtion: 0,
 		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: 'internal'
@@ -41,7 +41,6 @@ describe('party wall', () => {
 		await user.type(screen.getByTestId('width'), '20'); 
 		await user.type(screen.getByTestId('elevationalHeight'), '20');
 		await user.type(screen.getByTestId('surfaceArea'), '10');
-		await user.type(screen.getByTestId('solarAbsorbtion'), '0.1');
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.type(screen.getByTestId('kappaValue'), '100');
 		await user.click(screen.getByTestId('massDistributionClass_internal'));
@@ -79,7 +78,6 @@ describe('party wall', () => {
 		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('20');
 		expect((await screen.findByTestId('elevationalHeight') as HTMLInputElement).value).toBe('20');
 		expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('solarAbsorbtion') as HTMLInputElement).value).toBe('0.1');
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('kappaValue') as HTMLInputElement).value).toBe('100');
 		expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
@@ -98,7 +96,6 @@ describe('party wall', () => {
 		expect((await screen.findByTestId('width_error'))).toBeDefined();
 		expect((await screen.findByTestId('elevationalHeight_error'))).toBeDefined();
 		expect((await screen.findByTestId('surfaceArea_error'))).toBeDefined();
-		expect((await screen.findByTestId('solarAbsorbtion_error'))).toBeDefined();
 		expect((await screen.findByTestId('uValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();
