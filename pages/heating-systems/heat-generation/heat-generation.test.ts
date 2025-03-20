@@ -184,5 +184,95 @@ describe('heat generation', () => {
 			expect(screen.getByText('boiler 1 (1) (2)')).toBeDefined();
 		});
 	});
+
+	describe('heat battery', () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+
+		const heatBattery1: HeatBattery = {
+			name: "heatBattery 1"
+		};
+
+		const heatBattery2: HeatBattery = {
+			...heatBattery1,
+			name: "heatBattery 2",
+		};
+
+		const heatBattery3: HeatBatteryData = {
+			...heatBattery1,
+			name: "heatBattery 3"
+		};
+
+		afterEach(() => {
+			store.$reset();
+		});
+
+		it('heat battery is removed when remove link is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatBattery: {
+							data: [heatBattery1]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+
+			expect(screen.getAllByTestId('heatBattery_items')).toBeDefined();
+
+			await user.click(screen.getByTestId('heatBattery_remove_0'));
+
+			expect(screen.queryByTestId('heatBattery_items')).toBeNull();
+		});
+
+		it('should only remove the heat battery that is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatBattery: {
+							data:[heatBattery1, heatBattery2, heatBattery3]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+			await user.click(screen.getByTestId('heatBattery_remove_1'));
+
+			const populatedList = screen.getByTestId('heatBattery_items');
+
+			expect(within(populatedList).getByText('heatBattery 1')).toBeDefined();
+			expect(within(populatedList).getByText('heatBattery 3')).toBeDefined();
+			expect(within(populatedList).queryByText('heatBattery 2')).toBeNull();
+
+		});
+
+		it('heat battery is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatBattery: {
+							data: [heatBattery1, heatBattery2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+			await userEvent.click(screen.getByTestId('heatBattery_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatBattery_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatBattery_duplicate_2'));
+			await userEvent.click(screen.getByTestId('heatBattery_duplicate_2'));
+
+			expect(screen.queryAllByTestId('heatBattery_item').length).toBe(6);
+			expect(screen.getByText('heatBattery 1')).toBeDefined();
+			expect(screen.getByText('heatBattery 1 (1)')).toBeDefined();
+			expect(screen.getByText('heatBattery 1 (2)')).toBeDefined();
+			expect(screen.getByText('heatBattery 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('heatBattery 1 (1) (2)')).toBeDefined();
+		});
+	});
 });
 
