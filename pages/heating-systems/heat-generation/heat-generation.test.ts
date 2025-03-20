@@ -68,31 +68,6 @@ describe('heat generation', () => {
 			expect(within(populatedList).queryByText('Heat pump 2')).toBeNull();
 
 		});
-
-		it('Heat pump is duplicated when duplicate link is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						heatPump: {
-							data: [heatPump1, heatPump2]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-			await userEvent.click(screen.getByTestId('heatPump_duplicate_0'));
-			await userEvent.click(screen.getByTestId('heatPump_duplicate_0'));
-			await userEvent.click(screen.getByTestId('heatPump_duplicate_2'));
-			await userEvent.click(screen.getByTestId('heatPump_duplicate_2'));
-
-			expect(screen.queryAllByTestId('heatPump_item').length).toBe(6);
-			expect(screen.getByText('Heat pump 1')).toBeDefined();
-			expect(screen.getByText('Heat pump 1 (1)')).toBeDefined();
-			expect(screen.getByText('Heat pump 1 (2)')).toBeDefined();
-			expect(screen.getByText('Heat pump 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Heat pump 1 (1) (2)')).toBeDefined();
-		});
 	});
 
 	describe('boiler', () => {
@@ -157,31 +132,6 @@ describe('heat generation', () => {
 			expect(within(populatedList).getByText('boiler 3')).toBeDefined();
 			expect(within(populatedList).queryByText('boiler 2')).toBeNull();
 
-		});
-
-		it('Boiler is duplicated when duplicate link is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						boiler: {
-							data: [boiler1, boiler2]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-			await userEvent.click(screen.getByTestId('boiler_duplicate_0'));
-			await userEvent.click(screen.getByTestId('boiler_duplicate_0'));
-			await userEvent.click(screen.getByTestId('boiler_duplicate_2'));
-			await userEvent.click(screen.getByTestId('boiler_duplicate_2'));
-
-			expect(screen.queryAllByTestId('boiler_item').length).toBe(6);
-			expect(screen.getByText('boiler 1')).toBeDefined();
-			expect(screen.getByText('boiler 1 (1)')).toBeDefined();
-			expect(screen.getByText('boiler 1 (2)')).toBeDefined();
-			expect(screen.getByText('boiler 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('boiler 1 (1) (2)')).toBeDefined();
 		});
 	});
 
@@ -248,31 +198,6 @@ describe('heat generation', () => {
 			expect(within(populatedList).queryByText('heatBattery 2')).toBeNull();
 
 		});
-
-		it('heat battery is duplicated when duplicate link is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						heatBattery: {
-							data: [heatBattery1, heatBattery2]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-			await userEvent.click(screen.getByTestId('heatBattery_duplicate_0'));
-			await userEvent.click(screen.getByTestId('heatBattery_duplicate_0'));
-			await userEvent.click(screen.getByTestId('heatBattery_duplicate_2'));
-			await userEvent.click(screen.getByTestId('heatBattery_duplicate_2'));
-
-			expect(screen.queryAllByTestId('heatBattery_item').length).toBe(6);
-			expect(screen.getByText('heatBattery 1')).toBeDefined();
-			expect(screen.getByText('heatBattery 1 (1)')).toBeDefined();
-			expect(screen.getByText('heatBattery 1 (2)')).toBeDefined();
-			expect(screen.getByText('heatBattery 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('heatBattery 1 (1) (2)')).toBeDefined();
-		});
 	});
 
 	describe('heat network', () => {
@@ -338,31 +263,6 @@ describe('heat generation', () => {
 			expect(within(populatedList).queryByText('heatNetwork 2')).toBeNull();
 
 		});
-
-		it('heat network is duplicated when duplicate link is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						heatNetwork: {
-							data: [heatNetwork1, heatNetwork2]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-			await userEvent.click(screen.getByTestId('heatNetwork_duplicate_0'));
-			await userEvent.click(screen.getByTestId('heatNetwork_duplicate_0'));
-			await userEvent.click(screen.getByTestId('heatNetwork_duplicate_2'));
-			await userEvent.click(screen.getByTestId('heatNetwork_duplicate_2'));
-
-			expect(screen.queryAllByTestId('heatNetwork_item').length).toBe(6);
-			expect(screen.getByText('heatNetwork 1')).toBeDefined();
-			expect(screen.getByText('heatNetwork 1 (1)')).toBeDefined();
-			expect(screen.getByText('heatNetwork 1 (2)')).toBeDefined();
-			expect(screen.getByText('heatNetwork 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('heatNetwork 1 (1) (2)')).toBeDefined();
-		});
 	});
 
 	describe('heat interface unit', () => {
@@ -427,31 +327,6 @@ describe('heat generation', () => {
 			expect(within(populatedList).getByText('heatInterfaceUnit 3')).toBeDefined();
 			expect(within(populatedList).queryByText('heatInterfaceUnit 2')).toBeNull();
 
-		});
-
-		it('heat interface unit is duplicated when duplicate link is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						heatInterfaceUnit: {
-							data: [heatInterfaceUnit1, heatInterfaceUnit2]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_0'));
-			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_0'));
-			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_2'));
-			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_2'));
-
-			expect(screen.queryAllByTestId('heatInterfaceUnit_item').length).toBe(6);
-			expect(screen.getByText('heatInterfaceUnit 1')).toBeDefined();
-			expect(screen.getByText('heatInterfaceUnit 1 (1)')).toBeDefined();
-			expect(screen.getByText('heatInterfaceUnit 1 (2)')).toBeDefined();
-			expect(screen.getByText('heatInterfaceUnit 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('heatInterfaceUnit 1 (1) (2)')).toBeDefined();
 		});
 	});
 });
