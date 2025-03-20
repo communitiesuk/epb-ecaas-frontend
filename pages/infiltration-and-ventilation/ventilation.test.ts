@@ -20,13 +20,12 @@ describe('Ventilation', () => {
 	const state: VentilationData = {
 		zoneElevationalLevelAtBase: 1,
 		crossVentFactor: 'yes',
-		maxRequiredAirChangeRate: 1
+		maxRequiredAirChangeRate: 2
 	};
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('zoneElevationalLevelAtBase'), '1');
 		await user.click(screen.getByTestId('crossVentFactor_yes'));
-		await user.type(screen.getByTestId('maxRequiredAirChangeRate'), '1');
 		await user.tab();
 	};
 
@@ -54,7 +53,6 @@ describe('Ventilation', () => {
 		
 		expect((await screen.findByTestId('zoneElevationalLevelAtBase') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('crossVentFactor_yes')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('maxRequiredAirChangeRate') as HTMLInputElement).value).toBe('1');
 	});
 		
 	it('required error messages are displayed when empty form is submitted', async () => {
@@ -64,7 +62,6 @@ describe('Ventilation', () => {
 
 		expect((await screen.findByTestId('zoneElevationalLevelAtBase_error'))).toBeDefined();
 		expect((await screen.findByTestId('crossVentFactor_error'))).toBeDefined();
-		expect((await screen.findByTestId('maxRequiredAirChangeRate_error'))).toBeDefined();
 	});
 
 	it('error summary is displayed when an invalid form in submitted', async () => {

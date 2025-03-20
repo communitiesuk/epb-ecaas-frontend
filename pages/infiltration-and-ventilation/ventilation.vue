@@ -13,7 +13,7 @@ const saveForm = (fields: VentilationData) => {
 				data: {
 					zoneElevationalLevelAtBase: fields.zoneElevationalLevelAtBase,
 					crossVentFactor: fields.crossVentFactor,
-					maxRequiredAirChangeRate: fields.maxRequiredAirChangeRate
+					maxRequiredAirChangeRate: 2
 				},
 				complete: true
 			},
@@ -60,15 +60,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="A flag to indicate if cross ventilation is possible or not"
 			name="crossVentFactor"
 			validation="required"
-		/>
-		<FormKit
-			id="maxRequiredAirChangeRate"
-			type="govInputWithSuffix"
-			label="Maximum required air change rate"
-			help="Required maximum air change rate ach (or h-1) to be used in the static calculations of HTC and HLP"
-			name="maxRequiredAirChangeRate"
-			validation="required | number"
-			suffix-text="ACH (h-1)"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
