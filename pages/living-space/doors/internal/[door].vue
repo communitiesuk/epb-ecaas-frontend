@@ -1,19 +1,14 @@
 <script setup lang="ts">
-
 const title = "Internal door";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const doorData = useItemToEdit('door', store.livingSpaceFabric.livingSpaceDoors.livingSpaceInternalDoor?.data);
 const model: Ref<InternalDoorData> = ref(doorData!);
 
 const saveForm = (fields: InternalDoorData) => {
 	store.$patch((state) => {
-		const {livingSpaceDoors} = state.livingSpaceFabric;
-
-		if (!livingSpaceDoors.livingSpaceInternalDoor?.data) {
-			livingSpaceDoors.livingSpaceInternalDoor = {data: []};
-		}
+		const {livingSpaceInternalDoor} = state.livingSpaceFabric.livingSpaceDoors;
 
 		const door: InternalDoorData = {
 			typeOfCeiling: fields.typeOfCeiling,
@@ -27,14 +22,7 @@ const saveForm = (fields: InternalDoorData) => {
 			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 		};
 
-		if (route.params.door && route.params.door !== 'create') {
-			const index = parseInt(route.params.door as string);
-			livingSpaceDoors.livingSpaceInternalDoor.data[index] = door;
-		} else {
-			livingSpaceDoors.livingSpaceInternalDoor.data.push(door);
-		}
-
-		livingSpaceDoors.livingSpaceInternalDoor.complete = true;
+		saveToList(door, livingSpaceInternalDoor);
 	});
 
 	navigateTo("/living-space/doors");

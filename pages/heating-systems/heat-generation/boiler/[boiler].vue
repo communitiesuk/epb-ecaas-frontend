@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Boiler";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const boilerData = useItemToEdit('boiler', store.heatingSystems.heatGeneration.boiler.data);
 const model: Ref<BoilerData> = ref(boilerData!);
@@ -10,22 +10,11 @@ const saveForm = (fields: BoilerData) => {
 	store.$patch((state) => {
 		const {boiler} = state.heatingSystems.heatGeneration;
 
-		if (!boiler.data) {
-			boiler.data = [];
-		}
-
 		const boilerItem: BoilerData = {
 			name: fields.name
 		};
 
-		if (route.params.boiler && route.params.boiler !== 'create') {
-			const index = parseInt(route.params.boiler as string);
-			boiler.data[index] = boilerItem;
-		} else {
-			boiler.data.push(boilerItem);
-		}
-
-		boiler.complete = true;
+		saveToList(boilerItem, boiler);
 	});
 
 	navigateTo("/heating-systems/heat-generation");

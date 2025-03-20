@@ -423,18 +423,14 @@ export type PipeworkData = {
 };
 
 export interface InfiltrationAndVentilation {
-	mechanicalVentilation: EcaasForm<MechanicalVentilation>;
+	mechanicalVentilation: EcaasForm<MechanicalVentilationData[]>;
 	vents: EcaasForm<VentData[]>;
 	combustionAppliances: CombustionAppliancesData;
 	ventilation: EcaasForm<VentilationData>;
 	airPermeability: EcaasForm<AirPermeabilityData>;
 }
 
-export interface MechanicalVentilation {
-	mechanicalVentilationObjects?: MechanicalVentilationObject[]
-}
-
-export type MechanicalVentilationObject = {
+export type MechanicalVentilationData = {
 	name: string;
 	typeOfMechanicalVentilationOptions: string;
 	controlForSupplyAirflow: string;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Smart hot water tank";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const smartHotWaterTankData = useItemToEdit('smartHotWaterTank', store.domesticHotWater.waterHeating.smartHotWaterTank.data);
 const model: Ref<SmartHotWaterTankData> = ref(smartHotWaterTankData!);
@@ -10,22 +10,11 @@ const saveForm = (fields: SmartHotWaterTankData) => {
 	store.$patch((state) => {
 		const {smartHotWaterTank} = state.domesticHotWater.waterHeating;
 
-		if (!smartHotWaterTank.data) {
-			smartHotWaterTank.data = [];
-		}
-
-		const storageTankItem: SmartHotWaterTankData = {
+		const smartHotWaterTankItem: SmartHotWaterTankData = {
 			name: fields.name
 		};
 
-		if (route.params.smartHotWaterTank && route.params.smartHotWaterTank !== 'create') {
-			const index = parseInt(route.params.smartHotWaterTank as string);
-			smartHotWaterTank.data[index] = storageTankItem;
-		} else {
-			smartHotWaterTank.data.push(storageTankItem);
-		}
-
-		smartHotWaterTank.complete = true;
+		saveToList(smartHotWaterTankItem, smartHotWaterTank);
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

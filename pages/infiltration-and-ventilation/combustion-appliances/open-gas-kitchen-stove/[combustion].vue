@@ -1,19 +1,14 @@
 <script setup lang="ts">
-
 const title = "Open gas kitchen stove";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const applianceData = useItemToEdit('combustion', store.infiltrationAndVentilation.combustionAppliances.openGasKitchenStove.data);
 const model: Ref<CombustionApplianceData> = ref(applianceData!);
 
 const saveForm = (fields: CombustionApplianceData) => {
 	store.$patch((state) => {
-		const {combustionAppliances} = state.infiltrationAndVentilation;
-
-		if (!combustionAppliances.openGasKitchenStove.data) {
-			combustionAppliances.openGasKitchenStove.data = [];
-		}
+		const {openGasKitchenStove} = state.infiltrationAndVentilation.combustionAppliances;
 
 		const appliance: CombustionApplianceData = {
 			name: fields.name,
@@ -22,14 +17,7 @@ const saveForm = (fields: CombustionApplianceData) => {
 			typeOfFuel: fields.typeOfFuel,
 		};
 
-		if (route.params.combustion && route.params.combustion !== 'create') {
-			const index = parseInt(route.params.combustion as string);
-			combustionAppliances.openGasKitchenStove.data[index] = appliance;
-		} else {
-			combustionAppliances.openGasKitchenStove.data.push(appliance);
-		}
-
-		combustionAppliances.openGasKitchenStove.complete = true;
+		saveToList(appliance, openGasKitchenStove);
 	});
 
 	navigateTo("/infiltration-and-ventilation/combustion-appliances");

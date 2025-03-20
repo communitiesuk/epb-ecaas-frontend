@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Vent";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const ventData = useItemToEdit('vent', store.infiltrationAndVentilation.vents.data);
 const model: Ref<VentData> = ref(ventData!);
@@ -9,10 +9,6 @@ const model: Ref<VentData> = ref(ventData!);
 const saveForm = (fields: VentData) => {
 	store.$patch((state) => {
 		const {vents} = state.infiltrationAndVentilation;
-
-		if (!vents.data) {
-			vents.data = [];
-		}
 
 		const vent: VentData = {
 			name: fields.name,
@@ -25,14 +21,7 @@ const saveForm = (fields: VentData) => {
 			pitch: fields.pitch
 		};
 
-		if (route.params.vent && route.params.vent !== 'create') {
-			const index = parseInt(route.params.vent as string);
-			vents.data[index] = vent;
-		} else {
-			vents.data.push(vent);
-		}
-
-		vents.complete = true;
+		saveToList(vent, vents);
 	});
 
 	navigateTo("/infiltration-and-ventilation/vents");

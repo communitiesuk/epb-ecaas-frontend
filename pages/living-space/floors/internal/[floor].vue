@@ -1,8 +1,7 @@
 <script setup lang="ts">
-
 const title = "Internal floor";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const floorData = useItemToEdit('floor', store.livingSpaceFabric.livingSpaceFloors.livingSpaceInternalFloor?.data);
 const model: Ref<InternalFloorData> = ref(floorData!);
@@ -10,10 +9,6 @@ const model: Ref<InternalFloorData> = ref(floorData!);
 const saveForm = (fields: InternalFloorData) => {
 	store.$patch((state) => {
 		const {livingSpaceFloors} = state.livingSpaceFabric;
-
-		if (!livingSpaceFloors.livingSpaceInternalFloor?.data) {
-			livingSpaceFloors.livingSpaceInternalFloor = {data: []};
-		}
 
 		const floor: InternalFloorData = {
 			name: fields.name,
@@ -27,14 +22,11 @@ const saveForm = (fields: InternalFloorData) => {
 			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace
 		};
 
-		if (route.params.floor && route.params.floor !== 'create') {
-			const index = parseInt(route.params.floor as string);
-			livingSpaceFloors.livingSpaceInternalFloor.data[index] = floor;
-		} else {
-			livingSpaceFloors.livingSpaceInternalFloor.data.push(floor);
+		if (!livingSpaceFloors.livingSpaceInternalFloor) {
+			livingSpaceFloors.livingSpaceInternalFloor = {data: []};
 		}
 
-		livingSpaceFloors.livingSpaceInternalFloor.complete = true;
+		saveToList(floor, livingSpaceFloors.livingSpaceInternalFloor);
 	});
 
 	navigateTo("/living-space/floors");

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Pipework";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.data);
 const model: Ref<PipeworkData> = ref(pipeworkData!);
@@ -10,10 +10,6 @@ const saveForm = (fields: PipeworkData) => {
 	store.$patch((state) => {
 		const {pipework} = state.domesticHotWater;
 
-		if (!pipework.data) {
-			pipework.data = [];
-		}
-
 		const pipeworkItem: PipeworkData = {
 			name: fields.name,
 			location: fields.location,
@@ -21,14 +17,7 @@ const saveForm = (fields: PipeworkData) => {
 			internalDiameter: fields.internalDiameter,
 		};
 
-		if (route.params.pipework && route.params.pipework !== 'create') {
-			const index = parseInt(route.params.pipework as string);
-			pipework.data[index] = pipeworkItem;
-		} else {
-			pipework.data.push(pipeworkItem);
-		}
-
-		state.domesticHotWater.pipework.complete = true;
+		saveToList(pipeworkItem, pipework);
 	});
 
 	navigateTo("/domestic-hot-water/pipework");

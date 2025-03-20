@@ -7,7 +7,7 @@ describe("mechanical ventilation overview", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const mechanicalVentilation1: MechanicalVentilationObject = {
+	const mechanicalVentilation1: MechanicalVentilationData = {
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: "mvhr",
 		controlForSupplyAirflow: "load",
@@ -25,7 +25,7 @@ describe("mechanical ventilation overview", () => {
 		surfaceReflectivity: "reflective",
 	};
 
-	const mechanicalVentilation2: MechanicalVentilationObject = {
+	const mechanicalVentilation2: MechanicalVentilationData = {
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "decentralisedContinuous",
 		controlForSupplyAirflow: "oda",
@@ -43,7 +43,7 @@ describe("mechanical ventilation overview", () => {
 		surfaceReflectivity: undefined,
 	};
 
-	const mechanicalVentilation3: MechanicalVentilationObject = {
+	const mechanicalVentilation3: MechanicalVentilationData = {
 		name: "Mechanical name 3",
 		typeOfMechanicalVentilationOptions: "intermittent",
 		controlForSupplyAirflow: "oda",
@@ -69,29 +69,29 @@ describe("mechanical ventilation overview", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: {
-						mechanicalVentilationObjects: [mechanicalVentilation1],
-					},
+					data: [mechanicalVentilation1],
 				},
 			},
 		});
+
 		await renderSuspended(MechanicalVentilationOverview);
+
 		expect(screen.getAllByTestId("mechanicalVentilation_items")).toBeDefined();
+
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
 
 		expect(screen.queryByTestId("mechanicalVentilation_items")).toBeNull();
 	});
+
 	it("should only remove the mechanical ventilation object that is clicked", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: {
-						mechanicalVentilationObjects: [
-							mechanicalVentilation1,
-							mechanicalVentilation2,
-							mechanicalVentilation3,
-						],
-					},
+					data: [
+						mechanicalVentilation1,
+						mechanicalVentilation2,
+						mechanicalVentilation3
+					],
 				},
 			},
 		});
@@ -109,12 +109,10 @@ describe("mechanical ventilation overview", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: {
-						mechanicalVentilationObjects: [
-							mechanicalVentilation1,
-							mechanicalVentilation2,
-						],
-					},
+					data: [
+						mechanicalVentilation1,
+						mechanicalVentilation2
+					],
 				},
 			},
 		});

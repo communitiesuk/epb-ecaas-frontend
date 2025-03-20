@@ -1,8 +1,7 @@
 <script setup lang="ts">
-
 const title = "Party wall";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const wallData = useItemToEdit('wall', store.livingSpaceFabric.livingSpaceWalls.livingSpacePartyWall?.data);
 const model: Ref<PartyWallData> = ref(wallData!);
@@ -10,10 +9,6 @@ const model: Ref<PartyWallData> = ref(wallData!);
 const saveForm = (fields: PartyWallData) => {
 	store.$patch((state) => {
 		const {livingSpaceWalls} = state.livingSpaceFabric;
-
-		if (!livingSpaceWalls.livingSpacePartyWall?.data) {
-			livingSpaceWalls.livingSpacePartyWall = {data: []};
-		}
 
 		const wall: PartyWallData = {
 			name: fields.name,
@@ -30,14 +25,11 @@ const saveForm = (fields: PartyWallData) => {
 			massDistributionClass: fields.massDistributionClass
 		};
 
-		if (route.params.wall && route.params.wall !== 'create') {
-			const index = parseInt(route.params.wall as string);
-			livingSpaceWalls.livingSpacePartyWall.data[index] = wall;
-		} else {
-			livingSpaceWalls.livingSpacePartyWall.data.push(wall);
+		if (!livingSpaceWalls.livingSpacePartyWall) {
+			livingSpaceWalls.livingSpacePartyWall = { data: [] };
 		}
 
-		livingSpaceWalls.livingSpacePartyWall.complete = true;
+		saveToList(wall, livingSpaceWalls.livingSpacePartyWall);
 	});
 
 	navigateTo("/living-space/walls");

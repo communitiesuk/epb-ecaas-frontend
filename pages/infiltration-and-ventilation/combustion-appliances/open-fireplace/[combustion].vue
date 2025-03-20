@@ -1,19 +1,14 @@
 <script setup lang="ts">
-
 const title = "Open fireplace";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const applianceData = useItemToEdit('combustion', store.infiltrationAndVentilation.combustionAppliances.openFireplace.data);
 const model: Ref<CombustionApplianceData> = ref(applianceData!);
 
 const saveForm = (fields: CombustionApplianceData) => {
 	store.$patch((state) => {
-		const {combustionAppliances} = state.infiltrationAndVentilation;
-
-		if (!combustionAppliances.openFireplace.data) {
-			combustionAppliances.openFireplace.data = [];
-		}
+		const {openFireplace} = state.infiltrationAndVentilation.combustionAppliances;
 
 		const appliance: CombustionApplianceData = {
 			name: fields.name,
@@ -22,14 +17,7 @@ const saveForm = (fields: CombustionApplianceData) => {
 			typeOfFuel: fields.typeOfFuel,
 		};
 
-		if (route.params.combustion && route.params.combustion !== 'create') {
-			const index = parseInt(route.params.combustion as string);
-			combustionAppliances.openFireplace.data[index] = appliance;
-		} else {
-			combustionAppliances.openFireplace.data.push(appliance);
-		}
-
-		combustionAppliances.openFireplace.complete = true;
+		saveToList(appliance, openFireplace);
 	});
 
 	navigateTo("/infiltration-and-ventilation/combustion-appliances");

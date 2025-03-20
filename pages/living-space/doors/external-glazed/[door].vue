@@ -1,18 +1,14 @@
 <script setup lang="ts">
 const title = "External glazed door";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const doorData = useItemToEdit('door', store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalGlazedDoor?.data);
 const model: Ref<ExternalGlazedDoorData> = ref(doorData!);
 
 const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
-		const {livingSpaceDoors} = state.livingSpaceFabric;
-
-		if (!livingSpaceDoors.livingSpaceExternalGlazedDoor?.data) {
-			livingSpaceDoors.livingSpaceExternalGlazedDoor = {data: []};
-		}
+		const {livingSpaceExternalGlazedDoor} = state.livingSpaceFabric.livingSpaceDoors;
 
 		const door: ExternalGlazedDoorData = {
 			name: fields.name,
@@ -36,14 +32,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			midHeightOpenablePart4: fields.midHeightOpenablePart4,
 		};
 
-		if (route.params.door && route.params.door !== 'create') {
-			const index = parseInt(route.params.door as string);
-			livingSpaceDoors.livingSpaceExternalGlazedDoor.data[index] = door;
-		} else {
-			livingSpaceDoors.livingSpaceExternalGlazedDoor.data.push(door);
-		}
-
-		livingSpaceDoors.livingSpaceExternalGlazedDoor.complete = true;
+		saveToList(door, livingSpaceExternalGlazedDoor);
 	});
 
 	navigateTo("/living-space/doors");

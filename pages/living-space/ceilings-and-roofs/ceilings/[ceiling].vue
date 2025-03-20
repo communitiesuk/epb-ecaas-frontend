@@ -1,19 +1,14 @@
 <script setup lang="ts">
-
 const title = "Ceiling";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const ceilingData = useItemToEdit('ceiling', store.livingSpaceFabric.livingSpaceCeilingsAndRoofs.livingSpaceCeilings?.data);
 const model: Ref<CeilingData> = ref(ceilingData!);
 
 const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
-		const {livingSpaceCeilingsAndRoofs} = state.livingSpaceFabric;
-
-		if (!livingSpaceCeilingsAndRoofs.livingSpaceCeilings?.data) {
-			livingSpaceCeilingsAndRoofs.livingSpaceCeilings = {data: []};
-		}
+		const {livingSpaceCeilings} = state.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
 
 		const ceiling: CeilingData = {
 			type: fields.type,
@@ -27,14 +22,7 @@ const saveForm = (fields: CeilingData) => {
 			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 		};
 
-		if (route.params.ceiling && route.params.ceiling !== 'create') {
-			const index = parseInt(route.params.ceiling as string);
-			livingSpaceCeilingsAndRoofs.livingSpaceCeilings.data[index] = ceiling;
-		} else {
-			livingSpaceCeilingsAndRoofs.livingSpaceCeilings.data.push(ceiling);
-		}
-
-		livingSpaceCeilingsAndRoofs.livingSpaceCeilings.complete = true;
+		saveToList(ceiling, livingSpaceCeilings);
 	});
 
 	navigateTo("/living-space/ceilings-and-roofs");

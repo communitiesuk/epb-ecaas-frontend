@@ -1,19 +1,14 @@
 <script setup lang="ts">
-
 const title = "Closed fireplace with fan";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const applianceData = useItemToEdit('combustion', store.infiltrationAndVentilation.combustionAppliances.closedFireplaceWithFan.data);
 const model: Ref<CombustionApplianceData> = ref(applianceData!);
 
 const saveForm = (fields: CombustionApplianceData) => {
 	store.$patch((state) => {
-		const {combustionAppliances} = state.infiltrationAndVentilation;
-
-		if (!combustionAppliances.closedFireplaceWithFan.data) {
-			combustionAppliances.closedFireplaceWithFan.data = [];
-		}
+		const {closedFireplaceWithFan} = state.infiltrationAndVentilation.combustionAppliances;
 
 		const appliance: CombustionApplianceData = {
 			name: fields.name,
@@ -22,14 +17,7 @@ const saveForm = (fields: CombustionApplianceData) => {
 			typeOfFuel: fields.typeOfFuel,
 		};
 
-		if (route.params.combustion && route.params.combustion !== 'create') {
-			const index = parseInt(route.params.combustion as string);
-			combustionAppliances.closedFireplaceWithFan.data[index] = appliance;
-		} else {
-			combustionAppliances.closedFireplaceWithFan.data.push(appliance);
-		}
-
-		combustionAppliances.closedFireplaceWithFan.complete = true;
+		saveToList(appliance, closedFireplaceWithFan);
 	});
 
 	navigateTo("/infiltration-and-ventilation/combustion-appliances");

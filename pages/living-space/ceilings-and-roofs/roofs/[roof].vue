@@ -1,19 +1,14 @@
 <script setup lang="ts">
-
 const title = "Roof";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const roofData = useItemToEdit('roof', store.livingSpaceFabric.livingSpaceCeilingsAndRoofs.livingSpaceRoofs?.data);
 const model: Ref<RoofData> = ref(roofData!);
 
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
-		const {livingSpaceCeilingsAndRoofs} = state.livingSpaceFabric;
-
-		if (!livingSpaceCeilingsAndRoofs.livingSpaceRoofs?.data) {
-			livingSpaceCeilingsAndRoofs.livingSpaceRoofs = {data: []};
-		}
+		const {livingSpaceRoofs} = state.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
 
 		const roof: RoofData = {
 			name: fields.name,
@@ -31,14 +26,7 @@ const saveForm = (fields: RoofData) => {
 			massDistributionClass: fields.massDistributionClass
 		};
 
-		if (route.params.roof && route.params.roof !== 'create') {
-			const index = parseInt(route.params.roof as string);
-			livingSpaceCeilingsAndRoofs.livingSpaceRoofs.data[index] = roof;
-		} else {
-			livingSpaceCeilingsAndRoofs.livingSpaceRoofs.data.push(roof);
-		}
-
-		livingSpaceCeilingsAndRoofs.livingSpaceRoofs.complete = true;
+		saveToList(roof, livingSpaceRoofs);
 	});
 
 	navigateTo("/living-space/ceilings-and-roofs");

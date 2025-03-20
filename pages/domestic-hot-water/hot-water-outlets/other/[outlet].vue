@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Other outlets";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const otherOutletsData = useItemToEdit('outlet', store.domesticHotWater.hotWaterOutlets.otherOutlets.data);
 const model: Ref<OtherHotWaterOutletData> = ref(otherOutletsData!);
@@ -10,23 +10,12 @@ const saveForm = (fields: OtherHotWaterOutletData) => {
 	store.$patch((state) => {
 		const {otherOutlets} = state.domesticHotWater.hotWaterOutlets;
 
-		if (!otherOutlets.data) {
-			otherOutlets.data = [];
-		}
-
 		const outletItem: OtherHotWaterOutletData = {
 			name: fields.name,
 			flowRate: fields.flowRate,
 		};
 
-		if (route.params.outlet && route.params.outlet !== 'create') {
-			const index = parseInt(route.params.outlet as string);
-			otherOutlets.data[index] = outletItem;
-		} else {
-			otherOutlets.data.push(outletItem);
-		}
-
-		otherOutlets.complete = true;
+		saveToList(outletItem, otherOutlets);
 	});
 
 	navigateTo("/domestic-hot-water/hot-water-outlets");

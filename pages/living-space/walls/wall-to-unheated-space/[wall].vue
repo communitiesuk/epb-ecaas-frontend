@@ -1,8 +1,7 @@
 <script setup lang="ts">
-
 const title = "Wall to unheated space";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const wallData = useItemToEdit('wall', store.livingSpaceFabric.livingSpaceWalls.livingSpaceWallToUnheatedSpace?.data);
 const model: Ref<WallsToUnheatedSpaceData> = ref(wallData!);
@@ -10,10 +9,6 @@ const model: Ref<WallsToUnheatedSpaceData> = ref(wallData!);
 const saveForm = (fields: WallsToUnheatedSpaceData) => {
 	store.$patch((state) => {
 		const {livingSpaceWalls} = state.livingSpaceFabric;
-
-		if (!livingSpaceWalls.livingSpaceWallToUnheatedSpace?.data) {
-			livingSpaceWalls.livingSpaceWallToUnheatedSpace = {data: []};
-		}
 
 		const wall: WallsToUnheatedSpaceData = {
 			name: fields.name,
@@ -26,15 +21,11 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace
 		};
 
-
-		if (route.params.wall && route.params.wall !== 'create') {
-			const index = parseInt(route.params.wall as string);
-			livingSpaceWalls.livingSpaceWallToUnheatedSpace.data[index] = wall;
-		} else {
-			livingSpaceWalls.livingSpaceWallToUnheatedSpace.data.push(wall);
+		if (!livingSpaceWalls.livingSpaceWallToUnheatedSpace) {
+			livingSpaceWalls.livingSpaceWallToUnheatedSpace = { data: [] };
 		}
 
-		livingSpaceWalls.livingSpaceWallToUnheatedSpace.complete = true;
+		saveToList(wall, livingSpaceWalls.livingSpaceWallToUnheatedSpace);
 	});
 
 	navigateTo("/living-space/walls");

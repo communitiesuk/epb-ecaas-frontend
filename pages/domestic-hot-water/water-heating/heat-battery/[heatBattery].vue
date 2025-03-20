@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Heat battery";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const heatBatteryData = useItemToEdit('heatBattery', store.domesticHotWater.waterHeating.heatBattery.data);
 const model: Ref<HeatBatteryData> = ref(heatBatteryData!);
@@ -10,22 +10,11 @@ const saveForm = (fields: HeatBatteryData) => {
 	store.$patch((state) => {
 		const {heatBattery} = state.domesticHotWater.waterHeating;
 
-		if (!heatBattery.data) {
-			heatBattery.data = [];
-		}
-
 		const heatBatteryItem: HeatBatteryData = {
 			name: fields.name
 		};
 
-		if (route.params.heatBattery && route.params.heatBattery !== 'create') {
-			const index = parseInt(route.params.heatBattery as string);
-			heatBattery.data[index] = heatBatteryItem;
-		} else {
-			heatBattery.data.push(heatBatteryItem);
-		}
-
-		heatBattery.complete = true;
+		saveToList(heatBatteryItem, heatBattery);
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

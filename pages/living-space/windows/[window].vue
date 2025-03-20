@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Window";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const window = useItemToEdit('window', store.livingSpaceFabric.livingSpaceWindows.data);
 const model: Ref<WindowData> = ref(window!);
@@ -9,10 +9,6 @@ const model: Ref<WindowData> = ref(window!);
 const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
 		const {livingSpaceWindows} = state.livingSpaceFabric;
-
-		if (!livingSpaceWindows.data) {
-			livingSpaceWindows.data = [];
-		}
 
 		const window: WindowData = {
 			name: fields.name,
@@ -46,14 +42,7 @@ const saveForm = (fields: WindowData) => {
 			solarTransmittenceReduction: fields.solarTransmittenceReduction,
 		};
 
-		if (route.params.window && route.params.window !== 'create') {
-			const index = parseInt(route.params.window as string);
-			livingSpaceWindows.data[index] = window;
-		} else {
-			livingSpaceWindows.data.push(window);
-		}
-
-		state.livingSpaceFabric.livingSpaceWindows.complete = true;
+		saveToList(window, livingSpaceWindows);
 	});
 
 	navigateTo("/living-space/windows");

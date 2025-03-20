@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Immersion heater";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const immersionHeaterData = useItemToEdit('immersionHeater', store.domesticHotWater.waterHeating.immersionHeater.data);
 const model: Ref<ImmersionHeaterData> = ref(immersionHeaterData!);
@@ -10,22 +10,11 @@ const saveForm = (fields: ImmersionHeaterData) => {
 	store.$patch((state) => {
 		const {immersionHeater} = state.domesticHotWater.waterHeating;
 
-		if (!immersionHeater.data) {
-			immersionHeater.data = [];
-		}
-
 		const immersionHeaterItem: ImmersionHeaterData = {
 			name: fields.name
 		};
 
-		if (route.params.immersionHeater && route.params.immersionHeater !== 'create') {
-			const index = parseInt(route.params.immersionHeater as string);
-			immersionHeater.data[index] = immersionHeaterItem;
-		} else {
-			immersionHeater.data.push(immersionHeaterItem);
-		}
-
-		immersionHeater.complete = true;
+		saveToList(immersionHeaterItem, immersionHeater);
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

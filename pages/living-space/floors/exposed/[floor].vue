@@ -1,8 +1,7 @@
 <script setup lang="ts">
-
 const title = "Exposed floor";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const floorData = useItemToEdit('floor', store.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor?.data);
 const model: Ref<ExposedFloorData> = ref(floorData!);
@@ -10,10 +9,6 @@ const model: Ref<ExposedFloorData> = ref(floorData!);
 const saveForm = (fields: ExposedFloorData) => {
 	store.$patch((state) => {
 		const {livingSpaceFloors} = state.livingSpaceFabric;
-
-		if (!livingSpaceFloors.livingSpaceExposedFloor?.data) {
-			livingSpaceFloors.livingSpaceExposedFloor = {data: []};
-		}
 
 		const floor: ExposedFloorData = {
 			name: fields.name,
@@ -30,14 +25,11 @@ const saveForm = (fields: ExposedFloorData) => {
 			massDistributionClass: fields.massDistributionClass
 		};
 
-		if (route.params.floor && route.params.floor !== 'create') {
-			const index = parseInt(route.params.floor as string);
-			livingSpaceFloors.livingSpaceExposedFloor.data[index] = floor;
-		} else {
-			livingSpaceFloors.livingSpaceExposedFloor.data.push(floor);
+		if (!livingSpaceFloors.livingSpaceExposedFloor) {
+			livingSpaceFloors.livingSpaceExposedFloor = { data: [] };
 		}
 
-		livingSpaceFloors.livingSpaceExposedFloor.complete = true;
+		saveToList(floor, livingSpaceFloors.livingSpaceExposedFloor);
 	});
 
 	navigateTo("/living-space/floors");

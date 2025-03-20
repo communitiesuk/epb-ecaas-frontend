@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Electric shower";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const electricShowerData = useItemToEdit('shower', store.domesticHotWater.hotWaterOutlets.electricShower.data);
 const model: Ref<ElectricShowerData> = ref(electricShowerData!);
@@ -10,23 +10,12 @@ const saveForm = (fields: ElectricShowerData) => {
 	store.$patch((state) => {
 		const {electricShower} = state.domesticHotWater.hotWaterOutlets;
 
-		if (!electricShower.data) {
-			electricShower.data = [];
-		}
-
 		const electricShowerItem: ElectricShowerData = {
 			name: fields.name,
 			ratedPower: fields.ratedPower,
 		};
 
-		if (route.params.shower && route.params.shower !== 'create') {
-			const index = parseInt(route.params.shower as string);
-			electricShower.data[index] = electricShowerItem;
-		} else {
-			electricShower.data.push(electricShowerItem);
-		}
-
-		electricShower.complete = true;
+		saveToList(electricShowerItem, electricShower);
 	});
 
 	navigateTo("/domestic-hot-water/hot-water-outlets");

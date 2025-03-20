@@ -8,7 +8,7 @@ describe("mechanical ventilation form", () => {
 	const store = useEcaasStore();
 	const navigateToMock = vi.hoisted(() => vi.fn());
 
-	const mechanicalVentilation1: MechanicalVentilationObject = {
+	const mechanicalVentilation1: MechanicalVentilationData = {
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: "mvhr",
 		controlForSupplyAirflow: "load",
@@ -25,7 +25,8 @@ describe("mechanical ventilation form", () => {
 		thermalInsulationConductivityOfDuctwork: 10,
 		surfaceReflectivity: "reflective",
 	};
-	const mechanicalVentilation2: MechanicalVentilationObject = {
+
+	const mechanicalVentilation2: MechanicalVentilationData = {
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "intermittent",
 		controlForSupplyAirflow: "oda",
@@ -78,12 +79,10 @@ describe("mechanical ventilation form", () => {
 		await user.click(screen.getByTestId("surfaceReflectivity_reflective"));
 		await user.click(screen.getByRole("button"));
 
-		const { data, complete } =
-      store.infiltrationAndVentilation.mechanicalVentilation;
+		const { data, complete } = store.infiltrationAndVentilation.mechanicalVentilation;
+
 		expect(complete).toBe(true);
-		expect(data.mechanicalVentilationObjects?.[0]).toEqual(
-			mechanicalVentilation1
-		);
+		expect(data[0]).toEqual(mechanicalVentilation1);
 		expect(navigateToMock).toHaveBeenCalledWith(
 			"/infiltration-and-ventilation/mechanical-ventilation"
 		);
@@ -101,13 +100,11 @@ describe("mechanical ventilation form", () => {
 		await user.type(screen.getByTestId("airFlowRate"), "14");
 
 		await user.click(screen.getByRole("button"));
+
 		await waitFor(() => {
-			const { data, complete } =
-        store.infiltrationAndVentilation.mechanicalVentilation;
+			const { data, complete } = store.infiltrationAndVentilation.mechanicalVentilation;
 			expect(complete).toBe(true);
-			expect(data.mechanicalVentilationObjects?.[0]).toEqual(
-				mechanicalVentilation2
-			);
+			expect(data[0]).toEqual(mechanicalVentilation2);
 			expect(navigateToMock).toHaveBeenCalledWith(
 				"/infiltration-and-ventilation/mechanical-ventilation"
 			);
@@ -118,12 +115,7 @@ describe("mechanical ventilation form", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: {
-						mechanicalVentilationObjects: [
-							mechanicalVentilation1,
-							mechanicalVentilation2,
-						],
-					},
+					data: [mechanicalVentilation1, mechanicalVentilation2]
 				},
 			},
 		});
@@ -142,27 +134,25 @@ describe("mechanical ventilation form", () => {
 
 		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
 
-		expect(data.mechanicalVentilationObjects?.[0]).toEqual(
-			mechanicalVentilation1
-		);
-		expect(data.mechanicalVentilationObjects?.[1].name).toBe("new name");
+		expect(data[0]).toEqual(mechanicalVentilation1);
+		expect(data[1].name).toBe("new name");
 	});
 
 	it("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: {
-						mechanicalVentilationObjects: [mechanicalVentilation1],
-					},
+					data: [mechanicalVentilation1]
 				},
 			},
 		});
+
 		await renderSuspended(MechanicalVentilationForm, {
 			route: {
 				params: { mechanical: "0" },
 			},
 		});
+		
 		expect(
 			((await screen.findByTestId("name")) as HTMLInputElement).value
 		).toBe("Mechanical name 1");
@@ -244,6 +234,7 @@ describe("mechanical ventilation form", () => {
 			).checked
 		).toBe(true);
 	});
+
 	it("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(MechanicalVentilationForm);
 

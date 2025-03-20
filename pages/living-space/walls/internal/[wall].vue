@@ -1,19 +1,14 @@
 <script setup lang="ts">
-
 const title = "Internal wall";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const wallData = useItemToEdit('wall', store.livingSpaceFabric.livingSpaceWalls.livingSpaceInternalWall.data);
 const model: Ref<InternalWallData> = ref(wallData!);
 
 const saveForm = (fields: InternalWallData) => {
 	store.$patch((state) => {
-		const {livingSpaceWalls} = state.livingSpaceFabric;
-
-		if (!livingSpaceWalls.livingSpaceInternalWall.data) {
-			livingSpaceWalls.livingSpaceInternalWall = {data: []};
-		}
+		const {livingSpaceInternalWall} = state.livingSpaceFabric.livingSpaceWalls;
 
 		const wall: InternalWallData = {
 			name: fields.name,
@@ -25,14 +20,7 @@ const saveForm = (fields: InternalWallData) => {
 			pitch: fields.pitchOption === '90' ? 90 : fields.pitch
 		};
 
-		if (route.params.wall && route.params.wall !== 'create') {
-			const index = parseInt(route.params.wall as string);
-			livingSpaceWalls.livingSpaceInternalWall.data[index] = wall;
-		} else {
-			livingSpaceWalls.livingSpaceInternalWall.data.push(wall);
-		}
-
-		livingSpaceWalls.livingSpaceInternalWall.complete = true;
+		saveToList(wall, livingSpaceInternalWall);
 	});
 
 	navigateTo("/living-space/walls");

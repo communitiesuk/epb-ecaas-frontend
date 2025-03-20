@@ -13,7 +13,7 @@ function getInitialState(): EcaasState {
 			externalFactors: { data: {} },
 		},
 		infiltrationAndVentilation: {
-			mechanicalVentilation: { data: {} },
+			mechanicalVentilation: { data: [] },
 			vents: { data: [] },
 			combustionAppliances: {
 				openFireplace: { data: [] },

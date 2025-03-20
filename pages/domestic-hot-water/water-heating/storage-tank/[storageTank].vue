@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Storage tank";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const storageTankData = useItemToEdit('storageTank', store.domesticHotWater.waterHeating.storageTank.data);
 const model: Ref<StorageTankData> = ref(storageTankData!);
@@ -10,22 +10,11 @@ const saveForm = (fields: StorageTankData) => {
 	store.$patch((state) => {
 		const {storageTank} = state.domesticHotWater.waterHeating;
 
-		if (!storageTank.data) {
-			storageTank.data = [];
-		}
-
 		const storageTankItem: StorageTankData = {
 			name: fields.name
 		};
 
-		if (route.params.storageTank && route.params.storageTank !== 'create') {
-			const index = parseInt(route.params.storageTank as string);
-			storageTank.data[index] = storageTankItem;
-		} else {
-			storageTank.data.push(storageTankItem);
-		}
-
-		storageTank.complete = true;
+		saveToList(storageTankItem, storageTank);
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

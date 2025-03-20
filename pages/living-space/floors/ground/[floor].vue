@@ -1,8 +1,7 @@
 <script setup lang="ts">
-
 const title = "Ground floor";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const floorData = useItemToEdit('floor', store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data);
 const model: Ref<GroundFloorData> = ref(floorData!);
@@ -10,10 +9,6 @@ const model: Ref<GroundFloorData> = ref(floorData!);
 const saveForm = (fields: GroundFloorData) => {
 	store.$patch((state) => {
 		const {livingSpaceFloors} = state.livingSpaceFabric;
-
-		if (!livingSpaceFloors.livingSpaceGroundFloor.data) {
-			livingSpaceFloors.livingSpaceGroundFloor.data = [];
-		}
 
 		const floor: GroundFloorData = {
 			name: fields.name,
@@ -44,14 +39,11 @@ const saveForm = (fields: GroundFloorData) => {
 			heightOfBasementWallsAboveGround: fields.heightOfBasementWallsAboveGround
 		};
 
-		if (route.params.floor && route.params.floor !== 'create') {
-			const index = parseInt(route.params.floor as string);
-			livingSpaceFloors.livingSpaceGroundFloor.data[index] = floor;
-		} else {
-			livingSpaceFloors.livingSpaceGroundFloor.data.push(floor);
+		if (!livingSpaceFloors.livingSpaceGroundFloor) {
+			livingSpaceFloors.livingSpaceGroundFloor = { data: [] };
 		}
 
-		livingSpaceFloors.livingSpaceGroundFloor.complete = true;
+		saveToList(floor, livingSpaceFloors.livingSpaceGroundFloor);
 	});
 
 	navigateTo("/living-space/floors");

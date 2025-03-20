@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Combi boiler";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const combiBoilerData = useItemToEdit('combiBoiler', store.domesticHotWater.waterHeating.combiBoiler.data);
 const model: Ref<CombiBoilerData> = ref(combiBoilerData!);
@@ -10,22 +10,11 @@ const saveForm = (fields: CombiBoilerData) => {
 	store.$patch((state) => {
 		const {combiBoiler} = state.domesticHotWater.waterHeating;
 
-		if (!combiBoiler.data) {
-			combiBoiler.data = [];
-		}
-
 		const combiBoilerItem: CombiBoilerData = {
 			name: fields.name
 		};
 
-		if (route.params.combiBoiler && route.params.combiBoiler !== 'create') {
-			const index = parseInt(route.params.combiBoiler as string);
-			combiBoiler.data[index] = combiBoilerItem;
-		} else {
-			combiBoiler.data.push(combiBoilerItem);
-		}
-
-		combiBoiler.complete = true;
+		saveToList(combiBoilerItem, combiBoiler);
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

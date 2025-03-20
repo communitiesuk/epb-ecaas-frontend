@@ -3,7 +3,7 @@ import type { FormKitOptionsProp } from '@formkit/inputs';
 
 const title = "Linear thermal bridges";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const thermalBridgeData = useItemToEdit('bridging', store.livingSpaceFabric.livingSpaceThermalBridging.livingSpaceLinearThermalBridges.data);
 const model: Ref<LinearThermalBridgeData> = ref(thermalBridgeData!);
@@ -59,11 +59,7 @@ const options: FormKitOptionsProp[] = [{
 
 const saveForm = (fields: LinearThermalBridgeData) => {
 	store.$patch((state) => {
-		const { livingSpaceThermalBridging } = state.livingSpaceFabric;
-		
-		if (!livingSpaceThermalBridging.livingSpaceLinearThermalBridges?.data) {
-			livingSpaceThermalBridging.livingSpaceLinearThermalBridges = { data: [] };
-		}
+		const { livingSpaceLinearThermalBridges } = state.livingSpaceFabric.livingSpaceThermalBridging;
 
 		const option = options.find(o => Object.keys(o).includes(fields.typeOfThermalBridge));
 		const entry = Object.entries(option!).find(o => o[0] === fields.typeOfThermalBridge);
@@ -75,14 +71,7 @@ const saveForm = (fields: LinearThermalBridgeData) => {
 			length: fields.length
 		};
 
-		if (route.params.bridging && route.params.bridging !== 'create') {
-			const index = parseInt(route.params.bridging as string);
-			livingSpaceThermalBridging.livingSpaceLinearThermalBridges.data[index] = thermalBridge;
-		} else {
-			livingSpaceThermalBridging.livingSpaceLinearThermalBridges.data.push(thermalBridge);
-		}
-
-		state.livingSpaceFabric.livingSpaceThermalBridging.livingSpaceLinearThermalBridges.complete = true;
+		saveToList(thermalBridge, livingSpaceLinearThermalBridges);
 	});
 
 	navigateTo("/living-space/thermal-bridging");

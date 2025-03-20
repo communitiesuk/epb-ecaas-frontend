@@ -4,9 +4,7 @@ const title = "Combustion appliances";
 const store = useEcaasStore();
 
 type ApplianceType = keyof typeof store.infiltrationAndVentilation.combustionAppliances;
-
-interface ApplianceData extends CombustionApplianceData, ClosedFireplaceWithFanData, OpenGasFlueBalancerData, OpenGasKitchenStoveData, OpenGasFireData, ClosedFireData {
-}
+interface ApplianceData extends CombustionApplianceData, ClosedFireplaceWithFanData, OpenGasFlueBalancerData, OpenGasKitchenStoveData, OpenGasFireData, ClosedFireData {}
 
 function handleRemove(applianceType: ApplianceType, index: number) {
 	const appliances = store.infiltrationAndVentilation.combustionAppliances[applianceType]?.data;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Distant shading";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const shading = useItemToEdit('shading', store.dwellingDetails.shading.data);
 const model: Ref<ShadingData> = ref(shading!);
@@ -9,10 +9,6 @@ const model: Ref<ShadingData> = ref(shading!);
 const saveForm = (fields: ShadingData) => {
 	store.$patch((state) => {
 		const {shading} = state.dwellingDetails;
-
-		if (!shading.data) {
-			shading.data = [];
-		}
 
 		const shadingItem: ShadingData = {
 			name: fields.name,
@@ -23,14 +19,7 @@ const saveForm = (fields: ShadingData) => {
 			distance: fields.distance
 		};
 
-		if (route.params.shading && route.params.shading !== 'create') {
-			const index = parseInt(route.params.shading as string);
-			shading.data[index] = shadingItem;
-		} else {
-			shading.data.push(shadingItem);
-		}
-
-		state.dwellingDetails.shading.complete = true;
+		saveToList(shadingItem, shading);
 	});
 
 	navigateTo("/dwelling-details/shading");

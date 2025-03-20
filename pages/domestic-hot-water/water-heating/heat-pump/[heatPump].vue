@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Heat pump (hot water only)";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const heatPumpData = useItemToEdit('heatPump', store.domesticHotWater.waterHeating.heatPump.data);
 const model: Ref<HotWaterHeatPumpData> = ref(heatPumpData!);
@@ -10,22 +10,11 @@ const saveForm = (fields: HotWaterHeatPumpData) => {
 	store.$patch((state) => {
 		const {heatPump} = state.domesticHotWater.waterHeating;
 
-		if (!heatPump.data) {
-			heatPump.data = [];
-		}
-
 		const heatPumpItem: HotWaterHeatPumpData = {
 			name: fields.name
 		};
 
-		if (route.params.heatPump && route.params.heatPump !== 'create') {
-			const index = parseInt(route.params.heatPump as string);
-			heatPump.data[index] = heatPumpItem;
-		} else {
-			heatPump.data.push(heatPumpItem);
-		}
-
-		heatPump.complete = true;
+		saveToList(heatPumpItem, heatPump);
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

@@ -1,32 +1,21 @@
 <script setup lang="ts">
 const title = "Point thermal bridges";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const thermalBridgeData = useItemToEdit('bridging', store.livingSpaceFabric.livingSpaceThermalBridging.livingSpacePointThermalBridges.data);
 const model: Ref<PointThermalBridgeData> = ref(thermalBridgeData!);
 
 const saveForm = (fields: PointThermalBridgeData) => {
 	store.$patch((state) => {
-		const {livingSpaceThermalBridging} = state.livingSpaceFabric;
-
-		if (!livingSpaceThermalBridging.livingSpacePointThermalBridges?.data) {
-			livingSpaceThermalBridging.livingSpacePointThermalBridges = {data: []};
-		}
+		const {livingSpacePointThermalBridges} = state.livingSpaceFabric.livingSpaceThermalBridging;
 
 		const thermalBridge: PointThermalBridgeData = {
 			name: fields.name,
 			heatTransferCoefficient: fields.heatTransferCoefficient
 		};
 
-		if (route.params.bridging && route.params.bridging !== 'create') {
-			const index = parseInt(route.params.bridging as string);
-			livingSpaceThermalBridging.livingSpacePointThermalBridges.data[index] = thermalBridge;
-		} else {
-			livingSpaceThermalBridging.livingSpacePointThermalBridges.data.push(thermalBridge);
-		}
-
-		state.livingSpaceFabric.livingSpaceThermalBridging.livingSpacePointThermalBridges.complete = true;
+		saveToList(thermalBridge, livingSpacePointThermalBridges);
 	});
 
 	navigateTo("/living-space/thermal-bridging");

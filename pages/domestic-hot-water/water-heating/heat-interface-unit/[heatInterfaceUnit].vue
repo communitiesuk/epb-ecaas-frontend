@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Heat interface unit";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const heatInterfaceUnitData = useItemToEdit('heatInterfaceUnit', store.domesticHotWater.waterHeating.heatInterfaceUnit.data);
 const model: Ref<HeatInterfaceUnitData> = ref(heatInterfaceUnitData!);
@@ -10,22 +10,11 @@ const saveForm = (fields: HeatInterfaceUnitData) => {
 	store.$patch((state) => {
 		const {heatInterfaceUnit} = state.domesticHotWater.waterHeating;
 
-		if (!heatInterfaceUnit.data) {
-			heatInterfaceUnit.data = [];
-		}
-
 		const heatInterfaceUnitItem: HeatInterfaceUnitData = {
 			name: fields.name
 		};
 
-		if (route.params.heatInterfaceUnit && route.params.heatInterfaceUnit !== 'create') {
-			const index = parseInt(route.params.heatInterfaceUnit as string);
-			heatInterfaceUnit.data[index] = heatInterfaceUnitItem;
-		} else {
-			heatInterfaceUnit.data.push(heatInterfaceUnitItem);
-		}
-
-		heatInterfaceUnit.complete = true;
+		saveToList(heatInterfaceUnitItem, heatInterfaceUnit);
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

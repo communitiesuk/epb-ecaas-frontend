@@ -1,19 +1,14 @@
 <script setup lang="ts">
-
 const title = "External wall";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const wallData = useItemToEdit('wall', store.livingSpaceFabric.livingSpaceWalls.livingSpaceExternalWall?.data);
 const model: Ref<ExternalWallData> = ref(wallData!);
 
 const saveForm = (fields: ExternalWallData) => {
 	store.$patch((state) => {
-		const {livingSpaceWalls} = state.livingSpaceFabric;
-
-		if (!livingSpaceWalls.livingSpaceExternalWall?.data) {
-			livingSpaceWalls.livingSpaceExternalWall = {data: []};
-		}
+		const {livingSpaceExternalWall} = state.livingSpaceFabric.livingSpaceWalls;
 
 		const wall: ExternalWallData = {
 			name: fields.name,
@@ -30,14 +25,7 @@ const saveForm = (fields: ExternalWallData) => {
 			massDistributionClass: fields.massDistributionClass
 		};
 
-		if (route.params.wall && route.params.wall !== 'create') {
-			const index = parseInt(route.params.wall as string);
-			livingSpaceWalls.livingSpaceExternalWall.data[index] = wall;
-		} else {
-			livingSpaceWalls.livingSpaceExternalWall.data.push(wall);
-		}
-
-		livingSpaceWalls.livingSpaceExternalWall.complete = true;
+		saveToList(wall, livingSpaceExternalWall);
 	});
 
 	navigateTo("/living-space/walls");

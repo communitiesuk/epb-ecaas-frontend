@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const title = "Heat pump";
 const store = useEcaasStore();
-const route = useRoute();
+const { saveToList } = useForm();
 
 const heatPumpData = useItemToEdit('pump', store.heatingSystems.heatGeneration.heatPump.data);
 const model: Ref<HeatPumpData> = ref(heatPumpData!);
@@ -10,22 +10,11 @@ const saveForm = (fields: HeatPumpData) => {
 	store.$patch((state) => {
 		const {heatPump} = state.heatingSystems.heatGeneration;
 
-		if (!heatPump.data) {
-			heatPump.data = [];
-		}
-
 		const heatPumpItem: HeatPumpData = {
 			name: fields.name
 		};
 
-		if (route.params.pump && route.params.pump !== 'create') {
-			const index = parseInt(route.params.pump as string);
-			heatPump.data[index] = heatPumpItem;
-		} else {
-			heatPump.data.push(heatPumpItem);
-		}
-
-		heatPump.complete = true;
+		saveToList(heatPumpItem, heatPump);
 	});
 
 	navigateTo("/heating-systems/heat-generation");
