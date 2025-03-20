@@ -16,6 +16,13 @@ const livingSpaceFabricPages: Array<Page> = [
 		parentId: 'livingSpaceFabric'
 	},
 	{
+		id: 'livingSpaceZoneParametersGuidance',
+		title: 'Measuring zone parameters',
+		url: '/living-space/zone-parameters/guidance',
+		type: PageType.Content,
+		parentId: 'livingSpaceZoneParameters'
+	},
+	{
 		id: 'livingSpaceFloors',
 		title: 'Floors',
 		url: '/living-space/floors',
