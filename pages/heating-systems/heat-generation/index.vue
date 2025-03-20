@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type {BoilerData, HeatPumpData, HeatBatteryData, HeatNetworkData} from '~/stores/ecaasStore.types';
+import type {BoilerData, HeatPumpData, HeatBatteryData, HeatNetworkData, HeatInterfaceUnitData} from '~/stores/ecaasStore.types';
 
 const title = "Heat generation";
 const page = usePage();
 const store = useEcaasStore();
 
 type HeatGenerationType = keyof typeof store.heatingSystems.heatGeneration;
-interface HeatGenerationData extends HeatPumpData, BoilerData, HeatBatteryData, HeatNetworkData {};
+interface HeatGenerationData extends HeatPumpData, BoilerData, HeatBatteryData, HeatNetworkData, HeatInterfaceUnitData {};
 
 function handleRemove(outletType: HeatGenerationType, index: number) {
 	const outlets = store.heatingSystems.heatGeneration[outletType]?.data;
@@ -78,6 +78,14 @@ function handleDuplicate<T extends HeatGenerationData>(outletType: HeatGeneratio
 		:items="store.heatingSystems.heatGeneration.heatNetwork.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('heatNetwork', index)"
 		@duplicate="(index: number) => handleDuplicate('heatNetwork', index)"
+	/>
+	<GovCustomList
+		id="heatInterfaceUnit"
+		title="Heat interface unit"
+		:form-url="`${page?.url!}/heat-interface-unit`"
+		:items="store.heatingSystems.heatGeneration.heatInterfaceUnit.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('heatInterfaceUnit', index)"
+		@duplicate="(index: number) => handleDuplicate('heatInterfaceUnit', index)"
 	/>
 	<GovButton
 		href="/heating-systems"

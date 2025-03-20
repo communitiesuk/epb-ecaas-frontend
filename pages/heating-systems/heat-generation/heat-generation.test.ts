@@ -279,11 +279,11 @@ describe('heat generation', () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
-		const heatNetwork1: HeatNetwork = {
+		const heatNetwork1: HeatNetworkData = {
 			name: "heatNetwork 1"
 		};
 
-		const heatNetwork2: HeatNetworky = {
+		const heatNetwork2: HeatNetworkData = {
 			...heatNetwork1,
 			name: "heatNetwork 2",
 		};
@@ -362,6 +362,96 @@ describe('heat generation', () => {
 			expect(screen.getByText('heatNetwork 1 (2)')).toBeDefined();
 			expect(screen.getByText('heatNetwork 1 (1) (1)')).toBeDefined();
 			expect(screen.getByText('heatNetwork 1 (1) (2)')).toBeDefined();
+		});
+	});
+
+	describe('heat interface unit', () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+
+		const heatInterfaceUnit1: HeatInterfaceUnitData = {
+			name: "heatInterfaceUnit 1"
+		};
+
+		const heatInterfaceUnit2: HeatInterfaceUnitData = {
+			...heatInterfaceUnit1,
+			name: "heatInterfaceUnit 2",
+		};
+
+		const heatInterfaceUnit3: HeatInterfaceUnitData = {
+			...heatInterfaceUnit1,
+			name: "heatInterfaceUnit 3"
+		};
+
+		afterEach(() => {
+			store.$reset();
+		});
+
+		it('heat interface unit is removed when remove link is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatInterfaceUnit: {
+							data: [heatInterfaceUnit1]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+
+			expect(screen.getAllByTestId('heatInterfaceUnit_items')).toBeDefined();
+
+			await user.click(screen.getByTestId('heatInterfaceUnit_remove_0'));
+
+			expect(screen.queryByTestId('heatInterfaceUnit_items')).toBeNull();
+		});
+
+		it('should only remove the heat interface unit that is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatInterfaceUnit: {
+							data:[heatInterfaceUnit1, heatInterfaceUnit2, heatInterfaceUnit3]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+			await user.click(screen.getByTestId('heatInterfaceUnit_remove_1'));
+
+			const populatedList = screen.getByTestId('heatInterfaceUnit_items');
+
+			expect(within(populatedList).getByText('heatInterfaceUnit 1')).toBeDefined();
+			expect(within(populatedList).getByText('heatInterfaceUnit 3')).toBeDefined();
+			expect(within(populatedList).queryByText('heatInterfaceUnit 2')).toBeNull();
+
+		});
+
+		it('heat interface unit is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatInterfaceUnit: {
+							data: [heatInterfaceUnit1, heatInterfaceUnit2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(HeatGeneration);
+			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_2'));
+			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_2'));
+
+			expect(screen.queryAllByTestId('heatInterfaceUnit_item').length).toBe(6);
+			expect(screen.getByText('heatInterfaceUnit 1')).toBeDefined();
+			expect(screen.getByText('heatInterfaceUnit 1 (1)')).toBeDefined();
+			expect(screen.getByText('heatInterfaceUnit 1 (2)')).toBeDefined();
+			expect(screen.getByText('heatInterfaceUnit 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('heatInterfaceUnit 1 (1) (2)')).toBeDefined();
 		});
 	});
 });

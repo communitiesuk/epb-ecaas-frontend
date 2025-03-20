@@ -44,6 +44,13 @@ const heatingSystemsPages: Array<Page> = [
 		parentId: 'heatGeneration'
 	},
 	{
+		id: 'heatInterfaceUnit',
+		title: 'Heat interface unit',
+		url: '/heating-systems/heat-generation/heat-interface-unit',
+		type: PageType.Task,
+		parentId: 'heatGeneration'
+	},
+	{
 		id: 'heatNetwork',
 		title: 'Heat network',
 		url: '/heating-systems/heat-generation/heat-network',
