@@ -191,4 +191,12 @@ describe('window', () => {
     
 		expect((await screen.getByTestId('curtainsControlObject_motorised'))).toBeDefined();
 	});
+
+	it('displays guidance link to window shading guidance page', async () => {
+		await renderSuspended(Window);
+		const guidance = await screen.getByRole('link', {name : 'Shading guidance (opens in another window)'});
+		expect(guidance).toBeDefined();
+		expect(guidance.getAttribute('href')).toBe('/living-space/windows/window-shading-guidance');
+
+	});
 });

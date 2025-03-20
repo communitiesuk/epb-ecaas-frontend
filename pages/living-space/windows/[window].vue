@@ -8,7 +8,7 @@ const model: Ref<WindowData> = ref(window!);
 
 const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
-		const {livingSpaceWindows} = state.livingSpaceFabric;
+		const { livingSpaceWindows } = state.livingSpaceFabric;
 
 		const window: WindowData = {
 			name: fields.name,
@@ -48,10 +48,11 @@ const saveForm = (fields: WindowData) => {
 	navigateTo("/living-space/windows");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -59,181 +60,93 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		{{ title }}
 	</h1>
 	<FormKit
-		v-model="model"
-		type="form"
-		:actions="false"
-		:incomplete-message="false"
-		@submit="saveForm"
-		@submit-invalid="handleInvalidSubmit"
-	>
-		<GovErrorSummary :error-list="errorMessages" test-id="windowErrorSummary"/>
+		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+		@submit-invalid="handleInvalidSubmit">
+		<GovErrorSummary :error-list="errorMessages" test-id="windowErrorSummary" />
 		<FormKit
-			id="name"
-			type="govInputText"
-			label="Name"
-			help="Provide a name for this element so that it can be identified later"
-			name="name"
-			validation="required"
-		/>
-		<FieldsOrientation />
+			id="name" type="govInputText" label="Name"
+			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
 		<FormKit
-			id="surfaceArea"
-			type="govInputWithSuffix"
-			suffix-text="m2"
-			label="Surface area"
+			id="orientation" type="govInputWithSuffix" suffix-text="degrees" label="Orientation"
+			help="The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360"
+			name="orientation" validation="required | number | min:0 | max:360" />
+		<FormKit
+			id="surfaceArea" type="govInputWithSuffix" suffix-text="m2" label="Surface area"
 			help="Net area of the building element. For non-rectangular windows, use the area of the window based on its shape"
-			name="surfaceArea"
-			validation="required | number | min:0.01 | max:10000"
-		/>
+			name="surfaceArea" validation="required | number | min:0.01 | max:10000" />
 		<FormKit
-			id="height"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Height"
-			help="The height of the building element"
-			name="height"
-			validation="required | number | min:0.001 | max:50"
-		/>
+			id="height" type="govInputWithSuffix" suffix-text="m" label="Height"
+			help="The height of the building element" name="height" validation="required | number | min:0.001 | max:50" />
 		<FormKit
-			id="width"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Width"
-			help="The width of the building element"
-			name="width"
-			validation="required | number | min:0.001 | max:50"
-		/>
+			id="width" type="govInputWithSuffix" suffix-text="m" label="Width" help="The width of the building element"
+			name="width" validation="required | number | min:0.001 | max:50" />
 		<FormKit
-			id="uValue"
-			type="govInputWithSuffix"
-			suffix-text="W/(m2.K)"
-			label="U-value"
-			help="Steady-state thermal transmittance of the building element"
-			name="uValue"
-			validation="required | number | min:0.01 | max:10"
-		/>
+			id="uValue" type="govInputWithSuffix" suffix-text="W/(m2.K)" label="U-value"
+			help="Steady-state thermal transmittance of the building element" name="uValue"
+			validation="required | number | min:0.01 | max:10" />
 		<FormKit
-			id="pitchOption"
-			type="govRadios"
-			:options="{
+			id="pitchOption" type="govRadios" :options="{
 				'90': '90',
 				custom: 'Custom'
-			}"
-			label="Pitch"
+			}" label="Pitch"
 			help="Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down"
-			name="pitchOption"
-			validation="required"
-		/>
+			name="pitchOption" validation="required" />
 		<FormKit
-			v-if="model.pitchOption === 'custom'"
-			id="pitch"
-			type="govInputWithSuffix"
-			suffix-text="degrees"
-			name="pitch"
-			validation="required | number | min:0 | max:180"
-		/>
+			v-if="model.pitchOption === 'custom'" id="pitch" type="govInputWithSuffix" suffix-text="degrees"
+			name="pitch" validation="required | number | min:0 | max:180" />
 		<FormKit
-			id="solarTransmittence"
-			type="govInputFloat"
-			label="Transmittance of solar energy "
+			id="solarTransmittence" type="govInputFloat" label="Transmittance of solar energy "
 			help="G value. Total solar energy transmittance of the transparent part of the window. Decimal between 0-1"
-			name="solarTransmittence"
-			validation="required | number | min:0.01 | max:1"
-		/>
+			name="solarTransmittence" validation="required | number | min:0.01 | max:1" />
 		<FormKit
-			id="elevationalHeight"
-			type="govInputWithSuffix"
-			suffix-text="m"
+			id="elevationalHeight" type="govInputWithSuffix" suffix-text="m"
 			label="Elevational height of building element at its base"
-			help="The distance between the ground and the lowest edge of the element"
-			name="elevationalHeight"
-			validation="required | number | min:0 | max:500"
-		/>
+			help="The distance between the ground and the lowest edge of the element" name="elevationalHeight"
+			validation="required | number | min:0 | max:500" />
 		<FormKit
-			id="midHeight"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Mid height"
-			help="Mid height of the air-flow path relative to the ventilation zone floor"
-			name="midHeight"
-			validation="required | number | min:0 | max:100"
-		/>
+			id="midHeight" type="govInputWithSuffix" suffix-text="m" label="Mid height"
+			help="Mid height of the air-flow path relative to the ventilation zone floor" name="midHeight"
+			validation="required | number | min:0 | max:100" />
 		<FormKit
-			id="numberOpenableParts"
-			type="govRadios"
-			:options="{
+			id="numberOpenableParts" type="govRadios" :options="{
 				one: '1',
 				two: '2',
 				three: '3',
 				four: '4',
 				none: 'None',
-			}"
-			label="Number of openable parts "
-			name="numberOpenableParts"
-			validation="required"
-		/>
+			}" label="Number of openable parts " name="numberOpenableParts" validation="required" />
 		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== 'none'">
 			<FormKit
-				id="frameToOpeningRatio"
-				type="govInputFloat"
-				label="Frame to opening ratio"
+				id="frameToOpeningRatio" type="govInputFloat" label="Frame to opening ratio"
 				help="The frame area fraction of window wi, ratio of the projected frame area to the overall projected area of the glazed element of the window. Decimal 0-1"
-				name="frameToOpeningRatio"
-				validation="required | number | min:0 | max:100"
-			/>
+				name="frameToOpeningRatio" validation="required | number | min:0 | max:100" />
 			<FormKit
-				id="maximumOpenableArea"
-				type="govInputWithSuffix"
-				suffix-text="m2"
-				label="Maximum openable area"
-				help="The equivalent open area of the windows in the home."
-				name="maximumOpenableArea"
-				validation="required | number | min:0 | max:100"
-			/>
+				id="maximumOpenableArea" type="govInputWithSuffix" suffix-text="m2" label="Maximum openable area"
+				help="The equivalent open area of the windows in the home." name="maximumOpenableArea"
+				validation="required | number | min:0 | max:100" />
 			<FormKit
-				id="heightOpenableArea"
-				type="govInputWithSuffix"
-				suffix-text="m"
-				label="Height of the openable area"
+				id="heightOpenableArea" type="govInputWithSuffix" suffix-text="m" label="Height of the openable area"
 				help="Height of the openable part of the window (excluding the frame edges, and top/bottom portions that are not openable)"
-				name="heightOpenableArea"
-				validation="required | number | min:0 | max:100"
-			/>
+				name="heightOpenableArea" validation="required | number | min:0 | max:100" />
 			<FormKit
-				id="midHeightOpenablePart1"
-				type="govInputWithSuffix"
-				suffix-text="m"
-				label="Mid height of the air flow path for openable part 1 "
-				name="midHeightOpenablePart1"
-				validation="required | number | min:0 | max:100"
-			/>
+				id="midHeightOpenablePart1" type="govInputWithSuffix" suffix-text="m"
+				label="Mid height of the air flow path for openable part 1 " name="midHeightOpenablePart1"
+				validation="required | number | min:0 | max:100" />
 			<template v-if="model.numberOpenableParts !== 'one'">
 				<FormKit
-					id="midHeightOpenablePart2"
-					type="govInputWithSuffix"
-					suffix-text="m"
-					label="Mid height of the air flow path for openable part 2 "
-					name="midHeightOpenablePart2"
-					validation="required | number | min:0 | max:100"
-				/>
+					id="midHeightOpenablePart2" type="govInputWithSuffix" suffix-text="m"
+					label="Mid height of the air flow path for openable part 2 " name="midHeightOpenablePart2"
+					validation="required | number | min:0 | max:100" />
 				<template v-if="model.numberOpenableParts !== 'two'">
 					<FormKit
-						id="midHeightOpenablePart3"
-						type="govInputWithSuffix"
-						suffix-text="m"
-						label="Mid height of the air flow path for openable part 3 "
-						name="midHeightOpenablePart3"
-						validation="required | number | min:0 | max:100"
-					/>
+						id="midHeightOpenablePart3" type="govInputWithSuffix" suffix-text="m"
+						label="Mid height of the air flow path for openable part 3 " name="midHeightOpenablePart3"
+						validation="required | number | min:0 | max:100" />
 					<template v-if="model.numberOpenableParts !== 'three'">
 						<FormKit
-							id="midHeightOpenablePart4"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							label="Mid height of the air flow path for openable part 4 "
-							name="midHeightOpenablePart4"
-							validation="required | number | min:0 | max:100"
-						/>
+							id="midHeightOpenablePart4" type="govInputWithSuffix" suffix-text="m"
+							label="Mid height of the air flow path for openable part 4 " name="midHeightOpenablePart4"
+							validation="required | number | min:0 | max:100" />
 					</template>
 				</template>
 			</template>
@@ -242,7 +155,14 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 
 		<table class="govuk-table">
 			<caption class="govuk-table__caption govuk-table__caption--m govuk-!-margin-bottom-6">Window shading</caption>
+		
 			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
+					<td class="govuk-table__guidance_link" colspan="3">
+						<a href="/living-space/windows/window-shading-guidance" target="_blank" class="govuk-link">Shading
+							guidance (opens in another window)</a>
+					</td>
+				</tr>	
 				<tr class="govuk-table__row">
 					<th scope="col" class="govuk-!-text-align-left">Type of shading</th>
 					<th scope="col" class="govuk-!-text-align-left">Depth</th>
@@ -254,63 +174,39 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 					<th scope="row" class="govuk-!-text-align-left">Overhang</th>
 					<td>
 						<FormKit
-							id="overhangDepth"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="overhangDepth"
-							validation="number0"
-						/>
+							id="overhangDepth" type="govInputWithSuffix" suffix-text="m" name="overhangDepth"
+							validation="number0" />
 					</td>
 					<td>
 						<FormKit
-							id="overhangDistance"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="overhangDistance"
-							validation="number0"
-						/>
+							id="overhangDistance" type="govInputWithSuffix" suffix-text="m" name="overhangDistance"
+							validation="number0" />
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-!-text-align-left">Side fin right</th>
 					<td>
 						<FormKit
-							id="sideFinRightDepth"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="sideFinRightDepth"
-							validation="number0"
-						/>
+							id="sideFinRightDepth" type="govInputWithSuffix" suffix-text="m" name="sideFinRightDepth"
+							validation="number0" />
 					</td>
 					<td>
 						<FormKit
-							id="sideFinRightDistance"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="sideFinRightDistance"
-							validation="number0"
-						/>
+							id="sideFinRightDistance" type="govInputWithSuffix" suffix-text="m" name="sideFinRightDistance"
+							validation="number0" />
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-!-text-align-left">Side fin left</th>
 					<td>
 						<FormKit
-							id="sideFinLeftDepth"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="sideFinLeftDepth"
-							validation="number0"
-						/>
+							id="sideFinLeftDepth" type="govInputWithSuffix" suffix-text="m" name="sideFinLeftDepth"
+							validation="number0" />
 					</td>
 					<td>
 						<FormKit
-							id="sideFinLeftDistance"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							name="sideFinLeftDistance"
-							validation="number0"
-						/>
+							id="sideFinLeftDistance" type="govInputWithSuffix" suffix-text="m" name="sideFinLeftDistance"
+							validation="number0" />
 					</td>
 				</tr>
 			</tbody>
@@ -320,49 +216,32 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<h2 class="govuk-heading-m">Curtains and blinds</h2>
 		<p class="govuk-caption-m govuk-!-font-weight-bold">OPTIONAL SECTION</p>
 		<FormKit
-			id="type"
-			type="govRadios"
-			:options="{
+			id="type" type="govRadios" :options="{
 				curtains: 'Curtains',
 				blinds: 'Blinds',
-			}"
-			label="Type"
-			help="Determines behaviour (curtains are scheduled, blinds respond to sunlight)"
-			name="type"
-		/>
+			}" label="Type" help="Determines behaviour (curtains are scheduled, blinds respond to sunlight)" name="type" />
 		<FormKit
-			v-if="model.type === 'curtains'"
-			id="curtainsControlObject"
-			type="govRadios"
-			:options="{
+			v-if="model.type === 'curtains'" id="curtainsControlObject" type="govRadios" :options="{
 				motorised: 'Auto motorised',
 				manual: 'Manual',
-			}"
-			label="Curtains control object reference"
+			}" label="Curtains control object reference"
 			help="Reference to an OnOffTimeControl object that determines when curtains should open"
-			name="curtainsControlObject"
-		/>
+			name="curtainsControlObject" />
 		<FormKit
-			id="thermalResistivityIncrease"
-			type="govInputWithSuffix"
-			suffix-text="W / (m2.K)"
+			id="thermalResistivityIncrease" type="govInputWithSuffix" suffix-text="W / (m2.K)"
 			label="Thermal resistivity increase"
 			help="Additional thermal resistivity applied to window when curtain/blind is closed"
-			name="thermalResistivityIncrease"
-			validation="number | min:0 | max:100"
-		/>
+			name="thermalResistivityIncrease" validation="number | min:0 | max:100" />
 		<FormKit
-			id="solarTransmittenceReduction"
-			type="govInputFloat"
-			label="Solar transmittance reduction"
+			id="solarTransmittenceReduction" type="govInputFloat" label="Solar transmittance reduction"
 			help="Proportion of solar energy allowed through the window which is allowed into the zone when curtain/blind is closed (ie this is an additional reduction in transmission after the initial reduction by the window). Decimal 0-1"
-			name="solarTransmittenceReduction"
-			validation="number | min:0 | max:1"
-		/>
+			name="solarTransmittenceReduction" validation="number | min:0 | max:1" />
 
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>
+<style scoped lang="scss">
+	.govuk-table__guidance_link {
+		padding-bottom: 40px;
+	}
+</style>
