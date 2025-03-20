@@ -14,7 +14,7 @@ const saveForm = (fields: VentData) => {
 			name: fields.name,
 			typeOfVent: fields.typeOfVent,
 			effectiveVentilationArea: fields.effectiveVentilationArea,
-			openingRatio: fields.openingRatio,
+			openingRatio: 1,
 			airFlowAtMidHeightLevel: fields.airFlowAtMidHeightLevel,
 			pressureDifference: fields.pressureDifference,
 			orientation: fields.orientation,
@@ -69,34 +69,59 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Effective area of vent opening"
 			name="effectiveVentilationArea"
 			validation="required | number | min:1 | max:999999"
-			suffix-text="cm2"
-		/>
-		<FormKit
-			id="openingRatio"
-			type="govInputFloat"
-			label="Vent opening ratio"
-			help="Amount the vent is open. 0 = fully closed, 1 = fully open"
-			name="openingRatio"
-			validation="required | number | min:0 | max:1"
-		/>
+			suffix-text="cm2">
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Vent type</th>
+							<th scope="col" class="govuk-table__header">Effective area (cm2)</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Small trickle vent</td>
+							<td class="govuk-table__cell">50 - 100</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Standard window trickle vent</td>
+							<td class="govuk-table__cell">200 - 500</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Wall-mounted air brick</td>
+							<td class="govuk-table__cell">100 - 300</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="airFlowAtMidHeightLevel"
 			type="govInputWithSuffix"
 			label="Air flow at mid height level"
-			help="The mid height of the zone that the extract vent serves"
+			help="The typical height at which airflow occurs in a room, based on window or vent positioning."
 			name="airFlowAtMidHeightLevel"
 			validation="required | number | min:1 | max:60"
-			suffix-text="m"
-		/>
+			suffix-text="m">
+			<GovDetails summary-text="Help with this input">
+				<p>Typical ranges - 1.2 - 1.8m</p>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="pressureDifference"
 			type="govInputWithSuffix"
 			label="Pressure difference"
-			help="Reference pressure difference for vent"
+			help="The difference in pressure between inside and outside the building, which drives airflow"
 			name="pressureDifference"
 			validation="required | number"
-			suffix-text="pa"
-		/>
+			suffix-text="pa">
+			<GovDetails summary-text="Help with this input">
+				<p>
+					1 - 2 Pa for natural ventilation<br>
+					5 - 10 Pa for mechanical systems
+				</p>
+			</GovDetails>
+		</FormKit>
 		<FieldsOrientation />
 		<FormKit
 			id="pitch"
