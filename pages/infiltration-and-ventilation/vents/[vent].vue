@@ -97,15 +97,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required | number"
 			suffix-text="pa"
 		/>
-		<FormKit
-			id="orientation"
-			type="govInputWithSuffix"
-			label="Orientation"
-			help="Is the orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined  surface normal, 0 to 360. 0 = north, 90 = east, 180 = south, 270 = west."
-			name="orientation"
-			validation="required | number | min:0 | max:360"
-			suffix-text="degrees"
-		/>
+		<FieldsOrientation />
 		<FormKit
 			id="pitch"
 			type="govInputWithSuffix"

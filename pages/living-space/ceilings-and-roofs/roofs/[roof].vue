@@ -102,15 +102,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				validation="required | number | min:0 | max:180"
 			/>
 		</template>
-		<FormKit
-			id="orientation"
-			type="govInputWithSuffix"
-			label="Orientation"
-			help="The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360."
-			name="orientation"
-			validation="required | number | min:0 | max:360"
-			suffix-text="degrees"
-		/>
+		<FieldsOrientation />
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"

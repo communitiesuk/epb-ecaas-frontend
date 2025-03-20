@@ -1,6 +1,6 @@
-const route = useRoute();
-
 export function useForm() {
+	const route = useRoute();
+
 	/**
 	 * Updates EcaasForm data array with new object.
 	 * If the route parameter is an index value, the existing object at that index will be replaced.
