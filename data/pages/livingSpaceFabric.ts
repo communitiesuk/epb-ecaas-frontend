@@ -65,13 +65,6 @@ const livingSpaceFabricPages: Array<Page> = [
 		parentId: 'livingSpaceWalls'
 	},
 	{
-		id: 'calculatingDistantShading',
-		title: 'Calculating distant shading',
-		url: '/living-space/walls/external/calculating-distant-shading',
-		type: PageType.Content,
-		parentId: 'livingSpaceExternalWall'
-	},
-	{
 		id: 'livingSpaceInternalWall',
 		title: 'Internal wall',
 		url: '/living-space/walls/internal/:wall',

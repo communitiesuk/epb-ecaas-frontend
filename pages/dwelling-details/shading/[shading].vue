@@ -35,9 +35,8 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		{{ title }}
 	</h1>
 	<p class="govuk-body">
-		<a href="/living-space/walls/external/calculating-distant-shading" target="_blank" class="govuk-link">
-			Shading guidance (opens in another window)
-		</a>
+		<a href="/dwelling-details/shading/calculating-distant-shading" target="_blank" class="govuk-link">Shading
+			guidance (opens in another window)</a>
 	</p>
 	<FormKit
 		v-model="model"

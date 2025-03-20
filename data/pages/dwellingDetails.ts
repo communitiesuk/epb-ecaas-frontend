@@ -30,6 +30,13 @@ const dwellingDetailsPages: Array<Page> = [
 		parentId: 'dwellingDetails'
 	},
 	{
+		id: 'calculatingDistantShading',
+		title: 'Calculating distant shading',
+		url: '/dwelling-details/shading/calculating-distant-shading',
+		type: PageType.Content,
+		parentId: 'shading'
+	},
+	{
 		id: 'shadingCreate',
 		title: 'Create',
 		url: '/dwelling-details/shading/create',
