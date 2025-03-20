@@ -17,7 +17,7 @@ describe("mechanical ventilation form", () => {
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
 		ductworkCrossSectionalShape: "circular",
-		ductTape: "intake",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -31,17 +31,7 @@ describe("mechanical ventilation form", () => {
 		typeOfMechanicalVentilationOptions: "intermittent",
 		controlForSupplyAirflow: "oda",
 		supplyAirTemperatureControl: "odaComp",
-		airFlowRate: 14,
-		mvhrLocation: undefined,
-		mvhrEfficiency: undefined,
-		ductworkCrossSectionalShape: undefined,
-		ductTape: undefined,
-		internalDiameterOfDuctwork: undefined,
-		externalDiameterOfDuctwork: undefined,
-		insulationThickness: undefined,
-		lengthOfDucwork: undefined,
-		thermalInsulationConductivityOfDuctwork: undefined,
-		surfaceReflectivity: undefined,
+		airFlowRate: 14
 	};
 
 	mockNuxtImport("navigateTo", () => {
@@ -67,7 +57,7 @@ describe("mechanical ventilation form", () => {
 		await user.click(
 			screen.getByTestId("ductworkCrossSectionalShape_circular")
 		);
-		await user.click(screen.getByTestId("ductTape_intake"));
+		await user.click(screen.getByTestId("ductType_intake"));
 		await user.type(screen.getByTestId("internalDiameterOfDuctwork"), "300");
 		await user.type(screen.getByTestId("externalDiameterOfDuctwork"), "1000");
 		await user.type(screen.getByTestId("insulationThickness"), "100");
@@ -195,7 +185,7 @@ describe("mechanical ventilation form", () => {
 			).checked
 		).toBe(true);
 		expect(
-			((await screen.findByTestId("ductTape_intake")) as HTMLInputElement)
+			((await screen.findByTestId("ductType_intake")) as HTMLInputElement)
 				.checked
 		).toBe(true);
 		expect(
@@ -255,7 +245,7 @@ describe("mechanical ventilation form", () => {
 			"mvhrLocation_error",
 			"mvhrEfficiency_error",
 			"ductworkCrossSectionalShape_error",
-			"ductTape_error",
+			"ductType_error",
 			"internalDiameterOfDuctwork_error",
 			"externalDiameterOfDuctwork_error",
 			"insulationThickness_error",

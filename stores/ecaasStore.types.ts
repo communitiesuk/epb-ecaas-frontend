@@ -436,7 +436,7 @@ export type MechanicalVentilationData = {
 	mvhrLocation?: string;
 	mvhrEfficiency?: number;
 	ductworkCrossSectionalShape?: string;
-	ductTape?: string;
+	ductType?: string;
 	internalDiameterOfDuctwork?: number;
 	externalDiameterOfDuctwork?: number;
 	insulationThickness?: number;
