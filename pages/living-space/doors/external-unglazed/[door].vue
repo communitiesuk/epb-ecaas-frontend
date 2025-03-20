@@ -111,7 +111,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m2"
 			label="Surface area"
-			help="Net area of the opaque building element (i.e. minus any windows / doors / etc.) If the element is not square or rectangular the area might not be equal to width x height, hence the need to ask for this in addition to width and height"
+			help="Net area of the building element"
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
