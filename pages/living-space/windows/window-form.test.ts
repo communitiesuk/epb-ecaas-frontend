@@ -64,7 +64,7 @@ describe('window', () => {
 		await user.type(screen.getByTestId('thermalResistivityIncrease'), '1');
 		await user.type(screen.getByTestId('solarTransmittenceReduction'), '0.1');
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
 
 		const { data, complete } = store.livingSpaceFabric.livingSpaceWindows;
 		
@@ -113,7 +113,7 @@ describe('window', () => {
 	it('only required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(Window);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
@@ -141,7 +141,7 @@ describe('window', () => {
 	it('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(Window);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
 
 		expect((await screen.findByTestId('windowErrorSummary'))).toBeDefined();
 	});
@@ -150,7 +150,7 @@ describe('window', () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId('pitchOption_custom'));
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
     
 		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
 	});
@@ -159,7 +159,7 @@ describe('window', () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId('numberOpenableParts_four'));
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
     
 		expect((await screen.findByTestId('frameToOpeningRatio_error'))).toBeDefined();
 		expect((await screen.findByTestId('maximumOpenableArea_error'))).toBeDefined();
@@ -174,7 +174,7 @@ describe('window', () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId('numberOpenableParts_one'));
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
     
 		expect((await screen.findByTestId('midHeightOpenablePart1_error'))).toBeDefined();
         

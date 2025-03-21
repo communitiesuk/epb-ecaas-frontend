@@ -210,33 +210,51 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					</td>
 				</tr>
 			</tbody>
-
 		</table>
-		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-		<h2 class="govuk-heading-m">Curtains and blinds</h2>
-		<p class="govuk-caption-m govuk-!-font-weight-bold">OPTIONAL SECTION</p>
-		<FormKit
-			id="type" type="govRadios" :options="{
-				curtains: 'Curtains',
-				blinds: 'Blinds',
-			}" label="Type" help="Determines behaviour (curtains are scheduled, blinds respond to sunlight)" name="type" />
-		<FormKit
-			v-if="model.type === 'curtains'" id="curtainsControlObject" type="govRadios" :options="{
-				motorised: 'Auto motorised',
-				manual: 'Manual',
-			}" label="Curtains control object reference"
-			help="Reference to an OnOffTimeControl object that determines when curtains should open"
-			name="curtainsControlObject" />
-		<FormKit
-			id="thermalResistivityIncrease" type="govInputWithSuffix" suffix-text="W / (m2.K)"
-			label="Thermal resistivity increase"
-			help="Additional thermal resistivity applied to window when curtain/blind is closed"
-			name="thermalResistivityIncrease" validation="number | min:0 | max:100" />
-		<FormKit
-			id="solarTransmittenceReduction" type="govInputFloat" label="Solar transmittance reduction"
-			help="Proportion of solar energy allowed through the window which is allowed into the zone when curtain/blind is closed (ie this is an additional reduction in transmission after the initial reduction by the window). Decimal 0-1"
-			name="solarTransmittenceReduction" validation="number | min:0 | max:1" />
-
+		<GovAccordion>
+			<GovAccordionSection id="curtainsAndBlinds" title="Curtains and blinds (optional inputs)" :index="0" heading-size="m">
+				<FormKit
+					id="type"
+					type="govRadios"
+					:options="{
+						curtains: 'Curtains',
+						blinds: 'Blinds',
+					}"
+					label="Type"
+					help="Determines behaviour (curtains are scheduled, blinds respond to sunlight)"
+					name="type"
+				/>
+				<FormKit
+					v-if="model.type === 'curtains'"
+					id="curtainsControlObject"
+					type="govRadios"
+					:options="{
+						motorised: 'Auto motorised',
+						manual: 'Manual',
+					}"
+					label="Curtains control object reference"
+					help="Reference to an OnOffTimeControl object that determines when curtains should open"
+					name="curtainsControlObject"
+				/>
+				<FormKit
+					id="thermalResistivityIncrease"
+					type="govInputWithSuffix"
+					suffix-text="W / (m2.K)"
+					label="Thermal resistivity increase"
+					help="Additional thermal resistivity applied to window when curtain/blind is closed"
+					name="thermalResistivityIncrease"
+					validation="number | min:0 | max:100"
+				/>
+				<FormKit
+					id="solarTransmittenceReduction"
+					type="govInputFloat"
+					label="Solar transmittance reduction"
+					help="Proportion of solar energy allowed through the window which is allowed into the zone when curtain/blind is closed (ie this is an additional reduction in transmission after the initial reduction by the window). Decimal 0-1"
+					name="solarTransmittenceReduction"
+					validation="number | min:0 | max:1"
+				/>
+			</GovAccordionSection>
+		</GovAccordion>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>
