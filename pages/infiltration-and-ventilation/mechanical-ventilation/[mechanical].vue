@@ -92,8 +92,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="{
 				noControl: 'No control',
 				constant: 'Constant',
-				odaComp: 'ODA comp',
-				loadComp: 'Load comp'
+				odaComp: 'Outdoor air compensation',
+				loadComp: 'Load compensation'
 			}"
 			label="Supply air temperature control"
 			name="supplyAirTemperatureControl"
