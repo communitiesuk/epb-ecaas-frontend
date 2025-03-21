@@ -18,7 +18,7 @@ const props = defineProps({
 const {
 	id,
 	node: { name },
-	attrs: { options, details },
+	attrs: { options },
 	label,
 	help
 } = props.context;
@@ -27,7 +27,13 @@ const { mounted } = useMounted();
 
 function handleInput(e: Event) {
 	const target = e.target as HTMLInputElement;
-	props.context.node.input(target.value);
+	const valueType = props.context.attrs['value-type'];
+	
+	if (valueType === 'number') {
+		props.context.node.input(parseInt(target.value));
+	} else {
+		props.context.node.input(target.value);
+	}
 }
 </script>
 
@@ -41,12 +47,10 @@ function handleInput(e: Event) {
 			<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
 				{{ label }}
 			</legend>
+			<slot />
 			<div v-if="help" :id="`${id}_hint`" class="govuk-hint">
 				{{ help }}
 			</div>
-			<GovDetails v-if="details" :summary-text="details.summaryText" classes="govuk-!-margin-bottom-4">
-				{{ details.text }}
-			</GovDetails>
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>

@@ -16,7 +16,7 @@ describe('internal wall', () => {
 		name: "Internal 1",
 		surfaceAreaOfElement: 5,
 		uValue: 1,
-		kappaValue: 100,
+		kappaValue: 50000,
 		massDistributionClass: 'internal',
 		pitchOption: '90',
 		pitch: 90
@@ -30,7 +30,7 @@ describe('internal wall', () => {
 		await user.type(screen.getByTestId('name'), 'Internal 1');
 		await user.type(screen.getByTestId('surfaceAreaOfElement'), '5');
 		await user.type(screen.getByTestId('uValue'), '1');
-		await user.type(screen.getByTestId('kappaValue'), '100');
+		await user.click(screen.getByTestId('kappaValue_50000'));
 		await user.click(screen.getByTestId('massDistributionClass_internal'));
 		await user.click(screen.getByTestId('pitchOption_90'));
 	};
@@ -66,7 +66,7 @@ describe('internal wall', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Internal 1');
 		expect((await screen.findByTestId('surfaceAreaOfElement') as HTMLInputElement).value).toBe('5');
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('kappaValue') as HTMLInputElement).value).toBe('100');
+		expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
 	});

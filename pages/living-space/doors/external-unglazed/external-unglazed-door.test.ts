@@ -23,7 +23,7 @@ describe('external unglazed door', () => {
 		surfaceArea: 10,
 		solarAbsorbtion: 0.1,
 		uValue: 1,
-		kappaValue: 100,
+		kappaValue: 50000,
 		massDistributionClass: 'internal'
 	};
 
@@ -43,7 +43,7 @@ describe('external unglazed door', () => {
 		await user.type(screen.getByTestId('surfaceArea'), '10');
 		await user.type(screen.getByTestId('solarAbsorbtion'), '0.1');
 		await user.type(screen.getByTestId('uValue'), '1');
-		await user.type(screen.getByTestId('kappaValue'), '100');
+		await user.click(screen.getByTestId('kappaValue_50000'));
 		await user.click(screen.getByTestId('massDistributionClass_internal'));
 
 		await user.click(screen.getByRole('button'));
@@ -81,9 +81,8 @@ describe('external unglazed door', () => {
 		expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('10');
 		expect((await screen.findByTestId('solarAbsorbtion') as HTMLInputElement).value).toBe('0.1');
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('kappaValue') as HTMLInputElement).value).toBe('100');
+		expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
-
 	});
 		
 	it('required error messages are displayed when empty form is submitted', async () => {

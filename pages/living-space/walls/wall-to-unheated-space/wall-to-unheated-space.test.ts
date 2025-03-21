@@ -16,7 +16,7 @@ describe('wall to unheated space', () => {
 		name: 'Wall to unheated space 1',
 		surfaceAreaOfElement: 500,
 		uValue: 10,
-		arealHeatCapacity:40000,
+		arealHeatCapacity: 50000,
 		massDistributionClass: 'external',
 		pitchOption: '90',
 		pitch: 90,
@@ -33,7 +33,7 @@ describe('wall to unheated space', () => {
 		await user.type(screen.getByTestId('name'), 'Wall to unheated space 1');
 		await user.type(screen.getByTestId('surfaceAreaOfElement'), '500');
 		await user.type(screen.getByTestId('uValue'), '10');
-		await user.type(screen.getByTestId('arealHeatCapacity'), '40000');
+		await user.click(screen.getByTestId('arealHeatCapacity_50000'));
 		await user.click(screen.getByTestId('massDistributionClass_external'));
 		await user.click(screen.getByTestId('pitchOption_90'));
 		await user.type(screen.getByTestId('thermalResistanceOfAdjacentUnheatedSpace'), '1');
@@ -68,7 +68,7 @@ describe('wall to unheated space', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Wall to unheated space 1');
 		expect((await screen.findByTestId('surfaceAreaOfElement') as HTMLInputElement).value).toBe('500');
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('arealHeatCapacity') as HTMLInputElement).value).toBe('40000');
+		expect((await screen.findByTestId('arealHeatCapacity_50000')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('massDistributionClass_external')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('thermalResistanceOfAdjacentUnheatedSpace') as HTMLInputElement).value).toBe('1');

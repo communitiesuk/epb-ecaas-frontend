@@ -8,23 +8,45 @@ defineProps<{
 <template>
 	<FormKit
 		:id="id"
-		type="govInputWithSuffix"
-		suffix-text="J/m²·K"
+		type="govRadios"
 		label="Areal heat capacity"
-		help="Effective areal heat capacity or kappa value. This is the total heat capacity of all the construction layers, that is, the sum of the heat capacities of each individual layers. (Note that this is different to the effectiveness thickness definition of areal heat capacity used in SAP10 and in other monthly models.)"
 		:name="name"
-		validation="required | number | min:100 | max:5000000">
+		help="Effective areal heat capacity or kappa value. This is the total heat capacity of all the construction layers, that is, the sum of the heat capacities of each individual layers."
+		validation="required"
+		:options="{
+			'50000': 'Very light',
+			'75000': 'Light',
+			'110000': 'Medium',
+			'175000': 'Heavy',
+			'250000': 'Very heavy'
+		}"
+		value-type="number"
+	>
 		<GovDetails summary-text="Help with this input">
-			<p><strong>20,000-40,000 J/m2.K</strong></p>
-			<p>(e.g., lightweight timber frame, minimal thermal mass)</p>
-			<p><strong>40,000-60,000 J/m2.K</strong></p>
-			<p>(e.g., timber with some internal thermal mass like plasterboard)</p>
-			<p><strong>60,000-100,000 J/m2.K</strong></p>
-			<p>(e.g., standard brick/block construction with moderate thermal mass)</p>
-			<p><strong>100,000-150,000 J/m2.K</strong></p>
-			<p>(e.g., brick/block with concrete floors, significant thermal mass)</p>
-			<p><strong>~150,000+ J/m2.K</strong></p>
-			<p>(e.g., concrete or stone with thick internal walls and floors)</p>
+			<table class="govuk-table">
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table__header">Very light</th>
+						<td class="govuk-table__cell">Light board or plastic</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table__header">Light</th>
+						<td class="govuk-table__cell">5-10 cm lightweight brick or concrete</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table__header">Medium</th>
+						<td class="govuk-table__cell">10-20 cm lightweight brick or concrete</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table__header">Heavy</th>
+						<td class="govuk-table__cell">7-12 cm solid brick or heavyweight concrete</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-table__header">Very heavy</th>
+						<td class="govuk-table__cell">More than 12 cm solid brick or heavyweight concrete</td>
+					</tr>
+				</tbody>
+			</table>
 		</GovDetails>
 	</FormKit>
 </template>

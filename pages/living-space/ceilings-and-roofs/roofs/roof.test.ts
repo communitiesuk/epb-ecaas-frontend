@@ -24,7 +24,7 @@ describe('roof', () => {
 		surfaceArea: 1,
 		solarAbsorbtionCoefficient: 0.5,
 		uValue: 1,
-		kappaValue: 100,
+		kappaValue: 50000,
 		massDistributionClass: 'internal'
 	};
 
@@ -43,7 +43,7 @@ describe('roof', () => {
 		await user.type(screen.getByTestId('surfaceArea'), '1');
 		await user.type(screen.getByTestId('solarAbsorbtionCoefficient'), '0.5');
 		await user.type(screen.getByTestId('uValue'), '1');
-		await user.type(screen.getByTestId('kappaValue'), '100');
+		await user.click(screen.getByTestId('kappaValue_50000'));
 		await user.click(screen.getByTestId('massDistributionClass_internal'));
 	};
 
@@ -85,7 +85,7 @@ describe('roof', () => {
 		expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('solarAbsorbtionCoefficient') as HTMLInputElement).value).toBe('0.5');
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('kappaValue') as HTMLInputElement).value).toBe('100');
+		expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
 	});
 

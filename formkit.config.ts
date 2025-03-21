@@ -8,7 +8,6 @@ import GovInputFloat from './components/GovInputFloat.vue';
 import GovInputInt from './components/GovInputInt.vue';
 import GovInputWithSuffix from './components/GovInputWithSuffix.vue';
 import GovCheckboxes from './components/GovCheckboxes.vue';
-import type { GovDetailsProps } from './components/GovDetails.vue';
 import GovInputText from './components/GovInputText.vue';
 
 // Enable TypeScript support for custom inputs
@@ -16,8 +15,8 @@ declare module '@formkit/inputs' {
 	interface FormKitInputProps<Props extends FormKitInputs<Props>> {
 		'govRadios': {
 			type: 'govRadios',
-			options: Record<string, string | GovRadioOption>
-			details?: GovDetailsProps
+			options: Record<string, string | GovRadioOption>,
+			valueType?: 'string' | 'number'
 		},
 		'govButton': {
 			type: 'govButton'
