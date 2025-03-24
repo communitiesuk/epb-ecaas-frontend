@@ -61,7 +61,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required"
 		/>
 		<p v-if="model.type === 'unheatedSpace'" class="govuk-body">
-			<a href="/living-space/unheated-space-guidance" target="_blank" class="govuk-link">
+			<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
 				Unheated space guidance (opens in another window)
 			</a>
 		</p>

@@ -46,7 +46,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<h1 class="govuk-heading-l">Zone parameters</h1>
 		<p class="govuk-body">
-			<a href="/living-space/zone-parameters/guidance" target="_blank" class="govuk-link">
+			<a href="/guidance/zone-parameters" target="_blank" class="govuk-link">
 				Zone parameters guidance (opens in another window)
 			</a>
 		</p>

@@ -43,7 +43,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		{{ title }}
 	</h1>
 	<p class="govuk-body">
-		<a href="/living-space/unheated-space-guidance" target="_blank" class="govuk-link">
+		<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
 			Unheated space guidance (opens in another window)
 		</a>
 	</p>

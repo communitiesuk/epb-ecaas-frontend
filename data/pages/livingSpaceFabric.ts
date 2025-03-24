@@ -16,13 +16,6 @@ const livingSpaceFabricPages: Array<Page> = [
 		parentId: 'livingSpaceFabric'
 	},
 	{
-		id: 'livingSpaceZoneParametersGuidance',
-		title: 'Measuring zone parameters',
-		url: '/living-space/zone-parameters/guidance',
-		type: PageType.Content,
-		parentId: 'livingSpaceZoneParameters'
-	},
-	{
 		id: 'livingSpaceFloors',
 		title: 'Floors',
 		url: '/living-space/floors',
@@ -140,13 +133,6 @@ const livingSpaceFabricPages: Array<Page> = [
 		url: '/living-space/windows',
 		type: PageType.Task,
 		parentId: 'livingSpaceFabric'
-	},
-	{
-		id: 'windowShadingGuidance',
-		title: 'Window Shading: Modelling Overhangs and Side Fins',
-		url: '/living-space/windows/window-shading/guidance',
-		type: PageType.Content,
-		parentId: 'livingSpaceWindows'
 	},
 	{
 		id: 'livingSpaceWindowCreate',

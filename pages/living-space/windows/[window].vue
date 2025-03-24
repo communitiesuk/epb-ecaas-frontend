@@ -156,8 +156,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">
 					<td class="govuk-table__guidance_link" colspan="3">
-						<a href="/living-space/windows/window-shading-guidance" target="_blank" class="govuk-link">Shading
-							guidance (opens in another window)</a>
+						<a href="/guidance/window-shading-guidance" target="_blank" class="govuk-link">
+							Shading guidance (opens in another window)
+						</a>
 					</td>
 				</tr>	
 				<tr class="govuk-table__row">
