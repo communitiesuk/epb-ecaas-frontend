@@ -123,15 +123,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<FieldsOrientation />
-		<FormKit
-			id="pitch"
-			type="govInputWithSuffix"
-			label="Pitch"
-			help="The tilt angle of the surface from horizontal, in degrees between 0 and 180 (0 means external surface is facing up, 90 means external surface is vertical and 180 means external surface is facing down)"
-			name="pitch"
-			validation="required | number | min:0 | max:180"
-			suffix-text="degrees"
-		/>
+		<FieldsPitch />
 		<FormKit
 			type="govButton"
 			label="Save and continue"

@@ -84,16 +84,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="uValue" type="govInputWithSuffix" suffix-text="W/(m2.K)" label="U-value"
 			help="Steady-state thermal transmittance of the building element" name="uValue"
 			validation="required | number | min:0.01 | max:10" />
-		<FormKit
-			id="pitchOption" type="govRadios" :options="{
+		<FieldsPitch
+			:pitch-option="model.pitchOption"
+			:options="{
 				'90': '90',
 				custom: 'Custom'
-			}" label="Pitch"
-			help="Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down"
-			name="pitchOption" validation="required" />
-		<FormKit
-			v-if="model.pitchOption === 'custom'" id="pitch" type="govInputWithSuffix" suffix-text="degrees"
-			name="pitch" validation="required | number | min:0 | max:180" />
+			}"
+		/>
 		<FormKit
 			id="solarTransmittence" type="govInputFloat" label="Transmittance of solar energy "
 			help="G value. Total solar energy transmittance of the transparent part of the window. Decimal between 0-1"

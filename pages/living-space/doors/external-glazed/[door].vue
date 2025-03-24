@@ -102,25 +102,12 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
 		/>
-		<FormKit
-			id="pitchOption"
-			type="govRadios"
+		<FieldsPitch
+			:pitch-option="model.pitchOption"
 			:options="{
 				'90': '90',
 				custom: 'Custom'
 			}"
-			label="Pitch"
-			help="Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down"
-			name="pitchOption"
-			validation="required"
-		/>
-		<FormKit
-			v-if="model.pitchOption === 'custom'"
-			id="pitch"
-			type="govInputWithSuffix"
-			suffix-text="degrees"
-			name="pitch"
-			validation="required | number | min:0 | max:180"
 		/>
 		<FormKit
 			id="solarTransmittence"
