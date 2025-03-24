@@ -34,6 +34,18 @@ defineProps<{
 		label="Mass distribution class"
 		help="Distribution of mass in building element"
 		:name="name"
-		validation="required"
-	/>
+		validation="required">
+		<div class="govuk__custom-link">
+			<a href="/guidance/mass-distribution-guidance" target="_blank" class="govuk-link govuk-link-text">Guidance (opens in another window)</a>	
+		</div>
+	</FormKit>
 </template>
+
+<style lang="scss" scoped>
+
+.govuk__custom-link {
+	padding-bottom: 30px;
+	font-size: 1.1875rem;
+}
+
+</style>
