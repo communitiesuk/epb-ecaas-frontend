@@ -59,6 +59,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="typeOfCeiling"
 			validation="required"
 		/>
+		<p v-if="model.typeOfCeiling === 'unheatedSpace'" class="govuk-body">
+			<a href="/living-space/unheated-space-guidance" target="_blank" class="govuk-link">
+				Unheated space guidance (opens in another window)
+			</a>
+		</p>
 		<template v-if="!!model.typeOfCeiling">
 			<FormKit
 				id="name"

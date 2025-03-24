@@ -60,6 +60,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="type"
 			validation="required"
 		/>
+		<p v-if="model.type === 'unheatedSpace'" class="govuk-body">
+			<a href="/living-space/unheated-space-guidance" target="_blank" class="govuk-link">
+				Unheated space guidance (opens in another window)
+			</a>
+		</p>
 		<template v-if="!!model.type">
 			<FormKit
 				id="name"
@@ -107,7 +112,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
 		/>
-
 		<FormKit
 			type="govButton"
 			label="Save and continue"

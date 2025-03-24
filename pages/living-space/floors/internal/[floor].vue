@@ -60,6 +60,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="typeOfInternalFloor"
 			validation="required"
 		/>
+		<p v-if="model.typeOfInternalFloor === 'unheatedSpace'" class="govuk-body">
+			<a href="/living-space/unheated-space-guidance" target="_blank" class="govuk-link">
+				Unheated space guidance (opens in another window)
+			</a>
+		</p>
 		<template v-if="!!model.typeOfInternalFloor">
 			<FormKit
 				id="name"
