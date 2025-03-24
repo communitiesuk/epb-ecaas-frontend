@@ -11,6 +11,14 @@ export function useItemToEdit<T>(indexRouteParam: string, list?: Array<T>): T | 
 		const index = parseInt(route.params[indexRouteParam] as string);
 		const item = list?.[index];
 
+		// TODO: Remove check for import.meta.client when using server session storage
+		if (!item && import.meta.client) {
+			throw createError({
+				statusCode: 404,
+				statusMessage: `Page not found: ${route.path}`
+			});
+		}
+
 		return item ? { ...item } : undefined;
 	}
 }

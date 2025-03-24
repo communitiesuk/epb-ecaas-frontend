@@ -1,6 +1,15 @@
 <script setup lang="ts">
 const page = usePage();
 
+if (!page) {
+	const route = useRoute();
+
+	throw createError({
+		statusCode: 404,
+		statusMessage: `Page not found: ${route.path}`
+	});
+}
+
 const { createTaskList } = useTaskList();
 const taskList = createTaskList(page);
 </script>
