@@ -11,6 +11,7 @@ const saveForm = (fields: StorageTankData) => {
 		const {storageTank} = state.domesticHotWater.waterHeating;
 
 		const storageTankItem: StorageTankData = {
+			name: fields.name,
 			heatSource: fields.heatSource,
 			tankVolume: fields.tankVolume,
 			dailyEnergyLoss: fields.dailyEnergyLoss
@@ -38,6 +39,14 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="storageTankErrorSummary"/>
+		<FormKit
+			id="name"
+			type="govInputText"
+			label="Name"
+			help="Provide a name for this element so that it can be identified later"
+			name="name"
+			validation="required"
+		/>
 		<FormKit
 			id="heatSource"
 			type="govRadios"
