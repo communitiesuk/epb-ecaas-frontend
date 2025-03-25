@@ -349,7 +349,9 @@ export interface WaterHeating {
 }
 
 export type StorageTankData = {
-	name: string;
+	heatSource: string;
+	tankVolume: number;
+	dailyEnergyLoss: number;
 };
 
 export type ImmersionHeaterData = {

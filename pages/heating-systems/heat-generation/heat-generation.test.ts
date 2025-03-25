@@ -139,11 +139,11 @@ describe('heat generation', () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
-		const heatBattery1: HeatBattery = {
+		const heatBattery1: HeatBatteryData = {
 			name: "heatBattery 1"
 		};
 
-		const heatBattery2: HeatBattery = {
+		const heatBattery2: HeatBatteryData = {
 			...heatBattery1,
 			name: "heatBattery 2",
 		};
