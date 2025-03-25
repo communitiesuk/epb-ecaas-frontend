@@ -16,7 +16,7 @@ const state: PipeworkData = {
 	internalDiameter: 0.09
 };
 
-describe('Pipework form', () => {
+describe('Secondary pipework form', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -36,7 +36,7 @@ describe('Pipework form', () => {
 		
 		await user.click(screen.getByRole('button'));
 		
-		const { data, complete } = store.domesticHotWater.pipework;
+		const { data, complete } = store.domesticHotWater.pipework.secondaryPipework;
 
 		expect(data[0]).toEqual(state);
 		expect(complete).toBe(true);
@@ -47,7 +47,9 @@ describe('Pipework form', () => {
 		store.$patch({
 			domesticHotWater: {
 				pipework: {
-					data: [state]
+					secondaryPipework: {
+						data: [state]
+					}
 				}
 			}
 		});

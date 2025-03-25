@@ -3,12 +3,12 @@ const title = "Secondary Pipework";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.data);
+const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.secondaryPipework.data);
 const model: Ref<PipeworkData> = ref(pipeworkData!);
 
 const saveForm = (fields: PipeworkData) => {
 	store.$patch((state) => {
-		const {pipework} = state.domesticHotWater;
+		const {secondaryPipework} = state.domesticHotWater.pipework;
 
 		const pipeworkItem: PipeworkData = {
 			name: fields.name,
@@ -17,7 +17,7 @@ const saveForm = (fields: PipeworkData) => {
 			internalDiameter: fields.internalDiameter,
 		};
 
-		saveToList(pipeworkItem, pipework);
+		saveToList(pipeworkItem, secondaryPipework);
 	});
 
 	navigateTo("/domestic-hot-water/pipework");

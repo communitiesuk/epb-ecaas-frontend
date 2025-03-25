@@ -79,7 +79,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				'0': 'Bottom'
 			}"
 			value-type="number"
-			label="Heater position"
+			label="Thermostat position"
 			help="Enter the location of the thermostat sensor in the tank"
 			name="thermostatPosition"
 			validation="required"

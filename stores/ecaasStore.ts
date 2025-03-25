@@ -44,7 +44,10 @@ function getInitialState(): EcaasState {
 				bath: { data: [] },
 				otherOutlets: { data: [] }
 			},
-			pipework: { data: [] },
+			pipework: {
+				primaryPipework: { data: [] },
+				secondaryPipework: { data: [] }
+			},
 		},
 		livingSpaceFabric: {
 			livingSpaceFloors: {

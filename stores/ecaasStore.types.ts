@@ -333,7 +333,7 @@ export type SpaceHeatControlSystemData = {
 export interface DomesticHotWater {
 	waterHeating: WaterHeating;
 	hotWaterOutlets: HotWaterOutlets;
-	pipework: EcaasForm<PipeworkData[]>;
+	pipework: Pipework;
 }
 
 export interface WaterHeating {
@@ -414,6 +414,11 @@ export type OtherHotWaterOutletData = {
 	name: string;
 	flowRate: number;
 };
+
+export interface Pipework {
+	primaryPipework: EcaasForm<PipeworkData[]>;
+	secondaryPipework: EcaasForm<PipeworkData[]>;
+}
 
 export type PipeworkData = {
 	name: string;

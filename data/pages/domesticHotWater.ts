@@ -121,8 +121,8 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'domesticHotWater'
 	},
 	{
-		id: 'pipe',
-		title: 'Secondary Pipework',
+		id: 'secondaryPipe',
+		title: 'Secondary pipework',
 		url: '/domestic-hot-water/pipework/secondary/:pipe',
 		type: PageType.Task,
 		parentId: 'pipework'

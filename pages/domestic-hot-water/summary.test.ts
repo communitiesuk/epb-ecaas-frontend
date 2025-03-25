@@ -26,14 +26,17 @@ describe('Domestic hot water summary', () => {
 	it('should contain the correct tabs for pipework details', async () => {
 		await renderSuspended(Summary);
   
-		expect(screen.getByRole('link', {name: 'Pipework'}));
+		expect(screen.getByRole('link', {name: 'Primary pipework'}));
+		expect(screen.getByRole('link', {name: 'Secondary pipework'}));
 	});
 
-	it('should display the correct data for the pipework section', async () => {
+	it('should display the correct data for the primary pipework section', async () => {
 		store.$patch({
 			domesticHotWater: {
 				pipework: {
-					data: [pipework]
+					primaryPipework: {
+						data: [pipework]
+					}
 				}
 			}
 		});

@@ -3,31 +3,32 @@ const title = "Pipework";
 const page = usePage();
 const store = useEcaasStore();
 
-const { data = [] } = store.domesticHotWater.pipework;
+type PipeworkType = keyof typeof store.domesticHotWater.pipework;
 
-function handleRemove(index: number) {
-	data.splice(index, 1);
-
-	store.$patch({
-		domesticHotWater: {
-			pipework: {
-				data,
-				complete: data.length > 0
-			}
-		}
-	});
-}
-
-function handleDuplicate(index: number) {
-	const pipework = data[index];
+function handleRemove(pipeworkType: PipeworkType, index: number) {
+	const pipework = store.domesticHotWater.pipework[pipeworkType].data;
 
 	if (pipework) {
-		const duplicates = data.filter(d => d.name.match(duplicateNamePattern(pipework.name)));
+		pipework.splice(index, 1);
 
 		store.$patch((state) => {
-			state.domesticHotWater.pipework.data.push({
-				...pipework,
-				name: `${pipework.name} (${duplicates.length})`
+			state.domesticHotWater.pipework[pipeworkType].data = pipework.length ? pipework : [];
+			state.domesticHotWater.pipework[pipeworkType].complete = pipework.length > 0;
+		});
+	}
+}
+
+function handleDuplicate(pipeworkType: PipeworkType, index: number) {
+	const pipework = store.domesticHotWater.pipework[pipeworkType].data;
+	const pipeworkItem = pipework[index];
+
+	if (pipework) {
+		const duplicates = pipework.filter(d => d.name.match(duplicateNamePattern(pipeworkItem.name)));
+
+		store.$patch((state) => {
+			state.domesticHotWater.pipework[pipeworkType].data.push({
+				...pipeworkItem,
+				name: `${pipeworkItem.name} (${duplicates.length})`
 			});
 		});
 	}
@@ -40,12 +41,20 @@ function handleDuplicate(index: number) {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovCustomList
-		id="secondary"
-		title="Secondary Pipework"
+		id="primaryPipework"
+		title="Primary pipework"
+		:form-url="`${page?.url!}/primary`"
+		:items="store.domesticHotWater.pipework.primaryPipework.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('primaryPipework', index)"
+		@duplicate="(index: number) => handleDuplicate('primaryPipework', index)"
+	/>
+	<GovCustomList
+		id="secondaryPipework"
+		title="Seconday pipework (hot water distribution)"
 		:form-url="`${page?.url!}/secondary`"
-		:items="store.domesticHotWater.pipework.data.map(x => x.name)"
-		@remove="handleRemove"
-		@duplicate="handleDuplicate"
+		:items="store.domesticHotWater.pipework.secondaryPipework.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('secondaryPipework', index)"
+		@duplicate="(index: number) => handleDuplicate('secondaryPipework', index)"
 	/>
 	<GovButton href="/domestic-hot-water" secondary>Return to overview</GovButton>
 </template>

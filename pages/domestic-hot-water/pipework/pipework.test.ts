@@ -25,43 +25,95 @@ describe("Pipeworks", () => {
 		store.$reset();
 	});
 
-	it("pipework is removed when remove link is clicked", async () => {
-		store.$patch({
-			domesticHotWater: {
-				pipework: {
-					data: [pipework1],
-				},
-			},
+	describe('primary pipework', () => {
+		it('pipework is removed when remove link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					pipework: {
+						primaryPipework: {
+							data: [pipework1]
+						}
+					}
+				}
+			});
+	
+			await renderSuspended(Pipework);
+	
+			const populatedList = screen.queryByTestId('primaryPipework_items');
+	
+			await user.click(screen.getByTestId('primaryPipework_remove_0'));
+	
+			expect(populatedList).toBeDefined();
+			expect(screen.queryByTestId('primaryPipework_items')).toBeNull();
 		});
-
-		await renderSuspended(Pipework);
-
-		const populatedList = screen.queryByTestId("secondary_items");
-
-		await user.click(screen.getByTestId("secondary_remove_0"));
-
-		expect(populatedList).toBeDefined();
-		expect(screen.queryByTestId("secondary_items")).toBeNull();
+	
+		it('duplicates pipework in list when duplicate link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					pipework: {
+						primaryPipework: {
+							data: [pipework1, pipework2]
+						}
+					}
+				}
+			});
+	
+			await renderSuspended(Pipework);
+	
+			await user.click(screen.getByTestId('primaryPipework_duplicate_0'));
+			await user.click(screen.getByTestId('primaryPipework_duplicate_0'));
+			await user.click(screen.getByTestId('primaryPipework_duplicate_1'));
+	
+			expect(screen.queryAllByTestId('primaryPipework_item').length).toBe(5);
+			expect(screen.getByText('Pipework Kitchen Sink (1)')).toBeDefined();
+			expect(screen.getByText('Pipework Kitchen Sink (2)')).toBeDefined();
+			expect(screen.getByText('Pipework Kitchen (1)')).toBeDefined();
+		});
 	});
 
-	it("duplicates pipework in list when duplicate link is clicked", async () => {
-		store.$patch({
-			domesticHotWater: {
-				pipework: {
-					data: [pipework1, pipework2],
-				},
-			},
+	describe('secondary pipework', () => {
+		it('pipework is removed when remove link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					pipework: {
+						secondaryPipework: {
+							data: [pipework1]
+						}
+					}
+				}
+			});
+	
+			await renderSuspended(Pipework);
+	
+			const populatedList = screen.queryByTestId('secondaryPipework_items');
+	
+			await user.click(screen.getByTestId('secondaryPipework_remove_0'));
+	
+			expect(populatedList).toBeDefined();
+			expect(screen.queryByTestId('secondaryPipework_items')).toBeNull();
 		});
-
-		await renderSuspended(Pipework);
-
-		await user.click(screen.getByTestId("secondary_duplicate_0"));
-		await user.click(screen.getByTestId("secondary_duplicate_0"));
-		await user.click(screen.getByTestId("secondary_duplicate_1"));
-
-		expect(screen.queryAllByTestId("secondary_item").length).toBe(5);
-		expect(screen.getByText("Pipework Kitchen Sink (1)")).toBeDefined();
-		expect(screen.getByText("Pipework Kitchen Sink (2)")).toBeDefined();
-		expect(screen.getByText("Pipework Kitchen (1)")).toBeDefined();
+	
+		it('duplicates pipework in list when duplicate link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					pipework: {
+						secondaryPipework: {
+							data: [pipework1, pipework2]
+						}
+					}
+				}
+			});
+	
+			await renderSuspended(Pipework);
+	
+			await user.click(screen.getByTestId('secondaryPipework_duplicate_0'));
+			await user.click(screen.getByTestId('secondaryPipework_duplicate_0'));
+			await user.click(screen.getByTestId('secondaryPipework_duplicate_1'));
+	
+			expect(screen.queryAllByTestId('secondaryPipework_item').length).toBe(5);
+			expect(screen.getByText('Pipework Kitchen Sink (1)')).toBeDefined();
+			expect(screen.getByText('Pipework Kitchen Sink (2)')).toBeDefined();
+			expect(screen.getByText('Pipework Kitchen (1)')).toBeDefined();
+		});
 	});
 });
