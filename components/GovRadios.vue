@@ -35,6 +35,8 @@ function handleInput(e: Event) {
 		props.context.node.input(target.value);
 	}
 }
+
+const optionsMap = options instanceof Map ? options : new Map(Object.entries(options));
 </script>
 
 <template>
@@ -55,7 +57,7 @@ function handleInput(e: Event) {
 				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>
 			<div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
-				<div v-for="key in Object.keys(options)" :key="key" class="govuk-radios__item">
+				<div v-for="key in optionsMap.keys()" :key="key" class="govuk-radios__item">
 					<input
 						:id="`${id}_${key}`"
 						class="govuk-radios__input"
@@ -64,14 +66,14 @@ function handleInput(e: Event) {
 						:value="key"
 						:checked="mounted ? props.context._value == key : false"
 						:data-testid="`${id}_${key}`"
-						:aria-describedby="typeof options[key] === 'object' ? `${id}_${key}_hint` : ''"
+						:aria-describedby="typeof optionsMap.get(key) === 'object' ? `${id}_${key}_hint` : ''"
 						@change="handleInput"
 					>
 					<label class="govuk-label govuk-radios__label" :for="`${id}_${key}`">
-						{{ typeof options[key] === 'object' ? options[key].label : options[key] }}
+						{{ typeof optionsMap.get(key) === 'object' ? optionsMap.get(key).label : optionsMap.get(key) }}
 					</label>
-					<div v-if="(typeof options[key] === 'object')" :id="`${id}_${key}_hint`" class="govuk-hint govuk-radios__hint">
-						{{ options[key].hint }}
+					<div v-if="(typeof optionsMap.get(key) === 'object')" :id="`${id}_${key}_hint`" class="govuk-hint govuk-radios__hint">
+						{{ optionsMap.get(key).hint }}
 					</div>
 				</div>
 			</div>

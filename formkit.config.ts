@@ -15,7 +15,7 @@ declare module '@formkit/inputs' {
 	interface FormKitInputProps<Props extends FormKitInputs<Props>> {
 		'govRadios': {
 			type: 'govRadios',
-			options: Record<string, string | GovRadioOption>,
+			options: Record<string, string | GovRadioOption> | Map<string, string>,
 			valueType?: 'string' | 'number'
 		},
 		'govButton': {

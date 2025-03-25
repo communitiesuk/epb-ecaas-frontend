@@ -345,7 +345,7 @@ export interface WaterHeating {
 	combiBoiler: EcaasForm<CombiBoilerData[]>;
 	heatBattery: EcaasForm<WaterHeatingHeatBatteryData[]>;
 	smartHotWaterTank: EcaasForm<SmartHotWaterTankData[]>;
-	heatInterfaceUnit: EcaasForm<HeatInterfaceUnitData[]>;
+	heatInterfaceUnit: EcaasForm<WaterHeatingHeatInterfaceUnitData[]>;
 }
 
 export type StorageTankData = {
@@ -357,6 +357,9 @@ export type StorageTankData = {
 
 export type ImmersionHeaterData = {
 	name: string;
+	ratedPower: number;
+	heaterPosition: number;
+	thermostatPosition: number;
 };
 
 export type SolarThermalData = {
@@ -383,7 +386,7 @@ export type SmartHotWaterTankData = {
 	name: string;
 };
 
-export type HeatInterfaceUnitData = {
+export type WaterHeatingHeatInterfaceUnitData = {
 	name: string;
 };
 

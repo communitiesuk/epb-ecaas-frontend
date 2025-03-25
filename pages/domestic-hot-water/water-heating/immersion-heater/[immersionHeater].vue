@@ -59,11 +59,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="heaterPosition"
 			type="govRadios"
-			:options="{
-				'1': 'Top',
-				'0.5': 'Middle',
-				'0': 'Bottom'
-			}"
+			:options="new Map([
+				['1', 'Top'],
+				['0.5', 'Middle'],
+				['0', 'Bottom']
+			])"
 			value-type="number"
 			label="Heater position"
 			help="Specify where the immersion heater is installed within the tank"
@@ -73,11 +73,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="thermostatPosition"
 			type="govRadios"
-			:options="{
-				'1': 'Top',
-				'0.5': 'Middle',
-				'0': 'Bottom'
-			}"
+			:options="new Map([
+				['1', 'Top'],
+				['0.5', 'Middle'],
+				['0', 'Bottom']
+			])"
 			value-type="number"
 			label="Thermostat position"
 			help="Enter the location of the thermostat sensor in the tank"
