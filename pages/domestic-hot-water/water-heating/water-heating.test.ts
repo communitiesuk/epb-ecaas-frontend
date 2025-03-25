@@ -2,7 +2,7 @@ import { renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
 import WaterHeating from './index.vue';
-import type { CombiBoilerData, HeatBatteryData, HeatInterfaceUnitData, HotWaterHeatPumpData, ImmersionHeaterData, PointOfUseData, SmartHotWaterTankData, SolarThermalData, StorageTankData } from "~/stores/ecaasStore.types";
+import type { CombiBoilerData, HeatBatteryData, WaterHeatingHeatInterfaceUnitData, HotWaterHeatPumpData, ImmersionHeaterData, PointOfUseData, SmartHotWaterTankData, SolarThermalData, StorageTankData } from "~/stores/ecaasStore.types";
 
 describe('water heating', () => {
 
@@ -75,7 +75,10 @@ describe('water heating', () => {
 		const user = userEvent.setup();
 
 		const immersionHeater1: ImmersionHeaterData = {
-			name: "Immersion heater 1"
+			name: "Immersion heater 1",
+			ratedPower: 10,
+			heaterPosition: 1,
+			thermostatPosition: 1
 		};
 
 		const immersionHeater2: ImmersionHeaterData = {
@@ -522,16 +525,16 @@ describe('water heating', () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
-		const heatInterfaceUnit1: HeatInterfaceUnitData = {
+		const heatInterfaceUnit1: WaterHeatingHeatInterfaceUnitData = {
 			name: "Heat interface unit 1"
 		};
 
-		const heatInterfaceUnit2: HeatInterfaceUnitData = {
+		const heatInterfaceUnit2: WaterHeatingHeatInterfaceUnitData = {
 			...heatInterfaceUnit1,
 			name: "Heat interface unit 2",
 		};
 
-		const heatInterfaceUnit3: HeatInterfaceUnitData = {
+		const heatInterfaceUnit3: WaterHeatingHeatInterfaceUnitData = {
 			...heatInterfaceUnit1,
 			name: "Heat interface unit 3"
 		};
