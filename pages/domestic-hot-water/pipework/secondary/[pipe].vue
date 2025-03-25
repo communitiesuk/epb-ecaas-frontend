@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = "Pipework";
+const title = "Secondary Pipework";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 

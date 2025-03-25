@@ -117,13 +117,13 @@ const domesticHotWaterPages: Array<Page> = [
 		id: 'pipework',
 		title: 'Pipework',
 		url: '/domestic-hot-water/pipework',
-		type: PageType.Task,
+		type: PageType.TaskGroup,
 		parentId: 'domesticHotWater'
 	},
 	{
 		id: 'pipe',
-		title: 'Pipework',
-		url: '/domestic-hot-water/pipework/:pipe',
+		title: 'Secondary Pipework',
+		url: '/domestic-hot-water/pipework/secondary/:pipe',
 		type: PageType.Task,
 		parentId: 'pipework'
 	},

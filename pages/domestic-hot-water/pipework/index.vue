@@ -40,9 +40,9 @@ function handleDuplicate(index: number) {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovCustomList
-		id="pipework"
-		title="Pipework"
-		:form-url="page?.url!"
+		id="secondary"
+		title="Secondary Pipework"
+		:form-url="`${page?.url!}/secondary`"
 		:items="store.domesticHotWater.pipework.data.map(x => x.name)"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
