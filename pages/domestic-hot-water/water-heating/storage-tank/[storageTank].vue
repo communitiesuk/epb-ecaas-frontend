@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {getUrl} from "~/utils/page";
-import {getTabItems} from "~/utils/summary";
 
 const title = "Storage tank";
 const store = useEcaasStore();

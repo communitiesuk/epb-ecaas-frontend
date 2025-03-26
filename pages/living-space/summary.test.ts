@@ -1,7 +1,6 @@
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
-import userEvent from '@testing-library/user-event';
 import type { CeilingsAndRoofsData, DoorsData, FloorsData, LivingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData } from '~/stores/ecaasStore.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -241,7 +240,6 @@ const thermalBridgingData: ThermalBridgingData = {
 
 describe('Living space fabric summary', () => {
 	const store = useEcaasStore();
-	const user = userEvent.setup();
 
 	afterEach(() => {
 		store.$reset();
