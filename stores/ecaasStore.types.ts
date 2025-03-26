@@ -540,7 +540,7 @@ export interface EnergySupplyData {
 
 export interface HeatEmitting {
 	wetDistribution: EcaasForm<WetDistributionData[]>;
-	instantElectricHeater: EcaasForm<InstantElectricStorageData[]>;
+	instantElectricHeater: EcaasForm<InstantElectricHeaterData[]>;
 	electricStorageHeater: EcaasForm<ElectricStorageHeaterData[]>;
 	warmAirHeatPump: EcaasForm<WarmAirHeatPumpData[]>;
 }
@@ -550,6 +550,8 @@ export type ElectricStorageHeaterData = {
 };
 export type InstantElectricStorageData = {
 	name: string,
+	ratedPower: number,
+	convectionFraction: number,
 };
 export type WarmAirHeatPumpData = {
 	name: string,

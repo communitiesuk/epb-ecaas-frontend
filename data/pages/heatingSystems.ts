@@ -74,7 +74,7 @@ const heatingSystemsPages: Array<Page> = [
 	{
 		id: 'instantElectricHeater',
 		title: 'Instant electric heater',
-		url: '/heating-systems/heat-emitting/instant-electric-heater',
+		url: '/heating-systems/heat-emitting/instant-electric-heater/:heater',
 		type: PageType.Task,
 		parentId: 'heatEmitting'
 	},
