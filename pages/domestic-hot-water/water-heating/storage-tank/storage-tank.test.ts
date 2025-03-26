@@ -14,7 +14,6 @@ describe('storageTank', () => {
 
 	const storageTank: StorageTankData = {
 		name: 'Storage tank 1',
-		heatSource: 'kensaHeatPump',
 		tankVolume: 5,
 		dailyEnergyLoss: 1
 
@@ -26,7 +25,6 @@ describe('storageTank', () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Storage tank 1');
-		await user.click(screen.getByTestId('heatSource_kensaHeatPump'));
 		await user.type(screen.getByTestId('tankVolume'), '5');
 		await user.type(screen.getByTestId('dailyEnergyLoss'), '1');
 		await user.tab();
@@ -60,7 +58,6 @@ describe('storageTank', () => {
 			}
 		});
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Storage tank 1');
-		expect((await screen.findByTestId('heatSource_kensaHeatPump')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('tankVolume') as HTMLInputElement).value).toBe('5');
 		expect((await screen.findByTestId('dailyEnergyLoss') as HTMLInputElement).value).toBe('1');
 	});
@@ -71,7 +68,6 @@ describe('storageTank', () => {
 		await user.click(screen.getByRole('button'));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
-		expect((await screen.findByTestId('heatSource_error'))).toBeDefined();
 		expect((await screen.findByTestId('tankVolume_error'))).toBeDefined();
 		expect((await screen.findByTestId('dailyEnergyLoss_error'))).toBeDefined();
 

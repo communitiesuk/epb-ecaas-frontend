@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import {getUrl} from "~/utils/page";
+import {getTabItems} from "~/utils/summary";
+
 const title = "Storage tank";
 const store = useEcaasStore();
 const { saveToList } = useForm();
@@ -49,15 +52,12 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		/>
 		<FormKit
 			id="heatSource"
-			type="govRadios"
-			:options="{
-				kensaHeatPump: 'Kensa heat pump',
-				batteryHeat: 'Battery heat 189',
-			}"
+			type="govStoredList"
 			label="Heat source"
-			help="Select the relevant heat source that has been added previously"
 			name="heatSource"
-			validation="required"
+			help="Select the relevant heat source that has been added previously"
+			:options="[]"
+			:link="getUrl('heatingSystems')"
 		/>
 		<FormKit
 			id="tankVolume"
