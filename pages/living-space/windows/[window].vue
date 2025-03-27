@@ -124,22 +124,30 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				name="heightOpenableArea" validation="required | number | min:0 | max:100" />
 			<FormKit
 				id="midHeightOpenablePart1" type="govInputWithSuffix" suffix-text="m"
-				label="Enter the height from the ground to the midpoint of the openable section of the window" name="midHeightOpenablePart1"
+				label="Mid height of the air flow path for openable part 1 "
+				help="Enter the height from the ground to the midpoint of the openable section of the window"
+				name="midHeightOpenablePart1"
 				validation="required | number | min:0 | max:100" />
 			<template v-if="model.numberOpenableParts !== 'one'">
 				<FormKit
 					id="midHeightOpenablePart2" type="govInputWithSuffix" suffix-text="m"
-					label="Enter the height from the ground to the midpoint of the openable section of the window" name="midHeightOpenablePart2"
+					label="Mid height of the air flow path for openable part 2 "
+					help="Enter the height from the ground to the midpoint of the openable section of the window"
+					name="midHeightOpenablePart2"
 					validation="required | number | min:0 | max:100" />
 				<template v-if="model.numberOpenableParts !== 'two'">
 					<FormKit
 						id="midHeightOpenablePart3" type="govInputWithSuffix" suffix-text="m"
-						label="Enter the height from the ground to the midpoint of the openable section of the window" name="midHeightOpenablePart3"
+						label="Mid height of the air flow path for openable part 3 "
+						help="Enter the height from the ground to the midpoint of the openable section of the window"
+						name="midHeightOpenablePart3"
 						validation="required | number | min:0 | max:100" />
 					<template v-if="model.numberOpenableParts !== 'three'">
 						<FormKit
 							id="midHeightOpenablePart4" type="govInputWithSuffix" suffix-text="m"
-							label="Enter the height from the ground to the midpoint of the openable section of the window" name="midHeightOpenablePart4"
+							label="Mid height of the air flow path for openable part 4 "
+							help="Enter the height from the ground to the midpoint of the openable section of the window"
+							name="midHeightOpenablePart4"
 							validation="required | number | min:0 | max:100" />
 					</template>
 				</template>
