@@ -77,7 +77,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				custom: 'Custom'
 			}"
 		/>
-		<template v-else-if="!!model.typeOfRoof">
+		<template v-if="['pitchedInsulatedAtRoof', 'pitchedInsulatedAtCeiling'].includes(model.typeOfRoof)">
 			<FormKit
 				id="pitch"
 				type="govInputWithSuffix"
@@ -87,13 +87,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				name="pitch"
 				validation="required | number | min:0 | max:180"
 			/>
-		</template>
-		<FieldsOrientation />
-		<div v-if="model.typeOfRoof !== 'flat' && !!model.orientation" class="govuk-error-summary">
-			<div role="alert" class="govuk-hint govuk-!-margin-bottom-0">
-				If the pitched roof has multiple orientations (e.g., a gable or hip roof), each orientation must be modelled as a separate roof element.
+			<FieldsOrientation />
+			<div v-if="!!model.orientation" class="govuk-error-summary">
+				<div role="alert" class="govuk-hint govuk-!-margin-bottom-0">
+					If the pitched roof has multiple orientations (e.g., a gable or hip roof), each orientation must be modelled as a separate roof element.
+				</div>
 			</div>
-		</div>
+		</template>
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"

@@ -34,7 +34,6 @@ describe('exposed floor', () => {
 		await renderSuspended(ExposedFloor);
 
 		await user.type(screen.getByTestId('name'), 'Exposed Floor 1');
-		await user.type(screen.getByTestId('orientation'), '0');
 		await user.type(screen.getByTestId('height'), '0.5');
 		await user.type(screen.getByTestId('width'), '20'); 
 		await user.type(screen.getByTestId('elevationalHeight'), '20');
@@ -71,7 +70,6 @@ describe('exposed floor', () => {
 		});
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Exposed Floor 1');
-		expect((await screen.findByTestId('orientation') as HTMLInputElement).value).toBe('0');
 		expect((await screen.findByTestId('height') as HTMLInputElement).value).toBe('0.5');
 		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('20');
 		expect((await screen.findByTestId('elevationalHeight') as HTMLInputElement).value).toBe('20');
@@ -88,7 +86,6 @@ describe('exposed floor', () => {
 		await user.click(screen.getByRole('button'));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
-		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
 		expect((await screen.findByTestId('height_error'))).toBeDefined();
 		expect((await screen.findByTestId('width_error'))).toBeDefined();
 		expect((await screen.findByTestId('elevationalHeight_error'))).toBeDefined();

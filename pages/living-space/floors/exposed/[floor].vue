@@ -13,7 +13,7 @@ const saveForm = (fields: ExposedFloorData) => {
 		const floor: ExposedFloorData = {
 			name: fields.name,
 			pitch: 180,
-			orientation: fields.orientation,
+			orientation: 0,
 			height: fields.height,
 			width: fields.width,
 			elevationalHeight: fields.elevationalHeight,
@@ -61,7 +61,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
-		<FieldsOrientation />
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"

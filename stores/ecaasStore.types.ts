@@ -196,7 +196,7 @@ export type RoofData = {
 	typeOfRoof: string;
 	pitchOption?: string;
 	pitch: number;
-	orientation: number;
+	orientation?: number;
 	height: number;
 	width: number;
 	elevationalHeightOfElement: number;
