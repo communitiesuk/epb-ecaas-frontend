@@ -102,7 +102,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max:500" />
 		<FormKit
 			id="midHeight" type="govInputWithSuffix" suffix-text="m" label="Mid height"
-			help="Mid height of the air-flow path relative to the ventilation zone floor" name="midHeight"
+			help="Enter the height from the ground to the midpoint of the window" name="midHeight"
 			validation="required | number | min:0 | max:100" />
 		<FormKit
 			id="numberOpenableParts" type="govRadios" :options="{
@@ -115,34 +115,34 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== 'none'">
 			<FormKit
 				id="frameToOpeningRatio" type="govInputFloat" label="Frame to opening ratio"
-				help="The frame area fraction of window wi, ratio of the projected frame area to the overall projected area of the glazed element of the window. Decimal 0-1"
+				help="The proportion of the window taken up by the frame compared to the total opening area"
 				name="frameToOpeningRatio" validation="required | number | min:0 | max:100" />
 			<FormKit
 				id="maximumOpenableArea" type="govInputWithSuffix" suffix-text="m2" label="Maximum openable area"
-				help="The equivalent open area of the windows in the home." name="maximumOpenableArea"
+				help="The total area of the window that can be opened for ventilation." name="maximumOpenableArea"
 				validation="required | number | min:0 | max:100" />
 			<FormKit
 				id="heightOpenableArea" type="govInputWithSuffix" suffix-text="m" label="Height of the openable area"
-				help="Height of the openable part of the window (excluding the frame edges, and top/bottom portions that are not openable)"
+				help="The vertical measurement of the section of the window that can be opened"
 				name="heightOpenableArea" validation="required | number | min:0 | max:100" />
 			<FormKit
 				id="midHeightOpenablePart1" type="govInputWithSuffix" suffix-text="m"
-				label="Mid height of the air flow path for openable part 1 " name="midHeightOpenablePart1"
+				label="Enter the height from the ground to the midpoint of the openable section of the window" name="midHeightOpenablePart1"
 				validation="required | number | min:0 | max:100" />
 			<template v-if="model.numberOpenableParts !== 'one'">
 				<FormKit
 					id="midHeightOpenablePart2" type="govInputWithSuffix" suffix-text="m"
-					label="Mid height of the air flow path for openable part 2 " name="midHeightOpenablePart2"
+					label="Enter the height from the ground to the midpoint of the openable section of the window" name="midHeightOpenablePart2"
 					validation="required | number | min:0 | max:100" />
 				<template v-if="model.numberOpenableParts !== 'two'">
 					<FormKit
 						id="midHeightOpenablePart3" type="govInputWithSuffix" suffix-text="m"
-						label="Mid height of the air flow path for openable part 3 " name="midHeightOpenablePart3"
+						label="Enter the height from the ground to the midpoint of the openable section of the window" name="midHeightOpenablePart3"
 						validation="required | number | min:0 | max:100" />
 					<template v-if="model.numberOpenableParts !== 'three'">
 						<FormKit
 							id="midHeightOpenablePart4" type="govInputWithSuffix" suffix-text="m"
-							label="Mid height of the air flow path for openable part 4 " name="midHeightOpenablePart4"
+							label="Enter the height from the ground to the midpoint of the openable section of the window" name="midHeightOpenablePart4"
 							validation="required | number | min:0 | max:100" />
 					</template>
 				</template>

@@ -131,7 +131,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Mid height"
-			help="Mid height of the air-flow path relative to the ventilation zone floor"
+			help="Enter the height from the ground to the midpoint of the window"
 			name="midHeight"
 			validation="required | number | min:0 | max:100"
 		/>
