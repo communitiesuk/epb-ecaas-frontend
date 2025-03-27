@@ -40,11 +40,6 @@ function handleDuplicate(pipeworkType: PipeworkType, index: number) {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<p class="govuk-body">
-		<a href="/guidance/primary-and-secondary-pipework" target="_blank" class="govuk-link">
-			Primary and secondary pipework guidance (opens in another window)
-		</a>
-	</p>
 	<GovCustomList
 		id="primaryPipework"
 		title="Primary pipework"
