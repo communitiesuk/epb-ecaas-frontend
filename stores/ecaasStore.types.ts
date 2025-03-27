@@ -553,7 +553,7 @@ export interface EnergySupplyData {
 
 export interface HeatEmitting {
 	wetDistribution: EcaasForm<WetDistributionData[]>;
-	instantElectricHeater: EcaasForm<InstantElectricHeaterData[]>;
+	instantElectricHeater: EcaasForm<InstantElectricStorageData[]>;
 	electricStorageHeater: EcaasForm<ElectricStorageHeaterData[]>;
 	warmAirHeatPump: EcaasForm<WarmAirHeatPumpData[]>;
 }

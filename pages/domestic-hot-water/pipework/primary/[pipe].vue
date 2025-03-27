@@ -55,48 +55,36 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					</tr>
 					<tr class="govuk-table__row">
 						<td class="govuk-table__cell">Internal diameter of pipework</td>
-						<td class="govuk-table__cell">
-							15 - 28 mm (common for domestic hot water and heating)<br>
-							15 mm for small radiators/taps<br >
-							22 mm for main distribution<br>
-							28 mm for high-flow systems
-						</td>
+						<td class="govuk-table__cell">15 - 28 mm</td>
 					</tr>
 					<tr class="govuk-table__row">
 						<td class="govuk-table__cell">External diameter of pipework</td>
-						<td class="govuk-table__cell">
-							Varies by material:<br>
-							Copper: 15 mm internal → 22 mm external<br>
-							Copper: 22 mm internal → 28 mm external<br>
-							Copper: 28 mm internal → 25 mm external<br>
-							Plastic pipes my differ slightly<br>
-						</td>
+						<td class="govuk-table__cell">22 - 28 mm</td>
 					</tr>
 					<tr class="govuk-table__row">
 						<td class="govuk-table__cell">Length of pipework</td>
 						<td class="govuk-table__cell">
-							Varies by dwelling size:<br>
 							5 - 20 meters (small apartment)<br>
-							20 50 meters (large house)<br>
-							More for complex layouts or multiple heating zones
+							20 50 meters (large house)
 						</td>
 					</tr>
 					<tr class="govuk-table__row">
 						<td class="govuk-table__cell">Thermal conductivity of insulation</td>
 						<td class="govuk-table__cell">
-							Common insulation materials:<br>
-							Mineral wool / fiberglass: 0.035 - 0.045 W/m.K<br>
-							Polyethylene foam: 0.035 - 0.0.40 W/m.K<br>
-							Elastomeric foam (e.g. Armaflex): 0.033 - 0.040 W/m.K<br>
+							<p>Mineral wool / fiberglass:<br>
+								0.035 - 0.045 W/m.K</p>
+							<p>Polyethylene foam:<br>
+								0.035 - 0.0.40 W/m.K</p>
+							<p>Elastomeric foam (e.g. Armaflex):<br>
+								0.033 - 0.040 W/m.K</p>
 						</td>
 					</tr>
 					<tr class="govuk-table__row">
 						<td class="govuk-table__cell">Insulation thickness</td>
 						<td class="govuk-table__cell">
-							Standard domestic sizes:<br>
-							9 mm (minimal insulation)<br>
-							13 - 25 mm (recommended for energy efficiency)<br>
-							32 mm+ (for high-performance or external pipework)
+							13 - 25 mm<br>
+							32 mm+<br>
+							(for high-performance or external pipework)
 						</td>
 					</tr>
 				</tbody>
