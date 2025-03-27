@@ -66,10 +66,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="name" type="govInputText" label="Name"
 			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
-		<FormKit
-			id="orientation" type="govInputWithSuffix" suffix-text="degrees" label="Orientation"
-			help="The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360"
-			name="orientation" validation="required | number | min:0 | max:360" />
+		<FieldsOrientation />
 		<FormKit
 			id="surfaceArea" type="govInputWithSuffix" suffix-text="m2" label="Surface area"
 			help="Net area of the building element. For non-rectangular windows, use the area of the window based on its shape"
