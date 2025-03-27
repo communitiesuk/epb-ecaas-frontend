@@ -14,7 +14,7 @@ const saveForm = (fields: InternalFloorData) => {
 			name: fields.name,
 			typeOfInternalFloor: fields.typeOfInternalFloor,
 			surfaceAreaOfElement: fields.surfaceAreaOfElement,
-			uValue: fields.uValue,
+			uValue: 0,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
 			pitch: 180,
@@ -82,15 +82,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				name="surfaceAreaOfElement"
 				validation="required | number | min:0 | max:10000"
 				suffix-text="m2"
-			/>
-			<FormKit
-				id="uValue"
-				type="govInputWithSuffix"
-				label="U-value"
-				help="Steady-state thermal transmittance of the building element"
-				name="uValue"
-				validation="required | number | min:0.01 | max:10"
-				suffix-text="W/(m2.K)"
 			/>
 			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
