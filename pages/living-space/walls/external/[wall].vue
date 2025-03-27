@@ -65,7 +65,19 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				custom: 'Custom'
 			}"
 		/>
-		<FieldsOrientation />
+		<FormKit
+			id="orientation"
+			type="govInputWithSuffix"
+			suffix-text="degrees"
+			label="Orientation"
+			name="orientation"
+			validation="required | number | min:0 | max:360">
+			<GovDetails summary-text="Help with this input">
+				<img src="/img/orientation-measurement.png" alt="Orientation measurement">
+				<p class="govuk-hint">To define an object's orientation, measure the angle of its outside face clockwise from true North, accurate to the nearest degree.</p>
+				<p class="govuk-hint">If a wall has multiple orientations (i.e a hexagonal wall) each different orientation needs to be modelled separately</p>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"
