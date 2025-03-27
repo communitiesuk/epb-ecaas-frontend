@@ -350,7 +350,7 @@ export interface WaterHeating {
 
 export type StorageTankData = {
 	name: string;
-	heatSource: string;
+	heatSource?: string;
 	tankVolume: number;
 	dailyEnergyLoss: number;
 };
@@ -419,11 +419,24 @@ export type OtherHotWaterOutletData = {
 };
 
 export interface Pipework {
-	primaryPipework: EcaasForm<PipeworkData[]>;
-	secondaryPipework: EcaasForm<PipeworkData[]>;
+	primaryPipework: EcaasForm<PrimaryPipeworkData[]>;
+	secondaryPipework: EcaasForm<SecondaryPipeworkData[]>;
 }
 
-export type PipeworkData = {
+export type PrimaryPipeworkData = {
+	name: string;
+	internalDiameter: number;
+	externalDiameter: number;
+	length: number;
+	insulationThickness: number;
+	thermalConductivity: number;
+	surfaceReflectivity: string;
+	pipeContents: string;
+	storageTank: string;
+	location: string;
+};
+
+export type SecondaryPipeworkData = {
 	name: string;
 	length: number;
 	location: string;

@@ -1,0 +1,222 @@
+<script setup lang="ts">
+import { getUrl } from '#imports';
+const title = "Primary pipework";
+const store = useEcaasStore();
+const { saveToList } = useForm();
+
+const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.primaryPipework.data);
+const model: Ref<PrimaryPipeworkData> = ref(pipeworkData!);
+
+const saveForm = (fields: PrimaryPipeworkData) => {
+	console.log('saveForm');
+	
+	store.$patch((state) => {
+		const {primaryPipework} = state.domesticHotWater.pipework;
+
+		const pipeworkItem: PrimaryPipeworkData = {
+			name: fields.name,
+			internalDiameter: fields.internalDiameter,
+			externalDiameter: fields.externalDiameter,
+			length: fields.length,
+			insulationThickness: fields.insulationThickness,
+			thermalConductivity: fields.thermalConductivity,
+			surfaceReflectivity: fields.surfaceReflectivity,
+			pipeContents: fields.pipeContents,
+			storageTank: fields.storageTank,
+			location: fields.location,
+		};
+
+		saveToList(pipeworkItem, primaryPipework);
+	});
+
+	navigateTo("/domestic-hot-water/pipework");
+};
+
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+</script>
+
+<template>
+
+	<Head>
+		<Title>{{ title }}</Title>
+	</Head>
+	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<FormKit
+		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+		@submit-invalid="handleInvalidSubmit">
+		<GovErrorSummary :error-list="errorMessages" test-id="pipeworkErrorSummary" />
+
+		<GovDetails class="summary-text" :summary-text="`Help with these inputs`" classes="govuk-!-margin-bottom-4">
+			<table class="govuk-table">
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
+						<th class="govuk-table__header">Parameter</th>
+						<th class="govuk-table__header">Typical values</th>
+					</tr>
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">Internal diameter of pipework</td>
+						<td class="govuk-table__cell">
+							15 - 28 mm (common for domestic hot water and heating)<br>
+							15 mm for small radiators/taps<br >
+							22 mm for main distribution<br>
+							28 mm for high-flow systems
+						</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">External diameter of pipework</td>
+						<td class="govuk-table__cell">
+							Varies by material:<br>
+							Copper: 15 mm internal → 22 mm external<br>
+							Copper: 22 mm internal → 28 mm external<br>
+							Copper: 28 mm internal → 25 mm external<br>
+							Plastic pipes my differ slightly<br>
+						</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">Length of pipework</td>
+						<td class="govuk-table__cell">
+							Varies by dwelling size:<br>
+							5 - 20 meters (small apartment)<br>
+							20 50 meters (large house)<br>
+							More for complex layouts or multiple heating zones
+						</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">Thermal conductivity of insulation</td>
+						<td class="govuk-table__cell">
+							Common insulation materials:<br>
+							Mineral wool / fiberglass: 0.035 - 0.045 W/m.K<br>
+							Polyethylene foam: 0.035 - 0.0.40 W/m.K<br>
+							Elastomeric foam (e.g. Armaflex): 0.033 - 0.040 W/m.K<br>
+						</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<td class="govuk-table__cell">Insulation thickness</td>
+						<td class="govuk-table__cell">
+							Standard domestic sizes:<br>
+							9 mm (minimal insulation)<br>
+							13 - 25 mm (recommended for energy efficiency)<br>
+							32 mm+ (for high-performance or external pipework)
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</GovDetails>
+
+		<FormKit
+			id="name"
+			type="govInputText"
+			label="Name"
+			help="Provide a name for this element so that it can be identified later"
+			name="name"
+			validation="required | length:1,50"
+		/>
+		<FormKit
+			id="internalDiameter"
+			type="govInputWithSuffix"
+			label="Internal diameter of pipework"
+			help="Nominal internal width of pipe"
+			name="internalDiameter"
+			validation="required | number"
+			suffix-text="mm"
+		/>
+		<FormKit
+			id="externalDiameter"
+			type="govInputWithSuffix"
+			label="External diameter of pipework"
+			help="Nominal external width of pipe"
+			name="externalDiameter"
+			validation="required | number"
+			suffix-text="mm"
+		/>
+		<FormKit
+			id="length"
+			type="govInputWithSuffix"
+			label="Length"
+			help="Length of the pipework between the cylinder and heat source"
+			name="length"
+			validation="required | number | min:0 | max:200"
+			suffix-text="m"
+		/>
+		<FormKit
+			id="insulationThickness"
+			type="govInputWithSuffix"
+			label="Insulation thickness"
+			help="The thickness of insulation around the pipe"
+			name="insulationThickness"
+			validation="required | number"
+			suffix-text="mm"
+		/>
+		<FormKit
+			id="thermalConductivity"
+			type="govInputWithSuffix"
+			label="Thermal conductivity of the insulation"
+			help="The conductivity of the insulation around the pipe"
+			name="thermalConductivity"
+			validation="required | number"
+			suffix-text="W / m.K"
+		/>
+		<FormKit
+			id="surfaceReflectivity"
+			type="govRadios"
+			:options="{
+				reflective: 'Reflective',
+				notReflective: 'Not reflective',
+			}"
+			label="Surface reflectivity"
+			help="Whether there is a reflective coating or not"
+			name="surfaceReflectivity"
+			validation="required"
+		/>
+		<FormKit
+			id="pipeContents"
+			type="govRadios"
+			:options="{
+				water: 'Water',
+				glycol25: 'Glycol 25',
+			}"
+			label="Pipe contents"
+			help="The medium distributed through the pipe"
+			name="pipeContents"
+			validation="required"
+		/>
+		<FormKit
+			id="storageTank"
+			type="govRadios"
+			:options="new Map(store.domesticHotWater.waterHeating.storageTank.data.map((x, i) => [`${i}`, x.name]))"
+			label="Storage tank"
+			help="Select a storage tank that this pipework is connected to"
+			name="storageTank"
+			validation="required">
+			<div v-if="!store.domesticHotWater.waterHeating.storageTank.data.length">
+				<p class="govuk-error-message">No storage tank added.</p>
+				<NuxtLink :to="getUrl('storageTankCreate')" class="govuk-link gov-radios-add-link">
+					Click here to add a storage tank
+				</NuxtLink>
+			</div>
+		</FormKit>
+		<FormKit
+			id="location"
+			type="govRadios"
+			:options="{
+				internal: 'Internal',
+				external: 'External',
+			}"
+			label="Location"
+			help="The location of the pipe"
+			name="location"
+			validation="required"
+		/>
+		<FormKit type="govButton" label="Save and continue" />
+	</FormKit>
+</template>
+
+<style scoped lang="scss">
+.summary-text {
+	white-space: pre-wrap;
+}
+
+.h2 {
+	padding-top: 40px;
+}
+</style>

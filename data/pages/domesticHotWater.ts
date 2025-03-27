@@ -23,6 +23,13 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'waterHeating'
 	},
 	{
+		id: 'storageTankCreate',
+		title: 'Storage tank',
+		url: '/domestic-hot-water/water-heating/storage-tank/create',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
 		id: 'immersionHeater',
 		title: 'Immersion heater',
 		url: '/domestic-hot-water/water-heating/immersion-heater/:immersionHeater',
@@ -121,7 +128,14 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'domesticHotWater'
 	},
 	{
-		id: 'secondaryPipe',
+		id: 'primaryPipework',
+		title: 'Secondary pipework',
+		url: '/domestic-hot-water/pipework/primary/:pipe',
+		type: PageType.Task,
+		parentId: 'pipework'
+	},
+	{
+		id: 'secondaryPipework',
 		title: 'Secondary pipework',
 		url: '/domestic-hot-water/pipework/secondary/:pipe',
 		type: PageType.Task,

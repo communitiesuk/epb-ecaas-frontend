@@ -74,7 +74,7 @@ export function getSectionStatus(section: object): GovTagProps {
 		if (taskPage?.type === PageType.TaskGroup) {
 			const taskGroupStatus = getSectionStatus(task[1]);
 
-			if (taskGroupStatus === formStatus.complete) {
+			if (taskGroupStatus !== formStatus.notStarted) {
 				status = formStatus.inProgress;
 				complete++;
 			}

@@ -1,16 +1,16 @@
 <script setup lang="ts">
-const title = "Secondary Pipework";
+const title = "Secondary pipework";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.secondaryPipework.data);
-const model: Ref<PipeworkData> = ref(pipeworkData!);
+const model: Ref<SecondaryPipeworkData> = ref(pipeworkData!);
 
-const saveForm = (fields: PipeworkData) => {
+const saveForm = (fields: SecondaryPipeworkData) => {
 	store.$patch((state) => {
 		const {secondaryPipework} = state.domesticHotWater.pipework;
 
-		const pipeworkItem: PipeworkData = {
+		const pipeworkItem: SecondaryPipeworkData = {
 			name: fields.name,
 			location: fields.location,
 			length: fields.length,

@@ -2,14 +2,14 @@ import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
 import PipeworkForm from './[pipe].vue';
-import type { PipeworkData } from '~/stores/ecaasStore.types';
+import type { SecondaryPipeworkData } from '~/stores/ecaasStore.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
-const state: PipeworkData = {
+const state: SecondaryPipeworkData = {
 	name: 'Pipework Kitchen Sink',
 	length: 3,
 	location: 'internal',
@@ -64,7 +64,6 @@ describe('Secondary pipework form', () => {
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('3');
 		expect((await screen.findByTestId('internalDiameter') as HTMLInputElement).value).toBe('0.09');
-
 	});
 
 	it('required error messages are displayed when empty form is submitted', async () => {

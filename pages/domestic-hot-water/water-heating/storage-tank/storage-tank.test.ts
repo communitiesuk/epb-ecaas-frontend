@@ -16,7 +16,6 @@ describe('storageTank', () => {
 		name: 'Storage tank 1',
 		tankVolume: 5,
 		dailyEnergyLoss: 1
-
 	};
 
 	afterEach(() => {

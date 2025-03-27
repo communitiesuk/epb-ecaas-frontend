@@ -49,10 +49,10 @@ const optionsMap = options instanceof Map ? options : new Map(Object.entries(opt
 			<legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
 				{{ label }}
 			</legend>
-			<slot />
 			<div v-if="help" :id="`${id}_hint`" class="govuk-hint">
 				{{ help }}
 			</div>
+			<slot />
 			<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 				<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 			</p>
@@ -80,3 +80,12 @@ const optionsMap = options instanceof Map ? options : new Map(Object.entries(opt
 		</fieldset>
 	</div>
 </template>
+
+<style lang="scss">
+	.gov-radios-add-link {
+		color: #1d70b8;
+		font-size: 1.1875rem;
+		line-height: 1.3157894737;
+		font-weight: bold;
+	}
+</style>
