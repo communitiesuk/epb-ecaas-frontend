@@ -78,7 +78,7 @@ export type ExposedFloorData = {
 	name: string;
 	pitch: number;
 	orientation: number;
-	height: number;
+	length: number;
 	width: number;
 	elevationalHeight: number;
 	surfaceArea: number;
