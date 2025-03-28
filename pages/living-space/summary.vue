@@ -311,7 +311,7 @@ const windowSummary: SummarySection = {
 			"Name": x.name,
 			"Orientation": x.orientation,
 			"Surface area": x.surfaceArea,
-			"Height": x.height,
+			"Length": x.length,
 			"Width": x.width,
 			"U-value": x.uValue,
 			"Pitch": x.pitch,

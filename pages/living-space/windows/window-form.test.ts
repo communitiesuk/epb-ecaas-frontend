@@ -16,7 +16,7 @@ describe('window', () => {
 		name: "Window 1",
 		orientation: 1,
 		surfaceArea: 1,
-		height: 1,
+		length: 1,
 		width: 1,
 		uValue: 1,
 		pitchOption: '90',
@@ -46,7 +46,7 @@ describe('window', () => {
 		await user.type(screen.getByTestId('name'), 'Window 1');
 		await user.type(screen.getByTestId('orientation'), '1');
 		await user.type(screen.getByTestId('surfaceArea'), '1');
-		await user.type(screen.getByTestId('height'), '1');
+		await user.type(screen.getByTestId('length'), '1');
 		await user.type(screen.getByTestId('width'), '1'); 
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.click(screen.getByTestId('pitchOption_90'));
@@ -91,7 +91,7 @@ describe('window', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Window 1');
 		expect((await screen.findByTestId('orientation') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('height') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
@@ -118,7 +118,7 @@ describe('window', () => {
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
 		expect((await screen.findByTestId('surfaceArea_error'))).toBeDefined();
-		expect((await screen.findByTestId('height_error'))).toBeDefined();
+		expect((await screen.findByTestId('length_error'))).toBeDefined();
 		expect((await screen.findByTestId('width_error'))).toBeDefined();
 		expect((await screen.findByTestId('uValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('pitchOption_error'))).toBeDefined();

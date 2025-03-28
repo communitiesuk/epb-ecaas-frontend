@@ -14,7 +14,7 @@ const saveForm = (fields: WindowData) => {
 			name: fields.name,
 			orientation: fields.orientation,
 			surfaceArea: fields.surfaceArea,
-			height: fields.height,
+			length: fields.length,
 			width: fields.width,
 			uValue: fields.uValue,
 			pitchOption: fields.pitchOption,
@@ -72,8 +72,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Net area of the building element. For non-rectangular windows, use the area of the window based on its shape"
 			name="surfaceArea" validation="required | number | min:0.01 | max:10000" />
 		<FormKit
-			id="height" type="govInputWithSuffix" suffix-text="m" label="Height"
-			help="The height of the building element" name="height" validation="required | number | min:0.001 | max:50" />
+			id="length" type="govInputWithSuffix" suffix-text="m" label="Length"
+			help="The length of the building element" name="length" validation="required | number | min:0.001 | max:50" />
 		<FormKit
 			id="width" type="govInputWithSuffix" suffix-text="m" label="Width" help="The width of the building element"
 			name="width" validation="required | number | min:0.001 | max:50" />
