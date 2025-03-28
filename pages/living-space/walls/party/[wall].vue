@@ -15,7 +15,7 @@ const saveForm = (fields: PartyWallData) => {
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
 			orientation: fields.orientation,
-			height: fields.height,
+			length: fields.length,
 			width: fields.width,
 			elevationalHeight: fields.elevationalHeight,
 			surfaceArea: fields.surfaceArea,
@@ -71,12 +71,12 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		/>
 		<FieldsOrientation />
 		<FormKit
-			id="height"
+			id="length"
 			type="govInputWithSuffix"
 			suffix-text="m"
-			label="Height"
-			help="The height of the building element"
-			name="height"
+			label="Length"
+			help="The length of the building element"
+			name="length"
 			validation="required | number | min:0.001 | max:50"
 		/>
 		<FormKit
