@@ -47,7 +47,7 @@ export interface ExternalFactorsData {
 	noiseNuisance?: string;
 }
 
-export interface LivingSpaceFabric {
+export interface LivingSpaceFabricf {
 	livingSpaceFloors: FloorsData;
 	livingSpaceWalls: WallsData;
 	livingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
@@ -218,7 +218,7 @@ export type ExternalUnglazedDoorData = {
 	pitchOption: string;
 	pitch?: number;
 	orientation: number;
-	height: number;
+	length: number;
 	width: number;
 	elevationalHeight: number;
 	surfaceArea: number;
