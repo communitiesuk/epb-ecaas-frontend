@@ -17,7 +17,7 @@ describe('roof', () => {
 		typeOfRoof: 'flat',
 		pitchOption: '0',
 		pitch: 0,
-		height: 1,
+		length: 1,
 		width: 1,
 		elevationalHeightOfElement: 2,
 		surfaceArea: 1,
@@ -35,7 +35,7 @@ describe('roof', () => {
 		await user.type(screen.getByTestId('name'), 'Roof 1');
 		await user.click(screen.getByTestId('typeOfRoof_flat'));
 		await user.click(screen.getByTestId('pitchOption_0'));
-		await user.type(screen.getByTestId('height'), '1');
+		await user.type(screen.getByTestId('length'), '1');
 		await user.type(screen.getByTestId('width'), '1');
 		await user.type(screen.getByTestId('elevationalHeightOfElement'), '2');
 		await user.type(screen.getByTestId('surfaceArea'), '1');
@@ -76,7 +76,7 @@ describe('roof', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Roof 1');
 		expect((await screen.findByTestId('typeOfRoof_flat')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('pitchOption_0')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('height') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('elevationalHeightOfElement') as HTMLInputElement).value).toBe('2');
 		expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('1');
@@ -93,7 +93,7 @@ describe('roof', () => {
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('typeOfRoof_error'))).toBeDefined();
-		expect((await screen.findByTestId('height_error'))).toBeDefined();
+		expect((await screen.findByTestId('length_error'))).toBeDefined();
 		expect((await screen.findByTestId('width_error'))).toBeDefined();
 		expect((await screen.findByTestId('elevationalHeightOfElement_error'))).toBeDefined();
 		expect((await screen.findByTestId('surfaceArea_error'))).toBeDefined();

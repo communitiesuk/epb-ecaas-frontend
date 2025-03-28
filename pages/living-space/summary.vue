@@ -210,7 +210,7 @@ const roofSummary: SummarySection = {
 			"Type of roof": x.typeOfRoof,
 			"Pitch": x.pitch,
 			"Orientation": x.orientation,
-			"Height": x.height,
+			"Length": x.length,
 			"Width": x.width,
 			"Elevational height of building element at its base": x.elevationalHeightOfElement,
 			"Surface area": x.surfaceArea,

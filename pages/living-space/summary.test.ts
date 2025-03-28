@@ -138,7 +138,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 			pitchOption: '180',
 			pitch: 180,
 			orientation: 0,
-			height: 1,
+			length: 1,
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
@@ -560,7 +560,7 @@ describe('Living space fabric summary', () => {
 				"Type of roof": 'Flat',
 				"Pitch": 180,
 				"Orientation": 0,
-				"Height": 1,
+				"Length": 1,
 				"Width": 1,
 				"Elevational height of building element at its base": 2,
 				"Surface area": 1,
@@ -569,7 +569,7 @@ describe('Living space fabric summary', () => {
 				"Areal heat capacity": 100,
 				"Mass distribution class": 'Internal'
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);

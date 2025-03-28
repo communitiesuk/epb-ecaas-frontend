@@ -16,7 +16,7 @@ const saveForm = (fields: RoofData) => {
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === '0' ? 0 : fields.pitch,
 			orientation: fields.orientation,
-			height: fields.height,
+			length: fields.length,
 			width: fields.width,
 			elevationalHeightOfElement: fields.elevationalHeightOfElement,
 			surfaceArea: fields.surfaceArea,
@@ -95,11 +95,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			</div>
 		</template>
 		<FormKit
-			id="height"
+			id="length"
 			type="govInputWithSuffix"
-			label="Height"
-			help="The height of the building element."
-			name="height"
+			label="Length"
+			help="The length of the building element."
+			name="length"
 			validation="required | number | min:0.001 | max:50"
 			suffix-text="m"
 		/>
