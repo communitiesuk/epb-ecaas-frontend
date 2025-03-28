@@ -232,7 +232,7 @@ export type ExternalGlazedDoorData = {
 	name: string;
 	orientation: number;
 	surfaceArea: number;
-	height: number;
+	length: number;
 	width: number;
 	uValue: number;
 	pitchOption: string;
