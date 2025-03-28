@@ -67,7 +67,7 @@ const wallsData: WallsData = {
 			pitchOption: '90',
 			pitch: 90,
 			orientation: 0,
-			height: 0.5,
+			length: 0.5,
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
@@ -396,14 +396,14 @@ describe('Living space fabric summary', () => {
 					}
 				}
 			});
-	
+
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
 				"Name": 'External wall 1',
 				"Pitch": 90,
 				"Orientation": 0,
-				"Height": 0.5,
+				"Length": 0.5,
 				"Width": 20,
 				"Elevational height of building element at its base": 20,
 				"Surface area": 10,

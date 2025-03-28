@@ -128,7 +128,7 @@ export type ExternalWallData = {
 	pitchOption: string;
 	pitch?: number;
 	orientation: number;
-	height: number;
+	length: number;
 	width: number;
 	elevationalHeight: number;
 	surfaceArea: number;
