@@ -30,12 +30,12 @@ const title = 'Understanding mass distribution class';
 	<p class="govuk-body">Note: that the thermal mass includes the entire thickness of the building element. A monthly method such as the Standard Assessment Procedure would instead use the kappa value, which includes only the thickness of the construction active in thermal storage for the internal surface.</p>
 	<p class="govuk-body">The thermal mass is either distributed as a whole unit, or divided up in fractions of a half, a quarter or one-eighth. The distribution amongst the nodes is shown graphically below, where the thermal mass distribution is represented by the brown area.</p>
 	<div>
-  <img class="custom-govuk__img" src="/img/mass-concentrated-internal-side.png" alt="Mass concenrated on internal side">
-	<img class="custom-govuk__img" src="/img/mass-consentrated-external-side.png" alt="Mass concenrated on internal side">
-	<img class="custom-govuk__img" src="/img/mass-divided-internal-external-sides.png" alt="Mass divided over internal and external sides">
-	<img class="custom-govuk__img" src="/img/mass-equally-distributed.png" alt="Mass equally distributed">
-	<img class="custom-govuk__img" src="/img/mass-concentrated-inside.png" alt="Mass concenrated inside">
-  </div>
+		<img class="custom-govuk__img" src="/img/mass-concentrated-internal-side.png" alt="Mass concenrated on internal side">
+		<img class="custom-govuk__img" src="/img/mass-consentrated-external-side.png" alt="Mass concenrated on internal side">
+		<img class="custom-govuk__img" src="/img/mass-divided-internal-external-sides.png" alt="Mass divided over internal and external sides">
+		<img class="custom-govuk__img" src="/img/mass-equally-distributed.png" alt="Mass equally distributed">
+		<img class="custom-govuk__img" src="/img/mass-concentrated-inside.png" alt="Mass concenrated inside">
+	</div>
 </template>
 
 
