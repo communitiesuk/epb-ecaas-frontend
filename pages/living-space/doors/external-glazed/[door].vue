@@ -154,7 +154,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				id="frameToOpeningRatio"
 				type="govInputFloat"
 				label="Frame to opening ratio"
-				help="The frame area fraction of window wi, ratio of the projected frame area to the overall projected area of the glazed element of the window. Decimal 0-1"
+				help="The proportion of the window taken up by the frame compared to the total opening area."
 				name="frameToOpeningRatio"
 				validation="required | number | min:0 | max:100"
 			/>
@@ -163,7 +163,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="m2"
 				label="Maximum openable area"
-				help="The equivalent open area of the windows in the home."
+				help="The total area of the window that can be opened for ventilation."
 				name="maximumOpenableArea"
 				validation="required | number | min:0 | max:100"
 			/>
@@ -172,7 +172,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Height of the openable area"
-				help="Height of the openable part of the window (excluding the frame edges, and top/bottom portions that are not openable)"
+				help="The vertical measurement of the section of the window that can be opened."
 				name="heightOpenableArea"
 				validation="required | number | min:0 | max:100"
 			/>
@@ -181,6 +181,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Mid height of the air flow path for openable part 1 "
+				help="Enter the height from the ground to the midpoint of the openable section of the window."
 				name="midHeightOpenablePart1"
 				validation="required | number | min:0 | max:100"
 			/>
@@ -190,6 +191,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 					type="govInputWithSuffix"
 					suffix-text="m"
 					label="Mid height of the air flow path for openable part 2 "
+					help="Enter the height from the ground to the midpoint of the openable section of the window."
 					name="midHeightOpenablePart2"
 					validation="required | number | min:0 | max:100"
 				/>
@@ -199,6 +201,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 						type="govInputWithSuffix"
 						suffix-text="m"
 						label="Mid height of the air flow path for openable part 3 "
+						help="Enter the height from the ground to the midpoint of the openable section of the window."
 						name="midHeightOpenablePart3"
 						validation="required | number | min:0 | max:100"
 					/>
@@ -208,6 +211,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 							type="govInputWithSuffix"
 							suffix-text="m"
 							label="Mid height of the air flow path for openable part 4 "
+							help="Enter the height from the ground to the midpoint of the openable section of the window."
 							name="midHeightOpenablePart4"
 							validation="required | number | min:0 | max:100"
 						/>
