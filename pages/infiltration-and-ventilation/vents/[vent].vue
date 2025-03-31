@@ -15,7 +15,7 @@ const saveForm = (fields: VentData) => {
 			typeOfVent: fields.typeOfVent,
 			effectiveVentilationArea: fields.effectiveVentilationArea,
 			openingRatio: 1,
-			airFlowAtMidHeightLevel: fields.airFlowAtMidHeightLevel,
+			midHeightOfZone: fields.midHeightOfZone,
 			pressureDifference: fields.pressureDifference,
 			orientation: fields.orientation,
 			pitch: fields.pitch
@@ -96,11 +96,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<FormKit
-			id="airFlowAtMidHeightLevel"
+			id="midHeightOfZone"
 			type="govInputWithSuffix"
-			label="Air flow at mid height level"
-			help="The typical height at which airflow occurs in a room, based on window or vent positioning."
-			name="airFlowAtMidHeightLevel"
+			label="Mid height of zone"
+			help="Mid height of the zone that the vent serves"
+			name="midHeightOfZone"
 			validation="required | number | min:1 | max:60"
 			suffix-text="m">
 			<GovDetails summary-text="Help with this input">

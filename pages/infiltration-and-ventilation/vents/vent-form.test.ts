@@ -22,7 +22,7 @@ describe('vent', () => {
 		typeOfVent: 'trickle',
 		effectiveVentilationArea: 10,
 		openingRatio: 1,
-		airFlowAtMidHeightLevel: 1,
+		midHeightOfZone: 1,
 		pressureDifference: 1,
 		orientation: 0,
 		pitch: 0
@@ -32,7 +32,7 @@ describe('vent', () => {
 		await user.type(screen.getByTestId('name'), 'Vent 1');
 		await user.click(screen.getByTestId('typeOfVent_trickle'));
 		await user.type(screen.getByTestId('effectiveVentilationArea'), '10');
-		await user.type(screen.getByTestId('airFlowAtMidHeightLevel'), '1');
+		await user.type(screen.getByTestId('midHeightOfZone'), '1');
 		await user.type(screen.getByTestId('pressureDifference'), '1');
 		await user.type(screen.getByTestId('orientation'), '0');
 		await user.type(screen.getByTestId('pitch'), '0');
@@ -68,7 +68,7 @@ describe('vent', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Vent 1');
 		expect((await screen.findByTestId('typeOfVent_trickle')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('effectiveVentilationArea') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('airFlowAtMidHeightLevel') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId('midHeightOfZone') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('pressureDifference') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('orientation') as HTMLInputElement).value).toBe('0');
 		expect((await screen.findByTestId('pitch') as HTMLInputElement).value).toBe('0');
@@ -82,7 +82,7 @@ describe('vent', () => {
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('typeOfVent_error'))).toBeDefined();
 		expect((await screen.findByTestId('effectiveVentilationArea_error'))).toBeDefined();
-		expect((await screen.findByTestId('airFlowAtMidHeightLevel_error'))).toBeDefined();
+		expect((await screen.findByTestId('midHeightOfZone_error'))).toBeDefined();
 		expect((await screen.findByTestId('pressureDifference_error'))).toBeDefined();
 		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
 		expect((await screen.findByTestId('pitch_error'))).toBeDefined();

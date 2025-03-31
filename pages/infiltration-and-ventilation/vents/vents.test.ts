@@ -13,7 +13,7 @@ describe('vents', () => {
 		typeOfVent: 'trickle',
 		effectiveVentilationArea: 10,
 		openingRatio: 1,
-		airFlowAtMidHeightLevel: 1,
+		midHeightOfZone: 1,
 		pressureDifference: 1,
 		orientation: 0,
 		pitch: 0

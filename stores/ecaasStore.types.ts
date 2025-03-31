@@ -47,7 +47,7 @@ export interface ExternalFactorsData {
 	noiseNuisance?: string;
 }
 
-export interface LivingSpaceFabricf {
+export interface LivingSpaceFabric {
 	livingSpaceFloors: FloorsData;
 	livingSpaceWalls: WallsData;
 	livingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
@@ -474,7 +474,7 @@ export type VentData = {
 	typeOfVent: string;
 	effectiveVentilationArea: number;
 	openingRatio: number;
-	airFlowAtMidHeightLevel: number;
+	midHeightOfZone: number;
 	pressureDifference: number;
 	orientation: number;
 	pitch: number;
