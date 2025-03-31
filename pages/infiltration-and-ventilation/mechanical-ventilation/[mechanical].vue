@@ -174,7 +174,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					outside: 'Outside'
 				}"
 				label="MVHR location"
-				help="Whether the MVHR unit is located inside or outside"
+				help="Whether the MVHR unit is located inside or outside the thermal envelope"
 				name="mvhrLocation"
 				validation="required"
 			/>
