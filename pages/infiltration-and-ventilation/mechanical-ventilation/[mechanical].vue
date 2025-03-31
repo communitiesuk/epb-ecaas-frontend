@@ -102,7 +102,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="airFlowRate"
 			type="govInputWithSuffix"
-			suffix-text="cm2"
+			suffix-text="m3/h"
 			label="Air flow rate"
 			help="The required design air flow rate to be supplied to or extracted from the ventilation zone by the system"
 			name="airFlowRate" validation="required | number | min:0"
