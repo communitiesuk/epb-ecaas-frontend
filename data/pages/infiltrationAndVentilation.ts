@@ -65,42 +65,42 @@ const infiltrationAndVentilationPages: Array<Page> = [
 		parentId: 'infiltrationAndVentilation'
 	},
 	{
-		id: 'combustionAppliancesOpenFireplace',
+		id: 'openFireplace',
 		title: 'Open fireplace',
 		url: '/infiltration-and-ventilation/combustion-appliances/open-fireplace/:combustion',
 		type: PageType.Task,
 		parentId: 'combustionAppliances'
 	},
 	{
-		id: 'combustionAppliancesClosedFireplaceWithFan',
+		id: 'closedFireplaceWithFan',
 		title: 'Closed fireplace with fan',
 		url: '/infiltration-and-ventilation/combustion-appliances/closed-fireplace-with-fan/:combustion',
 		type: PageType.Task,
 		parentId: 'combustionAppliances'
 	},
 	{
-		id: 'combustionAppliancesOpenGasFlueBalancer',
+		id: 'openGasFlueBalancer',
 		title: 'Open gas flue balancer',
 		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-flue-balancer/:combustion',
 		type: PageType.Task,
 		parentId: 'combustionAppliances'
 	},
 	{
-		id: 'combustionAppliancesOpenGasKitchenStove',
+		id: 'openGasKitchenStove',
 		title: 'Open gas kitchen stove',
 		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-kitchen-stove/:combustion',
 		type: PageType.Task,
 		parentId: 'combustionAppliances'
 	},
 	{
-		id: 'combustionAppliancesOpenGasFire',
+		id: 'openGasFire',
 		title: 'Open gas fire',
 		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-fire/:combustion',
 		type: PageType.Task,
 		parentId: 'combustionAppliances'
 	},
 	{
-		id: 'combustionAppliancesClosedFire',
+		id: 'closedFire',
 		title: 'Closed fire',
 		url: '/infiltration-and-ventilation/combustion-appliances/closed-fire/:combustion',
 		type: PageType.Task,
