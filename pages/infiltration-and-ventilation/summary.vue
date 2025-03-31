@@ -7,7 +7,7 @@ const store = useEcaasStore();
 
 definePageMeta({ layout: false });
 
-const mechanicalVentilationData = store.infiltrationAndVentilation.mechanicalVentilation.data.mechanicalVentilationObjects;
+const mechanicalVentilationData = store.infiltrationAndVentilation.mechanicalVentilation.data;
 
 const mechanicalVentilationSummary: SummarySection = {
 	id: 'mechanicalVentilation',
@@ -22,7 +22,7 @@ const mechanicalVentilationSummary: SummarySection = {
 			"MVHR location": x.mvhrLocation,
 			"MVHR efficiency": x.mvhrEfficiency,
 			"Ductwork cross sectional shape": x.ductworkCrossSectionalShape,
-			"Duct tape": x.ductTape,
+			"Duct type": x.ductType,
 			"Internal diameter of ductwork": x.internalDiameterOfDuctwork,
 			"External diameter of ductwork": x.externalDiameterOfDuctwork,
 			"Thermal insulation conductivity of ductwork": x.thermalInsulationConductivityOfDuctwork,
@@ -42,7 +42,7 @@ const ventSummary: SummarySection = {
 			"Type of vent": x.typeOfVent,
 			"Effective ventilation area": x.effectiveVentilationArea,
 			"Vent opening ratio": x.openingRatio,
-			"Air flow at mid height level": x.airFlowAtMidHeightLevel,
+			"Mid height of zone": x.midHeightOfZone,
 			"Pressure difference": x.pressureDifference,
 			"Orientation": x.orientation,
 			"Pitch": x.pitch

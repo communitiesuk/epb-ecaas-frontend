@@ -2,7 +2,7 @@ import { renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from '@testing-library/vue';
 import Summary from "./summary.vue";
 
-const mechanicalVentilationData: MechanicalVentilationObject = {
+const mechanicalVentilationData: MechanicalVentilationData = {
 	name: "Mechanical name 1",
 	typeOfMechanicalVentilationOptions: "mvhr",
 	controlForSupplyAirflow: "load",
@@ -11,7 +11,7 @@ const mechanicalVentilationData: MechanicalVentilationObject = {
 	mvhrLocation: "inside",
 	mvhrEfficiency: 0.2,
 	ductworkCrossSectionalShape: "circular",
-	ductTape: "intake",
+	ductType: "intake",
 	internalDiameterOfDuctwork: 300,
 	externalDiameterOfDuctwork: 1000,
 	insulationThickness: 100,
@@ -25,7 +25,7 @@ const ventData: VentData = {
 	typeOfVent: 'trickle',
 	effectiveVentilationArea: 10,
 	openingRatio: 1,
-	airFlowAtMidHeightLevel: 1,
+	midHeightOfZone: 1,
 	pressureDifference: 1,
 	orientation: 0,
 	pitch: 0
@@ -106,9 +106,7 @@ describe('Infiltration and ventilation summary', () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: {
-						mechanicalVentilationObjects: [mechanicalVentilationData]
-					}
+					data: [mechanicalVentilationData]
 				}
 			}
 		});
@@ -124,7 +122,7 @@ describe('Infiltration and ventilation summary', () => {
 			"MVHR location": 'inside',
 			"MVHR efficiency": 0.2,
 			"Ductwork cross sectional shape": 'circular',
-			"Duct tape": 'intake',
+			"Duct type": 'intake',
 			"Internal diameter of ductwork": 300,
 			"External diameter of ductwork": 1000,
 			"Thermal insulation conductivity of ductwork": 10,
@@ -154,7 +152,7 @@ describe('Infiltration and ventilation summary', () => {
 			"Type of vent": 'trickle',
 			"Effective ventilation area": 10,
 			"Vent opening ratio": 1,
-			"Air flow at mid height level": 1,
+			"Mid height of zone": 1,
 			"Pressure difference": 1,
 			"Orientation": 0,
 			"Pitch": 0
