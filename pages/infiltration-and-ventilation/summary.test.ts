@@ -38,8 +38,6 @@ const ventilationData: VentilationData = {
 };
 
 const airPermeabilityData: AirPermeabilityData = {
-	zoneHeight: 1,
-	zoneEnvelopeArea: 5,
 	testPressure: 1,
 	airTightnessTestResult: 1
 };
@@ -100,6 +98,7 @@ describe('Infiltration and ventilation summary', () => {
 		expect(screen.getByRole('link', {name: 'Vents'}));
 		expect(screen.getByRole('link', {name: 'Ventilation'}));
 		expect(screen.getByRole('link', {name: 'Air permeability'}));
+		expect(screen.getByRole('link', {name: 'Combustion appliances'}));
 	});
 
 	it('should display the correct data for the mechanical ventilation section', async () => {
@@ -215,18 +214,8 @@ describe('Infiltration and ventilation summary', () => {
 	});
 
 	describe('Combustion appliances', () => {
-		it('should contain the correct tabs for combustion appliances', async () => {
-			await renderSuspended(Summary);
-		
-			expect(screen.getByRole('link', {name: 'Open fireplace'}));
-			expect(screen.getByRole('link', {name: 'Closed fireplace with fan'}));
-			expect(screen.getByRole('link', {name: 'Open gas flue balancer'}));
-			expect(screen.getByRole('link', {name: 'Open gas kitchen stove'}));
-			expect(screen.getByRole('link', {name: 'Open gas fire'}));
-			expect(screen.getByRole('link', {name: 'Closed fire'}));
-		});
 
-		it('should display the correct data for the open fireplace section', async () => {
+		it('should display the correct data for the open fireplace', async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
@@ -240,6 +229,7 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
+				"Type": 'Open fireplace',
 				"Name": 'Open fireplace 1',
 				"Air supply to appliance": 'Room air',
 				"Exhaust method from appliance": 'Into separate duct',
@@ -253,7 +243,7 @@ describe('Infiltration and ventilation summary', () => {
 			}
 		});
 
-		it('should display the correct data for the closed fireplace with fan section', async () => {
+		it('should display the correct data for closed fireplace with fan', async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
@@ -267,6 +257,7 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
+				"Type": 'Closed fireplace',
 				"Name": 'Closed fireplace',
 				"Air supply to appliance": 'Room air',
 				"Exhaust method from appliance": 'Into separate duct',
@@ -280,7 +271,7 @@ describe('Infiltration and ventilation summary', () => {
 			}
 		});
 
-		it('should display the correct data for the open gas flue balancer section', async () => {
+		it('should display the correct data for open gas flue balancer', async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
@@ -294,6 +285,7 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
+				"Type": 'Open gas flue balancer',
 				"Name": 'Open gas flue balancer 1',
 				"Air supply to appliance": 'Outside',
 				"Exhaust method from appliance": 'Into room',
@@ -307,7 +299,7 @@ describe('Infiltration and ventilation summary', () => {
 			}
 		});
 
-		it('should display the correct data for the open gas kitchen stove section', async () => {
+		it('should display the correct data for open gas kitchen stove', async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
@@ -321,6 +313,7 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
+				"Type": 'Open gas kitchen stove',
 				"Name": 'Open gas kitchen stove 1',
 				"Air supply to appliance": 'Outside',
 				"Exhaust method from appliance": 'Into room',
@@ -334,7 +327,7 @@ describe('Infiltration and ventilation summary', () => {
 			}
 		});
 
-		it('should display the correct data for the open gas fire section', async () => {
+		it('should display the correct data for open gas fire', async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
@@ -348,6 +341,7 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
+				"Type": 'Open gas fire',
 				"Name": 'Open gas fire 1',
 				"Air supply to appliance": 'Outside',
 				"Exhaust method from appliance": 'Into mechanical vent',
@@ -361,7 +355,7 @@ describe('Infiltration and ventilation summary', () => {
 			}
 		});
 
-		it('should display the correct data for the closed fire section', async () => {
+		it('should display the correct data for closed fire', async () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
@@ -375,6 +369,7 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
+				"Type": 'Closed fire',
 				"Name": 'Closed fire 1',
 				"Air supply to appliance": 'Outside',
 				"Exhaust method from appliance": 'Into mechanical vent',
