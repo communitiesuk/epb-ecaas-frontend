@@ -56,6 +56,8 @@ const ventilationSummary: SummarySection = {
 	id: 'ventilation',
 	label: 'Ventilation',
 	data: {
+		"Zone height": ventilationData.zoneHeight,
+		"Zone envelope area": ventilationData.zoneEnvelopeArea,
 		"Zone elevational level at base": ventilationData.zoneElevationalLevelAtBase,
 		"Cross vent factor": ventilationData.crossVentFactor,
 		"Maximum required air change rate": ventilationData.maxRequiredAirChangeRate
@@ -68,8 +70,6 @@ const airPermeabilitySummary: SummarySection = {
 	id: 'airPermeability',
 	label: 'Air permeability',
 	data: {
-		"Zone height": airPermeabilityData.zoneHeight,
-		"Zone envelope area": airPermeabilityData.zoneEnvelopeArea,
 		"Test pressure": airPermeabilityData.testPressure,
 		"Air tightness test result": airPermeabilityData.airTightnessTestResult
 	}

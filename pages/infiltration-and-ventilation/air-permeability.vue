@@ -11,8 +11,6 @@ const saveForm = (fields: AirPermeabilityData) => {
 		infiltrationAndVentilation: {
 			airPermeability: {
 				data: {
-					zoneHeight: fields.zoneHeight,
-					zoneEnvelopeArea: fields.zoneEnvelopeArea,
 					testPressure: fields.testPressure,
 					airTightnessTestResult: fields.airTightnessTestResult
 				},
@@ -41,24 +39,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit-invalid="handleInvalidSubmit"
 	>
 		<GovErrorSummary :error-list="errorMessages" test-id="airPermeabilityErrorSummary"/>
-		<FormKit
-			id="zoneHeight"
-			type="govInputWithSuffix"
-			label="Zone height"
-			help="Height of zone"
-			name="zoneHeight"
-			validation="required | number | min:1 | max:20"
-			suffix-text="m"
-		/>
-		<FormKit
-			id="zoneEnvelopeArea"
-			type="govInputWithSuffix"
-			label="Zone envelope area"
-			help="External surface area of envelope"
-			name="zoneEnvelopeArea"
-			validation="required | number | min:5 | max:72000"
-			suffix-text="m2"
-		/>
 		<FormKit
 			id="testPressure"
 			type="govInputWithSuffix"

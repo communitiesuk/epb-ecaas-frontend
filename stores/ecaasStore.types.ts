@@ -497,14 +497,14 @@ export type CombustionApplianceData = {
 };
 
 export interface VentilationData {
+	zoneHeight?: number;
+	zoneEnvelopeArea?: number;
 	zoneElevationalLevelAtBase?: number;
 	crossVentFactor?: string;
 	maxRequiredAirChangeRate?: number;
 }
 
 export interface AirPermeabilityData {
-	zoneHeight?: number;
-	zoneEnvelopeArea?: number;
 	testPressure?: number;
 	airTightnessTestResult?: number;
 }

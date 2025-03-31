@@ -18,15 +18,11 @@ describe('Air permeability', () => {
 	});
 
 	const state: AirPermeabilityData = {
-		zoneHeight: 1,
-		zoneEnvelopeArea: 5,
 		testPressure: 1,
 		airTightnessTestResult: 1
 	};
 
 	const populateValidForm = async () => {
-		await user.type(screen.getByTestId('zoneHeight'), '1');
-		await user.type(screen.getByTestId('zoneEnvelopeArea'), '5');
 		await user.type(screen.getByTestId('testPressure'), '1');
 		await user.type(screen.getByTestId('airTightnessTestResult'), '1');
 		await user.tab();
@@ -53,9 +49,7 @@ describe('Air permeability', () => {
 		});
 
 		await renderSuspended(AirPermeability);
-		
-		expect((await screen.findByTestId('zoneHeight') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('zoneEnvelopeArea') as HTMLInputElement).value).toBe('5');
+
 		expect((await screen.findByTestId('testPressure') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('airTightnessTestResult') as HTMLInputElement).value).toBe('1');
 	});
@@ -65,8 +59,6 @@ describe('Air permeability', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		expect((await screen.findByTestId('zoneHeight_error'))).toBeDefined();
-		expect((await screen.findByTestId('zoneEnvelopeArea_error'))).toBeDefined();
 		expect((await screen.findByTestId('testPressure_error'))).toBeDefined();
 		expect((await screen.findByTestId('airTightnessTestResult_error'))).toBeDefined();
 	});

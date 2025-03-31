@@ -11,6 +11,8 @@ const saveForm = (fields: VentilationData) => {
 		infiltrationAndVentilation: {
 			ventilation: {
 				data: {
+					zoneHeight: fields.zoneHeight,
+					zoneEnvelopeArea: fields.zoneEnvelopeArea,
 					zoneElevationalLevelAtBase: fields.zoneElevationalLevelAtBase,
 					crossVentFactor: fields.crossVentFactor,
 					maxRequiredAirChangeRate: 2
@@ -41,9 +43,27 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	>
 		<GovErrorSummary :error-list="errorMessages" test-id="ventilationErrorSummary"/>
 		<FormKit
+			id="zoneHeight"
+			type="govInputWithSuffix"
+			label="Zone height"
+			help="Height of zone"
+			name="zoneHeight"
+			validation="required | number | min:1 | max:20"
+			suffix-text="m"
+		/>
+		<FormKit
+			id="zoneEnvelopeArea"
+			type="govInputWithSuffix"
+			label="Zone envelope area"
+			help="External surface area of envelope"
+			name="zoneEnvelopeArea"
+			validation="required | number | min:5 | max:72000"
+			suffix-text="m2"
+		/>
+		<FormKit
 			id="zoneElevationalLevelAtBase"
 			type="govInputWithSuffix"
-			label="Zone elevational level at base"
+			label="Elevational height of zone at its base"
 			help="Elevational height of zone above ground datum level"
 			name="zoneElevationalLevelAtBase"
 			validation="required | number | min:-150 | max:750"
