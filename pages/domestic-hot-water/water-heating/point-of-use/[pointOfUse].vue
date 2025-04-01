@@ -11,9 +11,7 @@ const saveForm = (fields: PointOfUseData) => {
 		const {pointOfUse} = state.domesticHotWater.waterHeating;
 
 		const pointOfUseItem: PointOfUseData = {
-			name: fields.name,
-			setPointTemperature: fields.setPointTemperature,
-			heaterEfficiency: fields.heaterEfficiency,
+			name: fields.name
 		};
 
 		saveToList(pointOfUseItem, pointOfUse);
@@ -45,26 +43,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
-		/>
-		<FormKit
-			id="setPointTemperature"
-			type="govInputWithSuffix"
-			label="Set point temperature"
-			help="Set point temperature which the heating system is set to raise the temperature of the hot water. Not recommended to heat above 65 °C due to scalding risk."
-			name="setPointTemperature"
-			validation="required | number"
-			suffix-text="&deg;C">
-			<GovDetails summary-text="Help with this input">
-				<p>Typical range 25 - 44</p>
-			</GovDetails>
-		</FormKit>
-		<FormKit
-			id="heaterEfficiency"
-			type="govInputFloat"
-			label="Heater efficiency"
-			help="Efficiency of the heater, between 0 and 1"
-			name="heaterEfficiency"
-			validation="required | number | min:0 | max:1"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
