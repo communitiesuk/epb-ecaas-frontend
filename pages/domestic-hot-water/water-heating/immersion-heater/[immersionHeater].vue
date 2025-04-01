@@ -18,6 +18,7 @@ const saveForm = (fields: ImmersionHeaterData) => {
 		};
 
 		saveToList(immersionHeaterItem, immersionHeater);
+		immersionHeater.complete = true;
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

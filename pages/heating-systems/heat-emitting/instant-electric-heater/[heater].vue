@@ -4,19 +4,20 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const instantElectricHeaterData = useItemToEdit('heater', store.heatingSystems.heatEmitting.instantElectricHeater.data);
-const model: Ref<InstantElectricHeaterData> = ref(instantElectricHeaterData!);
+const model: Ref<InstantElectricStorageData> = ref(instantElectricHeaterData!);
 
-const saveForm = (fields: InstantElectricHeaterData) => {
+const saveForm = (fields: InstantElectricStorageData) => {
 	store.$patch((state) => {
 		const {instantElectricHeater} = state.heatingSystems.heatEmitting;
 
-		const instantElectricHeaterItem: instantElectricHeaterData = {
+		const instantElectricHeaterItem: InstantElectricStorageData = {
 			name: fields.name,
 			ratedPower: fields.ratedPower,
 			convectionFraction: fields.convectionFraction,
 		};
 
 		saveToList(instantElectricHeaterItem, instantElectricHeater);
+		instantElectricHeater.complete = true;
 	});
 
 	navigateTo("/heating-systems/heat-emitting");

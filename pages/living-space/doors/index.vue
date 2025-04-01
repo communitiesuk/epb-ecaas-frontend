@@ -36,6 +36,20 @@ function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) 
 		});
 	}
 }
+
+function handleComplete() {
+	store.$patch({
+		livingSpaceFabric: {
+			livingSpaceDoors: {
+				livingSpaceExternalGlazedDoor: { complete: true },
+				livingSpaceExternalUnglazedDoor: { complete: true },
+				livingSpaceInternalDoor: { complete: true }
+			}
+		}
+	});
+
+	navigateTo('/living-space');
+}
 </script>
 
 <template>
@@ -69,11 +83,15 @@ function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) 
 		@remove="(index: number) => handleRemove('livingSpaceInternalDoor', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceInternalDoor', index)"
 	/>
-
-	<GovButton
-		href="/living-space"
-		secondary
-	>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/living-space"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovButton data-testid="completeSection" @click="handleComplete">
+			Mark section as complete
+		</GovButton>
+	</div>
 </template>

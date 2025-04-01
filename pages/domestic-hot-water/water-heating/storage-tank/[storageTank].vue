@@ -20,6 +20,7 @@ const saveForm = (fields: StorageTankData) => {
 		};
 
 		saveToList(storageTankItem, storageTank);
+		storageTank.complete = true;
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

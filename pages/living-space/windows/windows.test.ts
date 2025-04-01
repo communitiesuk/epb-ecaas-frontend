@@ -1,4 +1,4 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import Windows from './index.vue';
 import {screen } from '@testing-library/vue';
@@ -7,6 +7,15 @@ import {within} from '@testing-library/dom';
 describe('windows', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
+	const navigateToMock = vi.hoisted(() => vi.fn());
+
+	mockNuxtImport('navigateTo', () => {
+		return navigateToMock;
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
 
 	const window1: WindowData = {
 		name: "Window 1",
@@ -42,8 +51,8 @@ describe('windows', () => {
 		pitchOption: '90',
 		pitch: 90,
 		solarTransmittence: 0.1,
-		elevationallength: 1,
-		midlength: 1,
+		elevationalHeight: 1,
+		midHeight: 1,
 		numberOpenableParts: "none",
 		overhangDepth: 1,
 		overhangDistance: 1,
@@ -79,10 +88,6 @@ describe('windows', () => {
 		thermalResistivityIncrease: 1,
 		solarTransmittenceReduction: 0.1,
 	};
-
-	afterEach(() => {
-		store.$reset();
-	});
 
 	it('window is removed when remove link is clicked', async () => {
 		store.$patch({
@@ -143,5 +148,16 @@ describe('windows', () => {
 		expect(screen.getByText('Window 1 (2)')).toBeDefined();
 		expect(screen.getByText('Window 1 (1) (1)')).toBeDefined();
 		expect(screen.getByText('Window 1 (1) (2)')).toBeDefined();
+	});
+
+	it('marks shading as complete when complete button is clicked', async () => {
+		await renderSuspended(Windows);
+
+		await user.click(screen.getByTestId('completeSection'));
+
+		const { complete } = store.livingSpaceFabric.livingSpaceWindows;
+
+		expect(navigateToMock).toHaveBeenCalledWith('/living-space');
+		expect(complete).toBe(true);
 	});
 });

@@ -48,10 +48,9 @@ describe('external unglazed door', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		const { data = [], complete = false} = store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalUnglazedDoor || {};
+		const { data = [] } = store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalUnglazedDoor || {};
 		
 		expect(data[0]).toEqual(state);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/doors');
 	});
 

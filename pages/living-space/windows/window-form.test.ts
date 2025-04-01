@@ -69,7 +69,6 @@ describe('window', () => {
 		const { data, complete } = store.livingSpaceFabric.livingSpaceWindows;
 		
 		expect(data[0]).toEqual(state);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/windows');
 	});
 

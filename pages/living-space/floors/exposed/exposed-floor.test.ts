@@ -45,10 +45,9 @@ describe('exposed floor', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		const { data = [], complete = false} = store.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor || {};
+		const { data = [] } = store.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor || {};
 		
 		expect(data[0]).toEqual(state);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/floors');
 	});
 	

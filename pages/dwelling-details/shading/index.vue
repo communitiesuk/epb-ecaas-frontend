@@ -10,10 +10,7 @@ function handleRemove(index: number) {
 
 	store.$patch({
 		dwellingDetails: {
-			shading: {
-				data,
-				complete: data.length > 0
-			}
+			shading: { data }
 		}
 	});
 }
@@ -32,6 +29,16 @@ function handleDuplicate(index: number) {
 		});
 	}
 }
+
+function handleComplete() {
+	store.$patch({
+		dwellingDetails: {
+			shading: { complete: true }
+		}
+	});
+
+	navigateTo('/dwelling-details');
+}
 </script>
 
 <template>
@@ -49,10 +56,15 @@ function handleDuplicate(index: number) {
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
-	<GovButton
-		href="/dwelling-details"
-		secondary
-	>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/dwelling-details"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovButton data-testid="completeSection" @click="handleComplete">
+			Mark section as complete
+		</GovButton>
+	</div>
 </template>

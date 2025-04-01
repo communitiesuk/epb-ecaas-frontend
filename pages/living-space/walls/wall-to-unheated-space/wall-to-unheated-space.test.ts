@@ -40,9 +40,8 @@ describe('wall to unheated space', () => {
 
 		await user.click(screen.getByRole('button'));
 		await waitFor(() => {
-			const { data = [], complete = false} = store.livingSpaceFabric.livingSpaceWalls.livingSpaceWallToUnheatedSpace || {};
+			const { data = [] } = store.livingSpaceFabric.livingSpaceWalls.livingSpaceWallToUnheatedSpace || {};
 			expect(data[0]).toEqual(state);
-			expect(complete).toBe(true);
 			expect(navigateToMock).toHaveBeenCalledWith('/living-space/walls');
 		
 		});

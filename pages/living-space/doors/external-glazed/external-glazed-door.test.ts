@@ -48,10 +48,9 @@ describe('external glazed door', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		const { data = [], complete = false} = store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalGlazedDoor || {};
+		const { data = [] } = store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalGlazedDoor || {};
 		
 		expect(data[0]).toEqual(state);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/doors');
 	});
 

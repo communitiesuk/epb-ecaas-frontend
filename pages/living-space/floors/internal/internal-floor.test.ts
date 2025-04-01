@@ -158,9 +158,6 @@ describe('internal floor', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { livingSpaceInternalFloor } = store.livingSpaceFabric.livingSpaceFloors;
-		
-		expect(livingSpaceInternalFloor?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/floors');
 	});
 });

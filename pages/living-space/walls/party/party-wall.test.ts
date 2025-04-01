@@ -47,10 +47,9 @@ describe('party wall', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		const { data = [], complete = false} = store.livingSpaceFabric.livingSpaceWalls.livingSpacePartyWall || {};
+		const { data = [] } = store.livingSpaceFabric.livingSpaceWalls.livingSpacePartyWall || {};
 		
 		expect(data[0]).toEqual(state);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/walls');
 	});
 

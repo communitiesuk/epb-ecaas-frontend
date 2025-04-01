@@ -18,6 +18,7 @@ const saveForm = (fields: CombustionApplianceData) => {
 		};
 
 		saveToList(appliance, openGasKitchenStove);
+		openGasKitchenStove.complete = true;
 	});
 
 	navigateTo("/infiltration-and-ventilation/combustion-appliances");

@@ -36,6 +36,19 @@ function handleDuplicate<T extends CeilingAndRoofData>(ceilingAndRoofType: Ceili
 		});
 	}
 }
+
+function handleComplete() {
+	store.$patch({
+		livingSpaceFabric: {
+			livingSpaceCeilingsAndRoofs: {
+				livingSpaceCeilings: { complete: true },
+				livingSpaceRoofs: { complete: true }
+			}
+		}
+	});
+
+	navigateTo('/living-space');
+}
 </script>
 
 <template>
@@ -61,10 +74,15 @@ function handleDuplicate<T extends CeilingAndRoofData>(ceilingAndRoofType: Ceili
 		@remove="(index: number) => handleRemove('livingSpaceRoofs', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceRoofs', index)"
 	/>
-	<GovButton
-		href="/living-space"
-		secondary
-	>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/living-space"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovButton data-testid="completeSection" @click="handleComplete">
+			Mark section as complete
+		</GovButton>
+	</div>
 </template>

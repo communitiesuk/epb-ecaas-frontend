@@ -48,10 +48,9 @@ describe('external wall', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		const { data = [], complete = false} = store.livingSpaceFabric.livingSpaceWalls.livingSpaceExternalWall || {};
+		const { data = [] } = store.livingSpaceFabric.livingSpaceWalls.livingSpaceExternalWall || {};
 		
 		expect(data[0]).toEqual(state);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/walls');
 	});
 

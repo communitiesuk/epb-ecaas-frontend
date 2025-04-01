@@ -87,9 +87,6 @@ describe('linear thermal bridges', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { livingSpaceLinearThermalBridges } = store.livingSpaceFabric.livingSpaceThermalBridging;
-		
-		expect(livingSpaceLinearThermalBridges?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/thermal-bridging');
 	});
 });

@@ -145,7 +145,7 @@ export type InternalWallData = {
 	kappaValue: number;
 	massDistributionClass: string;
 	pitchOption: string;
-	pitch: number;
+	pitch?: number;
 };
 
 export type WallsToUnheatedSpaceData = {

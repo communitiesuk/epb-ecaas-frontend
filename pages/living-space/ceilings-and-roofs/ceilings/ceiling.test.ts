@@ -50,7 +50,7 @@ describe('ceiling', () => {
 			await populateValidForm();
 			await user.click(screen.getByRole('button'));
 	
-			const  { livingSpaceCeilings } = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
+			const { livingSpaceCeilings } = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
 			
 			expect(livingSpaceCeilings?.data[0]).toEqual(internalFloor);
 		});
@@ -190,9 +190,6 @@ describe('ceiling', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { livingSpaceCeilings } = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
-		
-		expect(livingSpaceCeilings?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/ceilings-and-roofs');
 	});
 });

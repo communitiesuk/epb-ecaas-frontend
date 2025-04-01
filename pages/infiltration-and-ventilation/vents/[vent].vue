@@ -22,6 +22,7 @@ const saveForm = (fields: VentData) => {
 		};
 
 		saveToList(vent, vents);
+		vents.complete = true;
 	});
 
 	navigateTo("/infiltration-and-ventilation/vents");

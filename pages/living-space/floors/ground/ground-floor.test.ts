@@ -375,9 +375,6 @@ describe('ground floor', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { complete } = store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor;
-		
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/floors');
 	});
 });

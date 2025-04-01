@@ -21,8 +21,6 @@ export function useForm() {
 		} else {
 			form.data.push(item);
 		}
-	
-		form.complete = true;
 	};
 
 	return { saveToList };

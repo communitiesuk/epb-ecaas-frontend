@@ -32,6 +32,16 @@ function handleDuplicate(index: number) {
 		});
 	}
 }
+
+function handleComplete() {
+	store.$patch({
+		livingSpaceFabric: {
+			livingSpaceWindows: { complete: true }
+		}
+	});
+
+	navigateTo('/living-space');
+}
 </script>
 
 <template>
@@ -49,10 +59,15 @@ function handleDuplicate(index: number) {
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
-	<GovButton
-		href="/living-space"
-		secondary
-	>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/living-space"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovButton data-testid="completeSection" @click="handleComplete">
+			Mark section as complete
+		</GovButton>
+	</div>
 </template>

@@ -36,6 +36,19 @@ function handleDuplicate<T extends ThermalBridgingData>(thermalBridgingType: The
 		});
 	}
 }
+
+function handleComplete() {
+	store.$patch({
+		livingSpaceFabric: {
+			livingSpaceThermalBridging: {
+				livingSpaceLinearThermalBridges: { complete: true },
+				livingSpacePointThermalBridges: { complete: true }
+			}
+		}
+	});
+
+	navigateTo('/living-space');
+}
 </script>
 
 <template>
@@ -61,10 +74,15 @@ function handleDuplicate<T extends ThermalBridgingData>(thermalBridgingType: The
 		@remove="(index: number) => handleRemove('livingSpacePointThermalBridges', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpacePointThermalBridges', index)"
 	/>
-	<GovButton
-		href="/living-space"
-		secondary
-	>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/living-space"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovButton data-testid="completeSection" @click="handleComplete">
+			Mark section as complete
+		</GovButton>
+	</div>
 </template>

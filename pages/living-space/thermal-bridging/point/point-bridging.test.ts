@@ -81,10 +81,7 @@ describe('point thermal bridges', () => {
 	
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
-
-		const { livingSpacePointThermalBridges } = store.livingSpaceFabric.livingSpaceThermalBridging;
 		
-		expect(livingSpacePointThermalBridges?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/thermal-bridging');
 	});
 });

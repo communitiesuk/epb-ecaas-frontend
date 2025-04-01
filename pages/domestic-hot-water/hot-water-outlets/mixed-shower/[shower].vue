@@ -16,6 +16,7 @@ const saveForm = (fields: MixedShowerData) => {
 		};
 
 		saveToList(mixedShowerItem, mixedShower);
+		mixedShower.complete = true;
 	});
 
 	navigateTo("/domestic-hot-water/hot-water-outlets");

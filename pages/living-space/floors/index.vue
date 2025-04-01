@@ -36,6 +36,20 @@ function handleDuplicate<T extends FloorData>(floorType: FloorType, index: numbe
 		});
 	}
 }
+
+function handleComplete() {
+	store.$patch({
+		livingSpaceFabric: {
+			livingSpaceFloors: {
+				livingSpaceExposedFloor: { complete: true },
+				livingSpaceGroundFloor: { complete: true },
+				livingSpaceInternalFloor: { complete: true }
+			}
+		}
+	});
+
+	navigateTo('/living-space');
+}
 </script>
 
 <template>
@@ -57,7 +71,7 @@ function handleDuplicate<T extends FloorData>(floorType: FloorType, index: numbe
 		id="internal"
 		title="Internal floor"
 		:form-url="`${page?.url!}/internal`"
-		:items="store.livingSpaceFabric.livingSpaceFloors.livingSpaceInternalFloor?.data.map(x => x.name)"
+		:items="store.livingSpaceFabric.livingSpaceFloors.livingSpaceInternalFloor?.data?.map(x => x.name)"
 		@remove="(index: number) => handleRemove('livingSpaceInternalFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceInternalFloor', index)"
 	/>
@@ -65,15 +79,20 @@ function handleDuplicate<T extends FloorData>(floorType: FloorType, index: numbe
 		id="exposed"
 		title="Exposed floor"
 		:form-url="`${page?.url!}/exposed`"
-		:items="store.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor?.data.map(x => x.name)"
+		:items="store.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor?.data?.map(x => x.name)"
 		@remove="(index: number) => handleRemove('livingSpaceExposedFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceExposedFloor', index)"
 
 	/>
-	<GovButton
-		href="/living-space"
-		secondary
-	>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/living-space"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovButton data-testid="completeSection" @click="handleComplete">
+			Mark section as complete
+		</GovButton>
+	</div>
 </template>

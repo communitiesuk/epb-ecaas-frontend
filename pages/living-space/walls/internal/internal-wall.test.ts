@@ -41,7 +41,7 @@ describe('internal wall', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const  { livingSpaceInternalWall } = store.livingSpaceFabric.livingSpaceWalls;
+		const { livingSpaceInternalWall } = store.livingSpaceFabric.livingSpaceWalls;
 		
 		expect(livingSpaceInternalWall?.data[0]).toEqual(internalWall);
 	});
@@ -121,9 +121,6 @@ describe('internal wall', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { livingSpaceInternalWall } = store.livingSpaceFabric.livingSpaceWalls;
-		
-		expect(livingSpaceInternalWall?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/walls');
 	});
 });

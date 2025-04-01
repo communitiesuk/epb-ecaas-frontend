@@ -23,7 +23,7 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 	const walls = store.livingSpaceFabric.livingSpaceWalls[wallType]?.data;
 	const wall = walls?.[index];
 
-	if(wall) {
+	if (wall) {
 		const duplicates = walls.filter(w => w.name.match(duplicateNamePattern(wall.name)));
 	
 		store.$patch((state) => {
@@ -34,12 +34,23 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 
 			state.livingSpaceFabric.livingSpaceWalls[wallType]!.data.push(newWall);
 		});
-	
 	}
-
 }
 
+function handleComplete() {
+	store.$patch({
+		livingSpaceFabric: {
+			livingSpaceWalls: {
+				livingSpaceExternalWall: { complete: true },
+				livingSpaceInternalWall: { complete: true },
+				livingSpacePartyWall: { complete: true },
+				livingSpaceWallToUnheatedSpace: { complete: true }
+			}
+		}
+	});
 
+	navigateTo('/living-space');
+}
 </script>
 <template>
 	<Head>
@@ -80,11 +91,15 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 		@remove="(index: number) => handleRemove('livingSpacePartyWall', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpacePartyWall', index)"
 	/>
-	<GovButton
-		href="/living-space"
-		secondary
-	>
-		Return to overview
-	</GovButton>
-
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/living-space"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovButton data-testid="completeSection" @click="handleComplete">
+			Mark section as complete
+		</GovButton>
+	</div>
 </template>

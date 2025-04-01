@@ -50,7 +50,7 @@ describe('internal door', () => {
 			await populateValidForm();
 			await user.click(screen.getByRole('button'));
 	
-			const  { livingSpaceInternalDoor } = store.livingSpaceFabric.livingSpaceDoors;
+			const { livingSpaceInternalDoor } = store.livingSpaceFabric.livingSpaceDoors;
 			
 			expect(livingSpaceInternalDoor?.data[0]).toEqual(internalDoor);
 		});
@@ -190,9 +190,6 @@ describe('internal door', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { livingSpaceInternalDoor } = store.livingSpaceFabric.livingSpaceDoors;
-		
-		expect(livingSpaceInternalDoor?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/doors');
 	});
 });

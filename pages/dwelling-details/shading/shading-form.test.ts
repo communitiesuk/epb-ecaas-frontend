@@ -44,9 +44,8 @@ describe('shading form', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const { data, complete } = store.dwellingDetails.shading;
+		const { data } = store.dwellingDetails.shading;
 
-		expect(complete).toBe(true);
 		expect(data[0]).toEqual(shading1);
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details/shading');
 	});
