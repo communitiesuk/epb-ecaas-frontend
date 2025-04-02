@@ -1,17 +1,20 @@
 <script setup lang="ts">
-const title = "PV System";
+const title = "Photovoltaic (PV)";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const pvSystemData = useItemToEdit('system', store.pvAndBatteries.pvSystem.data);
+const pvSystemData = useItemToEdit(
+	"system",
+	store.pvAndBatteries.pvSystem.data
+);
 const model: Ref<PvSystemData> = ref(pvSystemData!);
 
 const saveForm = (fields: PvSystemData) => {
 	store.$patch((state) => {
-		const {pvSystem} = state.pvAndBatteries;
+		const { pvSystem } = state.pvAndBatteries;
 
 		const pvSystemItem: PvSystemData = {
-			name: fields.name
+			name: fields.name,
 		};
 
 		saveToList(pvSystemItem, pvSystem);
@@ -21,7 +24,7 @@ const saveForm = (fields: PvSystemData) => {
 	navigateTo("/pv-and-batteries");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
@@ -37,7 +40,10 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit"
 	>
-		<GovErrorSummary :error-list="errorMessages" test-id="internalFloorErrorSummary"/>
+		<GovErrorSummary
+			:error-list="errorMessages"
+			test-id="photovoltaicErrorSummary"
+		/>
 		<FormKit
 			id="name"
 			type="govInputText"
@@ -47,8 +53,208 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required"
 		/>
 		<FormKit
-			type="govButton"
-			label="Save and continue"
+			id="peakPower"
+			type="govInputWithSuffix"
+			label="Peak power"
+			help="The maximum power output the photovoltaic system can generate under ideal conditions"
+			name="peakPower"
+			validation="required | number | min:0.001 | max: 100"
+			suffix-text="kW"
 		/>
+		<FormKit
+			id="ventilationStrategy"
+			type="govRadios"
+			:options="{
+				unventilated: 'Unventilated',
+				moderately: 'Moderately ventilated',
+				stronglyOrForced: 'Strongly or forced ventilated',
+				rearSurfaceFree: 'Rear surface free',
+			}"
+			label="Ventilation strategy"
+			name="ventilationStrategy"
+			validation="required"
+		>
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">
+								Ventilation strategy
+							</th>
+							<th scope="col" class="govuk-table__header">Explanation</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Unventilated</td>
+							<td class="govuk-table__cell">
+								The PV module is installed without airflow behind it, leading to
+								higher operating temperatures and reduced efficiency. Suitable
+								for building-integrated systems (e.g., PV panels embedded in
+								roofs or facades).
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Moderately ventilated</td>
+							<td class="govuk-table__cell">
+								Limited airflow is present behind the PV module, allowing some
+								cooling but still leading to moderate temperature increases.
+								Common in rooftop installations with a small gap between the
+								panel and the surface.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Strongly or forced ventilated</td>
+							<td class="govuk-table__cell">
+								Active airflow (natural or mechanical) is used to cool the PV
+								module, reducing temperature and improving efficiency. Often
+								used in large-scale solar farms or setups with cooling fans.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Rear surface free</td>
+							<td class="govuk-table__cell">
+								The back of the PV module is completely open to airflow,
+								maximising natural cooling. Typically seen in ground-mounted
+								systems or open-rack installations.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
+		<FormKit
+			id="pitch"
+			type="govInputWithSuffix"
+			label="Pitch"
+			help="The tilt angle (inclination) of the PV panel from horizontal measured upwards facing, 0 to 90, in degrees. 0 = horizontal surface, 90 = vertical surface."
+			name="pitch"
+			validation="required | number | min:0 | max: 90"
+			suffix-text="degrees"
+		/>
+		<FieldsOrientation />
+		<FormKit
+			id="elevationalHeight"
+			type="govInputWithSuffix"
+			label="Elevational height of PV element at its base"
+			help="Distance between the ground and the lowest edge of the PV"
+			name="elevationalHeight"
+			validation="required | number | min:0 | max: 500"
+			suffix-text="m"
+		/>
+		<FormKit
+			id="lengthOfPV"
+			type="govInputWithSuffix"
+			label="Length of PV"
+			help="Length x width provides area"
+			name="lengthOfPV"
+			validation="required | number | min:0 | max: 100"
+			suffix-text="m"
+		/>
+		<FormKit
+			id="widthOfPV"
+			type="govInputWithSuffix"
+			label="Width of PV"
+			help="Width x width provides area"
+			name="widthOfPV"
+			validation="required | number | min:0 | max: 100"
+			suffix-text="m"
+		/>
+		<FormKit
+			id="inverterPeakPowerAC"
+			type="govInputWithSuffix"
+			label="Inverter peak power AC"
+			help="The maximum power output the inverter can provide on the AC side"
+			name="inverterPeakPowerAC"
+			validation="required | number"
+			suffix-text="kW"
+		/>
+		<FormKit
+			id="inverterPeakPowerDC"
+			type="govInputWithSuffix"
+			label="Inverter peak power DC"
+			help="The maximum power input the inverter can handle on the DC side"
+			name="inverterPeakPowerDC"
+			validation="required | number"
+			suffix-text="kW"
+		/>
+		<FormKit
+			id="inverterLocation"
+			type="govRadios"
+			:options="{
+				inside: 'Inside',
+				outside: 'Outside',
+			}"
+			label="Inverter location"
+			help="Is the inverter inside the thermal envelope of the dwelling"
+			name="inverterLocation"
+			validation="required"
+		/>
+		<FormKit
+			id="inverterType"
+			type="govRadios"
+			:options="{
+				central: 'Central inverter',
+				micro: 'Micro inverter',
+			}"
+			label="Inverter type"
+			name="inverterType"
+			validation="required"
+		/>
+		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+		<h2 class="govuk-heading-l">PV shading</h2>
+		<table class="govuk-table">		
+
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
+					<th scope="col" class="govuk-!-text-align-left">Shading direction</th>
+					<th scope="col" class="govuk-!-text-align-left">Depth</th>
+					<th scope="col" class="govuk-!-text-align-left">Distance</th>
+				</tr>
+			</thead>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-!-text-align-left">Above</th>
+					<td>
+						<FormKit
+							id="above" type="govInputWithSuffix" suffix-text="m" name="above"
+							validation="number0" />
+					</td>
+					<td>
+						<FormKit
+							id="above" type="govInputWithSuffix" suffix-text="m" name="above"
+							validation="number0" />
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-!-text-align-left">Left</th>
+					<td>
+						<FormKit
+							id="left" type="govInputWithSuffix" suffix-text="m" name="left"
+							validation="number0" />
+					</td>
+					<td>
+						<FormKit
+							id="left" type="govInputWithSuffix" suffix-text="m" name="left"
+							validation="number0" />
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-!-text-align-left">Right</th>
+					<td>
+						<FormKit
+							id="right" type="govInputWithSuffix" suffix-text="m" name="right"
+							validation="number0" />
+					</td>
+					<td>
+						<FormKit
+							id="right" type="govInputWithSuffix" suffix-text="m" name="right"
+							validation="number0" />
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>
