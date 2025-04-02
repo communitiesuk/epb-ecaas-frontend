@@ -9,14 +9,19 @@ describe('open fireplace', () => {
 	const user = userEvent.setup();
 
 	const openFireplace1: CombustionApplianceData = {
-		name: 'Open fireplace 1'
+		name: 'Open fireplace 1',
+		airSupplyToAppliance: 'roomAir',
+		exhaustMethodFromAppliance: 'intoSeparateDuct',
+		typeOfFuel: 'coal',
 	};
 
 	const openFireplace2: CombustionApplianceData = {
+		...openFireplace1,
 		name: 'Open fireplace 2'
 	};
 
 	const openFireplace3: CombustionApplianceData = {
+		...openFireplace1,
 		name: 'Open fireplace 3'
 	};
 
@@ -96,15 +101,20 @@ describe('closed fireplace with fan', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const closedFireplaceWithFan1: ClosedFireplaceWithFanData = {
-		name: 'Closed fireplace with fan 1'
+	const closedFireplaceWithFan1: CombustionApplianceData = {
+		name: 'Closed fireplace with fan 1',
+		airSupplyToAppliance: 'roomAir',
+		exhaustMethodFromAppliance: 'intoSeparateDuct',
+		typeOfFuel: 'wood'
 	};
 
-	const closedFireplaceWithFan2: ClosedFireplaceWithFanData = {
+	const closedFireplaceWithFan2: CombustionApplianceData = {
+		...closedFireplaceWithFan1,
 		name: 'Closed fireplace with fan 2'
 	};
 
-	const closedFireplaceWithFan3: ClosedFireplaceWithFanData = {
+	const closedFireplaceWithFan3: CombustionApplianceData = {
+		...closedFireplaceWithFan1,
 		name: 'Closed fireplace with fan 3'
 	};
 
@@ -184,15 +194,20 @@ describe('open gas flue balancer', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const openGasFlueBalancer1: OpenGasFlueBalancerData = {
-		name: 'Open gas flue balancer 1'
+	const openGasFlueBalancer1: CombustionApplianceData = {
+		name: 'Open gas flue balancer 1',
+		airSupplyToAppliance: 'outside',
+		exhaustMethodFromAppliance: 'intoRoom',
+		typeOfFuel: 'gas',
 	};
 
-	const openGasFlueBalancer2: OpenGasFlueBalancerData = {
+	const openGasFlueBalancer2: CombustionApplianceData = {
+		...openGasFlueBalancer1,
 		name: 'Open gas flue balancer 2'
 	};
 
-	const openGasFlueBalancer3: OpenGasFlueBalancerData = {
+	const openGasFlueBalancer3: CombustionApplianceData = {
+		...openGasFlueBalancer1,
 		name: 'Open gas flue balancer 3'
 	};
 
@@ -272,15 +287,20 @@ describe('open gas kitchen stove', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const openGasKitchenStove1: OpenGasKitchenStoveData = {
-		name: 'Open gas kitchen stove 1'
+	const openGasKitchenStove1: CombustionApplianceData = {
+		name: 'Open gas kitchen stove 1',
+		airSupplyToAppliance: 'outside',
+		exhaustMethodFromAppliance: 'intoRoom',
+		typeOfFuel: 'oil',
 	};
 
-	const openGasKitchenStove2: OpenGasKitchenStoveData = {
+	const openGasKitchenStove2: CombustionApplianceData = {
+		...openGasKitchenStove1,
 		name: 'Open gas kitchen stove 2'
 	};
 
-	const openGasKitchenStove3: OpenGasKitchenStoveData = {
+	const openGasKitchenStove3: CombustionApplianceData = {
+		...openGasKitchenStove1,
 		name: 'Open gas kitchen stove 3'
 	};
 
@@ -360,15 +380,20 @@ describe('open gas fire', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const openGasFire1: OpenGasFireData = {
-		name: 'Open gas fire 1'
+	const openGasFire1: CombustionApplianceData = {
+		name: 'Open gas fire 1',
+		airSupplyToAppliance: 'outside',
+		exhaustMethodFromAppliance: 'intoMechanicalVent',
+		typeOfFuel: 'oil',
 	};
 
-	const openGasFire2: OpenGasFireData = {
+	const openGasFire2: CombustionApplianceData = {
+		...openGasFire1,
 		name: 'Open gas fire 2'
 	};
 
-	const openGasFire3: OpenGasFireData = {
+	const openGasFire3: CombustionApplianceData = {
+		...openGasFire1,
 		name: 'Open gas fire 3'
 	};
 
@@ -448,15 +473,20 @@ describe('closed fire', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const closedFire1: ClosedFireData = {
-		name: 'Closed fire 1'
+	const closedFire1: CombustionApplianceData = {
+		name: 'Closed fire 1',
+		airSupplyToAppliance: 'outside',
+		exhaustMethodFromAppliance: 'intoMechanicalVent',
+		typeOfFuel: 'coal',
 	};
 
-	const closedFire2: ClosedFireData = {
+	const closedFire2: CombustionApplianceData = {
+		...closedFire1,
 		name: 'Closed fire 2'
 	};
 
-	const closedFire3: ClosedFireData = {
+	const closedFire3: CombustionApplianceData = {
+		...closedFire1,
 		name: 'Closed fire 3'
 	};
 
