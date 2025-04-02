@@ -19,7 +19,7 @@ const heatingSystemsPages: Array<Page> = [
 		id: 'heatGeneration',
 		title: 'Heat generation',
 		url: '/heating-systems/heat-generation',
-		type: PageType.Task,
+		type: PageType.TaskGroup,
 		parentId: 'heatingSystems'
 	},
 	{

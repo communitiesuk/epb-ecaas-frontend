@@ -603,4 +603,6 @@ export type ElectricBatteryData = {
 
 export type PvDiverterData = {
 	name: string;
+	energyDivertedToHeatGeneration: string;
+	energyDivertedToStorageTank: string;
 };
