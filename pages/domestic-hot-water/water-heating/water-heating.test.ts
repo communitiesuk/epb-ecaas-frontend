@@ -11,6 +11,8 @@ describe('water heating', () => {
 		const user = userEvent.setup();
 
 		const storageTank1: StorageTankData = {
+			tankVolume: 5,
+			dailyEnergyLoss: 1,
 			name: "Storage tank 1"
 		};
 
