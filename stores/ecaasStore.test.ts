@@ -34,6 +34,24 @@ describe('Ecaas Store', () => {
 		expect(status).toBe(formStatus.inProgress);
 	});
 
+	it('getStatus of section returns in progress status when forms have saved data', () => {
+		const store = useEcaasStore();
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						typeOfDwelling: 'house'
+					}
+				}
+			}
+		});
+
+		const page = pagesData.find(p => p.id === 'dwellingDetails');
+		const status = store.getStatus(page!);
+
+		expect(status).toBe(formStatus.inProgress);
+	});
+
 	it('getStatus of a section containing grouped tasks returns in progress status when one of the grouped tasks is complete', () => {
 		const store = useEcaasStore();
 		store.$patch({

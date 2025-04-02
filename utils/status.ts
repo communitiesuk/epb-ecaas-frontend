@@ -40,8 +40,13 @@ export function getSection(pageId: string, section: object): object | undefined 
  */
 export function getTaskStatus(task: object): GovTagProps {
 	const form = task as EcaasForm<typeof task>;
+	let status = isFormStarted(form) ? formStatus.inProgress : formStatus.notStarted;
 
-	return form.complete ? formStatus.complete : formStatus.notStarted;
+	if (form.complete) {
+		status = formStatus.complete;
+	}
+
+	return status;
 }
 
 /**
@@ -61,8 +66,11 @@ export function getSectionStatus(section: object): GovTagProps {
 		if (taskPage?.type === PageType.Task) {
 			const form = task[1] as EcaasForm<typeof task[1]>;
 
-			if (form.complete) {
+			if (isFormStarted(form) || form.complete) {
 				status = formStatus.inProgress;
+			}
+
+			if (form.complete) {
 				complete++;
 			}
 
@@ -90,4 +98,8 @@ export function getSectionStatus(section: object): GovTagProps {
 	});
 
 	return status;
+}
+
+function isFormStarted<T>(form: EcaasForm<T>): boolean {
+	return form.data && (Array.isArray(form.data) ? !!form.data.length : !!Object.entries(form.data).length);
 }
