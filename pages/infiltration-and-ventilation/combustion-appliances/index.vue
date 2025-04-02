@@ -4,7 +4,6 @@ const title = "Combustion appliances";
 const store = useEcaasStore();
 
 type ApplianceType = keyof typeof store.infiltrationAndVentilation.combustionAppliances;
-interface ApplianceData extends CombustionApplianceData, ClosedFireplaceWithFanData, OpenGasFlueBalancerData, OpenGasKitchenStoveData, OpenGasFireData, ClosedFireData {}
 
 function handleRemove(applianceType: ApplianceType, index: number) {
 	const appliances = store.infiltrationAndVentilation.combustionAppliances[applianceType]?.data;
@@ -19,7 +18,7 @@ function handleRemove(applianceType: ApplianceType, index: number) {
 	}
 }
 
-function handleDuplicate<T extends ApplianceData>(applianceType: ApplianceType, index: number) {
+function handleDuplicate<T extends CombustionApplianceData>(applianceType: ApplianceType, index: number) {
 	const appliances = store.infiltrationAndVentilation.combustionAppliances[applianceType]?.data;
 	const appliance = appliances?.[index];
 
