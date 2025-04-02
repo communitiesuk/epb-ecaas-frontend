@@ -140,7 +140,7 @@ describe('Ecaas Store', () => {
 		expect(status).toBe(formStatus.complete);
 	});
 
-	it('getStatus of subsection returns not started status when form has no data', () => {
+	it('getStatus of task returns not started status when form has no data', () => {
 		const store = useEcaasStore();
 		const page = pagesData.find(p => p.id === 'generalSpecifications');
 		const status = store.getStatus(page!);
@@ -148,7 +148,25 @@ describe('Ecaas Store', () => {
 		expect(status).toBe(formStatus.notStarted);
 	});
 
-	it('getStatus of subsection returns complete status when form is complete', () => {
+	it('getStatus of task returns in progress status when form has saved data', () => {
+		const store = useEcaasStore();
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						typeOfDwelling: 'house'
+					}
+				}
+			}
+		});
+
+		const page = pagesData.find(p => p.id === 'generalSpecifications');
+		const status = store.getStatus(page!);
+
+		expect(status).toBe(formStatus.inProgress);
+	});
+
+	it('getStatus of task returns complete status when form is complete', () => {
 		const store = useEcaasStore();
 		store.$patch({
 			dwellingDetails: {
@@ -164,7 +182,7 @@ describe('Ecaas Store', () => {
 		expect(status).toBe(formStatus.complete);
 	});
 
-	it('getStatus of subsection returns complete status when required forms are complete', () => {
+	it('getStatus of task returns complete status when required forms are complete', () => {
 		const store = useEcaasStore();
 		store.$patch({
 			livingSpaceFabric: {
