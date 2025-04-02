@@ -50,7 +50,7 @@ describe('water heating', () => {
 			expect(screen.queryByTestId('storageTank_items')).toBeNull();
 		});
 
-		it('should only remove the storage tank thats is clicked', async () => {
+		it('should only remove the storage tank that is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
@@ -69,6 +69,31 @@ describe('water heating', () => {
 			expect(within(populatedList).getByText('Storage tank 1')).toBeDefined();
 			expect(within(populatedList).getByText('Storage tank 3')).toBeDefined();
 			expect(within(populatedList).queryByText('Storage tank 2')).toBeNull();
+		});
+
+		it('storage tank is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterHeating: {
+						storageTank: {
+							data:[storageTank1, storageTank2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(WaterHeating);
+			await userEvent.click(screen.getByTestId('storageTank_duplicate_0'));
+			await userEvent.click(screen.getByTestId('storageTank_duplicate_0'));
+			await userEvent.click(screen.getByTestId('storageTank_duplicate_2'));
+			await userEvent.click(screen.getByTestId('storageTank_duplicate_2'));
+
+			expect(screen.queryAllByTestId('storageTank_item').length).toBe(6);
+			expect(screen.getByText('Storage tank 1')).toBeDefined();
+			expect(screen.getByText('Storage tank 1 (1)')).toBeDefined();
+			expect(screen.getByText('Storage tank 1 (2)')).toBeDefined();
+			expect(screen.getByText('Storage tank 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('Storage tank 1 (1) (2)')).toBeDefined();
 		});
 	});
 
@@ -117,7 +142,7 @@ describe('water heating', () => {
 			expect(screen.queryByTestId('immersionHeater_items')).toBeNull();
 		});
 
-		it('should only remove the immersion heater that\'s is clicked', async () => {
+		it('should only remove the immersion heater that is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
@@ -136,6 +161,31 @@ describe('water heating', () => {
 			expect(within(populatedList).getByText('Immersion heater 1')).toBeDefined();
 			expect(within(populatedList).getByText('Immersion heater 3')).toBeDefined();
 			expect(within(populatedList).queryByText('Immersion heater 2')).toBeNull();
+		});
+
+		it('immersion heater is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterHeating: {
+						immersionHeater: {
+							data:[immersionHeater1, immersionHeater2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(WaterHeating);
+			await userEvent.click(screen.getByTestId('immersionHeater_duplicate_0'));
+			await userEvent.click(screen.getByTestId('immersionHeater_duplicate_0'));
+			await userEvent.click(screen.getByTestId('immersionHeater_duplicate_2'));
+			await userEvent.click(screen.getByTestId('immersionHeater_duplicate_2'));
+
+			expect(screen.queryAllByTestId('immersionHeater_item').length).toBe(6);
+			expect(screen.getByText('Immersion heater 1')).toBeDefined();
+			expect(screen.getByText('Immersion heater 1 (1)')).toBeDefined();
+			expect(screen.getByText('Immersion heater 1 (2)')).toBeDefined();
+			expect(screen.getByText('Immersion heater 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('Immersion heater 1 (1) (2)')).toBeDefined();
 		});
 	});
 
@@ -181,7 +231,7 @@ describe('water heating', () => {
 			expect(screen.queryByTestId('solarThermal_items')).toBeNull();
 		});
 
-		it('should only remove the solar thermal that\'s is clicked', async () => {
+		it('should only remove the solar thermal that is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
@@ -200,6 +250,31 @@ describe('water heating', () => {
 			expect(within(populatedList).getByText('Solar thermal 1')).toBeDefined();
 			expect(within(populatedList).getByText('Solar thermal 3')).toBeDefined();
 			expect(within(populatedList).queryByText('Solar thermal 2')).toBeNull();
+		});
+
+		it('solar thermal is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterHeating: {
+						solarThermal: {
+							data:[solarThermal1, solarThermal2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(WaterHeating);
+			await userEvent.click(screen.getByTestId('solarThermal_duplicate_0'));
+			await userEvent.click(screen.getByTestId('solarThermal_duplicate_0'));
+			await userEvent.click(screen.getByTestId('solarThermal_duplicate_2'));
+			await userEvent.click(screen.getByTestId('solarThermal_duplicate_2'));
+
+			expect(screen.queryAllByTestId('solarThermal_item').length).toBe(6);
+			expect(screen.getByText('Solar thermal 1')).toBeDefined();
+			expect(screen.getByText('Solar thermal 1 (1)')).toBeDefined();
+			expect(screen.getByText('Solar thermal 1 (2)')).toBeDefined();
+			expect(screen.getByText('Solar thermal 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('Solar thermal 1 (1) (2)')).toBeDefined();
 		});
 	});
 
@@ -247,7 +322,7 @@ describe('water heating', () => {
 			expect(screen.queryByTestId('pointOfUse_items')).toBeNull();
 		});
 
-		it('should only remove the solar thermal that\'s is clicked', async () => {
+		it('should only remove the point of use that is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
@@ -266,6 +341,31 @@ describe('water heating', () => {
 			expect(within(populatedList).getByText('Point of use 1')).toBeDefined();
 			expect(within(populatedList).getByText('Point of use 3')).toBeDefined();
 			expect(within(populatedList).queryByText('Point of use 2')).toBeNull();
+		});
+
+		it('point of use is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterHeating: {
+						pointOfUse: {
+							data:[pointOfUse1, pointOfUse2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(WaterHeating);
+			await userEvent.click(screen.getByTestId('pointOfUse_duplicate_0'));
+			await userEvent.click(screen.getByTestId('pointOfUse_duplicate_0'));
+			await userEvent.click(screen.getByTestId('pointOfUse_duplicate_2'));
+			await userEvent.click(screen.getByTestId('pointOfUse_duplicate_2'));
+
+			expect(screen.queryAllByTestId('pointOfUse_item').length).toBe(6);
+			expect(screen.getByText('Point of use 1')).toBeDefined();
+			expect(screen.getByText('Point of use 1 (1)')).toBeDefined();
+			expect(screen.getByText('Point of use 1 (2)')).toBeDefined();
+			expect(screen.getByText('Point of use 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('Point of use 1 (1) (2)')).toBeDefined();
 		});
 	});
 
@@ -311,7 +411,7 @@ describe('water heating', () => {
 			expect(screen.queryByTestId('heatPump_items')).toBeNull();
 		});
 
-		it('should only remove the heat pump that\'s is clicked', async () => {
+		it('should only remove the heat pump that is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
@@ -330,6 +430,31 @@ describe('water heating', () => {
 			expect(within(populatedList).getByText('Heat pump 1')).toBeDefined();
 			expect(within(populatedList).getByText('Heat pump 3')).toBeDefined();
 			expect(within(populatedList).queryByText('Heat pump 2')).toBeNull();
+		});
+
+		it('heat pump is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterHeating: {
+						heatPump: {
+							data:[heatPump1, heatPump2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(WaterHeating);
+			await userEvent.click(screen.getByTestId('heatPump_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatPump_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatPump_duplicate_2'));
+			await userEvent.click(screen.getByTestId('heatPump_duplicate_2'));
+
+			expect(screen.queryAllByTestId('heatPump_item').length).toBe(6);
+			expect(screen.getByText('Heat pump 1')).toBeDefined();
+			expect(screen.getByText('Heat pump 1 (1)')).toBeDefined();
+			expect(screen.getByText('Heat pump 1 (2)')).toBeDefined();
+			expect(screen.getByText('Heat pump 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('Heat pump 1 (1) (2)')).toBeDefined();
 		});
 	});
 
@@ -375,7 +500,7 @@ describe('water heating', () => {
 			expect(screen.queryByTestId('combiBoiler_items')).toBeNull();
 		});
 
-		it('should only remove the combi boiler that\'s is clicked', async () => {
+		it('should only remove the combi boiler that is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
@@ -394,6 +519,31 @@ describe('water heating', () => {
 			expect(within(populatedList).getByText('Combi boiler 1')).toBeDefined();
 			expect(within(populatedList).getByText('Combi boiler 3')).toBeDefined();
 			expect(within(populatedList).queryByText('Combi boiler 2')).toBeNull();
+		});
+
+		it('combi boiler is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterHeating: {
+						combiBoiler: {
+							data:[combiBoiler1, combiBoiler2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(WaterHeating);
+			await userEvent.click(screen.getByTestId('combiBoiler_duplicate_0'));
+			await userEvent.click(screen.getByTestId('combiBoiler_duplicate_0'));
+			await userEvent.click(screen.getByTestId('combiBoiler_duplicate_2'));
+			await userEvent.click(screen.getByTestId('combiBoiler_duplicate_2'));
+
+			expect(screen.queryAllByTestId('combiBoiler_item').length).toBe(6);
+			expect(screen.getByText('Combi boiler 1')).toBeDefined();
+			expect(screen.getByText('Combi boiler 1 (1)')).toBeDefined();
+			expect(screen.getByText('Combi boiler 1 (2)')).toBeDefined();
+			expect(screen.getByText('Combi boiler 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('Combi boiler 1 (1) (2)')).toBeDefined();
 		});
 	});
 
@@ -439,7 +589,7 @@ describe('water heating', () => {
 			expect(screen.queryByTestId('heatBattery_items')).toBeNull();
 		});
 
-		it('should only remove the heat battery that\'s is clicked', async () => {
+		it('should only remove the heat battery that is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
@@ -458,6 +608,31 @@ describe('water heating', () => {
 			expect(within(populatedList).getByText('Heat battery 1')).toBeDefined();
 			expect(within(populatedList).getByText('Heat battery 3')).toBeDefined();
 			expect(within(populatedList).queryByText('Heat battery 2')).toBeNull();
+		});
+
+		it('heat battery is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterHeating: {
+						heatBattery: {
+							data:[heatBattery1, heatBattery2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(WaterHeating);
+			await userEvent.click(screen.getByTestId('heatBattery_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatBattery_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatBattery_duplicate_2'));
+			await userEvent.click(screen.getByTestId('heatBattery_duplicate_2'));
+
+			expect(screen.queryAllByTestId('heatBattery_item').length).toBe(6);
+			expect(screen.getByText('Heat battery 1')).toBeDefined();
+			expect(screen.getByText('Heat battery 1 (1)')).toBeDefined();
+			expect(screen.getByText('Heat battery 1 (2)')).toBeDefined();
+			expect(screen.getByText('Heat battery 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('Heat battery 1 (1) (2)')).toBeDefined();
 		});
 	});
 
@@ -503,7 +678,7 @@ describe('water heating', () => {
 			expect(screen.queryByTestId('smartHotWaterTank_items')).toBeNull();
 		});
 
-		it('should only remove the smart hot water tank that\'s is clicked', async () => {
+		it('should only remove the smart hot water tank that is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
@@ -522,6 +697,31 @@ describe('water heating', () => {
 			expect(within(populatedList).getByText('Smart hot water tank 1')).toBeDefined();
 			expect(within(populatedList).getByText('Smart hot water tank 3')).toBeDefined();
 			expect(within(populatedList).queryByText('Smart hot water tank 2')).toBeNull();
+		});
+
+		it('smart hot water tank is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterHeating: {
+						smartHotWaterTank: {
+							data:[smartHotWaterTank1, smartHotWaterTank2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(WaterHeating);
+			await userEvent.click(screen.getByTestId('smartHotWaterTank_duplicate_0'));
+			await userEvent.click(screen.getByTestId('smartHotWaterTank_duplicate_0'));
+			await userEvent.click(screen.getByTestId('smartHotWaterTank_duplicate_2'));
+			await userEvent.click(screen.getByTestId('smartHotWaterTank_duplicate_2'));
+
+			expect(screen.queryAllByTestId('smartHotWaterTank_item').length).toBe(6);
+			expect(screen.getByText('Smart hot water tank 1')).toBeDefined();
+			expect(screen.getByText('Smart hot water tank 1 (1)')).toBeDefined();
+			expect(screen.getByText('Smart hot water tank 1 (2)')).toBeDefined();
+			expect(screen.getByText('Smart hot water tank 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('Smart hot water tank 1 (1) (2)')).toBeDefined();
 		});
 	});
 
@@ -567,7 +767,7 @@ describe('water heating', () => {
 			expect(screen.queryByTestId('heatInterfaceUnit_items')).toBeNull();
 		});
 
-		it('should only remove the heat interface unit that\'s is clicked', async () => {
+		it('should only remove the heat interface unit that is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
@@ -586,6 +786,31 @@ describe('water heating', () => {
 			expect(within(populatedList).getByText('Heat interface unit 1')).toBeDefined();
 			expect(within(populatedList).getByText('Heat interface unit 3')).toBeDefined();
 			expect(within(populatedList).queryByText('Heat interface unit 2')).toBeNull();
+		});
+
+		it('heat interface unit is duplicated when duplicate link is clicked', async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterHeating: {
+						heatInterfaceUnit: {
+							data:[heatInterfaceUnit1, heatInterfaceUnit2]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(WaterHeating);
+			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_0'));
+			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_2'));
+			await userEvent.click(screen.getByTestId('heatInterfaceUnit_duplicate_2'));
+
+			expect(screen.queryAllByTestId('heatInterfaceUnit_item').length).toBe(6);
+			expect(screen.getByText('Heat interface unit 1')).toBeDefined();
+			expect(screen.getByText('Heat interface unit 1 (1)')).toBeDefined();
+			expect(screen.getByText('Heat interface unit 1 (2)')).toBeDefined();
+			expect(screen.getByText('Heat interface unit 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('Heat interface unit 1 (1) (2)')).toBeDefined();
 		});
 	});
 });

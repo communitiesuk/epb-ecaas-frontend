@@ -17,6 +17,22 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 		});
 	}
 }
+
+function handleDuplicate(waterHeatingType: WaterHeatingType, index: number) {
+	const waterHeating = store.domesticHotWater.waterHeating[waterHeatingType]?.data;
+	const waterHeatingItem = waterHeating[index];
+
+	if (waterHeating) {
+		const duplicates = waterHeating.filter(d => d.name.match(duplicateNamePattern(waterHeatingItem.name)));
+
+		store.$patch((state) => {
+			state.domesticHotWater.waterHeating[waterHeatingType].data.push({
+				...waterHeatingItem,
+				name: `${waterHeatingItem.name} (${duplicates.length})`
+			});
+		});
+	}
+}
 </script>
 
 <template>
@@ -32,6 +48,7 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 		:form-url="`${page?.url!}/storage-tank`"
 		:items="store.domesticHotWater.waterHeating.storageTank.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('storageTank', index)"
+		@duplicate="(index: number) => handleDuplicate('storageTank', index)"
 	/>
 	<GovCustomList
 		id="immersionHeater"
@@ -39,6 +56,7 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 		:form-url="`${page?.url!}/immersion-heater`"
 		:items="store.domesticHotWater.waterHeating.immersionHeater.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('immersionHeater', index)"
+		@duplicate="(index: number) => handleDuplicate('immersionHeater', index)"
 	/>
 	<GovCustomList
 		id="solarThermal"
@@ -46,6 +64,7 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 		:form-url="`${page?.url!}/solar-thermal`"
 		:items="store.domesticHotWater.waterHeating.solarThermal.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('solarThermal', index)"
+		@duplicate="(index: number) => handleDuplicate('solarThermal', index)"
 	/>
 	<h2 class="govuk-heading-l">
 		Other water heat sources
@@ -56,6 +75,7 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 		:form-url="`${page?.url!}/point-of-use`"
 		:items="store.domesticHotWater.waterHeating.pointOfUse.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('pointOfUse', index)"
+		@duplicate="(index: number) => handleDuplicate('pointOfUse', index)"
 	/>
 	<GovCustomList
 		id="heatPump"
@@ -63,6 +83,7 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 		:form-url="`${page?.url!}/heat-pump`"
 		:items="store.domesticHotWater.waterHeating.heatPump.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('heatPump', index)"
+		@duplicate="(index: number) => handleDuplicate('heatPump', index)"
 	/>
 	<GovCustomList
 		id="combiBoiler"
@@ -70,6 +91,7 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 		:form-url="`${page?.url!}/combi-boiler`"
 		:items="store.domesticHotWater.waterHeating.combiBoiler.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('combiBoiler', index)"
+		@duplicate="(index: number) => handleDuplicate('combiBoiler', index)"
 	/>
 	<GovCustomList
 		id="heatBattery"
@@ -77,6 +99,7 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 		:form-url="`${page?.url!}/heat-battery`"
 		:items="store.domesticHotWater.waterHeating.heatBattery.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('heatBattery', index)"
+		@duplicate="(index: number) => handleDuplicate('heatBattery', index)"
 	/>
 	<GovCustomList
 		id="smartHotWaterTank"
@@ -84,6 +107,7 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 		:form-url="`${page?.url!}/smart-hot-water-tank`"
 		:items="store.domesticHotWater.waterHeating.smartHotWaterTank.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('smartHotWaterTank', index)"
+		@duplicate="(index: number) => handleDuplicate('smartHotWaterTank', index)"
 	/>
 	<GovCustomList
 		id="heatInterfaceUnit"
@@ -91,6 +115,7 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 		:form-url="`${page?.url!}/heat-interface-unit`"
 		:items="store.domesticHotWater.waterHeating.heatInterfaceUnit.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('heatInterfaceUnit', index)"
+		@duplicate="(index: number) => handleDuplicate('heatInterfaceUnit', index)"
 	/>
 	<GovButton
 		href="/domestic-hot-water"
