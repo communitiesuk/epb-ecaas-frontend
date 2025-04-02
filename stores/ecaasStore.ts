@@ -90,6 +90,9 @@ function getInitialState(): EcaasState {
 				electricStorageHeater: { data: [] },
 				warmAirHeatPump: { data: [] },
 			},
+		},
+		pvAndEnergyStorage: {
+			electricBattery: { data: {} }
 		}
 	};
 }	

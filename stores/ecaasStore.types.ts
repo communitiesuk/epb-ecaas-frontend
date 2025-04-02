@@ -4,6 +4,7 @@ export interface EcaasState {
 	livingSpaceFabric: LivingSpaceFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
 	heatingSystems: HeatingSystems;
+	pvAndEnergyStorage: PvAndEnergyStorage;
 }
 
 export interface EcaasForm<T> {
@@ -571,5 +572,21 @@ export type WarmAirHeatPumpData = {
 };
 export type WetDistributionData = {
 	name: string
+};
+
+export interface PvAndEnergyStorage {
+	electricBattery: EcaasForm<ElectricBatteryData>;
+};
+
+export interface ElectricBatteryData {
+	name: string;
+	capacity: number;
+	batteryAge: number;
+	chargeEfficiency: number;
+	location: string;
+	gridChargingPossible: string; // should be able to define this as a boolean
+	maximumChargeRate: number;
+	minimumChargeRate: number;
+	maximumDischargeRate: number;
 };
 
