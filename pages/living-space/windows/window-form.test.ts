@@ -66,7 +66,7 @@ describe('window', () => {
 
 		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
 
-		const { data, complete } = store.livingSpaceFabric.livingSpaceWindows;
+		const { data } = store.livingSpaceFabric.livingSpaceWindows;
 		
 		expect(data[0]).toEqual(state);
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/windows');
