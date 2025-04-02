@@ -206,7 +206,9 @@ describe('water heating', () => {
 		const user = userEvent.setup();
 
 		const pointOfUse1: PointOfUseData = {
-			name: "Point of use 1"
+			name: "Point of use 1",
+			setPointTemperature: 0,
+			heaterEfficiency: 0,
 		};
 
 		const pointOfUse2: PointOfUseData = {
