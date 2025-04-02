@@ -10,7 +10,7 @@ function getInitialState(): EcaasState {
 			generalSpecifications: { data: {} },
 			appliances: { data: {} },
 			shading: { data: [] },
-			externalFactors: { data: {} },
+			externalFactors: { data: {} }
 		},
 		infiltrationAndVentilation: {
 			mechanicalVentilation: { data: [] },
@@ -91,8 +91,10 @@ function getInitialState(): EcaasState {
 				warmAirHeatPump: { data: [] },
 			},
 		},
-		pvAndEnergyStorage: {
-			electricBattery: { data: {} }
+		pvAndBatteries: {
+			pvSystem: { data: [] },
+			electricBattery: { data: [] },
+			pvDiverter: { data: [] }
 		}
 	};
 }	

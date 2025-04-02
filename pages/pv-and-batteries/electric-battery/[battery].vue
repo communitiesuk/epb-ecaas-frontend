@@ -1,25 +1,35 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 const title = "Electric battery";
 const store = useEcaasStore();
+const { saveToList } = useForm();
 
-const model = ref({
-	...store.pvAndEnergyStorage.electricBattery.data
-});
+const electricBatteryData = useItemToEdit('battery', store.pvAndBatteries.electricBattery.data);
+const model: Ref<ElectricBatteryData> = ref(electricBatteryData!);
 
 const saveForm = (fields: ElectricBatteryData) => {
-	store.$patch({
-		pvAndEnergyStorage: {
-			electricBattery: {
-				data: fields,
-				complete: true
-			}
-		}
+	store.$patch((state) => {
+		const {electricBattery} = state.pvAndBatteries;
+
+		const electricBatteryItem: ElectricBatteryData = {
+			name: fields.name,
+			capacity: fields.capacity,
+			batteryAge: fields.batteryAge,
+			chargeEfficiency: fields.chargeEfficiency,
+			location: fields.location,
+			gridChargingPossible: fields.gridChargingPossible,
+			maximumChargeRate: fields.maximumChargeRate,
+			minimumChargeRate: fields.minimumChargeRate,
+			maximumDischargeRate: fields.maximumDischargeRate
+		};
+
+		saveToList(electricBatteryItem, electricBattery);
+		electricBattery.complete = true;
 	});
 
-	navigateTo("/pv-storage");
+	navigateTo("/pv-and-batteries");
 };
 
-const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 
 const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 	const parent = node.at("$parent");
@@ -46,7 +56,8 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 		:actions="false"
 		:incomplete-message="false"
 		@submit="saveForm"
-		@submit-invalid="handleInvalidSubmit">
+		@submit-invalid="handleInvalidSubmit"
+	>
 		<GovErrorSummary :error-list="errorMessages" test-id="electricBatteryErrorSummary"/>
 		<FormKit
 			id="name"

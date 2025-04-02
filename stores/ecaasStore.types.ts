@@ -4,7 +4,7 @@ export interface EcaasState {
 	livingSpaceFabric: LivingSpaceFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
 	heatingSystems: HeatingSystems;
-	pvAndEnergyStorage: PvAndEnergyStorage;
+	pvAndBatteries: PvAndBatteries;
 }
 
 export interface EcaasForm<T> {
@@ -562,23 +562,32 @@ export interface HeatEmitting {
 export type ElectricStorageHeaterData = {
 	name: string,
 };
+
 export type InstantElectricStorageData = {
 	name: string,
 	ratedPower: number,
 	convectionFraction: number,
 };
+
 export type WarmAirHeatPumpData = {
 	name: string,
 };
+
 export type WetDistributionData = {
 	name: string
 };
 
-export interface PvAndEnergyStorage {
-	electricBattery: EcaasForm<ElectricBatteryData>;
+export interface PvAndBatteries {
+	pvSystem: EcaasForm<PvSystemData[]>;
+	electricBattery: EcaasForm<ElectricBatteryData[]>;
+	pvDiverter: EcaasForm<PvDiverterData[]>;
+}
+
+export type PvSystemData = {
+	name: string;
 };
 
-export interface ElectricBatteryData {
+export type ElectricBatteryData = {
 	name: string;
 	capacity: number;
 	batteryAge: number;
@@ -590,3 +599,6 @@ export interface ElectricBatteryData {
 	maximumDischargeRate: number;
 };
 
+export type PvDiverterData = {
+	name: string;
+};

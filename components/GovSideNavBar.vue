@@ -33,7 +33,7 @@ function isOpen(index: number) {
 			</button>
 			<ul v-if="isOpen(index)" class="govuk-inset-text">
 				<template v-for="page in pagesData" :key="page.id">
-					<li v-if="page.parentId === parentPage.id">
+					<li v-if="page.parentId === parentPage.id && !page.url.includes(':')">
 						<NuxtLink class="govuk-link govuk-body-s" :to="page.url" @click.stop>
 							{{ page.title }}
 						</NuxtLink>

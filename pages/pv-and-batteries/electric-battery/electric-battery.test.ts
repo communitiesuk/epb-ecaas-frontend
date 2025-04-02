@@ -1,4 +1,4 @@
-import ElectricBattery from "./electric-battery.vue";
+import ElectricBattery from "./[battery].vue";
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
@@ -49,9 +49,9 @@ describe('Electric battery', () => {
 		await fillForm();
 		await user.click(screen.getByRole('button'));
 
-		const { data } = store.pvAndEnergyStorage.electricBattery;
+		const { data } = store.pvAndBatteries.electricBattery;
 
-		expect(data).toEqual(fullElectricBattery);
+		expect(data[0]).toEqual(fullElectricBattery);
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {
@@ -68,10 +68,10 @@ describe('Electric battery', () => {
 		await fillForm();
 		await user.click(screen.getByRole('button'));
     
-		const { complete } = store.pvAndEnergyStorage.electricBattery;
+		const { complete } = store.pvAndBatteries.electricBattery;
             
 		expect(complete).toBe(true);
-		expect(navigateToMock).toHaveBeenCalledWith('/pv-storage');
+		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries');
 	});
 
 	it('shows an error when maximum charge level is less than minimum charge level', async () => {
