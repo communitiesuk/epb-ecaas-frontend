@@ -5,6 +5,7 @@ export interface EcaasState {
 	infiltrationAndVentilation: InfiltrationAndVentilation;
 	heatingSystems: HeatingSystems;
 	pvAndBatteries: PvAndBatteries;
+	cooling: Cooling;
 }
 
 export interface EcaasForm<T> {
@@ -605,4 +606,12 @@ export type PvDiverterData = {
 	name: string;
 	energyDivertedToHeatGeneration: string;
 	energyDivertedToStorageTank: string;
+};
+
+export interface Cooling {
+	airConditioning: EcaasForm<AirConditioningData[]>;
+}
+
+export type AirConditioningData = {
+	name: string;
 };

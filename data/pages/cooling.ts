@@ -11,7 +11,14 @@ const coolingPages: Array<Page> = [
 	{
 		id: 'airConditioning',
 		title: 'Air conditioning',
-		url: '/cooling/air-conditioning',
+		url: '/cooling/air-conditioning/create',
+		type: PageType.Task,
+		parentId: 'cooling'
+	},
+	{
+		id: 'airConditioningEdit',
+		title: 'Air conditioning',
+		url: '/cooling/air-conditioning/:airConditioning',
 		type: PageType.Task,
 		parentId: 'cooling'
 	},
