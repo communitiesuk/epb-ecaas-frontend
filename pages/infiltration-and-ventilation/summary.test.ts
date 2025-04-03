@@ -200,7 +200,7 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Zone height": 1,
+			"Dwelling height": 1,
 			"Zone envelope area": 5,
 			"Test pressure": 1,
 			"Air tightness test result": 1
