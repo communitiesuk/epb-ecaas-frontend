@@ -2,6 +2,7 @@
 defineProps<{
 	id: string,
 	name: string;
+	label?: string;
 }>();
 </script>
 
@@ -9,7 +10,7 @@ defineProps<{
 	<FormKit
 		:id="id"
 		type="govInputFloat"
-		label="Solar absorption coefficient"
+		:label="label ?? 'Solar absorption coefficient'"
 		help="Solar absorption coefficient at the external surface (dimensionless), the proportion of solar radiation which is absorbed. Decimal between 0-1."
 		:name="name"
 		validation="required | number | min:0.01 | max:1">

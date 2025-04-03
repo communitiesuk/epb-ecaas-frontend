@@ -2,6 +2,7 @@
 defineProps<{
 	id?: string;
 	name?: string;
+	label?: string;
 	pitchOption?: string;
 	options?: Record<string, string>
 }>();
@@ -15,7 +16,7 @@ const help = 'Tilt angle of the surface from horizontal, between 0 and 180, wher
 			id="pitchOption"
 			type="govRadios"
 			:options="options"
-			label="Pitch"
+			:label="label ?? 'Pitch'"
 			name="pitchOption"
 			validation="required">
 			<p class="govuk-body">
@@ -23,8 +24,8 @@ const help = 'Tilt angle of the surface from horizontal, between 0 and 180, wher
 					Guidance (opens in another window)
 				</a>
 			</p>
-			<p class="govuk-body">{{ help }}</p>
-			<p class="govuk-body">
+			<p class="govuk-hint">{{ help }}</p>
+			<p class="govuk-hint">
 				180 = floors<br>
 				0 = ceilings
 			</p>
@@ -42,10 +43,19 @@ const help = 'Tilt angle of the surface from horizontal, between 0 and 180, wher
 		v-else
 		:id="id ?? 'pitch'"
 		type="govInputWithSuffix"
-		label="Pitch"
-		:help="help"
+		:label="label ?? 'Pitch'"
 		:name="name ?? 'pitch'"
 		validation="required | number | min:0 | max:180"
-		suffix-text="degrees"
-	/>
+		suffix-text="degrees">
+		<p class="govuk-body">
+			<a href="/guidance/pitch" target="_blank" class="govuk-link">
+				Guidance (opens in another window)
+			</a>
+		</p>
+		<p class="govuk-hint">{{ help }}</p>
+		<p class="govuk-hint">
+			180 = floors<br>
+			0 = ceilings
+		</p>
+	</FormKit>
 </template>

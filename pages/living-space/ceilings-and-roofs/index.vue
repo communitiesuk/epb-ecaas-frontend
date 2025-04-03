@@ -74,6 +74,14 @@ function handleComplete() {
 		@remove="(index: number) => handleRemove('livingSpaceRoofs', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceRoofs', index)"
 	/>
+	<GovCustomList
+		id="unheatedPitchedRoofs"
+		title="Unheated pitched roof"
+		:form-url="`${page?.url!}/unheated-pitched-roofs`"
+		:items="store.livingSpaceFabric.livingSpaceCeilingsAndRoofs.livingSpaceUnheatedPitchedRoofs?.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('livingSpaceUnheatedPitchedRoofs', index)"
+		@duplicate="(index: number) => handleDuplicate('livingSpaceUnheatedPitchedRoofs', index)"
+	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton
 			href="/living-space"

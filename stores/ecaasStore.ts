@@ -62,6 +62,7 @@ function getInitialState(): EcaasState {
 			livingSpaceCeilingsAndRoofs: {
 				livingSpaceCeilings: { data: [] },
 				livingSpaceRoofs: { data: [] },
+				livingSpaceUnheatedPitchedRoofs: { data: [] }
 			},
 			livingSpaceDoors: {
 				livingSpaceExternalUnglazedDoor: { data: [] },

@@ -8,15 +8,15 @@ mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
-describe('roof', () => {
+describe('unheated pitched roof', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const roof: RoofData = {
 		name: "Roof 1",
-		typeOfRoof: 'flat',
-		pitchOption: '0',
+		typeOfRoof: 'unheatedPitched',
 		pitch: 0,
+		orientation: 90,
 		length: 1,
 		width: 1,
 		elevationalHeightOfElement: 2,
@@ -33,8 +33,8 @@ describe('roof', () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Roof 1');
-		await user.click(screen.getByTestId('typeOfRoof_flat'));
-		await user.click(screen.getByTestId('pitchOption_0'));
+		await user.type(screen.getByTestId('pitch'), '0');
+		await user.type(screen.getByTestId('orientation'), '90');
 		await user.type(screen.getByTestId('length'), '1');
 		await user.type(screen.getByTestId('width'), '1');
 		await user.type(screen.getByTestId('elevationalHeightOfElement'), '2');
@@ -51,16 +51,16 @@ describe('roof', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const  { livingSpaceRoofs } = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
+		const  { livingSpaceUnheatedPitchedRoofs } = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
 		
-		expect(livingSpaceRoofs?.data[0]).toEqual(roof);
+		expect(livingSpaceUnheatedPitchedRoofs?.data[0]).toEqual(roof);
 	});
 
 	it('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceCeilingsAndRoofs: {
-					livingSpaceRoofs: {
+					livingSpaceUnheatedPitchedRoofs: {
 						data: [roof]
 					}
 				}
@@ -74,8 +74,8 @@ describe('roof', () => {
 		});
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Roof 1');
-		expect((await screen.findByTestId('typeOfRoof_flat')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('pitchOption_0')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('pitch') as HTMLInputElement).value).toBe('0');
+		expect((await screen.findByTestId('orientation') as HTMLInputElement).value).toBe('90');
 		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('elevationalHeightOfElement') as HTMLInputElement).value).toBe('2');
@@ -92,7 +92,8 @@ describe('roof', () => {
 		await user.click(screen.getByRole('button'));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
-		expect((await screen.findByTestId('typeOfRoof_error'))).toBeDefined();
+		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
+		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
 		expect((await screen.findByTestId('length_error'))).toBeDefined();
 		expect((await screen.findByTestId('width_error'))).toBeDefined();
 		expect((await screen.findByTestId('elevationalHeightOfElement_error'))).toBeDefined();
@@ -109,63 +110,6 @@ describe('roof', () => {
 		await user.click(screen.getByRole('button'));
 
 		expect((await screen.findByTestId('roofErrorSummary'))).toBeDefined();
-	});
-
-	it('requires pitch option when type of roof is flat', async () => {
-		await renderSuspended(Roof);
-		await user.click(screen.getByTestId('typeOfRoof_flat'));
-		await user.click(screen.getByRole('button'));
-
-		expect((await screen.findByTestId('pitchOption_error'))).toBeDefined();
-	});
-
-	it('requires pitch when custom pitch option is selected', async () => {
-		await renderSuspended(Roof);
-
-		await user.click(screen.getByTestId('typeOfRoof_flat'));
-		await user.click(screen.getByTestId('pitchOption_custom'));
-		await user.click(screen.getByRole('button'));
-
-		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
-	});
-
-	it('saves custom pitch when custom pitch option is selected', async () => {
-		await renderSuspended(Roof);
-
-		await populateValidForm();
-		await user.click(screen.getByTestId('pitchOption_custom'));
-		await user.type(screen.getByTestId('pitch'), '90');
-		await user.tab();
-		await user.click(screen.getByRole('button'));
-
-		const { livingSpaceRoofs } = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
-		
-		expect(livingSpaceRoofs?.data[0].pitch).toEqual(90);
-	});
-
-	it('requires additional fields when type of roof is pitched', async () => {
-		await renderSuspended(Roof);
-		await user.click(screen.getByTestId('typeOfRoof_pitchedInsulatedAtRoof'));
-		await user.click(screen.getByRole('button'));
-
-		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
-		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
-	});
-
-	it('saves additional fields when type of roof is pitched', async () => {
-		await renderSuspended(Roof);
-
-		await populateValidForm();
-		await user.click(screen.getByTestId('typeOfRoof_pitchedInsulatedAtRoof'));
-		await user.type(screen.getByTestId('pitch'), '90');
-		await user.type(screen.getByTestId('orientation'), '90');
-		await user.tab();
-		await user.click(screen.getByRole('button'));
-
-		const { livingSpaceRoofs } = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
-		
-		expect(livingSpaceRoofs?.data[0].pitch).toEqual(90);
-		expect(livingSpaceRoofs?.data[0].orientation).toEqual(90);
 	});
 
 	it('navigates to ceilings and roofs page when valid form is completed', async () => {

@@ -2,6 +2,8 @@
 defineProps<{
 	id: string,
 	name: string;
+	label?: string;
+	help?: string;
 }>();
 </script>
 
@@ -31,8 +33,8 @@ defineProps<{
 				hint: 'Construction with both internal and external insulation (main mass component concentrated near centre of construction), or equivalent'
 			},
 		}"
-		label="Mass distribution class"
-		help="Distribution of mass in building element"
+		:label="label ?? 'Mass distribution class'"
+		:help="help ?? 'Distribution of mass in building element'"
 		:name="name"
 		validation="required">
 		<div class="govuk__custom-link">

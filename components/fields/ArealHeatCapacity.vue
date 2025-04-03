@@ -2,6 +2,8 @@
 defineProps<{
 	id: string,
 	name: string;
+	label?: string;
+	help?: string;
 }>();
 </script>
 
@@ -9,7 +11,7 @@ defineProps<{
 	<FormKit
 		:id="id"
 		type="govRadios"
-		label="Areal heat capacity"
+		:label="label ?? 'Areal heat capacity'"
 		:name="name"
 		help="Effective areal heat capacity or kappa value. This is the total heat capacity of all the construction layers, that is, the sum of the heat capacities of each individual layers."
 		validation="required"

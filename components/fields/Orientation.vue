@@ -2,6 +2,7 @@
 defineProps<{
 	id?: string;
 	name?: string;
+	label?: string;
 }>();
 </script>
 
@@ -10,7 +11,7 @@ defineProps<{
 		:id="id ?? 'orientation'"
 		type="govInputWithSuffix"
 		suffix-text="degrees"
-		label="Orientation"
+		:label="label ?? 'Orientation'"
 		:name="name ?? 'orientation'"
 		validation="required | number | min:0 | max:360">
 		<GovDetails summary-text="Help with this input">

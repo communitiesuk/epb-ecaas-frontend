@@ -78,15 +78,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			}"
 		/>
 		<template v-if="['pitchedInsulatedAtRoof', 'pitchedInsulatedAtCeiling'].includes(model.typeOfRoof)">
-			<FormKit
-				id="pitch"
-				type="govInputWithSuffix"
-				suffix-text="degrees"
-				label="Pitch"
-				help="Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down."
-				name="pitch"
-				validation="required | number | min:0 | max:180"
-			/>
+			<FieldsPitch />
 			<FieldsOrientation />
 			<div v-if="!!model.orientation" class="govuk-error-summary">
 				<div role="alert" class="govuk-hint govuk-!-margin-bottom-0">

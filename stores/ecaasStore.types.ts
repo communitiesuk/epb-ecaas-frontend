@@ -179,6 +179,7 @@ export type PartyWallData = {
 export interface CeilingsAndRoofsData {
 	livingSpaceCeilings: EcaasForm<CeilingData[]>;
 	livingSpaceRoofs: EcaasForm<RoofData[]>;
+	livingSpaceUnheatedPitchedRoofs: EcaasForm<RoofData[]>;
 }
 
 export type CeilingData = {
