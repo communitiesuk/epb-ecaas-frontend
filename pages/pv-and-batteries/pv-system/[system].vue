@@ -15,6 +15,23 @@ const saveForm = (fields: PvSystemData) => {
 
 		const pvSystemItem: PvSystemData = {
 			name: fields.name,
+			peakPower: fields.peakPower,
+			ventilationStrategy: fields.ventilationStrategy,
+			pitch: fields.pitch,
+			orientation: fields.orientation,
+			elevationalHeight: fields.elevationalHeight,
+			lengthOfPV: fields.lengthOfPV,
+			widthOfPV: fields.widthOfPV,
+			inverterPeakPowerAC: fields.inverterPeakPowerAC,
+			inverterPeakPowerDC: fields.inverterPeakPowerDC,
+			inverterLocation: fields.inverterLocation,
+			inverterType: fields.inverterType,
+			aboveDepth: fields.aboveDepth,
+			aboveDistance: fields.aboveDistance,
+			leftDepth: fields.leftDepth,
+			leftDistance: fields.leftDistance,
+			rightDepth: fields.rightDepth,
+			rightDistance: fields.rightDistance,
 		};
 
 		saveToList(pvSystemItem, pvSystem);
@@ -223,25 +240,25 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					<th scope="row" class="govuk-!-text-align-left">Above</th>
 					<td>
 						<FormKit
-							id="above" type="govInputWithSuffix" suffix-text="m" name="above"
-							validation="number0" />
+							id="aboveDepth" type="govInputWithSuffix" suffix-text="m" name="aboveDepth"
+							validation="required | number0" />
 					</td>
 					<td>
 						<FormKit
-							id="above" type="govInputWithSuffix" suffix-text="m" name="above"
-							validation="number0" />
+							id="aboveDistance" type="govInputWithSuffix" suffix-text="m" name="aboveDistance"
+							validation="required |number0" />
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-!-text-align-left">Left</th>
 					<td>
 						<FormKit
-							id="left" type="govInputWithSuffix" suffix-text="m" name="left"
+							id="leftDepth" type="govInputWithSuffix" suffix-text="m" name="leftDepth"
 							validation="number0" />
 					</td>
 					<td>
 						<FormKit
-							id="left" type="govInputWithSuffix" suffix-text="m" name="left"
+							id="leftDistance" type="govInputWithSuffix" suffix-text="m" name="leftDistance"
 							validation="number0" />
 					</td>
 				</tr>
@@ -249,12 +266,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					<th scope="row" class="govuk-!-text-align-left">Right</th>
 					<td>
 						<FormKit
-							id="right" type="govInputWithSuffix" suffix-text="m" name="right"
+							id="rightDepth" type="govInputWithSuffix" suffix-text="m" name="rightDepth"
 							validation="number0" />
 					</td>
 					<td>
 						<FormKit
-							id="right" type="govInputWithSuffix" suffix-text="m" name="right"
+							id="rightDistance" type="govInputWithSuffix" suffix-text="m" name="rightDistance"
 							validation="number0" />
 					</td>
 				</tr>

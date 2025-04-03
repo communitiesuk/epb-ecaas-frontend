@@ -588,6 +588,23 @@ export interface PvAndBatteries {
 
 export type PvSystemData = {
 	name: string;
+	peakPower: number;
+	ventilationStrategy: string;
+	pitch: number;
+	orientation: number;
+	elevationalHeight: number;
+	lengthOfPV: number;
+	widthOfPV: number;
+	inverterPeakPowerAC: number;
+	inverterPeakPowerDC: number;
+	inverterLocation: string;
+	inverterType: string;
+	aboveDepth: number;
+	aboveDistance: number;
+	leftDepth: number;
+	leftDistance: number;
+	rightDepth: number;
+	rightDistance: number;
 };
 
 export type ElectricBatteryData = {
