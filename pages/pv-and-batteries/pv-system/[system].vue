@@ -207,6 +207,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">
+					<td colspan="3" class="govuk-!-text-align-left">This refers to objects on the roof which might cause shading to the PV.</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<td colspan="3" class="govuk-!-text-align-left govuk-!-font-weight-bold govuk-!-padding-bottom-5" >This is not distant shading objects such as trees or buildings</td>
+				</tr>		
+				<tr class="govuk-table__row">
 					<th scope="col" class="govuk-!-text-align-left">Shading direction</th>
 					<th scope="col" class="govuk-!-text-align-left">Depth</th>
 					<th scope="col" class="govuk-!-text-align-left">Distance</th>
@@ -258,3 +264,4 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>
+
