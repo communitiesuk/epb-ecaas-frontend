@@ -18,7 +18,7 @@ function handleRemove(applianceType: ApplianceType, index: number) {
 	}
 }
 
-function handleDuplicate<T extends CombustionApplianceData>(applianceType: ApplianceType, index: number) {
+function handleDuplicate(applianceType: ApplianceType, index: number) {
 	const appliances = store.infiltrationAndVentilation.combustionAppliances[applianceType]?.data;
 	const appliance = appliances?.[index];
 
