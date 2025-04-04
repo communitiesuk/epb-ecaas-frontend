@@ -201,7 +201,7 @@ describe('Infiltration and ventilation summary', () => {
 
 		const expectedResult = {
 			"Dwelling height": 1,
-			"Zone envelope area": 5,
+			"Dwelling envelope area": 5,
 			"Test pressure": 1,
 			"Air tightness test result": 1
 		};

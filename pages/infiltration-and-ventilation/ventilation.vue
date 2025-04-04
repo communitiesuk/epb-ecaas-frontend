@@ -12,7 +12,7 @@ const saveForm = (fields: VentilationData) => {
 			ventilation: {
 				data: {
 					dwellingHeight: fields.dwellingHeight,
-					zoneEnvelopeArea: fields.zoneEnvelopeArea,
+					dwellingEnvelopeArea: fields.dwellingEnvelopeArea,
 					zoneElevationalLevelAtBase: fields.zoneElevationalLevelAtBase,
 					crossVentFactor: fields.crossVentFactor,
 					maxRequiredAirChangeRate: 2
@@ -52,11 +52,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m"
 		/>
 		<FormKit
-			id="zoneEnvelopeArea"
+			id="dwellingEnvelopeArea"
 			type="govInputWithSuffix"
-			label="Zone envelope area"
-			help="External surface area of envelope"
-			name="zoneEnvelopeArea"
+			label="Dwelling envelope area"
+			help="Total envelope area for the whole dwelling"
+			name="dwellingEnvelopeArea"
 			validation="required | number | min:5 | max:72000"
 			suffix-text="m2"
 		/>
