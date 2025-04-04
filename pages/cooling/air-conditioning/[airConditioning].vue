@@ -11,7 +11,10 @@ const saveForm = (fields: AirConditioningData) => {
 		const {airConditioning} = state.cooling;
 
 		const airConditioningItem: AirConditioningData = {
-			name: fields.name
+			name: fields.name,
+			coolingCapacity: fields.coolingCapacity,
+			seasonalEnergyEfficiencyRatio: fields.seasonalEnergyEfficiencyRatio,
+			convectionFraction: fields.convectionFraction
 		};
 
 		saveToList(airConditioningItem, airConditioning);
@@ -45,6 +48,30 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required"
+		/>
+		<FormKit
+			id="coolingCapacity"
+			type="govInputWithSuffix"
+			label="Cooling capacity"
+			help="Maximum cooling capacity of the system"
+			name="coolingCapacity"
+			validation="required | number"
+			suffix-text="kW"
+		/>
+		<FormKit
+			id="seasonalEnergyEfficiencyRatio"
+			type="govInputWithSuffix"
+			label="Seasonal energy efficiency ratio"
+			name="seasonalEnergyEfficiencyRatio"
+			validation="required | number | between:0,25"
+			suffix-text="kW"
+		/>
+		<FormKit
+			id="convectionFraction"
+			type="govInputInt"
+			label="Convection fraction"
+			name="convectionFraction"
+			validation="required | number | between:0,1"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>

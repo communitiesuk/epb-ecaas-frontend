@@ -19,14 +19,33 @@ describe('pv and batteries', () => {
 
 	describe('pv system', () => {
 		const pvSystem1: PvSystemData = {
-			name: "PV System 1"
+			name: "PV System 1",
+			peakPower: 4,
+			ventilationStrategy: 'unventilated',
+			pitch: 45,
+			orientation: 20,
+			elevationalHeight: 100,
+			lengthOfPV: 20,
+			widthOfPV: 20,
+			inverterPeakPowerAC: 4,
+			inverterPeakPowerDC: 5,
+			inverterLocation: 'inside',
+			inverterType: 'central',
+			aboveDepth: 20,
+			aboveDistance: 4,
+			leftDepth: 10,
+			leftDistance: 7,
+			rightDepth: 2,
+			rightDistance: 10
 		};
 	
 		const pvSystem2: PvSystemData = {
+			...pvSystem1,
 			name: "PV System 2"
 		};
 	
 		const pvSystem3: PvSystemData = {
+			...pvSystem1,
 			name: "PV System 3"
 		};
 	
@@ -91,17 +110,26 @@ describe('pv and batteries', () => {
 		});
 	});
 
-	
 	describe('electric battery', () => {
 		const electricBattery1: ElectricBatteryData = {
-			name: 'Electric battery 1'
+			name: 'Electric battery 1',
+			capacity: 40,
+			batteryAge: 12,
+			chargeEfficiency: 0.9,
+			location: 'inside',
+			gridChargingPossible: 'no',
+			maximumChargeRate: 30,
+			minimumChargeRate: 20,
+			maximumDischargeRate: 35
 		};
 	
 		const electricBattery2: ElectricBatteryData = {
+			...electricBattery1,
 			name: 'Electric battery 2'
 		};
 
 		const electricBattery3: ElectricBatteryData = {
+			...electricBattery1,
 			name: 'Electric battery 3'
 		};
 	
@@ -169,14 +197,18 @@ describe('pv and batteries', () => {
 
 	describe('pv diverter', () => {
 		const pvDiverter1: PvDiverterData = {
-			name: "PV Diverter 1"
+			name: "PV Diverter 1",
+			energyDivertedToHeatGeneration: 'heatPump_0',
+			energyDivertedToStorageTank: '0'
 		};
 	
 		const pvDiverter2: PvDiverterData = {
+			...pvDiverter1,
 			name: "PV Diverter 2"
 		};
 
 		const pvDiverter3: PvDiverterData = {
+			...pvDiverter1,
 			name: "PV Diverter 3"
 		};
 	

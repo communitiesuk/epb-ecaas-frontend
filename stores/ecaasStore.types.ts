@@ -632,4 +632,7 @@ export interface Cooling {
 
 export type AirConditioningData = {
 	name: string;
+	coolingCapacity: number;
+	seasonalEnergyEfficiencyRatio: number;
+	convectionFraction: number;
 };
