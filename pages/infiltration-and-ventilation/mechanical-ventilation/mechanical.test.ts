@@ -15,14 +15,7 @@ describe("mechanical ventilation overview", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
-		ductworkCrossSectionalShape: "circular",
-		ductTape: "intake",
-		internalDiameterOfDuctwork: 300,
-		externalDiameterOfDuctwork: 1000,
-		insulationThickness: 100,
-		lengthOfDucwork: 100,
-		thermalInsulationConductivityOfDuctwork: 10,
-		surfaceReflectivity: "reflective",
+
 	};
 
 	const mechanicalVentilation2: MechanicalVentilationData = {
@@ -33,14 +26,6 @@ describe("mechanical ventilation overview", () => {
 		airFlowRate: 14,
 		mvhrLocation: undefined,
 		mvhrEfficiency: undefined,
-		ductworkCrossSectionalShape: undefined,
-		ductTape: undefined,
-		internalDiameterOfDuctwork: undefined,
-		externalDiameterOfDuctwork: undefined,
-		insulationThickness: undefined,
-		lengthOfDucwork: undefined,
-		thermalInsulationConductivityOfDuctwork: undefined,
-		surfaceReflectivity: undefined,
 	};
 
 	const mechanicalVentilation3: MechanicalVentilationData = {
@@ -51,14 +36,6 @@ describe("mechanical ventilation overview", () => {
 		airFlowRate: 14,
 		mvhrLocation: undefined,
 		mvhrEfficiency: undefined,
-		ductworkCrossSectionalShape: undefined,
-		ductTape: undefined,
-		internalDiameterOfDuctwork: undefined,
-		externalDiameterOfDuctwork: undefined,
-		insulationThickness: undefined,
-		lengthOfDucwork: undefined,
-		thermalInsulationConductivityOfDuctwork: undefined,
-		surfaceReflectivity: undefined,
 	};
 
 	afterEach(() => {

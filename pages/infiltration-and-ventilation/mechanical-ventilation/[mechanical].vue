@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const title = "Mechanical ventilation";
 const mvhrTitle = "MVHR only inputs";
-const ductworkTitle = "Ductwork";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
@@ -20,14 +19,6 @@ const saveForm = (fields: MechanicalVentilationData) => {
 			airFlowRate: fields.airFlowRate,
 			mvhrLocation: fields.mvhrLocation,
 			mvhrEfficiency: fields.mvhrEfficiency,
-			ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
-			ductType: fields.ductType,
-			internalDiameterOfDuctwork: fields.internalDiameterOfDuctwork,
-			externalDiameterOfDuctwork: fields.externalDiameterOfDuctwork,
-			insulationThickness: fields.insulationThickness,
-			lengthOfDucwork: fields.lengthOfDucwork,
-			thermalInsulationConductivityOfDuctwork: fields.thermalInsulationConductivityOfDuctwork,
-			surfaceReflectivity: fields.surfaceReflectivity,
 		};
 
 		saveToList(mechanicalVentilationItem, mechanicalVentilation);
@@ -186,88 +177,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Heat recovery efficiency (0 to 1) allowing for in-use factor"
 				name="mvhrEfficiency"
 				validation="required | min:0 | max:1"
-			/>
-			<h2 class="govuk-heading-l custom-govuk__heading__padding ">
-				{{ ductworkTitle }}
-			</h2>
-			<FormKit
-				id="ductworkCrossSectionalShape"
-				type="govRadios"
-				:options="{
-					circular: 'Circular',
-					rectangular: 'Rectangular'
-				}"
-				label="Ductwork cross sectional shape"
-				name="ductworkCrossSectionalShape"
-				validation="required"
-			/>
-			<FormKit
-				id="ductType"
-				type="govRadios"
-				:options="{
-					circular: 'Supply',
-					extract: 'Extract',
-					intake: 'Intake',
-					exhaust: 'Exhaust'
-				}"
-				label="Duct type"
-				name="ductType"
-				validation="required"
-			/>
-			<FormKit
-				id="internalDiameterOfDuctwork"
-				type="govInputWithSuffix"
-				suffix-text="mm"
-				label="Internal diameter of ductwork"
-				name="internalDiameterOfDuctwork"
-				validation="required | number | min:0 | max:1000"
-			/>
-			<FormKit
-				id="externalDiameterOfDuctwork"
-				type="govInputWithSuffix"
-				suffix-text="mm"
-				label="External diameter of ductwork"
-				name="externalDiameterOfDuctwork"
-				validation="required | number | min:0 | max:1000"
-			/>
-			<FormKit
-				id="insulationThickness"
-				type="govInputWithSuffix"
-				suffix-text="mm"
-				label="Insulation thickness"
-				help="The thickness of the duct insulation"
-				name="insulationThickness"
-				validation="required | number | min:0 | max:100"
-			/>
-			<FormKit
-				id="lengthOfDucwork"
-				type="govInputWithSuffix"
-				suffix-text="m"
-				label="Length of ductwork"
-				help="Length of the piece of ductwork specified in this sub-object"
-				name="lengthOfDucwork"
-				validation="required | number | min:0"
-			/>
-			<FormKit
-				id="thermalInsulationConductivityOfDuctwork"
-				type="govInputWithSuffix"
-				suffix-text="W/m.K"
-				label="Thermal insulation conductivity of ductwork"
-				help="The thermal conductivity of the insulation"
-				name="thermalInsulationConductivityOfDuctwork"
-				validation="required | number | min:0"
-			/>
-			<FormKit
-				id="surfaceReflectivity"
-				type="govRadios"
-				:options="{
-					reflective: 'Reflective',
-					notReflective: 'Not reflective',
-				}"
-				label="Surface reflectivity"
-				help="Whether the surface is reflective or not"
-				name="surfaceReflectivity"
-				validation="required"
 			/>
 		</template>
 		<FormKit type="govButton" label="Save and continue" />

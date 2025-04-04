@@ -450,6 +450,7 @@ export type SecondaryPipeworkData = {
 
 export interface InfiltrationAndVentilation {
 	mechanicalVentilation: EcaasForm<MechanicalVentilationData[]>;
+	ductwork: EcaasForm<DuctworkData>
 	vents: EcaasForm<VentData[]>;
 	combustionAppliances: CombustionAppliancesData;
 	ventilation: EcaasForm<VentilationData>;
@@ -464,6 +465,11 @@ export type MechanicalVentilationData = {
 	airFlowRate: number;
 	mvhrLocation?: string;
 	mvhrEfficiency?: number;
+};
+
+export type DuctworkData = {
+	name?:string;
+	mvhrUnit?: string;
 	ductworkCrossSectionalShape?: string;
 	ductType?: string;
 	internalDiameterOfDuctwork?: number;
@@ -472,7 +478,8 @@ export type MechanicalVentilationData = {
 	lengthOfDucwork?: number;
 	thermalInsulationConductivityOfDuctwork?: number;
 	surfaceReflectivity?: string;
-};
+	
+}
 
 export type VentData = {
 	name: string;
@@ -636,3 +643,4 @@ export type AirConditioningData = {
 	seasonalEnergyEfficiencyRatio: number;
 	convectionFraction: number;
 };
+
