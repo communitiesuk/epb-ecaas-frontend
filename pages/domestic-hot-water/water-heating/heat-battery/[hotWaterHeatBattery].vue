@@ -1,20 +1,20 @@
 <script setup lang="ts">
-const title = "Heat pump (hot water only)";
+const title = "Heat battery";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const heatPumpData = useItemToEdit('heatPump', store.domesticHotWater.waterHeating.heatPump.data);
-const model: Ref<HotWaterHeatPumpData> = ref(heatPumpData!);
+const heatBatteryData = useItemToEdit('hotWaterHeatBattery', store.domesticHotWater.waterHeating.heatBattery.data);
+const model: Ref<HeatBatteryData> = ref(heatBatteryData!);
 
-const saveForm = (fields: HotWaterHeatPumpData) => {
+const saveForm = (fields: HeatBatteryData) => {
 	store.$patch((state) => {
-		const {heatPump} = state.domesticHotWater.waterHeating;
+		const {heatBattery} = state.domesticHotWater.waterHeating;
 
-		const heatPumpItem: HotWaterHeatPumpData = {
+		const heatBatteryItem: HeatBatteryData = {
 			name: fields.name
 		};
 
-		saveToList(heatPumpItem, heatPump);
+		saveToList(heatBatteryItem, heatBattery);
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");
@@ -35,7 +35,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		:incomplete-message="false"
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
-		<GovErrorSummary :error-list="errorMessages" test-id="heatPumpErrorSummary"/>
+		<GovErrorSummary :error-list="errorMessages" test-id="heatBatteryErrorSummary"/>
 		<FormKit
 			id="name"
 			type="govInputText"

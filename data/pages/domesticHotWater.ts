@@ -51,9 +51,9 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'waterHeating'
 	},
 	{
-		id: 'heatPump',
+		id: 'hotWaterheatPump',
 		title: 'Heat pump',
-		url: '/domestic-hot-water/water-heating/heat-pump/:heatPump',
+		url: '/domestic-hot-water/water-heating/heat-pump/:hotWaterHeatPump',
 		type: PageType.Task,
 		parentId: 'waterHeating'
 	},
@@ -65,9 +65,9 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'waterHeating'
 	},
 	{
-		id: 'heatBattery',
+		id: 'hotWaterHeatBattery',
 		title: 'Heat battery',
-		url: '/domestic-hot-water/water-heating/heat-battery/:heatBattery',
+		url: '/domestic-hot-water/water-heating/heat-battery/:hotWaterHeatBattery',
 		type: PageType.Task,
 		parentId: 'waterHeating'
 	},
@@ -79,9 +79,9 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'waterHeating'
 	},
 	{
-		id: 'heatInterfaceUnit',
+		id: 'hotWaterHeatInterfaceUnit',
 		title: 'Heat interface unit',
-		url: '/domestic-hot-water/water-heating/heat-interface-unit/:heatInterfaceUnit',
+		url: '/domestic-hot-water/water-heating/heat-interface-unit/:hotWaterHeatInterfaceUnit',
 		type: PageType.Task,
 		parentId: 'waterHeating'
 	},
