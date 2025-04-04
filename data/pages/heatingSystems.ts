@@ -25,35 +25,35 @@ const heatingSystemsPages: Array<Page> = [
 	{
 		id: 'heatPump',
 		title: 'Heat pump',
-		url: '/heating-systems/heat-generation/heat-pump',
+		url: '/heating-systems/heat-generation/heat-pump/:pump',
 		type: PageType.Task,
 		parentId: 'heatGeneration'
 	},
 	{
 		id: 'boiler',
 		title: 'Boiler',
-		url: '/heating-systems/heat-generation/boiler',
+		url: '/heating-systems/heat-generation/boiler/:boiler',
 		type: PageType.Task,
 		parentId: 'heatGeneration'
 	},
 	{
 		id: 'heatBattery',
 		title: 'Heat battery',
-		url: '/heating-systems/heat-generation/heat-battery',
+		url: '/heating-systems/heat-generation/heat-battery/:battery',
 		type: PageType.Task,
 		parentId: 'heatGeneration'
 	},
 	{
 		id: 'heatInterfaceUnit',
 		title: 'Heat interface unit',
-		url: '/heating-systems/heat-generation/heat-interface-unit',
+		url: '/heating-systems/heat-generation/heat-interface-unit/:interface',
 		type: PageType.Task,
 		parentId: 'heatGeneration'
 	},
 	{
 		id: 'heatNetwork',
 		title: 'Heat network',
-		url: '/heating-systems/heat-generation/heat-network',
+		url: '/heating-systems/heat-generation/heat-network/:network',
 		type: PageType.Task,
 		parentId: 'heatGeneration'
 	},
