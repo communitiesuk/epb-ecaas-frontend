@@ -241,12 +241,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					<td>
 						<FormKit
 							id="aboveDepth" type="govInputWithSuffix" suffix-text="m" name="aboveDepth"
-							validation="required | number0" />
+							validation="number0" />
 					</td>
 					<td>
 						<FormKit
 							id="aboveDistance" type="govInputWithSuffix" suffix-text="m" name="aboveDistance"
-							validation="required |number0" />
+							validation="number0" />
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
