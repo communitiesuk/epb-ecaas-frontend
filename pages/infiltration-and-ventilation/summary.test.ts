@@ -32,7 +32,7 @@ const ventData: VentData = {
 };
 
 const ventilationData: VentilationData = {
-	zoneElevationalLevelAtBase: 1,
+	dwellingElevationalLevelAtBase: 1,
 	crossVentFactor: 'yes',
 	maxRequiredAirChangeRate: 1
 };
@@ -176,7 +176,7 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Zone elevational level at base": 1,
+			"Elevational height of dwelling at its base": 1,
 			"Cross vent factor": 'Yes',
 			"Maximum required air change rate": 1
 		};
