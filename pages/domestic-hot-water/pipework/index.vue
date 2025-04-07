@@ -4,6 +4,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type PipeworkType = keyof typeof store.domesticHotWater.pipework;
+interface PipeworkData extends PrimaryPipeworkData, SecondaryPipeworkData {};
 
 function handleRemove(pipeworkType: PipeworkType, index: number) {
 	const pipework = store.domesticHotWater.pipework[pipeworkType].data;
@@ -18,7 +19,7 @@ function handleRemove(pipeworkType: PipeworkType, index: number) {
 	}
 }
 
-function handleDuplicate(pipeworkType: PipeworkType, index: number) {
+function handleDuplicate<T extends PipeworkData>(pipeworkType: PipeworkType, index: number) {
 	const pipework = store.domesticHotWater.pipework[pipeworkType].data;
 	const pipeworkItem = pipework[index];
 
@@ -26,10 +27,12 @@ function handleDuplicate(pipeworkType: PipeworkType, index: number) {
 		const duplicates = pipework.filter(d => d.name.match(duplicateNamePattern(pipeworkItem.name)));
 
 		store.$patch((state) => {
-			state.domesticHotWater.pipework[pipeworkType].data.push({
+			const newPipework = {
 				...pipeworkItem,
 				name: `${pipeworkItem.name} (${duplicates.length})`
-			});
+			} as T;
+
+			state.domesticHotWater.pipework[pipeworkType].data.push(newPipework);
 		});
 	}
 }

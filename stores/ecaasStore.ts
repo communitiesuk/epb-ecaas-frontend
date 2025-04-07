@@ -24,7 +24,8 @@ function getInitialState(): EcaasState {
 				closedFire: { data: [] },
 			},
 			ventilation: { data: {} },
-			airPermeability: { data: {} }
+			airPermeability: { data: {} },
+			ductwork: { data: {} }
 		},
 		domesticHotWater: {
 			waterHeating: {
@@ -48,6 +49,7 @@ function getInitialState(): EcaasState {
 				primaryPipework: { data: [] },
 				secondaryPipework: { data: [] }
 			},
+			wwhrs: { data: [] }
 		},
 		livingSpaceFabric: {
 			livingSpaceFloors: {

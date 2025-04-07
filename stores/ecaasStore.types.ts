@@ -337,6 +337,7 @@ export interface DomesticHotWater {
 	waterHeating: WaterHeating;
 	hotWaterOutlets: HotWaterOutlets;
 	pipework: Pipework;
+	wwhrs: EcaasForm<WwhrsData[]>
 }
 
 export interface WaterHeating {
@@ -445,7 +446,11 @@ export type SecondaryPipeworkData = {
 	name: string;
 	length: number;
 	location: string;
-	internalDiameter?: number;
+	internalDiameter: number;
+};
+
+export type WwhrsData = {
+	name: string;
 };
 
 export interface InfiltrationAndVentilation {
@@ -479,7 +484,7 @@ export type DuctworkData = {
 	thermalInsulationConductivityOfDuctwork?: number;
 	surfaceReflectivity?: string;
 	
-}
+};
 
 export type VentData = {
 	name: string;
