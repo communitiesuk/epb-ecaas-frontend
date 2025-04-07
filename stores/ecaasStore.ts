@@ -14,6 +14,7 @@ function getInitialState(): EcaasState {
 		},
 		infiltrationAndVentilation: {
 			mechanicalVentilation: { data: [] },
+			ductwork: {data: []},
 			vents: { data: [] },
 			combustionAppliances: {
 				openFireplace: { data: [] },

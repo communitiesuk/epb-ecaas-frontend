@@ -460,7 +460,7 @@ export type WwhrsData = {
 
 export interface InfiltrationAndVentilation {
 	mechanicalVentilation: EcaasForm<MechanicalVentilationData[]>;
-	ductwork: EcaasForm<DuctworkData>
+	ductwork: EcaasForm<DuctworkData[]>
 	vents: EcaasForm<VentData[]>;
 	combustionAppliances: CombustionAppliancesData;
 	ventilation: EcaasForm<VentilationData>;
@@ -478,16 +478,16 @@ export type MechanicalVentilationData = {
 };
 
 export type DuctworkData = {
-	name?:string;
-	mvhrUnit?: string;
-	ductworkCrossSectionalShape?: string;
-	ductType?: string;
-	internalDiameterOfDuctwork?: number;
-	externalDiameterOfDuctwork?: number;
-	insulationThickness?: number;
-	lengthOfDucwork?: number;
-	thermalInsulationConductivityOfDuctwork?: number;
-	surfaceReflectivity?: string;
+	name:string;
+	mvhrUnit: string;
+	ductworkCrossSectionalShape: string;
+	ductType: string;
+	internalDiameterOfDuctwork: number;
+	externalDiameterOfDuctwork: number;
+	insulationThickness: number;
+	lengthOfDucwork: number;
+	thermalInsulationConductivityOfDuctwork: number;
+	surfaceReflectivity: string;
 	
 };
 
