@@ -100,6 +100,13 @@ const livingSpaceFabricPages: Array<Page> = [
 		parentId: 'livingSpaceCeilingsAndRoofs'
 	},
 	{
+		id: 'livingSpaceUnheatedPitchedRoofs',
+		title: 'Unheated pitched roof',
+		url: '/living-space/ceilings-and-roofs/unheated-pitched-roofs/:roof',
+		type: PageType.Task,
+		parentId: 'livingSpaceCeilingsAndRoofs'
+	},
+	{
 		id: 'livingSpaceDoors',
 		title: 'Doors',
 		url: '/living-space/doors',
