@@ -68,7 +68,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		/>
 		<FormKit
 			id="convectionFraction"
-			type="govInputInt"
+			type="govInputFloat"
 			label="Convection fraction"
 			name="convectionFraction"
 			validation="required | number | between:0,1"
