@@ -451,6 +451,11 @@ export type SecondaryPipeworkData = {
 
 export type WwhrsData = {
 	name: string;
+	outlet: string;
+	type: string;
+	flowRate: number;
+	efficiency: number;
+	proportionOfUse: number;
 };
 
 export interface InfiltrationAndVentilation {

@@ -149,6 +149,13 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'domesticHotWater'
 	},
 	{
+		id: 'wwhrsItem',
+		title: 'WWHRS',
+		url: '/domestic-hot-water/wwhrs/:wwhrs',
+		type: PageType.Task,
+		parentId: 'wwhrs'
+	},
+	{
 		id: 'domesticHotWaterSummary',
 		title: 'Summary',
 		url: '/domestic-hot-water/summary',

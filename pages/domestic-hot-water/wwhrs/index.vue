@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = "WWHRS";
+const title = "Waste water heat recovery (WWHRS)";
 const page = usePage();
 const store = useEcaasStore();
 
