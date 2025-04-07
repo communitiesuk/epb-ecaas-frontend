@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = 'Check dwelling compliance';
+const title = 'Check part L building compliance';
 	
 const page = usePage();
 const { createTaskList } = useTaskList();
