@@ -101,6 +101,7 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 				outside: 'Outside',
 			}"
 			label="Location"
+			help="Is the battery inside or outside the thermal envelope?"
 			name="location"
 			validation="required"
 		/>
