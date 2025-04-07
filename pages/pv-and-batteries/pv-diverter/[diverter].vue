@@ -8,16 +8,6 @@ const { saveToList } = useForm();
 const pvDiverterData = useItemToEdit('diverter', store.pvAndBatteries.pvDiverter.data);
 const model: Ref<PvDiverterData> = ref(pvDiverterData!);
 
-const { heatPump, boiler, heatBattery, heatNetwork, heatInterfaceUnit } = store.heatingSystems.heatGeneration;
-
-const heatGenerators = [
-	heatPump.data.map((x, i) => [`heatPump_${i}`, x.name] as [string, string]),
-	boiler.data.map((x, i) => [`boiler_${i}`, x.name] as [string, string]),
-	heatBattery.data.map((x, i) => [`heatBattery_${i}`, x.name] as [string, string]),
-	heatNetwork.data.map((x, i) => [`heatNetwork_${i}`, x.name] as [string, string]),
-	heatInterfaceUnit.data.map((x, i) => [`heatInterfaceUnit_${i}`, x.name] as [string, string])
-].flat();
-
 const saveForm = (fields: PvDiverterData) => {
 	store.$patch((state) => {
 		const {pvDiverter} = state.pvAndBatteries;
@@ -60,21 +50,12 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
-		<FormKit
+		<FieldsHeatGenerators
 			id="energyDivertedToHeatGeneration"
-			type="govRadios"
-			:options="new Map(heatGenerators)"
+			name="energyDivertedToHeatGeneration"
 			label="Energy diverted to heat generation"
 			help="Select which heat generator, added previously, is being sent energy by the diverter"
-			name="energyDivertedToHeatGeneration"
-			validation="required">
-			<div v-if="!heatGenerators.length">
-				<p class="govuk-error-message">No heat generators added.</p>
-				<NuxtLink :to="getUrl('heatGeneration')" class="govuk-link gov-radios-add-link">
-					Click here to add a heat generator
-				</NuxtLink>
-			</div>
-		</FormKit>
+		/>
 		<FormKit
 			id="energyDivertedToStorageTank"
 			type="govRadios"

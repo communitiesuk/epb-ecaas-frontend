@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import {getUrl} from "~/utils/page";
-
 const title = "Storage tank";
 const store = useEcaasStore();
 const { saveToList } = useForm();
@@ -50,14 +48,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
-		<FormKit
+		<FieldsHeatGenerators
 			id="heatSource"
-			type="govStoredList"
-			label="Heat source"
 			name="heatSource"
+			label="Heat source"
 			help="Select the relevant heat source that has been added previously"
-			:options="[]"
-			:link="getUrl('heatingSystems')"
 		/>
 		<FormKit
 			id="tankVolume"

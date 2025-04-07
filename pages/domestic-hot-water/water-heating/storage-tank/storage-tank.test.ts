@@ -14,22 +14,39 @@ describe('storageTank', () => {
 
 	const storageTank: StorageTankData = {
 		name: 'Storage tank 1',
+		heatSource: 'heatPump_0',
 		tankVolume: 5,
-		dailyEnergyLoss: 1
+		dailyEnergyLoss: 1,
 	};
 
 	afterEach(() => {
 		store.$reset();
 	});
 
+	const addStoreData = () => {
+		store.$patch({
+			heatingSystems: {
+				heatGeneration: {
+					heatPump: {
+						data: [{
+							name: 'Heat pump'
+						}]
+					}
+				}
+			}
+		});
+	};
+
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Storage tank 1');
+		await user.click(screen.getByTestId('heatSource_heatPump_0'));
 		await user.type(screen.getByTestId('tankVolume'), '5');
 		await user.type(screen.getByTestId('dailyEnergyLoss'), '1');
 		await user.tab();
 	};
 
 	it('data is saved to store state when form is valid', async () => {
+		addStoreData();
 		await renderSuspended(StorageTank);
 
 		await populateValidForm();
@@ -51,11 +68,13 @@ describe('storageTank', () => {
 			}
 		});
 
+		addStoreData();
 		await renderSuspended(StorageTank, {
 			route: {
 				params: { 'storageTank': '0' }
 			}
 		});
+
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Storage tank 1');
 		expect((await screen.findByTestId('tankVolume') as HTMLInputElement).value).toBe('5');
 		expect((await screen.findByTestId('dailyEnergyLoss') as HTMLInputElement).value).toBe('1');
@@ -81,6 +100,7 @@ describe('storageTank', () => {
 	});
 
 	it('navigates to hot water outlets page when valid form is completed', async () => {
+		addStoreData();
 		await renderSuspended(StorageTank);
 
 		await populateValidForm();
