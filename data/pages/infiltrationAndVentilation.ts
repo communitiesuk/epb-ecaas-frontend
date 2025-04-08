@@ -30,11 +30,12 @@ const infiltrationAndVentilationPages: Array<Page> = [
 		parentId: 'mechanicalVentilation'
 	},
 	{
-		id: 'mechanicalVentilationDuckwork',
+		id: 'mechanicalVentilationDuctwork',
 		title: 'MVHR ductwork',
 		url: '/infiltration-and-ventilation/ductwork',
 		type: PageType.Task,
-		parentId: 'infiltrationAndVentilation'
+		parentId: 'infiltrationAndVentilation',
+		excludeFromNavigation: true
 	},
 	{
 		id: 'mechanicalVentilationDuctworkCreate',

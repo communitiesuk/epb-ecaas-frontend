@@ -12,4 +12,5 @@ export interface Page {
 	url: string;
 	type?: PageType;
 	parentId?: string;
+	excludeFromNavigation?: boolean
 }
