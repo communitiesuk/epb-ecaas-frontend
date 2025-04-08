@@ -485,7 +485,7 @@ export type DuctworkData = {
 	internalDiameterOfDuctwork: number;
 	externalDiameterOfDuctwork: number;
 	insulationThickness: number;
-	lengthOfDucwork: number;
+	lengthOfDuctwork: number;
 	thermalInsulationConductivityOfDuctwork: number;
 	surfaceReflectivity: string;
 	

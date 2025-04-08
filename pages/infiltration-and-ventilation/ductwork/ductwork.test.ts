@@ -16,7 +16,7 @@ describe('ductwork', async () => {
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
-		lengthOfDucwork: 100,
+		lengthOfDuctwork: 100,
 		thermalInsulationConductivityOfDuctwork: 10,
 		surfaceReflectivity: "reflective",
 	};
@@ -28,7 +28,7 @@ describe('ductwork', async () => {
 		internalDiameterOfDuctwork: 30,
 		externalDiameterOfDuctwork: 100,
 		insulationThickness: 10,
-		lengthOfDucwork: 10,
+		lengthOfDuctwork: 10,
 		thermalInsulationConductivityOfDuctwork: 9,
 		surfaceReflectivity: "reflective",
 	};
@@ -40,7 +40,7 @@ describe('ductwork', async () => {
 		internalDiameterOfDuctwork: 200,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
-		lengthOfDucwork: 200,
+		lengthOfDuctwork: 200,
 		thermalInsulationConductivityOfDuctwork: 1,
 		surfaceReflectivity: "reflective",
 	};
