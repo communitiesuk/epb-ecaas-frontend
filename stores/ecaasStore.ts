@@ -25,8 +25,7 @@ function getInitialState(): EcaasState {
 				closedFire: { data: [] },
 			},
 			ventilation: { data: {} },
-			airPermeability: { data: {} },
-			ductwork: { data: {} }
+			airPermeability: { data: {} }
 		},
 		domesticHotWater: {
 			waterHeating: {
