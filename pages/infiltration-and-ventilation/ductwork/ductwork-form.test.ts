@@ -35,10 +35,13 @@ describe("ductwork form", async () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [{
-						name: 'MHVR 1'
+						name: 'MVHR 1',
+						typeOfMechanicalVentilationOptions: 'mvhr'
 					},
 					{
-						name: 'MHVR 2'
+						name: 'MVHR 2',
+						typeOfMechanicalVentilationOptions: 'mvhr'
+
 					}]
 				}
 			}
@@ -88,9 +91,9 @@ describe("ductwork form", async () => {
 	it("should list MVHR units previously added", async() => {
 		addStoreData();
 		await renderSuspended(Ductwork);
-		expect(screen.getByText("MHVR 1")).toBeDefined();
-		expect(screen.getByText("MHVR 2")).toBeDefined();
-	})
+		expect(screen.getByText("MVHR 1")).toBeDefined();
+		expect(screen.getByText("MVHR 2")).toBeDefined();
+	});
 
 	it("data is saved to store when form is valid", async () => {
 		addStoreData();
