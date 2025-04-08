@@ -3,7 +3,7 @@ import type { GovTaskListItemProps } from '~/components/GovTaskList.vue';
 
 const title = 'Infiltration and ventilation';
 const page = usePage();
-const store = useEcaasStore()
+const store = useEcaasStore();
 
 
 
@@ -17,21 +17,22 @@ const taskList:GovTaskListItemProps[] = createTaskList(page);
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-  <ul class="govuk-task-list">
+	<ul class="govuk-task-list">
 		<template v-for="item in taskList" :key="item.id">
-      <li class="govuk-task-list__item govuk-task-list__item--with-link"
-    v-if="item.id !== 'mechanicalVentilationDuctwork' || store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === 'mvhr').length">
-			<div class="govuk-task-list__name-and-hint">
-				<NuxtLink :to="item.url" class="govuk-link govuk-task-list__link" :aria-describedby="item.id">
-					{{ item.title }}
-				</NuxtLink>
-			</div>
-			<div :id="`${item.id}-status`" class="govuk-task-list__status">
-				<ClientOnly>
-					<GovTag :text="item.status.tag.text" :color="item.status.tag.color" />
-				</ClientOnly>
-			</div>
-		</li></template>
+			<li
+				v-if="item.id !== 'mechanicalVentilationDuctwork' || store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === 'mvhr').length"
+				class="govuk-task-list__item govuk-task-list__item--with-link">
+				<div class="govuk-task-list__name-and-hint">
+					<NuxtLink :to="item.url" class="govuk-link govuk-task-list__link" :aria-describedby="item.id">
+						{{ item.title }}
+					</NuxtLink>
+				</div>
+				<div :id="`${item.id}-status`" class="govuk-task-list__status">
+					<ClientOnly>
+						<GovTag :text="item.status.tag.text" :color="item.status.tag.color" />
+					</ClientOnly>
+				</div>
+			</li></template>
 	</ul>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
