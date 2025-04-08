@@ -11,7 +11,7 @@ const user = userEvent.setup();
 
 const populateValidForm = async () => {
 	await user.type(screen.getByTestId("name"), "Ductwork 1");
-	await user.click(screen.getByTestId("mvhrUnit_todo"));
+	await user.click(screen.getByTestId("mvhrUnit_0"));
 	await user.click(
 		screen.getByTestId("ductworkCrossSectionalShape_circular")
 	);
@@ -30,9 +30,24 @@ const populateValidForm = async () => {
 describe("ductwork form", async () => {
 	const store = useEcaasStore();
 
+	const addStoreData = () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						name: 'MHVR 1'
+					},
+					{
+						name: 'MHVR 2'
+					}]
+				}
+			}
+		});
+	};
+
 	const ductwork1: DuctworkData = {
 		name: "Ductwork 1",
-		mvhrUnit: "todo", //TODO
+		mvhrUnit: "0", 
 		ductworkCrossSectionalShape: "circular",
 		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
@@ -70,18 +85,25 @@ describe("ductwork form", async () => {
 		expect(screen.getByText("Surface reflectivity")).toBeDefined();
 	});
 
+	it("should list MVHR units previously added", async() => {
+		addStoreData();
+		await renderSuspended(Ductwork);
+		expect(screen.getByText("MHVR 1")).toBeDefined();
+		expect(screen.getByText("MHVR 2")).toBeDefined();
+	})
+
 	it("data is saved to store when form is valid", async () => {
+		addStoreData();
 		await renderSuspended(Ductwork);
 		await populateValidForm();
 		await user.click(screen.getByRole("button"));
 		const { data } = store.infiltrationAndVentilation.ductwork;
 
 		expect(data[0]).toEqual(ductwork1);
-
-
 	});
 
 	it("form populated when data exists in state", async () => {
+		addStoreData();
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
@@ -99,7 +121,7 @@ describe("ductwork form", async () => {
 			((await screen.findByTestId("name")) as HTMLInputElement).value
 		).toBe("Ductwork 1");
 		expect(
-			((await screen.findByTestId("mvhrUnit_todo")) as HTMLInputElement).checked
+			((await screen.findByTestId("mvhrUnit_0")) as HTMLInputElement).checked
 		).toBe(true);
 
 		expect(
@@ -151,6 +173,7 @@ describe("ductwork form", async () => {
 	});
   
 	it("required error messages are displayed when empty form is submitted", async () => {
+		addStoreData();
 		await renderSuspended(Ductwork);
 
 		await user.click(screen.getByRole("button"));
@@ -183,6 +206,7 @@ describe("ductwork form", async () => {
 	});
 
 	it('navigates to ductwork page when valid form is completed', async () => {
+		addStoreData();
 		await renderSuspended(Ductwork);
 
 		await populateValidForm();

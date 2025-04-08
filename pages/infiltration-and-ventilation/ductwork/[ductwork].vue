@@ -65,11 +65,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="mvhrUnit"
 			type="govRadios"
-			:options="{
-				todo: 'TODO',
-				todo2: 'TODO2',
-
-			}"
+			:options="new Map(store.infiltrationAndVentilation.mechanicalVentilation.data.map((x, i) => [`${i}`, x.name]))"
 			label="MVHR unit"
 			name="mvhrUnit"
 			help="Select a MVHR unit that has been added previously which this ductwork is attached to"
