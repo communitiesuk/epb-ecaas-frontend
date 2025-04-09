@@ -2,6 +2,7 @@ import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import MechanicalVentilationOverview from "./index.vue";
 import { renderSuspended } from "@nuxt/test-utils/runtime";
+import InfiltrationAndVentilationTaskPage from "../index.vue";
 
 describe("mechanical ventilation overview", () => {
 	const store = useEcaasStore();
@@ -36,6 +37,19 @@ describe("mechanical ventilation overview", () => {
 		airFlowRate: 14,
 		mvhrLocation: undefined,
 		mvhrEfficiency: undefined,
+	};
+
+	const ductwork1: DuctworkData = {
+		name: 'Ductwork 1',
+		mvhrUnit: 'Mechanical name 1',
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
+		internalDiameterOfDuctwork: 300,
+		externalDiameterOfDuctwork: 1000,
+		insulationThickness: 100,
+		lengthOfDuctwork: 100,
+		thermalInsulationConductivityOfDuctwork: 10,
+		surfaceReflectivity: "reflective",
 	};
 
 	afterEach(() => {
@@ -80,6 +94,32 @@ describe("mechanical ventilation overview", () => {
 		expect(screen.queryByTestId("mechanicalVentilation_1")).toBeNull();
 		expect(screen.queryByTestId("mechanicalVentilation_0")).toBeDefined();
 		expect(screen.queryByTestId("mechanicalVentilation_2")).toBeDefined();
+	});
+
+	it("should remove the associated ductwork when a MVHR mechanical ventilation object is removed", async() => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						mechanicalVentilation1,
+					],
+				},
+				ductwork :{
+					data: [
+						ductwork1
+					]
+				}
+			},
+		});
+		await renderSuspended(MechanicalVentilationOverview);
+		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
+		await renderSuspended(InfiltrationAndVentilationTaskPage,{
+			route: {
+				path: '/infiltration-and-ventilation'
+			}
+		});
+		expect(screen.queryByText('MVHR ductwork')).toBeNull();
+		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([]);
 	});
 
 	it("should duplicate mechanical ventilation object when duplicate button is clicked", async () => {

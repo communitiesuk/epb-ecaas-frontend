@@ -8,8 +8,6 @@ const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.prima
 const model: Ref<PrimaryPipeworkData> = ref(pipeworkData!);
 
 const saveForm = (fields: PrimaryPipeworkData) => {
-	console.log('saveForm');
-	
 	store.$patch((state) => {
 		const {primaryPipework} = state.domesticHotWater.pipework;
 

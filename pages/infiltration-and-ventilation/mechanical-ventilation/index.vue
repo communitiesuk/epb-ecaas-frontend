@@ -6,16 +6,31 @@ const store = useEcaasStore();
 const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
 
 function handleRemove(index: number) {
+	const mvhrName = data[index].name;
 	data.splice(index, 1);
 
 	store.$patch({
 		infiltrationAndVentilation: {
 			mechanicalVentilation: {
-				data: data.length ? data : undefined,
+				data: data,
 				complete: data.length > 0
 			},
 		},
 	});
+
+	const matchingDuctwork = store.infiltrationAndVentilation.ductwork.data.filter(x => x.mvhrUnit !== mvhrName);
+
+	store.$patch({
+		infiltrationAndVentilation: {
+			ductwork: {
+				data: matchingDuctwork
+			}
+		}
+	});
+
+
+
+
 }
 function handleDuplicate(index: number) {
 	const mechanicalVentilation = data[index];
