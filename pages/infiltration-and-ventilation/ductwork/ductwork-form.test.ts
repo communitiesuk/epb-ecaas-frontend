@@ -11,7 +11,7 @@ const user = userEvent.setup();
 
 const populateValidForm = async () => {
 	await user.type(screen.getByTestId("name"), "Ductwork 1");
-	await user.click(screen.getByTestId("mvhrUnit_0"));
+	await user.click(screen.getByTestId("mvhrUnit_MVHR_1"));
 	await user.click(
 		screen.getByTestId("ductworkCrossSectionalShape_circular")
 	);
@@ -35,11 +35,11 @@ describe("ductwork form", async () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [{
-						name: 'MVHR 1',
+						name: 'MVHR_1',
 						typeOfMechanicalVentilationOptions: 'mvhr'
 					},
 					{
-						name: 'MVHR 2',
+						name: 'MVHR_2',
 						typeOfMechanicalVentilationOptions: 'mvhr'
 
 					}]
@@ -50,7 +50,7 @@ describe("ductwork form", async () => {
 
 	const ductwork1: DuctworkData = {
 		name: "Ductwork 1",
-		mvhrUnit: "0", 
+		mvhrUnit: "MVHR_1",
 		ductworkCrossSectionalShape: "circular",
 		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
@@ -91,8 +91,8 @@ describe("ductwork form", async () => {
 	it("should list MVHR units previously added", async() => {
 		addStoreData();
 		await renderSuspended(Ductwork);
-		expect(screen.getByText("MVHR 1")).toBeDefined();
-		expect(screen.getByText("MVHR 2")).toBeDefined();
+		expect(screen.getByText("MVHR_1")).toBeDefined();
+		expect(screen.getByText("MVHR_2")).toBeDefined();
 	});
 
 	it("data is saved to store when form is valid", async () => {
@@ -124,7 +124,7 @@ describe("ductwork form", async () => {
 			((await screen.findByTestId("name")) as HTMLInputElement).value
 		).toBe("Ductwork 1");
 		expect(
-			((await screen.findByTestId("mvhrUnit_0")) as HTMLInputElement).checked
+			((await screen.findByTestId("mvhrUnit_MVHR_1")) as HTMLInputElement).checked
 		).toBe(true);
 
 		expect(
