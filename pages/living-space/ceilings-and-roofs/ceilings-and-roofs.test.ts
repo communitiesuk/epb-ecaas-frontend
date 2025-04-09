@@ -353,11 +353,13 @@ describe('ceilings and roofs', () => {
 
 		const {
 			livingSpaceCeilings,
-			livingSpaceRoofs
+			livingSpaceRoofs,
+			livingSpaceUnheatedPitchedRoofs
 		} = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
 
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space');
 		expect(livingSpaceCeilings.complete).toBe(true);
 		expect(livingSpaceRoofs.complete).toBe(true);
+		expect(livingSpaceUnheatedPitchedRoofs.complete).toBe(true);
 	});
 });

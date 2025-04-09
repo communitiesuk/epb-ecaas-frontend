@@ -42,7 +42,8 @@ function handleComplete() {
 		livingSpaceFabric: {
 			livingSpaceCeilingsAndRoofs: {
 				livingSpaceCeilings: { complete: true },
-				livingSpaceRoofs: { complete: true }
+				livingSpaceRoofs: { complete: true },
+				livingSpaceUnheatedPitchedRoofs: { complete: true }
 			}
 		}
 	});
