@@ -2,13 +2,17 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import MechanicalVentilationForm from "./[mechanical].vue";
 import { userEvent } from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
+import { v4 as uuidv4 } from 'uuid';
 
 describe("mechanical ventilation form", () => {
 	const user = userEvent.setup();
 	const store = useEcaasStore();
+	
 	const navigateToMock = vi.hoisted(() => vi.fn());
+	vi.mock('uuid');
 
 	const mechanicalVentilation1: MechanicalVentilationData = {
+		id: 'mechanicalVentilation1',
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: "mvhr",
 		controlForSupplyAirflow: "load",
@@ -19,6 +23,7 @@ describe("mechanical ventilation form", () => {
 	};
 
 	const mechanicalVentilation2: MechanicalVentilationData = {
+		id: 'mechanicalVentilation2',
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "intermittent",
 		controlForSupplyAirflow: "oda",
@@ -35,6 +40,8 @@ describe("mechanical ventilation form", () => {
 	});
 
 	it("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions_mvhr is mvhr", async () => {
+		vi.mocked(uuidv4).mockReturnValue('mechanicalVentilation1' as unknown as Buffer);
+
 		await renderSuspended(MechanicalVentilationForm);
 
 		await user.type(screen.getByTestId("name"), "Mechanical name 1");
@@ -58,6 +65,8 @@ describe("mechanical ventilation form", () => {
 	});
 
 	it("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is not mvhr", async () => {
+		vi.mocked(uuidv4).mockReturnValue('mechanicalVentilation2' as unknown as Buffer);
+
 		await renderSuspended(MechanicalVentilationForm);
 
 		await user.type(screen.getByTestId("name"), "Mechanical name 2");
@@ -82,6 +91,8 @@ describe("mechanical ventilation form", () => {
 	});
 
 	it("data is saved to correct object in store state when form is valid", async () => {
+		vi.mocked(uuidv4).mockReturnValue('mechanicalVentilation1' as unknown as Buffer);
+
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {

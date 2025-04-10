@@ -468,6 +468,7 @@ export interface InfiltrationAndVentilation {
 }
 
 export type MechanicalVentilationData = {
+	id: string;
 	name: string;
 	typeOfMechanicalVentilationOptions: string;
 	controlForSupplyAirflow: string;

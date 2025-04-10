@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { v4 as uuidv4 } from 'uuid';
+
 const title = "Mechanical ventilation";
 const mvhrTitle = "MVHR only inputs";
 const store = useEcaasStore();
@@ -12,6 +14,7 @@ const saveForm = (fields: MechanicalVentilationData) => {
 		const { mechanicalVentilation } = state.infiltrationAndVentilation;
 
 		const mechanicalVentilationItem: MechanicalVentilationData = {
+			id: uuidv4(),
 			name: fields.name,
 			typeOfMechanicalVentilationOptions: fields.typeOfMechanicalVentilationOptions,
 			controlForSupplyAirflow: fields.controlForSupplyAirflow,
