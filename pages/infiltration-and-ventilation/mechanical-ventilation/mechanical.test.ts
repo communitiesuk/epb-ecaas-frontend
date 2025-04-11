@@ -209,4 +209,21 @@ describe("mechanical ventilation overview", () => {
 		expect(screen.getByText("Mechanical name 1 (1) (1)")).toBeDefined();
 		expect(screen.getByText("Mechanical name 1 (1) (2)")).toBeDefined();
 	});
+
+	it("should not duplicate the id when duplicating the mechanical ventilation object", async() => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						mechanicalVentilation1
+					],
+				},
+			},
+		});
+		await renderSuspended(MechanicalVentilationOverview);
+		await userEvent.click(
+			screen.getByTestId("mechanicalVentilation_duplicate_0")
+		);
+		expect(store.infiltrationAndVentilation.mechanicalVentilation.data[0]["id"]).not.toBe(store.infiltrationAndVentilation.mechanicalVentilation.data[1]["id"]);
+	});
 });

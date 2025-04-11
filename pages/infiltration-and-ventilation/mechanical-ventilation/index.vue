@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { v4 as uuidv4 } from 'uuid';
+
 const page = usePage();
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
@@ -27,11 +29,8 @@ function handleRemove(index: number) {
 			}
 		}
 	});
-
-
-
-
 }
+
 function handleDuplicate(index: number) {
 	const mechanicalVentilation = data[index];
 
@@ -41,7 +40,8 @@ function handleDuplicate(index: number) {
 		store.$patch((state) => {
 			state.infiltrationAndVentilation.mechanicalVentilation.data.push({
 				...mechanicalVentilation,
-				name: `${mechanicalVentilation.name} (${duplicates.length})`
+				name: `${mechanicalVentilation.name} (${duplicates.length})`,
+				id: uuidv4()
 			});
 		});
 	}
