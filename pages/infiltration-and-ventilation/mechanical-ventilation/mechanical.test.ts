@@ -42,9 +42,50 @@ describe("mechanical ventilation overview", () => {
 		mvhrEfficiency: undefined,
 	};
 
+	const mechanicalVentilation4: MechanicalVentilationData = {
+		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
+		name: "Mechanical name 4",
+		typeOfMechanicalVentilationOptions: "mvhr",
+		controlForSupplyAirflow: "load",
+		supplyAirTemperatureControl: "odaComp",
+		airFlowRate: 12,
+		mvhrLocation: "inside",
+		mvhrEfficiency: 0.1,
+
+	};
+
+	// linked to mechanicalVentilation1
 	const ductwork1: DuctworkData = {
 		name: 'Ductwork 1',
-		mvhrUnit: 'Mechanical name 1',
+		mvhrUnit: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
+		internalDiameterOfDuctwork: 300,
+		externalDiameterOfDuctwork: 1000,
+		insulationThickness: 100,
+		lengthOfDuctwork: 100,
+		thermalInsulationConductivityOfDuctwork: 10,
+		surfaceReflectivity: "reflective",
+	};
+
+	// linked to mechanicalVentilation1
+	const ductwork2: DuctworkData = {
+		name: 'Ductwork 2',
+		mvhrUnit: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
+		internalDiameterOfDuctwork: 300,
+		externalDiameterOfDuctwork: 1000,
+		insulationThickness: 100,
+		lengthOfDuctwork: 100,
+		thermalInsulationConductivityOfDuctwork: 10,
+		surfaceReflectivity: "reflective",
+	};
+
+	// linked to mechanicalVentilation4
+	const ductwork3: DuctworkData = {
+		name: 'Ductwork 3',
+		mvhrUnit: '6746f2fe-f15b-4a56-ba5a-1a7751ac89hh',
 		ductworkCrossSectionalShape: "circular",
 		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
@@ -105,24 +146,31 @@ describe("mechanical ventilation overview", () => {
 				mechanicalVentilation: {
 					data: [
 						mechanicalVentilation1,
+						mechanicalVentilation4,
 					],
 				},
 				ductwork :{
 					data: [
-						ductwork1
+						ductwork1,
+						ductwork2,
+						ductwork3
 					]
 				}
 			},
 		});
 		await renderSuspended(MechanicalVentilationOverview);
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
+		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([ductwork3]);
+
+		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
+		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([]);
+
 		await renderSuspended(InfiltrationAndVentilationTaskPage,{
 			route: {
 				path: '/infiltration-and-ventilation'
 			}
 		});
 		expect(screen.queryByText('MVHR ductwork')).toBeNull();
-		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([]);
 	});
 
 	it("should duplicate mechanical ventilation object when duplicate button is clicked", async () => {

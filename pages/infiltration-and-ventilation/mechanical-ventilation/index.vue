@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
 
 function handleRemove(index: number) {
-	const mvhrName = data[index].name;
+	const mvhrID = data[index].id;
 	data.splice(index, 1);
 
 	store.$patch({
@@ -18,7 +18,7 @@ function handleRemove(index: number) {
 		},
 	});
 
-	const matchingDuctwork = store.infiltrationAndVentilation.ductwork.data.filter(x => x.mvhrUnit !== mvhrName);
+	const matchingDuctwork = store.infiltrationAndVentilation.ductwork.data.filter(x => x.mvhrUnit !== mvhrID);
 
 	store.$patch({
 		infiltrationAndVentilation: {

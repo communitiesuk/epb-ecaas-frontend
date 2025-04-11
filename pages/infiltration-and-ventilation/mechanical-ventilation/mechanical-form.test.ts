@@ -91,8 +91,6 @@ describe("mechanical ventilation form", () => {
 	});
 
 	it("data is saved to correct object in store state when form is valid", async () => {
-		vi.mocked(uuidv4).mockReturnValue('mechanicalVentilation1' as unknown as Buffer);
-
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {

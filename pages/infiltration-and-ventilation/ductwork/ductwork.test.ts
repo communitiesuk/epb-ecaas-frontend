@@ -102,7 +102,5 @@ describe('ductwork', async () => {
 		expect(screen.getByText('Ductwork 1 (2)')).toBeDefined();
 		expect(screen.getByText('Ductwork 1 (1) (1)')).toBeDefined();
 		expect(screen.getByText('Ductwork 1 (1) (2)')).toBeDefined();
-
-
 	});
 });
