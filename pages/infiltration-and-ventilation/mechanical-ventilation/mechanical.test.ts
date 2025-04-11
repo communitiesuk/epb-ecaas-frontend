@@ -9,6 +9,7 @@ describe("mechanical ventilation overview", () => {
 	const user = userEvent.setup();
 
 	const mechanicalVentilation1: MechanicalVentilationData = {
+		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: "mvhr",
 		controlForSupplyAirflow: "load",
@@ -20,6 +21,7 @@ describe("mechanical ventilation overview", () => {
 	};
 
 	const mechanicalVentilation2: MechanicalVentilationData = {
+		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "decentralisedContinuous",
 		controlForSupplyAirflow: "oda",
@@ -30,6 +32,7 @@ describe("mechanical ventilation overview", () => {
 	};
 
 	const mechanicalVentilation3: MechanicalVentilationData = {
+		id: "6380f2fe-a78f-4a56-ba5a-1a7751ac502a",
 		name: "Mechanical name 3",
 		typeOfMechanicalVentilationOptions: "intermittent",
 		controlForSupplyAirflow: "oda",

@@ -11,7 +11,7 @@ const user = userEvent.setup();
 
 const populateValidForm = async () => {
 	await user.type(screen.getByTestId("name"), "Ductwork 1");
-	await user.click(screen.getByTestId("mvhrUnit_MVHR_1"));
+	await user.click(screen.getByTestId("mvhrUnit_5124f2fe-f15b-4a56-ba5a-1a7751ac506f"));
 	await user.click(
 		screen.getByTestId("ductworkCrossSectionalShape_circular")
 	);
@@ -36,10 +36,12 @@ describe("ductwork form", async () => {
 				mechanicalVentilation: {
 					data: [{
 						name: 'MVHR_1',
+						id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
 						typeOfMechanicalVentilationOptions: 'mvhr'
 					},
 					{
 						name: 'MVHR_2',
+						id: '7184f2fe-a78f-4a56-ba5a-1a7751ac506d',
 						typeOfMechanicalVentilationOptions: 'mvhr'
 
 					}]
@@ -50,7 +52,7 @@ describe("ductwork form", async () => {
 
 	const ductwork1: DuctworkData = {
 		name: "Ductwork 1",
-		mvhrUnit: "MVHR_1",
+		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		ductworkCrossSectionalShape: "circular",
 		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
@@ -124,7 +126,7 @@ describe("ductwork form", async () => {
 			((await screen.findByTestId("name")) as HTMLInputElement).value
 		).toBe("Ductwork 1");
 		expect(
-			((await screen.findByTestId("mvhrUnit_MVHR_1")) as HTMLInputElement).checked
+			((await screen.findByTestId("mvhrUnit_5124f2fe-f15b-4a56-ba5a-1a7751ac506f")) as HTMLInputElement).checked
 		).toBe(true);
 
 		expect(

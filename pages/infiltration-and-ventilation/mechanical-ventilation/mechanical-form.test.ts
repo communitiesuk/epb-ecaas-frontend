@@ -12,7 +12,7 @@ describe("mechanical ventilation form", () => {
 	vi.mock('uuid');
 
 	const mechanicalVentilation1: MechanicalVentilationData = {
-		id: 'mechanicalVentilation1',
+		id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: "mvhr",
 		controlForSupplyAirflow: "load",
@@ -23,7 +23,7 @@ describe("mechanical ventilation form", () => {
 	};
 
 	const mechanicalVentilation2: MechanicalVentilationData = {
-		id: 'mechanicalVentilation2',
+		id: '7184f2fe-a78f-4a56-ba5a-1a7751ac506d',
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "intermittent",
 		controlForSupplyAirflow: "oda",
@@ -40,7 +40,7 @@ describe("mechanical ventilation form", () => {
 	});
 
 	it("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions_mvhr is mvhr", async () => {
-		vi.mocked(uuidv4).mockReturnValue('mechanicalVentilation1' as unknown as Buffer);
+		vi.mocked(uuidv4).mockReturnValue('5124f2fe-f15b-4a56-ba5a-1a7751ac506f' as unknown as Buffer);
 
 		await renderSuspended(MechanicalVentilationForm);
 
@@ -65,7 +65,7 @@ describe("mechanical ventilation form", () => {
 	});
 
 	it("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is not mvhr", async () => {
-		vi.mocked(uuidv4).mockReturnValue('mechanicalVentilation2' as unknown as Buffer);
+		vi.mocked(uuidv4).mockReturnValue('7184f2fe-a78f-4a56-ba5a-1a7751ac506d' as unknown as Buffer);
 
 		await renderSuspended(MechanicalVentilationForm);
 
