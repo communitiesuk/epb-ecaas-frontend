@@ -8,7 +8,7 @@ const store = useEcaasStore();
 
 
 const { createTaskList } = useTaskList();
-const taskList:GovTaskListItemProps[] = createTaskList(page);
+const taskList: GovTaskListItemProps[] = createTaskList(page);
 
 </script>
 
@@ -20,7 +20,7 @@ const taskList:GovTaskListItemProps[] = createTaskList(page);
 	<ul class="govuk-task-list">
 		<template v-for="item in taskList" :key="item.id">
 			<li
-				v-if="item.id !== 'mechanicalVentilationDuctwork' || store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === 'mvhr').length"
+				v-if="item.id !== 'ductwork' || store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === 'mvhr').length"
 				class="govuk-task-list__item govuk-task-list__item--with-link">
 				<div class="govuk-task-list__name-and-hint">
 					<NuxtLink :to="item.url" class="govuk-link govuk-task-list__link" :aria-describedby="item.id">
@@ -32,7 +32,8 @@ const taskList:GovTaskListItemProps[] = createTaskList(page);
 						<GovTag :text="item.status.tag.text" :color="item.status.tag.color" />
 					</ClientOnly>
 				</div>
-			</li></template>
+			</li>
+		</template>
 	</ul>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>

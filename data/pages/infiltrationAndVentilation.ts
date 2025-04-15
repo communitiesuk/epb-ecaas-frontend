@@ -30,7 +30,7 @@ const infiltrationAndVentilationPages: Array<Page> = [
 		parentId: 'mechanicalVentilation'
 	},
 	{
-		id: 'mechanicalVentilationDuctwork',
+		id: 'ductwork',
 		title: 'MVHR ductwork',
 		url: '/infiltration-and-ventilation/ductwork',
 		type: PageType.Task,
@@ -38,18 +38,18 @@ const infiltrationAndVentilationPages: Array<Page> = [
 		excludeFromNavigation: true
 	},
 	{
-		id: 'mechanicalVentilationDuctworkCreate',
+		id: 'ductworkCreate',
 		title: 'Create',
 		url: '/infiltration-and-ventilation/ductwork/create',
 		type: PageType.Task,
-		parentId: 'mechanicalVentilationDuckwork'
+		parentId: 'ductwork'
 	},
 	{
-		id: 'mechanicalVentilationDuctworkEdit',
+		id: 'ductworkEdit',
 		title: 'Edit',
 		url: '/infiltration-and-ventilation/ductwork/:ductwork',
 		type: PageType.Task,
-		parentId: 'mechanicalVentilationDuckwork'
+		parentId: 'ductwork'
 	},
 	{
 		id: 'vents',
