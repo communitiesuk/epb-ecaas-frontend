@@ -53,7 +53,7 @@ describe('Domestic hot water summary', () => {
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			const lineResult = (await screen.findByTestId(`summary-primaryPipework-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 		}

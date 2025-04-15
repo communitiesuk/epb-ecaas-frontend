@@ -92,7 +92,7 @@ describe('Dwelling details summary', () => {
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			const lineResult = (await screen.findByTestId(`summary-generalSpecifications-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 		}
@@ -127,7 +127,7 @@ describe('Dwelling details summary', () => {
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			const lineResult = (await screen.findByTestId(`summary-appliances-${hyphenate(key)}`));
 			const lineValues = Array.from(lineResult.querySelectorAll("li").values().map(v => v.textContent));
 
 			const result = value.every(v => lineValues.includes(v));
@@ -158,7 +158,7 @@ describe('Dwelling details summary', () => {
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			const lineResult = (await screen.findByTestId(`summary-externalFactors-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 		}

@@ -6,7 +6,7 @@ export type SummaryData = {
 	[key: string]: string | number | boolean | string[] | undefined;
 };
 
-const props = defineProps<{ data: SummaryData | SummaryData[]; }>();
+const props = defineProps<{ data: SummaryData | SummaryData[]; id: string }>();
 
 const overflow = Array.isArray(props.data) && props.data.length > 3;
 </script>
@@ -16,7 +16,7 @@ const overflow = Array.isArray(props.data) && props.data.length > 3;
 		<dl class="govuk-summary-list">
 			<template v-if="!Array.isArray(data)">
 				<div
-					v-for="(value, key) in data" :key="key" :data-testid="`summary-${hyphenate(key as string)}`"
+					v-for="(value, key) in data" :key="key" :data-testid="`summary-${id}-${hyphenate(key as string)}`"
 					class="govuk-summary-list__row">
 					<dt class="govuk-summary-list__key">{{ key }}</dt>
 					<dd class="govuk-summary-list__value">
@@ -35,7 +35,7 @@ const overflow = Array.isArray(props.data) && props.data.length > 3;
 			</template>
 			<template v-if="Array.isArray(data) && data.length">
 				<template v-for="(key, keyIndex) in Object.keys(data[0])" :key="key">
-					<div v-if="data.some(x => x[key] != undefined)" class="govuk-summary-list__row" :data-testid="`summary-${hyphenate(key as string)}`">
+					<div v-if="data.some(x => x[key] != undefined)" class="govuk-summary-list__row" :data-testid="`summary-${id}-${hyphenate(key as string)}`">
 						<dt class="govuk-summary-list__key" >{{ key }}</dt>
 						<template v-for="(entry, index) in data" :key="`entry-${key}-${index}`">
 							<template v-for="(entryProp, entryKey) in entry" :key="`prop-${entryKey}-${index}`">
