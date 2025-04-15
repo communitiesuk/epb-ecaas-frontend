@@ -1,6 +1,11 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from '@testing-library/vue';
 import Summary from "./summary.vue";
+import MechanicalVentilationOverview from "./index.vue";
+import userEvent from "@testing-library/user-event";
+
+
+vi.mock('uuid')
 
 const mechanicalVentilationData: MechanicalVentilationData = {
 	name: "Mechanical name 1",
@@ -10,12 +15,17 @@ const mechanicalVentilationData: MechanicalVentilationData = {
 	airFlowRate: 12,
 	mvhrLocation: "inside",
 	mvhrEfficiency: 0.2,
+	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g"
+};
+const ductworkData: DuctworkData = {
+	name: "Ducktwork 1",
+	mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
 	ductworkCrossSectionalShape: "circular",
 	ductType: "intake",
 	internalDiameterOfDuctwork: 300,
 	externalDiameterOfDuctwork: 1000,
 	insulationThickness: 100,
-	lengthOfDucwork: 100,
+	lengthOfDuctwork: 100,
 	thermalInsulationConductivityOfDuctwork: 10,
 	surfaceReflectivity: "reflective",
 };
@@ -95,6 +105,7 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 	
 		expect(screen.getByRole('link', {name: 'Mechanical ventilation'}));
+		expect(screen.getByRole('link', {name: 'Ductwork'}));
 		expect(screen.getByRole('link', {name: 'Vents'}));
 		expect(screen.getByRole('link', {name: 'Ventilation'}));
 		expect(screen.getByRole('link', {name: 'Air permeability'}));
@@ -120,19 +131,46 @@ describe('Infiltration and ventilation summary', () => {
 			"Air flow rate": 12,
 			"MVHR location": 'inside',
 			"MVHR efficiency": 0.2,
-			"Ductwork cross sectional shape": 'circular',
-			"Duct type": 'intake',
-			"Internal diameter of ductwork": 300,
-			"External diameter of ductwork": 1000,
-			"Thermal insulation conductivity of ductwork": 10,
-			"Surface reflectivity": 'reflective'
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 		}
+	});
+
+	it('should display the correct data for the ductwork section', async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data:[mechanicalVentilationData]
+				},
+				ductwork: {
+					data: [ductworkData]
+				}
+			}
+		});
+
+		await renderSuspended(Summary)
+		const expectedResult = {
+			"Name": "Ducktwork 1",
+			"MVHR unit": "Mechanical name 1",
+			"Ductwork cross sectional shape": 'Circular',
+			"Duct type": 'Intake',
+			"Internal diameter of ductwork": "300",
+			"External diameter of ductwork": "1000",
+			"Thermal insulation conductivity of ductwork": "10",
+			"Surface reflectivity": 'Reflective'
+		}
+
+			for(const [key, value] of Object.entries(expectedResult)){
+
+			const lineResult = (await screen.findByTestId(`summary-ductwork-${hyphenate(key)}`));
+
+				expect((lineResult).querySelector("dt")?.textContent).toBe(key)
+				expect((lineResult).querySelector("dd")?.textContent).toBe(value)
+			}
 	});
 
 	it('should display the correct data for the vents section', async () => {
@@ -158,7 +196,7 @@ describe('Infiltration and ventilation summary', () => {
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			const lineResult = (await screen.findByTestId(`summary-vents-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 		}
@@ -182,7 +220,7 @@ describe('Infiltration and ventilation summary', () => {
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			const lineResult = (await screen.findByTestId(`summary-ventilation-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 		}
@@ -200,14 +238,12 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Dwelling height": 1,
-			"Dwelling envelope area": 5,
 			"Test pressure": 1,
 			"Air tightness test result": 1
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+			const lineResult = (await screen.findByTestId(`summary-airPermeability-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 		}
@@ -237,7 +273,7 @@ describe('Infiltration and ventilation summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -265,7 +301,7 @@ describe('Infiltration and ventilation summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -293,7 +329,7 @@ describe('Infiltration and ventilation summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -321,7 +357,7 @@ describe('Infiltration and ventilation summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -349,7 +385,7 @@ describe('Infiltration and ventilation summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -377,7 +413,7 @@ describe('Infiltration and ventilation summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}

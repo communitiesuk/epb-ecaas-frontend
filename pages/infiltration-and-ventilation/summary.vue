@@ -21,12 +21,29 @@ const mechanicalVentilationSummary: SummarySection = {
 			"Air flow rate": x.airFlowRate,
 			"MVHR location": x.mvhrLocation,
 			"MVHR efficiency": x.mvhrEfficiency,
+		};
+	}) || []
+};
+
+const ductworkData = store.infiltrationAndVentilation.ductwork.data;
+
+const ductworkSummary: SummarySection = {
+	id: 'ductwork',
+	label: 'Ductwork',
+	data: ductworkData?.map(x => {
+
+
+		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.id === x.mvhrUnit)
+
+		return {
+			"Name": x.name,
+			"MVHR unit": mvhr[0]?.name,
 			"Ductwork cross sectional shape": x.ductworkCrossSectionalShape,
 			"Duct type": x.ductType,
 			"Internal diameter of ductwork": x.internalDiameterOfDuctwork,
 			"External diameter of ductwork": x.externalDiameterOfDuctwork,
 			"Thermal insulation conductivity of ductwork": x.thermalInsulationConductivityOfDuctwork,
-			"Surface reflectivity": x.surfaceReflectivity
+			"Surface reflectivity": x.surfaceReflectivity,
 		};
 	}) || []
 };
@@ -104,6 +121,7 @@ const combustionAppliancesSummary: SummarySection = {
 
 const summarySections: SummarySection[] = [
 	mechanicalVentilationSummary,
+	ductworkSummary,
 	ventSummary,
 	ventilationSummary,
 	airPermeabilitySummary,
@@ -119,6 +137,7 @@ const summarySections: SummarySection[] = [
 			</Head>
 			<h1 class="govuk-heading-l">{{ title }}</h1>
 			<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
+				
 				<GovSummaryTab :summary="mechanicalVentilationSummary" :selected="tabProps.currentTab === 0">
 					<template #empty>
 						<h2 class="govuk-heading-m">No mechanical ventilation added</h2>
@@ -128,7 +147,16 @@ const summarySections: SummarySection[] = [
 					</template>
 				</GovSummaryTab>
 
-				<GovSummaryTab :summary="ventSummary" :selected="tabProps.currentTab === 1">
+				<GovSummaryTab :summary="ductworkSummary" :selected="tabProps.currentTab === 1">
+					<template #empty>
+						<h2 class="govuk-heading-m">No ductwork added</h2>
+						<NuxtLink class="govuk-link" :to="`${getUrl(ductworkSummary.id)}/create`">
+							Add ductwork
+						</NuxtLink>
+					</template>
+				</GovSummaryTab>
+
+				<GovSummaryTab :summary="ventSummary" :selected="tabProps.currentTab === 2">
 					<template #empty>
 						<h2 class="govuk-heading-m">No vents added</h2>
 						<NuxtLink class="govuk-link" :to="`${getUrl(ventSummary.id)}/create`">
