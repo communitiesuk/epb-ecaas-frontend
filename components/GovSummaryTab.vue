@@ -13,7 +13,7 @@ defineProps<{ summary: SummarySection, selected: boolean }>();
 	>
 		<template v-if="!Array.isArray(summary.data) || summary.data.length">
 			<h2 class="govuk-heading-m">{{ summary.label }}</h2>
-			<GovSummaryList :data="summary.data" :id="summary.id"/>
+			<GovSummaryList :id="summary.id" :data="summary.data"/>
 			<NuxtLink class="govuk-link" :to="getUrl(summary.id)">Edit</NuxtLink>
 		</template>
 		<template v-if="Array.isArray(summary.data) && !summary.data.length">
