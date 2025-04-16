@@ -1,11 +1,11 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from '@testing-library/vue';
 import Summary from "./summary.vue";
-import MechanicalVentilationOverview from "./index.vue";
+import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
 
 
-vi.mock('uuid')
+vi.mock('uuid');
 
 const mechanicalVentilationData: MechanicalVentilationData = {
 	name: "Mechanical name 1",
@@ -152,7 +152,7 @@ describe('Infiltration and ventilation summary', () => {
 			}
 		});
 
-		await renderSuspended(Summary)
+		await renderSuspended(Summary);
 		const expectedResult = {
 			"Name": "Ducktwork 1",
 			"MVHR unit": "Mechanical name 1",
@@ -162,15 +162,34 @@ describe('Infiltration and ventilation summary', () => {
 			"External diameter of ductwork": "1000",
 			"Thermal insulation conductivity of ductwork": "10",
 			"Surface reflectivity": 'Reflective'
-		}
+		};
 
-			for(const [key, value] of Object.entries(expectedResult)){
+		for(const [key, value] of Object.entries(expectedResult)){
 
 			const lineResult = (await screen.findByTestId(`summary-ductwork-${hyphenate(key)}`));
 
-				expect((lineResult).querySelector("dt")?.textContent).toBe(key)
-				expect((lineResult).querySelector("dd")?.textContent).toBe(value)
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it('should not display the ductwork section when there are no mechanical ventilations created of type mvhr', async () => {
+		const user = userEvent.setup();
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data:[mechanicalVentilationData]
+				},
+				ductwork: {
+					data: [ductworkData]
+				}
 			}
+		});
+    
+		await renderSuspended(MechanicalVentilationOverview);
+		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
+		await renderSuspended(Summary);
+		expect(screen.getByText("No ductwork added")).toBeDefined();
 	});
 
 	it('should display the correct data for the vents section', async () => {
