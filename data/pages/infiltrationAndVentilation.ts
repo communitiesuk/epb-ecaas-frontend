@@ -1,4 +1,11 @@
 import { PageType, type Page } from "./pages.types";
+import { isEmpty } from "~/utils/isEmpty";
+
+function noMhvrPresent():boolean {
+	const store = useEcaasStore();
+
+	return isEmpty(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === "mvhr"));
+}
 
 const infiltrationAndVentilationPages: Array<Page> = [
 	{
@@ -35,7 +42,7 @@ const infiltrationAndVentilationPages: Array<Page> = [
 		url: '/infiltration-and-ventilation/ductwork',
 		type: PageType.Task,
 		parentId: 'infiltrationAndVentilation',
-		excludeFromNavigation: true
+		excludeFromNavigation: noMhvrPresent
 	},
 	{
 		id: 'ductworkCreate',
