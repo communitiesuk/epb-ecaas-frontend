@@ -199,4 +199,116 @@ describe('Ecaas Store', () => {
 
 		expect(status).toBe(formStatus.complete);
 	});
+
+	it('getStatus returns notStarted when there is a mvhr present but no ductwork', () => {
+		const store = useEcaasStore();
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						name: 'MVHR_1',
+						id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+						typeOfMechanicalVentilationOptions: 'mvhr',
+						complete: true
+					},
+					{
+						name: 'MVHR_2',
+						id: '7184f2fe-a78f-4a56-ba5a-1a7751ac506d',
+						typeOfMechanicalVentilationOptions: 'mvhr',
+						complete: true
+					}]
+				}
+			}
+		});
+
+		const page = pagesData.find(p => p.id === 'ductwork');
+		const status = store.getStatus(page!);
+
+		expect(status).toBe(formStatus.notStarted);
+	});
+
+	it('getStatus returns incomplete when not all mvhrs have a ductwork', () => {
+		const store = useEcaasStore();
+
+		const ductwork1: DuctworkData = {
+			name: "Ductwork 1",
+			mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
+			ductworkCrossSectionalShape: "circular",
+			ductType: "intake",
+			internalDiameterOfDuctwork: 300,
+			externalDiameterOfDuctwork: 1000,
+			insulationThickness: 100,
+			lengthOfDuctwork: 100,
+			thermalInsulationConductivityOfDuctwork: 10,
+			surfaceReflectivity: "reflective",
+			complete: true
+		};
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						name: 'MVHR_1',
+						id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+						typeOfMechanicalVentilationOptions: 'mvhr',
+						complete: true
+					},
+					{
+						name: 'MVHR_2',
+						id: '7184f2fe-a78f-4a56-ba5a-1a7751ac506d',
+						typeOfMechanicalVentilationOptions: 'mvhr',
+						complete: true
+					}]
+				},
+				ductwork:{
+					data: [ductwork1]
+				}
+			}
+		});
+
+		const page = pagesData.find(p => p.id === 'ductwork');
+		const status = store.getStatus(page!);
+
+		expect(status).toBe(formStatus.inProgress);
+	});
+
+	it('getStatus returns complete when all mvhrs have a ductwork', () => {
+		const store = useEcaasStore();
+
+		const ductwork1: DuctworkData = {
+			name: "Ductwork 1",
+			mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
+			ductworkCrossSectionalShape: "circular",
+			ductType: "intake",
+			internalDiameterOfDuctwork: 300,
+			externalDiameterOfDuctwork: 1000,
+			insulationThickness: 100,
+			lengthOfDuctwork: 100,
+			thermalInsulationConductivityOfDuctwork: 10,
+			surfaceReflectivity: "reflective",
+			complete: true
+		};
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [{
+						name: 'MVHR_1',
+						id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+						typeOfMechanicalVentilationOptions: 'mvhr',
+						complete: true
+					}]
+				},
+				ductwork:{
+					data: [ductwork1]
+				}
+			}
+		});
+
+		const page = pagesData.find(p => p.id === 'ductwork');
+		const status = store.getStatus(page!);
+
+		expect(status).toBe(formStatus.complete);
+	});
 });

@@ -119,6 +119,21 @@ export const useEcaasStore = defineStore("ecaas", {
 				if (section) {
 					const entry = Object.entries(section).find((x) => x[0] === page.id)!;
 
+					if (page.id === 'ductwork') {
+						const task_status = checkMvhrHasDuckwork();
+						let status;
+
+						if (task_status == true) {
+							status = formStatus.complete;
+						} else if (entry[1].data.length == 0){
+							status = formStatus.notStarted;
+						} else {
+							status = formStatus.inProgress;
+						};
+
+						return status;
+					}
+
 					if (page.type === PageType.Task) {
 						return getTaskStatus(entry[1]);
 					}
