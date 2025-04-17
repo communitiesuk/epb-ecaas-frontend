@@ -17,6 +17,7 @@ function handleRemove(index: number) {
 		},
 	});
 }
+
 function handleDuplicate(index: number) {
 	const ductwork = data[index];
 	if (ductwork) {
