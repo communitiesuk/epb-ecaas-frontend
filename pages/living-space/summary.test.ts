@@ -144,6 +144,22 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 			kappaValue: 100,
 			massDistributionClass: 'internal'
 		}]
+	},
+	livingSpaceUnheatedPitchedRoofs: {
+		data: [{
+			name: "Roof 1",
+			typeOfRoof: 'unheatedPitched',
+			pitch: 0,
+			orientation: 90,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			solarAbsorbtionCoefficient: 0.5,
+			uValue: 1,
+			kappaValue: 50000,
+			massDistributionClass: 'internal'
+		}]
 	}
 };
 
@@ -569,6 +585,39 @@ describe('Living space fabric summary', () => {
 
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceRoofs-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
+
+		it('should display the correct data for the unheated pitched roof section', async () => {
+			store.$patch({
+				livingSpaceFabric: {
+					livingSpaceCeilingsAndRoofs: {
+						livingSpaceUnheatedPitchedRoofs: ceilingsAndRoofsData.livingSpaceUnheatedPitchedRoofs
+					}
+				}
+			});
+	
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": 'Roof 1',
+				"Type of roof": 'Unheated pitched',
+				"Pitch": 180,
+				"Orientation": 0,
+				"Length": 1,
+				"Width": 1,
+				"Elevational height of building element at its base": 2,
+				"Surface area": 1,
+				"Solar absorption coefficient": 0.5,
+				"U-value": 1,
+				"Areal heat capacity": 100,
+				"Mass distribution class": 'Internal'
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceUnheatedPitchedRoofs-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}

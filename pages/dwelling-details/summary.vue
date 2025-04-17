@@ -84,7 +84,7 @@ const summarySections: SummarySection[] = [
 				<GovSummaryTab :summary="shadingSummary" :selected="tabProps.currentTab === 2">
 					<template #empty>
 						<h2 class="govuk-heading-m">No shading added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(shadingSummary.id)}/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('shadingCreate')">
 							Add shading
 						</NuxtLink>
 					</template>

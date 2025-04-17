@@ -412,7 +412,7 @@ const wwhrsSummary: SummarySection = {
 				<GovSummaryTab :summary="wwhrsSummary" :selected="tabProps.currentTab === 0" :edit-url="getUrl('wwhrs')!">
 					<template #empty>
 						<h2 class="govuk-heading-m">No WWHRS added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(wwhrsSummary.id)}/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('wwhrsCreate')">
 							Add WWHRS
 						</NuxtLink>
 					</template>

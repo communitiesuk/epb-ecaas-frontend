@@ -145,7 +145,7 @@ const summarySections: SummarySection[] = [
 				<GovSummaryTab :summary="mechanicalVentilationSummary" :selected="tabProps.currentTab === 0">
 					<template #empty>
 						<h2 class="govuk-heading-m">No mechanical ventilation added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(mechanicalVentilationSummary.id)}/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('mechanicalVentilationCreate')">
 							Add mechanical ventilation
 						</NuxtLink>
 					</template>
@@ -154,7 +154,7 @@ const summarySections: SummarySection[] = [
 				<GovSummaryTab :summary="ductworkSummary" :selected="tabProps.currentTab === 1">
 					<template #empty>
 						<h2 class="govuk-heading-m">No ductwork added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(ductworkSummary.id)}/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('ductworkCreate')">
 							Add ductwork
 						</NuxtLink>
 					</template>
@@ -163,7 +163,7 @@ const summarySections: SummarySection[] = [
 				<GovSummaryTab :summary="ventSummary" :selected="tabProps.currentTab === 2">
 					<template #empty>
 						<h2 class="govuk-heading-m">No vents added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(ventSummary.id)}/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('ventCreate')">
 							Add vents
 						</NuxtLink>
 					</template>
@@ -175,7 +175,7 @@ const summarySections: SummarySection[] = [
 				<GovSummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 4">
 					<template #empty>
 						<h2 class="govuk-heading-m">No combustion appliances added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl(combustionAppliancesSummary.id)">
+						<NuxtLink class="govuk-link" :to="getUrl('combustionAppliances')">
 							Add combustion appliance
 						</NuxtLink>
 					</template>

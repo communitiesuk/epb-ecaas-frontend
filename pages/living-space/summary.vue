@@ -191,6 +191,7 @@ const wallSummarySections: SummarySection[] = [
 
 const ceilingData = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs.livingSpaceCeilings.data;
 const roofData = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs.livingSpaceRoofs.data;
+const unheatedPitchedRoofData = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs.livingSpaceUnheatedPitchedRoofs.data;
 
 const ceilingSummary: SummarySection = {
 	id: 'livingSpaceCeilings',
@@ -232,9 +233,32 @@ const roofSummary: SummarySection = {
 	editUrl: getUrl('livingSpaceCeilingsAndRoofs')!
 };
 
+const unheatedPitchedRoofSummary: SummarySection = {
+	id: 'livingSpaceUnheatedPitchedRoofs',
+	label: 'Unheated pitched roof',
+	data: unheatedPitchedRoofData.map(x => {
+		return {
+			"Name": x.name,
+			"Type of roof": x.typeOfRoof,
+			"Pitch": x.pitch,
+			"Orientation": x.orientation,
+			"Length": x.length,
+			"Width": x.width,
+			"Elevational height of building element at its base": x.elevationalHeightOfElement,
+			"Surface area": x.surfaceArea,
+			"Solar absorption coefficient": x.solarAbsorbtionCoefficient,
+			"U-value": x.uValue,
+			"Areal heat capacity": x.kappaValue,
+			"Mass distribution class": x.massDistributionClass
+		};
+	}),
+	editUrl: getUrl('livingSpaceCeilingsAndRoofs')!
+};
+
 const ceilingAndRoofSummarySections: SummarySection[] = [
 	ceilingSummary,
-	roofSummary
+	roofSummary,
+	unheatedPitchedRoofSummary
 ];
 
 const unglazedDoorData = store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalUnglazedDoor.data;
@@ -405,7 +429,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="groundFloorSummary" :selected="tabProps.currentTab === 0">
 					<template #empty>
 						<h2 class="govuk-heading-m">No ground floors added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(groundFloorSummary.id)}/ground/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceGroundFloorCreate')">
 							Add ground floors
 						</NuxtLink>
 					</template>
@@ -414,7 +438,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="internalFloorSummary" :selected="tabProps.currentTab === 1">
 					<template #empty>
 						<h2 class="govuk-heading-m">No internal floors added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(internalFloorSummary.id)}/internal/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceInternalFloorCreate')">
 							Add internal floors
 						</NuxtLink>
 					</template>
@@ -423,7 +447,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="exposedFloorSummary" :selected="tabProps.currentTab === 2">
 					<template #empty>
 						<h2 class="govuk-heading-m">No exposed floors added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(exposedFloorSummary.id)}/exposed/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceExposedFloorCreate')">
 							Add exposed floors
 						</NuxtLink>
 					</template>
@@ -434,7 +458,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="externalWallSummary" :selected="tabProps.currentTab === 0">
 					<template #empty>
 						<h2 class="govuk-heading-m">No external walls added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(externalWallSummary.id)}/external/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceExternalWallCreate')">
 							Add external walls
 						</NuxtLink>
 					</template>
@@ -443,7 +467,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="internalWallSummary" :selected="tabProps.currentTab === 1">
 					<template #empty>
 						<h2 class="govuk-heading-m">No internal walls added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(internalWallSummary.id)}/internal/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceInternalWallCreate')">
 							Add internal walls
 						</NuxtLink>
 					</template>
@@ -452,7 +476,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="wallToUnheatedSpaceSummary" :selected="tabProps.currentTab === 2">
 					<template #empty>
 						<h2 class="govuk-heading-m">No walls to unheated spaces added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(wallToUnheatedSpaceSummary.id)}/wall-to-unheated-space/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceWallToUnheatedSpaceCreate')">
 							Add walls to unheated spaces
 						</NuxtLink>
 					</template>
@@ -461,7 +485,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="partyWallSummary" :selected="tabProps.currentTab === 3">
 					<template #empty>
 						<h2 class="govuk-heading-m">No party walls added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(partyWallSummary.id)}/party/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpacePartyWallCreate')">
 							Add party walls
 						</NuxtLink>
 					</template>
@@ -472,7 +496,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="ceilingSummary" :selected="tabProps.currentTab === 0">
 					<template #empty>
 						<h2 class="govuk-heading-m">No ceilings added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(ceilingSummary.id)}/ceilings/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceCeilingsCreate')">
 							Add ceilings
 						</NuxtLink>
 					</template>
@@ -481,8 +505,17 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="roofSummary" :selected="tabProps.currentTab === 1">
 					<template #empty>
 						<h2 class="govuk-heading-m">No roofs added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(roofSummary.id)}/roofs/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceRoofsCreate')">
 							Add roofs
+						</NuxtLink>
+					</template>
+				</GovSummaryTab>
+
+				<GovSummaryTab :summary="unheatedPitchedRoofSummary" :selected="tabProps.currentTab === 2">
+					<template #empty>
+						<h2 class="govuk-heading-m">No unheated pitched roofs added</h2>
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceUnheatedPitchedRoofsCreate')">
+							Add unheated pitched roof
 						</NuxtLink>
 					</template>
 				</GovSummaryTab>
@@ -492,7 +525,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="unglazedDoorSummary" :selected="tabProps.currentTab === 0">
 					<template #empty>
 						<h2 class="govuk-heading-m">No external unglazed doors added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(unglazedDoorSummary.id)}/external-unglazed/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceExternalUnglazedDoorCreate')">
 							Add external unglazed doors
 						</NuxtLink>
 					</template>
@@ -501,7 +534,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="glazedDoorSummary" :selected="tabProps.currentTab === 1">
 					<template #empty>
 						<h2 class="govuk-heading-m">No external glazed doors added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(glazedDoorSummary.id)}/external-glazed/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceExternalGlazedDoorCreate')">
 							Add external glazed doors
 						</NuxtLink>
 					</template>
@@ -510,7 +543,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="internalDoorSummary" :selected="tabProps.currentTab === 2">
 					<template #empty>
 						<h2 class="govuk-heading-m">No internal doors added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(internalDoorSummary.id)}/internal/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceInternalDoorCreate')">
 							Add internal doors
 						</NuxtLink>
 					</template>
@@ -521,7 +554,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="windowSummary" :selected="tabProps.currentTab === 0">
 					<template #empty>
 						<h2 class="govuk-heading-m">No windows added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(windowSummary.id)}/windows/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceWindowCreate')">
 							Add windows
 						</NuxtLink>
 					</template>
@@ -532,7 +565,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="linearThermalBridgesSummary" :selected="tabProps.currentTab === 0">
 					<template #empty>
 						<h2 class="govuk-heading-m">No linear thermal bridges added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(linearThermalBridgesSummary.id)}/linear/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpaceLinearThermalBridgesCreate')">
 							Add linear thermal bridges
 						</NuxtLink>
 					</template>
@@ -541,7 +574,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<GovSummaryTab :summary="pointThermalBridgesSummary" :selected="tabProps.currentTab === 1">
 					<template #empty>
 						<h2 class="govuk-heading-m">No point thermal bridges added</h2>
-						<NuxtLink class="govuk-link" :to="`${getUrl(pointThermalBridgesSummary.id)}/point/create`">
+						<NuxtLink class="govuk-link" :to="getUrl('livingSpacePointThermalBridgesCreate')">
 							Add point thermal bridges
 						</NuxtLink>
 					</template>
