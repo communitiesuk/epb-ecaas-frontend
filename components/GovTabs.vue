@@ -33,7 +33,7 @@ function selectTab(index: number, e: MouseEvent) {
 			</ul>
 		</div>
 
-		<slot :current-tab="currentTab" />
+		<slot :current-tab="currentTab" :current-item="items[currentTab]" />
 	</div>
 </template>
 

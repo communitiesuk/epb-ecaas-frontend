@@ -280,78 +280,21 @@ const wwhrsSummary: SummarySection = {
 			<h1 class="govuk-heading-l">{{ title }}</h1>
 			<h2 class="govuk-heading-m">Water heating</h2>
 			<GovTabs v-slot="tabProps" :items="getTabItems(waterHeatingSummarySections)">
-				<GovSummaryTab :summary="storageTankSummary" :selected="tabProps.currentTab === 0">
-					<template #empty>
-						<h2 class="govuk-heading-m">No storage tanks added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('storageTankCreate')">
-							Add storage tank
-						</NuxtLink>
-					</template>
-				</GovSummaryTab>
-				<GovSummaryTab :summary="immersionHeaterSummary" :selected="tabProps.currentTab === 1">
-					<template #empty>
-						<h2 class="govuk-heading-m">No immersion heaters added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('immersionHeaterCreate')">
-							Add immersion heater
-						</NuxtLink>
-					</template>
-				</GovSummaryTab>
-				<GovSummaryTab :summary="solarThermalSummary" :selected="tabProps.currentTab === 2">
-					<template #empty>
-						<h2 class="govuk-heading-m">No solar thermal added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('solarThermalCreate')">
-							Add solar thermal
-						</NuxtLink>
-					</template>
-				</GovSummaryTab>
-				<GovSummaryTab :summary="pointOfUseSummary" :selected="tabProps.currentTab === 3">
-					<template #empty>
-						<h2 class="govuk-heading-m">No point of use added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('pointOfUseCreate')">
-							Add point of use
-						</NuxtLink>
-					</template>
-				</GovSummaryTab>
-				<GovSummaryTab :summary="heatPumpSummary" :selected="tabProps.currentTab === 4">
-					<template #empty>
-						<h2 class="govuk-heading-m">No heat pump added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('hotWaterheatPumpCreate')">
-							Add heat pump
-						</NuxtLink>
-					</template>
-				</GovSummaryTab>
-				<GovSummaryTab :summary="combiBoilerSummary" :selected="tabProps.currentTab === 5">
-					<template #empty>
-						<h2 class="govuk-heading-m">No combi boiler added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('combiBoilerCreate')">
-							Add combi boiler
-						</NuxtLink>
-					</template>
-				</GovSummaryTab>
-				<GovSummaryTab :summary="heatBatterySummary" :selected="tabProps.currentTab === 6">
-					<template #empty>
-						<h2 class="govuk-heading-m">No heat battery added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('hotWaterHeatBatteryCreate')">
-							Add heat battery
-						</NuxtLink>
-					</template>
-				</GovSummaryTab>
-				<GovSummaryTab :summary="smartHotWaterTankSummary" :selected="tabProps.currentTab === 7">
-					<template #empty>
-						<h2 class="govuk-heading-m">No smart hot water tank added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('smartHotWaterTankCreate')">
-							Add smart hot water tank
-						</NuxtLink>
-					</template>
-				</GovSummaryTab>
-				<GovSummaryTab :summary="heatInterfaceUnitSummary" :selected="tabProps.currentTab === 8">
-					<template #empty>
-						<h2 class="govuk-heading-m">No heat interface unit added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('hotWaterHeatInterfaceUnitCreate')">
-							Add heat interface unit
-						</NuxtLink>
-					</template>
-				</GovSummaryTab>
+				<GovTabPanel id="waterHeating" :selected="!tabProps.currentItem">
+					<h2 class="govuk-heading-m">No water heating added</h2>
+					<NuxtLink class="govuk-link" :to="getUrl('waterHeating')">
+						Add water heating
+					</NuxtLink>
+				</GovTabPanel>
+				<GovSummaryTab :summary="storageTankSummary" :selected="tabProps.currentItem?.id === 'storageTank'" />
+				<GovSummaryTab :summary="immersionHeaterSummary" :selected="tabProps.currentItem?.id === 'immersionHeater'" />
+				<GovSummaryTab :summary="solarThermalSummary" :selected="tabProps.currentItem?.id === 'solarThermal'" />
+				<GovSummaryTab :summary="pointOfUseSummary" :selected="tabProps.currentItem?.id === 'pointOfUse'" />
+				<GovSummaryTab :summary="heatPumpSummary" :selected="tabProps.currentItem?.id === 'heatPump'" />
+				<GovSummaryTab :summary="combiBoilerSummary" :selected="tabProps.currentItem?.id === 'combiBoiler'" />
+				<GovSummaryTab :summary="heatBatterySummary" :selected="tabProps.currentItem?.id === 'heatBattery'" />
+				<GovSummaryTab :summary="smartHotWaterTankSummary" :selected="tabProps.currentItem?.id === 'smartHotWaterTank'" />
+				<GovSummaryTab :summary="heatInterfaceUnitSummary" :selected="tabProps.currentItem?.id === 'heatInterfaceUnit'" />
 			</GovTabs>
 			<h2 class="govuk-heading-m">Hot water outlets</h2>
 			<GovTabs v-slot="tabProps" :items="getTabItems(hotWaterOutletsSummarySections)">

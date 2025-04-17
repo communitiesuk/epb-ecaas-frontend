@@ -258,7 +258,7 @@ const domesticHotWaterPages: Array<Page> = [
 		title: 'WWHRS',
 		url: '/domestic-hot-water/wwhrs/create',
 		type: PageType.Task,
-		parentId: 'domesticHotWater'
+		parentId: 'wwhrs'
 	},
 	{
 		id: 'domesticHotWaterSummary',

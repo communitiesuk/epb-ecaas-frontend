@@ -6,7 +6,7 @@ defineProps<{
 </script>
 
 <template>
-	<div :id="id" class="govuk-tabs__panel" :class="{ 'govuk-tabs__panel--hidden': !selected }">
+	<div v-show="selected" :id="id" class="govuk-tabs__panel">
 		<slot />
 	</div>
 </template>

@@ -62,6 +62,15 @@ describe('Domestic hot water summary', () => {
 			expect(screen.queryByRole('link', {name: 'Heat interface unit'})).toBeNull();
 		});
 
+		it('should display an empty state when no water heating data is present', async () => {
+			await renderSuspended(Summary);
+
+			const addWaterHeatingLink = screen.queryByRole('link', {name: 'Add water heating'}) as HTMLAnchorElement;
+
+			expect(screen.queryByText('No water heating added')).toBeDefined();
+			expect(new URL(addWaterHeatingLink.href).pathname).toBe(getUrl('waterHeating'));
+		});
+
 		it('should display the correct data for the storage tank section', async () => {
 			addWaterHeatingData();
 			await renderSuspended(Summary);
