@@ -25,7 +25,20 @@ describe('Domestic hot water summary', () => {
 			dailyEnergyLoss: 1,
 		};
 
-		const addWaterHeatingData = () => {
+		const immersionHeater: ImmersionHeaterData = {
+			name: 'Immersion heater',
+			ratedPower: 10,
+			heaterPosition: 1,
+			thermostatPosition: 1
+		};
+
+		const pointOfUse: PointOfUseData = {
+			name: 'Point of use',
+			setPointTemperature: 25,
+			heaterEfficiency: 0.5,
+		};
+
+		const addStorageTankData = () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
@@ -48,7 +61,7 @@ describe('Domestic hot water summary', () => {
 		};
 
 		it('should contain the correct tabs for water heating when data is present', async () => {
-			addWaterHeatingData();
+			addStorageTankData();
 			await renderSuspended(Summary);
 	  
 			expect(screen.queryByRole('link', {name: 'Storage tank'})).toBeDefined();
@@ -72,7 +85,7 @@ describe('Domestic hot water summary', () => {
 		});
 
 		it('should display the correct data for the storage tank section', async () => {
-			addWaterHeatingData();
+			addStorageTankData();
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
@@ -88,6 +101,59 @@ describe('Domestic hot water summary', () => {
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
 		});
+
+		it('should display the correct data for the immersion heater section', async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterHeating: {
+						immersionHeater: {
+							data: [immersionHeater]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": "Immersion heater",
+				"Rated power": 10,
+				"Heater position": 1,
+				"Thermostat position": 1,
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-immersionHeater-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
+
+		it('should display the correct data for the point of use section', async () => {
+			store.$patch({
+				domesticHotWater: {
+					waterHeating: {
+						pointOfUse: {
+							data: [pointOfUse]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": "Point of use",
+				"Set point temperature": 25,
+				"Heater efficiency": 0.5
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-pointOfUse-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
 	});
 
 	describe('hot water outlets', () => {
@@ -97,21 +163,26 @@ describe('Domestic hot water summary', () => {
 			flowRate: 10
 		};
 
-		const addHotWaterData = () => {
-			store.$patch({
-				domesticHotWater: {
-					hotWaterOutlets: {
-						mixedShower: {
-							data: [mixedShower]
-						}
-					}
-				}
-			});
+		const electricShower: ElectricShowerData = {
+			id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e',
+			name: 'Electric shower 1',
+			ratedPower: 10
 		};
-		
+
+		const bathData: BathData = {
+			id: 'd3883380-885b-48fd-9425-9f9fac7587fb',
+			name: 'Bath 1',
+			size: 170,
+			flowRate: 10
+		};
+
+		const otherOutletsData: OtherHotWaterOutletData = {
+			id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e',
+			name: "Basin tap 1",
+			flowRate: 10
+		};
 
 		it('should contain the correct tabs for hot water outlets', async () => {
-			addHotWaterData();
 			await renderSuspended(Summary);
 	  
 			expect(screen.getByRole('link', {name: 'Mixed shower'})).toBeDefined();
@@ -121,7 +192,16 @@ describe('Domestic hot water summary', () => {
 		});
 
 		it('should display the correct data for the mixed shower section', async () => {
-			addHotWaterData();
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						mixedShower: {
+							data: [mixedShower]
+						}
+					}
+				}
+			});
+
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
@@ -131,6 +211,82 @@ describe('Domestic hot water summary', () => {
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-mixedShower-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
+
+		it('should display the correct data for the electric shower section', async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						electricShower: {
+							data: [electricShower]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": "Electric shower 1",
+				"Rated power": 10
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-electricShower-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
+
+		it('should display the correct data for the bath section', async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						bath: {
+							data: [bathData]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": "Bath 1",
+				"Size": 170,
+				"Flow rate": 10
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-bath-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
+
+		it('should display the correct data for the other outlets section', async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						otherOutlets: {
+							data: [otherOutletsData]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": "Basin tap 1",
+				"Flow rate": 10
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-otherOutlets-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -153,7 +309,21 @@ describe('Domestic hot water summary', () => {
 			location: 'internal'
 		};
 
-		const addPipeworkData = () => {
+		const secondaryPipework: SecondaryPipeworkData = {
+			name: 'Pipework Kitchen Sink',
+			length: 3,
+			location: 'internal',
+			internalDiameter: 0.09
+		};
+
+		it('should contain the correct tabs for pipework details', async () => {
+			await renderSuspended(Summary);
+	  
+			expect(screen.getByRole('link', {name: 'Primary pipework'})).toBeDefined();
+			expect(screen.getByRole('link', {name: 'Secondary pipework'})).toBeDefined();
+		});
+	
+		it('should display the correct data for the primary pipework section', async () => {
 			store.$patch({
 				domesticHotWater: {
 					pipework: {
@@ -171,18 +341,7 @@ describe('Domestic hot water summary', () => {
 					}
 				}
 			});
-		};
 
-		it('should contain the correct tabs for pipework details', async () => {
-			addPipeworkData();
-			await renderSuspended(Summary);
-	  
-			expect(screen.getByRole('link', {name: 'Primary pipework'})).toBeDefined();
-			expect(screen.getByRole('link', {name: 'Secondary pipework'})).toBeDefined();
-		});
-	
-		it('should display the correct data for the primary pipework section', async () => {
-			addPipeworkData();
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
@@ -204,6 +363,33 @@ describe('Domestic hot water summary', () => {
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
 		});
+
+		it('should display the correct data for the secondary pipework section', async () => {
+			store.$patch({
+				domesticHotWater: {
+					pipework: {
+						secondaryPipework: {
+							data: [secondaryPipework]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Name": "Pipework Kitchen Sink",
+				"Length": 3,
+				"Location": "Internal",
+				"Internal diameter": 0.09
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-secondaryPipework-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			}
+		});
 	});
 
 	describe('waste water heat recovery', () => {
@@ -218,7 +404,13 @@ describe('Domestic hot water summary', () => {
 			proportionOfUse: 0.5
 		};
 
-		const addWwhrsData = () => {
+		it('should contain the correct tabs for WWHRS', async () => {
+			await renderSuspended(Summary);
+	  
+			expect(screen.getByRole('link', {name: 'WWHRS'})).toBeDefined();
+		});
+
+		it('should display the correct data for the WWHRS section', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -234,17 +426,7 @@ describe('Domestic hot water summary', () => {
 					}
 				}
 			});
-		};
 
-		it('should contain the correct tabs for WWHRS', async () => {
-			addWwhrsData();
-			await renderSuspended(Summary);
-	  
-			expect(screen.getByRole('link', {name: 'WWHRS'})).toBeDefined();
-		});
-
-		it('should display the correct data for the WWHRS section', async () => {
-			addWwhrsData();
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
