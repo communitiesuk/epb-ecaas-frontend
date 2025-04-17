@@ -2,19 +2,25 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import StorageTank from './[storageTank].vue';
+import { v4 as uuidv4 } from 'uuid';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
+vi.mock('uuid');
+
 describe('storageTank', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
+	const heatPumpId = '463c94f6-566c-49b2-af27-57e5c68b5c30';
+
 	const storageTank: StorageTankData = {
+		id: 'c84528bb-f805-4f1e-95d3-2bd17384fdbe',
 		name: 'Storage tank 1',
-		heatSource: 'heatPump_0',
+		heatSource: heatPumpId,
 		tankVolume: 5,
 		dailyEnergyLoss: 1,
 	};
@@ -29,6 +35,7 @@ describe('storageTank', () => {
 				heatGeneration: {
 					heatPump: {
 						data: [{
+							id: heatPumpId,
 							name: 'Heat pump'
 						}]
 					}
@@ -39,7 +46,7 @@ describe('storageTank', () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Storage tank 1');
-		await user.click(screen.getByTestId('heatSource_heatPump_0'));
+		await user.click(screen.getByTestId(`heatSource_${heatPumpId}`));
 		await user.type(screen.getByTestId('tankVolume'), '5');
 		await user.type(screen.getByTestId('dailyEnergyLoss'), '1');
 		await user.tab();
@@ -47,6 +54,8 @@ describe('storageTank', () => {
 
 	it('data is saved to store state when form is valid', async () => {
 		addStoreData();
+
+		vi.mocked(uuidv4).mockReturnValue(storageTank.id as unknown as Buffer);
 		await renderSuspended(StorageTank);
 
 		await populateValidForm();

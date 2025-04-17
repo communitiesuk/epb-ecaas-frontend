@@ -13,9 +13,11 @@ describe('wwhrs form', () => {
 		return navigateToMock;
 	});
 
+	const mixedShowerId = '5b2d625b-617a-4f69-9cfc-e685a9aafad0';
+
 	const state: WwhrsData = {
 		name: 'WWHRS 1',
-		outlet: 'mixedShower_0',
+		outlet: mixedShowerId,
 		type: 'a',
 		flowRate: 10,
 		efficiency: 10,
@@ -28,6 +30,7 @@ describe('wwhrs form', () => {
 				hotWaterOutlets: {
 					mixedShower: {
 						data: [{
+							id: mixedShowerId,
 							name: 'Mixed shower 1'
 						}]
 					}
@@ -38,7 +41,7 @@ describe('wwhrs form', () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'WWHRS 1');
-		await user.click(screen.getByTestId('outlet_mixedShower_0'));
+		await user.click(screen.getByTestId(`outlet_${mixedShowerId}`));
 		await user.click(screen.getByTestId('type_a'));
 		await user.type(screen.getByTestId('flowRate'), '10');
 		await user.type(screen.getByTestId('efficiency'), '10');
@@ -79,7 +82,7 @@ describe('wwhrs form', () => {
 		});
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('WWHRS 1');
-		expect((await screen.findByTestId('outlet_mixedShower_0')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId(`outlet_${mixedShowerId}`)).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('type_a')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('flowRate') as HTMLInputElement).value).toBe('10');
 		expect((await screen.findByTestId('efficiency') as HTMLInputElement).value).toBe('10');

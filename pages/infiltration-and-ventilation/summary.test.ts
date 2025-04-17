@@ -8,15 +8,16 @@ import userEvent from "@testing-library/user-event";
 vi.mock('uuid');
 
 const mechanicalVentilationData: MechanicalVentilationData = {
+	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
 	name: "Mechanical name 1",
 	typeOfMechanicalVentilationOptions: "mvhr",
 	controlForSupplyAirflow: "load",
 	supplyAirTemperatureControl: "odaComp",
 	airFlowRate: 12,
 	mvhrLocation: "inside",
-	mvhrEfficiency: 0.2,
-	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g"
+	mvhrEfficiency: 0.2
 };
+
 const ductworkData: DuctworkData = {
 	name: "Ducktwork 1",
 	mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",

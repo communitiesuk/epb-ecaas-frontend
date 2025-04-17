@@ -5,11 +5,8 @@ const title = 'Infiltration and ventilation';
 const page = usePage();
 const store = useEcaasStore();
 
-
-
 const { createTaskList } = useTaskList();
 const taskList: GovTaskListItemProps[] = createTaskList(page);
-
 </script>
 
 <template>
@@ -37,6 +34,6 @@ const taskList: GovTaskListItemProps[] = createTaskList(page);
 	</ul>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
-		<NuxtLink :to="`/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
+		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
 	</div>
 </template>

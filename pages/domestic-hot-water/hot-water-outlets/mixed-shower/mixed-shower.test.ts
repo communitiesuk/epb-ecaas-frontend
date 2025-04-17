@@ -2,17 +2,21 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import MixedShower from './[shower].vue';
+import { v4 as uuidv4 } from 'uuid';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
+vi.mock('uuid');
+
 describe('mixed shower', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const mixedShower: MixedShowerData = {
+		id: '4a93532e-a370-4015-9778-854661bf1627',
 		name: 'Mixed shower 1',
 		flowRate: 10
 	};
@@ -28,6 +32,8 @@ describe('mixed shower', () => {
 	};
 
 	it('data is saved to store state when form is valid', async () => {
+		vi.mocked(uuidv4).mockReturnValue(mixedShower.id as unknown as Buffer);
+
 		await renderSuspended(MixedShower);
 
 		await populateValidForm();

@@ -2,17 +2,21 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import ElectricShower from './[shower].vue';
+import { v4 as uuidv4 } from 'uuid';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
+vi.mock('uuid');
+
 describe('electric shower', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const electricShower: ElectricShowerData = {
+		id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e',
 		name: 'Electric shower 1',
 		ratedPower: 10
 	};
@@ -28,6 +32,8 @@ describe('electric shower', () => {
 	};
 
 	it('data is saved to store state when form is valid', async () => {
+		vi.mocked(uuidv4).mockReturnValue(electricShower.id as unknown as Buffer);
+
 		await renderSuspended(ElectricShower);
 
 		await populateValidForm();

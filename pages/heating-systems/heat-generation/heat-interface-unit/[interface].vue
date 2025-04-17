@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { v4 as uuidv4 } from 'uuid';
+
 const title = "Heat interface unit";
 const store = useEcaasStore();
 const { saveToList } = useForm();
@@ -11,6 +13,7 @@ const saveForm = (fields: HeatInterfaceUnitData) => {
 		const {heatInterfaceUnit} = state.heatingSystems.heatGeneration;
 
 		const heatInterfaceUnitItem: HeatInterfaceUnitData = {
+			id: uuidv4(),
 			name: fields.name
 		};
 

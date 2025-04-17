@@ -170,7 +170,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="storageTank"
 			type="govRadios"
-			:options="new Map(store.domesticHotWater.waterHeating.storageTank.data.map((x, i) => [`${i}`, x.name]))"
+			:options="new Map(store.domesticHotWater.waterHeating.storageTank.data.map(x => [x.id, x.name]))"
 			label="Storage tank"
 			help="Select a storage tank that this pipework is connected to"
 			name="storageTank"

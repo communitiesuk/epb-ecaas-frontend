@@ -2,17 +2,21 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import HeatPump from './[pump].vue';
+import { v4 as uuidv4 } from 'uuid';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
+vi.mock('uuid');
+
 describe('heatPump', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const heatPump: HeatPumpData = {
+		id: '463c94f6-566c-49b2-af27-57e5c68b5c30',
 		name: 'Heat pump 1'
 	};
 
@@ -26,6 +30,8 @@ describe('heatPump', () => {
 	};
 
 	it('data is saved to store state when form is valid', async () => {
+		vi.mocked(uuidv4).mockReturnValue(heatPump.id as unknown as Buffer);
+
 		await renderSuspended(HeatPump);
 
 		await populateValidForm();

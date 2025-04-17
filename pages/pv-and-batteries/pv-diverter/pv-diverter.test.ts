@@ -8,14 +8,19 @@ mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
+vi.mock('uuid');
+
 describe('pv diverter', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
+	const heatPumpId = '463c94f6-566c-49b2-af27-57e5c68b5c30';
+	const storageTankId = 'c84528bb-f805-4f1e-95d3-2bd17384fdbe';
+
 	const state: PvDiverterData = {
 		name: "PV Diverter 1",
-		energyDivertedToHeatGeneration: 'heatPump_0',
-		energyDivertedToStorageTank: '0'
+		energyDivertedToHeatGeneration: heatPumpId,
+		energyDivertedToStorageTank: storageTankId
 	};
 
 	afterEach(() => {
@@ -28,6 +33,7 @@ describe('pv diverter', () => {
 				heatGeneration: {
 					heatPump: {
 						data: [{
+							id: heatPumpId,
 							name: 'Heat pump'
 						}]
 					}
@@ -37,6 +43,7 @@ describe('pv diverter', () => {
 				waterHeating: {
 					storageTank: {
 						data: [{
+							id: storageTankId,
 							name: 'Storage tank'
 						}]
 					}
@@ -47,8 +54,8 @@ describe('pv diverter', () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'PV Diverter 1');
-		await user.click(screen.getByTestId('energyDivertedToHeatGeneration_heatPump_0'));
-		await user.click(screen.getByTestId('energyDivertedToStorageTank_0'));
+		await user.click(screen.getByTestId(`energyDivertedToHeatGeneration_${heatPumpId}`));
+		await user.click(screen.getByTestId(`energyDivertedToStorageTank_${storageTankId}`));
 	};
 
 	it('data is saved to store state when form is valid', async () => {
@@ -80,8 +87,8 @@ describe('pv diverter', () => {
 		});
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('PV Diverter 1');
-		expect((await screen.findByTestId('energyDivertedToHeatGeneration_heatPump_0')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('energyDivertedToStorageTank_0')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId(`energyDivertedToHeatGeneration_${heatPumpId}`)).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId(`energyDivertedToStorageTank_${storageTankId}`)).hasAttribute('checked')).toBe(true);
 	});
 		
 	it('required error messages are displayed when empty form is submitted', async () => {

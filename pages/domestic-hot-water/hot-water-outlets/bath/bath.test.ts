@@ -2,17 +2,21 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import Bath from './[bath].vue';
+import { v4 as uuidv4 } from 'uuid';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
+vi.mock('uuid');
+
 describe('bath', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const bath: BathData = {
+		id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e',
 		name: 'Bath 1',
 		size: 170,
 		flowRate: 10
@@ -30,6 +34,8 @@ describe('bath', () => {
 	};
 
 	it('data is saved to store state when form is valid', async () => {
+		vi.mocked(uuidv4).mockReturnValue(bath.id as unknown as Buffer);
+
 		await renderSuspended(Bath);
 
 		await populateValidForm();

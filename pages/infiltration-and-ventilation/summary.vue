@@ -22,7 +22,8 @@ const mechanicalVentilationSummary: SummarySection = {
 			"MVHR location": x.mvhrLocation,
 			"MVHR efficiency": x.mvhrEfficiency,
 		};
-	}) || []
+	}) || [],
+	editUrl: getUrl('mechanicalVentilation')!
 };
 
 const ductworkData = store.infiltrationAndVentilation.ductwork.data;
@@ -31,8 +32,6 @@ const ductworkSummary: SummarySection = {
 	id: 'ductwork',
 	label: 'Ductwork',
 	data: ductworkData?.map(x => {
-
-
 		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.id === x.mvhrUnit);
 
 		return {
@@ -45,7 +44,8 @@ const ductworkSummary: SummarySection = {
 			"Thermal insulation conductivity of ductwork": x.thermalInsulationConductivityOfDuctwork,
 			"Surface reflectivity": x.surfaceReflectivity,
 		};
-	}) || []
+	}) || [],
+	editUrl: getUrl('ductwork')!
 };
 
 const ventData = store.infiltrationAndVentilation.vents.data;
@@ -64,7 +64,8 @@ const ventSummary: SummarySection = {
 			"Orientation": x.orientation,
 			"Pitch": x.pitch
 		};
-	})
+	}),
+	editUrl: getUrl('vents')!
 };
 
 const ventilationData = store.infiltrationAndVentilation.ventilation.data;
@@ -78,7 +79,8 @@ const ventilationSummary: SummarySection = {
 		"Elevational height of dwelling at its base": ventilationData.dwellingElevationalLevelAtBase,
 		"Cross vent factor": ventilationData.crossVentFactor,
 		"Maximum required air change rate": ventilationData.maxRequiredAirChangeRate
-	}
+	},
+	editUrl: getUrl('ventilation')!
 };
 
 const airPermeabilityData = store.infiltrationAndVentilation.airPermeability.data;
@@ -89,7 +91,8 @@ const airPermeabilitySummary: SummarySection = {
 	data: {
 		"Test pressure": airPermeabilityData.testPressure,
 		"Air tightness test result": airPermeabilityData.airTightnessTestResult
-	}
+	},
+	editUrl: getUrl('airPermeability')!
 };
 
 const { combustionAppliances } = store.infiltrationAndVentilation;
@@ -116,7 +119,8 @@ const combustionAppliancesSummary: SummarySection = {
 		getCombustionApplianceData('Open gas fire', combustionAppliances.openGasFire.data),
 		getCombustionApplianceData('Open gas flue balancer', combustionAppliances.openGasFlueBalancer.data),
 		getCombustionApplianceData('Open gas kitchen stove', combustionAppliances.openGasKitchenStove.data)
-	].flat()
+	].flat(),
+	editUrl: getUrl('combustionAppliances')!
 };
 
 const summarySections: SummarySection[] = [
@@ -167,7 +171,15 @@ const summarySections: SummarySection[] = [
 
 				<GovSummaryTab :summary="ventilationSummary" :selected="tabProps.currentTab === 2" />
 				<GovSummaryTab :summary="airPermeabilitySummary" :selected="tabProps.currentTab === 3" />
-				<GovSummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 4" />
+
+				<GovSummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 4">
+					<template #empty>
+						<h2 class="govuk-heading-m">No combustion appliances added</h2>
+						<NuxtLink class="govuk-link" :to="getUrl(combustionAppliancesSummary.id)">
+							Add combustion appliance
+						</NuxtLink>
+					</template>
+				</GovSummaryTab>
 			</GovTabs>
 		</NuxtLayout>
 	</div>

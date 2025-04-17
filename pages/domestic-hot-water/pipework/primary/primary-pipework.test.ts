@@ -9,6 +9,8 @@ mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
+const storageTankId = 'c84528bb-f805-4f1e-95d3-2bd17384fdbe';
+
 const state: PrimaryPipeworkData = {
 	name: 'Pipework Kitchen Sink',
 	internalDiameter: 10,
@@ -18,7 +20,7 @@ const state: PrimaryPipeworkData = {
 	thermalConductivity: 1,
 	surfaceReflectivity: 'reflective',
 	pipeContents: 'water',
-	storageTank: '0',
+	storageTank: storageTankId,
 	location: 'internal'
 };
 
@@ -36,10 +38,11 @@ describe('Primary pipework form', () => {
 				waterHeating: {
 					storageTank: {
 						data: [{
+							id: storageTankId,
 							name: 'Storage tank 1',
 							tankVolume: 5,
 							dailyEnergyLoss: 1,
-							heatSource: '0'
+							heatSource: '463c94f6-566c-49b2-af27-57e5c68b5c30'
 						}]
 					}
 				}
@@ -56,7 +59,7 @@ describe('Primary pipework form', () => {
 		await user.type(screen.getByTestId('thermalConductivity'), '1');
 		await user.click(screen.getByTestId('surfaceReflectivity_reflective'));
 		await user.click(screen.getByTestId('pipeContents_water'));
-		await user.click(screen.getByTestId('storageTank_0'));
+		await user.click(screen.getByTestId(`storageTank_${storageTankId}`));
 		await user.click(screen.getByTestId('location_internal'));
 	};
 
@@ -99,7 +102,7 @@ describe('Primary pipework form', () => {
 		expect((await screen.findByTestId('thermalConductivity') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('surfaceReflectivity_reflective')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('pipeContents_water')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('storageTank_0')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId(`storageTank_${storageTankId}`)).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);
 	});
 

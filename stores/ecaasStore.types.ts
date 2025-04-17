@@ -353,6 +353,7 @@ export interface WaterHeating {
 }
 
 export type StorageTankData = {
+	id: string;
 	name: string;
 	heatSource?: string;
 	tankVolume: number;
@@ -404,22 +405,26 @@ export interface HotWaterOutlets {
 }
 
 export type MixedShowerData = {
+	id: string;
 	name: string;
 	flowRate: number;
 };
 
 export type ElectricShowerData = {
+	id: string;
 	name: string;
 	ratedPower: number;
 };
 
 export type BathData = {
+	id: string;
 	name: string;
 	size: number;
 	flowRate: number;
 };
 
 export type OtherHotWaterOutletData = {
+	id: string;
 	name: string;
 	flowRate: number;
 };
@@ -547,22 +552,27 @@ export interface HeatGeneration {
 }
 
 export type HeatPumpData = {
+	id: string;
 	name: string;
 };
 
 export type BoilerData = {
+	id: string;
 	name: string;
 };
 
 export type HeatBatteryData = {
+	id: string;
 	name: string;
 };
 
 export type HeatNetworkData = {
+	id: string;
 	name: string;
 };
 
 export type HeatInterfaceUnitData = {
+	id: string;
 	name: string;
 };
 

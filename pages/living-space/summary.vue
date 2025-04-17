@@ -16,7 +16,8 @@ const zoneParametersSummary: SummarySection = {
 		"Area": zoneParametersData.area,
 		"Volume": zoneParametersData.volume,
 		"Heating control type": zoneParametersData.heatingControlType
-	}
+	},
+	editUrl: getUrl('livingSpaceZoneParameters')!
 };
 
 const groundFloorData = store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data;
@@ -24,7 +25,7 @@ const internalFloorData = store.livingSpaceFabric.livingSpaceFloors.livingSpaceI
 const exposedFloorData = store.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor?.data;
 
 const groundFloorSummary: SummarySection = {
-	id: 'livingSpaceFloors',
+	id: 'livingSpaceGroundFloors',
 	label: 'Ground floor',
 	data: groundFloorData.map(x => {
 		return {
@@ -52,11 +53,12 @@ const groundFloorSummary: SummarySection = {
 			"Thermal transmittance of walls of the basement": x.thermalTransmittanceOfBasementWalls,
 			"Height of the basement walls above ground level": x.heightOfBasementWallsAboveGround
 		};
-	})
+	}),
+	editUrl: getUrl('livingSpaceFloors')!
 };
 
 const internalFloorSummary: SummarySection = {
-	id: 'livingSpaceFloors',
+	id: 'livingSpaceInternalFloors',
 	label: 'Internal floor',
 	data: internalFloorData?.map(x => {
 		return {
@@ -69,11 +71,12 @@ const internalFloorSummary: SummarySection = {
 			"Pitch": x.pitch,
 			"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace
 		};
-	}) || []
+	}) || [],
+	editUrl: getUrl('livingSpaceFloors')!
 };
 
 const exposedFloorSummary: SummarySection = {
-	id: 'livingSpaceFloors',
+	id: 'livingSpaceExposedFloors',
 	label: 'Exposed floor',
 	data: exposedFloorData?.map(x => {
 		return {
@@ -89,7 +92,8 @@ const exposedFloorSummary: SummarySection = {
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": x.massDistributionClass
 		};
-	}) || []
+	}) || [],
+	editUrl: getUrl('livingSpaceFloors')!
 };
 
 const floorSummarySections: SummarySection[] = [
@@ -104,7 +108,7 @@ const wallToUnheatedSpaceData = store.livingSpaceFabric.livingSpaceWalls.livingS
 const partyWallData = store.livingSpaceFabric.livingSpaceWalls.livingSpacePartyWall?.data;
 
 const externalWallSummary: SummarySection = {
-	id: 'livingSpaceWalls',
+	id: 'livingSpaceExternalWalls',
 	label: 'External wall',
 	data: externalWallData.map(x => {
 		return {
@@ -120,11 +124,12 @@ const externalWallSummary: SummarySection = {
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": x.massDistributionClass
 		};
-	})
+	}),
+	editUrl: getUrl('livingSpaceWalls')!
 };
 
 const internalWallSummary: SummarySection = {
-	id: 'livingSpaceWalls',
+	id: 'livingSpaceInternalWalls',
 	label: 'Internal wall',
 	data: internalWallData.map(x => {
 		return {
@@ -135,11 +140,12 @@ const internalWallSummary: SummarySection = {
 			"Mass distribution class": x.massDistributionClass,
 			"Pitch": x.pitch
 		};
-	})
+	}),
+	editUrl: getUrl('livingSpaceWalls')!
 };
 
 const wallToUnheatedSpaceSummary: SummarySection = {
-	id: 'livingSpaceWalls',
+	id: 'livingSpaceUnheatedSpaceWalls',
 	label: 'Wall to unheated space',
 	data: wallToUnheatedSpaceData?.map(x => {
 		return {
@@ -151,11 +157,12 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 			"Pitch": x.pitch,
 			"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace
 		};
-	}) || []
+	}) || [],
+	editUrl: getUrl('livingSpaceWalls')!
 };
 
 const partyWallSummary: SummarySection = {
-	id: 'livingSpaceWalls',
+	id: 'livingSpacePartyWalls',
 	label: 'Party wall',
 	data: partyWallData?.map(x => {
 		return {
@@ -171,7 +178,8 @@ const partyWallSummary: SummarySection = {
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": x.massDistributionClass
 		};
-	}) || []
+	}) || [],
+	editUrl: getUrl('livingSpaceWalls')!
 };
 
 const wallSummarySections: SummarySection[] = [
@@ -185,7 +193,7 @@ const ceilingData = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs.livingSp
 const roofData = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs.livingSpaceRoofs.data;
 
 const ceilingSummary: SummarySection = {
-	id: 'livingSpaceCeilingsAndRoofs',
+	id: 'livingSpaceCeilings',
 	label: 'Ceiling',
 	data: ceilingData.map(x => {
 		return {
@@ -198,11 +206,12 @@ const ceilingSummary: SummarySection = {
 			"Pitch": x.pitch,
 			"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace
 		};
-	})
+	}),
+	editUrl: getUrl('livingSpaceCeilingsAndRoofs')!
 };
 
 const roofSummary: SummarySection = {
-	id: 'livingSpaceCeilingsAndRoofs',
+	id: 'livingSpaceRoofs',
 	label: 'Roof',
 	data: roofData.map(x => {
 		return {
@@ -219,7 +228,8 @@ const roofSummary: SummarySection = {
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": x.massDistributionClass
 		};
-	})
+	}),
+	editUrl: getUrl('livingSpaceCeilingsAndRoofs')!
 };
 
 const ceilingAndRoofSummarySections: SummarySection[] = [
@@ -232,7 +242,7 @@ const glazedDoorData = store.livingSpaceFabric.livingSpaceDoors.livingSpaceExter
 const internalDoorData = store.livingSpaceFabric.livingSpaceDoors.livingSpaceInternalDoor.data;
 
 const unglazedDoorSummary: SummarySection = {
-	id: 'livingSpaceDoors',
+	id: 'livingSpaceUnglazedDoors',
 	label: 'External unglazed door',
 	data: unglazedDoorData.map(x => {
 		return {
@@ -248,11 +258,12 @@ const unglazedDoorSummary: SummarySection = {
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": x.massDistributionClass
 		};
-	})
+	}),
+	editUrl: getUrl('livingSpaceDoors')!
 };
 
 const glazedDoorSummary: SummarySection = {
-	id: 'livingSpaceDoors',
+	id: 'livingSpaceGlazedDoors',
 	label: 'External glazed door',
 	data: glazedDoorData.map(x => {
 		return {
@@ -275,11 +286,12 @@ const glazedDoorSummary: SummarySection = {
 			"Mid height of the air flow path for openable part 3": x.midHeightOpenablePart3,
 			"Mid height of the air flow path for openable part 4": x.midHeightOpenablePart4
 		};
-	})
+	}),
+	editUrl: getUrl('livingSpaceDoors')!
 };
 
 const internalDoorSummary: SummarySection = {
-	id: 'livingSpaceDoors',
+	id: 'livingSpaceInternalDoors',
 	label: 'Internal door',
 	data: internalDoorData?.map(x => {
 		return {
@@ -292,7 +304,8 @@ const internalDoorSummary: SummarySection = {
 			"Pitch": x.pitch,
 			"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace
 		};
-	}) || []
+	}) || [],
+	editUrl: getUrl('livingSpaceDoors')!
 };
 
 const doorSummarySections: SummarySection[] = [
@@ -337,14 +350,15 @@ const windowSummary: SummarySection = {
 			"Thermal resistivity increase": x.thermalResistivityIncrease,
 			"Solar transmittance reduction": x.solarTransmittenceReduction
 		};
-	}) || []
+	}) || [],
+	editUrl: getUrl('livingSpaceWindows')!
 };
 
 const linearThermalBridgesData = store.livingSpaceFabric.livingSpaceThermalBridging.livingSpaceLinearThermalBridges.data;
 const pointThermalBridgesData = store.livingSpaceFabric.livingSpaceThermalBridging.livingSpacePointThermalBridges.data;
 
 const linearThermalBridgesSummary: SummarySection = {
-	id: 'livingSpaceThermalBridging',
+	id: 'livingSpaceLinearThermalBridging',
 	label: 'Linear thermal bridges',
 	data: linearThermalBridgesData.map(x => {
 		return {
@@ -353,18 +367,20 @@ const linearThermalBridgesSummary: SummarySection = {
 			"Linear thermal transmittance": x.linearThermalTransmittance,
 			"Length of thermal bridge": x.length
 		};
-	})
+	}),
+	editUrl: getUrl('livingSpaceThermalBridging')!
 };
 
 const pointThermalBridgesSummary: SummarySection = {
-	id: 'livingSpaceThermalBridging',
+	id: 'livingSpacePointThermalBridging',
 	label: 'Point thermal bridges',
 	data: pointThermalBridgesData.map(x => {
 		return {
 			"Name": x.name,
 			"Heat transfer coefficient": x.heatTransferCoefficient
 		};
-	})
+	}),
+	editUrl: getUrl('livingSpaceThermalBridging')!
 };
 
 const thermalBridgeSummarySections: SummarySection[] = [

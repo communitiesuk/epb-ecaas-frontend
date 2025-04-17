@@ -2,17 +2,21 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import HeatNetwork from './[network].vue';
+import { v4 as uuidv4 } from 'uuid';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
+vi.mock('uuid');
+
 describe('heatNetwork', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const heatNetwork: HeatNetworkData = {
+		id: '463c94f6-566c-49b2-af27-57e5c68b5c30',
 		name: 'Heat network 1'
 	};
 
@@ -26,6 +30,8 @@ describe('heatNetwork', () => {
 	};
 
 	it('data is saved to store state when form is valid', async () => {
+		vi.mocked(uuidv4).mockReturnValue(heatNetwork.id as unknown as Buffer);
+
 		await renderSuspended(HeatNetwork);
 
 		await populateValidForm();

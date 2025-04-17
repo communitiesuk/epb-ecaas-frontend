@@ -11,10 +11,10 @@ const model: Ref<WwhrsData> = ref(wwhrsData!);
 const { bath, electricShower, mixedShower, otherOutlets } = store.domesticHotWater.hotWaterOutlets;
 
 const hotWaterOutlets = [
-	bath.data.map((x, i) => [`bath_${i}`, x.name] as [string, string]),
-	electricShower.data.map((x, i) => [`electricShower_${i}`, x.name] as [string, string]),
-	mixedShower.data.map((x, i) => [`mixedShower_${i}`, x.name] as [string, string]),
-	otherOutlets.data.map((x, i) => [`otherOutlets_${i}`, x.name] as [string, string])
+	bath.data.map(x => [x.id, x.name] as [string, string]),
+	electricShower.data.map(x => [x.id, x.name] as [string, string]),
+	mixedShower.data.map(x => [x.id, x.name] as [string, string]),
+	otherOutlets.data.map(x => [x.id, x.name] as [string, string])
 ].flat();
 
 const saveForm = (fields: WwhrsData) => {

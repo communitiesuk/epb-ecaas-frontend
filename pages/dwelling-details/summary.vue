@@ -22,7 +22,8 @@ const generalSpecificationsSummary: SummarySection = {
 		"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
 		"Part G compliance": generalSpecificationsData.partGCompliance,
 		"Cooling required": generalSpecificationsData.coolingRequired
-	}
+	},
+	editUrl: getUrl('generalSpecifications')!
 };
 
 const appliancesAndElectricitySummary: SummarySection = {
@@ -30,7 +31,8 @@ const appliancesAndElectricitySummary: SummarySection = {
 	label: "Appliances",
 	data: {
 		"Appliances": appliancesData.appliances
-	}
+	},
+	editUrl: getUrl('appliances')!
 };
 
 const shadingSummary: SummarySection = {
@@ -45,7 +47,8 @@ const shadingSummary: SummarySection = {
 			"Height": s.height,
 			"Distance": s.distance
 		};
-	}) || []
+	}) || [],
+	editUrl: getUrl('shading')!
 };
 
 const externalFactorsSummary: SummarySection = {
@@ -56,7 +59,8 @@ const externalFactorsSummary: SummarySection = {
 		"Type of exposure": externalFactors.typeOfExposure,
 		"Terrain type": externalFactors.terrainType,
 		"Noise nuisance": externalFactors.noiseNuisance
-	}
+	},
+	editUrl: getUrl('externalFactors')!
 };
 
 const summarySections: SummarySection[] = [

@@ -59,7 +59,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="energyDivertedToStorageTank"
 			type="govRadios"
-			:options="new Map(store.domesticHotWater.waterHeating.storageTank.data.map((x, i) => [`${i}`, x.name]))"
+			:options="new Map(store.domesticHotWater.waterHeating.storageTank.data.map(x => [x.id, x.name]))"
 			label="Energy diverted to storage tank"
 			help="Select a storage tank, added previously, which is being sent energy by the diverter"
 			name="energyDivertedToStorageTank"

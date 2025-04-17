@@ -2,17 +2,21 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import OtherOutlet from './[outlet].vue';
+import { v4 as uuidv4 } from 'uuid';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
+vi.mock('uuid');
+
 describe('other outlets', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const outlet: OtherHotWaterOutletData = {
+		id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e',
 		name: "Basin tap 1",
 		flowRate: 10
 	};
@@ -28,6 +32,8 @@ describe('other outlets', () => {
 	};
 
 	it('data is saved to store state when form is valid', async () => {
+		vi.mocked(uuidv4).mockReturnValue(outlet.id as unknown as Buffer);
+
 		await renderSuspended(OtherOutlet);
 
 		await populateValidForm();

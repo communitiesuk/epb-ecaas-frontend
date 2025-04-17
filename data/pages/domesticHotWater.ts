@@ -37,9 +37,23 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'waterHeating'
 	},
 	{
+		id: 'immersionHeaterCreate',
+		title: 'Immersion heater',
+		url: '/domestic-hot-water/water-heating/immersion-heater/create',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
 		id: 'solarThermal',
 		title: 'Solar thermal',
 		url: '/domestic-hot-water/water-heating/solar-thermal/:solarThermal',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'solarThermalCreate',
+		title: 'Solar thermal',
+		url: '/domestic-hot-water/water-heating/solar-thermal/create',
 		type: PageType.Task,
 		parentId: 'waterHeating'
 	},
@@ -51,9 +65,23 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'waterHeating'
 	},
 	{
+		id: 'pointOfUseCreate',
+		title: 'Point of use',
+		url: '/domestic-hot-water/water-heating/point-of-use/create',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
 		id: 'hotWaterheatPump',
 		title: 'Heat pump',
 		url: '/domestic-hot-water/water-heating/heat-pump/:hotWaterHeatPump',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'hotWaterheatPumpCreate',
+		title: 'Heat pump',
+		url: '/domestic-hot-water/water-heating/heat-pump/create',
 		type: PageType.Task,
 		parentId: 'waterHeating'
 	},
@@ -65,9 +93,23 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'waterHeating'
 	},
 	{
+		id: 'combiBoilerCreate',
+		title: 'Combi boiler',
+		url: '/domestic-hot-water/water-heating/combi-boiler/create',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
 		id: 'hotWaterHeatBattery',
 		title: 'Heat battery',
 		url: '/domestic-hot-water/water-heating/heat-battery/:hotWaterHeatBattery',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'hotWaterHeatBatteryCreate',
+		title: 'Heat battery',
+		url: '/domestic-hot-water/water-heating/heat-battery/create',
 		type: PageType.Task,
 		parentId: 'waterHeating'
 	},
@@ -79,9 +121,23 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'waterHeating'
 	},
 	{
+		id: 'smartHotWaterTankCreate',
+		title: 'Smart hot water tank',
+		url: '/domestic-hot-water/water-heating/smart-hot-water-tank/create',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
 		id: 'hotWaterHeatInterfaceUnit',
 		title: 'Heat interface unit',
 		url: '/domestic-hot-water/water-heating/heat-interface-unit/:hotWaterHeatInterfaceUnit',
+		type: PageType.Task,
+		parentId: 'waterHeating'
+	},
+	{
+		id: 'hotWaterHeatInterfaceUnitCreate',
+		title: 'Heat interface unit',
+		url: '/domestic-hot-water/water-heating/heat-interface-unit/create',
 		type: PageType.Task,
 		parentId: 'waterHeating'
 	},
@@ -100,9 +156,23 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'hotWaterOutlets'
 	},
 	{
+		id: 'mixedShowerCreate',
+		title: 'Mixed shower',
+		url: '/domestic-hot-water/hot-water-outlets/mixed-shower/create',
+		type: PageType.Task,
+		parentId: 'hotWaterOutlets'
+	},
+	{
 		id: 'electricShower',
 		title: 'Electric shower',
 		url: '/domestic-hot-water/hot-water-outlets/electric-shower/:shower',
+		type: PageType.Task,
+		parentId: 'hotWaterOutlets'
+	},
+	{
+		id: 'electricShowerCreate',
+		title: 'Electric shower',
+		url: '/domestic-hot-water/hot-water-outlets/electric-shower/create',
 		type: PageType.Task,
 		parentId: 'hotWaterOutlets'
 	},
@@ -114,9 +184,23 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'hotWaterOutlets'
 	},
 	{
+		id: 'bathCreate',
+		title: 'Bath',
+		url: '/domestic-hot-water/hot-water-outlets/bath/create',
+		type: PageType.Task,
+		parentId: 'hotWaterOutlets'
+	},
+	{
 		id: 'otherOutlets',
 		title: 'Other outlet',
 		url: '/domestic-hot-water/hot-water-outlets/other/:outlet',
+		type: PageType.Task,
+		parentId: 'hotWaterOutlets'
+	},
+	{
+		id: 'otherOutletsCreate',
+		title: 'Other outlet',
+		url: '/domestic-hot-water/hot-water-outlets/other/create',
 		type: PageType.Task,
 		parentId: 'hotWaterOutlets'
 	},
@@ -135,9 +219,23 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'pipework'
 	},
 	{
+		id: 'primaryPipeworkCreate',
+		title: 'Secondary pipework',
+		url: '/domestic-hot-water/pipework/primary/create',
+		type: PageType.Task,
+		parentId: 'pipework'
+	},
+	{
 		id: 'secondaryPipework',
 		title: 'Secondary pipework',
 		url: '/domestic-hot-water/pipework/secondary/:pipe',
+		type: PageType.Task,
+		parentId: 'pipework'
+	},
+	{
+		id: 'secondaryPipeworkCreate',
+		title: 'Secondary pipework',
+		url: '/domestic-hot-water/pipework/secondary/create',
 		type: PageType.Task,
 		parentId: 'pipework'
 	},

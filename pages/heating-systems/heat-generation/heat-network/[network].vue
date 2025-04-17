@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { v4 as uuidv4 } from 'uuid';
+
 const title = "Heat network";
 const store = useEcaasStore();
 const { saveToList } = useForm();
@@ -11,6 +13,7 @@ const saveForm = (fields: HeatNetworkData) => {
 		const {heatNetwork} = state.heatingSystems.heatGeneration;
 
 		const heatNetworkItem: HeatNetworkData = {
+			id: uuidv4(),
 			name: fields.name
 		};
 

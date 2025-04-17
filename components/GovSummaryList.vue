@@ -6,7 +6,7 @@ export type SummaryData = {
 	[key: string]: string | number | boolean | string[] | undefined;
 };
 
-const props = defineProps<{ data: SummaryData | SummaryData[]; id: string }>();
+const props = defineProps<{ data: SummaryData | SummaryData[]; id: string; }>();
 
 const overflow = Array.isArray(props.data) && props.data.length > 3;
 </script>

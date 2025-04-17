@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { v4 as uuidv4 } from 'uuid';
+
 const title = "Other outlets";
 const store = useEcaasStore();
 const { saveToList } = useForm();
@@ -11,6 +13,7 @@ const saveForm = (fields: OtherHotWaterOutletData) => {
 		const {otherOutlets} = state.domesticHotWater.hotWaterOutlets;
 
 		const outletItem: OtherHotWaterOutletData = {
+			id: uuidv4(),
 			name: fields.name,
 			flowRate: fields.flowRate,
 		};

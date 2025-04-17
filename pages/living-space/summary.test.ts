@@ -20,7 +20,6 @@ const floorsData: FloorsData = {
 			name: "Ground 1",
 			surfaceAreaInZone: 5,
 			surfaceAreaAllZones: 0,
-			pitchOption: '0',
 			pitch: 0,
 			uValue: 1,
 			kappaValue: 100,
@@ -38,14 +37,12 @@ const floorsData: FloorsData = {
 			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: 'internal',
-			pitchOption: '0',
 			pitch: 0
 		}]
 	},
 	livingSpaceExposedFloor: {
 		data: [{
 			name: "Exposed Floor 1",
-			pitchOption: '0',
 			pitch: 0,
 			orientation: 0,
 			length: 0.5,
@@ -311,7 +308,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceFloors-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceGroundFloors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -339,7 +336,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceFloors-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceInternalFloors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -371,7 +368,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceFloors-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceExposedFloors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -414,7 +411,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceWalls-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceExternalWalls-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -441,7 +438,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceWalls-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceInternalWalls-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -469,7 +466,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceWalls-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceUnheatedSpaceWalls-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -501,7 +498,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceWalls-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpacePartyWalls-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -538,7 +535,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceCeilingsAndRoofs-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceCeilings-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -571,7 +568,7 @@ describe('Living space fabric summary', () => {
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceCeilingsAndRoofs-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceRoofs-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -613,7 +610,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceDoors-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceUnglazedDoors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -645,7 +642,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceDoors-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceGlazedDoors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -673,7 +670,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceDoors-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceInternalDoors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -756,7 +753,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceThermalBridging-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpaceLinearThermalBridging-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}
@@ -779,7 +776,7 @@ describe('Living space fabric summary', () => {
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-livingSpaceThermalBridging-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-livingSpacePointThermalBridging-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
 				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
 			}

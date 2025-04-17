@@ -9,4 +9,5 @@ export interface SummarySection {
 	id: string;
 	label: string;
 	data: SummaryData | SummaryData[];
+	editUrl: string;
 }
