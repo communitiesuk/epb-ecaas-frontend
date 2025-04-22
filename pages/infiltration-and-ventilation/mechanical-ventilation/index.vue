@@ -46,9 +46,12 @@ function handleDuplicate(index: number) {
 		});
 	}
 }
+const mvhrArray = store.infiltrationAndVentilation.mechanicalVentilation.data?.filter(x => x.typeOfMechanicalVentilationOptions === 'mvhr');
+
 </script>
 
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -58,7 +61,9 @@ function handleDuplicate(index: number) {
 	<GovCustomList
 		id="mechanicalVentilation" title="Mechanical ventilation" :form-url="page?.url!" :items="store.infiltrationAndVentilation.mechanicalVentilation.data?.map(
 			x => x.name)" @remove="handleRemove" @duplicate="handleDuplicate" />
-	<p class="govuk-body">Note if you remove a MVHR this will also remove any associated ductwork</p>
+	<p
+		v-if="mvhrArray.length > 0"
+		class="govuk-body">Note if you remove a MVHR this will also remove any associated ductwork</p>
 	<GovButton href="/infiltration-and-ventilation" secondary>
 		Return to overview
 	</GovButton>

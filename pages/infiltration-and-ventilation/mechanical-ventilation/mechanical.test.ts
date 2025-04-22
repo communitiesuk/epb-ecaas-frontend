@@ -226,4 +226,26 @@ describe("mechanical ventilation overview", () => {
 		);
 		expect(store.infiltrationAndVentilation.mechanicalVentilation.data[0]["id"]).not.toBe(store.infiltrationAndVentilation.mechanicalVentilation.data[1]["id"]);
 	});
+
+	it("should only display warning message when mechanical ventilations of type mvhr have been added", async() => {
+
+		const warningMessage = "Note if you remove a MVHR this will also remove any associated ductwork";
+		await renderSuspended(MechanicalVentilationOverview);
+
+		expect(screen.queryByText(warningMessage)).toBeNull();
+		
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						mechanicalVentilation1
+					],
+				},
+			},
+		});
+		await renderSuspended(MechanicalVentilationOverview);
+
+		expect(screen.getByText(warningMessage)).toBeDefined();
+
+	});
 });
