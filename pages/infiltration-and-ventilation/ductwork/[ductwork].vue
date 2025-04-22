@@ -42,6 +42,61 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovDetails summary-text="Help with these inputs">
+		<table class="govuk-table">
+			<thead class="govuk-table__head">
+				<tr class="govuk-table__row">
+					<th scope="col" class="govuk-table__header">Parameter</th>
+					<th scope="col" class="govuk-table__header">Explanation</th>
+					<th scope="col" class="govuk-table__header">Typical range</th>
+				</tr>
+			</thead>
+			<tbody class="govuk-table__body">
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">MVHR efficiency</td>
+					<td class="govuk-table__cell">How much heat the system recoers from outgoing air</td>
+					<td class="govuk-table__cell">
+						0.85 - 0.95<br>
+						(high performance systems recover around 0.90)
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">Thermal insulation conductivity of ductwork</td>
+					<td class="govuk-table__cell">How well the insulation reduces heat transfer</td>
+					<td class="govuk-table__cell">
+						0.030 - 0.040<br>
+						(common materials: mineral wool, phenolic foam)
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">Insulation thickness</td>
+					<td class="govuk-table__cell">Thickness of duct insulation to minimise heat loss and prevent condensation</td>
+					<td class="govuk-table__cell">25-50mm</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">External diameter of ductwork</td>
+					<td class="govuk-table__cell">Outer size of the duct, affecting airflow and space requirements</td>
+					<td class="govuk-table__cell">
+						125 - 160<br>
+						(standard domestic systems)
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">Internal diameter of ductwork</td>
+					<td class="govuk-table__cell">Inner size of the duct, determining actual airflow capacity</td>
+					<td class="govuk-table__cell">
+						100 - 150mm<br>
+						(varies based on system needs)
+					</td>
+				</tr>
+				<tr class="govuk-table__row">
+					<td class="govuk-table__cell">Length of ductwork</td>
+					<td class="govuk-table__cell">Total duct length required, based on building size and layout</td>
+					<td class="govuk-table__cell">10 - 30 metres</td>
+				</tr>
+			</tbody>
+		</table>
+	</GovDetails>
 	<FormKit
 		v-model="model"
 		type="form"

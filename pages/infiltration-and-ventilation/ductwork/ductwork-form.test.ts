@@ -2,6 +2,7 @@ import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Ductwork from "./[ductwork].vue";
 import userEvent from "@testing-library/user-event";
+import { within } from "@testing-library/dom";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -76,18 +77,19 @@ describe("ductwork form", async () => {
 
 	it("should have the following inputs", async () => {
 		await renderSuspended(Ductwork);
-		expect(screen.getByText("Name")).toBeDefined();
-		expect(screen.getByText("MVHR unit")).toBeDefined();
-		expect(screen.getByText("Ductwork cross sectional shape")).toBeDefined();
-		expect(screen.getByText("Duct type")).toBeDefined();
-		expect(screen.getByText("Internal diameter of ductwork")).toBeDefined();
-		expect(screen.getByText("External diameter of ductwork")).toBeDefined();
-		expect(screen.getByText("Insulation thickness")).toBeDefined();
-		expect(screen.getByText("Length of ductwork")).toBeDefined();
+		const form = within(document.getElementsByTagName("form")[0]);
+		expect(form.getByText("Name")).toBeDefined();
+		expect(form.getByText("MVHR unit")).toBeDefined();
+		expect(form.getByText("Ductwork cross sectional shape")).toBeDefined();
+		expect(form.getByText("Duct type")).toBeDefined();
+		expect(form.getByText("Internal diameter of ductwork")).toBeDefined();
+		expect(form.getByText("External diameter of ductwork")).toBeDefined();
+		expect(form.getByText("Insulation thickness")).toBeDefined();
+		expect(form.getByText("Length of ductwork")).toBeDefined();
 		expect(
-			screen.getByText("Thermal insulation conductivity of ductwork")
+			form.getByText("Thermal insulation conductivity of ductwork")
 		).toBeDefined();
-		expect(screen.getByText("Surface reflectivity")).toBeDefined();
+		expect(form.getByText("Surface reflectivity")).toBeDefined();
 	});
 
 	it("should list MVHR units previously added", async() => {
