@@ -118,6 +118,10 @@ export const useEcaasStore = defineStore("ecaas", {
 
 				if (section) {
 					const entry = Object.entries(section).find((x) => x[0] === page.id)!;
+					
+					if(page.id === "ductwork"){
+						return getDuctworkStatus(entry[1]);
+					}
 
 					if (page.type === PageType.Task) {
 						return getTaskStatus(entry[1]);

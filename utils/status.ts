@@ -9,8 +9,11 @@ import { PageType } from "~/data/pages/pages.types";
  * @param section Object to traverse
  * @returns Nested object
  */
-export function getSection(pageId: string, section: object): object | undefined {
-	if (typeof section !== 'object') {
+export function getSection(
+	pageId: string,
+	section: object
+): object | undefined {
+	if (typeof section !== "object") {
 		return undefined;
 	}
 
@@ -34,13 +37,31 @@ export function getSection(pageId: string, section: object): object | undefined 
 }
 
 /**
+ * Returns the completion status of a ductwork task for the GovTag component
+ * @param task
+ * @returns Status as GovTagProps
+ */
+export function getDuctworkStatus(task: object): GovTagProps {
+	const form = task as EcaasForm<typeof task>;
+	const status = !isFormStarted(form)
+		? formStatus.notStarted
+		: !checkMvhrHasDuckwork()
+			? formStatus.inProgress
+			: formStatus.complete;
+
+	return status;
+}
+
+/**
  * Returns the completion status of a task for the GovTag component
  * @param task
  * @returns Status as GovTagProps
  */
 export function getTaskStatus(task: object): GovTagProps {
 	const form = task as EcaasForm<typeof task>;
-	let status = isFormStarted(form) ? formStatus.inProgress : formStatus.notStarted;
+	let status = isFormStarted(form)
+		? formStatus.inProgress
+		: formStatus.notStarted;
 
 	if (form.complete) {
 		status = formStatus.complete;
@@ -51,7 +72,7 @@ export function getTaskStatus(task: object): GovTagProps {
 
 /**
  * Returns the completion status of a section containing nested tasks
- * @param entry 
+ * @param entry
  * @returns Status as GovTagProps
  */
 export function getSectionStatus(section: object): GovTagProps {
@@ -60,11 +81,11 @@ export function getSectionStatus(section: object): GovTagProps {
 
 	const tasks = Object.entries(section);
 
-	tasks.forEach(task => {
-		const taskPage = pagesData.find(x => x.id === task[0]);
-		
+	tasks.forEach((task) => {
+		const taskPage = pagesData.find((x) => x.id === task[0]);
+
 		if (taskPage?.type === PageType.Task) {
-			const form = task[1] as EcaasForm<typeof task[1]>;
+			const form = task[1] as EcaasForm<(typeof task)[1]>;
 
 			if (isFormStarted(form) || form.complete) {
 				status = formStatus.inProgress;
@@ -101,5 +122,10 @@ export function getSectionStatus(section: object): GovTagProps {
 }
 
 function isFormStarted<T>(form: EcaasForm<T>): boolean {
-	return form.data && (Array.isArray(form.data) ? !!form.data.length : !!Object.entries(form.data).length);
+	return (
+		form.data &&
+    (Array.isArray(form.data)
+    	? !!form.data.length
+    	: !!Object.entries(form.data).length)
+	);
 }
