@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = 'Check part L building compliance';
+const title = 'Check Part L building compliance';
 	
 const page = usePage();
 const { createTaskList } = useTaskList();

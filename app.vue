@@ -5,7 +5,7 @@ import GovServiceNavigation from './components/GovServiceNavigation.vue';
 
 <template>
 	<GovHeader classes="govuk-header--full-width-border" />
-	<GovServiceNavigation service-name="Check part L building compliance" />
+	<GovServiceNavigation service-name="Check Part L building compliance" />
 	<div class="govuk-width-container">
 		<GovPhaseBanner tag="Alpha">
 			This is a new service - your feedback will help us to improve it.
