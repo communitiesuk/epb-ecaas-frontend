@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --fix",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test": "vitest"
+    "test": "vitest",
+    "typecheck": "nuxt typecheck"
   },
   "dependencies": {
     "@formkit/nuxt": "^1.6.9",
