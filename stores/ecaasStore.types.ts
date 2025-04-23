@@ -84,7 +84,7 @@ export type ExposedFloorData = {
 	width: number;
 	elevationalHeight: number;
 	surfaceArea: number;
-	solarAbsorbtion: number;
+	solarAbsorption: number;
 	uValue: number;
 	kappaValue: number;
 	massDistributionClass: string;
@@ -134,7 +134,7 @@ export type ExternalWallData = {
 	length: number;
 	elevationalHeight: number;
 	surfaceArea: number;
-	solarAbsorbtion: number;
+	solarAbsorption: number;
 	uValue: number;
 	kappaValue: number;
 	massDistributionClass: string;
@@ -170,7 +170,7 @@ export type PartyWallData = {
 	height: number;
 	elevationalHeight: number;
 	surfaceArea: number;
-	solarAbsorbtion: number;
+	solarAbsorption: number;
 	uValue: number;
 	kappaValue: number;
 	massDistributionClass: string;
@@ -204,7 +204,7 @@ export type RoofData = {
 	width: number;
 	elevationalHeightOfElement: number;
 	surfaceArea: number;
-	solarAbsorbtionCoefficient: number;
+	solarAbsorptionCoefficient: number;
 	uValue: number;
 	kappaValue: number;
 	massDistributionClass: string;
@@ -225,7 +225,7 @@ export type ExternalUnglazedDoorData = {
 	width: number;
 	elevationalHeight: number;
 	surfaceArea: number;
-	solarAbsorbtion: number;
+	solarAbsorption: number;
 	uValue: number;
 	kappaValue: number;
 	massDistributionClass: string;

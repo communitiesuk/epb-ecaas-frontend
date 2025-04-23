@@ -232,7 +232,7 @@ describe('floors', () => {
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorbtion: 0.1,
+			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: 'internal'
@@ -246,7 +246,7 @@ describe('floors', () => {
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorbtion: 0.1,
+			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: 'internal'
@@ -260,7 +260,7 @@ describe('floors', () => {
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorbtion: 0.1,
+			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: 'internal'

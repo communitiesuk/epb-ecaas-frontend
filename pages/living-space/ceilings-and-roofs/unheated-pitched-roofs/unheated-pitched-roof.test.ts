@@ -21,7 +21,7 @@ describe('unheated pitched roof', () => {
 		width: 1,
 		elevationalHeightOfElement: 2,
 		surfaceArea: 1,
-		solarAbsorbtionCoefficient: 0.5,
+		solarAbsorptionCoefficient: 0.5,
 		uValue: 1,
 		kappaValue: 50000,
 		massDistributionClass: 'internal'
@@ -39,7 +39,7 @@ describe('unheated pitched roof', () => {
 		await user.type(screen.getByTestId('width'), '1');
 		await user.type(screen.getByTestId('elevationalHeightOfElement'), '2');
 		await user.type(screen.getByTestId('surfaceArea'), '1');
-		await user.type(screen.getByTestId('solarAbsorbtionCoefficient'), '0.5');
+		await user.type(screen.getByTestId('solarAbsorptionCoefficient'), '0.5');
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.click(screen.getByTestId('kappaValue_50000'));
 		await user.click(screen.getByTestId('massDistributionClass_internal'));
@@ -80,7 +80,7 @@ describe('unheated pitched roof', () => {
 		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('elevationalHeightOfElement') as HTMLInputElement).value).toBe('2');
 		expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('solarAbsorbtionCoefficient') as HTMLInputElement).value).toBe('0.5');
+		expect((await screen.findByTestId('solarAbsorptionCoefficient') as HTMLInputElement).value).toBe('0.5');
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
@@ -98,7 +98,7 @@ describe('unheated pitched roof', () => {
 		expect((await screen.findByTestId('width_error'))).toBeDefined();
 		expect((await screen.findByTestId('elevationalHeightOfElement_error'))).toBeDefined();
 		expect((await screen.findByTestId('surfaceArea_error'))).toBeDefined();
-		expect((await screen.findByTestId('solarAbsorbtionCoefficient_error'))).toBeDefined();
+		expect((await screen.findByTestId('solarAbsorptionCoefficient_error'))).toBeDefined();
 		expect((await screen.findByTestId('uValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();

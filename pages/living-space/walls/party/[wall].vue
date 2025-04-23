@@ -19,7 +19,7 @@ const saveForm = (fields: PartyWallData) => {
 			height: fields.height,
 			elevationalHeight: fields.elevationalHeight,
 			surfaceArea: fields.surfaceArea,
-			solarAbsorbtion: 0,
+			solarAbsorption: 0,
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass

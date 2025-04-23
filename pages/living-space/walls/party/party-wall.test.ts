@@ -21,7 +21,7 @@ describe('party wall', () => {
 		height: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorbtion: 0,
+		solarAbsorption: 0,
 		uValue: 1,
 		kappaValue: 50000,
 		massDistributionClass: 'internal'

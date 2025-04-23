@@ -19,7 +19,7 @@ const saveForm = (fields: RoofData) => {
 			width: fields.width,
 			elevationalHeightOfElement: fields.elevationalHeightOfElement,
 			surfaceArea: fields.surfaceArea,
-			solarAbsorbtionCoefficient: fields.solarAbsorbtionCoefficient,
+			solarAbsorptionCoefficient: fields.solarAbsorptionCoefficient,
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass
@@ -105,8 +105,8 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			suffix-text="m"
 		/>
 		<FieldsSolarAbsorptionCoefficient
-			id="solarAbsorbtionCoefficient"
-			name="solarAbsorbtionCoefficient"
+			id="solarAbsorptionCoefficient"
+			name="solarAbsorptionCoefficient"
 			label="Solar absorption coefficient of roof"
 		/>
 		<FormKit

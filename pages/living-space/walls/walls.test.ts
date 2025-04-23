@@ -27,7 +27,7 @@ describe('walls', () => {
 			length: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorbtion: 0.1,
+			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: 'internal'
@@ -43,7 +43,7 @@ describe('walls', () => {
 			length: 30,
 			elevationalHeight: 30,
 			surfaceArea: 15,
-			solarAbsorbtion: 0.6,
+			solarAbsorption: 0.6,
 			uValue: 0,
 			kappaValue: 199,
 			massDistributionClass: 'external'
@@ -58,7 +58,7 @@ describe('walls', () => {
 			length: 200,
 			elevationalHeight: 29,
 			surfaceArea: 10,
-			solarAbsorbtion: 0.1,
+			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: 'divided'
@@ -343,7 +343,7 @@ describe('walls', () => {
 			length: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorbtion: 0.1,
+			solarAbsorption: 0.1,
 			uValue: 0.01,
 			kappaValue: 100,
 			massDistributionClass: 'internal'
@@ -359,7 +359,7 @@ describe('walls', () => {
 			length: 300,
 			elevationalHeight: 30,
 			surfaceArea: 15,
-			solarAbsorbtion: 0.6,
+			solarAbsorption: 0.6,
 			uValue: 8,
 			kappaValue: 199,
 			massDistributionClass: 'external'
@@ -374,7 +374,7 @@ describe('walls', () => {
 			length: 220,
 			elevationalHeight: 29,
 			surfaceArea: 10,
-			solarAbsorbtion: 1,
+			solarAbsorption: 1,
 			uValue: 10,
 			kappaValue: 100,
 			massDistributionClass: 'divided'

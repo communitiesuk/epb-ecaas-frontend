@@ -19,7 +19,7 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 			width: fields.width,
 			elevationalHeight: fields.elevationalHeight,
 			surfaceArea: fields.surfaceArea,
-			solarAbsorbtion: fields.solarAbsorbtion,
+			solarAbsorption: fields.solarAbsorption,
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass
@@ -102,7 +102,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorbtion" name="solarAbsorbtion"/>
+		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption"/>
 		<FormKit
 			id="uValue"
 			type="govInputWithSuffix"

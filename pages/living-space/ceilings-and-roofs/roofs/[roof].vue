@@ -20,7 +20,7 @@ const saveForm = (fields: RoofData) => {
 			width: fields.width,
 			elevationalHeightOfElement: fields.elevationalHeightOfElement,
 			surfaceArea: fields.surfaceArea,
-			solarAbsorbtionCoefficient: fields.solarAbsorbtionCoefficient,
+			solarAbsorptionCoefficient: fields.solarAbsorptionCoefficient,
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass
@@ -122,7 +122,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			suffix-text="m2"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorbtionCoefficient" name="solarAbsorbtionCoefficient"/>
+		<FieldsSolarAbsorptionCoefficient id="solarAbsorptionCoefficient" name="solarAbsorptionCoefficient"/>
 		<FormKit
 			id="uValue"
 			type="govInputWithSuffix"

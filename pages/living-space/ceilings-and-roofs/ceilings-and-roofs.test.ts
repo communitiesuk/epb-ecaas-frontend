@@ -130,7 +130,7 @@ describe('ceilings and roofs', () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			solarAbsorbtionCoefficient: 0.5,
+			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: 'internal'
@@ -146,7 +146,7 @@ describe('ceilings and roofs', () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			solarAbsorbtionCoefficient: 0.5,
+			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: 'internal'
@@ -162,7 +162,7 @@ describe('ceilings and roofs', () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			solarAbsorbtionCoefficient: 0.5,
+			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: 'internal'
@@ -262,7 +262,7 @@ describe('ceilings and roofs', () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			solarAbsorbtionCoefficient: 0.5,
+			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: 'internal'

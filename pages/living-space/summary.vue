@@ -87,7 +87,7 @@ const exposedFloorSummary: SummarySection = {
 			"Width": x.width,
 			"Elevational height of building element at its base": x.elevationalHeight,
 			"Surface area": x.surfaceArea,
-			"Solar absorption coefficient": x.solarAbsorbtion,
+			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": x.massDistributionClass
@@ -119,7 +119,7 @@ const externalWallSummary: SummarySection = {
 			"Length": x.length,
 			"Elevational height of building element at its base": x.elevationalHeight,
 			"Surface area": x.surfaceArea,
-			"Solar absorption coefficient": x.solarAbsorbtion,
+			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": x.massDistributionClass
@@ -173,7 +173,7 @@ const partyWallSummary: SummarySection = {
 			"Length": x.length,
 			"Elevational height of building element at its base": x.elevationalHeight,
 			"Surface area": x.surfaceArea,
-			"Solar absorption coefficient": x.solarAbsorbtion,
+			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": x.massDistributionClass
@@ -224,7 +224,7 @@ const roofSummary: SummarySection = {
 			"Width": x.width,
 			"Elevational height of building element at its base": x.elevationalHeightOfElement,
 			"Surface area": x.surfaceArea,
-			"Solar absorption coefficient": x.solarAbsorbtionCoefficient,
+			"Solar absorption coefficient": x.solarAbsorptionCoefficient,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": x.massDistributionClass
@@ -246,7 +246,7 @@ const unheatedPitchedRoofSummary: SummarySection = {
 			"Width": x.width,
 			"Elevational height of building element at its base": x.elevationalHeightOfElement,
 			"Surface area": x.surfaceArea,
-			"Solar absorption coefficient": x.solarAbsorbtionCoefficient,
+			"Solar absorption coefficient": x.solarAbsorptionCoefficient,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": x.massDistributionClass
@@ -277,7 +277,7 @@ const unglazedDoorSummary: SummarySection = {
 			"Width": x.width,
 			"Elevational height of building element at its base": x.elevationalHeight,
 			"Surface area": x.surfaceArea,
-			"Solar absorption coefficient": x.solarAbsorbtion,
+			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": x.massDistributionClass
