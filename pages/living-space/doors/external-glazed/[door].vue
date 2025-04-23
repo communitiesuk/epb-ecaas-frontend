@@ -14,7 +14,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			name: fields.name,
 			orientation: fields.orientation,
 			surfaceArea: fields.surfaceArea,
-			length: fields.length,
+			height: fields.height,
 			width: fields.width,
 			uValue: fields.uValue,
 			pitchOption: fields.pitchOption,
@@ -76,12 +76,12 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 		/>
 		<FormKit
-			id="length"
+			id="height"
 			type="govInputWithSuffix"
 			suffix-text="m"
-			label="Length"
-			help="The length of the building element"
-			name="length"
+			label="Height"
+			help="The height of the building element"
+			name="height"
 			validation="required | number | min:0.001 | max:50"
 		/>
 		<FormKit

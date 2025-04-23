@@ -15,8 +15,8 @@ const saveForm = (fields: ExternalWallData) => {
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
 			orientation: fields.orientation,
+			height: fields.height,
 			length: fields.length,
-			width: fields.width,
 			elevationalHeight: fields.elevationalHeight,
 			surfaceArea: fields.surfaceArea,
 			solarAbsorbtion: fields.solarAbsorbtion,
@@ -80,21 +80,21 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		</FormKit>
 		
 		<FormKit
+			id="height"
+			type="govInputWithSuffix"
+			suffix-text="m"
+			label="Height"
+			help="The height of the building element"
+			name="height"
+			validation="required | number | min:0.001 | max:50"
+		/>
+		<FormKit
 			id="length"
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Length"
 			help="The length of the building element"
 			name="length"
-			validation="required | number | min:0.001 | max:50"
-		/>
-		<FormKit
-			id="width"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Width"
-			help="The width of the building element"
-			name="width"
 			validation="required | number | min:0.001 | max:50"
 		/>
 		<FormKit

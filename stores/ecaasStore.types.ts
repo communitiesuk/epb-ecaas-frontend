@@ -130,8 +130,8 @@ export type ExternalWallData = {
 	pitchOption: string;
 	pitch?: number;
 	orientation: number;
+	height: number;
 	length: number;
-	width: number;
 	elevationalHeight: number;
 	surfaceArea: number;
 	solarAbsorbtion: number;
@@ -167,7 +167,7 @@ export type PartyWallData = {
 	pitch?: number;
 	orientation: number;
 	length: number;
-	width: number;
+	height: number;
 	elevationalHeight: number;
 	surfaceArea: number;
 	solarAbsorbtion: number;
@@ -221,7 +221,7 @@ export type ExternalUnglazedDoorData = {
 	pitchOption: string;
 	pitch?: number;
 	orientation: number;
-	length: number;
+	height: number;
 	width: number;
 	elevationalHeight: number;
 	surfaceArea: number;
@@ -235,7 +235,7 @@ export type ExternalGlazedDoorData = {
 	name: string;
 	orientation: number;
 	surfaceArea: number;
-	length: number;
+	height: number;
 	width: number;
 	uValue: number;
 	pitchOption: string;
@@ -269,7 +269,7 @@ export type WindowData = {
 	name: string;
 	orientation: number;
 	surfaceArea: number;
-	length: number;
+	height: number;
 	width: number;
 	uValue: number;
 	pitchOption: string;
