@@ -19,7 +19,7 @@ const saveForm = (fields: WindowData) => {
 			uValue: fields.uValue,
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
-			solarTransmittence: fields.solarTransmittence,
+			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
 			numberOpenableParts: fields.numberOpenableParts,
@@ -39,7 +39,7 @@ const saveForm = (fields: WindowData) => {
 			type: fields.type,
 			curtainsControlObject: fields.curtainsControlObject,
 			thermalResistivityIncrease: fields.thermalResistivityIncrease,
-			solarTransmittenceReduction: fields.solarTransmittenceReduction,
+			solarTransmittanceReduction: fields.solarTransmittanceReduction,
 		};
 
 		saveToList(window, livingSpaceWindows);
@@ -89,9 +89,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<FormKit
-			id="solarTransmittence" type="govInputFloat" label="Transmittance of solar energy "
+			id="solarTransmittance" type="govInputFloat" label="Transmittance of solar energy "
 			help="G value. Total solar energy transmittance of the transparent part of the window. Decimal between 0-1"
-			name="solarTransmittence" validation="required | number | min:0.01 | max:1" />
+			name="solarTransmittance" validation="required | number | min:0.01 | max:1" />
 		<FormKit
 			id="elevationalHeight" type="govInputWithSuffix" suffix-text="m"
 			label="Elevational height of building element at its base"
@@ -249,11 +249,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					validation="number | min:0 | max:100"
 				/>
 				<FormKit
-					id="solarTransmittenceReduction"
+					id="solarTransmittanceReduction"
 					type="govInputFloat"
 					label="Solar transmittance reduction"
 					help="Proportion of solar energy allowed through the window which is allowed into the zone when curtain/blind is closed (ie this is an additional reduction in transmission after the initial reduction by the window). Decimal 0-1"
-					name="solarTransmittenceReduction"
+					name="solarTransmittanceReduction"
 					validation="number | min:0 | max:1"
 				/>
 			</GovAccordionSection>

@@ -21,7 +21,7 @@ describe('window', () => {
 		uValue: 1,
 		pitchOption: '90',
 		pitch: 90,
-		solarTransmittence: 0.1,
+		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
 		numberOpenableParts: "none",
@@ -33,7 +33,7 @@ describe('window', () => {
 		sideFinLeftDistance: 1,
 		type: "blinds",
 		thermalResistivityIncrease: 1,
-		solarTransmittenceReduction: 0.1,
+		solarTransmittanceReduction: 0.1,
 	};
 
 	afterEach(() => {
@@ -50,7 +50,7 @@ describe('window', () => {
 		await user.type(screen.getByTestId('width'), '1'); 
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.click(screen.getByTestId('pitchOption_90'));
-		await user.type(screen.getByTestId('solarTransmittence'), '0.1');
+		await user.type(screen.getByTestId('solarTransmittance'), '0.1');
 		await user.type(screen.getByTestId('elevationalHeight'), '1');
 		await user.type(screen.getByTestId('midHeight'), '1');
 		await user.click(screen.getByTestId('numberOpenableParts_none'));
@@ -62,7 +62,7 @@ describe('window', () => {
 		await user.type(screen.getByTestId('sideFinLeftDistance'), '1');
 		await user.click(screen.getByTestId('type_blinds'));
 		await user.type(screen.getByTestId('thermalResistivityIncrease'), '1');
-		await user.type(screen.getByTestId('solarTransmittenceReduction'), '0.1');
+		await user.type(screen.getByTestId('solarTransmittanceReduction'), '0.1');
 
 		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
 
@@ -94,7 +94,7 @@ describe('window', () => {
 		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('solarTransmittence') as HTMLInputElement).value).toBe('0.1');
+		expect((await screen.findByTestId('solarTransmittance') as HTMLInputElement).value).toBe('0.1');
 		expect((await screen.findByTestId('elevationalHeight') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('midHeight') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('numberOpenableParts_none')).hasAttribute('checked')).toBe(true);
@@ -106,7 +106,7 @@ describe('window', () => {
 		expect((await screen.findByTestId('sideFinLeftDistance') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('type_blinds')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('thermalResistivityIncrease') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('solarTransmittenceReduction') as HTMLInputElement).value).toBe('0.1');
+		expect((await screen.findByTestId('solarTransmittanceReduction') as HTMLInputElement).value).toBe('0.1');
 	});
 		
 	it('only required error messages are displayed when empty form is submitted', async () => {
@@ -121,14 +121,14 @@ describe('window', () => {
 		expect((await screen.findByTestId('width_error'))).toBeDefined();
 		expect((await screen.findByTestId('uValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('pitchOption_error'))).toBeDefined();
-		expect((await screen.findByTestId('solarTransmittence_error'))).toBeDefined();
+		expect((await screen.findByTestId('solarTransmittance_error'))).toBeDefined();
 		expect((await screen.findByTestId('elevationalHeight_error'))).toBeDefined();
 		expect((await screen.findByTestId('midHeight_error'))).toBeDefined();
 		expect((await screen.findByTestId('numberOpenableParts_error'))).toBeDefined();
 
 		expect((await screen.queryByTestId('type_error'))).toBeNull();
 		expect((await screen.queryByTestId('thermalResistivityIncrease_error'))).toBeNull();
-		expect((await screen.queryByTestId('solarTransmittenceReduction_error'))).toBeNull();
+		expect((await screen.queryByTestId('solarTransmittanceReduction_error'))).toBeNull();
 		expect((await screen.queryByTestId('overhangDepth_error'))).toBeNull();
 		expect((await screen.queryByTestId('overhangDistance_error'))).toBeNull();
 		expect((await screen.queryByTestId('sideFinRightDepth_error'))).toBeNull();

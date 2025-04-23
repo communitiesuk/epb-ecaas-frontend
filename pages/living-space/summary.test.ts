@@ -190,7 +190,7 @@ const doorsData: DoorsData = {
 			uValue: 1,
 			pitchOption: '90',
 			pitch: 90,
-			solarTransmittence: 0.1,
+			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
 			numberOpenableParts: "none",
@@ -219,7 +219,7 @@ const windowData: WindowData = {
 	uValue: 1,
 	pitchOption: '90',
 	pitch: 90,
-	solarTransmittence: 0.1,
+	solarTransmittance: 0.1,
 	elevationalHeight: 1,
 	midHeight: 1,
 	numberOpenableParts: "none",
@@ -231,7 +231,7 @@ const windowData: WindowData = {
 	sideFinLeftDistance: 1,
 	type: "blinds",
 	thermalResistivityIncrease: 1,
-	solarTransmittenceReduction: 0.1,
+	solarTransmittanceReduction: 0.1,
 };
 
 const thermalBridgingData: ThermalBridgingData = {

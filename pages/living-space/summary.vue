@@ -298,7 +298,7 @@ const glazedDoorSummary: SummarySection = {
 			"Width": x.width,
 			"U-value": x.uValue,
 			"Pitch": x.pitch,
-			"Transmittance of solar energy": x.solarTransmittence,
+			"Transmittance of solar energy": x.solarTransmittance,
 			"Elevational height of building element at its base": x.elevationalHeight,
 			"Mid height": x.midHeight,
 			"Number of openable parts": x.numberOpenableParts,
@@ -352,7 +352,7 @@ const windowSummary: SummarySection = {
 			"Width": x.width,
 			"U-value": x.uValue,
 			"Pitch": x.pitch,
-			"Transmittance of solar energy": x.solarTransmittence,
+			"Transmittance of solar energy": x.solarTransmittance,
 			"Elevational height of building element at its base": x.elevationalHeight,
 			"Mid height": x.midHeight,
 			"Number of openable parts": x.numberOpenableParts,
@@ -372,7 +372,7 @@ const windowSummary: SummarySection = {
 			"Type": x.type,
 			"Curtains control object reference": x.curtainsControlObject,
 			"Thermal resistivity increase": x.thermalResistivityIncrease,
-			"Solar transmittance reduction": x.solarTransmittenceReduction
+			"Solar transmittance reduction": x.solarTransmittanceReduction
 		};
 	}) || [],
 	editUrl: getUrl('livingSpaceWindows')!

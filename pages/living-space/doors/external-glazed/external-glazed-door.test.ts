@@ -21,7 +21,7 @@ describe('external glazed door', () => {
 		uValue: 1,
 		pitchOption: '90',
 		pitch: 90,
-		solarTransmittence: 0.1,
+		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
 		numberOpenableParts: "none",
@@ -41,7 +41,7 @@ describe('external glazed door', () => {
 		await user.type(screen.getByTestId('width'), '1'); 
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.click(screen.getByTestId('pitchOption_90'));
-		await user.type(screen.getByTestId('solarTransmittence'), '0.1');
+		await user.type(screen.getByTestId('solarTransmittance'), '0.1');
 		await user.type(screen.getByTestId('elevationalHeight'), '1');
 		await user.type(screen.getByTestId('midHeight'), '1');
 		await user.click(screen.getByTestId('numberOpenableParts_none'));
@@ -78,7 +78,7 @@ describe('external glazed door', () => {
 		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('solarTransmittence') as HTMLInputElement).value).toBe('0.1');
+		expect((await screen.findByTestId('solarTransmittance') as HTMLInputElement).value).toBe('0.1');
 		expect((await screen.findByTestId('elevationalHeight') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('midHeight') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('numberOpenableParts_none')).hasAttribute('checked')).toBe(true);
@@ -96,7 +96,7 @@ describe('external glazed door', () => {
 		expect((await screen.findByTestId('width_error'))).toBeDefined();
 		expect((await screen.findByTestId('uValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('pitchOption_error'))).toBeDefined();
-		expect((await screen.findByTestId('solarTransmittence_error'))).toBeDefined();
+		expect((await screen.findByTestId('solarTransmittance_error'))).toBeDefined();
 		expect((await screen.findByTestId('elevationalHeight_error'))).toBeDefined();
 		expect((await screen.findByTestId('midHeight_error'))).toBeDefined();
 		expect((await screen.findByTestId('numberOpenableParts_error'))).toBeDefined();

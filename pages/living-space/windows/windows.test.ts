@@ -26,7 +26,7 @@ describe('windows', () => {
 		uValue: 1,
 		pitchOption: '90',
 		pitch: 90,
-		solarTransmittence: 0.1,
+		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
 		numberOpenableParts: "none",
@@ -38,7 +38,7 @@ describe('windows', () => {
 		sideFinLeftDistance: 1,
 		type: "blinds",
 		thermalResistivityIncrease: 1,
-		solarTransmittenceReduction: 0.1,
+		solarTransmittanceReduction: 0.1,
 	};
 
 	const window2: WindowData = {
@@ -50,7 +50,7 @@ describe('windows', () => {
 		uValue: 1,
 		pitchOption: '90',
 		pitch: 90,
-		solarTransmittence: 0.1,
+		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
 		numberOpenableParts: "none",
@@ -62,7 +62,7 @@ describe('windows', () => {
 		sideFinLeftDistance: 1,
 		type: "blinds",
 		thermalResistivityIncrease: 1,
-		solarTransmittenceReduction: 0.1,
+		solarTransmittanceReduction: 0.1,
 	};
 
 	const window3: WindowData = {
@@ -74,7 +74,7 @@ describe('windows', () => {
 		uValue: 1,
 		pitchOption: '90',
 		pitch: 90,
-		solarTransmittence: 0.1,
+		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
 		numberOpenableParts: "none",
@@ -86,7 +86,7 @@ describe('windows', () => {
 		sideFinLeftDistance: 1,
 		type: "blinds",
 		thermalResistivityIncrease: 1,
-		solarTransmittenceReduction: 0.1,
+		solarTransmittanceReduction: 0.1,
 	};
 
 	it('window is removed when remove link is clicked', async () => {

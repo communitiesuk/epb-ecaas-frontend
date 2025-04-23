@@ -19,7 +19,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			uValue: fields.uValue,
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
-			solarTransmittence: fields.solarTransmittence,
+			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
 			numberOpenableParts: fields.numberOpenableParts,
@@ -110,11 +110,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			}"
 		/>
 		<FormKit
-			id="solarTransmittence"
+			id="solarTransmittance"
 			type="govInputFloat"
 			label="Transmittance of solar energy "
 			help="G value. Total solar energy transmittance of the transparent part of the window. Decimal between 0-1"
-			name="solarTransmittence"
+			name="solarTransmittance"
 			validation="required | number | min:0.01 | max:1"
 		/>
 		<FormKit

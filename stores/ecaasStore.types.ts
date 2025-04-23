@@ -240,7 +240,7 @@ export type ExternalGlazedDoorData = {
 	uValue: number;
 	pitchOption: string;
 	pitch?: number;
-	solarTransmittence: number;
+	solarTransmittance: number;
 	elevationalHeight: number;
 	midHeight: number;
 	numberOpenableParts: string;
@@ -274,7 +274,7 @@ export type WindowData = {
 	uValue: number;
 	pitchOption: string;
 	pitch?: number;
-	solarTransmittence: number;
+	solarTransmittance: number;
 	elevationalHeight: number;
 	midHeight: number;
 	numberOpenableParts: string;
@@ -294,7 +294,7 @@ export type WindowData = {
 	type?: string;
 	curtainsControlObject?: string;
 	thermalResistivityIncrease?: number;
-	solarTransmittenceReduction?: number;
+	solarTransmittanceReduction?: number;
 };
 
 export interface ThermalBridgingData {
