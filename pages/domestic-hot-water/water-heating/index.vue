@@ -5,6 +5,17 @@ const store = useEcaasStore();
 
 type WaterHeatingType = keyof typeof store.domesticHotWater.waterHeating;
 
+interface WaterHeatingData extends
+	StorageTankData,
+	ImmersionHeaterData,
+	SolarThermalData,
+	PointOfUseData,
+	HotWaterHeatPumpData,
+	CombiBoilerData,
+	WaterHeatingHeatBatteryData,
+	SmartHotWaterTankData,
+	WaterHeatingHeatInterfaceUnitData {}
+
 function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 	const waterHeating = store.domesticHotWater.waterHeating[waterHeatingType]?.data;
 
@@ -18,7 +29,7 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 	}
 }
 
-function handleDuplicate(waterHeatingType: WaterHeatingType, index: number) {
+function handleDuplicate<T extends WaterHeatingData>(waterHeatingType: WaterHeatingType, index: number) {
 	const waterHeating = store.domesticHotWater.waterHeating[waterHeatingType]?.data;
 	const waterHeatingItem = waterHeating[index];
 
@@ -29,7 +40,7 @@ function handleDuplicate(waterHeatingType: WaterHeatingType, index: number) {
 			state.domesticHotWater.waterHeating[waterHeatingType].data.push({
 				...waterHeatingItem,
 				name: `${waterHeatingItem.name} (${duplicates.length})`
-			});
+			} as T);
 		});
 	}
 }
