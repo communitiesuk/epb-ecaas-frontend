@@ -12,7 +12,7 @@ const saveForm = (fields: PointOfUseData) => {
 
 		const pointOfUseItem: PointOfUseData = {
 			name: fields.name,
-			setPointTemperature: fields.setPointTemperature,
+			setpointTemperature: fields.setpointTemperature,
 			heaterEfficiency: fields.heaterEfficiency,
 		};
 
@@ -48,11 +48,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required"
 		/>
 		<FormKit
-			id="setPointTemperature"
+			id="setpointTemperature"
 			type="govInputWithSuffix"
-			label="Set point temperature"
-			help="Set point temperature which the heating system is set to raise the temperature of the hot water. Not recommended to heat above 65 °C due to scalding risk."
-			name="setPointTemperature"
+			label="Setpoint temperature"
+			help="Setpoint temperature which the heating system is set to raise the temperature of the hot water. Not recommended to heat above 65 °C due to scalding risk."
+			name="setpointTemperature"
 			validation="required | number"
 			suffix-text="&deg;C">
 			<GovDetails summary-text="Help with this input">

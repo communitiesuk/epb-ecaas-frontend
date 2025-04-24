@@ -65,7 +65,7 @@ const pointOfUseSummary: SummarySection = {
 	data: pointOfUseData.map(d => {
 		return {
 			"Name": d.name,
-			"Set point temperature": d.setPointTemperature,
+			"Setpoint temperature": d.setpointTemperature,
 			"Heater efficiency": d.heaterEfficiency
 		};
 	}),

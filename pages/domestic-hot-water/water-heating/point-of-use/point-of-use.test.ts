@@ -14,7 +14,7 @@ describe('point of use', () => {
 
 	const pointOfUse: PointOfUseData = {
 		name: 'Point of use',
-		setPointTemperature: 25,
+		setpointTemperature: 25,
 		heaterEfficiency: 0.5,
 	};
 
@@ -24,7 +24,7 @@ describe('point of use', () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Point of use');
-		await user.type(screen.getByTestId('setPointTemperature'), '25');
+		await user.type(screen.getByTestId('setpointTemperature'), '25');
 		await user.type(screen.getByTestId('heaterEfficiency'), '0.5');
 		await user.tab();
 	};
@@ -59,7 +59,7 @@ describe('point of use', () => {
 		});
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Point of use');
-		expect((await screen.findByTestId('setPointTemperature') as HTMLInputElement).value).toBe('25');
+		expect((await screen.findByTestId('setpointTemperature') as HTMLInputElement).value).toBe('25');
 		expect((await screen.findByTestId('heaterEfficiency') as HTMLInputElement).value).toBe('0.5');
 	});
 
@@ -69,7 +69,7 @@ describe('point of use', () => {
 		await user.click(screen.getByRole('button'));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
-		expect((await screen.findByTestId('setPointTemperature_error'))).toBeDefined();
+		expect((await screen.findByTestId('setpointTemperature_error'))).toBeDefined();
 		expect((await screen.findByTestId('heaterEfficiency_error'))).toBeDefined();
 	});
 

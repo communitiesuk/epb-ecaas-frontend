@@ -286,7 +286,7 @@ describe('water heating', () => {
 
 		const pointOfUse1: PointOfUseData = {
 			name: "Point of use 1",
-			setPointTemperature: 0,
+			setpointTemperature: 0,
 			heaterEfficiency: 0,
 		};
 

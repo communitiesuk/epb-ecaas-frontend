@@ -34,7 +34,7 @@ describe('Domestic hot water summary', () => {
 
 		const pointOfUse: PointOfUseData = {
 			name: 'Point of use',
-			setPointTemperature: 25,
+			setpointTemperature: 25,
 			heaterEfficiency: 0.5,
 		};
 
@@ -144,7 +144,7 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Point of use",
-				"Set point temperature": "25",
+				"Setpoint temperature": "25",
 				"Heater efficiency": "0.5"
 			};
 	

@@ -373,7 +373,7 @@ export type SolarThermalData = {
 
 export type PointOfUseData = {
 	name: string;
-	setPointTemperature: number;
+	setpointTemperature: number;
 	heaterEfficiency: number;
 };
 
