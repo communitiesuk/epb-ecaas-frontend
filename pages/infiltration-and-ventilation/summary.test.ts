@@ -205,14 +205,14 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-		"Name": "Vent 1",
-		"Type of vent": "Trickle",
-		"Effective ventilation area": "10",
-		"Vent opening ratio": "1",
-		"Mid height of zone": "1",
-		"Pressure difference": "1",
-		"Orientation": "0",
-		"Pitch": "0"
+			"Name": "Vent 1",
+			"Type of vent": "Trickle",
+			"Effective ventilation area": "10",
+			"Vent opening ratio": "1",
+			"Mid height of zone": "1",
+			"Pressure difference": "1",
+			"Orientation": "0",
+			"Pitch": "0"
 
 		};
 
@@ -243,7 +243,7 @@ describe('Infiltration and ventilation summary', () => {
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-ventilation-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-			expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}
 	});
 
@@ -266,7 +266,7 @@ describe('Infiltration and ventilation summary', () => {
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-airPermeability-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-			expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}
 	});
 
@@ -286,18 +286,18 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-		"Type": "Open fireplace",
-		"Name": "Open fireplace 1",
-		"Air supply to appliance": "Room air",
-		"Exhaust method from appliance": "Into separate duct",
-		"Type of fuel": "Coal"
+				"Type": "Open fireplace",
+				"Name": "Open fireplace 1",
+				"Air supply to appliance": "Room air",
+				"Exhaust method from appliance": "Into separate duct",
+				"Type of fuel": "Coal"
 
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
@@ -315,18 +315,18 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-		"Type": "Closed fireplace with fan",
-		"Name": "Closed fireplace",
-		"Air supply to appliance": "Room air",
-		"Exhaust method from appliance": "Into separate duct",
-		"Type of fuel": "Wood"
+				"Type": "Closed fireplace with fan",
+				"Name": "Closed fireplace",
+				"Air supply to appliance": "Room air",
+				"Exhaust method from appliance": "Into separate duct",
+				"Type of fuel": "Wood"
 
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
@@ -344,18 +344,18 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-		"Type": "Open gas flue balancer",
-		"Name": "Open gas flue balancer 1",
-		"Air supply to appliance": "Outside",
-		"Exhaust method from appliance": "Into room",
-		"Type of fuel": "Gas"
+				"Type": "Open gas flue balancer",
+				"Name": "Open gas flue balancer 1",
+				"Air supply to appliance": "Outside",
+				"Exhaust method from appliance": "Into room",
+				"Type of fuel": "Gas"
 
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
@@ -372,19 +372,19 @@ describe('Infiltration and ventilation summary', () => {
 	
 			await renderSuspended(Summary);
 	
-		const expectedResult = {
-		"Type": "Open gas kitchen stove",
-		"Name": "Open gas kitchen stove 1",
-		"Air supply to appliance": "Outside",
-		"Exhaust method from appliance": "Into room",
-		"Type of fuel": "Oil"
+			const expectedResult = {
+				"Type": "Open gas kitchen stove",
+				"Name": "Open gas kitchen stove 1",
+				"Air supply to appliance": "Outside",
+				"Exhaust method from appliance": "Into room",
+				"Type of fuel": "Oil"
 
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
@@ -413,7 +413,7 @@ describe('Infiltration and ventilation summary', () => {
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
@@ -442,7 +442,7 @@ describe('Infiltration and ventilation summary', () => {
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 	});

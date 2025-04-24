@@ -94,7 +94,7 @@ describe('Dwelling details summary', () => {
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-generalSpecifications-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-			expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}
 	});
 
@@ -160,7 +160,7 @@ describe('Dwelling details summary', () => {
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-externalFactors-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-			expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}
 	});
 });

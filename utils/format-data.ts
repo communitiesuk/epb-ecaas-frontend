@@ -10,7 +10,7 @@ function formatData(
 		return "";
 	}
 	if(key === "Name"){
-		return value  
+		return value;  
 	}
 	if (typeof value == "string") {
 		const formattedString = value.split(/(?=[A-Z](?=[a-z]))/)

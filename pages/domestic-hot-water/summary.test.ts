@@ -98,7 +98,7 @@ describe('Domestic hot water summary', () => {
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-storageTank-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
@@ -125,7 +125,7 @@ describe('Domestic hot water summary', () => {
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-immersionHeater-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
@@ -151,7 +151,7 @@ describe('Domestic hot water summary', () => {
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-pointOfUse-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 	});
@@ -212,7 +212,7 @@ describe('Domestic hot water summary', () => {
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-mixedShower-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
@@ -237,7 +237,7 @@ describe('Domestic hot water summary', () => {
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-electricShower-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
@@ -263,7 +263,7 @@ describe('Domestic hot water summary', () => {
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-bath-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
@@ -288,7 +288,7 @@ describe('Domestic hot water summary', () => {
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-otherOutlets-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 	});
@@ -361,7 +361,7 @@ describe('Domestic hot water summary', () => {
 				const lineResult = (await screen.findByTestId(`summary-primaryPipework-${hyphenate(key)}`));
 
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 
@@ -388,7 +388,7 @@ describe('Domestic hot water summary', () => {
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-secondaryPipework-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 	});
@@ -442,7 +442,7 @@ describe('Domestic hot water summary', () => {
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-wwhrs-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
 		});
 	});

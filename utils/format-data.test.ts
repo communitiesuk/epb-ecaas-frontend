@@ -5,7 +5,7 @@ describe("formatData utils function" , () => {
 	
 	it("should return value unformatted if the key parameter is 'Name'", () => {
 		expect(formatData("Primary Pipework","Name", true)).toBe("Primary Pipework");
-	})
+	});
 
 	it("should return string with first character capitalised if capitaliseFirstLetter is true", () => {
 		expect(formatData("electricity", "", true)).toBe("Electricity");
