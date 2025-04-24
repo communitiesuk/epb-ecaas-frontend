@@ -85,16 +85,16 @@ describe('Dwelling details summary', () => {
 
 		const expectedResult = {
 			"Type of dwelling": "House",
-			"Number of storeys in building": 2,
-			"Number of bedrooms": 3,
+			"Number of storeys in building": "2",
+			"Number of bedrooms": "3",
 			"Part G compliance": "Yes",
 			"Cooling required": "No"
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-generalSpecifications-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 		}
 	});
 
@@ -132,7 +132,7 @@ describe('Dwelling details summary', () => {
 
 			const result = value.every(v => lineValues.includes(v));
 
-			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 			expect(result).toBe(true);
 		}
 	});
@@ -151,7 +151,7 @@ describe('Dwelling details summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Altitude": 3,
+			"Altitude": "3",
 			"Type of exposure": "Shielded",
 			"Terrain type": "Suburban",
 			"Noise nuisance": "No"
@@ -159,8 +159,8 @@ describe('Dwelling details summary', () => {
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-externalFactors-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 		}
 	});
 });

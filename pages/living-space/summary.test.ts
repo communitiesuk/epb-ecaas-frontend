@@ -277,15 +277,15 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Area": 10,
-				"Volume": 10,
-				"Heating control type": 'Seperate temp control'
+				"Area": "10",
+				"Volume": "10",
+				"Heating control type": "Seperate temp control"
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceZoneParameters-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});
@@ -311,22 +311,23 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": "Ground 1",
-				"Surface area in zone": 5,
-				"Surface area in all zones": 0,
-				"Pitch": 0,
-				"U-value": 1,
-				"Areal heat capacity": 100,
-				"Mass distribution class": 'Internal',
-				"Perimeter": 0,
-				"Psi of wall junction": 0,
-				"Type of ground floor": 'Slab no edge insulation',
+		"Name": "Ground 1",
+		"Surface area in zone": "5",
+		"Surface area in all zones": "0",
+		"Pitch": "0",
+		"U-value": "1",
+		"Areal heat capacity": "100",
+		"Mass distribution class": "Internal",
+		"Perimeter": "0",
+		"Psi of wall junction": "0",
+		"Type of ground floor": "Slab no edge insulation"
+
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceGroundFloors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -342,19 +343,19 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type of internal floor": 'Heated space',
-				"Name": 'Internal 1',
-				"Surface area of element": 5,
-				"U-value": 1,
-				"Areal heat capacity": 100,
-				"Mass distribution class": 'Internal',
-				"Pitch": 0
+				"Type of internal floor": "Heated space",
+				"Name": "Internal 1",
+				"Surface area of element": "5",
+				"U-value": "1",
+				"Areal heat capacity": "100",
+				"Mass distribution class": "Internal",
+				"Pitch": "0"
 			};
-	
+			
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceInternalFloors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -370,23 +371,24 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": 'Exposed Floor 1',
-				"Pitch": 0,
-				"Orientation": 0,
-				"Length": 0.5,
-				"Width": 20,
-				"Elevational height of building element at its base": 20,
-				"Surface area": 10,
-				"Solar absorption coefficient": 0.1,
-				"U-value": 1,
-				"Areal heat capacity": 100,
-				"Mass distribution class": 'Internal'
+				"Name": "Exposed Floor 1",
+				"Pitch": "0",
+				"Orientation": "0",
+				"Length": "0.5",
+				"Width": "20",
+				"Elevational height of building element at its base": "20",
+				"Surface area": "10",
+				"Solar absorption coefficient": "0.1",
+				"U-value": "1",
+				"Areal heat capacity": "100",
+				"Mass distribution class": "Internal"
 			};
+			
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceExposedFloors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});
@@ -413,23 +415,23 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": 'External wall 1',
-				"Pitch": 90,
-				"Orientation": 0,
-				"Height": 0.5,
-				"Length": 20,
-				"Elevational height of building element at its base": 20,
-				"Surface area": 10,
-				"Solar absorption coefficient": 0.1,
-				"U-value": 1,
-				"Areal heat capacity": 100,
-				"Mass distribution class": 'Internal'
+				"Name": "External wall 1",
+				"Pitch": "90",
+				"Orientation": "0",
+				"Height": "0.5",
+				"Length": "20",
+				"Elevational height of building element at its base": "20",
+				"Surface area": "10",
+				"Solar absorption coefficient": "0.1",
+				"U-value": "1",
+				"Areal heat capacity": "100",
+				"Mass distribution class": "Internal"
 			};
-	
+			
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceExternalWalls-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -445,18 +447,19 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": 'Internal 1',
-				"Surface area of element": 5,
-				"U-value": 1,
-				"Areal heat capacity": 100,
-				"Mass distribution class": 'Internal',
-				"Pitch": 0
+				"Name": "Internal 1",
+				"Surface area of element": "5",
+				"U-value": "1",
+				"Areal heat capacity": "100",
+				"Mass distribution class": "Internal",
+				"Pitch": "0"
 			};
+			
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceInternalWalls-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -472,19 +475,20 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": 'Wall to unheated space 1',
-				"Surface area of element": 500,
-				"U-value": 10,
-				"Areal heat capacity": 40000,
-				"Mass distribution class": 'External',
-				"Pitch": 90,
-				"Thermal resistance of adjacent unheated space": 1
+				"Name": "Wall to unheated space 1",
+				"Surface area of element": "500",
+				"U-value": "10",
+				"Areal heat capacity": "40000",
+				"Mass distribution class": "External",
+				"Pitch": "90",
+				"Thermal resistance of adjacent unheated space": "1"
 			};
+			
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceUnheatedSpaceWalls-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -500,23 +504,23 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": 'Party wall 1',
-				"Pitch": 90,
-				"Orientation": 0,
-				"Height": 0.5,
-				"Length": 20,
-				"Elevational height of building element at its base": 20,
-				"Surface area": 10,
-				"Solar absorption coefficient": 0.1,
-				"U-value": 1,
-				"Areal heat capacity": 100,
-				"Mass distribution class": 'Internal'
+				"Name": "Party wall 1",
+				"Pitch": "90",
+				"Orientation": "0",
+				"Height": "0.5",
+				"Length": "20",
+				"Elevational height of building element at its base": "20",
+				"Surface area": "10",
+				"Solar absorption coefficient": "0.1",
+				"U-value": "1",
+				"Areal heat capacity": "100",
+				"Mass distribution class": "Internal"
 			};
-	
+			
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpacePartyWalls-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});
@@ -541,19 +545,20 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type of ceiling": 'Heated space',
-				"Name": 'Ceiling 1',
-				"Surface area": 5,
-				"U-value": 1,
-				"Areal heat capacity": 100,
-				"Mass distribution class": 'Internal',
-				"Pitch": 180
+				"Type of ceiling": "Heated space",
+				"Name": "Ceiling 1",
+				"Surface area": "5",
+				"U-value": "1",
+				"Areal heat capacity": "100",
+				"Mass distribution class": "Internal",
+				"Pitch": "180"
 			};
+			
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceCeilings-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -567,26 +572,26 @@ describe('Living space fabric summary', () => {
 			});
 	
 			await renderSuspended(Summary);
-	
 			const expectedResult = {
-				"Name": 'Roof 1',
-				"Type of roof": 'Flat',
-				"Pitch": 180,
-				"Orientation": 0,
-				"Length": 1,
-				"Width": 1,
-				"Elevational height of building element at its base": 2,
-				"Surface area": 1,
-				"Solar absorption coefficient": 0.5,
-				"U-value": 1,
-				"Areal heat capacity": 100,
-				"Mass distribution class": 'Internal'
+				"Name": "Roof 1",
+				"Type of roof": "Flat",
+				"Pitch": "180",
+				"Orientation": "0",
+				"Length": "1",
+				"Width": "1",
+				"Elevational height of building element at its base": "2",
+				"Surface area": "1",
+				"Solar absorption coefficient": "0.5",
+				"U-value": "1",
+				"Areal heat capacity": "100",
+				"Mass distribution class": "Internal"
 			};
+			
 
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceRoofs-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -602,24 +607,24 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": 'Roof 1',
-				"Type of roof": 'Unheated pitched',
-				"Pitch": 180,
-				"Orientation": 0,
-				"Length": 1,
-				"Width": 1,
-				"Elevational height of building element at its base": 2,
-				"Surface area": 1,
-				"Solar absorption coefficient": 0.5,
-				"U-value": 1,
-				"Areal heat capacity": 100,
-				"Mass distribution class": 'Internal'
+				"Name": "Roof 1",
+				"Type of roof": "Unheated pitched",
+				"Pitch": "0",
+				"Orientation": "90",
+				"Length": "1",
+				"Width": "1",
+				"Elevational height of building element at its base": "2",
+				"Surface area": "1",
+				"Solar absorption coefficient": "0.5",
+				"U-value": "1",
+				"Areal heat capacity": "50000",
+				"Mass distribution class": "Internal"
 			};
-
+	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceUnheatedPitchedRoofs-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});
@@ -645,23 +650,24 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": 'External unglazed door 1',
-				"Pitch": 90,
-				"Orientation": 0,
-				"Height": 0.5,
-				"Width": 20,
-				"Elevational height of building element at its base": 20,
-				"Surface area": 10,
-				"Solar absorption coefficient": 0.1,
-				"U-value": 1,
-				"Areal heat capacity": 100,
-				"Mass distribution class": 'Internal'
+				"Name": "External unglazed door 1",
+				"Pitch": "90",
+				"Orientation": "0",
+				"Height": "0.5",
+				"Width": "20",
+				"Elevational height of building element at its base": "20",
+				"Surface area": "10",
+				"Solar absorption coefficient": "0.1",
+				"U-value": "1",
+				"Areal heat capacity": "100",
+				"Mass distribution class": "Internal"
 			};
+			
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceUnglazedDoors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -677,23 +683,23 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": 'External glazed door 1',
-				"Orientation": 1,
-				"Surface area": 1,
-				"Height": 1,
-				"Width": 1,
-				"U-value": 1,
-				"Pitch": 90,
-				"Transmittance of solar energy": 0.1,
-				"Elevational height of building element at its base": 1,
-				"Mid height": 1,
-				"Number of openable parts": 'None'
+				"Name": "External glazed door 1",
+				"Orientation": "1",
+				"Surface area": "1",
+				"Height": "1",
+				"Width": "1",
+				"U-value": "1",
+				"Pitch": "90",
+				"Transmittance of solar energy": "0.1",
+				"Elevational height of building element at its base": "1",
+				"Mid height": "1",
+				"Number of openable parts": "None"
 			};
-	
+			
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceGlazedDoors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -709,19 +715,20 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type": 'Heated space',
-				"Name": 'Internal 1',
-				"Surface area of element": 5,
-				"U-value": 1,
-				"Areal heat capacity": 100,
-				"Mass distribution class": 'Internal',
-				"Pitch": 90
+				"Type": "Heated space",
+				"Name": "Internal 1",
+				"Surface area of element": "5",
+				"U-value": "1",
+				"Areal heat capacity": "100",
+				"Mass distribution class": "Internal",
+				"Pitch": "90"
 			};
+			
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceInternalDoors-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});
@@ -743,34 +750,34 @@ describe('Living space fabric summary', () => {
 			});
 	
 			await renderSuspended(Summary);
-	
 			const expectedResult = {
-				"Name": 'Window 1',
-				"Orientation": 1,
-				"Surface area": 1,
-				"Height": 1,
-				"Width": 1,
-				"U-value": 1,
-				"Pitch": 90,
-				"Transmittance of solar energy": 0.1,
-				"Elevational height of building element at its base": 1,
-				"Mid height": 1,
-				"Number of openable parts": 'None',
-				"Overhang depth": 1,
-				"Overhang distance": 1,
-				"Side fin right depth": 1,
-				"Side fin right distance": 1,
-				"Side fin left depth": 1,
-				"Side fin left distance": 1,
-				"Type": 'Blinds',
-				"Thermal resistivity increase": 1,
-				"Solar transmittance reduction": 0.1
+				"Name": "Window 1",
+				"Orientation": "1",
+				"Surface area": "1",
+				"Height": "1",
+				"Width": "1",
+				"U-value": "1",
+				"Pitch": "90",
+				"Transmittance of solar energy": "0.1",
+				"Elevational height of building element at its base": "1",
+				"Mid height": "1",
+				"Number of openable parts": "None",
+				"Overhang depth": "1",
+				"Overhang distance": "1",
+				"Side fin right depth": "1",
+				"Side fin right distance": "1",
+				"Side fin left depth": "1",
+				"Side fin left distance": "1",
+				"Type": "Blinds",
+				"Thermal resistivity increase": "1",
+				"Solar transmittance reduction": "0.1"
 			};
+			
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceWindows-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});
@@ -793,18 +800,18 @@ describe('Living space fabric summary', () => {
 			});
 	
 			await renderSuspended(Summary);
-	
 			const expectedResult = {
-				"Name": 'E1: Steel lintel with perforated steel base plate',
-				"Type of thermal bridge": 'E1',
-				"Linear thermal transmittance": 1,
-				"Length of thermal bridge": 2
+				"Name": "E1: Steel lintel with perforated steel base plate",
+				"Type of thermal bridge": "E1",
+				"Linear thermal transmittance": "1",
+				"Length of thermal bridge": "2"
 			};
+			
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpaceLinearThermalBridging-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -820,14 +827,14 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": 'Point 1',
-				"Heat transfer coefficient": 1
+				"Name": "Point 1",
+				"Heat transfer coefficient": "1"
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-livingSpacePointThermalBridging-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});

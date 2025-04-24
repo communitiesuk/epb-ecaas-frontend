@@ -123,21 +123,21 @@ describe('Infiltration and ventilation summary', () => {
 		});
 
 		await renderSuspended(Summary);
-
 		const expectedResult = {
-			"Name": 'Mechanical name 1',
-			"Type of mechanical ventilation": 'mvhr',
-			"Control for the supply airflow": 'load',
-			"Supply air temperature control": 'odaComp',
-			"Air flow rate": 12,
-			"MVHR location": 'inside',
-			"MVHR efficiency": 0.2,
+			"Name": "Mechanical name 1",
+			"Type of mechanical ventilation": "Mvhr",
+			"Control for the supply airflow": "Load",
+			"Supply air temperature control": "Oda comp",
+			"Air flow rate": "12",
+			"MVHR location": "Inside",
+			"MVHR efficiency": "0.2"
 		};
+		
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
 		}
 	});
 
@@ -156,12 +156,12 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 		const expectedResult = {
 			"Name": "Ducktwork 1",
-			"MVHR unit": "Mechanical name 1",
+			"MVHR unit": 'Mechanical name 1',
 			"Ductwork cross sectional shape": 'Circular',
 			"Duct type": 'Intake',
-			"Internal diameter of ductwork": "300",
-			"External diameter of ductwork": "1000",
-			"Thermal insulation conductivity of ductwork": "10",
+			"Internal diameter of ductwork": '300',
+			"External diameter of ductwork": '1000',
+			"Thermal insulation conductivity of ductwork": '10',
 			"Surface reflectivity": 'Reflective'
 		};
 
@@ -205,20 +205,21 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Name": 'Vent 1',
-			"Type of vent": 'trickle',
-			"Effective ventilation area": 10,
-			"Vent opening ratio": 1,
-			"Mid height of zone": 1,
-			"Pressure difference": 1,
-			"Orientation": 0,
-			"Pitch": 0
+		"Name": "Vent 1",
+		"Type of vent": "Trickle",
+		"Effective ventilation area": "10",
+		"Vent opening ratio": "1",
+		"Mid height of zone": "1",
+		"Pressure difference": "1",
+		"Orientation": "0",
+		"Pitch": "0"
+
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-vents-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}
 	});
 
@@ -234,15 +235,15 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Elevational height of dwelling at its base": 1,
+			"Elevational height of dwelling at its base": "1",
 			"Cross vent factor": 'Yes',
-			"Maximum required air change rate": 1
+			"Maximum required air change rate": "1"
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-ventilation-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 		}
 	});
 
@@ -258,14 +259,14 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Test pressure": 1,
-			"Air tightness test result": 1
+			"Test pressure": "1",
+			"Air tightness test result": "1"
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-airPermeability-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-			expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 		}
 	});
 
@@ -285,17 +286,18 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type": 'Open fireplace',
-				"Name": 'Open fireplace 1',
-				"Air supply to appliance": 'Room air',
-				"Exhaust method from appliance": 'Into separate duct',
-				"Type of fuel": 'coal'
+		"Type": "Open fireplace",
+		"Name": "Open fireplace 1",
+		"Air supply to appliance": "Room air",
+		"Exhaust method from appliance": "Into separate duct",
+		"Type of fuel": "Coal"
+
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -313,17 +315,18 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type": 'Closed fireplace',
-				"Name": 'Closed fireplace',
-				"Air supply to appliance": 'Room air',
-				"Exhaust method from appliance": 'Into separate duct',
-				"Type of fuel": 'wood'
+		"Type": "Closed fireplace with fan",
+		"Name": "Closed fireplace",
+		"Air supply to appliance": "Room air",
+		"Exhaust method from appliance": "Into separate duct",
+		"Type of fuel": "Wood"
+
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -341,17 +344,18 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type": 'Open gas flue balancer',
-				"Name": 'Open gas flue balancer 1',
-				"Air supply to appliance": 'Outside',
-				"Exhaust method from appliance": 'Into room',
-				"Type of fuel": 'gas'
+		"Type": "Open gas flue balancer",
+		"Name": "Open gas flue balancer 1",
+		"Air supply to appliance": "Outside",
+		"Exhaust method from appliance": "Into room",
+		"Type of fuel": "Gas"
+
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -368,18 +372,19 @@ describe('Infiltration and ventilation summary', () => {
 	
 			await renderSuspended(Summary);
 	
-			const expectedResult = {
-				"Type": 'Open gas kitchen stove',
-				"Name": 'Open gas kitchen stove 1',
-				"Air supply to appliance": 'Outside',
-				"Exhaust method from appliance": 'Into room',
-				"Type of fuel": 'oil'
+		const expectedResult = {
+		"Type": "Open gas kitchen stove",
+		"Name": "Open gas kitchen stove 1",
+		"Air supply to appliance": "Outside",
+		"Exhaust method from appliance": "Into room",
+		"Type of fuel": "Oil"
+
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -397,17 +402,18 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type": 'Open gas fire',
-				"Name": 'Open gas fire 1',
-				"Air supply to appliance": 'Outside',
-				"Exhaust method from appliance": 'Into mechanical vent',
-				"Type of fuel": 'oil'
+				"Type": "Open gas fire",
+				"Name": "Open gas fire 1",
+				"Air supply to appliance": "Outside",
+				"Exhaust method from appliance": "Into mechanical vent",
+				"Type of fuel": "Oil"
 			};
+			
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -425,17 +431,18 @@ describe('Infiltration and ventilation summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type": 'Closed fire',
-				"Name": 'Closed fire 1',
-				"Air supply to appliance": 'Outside',
-				"Exhaust method from appliance": 'Into mechanical vent',
-				"Type of fuel": 'coal'
+				"Type": "Closed fire",
+				"Name": "Closed fire 1",
+				"Air supply to appliance": "Outside",
+				"Exhaust method from appliance": "Into mechanical vent",
+				"Type of fuel": "Coal"
 			};
+			
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});

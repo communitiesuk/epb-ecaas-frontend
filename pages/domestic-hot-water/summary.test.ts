@@ -91,14 +91,14 @@ describe('Domestic hot water summary', () => {
 			const expectedResult = {
 				"Name": "Storage tank 1",
 				"Heat source": "Heat pump",
-				"Tank volume": 5,
-				"Daily energy loss": 1,
+				"Tank volume": "5",
+				"Daily energy loss": "1",
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-storageTank-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -117,15 +117,15 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Immersion heater",
-				"Rated power": 10,
-				"Heater position": 1,
-				"Thermostat position": 1,
+				"Rated power": "10",
+				"Heater position": "1",
+				"Thermostat position": "1",
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-immersionHeater-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -144,14 +144,14 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Point of use",
-				"Set point temperature": 25,
-				"Heater efficiency": 0.5
+				"Set point temperature": "25",
+				"Heater efficiency": "0.5"
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-pointOfUse-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});
@@ -206,13 +206,13 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Mixed shower 1",
-				"Flow rate": 10
+				"Flow rate": "10"
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-mixedShower-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -231,13 +231,13 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Electric shower 1",
-				"Rated power": 10
+				"Rated power": "10"
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-electricShower-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -256,14 +256,14 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Bath 1",
-				"Size": 170,
-				"Flow rate": 10
+				"Size": "170",
+				"Flow rate": "10"
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-bath-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -282,13 +282,13 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Basin tap 1",
-				"Flow rate": 10
+				"Flow rate": "10"
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-otherOutlets-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});
@@ -297,7 +297,7 @@ describe('Domestic hot water summary', () => {
 		const storageTankId = 'c84528bb-f805-4f1e-95d3-2bd17384fdbe';
 
 		const primaryPipework: PrimaryPipeworkData = {
-			name: 'Pipework Kitchen Sink',
+			name: 'Pipework Kitchen Sink Primary',
 			internalDiameter: 10,
 			externalDiameter: 10,
 			length: 3,
@@ -310,7 +310,7 @@ describe('Domestic hot water summary', () => {
 		};
 
 		const secondaryPipework: SecondaryPipeworkData = {
-			name: 'Pipework Kitchen Sink',
+			name: 'Pipework Kitchen Sink Secondary',
 			length: 3,
 			location: 'internal',
 			internalDiameter: 0.09
@@ -345,12 +345,12 @@ describe('Domestic hot water summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": "Pipework 1",
-				"Internal diameter": 10,
-				"External diameter": 10,
-				"Length": 2,
-				"Insulation thickness": 5,
-				"Thermal conductivity": 1,
+				"Name": "Pipework Kitchen Sink Primary",
+				"Internal diameter": "10",
+				"External diameter": "10",
+				"Length": "3",
+				"Insulation thickness": "5",
+				"Thermal conductivity": "1",
 				"Surface reflectivity": "Reflective",
 				"Pipe contents": "Water",
 				"Storage tank": 'Storage tank 1',
@@ -359,8 +359,9 @@ describe('Domestic hot water summary', () => {
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-primaryPipework-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 
@@ -378,16 +379,16 @@ describe('Domestic hot water summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": "Pipework Kitchen Sink",
-				"Length": 3,
+				"Name": "Pipework Kitchen Sink Secondary",
+				"Length": "3",
 				"Location": "Internal",
-				"Internal diameter": 0.09
+				"Internal diameter": "0.09"
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-secondaryPipework-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});
@@ -433,15 +434,15 @@ describe('Domestic hot water summary', () => {
 				"Name": "WWHRS 1",
 				"Outlet": "Mixed shower 1",
 				"Type": "A",
-				"Flow rate": 10,
-				"Efficiency": 50,
-				"Proportion of use": 1
+				"Flow rate": "10",
+				"Efficiency": "10",
+				"Proportion of use": "0.5"
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-wwhrs-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.getHTML() == `${key}`);
-				expect(lineResult.querySelector("dd")?.getHTML() == `${value}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value)
 			}
 		});
 	});
