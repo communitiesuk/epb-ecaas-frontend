@@ -1,6 +1,6 @@
-import { checkMvhrHasDuckwork } from "~/utils/checkMvhrHasDuckwork";
+import { checkMvhrHasDuctwork } from "~/utils/checkMvhrHasDuctwork";
 
-describe('checkMvhrHasDuckwork', () => {
+describe('checkMvhrHasDuctwork', () => {
 	const store = useEcaasStore();
 	const mechanicalVentilationData1: MechanicalVentilationData = {
 		name: "Mechanical name 1",
@@ -72,7 +72,7 @@ describe('checkMvhrHasDuckwork', () => {
 			}
 		});
 
-		expect(checkMvhrHasDuckwork()).toBe(true);
+		expect(checkMvhrHasDuctwork()).toBe(true);
 	});
 
 	it('should return false if at least one mvhr does not have a corresponding ductwork', async () => {
@@ -87,7 +87,7 @@ describe('checkMvhrHasDuckwork', () => {
 			}
 		});
 
-		expect(checkMvhrHasDuckwork()).toBe(false);
+		expect(checkMvhrHasDuctwork()).toBe(false);
 	});
 
 	it('should handle multiple mechanical ventilation objects of different types', async () => {
@@ -101,6 +101,6 @@ describe('checkMvhrHasDuckwork', () => {
 				}
 			}
 		});
-		expect(checkMvhrHasDuckwork()).toBe(true);
+		expect(checkMvhrHasDuctwork()).toBe(true);
 	});
 });

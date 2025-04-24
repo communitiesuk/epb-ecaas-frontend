@@ -1,4 +1,4 @@
-export const checkMvhrHasDuckwork = () => {
+export const checkMvhrHasDuctwork = () => {
 	const store = useEcaasStore();
 
 	let mvhrArray = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === 'mvhr');
