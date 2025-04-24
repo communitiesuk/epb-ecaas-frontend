@@ -19,15 +19,15 @@ describe('cooling', () => {
 	});
 
 	describe('air conditioning', () => {
-		const airConditioning1: AirConditioningData = {
+		const airConditioning1: Partial<AirConditioningData> = {
 			name: "Air conditioner 1"
 		};
 	
-		const airConditioning2: AirConditioningData = {
+		const airConditioning2: Partial<AirConditioningData> = {
 			name: "Air conditioner 2"
 		};
 
-		const airConditioning3: AirConditioningData = {
+		const airConditioning3: Partial<AirConditioningData> = {
 			name: "Air conditioner 3"
 		};
 	

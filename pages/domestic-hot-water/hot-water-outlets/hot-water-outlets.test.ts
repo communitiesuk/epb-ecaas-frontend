@@ -1,6 +1,7 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
+import { v4 as uuidv4 } from 'uuid';
 import HotWaterOutlets from './index.vue';
 
 describe('hot water outlets', () => {
@@ -10,6 +11,7 @@ describe('hot water outlets', () => {
 		const user = userEvent.setup();
 
 		const mixedShower1: MixedShowerData = {
+			id: uuidv4(),
 			name: "Mixed shower 1",
 			flowRate: 10
 		};
@@ -101,6 +103,7 @@ describe('hot water outlets', () => {
 		const user = userEvent.setup();
 
 		const electricShower1: ElectricShowerData = {
+			id: uuidv4(),
 			name: "Electric shower 1",
 			ratedPower: 10
 		};
@@ -192,6 +195,7 @@ describe('hot water outlets', () => {
 		const user = userEvent.setup();
 
 		const bath1: BathData = {
+			id: uuidv4(),
 			name: "Bath 1",
 			size: 100,
 			flowRate: 10
@@ -284,6 +288,7 @@ describe('hot water outlets', () => {
 		const user = userEvent.setup();
 
 		const basinTap1: OtherHotWaterOutletData = {
+			id: uuidv4(),
 			name: "Basin tap 1",
 			flowRate: 10
 		};

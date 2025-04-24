@@ -12,7 +12,7 @@ describe('instantElectricHeater', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const instantElectricHeater: InstantElectricHeaterData = {
+	const instantElectricHeater: InstantElectricStorageData = {
 		name: 'Instant electric heater 1',
 		ratedPower: 3,
 		convectionFraction: 0.2

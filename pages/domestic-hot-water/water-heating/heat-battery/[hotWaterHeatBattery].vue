@@ -4,13 +4,13 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const heatBatteryData = useItemToEdit('hotWaterHeatBattery', store.domesticHotWater.waterHeating.heatBattery.data);
-const model: Ref<HeatBatteryData> = ref(heatBatteryData!);
+const model: Ref<WaterHeatingHeatBatteryData> = ref(heatBatteryData!);
 
-const saveForm = (fields: HeatBatteryData) => {
+const saveForm = (fields: WaterHeatingHeatBatteryData) => {
 	store.$patch((state) => {
 		const {heatBattery} = state.domesticHotWater.waterHeating;
 
-		const heatBatteryItem: HeatBatteryData = {
+		const heatBatteryItem: WaterHeatingHeatBatteryData = {
 			name: fields.name
 		};
 

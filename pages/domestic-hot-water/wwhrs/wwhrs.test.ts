@@ -8,16 +8,16 @@ describe('wwhrs', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const wwhrs1: WwhrsData = {
+	const wwhrs1: Partial<WwhrsData> = {
 		name: "WWHRS 1"
 	};
 
-	const wwhrs2: WwhrsData = {
+	const wwhrs2: Partial<WwhrsData> = {
 		...wwhrs1,
 		name: "WWHRS 2",
 	};
 
-	const wwhrs3: WwhrsData = {
+	const wwhrs3: Partial<WwhrsData> = {
 		...wwhrs1,
 		name: "WWHRS 3"
 	};

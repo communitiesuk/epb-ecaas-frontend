@@ -29,7 +29,7 @@ function handleDuplicate(applianceType: ApplianceType, index: number) {
 			const newAppliance = {
 				...appliance,
 				name: `${appliance.name} (${duplicates.length})`
-			} as T;
+			};
 
 			state.infiltrationAndVentilation.combustionAppliances[applianceType]!.data.push(newAppliance);
 		});

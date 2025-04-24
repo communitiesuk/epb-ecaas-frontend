@@ -1,6 +1,7 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
+import { v4 as uuidv4 } from 'uuid';
 import WaterHeating from './index.vue';
 import type { CombiBoilerData, HeatBatteryData, WaterHeatingHeatInterfaceUnitData, HotWaterHeatPumpData, ImmersionHeaterData, PointOfUseData, SmartHotWaterTankData, SolarThermalData, StorageTankData } from "~/stores/ecaasStore.types";
 
@@ -11,6 +12,7 @@ describe('water heating', () => {
 		const user = userEvent.setup();
 
 		const storageTank1: StorageTankData = {
+			id: uuidv4(),
 			tankVolume: 5,
 			dailyEnergyLoss: 1,
 			name: "Storage tank 1"
@@ -552,6 +554,7 @@ describe('water heating', () => {
 		const user = userEvent.setup();
 
 		const heatBattery1: HeatBatteryData = {
+			id: uuidv4(),
 			name: "Heat battery 1"
 		};
 

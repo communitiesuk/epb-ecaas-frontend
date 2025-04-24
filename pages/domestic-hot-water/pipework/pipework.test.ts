@@ -2,20 +2,19 @@ import { renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Pipework from "./index.vue";
-import type { PipeworkData } from "~/stores/ecaasStore.types";
 
 describe("Pipeworks", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const pipework1: PipeworkData = {
+	const pipework1: Partial<PrimaryPipeworkData> = {
 		name: "Pipework Kitchen Sink",
 		length: 3,
 		location: "internal",
 		internalDiameter: 30,
 	};
 
-	const pipework2: PipeworkData = {
+	const pipework2: Partial<PrimaryPipeworkData> = {
 		name: "Pipework Kitchen",
 		length: 4,
 		location: "internal",

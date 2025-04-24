@@ -2,6 +2,7 @@ import { renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
 import HeatGeneration from './index.vue';
+import { v4 as uuidv4 } from "uuid";
 
 describe('heat generation', () => {
 
@@ -10,6 +11,7 @@ describe('heat generation', () => {
 		const user = userEvent.setup();
 
 		const heatPump1: HeatPumpData = {
+			id: uuidv4(),
 			name: "Heat pump 1"
 		};
 
@@ -75,6 +77,7 @@ describe('heat generation', () => {
 		const user = userEvent.setup();
 
 		const boiler1: BoilerData = {
+			id: uuidv4(),
 			name: "boiler 1"
 		};
 
@@ -140,6 +143,7 @@ describe('heat generation', () => {
 		const user = userEvent.setup();
 
 		const heatBattery1: HeatBatteryData = {
+			id: uuidv4(),
 			name: "heatBattery 1"
 		};
 
@@ -205,6 +209,7 @@ describe('heat generation', () => {
 		const user = userEvent.setup();
 
 		const heatNetwork1: HeatNetworkData = {
+			id: uuidv4(),
 			name: "heatNetwork 1"
 		};
 
@@ -270,6 +275,7 @@ describe('heat generation', () => {
 		const user = userEvent.setup();
 
 		const heatInterfaceUnit1: HeatInterfaceUnitData = {
+			id: uuidv4(),
 			name: "heatInterfaceUnit 1"
 		};
 
