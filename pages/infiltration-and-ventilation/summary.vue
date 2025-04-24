@@ -169,10 +169,10 @@ const summarySections: SummarySection[] = [
 					</template>
 				</GovSummaryTab>
 
-				<GovSummaryTab :summary="ventilationSummary" :selected="tabProps.currentTab === 2" />
-				<GovSummaryTab :summary="airPermeabilitySummary" :selected="tabProps.currentTab === 3" />
+				<GovSummaryTab :summary="ventilationSummary" :selected="tabProps.currentTab === 3" />
+				<GovSummaryTab :summary="airPermeabilitySummary" :selected="tabProps.currentTab === 4" />
 
-				<GovSummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 4">
+				<GovSummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 5">
 					<template #empty>
 						<h2 class="govuk-heading-m">No combustion appliances added</h2>
 						<NuxtLink class="govuk-link" :to="getUrl('combustionAppliances')">
