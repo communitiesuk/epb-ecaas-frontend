@@ -112,7 +112,7 @@ describe('internal wall', () => {
 
 		const { livingSpaceInternalWall } = store.livingSpaceFabric.livingSpaceWalls;
 		
-		expect(livingSpaceInternalWall?.data[0].pitch).toEqual(100);
+		expect(livingSpaceInternalWall?.data[0]?.pitch).toEqual(100);
 	});
 
 	it('navigates to walls page when valid form is completed', async () => {

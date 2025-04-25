@@ -13,7 +13,7 @@ export function useForm() {
 			form.data = [];
 		}
 
-		const routeParam = route.params[Object.keys(route.params)[0]];
+		const routeParam = route.params[Object.keys(route.params)[0]!];
 	
 		if (routeParam && routeParam !== 'create') {
 			const index = parseInt(routeParam as string);

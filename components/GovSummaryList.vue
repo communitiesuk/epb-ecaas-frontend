@@ -34,7 +34,7 @@ const overflow = Array.isArray(props.data) && props.data.length > 3;
 				</div>
 			</template>
 			<template v-if="Array.isArray(data) && data.length">
-				<template v-for="(key, keyIndex) in Object.keys(data[0])" :key="key">
+				<template v-for="(key, keyIndex) in Object.keys(data[0]!)" :key="key">
 					<div v-if="data.some(x => x[key] != undefined)" class="govuk-summary-list__row" :data-testid="`summary-${id}-${hyphenate(key as string)}`">
 						<dt class="govuk-summary-list__key" >{{ key }}</dt>
 						<template v-for="(entry, index) in data" :key="`entry-${key}-${index}`">

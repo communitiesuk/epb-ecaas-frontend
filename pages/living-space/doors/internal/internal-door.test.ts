@@ -180,7 +180,7 @@ describe('internal door', () => {
 
 		const { livingSpaceInternalDoor } = store.livingSpaceFabric.livingSpaceDoors;
 		
-		expect(livingSpaceInternalDoor?.data[0].pitch).toEqual(90);
+		expect(livingSpaceInternalDoor?.data[0]?.pitch).toEqual(90);
 	});
 
 	it('navigates to doors page when valid form is completed', async () => {

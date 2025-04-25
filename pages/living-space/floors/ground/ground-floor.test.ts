@@ -202,7 +202,7 @@ describe('ground floor', () => {
 			await user.click(screen.getByRole('button'));
 	
 			const { data } = store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor;
-			const entryData = Object.entries(data[0]).filter(e => e[1] !== undefined);
+			const entryData = Object.entries(data[0]!).filter(e => e[1] !== undefined);
 			
 			expect(Object.fromEntries(entryData)).toEqual(groundFloorWithSuspendedFloor);
 		});
@@ -259,7 +259,7 @@ describe('ground floor', () => {
 			await user.click(screen.getByRole('button'));
 	
 			const { data } = store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor;
-			const entryData = Object.entries(data[0]).filter(e => e[1] !== undefined);
+			const entryData = Object.entries(data[0]!).filter(e => e[1] !== undefined);
 			
 			expect(Object.fromEntries(entryData)).toEqual(groundFloorWithHeatedBasement);
 		});
@@ -315,7 +315,7 @@ describe('ground floor', () => {
 			await user.click(screen.getByRole('button'));
 	
 			const { data } = store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor;
-			const entryData = Object.entries(data[0]).filter(e => e[1] !== undefined);
+			const entryData = Object.entries(data[0]!).filter(e => e[1] !== undefined);
 			
 			expect(Object.fromEntries(entryData)).toEqual(groundFloorWithUnheatedBasement);
 		});

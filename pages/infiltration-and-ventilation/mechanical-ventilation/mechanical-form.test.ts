@@ -114,7 +114,7 @@ describe("mechanical ventilation form", () => {
 		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
 
 		expect(data[0]).toEqual(mechanicalVentilation1);
-		expect(data[1].name).toBe("new name");
+		expect(data[1]?.name).toBe("new name");
 	});
 
 	it("form is prepopulated when data exists in state", async () => {
@@ -181,8 +181,8 @@ describe("mechanical ventilation form", () => {
 			"supplyAirTemperatureControl_error",
 			"airFlowRate_error",
 		];
-		for (const error in initialErrorIds) {
-			const initialErrors = screen.getByTestId(initialErrorIds[error]);
+		for (const error of initialErrorIds) {
+			const initialErrors = screen.getByTestId(error);
 			expect(initialErrors).toBeDefined();
 		}
 		const mvhrErrorIds: string[] = [
@@ -195,8 +195,8 @@ describe("mechanical ventilation form", () => {
 		);
 		await user.click(screen.getByRole("button"));
 
-		for (const error in mvhrErrorIds) {
-			const mhvrErrors = screen.getByTestId(mvhrErrorIds[error]);
+		for (const error of mvhrErrorIds) {
+			const mhvrErrors = screen.getByTestId(error);
 			expect(mhvrErrors).toBeDefined();
 		}
 	});

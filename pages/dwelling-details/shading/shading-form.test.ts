@@ -73,7 +73,7 @@ describe('shading form', () => {
 		const { data } = store.dwellingDetails.shading;
 
 		expect(data[0]).toEqual(shading1);
-		expect(data[1].name).toBe('Wall');
+		expect(data[1]?.name).toBe('Wall');
 	});
 
 	it('form is prepopulated correctly when data exists in state', async () => {

@@ -23,7 +23,7 @@ function handleDuplicate<T extends PipeworkData>(pipeworkType: PipeworkType, ind
 	const pipework = store.domesticHotWater.pipework[pipeworkType].data;
 	const pipeworkItem = pipework[index];
 
-	if (pipework) {
+	if (pipeworkItem) {
 		const duplicates = pipework.filter(d => d.name.match(duplicateNamePattern(pipeworkItem.name)));
 
 		store.$patch((state) => {

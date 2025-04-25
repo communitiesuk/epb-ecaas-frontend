@@ -180,7 +180,7 @@ describe('ceiling', () => {
 
 		const { livingSpaceCeilings } = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
 		
-		expect(livingSpaceCeilings?.data[0].pitch).toEqual(90);
+		expect(livingSpaceCeilings?.data[0]?.pitch).toEqual(90);
 	});
 
 	it('navigates to ceilings and roofs page when valid form is completed', async () => {

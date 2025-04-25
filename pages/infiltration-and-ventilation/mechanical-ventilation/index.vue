@@ -8,7 +8,10 @@ const store = useEcaasStore();
 const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
 
 function handleRemove(index: number) {
-	const mvhrID = data[index].id;
+	const datum = data[index] ?? undefined;
+	if (!datum) return;
+
+	const mvhrID = datum.id;
 	data.splice(index, 1);
 
 	store.$patch({

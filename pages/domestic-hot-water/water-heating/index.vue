@@ -33,7 +33,7 @@ function handleDuplicate<T extends WaterHeatingData>(waterHeatingType: WaterHeat
 	const waterHeating = store.domesticHotWater.waterHeating[waterHeatingType]?.data;
 	const waterHeatingItem = waterHeating[index];
 
-	if (waterHeating) {
+	if (waterHeatingItem) {
 		const duplicates = waterHeating.filter(d => d.name.match(duplicateNamePattern(waterHeatingItem.name)));
 
 		store.$patch((state) => {

@@ -7,7 +7,7 @@ const backend = defineBackend({
 
 const { cfnResources } = backend.data.resources;
 
-cfnResources.amplifyDynamoDbTables["KeyValueStore"].timeToLiveAttribute = {
+cfnResources.amplifyDynamoDbTables["KeyValueStore"]!.timeToLiveAttribute = {
 	attributeName: "ttl",
 	enabled: true
 };

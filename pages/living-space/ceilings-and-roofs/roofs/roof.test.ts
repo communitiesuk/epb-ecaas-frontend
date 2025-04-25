@@ -140,7 +140,7 @@ describe('roof', () => {
 
 		const { livingSpaceRoofs } = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
 		
-		expect(livingSpaceRoofs?.data[0].pitch).toEqual(90);
+		expect(livingSpaceRoofs?.data[0]?.pitch).toEqual(90);
 	});
 
 	it('requires additional fields when type of roof is pitched', async () => {
@@ -164,8 +164,8 @@ describe('roof', () => {
 
 		const { livingSpaceRoofs } = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
 		
-		expect(livingSpaceRoofs?.data[0].pitch).toEqual(90);
-		expect(livingSpaceRoofs?.data[0].orientation).toEqual(90);
+		expect(livingSpaceRoofs?.data[0]?.pitch).toEqual(90);
+		expect(livingSpaceRoofs?.data[0]?.orientation).toEqual(90);
 	});
 
 	it('navigates to ceilings and roofs page when valid form is completed', async () => {

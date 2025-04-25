@@ -77,7 +77,7 @@ describe("ductwork form", async () => {
 
 	it("should have the following inputs", async () => {
 		await renderSuspended(Ductwork);
-		const form = within(document.getElementsByTagName("form")[0]);
+		const form = within(document.getElementsByTagName("form")[0]!);
 		expect(form.getByText("Name")).toBeDefined();
 		expect(form.getByText("MVHR unit")).toBeDefined();
 		expect(form.getByText("Ductwork cross sectional shape")).toBeDefined();
@@ -197,8 +197,8 @@ describe("ductwork form", async () => {
 			"thermalInsulationConductivityOfDuctwork_error",
 			"surfaceReflectivity_error",
 		];
-		for (const error in initialErrorIds) {
-			const initialErrors = screen.getByTestId(initialErrorIds[error]);
+		for (const error of initialErrorIds) {
+			const initialErrors = screen.getByTestId(error);
 			expect(initialErrors).toBeDefined();
 		}
 	});

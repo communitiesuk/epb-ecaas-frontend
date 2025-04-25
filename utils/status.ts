@@ -25,8 +25,8 @@ export function getSection(
 
 	let subsection;
 
-	for (let i = 0; i < entries.length; i++) {
-		subsection = getSection(pageId, entries[i][1]);
+	for (const entry of entries) {
+		subsection = getSection(pageId, entry[1]);
 
 		if (subsection) {
 			break;

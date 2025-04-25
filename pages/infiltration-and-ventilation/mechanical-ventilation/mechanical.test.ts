@@ -224,7 +224,7 @@ describe("mechanical ventilation overview", () => {
 		await userEvent.click(
 			screen.getByTestId("mechanicalVentilation_duplicate_0")
 		);
-		expect(store.infiltrationAndVentilation.mechanicalVentilation.data[0]["id"]).not.toBe(store.infiltrationAndVentilation.mechanicalVentilation.data[1]["id"]);
+		expect(store.infiltrationAndVentilation.mechanicalVentilation.data[0]?.id).not.toBe(store.infiltrationAndVentilation.mechanicalVentilation.data[1]?.id);
 	});
 
 	it("should only display warning message when mechanical ventilations of type mvhr have been added", async() => {
