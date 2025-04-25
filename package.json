@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
+    "ci-test": "npm run typedtest",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "lint": "eslint .",
