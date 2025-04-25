@@ -1,3 +1,5 @@
+![test status](https://github.com/communitiesuk/epb-ecaas-frontend/actions/workflows/test.yml/badge.svg)
+
 # Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
