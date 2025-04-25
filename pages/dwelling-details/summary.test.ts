@@ -128,7 +128,7 @@ describe('Dwelling details summary', () => {
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-appliances-${hyphenate(key)}`));
-			const lineValues = Array.from(lineResult.querySelectorAll("li").values().map(v => v.textContent));
+			const lineValues = Array.from(lineResult.querySelectorAll("li").values()).map(v => v.textContent);
 
 			const result = value.every(v => lineValues.includes(v));
 
