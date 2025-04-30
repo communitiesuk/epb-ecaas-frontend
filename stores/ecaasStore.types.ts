@@ -607,6 +607,24 @@ export type WarmAirHeatPumpData = {
 
 export type WetDistributionData = {
 	name: string
+	zoneReference: string,
+	heatSource: string,
+	thermalMass: number,
+	designTempDiffAcrossEmitters: number,
+	designFlowTemp: number,
+	typeOfSpaceHeater: string,
+	convectionFraction?: number,
+	exponent?: number, 
+	constant?: number,
+	emitterFloorArea?: number,
+	equivalentThermalMass?: number,
+	systemPerformanceFactor?: number,
+	ecoDesignControllerClass: string,
+	minimumFlowTemp: number,
+	minOutdoorTemp: number,
+	maxOutdoorTemp: number
+
+
 };
 
 export interface PvAndBatteries {

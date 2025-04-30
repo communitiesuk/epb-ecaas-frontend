@@ -1,17 +1,54 @@
 <script setup lang="ts">
+import type { FormKitOptionsProp } from "@formkit/inputs";
 const title = "Wet distribution";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const wetDistributionData = useItemToEdit('distribution', store.heatingSystems.heatEmitting.wetDistribution.data);
+const wetDistributionData = useItemToEdit(
+	"distribution",
+	store.heatingSystems.heatEmitting.wetDistribution.data
+);
 const model: Ref<WetDistributionData> = ref(wetDistributionData!);
+
+const options: FormKitOptionsProp[] = [
+	{
+		1: "I: On/Off Room Thermostat",
+		2: "II: Weather Compensator (Modulating Heaters)",
+		3: "III: Weather Compensator (On/Off Heaters)",
+		4: "IV: TPI Room Thermostat (On/Off Heaters)",
+		5: "V: Modulating Room Thermostat",
+		6: "VI: Weather Compensator + Room Sensor (Modulating)",
+		7: "VII: Weather Compensator + Room Sensor (On/Off)",
+		8: "VIII: Multi-Sensor Room Control (Modulating)",
+	},
+];
 
 const saveForm = (fields: WetDistributionData) => {
 	store.$patch((state) => {
-		const {wetDistribution} = state.heatingSystems.heatEmitting;
+		const { wetDistribution } = state.heatingSystems.heatEmitting;
 
 		const item: WetDistributionData = {
-			name: fields.name
+			name: fields.name,
+			zoneReference: fields.zoneReference,
+			heatSource: fields.heatSource,
+			thermalMass: fields.thermalMass,
+			designTempDiffAcrossEmitters: fields.designTempDiffAcrossEmitters,
+			designFlowTemp: fields.designFlowTemp,
+			typeOfSpaceHeater: fields.typeOfSpaceHeater,
+			convectionFraction: fields.convectionFraction,
+			emitterFloorArea: fields.emitterFloorArea,
+			ecoDesignControllerClass: fields.ecoDesignControllerClass,
+			minimumFlowTemp: fields.minimumFlowTemp,
+			minOutdoorTemp: 0,
+			maxOutdoorTemp: 15
+		};
+		if(item.typeOfSpaceHeater === "radiators"){
+			item.exponent = 1.3;
+			item.constant = 0.08;
+		};
+		if(item.typeOfSpaceHeater === "underFloorHeating"){
+			item.equivalentThermalMass = 80;
+			item.systemPerformanceFactor = 5;
 		};
 
 		saveToList(item, wetDistribution);
@@ -21,7 +58,7 @@ const saveForm = (fields: WetDistributionData) => {
 	navigateTo("/heating-systems/heat-emitting");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
@@ -35,16 +72,336 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		:actions="false"
 		:incomplete-message="false"
 		@submit="saveForm"
-		@submit-invalid="handleInvalidSubmit">
-		<GovErrorSummary :error-list="errorMessages" test-id="wetDistributionErrorSummary"/>
+		@submit-invalid="handleInvalidSubmit"
+	>
+		<GovErrorSummary
+			:error-list="errorMessages"
+			test-id="wetDistributionErrorSummary"
+		/>
 		<FormKit
 			id="name"
 			type="govInputText"
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
+			validation="required" />
+			
+		<FormKit
+			id="zoneReference"
+			type="govRadios"
+			:options="{
+				livingSpace: 'Living space',
+				restofDwelling: 'Rest of dwelling',
+			}"
+			label="Zone reference"
+			name="zoneReference"
+			hint="Which zone is this emitter heating"
 			validation="required"
 		/>
+
+		<FieldsHeatGenerators
+			id="heatSource"
+			name="heatSource"
+			label="Heat source"
+			help="Select the relevant heat source that has been added previously"
+		/>
+		<FormKit
+			id="thermalMass"
+			type="govInputWithSuffix"
+			label="Thermal mass"
+			name="thermalMass"
+			validation="required | number"
+			suffix-text="kJ/°C"
+		>
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Description</th>
+							<th scope="col" class="govuk-table__header">Example range</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">
+								The thermal mass of a wet distribution system refers to the
+								ability of the system's components (such as the floor or the
+								pipes carrying the heated water) to store and release heat. In
+								the context of underfloor heating (UFH) or other wet systems
+								(e.g., radiators), thermal mass is primarily influenced by the
+								material in which the heating pipes are embedded, such as
+								concrete, screed, or timber.
+							</td>
+							<td class="govuk-table__cell">0.1 - 0.5</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
+		<FormKit
+			id="designTempDiffAcrossEmitters"
+			type="govInputWithSuffix"
+			label="Design temperature difference across the emitters"
+			name="designTempDiffAcrossEmitters"
+			validation="required | number"
+			suffix-text="°C"
+		>
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Description</th>
+							<th scope="col" class="govuk-table__header">Example range</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">
+								The difference between the water flow temperature (the
+								temperature of the water circulating through the heating system)
+								and the room air temperature (the ambient temperature in the
+								room) at the point where the heating is being emitted, such as
+								through radiators or underfloor heating (UFH).
+							</td>
+							<td class="govuk-table__cell">5 - 15</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
+		<FormKit
+			id="designFlowTemp"
+			type="govInputWithSuffix"
+			label="Design flow temperature"
+			name="designFlowTemp"
+			validation="required | number"
+			suffix-text="°C"
+		>
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Description</th>
+							<th scope="col" class="govuk-table__header">Example range</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">
+								The temperature at which water is delivered to the heating
+								system during the coldest expected conditions in a building. It
+								is the temperature chosen for the system's water supply to
+								ensure that enough heat is delivered to maintain the desired
+								indoor temperature under extreme conditions.
+							</td>
+							<td class="govuk-table__cell">35 - 55</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
+		<FormKit
+			id="typeOfSpaceHeater"
+			type="govRadios"
+			:options="{
+				radiators: 'Radiators',
+				underFloorHeating: 'Under floor heating (UFH)',
+			}"
+			label="Type of space heater"
+			name="typeOfSpaceHeater"
+			validation="required"
+		/>
+		<template v-if="model.typeOfSpaceHeater === 'radiators'">
+			<FormKit
+				id="convectionFraction"
+				type="govInputFloat"
+				label="Convection fraction"
+				name="convectionFraction"
+				validation="required | number | min: 0 | max: 1 "
+			>
+				<GovDetails summary-text="Help with this input">
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header">Description</th>
+								<th scope="col" class="govuk-table__header">Example range</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">
+									The convection fraction for a radiator refers to the proportion
+									of heat that a radiator emits through convection as opposed to
+									radiation.
+								</td>
+								<td class="govuk-table__cell">0.2 - 0.8</td>
+							</tr>
+						</tbody>
+					</table>
+				</GovDetails>
+			</FormKit>
+		</template>
+
+		<template v-if="model.typeOfSpaceHeater === 'underFloorHeating'">
+			<FormKit
+				id="emitterFloorArea"
+				type="govInputWithSuffix"
+				label="Emitter floor area"
+				name="emitterFloorArea"
+				validation="required | number"
+				help="The emitter floor area for an underfloor heating (UFH) system refers to the actual heated floor area that emits heat into the room. It is different from the total floor area because some areas may not have UFH installed (e.g. under kitchen units, bathtubs, or built-in furniture)."
+				suffix-text="m2"
+			/>
+		</template>
+
+		<h2 class="govuk-heading-l">Eco design controller</h2>
+		<FormKit
+			id="ecoDesignControllerClass"
+			type="govDropdown"
+			label="Eco design controller class"
+			name="ecoDesignControllerClass"
+			validation="required"
+			:options="options"
+		>
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Class</th>
+							<th scope="col" class="govuk-table__header">Control type</th>
+							<th scope="col" class="govuk-table__header">Description</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">I</td>
+							<td class="govuk-table__cell">On/Off Room Thermostat</td>
+							<td class="govuk-table__cell">
+								A basic room thermostat that switches the heater on or off.
+								Performance depends on mechanical construction, including
+								switching differential and control accuracy.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">II</td>
+							<td class="govuk-table__cell">
+								Weather Compensator (Modulating Heaters)
+							</td>
+							<td class="govuk-table__cell">
+								Adjusts the flow temperature of water leaving the heater based
+								on outdoor temperature and a selected weather compensation
+								curve. Control is via modulation of heater output.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">III</td>
+							<td class="govuk-table__cell">
+								Weather Compensator (On/Off Heaters)
+							</td>
+							<td class="govuk-table__cell">
+								Similar to Class II, but used with on/off heaters. Flow
+								temperature is varied by switching the heater on or off based on
+								outdoor temperature and compensation curve.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">IV</td>
+							<td class="govuk-table__cell">
+								TPI Room Thermostat (On/Off Heaters)
+							</td>
+							<td class="govuk-table__cell">
+								An electronic thermostat using Time Proportional and Integral
+								(TPI) control. It adjusts cycle rate and on/off ratios to
+								improve temperature accuracy and reduce water temperature.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">V</td>
+							<td class="govuk-table__cell">Modulating Room Thermostat</td>
+							<td class="govuk-table__cell">
+								Adjusts the heater's flow temperature based on the difference
+								between measured room temperature and the set point. Control is
+								via modulation.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">VI</td>
+							<td class="govuk-table__cell">
+								Weather Compensator + Room Sensor (Modulating)
+							</td>
+							<td class="govuk-table__cell">
+								Uses both outdoor and room temperature data. Adjusts flow
+								temperature via modulation, improving comfort through
+								compensation curve displacement.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">VII</td>
+							<td class="govuk-table__cell">
+								Weather Compensator + Room Sensor (On/Off)
+							</td>
+							<td class="govuk-table__cell">
+								Similar to Class VI, but for on/off heaters. Adjusts the flow
+								temperature by switching heater on or off, based on both outdoor
+								and room temperature.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">VIII</td>
+							<td class="govuk-table__cell">
+								Multi-Sensor Room Control (Modulating)
+							</td>
+							<td class="govuk-table__cell">
+								Uses 3 or more room sensors to adjust heater output. Flow
+								temperature is based on the aggregated deviation from multiple
+								room sensor set points. Control is modulating.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
+		<FormKit
+			id="minimumFlowTemp"
+			type="govInputWithSuffix"
+			label="Minimum flow temperature"
+			name="minimumFlowTemp"
+			validation="required | number | min: 20 | max: 120"
+			help="Minimum flow temperature when using weather compensation. "
+			suffix-text="°C"
+		>
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Description</th>
+							<th scope="col" class="govuk-table__header">System type</th>
+							<th scope="col" class="govuk-table__header">
+								Minimum flow temperature
+							</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">
+								The minimum flow temperature isn't fixed but is influenced by
+								the control logic and the building's heat demand. Weather
+								compensation adjusts the flow temperature of water sent to
+								radiators or underfloor heating based on the outdoor
+								temperature.
+							</td>
+							<td class="govuk-table__cell">Radiator</td>
+							<td class="govuk-table__cell">35-40</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell"/>
+							<td class="govuk-table__cell">UFH</td>
+							<td class="govuk-table__cell">25-35</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit> 
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>
