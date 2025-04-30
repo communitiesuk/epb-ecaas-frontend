@@ -13,10 +13,6 @@ export interface ApiInfoResponse {
 }
 
 export interface ParameterStoreResponse {
-	Parameters: Array<SsmParameter>
-}
-
-export interface SsmParameter {
 	Name: string;
 	Type: string;
 	Value: string;
