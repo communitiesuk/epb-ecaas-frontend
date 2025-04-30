@@ -598,7 +598,7 @@ export type ElectricStorageHeaterData = {
 export type InstantElectricStorageData = {
 	name: string,
 	ratedPower: number,
-	convectionFraction: number,
+	convectionFractionInstant: number,
 };
 
 export type WarmAirHeatPumpData = {
@@ -613,7 +613,7 @@ export type WetDistributionData = {
 	designTempDiffAcrossEmitters: number,
 	designFlowTemp: number,
 	typeOfSpaceHeater: string,
-	convectionFraction?: number,
+	convectionFractionWet?: number,
 	exponent?: number, 
 	constant?: number,
 	emitterFloorArea?: number,

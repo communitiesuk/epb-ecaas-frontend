@@ -13,7 +13,7 @@ const saveForm = (fields: InstantElectricStorageData) => {
 		const instantElectricHeaterItem: InstantElectricStorageData = {
 			name: fields.name,
 			ratedPower: fields.ratedPower,
-			convectionFraction: fields.convectionFraction,
+			convectionFractionInstant: fields.convectionFractionInstant,
 		};
 
 		saveToList(instantElectricHeaterItem, instantElectricHeater);
@@ -57,11 +57,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			suffix-text="kW"
 		/>
 		<FormKit
-			id="convectionFraction"
+			id="convectionFractionInstant"
 			type="govInputFloat"
 			label="Convection fraction for heating"
 			help="Specify the portion of heat transferred through convection (0 to 1), where 1 means all heat is convective"
-			name="convectionFraction"
+			name="convectionFractionInstant"
 			validation="required | number | min:0.01 | max:1">
 			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">

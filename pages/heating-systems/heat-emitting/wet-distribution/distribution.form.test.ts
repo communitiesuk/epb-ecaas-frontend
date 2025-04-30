@@ -27,7 +27,7 @@ const wetDistribution1: WetDistributionData = {
 	exponent: 1.3,
 	constant: 0.08,
 	emitterFloorArea: undefined,
-	convectionFraction: 0.2,
+	convectionFractionWet: 0.2,
 	ecoDesignControllerClass: "1",
 	minimumFlowTemp: 20,
 	minOutdoorTemp: 0,
@@ -42,7 +42,7 @@ const wetDistribution2: WetDistributionData = {
 	designTempDiffAcrossEmitters: 0.2,
 	designFlowTemp: 32,
 	typeOfSpaceHeater: "underFloorHeating",
-	convectionFraction: undefined,
+	convectionFractionWet: undefined,
 	emitterFloorArea: 5,
 	equivalentThermalMass: 80,
 	systemPerformanceFactor: 5,
@@ -60,7 +60,7 @@ const populateValidForm = async () => {
 	await user.type(screen.getByTestId("designTempDiffAcrossEmitters"), "0.4");
 	await user.type(screen.getByTestId("designFlowTemp"), "32");
 	await user.click(screen.getByTestId("typeOfSpaceHeater_radiators"));
-	await user.type(screen.getByTestId("convectionFraction"), "0.2");
+	await user.type(screen.getByTestId("convectionFractionWet"), "0.2");
 	await user.selectOptions(screen.getByTestId("ecoDesignControllerClass"), "1");
 	await user.type(screen.getByTestId("minimumFlowTemp"), "20");
 };
@@ -149,7 +149,7 @@ describe("Wet distribution", () => {
 		}
 		await user.click(screen.getByRole("radio", { name: "Radiators" }));
 		await user.click(screen.getByRole("button"));
-		expect(screen.getByTestId("convectionFraction_error")).toBeDefined();
+		expect(screen.getByTestId("convectionFractionWet_error")).toBeDefined();
 
 		await user.click(
 			screen.getByRole("radio", { name: "Under floor heating (UFH)" })
@@ -253,7 +253,7 @@ describe("Wet distribution", () => {
 		expect(((await screen.findByTestId("designTempDiffAcrossEmitters")) as HTMLInputElement).value).toBe("0.4");
 		expect(((await screen.findByTestId("designFlowTemp")) as HTMLInputElement).value).toBe("32");
 		expect(((await screen.findByTestId("typeOfSpaceHeater_radiators")) as HTMLInputElement).checked).toBe(true);
-		expect(((await screen.findByTestId("convectionFraction")) as HTMLInputElement).value).toBe("0.2");
+		expect(((await screen.findByTestId("convectionFractionWet")) as HTMLInputElement).value).toBe("0.2");
 		expect(((await screen.findByTestId("ecoDesignControllerClass")) as HTMLSelectElement).value).toBe("1");
 		expect(((await screen.findByTestId("minimumFlowTemp")) as HTMLInputElement).value).toBe("20");
     

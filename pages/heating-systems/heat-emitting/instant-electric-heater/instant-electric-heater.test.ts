@@ -15,7 +15,7 @@ describe('instantElectricHeater', () => {
 	const instantElectricHeater: InstantElectricStorageData = {
 		name: 'Instant electric heater 1',
 		ratedPower: 3,
-		convectionFraction: 0.2
+		convectionFractionInstant: 0.2
 	};
 
 	afterEach(() => {
@@ -25,7 +25,7 @@ describe('instantElectricHeater', () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Instant electric heater 1');
 		await user.type(screen.getByTestId('ratedPower'), '3');
-		await user.type(screen.getByTestId('convectionFraction'), '0.2');
+		await user.type(screen.getByTestId('convectionFractionInstant'), '0.2');
 		await user.tab();
 	};
 
@@ -59,7 +59,7 @@ describe('instantElectricHeater', () => {
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Instant electric heater 1');
 		expect((await screen.findByTestId('ratedPower') as HTMLInputElement).value).toBe('3');
-		expect((await screen.findByTestId('convectionFraction') as HTMLInputElement).value).toBe('0.2');
+		expect((await screen.findByTestId('convectionFractionInstant') as HTMLInputElement).value).toBe('0.2');
 	});
 
 	it('required error messages are displayed when empty form is submitted', async () => {
@@ -69,7 +69,7 @@ describe('instantElectricHeater', () => {
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('ratedPower_error'))).toBeDefined();
-		expect((await screen.findByTestId('convectionFraction_error'))).toBeDefined();
+		expect((await screen.findByTestId('convectionFractionInstant_error'))).toBeDefined();
 	});
 
 	it('error summary is displayed when an invalid form in submitted', async () => {

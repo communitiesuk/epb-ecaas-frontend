@@ -35,7 +35,7 @@ const saveForm = (fields: WetDistributionData) => {
 			designTempDiffAcrossEmitters: fields.designTempDiffAcrossEmitters,
 			designFlowTemp: fields.designFlowTemp,
 			typeOfSpaceHeater: fields.typeOfSpaceHeater,
-			convectionFraction: fields.convectionFraction,
+			convectionFractionWet: fields.convectionFractionWet,
 			emitterFloorArea: fields.emitterFloorArea,
 			ecoDesignControllerClass: fields.ecoDesignControllerClass,
 			minimumFlowTemp: fields.minimumFlowTemp,
@@ -85,7 +85,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required" />
-			
+
 		<FormKit
 			id="zoneReference"
 			type="govRadios"
@@ -213,10 +213,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<template v-if="model.typeOfSpaceHeater === 'radiators'">
 			<FormKit
-				id="convectionFraction"
+				id="convectionFractionWet"
 				type="govInputFloat"
 				label="Convection fraction"
-				name="convectionFraction"
+				name="convectionFractionWet"
 				validation="required | number | min: 0 | max: 1 "
 			>
 				<GovDetails summary-text="Help with this input">
