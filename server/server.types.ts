@@ -13,7 +13,7 @@ export interface ApiInfoResponse {
 }
 
 export interface ParameterStoreResponse {
-	name: string;
-	type: string;
-	value: string;
+	Name: string;
+	Type: string;
+	Value: string;
 }
