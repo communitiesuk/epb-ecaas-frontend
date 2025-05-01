@@ -24,6 +24,10 @@ const session = () => {
 			process.env.CLIENT_SECRET :
 			(await parameterStore.getParameter('client_secret')).Value;
 
+		// Debugging - read test parameter from Parameter Store
+		const testParameter = await parameterStore.getParameter('test_parameter');
+		console.log('Test parameter', testParameter);
+
 		// Authenticate with backend
 		const tokenResponse = await ecaasApi.getToken(clientId!, clientSecret!);
 
