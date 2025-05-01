@@ -13,6 +13,10 @@ export interface ApiInfoResponse {
 }
 
 export interface ParameterStoreResponse {
+	Parameter: ParameterData;
+}
+
+export interface ParameterData {
 	Name: string;
 	Type: string;
 	Value: string;

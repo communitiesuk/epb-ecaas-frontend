@@ -17,16 +17,12 @@ const session = () => {
 		// Get client ID from environment variable
 		const clientId = import.meta.dev ?
 			process.env.CLIENT_ID :
-			(await parameterStore.getParameter('client_id')).Value;
+			(await parameterStore.getParameter('client_id')).Parameter.Value;
 
 		// Get client secret from environment variable
 		const clientSecret = import.meta.dev ?
 			process.env.CLIENT_SECRET :
-			(await parameterStore.getParameter('client_secret')).Value;
-
-		// Debugging - read test parameter from Parameter Store
-		const testParameter = await parameterStore.getParameter('test_parameter');
-		console.log('Test parameter', testParameter);
+			(await parameterStore.getParameter('client_secret')).Parameter.Value;
 
 		// Authenticate with backend
 		const tokenResponse = await ecaasApi.getToken(clientId!, clientSecret!);
