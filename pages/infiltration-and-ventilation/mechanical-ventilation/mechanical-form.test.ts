@@ -182,8 +182,7 @@ describe("mechanical ventilation form", () => {
 			"airFlowRate_error",
 		];
 		for (const error of initialErrorIds) {
-			const initialErrors = screen.getByTestId(error);
-			expect(initialErrors).toBeDefined();
+			expect(screen.getByTestId(error)).toBeDefined();
 		}
 		const mvhrErrorIds: string[] = [
 			"mvhrLocation_error",

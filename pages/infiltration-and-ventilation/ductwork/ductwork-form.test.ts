@@ -198,8 +198,7 @@ describe("ductwork form", async () => {
 			"surfaceReflectivity_error",
 		];
 		for (const error of initialErrorIds) {
-			const initialErrors = screen.getByTestId(error);
-			expect(initialErrors).toBeDefined();
+			expect(screen.getByTestId(error)).toBeDefined();
 		}
 	});
 	it("error summary is displayed when an invalid form in submitted", async () => {
