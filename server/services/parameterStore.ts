@@ -5,11 +5,13 @@ const parameterStoreUrl = 'http://localhost:2773/systemsmanager/parameters';
 
 const parameterStore = {
 	getParameter: async (name: string) => {
-		return await $fetch<ParameterStoreResponse>(`${parameterStoreUrl}/get?name=${name}&withDecryption=true`, {
+		const response = await fetch(`${parameterStoreUrl}/get?name=${name}&withDecryption=true`, {
 			headers: {
 				'X-Aws-Parameters-Secrets-Token': process.env.AWS_SESSION_TOKEN!
 			}
 		});
+
+		return await response.json() as ParameterStoreResponse;
 	}
 };
 

@@ -3,7 +3,7 @@ import type { ApiInfoResponse, TokenResponse } from "../server.types";
 
 const ecaasApi = {
 	getToken: async (clientId: string, clientSecret: string) => {
-		return await $fetch<TokenResponse>(`${process.env.ECAAS_AUTH_API_URL}/oauth2/token`, {
+		const response = await fetch(`${process.env.ECAAS_AUTH_API_URL}/oauth2/token`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'
@@ -15,24 +15,30 @@ const ecaasApi = {
 				'client_secret': clientSecret
 			})
 		});
+
+		return await response.json() as TokenResponse;
 	},
 
 	getInfo: async (accessToken: string) => {
-		return await $fetch<ApiInfoResponse>(`${process.env.ECAAS_API_URL}/`, {
+		const response = await fetch(`${process.env.ECAAS_API_URL}/`, {
 			headers: {
 				'Authorization': `Bearer ${accessToken}`
 			}
 		});
+
+		return await response.json() as ApiInfoResponse;
 	},
 
 	checkCompliance: async (data: object, accessToken: string) => {
-		return await $fetch<CheckComplianceResponse>(`${process.env.ECAAS_API_URL}/beta/future-homes-standard-compliance`, {
+		const response = await fetch(`${process.env.ECAAS_API_URL}/beta/future-homes-standard-compliance`, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${accessToken}`
 			},
-			body: data
+			body: JSON.stringify(data)
 		});
+
+		return await response.json() as CheckComplianceResponse;
 	}
 };
 
