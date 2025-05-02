@@ -1,3 +1,4 @@
+import type { CheckComplianceResponse } from "~/schema/api-schema.types";
 import type { ApiInfoResponse, TokenResponse } from "../server.types";
 
 const ecaasApi = {
@@ -21,6 +22,16 @@ const ecaasApi = {
 			headers: {
 				'Authorization': `Bearer ${accessToken}`
 			}
+		});
+	},
+
+	checkCompliance: async (data: object, accessToken: string) => {
+		return await $fetch<CheckComplianceResponse>(`${process.env.ECAAS_API_URL}/beta/future-homes-standard-compliance`, {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${accessToken}`
+			},
+			body: data
 		});
 	}
 };
