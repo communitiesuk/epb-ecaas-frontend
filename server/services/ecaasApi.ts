@@ -1,5 +1,5 @@
 import type { CheckComplianceResponse } from "~/schema/api-schema.types";
-import type { ApiInfoResponse, TokenResponse } from "../server.types";
+import type { TokenResponse } from "../server.types";
 
 const ecaasApi = {
 	getToken: async (clientId: string, clientSecret: string) => {
@@ -14,14 +14,6 @@ const ecaasApi = {
 				'client_id': clientId,
 				'client_secret': clientSecret
 			})
-		});
-	},
-
-	getInfo: async (accessToken: string) => {
-		return await $fetch<ApiInfoResponse>(`${process.env.ECAAS_API_URL}/`, {
-			headers: {
-				'Authorization': `Bearer ${accessToken}`
-			}
 		});
 	},
 
