@@ -1,10 +1,10 @@
 import ecaasApi from "../services/ecaasApi";
-import session from "../services/session";
+import clientSession from "../services/clientSession";
 
 export default defineEventHandler(async _ => {
 	// Get token from session
-	const { access_token } = await session.get();
+	const { accessToken } = await clientSession.get();
 
 	// Get API info
-	return await ecaasApi.getInfo(access_token);
+	return await ecaasApi.getInfo(accessToken);
 });

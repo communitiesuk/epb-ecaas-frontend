@@ -2,8 +2,8 @@ import type { ApiInfoResponse, TokenResponse } from "../server.types";
 
 const ecaasApi = {
 	getToken: async (clientId: string, clientSecret: string) => {
-		const response = await fetch(`${process.env.ECAAS_AUTH_API_URL}/oauth2/token`, {
-			method: 'post',
+		return await $fetch<TokenResponse>(`${process.env.ECAAS_AUTH_API_URL}/oauth2/token`, {
+			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
@@ -14,18 +14,14 @@ const ecaasApi = {
 				'client_secret': clientSecret
 			})
 		});
-
-		return await response.json() as TokenResponse;
 	},
 
 	getInfo: async (accessToken: string) => {
-		const response = await fetch(`${process.env.ECAAS_API_URL}/`, {
+		return await $fetch<ApiInfoResponse>(`${process.env.ECAAS_API_URL}/`, {
 			headers: {
 				'Authorization': `Bearer ${accessToken}`
 			}
 		});
-
-		return await response.json() as ApiInfoResponse;
 	}
 };
 

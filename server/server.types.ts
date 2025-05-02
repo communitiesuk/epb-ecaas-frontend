@@ -4,12 +4,9 @@ export interface TokenResponse {
 	token_type: string;
 }
 
-export interface ApiInfoResponse {
-	links: {
-		describedBy: string;
-	};
-	title: string;
-	version: string;
+export interface ClientSession {
+	accessToken: string;
+	expires: Date;
 }
 
 export interface ParameterStoreResponse {
@@ -20,4 +17,12 @@ export interface ParameterData {
 	Name: string;
 	Type: string;
 	Value: string;
+}
+
+export interface ApiInfoResponse {
+	links: {
+		describedBy: string;
+	};
+	title: string;
+	version: string;
 }
