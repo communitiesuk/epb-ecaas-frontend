@@ -262,105 +262,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="ecoDesignControllerClass"
 			validation="required"
 			:options="options"
+			
 		>
-			<GovDetails summary-text="Help with this input">
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header">Class</th>
-							<th scope="col" class="govuk-table__header">Control type</th>
-							<th scope="col" class="govuk-table__header">Description</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">I</td>
-							<td class="govuk-table__cell">On/Off Room Thermostat</td>
-							<td class="govuk-table__cell">
-								A basic room thermostat that switches the heater on or off.
-								Performance depends on mechanical construction, including
-								switching differential and control accuracy.
-							</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">II</td>
-							<td class="govuk-table__cell">
-								Weather Compensator (Modulating Heaters)
-							</td>
-							<td class="govuk-table__cell">
-								Adjusts the flow temperature of water leaving the heater based
-								on outdoor temperature and a selected weather compensation
-								curve. Control is via modulation of heater output.
-							</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">III</td>
-							<td class="govuk-table__cell">
-								Weather Compensator (On/Off Heaters)
-							</td>
-							<td class="govuk-table__cell">
-								Similar to Class II, but used with on/off heaters. Flow
-								temperature is varied by switching the heater on or off based on
-								outdoor temperature and compensation curve.
-							</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">IV</td>
-							<td class="govuk-table__cell">
-								TPI Room Thermostat (On/Off Heaters)
-							</td>
-							<td class="govuk-table__cell">
-								An electronic thermostat using Time Proportional and Integral
-								(TPI) control. It adjusts cycle rate and on/off ratios to
-								improve temperature accuracy and reduce water temperature.
-							</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">V</td>
-							<td class="govuk-table__cell">Modulating Room Thermostat</td>
-							<td class="govuk-table__cell">
-								Adjusts the heater's flow temperature based on the difference
-								between measured room temperature and the set point. Control is
-								via modulation.
-							</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">VI</td>
-							<td class="govuk-table__cell">
-								Weather Compensator + Room Sensor (Modulating)
-							</td>
-							<td class="govuk-table__cell">
-								Uses both outdoor and room temperature data. Adjusts flow
-								temperature via modulation, improving comfort through
-								compensation curve displacement.
-							</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">VII</td>
-							<td class="govuk-table__cell">
-								Weather Compensator + Room Sensor (On/Off)
-							</td>
-							<td class="govuk-table__cell">
-								Similar to Class VI, but for on/off heaters. Adjusts the flow
-								temperature by switching heater on or off, based on both outdoor
-								and room temperature.
-							</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">VIII</td>
-							<td class="govuk-table__cell">
-								Multi-Sensor Room Control (Modulating)
-							</td>
-							<td class="govuk-table__cell">
-								Uses 3 or more room sensors to adjust heater output. Flow
-								temperature is based on the aggregated deviation from multiple
-								room sensor set points. Control is modulating.
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
+
+			<p class="govuk-body">
+				<a href="/guidance/eco-design-control-guidance" target="_blank" class="govuk-link">
+					Eco design control guidance (opens in another window)
+				</a></p>
 		</FormKit>
+
 		<FormKit
 			id="minimumFlowTemp"
 			type="govInputWithSuffix"

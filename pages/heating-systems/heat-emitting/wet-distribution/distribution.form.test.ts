@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import WetDistribution from "./[distribution].vue";
 
-
 const user = userEvent.setup();
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -31,7 +30,7 @@ const wetDistribution1: WetDistributionData = {
 	ecoDesignControllerClass: "1",
 	minimumFlowTemp: 20,
 	minOutdoorTemp: 0,
-	maxOutdoorTemp:15
+	maxOutdoorTemp: 15,
 };
 
 const wetDistribution2: WetDistributionData = {
@@ -49,13 +48,15 @@ const wetDistribution2: WetDistributionData = {
 	ecoDesignControllerClass: "2",
 	minimumFlowTemp: 25,
 	minOutdoorTemp: 0,
-	maxOutdoorTemp:15
+	maxOutdoorTemp: 15,
 };
 
 const populateValidForm = async () => {
 	await user.type(screen.getByTestId("name"), "Wet distribution 1");
 	await user.click(screen.getByTestId("zoneReference_livingSpace"));
-	await user.click(screen.getByTestId("heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r"));
+	await user.click(
+		screen.getByTestId("heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r")
+	);
 	await user.type(screen.getByTestId("thermalMass"), "2");
 	await user.type(screen.getByTestId("designTempDiffAcrossEmitters"), "0.4");
 	await user.type(screen.getByTestId("designFlowTemp"), "32");
@@ -160,67 +161,72 @@ describe("Wet distribution", () => {
 
 	it("should show error summary when an invalid form in submitted", async () => {
 		await renderSuspended(WetDistribution);
-  
+
 		await user.click(screen.getByRole("button"));
-  
+
 		expect(
 			await screen.findByTestId("wetDistributionErrorSummary")
 		).toBeDefined();
 	});
 
 	it("should save data to store when form is valid and type of space heater is radiators", async () => {
-  
 		store.$patch({
 			heatingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [heatPump],
-					}
+					},
 				},
-			}
+			},
 		});
-  
+
 		await renderSuspended(WetDistribution);
 		await populateValidForm();
 
 		await user.click(screen.getByRole("button"));
 
-		await waitFor(()=> {
-			const { data, complete } = store.heatingSystems.heatEmitting.wetDistribution;
+		await waitFor(() => {
+			const { data, complete } =
+        store.heatingSystems.heatEmitting.wetDistribution;
 			expect(data[0]).toEqual(wetDistribution1);
 			expect(complete).toBe(true);
 		});
 	});
 
 	it("should save data to store when form is valid and type of space heater is under floor heating (UFH)", async () => {
-  
 		store.$patch({
 			heatingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [heatPump],
-					}
+					},
 				},
-			}
+			},
 		});
-  
+
 		await renderSuspended(WetDistribution);
 
 		await user.type(screen.getByTestId("name"), "Wet distribution 2");
 		await user.click(screen.getByTestId("zoneReference_livingSpace"));
-		await user.click(screen.getByTestId("heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r"));
+		await user.click(
+			screen.getByTestId("heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r")
+		);
 		await user.type(screen.getByTestId("thermalMass"), "5");
 		await user.type(screen.getByTestId("designTempDiffAcrossEmitters"), "0.2");
 		await user.type(screen.getByTestId("designFlowTemp"), "32");
 		await user.click(screen.getByTestId("typeOfSpaceHeater_underFloorHeating"));
 		await user.type(screen.getByTestId("emitterFloorArea"), "5");
-		await user.selectOptions(screen.getByTestId("ecoDesignControllerClass"), "2");
+		await user.selectOptions(
+			screen.getByTestId("ecoDesignControllerClass"),
+			"2"
+		);
 		await user.type(screen.getByTestId("minimumFlowTemp"), "25");
 
 		await user.click(screen.getByRole("button"));
 
-		await waitFor(()=> {
-			const { data, complete } = store.heatingSystems.heatEmitting.wetDistribution;
+		await waitFor(() => {
+			const { data, complete } =
+        store.heatingSystems.heatEmitting.wetDistribution;
 			expect(data[0]).toEqual(wetDistribution2);
 			expect(complete).toBe(true);
 		});
@@ -232,48 +238,99 @@ describe("Wet distribution", () => {
 				heatGeneration: {
 					heatPump: {
 						data: [heatPump],
-					}
+					},
 				},
 				heatEmitting: {
 					wetDistribution: {
 						data: [wetDistribution1],
-					}
+					},
 				},
-			}
+			},
 		});
 		await renderSuspended(WetDistribution, {
 			route: {
-				params: { distribution: "0"}
-			}
+				params: { distribution: "0" },
+			},
 		});
-		expect(((await screen.findByTestId("name")) as HTMLInputElement).value).toBe("Wet distribution 1");
-		expect(((await screen.findByTestId("zoneReference_livingSpace")) as HTMLInputElement).checked).toBe(true);
-		expect(((await screen.findByTestId("heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r")) as HTMLInputElement).checked).toBe(true);
-		expect(((await screen.findByTestId("thermalMass")) as HTMLInputElement).value).toBe("2");
-		expect(((await screen.findByTestId("designTempDiffAcrossEmitters")) as HTMLInputElement).value).toBe("0.4");
-		expect(((await screen.findByTestId("designFlowTemp")) as HTMLInputElement).value).toBe("32");
-		expect(((await screen.findByTestId("typeOfSpaceHeater_radiators")) as HTMLInputElement).checked).toBe(true);
-		expect(((await screen.findByTestId("convectionFractionWet")) as HTMLInputElement).value).toBe("0.2");
-		expect(((await screen.findByTestId("ecoDesignControllerClass")) as HTMLSelectElement).value).toBe("1");
-		expect(((await screen.findByTestId("minimumFlowTemp")) as HTMLInputElement).value).toBe("20");
-    
+		expect(
+			((await screen.findByTestId("name")) as HTMLInputElement).value
+		).toBe("Wet distribution 1");
+		expect(
+			(
+				(await screen.findByTestId(
+					"zoneReference_livingSpace"
+				)) as HTMLInputElement
+			).checked
+		).toBe(true);
+		expect(
+			(
+				(await screen.findByTestId(
+					"heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r"
+				)) as HTMLInputElement
+			).checked
+		).toBe(true);
+		expect(
+			((await screen.findByTestId("thermalMass")) as HTMLInputElement).value
+		).toBe("2");
+		expect(
+			(
+				(await screen.findByTestId(
+					"designTempDiffAcrossEmitters"
+				)) as HTMLInputElement
+			).value
+		).toBe("0.4");
+		expect(
+			((await screen.findByTestId("designFlowTemp")) as HTMLInputElement).value
+		).toBe("32");
+		expect(
+			(
+				(await screen.findByTestId(
+					"typeOfSpaceHeater_radiators"
+				)) as HTMLInputElement
+			).checked
+		).toBe(true);
+		expect(
+			((await screen.findByTestId("convectionFractionWet")) as HTMLInputElement)
+				.value
+		).toBe("0.2");
+		expect(
+			(
+				(await screen.findByTestId(
+					"ecoDesignControllerClass"
+				)) as HTMLSelectElement
+			).value
+		).toBe("1");
+		expect(
+			((await screen.findByTestId("minimumFlowTemp")) as HTMLInputElement).value
+		).toBe("20");
 	});
-	it("should navigate to the heat emitting page when form is saved", async() => {
-    
+
+	it("should contain link to seperate page for eco design control guidance", async () => {
+
+		await renderSuspended(WetDistribution);
+		const guidance = screen.getByRole("link", {name: "Eco design control guidance (opens in another window)"});
+		expect(guidance).toBeDefined();
+		expect(guidance.getAttribute("href")).toBe("/guidance/eco-design-control-guidance");
+
+
+
+	});
+
+	it("should navigate to the heat emitting page when form is saved", async () => {
 		store.$patch({
 			heatingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [heatPump],
-					}
+					},
 				},
-			}
+			},
 		});
 		await renderSuspended(WetDistribution);
 		await populateValidForm();
 		await user.click(screen.getByRole("button"));
-		expect(navigateToMock).toHaveBeenCalledWith("/heating-systems/heat-emitting");
-
+		expect(navigateToMock).toHaveBeenCalledWith(
+			"/heating-systems/heat-emitting"
+		);
 	});
-
 });

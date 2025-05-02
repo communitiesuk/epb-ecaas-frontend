@@ -34,6 +34,7 @@ function handleInput(e) {
 		<p v-if="props.context.state.invalid" class="govuk-error-message" :data-testid="`${id}_error`">
 			<span class="govuk-visually-hidden">Error:</span> {{ getErrorMessage(props.context) }}
 		</p>
+		<slot />
 		<select
 			:id="id"
 			:class="`govuk-select govuk-input--width-10 ${props.context.state.invalid ? 'govuk-select--error' : ''}`"
