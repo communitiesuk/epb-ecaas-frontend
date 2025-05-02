@@ -18,3 +18,11 @@ export interface ParameterData {
 	Type: string;
 	Value: string;
 }
+
+export interface ApiInfoResponse {
+	links: {
+		describedBy: string;
+	};
+	title: string;
+	version: string;
+}
