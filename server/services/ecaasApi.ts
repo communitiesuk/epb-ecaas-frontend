@@ -22,7 +22,6 @@ const ecaasApi = {
 
 	getInfo: async (accessToken: string) => {
 		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.ApiMetadata}`;
-		console.log("URI is: ", uri);
 		const response = await fetch(uri, {
 			headers: {
 				'Authorization': `Bearer ${accessToken}`
