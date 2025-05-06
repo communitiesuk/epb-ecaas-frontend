@@ -1,4 +1,5 @@
-import type { CheckComplianceResponse } from "~/schema/api-schema.types";
+import type { SchemaFhsComplianceResponse} from "~/schema/api-schema.types";
+import {ApiPaths} from "~/schema/api-schema.types";
 import type { ApiInfoResponse, TokenResponse } from "../server.types";
 
 const ecaasApi = {
@@ -20,7 +21,9 @@ const ecaasApi = {
 	},
 
 	getInfo: async (accessToken: string) => {
-		const response = await fetch(`${process.env.ECAAS_API_URL}/`, {
+		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.ApiMetadata}`;
+		console.log("URI is: ", uri);
+		const response = await fetch(uri, {
 			headers: {
 				'Authorization': `Bearer ${accessToken}`
 			}
@@ -30,7 +33,7 @@ const ecaasApi = {
 	},
 
 	checkCompliance: async (data: object, accessToken: string) => {
-		const response = await fetch(`${process.env.ECAAS_API_URL}/beta/future-homes-standard-compliance`, {
+		const response = await fetch(`${process.env.ECAAS_API_URL}${ApiPaths.FHSCompliance}`, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${accessToken}`
@@ -38,7 +41,7 @@ const ecaasApi = {
 			body: JSON.stringify(data)
 		});
 
-		return await response.json() as CheckComplianceResponse;
+		return await response.json() as SchemaFhsComplianceResponse;
 	}
 };
 

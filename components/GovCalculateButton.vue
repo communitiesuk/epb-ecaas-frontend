@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CheckComplianceResponse } from '~/schema/api-schema.types';
+import type {SchemaFhsComplianceResponse} from '~/schema/api-schema.types';
 
 const calculatePending = ref(false);
 
@@ -7,7 +7,7 @@ const calculate = async () => {
 	calculatePending.value = true;
 
 	try {
-		const response = await $fetch<CheckComplianceResponse>('/api/check-compliance', {
+		const response = await $fetch<SchemaFhsComplianceResponse>('/api/check-compliance', {
 			method: 'POST',
 			body: getInputData()
 		});
