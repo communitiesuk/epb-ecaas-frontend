@@ -116,7 +116,7 @@ describe('shading', () => {
 		expect(complete).toBe(true);
 	});
 
-	it('displays "completed" when there is at least one shading added and user clicks the mark section as complete button', async () => {
+	it('displays "completed" when user clicks the mark section as complete button', async () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {

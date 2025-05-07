@@ -38,8 +38,6 @@ function handleDuplicate(index: number) {
 
 
 function handleComplete() {
-
-	if (store.dwellingDetails.shading.data.length > 0) {
 		store.$patch({
 			dwellingDetails: {
 				shading: { complete: true }
@@ -48,10 +46,8 @@ function handleComplete() {
 		
 		navigateTo('/dwelling-details');
 		store.dwellingDetails.shading.complete = true;
-
 		
 	}
-}
 </script>
 
 <template>
