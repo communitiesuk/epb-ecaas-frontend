@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { defineEmits } from 'vue';
-const store = useEcaasStore();
 const emit = defineEmits(["completed"]);
+
+defineProps<{isComplete: boolean}>();
 </script>
 
 <template>
-	<GovButton v-show="!store.dwellingDetails.shading.complete" data-testid="completeSection" @click="emit('completed')">
+	<GovButton v-show="!isComplete" data-testid="completeSection" @click="emit('completed')">
 		Mark section as complete
 	</GovButton>
-	<div v-show="store.dwellingDetails.shading.complete" role="status" class="app-status-element">
+	<div v-show="isComplete" role="status" class="app-status-element">
 		Completed
 	</div>
 </template>

@@ -65,7 +65,7 @@ function handleComplete() {
 		<GovButton href="/dwelling-details" secondary>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement @completed="handleComplete"/>
+		<GovCompleteElement :is-complete="store.dwellingDetails.shading?.complete ?? false" @completed="handleComplete"/>
 
 	</div>
 </template>
