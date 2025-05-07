@@ -5,6 +5,7 @@ const store = useEcaasStore();
 
 const { data = [] } = store.dwellingDetails.shading;
 
+
 function handleRemove(index: number) {
 	data.splice(index, 1);
 	
@@ -31,7 +32,7 @@ function handleDuplicate(index: number) {
 				name: `${shading.name} (${duplicates.length})`
 			});
 		});
-		store.dwellingDetails.shading.complete = false;
+		store.dwellingDetails.shading.complete = false
 	}
 }
 
@@ -46,7 +47,7 @@ function handleComplete() {
 		});
 		
 		navigateTo('/dwelling-details');
-		store.dwellingDetails.shading.complete = true;
+		store.dwellingDetails.shading.complete = true
 
 		
 	}
@@ -61,8 +62,7 @@ function handleComplete() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
-		id="shading" title="Shading" :form-url="page?.url!"
+	<GovCustomList id="shading" title="Shading" :form-url="page?.url!"
 		:items="store.dwellingDetails.shading.data.map(x => x.name)" @remove="handleRemove" @duplicate="handleDuplicate" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-details" secondary>
@@ -72,7 +72,7 @@ function handleComplete() {
 		<GovButton v-if="!store.dwellingDetails.shading.complete" data-testid="completeSection" @click="handleComplete">
 			Mark section as complete
 		</GovButton>
-		<GovButton v-else class="govuk-button--secondary">
+		<GovButton v-else secondary>
 			Completed  
 		</GovButton>
 
