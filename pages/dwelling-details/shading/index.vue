@@ -45,10 +45,9 @@ function handleComplete() {
 		}
 	});
 		
-	navigateTo('/dwelling-details');
-	store.dwellingDetails.shading.complete = true;
-		
+	navigateTo('/dwelling-details');		
 }
+
 </script>
 
 <template>
