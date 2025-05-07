@@ -1,16 +1,16 @@
 <script setup lang="ts">
-const store = useEcaasStore()
 import { defineEmits } from 'vue';
-const emit = defineEmits(["completed"])
+const store = useEcaasStore();
+const emit = defineEmits(["completed"]);
 </script>
 
 <template>
-  <GovButton v-show="!store.dwellingDetails.shading.complete" data-testid="completeSection" @click="$emit('completed')">
-    Mark section as complete
-  </GovButton>
-  <div v-show="store.dwellingDetails.shading.complete" role="status" class="app-status-element">
-    Completed
-  </div>
+	<GovButton v-show="!store.dwellingDetails.shading.complete" data-testid="completeSection" @click="emit('completed')">
+		Mark section as complete
+	</GovButton>
+	<div v-show="store.dwellingDetails.shading.complete" role="status" class="app-status-element">
+		Completed
+	</div>
 </template>
 
 <style lang="scss" scoped>

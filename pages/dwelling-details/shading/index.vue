@@ -39,16 +39,16 @@ function handleDuplicate(index: number) {
 
 
 function handleComplete() {
-		store.$patch({
-			dwellingDetails: {
-				shading: { complete: true }
-			}
-		});
+	store.$patch({
+		dwellingDetails: {
+			shading: { complete: true }
+		}
+	});
 		
-		navigateTo('/dwelling-details');
-		store.dwellingDetails.shading.complete = true;
+	navigateTo('/dwelling-details');
+	store.dwellingDetails.shading.complete = true;
 		
-	}
+}
 </script>
 
 <template>
@@ -66,8 +66,7 @@ function handleComplete() {
 		<GovButton href="/dwelling-details" secondary>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement @completed="handleComplete">
-		</GovCompleteElement>
+		<GovCompleteElement @completed="handleComplete"/>
 
 	</div>
 </template>
