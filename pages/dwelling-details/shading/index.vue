@@ -32,7 +32,7 @@ function handleDuplicate(index: number) {
 				name: `${shading.name} (${duplicates.length})`
 			});
 		});
-		store.dwellingDetails.shading.complete = false
+		store.dwellingDetails.shading.complete = false;
 	}
 }
 
@@ -47,7 +47,7 @@ function handleComplete() {
 		});
 		
 		navigateTo('/dwelling-details');
-		store.dwellingDetails.shading.complete = true
+		store.dwellingDetails.shading.complete = true;
 
 		
 	}
@@ -62,19 +62,37 @@ function handleComplete() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList id="shading" title="Shading" :form-url="page?.url!"
+	<GovCustomList
+		id="shading" title="Shading" :form-url="page?.url!"
 		:items="store.dwellingDetails.shading.data.map(x => x.name)" @remove="handleRemove" @duplicate="handleDuplicate" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-details" secondary>
 			Return to overview
 		</GovButton>
 
-		<GovButton v-if="!store.dwellingDetails.shading.complete" data-testid="completeSection" @click="handleComplete">
+		<GovButton v-show="!store.dwellingDetails.shading.complete" data-testid="completeSection" @click="handleComplete">
 			Mark section as complete
 		</GovButton>
-		<GovButton v-else secondary>
+		<div v-show="store.dwellingDetails.shading.complete" role="status" class="app-status-element">
 			Completed  
-		</GovButton>
+		</div>
 
 	</div>
 </template>
+
+<style lang="scss" scoped>
+.app-status-element {
+
+	font-family: "GDS Transport", arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 400;
+		font-size: 1.1875rem;
+		line-height: 1;
+    padding: 8px 10px 7px;
+    border: 2px solid transparent;
+    color: #b1b4b6;
+    background-color: #f3f2f1;
+    box-shadow: 0 2px 0 #b1b4b6;
+}
+
+</style>

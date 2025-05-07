@@ -131,7 +131,7 @@ describe('shading', () => {
 		await user.click(screen.getByTestId('completeSection'));
 
 		expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
-		expect(screen.getByRole("button", {name: "Completed"})).toBeDefined();
+		expect(screen.getByText("Completed")).toBeDefined();
 
 	});
 
