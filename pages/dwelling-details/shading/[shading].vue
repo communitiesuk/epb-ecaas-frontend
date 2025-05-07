@@ -7,6 +7,7 @@ const shading = useItemToEdit('shading', store.dwellingDetails.shading.data);
 const model: Ref<ShadingData> = ref(shading!);
 
 const saveForm = (fields: ShadingData) => {
+	store.dwellingDetails.shading.complete = false;
 	store.$patch((state) => {
 		const {shading} = state.dwellingDetails;
 

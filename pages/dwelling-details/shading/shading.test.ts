@@ -2,17 +2,19 @@ import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
 import Shading from './index.vue';
+import ShadingForm from './[shading].vue';
+
+
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 
 describe('shading', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
 
+	const navigateToMock = vi.hoisted(() => vi.fn());
 	mockNuxtImport('navigateTo', () => {
 		return navigateToMock;
 	});
-
 	const shading1: ShadingData = {
 		name: "Cherry Tree",
 		startAngle: 10,
@@ -52,6 +54,7 @@ describe('shading', () => {
 		await user.click(screen.getByTestId('shading_remove_0'));
 
 		expect(screen.queryByTestId('shading_items')).toBeNull();
+		expect(store.dwellingDetails.shading.complete).toBe(false);
 	});
 
 	it('only second shading object is removed when corresponding remove link is clicked', async () => {
@@ -96,6 +99,13 @@ describe('shading', () => {
 	});
 
 	it('marks shading as complete when complete button is clicked', async () => {
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: [shading1]
+				}
+			}
+		});
 		await renderSuspended(Shading);
 
 		await user.click(screen.getByTestId('completeSection'));
@@ -104,6 +114,93 @@ describe('shading', () => {
 
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details');
 		expect(complete).toBe(true);
+	});
+
+	it('displays "completed" when there is at least one shading added and user clicks the mark section as complete button', async () => {
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: [shading1]
+				}
+			}
+		});
+		await renderSuspended(Shading);
+		
+		expect(screen.getByRole("button", {name: "Mark section as complete"})).toBeDefined();
+
+		await user.click(screen.getByTestId('completeSection'));
+
+		expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
+		expect(screen.getByRole("button", {name: "Completed"})).toBeDefined();
+
+	});
+
+
+	it('marks shading as not complete when complete button is clicked then user removes a shading item', async () => {
+		
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: [shading1, shading2]
+				}
+			}
+		});
+		await renderSuspended(Shading);
+
+		await user.click(screen.getByTestId('completeSection'));
+		expect(store.dwellingDetails.shading.complete).toBe(true);
+
+		await user.click(screen.getByTestId('shading_remove_0'));
+		expect(store.dwellingDetails.shading.complete).toBe(false);
+
+
+	});
+
+
+	it('marks shading as not complete when complete button is clicked then user adds a shading item', async () => {
+		
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: [shading1]
+				}
+			}
+		});
+		await renderSuspended(Shading);
+		await user.click(screen.getByTestId('completeSection'));
+		expect(store.dwellingDetails.shading.complete).toBe(true);
+
+		await user.click(screen.getByTestId('shading_duplicate_0'));
+		expect(store.dwellingDetails.shading.complete).toBe(false);
+
+	});
+
+	it('marks shading as not complete when a user marks section as complete but then makes an edit to a shading item', async () => {
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: [shading1]
+				}
+			}
+		});
+
+		await renderSuspended(Shading);
+		await user.click(screen.getByTestId('completeSection'));
+
+		await renderSuspended(ShadingForm, {
+			route: {
+				params: {shading: '0'}
+			}
+		});
+		await user.tab();
+		await user.clear(screen.getByTestId("name"));
+		await user.type(screen.getByTestId("name"), "Cherry tree edited");
+		await user.tab();
+		await user.click(screen.getByRole('button'));
+
+		const { complete } = store.dwellingDetails.shading;
+		expect(complete).toBe(false);
+		
 	});
 });
 
