@@ -10,7 +10,7 @@ phases:
     commands:
       - node -v
       - npm -v
-      - npm install
+      - npm ci
       - npm run build
       - cd .output/server
       - zip -r nuxt-lambda.zip .
