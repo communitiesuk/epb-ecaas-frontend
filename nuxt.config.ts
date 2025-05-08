@@ -52,6 +52,9 @@ export default defineNuxtConfig({
 		'@nuxt/test-utils/module',
 		'@nuxt/eslint'
 	],
+	plugins: [
+		'~/plugins/xray-fetch.server',
+	],
 	formkit: {
 		autoImport: true,
 		configFile: './formkit.config.ts'

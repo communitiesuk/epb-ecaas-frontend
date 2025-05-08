@@ -11,7 +11,7 @@
     "lint:fix": "eslint . --fix",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-	"schema-ts": "npx openapi-typescript https://docs.building-energy-calculator.communities.gov.uk/openapi.yaml -o schema/api-schema.types.ts",
+    "schema-ts": "npx openapi-typescript https://docs.building-energy-calculator.communities.gov.uk/openapi.yaml -o schema/api-schema.types.ts",
     "test": "vitest",
     "typecheck": "nuxt typecheck",
     "typedtest": "nuxt typecheck && vitest run"
@@ -20,6 +20,8 @@
     "@formkit/nuxt": "^1.6.9",
     "@pinia/nuxt": "^0.7.0",
     "aws-amplify": "^6.10.3",
+    "aws-xray-sdk": "^3.10.3",
+    "aws-xray-sdk-fetch": "^3.10.3",
     "dayjs": "^1.11.13",
     "nuxt": "^3.15.4",
     "pinia": "^2.2.6",
