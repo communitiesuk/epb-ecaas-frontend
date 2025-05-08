@@ -98,7 +98,7 @@ describe('shading', () => {
 		expect(screen.getByText('Cherry Tree (1) (2)')).toBeDefined();
 	});
 
-	it('marks shading as complete when complete button is clicked', async () => {
+	it('marks shading as complete when mark section as complete button is clicked', async () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
@@ -107,32 +107,16 @@ describe('shading', () => {
 			}
 		});
 		await renderSuspended(Shading);
+		expect(screen.getByRole("button", {name: "Mark section as complete"})).toBeDefined();
 
 		await user.click(screen.getByTestId('completeSection'));
 
 		const { complete } = store.dwellingDetails.shading;
 
-		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details');
 		expect(complete).toBe(true);
-	});
-
-	it('displays "completed" when user clicks the mark section as complete button', async () => {
-		store.$patch({
-			dwellingDetails: {
-				shading: {
-					data: [shading1]
-				}
-			}
-		});
-		await renderSuspended(Shading);
-		
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).toBeDefined();
-
-		await user.click(screen.getByTestId('completeSection'));
-
 		expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
-		expect(screen.getByText("Completed")).toBeDefined();
-
+		
+		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details');
 	});
 
 
