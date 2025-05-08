@@ -440,7 +440,7 @@ describe('doors', () => {
 	
 		});
 
-		it('marks doors as not complete when a user marks section as complete but then makes an edit to an unglazed door item', async () => {
+		it('marks doors as not complete when user saves a new or edited unglazed door form after marking section as complete', async () => {
 			await addDoorsDataToStore();
 			const {livingSpaceExternalUnglazedDoor } = store.livingSpaceFabric.livingSpaceDoors;
 			await renderSuspended(Doors);
@@ -462,7 +462,7 @@ describe('doors', () => {
 
 		});
 
-		it('marks doors as not complete when a user marks section as complete but then makes an edit to an glazed door item', async () => {
+		it('marks doors as not complete when user saves a new or edited glazed door form after marking section as complete', async () => {
 			await addDoorsDataToStore();
 			const {livingSpaceExternalGlazedDoor } = store.livingSpaceFabric.livingSpaceDoors;
 			await renderSuspended(Doors);
@@ -483,7 +483,7 @@ describe('doors', () => {
 			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();	
 		});
 
-		it('marks doors as not complete when a user marks section as complete but then makes an edit to an internal door item', async () => {
+		it('marks doors as not complete when user saves a new or edited internal door form after marking section as complete', async () => {
 			await addDoorsDataToStore();
 			const {livingSpaceInternalDoor } = store.livingSpaceFabric.livingSpaceDoors;
 			await renderSuspended(Doors);
