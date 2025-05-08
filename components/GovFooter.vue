@@ -1,6 +1,15 @@
+<script setup lang="ts">
+interface FooterProps {
+	rebrand: boolean;
+}
+
+const { rebrand } = defineProps<FooterProps>();
+</script>
+
 <template>
 	<footer class="govuk-footer">
 		<div class="govuk-width-container">
+			<gov-logo v-if="rebrand" :rebrand="true" classes="govuk-footer__crown" :use-logotype="false" />
 			<div class="govuk-footer__meta">
 				<div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
 					<svg
