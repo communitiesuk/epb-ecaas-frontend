@@ -5,10 +5,10 @@ defineProps<{isComplete: boolean}>();
 </script>
 
 <template>
-	<GovButton v-show="!isComplete" data-testid="completeSection" @click="emit('completed')">
+	<GovButton v-show="!isComplete" data-testid="completeSectionButton" @click="emit('completed')">
 		Mark section as complete
 	</GovButton>
-	<div v-show="isComplete" role="status" class="app-status-element">
+	<div v-show="isComplete" data-testid="completeSectionCompleted" role="status" class="app-status-element">
 		Completed
 	</div>
 </template>

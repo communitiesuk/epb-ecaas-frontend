@@ -99,23 +99,20 @@ describe('shading', () => {
 	});
 
 	it('marks shading as complete when mark section as complete button is clicked', async () => {
-		store.$patch({
-			dwellingDetails: {
-				shading: {
-					data: [shading1]
-				}
-			}
-		});
-		await renderSuspended(Shading);
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).toBeDefined();
 
-		await user.click(screen.getByTestId('completeSection'));
+		await renderSuspended(Shading);
+		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
+		expect(completedStatusElement?.style.display).toBe("none");
+
+		await user.click(screen.getByTestId('completeSectionButton'));
 
 		const { complete } = store.dwellingDetails.shading;
 
 		expect(complete).toBe(true);
 		expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
-		
+		expect(completedStatusElement?.style.display).not.toBe("none");
+
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details');
 	});
 
@@ -131,12 +128,12 @@ describe('shading', () => {
 		});
 		await renderSuspended(Shading);
 
-		await user.click(screen.getByTestId('completeSection'));
+		await user.click(screen.getByTestId('completeSectionButton'));
 		expect(store.dwellingDetails.shading.complete).toBe(true);
 
 		await user.click(screen.getByTestId('shading_remove_0'));
 		expect(store.dwellingDetails.shading.complete).toBe(false);
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).toBeDefined();
+		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
 
 	});
 
@@ -150,12 +147,12 @@ describe('shading', () => {
 			}
 		});
 		await renderSuspended(Shading);
-		await user.click(screen.getByTestId('completeSection'));
+		await user.click(screen.getByTestId('completeSectionButton'));
 		expect(store.dwellingDetails.shading.complete).toBe(true);
 
 		await user.click(screen.getByTestId('shading_duplicate_0'));
 		expect(store.dwellingDetails.shading.complete).toBe(false);
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).toBeDefined();
+		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
 
 	});
 
@@ -169,7 +166,7 @@ describe('shading', () => {
 		});
 
 		await renderSuspended(Shading);
-		await user.click(screen.getByTestId('completeSection'));
+		await user.click(screen.getByTestId('completeSectionButton'));
 
 		await renderSuspended(ShadingForm, {
 			route: {
@@ -186,7 +183,7 @@ describe('shading', () => {
 		expect(complete).toBe(false);
 
 		await renderSuspended(Shading);
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).toBeDefined();
+		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
 		
 	});
 
