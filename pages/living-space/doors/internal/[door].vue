@@ -24,7 +24,7 @@ const saveForm = (fields: InternalDoorData) => {
 
 		saveToList(door, livingSpaceInternalDoor);
 	});
-
+	store.livingSpaceFabric.livingSpaceDoors.livingSpaceInternalDoor.complete = false;
 	navigateTo("/living-space/doors");
 };
 

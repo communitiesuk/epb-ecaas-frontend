@@ -3,6 +3,10 @@ import userEvent from "@testing-library/user-event";
 import Doors from './index.vue';
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
+import UnglazedDoorForm from './external-unglazed/[door].vue';
+import glazedDoorForm from './external-glazed/[door].vue';
+import internalDoorForm from './internal/[door].vue';
+
 
 describe('doors', () => {
 	const store = useEcaasStore();
@@ -17,51 +21,130 @@ describe('doors', () => {
 		store.$reset();
 	});
 
+	const externalUnglazed1: ExternalUnglazedDoorData = {
+		name: "external unglazed 1 name",
+		pitchOption: '90',
+		pitch: 90,
+		orientation: 0,
+		height: 0.5,
+		width: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorption: 0.1,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
+	};
+
+	const externalUnglazed2: ExternalUnglazedDoorData = {
+		name: "external unglazed 2 name",
+		pitchOption: '90',
+		pitch: 90,
+		orientation: 0,
+		height: 0.5,
+		width: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorption: 0.1,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
+	};
+
+	const externalUnglazed3: ExternalUnglazedDoorData = {
+		name: "external unglazed 3 name",
+		pitchOption: '90',
+		pitch: 90,
+		orientation: 0,
+		height: 0.5,
+		width: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorption: 0.1,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
+	};
+
+	const externalGlazed1: ExternalGlazedDoorData = {
+		name: "externalGlazed1 name",
+		orientation: 1,
+		surfaceArea: 1,
+		height: 1,
+		width: 1,
+		uValue: 1,
+		pitchOption: '90',
+		pitch: 90,
+		solarTransmittance: 0.1,
+		elevationalHeight: 1,
+		midHeight: 1,
+		numberOpenableParts: "none",
+	};
+
+	const externalGlazed2: ExternalGlazedDoorData = {
+		name: "externalGlazed2 name",
+		orientation: 1,
+		surfaceArea: 1,
+		height: 1,
+		width: 1,
+		uValue: 1,
+		pitchOption: '90',
+		pitch: 90,
+		solarTransmittance: 0.1,
+		elevationalHeight: 1,
+		midHeight: 1,
+		numberOpenableParts: "none",
+	};
+
+	const externalGlazed3: ExternalGlazedDoorData = {
+		name: "externalGlazed3 name",
+		orientation: 1,
+		surfaceArea: 1,
+		height: 1,
+		width: 1,
+		uValue: 1,
+		pitchOption: '90',
+		pitch: 90,
+		solarTransmittance: 0.1,
+		elevationalHeight: 1,
+		midHeight: 1,
+		numberOpenableParts: "none",
+	};
+	
+	const internal1: InternalDoorData = {
+		typeOfCeiling: 'heatedSpace',
+		name: "Internal 1",
+		surfaceArea: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitchOption: '90',
+		pitch: 90
+	};
+
+	const internal2: InternalDoorData = {
+		typeOfCeiling: 'heatedSpace',
+		name: "Internal 2",
+		surfaceArea: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitchOption: '90',
+		pitch: 90
+	};
+
+	const internal3: InternalDoorData = {
+		typeOfCeiling: 'heatedSpace',
+		name: "Internal 3",
+		surfaceArea: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitchOption: '90',
+		pitch: 90
+	};
+	
 	describe('external unglazed doors', () => {
-		const externalUnglazed1: ExternalUnglazedDoorData = {
-			name: "external unglazed 1 name",
-			pitchOption: '90',
-			pitch: 90,
-			orientation: 0,
-			height: 0.5,
-			width: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal'
-		};
-	
-		const externalUnglazed2: ExternalUnglazedDoorData = {
-			name: "external unglazed 2 name",
-			pitchOption: '90',
-			pitch: 90,
-			orientation: 0,
-			height: 0.5,
-			width: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal'
-		};
-	
-		const externalUnglazed3: ExternalUnglazedDoorData = {
-			name: "external unglazed 3 name",
-			pitchOption: '90',
-			pitch: 90,
-			orientation: 0,
-			height: 0.5,
-			width: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal'
-		};
 	
 		it('external unglazed door is removed when remove link is clicked', async () => {
 			store.$patch({
@@ -131,50 +214,6 @@ describe('doors', () => {
 	});
 
 	describe('external glazed doors', () => {
-		const externalGlazed1: ExternalGlazedDoorData = {
-			name: "externalGlazed1 name",
-			orientation: 1,
-			surfaceArea: 1,
-			height: 1,
-			width: 1,
-			uValue: 1,
-			pitchOption: '90',
-			pitch: 90,
-			solarTransmittance: 0.1,
-			elevationalHeight: 1,
-			midHeight: 1,
-			numberOpenableParts: "none",
-		};
-	
-		const externalGlazed2: ExternalGlazedDoorData = {
-			name: "externalGlazed2 name",
-			orientation: 1,
-			surfaceArea: 1,
-			height: 1,
-			width: 1,
-			uValue: 1,
-			pitchOption: '90',
-			pitch: 90,
-			solarTransmittance: 0.1,
-			elevationalHeight: 1,
-			midHeight: 1,
-			numberOpenableParts: "none",
-		};
-	
-		const externalGlazed3: ExternalGlazedDoorData = {
-			name: "externalGlazed3 name",
-			orientation: 1,
-			surfaceArea: 1,
-			height: 1,
-			width: 1,
-			uValue: 1,
-			pitchOption: '90',
-			pitch: 90,
-			solarTransmittance: 0.1,
-			elevationalHeight: 1,
-			midHeight: 1,
-			numberOpenableParts: "none",
-		};
 	
 		it('iexternal glazed door is removed when remove link is clicked', async () => {
 			store.$patch({
@@ -186,11 +225,11 @@ describe('doors', () => {
 					}
 				}
 			});
-	
+			
 			await renderSuspended(Doors);
-	
+			
 			expect(screen.getAllByTestId('externalGlazed_items')).toBeDefined();
-	
+			
 			await user.click(screen.getByTestId('externalGlazed_remove_0'));
 	
 			expect(screen.queryByTestId('externalGlazed_items')).toBeNull();
@@ -245,38 +284,6 @@ describe('doors', () => {
 	});
 
 	describe('internal door', () => {
-		const internal1: InternalDoorData = {
-			typeOfCeiling: 'heatedSpace',
-			name: "Internal 1",
-			surfaceArea: 5,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal',
-			pitchOption: '90',
-			pitch: 90
-		};
-	
-		const internal2: InternalDoorData = {
-			typeOfCeiling: 'heatedSpace',
-			name: "Internal 2",
-			surfaceArea: 5,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal',
-			pitchOption: '90',
-			pitch: 90
-		};
-	
-		const internal3: InternalDoorData = {
-			typeOfCeiling: 'heatedSpace',
-			name: "Internal 3",
-			surfaceArea: 5,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal',
-			pitchOption: '90',
-			pitch: 90
-		};
 	
 		it('internal door is removed when remove link is clicked', async () => {
 			store.$patch({
@@ -344,20 +351,157 @@ describe('doors', () => {
 		});
 	});
 
-	it('marks shading as complete when complete button is clicked', async () => {
-		await renderSuspended(Doors);
+	describe('mark section as complete', () => {
 
-		await user.click(screen.getByTestId('completeSection'));
+		const addDoorsDataToStore = async () => {
+			store.$patch({
+				livingSpaceFabric: {
+					livingSpaceDoors: {
+						livingSpaceExternalUnglazedDoor: { data: [externalUnglazed1] },
+						livingSpaceExternalGlazedDoor: { data: [externalGlazed1] },
+						livingSpaceInternalDoor: { data: [internal1] },
+					},
+				}
+			});
+		};
 
-		const {
-			livingSpaceExternalGlazedDoor,
-			livingSpaceExternalUnglazedDoor,
-			livingSpaceInternalDoor,
-		} = store.livingSpaceFabric.livingSpaceDoors;
+		it('marks doors as complete when mark section as complete button is clicked', async () => {
+			await renderSuspended(Doors);
+	
+			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+			const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
+			expect(completedStatusElement?.style.display).toBe("none");
+	
+			await user.click(screen.getByTestId('completeSectionButton'));
+	
+			const {
+				livingSpaceExternalGlazedDoor,
+				livingSpaceExternalUnglazedDoor,
+				livingSpaceInternalDoor,
+			} = store.livingSpaceFabric.livingSpaceDoors;
+	
+	
+			expect(livingSpaceExternalGlazedDoor.complete).toBe(true);
+			expect(livingSpaceExternalUnglazedDoor.complete).toBe(true);
+			expect(livingSpaceInternalDoor.complete).toBe(true);
+			expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
+			expect(completedStatusElement?.style.display).not.toBe("none");
+	
+			expect(navigateToMock).toHaveBeenCalledWith('/living-space');
+		});
+	
+		it('marks doors as not complete when mark as complete button is clicked then user removes a door item', async () => {
+			await addDoorsDataToStore();
+		
+			await renderSuspended(Doors);
+			const {livingSpaceExternalUnglazedDoor,livingSpaceExternalGlazedDoor, livingSpaceInternalDoor } = store.livingSpaceFabric.livingSpaceDoors;
+	
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(livingSpaceExternalUnglazedDoor.complete).toBe(true);
+			await user.click(screen.getByTestId('externalUnglazed_remove_0'));
+			expect(livingSpaceExternalUnglazedDoor.complete).toBe(false);
+			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
 
-		expect(navigateToMock).toHaveBeenCalledWith('/living-space');
-		expect(livingSpaceExternalGlazedDoor.complete).toBe(true);
-		expect(livingSpaceExternalUnglazedDoor.complete).toBe(true);
-		expect(livingSpaceInternalDoor.complete).toBe(true);
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(livingSpaceExternalGlazedDoor.complete).toBe(true);
+			await user.click(screen.getByTestId('externalGlazed_remove_0'));
+			expect(livingSpaceExternalGlazedDoor.complete).toBe(false);
+			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(livingSpaceInternalDoor.complete).toBe(true);
+			await user.click(screen.getByTestId('internal_remove_0'));
+			expect(livingSpaceInternalDoor.complete).toBe(false);
+			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		});
+
+		it('marks doors as not complete when complete button is clicked then user adds a door item', async () => {
+			await addDoorsDataToStore();
+			await renderSuspended(Doors);
+			const {livingSpaceExternalUnglazedDoor,livingSpaceExternalGlazedDoor, livingSpaceInternalDoor } = store.livingSpaceFabric.livingSpaceDoors;
+
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(livingSpaceExternalUnglazedDoor.complete).toBe(true);
+			await user.click(screen.getByTestId('externalUnglazed_duplicate_0'));
+			expect(livingSpaceExternalUnglazedDoor.complete).toBe(false);
+			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(livingSpaceExternalGlazedDoor.complete).toBe(true);
+			await user.click(screen.getByTestId('externalGlazed_duplicate_0'));
+			expect(livingSpaceExternalGlazedDoor.complete).toBe(false);
+			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(livingSpaceInternalDoor.complete).toBe(true);
+			await user.click(screen.getByTestId('internal_duplicate_0'));
+			expect(livingSpaceInternalDoor.complete).toBe(false);
+			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+	
+		});
+
+		it('marks doors as not complete when a user marks section as complete but then makes an edit to an unglazed door item', async () => {
+			await addDoorsDataToStore();
+			const {livingSpaceExternalUnglazedDoor } = store.livingSpaceFabric.livingSpaceDoors;
+			await renderSuspended(Doors);
+
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(livingSpaceExternalUnglazedDoor.complete).toBe(true);
+
+			await renderSuspended(UnglazedDoorForm, {
+				route: {
+					params: {door: '0'}
+				}
+			});
+
+			await user.click(screen.getByRole('button'));
+
+			expect(livingSpaceExternalUnglazedDoor.complete).toBe(false);
+			await renderSuspended(Doors);
+			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+
+		});
+
+		it('marks doors as not complete when a user marks section as complete but then makes an edit to an glazed door item', async () => {
+			await addDoorsDataToStore();
+			const {livingSpaceExternalGlazedDoor } = store.livingSpaceFabric.livingSpaceDoors;
+			await renderSuspended(Doors);
+		
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(livingSpaceExternalGlazedDoor.complete).toBe(true);
+
+			await renderSuspended(glazedDoorForm, {
+				route: {
+					params: {door: '0'}
+				}
+			});
+
+			await user.click(screen.getByRole('button'));
+
+			expect(livingSpaceExternalGlazedDoor.complete).toBe(false);
+			await renderSuspended(Doors);
+			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();	
+		});
+
+		it('marks doors as not complete when a user marks section as complete but then makes an edit to an internal door item', async () => {
+			await addDoorsDataToStore();
+			const {livingSpaceInternalDoor } = store.livingSpaceFabric.livingSpaceDoors;
+			await renderSuspended(Doors);
+	
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(livingSpaceInternalDoor.complete).toBe(true);
+
+			await renderSuspended(internalDoorForm, {
+				route: {
+					params: {door: '0'}
+				}
+			});
+
+			await user.click(screen.getByRole('button'));
+
+			expect(livingSpaceInternalDoor.complete).toBe(false);
+			await renderSuspended(Doors);
+			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		});
 	});
 });

@@ -34,7 +34,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 
 		saveToList(door, livingSpaceExternalGlazedDoor);
 	});
-
+	store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalGlazedDoor.complete = false;
 	navigateTo("/living-space/doors");
 };
 

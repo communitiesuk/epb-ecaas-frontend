@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 const title = "Doors";
 const page = usePage();
 const store = useEcaasStore();
@@ -14,7 +15,7 @@ function handleRemove(doorType: DoorType, index: number) {
 
 		store.$patch((state) => {
 			state.livingSpaceFabric.livingSpaceDoors[doorType]!.data = doors.length ? doors : [];
-			state.livingSpaceFabric.livingSpaceDoors[doorType]!.complete = doors.length > 0;
+			state.livingSpaceFabric.livingSpaceDoors[doorType]!.complete = false;
 		});
 	}
 } 
@@ -34,6 +35,7 @@ function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) 
 
 			state.livingSpaceFabric.livingSpaceDoors[doorType]!.data.push(newDoor);
 		});
+		store.livingSpaceFabric.livingSpaceDoors[doorType].complete = false;
 	}
 }
 
@@ -50,6 +52,12 @@ function handleComplete() {
 
 	navigateTo('/living-space');
 }
+
+function checkIsComplete(){
+	const doors = store.livingSpaceFabric.livingSpaceDoors
+	return Object.values(doors).every(door => door.complete)
+}
+
 </script>
 
 <template>
@@ -90,8 +98,7 @@ function handleComplete() {
 		>
 			Return to overview
 		</GovButton>
-		<GovButton data-testid="completeSection" @click="handleComplete">
-			Mark section as complete
-		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+
 	</div>
 </template>

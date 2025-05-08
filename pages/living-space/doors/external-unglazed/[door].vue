@@ -27,7 +27,7 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 
 		saveToList(door, livingSpaceExternalUnglazedDoor);
 	});
-
+	store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalUnglazedDoor.complete = false;
 	navigateTo("/living-space/doors");
 };
 
