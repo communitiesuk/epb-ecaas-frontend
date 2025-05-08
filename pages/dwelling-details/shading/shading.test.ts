@@ -137,7 +137,7 @@ describe('shading', () => {
 
 	});
 
-	it('marks shading as not complete when complete button is clicked then user adds a shading item', async () => {
+	it('marks shading as not complete when complete button is clicked then user duplicates a shading item', async () => {
 		
 		store.$patch({
 			dwellingDetails: {
@@ -156,7 +156,7 @@ describe('shading', () => {
 
 	});
 
-	it('marks shading as not complete when a user marks section as complete but then makes an edit to a shading item', async () => {
+	it('marks shading as not complete when user saves a new or edited form after marking section as complete', async () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
