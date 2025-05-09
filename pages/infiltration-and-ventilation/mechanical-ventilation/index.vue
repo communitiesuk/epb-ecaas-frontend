@@ -18,7 +18,7 @@ function handleRemove(index: number) {
 		infiltrationAndVentilation: {
 			mechanicalVentilation: {
 				data: data,
-				complete: data.length > 0
+				complete: false
 			},
 		},
 	});
@@ -47,9 +47,20 @@ function handleDuplicate(index: number) {
 				id: uuidv4()
 			});
 		});
+		store.infiltrationAndVentilation.mechanicalVentilation.complete = false;
 	}
 }
 const mvhrArray = store.infiltrationAndVentilation.mechanicalVentilation.data?.filter(x => x.typeOfMechanicalVentilationOptions === 'mvhr');
+
+function handleComplete() {
+	store.$patch({
+		infiltrationAndVentilation: {
+			mechanicalVentilation: { complete: true }
+		}
+	});
+		
+	navigateTo('/infiltration-and-ventilation');		
+}
 
 </script>
 
@@ -67,7 +78,6 @@ const mvhrArray = store.infiltrationAndVentilation.mechanicalVentilation.data?.f
 	<p
 		v-if="mvhrArray.length > 0"
 		class="govuk-body">Note if you remove a MVHR this will also remove any associated ductwork</p>
-	<GovButton href="/infiltration-and-ventilation" secondary>
-		Return to overview
-	</GovButton>
+	<GovCompleteElement :is-complete="store.infiltrationAndVentilation.mechanicalVentilation?.complete ?? false" @completed="handleComplete"/>
+
 </template>

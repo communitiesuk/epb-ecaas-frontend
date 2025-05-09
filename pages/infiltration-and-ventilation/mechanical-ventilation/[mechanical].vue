@@ -25,7 +25,7 @@ const saveForm = (fields: MechanicalVentilationData) => {
 		};
 
 		saveToList(mechanicalVentilationItem, mechanicalVentilation);
-		mechanicalVentilation.complete = true;
+		store.infiltrationAndVentilation.mechanicalVentilation.complete = false;
 	});
 
 	navigateTo("/infiltration-and-ventilation/mechanical-ventilation");

@@ -1,12 +1,18 @@
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import MechanicalVentilationOverview from "./index.vue";
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import MechanicalVentilationForm from './[mechanical].vue';
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
 
 describe("mechanical ventilation overview", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
+
+	const navigateToMock = vi.hoisted(() => vi.fn());
+	mockNuxtImport('navigateTo', () => {
+		return navigateToMock;
+	});
 
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
@@ -248,4 +254,92 @@ describe("mechanical ventilation overview", () => {
 		expect(screen.getByText(warningMessage)).toBeDefined();
 
 	});
+
+	it('marks mechanical ventilation as complete when mark section as complete button is clicked', async () => {
+	
+		await renderSuspended(MechanicalVentilationOverview);
+		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
+		expect(completedStatusElement?.style.display).toBe("none");
+	
+		await user.click(screen.getByTestId('completeSectionButton'));
+	
+		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
+	
+		expect(complete).toBe(true);
+		expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
+		expect(completedStatusElement?.style.display).not.toBe("none");
+	
+		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation');
+	});
+	
+	it('marks shading as not complete when complete button is clicked then user removes a shading item', async () => {
+				
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						mechanicalVentilation1, mechanicalVentilation2
+					],
+				},
+			},
+		});
+		await renderSuspended(MechanicalVentilationOverview);
+		
+		await user.click(screen.getByTestId('completeSectionButton'));
+		expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(true);
+		
+		await user.click(screen.getByTestId('mechanicalVentilation_remove_0'));
+		expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(false);
+		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		
+	});
+
+	it('marks mechanical ventilation as not complete when complete button is clicked then user duplicates a mechanical ventilation item', async () => {
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [mechanicalVentilation1]
+				}
+			}
+		});
+			
+		await renderSuspended(MechanicalVentilationOverview);
+			
+		await user.click(screen.getByTestId('completeSectionButton'));
+		expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(true);
+			
+		await user.click(screen.getByTestId('mechanicalVentilation_duplicate_0'));
+		expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(false);
+		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+			
+	});
+	it('marks mechanical ventilation as not complete when user saves a new or edited form after marking section as complete', async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [mechanicalVentilation1]
+				}
+			}
+		});
+			
+		await renderSuspended(MechanicalVentilationOverview);
+		await user.click(screen.getByTestId('completeSectionButton'));
+			
+		await renderSuspended(MechanicalVentilationForm, {
+			route: {
+				params: {mechanical: '0'}
+			}
+		});
+		
+		await user.click(screen.getByRole('button')); 
+			
+		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
+		expect(complete).toBe(false);
+			
+		await renderSuspended(MechanicalVentilationOverview);
+		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+	});
+			
 });

@@ -55,9 +55,7 @@ describe("mechanical ventilation form", () => {
 		await user.type(screen.getByTestId("mvhrEfficiency"), "0.2");
 
 		await user.click(screen.getByRole("button"));
-		const { data, complete } =
-      store.infiltrationAndVentilation.mechanicalVentilation;
-		expect(complete).toBe(true);
+		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
 		expect(data[0]).toEqual(mechanicalVentilation1);
 		expect(navigateToMock).toHaveBeenCalledWith(
 			"/infiltration-and-ventilation/mechanical-ventilation"
@@ -80,9 +78,9 @@ describe("mechanical ventilation form", () => {
 		await user.click(screen.getByRole("button"));
 
 		await waitFor(() => {
-			const { data, complete } =
+			const { data } =
         store.infiltrationAndVentilation.mechanicalVentilation;
-			expect(complete).toBe(true);
+
 			expect(data[0]).toEqual(mechanicalVentilation2);
 			expect(navigateToMock).toHaveBeenCalledWith(
 				"/infiltration-and-ventilation/mechanical-ventilation"
