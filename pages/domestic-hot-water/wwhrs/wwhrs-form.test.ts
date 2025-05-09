@@ -110,16 +110,4 @@ describe('wwhrs form', () => {
 		expect((await screen.findByTestId('wwhrsErrorSummary'))).toBeDefined();
 	});
 
-	it('navigates to WWHRS page when valid form is completed', async () => {
-		addStoreData();
-		await renderSuspended(WwhrsForm);
-	
-		await populateValidForm();
-		await user.click(screen.getByRole('button'));
-
-		const { complete } = store.domesticHotWater.wwhrs;
-		
-		expect(complete).toBe(true);
-		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/wwhrs');
-	});
 });

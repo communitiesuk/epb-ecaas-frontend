@@ -3,6 +3,7 @@ const title = "Waste water heat recovery (WWHRS)";
 const page = usePage();
 const store = useEcaasStore();
 
+
 function handleRemove(index: number) {
 	const { data } = store.domesticHotWater.wwhrs;
 
@@ -11,7 +12,7 @@ function handleRemove(index: number) {
 
 		store.$patch((state) => {
 			state.domesticHotWater.wwhrs.data = data.length ? data : [];
-			state.domesticHotWater.wwhrs.complete = data.length > 0;
+			state.domesticHotWater.wwhrs.complete = false;
 		});
 	}
 }
@@ -31,8 +32,20 @@ function handleDuplicate(index: number) {
 
 			state.domesticHotWater.wwhrs.data.push(newItem);
 		});
+		store.domesticHotWater.wwhrs.complete = false;
 	}
 }
+function handleComplete() {
+	store.$patch({
+		domesticHotWater: {
+			wwhrs: { complete: true }
+		}
+	});
+	console.log(store.domesticHotWater.wwhrs.data, "data");
+		
+	navigateTo('/domestic-hot-water');		
+}
+
 </script>
 
 <template>
@@ -50,7 +63,10 @@ function handleDuplicate(index: number) {
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
-	<GovButton href="/domestic-hot-water" secondary>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton href="/domestic-hot-water" secondary>
+			Return to overview
+		</GovButton>
+		<GovCompleteElement :is-complete="store.domesticHotWater.wwhrs?.complete ?? false" @completed="handleComplete"/>
+	</div>
 </template>

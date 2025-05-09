@@ -31,9 +31,8 @@ const saveForm = (fields: WwhrsData) => {
 		};
 
 		saveToList(item, wwhrs);
-		wwhrs.complete = true;
 	});
-
+	store.domesticHotWater.wwhrs.complete = false;
 	navigateTo("/domestic-hot-water/wwhrs");
 };
 
