@@ -19,6 +19,7 @@ defineProps<{isComplete: boolean}>();
   font-family: "GDS Transport", arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   font-weight: 400;
+  width: fit-content;
   font-size: 1.1875rem;
   line-height: 1;
   padding: 8px 10px 7px;
