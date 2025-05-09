@@ -9,7 +9,7 @@ const ductwork = useItemToEdit(
 );
 
 const model: Ref<DuctworkData> = ref(ductwork!);
-
+store.infiltrationAndVentilation.ductwork.complete = false;
 const saveForm = (fields: DuctworkData) => {
 	store.$patch((state) => {
 		const { ductwork } = state.infiltrationAndVentilation;
@@ -29,7 +29,6 @@ const saveForm = (fields: DuctworkData) => {
 		};
 
 		saveToList(ductworkItem, ductwork);
-		ductwork.complete = true;
 	});
 	navigateTo("/infiltration-and-ventilation/ductwork");
 };

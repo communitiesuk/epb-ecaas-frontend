@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import {checkMvhrHasDuctwork} from "../../../utils/checkMvhrHasDuctwork";
 const title = "MVHR ductwork";
 const page = usePage();
 const store = useEcaasStore();
+
 
 const { data } = store.infiltrationAndVentilation.ductwork;
 
@@ -12,7 +14,7 @@ function handleRemove(index: number) {
 		infiltrationAndVentilation: {
 			ductwork: {
 				data: data.length ? data : undefined,
-				complete: data.length > 0,
+				complete: false,
 			},
 		},
 	});
@@ -30,7 +32,26 @@ function handleDuplicate(index: number) {
 				name: `${ductwork.name} (${duplicates.length})`,
 			});
 		});
+		store.infiltrationAndVentilation.ductwork.complete = false;
 	}
+}
+
+function handleComplete() {
+	if(checkMvhrHasDuctwork()){
+		store.$patch({
+			infiltrationAndVentilation: {
+				ductwork: { complete: true }
+			}
+		});
+		navigateTo('/infiltration-and-ventilation');		
+	}
+		
+}
+function checkIsComplete(){
+	if(!store.infiltrationAndVentilation.ductwork.complete){
+		return false;
+	}
+	return checkMvhrHasDuctwork();
 }
 </script>
 
@@ -49,7 +70,11 @@ function handleDuplicate(index: number) {
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
-	<GovButton href="/infiltration-and-ventilation" secondary>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton href="/infiltration-and-ventilation" secondary>
+			Return to overview
+		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+	</div>
+
 </template>

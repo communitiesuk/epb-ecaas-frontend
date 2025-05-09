@@ -211,16 +211,4 @@ describe("ductwork form", async () => {
 		).toBeDefined();
 	});
 
-	it('navigates to ductwork page when valid form is completed', async () => {
-		addStoreData();
-		await renderSuspended(Ductwork);
-
-		await populateValidForm();
-		await user.click(screen.getByRole('button'));
-	
-		const { complete } = store.infiltrationAndVentilation.ductwork;
-			
-		expect(complete).toBe(true);
-		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/ductwork');
-	});
 });

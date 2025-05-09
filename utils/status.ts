@@ -42,10 +42,11 @@ export function getSection(
  * @returns Status as GovTagProps
  */
 export function getDuctworkStatus(task: object): GovTagProps {
+	const store = useEcaasStore();
 	const form = task as EcaasForm<typeof task>;
 	const status = !isFormStarted(form)
 		? formStatus.notStarted
-		: !checkMvhrHasDuctwork()
+		:( !checkMvhrHasDuctwork() || !store.infiltrationAndVentilation.ductwork.complete)
 			? formStatus.inProgress
 			: formStatus.complete;
 
