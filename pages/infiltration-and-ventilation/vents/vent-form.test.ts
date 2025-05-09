@@ -96,15 +96,4 @@ describe('vent', () => {
 		expect((await screen.findByTestId('ventErrorSummary'))).toBeDefined();
 	});
 
-	it('navigates to vents page when valid form is completed', async () => {
-		await renderSuspended(Vent);
-	
-		await populateValidForm();
-		await user.click(screen.getByRole('button'));
-
-		const { complete } = store.infiltrationAndVentilation.vents;
-		
-		expect(complete).toBe(true);
-		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/vents');
-	});
 });

@@ -12,7 +12,7 @@ function handleRemove(index: number) {
 		infiltrationAndVentilation: {
 			vents: {
 				data,
-				complete: data.length > 0
+				complete: false
 			}
 		}
 	});
@@ -30,7 +30,17 @@ function handleDuplicate(index: number) {
 				name: `${vent.name} (${duplicates.length})`
 			});
 		});
+		store.infiltrationAndVentilation.vents.complete = false;
 	}
+}
+function handleComplete() {
+	store.$patch({
+		infiltrationAndVentilation: {
+			vents: { complete: true }
+		}
+	});
+		
+	navigateTo('/infiltration-and-ventilation');		
 }
 </script>
 
@@ -50,5 +60,10 @@ function handleDuplicate(index: number) {
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
-	<GovButton href="/infiltration-and-ventilation" secondary>Return to overview</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton href="/infiltration-and-ventilation" secondary>
+			Return to overview
+		</GovButton>
+		<GovCompleteElement :is-complete="store.infiltrationAndVentilation.vents?.complete ?? false" @completed="handleComplete"/>
+	</div>
 </template>

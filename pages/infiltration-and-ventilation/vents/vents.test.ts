@@ -1,13 +1,18 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
 import type { VentData } from "~/stores/ecaasStore.types";
 import Vents from './index.vue';
+import VentsForm from './[vent].vue';
 
 describe('vents', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
+	const navigateToMock = vi.hoisted(() => vi.fn());
+	mockNuxtImport('navigateTo', () => {
+		return navigateToMock;
+	});
 	const vent1: VentData = {
 		name: 'Vent 1',
 		typeOfVent: 'trickle',
@@ -93,4 +98,95 @@ describe('vents', () => {
 		expect(screen.getByText('Vent 1 (1) (1)')).toBeDefined();
 		expect(screen.getByText('Vent 1 (1) (2)')).toBeDefined();
 	});
+
+	it('marks vents as complete when mark section as complete button is clicked', async () => {
+		await renderSuspended(Vents);
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+	
+		const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
+		expect(completedStatusElement?.style.display).toBe("none");
+	
+		await user.click(screen.getByTestId('completeSectionButton'));
+	
+		const { complete } = store.infiltrationAndVentilation.vents;
+	
+		expect(complete).toBe(true);
+		expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+		expect(completedStatusElement?.style.display).not.toBe("none");
+	
+		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation');
+	});
+	
+	it('marks vents as not complete when complete button is clicked then user removes a vent item', async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					data: [vent1, vent2],
+				},
+			},
+		});
+	
+		await renderSuspended(Vents);
+	
+		await user.click(screen.getByTestId('completeSectionButton'));
+		expect(store.infiltrationAndVentilation.vents.complete).toBe(true);
+	
+		await user.click(screen.getByTestId('vents_remove_0'));
+		expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+	});
+	
+	it('marks vents as not complete when complete button is clicked then user duplicates a vent item', async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					data: [vent1],
+				},
+			},
+		});
+	
+		await renderSuspended(Vents);
+	
+		await user.click(screen.getByTestId('completeSectionButton'));
+		expect(store.infiltrationAndVentilation.vents.complete).toBe(true);
+	
+		await user.click(screen.getByTestId('vents_duplicate_0'));
+		expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+	});
+	
+	it('marks vents as not complete when user saves a new or edited form after marking section as complete', async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					data: [vent1],
+				},
+			},
+		});
+	
+		await renderSuspended(Vents);
+		await user.click(screen.getByTestId('completeSectionButton'));
+	
+		await renderSuspended(VentsForm, {
+			route: {
+				params: { vent: '0' },
+			},
+		});
+	
+		await user.click(screen.getByRole('button')); 
+	
+		const { complete } = store.infiltrationAndVentilation.vents;
+		expect(complete).toBe(false);
+	
+		await renderSuspended(Vents);
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+	});
+	
+	it('should navigate to the infiltration and ventilation overview page when return to overview is clicked', async () => {
+		await renderSuspended(Vents);
+	
+		const returnToOverviewButton = screen.getByRole("button", { name: "Return to overview" });
+		expect(returnToOverviewButton.getAttribute("href")).toBe("/infiltration-and-ventilation");
+	});
+	
 });
