@@ -44,7 +44,7 @@ const saveForm = (fields: WindowData) => {
 
 		saveToList(window, livingSpaceWindows);
 	});
-
+	store.livingSpaceFabric.livingSpaceWindows.complete = false;
 	navigateTo("/living-space/windows");
 };
 

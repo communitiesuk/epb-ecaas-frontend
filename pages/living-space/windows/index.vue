@@ -12,7 +12,7 @@ function handleRemove(index: number) {
 		livingSpaceFabric: {
 			livingSpaceWindows: {
 				data,
-				complete: data.length > 0
+				complete: false
 			}
 		}
 	});
@@ -30,16 +30,12 @@ function handleDuplicate(index: number) {
 				name: `${window.name} (${duplicates.length})`
 			});
 		});
+		store.livingSpaceFabric.livingSpaceWindows.complete = false;
 	}
 }
 
 function handleComplete() {
-	store.$patch({
-		livingSpaceFabric: {
-			livingSpaceWindows: { complete: true }
-		}
-	});
-
+	store.livingSpaceFabric.livingSpaceWindows.complete = true;
 	navigateTo('/living-space');
 }
 </script>
@@ -60,14 +56,9 @@ function handleComplete() {
 		@duplicate="handleDuplicate"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton
-			href="/living-space"
-			secondary
-		>
+		<GovButton href="/living-space" secondary>
 			Return to overview
 		</GovButton>
-		<GovButton data-testid="completeSection" @click="handleComplete">
-			Mark section as complete
-		</GovButton>
+		<GovCompleteElement :is-complete="store.livingSpaceFabric.livingSpaceWindows?.complete ?? false" @completed="handleComplete"/>
 	</div>
 </template>
