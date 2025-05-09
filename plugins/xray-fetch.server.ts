@@ -1,8 +1,9 @@
 export default defineNuxtPlugin(() => {
 	if (usesXRayInLambda()) {
-		// eslint-disable-next-line @typescript-eslint/no-require-imports
-		const { captureFetchGlobal } = require('aws-xray-sdk-fetch');
-		globalThis.fetch = captureFetchGlobal();
+		// //  eslint-disable-next-line @typescript-eslint/no-require-imports
+		// temporarily commented out
+		// const { captureFetchGlobal } = require('aws-xray-sdk-fetch');
+		// globalThis.fetch = captureFetchGlobal();
 	}
 });
 
