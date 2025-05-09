@@ -41,7 +41,6 @@ function handleComplete() {
 			wwhrs: { complete: true }
 		}
 	});
-	console.log(store.domesticHotWater.wwhrs.data, "data");
 		
 	navigateTo('/domestic-hot-water');		
 }
