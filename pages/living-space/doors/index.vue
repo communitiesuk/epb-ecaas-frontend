@@ -54,8 +54,8 @@ function handleComplete() {
 }
 
 function checkIsComplete(){
-	const doors = store.livingSpaceFabric.livingSpaceDoors
-	return Object.values(doors).every(door => door.complete)
+	const doors = store.livingSpaceFabric.livingSpaceDoors;
+	return Object.values(doors).every(door => door.complete);
 }
 
 </script>
