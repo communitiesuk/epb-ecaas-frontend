@@ -83,15 +83,4 @@ describe('Air conditioning', () => {
 		expect((await screen.findByTestId('airConditioningErrorSummary'))).toBeDefined();
 	});
 
-	it('navigates to cooling page when valid form is completed', async () => {
-		await renderSuspended(AirConditioning);
-	
-		await populateValidForm();
-		await user.click(screen.getByRole('button'));
-
-		const { complete } = store.cooling.airConditioning;
-		
-		expect(complete).toBe(true);
-		expect(navigateToMock).toHaveBeenCalledWith('/cooling');
-	});
 });

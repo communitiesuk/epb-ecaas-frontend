@@ -18,7 +18,7 @@ const saveForm = (fields: AirConditioningData) => {
 		};
 
 		saveToList(airConditioningItem, airConditioning);
-		airConditioning.complete = true;
+		store.cooling.airConditioning.complete = false;
 	});
 
 	navigateTo("/cooling");

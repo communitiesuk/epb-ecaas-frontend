@@ -11,7 +11,7 @@ function handleRemove(index: number) {
 
 		store.$patch((state) => {
 			state.cooling.airConditioning.data = data.length ? data : [];
-			state.cooling.airConditioning.complete = data.length > 0;
+			state.cooling.airConditioning.complete = false;
 		});
 	}
 }
@@ -30,9 +30,21 @@ function handleDuplicate(index: number) {
 			};
 
 			state.cooling.airConditioning.data.push(newItem);
+			state.cooling.airConditioning.complete = false;
 		});
 	}
 }
+
+function handleComplete() {
+	store.$patch({
+		cooling: {
+			airConditioning: { complete: true }
+		}
+	});
+		
+	navigateTo('/cooling');		
+}
+
 </script>
 
 <template>
@@ -50,7 +62,10 @@ function handleDuplicate(index: number) {
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
-	<GovButton href="/cooling" secondary>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton href="/cooling" secondary>
+			Return to overview
+		</GovButton>
+		<GovCompleteElement :is-complete="store.cooling.airConditioning?.complete ?? false" @completed="handleComplete"/>
+	</div>
 </template>
