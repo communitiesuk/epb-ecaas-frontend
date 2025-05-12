@@ -4,7 +4,7 @@ import stylistic from '@stylistic/eslint-plugin';
 export default withNuxt(
 	{
 		files: ['**/*.ts', '**/*.vue'],
-		ignores: ['**/*.d.ts'],
+		ignores: ['schema/api-schema.types.ts'],
 		plugins: {
 			'@stylistic': stylistic
 		},
