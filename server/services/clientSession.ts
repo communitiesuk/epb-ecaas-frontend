@@ -32,15 +32,15 @@ const clientSession = () => {
 		const tokenResponse = await ecaasApi.getToken(clientId!, clientSecret!);
 
 		// Store access token and expiry in session
-		const clientSession: ClientSession = {
+		const sessionData: ClientSession = {
 			accessToken: tokenResponse.access_token,
 			expires: dayjs().add(tokenResponse.expires_in, 'second').toDate()
 		};
 
-		await useStorage().setItem('client_session', clientSession);
+		await useStorage().setItem('client_session', sessionData);
 
-		// Return client session
-		return clientSession;
+		// Return client session data
+		return sessionData;
 	};
 
 	return { get };
