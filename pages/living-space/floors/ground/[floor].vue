@@ -41,7 +41,8 @@ const saveForm = (fields: GroundFloorData) => {
 		if (!livingSpaceFloors.livingSpaceGroundFloor) {
 			livingSpaceFloors.livingSpaceGroundFloor = { data: [] };
 		}
-
+		state.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.complete = false;
+		
 		saveToList(floor, livingSpaceFloors.livingSpaceGroundFloor);
 	});
 

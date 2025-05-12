@@ -14,7 +14,7 @@ function handleRemove(floorType: FloorType, index: number) {
 
 		store.$patch((state) => {
 			state.livingSpaceFabric.livingSpaceFloors[floorType]!.data = floors.length ? floors : [];
-			state.livingSpaceFabric.livingSpaceFloors[floorType]!.complete = floors.length > 0;
+			state.livingSpaceFabric.livingSpaceFloors[floorType]!.complete = false;
 		});
 	}
 } 
@@ -34,6 +34,7 @@ function handleDuplicate<T extends FloorData>(floorType: FloorType, index: numbe
 
 			state.livingSpaceFabric.livingSpaceFloors[floorType]!.data.push(newFloor);
 		});
+		store.livingSpaceFabric.livingSpaceFloors[floorType]!.complete = false;
 	}
 }
 
@@ -49,6 +50,11 @@ function handleComplete() {
 	});
 
 	navigateTo('/living-space');
+}
+
+function checkIsComplete(){
+	const floors = store.livingSpaceFabric.livingSpaceFloors;
+	return Object.values(floors).every(floor => floor.complete);
 }
 </script>
 
@@ -91,8 +97,7 @@ function handleComplete() {
 		>
 			Return to overview
 		</GovButton>
-		<GovButton data-testid="completeSection" @click="handleComplete">
-			Mark section as complete
-		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+
 	</div>
 </template>

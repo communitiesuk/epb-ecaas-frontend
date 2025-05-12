@@ -31,10 +31,10 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			midHeightOpenablePart3: fields.midHeightOpenablePart3,
 			midHeightOpenablePart4: fields.midHeightOpenablePart4,
 		};
-
+		livingSpaceExternalGlazedDoor.complete = false;
 		saveToList(door, livingSpaceExternalGlazedDoor);
 	});
-	store.livingSpaceFabric.livingSpaceDoors.livingSpaceExternalGlazedDoor.complete = false;
+	
 	navigateTo("/living-space/doors");
 };
 

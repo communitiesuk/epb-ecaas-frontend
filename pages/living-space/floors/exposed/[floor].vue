@@ -6,7 +6,8 @@ const { saveToList } = useForm();
 const floorData = useItemToEdit('floor', store.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor?.data);
 const model: Ref<ExposedFloorData> = ref(floorData!);
 
-const saveForm = (fields: ExposedFloorData) => {
+const saveForm = (fields: ExposedFloorData) => {	
+
 	store.$patch((state) => {
 		const {livingSpaceFloors} = state.livingSpaceFabric;
 
@@ -27,10 +28,9 @@ const saveForm = (fields: ExposedFloorData) => {
 		if (!livingSpaceFloors.livingSpaceExposedFloor) {
 			livingSpaceFloors.livingSpaceExposedFloor = { data: [] };
 		}
-
+		state.livingSpaceFabric.livingSpaceFloors.livingSpaceExposedFloor!.complete = false;
 		saveToList(floor, livingSpaceFloors.livingSpaceExposedFloor);
-	});
-
+	}); 
 	navigateTo("/living-space/floors");
 };
 

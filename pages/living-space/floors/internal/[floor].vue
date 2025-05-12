@@ -24,10 +24,9 @@ const saveForm = (fields: InternalFloorData) => {
 		if (!livingSpaceFloors.livingSpaceInternalFloor) {
 			livingSpaceFloors.livingSpaceInternalFloor = {data: []};
 		}
-
+		state.livingSpaceFabric.livingSpaceFloors.livingSpaceInternalFloor!.complete = false;
 		saveToList(floor, livingSpaceFloors.livingSpaceInternalFloor);
 	});
-
 	navigateTo("/living-space/floors");
 };
 

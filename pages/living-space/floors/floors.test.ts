@@ -1,6 +1,10 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import Floors from './index.vue';
+import GroundFloorForm from './ground/[floor].vue';
+import InternalFloorForm from './internal/[floor].vue';
+import ExposedFloorForm from './exposed/[floor].vue';
+
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
 
@@ -13,49 +17,122 @@ describe('floors', () => {
 		return navigateToMock;
 	});
 
+	const ground1: GroundFloorData = {
+		name: "ground1 name",
+		surfaceAreaInZone: 5,
+		surfaceAreaAllZones: 0,
+		pitch: 0,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		perimeter: 0,
+		psiOfWallJunction: 0,
+		typeOfGroundFloor: 'slabNoEdgeInsulation'
+	};
+
+	const ground2: GroundFloorData = {
+		name: "ground2 name",
+		surfaceAreaInZone: 5,
+		surfaceAreaAllZones: 0,
+		pitch: 0,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		perimeter: 0,
+		psiOfWallJunction: 0,
+		typeOfGroundFloor: 'slabNoEdgeInsulation'
+	};
+
+	const ground3: GroundFloorData = {
+		name: "ground3 name",
+		surfaceAreaInZone: 5,
+		surfaceAreaAllZones: 0,
+		pitch: 0,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		perimeter: 0,
+		psiOfWallJunction: 0,
+		typeOfGroundFloor: 'slabNoEdgeInsulation'
+	};
+	const internal1: InternalFloorData = {
+		typeOfInternalFloor: 'heatedSpace',
+		name: "internal1 name",
+		surfaceAreaOfElement: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitch: 0
+	};
+
+	const internal2: InternalFloorData = {
+		typeOfInternalFloor: 'heatedSpace',
+		name: "internal2 name",
+		surfaceAreaOfElement: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitch: 0
+	};
+
+	const internal3: InternalFloorData = {
+		typeOfInternalFloor: 'heatedSpace',
+		name: "internal3 name",
+		surfaceAreaOfElement: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitch: 0
+	};
+
+	const exposed1: ExposedFloorData = {
+		name: "exposed1 name",
+		pitch: 0,
+		orientation: 0,
+		length: 0.5,
+		width: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorption: 0.1,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
+	};
+
+	const exposed2: ExposedFloorData = {
+		name: "exposed2 name",
+		pitch: 0,
+		orientation: 0,
+		length: 0.5,
+		width: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorption: 0.1,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
+	};
+
+	const exposed3: ExposedFloorData = {
+		name: "exposed3 name",
+		pitch: 0,
+		orientation: 0,
+		length: 0.5,
+		width: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorption: 0.1,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
+	};
+
+
 	afterEach(() => {
 		store.$reset();
 	});
-
 	describe('ground floors', () => {
-		const ground1: GroundFloorData = {
-			name: "ground1 name",
-			surfaceAreaInZone: 5,
-			surfaceAreaAllZones: 0,
-			pitch: 0,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal',
-			perimeter: 0,
-			psiOfWallJunction: 0,
-			typeOfGroundFloor: 'slabNoEdgeInsulation'
-		};
-	
-		const ground2: GroundFloorData = {
-			name: "ground2 name",
-			surfaceAreaInZone: 5,
-			surfaceAreaAllZones: 0,
-			pitch: 0,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal',
-			perimeter: 0,
-			psiOfWallJunction: 0,
-			typeOfGroundFloor: 'slabNoEdgeInsulation'
-		};
-	
-		const ground3: GroundFloorData = {
-			name: "ground3 name",
-			surfaceAreaInZone: 5,
-			surfaceAreaAllZones: 0,
-			pitch: 0,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal',
-			perimeter: 0,
-			psiOfWallJunction: 0,
-			typeOfGroundFloor: 'slabNoEdgeInsulation'
-		};
+
 	
 		it('ground floor is removed when remove link is clicked', async () => {
 			store.$patch({
@@ -125,35 +202,6 @@ describe('floors', () => {
 	});
 
 	describe('internal floors', () => {
-		const internal1: InternalFloorData = {
-			typeOfInternalFloor: 'heatedSpace',
-			name: "internal1 name",
-			surfaceAreaOfElement: 5,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal',
-			pitch: 0
-		};
-	
-		const internal2: InternalFloorData = {
-			typeOfInternalFloor: 'heatedSpace',
-			name: "internal2 name",
-			surfaceAreaOfElement: 5,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal',
-			pitch: 0
-		};
-	
-		const internal3: InternalFloorData = {
-			typeOfInternalFloor: 'heatedSpace',
-			name: "internal3 name",
-			surfaceAreaOfElement: 5,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal',
-			pitch: 0
-		};
 	
 		it('internal floor is removed when remove link is clicked', async () => {
 			store.$patch({
@@ -224,48 +272,7 @@ describe('floors', () => {
 	});
 
 	describe('exposed floors', () => {
-		const exposed1: ExposedFloorData = {
-			name: "exposed1 name",
-			pitch: 0,
-			orientation: 0,
-			length: 0.5,
-			width: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal'
-		};
-	
-		const exposed2: ExposedFloorData = {
-			name: "exposed2 name",
-			pitch: 0,
-			orientation: 0,
-			length: 0.5,
-			width: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal'
-		};
-	
-		const exposed3: ExposedFloorData = {
-			name: "exposed3 name",
-			pitch: 0,
-			orientation: 0,
-			length: 0.5,
-			width: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal'
-		};
-	
+
 		it('exposed floor is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
@@ -333,20 +340,136 @@ describe('floors', () => {
 		});
 	});
 
-	it('marks shading as complete when complete button is clicked', async () => {
-		await renderSuspended(Floors);
+	describe('mark section as complete', () =>  {
+		
+		const addFloorsDataToStore = async () => {
+			store.$patch({
+				livingSpaceFabric: {
+					livingSpaceFloors: {
+						livingSpaceGroundFloor: { data: [ground1] },
+						livingSpaceInternalFloor: { data: [internal1] },
+						livingSpaceExposedFloor: { data: [exposed1] },
+					},
+				}
+			});
+		};
 
-		await user.click(screen.getByTestId('completeSection'));
+		beforeEach(async () =>{
+			await addFloorsDataToStore();
+			await renderSuspended(Floors);
+		});
 
-		const {
-			livingSpaceGroundFloor,
-			livingSpaceExposedFloor,
-			livingSpaceInternalFloor
-		} = store.livingSpaceFabric.livingSpaceFloors;
+		const getFloorData = async (action: string) => {
+			const floors = [
+				{
+					key: 'livingSpaceGroundFloor',
+					testId: `ground_${action}_0`,
+					form: GroundFloorForm
+				},
+				{
+					key: 'livingSpaceInternalFloor',
+					testId: `internal_${action}_0`,
+					form: InternalFloorForm
+				},
+				{
+					key: 'livingSpaceExposedFloor',
+					testId: `exposed_${action}_0`,
+					form: ExposedFloorForm
+				}
+			];
+			return floors;
+		};
 
-		expect(navigateToMock).toHaveBeenCalledWith('/living-space');
-		expect(livingSpaceGroundFloor.complete).toBe(true);
-		expect(livingSpaceExposedFloor?.complete).toBe(true);
-		expect(livingSpaceInternalFloor?.complete).toBe(true);
+		type FloorType = keyof typeof store.livingSpaceFabric.livingSpaceFloors;
+
+	
+		it('marks floors as complete when mark section as complete button is clicked', async () => {
+	
+			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+			const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
+			expect(completedStatusElement?.style.display).toBe("none");
+	
+			await user.click(screen.getByTestId('completeSectionButton'));
+	
+			const {livingSpaceGroundFloor, livingSpaceInternalFloor, livingSpaceExposedFloor
+	
+			} = store.livingSpaceFabric.livingSpaceFloors;
+	
+	
+			expect(livingSpaceGroundFloor?.complete).toBe(true);
+			expect(livingSpaceInternalFloor?.complete).toBe(true);
+			expect(livingSpaceExposedFloor?.complete).toBe(true);
+			expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
+			expect(completedStatusElement?.style.display).not.toBe("none");
+	
+			expect(navigateToMock).toHaveBeenCalledWith('/living-space');
+		});
+	
+		it('marks floors as not complete when mark as complete button is clicked then user removes a floor item', async () => {
+
+			const floorsData = await getFloorData("remove");
+			const floors = Object.entries(store.livingSpaceFabric.livingSpaceFloors);
+			
+			for (const [key] of floors) {
+				const typedKey = key as FloorType;
+		
+				await user.click(screen.getByTestId('completeSectionButton'));
+				expect(store.livingSpaceFabric.livingSpaceFloors[typedKey]?.complete).toBe(true);
+					
+				const floorData = floorsData.find(x => x.key === typedKey);
+	
+				await user.click(screen.getByTestId(floorData!.testId));
+				expect(store.livingSpaceFabric.livingSpaceFloors[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+	
+			}
+		});
+
+		it('marks floors as not complete when complete button is clicked then user duplicates a floor item', async () => {
+
+			const floorsData = await getFloorData("duplicate");
+			const floors = Object.entries(store.livingSpaceFabric.livingSpaceFloors);
+		
+			for (const [key] of floors) {
+				const typedKey = key as FloorType;
+	
+				await user.click(screen.getByTestId('completeSectionButton'));
+				expect(store.livingSpaceFabric.livingSpaceFloors[typedKey]?.complete).toBe(true);
+				
+				const floorData = floorsData.find(x => x.key === typedKey);
+
+				await user.click(screen.getByTestId(floorData!.testId));
+				expect(store.livingSpaceFabric.livingSpaceFloors[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+			}
+
+		});
+
+		it('marks floors as not complete when user saves a new or edited floor form after marking section as complete', async () => {
+
+			const floorsData = await getFloorData("");
+
+			const floors = Object.entries(store.livingSpaceFabric.livingSpaceFloors);
+	
+			for(const [key] of floors){
+				const typedKey = key as FloorType;
+				await user.click(screen.getByTestId('completeSectionButton'));
+				expect(store.livingSpaceFabric.livingSpaceFloors[typedKey]?.complete).toBe(true);
+
+				const floorData = floorsData.find(x => x.key === typedKey);
+
+				await renderSuspended(floorData?.form, {
+					route: {
+						params: {floor: '0'}
+					}
+				});
+
+				await user.click(screen.getByRole('button', {name: "Save and continue"}));
+				
+				expect(store.livingSpaceFabric.livingSpaceFloors[typedKey]?.complete).toBe(false);
+				await renderSuspended(Floors);
+				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+			}
+		});
 	});
 });
