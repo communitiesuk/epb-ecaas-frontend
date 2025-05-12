@@ -33,7 +33,6 @@ const ecaasApi = {
 
 	checkCompliance: async (data: object, accessToken: string) => {
 		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.FHSCompliance}`;
-		console.error("URI for checking compliance: ", uri);
 		const response = await fetch(uri, {
 			method: 'POST',
 			headers: {
