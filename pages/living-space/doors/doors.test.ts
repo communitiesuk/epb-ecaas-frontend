@@ -350,9 +350,9 @@ describe('doors', () => {
 			expect(screen.getByText('Internal 1 (1) (2)')).toBeDefined();
 		});
 	});
-
+	
 	describe('mark section as complete', () => {
-
+		
 		const addDoorsDataToStore = async () => {
 			store.$patch({
 				livingSpaceFabric: {
@@ -364,9 +364,36 @@ describe('doors', () => {
 				}
 			});
 		};
-
-		it('marks doors as complete when mark section as complete button is clicked', async () => {
+		beforeEach(async () =>{
+			await addDoorsDataToStore();
 			await renderSuspended(Doors);
+		});
+
+		const getDoorData = async (action: string) => {
+			const doors = [
+				{
+					key: 'livingSpaceExternalUnglazedDoor',
+					testId: `externalUnglazed_${action}_0`,
+					form: UnglazedDoorForm
+				},
+				{
+					key: 'livingSpaceExternalGlazedDoor',
+					testId: `externalGlazed_${action}_0`,
+					form: glazedDoorForm
+				},
+				{
+					key: 'livingSpaceInternalDoor',
+					testId: `internal_${action}_0`,
+					form: internalDoorForm
+				}
+			];
+			return doors;
+		};
+
+		type DoorType = keyof typeof store.livingSpaceFabric.livingSpaceDoors;
+
+	
+		it('marks doors as complete when mark section as complete button is clicked', async () => {
 	
 			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
 			const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
@@ -391,117 +418,70 @@ describe('doors', () => {
 		});
 	
 		it('marks doors as not complete when mark as complete button is clicked then user removes a door item', async () => {
-			await addDoorsDataToStore();
+
+			const doorsData = await getDoorData("remove");
+			const doors = Object.entries(store.livingSpaceFabric.livingSpaceDoors);
+			
+			for (const [key] of doors) {
+				const typedKey = key as DoorType;
 		
-			await renderSuspended(Doors);
-			const {livingSpaceExternalUnglazedDoor,livingSpaceExternalGlazedDoor, livingSpaceInternalDoor } = store.livingSpaceFabric.livingSpaceDoors;
+				await user.click(screen.getByTestId('completeSectionButton'));
+				expect(store.livingSpaceFabric.livingSpaceDoors[typedKey]?.complete).toBe(true);
+					
+				const doorData = doorsData.find(x => x.key === typedKey);
 	
-			await user.click(screen.getByTestId('completeSectionButton'));
-			expect(livingSpaceExternalUnglazedDoor.complete).toBe(true);
-			await user.click(screen.getByTestId('externalUnglazed_remove_0'));
-			expect(livingSpaceExternalUnglazedDoor.complete).toBe(false);
-			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
-
-			await user.click(screen.getByTestId('completeSectionButton'));
-			expect(livingSpaceExternalGlazedDoor.complete).toBe(true);
-			await user.click(screen.getByTestId('externalGlazed_remove_0'));
-			expect(livingSpaceExternalGlazedDoor.complete).toBe(false);
-			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
-
-			await user.click(screen.getByTestId('completeSectionButton'));
-			expect(livingSpaceInternalDoor.complete).toBe(true);
-			await user.click(screen.getByTestId('internal_remove_0'));
-			expect(livingSpaceInternalDoor.complete).toBe(false);
-			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
-		});
-
-		it('marks doors as not complete when complete button is clicked then user adds a door item', async () => {
-			await addDoorsDataToStore();
-			await renderSuspended(Doors);
-			const {livingSpaceExternalUnglazedDoor,livingSpaceExternalGlazedDoor, livingSpaceInternalDoor } = store.livingSpaceFabric.livingSpaceDoors;
-
-			await user.click(screen.getByTestId('completeSectionButton'));
-			expect(livingSpaceExternalUnglazedDoor.complete).toBe(true);
-			await user.click(screen.getByTestId('externalUnglazed_duplicate_0'));
-			expect(livingSpaceExternalUnglazedDoor.complete).toBe(false);
-			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
-
-			await user.click(screen.getByTestId('completeSectionButton'));
-			expect(livingSpaceExternalGlazedDoor.complete).toBe(true);
-			await user.click(screen.getByTestId('externalGlazed_duplicate_0'));
-			expect(livingSpaceExternalGlazedDoor.complete).toBe(false);
-			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
-
-			await user.click(screen.getByTestId('completeSectionButton'));
-			expect(livingSpaceInternalDoor.complete).toBe(true);
-			await user.click(screen.getByTestId('internal_duplicate_0'));
-			expect(livingSpaceInternalDoor.complete).toBe(false);
-			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+				await user.click(screen.getByTestId(doorData!.testId));
+				expect(store.livingSpaceFabric.livingSpaceDoors[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
 	
+			}
 		});
 
-		it('marks doors as not complete when user saves a new or edited unglazed door form after marking section as complete', async () => {
-			await addDoorsDataToStore();
-			const {livingSpaceExternalUnglazedDoor } = store.livingSpaceFabric.livingSpaceDoors;
-			await renderSuspended(Doors);
+		it('marks doors as not complete when complete button is clicked then user duplicates a door item', async () => {
 
-			await user.click(screen.getByTestId('completeSectionButton'));
-			expect(livingSpaceExternalUnglazedDoor.complete).toBe(true);
-
-			await renderSuspended(UnglazedDoorForm, {
-				route: {
-					params: {door: '0'}
-				}
-			});
-
-			await user.click(screen.getByRole('button'));
-
-			expect(livingSpaceExternalUnglazedDoor.complete).toBe(false);
-			await renderSuspended(Doors);
-			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
-
-		});
-
-		it('marks doors as not complete when user saves a new or edited glazed door form after marking section as complete', async () => {
-			await addDoorsDataToStore();
-			const {livingSpaceExternalGlazedDoor } = store.livingSpaceFabric.livingSpaceDoors;
-			await renderSuspended(Doors);
+			const doorsData = await getDoorData("duplicate");
+			const doors = Object.entries(store.livingSpaceFabric.livingSpaceDoors);
 		
-			await user.click(screen.getByTestId('completeSectionButton'));
-			expect(livingSpaceExternalGlazedDoor.complete).toBe(true);
+			for (const [key] of doors) {
+				const typedKey = key as DoorType;
+	
+				await user.click(screen.getByTestId('completeSectionButton'));
+				expect(store.livingSpaceFabric.livingSpaceDoors[typedKey]?.complete).toBe(true);
+				
+				const doorData = doorsData.find(x => x.key === typedKey);
 
-			await renderSuspended(glazedDoorForm, {
-				route: {
-					params: {door: '0'}
-				}
-			});
+				await user.click(screen.getByTestId(doorData!.testId));
+				expect(store.livingSpaceFabric.livingSpaceDoors[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+			}
 
-			await user.click(screen.getByRole('button'));
-
-			expect(livingSpaceExternalGlazedDoor.complete).toBe(false);
-			await renderSuspended(Doors);
-			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();	
 		});
 
-		it('marks doors as not complete when user saves a new or edited internal door form after marking section as complete', async () => {
-			await addDoorsDataToStore();
-			const {livingSpaceInternalDoor } = store.livingSpaceFabric.livingSpaceDoors;
-			await renderSuspended(Doors);
+		it('marks doors as not complete when user saves a new or edited door form after marking section as complete', async () => {
+
+			const doorsData = await getDoorData("");
+
+			const doors = Object.entries(store.livingSpaceFabric.livingSpaceDoors);
 	
-			await user.click(screen.getByTestId('completeSectionButton'));
-			expect(livingSpaceInternalDoor.complete).toBe(true);
+			for(const [key] of doors){
+				const typedKey = key as DoorType;
+				await user.click(screen.getByTestId('completeSectionButton'));
+				expect(store.livingSpaceFabric.livingSpaceDoors[typedKey].complete).toBe(true);
 
-			await renderSuspended(internalDoorForm, {
-				route: {
-					params: {door: '0'}
-				}
-			});
+				const doorData = doorsData.find(x => x.key === typedKey);
 
-			await user.click(screen.getByRole('button'));
+				await renderSuspended(doorData?.form, {
+					route: {
+						params: {door: '0'}
+					}
+				});
+			
+				await user.click(screen.getByRole('button', {name: "Save and continue"}));
 
-			expect(livingSpaceInternalDoor.complete).toBe(false);
-			await renderSuspended(Doors);
-			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+				expect(store.livingSpaceFabric.livingSpaceDoors[typedKey]?.complete).toBe(false);
+				await renderSuspended(Doors);
+				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+			}
 		});
 	});
 });
