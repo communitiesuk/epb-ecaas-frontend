@@ -24,7 +24,7 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 		if (!livingSpaceWalls.livingSpaceWallToUnheatedSpace) {
 			livingSpaceWalls.livingSpaceWallToUnheatedSpace = { data: [] };
 		}
-
+		livingSpaceWalls.livingSpaceWallToUnheatedSpace.complete = false;
 		saveToList(wall, livingSpaceWalls.livingSpaceWallToUnheatedSpace);
 	});
 

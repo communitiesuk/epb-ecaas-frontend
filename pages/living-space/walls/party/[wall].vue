@@ -28,7 +28,7 @@ const saveForm = (fields: PartyWallData) => {
 		if (!livingSpaceWalls.livingSpacePartyWall) {
 			livingSpaceWalls.livingSpacePartyWall = { data: [] };
 		}
-
+		livingSpaceWalls.livingSpacePartyWall.complete = false;
 		saveToList(wall, livingSpaceWalls.livingSpacePartyWall);
 	});
 

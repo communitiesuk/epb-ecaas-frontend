@@ -1,6 +1,11 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import Walls from './index.vue';
+import ExternalWallForm from './external/[wall].vue';
+import InternalWallForm from './internal/[wall].vue';
+import PartyWallForm from './party/[wall].vue';
+import WallToUnheatedForm from './wall-to-unheated-space/[wall].vue';
+
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
 
@@ -16,53 +21,101 @@ describe('walls', () => {
 	afterEach(() => {
 		store.$reset();
 	});
+	const external1: ExternalWallData = {
+		name: "External wall 1",
+		pitchOption: '90',
+		pitch: 90,
+		orientation: 0,
+		height: 0.5,
+		length: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorption: 0.1,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
+		
+	};
+
+	const external2: ExternalWallData = {
+		...external1,
+		name: "External wall 2",
+	};
+
+	const external3: ExternalWallData = {
+		...external1,
+		name: "External wall 3",
+	};
+
+	const internal1: InternalWallData = {
+		name: "Internal wall 1",
+		surfaceAreaOfElement: 5,
+		uValue: 1,
+		kappaValue: 100,
+		massDistributionClass: 'internal',
+		pitchOption: 'custom',
+		pitch: 3
+	};
+	
+	const internal2: InternalWallData = {
+		...internal1,
+		name: "Internal wall 2",
+	};
+	
+	const internal3: InternalWallData = {
+		...internal1,
+		name: "Internal wall 3",
+	};
+
+	const toUnheatedSpace1: WallsToUnheatedSpaceData = {
+		name: "Wall to heated space 1",
+		surfaceAreaOfElement: 500,
+		uValue: 10,
+		arealHeatCapacity:40000,
+		massDistributionClass: 'external',
+		pitchOption: '90',
+		pitch: 90,
+		thermalResistanceOfAdjacentUnheatedSpace: 1
+		
+	};
+	
+	const toUnheatedSpace2: WallsToUnheatedSpaceData = {
+		...toUnheatedSpace1,
+		name: "Wall to heated space 2",
+	};
+	
+	const toUnheatedSpace3: WallsToUnheatedSpaceData = {
+		...toUnheatedSpace1,
+		name: "Wall to heated space 3",
+	};
+
+	const party1: PartyWallData = {
+		name: "Party wall 1",
+		pitchOption: '90',
+		pitch: 90,
+		orientation: 200,
+		height: 5,
+		length: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorption: 0.1,
+		uValue: 0.01,
+		kappaValue: 100,
+		massDistributionClass: 'internal'
+		
+	};
+
+	const party2: PartyWallData = {
+		...party1,
+		name: "Party wall 2",
+	};
+
+	const party3: PartyWallData = {
+		...party1,
+		name: "Party wall 3",
+	};
 
 	describe('External walls', () => {
-		const external1: ExternalWallData = {
-			name: "External wall 1",
-			pitchOption: '90',
-			pitch: 90,
-			orientation: 0,
-			height: 0.5,
-			length: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal'
-			
-		};
-	
-		const external2: ExternalWallData = {
-			name: "External wall 2",
-			pitchOption: '90',
-			pitch: 90,
-			orientation: 0,
-			height: 0.8,
-			length: 30,
-			elevationalHeight: 30,
-			surfaceArea: 15,
-			solarAbsorption: 0.6,
-			uValue: 0,
-			kappaValue: 199,
-			massDistributionClass: 'external'
-		};
-	
-		const external3: ExternalWallData = {
-			name: "External wall 3",
-			pitchOption: 'custom',
-			pitch: 99,
-			orientation: 33,
-			height: 0.5,
-			length: 200,
-			elevationalHeight: 29,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'divided'
-		};
 	
 		it('ground wall is removed when remove link is clicked', async () => {
 			store.$patch({
@@ -133,35 +186,7 @@ describe('walls', () => {
 	});
 
 	describe('Internal walls', () => {
-		const internal1: InternalWallData = {
-			name: "Internal wall 1",
-			surfaceAreaOfElement: 5,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'internal',
-			pitchOption: 'custom',
-			pitch: 3
-		};
-	  
-		const internal2: InternalWallData = {
-			name: "Internal wall 2",
-			surfaceAreaOfElement: 10,
-			uValue: 1,
-			kappaValue: 100,
-			massDistributionClass: 'inside',
-			pitchOption: '90',
-			pitch: 90
-		};
-	  
-		const internal3: InternalWallData = {
-			name: "Internal wall 3",
-			surfaceAreaOfElement: 7,
-			uValue: 0,
-			kappaValue: 10,
-			massDistributionClass: 'divided',
-			pitchOption: '0',
-			pitch: 0
-		};
+
 	  
 		it('internal wall is removed when remove link is clicked', async () => {
 			store.$patch({
@@ -232,39 +257,7 @@ describe('walls', () => {
 	});
 
 	describe('Wall to unheated space', () => {
-		const toUnheatedSpace1: WallsToUnheatedSpaceData = {
-			name: "Wall to heated space 1",
-			surfaceAreaOfElement: 500,
-			uValue: 10,
-			arealHeatCapacity:40000,
-			massDistributionClass: 'external',
-			pitchOption: '90',
-			pitch: 90,
-			thermalResistanceOfAdjacentUnheatedSpace: 1
-			
-		};
-	  
-		const toUnheatedSpace2: WallsToUnheatedSpaceData = {
-			name: "Wall to heated space 2",
-			surfaceAreaOfElement: 200,
-			uValue: 60,
-			arealHeatCapacity:10000,
-			massDistributionClass: 'divided',
-			pitchOption: '90',
-			pitch: 90,
-			thermalResistanceOfAdjacentUnheatedSpace: 1
-		};
-	  
-		const toUnheatedSpace3: WallsToUnheatedSpaceData = {
-			name: "Wall to heated space 3",
-			surfaceAreaOfElement: 800,
-			uValue: 8,
-			arealHeatCapacity:8000,
-			massDistributionClass: 'equally',
-			pitchOption: 'custom',
-			pitch: 10,
-			thermalResistanceOfAdjacentUnheatedSpace: 2
-		};
+
 	  
 		it('wall-to-heated-space is removed when remove link is clicked', async () => {
 			store.$patch({
@@ -334,52 +327,7 @@ describe('walls', () => {
 	});
 
 	describe('Party walls', () => {
-		const party1: PartyWallData = {
-			name: "Party wall 1",
-			pitchOption: '90',
-			pitch: 90,
-			orientation: 200,
-			height: 5,
-			length: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 0.01,
-			kappaValue: 100,
-			massDistributionClass: 'internal'
-			
-		};
-	
-		const party2: PartyWallData = {
-			name: "Party wall 2",
-			pitchOption: 'custom',
-			pitch: 99,
-			orientation: 0,
-			height: 0.8,
-			length: 300,
-			elevationalHeight: 30,
-			surfaceArea: 15,
-			solarAbsorption: 0.6,
-			uValue: 8,
-			kappaValue: 199,
-			massDistributionClass: 'external'
-		};
-	
-		const party3: PartyWallData = {
-			name: "Party wall 3",
-			pitchOption: 'custom',
-			pitch: 99,
-			orientation: 33,
-			height: 50,
-			length: 220,
-			elevationalHeight: 29,
-			surfaceArea: 10,
-			solarAbsorption: 1,
-			uValue: 10,
-			kappaValue: 100,
-			massDistributionClass: 'divided'
-		};
-	
+
 		it('party wall is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
@@ -447,23 +395,135 @@ describe('walls', () => {
 			expect(screen.getByText('Party wall 1 (1) (2)')).toBeDefined();
 		});
 	});
-
-	it('marks shading as complete when complete button is clicked', async () => {
-		await renderSuspended(Walls);
-
-		await user.click(screen.getByTestId('completeSection'));
-
-		const {
-			livingSpaceExternalWall,
-			livingSpaceInternalWall,
-			livingSpacePartyWall,
-			livingSpaceWallToUnheatedSpace
-		} = store.livingSpaceFabric.livingSpaceWalls;
-
-		expect(navigateToMock).toHaveBeenCalledWith('/living-space');
-		expect(livingSpaceExternalWall.complete).toBe(true);
-		expect(livingSpaceInternalWall.complete).toBe(true);
-		expect(livingSpacePartyWall?.complete).toBe(true);
-		expect(livingSpaceWallToUnheatedSpace?.complete).toBe(true);
+	describe('mark section as complete', () => {
+		const addWallsDataToStore = async () => {
+			store.$patch({
+				livingSpaceFabric: {
+					livingSpaceWalls: {
+						livingSpaceExternalWall: { data: [external1] },
+						livingSpaceInternalWall: { data: [internal1] },
+						livingSpacePartyWall: { data: [party1] },
+						livingSpaceWallToUnheatedSpace: { data: [toUnheatedSpace1] },
+					},
+				}
+			});
+		};
+	
+		beforeEach(async () => {
+			await addWallsDataToStore();
+			await renderSuspended(Walls);
+		});
+	
+		const getWallData = async (action: string) => {
+			return [
+				{
+					key: 'livingSpaceExternalWall',
+					testId: `external_${action}_0`,
+					form: ExternalWallForm
+				},
+				{
+					key: 'livingSpaceInternalWall',
+					testId: `internal_${action}_0`,
+					form: InternalWallForm
+				},
+				{
+					key: 'livingSpacePartyWall',
+					testId: `party_${action}_0`,
+					form: PartyWallForm
+				},
+				{
+					key: 'livingSpaceWallToUnheatedSpace',
+					testId: `toHeatedSpace_${action}_0`,
+					form: WallToUnheatedForm
+				}
+			];
+		};
+	
+		type WallType = keyof typeof store.livingSpaceFabric.livingSpaceWalls;
+	
+		it('marks walls as complete when mark section as complete button is clicked', async () => {
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
+			expect(completedStatusElement?.style.display).toBe("none");
+	
+			await user.click(screen.getByTestId('completeSectionButton'));
+	
+			const {
+				livingSpaceExternalWall,
+				livingSpaceInternalWall,
+				livingSpacePartyWall,
+				livingSpaceWallToUnheatedSpace
+			} = store.livingSpaceFabric.livingSpaceWalls;
+	
+			expect(livingSpaceExternalWall?.complete).toBe(true);
+			expect(livingSpaceInternalWall?.complete).toBe(true);
+			expect(livingSpacePartyWall?.complete).toBe(true);
+			expect(livingSpaceWallToUnheatedSpace?.complete).toBe(true);
+			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+			expect(completedStatusElement?.style.display).not.toBe("none");
+	
+			expect(navigateToMock).toHaveBeenCalledWith('/living-space');
+		});
+	
+		it('marks walls as not complete when complete button is clicked then user removes a wall item', async () => {
+			const wallData = await getWallData("remove");
+			const walls = Object.entries(store.livingSpaceFabric.livingSpaceWalls);
+	
+			for (const [key] of walls) {
+				const typedKey = key as WallType;
+	
+				await user.click(screen.getByTestId('completeSectionButton'));
+				expect(store.livingSpaceFabric.livingSpaceWalls[typedKey]?.complete).toBe(true);
+	
+				const item = wallData.find(x => x.key === typedKey)!;
+				await user.click(screen.getByTestId(item.testId));
+	
+				expect(store.livingSpaceFabric.livingSpaceWalls[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+	
+		it('marks walls as not complete when complete button is clicked then user duplicates a wall item', async () => {
+			const wallData = await getWallData("duplicate");
+			const walls = Object.entries(store.livingSpaceFabric.livingSpaceWalls);
+	
+			for (const [key] of walls) {
+				const typedKey = key as WallType;
+	
+				await user.click(screen.getByTestId('completeSectionButton'));
+				expect(store.livingSpaceFabric.livingSpaceWalls[typedKey]?.complete).toBe(true);
+	
+				const item = wallData.find(x => x.key === typedKey)!;
+				await user.click(screen.getByTestId(item.testId));
+	
+				expect(store.livingSpaceFabric.livingSpaceWalls[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+	
+		it('marks walls as not complete when user saves a new or edited wall form after marking section as complete', async () => {
+			const wallData = await getWallData("");
+			const walls = Object.entries(store.livingSpaceFabric.livingSpaceWalls);
+	
+			for (const [key] of walls) {
+				const typedKey = key as WallType;
+	
+				await user.click(screen.getByTestId('completeSectionButton'));
+				expect(store.livingSpaceFabric.livingSpaceWalls[typedKey]?.complete).toBe(true);
+	
+				const item = wallData.find(x => x.key === typedKey)!;
+	
+				await renderSuspended(item.form, {
+					route: { params: { wall: '0' } }
+				});
+	
+				await user.click(screen.getByRole('button', { name: "Save and continue" }));
+	
+				expect(store.livingSpaceFabric.livingSpaceWalls[typedKey]?.complete).toBe(false);
+				await renderSuspended(Walls);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
 	});
+	
 });

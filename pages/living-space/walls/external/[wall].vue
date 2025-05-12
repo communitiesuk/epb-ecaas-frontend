@@ -24,7 +24,7 @@ const saveForm = (fields: ExternalWallData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass
 		};
-
+		livingSpaceExternalWall.complete = false;
 		saveToList(wall, livingSpaceExternalWall);
 	});
 

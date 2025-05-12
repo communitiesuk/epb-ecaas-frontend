@@ -14,7 +14,7 @@ function handleRemove( wallType: WallType, index: number) {
 
 		store.$patch((state) => {
 			state.livingSpaceFabric.livingSpaceWalls[wallType]!.data = walls.length ? walls : [];
-			state.livingSpaceFabric.livingSpaceWalls[wallType]!.complete = walls.length > 0;
+			state.livingSpaceFabric.livingSpaceWalls[wallType]!.complete = false;
 		});
 	}
 }
@@ -33,6 +33,7 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 			} as T;
 
 			state.livingSpaceFabric.livingSpaceWalls[wallType]!.data.push(newWall);
+			state.livingSpaceFabric.livingSpaceWalls[wallType]!.complete = false;
 		});
 	}
 }
@@ -51,6 +52,11 @@ function handleComplete() {
 
 	navigateTo('/living-space');
 }
+function checkIsComplete(){
+	const walls = store.livingSpaceFabric.livingSpaceWalls;
+	return Object.values(walls).every(wall => wall.complete);
+}
+
 </script>
 <template>
 	<Head>
@@ -98,8 +104,7 @@ function handleComplete() {
 		>
 			Return to overview
 		</GovButton>
-		<GovButton data-testid="completeSection" @click="handleComplete">
-			Mark section as complete
-		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+
 	</div>
 </template>

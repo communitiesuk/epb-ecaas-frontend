@@ -19,7 +19,7 @@ const saveForm = (fields: InternalWallData) => {
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === '90' ? 90 : fields.pitch
 		};
-
+		livingSpaceInternalWall.complete = false;
 		saveToList(wall, livingSpaceInternalWall);
 	});
 
