@@ -13,7 +13,7 @@ const saveForm = (fields: SolarThermalData) => {
 		const solarThermalItem: SolarThermalData = {
 			name: fields.name
 		};
-
+		solarThermal.complete = false;
 		saveToList(solarThermalItem, solarThermal);
 	});
 

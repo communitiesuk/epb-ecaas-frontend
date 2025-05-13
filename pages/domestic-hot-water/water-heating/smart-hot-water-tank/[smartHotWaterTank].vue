@@ -13,7 +13,7 @@ const saveForm = (fields: SmartHotWaterTankData) => {
 		const smartHotWaterTankItem: SmartHotWaterTankData = {
 			name: fields.name
 		};
-
+		smartHotWaterTank.complete = false;
 		saveToList(smartHotWaterTankItem, smartHotWaterTank);
 	});
 

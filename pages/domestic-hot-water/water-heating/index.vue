@@ -24,7 +24,7 @@ function handleRemove(waterHeatingType: WaterHeatingType, index: number) {
 
 		store.$patch((state) => {
 			state.domesticHotWater.waterHeating[waterHeatingType]!.data = waterHeating.length ? waterHeating : [];
-			state.domesticHotWater.waterHeating[waterHeatingType]!.complete = waterHeating.length > 0;
+			state.domesticHotWater.waterHeating[waterHeatingType]!.complete = false;
 		});
 	}
 }
@@ -41,8 +41,33 @@ function handleDuplicate<T extends WaterHeatingData>(waterHeatingType: WaterHeat
 				...waterHeatingItem,
 				name: `${waterHeatingItem.name} (${duplicates.length})`
 			} as T);
+			state.domesticHotWater.waterHeating[waterHeatingType].complete = false;
 		});
 	}
+}
+
+function handleComplete() {
+	store.$patch({
+		domesticHotWater: {
+			waterHeating: {
+				storageTank: { complete: true },
+				immersionHeater: { complete: true },
+				solarThermal: { complete: true },
+				pointOfUse: { complete: true },
+				heatPump: { complete: true },
+				combiBoiler: { complete: true },
+				heatBattery: { complete: true },
+				smartHotWaterTank: { complete: true },
+				heatInterfaceUnit: { complete: true },
+			}
+		}
+	});
+	navigateTo('/domestic-hot-water');
+}
+
+function checkIsComplete(){
+	const heatingItems = store.domesticHotWater.waterHeating;
+	return Object.values(heatingItems).every(item => item.complete);
 }
 </script>
 
@@ -128,10 +153,14 @@ function handleDuplicate<T extends WaterHeatingData>(waterHeatingType: WaterHeat
 		@remove="(index: number) => handleRemove('heatInterfaceUnit', index)"
 		@duplicate="(index: number) => handleDuplicate('heatInterfaceUnit', index)"
 	/>
-	<GovButton
-		href="/domestic-hot-water"
-		secondary
-	>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/domestic-hot-water"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+
+	</div>
 </template>

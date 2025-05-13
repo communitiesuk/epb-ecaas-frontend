@@ -13,7 +13,7 @@ const saveForm = (fields: HotWaterHeatPumpData) => {
 		const heatPumpItem: HotWaterHeatPumpData = {
 			name: fields.name
 		};
-
+		heatPump.complete = false;
 		saveToList(heatPumpItem, heatPump);
 	});
 

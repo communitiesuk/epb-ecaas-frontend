@@ -13,7 +13,7 @@ const saveForm = (fields: CombiBoilerData) => {
 		const combiBoilerItem: CombiBoilerData = {
 			name: fields.name
 		};
-
+		combiBoiler.complete = false;
 		saveToList(combiBoilerItem, combiBoiler);
 	});
 

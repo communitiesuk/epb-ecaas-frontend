@@ -35,10 +35,9 @@ describe('point of use', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { data, complete } = store.domesticHotWater.waterHeating.pointOfUse;
+		const { data } = store.domesticHotWater.waterHeating.pointOfUse;
 
 		expect(data[0]).toEqual(pointOfUse);
-		expect(complete).toBe(true);
 	});
 
 	it('form is prepopulated when data exists in state', async () => {
@@ -87,9 +86,6 @@ describe('point of use', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { pointOfUse } = store.domesticHotWater.waterHeating;
-
-		expect(pointOfUse?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/water-heating');
 	});
 });

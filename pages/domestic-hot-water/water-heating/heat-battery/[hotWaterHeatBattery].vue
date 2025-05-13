@@ -13,7 +13,7 @@ const saveForm = (fields: WaterHeatingHeatBatteryData) => {
 		const heatBatteryItem: WaterHeatingHeatBatteryData = {
 			name: fields.name
 		};
-
+		heatBattery.complete = false;
 		saveToList(heatBatteryItem, heatBattery);
 	});
 

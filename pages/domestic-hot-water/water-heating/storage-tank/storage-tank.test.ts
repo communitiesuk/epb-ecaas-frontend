@@ -114,10 +114,7 @@ describe('storageTank', () => {
 
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
-
-		const { storageTank } = store.domesticHotWater.waterHeating;
-
-		expect(storageTank?.complete).toBe(true);
+		
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/water-heating');
 	});
 });

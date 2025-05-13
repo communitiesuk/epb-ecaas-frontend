@@ -17,7 +17,7 @@ const saveForm = (fields: PointOfUseData) => {
 		};
 
 		saveToList(pointOfUseItem, pointOfUse);
-		pointOfUse.complete = true;
+		pointOfUse.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");

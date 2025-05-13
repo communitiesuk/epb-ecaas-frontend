@@ -90,9 +90,6 @@ describe('immersion heater', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { immersionHeater } = store.domesticHotWater.waterHeating;
-		
-		expect(immersionHeater?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/water-heating');
 	});
 });
