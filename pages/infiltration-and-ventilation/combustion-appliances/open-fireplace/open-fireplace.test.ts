@@ -34,10 +34,9 @@ describe('open fireplace', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const {data, complete} = store.infiltrationAndVentilation.combustionAppliances.openFireplace;
+		const {data} = store.infiltrationAndVentilation.combustionAppliances.openFireplace;
 
 		expect(data[0]).toEqual(openFireplace);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
 	});
 

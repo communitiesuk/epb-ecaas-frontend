@@ -34,10 +34,9 @@ describe('open gas flue balancer', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const {data, complete} = store.infiltrationAndVentilation.combustionAppliances.openGasFlueBalancer;
+		const {data} = store.infiltrationAndVentilation.combustionAppliances.openGasFlueBalancer;
 
 		expect(data[0]).toEqual(openGasFlueBalancer);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
 	});
 

@@ -18,7 +18,7 @@ const saveForm = (fields: CombustionApplianceData) => {
 		};
 
 		saveToList(appliance, openGasFlueBalancer);
-		openGasFlueBalancer.complete = true;
+		openGasFlueBalancer.complete = false;
 	});
 
 	navigateTo("/infiltration-and-ventilation/combustion-appliances");

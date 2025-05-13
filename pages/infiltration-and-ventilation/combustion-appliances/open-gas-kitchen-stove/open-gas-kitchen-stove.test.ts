@@ -34,10 +34,9 @@ describe('open gas kitchen stove', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const {data, complete} = store.infiltrationAndVentilation.combustionAppliances.openGasKitchenStove;
+		const {data} = store.infiltrationAndVentilation.combustionAppliances.openGasKitchenStove;
 
 		expect(data[0]).toEqual(openGasKitchenStove);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
 	});
 

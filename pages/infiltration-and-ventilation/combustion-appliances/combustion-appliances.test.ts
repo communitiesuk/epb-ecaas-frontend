@@ -1,7 +1,14 @@
-import {renderSuspended} from "@nuxt/test-utils/runtime";
+import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen, within} from '@testing-library/vue';
 import CombustionAppliances from './index.vue';
+import OpenFireplaceForm from './open-fireplace/[combustion].vue';
+import ClosedFireplaceWithFanForm from './closed-fireplace-with-fan/[combustion].vue';
+import OpenGasFlueBalancerForm from './open-gas-flue-balancer/[combustion].vue';
+import OpenGasKitchenStoveForm from './open-gas-kitchen-stove/[combustion].vue';
+import OpenGasFireForm from './open-gas-fire/[combustion].vue';
+import ClosedFireForm from './closed-fire/[combustion].vue';
+
 import {expect} from "vitest";
 
 describe('open fireplace', () => {
@@ -559,5 +566,161 @@ describe('closed fire', () => {
 		expect(screen.getByText('Closed fire 1 (2)')).toBeDefined();
 		expect(screen.getByText('Closed fire 1 (1) (1)')).toBeDefined();
 		expect(screen.getByText('Closed fire 1 (1) (2)')).toBeDefined();
+	});
+});
+describe('mark section as complete', () => {
+	
+	const navigateToMock = vi.hoisted(() => vi.fn());
+	mockNuxtImport('navigateTo', () => {
+		return navigateToMock;
+	});
+	
+	const openFireplace1: CombustionApplianceData = {
+		name: 'Open fireplace 1',
+		airSupplyToAppliance: 'roomAir',
+		exhaustMethodFromAppliance: 'intoSeparateDuct',
+		typeOfFuel: 'coal',
+	};
+	const closedFireplaceWithFan1: CombustionApplianceData = {
+		name: 'Closed fireplace with fan 1',
+		airSupplyToAppliance: 'roomAir',
+		exhaustMethodFromAppliance: 'intoSeparateDuct',
+		typeOfFuel: 'wood'
+	};
+	const openGasFlueBalancer1: CombustionApplianceData = {
+		name: 'Open gas flue balancer 1',
+		airSupplyToAppliance: 'outside',
+		exhaustMethodFromAppliance: 'intoRoom',
+		typeOfFuel: 'gas',
+	};
+	const openGasKitchenStove1: CombustionApplianceData = {
+		name: 'Open gas kitchen stove 1',
+		airSupplyToAppliance: 'outside',
+		exhaustMethodFromAppliance: 'intoRoom',
+		typeOfFuel: 'oil',
+	};
+	const openGasFire1: CombustionApplianceData = {
+		name: 'Open gas fire 1',
+		airSupplyToAppliance: 'outside',
+		exhaustMethodFromAppliance: 'intoMechanicalVent',
+		typeOfFuel: 'oil',
+	};
+
+	const closedFire1: CombustionApplianceData = {
+		name: 'Closed fire 1',
+		airSupplyToAppliance: 'outside',
+		exhaustMethodFromAppliance: 'intoMechanicalVent',
+		typeOfFuel: 'coal',
+	};
+
+	const store = useEcaasStore();
+	const user = userEvent.setup();
+
+	const addCombustionApplianceDataToStore = async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				combustionAppliances: {
+					openFireplace: { data: [openFireplace1] },
+					closedFireplaceWithFan: { data: [closedFireplaceWithFan1] },
+					openGasFlueBalancer: { data: [openGasFlueBalancer1] },
+					openGasKitchenStove: { data: [openGasKitchenStove1] },
+					openGasFire: { data: [openGasFire1] },
+					closedFire: { data: [closedFire1] },
+				}
+			}
+		});
+	};
+
+	beforeEach(async () => {
+		await addCombustionApplianceDataToStore();
+		await renderSuspended(CombustionAppliances);
+	});
+
+	const getCombustionApplianceData = async (action: string) => {
+		return [
+			{ key: 'openFireplace', testId: `openFireplace_${action}_0`, form: OpenFireplaceForm },
+			{ key: 'closedFireplaceWithFan', testId: `closedFireplaceWithFan_${action}_0`, form: ClosedFireplaceWithFanForm },
+			{ key: 'openGasFlueBalancer', testId: `openGasFlueBalancer_${action}_0`, form: OpenGasFlueBalancerForm },
+			{ key: 'openGasKitchenStove', testId: `openGasKitchenStove_${action}_0`, form: OpenGasKitchenStoveForm },
+			{ key: 'openGasFire', testId: `openGasFire_${action}_0`, form: OpenGasFireForm },
+			{ key: 'closedFire', testId: `closedFire_${action}_0`, form: ClosedFireForm }
+		];
+	};
+
+	type CombustionKey = keyof typeof store.infiltrationAndVentilation.combustionAppliances;
+
+	it('marks combustion appliances as complete when mark section as complete button is clicked', async () => {
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
+		expect(completedStatusElement?.style.display).toBe("none");
+
+		await user.click(screen.getByTestId('completeSectionButton'));
+
+		const appliances = store.infiltrationAndVentilation.combustionAppliances;
+
+		for (const key in appliances) {
+			expect(appliances[key as CombustionKey]?.complete).toBe(true);
+		}
+
+		expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+		expect(completedStatusElement?.style.display).not.toBe("none");
+		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation');
+	});
+
+	it('marks combustion appliances as not complete when user removes an item after completion', async () => {
+		const applianceData = await getCombustionApplianceData("remove");
+		const appliances = Object.entries(store.infiltrationAndVentilation.combustionAppliances);
+
+		for (const [key] of appliances) {
+			const typedKey = key as CombustionKey;
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(true);
+
+			const item = applianceData.find(x => x.key === typedKey);
+			await user.click(screen.getByTestId(item!.testId));
+			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(false);
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		}
+	});
+
+	it('marks combustion appliances as not complete when user duplicates an item after completion', async () => {
+		const applianceData = await getCombustionApplianceData("duplicate");
+		const appliances = Object.entries(store.infiltrationAndVentilation.combustionAppliances);
+
+		for (const [key] of appliances) {
+			const typedKey = key as CombustionKey;
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(true);
+
+			const item = applianceData.find(x => x.key === typedKey);
+			await user.click(screen.getByTestId(item!.testId));
+			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(false);
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		}
+	});
+
+	it('marks combustion appliances as not complete when user saves a new or edited appliance form after marking complete', async () => {
+		const applianceData = await getCombustionApplianceData("");
+		const appliances = Object.entries(store.infiltrationAndVentilation.combustionAppliances);
+
+		for (const [key] of appliances) {
+			const typedKey = key as CombustionKey;
+			await user.click(screen.getByTestId('completeSectionButton'));
+			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(true);
+
+			const item = applianceData.find(x => x.key === typedKey);
+
+			await renderSuspended(item?.form, {
+				route: {
+					params: { combustion: '0' }
+				}
+			});
+
+			await user.click(screen.getByRole('button', { name: "Save and continue" }));
+			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(false);
+
+			await renderSuspended(CombustionAppliances);
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		}
 	});
 });

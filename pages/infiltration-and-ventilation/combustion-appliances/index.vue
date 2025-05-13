@@ -13,7 +13,7 @@ function handleRemove(applianceType: ApplianceType, index: number) {
 
 		store.$patch((state) => {
 			state.infiltrationAndVentilation.combustionAppliances[applianceType]!.data = appliances.length ? appliances : [];
-			state.infiltrationAndVentilation.combustionAppliances[applianceType]!.complete = appliances.length > 0;
+			state.infiltrationAndVentilation.combustionAppliances[applianceType]!.complete = false;
 		});
 	}
 }
@@ -32,8 +32,30 @@ function handleDuplicate(applianceType: ApplianceType, index: number) {
 			};
 
 			state.infiltrationAndVentilation.combustionAppliances[applianceType]!.data.push(newAppliance);
+			state.infiltrationAndVentilation.combustionAppliances[applianceType].complete = false;
 		});
 	}
+}
+function handleComplete() {
+	store.$patch({
+		infiltrationAndVentilation: {
+			combustionAppliances: {
+				openFireplace: { complete: true },
+				closedFireplaceWithFan: { complete: true },
+				openGasFlueBalancer: { complete: true },
+				openGasKitchenStove: { complete: true },
+				openGasFire: { complete: true },
+				closedFire: { complete: true }
+			}
+		}
+	});
+
+	navigateTo('/infiltration-and-ventilation');
+}
+
+function checkIsComplete(){
+	const appliances = store.infiltrationAndVentilation.combustionAppliances;
+	return Object.values(appliances).every(appliance => appliance.complete);
 }
 
 </script>
@@ -94,7 +116,13 @@ function handleDuplicate(applianceType: ApplianceType, index: number) {
 		@remove="(index: number) => handleRemove('closedFire', index)"
 		@duplicate="(index: number) => handleDuplicate('closedFire', index)"
 	/>
-	<GovButton href="/infiltration-and-ventilation" secondary>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/infiltration-and-ventilation"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+	</div>
 </template>

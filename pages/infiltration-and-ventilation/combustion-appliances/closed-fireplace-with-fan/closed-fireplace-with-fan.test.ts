@@ -34,10 +34,9 @@ describe('closed fireplace with fan', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const {data, complete} = store.infiltrationAndVentilation.combustionAppliances.closedFireplaceWithFan;
+		const {data} = store.infiltrationAndVentilation.combustionAppliances.closedFireplaceWithFan;
 
 		expect(data[0]).toEqual(closedFireplace);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
 	});
 

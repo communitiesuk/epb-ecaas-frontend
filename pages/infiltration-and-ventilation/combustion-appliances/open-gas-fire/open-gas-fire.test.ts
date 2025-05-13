@@ -34,10 +34,9 @@ describe('open gas fire', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const {data, complete} = store.infiltrationAndVentilation.combustionAppliances.openGasFire;
+		const {data} = store.infiltrationAndVentilation.combustionAppliances.openGasFire;
 
 		expect(data[0]).toEqual(openGasFire);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
 	});
 
