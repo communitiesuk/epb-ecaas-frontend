@@ -19,7 +19,7 @@ const saveForm = (fields: ElectricShowerData) => {
 		};
 
 		saveToList(electricShowerItem, electricShower);
-		electricShower.complete = true;
+		electricShower.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/hot-water-outlets");

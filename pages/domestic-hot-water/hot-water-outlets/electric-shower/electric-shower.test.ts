@@ -88,9 +88,6 @@ describe('electric shower', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { electricShower } = store.domesticHotWater.hotWaterOutlets;
-		
-		expect(electricShower?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/hot-water-outlets');
 	});
 });

@@ -92,9 +92,6 @@ describe('bath', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { bath } = store.domesticHotWater.hotWaterOutlets;
-		
-		expect(bath?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/hot-water-outlets');
 	});
 });

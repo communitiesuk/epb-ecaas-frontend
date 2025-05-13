@@ -87,10 +87,7 @@ describe('other outlets', () => {
 	
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
-
-		const { otherOutlets } = store.domesticHotWater.hotWaterOutlets;
 		
-		expect(otherOutlets?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/hot-water-outlets');
 	});
 });

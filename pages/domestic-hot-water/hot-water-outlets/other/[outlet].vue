@@ -19,7 +19,7 @@ const saveForm = (fields: OtherHotWaterOutletData) => {
 		};
 
 		saveToList(outletItem, otherOutlets);
-		otherOutlets.complete = true;
+		otherOutlets.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/hot-water-outlets");

@@ -16,7 +16,7 @@ function handleRemove(outletType: HotWaterOutletType, index: number) {
 
 		store.$patch((state) => {
 			state.domesticHotWater.hotWaterOutlets[outletType]!.data = outlets.length ? outlets : [];
-			state.domesticHotWater.hotWaterOutlets[outletType]!.complete = outlets.length > 0;
+			state.domesticHotWater.hotWaterOutlets[outletType]!.complete = false;
 		});
 	}
 } 
@@ -35,8 +35,29 @@ function handleDuplicate<T extends HotWaterOutletData>(outletType: HotWaterOutle
 			} as T;
 
 			state.domesticHotWater.hotWaterOutlets[outletType]!.data.push(newItem);
+			state.domesticHotWater.hotWaterOutlets[outletType].complete = false;
 		});
 	}
+}
+
+function handleComplete() {
+	store.$patch({
+		domesticHotWater: {
+			hotWaterOutlets: {
+				mixedShower: { complete: true },
+				electricShower: { complete: true },
+				bath: { complete: true },
+				otherOutlets: { complete: true }
+			}
+		}
+	});
+	navigateTo('/domestic-hot-water');
+}
+
+
+function checkIsComplete() {
+	const outlets = store.domesticHotWater.hotWaterOutlets;
+	return Object.values(outlets).every(outlet => outlet.complete);
 }
 </script>
 
@@ -81,10 +102,13 @@ function handleDuplicate<T extends HotWaterOutletData>(outletType: HotWaterOutle
 		@duplicate="(index: number) => handleDuplicate('otherOutlets', index)"
 	/>
 
-	<GovButton
-		href="/domestic-hot-water"
-		secondary
-	>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/domestic-hot-water"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+	</div>
 </template>

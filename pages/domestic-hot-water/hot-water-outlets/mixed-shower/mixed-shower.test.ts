@@ -88,9 +88,6 @@ describe('mixed shower', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { mixedShower } = store.domesticHotWater.hotWaterOutlets;
-		
-		expect(mixedShower?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/hot-water-outlets');
 	});
 });

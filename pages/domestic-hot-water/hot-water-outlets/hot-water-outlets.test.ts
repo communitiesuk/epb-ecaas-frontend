@@ -1,8 +1,13 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
 import { v4 as uuidv4 } from 'uuid';
 import HotWaterOutlets from './index.vue';
+import  MixedShowerForm from "./mixed-shower/[shower].vue";
+import  ElectricShowerForm from "./electric-shower/[shower].vue";
+import  BathForm from "./bath/[bath].vue";
+import  OtherHotWaterOutletForm  from "./other/[outlet].vue";
+
 
 describe('hot water outlets', () => {
 
@@ -374,4 +379,161 @@ describe('hot water outlets', () => {
 			expect(screen.getByText('Basin tap 1 (1) (2)')).toBeDefined();
 		});
 	});
+	describe("mark section as complete", () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+	
+		const navigateToMock = vi.hoisted(() => vi.fn());
+		mockNuxtImport("navigateTo", () => {
+			return navigateToMock;
+		});
+	
+		const mixedShower1: MixedShowerData = {
+			id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a3",
+			name: "Mixed Shower 1",
+			flowRate: 10,
+		};
+		const electricShower1: ElectricShowerData = {
+			id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a4",
+			name: "Electric Shower 1",
+			ratedPower: 8,
+		};
+		const bath1: BathData = {
+			id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a35",
+			name: "Bath 1",
+			size: 200,
+			flowRate: 15,
+		};
+		const otherHotWaterOutlet1: OtherHotWaterOutletData = {
+			id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
+			name: "Other Outlet 1",
+			flowRate: 5,
+		};
+	
+		const addHotWaterOutletsDataToStore = async () => {
+			store.$patch({
+				domesticHotWater: {
+					hotWaterOutlets: {
+						mixedShower: { data: [mixedShower1] },
+						electricShower: { data: [electricShower1] },
+						bath: { data: [bath1] },
+						otherOutlets: { data: [otherHotWaterOutlet1] },
+					},
+				},
+			});
+		};
+	
+		beforeEach(async () => {
+			await addHotWaterOutletsDataToStore();
+			await renderSuspended(HotWaterOutlets);
+		});
+	
+		const getHotWaterOutletsData = async (action: string) => {
+			return [
+				{
+					key: "mixedShower",
+					testId: `mixedShower_${action}_0`,
+					form: MixedShowerForm,
+					params: "shower",
+				},
+				{
+					key: "electricShower",
+					testId: `electricShower_${action}_0`,
+					form: ElectricShowerForm,
+					params: "shower",
+				},
+				{
+					key: "bath",
+					testId: `bath_${action}_0`,
+					form: BathForm,
+					params: "bath",
+				},
+				{
+					key: "otherOutlets",
+					testId: `otherOutlets_${action}_0`,
+					form: OtherHotWaterOutletForm,
+					params: "outlet",
+				},
+			];
+		};
+	
+		type HotWaterOutletsType = keyof typeof store.domesticHotWater.hotWaterOutlets;
+	
+		it("marks hot water outlets section as complete when button is clicked", async () => {
+			expect(
+				screen.getByRole("button", { name: "Mark section as complete" })
+			).not.toBeNull();
+			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
+			expect(completedStatusElement?.style.display).toBe("none");
+	
+			await user.click(screen.getByTestId("completeSectionButton"));
+	
+			const { mixedShower, electricShower, bath, otherOutlets } = store.domesticHotWater.hotWaterOutlets;
+	
+			expect(mixedShower?.complete).toBe(true);
+			expect(electricShower?.complete).toBe(true);
+			expect(bath?.complete).toBe(true);
+			expect(otherOutlets?.complete).toBe(true);
+			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+			expect(completedStatusElement?.style.display).not.toBe("none");
+	
+			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
+		});
+	
+		it("marks as not complete if an item is removed after marking complete", async () => {
+			const outlets = await getHotWaterOutletsData("remove");
+	
+			for (const [key] of Object.entries(store.domesticHotWater.hotWaterOutlets)) {
+				const typedKey = key as HotWaterOutletsType;
+	
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(true);
+	
+				const outletData = outlets.find((e) => e.key === typedKey);
+				await user.click(screen.getByTestId(outletData!.testId));
+				expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+	
+		it("marks as not complete if an item is duplicated after marking complete", async () => {
+			const outlets = await getHotWaterOutletsData("duplicate");
+	
+			for (const [key] of Object.entries(store.domesticHotWater.hotWaterOutlets)) {
+				const typedKey = key as HotWaterOutletsType;
+	
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(true);
+	
+				const outletData = outlets.find((e) => e.key === typedKey);
+				await user.click(screen.getByTestId(outletData!.testId));
+				expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+	
+		it("marks as not complete after saving a new or edited hot water outlet item", async () => {
+			for (const [key] of Object.entries(store.domesticHotWater.hotWaterOutlets)) {
+				const outlets = await getHotWaterOutletsData("");
+				const typedKey = key as HotWaterOutletsType;
+	
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(true);
+	
+				const outletData = outlets.find((e) => e.key === typedKey);
+				const params: string = outletData!.params;
+				await renderSuspended(outletData?.form, {
+					route: {
+						params: { [params]: "0" },
+					},
+				});
+				await user.click(screen.getByRole("button", { name: "Save and continue" }));
+				expect(store.domesticHotWater.hotWaterOutlets[typedKey].complete).toBe(false);
+	
+				await renderSuspended(HotWaterOutlets);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+	});
+	
 });

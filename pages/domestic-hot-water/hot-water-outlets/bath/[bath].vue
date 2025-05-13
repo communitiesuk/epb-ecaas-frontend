@@ -20,7 +20,7 @@ const saveForm = (fields: BathData) => {
 		};
 
 		saveToList(bathItem, bath);
-		bath.complete = true;
+		bath.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/hot-water-outlets");
