@@ -25,7 +25,7 @@ const saveForm = (fields: RoofData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass
 		};
-
+		livingSpaceRoofs.complete = false;
 		saveToList(roof, livingSpaceRoofs);
 	});
 

@@ -14,7 +14,7 @@ function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 
 		store.$patch((state) => {
 			state.livingSpaceFabric.livingSpaceCeilingsAndRoofs[ceilingAndRoofType]!.data = items.length ? items : [];
-			state.livingSpaceFabric.livingSpaceCeilingsAndRoofs[ceilingAndRoofType]!.complete = items.length > 0;
+			state.livingSpaceFabric.livingSpaceCeilingsAndRoofs[ceilingAndRoofType]!.complete = false;
 		});
 	}
 } 
@@ -33,6 +33,7 @@ function handleDuplicate<T extends CeilingAndRoofData>(ceilingAndRoofType: Ceili
 			} as T;
 
 			state.livingSpaceFabric.livingSpaceCeilingsAndRoofs[ceilingAndRoofType]!.data.push(newItem);
+			state.livingSpaceFabric.livingSpaceCeilingsAndRoofs[ceilingAndRoofType].complete = false;
 		});
 	}
 }
@@ -49,6 +50,10 @@ function handleComplete() {
 	});
 
 	navigateTo('/living-space');
+}
+function checkIsComplete(){
+	const ceilingsAndRoofs = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
+	return Object.values(ceilingsAndRoofs).every(ceilingAndRoof => ceilingAndRoof.complete);
 }
 </script>
 
@@ -90,8 +95,6 @@ function handleComplete() {
 		>
 			Return to overview
 		</GovButton>
-		<GovButton data-testid="completeSection" @click="handleComplete">
-			Mark section as complete
-		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>
 </template>

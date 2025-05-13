@@ -21,7 +21,7 @@ const saveForm = (fields: CeilingData) => {
 			pitch: fields.pitchOption === '0' ? 0 : fields.pitch,
 			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 		};
-
+		livingSpaceCeilings.complete = false;
 		saveToList(ceiling, livingSpaceCeilings);
 	});
 
