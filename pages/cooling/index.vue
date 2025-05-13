@@ -42,7 +42,7 @@ function handleComplete() {
 		}
 	});
 		
-	navigateTo('/cooling');		
+	navigateTo('/');		
 }
 
 </script>
@@ -63,7 +63,7 @@ function handleComplete() {
 		@duplicate="handleDuplicate"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/cooling" secondary>
+		<GovButton href="/" secondary>
 			Return to overview
 		</GovButton>
 		<GovCompleteElement :is-complete="store.cooling.airConditioning?.complete ?? false" @completed="handleComplete"/>

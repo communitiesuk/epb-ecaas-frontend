@@ -113,7 +113,7 @@ describe('cooling', () => {
 			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
 			expect(completedStatusElement?.style.display).not.toBe("none");
 		
-			expect(navigateToMock).toHaveBeenCalledWith('/cooling');
+			expect(navigateToMock).toHaveBeenCalledWith('/');
 		});
 		
 		it('marks cooling as not complete when complete button is clicked then user removes an item', async () => {
@@ -182,11 +182,11 @@ describe('cooling', () => {
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 		});
 		
-		it('should navigate to the cooling overview page when return to overview is clicked', async () => {
+		it('should navigate to the main overview page when return to overview is clicked', async () => {
 			await renderSuspended(Cooling);
 		
 			const returnToOverviewButton = screen.getByRole("button", { name: "Return to overview" });
-			expect(returnToOverviewButton.getAttribute("href")).toBe("/cooling");
+			expect(returnToOverviewButton.getAttribute("href")).toBe("/");
 		});
 	});
 });
