@@ -115,10 +115,7 @@ describe('pv diverter', () => {
 	
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
-
-		const { complete } = store.pvAndBatteries.pvDiverter;
-		
-		expect(complete).toBe(true);
+		;
 		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries');
 	});
 });

@@ -23,7 +23,7 @@ const saveForm = (fields: ElectricBatteryData) => {
 		};
 
 		saveToList(electricBatteryItem, electricBattery);
-		electricBattery.complete = true;
+		electricBattery.complete = false;
 	});
 
 	navigateTo("/pv-and-batteries");

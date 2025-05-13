@@ -14,7 +14,7 @@ function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
 
 		store.$patch((state) => {
 			state.pvAndBatteries[pvAndBatteryType]!.data = data.length ? data : [];
-			state.pvAndBatteries[pvAndBatteryType]!.complete = data.length > 0;
+			state.pvAndBatteries[pvAndBatteryType]!.complete = false;
 		});
 	}
 } 
@@ -33,8 +33,26 @@ function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatt
 			} as T;
 
 			state.pvAndBatteries[pvAndBatteryType]!.data.push(newItem);
+			state.pvAndBatteries[pvAndBatteryType].complete = false;
 		});
 	}
+}
+function handleComplete() {
+	store.$patch({
+		pvAndBatteries: {
+			pvSystem: { complete: true },
+			electricBattery: { complete: true },
+			pvDiverter: { complete: true }
+
+		}
+	});
+
+	navigateTo('/');
+}
+
+function checkIsComplete(){
+	const pvAndBatteries = store.pvAndBatteries;
+	return Object.values(pvAndBatteries).every(pvAndBattery => pvAndBattery.complete);
 }
 </script>
 
@@ -70,7 +88,13 @@ function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatt
 		@duplicate="(index: number) => handleDuplicate('pvDiverter', index)"
 
 	/>
-	<GovButton href="/living-space" secondary>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+	</div>
 </template>

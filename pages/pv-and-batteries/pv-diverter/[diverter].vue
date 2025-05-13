@@ -19,7 +19,7 @@ const saveForm = (fields: PvDiverterData) => {
 		};
 
 		saveToList(pvDiverterItem, pvDiverter);
-		pvDiverter.complete = true;
+		pvDiverter.complete = false;
 	});
 
 	navigateTo("/pv-and-batteries");

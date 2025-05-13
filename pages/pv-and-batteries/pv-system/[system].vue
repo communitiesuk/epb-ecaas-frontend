@@ -35,7 +35,7 @@ const saveForm = (fields: PvSystemData) => {
 		};
 
 		saveToList(pvSystemItem, pvSystem);
-		pvSystem.complete = true;
+		pvSystem.complete = false;
 	});
 
 	navigateTo("/pv-and-batteries");
