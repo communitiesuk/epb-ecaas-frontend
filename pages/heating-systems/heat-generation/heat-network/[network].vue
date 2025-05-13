@@ -18,7 +18,7 @@ const saveForm = (fields: HeatNetworkData) => {
 		};
 
 		saveToList(heatNetworkItem, heatNetwork);
-		heatNetwork.complete = true;
+		heatNetwork.complete = false;
 	});
 
 	navigateTo("/heating-systems/heat-generation");

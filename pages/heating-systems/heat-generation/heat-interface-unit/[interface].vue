@@ -18,7 +18,7 @@ const saveForm = (fields: HeatInterfaceUnitData) => {
 		};
 
 		saveToList(heatInterfaceUnitItem, heatInterfaceUnit);
-		heatInterfaceUnit.complete = true;
+		heatInterfaceUnit.complete = false;
 	});
 
 	navigateTo("/heating-systems/heat-generation");

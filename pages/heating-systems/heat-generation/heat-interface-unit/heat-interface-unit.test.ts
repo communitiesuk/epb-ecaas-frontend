@@ -84,9 +84,6 @@ describe('heatInterfaceUnit', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { heatInterfaceUnit } = store.heatingSystems.heatGeneration;
-		
-		expect(heatInterfaceUnit?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/heating-systems/heat-generation');
 	});
 });

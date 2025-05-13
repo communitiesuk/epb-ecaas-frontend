@@ -1,7 +1,13 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
 import HeatGeneration from './index.vue';
+import HeatPumpForm from "./heat-pump/[pump].vue";
+import BoilerForm from "./boiler/[boiler].vue";
+import HeatBatteryForm from "./heat-battery/[battery].vue";
+import HeatNetworkForm from "./heat-network/[network].vue";
+import HeatInterfaceUnitForm from "./heat-interface-unit/[interface].vue";
+
 import { v4 as uuidv4 } from "uuid";
 
 describe('heat generation', () => {
@@ -335,5 +341,105 @@ describe('heat generation', () => {
 
 		});
 	});
+	describe("mark heat generation section as complete", () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+	
+		const navigateToMock = vi.hoisted(() => vi.fn());
+		mockNuxtImport("navigateTo", () => {
+			return navigateToMock;
+		});
+	
+		const addHeatGenerationDataToStore = async () => {
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatPump: { data: [{ id: "1b6a1e50-0e1f-4bc1-b198-f84587a7fdf2", name: "Heat pump 1" }] },
+						boiler: { data: [{ id: "2eec2b28-7c7a-47c2-92bb-c13b1eaa9ae3", name: "Boiler 1" }] },
+						heatBattery: { data: [{ id: "3c4bc9a3-2e7c-419a-86c9-0cb2f4768a1c", name: "Battery 1" }] },
+						heatNetwork: { data: [{ id: "46d0c104-42a5-44f4-b250-f58c933b9f5e", name: "Network 1" }] },
+						heatInterfaceUnit: { data: [{ id: "55ab34d1-8238-4a90-bf3e-223a84c1f4dc", name: "Heat interface unit 1" }] },
+					},
+				},
+			});
+		};
+	
+		beforeEach(async () => {
+			await addHeatGenerationDataToStore();
+			await renderSuspended(HeatGeneration);
+		});
+	
+		const getGeneratorsData = async (action: string) => {
+			return [
+				{ key: "heatPump", testId: `heatPump_${action}_0`, form: HeatPumpForm, params: "pump" },
+				{ key: "boiler", testId: `boiler_${action}_0`, form: BoilerForm, params: "boiler" },
+				{ key: "heatBattery", testId: `heatBattery_${action}_0`, form: HeatBatteryForm, params: "battery" },
+				{ key: "heatNetwork", testId: `heatNetwork_${action}_0`, form: HeatNetworkForm, params: "network" },
+				{ key: "heatInterfaceUnit", testId: `heatInterfaceUnit_${action}_0`, form: HeatInterfaceUnitForm, params: "interface" },
+			];
+		};
+	
+		type HeatGenerationType = keyof typeof store.heatingSystems.heatGeneration;
+	
+		it("marks heat generation section as complete when button is clicked", async () => {
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
+			expect(completedStatusElement?.style.display).toBe("none");
+	
+			await user.click(screen.getByTestId("completeSectionButton"));
+
+			const heatGenerators = store.heatingSystems.heatGeneration;
+			for (const key in heatGenerators) {
+				expect(heatGenerators[key as HeatGenerationType]?.complete).toBe(true);
+			}
+	
+			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+			expect(completedStatusElement?.style.display).not.toBe("none");
+			expect(navigateToMock).toHaveBeenCalledWith("/heating-systems");
+		});
+	
+		it("marks as not complete if an item is removed after marking complete", async () => {
+			const generators = await getGeneratorsData("remove");
+	
+			for (const [key] of Object.entries(store.heatingSystems.heatGeneration)) {
+				const typedKey = key as HeatGenerationType;
+	
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.heatingSystems.heatGeneration[typedKey]?.complete).toBe(true);
+	
+				const generatorData = generators.find((e) => e.key === typedKey);
+				await user.click(screen.getByTestId(generatorData!.testId));
+				expect(store.heatingSystems.heatGeneration[typedKey]?.complete).toBe(false);
+	
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+	
+		it("marks as not complete after saving a new or edited generator item", async () => {
+			const generators = await getGeneratorsData("");
+	
+			for (const [key] of Object.entries(store.heatingSystems.heatGeneration)) {
+				const typedKey = key as HeatGenerationType;
+	
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.heatingSystems.heatGeneration[typedKey]?.complete).toBe(true);
+	
+				const generatorData = generators.find((e) => e.key === typedKey);
+				await renderSuspended(generatorData!.form, {
+					route: {
+						params: { [generatorData!.params]: "0" },
+					},
+				});
+				await user.click(screen.getByRole("button", { name: "Save and continue" }));
+	
+				expect(store.heatingSystems.heatGeneration[typedKey].complete).toBe(false);
+	
+				await renderSuspended(HeatGeneration);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+	});
+	
+	
 });
 

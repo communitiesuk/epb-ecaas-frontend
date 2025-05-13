@@ -18,7 +18,7 @@ const saveForm = (fields: BoilerData) => {
 		};
 
 		saveToList(boilerItem, boiler);
-		boiler.complete = true;
+		boiler.complete = false;
 	});
 
 	navigateTo("/heating-systems/heat-generation");

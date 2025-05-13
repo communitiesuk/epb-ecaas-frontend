@@ -14,10 +14,31 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 
 		store.$patch((state) => {
 			state.heatingSystems.heatGeneration[outletType]!.data = outlets.length ? outlets : [];
-			state.heatingSystems.heatGeneration[outletType]!.complete = outlets.length > 0;
+			state.heatingSystems.heatGeneration[outletType]!.complete = false;
 		});
 	}
 } 
+
+function handleComplete() {
+	store.$patch({
+		heatingSystems: {
+			heatGeneration: {
+				heatPump: { complete: true },
+				boiler: { complete: true },
+				heatBattery: { complete: true },
+				heatNetwork: { complete: true },
+				heatInterfaceUnit: { complete: true },
+			}
+		}
+	});
+
+	navigateTo('/heating-systems');
+}
+
+function checkIsComplete(){
+	const generators = store.heatingSystems.heatGeneration;
+	return Object.values(generators).every(generator => generator.complete);
+}
 
 
 </script>
@@ -64,10 +85,13 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 		:items="store.heatingSystems.heatGeneration.heatInterfaceUnit.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('heatInterfaceUnit', index)"
 	/>
-	<GovButton
-		href="/heating-systems"
-		secondary
-	>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/heating-systems"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+	</div>
 </template>

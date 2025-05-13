@@ -83,10 +83,7 @@ describe('boiler', () => {
 	
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
-
-		const { boiler } = store.heatingSystems.heatGeneration;
 		
-		expect(boiler?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/heating-systems/heat-generation');
 	});
 });

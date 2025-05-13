@@ -84,9 +84,6 @@ describe('heatNetwork', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { heatNetwork } = store.heatingSystems.heatGeneration;
-		
-		expect(heatNetwork?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/heating-systems/heat-generation');
 	});
 });

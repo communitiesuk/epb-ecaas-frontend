@@ -18,7 +18,7 @@ const saveForm = (fields: HeatBatteryData) => {
 		};
 
 		saveToList(heatBatteryItem, heatBattery);
-		heatBattery.complete = true;
+		heatBattery.complete = false;
 	});
 
 	navigateTo("/heating-systems/heat-generation");

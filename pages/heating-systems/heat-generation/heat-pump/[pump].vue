@@ -18,7 +18,7 @@ const saveForm = (fields: HeatPumpData) => {
 		};
 
 		saveToList(heatPumpItem, heatPump);
-		heatPump.complete = true;
+		heatPump.complete = false;
 	});
 
 	navigateTo("/heating-systems/heat-generation");

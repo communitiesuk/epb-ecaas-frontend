@@ -84,9 +84,6 @@ describe('heatBattery', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { heatBattery } = store.heatingSystems.heatGeneration;
-		
-		expect(heatBattery?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/heating-systems/heat-generation');
 	});
 });

@@ -83,10 +83,7 @@ describe('heatPump', () => {
 	
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
-
-		const { heatPump } = store.heatingSystems.heatGeneration;
 		
-		expect(heatPump?.complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/heating-systems/heat-generation');
 	});
 });
