@@ -137,10 +137,7 @@ describe('Primary pipework form', () => {
 	
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
-
-		const { complete } = store.domesticHotWater.pipework.primaryPipework;
 		
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/pipework');
 	});
 });

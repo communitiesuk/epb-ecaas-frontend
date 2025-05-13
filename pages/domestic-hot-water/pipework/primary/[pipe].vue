@@ -25,7 +25,8 @@ const saveForm = (fields: PrimaryPipeworkData) => {
 		};
 
 		saveToList(pipeworkItem, primaryPipework);
-		primaryPipework.complete = true;
+		
+		primaryPipework.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/pipework");

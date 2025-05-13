@@ -36,10 +36,9 @@ describe('Secondary pipework form', () => {
 		
 		await user.click(screen.getByRole('button'));
 		
-		const { data, complete } = store.domesticHotWater.pipework.secondaryPipework;
+		const { data } = store.domesticHotWater.pipework.secondaryPipework;
 
 		expect(data[0]).toEqual(state);
-		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/pipework');
 	});
 

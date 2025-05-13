@@ -1,7 +1,10 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Pipework from "./index.vue";
+import PrimaryPipeworkForm from "./primary/[pipe].vue";
+import SecondaryPipeworkForm from "./secondary/[pipe].vue";
+
 
 describe("Pipeworks", () => {
 	const store = useEcaasStore();
@@ -9,15 +12,22 @@ describe("Pipeworks", () => {
 
 	const pipework1: Partial<PrimaryPipeworkData> = {
 		name: "Pipework Kitchen Sink",
-		length: 3,
-		location: "internal",
-		internalDiameter: 30,
+		internalDiameter: 20,
+		externalDiameter: 25,
+		length: 10,
+		insulationThickness: 5,
+		thermalConductivity: 0.5,
+		surfaceReflectivity: "low",
+		pipeContents: "water",
+		storageTank: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
+		location: "Living room",
 	};
 
-	const pipework2: Partial<PrimaryPipeworkData> = {
+	const pipework2: Partial<SecondaryPipeworkData> = {
 		name: "Pipework Kitchen",
-		length: 4,
-		location: "internal",
+		length: 3,
+		location: 'internal',
+		internalDiameter: 0.09
 	};
 
 	afterEach(() => {
@@ -115,4 +125,137 @@ describe("Pipeworks", () => {
 			expect(screen.getByText('Pipework Kitchen (1)')).toBeDefined();
 		});
 	});
+
+	describe("mark pipework section as complete", () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+	
+		const navigateToMock = vi.hoisted(() => vi.fn());
+		mockNuxtImport("navigateTo", () => {
+			return navigateToMock;
+		});
+
+	
+		const addPipeworkDataToStore = async () => {
+			store.$patch({
+				domesticHotWater: {
+					pipework: {
+						primaryPipework: { data: [pipework1] },
+						secondaryPipework: { data: [pipework2] },
+					},
+					waterHeating:{
+						storageTank: { data: [{name: "Storage 1", id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36"}]}
+					}
+				},
+					
+			});
+		};
+	
+		beforeEach(async () => {
+			await addPipeworkDataToStore();
+			await renderSuspended(Pipework);
+		});
+	
+		const getPipeworkData = async (action: string) => {
+			return [
+				{
+					key: "primaryPipework",
+					testId: `primaryPipework_${action}_0`,
+					form: PrimaryPipeworkForm,
+				},
+				{
+					key: "secondaryPipework",
+					testId: `secondaryPipework_${action}_0`,
+					form: SecondaryPipeworkForm,
+				},
+			];
+		};
+	
+		type PipeworkType = keyof typeof store.domesticHotWater.pipework;
+	
+		it("marks pipework section as complete when button is clicked", async () => {
+			expect(
+				screen.getByRole("button", { name: "Mark section as complete" })
+			).not.toBeNull();
+			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
+			expect(completedStatusElement?.style.display).toBe("none");
+	
+			await user.click(screen.getByTestId("completeSectionButton"));
+	
+			const { primaryPipework, secondaryPipework } = store.domesticHotWater.pipework;
+	
+			expect(primaryPipework?.complete).toBe(true);
+			expect(secondaryPipework?.complete).toBe(true);
+			expect(
+				screen.queryByRole("button", { name: "Mark section as complete" })
+			).toBeNull();
+			expect(completedStatusElement?.style.display).not.toBe("none");
+	
+			expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
+		});
+	
+		it("marks as not complete if an item is removed after marking complete", async () => {
+			const pipeworkData = await getPipeworkData("remove");
+	
+			for (const [key] of Object.entries(store.domesticHotWater.pipework)) {
+				const typedKey = key as PipeworkType;
+	
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.domesticHotWater.pipework[typedKey]?.complete).toBe(true);
+	
+				const pipeworkItem = pipeworkData.find((e) => e.key === typedKey);
+				await user.click(screen.getByTestId(pipeworkItem!.testId));
+				expect(store.domesticHotWater.pipework[typedKey]?.complete).toBe(false);
+				expect(
+					screen.getByRole("button", { name: "Mark section as complete" })
+				).not.toBeNull();
+			}
+		});
+	
+		it("marks as not complete if an item is duplicated after marking complete", async () => {
+			const pipeworkData = await getPipeworkData("duplicate");
+	
+			for (const [key] of Object.entries(store.domesticHotWater.pipework)) {
+				const typedKey = key as PipeworkType;
+	
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.domesticHotWater.pipework[typedKey]?.complete).toBe(true);
+	
+				const pipeworkItem = pipeworkData.find((e) => e.key === typedKey);
+				await user.click(screen.getByTestId(pipeworkItem!.testId));
+				expect(store.domesticHotWater.pipework[typedKey]?.complete).toBe(false);
+				expect(
+					screen.getByRole("button", { name: "Mark section as complete" })
+				).not.toBeNull();
+			}
+		});
+	
+		it("marks as not complete after saving a new or edited pipework item", async () => {
+			for (const [key] of Object.entries(store.domesticHotWater.pipework)) {
+				const pipeworkData = await getPipeworkData("");
+				const typedKey = key as PipeworkType;
+	
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.domesticHotWater.pipework[typedKey]?.complete).toBe(true);
+	
+				const pipeworkItem = pipeworkData.find((e) => e.key === typedKey);
+
+				await renderSuspended(pipeworkItem?.form, {
+					route: {
+						params: { pipe: "0" },
+					},
+				});
+				await user.click(
+					screen.getByRole("button", { name: "Save and continue" })
+				);
+				expect(store.domesticHotWater.pipework[typedKey].complete).toBe(false);
+	
+				await renderSuspended(Pipework);
+				expect(
+					screen.getByRole("button", { name: "Mark section as complete" })
+				).not.toBeNull();
+			}
+		});
+	});
+	
 });

@@ -14,7 +14,7 @@ function handleRemove(pipeworkType: PipeworkType, index: number) {
 
 		store.$patch((state) => {
 			state.domesticHotWater.pipework[pipeworkType].data = pipework.length ? pipework : [];
-			state.domesticHotWater.pipework[pipeworkType].complete = pipework.length > 0;
+			state.domesticHotWater.pipework[pipeworkType].complete = false;
 		});
 	}
 }
@@ -33,8 +33,27 @@ function handleDuplicate<T extends PipeworkData>(pipeworkType: PipeworkType, ind
 			} as T;
 
 			state.domesticHotWater.pipework[pipeworkType].data.push(newPipework);
+			state.domesticHotWater.pipework[pipeworkType].complete = false;
 		});
 	}
+}
+
+function handleComplete() {
+	store.$patch({
+		domesticHotWater: {
+			pipework: {
+				primaryPipework: { complete: true },
+				secondaryPipework: { complete: true },
+			}
+		}
+	});
+
+	navigateTo('/domestic-hot-water');
+}
+
+function checkIsComplete(){
+	const pipes = store.domesticHotWater.pipework;
+	return Object.values(pipes).every(pipe => pipe.complete);
 }
 </script>
 
@@ -64,5 +83,13 @@ function handleDuplicate<T extends PipeworkData>(pipeworkType: PipeworkType, ind
 		@remove="(index: number) => handleRemove('secondaryPipework', index)"
 		@duplicate="(index: number) => handleDuplicate('secondaryPipework', index)"
 	/>
-	<GovButton href="/domestic-hot-water" secondary>Return to overview</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/domestic-hot-water"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+	</div>
 </template>
