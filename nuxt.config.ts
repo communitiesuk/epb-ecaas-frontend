@@ -3,7 +3,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	compatibilityDate: '2024-04-03',
-	devtools: { enabled: false },
+	devtools: { enabled: true },
 	app: {
 		head: {
 			titleTemplate: '%s - ECaaS GOV.UK',
