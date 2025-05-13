@@ -14,7 +14,7 @@ const saveForm = (fields: PointThermalBridgeData) => {
 			name: fields.name,
 			heatTransferCoefficient: fields.heatTransferCoefficient
 		};
-
+		livingSpacePointThermalBridges.complete = false;
 		saveToList(thermalBridge, livingSpacePointThermalBridges);
 	});
 

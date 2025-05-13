@@ -70,7 +70,7 @@ const saveForm = (fields: LinearThermalBridgeData) => {
 			linearThermalTransmittance: fields.linearThermalTransmittance,
 			length: fields.length
 		};
-
+		livingSpaceLinearThermalBridges.complete = false;
 		saveToList(thermalBridge, livingSpaceLinearThermalBridges);
 	});
 

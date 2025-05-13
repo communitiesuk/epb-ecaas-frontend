@@ -14,7 +14,7 @@ function handleRemove(thermalBridgingType: ThermalBridgingType, index: number) {
 
 		store.$patch((state) => {
 			state.livingSpaceFabric.livingSpaceThermalBridging[thermalBridgingType]!.data = items.length ? items : [];
-			state.livingSpaceFabric.livingSpaceThermalBridging[thermalBridgingType]!.complete = items.length > 0;
+			state.livingSpaceFabric.livingSpaceThermalBridging[thermalBridgingType]!.complete = false;
 		});
 	}
 } 
@@ -33,6 +33,7 @@ function handleDuplicate<T extends ThermalBridgingData>(thermalBridgingType: The
 			} as T;
 
 			state.livingSpaceFabric.livingSpaceThermalBridging[thermalBridgingType]!.data.push(newItem);
+			state.livingSpaceFabric.livingSpaceThermalBridging[thermalBridgingType].complete = false;
 		});
 	}
 }
@@ -48,6 +49,11 @@ function handleComplete() {
 	});
 
 	navigateTo('/living-space');
+}
+
+function checkIsComplete(){
+	const bridges = store.livingSpaceFabric.livingSpaceThermalBridging;
+	return Object.values(bridges).every(bridge => bridge.complete);
 }
 </script>
 
@@ -81,8 +87,6 @@ function handleComplete() {
 		>
 			Return to overview
 		</GovButton>
-		<GovButton data-testid="completeSection" @click="handleComplete">
-			Mark section as complete
-		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>
 </template>
