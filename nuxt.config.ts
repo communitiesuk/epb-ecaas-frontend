@@ -23,7 +23,7 @@ export default defineNuxtConfig({
 			}
 		}
 	},
-	css: [process.env.BUILD_FOR_AWS_AMPLIFY ? '~/assets/scss/main_amplify.scss' : '~/assets/scss/main.scss'],
+	css: ['~/assets/scss/main.scss'],
 	vite: {
 		css: {
 			preprocessorOptions: {
