@@ -13,7 +13,7 @@ function handleRemove(emittingType: HeatEmittingType, index: number) {
 
 		store.$patch((state) => {
 			state.heatingSystems.heatEmitting[emittingType]!.data = emitters.length ? emitters : [];
-			state.heatingSystems.heatEmitting[emittingType]!.complete = emitters.length > 0;
+			state.heatingSystems.heatEmitting[emittingType]!.complete = false;
 		});
 	}
 }
@@ -31,8 +31,28 @@ function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingT
 			} as T;
 
 			state.heatingSystems.heatEmitting[emittingType]!.data.push(newItem);
+			state.heatingSystems.heatEmitting[emittingType].complete = false;
 		});
 	}
+}
+function handleComplete() {
+	store.$patch({
+		heatingSystems: {
+			heatEmitting: {
+				wetDistribution: { complete: true },
+				instantElectricHeater: { complete: true },
+				electricStorageHeater: { complete: true },
+				warmAirHeatPump: { complete: true }
+			}
+		}
+	});
+
+	navigateTo('/heating-systems');
+}
+
+function checkIsComplete(){
+	const emitters = store.heatingSystems.heatEmitting;
+	return Object.values(emitters).every(emitter => emitter.complete);
 }
 </script>
 
@@ -69,11 +89,13 @@ function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingT
 		:items="store.heatingSystems.heatEmitting.warmAirHeatPump.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('warmAirHeatPump', index)"
 		@duplicate="(index: number) => handleDuplicate('warmAirHeatPump', index)" />
-
-	<GovButton
-		href="/heating-systems"
-		secondary
-	>
-		Return to overview
-	</GovButton>
+	<div class="govuk-button-group govuk-!-margin-top-6">
+		<GovButton
+			href="/heating-systems"
+			secondary
+		>
+			Return to overview
+		</GovButton>
+		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+	</div>
 </template>

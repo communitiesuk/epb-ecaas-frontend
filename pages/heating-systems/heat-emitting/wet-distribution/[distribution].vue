@@ -51,8 +51,9 @@ const saveForm = (fields: WetDistributionData) => {
 			item.systemPerformanceFactor = 5;
 		};
 
+		wetDistribution.complete = false;
 		saveToList(item, wetDistribution);
-		wetDistribution.complete = true;
+
 	});
 
 	navigateTo("/heating-systems/heat-emitting");

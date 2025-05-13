@@ -186,10 +186,9 @@ describe("Wet distribution", () => {
 		await user.click(screen.getByRole("button"));
 
 		await waitFor(() => {
-			const { data, complete } =
+			const { data } =
         store.heatingSystems.heatEmitting.wetDistribution;
 			expect(data[0]).toEqual(wetDistribution1);
-			expect(complete).toBe(true);
 		});
 	});
 
@@ -225,10 +224,9 @@ describe("Wet distribution", () => {
 		await user.click(screen.getByRole("button"));
 
 		await waitFor(() => {
-			const { data, complete } =
+			const { data } =
         store.heatingSystems.heatEmitting.wetDistribution;
 			expect(data[0]).toEqual(wetDistribution2);
-			expect(complete).toBe(true);
 		});
 	});
 
@@ -306,14 +304,14 @@ describe("Wet distribution", () => {
 	});
 
 	it("should contain link to seperate page for eco design control guidance", async () => {
-
 		await renderSuspended(WetDistribution);
-		const guidance = screen.getByRole("link", {name: "Eco design control guidance (opens in another window)"});
+		const guidance = screen.getByRole("link", {
+			name: "Eco design control guidance (opens in another window)",
+		});
 		expect(guidance).toBeDefined();
-		expect(guidance.getAttribute("href")).toBe("/guidance/eco-design-control-guidance");
-
-
-
+		expect(guidance.getAttribute("href")).toBe(
+			"/guidance/eco-design-control-guidance"
+		);
 	});
 
 	it("should navigate to the heat emitting page when form is saved", async () => {

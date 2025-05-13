@@ -1,28 +1,32 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
-import HeatEmitting from './index.vue';
-import {screen} from '@testing-library/vue';
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import HeatEmitting from "./index.vue";
+import WetDistributionForm from "./wet-distribution/[distribution].vue";
+import InstantElectricHeaterForm from "./instant-electric-heater/[heater].vue";
+import ElectricStorageHeaterForm from "./electric-storage-heater/[heater].vue";
+import WarmAirHeatPumpForm from "./warm-air-heat-pump/[pump].vue";
+
+import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 
 describe("heat emitting", () => {
-
-	describe('wet distribution', async () => {
+	describe("wet distribution", async () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
 		const wetDistribution1 = {
-			name: 'Wet Distribution 1',
+			name: "Wet Distribution 1",
 		};
 		const wetDistribution2 = {
-			name: 'Wet Distribution 2',
+			name: "Wet Distribution 2",
 		};
 		const wetDistribution3 = {
-			name: 'Wet Distribution 3',
+			name: "Wet Distribution 3",
 		};
 		afterEach(() => {
 			store.$reset();
 		});
 
-		it('should remove wet distribution when remove link is clicked', async () => {
+		it("should remove wet distribution when remove link is clicked", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
@@ -33,13 +37,13 @@ describe("heat emitting", () => {
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			expect(screen.getAllByTestId('wetDistribution_items')).toBeDefined();
+			expect(screen.getAllByTestId("wetDistribution_items")).toBeDefined();
 
-			await user.click(screen.getByTestId('wetDistribution_remove_0'));
-			expect(screen.queryByTestId('wetDistribution_items')).toBeNull();
+			await user.click(screen.getByTestId("wetDistribution_remove_0"));
+			expect(screen.queryByTestId("wetDistribution_items")).toBeNull();
 		});
 
-		it('should only remove the wet distribution that is clicked if there are multiple wet distributions', async () => {
+		it("should only remove the wet distribution that is clicked if there are multiple wet distributions", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
@@ -50,14 +54,14 @@ describe("heat emitting", () => {
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			await user.click(screen.getByTestId('wetDistribution_remove_1'));
+			await user.click(screen.getByTestId("wetDistribution_remove_1"));
 
-			expect(screen.getByText('Wet Distribution 1')).toBeDefined();
-			expect(screen.getByText('Wet Distribution 3')).toBeDefined();
-			expect(screen.queryByText('Wet Distribution 2')).toBeNull();
+			expect(screen.getByText("Wet Distribution 1")).toBeDefined();
+			expect(screen.getByText("Wet Distribution 3")).toBeDefined();
+			expect(screen.queryByText("Wet Distribution 2")).toBeNull();
 		});
 
-		it('should duplicate the correct wet distribution when duplicate link is clicked', async () => {
+		it("should duplicate the correct wet distribution when duplicate link is clicked", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
@@ -68,35 +72,35 @@ describe("heat emitting", () => {
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			await userEvent.click(screen.getByTestId('wetDistribution_duplicate_0'));
-			await userEvent.click(screen.getByTestId('wetDistribution_duplicate_0'));
-			await userEvent.click(screen.getByTestId('wetDistribution_duplicate_2'));
-			await userEvent.click(screen.getByTestId('wetDistribution_duplicate_2'));
+			await userEvent.click(screen.getByTestId("wetDistribution_duplicate_0"));
+			await userEvent.click(screen.getByTestId("wetDistribution_duplicate_0"));
+			await userEvent.click(screen.getByTestId("wetDistribution_duplicate_2"));
+			await userEvent.click(screen.getByTestId("wetDistribution_duplicate_2"));
 
-			expect(screen.queryAllByTestId('wetDistribution_item').length).toBe(6);
-			expect(screen.getByText('Wet Distribution 1')).toBeDefined();
-			expect(screen.getByText('Wet Distribution 1 (1)')).toBeDefined();
-			expect(screen.getByText('Wet Distribution 1 (2)')).toBeDefined();
-			expect(screen.getByText('Wet Distribution 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Wet Distribution 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("wetDistribution_item").length).toBe(6);
+			expect(screen.getByText("Wet Distribution 1")).toBeDefined();
+			expect(screen.getByText("Wet Distribution 1 (1)")).toBeDefined();
+			expect(screen.getByText("Wet Distribution 1 (2)")).toBeDefined();
+			expect(screen.getByText("Wet Distribution 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Wet Distribution 1 (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('instant electric heater', async () => {
+	describe("instant electric heater", async () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
 		const instantElectricHeater1 = {
-			name: 'Instant Electric Heater 1',
+			name: "Instant Electric Heater 1",
 		};
 		const instantElectricHeater2 = {
-			name: 'Instant Electric Heater 2',
+			name: "Instant Electric Heater 2",
 		};
 		const instantElectricHeater3 = {
-			name: 'Instant Electric Heater 3',
+			name: "Instant Electric Heater 3",
 		};
 
-		it('should remove instant electric heater when remove link is clicked', async () => {
+		it("should remove instant electric heater when remove link is clicked", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
@@ -107,31 +111,37 @@ describe("heat emitting", () => {
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			expect(screen.getAllByTestId('instantElectricHeater_items')).toBeDefined();
+			expect(
+				screen.getAllByTestId("instantElectricHeater_items")
+			).toBeDefined();
 
-			await user.click(screen.getByTestId('instantElectricHeater_remove_0'));
-			expect(screen.queryByTestId('instantElectricHeater_items')).toBeNull();
+			await user.click(screen.getByTestId("instantElectricHeater_remove_0"));
+			expect(screen.queryByTestId("instantElectricHeater_items")).toBeNull();
 		});
 
-		it('should only remove the instant electric heater that is clicked if there are multiple instant electric heaters', async () => {
+		it("should only remove the instant electric heater that is clicked if there are multiple instant electric heaters", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
 						instantElectricHeater: {
-							data: [instantElectricHeater1, instantElectricHeater2, instantElectricHeater3],
+							data: [
+								instantElectricHeater1,
+								instantElectricHeater2,
+								instantElectricHeater3,
+							],
 						},
 					},
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			await user.click(screen.getByTestId('instantElectricHeater_remove_1'));
+			await user.click(screen.getByTestId("instantElectricHeater_remove_1"));
 
-			expect(screen.getByText('Instant Electric Heater 1')).toBeDefined();
-			expect(screen.getByText('Instant Electric Heater 3')).toBeDefined();
-			expect(screen.queryByText('Instant Electric Heater 2')).toBeNull();
+			expect(screen.getByText("Instant Electric Heater 1")).toBeDefined();
+			expect(screen.getByText("Instant Electric Heater 3")).toBeDefined();
+			expect(screen.queryByText("Instant Electric Heater 2")).toBeNull();
 		});
 
-		it('should duplicate the correct instant electric heater when duplicate link is clicked', async () => {
+		it("should duplicate the correct instant electric heater when duplicate link is clicked", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
@@ -142,22 +152,35 @@ describe("heat emitting", () => {
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			await userEvent.click(screen.getByTestId('instantElectricHeater_duplicate_0'));
-			await userEvent.click(screen.getByTestId('instantElectricHeater_duplicate_0'));
-			await userEvent.click(screen.getByTestId('instantElectricHeater_duplicate_2'));
-			await userEvent.click(screen.getByTestId('instantElectricHeater_duplicate_2'));
+			await userEvent.click(
+				screen.getByTestId("instantElectricHeater_duplicate_0")
+			);
+			await userEvent.click(
+				screen.getByTestId("instantElectricHeater_duplicate_0")
+			);
+			await userEvent.click(
+				screen.getByTestId("instantElectricHeater_duplicate_2")
+			);
+			await userEvent.click(
+				screen.getByTestId("instantElectricHeater_duplicate_2")
+			);
 
-			expect(screen.queryAllByTestId('instantElectricHeater_item').length).toBe(6);
-			expect(screen.getByText('Instant Electric Heater 1')).toBeDefined();
-			expect(screen.getByText('Instant Electric Heater 1 (1)')).toBeDefined();
-			expect(screen.getByText('Instant Electric Heater 1 (2)')).toBeDefined();
-			expect(screen.getByText('Instant Electric Heater 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Instant Electric Heater 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("instantElectricHeater_item").length).toBe(
+				6
+			);
+			expect(screen.getByText("Instant Electric Heater 1")).toBeDefined();
+			expect(screen.getByText("Instant Electric Heater 1 (1)")).toBeDefined();
+			expect(screen.getByText("Instant Electric Heater 1 (2)")).toBeDefined();
+			expect(
+				screen.getByText("Instant Electric Heater 1 (1) (1)")
+			).toBeDefined();
+			expect(
+				screen.getByText("Instant Electric Heater 1 (1) (2)")
+			).toBeDefined();
 		});
 	});
 
 	describe("electric storage heater", async () => {
-
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
@@ -185,11 +208,12 @@ describe("heat emitting", () => {
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			expect(screen.getAllByTestId('electricStorageHeater_items')).toBeDefined();
+			expect(
+				screen.getAllByTestId("electricStorageHeater_items")
+			).toBeDefined();
 
-			await user.click(screen.getByTestId('electricStorageHeater_remove_0'));
-			expect(screen.queryByTestId('electricStorageHeater_items')).toBeNull();
-
+			await user.click(screen.getByTestId("electricStorageHeater_remove_0"));
+			expect(screen.queryByTestId("electricStorageHeater_items")).toBeNull();
 		});
 
 		it("should only remove the heater thats is clicked if there are multiple heaters", async () => {
@@ -197,60 +221,69 @@ describe("heat emitting", () => {
 				heatingSystems: {
 					heatEmitting: {
 						electricStorageHeater: {
-							data: [storageHeater1, storageHeater2, storageHeater3]
+							data: [storageHeater1, storageHeater2, storageHeater3],
 						},
 					},
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			await user.click(screen.getByTestId('electricStorageHeater_remove_1'));
+			await user.click(screen.getByTestId("electricStorageHeater_remove_1"));
 
-			expect(screen.getByText('Storage heater 1')).toBeDefined();
-			expect(screen.getByText('Storage heater 3')).toBeDefined();
-			expect(screen.queryByText('Storage heater 2')).toBeNull();
-
+			expect(screen.getByText("Storage heater 1")).toBeDefined();
+			expect(screen.getByText("Storage heater 3")).toBeDefined();
+			expect(screen.queryByText("Storage heater 2")).toBeNull();
 		});
-		it("should duplicate the correct heater when duplicate link is clicked", async () => 	{
+		it("should duplicate the correct heater when duplicate link is clicked", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
 						electricStorageHeater: {
-							data: [storageHeater1, storageHeater2]
+							data: [storageHeater1, storageHeater2],
 						},
 					},
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			await userEvent.click(screen.getByTestId('electricStorageHeater_duplicate_0'));
-			await userEvent.click(screen.getByTestId('electricStorageHeater_duplicate_0'));
-			await userEvent.click(screen.getByTestId('electricStorageHeater_duplicate_2'));
-			await userEvent.click(screen.getByTestId('electricStorageHeater_duplicate_2'));
+			await userEvent.click(
+				screen.getByTestId("electricStorageHeater_duplicate_0")
+			);
+			await userEvent.click(
+				screen.getByTestId("electricStorageHeater_duplicate_0")
+			);
+			await userEvent.click(
+				screen.getByTestId("electricStorageHeater_duplicate_2")
+			);
+			await userEvent.click(
+				screen.getByTestId("electricStorageHeater_duplicate_2")
+			);
 
-			expect(screen.queryAllByTestId('electricStorageHeater_item').length).toBe(6);
-			expect(screen.getByText('Storage heater 1')).toBeDefined();
-			expect(screen.getByText('Storage heater 1 (1)')).toBeDefined();
-			expect(screen.getByText('Storage heater 1 (2)')).toBeDefined();
-			expect(screen.getByText('Storage heater 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Storage heater 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("electricStorageHeater_item").length).toBe(
+				6
+			);
+			expect(screen.getByText("Storage heater 1")).toBeDefined();
+			expect(screen.getByText("Storage heater 1 (1)")).toBeDefined();
+			expect(screen.getByText("Storage heater 1 (2)")).toBeDefined();
+			expect(screen.getByText("Storage heater 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Storage heater 1 (1) (2)")).toBeDefined();
 		});
 	});
-	describe('warm air heat pump', async () => {
+	describe("warm air heat pump", async () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
-	
+
 		const warmAirHeatPump1 = {
-			name: 'Warm Air Heat Pump 1',
+			name: "Warm Air Heat Pump 1",
 		};
 		const warmAirHeatPump2 = {
-			name: 'Warm Air Heat Pump 2',
+			name: "Warm Air Heat Pump 2",
 		};
 		const warmAirHeatPump3 = {
-			name: 'Warm Air Heat Pump 3',
+			name: "Warm Air Heat Pump 3",
 		};
 		afterEach(() => {
 			store.$reset();
 		});
-		it('should remove warm air heat pump when remove link is clicked', async () => {
+		it("should remove warm air heat pump when remove link is clicked", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
@@ -261,13 +294,13 @@ describe("heat emitting", () => {
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			expect(screen.getAllByTestId('warmAirHeatPump_items')).toBeDefined();
-	
-			await user.click(screen.getByTestId('warmAirHeatPump_remove_0'));
-			expect(screen.queryByTestId('warmAirHeatPump_items')).toBeNull();
+			expect(screen.getAllByTestId("warmAirHeatPump_items")).toBeDefined();
+
+			await user.click(screen.getByTestId("warmAirHeatPump_remove_0"));
+			expect(screen.queryByTestId("warmAirHeatPump_items")).toBeNull();
 		});
-	
-		it('should only remove the heat pump that is clicked if there are multiple heat pumps', async () => {
+
+		it("should only remove the heat pump that is clicked if there are multiple heat pumps", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
@@ -278,14 +311,14 @@ describe("heat emitting", () => {
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			await user.click(screen.getByTestId('warmAirHeatPump_remove_1'));
-	
-			expect(screen.getByText('Warm Air Heat Pump 1')).toBeDefined();
-			expect(screen.getByText('Warm Air Heat Pump 3')).toBeDefined();
-			expect(screen.queryByText('Warm Air Heat Pump 2')).toBeNull();
+			await user.click(screen.getByTestId("warmAirHeatPump_remove_1"));
+
+			expect(screen.getByText("Warm Air Heat Pump 1")).toBeDefined();
+			expect(screen.getByText("Warm Air Heat Pump 3")).toBeDefined();
+			expect(screen.queryByText("Warm Air Heat Pump 2")).toBeNull();
 		});
-	
-		it('should duplicate the correct heat pump when duplicate link is clicked', async () => {
+
+		it("should duplicate the correct heat pump when duplicate link is clicked", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
@@ -296,19 +329,212 @@ describe("heat emitting", () => {
 				},
 			});
 			await renderSuspended(HeatEmitting);
-			await userEvent.click(screen.getByTestId('warmAirHeatPump_duplicate_0'));
-			await userEvent.click(screen.getByTestId('warmAirHeatPump_duplicate_0'));
-			await userEvent.click(screen.getByTestId('warmAirHeatPump_duplicate_2'));
-			await userEvent.click(screen.getByTestId('warmAirHeatPump_duplicate_2'));
-	
-			expect(screen.queryAllByTestId('warmAirHeatPump_item').length).toBe(6);
-			expect(screen.getByText('Warm Air Heat Pump 1')).toBeDefined();
-			expect(screen.getByText('Warm Air Heat Pump 1 (1)')).toBeDefined();
-			expect(screen.getByText('Warm Air Heat Pump 1 (2)')).toBeDefined();
-			expect(screen.getByText('Warm Air Heat Pump 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Warm Air Heat Pump 1 (1) (2)')).toBeDefined();
+			await userEvent.click(screen.getByTestId("warmAirHeatPump_duplicate_0"));
+			await userEvent.click(screen.getByTestId("warmAirHeatPump_duplicate_0"));
+			await userEvent.click(screen.getByTestId("warmAirHeatPump_duplicate_2"));
+			await userEvent.click(screen.getByTestId("warmAirHeatPump_duplicate_2"));
+
+			expect(screen.queryAllByTestId("warmAirHeatPump_item").length).toBe(6);
+			expect(screen.getByText("Warm Air Heat Pump 1")).toBeDefined();
+			expect(screen.getByText("Warm Air Heat Pump 1 (1)")).toBeDefined();
+			expect(screen.getByText("Warm Air Heat Pump 1 (2)")).toBeDefined();
+			expect(screen.getByText("Warm Air Heat Pump 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Warm Air Heat Pump 1 (1) (2)")).toBeDefined();
 		});
 	});
-	
-});
+	describe("mark section as complete", () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
 
+		const navigateToMock = vi.hoisted(() => vi.fn());
+		mockNuxtImport("navigateTo", () => {
+			return navigateToMock;
+		});
+		const wetDistribution1: WetDistributionData = {
+			name: "Wet distribution 1",
+			zoneReference: "livingSpace",
+			heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+			thermalMass: 2,
+			designTempDiffAcrossEmitters: 0.4,
+			designFlowTemp: 32,
+			typeOfSpaceHeater: "radiators",
+			exponent: 1.3,
+			constant: 0.08,
+			emitterFloorArea: undefined,
+			convectionFractionWet: 0.2,
+			ecoDesignControllerClass: "1",
+			minimumFlowTemp: 20,
+			minOutdoorTemp: 0,
+			maxOutdoorTemp: 15,
+		};
+		const instantElectricHeater1 = {
+			name: "Instant Electric Heater 1",
+			ratedPower: 30,
+			convectionFractionInstant: 1,
+		};
+		const addHeatEmittingDataToStore = async () => {
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						wetDistribution: { data: [wetDistribution1] },
+						instantElectricHeater: { data: [instantElectricHeater1] },
+						electricStorageHeater: { data: [{ name: "storage 1" }] },
+						warmAirHeatPump: { data: [{ name: "warm air 1" }] },
+					},
+					heatGeneration: {
+						heatPump: {
+							data: [
+								{
+									id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+									name: "Heat pump 1",
+								},
+							],
+						},
+					},
+				},
+			});
+		};
+
+		beforeEach(async () => {
+			await addHeatEmittingDataToStore();
+			await renderSuspended(HeatEmitting);
+		});
+
+		const getEmittersData = async (action: string) => {
+			return [
+				{
+					key: "wetDistribution",
+					testId: `wetDistribution_${action}_0`,
+					form: WetDistributionForm,
+					params: "distribution"
+				},
+				{
+					key: "instantElectricHeater",
+					testId: `instantElectricHeater_${action}_0`,
+					form: InstantElectricHeaterForm,
+					params: "heater"
+				},
+				{
+					key: "electricStorageHeater",
+					testId: `electricStorageHeater_${action}_0`,
+					form: ElectricStorageHeaterForm,
+					params: "heater"
+				},
+				{
+					key: "warmAirHeatPump",
+					testId: `warmAirHeatPump_${action}_0`,
+					form: WarmAirHeatPumpForm,
+					params: "pump"
+				},
+			];
+		};
+
+    type HeatEmittingType = keyof typeof store.heatingSystems.heatEmitting;
+
+    it("marks heat emitting section as complete when button is clicked", async () => {
+    	expect(
+    		screen.getByRole("button", { name: "Mark section as complete" })
+    	).not.toBeNull();
+    	const completedStatusElement = screen.queryByTestId(
+    		"completeSectionCompleted"
+    	);
+    	expect(completedStatusElement?.style.display).toBe("none");
+
+    	await user.click(screen.getByTestId("completeSectionButton"));
+
+    	const {
+    		wetDistribution,
+    		instantElectricHeater,
+    		electricStorageHeater,
+    		warmAirHeatPump,
+    	} = store.heatingSystems.heatEmitting;
+
+    	expect(wetDistribution?.complete).toBe(true);
+    	expect(instantElectricHeater?.complete).toBe(true);
+    	expect(electricStorageHeater?.complete).toBe(true);
+    	expect(warmAirHeatPump?.complete).toBe(true);
+    	expect(
+    		screen.queryByRole("button", { name: "Mark section as complete" })
+    	).toBeNull();
+    	expect(completedStatusElement?.style.display).not.toBe("none");
+
+    	expect(navigateToMock).toHaveBeenCalledWith("/heating-systems");
+    });
+
+    it("marks as not complete if an item is removed after marking complete", async () => {
+    	const emitters = await getEmittersData("remove");
+
+    	for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
+    		const typedKey = key as HeatEmittingType;
+
+    		await user.click(screen.getByTestId("completeSectionButton"));
+    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
+    			true
+    		);
+
+    		const emitterData = emitters.find((e) => e.key === typedKey);
+    		await user.click(screen.getByTestId(emitterData!.testId));
+    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
+    			false
+    		);
+    		expect(
+    			screen.getByRole("button", { name: "Mark section as complete" })
+    		).not.toBeNull();
+    	}
+    });
+
+    it("marks as not complete if an item is duplicated after marking complete", async () => {
+    	const emitters = await getEmittersData("duplicate");
+
+    	for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
+    		const typedKey = key as HeatEmittingType;
+
+    		await user.click(screen.getByTestId("completeSectionButton"));
+    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
+    			true
+    		);
+
+    		const emitterData = emitters.find((e) => e.key === typedKey);
+    		await user.click(screen.getByTestId(emitterData!.testId));
+    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
+    			false
+    		);
+    		expect(
+    			screen.getByRole("button", { name: "Mark section as complete" })
+    		).not.toBeNull();
+    	}
+    });
+
+    it("marks as not complete after saving a new or edited emitter item", async () => {
+			
+    	for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
+    		const emitters = await getEmittersData("");
+    		const typedKey = key as HeatEmittingType;
+
+    		await user.click(screen.getByTestId("completeSectionButton"));
+    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
+    			true
+    		);
+
+    		const emitterData = emitters.find((e) => e.key === typedKey);
+    		const params:string = emitterData!.params;
+    		await renderSuspended(emitterData?.form, {
+    			route: {
+    				params: { [params]: "0" },
+    			},
+    		});
+    		await user.click(
+    			screen.getByRole("button", { name: "Save and continue" })
+    		);
+    		expect(
+    			store.heatingSystems.heatEmitting[typedKey].complete
+    		).toBe(false);
+
+    		await renderSuspended(HeatEmitting);
+    		expect(
+    			screen.getByRole("button", { name: "Mark section as complete" })
+    		).not.toBeNull();
+    	}
+    });
+	});
+});

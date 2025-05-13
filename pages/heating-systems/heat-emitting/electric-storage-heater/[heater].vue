@@ -15,9 +15,9 @@ const saveForm = (fields: ElectricStorageHeaterData) => {
 		};
 
 		saveToList(item, electricStorageHeater);
-		electricStorageHeater.complete = true;
-	});
+		electricStorageHeater.complete = false;
 
+	});
 	navigateTo("/heating-systems/heat-emitting");
 };
 

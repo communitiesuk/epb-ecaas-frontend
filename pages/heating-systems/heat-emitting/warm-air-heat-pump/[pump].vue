@@ -15,7 +15,7 @@ const saveForm = (fields: WarmAirHeatPumpData) => {
 		};
 
 		saveToList(item, warmAirHeatPump);
-		warmAirHeatPump.complete = true;
+		warmAirHeatPump.complete = false;
 	});
 
 	navigateTo("/heating-systems/heat-emitting");
