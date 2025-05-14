@@ -1,9 +1,10 @@
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+import yn from 'yn';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	compatibilityDate: '2024-04-03',
-	devtools: { enabled: true },
+	devtools: { enabled: typeof process.env.DISABLE_DEVTOOLS !== 'undefined' ? !yn(process.env.DISABLE_DEVTOOLS) : true },
 	app: {
 		head: {
 			titleTemplate: '%s - ECaaS GOV.UK',
