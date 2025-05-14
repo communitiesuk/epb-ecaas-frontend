@@ -94,7 +94,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				yes: 'Yes',
 				no: 'No'
 			}"
-			label="Can the fuel by exported?"
+			label="Can the fuel be exported?"
 			name="exported"
 			validation="required"
 		/>
