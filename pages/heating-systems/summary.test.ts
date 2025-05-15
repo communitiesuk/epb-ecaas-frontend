@@ -17,6 +17,23 @@ describe("Heating systems summary page", () => {
 			).not.toBeNull();
 		});
 
+		it("should display and empty section if no energy supply data has been added", async () => {
+			await renderSuspended(HeatingSystemsSummary);
+			const expectedEnergySupplyData = {
+				"Fuel type": "",
+				"Exported": "",
+				"CO2 per kWh": "",
+				"CO2 per kWh (including out of scope)": "",
+				"kWh per kWh delivered": ""
+			};
+
+			for(const [key, value] of Object.entries(expectedEnergySupplyData)){
+				const lineResult = await screen.findByTestId(`summary-energySupply-${hyphenate(key)}`);
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+
 		it("should display the correct data for energy supply", async () => {
 			const store = useEcaasStore();
 
@@ -49,7 +66,6 @@ describe("Heating systems summary page", () => {
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
-
 		});
 	});
 });
