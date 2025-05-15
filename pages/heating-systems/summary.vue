@@ -23,7 +23,7 @@ const energySupplySummary: SummarySection = {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovTabs v-slot="tabProps" :items="getTabItems([energySupplySummary])">
-		<GovSummaryTab
+		<SummaryTab
 			:summary="energySupplySummary"
 			:selected="tabProps.currentTab === 0"
 		/>
