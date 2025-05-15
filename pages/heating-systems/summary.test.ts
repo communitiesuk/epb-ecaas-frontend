@@ -2,6 +2,16 @@ import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatingSystemsSummary from "./summary.vue";
 import { screen } from "@testing-library/vue";
 
+type expectedData = { [key: string]: string };
+const verifyDataInSection = async (section: string, expectedSectionData: expectedData) => {
+	for (const [key, value] of Object.entries(expectedSectionData)) {
+		const lineResult = await screen.findByTestId(
+			`summary-${section}-${hyphenate(key)}`
+		);
+		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+		expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+	}
+};
 describe("Heating systems summary page", () => {
 	it("should display the correct title", async () => {
 		await renderSuspended(HeatingSystemsSummary);
@@ -9,7 +19,6 @@ describe("Heating systems summary page", () => {
 	});
 
 	describe("Energy supply section", () => {
-
 		it("should display the correct tabs for energy supply", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 			expect(
@@ -24,14 +33,10 @@ describe("Heating systems summary page", () => {
 				"Exported": "",
 				"CO2 per kWh": "",
 				"CO2 per kWh (including out of scope)": "",
-				"kWh per kWh delivered": ""
+				"kWh per kWh delivered": "",
 			};
 
-			for(const [key, value] of Object.entries(expectedEnergySupplyData)){
-				const lineResult = await screen.findByTestId(`summary-energySupply-${hyphenate(key)}`);
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
+			await verifyDataInSection("energySupply", expectedEnergySupplyData);
 		});
 
 		it("should display the correct data for energy supply", async () => {
@@ -42,13 +47,13 @@ describe("Heating systems summary page", () => {
 				exported: "yes",
 				co2PerKwh: 1,
 				co2PerKwhIncludingOutOfScope: 2,
-				kwhPerKwhDelivered: 3
+				kwhPerKwhDelivered: 3,
 			};
-      
+
 			store.$patch({
 				heatingSystems: {
 					energySupply: {
-						data: energySupplyData
+						data: energySupplyData,
 					},
 				},
 			});
@@ -58,14 +63,10 @@ describe("Heating systems summary page", () => {
 				"Exported": "Yes",
 				"CO2 per kWh": "1",
 				"CO2 per kWh (including out of scope)": "2",
-				"kWh per kWh delivered": "3"
+				"kWh per kWh delivered": "3",
 			};
 			await renderSuspended(HeatingSystemsSummary);
-			for(const [key, value] of Object.entries(expectedEnergySupplyData)){
-				const lineResult = await screen.findByTestId(`summary-energySupply-${hyphenate(key)}`);
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
+			await verifyDataInSection("energySupply", expectedEnergySupplyData);
 		});
 	});
 });
