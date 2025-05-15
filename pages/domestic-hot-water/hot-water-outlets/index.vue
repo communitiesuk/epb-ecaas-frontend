@@ -68,7 +68,7 @@ function checkIsComplete() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="mixedShower"
 		title="Mixed shower"
 		:form-url="`${page?.url!}/mixed-shower`"
@@ -76,7 +76,7 @@ function checkIsComplete() {
 		@remove="(index: number) => handleRemove('mixedShower', index)"
 		@duplicate="(index: number) => handleDuplicate('mixedShower', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="electricShower"
 		title="Instant electric shower"
 		:form-url="`${page?.url!}/electric-shower`"
@@ -84,7 +84,7 @@ function checkIsComplete() {
 		@remove="(index: number) => handleRemove('electricShower', index)"
 		@duplicate="(index: number) => handleDuplicate('electricShower', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="bath"
 		title="Bath"
 		:form-url="`${page?.url!}/bath`"
@@ -92,7 +92,7 @@ function checkIsComplete() {
 		@remove="(index: number) => handleRemove('bath', index)"
 		@duplicate="(index: number) => handleDuplicate('bath', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="otherOutlets"
 		title="Other"
 		hint="(basin tap, kitchen sink etc)"
@@ -109,6 +109,6 @@ function checkIsComplete() {
 		>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>
 </template>

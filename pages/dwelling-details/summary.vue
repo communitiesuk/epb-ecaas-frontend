@@ -79,17 +79,17 @@ const summarySections: SummarySection[] = [
 			</Head>
 			<h1 class="govuk-heading-l">{{ title }}</h1>
 			<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
-				<GovSummaryTab :summary="generalSpecificationsSummary" :selected="tabProps.currentTab === 0"/>
-				<GovSummaryTab :summary="externalFactorsSummary" :selected="tabProps.currentTab === 1"/>
-				<GovSummaryTab :summary="shadingSummary" :selected="tabProps.currentTab === 2">
+				<SummaryTab :summary="generalSpecificationsSummary" :selected="tabProps.currentTab === 0"/>
+				<SummaryTab :summary="externalFactorsSummary" :selected="tabProps.currentTab === 1"/>
+				<SummaryTab :summary="shadingSummary" :selected="tabProps.currentTab === 2">
 					<template #empty>
 						<h2 class="govuk-heading-m">No shading added</h2>
 						<NuxtLink class="govuk-link" :to="getUrl('shadingCreate')">
 							Add shading
 						</NuxtLink>
 					</template>
-				</GovSummaryTab>
-				<GovSummaryTab :summary="appliancesAndElectricitySummary" :selected="tabProps.currentTab === 3"/>
+				</SummaryTab>
+				<SummaryTab :summary="appliancesAndElectricitySummary" :selected="tabProps.currentTab === 3"/>
 			</GovTabs>
 			<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 		</NuxtLayout>

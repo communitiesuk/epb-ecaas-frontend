@@ -1,21 +1,21 @@
-import GovStoredList, { type GovStoredListOption } from './components/GovStoredList.vue';
+import FormKitStoredList, { type StoredListOption } from './components/form-kit/StoredList.vue';
 import { defineFormKitConfig } from '@formkit/vue';
-import GovFormButton from './components/GovFormButton.vue';
-import GovRadios, { type GovRadioOption } from './components/GovRadios.vue';
+import FormKitButton from './components/form-kit/Button.vue';
+import FormKitRadios, { type RadioOption } from './components/form-kit/Radios.vue';
 import type { FormKitInputs, FormKitOptionsProp } from '@formkit/inputs';
-import GovDropdown from './components/GovDropdown.vue';
-import GovInputFloat from './components/GovInputFloat.vue';
-import GovInputInt from './components/GovInputInt.vue';
-import GovInputWithSuffix from './components/GovInputWithSuffix.vue';
-import GovCheckboxes from './components/GovCheckboxes.vue';
-import GovInputText from './components/GovInputText.vue';
+import FormKitDropdown from './components/form-kit/Dropdown.vue';
+import FormKitInputFloat from './components/form-kit/InputFloat.vue';
+import FormKitInputInt from './components/form-kit/InputInt.vue';
+import FormKitInputWithSuffix from './components/form-kit/InputWithSuffix.vue';
+import FormKitCheckboxes from './components/form-kit/Checkboxes.vue';
+import FormKitInputText from './components/form-kit/InputText.vue';
 
 // Enable TypeScript support for custom inputs
 declare module '@formkit/inputs' {
 	interface FormKitInputProps<Props extends FormKitInputs<Props>> {
 		'govRadios': {
 			type: 'govRadios',
-			options: Record<string, string | GovRadioOption> | Map<string, string>,
+			options: Record<string, string | RadioOption> | Map<string, string>,
 			valueType?: 'string' | 'number'
 		},
 		'govButton': {
@@ -45,7 +45,7 @@ declare module '@formkit/inputs' {
 		}, 
 		'govStoredList': {
 			type: 'govStoredList',
-			options: GovStoredListOption[]
+			options: StoredListOption[]
 		}
 	}
 }
@@ -56,39 +56,39 @@ export default defineFormKitConfig(() => {
 		inputs: {
 			govRadios: {
 				type: 'input',
-				component: GovRadios
+				component: FormKitRadios
 			},
 			govButton: {
 				type: 'input',
-				component: GovFormButton
+				component: FormKitButton
 			},
 			govDropdown: {
 				type: 'input',
-				component: GovDropdown
+				component: FormKitDropdown
 			},
 			govInputFloat: {
 				type: 'input',
-				component: GovInputFloat
+				component: FormKitInputFloat
 			},
 			govInputInt: {
 				type: 'input',
-				component: GovInputInt
+				component: FormKitInputInt
 			},
 			govInputWithSuffix: {
 				type: "input",
-				component: GovInputWithSuffix
+				component: FormKitInputWithSuffix
 			},
 			govCheckboxes: {
 				type: "input",
-				component: GovCheckboxes
+				component: FormKitCheckboxes
 			},
 			govInputText: {
 				type: "input",
-				component: GovInputText
+				component: FormKitInputText
 			},
 			govStoredList: {
 				type: "input",
-				component: GovStoredList
+				component: FormKitStoredList
 			}
 
 		}

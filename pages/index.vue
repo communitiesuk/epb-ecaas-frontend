@@ -13,6 +13,6 @@ const taskList = createTaskList(page);
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovTaskList :items="taskList" />
 	<div class="govuk-!-margin-top-8">
-		<GovCalculateButton />
+		<CalculateButton />
 	</div>
 </template>

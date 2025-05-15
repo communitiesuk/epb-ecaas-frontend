@@ -1,4 +1,4 @@
-import type { SummaryData } from "./components/GovSummaryList.vue";
+import type { SummaryData } from "./components/SummaryList.vue";
 
 export interface GovTagProps {
 	text: string;

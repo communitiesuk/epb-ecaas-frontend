@@ -63,7 +63,7 @@ function checkIsComplete(){
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="pvSystem"
 		title="PV System"
 		:form-url="`${page?.url!}/pv-system`"
@@ -71,7 +71,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('pvSystem', index)"
 		@duplicate="(index: number) => handleDuplicate('pvSystem', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="electricBattery"
 		title="Electric battery"
 		:form-url="`${page?.url!}/electric-battery`"
@@ -79,7 +79,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('electricBattery', index)"
 		@duplicate="(index: number) => handleDuplicate('electricBattery', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="pvDiverter"
 		title="PV diverter"
 		:form-url="`${page?.url!}/pv-diverter`"
@@ -95,6 +95,6 @@ function checkIsComplete(){
 		>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>
 </template>

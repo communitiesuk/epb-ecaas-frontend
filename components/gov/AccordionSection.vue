@@ -1,3 +1,5 @@
+/** This component is a constituent part of the GOV.UK accordion component (https://design-system.service.gov.uk/components/accordion/) and is used with GovAccordion. */
+
 <script setup lang="ts">
 defineProps<{
 	id?: string;

@@ -50,35 +50,35 @@ function checkIsComplete(){
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="heatPump"
 		title="Heat pump"
 		:form-url="`${page?.url!}/heat-pump`"
 		:items="store.heatingSystems.heatGeneration.heatPump.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('heatPump', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="boiler"
 		title="Boiler"
 		:form-url="`${page?.url!}/boiler`"
 		:items="store.heatingSystems.heatGeneration.boiler.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('boiler', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="heatBattery"
 		title="Heat battery"
 		:form-url="`${page?.url!}/heat-battery`"
 		:items="store.heatingSystems.heatGeneration.heatBattery.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('heatBattery', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="heatNetwork"
 		title="Heat network"
 		:form-url="`${page?.url!}/heat-network`"
 		:items="store.heatingSystems.heatGeneration.heatNetwork.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('heatNetwork', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="heatInterfaceUnit"
 		title="Heat interface unit"
 		:form-url="`${page?.url!}/heat-interface-unit`"
@@ -92,6 +92,6 @@ function checkIsComplete(){
 		>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>
 </template>

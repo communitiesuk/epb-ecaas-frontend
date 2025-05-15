@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { showErrorState, getErrorMessage } from '#imports';
 
-export type GovRadioOption = {
+export type RadioOption = {
 	label: string;
 	hint?: string;
 };

@@ -62,28 +62,28 @@ function checkIsComplete(){
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovCustomList
+	<CustomList
 		id="wetDistribution" title="Wet distribution" 
 		:form-url="`${page?.url!}/wet-distribution`"
 		:items="store.heatingSystems.heatEmitting.wetDistribution.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('wetDistribution', index)"
 		@duplicate="(index: number) => handleDuplicate('wetDistribution', index)" />
 
-	<GovCustomList
+	<CustomList
 		id="instantElectricHeater" title="Instant electric heater"
 		:form-url="`${page?.url!}/instant-electric-heater`"
 		:items="store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('instantElectricHeater', index)"
 		@duplicate="(index: number) => handleDuplicate('instantElectricHeater', index)" />
 
-	<GovCustomList
+	<CustomList
 		id="electricStorageHeater" title="Electric storage heater"
 		:form-url="`${page?.url!}/electric-storage-heater`"
 		:items="store.heatingSystems.heatEmitting.electricStorageHeater.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('electricStorageHeater', index)"
 		@duplicate="(index: number) => handleDuplicate('electricStorageHeater', index)" />
 
-	<GovCustomList
+	<CustomList
 		id="warmAirHeatPump" title="Warm air heat pump" 
 		:form-url="`${page?.url!}/warm-air-heat-pump`"
 		:items="store.heatingSystems.heatEmitting.warmAirHeatPump.data.map(x => x.name)"
@@ -96,6 +96,6 @@ function checkIsComplete(){
 		>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>
 </template>

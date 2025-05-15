@@ -65,7 +65,7 @@ function checkIsComplete(){
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="external"
 		title="External wall"
 		:form-url="`${page?.url!}/external`"
@@ -73,7 +73,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('livingSpaceExternalWall', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceExternalWall', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="internal"
 		title="Internal wall"
 		:form-url="`${page?.url!}/internal`"
@@ -81,7 +81,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('livingSpaceInternalWall', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceInternalWall', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="toHeatedSpace"
 		title="Wall to unheated space"
 		:form-url="`${page?.url!}/wall-to-unheated-space`"
@@ -89,7 +89,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('livingSpaceWallToUnheatedSpace', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceWallToUnheatedSpace', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="party"
 		title="Party wall"
 		:form-url="`${page?.url!}/party`"
@@ -104,7 +104,7 @@ function checkIsComplete(){
 		>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 
 	</div>
 </template>

@@ -72,7 +72,7 @@ function handleComplete() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="mechanicalVentilation" title="Mechanical ventilation" :form-url="page?.url!" :items="store.infiltrationAndVentilation.mechanicalVentilation.data?.map(
 			x => x.name)" @remove="handleRemove" @duplicate="handleDuplicate" />
 	<p
@@ -82,6 +82,6 @@ function handleComplete() {
 		<GovButton href="/infiltration-and-ventilation" secondary>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="store.infiltrationAndVentilation.mechanicalVentilation?.complete ?? false" @completed="handleComplete"/>
+		<CompleteElement :is-complete="store.infiltrationAndVentilation.mechanicalVentilation?.complete ?? false" @completed="handleComplete"/>
 	</div>
 </template>

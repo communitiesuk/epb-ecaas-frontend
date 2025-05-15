@@ -78,7 +78,7 @@ function checkIsComplete(){
 	<h1 class="govuk-heading-l">
 		Storage tank
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="storageTank"
 		title="Storage tank"
 		:form-url="`${page?.url!}/storage-tank`"
@@ -86,7 +86,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('storageTank', index)"
 		@duplicate="(index: number) => handleDuplicate('storageTank', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="immersionHeater"
 		title="Immersion heater"
 		:form-url="`${page?.url!}/immersion-heater`"
@@ -94,7 +94,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('immersionHeater', index)"
 		@duplicate="(index: number) => handleDuplicate('immersionHeater', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="solarThermal"
 		title="Solar thermal"
 		:form-url="`${page?.url!}/solar-thermal`"
@@ -105,7 +105,7 @@ function checkIsComplete(){
 	<h2 class="govuk-heading-l">
 		Other water heat sources
 	</h2>
-	<GovCustomList
+	<CustomList
 		id="pointOfUse"
 		title="Point of use"
 		:form-url="`${page?.url!}/point-of-use`"
@@ -113,7 +113,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('pointOfUse', index)"
 		@duplicate="(index: number) => handleDuplicate('pointOfUse', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="heatPump"
 		title="Heat pump (hot water only)"
 		:form-url="`${page?.url!}/heat-pump`"
@@ -121,7 +121,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('heatPump', index)"
 		@duplicate="(index: number) => handleDuplicate('heatPump', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="combiBoiler"
 		title="Combi boiler"
 		:form-url="`${page?.url!}/combi-boiler`"
@@ -129,7 +129,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('combiBoiler', index)"
 		@duplicate="(index: number) => handleDuplicate('combiBoiler', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="heatBattery"
 		title="Heat battery"
 		:form-url="`${page?.url!}/heat-battery`"
@@ -137,7 +137,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('heatBattery', index)"
 		@duplicate="(index: number) => handleDuplicate('heatBattery', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="smartHotWaterTank"
 		title="Smart hot water tank"
 		:form-url="`${page?.url!}/smart-hot-water-tank`"
@@ -145,7 +145,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('smartHotWaterTank', index)"
 		@duplicate="(index: number) => handleDuplicate('smartHotWaterTank', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="heatInterfaceUnit"
 		title="Heat interface unit"
 		:form-url="`${page?.url!}/heat-interface-unit`"
@@ -160,7 +160,7 @@ function checkIsComplete(){
 		>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 
 	</div>
 </template>

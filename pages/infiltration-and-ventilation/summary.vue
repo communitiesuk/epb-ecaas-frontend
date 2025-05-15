@@ -142,44 +142,44 @@ const summarySections: SummarySection[] = [
 			<h1 class="govuk-heading-l">{{ title }}</h1>
 			<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
 				
-				<GovSummaryTab :summary="mechanicalVentilationSummary" :selected="tabProps.currentTab === 0">
+				<SummaryTab :summary="mechanicalVentilationSummary" :selected="tabProps.currentTab === 0">
 					<template #empty>
 						<h2 class="govuk-heading-m">No mechanical ventilation added</h2>
 						<NuxtLink class="govuk-link" :to="getUrl('mechanicalVentilationCreate')">
 							Add mechanical ventilation
 						</NuxtLink>
 					</template>
-				</GovSummaryTab>
+				</SummaryTab>
 
-				<GovSummaryTab :summary="ductworkSummary" :selected="tabProps.currentTab === 1">
+				<SummaryTab :summary="ductworkSummary" :selected="tabProps.currentTab === 1">
 					<template #empty>
 						<h2 class="govuk-heading-m">No ductwork added</h2>
 						<NuxtLink class="govuk-link" :to="getUrl('ductworkCreate')">
 							Add ductwork
 						</NuxtLink>
 					</template>
-				</GovSummaryTab>
+				</SummaryTab>
 
-				<GovSummaryTab :summary="ventSummary" :selected="tabProps.currentTab === 2">
+				<SummaryTab :summary="ventSummary" :selected="tabProps.currentTab === 2">
 					<template #empty>
 						<h2 class="govuk-heading-m">No vents added</h2>
 						<NuxtLink class="govuk-link" :to="getUrl('ventCreate')">
 							Add vents
 						</NuxtLink>
 					</template>
-				</GovSummaryTab>
+				</SummaryTab>
 
-				<GovSummaryTab :summary="ventilationSummary" :selected="tabProps.currentTab === 3" />
-				<GovSummaryTab :summary="airPermeabilitySummary" :selected="tabProps.currentTab === 4" />
+				<SummaryTab :summary="ventilationSummary" :selected="tabProps.currentTab === 3" />
+				<SummaryTab :summary="airPermeabilitySummary" :selected="tabProps.currentTab === 4" />
 
-				<GovSummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 5">
+				<SummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 5">
 					<template #empty>
 						<h2 class="govuk-heading-m">No combustion appliances added</h2>
 						<NuxtLink class="govuk-link" :to="getUrl('combustionAppliances')">
 							Add combustion appliance
 						</NuxtLink>
 					</template>
-				</GovSummaryTab>
+				</SummaryTab>
 			</GovTabs>
 		</NuxtLayout>
 	</div>

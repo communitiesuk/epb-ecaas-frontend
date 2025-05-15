@@ -67,7 +67,7 @@ function checkIsComplete(){
 			Primary and secondary pipework guidance (opens in another window)
 		</a>
 	</p>
-	<GovCustomList
+	<CustomList
 		id="primaryPipework"
 		title="Primary pipework"
 		:form-url="`${page?.url!}/primary`"
@@ -75,7 +75,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('primaryPipework', index)"
 		@duplicate="(index: number) => handleDuplicate('primaryPipework', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="secondaryPipework"
 		title="Seconday pipework (hot water distribution)"
 		:form-url="`${page?.url!}/secondary`"
@@ -90,6 +90,6 @@ function checkIsComplete(){
 		>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>
 </template>

@@ -68,7 +68,7 @@ function checkIsComplete(){
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="openFireplace"
 		title="Open fireplace"
 		:form-url="`${page?.url!}/open-fireplace`"
@@ -76,7 +76,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('openFireplace', index)"
 		@duplicate="(index: number) => handleDuplicate('openFireplace', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="closedFireplaceWithFan"
 		title="Closed fireplace with fan"
 		:form-url="`${page?.url!}/closed-fireplace-with-fan`"
@@ -84,7 +84,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('closedFireplaceWithFan', index)"
 		@duplicate="(index: number) => handleDuplicate('closedFireplaceWithFan', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="openGasFlueBalancer"
 		title="Open gas flue balancer"
 		:form-url="`${page?.url!}/open-gas-flue-balancer`"
@@ -92,7 +92,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('openGasFlueBalancer', index)"
 		@duplicate="(index: number) => handleDuplicate('openGasFlueBalancer', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="openGasKitchenStove"
 		title="Open gas kitchen stove"
 		:form-url="`${page?.url!}/open-gas-kitchen-stove`"
@@ -100,7 +100,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('openGasKitchenStove', index)"
 		@duplicate="(index: number) => handleDuplicate('openGasKitchenStove', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="openGasFire"
 		title="Open gas fire"
 		:form-url="`${page?.url!}/open-gas-fire`"
@@ -108,7 +108,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('openGasFire', index)"
 		@duplicate="(index: number) => handleDuplicate('openGasFire', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="closedFire"
 		title="Closed fire"
 		:form-url="`${page?.url!}/closed-fire`"
@@ -123,6 +123,6 @@ function checkIsComplete(){
 		>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>
 </template>

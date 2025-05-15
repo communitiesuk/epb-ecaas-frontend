@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import formatData from '~/utils/format-data';
 
-export type GovStoredListOption = {
+export type StoredListOption = {
 	id: string;
 	name: string;
 };

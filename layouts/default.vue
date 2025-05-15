@@ -3,6 +3,6 @@
 		<slot />
 	</div>
 	<div class="govuk-grid-column-one-third">
-		<GovSideNavBar />    
+		<SideNavBar />    
 	</div>
 </template>

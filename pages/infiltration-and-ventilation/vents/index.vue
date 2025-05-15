@@ -52,7 +52,7 @@ function handleComplete() {
 	<p v-if="store.infiltrationAndVentilation.vents.data.length === 0" class="govuk-hint">
 		Add vents below, after adding one you will have options to add others, edit and duplicate.
 	</p>
-	<GovCustomList
+	<CustomList
 		id="vents"
 		title="Vents"
 		:form-url="page?.url!"
@@ -64,6 +64,6 @@ function handleComplete() {
 		<GovButton href="/infiltration-and-ventilation" secondary>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="store.infiltrationAndVentilation.vents?.complete ?? false" @completed="handleComplete"/>
+		<CompleteElement :is-complete="store.infiltrationAndVentilation.vents?.complete ?? false" @completed="handleComplete"/>
 	</div>
 </template>

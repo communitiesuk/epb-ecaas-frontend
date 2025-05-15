@@ -54,7 +54,7 @@ function handleComplete() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="wwhrs"
 		title="WWHRS"
 		:form-url="page?.url!"
@@ -66,6 +66,6 @@ function handleComplete() {
 		<GovButton href="/domestic-hot-water" secondary>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="store.domesticHotWater.wwhrs?.complete ?? false" @completed="handleComplete"/>
+		<CompleteElement :is-complete="store.domesticHotWater.wwhrs?.complete ?? false" @completed="handleComplete"/>
 	</div>
 </template>

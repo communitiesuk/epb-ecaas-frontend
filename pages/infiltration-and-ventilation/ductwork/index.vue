@@ -62,7 +62,7 @@ function checkIsComplete(){
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="ductwork"
 		title="Ductwork"
 		:form-url="page?.url!"
@@ -74,7 +74,7 @@ function checkIsComplete(){
 		<GovButton href="/infiltration-and-ventilation" secondary>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>
 
 </template>

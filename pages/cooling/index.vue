@@ -54,7 +54,7 @@ function handleComplete() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="airConditioning"
 		title="Air conditioning"
 		:form-url="`${page?.url!}/air-conditioning`"
@@ -66,6 +66,6 @@ function handleComplete() {
 		<GovButton href="/" secondary>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="store.cooling.airConditioning?.complete ?? false" @completed="handleComplete"/>
+		<CompleteElement :is-complete="store.cooling.airConditioning?.complete ?? false" @completed="handleComplete"/>
 	</div>
 </template>

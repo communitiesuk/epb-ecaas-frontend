@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { GovTaskListItemProps } from '~/components/GovTaskList.vue';
+import type { GovTaskListItemProps } from '~/components/gov/TaskList.vue';
 
 const title = 'Infiltration and ventilation';
 const page = usePage();

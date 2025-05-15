@@ -58,14 +58,14 @@ function handleComplete() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="shading" title="Shading" :form-url="page?.url!"
 		:items="store.dwellingDetails.shading.data.map(x => x.name)" @remove="handleRemove" @duplicate="handleDuplicate" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-details" secondary>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="store.dwellingDetails.shading?.complete ?? false" @completed="handleComplete"/>
+		<CompleteElement :is-complete="store.dwellingDetails.shading?.complete ?? false" @completed="handleComplete"/>
 
 	</div>
 </template>

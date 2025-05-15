@@ -47,7 +47,7 @@ function handleComplete() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="windows"
 		title="Window"
 		:form-url="page?.url!"
@@ -59,6 +59,6 @@ function handleComplete() {
 		<GovButton href="/living-space" secondary>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="store.livingSpaceFabric.livingSpaceWindows?.complete ?? false" @completed="handleComplete"/>
+		<CompleteElement :is-complete="store.livingSpaceFabric.livingSpaceWindows?.complete ?? false" @completed="handleComplete"/>
 	</div>
 </template>

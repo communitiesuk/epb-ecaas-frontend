@@ -64,7 +64,7 @@ function checkIsComplete(){
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<GovCustomList
+	<CustomList
 		id="linearThermalBridges"
 		title="Linear thermal bridges"
 		:form-url="`${page?.url!}/linear`"
@@ -72,7 +72,7 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('livingSpaceLinearThermalBridges', index)"
 		@duplicate="(index: number) => handleDuplicate('livingSpaceLinearThermalBridges', index)"
 	/>
-	<GovCustomList
+	<CustomList
 		id="pointThermalBridges"
 		title="Point thermal bridges"
 		:form-url="`${page?.url!}/point`"
@@ -87,6 +87,6 @@ function checkIsComplete(){
 		>
 			Return to overview
 		</GovButton>
-		<GovCompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>
 </template>

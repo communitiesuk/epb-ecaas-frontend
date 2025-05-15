@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GovServiceNavigation from './components/GovServiceNavigation.vue';
+import GovServiceNavigation from './components/gov/ServiceNavigation.vue';
 
 // flag for rebrand of GOV.UK, going live on June 25th 2025
 const usesRebrand = false;

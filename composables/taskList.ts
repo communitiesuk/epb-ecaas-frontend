@@ -1,4 +1,4 @@
-import type { GovTaskListItemProps } from "~/components/GovTaskList.vue";
+import type { GovTaskListItemProps } from "~/components/gov/TaskList.vue";
 import pagesData from "~/data/pages/pages";
 import { PageType, type Page } from "~/data/pages/pages.types";
 
