@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FormKitFrameworkContext } from '@formkit/core';
 import { showErrorState, getErrorMessage } from '#imports';
 
 export type RadioOption = {
@@ -6,14 +7,9 @@ export type RadioOption = {
 	hint?: string;
 };
 
-const props = defineProps({
-	context: {
-		type: Object,
-		default() {
-			return {};
-		}
-	}
-});
+const props = defineProps<{
+	context: FormKitFrameworkContext
+}>();
 	
 const {
 	id,

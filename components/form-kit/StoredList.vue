@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FormKitFrameworkContext } from '@formkit/core';
 import formatData from '~/utils/format-data';
 
 export type StoredListOption = {
@@ -6,14 +7,9 @@ export type StoredListOption = {
 	name: string;
 };
 
-const props = defineProps({
-	context: {
-		type: Object,
-		default() {
-			return {};
-		}
-	}
-});
+const props = defineProps<{
+	context: FormKitFrameworkContext
+}>();
 
 const {
 	id,

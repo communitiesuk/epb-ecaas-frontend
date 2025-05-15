@@ -1,12 +1,10 @@
 <script setup lang="ts">
-const props = defineProps({
-	context: {
-		type: Object,
-		default() {
-			return {};
-		},
-	},
-});
+import type { FormKitFrameworkContext } from '@formkit/core';
+import { showErrorState, getErrorMessage } from '#imports';
+
+const props = defineProps<{
+	context: FormKitFrameworkContext
+}>();
 
 const {
 	id,

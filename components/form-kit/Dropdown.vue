@@ -1,12 +1,10 @@
-<script setup>
-const props = defineProps({
-	context: {
-		type: Object,
-		default() {
-			return {};
-		}
-	}
-});
+<script setup lang="ts">
+import type { FormKitFrameworkContext } from '@formkit/core';
+import { showErrorState, getErrorMessage } from '#imports';
+
+const props = defineProps<{
+	context: FormKitFrameworkContext
+}>();
 
 const {
 	id,
@@ -18,8 +16,9 @@ const {
 
 const { mounted } = useMounted();
 
-function handleInput(e) {
-	props.context.node.input(e.target.value);
+function handleInput(e: Event) {
+	const target = e.target as HTMLSelectElement;
+	props.context.node.input(target.value);
 }
 </script>
 

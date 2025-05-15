@@ -1,12 +1,9 @@
-<script setup>
-const props = defineProps({
-	context: {
-		type: Object,
-		default() {
-			return {};
-		}
-	}
-});
+<script setup lang="ts">
+import type { FormKitFrameworkContext } from '@formkit/core';
+
+const props = defineProps<{
+	context: FormKitFrameworkContext
+}>();
 
 const { label } = props.context;
 </script>
