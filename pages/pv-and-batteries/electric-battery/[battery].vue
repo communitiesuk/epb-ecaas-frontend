@@ -107,11 +107,7 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 		/>
 		<FormKit
 			id="gridChargingPossible"
-			type="govRadios"
-			:options="{
-				yes: 'Yes',
-				no: 'No',
-			}"
+			type="govBoolean"
 			label="Charging from the grid"
 			name="gridChargingPossible"
 			validation="required"

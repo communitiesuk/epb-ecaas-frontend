@@ -58,7 +58,7 @@ const externalFactorsSummary: SummarySection = {
 		"Altitude": externalFactors.altitude,
 		"Type of exposure": externalFactors.typeOfExposure,
 		"Terrain type": externalFactors.terrainType,
-		"Noise nuisance": externalFactors.noiseNuisance
+		"Noise nuisance": displayBoolean(externalFactors.noiseNuisance)
 	},
 	editUrl: getUrl('externalFactors')!
 };

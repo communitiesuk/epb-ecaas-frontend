@@ -44,7 +44,7 @@ const ventData: VentData = {
 
 const ventilationData: VentilationData = {
 	dwellingElevationalLevelAtBase: 1,
-	crossVentFactor: 'yes',
+	crossVentFactor: true,
 	maxRequiredAirChangeRate: 1
 };
 

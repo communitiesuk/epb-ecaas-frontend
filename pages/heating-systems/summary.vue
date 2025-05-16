@@ -9,7 +9,7 @@ const energySupplySummary: SummarySection = {
 	label: "Energy supply",
 	data: {
 		"Fuel type": store.heatingSystems.energySupply.data.fuelType,
-		"Exported": store.heatingSystems.energySupply.data.exported,
+		"Exported": displayBoolean(store.heatingSystems.energySupply.data.exported),
 		"CO2 per kWh": store.heatingSystems.energySupply.data.co2PerKwh,
 		"CO2 per kWh (including out of scope)": store.heatingSystems.energySupply.data.co2PerKwhIncludingOutOfScope,
 		"kWh per kWh delivered": store.heatingSystems.energySupply.data.kwhPerKwhDelivered,

@@ -46,7 +46,7 @@ export interface ExternalFactorsData {
 	altitude?: number;
 	typeOfExposure?: string;
 	terrainType?: string;
-	noiseNuisance?: string;
+	noiseNuisance?: boolean;
 }
 
 export interface LivingSpaceFabric {
@@ -528,7 +528,7 @@ export interface VentilationData {
 	dwellingHeight?: number;
 	dwellingEnvelopeArea?: number;
 	dwellingElevationalLevelAtBase?: number;
-	crossVentFactor?: string;
+	crossVentFactor?: boolean;
 	maxRequiredAirChangeRate?: number;
 }
 
@@ -581,7 +581,7 @@ export interface EnergySupplyData {
 	co2PerKwh?: number;
 	co2PerKwhIncludingOutOfScope?: number;
 	kwhPerKwhDelivered?: number;
-	exported?: string;
+	exported?: boolean;
 }
 
 export interface HeatEmitting {
@@ -660,7 +660,7 @@ export type ElectricBatteryData = {
 	batteryAge: number;
 	chargeEfficiency: number;
 	location: string;
-	gridChargingPossible: string; // should be able to define this as a boolean
+	gridChargingPossible: boolean;
 	maximumChargeRate: number;
 	minimumChargeRate: number;
 	maximumDischargeRate: number;

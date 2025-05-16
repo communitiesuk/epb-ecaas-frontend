@@ -21,7 +21,7 @@ describe('Ventilation', () => {
 		dwellingHeight: 1,
 		dwellingEnvelopeArea: 5,
 		dwellingElevationalLevelAtBase: 1,
-		crossVentFactor: 'yes',
+		crossVentFactor: true,
 		maxRequiredAirChangeRate: 2
 	};
 

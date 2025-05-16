@@ -50,7 +50,7 @@ const state: DwellingDetailSummary = {
 		altitude: 3,
 		typeOfExposure: 'Shielded',
 		terrainType: 'Suburban',
-		noiseNuisance: 'No'
+		noiseNuisance: false
 	}
 };
 

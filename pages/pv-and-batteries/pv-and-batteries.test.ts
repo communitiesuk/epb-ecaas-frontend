@@ -55,7 +55,7 @@ describe('pv and batteries', () => {
 		batteryAge: 12,
 		chargeEfficiency: 0.9,
 		location: 'inside',
-		gridChargingPossible: 'no',
+		gridChargingPossible: false,
 		maximumChargeRate: 30,
 		minimumChargeRate: 20,
 		maximumDischargeRate: 35

@@ -71,11 +71,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="crossVentFactor"
-			type="govRadios"
-			:options="{
-				yes: 'Yes',
-				no: 'No'
-			}"
+			type="govBoolean"
 			label="Cross vent factor"
 			help="A flag to indicate if cross ventilation is possible or not"
 			name="crossVentFactor"

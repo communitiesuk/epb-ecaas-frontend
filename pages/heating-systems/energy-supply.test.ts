@@ -23,7 +23,7 @@ describe('Energy supply', () => {
 
 	const energySupplyWithElectricity: EnergySupplyData = {
 		fuelType: ['electricity'],
-		exported: 'yes'
+		exported: true
 	};
 
 	const energySupplyWithCustom: EnergySupplyData = {

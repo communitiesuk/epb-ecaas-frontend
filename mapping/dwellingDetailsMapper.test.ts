@@ -44,7 +44,7 @@ describe('dwelling details mapper', () => {
 			altitude: 30,
 			typeOfExposure: 'Normal',
 			terrainType: 'OpenField',
-			noiseNuisance: 'yes'
+			noiseNuisance: true
 		};
 
 		store.$patch({

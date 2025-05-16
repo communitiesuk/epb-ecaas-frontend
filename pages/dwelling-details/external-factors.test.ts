@@ -13,7 +13,7 @@ const state: ExternalFactorsData = {
 	altitude: 3,
 	typeOfExposure: 'Shielded',
 	terrainType: 'Suburban',
-	noiseNuisance: 'no'
+	noiseNuisance: false
 };
 
 describe('External factors', () => {

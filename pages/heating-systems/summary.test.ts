@@ -44,7 +44,7 @@ describe("Heating systems summary page", () => {
 
 			const energySupplyData: EnergySupplyData = {
 				fuelType: ["wood", "electricity"],
-				exported: "yes",
+				exported: true,
 				co2PerKwh: 1,
 				co2PerKwhIncludingOutOfScope: 2,
 				kwhPerKwhDelivered: 3,

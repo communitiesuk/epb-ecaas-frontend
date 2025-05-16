@@ -38,7 +38,7 @@ function mapExternalFactorsData(state: EcaasState): Partial<StripDefs<SchemaFhsI
 			altitude: externalFactors.data.altitude!,
 			shield_class: externalFactors.data.typeOfExposure as SchemaVentilationShieldClass,
 			terrain_class: externalFactors.data.terrainType as SchemaTerrainClass,
-			noise_nuisance: externalFactors.data.noiseNuisance ? externalFactors.data.noiseNuisance === 'yes' : undefined
+			noise_nuisance: externalFactors.data.noiseNuisance
 		}
 	} as Partial<StripDefs<SchemaFhsInputSchema>>;
 }

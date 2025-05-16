@@ -89,11 +89,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			v-if="model.fuelType?.includes('electricity')"
 			id="exported"
-			type="govRadios"
-			:options="{
-				yes: 'Yes',
-				no: 'No'
-			}"
+			type="govBoolean"
 			label="Can the fuel be exported?"
 			name="exported"
 			validation="required"

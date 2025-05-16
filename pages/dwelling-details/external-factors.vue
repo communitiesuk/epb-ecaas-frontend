@@ -72,11 +72,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="noiseNuisance"
-			type="govRadios"
-			:options="{
-				yes: 'Yes',
-				no: 'No',
-			}"
+			type="govBoolean"
 			label="Noise nuisance"
 			name="noiseNuisance"
 			validation="required"
