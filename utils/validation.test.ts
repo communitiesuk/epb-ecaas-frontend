@@ -1,3 +1,4 @@
+import type { FormKitFrameworkContext } from '@formkit/core';
 
 describe('Show error state', () => {
 	it('returns true when state is invalid', () => {
@@ -11,7 +12,7 @@ describe('Show error state', () => {
 			state: {
 				invalid: true
 			}
-		};
+		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
 
@@ -33,7 +34,7 @@ describe('Show error state', () => {
 			state: {
 				invalid: true
 			}
-		};
+		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
 
@@ -51,7 +52,7 @@ describe('Show error state', () => {
 			state: {
 				invalid: true
 			}
-		};
+		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
 
@@ -64,7 +65,7 @@ describe('Show error state', () => {
 			state: {
 				invalid: true
 			}
-		};
+		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
 
@@ -82,7 +83,7 @@ describe('Show error state', () => {
 			state: {
 				invalid: true
 			}
-		};
+		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
 
@@ -95,7 +96,7 @@ describe('Show error state', () => {
 			state: {
 				invalid: false
 			}
-		};
+		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
 
@@ -112,7 +113,7 @@ describe('Get error message', () => {
 					visible: true
 				}
 			}
-		};
+		} as unknown as FormKitFrameworkContext;
 
 		const result = getErrorMessage(context);
 
@@ -122,7 +123,7 @@ describe('Get error message', () => {
 	it('returns undefined when context has no error messages', () => {
 		const context = {
 			messages: {}
-		};
+		} as unknown as FormKitFrameworkContext;
 
 		const result = getErrorMessage(context);
 
@@ -141,7 +142,7 @@ describe('Get error message', () => {
 					visible: true
 				}
 			}
-		};
+		} as unknown as FormKitFrameworkContext;
 
 		const result = getErrorMessage(context);
 
