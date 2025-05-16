@@ -29,8 +29,14 @@ function handleInput(e: Event) {
 	const target = e.target as HTMLInputElement;
 
 	props.context.node.input(target.value === yesValue);
-	
 }
+
+const currentValue = computed(() => {
+	if (props.context._value === undefined) {
+		return undefined;
+	}
+	return props.context._value ? yesValue : noValue;
+});
 
 </script>
 
@@ -46,6 +52,6 @@ function handleInput(e: Event) {
 		:invalid="props.context.state.invalid"
 		:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 		:handle-input="handleInput"
-		:current-value="props.context._value ? yesValue : noValue"
+		:current-value="currentValue"
 	/>
 </template>
