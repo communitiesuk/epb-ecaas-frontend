@@ -60,7 +60,7 @@ function handleComplete() {
 	</h1>
 	<CustomList
 		id="shading" title="Shading" :form-url="page?.url!"
-		:items="store.dwellingDetails.shading.data.map(x => x.name)" @remove="handleRemove" @duplicate="handleDuplicate" />
+		:items="store.dwellingDetails.shading?.data?.map(x => x.name)" @remove="handleRemove" @duplicate="handleDuplicate" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-details" secondary>
 			Return to overview
