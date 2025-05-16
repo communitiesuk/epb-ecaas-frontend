@@ -13,8 +13,8 @@ const state: GeneralSpecificationsData = {
 	typeOfDwelling: 'house',
 	storeysInDwelling: 2,
 	numOfBedrooms: 3,
-	partGCompliance: "yes",
-	coolingRequired: "no",
+	partGCompliance: true,
+	coolingRequired: false,
 };
 
 const stateWithFlat: GeneralSpecificationsData = {
@@ -22,8 +22,8 @@ const stateWithFlat: GeneralSpecificationsData = {
 	storeysInDwelling: 7,
 	storeyOfFlat: 3,
 	numOfBedrooms: 3,
-	partGCompliance: "yes",
-	coolingRequired: "no",
+	partGCompliance: true,
+	coolingRequired: false,
 };
 
 describe('General specifications', () => {

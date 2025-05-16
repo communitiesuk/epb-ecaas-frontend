@@ -25,8 +25,8 @@ export interface GeneralSpecificationsData {
 	storeysInDwelling?: number;
 	storeyOfFlat?: number;
 	numOfBedrooms?: number;
-	partGCompliance?: string;
-	coolingRequired?: string;
+	partGCompliance?: boolean;
+	coolingRequired?: boolean;
 }
 
 export interface AppliancesData {

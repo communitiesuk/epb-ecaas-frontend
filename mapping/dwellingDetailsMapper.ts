@@ -25,11 +25,8 @@ function mapGeneralSpecificationsData(state: EcaasState): Partial<StripDefs<Sche
 			storey_of_dwelling: generalSpecifications.data.storeyOfFlat
 		},
 		NumberOfBedrooms: generalSpecifications.data.numOfBedrooms,
-		PartGcompliance: generalSpecifications.data.partGCompliance ?
-			generalSpecifications.data.partGCompliance === 'yes' : undefined,
-
-		PartO_active_cooling_required: generalSpecifications.data.coolingRequired ?
-			generalSpecifications.data.coolingRequired === 'yes' : undefined
+		PartGcompliance: generalSpecifications.data.partGCompliance,
+		PartO_active_cooling_required: generalSpecifications.data.coolingRequired
 	};
 }
 

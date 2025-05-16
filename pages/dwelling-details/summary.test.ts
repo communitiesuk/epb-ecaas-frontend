@@ -21,8 +21,8 @@ const state: DwellingDetailSummary = {
 		typeOfDwelling: 'house',
 		storeysInDwelling: 2,
 		numOfBedrooms: 3,
-		partGCompliance: "yes",
-		coolingRequired: "no",
+		partGCompliance: true,
+		coolingRequired: false,
 	},
 	appliances: {
 		appliances: [
@@ -87,8 +87,8 @@ describe('Dwelling details summary', () => {
 			"Type of dwelling": "House",
 			"Number of storeys in building": "2",
 			"Number of bedrooms": "3",
-			"Part G compliance": "Yes",
-			"Cooling required": "No"
+			"Part G compliance": "true",
+			"Cooling required": "false"
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

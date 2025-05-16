@@ -14,8 +14,8 @@ describe('dwelling details mapper', () => {
 			storeysInDwelling: 3,
 			storeyOfFlat: 1,
 			numOfBedrooms: 2,
-			partGCompliance: 'yes',
-			coolingRequired: 'no'
+			partGCompliance: true,
+			coolingRequired: false
 		};
 
 		store.$patch({

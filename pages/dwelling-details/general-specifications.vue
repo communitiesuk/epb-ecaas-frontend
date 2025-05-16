@@ -75,11 +75,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="partGCompliance"
-			type="govRadios"
-			:options="{
-				yes: 'Yes',
-				no: 'No',
-			}"
+			type="govBoolean"
 			label="Part G compliance"
 			name="partGCompliance"
 			validation="required"
@@ -87,11 +83,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="coolingRequired"
-			type="govRadios"
-			:options="{
-				yes: 'Yes',
-				no: 'No',
-			}"
+			type="govBoolean"
 			label="Cooling required"
 			name="coolingRequired"
 			validation="required"
