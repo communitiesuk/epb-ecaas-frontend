@@ -62,5 +62,8 @@ export default defineNuxtConfig({
 	},
 	nitro: process.env.BUILD_FOR_AWS_LAMBDA ? {
 		preset: 'aws-lambda',
-	} : undefined
+	} : undefined,
+	experimental: {
+		watcher: "parcel"
+	}
 });
