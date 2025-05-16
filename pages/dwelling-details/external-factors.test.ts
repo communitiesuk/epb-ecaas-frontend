@@ -11,8 +11,8 @@ mockNuxtImport('navigateTo', () => {
 
 const state: ExternalFactorsData = {
 	altitude: 3,
-	typeOfExposure: 'shielded',
-	terrainType: 'suburban',
+	typeOfExposure: 'Shielded',
+	terrainType: 'Suburban',
 	noiseNuisance: 'no'
 };
 
@@ -29,8 +29,8 @@ describe('External factors', () => {
 		await renderSuspended(ExternalFactors);
 
 		await user.type(screen.getByTestId('altitude'), '3');
-		await user.click(screen.getByTestId('typeOfExposure_shielded'));
-		await user.click(screen.getByTestId('terrainType_suburban'));
+		await user.click(screen.getByTestId('typeOfExposure_Shielded'));
+		await user.click(screen.getByTestId('terrainType_Suburban'));
 		await user.click(screen.getByTestId('noiseNuisance_no'));
 		await user.click(screen.getByRole('button'));
 
@@ -53,8 +53,8 @@ describe('External factors', () => {
 		await renderSuspended(ExternalFactors);
 		
 		expect((await screen.findByTestId('altitude') as HTMLInputElement).value).toBe('3');
-		expect((await screen.findByTestId('typeOfExposure_shielded')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('terrainType_suburban')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('typeOfExposure_Shielded')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('terrainType_Suburban')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('noiseNuisance_no')).hasAttribute('checked')).toBe(true);
 	});
 		

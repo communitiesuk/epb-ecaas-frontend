@@ -11,16 +11,16 @@ mockNuxtImport('navigateTo', () => {
 
 const state: AppliancesData = {
 	appliances: [
-		'fridge',
-		'freezer',
-		'fridgeFreezer',
-		'dishwasher',
-		'oven',
-		'washingMachine',
-		'tumbleDryer',
-		'hobs',
-		'kettle',
-		'microwave'
+		'Fridge',
+		'Freezer',
+		'Fridge-Freezer',
+		'Dishwasher',
+		'Oven',
+		'Clothes_washing',
+		'Clothes_drying',
+		'Hobs',
+		'Kettle',
+		'Microwave'
 	]
 };
 
@@ -36,16 +36,16 @@ describe('Appliances', () => {
 
 		await renderSuspended(Appliances);
 
-		await user.click(screen.getByTestId('appliances_fridge'));
-		await user.click(screen.getByTestId('appliances_freezer'));
-		await user.click(screen.getByTestId('appliances_fridgeFreezer'));
-		await user.click(screen.getByTestId('appliances_dishwasher'));
-		await user.click(screen.getByTestId('appliances_oven'));
-		await user.click(screen.getByTestId('appliances_washingMachine'));
-		await user.click(screen.getByTestId('appliances_tumbleDryer'));
-		await user.click(screen.getByTestId('appliances_hobs'));
-		await user.click(screen.getByTestId('appliances_kettle'));
-		await user.click(screen.getByTestId('appliances_microwave'));
+		await user.click(screen.getByTestId('appliances_Fridge'));
+		await user.click(screen.getByTestId('appliances_Freezer'));
+		await user.click(screen.getByTestId('appliances_Fridge-Freezer'));
+		await user.click(screen.getByTestId('appliances_Dishwasher'));
+		await user.click(screen.getByTestId('appliances_Oven'));
+		await user.click(screen.getByTestId('appliances_Clothes_washing'));
+		await user.click(screen.getByTestId('appliances_Clothes_drying'));
+		await user.click(screen.getByTestId('appliances_Hobs'));
+		await user.click(screen.getByTestId('appliances_Kettle'));
+		await user.click(screen.getByTestId('appliances_Microwave'));
 		await user.click(screen.getByRole('button'));
 
 		const { data, complete } = store.dwellingDetails.appliances;
@@ -66,16 +66,16 @@ describe('Appliances', () => {
 
 		await renderSuspended(Appliances);
 
-		expect((await screen.findByTestId('appliances_fridge')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('appliances_freezer')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('appliances_fridgeFreezer')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('appliances_dishwasher')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('appliances_oven')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('appliances_washingMachine')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('appliances_tumbleDryer')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('appliances_hobs')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('appliances_kettle')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('appliances_microwave')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('appliances_Fridge')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('appliances_Freezer')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('appliances_Fridge-Freezer')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('appliances_Dishwasher')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('appliances_Oven')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('appliances_Clothes_washing')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('appliances_Clothes_drying')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('appliances_Hobs')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('appliances_Kettle')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('appliances_Microwave')).hasAttribute('checked')).toBe(true);
 	});
 
 	it('required error messages are displayed when empty form is submitted', async () => {

@@ -47,9 +47,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="typeOfExposure"
 			type="govRadios"
 			:options="{
-				open: 'Open',
-				normal: 'Normal',
-				shielded: 'Shielded'
+				Open: 'Open',
+				Normal: 'Normal',
+				Shielded: 'Shielded'
 			}"
 			label="Type of exposure"
 			name="typeOfExposure"
@@ -60,10 +60,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="terrainType"
 			type="govRadios"
 			:options="{
-				openWater: 'Open water',
-				openField: 'Open field',
-				suburban: 'Suburban',
-				urban: 'Urban'
+				OpenWater: 'Open water',
+				OpenField: 'Open field',
+				Suburban: 'Suburban',
+				Urban: 'Urban'
 			}"
 			label="Terrain Type"
 			name="terrainType"

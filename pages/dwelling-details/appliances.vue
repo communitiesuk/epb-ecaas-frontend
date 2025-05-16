@@ -36,16 +36,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="appliances"
 			help="Select all that are present."
 			:options="{
-				fridge: 'Fridge',
-				freezer: 'Freezer',
-				fridgeFreezer: 'Fridge freezer',
-				dishwasher: 'Dishwasher',
-				oven: 'Oven',
-				washingMachine: 'Washing machine',
-				tumbleDryer: 'Tumble dryer',
-				hobs: 'Hobs',
-				kettle: 'Kettle',
-				microwave: 'Microwave'
+				Fridge: 'Fridge',
+				Freezer: 'Freezer',
+				'Fridge-Freezer': 'Fridge freezer',
+				Dishwasher: 'Dishwasher',
+				Oven: 'Oven',
+				'Clothes_washing': 'Washing machine',
+				'Clothes_drying': 'Tumble dryer',
+				Hobs: 'Hobs',
+				Kettle: 'Kettle',
+				Microwave: 'Microwave'
 			}"
 			validation="required"
 		/>
