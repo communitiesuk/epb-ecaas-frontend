@@ -9,6 +9,7 @@ import FormKitInputInt from './components/form-kit/InputInt.vue';
 import FormKitInputWithSuffix from './components/form-kit/InputWithSuffix.vue';
 import FormKitCheckboxes from './components/form-kit/Checkboxes.vue';
 import FormKitInputText from './components/form-kit/InputText.vue';
+import { FormKitBoolean } from '#components';
 
 // Enable TypeScript support for custom inputs
 declare module '@formkit/inputs' {
@@ -46,6 +47,11 @@ declare module '@formkit/inputs' {
 		'govStoredList': {
 			type: 'govStoredList',
 			options: StoredListOption[]
+		},
+		'govBoolean': {
+			type: 'govBoolean',
+			trueLabel?: string,
+			falseLabel?: string
 		}
 	}
 }
@@ -89,8 +95,11 @@ export default defineFormKitConfig(() => {
 			govStoredList: {
 				type: "input",
 				component: FormKitStoredList
+			},
+			govBoolean: {
+				type: "input",
+				component: FormKitBoolean
 			}
-
 		}
 	};
 });
