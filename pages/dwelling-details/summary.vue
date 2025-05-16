@@ -20,8 +20,8 @@ const generalSpecificationsSummary: SummarySection = {
 		"Number of storeys in building": generalSpecificationsData.storeysInDwelling,
 		"Storey of flat": generalSpecificationsData.storeyOfFlat,
 		"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
-		"Part G compliance": generalSpecificationsData.partGCompliance,
-		"Cooling required": generalSpecificationsData.coolingRequired
+		"Part G compliance": generalSpecificationsData.partGCompliance ? 'Yes' : 'No',
+		"Cooling required": generalSpecificationsData.coolingRequired ? 'Yes' : 'No',
 	},
 	editUrl: getUrl('generalSpecifications')!
 };
