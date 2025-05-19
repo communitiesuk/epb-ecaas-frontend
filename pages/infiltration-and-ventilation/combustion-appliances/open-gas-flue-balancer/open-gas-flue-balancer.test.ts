@@ -1,5 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import OpenGasFlueBalancer from './[combustion].vue';
+import { CombustionFuelType } from "~/schema/api-schema.types";
 import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import {screen} from "@testing-library/vue";
 
@@ -16,7 +17,7 @@ describe('open gas flue balancer', () => {
 		name: 'Open gas flue balancer 1',
 		airSupplyToAppliance: 'outside',
 		exhaustMethodFromAppliance: 'intoRoom',
-		typeOfFuel: 'gas',
+		typeOfFuel: CombustionFuelType.gas,
 	};
 
 	afterEach(() => {

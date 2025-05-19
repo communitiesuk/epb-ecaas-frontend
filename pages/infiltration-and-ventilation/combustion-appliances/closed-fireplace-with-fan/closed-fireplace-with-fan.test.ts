@@ -2,6 +2,7 @@ import userEvent from "@testing-library/user-event";
 import ClosedFireplaceWithFan from './[combustion].vue';
 import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import {screen} from "@testing-library/vue";
+import { CombustionFuelType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -16,7 +17,7 @@ describe('closed fireplace with fan', () => {
 		name: 'Closed fireplace',
 		airSupplyToAppliance: 'roomAir',
 		exhaustMethodFromAppliance: 'intoSeparateDuct',
-		typeOfFuel: 'wood',
+		typeOfFuel: CombustionFuelType.wood,
 	};
 
 	afterEach(() => {

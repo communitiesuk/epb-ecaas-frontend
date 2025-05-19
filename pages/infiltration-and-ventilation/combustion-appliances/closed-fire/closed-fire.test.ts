@@ -2,6 +2,7 @@ import userEvent from "@testing-library/user-event";
 import ClosedFire from './[combustion].vue';
 import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import {screen} from "@testing-library/vue";
+import { CombustionFuelType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -16,7 +17,7 @@ describe('closed fire', () => {
 		name: 'Closed fire 1',
 		airSupplyToAppliance: 'outside',
 		exhaustMethodFromAppliance: 'intoMechanicalVent',
-		typeOfFuel: 'coal',
+		typeOfFuel: CombustionFuelType.coal,
 	};
 
 	afterEach(() => {
