@@ -1,8 +1,16 @@
 <script setup lang="ts">
+import type { CombustionAirSupplySituation } from '~/schema/api-schema.types';
+
 defineProps<{
 	id: string,
 	name: string;
 }>();
+
+const options: EnumRecord<CombustionAirSupplySituation, SnakeToSentenceCase<CombustionAirSupplySituation>> = {
+	room_air: 'Room air',
+	outside: 'Outside'
+};
+
 </script>
 
 <template>
@@ -12,6 +20,6 @@ defineProps<{
 		label="Air supply to appliance"
 		:name="name"
 		validation="required"
-		:options="{ roomAir: 'Room air', outside: 'Outside' }"
+		:options="options"
 	/>
 </template>

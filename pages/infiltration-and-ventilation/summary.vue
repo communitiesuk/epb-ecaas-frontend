@@ -102,7 +102,7 @@ function getCombustionApplianceData(type: string, data: CombustionApplianceData[
 		return {
 			"Type": type,
 			"Name": x.name,
-			"Air supply to appliance": x.airSupplyToAppliance,
+			"Air supply to appliance": sentenceCase(x.airSupplyToAppliance),
 			"Exhaust method from appliance": x.exhaustMethodFromAppliance,
 			"Type of fuel": x.typeOfFuel
 		};

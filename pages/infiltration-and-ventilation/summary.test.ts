@@ -3,7 +3,7 @@ import { screen } from '@testing-library/vue';
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { CombustionFuelType } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionFuelType } from "~/schema/api-schema.types";
 
 
 vi.mock('uuid');
@@ -56,42 +56,42 @@ const airPermeabilityData: AirPermeabilityData = {
 
 const openFireplaceData: CombustionApplianceData = {
 	name: 'Open fireplace 1',
-	airSupplyToAppliance: 'roomAir',
+	airSupplyToAppliance: CombustionAirSupplySituation.room_air,
 	exhaustMethodFromAppliance: 'intoSeparateDuct',
 	typeOfFuel: CombustionFuelType.coal
 };
 
 const closedFireplaceWithFanData: CombustionApplianceData = {
 	name: 'Closed fireplace',
-	airSupplyToAppliance: 'roomAir',
+	airSupplyToAppliance: CombustionAirSupplySituation.room_air,
 	exhaustMethodFromAppliance: 'intoSeparateDuct',
 	typeOfFuel: CombustionFuelType.wood
 };
 
 const openGasFlueBalancerData: CombustionApplianceData = {
 	name: 'Open gas flue balancer 1',
-	airSupplyToAppliance: 'outside',
+	airSupplyToAppliance: CombustionAirSupplySituation.outside,
 	exhaustMethodFromAppliance: 'intoRoom',
 	typeOfFuel: CombustionFuelType.gas
 };
 
 const openGasKitchenStoveData: CombustionApplianceData = {
 	name: 'Open gas kitchen stove 1',
-	airSupplyToAppliance: 'outside',
+	airSupplyToAppliance: CombustionAirSupplySituation.outside,
 	exhaustMethodFromAppliance: 'intoRoom',
 	typeOfFuel: CombustionFuelType.oil,
 };
 
 const openGasFireData: CombustionApplianceData = {
 	name: 'Open gas fire 1',
-	airSupplyToAppliance: 'outside',
+	airSupplyToAppliance: CombustionAirSupplySituation.outside,
 	exhaustMethodFromAppliance: 'intoMechanicalVent',
 	typeOfFuel: CombustionFuelType.oil
 };
 
 const closedFireData: CombustionApplianceData = {
 	name: 'Closed fire 1',
-	airSupplyToAppliance: 'outside',
+	airSupplyToAppliance: CombustionAirSupplySituation.outside,
 	exhaustMethodFromAppliance: 'intoMechanicalVent',
 	typeOfFuel: CombustionFuelType.coal
 };

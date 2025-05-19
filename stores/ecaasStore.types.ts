@@ -1,4 +1,4 @@
-import type { CombustionFuelType, MassDistributionClass } from "~/schema/api-schema.types";
+import type { CombustionAirSupplySituation, CombustionFuelType, MassDistributionClass } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -521,7 +521,7 @@ export interface CombustionAppliancesData {
 
 export type CombustionApplianceData = {
 	name: string;
-	airSupplyToAppliance: string;
+	airSupplyToAppliance: CombustionAirSupplySituation;
 	exhaustMethodFromAppliance: string;
 	typeOfFuel: CombustionFuelType;
 };

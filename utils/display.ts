@@ -28,3 +28,8 @@ export function displayMassDistributionClass(value: MassDistributionClass | unde
 }
 
 type MassDistributionClassDisplay = 'Internal' | 'External' | 'Divided' | 'Equally' | 'Inside';
+
+export function sentenceCase(value: string): string {
+	const replaced = value.replaceAll(/_/g, ' ');
+	return replaced.charAt(0).toUpperCase() + replaced.slice(1).toLowerCase();
+}

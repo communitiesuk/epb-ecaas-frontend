@@ -2,7 +2,7 @@ import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import {screen} from '@testing-library/vue';
 import OpenFireplace from './[combustion].vue';
 import userEvent from "@testing-library/user-event";
-import { CombustionFuelType } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionFuelType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -15,7 +15,7 @@ describe('open fireplace', () => {
 
 	const openFireplace: CombustionApplianceData = {
 		name: 'Open fireplace 1',
-		airSupplyToAppliance: 'roomAir',
+		airSupplyToAppliance: CombustionAirSupplySituation.room_air,
 		exhaustMethodFromAppliance: 'intoSeparateDuct',
 		typeOfFuel: CombustionFuelType.coal,
 	};
@@ -28,7 +28,7 @@ describe('open fireplace', () => {
 		await renderSuspended(OpenFireplace);
 
 		await user.type(screen.getByTestId('name'), 'Open fireplace 1');
-		await user.click(screen.getByTestId('airSupplyToAppliance_roomAir'));
+		await user.click(screen.getByTestId('airSupplyToAppliance_room_air'));
 		await user.click(screen.getByTestId('exhaustMethodFromAppliance_intoSeparateDuct'));
 		await user.click(screen.getByTestId('typeOfFuel_coal'));
 
@@ -59,7 +59,7 @@ describe('open fireplace', () => {
 		});
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Open fireplace 1');
-		expect((await screen.findByTestId('airSupplyToAppliance_roomAir')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('airSupplyToAppliance_room_air')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('exhaustMethodFromAppliance_intoSeparateDuct')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('typeOfFuel_coal')).hasAttribute('checked')).toBe(true);
 	});

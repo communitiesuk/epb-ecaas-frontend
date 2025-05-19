@@ -48,3 +48,20 @@ describe('Show MassDistributionClass in display', () => {
 		expect(result).toBe(undefined);
 	});
 });
+
+describe('Show string in sentence case', () => {
+	it('should return string in sentence case', () => {
+		const result = sentenceCase('hello_world');
+		expect(result).toBe('Hello world');
+	});
+
+	it('should return string in sentence case with multiple underscores and initial capital', () => {
+		const result = sentenceCase('Hello_world_test');
+		expect(result).toBe('Hello world test');
+	});
+
+	it('should return string in sentence case with no underscores', () => {
+		const result = sentenceCase('helloworld');
+		expect(result).toBe('Helloworld');
+	});
+});

@@ -2,7 +2,7 @@ import userEvent from "@testing-library/user-event";
 import OpenGasKitchenStove from './[combustion].vue';
 import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import {screen} from "@testing-library/vue";
-import { CombustionFuelType } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionFuelType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -15,7 +15,7 @@ describe('open gas kitchen stove', () => {
 
 	const openGasKitchenStove: CombustionApplianceData = {
 		name: 'Open gas kitchen stove 1',
-		airSupplyToAppliance: 'outside',
+		airSupplyToAppliance: CombustionAirSupplySituation.outside,
 		exhaustMethodFromAppliance: 'intoRoom',
 		typeOfFuel: CombustionFuelType.oil,
 	};
