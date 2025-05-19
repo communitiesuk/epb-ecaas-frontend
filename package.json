@@ -12,7 +12,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "schema-ts": "npx openapi-typescript https://docs.building-energy-calculator.communities.gov.uk/openapi.yaml -o schema/api-schema.types.ts --path-params-as-types --make-paths-enum --root-types --enum",
-    "test": "vitest",
+    "test": "vitest --typecheck",
     "typecheck": "nuxt typecheck",
     "typedtest": "nuxt typecheck && vitest run"
   },
