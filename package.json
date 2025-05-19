@@ -11,7 +11,7 @@
     "lint:fix": "eslint . --fix",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "schema-ts": "npx openapi-typescript https://docs.building-energy-calculator.communities.gov.uk/openapi.yaml -o schema/api-schema.types.ts --path-params-as-types --make-paths-enum --root-types --enum",
+    "schema-ts": "npx openapi-typescript https://docs.building-energy-calculator.communities.gov.uk/openapi.yaml -o schema/api-schema.types.ts --path-params-as-types --make-paths-enum --root-types",
     "test": "vitest",
     "typecheck": "nuxt typecheck",
     "typedtest": "nuxt typecheck && vitest run"
