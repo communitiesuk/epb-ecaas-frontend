@@ -35,7 +35,7 @@ const groundFloorSummary: SummarySection = {
 			"Pitch": x.pitch,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": x.massDistributionClass,
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Perimeter": x.perimeter,
 			"Psi of wall junction": x.psiOfWallJunction,
 			"Type of ground floor": x.typeOfGroundFloor,
@@ -67,7 +67,7 @@ const internalFloorSummary: SummarySection = {
 			"Surface area of element": x.surfaceAreaOfElement,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": x.massDistributionClass,
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,
 			"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace
 		};
@@ -90,7 +90,7 @@ const exposedFloorSummary: SummarySection = {
 			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": x.massDistributionClass
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}) || [],
 	editUrl: getUrl('livingSpaceFloors')!
@@ -122,7 +122,7 @@ const externalWallSummary: SummarySection = {
 			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": x.massDistributionClass
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}),
 	editUrl: getUrl('livingSpaceWalls')!
@@ -137,7 +137,7 @@ const internalWallSummary: SummarySection = {
 			"Surface area of element": x.surfaceAreaOfElement,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": x.massDistributionClass,
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch
 		};
 	}),
@@ -153,7 +153,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 			"Surface area of element": x.surfaceAreaOfElement,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.arealHeatCapacity,
-			"Mass distribution class": x.massDistributionClass,
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,
 			"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace
 		};
@@ -176,7 +176,7 @@ const partyWallSummary: SummarySection = {
 			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": x.massDistributionClass
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}) || [],
 	editUrl: getUrl('livingSpaceWalls')!
@@ -203,7 +203,7 @@ const ceilingSummary: SummarySection = {
 			"Surface area": x.surfaceArea,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": x.massDistributionClass,
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,
 			"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace
 		};
@@ -227,7 +227,7 @@ const roofSummary: SummarySection = {
 			"Solar absorption coefficient": x.solarAbsorptionCoefficient,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": x.massDistributionClass
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}),
 	editUrl: getUrl('livingSpaceCeilingsAndRoofs')!
@@ -249,7 +249,7 @@ const unheatedPitchedRoofSummary: SummarySection = {
 			"Solar absorption coefficient": x.solarAbsorptionCoefficient,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": x.massDistributionClass
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}),
 	editUrl: getUrl('livingSpaceCeilingsAndRoofs')!
@@ -280,7 +280,7 @@ const unglazedDoorSummary: SummarySection = {
 			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": x.massDistributionClass
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}),
 	editUrl: getUrl('livingSpaceDoors')!
@@ -324,7 +324,7 @@ const internalDoorSummary: SummarySection = {
 			"Surface area of element": x.surfaceArea,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": x.massDistributionClass,
+			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,
 			"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace
 		};

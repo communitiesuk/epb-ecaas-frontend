@@ -1,3 +1,5 @@
+import type { MassDistributionClass } from "~/schema/api-schema.types";
+
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
 	domesticHotWater: DomesticHotWater;
@@ -71,7 +73,7 @@ export type InternalFloorData = {
 	surfaceAreaOfElement: number;
 	uValue: number;
 	kappaValue: number;
-	massDistributionClass: string;
+	massDistributionClass: MassDistributionClass;
 	pitch: number;
 	thermalResistanceOfAdjacentUnheatedSpace?: 0;
 };
@@ -87,7 +89,7 @@ export type ExposedFloorData = {
 	solarAbsorption: number;
 	uValue: number;
 	kappaValue: number;
-	massDistributionClass: string;
+	massDistributionClass: MassDistributionClass;
 };
 
 export type GroundFloorData = {
@@ -97,7 +99,7 @@ export type GroundFloorData = {
 	pitch: number;
 	uValue: number;
 	kappaValue: number;
-	massDistributionClass: string;
+	massDistributionClass: MassDistributionClass;
 	perimeter: number;
 	psiOfWallJunction: number;
 	typeOfGroundFloor: string;
@@ -137,7 +139,7 @@ export type ExternalWallData = {
 	solarAbsorption: number;
 	uValue: number;
 	kappaValue: number;
-	massDistributionClass: string;
+	massDistributionClass: MassDistributionClass;
 };
 
 export type InternalWallData = {
@@ -145,7 +147,7 @@ export type InternalWallData = {
 	surfaceAreaOfElement: number;
 	uValue: number;
 	kappaValue: number;
-	massDistributionClass: string;
+	massDistributionClass: MassDistributionClass;
 	pitchOption: string;
 	pitch?: number;
 };
@@ -155,7 +157,7 @@ export type WallsToUnheatedSpaceData = {
 	surfaceAreaOfElement: number;
 	uValue: number;
 	arealHeatCapacity: number;
-	massDistributionClass: string;
+	massDistributionClass: MassDistributionClass;
 	pitchOption: string;
 	pitch?: number;
 	thermalResistanceOfAdjacentUnheatedSpace: number;
@@ -173,7 +175,7 @@ export type PartyWallData = {
 	solarAbsorption: number;
 	uValue: number;
 	kappaValue: number;
-	massDistributionClass: string;
+	massDistributionClass: MassDistributionClass;
 };
 
 export interface CeilingsAndRoofsData {
@@ -188,7 +190,7 @@ export type CeilingData = {
 	surfaceArea: number;
 	uValue: number;
 	kappaValue: number;
-	massDistributionClass: string;
+	massDistributionClass: MassDistributionClass;
 	pitchOption?: string;
 	pitch: number;
 	thermalResistanceOfAdjacentUnheatedSpace?: number;
@@ -207,7 +209,7 @@ export type RoofData = {
 	solarAbsorptionCoefficient: number;
 	uValue: number;
 	kappaValue: number;
-	massDistributionClass: string;
+	massDistributionClass: MassDistributionClass;
 };
 
 export interface DoorsData {
@@ -228,7 +230,7 @@ export type ExternalUnglazedDoorData = {
 	solarAbsorption: number;
 	uValue: number;
 	kappaValue: number;
-	massDistributionClass: string;
+	massDistributionClass: MassDistributionClass;
 };
 
 export type ExternalGlazedDoorData = {
@@ -259,7 +261,7 @@ export type InternalDoorData = {
 	surfaceArea: number;
 	uValue: number;
 	kappaValue: number;
-	massDistributionClass: string;
+	massDistributionClass: MassDistributionClass;
 	pitchOption: string;
 	pitch?: number;
 	thermalResistanceOfAdjacentUnheatedSpace?: number;

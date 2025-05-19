@@ -4,6 +4,7 @@ import CeilingsAndRoofs from './index.vue';
 import CeilingForm from './ceilings/[ceiling].vue';
 import RoofForm from './roofs/[roof].vue';
 import UnheatedRoofForm from './unheated-pitched-roofs/[roof].vue';
+import { MassDistributionClass } from "~/schema/api-schema.types";
 
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
@@ -27,7 +28,7 @@ describe('ceilings and roofs', () => {
 		surfaceArea: 5,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		pitchOption: '180',
 		pitch: 180
 	};
@@ -53,7 +54,7 @@ describe('ceilings and roofs', () => {
 		solarAbsorptionCoefficient: 0.5,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: 'internal'
+		massDistributionClass: MassDistributionClass.I
 	};
 
 	const roof2: RoofData = {
@@ -78,7 +79,7 @@ describe('ceilings and roofs', () => {
 		solarAbsorptionCoefficient: 0.5,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal'
+		massDistributionClass: MassDistributionClass.I
 	};
 
 	const pitchedRoof2: RoofData = {

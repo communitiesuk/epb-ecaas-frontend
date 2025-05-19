@@ -7,6 +7,7 @@ import ExposedFloorForm from './exposed/[floor].vue';
 
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
+import { MassDistributionClass } from "~/schema/api-schema.types";
 
 describe('floors', () => {
 	const store = useEcaasStore();
@@ -24,7 +25,7 @@ describe('floors', () => {
 		pitch: 0,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		typeOfGroundFloor: 'slabNoEdgeInsulation'
@@ -37,7 +38,7 @@ describe('floors', () => {
 		pitch: 0,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		typeOfGroundFloor: 'slabNoEdgeInsulation'
@@ -50,7 +51,7 @@ describe('floors', () => {
 		pitch: 0,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		typeOfGroundFloor: 'slabNoEdgeInsulation'
@@ -61,7 +62,7 @@ describe('floors', () => {
 		surfaceAreaOfElement: 5,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		pitch: 0
 	};
 
@@ -71,7 +72,7 @@ describe('floors', () => {
 		surfaceAreaOfElement: 5,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		pitch: 0
 	};
 
@@ -81,7 +82,7 @@ describe('floors', () => {
 		surfaceAreaOfElement: 5,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		pitch: 0
 	};
 
@@ -96,7 +97,7 @@ describe('floors', () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal'
+		massDistributionClass: MassDistributionClass.I
 	};
 
 	const exposed2: ExposedFloorData = {
@@ -110,7 +111,7 @@ describe('floors', () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal'
+		massDistributionClass: MassDistributionClass.I
 	};
 
 	const exposed3: ExposedFloorData = {
@@ -124,7 +125,7 @@ describe('floors', () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal'
+		massDistributionClass: MassDistributionClass.I
 	};
 
 

@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import PartyWall from './[wall].vue';
+import { MassDistributionClass } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -24,7 +25,7 @@ describe('party wall', () => {
 		solarAbsorption: 0,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: 'internal'
+		massDistributionClass: MassDistributionClass.I
 	};
 
 	afterEach(() => {
@@ -43,7 +44,7 @@ describe('party wall', () => {
 		await user.type(screen.getByTestId('surfaceArea'), '10');
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.click(screen.getByTestId('kappaValue_50000'));
-		await user.click(screen.getByTestId('massDistributionClass_internal'));
+		await user.click(screen.getByTestId('massDistributionClass_I'));
 
 		await user.click(screen.getByRole('button'));
 
@@ -79,7 +80,7 @@ describe('party wall', () => {
 		expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('10');
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 	});
 		
 	it('required error messages are displayed when empty form is submitted', async () => {

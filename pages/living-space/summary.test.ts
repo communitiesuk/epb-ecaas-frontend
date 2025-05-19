@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import type { CeilingsAndRoofsData, DoorsData, FloorsData, LivingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData } from '~/stores/ecaasStore.types';
+import { MassDistributionClass } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -23,7 +24,7 @@ const floorsData: FloorsData = {
 			pitch: 0,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: 'internal',
+			massDistributionClass: MassDistributionClass.I,
 			perimeter: 0,
 			psiOfWallJunction: 0,
 			typeOfGroundFloor: 'slabNoEdgeInsulation'
@@ -36,7 +37,7 @@ const floorsData: FloorsData = {
 			surfaceAreaOfElement: 5,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: 'internal',
+			massDistributionClass: MassDistributionClass.I,
 			pitch: 0
 		}]
 	},
@@ -52,7 +53,7 @@ const floorsData: FloorsData = {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: 'internal'
+			massDistributionClass: MassDistributionClass.I
 		}]
 	}
 };
@@ -71,7 +72,7 @@ const wallsData: WallsData = {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: 'internal'
+			massDistributionClass: MassDistributionClass.I
 		}]
 	},
 	livingSpaceInternalWall: {
@@ -80,7 +81,7 @@ const wallsData: WallsData = {
 			surfaceAreaOfElement: 5,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: 'internal',
+			massDistributionClass: MassDistributionClass.I,
 			pitchOption: '0',
 			pitch: 0
 		}]
@@ -91,7 +92,7 @@ const wallsData: WallsData = {
 			surfaceAreaOfElement: 500,
 			uValue: 10,
 			arealHeatCapacity:40000,
-			massDistributionClass: 'external',
+			massDistributionClass: MassDistributionClass.E,
 			pitchOption: '90',
 			pitch: 90,
 			thermalResistanceOfAdjacentUnheatedSpace: 1
@@ -110,7 +111,7 @@ const wallsData: WallsData = {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: 'internal'
+			massDistributionClass: MassDistributionClass.I
 		}]
 	}
 };
@@ -123,7 +124,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 			surfaceArea: 5,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: 'internal',
+			massDistributionClass: MassDistributionClass.I,
 			pitchOption: '180',
 			pitch: 180
 		}]
@@ -142,7 +143,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: 'internal'
+			massDistributionClass: MassDistributionClass.I
 		}]
 	},
 	livingSpaceUnheatedPitchedRoofs: {
@@ -158,7 +159,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: 'internal'
+			massDistributionClass: MassDistributionClass.I
 		}]
 	}
 };
@@ -177,7 +178,7 @@ const doorsData: DoorsData = {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: 'internal'
+			massDistributionClass: MassDistributionClass.I
 		}]
 	},
 	livingSpaceExternalGlazedDoor: {
@@ -203,7 +204,7 @@ const doorsData: DoorsData = {
 			surfaceArea: 5,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: 'internal',
+			massDistributionClass: MassDistributionClass.I,
 			pitchOption: '90',
 			pitch: 90
 		}]

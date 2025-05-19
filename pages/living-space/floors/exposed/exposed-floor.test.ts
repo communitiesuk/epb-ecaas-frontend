@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import ExposedFloor from './[floor].vue';
+import { MassDistributionClass } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -23,7 +24,7 @@ describe('exposed floor', () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: 'internal'
+		massDistributionClass: MassDistributionClass.I
 	};
 
 	afterEach(() => {
@@ -41,7 +42,7 @@ describe('exposed floor', () => {
 		await user.type(screen.getByTestId('solarAbsorption'), '0.1');
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.click(screen.getByTestId('kappaValue_50000'));
-		await user.click(screen.getByTestId('massDistributionClass_internal'));
+		await user.click(screen.getByTestId('massDistributionClass_I'));
 
 		await user.click(screen.getByRole('button'));
 
@@ -76,7 +77,7 @@ describe('exposed floor', () => {
 		expect((await screen.findByTestId('solarAbsorption') as HTMLInputElement).value).toBe('0.1');
 		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 	});
 		
 	it('required error messages are displayed when empty form is submitted', async () => {

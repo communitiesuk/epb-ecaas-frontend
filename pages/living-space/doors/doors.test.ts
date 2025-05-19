@@ -6,7 +6,7 @@ import {within} from '@testing-library/dom';
 import UnglazedDoorForm from './external-unglazed/[door].vue';
 import glazedDoorForm from './external-glazed/[door].vue';
 import internalDoorForm from './internal/[door].vue';
-
+import { MassDistributionClass } from "~/schema/api-schema.types";
 
 describe('doors', () => {
 	const store = useEcaasStore();
@@ -33,7 +33,7 @@ describe('doors', () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal'
+		massDistributionClass: MassDistributionClass.I
 	};
 
 	const externalUnglazed2: ExternalUnglazedDoorData = {
@@ -48,7 +48,7 @@ describe('doors', () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal'
+		massDistributionClass: MassDistributionClass.I
 	};
 
 	const externalUnglazed3: ExternalUnglazedDoorData = {
@@ -63,7 +63,7 @@ describe('doors', () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal'
+		massDistributionClass: MassDistributionClass.I
 	};
 
 	const externalGlazed1: ExternalGlazedDoorData = {
@@ -117,7 +117,7 @@ describe('doors', () => {
 		surfaceArea: 5,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		pitchOption: '90',
 		pitch: 90
 	};
@@ -128,7 +128,7 @@ describe('doors', () => {
 		surfaceArea: 5,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		pitchOption: '90',
 		pitch: 90
 	};
@@ -139,7 +139,7 @@ describe('doors', () => {
 		surfaceArea: 5,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		pitchOption: '90',
 		pitch: 90
 	};

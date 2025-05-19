@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import GroundFloor from './[floor].vue';
+import { MassDistributionClass } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -19,7 +20,7 @@ describe('ground floor', () => {
 		pitch: 180,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		typeOfGroundFloor: 'slabNoEdgeInsulation'
@@ -72,7 +73,7 @@ describe('ground floor', () => {
 		await user.type(screen.getByTestId('surfaceAreaAllZones'), '0');
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.click(screen.getByTestId('kappaValue_50000'));
-		await user.click(screen.getByTestId('massDistributionClass_internal'));
+		await user.click(screen.getByTestId('massDistributionClass_I'));
 		await user.type(screen.getByTestId('perimeter'), '0');
 		await user.type(screen.getByTestId('psiOfWallJunction'), '0');
 		await user.click(screen.getByTestId('typeOfGroundFloor_slabNoEdgeInsulation'));
@@ -112,7 +113,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('surfaceAreaAllZones') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 			expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('perimeter') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('psiOfWallJunction') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('typeOfGroundFloor_slabNoEdgeInsulation')).hasAttribute('checked')).toBe(true);

@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import InternalFloor from './[floor].vue';
+import { MassDistributionClass } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -18,7 +19,7 @@ describe('internal floor', () => {
 		surfaceAreaOfElement: 5,
 		uValue: 0,
 		kappaValue: 50000,
-		massDistributionClass: 'internal',
+		massDistributionClass: MassDistributionClass.I,
 		pitch: 180
 	};
 
@@ -36,7 +37,7 @@ describe('internal floor', () => {
 		await user.type(screen.getByTestId('name'), 'Internal 1');
 		await user.type(screen.getByTestId('surfaceAreaOfElement'), '5');
 		await user.click(screen.getByTestId('kappaValue_50000'));
-		await user.click(screen.getByTestId('massDistributionClass_internal'));
+		await user.click(screen.getByTestId('massDistributionClass_I'));
 	};
 	
 	describe('when type of internal floor is heated space', () => {
@@ -73,7 +74,7 @@ describe('internal floor', () => {
 			expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Internal 1');
 			expect((await screen.findByTestId('surfaceAreaOfElement') as HTMLInputElement).value).toBe('5');
 			expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('massDistributionClass_internal')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 		});
 
 		it('requires additional fields when heated space is selected', async () => {
