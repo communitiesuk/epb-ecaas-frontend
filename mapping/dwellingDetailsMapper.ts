@@ -1,4 +1,4 @@
-import type { SchemaApplianceEntry, SchemaBuildType, SchemaFhsInputSchema, SchemaShadingObjectType, SchemaTerrainClass, SchemaVentilationShieldClass } from "~/schema/api-schema.types";
+import { ApplianceReference, type SchemaApplianceEntry, type SchemaBuildType, type SchemaFhsInputSchema, type SchemaShadingObjectType, type SchemaTerrainClass, type SchemaVentilationShieldClass } from "~/schema/api-schema.types";
 import type { StripDefs } from "./mapping.types";
 
 export function mapDwellingDetailsData(state: EcaasState): Partial<StripDefs<SchemaFhsInputSchema>> {
@@ -68,7 +68,7 @@ function mapApplianceData(state: EcaasState): Partial<StripDefs<SchemaFhsInputSc
 	const { appliances } = state.dwellingDetails.appliances.data;
 
 	const applianceData: Record<string, SchemaApplianceEntry> = {};
-	appliances?.forEach(x => applianceData[x] = 'Default');
+	appliances?.forEach(x => applianceData[x] = ApplianceReference.Default);
 
 	return {
 		Appliances: applianceData
