@@ -85,16 +85,24 @@ const heatGenerationSummary: SummarySection[] = [
 	heatInterfaceUnitSummary
 ].filter(x => x.data.length);
 
+const { heatPump, boiler, heatBattery, heatNetwork, heatInterfaceUnit } = store.heatingSystems.heatGeneration;
+const heatGenerationData = [
+	heatPump.data,
+	boiler.data,
+	heatBattery.data,
+	heatNetwork.data,
+	heatInterfaceUnit.data
+].flat().map(x => ({ id: x.id, name: x.name }));
 
 const wetDistributions = store.heatingSystems.heatEmitting.wetDistribution.data;
 const wetDistributionSummary: SummarySection = {
 	id: "wetDistribution",
 	label: "Wet distribution",
 	data: wetDistributions.map(wetDistribution => {
-		const wetDistributionData :Record<string, string | number>= {
+		const wetDistributionData: Record<string, string | number | undefined> = {
 			"Name": wetDistribution.name,
 			"Zone reference": wetDistribution.zoneReference,
-			"Heat source": wetDistribution.heatSource,
+			"Heat source": heatGenerationData.find(x => x.id === wetDistribution.heatSource)?.name,
 			"Thermal mass": wetDistribution.thermalMass,
 			"Design temperature difference across the emitters": wetDistribution.designTempDiffAcrossEmitters,
 			"Design flow temperature": wetDistribution.designFlowTemp,
@@ -102,14 +110,14 @@ const wetDistributionSummary: SummarySection = {
 		};
 		if (
 			wetDistribution.typeOfSpaceHeater === "radiators" &&
-      wetDistribution.convectionFractionWet !== undefined
+			wetDistribution.convectionFractionWet !== undefined
 		) {
 			wetDistributionData["Convection fraction"] = wetDistribution.convectionFractionWet;
 		}
 
 		if (
 			wetDistribution.typeOfSpaceHeater === "underFloorHeating" &&
-      wetDistribution.emitterFloorArea !== undefined
+			wetDistribution.emitterFloorArea !== undefined
 		) {
 			wetDistributionData["Emitter floor area"] = wetDistribution.emitterFloorArea;
 		}

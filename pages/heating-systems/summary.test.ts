@@ -1,7 +1,6 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatingSystemsSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
-import { WetEmitterWet_emitter_type } from "~/schema/api-schema.types";
 
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -416,7 +415,7 @@ describe("Heating systems summary page", () => {
 			const expectedWetDistributionData = {
 				"Name": "Wet distribution 1",
 				"Zone reference": "Living space",
-				"Heat source": "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
+				"Heat source": "Heat pump 1",
 				"Thermal mass": "2",
 				"Design temperature difference across the emitters": "0.4",
 				"Design flow temperature": "32",
@@ -450,7 +449,7 @@ describe("Heating systems summary page", () => {
 			const expectedWetDistributionData = {
 				"Name": "Wet distribution 2",
 				"Zone reference": "Living space",
-				"Heat source": "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
+				"Heat source": "Heat pump 1",
 				"Thermal mass": "2",
 				"Design temperature difference across the emitters": "0.4",
 				"Design flow temperature": "32",
@@ -462,5 +461,40 @@ describe("Heating systems summary page", () => {
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
 		});
+
+		it("displays the correct data for the wet distribution section", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						wetDistribution: {
+							data: [wetDistribution1],
+						},
+					},
+					heatGeneration: {
+						heatPump: {
+							data: [heatPump]
+						}
+					}
+				},
+			});
+
+			const expectedWetDistributionData = {
+				"Name": "Wet distribution 1",
+				"Zone reference": "Living space",
+				"Heat source": "Heat pump 1",
+				"Thermal mass": "2",
+				"Design temperature difference across the emitters": "0.4",
+				"Design flow temperature": "32",
+				"Type of space heater": "Radiators",
+				"Convection fraction": "0.2",
+				"Eco design controller class": "1",
+				"Minimum flow temperature": "20",
+			};
+			await renderSuspended(HeatingSystemsSummary);
+			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
+		});
+
 	});
 });
