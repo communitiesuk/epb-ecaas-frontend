@@ -1,4 +1,4 @@
-import type { CombustionAirSupplySituation, CombustionFuelType, MassDistributionClass, MVHRLocation, VentType } from "~/schema/api-schema.types";
+import type { CombustionAirSupplySituation, CombustionFuelType, MassDistributionClass, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -478,7 +478,7 @@ export type MechanicalVentilationData = {
 	readonly id: string;
 	name: string;
 	typeOfMechanicalVentilationOptions: VentType;
-	controlForSupplyAirflow: string;
+	controlForSupplyAirflow: SupplyAirFlowRateControlType;
 	supplyAirTemperatureControl: string;
 	airFlowRate: number;
 	mvhrLocation?: MVHRLocation;

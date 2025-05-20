@@ -3,7 +3,7 @@ import { screen } from '@testing-library/vue';
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { CombustionAirSupplySituation, CombustionFuelType, MVHRLocation, VentType } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionFuelType, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
 
 
 vi.mock('uuid');
@@ -12,7 +12,7 @@ const mechanicalVentilationData: MechanicalVentilationData = {
 	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
 	name: "Mechanical name 1",
 	typeOfMechanicalVentilationOptions: VentType.MVHR,
-	controlForSupplyAirflow: "load",
+	controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
 	supplyAirTemperatureControl: "odaComp",
 	airFlowRate: 12,
 	mvhrLocation: MVHRLocation.inside,
@@ -127,7 +127,7 @@ describe('Infiltration and ventilation summary', () => {
 		const expectedResult = {
 			"Name": "Mechanical name 1",
 			"Type of mechanical ventilation": "MVHR",
-			"Control for the supply airflow": "Load",
+			"Control for the supply airflow": "LOAD",
 			"Supply air temperature control": "Oda comp",
 			"Air flow rate": "12",
 			"MVHR location": "Inside",

@@ -1,4 +1,4 @@
-import { MVHRLocation, VentType } from "~/schema/api-schema.types";
+import { MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
 import { checkMvhrHasDuctwork } from "~/utils/checkMvhrHasDuctwork";
 
 describe('checkMvhrHasDuctwork', () => {
@@ -6,7 +6,7 @@ describe('checkMvhrHasDuctwork', () => {
 	const mechanicalVentilationData1: MechanicalVentilationData = {
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		controlForSupplyAirflow: "load",
+		controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
 		mvhrLocation: MVHRLocation.inside,
@@ -16,7 +16,7 @@ describe('checkMvhrHasDuctwork', () => {
 	const mechanicalVentilationData2: MechanicalVentilationData = {
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		controlForSupplyAirflow: "load",
+		controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
 		mvhrLocation: MVHRLocation.inside,
@@ -28,7 +28,7 @@ describe('checkMvhrHasDuctwork', () => {
 		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 3",
 		typeOfMechanicalVentilationOptions: VentType.Decentralised_continuous_MEV,
-		controlForSupplyAirflow: "oda",
+		controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA,
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 14,
 		mvhrLocation: undefined,

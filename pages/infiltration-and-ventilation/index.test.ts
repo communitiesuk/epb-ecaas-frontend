@@ -2,7 +2,7 @@ import InfiltrationAndVentilationTaskPage from './index.vue';
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { v4 as uuidv4 } from "uuid";
-import { MVHRLocation, VentType } from '~/schema/api-schema.types';
+import { MVHRLocation, SupplyAirFlowRateControlType, VentType } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -16,7 +16,7 @@ describe('the ventilation task page', async ()=>{
 		id: uuidv4(),
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		controlForSupplyAirflow: "load",
+		controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
 		mvhrLocation: MVHRLocation.inside,

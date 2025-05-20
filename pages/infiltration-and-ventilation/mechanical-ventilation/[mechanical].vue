@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
-import type { MVHRLocation} from '~/schema/api-schema.types';
+import { SupplyAirFlowRateControlType, type MVHRLocation} from '~/schema/api-schema.types';
 import { VentType } from '~/schema/api-schema.types';
 
 const title = "Mechanical ventilation";
@@ -22,6 +22,11 @@ const ventTypeOptions: EnumRecord<Exclude<VentType, 'PIV'>, string> = {
 const mvhrLocationOptions: EnumRecord<MVHRLocation, SnakeToSentenceCase<MVHRLocation>> = {
 	inside: 'Inside',
 	outside: 'Outside'
+};
+
+const controlForSupplyAirflowOptions: EnumRecord<SupplyAirFlowRateControlType, string> = {
+	[SupplyAirFlowRateControlType.ODA]: 'Outdoor air',
+	[SupplyAirFlowRateControlType.LOAD]: 'Load'
 };
 
 const saveForm = (fields: MechanicalVentilationData) => {
@@ -83,10 +88,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="controlForSupplyAirflow"
 			type="govRadios"
-			:options="{
-				oda: 'Outdoor air',
-				load: 'Load'
-			}"
+			:options="controlForSupplyAirflowOptions"
 			label="Control for the supply airflow"
 			name="controlForSupplyAirflow"
 			validation="required"
