@@ -108,4 +108,8 @@ const heatGenerationSummary: SummarySection[] = [
 		<SummaryTab :summary="heatNetworkSummary" :selected="tabProps.currentItem?.id === 'heatNetwork'" />
 		<SummaryTab :summary="heatInterfaceUnitSummary" :selected="tabProps.currentItem?.id === 'heatInterfaceUnit'" />
 	</GovTabs>
+	<h2 class="govuk-heading-m">No heat emitters added</h2>
+	<NuxtLink class="govuk-link" :to="getUrl('heatEmitting')">
+		Add heat emitters
+	</NuxtLink>
 </template>

@@ -284,5 +284,20 @@ describe("Heating systems summary page", () => {
 			}
 		});
 	});
+
+	describe("Heat emitting section", () => {
+
+		it("displays 'No heat emittors added' and link to heat emitting overview page when no data exists", async () => {
+			await renderSuspended(HeatingSystemsSummary);
+
+			expect(screen.getByText("No heat emitters added")).not.toBeNull();
+			const addHeatEmittingLink = screen.getByRole("link", {
+				name: "Add heat emitters",
+			}) as HTMLAnchorElement;
+			expect(new URL(addHeatEmittingLink.href).pathname).toBe(
+				getUrl("heatEmitting")
+			);
+		});
+	});
 });
 
