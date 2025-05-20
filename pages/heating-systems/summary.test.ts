@@ -230,7 +230,7 @@ describe("Heating systems summary page", () => {
 			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
 			expect(lineResult.querySelector("dd")?.textContent).toBe("Heat network");
 		});
-		
+
 		it("displays the correct data for the heat interface unit section", async () => {
 			const store = useEcaasStore();
 
@@ -245,10 +245,14 @@ describe("Heating systems summary page", () => {
 			});
 			await renderSuspended(HeatingSystemsSummary);
 
-			const lineResult = await screen.findByTestId("summary-heatInterfaceUnit-name");
+			const lineResult = await screen.findByTestId(
+				"summary-heatInterfaceUnit-name"
+			);
 
 			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
-			expect(lineResult.querySelector("dd")?.textContent).toBe("Heat interface unit");
+			expect(lineResult.querySelector("dd")?.textContent).toBe(
+				"Heat interface unit"
+			);
 		});
 		it("displays an edit link on each section that navigates to the heat generation overview page when clicked", async () => {
 			const store = useEcaasStore();
@@ -275,18 +279,21 @@ describe("Heating systems summary page", () => {
 				},
 			});
 			await renderSuspended(HeatingSystemsSummary);
-			for(const [key] of Object.entries(store.heatingSystems.heatGeneration)){
+			for (const [key] of Object.entries(store.heatingSystems.heatGeneration)) {
 				const heatGenerationSection = screen.getByTestId(key);
 
-				const editLink = within(heatGenerationSection).getByText("Edit") as HTMLAnchorElement;
+				const editLink = within(heatGenerationSection).getByText(
+					"Edit"
+				) as HTMLAnchorElement;
 				expect(editLink).not.toBeNull();
-				expect(new URL(editLink.href).pathname).toBe("/heating-systems/heat-generation");				
+				expect(new URL(editLink.href).pathname).toBe(
+					"/heating-systems/heat-generation"
+				);
 			}
 		});
 	});
 
 	describe("Heat emitting section", () => {
-
 		it("displays 'No heat emittors added' and link to heat emitting overview page when no data exists", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 
@@ -298,6 +305,73 @@ describe("Heating systems summary page", () => {
 				getUrl("heatEmitting")
 			);
 		});
+		it("displays tabs only for the heat emitting types that have data", async () => {
+			const store = useEcaasStore();
+
+			const heatPump: HeatPumpData = {
+				id: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
+				name: "Heat pump 1",
+			};
+
+			const wetDistribution: WetDistributionData = {
+				name: "Wet distribution 1",
+				zoneReference: "livingSpace",
+				heatSource: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
+				thermalMass: 2,
+				designTempDiffAcrossEmitters: 0.4,
+				designFlowTemp: 32,
+				typeOfSpaceHeater: "radiators",
+				exponent: 1.3,
+				constant: 0.08,
+				emitterFloorArea: undefined,
+				convectionFractionWet: 0.2,
+				ecoDesignControllerClass: "1",
+				minimumFlowTemp: 20,
+				minOutdoorTemp: 0,
+				maxOutdoorTemp: 15,
+			};
+
+			const instantElectricHeater: InstantElectricStorageData = {
+				name: "Instant electric heater 1",
+				ratedPower: 3,
+				convectionFractionInstant: 0.2,
+			};
+			const electricStorageHeater: ElectricStorageHeaterData = {
+				name: "Electric storage heater 1",
+			};
+			const warmAirHeatPump: WarmAirHeatPumpData = {
+				name: "Warm air heat pump 1",
+			};
+
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						wetDistribution: {
+							data: [wetDistribution],
+						},
+						instantElectricHeater: {
+							data: [instantElectricHeater],
+						},
+						electricStorageHeater: {
+							data: [electricStorageHeater],
+						},
+						warmAirHeatPump: {
+							data: [warmAirHeatPump],
+						},
+					},
+					heatGeneration: {
+						heatPump: {
+							data: [heatPump]
+						}
+					}
+				},
+			});
+			await renderSuspended(HeatingSystemsSummary);
+			expect(screen.getByRole("link", { name: "Wet distribution" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Instant electric heater" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Electric storage heater" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Warm air heat pump" })).not.toBeNull();
+
+		});
 	});
 });
-

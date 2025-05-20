@@ -85,6 +85,62 @@ const heatGenerationSummary: SummarySection[] = [
 	heatInterfaceUnitSummary
 ].filter(x => x.data.length);
 
+
+const wetDistributions = store.heatingSystems.heatEmitting.wetDistribution.data;
+const wetDistributionSummary: SummarySection = {
+	id: "wetDistribution",
+	label: "Wet distribution",
+	data: wetDistributions.map(wetDistribution => {
+		return {
+			"Name": wetDistribution.name
+		};
+	}),
+	editUrl: "",
+};
+
+const instantHeaters = store.heatingSystems.heatEmitting.instantElectricHeater.data;
+const instantElectricHeaterSummary: SummarySection = {
+	id: "instantElectricHeater",
+	label: "Instant electric heater",
+	data: instantHeaters.map(instantHeater => {
+		return {
+			"Name": instantHeater.name,
+
+		};
+	}),
+	editUrl: "",
+};
+
+const storageHeaters = store.heatingSystems.heatEmitting.electricStorageHeater.data;
+const electricStorageHeaterSummary: SummarySection = {
+	id: "electricStorageHeater",
+	label: "Electric storage heater",
+	data: storageHeaters.map(storageHeater => {
+		return {
+			"Name": storageHeater.name
+		};
+	}),
+	editUrl: "",
+};
+
+const warmAirHeatPumps = store.heatingSystems.heatEmitting.warmAirHeatPump.data;
+const warmAirHeatPumpSummary: SummarySection = {
+	id: "warmAirHeatPump",
+	label: "Warm air heat pump",
+	data: warmAirHeatPumps.map(pump => {
+		return {
+			"Name": pump.name
+		};
+	}),
+	editUrl: "",
+};
+
+const heatEmittingSummary: SummarySection[] = [
+	wetDistributionSummary,
+	instantElectricHeaterSummary,
+	electricStorageHeaterSummary,
+	warmAirHeatPumpSummary
+].filter(x => x.data.length);
 </script>
 <template>
 
@@ -108,8 +164,12 @@ const heatGenerationSummary: SummarySection[] = [
 		<SummaryTab :summary="heatNetworkSummary" :selected="tabProps.currentItem?.id === 'heatNetwork'" />
 		<SummaryTab :summary="heatInterfaceUnitSummary" :selected="tabProps.currentItem?.id === 'heatInterfaceUnit'" />
 	</GovTabs>
-	<h2 class="govuk-heading-m">No heat emitters added</h2>
-	<NuxtLink class="govuk-link" :to="getUrl('heatEmitting')">
-		Add heat emitters
-	</NuxtLink>
+	<GovTabs v-slot="tabProps" :items="getTabItems(heatEmittingSummary)">
+		<TabPanel id="heatEmitting" :selected="!tabProps.currentItem">
+			<h2 class="govuk-heading-m">No heat emitters added</h2>
+			<NuxtLink class="govuk-link" :to="getUrl('heatEmitting')">
+				Add heat emitters
+			</NuxtLink>
+		</TabPanel>
+	</GovTabs>
 </template>
