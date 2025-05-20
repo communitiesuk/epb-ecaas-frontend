@@ -15,7 +15,7 @@ export function mapDwellingDetailsData(state: EcaasState): Partial<StripDefs<Sch
 	};
 }
 
-function mapGeneralSpecificationsData(state: EcaasState): Partial<StripDefs<SchemaFhsInputSchema>> {
+function mapGeneralSpecificationsData(state: EcaasState): Pick<StripDefs<SchemaFhsInputSchema>, 'General' | 'NumberOfBedrooms' | 'PartGcompliance' | 'PartO_active_cooling_required'> {
 	const { generalSpecifications } = state.dwellingDetails;
 
 	return {
@@ -30,7 +30,7 @@ function mapGeneralSpecificationsData(state: EcaasState): Partial<StripDefs<Sche
 	};
 }
 
-function mapExternalFactorsData(state: EcaasState): Partial<StripDefs<SchemaFhsInputSchema>> {
+function mapExternalFactorsData(state: EcaasState): Pick<StripDefs<SchemaFhsInputSchema>, 'InfiltrationVentilation'> {
 	const { externalFactors } = state.dwellingDetails;
 
 	return {
@@ -40,10 +40,10 @@ function mapExternalFactorsData(state: EcaasState): Partial<StripDefs<SchemaFhsI
 			terrain_class: externalFactors.data.terrainType as SchemaTerrainClass,
 			noise_nuisance: externalFactors.data.noiseNuisance
 		}
-	} as Partial<StripDefs<SchemaFhsInputSchema>>;
+	} as Pick<StripDefs<SchemaFhsInputSchema>, 'InfiltrationVentilation'>;
 }
 
-function mapDistantShadingData(state: EcaasState): Partial<StripDefs<SchemaFhsInputSchema>> {
+function mapDistantShadingData(state: EcaasState): Pick<StripDefs<SchemaFhsInputSchema>, 'ExternalConditions'> {
 	const { shading } = state.dwellingDetails;
 
 	return {
@@ -64,7 +64,7 @@ function mapDistantShadingData(state: EcaasState): Partial<StripDefs<SchemaFhsIn
 	};
 }
 
-function mapApplianceData(state: EcaasState): Partial<StripDefs<SchemaFhsInputSchema>> {
+function mapApplianceData(state: EcaasState): Pick<StripDefs<SchemaFhsInputSchema>, 'Appliances'> {
 	const { appliances } = state.dwellingDetails.appliances.data;
 
 	const applianceData: Record<string, SchemaApplianceEntry> = {};
