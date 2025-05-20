@@ -16,20 +16,20 @@ const verifyDataInSection = async (
 	}
 };
 describe("Heating systems summary page", () => {
-	it("should display the correct title", async () => {
+	it("displays the correct title", async () => {
 		await renderSuspended(HeatingSystemsSummary);
 		expect(screen.getByRole("heading", { name: "Heating system summary" }));
 	});
 
 	describe("Energy supply section", () => {
-		it("should display the correct tabs for energy supply", async () => {
+		it("displays the correct tabs for energy supply", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 			expect(
 				screen.getByRole("link", { name: "Energy supply" })
 			).not.toBeNull();
 		});
 
-		it("should display an empty section if no energy supply data has been added", async () => {
+		it("displays an empty section if no energy supply data has been added", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 			const expectedEnergySupplyData = {
 				"Fuel type": "",
@@ -42,7 +42,7 @@ describe("Heating systems summary page", () => {
 			await verifyDataInSection("energySupply", expectedEnergySupplyData);
 		});
 
-		it("should display the correct data for energy supply", async () => {
+		it("displays the correct data for energy supply", async () => {
 			const store = useEcaasStore();
 
 			const energySupplyData: EnergySupplyData = {
