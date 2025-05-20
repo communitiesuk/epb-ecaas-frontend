@@ -16,6 +16,8 @@ const energySupplySummary: SummarySection = {
 	},
 	editUrl: "/heating-systems/energy-supply",
 };
+
+const heatGenerationUrl = "/heating-systems/heat-generation";
 const heatPumps = store.heatingSystems.heatGeneration.heatPump.data;
 const heatPumpSummary: SummarySection = {
 	id: "heatPump",
@@ -26,7 +28,7 @@ const heatPumpSummary: SummarySection = {
 			"Name": pump.name
 		};
 	}) || [],
-	editUrl: "/heating-systems/heat-generation",
+	editUrl: heatGenerationUrl,
 };
 
 const boilers = store.heatingSystems.heatGeneration.boiler.data;
@@ -38,7 +40,7 @@ const boilerSummary: SummarySection = {
 			"Name": boiler.name
 		};
 	}),
-	editUrl: "/heating-systems/heat-generation",
+	editUrl: heatGenerationUrl,
 };
 
 const batteries = store.heatingSystems.heatGeneration.heatBattery.data;
@@ -50,7 +52,7 @@ const heatBatterySummary: SummarySection = {
 			"Name": battery.name
 		};
 	}),
-	editUrl: "/heating-systems/heat-generation",
+	editUrl: heatGenerationUrl,
 };
 
 const networks = store.heatingSystems.heatGeneration.heatNetwork.data;
@@ -62,7 +64,7 @@ const heatNetworkSummary: SummarySection = {
 			"Name": network.name
 		};
 	}),
-	editUrl: "/heating-systems/heat-generation",
+	editUrl: heatGenerationUrl,
 };
 
 const units = store.heatingSystems.heatGeneration.heatInterfaceUnit.data;
@@ -74,7 +76,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 			"Name": unit.name
 		};
 	}),
-	editUrl: "/heating-systems/heat-generation",
+	editUrl: heatGenerationUrl,
 };
 
 const heatGenerationSummary: SummarySection[] = [
@@ -93,6 +95,9 @@ const heatGenerationData = [
 	heatNetwork.data,
 	heatInterfaceUnit.data
 ].flat().map(x => ({ id: x.id, name: x.name }));
+
+
+const heatEmittingUrl = "/heating-systems/heat-emitting";
 
 const wetDistributions = store.heatingSystems.heatEmitting.wetDistribution.data;
 const wetDistributionSummary: SummarySection = {
@@ -128,7 +133,7 @@ const wetDistributionSummary: SummarySection = {
 		return wetDistributionData;
 	}),
 
-	editUrl: "/heating-systems/heat-emitting",
+	editUrl: heatEmittingUrl,
 };
 
 const instantHeaters = store.heatingSystems.heatEmitting.instantElectricHeater.data;
@@ -143,7 +148,7 @@ const instantElectricHeaterSummary: SummarySection = {
 
 		};
 	}),
-	editUrl: "/heating-systems/heat-emitting",
+	editUrl: heatEmittingUrl,
 };
 
 const storageHeaters = store.heatingSystems.heatEmitting.electricStorageHeater.data;
@@ -155,7 +160,7 @@ const electricStorageHeaterSummary: SummarySection = {
 			"Name": storageHeater.name
 		};
 	}),
-	editUrl: "/heating-systems/heat-emitting",
+	editUrl: heatEmittingUrl,
 };
 
 const warmAirHeatPumps = store.heatingSystems.heatEmitting.warmAirHeatPump.data;
@@ -167,7 +172,7 @@ const warmAirHeatPumpSummary: SummarySection = {
 			"Name": pump.name
 		};
 	}),
-	editUrl: "/heating-systems/heat-emitting",
+	editUrl: heatEmittingUrl,
 };
 
 const heatEmittingSummary: SummarySection[] = [
