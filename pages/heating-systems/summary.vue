@@ -97,9 +97,9 @@ const heatGenerationSummary: SummarySection[] = [
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems(heatGenerationSummary)">
 		<TabPanel id="heatGeneration" :selected="!tabProps.currentItem">
-			<h2 class="govuk-heading-m">No heat generation added</h2>
+			<h2 class="govuk-heading-m">No heat generators added</h2>
 			<NuxtLink class="govuk-link" :to="getUrl('heatGeneration')">
-				Add heat generation
+				Add heat generators
 			</NuxtLink>
 		</TabPanel>
 		<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentItem?.id === 'heatPump'" />
@@ -110,4 +110,3 @@ const heatGenerationSummary: SummarySection[] = [
     
 	</GovTabs>
 </template>
-

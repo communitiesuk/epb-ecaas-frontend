@@ -71,6 +71,7 @@ describe("Heating systems summary page", () => {
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection("energySupply", expectedEnergySupplyData);
 		});
+
 		it("displays an edit link that navigates to the energy supply form page when clicked", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 			const editLink = screen.getByRole("link", {
@@ -81,6 +82,7 @@ describe("Heating systems summary page", () => {
 			);
 		});
 	});
+
 	describe("Heat generation section", () => {
 		const heatPump: HeatPumpData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
@@ -103,12 +105,12 @@ describe("Heating systems summary page", () => {
 			name: "Heat interface unit",
 		};
 
-		it("displays 'No heat generation added' and link to add heat generation overview page when no data exists", async () => {
+		it("displays 'No heat generators added' and link to heat generation overview page when no data exists", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 
-			expect(screen.getByText("No heat generation added")).not.toBeNull();
+			expect(screen.getByText("No heat generators added")).not.toBeNull();
 			const addHeatGenerationLink = screen.getByRole("link", {
-				name: "Add heat generation",
+				name: "Add heat generators",
 			}) as HTMLAnchorElement;
 			expect(new URL(addHeatGenerationLink.href).pathname).toBe(
 				getUrl("heatGeneration")
