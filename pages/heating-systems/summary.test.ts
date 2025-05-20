@@ -81,4 +81,17 @@ describe("Heating systems summary page", () => {
 			);
 		});
 	});
+	describe("Heat generation section", () => {
+		it("displays 'No heat generation added' and link to add heat generation overview page when no data exists", async () => {
+			await renderSuspended(HeatingSystemsSummary);
+
+			expect(screen.getByText("No heat generation added")).not.toBeNull();
+			const addHeatGenerationLink = screen.getByRole("link", {
+				name: "Add heat generation",
+			}) as HTMLAnchorElement;
+			expect(new URL(addHeatGenerationLink.href).pathname).toBe(
+				getUrl("heatGeneration")
+			);
+		});
+	});
 });
