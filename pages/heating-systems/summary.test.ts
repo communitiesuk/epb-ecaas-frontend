@@ -1,6 +1,6 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatingSystemsSummary from "./summary.vue";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -248,5 +248,39 @@ describe("Heating systems summary page", () => {
 			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
 			expect(lineResult.querySelector("dd")?.textContent).toBe("Heat interface unit");
 		});
+		it("displays an edit link on each section that navigates to the heat generation overview page when clicked", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatPump: {
+							data: [heatPump],
+						},
+						boiler: {
+							data: [boiler],
+						},
+						heatBattery: {
+							data: [heatBattery],
+						},
+						heatNetwork: {
+							data: [heatNetwork],
+						},
+						heatInterfaceUnit: {
+							data: [heatInterfaceUnit],
+						},
+					},
+				},
+			});
+			await renderSuspended(HeatingSystemsSummary);
+			for(const [key] of Object.entries(store.heatingSystems.heatGeneration)){
+				const heatGenerationSection = screen.getByTestId(key);
+
+				const editLink = within(heatGenerationSection).getByText("Edit") as HTMLAnchorElement;
+				expect(editLink).not.toBeNull();
+				expect(new URL(editLink.href).pathname).toBe("/heating-systems/heat-generation");				
+			}
+		});
 	});
 });
+

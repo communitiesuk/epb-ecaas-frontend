@@ -38,7 +38,7 @@ const boilerSummary: SummarySection = {
 			"Name": boiler.name
 		};
 	}),
-	editUrl: "",
+	editUrl: "/heating-systems/heat-generation",
 };
 
 const batteries = store.heatingSystems.heatGeneration.heatBattery.data;
@@ -50,7 +50,7 @@ const heatBatterySummary: SummarySection = {
 			"Name": battery.name
 		};
 	}),
-	editUrl: "",
+	editUrl: "/heating-systems/heat-generation",
 };
 
 const networks = store.heatingSystems.heatGeneration.heatNetwork.data;
@@ -62,7 +62,7 @@ const heatNetworkSummary: SummarySection = {
 			"Name": network.name
 		};
 	}),
-	editUrl: "",
+	editUrl: "/heating-systems/heat-generation",
 };
 
 const units = store.heatingSystems.heatGeneration.heatInterfaceUnit.data;
@@ -74,7 +74,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 			"Name": unit.name
 		};
 	}),
-	editUrl: "",
+	editUrl: "/heating-systems/heat-generation",
 };
 
 const heatGenerationSummary: SummarySection[] = [
