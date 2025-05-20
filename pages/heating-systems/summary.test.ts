@@ -209,5 +209,24 @@ describe("Heating systems summary page", () => {
       expect(lineResult.querySelector("dd")?.textContent).toBe("Heat battery");
     });
 
+		  it("displays the correct data for the heat network section", async () => {
+      const store = useEcaasStore();
+
+      store.$patch({
+        heatingSystems: {
+          heatGeneration: {
+            heatNetwork: {
+              data: [heatNetwork],
+            },
+          },
+        },
+      });
+      await renderSuspended(HeatingSystemsSummary);
+
+      const lineResult = await screen.findByTestId("summary-heatNetwork-name");
+
+      expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
+      expect(lineResult.querySelector("dd")?.textContent).toBe("Heat network");
+    });
   });
 });
