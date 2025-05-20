@@ -3,7 +3,7 @@ import MechanicalVentilationForm from "./[mechanical].vue";
 import { userEvent } from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import { v4 as uuidv4 } from 'uuid';
-import { VentType } from "~/schema/api-schema.types";
+import { MVHRLocation, VentType } from "~/schema/api-schema.types";
 
 describe("mechanical ventilation form", () => {
 	const user = userEvent.setup();
@@ -19,7 +19,7 @@ describe("mechanical ventilation form", () => {
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
-		mvhrLocation: "inside",
+		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.2,
 	};
 

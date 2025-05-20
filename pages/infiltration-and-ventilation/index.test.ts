@@ -2,7 +2,7 @@ import InfiltrationAndVentilationTaskPage from './index.vue';
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { v4 as uuidv4 } from "uuid";
-import { VentType } from '~/schema/api-schema.types';
+import { MVHRLocation, VentType } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -19,7 +19,7 @@ describe('the ventilation task page', async ()=>{
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
-		mvhrLocation: "inside",
+		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.1,
 	};
 

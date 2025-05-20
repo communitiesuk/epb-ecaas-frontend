@@ -1,4 +1,4 @@
-import { VentType } from "~/schema/api-schema.types";
+import { MVHRLocation, VentType } from "~/schema/api-schema.types";
 import { checkMvhrHasDuctwork } from "~/utils/checkMvhrHasDuctwork";
 
 describe('checkMvhrHasDuctwork', () => {
@@ -9,7 +9,7 @@ describe('checkMvhrHasDuctwork', () => {
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
-		mvhrLocation: "inside",
+		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.2,
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g"
 	};
@@ -19,7 +19,7 @@ describe('checkMvhrHasDuctwork', () => {
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
-		mvhrLocation: "inside",
+		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.2,
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506h"
 	};

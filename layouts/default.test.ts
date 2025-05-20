@@ -1,7 +1,7 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime';
 import DefaultPage from './default.vue';
 import { screen } from '@testing-library/vue';
-import { VentType } from '~/schema/api-schema.types';
+import { MVHRLocation, VentType } from '~/schema/api-schema.types';
 
 
 describe('nav bar with ductwork', () => {
@@ -14,7 +14,7 @@ describe('nav bar with ductwork', () => {
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
-		mvhrLocation: "inside",
+		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.2,
 	};
 

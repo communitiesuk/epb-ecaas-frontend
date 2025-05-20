@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
+import type { MVHRLocation} from '~/schema/api-schema.types';
 import { VentType } from '~/schema/api-schema.types';
 
 const title = "Mechanical ventilation";
@@ -16,6 +17,11 @@ const ventTypeOptions: EnumRecord<Exclude<VentType, 'PIV'>, string> = {
 	[VentType.Intermittent_MEV]: 'Intermittent MEV',
 	[VentType.Centralised_continuous_MEV]: 'Centralised continuous MEV',
 	[VentType.Decentralised_continuous_MEV]: 'Decentralised continuous MEV',
+};
+
+const mvhrLocationOptions: EnumRecord<MVHRLocation, SnakeToSentenceCase<MVHRLocation>> = {
+	inside: 'Inside',
+	outside: 'Outside'
 };
 
 const saveForm = (fields: MechanicalVentilationData) => {
@@ -113,10 +119,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FormKit
 				id="mvhrLocation"
 				type="govRadios"
-				:options="{
-					inside: 'Inside',
-					outside: 'Outside'
-				}"
+				:options="mvhrLocationOptions"
 				label="MVHR location"
 				help="Whether the MVHR unit is located inside or outside the thermal envelope"
 				name="mvhrLocation"

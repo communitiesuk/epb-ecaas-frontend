@@ -3,7 +3,7 @@ import { screen } from '@testing-library/vue';
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { CombustionAirSupplySituation, CombustionFuelType, VentType } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionFuelType, MVHRLocation, VentType } from "~/schema/api-schema.types";
 
 
 vi.mock('uuid');
@@ -15,7 +15,7 @@ const mechanicalVentilationData: MechanicalVentilationData = {
 	controlForSupplyAirflow: "load",
 	supplyAirTemperatureControl: "odaComp",
 	airFlowRate: 12,
-	mvhrLocation: "inside",
+	mvhrLocation: MVHRLocation.inside,
 	mvhrEfficiency: 0.2
 };
 

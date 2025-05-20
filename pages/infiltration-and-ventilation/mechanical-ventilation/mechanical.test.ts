@@ -4,7 +4,7 @@ import MechanicalVentilationOverview from "./index.vue";
 import MechanicalVentilationForm from './[mechanical].vue';
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
-import { VentType } from "~/schema/api-schema.types";
+import { MVHRLocation, VentType } from "~/schema/api-schema.types";
 
 describe("mechanical ventilation overview", () => {
 	const store = useEcaasStore();
@@ -22,7 +22,7 @@ describe("mechanical ventilation overview", () => {
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
-		mvhrLocation: "inside",
+		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.1,
 
 	};
@@ -56,7 +56,7 @@ describe("mechanical ventilation overview", () => {
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
-		mvhrLocation: "inside",
+		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.1,
 
 	};
