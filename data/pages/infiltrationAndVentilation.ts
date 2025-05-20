@@ -1,10 +1,11 @@
+import { VentType } from "~/schema/api-schema.types";
 import { PageType, type Page } from "./pages.types";
 import { isEmpty } from "~/utils/isEmpty";
 
 function noMhvrPresent():boolean {
 	const store = useEcaasStore();
 
-	return isEmpty(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === "mvhr"));
+	return isEmpty(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === VentType.MVHR));
 }
 
 const infiltrationAndVentilationPages: Array<Page> = [

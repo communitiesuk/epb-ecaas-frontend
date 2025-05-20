@@ -1,10 +1,11 @@
+import { VentType } from "~/schema/api-schema.types";
 import { checkMvhrHasDuctwork } from "~/utils/checkMvhrHasDuctwork";
 
 describe('checkMvhrHasDuctwork', () => {
 	const store = useEcaasStore();
 	const mechanicalVentilationData1: MechanicalVentilationData = {
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: "mvhr",
+		typeOfMechanicalVentilationOptions: VentType.MVHR,
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
@@ -14,7 +15,7 @@ describe('checkMvhrHasDuctwork', () => {
 	};
 	const mechanicalVentilationData2: MechanicalVentilationData = {
 		name: "Mechanical name 2",
-		typeOfMechanicalVentilationOptions: "mvhr",
+		typeOfMechanicalVentilationOptions: VentType.MVHR,
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
@@ -26,7 +27,7 @@ describe('checkMvhrHasDuctwork', () => {
 	const mechanicalVentilationData3: MechanicalVentilationData = {
 		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 3",
-		typeOfMechanicalVentilationOptions: "decentralisedContinuous",
+		typeOfMechanicalVentilationOptions: VentType.Decentralised_continuous_MEV,
 		controlForSupplyAirflow: "oda",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 14,

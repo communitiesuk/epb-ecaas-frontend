@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
+import { VentType } from '~/schema/api-schema.types';
 
 const title = "Mechanical ventilation";
 const mvhrTitle = "MVHR only inputs";
@@ -8,6 +9,14 @@ const { saveToList } = useForm();
 
 const mechanicalVentilation = useItemToEdit('mechanical', store.infiltrationAndVentilation.mechanicalVentilation.data);
 const model: Ref<MechanicalVentilationData> = ref(mechanicalVentilation!);
+
+/** 'PIV' is excluded from options here because it is in the schema currently but unsupported in HEM itself at 0.34 version */
+const ventTypeOptions: EnumRecord<Exclude<VentType, 'PIV'>, string> = {
+	[VentType.MVHR]: 'MVHR',
+	[VentType.Intermittent_MEV]: 'Intermittent MEV',
+	[VentType.Centralised_continuous_MEV]: 'Centralised continuous MEV',
+	[VentType.Decentralised_continuous_MEV]: 'Decentralised continuous MEV',
+};
 
 const saveForm = (fields: MechanicalVentilationData) => {
 	store.$patch((state) => {
@@ -60,12 +69,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="typeOfMechanicalVentilationOptions"
 			type="govRadios"
-			:options="{
-				mvhr: 'MVHR',
-				intermittent: 'Intermittent MEV',
-				centralisedContinuous: 'Centralised continuous MEV',
-				decentralisedContinuous: 'Decentralised continuous MEV',
-			}"
+			:options="ventTypeOptions"
 			label="Type of mechanical ventilation"
 			name="typeOfMechanicalVentilationOptions"
 			validation="required"
@@ -102,7 +106,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="The required design air flow rate to be supplied to or extracted from the ventilation zone by the system"
 			name="airFlowRate" validation="required | number | min:0"
 		/>
-		<template v-if="model.typeOfMechanicalVentilationOptions === 'mvhr'">
+		<template v-if="model.typeOfMechanicalVentilationOptions === VentType.MVHR">
 			<h2 class="govuk-heading-l custom-govuk__heading__padding">
 				{{ mvhrTitle }}
 			</h2>

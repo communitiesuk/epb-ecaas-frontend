@@ -4,6 +4,7 @@ import MechanicalVentilationOverview from "./index.vue";
 import MechanicalVentilationForm from './[mechanical].vue';
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
+import { VentType } from "~/schema/api-schema.types";
 
 describe("mechanical ventilation overview", () => {
 	const store = useEcaasStore();
@@ -17,7 +18,7 @@ describe("mechanical ventilation overview", () => {
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: "mvhr",
+		typeOfMechanicalVentilationOptions: VentType.MVHR,
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
@@ -29,7 +30,7 @@ describe("mechanical ventilation overview", () => {
 	const mechanicalVentilation2: MechanicalVentilationData = {
 		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 2",
-		typeOfMechanicalVentilationOptions: "decentralisedContinuous",
+		typeOfMechanicalVentilationOptions: VentType.Decentralised_continuous_MEV,
 		controlForSupplyAirflow: "oda",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 14,
@@ -40,7 +41,7 @@ describe("mechanical ventilation overview", () => {
 	const mechanicalVentilation3: MechanicalVentilationData = {
 		id: "6380f2fe-a78f-4a56-ba5a-1a7751ac502a",
 		name: "Mechanical name 3",
-		typeOfMechanicalVentilationOptions: "intermittent",
+		typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
 		controlForSupplyAirflow: "oda",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 14,
@@ -51,7 +52,7 @@ describe("mechanical ventilation overview", () => {
 	const mechanicalVentilation4: MechanicalVentilationData = {
 		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
 		name: "Mechanical name 4",
-		typeOfMechanicalVentilationOptions: "mvhr",
+		typeOfMechanicalVentilationOptions: VentType.MVHR,
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,

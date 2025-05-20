@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { VentType } from '~/schema/api-schema.types';
+
 const title = "MVHR ductwork";
 const store = useEcaasStore();
 const { saveToList } = useForm();
@@ -119,7 +121,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 		<FormKit
 			id="mvhrUnit" type="govRadios" :options="new
-				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === 'mvhr').map((x)=> [x.id, x.name]))"
+				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === VentType.MVHR).map((x)=> [x.id, x.name]))"
 			label="MVHR unit" 
 			name="mvhrUnit" 
 			help="Select a MVHR unit that

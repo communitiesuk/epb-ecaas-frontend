@@ -16,9 +16,11 @@ interface RadiosProps {
 	currentValue: string | undefined;
 }
 
-const { showErrorState, showErrorMessage } = defineProps<RadiosProps>();
+const { id, showErrorState, showErrorMessage } = defineProps<RadiosProps>();
 
 const { mounted } = useMounted();
+
+const idWithKey = (key: string) => `${id}_${key.replaceAll(/ /g, '_')}`;
 
 </script>
 
@@ -42,20 +44,20 @@ const { mounted } = useMounted();
 			<div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
 				<div v-for="key in options.keys()" :key="key" class="govuk-radios__item">
 					<input
-						:id="`${id}_${key}`"
+						:id="idWithKey(key)"
 						class="govuk-radios__input"
 						type="radio"
 						:name="name"
 						:value="key"
 						:checked="mounted ? currentValue == key : false"
-						:data-testid="`${id}_${key}`"
-						:aria-describedby="typeof options.get(key) === 'object' ? `${id}_${key}_hint` : ''"
+						:data-testid="idWithKey(key)"
+						:aria-describedby="typeof options.get(key) === 'object' ? `${idWithKey(key)}_hint` : ''"
 						@change="handleInput"
 					>
-					<label class="govuk-label govuk-radios__label" :for="`${id}_${key}`">
+					<label class="govuk-label govuk-radios__label" :for="idWithKey(key)">
 						{{ typeof options.get(key) === 'object' ? (options.get(key) as RadioOption).label : options.get(key) }}
 					</label>
-					<div v-if="(typeof options.get(key) === 'object')" :id="`${id}_${key}_hint`" class="govuk-hint govuk-radios__hint">
+					<div v-if="(typeof options.get(key) === 'object')" :id="`${idWithKey(key)}_hint`" class="govuk-hint govuk-radios__hint">
 						{{ (options.get(key)as RadioOption).hint }}
 					</div>
 				</div>

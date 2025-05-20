@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { GovTaskListItemProps } from '~/components/gov/TaskList.vue';
+import { VentType } from '~/schema/api-schema.types';
 
 const title = 'Infiltration and ventilation';
 const page = usePage();
@@ -17,7 +18,7 @@ const taskList: GovTaskListItemProps[] = createTaskList(page);
 	<ul class="govuk-task-list">
 		<template v-for="item in taskList" :key="item.id">
 			<li
-				v-if="item.id !== 'ductwork' || store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === 'mvhr').length"
+				v-if="item.id !== 'ductwork' || store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === VentType.MVHR).length"
 				class="govuk-task-list__item govuk-task-list__item--with-link">
 				<div class="govuk-task-list__name-and-hint">
 					<NuxtLink :to="item.url" class="govuk-link govuk-task-list__link" :aria-describedby="item.id">

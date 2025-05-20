@@ -5,6 +5,7 @@ import { createPinia, setActivePinia } from 'pinia';
 import formStatus from '~/constants/formStatus';
 import pagesData from '~/data/pages/pages';
 import  MechanicalOverview  from '~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue';
+import { VentType } from '~/schema/api-schema.types';
 const store = useEcaasStore();
 
 describe('Ecaas Store', () => {
@@ -211,7 +212,7 @@ describe('Ecaas Store', () => {
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: "mvhr",
+		typeOfMechanicalVentilationOptions: VentType.MVHR,
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
@@ -221,7 +222,7 @@ describe('Ecaas Store', () => {
 	const mechanicalVentilation2: MechanicalVentilationData = {
 		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
 		name: "Mechanical name 2",
-		typeOfMechanicalVentilationOptions: "mvhr",
+		typeOfMechanicalVentilationOptions: VentType.MVHR,
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,

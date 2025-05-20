@@ -3,6 +3,7 @@ import MechanicalVentilationForm from "./[mechanical].vue";
 import { userEvent } from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import { v4 as uuidv4 } from 'uuid';
+import { VentType } from "~/schema/api-schema.types";
 
 describe("mechanical ventilation form", () => {
 	const user = userEvent.setup();
@@ -14,7 +15,7 @@ describe("mechanical ventilation form", () => {
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: "mvhr",
+		typeOfMechanicalVentilationOptions: VentType.MVHR,
 		controlForSupplyAirflow: "load",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
@@ -25,7 +26,7 @@ describe("mechanical ventilation form", () => {
 	const mechanicalVentilation2: MechanicalVentilationData = {
 		id: '7184f2fe-a78f-4a56-ba5a-1a7751ac506d',
 		name: "Mechanical name 2",
-		typeOfMechanicalVentilationOptions: "intermittent",
+		typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
 		controlForSupplyAirflow: "oda",
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 14,
@@ -39,14 +40,14 @@ describe("mechanical ventilation form", () => {
 		store.$reset();
 	});
 
-	it("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions_mvhr is mvhr", async () => {
+	it("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions_MVHR is MVHR", async () => {
 		vi.mocked(uuidv4).mockReturnValue('5124f2fe-f15b-4a56-ba5a-1a7751ac506f' as unknown as Buffer);
 
 		await renderSuspended(MechanicalVentilationForm);
 
 		await user.type(screen.getByTestId("name"), "Mechanical name 1");
 		await user.click(
-			screen.getByTestId("typeOfMechanicalVentilationOptions_mvhr")
+			screen.getByTestId("typeOfMechanicalVentilationOptions_MVHR")
 		);
 		await user.click(screen.getByTestId("controlForSupplyAirflow_load"));
 		await user.click(screen.getByTestId("supplyAirTemperatureControl_odaComp"));
@@ -69,7 +70,7 @@ describe("mechanical ventilation form", () => {
 
 		await user.type(screen.getByTestId("name"), "Mechanical name 2");
 		await user.click(
-			screen.getByTestId("typeOfMechanicalVentilationOptions_intermittent")
+			screen.getByTestId("typeOfMechanicalVentilationOptions_Intermittent_MEV")
 		);
 		await user.click(screen.getByTestId("controlForSupplyAirflow_oda"));
 		await user.click(screen.getByTestId("supplyAirTemperatureControl_odaComp"));
@@ -136,7 +137,7 @@ describe("mechanical ventilation form", () => {
 		expect(
 			(
 				(await screen.findByTestId(
-					"typeOfMechanicalVentilationOptions_mvhr"
+					"typeOfMechanicalVentilationOptions_MVHR"
 				)) as HTMLInputElement
 			).checked
 		).toBe(true);
@@ -188,7 +189,7 @@ describe("mechanical ventilation form", () => {
 		];
 
 		await user.click(
-			screen.getByTestId("typeOfMechanicalVentilationOptions_mvhr")
+			screen.getByTestId("typeOfMechanicalVentilationOptions_MVHR")
 		);
 		await user.click(screen.getByRole("button"));
 
