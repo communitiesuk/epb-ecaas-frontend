@@ -92,7 +92,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govRadios"
 			:options="{
 				livingSpace: 'Living space',
-				restofDwelling: 'Rest of dwelling',
+				restOfDwelling: 'Rest of dwelling',
 			}"
 			label="Zone reference"
 			name="zoneReference"
