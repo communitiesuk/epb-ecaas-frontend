@@ -128,7 +128,7 @@ const wetDistributionSummary: SummarySection = {
 		return wetDistributionData;
 	}),
 
-	editUrl: "",
+	editUrl: "/heating-systems/heat-emitting",
 };
 
 const instantHeaters = store.heatingSystems.heatEmitting.instantElectricHeater.data;
@@ -143,7 +143,7 @@ const instantElectricHeaterSummary: SummarySection = {
 
 		};
 	}),
-	editUrl: "",
+	editUrl: "/heating-systems/heat-emitting",
 };
 
 const storageHeaters = store.heatingSystems.heatEmitting.electricStorageHeater.data;
@@ -155,7 +155,7 @@ const electricStorageHeaterSummary: SummarySection = {
 			"Name": storageHeater.name
 		};
 	}),
-	editUrl: "",
+	editUrl: "/heating-systems/heat-emitting",
 };
 
 const warmAirHeatPumps = store.heatingSystems.heatEmitting.warmAirHeatPump.data;
@@ -167,7 +167,7 @@ const warmAirHeatPumpSummary: SummarySection = {
 			"Name": pump.name
 		};
 	}),
-	editUrl: "",
+	editUrl: "/heating-systems/heat-emitting",
 };
 
 const heatEmittingSummary: SummarySection[] = [

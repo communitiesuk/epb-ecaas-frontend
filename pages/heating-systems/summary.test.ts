@@ -572,5 +572,45 @@ describe("Heating systems summary page", () => {
 				"Warm air heat pump 1"
 			);
 		});
+
+		it("displays an edit link on each section that navigates to the heat emitting overview page when clicked", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						wetDistribution: {
+							data: [wetDistribution1],
+						},
+						instantElectricHeater: {
+							data: [instantElectricHeater],
+						},
+						electricStorageHeater: {
+							data: [electricStorageHeater],
+						},
+						warmAirHeatPump: {
+							data: [warmAirHeatPump],
+						},
+					},
+					heatGeneration: {
+						heatPump: {
+							data: [heatPump],
+						},
+					},
+				},
+			});
+			await renderSuspended(HeatingSystemsSummary);
+			for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
+				const heatEmittingSection = screen.getByTestId(key);
+
+				const editLink = within(heatEmittingSection).getByText(
+					"Edit"
+				) as HTMLAnchorElement;
+				expect(editLink).not.toBeNull();
+				expect(new URL(editLink.href).pathname).toBe(
+					"/heating-systems/heat-emitting"
+				);
+			}
+		});
 	});
 });
