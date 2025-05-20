@@ -138,6 +138,8 @@ const instantElectricHeaterSummary: SummarySection = {
 	data: instantHeaters.map(instantHeater => {
 		return {
 			"Name": instantHeater.name,
+			"Rated power": instantHeater.ratedPower,
+			"Convection fraction": instantHeater.convectionFractionInstant
 
 		};
 	}),
@@ -205,6 +207,7 @@ const heatEmittingSummary: SummarySection[] = [
 			</NuxtLink>
 		</TabPanel>
 		<SummaryTab :summary="wetDistributionSummary" :selected="tabProps.currentItem?.id === 'wetDistribution'" />
+		<SummaryTab :summary="instantElectricHeaterSummary" :selected="tabProps.currentItem?.id === 'instantElectricHeater'" />
 
 	</GovTabs>
 </template>

@@ -496,5 +496,27 @@ describe("Heating systems summary page", () => {
 			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
 		});
 
+		it("displays the correct data for the instant electric heater section", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						instantElectricHeater: {
+							data: [instantElectricHeater],
+						},
+					}
+				},
+			});
+
+			const expectedInstantElectricHeaterData = {
+				"Name": "Instant electric heater 1",
+				"Rated power": "3",
+				"Convection fraction": "0.2"
+			};
+			await renderSuspended(HeatingSystemsSummary);
+			await verifyDataInSection("instantElectricHeater", expectedInstantElectricHeaterData);
+		});
+
 	});
 });
