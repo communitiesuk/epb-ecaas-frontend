@@ -518,5 +518,28 @@ describe("Heating systems summary page", () => {
 			await verifyDataInSection("instantElectricHeater", expectedInstantElectricHeaterData);
 		});
 
+		it("displays the correct data for the electric storage heater section", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						electricStorageHeater: {
+							data: [electricStorageHeater],
+						},
+					}
+				},
+			});
+
+			await renderSuspended(HeatingSystemsSummary);
+					const lineResult = await screen.findByTestId(
+				"summary-electricStorageHeater-name"
+			);
+
+			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
+			expect(lineResult.querySelector("dd")?.textContent).toBe(
+				"Electric storage heater 1"
+			);
+		});
 	});
 });

@@ -208,6 +208,8 @@ const heatEmittingSummary: SummarySection[] = [
 		</TabPanel>
 		<SummaryTab :summary="wetDistributionSummary" :selected="tabProps.currentItem?.id === 'wetDistribution'" />
 		<SummaryTab :summary="instantElectricHeaterSummary" :selected="tabProps.currentItem?.id === 'instantElectricHeater'" />
+		<SummaryTab :summary="electricStorageHeaterSummary" :selected="tabProps.currentItem?.id === 'electricStorageHeater'" />
+
 
 	</GovTabs>
 </template>
