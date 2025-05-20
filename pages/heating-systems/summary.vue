@@ -91,10 +91,35 @@ const wetDistributionSummary: SummarySection = {
 	id: "wetDistribution",
 	label: "Wet distribution",
 	data: wetDistributions.map(wetDistribution => {
-		return {
-			"Name": wetDistribution.name
+		const wetDistributionData :Record<string, string | number>= {
+			"Name": wetDistribution.name,
+			"Zone reference": wetDistribution.zoneReference,
+			"Heat source": wetDistribution.heatSource,
+			"Thermal mass": wetDistribution.thermalMass,
+			"Design temperature difference across the emitters": wetDistribution.designTempDiffAcrossEmitters,
+			"Design flow temperature": wetDistribution.designFlowTemp,
+			"Type of space heater": wetDistribution.typeOfSpaceHeater,
 		};
+		if (
+			wetDistribution.typeOfSpaceHeater === "radiators" &&
+      wetDistribution.convectionFractionWet !== undefined
+		) {
+			wetDistributionData["Convection fraction"] = wetDistribution.convectionFractionWet;
+		}
+
+		if (
+			wetDistribution.typeOfSpaceHeater === "underFloorHeating" &&
+      wetDistribution.emitterFloorArea !== undefined
+		) {
+			wetDistributionData["Emitter floor area"] = wetDistribution.emitterFloorArea;
+		}
+
+		wetDistributionData["Eco design controller class"] = wetDistribution.ecoDesignControllerClass;
+		wetDistributionData["Minimum flow temperature"] = wetDistribution.minimumFlowTemp;
+
+		return wetDistributionData;
 	}),
+
 	editUrl: "",
 };
 
@@ -171,5 +196,7 @@ const heatEmittingSummary: SummarySection[] = [
 				Add heat emitters
 			</NuxtLink>
 		</TabPanel>
+		<SummaryTab :summary="wetDistributionSummary" :selected="tabProps.currentItem?.id === 'wetDistribution'" />
+
 	</GovTabs>
 </template>

@@ -1,6 +1,7 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatingSystemsSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
+import { WetEmitterWet_emitter_type } from "~/schema/api-schema.types";
 
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -294,6 +295,61 @@ describe("Heating systems summary page", () => {
 	});
 
 	describe("Heat emitting section", () => {
+
+		const heatPump: HeatPumpData = {
+			id: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
+			name: "Heat pump 1",
+		};
+
+		const wetDistribution1: WetDistributionData = {
+			name: "Wet distribution 1",
+			zoneReference: "livingSpace",
+			heatSource: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
+			thermalMass: 2,
+			designTempDiffAcrossEmitters: 0.4,
+			designFlowTemp: 32,
+			typeOfSpaceHeater: "radiators",
+			exponent: 1.3,
+			constant: 0.08,
+			emitterFloorArea: undefined,
+			convectionFractionWet: 0.2,
+			ecoDesignControllerClass: "1",
+			minimumFlowTemp: 20,
+			minOutdoorTemp: 0,
+			maxOutdoorTemp: 15,
+		};
+
+
+		const wetDistribution2: WetDistributionData = {
+			name: "Wet distribution 2",
+			zoneReference: "livingSpace",
+			heatSource: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
+			thermalMass: 2,
+			designTempDiffAcrossEmitters: 0.4,
+			designFlowTemp: 32,
+			typeOfSpaceHeater: "underFloorHeating",
+			exponent: 1.3,
+			constant: 0.08,
+			emitterFloorArea: 5,
+			convectionFractionWet: undefined,
+			ecoDesignControllerClass: "1",
+			minimumFlowTemp: 20,
+			minOutdoorTemp: 0,
+			maxOutdoorTemp: 15,
+		};
+
+		const instantElectricHeater: InstantElectricStorageData = {
+			name: "Instant electric heater 1",
+			ratedPower: 3,
+			convectionFractionInstant: 0.2,
+		};
+		const electricStorageHeater: ElectricStorageHeaterData = {
+			name: "Electric storage heater 1",
+		};
+		const warmAirHeatPump: WarmAirHeatPumpData = {
+			name: "Warm air heat pump 1",
+		};
+
 		it("displays 'No heat emittors added' and link to heat emitting overview page when no data exists", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 
@@ -308,46 +364,12 @@ describe("Heating systems summary page", () => {
 		it("displays tabs only for the heat emitting types that have data", async () => {
 			const store = useEcaasStore();
 
-			const heatPump: HeatPumpData = {
-				id: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
-				name: "Heat pump 1",
-			};
-
-			const wetDistribution: WetDistributionData = {
-				name: "Wet distribution 1",
-				zoneReference: "livingSpace",
-				heatSource: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
-				thermalMass: 2,
-				designTempDiffAcrossEmitters: 0.4,
-				designFlowTemp: 32,
-				typeOfSpaceHeater: "radiators",
-				exponent: 1.3,
-				constant: 0.08,
-				emitterFloorArea: undefined,
-				convectionFractionWet: 0.2,
-				ecoDesignControllerClass: "1",
-				minimumFlowTemp: 20,
-				minOutdoorTemp: 0,
-				maxOutdoorTemp: 15,
-			};
-
-			const instantElectricHeater: InstantElectricStorageData = {
-				name: "Instant electric heater 1",
-				ratedPower: 3,
-				convectionFractionInstant: 0.2,
-			};
-			const electricStorageHeater: ElectricStorageHeaterData = {
-				name: "Electric storage heater 1",
-			};
-			const warmAirHeatPump: WarmAirHeatPumpData = {
-				name: "Warm air heat pump 1",
-			};
-
+		
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
 						wetDistribution: {
-							data: [wetDistribution],
+							data: [wetDistribution1],
 						},
 						instantElectricHeater: {
 							data: [instantElectricHeater],
@@ -371,7 +393,74 @@ describe("Heating systems summary page", () => {
 			expect(screen.getByRole("link", { name: "Instant electric heater" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Electric storage heater" })).not.toBeNull();
 			expect(screen.getByRole("link", { name: "Warm air heat pump" })).not.toBeNull();
+		});
 
+		it("displays the correct data for the wet distribution section when type of space heater is Radiators", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						wetDistribution: {
+							data: [wetDistribution1],
+						},
+					},
+					heatGeneration: {
+						heatPump: {
+							data: [heatPump]
+						}
+					}
+				},
+			});
+
+			const expectedWetDistributionData = {
+				"Name": "Wet distribution 1",
+				"Zone reference": "Living space",
+				"Heat source": "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
+				"Thermal mass": "2",
+				"Design temperature difference across the emitters": "0.4",
+				"Design flow temperature": "32",
+				"Type of space heater": "Radiators",
+				"Convection fraction": "0.2",
+				"Eco design controller class": "1",
+				"Minimum flow temperature": "20",
+			};
+			await renderSuspended(HeatingSystemsSummary);
+			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
+		});
+
+		it("displays the correct data for the wet distribution section when type of space heater is Under floor heating", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						wetDistribution: {
+							data: [wetDistribution2],
+						},
+					},
+					heatGeneration: {
+						heatPump: {
+							data: [heatPump]
+						}
+					}
+				},
+			});
+
+			const expectedWetDistributionData = {
+				"Name": "Wet distribution 2",
+				"Zone reference": "Living space",
+				"Heat source": "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
+				"Thermal mass": "2",
+				"Design temperature difference across the emitters": "0.4",
+				"Design flow temperature": "32",
+				"Type of space heater": "Under floor heating",
+				"Emitter floor area": "5",
+				"Eco design controller class": "1",
+				"Minimum flow temperature": "20",
+			};
+			await renderSuspended(HeatingSystemsSummary);
+			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
 		});
 	});
 });
