@@ -104,6 +104,7 @@ const heatGenerationSummary: SummarySection[] = [
 		</TabPanel>
 		<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentItem?.id === 'heatPump'" />
 		<SummaryTab :summary="boilerSummary" :selected="tabProps.currentItem?.id === 'boiler'" />
+		<SummaryTab :summary="heatBatterySummary" :selected="tabProps.currentItem?.id === 'heatBattery'" />
 	</GovTabs>
 </template>
 

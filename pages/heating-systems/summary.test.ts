@@ -188,5 +188,26 @@ describe("Heating systems summary page", () => {
       expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
       expect(lineResult.querySelector("dd")?.textContent).toBe("Boiler");
     });
+
+		  it("displays the correct data for the heat battery section", async () => {
+      const store = useEcaasStore();
+
+      store.$patch({
+        heatingSystems: {
+          heatGeneration: {
+            heatBattery: {
+              data: [heatBattery],
+            },
+          },
+        },
+      });
+      await renderSuspended(HeatingSystemsSummary);
+
+      const lineResult = await screen.findByTestId("summary-heatBattery-name");
+
+      expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
+      expect(lineResult.querySelector("dd")?.textContent).toBe("Heat battery");
+    });
+
   });
 });
