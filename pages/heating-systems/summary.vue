@@ -102,6 +102,7 @@ const heatGenerationSummary: SummarySection[] = [
 				Add heat generation
 			</NuxtLink>
 		</TabPanel>
+		<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentItem?.id === 'heatPump'" />
 	</GovTabs>
 </template>
 

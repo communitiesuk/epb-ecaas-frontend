@@ -82,6 +82,27 @@ describe("Heating systems summary page", () => {
 		});
 	});
 	describe("Heat generation section", () => {
+		const heatPump: HeatPumpData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+			name: "Heat pump",
+		};
+		const boiler: BoilerData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+			name: "Boiler",
+		};
+		const heatBattery: HeatBatteryData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+			name: "Heat battery",
+		};
+		const heatNetwork: HeatNetworkData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+			name: "Heat network",
+		};
+		const heatInterfaceUnit: HeatInterfaceUnitData = {
+			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+			name: "Heat interface unit",
+		};
+
 		it("displays 'No heat generation added' and link to add heat generation overview page when no data exists", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 
@@ -93,30 +114,10 @@ describe("Heating systems summary page", () => {
 				getUrl("heatGeneration")
 			);
 		});
-		
+
 		it("displays tabs only for the heat generation types that have data", async () => {
-			const heatPump: HeatPumpData = {
-				id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-				name: "Heat pump",
-			};
-			const boiler: BoilerData = {
-				id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-				name: "Boiler",
-			};
-			const heatBattery: HeatBatteryData = {
-				id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-				name: "Heat battery",
-			};
-			const heatNetwork: HeatNetworkData = {
-				id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-				name: "Heat network",
-			};
-			const heatInterfaceUnit: HeatInterfaceUnitData = {
-				id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-				name: "Heat interface unit",
-			};
 			const store = useEcaasStore();
-			
+
 			store.$patch({
 				heatingSystems: {
 					heatGeneration: {
@@ -146,6 +147,26 @@ describe("Heating systems summary page", () => {
 			expect(
 				screen.getByRole("link", { name: "Heat interface unit" })
 			).not.toBeNull();
+		});
+
+		it("displays the correct data for the heat pump section", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatPump: {
+							data: [heatPump],
+						},
+					},
+				},
+			});
+			await renderSuspended(HeatingSystemsSummary);
+
+			const lineResult = await screen.findByTestId("summary-heatPump-name");
+
+			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
+			expect(lineResult.querySelector("dd")?.textContent).toBe("Heat pump");
 		});
 	});
 });
