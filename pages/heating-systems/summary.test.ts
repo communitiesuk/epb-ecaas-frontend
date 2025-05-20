@@ -63,7 +63,7 @@ describe("Heating systems summary page", () => {
 
 			const expectedEnergySupplyData = {
 				"Fuel type": "WoodElectricity",
-				"Exported": "Yes",
+				Exported: "Yes",
 				"CO2 per kWh": "1",
 				"CO2 per kWh (including out of scope)": "2",
 				"kWh per kWh delivered": "3",
@@ -92,6 +92,60 @@ describe("Heating systems summary page", () => {
 			expect(new URL(addHeatGenerationLink.href).pathname).toBe(
 				getUrl("heatGeneration")
 			);
+		});
+		
+		it("displays tabs only for the heat generation types that have data", async () => {
+			const heatPump: HeatPumpData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+				name: "Heat pump",
+			};
+			const boiler: BoilerData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+				name: "Boiler",
+			};
+			const heatBattery: HeatBatteryData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+				name: "Heat battery",
+			};
+			const heatNetwork: HeatNetworkData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+				name: "Heat network",
+			};
+			const heatInterfaceUnit: HeatInterfaceUnitData = {
+				id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+				name: "Heat interface unit",
+			};
+			const store = useEcaasStore();
+			
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatPump: {
+							data: [heatPump],
+						},
+						boiler: {
+							data: [boiler],
+						},
+						heatBattery: {
+							data: [heatBattery],
+						},
+						heatNetwork: {
+							data: [heatNetwork],
+						},
+						heatInterfaceUnit: {
+							data: [heatInterfaceUnit],
+						},
+					},
+				},
+			});
+			await renderSuspended(HeatingSystemsSummary);
+			expect(screen.getByRole("link", { name: "Heat pump" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Boiler" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Heat battery" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Heat network" })).not.toBeNull();
+			expect(
+				screen.getByRole("link", { name: "Heat interface unit" })
+			).not.toBeNull();
 		});
 	});
 });

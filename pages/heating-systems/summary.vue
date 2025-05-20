@@ -16,6 +16,74 @@ const energySupplySummary: SummarySection = {
 	},
 	editUrl: "/heating-systems/energy-supply",
 };
+const heatPumps = store.heatingSystems.heatGeneration.heatPump.data;
+const heatPumpSummary: SummarySection = {
+	id: "heatPump",
+	label: "Heat pump",
+
+	data: heatPumps.map(pump => {
+		return {
+			"Name": pump.name
+		};
+	}) || [],
+	editUrl: "/heating-systems/heat-generation",
+};
+
+const boilers = store.heatingSystems.heatGeneration.boiler.data;
+const boilerSummary: SummarySection = {
+	id: "boiler",
+	label: "Boiler",
+	data: boilers.map(boiler => {
+		return {
+			"Name": boiler.name
+		};
+	}),
+	editUrl: "",
+};
+
+const batteries = store.heatingSystems.heatGeneration.heatBattery.data;
+const heatBatterySummary: SummarySection = {
+	id: "heatBattery",
+	label: "Heat battery",
+	data: batteries.map(battery => {
+		return {
+			"Name": battery.name
+		};
+	}),
+	editUrl: "",
+};
+
+const networks = store.heatingSystems.heatGeneration.heatNetwork.data;
+const heatNetworkSummary: SummarySection = {
+	id: "heatNetwork",
+	label: "Heat network",
+	data: networks.map(network => {
+		return {
+			"Name": network.name
+		};
+	}),
+	editUrl: "",
+};
+
+const units = store.heatingSystems.heatGeneration.heatInterfaceUnit.data;
+const heatInterfaceUnitSummary: SummarySection = {
+	id: "heatInterfaceUnit",
+	label: "Heat interface unit",
+	data: units.map(unit => {
+		return {
+			"Name": unit.name
+		};
+	}),
+	editUrl: "",
+};
+
+const heatGenerationSummary: SummarySection[] = [
+	heatPumpSummary,
+	boilerSummary,
+	heatBatterySummary,
+	heatNetworkSummary,
+	heatInterfaceUnitSummary
+].filter(x => x.data.length);
 
 </script>
 <template>
@@ -27,10 +95,13 @@ const energySupplySummary: SummarySection = {
 	<GovTabs v-slot="tabProps" :items="getTabItems([energySupplySummary])">
 		<SummaryTab :summary="energySupplySummary" :selected="tabProps.currentTab === 0" />
 	</GovTabs>
-	<h2 class="govuk-heading-m">No heat generation added</h2>
-	<NuxtLink class="govuk-link" :to="getUrl('heatGeneration')">
-		Add heat generation
-	</NuxtLink>
-	
-
+	<GovTabs v-slot="tabProps" :items="getTabItems(heatGenerationSummary)">
+		<TabPanel id="heatGeneration" :selected="!tabProps.currentItem">
+			<h2 class="govuk-heading-m">No heat generation added</h2>
+			<NuxtLink class="govuk-link" :to="getUrl('heatGeneration')">
+				Add heat generation
+			</NuxtLink>
+		</TabPanel>
+	</GovTabs>
 </template>
+
