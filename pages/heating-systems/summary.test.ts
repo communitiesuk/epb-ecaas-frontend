@@ -294,7 +294,6 @@ describe("Heating systems summary page", () => {
 	});
 
 	describe("Heat emitting section", () => {
-
 		const heatPump: HeatPumpData = {
 			id: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
 			name: "Heat pump 1",
@@ -317,7 +316,6 @@ describe("Heating systems summary page", () => {
 			minOutdoorTemp: 0,
 			maxOutdoorTemp: 15,
 		};
-
 
 		const wetDistribution2: WetDistributionData = {
 			name: "Wet distribution 2",
@@ -363,7 +361,6 @@ describe("Heating systems summary page", () => {
 		it("displays tabs only for the heat emitting types that have data", async () => {
 			const store = useEcaasStore();
 
-		
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
@@ -382,16 +379,24 @@ describe("Heating systems summary page", () => {
 					},
 					heatGeneration: {
 						heatPump: {
-							data: [heatPump]
-						}
-					}
+							data: [heatPump],
+						},
+					},
 				},
 			});
 			await renderSuspended(HeatingSystemsSummary);
-			expect(screen.getByRole("link", { name: "Wet distribution" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Instant electric heater" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Electric storage heater" })).not.toBeNull();
-			expect(screen.getByRole("link", { name: "Warm air heat pump" })).not.toBeNull();
+			expect(
+				screen.getByRole("link", { name: "Wet distribution" })
+			).not.toBeNull();
+			expect(
+				screen.getByRole("link", { name: "Instant electric heater" })
+			).not.toBeNull();
+			expect(
+				screen.getByRole("link", { name: "Electric storage heater" })
+			).not.toBeNull();
+			expect(
+				screen.getByRole("link", { name: "Warm air heat pump" })
+			).not.toBeNull();
 		});
 
 		it("displays the correct data for the wet distribution section when type of space heater is Radiators", async () => {
@@ -406,14 +411,14 @@ describe("Heating systems summary page", () => {
 					},
 					heatGeneration: {
 						heatPump: {
-							data: [heatPump]
-						}
-					}
+							data: [heatPump],
+						},
+					},
 				},
 			});
 
 			const expectedWetDistributionData = {
-				"Name": "Wet distribution 1",
+				Name: "Wet distribution 1",
 				"Zone reference": "Living space",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": "2",
@@ -440,14 +445,14 @@ describe("Heating systems summary page", () => {
 					},
 					heatGeneration: {
 						heatPump: {
-							data: [heatPump]
-						}
-					}
+							data: [heatPump],
+						},
+					},
 				},
 			});
 
 			const expectedWetDistributionData = {
-				"Name": "Wet distribution 2",
+				Name: "Wet distribution 2",
 				"Zone reference": "Living space",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": "2",
@@ -474,14 +479,14 @@ describe("Heating systems summary page", () => {
 					},
 					heatGeneration: {
 						heatPump: {
-							data: [heatPump]
-						}
-					}
+							data: [heatPump],
+						},
+					},
 				},
 			});
 
 			const expectedWetDistributionData = {
-				"Name": "Wet distribution 1",
+				Name: "Wet distribution 1",
 				"Zone reference": "Living space",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": "2",
@@ -505,17 +510,20 @@ describe("Heating systems summary page", () => {
 						instantElectricHeater: {
 							data: [instantElectricHeater],
 						},
-					}
+					},
 				},
 			});
 
 			const expectedInstantElectricHeaterData = {
-				"Name": "Instant electric heater 1",
+				Name: "Instant electric heater 1",
 				"Rated power": "3",
-				"Convection fraction": "0.2"
+				"Convection fraction": "0.2",
 			};
 			await renderSuspended(HeatingSystemsSummary);
-			await verifyDataInSection("instantElectricHeater", expectedInstantElectricHeaterData);
+			await verifyDataInSection(
+				"instantElectricHeater",
+				expectedInstantElectricHeaterData
+			);
 		});
 
 		it("displays the correct data for the electric storage heater section", async () => {
@@ -527,18 +535,41 @@ describe("Heating systems summary page", () => {
 						electricStorageHeater: {
 							data: [electricStorageHeater],
 						},
-					}
+					},
 				},
 			});
 
 			await renderSuspended(HeatingSystemsSummary);
-					const lineResult = await screen.findByTestId(
+			const lineResult = await screen.findByTestId(
 				"summary-electricStorageHeater-name"
 			);
 
 			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
 			expect(lineResult.querySelector("dd")?.textContent).toBe(
 				"Electric storage heater 1"
+			);
+		});
+		it("displays the correct data for the warm air heat pump section", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						warmAirHeatPump: {
+							data: [warmAirHeatPump],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(HeatingSystemsSummary);
+			const lineResult = await screen.findByTestId(
+				"summary-warmAirHeatPump-name"
+			);
+
+			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
+			expect(lineResult.querySelector("dd")?.textContent).toBe(
+				"Warm air heat pump 1"
 			);
 		});
 	});
