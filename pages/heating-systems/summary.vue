@@ -14,7 +14,7 @@ const energySupplySummary: SummarySection = {
 		"CO2 per kWh (including out of scope)": store.heatingSystems.energySupply.data.co2PerKwhIncludingOutOfScope,
 		"kWh per kWh delivered": store.heatingSystems.energySupply.data.kwhPerKwhDelivered,
 	},
-	editUrl: "",
+	editUrl: "/heating-systems/energy-supply",
 };
 </script>
 <template>
@@ -23,9 +23,6 @@ const energySupplySummary: SummarySection = {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovTabs v-slot="tabProps" :items="getTabItems([energySupplySummary])">
-		<SummaryTab
-			:summary="energySupplySummary"
-			:selected="tabProps.currentTab === 0"
-		/>
+		<SummaryTab :summary="energySupplySummary" :selected="tabProps.currentTab === 0" />
 	</GovTabs>
 </template>

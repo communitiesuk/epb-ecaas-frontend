@@ -3,7 +3,10 @@ import HeatingSystemsSummary from "./summary.vue";
 import { screen } from "@testing-library/vue";
 
 type expectedData = { [key: string]: string };
-const verifyDataInSection = async (section: string, expectedSectionData: expectedData) => {
+const verifyDataInSection = async (
+	section: string,
+	expectedSectionData: expectedData
+) => {
 	for (const [key, value] of Object.entries(expectedSectionData)) {
 		const lineResult = await screen.findByTestId(
 			`summary-${section}-${hyphenate(key)}`
@@ -26,11 +29,11 @@ describe("Heating systems summary page", () => {
 			).not.toBeNull();
 		});
 
-		it("should display and empty section if no energy supply data has been added", async () => {
+		it("should display an empty section if no energy supply data has been added", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 			const expectedEnergySupplyData = {
 				"Fuel type": "",
-				"Exported": "",
+				Exported: "",
 				"CO2 per kWh": "",
 				"CO2 per kWh (including out of scope)": "",
 				"kWh per kWh delivered": "",
@@ -67,6 +70,15 @@ describe("Heating systems summary page", () => {
 			};
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection("energySupply", expectedEnergySupplyData);
+		});
+		it("displays an edit link that navigates to the energy supply form page when clicked", async () => {
+			await renderSuspended(HeatingSystemsSummary);
+			const editLink = screen.getByRole("link", {
+				name: "Edit",
+			}) as HTMLAnchorElement;
+			expect(new URL(editLink.href).pathname).toBe(
+				"/heating-systems/energy-supply"
+			);
 		});
 	});
 });
