@@ -4,7 +4,7 @@ import MechanicalVentilationOverview from "./index.vue";
 import MechanicalVentilationForm from './[mechanical].vue';
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
-import { MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
+import { DuctShape, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
 
 describe("mechanical ventilation overview", () => {
 	const store = useEcaasStore();
@@ -65,7 +65,7 @@ describe("mechanical ventilation overview", () => {
 	const ductwork1: DuctworkData = {
 		name: 'Ductwork 1',
 		mvhrUnit: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
-		ductworkCrossSectionalShape: "circular",
+		ductworkCrossSectionalShape: DuctShape.circular,
 		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
@@ -79,7 +79,7 @@ describe("mechanical ventilation overview", () => {
 	const ductwork2: DuctworkData = {
 		name: 'Ductwork 2',
 		mvhrUnit: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
-		ductworkCrossSectionalShape: "circular",
+		ductworkCrossSectionalShape: DuctShape.circular,
 		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
@@ -93,7 +93,7 @@ describe("mechanical ventilation overview", () => {
 	const ductwork3: DuctworkData = {
 		name: 'Ductwork 3',
 		mvhrUnit: '6746f2fe-f15b-4a56-ba5a-1a7751ac89hh',
-		ductworkCrossSectionalShape: "circular",
+		ductworkCrossSectionalShape: DuctShape.circular,
 		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,

@@ -1,4 +1,4 @@
-import { MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
+import { DuctShape, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
 import { checkMvhrHasDuctwork } from "~/utils/checkMvhrHasDuctwork";
 
 describe('checkMvhrHasDuctwork', () => {
@@ -38,7 +38,7 @@ describe('checkMvhrHasDuctwork', () => {
 	const ductworkData1: DuctworkData = {
 		name: "Ducktwork 1",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
-		ductworkCrossSectionalShape: "circular",
+		ductworkCrossSectionalShape: DuctShape.circular,
 		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
@@ -51,7 +51,7 @@ describe('checkMvhrHasDuctwork', () => {
 	const ductworkData2: DuctworkData = {
 		name: "Ducktwork 2",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506h",
-		ductworkCrossSectionalShape: "circular",
+		ductworkCrossSectionalShape: DuctShape.circular,
 		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,

@@ -1,4 +1,4 @@
-import type { CombustionAirSupplySituation, CombustionFuelType, MassDistributionClass, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
+import type { CombustionAirSupplySituation, CombustionFuelType, DuctShape, MassDistributionClass, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -488,7 +488,7 @@ export type MechanicalVentilationData = {
 export type DuctworkData = {
 	name:string;
 	mvhrUnit: string;
-	ductworkCrossSectionalShape: string;
+	ductworkCrossSectionalShape: DuctShape;
 	ductType: string;
 	internalDiameterOfDuctwork: number;
 	externalDiameterOfDuctwork: number;

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { DuctShape } from '~/schema/api-schema.types';
 import { VentType } from '~/schema/api-schema.types';
 
 const title = "MVHR ductwork";
@@ -12,6 +13,12 @@ const ductwork = useItemToEdit(
 
 const model: Ref<DuctworkData> = ref(ductwork!);
 store.infiltrationAndVentilation.ductwork.complete = false;
+
+const ductworkCrossSectionalShapeOptions: EnumRecord<DuctShape, Capitalize<DuctShape>> = {
+	circular: "Circular",
+	rectangular: "Rectangular",
+};
+
 const saveForm = (fields: DuctworkData) => {
 	store.$patch((state) => {
 		const { ductwork } = state.infiltrationAndVentilation;
@@ -131,10 +138,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="ductworkCrossSectionalShape"
 			type="govRadios"
-			:options="{
-				circular: 'Circular',
-				rectangular: 'Rectangular',
-			}"
+			:options="ductworkCrossSectionalShapeOptions"
 			label="Ductwork cross sectional shape"
 			name="ductworkCrossSectionalShape"
 			validation="required"
