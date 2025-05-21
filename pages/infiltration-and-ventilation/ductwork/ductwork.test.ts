@@ -26,7 +26,7 @@ describe('ductwork', async () => {
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
 		thermalInsulationConductivityOfDuctwork: 10,
-		surfaceReflectivity: "reflective",
+		surfaceReflectivity: true,
 	};
 	const ductwork2: DuctworkData = {
 		name: 'Ductwork 2',
@@ -38,7 +38,7 @@ describe('ductwork', async () => {
 		insulationThickness: 10,
 		lengthOfDuctwork: 10,
 		thermalInsulationConductivityOfDuctwork: 9,
-		surfaceReflectivity: "reflective",
+		surfaceReflectivity: true,
 	};
 	const ductwork3: DuctworkData = {
 		name: 'Ductwork 3',
@@ -50,7 +50,7 @@ describe('ductwork', async () => {
 		insulationThickness: 100,
 		lengthOfDuctwork: 200,
 		thermalInsulationConductivityOfDuctwork: 1,
-		surfaceReflectivity: "reflective",
+		surfaceReflectivity: true,
 	};
 	afterEach(() => {
 		store.$reset();

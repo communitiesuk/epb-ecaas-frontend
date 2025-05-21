@@ -42,7 +42,7 @@ const ductworkSummary: SummarySection = {
 			"Internal diameter of ductwork": x.internalDiameterOfDuctwork,
 			"External diameter of ductwork": x.externalDiameterOfDuctwork,
 			"Thermal insulation conductivity of ductwork": x.thermalInsulationConductivityOfDuctwork,
-			"Surface reflectivity": x.surfaceReflectivity,
+			"Surface reflectivity": x.surfaceReflectivity ? "reflective" : "not reflective",
 		};
 	}) || [],
 	editUrl: getUrl('ductwork')!

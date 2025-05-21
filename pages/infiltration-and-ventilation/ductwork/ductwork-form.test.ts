@@ -26,7 +26,7 @@ const populateValidForm = async () => {
 		screen.getByTestId("thermalInsulationConductivityOfDuctwork"),
 		"10"
 	);
-	await user.click(screen.getByTestId("surfaceReflectivity_reflective"));
+	await user.click(screen.getByTestId("surfaceReflectivity_yes"));
 };
 
 describe("ductwork form", async () => {
@@ -62,7 +62,7 @@ describe("ductwork form", async () => {
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
 		thermalInsulationConductivityOfDuctwork: 10,
-		surfaceReflectivity: "reflective",
+		surfaceReflectivity: true,
 	};
 
 	afterEach(() => {
@@ -174,7 +174,7 @@ describe("ductwork form", async () => {
 		expect(
 			(
 				(await screen.findByTestId(
-					"surfaceReflectivity_reflective"
+					"surfaceReflectivity_yes"
 				)) as HTMLInputElement
 			).checked
 		).toBe(true);

@@ -72,7 +72,7 @@ describe("mechanical ventilation overview", () => {
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
 		thermalInsulationConductivityOfDuctwork: 10,
-		surfaceReflectivity: "reflective",
+		surfaceReflectivity: true,
 	};
 
 	// linked to mechanicalVentilation1
@@ -86,7 +86,7 @@ describe("mechanical ventilation overview", () => {
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
 		thermalInsulationConductivityOfDuctwork: 10,
-		surfaceReflectivity: "reflective",
+		surfaceReflectivity: true,
 	};
 
 	// linked to mechanicalVentilation4
@@ -100,7 +100,7 @@ describe("mechanical ventilation overview", () => {
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
 		thermalInsulationConductivityOfDuctwork: 10,
-		surfaceReflectivity: "reflective",
+		surfaceReflectivity: true,
 	};
 
 	afterEach(() => {

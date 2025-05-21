@@ -45,7 +45,7 @@ describe('checkMvhrHasDuctwork', () => {
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
 		thermalInsulationConductivityOfDuctwork: 10,
-		surfaceReflectivity: "reflective",
+		surfaceReflectivity: true,
 	};
 
 	const ductworkData2: DuctworkData = {
@@ -58,7 +58,7 @@ describe('checkMvhrHasDuctwork', () => {
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
 		thermalInsulationConductivityOfDuctwork: 10,
-		surfaceReflectivity: "reflective",
+		surfaceReflectivity: true,
 	};
 
 	it('should return true if one mvhr has a ductwork ', async () => {

@@ -29,7 +29,7 @@ const ductworkData: DuctworkData = {
 	insulationThickness: 100,
 	lengthOfDuctwork: 100,
 	thermalInsulationConductivityOfDuctwork: 10,
-	surfaceReflectivity: "reflective",
+	surfaceReflectivity: true,
 };
 
 const ventData: VentData = {

@@ -495,8 +495,7 @@ export type DuctworkData = {
 	insulationThickness: number;
 	lengthOfDuctwork: number;
 	thermalInsulationConductivityOfDuctwork: number;
-	surfaceReflectivity: string;
-	
+	surfaceReflectivity: boolean;
 };
 
 export type VentData = {

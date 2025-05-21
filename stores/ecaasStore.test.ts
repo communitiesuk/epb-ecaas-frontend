@@ -239,7 +239,7 @@ describe('Ecaas Store', () => {
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
 		thermalInsulationConductivityOfDuctwork: 10,
-		surfaceReflectivity: "reflective",
+		surfaceReflectivity: true,
 	};
 	const ductwork2: DuctworkData = {
 		name: 'Ductwork 2',
@@ -251,7 +251,7 @@ describe('Ecaas Store', () => {
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
 		thermalInsulationConductivityOfDuctwork: 10,
-		surfaceReflectivity: "reflective",
+		surfaceReflectivity: true,
 	};
 	it('getStatus of ductwork task returns not started status when mvhr and ductwork is added then mvhr is removed', async() => {
 
