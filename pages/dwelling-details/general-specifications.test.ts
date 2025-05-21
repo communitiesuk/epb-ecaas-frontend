@@ -3,6 +3,7 @@ import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
 import type { GeneralSpecificationsData } from '~/stores/ecaasStore.types';
+import { BuildType } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -10,7 +11,7 @@ mockNuxtImport('navigateTo', () => {
 });
 
 const state: GeneralSpecificationsData = {
-	typeOfDwelling: 'house',
+	typeOfDwelling: BuildType.house,
 	storeysInDwelling: 2,
 	numOfBedrooms: 3,
 	partGCompliance: true,
@@ -18,7 +19,7 @@ const state: GeneralSpecificationsData = {
 };
 
 const stateWithFlat: GeneralSpecificationsData = {
-	typeOfDwelling: 'flat',
+	typeOfDwelling: BuildType.flat,
 	storeysInDwelling: 7,
 	storeyOfFlat: 3,
 	numOfBedrooms: 3,

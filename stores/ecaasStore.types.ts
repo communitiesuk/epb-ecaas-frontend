@@ -1,4 +1,4 @@
-import type { CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
+import type { BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -16,14 +16,14 @@ export interface EcaasForm<T> {
 }
 
 export interface DwellingDetails {
-	generalSpecifications: EcaasForm<GeneralSpecificationsData>;
+	generalSpecifications: EcaasForm<Partial<GeneralSpecificationsData>>;
 	appliances: EcaasForm<AppliancesData>;
 	shading: EcaasForm<ShadingData[]>;
 	externalFactors: EcaasForm<ExternalFactorsData>;
 }
 
 export interface GeneralSpecificationsData {
-	typeOfDwelling?: string;
+	typeOfDwelling: BuildType;
 	storeysInDwelling?: number;
 	storeyOfFlat?: number;
 	numOfBedrooms?: number;

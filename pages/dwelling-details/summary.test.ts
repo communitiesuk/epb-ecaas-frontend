@@ -3,6 +3,7 @@ import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
 import hyphenate from '../../utils/hyphenate';
+import { BuildType } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -18,7 +19,7 @@ interface DwellingDetailSummary {
 
 const state: DwellingDetailSummary = {
 	generalSpecifications: {
-		typeOfDwelling: 'house',
+		typeOfDwelling: BuildType.house,
 		storeysInDwelling: 2,
 		numOfBedrooms: 3,
 		partGCompliance: true,

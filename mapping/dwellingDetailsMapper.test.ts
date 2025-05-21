@@ -1,3 +1,4 @@
+import { BuildType } from '~/schema/api-schema.types';
 import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 
 describe('dwelling details mapper', () => {
@@ -10,7 +11,7 @@ describe('dwelling details mapper', () => {
 	it('maps general specifications input state to FHS input request', () => {
 		// Arrange
 		const state: GeneralSpecificationsData = {
-			typeOfDwelling: 'flat',
+			typeOfDwelling: BuildType.flat,
 			storeysInDwelling: 3,
 			storeyOfFlat: 1,
 			numOfBedrooms: 2,

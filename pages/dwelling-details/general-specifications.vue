@@ -1,10 +1,17 @@
 <script setup lang="ts">
+import type { BuildType } from '~/schema/api-schema.types';
+
 const title = "General specifications";
 const store = useEcaasStore();
 
 const model = ref({
 	...store.dwellingDetails.generalSpecifications.data
 });
+
+const typeOfDwellingOptions: EnumRecord<BuildType, SnakeToSentenceCase<BuildType>> = {
+	house: "House",
+	flat: "Flat",
+};
 
 const saveForm = (fields: typeof model.value) => {
 	store.$patch({
@@ -39,10 +46,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="typeOfDwelling"
 			type="govRadios"
-			:options="{
-				house: 'House',
-				flat: 'Flat',
-			}"
+			:options="typeOfDwellingOptions"
 			label="Type of dwelling"
 			name="typeOfDwelling"
 			validation="required"

@@ -5,7 +5,7 @@ import { createPinia, setActivePinia } from 'pinia';
 import formStatus from '~/constants/formStatus';
 import pagesData from '~/data/pages/pages';
 import  MechanicalOverview  from '~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue';
-import { DuctShape, DuctType, MVHRLocation, SupplyAirFlowRateControlType, VentType } from '~/schema/api-schema.types';
+import { BuildType, DuctShape, DuctType, MVHRLocation, SupplyAirFlowRateControlType, VentType } from '~/schema/api-schema.types';
 const store = useEcaasStore();
 
 describe('Ecaas Store', () => {
@@ -49,7 +49,7 @@ describe('Ecaas Store', () => {
 			dwellingDetails: {
 				generalSpecifications: {
 					data: {
-						typeOfDwelling: 'house'
+						typeOfDwelling: BuildType.house
 					}
 				}
 			}
@@ -163,7 +163,7 @@ describe('Ecaas Store', () => {
 			dwellingDetails: {
 				generalSpecifications: {
 					data: {
-						typeOfDwelling: 'house'
+						typeOfDwelling: BuildType.house
 					}
 				}
 			}
