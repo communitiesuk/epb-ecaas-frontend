@@ -1,4 +1,4 @@
-import { MassDistributionClass } from '../schema/api-schema.types';
+import { FlueGasExhaustSituation, MassDistributionClass } from '../schema/api-schema.types';
 
 export function displayBoolean(value: boolean | undefined): BooleanDisplay | undefined {
 	if (typeof value === 'undefined') {
@@ -32,4 +32,20 @@ type MassDistributionClassDisplay = 'Internal' | 'External' | 'Divided' | 'Equal
 export function sentenceCase(value: string): string {
 	const replaced = value.replaceAll(/_/g, ' ');
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1).toLowerCase();
+}
+
+export type FlueGasExhaustSituationDisplay = 'Into separate duct' | 'Into room' | 'Into mechanical vent';
+
+export function displayFlueGasExhaustSituation(value: FlueGasExhaustSituation): FlueGasExhaustSituationDisplay {
+	switch (value) {
+		case FlueGasExhaustSituation.into_separate_duct:
+			return 'Into separate duct';
+		case FlueGasExhaustSituation.into_room:
+			return 'Into room';
+		case FlueGasExhaustSituation.into_mech_vent:
+			return 'Into mechanical vent';
+		default:
+			value satisfies never;
+			throw new Error(`Missed a flue gas exhaust situation case: ${value}`);
+	}
 }

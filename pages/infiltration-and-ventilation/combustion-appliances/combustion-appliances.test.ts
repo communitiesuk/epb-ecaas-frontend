@@ -10,7 +10,7 @@ import OpenGasFireForm from './open-gas-fire/[combustion].vue';
 import ClosedFireForm from './closed-fire/[combustion].vue';
 
 import {expect} from "vitest";
-import { CombustionAirSupplySituation, CombustionFuelType } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
 
 describe('open fireplace', () => {
 	const store = useEcaasStore();
@@ -19,7 +19,7 @@ describe('open fireplace', () => {
 	const openFireplace1: CombustionApplianceData = {
 		name: 'Open fireplace 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.room_air,
-		exhaustMethodFromAppliance: 'intoSeparateDuct',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_separate_duct,
 		typeOfFuel: CombustionFuelType.coal,
 	};
 
@@ -112,7 +112,7 @@ describe('closed fireplace with fan', () => {
 	const closedFireplaceWithFan1: CombustionApplianceData = {
 		name: 'Closed fireplace with fan 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.room_air,
-		exhaustMethodFromAppliance: 'intoSeparateDuct',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_separate_duct,
 		typeOfFuel: CombustionFuelType.wood
 	};
 
@@ -205,7 +205,7 @@ describe('open gas flue balancer', () => {
 	const openGasFlueBalancer1: CombustionApplianceData = {
 		name: 'Open gas flue balancer 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: 'intoRoom',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_room,
 		typeOfFuel: CombustionFuelType.gas,
 	};
 
@@ -298,7 +298,7 @@ describe('open gas kitchen stove', () => {
 	const openGasKitchenStove1: CombustionApplianceData = {
 		name: 'Open gas kitchen stove 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: 'intoRoom',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_room,
 		typeOfFuel: CombustionFuelType.oil,
 	};
 
@@ -391,7 +391,7 @@ describe('open gas fire', () => {
 	const openGasFire1: CombustionApplianceData = {
 		name: 'Open gas fire 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: 'intoMechanicalVent',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
 		typeOfFuel: CombustionFuelType.oil,
 	};
 
@@ -484,7 +484,7 @@ describe('closed fire', () => {
 	const closedFire1: CombustionApplianceData = {
 		name: 'Closed fire 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: 'intoMechanicalVent',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
 		typeOfFuel: CombustionFuelType.coal,
 	};
 
@@ -579,38 +579,38 @@ describe('mark section as complete', () => {
 	const openFireplace1: CombustionApplianceData = {
 		name: 'Open fireplace 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.room_air,
-		exhaustMethodFromAppliance: 'intoSeparateDuct',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_separate_duct,
 		typeOfFuel: CombustionFuelType.coal,
 	};
 	const closedFireplaceWithFan1: CombustionApplianceData = {
 		name: 'Closed fireplace with fan 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.room_air,
-		exhaustMethodFromAppliance: 'intoSeparateDuct',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_separate_duct,
 		typeOfFuel: CombustionFuelType.wood
 	};
 	const openGasFlueBalancer1: CombustionApplianceData = {
 		name: 'Open gas flue balancer 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: 'intoRoom',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_room,
 		typeOfFuel: CombustionFuelType.gas,
 	};
 	const openGasKitchenStove1: CombustionApplianceData = {
 		name: 'Open gas kitchen stove 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: 'intoRoom',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_room,
 		typeOfFuel: CombustionFuelType.oil,
 	};
 	const openGasFire1: CombustionApplianceData = {
 		name: 'Open gas fire 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: 'intoMechanicalVent',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
 		typeOfFuel: CombustionFuelType.oil,
 	};
 
 	const closedFire1: CombustionApplianceData = {
 		name: 'Closed fire 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: 'intoMechanicalVent',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
 		typeOfFuel: CombustionFuelType.coal,
 	};
 

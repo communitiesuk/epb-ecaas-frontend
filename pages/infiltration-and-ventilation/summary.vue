@@ -103,7 +103,7 @@ function getCombustionApplianceData(type: string, data: CombustionApplianceData[
 			"Type": type,
 			"Name": x.name,
 			"Air supply to appliance": sentenceCase(x.airSupplyToAppliance),
-			"Exhaust method from appliance": x.exhaustMethodFromAppliance,
+			"Exhaust method from appliance": displayFlueGasExhaustSituation(x.exhaustMethodFromAppliance),
 			"Type of fuel": x.typeOfFuel
 		};
 	});

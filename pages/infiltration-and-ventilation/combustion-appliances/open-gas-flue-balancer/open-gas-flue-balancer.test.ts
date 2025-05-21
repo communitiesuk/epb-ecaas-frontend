@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import OpenGasFlueBalancer from './[combustion].vue';
-import { CombustionAirSupplySituation, CombustionFuelType } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
 import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import {screen} from "@testing-library/vue";
 
@@ -16,7 +16,7 @@ describe('open gas flue balancer', () => {
 	const openGasFlueBalancer: CombustionApplianceData = {
 		name: 'Open gas flue balancer 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: 'intoRoom',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_room,
 		typeOfFuel: CombustionFuelType.gas,
 	};
 
@@ -29,7 +29,7 @@ describe('open gas flue balancer', () => {
 
 		await user.type(screen.getByTestId('name'), 'Open gas flue balancer 1');
 		await user.click(screen.getByTestId('airSupplyToAppliance_outside'));
-		await user.click(screen.getByTestId('exhaustMethodFromAppliance_intoRoom'));
+		await user.click(screen.getByTestId('exhaustMethodFromAppliance_into_room'));
 		await user.click(screen.getByTestId('typeOfFuel_gas'));
 
 		await user.tab();
@@ -60,7 +60,7 @@ describe('open gas flue balancer', () => {
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Open gas flue balancer 1');
 		expect((await screen.findByTestId('airSupplyToAppliance_outside')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('exhaustMethodFromAppliance_intoRoom')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('exhaustMethodFromAppliance_into_room')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('typeOfFuel_gas')).hasAttribute('checked')).toBe(true);
 	});
 

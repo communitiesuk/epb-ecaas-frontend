@@ -1,4 +1,4 @@
-import { MassDistributionClass } from "~/schema/api-schema.types";
+import { FlueGasExhaustSituation, MassDistributionClass } from "~/schema/api-schema.types";
 
 describe('Show boolean in display', () => {
 	it('should return Yes when value is true', () => {
@@ -63,5 +63,22 @@ describe('Show string in sentence case', () => {
 	it('should return string in sentence case with no underscores', () => {
 		const result = sentenceCase('helloworld');
 		expect(result).toBe('Helloworld');
+	});
+});
+
+describe('Show flue gas exhaust situation in display', () => {
+	it('should display correct representiation of flue gas exhasut situation "into room"', () => {
+		const result = displayFlueGasExhaustSituation(FlueGasExhaustSituation.into_room);
+		expect(result).toBe('Into room');
+	});
+
+	it('should display correct representiation of flue gas exhasut situation "into mechanical vent"', () => {
+		const result = displayFlueGasExhaustSituation(FlueGasExhaustSituation.into_mech_vent);
+		expect(result).toBe('Into mechanical vent');
+	});
+
+	it('should display correct representiation of flue gas exhasut situation "into separate duct"', () => {
+		const result = displayFlueGasExhaustSituation(FlueGasExhaustSituation.into_separate_duct);
+		expect(result).toBe('Into separate duct');
 	});
 });

@@ -1,4 +1,4 @@
-import type { CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, MassDistributionClass, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
+import type { CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -521,7 +521,7 @@ export interface CombustionAppliancesData {
 export type CombustionApplianceData = {
 	name: string;
 	airSupplyToAppliance: CombustionAirSupplySituation;
-	exhaustMethodFromAppliance: string;
+	exhaustMethodFromAppliance: FlueGasExhaustSituation;
 	typeOfFuel: CombustionFuelType;
 };
 

@@ -2,7 +2,7 @@ import userEvent from "@testing-library/user-event";
 import OpenGasKitchenStove from './[combustion].vue';
 import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import {screen} from "@testing-library/vue";
-import { CombustionAirSupplySituation, CombustionFuelType } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -16,7 +16,7 @@ describe('open gas kitchen stove', () => {
 	const openGasKitchenStove: CombustionApplianceData = {
 		name: 'Open gas kitchen stove 1',
 		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: 'intoRoom',
+		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_room,
 		typeOfFuel: CombustionFuelType.oil,
 	};
 
@@ -29,7 +29,7 @@ describe('open gas kitchen stove', () => {
 
 		await user.type(screen.getByTestId('name'), 'Open gas kitchen stove 1');
 		await user.click(screen.getByTestId('airSupplyToAppliance_outside'));
-		await user.click(screen.getByTestId('exhaustMethodFromAppliance_intoRoom'));
+		await user.click(screen.getByTestId('exhaustMethodFromAppliance_into_room'));
 		await user.click(screen.getByTestId('typeOfFuel_oil'));
 
 		await user.tab();
@@ -60,7 +60,7 @@ describe('open gas kitchen stove', () => {
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Open gas kitchen stove 1');
 		expect((await screen.findByTestId('airSupplyToAppliance_outside')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('exhaustMethodFromAppliance_intoRoom')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('exhaustMethodFromAppliance_into_room')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('typeOfFuel_oil')).hasAttribute('checked')).toBe(true);
 	});
 
