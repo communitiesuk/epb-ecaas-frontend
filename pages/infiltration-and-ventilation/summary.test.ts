@@ -3,7 +3,7 @@ import { screen } from '@testing-library/vue';
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { CombustionAirSupplySituation, CombustionFuelType, DuctShape, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
 
 
 vi.mock('uuid');
@@ -23,7 +23,7 @@ const ductworkData: DuctworkData = {
 	name: "Ducktwork 1",
 	mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
 	ductworkCrossSectionalShape: DuctShape.circular,
-	ductType: "intake",
+	ductType: DuctType.intake,
 	internalDiameterOfDuctwork: 300,
 	externalDiameterOfDuctwork: 1000,
 	insulationThickness: 100,

@@ -4,7 +4,7 @@ import DuctworkOverview from "./index.vue";
 import DuctworkForm from './[ductwork].vue';
 import userEvent from '@testing-library/user-event';
 import type {DuctworkData} from '../../../stores/ecaasStore.types';
-import { DuctShape } from '~/schema/api-schema.types';
+import { DuctShape, DuctType } from '~/schema/api-schema.types';
 
 describe('ductwork', async () => {
 	const user = userEvent.setup();
@@ -20,7 +20,7 @@ describe('ductwork', async () => {
 		name: 'Ductwork 1',
 		mvhrUnit: '',
 		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: "intake",
+		ductType: DuctType.intake,
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -32,7 +32,7 @@ describe('ductwork', async () => {
 		name: 'Ductwork 2',
 		mvhrUnit: '',
 		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: "supply",
+		ductType: DuctType.supply,
 		internalDiameterOfDuctwork: 30,
 		externalDiameterOfDuctwork: 100,
 		insulationThickness: 10,
@@ -44,7 +44,7 @@ describe('ductwork', async () => {
 		name: 'Ductwork 3',
 		mvhrUnit: '',
 		ductworkCrossSectionalShape: DuctShape.rectangular,
-		ductType: "exhaust",
+		ductType: DuctType.exhaust,
 		internalDiameterOfDuctwork: 200,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,

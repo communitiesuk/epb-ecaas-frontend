@@ -3,7 +3,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Ductwork from "./[ductwork].vue";
 import userEvent from "@testing-library/user-event";
 import { within } from "@testing-library/dom";
-import { DuctShape, VentType } from "~/schema/api-schema.types";
+import { DuctShape, DuctType, VentType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -56,7 +56,7 @@ describe("ductwork form", async () => {
 		name: "Ductwork 1",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: "intake",
+		ductType: DuctType.intake,
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,

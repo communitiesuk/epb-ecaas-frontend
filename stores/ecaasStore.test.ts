@@ -5,7 +5,7 @@ import { createPinia, setActivePinia } from 'pinia';
 import formStatus from '~/constants/formStatus';
 import pagesData from '~/data/pages/pages';
 import  MechanicalOverview  from '~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue';
-import { DuctShape, MVHRLocation, SupplyAirFlowRateControlType, VentType } from '~/schema/api-schema.types';
+import { DuctShape, DuctType, MVHRLocation, SupplyAirFlowRateControlType, VentType } from '~/schema/api-schema.types';
 const store = useEcaasStore();
 
 describe('Ecaas Store', () => {
@@ -233,7 +233,7 @@ describe('Ecaas Store', () => {
 		name: 'Ductwork 1',
 		mvhrUnit: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
 		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: "intake",
+		ductType: DuctType.intake,
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -245,7 +245,7 @@ describe('Ecaas Store', () => {
 		name: 'Ductwork 2',
 		mvhrUnit: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
 		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: "intake",
+		ductType: DuctType.intake,
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,

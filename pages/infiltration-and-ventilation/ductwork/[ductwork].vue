@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DuctShape } from '~/schema/api-schema.types';
+import type { DuctShape, DuctType } from '~/schema/api-schema.types';
 import { VentType } from '~/schema/api-schema.types';
 
 const title = "MVHR ductwork";
@@ -14,9 +14,15 @@ const ductwork = useItemToEdit(
 const model: Ref<DuctworkData> = ref(ductwork!);
 store.infiltrationAndVentilation.ductwork.complete = false;
 
-const ductworkCrossSectionalShapeOptions: EnumRecord<DuctShape, Capitalize<DuctShape>> = {
+const ductworkCrossSectionalShapeOptions: EnumRecord<DuctShape, SnakeToSentenceCase<DuctShape>> = {
 	circular: "Circular",
 	rectangular: "Rectangular",
+};
+const ductTypeOptions: EnumRecord<DuctType, SnakeToSentenceCase<DuctType>> = {
+	supply: "Supply",
+	extract: "Extract",
+	intake: "Intake",
+	exhaust: "Exhaust",
 };
 
 const saveForm = (fields: DuctworkData) => {
@@ -146,12 +152,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="ductType"
 			type="govRadios"
-			:options="{
-				supply: 'Supply',
-				extract: 'Extract',
-				intake: 'Intake',
-				exhaust: 'Exhaust',
-			}"
+			:options="ductTypeOptions"
 			label="Duct type"
 			name="ductType"
 			validation="required"
