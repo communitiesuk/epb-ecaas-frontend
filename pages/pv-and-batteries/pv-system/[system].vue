@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { OnSiteGenerationVentilationStrategy } from '~/schema/api-schema.types';
+
 const title = "Photovoltaic (PV)";
 const store = useEcaasStore();
 const { saveToList } = useForm();
@@ -8,6 +10,13 @@ const pvSystemData = useItemToEdit(
 	store.pvAndBatteries.pvSystem.data
 );
 const model: Ref<PvSystemData> = ref(pvSystemData!);
+
+const ventilationStrategyOptions: EnumRecord<OnSiteGenerationVentilationStrategy, string> = {
+	[OnSiteGenerationVentilationStrategy.unventilated]: 'Unventilated',
+	[OnSiteGenerationVentilationStrategy.moderately_ventilated]: 'Moderately ventilated',
+	[OnSiteGenerationVentilationStrategy.strongly_or_forced_ventilated]: 'Strongly or forced ventilated',
+	[OnSiteGenerationVentilationStrategy.rear_surface_free]: 'Rear surface free',
+};
 
 const saveForm = (fields: PvSystemData) => {
 	store.$patch((state) => {
@@ -81,12 +90,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="ventilationStrategy"
 			type="govRadios"
-			:options="{
-				unventilated: 'Unventilated',
-				moderately: 'Moderately ventilated',
-				stronglyOrForced: 'Strongly or forced ventilated',
-				rearSurfaceFree: 'Rear surface free',
-			}"
+			:options="ventilationStrategyOptions"
 			label="Ventilation strategy"
 			name="ventilationStrategy"
 			validation="required"

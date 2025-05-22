@@ -6,6 +6,7 @@ import ElectricBatteryForm from "./electric-battery/[battery].vue";
 import PvDiverterForm from "./pv-diverter/[diverter].vue";
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
+import { OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
 
 describe('pv and batteries', () => {
 	const store = useEcaasStore();
@@ -22,7 +23,7 @@ describe('pv and batteries', () => {
 	const pvSystem1: PvSystemData = {
 		name: "PV System 1",
 		peakPower: 4,
-		ventilationStrategy: 'unventilated',
+		ventilationStrategy: OnSiteGenerationVentilationStrategy.unventilated,
 		pitch: 45,
 		orientation: 20,
 		elevationalHeight: 100,

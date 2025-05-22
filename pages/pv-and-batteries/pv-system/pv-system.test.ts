@@ -2,6 +2,7 @@ import { screen } from "@testing-library/vue";
 import PVScreen from "./[system].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from '@testing-library/user-event';
+import { OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -36,7 +37,7 @@ describe("PV system", () => {
 	const pvSystem: PvSystemData = {
 		name: 'PV 1',
 		peakPower: 4,
-		ventilationStrategy: 'unventilated',
+		ventilationStrategy: OnSiteGenerationVentilationStrategy.unventilated,
 		pitch: 45,
 		orientation: 20,
 		elevationalHeight: 100,
