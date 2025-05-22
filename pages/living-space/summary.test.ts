@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import type { CeilingsAndRoofsData, DoorsData, FloorsData, LivingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData } from '~/stores/ecaasStore.types';
-import { FloorType, MassDistributionClass } from '~/schema/api-schema.types';
+import { FloorType, MassDistributionClass, WindowTreatmentType } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -230,7 +230,7 @@ const windowData: WindowData = {
 	sideFinRightDistance: 1,
 	sideFinLeftDepth: 1,
 	sideFinLeftDistance: 1,
-	type: "blinds",
+	type: WindowTreatmentType.blinds,
 	thermalResistivityIncrease: 1,
 	solarTransmittanceReduction: 0.1,
 };

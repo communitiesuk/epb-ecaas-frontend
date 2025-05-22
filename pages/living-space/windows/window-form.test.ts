@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import Window from './[window].vue';
+import { WindowTreatmentType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -31,7 +32,7 @@ describe('window', () => {
 		sideFinRightDistance: 1,
 		sideFinLeftDepth: 1,
 		sideFinLeftDistance: 1,
-		type: "blinds",
+		type: WindowTreatmentType.blinds,
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
 	};

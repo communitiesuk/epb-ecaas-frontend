@@ -1,10 +1,17 @@
 <script setup lang="ts">
+import type { WindowTreatmentType } from '~/schema/api-schema.types';
+
 const title = "Window";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const window = useItemToEdit('window', store.livingSpaceFabric.livingSpaceWindows.data);
 const model: Ref<WindowData> = ref(window!);
+
+const windowTypeOptions: EnumRecord<WindowTreatmentType, SnakeToSentenceCase<WindowTreatmentType>> = {
+	curtains: 'Curtains',
+	blinds: 'Blinds',
+};
 
 const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
@@ -219,10 +226,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<FormKit
 					id="type"
 					type="govRadios"
-					:options="{
-						curtains: 'Curtains',
-						blinds: 'Blinds',
-					}"
+					:options="windowTypeOptions"
 					label="Type"
 					help="Determines behaviour (curtains are scheduled, blinds respond to sunlight)"
 					name="type"
