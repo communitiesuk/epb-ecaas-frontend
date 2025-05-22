@@ -194,7 +194,7 @@ const doorsData: DoorsData = {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
-			numberOpenableParts: "none",
+			numberOpenableParts: 0,
 		}]
 	},
 	livingSpaceInternalDoor: {
@@ -223,7 +223,7 @@ const windowData: WindowData = {
 	solarTransmittance: 0.1,
 	elevationalHeight: 1,
 	midHeight: 1,
-	numberOpenableParts: "none",
+	numberOpenableParts: 0,
 	overhangDepth: 1,
 	overhangDistance: 1,
 	sideFinRightDepth: 1,
@@ -694,7 +694,7 @@ describe('Living space fabric summary', () => {
 				"Transmittance of solar energy": "0.1",
 				"Elevational height of building element at its base": "1",
 				"Mid height": "1",
-				"Number of openable parts": "None"
+				"Number of openable parts": "0"
 			};
 			
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -762,7 +762,7 @@ describe('Living space fabric summary', () => {
 				"Transmittance of solar energy": "0.1",
 				"Elevational height of building element at its base": "1",
 				"Mid height": "1",
-				"Number of openable parts": "None",
+				"Number of openable parts": "0",
 				"Overhang depth": "1",
 				"Overhang distance": "1",
 				"Side fin right depth": "1",

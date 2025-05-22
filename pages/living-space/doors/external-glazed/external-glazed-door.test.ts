@@ -24,7 +24,7 @@ describe('external glazed door', () => {
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
-		numberOpenableParts: "none",
+		numberOpenableParts: 0,
 	};
 
 	afterEach(() => {
@@ -44,7 +44,7 @@ describe('external glazed door', () => {
 		await user.type(screen.getByTestId('solarTransmittance'), '0.1');
 		await user.type(screen.getByTestId('elevationalHeight'), '1');
 		await user.type(screen.getByTestId('midHeight'), '1');
-		await user.click(screen.getByTestId('numberOpenableParts_none'));
+		await user.click(screen.getByTestId('numberOpenableParts_0'));
 
 		await user.click(screen.getByRole('button'));
 
@@ -81,7 +81,7 @@ describe('external glazed door', () => {
 		expect((await screen.findByTestId('solarTransmittance') as HTMLInputElement).value).toBe('0.1');
 		expect((await screen.findByTestId('elevationalHeight') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('midHeight') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('numberOpenableParts_none')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('numberOpenableParts_0')).hasAttribute('checked')).toBe(true);
 	});
 		
 	it('only required error messages are displayed when empty form is submitted', async () => {
@@ -122,7 +122,7 @@ describe('external glazed door', () => {
 	it('requires further data when four openable parts option is selected', async () => {
 		await renderSuspended(ExternalGlazedDoor);
     
-		await user.click(screen.getByTestId('numberOpenableParts_four'));
+		await user.click(screen.getByTestId('numberOpenableParts_4'));
 		await user.click(screen.getByRole('button'));
     
 		expect((await screen.findByTestId('frameToOpeningRatio_error'))).toBeDefined();
@@ -137,7 +137,7 @@ describe('external glazed door', () => {
 	it('does not require the mid height of more parts than have been selected', async () => {
 		await renderSuspended(ExternalGlazedDoor);
     
-		await user.click(screen.getByTestId('numberOpenableParts_one'));
+		await user.click(screen.getByTestId('numberOpenableParts_1'));
 		await user.click(screen.getByRole('button'));
     
 		expect((await screen.findByTestId('midHeightOpenablePart1_error'))).toBeDefined();

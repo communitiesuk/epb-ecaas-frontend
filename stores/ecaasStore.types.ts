@@ -245,7 +245,7 @@ export type ExternalGlazedDoorData = {
 	solarTransmittance: number;
 	elevationalHeight: number;
 	midHeight: number;
-	numberOpenableParts: string;
+	numberOpenableParts: number;
 	frameToOpeningRatio?: number;
 	maximumOpenableArea?: number;
 	heightOpenableArea?: number;
@@ -279,7 +279,7 @@ export type WindowData = {
 	solarTransmittance: number;
 	elevationalHeight: number;
 	midHeight: number;
-	numberOpenableParts: string;
+	numberOpenableParts: number;
 	frameToOpeningRatio?: number;
 	maximumOpenableArea?: number;
 	heightOpenableArea?: number;

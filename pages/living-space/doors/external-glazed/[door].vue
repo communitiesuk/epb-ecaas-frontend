@@ -138,18 +138,19 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="numberOpenableParts"
 			type="govRadios"
+			value-type="number"
 			:options="{
-				one: '1',
-				two: '2',
-				three: '3',
-				four: '4',
-				none: 'None',
+				1: '1',
+				2: '2',
+				3: '3',
+				4: '4',
+				0: 'None',
 			}"
 			label="Number of openable parts "
 			name="numberOpenableParts"
 			validation="required"
 		/>
-		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== 'none'">
+		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== 0">
 			<FormKit
 				id="frameToOpeningRatio"
 				type="govInputFloat"
@@ -185,7 +186,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				name="midHeightOpenablePart1"
 				validation="required | number | min:0 | max:100"
 			/>
-			<template v-if="model.numberOpenableParts !== 'one'">
+			<template v-if="model.numberOpenableParts !== 1">
 				<FormKit
 					id="midHeightOpenablePart2"
 					type="govInputWithSuffix"
@@ -195,7 +196,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 					name="midHeightOpenablePart2"
 					validation="required | number | min:0 | max:100"
 				/>
-				<template v-if="model.numberOpenableParts !== 'two'">
+				<template v-if="model.numberOpenableParts !== 2">
 					<FormKit
 						id="midHeightOpenablePart3"
 						type="govInputWithSuffix"
@@ -205,7 +206,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 						name="midHeightOpenablePart3"
 						validation="required | number | min:0 | max:100"
 					/>
-					<template v-if="model.numberOpenableParts !== 'three'">
+					<template v-if="model.numberOpenableParts !== 3">
 						<FormKit
 							id="midHeightOpenablePart4"
 							type="govInputWithSuffix"

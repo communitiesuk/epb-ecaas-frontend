@@ -102,14 +102,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the height from the ground to the midpoint of the window" name="midHeight"
 			validation="required | number | min:0 | max:100" />
 		<FormKit
-			id="numberOpenableParts" type="govRadios" :options="{
-				one: '1',
-				two: '2',
-				three: '3',
-				four: '4',
-				none: 'None',
+			id="numberOpenableParts" type="govRadios" value-type="number" :options="{
+				1: '1',
+				2: '2',
+				3: '3',
+				4: '4',
+				0: 'None',
 			}" label="Number of openable parts " name="numberOpenableParts" validation="required" />
-		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== 'none'">
+		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== 0">
 			<FormKit
 				id="frameToOpeningRatio" type="govInputFloat" label="Frame to opening ratio"
 				help="The proportion of the window taken up by the frame compared to the total opening area"
@@ -128,21 +128,21 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Enter the height from the ground to the midpoint of the openable section of the window"
 				name="midHeightOpenablePart1"
 				validation="required | number | min:0 | max:100" />
-			<template v-if="model.numberOpenableParts !== 'one'">
+			<template v-if="model.numberOpenableParts !== 1">
 				<FormKit
 					id="midHeightOpenablePart2" type="govInputWithSuffix" suffix-text="m"
 					label="Mid height of the air flow path for openable part 2 "
 					help="Enter the height from the ground to the midpoint of the openable section of the window"
 					name="midHeightOpenablePart2"
 					validation="required | number | min:0 | max:100" />
-				<template v-if="model.numberOpenableParts !== 'two'">
+				<template v-if="model.numberOpenableParts !== 2">
 					<FormKit
 						id="midHeightOpenablePart3" type="govInputWithSuffix" suffix-text="m"
 						label="Mid height of the air flow path for openable part 3 "
 						help="Enter the height from the ground to the midpoint of the openable section of the window"
 						name="midHeightOpenablePart3"
 						validation="required | number | min:0 | max:100" />
-					<template v-if="model.numberOpenableParts !== 'three'">
+					<template v-if="model.numberOpenableParts !== 3">
 						<FormKit
 							id="midHeightOpenablePart4" type="govInputWithSuffix" suffix-text="m"
 							label="Mid height of the air flow path for openable part 4 "

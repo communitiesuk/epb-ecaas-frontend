@@ -78,7 +78,7 @@ describe('doors', () => {
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
-		numberOpenableParts: "none",
+		numberOpenableParts: 0,
 	};
 
 	const externalGlazed2: ExternalGlazedDoorData = {
@@ -93,7 +93,7 @@ describe('doors', () => {
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
-		numberOpenableParts: "none",
+		numberOpenableParts: 0,
 	};
 
 	const externalGlazed3: ExternalGlazedDoorData = {
@@ -108,7 +108,7 @@ describe('doors', () => {
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
-		numberOpenableParts: "none",
+		numberOpenableParts: 0,
 	};
 	
 	const internal1: InternalDoorData = {
