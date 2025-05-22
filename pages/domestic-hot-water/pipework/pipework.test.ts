@@ -4,7 +4,7 @@ import { screen } from "@testing-library/vue";
 import Pipework from "./index.vue";
 import PrimaryPipeworkForm from "./primary/[pipe].vue";
 import SecondaryPipeworkForm from "./secondary/[pipe].vue";
-import { WaterPipeworkLocation } from "~/schema/api-schema.types";
+import { WaterPipeContentsType, WaterPipeworkLocation } from "~/schema/api-schema.types";
 
 
 describe("Pipeworks", () => {
@@ -19,7 +19,7 @@ describe("Pipeworks", () => {
 		insulationThickness: 5,
 		thermalConductivity: 0.5,
 		surfaceReflectivity: false,
-		pipeContents: "water",
+		pipeContents: WaterPipeContentsType.water,
 		storageTank: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
 		location: WaterPipeworkLocation.internal,
 	};

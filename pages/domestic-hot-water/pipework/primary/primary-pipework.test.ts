@@ -3,7 +3,7 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
 import PipeworkForm from './[pipe].vue';
 import type { PrimaryPipeworkData } from '~/stores/ecaasStore.types';
-import { WaterPipeworkLocation } from '~/schema/api-schema.types';
+import { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -20,7 +20,7 @@ const state: PrimaryPipeworkData = {
 	insulationThickness: 5,
 	thermalConductivity: 1,
 	surfaceReflectivity: true,
-	pipeContents: 'water',
+	pipeContents: WaterPipeContentsType.water,
 	storageTank: storageTankId,
 	location: WaterPipeworkLocation.internal
 };

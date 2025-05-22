@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { getUrl, type EnumRecord, type SnakeToSentenceCase } from '#imports';
-import type { WaterPipeworkLocation } from '~/schema/api-schema.types';
+import type { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
 const title = "Primary pipework";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.primaryPipework.data);
 const model: Ref<PrimaryPipeworkData> = ref(pipeworkData!);
+
+const pipeContentsOptions: EnumRecord<WaterPipeContentsType, string> = {
+	water: 'Water',
+	air: 'Air',
+	glycol25: 'Glycol 25',
+};
 
 const locationOptions: EnumRecord<WaterPipeworkLocation, SnakeToSentenceCase<WaterPipeworkLocation>> = {
 	internal: 'Internal',
@@ -163,10 +169,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="pipeContents"
 			type="govRadios"
-			:options="{
-				water: 'Water',
-				glycol25: 'Glycol 25',
-			}"
+			:options="pipeContentsOptions"
 			label="Pipe contents"
 			help="The medium distributed through the pipe"
 			name="pipeContents"
