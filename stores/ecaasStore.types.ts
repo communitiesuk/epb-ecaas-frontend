@@ -1,4 +1,4 @@
-import type { ApplianceKey, BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WindowTreatmentType } from "~/schema/api-schema.types";
+import type { ApplianceKey, BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -294,7 +294,7 @@ export type WindowData = {
 	sideFinLeftDepth?: number;
 	sideFinLeftDistance?: number;
 	type?: WindowTreatmentType;
-	curtainsControlObject?: string;
+	curtainsControlObject?: WindowTreatmentControl;
 	thermalResistivityIncrease?: number;
 	solarTransmittanceReduction?: number;
 };

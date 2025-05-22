@@ -189,7 +189,7 @@ describe('window', () => {
 		await user.click(screen.getByTestId('type_curtains'));
 		await user.tab();
     
-		expect((await screen.getByTestId('curtainsControlObject_motorised'))).toBeDefined();
+		expect((await screen.getByTestId('curtainsControlObject_auto_motorised'))).toBeDefined();
 	});
 
 	it('displays guidance link to window shading guidance page', async () => {

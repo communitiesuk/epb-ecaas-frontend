@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WindowTreatmentType } from '~/schema/api-schema.types';
+import { WindowTreatmentControl, type WindowTreatmentType } from '~/schema/api-schema.types';
 
 const title = "Window";
 const store = useEcaasStore();
@@ -11,6 +11,10 @@ const model: Ref<WindowData> = ref(window!);
 const windowTypeOptions: EnumRecord<WindowTreatmentType, SnakeToSentenceCase<WindowTreatmentType>> = {
 	curtains: 'Curtains',
 	blinds: 'Blinds',
+};
+const curtainsControlObjectOptions: EnumRecord<Exclude<WindowTreatmentControl, 'manual_motorised' | 'combined_light_blind_HVAC'>, string> = {
+	[WindowTreatmentControl.auto_motorised]: 'Auto motorised',
+	[WindowTreatmentControl.manual]: 'Manual',
 };
 
 const saveForm = (fields: WindowData) => {
@@ -235,10 +239,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					v-if="model.type === 'curtains'"
 					id="curtainsControlObject"
 					type="govRadios"
-					:options="{
-						motorised: 'Auto motorised',
-						manual: 'Manual',
-					}"
+					:options="curtainsControlObjectOptions"
 					label="Curtains control object reference"
 					help="Reference to an OnOffTimeControl object that determines when curtains should open"
 					name="curtainsControlObject"
