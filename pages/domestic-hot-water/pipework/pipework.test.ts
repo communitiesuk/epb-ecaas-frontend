@@ -4,6 +4,7 @@ import { screen } from "@testing-library/vue";
 import Pipework from "./index.vue";
 import PrimaryPipeworkForm from "./primary/[pipe].vue";
 import SecondaryPipeworkForm from "./secondary/[pipe].vue";
+import { WaterPipeworkLocation } from "~/schema/api-schema.types";
 
 
 describe("Pipeworks", () => {
@@ -20,13 +21,13 @@ describe("Pipeworks", () => {
 		surfaceReflectivity: false,
 		pipeContents: "water",
 		storageTank: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
-		location: "Living room",
+		location: WaterPipeworkLocation.internal,
 	};
 
 	const pipework2: Partial<SecondaryPipeworkData> = {
 		name: "Pipework Kitchen",
 		length: 3,
-		location: 'internal',
+		location: WaterPipeworkLocation.internal,
 		internalDiameter: 0.09
 	};
 

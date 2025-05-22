@@ -1,4 +1,4 @@
-import type { ApplianceKey, BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
+import type { ApplianceKey, BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -446,13 +446,13 @@ export type PrimaryPipeworkData = {
 	surfaceReflectivity: boolean;
 	pipeContents: string;
 	storageTank: string;
-	location: string;
+	location: WaterPipeworkLocation;
 };
 
 export type SecondaryPipeworkData = {
 	name: string;
 	length: number;
-	location: string;
+	location: WaterPipeworkLocation;
 	internalDiameter: number;
 };
 

@@ -1,6 +1,7 @@
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
+import { WaterPipeworkLocation } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -306,13 +307,13 @@ describe('Domestic hot water summary', () => {
 			surfaceReflectivity: true,
 			pipeContents: 'water',
 			storageTank: storageTankId,
-			location: 'internal'
+			location: WaterPipeworkLocation.internal
 		};
 
 		const secondaryPipework: SecondaryPipeworkData = {
 			name: 'Pipework Kitchen Sink Secondary',
 			length: 3,
-			location: 'internal',
+			location: WaterPipeworkLocation.internal,
 			internalDiameter: 0.09
 		};
 

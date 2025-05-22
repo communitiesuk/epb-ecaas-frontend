@@ -3,6 +3,7 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
 import PipeworkForm from './[pipe].vue';
 import type { SecondaryPipeworkData } from '~/stores/ecaasStore.types';
+import { WaterPipeworkLocation } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -12,7 +13,7 @@ mockNuxtImport('navigateTo', () => {
 const state: SecondaryPipeworkData = {
 	name: 'Pipework Kitchen Sink',
 	length: 3,
-	location: 'internal',
+	location: WaterPipeworkLocation.internal,
 	internalDiameter: 0.09
 };
 
