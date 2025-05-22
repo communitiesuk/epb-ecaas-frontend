@@ -1,10 +1,22 @@
 <script setup lang="ts">
+import { FuelType } from '~/schema/api-schema.types';
+
 const title = "Energy supply";
 const store = useEcaasStore();
 
 const model = ref({
 	...store.heatingSystems.energySupply.data
 });
+
+const fuelTypeOptions: Record<Exclude<FuelType | 'wood' | 'oil' | 'coal', FuelType.LPG_bottled | FuelType.LPG_condition_11F | FuelType.energy_from_environment | FuelType.unmet_demand>, string> = {
+	[FuelType.electricity]: 'Electricity',
+	[FuelType.mains_gas]: 'Mains gas',
+	[FuelType.LPG_bulk]: 'LPG bulk',
+	wood: 'Wood',
+	oil: 'Oil',
+	coal: 'Coal',
+	[FuelType.custom]: 'Custom'
+};
 
 const saveForm = (fields: EnergySupplyData) => {
 	store.$patch({
@@ -47,18 +59,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="fuelType"
 			label="Energy supply by fuel type"
 			help="The user can specify several energy supply objects, to be used by different systems and appliances."
-			:options="{
-				electricity: 'Electricity',
-				mainsGas: 'Mains gas',
-				lpgBulk: 'LPG bulk',
-				wood: 'Wood',
-				oil: 'Oil',
-				coal: 'Coal',
-				custom: 'Custom'
-			}"
+			:options="fuelTypeOptions"
 			validation="required"
 		/>
-		<template v-if="model.fuelType?.includes('custom')">
+		<template v-if="model.fuelType?.includes(FuelType.custom)">
 			<FormKit
 				id="co2PerKwh"
 				type="govInputWithSuffix"
@@ -87,7 +91,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			/>
 		</template>
 		<FormKit
-			v-if="model.fuelType?.includes('electricity')"
+			v-if="model.fuelType?.includes(FuelType.electricity)"
 			id="exported"
 			type="govBoolean"
 			label="Can the fuel be exported?"
