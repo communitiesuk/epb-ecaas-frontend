@@ -1,10 +1,17 @@
 <script setup lang="ts">
+import type { WaterPipeworkLocation } from '~/schema/api-schema.types';
+
 const title = "Secondary pipework";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.secondaryPipework.data);
 const model: Ref<SecondaryPipeworkData> = ref(pipeworkData!);
+
+const locationOptions: EnumRecord<WaterPipeworkLocation, SnakeToSentenceCase<WaterPipeworkLocation>> = {
+	internal: 'Internal',
+	external: 'External',
+};
 
 const saveForm = (fields: SecondaryPipeworkData) => {
 	store.$patch((state) => {
@@ -67,10 +74,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Provide a name for this element so that it can be identified later" name="name"
 			validation="required | length:1,50" />
 		<FormKit
-			id="location" type="govRadios" :options="{
-				internal: 'Internal',
-				external: 'External',
-			}" label="Location" help="The location of the pipe" name="location" validation="required" />
+			id="location" type="govRadios" :options="locationOptions" label="Location" help="The location of the pipe" name="location" validation="required" />
 		<FormKit
 			id="length" type="govInputWithSuffix" label="Length"
 			help="Total length of distribution pipework - pipework serving multiple tapping points should be counted once for each tapping point"

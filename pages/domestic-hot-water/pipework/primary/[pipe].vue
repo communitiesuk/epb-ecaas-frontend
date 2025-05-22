@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { getUrl } from '#imports';
+import { getUrl, type EnumRecord, type SnakeToSentenceCase } from '#imports';
+import type { WaterPipeworkLocation } from '~/schema/api-schema.types';
 const title = "Primary pipework";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.primaryPipework.data);
 const model: Ref<PrimaryPipeworkData> = ref(pipeworkData!);
+
+const locationOptions: EnumRecord<WaterPipeworkLocation, SnakeToSentenceCase<WaterPipeworkLocation>> = {
+	internal: 'Internal',
+	external: 'External',
+};
 
 const saveForm = (fields: PrimaryPipeworkData) => {
 	store.$patch((state) => {
@@ -184,10 +190,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="location"
 			type="govRadios"
-			:options="{
-				internal: 'Internal',
-				external: 'External',
-			}"
+			:options="locationOptions"
 			label="Location"
 			help="The location of the pipe"
 			name="location"
