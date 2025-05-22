@@ -1,4 +1,5 @@
-import { FlueGasExhaustSituation, MassDistributionClass } from '../schema/api-schema.types';
+import App from '~/app.vue';
+import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass } from '../schema/api-schema.types';
 
 export function displayBoolean(value: boolean | undefined): BooleanDisplay | undefined {
 	if (typeof value === 'undefined') {
@@ -47,5 +48,39 @@ export function displayFlueGasExhaustSituation(value: FlueGasExhaustSituation): 
 		default:
 			value satisfies never;
 			throw new Error(`Missed a flue gas exhaust situation case: ${value}`);
+	}
+}
+
+export type ApplianceKeyDisplay = 'Fridge' | 'Freezer' | 'Fridge freezer' | 'Dishwasher' | 'Oven' | 'Washing machine' | 'Tumble dryer' | 'Hobs' | 'Kettle' | 'Microwave' | 'Lighting' | 'Other';
+
+export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
+	switch (value) {
+		case ApplianceKey.Fridge:
+			return 'Fridge';
+		case ApplianceKey.Freezer:
+			return 'Freezer';
+		case ApplianceKey.Fridge_Freezer:
+			return 'Fridge freezer';
+		case ApplianceKey.Dishwasher:
+			return 'Dishwasher';
+		case ApplianceKey.Oven:
+			return 'Oven';
+		case ApplianceKey.Clothes_washing:
+			return 'Washing machine';
+		case ApplianceKey.Clothes_drying:
+			return 'Tumble dryer';
+		case ApplianceKey.Hobs:
+			return 'Hobs';
+		case ApplianceKey.Kettle:
+			return 'Kettle';
+		case ApplianceKey.Microwave:
+			return 'Microwave';
+		case ApplianceKey.lighting:
+			return 'Lighting';
+		case ApplianceKey.Otherdevices:
+			return 'Other';
+		default:
+			value satisfies never;
+			throw new Error(`Missed a appliance key case: ${value}`);
 	}
 }

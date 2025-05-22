@@ -3,7 +3,7 @@ import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
 import hyphenate from '../../utils/hyphenate';
-import { BuildType } from '~/schema/api-schema.types';
+import { ApplianceKey, BuildType } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -27,16 +27,16 @@ const state: DwellingDetailSummary = {
 	},
 	appliances: {
 		appliances: [
-			'fridge',
-			'freezer',
-			'fridgeFreezer',
-			'dishwasher',
-			'oven',
-			'washingMachine',
-			'tumbleDryer',
-			'hobs',
-			'kettle',
-			'microwave'
+			ApplianceKey.Fridge,
+			ApplianceKey.Freezer,
+			ApplianceKey.Fridge_Freezer,
+			ApplianceKey.Dishwasher,
+			ApplianceKey.Oven,
+			ApplianceKey.Clothes_washing,
+			ApplianceKey.Clothes_drying,
+			ApplianceKey.Hobs,
+			ApplianceKey.Kettle,
+			ApplianceKey.Microwave
 		]
 	},
 	shading: [{

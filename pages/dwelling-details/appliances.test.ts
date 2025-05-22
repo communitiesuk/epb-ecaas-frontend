@@ -3,6 +3,7 @@ import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
 import type { AppliancesData } from '~/stores/ecaasStore.types';
+import { ApplianceKey } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -11,16 +12,16 @@ mockNuxtImport('navigateTo', () => {
 
 const state: AppliancesData = {
 	appliances: [
-		'Fridge',
-		'Freezer',
-		'Fridge-Freezer',
-		'Dishwasher',
-		'Oven',
-		'Clothes_washing',
-		'Clothes_drying',
-		'Hobs',
-		'Kettle',
-		'Microwave'
+		ApplianceKey.Fridge,
+		ApplianceKey.Freezer,
+		ApplianceKey.Fridge_Freezer,
+		ApplianceKey.Dishwasher,
+		ApplianceKey.Oven,
+		ApplianceKey.Clothes_washing,
+		ApplianceKey.Clothes_drying,
+		ApplianceKey.Hobs,
+		ApplianceKey.Kettle,
+		ApplianceKey.Microwave
 	]
 };
 

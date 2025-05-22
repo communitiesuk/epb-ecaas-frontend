@@ -1,9 +1,24 @@
 <script setup lang="ts">
+import type { ApplianceKey } from '~/schema/api-schema.types';
+
 const store = useEcaasStore();
 
 const model = ref({
 	...store.dwellingDetails.appliances.data
 });
+
+const applianceOptions: EnumRecord<Exclude<ApplianceKey, 'lighting' | 'Otherdevices'>, ApplianceKeyDisplay> = {
+	Fridge: 'Fridge',
+	Freezer: 'Freezer',
+	'Fridge-Freezer': 'Fridge freezer',
+	Dishwasher: 'Dishwasher',
+	Oven: 'Oven',
+	'Clothes_washing': 'Washing machine',
+	'Clothes_drying': 'Tumble dryer',
+	Hobs: 'Hobs',
+	Kettle: 'Kettle',
+	Microwave: 'Microwave'
+};
 
 const saveForm = (fields: typeof model.value) => {
 	store.$patch({
@@ -35,18 +50,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govCheckboxes"
 			name="appliances"
 			help="Select all that are present."
-			:options="{
-				Fridge: 'Fridge',
-				Freezer: 'Freezer',
-				'Fridge-Freezer': 'Fridge freezer',
-				Dishwasher: 'Dishwasher',
-				Oven: 'Oven',
-				'Clothes_washing': 'Washing machine',
-				'Clothes_drying': 'Tumble dryer',
-				Hobs: 'Hobs',
-				Kettle: 'Kettle',
-				Microwave: 'Microwave'
-			}"
+			:options="applianceOptions"
 			validation="required"
 		/>
 		<FormKit type="govButton" label="Save and continue" />

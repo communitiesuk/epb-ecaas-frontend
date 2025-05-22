@@ -30,7 +30,7 @@ const appliancesAndElectricitySummary: SummarySection = {
 	id: 'appliances',
 	label: "Appliances",
 	data: {
-		"Appliances": appliancesData.appliances
+		"Appliances": appliancesData.appliances?.map(displayApplianceKey)
 	},
 	editUrl: getUrl('appliances')!
 };
