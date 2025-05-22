@@ -3,13 +3,20 @@ import type { StripDefs } from './mapping.types';
 import type { SchemaFhsInputSchema } from '~/schema/api-schema.types';
 import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 import merge from 'deepmerge';
+import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
 
 export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 	const inputData = exampleData as FhsInputSchema;
 
 	const dwellingDetailsData = mapDwellingDetailsData(state);
+	const infilitrationVentilationData = mapInfiltrationVentilationData(state);
 
-	return merge(inputData, dwellingDetailsData);
+	const intermediate = merge(dwellingDetailsData, infilitrationVentilationData);
+	const final = merge(inputData, intermediate);
+
+	console.log(final);
+
+	return final;
 }
 
 export type FhsInputSchema = StripDefs<SchemaFhsInputSchema>;
