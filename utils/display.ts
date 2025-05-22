@@ -1,4 +1,3 @@
-import App from '~/app.vue';
 import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass, WwhrsType } from '../schema/api-schema.types';
 
 export function displayBoolean(value: boolean | undefined): BooleanDisplay | undefined {
