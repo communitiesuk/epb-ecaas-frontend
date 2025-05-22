@@ -6,6 +6,7 @@ import ShadingForm from './[shading].vue';
 
 
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { ShadingObjectType } from "~/schema/api-schema.types";
 
 describe('shading', () => {
 	const store = useEcaasStore();
@@ -19,7 +20,7 @@ describe('shading', () => {
 		name: "Cherry Tree",
 		startAngle: 10,
 		endAngle: 20,
-		objectType: "obstacle",
+		objectType: ShadingObjectType.obstacle,
 		height: 3,
 		distance: 2
 	};

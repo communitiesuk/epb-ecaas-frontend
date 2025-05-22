@@ -1,10 +1,17 @@
 <script setup lang="ts">
+import type { ShadingObjectType } from '~/schema/api-schema.types';
+
 const title = "Distant shading";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const shading = useItemToEdit('shading', store.dwellingDetails.shading.data);
 const model: Ref<ShadingData> = ref(shading!);
+
+const objectTypeOptions: EnumRecord<ShadingObjectType, Capitalize<ShadingObjectType>> = {
+	obstacle: 'Obstacle',
+	overhang: 'Overhang',
+};
 
 const saveForm = (fields: ShadingData) => {
 	store.dwellingDetails.shading.complete = false;
@@ -83,10 +90,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Object Type"
 			help="Select what type of object is causing the shading"
 			name="objectType"
-			:options="{
-				obstacle: 'Obstacle',
-				overhang: 'Overhang',
-			}"
+			:options="objectTypeOptions"
 			validation="required"
 		/>
 		<FormKit

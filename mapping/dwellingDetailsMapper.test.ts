@@ -1,4 +1,4 @@
-import { ApplianceKey, BuildType } from '~/schema/api-schema.types';
+import { ApplianceKey, BuildType, ShadingObjectType } from '~/schema/api-schema.types';
 import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 
 describe('dwelling details mapper', () => {
@@ -72,7 +72,7 @@ describe('dwelling details mapper', () => {
 			name: "Big Tree",
 			startAngle: 10,
 			endAngle: 20,
-			objectType: "obstacle",
+			objectType: ShadingObjectType.obstacle,
 			height: 3,
 			distance: 2
 		};

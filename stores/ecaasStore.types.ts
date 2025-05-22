@@ -1,4 +1,4 @@
-import type { ApplianceKey, BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
+import type { ApplianceKey, BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, ShadingObjectType, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -39,7 +39,7 @@ export type ShadingData = {
 	name: string;
 	startAngle: number;
 	endAngle: number;
-	objectType: string;
+	objectType: ShadingObjectType;
 	height: number;
 	distance: number;
 };

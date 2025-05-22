@@ -3,7 +3,7 @@ import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
 import hyphenate from '../../utils/hyphenate';
-import { ApplianceKey, BuildType } from '~/schema/api-schema.types';
+import { ApplianceKey, BuildType, ShadingObjectType } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -43,7 +43,7 @@ const state: DwellingDetailSummary = {
 		name: 'Shading 1',
 		startAngle: 0,
 		endAngle: 90,
-		objectType: 'obstacle',
+		objectType: ShadingObjectType.obstacle,
 		height: 1,
 		distance: 4
 	}],
