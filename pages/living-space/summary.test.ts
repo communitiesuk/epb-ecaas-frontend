@@ -12,7 +12,7 @@ mockNuxtImport('navigateTo', () => {
 const zoneParametersData: LivingSpaceZoneParametersData = {
 	area: 10,
 	volume: 10,
-	heatingControlType: 'seperateTempControl'
+	heatingControlType: 'separateTempControl'
 };
 
 const floorsData: FloorsData = {
@@ -280,7 +280,7 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Area": "10",
 				"Volume": "10",
-				"Heating control type": "Seperate temp control"
+				"Heating control type": "Separate temp control"
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {

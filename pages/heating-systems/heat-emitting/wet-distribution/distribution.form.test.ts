@@ -303,7 +303,7 @@ describe("Wet distribution", () => {
 		).toBe("20");
 	});
 
-	it("should contain link to seperate page for eco design control guidance", async () => {
+	it("should contain link to separate page for eco design control guidance", async () => {
 		await renderSuspended(WetDistribution);
 		const guidance = screen.getByRole("link", {
 			name: "Eco design control guidance (opens in another window)",

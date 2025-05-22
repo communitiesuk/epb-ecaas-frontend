@@ -16,7 +16,7 @@ describe("formatData utils function" , () => {
 	});
 
 	it("should return string with spaces in correct the position", () => {
-		expect(formatData("seperateTempAndTimeControl", "", true)).toBe("Seperate temp and time control");
+		expect(formatData("separateTempAndTimeControl", "", true)).toBe("Separate temp and time control");
 		expect(formatData("Shading 1","", true)).toBe("Shading 1");
 	});
 

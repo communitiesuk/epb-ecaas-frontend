@@ -79,10 +79,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="heatingControlType"
 			type="govRadios"
 			:options="{
-				seperateTempControl: {
+				separateTempControl: {
 					label: 'Separate temperature control',
 				},
-				seperateTempAndTimeControl: {
+				separateTempAndTimeControl: {
 					label: 'Separate temperature and time control',
 				},
 			}"
