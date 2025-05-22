@@ -303,7 +303,7 @@ describe('Domestic hot water summary', () => {
 			length: 3,
 			insulationThickness: 5,
 			thermalConductivity: 1,
-			surfaceReflectivity: 'reflective',
+			surfaceReflectivity: true,
 			pipeContents: 'water',
 			storageTank: storageTankId,
 			location: 'internal'

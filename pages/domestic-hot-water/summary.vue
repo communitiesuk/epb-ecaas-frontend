@@ -216,7 +216,7 @@ const primaryPipeworkSummary: SummarySection = {
 			"Length": d.length,
 			"Insulation thickness": d.insulationThickness,
 			"Thermal conductivity": d.thermalConductivity,
-			"Surface reflectivity": d.surfaceReflectivity,
+			"Surface reflectivity": d.surfaceReflectivity ? 'Reflective' : 'Not reflective',
 			"Pipe contents": d.pipeContents,
 			"Storage tank": storageTankData.find(x => x.id === d.storageTank)?.name,
 			"Location": d.location,

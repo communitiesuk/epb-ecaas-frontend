@@ -17,7 +17,7 @@ describe("Pipeworks", () => {
 		length: 10,
 		insulationThickness: 5,
 		thermalConductivity: 0.5,
-		surfaceReflectivity: "low",
+		surfaceReflectivity: false,
 		pipeContents: "water",
 		storageTank: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
 		location: "Living room",

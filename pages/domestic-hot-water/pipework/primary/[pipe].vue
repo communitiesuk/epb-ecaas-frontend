@@ -146,11 +146,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="surfaceReflectivity"
-			type="govRadios"
-			:options="{
-				reflective: 'Reflective',
-				notReflective: 'Not reflective',
-			}"
+			type="govBoolean"
+			true-label="Reflective"
+			false-label="Not reflective"
 			label="Surface reflectivity"
 			help="Whether there is a reflective coating or not"
 			name="surfaceReflectivity"

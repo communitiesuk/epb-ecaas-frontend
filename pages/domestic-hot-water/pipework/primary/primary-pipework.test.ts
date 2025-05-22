@@ -18,7 +18,7 @@ const state: PrimaryPipeworkData = {
 	length: 3,
 	insulationThickness: 5,
 	thermalConductivity: 1,
-	surfaceReflectivity: 'reflective',
+	surfaceReflectivity: true,
 	pipeContents: 'water',
 	storageTank: storageTankId,
 	location: 'internal'
@@ -57,7 +57,7 @@ describe('Primary pipework form', () => {
 		await user.type(screen.getByTestId('length'), '3');
 		await user.type(screen.getByTestId('insulationThickness'), '5');
 		await user.type(screen.getByTestId('thermalConductivity'), '1');
-		await user.click(screen.getByTestId('surfaceReflectivity_reflective'));
+		await user.click(screen.getByTestId('surfaceReflectivity_yes'));
 		await user.click(screen.getByTestId('pipeContents_water'));
 		await user.click(screen.getByTestId(`storageTank_${storageTankId}`));
 		await user.click(screen.getByTestId('location_internal'));
@@ -100,7 +100,7 @@ describe('Primary pipework form', () => {
 		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('3');
 		expect((await screen.findByTestId('insulationThickness') as HTMLInputElement).value).toBe('5');
 		expect((await screen.findByTestId('thermalConductivity') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('surfaceReflectivity_reflective')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('surfaceReflectivity_yes')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('pipeContents_water')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId(`storageTank_${storageTankId}`)).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);

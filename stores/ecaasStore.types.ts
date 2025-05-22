@@ -443,7 +443,7 @@ export type PrimaryPipeworkData = {
 	length: number;
 	insulationThickness: number;
 	thermalConductivity: number;
-	surfaceReflectivity: string;
+	surfaceReflectivity: boolean;
 	pipeContents: string;
 	storageTank: string;
 	location: string;
