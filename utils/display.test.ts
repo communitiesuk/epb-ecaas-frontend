@@ -82,3 +82,20 @@ describe('Show flue gas exhaust situation in display', () => {
 		expect(result).toBe('Into separate duct');
 	});
 });
+
+describe('displaySnakeToSentenceCase', () => {
+	it('should convert snake_case to Sentence Case', () => {
+		const result = displaySnakeToSentenceCase('hello_world');
+		expect(result).toBe('Hello world');
+	});
+
+	it('should convert snake_case with multiple underscores to sentence case', () => {
+		const result = displaySnakeToSentenceCase('hello_world_test');
+		expect(result).toBe('Hello world test');
+	});
+
+	it('should return the same string (but capitalised) if no underscores are present', () => {
+		const result = displaySnakeToSentenceCase('helloworld');
+		expect(result).toBe('Helloworld');
+	});
+});

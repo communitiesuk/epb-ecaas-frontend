@@ -38,7 +38,7 @@ const groundFloorSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Perimeter": x.perimeter,
 			"Psi of wall junction": x.psiOfWallJunction,
-			"Type of ground floor": x.typeOfGroundFloor,
+			"Type of ground floor": displaySnakeToSentenceCase(x.typeOfGroundFloor),
 			"Edge insulation type": x.edgeInsulationType,
 			"Edge insulation width": x.edgeInsulationWidth,
 			"Edge insulation thermal resistance": x.edgeInsulationThermalResistance,

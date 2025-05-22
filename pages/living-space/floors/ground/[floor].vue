@@ -1,10 +1,20 @@
 <script setup lang="ts">
+import { FloorType } from '~/schema/api-schema.types';
+
 const title = "Ground floor";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const floorData = useItemToEdit('floor', store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data);
 const model: Ref<GroundFloorData> = ref(floorData!);
+
+const typeOfGroundFloorOptions: EnumRecord<FloorType, SnakeToSentenceCase<FloorType>> = {
+	[FloorType.Slab_no_edge_insulation]: 'Slab no edge insulation',
+	[FloorType.Slab_edge_insulation]: 'Slab edge insulation',
+	[FloorType.Suspended_floor]: 'Suspended floor',
+	[FloorType.Heated_basement]: 'Heated basement',
+	[FloorType.Unheated_basement]: 'Unheated basement',
+};
 
 const saveForm = (fields: GroundFloorData) => {
 	store.$patch((state) => {
@@ -124,20 +134,14 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="typeOfGroundFloor"
 			type="govRadios"
-			:options="{
-				slabNoEdgeInsulation: 'Slab no edge insulation',
-				slabWithEdgeInsulation: 'Slab edge insulation',
-				suspendedFloor: 'Suspended floor',
-				heatedBasement: 'Heated basement',
-				unheatedBasement: 'Unheated basement',
-			}"
+			:options="typeOfGroundFloorOptions"
 			label="Type of ground floor "
 			help="This affects what inputs are necessary"
 			name="typeOfGroundFloor"
 			validation="required"
 		/>
 
-		<template v-if="model.typeOfGroundFloor === 'slabWithEdgeInsulation'">
+		<template v-if="model.typeOfGroundFloor === FloorType.Slab_edge_insulation">
 			<FormKit
 				id="edgeInsulationType"
 				type="govRadios"
@@ -168,7 +172,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === 'suspendedFloor'">
+		<template v-if="model.typeOfGroundFloor === FloorType.Suspended_floor">
 			<FormKit
 				id="heightOfFloorUpperSurface"
 				type="govInputWithSuffix"
@@ -215,7 +219,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === 'heatedBasement'">
+		<template v-if="model.typeOfGroundFloor === FloorType.Heated_basement">
 			<FormKit
 				id="thicknessOfWalls"
 				type="govInputWithSuffix"
@@ -243,7 +247,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === 'unheatedBasement'">
+		<template v-if="model.typeOfGroundFloor === FloorType.Unheated_basement">
 			<FormKit
 				id="thermalTransmittanceOfFloorAboveBasement"
 				type="govInputWithSuffix"

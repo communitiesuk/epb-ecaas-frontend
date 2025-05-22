@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import type { CeilingsAndRoofsData, DoorsData, FloorsData, LivingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData } from '~/stores/ecaasStore.types';
-import { MassDistributionClass } from '~/schema/api-schema.types';
+import { FloorType, MassDistributionClass } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -27,7 +27,7 @@ const floorsData: FloorsData = {
 			massDistributionClass: MassDistributionClass.I,
 			perimeter: 0,
 			psiOfWallJunction: 0,
-			typeOfGroundFloor: 'slabNoEdgeInsulation'
+			typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 		}]
 	},
 	livingSpaceInternalFloor: {

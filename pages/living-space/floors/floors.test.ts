@@ -7,7 +7,7 @@ import ExposedFloorForm from './exposed/[floor].vue';
 
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
-import { MassDistributionClass } from "~/schema/api-schema.types";
+import { FloorType, MassDistributionClass } from "~/schema/api-schema.types";
 
 describe('floors', () => {
 	const store = useEcaasStore();
@@ -28,7 +28,7 @@ describe('floors', () => {
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		typeOfGroundFloor: 'slabNoEdgeInsulation'
+		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 	};
 
 	const ground2: GroundFloorData = {
@@ -41,7 +41,7 @@ describe('floors', () => {
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		typeOfGroundFloor: 'slabNoEdgeInsulation'
+		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 	};
 
 	const ground3: GroundFloorData = {
@@ -54,7 +54,7 @@ describe('floors', () => {
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		typeOfGroundFloor: 'slabNoEdgeInsulation'
+		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 	};
 	const internal1: InternalFloorData = {
 		typeOfInternalFloor: 'heatedSpace',

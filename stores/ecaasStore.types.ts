@@ -1,4 +1,4 @@
-import type { ApplianceKey, BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType } from "~/schema/api-schema.types";
+import type { ApplianceKey, BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -102,7 +102,7 @@ export type GroundFloorData = {
 	massDistributionClass: MassDistributionClass;
 	perimeter: number;
 	psiOfWallJunction: number;
-	typeOfGroundFloor: string;
+	typeOfGroundFloor: FloorType;
 	edgeInsulationType?: EdgeInsulationType;
 	edgeInsulationWidth?: number;
 	edgeInsulationThermalResistance?: number;

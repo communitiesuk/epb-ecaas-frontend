@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import GroundFloor from './[floor].vue';
-import { EdgeInsulationType, MassDistributionClass } from "~/schema/api-schema.types";
+import { EdgeInsulationType, FloorType, MassDistributionClass } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -23,12 +23,12 @@ describe('ground floor', () => {
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
-		typeOfGroundFloor: 'slabNoEdgeInsulation'
+		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 	};
 
 	const groundFloorWithEdgeInsulation: GroundFloorData = {
 		...groundFloor,
-		typeOfGroundFloor: 'slabWithEdgeInsulation',
+		typeOfGroundFloor: FloorType.Slab_edge_insulation,
 		edgeInsulationType: EdgeInsulationType.horizontal,
 		edgeInsulationWidth: 0,
 		edgeInsulationThermalResistance: 0
@@ -36,7 +36,7 @@ describe('ground floor', () => {
 
 	const groundFloorWithSuspendedFloor: GroundFloorData = {
 		...groundFloor,
-		typeOfGroundFloor: 'suspendedFloor',
+		typeOfGroundFloor: FloorType.Suspended_floor,
 		heightOfFloorUpperSurface: 0,
 		thicknessOfWalls: 0,
 		underfloorSpaceThermalResistance: 0,
@@ -46,7 +46,7 @@ describe('ground floor', () => {
 
 	const groundFloorWithHeatedBasement: GroundFloorData = {
 		...groundFloor,
-		typeOfGroundFloor: 'heatedBasement',
+		typeOfGroundFloor: FloorType.Heated_basement,
 		thicknessOfWalls: 0,
 		depthOfBasementFloorBelowGround: 0,
 		thermalResistanceOfBasementWalls: 0
@@ -54,7 +54,7 @@ describe('ground floor', () => {
 
 	const groundFloorWithUnheatedBasement: GroundFloorData = {
 		...groundFloor,
-		typeOfGroundFloor: 'unheatedBasement',
+		typeOfGroundFloor: FloorType.Unheated_basement,
 		thermalTransmittanceOfFloorAboveBasement: 0,
 		thermalTransmittanceOfWallsAboveGround: 0,
 		thermalTransmittanceOfBasementWalls: 0,
@@ -76,7 +76,7 @@ describe('ground floor', () => {
 		await user.click(screen.getByTestId('massDistributionClass_I'));
 		await user.type(screen.getByTestId('perimeter'), '0');
 		await user.type(screen.getByTestId('psiOfWallJunction'), '0');
-		await user.click(screen.getByTestId('typeOfGroundFloor_slabNoEdgeInsulation'));
+		await user.click(screen.getByTestId('typeOfGroundFloor_Slab_no_edge_insulation'));
 	};
 	
 	describe('when type of ground floor is slab no edge insulation', () => {
@@ -116,7 +116,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('perimeter') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('psiOfWallJunction') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('typeOfGroundFloor_slabNoEdgeInsulation')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('typeOfGroundFloor_Slab_no_edge_insulation')).hasAttribute('checked')).toBe(true);
 		});
 			
 		it('required error messages are displayed when empty form is submitted', async () => {
@@ -141,7 +141,7 @@ describe('ground floor', () => {
 			await renderSuspended(GroundFloor);
 	
 			await populateValidForm();
-			await user.click(screen.getByTestId('typeOfGroundFloor_slabWithEdgeInsulation'));
+			await user.click(screen.getByTestId('typeOfGroundFloor_Slab_edge_insulation'));
 			await user.click(screen.getByTestId('edgeInsulationType_horizontal'));
 			await user.type(screen.getByTestId('edgeInsulationWidth'), '0');
 			await user.type(screen.getByTestId('edgeInsulationThermalResistance'), '0');
@@ -170,7 +170,7 @@ describe('ground floor', () => {
 				}
 			});
 	
-			expect((await screen.findByTestId('typeOfGroundFloor_slabWithEdgeInsulation')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('typeOfGroundFloor_Slab_edge_insulation')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('edgeInsulationType_horizontal')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('edgeInsulationWidth') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('edgeInsulationThermalResistance') as HTMLInputElement).value).toBe('0');
@@ -179,7 +179,7 @@ describe('ground floor', () => {
 		it('required error messages are displayed when empty form is submitted', async () => {
 			await renderSuspended(GroundFloor);
 	
-			await user.click(screen.getByTestId('typeOfGroundFloor_slabWithEdgeInsulation'));
+			await user.click(screen.getByTestId('typeOfGroundFloor_Slab_edge_insulation'));
 			await user.click(screen.getByRole('button'));
 
 			expect((await screen.findByTestId('edgeInsulationType_error'))).toBeDefined();
@@ -193,7 +193,7 @@ describe('ground floor', () => {
 			await renderSuspended(GroundFloor);
 	
 			await populateValidForm();
-			await user.click(screen.getByTestId('typeOfGroundFloor_suspendedFloor'));
+			await user.click(screen.getByTestId('typeOfGroundFloor_Suspended_floor'));
 			await user.type(screen.getByTestId('heightOfFloorUpperSurface'), '0');
 			await user.type(screen.getByTestId('thicknessOfWalls'), '0');
 			await user.type(screen.getByTestId('underfloorSpaceThermalResistance'), '0');
@@ -225,7 +225,7 @@ describe('ground floor', () => {
 				}
 			});
 	
-			expect((await screen.findByTestId('typeOfGroundFloor_suspendedFloor')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('typeOfGroundFloor_Suspended_floor')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('heightOfFloorUpperSurface') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('underfloorSpaceThermalResistance') as HTMLInputElement).value).toBe('0');
@@ -236,7 +236,7 @@ describe('ground floor', () => {
 		it('required error messages are displayed when empty form is submitted', async () => {
 			await renderSuspended(GroundFloor);
 	
-			await user.click(screen.getByTestId('typeOfGroundFloor_suspendedFloor'));
+			await user.click(screen.getByTestId('typeOfGroundFloor_Suspended_floor'));
 			await user.click(screen.getByRole('button'));
 
 			expect((await screen.findByTestId('heightOfFloorUpperSurface_error'))).toBeDefined();
@@ -252,7 +252,7 @@ describe('ground floor', () => {
 			await renderSuspended(GroundFloor);
 	
 			await populateValidForm();
-			await user.click(screen.getByTestId('typeOfGroundFloor_heatedBasement'));
+			await user.click(screen.getByTestId('typeOfGroundFloor_Heated_basement'));
 			await user.type(screen.getByTestId('thicknessOfWalls'), '0');
 			await user.type(screen.getByTestId('depthOfBasementFloorBelowGround'), '0');
 			await user.type(screen.getByTestId('thermalResistanceOfBasementWalls'), '0');
@@ -282,7 +282,7 @@ describe('ground floor', () => {
 				}
 			});
 	
-			expect((await screen.findByTestId('typeOfGroundFloor_heatedBasement')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('typeOfGroundFloor_Heated_basement')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('depthOfBasementFloorBelowGround') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('thermalResistanceOfBasementWalls') as HTMLInputElement).value).toBe('0');
@@ -291,7 +291,7 @@ describe('ground floor', () => {
 		it('required error messages are displayed when empty form is submitted', async () => {
 			await renderSuspended(GroundFloor);
 	
-			await user.click(screen.getByTestId('typeOfGroundFloor_heatedBasement'));
+			await user.click(screen.getByTestId('typeOfGroundFloor_Heated_basement'));
 			await user.click(screen.getByRole('button'));
 
 			expect((await screen.findByTestId('thicknessOfWalls_error'))).toBeDefined();
@@ -305,7 +305,7 @@ describe('ground floor', () => {
 			await renderSuspended(GroundFloor);
 	
 			await populateValidForm();
-			await user.click(screen.getByTestId('typeOfGroundFloor_unheatedBasement'));
+			await user.click(screen.getByTestId('typeOfGroundFloor_Unheated_basement'));
 			await user.type(screen.getByTestId('thermalTransmittanceOfFloorAboveBasement'), '0');
 			await user.type(screen.getByTestId('thermalTransmittanceOfWallsAboveGround'), '0');
 			await user.type(screen.getByTestId('thermalTransmittanceOfBasementWalls'), '0');
@@ -338,7 +338,7 @@ describe('ground floor', () => {
 				}
 			});
 	
-			expect((await screen.findByTestId('typeOfGroundFloor_unheatedBasement')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('typeOfGroundFloor_Unheated_basement')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('thermalTransmittanceOfFloorAboveBasement') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('thermalTransmittanceOfBasementWalls') as HTMLInputElement).value).toBe('0');
@@ -350,7 +350,7 @@ describe('ground floor', () => {
 		it('required error messages are displayed when empty form is submitted', async () => {
 			await renderSuspended(GroundFloor);
 	
-			await user.click(screen.getByTestId('typeOfGroundFloor_unheatedBasement'));
+			await user.click(screen.getByTestId('typeOfGroundFloor_Unheated_basement'));
 			await user.click(screen.getByRole('button'));
 
 			expect((await screen.findByTestId('thermalTransmittanceOfFloorAboveBasement_error'))).toBeDefined();

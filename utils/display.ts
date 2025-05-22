@@ -84,3 +84,8 @@ export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
 			throw new Error(`Missed a appliance key case: ${value}`);
 	}
 }
+
+export function displaySnakeToSentenceCase(value: string): string {
+	const replaced = value.replaceAll(/_/g, ' ');
+	return replaced.charAt(0).toUpperCase() + replaced.slice(1).toLowerCase();
+}
