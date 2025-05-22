@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { VentilationShieldClass } from '~/schema/api-schema.types';
+import type { TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
 
 const title = "External factors";
 const store = useEcaasStore();
@@ -12,6 +12,12 @@ const typeOfExposureOptions: EnumRecord<VentilationShieldClass, SnakeToSentenceC
 	Open: "Open",
 	Normal: "Normal",
 	Shielded: "Shielded"
+};
+const terrainTypeOptions: EnumRecord<TerrainClass, PascalToSentenceCase<TerrainClass>> = {
+	OpenWater: "Open water",
+	OpenField: "Open field",
+	Suburban: "Suburban",
+	Urban: "Urban"
 };
 
 const saveForm = (fields: typeof model.value) => {
@@ -63,12 +69,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="terrainType"
 			type="govRadios"
-			:options="{
-				OpenWater: 'Open water',
-				OpenField: 'Open field',
-				Suburban: 'Suburban',
-				Urban: 'Urban'
-			}"
+			:options="terrainTypeOptions"
 			label="Terrain Type"
 			name="terrainType"
 			validation="required"

@@ -58,3 +58,20 @@ describe('SnakeToSentenceCase', () => {
 		const _result: Result = 'Invalid example'; // This should be invalid
 	});
 });
+
+describe('PascalToSentenceCase', () => {
+	it('should convert PascalCase to sentence case', () => {
+		type PascalCase = 'PascalCaseExample' | 'AnotherExample';
+		type Result = PascalToSentenceCase<PascalCase>;
+
+		expectTypeOf<'Pascal case example'>().toMatchTypeOf<Result>();
+	});
+
+	it('should not allow invalid conversions', () => {
+		type PascalCase = 'PascalCaseExample' | 'AnotherExample';
+		type Result = PascalToSentenceCase<PascalCase>;
+
+		// @ts-expect-error this should be invalid
+		const _result: Result = 'Invalid example'; // This should be invalid
+	});
+});

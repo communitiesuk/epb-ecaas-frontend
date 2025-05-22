@@ -19,3 +19,15 @@ type StringReplace<
 		TReplacement
 	>}`
 	: TString;
+
+export type PascalToSentenceCase<S extends string> =
+  S extends `${infer First}${infer Rest}`
+  	? `${First}${PascalToSentenceCaseHelper<Rest>}`
+  	: S;
+
+type PascalToSentenceCaseHelper<S extends string, Acc extends string = ''> =
+  S extends `${infer First}${infer Rest}`
+  	? First extends Lowercase<First>
+  		? `${First}${PascalToSentenceCaseHelper<Rest>}`
+  		: ` ${Lowercase<First>}${PascalToSentenceCaseHelper<Rest>}`
+  	: Acc;

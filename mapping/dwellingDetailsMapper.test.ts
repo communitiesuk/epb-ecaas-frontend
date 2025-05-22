@@ -1,4 +1,4 @@
-import { ApplianceKey, BuildType, ShadingObjectType, VentilationShieldClass } from '~/schema/api-schema.types';
+import { ApplianceKey, BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
 import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 
 describe('dwelling details mapper', () => {
@@ -44,7 +44,7 @@ describe('dwelling details mapper', () => {
 		const state: ExternalFactorsData = {
 			altitude: 30,
 			typeOfExposure: VentilationShieldClass.Normal,
-			terrainType: 'OpenField',
+			terrainType: TerrainClass.OpenField,
 			noiseNuisance: true
 		};
 
