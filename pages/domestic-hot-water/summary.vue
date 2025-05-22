@@ -261,7 +261,7 @@ const wwhrsSummary: SummarySection = {
 		return {
 			"Name": d.name,
 			"Outlet": hotWaterOutletsData.find(x => x.id === d.outlet)?.name,
-			"Type": d.type,
+			"Type": displayWwhrsType(d.type),
 			"Flow rate": d.flowRate,
 			"Efficiency": d.efficiency,
 			"Proportion of use": d.proportionOfUse

@@ -1,5 +1,5 @@
 import App from '~/app.vue';
-import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass } from '../schema/api-schema.types';
+import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass, WwhrsType } from '../schema/api-schema.types';
 
 export function displayBoolean(value: boolean | undefined): BooleanDisplay | undefined {
 	if (typeof value === 'undefined') {
@@ -89,3 +89,19 @@ export function displaySnakeToSentenceCase(value: string): string {
 	const replaced = value.replaceAll(/_/g, ' ');
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1).toLowerCase();
 }
+
+export function displayWwhrsType(value: WwhrsType): WwhrsTypeDisplay {
+	switch (value) {
+		case WwhrsType.WWHRS_InstantaneousSystemA:
+			return 'A';
+		case WwhrsType.WWHRS_InstantaneousSystemB:
+			return 'B';
+		case WwhrsType.WWHRS_InstantaneousSystemC:
+			return 'C';
+		default:
+			value satisfies never;
+			throw new Error(`Missed a Wwhrs type case: ${value}`);
+	}
+}
+
+export type WwhrsTypeDisplay = 'A' | 'B' | 'C';

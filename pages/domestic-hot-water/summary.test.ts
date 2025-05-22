@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
-import { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
+import { WaterPipeContentsType, WaterPipeworkLocation, WwhrsType } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -400,7 +400,7 @@ describe('Domestic hot water summary', () => {
 		const wwhrs: WwhrsData = {
 			name: 'WWHRS 1',
 			outlet: mixedShowerId,
-			type: 'a',
+			type: WwhrsType.WWHRS_InstantaneousSystemA,
 			flowRate: 10,
 			efficiency: 10,
 			proportionOfUse: 0.5

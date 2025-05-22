@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { getUrl } from '#imports';
+import { getUrl, type EnumRecord } from '#imports';
+import { WwhrsType } from '~/schema/api-schema.types';
 
 const title = "Waste water heat recovery system";
 const store = useEcaasStore();
@@ -16,6 +17,12 @@ const hotWaterOutlets = [
 	mixedShower.data.map(x => [x.id, x.name] as [string, string]),
 	otherOutlets.data.map(x => [x.id, x.name] as [string, string])
 ].flat();
+
+const wwhrsTypeOptions: EnumRecord<WwhrsType, string> = {
+	[WwhrsType.WWHRS_InstantaneousSystemA]: 'System A',
+	[WwhrsType.WWHRS_InstantaneousSystemB]: 'System B',
+	[WwhrsType.WWHRS_InstantaneousSystemC]: 'System C'
+};
 
 const saveForm = (fields: WwhrsData) => {
 	store.$patch((state) => {
@@ -78,11 +85,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="type"
 			type="govRadios"
-			:options="{
-				a: 'System A',
-				b: 'System B',
-				c: 'System C'
-			}"
+			:options="wwhrsTypeOptions"
 			label="Type"
 			name="type"
 			validation="required">

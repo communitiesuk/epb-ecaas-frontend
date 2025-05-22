@@ -1,4 +1,4 @@
-import type { ApplianceKey, BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
+import type { ApplianceKey, BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -459,7 +459,7 @@ export type SecondaryPipeworkData = {
 export type WwhrsData = {
 	name: string;
 	outlet: string;
-	type: string;
+	type: WwhrsType;
 	flowRate: number;
 	efficiency: number;
 	proportionOfUse: number;
