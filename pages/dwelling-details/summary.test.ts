@@ -3,7 +3,7 @@ import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
 import hyphenate from '../../utils/hyphenate';
-import { ApplianceKey, BuildType, ShadingObjectType } from '~/schema/api-schema.types';
+import { ApplianceKey, BuildType, ShadingObjectType, VentilationShieldClass } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -49,7 +49,7 @@ const state: DwellingDetailSummary = {
 	}],
 	externalFactors: {
 		altitude: 3,
-		typeOfExposure: 'Shielded',
+		typeOfExposure: VentilationShieldClass.Shielded,
 		terrainType: 'Suburban',
 		noiseNuisance: false
 	}

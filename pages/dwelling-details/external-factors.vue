@@ -1,10 +1,18 @@
 <script setup lang="ts">
+import type { VentilationShieldClass } from '~/schema/api-schema.types';
+
 const title = "External factors";
 const store = useEcaasStore();
 
 const model = ref({
 	...store.dwellingDetails.externalFactors.data
 });
+
+const typeOfExposureOptions: EnumRecord<VentilationShieldClass, SnakeToSentenceCase<VentilationShieldClass>> = {
+	Open: "Open",
+	Normal: "Normal",
+	Shielded: "Shielded"
+};
 
 const saveForm = (fields: typeof model.value) => {
 	store.$patch({
@@ -46,11 +54,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="typeOfExposure"
 			type="govRadios"
-			:options="{
-				Open: 'Open',
-				Normal: 'Normal',
-				Shielded: 'Shielded'
-			}"
+			:options="typeOfExposureOptions"
 			label="Type of exposure"
 			name="typeOfExposure"
 			validation="required"

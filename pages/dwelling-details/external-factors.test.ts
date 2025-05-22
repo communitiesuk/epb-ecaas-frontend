@@ -3,6 +3,7 @@ import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
 import type { ExternalFactorsData } from '~/stores/ecaasStore.types';
+import { VentilationShieldClass } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -11,7 +12,7 @@ mockNuxtImport('navigateTo', () => {
 
 const state: ExternalFactorsData = {
 	altitude: 3,
-	typeOfExposure: 'Shielded',
+	typeOfExposure: VentilationShieldClass.Shielded,
 	terrainType: 'Suburban',
 	noiseNuisance: false
 };
