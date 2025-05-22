@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import GroundFloor from './[floor].vue';
-import { MassDistributionClass } from "~/schema/api-schema.types";
+import { EdgeInsulationType, MassDistributionClass } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -29,7 +29,7 @@ describe('ground floor', () => {
 	const groundFloorWithEdgeInsulation: GroundFloorData = {
 		...groundFloor,
 		typeOfGroundFloor: 'slabWithEdgeInsulation',
-		edgeInsulationType: 'horizontal',
+		edgeInsulationType: EdgeInsulationType.horizontal,
 		edgeInsulationWidth: 0,
 		edgeInsulationThermalResistance: 0
 	};
