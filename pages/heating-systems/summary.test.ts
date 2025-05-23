@@ -23,7 +23,7 @@ describe("Heating systems summary page", () => {
 	});
 
 	describe("Energy supply section", () => {
-		it("displays the correct tabs for energy supply", async () => {
+		it("displays energy supply tab", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 			expect(
 				screen.getByRole("link", { name: "Energy supply" })
@@ -36,7 +36,7 @@ describe("Heating systems summary page", () => {
 			await verifyDataInSection("energySupply", {"Fuel type": ""});
 		});
 
-		it("displays only the fuel type when non-electrivity, non-custom energy supply is selected", async () => {
+		it("displays only the fuel type field when non-electricity, non-custom energy supply is selected", async () => {
 			const store = useEcaasStore();
 
 			store.$patch({
@@ -53,7 +53,7 @@ describe("Heating systems summary page", () => {
 			await verifyDataInSection("energySupply", { "Fuel type": "WoodOil" });
 		});
 
-		it("displays the correct data when electricity is selected", async () => {
+		it("displays the correct fields when electricity is selected", async () => {
 			const store = useEcaasStore();
 
 			store.$patch({
@@ -74,7 +74,7 @@ describe("Heating systems summary page", () => {
 			});
 		});
 
-		it("displays the correct data when custom is selected", async () => {
+		it("displays the correct fields when custom is selected", async () => {
 			const store = useEcaasStore();
 
 			store.$patch({
@@ -99,7 +99,7 @@ describe("Heating systems summary page", () => {
 			});
 		});
 
-		it("displays all conditional fields when electricity and custom are selected", async () => {
+		it("displays all conditional fields when both electricity and custom are selected", async () => {
 			const store = useEcaasStore();
 
 			store.$patch({
