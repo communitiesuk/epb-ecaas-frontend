@@ -1,4 +1,4 @@
-import { ApplianceReference, type SchemaApplianceEntry, type SchemaBuildType, type SchemaShadingObjectType, type SchemaTerrainClass, type SchemaVentilationShieldClass } from "~/schema/api-schema.types";
+import { ApplianceReference, type SchemaApplianceEntry } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 
 export function mapDwellingDetailsData(state: EcaasState): Partial<FhsInputSchema> {
@@ -20,7 +20,7 @@ function mapGeneralSpecificationsData(state: EcaasState): Pick<FhsInputSchema, '
 
 	return {
 		General: {
-			build_type: generalSpecifications.data.typeOfDwelling as SchemaBuildType,
+			build_type: generalSpecifications.data.typeOfDwelling!,
 			storeys_in_building: generalSpecifications.data.storeysInDwelling!,
 			storey_of_dwelling: generalSpecifications.data.storeyOfFlat
 		},
@@ -36,8 +36,8 @@ function mapExternalFactorsData(state: EcaasState): Pick<FhsInputSchema, 'Infilt
 	return {
 		InfiltrationVentilation: {
 			altitude: externalFactors.data.altitude!,
-			shield_class: externalFactors.data.typeOfExposure as SchemaVentilationShieldClass,
-			terrain_class: externalFactors.data.terrainType as SchemaTerrainClass,
+			shield_class: externalFactors.data.typeOfExposure,
+			terrain_class: externalFactors.data.terrainType,
 			noise_nuisance: externalFactors.data.noiseNuisance
 		}
 	} as Pick<FhsInputSchema, 'InfiltrationVentilation'>;
@@ -54,7 +54,7 @@ function mapDistantShadingData(state: EcaasState): Pick<FhsInputSchema, 'Externa
 					start360: x.startAngle,
 					end360: x.endAngle,
 					shading: [{
-						type: x.objectType as SchemaShadingObjectType,
+						type: x.objectType,
 						height: x.height,
 						distance: x.distance
 					}]
