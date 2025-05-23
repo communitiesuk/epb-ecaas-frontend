@@ -12,7 +12,7 @@ export function mapInfiltrationVentilationData(state: EcaasState): Partial<FhsIn
 
 function mapMechanicalVentilationData(state: EcaasState): Pick<FhsInputSchema, 'InfiltrationVentilation'> {
 
-	const mechnicalVentilationEntries = state.infiltrationAndVentilation.mechanicalVentilation.data.map(x => {
+	const mechanicalVentilationEntries = state.infiltrationAndVentilation.mechanicalVentilation.data.map(x => {
 		const key = x.name;
 		const val: SchemaMechanicalVentilation = {
 			vent_type: x.typeOfMechanicalVentilationOptions,
@@ -27,7 +27,7 @@ function mapMechanicalVentilationData(state: EcaasState): Pick<FhsInputSchema, '
 
 	return {
 		InfiltrationVentilation: {
-			MechanicalVentilation: Object.fromEntries(mechnicalVentilationEntries)
+			MechanicalVentilation: Object.fromEntries(mechanicalVentilationEntries)
 		}
 	} as Pick<FhsInputSchema, 'InfiltrationVentilation'>;
 }
