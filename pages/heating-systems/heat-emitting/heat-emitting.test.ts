@@ -7,6 +7,7 @@ import WarmAirHeatPumpForm from "./warm-air-heat-pump/[pump].vue";
 
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import { WetEmitterWet_emitter_type } from "~/schema/api-schema.types";
 
 describe("heat emitting", () => {
 	describe("wet distribution", async () => {
@@ -357,7 +358,7 @@ describe("heat emitting", () => {
 			thermalMass: 2,
 			designTempDiffAcrossEmitters: 0.4,
 			designFlowTemp: 32,
-			typeOfSpaceHeater: "radiators",
+			typeOfSpaceHeater: WetEmitterWet_emitter_type.radiator,
 			exponent: 1.3,
 			constant: 0.08,
 			emitterFloorArea: undefined,

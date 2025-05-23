@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import WetDistribution from "./[distribution].vue";
+import { WetEmitterWet_emitter_type } from "~/schema/api-schema.types";
 
 const user = userEvent.setup();
 
@@ -22,7 +23,7 @@ const wetDistribution1: WetDistributionData = {
 	thermalMass: 2,
 	designTempDiffAcrossEmitters: 0.4,
 	designFlowTemp: 32,
-	typeOfSpaceHeater: "radiators",
+	typeOfSpaceHeater: WetEmitterWet_emitter_type.radiator,
 	exponent: 1.3,
 	constant: 0.08,
 	emitterFloorArea: undefined,
@@ -40,7 +41,7 @@ const wetDistribution2: WetDistributionData = {
 	thermalMass: 5,
 	designTempDiffAcrossEmitters: 0.2,
 	designFlowTemp: 32,
-	typeOfSpaceHeater: "underFloorHeating",
+	typeOfSpaceHeater: WetEmitterWet_emitter_type.ufh,
 	convectionFractionWet: undefined,
 	emitterFloorArea: 5,
 	equivalentThermalMass: 80,
@@ -60,7 +61,7 @@ const populateValidForm = async () => {
 	await user.type(screen.getByTestId("thermalMass"), "2");
 	await user.type(screen.getByTestId("designTempDiffAcrossEmitters"), "0.4");
 	await user.type(screen.getByTestId("designFlowTemp"), "32");
-	await user.click(screen.getByTestId("typeOfSpaceHeater_radiators"));
+	await user.click(screen.getByTestId("typeOfSpaceHeater_radiator"));
 	await user.type(screen.getByTestId("convectionFractionWet"), "0.2");
 	await user.selectOptions(screen.getByTestId("ecoDesignControllerClass"), "1");
 	await user.type(screen.getByTestId("minimumFlowTemp"), "20");
@@ -213,7 +214,7 @@ describe("Wet distribution", () => {
 		await user.type(screen.getByTestId("thermalMass"), "5");
 		await user.type(screen.getByTestId("designTempDiffAcrossEmitters"), "0.2");
 		await user.type(screen.getByTestId("designFlowTemp"), "32");
-		await user.click(screen.getByTestId("typeOfSpaceHeater_underFloorHeating"));
+		await user.click(screen.getByTestId("typeOfSpaceHeater_ufh"));
 		await user.type(screen.getByTestId("emitterFloorArea"), "5");
 		await user.selectOptions(
 			screen.getByTestId("ecoDesignControllerClass"),
@@ -283,7 +284,7 @@ describe("Wet distribution", () => {
 		expect(
 			(
 				(await screen.findByTestId(
-					"typeOfSpaceHeater_radiators"
+					"typeOfSpaceHeater_radiator"
 				)) as HTMLInputElement
 			).checked
 		).toBe(true);

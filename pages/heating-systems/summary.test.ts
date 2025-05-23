@@ -1,6 +1,7 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatingSystemsSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
+import { WetEmitterWet_emitter_type } from "~/schema/api-schema.types";
 
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -306,7 +307,7 @@ describe("Heating systems summary page", () => {
 			thermalMass: 2,
 			designTempDiffAcrossEmitters: 0.4,
 			designFlowTemp: 32,
-			typeOfSpaceHeater: "radiators",
+			typeOfSpaceHeater: WetEmitterWet_emitter_type.radiator,
 			exponent: 1.3,
 			constant: 0.08,
 			emitterFloorArea: undefined,
@@ -324,7 +325,7 @@ describe("Heating systems summary page", () => {
 			thermalMass: 2,
 			designTempDiffAcrossEmitters: 0.4,
 			designFlowTemp: 32,
-			typeOfSpaceHeater: "underFloorHeating",
+			typeOfSpaceHeater: WetEmitterWet_emitter_type.ufh,
 			exponent: 1.3,
 			constant: 0.08,
 			emitterFloorArea: 5,
@@ -433,7 +434,7 @@ describe("Heating systems summary page", () => {
 			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
 		});
 
-		it("displays the correct data for the wet distribution section when type of space heater is Under floor heating", async () => {
+		it("displays the correct data for the wet distribution section when type of space heater is Underfloor heating", async () => {
 			const store = useEcaasStore();
 
 			store.$patch({
@@ -458,7 +459,7 @@ describe("Heating systems summary page", () => {
 				"Thermal mass": "2",
 				"Design temperature difference across the emitters": "0.4",
 				"Design flow temperature": "32",
-				"Type of space heater": "Under floor heating",
+				"Type of space heater": "Underfloor heating",
 				"Emitter floor area": "5",
 				"Eco design controller class": "1",
 				"Minimum flow temperature": "20",

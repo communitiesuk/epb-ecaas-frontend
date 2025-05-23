@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FormKitOptionsProp } from "@formkit/inputs";
+import { WetEmitterWet_emitter_type } from "~/schema/api-schema.types";
 const title = "Wet distribution";
 const store = useEcaasStore();
 const { saveToList } = useForm();
@@ -23,6 +24,11 @@ const options: FormKitOptionsProp[] = [
 	},
 ];
 
+const typeOfSpaceHeaterOptions: Record<Exclude<WetEmitterWet_emitter_type, WetEmitterWet_emitter_type.fancoil>, string> = {
+	[WetEmitterWet_emitter_type.radiator]: 'Radiators',
+	[WetEmitterWet_emitter_type.ufh]: 'Under floor heating (UFH)',
+};
+
 const saveForm = (fields: WetDistributionData) => {
 	store.$patch((state) => {
 		const { wetDistribution } = state.heatingSystems.heatEmitting;
@@ -42,11 +48,11 @@ const saveForm = (fields: WetDistributionData) => {
 			minOutdoorTemp: 0,
 			maxOutdoorTemp: 15
 		};
-		if(item.typeOfSpaceHeater === "radiators"){
+		if(item.typeOfSpaceHeater === WetEmitterWet_emitter_type.radiator){
 			item.exponent = 1.3;
 			item.constant = 0.08;
 		};
-		if(item.typeOfSpaceHeater === "underFloorHeating"){
+		if(item.typeOfSpaceHeater === WetEmitterWet_emitter_type.ufh){
 			item.equivalentThermalMass = 80;
 			item.systemPerformanceFactor = 5;
 		};
@@ -204,15 +210,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="typeOfSpaceHeater"
 			type="govRadios"
-			:options="{
-				radiators: 'Radiators',
-				underFloorHeating: 'Under floor heating (UFH)',
-			}"
+			:options="typeOfSpaceHeaterOptions"
 			label="Type of space heater"
 			name="typeOfSpaceHeater"
 			validation="required"
 		/>
-		<template v-if="model.typeOfSpaceHeater === 'radiators'">
+		<template v-if="model.typeOfSpaceHeater === WetEmitterWet_emitter_type.radiator">
 			<FormKit
 				id="convectionFractionWet"
 				type="govInputFloat"
@@ -243,7 +246,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</FormKit>
 		</template>
 
-		<template v-if="model.typeOfSpaceHeater === 'underFloorHeating'">
+		<template v-if="model.typeOfSpaceHeater === WetEmitterWet_emitter_type.ufh">
 			<FormKit
 				id="emitterFloorArea"
 				type="govInputWithSuffix"
