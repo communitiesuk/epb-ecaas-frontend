@@ -6,7 +6,7 @@ import ElectricBatteryForm from "./electric-battery/[battery].vue";
 import PvDiverterForm from "./pv-diverter/[diverter].vue";
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
-import { OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
+import { BatteryLocation, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
 
 describe('pv and batteries', () => {
 	const store = useEcaasStore();
@@ -55,7 +55,7 @@ describe('pv and batteries', () => {
 		capacity: 40,
 		batteryAge: 12,
 		chargeEfficiency: 0.9,
-		location: 'inside',
+		location: BatteryLocation.inside,
 		gridChargingPossible: false,
 		maximumChargeRate: 30,
 		minimumChargeRate: 20,

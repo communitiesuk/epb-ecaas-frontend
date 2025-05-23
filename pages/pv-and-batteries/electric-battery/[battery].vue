@@ -1,10 +1,17 @@
 <script setup lang="ts">
+import type { BatteryLocation } from '~/schema/api-schema.types';
+
 const title = "Electric battery";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const electricBatteryData = useItemToEdit('battery', store.pvAndBatteries.electricBattery.data);
 const model: Ref<ElectricBatteryData> = ref(electricBatteryData!);
+
+const locationOptions: EnumRecord<BatteryLocation, SnakeToSentenceCase<BatteryLocation>> = {
+	inside: 'Inside',
+	outside: 'Outside',
+};
 
 const saveForm = (fields: ElectricBatteryData) => {
 	store.$patch((state) => {
@@ -96,10 +103,7 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 		<FormKit
 			id="location"
 			type="govRadios"
-			:options="{
-				inside: 'Inside',
-				outside: 'Outside',
-			}"
+			:options="locationOptions"
 			label="Location"
 			help="Is the battery inside or outside the thermal envelope?"
 			name="location"
