@@ -12,22 +12,22 @@ export function mapInfiltrationVentilationData(state: EcaasState): Partial<FhsIn
 }
 
 function mapMechanicalVentilationData(state: EcaasState): Pick<FhsInputSchema, 'InfiltrationVentilation'> {
-	// some fields are set in dwelling details
-	// Cowls, PDUs
+	const infiltrationVentilationData = state.infiltrationAndVentilation.ventilation.data;
+	const airPermeabilityData = state.infiltrationAndVentilation.airPermeability.data;
 	const infiltrationVentiliation: Omit<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
 		Cowls: {},
 		PDUs: {},
 		Leaks: {
-			ventilation_zone_height: state.infiltrationAndVentilation.ventilation.data.dwellingHeight!,
-			env_area: state.infiltrationAndVentilation.ventilation.data.dwellingEnvelopeArea!,
-			test_pressure: state.infiltrationAndVentilation.airPermeability.data.testPressure!,
-			test_result: state.infiltrationAndVentilation.airPermeability.data.airTightnessTestResult!
+			ventilation_zone_height: infiltrationVentilationData.dwellingHeight!,
+			env_area: infiltrationVentilationData.dwellingEnvelopeArea!,
+			test_pressure: airPermeabilityData.testPressure!,
+			test_result: airPermeabilityData.airTightnessTestResult!
 		},
 		CombustionAppliances: {
 			// TODO map this from state
 		},
-		cross_vent_factor: state.infiltrationAndVentilation.ventilation.data.crossVentFactor!,
-		ventilation_zone_base_height: state.infiltrationAndVentilation.ventilation.data.dwellingElevationalLevelAtBase!,
+		cross_vent_factor: infiltrationVentilationData.crossVentFactor!,
+		ventilation_zone_base_height: infiltrationVentilationData.dwellingElevationalLevelAtBase!,
 		ach_max_static_calcs: 2, // suggested default
 		vent_opening_ratio_init: 1, // 1 is open
 		MechanicalVentilation: mapMechanicalVentilation(state),
