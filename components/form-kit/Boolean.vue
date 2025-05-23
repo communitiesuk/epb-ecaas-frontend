@@ -10,7 +10,7 @@ const props = defineProps<{
 const {
 	id,
 	node: { name },
-	attrs: { trueLabel = 'Yes', falseLabel = 'No' },
+	attrs: { ['true-label']: trueLabel = 'Yes', ['false-label']: falseLabel = 'No' },
 	label,
 	help,
 } = props.context;
