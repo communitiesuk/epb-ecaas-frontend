@@ -140,23 +140,23 @@ describe("Heating systems summary page", () => {
 	describe("Heat generation section", () => {
 		const heatPump: HeatPumpData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-			name: "Heat pump",
+			name: "Heat pump 1",
 		};
 		const boiler: BoilerData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-			name: "Boiler",
+			name: "Boiler 1",
 		};
 		const heatBattery: HeatBatteryData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-			name: "Heat battery",
+			name: "Heat battery 1",
 		};
 		const heatNetwork: HeatNetworkData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-			name: "Heat network",
+			name: "Heat network 1",
 		};
 		const heatInterfaceUnit: HeatInterfaceUnitData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-			name: "Heat interface unit",
+			name: "Heat interface unit 1",
 		};
 
 		it("displays 'No heat generators added' and link to heat generation overview page when no data exists", async () => {
@@ -219,10 +219,8 @@ describe("Heating systems summary page", () => {
 			});
 			await renderSuspended(HeatingSystemsSummary);
 
-			const lineResult = await screen.findByTestId("summary-heatPump-name");
+			await verifyDataInSection("heatPump", {"Name": "Heat pump 1" });
 
-			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
-			expect(lineResult.querySelector("dd")?.textContent).toBe("Heat pump");
 		});
 
 		it("displays the correct data for the boiler section", async () => {
@@ -239,10 +237,7 @@ describe("Heating systems summary page", () => {
 			});
 			await renderSuspended(HeatingSystemsSummary);
 
-			const lineResult = await screen.findByTestId("summary-boiler-name");
-
-			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
-			expect(lineResult.querySelector("dd")?.textContent).toBe("Boiler");
+			await verifyDataInSection("boiler", { "Name": "Boiler 1" });
 		});
 
 		it("displays the correct data for the heat battery section", async () => {
@@ -259,10 +254,8 @@ describe("Heating systems summary page", () => {
 			});
 			await renderSuspended(HeatingSystemsSummary);
 
-			const lineResult = await screen.findByTestId("summary-heatBattery-name");
+			await verifyDataInSection("heatBattery", { "Name": "Heat battery 1" });
 
-			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
-			expect(lineResult.querySelector("dd")?.textContent).toBe("Heat battery");
 		});
 
 		it("displays the correct data for the heat network section", async () => {
@@ -279,10 +272,7 @@ describe("Heating systems summary page", () => {
 			});
 			await renderSuspended(HeatingSystemsSummary);
 
-			const lineResult = await screen.findByTestId("summary-heatNetwork-name");
-
-			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
-			expect(lineResult.querySelector("dd")?.textContent).toBe("Heat network");
+			await verifyDataInSection("heatNetwork", { "Name": "Heat network 1" });
 		});
 
 		it("displays the correct data for the heat interface unit section", async () => {
@@ -299,14 +289,8 @@ describe("Heating systems summary page", () => {
 			});
 			await renderSuspended(HeatingSystemsSummary);
 
-			const lineResult = await screen.findByTestId(
-				"summary-heatInterfaceUnit-name"
-			);
+			await verifyDataInSection("heatInterfaceUnit", { "Name": "Heat interface unit 1" });
 
-			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
-			expect(lineResult.querySelector("dd")?.textContent).toBe(
-				"Heat interface unit"
-			);
 		});
 		it("displays an edit link on each section that navigates to the heat generation overview page when clicked", async () => {
 			const store = useEcaasStore();
