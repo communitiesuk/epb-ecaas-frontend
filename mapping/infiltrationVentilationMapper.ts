@@ -1,6 +1,7 @@
 import { type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaVent, SupplyAirTemperatureControlType } from "~/schema/api-schema.types";
 
 import type { FhsInputSchema } from "./fhsInputMapper";
+import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 
 export function mapInfiltrationVentilationData(state: EcaasState): Partial<FhsInputSchema> {
 	const infiltrationVentilation = mapMechanicalVentilationData(state);
@@ -13,7 +14,7 @@ export function mapInfiltrationVentilationData(state: EcaasState): Partial<FhsIn
 function mapMechanicalVentilationData(state: EcaasState): Pick<FhsInputSchema, 'InfiltrationVentilation'> {
 	// some fields are set in dwelling details
 	// Cowls, PDUs
-	const infiltrationVentiliation: Omit<SchemaInfiltrationVentilation, 'altitude' | 'shield_class' | 'terrain_class' > = {
+	const infiltrationVentiliation: Omit<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
 		Cowls: {},
 		PDUs: {},
 		Leaks: {

@@ -1,4 +1,4 @@
-import { ApplianceReference, type SchemaApplianceEntry } from "~/schema/api-schema.types";
+import { ApplianceReference, type SchemaApplianceEntry, type SchemaInfiltrationVentilation } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 
 export function mapDwellingDetailsData(state: EcaasState): Partial<FhsInputSchema> {
@@ -30,15 +30,21 @@ function mapGeneralSpecificationsData(state: EcaasState): Pick<FhsInputSchema, '
 	};
 }
 
+export type InfiltrationFieldsFromDwelling = 'altitude' | 'shield_class' | 'terrain_class' | 'noise_nuisance';
+
 function mapExternalFactorsData(state: EcaasState): Pick<FhsInputSchema, 'InfiltrationVentilation'> {
 	const { externalFactors } = state.dwellingDetails;
 
+	const infiltrationVentilation: Pick<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
+		altitude: externalFactors.data.altitude!,
+		shield_class: externalFactors.data.typeOfExposure!,
+		terrain_class: externalFactors.data.terrainType!,
+		noise_nuisance: externalFactors.data.noiseNuisance
+	};
+
 	return {
 		InfiltrationVentilation: {
-			altitude: externalFactors.data.altitude!,
-			shield_class: externalFactors.data.typeOfExposure,
-			terrain_class: externalFactors.data.terrainType,
-			noise_nuisance: externalFactors.data.noiseNuisance
+			...infiltrationVentilation,
 		}
 	} as Pick<FhsInputSchema, 'InfiltrationVentilation'>;
 }
