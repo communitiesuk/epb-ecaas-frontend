@@ -9,11 +9,11 @@ const verifyDataInSection = async (
 	expectedSectionData: expectedData
 ) => {
 	for (const [key, value] of Object.entries(expectedSectionData)) {
-		const lineResult = await screen.findByTestId(
+		const lineResult = screen.queryByTestId(
 			`summary-${section}-${hyphenate(key)}`
 		);
-		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-		expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		expect(lineResult!.querySelector("dt")?.textContent).toBe(key);
+		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
 	}
 };
 describe("Heating systems summary page", () => {
@@ -32,47 +32,100 @@ describe("Heating systems summary page", () => {
 
 		it("displays an empty section if no energy supply data has been added", async () => {
 			await renderSuspended(HeatingSystemsSummary);
-			const expectedEnergySupplyData = {
-				"Fuel type": "",
-				Exported: "",
-				"CO2 per kWh": "",
-				"CO2 per kWh (including out of scope)": "",
-				"kWh per kWh delivered": "",
-			};
-
-			await verifyDataInSection("energySupply", expectedEnergySupplyData);
+	
+			await verifyDataInSection("energySupply", {"Fuel type": ""});
 		});
 
-		it("displays the correct data for energy supply", async () => {
+		it("displays only the fuel type when non-electrivity, non-custom energy supply is selected", async () => {
 			const store = useEcaasStore();
-
-			const energySupplyData: EnergySupplyData = {
-				fuelType: ["wood", "electricity"],
-				exported: true,
-				co2PerKwh: 1,
-				co2PerKwhIncludingOutOfScope: 2,
-				kwhPerKwhDelivered: 3,
-			};
 
 			store.$patch({
 				heatingSystems: {
 					energySupply: {
-						data: energySupplyData,
+						data: {
+							fuelType: ["wood", "oil"],
+						},
 					},
 				},
 			});
 
-			const expectedEnergySupplyData = {
-				"Fuel type": "WoodElectricity",
-				Exported: "Yes",
+			await renderSuspended(HeatingSystemsSummary);
+			await verifyDataInSection("energySupply", { "Fuel type": "WoodOil" });
+		});
+
+		it("displays the correct data when electricity is selected", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					energySupply: {
+						data: {
+							fuelType: ["electricity"],
+							exported: false
+						},
+					},
+				},
+			});
+
+			await renderSuspended(HeatingSystemsSummary);
+			await verifyDataInSection("energySupply", {
+				"Fuel type": "Electricity",
+				"Exported": "No",
+			});
+		});
+
+		it("displays the correct data when custom is selected", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					energySupply: {
+						data: {
+							fuelType: ["custom"],
+							co2PerKwh: 1,
+							co2PerKwhIncludingOutOfScope: 2,
+							kwhPerKwhDelivered: 3,
+						},
+					},
+				},
+			});
+
+			await renderSuspended(HeatingSystemsSummary);
+			await verifyDataInSection("energySupply", {
+				"Fuel type": "Custom",
 				"CO2 per kWh": "1",
 				"CO2 per kWh (including out of scope)": "2",
 				"kWh per kWh delivered": "3",
-			};
-			await renderSuspended(HeatingSystemsSummary);
-			await verifyDataInSection("energySupply", expectedEnergySupplyData);
+			});
 		});
 
+		it("displays all conditional fields when electricity and custom are selected", async () => {
+			const store = useEcaasStore();
+
+			store.$patch({
+				heatingSystems: {
+					energySupply: {
+						data: {
+							fuelType: ["custom", "electricity"],
+							co2PerKwh: 1,
+							co2PerKwhIncludingOutOfScope: 2,
+							kwhPerKwhDelivered: 3,
+							exported: true
+						},
+					},
+				},
+			});
+
+			await renderSuspended(HeatingSystemsSummary);
+			await verifyDataInSection("energySupply", {
+				"Fuel type": "CustomElectricity",
+				"CO2 per kWh": "1",
+				"CO2 per kWh (including out of scope)": "2",
+				"kWh per kWh delivered": "3",
+				"Exported": "Yes"
+			});
+		});
+    
 		it("displays an edit link that navigates to the energy supply form page when clicked", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 			const editLink = screen.getByRole("link", {

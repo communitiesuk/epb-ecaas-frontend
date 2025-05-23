@@ -5,16 +5,23 @@ import { WetEmitterWet_emitter_type } from "~/schema/api-schema.types";
 const store = useEcaasStore();
 const title = "Heating system summary";
 
+const { fuelType, exported, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered } = store.heatingSystems.energySupply.data;
+
 const energySupplySummary: SummarySection = {
 	id: "energySupply",
 	label: "Energy supply",
 	data: {
-		"Fuel type": store.heatingSystems.energySupply.data.fuelType,
-		"Exported": displayBoolean(store.heatingSystems.energySupply.data.exported),
-		"CO2 per kWh": store.heatingSystems.energySupply.data.co2PerKwh,
-		"CO2 per kWh (including out of scope)": store.heatingSystems.energySupply.data.co2PerKwhIncludingOutOfScope,
-		"kWh per kWh delivered": store.heatingSystems.energySupply.data.kwhPerKwhDelivered,
+		"Fuel type": fuelType,
+		...(fuelType?.includes("electricity") && {
+			Exported: displayBoolean(exported),
+		}),
+		...(fuelType?.includes("custom") && {
+			"CO2 per kWh": co2PerKwh,
+			"CO2 per kWh (including out of scope)": co2PerKwhIncludingOutOfScope,
+			"kWh per kWh delivered": kwhPerKwhDelivered,
+		}),
 	},
+
 	editUrl: "/heating-systems/energy-supply",
 };
 
@@ -24,11 +31,12 @@ const heatPumpSummary: SummarySection = {
 	id: "heatPump",
 	label: "Heat pump",
 
-	data: heatPumps.map(pump => {
-		return {
-			"Name": pump.name
-		};
-	}) || [],
+	data:
+		heatPumps.map((pump) => {
+			return {
+				Name: pump.name,
+			};
+		}) || [],
 	editUrl: heatGenerationUrl,
 };
 
@@ -36,9 +44,9 @@ const boilers = store.heatingSystems.heatGeneration.boiler.data;
 const boilerSummary: SummarySection = {
 	id: "boiler",
 	label: "Boiler",
-	data: boilers.map(boiler => {
+	data: boilers.map((boiler) => {
 		return {
-			"Name": boiler.name
+			Name: boiler.name,
 		};
 	}),
 	editUrl: heatGenerationUrl,
@@ -48,9 +56,9 @@ const batteries = store.heatingSystems.heatGeneration.heatBattery.data;
 const heatBatterySummary: SummarySection = {
 	id: "heatBattery",
 	label: "Heat battery",
-	data: batteries.map(battery => {
+	data: batteries.map((battery) => {
 		return {
-			"Name": battery.name
+			Name: battery.name,
 		};
 	}),
 	editUrl: heatGenerationUrl,
@@ -60,9 +68,9 @@ const networks = store.heatingSystems.heatGeneration.heatNetwork.data;
 const heatNetworkSummary: SummarySection = {
 	id: "heatNetwork",
 	label: "Heat network",
-	data: networks.map(network => {
+	data: networks.map((network) => {
 		return {
-			"Name": network.name
+			Name: network.name,
 		};
 	}),
 	editUrl: heatGenerationUrl,
@@ -72,9 +80,9 @@ const units = store.heatingSystems.heatGeneration.heatInterfaceUnit.data;
 const heatInterfaceUnitSummary: SummarySection = {
 	id: "heatInterfaceUnit",
 	label: "Heat interface unit",
-	data: units.map(unit => {
+	data: units.map((unit) => {
 		return {
-			"Name": unit.name
+			Name: unit.name,
 		};
 	}),
 	editUrl: heatGenerationUrl,
@@ -85,18 +93,20 @@ const heatGenerationSummary: SummarySection[] = [
 	boilerSummary,
 	heatBatterySummary,
 	heatNetworkSummary,
-	heatInterfaceUnitSummary
-].filter(x => x.data.length);
+	heatInterfaceUnitSummary,
+].filter((x) => x.data.length);
 
-const { heatPump, boiler, heatBattery, heatNetwork, heatInterfaceUnit } = store.heatingSystems.heatGeneration;
+const { heatPump, boiler, heatBattery, heatNetwork, heatInterfaceUnit } =
+	store.heatingSystems.heatGeneration;
 const heatGenerationData = [
 	heatPump.data,
 	boiler.data,
 	heatBattery.data,
 	heatNetwork.data,
-	heatInterfaceUnit.data
-].flat().map(x => ({ id: x.id, name: x.name }));
-
+	heatInterfaceUnit.data,
+]
+	.flat()
+	.map((x) => ({ id: x.id, name: x.name }));
 
 const heatEmittingUrl = "/heating-systems/heat-emitting";
 
@@ -104,13 +114,16 @@ const wetDistributions = store.heatingSystems.heatEmitting.wetDistribution.data;
 const wetDistributionSummary: SummarySection = {
 	id: "wetDistribution",
 	label: "Wet distribution",
-	data: wetDistributions.map(wetDistribution => {
+	data: wetDistributions.map((wetDistribution) => {
 		const wetDistributionData: Record<string, string | number | undefined> = {
-			"Name": wetDistribution.name,
+			Name: wetDistribution.name,
 			"Zone reference": wetDistribution.zoneReference,
-			"Heat source": heatGenerationData.find(x => x.id === wetDistribution.heatSource)?.name,
+			"Heat source": heatGenerationData.find(
+				(x) => x.id === wetDistribution.heatSource
+			)?.name,
 			"Thermal mass": wetDistribution.thermalMass,
-			"Design temperature difference across the emitters": wetDistribution.designTempDiffAcrossEmitters,
+			"Design temperature difference across the emitters":
+				wetDistribution.designTempDiffAcrossEmitters,
 			"Design flow temperature": wetDistribution.designFlowTemp,
 			"Type of space heater": wetDistribution.typeOfSpaceHeater === WetEmitterWet_emitter_type.radiator
 				? "Radiators"
@@ -122,18 +135,22 @@ const wetDistributionSummary: SummarySection = {
 			wetDistribution.typeOfSpaceHeater === WetEmitterWet_emitter_type.radiator &&
 			wetDistribution.convectionFractionWet !== undefined
 		) {
-			wetDistributionData["Convection fraction"] = wetDistribution.convectionFractionWet;
+			wetDistributionData["Convection fraction"] =
+				wetDistribution.convectionFractionWet;
 		}
 
 		if (
 			wetDistribution.typeOfSpaceHeater === WetEmitterWet_emitter_type.ufh &&
 			wetDistribution.emitterFloorArea !== undefined
 		) {
-			wetDistributionData["Emitter floor area"] = wetDistribution.emitterFloorArea;
+			wetDistributionData["Emitter floor area"] =
+				wetDistribution.emitterFloorArea;
 		}
 
-		wetDistributionData["Eco design controller class"] = wetDistribution.ecoDesignControllerClass;
-		wetDistributionData["Minimum flow temperature"] = wetDistribution.minimumFlowTemp;
+		wetDistributionData["Eco design controller class"] =
+			wetDistribution.ecoDesignControllerClass;
+		wetDistributionData["Minimum flow temperature"] =
+			wetDistribution.minimumFlowTemp;
 
 		return wetDistributionData;
 	}),
@@ -141,28 +158,29 @@ const wetDistributionSummary: SummarySection = {
 	editUrl: heatEmittingUrl,
 };
 
-const instantHeaters = store.heatingSystems.heatEmitting.instantElectricHeater.data;
+const instantHeaters =
+	store.heatingSystems.heatEmitting.instantElectricHeater.data;
 const instantElectricHeaterSummary: SummarySection = {
 	id: "instantElectricHeater",
 	label: "Instant electric heater",
-	data: instantHeaters.map(instantHeater => {
+	data: instantHeaters.map((instantHeater) => {
 		return {
-			"Name": instantHeater.name,
+			Name: instantHeater.name,
 			"Rated power": instantHeater.ratedPower,
-			"Convection fraction": instantHeater.convectionFractionInstant
-
+			"Convection fraction": instantHeater.convectionFractionInstant,
 		};
 	}),
 	editUrl: heatEmittingUrl,
 };
 
-const storageHeaters = store.heatingSystems.heatEmitting.electricStorageHeater.data;
+const storageHeaters =
+	store.heatingSystems.heatEmitting.electricStorageHeater.data;
 const electricStorageHeaterSummary: SummarySection = {
 	id: "electricStorageHeater",
 	label: "Electric storage heater",
-	data: storageHeaters.map(storageHeater => {
+	data: storageHeaters.map((storageHeater) => {
 		return {
-			"Name": storageHeater.name
+			Name: storageHeater.name,
 		};
 	}),
 	editUrl: heatEmittingUrl,
@@ -172,9 +190,9 @@ const warmAirHeatPumps = store.heatingSystems.heatEmitting.warmAirHeatPump.data;
 const warmAirHeatPumpSummary: SummarySection = {
 	id: "warmAirHeatPump",
 	label: "Warm air heat pump",
-	data: warmAirHeatPumps.map(pump => {
+	data: warmAirHeatPumps.map((pump) => {
 		return {
-			"Name": pump.name
+			Name: pump.name,
 		};
 	}),
 	editUrl: heatEmittingUrl,
@@ -184,8 +202,8 @@ const heatEmittingSummary: SummarySection[] = [
 	wetDistributionSummary,
 	instantElectricHeaterSummary,
 	electricStorageHeaterSummary,
-	warmAirHeatPumpSummary
-].filter(x => x.data.length);
+	warmAirHeatPumpSummary,
+].filter((x) => x.data.length);
 </script>
 <template>
 
@@ -217,8 +235,12 @@ const heatEmittingSummary: SummarySection[] = [
 			</NuxtLink>
 		</TabPanel>
 		<SummaryTab :summary="wetDistributionSummary" :selected="tabProps.currentItem?.id === 'wetDistribution'" />
-		<SummaryTab :summary="instantElectricHeaterSummary" :selected="tabProps.currentItem?.id === 'instantElectricHeater'" />
-		<SummaryTab :summary="electricStorageHeaterSummary" :selected="tabProps.currentItem?.id === 'electricStorageHeater'" />
+		<SummaryTab
+			:summary="instantElectricHeaterSummary"
+			:selected="tabProps.currentItem?.id === 'instantElectricHeater'" />
+		<SummaryTab
+			:summary="electricStorageHeaterSummary"
+			:selected="tabProps.currentItem?.id === 'electricStorageHeater'" />
 		<SummaryTab :summary="warmAirHeatPumpSummary" :selected="tabProps.currentItem?.id === 'warmAirHeatPump'" />
 	</GovTabs>
 </template>
