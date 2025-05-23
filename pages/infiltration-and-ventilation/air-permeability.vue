@@ -46,7 +46,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Reference pressure difference (From pressure test e.g blower door = 50Pa)"
 			name="testPressure"
 			validation="required | number | min:0 | max:500"
-			suffix-text="pa"
+			suffix-text="Pa"
 		/>
 		<FormKit
 			id="airTightnessTestResult"

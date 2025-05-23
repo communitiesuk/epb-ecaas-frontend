@@ -114,7 +114,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="The difference in pressure between inside and outside the building, which drives airflow"
 			name="pressureDifference"
 			validation="required | number"
-			suffix-text="pa">
+			suffix-text="Pa">
 			<GovDetails summary-text="Help with this input">
 				<p>
 					1 - 2 Pa for natural ventilation<br>
