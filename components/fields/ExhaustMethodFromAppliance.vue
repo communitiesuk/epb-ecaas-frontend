@@ -7,7 +7,7 @@ defineProps<{
 	name: string,
 }>();
 
-const exhaustMethodOptions: EnumRecord<FlueGasExhaustSituation, FlueGasExhaustSituationDisplay> = {
+const exhaustMethodOptions: Record<FlueGasExhaustSituation, FlueGasExhaustSituationDisplay> = {
 	[FlueGasExhaustSituation.into_room]: 'Into room',
 	[FlueGasExhaustSituation.into_separate_duct]: 'Into separate duct',
 	[FlueGasExhaustSituation.into_mech_vent]: 'Into mechanical vent',

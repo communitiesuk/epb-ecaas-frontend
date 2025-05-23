@@ -8,11 +8,11 @@ const { saveToList } = useForm();
 const window = useItemToEdit('window', store.livingSpaceFabric.livingSpaceWindows.data);
 const model: Ref<WindowData> = ref(window!);
 
-const windowTypeOptions: EnumRecord<WindowTreatmentType, SnakeToSentenceCase<WindowTreatmentType>> = {
+const windowTypeOptions: Record<WindowTreatmentType, SnakeToSentenceCase<WindowTreatmentType>> = {
 	curtains: 'Curtains',
 	blinds: 'Blinds',
 };
-const curtainsControlObjectOptions: EnumRecord<Exclude<WindowTreatmentControl, 'manual_motorised' | 'combined_light_blind_HVAC'>, string> = {
+const curtainsControlObjectOptions: Record<Exclude<WindowTreatmentControl, 'manual_motorised' | 'combined_light_blind_HVAC'>, string> = {
 	[WindowTreatmentControl.auto_motorised]: 'Auto motorised',
 	[WindowTreatmentControl.manual]: 'Manual',
 };

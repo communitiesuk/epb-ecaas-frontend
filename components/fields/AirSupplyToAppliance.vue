@@ -6,7 +6,7 @@ defineProps<{
 	name: string;
 }>();
 
-const options: EnumRecord<CombustionAirSupplySituation, SnakeToSentenceCase<CombustionAirSupplySituation>> = {
+const options: Record<CombustionAirSupplySituation, SnakeToSentenceCase<CombustionAirSupplySituation>> = {
 	room_air: 'Room air',
 	outside: 'Outside'
 };

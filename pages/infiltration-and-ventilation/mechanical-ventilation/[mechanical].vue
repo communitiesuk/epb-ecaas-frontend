@@ -12,19 +12,19 @@ const mechanicalVentilation = useItemToEdit('mechanical', store.infiltrationAndV
 const model: Ref<MechanicalVentilationData> = ref(mechanicalVentilation!);
 
 /** 'PIV' is excluded from options here because it is in the schema currently but unsupported in HEM itself at 0.34 version */
-const ventTypeOptions: EnumRecord<Exclude<VentType, 'PIV'>, string> = {
+const ventTypeOptions: Record<Exclude<VentType, 'PIV'>, string> = {
 	[VentType.MVHR]: 'MVHR',
 	[VentType.Intermittent_MEV]: 'Intermittent MEV',
 	[VentType.Centralised_continuous_MEV]: 'Centralised continuous MEV',
 	[VentType.Decentralised_continuous_MEV]: 'Decentralised continuous MEV',
 };
 
-const mvhrLocationOptions: EnumRecord<MVHRLocation, SnakeToSentenceCase<MVHRLocation>> = {
+const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation>> = {
 	inside: 'Inside',
 	outside: 'Outside'
 };
 
-const controlForSupplyAirflowOptions: EnumRecord<SupplyAirFlowRateControlType, string> = {
+const controlForSupplyAirflowOptions: Record<SupplyAirFlowRateControlType, string> = {
 	[SupplyAirFlowRateControlType.ODA]: 'Outdoor air',
 	[SupplyAirFlowRateControlType.LOAD]: 'Load'
 };

@@ -8,12 +8,12 @@ const model = ref({
 	...store.dwellingDetails.externalFactors.data
 });
 
-const typeOfExposureOptions: EnumRecord<VentilationShieldClass, SnakeToSentenceCase<VentilationShieldClass>> = {
+const typeOfExposureOptions: Record<VentilationShieldClass, SnakeToSentenceCase<VentilationShieldClass>> = {
 	Open: "Open",
 	Normal: "Normal",
 	Shielded: "Shielded"
 };
-const terrainTypeOptions: EnumRecord<TerrainClass, PascalToSentenceCase<TerrainClass>> = {
+const terrainTypeOptions: Record<TerrainClass, PascalToSentenceCase<TerrainClass>> = {
 	OpenWater: "Open water",
 	OpenField: "Open field",
 	Suburban: "Suburban",

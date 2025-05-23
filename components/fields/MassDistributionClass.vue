@@ -9,7 +9,7 @@ defineProps<{
 	help?: string;
 }>();
 
-const options: EnumRecord<MassDistributionClass, RadioOption> = {
+const options: Record<MassDistributionClass, RadioOption> = {
 	[MassDistributionClass.I]: {
 		label: 'Mass concentrated on internal side',
 		hint: 'Construction with external thermal insulation (main mass component near inside surface), or equivalent'

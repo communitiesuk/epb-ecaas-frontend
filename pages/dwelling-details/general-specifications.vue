@@ -8,7 +8,7 @@ const model = ref({
 	...store.dwellingDetails.generalSpecifications.data
 });
 
-const typeOfDwellingOptions: EnumRecord<BuildType, SnakeToSentenceCase<BuildType>> = {
+const typeOfDwellingOptions: Record<BuildType, SnakeToSentenceCase<BuildType>> = {
 	house: "House",
 	flat: "Flat",
 };

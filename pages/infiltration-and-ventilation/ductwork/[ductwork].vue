@@ -14,11 +14,11 @@ const ductwork = useItemToEdit(
 const model: Ref<DuctworkData> = ref(ductwork!);
 store.infiltrationAndVentilation.ductwork.complete = false;
 
-const ductworkCrossSectionalShapeOptions: EnumRecord<DuctShape, SnakeToSentenceCase<DuctShape>> = {
+const ductworkCrossSectionalShapeOptions: Record<DuctShape, SnakeToSentenceCase<DuctShape>> = {
 	circular: "Circular",
 	rectangular: "Rectangular",
 };
-const ductTypeOptions: EnumRecord<DuctType, SnakeToSentenceCase<DuctType>> = {
+const ductTypeOptions: Record<DuctType, SnakeToSentenceCase<DuctType>> = {
 	supply: "Supply",
 	extract: "Extract",
 	intake: "Intake",

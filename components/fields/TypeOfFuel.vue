@@ -6,7 +6,7 @@ defineProps<{
 	name: string;
 }>();
 
-const options: EnumRecord<CombustionFuelType, SnakeToSentenceCase<CombustionFuelType>> = {
+const options: Record<CombustionFuelType, SnakeToSentenceCase<CombustionFuelType>> = {
 	wood: 'Wood',
 	oil: 'Oil',
 	gas: 'Gas',

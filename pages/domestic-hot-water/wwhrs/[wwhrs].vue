@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getUrl, type EnumRecord } from '#imports';
+import { getUrl } from '#imports';
 import { WwhrsType } from '~/schema/api-schema.types';
 
 const title = "Waste water heat recovery system";
@@ -18,7 +18,7 @@ const hotWaterOutlets = [
 	otherOutlets.data.map(x => [x.id, x.name] as [string, string])
 ].flat();
 
-const wwhrsTypeOptions: EnumRecord<WwhrsType, string> = {
+const wwhrsTypeOptions: Record<WwhrsType, string> = {
 	[WwhrsType.WWHRS_InstantaneousSystemA]: 'System A',
 	[WwhrsType.WWHRS_InstantaneousSystemB]: 'System B',
 	[WwhrsType.WWHRS_InstantaneousSystemC]: 'System C'

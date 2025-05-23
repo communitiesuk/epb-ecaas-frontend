@@ -8,7 +8,7 @@ const { saveToList } = useForm();
 const electricBatteryData = useItemToEdit('battery', store.pvAndBatteries.electricBattery.data);
 const model: Ref<ElectricBatteryData> = ref(electricBatteryData!);
 
-const locationOptions: EnumRecord<BatteryLocation, SnakeToSentenceCase<BatteryLocation>> = {
+const locationOptions: Record<BatteryLocation, SnakeToSentenceCase<BatteryLocation>> = {
 	inside: 'Inside',
 	outside: 'Outside',
 };

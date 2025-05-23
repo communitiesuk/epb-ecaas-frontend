@@ -8,7 +8,7 @@ const { saveToList } = useForm();
 const floorData = useItemToEdit('floor', store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data);
 const model: Ref<GroundFloorData> = ref(floorData!);
 
-const typeOfGroundFloorOptions: EnumRecord<FloorType, SnakeToSentenceCase<FloorType>> = {
+const typeOfGroundFloorOptions: Record<FloorType, SnakeToSentenceCase<FloorType>> = {
 	[FloorType.Slab_no_edge_insulation]: 'Slab no edge insulation',
 	[FloorType.Slab_edge_insulation]: 'Slab edge insulation',
 	[FloorType.Suspended_floor]: 'Suspended floor',

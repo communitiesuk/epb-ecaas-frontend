@@ -11,7 +11,7 @@ const pvSystemData = useItemToEdit(
 );
 const model: Ref<PvSystemData> = ref(pvSystemData!);
 
-const ventilationStrategyOptions: EnumRecord<OnSiteGenerationVentilationStrategy, string> = {
+const ventilationStrategyOptions: Record<OnSiteGenerationVentilationStrategy, string> = {
 	[OnSiteGenerationVentilationStrategy.unventilated]: 'Unventilated',
 	[OnSiteGenerationVentilationStrategy.moderately_ventilated]: 'Moderately ventilated',
 	[OnSiteGenerationVentilationStrategy.strongly_or_forced_ventilated]: 'Strongly or forced ventilated',

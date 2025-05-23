@@ -8,7 +8,7 @@ const { saveToList } = useForm();
 const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.secondaryPipework.data);
 const model: Ref<SecondaryPipeworkData> = ref(pipeworkData!);
 
-const locationOptions: EnumRecord<WaterPipeworkLocation, SnakeToSentenceCase<WaterPipeworkLocation>> = {
+const locationOptions: Record<WaterPipeworkLocation, SnakeToSentenceCase<WaterPipeworkLocation>> = {
 	internal: 'Internal',
 	external: 'External',
 };

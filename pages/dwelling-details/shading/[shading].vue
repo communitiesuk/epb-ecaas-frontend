@@ -8,7 +8,7 @@ const { saveToList } = useForm();
 const shading = useItemToEdit('shading', store.dwellingDetails.shading.data);
 const model: Ref<ShadingData> = ref(shading!);
 
-const objectTypeOptions: EnumRecord<ShadingObjectType, Capitalize<ShadingObjectType>> = {
+const objectTypeOptions: Record<ShadingObjectType, Capitalize<ShadingObjectType>> = {
 	obstacle: 'Obstacle',
 	overhang: 'Overhang',
 };

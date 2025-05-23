@@ -7,7 +7,7 @@ const model = ref({
 	...store.dwellingDetails.appliances.data
 });
 
-const applianceOptions: EnumRecord<Exclude<ApplianceKey, 'lighting' | 'Otherdevices'>, ApplianceKeyDisplay> = {
+const applianceOptions: Record<Exclude<ApplianceKey, 'lighting' | 'Otherdevices'>, ApplianceKeyDisplay> = {
 	Fridge: 'Fridge',
 	Freezer: 'Freezer',
 	'Fridge-Freezer': 'Fridge freezer',
