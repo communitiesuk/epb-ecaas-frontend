@@ -33,7 +33,7 @@ const saveForm = (fields: PvSystemData) => {
 			widthOfPV: fields.widthOfPV,
 			inverterPeakPowerAC: fields.inverterPeakPowerAC,
 			inverterPeakPowerDC: fields.inverterPeakPowerDC,
-			inverterLocation: fields.inverterLocation,
+			inverterIsInside: fields.inverterIsInside,
 			inverterType: fields.inverterType,
 			aboveDepth: fields.aboveDepth,
 			aboveDistance: fields.aboveDistance,
@@ -200,15 +200,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="kW"
 		/>
 		<FormKit
-			id="inverterLocation"
-			type="govRadios"
-			:options="{
-				inside: 'Inside',
-				outside: 'Outside',
-			}"
+			id="inverterIsInside"
+			type="govBoolean"
+			true-label="Inside"
+			false-label="Outside"
 			label="Inverter location"
 			help="Is the inverter inside the thermal envelope of the dwelling"
-			name="inverterLocation"
+			name="inverterIsInside"
 			validation="required"
 		/>
 		<FormKit

@@ -645,7 +645,7 @@ export type PvSystemData = {
 	widthOfPV: number;
 	inverterPeakPowerAC: number;
 	inverterPeakPowerDC: number;
-	inverterLocation: string;
+	inverterIsInside: boolean;
 	inverterType: string;
 	aboveDepth: number;
 	aboveDistance: number;

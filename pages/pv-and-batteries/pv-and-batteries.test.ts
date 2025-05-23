@@ -31,7 +31,7 @@ describe('pv and batteries', () => {
 		widthOfPV: 20,
 		inverterPeakPowerAC: 4,
 		inverterPeakPowerDC: 5,
-		inverterLocation: 'inside',
+		inverterIsInside: true,
 		inverterType: 'central',
 		aboveDepth: 20,
 		aboveDistance: 4,

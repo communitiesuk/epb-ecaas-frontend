@@ -24,7 +24,7 @@ describe("PV system", () => {
 		await user.type(screen.getByTestId('widthOfPV'), '20');
 		await user.type(screen.getByTestId('inverterPeakPowerAC'), '4');
 		await user.type(screen.getByTestId('inverterPeakPowerDC'), '5');
-		await user.click(screen.getByTestId('inverterLocation_inside'));
+		await user.click(screen.getByTestId('inverterIsInside_yes'));
 		await user.click(screen.getByTestId('inverterType_central'));
 		await user.type(screen.getByTestId('aboveDepth'), '20');
 		await user.type(screen.getByTestId('aboveDistance'), '4');
@@ -45,7 +45,7 @@ describe("PV system", () => {
 		widthOfPV: 20,
 		inverterPeakPowerAC: 4,
 		inverterPeakPowerDC: 5,
-		inverterLocation: 'inside',
+		inverterIsInside: true,
 		inverterType: 'central',
 		aboveDepth: 20,
 		aboveDistance: 4,
@@ -92,7 +92,7 @@ describe("PV system", () => {
 		expect((await screen.findByTestId('widthOfPV_error'))).toBeDefined();
 		expect((await screen.findByTestId('inverterPeakPowerAC_error'))).toBeDefined();
 		expect((await screen.findByTestId('inverterPeakPowerDC_error'))).toBeDefined();
-		expect((await screen.findByTestId('inverterLocation_error'))).toBeDefined();
+		expect((await screen.findByTestId('inverterIsInside_error'))).toBeDefined();
 		expect((await screen.findByTestId('inverterType_error'))).toBeDefined();
 
 		expect((await screen.findByTestId('photovoltaicErrorSummary'))).toBeDefined();
@@ -114,6 +114,4 @@ describe("PV system", () => {
 		await user.click(screen.getByRole('button'));
 		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries');
 	});
-
-	
 });
