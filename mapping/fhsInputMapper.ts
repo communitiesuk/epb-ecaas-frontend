@@ -9,9 +9,9 @@ export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 	const inputData = exampleData as FhsInputSchema;
 
 	const dwellingDetailsData = mapDwellingDetailsData(state);
-	const infilitrationVentilationData = mapInfiltrationVentilationData(state);
+	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
 
-	const intermediate = merge(dwellingDetailsData, infilitrationVentilationData);
+	const intermediate = merge(dwellingDetailsData, infiltrationVentilationData);
 	const final = merge(inputData, intermediate);
 
 	console.log(final);
