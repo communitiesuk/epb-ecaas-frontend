@@ -1,4 +1,4 @@
-import type { SchemaMechanicalVentilation, SupplyAirTemperatureControlType } from "~/schema/api-schema.types";
+import { type SchemaMechanicalVentilation, SupplyAirTemperatureControlType } from "~/schema/api-schema.types";
 
 import type { FhsInputSchema } from "./fhsInputMapper";
 
@@ -19,7 +19,7 @@ function mapMechanicalVentilationData(state: EcaasState): Pick<FhsInputSchema, '
 			EnergySupply: "mains elec", // TODO validate this is correct
 			design_outdoor_air_flow_rate: x.airFlowRate,
 			sup_air_flw_ctrl: x.controlForSupplyAirflow,
-			sup_air_temp_ctrl: x.supplyAirTemperatureControl as SupplyAirTemperatureControlType
+			sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST
 		};
 
 		return [key, val];
