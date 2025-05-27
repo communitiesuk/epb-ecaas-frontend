@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import OpenGasFlueBalancer from './[combustion].vue';
-import { CombustionAirSupplySituation, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
 import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import {screen} from "@testing-library/vue";
 
@@ -35,7 +35,7 @@ describe('open gas flue balancer', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const {data} = store.infiltrationAndVentilation.combustionAppliances.openGasFlueBalancer;
+		const {data} = store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_gas_flue_balancer];
 
 		expect(data[0]).toEqual(openGasFlueBalancer);
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
@@ -45,7 +45,7 @@ describe('open gas flue balancer', () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					openGasFlueBalancer: {
+					[CombustionApplianceType.open_gas_flue_balancer]: {
 						data: [openGasFlueBalancer]
 					}
 				}

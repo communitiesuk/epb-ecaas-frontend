@@ -3,6 +3,7 @@ import type { EcaasState } from "./ecaasStore.types";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
 import { PageType, type Page } from "~/data/pages/pages.types";
+import { CombustionApplianceType } from "~/schema/api-schema.types";
 
 function getInitialState(): EcaasState {
 	return {
@@ -17,12 +18,12 @@ function getInitialState(): EcaasState {
 			ductwork: {data: []},
 			vents: { data: [] },
 			combustionAppliances: {
-				openFireplace: { data: [] },
-				closedFireplaceWithFan: { data: [] },
-				openGasFlueBalancer: { data: [] },
-				openGasKitchenStove: { data: [] },
-				openGasFire: { data: [] },
-				closedFire: { data: [] },
+				[CombustionApplianceType.open_fireplace]: { data: [] },
+				[CombustionApplianceType.closed_with_fan]: { data: [] },
+				[CombustionApplianceType.open_gas_flue_balancer]: { data: [] },
+				[CombustionApplianceType.open_gas_kitchen_stove]: { data: [] },
+				[CombustionApplianceType.open_gas_fire]: { data: [] },
+				[CombustionApplianceType.closed_fire]: { data: [] },
 			},
 			ventilation: { data: {} },
 			airPermeability: { data: {} }

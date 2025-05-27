@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { CombustionApplianceType } from '~/schema/api-schema.types';
+
 const page = usePage();
 const title = "Combustion appliances";
 const store = useEcaasStore();
@@ -40,12 +42,12 @@ function handleComplete() {
 	store.$patch({
 		infiltrationAndVentilation: {
 			combustionAppliances: {
-				openFireplace: { complete: true },
-				closedFireplaceWithFan: { complete: true },
-				openGasFlueBalancer: { complete: true },
-				openGasKitchenStove: { complete: true },
-				openGasFire: { complete: true },
-				closedFire: { complete: true }
+				[CombustionApplianceType.open_fireplace]: { complete: true },
+				[CombustionApplianceType.closed_with_fan]: { complete: true },
+				[CombustionApplianceType.open_gas_flue_balancer]: { complete: true },
+				[CombustionApplianceType.open_gas_kitchen_stove]: { complete: true },
+				[CombustionApplianceType.open_gas_fire]: { complete: true },
+				[CombustionApplianceType.closed_fire]: { complete: true }
 			}
 		}
 	});
@@ -72,49 +74,49 @@ function checkIsComplete(){
 		id="openFireplace"
 		title="Open fireplace"
 		:form-url="`${page?.url!}/open-fireplace`"
-		:items="store.infiltrationAndVentilation.combustionAppliances.openFireplace.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('openFireplace', index)"
-		@duplicate="(index: number) => handleDuplicate('openFireplace', index)"
+		:items="store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_fireplace].data.map(x => x.name)"
+		@remove="(index: number) => handleRemove(CombustionApplianceType.open_fireplace, index)"
+		@duplicate="(index: number) => handleDuplicate(CombustionApplianceType.open_fireplace, index)"
 	/>
 	<CustomList
 		id="closedFireplaceWithFan"
 		title="Closed fireplace with fan"
 		:form-url="`${page?.url!}/closed-fireplace-with-fan`"
-		:items="store.infiltrationAndVentilation.combustionAppliances.closedFireplaceWithFan.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('closedFireplaceWithFan', index)"
-		@duplicate="(index: number) => handleDuplicate('closedFireplaceWithFan', index)"
+		:items="store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.closed_with_fan].data.map(x => x.name)"
+		@remove="(index: number) => handleRemove(CombustionApplianceType.closed_with_fan, index)"
+		@duplicate="(index: number) => handleDuplicate(CombustionApplianceType.closed_with_fan, index)"
 	/>
 	<CustomList
 		id="openGasFlueBalancer"
 		title="Open gas flue balancer"
 		:form-url="`${page?.url!}/open-gas-flue-balancer`"
-		:items="store.infiltrationAndVentilation.combustionAppliances.openGasFlueBalancer.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('openGasFlueBalancer', index)"
-		@duplicate="(index: number) => handleDuplicate('openGasFlueBalancer', index)"
+		:items="store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_gas_flue_balancer].data.map(x => x.name)"
+		@remove="(index: number) => handleRemove(CombustionApplianceType.open_gas_flue_balancer, index)"
+		@duplicate="(index: number) => handleDuplicate(CombustionApplianceType.open_gas_flue_balancer, index)"
 	/>
 	<CustomList
 		id="openGasKitchenStove"
 		title="Open gas kitchen stove"
 		:form-url="`${page?.url!}/open-gas-kitchen-stove`"
-		:items="store.infiltrationAndVentilation.combustionAppliances.openGasKitchenStove.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('openGasKitchenStove', index)"
-		@duplicate="(index: number) => handleDuplicate('openGasKitchenStove', index)"
+		:items="store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_gas_kitchen_stove].data.map(x => x.name)"
+		@remove="(index: number) => handleRemove(CombustionApplianceType.open_gas_kitchen_stove, index)"
+		@duplicate="(index: number) => handleDuplicate(CombustionApplianceType.open_gas_kitchen_stove, index)"
 	/>
 	<CustomList
 		id="openGasFire"
 		title="Open gas fire"
 		:form-url="`${page?.url!}/open-gas-fire`"
-		:items="store.infiltrationAndVentilation.combustionAppliances.openGasFire.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('openGasFire', index)"
-		@duplicate="(index: number) => handleDuplicate('openGasFire', index)"
+		:items="store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_gas_fire].data.map(x => x.name)"
+		@remove="(index: number) => handleRemove(CombustionApplianceType.open_gas_fire, index)"
+		@duplicate="(index: number) => handleDuplicate(CombustionApplianceType.open_gas_fire, index)"
 	/>
 	<CustomList
 		id="closedFire"
 		title="Closed fire"
 		:form-url="`${page?.url!}/closed-fire`"
-		:items="store.infiltrationAndVentilation.combustionAppliances.closedFire.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('closedFire', index)"
-		@duplicate="(index: number) => handleDuplicate('closedFire', index)"
+		:items="store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.closed_fire].data.map(x => x.name)"
+		@remove="(index: number) => handleRemove(CombustionApplianceType.closed_fire, index)"
+		@duplicate="(index: number) => handleDuplicate(CombustionApplianceType.closed_fire, index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton

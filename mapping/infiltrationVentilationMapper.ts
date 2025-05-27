@@ -1,5 +1,5 @@
-import { type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaVent, SupplyAirTemperatureControlType } from "~/schema/api-schema.types";
-
+import { objectEntries, objectFromEntries } from 'ts-extras';
+import { type CombustionApplianceType, type SchemaCombustionAppliance, type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaVent, SupplyAirTemperatureControlType } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 
@@ -14,6 +14,20 @@ export function mapInfiltrationVentilationData(state: EcaasState): Partial<FhsIn
 function mapMechanicalVentilationData(state: EcaasState): Pick<FhsInputSchema, 'InfiltrationVentilation'> {
 	const infiltrationVentilationData = state.infiltrationAndVentilation.ventilation.data;
 	const airPermeabilityData = state.infiltrationAndVentilation.airPermeability.data;
+	const combustionApplianceEntries = objectEntries(state.infiltrationAndVentilation.combustionAppliances).filter(([_key, value]) => value.complete && !isEmpty(value.data)).map(([key, value]) => {
+		return value.data.flatMap<[string, SchemaCombustionAppliance]>((appliance) => {
+			const { name, airSupplyToAppliance, exhaustMethodFromAppliance, typeOfFuel } = appliance;
+			const applianceInput: SchemaCombustionAppliance = {
+				appliance_type: key as CombustionApplianceType,
+				exhaust_situation: exhaustMethodFromAppliance,
+				fuel_type: typeOfFuel,
+				supply_situation: airSupplyToAppliance,
+			};
+			return [[name, applianceInput]];
+		});
+	}).flat();
+	const combustionAppliances: Record<string, SchemaCombustionAppliance> = objectFromEntries(combustionApplianceEntries);
+
 	const infiltrationVentiliation: Omit<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
 		Cowls: {},
 		PDUs: {},
@@ -23,9 +37,7 @@ function mapMechanicalVentilationData(state: EcaasState): Pick<FhsInputSchema, '
 			test_pressure: airPermeabilityData.testPressure!,
 			test_result: airPermeabilityData.airTightnessTestResult!
 		},
-		CombustionAppliances: {
-			// TODO map this from state
-		},
+		CombustionAppliances: combustionAppliances,
 		cross_vent_factor: infiltrationVentilationData.crossVentFactor!,
 		ventilation_zone_base_height: infiltrationVentilationData.dwellingElevationalLevelAtBase!,
 		ach_max_static_calcs: 2, // suggested default

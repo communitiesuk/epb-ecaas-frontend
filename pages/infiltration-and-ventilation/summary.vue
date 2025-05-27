@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
 import { getTabItems, getUrl } from '#imports';
+import { CombustionApplianceType } from '~/schema/api-schema.types';
 
 const title = "Infiltration and ventilation summary";
 const store = useEcaasStore();
@@ -113,12 +114,12 @@ const combustionAppliancesSummary: SummarySection = {
 	id: 'combustionAppliances',
 	label: 'Combustion appliances',
 	data: [
-		getCombustionApplianceData('Closed fire', combustionAppliances.closedFire.data),
-		getCombustionApplianceData('Closed fireplace with fan', combustionAppliances.closedFireplaceWithFan.data),
-		getCombustionApplianceData('Open fireplace', combustionAppliances.openFireplace.data),
-		getCombustionApplianceData('Open gas fire', combustionAppliances.openGasFire.data),
-		getCombustionApplianceData('Open gas flue balancer', combustionAppliances.openGasFlueBalancer.data),
-		getCombustionApplianceData('Open gas kitchen stove', combustionAppliances.openGasKitchenStove.data)
+		getCombustionApplianceData('Closed fire', combustionAppliances[CombustionApplianceType.closed_fire].data),
+		getCombustionApplianceData('Closed fireplace with fan', combustionAppliances[CombustionApplianceType.closed_with_fan].data),
+		getCombustionApplianceData('Open fireplace', combustionAppliances[CombustionApplianceType.open_fireplace].data),
+		getCombustionApplianceData('Open gas fire', combustionAppliances[CombustionApplianceType.open_gas_fire].data),
+		getCombustionApplianceData('Open gas flue balancer', combustionAppliances[CombustionApplianceType.open_gas_flue_balancer].data),
+		getCombustionApplianceData('Open gas kitchen stove', combustionAppliances[CombustionApplianceType.open_gas_kitchen_stove].data)
 	].flat(),
 	editUrl: getUrl('combustionAppliances')!
 };

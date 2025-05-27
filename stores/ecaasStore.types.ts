@@ -1,4 +1,4 @@
-import type { ApplianceKey, BatteryLocation, BuildType, CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WetEmitterWet_emitter_type, WindowTreatmentControl, WindowTreatmentType, WwhrsType } from "~/schema/api-schema.types";
+import type { ApplianceKey, BatteryLocation, BuildType, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WetEmitterWet_emitter_type, WindowTreatmentControl, WindowTreatmentType, WwhrsType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -509,14 +509,7 @@ export type VentData = {
 	pitch: number;
 };
 
-export interface CombustionAppliancesData {
-	openFireplace: EcaasForm<CombustionApplianceData[]>
-	closedFireplaceWithFan: EcaasForm<CombustionApplianceData[]>
-	openGasFlueBalancer: EcaasForm<CombustionApplianceData[]>
-	openGasKitchenStove: EcaasForm<CombustionApplianceData[]>
-	openGasFire: EcaasForm<CombustionApplianceData[]>
-	closedFire: EcaasForm<CombustionApplianceData[]>
-}
+export type CombustionAppliancesData = Record<CombustionApplianceType, EcaasForm<CombustionApplianceData[]>>;
 
 export type CombustionApplianceData = {
 	name: string;

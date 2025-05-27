@@ -2,7 +2,7 @@ import userEvent from "@testing-library/user-event";
 import ClosedFireplaceWithFan from './[combustion].vue';
 import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import {screen} from "@testing-library/vue";
-import { CombustionAirSupplySituation, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -35,7 +35,7 @@ describe('closed fireplace with fan', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const {data} = store.infiltrationAndVentilation.combustionAppliances.closedFireplaceWithFan;
+		const {data} = store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.closed_with_fan];
 
 		expect(data[0]).toEqual(closedFireplace);
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
@@ -45,7 +45,7 @@ describe('closed fireplace with fan', () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					closedFireplaceWithFan: {
+					[CombustionApplianceType.closed_with_fan]: {
 						data: [closedFireplace]
 					}
 				}

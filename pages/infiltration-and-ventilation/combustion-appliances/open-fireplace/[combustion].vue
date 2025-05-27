@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import { CombustionApplianceType } from '~/schema/api-schema.types';
+
 const title = "Open fireplace";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const applianceData = useItemToEdit('combustion', store.infiltrationAndVentilation.combustionAppliances.openFireplace.data);
+const applianceData = useItemToEdit('combustion', store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_fireplace].data);
 const model: Ref<CombustionApplianceData> = ref(applianceData!);
 
 const saveForm = (fields: CombustionApplianceData) => {
 	store.$patch((state) => {
-		const {openFireplace} = state.infiltrationAndVentilation.combustionAppliances;
+		const { [CombustionApplianceType.open_fireplace]: openFireplace } = state.infiltrationAndVentilation.combustionAppliances;
 
 		const appliance: CombustionApplianceData = {
 			name: fields.name,

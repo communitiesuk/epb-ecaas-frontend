@@ -3,7 +3,7 @@ import { screen } from '@testing-library/vue';
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { CombustionAirSupplySituation, CombustionFuelType, DuctShape, DuctType, FlueGasExhaustSituation, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FlueGasExhaustSituation, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
 
 
 vi.mock('uuid');
@@ -277,7 +277,7 @@ describe('Infiltration and ventilation summary', () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
-						openFireplace: {
+						[CombustionApplianceType.open_fireplace]: {
 							data: [openFireplaceData]
 						}
 					}
@@ -306,7 +306,7 @@ describe('Infiltration and ventilation summary', () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
-						closedFireplaceWithFan: {
+						[CombustionApplianceType.closed_with_fan]: {
 							data: [closedFireplaceWithFanData]
 						}
 					}
@@ -335,7 +335,7 @@ describe('Infiltration and ventilation summary', () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
-						openGasFlueBalancer: {
+						[CombustionApplianceType.open_gas_flue_balancer]: {
 							data: [openGasFlueBalancerData]
 						}
 					}
@@ -364,7 +364,7 @@ describe('Infiltration and ventilation summary', () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
-						openGasKitchenStove: {
+						[CombustionApplianceType.open_gas_kitchen_stove]: {
 							data: [openGasKitchenStoveData]
 						}
 					}
@@ -379,7 +379,6 @@ describe('Infiltration and ventilation summary', () => {
 				"Air supply to appliance": "Outside",
 				"Exhaust method from appliance": "Into room",
 				"Type of fuel": "Oil"
-
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -393,7 +392,7 @@ describe('Infiltration and ventilation summary', () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
-						openGasFire: {
+						[CombustionApplianceType.open_gas_fire]: {
 							data: [openGasFireData]
 						}
 					}
@@ -422,7 +421,7 @@ describe('Infiltration and ventilation summary', () => {
 			store.$patch({
 				infiltrationAndVentilation: {
 					combustionAppliances: {
-						closedFire: {
+						[CombustionApplianceType.closed_fire]: {
 							data: [closedFireData]
 						}
 					}
