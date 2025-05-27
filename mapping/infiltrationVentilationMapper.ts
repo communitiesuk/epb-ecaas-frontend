@@ -15,7 +15,7 @@ function mapMechanicalVentilationData(state: EcaasState): Pick<FhsInputSchema, '
 	const infiltrationVentilationData = state.infiltrationAndVentilation.ventilation.data;
 	const airPermeabilityData = state.infiltrationAndVentilation.airPermeability.data;
 	const combustionApplianceEntries = objectEntries(state.infiltrationAndVentilation.combustionAppliances).filter(([_key, value]) => value.complete && !isEmpty(value.data)).map(([key, value]) => {
-		return value.data.flatMap<[string, SchemaCombustionAppliance]>((appliance) => {
+		return value.data.map<[string, SchemaCombustionAppliance]>((appliance) => {
 			const { name, airSupplyToAppliance, exhaustMethodFromAppliance, typeOfFuel } = appliance;
 			const applianceInput: SchemaCombustionAppliance = {
 				appliance_type: key as CombustionApplianceType,
@@ -23,7 +23,7 @@ function mapMechanicalVentilationData(state: EcaasState): Pick<FhsInputSchema, '
 				fuel_type: typeOfFuel,
 				supply_situation: airSupplyToAppliance,
 			};
-			return [[name, applianceInput]];
+			return [name, applianceInput];
 		});
 	}).flat();
 	const combustionAppliances: Record<string, SchemaCombustionAppliance> = objectFromEntries(combustionApplianceEntries);
