@@ -21,6 +21,10 @@ export default defineNuxtConfig({
 			],
 			bodyAttrs: {
 				class: 'govuk-template__body js-enabled govuk-frontend-supported'
+			},
+			htmlAttrs: {
+				class: 'govuk-template',
+				// class: 'govuk-template govuk-template--rebranded', <--- change to this when enabling new gov uk branding on 2025-06-25
 			}
 		}
 	},
