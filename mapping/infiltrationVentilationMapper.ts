@@ -1,9 +1,9 @@
 import { objectEntries, objectFromEntries } from 'ts-extras';
 import { type CombustionApplianceType, type SchemaCombustionAppliance, type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaVent, SupplyAirTemperatureControlType } from "~/schema/api-schema.types";
-import type { FhsInputSchema } from "./fhsInputMapper";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 
-export function mapInfiltrationVentilationData(state: EcaasState): Partial<FhsInputSchema> {
+export function mapInfiltrationVentilationData(state: Resolved<EcaasState>): Partial<FhsInputSchema> {
 	const infiltrationVentilation = mapMechanicalVentilationData(state);
 
 	return {
@@ -11,11 +11,11 @@ export function mapInfiltrationVentilationData(state: EcaasState): Partial<FhsIn
 	};
 }
 
-function mapMechanicalVentilationData(state: EcaasState): Pick<FhsInputSchema, 'InfiltrationVentilation'> {
-	const infiltrationVentilationData = state.infiltrationAndVentilation.ventilation.data;
-	const airPermeabilityData = state.infiltrationAndVentilation.airPermeability.data;
-	const combustionApplianceEntries = objectEntries(state.infiltrationAndVentilation.combustionAppliances).filter(([_key, value]) => value.complete && !isEmpty(value.data)).map(([key, value]) => {
-		return value.data.map<[string, SchemaCombustionAppliance]>((appliance) => {
+function mapMechanicalVentilationData(state: ResolvedState): Pick<FhsInputSchema, 'InfiltrationVentilation'> {
+	const infiltrationVentilationData = state.infiltrationAndVentilation.ventilation;
+	const airPermeabilityData = state.infiltrationAndVentilation.airPermeability;
+	const combustionApplianceEntries = objectEntries(state.infiltrationAndVentilation.combustionAppliances).map(([key, value]) => {
+		return value.map<[string, SchemaCombustionAppliance]>((appliance) => {
 			const { name, airSupplyToAppliance, exhaustMethodFromAppliance, typeOfFuel } = appliance;
 			const applianceInput: SchemaCombustionAppliance = {
 				appliance_type: key as CombustionApplianceType,
@@ -51,8 +51,8 @@ function mapMechanicalVentilationData(state: EcaasState): Pick<FhsInputSchema, '
 	} as Pick<FhsInputSchema, 'InfiltrationVentilation'>;
 }
 
-function mapVents(state: EcaasState) {
-	const entries = state.infiltrationAndVentilation.vents.data.map((x): [string, SchemaVent] => {
+function mapVents(state: ResolvedState) {
+	const entries = state.infiltrationAndVentilation.vents.map((x): [string, SchemaVent] => {
 		const key = x.name;
 		const val: SchemaVent = {
 			area_cm2: x.effectiveVentilationArea,
@@ -68,8 +68,8 @@ function mapVents(state: EcaasState) {
 	return Object.fromEntries(entries);
 }
 
-function mapMechanicalVentilation(state: EcaasState) {
-	const entries = state.infiltrationAndVentilation.mechanicalVentilation.data.map((x):[string, SchemaMechanicalVentilation] => {
+function mapMechanicalVentilation(state: ResolvedState) {
+	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x):[string, SchemaMechanicalVentilation] => {
 		const key = x.name;
 		const val: SchemaMechanicalVentilation = {
 			vent_type: x.typeOfMechanicalVentilationOptions,
