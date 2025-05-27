@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
 import { getTabItems, getUrl } from '#imports';
+import { BuildType } from '~/schema/api-schema.types';
 
 definePageMeta({ layout: false });
 
@@ -18,7 +19,7 @@ const generalSpecificationsSummary: SummarySection = {
 	data: {
 		"Type of dwelling": generalSpecificationsData.typeOfDwelling,
 		"Number of storeys in building": generalSpecificationsData.storeysInDwelling,
-		"Storey of flat": generalSpecificationsData.storeyOfFlat,
+		"Storey of flat": generalSpecificationsData.typeOfDwelling === BuildType.flat ? generalSpecificationsData.storeyOfFlat : undefined,
 		"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
 		"Part G compliance": displayBoolean(generalSpecificationsData.partGCompliance),
 		"Cooling required": displayBoolean(generalSpecificationsData.coolingRequired),

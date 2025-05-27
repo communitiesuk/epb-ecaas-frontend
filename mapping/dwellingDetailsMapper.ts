@@ -1,4 +1,4 @@
-import { ApplianceReference, type SchemaApplianceEntry, type SchemaInfiltrationVentilation } from "~/schema/api-schema.types";
+import { ApplianceReference, BuildType, type SchemaApplianceEntry, type SchemaInfiltrationVentilation } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 
 export function mapDwellingDetailsData(state: EcaasState): Partial<FhsInputSchema> {
@@ -22,7 +22,7 @@ function mapGeneralSpecificationsData(state: EcaasState): Pick<FhsInputSchema, '
 		General: {
 			build_type: generalSpecifications.data.typeOfDwelling!,
 			storeys_in_building: generalSpecifications.data.storeysInDwelling!,
-			storey_of_dwelling: generalSpecifications.data.storeyOfFlat
+			storey_of_dwelling: generalSpecifications.data.typeOfDwelling === BuildType.flat ? generalSpecifications.data.storeyOfFlat : undefined,
 		},
 		NumberOfBedrooms: generalSpecifications.data.numOfBedrooms,
 		PartGcompliance: generalSpecifications.data.partGCompliance,

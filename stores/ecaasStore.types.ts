@@ -1,4 +1,5 @@
-import type { ApplianceKey, BatteryLocation, BuildType, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WetEmitterWet_emitter_type, WindowTreatmentControl, WindowTreatmentType, WwhrsType } from "~/schema/api-schema.types";
+import type { EmptyObject, TaggedUnion } from "type-fest";
+import type { BuildType, ApplianceKey, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WetEmitterWet_emitter_type, WindowTreatmentControl, WindowTreatmentType, WwhrsType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -22,14 +23,17 @@ export interface DwellingDetails {
 	externalFactors: EcaasForm<ExternalFactorsData>;
 }
 
-export interface GeneralSpecificationsData {
-	typeOfDwelling: BuildType;
-	storeysInDwelling?: number;
-	storeyOfFlat?: number;
-	numOfBedrooms?: number;
-	partGCompliance?: boolean;
-	coolingRequired?: boolean;
-}
+export type GeneralSpecificationsData = {
+	storeysInDwelling: number;
+	numOfBedrooms: number;
+	partGCompliance: boolean;
+	coolingRequired: boolean;
+} & TaggedUnion<'typeOfDwelling', {
+	[BuildType.flat]: {
+		storeyOfFlat: number;
+	};
+	[BuildType.house]: EmptyObject;
+}>;
 
 export interface AppliancesData {
 	appliances?: ApplianceKey[];

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BuildType } from '~/schema/api-schema.types';
+import { BuildType } from '~/schema/api-schema.types';
 
 const title = "General specifications";
 const store = useEcaasStore();
@@ -20,7 +20,7 @@ const saveForm = (fields: typeof model.value) => {
 				data: {
 					typeOfDwelling: fields.typeOfDwelling,
 					storeysInDwelling: fields.storeysInDwelling,
-					storeyOfFlat: fields.storeyOfFlat,
+					storeyOfFlat: fields.typeOfDwelling === BuildType.flat ? fields.storeyOfFlat : undefined,
 					numOfBedrooms: fields.numOfBedrooms,
 					partGCompliance: fields.partGCompliance,
 					coolingRequired: fields.coolingRequired,
