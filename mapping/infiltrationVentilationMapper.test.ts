@@ -1,6 +1,11 @@
 import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType } from '~/schema/api-schema.types';
 import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from './infiltrationVentilationMapper';
 
+const baseForm = {
+	data: [],
+	complete: true,
+};
+
 describe('infiltration ventilation mapper', () => {
 	const mechVentMvhr: MechanicalVentilationData[] = [{
 		id: "bathroom exhaust fan",
@@ -24,13 +29,28 @@ describe('infiltration ventilation mapper', () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: mechVentMvhr
-				},	
+					...baseForm,
+					data: mechVentMvhr,
+				},
+				ventilation: {
+					...baseForm,
+					data: {}
+				},
+				airPermeability: {
+					...baseForm,
+					data: {
+						testPressure: 5.0,
+						airTightnessTestResult: 2.2,
+					}
+				},
+				vents: {
+					...baseForm,
+				}
 			}
 		});
     
 		// Act
-		const fhsInputData = mapInfiltrationVentilationData(store);
+		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
     
 		// Assert
 		expect(fhsInputData.InfiltrationVentilation).toBeDefined();
@@ -70,16 +90,32 @@ describe('infiltration ventilation mapper', () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
+					...baseForm,
 					data: mechVentMvhr
 				},
 				ductwork: {
+					...baseForm,
 					data: ductwork
-				}			
+				},
+				ventilation: {
+					...baseForm,
+					data: {}
+				},
+				airPermeability: {
+					...baseForm,
+					data: {
+						testPressure: 5.0,
+						airTightnessTestResult: 2.2,
+					}
+				},
+				vents: {
+					...baseForm,
+				}
 			}
 		});
     
 		// Act
-		const fhsInputData = mapInfiltrationVentilationData(store);
+		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
 		// Assert
 		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!['bathroom exhaust fan'];
@@ -101,13 +137,28 @@ describe('infiltration ventilation mapper', () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: mechVentMvhr
-				},	
+					...baseForm,
+					data: mechVentMvhr,
+				},
+				airPermeability: {
+					...baseForm,
+					data: {
+						testPressure: 5.0,
+						airTightnessTestResult: 2.2,
+					},
+				},
+				ventilation: {
+					...baseForm,
+					data: {},
+				},
+				vents: {
+					...baseForm,
+				}
 			}
 		});
     
 		// Act
-		const fhsInputData = mapInfiltrationVentilationData(store);
+		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
 		// Assert
 		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!['bathroom exhaust fan'];
@@ -131,13 +182,14 @@ describe('infiltration ventilation mapper', () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: mechVent
+					...baseForm,
+					data: mechVent,
 				}				
 			}
 		});
 
 		// Act
-		const fhsInputData = mapMechanicalVentilationData(store);
+		const fhsInputData = mapMechanicalVentilationData(resolveState(store.$state));
     
 		// Assert
 		const firstMechVent = fhsInputData['bathroom exhaust fan'];
@@ -170,13 +222,14 @@ describe('infiltration ventilation mapper', () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: ventData
+					...baseForm,
+					data: ventData,
 				}				
 			}
 		});
 
 		// Act
-		const fhsInputData = mapVentsData(store);
+		const fhsInputData = mapVentsData(resolveState(store.$state));
 
 		// Assert
 		const vent = fhsInputData[ventName];
@@ -200,13 +253,14 @@ describe('infiltration ventilation mapper', () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ventilation: {
-					data: ventilationData
+					...baseForm,
+					data: ventilationData,
 				}
 			}
 		});
 
 		// Act
-		const fhsInputData = mapVentilationData(store);
+		const fhsInputData = mapVentilationData(resolveState(store.$state));
 		const expectedVentilationData = {
 			dwellingHeight: 10,
 			dwellingEnvelopeArea: 200,
@@ -226,13 +280,14 @@ describe('infiltration ventilation mapper', () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				airPermeability: {
-					data: airPermeabilityData
+					...baseForm,
+					data: airPermeabilityData,
 				}
 			}
 		});
 
 		// Act
-		const fhsInputData = mapAirPermeabilityData(store);
+		const fhsInputData = mapAirPermeabilityData(resolveState(store.$state));
 
 		// Assert
 		expect(fhsInputData.test_pressure).toBe(50);
@@ -252,15 +307,15 @@ describe('infiltration ventilation mapper', () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					[CombustionApplianceType.open_gas_fire]: {
+						...baseForm,
 						data: combustionAppliances,
-						complete: true
 					}
 				}
 			}
 		});
 
 		// Act
-		const fhsInputData = mapCombustionAppliancesData(store);
+		const fhsInputData = mapCombustionAppliancesData(resolveState(store.$state));
 
 		// Assert
 		const gasBoiler = fhsInputData["Gas Boiler"];

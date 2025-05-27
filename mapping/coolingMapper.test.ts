@@ -1,6 +1,5 @@
-import { SpaceCoolSystemType } from "~/schema/api-schema.types";
-import { mapCoolingData } from "./coolingMapper";
-import type { FhsInputSchema } from "./fhsInputMapper";
+import { SpaceCoolSystemType, type SchemaSpaceCoolSystemDetails } from "~/schema/api-schema.types";
+import { mapSpaceCoolSystems } from "./coolingMapper";
 
 
 describe('cooling mapper', () => {
@@ -22,24 +21,23 @@ describe('cooling mapper', () => {
 		store.$patch({
 			cooling: {
 				airConditioning: {
-					data: [airConditioning]
+					data: [airConditioning],
+					complete: true
 				}
 			}
 		});
 
 		// Acts
-		const result = mapCoolingData(store);
+		const result = mapSpaceCoolSystems(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'SpaceCoolSystem'> = {
-			SpaceCoolSystem: {
-				"airCon1": {
-					EnergySupply: "mains elec",
-					cooling_capacity: 4,
-					frac_convective: 1,
-					efficiency: 1,
-					type: SpaceCoolSystemType.AirConditioning,
-				}
+		const expectedResult: Record<string, SchemaSpaceCoolSystemDetails> = {
+			"airCon1": {
+				EnergySupply: "mains elec",
+				cooling_capacity: 4,
+				frac_convective: 1,
+				efficiency: 1,
+				type: SpaceCoolSystemType.AirConditioning,
 			}
 		};
 
@@ -65,32 +63,31 @@ describe('cooling mapper', () => {
 		store.$patch({
 			cooling: {
 				airConditioning: {
-					data: [airConditioner1, airConditioner2]
+					data: [airConditioner1, airConditioner2],
+					complete: true,
 				}
 			}
 		});
 
 		// Acts
-		const result = mapCoolingData(store);
+		const result = mapSpaceCoolSystems(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'SpaceCoolSystem'> = {
-			SpaceCoolSystem: {
-				"airConditioner1": {
-					EnergySupply: "mains elec",
-					cooling_capacity: 1,
-					frac_convective: 3,
-					efficiency: 2,
-					type: SpaceCoolSystemType.AirConditioning,
-				},
-				"airConditioner2": {
-					EnergySupply: "mains elec",
-					cooling_capacity: 7,
-					frac_convective: 5,
-					efficiency: 6,
-					type: SpaceCoolSystemType.AirConditioning,
-				},
-			}
+		const expectedResult: Record<string, SchemaSpaceCoolSystemDetails> = {
+			"airConditioner1": {
+				EnergySupply: "mains elec",
+				cooling_capacity: 1,
+				frac_convective: 3,
+				efficiency: 2,
+				type: SpaceCoolSystemType.AirConditioning,
+			},
+			"airConditioner2": {
+				EnergySupply: "mains elec",
+				cooling_capacity: 7,
+				frac_convective: 5,
+				efficiency: 6,
+				type: SpaceCoolSystemType.AirConditioning,
+			},
 		};
 
 		expect(result).toEqual(expectedResult);

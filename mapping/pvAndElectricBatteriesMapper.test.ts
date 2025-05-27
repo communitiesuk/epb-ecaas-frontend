@@ -52,7 +52,7 @@ describe("PV and electric batteries mapper", () => {
 		});
 
 		// Act
-		const result = mapPvSystemData(store);
+		const result = mapPvSystemData(resolveState(store.$state));
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'OnSiteGeneration'> = {
@@ -132,7 +132,7 @@ describe("PV and electric batteries mapper", () => {
 		});
 
 		// Act
-		const result = mapElectricBatteryData(store);
+		const result = mapElectricBatteryData(resolveState(store.$state));
 
 		// Assert
 		const expectedResult: Record<string, SchemaElectricBattery> = {

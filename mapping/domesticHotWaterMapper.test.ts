@@ -1,5 +1,5 @@
-import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation } from "~/schema/api-schema.types";
-import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
+import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation, type SchemaHotWaterDemand } from "~/schema/api-schema.types";
+import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 
 describe('domestic hot water mapper', () => {
@@ -25,21 +25,51 @@ describe('domestic hot water mapper', () => {
 			domesticHotWater: {
 				waterHeating: {
 					hotWaterCylinder: {
-						data: [hotWaterCylinder]
+						data: [hotWaterCylinder],
+						complete: true,
 					}
-				}
+				},
+				hotWaterOutlets: {
+					mixedShower: {
+						data: [],
+						complete: true,
+					},
+					electricShower: {
+						data: [],
+						complete: true,
+					},
+					bath: {
+						data: [],
+						complete: true,
+					},
+					otherOutlets: {
+						data: [],
+						complete: true,
+					}
+				},
+				pipework: {
+					primaryPipework: {
+						data: [],
+						complete: true,
+					},
+					secondaryPipework: {
+						data: [],
+						complete: true,
+					}
+				},
 			},
 			heatingSystems: {
 				heatGeneration: {
 					heatPump: {
-						data: [{name: heatPumpName, id: heatPumpName}]
+						data: [{name: heatPumpName, id: heatPumpName}],
+						complete: true,
 					}
 				}
 			}
 		});
 
 		// Acts
-		const result = mapDomesticHotWaterData(store);
+		const result = mapDomesticHotWaterData(resolveState(store.$state));
 		const expectedResult: Pick<FhsInputSchema, 'HotWaterSource'> = {
 			HotWaterSource: {
 				"hw cylinder": {
@@ -92,10 +122,12 @@ describe('domestic hot water mapper', () => {
 
 		const pipework: Pipework = {
 			primaryPipework: {
-				data: [primaryPipework, primaryPipework]
+				data: [primaryPipework, primaryPipework],
+				complete: true,
 			},
 			secondaryPipework: {
-				data: []
+				data: [],
+				complete: true,
 			},
 		};
 
@@ -104,21 +136,41 @@ describe('domestic hot water mapper', () => {
 				pipework: pipework,
 				waterHeating: {
 					hotWaterCylinder: {
-						data: [hotWaterCylinder]
+						data: [hotWaterCylinder],
+						complete: true,
+					}
+				},
+				hotWaterOutlets: {
+					mixedShower: {
+						data: [],
+						complete: true,
+					},
+					electricShower: {
+						data: [],
+						complete: true,
+					},
+					bath: {
+						data: [],
+						complete: true,
+					},
+					otherOutlets: {
+						data: [],
+						complete: true,
 					}
 				}
 			},
 			heatingSystems: {
 				heatGeneration: {
 					heatPump: {
-						data: [{name: heatPumpName, id: heatPumpId}]
+						data: [{name: heatPumpName, id: heatPumpId}],
+						complete: true,
 					}
 				}
 			}
 		});
 
 		// Acts
-		const result = mapDomesticHotWaterData(store);
+		const result = mapDomesticHotWaterData(resolveState(store.$state));
 
 		const expectedResult: Pick<FhsInputSchema, 'HotWaterSource'> = {
 			HotWaterSource: {
@@ -198,23 +250,39 @@ describe('domestic hot water mapper', () => {
 			domesticHotWater: {
 				hotWaterOutlets: {
 					mixedShower: {
-						data: [mixedShower]
+						data: [mixedShower],
+						complete: true,
 					},
 					electricShower: {
-						data: [electricShower]
+						data: [electricShower],
+						complete: true,
 					},
 					bath: {
-						data: [bath]
+						data: [bath],
+						complete: true,
 					},
 					otherOutlets: {
-						data: [other]
+						data: [other],
+						complete: true,
+					}
+				},
+				pipework: {
+					secondaryPipework: {
+						data: [],
+						complete: true,
+					}
+				},
+				waterHeating: {
+					hotWaterCylinder: {
+						data: [],
+						complete: true,
 					}
 				}
 			}
 		});
 
 		// Acts
-		const result = mapDomesticHotWaterData(store);
+		const result = mapDomesticHotWaterData(resolveState(store.$state));
 		
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'HotWaterDemand'> = {
@@ -264,7 +332,8 @@ describe('domestic hot water mapper', () => {
 					length: 111, 
 					location: WaterPipeworkLocation.internal,
 					internalDiameter: 6
-				}]
+				}],
+				complete: true,
 			}
 		};
 
@@ -276,21 +345,14 @@ describe('domestic hot water mapper', () => {
 		});
 
 		// Acts
-		const result = mapDomesticHotWaterData(store);
-		const expectedResult: Pick<FhsInputSchema, 'HotWaterDemand'> = {
-			HotWaterDemand: {
-				Distribution: [{
-					internal_diameter_mm: 6,
-					length: 111,
-					location: WaterPipeworkLocation.internal
-				}],
-				Bath: {},
-				Other: {},
-				Shower: {}
-			}
-		};
+		const result = mapDistributionData(resolveState(store.$state));
+		const expectedResult: SchemaHotWaterDemand['Distribution'] = [{
+			internal_diameter_mm: 6,
+			length: 111,
+			location: WaterPipeworkLocation.internal
+		}];
 
 		// Assert
-		expect(result["HotWaterDemand"]).toEqual(expectedResult["HotWaterDemand"]);
+		expect(result).toEqual(expectedResult);
 	});
 });

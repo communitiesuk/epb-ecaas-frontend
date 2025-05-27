@@ -1,9 +1,9 @@
-import { objectEntries, objectFromEntries, isEmpty } from 'ts-extras';
+import { objectEntries, objectFromEntries } from 'ts-extras';
 import { type CombustionApplianceType, DuctShape, type SchemaCombustionAppliance, type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaMechanicalVentilationDuctwork, type SchemaVent, type SchemaVentilationLeaks, SupplyAirTemperatureControlType, VentType } from "~/schema/api-schema.types";
-import type { FhsInputSchema } from "./fhsInputMapper";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 
-export function mapInfiltrationVentilationData(state: EcaasState): Partial<FhsInputSchema> {
+export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentFactor } = mapVentilationData(state);
 	const mechanicalVentilation = mapMechanicalVentilationData(state);
 
@@ -37,8 +37,8 @@ export function mapInfiltrationVentilationData(state: EcaasState): Partial<FhsIn
 	} as Pick<FhsInputSchema, 'InfiltrationVentilation'>;
 }
 
-export function mapMechanicalVentilationData(state: EcaasState) {
-	const entries = state.infiltrationAndVentilation.mechanicalVentilation.data.map((x):[string, SchemaMechanicalVentilation] => {
+export function mapMechanicalVentilationData(state: ResolvedState) {
+	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x):[string, SchemaMechanicalVentilation] => {
 		const key = x.name;
 		const val: Omit<SchemaMechanicalVentilation, 'ductwork'> = {
 			vent_type: x.typeOfMechanicalVentilationOptions,
@@ -56,8 +56,8 @@ export function mapMechanicalVentilationData(state: EcaasState) {
 	return Object.fromEntries(entries);
 }
 
-function mapMvhrDuctworkData(mechanicalVentilationName: string, state: EcaasState): SchemaMechanicalVentilationDuctwork[] {
-	const mvhrductworks = state.infiltrationAndVentilation.ductwork?.data.filter(hasMechanicalVentilation);
+function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedState): SchemaMechanicalVentilationDuctwork[] {
+	const mvhrductworks = state.infiltrationAndVentilation.ductwork?.filter(hasMechanicalVentilation) ?? [];
 
 	function hasMechanicalVentilation(ductwork: DuctworkData) {
 		return mechanicalVentilationName === ductwork.mvhrUnit;
@@ -78,8 +78,8 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: EcaasStat
 	});
 }
 
-export function mapVentsData(state: EcaasState) {
-	const entries = state.infiltrationAndVentilation.vents.data.map((x): [string, SchemaVent] => {
+export function mapVentsData(state: ResolvedState) {
+	const entries = state.infiltrationAndVentilation.vents.map((x): [string, SchemaVent] => {
 		const key = x.name;
 		const val: SchemaVent = {
 			area_cm2: x.effectiveVentilationArea,
@@ -95,8 +95,8 @@ export function mapVentsData(state: EcaasState) {
 	return objectFromEntries(entries);
 }
 
-export function mapVentilationData(state: EcaasState): { dwellingElevationalLevelAtBase: number; dwellingHeight: number; dwellingEnvelopeArea: number; crossVentFactor: boolean; } {
-	const { dwellingElevationalLevelAtBase, dwellingHeight, dwellingEnvelopeArea, crossVentFactor } = state.infiltrationAndVentilation.ventilation.data;
+export function mapVentilationData(state: ResolvedState): { dwellingElevationalLevelAtBase: number; dwellingHeight: number; dwellingEnvelopeArea: number; crossVentFactor: boolean; } {
+	const { dwellingElevationalLevelAtBase, dwellingHeight, dwellingEnvelopeArea, crossVentFactor } = state.infiltrationAndVentilation.ventilation;
 
 	return {
 		dwellingElevationalLevelAtBase,
@@ -106,8 +106,8 @@ export function mapVentilationData(state: EcaasState): { dwellingElevationalLeve
 	};
 }
 
-export function mapAirPermeabilityData(state: EcaasState): Pick<SchemaVentilationLeaks, 'test_pressure' | 'test_result'> {
-	const { testPressure, airTightnessTestResult } = state.infiltrationAndVentilation.airPermeability.data;
+export function mapAirPermeabilityData(state: ResolvedState): Pick<SchemaVentilationLeaks, 'test_pressure' | 'test_result'> {
+	const { testPressure, airTightnessTestResult } = state.infiltrationAndVentilation.airPermeability;
 
 	return {
 		test_pressure: testPressure,
@@ -115,9 +115,9 @@ export function mapAirPermeabilityData(state: EcaasState): Pick<SchemaVentilatio
 	};
 }
 
-export function mapCombustionAppliancesData(state: EcaasState): Record<string, SchemaCombustionAppliance> {
-	const combustionApplianceEntries = objectEntries(state.infiltrationAndVentilation.combustionAppliances).filter(([_key, value]) => value.complete && !isEmpty(value.data)).map(([key, value]) => {
-		return value.data.map<[string, SchemaCombustionAppliance]>((appliance) => {
+export function mapCombustionAppliancesData(state: ResolvedState): Record<string, SchemaCombustionAppliance> {
+	const combustionApplianceEntries = objectEntries(state.infiltrationAndVentilation.combustionAppliances).map(([key, value]) => {
+		return value.map<[string, SchemaCombustionAppliance]>((appliance) => {
 			const { name, airSupplyToAppliance, exhaustMethodFromAppliance, typeOfFuel } = appliance;
 			const applianceInput: SchemaCombustionAppliance = {
 				appliance_type: key as CombustionApplianceType,

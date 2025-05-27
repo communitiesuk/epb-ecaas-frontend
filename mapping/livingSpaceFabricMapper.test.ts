@@ -1,5 +1,5 @@
 import { FloorType, MassDistributionClass, WindowShadingObjectType, WindowTreatmentType, type SchemaBuildingElement, type SchemaEdgeInsulation, type SchemaThermalBridgingDetails } from "~/schema/api-schema.types";
-import { mapLivingSpaceFabricData } from "./livingSpaceFabricMapper";
+import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./livingSpaceFabricMapper";
 
 type BuildingElementGround = Extract<SchemaBuildingElement, { type: 'BuildingElementGround' }>;
 type BuildingElementOpaque = Extract<SchemaBuildingElement, { type: 'BuildingElementOpaque' }>;
@@ -28,13 +28,14 @@ describe('living space fabric mapper', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceZoneParameters: {
-					data: state
+					data: state,
+					complete: true
 				}
 			}
 		});
 
 		// Act
-		const fhsInputData = mapLivingSpaceFabricData(store);
+		const fhsInputData = mapZoneParametersData(resolveState(store.$state));
 
 		// Assert
 		expect(fhsInputData.Zone!['zone 1']?.area).toBe(state.area);
@@ -131,15 +132,15 @@ describe('living space fabric mapper', () => {
 						groundFloorWithSuspendedFloor,
 						groundFloorWithHeatedBasement,
 						groundFloorWithUnheatedBasement
-					] },
-					livingSpaceInternalFloor: { data: [internalFloor] },
-					livingSpaceExposedFloor: { data: [exposedFloor] }
+					], complete: true },
+					livingSpaceInternalFloor: { data: [internalFloor], complete: true },
+					livingSpaceExposedFloor: { data: [exposedFloor], complete: true }
 				}
 			}
 		});
 
 		// Act
-		const fhsInputData = mapLivingSpaceFabricData(store);
+		const fhsInputData = mapFloorData(resolveState(store.$state));
 
 		// Assert
 		const groundFloorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[groundFloor.name]! as BuildingElementGround;
@@ -296,16 +297,16 @@ describe('living space fabric mapper', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWalls: {
-					livingSpaceExternalWall: { data: [externalWall] },
-					livingSpaceInternalWall: { data: [internalWall] },
-					livingSpacePartyWall: { data: [partyWall] },
-					livingSpaceWallToUnheatedSpace: { data: [wallToUnheatedSpace] }
+					livingSpaceExternalWall: { data: [externalWall], complete: true },
+					livingSpaceInternalWall: { data: [internalWall], complete: true },
+					livingSpacePartyWall: { data: [partyWall], complete: true },
+					livingSpaceWallToUnheatedSpace: { data: [wallToUnheatedSpace], complete: true }
 				}
 			}
 		});
 
 		// Act
-		const fhsInputData = mapLivingSpaceFabricData(store);
+		const fhsInputData = mapWallData(resolveState(store.$state));
 
 		// Assert
 		const externalWallElement = fhsInputData.Zone!['zone 1']!.BuildingElement[externalWall.name]! as BuildingElementOpaque;
@@ -418,15 +419,15 @@ describe('living space fabric mapper', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceCeilingsAndRoofs: {
-					livingSpaceCeilings: { data: [ceiling] },
-					livingSpaceRoofs: { data: [roof] },
-					livingSpaceUnheatedPitchedRoofs: { data: [unheatedPitchedRoof] }
+					livingSpaceCeilings: { data: [ceiling], complete: true, },
+					livingSpaceRoofs: { data: [roof], complete: true, },
+					livingSpaceUnheatedPitchedRoofs: { data: [unheatedPitchedRoof], complete: true, }
 				}
 			}
 		});
 
 		// Act
-		const fhsInputData = mapLivingSpaceFabricData(store);
+		const fhsInputData = mapCeilingAndRoofData(resolveState(store.$state));
 
 		// Assert
 		const ceilingElement = fhsInputData.Zone!['zone 1']!.BuildingElement[ceiling.name]! as BuildingElementAdjacentUnconditionedSpaceSimple;
@@ -532,15 +533,15 @@ describe('living space fabric mapper', () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceDoors: {
-					livingSpaceInternalDoor: { data: [internalDoor] },
-					livingSpaceExternalGlazedDoor: { data: [externalGlazedDoor] },
-					livingSpaceExternalUnglazedDoor: { data: [externalUnglazedDoor] }
+					livingSpaceInternalDoor: { data: [internalDoor], complete: true },
+					livingSpaceExternalGlazedDoor: { data: [externalGlazedDoor], complete: true },
+					livingSpaceExternalUnglazedDoor: { data: [externalUnglazedDoor], complete: true }
 				}
 			}
 		});
 
 		// Act
-		const fhsInputData = mapLivingSpaceFabricData(store);
+		const fhsInputData = mapDoorData(resolveState(store.$state));
 
 		// Assert
 		const internalDoorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[internalDoor.name]! as BuildingElementAdjacentUnconditionedSpaceSimple;
@@ -631,12 +632,12 @@ describe('living space fabric mapper', () => {
 
 		store.$patch({
 			livingSpaceFabric: {
-				livingSpaceWindows: { data: [window] }
+				livingSpaceWindows: { data: [window], complete: true },
 			}
 		});
 
 		// Act
-		const fhsInputData = mapLivingSpaceFabricData(store);
+		const fhsInputData = mapWindowData(resolveState(store.$state));
 
 		// Assert
 		const windowElement = fhsInputData.Zone!['zone 1']!.BuildingElement[window.name]! as BuildingElementTransparent;
@@ -694,17 +695,19 @@ describe('living space fabric mapper', () => {
 			heatTransferCoefficient: 1
 		};
 
+		const livingSpaceThermalBridging: ThermalBridgingData = {
+			livingSpaceLinearThermalBridges: { data: [linearThermalBridge], complete: true },
+			livingSpacePointThermalBridges: { data: [pointThermalBridge], complete: true }
+		};
+
 		store.$patch({
 			livingSpaceFabric: {
-				livingSpaceThermalBridging: {
-					livingSpaceLinearThermalBridges: { data: [linearThermalBridge] },
-					livingSpacePointThermalBridges: { data: [pointThermalBridge] }
-				}
+				livingSpaceThermalBridging
 			}
 		});
 
 		// Act
-		const fhsInputData = mapLivingSpaceFabricData(store);
+		const fhsInputData = mapThermalBridgingData(resolveState(store.$state));
 
 		// Assert
 		type ThermalBridging = { [key: string]: SchemaThermalBridgingDetails; };

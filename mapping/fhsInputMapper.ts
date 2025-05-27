@@ -9,7 +9,9 @@ import { mapPvAndElectricBatteriesData } from './pvAndElectricBatteriesMapper';
 import { mapDomesticHotWaterData } from './domesticHotWaterMapper';
 import { mapCoolingData } from './coolingMapper';
 
-export function mapFhsInputData(state: EcaasState): FhsInputSchema {
+export type ResolvedState = Resolved<EcaasState>;
+
+export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const dwellingDetailsData = mapDwellingDetailsData(state);
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
 	const livingSpaceFabricData = mapLivingSpaceFabricData(state);

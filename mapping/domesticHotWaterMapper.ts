@@ -8,9 +8,9 @@ import {
 	type SchemaWaterPipework,
 	type SchemaWaterPipeworkSimple
 } from "~/schema/api-schema.types";
-import type {FhsInputSchema} from "./fhsInputMapper";
+import type {FhsInputSchema, ResolvedState} from "./fhsInputMapper";
 
-export function mapDomesticHotWaterData(state: EcaasState): Partial<FhsInputSchema> {
+export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {
 	const showers = mapShowersData(state);
 	const baths = mapBathsData(state);
 	const others = mapOthersData(state);
@@ -30,8 +30,8 @@ export function mapDomesticHotWaterData(state: EcaasState): Partial<FhsInputSche
 	};
 }
 
-function mapShowersData(state: EcaasState) {
-	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.mixedShower.data.map((x):[string, SchemaShower] => {
+function mapShowersData(state: ResolvedState) {
+	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.mixedShower.map((x):[string, SchemaShower] => {
 		const key = x.name;
 		const val: SchemaShower = {
 			type: "MixerShower",
@@ -42,7 +42,7 @@ function mapShowersData(state: EcaasState) {
 		return [key, val];
 	});
 
-	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.electricShower.data.map((x):[string, SchemaShower] => {
+	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.electricShower.map((x):[string, SchemaShower] => {
 		const key = x.name;
 		const val: SchemaShower = {
 			type: "InstantElecShower",
@@ -57,8 +57,8 @@ function mapShowersData(state: EcaasState) {
 	return Object.fromEntries([...mixedShowerEntries, ...electricShowerEntries]);
 }
 
-function mapBathsData(state: EcaasState) {
-	const bathEntries = state.domesticHotWater.hotWaterOutlets.bath.data.map((x):[string, SchemaBathDetails] => {
+function mapBathsData(state: ResolvedState) {
+	const bathEntries = state.domesticHotWater.hotWaterOutlets.bath.map((x):[string, SchemaBathDetails] => {
 		const key = x.name;
 		const val: SchemaBathDetails = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
@@ -72,8 +72,8 @@ function mapBathsData(state: EcaasState) {
 	return Object.fromEntries(bathEntries);
 }
 
-function mapOthersData(state: EcaasState) {
-	const otherEntries = state.domesticHotWater.hotWaterOutlets.otherOutlets.data.map((x):[string, SchemaOtherWaterUseDetails] => {
+function mapOthersData(state: ResolvedState) {
+	const otherEntries = state.domesticHotWater.hotWaterOutlets.otherOutlets.map((x):[string, SchemaOtherWaterUseDetails] => {
 		const key = x.name;
 		const val: SchemaOtherWaterUseDetails = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
@@ -86,8 +86,8 @@ function mapOthersData(state: EcaasState) {
 	return Object.fromEntries(otherEntries);
 }
 
-function mapDistributionData(state: EcaasState) {
-	return state.domesticHotWater.pipework.secondaryPipework.data.map((x): SchemaWaterPipeworkSimple => {
+export function mapDistributionData(state: ResolvedState) {
+	return state.domesticHotWater.pipework.secondaryPipework.map((x): SchemaWaterPipeworkSimple => {
 		return {
 			length: x.length,
 			location: x.location,
@@ -96,10 +96,10 @@ function mapDistributionData(state: EcaasState) {
 	});
 }
 
-function mapHotWaterSourcesData(state: EcaasState) {
-	return state.domesticHotWater.waterHeating.hotWaterCylinder.data.map((x): SchemaHotWaterSourceDetails => {
-		const heatPumpName = state.heatingSystems.heatGeneration.heatPump.data.find(heat_pump => heat_pump.id === x.heatSource)?.name;
-		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.data.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
+export function mapHotWaterSourcesData(state: ResolvedState) {
+	return state.domesticHotWater.waterHeating.hotWaterCylinder.map((x): SchemaHotWaterSourceDetails => {
+		const heatPumpName = state.heatingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.id === x.heatSource)?.name;
+		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
 			return {
 				location: x.location,
 				internal_diameter_mm: x.internalDiameter,

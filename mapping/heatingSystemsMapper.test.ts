@@ -2,6 +2,11 @@ import { FuelType } from "~/schema/api-schema.types";
 import { mapEnergySupplyData, mapHeatEmittingData } from "./heatingSystemsMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 
+const baseForm = {
+	data: [],
+	complete: true,
+};
+
 describe("heating systems mapper", () => {
 	const store = useEcaasStore();
 
@@ -18,14 +23,14 @@ describe("heating systems mapper", () => {
 		store.$patch({
 			heatingSystems: {
 				energySupply: {
+					...baseForm,
 					data: energySupplyData,
-					complete: true
 				}
 			}
 		});
 
 		// Act
-		const result = mapEnergySupplyData(store);
+		const result = mapEnergySupplyData(resolveState(store.$state));
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
@@ -49,14 +54,14 @@ describe("heating systems mapper", () => {
 		store.$patch({
 			heatingSystems: {
 				energySupply: {
+					...baseForm,
 					data: energySupplyData,
-					complete: true
 				}
 			}
 		});
 
 		// Act
-		const result = mapEnergySupplyData(store);
+		const result = mapEnergySupplyData(resolveState(store.$state));
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
@@ -87,14 +92,14 @@ describe("heating systems mapper", () => {
 		store.$patch({
 			heatingSystems: {
 				energySupply: {
+					...baseForm,
 					data: energySupplyData,
-					complete: true
 				}
 			}
 		});
 
 		// Act
-		const result = mapEnergySupplyData(store);
+		const result = mapEnergySupplyData(resolveState(store.$state));
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
@@ -124,6 +129,7 @@ describe("heating systems mapper", () => {
 		// Arrange
 		const heatEmitting: HeatEmitting = {
 			wetDistribution: {
+				...baseForm,
 				data: [
 					{
 						name: "Radiators",
@@ -144,9 +150,9 @@ describe("heating systems mapper", () => {
 					}
 				]
 			},
-			instantElectricHeater: { data: [] },
-			electricStorageHeater: { data: [] },
-			warmAirHeatPump: { data: [] }
+			instantElectricHeater: { ...baseForm },
+			electricStorageHeater: { ...baseForm },
+			warmAirHeatPump: { ...baseForm }
 		};
 
 		store.$patch({
@@ -156,7 +162,7 @@ describe("heating systems mapper", () => {
 		});
 
 		// Act
-		const result = mapHeatEmittingData(store);
+		const result = mapHeatEmittingData(resolveState(store.$state));
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
@@ -198,6 +204,7 @@ describe("heating systems mapper", () => {
 		// Arrange
 		const heatEmitting: HeatEmitting = {
 			wetDistribution: {
+				...baseForm,
 				data: [
 					{
 						name: "Under floor heating",
@@ -218,9 +225,9 @@ describe("heating systems mapper", () => {
 					}
 				]
 			},
-			instantElectricHeater: { data: [] },
-			electricStorageHeater: { data: [] },
-			warmAirHeatPump: { data: [] }
+			instantElectricHeater: { ...baseForm },
+			electricStorageHeater: { ...baseForm },
+			warmAirHeatPump: { ...baseForm }
 		};
 
 		store.$patch({
@@ -230,7 +237,7 @@ describe("heating systems mapper", () => {
 		});
 
 		// Act
-		const result = mapHeatEmittingData(store);
+		const result = mapHeatEmittingData(resolveState(store.$state));
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
@@ -267,8 +274,9 @@ describe("heating systems mapper", () => {
 	it("maps instant electric heaters", () => {
 		// Arrange
 		const heatEmitting: HeatEmitting = {
-			wetDistribution: { data: [] },
+			wetDistribution: { ...baseForm },
 			instantElectricHeater: {
+				...baseForm,
 				data: [
 					{
 						name: "Acme instant electric heater",
@@ -277,8 +285,8 @@ describe("heating systems mapper", () => {
 					}
 				]
 			},
-			electricStorageHeater: { data: [] },
-			warmAirHeatPump: { data: [] }
+			electricStorageHeater: { ...baseForm },
+			warmAirHeatPump: { ...baseForm }
 		};
 
 		store.$patch({
@@ -288,7 +296,7 @@ describe("heating systems mapper", () => {
 		});
 
 		// Act
-		const result = mapHeatEmittingData(store);
+		const result = mapHeatEmittingData(resolveState(store.$state));
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {

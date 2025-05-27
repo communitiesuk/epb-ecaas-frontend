@@ -1,8 +1,8 @@
 import { SpaceCoolSystemType, type SchemaSpaceCoolSystemDetails } from "~/schema/api-schema.types";
-import type { FhsInputSchema } from "./fhsInputMapper";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 
-export function mapCoolingData(state: EcaasState): Partial<FhsInputSchema> {
+export function mapCoolingData(state: ResolvedState): Partial<FhsInputSchema> {
 	const spaceCoolSystems = mapSpaceCoolSystems(state);
     
 	return { 
@@ -10,8 +10,8 @@ export function mapCoolingData(state: EcaasState): Partial<FhsInputSchema> {
 	};
 }
 
-function mapSpaceCoolSystems(state: EcaasState) {
-	const spaceCoolSystems = state.cooling.airConditioning.data.map((x):[string, SchemaSpaceCoolSystemDetails] => {
+export function mapSpaceCoolSystems(state: ResolvedState) {
+	const spaceCoolSystems = state.cooling.airConditioning.map((x):[string, SchemaSpaceCoolSystemDetails] => {
 		const key = x.name;
 		const val: SchemaSpaceCoolSystemDetails = {
 			EnergySupply: "mains elec",

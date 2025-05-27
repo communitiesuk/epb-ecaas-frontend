@@ -1,5 +1,11 @@
 import { BatteryLocation, BuildType, ColdWaterSourceType, DuctShape, DuctType, FloorType, FuelType, HeatingControlType, MassDistributionClass, MVHRLocation, ShadingObjectType, SpaceCoolSystemType, SpaceHeatControlType, SupplyAirFlowRateControlType, SupplyAirTemperatureControlType, TerrainClass, VentilationShieldClass, VentType } from "~/schema/api-schema.types";
 import { mapFhsInputData, type FhsInputSchema } from "./fhsInputMapper";
+import { resolveState } from "~/stores/resolve";
+
+const baseForm = {
+	data: [],
+	complete: true,
+};
 
 describe("FHS input mapper", () => {
 	const store = useEcaasStore();
@@ -10,6 +16,7 @@ describe("FHS input mapper", () => {
 		// Arrange
 		const dwellingDetails: DwellingDetails = {
 			generalSpecifications: {
+				...baseForm,
 				data: {
 					typeOfDwelling: BuildType.house,
 					storeysInDwelling: 2,
@@ -17,6 +24,7 @@ describe("FHS input mapper", () => {
 				}
 			},
 			shading: {
+				...baseForm,
 				data: [{
 					name: "Tree",
 					startAngle: 60,
@@ -27,6 +35,7 @@ describe("FHS input mapper", () => {
 				}]
 			},
 			externalFactors: {
+				...baseForm,
 				data: {
 					altitude: 100,
 					typeOfExposure: VentilationShieldClass.Shielded,
@@ -38,6 +47,7 @@ describe("FHS input mapper", () => {
 
 		const infiltrationAndVentilation: InfiltrationAndVentilation = {
 			mechanicalVentilation: {
+				...baseForm,
 				data: [{
 					id: "kitchen exhaust fan",
 					name: "kitchen exhaust fan",
@@ -48,9 +58,10 @@ describe("FHS input mapper", () => {
 				}]
 			},
 			ductwork: {
-				data: [] // skipping ductwork as our mechanical ventilation isn't an MVHR
+				...baseForm // skipping ductwork as our mechanical ventilation isn't an MVHR
 			},
 			vents: {
+				...baseForm,
 				data: [{
 					name: "only vent",
 					typeOfVent: "Air brick",
@@ -64,26 +75,27 @@ describe("FHS input mapper", () => {
 			},
 			combustionAppliances: {
 				"open_fireplace": {
-					data: []
+					...baseForm,
 				},
 				"closed_with_fan": {
-					data: []
+					...baseForm,
 				},
 				"open_gas_flue_balancer": {
-					data: []
+					...baseForm,
 				},
 				"open_gas_kitchen_stove": {
-					data: []
+					...baseForm,
 				},
 				"open_gas_fire": {
-					data: []
+					...baseForm,
 				},
 				"closed_fire": {
-					data: []
+					...baseForm,
 				}
 			},
 			// skipping combustion appliances they have been removed for summer
 			ventilation: {
+				...baseForm,
 				data: {
 					dwellingHeight: 8,
 					dwellingEnvelopeArea: 320,
@@ -93,6 +105,7 @@ describe("FHS input mapper", () => {
 				}
 			},
 			airPermeability: {
+				...baseForm,
 				data: {
 					testPressure: 40,
 					airTightnessTestResult: 4,
@@ -102,6 +115,7 @@ describe("FHS input mapper", () => {
 		
 		const livingSpaceFabric: LivingSpaceFabric = {
 			livingSpaceZoneParameters: {
+				...baseForm,
 				data: {
 					area: 100,
 					volume: 300,
@@ -117,6 +131,7 @@ describe("FHS input mapper", () => {
 			},
 			livingSpaceFloors: {
 				livingSpaceGroundFloor: {
+					...baseForm,
 					data: [{
 						name: "ground-floor",
 						surfaceAreaInZone: 40,
@@ -132,57 +147,57 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				livingSpaceInternalFloor: {
-					data: []
+					...baseForm,
 				},
 				livingSpaceExposedFloor: {
-					data: []
+					...baseForm,
 				}
 			},
 			livingSpaceWalls: {
 				livingSpaceExternalWall: {
-					data: [],
+					...baseForm,
 				},
 				livingSpaceInternalWall: {
-					data: [],
+					...baseForm,
 				},
 				livingSpacePartyWall: {
-					data: [],
+					...baseForm,
 				},
 				livingSpaceWallToUnheatedSpace: {
-					data: [],
+					...baseForm,
 				}
 			},
 			livingSpaceCeilingsAndRoofs: {
 				livingSpaceCeilings: {
-					data: []
+					...baseForm,
 				},
 				livingSpaceRoofs: {
-					data: []
+					...baseForm,
 				},
 				livingSpaceUnheatedPitchedRoofs: {
-					data: []
+					...baseForm,
 				}
 			},
 			livingSpaceDoors: {
 				livingSpaceExternalUnglazedDoor: {
-					data: []
+					...baseForm,
 				},
 				livingSpaceExternalGlazedDoor: {
-					data: []
+					...baseForm,
 				},
 				livingSpaceInternalDoor: {
-					data: []
+					...baseForm,
 				}
 			},
 			livingSpaceWindows: {
-				data: []
+				...baseForm,
 			},
 			livingSpaceThermalBridging: {
 				livingSpaceLinearThermalBridges: {
-					data: []
+					...baseForm,
 				},
 				livingSpacePointThermalBridges: {
-					data: []
+					...baseForm,
 				}
 			}
 		};
@@ -190,25 +205,27 @@ describe("FHS input mapper", () => {
 		const heatingSystems: HeatingSystems = {
 			heatGeneration: {
 				heatPump: {
+					...baseForm,
 					data: [{
 						id: "some-heat-pump-id",
 						name: "some-heat-pump-name"
 					}]
 				},
 				boiler: {
-					data: []
+					...baseForm,
 				},
 				heatBattery: {
-					data: []
+					...baseForm,
 				},
 				heatInterfaceUnit: {
-					data: []
+					...baseForm,
 				},
 				heatNetwork: {
-					data: []
+					...baseForm,
 				}
 			},
 			energySupply: {
+				...baseForm,
 				data: {
 					fuelType: [FuelType.electricity], // TODO should this be an array?
 					exported: true,
@@ -216,6 +233,7 @@ describe("FHS input mapper", () => {
 			},
 			heatEmitting: {
 				wetDistribution: {
+					...baseForm,
 					data: [{
 						name: "some-wet-distribution",
 						zoneReference: "zone 1",
@@ -235,13 +253,13 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				instantElectricHeater: {
-					data: []
+					...baseForm,
 				},
 				electricStorageHeater: {
-					data: []
+					...baseForm,
 				},
 				warmAirHeatPump: {
-					data: []
+					...baseForm,
 				}
 			}
 		};
@@ -249,6 +267,7 @@ describe("FHS input mapper", () => {
 		const domesticHotWater: DomesticHotWater = {
 			waterHeating: {
 				hotWaterCylinder: {
+					...baseForm,
 					data: [{
 						id: "some-hot-water-cyclinder",
 						name: "hw cylinder",
@@ -258,32 +277,33 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				immersionHeater: {
-					data: []
+					...baseForm,
 				},
 				solarThermal: {
-					data: []
+					...baseForm,
 				},
 				pointOfUse: {
-					data: []
+					...baseForm,
 				},
 				heatPump: {
-					data: []
+					...baseForm,
 				},
 				combiBoiler: {
-					data: []
+					...baseForm,
 				},
 				heatBattery: {
-					data: []
+					...baseForm,
 				},
 				smartHotWaterTank: {
-					data: []
+					...baseForm,
 				},
 				heatInterfaceUnit: {
-					data: []
+					...baseForm,
 				},
 			},
 			hotWaterOutlets: {
 				mixedShower: {
+					...baseForm,
 					data: [{
 						id: "some-mixed-shower-id",
 						name: "some-mixed-shower-name",
@@ -291,33 +311,34 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				electricShower: {
-					data: []
+					...baseForm,
 				},
 				bath: {
-					data: []
+					...baseForm,
 				},
 				otherOutlets: {
-					data: []
+					...baseForm,
 				}
 			},
 			pipework: {
 				primaryPipework: {
-					data: []
+					...baseForm,
 				},
 				secondaryPipework: {
-					data: []
+					...baseForm,
 				}
 			},
 			wwhrs: {
-				data: []
+				...baseForm,
 			}
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
 			pvSystem: {
-				data: []
+				...baseForm,
 			},
 			electricBattery: {
+				...baseForm,
 				data: [{
 					name: "some-electric-battery-name",
 					capacity: 12,
@@ -334,6 +355,7 @@ describe("FHS input mapper", () => {
 
 		const cooling: Cooling = {
 			airConditioning: {
+				...baseForm,
 				data: [{
 					name: "some-aircon-unit-name",
 					coolingCapacity: 60,
@@ -551,7 +573,7 @@ describe("FHS input mapper", () => {
 		};
 
 		// Act
-		const fhsInputData = mapFhsInputData(store);
+		const fhsInputData = mapFhsInputData(resolveState(store.$state));
 
 		// Assert
 		expect(fhsInputData).toBeDefined();
@@ -562,6 +584,7 @@ describe("FHS input mapper", () => {
 		// Arrange
 		const dwellingDetails: DwellingDetails = {
 			generalSpecifications: {
+				...baseForm,
 				data: {
 					typeOfDwelling: BuildType.flat,
 					storeysInDwelling: 6,
@@ -570,9 +593,10 @@ describe("FHS input mapper", () => {
 				}
 			},
 			shading: {
-				data: []
+				...baseForm,
 			},
 			externalFactors: {
+				...baseForm,
 				data: {
 					altitude: 30,
 					typeOfExposure: VentilationShieldClass.Normal,
@@ -584,6 +608,7 @@ describe("FHS input mapper", () => {
 
 		const infiltrationAndVentilation: InfiltrationAndVentilation = {
 			mechanicalVentilation: {
+				...baseForm,
 				data: [{
 					id: "mvhr vent 1 id",
 					name: "mvhr vent 1 name",
@@ -614,6 +639,7 @@ describe("FHS input mapper", () => {
 				}]
 			},
 			ductwork: {
+				...baseForm,
 				data: [{
 					name: "ductwork 1",
 					mvhrUnit: "mvhr vent 1 name",
@@ -628,6 +654,7 @@ describe("FHS input mapper", () => {
 				}]
 			},
 			vents: {
+				...baseForm,
 				data: [{
 					name: "only vent",
 					typeOfVent: "Air brick",
@@ -641,25 +668,26 @@ describe("FHS input mapper", () => {
 			},
 			combustionAppliances: {
 				"open_fireplace": {
-					data: []
+					...baseForm,
 				},
 				"closed_with_fan": {
-					data: []
+					...baseForm,
 				},
 				"open_gas_flue_balancer": {
-					data: []
+					...baseForm,
 				},
 				"open_gas_kitchen_stove": {
-					data: []
+					...baseForm,
 				},
 				"open_gas_fire": {
-					data: []
+					...baseForm,
 				},
 				"closed_fire": {
-					data: []
+					...baseForm,
 				}
 			},
 			ventilation: {
+				...baseForm,
 				data: {
 					dwellingHeight: 1,
 					dwellingEnvelopeArea: 5,
@@ -669,6 +697,7 @@ describe("FHS input mapper", () => {
 				}
 			},
 			airPermeability: {
+				...baseForm,
 				data: {
 					testPressure: 20,
 					airTightnessTestResult: 10,
@@ -678,6 +707,7 @@ describe("FHS input mapper", () => {
 		
 		const livingSpaceFabric: LivingSpaceFabric = {
 			livingSpaceZoneParameters: {
+				...baseForm,
 				data: {
 					area: 16,
 					volume: 550,
@@ -689,6 +719,7 @@ describe("FHS input mapper", () => {
 			},
 			livingSpaceFloors: {
 				livingSpaceGroundFloor: {
+					...baseForm,
 					data: [{
 						name: "ground floor 1",
 						surfaceAreaInZone: 12,
@@ -723,6 +754,7 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				livingSpaceInternalFloor: {
+					...baseForm,
 					data: [{
 						name: "internal floor 1",
 						typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
@@ -741,11 +773,12 @@ describe("FHS input mapper", () => {
 					]
 				},
 				livingSpaceExposedFloor: {
-					data: []
+					...baseForm,
 				}
 			},
 			livingSpaceWalls: {
 				livingSpacePartyWall: {
+					...baseForm,
 					data: [{
 						name: "party wall 1",
 						pitchOption: "90",
@@ -762,6 +795,7 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				livingSpaceExternalWall: {
+					...baseForm,
 					data: [{
 						name: "external wall 1",
 						pitchOption: "90",
@@ -778,6 +812,7 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				livingSpaceInternalWall: {
+					...baseForm,
 					data: [{
 						name: "internal wall 1",
 						pitchOption: "100",
@@ -788,6 +823,7 @@ describe("FHS input mapper", () => {
 					}],
 				},
 				livingSpaceWallToUnheatedSpace: {
+					...baseForm,
 					data: [{
 						name: "wall to garage",
 						pitchOption: "90",
@@ -802,17 +838,18 @@ describe("FHS input mapper", () => {
 			},
 			livingSpaceCeilingsAndRoofs: {
 				livingSpaceCeilings: {
-					data: []
+					...baseForm,
 				},
 				livingSpaceRoofs: {
-					data: []
+					...baseForm,
 				},
 				livingSpaceUnheatedPitchedRoofs: {
-					data: []
+					...baseForm,
 				}
 			},
 			livingSpaceDoors: {
 				livingSpaceExternalUnglazedDoor: {
+					...baseForm,
 					data: [{
 						name: "front door",
 						pitchOption: "90",
@@ -829,9 +866,10 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				livingSpaceExternalGlazedDoor: {
-					data: []
+					...baseForm,
 				},
 				livingSpaceInternalDoor: {
+					...baseForm,
 					data: [{
 						typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 						name: "bathroom door",
@@ -854,14 +892,14 @@ describe("FHS input mapper", () => {
 				}
 			},
 			livingSpaceWindows: {
-				data: []
+				...baseForm,
 			},
 			livingSpaceThermalBridging: {
 				livingSpaceLinearThermalBridges: {
-					data: []
+					...baseForm,
 				},
 				livingSpacePointThermalBridges: {
-					data: []
+					...baseForm,
 				}
 			}
 		};
@@ -869,25 +907,27 @@ describe("FHS input mapper", () => {
 		const heatingSystems: HeatingSystems = {
 			heatGeneration: {
 				heatPump: {
+					...baseForm,
 					data: [{
 						id: "heat pump 1 id",
 						name: "heat pump 1 name"
 					}]
 				},
 				boiler: {
-					data: []
+					...baseForm,
 				},
 				heatBattery: {
-					data: []
+					...baseForm,
 				},
 				heatInterfaceUnit: {
-					data: []
+					...baseForm,
 				},
 				heatNetwork: {
-					data: []
+					...baseForm,
 				}
 			},
 			energySupply: {
+				...baseForm,
 				data: {
 					fuelType: [FuelType.electricity],
 					exported: true,
@@ -895,16 +935,16 @@ describe("FHS input mapper", () => {
 			},
 			heatEmitting: {
 				wetDistribution: {
-					data: []
+					...baseForm,
 				},
 				instantElectricHeater: {
-					data: []
+					...baseForm,
 				},
 				electricStorageHeater: {
-					data: []
+					...baseForm,
 				},
 				warmAirHeatPump: {
-					data: []
+					...baseForm,
 				}
 			}
 		};
@@ -912,6 +952,7 @@ describe("FHS input mapper", () => {
 		const domesticHotWater: DomesticHotWater = {
 			waterHeating: {
 				hotWaterCylinder: {
+					...baseForm,
 					data: [{
 						id: "hw cylinder 1 id",
 						name: "hw cylinder 1 name",
@@ -921,32 +962,33 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				immersionHeater: {
-					data: []
+					...baseForm,
 				},
 				solarThermal: {
-					data: []
+					...baseForm,
 				},
 				pointOfUse: {
-					data: []
+					...baseForm,
 				},
 				heatPump: {
-					data: []
+					...baseForm,
 				},
 				combiBoiler: {
-					data: []
+					...baseForm,
 				},
 				heatBattery: {
-					data: []
+					...baseForm,
 				},
 				smartHotWaterTank: {
-					data: []
+					...baseForm,
 				},
 				heatInterfaceUnit: {
-					data: []
+					...baseForm,
 				},
 			},
 			hotWaterOutlets: {
 				mixedShower: {
+					...baseForm,
 					data: [{
 						id: "some-mixed-shower-id",
 						name: "some-mixed-shower-name",
@@ -954,33 +996,34 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				electricShower: {
-					data: []
+					...baseForm,
 				},
 				bath: {
-					data: []
+					...baseForm,
 				},
 				otherOutlets: {
-					data: []
+					...baseForm,
 				}
 			},
 			pipework: {
 				primaryPipework: {
-					data: []
+					...baseForm,
 				},
 				secondaryPipework: {
-					data: []
+					...baseForm,
 				}
 			},
 			wwhrs: {
-				data: []
+				...baseForm,
 			}
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
 			pvSystem: {
-				data: []
+				...baseForm,
 			},
 			electricBattery: {
+				...baseForm,
 				data: [{
 					name: "some-electric-battery-name",
 					capacity: 12,
@@ -997,7 +1040,7 @@ describe("FHS input mapper", () => {
 
 		const cooling: Cooling = {
 			airConditioning: {
-				data: []
+				...baseForm,
 			}
 		};
 
@@ -1309,7 +1352,7 @@ describe("FHS input mapper", () => {
 		};
 
 		// Act
-		const fhsInputData = mapFhsInputData(store);
+		const fhsInputData = mapFhsInputData(resolveState(store.$state));
 
 		// Assert
 		expect(fhsInputData).toBeDefined();

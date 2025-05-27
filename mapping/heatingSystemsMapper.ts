@@ -1,16 +1,16 @@
 import { objectFromEntries } from "ts-extras";
-import type { FhsInputSchema } from "./fhsInputMapper";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { FuelType, type SchemaSpaceHeatSystemDetails } from "~/schema/api-schema.types";
 
-export function mapHeatingSystemsData(state: EcaasState): Pick<FhsInputSchema, 'EnergySupply' | 'SpaceHeatSystem'> {
+export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema, 'EnergySupply' | 'SpaceHeatSystem'> {
 	return {
 		...mapEnergySupplyData(state),
 		...mapHeatEmittingData(state),
 	};
 }
 
-export function mapEnergySupplyData(state: EcaasState): Pick<FhsInputSchema, 'EnergySupply'> {
-	const { fuelType, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered, exported } = state.heatingSystems.energySupply.data;
+export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 'EnergySupply'> {
+	const { fuelType, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered, exported } = state.heatingSystems.energySupply;
 	
 	return {
 		EnergySupply: {
@@ -32,8 +32,8 @@ export function mapEnergySupplyData(state: EcaasState): Pick<FhsInputSchema, 'En
 
 // TODO need a mapHeatGenerationData function here, though this specifies products in the PCDB, heat pumps initially
 
-export function mapHeatEmittingData(state: EcaasState): Pick<FhsInputSchema, 'SpaceHeatSystem'> {
-	const wetDistributions = state.heatingSystems.heatEmitting.wetDistribution.data;
+export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 'SpaceHeatSystem'> {
+	const wetDistributions = state.heatingSystems.heatEmitting.wetDistribution;
 	const wetDistributionEntries = wetDistributions.map((distribution) => {
 		const { name, zoneReference, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution;
 
@@ -73,7 +73,7 @@ export function mapHeatEmittingData(state: EcaasState): Pick<FhsInputSchema, 'Sp
 		] as const;
 	});
 
-	const instantElectricHeaters = state.heatingSystems.heatEmitting.instantElectricHeater.data;
+	const instantElectricHeaters = state.heatingSystems.heatEmitting.instantElectricHeater;
 	const instantElectricHeaterEntries = instantElectricHeaters.map((heater): [string, SchemaSpaceHeatSystemDetails] => [
 		heater.name,
 		{

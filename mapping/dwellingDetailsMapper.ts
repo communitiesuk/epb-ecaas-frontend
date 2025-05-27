@@ -1,7 +1,7 @@
 import { BuildType, type SchemaInfiltrationVentilation } from "~/schema/api-schema.types";
-import type { FhsInputSchema } from "./fhsInputMapper";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
-export function mapDwellingDetailsData(state: EcaasState): Partial<FhsInputSchema> {
+export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSchema> {
 	const generalSpecificationsData = mapGeneralSpecificationsData(state);
 	const externalFactorsData = mapExternalFactorsData(state);
 	const distantShadingData = mapDistantShadingData(state);
@@ -13,31 +13,33 @@ export function mapDwellingDetailsData(state: EcaasState): Partial<FhsInputSchem
 	};
 }
 
-export function mapGeneralSpecificationsData(state: EcaasState): Pick<FhsInputSchema, 'General' | 'NumberOfBedrooms' | 'PartGcompliance' | 'PartO_active_cooling_required'> {
+export function mapGeneralSpecificationsData(state: ResolvedState): Pick<FhsInputSchema, 'General' | 'NumberOfBedrooms' | 'PartGcompliance' | 'PartO_active_cooling_required'> {
 	const { generalSpecifications } = state.dwellingDetails;
-
+	
 	return {
 		General: {
-			build_type: generalSpecifications.data.typeOfDwelling!,
-			storeys_in_building: generalSpecifications.data.storeysInDwelling!,
-			...(generalSpecifications.data.typeOfDwelling === BuildType.flat ? {storey_of_dwelling: generalSpecifications.data.storeyOfFlat} : {}),
+			build_type: generalSpecifications.typeOfDwelling!,
+			storeys_in_building: generalSpecifications.storeysInDwelling!,
+			...(generalSpecifications.typeOfDwelling === BuildType.flat ? {storey_of_dwelling: generalSpecifications.storeyOfFlat} : {}),
 		},
-		NumberOfBedrooms: generalSpecifications.data.numOfBedrooms,
-		...(generalSpecifications.data.partGCompliance !== undefined ? {PartGcompliance: generalSpecifications.data.partGCompliance} : {}),
-		...(generalSpecifications.data.coolingRequired !== undefined ? {PartO_active_cooling_required: generalSpecifications.data.coolingRequired} : {}),
+		NumberOfBedrooms: generalSpecifications.numOfBedrooms,
+		...(generalSpecifications.partGCompliance !== undefined ? {PartGcompliance: generalSpecifications.partGCompliance} : {}),
+		...(generalSpecifications.coolingRequired !== undefined ? {PartO_active_cooling_required: generalSpecifications.coolingRequired} : {}),
+		PartGcompliance: generalSpecifications.partGCompliance,
+		PartO_active_cooling_required: generalSpecifications.coolingRequired
 	};
 }
 
 export type InfiltrationFieldsFromDwelling = 'altitude' | 'shield_class' | 'terrain_class' | 'noise_nuisance';
 
-export function mapExternalFactorsData(state: EcaasState): Pick<FhsInputSchema, 'InfiltrationVentilation'> {
+export function mapExternalFactorsData(state: ResolvedState): Pick<FhsInputSchema, 'InfiltrationVentilation'> {
 	const { externalFactors } = state.dwellingDetails;
 
 	const infiltrationVentilation: Pick<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
-		altitude: externalFactors.data.altitude!,
-		shield_class: externalFactors.data.typeOfExposure!,
-		terrain_class: externalFactors.data.terrainType!,
-		noise_nuisance: externalFactors.data.noiseNuisance
+		altitude: externalFactors.altitude!,
+		shield_class: externalFactors.typeOfExposure!,
+		terrain_class: externalFactors.terrainType!,
+		noise_nuisance: externalFactors.noiseNuisance
 	};
 
 	return {
@@ -47,12 +49,12 @@ export function mapExternalFactorsData(state: EcaasState): Pick<FhsInputSchema, 
 	} as Pick<FhsInputSchema, 'InfiltrationVentilation'>;
 }
 
-export function mapDistantShadingData(state: EcaasState): Pick<FhsInputSchema, 'ExternalConditions'> {
+export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema, 'ExternalConditions'> {
 	const { shading } = state.dwellingDetails;
 
 	return {
 		ExternalConditions: {
-			shading_segments: shading.data.map((x, i) => {
+			shading_segments: (shading ?? []).map((x, i) => {
 				return {
 					number: i + 1,
 					start360: x.startAngle,
@@ -66,4 +68,5 @@ export function mapDistantShadingData(state: EcaasState): Pick<FhsInputSchema, '
 			})
 		}
 	};
+
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mapFhsInputData } from '~/mapping/fhsInputMapper';
+import { mapFhsInputData, type ResolvedState } from '~/mapping/fhsInputMapper';
 import type {SchemaFhsComplianceResponse} from '~/schema/api-schema.types';
 
 const store = useEcaasStore();
@@ -11,7 +11,7 @@ const calculate = async () => {
 	try {
 		const response = await $fetch<SchemaFhsComplianceResponse>('/api/check-compliance', {
 			method: 'POST',
-			body: mapFhsInputData(store)
+			body: mapFhsInputData(resolveState(store) as ResolvedState)
 		});
 
 		// TODO: Handle success and error responses

@@ -1,9 +1,9 @@
 import type { EmptyObject } from "type-fest";
-import type { FhsInputSchema } from "./fhsInputMapper";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
 import { FuelType, type SchemaElectricBattery, type SchemaWindowShadingObject } from "~/schema/api-schema.types";
 
-export function mapPvAndElectricBatteriesData(state: EcaasState): [Pick<FhsInputSchema, 'OnSiteGeneration'>, Record<string, SchemaElectricBattery>] {
+export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, 'OnSiteGeneration'>, Record<string, SchemaElectricBattery>] {
 	return [
 		{
 			...mapPvSystemData(state),
@@ -13,9 +13,9 @@ export function mapPvAndElectricBatteriesData(state: EcaasState): [Pick<FhsInput
 	];
 }
 
-export function mapPvSystemData(state: EcaasState): Pick<FhsInputSchema, 'OnSiteGeneration'> {
+export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, 'OnSiteGeneration'> {
 	return {
-		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvSystem.data.map((system) => {
+		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvSystem.map((system) => {
 			const { name, elevationalHeight, lengthOfPV, widthOfPV, inverterIsInside, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = system;
 
 			return [
@@ -41,8 +41,8 @@ export function mapPvSystemData(state: EcaasState): Pick<FhsInputSchema, 'OnSite
 	};
 }
 
-export function mapElectricBatteryData(state: EcaasState): Record<string, SchemaElectricBattery> {
-	return objectFromEntries(state.pvAndBatteries.electricBattery.data.map((battery): [string, SchemaElectricBattery] => {
+export function mapElectricBatteryData(state: ResolvedState): Record<string, SchemaElectricBattery> {
+	return objectFromEntries(state.pvAndBatteries.electricBattery.map((battery): [string, SchemaElectricBattery] => {
 		const { name, batteryAge, location, capacity, chargeEfficiency, gridChargingPossible, maximumChargeRate, maximumDischargeRate, minimumChargeRate } = battery;
 
 		return [
@@ -62,6 +62,6 @@ export function mapElectricBatteryData(state: EcaasState): Record<string, Schema
 }
 
 /* Function unused yet while no diverter data to map. **/
-export function mapPvDiverterData(_state: EcaasState): EmptyObject {
+export function mapPvDiverterData(_state: ResolvedState): EmptyObject {
 	return {};
 }

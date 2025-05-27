@@ -1,8 +1,8 @@
 import { FloorType, SpaceHeatControlType, WindowShadingObjectType, type SchemaBuildingElement, type SchemaHeatingControlType, type SchemaThermalBridgingDetails, type SchemaWindowPart, type SchemaZoneInput } from "~/schema/api-schema.types";
-import type { FhsInputSchema } from "./fhsInputMapper";
+import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
 
-export function mapLivingSpaceFabricData(state: EcaasState): Partial<FhsInputSchema> {
+export function mapLivingSpaceFabricData(state: ResolvedState): Partial<FhsInputSchema> {
 	const zoneParameterData = mapZoneParametersData(state);
 	const floorData = mapFloorData(state);
 	const wallData = mapWallData(state);
@@ -26,24 +26,24 @@ export function mapLivingSpaceFabricData(state: EcaasState): Partial<FhsInputSch
 
 const defaultUValue = 0;
 
-function mapZoneParametersData(state: EcaasState): Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'> {
+export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'> {
 	const { livingSpaceZoneParameters } = state.livingSpaceFabric;
 
 	return {
-		HeatingControlType: livingSpaceZoneParameters.data.heatingControlType as SchemaHeatingControlType,
+		HeatingControlType: livingSpaceZoneParameters.heatingControlType as SchemaHeatingControlType,
 		Zone: {
 			"zone 1": {
-				SpaceHeatSystem: livingSpaceZoneParameters.data.spaceHeatingSystemForThisZone?.map(x => x.name),
-				SpaceCoolSystem: livingSpaceZoneParameters.data.spaceCoolingSystemForThisZone?.map(x => x.name),
+				SpaceHeatSystem: livingSpaceZoneParameters.spaceHeatingSystemForThisZone?.map(x => x.name),
+				SpaceCoolSystem: livingSpaceZoneParameters.spaceCoolingSystemForThisZone?.map(x => x.name),
 				SpaceHeatControl: SpaceHeatControlType.livingroom,
-				area: livingSpaceZoneParameters.data.area,
-				volume: livingSpaceZoneParameters.data.volume,
+				area: livingSpaceZoneParameters.area,
+				volume: livingSpaceZoneParameters.volume,
 			} as Partial<SchemaZoneInput>
 		}
 	} as Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'>;
 }
 
-function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
+export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'GroundFloorArea' | 'Zone'> {
 	const { livingSpaceGroundFloor, livingSpaceInternalFloor, livingSpaceExposedFloor } = state.livingSpaceFabric.livingSpaceFloors;
 
 	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: FloorType.Slab_edge_insulation }>) {
@@ -64,7 +64,7 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 		}
 	}
 
-	const groundFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceGroundFloor.data.map(x => ({
+	const groundFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceGroundFloor.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementGround',
 			area: x.surfaceAreaInZone,
@@ -90,7 +90,7 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 		}
 	}));
 
-	const internalFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalFloor?.data?.map(x => {
+	const internalFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalFloor?.map(x => {
 		const commonFields = {
 			area: x.surfaceAreaOfElement,
 			areal_heat_capacity: x.kappaValue,
@@ -98,6 +98,7 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 			pitch: 180,
 			u_value: 0.01
 		};
+
 
 		let internalFloor: SchemaBuildingElement;
 
@@ -117,7 +118,7 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 		return {[x.name]: internalFloor};
 	}) || [];
 
-	const exposedFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExposedFloor?.data?.map(x => ({
+	const exposedFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExposedFloor.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementOpaque',
 			height: x.length,
@@ -135,7 +136,7 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 	})) || [];
 
 	return {
-		GroundFloorArea: livingSpaceGroundFloor.data.map(x => x.surfaceAreaAllZones)[0],
+		GroundFloorArea: livingSpaceGroundFloor.map(x => x.surfaceAreaAllZones)[0],
 		Zone: {
 			"zone 1": {
 				BuildingElement: Object.assign(
@@ -149,10 +150,10 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 	} as Pick<FhsInputSchema, 'GroundFloorArea' | 'Zone'>;
 }
 
-function mapWallData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
+export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> {
 	const { livingSpaceExternalWall, livingSpaceInternalWall, livingSpacePartyWall, livingSpaceWallToUnheatedSpace } = state.livingSpaceFabric.livingSpaceWalls;
 
-	const externalWallData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExternalWall?.data.map(x => ({
+	const externalWallData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExternalWall?.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementOpaque',
 			pitch: x.pitch!,
@@ -169,7 +170,7 @@ function mapWallData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 		}
 	})) || [];
 
-	const internalWallData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalWall?.data.map(x => ({
+	const internalWallData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalWall?.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementAdjacentConditionedSpace',
 			pitch: x.pitch!,
@@ -180,7 +181,7 @@ function mapWallData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 		}
 	})) || [];
 
-	const partyWallData: { [key: string]: SchemaBuildingElement }[] = livingSpacePartyWall?.data.map(x => ({
+	const partyWallData: { [key: string]: SchemaBuildingElement }[] = livingSpacePartyWall?.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementOpaque',
 			pitch: x.pitch!,
@@ -197,7 +198,7 @@ function mapWallData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 		}
 	})) || [];
 
-	const wallToUnheatedSpaceData: { [key: string]: SchemaBuildingElement }[] = livingSpaceWallToUnheatedSpace?.data.map(x => ({
+	const wallToUnheatedSpaceData: { [key: string]: SchemaBuildingElement }[] = livingSpaceWallToUnheatedSpace?.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
 			pitch: x.pitch!,
@@ -224,10 +225,10 @@ function mapWallData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 	} as Pick<FhsInputSchema, 'Zone'>;
 }
 
-function mapCeilingAndRoofData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
+export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> {
 	const { livingSpaceCeilings, livingSpaceRoofs, livingSpaceUnheatedPitchedRoofs } = state.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
 
-	const ceilingData: { [key: string]: SchemaBuildingElement }[] = livingSpaceCeilings.data.map(x => ({
+	const ceilingData: { [key: string]: SchemaBuildingElement }[] = livingSpaceCeilings.map(x => ({
 		[x.name]: {
 			type: x.type === 'heatedSpace' ?
 				'BuildingElementAdjacentConditionedSpace' :
@@ -241,7 +242,7 @@ function mapCeilingAndRoofData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> 
 		}
 	}));
 
-	const roofData: { [key: string]: SchemaBuildingElement }[] = livingSpaceRoofs.data.map(x => ({
+	const roofData: { [key: string]: SchemaBuildingElement }[] = livingSpaceRoofs.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementOpaque',
 			pitch: x.pitch,
@@ -259,7 +260,7 @@ function mapCeilingAndRoofData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> 
 		}
 	}));
 
-	const unheatedPitchedRoofData: { [key: string]: SchemaBuildingElement }[] = livingSpaceUnheatedPitchedRoofs.data.map(x => ({
+	const unheatedPitchedRoofData: { [key: string]: SchemaBuildingElement }[] = livingSpaceUnheatedPitchedRoofs.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementOpaque',
 			pitch: x.pitch,
@@ -291,10 +292,10 @@ function mapCeilingAndRoofData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> 
 	} as Pick<FhsInputSchema, 'Zone'>;
 }
 
-function mapDoorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
+export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> {
 	const { livingSpaceInternalDoor, livingSpaceExternalGlazedDoor, livingSpaceExternalUnglazedDoor } = state.livingSpaceFabric.livingSpaceDoors;
 
-	const internalDoorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalDoor.data.map(x => {
+	const internalDoorData: Record<string, SchemaBuildingElement>[] = livingSpaceInternalDoor.map(x => {
 		const commonFields = {
 			pitch: x.pitch!,
 			area: x.surfaceArea,
@@ -321,7 +322,7 @@ function mapDoorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 		return {[x.name]: internalDoor};
 	});
 
-	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExternalGlazedDoor.data.map(x => {
+	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExternalGlazedDoor.map(x => {
 
 		function mapWindowPartList(data: ExternalGlazedDoorData): SchemaWindowPart[] {
 			if (data.numberOpenableParts === '1') {
@@ -378,7 +379,7 @@ function mapDoorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 		};
 	});
 
-	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExternalUnglazedDoor.data.map(x => ({
+	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExternalUnglazedDoor.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementOpaque',
 			pitch: x.pitch!,
@@ -409,7 +410,7 @@ function mapDoorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 	} as Pick<FhsInputSchema, 'Zone'>;
 }
 
-function mapWindowData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
+export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> {
 	const { livingSpaceWindows } = state.livingSpaceFabric;
 
 	function mapWindowPartList(data: WindowData): SchemaWindowPart[] {
@@ -446,7 +447,7 @@ function mapWindowData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 		return [];
 	}
 
-	const windowData: { [key: string]: SchemaBuildingElement }[] = livingSpaceWindows.data.map(x => ({
+	const windowData: { [key: string]: SchemaBuildingElement }[] = livingSpaceWindows.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementTransparent',
 			pitch: x.pitch!,
@@ -491,10 +492,10 @@ function mapWindowData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 	} as Pick<FhsInputSchema, 'Zone'>;
 }
 
-function mapThermalBridgingData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
+export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> {
 	const { livingSpaceLinearThermalBridges, livingSpacePointThermalBridges } = state.livingSpaceFabric.livingSpaceThermalBridging;
 
-	const linearThermalBridgesData: { [key: string]: SchemaThermalBridgingDetails }[] = livingSpaceLinearThermalBridges.data.map(x => ({
+	const linearThermalBridgesData: Record<string, SchemaThermalBridgingDetails>[] = livingSpaceLinearThermalBridges.map(x => ({
 		[x.name]: {
 			type: 'ThermalBridgeLinear',
 			junction_type: x.typeOfThermalBridge.toUpperCase(),
@@ -503,7 +504,7 @@ function mapThermalBridgingData(state: EcaasState): Pick<FhsInputSchema, 'Zone'>
 		}
 	}));
 
-	const pointThermalBridgesData: { [key: string]: SchemaThermalBridgingDetails }[] = livingSpacePointThermalBridges.data.map(x => ({
+	const pointThermalBridgesData: Record<string, SchemaThermalBridgingDetails>[] = livingSpacePointThermalBridges.map(x => ({
 		[x.name]: {
 			type: 'ThermalBridgePoint',
 			heat_transfer_coeff: x.heatTransferCoefficient
