@@ -11,7 +11,7 @@ defineProps<{
 		<div class="govuk-width-container">
 			<div class="govuk-service-navigation__container">
 				<span class="govuk-service-navigation__service-name">
-					<NuxtLink to="/" class="govuk-service-navigation__link">
+					<NuxtLink to="/" class="govuk-service-navigation__link" aria-label="Go to the homepage">
 						{{ serviceName }}
 					</NuxtLink>
 				</span>
