@@ -125,8 +125,8 @@ export type GroundFloorData = {
 };
 
 export interface WallsData {
-	livingSpaceExternalWall: EcaasForm<ExternalWallData[]>;
-	livingSpaceInternalWall: EcaasForm<InternalWallData[]>;
+	livingSpaceExternalWall?: EcaasForm<ExternalWallData[]>;
+	livingSpaceInternalWall?: EcaasForm<InternalWallData[]>;
 	livingSpaceWallToUnheatedSpace?: EcaasForm<WallsToUnheatedSpaceData[]>;
 	livingSpacePartyWall?: EcaasForm<PartyWallData[]>;
 }
