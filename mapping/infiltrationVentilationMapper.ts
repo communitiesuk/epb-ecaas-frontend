@@ -1,4 +1,4 @@
-import { objectEntries, objectFromEntries } from 'ts-extras';
+import { objectEntries, objectFromEntries, isEmpty } from 'ts-extras';
 import { type CombustionApplianceType, type SchemaCombustionAppliance, type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaVent, SupplyAirTemperatureControlType } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";

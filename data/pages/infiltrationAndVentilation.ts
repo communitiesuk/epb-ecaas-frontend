@@ -1,6 +1,6 @@
 import { VentType } from "~/schema/api-schema.types";
 import { PageType, type Page } from "./pages.types";
-import { isEmpty } from "~/utils/isEmpty";
+import { isEmpty } from "ts-extras";
 
 function noMhvrPresent():boolean {
 	const store = useEcaasStore();
