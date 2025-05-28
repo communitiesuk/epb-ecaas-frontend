@@ -345,12 +345,12 @@ export type PointThermalBridgeData = {
 };
 
 export type LivingSpaceZoneParametersData = {
-	area?: number;
-	volume?: number;
-	heatingControlType?: string;
-	spaceHeatingSystemForThisZone?: SpaceHeatingSystemData[];
-	spaceCoolingSystemForThisZone?: SpaceCoolingSystemData[];
-	spaceHeatControlSystemForThisZone?: SpaceHeatControlSystemData[];
+	area: number;
+	volume: number;
+	heatingControlType: string;
+	spaceHeatingSystemForThisZone: SpaceHeatingSystemData[];
+	spaceCoolingSystemForThisZone: SpaceCoolingSystemData[];
+	spaceHeatControlSystemForThisZone: SpaceHeatControlSystemData[];
 };
 
 export type SpaceHeatingSystemData = {

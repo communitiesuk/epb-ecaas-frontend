@@ -12,7 +12,10 @@ mockNuxtImport('navigateTo', () => {
 const zoneParametersData: LivingSpaceZoneParametersData = {
 	area: 10,
 	volume: 10,
-	heatingControlType: 'separateTempControl'
+	heatingControlType: 'separateTempControl',
+	spaceHeatingSystemForThisZone: [],
+	spaceCoolingSystemForThisZone: [],
+	spaceHeatControlSystemForThisZone: []
 };
 
 const floorsData: FloorsData = {
