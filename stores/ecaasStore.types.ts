@@ -521,7 +521,7 @@ export type MechanicalVentilationData = {
 }>;
 
 export type DuctworkData = {
-	name:string;
+	name: string;
 	mvhrUnit: string;
 	ductworkCrossSectionalShape: DuctShape;
 	ductType: DuctType;
@@ -554,16 +554,16 @@ export type CombustionApplianceData = {
 };
 
 export interface VentilationData {
-	dwellingHeight?: number;
-	dwellingEnvelopeArea?: number;
-	dwellingElevationalLevelAtBase?: number;
-	crossVentFactor?: boolean;
-	maxRequiredAirChangeRate?: number;
+	dwellingHeight: number;
+	dwellingEnvelopeArea: number;
+	dwellingElevationalLevelAtBase: number;
+	crossVentFactor: boolean;
+	maxRequiredAirChangeRate: number;
 }
 
 export interface AirPermeabilityData {
-	testPressure?: number;
-	airTightnessTestResult?: number;
+	testPressure: number;
+	airTightnessTestResult: number;
 }
 
 export interface HeatingSystems {
@@ -606,7 +606,7 @@ export type HeatInterfaceUnitData = {
 };
 
 export interface EnergySupplyData {
-	fuelType?: string[];
+	fuelType: string[];
 	co2PerKwh?: number;
 	co2PerKwhIncludingOutOfScope?: number;
 	kwhPerKwhDelivered?: number;
