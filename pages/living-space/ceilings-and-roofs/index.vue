@@ -4,7 +4,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type CeilingAndRoofType = keyof typeof store.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
-interface CeilingAndRoofData extends CeilingData, RoofData {};
+type CeilingAndRoofData = CeilingData & RoofData;
 
 function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 	const items = store.livingSpaceFabric.livingSpaceCeilingsAndRoofs[ceilingAndRoofType]?.data;

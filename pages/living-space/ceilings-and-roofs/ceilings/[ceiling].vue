@@ -10,8 +10,7 @@ const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
 		const {livingSpaceCeilings} = state.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
 
-		const ceiling: CeilingData = {
-			type: fields.type,
+		const commonFields = {
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			uValue: fields.uValue,
@@ -19,8 +18,25 @@ const saveForm = (fields: CeilingData) => {
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === '0' ? 0 : fields.pitch,
-			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 		};
+
+		let ceiling: CeilingData;
+
+		if (fields.type === 'unheatedSpace') {
+			ceiling = {
+				...commonFields,
+				type: fields.type,
+				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
+			};
+		} else if (fields.type === 'heatedSpace') {
+			ceiling = {
+				...commonFields,
+				type: fields.type,
+			};
+		} else {
+			throw new Error("Invalid ceiling type");
+		}
+
 		livingSpaceCeilings.complete = false;
 		saveToList(ceiling, livingSpaceCeilings);
 	});

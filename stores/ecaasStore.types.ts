@@ -188,8 +188,9 @@ export interface CeilingsAndRoofsData {
 	livingSpaceUnheatedPitchedRoofs: EcaasForm<RoofData[]>;
 }
 
+export type CeilingType = 'heatedSpace' | 'unheatedSpace';
+
 export type CeilingData = {
-	type: string;
 	name: string;
 	surfaceArea: number;
 	uValue: number;
@@ -197,8 +198,12 @@ export type CeilingData = {
 	massDistributionClass: MassDistributionClass;
 	pitchOption?: string;
 	pitch: number;
-	thermalResistanceOfAdjacentUnheatedSpace?: number;
-};
+} & TaggedUnion<'type', {
+	heatedSpace: EmptyObject;
+	unheatedSpace: {
+		thermalResistanceOfAdjacentUnheatedSpace: number;
+	}
+}>;
 
 export type RoofData = {
 	name: string;
