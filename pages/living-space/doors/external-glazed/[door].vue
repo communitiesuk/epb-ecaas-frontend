@@ -10,7 +10,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
 		const {livingSpaceExternalGlazedDoor} = state.livingSpaceFabric.livingSpaceDoors;
 
-		const door: ExternalGlazedDoorData = {
+		const commonFields = {
 			name: fields.name,
 			orientation: fields.orientation,
 			surfaceArea: fields.surfaceArea,
@@ -22,15 +22,70 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
-			numberOpenableParts: fields.numberOpenableParts,
-			frameToOpeningRatio: fields.frameToOpeningRatio,
-			maximumOpenableArea: fields.maximumOpenableArea,
-			heightOpenableArea: fields.heightOpenableArea,
-			midHeightOpenablePart1: fields.midHeightOpenablePart1,
-			midHeightOpenablePart2: fields.midHeightOpenablePart2,
-			midHeightOpenablePart3: fields.midHeightOpenablePart3,
-			midHeightOpenablePart4: fields.midHeightOpenablePart4,
 		};
+
+		let door: ExternalGlazedDoorData;
+
+		const numberParts = fields.numberOpenableParts;
+
+		switch (numberParts) {
+			case '0':
+				door = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+				};
+				console.log('door', door);
+				break;
+			case '1':
+				door = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					frameToOpeningRatio: fields.frameToOpeningRatio,
+					maximumOpenableArea: fields.maximumOpenableArea,
+					heightOpenableArea: fields.heightOpenableArea,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+				};
+				break;
+			case '2':
+				door = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					frameToOpeningRatio: fields.frameToOpeningRatio,
+					maximumOpenableArea: fields.maximumOpenableArea,
+					heightOpenableArea: fields.heightOpenableArea,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+					midHeightOpenablePart2: fields.midHeightOpenablePart2,
+				};
+				break;
+			case '3':
+				door = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					frameToOpeningRatio: fields.frameToOpeningRatio,
+					maximumOpenableArea: fields.maximumOpenableArea,
+					heightOpenableArea: fields.heightOpenableArea,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+					midHeightOpenablePart2: fields.midHeightOpenablePart2,
+					midHeightOpenablePart3: fields.midHeightOpenablePart3,
+				};
+				break;
+			case '4':
+				door = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					frameToOpeningRatio: fields.frameToOpeningRatio,
+					maximumOpenableArea: fields.maximumOpenableArea,
+					heightOpenableArea: fields.heightOpenableArea,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+					midHeightOpenablePart2: fields.midHeightOpenablePart2,
+					midHeightOpenablePart3: fields.midHeightOpenablePart3,
+					midHeightOpenablePart4: fields.midHeightOpenablePart4,
+				};
+				break;
+			default:
+				door = { ...commonFields } as ExternalGlazedDoorData;
+		}
+			
 		livingSpaceExternalGlazedDoor.complete = false;
 		saveToList(door, livingSpaceExternalGlazedDoor);
 	});
@@ -138,19 +193,18 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="numberOpenableParts"
 			type="govRadios"
-			value-type="number"
 			:options="{
-				1: '1',
-				2: '2',
-				3: '3',
-				4: '4',
-				0: 'None',
+				'1': '1',
+				'2': '2',
+				'3': '3',
+				'4': '4',
+				'0': 'None',
 			}"
 			label="Number of openable parts "
 			name="numberOpenableParts"
 			validation="required"
 		/>
-		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== 0">
+		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
 				id="frameToOpeningRatio"
 				type="govInputFloat"
@@ -186,7 +240,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				name="midHeightOpenablePart1"
 				validation="required | number | min:0 | max:100"
 			/>
-			<template v-if="model.numberOpenableParts !== 1">
+			<template v-if="model.numberOpenableParts !== '1'">
 				<FormKit
 					id="midHeightOpenablePart2"
 					type="govInputWithSuffix"
@@ -196,7 +250,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 					name="midHeightOpenablePart2"
 					validation="required | number | min:0 | max:100"
 				/>
-				<template v-if="model.numberOpenableParts !== 2">
+				<template v-if="model.numberOpenableParts !== '2'">
 					<FormKit
 						id="midHeightOpenablePart3"
 						type="govInputWithSuffix"
@@ -206,7 +260,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 						name="midHeightOpenablePart3"
 						validation="required | number | min:0 | max:100"
 					/>
-					<template v-if="model.numberOpenableParts !== 3">
+					<template v-if="model.numberOpenableParts !== '3'">
 						<FormKit
 							id="midHeightOpenablePart4"
 							type="govInputWithSuffix"

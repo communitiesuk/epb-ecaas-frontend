@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
 import { getUrl, getTabItems } from '#imports';
+import { arrayIncludes } from 'ts-extras';
 
 const title = "Living space fabric summary";
 const store = useEcaasStore();
@@ -302,13 +303,13 @@ const glazedDoorSummary: SummarySection = {
 			"Elevational height of building element at its base": x.elevationalHeight,
 			"Mid height": x.midHeight,
 			"Number of openable parts": x.numberOpenableParts,
-			"Frame to opening ratio": x.frameToOpeningRatio,
-			"Maximum openable area": x.maximumOpenableArea,
-			"Height of the openable area": x.heightOpenableArea,
-			"Mid height of the air flow path for openable part 1": x.midHeightOpenablePart1,
-			"Mid height of the air flow path for openable part 2": x.midHeightOpenablePart2,
-			"Mid height of the air flow path for openable part 3": x.midHeightOpenablePart3,
-			"Mid height of the air flow path for openable part 4": x.midHeightOpenablePart4
+			"Frame to opening ratio": x.numberOpenableParts !== '0' ? x.frameToOpeningRatio : undefined,
+			"Maximum openable area": x.numberOpenableParts !== '0' ? x.maximumOpenableArea : undefined,
+			"Height of the openable area": x.numberOpenableParts !== '0' ? x.heightOpenableArea : undefined,
+			"Mid height of the air flow path for openable part 1": x.numberOpenableParts !== '0' ? x.midHeightOpenablePart1 : undefined,
+			"Mid height of the air flow path for openable part 2": (x.numberOpenableParts !== '0' && x.numberOpenableParts !== '1') ? x.midHeightOpenablePart2 : undefined,
+			"Mid height of the air flow path for openable part 3": (x.numberOpenableParts === '3' || x.numberOpenableParts === '4') ? x.midHeightOpenablePart3 : undefined,
+			"Mid height of the air flow path for openable part 4": x.numberOpenableParts === '4' ? x.midHeightOpenablePart4 : undefined
 		};
 	}),
 	editUrl: getUrl('livingSpaceDoors')!

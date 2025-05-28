@@ -194,7 +194,7 @@ const doorsData: DoorsData = {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
-			numberOpenableParts: 0,
+			numberOpenableParts: '0',
 		}]
 	},
 	livingSpaceInternalDoor: {

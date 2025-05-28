@@ -242,6 +242,24 @@ export type ExternalUnglazedDoorData = {
 	massDistributionClass: MassDistributionClass;
 };
 
+type CommonOpenablePartsFields = {
+	frameToOpeningRatio?: number;
+	maximumOpenableArea?: number;
+	heightOpenableArea?: number;
+};
+type OnePartFields = CommonOpenablePartsFields & {
+	midHeightOpenablePart1: number;
+};
+type TwoPartsFields = OnePartFields & {
+	midHeightOpenablePart2: number;
+};
+type ThreePartsFields = TwoPartsFields & {
+	midHeightOpenablePart3: number;
+};
+type FourPartsFields = ThreePartsFields & {
+	midHeightOpenablePart4: number;
+};
+
 export type ExternalGlazedDoorData = {
 	name: string;
 	orientation: number;
@@ -254,15 +272,13 @@ export type ExternalGlazedDoorData = {
 	solarTransmittance: number;
 	elevationalHeight: number;
 	midHeight: number;
-	numberOpenableParts: number;
-	frameToOpeningRatio?: number;
-	maximumOpenableArea?: number;
-	heightOpenableArea?: number;
-	midHeightOpenablePart1?: number;
-	midHeightOpenablePart2?: number;
-	midHeightOpenablePart3?: number;
-	midHeightOpenablePart4?: number;
-};
+} & TaggedUnion<'numberOpenableParts', {
+	'0': EmptyObject;
+	'1': OnePartFields;
+	'2': TwoPartsFields;
+	'3': ThreePartsFields;
+	'4': FourPartsFields;
+}>;
 
 export type InternalDoorData = {
 	name: string;
