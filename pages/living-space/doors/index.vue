@@ -5,7 +5,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type DoorType = keyof typeof store.livingSpaceFabric.livingSpaceDoors;
-interface DoorData extends ExternalUnglazedDoorData, ExternalGlazedDoorData, InternalDoorData {};
+type DoorData = ExternalUnglazedDoorData & ExternalGlazedDoorData & InternalDoorData;
 
 function handleRemove(doorType: DoorType, index: number) {
 	const doors = store.livingSpaceFabric.livingSpaceDoors[doorType]?.data;

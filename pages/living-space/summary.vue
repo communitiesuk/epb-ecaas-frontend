@@ -326,7 +326,7 @@ const internalDoorSummary: SummarySection = {
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,
-			"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace
+			"Thermal resistance of adjacent unheated space": x.typeOfCeiling === 'unheatedSpace' ? x.thermalResistanceOfAdjacentUnheatedSpace : undefined,
 		};
 	}) || [],
 	editUrl: getUrl('livingSpaceDoors')!

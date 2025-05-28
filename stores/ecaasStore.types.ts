@@ -265,7 +265,6 @@ export type ExternalGlazedDoorData = {
 };
 
 export type InternalDoorData = {
-	typeOfCeiling: string;
 	name: string;
 	surfaceArea: number;
 	uValue: number;
@@ -273,8 +272,12 @@ export type InternalDoorData = {
 	massDistributionClass: MassDistributionClass;
 	pitchOption: string;
 	pitch?: number;
-	thermalResistanceOfAdjacentUnheatedSpace?: number;
-};
+} & TaggedUnion<'typeOfCeiling', {
+	heatedSpace: EmptyObject;
+	unheatedSpace: {
+		thermalResistanceOfAdjacentUnheatedSpace: number;
+	}
+}>;
 
 export type WindowData = {
 	name: string;

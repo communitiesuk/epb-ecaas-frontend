@@ -10,8 +10,7 @@ const saveForm = (fields: InternalDoorData) => {
 	store.$patch((state) => {
 		const {livingSpaceInternalDoor} = state.livingSpaceFabric.livingSpaceDoors;
 
-		const door: InternalDoorData = {
-			typeOfCeiling: fields.typeOfCeiling,
+		const commonFields = {
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			uValue: fields.uValue,
@@ -19,8 +18,23 @@ const saveForm = (fields: InternalDoorData) => {
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
-			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 		};
+
+		let door: InternalDoorData;
+		if (fields.typeOfCeiling === 'unheatedSpace') {
+			door = {
+				...commonFields,
+				typeOfCeiling: fields.typeOfCeiling,
+				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
+			};
+		} else if (fields.typeOfCeiling === 'heatedSpace') {
+			door = {
+				...commonFields,
+				typeOfCeiling: fields.typeOfCeiling,
+			};
+		} else {
+			throw new Error("Invalid type of ceiling");
+		}
 
 		saveToList(door, livingSpaceInternalDoor);
 	});
