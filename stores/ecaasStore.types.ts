@@ -681,3 +681,7 @@ export type AirConditioningData = {
 	convectionFraction: number;
 };
 
+export type UsesPitchComponent = {
+	pitch?: number;
+	pitchOption: string;
+};

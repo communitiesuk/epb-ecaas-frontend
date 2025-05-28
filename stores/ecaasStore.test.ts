@@ -322,3 +322,27 @@ describe('Ecaas Store', () => {
 		expect(status).toBe(formStatus.complete);
 	});
 });
+
+describe('extractPitch', () => {
+	it('should return the pitch from a string with a pitch', () => {
+		const result = extractPitch({
+			pitch: 45,
+			pitchOption: 'custom',
+		});
+		expect(result).toBe(45);
+	});
+
+	it('should return undefined when no pitch is present', () => {
+		const result = extractPitch({
+			pitchOption: 'custom',
+		});
+		expect(result).toBeUndefined();
+	});
+
+	it('should return number 90 when selected as pitchOption', () => {
+		const result = extractPitch({
+			pitchOption: '90',
+		});
+		expect(result).toBe(90);
+	});
+});
