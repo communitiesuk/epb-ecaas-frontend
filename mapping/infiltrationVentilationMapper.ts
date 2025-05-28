@@ -1,5 +1,5 @@
 import { objectEntries, objectFromEntries, isEmpty } from 'ts-extras';
-import { type CombustionApplianceType, type SchemaCombustionAppliance, type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaVent, SupplyAirTemperatureControlType } from "~/schema/api-schema.types";
+import { type CombustionApplianceType, type SchemaCombustionAppliance, type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaVent, SupplyAirTemperatureControlType, VentType } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 
@@ -73,10 +73,12 @@ function mapMechanicalVentilation(state: EcaasState) {
 		const key = x.name;
 		const val: SchemaMechanicalVentilation = {
 			vent_type: x.typeOfMechanicalVentilationOptions,
-			EnergySupply: "mains elec", // TODO validate this is correct
+			EnergySupply: "mains elec",
 			design_outdoor_air_flow_rate: x.airFlowRate,
 			sup_air_flw_ctrl: x.controlForSupplyAirflow,
-			sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST
+			sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
+			mvhr_location: x.typeOfMechanicalVentilationOptions === VentType.MVHR ? x.mvhrLocation : undefined,
+			mvhr_eff: x.typeOfMechanicalVentilationOptions === VentType.MVHR ? x.mvhrEfficiency : undefined,
 		};
 
 		return [key, val];
