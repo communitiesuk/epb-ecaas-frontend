@@ -385,7 +385,7 @@ export interface WaterHeating {
 export type StorageTankData = {
 	readonly id: string;
 	name: string;
-	heatSource?: string;
+	heatSource: string;
 	tankVolume: number;
 	dailyEnergyLoss: number;
 };

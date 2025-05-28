@@ -13,6 +13,7 @@ describe('water heating', () => {
 
 		const storageTank1: StorageTankData = {
 			id: uuidv4(),
+			heatSource: "🥕",
 			tankVolume: 5,
 			dailyEnergyLoss: 1,
 			name: "Storage tank 1"
