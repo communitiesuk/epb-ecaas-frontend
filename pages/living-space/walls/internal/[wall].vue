@@ -3,12 +3,12 @@ const title = "Internal wall";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const wallData = useItemToEdit('wall', store.livingSpaceFabric.livingSpaceWalls.livingSpaceInternalWall.data);
+const wallData = useItemToEdit('wall', store.livingSpaceFabric.livingSpaceWalls.livingSpaceInternalWall?.data);
 const model: Ref<InternalWallData> = ref(wallData!);
 
 const saveForm = (fields: InternalWallData) => {
 	store.$patch((state) => {
-		const {livingSpaceInternalWall} = state.livingSpaceFabric.livingSpaceWalls;
+		const {livingSpaceWalls} = state.livingSpaceFabric;
 
 		const wall: InternalWallData = {
 			name: fields.name,
@@ -19,8 +19,12 @@ const saveForm = (fields: InternalWallData) => {
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === '90' ? 90 : fields.pitch
 		};
-		livingSpaceInternalWall.complete = false;
-		saveToList(wall, livingSpaceInternalWall);
+
+		if (!livingSpaceWalls.livingSpaceInternalWall) {
+			livingSpaceWalls.livingSpaceInternalWall = { data: [] };
+		}
+		livingSpaceWalls.livingSpaceInternalWall.complete = false;
+		saveToList(wall, livingSpaceWalls.livingSpaceInternalWall);
 	});
 
 	navigateTo("/living-space/walls");

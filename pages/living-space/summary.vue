@@ -102,15 +102,15 @@ const floorSummarySections: SummarySection[] = [
 	exposedFloorSummary
 ];
 
-const externalWallData = store.livingSpaceFabric.livingSpaceWalls.livingSpaceExternalWall.data;
-const internalWallData = store.livingSpaceFabric.livingSpaceWalls.livingSpaceInternalWall.data;
+const externalWallData = store.livingSpaceFabric.livingSpaceWalls.livingSpaceExternalWall?.data;
+const internalWallData = store.livingSpaceFabric.livingSpaceWalls.livingSpaceInternalWall?.data;
 const wallToUnheatedSpaceData = store.livingSpaceFabric.livingSpaceWalls.livingSpaceWallToUnheatedSpace?.data;
 const partyWallData = store.livingSpaceFabric.livingSpaceWalls.livingSpacePartyWall?.data;
 
 const externalWallSummary: SummarySection = {
 	id: 'livingSpaceExternalWalls',
 	label: 'External wall',
-	data: externalWallData.map(x => {
+	data: externalWallData?.map(x => {
 		return {
 			"Name": x.name,
 			"Pitch": x.pitch,
@@ -124,14 +124,14 @@ const externalWallSummary: SummarySection = {
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
-	}),
+	}) || [],
 	editUrl: getUrl('livingSpaceWalls')!
 };
 
 const internalWallSummary: SummarySection = {
 	id: 'livingSpaceInternalWalls',
 	label: 'Internal wall',
-	data: internalWallData.map(x => {
+	data: internalWallData?.map(x => {
 		return {
 			"Name": x.name,
 			"Surface area of element": x.surfaceAreaOfElement,
@@ -140,7 +140,7 @@ const internalWallSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch
 		};
-	}),
+	}) || [],
 	editUrl: getUrl('livingSpaceWalls')!
 };
 

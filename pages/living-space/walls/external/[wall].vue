@@ -8,7 +8,7 @@ const model: Ref<ExternalWallData> = ref(wallData!);
 
 const saveForm = (fields: ExternalWallData) => {
 	store.$patch((state) => {
-		const {livingSpaceExternalWall} = state.livingSpaceFabric.livingSpaceWalls;
+		const {livingSpaceWalls} = state.livingSpaceFabric;
 
 		const wall: ExternalWallData = {
 			name: fields.name,
@@ -24,8 +24,12 @@ const saveForm = (fields: ExternalWallData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass
 		};
-		livingSpaceExternalWall.complete = false;
-		saveToList(wall, livingSpaceExternalWall);
+
+		if (!livingSpaceWalls.livingSpaceExternalWall) {
+			livingSpaceWalls.livingSpaceExternalWall = { data: [] };
+		}
+		livingSpaceWalls.livingSpaceExternalWall.complete = false;
+		saveToList(wall, livingSpaceWalls.livingSpaceExternalWall);
 	});
 
 	navigateTo("/living-space/walls");
