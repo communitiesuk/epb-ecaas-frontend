@@ -34,8 +34,6 @@ describe("mechanical ventilation overview", () => {
 		controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA,
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 14,
-		mvhrLocation: undefined,
-		mvhrEfficiency: undefined,
 	};
 
 	const mechanicalVentilation3: MechanicalVentilationData = {
@@ -45,8 +43,6 @@ describe("mechanical ventilation overview", () => {
 		controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA,
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 14,
-		mvhrLocation: undefined,
-		mvhrEfficiency: undefined,
 	};
 
 	const mechanicalVentilation4: MechanicalVentilationData = {

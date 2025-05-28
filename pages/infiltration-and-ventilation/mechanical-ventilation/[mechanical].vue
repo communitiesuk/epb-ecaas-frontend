@@ -33,16 +33,29 @@ const saveForm = (fields: MechanicalVentilationData) => {
 	store.$patch((state) => {
 		const { mechanicalVentilation } = state.infiltrationAndVentilation;
 
-		const mechanicalVentilationItem: MechanicalVentilationData = {
+		const commonFields = {
 			id: uuidv4(),
 			name: fields.name,
-			typeOfMechanicalVentilationOptions: fields.typeOfMechanicalVentilationOptions,
 			controlForSupplyAirflow: fields.controlForSupplyAirflow,
 			supplyAirTemperatureControl: fields.supplyAirTemperatureControl,
 			airFlowRate: fields.airFlowRate,
-			mvhrLocation: fields.mvhrLocation,
-			mvhrEfficiency: fields.mvhrEfficiency,
 		};
+
+		let mechanicalVentilationItem: MechanicalVentilationData;
+
+		if (fields.typeOfMechanicalVentilationOptions === VentType.MVHR) {
+			mechanicalVentilationItem = {
+				...commonFields,
+				typeOfMechanicalVentilationOptions: fields.typeOfMechanicalVentilationOptions,
+				mvhrLocation: fields.mvhrLocation,
+				mvhrEfficiency: fields.mvhrEfficiency,
+			};
+		} else {
+			mechanicalVentilationItem = {
+				...commonFields,
+				typeOfMechanicalVentilationOptions: fields.typeOfMechanicalVentilationOptions,
+			};
+		}
 
 		saveToList(mechanicalVentilationItem, mechanicalVentilation);
 		store.infiltrationAndVentilation.mechanicalVentilation.complete = false;

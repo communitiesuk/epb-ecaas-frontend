@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
 import { getTabItems, getUrl } from '#imports';
-import { CombustionApplianceType } from '~/schema/api-schema.types';
+import { CombustionApplianceType, VentType } from '~/schema/api-schema.types';
 
 const title = "Infiltration and ventilation summary";
 const store = useEcaasStore();
@@ -20,8 +20,10 @@ const mechanicalVentilationSummary: SummarySection = {
 			"Control for the supply airflow": x.controlForSupplyAirflow,
 			"Supply air temperature control": x.supplyAirTemperatureControl,
 			"Air flow rate": x.airFlowRate,
-			"MVHR location": x.mvhrLocation,
-			"MVHR efficiency": x.mvhrEfficiency,
+			...(x.typeOfMechanicalVentilationOptions == VentType.MVHR ? {
+				"MVHR location": x.mvhrLocation,
+				"MVHR efficiency": x.mvhrEfficiency,
+			} : {})
 		};
 	}) || [],
 	editUrl: getUrl('mechanicalVentilation')!

@@ -509,9 +509,16 @@ export type MechanicalVentilationData = {
 	controlForSupplyAirflow: SupplyAirFlowRateControlType;
 	supplyAirTemperatureControl: string;
 	airFlowRate: number;
-	mvhrLocation?: MVHRLocation;
-	mvhrEfficiency?: number;
-};
+} & TaggedUnion<'typeOfMechanicalVentilationOptions', {
+	[VentType.Intermittent_MEV]: EmptyObject;
+	[VentType.Centralised_continuous_MEV]: EmptyObject;
+	[VentType.Decentralised_continuous_MEV]: EmptyObject;
+	[VentType.MVHR]: {
+		mvhrLocation: MVHRLocation;
+		mvhrEfficiency: number;
+	};
+	[VentType.PIV]: EmptyObject;
+}>;
 
 export type DuctworkData = {
 	name:string;

@@ -31,8 +31,6 @@ describe('checkMvhrHasDuctwork', () => {
 		controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA,
 		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 14,
-		mvhrLocation: undefined,
-		mvhrEfficiency: undefined,
 	};
 
 	const ductworkData1: DuctworkData = {
