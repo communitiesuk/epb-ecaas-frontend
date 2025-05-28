@@ -5,7 +5,9 @@ import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 import merge from 'deepmerge';
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
 
-export function mapFhsInputData(state: EcaasState): FhsInputSchema {
+export type ResolvedState = Resolved<EcaasState>;
+
+export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const inputData = exampleData as FhsInputSchema;
 
 	const dwellingDetailsData = mapDwellingDetailsData(state);
