@@ -13,7 +13,7 @@ export default defineOAuthCognitoEventHandler({
 		region: process.env.AWS_DEFAULT_REGION,
 		scope: ['openid']
 	},
-	async onSuccess(event: H3Event, { user }: unknown) {
+	async onSuccess(event: H3Event, { user }: { user: { id: unknown } }) {
 		await setUserSession(event, {
 			user: {
 				id: user.id
