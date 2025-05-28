@@ -1,12 +1,13 @@
 import { defineStore } from "pinia";
-import type { EcaasState } from "./ecaasStore.types";
+import type { EcaasForm, EcaasState } from "./ecaasStore.types";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
 import { PageType, type Page } from "~/data/pages/pages.types";
 import { CombustionApplianceType } from "~/schema/api-schema.types";
+import type { EmptyObject } from "type-fest";
 
 function getInitialState(): EcaasState {
-	return {
+	const store: NulledForms<EcaasState> = {
 		dwellingDetails: {
 			generalSpecifications: { data: {} },
 			appliances: { data: {} },
@@ -104,6 +105,7 @@ function getInitialState(): EcaasState {
 			airConditioning: { data: [] }
 		}
 	};
+	return store as EcaasState;
 }	
 
 export const useEcaasStore = defineStore("ecaas", {
@@ -145,3 +147,5 @@ export const useEcaasStore = defineStore("ecaas", {
 		storage: piniaPluginPersistedstate.localStorage(),
 	},
 });
+
+export type NulledForms<T> = { [P in keyof T]: T[P] extends EcaasForm<infer U> ? EcaasForm<U | EmptyObject> : NulledForms<T[P]> };

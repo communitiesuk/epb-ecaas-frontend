@@ -36,7 +36,7 @@ export type GeneralSpecificationsData = {
 }>;
 
 export interface AppliancesData {
-	appliances?: ApplianceKey[];
+	appliances: ApplianceKey[];
 }
 
 export type ShadingData = {
@@ -49,10 +49,10 @@ export type ShadingData = {
 };
 
 export interface ExternalFactorsData {
-	altitude?: number;
-	typeOfExposure?: VentilationShieldClass;
-	terrainType?: TerrainClass;
-	noiseNuisance?: boolean;
+	altitude: number;
+	typeOfExposure: VentilationShieldClass;
+	terrainType: TerrainClass;
+	noiseNuisance: boolean;
 }
 
 export interface LivingSpaceFabric {
