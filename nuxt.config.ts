@@ -1,3 +1,4 @@
+import type { NuxtPage } from 'nuxt/schema';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import yn from 'yn';
 
@@ -37,7 +38,6 @@ export default defineNuxtConfig({
 					additionalData: `
 						@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
 						@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`
-
 				}
 			}
 		},
@@ -55,7 +55,8 @@ export default defineNuxtConfig({
 		'@pinia/nuxt',
 		'pinia-plugin-persistedstate/nuxt',
 		'@nuxt/test-utils/module',
-		'@nuxt/eslint'
+		'@nuxt/eslint',
+		'nuxt-auth-utils'
 	],
 	plugins: [
 		'~/plugins/xray-fetch.server',
@@ -72,5 +73,21 @@ export default defineNuxtConfig({
 	},
 	experimental: {
 		watcher: "parcel"
+	},
+	hooks: {
+		'pages:extend' (pages) {
+			function setAuthMiddleware(pages: NuxtPage[]) {
+				for (const page of pages) {
+					page.meta ||= {};
+					page.meta.middleware = ['authenticated'];
+
+					if (page.children) {
+						setAuthMiddleware(page.children);
+					}
+				}
+			}
+			
+			setAuthMiddleware(pages);
+		}
 	}
 });
