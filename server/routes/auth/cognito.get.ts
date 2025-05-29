@@ -25,9 +25,13 @@ export default defineEventHandler(async event => {
 
 			return sendRedirect(event, '/');
 		},
-		onError(event: H3Event, error: H3Error) {
+		onError(_: H3Event, error: H3Error) {
 			console.error('Cognito OAuth error:', error);
-			return sendRedirect(event, '/error');
+
+			throw createError({
+				statusCode: 401,
+				statusMessage: 'Authentication error'
+			});
 		}
 	})(event);
 });
