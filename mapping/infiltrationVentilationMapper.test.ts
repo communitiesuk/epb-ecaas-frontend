@@ -46,5 +46,7 @@ describe('infiltration ventilation mapper', () => {
 		expect(firstMechVent?.sup_air_temp_ctrl).toBe(SupplyAirTemperatureControlType.CONST);
 		expect(firstMechVent?.mvhr_location).toBe(MVHRLocation.inside);
 		expect(firstMechVent?.mvhr_eff).toBe(1);
+		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
+		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 	});
 });

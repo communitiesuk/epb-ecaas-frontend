@@ -79,6 +79,8 @@ function mapMechanicalVentilation(state: EcaasState) {
 			sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
 			mvhr_location: x.typeOfMechanicalVentilationOptions === VentType.MVHR ? x.mvhrLocation : undefined,
 			mvhr_eff: x.typeOfMechanicalVentilationOptions === VentType.MVHR ? x.mvhrEfficiency : undefined,
+			measured_air_flow_rate: 37,
+			measured_fan_power: 12.26
 		};
 
 		return [key, val];
