@@ -17,8 +17,6 @@ export default defineEventHandler(async event => {
 			scope: ['openid']
 		},
 		async onSuccess(event: H3Event, { user }: { user: { id: unknown } }) {
-			console.log('Auth success');
-
 			await setUserSession(event, {
 				user: {
 					id: user.id
