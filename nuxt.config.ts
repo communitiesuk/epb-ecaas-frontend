@@ -87,7 +87,9 @@ export default defineNuxtConfig({
 				}
 			}
 			
-			setAuthMiddleware(pages);
+			if (process.env.NODE_ENV !== 'development') {
+				setAuthMiddleware(pages);
+			}
 		}
 	}
 });
