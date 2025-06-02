@@ -1,5 +1,5 @@
 import { objectEntries, objectFromEntries, isEmpty } from 'ts-extras';
-import { type CombustionApplianceType, type SchemaCombustionAppliance, type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaVent, SupplyAirTemperatureControlType, VentType } from "~/schema/api-schema.types";
+import { type CombustionApplianceType, type SchemaCombustionAppliance, type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaMechanicalVentilationDuctwork, type SchemaVent, SupplyAirTemperatureControlType, VentType } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 
@@ -71,6 +71,7 @@ function mapVents(state: EcaasState) {
 function mapMechanicalVentilation(state: EcaasState) {
 	const entries = state.infiltrationAndVentilation.mechanicalVentilation.data.map((x):[string, SchemaMechanicalVentilation] => {
 		const key = x.name;
+		const mvhr_ductwork: SchemaMechanicalVentilationDuctwork[] = mapMvhrDuctwork(x.name, state);
 		const val: SchemaMechanicalVentilation = {
 			vent_type: x.typeOfMechanicalVentilationOptions,
 			EnergySupply: "mains elec",
@@ -80,10 +81,34 @@ function mapMechanicalVentilation(state: EcaasState) {
 			mvhr_location: x.typeOfMechanicalVentilationOptions === VentType.MVHR ? x.mvhrLocation : undefined,
 			mvhr_eff: x.typeOfMechanicalVentilationOptions === VentType.MVHR ? x.mvhrEfficiency : undefined,
 			measured_air_flow_rate: 37,
-			measured_fan_power: 12.26
+			measured_fan_power: 12.26,
+			ductwork: x.typeOfMechanicalVentilationOptions === VentType.MVHR ? mvhr_ductwork : undefined,
 		};
 
 		return [key, val];
 	});
 	return Object.fromEntries(entries);
+}
+
+function mapMvhrDuctwork(mechanicalVentilationName: string, state: EcaasState): SchemaMechanicalVentilationDuctwork[] {
+	const mvhrductworks = state.infiltrationAndVentilation.ductwork?.data.filter(hasMechanicalVentilation);
+
+	function hasMechanicalVentilation(ductwork: DuctworkData) {
+		return mechanicalVentilationName === ductwork.mvhrUnit;
+	}
+
+	return mvhrductworks.map((x) => {
+		const val: SchemaMechanicalVentilationDuctwork = {
+			cross_section_shape: x.ductworkCrossSectionalShape,
+			// duct_perimeter_mm
+			duct_type: x.ductType,
+			external_diameter_mm: x.externalDiameterOfDuctwork,
+			insulation_thermal_conductivity: x.thermalInsulationConductivityOfDuctwork,
+			insulation_thickness_mm: x.insulationThickness,
+			internal_diameter_mm: x.internalDiameterOfDuctwork,
+			length: x.lengthOfDuctwork,
+			reflective: x.surfaceReflectivity
+		};
+		return val;
+	});
 }

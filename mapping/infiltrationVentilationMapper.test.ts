@@ -1,4 +1,4 @@
-import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType } from '~/schema/api-schema.types';
+import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType } from '~/schema/api-schema.types';
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
 
 describe('infiltration ventilation mapper', () => {
@@ -9,9 +9,9 @@ describe('infiltration ventilation mapper', () => {
 		store.$reset();
 	});
 
-	it('maps mechanical ventilation input state to FHS input request', () => {
+	it('maps mechanical ventilation of type MVHR input state to FHS input request', () => {
 		// Arrange
-		const state: MechanicalVentilationData[] = [{
+		const mechVent: MechanicalVentilationData[] = [{
 			id: "bathroom exhaust fan",
 			name: "bathroom exhaust fan",
 			typeOfMechanicalVentilationOptions: VentType.MVHR,
@@ -22,11 +22,28 @@ describe('infiltration ventilation mapper', () => {
 			mvhrEfficiency: 1,
 		}];
 
+		const ductwork: DuctworkData[] = [{
+			name: "ductwork 1",
+			mvhrUnit: "bathroom exhaust fan",
+			ductworkCrossSectionalShape: DuctShape.circular,
+			internalDiameterOfDuctwork: 200,
+			externalDiameterOfDuctwork: 300,
+			lengthOfDuctwork: 10.0,
+			thermalInsulationConductivityOfDuctwork: 0.023,
+			insulationThickness: 100,
+			surfaceReflectivity: false,
+			ductType: DuctType.extract
+		}];
+		
+
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: state
-				}				
+					data: mechVent
+				},
+				ductwork: {
+					data: ductwork
+				}			
 			}
 		});
     
@@ -48,5 +65,55 @@ describe('infiltration ventilation mapper', () => {
 		expect(firstMechVent?.mvhr_eff).toBe(1);
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
+		expect(firstMechVent?.ductwork).toBeDefined();
+
+		const firstDuctwork = firstMechVent!.ductwork![0];
+		expect(firstDuctwork?.cross_section_shape).toBe(DuctShape.circular);
+		expect(firstDuctwork?.internal_diameter_mm).toBe(200);
+		expect(firstDuctwork?.external_diameter_mm).toBe(300);
+		expect(firstDuctwork?.length).toBe(10);
+		expect(firstDuctwork?.insulation_thermal_conductivity).toBe(0.023);
+		expect(firstDuctwork?.insulation_thickness_mm).toBe(100);
+		expect(firstDuctwork?.reflective).toBe(false);
+		expect(firstDuctwork?.duct_type).toBe(DuctType.extract);
+	});
+
+
+
+	it('maps mechanical ventilation of type intermittent MEV input state to FHS input request', () => {
+		// Arrange
+		const mechVent: MechanicalVentilationData[] = [{
+			id: "bathroom exhaust fan",
+			name: "bathroom exhaust fan",
+			typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
+			controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA, // to be removed (EC-540)
+			supplyAirTemperatureControl: "TO_BE_REMOVED", // to be removed (EC-540)
+			airFlowRate: 30,
+		}];
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: mechVent
+				}				
+			}
+		});
+
+		const fhsInputData = mapInfiltrationVentilationData(store);
+    
+		// Assert
+		expect(fhsInputData.InfiltrationVentilation).toBeDefined();
+		expect(fhsInputData.InfiltrationVentilation?.MechanicalVentilation).toBeDefined();
+
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!['bathroom exhaust fan'];
+		expect(firstMechVent).toBeDefined();
+		expect(firstMechVent?.EnergySupply).toBe("mains elec");
+		expect(firstMechVent?.vent_type).toBe(VentType.Intermittent_MEV);
+		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(30);
+		expect(firstMechVent?.sup_air_flw_ctrl).toBe(SupplyAirFlowRateControlType.ODA); 
+		expect(firstMechVent?.sup_air_temp_ctrl).toBe(SupplyAirTemperatureControlType.CONST);
+		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
+		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
+		expect(firstMechVent?.ductwork).toBeUndefined();
 	});
 });
