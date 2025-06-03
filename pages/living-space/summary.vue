@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
 import { getUrl, getTabItems } from '#imports';
-import { arrayIncludes } from 'ts-extras';
 
 const title = "Living space fabric summary";
 const store = useEcaasStore();
