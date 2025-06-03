@@ -136,6 +136,7 @@ describe('infiltration ventilation mapper', () => {
 			}
 		});
 
+		// Act
 		const fhsInputData = mapInfiltrationVentilationData(store);
     
 		// Assert
@@ -152,5 +153,42 @@ describe('infiltration ventilation mapper', () => {
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeUndefined();
+	});
+
+	it('maps vents to FHS input request', async () => {
+		const ventName = 'Acme'; 
+
+		// Arrange
+		const ventData: VentData[] = [{
+			name: ventName,
+			typeOfVent: "Air brick",
+			effectiveVentilationArea: 100,
+			openingRatio: 0.6,
+			midHeightOfZone: 1.5,
+			pressureDifference: 20,
+			orientation: 180,
+			pitch: 45,
+		}];
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					data: ventData
+				}				
+			}
+		});
+
+		// Act
+		const fhsInputData = mapInfiltrationVentilationData(store);
+
+		// Assert
+		expect(fhsInputData.InfiltrationVentilation?.Vents).toBeDefined();
+
+		const vent = fhsInputData.InfiltrationVentilation!.Vents![ventName];
+		expect(vent?.area_cm2).toBe(100);
+		expect(vent?.mid_height_air_flow_path).toBe(1.5);
+		expect(vent?.pressure_difference_ref).toBe(20);
+		expect(vent?.orientation360).toBe(180);
+		expect(vent?.pitch).toBe(45);
 	});
 });
