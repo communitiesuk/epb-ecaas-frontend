@@ -233,7 +233,7 @@ const windowData: WindowData = {
 	sideFinRightDistance: 1,
 	sideFinLeftDepth: 1,
 	sideFinLeftDistance: 1,
-	type: WindowTreatmentType.blinds,
+	treatmentType: WindowTreatmentType.blinds,
 	thermalResistivityIncrease: 1,
 	solarTransmittanceReduction: 0.1,
 };

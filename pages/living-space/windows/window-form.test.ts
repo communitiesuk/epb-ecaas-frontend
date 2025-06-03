@@ -32,7 +32,7 @@ describe('window', () => {
 		sideFinRightDistance: 1,
 		sideFinLeftDepth: 1,
 		sideFinLeftDistance: 1,
-		type: WindowTreatmentType.blinds,
+		treatmentType: WindowTreatmentType.blinds,
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
 	};
@@ -61,7 +61,7 @@ describe('window', () => {
 		await user.type(screen.getByTestId('sideFinRightDistance'), '1');
 		await user.type(screen.getByTestId('sideFinLeftDepth'), '1');
 		await user.type(screen.getByTestId('sideFinLeftDistance'), '1');
-		await user.click(screen.getByTestId('type_blinds'));
+		await user.click(screen.getByTestId('treatmentType_blinds'));
 		await user.type(screen.getByTestId('thermalResistivityIncrease'), '1');
 		await user.type(screen.getByTestId('solarTransmittanceReduction'), '0.1');
 
@@ -105,7 +105,7 @@ describe('window', () => {
 		expect((await screen.findByTestId('sideFinRightDistance') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('sideFinLeftDepth') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('sideFinLeftDistance') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('type_blinds')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('treatmentType_blinds')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('thermalResistivityIncrease') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('solarTransmittanceReduction') as HTMLInputElement).value).toBe('0.1');
 	});
@@ -127,7 +127,7 @@ describe('window', () => {
 		expect((await screen.findByTestId('midHeight_error'))).toBeDefined();
 		expect((await screen.findByTestId('numberOpenableParts_error'))).toBeDefined();
 
-		expect((await screen.queryByTestId('type_error'))).toBeNull();
+		expect((await screen.queryByTestId('treatmentType_error'))).toBeNull();
 		expect((await screen.queryByTestId('thermalResistivityIncrease_error'))).toBeNull();
 		expect((await screen.queryByTestId('solarTransmittanceReduction_error'))).toBeNull();
 		expect((await screen.queryByTestId('overhangDepth_error'))).toBeNull();
@@ -186,7 +186,7 @@ describe('window', () => {
 	it('displays curtainsControlObject when the curtains option is selected', async () => {
 		await renderSuspended(Window);
     
-		await user.click(screen.getByTestId('type_curtains'));
+		await user.click(screen.getByTestId('treatmentType_curtains'));
 		await user.tab();
     
 		expect((await screen.getByTestId('curtainsControlObject_auto_motorised'))).toBeDefined();

@@ -370,7 +370,7 @@ const windowSummary: SummarySection = {
 			"Side fin right distance": x.sideFinRightDistance,
 			"Side fin left depth": x.sideFinLeftDepth,
 			"Side fin left distance": x.sideFinLeftDistance,
-			"Type": x.type,
+			"Type": x.treatmentType,
 			"Curtains control object reference": x.curtainsControlObject,
 			"Thermal resistivity increase": x.thermalResistivityIncrease,
 			"Solar transmittance reduction": x.solarTransmittanceReduction

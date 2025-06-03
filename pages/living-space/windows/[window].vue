@@ -8,7 +8,7 @@ const { saveToList } = useForm();
 const window = useItemToEdit('window', store.livingSpaceFabric.livingSpaceWindows.data);
 const model: Ref<WindowData> = ref(window!);
 
-const windowTypeOptions: Record<WindowTreatmentType, SnakeToSentenceCase<WindowTreatmentType>> = {
+const windowTreatmentTypeOptions: Record<WindowTreatmentType, SnakeToSentenceCase<WindowTreatmentType>> = {
 	curtains: 'Curtains',
 	blinds: 'Blinds',
 };
@@ -21,7 +21,7 @@ const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
 		const { livingSpaceWindows } = state.livingSpaceFabric;
 
-		const window: WindowData = {
+		const commonFields = {
 			name: fields.name,
 			orientation: fields.orientation,
 			surfaceArea: fields.surfaceArea,
@@ -47,11 +47,23 @@ const saveForm = (fields: WindowData) => {
 			sideFinRightDistance: fields.sideFinRightDistance,
 			sideFinLeftDepth: fields.sideFinLeftDepth,
 			sideFinLeftDistance: fields.sideFinLeftDistance,
-			type: fields.type,
-			curtainsControlObject: fields.curtainsControlObject,
-			thermalResistivityIncrease: fields.thermalResistivityIncrease,
-			solarTransmittanceReduction: fields.solarTransmittanceReduction,
 		};
+
+		let window: WindowData;
+
+		if (fields.treatmentType) {
+			window = {
+				...commonFields,
+				treatmentType: fields.treatmentType,
+				curtainsControlObject: fields.treatmentType === 'curtains' ? fields.curtainsControlObject : undefined,
+				thermalResistivityIncrease: fields.thermalResistivityIncrease,
+				solarTransmittanceReduction: fields.solarTransmittanceReduction,
+			};
+		} else {
+			window = {
+				...commonFields,
+			};
+		}
 
 		saveToList(window, livingSpaceWindows);
 	});
@@ -228,15 +240,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovAccordion>
 			<GovAccordionSection id="curtainsAndBlinds" title="Curtains and blinds (optional inputs)" :index="0" heading-size="m">
 				<FormKit
-					id="type"
+					id="treatmentType"
 					type="govRadios"
-					:options="windowTypeOptions"
+					:options="windowTreatmentTypeOptions"
 					label="Type"
 					help="Determines behaviour (curtains are scheduled, blinds respond to sunlight)"
-					name="type"
+					name="treatmentType"
 				/>
 				<FormKit
-					v-if="model.type === 'curtains'"
+					v-if="model.treatmentType === 'curtains'"
 					id="curtainsControlObject"
 					type="govRadios"
 					:options="curtainsControlObjectOptions"

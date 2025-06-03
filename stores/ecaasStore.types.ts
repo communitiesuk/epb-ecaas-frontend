@@ -321,11 +321,21 @@ export type WindowData = {
 	sideFinRightDistance?: number;
 	sideFinLeftDepth?: number;
 	sideFinLeftDistance?: number;
-	type?: WindowTreatmentType;
+	treatmentType?: WindowTreatmentType;
 	curtainsControlObject?: WindowTreatmentControl;
 	thermalResistivityIncrease?: number;
 	solarTransmittanceReduction?: number;
-};
+} & ({
+	treatmentType: WindowTreatmentType;
+	curtainsControlObject?: WindowTreatmentControl;
+	thermalResistivityIncrease: number;
+	solarTransmittanceReduction: number;
+} | {
+	treatmentType?: undefined;
+	curtainsControlObject?: never;
+	thermalResistivityIncrease?: never;
+	solarTransmittanceReduction?: never;
+});
 
 export interface ThermalBridgingData {
 	livingSpaceLinearThermalBridges: EcaasForm<LinearThermalBridgeData[]>;
