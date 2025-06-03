@@ -29,6 +29,23 @@ const populateValidForm = async () => {
 	await user.click(screen.getByTestId("surfaceReflectivity_yes"));
 };
 
+const populateValidFormWithRectangularShape = async () => {
+	await user.type(screen.getByTestId("name"), "Ductwork 1");
+	await user.click(screen.getByTestId("mvhrUnit_5124f2fe-f15b-4a56-ba5a-1a7751ac506f"));
+	await user.click(
+		screen.getByTestId("ductworkCrossSectionalShape_rectangular")
+	);
+	await user.click(screen.getByTestId("ductType_intake"));
+	await user.type(screen.getByTestId("ductPerimeter"), "200");
+	await user.type(screen.getByTestId("insulationThickness"), "100");
+	await user.type(screen.getByTestId("lengthOfDuctwork"), "100");
+	await user.type(
+		screen.getByTestId("thermalInsulationConductivityOfDuctwork"),
+		"10"
+	);
+	await user.click(screen.getByTestId("surfaceReflectivity_yes"));
+};
+
 describe("ductwork form", async () => {
 	const store = useEcaasStore();
 
@@ -59,6 +76,18 @@ describe("ductwork form", async () => {
 		ductType: DuctType.intake,
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
+		insulationThickness: 100,
+		lengthOfDuctwork: 100,
+		thermalInsulationConductivityOfDuctwork: 10,
+		surfaceReflectivity: true,
+	};
+
+	const ductwork2: DuctworkData = {
+		name: "Ductwork 1",
+		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
+		ductworkCrossSectionalShape: DuctShape.rectangular,
+		ductType: DuctType.intake,
+		ductPerimeter: 200,
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
 		thermalInsulationConductivityOfDuctwork: 10,
@@ -101,7 +130,25 @@ describe("ductwork form", async () => {
 		expect(screen.getByText("MVHR_2")).toBeDefined();
 	});
 
-	it("data is saved to store when form is valid", async () => {
+	it("should show relevant inputs for circular duct shape", async() => {
+		await renderSuspended(Ductwork);
+		await user.click(screen.getByTestId("ductworkCrossSectionalShape_circular"));
+
+		expect(screen.getByTestId("internalDiameterOfDuctwork")).toBeDefined();
+		expect(screen.getByTestId("externalDiameterOfDuctwork")).toBeDefined();
+		expect(screen.queryByTestId("ductPerimeter")).toBeNull();
+	});
+
+	it("should show relevant inputs for rectangular duct shape", async() => {
+		await renderSuspended(Ductwork);
+		await user.click(screen.getByTestId("ductworkCrossSectionalShape_rectangular"));
+
+		expect(screen.queryByTestId("internalDiameterOfDuctwork")).toBeNull();
+		expect(screen.queryByTestId("externalDiameterOfDuctwork")).toBeNull();
+		expect(screen.getByTestId("ductPerimeter")).toBeDefined();
+	});
+
+	test("data with circular shape is saved to store when form is valid", async () => {
 		addStoreData();
 		await renderSuspended(Ductwork);
 		await populateValidForm();
@@ -109,6 +156,16 @@ describe("ductwork form", async () => {
 		const { data } = store.infiltrationAndVentilation.ductwork;
 
 		expect(data[0]).toEqual(ductwork1);
+	});
+
+	test("data with rectangular shape is saved to store when form is valid", async () => {
+		addStoreData();
+		await renderSuspended(Ductwork);
+		await populateValidFormWithRectangularShape();
+		await user.click(screen.getByRole("button"));
+		const { data } = store.infiltrationAndVentilation.ductwork;
+
+		expect(data[0]).toEqual(ductwork2);
 	});
 
 	it("form populated when data exists in state", async () => {

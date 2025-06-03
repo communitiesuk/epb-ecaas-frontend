@@ -161,19 +161,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required" />
 
 		<FormKit
-			id="ductworkCrossSectionalShape"
-			type="govRadios"
-			:options="ductworkCrossSectionalShapeOptions"
-			label="Ductwork cross sectional shape"
-			name="ductworkCrossSectionalShape"
-			validation="required"
-		/>
-		<FormKit
 			id="ductType"
 			type="govRadios"
 			:options="ductTypeOptions"
 			label="Duct type"
 			name="ductType"
+			validation="required"
+		/>
+		<FormKit
+			id="ductworkCrossSectionalShape"
+			type="govRadios"
+			:options="ductworkCrossSectionalShapeOptions"
+			label="Ductwork cross sectional shape"
+			name="ductworkCrossSectionalShape"
 			validation="required"
 		/>
 		<template v-if="model.ductworkCrossSectionalShape === DuctShape.circular">
