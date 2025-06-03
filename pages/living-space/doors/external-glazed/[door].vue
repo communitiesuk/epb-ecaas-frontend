@@ -34,7 +34,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
 				};
-				console.log('door', door);
 				break;
 			case '1':
 				door = {

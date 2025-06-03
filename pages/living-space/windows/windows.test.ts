@@ -30,7 +30,7 @@ describe('windows', () => {
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
-		numberOpenableParts: 0,
+		numberOpenableParts: '0',
 	};
 
 	const window2: WindowData = {

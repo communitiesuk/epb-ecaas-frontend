@@ -307,25 +307,22 @@ export type WindowData = {
 	solarTransmittance: number;
 	elevationalHeight: number;
 	midHeight: number;
-	numberOpenableParts: number;
-	frameToOpeningRatio?: number;
-	maximumOpenableArea?: number;
-	heightOpenableArea?: number;
-	midHeightOpenablePart1?: number;
-	midHeightOpenablePart2?: number;
-	midHeightOpenablePart3?: number;
-	midHeightOpenablePart4?: number;
-	overhangDepth?: number;
-	overhangDistance?: number;
-	sideFinRightDepth?: number;
-	sideFinRightDistance?: number;
-	sideFinLeftDepth?: number;
-	sideFinLeftDistance?: number;
-	treatmentType?: WindowTreatmentType;
-	curtainsControlObject?: WindowTreatmentControl;
-	thermalResistivityIncrease?: number;
-	solarTransmittanceReduction?: number;
-} & ({
+} & TaggedUnion<'numberOpenableParts', {
+	'0': EmptyObject;
+	'1': OnePartFields;
+	'2': TwoPartsFields;
+	'3': ThreePartsFields;
+	'4': FourPartsFields;
+}> & ({
+	overhangDepth: number;
+	overhangDistance: number;
+} | EmptyObject) & ({
+	sideFinRightDepth: number;
+	sideFinRightDistance: number;
+} | EmptyObject) & ({
+	sideFinLeftDepth: number;
+	sideFinLeftDistance: number;
+} | EmptyObject) & ({
 	treatmentType: WindowTreatmentType;
 	curtainsControlObject?: WindowTreatmentControl;
 	thermalResistivityIncrease: number;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WindowTreatmentControl, type WindowTreatmentType } from '~/schema/api-schema.types';
+import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
 
 const title = "Window";
 const store = useEcaasStore();
@@ -33,35 +33,94 @@ const saveForm = (fields: WindowData) => {
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
-			numberOpenableParts: fields.numberOpenableParts,
-			frameToOpeningRatio: fields.frameToOpeningRatio,
-			maximumOpenableArea: fields.maximumOpenableArea,
-			heightOpenableArea: fields.heightOpenableArea,
-			midHeightOpenablePart1: fields.midHeightOpenablePart1,
-			midHeightOpenablePart2: fields.midHeightOpenablePart2,
-			midHeightOpenablePart3: fields.midHeightOpenablePart3,
-			midHeightOpenablePart4: fields.midHeightOpenablePart4,
-			overhangDepth: fields.overhangDepth,
-			overhangDistance: fields.overhangDistance,
-			sideFinRightDepth: fields.sideFinRightDepth,
-			sideFinRightDistance: fields.sideFinRightDistance,
-			sideFinLeftDepth: fields.sideFinLeftDepth,
-			sideFinLeftDistance: fields.sideFinLeftDistance,
+			overhangDepth: 'overhangDepth' in fields ? fields.overhangDepth : undefined,
+			overhangDistance: 'overhangDepth' in fields ? fields.overhangDistance: undefined,
+			sideFinRightDepth: 'sideFinRightDepth' in fields ? fields.sideFinRightDepth : undefined,
+			sideFinRightDistance: 'sideFinRightDepth' in fields ? fields.sideFinRightDistance : undefined,
+			sideFinLeftDepth: 'sideFinLeftDepth' in fields ? fields.sideFinLeftDepth : undefined,
+			sideFinLeftDistance: 'sideFinLeftDepth' in fields ? fields.sideFinLeftDistance : undefined,
 		};
+
+		let commonFieldsIncludingOpenableParts;
+
+		const numberParts = fields.numberOpenableParts;
+
+		switch (numberParts) {
+			case '0':
+				commonFieldsIncludingOpenableParts = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+				};
+				break;
+			case '1':
+				commonFieldsIncludingOpenableParts = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					frameToOpeningRatio: fields.frameToOpeningRatio,
+					maximumOpenableArea: fields.maximumOpenableArea,
+					heightOpenableArea: fields.heightOpenableArea,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+				};
+				break;
+			case '2':
+				commonFieldsIncludingOpenableParts = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					frameToOpeningRatio: fields.frameToOpeningRatio,
+					maximumOpenableArea: fields.maximumOpenableArea,
+					heightOpenableArea: fields.heightOpenableArea,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+					midHeightOpenablePart2: fields.midHeightOpenablePart2,
+				};
+				break;
+			case '3':
+				commonFieldsIncludingOpenableParts = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					frameToOpeningRatio: fields.frameToOpeningRatio,
+					maximumOpenableArea: fields.maximumOpenableArea,
+					heightOpenableArea: fields.heightOpenableArea,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+					midHeightOpenablePart2: fields.midHeightOpenablePart2,
+					midHeightOpenablePart3: fields.midHeightOpenablePart3,
+				};
+				break;
+			case '4':
+				commonFieldsIncludingOpenableParts = {
+					...commonFields,
+					numberOpenableParts: fields.numberOpenableParts,
+					frameToOpeningRatio: fields.frameToOpeningRatio,
+					maximumOpenableArea: fields.maximumOpenableArea,
+					heightOpenableArea: fields.heightOpenableArea,
+					midHeightOpenablePart1: fields.midHeightOpenablePart1,
+					midHeightOpenablePart2: fields.midHeightOpenablePart2,
+					midHeightOpenablePart3: fields.midHeightOpenablePart3,
+					midHeightOpenablePart4: fields.midHeightOpenablePart4,
+				};
+				break;
+			default:
+				commonFieldsIncludingOpenableParts = { ...commonFields } as WindowData;
+				break;
+		}
 
 		let window: WindowData;
 
 		if (fields.treatmentType) {
 			window = {
-				...commonFields,
+				...commonFieldsIncludingOpenableParts,
 				treatmentType: fields.treatmentType,
-				curtainsControlObject: fields.treatmentType === 'curtains' ? fields.curtainsControlObject : undefined,
 				thermalResistivityIncrease: fields.thermalResistivityIncrease,
 				solarTransmittanceReduction: fields.solarTransmittanceReduction,
 			};
+			if (fields.treatmentType === WindowTreatmentType.curtains) {
+				window = {
+					...window,
+					curtainsControlObject: fields.curtainsControlObject,
+				};
+			}
 		} else {
 			window = {
-				...commonFields,
+				...commonFieldsIncludingOpenableParts,
 			};
 		}
 
@@ -125,14 +184,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the height from the ground to the midpoint of the window" name="midHeight"
 			validation="required | number | min:0 | max:100" />
 		<FormKit
-			id="numberOpenableParts" type="govRadios" value-type="number" :options="{
+			id="numberOpenableParts" type="govRadios" :options="{
 				1: '1',
 				2: '2',
 				3: '3',
 				4: '4',
 				0: 'None',
 			}" label="Number of openable parts " name="numberOpenableParts" validation="required" />
-		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== 0">
+		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
 				id="frameToOpeningRatio" type="govInputFloat" label="Frame to opening ratio"
 				help="The proportion of the window taken up by the frame compared to the total opening area"
@@ -151,21 +210,21 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Enter the height from the ground to the midpoint of the openable section of the window"
 				name="midHeightOpenablePart1"
 				validation="required | number | min:0 | max:100" />
-			<template v-if="model.numberOpenableParts !== 1">
+			<template v-if="model.numberOpenableParts !== '1'">
 				<FormKit
 					id="midHeightOpenablePart2" type="govInputWithSuffix" suffix-text="m"
 					label="Mid height of the air flow path for openable part 2 "
 					help="Enter the height from the ground to the midpoint of the openable section of the window"
 					name="midHeightOpenablePart2"
 					validation="required | number | min:0 | max:100" />
-				<template v-if="model.numberOpenableParts !== 2">
+				<template v-if="model.numberOpenableParts !== '2'">
 					<FormKit
 						id="midHeightOpenablePart3" type="govInputWithSuffix" suffix-text="m"
 						label="Mid height of the air flow path for openable part 3 "
 						help="Enter the height from the ground to the midpoint of the openable section of the window"
 						name="midHeightOpenablePart3"
 						validation="required | number | min:0 | max:100" />
-					<template v-if="model.numberOpenableParts !== 3">
+					<template v-if="model.numberOpenableParts !== '3'">
 						<FormKit
 							id="midHeightOpenablePart4" type="govInputWithSuffix" suffix-text="m"
 							label="Mid height of the air flow path for openable part 4 "
