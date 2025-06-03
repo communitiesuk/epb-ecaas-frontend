@@ -1,5 +1,5 @@
 import { objectEntries, objectFromEntries, isEmpty } from 'ts-extras';
-import { type CombustionApplianceType, type SchemaCombustionAppliance, type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaMechanicalVentilationDuctwork, type SchemaVent, SupplyAirTemperatureControlType, VentType } from "~/schema/api-schema.types";
+import { type CombustionApplianceType, DuctShape, type SchemaCombustionAppliance, type SchemaInfiltrationVentilation, type SchemaMechanicalVentilation, type SchemaMechanicalVentilationDuctwork, type SchemaVent, SupplyAirTemperatureControlType, VentType } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 
@@ -100,12 +100,12 @@ function mapMvhrDuctwork(mechanicalVentilationName: string, state: EcaasState): 
 	return mvhrductworks.map((x) => {
 		const val: SchemaMechanicalVentilationDuctwork = {
 			cross_section_shape: x.ductworkCrossSectionalShape,
-			// duct_perimeter_mm
 			duct_type: x.ductType,
-			external_diameter_mm: x.externalDiameterOfDuctwork,
 			insulation_thermal_conductivity: x.thermalInsulationConductivityOfDuctwork,
 			insulation_thickness_mm: x.insulationThickness,
-			internal_diameter_mm: x.internalDiameterOfDuctwork,
+			internal_diameter_mm:  x.ductworkCrossSectionalShape === DuctShape.circular ? x.internalDiameterOfDuctwork : undefined,
+			external_diameter_mm: x.ductworkCrossSectionalShape === DuctShape.circular ? x.externalDiameterOfDuctwork : undefined,
+			duct_perimeter_mm: x.ductworkCrossSectionalShape === DuctShape.rectangular ? x.ductPerimeter : undefined,
 			length: x.lengthOfDuctwork,
 			reflective: x.surfaceReflectivity
 		};

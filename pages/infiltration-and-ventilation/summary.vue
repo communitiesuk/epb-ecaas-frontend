@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
 import { getTabItems, getUrl } from '#imports';
-import { CombustionApplianceType, VentType } from '~/schema/api-schema.types';
+import { CombustionApplianceType, DuctShape, VentType } from '~/schema/api-schema.types';
 
 const title = "Infiltration and ventilation summary";
 const store = useEcaasStore();
@@ -42,8 +42,9 @@ const ductworkSummary: SummarySection = {
 			"MVHR unit": mvhr[0]?.name,
 			"Ductwork cross sectional shape": x.ductworkCrossSectionalShape,
 			"Duct type": x.ductType,
-			"Internal diameter of ductwork": x.internalDiameterOfDuctwork,
-			"External diameter of ductwork": x.externalDiameterOfDuctwork,
+			"Internal diameter of ductwork": x.ductworkCrossSectionalShape === DuctShape.circular ? x.internalDiameterOfDuctwork : undefined,
+			"External diameter of ductwork": x.ductworkCrossSectionalShape === DuctShape.circular ? x.externalDiameterOfDuctwork : undefined,
+			"Perimeter of ductwork": x.ductworkCrossSectionalShape === DuctShape.rectangular ? x.ductPerimeter : undefined,
 			"Thermal insulation conductivity of ductwork": x.thermalInsulationConductivityOfDuctwork,
 			"Surface reflectivity": x.surfaceReflectivity ? "reflective" : "not reflective",
 		};

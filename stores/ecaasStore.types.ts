@@ -535,13 +535,19 @@ export type DuctworkData = {
 	mvhrUnit: string;
 	ductworkCrossSectionalShape: DuctShape;
 	ductType: DuctType;
-	internalDiameterOfDuctwork: number;
-	externalDiameterOfDuctwork: number;
 	insulationThickness: number;
 	lengthOfDuctwork: number;
 	thermalInsulationConductivityOfDuctwork: number;
 	surfaceReflectivity: boolean;
-};
+} & TaggedUnion<'ductworkCrossSectionalShape', {
+	[DuctShape.circular]: {
+		internalDiameterOfDuctwork: number;
+		externalDiameterOfDuctwork: number;
+	};
+	[DuctShape.rectangular]: {
+		ductPerimeter: number;
+	};
+}>;
 
 export type VentData = {
 	name: string;

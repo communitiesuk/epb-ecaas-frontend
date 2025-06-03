@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DuctShape, DuctType } from '~/schema/api-schema.types';
+import { DuctShape, type DuctType } from '~/schema/api-schema.types';
 import { VentType } from '~/schema/api-schema.types';
 
 const title = "MVHR ductwork";
@@ -29,19 +29,38 @@ const saveForm = (fields: DuctworkData) => {
 	store.$patch((state) => {
 		const { ductwork } = state.infiltrationAndVentilation;
 
-		const ductworkItem: DuctworkData = {
+		const commonFields = {
 			name: fields.name,
 			mvhrUnit: fields.mvhrUnit,
-			ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
 			ductType: fields.ductType,
-			internalDiameterOfDuctwork: fields.internalDiameterOfDuctwork,
-			externalDiameterOfDuctwork: fields.externalDiameterOfDuctwork,
 			insulationThickness: fields.insulationThickness,
 			lengthOfDuctwork: fields.lengthOfDuctwork,
 			thermalInsulationConductivityOfDuctwork:
         fields.thermalInsulationConductivityOfDuctwork,
 			surfaceReflectivity: fields.surfaceReflectivity,
 		};
+
+		let ductworkItem: DuctworkData;
+
+		switch (fields.ductworkCrossSectionalShape) {
+			case DuctShape.circular:
+				ductworkItem = {
+					...commonFields,
+					ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
+					internalDiameterOfDuctwork: fields.internalDiameterOfDuctwork,
+					externalDiameterOfDuctwork: fields.externalDiameterOfDuctwork,
+				};
+				break;
+			case DuctShape.rectangular:
+				ductworkItem = {
+					...commonFields,
+					ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
+					ductPerimeter: fields.ductPerimeter,
+				};
+				break;
+			default:
+				throw new Error("Missed a duct shape case");
+		}
 
 		saveToList(ductworkItem, ductwork);
 	});
@@ -157,22 +176,35 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="ductType"
 			validation="required"
 		/>
+		<template v-if="model.ductworkCrossSectionalShape === DuctShape.circular">
+			<FormKit
+				id="internalDiameterOfDuctwork"
+				type="govInputWithSuffix"
+				suffix-text="mm"
+				label="Internal diameter of ductwork"
+				name="internalDiameterOfDuctwork"
+				validation="required | number | min:0 | max:1000"
+			/>
+			<FormKit
+				id="externalDiameterOfDuctwork"
+				type="govInputWithSuffix"
+				suffix-text="mm"
+				label="External diameter of ductwork"
+				name="externalDiameterOfDuctwork"
+				validation="required | number | min:0 | max:1000"
+			/>
+		</template>
+
 		<FormKit
-			id="internalDiameterOfDuctwork"
+			v-if="model.ductworkCrossSectionalShape === DuctShape.rectangular"
+			id="ductPerimeter"
 			type="govInputWithSuffix"
 			suffix-text="mm"
-			label="Internal diameter of ductwork"
-			name="internalDiameterOfDuctwork"
+			label="Perimeter of ductwork"
+			name="ductPerimeter"
 			validation="required | number | min:0 | max:1000"
 		/>
-		<FormKit
-			id="externalDiameterOfDuctwork"
-			type="govInputWithSuffix"
-			suffix-text="mm"
-			label="External diameter of ductwork"
-			name="externalDiameterOfDuctwork"
-			validation="required | number | min:0 | max:1000"
-		/>
+		
 		<FormKit
 			id="insulationThickness"
 			type="govInputWithSuffix"

@@ -83,8 +83,9 @@ describe("ductwork form", async () => {
 		expect(form.getByText("MVHR unit")).toBeDefined();
 		expect(form.getByText("Ductwork cross sectional shape")).toBeDefined();
 		expect(form.getByText("Duct type")).toBeDefined();
-		expect(form.getByText("Internal diameter of ductwork")).toBeDefined();
-		expect(form.getByText("External diameter of ductwork")).toBeDefined();
+		expect(form.queryByText("Internal diameter of ductwork")).toBeNull();
+		expect(form.queryByText("External diameter of ductwork")).toBeNull();
+		expect(form.queryByText("Perimeter of ductwork")).toBeNull();
 		expect(form.getByText("Insulation thickness")).toBeDefined();
 		expect(form.getByText("Length of ductwork")).toBeDefined();
 		expect(
@@ -191,8 +192,6 @@ describe("ductwork form", async () => {
 			"mvhrUnit_error",
 			"ductworkCrossSectionalShape_error",
 			"ductType_error",
-			"internalDiameterOfDuctwork_error",
-			"externalDiameterOfDuctwork_error",
 			"insulationThickness_error",
 			"lengthOfDuctwork_error",
 			"thermalInsulationConductivityOfDuctwork_error",
