@@ -2,6 +2,16 @@ import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperat
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
 
 describe('infiltration ventilation mapper', () => {
+	const mechVentMvhr: MechanicalVentilationData[] = [{
+		id: "bathroom exhaust fan",
+		name: "bathroom exhaust fan",
+		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA, // to be removed (EC-540)
+		supplyAirTemperatureControl: "TO_BE_REMOVED", // to be removed (EC-540)
+		airFlowRate: 30,
+		mvhrLocation: MVHRLocation.inside,
+		mvhrEfficiency: 1,
+	}];
 
 	const store = useEcaasStore();
 
@@ -11,39 +21,11 @@ describe('infiltration ventilation mapper', () => {
 
 	it('maps mechanical ventilation of type MVHR input state to FHS input request', () => {
 		// Arrange
-		const mechVent: MechanicalVentilationData[] = [{
-			id: "bathroom exhaust fan",
-			name: "bathroom exhaust fan",
-			typeOfMechanicalVentilationOptions: VentType.MVHR,
-			controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA, // to be removed (EC-540)
-			supplyAirTemperatureControl: "TO_BE_REMOVED", // to be removed (EC-540)
-			airFlowRate: 30,
-			mvhrLocation: MVHRLocation.inside,
-			mvhrEfficiency: 1,
-		}];
-
-		const ductwork: DuctworkData[] = [{
-			name: "ductwork 1",
-			mvhrUnit: "bathroom exhaust fan",
-			ductworkCrossSectionalShape: DuctShape.circular,
-			internalDiameterOfDuctwork: 200,
-			externalDiameterOfDuctwork: 300,
-			lengthOfDuctwork: 10.0,
-			thermalInsulationConductivityOfDuctwork: 0.023,
-			insulationThickness: 100,
-			surfaceReflectivity: false,
-			ductType: DuctType.extract
-		}];
-		
-
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: mechVent
-				},
-				ductwork: {
-					data: ductwork
-				}			
+					data: mechVentMvhr
+				},	
 			}
 		});
     
@@ -66,8 +48,43 @@ describe('infiltration ventilation mapper', () => {
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeDefined();
+	});
 
+
+	it('maps ductwork input state to FHS input request', () => {
+		// Arrange
+		
+		const ductwork: DuctworkData[] = [{
+			name: "ductwork 1",
+			mvhrUnit: "bathroom exhaust fan",
+			ductworkCrossSectionalShape: DuctShape.circular,
+			internalDiameterOfDuctwork: 200,
+			externalDiameterOfDuctwork: 300,
+			lengthOfDuctwork: 10.0,
+			thermalInsulationConductivityOfDuctwork: 0.023,
+			insulationThickness: 100,
+			surfaceReflectivity: false,
+			ductType: DuctType.extract
+		}];
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: mechVentMvhr
+				},
+				ductwork: {
+					data: ductwork
+				}			
+			}
+		});
+    
+		// Act
+		const fhsInputData = mapInfiltrationVentilationData(store);
+
+		// Assert
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!['bathroom exhaust fan'];
 		const firstDuctwork = firstMechVent!.ductwork![0];
+
 		expect(firstDuctwork?.cross_section_shape).toBe(DuctShape.circular);
 		expect(firstDuctwork?.internal_diameter_mm).toBe(200);
 		expect(firstDuctwork?.external_diameter_mm).toBe(300);
@@ -76,6 +93,26 @@ describe('infiltration ventilation mapper', () => {
 		expect(firstDuctwork?.insulation_thickness_mm).toBe(100);
 		expect(firstDuctwork?.reflective).toBe(false);
 		expect(firstDuctwork?.duct_type).toBe(DuctType.extract);
+	});
+
+	it('maps input state for MVHR without ductwork to FHS input request', () => {
+		// Arrange
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: mechVentMvhr
+				},	
+			}
+		});
+    
+		// Act
+		const fhsInputData = mapInfiltrationVentilationData(store);
+
+		// Assert
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!['bathroom exhaust fan'];
+
+		expect(firstMechVent!.ductwork).toStrictEqual([]);
 	});
 
 
