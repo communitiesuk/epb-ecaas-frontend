@@ -107,4 +107,25 @@ describe("heating systems mapper", () => {
 
 		expect(result).toEqual(expectedResult);
 	});
+
+	// it("maps heat emitters with wet distribution", () => {
+	// 	// Arrange
+	// 	const state = {
+	// 		heatingSystems: {
+	// 			heatEmitting: {
+	// 				wetDistribution: {
+	// 					data: [
+	// 						{
+	// 							name: "Radiators",
+	// 							typeOfHeatEmitter: "radiator",
+	// 							heatEmitterType: "wet",
+	// 							heatEmitterLocation: "internal",
+	// 							heatEmitterControlType: "thermostatic"
+	// 						}
+	// 					]
+	// 				}
+	// 			}
+	// 		}
+	// 	};
+	// });
 });

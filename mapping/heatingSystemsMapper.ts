@@ -2,8 +2,10 @@ import { objectFromEntries } from "ts-extras";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { FuelType } from "~/schema/api-schema.types";
 
-export function mapHeatingSystemsData(_state: EcaasState): Partial<FhsInputSchema> {
-	return {};
+export function mapHeatingSystemsData(state: EcaasState): Partial<FhsInputSchema> {
+	return {
+		...mapEnergySupplyData(state),
+	};
 }
 
 export function mapEnergySupplyData(state: EcaasState): Pick<FhsInputSchema, 'EnergySupply'> {
@@ -26,3 +28,5 @@ export function mapEnergySupplyData(state: EcaasState): Pick<FhsInputSchema, 'En
 		}
 	};
 }
+
+// TODO need a mapHeatGenerationData function here, though this specifies products in the PCDB, heat pumps initially
