@@ -1,5 +1,5 @@
 import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType } from '~/schema/api-schema.types';
-import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
+import { mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentsData } from './infiltrationVentilationMapper';
 
 describe('infiltration ventilation mapper', () => {
 	const mechVentMvhr: MechanicalVentilationData[] = [{
@@ -137,13 +137,10 @@ describe('infiltration ventilation mapper', () => {
 		});
 
 		// Act
-		const fhsInputData = mapInfiltrationVentilationData(store);
+		const fhsInputData = mapMechanicalVentilationData(store);
     
 		// Assert
-		expect(fhsInputData.InfiltrationVentilation).toBeDefined();
-		expect(fhsInputData.InfiltrationVentilation?.MechanicalVentilation).toBeDefined();
-
-		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!['bathroom exhaust fan'];
+		const firstMechVent = fhsInputData['bathroom exhaust fan'];
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
 		expect(firstMechVent?.vent_type).toBe(VentType.Intermittent_MEV);
@@ -179,12 +176,10 @@ describe('infiltration ventilation mapper', () => {
 		});
 
 		// Act
-		const fhsInputData = mapInfiltrationVentilationData(store);
+		const fhsInputData = mapVentsData(store);
 
 		// Assert
-		expect(fhsInputData.InfiltrationVentilation?.Vents).toBeDefined();
-
-		const vent = fhsInputData.InfiltrationVentilation!.Vents![ventName];
+		const vent = fhsInputData[ventName];
 		expect(vent?.area_cm2).toBe(100);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
 		expect(vent?.pressure_difference_ref).toBe(20);

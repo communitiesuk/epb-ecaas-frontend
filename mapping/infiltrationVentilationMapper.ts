@@ -37,7 +37,7 @@ export function mapInfiltrationVentilationData(state: EcaasState): Partial<FhsIn
 	} as Pick<FhsInputSchema, 'InfiltrationVentilation'>;
 }
 
-function mapMechanicalVentilationData(state: EcaasState) {
+export function mapMechanicalVentilationData(state: EcaasState) {
 	const entries = state.infiltrationAndVentilation.mechanicalVentilation.data.map((x):[string, SchemaMechanicalVentilation] => {
 		const key = x.name;
 		const val: Omit<SchemaMechanicalVentilation, 'ductwork'> = {
@@ -80,7 +80,7 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: EcaasStat
 	});
 }
 
-function mapVentsData(state: EcaasState) {
+export function mapVentsData(state: EcaasState) {
 	const entries = state.infiltrationAndVentilation.vents.data.map((x): [string, SchemaVent] => {
 		const key = x.name;
 		const val: SchemaVent = {
