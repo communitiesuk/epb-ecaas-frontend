@@ -361,7 +361,6 @@ describe("heat emitting", () => {
 			typeOfSpaceHeater: WetEmitterWet_emitter_type.radiator,
 			exponent: 1.3,
 			constant: 0.08,
-			emitterFloorArea: undefined,
 			convectionFractionWet: 0.2,
 			ecoDesignControllerClass: "1",
 			minimumFlowTemp: 20,

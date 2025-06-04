@@ -4,7 +4,7 @@ const title = "Heat emitting";
 const store = useEcaasStore();
 
 type HeatEmittingType = keyof typeof store.heatingSystems.heatEmitting;
-interface HeatEmittingData extends ElectricStorageHeaterData, InstantElectricStorageData, WetDistributionData, WarmAirHeatPumpData {}
+type HeatEmittingData = ElectricStorageHeaterData & InstantElectricStorageData & WetDistributionData & WarmAirHeatPumpData;
 
 function handleRemove(emittingType: HeatEmittingType, index: number) {
 	const emitters = store.heatingSystems.heatEmitting[emittingType]?.data;

@@ -33,28 +33,44 @@ const saveForm = (fields: WetDistributionData) => {
 	store.$patch((state) => {
 		const { wetDistribution } = state.heatingSystems.heatEmitting;
 
-		const item: WetDistributionData = {
+		const commonFields = {
 			name: fields.name,
 			zoneReference: fields.zoneReference,
 			heatSource: fields.heatSource,
 			thermalMass: fields.thermalMass,
 			designTempDiffAcrossEmitters: fields.designTempDiffAcrossEmitters,
 			designFlowTemp: fields.designFlowTemp,
-			typeOfSpaceHeater: fields.typeOfSpaceHeater,
-			convectionFractionWet: fields.convectionFractionWet,
-			emitterFloorArea: fields.emitterFloorArea,
 			ecoDesignControllerClass: fields.ecoDesignControllerClass,
 			minimumFlowTemp: fields.minimumFlowTemp,
 			minOutdoorTemp: 0,
 			maxOutdoorTemp: 15
 		};
-		if(item.typeOfSpaceHeater === WetEmitterWet_emitter_type.radiator){
-			item.exponent = 1.3;
-			item.constant = 0.08;
-		};
-		if(item.typeOfSpaceHeater === WetEmitterWet_emitter_type.ufh){
-			item.equivalentThermalMass = 80;
-			item.systemPerformanceFactor = 5;
+
+		let item: WetDistributionData;
+
+		switch (fields.typeOfSpaceHeater) {
+			case WetEmitterWet_emitter_type.radiator:
+				item = {
+					...commonFields,
+					typeOfSpaceHeater: fields.typeOfSpaceHeater,
+					convectionFractionWet: fields.convectionFractionWet,
+					exponent: 1.3,
+					constant: 0.08,
+				};
+				break;
+
+			case WetEmitterWet_emitter_type.ufh:
+				item = {
+					...commonFields,
+					typeOfSpaceHeater: fields.typeOfSpaceHeater,
+					emitterFloorArea: fields.emitterFloorArea,
+					equivalentThermalMass: 80,
+					systemPerformanceFactor: 5,
+				};
+				break;
+
+			default:
+				throw new Error("Unsupported type of space heater");
 		};
 
 		wetDistribution.complete = false;

@@ -127,9 +127,7 @@ const wetDistributionSummary: SummarySection = {
 			"Design flow temperature": wetDistribution.designFlowTemp,
 			"Type of space heater": wetDistribution.typeOfSpaceHeater === WetEmitterWet_emitter_type.radiator
 				? "Radiators"
-				: wetDistribution.typeOfSpaceHeater === WetEmitterWet_emitter_type.ufh
-					? "Underfloor heating"
-					: wetDistribution.typeOfSpaceHeater,
+				: "Underfloor heating",
 		};
 		if (
 			wetDistribution.typeOfSpaceHeater === WetEmitterWet_emitter_type.radiator &&

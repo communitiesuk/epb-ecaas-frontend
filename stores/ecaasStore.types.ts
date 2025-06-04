@@ -654,20 +654,22 @@ export type WetDistributionData = {
 	thermalMass: number,
 	designTempDiffAcrossEmitters: number,
 	designFlowTemp: number,
-	typeOfSpaceHeater: WetEmitterWet_emitter_type,
-	convectionFractionWet?: number,
-	exponent?: number, 
-	constant?: number,
-	emitterFloorArea?: number,
-	equivalentThermalMass?: number,
-	systemPerformanceFactor?: number,
-	ecoDesignControllerClass: string,
+	ecoDesignControllerClass: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8',
 	minimumFlowTemp: number,
 	minOutdoorTemp: number,
 	maxOutdoorTemp: number
-
-
-};
+} & TaggedUnion<'typeOfSpaceHeater', {
+	[WetEmitterWet_emitter_type.radiator]: {
+		convectionFractionWet: number,
+		exponent: number, 
+		constant: number,
+	},
+	[WetEmitterWet_emitter_type.ufh]: {
+		emitterFloorArea: number,
+		equivalentThermalMass: number,
+		systemPerformanceFactor: number,
+	}
+}>;
 
 export interface PvAndBatteries {
 	pvSystem: EcaasForm<PvSystemData[]>;
