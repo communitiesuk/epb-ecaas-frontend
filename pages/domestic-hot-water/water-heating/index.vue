@@ -78,6 +78,7 @@ function checkIsComplete(){
 	<h1 class="govuk-heading-l">
 		Water Heating
 	</h1>
+	<p class="govuk-body">For now, this service only allows homes to be modelled with the following. In future releases there will be further options.</p>
 	<CustomList
 		id="storageTank"
 		title="Hot water cylinder"
