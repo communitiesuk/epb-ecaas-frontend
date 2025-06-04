@@ -94,57 +94,6 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('immersionHeater', index)"
 		@duplicate="(index: number) => handleDuplicate('immersionHeater', index)"
 	/>
-	<h2 class="govuk-heading-l">
-		Other water heat sources
-	</h2>
-	<CustomList
-		id="pointOfUse"
-		title="Point of use"
-		:form-url="`${page?.url!}/point-of-use`"
-		:items="store.domesticHotWater.waterHeating.pointOfUse.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('pointOfUse', index)"
-		@duplicate="(index: number) => handleDuplicate('pointOfUse', index)"
-	/>
-	<CustomList
-		id="heatPump"
-		title="Heat pump (hot water only)"
-		:form-url="`${page?.url!}/heat-pump`"
-		:items="store.domesticHotWater.waterHeating.heatPump.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('heatPump', index)"
-		@duplicate="(index: number) => handleDuplicate('heatPump', index)"
-	/>
-	<CustomList
-		id="combiBoiler"
-		title="Combi boiler"
-		:form-url="`${page?.url!}/combi-boiler`"
-		:items="store.domesticHotWater.waterHeating.combiBoiler.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('combiBoiler', index)"
-		@duplicate="(index: number) => handleDuplicate('combiBoiler', index)"
-	/>
-	<CustomList
-		id="heatBattery"
-		title="Heat battery"
-		:form-url="`${page?.url!}/heat-battery`"
-		:items="store.domesticHotWater.waterHeating.heatBattery.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('heatBattery', index)"
-		@duplicate="(index: number) => handleDuplicate('heatBattery', index)"
-	/>
-	<CustomList
-		id="smartHotWaterTank"
-		title="Smart hot water tank"
-		:form-url="`${page?.url!}/smart-hot-water-tank`"
-		:items="store.domesticHotWater.waterHeating.smartHotWaterTank.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('smartHotWaterTank', index)"
-		@duplicate="(index: number) => handleDuplicate('smartHotWaterTank', index)"
-	/>
-	<CustomList
-		id="heatInterfaceUnit"
-		title="Heat interface unit"
-		:form-url="`${page?.url!}/heat-interface-unit`"
-		:items="store.domesticHotWater.waterHeating.heatInterfaceUnit.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('heatInterfaceUnit', index)"
-		@duplicate="(index: number) => handleDuplicate('heatInterfaceUnit', index)"
-	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton
 			href="/domestic-hot-water"
