@@ -1,5 +1,5 @@
-import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType } from '~/schema/api-schema.types';
-import { mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentsData } from './infiltrationVentilationMapper';
+import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType } from '~/schema/api-schema.types';
+import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from './infiltrationVentilationMapper';
 
 describe('infiltration ventilation mapper', () => {
 	const mechVentMvhr: MechanicalVentilationData[] = [{
@@ -185,5 +185,89 @@ describe('infiltration ventilation mapper', () => {
 		expect(vent?.pressure_difference_ref).toBe(20);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);
+	});
+
+	it('maps ventilation data to extract needed fields', async () => {
+		// Arrange
+		const ventilationData: VentilationData = {
+			dwellingHeight: 10,
+			dwellingEnvelopeArea: 200,
+			dwellingElevationalLevelAtBase: 4,
+			crossVentFactor: true,
+			maxRequiredAirChangeRate: 1.5,
+		};
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				ventilation: {
+					data: ventilationData
+				}
+			}
+		});
+
+		// Act
+		const fhsInputData = mapVentilationData(store);
+		const expectedVentilationData = {
+			dwellingHeight: 10,
+			dwellingEnvelopeArea: 200,
+			dwellingElevationalLevelAtBase: 4,
+			crossVentFactor: true,
+		};
+		expect(fhsInputData).toEqual(expectedVentilationData);
+	});
+
+	it('maps air permeability data to extract needed fields', async () => {
+		// Arrange
+		const airPermeabilityData: AirPermeabilityData = {
+			testPressure: 50,
+			airTightnessTestResult: 5,
+		};
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				airPermeability: {
+					data: airPermeabilityData
+				}
+			}
+		});
+
+		// Act
+		const fhsInputData = mapAirPermeabilityData(store);
+
+		// Assert
+		expect(fhsInputData.test_pressure).toBe(50);
+		expect(fhsInputData.test_result).toBe(5);
+	});
+
+	it('maps combustion appliances data to FHS input request', () => {
+		// Arrange
+		const combustionAppliances: CombustionApplianceData[] = [{
+			name: "Gas Boiler",
+			airSupplyToAppliance: CombustionAirSupplySituation.room_air,
+			exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
+			typeOfFuel: CombustionFuelType.gas
+		}];
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				combustionAppliances: {
+					[CombustionApplianceType.open_gas_fire]: {
+						data: combustionAppliances,
+						complete: true
+					}
+				}
+			}
+		});
+
+		// Act
+		const fhsInputData = mapCombustionAppliancesData(store);
+
+		// Assert
+		const gasBoiler = fhsInputData["Gas Boiler"];
+		expect(gasBoiler).toBeDefined();
+		expect(gasBoiler?.supply_situation).toBe(CombustionAirSupplySituation.room_air);
+		expect(gasBoiler?.exhaust_situation).toBe(FlueGasExhaustSituation.into_mech_vent);
+		expect(gasBoiler?.fuel_type).toBe(CombustionFuelType.gas);
+		expect(gasBoiler?.appliance_type).toBe(CombustionApplianceType.open_gas_fire);
 	});
 });

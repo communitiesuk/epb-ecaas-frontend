@@ -97,7 +97,7 @@ export function mapVentsData(state: EcaasState) {
 	return objectFromEntries(entries);
 }
 
-function mapVentilationData(state: EcaasState): { dwellingElevationalLevelAtBase: number; dwellingHeight: number; dwellingEnvelopeArea: number; crossVentFactor: boolean; } {
+export function mapVentilationData(state: EcaasState): { dwellingElevationalLevelAtBase: number; dwellingHeight: number; dwellingEnvelopeArea: number; crossVentFactor: boolean; } {
 	const { dwellingElevationalLevelAtBase, dwellingHeight, dwellingEnvelopeArea, crossVentFactor } = state.infiltrationAndVentilation.ventilation.data;
 
 	return {
@@ -108,7 +108,7 @@ function mapVentilationData(state: EcaasState): { dwellingElevationalLevelAtBase
 	};
 }
 
-function mapAirPermeabilityData(state: EcaasState): Pick<SchemaVentilationLeaks, 'test_pressure' | 'test_result'> {
+export function mapAirPermeabilityData(state: EcaasState): Pick<SchemaVentilationLeaks, 'test_pressure' | 'test_result'> {
 	const { testPressure, airTightnessTestResult } = state.infiltrationAndVentilation.airPermeability.data;
 
 	return {
@@ -117,7 +117,7 @@ function mapAirPermeabilityData(state: EcaasState): Pick<SchemaVentilationLeaks,
 	};
 }
 
-function mapCombustionAppliancesData(state: EcaasState): Record<string, SchemaCombustionAppliance> {
+export function mapCombustionAppliancesData(state: EcaasState): Record<string, SchemaCombustionAppliance> {
 	const combustionApplianceEntries = objectEntries(state.infiltrationAndVentilation.combustionAppliances).filter(([_key, value]) => value.complete && !isEmpty(value.data)).map(([key, value]) => {
 		return value.data.map<[string, SchemaCombustionAppliance]>((appliance) => {
 			const { name, airSupplyToAppliance, exhaustMethodFromAppliance, typeOfFuel } = appliance;
