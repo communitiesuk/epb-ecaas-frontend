@@ -76,11 +76,11 @@ function checkIsComplete(){
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">
-		Storage tank
+		Water Heating
 	</h1>
 	<CustomList
 		id="storageTank"
-		title="Storage tank"
+		title="Hot water cylinder"
 		:form-url="`${page?.url!}/storage-tank`"
 		:items="store.domesticHotWater.waterHeating.storageTank.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('storageTank', index)"
@@ -93,14 +93,6 @@ function checkIsComplete(){
 		:items="store.domesticHotWater.waterHeating.immersionHeater.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('immersionHeater', index)"
 		@duplicate="(index: number) => handleDuplicate('immersionHeater', index)"
-	/>
-	<CustomList
-		id="solarThermal"
-		title="Solar thermal"
-		:form-url="`${page?.url!}/solar-thermal`"
-		:items="store.domesticHotWater.waterHeating.solarThermal.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('solarThermal', index)"
-		@duplicate="(index: number) => handleDuplicate('solarThermal', index)"
 	/>
 	<h2 class="govuk-heading-l">
 		Other water heat sources
