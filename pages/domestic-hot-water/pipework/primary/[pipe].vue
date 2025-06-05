@@ -180,7 +180,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="hotWaterCylinder"
 			type="govRadios"
 			:options="new Map(store.domesticHotWater.waterHeating.hotWaterCylinder.data.map(x => [x.id, x.name]))"
-			label="Hot water Cylinder"
+			label="Hot water cylinder"
 			help="Select a hot water cylinder that this pipework is connected to"
 			name="hotWaterCylinder"
 			validation="required">
