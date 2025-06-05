@@ -352,6 +352,7 @@ describe("Heating systems summary page", () => {
 			minimumFlowTemp: 20,
 			minOutdoorTemp: 0,
 			maxOutdoorTemp: 15,
+			numberOfRadiators: 1,
 		};
 
 		const wetDistribution2: WetDistributionData = {
@@ -363,8 +364,6 @@ describe("Heating systems summary page", () => {
 			designFlowTemp: 32,
 			typeOfSpaceHeater: WetEmitterWet_emitter_type.ufh,
 			emitterFloorArea: 5,
-			equivalentThermalMass: 80,
-			systemPerformanceFactor: 5,
 			ecoDesignControllerClass: "1",
 			minimumFlowTemp: 20,
 			minOutdoorTemp: 0,

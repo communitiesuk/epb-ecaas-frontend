@@ -9,7 +9,10 @@ const wetDistributionData = useItemToEdit(
 	"distribution",
 	store.heatingSystems.heatEmitting.wetDistribution.data
 );
-const model: Ref<WetDistributionData> = ref(wetDistributionData!);
+const model: Ref<WetDistributionData> = ref({
+	...wetDistributionData,
+	typeOfSpaceHeater: WetEmitterWet_emitter_type.radiator,
+} as WetDistributionData);
 
 const options: FormKitOptionsProp[] = [
 	{
@@ -24,9 +27,10 @@ const options: FormKitOptionsProp[] = [
 	},
 ];
 
-const typeOfSpaceHeaterOptions: Record<Exclude<WetEmitterWet_emitter_type, WetEmitterWet_emitter_type.fancoil>, string> = {
+const typeOfSpaceHeaterOptions: Record<WetEmitterWet_emitter_type.radiator, string> = {
 	[WetEmitterWet_emitter_type.radiator]: 'Radiators',
-	[WetEmitterWet_emitter_type.ufh]: 'Under floor heating (UFH)',
+	// remove under-floor heating (UFH) option for now
+	// [WetEmitterWet_emitter_type.ufh]: 'Under floor heating (UFH)',
 };
 
 const saveForm = (fields: WetDistributionData) => {
@@ -53,6 +57,7 @@ const saveForm = (fields: WetDistributionData) => {
 				item = {
 					...commonFields,
 					typeOfSpaceHeater: fields.typeOfSpaceHeater,
+					numberOfRadiators: fields.numberOfRadiators,
 					convectionFractionWet: fields.convectionFractionWet,
 					exponent: 1.3,
 					constant: 0.08,
@@ -64,8 +69,6 @@ const saveForm = (fields: WetDistributionData) => {
 					...commonFields,
 					typeOfSpaceHeater: fields.typeOfSpaceHeater,
 					emitterFloorArea: fields.emitterFloorArea,
-					equivalentThermalMass: 80,
-					systemPerformanceFactor: 5,
 				};
 				break;
 
@@ -230,8 +233,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Type of space heater"
 			name="typeOfSpaceHeater"
 			validation="required"
+			help="For now, a user can only model a home with radiators. In future releases this will include under floor heating and other emitters."
 		/>
 		<template v-if="model.typeOfSpaceHeater === WetEmitterWet_emitter_type.radiator">
+			<FormKit
+				id="numberOfRadiators"
+				name="numberOfRadiators"
+				type="govInputInt"
+				label="Number of radiators"
+				help="Specify how many radiators are in this zone"
+				validation="required | integer | min: 1"
+			/>
+
 			<FormKit
 				id="convectionFractionWet"
 				type="govInputFloat"

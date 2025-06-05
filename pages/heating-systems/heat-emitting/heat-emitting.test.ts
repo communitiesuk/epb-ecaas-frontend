@@ -366,6 +366,7 @@ describe("heat emitting", () => {
 			minimumFlowTemp: 20,
 			minOutdoorTemp: 0,
 			maxOutdoorTemp: 15,
+			numberOfRadiators: 1,
 		};
 		const instantElectricHeater1 = {
 			name: "Instant Electric Heater 1",
