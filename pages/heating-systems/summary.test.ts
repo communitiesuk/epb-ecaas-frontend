@@ -1,7 +1,6 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatingSystemsSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
-import { WetEmitterWet_emitter_type } from "~/schema/api-schema.types";
 
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -344,7 +343,7 @@ describe("Heating systems summary page", () => {
 			thermalMass: 2,
 			designTempDiffAcrossEmitters: 0.4,
 			designFlowTemp: 32,
-			typeOfSpaceHeater: WetEmitterWet_emitter_type.radiator,
+			typeOfSpaceHeater: "radiator",
 			exponent: 1.3,
 			constant: 0.08,
 			convectionFractionWet: 0.2,
@@ -362,7 +361,7 @@ describe("Heating systems summary page", () => {
 			thermalMass: 2,
 			designTempDiffAcrossEmitters: 0.4,
 			designFlowTemp: 32,
-			typeOfSpaceHeater: WetEmitterWet_emitter_type.ufh,
+			typeOfSpaceHeater: "ufh",
 			emitterFloorArea: 5,
 			equivalentThermalMass: 80,
 			systemPerformanceFactor: 5,

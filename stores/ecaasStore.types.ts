@@ -1,5 +1,5 @@
 import type { EmptyObject, TaggedUnion } from "type-fest";
-import type { BuildType, ApplianceKey, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, EdgeInsulationType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WetEmitterWet_emitter_type, WindowTreatmentControl, WindowTreatmentType, WwhrsType } from "~/schema/api-schema.types";
+import type { BuildType, ApplianceKey, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -107,7 +107,7 @@ export type GroundFloorData = {
 	perimeter: number;
 	psiOfWallJunction: number;
 	typeOfGroundFloor: FloorType;
-	edgeInsulationType?: EdgeInsulationType;
+	edgeInsulationType?: "horizontal" | "vertical";
 	edgeInsulationWidth?: number;
 	edgeInsulationThermalResistance?: number;
 	heightOfFloorUpperSurface?: number;
@@ -660,12 +660,12 @@ export type WetDistributionData = {
 	maxOutdoorTemp: number,
 	convectionFractionWet: number,
 } & TaggedUnion<'typeOfSpaceHeater', {
-	[WetEmitterWet_emitter_type.radiator]: {
+	radiator: {
 		numberOfRadiators: number,
 		exponent: number, 
 		constant: number,
 	},
-	[WetEmitterWet_emitter_type.ufh]: {
+	ufh: {
 		emitterFloorArea: number,
 		equivalentThermalMass: number,
 		systemPerformanceFactor: number,

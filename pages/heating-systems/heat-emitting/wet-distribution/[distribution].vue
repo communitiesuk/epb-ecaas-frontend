@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { FormKitOptionsProp } from "@formkit/inputs";
-import { WetEmitterWet_emitter_type } from "~/schema/api-schema.types";
 const title = "Wet distribution";
 const store = useEcaasStore();
 const { saveToList } = useForm();
@@ -11,7 +10,7 @@ const wetDistributionData = useItemToEdit(
 );
 const model: Ref<WetDistributionData> = ref({
 	...wetDistributionData,
-	typeOfSpaceHeater: WetEmitterWet_emitter_type.radiator,
+	typeOfSpaceHeater: "radiator",
 } as WetDistributionData);
 
 const options: FormKitOptionsProp[] = [
@@ -27,10 +26,10 @@ const options: FormKitOptionsProp[] = [
 	},
 ];
 
-const typeOfSpaceHeaterOptions: Record<WetEmitterWet_emitter_type.radiator, string> = {
-	[WetEmitterWet_emitter_type.radiator]: 'Radiators',
+const typeOfSpaceHeaterOptions: Record<'radiator', string> = {
+	radiator: 'Radiators',
 	// remove under-floor heating (UFH) option for now
-	// [WetEmitterWet_emitter_type.ufh]: 'Under floor heating (UFH)',
+	// ufh: 'Under floor heating (UFH)',
 };
 
 const saveForm = (fields: WetDistributionData) => {
@@ -54,7 +53,7 @@ const saveForm = (fields: WetDistributionData) => {
 		let item: WetDistributionData;
 
 		switch (fields.typeOfSpaceHeater) {
-			case WetEmitterWet_emitter_type.radiator:
+			case "radiator":
 				item = {
 					...commonFields,
 					typeOfSpaceHeater: fields.typeOfSpaceHeater,
@@ -64,7 +63,7 @@ const saveForm = (fields: WetDistributionData) => {
 				};
 				break;
 
-			case WetEmitterWet_emitter_type.ufh:
+			case "ufh":
 				item = {
 					...commonFields,
 					typeOfSpaceHeater: fields.typeOfSpaceHeater,
@@ -237,7 +236,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			help="For now, a user can only model a home with radiators. In future releases this will include under floor heating and other emitters."
 		/>
-		<template v-if="model.typeOfSpaceHeater === WetEmitterWet_emitter_type.radiator">
+		<template v-if="model.typeOfSpaceHeater === 'radiator'">
 			<FormKit
 				id="numberOfRadiators"
 				name="numberOfRadiators"
@@ -277,7 +276,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</FormKit>
 		</template>
 
-		<template v-if="model.typeOfSpaceHeater === WetEmitterWet_emitter_type.ufh">
+		<template v-if="model.typeOfSpaceHeater === 'ufh'">
 			<FormKit
 				id="emitterFloorArea"
 				type="govInputWithSuffix"

@@ -181,8 +181,8 @@ export interface components {
             /** Format: double */
             max_shift_hrs: number;
             priority?: number | null;
-            /** @enum {string} */
-            weight?: ApplianceLoadShiftingWeight;
+            /** @constant */
+            weight?: "Tariff";
             weight_timeseries?: number[] | null;
         };
         Appliance: {
@@ -250,8 +250,8 @@ export interface components {
             distance: number;
             /** Format: double */
             transparency: number;
-            /** @enum {string} */
-            type?: WindowShadingObjectType;
+            /** @constant */
+            type?: "obstacle";
         } | {
             /** Format: double */
             depth: number;
@@ -291,8 +291,8 @@ export interface components {
         EdgeInsulation: {
             /** Format: double */
             edge_thermal_resistance: number;
-            /** @enum {string} */
-            type: EdgeInsulationType;
+            /** @constant */
+            type: "horizontal";
             /** Format: double */
             width: number;
         } | {
@@ -300,8 +300,8 @@ export interface components {
             depth: number;
             /** Format: double */
             edge_thermal_resistance: number;
-            /** @enum {string} */
-            type: EdgeInsulationType;
+            /** @constant */
+            type: "vertical";
         };
         /** @enum {string} */
         FloorType: FloorType;
@@ -382,8 +382,8 @@ export interface components {
              * @description Timestep of the time series data (unit: hours)
              */
             time_series_step: number;
-            /** @enum {string} */
-            type: ControlDetailsType;
+            /** @constant */
+            type: "OnOffTimeControl";
         } | {
             logic_type?: components["schemas"]["ControlLogicType"] | null;
             /** @description List of cost values (one entry per time_series_step) */
@@ -403,8 +403,8 @@ export interface components {
              * @description Timestep of the time series data (unit: hours)
              */
             time_series_step: number;
-            /** @enum {string} */
-            type: ControlDetailsType;
+            /** @constant */
+            type: "OnOffCostMinimisingTimeControl";
         } | {
             /**
              * Format: double
@@ -436,8 +436,8 @@ export interface components {
              * @description Timestep of the time series data (unit: hours)
              */
             time_series_step: number;
-            /** @enum {string} */
-            type: ControlDetailsType;
+            /** @constant */
+            type: "SetpointTimeControl";
         } | {
             /** @description Proportion of the charge targeted for each day */
             charge_level?: components["schemas"]["ChargeLevel"] | null;
@@ -467,23 +467,23 @@ export interface components {
              * @description Timestep of the time series data (unit: hours)
              */
             time_series_step: number;
-            /** @enum {string} */
-            type: ControlDetailsType;
+            /** @constant */
+            type: "ChargeControl";
         } | {
             combination: components["schemas"]["ControlCombinations"];
             start_day: number;
             /** Format: double */
             time_series_step: number;
-            /** @enum {string} */
-            type?: ControlDetailsType;
+            /** @constant */
+            type?: "CombinationTimeControl";
         };
         EcoDesignControllerClass: number;
         /** @enum {string} */
         BatteryLocation: BatteryLocation;
         /** @enum {string} */
         DiverterHeatSourceType: DiverterHeatSourceType;
-        /** @enum {string} */
-        StorageTankType: StorageTankType;
+        /** @constant */
+        StorageTankType: "hw cylinder";
         ElectricBattery: {
             /** Format: double */
             battery_age: number;
@@ -676,15 +676,15 @@ export interface components {
              * @description Tap/outlet flow rate (unit: litre/minute)
              */
             flowrate: number;
-            /** @enum {string} */
-            type: ShowerType;
+            /** @constant */
+            type: "MixerShower";
         } | {
             ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
             EnergySupply: string;
             /** Format: double */
             rated_power: number;
-            /** @enum {string} */
-            type: ShowerType;
+            /** @constant */
+            type: "InstantElecShower";
         };
         Showers: {
             [key: string]: components["schemas"]["Shower"];
@@ -700,8 +700,8 @@ export interface components {
             power: number;
             /** Format: double */
             thermostat_position?: number;
-            /** @enum {string} */
-            type: HeatSourceType;
+            /** @constant */
+            type: "ImmersionHeater";
         } | {
             Controlmax: string;
             EnergySupply: string;
@@ -735,8 +735,8 @@ export interface components {
             thermostat_position: number;
             /** Format: double */
             tilt: number;
-            /** @enum {string} */
-            type: HeatSourceType;
+            /** @constant */
+            type: "SolarThermalSystem";
         } | {
             ColdWaterSource?: components["schemas"]["ColdWaterSourceType"] | null;
             Control?: components["schemas"]["HeatSourceControlType"] | null;
@@ -752,8 +752,8 @@ export interface components {
             temp_return?: number | null;
             /** Format: double */
             thermostat_position?: number;
-            /** @enum {string} */
-            type: HeatSourceType;
+            /** @constant */
+            type: "HeatSourceWet";
         } | {
             Control?: components["schemas"]["HeatSourceControlType"] | null;
             Controlmax: string;
@@ -774,8 +774,8 @@ export interface components {
             test_data: components["schemas"]["HeatPumpHotWaterTestData"];
             /** Format: double */
             thermostat_position: number;
-            /** @enum {string} */
-            type: HeatSourceType;
+            /** @constant */
+            type: "HeatPump_HWOnly";
             /** Format: double */
             vol_hw_daily_average: number;
         };
@@ -821,8 +821,8 @@ export interface components {
              * @description Setpoint temperature (unit: ˚C)
              */
             setpoint_temp?: number | null;
-            /** @enum {string} */
-            type: StorageTankType;
+            /** @constant */
+            type: "StorageTank";
             /**
              * Format: double
              * @description Total volume of tank (unit: litre)
@@ -853,16 +853,16 @@ export interface components {
             setpoint_temp?: number | null;
             /** Format: double */
             storage_loss_factor_2: number;
-            /** @enum {string} */
-            type: HotWaterSourceDetailsType;
+            /** @constant */
+            type: "CombiBoiler";
         } | {
             ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
             HeatSourceWet: components["schemas"]["HeatSourceWetType"];
             Control?: components["schemas"]["HeatSourceControlType"] | null;
             /** Format: double */
             setpoint_temp?: number | null;
-            /** @enum {string} */
-            type: HotWaterSourceDetailsType;
+            /** @constant */
+            type: "HIU";
         } | {
             ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
             EnergySupply: string;
@@ -870,8 +870,8 @@ export interface components {
             efficiency: number;
             /** Format: double */
             setpoint_temp?: number | null;
-            /** @enum {string} */
-            type: HotWaterSourceDetailsType;
+            /** @constant */
+            type: "PointOfUse";
         } | {
             ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
             EnergySupply_pump: string;
@@ -890,16 +890,16 @@ export interface components {
             temp_setpnt_max: string;
             /** Format: double */
             temp_usable: number;
-            /** @enum {string} */
-            type: HotWaterSourceDetailsType;
+            /** @constant */
+            type: "SmartHotWaterTank";
             /** Format: double */
             volume: number;
         } | {
             ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
             Control: string;
             HeatSourceWet: string;
-            /** @enum {string} */
-            type: HotWaterSourceDetailsType;
+            /** @constant */
+            type: "HeatBattery";
         };
         AirTerminalDevice: {
             /** Format: double */
@@ -1068,8 +1068,8 @@ export interface components {
             frac_convective: number;
             /** Format: double */
             n: number;
-            /** @enum {string} */
-            wet_emitter_type: WetEmitterWet_emitter_type;
+            /** @constant */
+            wet_emitter_type: "radiator";
         } | {
             /** Format: double */
             emitter_floor_area: number;
@@ -1079,15 +1079,15 @@ export interface components {
             frac_convective: number;
             /** Format: double */
             system_performance_factor: number;
-            /** @enum {string} */
-            wet_emitter_type?: WetEmitterWet_emitter_type;
+            /** @constant */
+            wet_emitter_type?: "ufh";
         } | {
             fancoil_test_data: components["schemas"]["FancoilTestData"];
             /** Format: double */
             frac_convective: number;
             n_units: number;
-            /** @enum {string} */
-            wet_emitter_type?: WetEmitterWet_emitter_type;
+            /** @constant */
+            wet_emitter_type?: "fancoil";
         };
         EcoDesignController: {
             ecodesign_control_class: components["schemas"]["EcoDesignControllerClass"];
@@ -1103,14 +1103,14 @@ export interface components {
             length: number;
             /** Format: double */
             linear_thermal_transmittance: number;
-            /** @enum {string} */
-            type: ThermalBridgingDetailsType;
+            /** @constant */
+            type: "ThermalBridgeLinear";
             junction_type?: string | null;
         } | {
             /** Format: double */
             heat_transfer_coeff: number;
-            /** @enum {string} */
-            type: ThermalBridgingDetailsType;
+            /** @constant */
+            type: "ThermalBridgePoint";
         };
         /** @enum {string} */
         WwhrsType: WwhrsType;
@@ -1580,8 +1580,8 @@ export interface components {
             time_constant_onoff_operation: number;
             /** Format: double */
             time_delay_backup: number;
-            /** @enum {string} */
-            type: HeatSourceWetDetailsType;
+            /** @constant */
+            type: "HeatPump";
             var_flow_temp_ctrl_during_test: boolean;
         } | {
             EnergySupply: string;
@@ -1603,8 +1603,8 @@ export interface components {
             modulation_load: number;
             /** Format: double */
             rated_power: number;
-            /** @enum {string} */
-            type: HeatSourceWetDetailsType;
+            /** @constant */
+            type: "Boiler";
         } | {
             /** Format: double */
             A: number;
@@ -1641,8 +1641,8 @@ export interface components {
             /** Format: double */
             rated_charge_power: number;
             simultaneous_charging_and_discharging: boolean;
-            /** @enum {string} */
-            type: HeatSourceWetDetailsType;
+            /** @constant */
+            type: "HeatBattery";
             /** Format: double */
             velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
         } | {
@@ -1653,8 +1653,8 @@ export interface components {
             building_level_distribution_losses: number;
             /** Format: double */
             power_max: number;
-            /** @enum {string} */
-            type: HeatSourceWetDetailsType;
+            /** @constant */
+            type: "HIU";
         };
         /** @enum {string} */
         HeatingControlType: HeatingControlType;
@@ -1756,8 +1756,8 @@ export interface components {
              */
             pitch: number;
             shading: components["schemas"]["WindowShadingObject"][];
-            /** @enum {string} */
-            type: OnSiteGenerationDetailsType;
+            /** @constant */
+            type: "PhotovoltaicSystem";
             ventilation_strategy: components["schemas"]["OnSiteGenerationVentilationStrategy"];
             /**
              * Format: double
@@ -1824,8 +1824,8 @@ export interface components {
             rated_power: number;
             /** Format: double */
             temp_setback?: number | null;
-            /** @enum {string} */
-            type: SpaceHeatSystemDetailsType;
+            /** @constant */
+            type: "InstantElecHeater";
         } | {
             ControlCharger: string;
             ESH_max_output: number[][];
@@ -1855,8 +1855,8 @@ export interface components {
             rated_power_instant: number;
             /** Format: double */
             storage_capacity: number;
-            /** @enum {string} */
-            type: SpaceHeatSystemDetailsType;
+            /** @constant */
+            type: "ElecStorageHeater";
             /** @description The zone where the unit(s) is/are installed */
             Zone: string;
             HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
@@ -1890,8 +1890,8 @@ export interface components {
             temp_setback?: number | null;
             /** Format: double */
             thermal_mass?: number | null;
-            /** @enum {string} */
-            type: SpaceHeatSystemDetailsType;
+            /** @constant */
+            type: "WetDistribution";
             variable_flow?: boolean | null;
             wet_emitter_type?: string | null;
             Control?: string | null;
@@ -1908,8 +1908,8 @@ export interface components {
             advanced_start?: number | null;
             /** Format: double */
             temp_setback?: number | null;
-            /** @enum {string} */
-            type: SpaceHeatSystemDetailsType;
+            /** @constant */
+            type: "WarmAir";
         };
         Tariff: {
             schedule: components["schemas"]["Schedule_for_double"];
@@ -2089,8 +2089,8 @@ export interface components {
                     /** Format: double */
                     max_shift_hrs: number;
                     priority?: number | null;
-                    /** @enum {string} */
-                    weight?: Fhs_inputSchema$defsApplianceLoadShiftingWeight;
+                    /** @constant */
+                    weight?: "Tariff";
                     weight_timeseries?: number[] | null;
                 };
                 /** @enum {string} */
@@ -2452,8 +2452,8 @@ export interface components {
                      * @description Timestep of the time series data (unit: hours)
                      */
                     time_series_step: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsControlDetailsType;
+                    /** @constant */
+                    type: "OnOffTimeControl";
                 } | {
                     logic_type?: components["schemas"]["ControlLogicType"] | null;
                     /** @description List of cost values (one entry per time_series_step) */
@@ -2473,8 +2473,8 @@ export interface components {
                      * @description Timestep of the time series data (unit: hours)
                      */
                     time_series_step: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsControlDetailsType;
+                    /** @constant */
+                    type: "OnOffCostMinimisingTimeControl";
                 } | {
                     /**
                      * Format: double
@@ -2506,8 +2506,8 @@ export interface components {
                      * @description Timestep of the time series data (unit: hours)
                      */
                     time_series_step: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsControlDetailsType;
+                    /** @constant */
+                    type: "SetpointTimeControl";
                 } | {
                     /** @description Proportion of the charge targeted for each day */
                     charge_level?: components["schemas"]["ChargeLevel"] | null;
@@ -2537,15 +2537,15 @@ export interface components {
                      * @description Timestep of the time series data (unit: hours)
                      */
                     time_series_step: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsControlDetailsType;
+                    /** @constant */
+                    type: "ChargeControl";
                 } | {
                     combination: components["schemas"]["ControlCombinations"];
                     start_day: number;
                     /** Format: double */
                     time_series_step: number;
-                    /** @enum {string} */
-                    type?: Fhs_inputSchema$defsControlDetailsType;
+                    /** @constant */
+                    type?: "CombinationTimeControl";
                 };
                 /** @enum {string} */
                 ControlLogicType: Fhs_inputSchema$defsControlLogicType;
@@ -2578,8 +2578,8 @@ export interface components {
                 EdgeInsulation: {
                     /** Format: double */
                     edge_thermal_resistance: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsEdgeInsulationType;
+                    /** @constant */
+                    type: "horizontal";
                     /** Format: double */
                     width: number;
                 } | {
@@ -2587,8 +2587,8 @@ export interface components {
                     depth: number;
                     /** Format: double */
                     edge_thermal_resistance: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsEdgeInsulationType;
+                    /** @constant */
+                    type: "vertical";
                 };
                 ElectricBattery: {
                     /** Format: double */
@@ -2799,8 +2799,8 @@ export interface components {
                     power: number;
                     /** Format: double */
                     thermostat_position?: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHeatSourceType;
+                    /** @constant */
+                    type: "ImmersionHeater";
                 } | {
                     Controlmax: string;
                     EnergySupply: string;
@@ -2834,8 +2834,8 @@ export interface components {
                     thermostat_position: number;
                     /** Format: double */
                     tilt: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHeatSourceType;
+                    /** @constant */
+                    type: "SolarThermalSystem";
                 } | {
                     ColdWaterSource?: components["schemas"]["ColdWaterSourceType"] | null;
                     Control?: components["schemas"]["HeatSourceControlType"] | null;
@@ -2851,8 +2851,8 @@ export interface components {
                     temp_return?: number | null;
                     /** Format: double */
                     thermostat_position?: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHeatSourceType;
+                    /** @constant */
+                    type: "HeatSourceWet";
                 } | {
                     Control?: components["schemas"]["HeatSourceControlType"] | null;
                     Controlmax: string;
@@ -2873,8 +2873,8 @@ export interface components {
                     test_data: components["schemas"]["HeatPumpHotWaterTestData"];
                     /** Format: double */
                     thermostat_position: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHeatSourceType;
+                    /** @constant */
+                    type: "HeatPump_HWOnly";
                     /** Format: double */
                     vol_hw_daily_average: number;
                 };
@@ -2929,8 +2929,8 @@ export interface components {
                     time_constant_onoff_operation: number;
                     /** Format: double */
                     time_delay_backup: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHeatSourceWetDetailsType;
+                    /** @constant */
+                    type: "HeatPump";
                     var_flow_temp_ctrl_during_test: boolean;
                 } | {
                     EnergySupply: string;
@@ -2952,8 +2952,8 @@ export interface components {
                     modulation_load: number;
                     /** Format: double */
                     rated_power: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHeatSourceWetDetailsType;
+                    /** @constant */
+                    type: "Boiler";
                 } | {
                     /** Format: double */
                     A: number;
@@ -2990,8 +2990,8 @@ export interface components {
                     /** Format: double */
                     rated_charge_power: number;
                     simultaneous_charging_and_discharging: boolean;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHeatSourceWetDetailsType;
+                    /** @constant */
+                    type: "HeatBattery";
                     /** Format: double */
                     velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
                 } | {
@@ -3002,8 +3002,8 @@ export interface components {
                     building_level_distribution_losses: number;
                     /** Format: double */
                     power_max: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHeatSourceWetDetailsType;
+                    /** @constant */
+                    type: "HIU";
                 };
                 HeatSourceWetType: Fhs_inputSchema$defsHeatSourceWetType | {
                     Other: string;
@@ -3038,16 +3038,16 @@ export interface components {
                     setpoint_temp?: number | null;
                     /** Format: double */
                     storage_loss_factor_2: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHotWaterSourceDetailsType;
+                    /** @constant */
+                    type: "CombiBoiler";
                 } | {
                     ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
                     HeatSourceWet: components["schemas"]["HeatSourceWetType"];
                     Control?: components["schemas"]["HeatSourceControlType"] | null;
                     /** Format: double */
                     setpoint_temp?: number | null;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHotWaterSourceDetailsType;
+                    /** @constant */
+                    type: "HIU";
                 } | {
                     ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
                     EnergySupply: string;
@@ -3055,8 +3055,8 @@ export interface components {
                     efficiency: number;
                     /** Format: double */
                     setpoint_temp?: number | null;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHotWaterSourceDetailsType;
+                    /** @constant */
+                    type: "PointOfUse";
                 } | {
                     ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
                     EnergySupply_pump: string;
@@ -3075,16 +3075,16 @@ export interface components {
                     temp_setpnt_max: string;
                     /** Format: double */
                     temp_usable: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHotWaterSourceDetailsType;
+                    /** @constant */
+                    type: "SmartHotWaterTank";
                     /** Format: double */
                     volume: number;
                 } | {
                     ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
                     Control: string;
                     HeatSourceWet: string;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsHotWaterSourceDetailsType;
+                    /** @constant */
+                    type: "HeatBattery";
                 };
                 InfiltrationVentilation: {
                     AirTerminalDevices?: {
@@ -3241,8 +3241,8 @@ export interface components {
                      */
                     pitch: number;
                     shading: components["schemas"]["WindowShadingObject"][];
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsOnSiteGenerationDetailsType;
+                    /** @constant */
+                    type: "PhotovoltaicSystem";
                     ventilation_strategy: components["schemas"]["OnSiteGenerationVentilationStrategy"];
                     /**
                      * Format: double
@@ -3319,15 +3319,15 @@ export interface components {
                      * @description Tap/outlet flow rate (unit: litre/minute)
                      */
                     flowrate: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsShowerType;
+                    /** @constant */
+                    type: "MixerShower";
                 } | {
                     ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
                     EnergySupply: string;
                     /** Format: double */
                     rated_power: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsShowerType;
+                    /** @constant */
+                    type: "InstantElecShower";
                 };
                 Showers: {
                     [key: string]: components["schemas"]["Shower"];
@@ -3411,8 +3411,8 @@ export interface components {
                     rated_power: number;
                     /** Format: double */
                     temp_setback?: number | null;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsSpaceHeatSystemDetailsType;
+                    /** @constant */
+                    type: "InstantElecHeater";
                 } | {
                     ControlCharger: string;
                     ESH_max_output: number[][];
@@ -3442,8 +3442,8 @@ export interface components {
                     rated_power_instant: number;
                     /** Format: double */
                     storage_capacity: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsSpaceHeatSystemDetailsType;
+                    /** @constant */
+                    type: "ElecStorageHeater";
                     /** @description The zone where the unit(s) is/are installed */
                     Zone: string;
                     HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
@@ -3477,8 +3477,8 @@ export interface components {
                     temp_setback?: number | null;
                     /** Format: double */
                     thermal_mass?: number | null;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsSpaceHeatSystemDetailsType;
+                    /** @constant */
+                    type: "WetDistribution";
                     variable_flow?: boolean | null;
                     wet_emitter_type?: string | null;
                     Control?: string | null;
@@ -3495,8 +3495,8 @@ export interface components {
                     advanced_start?: number | null;
                     /** Format: double */
                     temp_setback?: number | null;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsSpaceHeatSystemDetailsType;
+                    /** @constant */
+                    type: "WarmAir";
                 };
                 SpaceHeatSystemHeatSource: {
                     name: string;
@@ -3530,16 +3530,16 @@ export interface components {
                      * @description Setpoint temperature (unit: ˚C)
                      */
                     setpoint_temp?: number | null;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsStorageTankType;
+                    /** @constant */
+                    type: "StorageTank";
                     /**
                      * Format: double
                      * @description Total volume of tank (unit: litre)
                      */
                     volume: number;
                 };
-                /** @enum {string} */
-                StorageTankType: Fhs_inputSchema$defsStorageTankType;
+                /** @constant */
+                StorageTankType: "hw cylinder";
                 /** @enum {string} */
                 SupplyAirFlowRateControlType: Fhs_inputSchema$defsSupplyAirFlowRateControlType;
                 /** @enum {string} */
@@ -3559,14 +3559,14 @@ export interface components {
                     length: number;
                     /** Format: double */
                     linear_thermal_transmittance: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsThermalBridgingDetailsType;
+                    /** @constant */
+                    type: "ThermalBridgeLinear";
                     junction_type?: string | null;
                 } | {
                     /** Format: double */
                     heat_transfer_coeff: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsThermalBridgingDetailsType;
+                    /** @constant */
+                    type: "ThermalBridgePoint";
                 };
                 Vent: {
                     /** Format: double */
@@ -3684,8 +3684,8 @@ export interface components {
                     frac_convective: number;
                     /** Format: double */
                     n: number;
-                    /** @enum {string} */
-                    wet_emitter_type: Fhs_inputSchema$defsWetEmitterWet_emitter_type;
+                    /** @constant */
+                    wet_emitter_type: "radiator";
                 } | {
                     /** Format: double */
                     emitter_floor_area: number;
@@ -3695,15 +3695,15 @@ export interface components {
                     frac_convective: number;
                     /** Format: double */
                     system_performance_factor: number;
-                    /** @enum {string} */
-                    wet_emitter_type?: Fhs_inputSchema$defsWetEmitterWet_emitter_type;
+                    /** @constant */
+                    wet_emitter_type?: "ufh";
                 } | {
                     fancoil_test_data: components["schemas"]["FancoilTestData"];
                     /** Format: double */
                     frac_convective: number;
                     n_units: number;
-                    /** @enum {string} */
-                    wet_emitter_type?: Fhs_inputSchema$defsWetEmitterWet_emitter_type;
+                    /** @constant */
+                    wet_emitter_type?: "fancoil";
                 };
                 /** @enum {string} */
                 WindShieldLocation: Fhs_inputSchema$defsWindShieldLocation;
@@ -3722,8 +3722,8 @@ export interface components {
                     distance: number;
                     /** Format: double */
                     transparency: number;
-                    /** @enum {string} */
-                    type?: Fhs_inputSchema$defsWindowShadingObjectType;
+                    /** @constant */
+                    type?: "obstacle";
                 } | {
                     /** Format: double */
                     depth: number;
@@ -4776,9 +4776,6 @@ export interface operations {
         };
     };
 }
-export enum ApplianceLoadShiftingWeight {
-    Tariff = "Tariff"
-}
 export enum ApplianceReference {
     Default = "Default",
     Not_Installed = "Not Installed"
@@ -4795,9 +4792,6 @@ export enum MassDistributionClass {
     M = "M"
 }
 export enum WindowShadingObjectType {
-    obstacle = "obstacle"
-}
-export enum WindowShadingObjectType {
     overhang = "overhang",
     sidefinright = "sidefinright",
     sidefinleft = "sidefinleft",
@@ -4812,12 +4806,6 @@ export enum WindowTreatmentControl {
 export enum WindowTreatmentType {
     blinds = "blinds",
     curtains = "curtains"
-}
-export enum EdgeInsulationType {
-    horizontal = "horizontal"
-}
-export enum EdgeInsulationType {
-    vertical = "vertical"
 }
 export enum FloorType {
     Slab_no_edge_insulation = "Slab_no_edge_insulation",
@@ -4870,30 +4858,12 @@ export enum ControlCombinationOperation {
     MIN = "MIN",
     MEAN = "MEAN"
 }
-export enum ControlDetailsType {
-    OnOffTimeControl = "OnOffTimeControl"
-}
-export enum ControlDetailsType {
-    OnOffCostMinimisingTimeControl = "OnOffCostMinimisingTimeControl"
-}
-export enum ControlDetailsType {
-    SetpointTimeControl = "SetpointTimeControl"
-}
-export enum ControlDetailsType {
-    ChargeControl = "ChargeControl"
-}
-export enum ControlDetailsType {
-    CombinationTimeControl = "CombinationTimeControl"
-}
 export enum BatteryLocation {
     inside = "inside",
     outside = "outside"
 }
 export enum DiverterHeatSourceType {
     immersion = "immersion"
-}
-export enum StorageTankType {
-    hw_cylinder = "hw cylinder"
 }
 export enum FuelType {
     LPG_bottled = "LPG_bottled",
@@ -4975,27 +4945,6 @@ export enum WaterPipeContentsType {
     air = "air",
     glycol25 = "glycol25"
 }
-export enum ShowerType {
-    MixerShower = "MixerShower"
-}
-export enum ShowerType {
-    InstantElecShower = "InstantElecShower"
-}
-export enum HeatSourceType {
-    ImmersionHeater = "ImmersionHeater"
-}
-export enum HeatSourceType {
-    SolarThermalSystem = "SolarThermalSystem"
-}
-export enum HeatSourceType {
-    HeatSourceWet = "HeatSourceWet"
-}
-export enum HeatSourceType {
-    HeatPump_HWOnly = "HeatPump_HWOnly"
-}
-export enum StorageTankType {
-    StorageTank = "StorageTank"
-}
 export enum HeatSourceWetType {
     boiler = "boiler",
     HeatNetwork = "HeatNetwork",
@@ -5006,21 +4955,6 @@ export enum BoilerHotWaterTest {
     M_S = "M&S",
     M_only = "M_only",
     No_additional_tests = "No_additional_tests"
-}
-export enum HotWaterSourceDetailsType {
-    CombiBoiler = "CombiBoiler"
-}
-export enum HotWaterSourceDetailsType {
-    HIU = "HIU"
-}
-export enum HotWaterSourceDetailsType {
-    PointOfUse = "PointOfUse"
-}
-export enum HotWaterSourceDetailsType {
-    SmartHotWaterTank = "SmartHotWaterTank"
-}
-export enum HotWaterSourceDetailsType {
-    HeatBattery = "HeatBattery"
 }
 export enum DuctShape {
     circular = "circular",
@@ -5090,21 +5024,6 @@ export enum ApplianceKey {
 export enum SpaceCoolSystemType {
     AirConditioning = "AirConditioning"
 }
-export enum WetEmitterWet_emitter_type {
-    radiator = "radiator"
-}
-export enum WetEmitterWet_emitter_type {
-    ufh = "ufh"
-}
-export enum WetEmitterWet_emitter_type {
-    fancoil = "fancoil"
-}
-export enum ThermalBridgingDetailsType {
-    ThermalBridgeLinear = "ThermalBridgeLinear"
-}
-export enum ThermalBridgingDetailsType {
-    ThermalBridgePoint = "ThermalBridgePoint"
-}
 export enum WwhrsType {
     WWHRS_InstantaneousSystemA = "WWHRS_InstantaneousSystemA",
     WWHRS_InstantaneousSystemB = "WWHRS_InstantaneousSystemB",
@@ -5118,40 +5037,13 @@ export enum ZoneTemperatureControlBasis {
     air = "air",
     operative = "operative"
 }
-export enum HeatSourceWetDetailsType {
-    HeatPump = "HeatPump"
-}
-export enum HeatSourceWetDetailsType {
-    Boiler = "Boiler"
-}
-export enum HeatSourceWetDetailsType {
-    HeatBattery = "HeatBattery"
-}
-export enum HeatSourceWetDetailsType {
-    HIU = "HIU"
-}
 export enum HeatingControlType {
     SeparateTimeAndTempControl = "SeparateTimeAndTempControl",
     SeparateTempControl = "SeparateTempControl"
 }
-export enum OnSiteGenerationDetailsType {
-    PhotovoltaicSystem = "PhotovoltaicSystem"
-}
-export enum SpaceHeatSystemDetailsType {
-    InstantElecHeater = "InstantElecHeater"
-}
 export enum SpaceHeatSystemDetailsAir_flow_type {
     fan_assisted = "fan-assisted",
     damper_only = "damper-only"
-}
-export enum SpaceHeatSystemDetailsType {
-    ElecStorageHeater = "ElecStorageHeater"
-}
-export enum SpaceHeatSystemDetailsType {
-    WetDistribution = "WetDistribution"
-}
-export enum SpaceHeatSystemDetailsType {
-    WarmAir = "WarmAir"
 }
 export enum WaterHeatingSchedule {
     AllDay = "AllDay",
@@ -5170,9 +5062,6 @@ export enum Fhs_inputSchema$defsApplianceKey {
     Otherdevices = "Otherdevices",
     Oven = "Oven",
     lighting = "lighting"
-}
-export enum Fhs_inputSchema$defsApplianceLoadShiftingWeight {
-    Tariff = "Tariff"
 }
 export enum Fhs_inputSchema$defsApplianceReference {
     Default = "Default",
@@ -5223,21 +5112,6 @@ export enum Fhs_inputSchema$defsControlCombinationOperation {
     MIN = "MIN",
     MEAN = "MEAN"
 }
-export enum Fhs_inputSchema$defsControlDetailsType {
-    OnOffTimeControl = "OnOffTimeControl"
-}
-export enum Fhs_inputSchema$defsControlDetailsType {
-    OnOffCostMinimisingTimeControl = "OnOffCostMinimisingTimeControl"
-}
-export enum Fhs_inputSchema$defsControlDetailsType {
-    SetpointTimeControl = "SetpointTimeControl"
-}
-export enum Fhs_inputSchema$defsControlDetailsType {
-    ChargeControl = "ChargeControl"
-}
-export enum Fhs_inputSchema$defsControlDetailsType {
-    CombinationTimeControl = "CombinationTimeControl"
-}
 export enum Fhs_inputSchema$defsControlLogicType {
     celect = "celect",
     heat_battery = "heat_battery",
@@ -5262,12 +5136,6 @@ export enum Fhs_inputSchema$defsDuctType {
     supply = "supply",
     extract = "extract",
     exhaust = "exhaust"
-}
-export enum Fhs_inputSchema$defsEdgeInsulationType {
-    horizontal = "horizontal"
-}
-export enum Fhs_inputSchema$defsEdgeInsulationType {
-    vertical = "vertical"
 }
 export enum Fhs_inputSchema$defsFloorType {
     Slab_no_edge_insulation = "Slab_no_edge_insulation",
@@ -5311,18 +5179,6 @@ export enum Fhs_inputSchema$defsHeatPumpSourceType {
     WaterSurface = "WaterSurface",
     HeatNetwork = "HeatNetwork"
 }
-export enum Fhs_inputSchema$defsHeatSourceType {
-    ImmersionHeater = "ImmersionHeater"
-}
-export enum Fhs_inputSchema$defsHeatSourceType {
-    SolarThermalSystem = "SolarThermalSystem"
-}
-export enum Fhs_inputSchema$defsHeatSourceType {
-    HeatSourceWet = "HeatSourceWet"
-}
-export enum Fhs_inputSchema$defsHeatSourceType {
-    HeatPump_HWOnly = "HeatPump_HWOnly"
-}
 export enum Fhs_inputSchema$defsHeatSourceControlType {
     hw_timer = "hw timer",
     window_opening = "window opening",
@@ -5334,18 +5190,6 @@ export enum Fhs_inputSchema$defsHeatSourceLocation {
     internal = "internal",
     external = "external"
 }
-export enum Fhs_inputSchema$defsHeatSourceWetDetailsType {
-    HeatPump = "HeatPump"
-}
-export enum Fhs_inputSchema$defsHeatSourceWetDetailsType {
-    Boiler = "Boiler"
-}
-export enum Fhs_inputSchema$defsHeatSourceWetDetailsType {
-    HeatBattery = "HeatBattery"
-}
-export enum Fhs_inputSchema$defsHeatSourceWetDetailsType {
-    HIU = "HIU"
-}
 export enum Fhs_inputSchema$defsHeatSourceWetType {
     boiler = "boiler",
     HeatNetwork = "HeatNetwork",
@@ -5354,21 +5198,6 @@ export enum Fhs_inputSchema$defsHeatSourceWetType {
 export enum Fhs_inputSchema$defsHeatingControlType {
     SeparateTimeAndTempControl = "SeparateTimeAndTempControl",
     SeparateTempControl = "SeparateTempControl"
-}
-export enum Fhs_inputSchema$defsHotWaterSourceDetailsType {
-    CombiBoiler = "CombiBoiler"
-}
-export enum Fhs_inputSchema$defsHotWaterSourceDetailsType {
-    HIU = "HIU"
-}
-export enum Fhs_inputSchema$defsHotWaterSourceDetailsType {
-    PointOfUse = "PointOfUse"
-}
-export enum Fhs_inputSchema$defsHotWaterSourceDetailsType {
-    SmartHotWaterTank = "SmartHotWaterTank"
-}
-export enum Fhs_inputSchema$defsHotWaterSourceDetailsType {
-    HeatBattery = "HeatBattery"
 }
 export enum Fhs_inputSchema$defsInverterType {
     optimised_inverter = "optimised_inverter",
@@ -5385,9 +5214,6 @@ export enum Fhs_inputSchema$defsMassDistributionClass {
     IE = "IE",
     M = "M"
 }
-export enum Fhs_inputSchema$defsOnSiteGenerationDetailsType {
-    PhotovoltaicSystem = "PhotovoltaicSystem"
-}
 export enum Fhs_inputSchema$defsOnSiteGenerationVentilationStrategy {
     unventilated = "unventilated",
     moderately_ventilated = "moderately_ventilated",
@@ -5402,12 +5228,6 @@ export enum Fhs_inputSchema$defsShadingObjectType {
     obstacle = "obstacle",
     overhang = "overhang"
 }
-export enum Fhs_inputSchema$defsShowerType {
-    MixerShower = "MixerShower"
-}
-export enum Fhs_inputSchema$defsShowerType {
-    InstantElecShower = "InstantElecShower"
-}
 export enum Fhs_inputSchema$defsSolarCellLocation {
     OUT = "OUT",
     HS = "HS",
@@ -5420,27 +5240,9 @@ export enum Fhs_inputSchema$defsSpaceHeatControlType {
     livingroom = "livingroom",
     restofdwelling = "restofdwelling"
 }
-export enum Fhs_inputSchema$defsSpaceHeatSystemDetailsType {
-    InstantElecHeater = "InstantElecHeater"
-}
 export enum Fhs_inputSchema$defsSpaceHeatSystemDetailsAir_flow_type {
     fan_assisted = "fan-assisted",
     damper_only = "damper-only"
-}
-export enum Fhs_inputSchema$defsSpaceHeatSystemDetailsType {
-    ElecStorageHeater = "ElecStorageHeater"
-}
-export enum Fhs_inputSchema$defsSpaceHeatSystemDetailsType {
-    WetDistribution = "WetDistribution"
-}
-export enum Fhs_inputSchema$defsSpaceHeatSystemDetailsType {
-    WarmAir = "WarmAir"
-}
-export enum Fhs_inputSchema$defsStorageTankType {
-    StorageTank = "StorageTank"
-}
-export enum Fhs_inputSchema$defsStorageTankType {
-    hw_cylinder = "hw cylinder"
 }
 export enum Fhs_inputSchema$defsSupplyAirFlowRateControlType {
     ODA = "ODA",
@@ -5464,12 +5266,6 @@ export enum Fhs_inputSchema$defsTestLetter {
     D = "D",
     F = "F",
     F2 = "F2"
-}
-export enum Fhs_inputSchema$defsThermalBridgingDetailsType {
-    ThermalBridgeLinear = "ThermalBridgeLinear"
-}
-export enum Fhs_inputSchema$defsThermalBridgingDetailsType {
-    ThermalBridgePoint = "ThermalBridgePoint"
 }
 export enum Fhs_inputSchema$defsVentType {
     Intermittent_MEV = "Intermittent MEV",
@@ -5496,22 +5292,10 @@ export enum Fhs_inputSchema$defsWaterPipeworkLocation {
     internal = "internal",
     external = "external"
 }
-export enum Fhs_inputSchema$defsWetEmitterWet_emitter_type {
-    radiator = "radiator"
-}
-export enum Fhs_inputSchema$defsWetEmitterWet_emitter_type {
-    ufh = "ufh"
-}
-export enum Fhs_inputSchema$defsWetEmitterWet_emitter_type {
-    fancoil = "fancoil"
-}
 export enum Fhs_inputSchema$defsWindShieldLocation {
     Sheltered = "Sheltered",
     Average = "Average",
     Exposed = "Exposed"
-}
-export enum Fhs_inputSchema$defsWindowShadingObjectType {
-    obstacle = "obstacle"
 }
 export enum Fhs_inputSchema$defsWindowShadingObjectType {
     overhang = "overhang",

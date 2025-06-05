@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl } from "#imports";
-import { WetEmitterWet_emitter_type } from "~/schema/api-schema.types";
 const store = useEcaasStore();
 const title = "Heating system summary";
 
@@ -125,12 +124,12 @@ const wetDistributionSummary: SummarySection = {
 			"Design temperature difference across the emitters":
 				wetDistribution.designTempDiffAcrossEmitters,
 			"Design flow temperature": wetDistribution.designFlowTemp,
-			"Type of space heater": wetDistribution.typeOfSpaceHeater === WetEmitterWet_emitter_type.radiator
+			"Type of space heater": wetDistribution.typeOfSpaceHeater === "radiator"
 				? "Radiators"
 				: "Underfloor heating",
 		};
 		if (
-			wetDistribution.typeOfSpaceHeater === WetEmitterWet_emitter_type.radiator &&
+			wetDistribution.typeOfSpaceHeater === "radiator" &&
 			wetDistribution.convectionFractionWet !== undefined
 		) {
 			wetDistributionData["Convection fraction"] =
@@ -138,7 +137,7 @@ const wetDistributionSummary: SummarySection = {
 		}
 
 		if (
-			wetDistribution.typeOfSpaceHeater === WetEmitterWet_emitter_type.ufh &&
+			wetDistribution.typeOfSpaceHeater === "ufh" &&
 			wetDistribution.emitterFloorArea !== undefined
 		) {
 			wetDistributionData["Emitter floor area"] =

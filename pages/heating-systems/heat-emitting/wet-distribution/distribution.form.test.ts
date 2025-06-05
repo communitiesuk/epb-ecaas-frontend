@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import WetDistribution from "./[distribution].vue";
-import { WetEmitterWet_emitter_type } from "~/schema/api-schema.types";
 
 const user = userEvent.setup();
 
@@ -23,7 +22,7 @@ const wetDistribution1: WetDistributionData = {
 	thermalMass: 2,
 	designTempDiffAcrossEmitters: 0.4,
 	designFlowTemp: 32,
-	typeOfSpaceHeater: WetEmitterWet_emitter_type.radiator,
+	typeOfSpaceHeater: "radiator",
 	exponent: 1.3,
 	constant: 0.08,
 	convectionFractionWet: 0.2,
@@ -41,7 +40,7 @@ const wetDistribution1: WetDistributionData = {
 // 	thermalMass: 5,
 // 	designTempDiffAcrossEmitters: 0.2,
 // 	designFlowTemp: 32,
-// 	typeOfSpaceHeater: WetEmitterWet_emitter_type.ufh,
+// 	typeOfSpaceHeater: "ufh",
 // 	emitterFloorArea: 5,
 // 	ecoDesignControllerClass: "2",
 // 	minimumFlowTemp: 25,
