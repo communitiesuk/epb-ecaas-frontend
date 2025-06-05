@@ -33,7 +33,7 @@ export function mapEnergySupplyData(state: EcaasState): Pick<FhsInputSchema, 'En
 
 export function mapHeatEmittingData(state: EcaasState): Pick<FhsInputSchema, 'SpaceHeatSystem'> {
 	const wetDistributions = state.heatingSystems.heatEmitting.wetDistribution.data;
-	const entries = wetDistributions.map((distribution) => {
+	const wetDistributionEntries = wetDistributions.map((distribution) => {
 		const { name, zoneReference, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution;
 
 		const distributionDetails: SchemaSpaceHeatSystemDetails = {
@@ -72,7 +72,20 @@ export function mapHeatEmittingData(state: EcaasState): Pick<FhsInputSchema, 'Sp
 		] as const;
 	});
 
+	const instantElectricHeaters = state.heatingSystems.heatEmitting.instantElectricHeater.data;
+	const instantElectricHeaterEntries = instantElectricHeaters.map((heater): [string, SchemaSpaceHeatSystemDetails] => [
+		heater.name,
+		{
+			type: "InstantElecHeater",
+			EnergySupply: FuelType.electricity,
+			rated_power: heater.ratedPower,
+			frac_convective: heater.convectionFractionInstant,
+		}
+	]);
+
+	// NB. electric storage heaters and warm air heat pumps yet to be mapped here (PCDB dependent)
+
 	return {
-		SpaceHeatSystem: objectFromEntries(entries)
+		SpaceHeatSystem: objectFromEntries([...wetDistributionEntries, ...instantElectricHeaterEntries])
 	};
 }

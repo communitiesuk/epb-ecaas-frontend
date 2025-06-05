@@ -132,10 +132,13 @@ describe("heating systems mapper", () => {
 								constant: 0.08,
 							}
 						]
-					}
+					},
+					instantElectricHeater: { data: [] },
+					electricStorageHeater: { data: [] },
+					warmAirHeatPump: { data: [] }
 				}
 			}
-		} as EcaasState;
+		} as unknown as EcaasState;
 
 		// Act
 		const result = mapHeatEmittingData(state);
@@ -196,10 +199,13 @@ describe("heating systems mapper", () => {
 								convectionFractionWet: 0.7,
 							}
 						]
-					}
+					},
+					instantElectricHeater: { data: [] },
+					electricStorageHeater: { data: [] },
+					warmAirHeatPump: { data: [] }
 				}
 			}
-		} as EcaasState;
+		} as unknown as EcaasState;
 
 		// Act
 		const result = mapHeatEmittingData(state);
@@ -233,6 +239,44 @@ describe("heating systems mapper", () => {
 			}
 		};
 
+		expect(result).toEqual(expectedResult);
+	});
+
+	it("maps instant electric heaters", () => {
+		// Arrange
+		const state = {
+			heatingSystems: {
+				heatEmitting: {
+					wetDistribution: { data: [] },
+					instantElectricHeater: {
+						data: [
+							{
+								name: "Acme instant electric heater",
+								ratedPower: 100,
+								convectionFractionInstant: 0.8,
+							}
+						]
+					},
+					electricStorageHeater: { data: [] },
+					warmAirHeatPump: { data: [] }
+				}
+			}
+		} as unknown as EcaasState;
+
+		// Act
+		const result = mapHeatEmittingData(state);
+
+		// Assert
+		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
+			SpaceHeatSystem: {
+				"Acme instant electric heater": {
+					type: "InstantElecHeater",
+					rated_power: 100,
+					frac_convective: 0.8,
+					EnergySupply: FuelType.electricity
+				}
+			}
+		};
 		expect(result).toEqual(expectedResult);
 	});
 });
