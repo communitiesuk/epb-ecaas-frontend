@@ -44,6 +44,7 @@ const saveForm = (fields: WetDistributionData) => {
 			thermalMass: fields.thermalMass,
 			designTempDiffAcrossEmitters: fields.designTempDiffAcrossEmitters,
 			designFlowTemp: fields.designFlowTemp,
+			convectionFractionWet: fields.convectionFractionWet,
 			ecoDesignControllerClass: fields.ecoDesignControllerClass,
 			minimumFlowTemp: fields.minimumFlowTemp,
 			minOutdoorTemp: 0,
@@ -58,7 +59,6 @@ const saveForm = (fields: WetDistributionData) => {
 					...commonFields,
 					typeOfSpaceHeater: fields.typeOfSpaceHeater,
 					numberOfRadiators: fields.numberOfRadiators,
-					convectionFractionWet: fields.convectionFractionWet,
 					exponent: 1.3,
 					constant: 0.08,
 				};
@@ -69,6 +69,8 @@ const saveForm = (fields: WetDistributionData) => {
 					...commonFields,
 					typeOfSpaceHeater: fields.typeOfSpaceHeater,
 					emitterFloorArea: fields.emitterFloorArea,
+					equivalentThermalMass: 80,
+					systemPerformanceFactor: 5,
 				};
 				break;
 

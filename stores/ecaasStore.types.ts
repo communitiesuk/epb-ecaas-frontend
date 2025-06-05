@@ -658,15 +658,17 @@ export type WetDistributionData = {
 	minimumFlowTemp: number,
 	minOutdoorTemp: number,
 	maxOutdoorTemp: number,
+	convectionFractionWet: number,
 } & TaggedUnion<'typeOfSpaceHeater', {
 	[WetEmitterWet_emitter_type.radiator]: {
 		numberOfRadiators: number,
-		convectionFractionWet: number,
 		exponent: number, 
 		constant: number,
 	},
 	[WetEmitterWet_emitter_type.ufh]: {
 		emitterFloorArea: number,
+		equivalentThermalMass: number,
+		systemPerformanceFactor: number,
 	}
 }>;
 
