@@ -691,12 +691,12 @@ export type PvSystemData = {
 	inverterPeakPowerDC: number;
 	inverterIsInside: boolean;
 	inverterType: string;
-	aboveDepth: number;
-	aboveDistance: number;
-	leftDepth: number;
-	leftDistance: number;
-	rightDepth: number;
-	rightDistance: number;
+	aboveDepth?: number;
+	aboveDistance?: number;
+	leftDepth?: number;
+	leftDistance?: number;
+	rightDepth?: number;
+	rightDistance?: number;
 };
 
 export type ElectricBatteryData = {

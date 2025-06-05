@@ -2,7 +2,7 @@ import { screen } from "@testing-library/vue";
 import PVScreen from "./[system].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from '@testing-library/user-event';
-import { OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
+import { InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -25,7 +25,7 @@ describe("PV system", () => {
 		await user.type(screen.getByTestId('inverterPeakPowerAC'), '4');
 		await user.type(screen.getByTestId('inverterPeakPowerDC'), '5');
 		await user.click(screen.getByTestId('inverterIsInside_yes'));
-		await user.click(screen.getByTestId('inverterType_central'));
+		await user.click(screen.getByTestId('inverterType_optimised_inverter'));
 		await user.type(screen.getByTestId('aboveDepth'), '20');
 		await user.type(screen.getByTestId('aboveDistance'), '4');
 		await user.type(screen.getByTestId('leftDepth'), '10');
@@ -46,7 +46,7 @@ describe("PV system", () => {
 		inverterPeakPowerAC: 4,
 		inverterPeakPowerDC: 5,
 		inverterIsInside: true,
-		inverterType: 'central',
+		inverterType: InverterType.optimised_inverter,
 		aboveDepth: 20,
 		aboveDistance: 4,
 		leftDepth: 10,
