@@ -1176,8 +1176,8 @@ export interface components {
              * @description Thermal resistance (unit: m².K/W)
              */
             thermal_resistance_construction?: number | null;
-            /** @enum {string} */
-            type: BuildingElementType;
+            /** @constant */
+            type: "BuildingElementOpaque";
             /** Format: double */
             u_value?: number | null;
             /**
@@ -1233,8 +1233,8 @@ export interface components {
              */
             thermal_resistance_construction?: number | null;
             treatment?: components["schemas"]["WindowTreatment"][] | null;
-            /** @enum {string} */
-            type: BuildingElementType;
+            /** @constant */
+            type: "BuildingElementTransparent";
             /** Format: double */
             u_value?: number | null;
             /**
@@ -1326,8 +1326,8 @@ export interface components {
              * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
              */
             total_area: number;
-            /** @enum {string} */
-            type: BuildingElementType;
+            /** @constant */
+            type: "BuildingElementGround";
             /**
              * Format: double
              * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
@@ -1352,8 +1352,8 @@ export interface components {
              * @description Thermal resistance (unit: m².K/W)
              */
             thermal_resistance_construction?: number | null;
-            /** @enum {string} */
-            type: BuildingElementType;
+            /** @constant */
+            type: "BuildingElementAdjacentConditionedSpace";
             /** Format: double */
             u_value?: number | null;
         } | {
@@ -1383,8 +1383,8 @@ export interface components {
              * @description Effective thermal resistance of unheated space (unit: m².K/W)
              */
             thermal_resistance_unconditioned_space: number;
-            /** @enum {string} */
-            type: BuildingElementType;
+            /** @constant */
+            type: "BuildingElementAdjacentUnconditionedSpace_Simple";
             /** Format: double */
             u_value?: number | null;
         };
@@ -2177,8 +2177,8 @@ export interface components {
                      * @description Thermal resistance (unit: m².K/W)
                      */
                     thermal_resistance_construction?: number | null;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsBuildingElementType;
+                    /** @constant */
+                    type: "BuildingElementOpaque";
                     /** Format: double */
                     u_value?: number | null;
                     /**
@@ -2234,8 +2234,8 @@ export interface components {
                      */
                     thermal_resistance_construction?: number | null;
                     treatment?: components["schemas"]["WindowTreatment"][] | null;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsBuildingElementType;
+                    /** @constant */
+                    type: "BuildingElementTransparent";
                     /** Format: double */
                     u_value?: number | null;
                     /**
@@ -2327,8 +2327,8 @@ export interface components {
                      * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
                      */
                     total_area: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsBuildingElementType;
+                    /** @constant */
+                    type: "BuildingElementGround";
                     /**
                      * Format: double
                      * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
@@ -2353,8 +2353,8 @@ export interface components {
                      * @description Thermal resistance (unit: m².K/W)
                      */
                     thermal_resistance_construction?: number | null;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsBuildingElementType;
+                    /** @constant */
+                    type: "BuildingElementAdjacentConditionedSpace";
                     /** Format: double */
                     u_value?: number | null;
                 } | {
@@ -2384,8 +2384,8 @@ export interface components {
                      * @description Effective thermal resistance of unheated space (unit: m².K/W)
                      */
                     thermal_resistance_unconditioned_space: number;
-                    /** @enum {string} */
-                    type: Fhs_inputSchema$defsBuildingElementType;
+                    /** @constant */
+                    type: "BuildingElementAdjacentUnconditionedSpace_Simple";
                     /** Format: double */
                     u_value?: number | null;
                 };
@@ -5110,21 +5110,6 @@ export enum WwhrsType {
     WWHRS_InstantaneousSystemB = "WWHRS_InstantaneousSystemB",
     WWHRS_InstantaneousSystemC = "WWHRS_InstantaneousSystemC"
 }
-export enum BuildingElementType {
-    BuildingElementOpaque = "BuildingElementOpaque"
-}
-export enum BuildingElementType {
-    BuildingElementTransparent = "BuildingElementTransparent"
-}
-export enum BuildingElementType {
-    BuildingElementGround = "BuildingElementGround"
-}
-export enum BuildingElementType {
-    BuildingElementAdjacentConditionedSpace = "BuildingElementAdjacentConditionedSpace"
-}
-export enum BuildingElementType {
-    BuildingElementAdjacentUnconditionedSpace_Simple = "BuildingElementAdjacentUnconditionedSpace_Simple"
-}
 export enum SpaceHeatControlType {
     livingroom = "livingroom",
     restofdwelling = "restofdwelling"
@@ -5206,21 +5191,6 @@ export enum Fhs_inputSchema$defsBoilerHotWaterTest {
 export enum Fhs_inputSchema$defsBuildType {
     house = "house",
     flat = "flat"
-}
-export enum Fhs_inputSchema$defsBuildingElementType {
-    BuildingElementOpaque = "BuildingElementOpaque"
-}
-export enum Fhs_inputSchema$defsBuildingElementType {
-    BuildingElementTransparent = "BuildingElementTransparent"
-}
-export enum Fhs_inputSchema$defsBuildingElementType {
-    BuildingElementGround = "BuildingElementGround"
-}
-export enum Fhs_inputSchema$defsBuildingElementType {
-    BuildingElementAdjacentConditionedSpace = "BuildingElementAdjacentConditionedSpace"
-}
-export enum Fhs_inputSchema$defsBuildingElementType {
-    BuildingElementAdjacentUnconditionedSpace_Simple = "BuildingElementAdjacentUnconditionedSpace_Simple"
 }
 export enum Fhs_inputSchema$defsColdWaterSourceType {
     mains_water = "mains water",
