@@ -350,17 +350,6 @@ const wwhrsSummary: SummarySection = {
 					</template>
 				</SummaryTab>
 			</GovTabs>
-			<h2 class="govuk-heading-m">Waste water heat recovery (WWHRS)</h2>
-			<GovTabs v-slot="tabProps" :items="getTabItems([wwhrsSummary])">
-				<SummaryTab :summary="wwhrsSummary" :selected="tabProps.currentTab === 0" :edit-url="getUrl('wwhrs')!">
-					<template #empty>
-						<h2 class="govuk-heading-m">No WWHRS added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('wwhrsCreate')">
-							Add WWHRS
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-			</GovTabs>
 			<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 		</NuxtLayout>
 	</div>

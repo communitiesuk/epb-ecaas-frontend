@@ -240,13 +240,6 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'pipework'
 	},
 	{
-		id: 'wwhrs',
-		title: 'WWHRS',
-		url: '/domestic-hot-water/wwhrs',
-		type: PageType.Task,
-		parentId: 'domesticHotWater'
-	},
-	{
 		id: 'wwhrsItem',
 		title: 'WWHRS',
 		url: '/domestic-hot-water/wwhrs/:wwhrs',
