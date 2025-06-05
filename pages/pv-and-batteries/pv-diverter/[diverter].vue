@@ -15,7 +15,7 @@ const saveForm = (fields: PvDiverterData) => {
 		const pvDiverterItem: PvDiverterData = {
 			name: fields.name,
 			energyDivertedToHeatGeneration: fields.energyDivertedToHeatGeneration,
-			energyDivertedToStorageTank: fields.energyDivertedToStorageTank
+			energyDivertedToHotWaterCylinder: fields.energyDivertedToHotWaterCylinder
 		};
 
 		saveToList(pvDiverterItem, pvDiverter);
@@ -57,17 +57,17 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Select which heat generator, added previously, is being sent energy by the diverter"
 		/>
 		<FormKit
-			id="energyDivertedToStorageTank"
+			id="energyDivertedToHotWaterCylinder"
 			type="govRadios"
-			:options="new Map(store.domesticHotWater.waterHeating.storageTank.data.map(x => [x.id, x.name]))"
-			label="Energy diverted to storage tank"
-			help="Select a storage tank, added previously, which is being sent energy by the diverter"
-			name="energyDivertedToStorageTank"
+			:options="new Map(store.domesticHotWater.waterHeating.hotWaterCylinder.data.map(x => [x.id, x.name]))"
+			label="Energy diverted to hot water cylinder"
+			help="Select a hot water cylinder, added previously, which is being sent energy by the diverter"
+			name="energyDivertedToHotWaterCylinder"
 			validation="required">
-			<div v-if="!store.domesticHotWater.waterHeating.storageTank.data.length">
-				<p class="govuk-error-message">No storage tank added.</p>
-				<NuxtLink :to="getUrl('storageTankCreate')" class="govuk-link gov-radios-add-link">
-					Click here to add a storage tank
+			<div v-if="!store.domesticHotWater.waterHeating.hotWaterCylinder.data.length">
+				<p class="govuk-error-message">No hot water cylinder added.</p>
+				<NuxtLink :to="getUrl('hotWaterCylinderCreate')" class="govuk-link gov-radios-add-link">
+					Click here to add a hot water cylinder
 				</NuxtLink>
 			</div>
 		</FormKit>

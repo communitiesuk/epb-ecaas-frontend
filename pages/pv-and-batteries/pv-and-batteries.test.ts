@@ -75,7 +75,7 @@ describe('pv and batteries', () => {
 	const pvDiverter1: PvDiverterData = {
 		name: "PV Diverter 1",
 		energyDivertedToHeatGeneration: 'heatPump_0',
-		energyDivertedToStorageTank: '0'
+		energyDivertedToHotWaterCylinder: '0'
 	};
 
 	const pvDiverter2: PvDiverterData = {

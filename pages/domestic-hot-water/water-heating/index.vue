@@ -6,7 +6,7 @@ const store = useEcaasStore();
 type WaterHeatingType = keyof typeof store.domesticHotWater.waterHeating;
 
 interface WaterHeatingData extends
-	StorageTankData,
+	HotWaterCylinderData,
 	ImmersionHeaterData,
 	SolarThermalData,
 	PointOfUseData,
@@ -50,7 +50,7 @@ function handleComplete() {
 	store.$patch({
 		domesticHotWater: {
 			waterHeating: {
-				storageTank: { complete: true },
+				hotWaterCylinder: { complete: true },
 				immersionHeater: { complete: true },
 				solarThermal: { complete: true },
 				pointOfUse: { complete: true },
@@ -80,12 +80,12 @@ function checkIsComplete(){
 	</h1>
 	<p class="govuk-body">For now, this service only allows homes to be modelled with the following. In future releases there will be further options.</p>
 	<CustomList
-		id="storageTank"
+		id="hotWaterCylinder"
 		title="Hot water cylinder"
-		:form-url="`${page?.url!}/storage-tank`"
-		:items="store.domesticHotWater.waterHeating.storageTank.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('storageTank', index)"
-		@duplicate="(index: number) => handleDuplicate('storageTank', index)"
+		:form-url="`${page?.url!}/hot-water-cylinder`"
+		:items="store.domesticHotWater.waterHeating.hotWaterCylinder.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('hotWaterCylinder', index)"
+		@duplicate="(index: number) => handleDuplicate('hotWaterCylinder', index)"
 	/>
 	<CustomList
 		id="immersionHeater"

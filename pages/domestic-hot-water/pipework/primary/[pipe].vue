@@ -33,7 +33,7 @@ const saveForm = (fields: PrimaryPipeworkData) => {
 			thermalConductivity: fields.thermalConductivity,
 			surfaceReflectivity: fields.surfaceReflectivity,
 			pipeContents: fields.pipeContents,
-			storageTank: fields.storageTank,
+			hotWaterCylinder: fields.hotWaterCylinder,
 			location: fields.location,
 		};
 
@@ -177,17 +177,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<FormKit
-			id="storageTank"
+			id="hotWaterCylinder"
 			type="govRadios"
-			:options="new Map(store.domesticHotWater.waterHeating.storageTank.data.map(x => [x.id, x.name]))"
-			label="Storage tank"
-			help="Select a storage tank that this pipework is connected to"
-			name="storageTank"
+			:options="new Map(store.domesticHotWater.waterHeating.hotWaterCylinder.data.map(x => [x.id, x.name]))"
+			label="Hot water Cylinder"
+			help="Select a hot water cylinder that this pipework is connected to"
+			name="hotWaterCylinder"
 			validation="required">
-			<div v-if="!store.domesticHotWater.waterHeating.storageTank.data.length">
-				<p class="govuk-error-message">No storage tank added.</p>
-				<NuxtLink :to="getUrl('storageTankCreate')" class="govuk-link gov-radios-add-link">
-					Click here to add a storage tank
+			<div v-if="!store.domesticHotWater.waterHeating.hotWaterCylinder.data.length">
+				<p class="govuk-error-message">No hot water cylinder added.</p>
+				<NuxtLink :to="getUrl('hotWaterCylinderCreate')" class="govuk-link gov-radios-add-link">
+					Click here to add a hot water cylinder
 				</NuxtLink>
 			</div>
 		</FormKit>

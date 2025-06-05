@@ -31,7 +31,7 @@ function getInitialState(): EcaasState {
 		},
 		domesticHotWater: {
 			waterHeating: {
-				storageTank: { data: [] },
+				hotWaterCylinder: { data: [] },
 				immersionHeater: { data: [] },
 				solarThermal: { data: [] },
 				pointOfUse: { data: [] },

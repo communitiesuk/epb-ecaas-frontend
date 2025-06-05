@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
-import { WaterPipeContentsType, WaterPipeworkLocation, WwhrsType } from '~/schema/api-schema.types';
+import { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -18,9 +18,9 @@ describe('Domestic hot water summary', () => {
 	describe('water heating', () => {
 		const heatPumpId = '463c94f6-566c-49b2-af27-57e5c68b5c30';
 
-		const storageTank: StorageTankData = {
+		const hotWaterCylinder: HotWaterCylinderData = {
 			id: 'c84528bb-f805-4f1e-95d3-2bd17384fdbe',
-			name: 'Storage tank 1',
+			name: 'Hot water cylinder 1',
 			heatSource: heatPumpId,
 			tankVolume: 5,
 			dailyEnergyLoss: 1,
@@ -39,12 +39,12 @@ describe('Domestic hot water summary', () => {
 			heaterEfficiency: 0.5,
 		};
 
-		const addStorageTankData = () => {
+		const addHotWaterCylinderData = () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
-						storageTank: {
-							data: [storageTank]
+						hotWaterCylinder: {
+							data: [hotWaterCylinder]
 						}
 					},
 				},
@@ -62,10 +62,10 @@ describe('Domestic hot water summary', () => {
 		};
 
 		it('should contain the correct tabs for water heating when data is present', async () => {
-			addStorageTankData();
+			addHotWaterCylinderData();
 			await renderSuspended(Summary);
 	  
-			expect(screen.queryByRole('link', {name: 'Storage tank'})).toBeDefined();
+			expect(screen.queryByRole('link', {name: 'Hot water cylinder'})).toBeDefined();
 			expect(screen.queryByRole('link', {name: 'Immersion heater'})).toBeNull();
 			expect(screen.queryByRole('link', {name: 'Solar thermal'})).toBeNull();
 			expect(screen.queryByRole('link', {name: 'Point of use'})).toBeNull();
@@ -85,19 +85,19 @@ describe('Domestic hot water summary', () => {
 			expect(new URL(addWaterHeatingLink.href).pathname).toBe(getUrl('waterHeating'));
 		});
 
-		it('should display the correct data for the storage tank section', async () => {
-			addStorageTankData();
+		it('should display the correct data for the hot water cylinder section', async () => {
+			addHotWaterCylinderData();
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": "Storage tank 1",
+				"Name": "Hot water cylinder 1",
 				"Heat source": "Heat pump",
 				"Tank volume": "5",
 				"Daily energy loss": "1",
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-storageTank-${hyphenate(key)}`));
+				const lineResult = (await screen.findByTestId(`summary-hotWaterCylinder-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
@@ -295,7 +295,7 @@ describe('Domestic hot water summary', () => {
 	});
 
 	describe('pipework', () => {
-		const storageTankId = 'c84528bb-f805-4f1e-95d3-2bd17384fdbe';
+		const hotWaterCylinderId = 'c84528bb-f805-4f1e-95d3-2bd17384fdbe';
 
 		const primaryPipework: PrimaryPipeworkData = {
 			name: 'Pipework Kitchen Sink Primary',
@@ -306,7 +306,7 @@ describe('Domestic hot water summary', () => {
 			thermalConductivity: 1,
 			surfaceReflectivity: true,
 			pipeContents: WaterPipeContentsType.water,
-			storageTank: storageTankId,
+			hotWaterCylinder: hotWaterCylinderId,
 			location: WaterPipeworkLocation.internal
 		};
 
@@ -333,10 +333,10 @@ describe('Domestic hot water summary', () => {
 						}
 					},
 					waterHeating: {
-						storageTank: {
+						hotWaterCylinder: {
 							data: [{
-								id: storageTankId,
-								name: 'Storage tank 1'
+								id: hotWaterCylinderId,
+								name: 'Hot water cylinder 1'
 							}]
 						}
 					}
@@ -354,7 +354,7 @@ describe('Domestic hot water summary', () => {
 				"Thermal conductivity": "1",
 				"Surface reflectivity": "Reflective",
 				"Pipe contents": "Water",
-				"Storage tank": 'Storage tank 1',
+				"Hot water cylinder": 'Hot water cylinder 1',
 				"Location": "Internal",
 			};
 	

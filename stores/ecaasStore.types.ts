@@ -378,7 +378,7 @@ export interface DomesticHotWater {
 }
 
 export interface WaterHeating {
-	storageTank: EcaasForm<StorageTankData[]>;
+	hotWaterCylinder: EcaasForm<HotWaterCylinderData[]>;
 	immersionHeater: EcaasForm<ImmersionHeaterData[]>;
 	solarThermal: EcaasForm<SolarThermalData[]>;
 	pointOfUse: EcaasForm<PointOfUseData[]>;
@@ -389,7 +389,7 @@ export interface WaterHeating {
 	heatInterfaceUnit: EcaasForm<WaterHeatingHeatInterfaceUnitData[]>;
 }
 
-export type StorageTankData = {
+export type HotWaterCylinderData = {
 	readonly id: string;
 	name: string;
 	heatSource: string;
@@ -480,7 +480,7 @@ export type PrimaryPipeworkData = {
 	thermalConductivity: number;
 	surfaceReflectivity: boolean;
 	pipeContents: WaterPipeContentsType;
-	storageTank: string;
+	hotWaterCylinder: string;
 	location: WaterPipeworkLocation;
 };
 
@@ -714,7 +714,7 @@ export type ElectricBatteryData = {
 export type PvDiverterData = {
 	name: string;
 	energyDivertedToHeatGeneration: string;
-	energyDivertedToStorageTank: string;
+	energyDivertedToHotWaterCylinder: string;
 };
 
 export interface Cooling {

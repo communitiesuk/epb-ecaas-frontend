@@ -16,11 +16,11 @@ const heatGenerationData = [
 	heatInterfaceUnit.data
 ].flat().map(x => ({ id: x.id, name: x.name }));
 
-const storageTankData = store.domesticHotWater.waterHeating.storageTank.data;
-const storageTankSummary: SummarySection = {
-	id: 'storageTank',
-	label: 'Storage tank',
-	data: storageTankData.map(d => {
+const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
+const hotWaterCylinderSummary: SummarySection = {
+	id: 'hotWaterCylinder',
+	label: 'Hot Water Cylinder',
+	data: hotWaterCylinderData.map(d => {
 		return {
 			"Name": d.name,
 			"Heat source": heatGenerationData.find(x => x.id === d.heatSource)?.name,
@@ -133,7 +133,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 };
 
 const waterHeatingSummarySections: SummarySection[] = [
-	storageTankSummary,
+	hotWaterCylinderSummary,
 	immersionHeaterSummary,
 	solarThermalSummary,
 	pointOfUseSummary,
@@ -218,7 +218,7 @@ const primaryPipeworkSummary: SummarySection = {
 			"Thermal conductivity": d.thermalConductivity,
 			"Surface reflectivity": d.surfaceReflectivity ? 'Reflective' : 'Not reflective',
 			"Pipe contents": d.pipeContents,
-			"Storage tank": storageTankData.find(x => x.id === d.storageTank)?.name,
+			"Hot water cylinder": hotWaterCylinderData.find(x => x.id === d.hotWaterCylinder)?.name,
 			"Location": d.location,
 		};
 	}) || [],
@@ -253,22 +253,6 @@ const hotWaterOutletsData = [
 	otherOutlets.data
 ].flat().map(x => ({ id: x.id, name: x.name }));
 
-const wwhrsData = store.domesticHotWater.wwhrs.data;
-const wwhrsSummary: SummarySection = {
-	id: 'wwhrs',
-	label: 'WWHRS',
-	data: wwhrsData.map(d => {
-		return {
-			"Name": d.name,
-			"Outlet": hotWaterOutletsData.find(x => x.id === d.outlet)?.name,
-			"Type": displayWwhrsType(d.type),
-			"Flow rate": d.flowRate,
-			"Efficiency": d.efficiency,
-			"Proportion of use": d.proportionOfUse
-		};
-	}),
-	editUrl: getUrl('wwhrs')!
-};
 </script>
 
 <template>
@@ -286,7 +270,7 @@ const wwhrsSummary: SummarySection = {
 						Add water heating
 					</NuxtLink>
 				</TabPanel>
-				<SummaryTab :summary="storageTankSummary" :selected="tabProps.currentItem?.id === 'storageTank'" />
+				<SummaryTab :summary="hotWaterCylinderSummary" :selected="tabProps.currentItem?.id === 'hotWaterCylinder'" />
 				<SummaryTab :summary="immersionHeaterSummary" :selected="tabProps.currentItem?.id === 'immersionHeater'" />
 				<SummaryTab :summary="solarThermalSummary" :selected="tabProps.currentItem?.id === 'solarThermal'" />
 				<SummaryTab :summary="pointOfUseSummary" :selected="tabProps.currentItem?.id === 'pointOfUse'" />

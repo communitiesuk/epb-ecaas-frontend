@@ -16,16 +16,16 @@ const domesticHotWaterPages: Array<Page> = [
 		parentId: 'domesticHotWater'
 	},
 	{
-		id: 'storageTank',
-		title: 'Storage tank',
-		url: '/domestic-hot-water/water-heating/storage-tank/:storageTank',
+		id: 'hotWaterCylinder',
+		title: 'Hot water cylinder',
+		url: '/domestic-hot-water/water-heating/hot-water-cylinder/:hotWaterCylinder',
 		type: PageType.Task,
 		parentId: 'waterHeating'
 	},
 	{
-		id: 'storageTankCreate',
-		title: 'Storage tank',
-		url: '/domestic-hot-water/water-heating/storage-tank/create',
+		id: 'hotWaterCylinderCreate',
+		title: 'Hot water cylinder',
+		url: '/domestic-hot-water/water-heating/hot-water-cylinder/create',
 		type: PageType.Task,
 		parentId: 'waterHeating'
 	},

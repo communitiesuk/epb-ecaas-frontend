@@ -10,7 +10,7 @@ mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
-const storageTankId = 'c84528bb-f805-4f1e-95d3-2bd17384fdbe';
+const hotWaterCylinderId = 'c84528bb-f805-4f1e-95d3-2bd17384fdbe';
 
 const state: PrimaryPipeworkData = {
 	name: 'Pipework Kitchen Sink',
@@ -21,7 +21,7 @@ const state: PrimaryPipeworkData = {
 	thermalConductivity: 1,
 	surfaceReflectivity: true,
 	pipeContents: WaterPipeContentsType.water,
-	storageTank: storageTankId,
+	hotWaterCylinder: hotWaterCylinderId,
 	location: WaterPipeworkLocation.internal
 };
 
@@ -33,14 +33,14 @@ describe('Primary pipework form', () => {
 		store.$reset();
 	});
 
-	const addStorageTank = () => {
+	const addHotWaterCylinder = () => {
 		store.$patch({
 			domesticHotWater: {
 				waterHeating: {
-					storageTank: {
+					hotWaterCylinder: {
 						data: [{
-							id: storageTankId,
-							name: 'Storage tank 1',
+							id: hotWaterCylinderId,
+							name: 'Hot water cylinder 1',
 							tankVolume: 5,
 							dailyEnergyLoss: 1,
 							heatSource: '463c94f6-566c-49b2-af27-57e5c68b5c30'
@@ -60,12 +60,12 @@ describe('Primary pipework form', () => {
 		await user.type(screen.getByTestId('thermalConductivity'), '1');
 		await user.click(screen.getByTestId('surfaceReflectivity_yes'));
 		await user.click(screen.getByTestId('pipeContents_water'));
-		await user.click(screen.getByTestId(`storageTank_${storageTankId}`));
+		await user.click(screen.getByTestId(`hotWaterCylinder_${hotWaterCylinderId}`));
 		await user.click(screen.getByTestId('location_internal'));
 	};
 
 	it('data is saved to store state when form is valid', async () => {
-		addStorageTank();
+		addHotWaterCylinder();
 		await renderSuspended(PipeworkForm);
 		
 		await populateValidForm();
@@ -77,7 +77,7 @@ describe('Primary pipework form', () => {
 	});
 
 	it('form is prepopulated when data exists in state', async () => {
-		addStorageTank();
+		addHotWaterCylinder();
 
 		store.$patch({
 			domesticHotWater: {
@@ -103,7 +103,7 @@ describe('Primary pipework form', () => {
 		expect((await screen.findByTestId('thermalConductivity') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('surfaceReflectivity_yes')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('pipeContents_water')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId(`storageTank_${storageTankId}`)).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId(`hotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);
 	});
 
@@ -120,7 +120,7 @@ describe('Primary pipework form', () => {
 		expect((await screen.findByTestId('thermalConductivity_error'))).toBeDefined();
 		expect((await screen.findByTestId('surfaceReflectivity_error'))).toBeDefined();
 		expect((await screen.findByTestId('pipeContents_error'))).toBeDefined();
-		expect((await screen.findByTestId('storageTank_error'))).toBeDefined();
+		expect((await screen.findByTestId('hotWaterCylinder_error'))).toBeDefined();
 		expect((await screen.findByTestId('location_error'))).toBeDefined();
 	});
 
@@ -133,7 +133,7 @@ describe('Primary pipework form', () => {
 	});
 
 	it('navigates to pipework page when valid form is completed', async () => {
-		addStorageTank();
+		addHotWaterCylinder();
 		await renderSuspended(PipeworkForm);
 	
 		await populateValidForm();

@@ -20,7 +20,7 @@ describe("Pipeworks", () => {
 		thermalConductivity: 0.5,
 		surfaceReflectivity: false,
 		pipeContents: WaterPipeContentsType.water,
-		storageTank: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
+		hotWaterCylinder: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
 		location: WaterPipeworkLocation.internal,
 	};
 
@@ -145,7 +145,7 @@ describe("Pipeworks", () => {
 						secondaryPipework: { data: [pipework2] },
 					},
 					waterHeating:{
-						storageTank: { data: [{name: "Storage 1", id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36"}]}
+						hotWaterCylinder: { data: [{name: "Cylinder 1", id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36"}]}
 					}
 				},
 					

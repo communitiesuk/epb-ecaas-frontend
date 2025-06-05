@@ -3,42 +3,42 @@ import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
 import { v4 as uuidv4 } from 'uuid';
 import WaterHeating from './index.vue';
-import type { ImmersionHeaterData, StorageTankData } from "~/stores/ecaasStore.types";
+import type { ImmersionHeaterData, HotWaterCylinderData } from "~/stores/ecaasStore.types";
 
 describe('water heating', () => {
 
-	describe('storage tank', () => {
+	describe('hot water cylinder', () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
-		const storageTank1: StorageTankData = {
+		const hotWaterCylinder1: HotWaterCylinderData = {
 			id: uuidv4(),
 			heatSource: "🥕",
 			tankVolume: 5,
 			dailyEnergyLoss: 1,
-			name: "Storage tank 1"
+			name: "Hot water cylinder 1"
 		};
 
-		const storageTank2: StorageTankData = {
-			...storageTank1,
-			name: "Storage tank 2",
+		const hotWaterCylinder2: HotWaterCylinderData = {
+			...hotWaterCylinder1,
+			name: "Hot water cylinder 2",
 		};
 
-		const storageTank3: StorageTankData = {
-			...storageTank1,
-			name: "Storage tank 3"
+		const hotWaterCylinder3: HotWaterCylinderData = {
+			...hotWaterCylinder1,
+			name: "Hot water cylinder 3"
 		};
 
 		afterEach(() => {
 			store.$reset();
 		});
 
-		it('storage tank is removed when remove link is clicked', async () => {
+		it('hot water cylinder is removed when remove link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
-						storageTank: {
-							data: [storageTank1]
+						hotWaterCylinder: {
+							data: [hotWaterCylinder1]
 						}
 					}
 				}
@@ -46,57 +46,57 @@ describe('water heating', () => {
 
 			await renderSuspended(WaterHeating);
 
-			expect(screen.getAllByTestId('storageTank_items')).toBeDefined();
+			expect(screen.getAllByTestId('hotWaterCylinder_items')).toBeDefined();
 
-			await user.click(screen.getByTestId('storageTank_remove_0'));
+			await user.click(screen.getByTestId('hotWaterCylinder_remove_0'));
 
-			expect(screen.queryByTestId('storageTank_items')).toBeNull();
+			expect(screen.queryByTestId('hotWaterCylinder_items')).toBeNull();
 		});
 
-		it('should only remove the storage tank that is clicked', async () => {
+		it('should only remove the hot water cylinder that is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
-						storageTank: {
-							data:[storageTank1, storageTank2, storageTank3]
+						hotWaterCylinder: {
+							data:[hotWaterCylinder1, hotWaterCylinder2, hotWaterCylinder3]
 						}
 					}
 				}
 			});
 
 			await renderSuspended(WaterHeating);
-			await user.click(screen.getByTestId('storageTank_remove_1'));
+			await user.click(screen.getByTestId('hotWaterCylinder_remove_1'));
 
-			const populatedList = screen.getByTestId('storageTank_items');
+			const populatedList = screen.getByTestId('hotWaterCylinder_items');
 
-			expect(within(populatedList).getByText('Storage tank 1')).toBeDefined();
-			expect(within(populatedList).getByText('Storage tank 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Storage tank 2')).toBeNull();
+			expect(within(populatedList).getByText('Hot water cylinder 1')).toBeDefined();
+			expect(within(populatedList).getByText('Hot water cylinder 3')).toBeDefined();
+			expect(within(populatedList).queryByText('Hot water cylinder 2')).toBeNull();
 		});
 
-		it('storage tank is duplicated when duplicate link is clicked', async () => {
+		it('hot water cylinder is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
-						storageTank: {
-							data:[storageTank1, storageTank2]
+						hotWaterCylinder: {
+							data:[hotWaterCylinder1, hotWaterCylinder2]
 						}
 					}
 				}
 			});
 
 			await renderSuspended(WaterHeating);
-			await userEvent.click(screen.getByTestId('storageTank_duplicate_0'));
-			await userEvent.click(screen.getByTestId('storageTank_duplicate_0'));
-			await userEvent.click(screen.getByTestId('storageTank_duplicate_2'));
-			await userEvent.click(screen.getByTestId('storageTank_duplicate_2'));
+			await userEvent.click(screen.getByTestId('hotWaterCylinder_duplicate_0'));
+			await userEvent.click(screen.getByTestId('hotWaterCylinder_duplicate_0'));
+			await userEvent.click(screen.getByTestId('hotWaterCylinder_duplicate_2'));
+			await userEvent.click(screen.getByTestId('hotWaterCylinder_duplicate_2'));
 
-			expect(screen.queryAllByTestId('storageTank_item').length).toBe(6);
-			expect(screen.getByText('Storage tank 1')).toBeDefined();
-			expect(screen.getByText('Storage tank 1 (1)')).toBeDefined();
-			expect(screen.getByText('Storage tank 1 (2)')).toBeDefined();
-			expect(screen.getByText('Storage tank 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Storage tank 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId('hotWaterCylinder_item').length).toBe(6);
+			expect(screen.getByText('Hot water cylinder 1')).toBeDefined();
+			expect(screen.getByText('Hot water cylinder 1 (1)')).toBeDefined();
+			expect(screen.getByText('Hot water cylinder 1 (2)')).toBeDefined();
+			expect(screen.getByText('Hot water cylinder 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('Hot water cylinder 1 (1) (2)')).toBeDefined();
 		});
 	});
 
