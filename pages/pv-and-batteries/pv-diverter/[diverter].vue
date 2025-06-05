@@ -55,6 +55,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="energyDivertedToHeatGeneration"
 			label="Energy diverted to heat generation"
 			help="Select which heat generator, added previously, is being sent energy by the diverter"
+			validation="required"
 		/>
 		<FormKit
 			id="energyDivertedToHotWaterCylinder"

@@ -6,6 +6,7 @@ defineProps<{
 	name: string;
 	label: string;
 	help?: string;
+	validation?: string
 }>();
 
 const store = useEcaasStore();
@@ -29,7 +30,7 @@ const heatGenerators = [
 		:label="label"
 		:help="help"
 		:name="name"
-		validation="required">
+		:validation="validation ?? 'required'">
 		<div v-if="!heatGenerators.length">
 			<p class="govuk-error-message">No heat generators added.</p>
 			<NuxtLink :to="getUrl('heatGeneration')" class="govuk-link gov-radios-add-link">
