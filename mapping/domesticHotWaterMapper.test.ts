@@ -57,6 +57,12 @@ describe('domestic hot water mapper', () => {
 			flowRate: 1,
 		};
 
+		const other: OtherHotWaterOutletData = {
+			id: "other1",
+			name: "other1",
+			flowRate: 4,
+		};
+
 		store.$patch({
 			domesticHotWater: {
 				hotWaterOutlets: {
@@ -68,6 +74,9 @@ describe('domestic hot water mapper', () => {
 					},
 					bath: {
 						data: [bath]
+					},
+					otherOutlets: {
+						data: [other]
 					}
 				}
 			}
@@ -97,6 +106,12 @@ describe('domestic hot water mapper', () => {
 						ColdWaterSource: ColdWaterSourceType.mains_water,
 						flowrate: 1,
 						size: 70,
+					}
+				},
+				Other: {
+					"other1": {
+						ColdWaterSource: ColdWaterSourceType.mains_water,
+						flowrate: 4,
 					}
 				}
 			}

@@ -1,14 +1,16 @@
-import { ColdWaterSourceType, type SchemaBathDetails, type SchemaShower } from "~/schema/api-schema.types";
+import { ColdWaterSourceType, type SchemaBathDetails, type SchemaOtherWaterUseDetails, type SchemaShower } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 
 export function mapDomesticHotWaterData(state: EcaasState): Partial<FhsInputSchema> {
 	const showers = mapShowersData(state);
 	const baths = mapBathsData(state);
+	const others = mapOthersData(state);
 
 	return {
 		HotWaterDemand: {
 			Shower: showers,
 			Bath: baths,
+			Other: others,
 		}
 	};
 }
@@ -53,4 +55,18 @@ export function mapBathsData(state: EcaasState) {
 	});
 
 	return Object.fromEntries(bathEntries);
+}
+
+export function mapOthersData(state: EcaasState) {
+	const otherEntries = state.domesticHotWater.hotWaterOutlets.otherOutlets.data.map((x):[string, SchemaOtherWaterUseDetails] => {
+		const key = x.name;
+		const val: SchemaOtherWaterUseDetails = {
+			ColdWaterSource: ColdWaterSourceType.mains_water,
+			flowrate: x.flowRate,
+		};
+
+		return [key, val];
+	});
+
+	return Object.fromEntries(otherEntries);
 }
