@@ -2,9 +2,10 @@ import { objectFromEntries } from "ts-extras";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { FuelType, type SchemaSpaceHeatSystemDetails } from "~/schema/api-schema.types";
 
-export function mapHeatingSystemsData(state: EcaasState): Partial<FhsInputSchema> {
+export function mapHeatingSystemsData(state: EcaasState): Pick<FhsInputSchema, 'EnergySupply' | 'SpaceHeatSystem'> {
 	return {
 		...mapEnergySupplyData(state),
+		...mapHeatEmittingData(state),
 	};
 }
 
