@@ -713,9 +713,7 @@ export type ElectricBatteryData = {
 
 export type PvDiverterData = {
 	name: string;
-	energyDivertedToHeatGeneration: string;
-	energyDivertedToHotWaterCylinder: string;
-};
+} & ({ energyDivertedToHeatGeneration: string; } | { energyDivertedToHotWaterCylinder: string; });
 
 export interface Cooling {
 	airConditioning: EcaasForm<AirConditioningData[]>;
