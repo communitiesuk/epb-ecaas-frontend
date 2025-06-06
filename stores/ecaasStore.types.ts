@@ -79,7 +79,7 @@ export type InternalFloorData = {
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
 	pitch: number;
-	thermalResistanceOfAdjacentUnheatedSpace?: 0;
+	thermalResistanceOfAdjacentUnheatedSpace?: number;
 };
 
 export type ExposedFloorData = {

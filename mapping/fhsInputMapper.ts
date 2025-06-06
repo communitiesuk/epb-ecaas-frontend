@@ -5,15 +5,23 @@ import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 import merge from 'deepmerge';
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
 import { mapHeatingSystemsData } from './heatingSystemsMapper';
+import { mapLivingSpaceFabricData } from './livingSpaceFabricMapper';
 
 export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 	const inputData = exampleData as FhsInputSchema;
 
 	const dwellingDetailsData = mapDwellingDetailsData(state);
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
+	const livingSpaceFabricData = mapLivingSpaceFabricData(state);
 	const heatingSystemsData = mapHeatingSystemsData(state);
 
-	const intermediate = merge(dwellingDetailsData, merge(infiltrationVentilationData, heatingSystemsData));
+	const intermediate = merge.all([
+		dwellingDetailsData,
+		infiltrationVentilationData,
+		livingSpaceFabricData,
+		heatingSystemsData
+	]);
+	
 	const final = merge(inputData, intermediate);
 
 	console.log(final);
