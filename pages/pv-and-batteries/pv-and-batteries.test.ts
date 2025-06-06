@@ -6,7 +6,7 @@ import ElectricBatteryForm from "./electric-battery/[battery].vue";
 import PvDiverterForm from "./pv-diverter/[diverter].vue";
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
-import { BatteryLocation, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
+import { BatteryLocation, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
 
 describe('pv and batteries', () => {
 	const store = useEcaasStore();
@@ -32,7 +32,7 @@ describe('pv and batteries', () => {
 		inverterPeakPowerAC: 4,
 		inverterPeakPowerDC: 5,
 		inverterIsInside: true,
-		inverterType: 'central',
+		inverterType: InverterType.string_inverter,
 		// aboveDepth: 20,
 		// aboveDistance: 4,
 		// leftDepth: 10,

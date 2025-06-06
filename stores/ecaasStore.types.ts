@@ -1,5 +1,5 @@
 import type { EmptyObject, TaggedUnion } from "type-fest";
-import type { BuildType, ApplianceKey, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType } from "~/schema/api-schema.types";
+import type { BuildType, ApplianceKey, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -690,7 +690,7 @@ export type PvSystemData = {
 	inverterPeakPowerAC: number;
 	inverterPeakPowerDC: number;
 	inverterIsInside: boolean;
-	inverterType: string;
+	inverterType: InverterType;
 	aboveDepth?: number;
 	aboveDistance?: number;
 	leftDepth?: number;
