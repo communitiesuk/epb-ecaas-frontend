@@ -14,7 +14,7 @@
     "schema-ts": "npx openapi-typescript https://docs.building-energy-calculator.communities.gov.uk/openapi.yaml -o schema/api-schema.types.ts --path-params-as-types --make-paths-enum --root-types --enum",
     "test": "vitest --typecheck",
     "typecheck": "nuxt typecheck",
-    "typedtest": "nuxt typecheck && vitest run"
+    "typedtest": "nuxt typecheck && ROLLDOWN_OPTIONS_VALIDATION=loose vitest run"
   },
   "dependencies": {
     "@formkit/nuxt": "^1.6.9",
@@ -46,7 +46,6 @@
     "aws-cdk": "^2.1006.0",
     "aws-cdk-lib": "^2.189.1",
     "constructs": "^10.4.2",
-    "esbuild": "^0.25.0",
     "govuk-frontend": "^5.10.2",
     "happy-dom": "^15.11.6",
     "openapi-typescript": "^7.6.1",
@@ -59,6 +58,9 @@
     "vitest": "^3.0.9",
     "vue-tsc": "^2.2.10",
     "yn": "^5.0.0"
+  },
+  "overrides": {
+    "vite": "npm:rolldown-vite@latest"
   },
   "engines": {
     "node": "^22.11.0"
