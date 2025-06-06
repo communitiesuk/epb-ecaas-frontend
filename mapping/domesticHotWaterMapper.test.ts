@@ -36,7 +36,7 @@ describe('domestic hot water mapper', () => {
 		expect(fhsInputData).toBeDefined();
 	});
 
-	it('maps hot water outlets (mixed shower and electric shower) input state to FHS input request', () => {
+	it('maps hot water outlets input state to FHS input request', () => {
 		// Arrange
 		const mixedShower: MixedShowerData = {
 			id: "shower1",
@@ -50,6 +50,13 @@ describe('domestic hot water mapper', () => {
 			ratedPower: 10,
 		};
 
+		const bath: BathData = {
+			id: "bath1",
+			name: "bath1",
+			size: 70,
+			flowRate: 1,
+		};
+
 		store.$patch({
 			domesticHotWater: {
 				hotWaterOutlets: {
@@ -58,6 +65,9 @@ describe('domestic hot water mapper', () => {
 					},
 					electricShower: {
 						data: [electricShower]
+					},
+					bath: {
+						data: [bath]
 					}
 				}
 			}
@@ -80,6 +90,13 @@ describe('domestic hot water mapper', () => {
 						rated_power: 10,
 						ColdWaterSource: ColdWaterSourceType.mains_water,
 						EnergySupply: "mains elec"
+					}
+				},
+				Bath: {
+					"bath1": {
+						ColdWaterSource: ColdWaterSourceType.mains_water,
+						flowrate: 1,
+						size: 70,
 					}
 				}
 			}
