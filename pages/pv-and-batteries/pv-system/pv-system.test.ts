@@ -26,12 +26,12 @@ describe("PV system", () => {
 		await user.type(screen.getByTestId('inverterPeakPowerDC'), '5');
 		await user.click(screen.getByTestId('inverterIsInside_yes'));
 		await user.click(screen.getByTestId('inverterType_optimised_inverter'));
-		await user.type(screen.getByTestId('aboveDepth'), '20');
-		await user.type(screen.getByTestId('aboveDistance'), '4');
-		await user.type(screen.getByTestId('leftDepth'), '10');
-		await user.type(screen.getByTestId('leftDistance'), '7');
-		await user.type(screen.getByTestId('rightDepth'), '2');
-		await user.type(screen.getByTestId('rightDistance'), '10');
+		// await user.type(screen.getByTestId('aboveDepth'), '20');
+		// await user.type(screen.getByTestId('aboveDistance'), '4');
+		// await user.type(screen.getByTestId('leftDepth'), '10');
+		// await user.type(screen.getByTestId('leftDistance'), '7');
+		// await user.type(screen.getByTestId('rightDepth'), '2');
+		// await user.type(screen.getByTestId('rightDistance'), '10');
 	};
 
 	const pvSystem: PvSystemData = {
@@ -47,12 +47,12 @@ describe("PV system", () => {
 		inverterPeakPowerDC: 5,
 		inverterIsInside: true,
 		inverterType: InverterType.optimised_inverter,
-		aboveDepth: 20,
-		aboveDistance: 4,
-		leftDepth: 10,
-		leftDistance: 7,
-		rightDepth: 2,
-		rightDistance: 10,
+		// aboveDepth: 20,
+		// aboveDistance: 4,
+		// leftDepth: 10,
+		// leftDistance: 7,
+		// rightDepth: 2,
+		// rightDistance: 10,
 	};
 
 	it("should have a heading", async () => {
@@ -76,7 +76,7 @@ describe("PV system", () => {
 		expect(screen.getByText("Inverter peak power DC")).toBeDefined();
 		expect(screen.getByText("Inverter location")).toBeDefined();
 		expect(screen.getByText("Inverter type")).toBeDefined();
-		expect(screen.getByText("PV shading")).toBeDefined();
+		expect(screen.queryByText("PV shading")).toBeNull();
 	});
 
 	it("should error when user submits an empty form", async () => {

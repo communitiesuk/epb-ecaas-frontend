@@ -33,12 +33,12 @@ describe('pv and batteries', () => {
 		inverterPeakPowerDC: 5,
 		inverterIsInside: true,
 		inverterType: 'central',
-		aboveDepth: 20,
-		aboveDistance: 4,
-		leftDepth: 10,
-		leftDistance: 7,
-		rightDepth: 2,
-		rightDistance: 10
+		// aboveDepth: 20,
+		// aboveDistance: 4,
+		// leftDepth: 10,
+		// leftDistance: 7,
+		// rightDepth: 2,
+		// rightDistance: 10
 	};
 
 	const pvSystem2: PvSystemData = {
@@ -75,7 +75,7 @@ describe('pv and batteries', () => {
 	const pvDiverter1: PvDiverterData = {
 		name: "PV Diverter 1",
 		energyDivertedToHeatGeneration: 'heatPump_0',
-		energyDivertedToHotWaterCylinder: '0'
+		// energyDivertedToHotWaterCylinder: '0'
 	};
 
 	const pvDiverter2: PvDiverterData = {
@@ -323,82 +323,81 @@ describe('pv and batteries', () => {
 			];
 		};
 
-	type PvType = keyof typeof store.pvAndBatteries;
+		type PvType = keyof typeof store.pvAndBatteries;
 
-	beforeEach(async () => {
-		await addPvDataToStore();
-		await renderSuspended(PvAndBatteries);
-	});
-
-	it("marks pv and batteries section as complete", async () => {
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		const completeStatus = screen.queryByTestId("completeSectionCompleted");
-		expect(completeStatus?.style.display).toBe("none");
-
-		await user.click(screen.getByTestId("completeSectionButton"));
-
-		const PvAndBatteryItems = store.pvAndBatteries;
-		for (const key in PvAndBatteryItems) {
-			expect(PvAndBatteryItems[key as PvType]?.complete).toBe(true);
-		}
-		expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
-		expect(completeStatus?.style.display).not.toBe("none");
-
-		expect(navigateToMock).toHaveBeenCalledWith("/");
-	});
-
-	it("marks as not complete if item is removed", async () => {
-		const items = await getPvData("remove");
-
-		for (const [key] of Object.entries(store.pvAndBatteries)) {
-			const typedKey = key as PvType;
-
-			await user.click(screen.getByTestId("completeSectionButton"));
-			expect(store.pvAndBatteries[typedKey]?.complete).toBe(true);
-
-			const itemData = items.find(i => i.key === typedKey);
-			await user.click(screen.getByTestId(itemData!.testId));
-			expect(store.pvAndBatteries[typedKey]?.complete).toBe(false);
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		}
-	});
-
-	it("marks as not complete if item is duplicated", async () => {
-		const items = await getPvData("duplicate");
-
-		for (const [key] of Object.entries(store.pvAndBatteries)) {
-			const typedKey = key as PvType;
-
-			await user.click(screen.getByTestId("completeSectionButton"));
-			expect(store.pvAndBatteries[typedKey]?.complete).toBe(true);
-
-			const itemData = items.find(i => i.key === typedKey);
-			await user.click(screen.getByTestId(itemData!.testId));
-			expect(store.pvAndBatteries[typedKey]?.complete).toBe(false);
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		}
-	});
-
-	it("marks as not complete after save", async () => {
-		for (const [key] of Object.entries(store.pvAndBatteries)) {
-			const items = await getPvData("");
-			const typedKey = key as PvType;
-
-			await user.click(screen.getByTestId("completeSectionButton"));
-			expect(store.pvAndBatteries[typedKey]?.complete).toBe(true);
-
-			const itemData = items.find(i => i.key === typedKey);
-			const param = itemData!.params;
-			await renderSuspended(itemData!.form, {
-				route: { params: { [param]: "0" } },
-			});
-			await user.click(screen.getByRole("button", { name: "Save and continue" }));
-			expect(store.pvAndBatteries[typedKey].complete).toBe(false);
-
+		beforeEach(async () => {
+			await addPvDataToStore();
 			await renderSuspended(PvAndBatteries);
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		}
-	});
-	});
+		});
 
+		it("marks pv and batteries section as complete", async () => {
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			const completeStatus = screen.queryByTestId("completeSectionCompleted");
+			expect(completeStatus?.style.display).toBe("none");
+
+			await user.click(screen.getByTestId("completeSectionButton"));
+
+			const PvAndBatteryItems = store.pvAndBatteries;
+			for (const key in PvAndBatteryItems) {
+				expect(PvAndBatteryItems[key as PvType]?.complete).toBe(true);
+			}
+			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+			expect(completeStatus?.style.display).not.toBe("none");
+
+			expect(navigateToMock).toHaveBeenCalledWith("/");
+		});
+
+		it("marks as not complete if item is removed", async () => {
+			const items = await getPvData("remove");
+
+			for (const [key] of Object.entries(store.pvAndBatteries)) {
+				const typedKey = key as PvType;
+
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.pvAndBatteries[typedKey]?.complete).toBe(true);
+
+				const itemData = items.find(i => i.key === typedKey);
+				await user.click(screen.getByTestId(itemData!.testId));
+				expect(store.pvAndBatteries[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+
+		it("marks as not complete if item is duplicated", async () => {
+			const items = await getPvData("duplicate");
+
+			for (const [key] of Object.entries(store.pvAndBatteries)) {
+				const typedKey = key as PvType;
+
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.pvAndBatteries[typedKey]?.complete).toBe(true);
+
+				const itemData = items.find(i => i.key === typedKey);
+				await user.click(screen.getByTestId(itemData!.testId));
+				expect(store.pvAndBatteries[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+
+		it("marks as not complete after save", async () => {
+			for (const [key] of Object.entries(store.pvAndBatteries)) {
+				const items = await getPvData("");
+				const typedKey = key as PvType;
+
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.pvAndBatteries[typedKey]?.complete).toBe(true);
+
+				const itemData = items.find(i => i.key === typedKey);
+				const param = itemData!.params;
+				await renderSuspended(itemData!.form, {
+					route: { params: { [param]: "0" } },
+				});
+				await user.click(screen.getByRole("button", { name: "Save and continue" }));
+				expect(store.pvAndBatteries[typedKey].complete).toBe(false);
+
+				await renderSuspended(PvAndBatteries);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+	});
 });

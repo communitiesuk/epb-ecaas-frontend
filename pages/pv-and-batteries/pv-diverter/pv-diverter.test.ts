@@ -20,7 +20,6 @@ describe('pv diverter', () => {
 	const state: PvDiverterData = {
 		name: "PV Diverter 1",
 		energyDivertedToHeatGeneration: heatPumpId,
-		energyDivertedToHotWaterCylinder: hotWaterCylinderId
 	};
 
 	afterEach(() => {
@@ -55,7 +54,6 @@ describe('pv diverter', () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'PV Diverter 1');
 		await user.click(screen.getByTestId(`energyDivertedToHeatGeneration_${heatPumpId}`));
-		await user.click(screen.getByTestId(`energyDivertedToHotWaterCylinder_${hotWaterCylinderId}`));
 	};
 
 	it('data is saved to store state when form is valid', async () => {
@@ -88,7 +86,7 @@ describe('pv diverter', () => {
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('PV Diverter 1');
 		expect((await screen.findByTestId(`energyDivertedToHeatGeneration_${heatPumpId}`)).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId(`energyDivertedToHotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute('checked')).toBe(true);
+		// expect((await screen.findByTestId(`energyDivertedToHotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute('checked')).toBe(true);
 	});
 		
 	it('required error messages are displayed when empty form is submitted', async () => {
@@ -98,7 +96,7 @@ describe('pv diverter', () => {
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('energyDivertedToHeatGeneration_error'))).toBeDefined();
-		expect((await screen.findByTestId('energyDivertedToHotWaterCylinder_error'))).toBeDefined();
+		expect((await screen.queryByTestId('energyDivertedToHotWaterCylinder_error'))).toBeNull();
 	});
 
 	it('error summary is displayed when an invalid form in submitted', async () => {
