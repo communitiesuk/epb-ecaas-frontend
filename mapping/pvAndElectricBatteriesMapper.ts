@@ -1,14 +1,16 @@
 import type { EmptyObject } from "type-fest";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
-import { FuelType, type SchemaWindowShadingObject } from "~/schema/api-schema.types";
+import { FuelType, type SchemaElectricBattery, type SchemaWindowShadingObject } from "~/schema/api-schema.types";
 
-export function mapPvAndElectricBatteriesData(state: EcaasState): Partial<FhsInputSchema> {
-	return {
-		...mapPvSystemData(state),
-		...mapElectricBatteryData(state),
-		...mapPvDiverterData(state),
-	};
+export function mapPvAndElectricBatteriesData(state: EcaasState): [Pick<FhsInputSchema, 'OnSiteGeneration'>, Record<string, SchemaElectricBattery>] {
+	return [
+		{
+			...mapPvSystemData(state),
+			...mapPvDiverterData(state),
+		},
+		mapElectricBatteryData(state)
+	];
 }
 
 export function mapPvSystemData(state: EcaasState): Pick<FhsInputSchema, 'OnSiteGeneration'> {
@@ -39,8 +41,24 @@ export function mapPvSystemData(state: EcaasState): Pick<FhsInputSchema, 'OnSite
 	};
 }
 
-export function mapElectricBatteryData(_state: EcaasState): Partial<FhsInputSchema> {
-	return {};
+export function mapElectricBatteryData(state: EcaasState): Record<string, SchemaElectricBattery> {
+	return objectFromEntries(state.pvAndBatteries.electricBattery.data.map((battery): [string, SchemaElectricBattery] => {
+		const { name, batteryAge, location, capacity, chargeEfficiency, gridChargingPossible, maximumChargeRate, maximumDischargeRate, minimumChargeRate } = battery;
+
+		return [
+			name,
+			{
+				battery_age: batteryAge,
+				battery_location: location,
+				capacity,
+				charge_discharge_efficiency_round_trip: chargeEfficiency,
+				grid_charging_possible: gridChargingPossible,
+				maximum_charge_rate_one_way_trip: maximumChargeRate,
+				maximum_discharge_rate_one_way_trip: maximumDischargeRate,
+				minimum_charge_rate_one_way_trip: minimumChargeRate
+			}
+		];
+	}));
 }
 
 /* Function unused yet while no diverter data to map. **/

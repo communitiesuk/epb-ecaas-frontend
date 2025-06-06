@@ -1,6 +1,6 @@
-import { FuelType, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
+import { BatteryLocation, FuelType, InverterType, OnSiteGenerationVentilationStrategy, type SchemaElectricBattery } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { mapPvSystemData } from "./pvAndElectricBatteriesMapper";
+import { mapElectricBatteryData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
 
 describe("PV and electric batteries mapper", () => {
 	const store = useEcaasStore();
@@ -90,6 +90,72 @@ describe("PV and electric batteries mapper", () => {
 					width: 15,
 				},
 			}
+		};
+
+		expect(result).toEqual(expectedResult);
+	});
+
+	it("maps electric batteries to the correct form for FHS input", () => {
+		// Arrange
+		const batteries: ElectricBatteryData[] = [
+			{
+				name: "Acme Model II",
+				capacity: 10,
+				batteryAge: 2,
+				chargeEfficiency: 0.7,
+				location: BatteryLocation.inside,
+				gridChargingPossible: false,
+				maximumChargeRate: 6.2,
+				minimumChargeRate: 4.5,
+				maximumDischargeRate: 2.3,
+			},
+			{
+				name: "Acme Model III",
+				capacity: 14,
+				batteryAge: 0,
+				chargeEfficiency: 0.8,
+				location: BatteryLocation.outside,
+				gridChargingPossible: true,
+				maximumChargeRate: 7.4,
+				minimumChargeRate: 4.2,
+				maximumDischargeRate: 2.9,
+			}
+		];
+
+		store.$patch({
+			pvAndBatteries: {
+				electricBattery: {
+					data: batteries,
+					complete: true
+				}
+			}
+		});
+
+		// Act
+		const result = mapElectricBatteryData(store);
+
+		// Assert
+		const expectedResult: Record<string, SchemaElectricBattery> = {
+			"Acme Model II": {
+				battery_age: 2,
+				battery_location: BatteryLocation.inside,
+				capacity: 10,
+				charge_discharge_efficiency_round_trip: 0.7,
+				grid_charging_possible: false,
+				maximum_charge_rate_one_way_trip: 6.2,
+				maximum_discharge_rate_one_way_trip: 2.3,
+				minimum_charge_rate_one_way_trip: 4.5
+			},
+			"Acme Model III": {
+				battery_age: 0,
+				battery_location: BatteryLocation.outside,
+				capacity: 14,
+				charge_discharge_efficiency_round_trip: 0.8,
+				grid_charging_possible: true,
+				maximum_charge_rate_one_way_trip: 7.4,
+				maximum_discharge_rate_one_way_trip: 2.9,
+				minimum_charge_rate_one_way_trip: 4.2
+			},
 		};
 
 		expect(result).toEqual(expectedResult);

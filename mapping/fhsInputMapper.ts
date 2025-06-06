@@ -13,9 +13,11 @@ export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 	const dwellingDetailsData = mapDwellingDetailsData(state);
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
 	const heatingSystemsData = mapHeatingSystemsData(state);
-	const pvAndElectricBatteriesData = mapPvAndElectricBatteriesData(state);
+	const [pvData, _electricBatteries] = mapPvAndElectricBatteriesData(state);
 
-	const intermediate = merge(dwellingDetailsData, merge(infiltrationVentilationData, merge(heatingSystemsData, pvAndElectricBatteriesData)));
+	// TODO merge electric batteries onto energy supplies once we know the right logic
+
+	const intermediate = merge(dwellingDetailsData, merge(infiltrationVentilationData, merge(heatingSystemsData, pvData)));
 	const final = merge(inputData, intermediate);
 
 	console.log(final);
