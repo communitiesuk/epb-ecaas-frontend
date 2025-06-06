@@ -1,4 +1,4 @@
-import { ColdWaterSourceType } from "~/schema/api-schema.types";
+import { ColdWaterSourceType, WaterPipeworkLocation } from "~/schema/api-schema.types";
 import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 
@@ -113,10 +113,53 @@ describe('domestic hot water mapper', () => {
 						ColdWaterSource: ColdWaterSourceType.mains_water,
 						flowrate: 4,
 					}
-				}
+				},
+				Distribution: []
 			}
 		};
 		
+		expect(result).toEqual(expectedResult);
+	});
+
+	it('maps secondary pipework input state to FHS input request', () => {
+		// Arrange
+		const pipework: Pipework = {
+			primaryPipework: {
+				data: []
+			},
+			secondaryPipework: {
+				data: [{
+					name: "secondaryPipework1",
+					length: 111, 
+					location: WaterPipeworkLocation.internal,
+					internalDiameter: 6
+				}]
+			}
+		};
+
+		store.$patch({
+			domesticHotWater: {
+				pipework: 
+					pipework
+			}
+		});
+
+		// Acts
+		const result = mapDomesticHotWaterData(store);
+		const expectedResult: Pick<FhsInputSchema, 'HotWaterDemand'> = {
+			HotWaterDemand: {
+				Distribution: [{
+					internal_diameter_mm: 6,
+					length: 111,
+					location: WaterPipeworkLocation.internal
+				}],
+				Bath: {},
+				Other: {},
+				Shower: {}
+			}
+		};
+
+		// Assert
 		expect(result).toEqual(expectedResult);
 	});
 });
