@@ -263,7 +263,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="inverterType"
 			validation="required"
 		/>
-		<template v-if="shadingSectionDisabled">
+		<template v-if="!shadingSectionDisabled">
 			<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 			<h2 class="govuk-heading-l">PV shading</h2>
 			<table class="govuk-table">		
