@@ -245,14 +245,6 @@ const pipeworkSummarySections: SummarySection[] = [
 	secondaryPipeworkSummary
 ];
 
-const { mixedShower, electricShower, bath, otherOutlets } = store.domesticHotWater.hotWaterOutlets;
-const hotWaterOutletsData = [
-	mixedShower.data,
-	electricShower.data,
-	bath.data,
-	otherOutlets.data
-].flat().map(x => ({ id: x.id, name: x.name }));
-
 </script>
 
 <template>
