@@ -6,6 +6,7 @@ import merge from 'deepmerge';
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
 import { mapHeatingSystemsData } from './heatingSystemsMapper';
 import { mapPvAndElectricBatteriesData } from './pvAndElectricBatteriesMapper';
+import { mapDomesticHotWaterData } from './domesticHotWaterMapper';
 
 export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 	const inputData = exampleData as FhsInputSchema;
@@ -14,10 +15,11 @@ export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
 	const heatingSystemsData = mapHeatingSystemsData(state);
 	const [pvData, _electricBatteries] = mapPvAndElectricBatteriesData(state);
+	const domesticHotWaterData = mapDomesticHotWaterData(state);
 
 	// TODO merge electric batteries onto energy supplies once we know the right logic
 
-	const intermediate = merge(dwellingDetailsData, merge(infiltrationVentilationData, merge(heatingSystemsData, pvData)));
+	const intermediate = merge(dwellingDetailsData, merge(infiltrationVentilationData, merge(heatingSystemsData, merge(pvData, domesticHotWaterData))));
 	const final = merge(inputData, intermediate);
 
 	console.log(final);

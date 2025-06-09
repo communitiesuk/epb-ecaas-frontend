@@ -10,11 +10,12 @@ describe('domestic hot water mapper', () => {
 	});
 
 	it('maps hot water cylinder input state to FHS input request', () => {
+		const heatPumpName = "heat pump";
 		// Arrange
 		const hotWaterCylinder: HotWaterCylinderData = {
 			id: "hot water cylinder",
 			name: "hot water cylinder",
-			heatSource: "heat pump",
+			heatSource: heatPumpName,
 			tankVolume: 10,
 			dailyEnergyLoss: 3
 		};
@@ -26,14 +27,39 @@ describe('domestic hot water mapper', () => {
 						data: [hotWaterCylinder]
 					}
 				}
+			},
+			heatingSystems: {
+				heatGeneration: {
+					heatPump: {
+						data: [{name: heatPumpName, id: heatPumpName}]
+					}
+				}
 			}
 		});
 
 		// Acts
-		const fhsInputData = mapDomesticHotWaterData(store);
+		const result = mapDomesticHotWaterData(store);
+		const expectedResult: Pick<FhsInputSchema, 'HotWaterSource'> = {
+			HotWaterSource: {
+				"hw cylinder": {
+					ColdWaterSource: ColdWaterSourceType.mains_water,
+					HeatSource: {
+						[heatPumpName]: {
+							EnergySupply: "mains elec",
+							heater_position: 0.1,
+							type: "HeatSourceWet",
+							name: heatPumpName
+						}
+					},
+					daily_losses: 3,
+					volume: 10,
+					type: "StorageTank",
+				}
+			}
+		};
 
 		// Assert
-		expect(fhsInputData).toBeDefined();
+		expect(result["HotWaterSource"]).toEqual(expectedResult["HotWaterSource"]);
 	});
 
 	it('maps hot water outlets input state to FHS input request', () => {
@@ -118,7 +144,7 @@ describe('domestic hot water mapper', () => {
 			}
 		};
 		
-		expect(result).toEqual(expectedResult);
+		expect(result["HotWaterDemand"]).toEqual(expectedResult["HotWaterDemand"]);
 	});
 
 	it('maps secondary pipework input state to FHS input request', () => {
@@ -160,6 +186,6 @@ describe('domestic hot water mapper', () => {
 		};
 
 		// Assert
-		expect(result).toEqual(expectedResult);
+		expect(result["HotWaterDemand"]).toEqual(expectedResult["HotWaterDemand"]);
 	});
 });
