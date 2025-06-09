@@ -28,7 +28,7 @@ describe("Pipeworks", () => {
 		name: "Pipework Kitchen",
 		length: 3,
 		location: WaterPipeworkLocation.internal,
-		internalDiameter: 0.09
+		internalDiameter: 9
 	};
 
 	afterEach(() => {

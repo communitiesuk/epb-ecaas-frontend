@@ -14,7 +14,7 @@ const state: SecondaryPipeworkData = {
 	name: 'Pipework Kitchen Sink',
 	length: 3,
 	location: WaterPipeworkLocation.internal,
-	internalDiameter: 0.09
+	internalDiameter: 9
 };
 
 describe('Secondary pipework form', () => {
@@ -31,7 +31,7 @@ describe('Secondary pipework form', () => {
 		await user.type(screen.getByTestId('name'), 'Pipework Kitchen Sink');
 		await user.click(screen.getByTestId('location_internal'));
 		await user.type(screen.getByTestId('length'), '3');
-		await user.type(screen.getByTestId('internalDiameter'), '0.09');
+		await user.type(screen.getByTestId('internalDiameter'), '9');
 		
 		await user.tab();
 		
@@ -63,7 +63,7 @@ describe('Secondary pipework form', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Pipework Kitchen Sink');
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('3');
-		expect((await screen.findByTestId('internalDiameter') as HTMLInputElement).value).toBe('0.09');
+		expect((await screen.findByTestId('internalDiameter') as HTMLInputElement).value).toBe('9');
 	});
 
 	it('required error messages are displayed when empty form is submitted', async () => {
