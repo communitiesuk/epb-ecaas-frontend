@@ -94,13 +94,13 @@ const infiltrationAndVentilationPages: Array<Page> = [
 		type: PageType.Task,
 		parentId: 'infiltrationAndVentilation'
 	},
-	{
-		id: 'combustionAppliances',
-		title: 'Combustion appliances',
-		url: '/infiltration-and-ventilation/combustion-appliances',
-		type: PageType.TaskGroup,
-		parentId: 'infiltrationAndVentilation'
-	},
+	// {
+	// 	id: 'combustionAppliances',
+	// 	title: 'Combustion appliances',
+	// 	url: '/infiltration-and-ventilation/combustion-appliances',
+	// 	type: PageType.TaskGroup,
+	// 	parentId: 'infiltrationAndVentilation'
+	// },
 	{
 		id: 'openFireplace',
 		title: 'Open fireplace',
