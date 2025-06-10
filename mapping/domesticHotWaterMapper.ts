@@ -15,7 +15,7 @@ export function mapDomesticHotWaterData(state: EcaasState): Partial<FhsInputSche
 	const baths = mapBathsData(state);
 	const others = mapOthersData(state);
 	const distribution = mapDistributionData(state);
-	const hotWaterCylinders = mapHotWaterCylindersData(state);
+	const hotWaterSources = mapHotWaterSourcesData(state);
 
 	return {
 		HotWaterDemand: {
@@ -25,7 +25,7 @@ export function mapDomesticHotWaterData(state: EcaasState): Partial<FhsInputSche
 			Distribution: distribution
 		},
 		HotWaterSource: {
-			"hw cylinder": hotWaterCylinders[0]!, // FHS input schema currently only allows for one hot water cylinder while the frontend allows users to add multiple
+			"hw cylinder": hotWaterSources[0]!, // FHS input schema currently only allows for one hot water cylinder while the frontend allows users to add multiple
 		}
 	};
 }
@@ -96,7 +96,7 @@ function mapDistributionData(state: EcaasState) {
 	});
 }
 
-function mapHotWaterCylindersData(state: EcaasState) {
+function mapHotWaterSourcesData(state: EcaasState) {
 	return state.domesticHotWater.waterHeating.hotWaterCylinder.data.map((x): SchemaHotWaterSourceDetails => {
 		const heatPumpName = state.heatingSystems.heatGeneration.heatPump.data.find(heat_pump => heat_pump.id === x.heatSource)?.name;
 		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.data.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
