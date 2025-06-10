@@ -5,6 +5,7 @@ import {
 	type SchemaOtherWaterUseDetails,
 	type SchemaShower,
 	type SchemaStorageTank,
+	type SchemaWaterPipework,
 	type SchemaWaterPipeworkSimple
 } from "~/schema/api-schema.types";
 import type {FhsInputSchema} from "./fhsInputMapper";
@@ -98,6 +99,18 @@ function mapDistributionData(state: EcaasState) {
 function mapHotWaterCylindersData(state: EcaasState) {
 	return state.domesticHotWater.waterHeating.hotWaterCylinder.data.map((x): SchemaHotWaterSourceDetails => {
 		const heatPumpName = state.heatingSystems.heatGeneration.heatPump.data.find(heat_pump => heat_pump.id === x.heatSource)?.name;
+		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.data.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
+			return {
+				location: x.location,
+				internal_diameter_mm: x.internalDiameter,
+				external_diameter_mm: x.externalDiameter,
+				length: x.length,
+				insulation_thermal_conductivity: x.thermalConductivity,
+				insulation_thickness_mm: x.insulationThickness,
+				surface_reflectivity: x.surfaceReflectivity,
+				pipe_contents: x.pipeContents
+			};
+		});
 
 		const val: SchemaStorageTank = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
@@ -112,8 +125,10 @@ function mapHotWaterCylindersData(state: EcaasState) {
 					heater_position: 0.1,
 					type: "HeatSourceWet"
 				}
-			}
+			},
+			...(primaryPipeworkEntries.length !== 0 ? { primary_pipework: primaryPipeworkEntries } : {}),
 		};
+
 		return val;		
 	});
 }

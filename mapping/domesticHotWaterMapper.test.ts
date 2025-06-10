@@ -1,4 +1,4 @@
-import { ColdWaterSourceType, WaterPipeworkLocation } from "~/schema/api-schema.types";
+import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation } from "~/schema/api-schema.types";
 import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 
@@ -10,14 +10,15 @@ describe('domestic hot water mapper', () => {
 	});
 
 	it('maps hot water cylinder input state to FHS input request', () => {
-		const heatPumpName = "heat pump";
 		// Arrange
+		const heatPumpName = "heat pump";
+
 		const hotWaterCylinder: HotWaterCylinderData = {
 			id: "hot water cylinder",
 			name: "hot water cylinder",
 			heatSource: heatPumpName,
 			tankVolume: 10,
-			dailyEnergyLoss: 3
+			dailyEnergyLoss: 3,
 		};
 
 		store.$patch({
@@ -54,6 +55,106 @@ describe('domestic hot water mapper', () => {
 					daily_losses: 3,
 					volume: 10,
 					type: "StorageTank",
+				}
+			}
+		};
+
+		// Assert
+		expect(result["HotWaterSource"]).toEqual(expectedResult["HotWaterSource"]);
+	});
+
+	it('maps hot water cylinder with primary pipework input state to FHS input request', () => {
+		// Arrange
+		const heatPumpName = "heatPump1";
+		const heatPumpId = "heatPump1Id";
+		const hotWaterCylinder: HotWaterCylinderData = {
+			id: "hotWaterCylinderId",
+			name: "hotWaterCylinderName",
+			heatSource: heatPumpId,
+			tankVolume: 10,
+			dailyEnergyLoss: 3,
+		};
+
+		const primaryPipework: PrimaryPipeworkData = {
+			name: "primaryPipework1",
+			location: WaterPipeworkLocation.internal,
+			internalDiameter: 24,
+			externalDiameter: 26,
+			length: 10.0,
+			thermalConductivity: 0.040,
+			insulationThickness: 40,
+			surfaceReflectivity: false,
+			pipeContents: WaterPipeContentsType.water,
+			hotWaterCylinder: hotWaterCylinder.id
+		};
+
+		const pipework: Pipework = {
+			primaryPipework: {
+				data: [primaryPipework, primaryPipework]
+			},
+			secondaryPipework: {
+				data: []
+			},
+		};
+
+		store.$patch({
+			domesticHotWater: {
+				pipework: pipework,
+				waterHeating: {
+					hotWaterCylinder: {
+						data: [hotWaterCylinder]
+					}
+				}
+			},
+			heatingSystems: {
+				heatGeneration: {
+					heatPump: {
+						data: [{name: heatPumpName, id: heatPumpId}]
+					}
+				}
+			}
+		});
+
+		// Acts
+		const result = mapDomesticHotWaterData(store);
+
+		const expectedResult: Pick<FhsInputSchema, 'HotWaterSource'> = {
+			HotWaterSource: {
+				"hw cylinder": {
+					ColdWaterSource: ColdWaterSourceType.mains_water,
+					HeatSource: {
+						[heatPumpName]: {
+							EnergySupply: "mains elec",
+							heater_position: 0.1,
+							type: "HeatSourceWet",
+							name: heatPumpName
+						}
+					},
+					daily_losses: 3,
+					volume: 10,
+					type: "StorageTank",
+					primary_pipework: [
+						{
+							location: WaterPipeworkLocation.internal,
+							internal_diameter_mm: 24,
+							external_diameter_mm: 26,
+							length: 10.0,
+							insulation_thermal_conductivity: 0.040,
+							insulation_thickness_mm: 40,
+							surface_reflectivity: false,
+							pipe_contents: WaterPipeContentsType.water
+						},
+						{
+							location: WaterPipeworkLocation.internal,
+							internal_diameter_mm: 24,
+							external_diameter_mm: 26,
+							length: 10.0,
+							insulation_thermal_conductivity: 0.040,
+							insulation_thickness_mm: 40,
+							surface_reflectivity: false,
+							pipe_contents: WaterPipeContentsType.water
+						},
+					]
 				}
 			}
 		};
