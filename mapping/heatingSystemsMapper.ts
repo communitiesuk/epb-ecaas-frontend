@@ -14,7 +14,7 @@ export function mapEnergySupplyData(state: EcaasState): Pick<FhsInputSchema, 'En
 	
 	return {
 		EnergySupply: {
-			...objectFromEntries(fuelType.map((fuelType) => ([
+			...objectFromEntries(fuelType ? fuelType.map((fuelType) => ([
 				fuelType,
 				{
 					fuel: fuelType as FuelType,
@@ -25,7 +25,7 @@ export function mapEnergySupplyData(state: EcaasState): Pick<FhsInputSchema, 'En
 						"Primary Energy Factor kWh/kWh delivered": kwhPerKwhDelivered!
 					} } : {}),
 				}
-			])))
+			])) : [])
 		}
 	};
 }
