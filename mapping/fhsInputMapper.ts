@@ -8,6 +8,7 @@ import { mapHeatingSystemsData } from './heatingSystemsMapper';
 import { mapLivingSpaceFabricData } from './livingSpaceFabricMapper';
 import { mapPvAndElectricBatteriesData } from './pvAndElectricBatteriesMapper';
 import { mapDomesticHotWaterData } from './domesticHotWaterMapper';
+import { mapCoolingData } from './coolingMapper';
 
 export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 	const inputData = exampleData as FhsInputSchema;
@@ -18,6 +19,7 @@ export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 	const heatingSystemsData = mapHeatingSystemsData(state);
 	const [pvData, _electricBatteries] = mapPvAndElectricBatteriesData(state);
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
+	const coolingData = mapCoolingData(state);
 
 	const intermediate = merge.all([
 		dwellingDetailsData,
@@ -25,7 +27,8 @@ export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 		livingSpaceFabricData,
 		heatingSystemsData,
 		domesticHotWaterData,
-		pvData
+		pvData,
+		coolingData
 	]);
 	
 	const final = merge(inputData, intermediate);
