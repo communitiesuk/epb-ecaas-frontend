@@ -81,8 +81,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="length" validation="required | number | min:0 | max:200" suffix-text="m" />
 		<FormKit
 			id="internalDiameter" type="govInputWithSuffix" label="Internal diameter"
-			help="Internal diameter of the pipe" name="internalDiameter" validation="number| min:0.005 | max:0.1"
-			suffix-text="m" />
+			help="Internal diameter of the pipe" name="internalDiameter" validation="number| min:5 | max:10"
+			suffix-text="mm" />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

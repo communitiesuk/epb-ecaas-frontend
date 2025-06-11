@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
 import { getTabItems, getUrl } from '#imports';
-import { CombustionApplianceType, DuctShape, VentType } from '~/schema/api-schema.types';
+import { DuctShape, VentType } from '~/schema/api-schema.types';
 
 const title = "Infiltration and ventilation summary";
 const store = useEcaasStore();
@@ -99,33 +99,33 @@ const airPermeabilitySummary: SummarySection = {
 	editUrl: getUrl('airPermeability')!
 };
 
-const { combustionAppliances } = store.infiltrationAndVentilation;
+// const { combustionAppliances } = store.infiltrationAndVentilation;
 
-function getCombustionApplianceData(type: string, data: CombustionApplianceData[]) {
-	return data.map(x => {
-		return {
-			"Type": type,
-			"Name": x.name,
-			"Air supply to appliance": sentenceCase(x.airSupplyToAppliance),
-			"Exhaust method from appliance": displayFlueGasExhaustSituation(x.exhaustMethodFromAppliance),
-			"Type of fuel": x.typeOfFuel
-		};
-	});
-}
+// function getCombustionApplianceData(type: string, data: CombustionApplianceData[]) {
+// 	return data.map(x => {
+// 		return {
+// 			"Type": type,
+// 			"Name": x.name,
+// 			"Air supply to appliance": sentenceCase(x.airSupplyToAppliance),
+// 			"Exhaust method from appliance": displayFlueGasExhaustSituation(x.exhaustMethodFromAppliance),
+// 			"Type of fuel": x.typeOfFuel
+// 		};
+// 	});
+// }
 
-const combustionAppliancesSummary: SummarySection = {
-	id: 'combustionAppliances',
-	label: 'Combustion appliances',
-	data: [
-		getCombustionApplianceData('Closed fire', combustionAppliances[CombustionApplianceType.closed_fire].data),
-		getCombustionApplianceData('Closed fireplace with fan', combustionAppliances[CombustionApplianceType.closed_with_fan].data),
-		getCombustionApplianceData('Open fireplace', combustionAppliances[CombustionApplianceType.open_fireplace].data),
-		getCombustionApplianceData('Open gas fire', combustionAppliances[CombustionApplianceType.open_gas_fire].data),
-		getCombustionApplianceData('Open gas flue balancer', combustionAppliances[CombustionApplianceType.open_gas_flue_balancer].data),
-		getCombustionApplianceData('Open gas kitchen stove', combustionAppliances[CombustionApplianceType.open_gas_kitchen_stove].data)
-	].flat(),
-	editUrl: getUrl('combustionAppliances')!
-};
+// const combustionAppliancesSummary: SummarySection = {
+// 	id: 'combustionAppliances',
+// 	label: 'Combustion appliances',
+// 	data: [
+// 		getCombustionApplianceData('Closed fire', combustionAppliances[CombustionApplianceType.closed_fire].data),
+// 		getCombustionApplianceData('Closed fireplace with fan', combustionAppliances[CombustionApplianceType.closed_with_fan].data),
+// 		getCombustionApplianceData('Open fireplace', combustionAppliances[CombustionApplianceType.open_fireplace].data),
+// 		getCombustionApplianceData('Open gas fire', combustionAppliances[CombustionApplianceType.open_gas_fire].data),
+// 		getCombustionApplianceData('Open gas flue balancer', combustionAppliances[CombustionApplianceType.open_gas_flue_balancer].data),
+// 		getCombustionApplianceData('Open gas kitchen stove', combustionAppliances[CombustionApplianceType.open_gas_kitchen_stove].data)
+// 	].flat(),
+// 	editUrl: getUrl('combustionAppliances')!
+// };
 
 const summarySections: SummarySection[] = [
 	mechanicalVentilationSummary,
@@ -133,7 +133,6 @@ const summarySections: SummarySection[] = [
 	ventSummary,
 	ventilationSummary,
 	airPermeabilitySummary,
-	combustionAppliancesSummary
 ];
 </script>
 
@@ -176,14 +175,14 @@ const summarySections: SummarySection[] = [
 				<SummaryTab :summary="ventilationSummary" :selected="tabProps.currentTab === 3" />
 				<SummaryTab :summary="airPermeabilitySummary" :selected="tabProps.currentTab === 4" />
 
-				<SummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 5">
+				<!-- <SummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 5">
 					<template #empty>
 						<h2 class="govuk-heading-m">No combustion appliances added</h2>
 						<NuxtLink class="govuk-link" :to="getUrl('combustionAppliances')">
 							Add combustion appliance
 						</NuxtLink>
 					</template>
-				</SummaryTab>
+				</SummaryTab> -->
 			</GovTabs>
 		</NuxtLayout>
 	</div>

@@ -87,14 +87,6 @@ function checkIsComplete(){
 		@remove="(index: number) => handleRemove('hotWaterCylinder', index)"
 		@duplicate="(index: number) => handleDuplicate('hotWaterCylinder', index)"
 	/>
-	<CustomList
-		id="immersionHeater"
-		title="Immersion heater"
-		:form-url="`${page?.url!}/immersion-heater`"
-		:items="store.domesticHotWater.waterHeating.immersionHeater.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('immersionHeater', index)"
-		@duplicate="(index: number) => handleDuplicate('immersionHeater', index)"
-	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton
 			href="/domestic-hot-water"

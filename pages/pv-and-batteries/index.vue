@@ -4,7 +4,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type PvAndBatteryType = keyof typeof store.pvAndBatteries;
-interface PvAndBatteryData extends PvSystemData, ElectricBatteryData, PvDiverterData {};
+type PvAndBatteryData = PvSystemData & ElectricBatteryData & PvDiverterData;
 
 function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
 	const data = store.pvAndBatteries[pvAndBatteryType]?.data;

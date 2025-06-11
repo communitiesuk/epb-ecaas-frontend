@@ -1,5 +1,5 @@
 import type { EmptyObject, TaggedUnion } from "type-fest";
-import type { BuildType, ApplianceKey, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType } from "~/schema/api-schema.types";
+import type { BuildType, ApplianceKey, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -690,13 +690,13 @@ export type PvSystemData = {
 	inverterPeakPowerAC: number;
 	inverterPeakPowerDC: number;
 	inverterIsInside: boolean;
-	inverterType: string;
-	aboveDepth: number;
-	aboveDistance: number;
-	leftDepth: number;
-	leftDistance: number;
-	rightDepth: number;
-	rightDistance: number;
+	inverterType: InverterType;
+	aboveDepth?: number;
+	aboveDistance?: number;
+	leftDepth?: number;
+	leftDistance?: number;
+	rightDepth?: number;
+	rightDistance?: number;
 };
 
 export type ElectricBatteryData = {
@@ -713,9 +713,7 @@ export type ElectricBatteryData = {
 
 export type PvDiverterData = {
 	name: string;
-	energyDivertedToHeatGeneration: string;
-	energyDivertedToHotWaterCylinder: string;
-};
+} & ({ energyDivertedToHeatGeneration: string; } | { energyDivertedToHotWaterCylinder: string; });
 
 export interface Cooling {
 	airConditioning: EcaasForm<AirConditioningData[]>;

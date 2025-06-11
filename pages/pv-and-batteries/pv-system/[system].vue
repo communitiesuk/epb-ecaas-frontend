@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { OnSiteGenerationVentilationStrategy } from '~/schema/api-schema.types';
+import { InverterType, OnSiteGenerationVentilationStrategy } from '~/schema/api-schema.types';
 
 const title = "Photovoltaic (PV)";
 const store = useEcaasStore();
@@ -11,11 +11,18 @@ const pvSystemData = useItemToEdit(
 );
 const model: Ref<PvSystemData> = ref(pvSystemData!);
 
+const shadingSectionDisabled = true;
+
 const ventilationStrategyOptions: Record<OnSiteGenerationVentilationStrategy, string> = {
 	[OnSiteGenerationVentilationStrategy.unventilated]: 'Unventilated',
 	[OnSiteGenerationVentilationStrategy.moderately_ventilated]: 'Moderately ventilated',
 	[OnSiteGenerationVentilationStrategy.strongly_or_forced_ventilated]: 'Strongly or forced ventilated',
 	[OnSiteGenerationVentilationStrategy.rear_surface_free]: 'Rear surface free',
+};
+
+const inverterTypeOptions: Record<InverterType, string> = {
+	[InverterType.optimised_inverter]: 'Optimised',
+	[InverterType.string_inverter]: 'String',
 };
 
 const saveForm = (fields: PvSystemData) => {
@@ -86,7 +93,46 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="peakPower"
 			validation="required | number | min:0.001 | max: 100"
 			suffix-text="kW"
-		/>
+		>
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">
+								Home type
+							</th>
+							<th scope="col" class="govuk-table__header">Example range</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Small flat</td>
+							<td class="govuk-table__cell">
+								0.5 - 1.5
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Terraced house</td>
+							<td class="govuk-table__cell">
+								1.5 - 2.5
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Semi-detached</td>
+							<td class="govuk-table__cell">
+								2 - 3.5
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Detached</td>
+							<td class="govuk-table__cell">
+								4 - 6
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="ventilationStrategy"
 			type="govRadios"
@@ -176,7 +222,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="widthOfPV"
 			type="govInputWithSuffix"
 			label="Width of PV"
-			help="Width x width provides area"
+			help="Length x width provides area"
 			name="widthOfPV"
 			validation="required | number | min:0 | max: 100"
 			suffix-text="m"
@@ -212,73 +258,72 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="inverterType"
 			type="govRadios"
-			:options="{
-				central: 'Central inverter',
-				micro: 'Micro inverter',
-			}"
+			:options="inverterTypeOptions"
 			label="Inverter type"
 			name="inverterType"
 			validation="required"
 		/>
-		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-		<h2 class="govuk-heading-l">PV shading</h2>
-		<table class="govuk-table">		
+		<template v-if="!shadingSectionDisabled">
+			<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+			<h2 class="govuk-heading-l">PV shading</h2>
+			<table class="govuk-table">		
 
-			<thead class="govuk-table__head">
-				<tr class="govuk-table__row">
-					<td colspan="3" class="govuk-!-text-align-left">This refers to objects on the roof which might cause shading to the PV.</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<td colspan="3" class="govuk-!-text-align-left govuk-!-font-weight-bold govuk-!-padding-bottom-5" >This is not distant shading objects such as trees or buildings</td>
-				</tr>		
-				<tr class="govuk-table__row">
-					<th scope="col" class="govuk-!-text-align-left">Shading direction</th>
-					<th scope="col" class="govuk-!-text-align-left">Depth</th>
-					<th scope="col" class="govuk-!-text-align-left">Distance</th>
-				</tr>
-			</thead>
-			<tbody class="govuk-table__body">
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-!-text-align-left">Above</th>
-					<td>
-						<FormKit
-							id="aboveDepth" type="govInputWithSuffix" suffix-text="m" name="aboveDepth"
-							validation="number0" />
-					</td>
-					<td>
-						<FormKit
-							id="aboveDistance" type="govInputWithSuffix" suffix-text="m" name="aboveDistance"
-							validation="number0" />
-					</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-!-text-align-left">Left</th>
-					<td>
-						<FormKit
-							id="leftDepth" type="govInputWithSuffix" suffix-text="m" name="leftDepth"
-							validation="number0" />
-					</td>
-					<td>
-						<FormKit
-							id="leftDistance" type="govInputWithSuffix" suffix-text="m" name="leftDistance"
-							validation="number0" />
-					</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-!-text-align-left">Right</th>
-					<td>
-						<FormKit
-							id="rightDepth" type="govInputWithSuffix" suffix-text="m" name="rightDepth"
-							validation="number0" />
-					</td>
-					<td>
-						<FormKit
-							id="rightDistance" type="govInputWithSuffix" suffix-text="m" name="rightDistance"
-							validation="number0" />
-					</td>
-				</tr>
-			</tbody>
-		</table>
+				<thead class="govuk-table__head">
+					<tr class="govuk-table__row">
+						<td colspan="3" class="govuk-!-text-align-left">This refers to objects on the roof which might cause shading to the PV.</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<td colspan="3" class="govuk-!-text-align-left govuk-!-font-weight-bold govuk-!-padding-bottom-5" >This is not distant shading objects such as trees or buildings</td>
+					</tr>		
+					<tr class="govuk-table__row">
+						<th scope="col" class="govuk-!-text-align-left">Shading direction</th>
+						<th scope="col" class="govuk-!-text-align-left">Depth</th>
+						<th scope="col" class="govuk-!-text-align-left">Distance</th>
+					</tr>
+				</thead>
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-!-text-align-left">Above</th>
+						<td>
+							<FormKit
+								id="aboveDepth" type="govInputWithSuffix" suffix-text="m" name="aboveDepth"
+								validation="number0" />
+						</td>
+						<td>
+							<FormKit
+								id="aboveDistance" type="govInputWithSuffix" suffix-text="m" name="aboveDistance"
+								validation="number0" />
+						</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-!-text-align-left">Left</th>
+						<td>
+							<FormKit
+								id="leftDepth" type="govInputWithSuffix" suffix-text="m" name="leftDepth"
+								validation="number0" />
+						</td>
+						<td>
+							<FormKit
+								id="leftDistance" type="govInputWithSuffix" suffix-text="m" name="leftDistance"
+								validation="number0" />
+						</td>
+					</tr>
+					<tr class="govuk-table__row">
+						<th scope="row" class="govuk-!-text-align-left">Right</th>
+						<td>
+							<FormKit
+								id="rightDepth" type="govInputWithSuffix" suffix-text="m" name="rightDepth"
+								validation="number0" />
+						</td>
+						<td>
+							<FormKit
+								id="rightDistance" type="govInputWithSuffix" suffix-text="m" name="rightDistance"
+								validation="number0" />
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</template>
 
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>

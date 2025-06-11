@@ -36,8 +36,8 @@ export default defineNuxtConfig({
 				scss: {
 					silenceDeprecations: ['mixed-decls', 'global-builtin', 'slash-div', 'import'],
 					additionalData: `
-						@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
-						@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`
+																								@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
+																								@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`
 				}
 			}
 		},
@@ -56,7 +56,8 @@ export default defineNuxtConfig({
 		'pinia-plugin-persistedstate/nuxt',
 		'@nuxt/test-utils/module',
 		'@nuxt/eslint',
-		'nuxt-auth-utils'
+		'nuxt-auth-utils',
+		'@nuxtjs/robots'
 	],
 	plugins: [
 		'~/plugins/xray-fetch.server',
@@ -86,10 +87,13 @@ export default defineNuxtConfig({
 					}
 				}
 			}
-			
+												
 			if (process.env.NODE_ENV !== 'development') {
 				setAuthMiddleware(pages);
 			}
 		}
+	},
+	site: {
+		indexable: false
 	}
 });

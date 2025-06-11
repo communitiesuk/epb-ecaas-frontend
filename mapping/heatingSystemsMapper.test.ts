@@ -3,21 +3,29 @@ import { mapEnergySupplyData, mapHeatEmittingData } from "./heatingSystemsMapper
 import type { FhsInputSchema } from "./fhsInputMapper";
 
 describe("heating systems mapper", () => {
+	const store = useEcaasStore();
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	it("maps energy supplies that include gas only", () => {
 		// Arrange
-		const state = {
+		const energySupplyData: EnergySupplyData = {
+			fuelType: [FuelType.mains_gas],
+		};
+
+		store.$patch({
 			heatingSystems: {
 				energySupply: {
-					data: {
-						fuelType: [FuelType.mains_gas],
-					},
+					data: energySupplyData,
 					complete: true
 				}
 			}
-		} as EcaasState;
+		});
 
 		// Act
-		const result = mapEnergySupplyData(state);
+		const result = mapEnergySupplyData(store);
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
@@ -33,20 +41,22 @@ describe("heating systems mapper", () => {
 
 	it("maps energy supplies that include exported electricity", () => {
 		// Arrange
-		const state = {
+		const energySupplyData: EnergySupplyData = {
+			fuelType: [FuelType.mains_gas, FuelType.electricity],
+			exported: true
+		};
+
+		store.$patch({
 			heatingSystems: {
 				energySupply: {
-					data: {
-						fuelType: [FuelType.mains_gas, FuelType.electricity],
-						exported: true
-					},
+					data: energySupplyData,
 					complete: true
 				}
 			}
-		} as EcaasState;
+		});
 
 		// Act
-		const result = mapEnergySupplyData(state);
+		const result = mapEnergySupplyData(store);
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
@@ -66,23 +76,25 @@ describe("heating systems mapper", () => {
 
 	it("maps energy supplies that include electricity and custom fuel types", () => {
 		// Arrange
-		const state = {
+		const energySupplyData: EnergySupplyData = {
+			fuelType: [FuelType.electricity, FuelType.custom, FuelType.mains_gas],
+			exported: true,
+			co2PerKwh: 3.2,
+			co2PerKwhIncludingOutOfScope: 4.8,
+			kwhPerKwhDelivered: 1.0,
+		};
+
+		store.$patch({
 			heatingSystems: {
 				energySupply: {
-					data: {
-						fuelType: [FuelType.electricity, FuelType.custom, FuelType.mains_gas],
-						exported: true,
-						co2PerKwh: 3.2,
-						co2PerKwhIncludingOutOfScope: 4.8,
-						kwhPerKwhDelivered: 1.0,
-					},
+					data: energySupplyData,
 					complete: true
 				}
 			}
-		} as EcaasState;
+		});
 
 		// Act
-		const result = mapEnergySupplyData(state);
+		const result = mapEnergySupplyData(store);
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
@@ -110,38 +122,41 @@ describe("heating systems mapper", () => {
 
 	it("maps heat emitters with wet distribution (radiator only)", () => {
 		// Arrange
-		const state = {
+		const heatEmitting: HeatEmitting = {
+			wetDistribution: {
+				data: [
+					{
+						name: "Radiators",
+						zoneReference: "livingSpace",
+						heatSource: "Acme heat pump",
+						thermalMass: 400,
+						designTempDiffAcrossEmitters: 4,
+						designFlowTemp: 35,
+						ecoDesignControllerClass: '2',
+						minimumFlowTemp: 30,
+						minOutdoorTemp: -5,
+						maxOutdoorTemp: 32,
+						typeOfSpaceHeater: "radiator",
+						convectionFractionWet: 0.7,
+						exponent: 1.3,
+						constant: 0.08,
+						numberOfRadiators: 2,
+					}
+				]
+			},
+			instantElectricHeater: { data: [] },
+			electricStorageHeater: { data: [] },
+			warmAirHeatPump: { data: [] }
+		};
+
+		store.$patch({
 			heatingSystems: {
-				heatEmitting: {
-					wetDistribution: {
-						data: [
-							{
-								name: "Radiators",
-								zoneReference: "livingSpace",
-								heatSource: "Acme heat pump",
-								thermalMass: 400,
-								designTempDiffAcrossEmitters: 4,
-								designFlowTemp: 35,
-								ecoDesignControllerClass: '2',
-								minimumFlowTemp: 30,
-								minOutdoorTemp: -5,
-								maxOutdoorTemp: 32,
-								typeOfSpaceHeater: "radiator",
-								convectionFractionWet: 0.7,
-								exponent: 1.3,
-								constant: 0.08,
-							}
-						]
-					},
-					instantElectricHeater: { data: [] },
-					electricStorageHeater: { data: [] },
-					warmAirHeatPump: { data: [] }
-				}
+				heatEmitting
 			}
-		} as unknown as EcaasState;
+		});
 
 		// Act
-		const result = mapHeatEmittingData(state);
+		const result = mapHeatEmittingData(store);
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
@@ -152,6 +167,11 @@ describe("heating systems mapper", () => {
 					},
 					design_flow_temp: 35,
 					emitters: [{
+						wet_emitter_type: "radiator",
+						frac_convective: 0.7,
+						c: 0.08,
+						n: 1.3,
+					}, {
 						wet_emitter_type: "radiator",
 						frac_convective: 0.7,
 						c: 0.08,
@@ -176,39 +196,41 @@ describe("heating systems mapper", () => {
 
 	it("maps heat emitters with wet distribution (ufh only)", () => {
 		// Arrange
-		const state = {
+		const heatEmitting: HeatEmitting = {
+			wetDistribution: {
+				data: [
+					{
+						name: "Under floor heating",
+						zoneReference: "livingSpace",
+						heatSource: "Acme heat pump",
+						thermalMass: 400,
+						designTempDiffAcrossEmitters: 4,
+						designFlowTemp: 35,
+						ecoDesignControllerClass: '2',
+						minimumFlowTemp: 30,
+						minOutdoorTemp: -5,
+						maxOutdoorTemp: 32,
+						typeOfSpaceHeater: "ufh",
+						emitterFloorArea: 1.5,
+						equivalentThermalMass: 80,
+						systemPerformanceFactor: 5,
+						convectionFractionWet: 0.7,
+					}
+				]
+			},
+			instantElectricHeater: { data: [] },
+			electricStorageHeater: { data: [] },
+			warmAirHeatPump: { data: [] }
+		};
+
+		store.$patch({
 			heatingSystems: {
-				heatEmitting: {
-					wetDistribution: {
-						data: [
-							{
-								name: "Under floor heating",
-								zoneReference: "livingSpace",
-								heatSource: "Acme heat pump",
-								thermalMass: 400,
-								designTempDiffAcrossEmitters: 4,
-								designFlowTemp: 35,
-								ecoDesignControllerClass: '2',
-								minimumFlowTemp: 30,
-								minOutdoorTemp: -5,
-								maxOutdoorTemp: 32,
-								typeOfSpaceHeater: "ufh",
-								emitterFloorArea: 1.5,
-								equivalentThermalMass: 80,
-								systemPerformanceFactor: 5,
-								convectionFractionWet: 0.7,
-							}
-						]
-					},
-					instantElectricHeater: { data: [] },
-					electricStorageHeater: { data: [] },
-					warmAirHeatPump: { data: [] }
-				}
+				heatEmitting
 			}
-		} as unknown as EcaasState;
+		});
 
 		// Act
-		const result = mapHeatEmittingData(state);
+		const result = mapHeatEmittingData(store);
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
@@ -244,27 +266,29 @@ describe("heating systems mapper", () => {
 
 	it("maps instant electric heaters", () => {
 		// Arrange
-		const state = {
+		const heatEmitting: HeatEmitting = {
+			wetDistribution: { data: [] },
+			instantElectricHeater: {
+				data: [
+					{
+						name: "Acme instant electric heater",
+						ratedPower: 100,
+						convectionFractionInstant: 0.8,
+					}
+				]
+			},
+			electricStorageHeater: { data: [] },
+			warmAirHeatPump: { data: [] }
+		};
+
+		store.$patch({
 			heatingSystems: {
-				heatEmitting: {
-					wetDistribution: { data: [] },
-					instantElectricHeater: {
-						data: [
-							{
-								name: "Acme instant electric heater",
-								ratedPower: 100,
-								convectionFractionInstant: 0.8,
-							}
-						]
-					},
-					electricStorageHeater: { data: [] },
-					warmAirHeatPump: { data: [] }
-				}
+				heatEmitting
 			}
-		} as unknown as EcaasState;
+		});
 
 		// Act
-		const result = mapHeatEmittingData(state);
+		const result = mapHeatEmittingData(store);
 
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {

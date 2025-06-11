@@ -314,7 +314,7 @@ describe('Domestic hot water summary', () => {
 			name: 'Pipework Kitchen Sink Secondary',
 			length: 3,
 			location: WaterPipeworkLocation.internal,
-			internalDiameter: 0.09
+			internalDiameter: 9
 		};
 
 		it('should contain the correct tabs for pipework details', async () => {
@@ -383,7 +383,7 @@ describe('Domestic hot water summary', () => {
 				"Name": "Pipework Kitchen Sink Secondary",
 				"Length": "3",
 				"Location": "Internal",
-				"Internal diameter": "0.09"
+				"Internal diameter": "9"
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
