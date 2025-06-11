@@ -34,6 +34,7 @@ const groundFloorSummary: SummarySection = {
 			"Surface area in all zones": x.surfaceAreaAllZones,
 			"Pitch": x.pitch,
 			"U-value": x.uValue,
+			"Thermal resistance of floor construction": x.thermalResistanceOfFloorConstruction,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Perimeter": x.perimeter,
@@ -50,7 +51,6 @@ const groundFloorSummary: SummarySection = {
 			"Depth of basement floor below ground level": x.depthOfBasementFloorBelowGround,
 			"Thermal resistance of walls of basement": x.thermalResistanceOfBasementWalls,
 			"Thermal transmittance of floor above basement": x.thermalTransmittanceOfFloorAboveBasement,
-			"Thermal transmittance of walls of the basement": x.thermalTransmittanceOfBasementWalls,
 			"Height of the basement walls above ground level": x.heightOfBasementWallsAboveGround
 		};
 	}),

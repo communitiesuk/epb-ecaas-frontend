@@ -102,6 +102,7 @@ export type GroundFloorData = {
 	surfaceAreaAllZones: number;
 	pitch: number;
 	uValue: number;
+	thermalResistanceOfFloorConstruction: number;
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
 	perimeter: number;
@@ -119,7 +120,6 @@ export type GroundFloorData = {
 	thermalResistanceOfFloorAboveBasement?: number;
 	thermalResistanceOfWallsAboveGround?: number;
 	thermalTransmittanceOfFloorAboveBasement?: number;
-	thermalTransmittanceOfBasementWalls?: number;
 	thicknessOfWalls?: number;
 	heightOfBasementWallsAboveGround?: number
 };

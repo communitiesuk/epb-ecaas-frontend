@@ -68,6 +68,7 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 			area: x.surfaceAreaInZone,
 			total_area: x.surfaceAreaAllZones,
 			u_value: x.uValue,
+			thermal_resistance_floor_construction: x.thermalResistanceOfFloorConstruction,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
 			perimeter: x.perimeter,
@@ -80,13 +81,10 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 			area_per_perimeter_vent: x.ventilationOpeningsArea,
 			depth_basement_floor: x.depthOfBasementFloorBelowGround,
 			height_basement_walls: x.heightOfBasementWallsAboveGround,
-
-			// TODO: Check mapping of below
 			thermal_resist_insul: x.underfloorSpaceThermalResistance,
 			thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround,
 			thermal_resist_walls_base: x.thermalResistanceOfBasementWalls,
 			thermal_transm_envi_base: x.thermalTransmittanceOfFloorAboveBasement,
-			thermal_resistance_floor_construction: 1
 		}
 	}));
 
@@ -153,19 +151,12 @@ function mapWallData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 
 	const internalWallData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalWall?.data.map(x => ({
 		[x.name]: {
-			type: 'BuildingElementOpaque',
+			type: 'BuildingElementAdjacentConditionedSpace',
 			pitch: x.pitch!,
 			area: x.surfaceAreaOfElement,
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass,
-
-			// TODO: Re-map these required fields - currently no corresponding inputs
-			orientation360: 0,
-			height: 0,
-			width: 0,
-			base_height: 0,
-			solar_absorption_coeff: 0
+			mass_distribution_class: x.massDistributionClass
 		}
 	})) || [];
 
@@ -187,20 +178,13 @@ function mapWallData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 
 	const wallToUnheatedSpaceData: { [key: string]: SchemaBuildingElement }[] = livingSpaceWallToUnheatedSpace?.data.map(x => ({
 		[x.name]: {
-			type: 'BuildingElementOpaque',
+			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
 			pitch: x.pitch!,
 			area: x.surfaceAreaOfElement,
 			u_value: x.uValue,
 			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: x.massDistributionClass,
-			thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
-
-			// TODO: Re-map these required fields - currently no corresponding inputs
-			orientation360: 0,
-			height: 0,
-			width: 0,
-			base_height: 0,
-			solar_absorption_coeff: 0,
+			thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace
 		}
 	})) || [];
 

@@ -24,6 +24,7 @@ describe('floors', () => {
 		surfaceAreaAllZones: 0,
 		pitch: 0,
 		uValue: 1,
+		thermalResistanceOfFloorConstruction: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
@@ -37,6 +38,7 @@ describe('floors', () => {
 		surfaceAreaAllZones: 0,
 		pitch: 0,
 		uValue: 1,
+		thermalResistanceOfFloorConstruction: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
@@ -50,12 +52,14 @@ describe('floors', () => {
 		surfaceAreaAllZones: 0,
 		pitch: 0,
 		uValue: 1,
+		thermalResistanceOfFloorConstruction: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 	};
+	
 	const internal1: InternalFloorData = {
 		typeOfInternalFloor: 'heatedSpace',
 		name: "internal1 name",

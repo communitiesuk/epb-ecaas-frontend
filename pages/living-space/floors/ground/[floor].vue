@@ -26,6 +26,7 @@ const saveForm = (fields: GroundFloorData) => {
 			surfaceAreaAllZones: fields.surfaceAreaAllZones,
 			pitch: 180,
 			uValue: fields.uValue,
+			thermalResistanceOfFloorConstruction: fields.thermalResistanceOfFloorConstruction,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
 			perimeter: fields.perimeter,
@@ -43,7 +44,6 @@ const saveForm = (fields: GroundFloorData) => {
 			thermalResistanceOfBasementWalls: fields.thermalResistanceOfBasementWalls,
 			thermalResistanceOfFloorAboveBasement: fields.thermalResistanceOfFloorAboveBasement,
 			thermalResistanceOfWallsAboveGround: fields.thermalResistanceOfWallsAboveGround,
-			thermalTransmittanceOfBasementWalls: fields.thermalTransmittanceOfBasementWalls,
 			thermalTransmittanceOfFloorAboveBasement: fields.thermalTransmittanceOfFloorAboveBasement,
 			heightOfBasementWallsAboveGround: fields.heightOfBasementWallsAboveGround
 		};
@@ -110,6 +110,15 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Steady-state thermal transmittance of the building element"
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
+		/>
+		<FormKit
+			id="thermalResistanceOfFloorConstruction"
+			type="govInputWithSuffix"
+			suffix-text="W/(m2.K)"
+			label="Thermal resistance of floor construction"
+			help="Thermal resistance of all layers in the floor construction"
+			name="thermalResistanceOfFloorConstruction"
+			validation="required | number | min:0.00001 | max:50"
 		/>
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
@@ -263,14 +272,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				suffix-text="W/(m2·K)"
 				label="Thermal transmittance of walls above ground"
 				name="thermalTransmittanceOfWallsAboveGround"
-				validation="required | number"
-			/>
-			<FormKit
-				id="thermalTransmittanceOfBasementWalls"
-				type="govInputWithSuffix"
-				suffix-text="W/(m2·K)"
-				label="Thermal transmittance of walls of the basement"
-				name="thermalTransmittanceOfBasementWalls"
 				validation="required | number"
 			/>
 			<FormKit

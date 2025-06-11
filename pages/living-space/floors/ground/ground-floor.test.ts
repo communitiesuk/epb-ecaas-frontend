@@ -19,6 +19,7 @@ describe('ground floor', () => {
 		surfaceAreaAllZones: 0,
 		pitch: 180,
 		uValue: 1,
+		thermalResistanceOfFloorConstruction: 1,
 		kappaValue: 50000,
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
@@ -57,7 +58,6 @@ describe('ground floor', () => {
 		typeOfGroundFloor: FloorType.Unheated_basement,
 		thermalTransmittanceOfFloorAboveBasement: 0,
 		thermalTransmittanceOfWallsAboveGround: 0,
-		thermalTransmittanceOfBasementWalls: 0,
 		thicknessOfWalls: 0,
 		depthOfBasementFloorBelowGround: 0,
 		heightOfBasementWallsAboveGround: 0
@@ -72,6 +72,7 @@ describe('ground floor', () => {
 		await user.type(screen.getByTestId('surfaceAreaInZone'), '5');
 		await user.type(screen.getByTestId('surfaceAreaAllZones'), '0');
 		await user.type(screen.getByTestId('uValue'), '1');
+		await user.type(screen.getByTestId('thermalResistanceOfFloorConstruction'), '1');
 		await user.click(screen.getByTestId('kappaValue_50000'));
 		await user.click(screen.getByTestId('massDistributionClass_I'));
 		await user.type(screen.getByTestId('perimeter'), '0');
@@ -112,6 +113,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('surfaceAreaInZone') as HTMLInputElement).value).toBe('5');
 			expect((await screen.findByTestId('surfaceAreaAllZones') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
+			expect((await screen.findByTestId('thermalResistanceOfFloorConstruction') as HTMLInputElement).value).toBe('1');
 			expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('perimeter') as HTMLInputElement).value).toBe('0');
@@ -128,6 +130,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('surfaceAreaInZone_error'))).toBeDefined();
 			expect((await screen.findByTestId('surfaceAreaAllZones_error'))).toBeDefined();
 			expect((await screen.findByTestId('uValue_error'))).toBeDefined();
+			expect((await screen.findByTestId('thermalResistanceOfFloorConstruction_error'))).toBeDefined();
 			expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();
 			expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();
 			expect((await screen.findByTestId('perimeter_error'))).toBeDefined();
@@ -308,7 +311,6 @@ describe('ground floor', () => {
 			await user.click(screen.getByTestId('typeOfGroundFloor_Unheated_basement'));
 			await user.type(screen.getByTestId('thermalTransmittanceOfFloorAboveBasement'), '0');
 			await user.type(screen.getByTestId('thermalTransmittanceOfWallsAboveGround'), '0');
-			await user.type(screen.getByTestId('thermalTransmittanceOfBasementWalls'), '0');
 			await user.type(screen.getByTestId('thicknessOfWalls'), '0');
 			await user.type(screen.getByTestId('depthOfBasementFloorBelowGround'), '0');
 			await user.type(screen.getByTestId('heightOfBasementWallsAboveGround'), '0');
@@ -341,7 +343,6 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('typeOfGroundFloor_Unheated_basement')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('thermalTransmittanceOfFloorAboveBasement') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('thermalTransmittanceOfBasementWalls') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('depthOfBasementFloorBelowGround') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('heightOfBasementWallsAboveGround') as HTMLInputElement).value).toBe('0');
@@ -355,7 +356,6 @@ describe('ground floor', () => {
 
 			expect((await screen.findByTestId('thermalTransmittanceOfFloorAboveBasement_error'))).toBeDefined();
 			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround_error'))).toBeDefined();
-			expect((await screen.findByTestId('thermalTransmittanceOfBasementWalls_error'))).toBeDefined();
 			expect((await screen.findByTestId('thicknessOfWalls_error'))).toBeDefined();
 			expect((await screen.findByTestId('depthOfBasementFloorBelowGround_error'))).toBeDefined();
 			expect((await screen.findByTestId('heightOfBasementWallsAboveGround_error'))).toBeDefined();
