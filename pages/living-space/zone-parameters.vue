@@ -1,11 +1,23 @@
 <script setup lang="ts">
 import { getUrl } from '#imports';
+import type { RadioOption } from '~/components/form-kit/Radios.vue';
+import type { HeatingControlType } from '~/schema/api-schema.types';
 
 const store = useEcaasStore();
 
 const model = ref({
 	...store.livingSpaceFabric.livingSpaceZoneParameters.data,
 });
+
+const heatingControlTypeOptions: Record<HeatingControlType, RadioOption> = {
+	SeparateTempControl: { 
+		label: 'Separate temperature control'
+	},
+	SeparateTimeAndTempControl: {
+		label: 'Separate temperature and time control'
+	}
+};
+
 const saveForm = (fields: typeof model.value) => {
 	store.$patch({
 		livingSpaceFabric: {
@@ -25,6 +37,7 @@ const saveForm = (fields: typeof model.value) => {
 
 	navigateTo("/living-space");
 };
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
@@ -78,14 +91,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="heatingControlType"
 			type="govRadios"
-			:options="{
-				separateTempControl: {
-					label: 'Separate temperature control',
-				},
-				separateTempAndTimeControl: {
-					label: 'Separate temperature and time control',
-				},
-			}"
+			:options="heatingControlTypeOptions"
 			label="Heating control type"
 			name="heatingControlType"
 			validation="required"

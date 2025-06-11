@@ -112,7 +112,8 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
 			pitch: x.pitch,
-			orientation360: x.orientation
+			orientation360: x.orientation,
+			is_external_door: false
 		}
 	})) || [];
 
@@ -145,7 +146,8 @@ function mapWallData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 			solar_absorption_coeff: x.solarAbsorption,
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass
+			mass_distribution_class: x.massDistributionClass,
+			is_external_door: false
 		}
 	})) || [];
 
@@ -172,7 +174,8 @@ function mapWallData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 			solar_absorption_coeff: x.solarAbsorption,
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass
+			mass_distribution_class: x.massDistributionClass,
+			is_external_door: false
 		}
 	})) || [];
 
@@ -233,6 +236,7 @@ function mapCeilingAndRoofData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> 
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
+			is_external_door: false
 		}
 	}));
 
@@ -248,7 +252,8 @@ function mapCeilingAndRoofData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> 
 			solar_absorption_coeff: x.solarAbsorptionCoefficient,
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass
+			mass_distribution_class: x.massDistributionClass,
+			is_external_door: false
 		}
 	}));
 
@@ -352,7 +357,8 @@ function mapDoorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 			solar_absorption_coeff: x.solarAbsorption,
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass
+			mass_distribution_class: x.massDistributionClass,
+			is_external_door: true
 		}
 	}));
 
@@ -458,7 +464,7 @@ function mapThermalBridgingData(state: EcaasState): Pick<FhsInputSchema, 'Zone'>
 	const linearThermalBridgesData: { [key: string]: SchemaThermalBridgingDetails }[] = livingSpaceLinearThermalBridges.data.map(x => ({
 		[x.name]: {
 			type: 'ThermalBridgeLinear',
-			junction_type: x.typeOfThermalBridge,
+			junction_type: x.typeOfThermalBridge.toUpperCase(),
 			linear_thermal_transmittance: x.linearThermalTransmittance,
 			length: x.length
 		}
