@@ -1,4 +1,4 @@
-import { type FloorType, WindowShadingObjectType, type SchemaBuildingElement, type SchemaHeatingControlType, type SchemaThermalBridgingDetails, type SchemaWindowPart, type SchemaZoneInput, type SpaceHeatControlType } from "~/schema/api-schema.types";
+import { SpaceHeatControlType, type FloorType, WindowShadingObjectType, type SchemaBuildingElement, type SchemaHeatingControlType, type SchemaThermalBridgingDetails, type SchemaWindowPart, type SchemaZoneInput } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import merge from 'deepmerge';
 
@@ -31,7 +31,7 @@ function mapZoneParametersData(state: EcaasState): Pick<FhsInputSchema, 'Heating
 			"zone 1": {
 				SpaceHeatSystem: livingSpaceZoneParameters.data.spaceHeatingSystemForThisZone?.map(x => x.name),
 				SpaceCoolSystem: livingSpaceZoneParameters.data.spaceCoolingSystemForThisZone?.map(x => x.name),
-				SpaceHeatControl: livingSpaceZoneParameters.data.spaceHeatControlSystemForThisZone?.map(x => x.name)?.[0] as SpaceHeatControlType,
+				SpaceHeatControl: SpaceHeatControlType.livingroom,
 				area: livingSpaceZoneParameters.data.area,
 				volume: livingSpaceZoneParameters.data.volume,
 			} as Partial<SchemaZoneInput>
@@ -236,7 +236,8 @@ function mapCeilingAndRoofData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> 
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
-			is_external_door: false
+			is_external_door: false,
+			is_unheated_pitched_roof: false
 		}
 	}));
 
@@ -253,7 +254,8 @@ function mapCeilingAndRoofData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> 
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
-			is_external_door: false
+			is_external_door: false,
+			is_unheated_pitched_roof: true
 		}
 	}));
 
