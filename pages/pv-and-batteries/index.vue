@@ -41,9 +41,7 @@ function handleComplete() {
 	store.$patch({
 		pvAndBatteries: {
 			pvSystem: { complete: true },
-			electricBattery: { complete: true },
-			pvDiverter: { complete: true }
-
+			electricBattery: { complete: true }
 		}
 	});
 
@@ -78,15 +76,6 @@ function checkIsComplete(){
 		:items="store.pvAndBatteries.electricBattery.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('electricBattery', index)"
 		@duplicate="(index: number) => handleDuplicate('electricBattery', index)"
-	/>
-	<CustomList
-		id="pvDiverter"
-		title="PV diverter"
-		:form-url="`${page?.url!}/pv-diverter`"
-		:items="store.pvAndBatteries.pvDiverter.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('pvDiverter', index)"
-		@duplicate="(index: number) => handleDuplicate('pvDiverter', index)"
-
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton

@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import PvAndBatteries from './index.vue';
 import PvSystemForm from "./pv-system/[system].vue";
 import ElectricBatteryForm from "./electric-battery/[battery].vue";
-import PvDiverterForm from "./pv-diverter/[diverter].vue";
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
 import { BatteryLocation, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
@@ -72,21 +71,6 @@ describe('pv and batteries', () => {
 		name: 'Electric battery 3'
 	};
 
-	const pvDiverter1: PvDiverterData = {
-		name: "PV Diverter 1",
-		energyDivertedToHeatGeneration: 'heatPump_0',
-		// energyDivertedToHotWaterCylinder: '0'
-	};
-
-	const pvDiverter2: PvDiverterData = {
-		...pvDiverter1,
-		name: "PV Diverter 2"
-	};
-
-	const pvDiverter3: PvDiverterData = {
-		...pvDiverter1,
-		name: "PV Diverter 3"
-	};
 	describe('pv system', () => {
 	
 	
@@ -216,70 +200,6 @@ describe('pv and batteries', () => {
 		});
 	});
 
-	describe('pv diverter', () => {
-		
-	
-		it('pv diverter is removed when remove link is clicked', async () => {
-			store.$patch({
-				pvAndBatteries: {
-					pvDiverter: {
-						data: [pvDiverter1]
-					}
-				}
-			});
-	
-			await renderSuspended(PvAndBatteries);
-	
-			expect(screen.getAllByTestId('pvDiverter_items')).toBeDefined();
-	
-			await user.click(screen.getByTestId('pvDiverter_remove_0'));
-	
-			expect(screen.queryByTestId('pvDiverter_items')).toBeNull();
-		});
-	
-		it('should only remove the pv diverter object that is clicked', async () => {
-			store.$patch({
-				pvAndBatteries: {
-					pvDiverter: {
-						data: [pvDiverter1, pvDiverter2, pvDiverter3]
-					}
-				}
-			});
-	
-			await renderSuspended(PvAndBatteries);
-			await user.click(screen.getByTestId('pvDiverter_remove_1'));
-			const populatedList = screen.getByTestId('pvDiverter_items');
-	
-			expect(within(populatedList).getByText('PV Diverter 1')).toBeDefined();
-			expect(within(populatedList).getByText('PV Diverter 3')).toBeDefined();
-			expect(within(populatedList).queryByText('PV Diverter 2')).toBeNull();
-	
-		});
-		
-		it('floor is duplicated when duplicate link is clicked', async () => {
-			store.$patch({
-				pvAndBatteries: {
-					pvDiverter: {
-						data: [pvDiverter1, pvDiverter2]
-					}
-				}
-			});
-	
-			await renderSuspended(PvAndBatteries);
-			await userEvent.click(screen.getByTestId('pvDiverter_duplicate_0'));
-			await userEvent.click(screen.getByTestId('pvDiverter_duplicate_0'));
-			await userEvent.click(screen.getByTestId('pvDiverter_duplicate_2'));
-			await userEvent.click(screen.getByTestId('pvDiverter_duplicate_2'));
-	
-			expect(screen.queryAllByTestId('pvDiverter_item').length).toBe(6);
-			expect(screen.getByText('PV Diverter 1')).toBeDefined();
-			expect(screen.getByText('PV Diverter 1 (1)')).toBeDefined();
-			expect(screen.getByText('PV Diverter 1 (2)')).toBeDefined();
-			expect(screen.getByText('PV Diverter 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('PV Diverter 1 (1) (2)')).toBeDefined();
-		});
-	});
-
 	describe("mark section as complete", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
@@ -294,8 +214,7 @@ describe('pv and batteries', () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystem: { data: [pvSystem1] },
-					electricBattery: { data: [electricBattery1] },
-					pvDiverter: { data: [pvDiverter1] },
+					electricBattery: { data: [electricBattery1] }
 				},
 			});
 		};
@@ -313,13 +232,7 @@ describe('pv and batteries', () => {
 					testId: `electricBattery_${action}_0`,
 					form: ElectricBatteryForm,
 					params: "battery",
-				},
-				{
-					key: "pvDiverter",
-					testId: `pvDiverter_${action}_0`,
-					form: PvDiverterForm,
-					params: "diverter",
-				},
+				}
 			];
 		};
 

@@ -98,8 +98,7 @@ function getInitialState(): EcaasState {
 		},
 		pvAndBatteries: {
 			pvSystem: { data: [] },
-			electricBattery: { data: [] },
-			pvDiverter: { data: [] }
+			electricBattery: { data: [] }
 		},
 		cooling: {
 			airConditioning: { data: [] }

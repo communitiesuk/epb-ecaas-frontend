@@ -37,20 +37,6 @@ const pvAndBatteriesPages: Array<Page> = [
 		parentId: 'pvAndBatteries'
 	},
 	{
-		id: 'pvDiverter',
-		title: 'PV diverter',
-		url: '/pv-and-batteries/pv-diverter/create',
-		type: PageType.Task,
-		parentId: 'pvAndBatteries'
-	},
-	{
-		id: 'pvDiverterEdit',
-		title: 'PV diverter',
-		url: '/pv-and-batteries/pv-diverter/:diverter',
-		type: PageType.Task,
-		parentId: 'pvAndBatteries'
-	},
-	{
 		id: 'pvStorageSummary',
 		title: 'Summary',
 		url: '/pv-and-batteries/summary',
