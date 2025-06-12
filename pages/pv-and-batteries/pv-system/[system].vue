@@ -94,7 +94,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.001 | max: 100"
 			suffix-text="kW"
 		>
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
@@ -141,7 +141,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="ventilationStrategy"
 			validation="required"
 		>
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">

@@ -75,7 +75,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovDetails summary-text="Help with these inputs">
+	<GovDetails summary-text="Help with these inputs" possibly-llm-placeholder>
 		<table class="govuk-table">
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">

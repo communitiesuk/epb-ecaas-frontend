@@ -89,7 +89,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Type"
 			name="type"
 			validation="required">
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p class="govuk-hint">
 					<strong>System A:</strong><br>
 					Output of the heat exchanger is fed to both the shower and the combi boiler or hot water system

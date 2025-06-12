@@ -14,7 +14,7 @@ defineProps<{
 		help="Solar absorption coefficient at the external surface (dimensionless), the proportion of solar radiation which is absorbed. Decimal between 0-1."
 		:name="name"
 		validation="required | number | min:0.01 | max:1">
-		<GovDetails summary-text="Help with this input">
+		<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 			<table class="govuk-table">
 				<thead class="govuk-table__head">
 					<tr>

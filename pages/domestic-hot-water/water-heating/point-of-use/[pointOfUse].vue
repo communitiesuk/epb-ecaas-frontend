@@ -55,7 +55,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="setpointTemperature"
 			validation="required | number"
 			suffix-text="&deg;C">
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p>Typical range 25 - 44</p>
 			</GovDetails>
 		</FormKit>

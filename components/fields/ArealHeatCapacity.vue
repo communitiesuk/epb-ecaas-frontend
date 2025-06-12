@@ -24,7 +24,7 @@ defineProps<{
 		}"
 		value-type="number"
 	>
-		<GovDetails summary-text="Help with this input">
+		<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 			<table class="govuk-table">
 				<tbody class="govuk-table__body">
 					<tr class="govuk-table__row">

@@ -45,7 +45,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="pipeworkErrorSummary" />
 
-		<GovDetails class="summary-text" :summary-text="`Help with these inputs`" classes="govuk-!-margin-bottom-4">
+		<GovDetails class="summary-text" :summary-text="`Help with these inputs`" classes="govuk-!-margin-bottom-4" possibly-llm-placeholder>
 			<table class="govuk-table">
 				<tbody class="govuk-table__body">
 					<tr class="govuk-table__row">

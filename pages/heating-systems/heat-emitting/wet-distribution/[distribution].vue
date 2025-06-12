@@ -140,7 +140,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number"
 			suffix-text="kJ/°C"
 		>
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
@@ -173,7 +173,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number"
 			suffix-text="°C"
 		>
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
@@ -204,7 +204,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number"
 			suffix-text="°C"
 		>
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
@@ -253,7 +253,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				name="convectionFractionWet"
 				validation="required | number | min: 0 | max: 1 "
 			>
-				<GovDetails summary-text="Help with this input">
+				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 					<table class="govuk-table">
 						<thead class="govuk-table__head">
 							<tr class="govuk-table__row">
@@ -314,7 +314,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Minimum flow temperature when using weather compensation. "
 			suffix-text="°C"
 		>
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">

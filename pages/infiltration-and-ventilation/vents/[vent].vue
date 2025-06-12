@@ -70,7 +70,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="effectiveVentilationArea"
 			validation="required | number | min:1 | max:999999"
 			suffix-text="cm2">
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
@@ -103,7 +103,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="midHeightOfZone"
 			validation="required | number | min:1 | max:60"
 			suffix-text="m">
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p>Typical ranges - 1.2 - 1.8m</p>
 			</GovDetails>
 		</FormKit>
@@ -115,7 +115,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="pressureDifference"
 			validation="required | number"
 			suffix-text="Pa">
-			<GovDetails summary-text="Help with this input">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p>
 					1 - 2 Pa for natural ventilation<br>
 					5 - 10 Pa for mechanical systems

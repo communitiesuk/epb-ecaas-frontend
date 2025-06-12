@@ -12,7 +12,7 @@ const { field = 'elevationalHeight' } = defineProps<{
 		:name="field"
 		validation="required | number | min:0 | max:500"
 	>
-		<GovDetails summary-text="Help with this input">
+		<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 			<table class="govuk-table">
 				<thead class="govuk-table__head">
 					<tr class="govuk-table__row">
