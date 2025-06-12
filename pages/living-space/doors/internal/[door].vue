@@ -89,7 +89,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FormKit
 				id="surfaceArea"
 				type="govInputWithSuffix"
-				label="Surface area of element"
+				label="Net surface area of element"
 				help="Net area of the building element"
 				name="surfaceArea"
 				validation="required | number | min:0 | max:10000"

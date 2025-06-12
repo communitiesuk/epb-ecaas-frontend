@@ -30,7 +30,7 @@ const groundFloorSummary: SummarySection = {
 	data: groundFloorData.map(x => {
 		return {
 			"Name": x.name,
-			"Surface area in zone": x.surfaceAreaInZone,
+			"Net surface area in zone": x.surfaceAreaInZone,
 			"Surface area in all zones": x.surfaceAreaAllZones,
 			"Pitch": x.pitch,
 			"U-value": x.uValue,
@@ -64,7 +64,7 @@ const internalFloorSummary: SummarySection = {
 		return {
 			"Type of internal floor": x.typeOfInternalFloor,
 			"Name": x.name,
-			"Surface area of element": x.surfaceAreaOfElement,
+			"Net surface area of element": x.surfaceAreaOfElement,
 			"U-value": 'uValue' in x ? x.uValue : undefined,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
@@ -86,7 +86,7 @@ const exposedFloorSummary: SummarySection = {
 			"Length": x.length,
 			"Width": x.width,
 			"Elevational height of building element at its base": x.elevationalHeight,
-			"Surface area": x.surfaceArea,
+			"Net surface area": x.surfaceArea,
 			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
@@ -118,7 +118,7 @@ const externalWallSummary: SummarySection = {
 			"Height": x.height,
 			"Length": x.length,
 			"Elevational height of building element at its base": x.elevationalHeight,
-			"Surface area": x.surfaceArea,
+			"Net surface area": x.surfaceArea,
 			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
@@ -134,7 +134,7 @@ const internalWallSummary: SummarySection = {
 	data: internalWallData?.map(x => {
 		return {
 			"Name": x.name,
-			"Surface area of element": x.surfaceAreaOfElement,
+			"Net surface area of element": x.surfaceAreaOfElement,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch
@@ -149,7 +149,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 	data: wallToUnheatedSpaceData?.map(x => {
 		return {
 			"Name": x.name,
-			"Surface area of element": x.surfaceAreaOfElement,
+			"Net surface area of element": x.surfaceAreaOfElement,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.arealHeatCapacity,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
@@ -171,7 +171,7 @@ const partyWallSummary: SummarySection = {
 			"Height": x.height,
 			"Length": x.length,
 			"Elevational height of building element at its base": x.elevationalHeight,
-			"Surface area": x.surfaceArea,
+			"Net surface area": x.surfaceArea,
 			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
@@ -199,7 +199,7 @@ const ceilingSummary: SummarySection = {
 		return {
 			"Type of ceiling": x.type,
 			"Name": x.name,
-			"Surface area": x.surfaceArea,
+			"Net surface area": x.surfaceArea,
 			"U-value": x.type === 'unheatedSpace' ? x.uValue : undefined,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
@@ -222,7 +222,7 @@ const roofSummary: SummarySection = {
 			"Length": x.length,
 			"Width": x.width,
 			"Elevational height of building element at its base": x.elevationalHeightOfElement,
-			"Surface area": x.surfaceArea,
+			"Net surface area": x.surfaceArea,
 			"Solar absorption coefficient": x.solarAbsorptionCoefficient,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
@@ -244,7 +244,7 @@ const unheatedPitchedRoofSummary: SummarySection = {
 			"Length": x.length,
 			"Width": x.width,
 			"Elevational height of building element at its base": x.elevationalHeightOfElement,
-			"Surface area": x.surfaceArea,
+			"Net surface area of ceiling": x.surfaceArea,
 			"Solar absorption coefficient": x.solarAbsorptionCoefficient,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
@@ -275,7 +275,7 @@ const unglazedDoorSummary: SummarySection = {
 			"Height": x.height,
 			"Width": x.width,
 			"Elevational height of building element at its base": x.elevationalHeight,
-			"Surface area": x.surfaceArea,
+			"Net surface area": x.surfaceArea,
 			"Solar absorption coefficient": x.solarAbsorption,
 			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
@@ -292,7 +292,7 @@ const glazedDoorSummary: SummarySection = {
 		return {
 			"Name": x.name,
 			"Orientation": x.orientation,
-			"Surface area": x.surfaceArea,
+			"Net surface area": x.surfaceArea,
 			"Height": x.height,
 			"Width": x.width,
 			"U-value": x.uValue,
@@ -320,7 +320,7 @@ const internalDoorSummary: SummarySection = {
 		return {
 			"Type": x.typeOfCeiling,
 			"Name": x.name,
-			"Surface area of element": x.surfaceArea,
+			"Net surface area of element": x.surfaceArea,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,
@@ -345,7 +345,7 @@ const windowSummary: SummarySection = {
 		return {
 			"Name": x.name,
 			"Orientation": x.orientation,
-			"Surface area": x.surfaceArea,
+			"Net surface area": x.surfaceArea,
 			"Height": x.height,
 			"Width": x.width,
 			"U-value": x.uValue,

@@ -63,7 +63,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="surfaceAreaOfElement"
 			type="govInputWithSuffix"
-			label="Surface area of element"
+			label="Net surface area of element"
 			help="Net area of the opaque building element (i.e. area of all windows / doors should be subtracted before entry). If the element is not square or rectangular the area might not be equal to width x height, hence the need to ask for area in addition to width and height."
 			name="surfaceAreaOfElement"
 			validation="required | number | min:0 | max:10000"

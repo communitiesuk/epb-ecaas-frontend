@@ -150,7 +150,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
 		<FieldsOrientation />
 		<FormKit
-			id="surfaceArea" type="govInputWithSuffix" suffix-text="m2" label="Surface area"
+			id="surfaceArea" type="govInputWithSuffix" suffix-text="m2" label="Net surface area"
 			help="Net area of the building element. For non-rectangular windows, use the area of the window based on its shape"
 			name="surfaceArea" validation="required | number | min:0.01 | max:10000" />
 		<FormKit

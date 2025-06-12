@@ -64,7 +64,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="surfaceArea"
 			type="govInputWithSuffix"
-			label="Surface area of ceiling"
+			label="Net surface area of ceiling"
 			help="Net area of the opaque building element. For an unheated pitched roof this input must be for the ceiling."
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"

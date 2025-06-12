@@ -314,7 +314,7 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "Ground 1",
-				"Surface area in zone": "5",
+				"Net surface area in zone": "5",
 				"Surface area in all zones": "0",
 				"Pitch": "0",
 				"U-value": "1",
@@ -348,7 +348,7 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Type of internal floor": "Heated space",
 				"Name": "Internal 1",
-				"Surface area of element": "5",
+				"Net surface area of element": "5",
 				"U-value": "1",
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
@@ -380,7 +380,7 @@ describe('Living space fabric summary', () => {
 				"Length": "0.5",
 				"Width": "20",
 				"Elevational height of building element at its base": "20",
-				"Surface area": "10",
+				"Net surface area": "10",
 				"Solar absorption coefficient": "0.1",
 				"U-value": "1",
 				"Areal heat capacity": "100",
@@ -424,7 +424,7 @@ describe('Living space fabric summary', () => {
 				"Height": "0.5",
 				"Length": "20",
 				"Elevational height of building element at its base": "20",
-				"Surface area": "10",
+				"Net surface area": "10",
 				"Solar absorption coefficient": "0.1",
 				"U-value": "1",
 				"Areal heat capacity": "100",
@@ -451,7 +451,7 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "Internal 1",
-				"Surface area of element": "5",
+				"Net surface area of element": "5",
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
 				"Pitch": "0"
@@ -478,7 +478,7 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "Wall to unheated space 1",
-				"Surface area of element": "500",
+				"Net surface area of element": "500",
 				"U-value": "10",
 				"Areal heat capacity": "40000",
 				"Mass distribution class": "External",
@@ -512,7 +512,7 @@ describe('Living space fabric summary', () => {
 				"Height": "0.5",
 				"Length": "20",
 				"Elevational height of building element at its base": "20",
-				"Surface area": "10",
+				"Net surface area": "10",
 				"Solar absorption coefficient": "0.1",
 				"U-value": "1",
 				"Areal heat capacity": "100",
@@ -549,7 +549,7 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Type of ceiling": "Heated space",
 				"Name": "Ceiling 1",
-				"Surface area": "5",
+				"Net surface area": "5",
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
 				"Pitch": "180"
@@ -581,7 +581,7 @@ describe('Living space fabric summary', () => {
 				"Length": "1",
 				"Width": "1",
 				"Elevational height of building element at its base": "2",
-				"Surface area": "1",
+				"Net surface area": "1",
 				"Solar absorption coefficient": "0.5",
 				"U-value": "1",
 				"Areal heat capacity": "100",
@@ -615,7 +615,7 @@ describe('Living space fabric summary', () => {
 				"Length": "1",
 				"Width": "1",
 				"Elevational height of building element at its base": "2",
-				"Surface area": "1",
+				"Net surface area of ceiling": "1",
 				"Solar absorption coefficient": "0.5",
 				"U-value": "1",
 				"Areal heat capacity": "50000",
@@ -657,7 +657,7 @@ describe('Living space fabric summary', () => {
 				"Height": "0.5",
 				"Width": "20",
 				"Elevational height of building element at its base": "20",
-				"Surface area": "10",
+				"Net surface area": "10",
 				"Solar absorption coefficient": "0.1",
 				"U-value": "1",
 				"Areal heat capacity": "100",
@@ -686,7 +686,7 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Name": "External glazed door 1",
 				"Orientation": "1",
-				"Surface area": "1",
+				"Net surface area": "1",
 				"Height": "1",
 				"Width": "1",
 				"U-value": "1",
@@ -718,7 +718,7 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Type": "Heated space",
 				"Name": "Internal 1",
-				"Surface area of element": "5",
+				"Net surface area of element": "5",
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
 				"Pitch": "90"
@@ -753,7 +753,7 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Name": "Window 1",
 				"Orientation": "1",
-				"Surface area": "1",
+				"Net surface area": "1",
 				"Height": "1",
 				"Width": "1",
 				"U-value": "1",
