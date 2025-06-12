@@ -213,14 +213,14 @@ const domesticHotWaterPages: Array<Page> = [
 	},
 	{
 		id: 'primaryPipework',
-		title: 'Secondary pipework',
+		title: 'Primary pipework',
 		url: '/domestic-hot-water/pipework/primary/:pipe',
 		type: PageType.Task,
 		parentId: 'pipework'
 	},
 	{
 		id: 'primaryPipeworkCreate',
-		title: 'Secondary pipework',
+		title: 'Primary pipework',
 		url: '/domestic-hot-water/pipework/primary/create',
 		type: PageType.Task,
 		parentId: 'pipework'
