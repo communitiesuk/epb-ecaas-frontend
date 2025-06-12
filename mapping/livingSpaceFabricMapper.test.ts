@@ -41,7 +41,7 @@ describe('living space fabric mapper', () => {
 		expect(fhsInputData.Zone!['zone 1']?.volume).toBe(state.volume);
 		expect(fhsInputData.Zone!['zone 1']?.SpaceHeatSystem).toEqual([]);
 		expect(fhsInputData.Zone!['zone 1']?.SpaceCoolSystem).toEqual([]);
-		expect(fhsInputData.Zone!['zone 1']?.SpaceHeatControl).toBeUndefined();
+		expect(fhsInputData.Zone!['zone 1']?.SpaceHeatControl).toBe('livingroom');
 	});
 
 	it('maps floor input state to FHS input request', () => {
@@ -235,7 +235,8 @@ describe('living space fabric mapper', () => {
 			u_value: exposedFloor.uValue,
 			areal_heat_capacity: exposedFloor.kappaValue,
 			mass_distribution_class: exposedFloor.massDistributionClass,
-			orientation360: exposedFloor.orientation
+			orientation360: exposedFloor.orientation,
+			is_external_door: false
 		};
 
 		expect(exposedFloorElement).toEqual(expectedExposedFloor);
@@ -325,7 +326,8 @@ describe('living space fabric mapper', () => {
 			solar_absorption_coeff: externalWall.solarAbsorption,
 			u_value: externalWall.uValue,
 			areal_heat_capacity: externalWall.kappaValue,
-			mass_distribution_class: externalWall.massDistributionClass
+			mass_distribution_class: externalWall.massDistributionClass,
+			is_external_door: false
 		};
 
 		expect(externalWallElement).toEqual(expectedExternalWall);
@@ -352,7 +354,8 @@ describe('living space fabric mapper', () => {
 			solar_absorption_coeff: partyWall.solarAbsorption,
 			u_value: partyWall.uValue,
 			areal_heat_capacity: partyWall.kappaValue,
-			mass_distribution_class: partyWall.massDistributionClass
+			mass_distribution_class: partyWall.massDistributionClass,
+			is_external_door: false
 		};
 
 		expect(partyWallElement).toEqual(expectedPartyWall);
@@ -455,7 +458,9 @@ describe('living space fabric mapper', () => {
 			solar_absorption_coeff: roof.solarAbsorptionCoefficient,
 			u_value: roof.uValue,
 			areal_heat_capacity: roof.kappaValue,
-			mass_distribution_class: roof.massDistributionClass
+			mass_distribution_class: roof.massDistributionClass,
+			is_external_door: false,
+			is_unheated_pitched_roof: false
 		};
 
 		expect(roofElement).toEqual(expectedRoof);
@@ -471,7 +476,9 @@ describe('living space fabric mapper', () => {
 			solar_absorption_coeff: unheatedPitchedRoof.solarAbsorptionCoefficient,
 			u_value: unheatedPitchedRoof.uValue,
 			areal_heat_capacity: unheatedPitchedRoof.kappaValue,
-			mass_distribution_class: unheatedPitchedRoof.massDistributionClass
+			mass_distribution_class: unheatedPitchedRoof.massDistributionClass,
+			is_external_door: false,
+			is_unheated_pitched_roof: true
 		};
 
 		expect(unheatedPitchedRoofElement).toEqual(expectedUnpitchedRoof);
@@ -588,7 +595,8 @@ describe('living space fabric mapper', () => {
 			solar_absorption_coeff: externalUnglazedDoor.solarAbsorption,
 			u_value: externalUnglazedDoor.uValue,
 			areal_heat_capacity: externalUnglazedDoor.kappaValue,
-			mass_distribution_class: externalUnglazedDoor.massDistributionClass
+			mass_distribution_class: externalUnglazedDoor.massDistributionClass,
+			is_external_door: true
 		};
 
 		expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);
@@ -713,7 +721,7 @@ describe('living space fabric mapper', () => {
 
 		const expectedLinearThermalBridge: ThermalBridgeLinear = {
 			type: 'ThermalBridgeLinear',
-			junction_type: linearThermalBridge.typeOfThermalBridge,
+			junction_type: 'E1',
 			linear_thermal_transmittance: linearThermalBridge.linearThermalTransmittance,
 			length: linearThermalBridge.length
 		};
