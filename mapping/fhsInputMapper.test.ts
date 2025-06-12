@@ -1,4 +1,4 @@
-import { BatteryLocation, BuildType, FloorType, FuelType, MassDistributionClass, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, ZoneTemperatureControlBasis } from "~/schema/api-schema.types";
+import { BatteryLocation, BuildType, FloorType, FuelType, MassDistributionClass, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType } from "~/schema/api-schema.types";
 import { mapFhsInputData } from "./fhsInputMapper";
 
 describe("FHS input mapper", () => {
@@ -16,11 +16,6 @@ describe("FHS input mapper", () => {
 					numOfBedrooms: 7,
 					partGCompliance: true,
 					coolingRequired: true
-				}
-			},
-			appliances: {
-				data: {
-					appliances: [] // skipping appliance data as it will be removed for summer
 				}
 			},
 			shading: {

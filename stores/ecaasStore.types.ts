@@ -1,5 +1,5 @@
 import type { EmptyObject, TaggedUnion } from "type-fest";
-import type { BuildType, ApplianceKey, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType } from "~/schema/api-schema.types";
+import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -18,7 +18,6 @@ export interface EcaasForm<T> {
 
 export interface DwellingDetails {
 	generalSpecifications: EcaasForm<Partial<GeneralSpecificationsData>>;
-	appliances: EcaasForm<AppliancesData>;
 	shading: EcaasForm<ShadingData[]>;
 	externalFactors: EcaasForm<ExternalFactorsData>;
 }
@@ -35,10 +34,6 @@ export type GeneralSpecificationsData = {
 	};
 	[BuildType.house]: EmptyObject;
 }>;
-
-export interface AppliancesData {
-	appliances: ApplianceKey[];
-}
 
 export type ShadingData = {
 	name: string;

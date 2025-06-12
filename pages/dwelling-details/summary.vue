@@ -9,7 +9,6 @@ const title = "Dwelling details summary";
 const store = useEcaasStore();
 
 const generalSpecificationsData = store.dwellingDetails.generalSpecifications.data;
-const appliancesData = store.dwellingDetails.appliances.data;
 const shadingData = store.dwellingDetails.shading.data;
 const externalFactors = store.dwellingDetails.externalFactors.data;
 
@@ -25,15 +24,6 @@ const generalSpecificationsSummary: SummarySection = {
 		"Cooling required": displayBoolean(generalSpecificationsData.coolingRequired),
 	},
 	editUrl: getUrl('generalSpecifications')!
-};
-
-const appliancesAndElectricitySummary: SummarySection = {
-	id: 'appliances',
-	label: "Appliances",
-	data: {
-		"Appliances": appliancesData.appliances?.map(displayApplianceKey)
-	},
-	editUrl: getUrl('appliances')!
 };
 
 const shadingSummary: SummarySection = {
@@ -67,8 +57,7 @@ const externalFactorsSummary: SummarySection = {
 const summarySections: SummarySection[] = [
 	generalSpecificationsSummary,
 	externalFactorsSummary,
-	shadingSummary,
-	appliancesAndElectricitySummary
+	shadingSummary
 ];
 </script>
 
@@ -90,7 +79,6 @@ const summarySections: SummarySection[] = [
 						</NuxtLink>
 					</template>
 				</SummaryTab>
-				<SummaryTab :summary="appliancesAndElectricitySummary" :selected="tabProps.currentTab === 3"/>
 			</GovTabs>
 			<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 		</NuxtLayout>

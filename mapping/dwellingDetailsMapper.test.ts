@@ -1,4 +1,4 @@
-import { ApplianceKey, BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
+import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
 import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 
 describe('dwelling details mapper', () => {
@@ -97,50 +97,5 @@ describe('dwelling details mapper', () => {
 		expect(shadingSegment?.shading![0]?.type).toBe(state.objectType);
 		expect(shadingSegment?.shading![0]?.height).toBe(state.height);
 		expect(shadingSegment?.shading![0]?.distance).toBe(state.distance);
-	});
-
-	it('maps appliances input state to FHS input request', () => {
-		// Arrange
-		const state: AppliancesData = {
-			appliances: [
-				ApplianceKey.Fridge,
-				ApplianceKey.Freezer,
-				ApplianceKey.Fridge_Freezer,
-				ApplianceKey.Dishwasher,
-				ApplianceKey.Oven,
-				ApplianceKey.Clothes_washing,
-				ApplianceKey.Clothes_drying,
-				ApplianceKey.Hobs,
-				ApplianceKey.Kettle,
-				ApplianceKey.Microwave
-			]
-		};
-
-		store.$patch({
-			dwellingDetails: {
-				appliances: {
-					data: state
-				}
-			}
-		});
-
-		// Act
-		const fhsInputData = mapDwellingDetailsData(store);
-
-		// Assert
-		const expectedAppliances = {
-			'Dishwasher': 'Default',
-			'Clothes_washing': 'Default',
-			'Clothes_drying': 'Default',
-			'Fridge': 'Default',
-			'Freezer': 'Default',
-			'Fridge-Freezer': 'Default',
-			'Oven': 'Default',
-			'Kettle': 'Default',
-			'Microwave': 'Default',
-			'Hobs': 'Default'
-		};
-
-		expect(fhsInputData.Appliances).toEqual(expectedAppliances);
 	});
 });

@@ -1,17 +1,15 @@
-import { ApplianceReference, BuildType, type SchemaApplianceEntry, type SchemaInfiltrationVentilation } from "~/schema/api-schema.types";
+import { BuildType, type SchemaInfiltrationVentilation } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 
 export function mapDwellingDetailsData(state: EcaasState): Partial<FhsInputSchema> {
 	const generalSpecificationsData = mapGeneralSpecificationsData(state);
 	const externalFactorsData = mapExternalFactorsData(state);
 	const distantShadingData = mapDistantShadingData(state);
-	const applianceData = mapApplianceData(state);
 
 	return {
 		...generalSpecificationsData,
 		...externalFactorsData,
-		...distantShadingData,
-		...applianceData
+		...distantShadingData
 	};
 }
 
@@ -67,16 +65,5 @@ function mapDistantShadingData(state: EcaasState): Pick<FhsInputSchema, 'Externa
 				};
 			})
 		}
-	};
-}
-
-function mapApplianceData(state: EcaasState): Pick<FhsInputSchema, 'Appliances'> {
-	const { appliances } = state.dwellingDetails.appliances.data;
-
-	const applianceData: Record<string, SchemaApplianceEntry> = {};
-	appliances?.forEach(x => applianceData[x] = ApplianceReference.Default);
-
-	return {
-		Appliances: applianceData
 	};
 }

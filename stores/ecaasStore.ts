@@ -10,7 +10,6 @@ function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
 		dwellingDetails: {
 			generalSpecifications: { data: {} },
-			appliances: { data: {} },
 			shading: { data: [] },
 			externalFactors: { data: {} }
 		},

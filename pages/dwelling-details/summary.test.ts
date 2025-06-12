@@ -3,7 +3,7 @@ import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import userEvent from '@testing-library/user-event';
 import hyphenate from '../../utils/hyphenate';
-import { ApplianceKey, BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
+import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -12,7 +12,6 @@ mockNuxtImport('navigateTo', () => {
 
 interface DwellingDetailSummary {
 	generalSpecifications: GeneralSpecificationsData,
-	appliances: AppliancesData,
 	shading: ShadingData[],
 	externalFactors: ExternalFactorsData
 }
@@ -24,20 +23,6 @@ const state: DwellingDetailSummary = {
 		numOfBedrooms: 3,
 		partGCompliance: true,
 		coolingRequired: false,
-	},
-	appliances: {
-		appliances: [
-			ApplianceKey.Fridge,
-			ApplianceKey.Freezer,
-			ApplianceKey.Fridge_Freezer,
-			ApplianceKey.Dishwasher,
-			ApplianceKey.Oven,
-			ApplianceKey.Clothes_washing,
-			ApplianceKey.Clothes_drying,
-			ApplianceKey.Hobs,
-			ApplianceKey.Kettle,
-			ApplianceKey.Microwave
-		]
 	},
 	shading: [{
 		name: 'Shading 1',
@@ -66,7 +51,6 @@ describe('Dwelling details summary', () => {
 		await renderSuspended(Summary);
   
 		expect(screen.getByRole('link', {name: 'General specifications'}));
-		expect(screen.getByRole('link', {name: 'Appliances'}));
 		expect(screen.getByRole('link', {name: 'Shading'}));
 
 	});
@@ -96,45 +80,6 @@ describe('Dwelling details summary', () => {
 			const lineResult = (await screen.findByTestId(`summary-generalSpecifications-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-		}
-	});
-
-	it('should display the correct data for the appliances section', async () => {
-		store.$patch({
-			dwellingDetails: {
-				appliances: {
-					data: state.appliances
-				}
-			}
-		});
-
-		userEvent.setup();
-
-		await renderSuspended(Summary);
-
-		const expectedResult = {
-			"Appliances": [
-				'Fridge',
-				'Freezer',
-				'Fridge freezer',
-				'Dishwasher',
-				'Oven',
-				'Washing machine',
-				'Tumble dryer',
-				'Hobs',
-				'Kettle',
-				'Microwave'
-			]
-		};
-
-		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-appliances-${hyphenate(key)}`));
-			const lineValues = Array.from(lineResult.querySelectorAll("li").values()).map(v => v.textContent);
-
-			const result = value.every(v => lineValues.includes(v));
-
-			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-			expect(result).toBe(true);
 		}
 	});
 

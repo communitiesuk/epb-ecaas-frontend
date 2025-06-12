@@ -30,9 +30,6 @@ describe('Ecaas Store', () => {
 			dwellingDetails: {
 				generalSpecifications: {
 					complete: true
-				},
-				appliances: {
-					complete: false
 				}
 			}
 		});
@@ -90,9 +87,6 @@ describe('Ecaas Store', () => {
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
-					complete: true
-				},
-				appliances: {
 					complete: true
 				},
 				shading: {
