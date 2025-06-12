@@ -60,9 +60,10 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		/>
 		<FormKit
 			id="seasonalEnergyEfficiencyRatio"
-			type="govInputWithSuffix"
+			type="govInputFloat"
 			label="Seasonal energy efficiency ratio"
 			name="seasonalEnergyEfficiencyRatio"
+			help="This value represents how efficiently the system performs across a typical cooling season. A higher SEER means better energy efficiency. Typical ranges are between 4.0 - 7.0."
 			validation="required | number | between:0,25"
 			suffix-text="kW"
 		/>
@@ -71,6 +72,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputFloat"
 			label="Convection fraction"
 			name="convectionFraction"
+			help="This is the proportion of the system’s sensible cooling output that is delivered through air movement (convection), as opposed to radiant cooling. For most ducted or wall-mounted air conditioning systems, this value is typically 1.0, meaning all cooling is by convection."
 			validation="required | number | between:0,1"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
