@@ -65,7 +65,7 @@ const internalFloorSummary: SummarySection = {
 			"Type of internal floor": x.typeOfInternalFloor,
 			"Name": x.name,
 			"Surface area of element": x.surfaceAreaOfElement,
-			"U-value": x.uValue,
+			"U-value": 'uValue' in x ? x.uValue : undefined,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,
@@ -135,7 +135,6 @@ const internalWallSummary: SummarySection = {
 		return {
 			"Name": x.name,
 			"Surface area of element": x.surfaceAreaOfElement,
-			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch
@@ -201,7 +200,7 @@ const ceilingSummary: SummarySection = {
 			"Type of ceiling": x.type,
 			"Name": x.name,
 			"Surface area": x.surfaceArea,
-			"U-value": x.uValue,
+			"U-value": x.type === 'unheatedSpace' ? x.uValue : undefined,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,
@@ -322,7 +321,6 @@ const internalDoorSummary: SummarySection = {
 			"Type": x.typeOfCeiling,
 			"Name": x.name,
 			"Surface area of element": x.surfaceArea,
-			"U-value": x.uValue,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,

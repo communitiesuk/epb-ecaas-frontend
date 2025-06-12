@@ -105,7 +105,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="U-value"
 			help="Steady-state thermal transmittance of the building element"
 			name="uValue"
-			validation="required | number | min:0.01 | max:10"
+			validation="required | number | min:0 | max:10"
 		/>
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>

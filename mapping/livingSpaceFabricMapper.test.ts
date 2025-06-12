@@ -262,7 +262,6 @@ describe('living space fabric mapper', () => {
 		const internalWall: InternalWallData = {
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
-			uValue: 1,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: '90',
@@ -336,7 +335,7 @@ describe('living space fabric mapper', () => {
 			type: 'BuildingElementAdjacentConditionedSpace',
 			pitch: internalWall.pitch!,
 			area: internalWall.surfaceAreaOfElement,
-			u_value: internalWall.uValue,
+			u_value: 0,
 			areal_heat_capacity: internalWall.kappaValue,
 			mass_distribution_class: internalWall.massDistributionClass
 		};
@@ -490,7 +489,6 @@ describe('living space fabric mapper', () => {
 			typeOfCeiling: 'unheatedSpace',
 			name: "Internal 1",
 			surfaceArea: 5,
-			uValue: 1,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: '90',
@@ -554,7 +552,7 @@ describe('living space fabric mapper', () => {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
 			pitch: internalDoor.pitch!,
 			area: internalDoor.surfaceArea,
-			u_value: internalDoor.uValue,
+			u_value: 0,
 			areal_heat_capacity: internalDoor.kappaValue,
 			mass_distribution_class: internalDoor.massDistributionClass,
 			thermal_resistance_unconditioned_space: internalDoor.thermalResistanceOfAdjacentUnheatedSpace

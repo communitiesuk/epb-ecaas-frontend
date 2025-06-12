@@ -26,7 +26,6 @@ describe('ceilings and roofs', () => {
 		name: "Ceiling 1",
 		type: 'heatedSpace',
 		surfaceArea: 5,
-		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
 		pitchOption: '180',

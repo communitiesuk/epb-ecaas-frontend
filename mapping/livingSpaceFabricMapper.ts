@@ -22,6 +22,8 @@ export function mapLivingSpaceFabricData(state: EcaasState): Partial<FhsInputSch
 	]);
 }
 
+const defaultUValue = 0;
+
 function mapZoneParametersData(state: EcaasState): Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'> {
 	const { livingSpaceZoneParameters } = state.livingSpaceFabric;
 
@@ -154,7 +156,7 @@ function mapWallData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 			type: 'BuildingElementAdjacentConditionedSpace',
 			pitch: x.pitch!,
 			area: x.surfaceAreaOfElement,
-			u_value: x.uValue,
+			u_value: defaultUValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass
 		}
@@ -214,7 +216,7 @@ function mapCeilingAndRoofData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> 
 				'BuildingElementAdjacentUnconditionedSpace_Simple',
 			pitch: x.pitch,
 			area: x.surfaceArea,
-			u_value: x.uValue,
+			u_value: x.type === 'unheatedSpace' ? x.uValue : defaultUValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
 			thermal_resistance_unconditioned_space: x.type === 'heatedSpace' ? 0 : x.thermalResistanceOfAdjacentUnheatedSpace!
@@ -281,7 +283,7 @@ function mapDoorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 				'BuildingElementAdjacentUnconditionedSpace_Simple',
 			pitch: x.pitch!,
 			area: x.surfaceArea,
-			u_value: x.uValue,
+			u_value: defaultUValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
 			thermal_resistance_unconditioned_space: x.typeOfCeiling === 'heatedSpace' ? 0 : x.thermalResistanceOfAdjacentUnheatedSpace

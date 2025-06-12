@@ -145,7 +145,6 @@ export type ExternalWallData = {
 export type InternalWallData = {
 	name: string;
 	surfaceAreaOfElement: number;
-	uValue: number;
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
 	pitchOption: string;
@@ -189,7 +188,6 @@ export type CeilingType = 'heatedSpace' | 'unheatedSpace';
 export type CeilingData = {
 	name: string;
 	surfaceArea: number;
-	uValue: number;
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
 	pitchOption?: string;
@@ -198,6 +196,7 @@ export type CeilingData = {
 	heatedSpace: EmptyObject;
 	unheatedSpace: {
 		thermalResistanceOfAdjacentUnheatedSpace: number;
+		uValue: number;
 	}
 }>;
 
@@ -279,7 +278,6 @@ export type ExternalGlazedDoorData = {
 export type InternalDoorData = {
 	name: string;
 	surfaceArea: number;
-	uValue: number;
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
 	pitchOption: string;

@@ -51,7 +51,6 @@ describe('walls', () => {
 	const internal1: InternalWallData = {
 		name: "Internal wall 1",
 		surfaceAreaOfElement: 5,
-		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
 		pitchOption: 'custom',

@@ -83,7 +83,6 @@ const wallsData: WallsData = {
 		data: [{
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
-			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: '0',
@@ -126,7 +125,6 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 			type: 'heatedSpace',
 			name: "Ceiling 1",
 			surfaceArea: 5,
-			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: '180',
@@ -206,7 +204,6 @@ const doorsData: DoorsData = {
 			typeOfCeiling: 'heatedSpace',
 			name: "Internal 1",
 			surfaceArea: 5,
-			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: '90',
@@ -455,7 +452,6 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Name": "Internal 1",
 				"Surface area of element": "5",
-				"U-value": "1",
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
 				"Pitch": "0"
@@ -554,7 +550,6 @@ describe('Living space fabric summary', () => {
 				"Type of ceiling": "Heated space",
 				"Name": "Ceiling 1",
 				"Surface area": "5",
-				"U-value": "1",
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
 				"Pitch": "180"
@@ -724,7 +719,6 @@ describe('Living space fabric summary', () => {
 				"Type": "Heated space",
 				"Name": "Internal 1",
 				"Surface area of element": "5",
-				"U-value": "1",
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
 				"Pitch": "90"

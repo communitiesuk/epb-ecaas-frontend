@@ -17,7 +17,6 @@ describe('ceiling', () => {
 		type: 'heatedSpace',
 		name: "Ceiling 1",
 		surfaceArea: 5,
-		uValue: 1,
 		kappaValue: 50000,
 		massDistributionClass: MassDistributionClass.I,
 		pitchOption: '0',
@@ -27,6 +26,7 @@ describe('ceiling', () => {
 	const internalFloorWithUnheated: CeilingData = {
 		...internalFloor,
 		type: 'unheatedSpace',
+		uValue: 1,
 		thermalResistanceOfAdjacentUnheatedSpace: 0
 	};
 
@@ -37,10 +37,14 @@ describe('ceiling', () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Ceiling 1');
 		await user.type(screen.getByTestId('surfaceArea'), '5');
-		await user.type(screen.getByTestId('uValue'), '1');
 		await user.click(screen.getByTestId('kappaValue_50000'));
 		await user.click(screen.getByTestId('massDistributionClass_I'));
 		await user.click(screen.getByTestId('pitchOption_0'));
+	};
+
+	const populateValidFormUnheated = async () => {
+		await populateValidForm();
+		await user.type(screen.getByTestId('uValue'), '1');
 	};
 	
 	describe('when type of ceiling is heated space', () => {
@@ -76,7 +80,6 @@ describe('ceiling', () => {
 			expect((await screen.findByTestId('type_heatedSpace')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Ceiling 1');
 			expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('5');
-			expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 			expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('pitchOption_0')).hasAttribute('checked')).toBe(true);
@@ -90,7 +93,6 @@ describe('ceiling', () => {
 	
 			expect((await screen.findByTestId('name_error'))).toBeDefined();
 			expect((await screen.findByTestId('surfaceArea_error'))).toBeDefined();
-			expect((await screen.findByTestId('uValue_error'))).toBeDefined();
 			expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();
 			expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();
 			expect((await screen.findByTestId('pitchOption_error'))).toBeDefined();
@@ -102,7 +104,7 @@ describe('ceiling', () => {
 			await renderSuspended(Ceiling);
 	
 			await user.click(screen.getByTestId('type_unheatedSpace'));
-			await populateValidForm();
+			await populateValidFormUnheated();
 			await user.type(screen.getByTestId('thermalResistanceOfAdjacentUnheatedSpace'), '0');
 			await user.tab();
 			await user.click(screen.getByRole('button'));

@@ -13,7 +13,6 @@ const saveForm = (fields: CeilingData) => {
 		const commonFields = {
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
-			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
@@ -26,6 +25,7 @@ const saveForm = (fields: CeilingData) => {
 			ceiling = {
 				...commonFields,
 				type: fields.type,
+				uValue: fields.uValue,
 				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 			};
 		} else if (fields.type === 'heatedSpace') {
@@ -100,6 +100,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				validation="required | number | min:0 | max:10000"
 			/>
 			<FormKit
+				v-if="model.type !== 'heatedSpace'"
 				id="uValue"
 				type="govInputWithSuffix"
 				suffix-text="W/(m2.K)"
