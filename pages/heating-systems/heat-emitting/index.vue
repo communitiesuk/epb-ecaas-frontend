@@ -62,6 +62,9 @@ function checkIsComplete(){
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+
+	<p class="govuk-hint">For now, this service only allows homes to be modelled with the following. In future releases there will be further options.</p>
+
 	<CustomList
 		id="wetDistribution" title="Wet distribution" 
 		:form-url="`${page?.url!}/wet-distribution`"
@@ -77,6 +80,7 @@ function checkIsComplete(){
 		@duplicate="(index: number) => handleDuplicate('instantElectricHeater', index)" />
 
 	<CustomList
+		v-if="false"
 		id="electricStorageHeater" title="Electric storage heater"
 		:form-url="`${page?.url!}/electric-storage-heater`"
 		:items="store.heatingSystems.heatEmitting.electricStorageHeater.data.map(x => x.name)"
@@ -84,6 +88,7 @@ function checkIsComplete(){
 		@duplicate="(index: number) => handleDuplicate('electricStorageHeater', index)" />
 
 	<CustomList
+		v-if="false"
 		id="warmAirHeatPump" title="Warm air heat pump" 
 		:form-url="`${page?.url!}/warm-air-heat-pump`"
 		:items="store.heatingSystems.heatEmitting.warmAirHeatPump.data.map(x => x.name)"
