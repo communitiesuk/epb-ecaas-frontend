@@ -171,15 +171,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="solarTransmittance"
 			validation="required | number | min:0.01 | max:1"
 		/>
-		<FormKit
-			id="elevationalHeight"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Elevational height of building element at its base"
-			help="The distance between the ground and the lowest edge of the element"
-			name="elevationalHeight"
-			validation="required | number | min:0 | max:500"
-		/>
+		<FieldsElevationalHeight />
 		<FormKit
 			id="midHeight"
 			type="govInputWithSuffix"

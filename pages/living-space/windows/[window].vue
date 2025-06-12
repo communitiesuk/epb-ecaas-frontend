@@ -174,11 +174,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="solarTransmittance" type="govInputFloat" label="Transmittance of solar energy "
 			help="G value. Total solar energy transmittance of the transparent part of the window. Decimal between 0-1"
 			name="solarTransmittance" validation="required | number | min:0.01 | max:1" />
-		<FormKit
-			id="elevationalHeight" type="govInputWithSuffix" suffix-text="m"
-			label="Elevational height of building element at its base"
-			help="The distance between the ground and the lowest edge of the element" name="elevationalHeight"
-			validation="required | number | min:0 | max:500" />
+		<FieldsElevationalHeight />
 		<FormKit
 			id="midHeight" type="govInputWithSuffix" suffix-text="m" label="Mid height"
 			help="Enter the height from the ground to the midpoint of the window" name="midHeight"

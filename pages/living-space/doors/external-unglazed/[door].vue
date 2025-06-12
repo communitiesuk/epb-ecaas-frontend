@@ -84,15 +84,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="width"
 			validation="required | number | min:0.001 | max:50"
 		/>
-		<FormKit
-			id="elevationalHeight"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Elevational height of building element at its base"
-			help="The distance between the ground and the lowest edge of the element"
-			name="elevationalHeight"
-			validation="required | number | min:0 | max:500"
-		/>
+		<FieldsElevationalHeight />
 		<FormKit
 			id="surfaceArea"
 			type="govInputWithSuffix"
