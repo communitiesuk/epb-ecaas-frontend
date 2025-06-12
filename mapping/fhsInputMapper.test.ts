@@ -1,4 +1,4 @@
-import { BatteryLocation, BuildType, FloorType, FuelType, MassDistributionClass, ShadingObjectType, SupplyAirFlowRateControlType, SupplyAirTemperatureControlType, TerrainClass, VentilationShieldClass, VentType, ZoneTemperatureControlBasis } from "~/schema/api-schema.types";
+import { BatteryLocation, BuildType, FloorType, FuelType, MassDistributionClass, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, ZoneTemperatureControlBasis } from "~/schema/api-schema.types";
 import { mapFhsInputData } from "./fhsInputMapper";
 
 describe("FHS input mapper", () => {
@@ -322,9 +322,6 @@ describe("FHS input mapper", () => {
 					minimumChargeRate: 80,
 					maximumDischargeRate: 20,
 				}]
-			},
-			pvDiverter: {
-				data: []
 			}
 		};
 
