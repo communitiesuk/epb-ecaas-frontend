@@ -24,6 +24,7 @@ export interface DwellingDetails {
 }
 
 export type GeneralSpecificationsData = {
+	typeOfDwelling: BuildType;
 	storeysInDwelling: number;
 	numOfBedrooms: number;
 	partGCompliance: boolean;
@@ -56,13 +57,13 @@ export interface ExternalFactorsData {
 }
 
 export interface LivingSpaceFabric {
+	livingSpaceZoneParameters: EcaasForm<LivingSpaceZoneParametersData>;
 	livingSpaceFloors: FloorsData;
 	livingSpaceWalls: WallsData;
 	livingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
 	livingSpaceDoors: DoorsData;
 	livingSpaceWindows: EcaasForm<WindowData[]>;
 	livingSpaceThermalBridging: ThermalBridgingData;
-	livingSpaceZoneParameters: EcaasForm<LivingSpaceZoneParametersData>;
 }
 
 export interface FloorsData {
