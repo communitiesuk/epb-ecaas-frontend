@@ -6,6 +6,12 @@ const { saveToList } = useForm();
 const immersionHeaterData = useItemToEdit('immersionHeater', store.domesticHotWater.waterHeating.immersionHeater.data);
 const model: Ref<ImmersionHeaterData> = ref(immersionHeaterData!);
 
+const heaterPositionOptions: Record<ImmersionHeaterPosition, Capitalize<ImmersionHeaterPosition>> = {
+	top: 'Top',
+	middle: 'Middle',
+	bottom: 'Bottom'
+};
+
 const saveForm = (fields: ImmersionHeaterData) => {
 	store.$patch((state) => {
 		const {immersionHeater} = state.domesticHotWater.waterHeating;
@@ -14,7 +20,7 @@ const saveForm = (fields: ImmersionHeaterData) => {
 			name: fields.name,
 			ratedPower: fields.ratedPower,
 			heaterPosition: fields.heaterPosition,
-			thermostatPosition: fields.heaterPosition
+			thermostatPosition: fields.thermostatPosition
 		};
 
 		saveToList(immersionHeaterItem, immersionHeater);
@@ -60,12 +66,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="heaterPosition"
 			type="govRadios"
-			:options="new Map([
-				['1', 'Top'],
-				['0.5', 'Middle'],
-				['0', 'Bottom']
-			])"
-			value-type="number"
+			:options="heaterPositionOptions"
 			label="Heater position"
 			help="Specify where the immersion heater is installed within the tank"
 			name="heaterPosition"
@@ -74,12 +75,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="thermostatPosition"
 			type="govRadios"
-			:options="new Map([
-				['1', 'Top'],
-				['0.5', 'Middle'],
-				['0', 'Bottom']
-			])"
-			value-type="number"
+			:options="heaterPositionOptions"
 			label="Thermostat position"
 			help="Enter the location of the thermostat sensor in the tank"
 			name="thermostatPosition"

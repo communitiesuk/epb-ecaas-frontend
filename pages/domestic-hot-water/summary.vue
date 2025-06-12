@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
-import { getTabItems, getUrl } from '#imports';
+import { getTabItems, getUrl, type ImmersionHeaterPosition } from '#imports';
+import { immersionHeaterPositionValues } from '~/mapping/common';
 
 definePageMeta({ layout: false });
 
@@ -39,12 +40,16 @@ const immersionHeaterSummary: SummarySection = {
 		return {
 			"Name": d.name,
 			"Rated power": d.ratedPower,
-			"Heater position": d.heaterPosition,
-			"Thermostat position": d.thermostatPosition
+			"Heater position": renderHeaterPosition(d.heaterPosition),
+			"Thermostat position": renderHeaterPosition(d.thermostatPosition)
 		};
 	}),
 	editUrl: getUrl('waterHeating')!
 };
+
+function renderHeaterPosition(position: ImmersionHeaterPosition): string {
+	return `${ position } (${ immersionHeaterPositionValues[position] })`;
+}
 
 const solarThermalData = store.domesticHotWater.waterHeating.solarThermal.data;
 const solarThermalSummary: SummarySection = {

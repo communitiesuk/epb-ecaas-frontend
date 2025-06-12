@@ -29,8 +29,8 @@ describe('Domestic hot water summary', () => {
 		const immersionHeater: ImmersionHeaterData = {
 			name: 'Immersion heater',
 			ratedPower: 10,
-			heaterPosition: 1,
-			thermostatPosition: 1
+			heaterPosition: 'top',
+			thermostatPosition: 'top'
 		};
 
 		const pointOfUse: PointOfUseData = {
@@ -119,8 +119,8 @@ describe('Domestic hot water summary', () => {
 			const expectedResult = {
 				"Name": "Immersion heater",
 				"Rated power": "10",
-				"Heater position": "1",
-				"Thermostat position": "1",
+				"Heater position": "Top (1)",
+				"Thermostat position": "Top (1)",
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {

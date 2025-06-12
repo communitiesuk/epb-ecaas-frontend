@@ -15,8 +15,8 @@ describe('immersion heater', () => {
 	const immersionHeater: ImmersionHeaterData = {
 		name: 'Immersion heater',
 		ratedPower: 10,
-		heaterPosition: 1,
-		thermostatPosition: 1
+		heaterPosition: 'top',
+		thermostatPosition: 'top'
 	};
 
 	afterEach(() => {
@@ -26,8 +26,8 @@ describe('immersion heater', () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Immersion heater');
 		await user.type(screen.getByTestId('ratedPower'), '10');
-		await user.click(screen.getByTestId('heaterPosition_1'));
-		await user.click(screen.getByTestId('thermostatPosition_1'));
+		await user.click(screen.getByTestId('heaterPosition_top'));
+		await user.click(screen.getByTestId('thermostatPosition_top'));
 		await user.tab();
 	};
 
@@ -61,8 +61,8 @@ describe('immersion heater', () => {
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Immersion heater');
 		expect((await screen.findByTestId('ratedPower') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('heaterPosition_1')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('thermostatPosition_1')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('heaterPosition_top')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('thermostatPosition_top')).hasAttribute('checked')).toBe(true);
 	});
 
 	it('required error messages are displayed when empty form is submitted', async () => {

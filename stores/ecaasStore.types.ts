@@ -394,9 +394,11 @@ export type HotWaterCylinderData = {
 export type ImmersionHeaterData = {
 	name: string;
 	ratedPower: number;
-	heaterPosition: number;
-	thermostatPosition: number;
+	heaterPosition: ImmersionHeaterPosition;
+	thermostatPosition: ImmersionHeaterPosition;
 };
+
+export type ImmersionHeaterPosition = 'top' | 'middle' | 'bottom';
 
 export type SolarThermalData = {
 	name: string;
