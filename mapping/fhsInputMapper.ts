@@ -1,6 +1,5 @@
-import exampleData from '@/data/examples/demo_FHS.json';
 import type { StripDefs } from './mapping.types';
-import type { SchemaFhsInputSchema } from '~/schema/api-schema.types';
+import { ColdWaterSourceType, type SchemaFhsInputSchema } from '~/schema/api-schema.types';
 import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 import merge from 'deepmerge';
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
@@ -11,8 +10,6 @@ import { mapDomesticHotWaterData } from './domesticHotWaterMapper';
 import { mapCoolingData } from './coolingMapper';
 
 export function mapFhsInputData(state: EcaasState): FhsInputSchema {
-	const inputData = exampleData as FhsInputSchema;
-
 	const dwellingDetailsData = mapDwellingDetailsData(state);
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
 	const livingSpaceFabricData = mapLivingSpaceFabricData(state);
@@ -21,6 +18,32 @@ export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
 	const coolingData = mapCoolingData(state);
 
+	const control: Partial<FhsInputSchema> = {
+		Control: {}
+	};
+	const events: Partial<FhsInputSchema> = {
+		Events: {}
+	};
+	const internalGains: Partial<FhsInputSchema> = {
+		InternalGains: {}
+	};
+	const defaultColdWaterSource: Partial<FhsInputSchema> = { 
+		ColdWaterSource: {
+			[ColdWaterSourceType.mains_water]: {
+				start_day: 0,
+				temperatures: [3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
+				time_series_step: 1
+			}
+		}
+	};
+	const defaultSimulationTime: Partial<FhsInputSchema> = {
+		SimulationTime: {
+			start: 0,
+			end: 8,
+			step: 1
+		}
+	};
+
 	const intermediate = merge.all([
 		dwellingDetailsData,
 		infiltrationVentilationData,
@@ -28,14 +51,17 @@ export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 		heatingSystemsData,
 		domesticHotWaterData,
 		pvData,
-		coolingData
-	]);
-	
-	const final = merge(inputData, intermediate);
+		coolingData,
+		defaultColdWaterSource,
+		control,
+		events,
+		internalGains,
+		defaultSimulationTime
+	]) as FhsInputSchema;
 
-	console.log(final);
+	console.log(intermediate);
 
-	return final;
+	return intermediate;
 }
 
 export type FhsInputSchema = StripDefs<SchemaFhsInputSchema>;

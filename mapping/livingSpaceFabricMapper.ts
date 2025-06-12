@@ -58,8 +58,6 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 				edge_thermal_resistance: data.edgeInsulationThermalResistance!
 			}];
 		}
-
-		return undefined;
 	}
 
 	const groundFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceGroundFloor.data.map(x => ({
@@ -75,16 +73,16 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 			psi_wall_floor_junc: x.psiOfWallJunction,
 			floor_type: x.typeOfGroundFloor as FloorType,
 			pitch: x.pitch,
-			edge_insulation: mapEdgeInsulation(x),
-			height_upper_surface: x.heightOfFloorUpperSurface,
+			...(x.edgeInsulationType? {edge_insulation: mapEdgeInsulation(x)} : {}),
+			...(x.heightOfFloorUpperSurface ? {height_upper_surface: x.heightOfFloorUpperSurface} : {}),
 			thickness_walls: x.thicknessOfWalls || 0,
-			area_per_perimeter_vent: x.ventilationOpeningsArea,
-			depth_basement_floor: x.depthOfBasementFloorBelowGround,
-			height_basement_walls: x.heightOfBasementWallsAboveGround,
-			thermal_resist_insul: x.underfloorSpaceThermalResistance,
-			thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround,
-			thermal_resist_walls_base: x.thermalResistanceOfBasementWalls,
-			thermal_transm_envi_base: x.thermalTransmittanceOfFloorAboveBasement,
+			...(x.ventilationOpeningsArea ? {area_per_perimeter_vent: x.ventilationOpeningsArea} : {}),
+			...(x.depthOfBasementFloorBelowGround ? {depth_basement_floor: x.depthOfBasementFloorBelowGround} : {}),
+			...(x.heightOfBasementWallsAboveGround ? {height_basement_walls: x.heightOfBasementWallsAboveGround} : {}),
+			...(x.underfloorSpaceThermalResistance ? {thermal_resist_insul: x.underfloorSpaceThermalResistance} : {}),
+			...(x.thermalTransmittanceOfWallsAboveGround ? {thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround} : {}),
+			...(x.thermalResistanceOfBasementWalls ? {thermal_resist_walls_base: x.thermalResistanceOfBasementWalls} : {}),
+			...(x.thermalTransmittanceOfFloorAboveBasement ? {thermal_transm_envi_base: x.thermalTransmittanceOfFloorAboveBasement} : {}),
 		}
 	}));
 

@@ -20,11 +20,11 @@ function mapGeneralSpecificationsData(state: EcaasState): Pick<FhsInputSchema, '
 		General: {
 			build_type: generalSpecifications.data.typeOfDwelling!,
 			storeys_in_building: generalSpecifications.data.storeysInDwelling!,
-			storey_of_dwelling: generalSpecifications.data.typeOfDwelling === BuildType.flat ? generalSpecifications.data.storeyOfFlat : undefined,
+			...(generalSpecifications.data.typeOfDwelling === BuildType.flat ? {storey_of_dwelling: generalSpecifications.data.storeyOfFlat} : {}),
 		},
 		NumberOfBedrooms: generalSpecifications.data.numOfBedrooms,
-		PartGcompliance: generalSpecifications.data.partGCompliance,
-		PartO_active_cooling_required: generalSpecifications.data.coolingRequired
+		...(generalSpecifications.data.partGCompliance !== undefined ? {PartGcompliance: generalSpecifications.data.partGCompliance} : {}),
+		...(generalSpecifications.data.coolingRequired !== undefined ? {PartO_active_cooling_required: generalSpecifications.data.coolingRequired} : {}),
 	};
 }
 
