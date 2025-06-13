@@ -1,16 +1,32 @@
 <script lang="ts" setup>
-const { field = 'elevationalHeight' } = defineProps<{
-	field?: string
+const { field = 'elevationalHeight', ...otherProps } = defineProps<{
+	field?: string;
+	help?: string;
+	minmax?: MinMax;
 }>();
+
+interface MinMax {
+	min: number;
+	max: number;
+}
+
+let min: number | undefined;
+let max: number | undefined;
+if (otherProps.minmax) {
+	const { min: minParam, max: maxParam } = otherProps.minmax;
+	min = minParam;
+	max = maxParam;
+}
+
 </script>
 
 <template>
 	<FormKit
 		:id="field" type="govInputWithSuffix" suffix-text="m"
 		label="Elevational height of building element at its base"
-		help="The distance between the ground and the lowest edge of the element"
+		:help="help ?? 'The distance between the ground and the lowest edge of the element'"
 		:name="field"
-		validation="required | number | min:0 | max:500"
+		:validation="`required | number | min:${ min ?? 0 } | max:${ max ?? 500 }`"
 	>
 		<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 			<table class="govuk-table">
