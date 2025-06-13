@@ -1,4 +1,4 @@
-import { BatteryLocation, BuildType, ColdWaterSourceType, FloorType, FuelType, HeatingControlType, MassDistributionClass, ShadingObjectType, SpaceCoolSystemType, SpaceHeatControlType, SupplyAirFlowRateControlType, SupplyAirTemperatureControlType, TerrainClass, VentilationShieldClass, VentType } from "~/schema/api-schema.types";
+import { BatteryLocation, BuildType, ColdWaterSourceType, DuctShape, DuctType, FloorType, FuelType, HeatingControlType, MassDistributionClass, MVHRLocation, ShadingObjectType, SpaceCoolSystemType, SpaceHeatControlType, SupplyAirFlowRateControlType, SupplyAirTemperatureControlType, TerrainClass, VentilationShieldClass, VentType } from "~/schema/api-schema.types";
 import { mapFhsInputData, type FhsInputSchema } from "./fhsInputMapper";
 
 describe("FHS input mapper", () => {
@@ -6,7 +6,7 @@ describe("FHS input mapper", () => {
 
 	afterEach(() => store.$reset());
 
-	it("maps input state to an FHS input request", () => {
+	it("maps input state with a build type of house to an FHS input request", () => {
 		// Arrange
 		const dwellingDetails: DwellingDetails = {
 			generalSpecifications: {
@@ -445,7 +445,7 @@ describe("FHS input mapper", () => {
 			InternalGains: {},
 			NumberOfBedrooms: 7,
 			OnSiteGeneration: {},
-			SimulationTime: { //TODO check these values
+			SimulationTime: {
 				start: 0,
 				end: 8,
 				step: 1
@@ -515,6 +515,532 @@ describe("FHS input mapper", () => {
 					ThermalBridging: {},
 					area: 100,
 					volume: 300,
+				}
+			},
+		};
+
+		// Act
+		const fhsInputData = mapFhsInputData(store);
+
+		// Assert
+		expect(fhsInputData).toBeDefined();
+		expect(fhsInputData).toEqual(expectedResult);   
+	});
+
+	it("maps input state with a build type of flat to an FHS input request", () => {
+		// Arrange
+		const dwellingDetails: DwellingDetails = {
+			generalSpecifications: {
+				data: {
+					typeOfDwelling: BuildType.flat,
+					storeysInDwelling: 6,
+					storeyOfFlat: 3,
+					numOfBedrooms: 2,
+				}
+			},
+			shading: {
+				data: []
+			},
+			externalFactors: {
+				data: {
+					altitude: 30,
+					typeOfExposure: VentilationShieldClass.Normal,
+					terrainType: TerrainClass.OpenField,
+					noiseNuisance: true,
+				}
+			},
+		};
+
+		const infiltrationAndVentilation: InfiltrationAndVentilation = {
+			mechanicalVentilation: {
+				data: [{
+					id: "mvhr vent 1 id",
+					name: "mvhr vent 1 name",
+					typeOfMechanicalVentilationOptions: VentType.MVHR,
+					controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA,
+					supplyAirTemperatureControl: "TO_BE_REMOVED",
+					airFlowRate: 17,
+					mvhrLocation: MVHRLocation.inside,
+					mvhrEfficiency: 1
+				}]
+			},
+			ductwork: {
+				data: [{
+					name: "ductwork 1",
+					mvhrUnit: "mvhr vent 1 name",
+					ductType: DuctType.supply,
+					ductworkCrossSectionalShape: DuctShape.circular,
+					internalDiameterOfDuctwork: 50,
+					externalDiameterOfDuctwork: 55,
+					insulationThickness: 5,
+					lengthOfDuctwork: 4,
+					thermalInsulationConductivityOfDuctwork: 1,
+					surfaceReflectivity: true,
+				}]
+			},
+			vents: {
+				data: [{
+					name: "only vent",
+					typeOfVent: "Air brick",
+					effectiveVentilationArea: 75,
+					openingRatio: 0.2,
+					midHeightOfZone: 1.9,
+					pressureDifference: 4,
+					orientation: 90,
+					pitch: 180,
+				}]
+			},
+			combustionAppliances: {
+				"open_fireplace": {
+					data: []
+				},
+				"closed_with_fan": {
+					data: []
+				},
+				"open_gas_flue_balancer": {
+					data: []
+				},
+				"open_gas_kitchen_stove": {
+					data: []
+				},
+				"open_gas_fire": {
+					data: []
+				},
+				"closed_fire": {
+					data: []
+				}
+			},
+			ventilation: {
+				data: {
+					dwellingHeight: 1,
+					dwellingEnvelopeArea: 5,
+					dwellingElevationalLevelAtBase: 1,
+					crossVentFactor: true,
+					maxRequiredAirChangeRate: 2,
+				}
+			},
+			airPermeability: {
+				data: {
+					testPressure: 20,
+					airTightnessTestResult: 10,
+				}
+			},
+		};
+		
+		const livingSpaceFabric: LivingSpaceFabric = {
+			livingSpaceZoneParameters: {
+				data: {
+					area: 16,
+					volume: 550,
+					heatingControlType: HeatingControlType.SeparateTimeAndTempControl,
+					spaceHeatingSystemForThisZone: [],
+					spaceCoolingSystemForThisZone: [],
+					spaceHeatControlSystemForThisZone: []
+				}
+			},
+			livingSpaceFloors: {
+				livingSpaceGroundFloor: {
+					data: [{
+						name: "ground floor 1",
+						surfaceAreaInZone: 12,
+						surfaceAreaAllZones: 26,
+						pitch: 0,
+						uValue: 5,
+						thermalResistanceOfFloorConstruction: 2,
+						kappaValue: 50000,
+						massDistributionClass: MassDistributionClass.E,
+						perimeter: 40,
+						psiOfWallJunction: 0.4,
+						typeOfGroundFloor: FloorType.Slab_edge_insulation,
+						edgeInsulationType: "horizontal",
+						edgeInsulationWidth: 7,
+						edgeInsulationThermalResistance: 2.4
+					},
+					{
+						name: "ground floor 2",
+						surfaceAreaInZone: 9,
+						surfaceAreaAllZones: 26,
+						pitch: 0,
+						uValue: 5,
+						thermalResistanceOfFloorConstruction: 2,
+						kappaValue: 50000,
+						massDistributionClass: MassDistributionClass.D,
+						perimeter: 21,
+						psiOfWallJunction: 0.8,
+						typeOfGroundFloor: FloorType.Heated_basement,
+						thicknessOfWalls: 1,
+						depthOfBasementFloorBelowGround: 2,
+						thermalResistanceOfBasementWalls: 3,
+					}]
+				},
+				livingSpaceInternalFloor: {
+					data: [{
+						name: "internal floor 1",
+						typeOfInternalFloor: "not heated",
+						surfaceAreaOfElement: 6,
+						uValue: 0.1,
+						kappaValue: 0.2,
+						massDistributionClass: MassDistributionClass.IE,
+						pitch: 0,
+						thermalResistanceOfAdjacentUnheatedSpace: 1,
+					}]
+				},
+				// TODO add more floors
+				livingSpaceExposedFloor: {
+					data: []
+				}
+			},
+			livingSpaceWalls: {},
+			livingSpaceCeilingsAndRoofs: {
+				livingSpaceCeilings: {
+					data: []
+				},
+				livingSpaceRoofs: {
+					data: []
+				},
+				livingSpaceUnheatedPitchedRoofs: {
+					data: []
+				}
+			},
+			livingSpaceDoors: {
+				livingSpaceExternalUnglazedDoor: {
+					data: []
+				},
+				livingSpaceExternalGlazedDoor: {
+					data: []
+				},
+				livingSpaceInternalDoor: {
+					data: []
+				}
+			},
+			livingSpaceWindows: {
+				data: []
+			},
+			livingSpaceThermalBridging: {
+				livingSpaceLinearThermalBridges: {
+					data: []
+				},
+				livingSpacePointThermalBridges: {
+					data: []
+				}
+			}
+		};
+
+		const heatingSystems: HeatingSystems = {
+			heatGeneration: {
+				heatPump: {
+					data: [{
+						id: "heat pump 1 id",
+						name: "heat pump 1 name"
+					}]
+				},
+				boiler: {
+					data: []
+				},
+				heatBattery: {
+					data: []
+				},
+				heatInterfaceUnit: {
+					data: []
+				},
+				heatNetwork: {
+					data: []
+				}
+			},
+			energySupply: {
+				data: {
+					fuelType: [FuelType.electricity],
+					exported: true,
+				}
+			},
+			heatEmitting: {
+				wetDistribution: {
+					data: []
+				},
+				instantElectricHeater: {
+					data: []
+				},
+				electricStorageHeater: {
+					data: []
+				},
+				warmAirHeatPump: {
+					data: []
+				}
+			}
+		};
+
+		const domesticHotWater: DomesticHotWater = {
+			waterHeating: {
+				hotWaterCylinder: {
+					data: [{
+						id: "hw cylinder 1 id",
+						name: "hw cylinder 1 name",
+						heatSource: "heat pump 1 id",
+						tankVolume: 80,
+						dailyEnergyLoss: 10
+					}]
+				},
+				immersionHeater: {
+					data: []
+				},
+				solarThermal: {
+					data: []
+				},
+				pointOfUse: {
+					data: []
+				},
+				heatPump: {
+					data: []
+				},
+				combiBoiler: {
+					data: []
+				},
+				heatBattery: {
+					data: []
+				},
+				smartHotWaterTank: {
+					data: []
+				},
+				heatInterfaceUnit: {
+					data: []
+				},
+			},
+			hotWaterOutlets: {
+				mixedShower: {
+					data: [{
+						id: "some-mixed-shower-id",
+						name: "some-mixed-shower-name",
+						flowRate: 14
+					}]
+				},
+				electricShower: {
+					data: []
+				},
+				bath: {
+					data: []
+				},
+				otherOutlets: {
+					data: []
+				}
+			},
+			pipework: {
+				primaryPipework: {
+					data: []
+				},
+				secondaryPipework: {
+					data: []
+				}
+			},
+			wwhrs: {
+				data: []
+			}
+		};
+
+		const pvAndBatteries: PvAndBatteries = {
+			pvSystem: {
+				data: []
+			},
+			electricBattery: {
+				data: [{
+					name: "some-electric-battery-name",
+					capacity: 12,
+					batteryAge: 0,
+					chargeEfficiency: 1,
+					location: BatteryLocation.inside,
+					gridChargingPossible: true,
+					maximumChargeRate: 90,
+					minimumChargeRate: 80,
+					maximumDischargeRate: 20,
+				}]
+			}
+		};
+
+		const cooling: Cooling = {
+			airConditioning: {
+				data: []
+			}
+		};
+
+		const state: EcaasState = {
+			dwellingDetails,
+			domesticHotWater,
+			livingSpaceFabric,
+			infiltrationAndVentilation,
+			heatingSystems,
+			pvAndBatteries,
+			cooling
+		};
+
+		store.$state = state;
+
+		const expectedResult: FhsInputSchema = {
+			ColdWaterSource: {
+				[ColdWaterSourceType.mains_water]: {
+					start_day: 0,
+					temperatures: [3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
+					time_series_step: 1
+				}
+			},
+			Control: {},
+			EnergySupply: {
+				[FuelType.electricity]: {
+					fuel: FuelType.electricity,
+					is_export_capable: true,
+				}
+			},
+			Events: {},
+			ExternalConditions: {
+				shading_segments: []
+			},
+			General: {
+				build_type: BuildType.flat,
+				storeys_in_building: 6,
+				storey_of_dwelling: 3
+			},
+			HeatingControlType: HeatingControlType.SeparateTimeAndTempControl,
+			HotWaterDemand: {
+				Shower: {
+					"some-mixed-shower-name": {
+						ColdWaterSource: ColdWaterSourceType.mains_water,
+						flowrate: 14,
+						type: "MixerShower"
+					},
+				},
+				Bath: {},
+				Distribution: [],
+				Other: {}
+			},
+			HotWaterSource: {
+				"hw cylinder": {
+					ColdWaterSource: ColdWaterSourceType.mains_water,
+					HeatSource: {
+						["heat pump 1 name"]: {
+							name: "heat pump 1 name",
+							EnergySupply: "mains elec",
+							heater_position: 0.1,
+							type: "HeatSourceWet"
+						},
+					},
+					daily_losses: 10,
+					volume: 80,
+					type: "StorageTank"
+				}
+			},
+			InfiltrationVentilation: {
+				CombustionAppliances: {},
+				Cowls: {},
+				Leaks: {
+					ventilation_zone_height: 1,
+					env_area: 5,
+					test_pressure: 20,
+					test_result: 10
+				},
+				MechanicalVentilation: {
+					"mvhr vent 1 name": {
+						EnergySupply: "mains elec",
+						design_outdoor_air_flow_rate: 17,
+						sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
+						sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
+						vent_type: VentType.MVHR,
+						measured_air_flow_rate: 37,
+						measured_fan_power: 12.26,
+						mvhr_eff: 1,
+						mvhr_location: MVHRLocation.inside,
+						ductwork: [{
+							cross_section_shape: DuctShape.circular,
+							duct_type: DuctType.supply,
+							internal_diameter_mm: 50,
+							external_diameter_mm: 55,
+							insulation_thermal_conductivity: 1,
+							insulation_thickness_mm: 5,
+							length: 4,
+							reflective: true
+						}]
+					}
+				},
+				PDUs: {},
+				Vents: {
+					"only vent": {
+						area_cm2: 75,
+						mid_height_air_flow_path: 1.9,
+						orientation360: 90,
+						pitch: 180,
+						pressure_difference_ref: 4
+					}
+				},
+				ach_max_static_calcs: 2,
+				altitude: 30,
+				cross_vent_factor: true,
+				noise_nuisance: true,
+				shield_class: VentilationShieldClass.Normal,
+				terrain_class: TerrainClass.OpenField,
+				vent_opening_ratio_init: 1,
+				ventilation_zone_base_height: 1,
+			},
+			InternalGains: {},
+			NumberOfBedrooms: 2,
+			OnSiteGeneration: {},
+			SimulationTime: {
+				start: 0,
+				end: 8,
+				step: 1
+			},
+			SpaceCoolSystem: {},
+			SpaceHeatSystem: {},
+			Zone: {
+				"zone 1": {
+					BuildingElement: {
+						"ground floor 1": {
+							type: 'BuildingElementGround',
+							area: 12,
+							total_area: 26,
+							u_value: 5,
+							thermal_resistance_floor_construction: 2,
+							areal_heat_capacity: 50000,
+							mass_distribution_class: MassDistributionClass.E,
+							perimeter: 40,
+							edge_insulation: [{
+								edge_thermal_resistance: 2.4,
+								type: "horizontal",
+								width: 7
+							}],
+							psi_wall_floor_junc: 0.4,
+							floor_type: FloorType.Slab_edge_insulation,
+							pitch: 0,
+							thickness_walls: 0
+						},
+						"ground floor 2": {
+							type: 'BuildingElementGround',
+							area: 9,
+							total_area: 26,
+							depth_basement_floor: 2,
+							u_value: 5,
+							thermal_resistance_floor_construction: 2,
+							areal_heat_capacity: 50000,
+							mass_distribution_class: MassDistributionClass.D,
+							perimeter: 21,
+							thermal_resist_walls_base: 3,
+							psi_wall_floor_junc: 0.8,
+							floor_type: FloorType.Heated_basement,
+							pitch: 0,
+							thickness_walls: 1
+						},
+						"internal floor 1": {
+							area: 6,
+							areal_heat_capacity: 0.2,
+							mass_distribution_class: MassDistributionClass.IE,
+							pitch: 0,
+							thermal_resistance_unconditioned_space: 1,
+							type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+							u_value: 0.1
+						}
+					},
+					SpaceCoolSystem: [],
+					SpaceHeatControl: SpaceHeatControlType.livingroom,
+					SpaceHeatSystem: [],
+					ThermalBridging: {},
+					area: 16,
+					volume: 550,
 				}
 			},
 		};

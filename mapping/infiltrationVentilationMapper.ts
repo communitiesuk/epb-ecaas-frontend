@@ -69,9 +69,8 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: EcaasStat
 			duct_type: x.ductType,
 			insulation_thermal_conductivity: x.thermalInsulationConductivityOfDuctwork,
 			insulation_thickness_mm: x.insulationThickness,
-			internal_diameter_mm:  x.ductworkCrossSectionalShape === DuctShape.circular ? x.internalDiameterOfDuctwork : undefined,
-			external_diameter_mm: x.ductworkCrossSectionalShape === DuctShape.circular ? x.externalDiameterOfDuctwork : undefined,
-			duct_perimeter_mm: x.ductworkCrossSectionalShape === DuctShape.rectangular ? x.ductPerimeter : undefined,
+			...(x.ductworkCrossSectionalShape === DuctShape.circular ? {internal_diameter_mm: x.internalDiameterOfDuctwork, external_diameter_mm: x.externalDiameterOfDuctwork} : {}),
+			...(x.ductworkCrossSectionalShape === DuctShape.rectangular ? {duct_perimeter_mm: x.ductPerimeter} : {}),
 			length: x.lengthOfDuctwork,
 			reflective: x.surfaceReflectivity
 		};
