@@ -18,15 +18,10 @@ export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
 	const coolingData = mapCoolingData(state);
 
-	const control: Partial<FhsInputSchema> = {
-		Control: {}
-	};
-	const events: Partial<FhsInputSchema> = {
-		Events: {}
-	};
-	const internalGains: Partial<FhsInputSchema> = {
-		InternalGains: {}
-	};
+	const control: Partial<FhsInputSchema> = {Control: {}};
+	const events: Partial<FhsInputSchema> = {Events: {}};
+	const internalGains: Partial<FhsInputSchema> = {InternalGains: {}};
+	
 	const defaultColdWaterSource: Partial<FhsInputSchema> = { 
 		ColdWaterSource: {
 			[ColdWaterSourceType.mains_water]: {
@@ -44,7 +39,7 @@ export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 		}
 	};
 
-	const intermediate = merge.all([
+	const fhsInput = merge.all([
 		dwellingDetailsData,
 		infiltrationVentilationData,
 		livingSpaceFabricData,
@@ -59,9 +54,9 @@ export function mapFhsInputData(state: EcaasState): FhsInputSchema {
 		defaultSimulationTime
 	]) as FhsInputSchema;
 
-	console.log(intermediate);
+	console.log(fhsInput);
 
-	return intermediate;
+	return fhsInput;
 }
 
 export type FhsInputSchema = StripDefs<SchemaFhsInputSchema>;
