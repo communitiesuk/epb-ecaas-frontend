@@ -128,7 +128,7 @@ describe("FHS input mapper", () => {
 						massDistributionClass: MassDistributionClass.I,
 						perimeter: 100,
 						psiOfWallJunction: 1,
-						typeOfGroundFloor: FloorType.Suspended_floor
+						typeOfGroundFloor: FloorType.Slab_no_edge_insulation,
 					}]
 				},
 				livingSpaceInternalFloor: {
@@ -504,7 +504,7 @@ describe("FHS input mapper", () => {
 							mass_distribution_class: MassDistributionClass.I,
 							perimeter: 100,
 							psi_wall_floor_junc: 1,
-							floor_type: FloorType.Suspended_floor,
+							floor_type: FloorType.Slab_no_edge_insulation,
 							pitch: 0,
 							thickness_walls: 0
 						}
@@ -526,4 +526,6 @@ describe("FHS input mapper", () => {
 		expect(fhsInputData).toBeDefined();
 		expect(fhsInputData).toEqual(expectedResult);   
 	});
+
+	// TODO - test with a floor of type suspended, we may be missing a property (shield_fact_location)
 });
