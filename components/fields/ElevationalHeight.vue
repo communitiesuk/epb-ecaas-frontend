@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const { field = 'elevationalHeight', ...otherProps } = defineProps<{
 	field?: string;
+	label?: string;
 	help?: string;
 	minmax?: MinMax;
 }>();
@@ -23,7 +24,7 @@ if (otherProps.minmax) {
 <template>
 	<FormKit
 		:id="field" type="govInputWithSuffix" suffix-text="m"
-		label="Elevational height of building element at its base"
+		:label="label ?? 'Elevational height of building element at its base'"
 		:help="help ?? 'The distance between the ground and the lowest edge of the element'"
 		:name="field"
 		:validation="`required | number | min:${ min ?? 0 } | max:${ max ?? 500 }`"

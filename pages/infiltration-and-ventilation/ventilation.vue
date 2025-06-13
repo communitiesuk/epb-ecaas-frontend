@@ -60,7 +60,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:5 | max:72000"
 			suffix-text="m2"
 		/>
-		<FieldsElevationalHeight field="dwellingElevationalLevelAtBase" help="Elevational height of dwelling above ground datum level" :minmax="{ min: -150, max: 750 }" />
+		<FieldsElevationalHeight field="dwellingElevationalLevelAtBase" label="Elevational height of dwelling at its base" help="Elevational height of dwelling above ground datum level" :minmax="{ min: -150, max: 750 }" />
 		<FormKit
 			id="crossVentFactor"
 			type="govBoolean"
