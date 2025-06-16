@@ -1,5 +1,5 @@
 import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
-import { mapDwellingDetailsData } from './dwellingDetailsMapper';
+import { mapDistantShadingData, mapDwellingDetailsData, mapExternalFactorsData, mapGeneralSpecificationsData } from './dwellingDetailsMapper';
 
 describe('dwelling details mapper', () => {
 	const store = useEcaasStore();
@@ -28,7 +28,7 @@ describe('dwelling details mapper', () => {
 		});
 
 		// Act
-		const fhsInputData = mapDwellingDetailsData(store);
+		const fhsInputData = mapGeneralSpecificationsData(store);
 
 		// Assert
 		expect(fhsInputData.General!.build_type).toBe(state.typeOfDwelling);
@@ -57,7 +57,7 @@ describe('dwelling details mapper', () => {
 		});
 
 		// Act
-		const fhsInputData = mapDwellingDetailsData(store);
+		const fhsInputData = mapExternalFactorsData(store);
 
 		// Assert
 		expect(fhsInputData.InfiltrationVentilation?.altitude).toBe(state.altitude);
@@ -86,7 +86,7 @@ describe('dwelling details mapper', () => {
 		});
 
 		// Act
-		const fhsInputData = mapDwellingDetailsData(store);
+		const fhsInputData = mapDistantShadingData(store);
 		const shadingSegment = fhsInputData.ExternalConditions?.shading_segments![0];
 
 		// Assert
