@@ -95,8 +95,8 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
 			thermal_resistance_unconditioned_space: x.typeOfInternalFloor === 'heatedSpace' ? 0 : x.thermalResistanceOfAdjacentUnheatedSpace!,
-			pitch: x.pitch,
-			u_value: x.uValue
+			pitch: 180,
+			u_value: 0.01
 		}
 	})) || [];
 

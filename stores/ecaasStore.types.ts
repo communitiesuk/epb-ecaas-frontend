@@ -71,10 +71,8 @@ export type InternalFloorData = {
 	name: string;
 	typeOfInternalFloor: string;
 	surfaceAreaOfElement: number;
-	uValue: number;
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
-	pitch: number;
 	thermalResistanceOfAdjacentUnheatedSpace?: number;
 };
 

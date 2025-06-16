@@ -17,10 +17,8 @@ describe('internal floor', () => {
 		typeOfInternalFloor: 'heatedSpace',
 		name: "Internal 1",
 		surfaceAreaOfElement: 5,
-		uValue: 0,
 		kappaValue: 50000,
 		massDistributionClass: MassDistributionClass.I,
-		pitch: 180
 	};
 
 	const internalFloorWithUnheatedSpace: InternalFloorData = {

@@ -696,20 +696,16 @@ describe("FHS input mapper", () => {
 						name: "internal floor 1",
 						typeOfInternalFloor: "not heated",
 						surfaceAreaOfElement: 6,
-						uValue: 0.1,
-						kappaValue: 0.2,
+						kappaValue: 50000,
 						massDistributionClass: MassDistributionClass.IE,
-						pitch: 0,
 						thermalResistanceOfAdjacentUnheatedSpace: 1,
 					}, 
 					// {
 					// 	name: "internal floor 2",
 					// 	typeOfInternalFloor: "heatedSpace",
 					// 	surfaceAreaOfElement: 4,
-					// 	// uValue: 0.6,
 					// 	kappaValue: 0.5,
 					// 	massDistributionClass: MassDistributionClass.M,
-					// 	// pitch: 1,
 					// }
 					]
 				},
@@ -731,7 +727,7 @@ describe("FHS input mapper", () => {
 						surfaceArea: 15,
 						solarAbsorption: 0.6,
 						uValue: 1,
-						kappaValue: 2,
+						kappaValue: 50000,
 						massDistributionClass: MassDistributionClass.E
 					}]
 				}
@@ -1093,25 +1089,25 @@ describe("FHS input mapper", () => {
 							thickness_walls: 1
 						},
 						"internal floor 1": {
-							area: 6,
-							areal_heat_capacity: 0.2,
-							mass_distribution_class: MassDistributionClass.IE,
-							pitch: 0,
-							thermal_resistance_unconditioned_space: 1,
 							type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-							u_value: 0.1
+							area: 6,
+							areal_heat_capacity: 50000,
+							mass_distribution_class: MassDistributionClass.IE,
+							thermal_resistance_unconditioned_space: 1,
+							pitch: 180,
+							u_value: 0.01
 						},
 						// "internal floor 2": {
 						// 	type: "BuildingElementAdjacentConditionedSpace",
 						// 	area: 4, 
-						// 	u_value: 0.6,
-						// 	areal_heat_capacity: 0.5,
+						// 	u_value: 0.01,
+						// 	areal_heat_capacity: 110000,
 						// 	mass_distribution_class: MassDistributionClass.M,
-						// 	pitch: 1,
+						// pitch: 180,
 						// }
 						"party wall 1": {
 							area: 15,
-							areal_heat_capacity: 2,
+							areal_heat_capacity: 50000,
 							base_height: 1,
 							height: 3,
 							is_external_door: false,

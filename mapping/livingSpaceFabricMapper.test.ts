@@ -104,10 +104,8 @@ describe('living space fabric mapper', () => {
 			typeOfInternalFloor: 'unheatedSpace',
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
-			uValue: 0,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
-			pitch: 180,
 			thermalResistanceOfAdjacentUnheatedSpace: 1
 		};
 
@@ -215,8 +213,8 @@ describe('living space fabric mapper', () => {
 		const expectedInternalFloor: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
 			area: internalFloor.surfaceAreaOfElement,
-			pitch: internalFloor.pitch,
-			u_value: internalFloor.uValue,
+			pitch: 180,
+			u_value: 0.01,
 			areal_heat_capacity: internalFloor.kappaValue,
 			mass_distribution_class: internalFloor.massDistributionClass,
 			thermal_resistance_unconditioned_space: internalFloor.thermalResistanceOfAdjacentUnheatedSpace!

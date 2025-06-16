@@ -39,10 +39,8 @@ const floorsData: FloorsData = {
 			typeOfInternalFloor: 'heatedSpace',
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
-			uValue: 1,
 			kappaValue: 100,
 			massDistributionClass: MassDistributionClass.I,
-			pitch: 0
 		}]
 	},
 	livingSpaceExposedFloor: {
@@ -349,10 +347,8 @@ describe('Living space fabric summary', () => {
 				"Type of internal floor": "Heated space",
 				"Name": "Internal 1",
 				"Net surface area of element": "5",
-				"U-value": "1",
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
-				"Pitch": "0"
 			};
 			
 			for (const [key, value] of Object.entries(expectedResult)) {

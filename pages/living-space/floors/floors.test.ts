@@ -64,30 +64,24 @@ describe('floors', () => {
 		typeOfInternalFloor: 'heatedSpace',
 		name: "internal1 name",
 		surfaceAreaOfElement: 5,
-		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
-		pitch: 0
 	};
 
 	const internal2: InternalFloorData = {
 		typeOfInternalFloor: 'heatedSpace',
 		name: "internal2 name",
 		surfaceAreaOfElement: 5,
-		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
-		pitch: 0
 	};
 
 	const internal3: InternalFloorData = {
 		typeOfInternalFloor: 'heatedSpace',
 		name: "internal3 name",
 		surfaceAreaOfElement: 5,
-		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
-		pitch: 0
 	};
 
 	const exposed1: ExposedFloorData = {

@@ -14,10 +14,8 @@ const saveForm = (fields: InternalFloorData) => {
 			name: fields.name,
 			typeOfInternalFloor: fields.typeOfInternalFloor,
 			surfaceAreaOfElement: fields.surfaceAreaOfElement,
-			uValue: 0,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
-			pitch: 180,
 			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace
 		};
 
