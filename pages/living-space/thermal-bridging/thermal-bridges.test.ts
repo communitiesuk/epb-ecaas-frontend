@@ -194,7 +194,6 @@ describe('thermal bridges', () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
-		const navigateToMock = vi.hoisted(() => vi.fn());
 		mockNuxtImport("navigateTo", () => navigateToMock);
 
 		const addThermalBridgingDataToStore = async () => {

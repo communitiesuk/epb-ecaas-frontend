@@ -304,7 +304,6 @@ describe('ceilings and roofs', () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 	
-		const navigateToMock = vi.hoisted(() => vi.fn());
 		mockNuxtImport("navigateTo", () => navigateToMock);
 	
 		const addCeilingsAndRoofsDataToStore = async () => {
