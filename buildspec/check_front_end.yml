@@ -1,0 +1,12 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      # update nodejs to version 22
+      - n 22
+
+  build:
+    commands:
+      - npm ci
+      - npm run ci-test

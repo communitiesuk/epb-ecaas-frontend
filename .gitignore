@@ -6,14 +6,9 @@
 .cache
 dist
 
-# amplify
-.amplify
-.amplify-hosting
-amplify_outputs*
-amplifyconfiguration*
-
 # GOV.UK assets copied into public dir
 public/assets
+public/static/assets
 
 # Node dependencies
 node_modules

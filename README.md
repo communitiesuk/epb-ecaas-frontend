@@ -1,6 +1,13 @@
+![test status](https://github.com/communitiesuk/epb-ecaas-frontend/actions/workflows/test.yml/badge.svg)
+
 # Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Prerequisites
+
+- Node.js - 18.x or newer (but we recommend the active LTS release)
+- One of these JavaScript package managers: `npm`, `yarn`, `bun` or `pnpm`
+- See an up-to-date list of [Nuxt prerequisites](https://nuxt.com/docs/getting-started/installation#prerequisites)
 
 ## Setup
 
@@ -73,3 +80,12 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+
+## Running as a [Tauri](https://v2.tauri.app) app
+
+```sh
+npm ci
+npx tauri dev
+```
+

@@ -1,64 +1,164 @@
-import { defineStore } from 'pinia';
-import type { EcaasState } from './ecaasStore.types';
-import formStatus from '~/constants/formStatus';
-import type { GovTagProps } from '~/common.types';
-import type { Page } from '~/data/pages';
-import merge from 'deepmerge';
+import { defineStore } from "pinia";
+import type { EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.types";
+import formStatus from "~/constants/formStatus";
+import type { GovTagProps } from "~/common.types";
+import { PageType, type Page } from "~/data/pages/pages.types";
+import { CombustionApplianceType } from "~/schema/api-schema.types";
+import type { EmptyObject } from "type-fest";
 
-type Section = keyof EcaasState;
-
-export const useEcaasStore = defineStore('ecaas', {
-    state: (): EcaasState => ({
-        dwellingDetails: {
-            generalSpecifications: { data: {} },
-			appliancesAndElectricity: { data: {} }
-        }
-    }),
-	actions: {
-		async fetchState() {
-			const resp = await useFetch('/api/getState');
-
-			if (resp.data.value) {
-				const state = merge(this.$state, resp.data.value);
-				this.$patch(state);
-			}
+function getInitialState(): EcaasState {
+	const store: NulledForms<EcaasState> = {
+		dwellingDetails: {
+			generalSpecifications: { data: {} },
+			shading: { data: [] },
+			externalFactors: { data: {} }
+		},
+		infiltrationAndVentilation: {
+			mechanicalVentilation: { data: [] },
+			ductwork: {data: []},
+			vents: { data: [] },
+			combustionAppliances: {
+				[CombustionApplianceType.open_fireplace]: { data: [] },
+				[CombustionApplianceType.closed_with_fan]: { data: [] },
+				[CombustionApplianceType.open_gas_flue_balancer]: { data: [] },
+				[CombustionApplianceType.open_gas_kitchen_stove]: { data: [] },
+				[CombustionApplianceType.open_gas_fire]: { data: [] },
+				[CombustionApplianceType.closed_fire]: { data: [] },
+			},
+			ventilation: { data: {} },
+			airPermeability: { data: {} }
+		},
+		domesticHotWater: {
+			waterHeating: {
+				hotWaterCylinder: { data: [] },
+				immersionHeater: { data: [] },
+				solarThermal: { data: [] },
+				pointOfUse: { data: [] },
+				heatPump: { data: [] },
+				combiBoiler: { data: [] },
+				heatBattery: { data: [] },
+				smartHotWaterTank: { data: [] },
+				heatInterfaceUnit: { data: [] }
+			},
+			hotWaterOutlets: {
+				mixedShower: { data: [] },
+				electricShower: { data: [] },
+				bath: { data: [] },
+				otherOutlets: { data: [] }
+			},
+			pipework: {
+				primaryPipework: { data: [] },
+				secondaryPipework: { data: [] }
+			},
+			wwhrs: { data: [] }
+		},
+		livingSpaceFabric: {
+			livingSpaceFloors: {
+				livingSpaceGroundFloor: { data: [] },
+			},
+			livingSpaceWalls: {
+				livingSpaceExternalWall: { data: [] },
+				livingSpaceInternalWall: { data: [] },
+				livingSpaceWallToUnheatedSpace: { data: [] },
+				livingSpacePartyWall: { data: [] },
+			},
+			livingSpaceCeilingsAndRoofs: {
+				livingSpaceCeilings: { data: [] },
+				livingSpaceRoofs: { data: [] },
+				livingSpaceUnheatedPitchedRoofs: { data: [] }
+			},
+			livingSpaceDoors: {
+				livingSpaceExternalUnglazedDoor: { data: [] },
+				livingSpaceExternalGlazedDoor: { data: [] },
+				livingSpaceInternalDoor: { data: [] },
+			},
+			livingSpaceWindows: { data: [] },
+			livingSpaceThermalBridging: {
+				livingSpaceLinearThermalBridges: { data: [] },
+				livingSpacePointThermalBridges: { data: [] }
+			}, 
+			livingSpaceZoneParameters: { data: {} }
+		},
+		heatingSystems: {
+			heatGeneration: {
+				heatPump: { data: [] },
+				boiler: { data: [] },
+				heatBattery: { data: [] },
+				heatNetwork: { data: [] },
+				heatInterfaceUnit: { data: [] },
+			},
+			energySupply: { data: {} },
+			heatEmitting: {
+				wetDistribution: { data: []},
+				instantElectricHeater: { data: [] },
+				electricStorageHeater: { data: [] },
+				warmAirHeatPump: { data: [] },
+			},
+		},
+		pvAndBatteries: {
+			pvSystem: { data: [] },
+			electricBattery: { data: [] }
+		},
+		cooling: {
+			airConditioning: { data: [] }
 		}
-	},
-    getters: {
+	};
+	return store as EcaasState;
+}	
+
+export const useEcaasStore = defineStore("ecaas", {
+	state: getInitialState,
+	getters: {
 		getStatus: (state) => {
+			const stateEntries = Object.entries(state).filter(
+				(e) => e[0] in getInitialState()
+			);
+
 			return (page: Page): GovTagProps => {
-				const section = (page.id in state ? page.id : page.parentId) as Section;
-				
-				const subsections = state[section];
-				type Subsection = keyof typeof subsections;
+				const section = getSection(page.id, Object.fromEntries(stateEntries));
 
-				if (page.id in state) {
-					const subsectionList = Object.keys(subsections) as Array<Subsection>;
+				if (section) {
+					const entry = Object.entries(section).find((x) => x[0] === page.id)!;
+					
+					if(page.id === "ductwork"){
+						return getDuctworkStatus(entry[1]);
+					}
 
-					let status = formStatus.notStarted;
-					let complete = 0;
+					if (page.type === PageType.Task) {
+						return getTaskStatus(entry[1]);
+					}
 
-					subsectionList.forEach(subsection => {
-						if (subsections[subsection].complete) {
-							status = formStatus.inProgress;
-							complete++;
-						}
+					if (page.type === PageType.TaskGroup) {
+						return getSectionStatus(entry[1]);
+					}
 
-						if (complete === subsectionList.length) {
-							status = formStatus.complete;
-						}
-					});
-
-					return status;
-				}
-
-				if (subsections && page.id in subsections) {
-					const subsection = subsections[page.id as Subsection];
-					return subsection?.complete ? formStatus.complete : formStatus.notStarted;
+					if (page.type === PageType.Section) {
+						return getSectionStatus(entry[1]);
+					}
 				}
 
 				return formStatus.notStarted;
 			};
-		}
-    }
+		},
+	},
+	persist: {
+		storage: piniaPluginPersistedstate.localStorage(),
+	},
 });
+
+export type NulledForms<T> = { [P in keyof T]: T[P] extends EcaasForm<infer U> ? EcaasForm<U | EmptyObject> : NulledForms<T[P]> };
+
+/** Function to wrap a form that uses the Pitch component (which writes to pitch and pitchOption fields) and extract the pitch number value */
+export function extractPitch(form: UsesPitchComponent): number | undefined {
+	const { pitch, pitchOption } = form;
+	if (isNumeric(pitchOption)) {
+		return Number(pitchOption);
+	}
+	if (pitchOption === "custom") {
+		return pitch;
+	}
+}
+
+function isNumeric(value: string): boolean {
+	return Number.isFinite(+value);
+}

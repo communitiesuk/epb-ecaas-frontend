@@ -1,37 +1,39 @@
 <script setup lang="ts">
-	const title = "General specifications";
-	const store = useEcaasStore();
+import { BuildType } from '~/schema/api-schema.types';
 
-	const model = ref({
-		...store.dwellingDetails.generalSpecifications.data
+const title = "General specifications";
+const store = useEcaasStore();
+
+const model = ref({
+	...store.dwellingDetails.generalSpecifications.data
+});
+
+const typeOfDwellingOptions: Record<BuildType, SnakeToSentenceCase<BuildType>> = {
+	house: "House",
+	flat: "Flat",
+};
+
+const saveForm = (fields: typeof model.value) => {
+	store.$patch({
+		dwellingDetails: {
+			generalSpecifications: {
+				data: {
+					typeOfDwelling: fields.typeOfDwelling,
+					storeysInDwelling: fields.storeysInDwelling,
+					storeyOfFlat: fields.typeOfDwelling === BuildType.flat ? fields.storeyOfFlat : undefined,
+					numOfBedrooms: fields.numOfBedrooms,
+					partGCompliance: fields.partGCompliance,
+					coolingRequired: fields.coolingRequired,
+				},
+				complete: true,
+			},
+		},
 	});
 
-	const saveForm = (fields: typeof model.value) => {
-		store.$patch({
-			dwellingDetails: {
-				generalSpecifications: {
-					data: {
-						typeOfResidence: fields.typeOfResidence,
-						weatherDataLocation: fields.weatherDataLocation,
-						sizeGroundFloorArea: fields.sizeGroundFloorArea,
-						numOfBedrooms: fields.numOfBedrooms,
-						storiesInDwelling: fields.storiesInDwelling,
-						levelOfShelter: fields.levelOfShelter,
-						numOfShelteredSides: fields.numOfShelteredSides,
-						heatingControlType: fields.heatingControlType,
-						cookingFuelType: fields.cookingFuelType,
-						coldWaterSource: fields.coldWaterSource,
-						numOfADFWetRooms: fields.numOfADFWetRooms
-					},
-					complete: true,
-				},
-			},
-		});
+	navigateTo("/dwelling-details");
+};
 
-		navigateTo("/dwelling-details");
-	};
-
-	const { handleInvalidSubmit, errorMessages } = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
@@ -39,120 +41,57 @@
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<FormKit type="form" v-model="model" @submit="saveForm" @submit-invalid="handleInvalidSubmit" :actions="false" :incomplete-message="false">
+	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm" @submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="generalSpecificationsErrorSummary"/>
 		<FormKit
+			id="typeOfDwelling"
 			type="govRadios"
-			:options="{
-				house: 'House',
-				flat: 'Flat',
-			}"
-			label="Type of residence"
-			id="typeOfResidence"
-			name="typeOfResidence"
+			:options="typeOfDwellingOptions"
+			label="Type of dwelling"
+			name="typeOfDwelling"
 			validation="required"
+			help="The broad dwelling type classification."
 		/>
 		<FormKit
-			type="govDropdown"
-			label="Weather data location"
-			id="weatherDataLocation"
-			name="weatherDataLocation"
-			:options="{
-				london: 'London',
-				manchester: 'Manchester',
-				york: 'York',
-			}"
-			validation="required"
-			help="The location nearest to your planned site"
+			id="storeysInDwelling"
+			type="govInputInt"
+			label="Number of storeys in building"
+			name="storeysInDwelling"
+			validation="required | number | min:1 | max:250"
+			help="Number of storeys in the building. For houses this will be the same as the number of storeys in the dwelling, for flats, this will be the total number of storeys of the whole building that the flat is part of."
 		/>
 		<FormKit
-			type="govInputMeters"
-			label="Size of ground floor area"
-			id="sizeGroundFloorArea"
-			name="sizeGroundFloorArea"
-			validation="required | number"
+			v-if="model.typeOfDwelling === 'flat'"
+			id="storeyOfFlat"
+			type="govInputInt"
+			label="Storey of flat"
+			name="storeyOfFlat"
+			validation="required | number | min:-50 | max:199"
+			help="The vertical position of the flat expressed by the storey it is on. 0 represents the ground floor."
 		/>
 		<FormKit
+			id="numOfBedrooms"
 			type="govInputInt"
 			label="Number of bedrooms"
-			id="numOfBedrooms"
 			name="numOfBedrooms"
-			validation="required | number"
+			validation="required | number | min:1"
+			help="Number of bedrooms in dwelling. Affects predicted occupancy."
 		/>
 		<FormKit
-			type="govInputInt"
-			label="Number of stories in dwelling"
-			id="storiesInDwelling"
-			name="storiesInDwelling"
-			validation="required | number"
-		/>
-		<FormKit
-			type="govRadios"
-			:options="{
-				verySheltered: 'Very sheltered',
-				sheltered: 'Sheltered',
-				normal: 'Normal',
-				exposed: 'Exposed'
-			}"
-			label="Shelter"
-			id="levelOfShelter"
-			name="levelOfShelter"
+			id="partGCompliance"
+			type="govBoolean"
+			label="Part G compliance"
+			name="partGCompliance"
 			validation="required"
-			help="Exposure level of the dwelling"
+			help="Is this dwelling compliant with part G regulations? Affects predicted hot water demand"
 		/>
 		<FormKit
-			type="govInputInt"
-			label="Number of sheltered sides"
-			id="numOfShelteredSides"
-			name="numOfShelteredSides"
-			validation="required | number"
-		/>
-		<FormKit
-			type="govRadios"
-			:options="{
-				seperateTempControl: {
-					label: 'Separate temperature control',
-					hint: 'Both living and rest of dwelling zones follow the same schedule but have different temperature set points.'
-				},
-				seperateTempAndTimeControl: {
-					label: 'Separate temperature and time control',
-					hint: 'Each zone has heating schedule and temperature set points.'
-				},
-			}"
-			label="Heating control type"
-			id="heatingControlType"
-			name="heatingControlType"
+			id="coolingRequired"
+			type="govBoolean"
+			label="Cooling required"
+			name="coolingRequired"
 			validation="required"
-		/>
-		<FormKit
-			type="govRadios"
-			:options="{
-				electricity: 'Electricity',
-				mainsGas: 'Mains gas',
-			}"
-			label="Cooking fuel type"
-			id="cookingFuelType"
-			name="cookingFuelType"
-			validation="required"
-		/>
-		<FormKit
-			type="govRadios"
-			:options="{
-				mainsWater: 'Mains water',
-				headerTank: 'Header tank',
-			}"
-			label="Cold water source"
-			id="coldWaterSource"
-			name="coldWaterSource"
-			validation="required"
-		/>
-		<FormKit
-			type="govInputInt"
-			label="Number of ADF wet rooms"
-			id="numOfADFWetRooms"
-			name="numOfADFWetRooms"
-			validation="required | number"
-			help="Rooms used for domestic activities such as kitchen and bathroom that create a large amount of airborne moisture."
+			help="Is cooling required for this dwelling? This affects space cooling of notional building"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>

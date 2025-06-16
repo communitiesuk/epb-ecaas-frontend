@@ -19,6 +19,6 @@ const formStatus: FormStatus = {
 		text: 'Complete',
 		color: 'green'
 	}
-}
+};
 
 export default formStatus;

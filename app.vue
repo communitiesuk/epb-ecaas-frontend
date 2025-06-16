@@ -1,43 +1,30 @@
 <script setup lang="ts">
-	import type { SubscriptionCallbackMutationPatchObject } from 'pinia';
+import GovServiceNavigation from './components/gov/ServiceNavigation.vue';
 
-	const store = useEcaasStore();
-
-	// Fetch initial state from server
-	await useAsyncData('state', () => store.fetchState().then(() => true));
-
-	// Update server session when state changes
-	store.$subscribe(async (mutation, state) => {
-		const typedMutation = mutation as SubscriptionCallbackMutationPatchObject<EcaasState>;
-
-		await $fetch('/api/setState', {
-			method: 'POST',
-			body: typedMutation.payload
-		});
-	});
+// flag for rebrand of GOV.UK, going live on June 25th 2025
+// NB. ALSO remember to update the htmlAttrs class value in nuxt.config.ts
+const usesRebrand = false;
 </script>
 
 <template>
-    <GovHeader service-name="Check dwelling compliance" />
-    <div class="govuk-width-container">
-        <GovPhaseBanner tag="ALPHA">
-            This is a new service - your feedback will help us to improve it.
-        </GovPhaseBanner>
-        <main class="govuk-main-wrapper govuk-!-padding-top-6">
+	<GovHeader classes="govuk-header--full-width-border" :rebrand="usesRebrand" />
+	<GovServiceNavigation service-name="Check Part L building compliance" />
+	<div class="govuk-width-container">
+		<GovPhaseBanner tag="Alpha">
+			This is a new service - your feedback will help us to improve it.
+		</GovPhaseBanner>
+		<main class="govuk-main-wrapper govuk-!-padding-top-6">
 			<div class="govuk-grid-row">
 				<div class="govuk-grid-column-full">
 					<GovBreadcrumbs />
 				</div>
 			</div>
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-                    <NuxtPage />
-                </div>
-                <div class="govuk-grid-column-one-third">
-                    <GovSideNavBar />    
-                </div>
-            </div>
-        </main>
-    </div>
-    <GovFooter />
+			<div class="govuk-grid-row">
+				<NuxtLayout>
+					<NuxtPage />
+				</NuxtLayout>
+			</div>
+		</main>
+	</div>
+	<GovFooter :rebrand="usesRebrand" />
 </template>

@@ -1,1 +1,8 @@
-@use "/node_modules/govuk-frontend/dist/govuk/index";
+@use "../../node_modules/govuk-frontend/dist/govuk/index" with (
+    $govuk-assets-path: "/static/assets/",
+    $govuk-new-organisation-colours: true
+);
+
+img {
+	max-width: 100%;
+}

@@ -1,0 +1,1 @@
+export type StripDefs<T> = Omit<T, "$defs">;
