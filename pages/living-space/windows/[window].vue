@@ -190,7 +190,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
 				id="frameToOpeningRatio" type="govInputFloat" label="Frame to opening ratio"
-				help="The proportion of the window taken up by the frame compared to the total opening area"
+				help="The proportion of the window area occupied by the frame, expressed as a decimal (e.g., 0.2)"
 				name="frameToOpeningRatio" validation="required | number | min:0 | max:100" />
 			<FormKit
 				id="maximumOpenableArea" type="govInputWithSuffix" suffix-text="m2" label="Maximum openable area"
