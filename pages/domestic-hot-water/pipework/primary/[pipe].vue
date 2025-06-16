@@ -60,51 +60,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="pipeworkErrorSummary" />
 
-		<GovDetails class="summary-text" :summary-text="`Help with these inputs`" classes="govuk-!-margin-bottom-4" possibly-llm-placeholder>
-			<table class="govuk-table">
-				<tbody class="govuk-table__body">
-					<tr class="govuk-table__row">
-						<th class="govuk-table__header">Parameter</th>
-						<th class="govuk-table__header">Typical values</th>
-					</tr>
-					<tr class="govuk-table__row">
-						<td class="govuk-table__cell">Internal diameter of pipework</td>
-						<td class="govuk-table__cell">15 - 28 mm</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<td class="govuk-table__cell">External diameter of pipework</td>
-						<td class="govuk-table__cell">22 - 28 mm</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<td class="govuk-table__cell">Length of pipework</td>
-						<td class="govuk-table__cell">
-							5 - 20 meters (small apartment)<br>
-							20 50 meters (large house)
-						</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<td class="govuk-table__cell">Thermal conductivity of insulation</td>
-						<td class="govuk-table__cell">
-							<p>Mineral wool / fiberglass:<br>
-								0.035 - 0.045 W/m.K</p>
-							<p>Polyethylene foam:<br>
-								0.035 - 0.0.40 W/m.K</p>
-							<p>Elastomeric foam (e.g. Armaflex):<br>
-								0.033 - 0.040 W/m.K</p>
-						</td>
-					</tr>
-					<tr class="govuk-table__row">
-						<td class="govuk-table__cell">Insulation thickness</td>
-						<td class="govuk-table__cell">
-							13 - 25 mm<br>
-							32 mm+<br>
-							(for high-performance or external pipework)
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</GovDetails>
-
 		<FormKit
 			id="name"
 			type="govInputText"
@@ -117,7 +72,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="internalDiameter"
 			type="govInputWithSuffix"
 			label="Internal diameter of pipework"
-			help="Nominal internal width of pipe"
+			help="Nominal internal width of pipe. Typical values are 15mm to 28mm."
 			name="internalDiameter"
 			validation="required | number"
 			suffix-text="mm"
@@ -126,7 +81,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="externalDiameter"
 			type="govInputWithSuffix"
 			label="External diameter of pipework"
-			help="Nominal external width of pipe"
+			help="Nominal external width of pipe. Typical values are 22mm to 28mm."
 			name="externalDiameter"
 			validation="required | number"
 			suffix-text="mm"
@@ -135,7 +90,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="length"
 			type="govInputWithSuffix"
 			label="Length"
-			help="Length of the pipework between the cylinder and heat source"
+			help="Length of the pipework between cylinder and heat source. Typical values are 5m to 20m for a small apartment and 20m to 50m for a larger house."
 			name="length"
 			validation="required | number | min:0 | max:200"
 			suffix-text="m"
@@ -148,7 +103,22 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="insulationThickness"
 			validation="required | number"
 			suffix-text="mm"
-		/>
+		>
+			<GovDetails class="summary-text" :summary-text="`Help with this input`" classes="govuk-!-margin-bottom-4">
+				<table class="govuk-table">
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th class="govuk-table__header">Typical values</th>
+							<td class="govuk-table__cell">
+								13 - 25 mm<br>
+								32 mm+<br>
+								(for high-performance or external pipework)
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="thermalConductivity"
 			type="govInputWithSuffix"
@@ -157,7 +127,24 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="thermalConductivity"
 			validation="required | number"
 			suffix-text="W / m.K"
-		/>
+		><GovDetails class="summary-text" :summary-text="`Help with this input`" classes="govuk-!-margin-bottom-4">
+			<table class="govuk-table">
+				<tbody class="govuk-table__body">
+					<tr class="govuk-table__row">
+						<th class="govuk-table__header">Typical values</th>
+						<td class="govuk-table__cell">
+							<p>Mineral wool / fiberglass:<br>
+								0.035 - 0.045 W/m.K</p>
+							<p>Polyethylene foam:<br>
+								0.035 - 0.0.40 W/m.K</p>
+							<p>Elastomeric foam (e.g. Armaflex):<br>
+								0.033 - 0.040 W/m.K</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</GovDetails>
+		</FormKit>
 		<FormKit
 			id="surfaceReflectivity"
 			type="govBoolean"
