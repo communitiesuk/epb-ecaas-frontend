@@ -562,6 +562,24 @@ describe("FHS input mapper", () => {
 					airFlowRate: 17,
 					mvhrLocation: MVHRLocation.inside,
 					mvhrEfficiency: 1
+				},
+				{
+					id: "mvhr vent 2 id",
+					name: "mvhr vent 2 name",
+					typeOfMechanicalVentilationOptions: VentType.MVHR,
+					controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
+					supplyAirTemperatureControl: "TO_BE_REMOVED",
+					airFlowRate: 3,
+					mvhrLocation: MVHRLocation.outside,
+					mvhrEfficiency: 0
+				},
+				{
+					id: "centralised MEV id",
+					name: "centralised MEV name",
+					typeOfMechanicalVentilationOptions: VentType.Centralised_continuous_MEV,
+					controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
+					supplyAirTemperatureControl: "TO_BE_REMOVED",
+					airFlowRate: 8,
 				}]
 			},
 			ductwork: {
@@ -683,14 +701,42 @@ describe("FHS input mapper", () => {
 						massDistributionClass: MassDistributionClass.IE,
 						pitch: 0,
 						thermalResistanceOfAdjacentUnheatedSpace: 1,
-					}]
+					}, 
+					// {
+					// 	name: "internal floor 2",
+					// 	typeOfInternalFloor: "heatedSpace",
+					// 	surfaceAreaOfElement: 4,
+					// 	// uValue: 0.6,
+					// 	kappaValue: 0.5,
+					// 	massDistributionClass: MassDistributionClass.M,
+					// 	// pitch: 1,
+					// }
+					]
 				},
 				// TODO add more floors
 				livingSpaceExposedFloor: {
 					data: []
 				}
 			},
-			livingSpaceWalls: {},
+			livingSpaceWalls: {
+				livingSpacePartyWall: {
+					data: [{
+						name: "party wall 1",
+						pitchOption: "90",
+						pitch: 90,
+						orientation: 80,
+						height: 3,
+						length: 5,
+						elevationalHeight: 1,
+						surfaceArea: 15,
+						solarAbsorption: 0.6,
+						uValue: 1,
+						kappaValue: 2,
+						massDistributionClass: MassDistributionClass.E
+					}]
+				}
+
+			},
 			livingSpaceCeilingsAndRoofs: {
 				livingSpaceCeilings: {
 					data: []
@@ -956,6 +1002,27 @@ describe("FHS input mapper", () => {
 							length: 4,
 							reflective: true
 						}]
+					},
+					"mvhr vent 2 name": {
+						EnergySupply: "mains elec",
+						design_outdoor_air_flow_rate: 3,
+						sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
+						sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
+						vent_type: VentType.MVHR,
+						measured_air_flow_rate: 37,
+						measured_fan_power: 12.26,
+						mvhr_eff: 0,
+						mvhr_location: MVHRLocation.outside,
+						ductwork: []
+					},
+					"centralised MEV name": {
+						EnergySupply: "mains elec",
+						design_outdoor_air_flow_rate: 8,
+						sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
+						sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
+						vent_type: VentType.Centralised_continuous_MEV,
+						measured_air_flow_rate: 37,
+						measured_fan_power: 12.26,
 					}
 				},
 				PDUs: {},
@@ -1033,6 +1100,28 @@ describe("FHS input mapper", () => {
 							thermal_resistance_unconditioned_space: 1,
 							type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 							u_value: 0.1
+						},
+						// "internal floor 2": {
+						// 	type: "BuildingElementAdjacentConditionedSpace",
+						// 	area: 4, 
+						// 	u_value: 0.6,
+						// 	areal_heat_capacity: 0.5,
+						// 	mass_distribution_class: MassDistributionClass.M,
+						// 	pitch: 1,
+						// }
+						"party wall 1": {
+							area: 15,
+							areal_heat_capacity: 2,
+							base_height: 1,
+							height: 3,
+							is_external_door: false,
+							mass_distribution_class: MassDistributionClass.E,
+							orientation360: 80,
+							pitch: 90,
+							solar_absorption_coeff: 0.6,
+							type: "BuildingElementOpaque",
+							u_value: 1,
+							width: 5,
 						}
 					},
 					SpaceCoolSystem: [],
