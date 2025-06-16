@@ -1,5 +1,5 @@
 import type { EmptyObject, TaggedUnion } from "type-fest";
-import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType } from "~/schema/api-schema.types";
+import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType, FuelType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -615,7 +615,7 @@ export type HeatInterfaceUnitData = {
 };
 
 export interface EnergySupplyData {
-	fuelType: string[];
+	fuelType: FuelType[];
 	co2PerKwh?: number;
 	co2PerKwhIncludingOutOfScope?: number;
 	kwhPerKwhDelivered?: number;

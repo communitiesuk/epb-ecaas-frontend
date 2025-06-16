@@ -8,14 +8,8 @@ const model = ref({
 	...store.heatingSystems.energySupply.data
 });
 
-const fuelTypeOptions: Record<Exclude<FuelType | 'wood' | 'oil' | 'coal', FuelType.LPG_bottled | FuelType.LPG_condition_11F | FuelType.energy_from_environment | FuelType.unmet_demand>, string> = {
+const fuelTypeOptions: Record<FuelType.electricity, Capitalize<FuelType.electricity>> = {
 	[FuelType.electricity]: 'Electricity',
-	[FuelType.mains_gas]: 'Mains gas',
-	[FuelType.LPG_bulk]: 'LPG bulk',
-	wood: 'Wood',
-	oil: 'Oil',
-	coal: 'Coal',
-	[FuelType.custom]: 'Custom'
 };
 
 const saveForm = (fields: EnergySupplyData) => {
@@ -58,7 +52,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govCheckboxes"
 			name="fuelType"
 			label="Energy supply by fuel type"
-			help="The user can specify several energy supply objects, to be used by different systems and appliances."
+			help="For now, this service only allows modelling based on electricity. More options will be available in future releases."
 			:options="fuelTypeOptions"
 			validation="required"
 		/>
@@ -94,7 +88,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			v-if="model.fuelType?.includes(FuelType.electricity)"
 			id="exported"
 			type="govBoolean"
-			label="Can the fuel be exported?"
+			label="Can electricity be exported back to the grid?"
 			name="exported"
 			validation="required"
 		/>
