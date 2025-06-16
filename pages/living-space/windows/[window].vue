@@ -33,6 +33,7 @@ const saveForm = (fields: WindowData) => {
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
+			frameToOpeningRatio: fields.frameToOpeningRatio,
 			overhangDepth: 'overhangDepth' in fields ? fields.overhangDepth : undefined,
 			overhangDistance: 'overhangDepth' in fields ? fields.overhangDistance: undefined,
 			sideFinRightDepth: 'sideFinRightDepth' in fields ? fields.sideFinRightDepth : undefined,
@@ -56,7 +57,6 @@ const saveForm = (fields: WindowData) => {
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -66,7 +66,6 @@ const saveForm = (fields: WindowData) => {
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -77,7 +76,6 @@ const saveForm = (fields: WindowData) => {
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -89,7 +87,6 @@ const saveForm = (fields: WindowData) => {
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -187,11 +184,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				4: '4',
 				0: 'None',
 			}" label="Number of openable parts " name="numberOpenableParts" validation="required" />
+		<FormKit
+			id="frameToOpeningRatio" type="govInputFloat" label="Frame to opening ratio"
+			help="The proportion of the window area occupied by the frame, expressed as a decimal (e.g., 0.2)"
+			name="frameToOpeningRatio" validation="required | number | min:0 | max:100" />
 		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== '0'">
-			<FormKit
-				id="frameToOpeningRatio" type="govInputFloat" label="Frame to opening ratio"
-				help="The proportion of the window area occupied by the frame, expressed as a decimal (e.g., 0.2)"
-				name="frameToOpeningRatio" validation="required | number | min:0 | max:100" />
 			<FormKit
 				id="maximumOpenableArea" type="govInputWithSuffix" suffix-text="m2" label="Maximum openable area"
 				help="The total area of the window that can be opened for ventilation." name="maximumOpenableArea"

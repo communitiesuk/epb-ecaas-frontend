@@ -236,9 +236,8 @@ export type ExternalUnglazedDoorData = {
 };
 
 type CommonOpenablePartsFields = {
-	frameToOpeningRatio?: number;
-	maximumOpenableArea?: number;
-	heightOpenableArea?: number;
+	maximumOpenableArea: number;
+	heightOpenableArea: number;
 };
 type OnePartFields = CommonOpenablePartsFields & {
 	midHeightOpenablePart1: number;
@@ -265,6 +264,7 @@ export type ExternalGlazedDoorData = {
 	solarTransmittance: number;
 	elevationalHeight: number;
 	midHeight: number;
+	frameToOpeningRatio: number;
 } & TaggedUnion<'numberOpenableParts', {
 	'0': EmptyObject;
 	'1': OnePartFields;
@@ -299,6 +299,7 @@ export type WindowData = {
 	solarTransmittance: number;
 	elevationalHeight: number;
 	midHeight: number;
+	frameToOpeningRatio: number;
 } & TaggedUnion<'numberOpenableParts', {
 	'0': EmptyObject;
 	'1': OnePartFields;

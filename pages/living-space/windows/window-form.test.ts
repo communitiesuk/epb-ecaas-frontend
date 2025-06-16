@@ -25,6 +25,7 @@ describe('window', () => {
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
+		frameToOpeningRatio: 0.8,
 		numberOpenableParts: '0',
 		overhangDepth: 1,
 		overhangDistance: 1,
@@ -54,6 +55,7 @@ describe('window', () => {
 		await user.type(screen.getByTestId('solarTransmittance'), '0.1');
 		await user.type(screen.getByTestId('elevationalHeight'), '1');
 		await user.type(screen.getByTestId('midHeight'), '1');
+		await user.type(screen.getByTestId('frameToOpeningRatio'), '0.8');
 		await user.click(screen.getByTestId('numberOpenableParts_0'));
 		await user.type(screen.getByTestId('overhangDepth'), '1');
 		await user.type(screen.getByTestId('overhangDistance'), '1');

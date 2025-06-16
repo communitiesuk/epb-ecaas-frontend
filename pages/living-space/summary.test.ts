@@ -195,6 +195,7 @@ const doorsData: DoorsData = {
 			elevationalHeight: 1,
 			midHeight: 1,
 			numberOpenableParts: '0',
+			frameToOpeningRatio: 0.8,
 		}]
 	},
 	livingSpaceInternalDoor: {
@@ -222,6 +223,7 @@ const windowData: WindowData = {
 	solarTransmittance: 0.1,
 	elevationalHeight: 1,
 	midHeight: 1,
+	frameToOpeningRatio: 0.8,
 	numberOpenableParts: '0',
 	overhangDepth: 1,
 	overhangDistance: 1,

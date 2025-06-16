@@ -22,6 +22,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
+			frameToOpeningRatio: fields.frameToOpeningRatio,
 		};
 
 		let door: ExternalGlazedDoorData;
@@ -39,7 +40,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				door = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -49,7 +49,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				door = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -60,7 +59,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				door = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -72,7 +70,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				door = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -195,15 +192,15 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="numberOpenableParts"
 			validation="required"
 		/>
+		<FormKit
+			id="frameToOpeningRatio"
+			type="govInputFloat"
+			label="Frame to opening ratio"
+			help="The proportion of the window taken up by the frame compared to the total opening area."
+			name="frameToOpeningRatio"
+			validation="required | number | min:0 | max:100"
+		/>
 		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== '0'">
-			<FormKit
-				id="frameToOpeningRatio"
-				type="govInputFloat"
-				label="Frame to opening ratio"
-				help="The proportion of the window taken up by the frame compared to the total opening area."
-				name="frameToOpeningRatio"
-				validation="required | number | min:0 | max:100"
-			/>
 			<FormKit
 				id="maximumOpenableArea"
 				type="govInputWithSuffix"

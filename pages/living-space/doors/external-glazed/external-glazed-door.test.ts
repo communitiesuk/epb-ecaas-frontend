@@ -25,6 +25,7 @@ describe('external glazed door', () => {
 		elevationalHeight: 1,
 		midHeight: 1,
 		numberOpenableParts: '0',
+		frameToOpeningRatio: 0.8,
 	};
 
 	afterEach(() => {
@@ -44,6 +45,7 @@ describe('external glazed door', () => {
 		await user.type(screen.getByTestId('solarTransmittance'), '0.1');
 		await user.type(screen.getByTestId('elevationalHeight'), '1');
 		await user.type(screen.getByTestId('midHeight'), '1');
+		await user.type(screen.getByTestId('frameToOpeningRatio'), '0.8');
 		await user.click(screen.getByTestId('numberOpenableParts_0'));
 
 		await user.click(screen.getByRole('button'));

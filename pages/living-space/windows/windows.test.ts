@@ -31,6 +31,7 @@ describe('windows', () => {
 		elevationalHeight: 1,
 		midHeight: 1,
 		numberOpenableParts: '0',
+		frameToOpeningRatio: 0.8,
 	};
 
 	const window2: WindowData = {
