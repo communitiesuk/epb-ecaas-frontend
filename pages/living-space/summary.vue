@@ -67,7 +67,7 @@ const internalFloorSummary: SummarySection = {
 			"Net surface area of element": x.surfaceAreaOfElement,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace
+			...(x.typeOfInternalFloor === InternalFloorType.unheatedSpace ? {"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace} : {})
 		};
 	}) || [],
 	editUrl: getUrl('livingSpaceFloors')!

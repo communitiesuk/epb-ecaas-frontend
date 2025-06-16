@@ -36,7 +36,7 @@ const floorsData: FloorsData = {
 	},
 	livingSpaceInternalFloor: {
 		data: [{
-			typeOfInternalFloor: 'heatedSpace',
+			typeOfInternalFloor: InternalFloorType.heatedSpace,
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
 			kappaValue: 100,

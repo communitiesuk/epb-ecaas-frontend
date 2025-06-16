@@ -88,17 +88,32 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 		}
 	}));
 
-	const internalFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalFloor?.data.map(x => ({
-		[x.name]: {
-			type: x.typeOfInternalFloor === 'heatedSpace' ?  'BuildingElementAdjacentConditionedSpace' : 'BuildingElementAdjacentUnconditionedSpace_Simple',
+	const internalFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalFloor?.data.map(x => {
+		const commonFields = {
 			area: x.surfaceAreaOfElement,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
-			thermal_resistance_unconditioned_space: x.typeOfInternalFloor === 'heatedSpace' ? 0 : x.thermalResistanceOfAdjacentUnheatedSpace!,
 			pitch: 180,
 			u_value: 0.01
+		};
+
+		let internalFloor: SchemaBuildingElement;
+
+		if (x.typeOfInternalFloor === InternalFloorType.unheatedSpace) {
+			internalFloor = {
+				...commonFields,
+				type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
+				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
+			};
+		} else {
+			internalFloor = {
+				...commonFields,
+				type: 'BuildingElementAdjacentConditionedSpace',
+			};
 		}
-	})) || [];
+		
+		return {[x.name]: internalFloor};
+	}) || [];
 
 	const exposedFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExposedFloor?.data.map(x => ({
 		[x.name]: {

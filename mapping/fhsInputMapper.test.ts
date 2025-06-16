@@ -694,19 +694,19 @@ describe("FHS input mapper", () => {
 				livingSpaceInternalFloor: {
 					data: [{
 						name: "internal floor 1",
-						typeOfInternalFloor: "not heated",
+						typeOfInternalFloor: InternalFloorType.unheatedSpace,
 						surfaceAreaOfElement: 6,
 						kappaValue: 50000,
 						massDistributionClass: MassDistributionClass.IE,
 						thermalResistanceOfAdjacentUnheatedSpace: 1,
 					}, 
-					// {
-					// 	name: "internal floor 2",
-					// 	typeOfInternalFloor: "heatedSpace",
-					// 	surfaceAreaOfElement: 4,
-					// 	kappaValue: 0.5,
-					// 	massDistributionClass: MassDistributionClass.M,
-					// }
+					{
+						name: "internal floor 2",
+						typeOfInternalFloor: InternalFloorType.heatedSpace,
+						surfaceAreaOfElement: 4,
+						kappaValue: 110000,
+						massDistributionClass: MassDistributionClass.M,
+					}
 					]
 				},
 				// TODO add more floors
@@ -1097,14 +1097,14 @@ describe("FHS input mapper", () => {
 							pitch: 180,
 							u_value: 0.01
 						},
-						// "internal floor 2": {
-						// 	type: "BuildingElementAdjacentConditionedSpace",
-						// 	area: 4, 
-						// 	u_value: 0.01,
-						// 	areal_heat_capacity: 110000,
-						// 	mass_distribution_class: MassDistributionClass.M,
-						// pitch: 180,
-						// }
+						"internal floor 2": {
+							type: "BuildingElementAdjacentConditionedSpace",
+							area: 4, 
+							u_value: 0.01,
+							areal_heat_capacity: 110000,
+							mass_distribution_class: MassDistributionClass.M,
+							pitch: 180,
+						},
 						"party wall 1": {
 							area: 15,
 							areal_heat_capacity: 50000,

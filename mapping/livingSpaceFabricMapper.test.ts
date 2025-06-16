@@ -101,7 +101,7 @@ describe('living space fabric mapper', () => {
 		};
 
 		const internalFloor: InternalFloorData = {
-			typeOfInternalFloor: 'unheatedSpace',
+			typeOfInternalFloor: InternalFloorType.unheatedSpace,
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
 			kappaValue: 50000,

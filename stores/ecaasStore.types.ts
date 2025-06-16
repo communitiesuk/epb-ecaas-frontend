@@ -67,14 +67,20 @@ export interface FloorsData {
 	livingSpaceExposedFloor?: EcaasForm<ExposedFloorData[]>
 }
 
+export enum InternalFloorType {
+	heatedSpace = "heatedSpace",
+	unheatedSpace = "unheatedSpace"
+}
+
 export type InternalFloorData = {
 	name: string;
-	typeOfInternalFloor: string;
 	surfaceAreaOfElement: number;
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
-	thermalResistanceOfAdjacentUnheatedSpace?: number;
-};
+} & TaggedUnion<'typeOfInternalFloor', {
+	[InternalFloorType.unheatedSpace]: {thermalResistanceOfAdjacentUnheatedSpace: number;}
+	[InternalFloorType.heatedSpace]: EmptyObject;
+}>;
 
 export type ExposedFloorData = {
 	name: string;
