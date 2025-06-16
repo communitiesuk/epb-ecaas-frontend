@@ -81,7 +81,7 @@ export default defineEventHandler(async (event) => {
 		sessionId = uuidv4();
 
 		//  // Store session Id in cookie
-		setCookie(event, "sessionId", sessionId, { maxAge: 60 * 60 * 24 * 14 });
+		setCookie(event, "sessionId", sessionId, { maxAge: 60 * 60 * 24 * 14, httpOnly: true });
 
 		//  // Save state to storage
 		await storage.setItem<EcaasState>(sessionId, body, { ttl: 1209600 });
