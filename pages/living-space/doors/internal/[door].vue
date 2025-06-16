@@ -68,7 +68,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				unheatedSpace: 'Internal door to unheated space'
 			}"
 			label="Type"
-			help="Selecting the type of ceiling affects what inputs are necessary."
+			help="This affects which inputs are necessary."
 			name="typeOfCeiling"
 			validation="required"
 		/>
