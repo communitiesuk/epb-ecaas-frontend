@@ -48,7 +48,7 @@ const boilerSummary: SummarySection = {
 		return {
 			Name: boiler.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatGenerationUrl,
 };
 
@@ -60,7 +60,7 @@ const heatBatterySummary: SummarySection = {
 		return {
 			Name: battery.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatGenerationUrl,
 };
 
@@ -72,7 +72,7 @@ const heatNetworkSummary: SummarySection = {
 		return {
 			Name: network.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatGenerationUrl,
 };
 
@@ -84,7 +84,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 		return {
 			Name: unit.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatGenerationUrl,
 };
 
@@ -151,7 +151,7 @@ const wetDistributionSummary: SummarySection = {
 			wetDistribution.minimumFlowTemp;
 
 		return wetDistributionData;
-	}),
+	}) || [],
 
 	editUrl: heatEmittingUrl,
 };
@@ -167,7 +167,7 @@ const instantElectricHeaterSummary: SummarySection = {
 			"Rated power": instantHeater.ratedPower,
 			"Convection fraction": instantHeater.convectionFractionInstant,
 		};
-	}),
+	}) || [],
 	editUrl: heatEmittingUrl,
 };
 
@@ -180,7 +180,7 @@ const electricStorageHeaterSummary: SummarySection = {
 		return {
 			Name: storageHeater.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatEmittingUrl,
 };
 
@@ -192,7 +192,7 @@ const warmAirHeatPumpSummary: SummarySection = {
 		return {
 			Name: pump.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatEmittingUrl,
 };
 
