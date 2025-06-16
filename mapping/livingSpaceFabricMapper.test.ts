@@ -20,7 +20,7 @@ describe('living space fabric mapper', () => {
 			area: 10,
 			volume: 10,
 			heatingControlType: 'separateTempControl',
-			spaceHeatingSystemForThisZone: [],
+			spaceHeatingSystemForThisZone: [{ name: 'main 1' }],
 			spaceCoolingSystemForThisZone: [],
 			spaceHeatControlSystemForThisZone: []
 		};
@@ -39,8 +39,7 @@ describe('living space fabric mapper', () => {
 		// Assert
 		expect(fhsInputData.Zone!['zone 1']?.area).toBe(state.area);
 		expect(fhsInputData.Zone!['zone 1']?.volume).toBe(state.volume);
-		expect(fhsInputData.Zone!['zone 1']?.SpaceHeatSystem).toEqual([]);
-		expect(fhsInputData.Zone!['zone 1']?.SpaceCoolSystem).toEqual([]);
+		expect(fhsInputData.Zone!['zone 1']?.SpaceHeatSystem).toEqual(['main 1']);
 		expect(fhsInputData.Zone!['zone 1']?.SpaceHeatControl).toBe('livingroom');
 	});
 
@@ -49,7 +48,7 @@ describe('living space fabric mapper', () => {
 		const groundFloor: GroundFloorData = {
 			name: "Ground 1",
 			surfaceAreaInZone: 5,
-			surfaceAreaAllZones: 0,
+			surfaceAreaAllZones: 10,
 			pitch: 180,
 			uValue: 1,
 			thermalResistanceOfFloorConstruction: 1,
@@ -150,6 +149,8 @@ describe('living space fabric mapper', () => {
 		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone!['zone 1']!.BuildingElement[groundFloorWithUnheatedBasement.name]! as BuildingElementGround;
 		const internalFloorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[internalFloor.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
 		const exposedFloorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[exposedFloor.name] as BuildingElementOpaque;
+
+		expect(fhsInputData.GroundFloorArea).toBe(groundFloor.surfaceAreaAllZones);
 
 		const expectedGroundFloor: BuildingElementGround = {
 			type: 'BuildingElementGround',

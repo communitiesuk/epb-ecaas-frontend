@@ -15,7 +15,7 @@ export function mapEnergySupplyData(state: EcaasState): Pick<FhsInputSchema, 'En
 	return {
 		EnergySupply: {
 			...objectFromEntries(fuelType ? fuelType.map((fuelType) => ([
-				fuelType,
+				fuelType === FuelType.electricity ? 'mains elec' : fuelType,
 				{
 					fuel: fuelType as FuelType,
 					...(fuelType === FuelType.electricity ? { is_export_capable: exported } : {}),
@@ -78,7 +78,7 @@ export function mapHeatEmittingData(state: EcaasState): Pick<FhsInputSchema, 'Sp
 		heater.name,
 		{
 			type: "InstantElecHeater",
-			EnergySupply: FuelType.electricity,
+			EnergySupply: "mains elec",
 			rated_power: heater.ratedPower,
 			frac_convective: heater.convectionFractionInstant,
 		}

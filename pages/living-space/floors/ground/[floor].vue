@@ -51,7 +51,8 @@ const saveForm = (fields: GroundFloorData) => {
 		if (!livingSpaceFloors.livingSpaceGroundFloor) {
 			livingSpaceFloors.livingSpaceGroundFloor = { data: [] };
 		}
-		state.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.complete = false;
+		
+		livingSpaceFloors.livingSpaceGroundFloor.complete = false;
 		
 		saveToList(floor, livingSpaceFloors.livingSpaceGroundFloor);
 	});
@@ -100,7 +101,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Surface area of element as a whole (across all zones)"
 			help="Total area of the building element across entire dwelling; if the floor is divided among several zones, this is the total area across all zone"
 			name="surfaceAreaAllZones"
-			validation="required | number"
+			validation="required | number | min:1"
 		/>
 		<FormKit
 			id="uValue"

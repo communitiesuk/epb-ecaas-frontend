@@ -88,7 +88,7 @@ export default defineNuxtConfig({
 				}
 			}
 												
-			if (process.env.NODE_ENV !== 'development') {
+			if (process.env.NODE_ENV === 'production') {
 				setAuthMiddleware(pages);
 			}
 		}

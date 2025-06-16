@@ -9,7 +9,7 @@ const model = ref({
 });
 
 const fuelTypeOptions: Record<FuelType.electricity, Capitalize<FuelType.electricity>> = {
-	[FuelType.electricity]: 'Electricity',
+	[FuelType.electricity]: 'Electricity'
 };
 
 const saveForm = (fields: EnergySupplyData) => {

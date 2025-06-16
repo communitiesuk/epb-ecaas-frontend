@@ -64,7 +64,7 @@ describe("heating systems mapper", () => {
 				mains_gas: {
 					fuel: FuelType.mains_gas,
 				},
-				electricity: {
+				'mains elec': {
 					fuel: FuelType.electricity,
 					is_export_capable: true
 				}
@@ -99,7 +99,7 @@ describe("heating systems mapper", () => {
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
 			EnergySupply: {
-				electricity: {
+				'mains elec': {
 					fuel: FuelType.electricity,
 					is_export_capable: true
 				},
@@ -297,7 +297,7 @@ describe("heating systems mapper", () => {
 					type: "InstantElecHeater",
 					rated_power: 100,
 					frac_convective: 0.8,
-					EnergySupply: FuelType.electricity
+					EnergySupply: 'mains elec'
 				}
 			}
 		};

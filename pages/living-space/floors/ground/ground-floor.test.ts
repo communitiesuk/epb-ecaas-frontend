@@ -16,7 +16,7 @@ describe('ground floor', () => {
 	const groundFloor: GroundFloorData = {
 		name: "Ground 1",
 		surfaceAreaInZone: 5,
-		surfaceAreaAllZones: 0,
+		surfaceAreaAllZones: 10,
 		pitch: 180,
 		uValue: 1,
 		thermalResistanceOfFloorConstruction: 1,
@@ -70,7 +70,7 @@ describe('ground floor', () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Ground 1');
 		await user.type(screen.getByTestId('surfaceAreaInZone'), '5');
-		await user.type(screen.getByTestId('surfaceAreaAllZones'), '0');
+		await user.type(screen.getByTestId('surfaceAreaAllZones'), '10');
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.type(screen.getByTestId('thermalResistanceOfFloorConstruction'), '1');
 		await user.click(screen.getByTestId('kappaValue_50000'));
@@ -111,7 +111,7 @@ describe('ground floor', () => {
 	
 			expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Ground 1');
 			expect((await screen.findByTestId('surfaceAreaInZone') as HTMLInputElement).value).toBe('5');
-			expect((await screen.findByTestId('surfaceAreaAllZones') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId('surfaceAreaAllZones') as HTMLInputElement).value).toBe('10');
 			expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
 			expect((await screen.findByTestId('thermalResistanceOfFloorConstruction') as HTMLInputElement).value).toBe('1');
 			expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);

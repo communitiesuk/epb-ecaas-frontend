@@ -352,7 +352,7 @@ describe("FHS input mapper", () => {
 			},
 			Control: {},
 			EnergySupply: {
-				[FuelType.electricity]: {
+				['mains elec']: {
 					fuel: FuelType.electricity,
 					is_export_capable: true,
 				}
@@ -395,7 +395,9 @@ describe("FHS input mapper", () => {
 							name: "some-heat-pump-name",
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
-							type: "HeatSourceWet"
+							type: "HeatSourceWet",
+							temp_flow_limit_upper: 65,
+							thermostat_position: 0.33
 						},
 					},
 					daily_losses: 34,
@@ -491,6 +493,7 @@ describe("FHS input mapper", () => {
 					thermal_mass: 23,
 				}
 			},
+			GroundFloorArea: 50,
 			Zone: {
 				"zone 1": {
 					BuildingElement: {
@@ -507,6 +510,21 @@ describe("FHS input mapper", () => {
 							floor_type: FloorType.Slab_no_edge_insulation,
 							pitch: 0,
 							thickness_walls: 0
+						}
+					},
+					Lighting: {
+						efficacy: 56.0,
+						bulbs: {
+							incandescent: {
+								count: 5,
+								power: 8,
+								efficacy: 18
+							},
+							led: {
+								count: 10,
+								power: 3,
+								efficacy: 150
+							}
 						}
 					},
 					SpaceCoolSystem: ["some-aircon-unit-name"],
@@ -925,7 +943,7 @@ describe("FHS input mapper", () => {
 			},
 			Control: {},
 			EnergySupply: {
-				[FuelType.electricity]: {
+				['mains elec']: {
 					fuel: FuelType.electricity,
 					is_export_capable: true,
 				}
@@ -960,7 +978,9 @@ describe("FHS input mapper", () => {
 							name: "heat pump 1 name",
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
-							type: "HeatSourceWet"
+							type: "HeatSourceWet",
+							temp_flow_limit_upper: 65,
+							thermostat_position: 0.33
 						},
 					},
 					daily_losses: 10,
@@ -1050,6 +1070,7 @@ describe("FHS input mapper", () => {
 			},
 			SpaceCoolSystem: {},
 			SpaceHeatSystem: {},
+			GroundFloorArea: 26,
 			Zone: {
 				"zone 1": {
 					BuildingElement: {
@@ -1120,10 +1141,25 @@ describe("FHS input mapper", () => {
 							width: 5,
 						}
 					},
-					SpaceCoolSystem: [],
 					SpaceHeatControl: SpaceHeatControlType.livingroom,
+					SpaceCoolSystem: [],
 					SpaceHeatSystem: [],
 					ThermalBridging: {},
+					Lighting: {
+						efficacy: 56.0,
+						bulbs: {
+							incandescent: {
+								count: 5,
+								power: 8,
+								efficacy: 18
+							},
+							led: {
+								count: 10,
+								power: 3,
+								efficacy: 150
+							}
+						}
+					},
 					area: 16,
 					volume: 550,
 				}
