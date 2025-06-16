@@ -53,7 +53,6 @@ export default defineNuxtConfig({
 	modules: [
 		'@formkit/nuxt',
 		'@pinia/nuxt',
-		'pinia-plugin-persistedstate/nuxt',
 		'@nuxt/test-utils/module',
 		'@nuxt/eslint',
 		'nuxt-auth-utils',
