@@ -108,7 +108,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<table class="govuk-table">
 					<tbody class="govuk-table__body">
 						<tr class="govuk-table__row">
-							<th class="govuk-table__header">Typical values</th>
+							<th scope="row" class="govuk-table__header">Typical values</th>
 							<td class="govuk-table__cell">
 								13 - 25 mm<br>
 								32 mm+<br>
