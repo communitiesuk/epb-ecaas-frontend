@@ -61,6 +61,9 @@ export default defineNuxtConfig({
 	],
 	plugins: [
 		'~/plugins/xray-fetch.server',
+		'~/plugins/load-store.client',
+		'~/plugins/update-store.client',
+
 	],
 	formkit: {
 		autoImport: true,

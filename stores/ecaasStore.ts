@@ -143,9 +143,6 @@ export const useEcaasStore = defineStore("ecaas", {
 			};
 		},
 	},
-	persist: {
-		storage: piniaPluginPersistedstate.localStorage(),
-	},
 });
 
 export type NulledForms<T> = { [P in keyof T]: T[P] extends EcaasForm<infer U> ? EcaasForm<U | EmptyObject> : NulledForms<T[P]> };

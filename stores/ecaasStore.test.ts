@@ -21,7 +21,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'dwellingDetails');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.notStarted);
+		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
 	it('getStatus of section returns in progress status when some forms are complete', () => {
@@ -37,7 +37,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'dwellingDetails');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.inProgress);
+		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
 	it('getStatus of section returns in progress status when forms have saved data', () => {
@@ -55,7 +55,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'dwellingDetails');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.inProgress);
+		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
 	it('getStatus of a section containing grouped tasks returns in progress status when one of the grouped tasks is complete', () => {
@@ -79,7 +79,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'livingSpaceFabric');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.inProgress);
+		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
 	it('getStatus of section returns complete status when all forms are complete', () => {
@@ -101,7 +101,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'dwellingDetails');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.complete);
+		expect(status).toStrictEqual(formStatus.complete);
 	});
 
 	it('getStatus of a section containing a grouped tasks returns complete when all forms are complete', () => {
@@ -140,7 +140,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'livingSpaceFabric');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.complete);
+		expect(status).toStrictEqual(formStatus.complete);
 	});
 
 	it('getStatus of task returns not started status when form has no data', () => {
@@ -148,7 +148,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'generalSpecifications');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.notStarted);
+		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
 	it('getStatus of task returns in progress status when form has saved data', () => {
@@ -166,7 +166,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'generalSpecifications');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.inProgress);
+		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
 	it('getStatus of task returns complete status when form is complete', () => {
@@ -182,7 +182,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'generalSpecifications');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.complete);
+		expect(status).toStrictEqual(formStatus.complete);
 	});
 
 	it('getStatus of task returns complete status when required forms are complete', () => {
@@ -206,7 +206,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'livingSpaceFloors');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.complete);
+		expect(status).toStrictEqual(formStatus.complete);
 	});
 
 	const mechanicalVentilation1: MechanicalVentilationData = {
@@ -276,7 +276,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'ductwork');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.notStarted);
+		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
 	it('getStatus of ductwork task returns in progress status when multiple mvhrs are added but they dont all have an associated ductwork', async() => {
@@ -298,7 +298,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'ductwork');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.inProgress);
+		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
 	it('getStatus of ductwork task returns complete status when a mvhr has an associated ductwork', async() => {
@@ -319,7 +319,7 @@ describe('Ecaas Store', () => {
 		const page = pagesData.find(p => p.id === 'ductwork');
 		const status = store.getStatus(page!);
 
-		expect(status).toBe(formStatus.complete);
+		expect(status).toStrictEqual(formStatus.complete);
 	});
 });
 
