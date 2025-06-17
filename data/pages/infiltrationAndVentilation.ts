@@ -81,9 +81,9 @@ const infiltrationAndVentilationPages: Array<Page> = [
 		parentId: 'vents'
 	},
 	{
-		id: 'ventilation',
-		title: 'Ventilation',
-		url: '/infiltration-and-ventilation/ventilation',
+		id: 'natural-ventilation',
+		title: 'Natural ventilation',
+		url: '/infiltration-and-ventilation/natural-ventilation',
 		type: PageType.Task,
 		parentId: 'infiltrationAndVentilation'
 	},

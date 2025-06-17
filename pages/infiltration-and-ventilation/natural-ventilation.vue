@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = "Ventilation";
+const title = "Natural ventilation";
 const store = useEcaasStore();
 
 const model = ref({

@@ -1,4 +1,4 @@
-import Ventilation from './ventilation.vue';
+import Ventilation from './natural-ventilation.vue';
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
