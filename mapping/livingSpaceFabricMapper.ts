@@ -294,19 +294,32 @@ function mapCeilingAndRoofData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> 
 function mapDoorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 	const { livingSpaceInternalDoor, livingSpaceExternalGlazedDoor, livingSpaceExternalUnglazedDoor } = state.livingSpaceFabric.livingSpaceDoors;
 
-	const internalDoorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalDoor.data.map(x => ({
-		[x.name]: {
-			type: x.typeOfCeiling === 'heatedSpace' ?
-				'BuildingElementAdjacentConditionedSpace' :
-				'BuildingElementAdjacentUnconditionedSpace_Simple',
+	const internalDoorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalDoor.data.map(x => {
+		const commonFields = {
 			pitch: x.pitch!,
 			area: x.surfaceArea,
 			u_value: defaultUValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
-			thermal_resistance_unconditioned_space: x.typeOfCeiling === 'heatedSpace' ? 0 : x.thermalResistanceOfAdjacentUnheatedSpace
-		}
-	}));
+		};
+
+		let internalDoor: SchemaBuildingElement;
+
+		if (x.typeOfCeiling === "unheatedSpace") {
+			internalDoor = {
+				...commonFields,
+				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace
+			};
+		} else {
+			internalDoor = {
+				...commonFields,
+				type: "BuildingElementAdjacentConditionedSpace",
+			};
+		};
+
+		return {[x.name]: internalDoor};
+	});
 
 	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExternalGlazedDoor.data.map(x => {
 

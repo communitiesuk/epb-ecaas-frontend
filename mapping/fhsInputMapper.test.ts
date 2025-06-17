@@ -763,13 +763,35 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				livingSpaceExternalWall: {
-					data: [],
+					data: [{
+						name: "external wall 1",
+						pitchOption: "90",
+						pitch: 90,
+						orientation: 30,
+						height: 2.6,
+						length: 3,
+						elevationalHeight: 1,
+						surfaceArea: 20,
+						solarAbsorption: 0.2,
+						uValue: 1, 
+						kappaValue: 75000,
+						massDistributionClass: MassDistributionClass.D
+					}]
 				},
 				livingSpaceInternalWall: {
 					data: [],
 				},
 				livingSpaceWallToUnheatedSpace: {
-					data: [],
+					data: [{
+						name: "wall to garage",
+						pitchOption: "90",
+						pitch: 90,
+						surfaceAreaOfElement: 20,
+						uValue: 1, 
+						arealHeatCapacity: 50000,
+						massDistributionClass: MassDistributionClass.D,
+						thermalResistanceOfAdjacentUnheatedSpace: 2.5,
+					}]
 				}
 			},
 			livingSpaceCeilingsAndRoofs: {
@@ -785,13 +807,44 @@ describe("FHS input mapper", () => {
 			},
 			livingSpaceDoors: {
 				livingSpaceExternalUnglazedDoor: {
-					data: []
+					data: [{
+						name: "front door",
+						pitchOption: "90",
+						pitch: 90,
+						orientation: 30,
+						height: 2.6,
+						width: 1.2,
+						elevationalHeight: 1,
+						surfaceArea: 20,
+						solarAbsorption: 0.2,
+						uValue: 1, 
+						kappaValue: 75000,
+						massDistributionClass: MassDistributionClass.I
+					}]
 				},
 				livingSpaceExternalGlazedDoor: {
 					data: []
 				},
 				livingSpaceInternalDoor: {
-					data: []
+					data: [{
+						typeOfCeiling: "heatedSpace",
+						name: "bathroom door",
+						surfaceArea: 1.4,
+						kappaValue: 50000,
+						massDistributionClass: MassDistributionClass.IE,
+						pitchOption: "90",
+						pitch: 90,
+					},
+					{
+						typeOfCeiling: "unheatedSpace",
+						name: "door to garage",
+						surfaceArea: 1.4,
+						kappaValue: 50000,
+						massDistributionClass: MassDistributionClass.IE,
+						pitchOption: "90",
+						pitch: 90,
+						thermalResistanceOfAdjacentUnheatedSpace: 2.5
+					}]
 				}
 			},
 			livingSpaceWindows: {
@@ -1160,6 +1213,60 @@ describe("FHS input mapper", () => {
 							type: "BuildingElementOpaque",
 							u_value: 1,
 							width: 5,
+						},
+						"external wall 1": {
+							type: "BuildingElementOpaque",
+							area: 20,
+							areal_heat_capacity: 75000,
+							base_height: 1,
+							height: 2.6,
+							is_external_door: false,
+							mass_distribution_class: MassDistributionClass.D,
+							orientation360: 30,
+							solar_absorption_coeff: 0.2,
+							u_value: 1,
+							width: 3,
+							pitch: 90
+						},
+						"front door": {
+							area: 20,
+							areal_heat_capacity: 75000,
+							base_height: 1,
+							height: 2.6,
+							is_external_door: true,
+							mass_distribution_class: MassDistributionClass.I,
+							orientation360: 30,
+							pitch: 90,
+							solar_absorption_coeff: 0.2,
+							type: "BuildingElementOpaque",
+							u_value: 1,
+							width: 1.2,
+						},
+						"wall to garage": {
+							area: 20,
+							areal_heat_capacity: 50000,
+							mass_distribution_class: MassDistributionClass.D,
+							pitch: 90,
+							thermal_resistance_unconditioned_space: 2.5,
+							type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+							u_value: 1,
+						},
+						"bathroom door": {
+							area: 1.4,
+							areal_heat_capacity: 50000,
+							mass_distribution_class: MassDistributionClass.IE,
+							pitch: 90,
+							type: "BuildingElementAdjacentConditionedSpace",
+							u_value: 0,
+						},
+						"door to garage": {
+							area: 1.4,
+							areal_heat_capacity: 50000,
+							mass_distribution_class: MassDistributionClass.IE,
+							pitch: 90,
+							thermal_resistance_unconditioned_space: 2.5,
+							type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+							u_value: 0,
 						}
 					},
 					SpaceHeatControl: SpaceHeatControlType.livingroom,
