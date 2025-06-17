@@ -99,26 +99,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="insulationThickness"
 			type="govInputWithSuffix"
 			label="Insulation thickness"
-			help="The thickness of insulation around the pipe"
+			help="The thickness of insulation around the pipe. Typical values are 13mm to 25mm, or 32mm or more for high performance or external pipework."
 			name="insulationThickness"
 			validation="required | number"
 			suffix-text="mm"
-		>
-			<GovDetails class="summary-text" :summary-text="`Help with this input`" classes="govuk-!-margin-bottom-4">
-				<table class="govuk-table">
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table__header">Typical values</th>
-							<td class="govuk-table__cell">
-								13 - 25 mm<br>
-								32 mm+<br>
-								(for high-performance or external pipework)
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+		/>
 		<FormKit
 			id="thermalConductivity"
 			type="govInputWithSuffix"
