@@ -192,6 +192,12 @@ describe('Ecaas Store', () => {
 				livingSpaceFloors: {
 					livingSpaceGroundFloor: {
 						complete: true
+					},
+					livingSpaceExposedFloor: {
+						complete: true
+					},
+					livingSpaceInternalFloor: {
+						complete: true
 					}
 				}
 			}
