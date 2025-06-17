@@ -1,6 +1,7 @@
 import type { SchemaFhsComplianceResponse} from "~/schema/api-schema.types";
 import {ApiPaths} from "~/schema/api-schema.types";
 import type { ApiInfoResponse, TokenResponse } from "../server.types";
+import clientSession from "../services/clientSession";
 
 const ecaasApi = {
 	getToken: async (clientId: string, clientSecret: string) => {
@@ -20,7 +21,8 @@ const ecaasApi = {
 		return await response.json() as TokenResponse;
 	},
 
-	getInfo: async (accessToken: string) => {
+	getInfo: async () => {
+		const { accessToken } = (await clientSession.get());
 		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.ApiMetadata}`;
 		const response = await fetch(uri, {
 			headers: {
@@ -31,7 +33,8 @@ const ecaasApi = {
 		return await response.json() as ApiInfoResponse;
 	},
 
-	checkCompliance: async (data: object, accessToken: string) => {
+	checkCompliance: async (data: object) => {
+		const { accessToken } = (await clientSession.get());
 		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.FHSCompliance}`;
 		const response = await fetch(uri, {
 			method: 'POST',
