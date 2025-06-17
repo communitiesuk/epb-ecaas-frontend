@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
         base: "{unstorage}",
         port: 6379,
         host: "elasticache-for-valkey-4oy4a5.serverless.euw2.cache.amazonaws.com",
+        tls: true as any,
       }),
     });
 
