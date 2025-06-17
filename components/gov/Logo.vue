@@ -6,7 +6,12 @@ interface LogoProps {
 	classes?: string;
 }
 
-const { ariaLabelText, classes, rebrand = false, useLogotype = true } = defineProps<LogoProps>();
+const {
+	ariaLabelText = undefined,
+	classes = undefined,
+	rebrand = false,
+	useLogotype = true
+} = defineProps<LogoProps>();
 
 const svgWidth = computed(() => {
 	let svgWidth = 32;

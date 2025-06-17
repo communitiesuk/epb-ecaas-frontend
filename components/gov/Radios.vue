@@ -16,7 +16,13 @@ interface RadiosProps {
 	currentValue: string | undefined;
 }
 
-const { id, showErrorState, showErrorMessage } = defineProps<RadiosProps>();
+const {
+	id,
+	showErrorState,
+	showErrorMessage,
+	help = undefined,
+	ariaDescribedBy = undefined
+} = defineProps<RadiosProps>();
 
 const { mounted } = useMounted();
 

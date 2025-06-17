@@ -1,5 +1,10 @@
 <script lang="ts" setup>
-const { field = 'elevationalHeight', ...otherProps } = defineProps<{
+const {
+	field = 'elevationalHeight',
+	label = undefined,
+	help = undefined,
+	minmax = undefined
+} = defineProps<{
 	field?: string;
 	label?: string;
 	help?: string;
@@ -13,8 +18,8 @@ interface MinMax {
 
 let min: number | undefined;
 let max: number | undefined;
-if (otherProps.minmax) {
-	const { min: minParam, max: maxParam } = otherProps.minmax;
+if (minmax) {
+	const { min: minParam, max: maxParam } = minmax;
 	min = minParam;
 	max = maxParam;
 }

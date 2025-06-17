@@ -1,5 +1,5 @@
 import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
-import { mapDistantShadingData, mapDwellingDetailsData, mapExternalFactorsData, mapGeneralSpecificationsData } from './dwellingDetailsMapper';
+import { mapDistantShadingData, mapExternalFactorsData, mapGeneralSpecificationsData } from './dwellingDetailsMapper';
 
 describe('dwelling details mapper', () => {
 	const store = useEcaasStore();
