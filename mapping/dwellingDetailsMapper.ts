@@ -25,8 +25,6 @@ export function mapGeneralSpecificationsData(state: ResolvedState): Pick<FhsInpu
 		NumberOfBedrooms: generalSpecifications.numOfBedrooms,
 		...(generalSpecifications.partGCompliance !== undefined ? {PartGcompliance: generalSpecifications.partGCompliance} : {}),
 		...(generalSpecifications.coolingRequired !== undefined ? {PartO_active_cooling_required: generalSpecifications.coolingRequired} : {}),
-		PartGcompliance: generalSpecifications.partGCompliance,
-		PartO_active_cooling_required: generalSpecifications.coolingRequired
 	};
 }
 

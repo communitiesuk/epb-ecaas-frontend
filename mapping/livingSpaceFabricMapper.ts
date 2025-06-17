@@ -228,19 +228,33 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> {
 	const { livingSpaceCeilings, livingSpaceRoofs, livingSpaceUnheatedPitchedRoofs } = state.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
 
-	const ceilingData: { [key: string]: SchemaBuildingElement }[] = livingSpaceCeilings.map(x => ({
-		[x.name]: {
-			type: x.type === 'heatedSpace' ?
-				'BuildingElementAdjacentConditionedSpace' :
-				'BuildingElementAdjacentUnconditionedSpace_Simple',
-			pitch: x.pitch,
+	const ceilingData: { [key: string]: SchemaBuildingElement }[] = livingSpaceCeilings.map(x => {
+		const commonFields = {
+			pitch: x.pitch!,
 			area: x.surfaceArea,
-			u_value: x.type === 'unheatedSpace' ? x.uValue : defaultUValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
-			thermal_resistance_unconditioned_space: x.type === 'heatedSpace' ? 0 : x.thermalResistanceOfAdjacentUnheatedSpace!
-		}
-	}));
+		};
+
+		let ceiling: SchemaBuildingElement;
+
+		if (x.type === AdjacentSpaceType.unheatedSpace) {
+			ceiling = {
+				...commonFields,
+				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
+				u_value: x.uValue
+			};
+		} else {
+			ceiling = {
+				...commonFields,
+				type: "BuildingElementAdjacentConditionedSpace",
+				u_value: defaultUValue
+			};
+		};
+
+		return {[x.name]: ceiling};
+	});
 
 	const roofData: { [key: string]: SchemaBuildingElement }[] = livingSpaceRoofs.map(x => ({
 		[x.name]: {

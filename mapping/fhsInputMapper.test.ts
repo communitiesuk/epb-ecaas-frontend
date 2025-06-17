@@ -1,3 +1,5 @@
+import Ajv2020, { type ValidateFunction } from "ajv/dist/2020";
+import fhsSchema from "../schema/fhs_input.schema.json";
 import { BatteryLocation, BuildType, ColdWaterSourceType, DuctShape, DuctType, FloorType, FuelType, HeatingControlType, MassDistributionClass, MVHRLocation, ShadingObjectType, SpaceCoolSystemType, SpaceHeatControlType, SupplyAirFlowRateControlType, SupplyAirTemperatureControlType, TerrainClass, VentilationShieldClass, VentType } from "~/schema/api-schema.types";
 import { mapFhsInputData, type FhsInputSchema } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
@@ -6,6 +8,538 @@ const baseForm = {
 	data: [],
 	complete: true,
 };
+
+const expectedHouseInput: FhsInputSchema = {
+	ColdWaterSource: {
+		[ColdWaterSourceType.mains_water]: {
+			start_day: 0,
+			temperatures: [3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
+			time_series_step: 1
+		}
+	},
+	Control: {},
+	EnergySupply: {
+		['mains elec']: {
+			fuel: FuelType.electricity,
+			is_export_capable: true,
+		}
+	},
+	Events: {},
+	ExternalConditions: {
+		shading_segments: [{
+			end360: 90,
+			number: 1,
+			shading: [{
+				distance: 1,
+				height: 2,
+				type: ShadingObjectType.obstacle
+			}],
+			start360: 60,
+		}]
+	},
+	General: {
+		build_type: BuildType.house,
+		storeys_in_building: 2,
+	},
+	HeatingControlType: HeatingControlType.SeparateTempControl,
+	HotWaterDemand: {
+		Shower: {
+			"some-mixed-shower-name": {
+				ColdWaterSource: ColdWaterSourceType.mains_water,
+				flowrate: 14,
+				type: "MixerShower"
+			},
+		},
+		Bath: {},
+		Distribution: [],
+		Other: {}
+	},
+	HotWaterSource: {
+		"hw cylinder": {
+			ColdWaterSource: ColdWaterSourceType.mains_water,
+			HeatSource: {
+				["some-heat-pump-name"]: {
+					name: "some-heat-pump-name",
+					EnergySupply: "mains elec",
+					heater_position: 0.1,
+					type: "HeatSourceWet",
+					temp_flow_limit_upper: 65,
+					thermostat_position: 0.33
+				},
+			},
+			daily_losses: 34,
+			volume: 200,
+			type: "StorageTank"
+		}
+	},
+	InfiltrationVentilation: {
+		CombustionAppliances: {},
+		Cowls: {},
+		Leaks: {
+			ventilation_zone_height: 8,
+			env_area: 320,
+			test_pressure: 40,
+			test_result: 4
+		},
+		MechanicalVentilation: {
+			"kitchen exhaust fan": {
+				EnergySupply: "mains elec",
+				design_outdoor_air_flow_rate: 55,
+				sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
+				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
+				vent_type: VentType.Intermittent_MEV,
+				measured_air_flow_rate: 37,
+				measured_fan_power: 12.26,
+			}
+		},
+		PDUs: {},
+		Vents: {
+			"only vent": {
+				area_cm2: 75,
+				mid_height_air_flow_path: 1.9,
+				orientation360: 90,
+				pitch: 180,
+				pressure_difference_ref: 4
+			}
+		},
+		ach_max_static_calcs: 2,
+		altitude: 100,
+		cross_vent_factor: false,
+		noise_nuisance: false,
+		shield_class: VentilationShieldClass.Shielded,
+		terrain_class: TerrainClass.Suburban,
+		vent_opening_ratio_init: 1,
+		ventilation_zone_base_height: 3,
+	},
+	InternalGains: {},
+	NumberOfBedrooms: 7,
+	OnSiteGeneration: {},
+	SimulationTime: {
+		start: 0,
+		end: 8,
+		step: 1
+	},
+	SpaceCoolSystem: {
+		"some-aircon-unit-name": {
+			type: SpaceCoolSystemType.AirConditioning,
+			EnergySupply: "mains elec",
+			cooling_capacity: 60,
+			efficiency: 4,
+			frac_convective: 0.2
+		}
+	},
+	SpaceHeatSystem: {
+		"some-wet-distribution": {
+			type: "WetDistribution",
+			HeatSource: {
+				name: "some-heat-pump-name",
+			},
+			Zone: "zone 1",
+			design_flow_temp: 12,
+			ecodesign_controller: {
+				ecodesign_control_class: 8,
+				max_outdoor_temp: 34,
+				min_flow_temp: 21,
+				min_outdoor_temp: 20
+			},
+			emitters: [
+				{
+					c: 9,
+					frac_convective: 4,
+					n: 3,
+					wet_emitter_type: "radiator"
+				},
+				{
+					c: 9,
+					frac_convective: 4,
+					n: 3,
+					wet_emitter_type: "radiator"
+				}
+			],
+			temp_diff_emit_dsgn: 31,
+			thermal_mass: 23,
+		}
+	},
+	GroundFloorArea: 50,
+	Zone: {
+		"zone 1": {
+			BuildingElement: {
+				"ground-floor": {
+					type: 'BuildingElementGround',
+					area: 40,
+					total_area: 50,
+					u_value: 1,
+					thermal_resistance_floor_construction: 1,
+					areal_heat_capacity: 50000,
+					mass_distribution_class: MassDistributionClass.I,
+					perimeter: 100,
+					psi_wall_floor_junc: 1,
+					floor_type: FloorType.Slab_no_edge_insulation,
+					pitch: 0,
+					thickness_walls: 0
+				}
+			},
+			Lighting: {
+				efficacy: 56.0,
+				bulbs: {
+					incandescent: {
+						count: 5,
+						power: 8,
+						efficacy: 18
+					},
+					led: {
+						count: 10,
+						power: 3,
+						efficacy: 150
+					}
+				}
+			},
+			SpaceCoolSystem: ["some-aircon-unit-name"],
+			SpaceHeatControl: SpaceHeatControlType.livingroom,
+			SpaceHeatSystem: ["some-wet-distribution"],
+			ThermalBridging: {},
+			area: 100,
+			volume: 300,
+		}
+	},
+};
+
+const expectedFlatInput: FhsInputSchema = {
+	ColdWaterSource: {
+		[ColdWaterSourceType.mains_water]: {
+			start_day: 0,
+			temperatures: [3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
+			time_series_step: 1
+		}
+	},
+	Control: {},
+	EnergySupply: {
+		['mains elec']: {
+			fuel: FuelType.electricity,
+			is_export_capable: true,
+		}
+	},
+	Events: {},
+	ExternalConditions: {
+		shading_segments: []
+	},
+	General: {
+		build_type: BuildType.flat,
+		storeys_in_building: 6,
+		storey_of_dwelling: 3
+	},
+	HeatingControlType: HeatingControlType.SeparateTimeAndTempControl,
+	HotWaterDemand: {
+		Shower: {
+			"some-mixed-shower-name": {
+				ColdWaterSource: ColdWaterSourceType.mains_water,
+				flowrate: 14,
+				type: "MixerShower"
+			},
+		},
+		Bath: {},
+		Distribution: [],
+		Other: {}
+	},
+	HotWaterSource: {
+		"hw cylinder": {
+			ColdWaterSource: ColdWaterSourceType.mains_water,
+			HeatSource: {
+				["heat pump 1 name"]: {
+					name: "heat pump 1 name",
+					EnergySupply: "mains elec",
+					heater_position: 0.1,
+					type: "HeatSourceWet",
+					temp_flow_limit_upper: 65,
+					thermostat_position: 0.33
+				},
+			},
+			daily_losses: 10,
+			volume: 80,
+			type: "StorageTank"
+		}
+	},
+	InfiltrationVentilation: {
+		CombustionAppliances: {},
+		Cowls: {},
+		Leaks: {
+			ventilation_zone_height: 1,
+			env_area: 5,
+			test_pressure: 20,
+			test_result: 10
+		},
+		MechanicalVentilation: {
+			"mvhr vent 1 name": {
+				EnergySupply: "mains elec",
+				design_outdoor_air_flow_rate: 17,
+				sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
+				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
+				vent_type: VentType.MVHR,
+				measured_air_flow_rate: 37,
+				measured_fan_power: 12.26,
+				mvhr_eff: 1,
+				mvhr_location: MVHRLocation.inside,
+				ductwork: [{
+					cross_section_shape: DuctShape.circular,
+					duct_type: DuctType.supply,
+					internal_diameter_mm: 50,
+					external_diameter_mm: 55,
+					insulation_thermal_conductivity: 1,
+					insulation_thickness_mm: 5,
+					length: 4,
+					reflective: true
+				}]
+			},
+			"mvhr vent 2 name": {
+				EnergySupply: "mains elec",
+				design_outdoor_air_flow_rate: 3,
+				sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
+				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
+				vent_type: VentType.MVHR,
+				measured_air_flow_rate: 37,
+				measured_fan_power: 12.26,
+				mvhr_eff: 0,
+				mvhr_location: MVHRLocation.outside,
+				ductwork: []
+			},
+			"centralised MEV name": {
+				EnergySupply: "mains elec",
+				design_outdoor_air_flow_rate: 8,
+				sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
+				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
+				vent_type: VentType.Centralised_continuous_MEV,
+				measured_air_flow_rate: 37,
+				measured_fan_power: 12.26,
+			}
+		},
+		PDUs: {},
+		Vents: {
+			"only vent": {
+				area_cm2: 75,
+				mid_height_air_flow_path: 1.9,
+				orientation360: 90,
+				pitch: 180,
+				pressure_difference_ref: 4
+			}
+		},
+		ach_max_static_calcs: 2,
+		altitude: 30,
+		cross_vent_factor: true,
+		noise_nuisance: true,
+		shield_class: VentilationShieldClass.Normal,
+		terrain_class: TerrainClass.OpenField,
+		vent_opening_ratio_init: 1,
+		ventilation_zone_base_height: 1,
+	},
+	InternalGains: {},
+	NumberOfBedrooms: 2,
+	OnSiteGeneration: {},
+	SimulationTime: {
+		start: 0,
+		end: 8,
+		step: 1
+	},
+	SpaceCoolSystem: {},
+	SpaceHeatSystem: {},
+	GroundFloorArea: 26,
+	Zone: {
+		"zone 1": {
+			BuildingElement: {
+				"ground floor 1": {
+					type: 'BuildingElementGround',
+					area: 12,
+					total_area: 26,
+					u_value: 5,
+					thermal_resistance_floor_construction: 2,
+					areal_heat_capacity: 50000,
+					mass_distribution_class: MassDistributionClass.E,
+					perimeter: 40,
+					edge_insulation: [{
+						edge_thermal_resistance: 2.4,
+						type: "horizontal",
+						width: 7
+					}],
+					psi_wall_floor_junc: 0.4,
+					floor_type: FloorType.Slab_edge_insulation,
+					pitch: 0,
+					thickness_walls: 0
+				},
+				"ground floor 2": {
+					type: 'BuildingElementGround',
+					area: 9,
+					total_area: 26,
+					depth_basement_floor: 2,
+					u_value: 5,
+					thermal_resistance_floor_construction: 2,
+					areal_heat_capacity: 50000,
+					mass_distribution_class: MassDistributionClass.D,
+					perimeter: 21,
+					thermal_resist_walls_base: 3,
+					psi_wall_floor_junc: 0.8,
+					floor_type: FloorType.Heated_basement,
+					pitch: 0,
+					thickness_walls: 1
+				},
+				"internal floor 1": {
+					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+					area: 6,
+					areal_heat_capacity: 50000,
+					mass_distribution_class: MassDistributionClass.IE,
+					thermal_resistance_unconditioned_space: 1,
+					pitch: 180,
+					u_value: 0.01
+				},
+				"internal floor 2": {
+					type: "BuildingElementAdjacentConditionedSpace",
+					area: 4, 
+					u_value: 0.01,
+					areal_heat_capacity: 110000,
+					mass_distribution_class: MassDistributionClass.M,
+					pitch: 180,
+				},
+				"exposed floor 1": {
+					height: 5,
+					width: 2,
+					base_height: 1,
+					area: 10,
+					solar_absorption_coeff: 0.4,
+					areal_heat_capacity: 110000,
+					mass_distribution_class: MassDistributionClass.D,
+					pitch: 180,
+					orientation360: 0,
+					u_value: 0.1,
+					type: "BuildingElementOpaque",
+					is_external_door: false
+				},
+				"party wall 1": {
+					area: 15,
+					areal_heat_capacity: 50000,
+					base_height: 1,
+					height: 3,
+					is_external_door: false,
+					mass_distribution_class: MassDistributionClass.E,
+					orientation360: 80,
+					pitch: 90,
+					solar_absorption_coeff: 0.6,
+					type: "BuildingElementOpaque",
+					u_value: 1,
+					width: 5,
+				},
+				"external wall 1": {
+					type: "BuildingElementOpaque",
+					area: 20,
+					areal_heat_capacity: 75000,
+					base_height: 1,
+					height: 2.6,
+					is_external_door: false,
+					mass_distribution_class: MassDistributionClass.D,
+					orientation360: 30,
+					solar_absorption_coeff: 0.2,
+					u_value: 1,
+					width: 3,
+					pitch: 90
+				},
+				"internal wall 1": {
+					area: 15,
+					areal_heat_capacity: 50000,
+					mass_distribution_class: MassDistributionClass.I,
+					pitch: 100,
+					type: "BuildingElementAdjacentConditionedSpace",
+					u_value: 0,
+				},
+				"front door": {
+					area: 20,
+					areal_heat_capacity: 75000,
+					base_height: 1,
+					height: 2.6,
+					is_external_door: true,
+					mass_distribution_class: MassDistributionClass.I,
+					orientation360: 30,
+					pitch: 90,
+					solar_absorption_coeff: 0.2,
+					type: "BuildingElementOpaque",
+					u_value: 1,
+					width: 1.2,
+				},
+				"wall to garage": {
+					area: 20,
+					areal_heat_capacity: 50000,
+					mass_distribution_class: MassDistributionClass.D,
+					pitch: 90,
+					thermal_resistance_unconditioned_space: 2.5,
+					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+					u_value: 1,
+				},
+				"ceiling to heated space": {
+					type: "BuildingElementAdjacentConditionedSpace",
+					area: 16,
+					areal_heat_capacity: 75000,
+					mass_distribution_class: MassDistributionClass.I,
+					pitch: 0,
+					u_value: 0,
+				},	
+				"ceiling to unheated space": {
+					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+					area: 20,
+					areal_heat_capacity: 60000,
+					mass_distribution_class: MassDistributionClass.IE,
+					pitch: 45,
+					thermal_resistance_unconditioned_space: 3.4,
+					u_value: 2.2
+				},
+				"bathroom door": {
+					area: 1.4,
+					areal_heat_capacity: 50000,
+					mass_distribution_class: MassDistributionClass.IE,
+					pitch: 90,
+					type: "BuildingElementAdjacentConditionedSpace",
+					u_value: 0,
+				},
+				"door to garage": {
+					area: 1.4,
+					areal_heat_capacity: 50000,
+					mass_distribution_class: MassDistributionClass.IE,
+					pitch: 90,
+					thermal_resistance_unconditioned_space: 2.5,
+					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+					u_value: 0,
+				}
+			},
+			SpaceHeatControl: SpaceHeatControlType.livingroom,
+			SpaceCoolSystem: [],
+			SpaceHeatSystem: [],
+			ThermalBridging: {},
+			Lighting: {
+				efficacy: 56.0,
+				bulbs: {
+					incandescent: {
+						count: 5,
+						power: 8,
+						efficacy: 18
+					},
+					led: {
+						count: 10,
+						power: 3,
+						efficacy: 150
+					}
+				}
+			},
+			area: 16,
+			volume: 550,
+		}
+	},
+};
+
+// custom vitest matcher so we can get more useful JSON validation errors
+expect.extend({
+	toPassJsonSchema(isValid: boolean, validator: ValidateFunction<unknown>) {
+		const errors = validator.errors?.map(({ message }) => message).join("; ");
+		return {
+			message: () => isValid ? '' : `JSON validation errors: ${ errors }`,
+			pass: isValid		
+		};
+	}
+});
 
 describe("FHS input mapper", () => {
 	const store = useEcaasStore();
@@ -377,200 +911,7 @@ describe("FHS input mapper", () => {
 
 		store.$state = state;
 
-		const expectedResult: FhsInputSchema = {
-			ColdWaterSource: {
-				[ColdWaterSourceType.mains_water]: {
-					start_day: 0,
-					temperatures: [3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
-					time_series_step: 1
-				}
-			},
-			Control: {},
-			EnergySupply: {
-				['mains elec']: {
-					fuel: FuelType.electricity,
-					is_export_capable: true,
-				}
-			},
-			Events: {},
-			ExternalConditions: {
-				shading_segments: [{
-					end360: 90,
-					number: 1,
-					shading: [{
-						distance: 1,
-						height: 2,
-						type: ShadingObjectType.obstacle
-					}],
-					start360: 60,
-				}]
-			},
-			General: {
-				build_type: BuildType.house,
-				storeys_in_building: 2,
-			},
-			HeatingControlType: HeatingControlType.SeparateTempControl,
-			HotWaterDemand: {
-				Shower: {
-					"some-mixed-shower-name": {
-						ColdWaterSource: ColdWaterSourceType.mains_water,
-						flowrate: 14,
-						type: "MixerShower"
-					},
-				},
-				Bath: {},
-				Distribution: [],
-				Other: {}
-			},
-			HotWaterSource: {
-				"hw cylinder": {
-					ColdWaterSource: ColdWaterSourceType.mains_water,
-					HeatSource: {
-						["some-heat-pump-name"]: {
-							name: "some-heat-pump-name",
-							EnergySupply: "mains elec",
-							heater_position: 0.1,
-							type: "HeatSourceWet",
-							temp_flow_limit_upper: 65,
-							thermostat_position: 0.33
-						},
-					},
-					daily_losses: 34,
-					volume: 200,
-					type: "StorageTank"
-				}
-			},
-			InfiltrationVentilation: {
-				CombustionAppliances: {},
-				Cowls: {},
-				Leaks: {
-					ventilation_zone_height: 8,
-					env_area: 320,
-					test_pressure: 40,
-					test_result: 4
-				},
-				MechanicalVentilation: {
-					"kitchen exhaust fan": {
-						EnergySupply: "mains elec",
-						design_outdoor_air_flow_rate: 55,
-						sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
-						sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
-						vent_type: VentType.Intermittent_MEV,
-						measured_air_flow_rate: 37,
-						measured_fan_power: 12.26,
-					}
-				},
-				PDUs: {},
-				Vents: {
-					"only vent": {
-						area_cm2: 75,
-						mid_height_air_flow_path: 1.9,
-						orientation360: 90,
-						pitch: 180,
-						pressure_difference_ref: 4
-					}
-				},
-				ach_max_static_calcs: 2,
-				altitude: 100,
-				cross_vent_factor: false,
-				noise_nuisance: false,
-				shield_class: VentilationShieldClass.Shielded,
-				terrain_class: TerrainClass.Suburban,
-				vent_opening_ratio_init: 1,
-				ventilation_zone_base_height: 3,
-			},
-			InternalGains: {},
-			NumberOfBedrooms: 7,
-			OnSiteGeneration: {},
-			SimulationTime: {
-				start: 0,
-				end: 8,
-				step: 1
-			},
-			SpaceCoolSystem: {
-				"some-aircon-unit-name": {
-					type: SpaceCoolSystemType.AirConditioning,
-					EnergySupply: "mains elec",
-					cooling_capacity: 60,
-					efficiency: 4,
-					frac_convective: 0.2
-				}
-			},
-			SpaceHeatSystem: {
-				"some-wet-distribution": {
-					type: "WetDistribution",
-					HeatSource: {
-						name: "some-heat-pump-name",
-					},
-					Zone: "zone 1",
-					design_flow_temp: 12,
-					ecodesign_controller: {
-						ecodesign_control_class: 8,
-						max_outdoor_temp: 34,
-						min_flow_temp: 21,
-						min_outdoor_temp: 20
-					},
-					emitters: [
-						{
-							c: 9,
-							frac_convective: 4,
-							n: 3,
-							wet_emitter_type: "radiator"
-						},
-						{
-							c: 9,
-							frac_convective: 4,
-							n: 3,
-							wet_emitter_type: "radiator"
-						}
-					],
-					temp_diff_emit_dsgn: 31,
-					thermal_mass: 23,
-				}
-			},
-			GroundFloorArea: 50,
-			Zone: {
-				"zone 1": {
-					BuildingElement: {
-						"ground-floor": {
-							type: 'BuildingElementGround',
-							area: 40,
-							total_area: 50,
-							u_value: 1,
-							thermal_resistance_floor_construction: 1,
-							areal_heat_capacity: 50000,
-							mass_distribution_class: MassDistributionClass.I,
-							perimeter: 100,
-							psi_wall_floor_junc: 1,
-							floor_type: FloorType.Slab_no_edge_insulation,
-							pitch: 0,
-							thickness_walls: 0
-						}
-					},
-					Lighting: {
-						efficacy: 56.0,
-						bulbs: {
-							incandescent: {
-								count: 5,
-								power: 8,
-								efficacy: 18
-							},
-							led: {
-								count: 10,
-								power: 3,
-								efficacy: 150
-							}
-						}
-					},
-					SpaceCoolSystem: ["some-aircon-unit-name"],
-					SpaceHeatControl: SpaceHeatControlType.livingroom,
-					SpaceHeatSystem: ["some-wet-distribution"],
-					ThermalBridging: {},
-					area: 100,
-					volume: 300,
-				}
-			},
-		};
+		const expectedResult: FhsInputSchema = expectedHouseInput;
 
 		// Act
 		const fhsInputData = mapFhsInputData(resolveState(store.$state));
@@ -769,11 +1110,23 @@ describe("FHS input mapper", () => {
 						surfaceAreaOfElement: 4,
 						kappaValue: 110000,
 						massDistributionClass: MassDistributionClass.M,
-					}
-					]
+					}]
 				},
 				livingSpaceExposedFloor: {
 					...baseForm,
+					data: [{
+						name: "exposed floor 1",
+						length: 5,
+						width: 2,
+						elevationalHeight: 1,
+						surfaceArea: 10,
+						solarAbsorption: 0.4,
+						kappaValue: 110000,
+						massDistributionClass: MassDistributionClass.D,
+						pitch: 180,
+						orientation: 0,
+						uValue: 0.1,
+					}]
 				}
 			},
 			livingSpaceWalls: {
@@ -839,6 +1192,26 @@ describe("FHS input mapper", () => {
 			livingSpaceCeilingsAndRoofs: {
 				livingSpaceCeilings: {
 					...baseForm,
+					data: [
+						{
+							name: "ceiling to heated space",
+							type: AdjacentSpaceType.heatedSpace,
+							surfaceArea: 16,
+							kappaValue: 75000,
+							massDistributionClass: MassDistributionClass.I,
+							pitch: 0,
+						},
+						{
+							name: "ceiling to unheated space",
+							type: AdjacentSpaceType.unheatedSpace,
+							surfaceArea: 20,
+							kappaValue: 60000,
+							massDistributionClass: MassDistributionClass.IE,
+							pitch: 45,
+							thermalResistanceOfAdjacentUnheatedSpace: 3.4,
+							uValue: 2.2
+						}
+					]
 				},
 				livingSpaceRoofs: {
 					...baseForm,
@@ -1056,300 +1429,7 @@ describe("FHS input mapper", () => {
 
 		store.$state = state;
 
-		const expectedResult: FhsInputSchema = {
-			ColdWaterSource: {
-				[ColdWaterSourceType.mains_water]: {
-					start_day: 0,
-					temperatures: [3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
-					time_series_step: 1
-				}
-			},
-			Control: {},
-			EnergySupply: {
-				['mains elec']: {
-					fuel: FuelType.electricity,
-					is_export_capable: true,
-				}
-			},
-			Events: {},
-			ExternalConditions: {
-				shading_segments: []
-			},
-			General: {
-				build_type: BuildType.flat,
-				storeys_in_building: 6,
-				storey_of_dwelling: 3
-			},
-			HeatingControlType: HeatingControlType.SeparateTimeAndTempControl,
-			HotWaterDemand: {
-				Shower: {
-					"some-mixed-shower-name": {
-						ColdWaterSource: ColdWaterSourceType.mains_water,
-						flowrate: 14,
-						type: "MixerShower"
-					},
-				},
-				Bath: {},
-				Distribution: [],
-				Other: {}
-			},
-			HotWaterSource: {
-				"hw cylinder": {
-					ColdWaterSource: ColdWaterSourceType.mains_water,
-					HeatSource: {
-						["heat pump 1 name"]: {
-							name: "heat pump 1 name",
-							EnergySupply: "mains elec",
-							heater_position: 0.1,
-							type: "HeatSourceWet",
-							temp_flow_limit_upper: 65,
-							thermostat_position: 0.33
-						},
-					},
-					daily_losses: 10,
-					volume: 80,
-					type: "StorageTank"
-				}
-			},
-			InfiltrationVentilation: {
-				CombustionAppliances: {},
-				Cowls: {},
-				Leaks: {
-					ventilation_zone_height: 1,
-					env_area: 5,
-					test_pressure: 20,
-					test_result: 10
-				},
-				MechanicalVentilation: {
-					"mvhr vent 1 name": {
-						EnergySupply: "mains elec",
-						design_outdoor_air_flow_rate: 17,
-						sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
-						sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
-						vent_type: VentType.MVHR,
-						measured_air_flow_rate: 37,
-						measured_fan_power: 12.26,
-						mvhr_eff: 1,
-						mvhr_location: MVHRLocation.inside,
-						ductwork: [{
-							cross_section_shape: DuctShape.circular,
-							duct_type: DuctType.supply,
-							internal_diameter_mm: 50,
-							external_diameter_mm: 55,
-							insulation_thermal_conductivity: 1,
-							insulation_thickness_mm: 5,
-							length: 4,
-							reflective: true
-						}]
-					},
-					"mvhr vent 2 name": {
-						EnergySupply: "mains elec",
-						design_outdoor_air_flow_rate: 3,
-						sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
-						sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
-						vent_type: VentType.MVHR,
-						measured_air_flow_rate: 37,
-						measured_fan_power: 12.26,
-						mvhr_eff: 0,
-						mvhr_location: MVHRLocation.outside,
-						ductwork: []
-					},
-					"centralised MEV name": {
-						EnergySupply: "mains elec",
-						design_outdoor_air_flow_rate: 8,
-						sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
-						sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
-						vent_type: VentType.Centralised_continuous_MEV,
-						measured_air_flow_rate: 37,
-						measured_fan_power: 12.26,
-					}
-				},
-				PDUs: {},
-				Vents: {
-					"only vent": {
-						area_cm2: 75,
-						mid_height_air_flow_path: 1.9,
-						orientation360: 90,
-						pitch: 180,
-						pressure_difference_ref: 4
-					}
-				},
-				ach_max_static_calcs: 2,
-				altitude: 30,
-				cross_vent_factor: true,
-				noise_nuisance: true,
-				shield_class: VentilationShieldClass.Normal,
-				terrain_class: TerrainClass.OpenField,
-				vent_opening_ratio_init: 1,
-				ventilation_zone_base_height: 1,
-			},
-			InternalGains: {},
-			NumberOfBedrooms: 2,
-			OnSiteGeneration: {},
-			SimulationTime: {
-				start: 0,
-				end: 8,
-				step: 1
-			},
-			SpaceCoolSystem: {},
-			SpaceHeatSystem: {},
-			GroundFloorArea: 26,
-			Zone: {
-				"zone 1": {
-					BuildingElement: {
-						"ground floor 1": {
-							type: 'BuildingElementGround',
-							area: 12,
-							total_area: 26,
-							u_value: 5,
-							thermal_resistance_floor_construction: 2,
-							areal_heat_capacity: 50000,
-							mass_distribution_class: MassDistributionClass.E,
-							perimeter: 40,
-							edge_insulation: [{
-								edge_thermal_resistance: 2.4,
-								type: "horizontal",
-								width: 7
-							}],
-							psi_wall_floor_junc: 0.4,
-							floor_type: FloorType.Slab_edge_insulation,
-							pitch: 0,
-							thickness_walls: 0
-						},
-						"ground floor 2": {
-							type: 'BuildingElementGround',
-							area: 9,
-							total_area: 26,
-							depth_basement_floor: 2,
-							u_value: 5,
-							thermal_resistance_floor_construction: 2,
-							areal_heat_capacity: 50000,
-							mass_distribution_class: MassDistributionClass.D,
-							perimeter: 21,
-							thermal_resist_walls_base: 3,
-							psi_wall_floor_junc: 0.8,
-							floor_type: FloorType.Heated_basement,
-							pitch: 0,
-							thickness_walls: 1
-						},
-						"internal floor 1": {
-							type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-							area: 6,
-							areal_heat_capacity: 50000,
-							mass_distribution_class: MassDistributionClass.IE,
-							thermal_resistance_unconditioned_space: 1,
-							pitch: 180,
-							u_value: 0.01
-						},
-						"internal floor 2": {
-							type: "BuildingElementAdjacentConditionedSpace",
-							area: 4, 
-							u_value: 0.01,
-							areal_heat_capacity: 110000,
-							mass_distribution_class: MassDistributionClass.M,
-							pitch: 180,
-						},
-						"party wall 1": {
-							area: 15,
-							areal_heat_capacity: 50000,
-							base_height: 1,
-							height: 3,
-							is_external_door: false,
-							mass_distribution_class: MassDistributionClass.E,
-							orientation360: 80,
-							pitch: 90,
-							solar_absorption_coeff: 0.6,
-							type: "BuildingElementOpaque",
-							u_value: 1,
-							width: 5,
-						},
-						"external wall 1": {
-							type: "BuildingElementOpaque",
-							area: 20,
-							areal_heat_capacity: 75000,
-							base_height: 1,
-							height: 2.6,
-							is_external_door: false,
-							mass_distribution_class: MassDistributionClass.D,
-							orientation360: 30,
-							solar_absorption_coeff: 0.2,
-							u_value: 1,
-							width: 3,
-							pitch: 90
-						},
-						"internal wall 1": {
-							area: 15,
-							areal_heat_capacity: 50000,
-							mass_distribution_class: MassDistributionClass.I,
-							pitch: 100,
-							type: "BuildingElementAdjacentConditionedSpace",
-							u_value: 0,
-						},
-						"front door": {
-							area: 20,
-							areal_heat_capacity: 75000,
-							base_height: 1,
-							height: 2.6,
-							is_external_door: true,
-							mass_distribution_class: MassDistributionClass.I,
-							orientation360: 30,
-							pitch: 90,
-							solar_absorption_coeff: 0.2,
-							type: "BuildingElementOpaque",
-							u_value: 1,
-							width: 1.2,
-						},
-						"wall to garage": {
-							area: 20,
-							areal_heat_capacity: 50000,
-							mass_distribution_class: MassDistributionClass.D,
-							pitch: 90,
-							thermal_resistance_unconditioned_space: 2.5,
-							type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-							u_value: 1,
-						},
-						"bathroom door": {
-							area: 1.4,
-							areal_heat_capacity: 50000,
-							mass_distribution_class: MassDistributionClass.IE,
-							pitch: 90,
-							type: "BuildingElementAdjacentConditionedSpace",
-							u_value: 0,
-						},
-						"door to garage": {
-							area: 1.4,
-							areal_heat_capacity: 50000,
-							mass_distribution_class: MassDistributionClass.IE,
-							pitch: 90,
-							thermal_resistance_unconditioned_space: 2.5,
-							type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-							u_value: 0,
-						}
-					},
-					SpaceHeatControl: SpaceHeatControlType.livingroom,
-					SpaceCoolSystem: [],
-					SpaceHeatSystem: [],
-					ThermalBridging: {},
-					Lighting: {
-						efficacy: 56.0,
-						bulbs: {
-							incandescent: {
-								count: 5,
-								power: 8,
-								efficacy: 18
-							},
-							led: {
-								count: 10,
-								power: 3,
-								efficacy: 150
-							}
-						}
-					},
-					area: 16,
-					volume: 550,
-				}
-			},
-		};
+		const expectedResult: FhsInputSchema = expectedFlatInput;
 
 		// Act
 		const fhsInputData = mapFhsInputData(resolveState(store.$state));
@@ -1357,5 +1437,17 @@ describe("FHS input mapper", () => {
 		// Assert
 		expect(fhsInputData).toBeDefined();
 		expect(fhsInputData).toEqual(expectedResult);   
+	});
+
+	test('the expected results pass against the current FHS input schema', () => {
+		const expectedsToTest = [expectedHouseInput, expectedFlatInput];
+
+		const ajv = new Ajv2020({ strict: false });
+
+		const validate = ajv.compile(fhsSchema);
+
+		for (const input of expectedsToTest) {
+			expect(validate(input)).toPassJsonSchema(validate);
+		}
 	});
 });
