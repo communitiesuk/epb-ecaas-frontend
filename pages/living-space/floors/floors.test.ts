@@ -21,7 +21,7 @@ describe('floors', () => {
 	const ground1: GroundFloorData = {
 		name: "ground1 name",
 		surfaceAreaInZone: 5,
-		surfaceAreaAllZones: 0,
+		surfaceAreaAllZones: 10,
 		pitch: 0,
 		uValue: 1,
 		thermalResistanceOfFloorConstruction: 1,
@@ -61,33 +61,27 @@ describe('floors', () => {
 	};
 	
 	const internal1: InternalFloorData = {
-		typeOfInternalFloor: 'heatedSpace',
+		typeOfInternalFloor: InternalFloorType.heatedSpace,
 		name: "internal1 name",
 		surfaceAreaOfElement: 5,
-		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
-		pitch: 0
 	};
 
 	const internal2: InternalFloorData = {
-		typeOfInternalFloor: 'heatedSpace',
+		typeOfInternalFloor: InternalFloorType.heatedSpace,
 		name: "internal2 name",
 		surfaceAreaOfElement: 5,
-		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
-		pitch: 0
 	};
 
 	const internal3: InternalFloorData = {
-		typeOfInternalFloor: 'heatedSpace',
+		typeOfInternalFloor: InternalFloorType.heatedSpace,
 		name: "internal3 name",
 		surfaceAreaOfElement: 5,
-		uValue: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
-		pitch: 0
 	};
 
 	const exposed1: ExposedFloorData = {

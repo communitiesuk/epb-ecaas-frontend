@@ -4,7 +4,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type FloorType = keyof typeof store.livingSpaceFabric.livingSpaceFloors;
-interface FloorData extends GroundFloorData, InternalFloorData, ExposedFloorData {};
+type FloorData = GroundFloorData & InternalFloorData & ExposedFloorData;
 
 function handleRemove(floorType: FloorType, index: number) {
 	const floors = store.livingSpaceFabric.livingSpaceFloors[floorType]?.data;

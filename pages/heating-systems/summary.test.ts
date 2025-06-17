@@ -1,6 +1,7 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatingSystemsSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
+import { FuelType } from "~/schema/api-schema.types";
 
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -35,23 +36,6 @@ describe("Heating systems summary page", () => {
 			await verifyDataInSection("energySupply", {"Fuel type": ""});
 		});
 
-		it("displays only the fuel type field when non-electricity, non-custom energy supply is selected", async () => {
-			const store = useEcaasStore();
-
-			store.$patch({
-				heatingSystems: {
-					energySupply: {
-						data: {
-							fuelType: ["wood", "oil"],
-						},
-					},
-				},
-			});
-
-			await renderSuspended(HeatingSystemsSummary);
-			await verifyDataInSection("energySupply", { "Fuel type": "WoodOil" });
-		});
-
 		it("displays the correct fields when electricity is selected", async () => {
 			const store = useEcaasStore();
 
@@ -59,7 +43,7 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					energySupply: {
 						data: {
-							fuelType: ["electricity"],
+							fuelType: [FuelType.electricity],
 							exported: false
 						},
 					},
@@ -80,7 +64,7 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					energySupply: {
 						data: {
-							fuelType: ["custom"],
+							fuelType: [FuelType.custom],
 							co2PerKwh: 1,
 							co2PerKwhIncludingOutOfScope: 2,
 							kwhPerKwhDelivered: 3,
@@ -105,7 +89,7 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					energySupply: {
 						data: {
-							fuelType: ["custom", "electricity"],
+							fuelType: [FuelType.custom, FuelType.electricity],
 							co2PerKwh: 1,
 							co2PerKwhIncludingOutOfScope: 2,
 							kwhPerKwhDelivered: 3,

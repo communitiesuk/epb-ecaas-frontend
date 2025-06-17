@@ -1,5 +1,5 @@
 import type { EmptyObject, TaggedUnion } from "type-fest";
-import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType } from "~/schema/api-schema.types";
+import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType, FuelType } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -63,20 +63,24 @@ export interface LivingSpaceFabric {
 
 export interface FloorsData {
 	livingSpaceGroundFloor: EcaasForm<GroundFloorData[]>,
-	livingSpaceInternalFloor?: EcaasForm<InternalFloorData[]>,
-	livingSpaceExposedFloor?: EcaasForm<ExposedFloorData[]>
+	livingSpaceInternalFloor: EcaasForm<InternalFloorData[]>,
+	livingSpaceExposedFloor: EcaasForm<ExposedFloorData[]>
+}
+
+export enum InternalFloorType {
+	heatedSpace = "heatedSpace",
+	unheatedSpace = "unheatedSpace"
 }
 
 export type InternalFloorData = {
 	name: string;
-	typeOfInternalFloor: string;
 	surfaceAreaOfElement: number;
-	uValue: number;
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
-	pitch: number;
-	thermalResistanceOfAdjacentUnheatedSpace?: number;
-};
+} & TaggedUnion<'typeOfInternalFloor', {
+	[InternalFloorType.unheatedSpace]: {thermalResistanceOfAdjacentUnheatedSpace: number;}
+	[InternalFloorType.heatedSpace]: EmptyObject;
+}>;
 
 export type ExposedFloorData = {
 	name: string;
@@ -121,10 +125,10 @@ export type GroundFloorData = {
 };
 
 export interface WallsData {
-	livingSpaceExternalWall?: EcaasForm<ExternalWallData[]>;
-	livingSpaceInternalWall?: EcaasForm<InternalWallData[]>;
-	livingSpaceWallToUnheatedSpace?: EcaasForm<WallsToUnheatedSpaceData[]>;
-	livingSpacePartyWall?: EcaasForm<PartyWallData[]>;
+	livingSpaceExternalWall: EcaasForm<ExternalWallData[]>;
+	livingSpaceInternalWall: EcaasForm<InternalWallData[]>;
+	livingSpaceWallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData[]>;
+	livingSpacePartyWall: EcaasForm<PartyWallData[]>;
 }
 
 export type ExternalWallData = {
@@ -238,9 +242,8 @@ export type ExternalUnglazedDoorData = {
 };
 
 type CommonOpenablePartsFields = {
-	frameToOpeningRatio?: number;
-	maximumOpenableArea?: number;
-	heightOpenableArea?: number;
+	maximumOpenableArea: number;
+	heightOpenableArea: number;
 };
 type OnePartFields = CommonOpenablePartsFields & {
 	midHeightOpenablePart1: number;
@@ -267,6 +270,7 @@ export type ExternalGlazedDoorData = {
 	solarTransmittance: number;
 	elevationalHeight: number;
 	midHeight: number;
+	frameToOpeningRatio: number;
 } & TaggedUnion<'numberOpenableParts', {
 	'0': EmptyObject;
 	'1': OnePartFields;
@@ -301,6 +305,7 @@ export type WindowData = {
 	solarTransmittance: number;
 	elevationalHeight: number;
 	midHeight: number;
+	frameToOpeningRatio: number;
 } & TaggedUnion<'numberOpenableParts', {
 	'0': EmptyObject;
 	'1': OnePartFields;
@@ -615,7 +620,7 @@ export type HeatInterfaceUnitData = {
 };
 
 export interface EnergySupplyData {
-	fuelType: string[];
+	fuelType: FuelType[];
 	co2PerKwh?: number;
 	co2PerKwhIncludingOutOfScope?: number;
 	kwhPerKwhDelivered?: number;

@@ -68,7 +68,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				unheatedSpace: 'Internal door to unheated space'
 			}"
 			label="Type"
-			help="Selecting the type of ceiling affects what inputs are necessary."
+			help="This affects which inputs are necessary."
 			name="typeOfCeiling"
 			validation="required"
 		/>
@@ -86,6 +86,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				name="name"
 				validation="required"
 			/>
+			<FieldsPitch
+				:pitch-option="model.pitchOption"
+				:options="{
+					'90': '90',
+					custom: 'Custom'
+				}"
+			/>
 			<FormKit
 				id="surfaceArea"
 				type="govInputWithSuffix"
@@ -97,13 +104,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
-			<FieldsPitch
-				:pitch-option="model.pitchOption"
-				:options="{
-					'90': '90',
-					custom: 'Custom'
-				}"
-			/>
 		</template>
 		<FormKit
 			v-if="model.typeOfCeiling === 'unheatedSpace'"

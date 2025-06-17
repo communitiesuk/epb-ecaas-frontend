@@ -14,18 +14,16 @@ describe('internal floor', () => {
 	const user = userEvent.setup();
 
 	const internalFloor: InternalFloorData = {
-		typeOfInternalFloor: 'heatedSpace',
+		typeOfInternalFloor: InternalFloorType.heatedSpace,
 		name: "Internal 1",
 		surfaceAreaOfElement: 5,
-		uValue: 0,
 		kappaValue: 50000,
 		massDistributionClass: MassDistributionClass.I,
-		pitch: 180
 	};
 
 	const internalFloorWithUnheatedSpace: InternalFloorData = {
 		...internalFloor,
-		typeOfInternalFloor: 'unheatedSpace',
+		typeOfInternalFloor: InternalFloorType.unheatedSpace,
 		thermalResistanceOfAdjacentUnheatedSpace: 0
 	};
 

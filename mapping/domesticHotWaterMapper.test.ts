@@ -49,7 +49,9 @@ describe('domestic hot water mapper', () => {
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
 							type: "HeatSourceWet",
-							name: heatPumpName
+							name: heatPumpName,
+							temp_flow_limit_upper: 65,
+							thermostat_position: 0.33
 						}
 					},
 					daily_losses: 3,
@@ -127,7 +129,9 @@ describe('domestic hot water mapper', () => {
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
 							type: "HeatSourceWet",
-							name: heatPumpName
+							name: heatPumpName,
+							temp_flow_limit_upper: 65,
+							thermostat_position: 0.33
 						}
 					},
 					daily_losses: 3,

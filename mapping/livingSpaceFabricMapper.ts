@@ -10,6 +10,7 @@ export function mapLivingSpaceFabricData(state: EcaasState): Partial<FhsInputSch
 	const doorData = mapDoorData(state);
 	const windowData = mapWindowData(state);
 	const thermalBridgingData = mapThermalBridgingData(state);
+	const lightingData = mapLightingData();
 
 	return merge.all([
 		zoneParameterData,
@@ -18,7 +19,8 @@ export function mapLivingSpaceFabricData(state: EcaasState): Partial<FhsInputSch
 		ceilingAndRoofData,
 		doorData,
 		windowData,
-		thermalBridgingData
+		thermalBridgingData,
+		lightingData
 	]);
 }
 
@@ -88,19 +90,34 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 		}
 	}));
 
-	const internalFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalFloor?.data.map(x => ({
-		[x.name]: {
-			type: x.typeOfInternalFloor === 'heatedSpace' ?  'BuildingElementAdjacentConditionedSpace' : 'BuildingElementAdjacentUnconditionedSpace_Simple',
+	const internalFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalFloor?.data?.map(x => {
+		const commonFields = {
 			area: x.surfaceAreaOfElement,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
-			thermal_resistance_unconditioned_space: x.typeOfInternalFloor === 'heatedSpace' ? 0 : x.thermalResistanceOfAdjacentUnheatedSpace!,
-			pitch: x.pitch,
-			u_value: x.uValue
-		}
-	})) || [];
+			pitch: 180,
+			u_value: 0.01
+		};
 
-	const exposedFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExposedFloor?.data.map(x => ({
+		let internalFloor: SchemaBuildingElement;
+
+		if (x.typeOfInternalFloor === InternalFloorType.unheatedSpace) {
+			internalFloor = {
+				...commonFields,
+				type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
+				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
+			};
+		} else {
+			internalFloor = {
+				...commonFields,
+				type: 'BuildingElementAdjacentConditionedSpace',
+			};
+		}
+		
+		return {[x.name]: internalFloor};
+	}) || [];
+
+	const exposedFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExposedFloor?.data?.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementOpaque',
 			height: x.length,
@@ -118,6 +135,7 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 	})) || [];
 
 	return {
+		GroundFloorArea: livingSpaceGroundFloor.data.map(x => x.surfaceAreaAllZones)[0],
 		Zone: {
 			"zone 1": {
 				BuildingElement: Object.assign(
@@ -128,7 +146,7 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 				)
 			} as Partial<SchemaZoneInput>
 		}
-	} as Pick<FhsInputSchema, 'Zone'>;
+	} as Pick<FhsInputSchema, 'GroundFloorArea' | 'Zone'>;
 }
 
 function mapWallData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
@@ -486,6 +504,30 @@ function mapThermalBridgingData(state: EcaasState): Pick<FhsInputSchema, 'Zone'>
 					...linearThermalBridgesData,
 					...pointThermalBridgesData
 				)
+			} as Partial<SchemaZoneInput>
+		}
+	} as Pick<FhsInputSchema, 'Zone'>;
+}
+
+function mapLightingData(): Pick<FhsInputSchema, 'Zone'> {
+	return {
+		Zone: {
+			"zone 1": {
+				Lighting: {
+					efficacy: 56.0,
+					bulbs: {
+						incandescent: {
+							count: 5,
+							power: 8,
+							efficacy: 18
+						},
+						led: {
+							count: 10,
+							power: 3,
+							efficacy: 150
+						}
+					}
+				}
 			} as Partial<SchemaZoneInput>
 		}
 	} as Pick<FhsInputSchema, 'Zone'>;

@@ -126,7 +126,41 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Air flow rate"
 			help="The required design air flow rate to be supplied to or extracted from the ventilation zone by the system"
 			name="airFlowRate" validation="required | number | min:0"
-		/>
+		>
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr>
+							<th scope="col" class="govuk-table__header">Ventilation type</th>
+							<th scope="col" class="govuk-table__header">Typical airflow rates (m³/h)</th>
+							<th scope="col" class="govuk-table__header">Notes</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">MVHR (Mechanical Ventilation with Heat Recovery)</th>
+							<td class="govuk-table__cell">150 - 300 m³/h</td>
+							<td class="govuk-table__cell">Whole-house system. Supplies fresh air and extracts stale air while recovering heat. Exact rate depends on dwelling size.</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Intermittent MEV (Mechanical Extract Ventilation)</th>
+							<td class="govuk-table__cell">30 - 60 m³/h per fan (typically kitchen/bathroom)</td>
+							<td class="govuk-table__cell">Small fans that operate only when needed (e.g., humidistat or user control). Each wet room usually has its own fan.</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Centralised Continuous MEV</th>
+							<td class="govuk-table__cell">60 - 150 m³/h</td>
+							<td class="govuk-table__cell">A single unit continuously extracts from multiple rooms via ductwork. Airflow depends on dwelling size and number of wet rooms.</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Decentralised Continuous MEV (dMEV)</th>
+							<td class="govuk-table__cell">10 - 40 m³/h per fan</td>
+							<td class="govuk-table__cell">Individual small fans in each wet room, running continuously at a low rate, with a boost function when needed.</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<template v-if="model.typeOfMechanicalVentilationOptions === VentType.MVHR">
 			<h2 class="govuk-heading-l custom-govuk__heading__padding">
 				{{ mvhrTitle }}

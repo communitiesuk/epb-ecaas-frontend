@@ -123,7 +123,9 @@ function mapHotWaterSourcesData(state: EcaasState) {
 					name: heatPumpName!,
 					EnergySupply: "mains elec", 
 					heater_position: 0.1,
-					type: "HeatSourceWet"
+					type: "HeatSourceWet",
+					temp_flow_limit_upper: 65,
+					thermostat_position: 0.33
 				}
 			},
 			...(primaryPipeworkEntries.length !== 0 ? { primary_pipework: primaryPipeworkEntries } : {}),

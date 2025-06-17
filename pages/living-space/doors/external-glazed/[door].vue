@@ -22,6 +22,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
+			frameToOpeningRatio: fields.frameToOpeningRatio,
 		};
 
 		let door: ExternalGlazedDoorData;
@@ -39,7 +40,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				door = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -49,7 +49,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				door = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -60,7 +59,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				door = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -72,7 +70,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				door = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
-					frameToOpeningRatio: fields.frameToOpeningRatio,
 					maximumOpenableArea: fields.maximumOpenableArea,
 					heightOpenableArea: fields.heightOpenableArea,
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
@@ -119,16 +116,14 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
-		<FieldsOrientation />
-		<FormKit
-			id="surfaceArea"
-			type="govInputWithSuffix"
-			suffix-text="m2"
-			label="Net surface area"
-			help="Net area of the building element. For non-rectangular windows, use the area of the window based on its shape"
-			name="surfaceArea"
-			validation="required | number | min:0.01 | max:10000"
+		<FieldsPitch
+			:pitch-option="model.pitchOption"
+			:options="{
+				'90': '90',
+				custom: 'Custom'
+			}"
 		/>
+		<FieldsOrientation />
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"
@@ -147,6 +142,16 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="width"
 			validation="required | number | min:0.001 | max:50"
 		/>
+		<FieldsElevationalHeight />
+		<FormKit
+			id="surfaceArea"
+			type="govInputWithSuffix"
+			suffix-text="m2"
+			label="Net surface area"
+			help="Net area of the building element. For non-rectangular windows, use the area of the window based on its shape"
+			name="surfaceArea"
+			validation="required | number | min:0.01 | max:10000"
+		/>
 		<FormKit
 			id="uValue"
 			type="govInputWithSuffix"
@@ -156,13 +161,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
 		/>
-		<FieldsPitch
-			:pitch-option="model.pitchOption"
-			:options="{
-				'90': '90',
-				custom: 'Custom'
-			}"
-		/>
 		<FormKit
 			id="solarTransmittance"
 			type="govInputFloat"
@@ -171,7 +169,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="solarTransmittance"
 			validation="required | number | min:0.01 | max:1"
 		/>
-		<FieldsElevationalHeight />
 		<FormKit
 			id="midHeight"
 			type="govInputWithSuffix"
@@ -179,6 +176,14 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Mid height"
 			help="Enter the height from the ground to the midpoint of the window"
 			name="midHeight"
+			validation="required | number | min:0 | max:100"
+		/>
+		<FormKit
+			id="frameToOpeningRatio"
+			type="govInputFloat"
+			label="Frame to opening ratio"
+			help="The proportion of the window taken up by the frame compared to the total opening area."
+			name="frameToOpeningRatio"
 			validation="required | number | min:0 | max:100"
 		/>
 		<FormKit
@@ -197,11 +202,12 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		/>
 		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
-				id="frameToOpeningRatio"
-				type="govInputFloat"
-				label="Frame to opening ratio"
-				help="The proportion of the window taken up by the frame compared to the total opening area."
-				name="frameToOpeningRatio"
+				id="heightOpenableArea"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Height of the openable area"
+				help="The vertical measurement of the section of the window that can be opened."
+				name="heightOpenableArea"
 				validation="required | number | min:0 | max:100"
 			/>
 			<FormKit
@@ -211,15 +217,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				label="Maximum openable area"
 				help="The total area of the window that can be opened for ventilation."
 				name="maximumOpenableArea"
-				validation="required | number | min:0 | max:100"
-			/>
-			<FormKit
-				id="heightOpenableArea"
-				type="govInputWithSuffix"
-				suffix-text="m"
-				label="Height of the openable area"
-				help="The vertical measurement of the section of the window that can be opened."
-				name="heightOpenableArea"
 				validation="required | number | min:0 | max:100"
 			/>
 			<FormKit

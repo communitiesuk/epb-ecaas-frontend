@@ -90,6 +90,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				name="name"
 				validation="required"
 			/>
+			<FieldsPitch
+				:pitch-option="model.pitchOption"
+				:options="{
+					'0': '0',
+					custom: 'Custom'
+				}"
+			/>
 			<FormKit
 				id="surfaceArea"
 				type="govInputWithSuffix"
@@ -111,13 +118,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
-			<FieldsPitch
-				:pitch-option="model.pitchOption"
-				:options="{
-					'0': '0',
-					custom: 'Custom'
-				}"
-			/>
 		</template>
 		<FormKit
 			v-if="model.type === 'unheatedSpace'"

@@ -204,7 +204,6 @@ describe('pv and batteries', () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
-		const navigateToMock = vi.hoisted(() => vi.fn());
 		mockNuxtImport("navigateTo", () => {
 			return navigateToMock;
 		});

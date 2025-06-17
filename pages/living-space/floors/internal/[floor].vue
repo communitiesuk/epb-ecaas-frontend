@@ -10,16 +10,30 @@ const saveForm = (fields: InternalFloorData) => {
 	store.$patch((state) => {
 		const {livingSpaceFloors} = state.livingSpaceFabric;
 
-		const floor: InternalFloorData = {
+		const commonFields = {
 			name: fields.name,
-			typeOfInternalFloor: fields.typeOfInternalFloor,
 			surfaceAreaOfElement: fields.surfaceAreaOfElement,
-			uValue: 0,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
-			pitch: 180,
-			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace
 		};
+
+		let floor: InternalFloorData;
+
+		if (fields.typeOfInternalFloor === 'unheatedSpace') {
+			floor = {
+				...commonFields,
+				typeOfInternalFloor: fields.typeOfInternalFloor,
+				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
+			
+			};
+		} else if (fields.typeOfInternalFloor === 'heatedSpace') {
+			floor = {
+				...commonFields,
+				typeOfInternalFloor: fields.typeOfInternalFloor,
+			};
+		} else {
+			throw new Error("Invalid floor type");
+		}
 
 		if (!livingSpaceFloors.livingSpaceInternalFloor) {
 			livingSpaceFloors.livingSpaceInternalFloor = {data: []};

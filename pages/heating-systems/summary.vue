@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl } from "#imports";
+import { FuelType } from "~/schema/api-schema.types";
 const store = useEcaasStore();
 const title = "Heating system summary";
 
@@ -11,10 +12,10 @@ const energySupplySummary: SummarySection = {
 	label: "Energy supply",
 	data: {
 		"Fuel type": fuelType,
-		...(fuelType?.includes("electricity") && {
+		...(fuelType?.includes(FuelType.electricity) && {
 			Exported: displayBoolean(exported),
 		}),
-		...(fuelType?.includes("custom") && {
+		...(fuelType?.includes(FuelType.custom) && {
 			"CO2 per kWh": co2PerKwh,
 			"CO2 per kWh (including out of scope)": co2PerKwhIncludingOutOfScope,
 			"kWh per kWh delivered": kwhPerKwhDelivered,
@@ -47,7 +48,7 @@ const boilerSummary: SummarySection = {
 		return {
 			Name: boiler.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatGenerationUrl,
 };
 
@@ -59,7 +60,7 @@ const heatBatterySummary: SummarySection = {
 		return {
 			Name: battery.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatGenerationUrl,
 };
 
@@ -71,7 +72,7 @@ const heatNetworkSummary: SummarySection = {
 		return {
 			Name: network.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatGenerationUrl,
 };
 
@@ -83,7 +84,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 		return {
 			Name: unit.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatGenerationUrl,
 };
 
@@ -150,7 +151,7 @@ const wetDistributionSummary: SummarySection = {
 			wetDistribution.minimumFlowTemp;
 
 		return wetDistributionData;
-	}),
+	}) || [],
 
 	editUrl: heatEmittingUrl,
 };
@@ -166,7 +167,7 @@ const instantElectricHeaterSummary: SummarySection = {
 			"Rated power": instantHeater.ratedPower,
 			"Convection fraction": instantHeater.convectionFractionInstant,
 		};
-	}),
+	}) || [],
 	editUrl: heatEmittingUrl,
 };
 
@@ -179,7 +180,7 @@ const electricStorageHeaterSummary: SummarySection = {
 		return {
 			Name: storageHeater.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatEmittingUrl,
 };
 
@@ -191,7 +192,7 @@ const warmAirHeatPumpSummary: SummarySection = {
 		return {
 			Name: pump.name,
 		};
-	}),
+	}) || [],
 	editUrl: heatEmittingUrl,
 };
 

@@ -82,6 +82,48 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
+	it('getStatus of section returns in progress status when forms have saved data', () => {
+
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: {
+						typeOfDwelling: BuildType.house
+					}
+				}
+			}
+		});
+
+		const page = pagesData.find(p => p.id === 'dwellingDetails');
+		const status = store.getStatus(page!);
+
+		expect(status).toStrictEqual(formStatus.inProgress);
+	});
+
+	it('getStatus of a section containing grouped tasks returns in progress status when one of the grouped tasks is complete', () => {
+
+		store.$patch({
+			livingSpaceFabric: {
+				livingSpaceFloors: {
+					livingSpaceExposedFloor: {complete: true},
+					livingSpaceInternalFloor: {complete: true},
+					livingSpaceGroundFloor: {complete: true}
+				},
+				livingSpaceWalls: {
+					livingSpaceExternalWall: {complete: false},
+					livingSpaceInternalWall: {complete: false},
+					livingSpaceWallToUnheatedSpace: {complete: false},
+					livingSpacePartyWall: {complete: false}
+				}
+			}
+		});
+
+		const page = pagesData.find(p => p.id === 'livingSpaceFabric');
+		const status = store.getStatus(page!);
+
+		expect(status).toStrictEqual(formStatus.inProgress);
+	});
+
 	it('getStatus of section returns complete status when all forms are complete', () => {
 
 		store.$patch({
@@ -314,6 +356,167 @@ describe('Ecaas Store', () => {
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
+	});
+});
+
+describe('extractPitch', () => {
+	it('should return the pitch from a string with a pitch', () => {
+		const result = extractPitch({
+			pitch: 45,
+			pitchOption: 'custom',
+		});
+		expect(result).toBe(45);
+	});
+
+	it('should return undefined when no pitch is present', () => {
+		const result = extractPitch({
+			pitchOption: 'custom',
+		});
+		expect(result).toBeUndefined();
+	});
+
+	it('should return number 90 when selected as pitchOption', () => {
+		const result = extractPitch({
+			pitchOption: '90',
+		});
+		expect(result).toBe(90);
+	});
+
+	it('getStatus of task returns complete status when required forms are complete', () => {
+
+		store.$patch({
+			livingSpaceFabric: {
+				livingSpaceFloors: {
+					livingSpaceGroundFloor: {
+						complete: true
+					},
+					livingSpaceExposedFloor: {
+						complete: true
+					},
+					livingSpaceInternalFloor: {
+						complete: true
+					}
+				}
+			}
+		});
+
+		const page = pagesData.find(p => p.id === 'livingSpaceFloors');
+		const status = store.getStatus(page!);
+
+		expect(status).toBe(formStatus.complete);
+	});
+
+	const mechanicalVentilation1: MechanicalVentilationData = {
+		id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+		name: "Mechanical name 1",
+		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
+		supplyAirTemperatureControl: "odaComp",
+		airFlowRate: 12,
+		mvhrLocation: MVHRLocation.inside,
+		mvhrEfficiency: 0.2,
+	};
+	const mechanicalVentilation2: MechanicalVentilationData = {
+		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
+		name: "Mechanical name 2",
+		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
+		supplyAirTemperatureControl: "odaComp",
+		airFlowRate: 12,
+		mvhrLocation: MVHRLocation.inside,
+		mvhrEfficiency: 0.1,
+	};
+	const ductwork1: DuctworkData = {
+		name: 'Ductwork 1',
+		mvhrUnit: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+		ductworkCrossSectionalShape: DuctShape.circular,
+		ductType: DuctType.intake,
+		internalDiameterOfDuctwork: 300,
+		externalDiameterOfDuctwork: 1000,
+		insulationThickness: 100,
+		lengthOfDuctwork: 100,
+		thermalInsulationConductivityOfDuctwork: 10,
+		surfaceReflectivity: true,
+	};
+	const ductwork2: DuctworkData = {
+		name: 'Ductwork 2',
+		mvhrUnit: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+		ductworkCrossSectionalShape: DuctShape.circular,
+		ductType: DuctType.intake,
+		internalDiameterOfDuctwork: 300,
+		externalDiameterOfDuctwork: 1000,
+		insulationThickness: 100,
+		lengthOfDuctwork: 100,
+		thermalInsulationConductivityOfDuctwork: 10,
+		surfaceReflectivity: true,
+	};
+	it('getStatus of ductwork task returns not started status when mvhr and ductwork is added then mvhr is removed', async() => {
+
+		const user = userEvent.setup();
+		
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [mechanicalVentilation1],
+					complete: true
+				},
+				ductwork: {
+					data: [ductwork1],
+					complete: true
+				}
+			}
+		});
+		await renderSuspended(MechanicalOverview);
+
+		await user.click(screen.getByTestId('mechanicalVentilation_remove_0'));
+
+		const page = pagesData.find(p => p.id === 'ductwork');
+		const status = store.getStatus(page!);
+
+		expect(status).toBe(formStatus.notStarted);
+	});
+
+	it('getStatus of ductwork task returns in progress status when multiple mvhrs are added but they dont all have an associated ductwork', async() => {
+
+		
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [mechanicalVentilation1, mechanicalVentilation2],
+					complete: true
+				},
+				ductwork: {
+					data: [ductwork1, ductwork2],
+					complete: true 
+				}
+			}
+		});
+
+		const page = pagesData.find(p => p.id === 'ductwork');
+		const status = store.getStatus(page!);
+
+		expect(status).toBe(formStatus.inProgress);
+	});
+
+	it('getStatus of ductwork task returns complete status when a mvhr has an associated ductwork', async() => {
+
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [mechanicalVentilation1],
+					complete: true
+				},
+				ductwork: {
+					data: [ductwork1],
+					complete: true
+				}
+			}
+		});
+
+		const page = pagesData.find(p => p.id === 'ductwork');
+		const status = store.getStatus(page!);
+
+		expect(status).toBe(formStatus.complete);
 	});
 });
 

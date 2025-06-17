@@ -138,7 +138,20 @@ describe("FHS input mapper", () => {
 					data: []
 				}
 			},
-			livingSpaceWalls: {},
+			livingSpaceWalls: {
+				livingSpaceExternalWall: {
+					data: [],
+				},
+				livingSpaceInternalWall: {
+					data: [],
+				},
+				livingSpacePartyWall: {
+					data: [],
+				},
+				livingSpaceWallToUnheatedSpace: {
+					data: [],
+				}
+			},
 			livingSpaceCeilingsAndRoofs: {
 				livingSpaceCeilings: {
 					data: []
@@ -352,7 +365,7 @@ describe("FHS input mapper", () => {
 			},
 			Control: {},
 			EnergySupply: {
-				[FuelType.electricity]: {
+				['mains elec']: {
 					fuel: FuelType.electricity,
 					is_export_capable: true,
 				}
@@ -395,7 +408,9 @@ describe("FHS input mapper", () => {
 							name: "some-heat-pump-name",
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
-							type: "HeatSourceWet"
+							type: "HeatSourceWet",
+							temp_flow_limit_upper: 65,
+							thermostat_position: 0.33
 						},
 					},
 					daily_losses: 34,
@@ -491,6 +506,7 @@ describe("FHS input mapper", () => {
 					thermal_mass: 23,
 				}
 			},
+			GroundFloorArea: 50,
 			Zone: {
 				"zone 1": {
 					BuildingElement: {
@@ -507,6 +523,21 @@ describe("FHS input mapper", () => {
 							floor_type: FloorType.Slab_no_edge_insulation,
 							pitch: 0,
 							thickness_walls: 0
+						}
+					},
+					Lighting: {
+						efficacy: 56.0,
+						bulbs: {
+							incandescent: {
+								count: 5,
+								power: 8,
+								efficacy: 18
+							},
+							led: {
+								count: 10,
+								power: 3,
+								efficacy: 150
+							}
 						}
 					},
 					SpaceCoolSystem: ["some-aircon-unit-name"],
@@ -562,6 +593,24 @@ describe("FHS input mapper", () => {
 					airFlowRate: 17,
 					mvhrLocation: MVHRLocation.inside,
 					mvhrEfficiency: 1
+				},
+				{
+					id: "mvhr vent 2 id",
+					name: "mvhr vent 2 name",
+					typeOfMechanicalVentilationOptions: VentType.MVHR,
+					controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
+					supplyAirTemperatureControl: "TO_BE_REMOVED",
+					airFlowRate: 3,
+					mvhrLocation: MVHRLocation.outside,
+					mvhrEfficiency: 0
+				},
+				{
+					id: "centralised MEV id",
+					name: "centralised MEV name",
+					typeOfMechanicalVentilationOptions: VentType.Centralised_continuous_MEV,
+					controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
+					supplyAirTemperatureControl: "TO_BE_REMOVED",
+					airFlowRate: 8,
 				}]
 			},
 			ductwork: {
@@ -676,21 +725,53 @@ describe("FHS input mapper", () => {
 				livingSpaceInternalFloor: {
 					data: [{
 						name: "internal floor 1",
-						typeOfInternalFloor: "not heated",
+						typeOfInternalFloor: InternalFloorType.unheatedSpace,
 						surfaceAreaOfElement: 6,
-						uValue: 0.1,
-						kappaValue: 0.2,
+						kappaValue: 50000,
 						massDistributionClass: MassDistributionClass.IE,
-						pitch: 0,
 						thermalResistanceOfAdjacentUnheatedSpace: 1,
-					}]
+					}, 
+					{
+						name: "internal floor 2",
+						typeOfInternalFloor: InternalFloorType.heatedSpace,
+						surfaceAreaOfElement: 4,
+						kappaValue: 110000,
+						massDistributionClass: MassDistributionClass.M,
+					}
+					]
 				},
 				// TODO add more floors
 				livingSpaceExposedFloor: {
 					data: []
 				}
 			},
-			livingSpaceWalls: {},
+			livingSpaceWalls: {
+				livingSpacePartyWall: {
+					data: [{
+						name: "party wall 1",
+						pitchOption: "90",
+						pitch: 90,
+						orientation: 80,
+						height: 3,
+						length: 5,
+						elevationalHeight: 1,
+						surfaceArea: 15,
+						solarAbsorption: 0.6,
+						uValue: 1,
+						kappaValue: 50000,
+						massDistributionClass: MassDistributionClass.E
+					}]
+				},
+				livingSpaceExternalWall: {
+					data: [],
+				},
+				livingSpaceInternalWall: {
+					data: [],
+				},
+				livingSpaceWallToUnheatedSpace: {
+					data: [],
+				}
+			},
 			livingSpaceCeilingsAndRoofs: {
 				livingSpaceCeilings: {
 					data: []
@@ -883,7 +964,7 @@ describe("FHS input mapper", () => {
 			},
 			Control: {},
 			EnergySupply: {
-				[FuelType.electricity]: {
+				['mains elec']: {
 					fuel: FuelType.electricity,
 					is_export_capable: true,
 				}
@@ -918,7 +999,9 @@ describe("FHS input mapper", () => {
 							name: "heat pump 1 name",
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
-							type: "HeatSourceWet"
+							type: "HeatSourceWet",
+							temp_flow_limit_upper: 65,
+							thermostat_position: 0.33
 						},
 					},
 					daily_losses: 10,
@@ -956,6 +1039,27 @@ describe("FHS input mapper", () => {
 							length: 4,
 							reflective: true
 						}]
+					},
+					"mvhr vent 2 name": {
+						EnergySupply: "mains elec",
+						design_outdoor_air_flow_rate: 3,
+						sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
+						sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
+						vent_type: VentType.MVHR,
+						measured_air_flow_rate: 37,
+						measured_fan_power: 12.26,
+						mvhr_eff: 0,
+						mvhr_location: MVHRLocation.outside,
+						ductwork: []
+					},
+					"centralised MEV name": {
+						EnergySupply: "mains elec",
+						design_outdoor_air_flow_rate: 8,
+						sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
+						sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
+						vent_type: VentType.Centralised_continuous_MEV,
+						measured_air_flow_rate: 37,
+						measured_fan_power: 12.26,
 					}
 				},
 				PDUs: {},
@@ -987,6 +1091,7 @@ describe("FHS input mapper", () => {
 			},
 			SpaceCoolSystem: {},
 			SpaceHeatSystem: {},
+			GroundFloorArea: 26,
 			Zone: {
 				"zone 1": {
 					BuildingElement: {
@@ -1026,19 +1131,56 @@ describe("FHS input mapper", () => {
 							thickness_walls: 1
 						},
 						"internal floor 1": {
-							area: 6,
-							areal_heat_capacity: 0.2,
-							mass_distribution_class: MassDistributionClass.IE,
-							pitch: 0,
-							thermal_resistance_unconditioned_space: 1,
 							type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-							u_value: 0.1
+							area: 6,
+							areal_heat_capacity: 50000,
+							mass_distribution_class: MassDistributionClass.IE,
+							thermal_resistance_unconditioned_space: 1,
+							pitch: 180,
+							u_value: 0.01
+						},
+						"internal floor 2": {
+							type: "BuildingElementAdjacentConditionedSpace",
+							area: 4, 
+							u_value: 0.01,
+							areal_heat_capacity: 110000,
+							mass_distribution_class: MassDistributionClass.M,
+							pitch: 180,
+						},
+						"party wall 1": {
+							area: 15,
+							areal_heat_capacity: 50000,
+							base_height: 1,
+							height: 3,
+							is_external_door: false,
+							mass_distribution_class: MassDistributionClass.E,
+							orientation360: 80,
+							pitch: 90,
+							solar_absorption_coeff: 0.6,
+							type: "BuildingElementOpaque",
+							u_value: 1,
+							width: 5,
 						}
 					},
-					SpaceCoolSystem: [],
 					SpaceHeatControl: SpaceHeatControlType.livingroom,
+					SpaceCoolSystem: [],
 					SpaceHeatSystem: [],
 					ThermalBridging: {},
+					Lighting: {
+						efficacy: 56.0,
+						bulbs: {
+							incandescent: {
+								count: 5,
+								power: 8,
+								efficacy: 18
+							},
+							led: {
+								count: 10,
+								power: 3,
+								efficacy: 150
+							}
+						}
+					},
 					area: 16,
 					volume: 550,
 				}

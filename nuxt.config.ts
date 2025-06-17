@@ -53,6 +53,7 @@ export default defineNuxtConfig({
 	modules: [
 		'@formkit/nuxt',
 		'@pinia/nuxt',
+		'pinia-plugin-persistedstate/nuxt',
 		'@nuxt/test-utils/module',
 		'@nuxt/eslint',
 		'nuxt-auth-utils',
@@ -87,7 +88,7 @@ export default defineNuxtConfig({
 				}
 			}
 												
-			if (process.env.NODE_ENV !== 'development') {
+			if (process.env.NODE_ENV === 'production') {
 				setAuthMiddleware(pages);
 			}
 		}
