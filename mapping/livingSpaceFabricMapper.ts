@@ -101,7 +101,7 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 
 		let internalFloor: SchemaBuildingElement;
 
-		if (x.typeOfInternalFloor === InternalFloorType.unheatedSpace) {
+		if (x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace) {
 			internalFloor = {
 				...commonFields,
 				type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
@@ -305,7 +305,7 @@ function mapDoorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 
 		let internalDoor: SchemaBuildingElement;
 
-		if (x.typeOfCeiling === "unheatedSpace") {
+		if (x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace) {
 			internalDoor = {
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",

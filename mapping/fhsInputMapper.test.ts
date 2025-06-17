@@ -725,7 +725,7 @@ describe("FHS input mapper", () => {
 				livingSpaceInternalFloor: {
 					data: [{
 						name: "internal floor 1",
-						typeOfInternalFloor: InternalFloorType.unheatedSpace,
+						typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
 						surfaceAreaOfElement: 6,
 						kappaValue: 50000,
 						massDistributionClass: MassDistributionClass.IE,
@@ -733,14 +733,13 @@ describe("FHS input mapper", () => {
 					}, 
 					{
 						name: "internal floor 2",
-						typeOfInternalFloor: InternalFloorType.heatedSpace,
+						typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 						surfaceAreaOfElement: 4,
 						kappaValue: 110000,
 						massDistributionClass: MassDistributionClass.M,
 					}
 					]
 				},
-				// TODO add more floors
 				livingSpaceExposedFloor: {
 					data: []
 				}
@@ -779,7 +778,14 @@ describe("FHS input mapper", () => {
 					}]
 				},
 				livingSpaceInternalWall: {
-					data: [],
+					data: [{
+						name: "internal wall 1",
+						pitchOption: "100",
+						pitch: 100,
+						surfaceAreaOfElement: 15,
+						kappaValue: 50000,
+						massDistributionClass: MassDistributionClass.I,
+					}],
 				},
 				livingSpaceWallToUnheatedSpace: {
 					data: [{
@@ -827,7 +833,7 @@ describe("FHS input mapper", () => {
 				},
 				livingSpaceInternalDoor: {
 					data: [{
-						typeOfCeiling: "heatedSpace",
+						typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 						name: "bathroom door",
 						surfaceArea: 1.4,
 						kappaValue: 50000,
@@ -836,7 +842,7 @@ describe("FHS input mapper", () => {
 						pitch: 90,
 					},
 					{
-						typeOfCeiling: "unheatedSpace",
+						typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 						name: "door to garage",
 						surfaceArea: 1.4,
 						kappaValue: 50000,
@@ -1228,6 +1234,14 @@ describe("FHS input mapper", () => {
 							width: 3,
 							pitch: 90
 						},
+						"internal wall 1": {
+							area: 15,
+							areal_heat_capacity: 50000,
+							mass_distribution_class: MassDistributionClass.I,
+							pitch: 100,
+							type: "BuildingElementAdjacentConditionedSpace",
+							u_value: 0,
+						},
 						"front door": {
 							area: 20,
 							areal_heat_capacity: 75000,
@@ -1301,6 +1315,4 @@ describe("FHS input mapper", () => {
 		expect(fhsInputData).toBeDefined();
 		expect(fhsInputData).toEqual(expectedResult);   
 	});
-
-	// TODO - test with a floor of type suspended, we may be missing a property (shield_fact_location)
 });

@@ -100,7 +100,7 @@ describe('living space fabric mapper', () => {
 		};
 
 		const internalFloor: InternalFloorData = {
-			typeOfInternalFloor: InternalFloorType.unheatedSpace,
+			typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
 			kappaValue: 50000,
@@ -374,7 +374,7 @@ describe('living space fabric mapper', () => {
 	it('maps ceiling and roof input state to FHS input request', () => {
 		// Arrange
 		const ceiling: CeilingData = {
-			type: 'unheatedSpace',
+			type: AdjacentSpaceType.unheatedSpace,
 			name: "Ceiling 1",
 			surfaceArea: 5,
 			uValue: 1,
@@ -485,7 +485,7 @@ describe('living space fabric mapper', () => {
 	it('maps door input state to FHS input request', () => {
 		// Arrange
 		const internalDoor: InternalDoorData = {
-			typeOfCeiling: 'unheatedSpace',
+			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 			name: "Internal 1",
 			surfaceArea: 5,
 			kappaValue: 50000,

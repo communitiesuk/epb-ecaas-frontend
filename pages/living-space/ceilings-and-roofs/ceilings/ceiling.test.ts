@@ -14,7 +14,7 @@ describe('ceiling', () => {
 	const user = userEvent.setup();
 
 	const internalFloor: CeilingData = {
-		type: 'heatedSpace',
+		type: AdjacentSpaceType.heatedSpace,
 		name: "Ceiling 1",
 		surfaceArea: 5,
 		kappaValue: 50000,
@@ -25,7 +25,7 @@ describe('ceiling', () => {
 
 	const internalFloorWithUnheated: CeilingData = {
 		...internalFloor,
-		type: 'unheatedSpace',
+		type: AdjacentSpaceType.unheatedSpace,
 		uValue: 1,
 		thermalResistanceOfAdjacentUnheatedSpace: 0
 	};

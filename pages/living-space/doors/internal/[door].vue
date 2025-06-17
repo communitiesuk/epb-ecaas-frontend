@@ -20,16 +20,16 @@ const saveForm = (fields: InternalDoorData) => {
 		};
 
 		let door: InternalDoorData;
-		if (fields.typeOfCeiling === 'unheatedSpace') {
+		if (fields.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace) {
 			door = {
 				...commonFields,
-				typeOfCeiling: fields.typeOfCeiling,
+				typeOfInternalDoor: fields.typeOfInternalDoor,
 				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 			};
-		} else if (fields.typeOfCeiling === 'heatedSpace') {
+		} else if (fields.typeOfInternalDoor === AdjacentSpaceType.heatedSpace) {
 			door = {
 				...commonFields,
-				typeOfCeiling: fields.typeOfCeiling,
+				typeOfInternalDoor: fields.typeOfInternalDoor,
 			};
 		} else {
 			throw new Error("Invalid type of ceiling");
@@ -61,7 +61,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 	>
 		<GovErrorSummary :error-list="errorMessages" test-id="internalDoorErrorSummary"/>
 		<FormKit
-			id="typeOfCeiling"
+			id="typeOfInternalDoor"
 			type="govRadios"
 			:options="{
 				heatedSpace: 'Internal door to heated space',
@@ -69,15 +69,15 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			}"
 			label="Type"
 			help="This affects which inputs are necessary."
-			name="typeOfCeiling"
+			name="typeOfInternalDoor"
 			validation="required"
 		/>
-		<p v-if="model.typeOfCeiling === 'unheatedSpace'" class="govuk-body">
+		<p v-if="model.typeOfInternalDoor === 'unheatedSpace'" class="govuk-body">
 			<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
 				Unheated space guidance (opens in another window)
 			</a>
 		</p>
-		<template v-if="!!model.typeOfCeiling">
+		<template v-if="!!model.typeOfInternalDoor">
 			<FormKit
 				id="name"
 				type="govInputText"
@@ -106,7 +106,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
 		<FormKit
-			v-if="model.typeOfCeiling === 'unheatedSpace'"
+			v-if="model.typeOfInternalDoor === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="m2·K/W"

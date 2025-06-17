@@ -14,7 +14,7 @@ describe('internal door', () => {
 	const user = userEvent.setup();
 
 	const internalDoor: InternalDoorData = {
-		typeOfCeiling: 'heatedSpace',
+		typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 		name: "Internal 1",
 		surfaceArea: 5,
 		kappaValue: 50000,
@@ -25,7 +25,7 @@ describe('internal door', () => {
 
 	const internalDoorWithUnheatedSpace: InternalDoorData = {
 		...internalDoor,
-		typeOfCeiling: 'unheatedSpace',
+		typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 		thermalResistanceOfAdjacentUnheatedSpace: 0
 	};
 
@@ -45,7 +45,7 @@ describe('internal door', () => {
 		it('data is saved to store state when form is valid', async () => {
 			await renderSuspended(InternalDoor);
 	
-			await user.click(screen.getByTestId('typeOfCeiling_heatedSpace'));
+			await user.click(screen.getByTestId('typeOfInternalDoor_heatedSpace'));
 			await populateValidForm();
 			await user.click(screen.getByRole('button'));
 	
@@ -71,7 +71,7 @@ describe('internal door', () => {
 				}
 			});
 	
-			expect((await screen.findByTestId('typeOfCeiling_heatedSpace')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('typeOfInternalDoor_heatedSpace')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Internal 1');
 			expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('5');
 			expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
@@ -82,7 +82,7 @@ describe('internal door', () => {
 		it('requires additional fields when heated space is selected', async () => {
 			await renderSuspended(InternalDoor);
 	
-			await user.click(screen.getByTestId('typeOfCeiling_heatedSpace'));
+			await user.click(screen.getByTestId('typeOfInternalDoor_heatedSpace'));
 			await user.click(screen.getByRole('button'));
 	
 			expect((await screen.findByTestId('name_error'))).toBeDefined();
@@ -97,7 +97,7 @@ describe('internal door', () => {
 		it('data is saved to store state when form is valid', async () => {
 			await renderSuspended(InternalDoor);
 	
-			await user.click(screen.getByTestId('typeOfCeiling_unheatedSpace'));
+			await user.click(screen.getByTestId('typeOfInternalDoor_unheatedSpace'));
 			await populateValidForm();
 			await user.type(screen.getByTestId('thermalResistanceOfAdjacentUnheatedSpace'), '0');
 			await user.tab();
@@ -125,14 +125,14 @@ describe('internal door', () => {
 				}
 			});
 	
-			expect((await screen.findByTestId('typeOfCeiling_unheatedSpace')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId('typeOfInternalDoor_unheatedSpace')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('thermalResistanceOfAdjacentUnheatedSpace') as HTMLInputElement).value).toBe('0');
 		});
 
 		it('requires additional fields when heated space is selected', async () => {
 			await renderSuspended(InternalDoor);
 	
-			await user.click(screen.getByTestId('typeOfCeiling_unheatedSpace'));
+			await user.click(screen.getByTestId('typeOfInternalDoor_unheatedSpace'));
 			await user.click(screen.getByRole('button'));
 	
 			expect((await screen.findByTestId('thermalResistanceOfAdjacentUnheatedSpace_error'))).toBeDefined();
@@ -144,7 +144,7 @@ describe('internal door', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		expect((await screen.findByTestId('typeOfCeiling_error'))).toBeDefined();
+		expect((await screen.findByTestId('typeOfInternalDoor_error'))).toBeDefined();
 	});
 
 	it('error summary is displayed when an invalid form in submitted', async () => {
@@ -158,7 +158,7 @@ describe('internal door', () => {
 	it('requires pitch when custom pitch option is selected', async () => {
 		await renderSuspended(InternalDoor);
 
-		await user.click(screen.getByTestId('typeOfCeiling_heatedSpace'));
+		await user.click(screen.getByTestId('typeOfInternalDoor_heatedSpace'));
 		await user.click(screen.getByTestId('pitchOption_custom'));
 		await user.click(screen.getByRole('button'));
 
@@ -168,7 +168,7 @@ describe('internal door', () => {
 	it('saves custom pitch when custom pitch option is selected', async () => {
 		await renderSuspended(InternalDoor);
 
-		await user.click(screen.getByTestId('typeOfCeiling_heatedSpace'));
+		await user.click(screen.getByTestId('typeOfInternalDoor_heatedSpace'));
 		await populateValidForm();
 		await user.click(screen.getByTestId('pitchOption_custom'));
 		await user.type(screen.getByTestId('pitch'), '90');
@@ -183,7 +183,7 @@ describe('internal door', () => {
 	it('navigates to doors page when valid form is completed', async () => {
 		await renderSuspended(InternalDoor);
 	
-		await user.click(screen.getByTestId('typeOfCeiling_heatedSpace'));
+		await user.click(screen.getByTestId('typeOfInternalDoor_heatedSpace'));
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 

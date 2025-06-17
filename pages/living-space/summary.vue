@@ -68,7 +68,7 @@ const internalFloorSummary: SummarySection = {
 			"Net surface area of element": x.surfaceAreaOfElement,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			...(x.typeOfInternalFloor === InternalFloorType.unheatedSpace ? {"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace} : {})
+			...(x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace ? {"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace} : {})
 		};
 	}) || [],
 	editUrl: getUrl('livingSpaceFloors')!
@@ -317,13 +317,13 @@ const internalDoorSummary: SummarySection = {
 	label: 'Internal door',
 	data: internalDoorData?.map(x => {
 		return {
-			"Type": x.typeOfCeiling,
+			"Type": x.typeOfInternalDoor,
 			"Name": x.name,
 			"Net surface area of element": x.surfaceArea,
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,
-			"Thermal resistance of adjacent unheated space": x.typeOfCeiling === 'unheatedSpace' ? x.thermalResistanceOfAdjacentUnheatedSpace : undefined,
+			"Thermal resistance of adjacent unheated space": x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace ? x.thermalResistanceOfAdjacentUnheatedSpace : undefined,
 		};
 	}) || [],
 	editUrl: getUrl('livingSpaceDoors')!

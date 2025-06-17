@@ -115,7 +115,7 @@ describe('doors', () => {
 	};
 	
 	const internal1: InternalDoorData = {
-		typeOfCeiling: 'heatedSpace',
+		typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 		name: "Internal 1",
 		surfaceArea: 5,
 		kappaValue: 100,
@@ -125,7 +125,7 @@ describe('doors', () => {
 	};
 
 	const internal2: InternalDoorData = {
-		typeOfCeiling: 'heatedSpace',
+		typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 		name: "Internal 2",
 		surfaceArea: 5,
 		kappaValue: 100,
@@ -135,7 +135,7 @@ describe('doors', () => {
 	};
 
 	const internal3: InternalDoorData = {
-		typeOfCeiling: 'heatedSpace',
+		typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 		name: "Internal 3",
 		surfaceArea: 5,
 		kappaValue: 100,

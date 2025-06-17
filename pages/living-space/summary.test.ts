@@ -36,7 +36,7 @@ const floorsData: FloorsData = {
 	},
 	livingSpaceInternalFloor: {
 		data: [{
-			typeOfInternalFloor: InternalFloorType.heatedSpace,
+			typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
 			kappaValue: 100,
@@ -120,7 +120,7 @@ const wallsData: WallsData = {
 const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 	livingSpaceCeilings: {
 		data: [{
-			type: 'heatedSpace',
+			type: AdjacentSpaceType.heatedSpace,
 			name: "Ceiling 1",
 			surfaceArea: 5,
 			kappaValue: 100,
@@ -200,7 +200,7 @@ const doorsData: DoorsData = {
 	},
 	livingSpaceInternalDoor: {
 		data: [{
-			typeOfCeiling: 'heatedSpace',
+			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 1",
 			surfaceArea: 5,
 			kappaValue: 100,

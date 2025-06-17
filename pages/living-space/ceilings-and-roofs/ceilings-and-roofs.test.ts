@@ -24,7 +24,7 @@ describe('ceilings and roofs', () => {
 
 	const ceiling1: CeilingData = {
 		name: "Ceiling 1",
-		type: 'heatedSpace',
+		type: AdjacentSpaceType.heatedSpace,
 		surfaceArea: 5,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,

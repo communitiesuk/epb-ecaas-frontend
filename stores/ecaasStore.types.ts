@@ -67,7 +67,7 @@ export interface FloorsData {
 	livingSpaceExposedFloor: EcaasForm<ExposedFloorData[]>
 }
 
-export enum InternalFloorType {
+export enum AdjacentSpaceType {
 	heatedSpace = "heatedSpace",
 	unheatedSpace = "unheatedSpace"
 }
@@ -78,8 +78,8 @@ export type InternalFloorData = {
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
 } & TaggedUnion<'typeOfInternalFloor', {
-	[InternalFloorType.unheatedSpace]: {thermalResistanceOfAdjacentUnheatedSpace: number;}
-	[InternalFloorType.heatedSpace]: EmptyObject;
+	[AdjacentSpaceType.unheatedSpace]: {thermalResistanceOfAdjacentUnheatedSpace: number;}
+	[AdjacentSpaceType.heatedSpace]: EmptyObject;
 }>;
 
 export type ExposedFloorData = {
@@ -198,8 +198,6 @@ export interface CeilingsAndRoofsData {
 	livingSpaceUnheatedPitchedRoofs: EcaasForm<RoofData[]>;
 }
 
-export type CeilingType = 'heatedSpace' | 'unheatedSpace';
-
 export type CeilingData = {
 	name: string;
 	surfaceArea: number;
@@ -208,8 +206,8 @@ export type CeilingData = {
 	pitchOption?: string;
 	pitch: number;
 } & TaggedUnion<'type', {
-	heatedSpace: EmptyObject;
-	unheatedSpace: {
+	[AdjacentSpaceType.heatedSpace]: EmptyObject;
+	[AdjacentSpaceType.unheatedSpace]: {
 		thermalResistanceOfAdjacentUnheatedSpace: number;
 		uValue: number;
 	}
@@ -297,9 +295,9 @@ export type InternalDoorData = {
 	massDistributionClass: MassDistributionClass;
 	pitchOption: string;
 	pitch?: number;
-} & TaggedUnion<'typeOfCeiling', {
-	heatedSpace: EmptyObject;
-	unheatedSpace: {
+} & TaggedUnion<'typeOfInternalDoor', {
+	[AdjacentSpaceType.heatedSpace]: EmptyObject;
+	[AdjacentSpaceType.unheatedSpace]: {
 		thermalResistanceOfAdjacentUnheatedSpace: number;
 	}
 }>;
