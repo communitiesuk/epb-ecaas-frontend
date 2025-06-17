@@ -138,7 +138,20 @@ describe("FHS input mapper", () => {
 					data: []
 				}
 			},
-			livingSpaceWalls: {},
+			livingSpaceWalls: {
+				livingSpaceExternalWall: {
+					data: [],
+				},
+				livingSpaceInternalWall: {
+					data: [],
+				},
+				livingSpacePartyWall: {
+					data: [],
+				},
+				livingSpaceWallToUnheatedSpace: {
+					data: [],
+				}
+			},
 			livingSpaceCeilingsAndRoofs: {
 				livingSpaceCeilings: {
 					data: []
@@ -748,8 +761,16 @@ describe("FHS input mapper", () => {
 						kappaValue: 50000,
 						massDistributionClass: MassDistributionClass.E
 					}]
+				},
+				livingSpaceExternalWall: {
+					data: [],
+				},
+				livingSpaceInternalWall: {
+					data: [],
+				},
+				livingSpaceWallToUnheatedSpace: {
+					data: [],
 				}
-
 			},
 			livingSpaceCeilingsAndRoofs: {
 				livingSpaceCeilings: {

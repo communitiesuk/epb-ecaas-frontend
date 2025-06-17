@@ -55,6 +55,8 @@ function getInitialState(): EcaasState {
 		livingSpaceFabric: {
 			livingSpaceFloors: {
 				livingSpaceGroundFloor: { data: [] },
+				livingSpaceInternalFloor: { data: [] },
+				livingSpaceExposedFloor: { data: [] },
 			},
 			livingSpaceWalls: {
 				livingSpaceExternalWall: { data: [] },

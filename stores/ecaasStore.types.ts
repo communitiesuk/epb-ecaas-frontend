@@ -63,8 +63,8 @@ export interface LivingSpaceFabric {
 
 export interface FloorsData {
 	livingSpaceGroundFloor: EcaasForm<GroundFloorData[]>,
-	livingSpaceInternalFloor?: EcaasForm<InternalFloorData[]>,
-	livingSpaceExposedFloor?: EcaasForm<ExposedFloorData[]>
+	livingSpaceInternalFloor: EcaasForm<InternalFloorData[]>,
+	livingSpaceExposedFloor: EcaasForm<ExposedFloorData[]>
 }
 
 export enum InternalFloorType {
@@ -125,10 +125,10 @@ export type GroundFloorData = {
 };
 
 export interface WallsData {
-	livingSpaceExternalWall?: EcaasForm<ExternalWallData[]>;
-	livingSpaceInternalWall?: EcaasForm<InternalWallData[]>;
-	livingSpaceWallToUnheatedSpace?: EcaasForm<WallsToUnheatedSpaceData[]>;
-	livingSpacePartyWall?: EcaasForm<PartyWallData[]>;
+	livingSpaceExternalWall: EcaasForm<ExternalWallData[]>;
+	livingSpaceInternalWall: EcaasForm<InternalWallData[]>;
+	livingSpaceWallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData[]>;
+	livingSpacePartyWall: EcaasForm<PartyWallData[]>;
 }
 
 export type ExternalWallData = {
