@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
 import { getUrl, getTabItems } from '#imports';
+import { FloorType } from '~/schema/api-schema.types';
 
 const title = "Living space fabric summary";
 const store = useEcaasStore();
@@ -40,18 +41,18 @@ const groundFloorSummary: SummarySection = {
 			"Perimeter": x.perimeter,
 			"Psi of wall junction": x.psiOfWallJunction,
 			"Type of ground floor": displaySnakeToSentenceCase(x.typeOfGroundFloor),
-			"Edge insulation type": x.edgeInsulationType,
-			"Edge insulation width": x.edgeInsulationWidth,
-			"Edge insulation thermal resistance": x.edgeInsulationThermalResistance,
-			"Height of the floor upper surface": x.heightOfFloorUpperSurface,
-			"Thickness of walls": x.thicknessOfWalls,
-			"Thermal resistance of insulation on base of underfloor space": x.underfloorSpaceThermalResistance,
-			"Thermal transmittance of walls above ground": x.thermalResistanceOfWallsAboveGround,
-			"Area of ventilation openings per perimeter": x.ventilationOpeningsArea,
-			"Depth of basement floor below ground level": x.depthOfBasementFloorBelowGround,
-			"Thermal resistance of walls of basement": x.thermalResistanceOfBasementWalls,
-			"Thermal transmittance of floor above basement": x.thermalTransmittanceOfFloorAboveBasement,
-			"Height of the basement walls above ground level": x.heightOfBasementWallsAboveGround
+			"Edge insulation type": x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? x.edgeInsulationType : undefined,
+			"Edge insulation width": x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? x.edgeInsulationWidth : undefined,
+			"Edge insulation thermal resistance": x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? x.edgeInsulationThermalResistance : undefined,
+			"Height of the floor upper surface": x.typeOfGroundFloor === FloorType.Suspended_floor ? x.heightOfFloorUpperSurface : undefined,
+			"Thickness of walls": x.typeOfGroundFloor === FloorType.Suspended_floor || x.typeOfGroundFloor === FloorType.Unheated_basement ? x.thicknessOfWalls : undefined,
+			"Thermal resistance of insulation on base of underfloor space": x.typeOfGroundFloor === FloorType.Suspended_floor ? x.underfloorSpaceThermalResistance : undefined,
+			"Thermal transmittance of walls above ground": x.typeOfGroundFloor === FloorType.Suspended_floor ? x.thermalTransmittanceOfWallsAboveGround : undefined,
+			"Area of ventilation openings per perimeter": x.typeOfGroundFloor === FloorType.Suspended_floor ? x.ventilationOpeningsArea : undefined,
+			"Depth of basement floor below ground level": x.typeOfGroundFloor === FloorType.Heated_basement || x.typeOfGroundFloor === FloorType.Unheated_basement ? x.depthOfBasementFloorBelowGround : undefined,
+			"Thermal resistance of walls of basement": x.typeOfGroundFloor === FloorType.Heated_basement ? x.thermalResistanceOfBasementWalls : undefined,
+			"Thermal transmittance of floor above basement": x.typeOfGroundFloor === FloorType.Unheated_basement ? x.thermalTransmittanceOfFloorAboveBasement : undefined,
+			"Height of the basement walls above ground level": x.typeOfGroundFloor === FloorType.Unheated_basement ? x.heightOfBasementWallsAboveGround : undefined
 		};
 	}),
 	editUrl: getUrl('livingSpaceFloors')!

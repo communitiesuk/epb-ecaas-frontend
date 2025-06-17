@@ -107,22 +107,33 @@ export type GroundFloorData = {
 	massDistributionClass: MassDistributionClass;
 	perimeter: number;
 	psiOfWallJunction: number;
-	typeOfGroundFloor: FloorType;
-	edgeInsulationType?: "horizontal" | "vertical";
-	edgeInsulationWidth?: number;
-	edgeInsulationThermalResistance?: number;
-	heightOfFloorUpperSurface?: number;
-	underfloorSpaceThermalResistance?: number;
-	thermalTransmittanceOfWallsAboveGround?: number;
-	ventilationOpeningsArea?: number;
-	depthOfBasementFloorBelowGround?: number;
-	thermalResistanceOfBasementWalls?: number;
-	thermalResistanceOfFloorAboveBasement?: number;
-	thermalResistanceOfWallsAboveGround?: number;
-	thermalTransmittanceOfFloorAboveBasement?: number;
-	thicknessOfWalls?: number;
-	heightOfBasementWallsAboveGround?: number
-};
+} & TaggedUnion<'typeOfGroundFloor', {
+	[FloorType.Slab_edge_insulation]: {
+		edgeInsulationType: "horizontal" | "vertical";
+		edgeInsulationWidth: number;
+		edgeInsulationThermalResistance: number;
+	},
+	[FloorType.Slab_no_edge_insulation]: EmptyObject,
+	[FloorType.Suspended_floor]: {
+		heightOfFloorUpperSurface: number;
+		thicknessOfWalls: number;
+		underfloorSpaceThermalResistance: number;
+		thermalTransmittanceOfWallsAboveGround: number;
+		ventilationOpeningsArea: number;
+	},
+	[FloorType.Heated_basement]: {
+		thicknessOfWalls: number;
+		depthOfBasementFloorBelowGround: number;
+		thermalResistanceOfBasementWalls: number;
+	},
+	[FloorType.Unheated_basement]: {
+		thermalTransmittanceOfFloorAboveBasement: number;
+		thermalTransmittanceOfWallsAboveGround: number;
+		thicknessOfWalls: number;
+		depthOfBasementFloorBelowGround: number;
+		heightOfBasementWallsAboveGround: number;
+	}
+}>;
 
 export interface WallsData {
 	livingSpaceExternalWall: EcaasForm<ExternalWallData[]>;

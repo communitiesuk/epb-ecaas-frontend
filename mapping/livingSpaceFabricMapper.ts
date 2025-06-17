@@ -1,4 +1,4 @@
-import { SpaceHeatControlType, type FloorType, WindowShadingObjectType, type SchemaBuildingElement, type SchemaHeatingControlType, type SchemaThermalBridgingDetails, type SchemaWindowPart, type SchemaZoneInput } from "~/schema/api-schema.types";
+import { FloorType, SpaceHeatControlType, WindowShadingObjectType, type SchemaBuildingElement, type SchemaHeatingControlType, type SchemaThermalBridgingDetails, type SchemaWindowPart, type SchemaZoneInput } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import merge from 'deepmerge';
 
@@ -46,7 +46,7 @@ function mapZoneParametersData(state: EcaasState): Pick<FhsInputSchema, 'Heating
 function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 	const { livingSpaceGroundFloor, livingSpaceInternalFloor, livingSpaceExposedFloor } = state.livingSpaceFabric.livingSpaceFloors;
 
-	function mapEdgeInsulation(data: GroundFloorData) {
+	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: FloorType.Slab_edge_insulation }>) {
 		if (data.edgeInsulationType === 'horizontal') {
 			return [{
 				type: data.edgeInsulationType!,
@@ -77,16 +77,16 @@ function mapFloorData(state: EcaasState): Pick<FhsInputSchema, 'Zone'> {
 			psi_wall_floor_junc: x.psiOfWallJunction,
 			floor_type: x.typeOfGroundFloor as FloorType,
 			pitch: x.pitch,
-			...(x.edgeInsulationType? {edge_insulation: mapEdgeInsulation(x)} : {}),
-			...(x.heightOfFloorUpperSurface ? {height_upper_surface: x.heightOfFloorUpperSurface} : {}),
-			thickness_walls: x.thicknessOfWalls || 0,
-			...(x.ventilationOpeningsArea ? {area_per_perimeter_vent: x.ventilationOpeningsArea} : {}),
-			...(x.depthOfBasementFloorBelowGround ? {depth_basement_floor: x.depthOfBasementFloorBelowGround} : {}),
-			...(x.heightOfBasementWallsAboveGround ? {height_basement_walls: x.heightOfBasementWallsAboveGround} : {}),
-			...(x.underfloorSpaceThermalResistance ? {thermal_resist_insul: x.underfloorSpaceThermalResistance} : {}),
-			...(x.thermalTransmittanceOfWallsAboveGround ? {thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround} : {}),
-			...(x.thermalResistanceOfBasementWalls ? {thermal_resist_walls_base: x.thermalResistanceOfBasementWalls} : {}),
-			...(x.thermalTransmittanceOfFloorAboveBasement ? {thermal_transm_envi_base: x.thermalTransmittanceOfFloorAboveBasement} : {}),
+			...(x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? {edge_insulation: mapEdgeInsulation(x)} : {}),
+			...(x.typeOfGroundFloor === FloorType.Suspended_floor ? {height_upper_surface: x.heightOfFloorUpperSurface} : {}),
+			thickness_walls: 'thicknessOfWalls' in x ? x.thicknessOfWalls : 0,
+			...('ventilationOpeningsArea' in x ? {area_per_perimeter_vent: x.ventilationOpeningsArea} : {}),
+			...('depthOfBasementFloorBelowGround' in x ? {depth_basement_floor: x.depthOfBasementFloorBelowGround} : {}),
+			...('heightOfBasementWallsAboveGround' in x ? {height_basement_walls: x.heightOfBasementWallsAboveGround} : {}),
+			...('underfloorSpaceThermalResistance' in x ? {thermal_resist_insul: x.underfloorSpaceThermalResistance} : {}),
+			...('thermalTransmittanceOfWallsAboveGround' in x ? {thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround} : {}),
+			...('thermalResistanceOfBasementWalls' in x ? {thermal_resist_walls_base: x.thermalResistanceOfBasementWalls} : {}),
+			...('thermalTransmittanceOfFloorAboveBasement' in x ? {thermal_transm_envi_base: x.thermalTransmittanceOfFloorAboveBasement} : {}),
 		}
 	}));
 

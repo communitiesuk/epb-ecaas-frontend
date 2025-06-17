@@ -20,7 +20,7 @@ const saveForm = (fields: GroundFloorData) => {
 	store.$patch((state) => {
 		const {livingSpaceFloors} = state.livingSpaceFabric;
 
-		const floor: GroundFloorData = {
+		const commonFields = {
 			name: fields.name,
 			surfaceAreaInZone: fields.surfaceAreaInZone,
 			surfaceAreaAllZones: fields.surfaceAreaAllZones,
@@ -31,22 +31,62 @@ const saveForm = (fields: GroundFloorData) => {
 			massDistributionClass: fields.massDistributionClass,
 			perimeter: fields.perimeter,
 			psiOfWallJunction: fields.psiOfWallJunction,
-			typeOfGroundFloor: fields.typeOfGroundFloor,
-			edgeInsulationType: fields.edgeInsulationType,
-			edgeInsulationWidth: fields.edgeInsulationWidth,
-			edgeInsulationThermalResistance: fields.edgeInsulationThermalResistance,
-			heightOfFloorUpperSurface: fields.heightOfFloorUpperSurface,
-			thicknessOfWalls: fields.thicknessOfWalls,
-			underfloorSpaceThermalResistance: fields.underfloorSpaceThermalResistance,
-			thermalTransmittanceOfWallsAboveGround: fields.thermalTransmittanceOfWallsAboveGround,
-			ventilationOpeningsArea: fields.ventilationOpeningsArea,
-			depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
-			thermalResistanceOfBasementWalls: fields.thermalResistanceOfBasementWalls,
-			thermalResistanceOfFloorAboveBasement: fields.thermalResistanceOfFloorAboveBasement,
-			thermalResistanceOfWallsAboveGround: fields.thermalResistanceOfWallsAboveGround,
-			thermalTransmittanceOfFloorAboveBasement: fields.thermalTransmittanceOfFloorAboveBasement,
-			heightOfBasementWallsAboveGround: fields.heightOfBasementWallsAboveGround
 		};
+
+		let floor: GroundFloorData;
+
+		switch(fields.typeOfGroundFloor) {
+			case FloorType.Slab_edge_insulation:
+				floor = {
+					...commonFields,
+					typeOfGroundFloor: fields.typeOfGroundFloor,
+					edgeInsulationType: fields.edgeInsulationType,
+					edgeInsulationWidth: fields.edgeInsulationWidth,
+					edgeInsulationThermalResistance: fields.edgeInsulationThermalResistance,
+				};
+				break;
+			case FloorType.Slab_no_edge_insulation:
+				floor = {
+					...commonFields,
+					typeOfGroundFloor: fields.typeOfGroundFloor,
+				};
+				break;
+			case FloorType.Suspended_floor:
+				floor = {
+					...commonFields,
+					typeOfGroundFloor: fields.typeOfGroundFloor,
+					heightOfFloorUpperSurface: fields.heightOfFloorUpperSurface,
+					thicknessOfWalls: fields.thicknessOfWalls,
+					underfloorSpaceThermalResistance: fields.underfloorSpaceThermalResistance,
+					thermalTransmittanceOfWallsAboveGround: fields.thermalTransmittanceOfWallsAboveGround,
+					ventilationOpeningsArea: fields.ventilationOpeningsArea,
+				};
+				break;
+			case FloorType.Heated_basement:
+				floor = {
+					...commonFields,
+					typeOfGroundFloor: fields.typeOfGroundFloor,
+					thicknessOfWalls: fields.thicknessOfWalls,
+					depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
+					thermalResistanceOfBasementWalls: fields.thermalResistanceOfBasementWalls,
+				};
+				break;
+			case FloorType.Unheated_basement:
+				floor = {
+					...commonFields,
+					typeOfGroundFloor: fields.typeOfGroundFloor,
+					thermalTransmittanceOfFloorAboveBasement: fields.thermalTransmittanceOfFloorAboveBasement,
+					thermalTransmittanceOfWallsAboveGround: fields.thermalTransmittanceOfWallsAboveGround,
+					thicknessOfWalls: fields.thicknessOfWalls,
+					depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
+					heightOfBasementWallsAboveGround: fields.heightOfBasementWallsAboveGround,
+				};
+				break;
+			default:
+				fields satisfies never;
+				throw new Error(`Did not handle floor type '${ (fields as GroundFloorData).typeOfGroundFloor }'`);
+
+		}
 
 		if (!livingSpaceFloors.livingSpaceGroundFloor) {
 			livingSpaceFloors.livingSpaceGroundFloor = { data: [] };
