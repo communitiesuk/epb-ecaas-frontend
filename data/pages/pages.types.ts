@@ -1,4 +1,5 @@
 export enum PageType {
+	Root,
 	Section,
 	Task,
 	TaskGroup,
@@ -10,7 +11,7 @@ export interface Page {
 	id: string;
 	title: string;
 	url: string;
-	type?: PageType;
+	type: PageType;
 	parentId?: string;
 	excludeFromNavigation?: () =>boolean
 }

@@ -17,7 +17,7 @@ export function useTaskList() {
 		const store = useEcaasStore();
 
 		const taskList: Array<GovTaskListItemProps> = pagesData
-			.filter(p => p.parentId === page!.id && [PageType.Section, PageType.Task, PageType.TaskGroup].includes(p.type!))
+			.filter(p => p.parentId === page!.id && [PageType.Section, PageType.Task, PageType.TaskGroup].includes(p.type))
 			.map(p => {
 				return {
 					id: p.id,

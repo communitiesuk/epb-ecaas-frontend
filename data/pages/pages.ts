@@ -1,4 +1,4 @@
-import type { Page } from "./pages.types";
+import { PageType, type Page } from "./pages.types";
 import coolingPages from "./cooling";
 import domesticHotWaterPages from "./domesticHotWater";
 import dwellingDetailsPages from "./dwellingDetails";
@@ -13,6 +13,7 @@ const pagesData: Array<Page> = [
 		id: 'taskList',
 		title: 'Task list',
 		url: '/',
+		type: PageType.Root,
 	},
 	...dwellingDetailsPages,
 	...infiltrationAndVentilationPages,
