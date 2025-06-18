@@ -32,7 +32,7 @@ describe('infiltration ventilation mapper', () => {
 					...baseForm,
 					data: mechVentMvhr,
 				},
-				ventilation: {
+				naturalVentilation: {
 					...baseForm,
 					data: {}
 				},
@@ -97,7 +97,7 @@ describe('infiltration ventilation mapper', () => {
 					...baseForm,
 					data: ductwork
 				},
-				ventilation: {
+				naturalVentilation: {
 					...baseForm,
 					data: {}
 				},
@@ -147,7 +147,7 @@ describe('infiltration ventilation mapper', () => {
 						airTightnessTestResult: 2.2,
 					},
 				},
-				ventilation: {
+				naturalVentilation: {
 					...baseForm,
 					data: {},
 				},
@@ -252,7 +252,7 @@ describe('infiltration ventilation mapper', () => {
 
 		store.$patch({
 			infiltrationAndVentilation: {
-				ventilation: {
+				naturalVentilation: {
 					...baseForm,
 					data: ventilationData,
 				}

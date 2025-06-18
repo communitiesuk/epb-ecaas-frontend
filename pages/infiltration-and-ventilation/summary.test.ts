@@ -229,7 +229,7 @@ describe('Infiltration and ventilation summary', () => {
 	it('should display the correct data for the ventilation section', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
-				ventilation: {
+				naturalVentilation: {
 					data: ventilationData
 				}
 			}

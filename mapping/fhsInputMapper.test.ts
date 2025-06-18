@@ -883,7 +883,12 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				}
 			},
+<<<<<<< Updated upstream
 			ventilation: {
+=======
+			// skipping combustion appliances they have been removed for summer
+			naturalVentilation: {
+>>>>>>> Stashed changes
 				...baseForm,
 				data: {
 					dwellingHeight: 8,
@@ -1285,7 +1290,7 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				}
 			},
-			ventilation: {
+			naturalVentilation: {
 				...baseForm,
 				data: {
 					dwellingHeight: 1,

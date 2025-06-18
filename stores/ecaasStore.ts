@@ -25,7 +25,7 @@ function getInitialState(): EcaasState {
 				[CombustionApplianceType.open_gas_fire]: { data: [] },
 				[CombustionApplianceType.closed_fire]: { data: [] },
 			},
-			ventilation: { data: {} },
+			naturalVentilation: { data: {} },
 			airPermeability: { data: {} }
 		},
 		domesticHotWater: {

@@ -72,7 +72,7 @@ const ventSummary: SummarySection = {
 	editUrl: getUrl('vents')!
 };
 
-const ventilationData = store.infiltrationAndVentilation.ventilation.data;
+const ventilationData = store.infiltrationAndVentilation.naturalVentilation.data;
 
 const ventilationSummary: SummarySection = {
 	id: 'ventilation',

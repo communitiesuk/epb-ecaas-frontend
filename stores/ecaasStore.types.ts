@@ -515,7 +515,7 @@ export interface InfiltrationAndVentilation {
 	ductwork: EcaasForm<DuctworkData[]>
 	vents: EcaasForm<VentData[]>;
 	combustionAppliances: CombustionAppliancesData;
-	ventilation: EcaasForm<VentilationData>;
+	naturalVentilation: EcaasForm<VentilationData>;
 	airPermeability: EcaasForm<AirPermeabilityData>;
 }
 

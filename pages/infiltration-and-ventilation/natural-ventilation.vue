@@ -3,13 +3,13 @@ const title = "Natural ventilation";
 const store = useEcaasStore();
 
 const model = ref({
-	...store.infiltrationAndVentilation.ventilation.data
+	...store.infiltrationAndVentilation.naturalVentilation.data
 });
 
 const saveForm = (fields: VentilationData) => {
 	store.$patch({
 		infiltrationAndVentilation: {
-			ventilation: {
+			naturalVentilation: {
 				data: {
 					dwellingHeight: fields.dwellingHeight,
 					dwellingEnvelopeArea: fields.dwellingEnvelopeArea,

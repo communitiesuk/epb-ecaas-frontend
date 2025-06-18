@@ -39,7 +39,7 @@ describe('Ventilation', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { data } = store.infiltrationAndVentilation.ventilation;
+		const { data } = store.infiltrationAndVentilation.naturalVentilation;
 		
 		expect(data).toEqual(state);
 	});
@@ -47,7 +47,7 @@ describe('Ventilation', () => {
 	it('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
-				ventilation: {
+				naturalVentilation: {
 					data: state
 				}
 			}
@@ -86,7 +86,7 @@ describe('Ventilation', () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { complete } = store.infiltrationAndVentilation.ventilation;
+		const { complete } = store.infiltrationAndVentilation.naturalVentilation;
 		
 		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation');
