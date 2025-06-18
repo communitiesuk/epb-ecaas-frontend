@@ -883,12 +883,8 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				}
 			},
-<<<<<<< Updated upstream
-			ventilation: {
-=======
 			// skipping combustion appliances they have been removed for summer
 			naturalVentilation: {
->>>>>>> Stashed changes
 				...baseForm,
 				data: {
 					dwellingHeight: 8,
