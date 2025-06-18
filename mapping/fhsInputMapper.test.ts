@@ -22,7 +22,10 @@ import {
 	VentilationShieldClass,
 	VentType,
 	WaterPipeContentsType,
-	WaterPipeworkLocation
+	WaterPipeworkLocation,
+	WindowShadingObjectType,
+	WindowTreatmentControl,
+	WindowTreatmentType
 } from "~/schema/api-schema.types";
 import { type FhsInputSchema, mapFhsInputData } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
@@ -254,7 +257,26 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	Events: {},
 	ExternalConditions: {
-		shading_segments: []
+		shading_segments: [{
+			end360: 40,
+			number: 1,
+			shading: [{
+				distance: 2,
+				height: 5,
+				type: ShadingObjectType.overhang
+			}],
+			start360: 10,
+		},
+		{
+			end360: 12,
+			number: 2,
+			shading: [{
+				distance: 0.5,
+				height: 1,
+				type: ShadingObjectType.obstacle
+			}],
+			start360: 1,
+		}]
 	},
 	General: {
 		build_type: BuildType.flat,
@@ -595,6 +617,23 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 1,
 					width: 1.2,
 				},
+				"external glazed door": {
+					area: 3,
+					base_height: 0.2,
+					frame_area_fraction: 0,
+					free_area_height: 0,
+					g_value: 0.5,
+					height: 3,
+					max_window_open_area: 0,
+					mid_height: 1.5,
+					orientation360: 20,
+					pitch: 90,
+					shading: [],
+					type: "BuildingElementTransparent",
+					u_value: 0.8,
+					width: 1,
+					window_part_list: []
+				},
 				"wall to garage": {
 					area: 20,
 					areal_heat_capacity: 50000,
@@ -621,6 +660,36 @@ const expectedFlatInput: FhsInputSchema = {
 					thermal_resistance_unconditioned_space: 3.4,
 					u_value: 2.2
 				},
+				"roof 1": {
+					pitch: 20,
+					orientation360: 180,
+					height: 2.5,
+					width: 10,
+					base_height: 0,
+					area: 25,
+					solar_absorption_coeff: 0.63,
+					u_value: 0.1,
+					areal_heat_capacity: 19300,
+					mass_distribution_class: MassDistributionClass.I,
+					type: "BuildingElementOpaque",
+					is_external_door: false,
+					is_unheated_pitched_roof: false
+				},
+				"unheated pitched roof": {
+					pitch: 0,
+					orientation360: 90,
+					height: 5,
+					width: 4,
+					base_height: 2,
+					area: 20,
+					solar_absorption_coeff: 0.1,
+					u_value: 0.6,
+					mass_distribution_class: MassDistributionClass.IE,
+					areal_heat_capacity: 50000,
+					is_unheated_pitched_roof: true,
+					is_external_door: false,
+					type: "BuildingElementOpaque"
+				},
 				"bathroom door": {
 					area: 1.4,
 					areal_heat_capacity: 50000,
@@ -637,6 +706,40 @@ const expectedFlatInput: FhsInputSchema = {
 					thermal_resistance_unconditioned_space: 2.5,
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					u_value: 0,
+				},
+				"bedroom window": {
+					type: "BuildingElementTransparent",
+					pitch: 90,
+					orientation360: 90,
+					height: 2,
+					width: 2,
+					base_height: 1,
+					area: 4,
+					u_value: 0.1,
+					g_value: 0.2,
+					mid_height: 2,
+					frame_area_fraction: 1,
+					max_window_open_area: 1,
+					free_area_height: 1,
+					window_part_list: [{
+						mid_height_air_flow_path: 1
+					}],
+					shading: [
+						{
+							type: WindowShadingObjectType.overhang,
+							depth: 0.5,
+							distance: 0.5
+						},
+						{
+							type: WindowShadingObjectType.sidefinleft,
+							depth: 0.25,
+							distance: 1
+						},
+						{
+							type: WindowShadingObjectType.sidefinright,
+							depth: 0.25,
+							distance: 1
+						}]
 				}
 			},
 			SpaceHeatControl: SpaceHeatControlType.livingroom,
@@ -1075,6 +1178,22 @@ describe("FHS input mapper", () => {
 			},
 			shading: {
 				...baseForm,
+				data: [{
+					name: "tree house",
+					startAngle: 10,
+					endAngle: 40,
+					objectType: ShadingObjectType.overhang,
+					height: 5,
+					distance: 2
+				},
+				{
+					name: "obstacle",
+					startAngle: 1,
+					endAngle: 12,
+					objectType: ShadingObjectType.obstacle,
+					height: 1,
+					distance: 0.5
+				}]
 			},
 			externalFactors: {
 				...baseForm,
@@ -1355,9 +1474,38 @@ describe("FHS input mapper", () => {
 				},
 				livingSpaceRoofs: {
 					...baseForm,
+					data: [{
+						name: "roof 1",
+						typeOfRoof: "flat",
+						pitch: 20,
+						pitchOption: "20",
+						orientation: 180,
+						length: 2.5,
+						width: 10,
+						elevationalHeightOfElement: 0,
+						surfaceArea: 25,
+						solarAbsorptionCoefficient: 0.63,
+						uValue: 0.1,
+						kappaValue: 19300,
+						massDistributionClass: MassDistributionClass.I
+					}]
 				},
 				livingSpaceUnheatedPitchedRoofs: {
 					...baseForm,
+					data: [{
+						name: "unheated pitched roof",
+						typeOfRoof: 'unheatedPitched',
+						pitch: 0,
+						orientation: 90,
+						length: 5,
+						width: 4,
+						elevationalHeightOfElement: 2,
+						surfaceArea: 20,
+						solarAbsorptionCoefficient: 0.1,
+						uValue: 0.6,
+						kappaValue: 50000,
+						massDistributionClass: MassDistributionClass.IE
+					}]
 				}
 			},
 			livingSpaceDoors: {
@@ -1380,6 +1528,21 @@ describe("FHS input mapper", () => {
 				},
 				livingSpaceExternalGlazedDoor: {
 					...baseForm,
+					data: [{
+						name: "external glazed door",
+						surfaceArea: 3,
+						height: 3,
+						width: 1,
+						uValue: 0.8,
+						pitchOption: "90",
+						pitch: 90,
+						orientation:20,
+						solarTransmittance: 0.5,
+						elevationalHeight: 0.2,
+						midHeight: 1.5,
+						frameToOpeningRatio: 1,
+						numberOpenableParts: "0",
+					}]
 				},
 				livingSpaceInternalDoor: {
 					...baseForm,
@@ -1406,6 +1569,34 @@ describe("FHS input mapper", () => {
 			},
 			livingSpaceWindows: {
 				...baseForm,
+				data: [{
+					name: "bedroom window",
+					orientation: 90,
+					surfaceArea: 4,
+					height: 2,
+					width: 2,
+					uValue: 0.1,
+					pitchOption: "90",
+					pitch: 90,
+					solarTransmittance: 0.2,
+					elevationalHeight: 1,
+					midHeight: 2,
+					numberOpenableParts: "1",
+					overhangDepth: 0.5 ,
+					overhangDistance: 0.5,
+					sideFinRightDepth: 0.25,
+					sideFinRightDistance: 1,
+					sideFinLeftDepth: 0.25,
+					sideFinLeftDistance: 1,
+					treatmentType: WindowTreatmentType.curtains,
+					thermalResistivityIncrease: 1,
+					solarTransmittanceReduction: 0.1,
+					midHeightOpenablePart1: 1,
+					frameToOpeningRatio: 1,
+					maximumOpenableArea: 1,
+					heightOpenableArea: 1,
+					curtainsControlObject: WindowTreatmentControl.auto_motorised,
+				}]
 			},
 			livingSpaceThermalBridging: {
 				livingSpaceLinearThermalBridges: {
