@@ -61,8 +61,8 @@ export default defineNuxtConfig({
 	],
 	plugins: [
 		'~/plugins/xray-fetch.server',
-		'~/plugins/load-store.client',
-		'~/plugins/update-store.client',
+		// '~/plugins/load-store.client',
+		// '~/plugins/update-store.client',
 
 	],
 	formkit: {
