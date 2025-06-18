@@ -1,7 +1,29 @@
 import Ajv2020, { type ValidateFunction } from "ajv/dist/2020";
 import fhsSchema from "../schema/fhs_input.schema.json";
-import { BatteryLocation, BuildType, ColdWaterSourceType, DuctShape, DuctType, FloorType, FuelType, HeatingControlType, MassDistributionClass, MVHRLocation, ShadingObjectType, SpaceCoolSystemType, SpaceHeatControlType, SupplyAirFlowRateControlType, SupplyAirTemperatureControlType, TerrainClass, VentilationShieldClass, VentType } from "~/schema/api-schema.types";
-import { mapFhsInputData, type FhsInputSchema } from "./fhsInputMapper";
+import {
+	BuildType,
+	ColdWaterSourceType,
+	DuctShape,
+	DuctType,
+	FloorType,
+	FuelType,
+	HeatingControlType,
+	InverterType,
+	MassDistributionClass,
+	MVHRLocation,
+	OnSiteGenerationVentilationStrategy,
+	ShadingObjectType,
+	SpaceCoolSystemType,
+	SpaceHeatControlType,
+	SupplyAirFlowRateControlType,
+	SupplyAirTemperatureControlType,
+	TerrainClass,
+	VentilationShieldClass,
+	VentType,
+	WaterPipeContentsType,
+	WaterPipeworkLocation
+} from "~/schema/api-schema.types";
+import { type FhsInputSchema, mapFhsInputData } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
 
 const baseForm = {
@@ -216,7 +238,7 @@ const expectedFlatInput: FhsInputSchema = {
 	EnergySupply: {
 		['mains elec']: {
 			fuel: FuelType.electricity,
-			is_export_capable: true,
+			is_export_capable: false,
 		}
 	},
 	Events: {},
@@ -231,15 +253,66 @@ const expectedFlatInput: FhsInputSchema = {
 	HeatingControlType: HeatingControlType.SeparateTimeAndTempControl,
 	HotWaterDemand: {
 		Shower: {
-			"some-mixed-shower-name": {
+			"mixed shower 1 name": {
 				ColdWaterSource: ColdWaterSourceType.mains_water,
-				flowrate: 14,
+				flowrate: 19,
 				type: "MixerShower"
 			},
+			"mixed shower 2 name": {
+				ColdWaterSource: ColdWaterSourceType.mains_water,
+				flowrate: 28,
+				type: "MixerShower"
+			},
+			"electric shower 1 name": {
+				ColdWaterSource: ColdWaterSourceType.mains_water,
+				rated_power: 20,
+				EnergySupply: "mains elec",
+				type: "InstantElecShower"
+			}
 		},
-		Bath: {},
-		Distribution: [],
-		Other: {}
+		Bath: {
+			"small bath name": {
+				ColdWaterSource: ColdWaterSourceType.mains_water,
+				size: 80,
+				flowrate: 8,
+			},
+			"medium bath name": {
+				ColdWaterSource: ColdWaterSourceType.mains_water,
+				size: 180,
+				flowrate: 8,
+			},
+			"large bath name": {
+				ColdWaterSource: ColdWaterSourceType.mains_water,
+				size: 400,
+				flowrate: 14,
+			}
+		},
+		Distribution: [
+			{
+				length: 5,
+				internal_diameter_mm: 14,
+				location: WaterPipeworkLocation.internal
+			},
+			{
+				length: 15,
+				internal_diameter_mm: 20,
+				location: WaterPipeworkLocation.external
+			}
+		],
+		Other: {
+			"kitchen sink name": {
+				ColdWaterSource: ColdWaterSourceType.mains_water,
+				flowrate: 7.4,
+			},
+			"bathroom basin name": {
+				ColdWaterSource: ColdWaterSourceType.mains_water,
+				flowrate: 6.4,
+			},
+			"cloakroom basin name": {
+				ColdWaterSource: ColdWaterSourceType.mains_water,
+				flowrate: 6.4,
+			},
+		}
 	},
 	HotWaterSource: {
 		"hw cylinder": {
@@ -256,7 +329,27 @@ const expectedFlatInput: FhsInputSchema = {
 			},
 			daily_losses: 10,
 			volume: 80,
-			type: "StorageTank"
+			type: "StorageTank",
+			primary_pipework: [{
+				internal_diameter_mm: 15,
+				external_diameter_mm: 22,
+				length: 5,
+				insulation_thickness_mm: 13,
+				insulation_thermal_conductivity: 0.035,
+				surface_reflectivity: true,
+				pipe_contents: WaterPipeContentsType.water,
+				location: WaterPipeworkLocation.internal
+			},
+			{
+				internal_diameter_mm: 28,
+				external_diameter_mm: 28,
+				length: 32,
+				insulation_thickness_mm: 13,
+				insulation_thermal_conductivity: 0.040,
+				surface_reflectivity: false,
+				pipe_contents: WaterPipeContentsType.air,
+				location: WaterPipeworkLocation.external
+			}]
 		}
 	},
 	InfiltrationVentilation: {
@@ -333,14 +426,44 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	InternalGains: {},
 	NumberOfBedrooms: 2,
-	OnSiteGeneration: {},
+	OnSiteGeneration: {
+		"pv system 1": {
+			EnergySupply: "electricity",
+			peak_power: 2,
+			ventilation_strategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
+			pitch: 15,
+			orientation360: 90,
+			base_height: 1,
+			height: 0.4,
+			width: 0.5,
+			inverter_peak_power_ac: 3,
+			inverter_peak_power_dc: 3.8,
+			inverter_is_inside: true,
+			inverter_type: InverterType.optimised_inverter,
+			type: "PhotovoltaicSystem",
+			shading: []
+		}
+	},
 	SimulationTime: {
 		start: 0,
 		end: 8,
 		step: 1
 	},
 	SpaceCoolSystem: {},
-	SpaceHeatSystem: {},
+	SpaceHeatSystem: {
+		"instant elec heater 1": {
+			rated_power: 10,
+			frac_convective: 1,
+			type: "InstantElecHeater",
+			EnergySupply: "mains elec"
+		},
+		"instant elec heater 2": {
+			rated_power: 13,
+			frac_convective: 0.8,
+			type: "InstantElecHeater",
+			EnergySupply: "mains elec"
+		}
+	},
 	GroundFloorArea: 26,
 	Zone: {
 		"zone 1": {
@@ -508,7 +631,26 @@ const expectedFlatInput: FhsInputSchema = {
 			SpaceHeatControl: SpaceHeatControlType.livingroom,
 			SpaceCoolSystem: [],
 			SpaceHeatSystem: [],
-			ThermalBridging: {},
+			ThermalBridging: {
+				"linear thermal bridge": {
+					junction_type: "E3: SILL",
+					length: 1.2,
+					linear_thermal_transmittance: 0.03,
+					type: "ThermalBridgeLinear"
+				},
+				"point thermal bridge 1": {
+					heat_transfer_coeff: 0.045,
+					type: "ThermalBridgePoint"
+				},
+				"point thermal bridge 2": {
+					heat_transfer_coeff: 0.035,
+					type: "ThermalBridgePoint"
+				},
+				"point thermal bridge 3": {
+					heat_transfer_coeff: 0.067,
+					type: "ThermalBridgePoint"
+				},
+			},
 			Lighting: {
 				efficacy: 56.0,
 				bulbs: {
@@ -761,7 +903,7 @@ describe("FHS input mapper", () => {
 			energySupply: {
 				...baseForm,
 				data: {
-					fuelType: [FuelType.electricity], // TODO should this be an array?
+					fuelType: [FuelType.electricity],
 					exported: true,
 				}
 			},
@@ -872,18 +1014,7 @@ describe("FHS input mapper", () => {
 				...baseForm,
 			},
 			electricBattery: {
-				...baseForm,
-				data: [{
-					name: "some-electric-battery-name",
-					capacity: 12,
-					batteryAge: 0,
-					chargeEfficiency: 1,
-					location: BatteryLocation.inside,
-					gridChargingPossible: true,
-					maximumChargeRate: 90,
-					minimumChargeRate: 80,
-					maximumDischargeRate: 20,
-				}]
+				...baseForm
 			}
 		};
 
@@ -899,7 +1030,7 @@ describe("FHS input mapper", () => {
 			}
 		};
 
-		const state: EcaasState = {
+		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
 			livingSpaceFabric,
@@ -908,8 +1039,6 @@ describe("FHS input mapper", () => {
 			pvAndBatteries,
 			cooling
 		};
-
-		store.$state = state;
 
 		const expectedResult: FhsInputSchema = expectedHouseInput;
 
@@ -1270,9 +1399,27 @@ describe("FHS input mapper", () => {
 			livingSpaceThermalBridging: {
 				livingSpaceLinearThermalBridges: {
 					...baseForm,
+					data: [{
+						name: "linear thermal bridge",
+						typeOfThermalBridge: "E3: Sill",
+						linearThermalTransmittance: 0.03,
+						length: 1.2
+					}]
 				},
 				livingSpacePointThermalBridges: {
 					...baseForm,
+					data: [{
+						name: "point thermal bridge 1",
+						heatTransferCoefficient: 0.045
+					},
+					{
+						name: "point thermal bridge 2",
+						heatTransferCoefficient: 0.035
+					},
+					{
+						name: "point thermal bridge 3",
+						heatTransferCoefficient: 0.067
+					}]
 				}
 			}
 		};
@@ -1303,7 +1450,7 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					fuelType: [FuelType.electricity],
-					exported: true,
+					exported: false,
 				}
 			},
 			heatEmitting: {
@@ -1312,6 +1459,16 @@ describe("FHS input mapper", () => {
 				},
 				instantElectricHeater: {
 					...baseForm,
+					data: [{
+						name: "instant elec heater 1",
+						ratedPower: 10,
+						convectionFractionInstant: 1
+					},
+					{
+						name: "instant elec heater 2",
+						ratedPower: 13,
+						convectionFractionInstant: 0.8
+					}]
 				},
 				electricStorageHeater: {
 					...baseForm,
@@ -1363,27 +1520,106 @@ describe("FHS input mapper", () => {
 				mixedShower: {
 					...baseForm,
 					data: [{
-						id: "some-mixed-shower-id",
-						name: "some-mixed-shower-name",
-						flowRate: 14
+						id: "mixed shower 1 id",
+						name: "mixed shower 1 name",
+						flowRate: 19
+					},
+					{
+						id: "mixed shower 2 id",
+						name: "mixed shower 2 name",
+						flowRate: 28
 					}]
 				},
 				electricShower: {
 					...baseForm,
+					data: [{
+						id: "electric shower 1 id",
+						name: "electric shower 1 name",
+						ratedPower: 20
+					}]
 				},
 				bath: {
 					...baseForm,
+					data: [{
+						name: "small bath name",
+						id: "small bath id",
+						size: 80,
+						flowRate: 8
+					},
+					{
+						name: "medium bath name",
+						id: "medium bath id",
+						size: 180,
+						flowRate: 8
+					},
+					{
+						name: "large bath name",
+						id: "large bath id",
+						size: 400,
+						flowRate: 14
+					}]
 				},
 				otherOutlets: {
 					...baseForm,
+					data: [{
+						id: "kitchen sink id",
+						name: "kitchen sink name",
+						flowRate: 7.4
+					},
+					{
+						id: "bathroom basin id",
+						name: "bathroom basin name",
+						flowRate: 6.4
+					},
+					{
+						id: "cloakroom basin id",
+						name: "cloakroom basin name",
+						flowRate: 6.4
+					}]
 				}
 			},
 			pipework: {
 				primaryPipework: {
 					...baseForm,
+					data: [{
+						name: "pipework 1",
+						internalDiameter: 15,
+						externalDiameter: 22,
+						length: 5,
+						insulationThickness: 13,
+						thermalConductivity: 0.035,
+						surfaceReflectivity: true,
+						pipeContents: WaterPipeContentsType.water,
+						hotWaterCylinder: "hw cylinder 1 id",
+						location: WaterPipeworkLocation.internal
+					},
+					{
+						name: "external pipework",
+						internalDiameter: 28,
+						externalDiameter: 28,
+						length: 32,
+						insulationThickness: 13,
+						thermalConductivity: 0.040,
+						surfaceReflectivity: false,
+						pipeContents: WaterPipeContentsType.air,
+						hotWaterCylinder: "hw cylinder 1 id",
+						location: WaterPipeworkLocation.external
+					}]
 				},
 				secondaryPipework: {
 					...baseForm,
+					data: [{
+						name: "secondary pipework",
+						length: 5,
+						location: WaterPipeworkLocation.internal,
+						internalDiameter: 14
+					},
+					{
+						name: "external secondary pipework",
+						length: 15,
+						location: WaterPipeworkLocation.external,
+						internalDiameter: 20
+					}]
 				}
 			},
 			wwhrs: {
@@ -1394,20 +1630,23 @@ describe("FHS input mapper", () => {
 		const pvAndBatteries: PvAndBatteries = {
 			pvSystem: {
 				...baseForm,
+				data: [{
+					name: "pv system 1",
+					peakPower: 2,
+					ventilationStrategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
+					pitch: 15,
+					orientation: 90,
+					elevationalHeight: 1,
+					lengthOfPV: 0.4,
+					widthOfPV: 0.5,
+					inverterPeakPowerAC: 3,
+					inverterPeakPowerDC: 3.8,
+					inverterIsInside: true,
+					inverterType: InverterType.optimised_inverter
+				}]
 			},
 			electricBattery: {
 				...baseForm,
-				data: [{
-					name: "some-electric-battery-name",
-					capacity: 12,
-					batteryAge: 0,
-					chargeEfficiency: 1,
-					location: BatteryLocation.inside,
-					gridChargingPossible: true,
-					maximumChargeRate: 90,
-					minimumChargeRate: 80,
-					maximumDischargeRate: 20,
-				}]
 			}
 		};
 
@@ -1417,7 +1656,7 @@ describe("FHS input mapper", () => {
 			}
 		};
 
-		const state: EcaasState = {
+		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
 			livingSpaceFabric,
@@ -1426,8 +1665,6 @@ describe("FHS input mapper", () => {
 			pvAndBatteries,
 			cooling
 		};
-
-		store.$state = state;
 
 		const expectedResult: FhsInputSchema = expectedFlatInput;
 
