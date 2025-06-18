@@ -883,7 +883,6 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				}
 			},
-			// skipping combustion appliances they have been removed for summer
 			ventilation: {
 				...baseForm,
 				data: {
