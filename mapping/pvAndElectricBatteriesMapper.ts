@@ -43,10 +43,10 @@ export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, 'OnS
 
 export function mapElectricBatteryData(state: ResolvedState): Record<string, SchemaElectricBattery> {
 	return objectFromEntries(state.pvAndBatteries.electricBattery.map((battery): [string, SchemaElectricBattery] => {
-		const { name, batteryAge, location, capacity, chargeEfficiency, gridChargingPossible, maximumChargeRate, maximumDischargeRate, minimumChargeRate } = battery;
+		const { batteryAge, location, capacity, chargeEfficiency, gridChargingPossible, maximumChargeRate, maximumDischargeRate, minimumChargeRate } = battery;
 
 		return [
-			name,
+			"ElectricBattery",
 			{
 				battery_age: batteryAge,
 				battery_location: location,

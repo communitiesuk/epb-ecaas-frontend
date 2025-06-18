@@ -1,6 +1,7 @@
 import Ajv2020, { type ValidateFunction } from "ajv/dist/2020";
 import fhsSchema from "../schema/fhs_input.schema.json";
 import {
+	BatteryLocation,
 	BuildType,
 	ColdWaterSourceType,
 	DuctShape,
@@ -239,6 +240,16 @@ const expectedFlatInput: FhsInputSchema = {
 		['mains elec']: {
 			fuel: FuelType.electricity,
 			is_export_capable: false,
+			ElectricBattery: {
+				capacity: 12,
+				battery_age: 0,
+				charge_discharge_efficiency_round_trip: 1,
+				battery_location: BatteryLocation.inside,
+				grid_charging_possible: true,
+				maximum_charge_rate_one_way_trip: 90,
+				minimum_charge_rate_one_way_trip: 80,
+				maximum_discharge_rate_one_way_trip: 20,
+			}
 		}
 	},
 	Events: {},
@@ -1647,6 +1658,17 @@ describe("FHS input mapper", () => {
 			},
 			electricBattery: {
 				...baseForm,
+				data: [{
+					name: "electric battery 1",
+					capacity: 12,
+					batteryAge: 0,
+					chargeEfficiency: 1,
+					location: BatteryLocation.inside,
+					gridChargingPossible: true,
+					maximumChargeRate: 90,
+					minimumChargeRate: 80,
+					maximumDischargeRate: 20,
+				}]
 			}
 		};
 

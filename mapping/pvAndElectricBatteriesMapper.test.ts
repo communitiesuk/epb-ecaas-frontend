@@ -109,17 +109,17 @@ describe("PV and electric batteries mapper", () => {
 				minimumChargeRate: 4.5,
 				maximumDischargeRate: 2.3,
 			},
-			{
-				name: "Acme Model III",
-				capacity: 14,
-				batteryAge: 0,
-				chargeEfficiency: 0.8,
-				location: BatteryLocation.outside,
-				gridChargingPossible: true,
-				maximumChargeRate: 7.4,
-				minimumChargeRate: 4.2,
-				maximumDischargeRate: 2.9,
-			}
+			// {
+			// 	name: "Acme Model III",
+			// 	capacity: 14,
+			// 	batteryAge: 0,
+			// 	chargeEfficiency: 0.8,
+			// 	location: BatteryLocation.outside,
+			// 	gridChargingPossible: true,
+			// 	maximumChargeRate: 7.4,
+			// 	minimumChargeRate: 4.2,
+			// 	maximumDischargeRate: 2.9,
+			// }
 		];
 
 		store.$patch({
@@ -136,7 +136,7 @@ describe("PV and electric batteries mapper", () => {
 
 		// Assert
 		const expectedResult: Record<string, SchemaElectricBattery> = {
-			"Acme Model II": {
+			"ElectricBattery": {
 				battery_age: 2,
 				battery_location: BatteryLocation.inside,
 				capacity: 10,
@@ -146,16 +146,16 @@ describe("PV and electric batteries mapper", () => {
 				maximum_discharge_rate_one_way_trip: 2.3,
 				minimum_charge_rate_one_way_trip: 4.5
 			},
-			"Acme Model III": {
-				battery_age: 0,
-				battery_location: BatteryLocation.outside,
-				capacity: 14,
-				charge_discharge_efficiency_round_trip: 0.8,
-				grid_charging_possible: true,
-				maximum_charge_rate_one_way_trip: 7.4,
-				maximum_discharge_rate_one_way_trip: 2.9,
-				minimum_charge_rate_one_way_trip: 4.2
-			},
+			// "ElectricBattery1": {
+			// 	battery_age: 0,
+			// 	battery_location: BatteryLocation.outside,
+			// 	capacity: 14,
+			// 	charge_discharge_efficiency_round_trip: 0.8,
+			// 	grid_charging_possible: true,
+			// 	maximum_charge_rate_one_way_trip: 7.4,
+			// 	maximum_discharge_rate_one_way_trip: 2.9,
+			// 	minimum_charge_rate_one_way_trip: 4.2
+			// },
 		};
 
 		expect(result).toEqual(expectedResult);

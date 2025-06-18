@@ -15,10 +15,18 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const dwellingDetailsData = mapDwellingDetailsData(state);
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
 	const livingSpaceFabricData = mapLivingSpaceFabricData(state);
-	const heatingSystemsData = mapHeatingSystemsData(state);
-	const [pvData, _electricBatteries] = mapPvAndElectricBatteriesData(state);
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
 	const coolingData = mapCoolingData(state);
+
+	const [pvData, electricBatteries] = mapPvAndElectricBatteriesData(state);
+	const { EnergySupply, SpaceHeatSystem } = mapHeatingSystemsData(state);
+	const fuelType = "mains elec";
+	const heatingSystemsData = {
+		SpaceHeatSystem,
+		EnergySupply: {
+			[fuelType]: {...EnergySupply[fuelType], ...electricBatteries}
+		}
+	};
 
 	const control: Partial<FhsInputSchema> = {Control: {}};
 	const events: Partial<FhsInputSchema> = {Events: {}};
