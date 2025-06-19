@@ -38,8 +38,12 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 		const { name, zoneReference, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution;
 
 		const distributionDetails: SchemaSpaceHeatSystemDetails = {
-			HeatSource: {name: heatSource},
+			HeatSource: {
+				name: heatSource,
+				temp_flow_limit_upper: 65 // we've defaulted this field on our heat pump until it comes from PCDB
+			},
 			design_flow_temp: designFlowTemp,
+			design_flow_rate: 12, // default value for summer
 			...(typeOfSpaceHeater === "radiator" ? {
 				emitters: Array(distribution.numberOfRadiators).fill({
 					wet_emitter_type: typeOfSpaceHeater,

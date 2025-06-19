@@ -170,8 +170,10 @@ describe("heating systems mapper", () => {
 				"Radiators": {
 					HeatSource: {
 						name: "Acme heat pump",
+						temp_flow_limit_upper: 65,
 					},
 					design_flow_temp: 35,
+					design_flow_rate: 12,
 					emitters: [{
 						wet_emitter_type: "radiator",
 						frac_convective: 0.7,
@@ -245,8 +247,10 @@ describe("heating systems mapper", () => {
 				"Under floor heating": {
 					HeatSource: {
 						name: "Acme heat pump",
+						temp_flow_limit_upper: 65,
 					},
 					design_flow_temp: 35,
+					design_flow_rate: 12,
 					ecodesign_controller: {
 						ecodesign_control_class: 2,
 						min_flow_temp: 30,

@@ -160,9 +160,11 @@ const expectedHouseInput: FhsInputSchema = {
 			type: "WetDistribution",
 			HeatSource: {
 				name: "some-heat-pump-name",
+				temp_flow_limit_upper: 65,
 			},
 			Zone: "zone 1",
 			design_flow_temp: 12,
+			design_flow_rate: 12,
 			ecodesign_controller: {
 				ecodesign_control_class: 8,
 				max_outdoor_temp: 34,
