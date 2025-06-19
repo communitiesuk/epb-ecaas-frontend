@@ -151,16 +151,10 @@ export const useEcaasStore = defineStore("ecaas", {
 export type NulledForms<T> = { [P in keyof T]: T[P] extends EcaasForm<infer U> ? EcaasForm<U | EmptyObject> : NulledForms<T[P]> };
 
 /** Function to wrap a form that uses the Pitch component (which writes to pitch and pitchOption fields) and extract the pitch number value */
-export function extractPitch(form: UsesPitchComponent): number | undefined {
+export function extractPitch(form: UsesPitchComponent): number {
 	const { pitch, pitchOption } = form;
-	if (isNumeric(pitchOption)) {
-		return Number(pitchOption);
-	}
 	if (pitchOption === "custom") {
-		return pitch;
+		return pitch!;
 	}
-}
-
-function isNumeric(value: string): boolean {
-	return Number.isFinite(+value);
+	return Number(pitchOption);
 }

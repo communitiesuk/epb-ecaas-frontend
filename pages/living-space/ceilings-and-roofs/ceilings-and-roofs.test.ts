@@ -28,7 +28,7 @@ describe('ceilings and roofs', () => {
 		surfaceArea: 5,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
-		pitchOption: '180',
+		pitchOption: 'custom',
 		pitch: 180
 	};
 
@@ -68,7 +68,7 @@ describe('ceilings and roofs', () => {
 	const pitchedRoof1: RoofData = {
 		name: "Unheated pitched roof 1",
 		typeOfRoof: 'flat',
-		pitchOption: '180',
+		pitchOption: 'custom',
 		pitch: 180,
 		orientation: 0,
 		length: 1,

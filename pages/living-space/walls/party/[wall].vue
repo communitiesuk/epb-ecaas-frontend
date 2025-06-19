@@ -64,10 +64,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		/>
 		<FieldsPitch
 			:pitch-option="model.pitchOption"
-			:options="{
-				'90': '90',
-				custom: 'Custom'
-			}"
+			:options="pitchOptions()"
 		/>
 		<FieldsOrientation />
 		<FormKit

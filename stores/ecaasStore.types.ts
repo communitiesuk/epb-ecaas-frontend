@@ -142,9 +142,17 @@ export interface WallsData {
 	livingSpacePartyWall: EcaasForm<PartyWallData[]>;
 }
 
+type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+type NonZeroDigit = Exclude<Digit, "0">;
+type AngleString = `${'' | '-'}${NonZeroDigit | ''}${NonZeroDigit | ''}${Digit | ''}`;
+
+export type PitchOption = AngleString | 'custom';
+
+export type StandardPitchOption = '90' | 'custom';
+
 export type ExternalWallData = {
 	name: string;
-	pitchOption: string;
+	pitchOption: StandardPitchOption;
 	pitch?: number;
 	orientation: number;
 	height: number;
@@ -162,7 +170,7 @@ export type InternalWallData = {
 	surfaceAreaOfElement: number;
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
-	pitchOption: string;
+	pitchOption: StandardPitchOption;
 	pitch?: number;
 };
 
@@ -172,14 +180,14 @@ export type WallsToUnheatedSpaceData = {
 	uValue: number;
 	arealHeatCapacity: number;
 	massDistributionClass: MassDistributionClass;
-	pitchOption: string;
+	pitchOption: StandardPitchOption;
 	pitch?: number;
 	thermalResistanceOfAdjacentUnheatedSpace: number;
 };
 
 export type PartyWallData = {
 	name: string;
-	pitchOption: string;
+	pitchOption: StandardPitchOption;
 	pitch?: number;
 	orientation: number;
 	length: number;
@@ -198,13 +206,15 @@ export interface CeilingsAndRoofsData {
 	livingSpaceUnheatedPitchedRoofs: EcaasForm<RoofData[]>;
 }
 
+export type ZeroPitchOption = '0' | 'custom';
+
 export type CeilingData = {
 	name: string;
 	surfaceArea: number;
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
-	pitchOption?: string;
-	pitch: number;
+	pitchOption: ZeroPitchOption;
+	pitch?: number;
 } & TaggedUnion<'type', {
 	[AdjacentSpaceType.heatedSpace]: EmptyObject;
 	[AdjacentSpaceType.unheatedSpace]: {
@@ -218,7 +228,7 @@ export type RoofType = 'flat' | 'pitchedInsulatedAtRoof' | 'pitchedInsulatedAtCe
 export type RoofData = {
 	name: string;
 	typeOfRoof: RoofType;
-	pitchOption?: string;
+	pitchOption?: ZeroPitchOption;
 	pitch: number;
 	orientation?: number;
 	length: number;
@@ -239,7 +249,7 @@ export interface DoorsData {
 
 export type ExternalUnglazedDoorData = {
 	name: string;
-	pitchOption: string;
+	pitchOption: StandardPitchOption;
 	pitch?: number;
 	orientation: number;
 	height: number;
@@ -276,7 +286,7 @@ export type ExternalGlazedDoorData = {
 	height: number;
 	width: number;
 	uValue: number;
-	pitchOption: string;
+	pitchOption: StandardPitchOption;
 	pitch?: number;
 	solarTransmittance: number;
 	elevationalHeight: number;
@@ -295,7 +305,7 @@ export type InternalDoorData = {
 	surfaceArea: number;
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
-	pitchOption: string;
+	pitchOption: StandardPitchOption;
 	pitch?: number;
 } & TaggedUnion<'typeOfInternalDoor', {
 	[AdjacentSpaceType.heatedSpace]: EmptyObject;
@@ -311,7 +321,7 @@ export type WindowData = {
 	height: number;
 	width: number;
 	uValue: number;
-	pitchOption: string;
+	pitchOption: StandardPitchOption;
 	pitch?: number;
 	solarTransmittance: number;
 	elevationalHeight: number;
@@ -739,5 +749,5 @@ export type AirConditioningData = {
 
 export type UsesPitchComponent = {
 	pitch?: number;
-	pitchOption: string;
+	pitchOption: PitchOption;
 };

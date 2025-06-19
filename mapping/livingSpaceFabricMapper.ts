@@ -156,7 +156,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 	const externalWallData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExternalWall?.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementOpaque',
-			pitch: x.pitch!,
+			pitch: extractPitch(x)!,
 			orientation360: x.orientation,
 			height: x.height,
 			width: x.length,
@@ -173,7 +173,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 	const internalWallData: { [key: string]: SchemaBuildingElement }[] = livingSpaceInternalWall?.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementAdjacentConditionedSpace',
-			pitch: x.pitch!,
+			pitch: extractPitch(x),
 			area: x.surfaceAreaOfElement,
 			u_value: defaultUValue,
 			areal_heat_capacity: x.kappaValue,
@@ -184,7 +184,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 	const partyWallData: { [key: string]: SchemaBuildingElement }[] = livingSpacePartyWall?.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementOpaque',
-			pitch: x.pitch!,
+			pitch: extractPitch(x),
 			orientation360: x.orientation,
 			height: x.height,
 			width: x.length,
@@ -201,7 +201,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 	const wallToUnheatedSpaceData: { [key: string]: SchemaBuildingElement }[] = livingSpaceWallToUnheatedSpace?.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
-			pitch: x.pitch!,
+			pitch: extractPitch(x),
 			area: x.surfaceAreaOfElement,
 			u_value: x.uValue,
 			areal_heat_capacity: x.arealHeatCapacity,
@@ -230,7 +230,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 
 	const ceilingData: { [key: string]: SchemaBuildingElement }[] = livingSpaceCeilings.map(x => {
 		const commonFields = {
-			pitch: x.pitch!,
+			pitch: extractPitch(x),
 			area: x.surfaceArea,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
@@ -311,7 +311,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = livingSpaceInternalDoor.map(x => {
 		const commonFields = {
-			pitch: x.pitch!,
+			pitch: extractPitch(x),
 			area: x.surfaceArea,
 			u_value: defaultUValue,
 			areal_heat_capacity: x.kappaValue,
@@ -375,7 +375,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 		return {
 			[x.name]: {
 				type: 'BuildingElementTransparent',
-				pitch: x.pitch!,
+				pitch: extractPitch(x),
 				orientation360: x.orientation,
 				height: x.height,
 				mid_height: x.midHeight,
@@ -396,7 +396,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceExternalUnglazedDoor.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementOpaque',
-			pitch: x.pitch!,
+			pitch: extractPitch(x),
 			orientation360: x.orientation,
 			height: x.height,
 			width: x.width,
@@ -464,7 +464,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 	const windowData: { [key: string]: SchemaBuildingElement }[] = livingSpaceWindows.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementTransparent',
-			pitch: x.pitch!,
+			pitch: extractPitch(x),
 			orientation360: x.orientation,
 			height: x.height,
 			width: x.width,

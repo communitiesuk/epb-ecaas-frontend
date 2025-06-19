@@ -599,7 +599,7 @@ const expectedFlatInput: FhsInputSchema = {
 					area: 15,
 					areal_heat_capacity: 50000,
 					mass_distribution_class: MassDistributionClass.I,
-					pitch: 100,
+					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 0,
 				},
@@ -1394,7 +1394,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						name: "party wall 1",
 						pitchOption: "90",
-						pitch: 90,
+						pitch: 45,
 						orientation: 80,
 						height: 3,
 						length: 5,
@@ -1411,7 +1411,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						name: "external wall 1",
 						pitchOption: "90",
-						pitch: 90,
+						pitch: 45,
 						orientation: 30,
 						height: 2.6,
 						length: 3,
@@ -1427,8 +1427,8 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [{
 						name: "internal wall 1",
-						pitchOption: "100",
-						pitch: 100,
+						pitchOption: "90",
+						pitch: 90,
 						surfaceAreaOfElement: 15,
 						kappaValue: 50000,
 						massDistributionClass: MassDistributionClass.I,
@@ -1438,7 +1438,7 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [{
 						name: "wall to garage",
-						pitchOption: "90",
+						pitchOption: "custom",
 						pitch: 90,
 						surfaceAreaOfElement: 20,
 						uValue: 1, 
@@ -1458,7 +1458,7 @@ describe("FHS input mapper", () => {
 							surfaceArea: 16,
 							kappaValue: 75000,
 							massDistributionClass: MassDistributionClass.I,
-							pitch: 0,
+							pitchOption: '0'
 						},
 						{
 							name: "ceiling to unheated space",
@@ -1467,6 +1467,7 @@ describe("FHS input mapper", () => {
 							kappaValue: 60000,
 							massDistributionClass: MassDistributionClass.IE,
 							pitch: 45,
+							pitchOption: 'custom',
 							thermalResistanceOfAdjacentUnheatedSpace: 3.4,
 							uValue: 2.2
 						}
@@ -1478,7 +1479,6 @@ describe("FHS input mapper", () => {
 						name: "roof 1",
 						typeOfRoof: "flat",
 						pitch: 20,
-						pitchOption: "20",
 						orientation: 180,
 						length: 2.5,
 						width: 10,

@@ -389,7 +389,7 @@ describe('living space fabric mapper', () => {
 		const roof: RoofData = {
 			name: "Roof 1",
 			typeOfRoof: 'flat',
-			pitchOption: '0',
+			pitchOption: 'custom',
 			pitch: 0,
 			length: 1,
 			width: 1,
@@ -404,6 +404,7 @@ describe('living space fabric mapper', () => {
 		const unheatedPitchedRoof: RoofData = {
 			name: "Unheated pitched roof 1",
 			typeOfRoof: 'unheatedPitched',
+			pitchOption: '0',
 			pitch: 0,
 			orientation: 90,
 			length: 1,
@@ -436,7 +437,7 @@ describe('living space fabric mapper', () => {
 
 		const expectedCeiling: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
-			pitch: ceiling.pitch,
+			pitch: extractPitch(ceiling),
 			area: ceiling.surfaceArea,
 			u_value: ceiling.uValue,
 			areal_heat_capacity: ceiling.kappaValue,

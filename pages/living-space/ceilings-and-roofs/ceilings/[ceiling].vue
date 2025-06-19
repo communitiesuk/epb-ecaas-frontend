@@ -1,10 +1,17 @@
 <script setup lang="ts">
+import type { ZeroPitchOption } from '~/stores/ecaasStore.types';
+
 const title = "Ceiling";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const ceilingData = useItemToEdit('ceiling', store.livingSpaceFabric.livingSpaceCeilingsAndRoofs.livingSpaceCeilings?.data);
 const model: Ref<CeilingData> = ref(ceilingData!);
+
+const ceilingPitchOptions: Record<ZeroPitchOption, Capitalize<ZeroPitchOption>> = {
+	'0': '0',
+	custom: 'Custom'
+};
 
 const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
@@ -92,10 +99,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 			<FieldsPitch
 				:pitch-option="model.pitchOption"
-				:options="{
-					'0': '0',
-					custom: 'Custom'
-				}"
+				:options="ceilingPitchOptions"
 			/>
 			<FormKit
 				id="surfaceArea"

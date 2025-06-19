@@ -147,10 +147,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
 		<FieldsPitch
 			:pitch-option="model.pitchOption"
-			:options="{
-				'90': '90',
-				custom: 'Custom'
-			}"
+			:options="pitchOptions()"
 		/>
 		<FieldsOrientation />
 		<FormKit
