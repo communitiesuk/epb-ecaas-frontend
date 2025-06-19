@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { pitchOptions } from '#imports';
 import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
 
 const title = "Window";

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { pitchOptions } from '#imports';
+
 const title = "External glazed door";
 const store = useEcaasStore();
 const { saveToList } = useForm();

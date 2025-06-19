@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { pitchOptions } from '#imports';
+
 const title = "Wall to unheated space";
 const store = useEcaasStore();
 const { saveToList } = useForm();
