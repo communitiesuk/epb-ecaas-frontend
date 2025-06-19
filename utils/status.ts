@@ -41,9 +41,9 @@ export function getSection(
  * @param task
  * @returns Status as GovTagProps
  */
-export function getDuctworkStatus(task: object): GovTagProps {
+export function getDuctworkStatus(task: EcaasForm<boolean>): GovTagProps {
 	const store = useEcaasStore();
-	const form = task as EcaasForm<typeof task>;
+	const form = task;
 	const status = !isFormStarted(form)
 		? formStatus.notStarted
 		:( !checkMvhrHasDuctwork() || !store.infiltrationAndVentilation.ductwork.complete)
@@ -58,8 +58,8 @@ export function getDuctworkStatus(task: object): GovTagProps {
  * @param task
  * @returns Status as GovTagProps
  */
-export function getTaskStatus(task: object): GovTagProps {
-	const form = task as EcaasForm<typeof task>;
+export function getTaskStatus(task: EcaasForm<boolean>): GovTagProps {
+	const form = task;
 	let status = isFormStarted(form)
 		? formStatus.inProgress
 		: formStatus.notStarted;
@@ -126,7 +126,7 @@ export function getSectionStatus(section: object): GovTagProps {
 	return status;
 }
 
-function isFormStarted<T>(form: EcaasForm<T>): boolean {
+function isFormStarted(form: EcaasForm<boolean>): boolean {
 	return (
 		form.data &&
     (Array.isArray(form.data)
