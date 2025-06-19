@@ -5,6 +5,7 @@ import type { GovTagProps } from "~/common.types";
 import { PageType, type Page } from "~/data/pages/pages.types";
 import { CombustionApplianceType } from "~/schema/api-schema.types";
 import type { EmptyObject } from "type-fest";
+import pagesData from "~/data/pages/pages";
 
 function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
@@ -157,4 +158,15 @@ export function extractPitch(form: UsesPitchComponent): number {
 		return pitch!;
 	}
 	return Number(pitchOption);
+}
+
+export function hasCompleteState(state: EcaasState): boolean {
+	const stateEntries = Object.entries(state).filter(
+		(e) => e[0] in getInitialState()
+	);
+	// go over section pages and check they are all complete
+	return pagesData.filter(page => page.type === PageType.Section).every(page => {
+		const section = getSection(page.id, Object.fromEntries(stateEntries))!;
+		return getSectionStatus(section as Record<string, object>).text === 'Complete';
+	});
 }

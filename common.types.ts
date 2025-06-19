@@ -1,8 +1,8 @@
 import type { SummaryData } from "./components/SummaryList.vue";
 
 export interface GovTagProps {
-	text: string;
-	color?: string;
+	text: 'Not started' | 'In progress' | 'Complete';
+	color: 'grey' | 'yellow' | 'green';
 }
 
 export interface SummarySection {

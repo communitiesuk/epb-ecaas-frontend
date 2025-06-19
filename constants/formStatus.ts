@@ -1,6 +1,6 @@
 import type { GovTagProps } from "~/common.types";
 
-interface FormStatus {
+export interface FormStatus {
 	readonly notStarted: GovTagProps;
 	readonly inProgress: GovTagProps;
 	readonly complete: GovTagProps;

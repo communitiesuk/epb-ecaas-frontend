@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { mapFhsInputData, type ResolvedState } from '~/mapping/fhsInputMapper';
 import type {SchemaFhsComplianceResponse} from '~/schema/api-schema.types';
+import { hasCompleteState } from '~/stores/ecaasStore';
 
 const store = useEcaasStore();
 const calculatePending = ref(false);
+
+const isAvailable = hasCompleteState(store.$state);
+
+const isDisabled = calculatePending.value || !isAvailable;
 
 const calculate = async () => {
 	calculatePending.value = true;
@@ -25,7 +30,7 @@ const calculate = async () => {
 </script>
 
 <template>
-	<GovButton class="calculate-button" :disabled="calculatePending ?? null" @click="calculate">Calculate</GovButton>
+	<GovButton class="calculate-button" :disabled="isDisabled" @click="calculate">Calculate</GovButton>
 </template>
 
 <style lang="scss" scoped>
