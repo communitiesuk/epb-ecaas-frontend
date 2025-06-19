@@ -29,6 +29,7 @@ import {
 } from "~/schema/api-schema.types";
 import { type FhsInputSchema, mapFhsInputData } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
+import { defaultHeatSourceWetDetails } from "~/mapping/common";
 
 const baseForm = {
 	data: [],
@@ -187,6 +188,7 @@ const expectedHouseInput: FhsInputSchema = {
 		}
 	},
 	GroundFloorArea: 50,
+	HeatSourceWet: {"some-heat-pump-name": defaultHeatSourceWetDetails},
 	Zone: {
 		"zone 1": {
 			BuildingElement: {
@@ -498,6 +500,9 @@ const expectedFlatInput: FhsInputSchema = {
 		}
 	},
 	GroundFloorArea: 26,
+	HeatSourceWet: {
+		"heat pump 1 name": defaultHeatSourceWetDetails,
+	},
 	Zone: {
 		"zone 1": {
 			BuildingElement: {

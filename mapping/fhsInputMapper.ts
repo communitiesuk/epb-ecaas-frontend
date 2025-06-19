@@ -1,5 +1,5 @@
 import type { StripDefs } from './mapping.types';
-import { ColdWaterSourceType, type SchemaFhsInputSchema } from '~/schema/api-schema.types';
+import { ColdWaterSourceType, type SchemaFhsInputSchema, type SchemaStorageTank } from '~/schema/api-schema.types';
 import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 import merge from 'deepmerge';
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
@@ -8,6 +8,7 @@ import { mapLivingSpaceFabricData } from './livingSpaceFabricMapper';
 import { mapPvAndElectricBatteriesData } from './pvAndElectricBatteriesMapper';
 import { mapDomesticHotWaterData } from './domesticHotWaterMapper';
 import { mapCoolingData } from './coolingMapper';
+import { defaultHeatSourceWetDetails } from "~/mapping/common";
 
 export type ResolvedState = Resolved<EcaasState>;
 
@@ -48,11 +49,16 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 			step: 1
 		}
 	};
+	// Below uses default values until heat pump is set up to come from PCDB
+	const { HotWaterSource } = domesticHotWaterData;
+	const heatPumpName: string = Object.keys((HotWaterSource!['hw cylinder'] as SchemaStorageTank).HeatSource)[0]!;
+	const defaultHeatSourceWetData = {"HeatSourceWet": {[heatPumpName]: defaultHeatSourceWetDetails}};
 
 	const fhsInput = merge.all([
 		dwellingDetailsData,
 		infiltrationVentilationData,
 		livingSpaceFabricData,
+		defaultHeatSourceWetData,
 		heatingSystemsData,
 		domesticHotWaterData,
 		pvData,
