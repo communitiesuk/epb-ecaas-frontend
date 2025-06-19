@@ -1,3 +1,4 @@
+import { objectEntries } from "ts-extras";
 import type { GovTagProps } from "~/common.types";
 import formStatus from "~/constants/formStatus";
 import pagesData from "~/data/pages/pages";
@@ -76,11 +77,11 @@ export function getTaskStatus(task: EcaasForm<boolean>): GovTagProps {
  * @param entry
  * @returns Status as GovTagProps
  */
-export function getSectionStatus(section: object): GovTagProps {
+export function getSectionStatus(section: Record<string, object>): GovTagProps {
 	let status = formStatus.notStarted;
 	let complete = 0;
 
-	const tasks = Object.entries(section);
+	const tasks = objectEntries(section);
 
 	tasks.forEach((task) => {
 		const taskPage = pagesData.find((x) => x.id === task[0]);
@@ -90,7 +91,7 @@ export function getSectionStatus(section: object): GovTagProps {
 		}
 
 		if (taskPage?.type === PageType.Task) {
-			const form = task[1] as EcaasForm<(typeof task)[1]>;
+			const form = task[1] as EcaasForm<boolean>;
 
 			if (isFormStarted(form) || form.complete) {
 				status = formStatus.inProgress;
@@ -106,7 +107,7 @@ export function getSectionStatus(section: object): GovTagProps {
 		}
 
 		if (taskPage?.type === PageType.TaskGroup) {
-			const taskGroupStatus = getSectionStatus(task[1]);
+			const taskGroupStatus = getSectionStatus(task[1] as Record<string, object>);
 
 			if (taskGroupStatus !== formStatus.notStarted) {
 				status = formStatus.inProgress;
@@ -115,7 +116,7 @@ export function getSectionStatus(section: object): GovTagProps {
 		}
 
 		if (taskPage?.type === PageType.Section) {
-			status = getSectionStatus(task[1]);
+			status = getSectionStatus(task[1] as Record<string, object>);
 		}
 	});
 
