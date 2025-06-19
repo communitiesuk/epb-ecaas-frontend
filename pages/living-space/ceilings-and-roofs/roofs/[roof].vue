@@ -6,6 +6,12 @@ const { saveToList } = useForm();
 const roofData = useItemToEdit('roof', store.livingSpaceFabric.livingSpaceCeilingsAndRoofs.livingSpaceRoofs?.data);
 const model: Ref<RoofData> = ref(roofData!);
 
+const roofTypeOptions: Record<Exclude<RoofType, 'unheatedPitched'>, string> = {
+	flat: 'Flat roof',
+	pitchedInsulatedAtRoof: 'Pitched roof insulated at roof or rafter',
+	pitchedInsulatedAtCeiling: 'Pitched roof insulated at ceiling or joist'
+};
+
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
 		const {livingSpaceRoofs} = state.livingSpaceFabric.livingSpaceCeilingsAndRoofs;
@@ -60,11 +66,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="typeOfRoof"
 			type="govRadios"
-			:options="{
-				flat: 'Flat roof',
-				pitchedInsulatedAtRoof: 'Pitched roof insulated at roof or rafter',
-				pitchedInsulatedAtCeiling: 'Pitched roof insulated at ceiling or joist'
-			}"
+			:options="roofTypeOptions"
 			label="Type of roof"
 			name="typeOfRoof"
 			validation="required"

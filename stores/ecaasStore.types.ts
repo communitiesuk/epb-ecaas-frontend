@@ -213,9 +213,11 @@ export type CeilingData = {
 	}
 }>;
 
+export type RoofType = 'flat' | 'pitchedInsulatedAtRoof' | 'pitchedInsulatedAtCeiling' | 'unheatedPitched';
+
 export type RoofData = {
 	name: string;
-	typeOfRoof: string;
+	typeOfRoof: RoofType;
 	pitchOption?: string;
 	pitch: number;
 	orientation?: number;
