@@ -6,5 +6,9 @@ import pagesData from "~/data/pages/pages";
  */
 export function usePage() {
 	const route = useRoute();
-	return pagesData.find(p => p.url === route.path);
+	const page = pagesData.find(p => p.url === route.path);
+	if (!page) {
+		throw new Error(`Page could not be resolved for route path '${ route.path }'`);
+	}
+	return page;
 }

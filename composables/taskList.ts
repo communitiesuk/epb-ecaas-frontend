@@ -9,15 +9,11 @@ import { PageType, type Page } from "~/data/pages/pages.types";
  */
 export function useTaskList() {
 
-	const createTaskList = (page?: Page) => {
-		if (!page) {
-			return [];
-		}
-
+	const createTaskList = (page: Page) => {
 		const store = useEcaasStore();
 
 		const taskList: Array<GovTaskListItemProps> = pagesData
-			.filter(p => p.parentId === page!.id && [PageType.Section, PageType.Task, PageType.TaskGroup].includes(p.type))
+			.filter(p => p.parentId === page.id && [PageType.Section, PageType.Task, PageType.TaskGroup].includes(p.type))
 			.map(p => {
 				return {
 					id: p.id,
