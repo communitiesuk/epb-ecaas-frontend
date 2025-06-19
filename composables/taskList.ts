@@ -21,7 +21,8 @@ export function useTaskList() {
 					url: p.url,
 					status: {
 						tag: store.getStatus(p)
-					}
+					},
+					excluded: !!p.excludeFromNavigation?.call(globalThis)
 				};
 			});
 

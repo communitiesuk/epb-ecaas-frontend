@@ -10,6 +10,7 @@ export interface GovTaskListItemProps {
 	title: string;
 	status: GovTaskListItemStatus;
 	url?: string;
+	excluded: boolean;
 }
 
 defineProps<{
