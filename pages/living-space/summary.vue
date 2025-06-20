@@ -16,7 +16,7 @@ const zoneParametersSummary: SummarySection = {
 	data: {
 		"Area": zoneParametersData.area,
 		"Volume": zoneParametersData.volume,
-		"Heating control type": zoneParametersData.heatingControlType
+		// "Heating control type": zoneParametersData.heatingControlType
 	},
 	editUrl: getUrl('livingSpaceZoneParameters')!
 };

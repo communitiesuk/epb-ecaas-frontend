@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { getUrl } from '#imports';
-import type { RadioOption } from '~/components/form-kit/Radios.vue';
-import type { HeatingControlType } from '~/schema/api-schema.types';
 
 const store = useEcaasStore();
 
@@ -9,14 +7,19 @@ const model = ref({
 	...store.livingSpaceFabric.livingSpaceZoneParameters.data,
 });
 
-const heatingControlTypeOptions: Record<HeatingControlType, RadioOption> = {
-	SeparateTempControl: { 
-		label: 'Separate temperature control'
-	},
-	SeparateTimeAndTempControl: {
-		label: 'Separate temperature and time control'
-	}
-};
+// const heatingControlTypeOptions: Record<HeatingControlType, RadioOption> = {
+// 	SeparateTempControl: { 
+// 		label: 'Separate temperature control'
+// 	},
+// 	SeparateTimeAndTempControl: {
+// 		label: 'Separate temperature and time control'
+// 	}
+// };
+
+const spaceHeatingSystemOptions = [
+	store.heatingSystems.heatEmitting.wetDistribution.data.map(x => [x.name, x.name] as [string, string]),
+	store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => [x.name, x.name] as [string, string]),
+].flat();
 
 const saveForm = (fields: typeof model.value) => {
 	store.$patch({
@@ -88,7 +91,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 
-		<FormKit
+		<!-- <FormKit
 			id="heatingControlType"
 			type="govRadios"
 			:options="heatingControlTypeOptions"
@@ -96,19 +99,28 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="heatingControlType"
 			validation="required"
 			help="Determines whether living-room and rest-of-dwelling have differing set-points/heating schedules"
-		/>
+		/> -->
 
 		<FormKit
 			id="spaceHeatingSystem"
-			type="govStoredList"
-			label="Space heating system for this zone"
+			type="govRadios"
+			label=" Heat emitting system for this zone"
 			name="spaceHeatingSystem"
-			help="Select a space heating system that has already been added to the calculation"
-			:options="[]"
-			:link="getUrl('heatingSystems')"
-		/>
+			help="Select a heat emitting system that has already been added to the calculation. You can only add one heat emitting system for each zone."
+			:options="new Map(spaceHeatingSystemOptions)"
+			:link="getUrl('heatingSystems')">
+			<div v-if="!spaceHeatingSystemOptions.length">
+				<p class="govuk-error-message">No heat emitting systems added.</p>
+			</div>
+		</FormKit>
 
-		<FormKit
+		<p class="govuk-!-margin-bottom-5">
+			<NuxtLink :to="getUrl('heatEmitting')" class="govuk-link gov-radios-add-link">
+				Edit heat emitting systems
+			</NuxtLink>
+		</p>
+
+		<!-- <FormKit
 			id="spaceCoolingSystem"
 			type="govStoredList"
 			label="Space cooling system for this zone"
@@ -116,8 +128,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Select a space cooling system that has already been added to the calculation"
 			:options="[]"
 			:link="getUrl('cooling')"
-		/>
-		<FormKit
+		/> -->
+		<!-- <FormKit
 			id="spaceHeatControlSystem"
 			type="govStoredList"
 			label="Space heat control system for this zone"
@@ -125,7 +137,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Select a space heat control system that has already been added to the calculation"
 			:options="[]"
 			link="/"
-		/>
-		<FormKit type="govButton" label="Save and continue" />
+		/> -->
+		<FormKit type="govButton" label="Save and continue"  />
 	</FormKit>
 </template>
