@@ -5,7 +5,6 @@ import dwellingDetailsPages from "./dwellingDetails";
 import heatingSystemsPages from "./heatingSystems";
 import infiltrationAndVentilationPages from "./infiltrationAndVentilation";
 import livingSpaceFabricPages from "./livingSpaceFabric";
-import restOfDwellingPages from "./restOfDwelling";
 import pvAndBatteriesPages from "./pvAndBatteries";
 
 const pagesData: Array<Page> = [
@@ -18,7 +17,7 @@ const pagesData: Array<Page> = [
 	...dwellingDetailsPages,
 	...infiltrationAndVentilationPages,
 	...livingSpaceFabricPages,
-	...restOfDwellingPages,
+	// ...restOfDwellingPages,
 	...heatingSystemsPages,
 	...domesticHotWaterPages,
 	...pvAndBatteriesPages,
