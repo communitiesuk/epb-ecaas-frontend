@@ -186,7 +186,7 @@ const expectedHouseInput: FhsInputSchema = {
 				}
 			],
 			temp_diff_emit_dsgn: 31,
-			thermal_mass: 23,
+			thermal_mass: 0.14,
 		}
 	},
 	GroundFloorArea: 50,
@@ -1035,7 +1035,7 @@ describe("FHS input mapper", () => {
 						name: "some-wet-distribution",
 						zoneReference: "zone 1",
 						heatSource: "some-heat-pump-name",
-						thermalMass: 23,
+						thermalMass: 0.14,
 						designTempDiffAcrossEmitters: 31,
 						designFlowTemp: 12,
 						ecoDesignControllerClass: "8",
