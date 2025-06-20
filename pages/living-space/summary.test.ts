@@ -13,7 +13,7 @@ const zoneParametersData: LivingSpaceZoneParametersData = {
 	area: 10,
 	volume: 10,
 	heatingControlType: '',
-	spaceHeatingSystemForThisZone: [],
+	spaceHeatingSystemForThisZone: 'elec heater',
 	spaceCoolingSystemForThisZone: [],
 	spaceHeatControlSystemForThisZone: []
 };
@@ -281,7 +281,7 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Area": "10",
 				"Volume": "10",
-				// "Heating control type": "Separate temp control"
+				"Heat emitting system for this zone": "Elec heater",
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {

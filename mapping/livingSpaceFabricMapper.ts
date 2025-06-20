@@ -33,8 +33,8 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 		HeatingControlType: livingSpaceZoneParameters.heatingControlType as SchemaHeatingControlType,
 		Zone: {
 			"zone 1": {
-				SpaceHeatSystem: livingSpaceZoneParameters.spaceHeatingSystemForThisZone?.map(x => x.name),
-				SpaceCoolSystem: livingSpaceZoneParameters.spaceCoolingSystemForThisZone?.map(x => x.name),
+				SpaceHeatSystem: livingSpaceZoneParameters.spaceHeatingSystemForThisZone,
+				// SpaceCoolSystem: livingSpaceZoneParameters.spaceCoolingSystemForThisZone?.map(x => x.name),
 				SpaceHeatControl: SpaceHeatControlType.livingroom,
 				area: livingSpaceZoneParameters.area,
 				volume: livingSpaceZoneParameters.volume,

@@ -108,7 +108,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="spaceHeatingSystemForThisZone"
 			help="Select a heat emitting system that has already been added to the calculation. You can only add one heat emitting system for each zone."
 			:options="new Map(spaceHeatingSystemOptions)"
-			:link="getUrl('heatingSystems')">
+			:link="getUrl('heatingSystems')"
+			validation="required">
 			<div v-if="!spaceHeatingSystemOptions.length">
 				<p class="govuk-error-message">No heat emitting systems added.</p>
 			</div>

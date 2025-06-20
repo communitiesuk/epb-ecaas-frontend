@@ -7,7 +7,6 @@ import { mapHeatingSystemsData } from './heatingSystemsMapper';
 import { mapLivingSpaceFabricData } from './livingSpaceFabricMapper';
 import { mapPvAndElectricBatteriesData } from './pvAndElectricBatteriesMapper';
 import { mapDomesticHotWaterData } from './domesticHotWaterMapper';
-import { mapCoolingData } from './coolingMapper';
 import { defaultHeatSourceWetDetails } from "~/mapping/common";
 
 export type ResolvedState = Resolved<EcaasState>;
@@ -17,7 +16,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
 	const livingSpaceFabricData = mapLivingSpaceFabricData(state);
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
-	const coolingData = mapCoolingData(state);
+	// const coolingData = mapCoolingData(state);
 
 	const [pvData, electricBatteries] = mapPvAndElectricBatteriesData(state);
 	const { EnergySupply, SpaceHeatSystem } = mapHeatingSystemsData(state);
@@ -62,7 +61,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		heatingSystemsData,
 		domesticHotWaterData,
 		pvData,
-		coolingData,
+		// coolingData,
 		defaultColdWaterSource,
 		control,
 		events,

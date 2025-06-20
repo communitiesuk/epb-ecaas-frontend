@@ -14,7 +14,6 @@ import {
 	MVHRLocation,
 	OnSiteGenerationVentilationStrategy,
 	ShadingObjectType,
-	SpaceCoolSystemType,
 	SpaceHeatControlType,
 	SupplyAirFlowRateControlType,
 	SupplyAirTemperatureControlType,
@@ -146,15 +145,15 @@ const expectedHouseInput: FhsInputSchema = {
 		end: 8,
 		step: 1
 	},
-	SpaceCoolSystem: {
-		"some-aircon-unit-name": {
-			type: SpaceCoolSystemType.AirConditioning,
-			EnergySupply: "mains elec",
-			cooling_capacity: 60,
-			efficiency: 4,
-			frac_convective: 0.2
-		}
-	},
+	// SpaceCoolSystem: {
+	// 	"some-aircon-unit-name": {
+	// 		type: SpaceCoolSystemType.AirConditioning,
+	// 		EnergySupply: "mains elec",
+	// 		cooling_capacity: 60,
+	// 		efficiency: 4,
+	// 		frac_convective: 0.2
+	// 	}
+	// },
 	SpaceHeatSystem: {
 		"some-wet-distribution": {
 			type: "WetDistribution",
@@ -224,9 +223,9 @@ const expectedHouseInput: FhsInputSchema = {
 					}
 				}
 			},
-			SpaceCoolSystem: ["some-aircon-unit-name"],
+			// SpaceCoolSystem: ["some-aircon-unit-name"],
 			SpaceHeatControl: SpaceHeatControlType.livingroom,
-			SpaceHeatSystem: ["some-wet-distribution"],
+			SpaceHeatSystem: "some-wet-distribution",
 			ThermalBridging: {},
 			area: 100,
 			volume: 300,
@@ -486,7 +485,7 @@ const expectedFlatInput: FhsInputSchema = {
 		end: 8,
 		step: 1
 	},
-	SpaceCoolSystem: {},
+	// SpaceCoolSystem: {},
 	SpaceHeatSystem: {
 		"instant elec heater 1": {
 			rated_power: 10,
@@ -750,8 +749,8 @@ const expectedFlatInput: FhsInputSchema = {
 				}
 			},
 			SpaceHeatControl: SpaceHeatControlType.livingroom,
-			SpaceCoolSystem: [],
-			SpaceHeatSystem: [],
+			// SpaceCoolSystem: [],
+			SpaceHeatSystem: "instant elec heater 1",
 			ThermalBridging: {
 				"linear thermal bridge": {
 					junction_type: "E3: SILL",
@@ -917,13 +916,11 @@ describe("FHS input mapper", () => {
 					area: 100,
 					volume: 300,
 					heatingControlType: HeatingControlType.SeparateTempControl,
-					spaceHeatingSystemForThisZone: [{
-						name: "some-wet-distribution",
-					}],
-					spaceCoolingSystemForThisZone: [{
-						name: "some-aircon-unit-name",
-					}],
-					spaceHeatControlSystemForThisZone: []
+					spaceHeatingSystemForThisZone: "some-wet-distribution",
+					// spaceCoolingSystemForThisZone: [{
+					// 	name: "some-aircon-unit-name",
+					// }],
+					// spaceHeatControlSystemForThisZone: []
 				}
 			},
 			livingSpaceFloors: {
@@ -1319,9 +1316,9 @@ describe("FHS input mapper", () => {
 					area: 16,
 					volume: 550,
 					heatingControlType: HeatingControlType.SeparateTimeAndTempControl,
-					spaceHeatingSystemForThisZone: [],
-					spaceCoolingSystemForThisZone: [],
-					spaceHeatControlSystemForThisZone: []
+					spaceHeatingSystemForThisZone: "instant elec heater 1",
+					// spaceCoolingSystemForThisZone: [],
+					// spaceHeatControlSystemForThisZone: []
 				}
 			},
 			livingSpaceFloors: {
