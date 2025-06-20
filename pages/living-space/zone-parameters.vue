@@ -28,10 +28,10 @@ const saveForm = (fields: typeof model.value) => {
 				data: {
 					area: fields.area,
 					volume: fields.volume,
-					heatingControlType: fields.heatingControlType,
 					spaceHeatingSystemForThisZone: fields.spaceHeatingSystemForThisZone,
-					spaceCoolingSystemForThisZone: fields.spaceCoolingSystemForThisZone,
-					spaceHeatControlSystemForThisZone: fields.spaceHeatControlSystemForThisZone,
+					// heatingControlType: fields.heatingControlType,
+					// spaceCoolingSystemForThisZone: fields.spaceCoolingSystemForThisZone,
+					// spaceHeatControlSystemForThisZone: fields.spaceHeatControlSystemForThisZone,
 				},
 				complete: true,
 			},
@@ -102,10 +102,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/> -->
 
 		<FormKit
-			id="spaceHeatingSystem"
+			id="spaceHeatingSystemForThisZone"
 			type="govRadios"
 			label=" Heat emitting system for this zone"
-			name="spaceHeatingSystem"
+			name="spaceHeatingSystemForThisZone"
 			help="Select a heat emitting system that has already been added to the calculation. You can only add one heat emitting system for each zone."
 			:options="new Map(spaceHeatingSystemOptions)"
 			:link="getUrl('heatingSystems')">
