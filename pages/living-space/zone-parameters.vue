@@ -123,7 +123,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<!-- <FormKit
 			id="spaceCoolingSystem"
 			type="govStoredList"
-			label="Space cooling system for this zone"
+			label="Cooling for this zone"
 			name="spaceCoolingSystem"
 			help="Select a space cooling system that has already been added to the calculation"
 			:options="[]"
