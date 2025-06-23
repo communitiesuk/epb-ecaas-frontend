@@ -98,7 +98,7 @@ export function mapDistributionData(state: ResolvedState) {
 
 export function mapHotWaterSourcesData(state: ResolvedState) {
 	return state.domesticHotWater.waterHeating.hotWaterCylinder.map((x): SchemaHotWaterSourceDetails => {
-		const heatPumpName = state.heatingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.id === x.heatSource)?.name;
+		const heatPumpName = state.heatingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.id === x.heatSource)?.name ?? "Heat pump";
 		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
 			return {
 				location: x.location,
@@ -119,8 +119,8 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 			volume: x.tankVolume,
 			HeatSource: {
 				// Adding these values as default until heat pump is set up to come from PCDB
-				[heatPumpName!]: {
-					name: heatPumpName!,
+				[heatPumpName]: {
+					name: heatPumpName,
 					EnergySupply: "mains elec", 
 					heater_position: 0.1,
 					type: "HeatSourceWet",
