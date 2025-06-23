@@ -28,11 +28,11 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		}
 	};
 
-	const control: Partial<FhsInputSchema> = {Control: {}};
-	const events: Partial<FhsInputSchema> = {Events: {}};
-	const internalGains: Partial<FhsInputSchema> = {InternalGains: {}};
+	const control: Pick<FhsInputSchema, 'Control'> = {Control: {}};
+	const events: Pick<FhsInputSchema, 'Events'> = {Events: {}};
+	const internalGains: Pick<FhsInputSchema, 'InternalGains'> = {InternalGains: {}};
 	
-	const defaultColdWaterSource: Partial<FhsInputSchema> = { 
+	const defaultColdWaterSource: Pick<FhsInputSchema, 'ColdWaterSource'> = { 
 		ColdWaterSource: {
 			[ColdWaterSourceType.mains_water]: {
 				start_day: 0,
@@ -41,7 +41,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 			}
 		}
 	};
-	const defaultSimulationTime: Partial<FhsInputSchema> = {
+	const defaultSimulationTime: Pick<FhsInputSchema, 'SimulationTime'> = {
 		SimulationTime: {
 			start: 0,
 			end: 8,
