@@ -4734,6 +4734,119 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
+                    /** @example {
+                     *       "data": {
+                     *         "dwelling_emission_rate": 29.85458751264378,
+                     *         "target_emission_rate": 31.61130283648656,
+                     *         "emission_rate_compliant": true,
+                     *         "dwelling_primary_energy_rate": 275.95387516860916,
+                     *         "target_primary_energy_rate": 254.87527761542435,
+                     *         "primary_energy_rate_compliant": false,
+                     *         "dwelling_fabric_energy_efficiency": 40.96297004171527,
+                     *         "target_fabric_energy_efficiency": 33.723746175514904,
+                     *         "fabric_energy_efficiency_compliant": false,
+                     *         "energy_demand": {
+                     *           "space_heating": {
+                     *             "actual": 17.16356340928921,
+                     *             "notional": 25.760607155988687
+                     *           },
+                     *           "space_cooling": {
+                     *             "actual": -64.17328615921666,
+                     *             "notional": -56.074844460081685
+                     *           }
+                     *         },
+                     *         "delivered_energy_use": {
+                     *           "total": {
+                     *             "actual": 175.24604509413854,
+                     *             "notional": 139.38990128808544
+                     *           },
+                     *           "by_system": {
+                     *             "mechvent1": {
+                     *               "actual": 0.34781063416353913,
+                     *               "notional": 0
+                     *             },
+                     *             "total": {
+                     *               "actual": 175.24604509413854,
+                     *               "notional": 139.38990128808544
+                     *             },
+                     *             "lighting": {
+                     *               "actual": 0.004627869797161936,
+                     *               "notional": 0.0021596725720089346
+                     *             },
+                     *             "Clothes_washing": {
+                     *               "actual": 108.1879413550729,
+                     *               "notional": 108.1879413550729
+                     *             },
+                     *             "Fridge": {
+                     *               "actual": 2.1862745085161106,
+                     *               "notional": 2.1862745085161106
+                     *             },
+                     *             "Oven": {
+                     *               "actual": 1.589614115685917,
+                     *               "notional": 1.589614115685917
+                     *             },
+                     *             "Kettle": {
+                     *               "actual": 1.0357616579409936,
+                     *               "notional": 1.0357616579409936
+                     *             },
+                     *             "Microwave": {
+                     *               "actual": 0.2989791338236019,
+                     *               "notional": 0.2989791338236019
+                     *             },
+                     *             "Otherdevices": {
+                     *               "actual": 8.318576377200134,
+                     *               "notional": 8.318576377200134
+                     *             },
+                     *             "immersion": {
+                     *               "actual": 14.483917676567225,
+                     *               "notional": 0
+                     *             },
+                     *             "main 1": {
+                     *               "actual": 31.70746941267138,
+                     *               "notional": 0
+                     *             },
+                     *             "main 2": {
+                     *               "actual": 1.3349625945025114,
+                     *               "notional": 0
+                     *             },
+                     *             "cooling system 1": {
+                     *               "actual": 0.05116606530398112,
+                     *               "notional": 0.04417504143392989
+                     *             },
+                     *             "cooling system 2": {
+                     *               "actual": 3.6066535193630824,
+                     *               "notional": 2.1109348259253
+                     *             },
+                     *             "Hobs": {
+                     *               "actual": 2.09229017353001,
+                     *               "notional": 2.09229017353001
+                     *             }
+                     *           }
+                     *         },
+                     *         "energy_use_by_fuel": {
+                     *           "total": {
+                     *             "actual": 71500.38639840852,
+                     *             "notional": 56871.07972553885
+                     *           },
+                     *           "mains elec": {
+                     *             "actual": 70646.73200760827,
+                     *             "notional": 56017.425334738604
+                     *           },
+                     *           "mains gas": {
+                     *             "actual": 853.6543908002442,
+                     *             "notional": 853.6543908002442
+                     *           }
+                     *         }
+                     *       },
+                     *       "meta": {
+                     *         "hem_version": "0.30",
+                     *         "hem_version_date": "2024-06-25",
+                     *         "fhs_version": "0.21",
+                     *         "fhs_version_date": "2024-06-25",
+                     *         "software_version": "f3303a81d75aaf8fda2d4d42b3eab7ead2b86dfa",
+                     *         "ecaas_request_id": "b6e02d18-f919-490e-bd1b-40d85d8ac456"
+                     *       }
+                     *     } */
                     "application/vnd.api+json": {
                         data: components["schemas"]["FhsComplianceResponse"];
                         meta: components["schemas"]["FhsMeta"];
@@ -4748,6 +4861,7 @@ export interface operations {
                 content: {
                     "application/vnd.api+json": {
                         errors: components["schemas"]["JsonApiOnePointOneErrors"];
+                        meta: components["schemas"]["FhsMeta"];
                     };
                 };
             };
@@ -4759,6 +4873,7 @@ export interface operations {
                 content: {
                     "application/vnd.api+json": {
                         errors: components["schemas"]["JsonApiOnePointOneErrors"];
+                        meta: components["schemas"]["FhsMeta"];
                     };
                 };
             };
@@ -4770,6 +4885,7 @@ export interface operations {
                 content: {
                     "application/vnd.api+json": {
                         errors: components["schemas"]["JsonApiOnePointOneErrors"];
+                        meta: components["schemas"]["FhsMeta"];
                     };
                 };
             };
