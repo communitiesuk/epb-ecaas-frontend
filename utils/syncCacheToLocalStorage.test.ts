@@ -2,13 +2,12 @@ describe("syncCacheToLocalStorage", () => {
 
 	const mockResponse = { test: "value" };
 	global.$fetch = vi.fn(() =>
-		Promise.resolve({
-			json: () => Promise.resolve(mockResponse),
-		})
+		Promise.resolve(Promise.resolve(mockResponse))
 	) as unknown as typeof global.$fetch;
 
 	const getItemSpy = vi.spyOn(localStorage, "getItem");
 	const setItemSpy = vi.spyOn(localStorage, "setItem");
+
 	beforeEach(() => {
 		localStorage.clear();
 		getItemSpy.mockClear();
@@ -26,6 +25,12 @@ describe("syncCacheToLocalStorage", () => {
 
 	it("should fetch data from cache if local storage has no ecaas data", async () => {
 		await syncCacheToLocalStorage();
-		expect($fetch).toHaveBeenCalledWith("/api/getState", { method: "GET" });
+		expect($fetch).toHaveBeenCalledWith("/api/getState", { method: "GET" });  
+	});
+
+	it("should update local storage with cached data if local storage has no ecaas data", async () => {
+		await syncCacheToLocalStorage();
+		expect(setItemSpy).toHaveBeenCalledWith("ecaas", JSON.stringify(mockResponse));
+		expect(localStorage.ecaas).toEqual(JSON.stringify(mockResponse));
 	});
 });

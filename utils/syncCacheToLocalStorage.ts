@@ -3,6 +3,8 @@ export const syncCacheToLocalStorage = async () => {
 	if(localStorage.getItem("ecaas")){
 		return;
 	}
-	await $fetch("/api/getState",{ method: "GET"});
-
+	const cachedData = await $fetch("/api/getState",{ method: "GET"});
+	if(cachedData) {
+		localStorage.setItem("ecaas", JSON.stringify(cachedData));
+	}
 };
