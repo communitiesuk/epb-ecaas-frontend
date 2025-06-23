@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { mapFhsInputData, type ResolvedState } from '~/mapping/fhsInputMapper';
-import type {SchemaFhsComplianceResponse} from '~/schema/api-schema.types';
+import type { SchemaFhsComplianceResponse } from '~/schema/api-schema.types';
+import type { FhsComplianceResponseIncludingErrors } from '~/server/server.types';
 import { hasCompleteState } from '~/stores/ecaasStore';
+import type { CorrectedJsonApiError } from '~/stores/ecaasStore.types';
 
 const store = useEcaasStore();
 const calculatePending = ref(false);
@@ -17,18 +19,29 @@ const calculate = async () => {
 	console.log(JSON.stringify(inputPayload));
 
 	try {
-		const response = await $fetch<SchemaFhsComplianceResponse>('/api/check-compliance', {
+		const response = await $fetch<FhsComplianceResponseIncludingErrors>('/api/check-compliance', {
 			method: 'POST',
 			body: inputPayload
 		});
 
 		// TODO: Handle success and error responses
 		console.log('Compliance check response', response);
+		store.$patch({
+			lastResult: (!('errors' in response)) ? {
+				resultType: 'ok',
+				response: response.data,
+			} : {
+				resultType: 'err',
+				errors: response.errors,
+			},
+		});
 	} catch (error) {
 		console.error(error);
 	} finally {
 		calculatePending.value = false;
 	}
+
+	navigateTo('/results');
 };
 </script>
 

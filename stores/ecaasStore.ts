@@ -104,7 +104,7 @@ function getInitialState(): EcaasState {
 		},
 		cooling: {
 			airConditioning: { data: [] }
-		}
+		},
 	};
 	return store as EcaasState;
 }	

@@ -1,6 +1,6 @@
 import type { SchemaFhsComplianceResponse} from "~/schema/api-schema.types";
 import {ApiPaths} from "~/schema/api-schema.types";
-import type { ApiInfoResponse, TokenResponse } from "../server.types";
+import type { ApiInfoResponse, FhsComplianceResponseIncludingErrors, TokenResponse } from "../server.types";
 import clientSession from "../services/clientSession";
 
 const ecaasApi = {
@@ -35,7 +35,7 @@ const ecaasApi = {
 	checkCompliance: async (data: object) => {
 		const { accessToken } = (await clientSession.get());
 		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.FHSCompliance}`;
-		return $fetch<SchemaFhsComplianceResponse>(uri, {
+		return $fetch<FhsComplianceResponseIncludingErrors>(uri, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${accessToken}`

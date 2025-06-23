@@ -1155,7 +1155,7 @@ describe("FHS input mapper", () => {
 			infiltrationAndVentilation,
 			heatingSystems,
 			pvAndBatteries,
-			cooling
+			cooling,
 		};
 
 		const expectedResult: FhsInputSchema = expectedHouseInput;
@@ -1880,7 +1880,7 @@ describe("FHS input mapper", () => {
 			infiltrationAndVentilation,
 			heatingSystems,
 			pvAndBatteries,
-			cooling
+			cooling,
 		};
 
 		const expectedResult: FhsInputSchema = expectedFlatInput;

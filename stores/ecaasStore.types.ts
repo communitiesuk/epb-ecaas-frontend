@@ -1,5 +1,5 @@
 import type { EmptyObject, TaggedUnion } from "type-fest";
-import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType, FuelType } from "~/schema/api-schema.types";
+import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, SupplyAirFlowRateControlType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType, FuelType, SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneError, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
 
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
@@ -9,6 +9,7 @@ export interface EcaasState {
 	heatingSystems: HeatingSystems;
 	pvAndBatteries: PvAndBatteries;
 	cooling: Cooling;
+	lastResult?: ComplianceResult;
 }
 
 export interface EcaasForm<T> {
@@ -750,4 +751,24 @@ export type AirConditioningData = {
 export type UsesPitchComponent = {
 	pitch?: number;
 	pitchOption: PitchOption;
+};
+
+export type ComplianceResult = TaggedUnion<'resultType', {
+	ok: {
+		response: SchemaFhsComplianceResponse,
+	},
+	err: {
+		errors: CorrectedJsonApiError[],
+	}
+}>;
+
+export type CorrectedJsonApiError = {
+	id?: string;
+	links?: SchemaJsonApiOnePointOneErrorLinks;
+	status?: string;
+	code?: string;
+	title?: string;
+	detail?: string;
+	source?: SchemaJsonApiOnePointOneErrorSource;
+	meta?: SchemaJsonApiOnePointOneMeta;
 };

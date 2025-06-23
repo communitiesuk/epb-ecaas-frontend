@@ -1,3 +1,6 @@
+import type { SchemaFhsComplianceResponse, SchemaFhsMeta } from "~/schema/api-schema.types";
+import type { CorrectedJsonApiError } from "~/stores/ecaasStore.types";
+
 export interface TokenResponse {
 	access_token: string;
 	expires_in: number;
@@ -26,3 +29,11 @@ export interface ApiInfoResponse {
 	title: string;
 	version: string;
 }
+
+export type FhsComplianceResponseIncludingErrors = {
+	data: SchemaFhsComplianceResponse,
+	meta: SchemaFhsMeta,
+} | {
+	errors: CorrectedJsonApiError[],
+	meta: SchemaFhsMeta,
+};
