@@ -5,7 +5,7 @@ import clientSession from "../services/clientSession";
 
 const ecaasApi = {
 	getToken: async (clientId: string, clientSecret: string) => {
-		const response = await fetch(`${process.env.ECAAS_AUTH_API_URL}/oauth2/token`, {
+		return await $fetch<TokenResponse>(`${process.env.ECAAS_AUTH_API_URL}/oauth2/token`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'
@@ -15,10 +15,9 @@ const ecaasApi = {
 				'scope': 'ecaas-api/home-energy-model',
 				'client_id': clientId,
 				'client_secret': clientSecret
-			})
+			}),
+			ignoreResponseError: true
 		});
-
-		return await response.json() as TokenResponse;
 	},
 
 	getInfo: async () => {
@@ -36,15 +35,14 @@ const ecaasApi = {
 	checkCompliance: async (data: object) => {
 		const { accessToken } = (await clientSession.get());
 		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.FHSCompliance}`;
-		const response = await fetch(uri, {
+		return $fetch<SchemaFhsComplianceResponse>(uri, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${accessToken}`
 			},
-			body: JSON.stringify(data)
+			body: JSON.stringify(data),
+			ignoreResponseError: true
 		});
-
-		return await response.json() as SchemaFhsComplianceResponse;
 	}
 };
 
