@@ -13,10 +13,13 @@ const isDisabled = calculatePending.value || !isAvailable;
 const calculate = async () => {
 	calculatePending.value = true;
 
+	const inputPayload = mapFhsInputData(resolveState(store) as ResolvedState);
+	console.log(JSON.stringify(inputPayload));
+
 	try {
 		const response = await $fetch<SchemaFhsComplianceResponse>('/api/check-compliance', {
 			method: 'POST',
-			body: mapFhsInputData(resolveState(store) as ResolvedState)
+			body: inputPayload
 		});
 
 		// TODO: Handle success and error responses
