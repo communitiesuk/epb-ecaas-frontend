@@ -16,6 +16,7 @@ const { lastResult: result } = store.$state;
 			<p class="govuk-body">There are no results yet to show.</p>
 		</template>
 		<template v-if="result?.resultType === 'ok'">
+			<p class="govuk-body">The figures shown are per year.</p>
 			<GovTabs v-slot="tabProps" :items="[{id: 'primary_tab', label: 'Primary outputs'}]">
 				<ResultPrimaryOutputTab :selected="true" :data="result.response" />
 			</GovTabs>
