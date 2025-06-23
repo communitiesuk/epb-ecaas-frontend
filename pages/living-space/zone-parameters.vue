@@ -117,7 +117,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 		<p class="govuk-!-margin-bottom-5">
 			<NuxtLink :to="getUrl('heatEmitting')" class="govuk-link gov-radios-add-link">
-				Edit heat emitting systems
+				{{spaceHeatingSystemOptions.length ? "Edit heat emitting systems" : "Add heat emitting system"}}
 			</NuxtLink>
 		</p>
 
