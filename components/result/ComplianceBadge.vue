@@ -1,0 +1,8 @@
+<script lang="ts" setup>
+defineProps<{ isCompliant: boolean; percentage?: number }>();
+</script>
+
+<template>
+	<strong v-if="isCompliant" class="govuk-tag govuk-tag--green">Compliant</strong>
+	<strong v-else class="govuk-tag govuk-tag--red">{{ typeof percentage !== "undefined" ? `${percentage.toFixed(3)}%` : 'Not compliant' }}</strong>
+</template>

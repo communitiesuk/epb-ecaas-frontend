@@ -16,6 +16,9 @@ const { lastResult: result } = store.$state;
 			<p class="govuk-body">There are no results yet to show.</p>
 		</template>
 		<template v-if="result?.resultType === 'ok'">
+			<GovTabs v-slot="tabProps" :items="[{id: 'primary_tab', label: 'Primary outputs'}]">
+				<ResultPrimaryOutputTab :selected="true" :data="result.response" />
+			</GovTabs>
 			<p class="govuk-body">That got a good successful response! Display of the response to follow.</p>
 		</template>
 		<template v-if="result?.resultType === 'err'">
