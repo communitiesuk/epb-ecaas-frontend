@@ -54,13 +54,13 @@ describe("syncCacheToLocalStorage", () => {
 	});
 
 	it("should log an error if fetch fails", async () => {
-		const consoleError = vi.spyOn(console, "error");
+		const consoleSpy = vi.spyOn(console, "error");
 		global.$fetch = vi.fn(() => {
 			return Promise.reject("Network error");
 		}) as unknown as typeof global.$fetch;
 		await syncCacheToLocalStorage();
 
-		expect(consoleError).toHaveBeenCalledWith("Failed to fetch data: Network error");
+		expect(consoleSpy).toHaveBeenCalledWith("Failed to fetch data: Network error");
 		expect(setItemSpy).not.toHaveBeenCalled();
 	});
 });
