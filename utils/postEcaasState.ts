@@ -1,6 +1,10 @@
 export const postEcaasState = async (state: EcaasState) => {
-  await $fetch("/api/setState", {
-    method: "POST",
-    body: state,
-  });
+	try {
+		await $fetch("/api/setState", {
+			method: "POST",
+			body: state,
+		});
+	} catch (error) {
+		console.error(`Failed to post data: ${error}`);
+	}
 };
