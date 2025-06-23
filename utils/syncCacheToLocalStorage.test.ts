@@ -6,7 +6,7 @@ describe("syncCacheToLocalStorage", () => {
 
 	function mockFetchResponse(mockResponse: cacheData | undefined) {
 		return (global.$fetch = vi.fn(() =>
-			Promise.resolve(Promise.resolve(mockResponse))
+			Promise.resolve(mockResponse)
 		) as unknown as typeof global.$fetch);
 	}
 
@@ -50,6 +50,17 @@ describe("syncCacheToLocalStorage", () => {
 		mockFetchResponse(undefined);
 		await syncCacheToLocalStorage();
 		expect(fetchSpy).toHaveBeenCalledTimes(1);
+		expect(setItemSpy).not.toHaveBeenCalled();
+	});
+
+	it("should log an error if fetch fails", async () => {
+		const consoleError = vi.spyOn(console, "error");
+		global.$fetch = vi.fn(() => {
+			return Promise.reject("Network error");
+		}) as unknown as typeof global.$fetch;
+		await syncCacheToLocalStorage();
+
+		expect(consoleError).toHaveBeenCalledWith("Failed to fetch data: Network error");
 		expect(setItemSpy).not.toHaveBeenCalled();
 	});
 });
