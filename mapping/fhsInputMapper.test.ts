@@ -607,7 +607,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: MassDistributionClass.I,
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
-					u_value: 0,
+					u_value: 0.01,
 				},
 				"front door": {
 					area: 20,
@@ -655,7 +655,7 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: 75000,
 					mass_distribution_class: MassDistributionClass.I,
 					pitch: 0,
-					u_value: 0,
+					u_value: 0.01,
 				},	
 				"ceiling to unheated space": {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -702,7 +702,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: MassDistributionClass.IE,
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
-					u_value: 0,
+					u_value: 0.01,
 				},
 				"door to garage": {
 					area: 1.4,
@@ -711,7 +711,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 90,
 					thermal_resistance_unconditioned_space: 2.5,
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-					u_value: 0,
+					u_value: 0.01,
 				},
 				"bedroom window": {
 					type: "BuildingElementTransparent",

@@ -335,7 +335,7 @@ describe('living space fabric mapper', () => {
 			type: 'BuildingElementAdjacentConditionedSpace',
 			pitch: internalWall.pitch!,
 			area: internalWall.surfaceAreaOfElement,
-			u_value: 0,
+			u_value: 0.01,
 			areal_heat_capacity: internalWall.kappaValue,
 			mass_distribution_class: internalWall.massDistributionClass
 		};
@@ -553,7 +553,7 @@ describe('living space fabric mapper', () => {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
 			pitch: internalDoor.pitch!,
 			area: internalDoor.surfaceArea,
-			u_value: 0,
+			u_value: 0.01,
 			areal_heat_capacity: internalDoor.kappaValue,
 			mass_distribution_class: internalDoor.massDistributionClass,
 			thermal_resistance_unconditioned_space: internalDoor.thermalResistanceOfAdjacentUnheatedSpace

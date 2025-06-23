@@ -24,7 +24,7 @@ export function mapLivingSpaceFabricData(state: ResolvedState): Partial<FhsInput
 	]);
 }
 
-const defaultUValue = 0;
+const defaultUValue = 0.01;
 
 export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'> {
 	const { livingSpaceZoneParameters } = state.livingSpaceFabric;
@@ -96,7 +96,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
 			pitch: 180,
-			u_value: 0.01
+			u_value: defaultUValue
 		};
 
 
