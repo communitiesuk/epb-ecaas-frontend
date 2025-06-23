@@ -1,4 +1,4 @@
-import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
+import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass, type SchemaShadingObject } from '~/schema/api-schema.types';
 import { mapDistantShadingData, mapExternalFactorsData, mapGeneralSpecificationsData } from './dwellingDetailsMapper';
 import { resolveState } from '~/stores/resolve';
 
@@ -73,8 +73,8 @@ describe('dwelling details mapper', () => {
 		// Arrange
 		const state: ShadingData = {
 			name: "Big Tree",
-			startAngle: 10,
-			endAngle: 20,
+			startAngle: 5,
+			endAngle: 25,
 			objectType: ShadingObjectType.obstacle,
 			height: 3,
 			distance: 2
@@ -91,15 +91,25 @@ describe('dwelling details mapper', () => {
 
 		// Act
 		const fhsInputData = mapDistantShadingData(resolveState(store.$state));
-		const shadingSegment = fhsInputData.ExternalConditions?.shading_segments![0];
+
+		const expectedShading: SchemaShadingObject = {
+			type: state.objectType,
+			height: state.height,
+			distance: state.distance
+		};
+
+		const shadingSegments = fhsInputData.ExternalConditions?.shading_segments;
+		const expectedSegmentNumbers = [1, 2, 3];
+		const segmentsWithShading = shadingSegments?.filter(x => x.shading);
 
 		// Assert
-		expect(shadingSegment).toBeDefined();
-		expect(shadingSegment?.number).toBe(1);
-		expect(shadingSegment?.start360).toBe(state.startAngle);
-		expect(shadingSegment?.end360).toBe(state.endAngle);
-		expect(shadingSegment?.shading![0]?.type).toBe(state.objectType);
-		expect(shadingSegment?.shading![0]?.height).toBe(state.height);
-		expect(shadingSegment?.shading![0]?.distance).toBe(state.distance);
+		expect(shadingSegments?.length).toBe(36);
+		expect(segmentsWithShading?.length).toBe(expectedSegmentNumbers.length);
+
+		segmentsWithShading?.forEach(x => {
+			expect(x.shading).toEqual([expectedShading]);
+		});
+
+		expect(segmentsWithShading?.every(x => expectedSegmentNumbers.includes(x.number))).toBe(true);
 	});
 });
