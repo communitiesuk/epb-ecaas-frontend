@@ -39,7 +39,7 @@ describe('shading', () => {
 		store.$reset();
 	});
 
-	it('shading is removed when remove link is clicked', async () => {
+	test('shading is removed when remove link is clicked', async () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
@@ -58,7 +58,7 @@ describe('shading', () => {
 		expect(store.dwellingDetails.shading.complete).toBe(false);
 	});
 
-	it('only second shading object is removed when corresponding remove link is clicked', async () => {
+	test('only second shading object is removed when corresponding remove link is clicked', async () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
@@ -75,7 +75,7 @@ describe('shading', () => {
 		expect(within(populatedList).queryByText('Apple Tree')).toBeNull();
 	});
 
-	it('shading is duplicated when duplicate link is clicked', async () => {
+	test('shading is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {

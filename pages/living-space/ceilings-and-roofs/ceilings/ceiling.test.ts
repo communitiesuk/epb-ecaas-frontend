@@ -48,7 +48,7 @@ describe('ceiling', () => {
 	};
 	
 	describe('when type of ceiling is heated space', () => {
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			await renderSuspended(Ceiling);
 	
 			await user.click(screen.getByTestId('type_heatedSpace'));
@@ -60,7 +60,7 @@ describe('ceiling', () => {
 			expect(livingSpaceCeilings?.data[0]).toEqual(internalFloor);
 		});
 	
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceCeilingsAndRoofs: {
@@ -100,7 +100,7 @@ describe('ceiling', () => {
 	});
 	
 	describe('when type of ceiling is unheated space', () => {
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			await renderSuspended(Ceiling);
 	
 			await user.click(screen.getByTestId('type_unheatedSpace'));
@@ -114,7 +114,7 @@ describe('ceiling', () => {
 			expect(livingSpaceCeilings?.data[0]).toEqual(internalFloorWithUnheated);
 		});
 	
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceCeilingsAndRoofs: {
@@ -153,7 +153,7 @@ describe('ceiling', () => {
 		expect((await screen.findByTestId('type_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(Ceiling);
 
 		await user.click(screen.getByRole('button'));

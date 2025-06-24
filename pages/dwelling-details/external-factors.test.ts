@@ -24,7 +24,7 @@ describe('External factors', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		const user = userEvent.setup();
 
 		await renderSuspended(ExternalFactors);
@@ -42,7 +42,7 @@ describe('External factors', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details');
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			dwellingDetails: {
 				externalFactors: {
@@ -59,7 +59,7 @@ describe('External factors', () => {
 		expect((await screen.findByTestId('noiseNuisance_no')).hasAttribute('checked')).toBe(true);
 	});
 		
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		const user = userEvent.setup();
 
 		await renderSuspended(ExternalFactors);
@@ -72,7 +72,7 @@ describe('External factors', () => {
 		expect((await screen.findByTestId('noiseNuisance_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		const user = userEvent.setup();
 
 		await renderSuspended(ExternalFactors);

@@ -42,7 +42,7 @@ describe('internal door', () => {
 	};
 	
 	describe('when type of internal door is heated space', () => {
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			await renderSuspended(InternalDoor);
 	
 			await user.click(screen.getByTestId('typeOfInternalDoor_heatedSpace'));
@@ -54,7 +54,7 @@ describe('internal door', () => {
 			expect(livingSpaceInternalDoor?.data[0]).toEqual(internalDoor);
 		});
 	
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceDoors: {
@@ -94,7 +94,7 @@ describe('internal door', () => {
 	});
 	
 	describe('when type of internal door is unheated space', () => {
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			await renderSuspended(InternalDoor);
 	
 			await user.click(screen.getByTestId('typeOfInternalDoor_unheatedSpace'));
@@ -108,7 +108,7 @@ describe('internal door', () => {
 			expect(livingSpaceInternalDoor?.data[0]).toEqual(internalDoorWithUnheatedSpace);
 		});
 	
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceDoors: {
@@ -147,7 +147,7 @@ describe('internal door', () => {
 		expect((await screen.findByTestId('typeOfInternalDoor_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(InternalDoor);
 
 		await user.click(screen.getByRole('button'));

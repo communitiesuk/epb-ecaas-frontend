@@ -34,7 +34,7 @@ describe('internal wall', () => {
 		await user.click(screen.getByTestId('pitchOption_90'));
 	};
 	
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(InternalWall);
 
 		await populateValidForm();
@@ -45,7 +45,7 @@ describe('internal wall', () => {
 		expect(livingSpaceInternalWall?.data[0]).toEqual(internalWall);
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWalls: {
@@ -69,7 +69,7 @@ describe('internal wall', () => {
 		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(InternalWall);
 
 		await user.click(screen.getByRole('button'));
@@ -81,7 +81,7 @@ describe('internal wall', () => {
 		expect((await screen.findByTestId('pitchOption_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(InternalWall);
 
 		await user.click(screen.getByRole('button'));

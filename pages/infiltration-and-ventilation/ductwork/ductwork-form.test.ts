@@ -168,7 +168,7 @@ describe("ductwork form", async () => {
 		expect(data[0]).toEqual(ductwork2);
 	});
 
-	it("form populated when data exists in state", async () => {
+	test("form populated when data exists in state", async () => {
 		addStoreData();
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -238,7 +238,7 @@ describe("ductwork form", async () => {
 		).toBe(true);
 	});
   
-	it("required error messages are displayed when empty form is submitted", async () => {
+	test("required error messages are displayed when empty form is submitted", async () => {
 		addStoreData();
 		await renderSuspended(Ductwork);
 
@@ -258,7 +258,7 @@ describe("ductwork form", async () => {
 			expect(screen.getByTestId(error)).toBeDefined();
 		}
 	});
-	it("error summary is displayed when an invalid form in submitted", async () => {
+	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Ductwork);
   
 		await user.click(screen.getByRole("button"));

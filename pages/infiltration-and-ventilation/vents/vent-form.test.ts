@@ -39,7 +39,7 @@ describe('vent', () => {
 		await user.tab();
 	};
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(Vent);
 		
 		await populateValidForm();
@@ -50,7 +50,7 @@ describe('vent', () => {
 		expect(data[0]).toEqual(state);
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
@@ -74,7 +74,7 @@ describe('vent', () => {
 		expect((await screen.findByTestId('pitch') as HTMLInputElement).value).toBe('0');
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(Vent);
 
 		await user.click(screen.getByRole('button'));
@@ -88,7 +88,7 @@ describe('vent', () => {
 		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(Vent);
 
 		await user.click(screen.getByRole('button'));

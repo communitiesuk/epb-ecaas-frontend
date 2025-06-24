@@ -16,7 +16,7 @@ describe('Ecaas Store', () => {
 		store.$reset();
 	});
 
-	it('getStatus of section returns not started status when no forms are complete', () => {
+	test('getStatus of section returns not started status when no forms are complete', () => {
 
 		const page = pagesData.find(p => p.id === 'dwellingDetails');
 		const status = store.getStatus(page!);
@@ -24,7 +24,7 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
-	it('getStatus of section returns in progress status when some forms are complete', () => {
+	test('getStatus of section returns in progress status when some forms are complete', () => {
 
 		store.$patch({
 			dwellingDetails: {
@@ -40,7 +40,7 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
-	it('getStatus of section returns in progress status when forms have saved data', () => {
+	test('getStatus of section returns in progress status when forms have saved data', () => {
 
 		store.$patch({
 			dwellingDetails: {
@@ -58,7 +58,7 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
-	it('getStatus of a section containing grouped tasks returns in progress status when one of the grouped tasks is complete', () => {
+	test('getStatus of a section containing grouped tasks returns in progress status when one of the grouped tasks is complete', () => {
 
 		store.$patch({
 			livingSpaceFabric: {
@@ -82,7 +82,7 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
-	it('getStatus of section returns complete status when all forms are complete', () => {
+	test('getStatus of section returns complete status when all forms are complete', () => {
 
 		store.$patch({
 			dwellingDetails: {
@@ -104,7 +104,7 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.complete);
 	});
 
-	it('getStatus of a section containing a grouped tasks returns complete when all forms are complete', () => {
+	test('getStatus of a section containing a grouped tasks returns complete when all forms are complete', () => {
 
 		store.$patch({
 			livingSpaceFabric: {
@@ -143,7 +143,7 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.complete);
 	});
 
-	it('getStatus of task returns not started status when form has no data', () => {
+	test('getStatus of task returns not started status when form has no data', () => {
 
 		const page = pagesData.find(p => p.id === 'generalSpecifications');
 		const status = store.getStatus(page!);
@@ -151,7 +151,7 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
-	it('getStatus of task returns in progress status when form has saved data', () => {
+	test('getStatus of task returns in progress status when form has saved data', () => {
 
 		store.$patch({
 			dwellingDetails: {
@@ -169,7 +169,7 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
-	it('getStatus of task returns complete status when form is complete', () => {
+	test('getStatus of task returns complete status when form is complete', () => {
 
 		store.$patch({
 			dwellingDetails: {
@@ -185,7 +185,7 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.complete);
 	});
 
-	it('getStatus of task returns complete status when required forms are complete', () => {
+	test('getStatus of task returns complete status when required forms are complete', () => {
 
 		store.$patch({
 			livingSpaceFabric: {
@@ -253,7 +253,7 @@ describe('Ecaas Store', () => {
 		thermalInsulationConductivityOfDuctwork: 10,
 		surfaceReflectivity: true,
 	};
-	it('getStatus of ductwork task returns not started status when mvhr and ductwork is added then mvhr is removed', async() => {
+	test('getStatus of ductwork task returns not started status when mvhr and ductwork is added then mvhr is removed', async() => {
 
 		const user = userEvent.setup();
 		
@@ -279,7 +279,7 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
-	it('getStatus of ductwork task returns in progress status when multiple mvhrs are added but they dont all have an associated ductwork', async() => {
+	test('getStatus of ductwork task returns in progress status when multiple mvhrs are added but they dont all have an associated ductwork', async() => {
 
 		
 		store.$patch({
@@ -301,7 +301,7 @@ describe('Ecaas Store', () => {
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
-	it('getStatus of ductwork task returns complete status when a mvhr has an associated ductwork', async() => {
+	test('getStatus of ductwork task returns complete status when a mvhr has an associated ductwork', async() => {
 
 		store.$patch({
 			infiltrationAndVentilation: {

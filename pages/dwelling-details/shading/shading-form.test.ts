@@ -32,7 +32,7 @@ describe('shading form', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(ShadingForm);
 
 		await user.type(screen.getByTestId('name'), 'Big Tree');
@@ -50,7 +50,7 @@ describe('shading form', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details/shading');
 	});
 
-	it('data is saved to correct object in store state when form is valid', async () => {
+	test('data is saved to correct object in store state when form is valid', async () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
@@ -77,7 +77,7 @@ describe('shading form', () => {
 		expect(data[1]?.name).toBe('Wall');
 	});
 
-	it('form is prepopulated correctly when data exists in state', async () => {
+	test('form is prepopulated correctly when data exists in state', async () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
@@ -108,7 +108,7 @@ describe('shading form', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Small Tree');
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(ShadingForm);
 
 		await user.click(screen.getByRole('button'));
@@ -121,7 +121,7 @@ describe('shading form', () => {
 		expect(await screen.findByTestId('distance_error')).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(ShadingForm);
 
 		await user.click(screen.getByRole('button'));

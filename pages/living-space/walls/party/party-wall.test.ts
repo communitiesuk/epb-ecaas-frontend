@@ -32,7 +32,7 @@ describe('party wall', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(PartyWall);
 
 		await user.type(screen.getByTestId('name'), 'Party wall 1');
@@ -54,7 +54,7 @@ describe('party wall', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/walls');
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWalls: {
@@ -83,7 +83,7 @@ describe('party wall', () => {
 		expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 	});
 		
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(PartyWall);
 
 		await user.click(screen.getByRole('button'));
@@ -101,7 +101,7 @@ describe('party wall', () => {
 
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(PartyWall);
 
 		await user.click(screen.getByRole('button'));
@@ -109,7 +109,7 @@ describe('party wall', () => {
 		expect((await screen.findByTestId('partyWallErrorSummary'))).toBeDefined();
 	});
 
-	it('requires pitch when custom pitch option is selected', async () => {
+	test('requires pitch when custom pitch option is selected', async () => {
 		await renderSuspended(PartyWall);
     
 		await user.click(screen.getByTestId('pitchOption_custom'));

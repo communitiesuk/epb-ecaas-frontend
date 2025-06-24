@@ -38,7 +38,7 @@ describe('open fireplace', () => {
 		store.$reset();
 	});
 
-	it('open fireplace is removed when remove link is clicked', async () => {
+	test('open fireplace is removed when remove link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -80,7 +80,7 @@ describe('open fireplace', () => {
 
 	});
 
-	it('open fireplace is duplicated when duplicate link is clicked', async () => {
+	test('open fireplace is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -131,7 +131,7 @@ describe('closed fireplace with fan', () => {
 		store.$reset();
 	});
 
-	it('closed fireplace is removed when remove link is clicked', async () => {
+	test('closed fireplace is removed when remove link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -173,7 +173,7 @@ describe('closed fireplace with fan', () => {
 
 	});
 
-	it('closed fireplace is duplicated when duplicate link is clicked', async () => {
+	test('closed fireplace is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -224,7 +224,7 @@ describe('open gas flue balancer', () => {
 		store.$reset();
 	});
 
-	it('open gas flue balancer is removed when remove link is clicked', async () => {
+	test('open gas flue balancer is removed when remove link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -266,7 +266,7 @@ describe('open gas flue balancer', () => {
 
 	});
 
-	it('open gas flue balancer is duplicated when duplicate link is clicked', async () => {
+	test('open gas flue balancer is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -317,7 +317,7 @@ describe('open gas kitchen stove', () => {
 		store.$reset();
 	});
 
-	it('open gas kitchen stove is removed when remove link is clicked', async () => {
+	test('open gas kitchen stove is removed when remove link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -359,7 +359,7 @@ describe('open gas kitchen stove', () => {
 
 	});
 
-	it('open gas kitchen stove is duplicated when duplicate link is clicked', async () => {
+	test('open gas kitchen stove is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -410,7 +410,7 @@ describe('open gas fire', () => {
 		store.$reset();
 	});
 
-	it('open gas fire is removed when remove link is clicked', async () => {
+	test('open gas fire is removed when remove link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -452,7 +452,7 @@ describe('open gas fire', () => {
 
 	});
 
-	it('open gas fire is duplicated when duplicate link is clicked', async () => {
+	test('open gas fire is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -503,7 +503,7 @@ describe('closed fire', () => {
 		store.$reset();
 	});
 
-	it('closed fire is removed when remove link is clicked', async () => {
+	test('closed fire is removed when remove link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -545,7 +545,7 @@ describe('closed fire', () => {
 
 	});
 
-	it('closed fire is duplicated when duplicate link is clicked', async () => {
+	test('closed fire is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {

@@ -31,7 +31,7 @@ describe('Energy supply', () => {
 	};
 
 	describe('when fuel type is electricity', () => {
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			await renderSuspended(EnergySupply);
 	
 			await user.click(screen.getByTestId('fuelType_electricity'));
@@ -43,7 +43,7 @@ describe('Energy supply', () => {
 			expect(data).toEqual(energySupplyWithElectricity);
 		});
 	
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				heatingSystems: {
 					energySupply: {
@@ -58,7 +58,7 @@ describe('Energy supply', () => {
 			expect((await screen.findByTestId('exported_yes')).hasAttribute('checked')).toBe(true);
 		});
 			
-		it('required error messages are displayed when empty form is submitted', async () => {
+		test('required error messages are displayed when empty form is submitted', async () => {
 			await renderSuspended(EnergySupply);
 	
 			await user.click(screen.getByTestId('fuelType_electricity'));
@@ -69,7 +69,7 @@ describe('Energy supply', () => {
 	});
 
 	// describe('when fuel type is custom', () => {
-	// 	it('data is saved to store state when form is valid', async () => {
+	// 	test('data is saved to store state when form is valid', async () => {
 	// 		await renderSuspended(EnergySupply);
 	
 	// 		await user.click(screen.getByTestId('fuelType_custom'));
@@ -83,7 +83,7 @@ describe('Energy supply', () => {
 	// 		expect(data).toEqual(energySupplyWithCustom);
 	// 	});
 	
-	// 	it('form is prepopulated when data exists in state', async () => {
+	// 	test('form is prepopulated when data exists in state', async () => {
 	// 		store.$patch({
 	// 			heatingSystems: {
 	// 				energySupply: {
@@ -100,7 +100,7 @@ describe('Energy supply', () => {
 	// 		expect((await screen.findByTestId('kwhPerKwhDelivered') as HTMLInputElement).value).toBe('1');
 	// 	});
 			
-	// 	it('required error messages are displayed when empty form is submitted', async () => {
+	// 	test('required error messages are displayed when empty form is submitted', async () => {
 	// 		await renderSuspended(EnergySupply);
 	
 	// 		await user.click(screen.getByTestId('fuelType_custom'));

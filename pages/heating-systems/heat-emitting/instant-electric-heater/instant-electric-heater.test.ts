@@ -29,7 +29,7 @@ describe("instantElectricHeater", () => {
 		await user.tab();
 	};
 
-	it("data is saved to store state when form is valid", async () => {
+	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(InstantElectricHeater);
 
 		await populateValidForm();
@@ -40,7 +40,7 @@ describe("instantElectricHeater", () => {
 		expect(data[0]).toEqual(instantElectricHeater);
 	});
 
-	it("form is prepopulated when data exists in state", async () => {
+	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			heatingSystems: {
 				heatEmitting: {
@@ -72,7 +72,7 @@ describe("instantElectricHeater", () => {
 		).toBe("0.2");
 	});
 
-	it("required error messages are displayed when empty form is submitted", async () => {
+	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(InstantElectricHeater);
 
 		await user.click(screen.getByRole("button"));
@@ -84,7 +84,7 @@ describe("instantElectricHeater", () => {
 		).toBeDefined();
 	});
 
-	it("error summary is displayed when an invalid form in submitted", async () => {
+	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(InstantElectricHeater);
 
 		await user.click(screen.getByRole("button"));

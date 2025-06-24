@@ -25,7 +25,7 @@ describe('Secondary pipework form', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(PipeworkForm);
 
 		await user.type(screen.getByTestId('name'), 'Pipework Kitchen Sink');
@@ -43,7 +43,7 @@ describe('Secondary pipework form', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/pipework');
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			domesticHotWater: {
 				pipework: {
@@ -66,7 +66,7 @@ describe('Secondary pipework form', () => {
 		expect((await screen.findByTestId('internalDiameter') as HTMLInputElement).value).toBe('9');
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(PipeworkForm);
 
 		await user.click(screen.getByRole('button'));
@@ -76,7 +76,7 @@ describe('Secondary pipework form', () => {
 		expect((await screen.findByTestId('length_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(PipeworkForm);
 
 		await user.click(screen.getByRole('button'));

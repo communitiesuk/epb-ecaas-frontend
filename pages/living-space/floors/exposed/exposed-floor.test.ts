@@ -31,7 +31,7 @@ describe('exposed floor', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(ExposedFloor);
 
 		await user.type(screen.getByTestId('name'), 'Exposed Floor 1');
@@ -52,7 +52,7 @@ describe('exposed floor', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/floors');
 	});
 	
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceFloors: {
@@ -80,7 +80,7 @@ describe('exposed floor', () => {
 		expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 	});
 		
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(ExposedFloor);
 
 		await user.click(screen.getByRole('button'));
@@ -96,7 +96,7 @@ describe('exposed floor', () => {
 		expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(ExposedFloor);
 
 		await user.click(screen.getByRole('button'));

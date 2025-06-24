@@ -24,7 +24,7 @@ describe('closed fire', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(ClosedFire);
 
 		await user.type(screen.getByTestId('name'), 'Closed fire 1');
@@ -41,7 +41,7 @@ describe('closed fire', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -64,7 +64,7 @@ describe('closed fire', () => {
 		expect((await screen.findByTestId('typeOfFuel_coal')).hasAttribute('checked')).toBe(true);
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(ClosedFire);
 
 		await user.click(screen.getByRole('button'));

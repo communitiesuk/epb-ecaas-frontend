@@ -64,7 +64,7 @@ describe('Primary pipework form', () => {
 		await user.click(screen.getByTestId('location_internal'));
 	};
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		addHotWaterCylinder();
 		await renderSuspended(PipeworkForm);
 		
@@ -76,7 +76,7 @@ describe('Primary pipework form', () => {
 		expect(data[0]).toEqual(state);
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		addHotWaterCylinder();
 
 		store.$patch({
@@ -107,7 +107,7 @@ describe('Primary pipework form', () => {
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(PipeworkForm);
 
 		await user.click(screen.getByRole('button'));
@@ -124,7 +124,7 @@ describe('Primary pipework form', () => {
 		expect((await screen.findByTestId('location_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(PipeworkForm);
 
 		await user.click(screen.getByRole('button'));

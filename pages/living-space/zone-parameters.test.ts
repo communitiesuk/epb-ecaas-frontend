@@ -46,7 +46,7 @@ describe('zone parameters', () => {
 		expect(screen.getByTestId('spaceHeatingSystemForThisZone_instant_electric_heater')).toBeDefined();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(ZoneParameters);
 
 		await user.type(screen.getByTestId('area'), '10');
@@ -62,7 +62,7 @@ describe('zone parameters', () => {
 		expect(navigateToMock).toBeCalledWith('/living-space');
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceZoneParameters: { data: state }
@@ -76,7 +76,7 @@ describe('zone parameters', () => {
 		expect((await screen.findByTestId('spaceHeatingSystemForThisZone_instant_electric_heater')).hasAttribute('checked')).toBe(true);
 	});
 			
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(ZoneParameters);
 
 		await user.click(screen.getByRole('button'));
@@ -86,7 +86,7 @@ describe('zone parameters', () => {
 		expect((await screen.findByTestId('spaceHeatingSystemForThisZone_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(ZoneParameters);
 
 		await user.click(screen.getByRole('button'));

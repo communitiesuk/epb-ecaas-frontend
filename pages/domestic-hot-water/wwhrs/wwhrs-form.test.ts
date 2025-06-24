@@ -54,7 +54,7 @@ describe('wwhrs form', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		addStoreData();
 		await renderSuspended(WwhrsForm);
 
@@ -66,7 +66,7 @@ describe('wwhrs form', () => {
 		expect(data[0]).toEqual(state);
 	});
 
-	it('form is prepopulated correctly when data exists in state', async () => {
+	test('form is prepopulated correctly when data exists in state', async () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
@@ -90,7 +90,7 @@ describe('wwhrs form', () => {
 		expect((await screen.findByTestId('proportionOfUse') as HTMLInputElement).value).toBe('0.5');
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(WwhrsForm);
 
 		await user.click(screen.getByRole('button'));
@@ -103,7 +103,7 @@ describe('wwhrs form', () => {
 		expect(await screen.findByTestId('proportionOfUse_error')).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(WwhrsForm);
 
 		await user.click(screen.getByRole('button'));

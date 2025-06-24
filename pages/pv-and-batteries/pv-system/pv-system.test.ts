@@ -98,7 +98,7 @@ describe("PV system", () => {
 		expect((await screen.findByTestId('photovoltaicErrorSummary'))).toBeDefined();
 	});
 
-	it("data is saved to store when form is valid", async () => {
+	test("data is saved to store when form is valid", async () => {
 		await renderSuspended(PVScreen);
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));

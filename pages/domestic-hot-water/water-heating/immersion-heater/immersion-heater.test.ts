@@ -31,7 +31,7 @@ describe('immersion heater', () => {
 		await user.tab();
 	};
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(ImmersionHeater);
 
 		await populateValidForm();
@@ -42,7 +42,7 @@ describe('immersion heater', () => {
 		expect(data[0]).toEqual(immersionHeater);
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			domesticHotWater: {
 				waterHeating: {
@@ -65,7 +65,7 @@ describe('immersion heater', () => {
 		expect((await screen.findByTestId('thermostatPosition_top')).hasAttribute('checked')).toBe(true);
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(ImmersionHeater);
 
 		await user.click(screen.getByRole('button'));
@@ -76,7 +76,7 @@ describe('immersion heater', () => {
 		expect((await screen.findByTestId('thermostatPosition_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(ImmersionHeater);
 
 		await user.click(screen.getByRole('button'));

@@ -117,7 +117,7 @@ describe('walls', () => {
 
 	describe('External walls', () => {
 	
-		it('ground wall is removed when remove link is clicked', async () => {
+		test('ground wall is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceWalls: {
@@ -159,7 +159,7 @@ describe('walls', () => {
 	
 		});
 	
-		it('wall is duplicated when duplicate link is clicked', async () => {
+		test('wall is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceWalls: {
@@ -188,7 +188,7 @@ describe('walls', () => {
 	describe('Internal walls', () => {
 
 	  
-		it('internal wall is removed when remove link is clicked', async () => {
+		test('internal wall is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceWalls: {
@@ -230,7 +230,7 @@ describe('walls', () => {
 	  
 		});
 	  
-		it('wall is duplicated when duplicate link is clicked', async () => {
+		test('wall is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceWalls: {
@@ -259,7 +259,7 @@ describe('walls', () => {
 	describe('Wall to unheated space', () => {
 
 	  
-		it('wall-to-heated-space is removed when remove link is clicked', async () => {
+		test('wall-to-heated-space is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceWalls: {
@@ -300,7 +300,7 @@ describe('walls', () => {
 			expect(within(populatedList).queryByText('Wall to heated space 2')).toBeNull();
 		});
 	  
-		it('wall is duplicated when duplicate link is clicked', async () => {
+		test('wall is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceWalls: {
@@ -328,7 +328,7 @@ describe('walls', () => {
 
 	describe('Party walls', () => {
 
-		it('party wall is removed when remove link is clicked', async () => {
+		test('party wall is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceWalls: {
@@ -370,7 +370,7 @@ describe('walls', () => {
 	
 		});
 	
-		it('wall is duplicated when duplicate link is clicked', async () => {
+		test('wall is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceWalls: {
@@ -525,5 +525,4 @@ describe('walls', () => {
 			}
 		});
 	});
-	
 });

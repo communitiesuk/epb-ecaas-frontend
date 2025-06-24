@@ -36,7 +36,7 @@ describe("Pipeworks", () => {
 	});
 
 	describe('primary pipework', () => {
-		it('pipework is removed when remove link is clicked', async () => {
+		test('pipework is removed when remove link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					pipework: {
@@ -82,7 +82,7 @@ describe("Pipeworks", () => {
 	});
 
 	describe('secondary pipework', () => {
-		it('pipework is removed when remove link is clicked', async () => {
+		test('pipework is removed when remove link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					pipework: {
@@ -258,5 +258,4 @@ describe("Pipeworks", () => {
 			}
 		});
 	});
-	
 });

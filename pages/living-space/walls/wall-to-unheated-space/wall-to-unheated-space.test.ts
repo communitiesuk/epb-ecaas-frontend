@@ -28,7 +28,7 @@ describe('wall to unheated space', () => {
 		store.$reset();
 	});	
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(WallToUnheatedSpace);
 
 		await user.type(screen.getByTestId('name'), 'Wall to unheated space 1');
@@ -48,7 +48,7 @@ describe('wall to unheated space', () => {
 		});
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWalls: {
@@ -75,7 +75,7 @@ describe('wall to unheated space', () => {
 	
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(WallToUnheatedSpace);
 	
 		await user.click(screen.getByRole('button'));
@@ -90,7 +90,7 @@ describe('wall to unheated space', () => {
 	
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(WallToUnheatedSpace);
 		
 		await user.click(screen.getByRole('button'));

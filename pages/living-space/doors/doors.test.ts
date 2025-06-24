@@ -146,7 +146,7 @@ describe('doors', () => {
 	
 	describe('external unglazed doors', () => {
 	
-		it('external unglazed door is removed when remove link is clicked', async () => {
+		test('external unglazed door is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceDoors: {
@@ -187,7 +187,7 @@ describe('doors', () => {
 			expect(within(populatedList).queryByText('external unglazed 2 name')).toBeNull();
 	
 		});
-		it('door is duplicated when duplicate link is clicked', async () => {
+		test('door is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceDoors: {
@@ -215,7 +215,7 @@ describe('doors', () => {
 
 	describe('external glazed doors', () => {
 	
-		it('iexternal glazed door is removed when remove link is clicked', async () => {
+		test('external glazed door is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceDoors: {
@@ -257,7 +257,7 @@ describe('doors', () => {
 	
 		});
 	
-		it('door is duplicated when duplicate link is clicked', async () => {
+		test('door is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceDoors: {
@@ -285,7 +285,7 @@ describe('doors', () => {
 
 	describe('internal door', () => {
 	
-		it('internal door is removed when remove link is clicked', async () => {
+		test('internal door is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceDoors: {
@@ -325,7 +325,7 @@ describe('doors', () => {
 			expect(within(populatedList).queryByText('Internal 2')).toBeNull();
 	
 		});
-		it('door is duplicated when duplicate link is clicked', async () => {
+		test('door is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceDoors: {

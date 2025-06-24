@@ -24,7 +24,7 @@ describe('closed fireplace with fan', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(ClosedFireplaceWithFan);
 
 		await user.type(screen.getByTestId('name'), 'Closed fireplace');
@@ -41,7 +41,7 @@ describe('closed fireplace with fan', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -64,7 +64,7 @@ describe('closed fireplace with fan', () => {
 		expect((await screen.findByTestId('typeOfFuel_wood')).hasAttribute('checked')).toBe(true);
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(ClosedFireplaceWithFan);
 
 		await user.click(screen.getByRole('button'));

@@ -81,7 +81,7 @@ describe('ground floor', () => {
 	};
 	
 	describe('when type of ground floor is slab no edge insulation', () => {
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			await renderSuspended(GroundFloor);
 	
 			await populateValidForm();
@@ -92,7 +92,7 @@ describe('ground floor', () => {
 			expect(data[0]).toEqual(groundFloor);
 		});
 	
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceFloors: {
@@ -121,7 +121,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('typeOfGroundFloor_Slab_no_edge_insulation')).hasAttribute('checked')).toBe(true);
 		});
 			
-		it('required error messages are displayed when empty form is submitted', async () => {
+		test('required error messages are displayed when empty form is submitted', async () => {
 			await renderSuspended(GroundFloor);
 	
 			await user.click(screen.getByRole('button'));
@@ -140,7 +140,7 @@ describe('ground floor', () => {
 	});
 	
 	describe('when type of ground floor is slab edge insulation', () => {
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			await renderSuspended(GroundFloor);
 	
 			await populateValidForm();
@@ -156,7 +156,7 @@ describe('ground floor', () => {
 			expect(data[0]).toEqual(groundFloorWithEdgeInsulation);
 		});
 	
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceFloors: {
@@ -179,7 +179,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('edgeInsulationThermalResistance') as HTMLInputElement).value).toBe('0');
 		});
 			
-		it('required error messages are displayed when empty form is submitted', async () => {
+		test('required error messages are displayed when empty form is submitted', async () => {
 			await renderSuspended(GroundFloor);
 	
 			await user.click(screen.getByTestId('typeOfGroundFloor_Slab_edge_insulation'));
@@ -192,7 +192,7 @@ describe('ground floor', () => {
 	});
 	
 	describe('when type of ground floor is suspended floor', () => {
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			await renderSuspended(GroundFloor);
 	
 			await populateValidForm();
@@ -211,7 +211,7 @@ describe('ground floor', () => {
 			expect(Object.fromEntries(entryData)).toEqual(groundFloorWithSuspendedFloor);
 		});
 		
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceFloors: {
@@ -236,7 +236,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('ventilationOpeningsArea') as HTMLInputElement).value).toBe('0');
 		});
 			
-		it('required error messages are displayed when empty form is submitted', async () => {
+		test('required error messages are displayed when empty form is submitted', async () => {
 			await renderSuspended(GroundFloor);
 	
 			await user.click(screen.getByTestId('typeOfGroundFloor_Suspended_floor'));
@@ -251,7 +251,7 @@ describe('ground floor', () => {
 	});
 	
 	describe('when type of ground floor is heated basement', () => {
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			await renderSuspended(GroundFloor);
 	
 			await populateValidForm();
@@ -268,7 +268,7 @@ describe('ground floor', () => {
 			expect(Object.fromEntries(entryData)).toEqual(groundFloorWithHeatedBasement);
 		});
 	
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceFloors: {
@@ -291,7 +291,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('thermalResistanceOfBasementWalls') as HTMLInputElement).value).toBe('0');
 		});
 			
-		it('required error messages are displayed when empty form is submitted', async () => {
+		test('required error messages are displayed when empty form is submitted', async () => {
 			await renderSuspended(GroundFloor);
 	
 			await user.click(screen.getByTestId('typeOfGroundFloor_Heated_basement'));
@@ -304,7 +304,7 @@ describe('ground floor', () => {
 	});
 	
 	describe('when type of ground floor is unheated basement', () => {
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			await renderSuspended(GroundFloor);
 	
 			await populateValidForm();
@@ -323,7 +323,7 @@ describe('ground floor', () => {
 			expect(Object.fromEntries(entryData)).toEqual(groundFloorWithUnheatedBasement);
 		});
 	
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceFloors: {
@@ -348,7 +348,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('heightOfBasementWallsAboveGround') as HTMLInputElement).value).toBe('0');
 		});
 			
-		it('required error messages are displayed when empty form is submitted', async () => {
+		test('required error messages are displayed when empty form is submitted', async () => {
 			await renderSuspended(GroundFloor);
 	
 			await user.click(screen.getByTestId('typeOfGroundFloor_Unheated_basement'));
@@ -362,7 +362,7 @@ describe('ground floor', () => {
 		});
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(GroundFloor);
 
 		await user.click(screen.getByRole('button'));

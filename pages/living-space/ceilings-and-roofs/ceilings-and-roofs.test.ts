@@ -6,8 +6,8 @@ import RoofForm from './roofs/[roof].vue';
 import UnheatedRoofForm from './unheated-pitched-roofs/[roof].vue';
 import { MassDistributionClass } from "~/schema/api-schema.types";
 
-import {screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom';
+import { screen } from '@testing-library/vue';
+import { within } from '@testing-library/dom';
 
 describe('ceilings and roofs', () => {
 	const store = useEcaasStore();
@@ -92,7 +92,7 @@ describe('ceilings and roofs', () => {
 	};
 	describe('ceilings', () => {
 	
-		it('ceiling is removed when remove link is clicked', async () => {
+		test('ceiling is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceCeilingsAndRoofs: {
@@ -134,7 +134,7 @@ describe('ceilings and roofs', () => {
 	
 		});
 	
-		it('ceiling is duplicated when duplicate link is clicked', async () => {
+		test('ceiling is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceCeilingsAndRoofs: {
@@ -162,7 +162,7 @@ describe('ceilings and roofs', () => {
 
 	describe('roofs', () => {
 	
-		it('roof is removed when remove link is clicked', async () => {
+		test('roof is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceCeilingsAndRoofs: {
@@ -204,7 +204,7 @@ describe('ceilings and roofs', () => {
 	
 		});
 	
-		it('roof is duplicated when duplicate link is clicked', async () => {
+		test('roof is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceCeilingsAndRoofs: {
@@ -233,7 +233,7 @@ describe('ceilings and roofs', () => {
 	describe('unheated pitched roofs', () => {
 	
 	
-		it('unheated pitched roof is removed when remove link is clicked', async () => {
+		test('unheated pitched roof is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceCeilingsAndRoofs: {
@@ -275,7 +275,7 @@ describe('ceilings and roofs', () => {
 	
 		});
 	
-		it('unheated pitched roof is duplicated when duplicate link is clicked', async () => {
+		test('unheated pitched roof is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceCeilingsAndRoofs: {
@@ -405,5 +405,4 @@ describe('ceilings and roofs', () => {
 			}
 		});
 	});
-	
 });

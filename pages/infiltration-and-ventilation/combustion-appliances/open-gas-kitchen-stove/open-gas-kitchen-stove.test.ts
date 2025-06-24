@@ -24,7 +24,7 @@ describe('open gas kitchen stove', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(OpenGasKitchenStove);
 
 		await user.type(screen.getByTestId('name'), 'Open gas kitchen stove 1');
@@ -41,7 +41,7 @@ describe('open gas kitchen stove', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -64,7 +64,7 @@ describe('open gas kitchen stove', () => {
 		expect((await screen.findByTestId('typeOfFuel_oil')).hasAttribute('checked')).toBe(true);
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(OpenGasKitchenStove);
 
 		await user.click(screen.getByRole('button'));

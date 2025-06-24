@@ -35,7 +35,7 @@ describe('hot water outlets', () => {
 			store.$reset();
 		});
 
-		it('mixed shower is removed when remove link is clicked', async () => {
+		test('mixed shower is removed when remove link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -77,7 +77,7 @@ describe('hot water outlets', () => {
 
 		});
 
-		it('mixed shower is duplicated when duplicate link is clicked', async () => {
+		test('mixed shower is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -127,7 +127,7 @@ describe('hot water outlets', () => {
 			store.$reset();
 		});
 
-		it('electric shower is removed when remove link is clicked', async () => {
+		test('electric shower is removed when remove link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -169,7 +169,7 @@ describe('hot water outlets', () => {
 
 		});
 
-		it('electric shower is duplicated when duplicate link is clicked', async () => {
+		test('electric shower is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -220,7 +220,7 @@ describe('hot water outlets', () => {
 			store.$reset();
 		});
 
-		it('bath is removed when remove link is clicked', async () => {
+		test('bath is removed when remove link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -262,7 +262,7 @@ describe('hot water outlets', () => {
 
 		});
 
-		it('bath is duplicated when duplicate link is clicked', async () => {
+		test('bath is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -312,7 +312,7 @@ describe('hot water outlets', () => {
 			store.$reset();
 		});
 
-		it('outlet is removed when remove link is clicked', async () => {
+		test('outlet is removed when remove link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -354,7 +354,7 @@ describe('hot water outlets', () => {
 
 		});
 
-		it('outlet is duplicated when duplicate link is clicked', async () => {
+		test('outlet is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -535,5 +535,4 @@ describe('hot water outlets', () => {
 			}
 		});
 	});
-	
 });

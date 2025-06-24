@@ -46,7 +46,7 @@ describe('roof', () => {
 		await user.click(screen.getByTestId('massDistributionClass_I'));
 	};
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(Roof);
 
 		await populateValidForm();
@@ -57,7 +57,7 @@ describe('roof', () => {
 		expect(livingSpaceRoofs?.data[0]).toEqual(roof);
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceCeilingsAndRoofs: {
@@ -87,7 +87,7 @@ describe('roof', () => {
 		expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(Roof);
 
 		await user.click(screen.getByRole('button'));
@@ -104,7 +104,7 @@ describe('roof', () => {
 		expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(Roof);
 
 		await user.click(screen.getByRole('button'));

@@ -40,7 +40,7 @@ describe("mechanical ventilation form", () => {
 		store.$reset();
 	});
 
-	it("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions_MVHR is MVHR", async () => {
+	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions_MVHR is MVHR", async () => {
 		vi.mocked(uuidv4).mockReturnValue('5124f2fe-f15b-4a56-ba5a-1a7751ac506f' as unknown as Buffer);
 
 		await renderSuspended(MechanicalVentilationForm);
@@ -63,7 +63,7 @@ describe("mechanical ventilation form", () => {
 		);
 	});
 
-	it("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is not mvhr", async () => {
+	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is not mvhr", async () => {
 		vi.mocked(uuidv4).mockReturnValue('7184f2fe-a78f-4a56-ba5a-1a7751ac506d' as unknown as Buffer);
 
 		await renderSuspended(MechanicalVentilationForm);
@@ -89,7 +89,7 @@ describe("mechanical ventilation form", () => {
 		});
 	});
 
-	it("data is saved to correct object in store state when form is valid", async () => {
+	test("data is saved to correct object in store state when form is valid", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -116,7 +116,7 @@ describe("mechanical ventilation form", () => {
 		expect(data[1]?.name).toBe("new name");
 	});
 
-	it("form is prepopulated when data exists in state", async () => {
+	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -168,7 +168,7 @@ describe("mechanical ventilation form", () => {
    
 	});
 
-	it("required error messages are displayed when empty form is submitted", async () => {
+	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(MechanicalVentilationForm);
 
 		await user.click(screen.getByRole("button"));
@@ -199,7 +199,7 @@ describe("mechanical ventilation form", () => {
 		}
 	});
 
-	it("error summary is displayed when an invalid form in submitted", async () => {
+	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(MechanicalVentilationForm);
 
 		await user.click(screen.getByRole("button"));

@@ -32,7 +32,7 @@ describe('external glazed door', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(ExternalGlazedDoor);
 
 		await user.type(screen.getByTestId('name'), 'External glazed door 1');
@@ -56,7 +56,7 @@ describe('external glazed door', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/doors');
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceDoors: {
@@ -86,7 +86,7 @@ describe('external glazed door', () => {
 		expect((await screen.findByTestId('numberOpenableParts_0')).hasAttribute('checked')).toBe(true);
 	});
 		
-	it('only required error messages are displayed when empty form is submitted', async () => {
+	test('only required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(ExternalGlazedDoor);
 
 		await user.click(screen.getByRole('button'));
@@ -104,7 +104,7 @@ describe('external glazed door', () => {
 		expect((await screen.findByTestId('numberOpenableParts_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(ExternalGlazedDoor);
 
 		await user.click(screen.getByRole('button'));

@@ -42,7 +42,7 @@ describe('window', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(Window);
 
 		await user.type(screen.getByTestId('name'), 'Window 1');
@@ -75,7 +75,7 @@ describe('window', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/windows');
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWindows: {
@@ -112,7 +112,7 @@ describe('window', () => {
 		expect((await screen.findByTestId('solarTransmittanceReduction') as HTMLInputElement).value).toBe('0.1');
 	});
 		
-	it('only required error messages are displayed when empty form is submitted', async () => {
+	test('only required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(Window);
 
 		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
@@ -140,7 +140,7 @@ describe('window', () => {
 		expect((await screen.queryByTestId('sideFinLeftDistance_error'))).toBeNull();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(Window);
 
 		await user.click(screen.getByRole('button', { name: 'Save and continue' }));

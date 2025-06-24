@@ -29,7 +29,7 @@ describe('boiler', () => {
 		await user.tab();
 	};
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		vi.mocked(uuidv4).mockReturnValue(boiler.id as unknown as Buffer);
 
 		await renderSuspended(Boiler);
@@ -42,7 +42,7 @@ describe('boiler', () => {
 		expect(data[0]).toEqual(boiler);
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			heatingSystems: {
 				heatGeneration: {
@@ -62,7 +62,7 @@ describe('boiler', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('boiler 1');
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(Boiler);
 
 		await user.click(screen.getByRole('button'));
@@ -70,7 +70,7 @@ describe('boiler', () => {
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(Boiler);
 
 		await user.click(screen.getByRole('button'));

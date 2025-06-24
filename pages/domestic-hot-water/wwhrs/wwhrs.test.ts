@@ -37,7 +37,7 @@ describe('wwhrs', () => {
 		store.$reset();
 	});
 
-	it('wwhrs is removed when remove link is clicked', async () => {
+	test('wwhrs is removed when remove link is clicked', async () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
@@ -75,7 +75,7 @@ describe('wwhrs', () => {
 
 	});
 
-	it('wwhrs is duplicated when duplicate link is clicked', async () => {
+	test('wwhrs is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {

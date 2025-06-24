@@ -33,7 +33,7 @@ describe('water heating', () => {
 			store.$reset();
 		});
 
-		it('hot water cylinder is removed when remove link is clicked', async () => {
+		test('hot water cylinder is removed when remove link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {
@@ -74,7 +74,7 @@ describe('water heating', () => {
 			expect(within(populatedList).queryByText('Hot water cylinder 2')).toBeNull();
 		});
 
-		it('hot water cylinder is duplicated when duplicate link is clicked', async () => {
+		test('hot water cylinder is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					waterHeating: {

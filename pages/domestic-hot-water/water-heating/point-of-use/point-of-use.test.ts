@@ -29,7 +29,7 @@ describe('point of use', () => {
 		await user.tab();
 	};
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(PointOfUse);
 
 		await populateValidForm();
@@ -40,7 +40,7 @@ describe('point of use', () => {
 		expect(data[0]).toEqual(pointOfUse);
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			domesticHotWater: {
 				waterHeating: {
@@ -62,7 +62,7 @@ describe('point of use', () => {
 		expect((await screen.findByTestId('heaterEfficiency') as HTMLInputElement).value).toBe('0.5');
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(PointOfUse);
 
 		await user.click(screen.getByRole('button'));
@@ -72,7 +72,7 @@ describe('point of use', () => {
 		expect((await screen.findByTestId('heaterEfficiency_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(PointOfUse);
 
 		await user.click(screen.getByRole('button'));

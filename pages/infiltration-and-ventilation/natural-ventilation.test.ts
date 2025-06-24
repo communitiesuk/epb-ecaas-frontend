@@ -33,7 +33,7 @@ describe('Ventilation', () => {
 		await user.tab();
 	};
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(Ventilation);
 
 		await populateValidForm();
@@ -44,7 +44,7 @@ describe('Ventilation', () => {
 		expect(data).toEqual(state);
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				naturalVentilation: {
@@ -61,7 +61,7 @@ describe('Ventilation', () => {
 		expect((await screen.findByTestId('crossVentFactor_yes')).hasAttribute('checked')).toBe(true);
 	});
 		
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(Ventilation);
 
 		await user.click(screen.getByRole('button'));
@@ -72,7 +72,7 @@ describe('Ventilation', () => {
 		expect((await screen.findByTestId('crossVentFactor_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(Ventilation);
 
 		await user.click(screen.getByRole('button'));

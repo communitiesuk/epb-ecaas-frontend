@@ -53,7 +53,7 @@ describe('thermal bridges', () => {
 
 	describe('linear thermal bridges', () => {
 	
-		it('linear thermal bridge is removed when remove link is clicked', async () => {
+		test('linear thermal bridge is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceThermalBridging: {
@@ -94,7 +94,7 @@ describe('thermal bridges', () => {
 			expect(within(populatedList).queryByText('Linear 2')).toBeNull();
 		});
 	
-		it('linear thermal bridge is duplicated when duplicate link is clicked', async () => {
+		test('linear thermal bridge is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceThermalBridging: {
@@ -122,7 +122,7 @@ describe('thermal bridges', () => {
 
 	describe('point thermal bridges', () => {
 
-		it('point thermal bridge is removed when remove link is clicked', async () => {
+		test('point thermal bridge is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceThermalBridging: {
@@ -163,7 +163,7 @@ describe('thermal bridges', () => {
 			expect(within(populatedList).queryByText('Point 2')).toBeNull();
 		});
 	
-		it('point thermal bridge is duplicated when duplicate link is clicked', async () => {
+		test('point thermal bridge is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceThermalBridging: {
@@ -292,5 +292,4 @@ describe('thermal bridges', () => {
 		}
 	});
 	});
-
 });

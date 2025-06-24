@@ -27,7 +27,7 @@ describe('point thermal bridges', () => {
 		await user.tab();
 	};
 	
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(PointBridging);
 
 		await populateValidForm();
@@ -38,7 +38,7 @@ describe('point thermal bridges', () => {
 		expect(livingSpacePointThermalBridges?.data[0]).toEqual(state);
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceThermalBridging: {
@@ -68,7 +68,7 @@ describe('point thermal bridges', () => {
 		expect((await screen.findByTestId('heatTransferCoefficient_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(PointBridging);
 
 		await user.click(screen.getByRole('button'));

@@ -31,7 +31,7 @@ describe('electric shower', () => {
 		await user.tab();
 	};
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		vi.mocked(uuidv4).mockReturnValue(electricShower.id as unknown as Buffer);
 
 		await renderSuspended(ElectricShower);
@@ -44,7 +44,7 @@ describe('electric shower', () => {
 		expect(data[0]).toEqual(electricShower);
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			domesticHotWater: {
 				hotWaterOutlets: {
@@ -65,7 +65,7 @@ describe('electric shower', () => {
 		expect((await screen.findByTestId('ratedPower') as HTMLInputElement).value).toBe('10');
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(ElectricShower);
 
 		await user.click(screen.getByRole('button'));
@@ -74,7 +74,7 @@ describe('electric shower', () => {
 		expect((await screen.findByTestId('ratedPower_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(ElectricShower);
 
 		await user.click(screen.getByRole('button'));

@@ -24,7 +24,7 @@ describe('open gas flue balancer', () => {
 		store.$reset();
 	});
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(OpenGasFlueBalancer);
 
 		await user.type(screen.getByTestId('name'), 'Open gas flue balancer 1');
@@ -41,7 +41,7 @@ describe('open gas flue balancer', () => {
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
@@ -64,7 +64,7 @@ describe('open gas flue balancer', () => {
 		expect((await screen.findByTestId('typeOfFuel_gas')).hasAttribute('checked')).toBe(true);
 	});
 
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(OpenGasFlueBalancer);
 
 		await user.click(screen.getByRole('button'));

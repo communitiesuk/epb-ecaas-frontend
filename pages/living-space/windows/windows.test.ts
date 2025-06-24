@@ -45,7 +45,7 @@ describe('windows', () => {
 		name: "Window 3",
 	};
 
-	it('window is removed when remove link is clicked', async () => {
+	test('window is removed when remove link is clicked', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWindows: {
@@ -83,7 +83,7 @@ describe('windows', () => {
 
 	});
 	
-	it('window is duplicated when duplicate link is clicked', async () => {
+	test('window is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			livingSpaceFabric: {
 				livingSpaceWindows: {
@@ -195,6 +195,4 @@ describe('windows', () => {
 		const returnToOverviewButton = screen.getByRole("button", { name: "Return to overview" });
 		expect(returnToOverviewButton.getAttribute("href")).toBe("/living-space");
 	});
-	
-
 });

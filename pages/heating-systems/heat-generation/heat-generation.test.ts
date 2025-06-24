@@ -35,7 +35,7 @@ describe('heat generation', () => {
 			store.$reset();
 		});
 
-		it('heat pump is removed when remove link is clicked', async () => {
+		test('heat pump is removed when remove link is clicked', async () => {
 			store.$patch({
 				heatingSystems: {
 					heatGeneration: {
@@ -451,4 +451,3 @@ describe('heat generation', () => {
 		});
 	});
 });
-

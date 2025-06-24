@@ -133,7 +133,7 @@ describe('floors', () => {
 	describe('ground floors', () => {
 
 	
-		it('ground floor is removed when remove link is clicked', async () => {
+		test('ground floor is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceFloors: {
@@ -174,7 +174,7 @@ describe('floors', () => {
 			expect(within(populatedList).queryByText('ground2 name')).toBeNull();
 	
 		});
-		it('floor is duplicated when duplicate link is clicked', async () => {
+		test('floor is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceFloors: {
@@ -202,7 +202,7 @@ describe('floors', () => {
 
 	describe('internal floors', () => {
 	
-		it('internal floor is removed when remove link is clicked', async () => {
+		test('internal floor is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceFloors: {
@@ -244,7 +244,7 @@ describe('floors', () => {
 	
 		});
 	
-		it('floor is duplicated when duplicate link is clicked', async () => {
+		test('floor is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceFloors: {
@@ -272,7 +272,7 @@ describe('floors', () => {
 
 	describe('exposed floors', () => {
 
-		it('exposed floor is removed when remove link is clicked', async () => {
+		test('exposed floor is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceFloors: {
@@ -313,7 +313,7 @@ describe('floors', () => {
 	
 		});
 		
-		it('floor is duplicated when duplicate link is clicked', async () => {
+		test('floor is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
 					livingSpaceFloors: {

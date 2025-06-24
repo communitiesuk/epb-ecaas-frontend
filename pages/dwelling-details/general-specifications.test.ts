@@ -36,7 +36,7 @@ describe('General specifications', () => {
 
 	describe('When the dwelling type is a house', () => {
 
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			const user = userEvent.setup();
 	
 			await renderSuspended(GeneralSpecifications);
@@ -55,7 +55,7 @@ describe('General specifications', () => {
 			expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details');
 		});
 
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -74,7 +74,7 @@ describe('General specifications', () => {
 			expect((await screen.findByTestId('coolingRequired_no')).hasAttribute('checked')).toBe(true);
 		});
 			
-		it('required error messages are displayed when empty form is submitted', async () => {
+		test('required error messages are displayed when empty form is submitted', async () => {
 			const user = userEvent.setup();
 
 			await renderSuspended(GeneralSpecifications);
@@ -90,7 +90,7 @@ describe('General specifications', () => {
 			expect((await screen.queryByTestId('storeyOfFlat_error'))).toBe(null);
 		});
 
-		it('error summary is displayed when an invalid form in submitted', async () => {
+		test('error summary is displayed when an invalid form in submitted', async () => {
 			const user = userEvent.setup();
 
 			await renderSuspended(GeneralSpecifications);
@@ -103,7 +103,7 @@ describe('General specifications', () => {
 
 	describe('When the type of dwelling is a flat', () => {
 
-		it('data is saved to store state when form is valid', async () => {
+		test('data is saved to store state when form is valid', async () => {
 			const user = userEvent.setup();
 
 			await renderSuspended(GeneralSpecifications);
@@ -123,7 +123,7 @@ describe('General specifications', () => {
 			expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details');
 		});
 
-		it('form is prepopulated when data exists in state', async () => {
+		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
@@ -142,7 +142,7 @@ describe('General specifications', () => {
 			expect((await screen.findByTestId('coolingRequired_no')).hasAttribute('checked')).toBe(true);
 		});
 
-		it('required error messages are displayed when empty form is submitted', async () => {
+		test('required error messages are displayed when empty form is submitted', async () => {
 			const user = userEvent.setup();
 
 			await renderSuspended(GeneralSpecifications);

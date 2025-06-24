@@ -72,9 +72,7 @@ describe('pv and batteries', () => {
 	};
 
 	describe('pv system', () => {
-	
-	
-		it('pv system is removed when remove link is clicked', async () => {
+		test('pv system is removed when remove link is clicked', async () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystem: {
@@ -111,7 +109,7 @@ describe('pv and batteries', () => {
 			expect(within(populatedList).queryByText('PV System 2')).toBeNull();
 		});
 
-		it('pv system is duplicated when duplicate link is clicked', async () => {
+		test('pv system is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystem: {
@@ -136,9 +134,7 @@ describe('pv and batteries', () => {
 	});
 
 	describe('electric battery', () => {
-	
-	
-		it('electric battery is removed when remove link is clicked', async () => {
+		test('electric battery is removed when remove link is clicked', async () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
@@ -176,7 +172,7 @@ describe('pv and batteries', () => {
 	
 		});
 	
-		it('electric battery is duplicated when duplicate link is clicked', async () => {
+		test('electric battery is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {

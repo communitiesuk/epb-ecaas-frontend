@@ -28,7 +28,7 @@ describe('Air permeability', () => {
 		await user.tab();
 	};
 
-	it('data is saved to store state when form is valid', async () => {
+	test('data is saved to store state when form is valid', async () => {
 		await renderSuspended(AirPermeability);
 
 		await populateValidForm();
@@ -39,7 +39,7 @@ describe('Air permeability', () => {
 		expect(data).toEqual(state);
 	});
 
-	it('form is prepopulated when data exists in state', async () => {
+	test('form is prepopulated when data exists in state', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				airPermeability: {
@@ -54,7 +54,7 @@ describe('Air permeability', () => {
 		expect((await screen.findByTestId('airTightnessTestResult') as HTMLInputElement).value).toBe('1');
 	});
 		
-	it('required error messages are displayed when empty form is submitted', async () => {
+	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(AirPermeability);
 
 		await user.click(screen.getByRole('button'));
@@ -63,7 +63,7 @@ describe('Air permeability', () => {
 		expect((await screen.findByTestId('airTightnessTestResult_error'))).toBeDefined();
 	});
 
-	it('error summary is displayed when an invalid form in submitted', async () => {
+	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(AirPermeability);
 
 		await user.click(screen.getByRole('button'));

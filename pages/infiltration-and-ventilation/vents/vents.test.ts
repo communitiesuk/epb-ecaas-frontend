@@ -38,7 +38,7 @@ describe('vents', () => {
 		store.$reset();
 	});
 
-	it('vent is removed when remove link is clicked', async () => {
+	test('vent is removed when remove link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
@@ -76,7 +76,7 @@ describe('vents', () => {
 
 	});
 	
-	it('vent is duplicated when duplicate link is clicked', async () => {
+	test('vent is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
