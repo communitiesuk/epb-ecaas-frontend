@@ -128,8 +128,8 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="surfaceAreaInZone"
 			type="govInputWithSuffix"
-			label="Net surface area of element in zone"
-			help="Net area of the ground floor"
+			label="Net area of this element within the current zone"
+			help="The surface area of only the part of this building element that is located inside the zone you are now defining. For a floor that spans multiple zones, enter the area of the floor within this specific zone."
 			name="surfaceAreaInZone"
 			validation="required | number | min:5 | max:10000"
 			suffix-text="m2"
@@ -138,8 +138,8 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="surfaceAreaAllZones"
 			type="govInputWithSuffix"
 			suffix-text="m2"
-			label="Surface area of element as a whole (across all zones)"
-			help="Total area of the building element across entire dwelling; if the floor is divided among several zones, this is the total area across all zone"
+			label="Total area of this element across all zones"
+			help="The total surface area of the entire building element, even if it extends into other zones. For a floor that spans multiple zones, enter the total area of the entire floor. If the ground floor does not span multiple zones, this value will be the same as above."
 			name="surfaceAreaAllZones"
 			validation="required | number | min:1"
 		/>
