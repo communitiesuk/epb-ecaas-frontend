@@ -63,7 +63,7 @@ function handleComplete() {
 		@duplicate="handleDuplicate"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/domestic-hot-water" secondary>
+		<GovButton href="/domestic-hot-water">
 			Return to overview
 		</GovButton>
 		<CompleteElement :is-complete="store.domesticHotWater.wwhrs?.complete ?? false" @completed="handleComplete"/>
