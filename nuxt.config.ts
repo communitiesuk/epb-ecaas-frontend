@@ -98,5 +98,8 @@ export default defineNuxtConfig({
 	},
 	site: {
 		indexable: false
-	}
+	},
+	ignore: [
+		"**/*.test.ts"
+	]
 });
