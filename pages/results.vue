@@ -1,38 +1,17 @@
 <script lang="ts" setup>
+definePageMeta({ layout: false });
+
 const title = "Dwelling compliance results";
-
-const store = useEcaasStore();
-const { lastResult: result } = store.$state;
-
 </script>
 
 <template>
-	<Head>
-		<Title>{{ title }}</Title>
-	</Head>
-	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<ClientOnly>
-		<template v-if="!result">
-			<p class="govuk-body">There are no results yet to show.</p>
-		</template>
-		<template v-if="result?.resultType === 'ok'">
-			<p class="govuk-body">The figures shown are per year.</p>
-			<GovTabs v-slot="tabProps" :items="[{id: 'primary_tab', label: 'Primary outputs'}]">
-				<ResultPrimaryOutputTab :selected="true" :data="result.response" />
-			</GovTabs>
-			<p class="govuk-body">That got a good successful response! Display of the response to follow.</p>
-		</template>
-		<template v-if="result?.resultType === 'err'">
-			<p class="govuk-body">There were errors as follows:</p>
-			<template v-for="error in result.errors">
-				<pre>{{ error.detail }}</pre>
-			</template>
-		</template>
-	</ClientOnly>
+	<NuxtLayout name="one-column">
+		<Head>
+			<Title>{{ title }}</Title>
+		</Head>
+		<h1 class="govuk-heading-l">{{ title }}</h1>
+		<ClientOnly>
+			<ResultTabs />
+		</ClientOnly>
+	</NuxtLayout>
 </template>
-
-<style lang="css">
-pre {
-    white-space: pre-wrap;
-}
-</style>

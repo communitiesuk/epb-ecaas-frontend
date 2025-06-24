@@ -20,11 +20,11 @@ defineProps<{ selected: boolean, data: Omit<SchemaFhsComplianceResponse, 'energy
 						<span class="govuk-!-font-weight-regular">kgCO2/m2</span>
 					</th>
 					<td class="govuk-table__cell">
-						{{ data.dwelling_emission_rate }}<br>
+						{{ data.dwelling_emission_rate?.toFixed(3) }}<br>
 						<span class="govuk-!-font-weight-bold">(DER)</span>
 					</td>
 					<td class="govuk-table__cell">
-						{{ data.target_emission_rate }}<br>
+						{{ data.target_emission_rate?.toFixed(3) }}<br>
 						<span class="govuk-!-font-weight-bold">(TER)</span>
 					</td>
 					<td class="govuk-table__cell"><ResultComplianceBadge :is-compliant="data.emission_rate_compliant!"/></td>
@@ -36,11 +36,11 @@ defineProps<{ selected: boolean, data: Omit<SchemaFhsComplianceResponse, 'energy
 						<span class="govuk-!-font-weight-regular">kWh/m2</span>
 					</th>
 					<td class="govuk-table__cell">
-						{{ data.dwelling_primary_energy_rate }}<br>
+						{{ data.dwelling_primary_energy_rate?.toFixed(3) }}<br>
 						<span class="govuk-!-font-weight-bold">(DPER)</span>
 					</td>
 					<td class="govuk-table__cell">
-						{{ data.target_primary_energy_rate }}<br>
+						{{ data.target_primary_energy_rate?.toFixed(3) }}<br>
 						<span class="govuk-!-font-weight-bold">(TPER)</span>
 					</td>
 					<td class="govuk-table__cell"><ResultComplianceBadge :is-compliant="data.primary_energy_rate_compliant!"/></td>
@@ -52,11 +52,11 @@ defineProps<{ selected: boolean, data: Omit<SchemaFhsComplianceResponse, 'energy
 						<span class="govuk-!-font-weight-regular">kWh/m2</span>
 					</th>
 					<td class="govuk-table__cell">
-						{{ data.dwelling_fabric_energy_efficiency }}<br>
+						{{ data.dwelling_fabric_energy_efficiency?.toFixed(3) }}<br>
 						<span class="govuk-!-font-weight-bold">(DFEE)</span>
 					</td>
 					<td class="govuk-table__cell">
-						{{ data.target_fabric_energy_efficiency }}<br>
+						{{ data.target_fabric_energy_efficiency?.toFixed(3) }}<br>
 						<span class="govuk-!-font-weight-bold">(TFEE)</span>
 					</td>
 					<td class="govuk-table__cell"><ResultComplianceBadge :is-compliant="data.fabric_energy_efficiency_compliant!"/></td>
