@@ -176,8 +176,8 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="psiOfWallJunction"
 			type="govInputWithSuffix"
 			suffix-text="W / m.K"
-			label="Psi of wall junction"
-			help="Linear thermal transmittance of the junction between the floor and the walls"
+			label="PSI value of E5 junction"
+			help="This is the linear thermal transmittance of the junction between the floor and the walls. This input needs to be entered here and in the thermal bridging section"
 			name="psiOfWallJunction"
 			validation="required | number | min:0 | max:2"
 		/>
