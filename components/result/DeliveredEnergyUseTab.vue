@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { SchemaFhsDeliveredEnergyUse } from '~/schema/api-schema.types';
+import { displayDeliveryEnergyUseKey } from '#imports';
 
 const { selected, data } = defineProps<{ selected: boolean, data: SchemaFhsDeliveredEnergyUse }>();
 const { total: _total, ...systems } = data.by_system || {}; // by_system can include total inside it, so remove if present
@@ -18,7 +19,7 @@ const { total: _total, ...systems } = data.by_system || {}; // by_system can inc
 				<template v-for="({actual, notional}, system) in systems" :key="`${system}-result`">
 					<tr class="govuk-table__row">
 						<th scope="row" class="govuk-table__header">
-							{{ system }}<br>
+							{{ displayDeliveryEnergyUseKey(system as string) }}<br>
 							<span class="govuk-!-font-weight-regular">kWh/m2</span>
 						</th>
 						<td class="govuk-table__cell">

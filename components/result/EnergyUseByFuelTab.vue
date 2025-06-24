@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { SchemaFhsEnergyPerformanceValue } from '~/schema/api-schema.types';
+import { sentenceCase } from '#imports';
 
 const { selected, data } = defineProps<{ selected: boolean, data: Record<string, SchemaFhsEnergyPerformanceValue> }>();
 const { total: _total, ...systems } = data; // list can include total inside it, so remove if present
@@ -17,7 +18,7 @@ const { total: _total, ...systems } = data; // list can include total inside it,
 			<tbody class="govuk-table__body">
 				<tr v-for="({actual = undefined, notional = undefined}, system) in systems" :key="`${system}-result`" class="govuk-table__row">
 					<th scope="row" class="govuk-table__header">
-						{{ system }}<br>
+						{{ sentenceCase(system as string) }}<br>
 						<span class="govuk-!-font-weight-regular">kWh/m2</span>
 					</th>
 					<td class="govuk-table__cell">

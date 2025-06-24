@@ -1,4 +1,4 @@
-import { FlueGasExhaustSituation, MassDistributionClass } from "~/schema/api-schema.types";
+import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass } from "~/schema/api-schema.types";
 
 describe('Show boolean in display', () => {
 	it('should return Yes when value is true', () => {
@@ -64,6 +64,11 @@ describe('Show string in sentence case', () => {
 		const result = sentenceCase('helloworld');
 		expect(result).toBe('Helloworld');
 	});
+
+	it('should return string in sentence with no spaces at start', () => {
+		const result = sentenceCase('_energy_from_environment');
+		expect(result).toBe('Energy from environment');
+	});
 });
 
 describe('Show flue gas exhaust situation in display', () => {
@@ -97,5 +102,19 @@ describe('displaySnakeToSentenceCase', () => {
 	it('should return the same string (but capitalised) if no underscores are present', () => {
 		const result = displaySnakeToSentenceCase('helloworld');
 		expect(result).toBe('Helloworld');
+	});
+});
+
+describe('displayDeliveryEnergyUseKey', () => {
+	it('should convert an appliance key to the correct display value', () => {
+		expect(displayDeliveryEnergyUseKey(ApplianceKey.Clothes_washing)).toBe("Clothes washing");
+	});
+
+	it('should pass anything else through verbatim', () => {
+		expect(displayDeliveryEnergyUseKey('acme')).toBe('acme');
+	});
+
+	test('applianceDisplays are full ApplianceKey records', () => {
+		expectTypeOf(applianceDisplays).toMatchObjectType<Record<ApplianceKey, string>>();
 	});
 });
