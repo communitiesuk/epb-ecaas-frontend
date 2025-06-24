@@ -75,21 +75,24 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
 							<th scope="col" class="govuk-table__header">Vent type</th>
-							<th scope="col" class="govuk-table__header">Effective area (cm2)</th>
+							<th scope="col" class="govuk-table__header govuk-!-width-one-third">Effective area (cm²)</th>
+							<th scope="col" class="govuk-table__header">Description</th>
 						</tr>
 					</thead>
 					<tbody class="govuk-table__body">
 						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">Small trickle vent</td>
-							<td class="govuk-table__cell">50 - 100</td>
-						</tr>
-						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Standard window trickle vent</td>
-							<td class="govuk-table__cell">200 - 500</td>
+							<td class="govuk-table__cell">40 - 80</td>
+							<td class="govuk-table__cell">
+								This is a common range for modern trickle vents designed to contribute to background ventilation in habitable rooms. Multiple vents per room might be needed.
+							</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Wall-mounted air brick</td>
-							<td class="govuk-table__cell">100 - 300</td>
+							<td class="govuk-table__cell">50 - 200</td>
+							<td class="govuk-table__cell">
+								Air bricks are generally larger and provide more airflow. The effective area depends significantly on the grill design and free area. Smaller air bricks might be around 50 to 100 cm², while larger ones can reach 200 cm² or more. Some manufacturers might quote the free area, which would be a higher number.
+							</td>
 						</tr>
 					</tbody>
 				</table>
