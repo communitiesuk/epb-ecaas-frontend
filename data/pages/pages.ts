@@ -16,9 +16,9 @@ const pagesData: Array<Page> = [
 	},
 	...dwellingDetailsPages,
 	...infiltrationAndVentilationPages,
+	...heatingSystemsPages,
 	...livingSpaceFabricPages,
 	// ...restOfDwellingPages,
-	...heatingSystemsPages,
 	...domesticHotWaterPages,
 	...pvAndBatteriesPages,
 	...coolingPages
