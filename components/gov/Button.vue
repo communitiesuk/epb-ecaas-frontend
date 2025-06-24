@@ -12,8 +12,8 @@ defineProps<{
 		:href="href"
 		role="button"
 		:class="`govuk-button ${secondary ? 'govuk-button--secondary' : ''}`"
-		:disabled="disabled"
-		:aria-disabled="disabled"
+		:disabled="disabled || undefined"
+		:aria-disabled="disabled || undefined"
 		data-module="govuk-button"
 	>
 		<slot />
@@ -21,8 +21,8 @@ defineProps<{
 	<button
 		v-else
 		:class="`govuk-button ${secondary ? 'govuk-button--secondary' : ''}`"
-		:disabled="disabled"
-		:aria-disabled="disabled"
+		:disabled="disabled || undefined"
+		:aria-disabled="disabled || undefined"
 		data-module="govuk-button"
 	>
 		<slot />
