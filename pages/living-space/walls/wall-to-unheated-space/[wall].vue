@@ -44,11 +44,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<p class="govuk-body">
-		<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
-			Unheated space guidance (opens in another window)
-		</a>
-	</p>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -98,7 +93,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="The effective thermal resistance of the unheated space. For example values, please refer to technical paper S11P-028. Max value in the paper is: Facing wall not exposed, 2.5 (m^2.K) / W"
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
-		/>
+		>
+			<p class="govuk-body">
+				<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
+					Guidance on thermal resistance of unheated spaces (opens in another window)
+				</a>
+			</p>
+		</FormKit>
 
 		<FormKit
 			type="govButton"
