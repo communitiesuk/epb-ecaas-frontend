@@ -186,6 +186,7 @@ const expectedHouseInput: FhsInputSchema = {
 	InternalGains: {},
 	NumberOfBedrooms: 7,
 	OnSiteGeneration: {},
+	PartGcompliance: true,
 	SimulationTime: {
 		start: 0,
 		end: 8,
@@ -573,6 +574,7 @@ const expectedFlatInput: FhsInputSchema = {
 			shading: []
 		}
 	},
+	PartGcompliance: true,
 	SimulationTime: {
 		start: 0,
 		end: 8,

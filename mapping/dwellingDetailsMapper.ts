@@ -23,7 +23,7 @@ export function mapGeneralSpecificationsData(state: ResolvedState): Pick<FhsInpu
 			...(generalSpecifications.typeOfDwelling === BuildType.flat ? {storey_of_dwelling: generalSpecifications.storeyOfFlat} : {}),
 		},
 		NumberOfBedrooms: generalSpecifications.numOfBedrooms,
-		...(generalSpecifications.partGCompliance !== undefined ? {PartGcompliance: generalSpecifications.partGCompliance} : {}),
+		PartGcompliance: true,
 		...(generalSpecifications.coolingRequired !== undefined ? {PartO_active_cooling_required: generalSpecifications.coolingRequired} : {}),
 	};
 }

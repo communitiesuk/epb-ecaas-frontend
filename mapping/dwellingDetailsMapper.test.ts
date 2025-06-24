@@ -16,7 +16,6 @@ describe('dwelling details mapper', () => {
 			storeysInDwelling: 3,
 			storeyOfFlat: 1,
 			numOfBedrooms: 2,
-			partGCompliance: true,
 			coolingRequired: false
 		};
 

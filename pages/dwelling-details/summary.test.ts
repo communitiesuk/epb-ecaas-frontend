@@ -21,7 +21,6 @@ const state: DwellingDetailSummary = {
 		typeOfDwelling: BuildType.house,
 		storeysInDwelling: 2,
 		numOfBedrooms: 3,
-		partGCompliance: true,
 		coolingRequired: false,
 	},
 	shading: [{
@@ -72,7 +71,6 @@ describe('Dwelling details summary', () => {
 			"Type of dwelling": "House",
 			"Number of storeys in building": "2",
 			"Number of bedrooms": "3",
-			"Part G compliance": "Yes",
 			"Cooling required": "No"
 		};
 

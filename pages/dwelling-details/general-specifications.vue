@@ -22,7 +22,6 @@ const saveForm = (fields: typeof model.value) => {
 					storeysInDwelling: fields.storeysInDwelling,
 					storeyOfFlat: fields.typeOfDwelling === BuildType.flat ? fields.storeyOfFlat : undefined,
 					numOfBedrooms: fields.numOfBedrooms,
-					partGCompliance: fields.partGCompliance,
 					coolingRequired: fields.coolingRequired,
 				},
 				complete: true,
@@ -76,14 +75,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="numOfBedrooms"
 			validation="required | number | min:1"
 			help="Number of bedrooms in dwelling. Affects predicted occupancy."
-		/>
-		<FormKit
-			id="partGCompliance"
-			type="govBoolean"
-			label="Part G compliance"
-			name="partGCompliance"
-			validation="required"
-			help="Is this dwelling compliant with part G regulations? Affects predicted hot water demand"
 		/>
 		<FormKit
 			id="coolingRequired"

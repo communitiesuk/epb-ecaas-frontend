@@ -20,7 +20,6 @@ const generalSpecificationsSummary: SummarySection = {
 		"Number of storeys in building": generalSpecificationsData.storeysInDwelling,
 		"Storey of flat": generalSpecificationsData.typeOfDwelling === BuildType.flat ? generalSpecificationsData.storeyOfFlat : undefined,
 		"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
-		"Part G compliance": displayBoolean(generalSpecificationsData.partGCompliance),
 		"Cooling required": displayBoolean(generalSpecificationsData.coolingRequired),
 	},
 	editUrl: getUrl('generalSpecifications')!

@@ -27,7 +27,6 @@ export type GeneralSpecificationsData = {
 	typeOfDwelling: BuildType;
 	storeysInDwelling: number;
 	numOfBedrooms: number;
-	partGCompliance: boolean;
 	coolingRequired: boolean;
 } & TaggedUnion<'typeOfDwelling', {
 	[BuildType.flat]: {
