@@ -144,9 +144,21 @@ export const useEcaasStore = defineStore("ecaas", {
 			};
 		},
 	},
+	actions: {
+		async postEcaasState (){
+			try {
+				await $fetch("/api/setState", {
+					method: "POST",
+					body: this.$state,
+				});
+			} catch (error) {
+				console.error(`Failed to post data: ${error}`);
+			}
+		},
+	},
 	persist: {
 		storage: piniaPluginPersistedstate.localStorage(),
-	},
+	}
 });
 
 export type NulledForms<T> = { [P in keyof T]: T[P] extends EcaasForm<infer U> ? EcaasForm<U | EmptyObject> : NulledForms<T[P]> };
