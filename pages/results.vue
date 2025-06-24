@@ -13,5 +13,6 @@ const title = "Dwelling compliance results";
 		<ClientOnly>
 			<ResultTabs />
 		</ClientOnly>
+		<GovButton href="/" secondary>Edit inputted data</GovButton>
 	</NuxtLayout>
 </template>
