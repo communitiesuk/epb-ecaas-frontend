@@ -4,7 +4,6 @@ import { SupplyAirFlowRateControlType, type MVHRLocation} from '~/schema/api-sch
 import { VentType } from '~/schema/api-schema.types';
 
 const title = "Mechanical ventilation";
-const mvhrTitle = "MVHR only inputs";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
@@ -162,9 +161,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<template v-if="model.typeOfMechanicalVentilationOptions === VentType.MVHR">
-			<h2 class="govuk-heading-l custom-govuk__heading__padding">
-				{{ mvhrTitle }}
-			</h2>
 			<FormKit
 				id="mvhrLocation"
 				type="govRadios"
