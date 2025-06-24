@@ -50,6 +50,7 @@ function checkIsComplete(){
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<p class="govuk-hint">For now, this service only allows homes to be modelled with a heat pump. In future releases there will be further options.</p>
 	<CustomList
 		id="heatPump"
 		title="Heat pump"
@@ -57,34 +58,34 @@ function checkIsComplete(){
 		:items="store.heatingSystems.heatGeneration.heatPump.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('heatPump', index)"
 	/>
-	<CustomList
-		id="boiler"
-		title="Boiler"
-		:form-url="`${page?.url!}/boiler`"
-		:items="store.heatingSystems.heatGeneration.boiler.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('boiler', index)"
-	/>
-	<CustomList
-		id="heatBattery"
-		title="Heat battery"
-		:form-url="`${page?.url!}/heat-battery`"
-		:items="store.heatingSystems.heatGeneration.heatBattery.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('heatBattery', index)"
-	/>
-	<CustomList
-		id="heatNetwork"
-		title="Heat network"
-		:form-url="`${page?.url!}/heat-network`"
-		:items="store.heatingSystems.heatGeneration.heatNetwork.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('heatNetwork', index)"
-	/>
-	<CustomList
-		id="heatInterfaceUnit"
-		title="Heat interface unit"
-		:form-url="`${page?.url!}/heat-interface-unit`"
-		:items="store.heatingSystems.heatGeneration.heatInterfaceUnit.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('heatInterfaceUnit', index)"
-	/>
+	<!--	<CustomList-->
+	<!--		id="boiler"-->
+	<!--		title="Boiler"-->
+	<!--		:form-url="`${page?.url!}/boiler`"-->
+	<!--		:items="store.heatingSystems.heatGeneration.boiler.data.map(x => x.name)"-->
+	<!--		@remove="(index: number) => handleRemove('boiler', index)"-->
+	<!--	/>-->
+	<!--	<CustomList-->
+	<!--		id="heatBattery"-->
+	<!--		title="Heat battery"-->
+	<!--		:form-url="`${page?.url!}/heat-battery`"-->
+	<!--		:items="store.heatingSystems.heatGeneration.heatBattery.data.map(x => x.name)"-->
+	<!--		@remove="(index: number) => handleRemove('heatBattery', index)"-->
+	<!--	/>-->
+	<!--	<CustomList-->
+	<!--		id="heatNetwork"-->
+	<!--		title="Heat network"-->
+	<!--		:form-url="`${page?.url!}/heat-network`"-->
+	<!--		:items="store.heatingSystems.heatGeneration.heatNetwork.data.map(x => x.name)"-->
+	<!--		@remove="(index: number) => handleRemove('heatNetwork', index)"-->
+	<!--	/>-->
+	<!--	<CustomList-->
+	<!--		id="heatInterfaceUnit"-->
+	<!--		title="Heat interface unit"-->
+	<!--		:form-url="`${page?.url!}/heat-interface-unit`"-->
+	<!--		:items="store.heatingSystems.heatGeneration.heatInterfaceUnit.data.map(x => x.name)"-->
+	<!--		@remove="(index: number) => handleRemove('heatInterfaceUnit', index)"-->
+	<!--	/>-->
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton
 			href="/heating-systems"

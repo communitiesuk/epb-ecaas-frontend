@@ -78,269 +78,270 @@ describe('heat generation', () => {
 		});
 	});
 
-	describe('boiler', () => {
-		const store = useEcaasStore();
-		const user = userEvent.setup();
+	// describe('boiler', () => {
+	// 	const store = useEcaasStore();
+	// 	const user = userEvent.setup();
+	//
+	// 	const boiler1: BoilerData = {
+	// 		id: uuidv4(),
+	// 		name: "boiler 1"
+	// 	};
+	//
+	// 	const boiler2: BoilerData = {
+	// 		...boiler1,
+	// 		name: "boiler 2",
+	// 	};
+	//
+	// 	const boiler3: BoilerData = {
+	// 		...boiler1,
+	// 		name: "boiler 3"
+	// 	};
+	//
+	// 	afterEach(() => {
+	// 		store.$reset();
+	// 	});
+	//
+	// 	it('boiler is removed when remove link is clicked', async () => {
+	// 		store.$patch({
+	// 			heatingSystems: {
+	// 				heatGeneration: {
+	// 					boiler: {
+	// 						data: [boiler1]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	//
+	// 		await renderSuspended(HeatGeneration);
+	//
+	// 		expect(screen.getAllByTestId('boiler_items')).toBeDefined();
+	//
+	// 		await user.click(screen.getByTestId('boiler_remove_0'));
+	//
+	// 		expect(screen.queryByTestId('boiler_items')).toBeNull();
+	// 	});
+	//
+	// 	it('should only remove the boiler thats is clicked', async () => {
+	// 		store.$patch({
+	// 			heatingSystems: {
+	// 				heatGeneration: {
+	// 					boiler: {
+	// 						data:[boiler1, boiler2, boiler3]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	//
+	// 		await renderSuspended(HeatGeneration);
+	// 		await user.click(screen.getByTestId('boiler_remove_1'));
+	//
+	// 		const populatedList = screen.getByTestId('boiler_items');
+	//
+	// 		expect(within(populatedList).getByText('boiler 1')).toBeDefined();
+	// 		expect(within(populatedList).getByText('boiler 3')).toBeDefined();
+	// 		expect(within(populatedList).queryByText('boiler 2')).toBeNull();
+	//
+	// 	});
+	// });
 
-		const boiler1: BoilerData = {
-			id: uuidv4(),
-			name: "boiler 1"
-		};
+	// describe('heat battery', () => {
+	// 	const store = useEcaasStore();
+	// 	const user = userEvent.setup();
+	//
+	// 	const heatBattery1: HeatBatteryData = {
+	// 		id: uuidv4(),
+	// 		name: "heatBattery 1"
+	// 	};
+	//
+	// 	const heatBattery2: HeatBatteryData = {
+	// 		...heatBattery1,
+	// 		name: "heatBattery 2",
+	// 	};
+	//
+	// 	const heatBattery3: HeatBatteryData = {
+	// 		...heatBattery1,
+	// 		name: "heatBattery 3"
+	// 	};
+	//
+	// 	afterEach(() => {
+	// 		store.$reset();
+	// 	});
+	//
+	// 	it('heat battery is removed when remove link is clicked', async () => {
+	// 		store.$patch({
+	// 			heatingSystems: {
+	// 				heatGeneration: {
+	// 					heatBattery: {
+	// 						data: [heatBattery1]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	//
+	// 		await renderSuspended(HeatGeneration);
+	//
+	// 		expect(screen.getAllByTestId('heatBattery_items')).toBeDefined();
+	//
+	// 		await user.click(screen.getByTestId('heatBattery_remove_0'));
+	//
+	// 		expect(screen.queryByTestId('heatBattery_items')).toBeNull();
+	// 	});
+	//
+	// 	it('should only remove the heat battery that is clicked', async () => {
+	// 		store.$patch({
+	// 			heatingSystems: {
+	// 				heatGeneration: {
+	// 					heatBattery: {
+	// 						data:[heatBattery1, heatBattery2, heatBattery3]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	//
+	// 		await renderSuspended(HeatGeneration);
+	// 		await user.click(screen.getByTestId('heatBattery_remove_1'));
+	//
+	// 		const populatedList = screen.getByTestId('heatBattery_items');
+	//
+	// 		expect(within(populatedList).getByText('heatBattery 1')).toBeDefined();
+	// 		expect(within(populatedList).getByText('heatBattery 3')).toBeDefined();
+	// 		expect(within(populatedList).queryByText('heatBattery 2')).toBeNull();
+	//
+	// 	});
+	// });
 
-		const boiler2: BoilerData = {
-			...boiler1,
-			name: "boiler 2",
-		};
+	// describe('heat network', () => {
+	// 	const store = useEcaasStore();
+	// 	const user = userEvent.setup();
+	//
+	// 	const heatNetwork1: HeatNetworkData = {
+	// 		id: uuidv4(),
+	// 		name: "heatNetwork 1"
+	// 	};
+	//
+	// 	const heatNetwork2: HeatNetworkData = {
+	// 		...heatNetwork1,
+	// 		name: "heatNetwork 2",
+	// 	};
+	//
+	// 	const heatNetwork3: HeatNetworkData = {
+	// 		...heatNetwork1,
+	// 		name: "heatNetwork 3"
+	// 	};
+	//
+	// 	afterEach(() => {
+	// 		store.$reset();
+	// 	});
+	//
+	// 	it('heat network is removed when remove link is clicked', async () => {
+	// 		store.$patch({
+	// 			heatingSystems: {
+	// 				heatGeneration: {
+	// 					heatNetwork: {
+	// 						data: [heatNetwork1]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	//
+	// 		await renderSuspended(HeatGeneration);
+	//
+	// 		expect(screen.getAllByTestId('heatNetwork_items')).toBeDefined();
+	//
+	// 		await user.click(screen.getByTestId('heatNetwork_remove_0'));
+	//
+	// 		expect(screen.queryByTestId('heatNetwork_items')).toBeNull();
+	// 	});
+	//
+	// 	it('should only remove the heat network that is clicked', async () => {
+	// 		store.$patch({
+	// 			heatingSystems: {
+	// 				heatGeneration: {
+	// 					heatNetwork: {
+	// 						data:[heatNetwork1, heatNetwork2, heatNetwork3]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	//
+	// 		await renderSuspended(HeatGeneration);
+	// 		await user.click(screen.getByTestId('heatNetwork_remove_1'));
+	//
+	// 		const populatedList = screen.getByTestId('heatNetwork_items');
+	//
+	// 		expect(within(populatedList).getByText('heatNetwork 1')).toBeDefined();
+	// 		expect(within(populatedList).getByText('heatNetwork 3')).toBeDefined();
+	// 		expect(within(populatedList).queryByText('heatNetwork 2')).toBeNull();
+	//
+	// 	});
+	// });
 
-		const boiler3: BoilerData = {
-			...boiler1,
-			name: "boiler 3"
-		};
+	// describe('heat interface unit', () => {
+	// 	const store = useEcaasStore();
+	// 	const user = userEvent.setup();
+	//
+	// 	const heatInterfaceUnit1: HeatInterfaceUnitData = {
+	// 		id: uuidv4(),
+	// 		name: "heatInterfaceUnit 1"
+	// 	};
+	//
+	// 	const heatInterfaceUnit2: HeatInterfaceUnitData = {
+	// 		...heatInterfaceUnit1,
+	// 		name: "heatInterfaceUnit 2",
+	// 	};
+	//
+	// 	const heatInterfaceUnit3: HeatInterfaceUnitData = {
+	// 		...heatInterfaceUnit1,
+	// 		name: "heatInterfaceUnit 3"
+	// 	};
+	//
+	// 	afterEach(() => {
+	// 		store.$reset();
+	// 	});
+	//
+	// 	it('heat interface unit is removed when remove link is clicked', async () => {
+	// 		store.$patch({
+	// 			heatingSystems: {
+	// 				heatGeneration: {
+	// 					heatInterfaceUnit: {
+	// 						data: [heatInterfaceUnit1]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	//
+	// 		await renderSuspended(HeatGeneration);
+	//
+	// 		expect(screen.getAllByTestId('heatInterfaceUnit_items')).toBeDefined();
+	//
+	// 		await user.click(screen.getByTestId('heatInterfaceUnit_remove_0'));
+	//
+	// 		expect(screen.queryByTestId('heatInterfaceUnit_items')).toBeNull();
+	// 	});
+	//
+	// 	it('should only remove the heat interface unit that is clicked', async () => {
+	// 		store.$patch({
+	// 			heatingSystems: {
+	// 				heatGeneration: {
+	// 					heatInterfaceUnit: {
+	// 						data:[heatInterfaceUnit1, heatInterfaceUnit2, heatInterfaceUnit3]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	//
+	// 		await renderSuspended(HeatGeneration);
+	// 		await user.click(screen.getByTestId('heatInterfaceUnit_remove_1'));
+	//
+	// 		const populatedList = screen.getByTestId('heatInterfaceUnit_items');
+	//
+	// 		expect(within(populatedList).getByText('heatInterfaceUnit 1')).toBeDefined();
+	// 		expect(within(populatedList).getByText('heatInterfaceUnit 3')).toBeDefined();
+	// 		expect(within(populatedList).queryByText('heatInterfaceUnit 2')).toBeNull();
+	//
+	// 	});
+	// });
 
-		afterEach(() => {
-			store.$reset();
-		});
-
-		it('boiler is removed when remove link is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						boiler: {
-							data: [boiler1]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-
-			expect(screen.getAllByTestId('boiler_items')).toBeDefined();
-
-			await user.click(screen.getByTestId('boiler_remove_0'));
-
-			expect(screen.queryByTestId('boiler_items')).toBeNull();
-		});
-
-		it('should only remove the boiler thats is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						boiler: {
-							data:[boiler1, boiler2, boiler3]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-			await user.click(screen.getByTestId('boiler_remove_1'));
-
-			const populatedList = screen.getByTestId('boiler_items');
-
-			expect(within(populatedList).getByText('boiler 1')).toBeDefined();
-			expect(within(populatedList).getByText('boiler 3')).toBeDefined();
-			expect(within(populatedList).queryByText('boiler 2')).toBeNull();
-
-		});
-	});
-
-	describe('heat battery', () => {
-		const store = useEcaasStore();
-		const user = userEvent.setup();
-
-		const heatBattery1: HeatBatteryData = {
-			id: uuidv4(),
-			name: "heatBattery 1"
-		};
-
-		const heatBattery2: HeatBatteryData = {
-			...heatBattery1,
-			name: "heatBattery 2",
-		};
-
-		const heatBattery3: HeatBatteryData = {
-			...heatBattery1,
-			name: "heatBattery 3"
-		};
-
-		afterEach(() => {
-			store.$reset();
-		});
-
-		it('heat battery is removed when remove link is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						heatBattery: {
-							data: [heatBattery1]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-
-			expect(screen.getAllByTestId('heatBattery_items')).toBeDefined();
-
-			await user.click(screen.getByTestId('heatBattery_remove_0'));
-
-			expect(screen.queryByTestId('heatBattery_items')).toBeNull();
-		});
-
-		it('should only remove the heat battery that is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						heatBattery: {
-							data:[heatBattery1, heatBattery2, heatBattery3]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-			await user.click(screen.getByTestId('heatBattery_remove_1'));
-
-			const populatedList = screen.getByTestId('heatBattery_items');
-
-			expect(within(populatedList).getByText('heatBattery 1')).toBeDefined();
-			expect(within(populatedList).getByText('heatBattery 3')).toBeDefined();
-			expect(within(populatedList).queryByText('heatBattery 2')).toBeNull();
-
-		});
-	});
-
-	describe('heat network', () => {
-		const store = useEcaasStore();
-		const user = userEvent.setup();
-
-		const heatNetwork1: HeatNetworkData = {
-			id: uuidv4(),
-			name: "heatNetwork 1"
-		};
-
-		const heatNetwork2: HeatNetworkData = {
-			...heatNetwork1,
-			name: "heatNetwork 2",
-		};
-
-		const heatNetwork3: HeatNetworkData = {
-			...heatNetwork1,
-			name: "heatNetwork 3"
-		};
-
-		afterEach(() => {
-			store.$reset();
-		});
-
-		it('heat network is removed when remove link is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						heatNetwork: {
-							data: [heatNetwork1]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-
-			expect(screen.getAllByTestId('heatNetwork_items')).toBeDefined();
-
-			await user.click(screen.getByTestId('heatNetwork_remove_0'));
-
-			expect(screen.queryByTestId('heatNetwork_items')).toBeNull();
-		});
-
-		it('should only remove the heat network that is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						heatNetwork: {
-							data:[heatNetwork1, heatNetwork2, heatNetwork3]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-			await user.click(screen.getByTestId('heatNetwork_remove_1'));
-
-			const populatedList = screen.getByTestId('heatNetwork_items');
-
-			expect(within(populatedList).getByText('heatNetwork 1')).toBeDefined();
-			expect(within(populatedList).getByText('heatNetwork 3')).toBeDefined();
-			expect(within(populatedList).queryByText('heatNetwork 2')).toBeNull();
-
-		});
-	});
-
-	describe('heat interface unit', () => {
-		const store = useEcaasStore();
-		const user = userEvent.setup();
-
-		const heatInterfaceUnit1: HeatInterfaceUnitData = {
-			id: uuidv4(),
-			name: "heatInterfaceUnit 1"
-		};
-
-		const heatInterfaceUnit2: HeatInterfaceUnitData = {
-			...heatInterfaceUnit1,
-			name: "heatInterfaceUnit 2",
-		};
-
-		const heatInterfaceUnit3: HeatInterfaceUnitData = {
-			...heatInterfaceUnit1,
-			name: "heatInterfaceUnit 3"
-		};
-
-		afterEach(() => {
-			store.$reset();
-		});
-
-		it('heat interface unit is removed when remove link is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						heatInterfaceUnit: {
-							data: [heatInterfaceUnit1]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-
-			expect(screen.getAllByTestId('heatInterfaceUnit_items')).toBeDefined();
-
-			await user.click(screen.getByTestId('heatInterfaceUnit_remove_0'));
-
-			expect(screen.queryByTestId('heatInterfaceUnit_items')).toBeNull();
-		});
-
-		it('should only remove the heat interface unit that is clicked', async () => {
-			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						heatInterfaceUnit: {
-							data:[heatInterfaceUnit1, heatInterfaceUnit2, heatInterfaceUnit3]
-						}
-					}
-				}
-			});
-
-			await renderSuspended(HeatGeneration);
-			await user.click(screen.getByTestId('heatInterfaceUnit_remove_1'));
-
-			const populatedList = screen.getByTestId('heatInterfaceUnit_items');
-
-			expect(within(populatedList).getByText('heatInterfaceUnit 1')).toBeDefined();
-			expect(within(populatedList).getByText('heatInterfaceUnit 3')).toBeDefined();
-			expect(within(populatedList).queryByText('heatInterfaceUnit 2')).toBeNull();
-
-		});
-	});
 	describe("mark heat generation section as complete", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
@@ -400,19 +401,29 @@ describe('heat generation', () => {
 	
 		it("marks as not complete if an item is removed after marking complete", async () => {
 			const generators = await getGeneratorsData("remove");
-	
-			for (const [key] of Object.entries(store.heatingSystems.heatGeneration)) {
-				const typedKey = key as HeatGenerationType;
-	
-				await user.click(screen.getByTestId("completeSectionButton"));
-				expect(store.heatingSystems.heatGeneration[typedKey]?.complete).toBe(true);
-	
-				const generatorData = generators.find((e) => e.key === typedKey);
-				await user.click(screen.getByTestId(generatorData!.testId));
-				expect(store.heatingSystems.heatGeneration[typedKey]?.complete).toBe(false);
-	
-				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-			}
+
+			// moved below out of for loop when removing non heat pump generators for summer
+			await user.click(screen.getByTestId("completeSectionButton"));
+			expect(store.heatingSystems.heatGeneration['heatPump']?.complete).toBe(true);
+
+			const generatorData = generators.find((e) => e.key === 'heatPump');
+			await user.click(screen.getByTestId(generatorData!.testId));
+
+			expect(store.heatingSystems.heatGeneration['heatPump']?.complete).toBe(false);
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+
+			// for (const [key] of Object.entries(store.heatingSystems.heatGeneration)) {
+			// 	const typedKey = key as HeatGenerationType;
+			//
+			// 	await user.click(screen.getByTestId("completeSectionButton"));
+			// 	expect(store.heatingSystems.heatGeneration[typedKey]?.complete).toBe(true);
+			//
+			// 	const generatorData = generators.find((e) => e.key === typedKey);
+			// 	await user.click(screen.getByTestId(generatorData!.testId));
+			// 	expect(store.heatingSystems.heatGeneration[typedKey]?.complete).toBe(false);
+			//
+			// 	expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			// }
 		});
 	
 		it("marks as not complete after saving a new or edited generator item", async () => {
@@ -439,7 +450,5 @@ describe('heat generation', () => {
 			}
 		});
 	});
-	
-	
 });
 
