@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { mapFhsInputData, type ResolvedState } from '~/mapping/fhsInputMapper';
-import type { SchemaFhsComplianceResponse } from '~/schema/api-schema.types';
 import type { FhsComplianceResponseIncludingErrors } from '~/server/server.types';
 import { hasCompleteState } from '~/stores/ecaasStore';
-import type { CorrectedJsonApiError } from '~/stores/ecaasStore.types';
 
 const store = useEcaasStore();
 const calculatePending = ref(false);
