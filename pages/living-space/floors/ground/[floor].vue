@@ -8,12 +8,14 @@ const { saveToList } = useForm();
 const floorData = useItemToEdit('floor', store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data);
 const model: Ref<GroundFloorData> = ref(floorData!);
 
-const typeOfGroundFloorOptions: Record<FloorType, SnakeToSentenceCase<FloorType>> = {
+type reducedGroundFloorOptions = FloorType.Slab_no_edge_insulation | FloorType.Slab_edge_insulation | FloorType.Suspended_floor;
+// Removed heated and unheated basement options for summer
+const typeOfGroundFloorOptions: Record<reducedGroundFloorOptions, SnakeToSentenceCase<reducedGroundFloorOptions>> = {
 	[FloorType.Slab_no_edge_insulation]: 'Slab no edge insulation',
 	[FloorType.Slab_edge_insulation]: 'Slab edge insulation',
 	[FloorType.Suspended_floor]: 'Suspended floor',
-	[FloorType.Heated_basement]: 'Heated basement',
-	[FloorType.Unheated_basement]: 'Unheated basement',
+	// [FloorType.Heated_basement]: 'Heated basement',
+	// [FloorType.Unheated_basement]: 'Unheated basement',
 };
 
 const saveForm = (fields: GroundFloorData) => {

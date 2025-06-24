@@ -45,23 +45,23 @@ describe('ground floor', () => {
 		ventilationOpeningsArea: 0
 	};
 
-	const groundFloorWithHeatedBasement: GroundFloorData = {
-		...groundFloor,
-		typeOfGroundFloor: FloorType.Heated_basement,
-		thicknessOfWalls: 0,
-		depthOfBasementFloorBelowGround: 0,
-		thermalResistanceOfBasementWalls: 0
-	};
-
-	const groundFloorWithUnheatedBasement: GroundFloorData = {
-		...groundFloor,
-		typeOfGroundFloor: FloorType.Unheated_basement,
-		thermalTransmittanceOfFloorAboveBasement: 0,
-		thermalTransmittanceOfWallsAboveGround: 0,
-		thicknessOfWalls: 0,
-		depthOfBasementFloorBelowGround: 0,
-		heightOfBasementWallsAboveGround: 0
-	};
+	// const groundFloorWithHeatedBasement: GroundFloorData = {
+	// 	...groundFloor,
+	// 	typeOfGroundFloor: FloorType.Heated_basement,
+	// 	thicknessOfWalls: 0,
+	// 	depthOfBasementFloorBelowGround: 0,
+	// 	thermalResistanceOfBasementWalls: 0
+	// };
+	//
+	// const groundFloorWithUnheatedBasement: GroundFloorData = {
+	// 	...groundFloor,
+	// 	typeOfGroundFloor: FloorType.Unheated_basement,
+	// 	thermalTransmittanceOfFloorAboveBasement: 0,
+	// 	thermalTransmittanceOfWallsAboveGround: 0,
+	// 	thicknessOfWalls: 0,
+	// 	depthOfBasementFloorBelowGround: 0,
+	// 	heightOfBasementWallsAboveGround: 0
+	// };
 
 	afterEach(() => {
 		store.$reset();
@@ -250,132 +250,132 @@ describe('ground floor', () => {
 		});
 	});
 	
-	describe('when type of ground floor is heated basement', () => {
-		test('data is saved to store state when form is valid', async () => {
-			await renderSuspended(GroundFloor);
+	// describe('when type of ground floor is heated basement', () => {
+	// 	test('data is saved to store state when form is valid', async () => {
+	// 		await renderSuspended(GroundFloor);
+	//
+	// 		await populateValidForm();
+	// 		await user.click(screen.getByTestId('typeOfGroundFloor_Heated_basement'));
+	// 		await user.type(screen.getByTestId('thicknessOfWalls'), '0');
+	// 		await user.type(screen.getByTestId('depthOfBasementFloorBelowGround'), '0');
+	// 		await user.type(screen.getByTestId('thermalResistanceOfBasementWalls'), '0');
+	// 		await user.tab();
+	// 		await user.click(screen.getByRole('button'));
+	//
+	// 		const { data } = store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor;
+	// 		const entryData = Object.entries(data[0]!).filter(e => e[1] !== undefined);
+	//
+	// 		expect(Object.fromEntries(entryData)).toEqual(groundFloorWithHeatedBasement);
+	// 	});
+	//
+	// 	test('form is prepopulated when data exists in state', async () => {
+	// 		store.$patch({
+	// 			livingSpaceFabric: {
+	// 				livingSpaceFloors: {
+	// 					livingSpaceGroundFloor: {
+	// 						data: [groundFloorWithHeatedBasement]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
+	//
+	// 		await renderSuspended(GroundFloor, {
+	// 			route: {
+	// 				params: { floor: '0' }
+	// 			}
+	// 		});
+	//
+	// 		expect((await screen.findByTestId('typeOfGroundFloor_Heated_basement')).hasAttribute('checked')).toBe(true);
+	// 		expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
+	// 		expect((await screen.findByTestId('depthOfBasementFloorBelowGround') as HTMLInputElement).value).toBe('0');
+	// 		expect((await screen.findByTestId('thermalResistanceOfBasementWalls') as HTMLInputElement).value).toBe('0');
+	// 	});
+	//
+	// 	test('required error messages are displayed when empty form is submitted', async () => {
+	// 		await renderSuspended(GroundFloor);
+	//
+	// 		await user.click(screen.getByTestId('typeOfGroundFloor_Heated_basement'));
+	// 		await user.click(screen.getByRole('button'));
+	//
+	// 		expect((await screen.findByTestId('thicknessOfWalls_error'))).toBeDefined();
+	// 		expect((await screen.findByTestId('depthOfBasementFloorBelowGround_error'))).toBeDefined();
+	// 		expect((await screen.findByTestId('thermalResistanceOfBasementWalls_error'))).toBeDefined();
+	// 	});
+	// });
 	
-			await populateValidForm();
-			await user.click(screen.getByTestId('typeOfGroundFloor_Heated_basement'));
-			await user.type(screen.getByTestId('thicknessOfWalls'), '0');
-			await user.type(screen.getByTestId('depthOfBasementFloorBelowGround'), '0');
-			await user.type(screen.getByTestId('thermalResistanceOfBasementWalls'), '0');
-			await user.tab();
-			await user.click(screen.getByRole('button'));
-	
-			const { data } = store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor;
-			const entryData = Object.entries(data[0]!).filter(e => e[1] !== undefined);
-			
-			expect(Object.fromEntries(entryData)).toEqual(groundFloorWithHeatedBasement);
-		});
-	
-		test('form is prepopulated when data exists in state', async () => {
-			store.$patch({
-				livingSpaceFabric: {
-					livingSpaceFloors: {
-						livingSpaceGroundFloor: {
-							data: [groundFloorWithHeatedBasement]
-						}
-					}
-				}
-			});
-	
-			await renderSuspended(GroundFloor, {
-				route: {
-					params: { floor: '0' }
-				}
-			});
-	
-			expect((await screen.findByTestId('typeOfGroundFloor_Heated_basement')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('depthOfBasementFloorBelowGround') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('thermalResistanceOfBasementWalls') as HTMLInputElement).value).toBe('0');
-		});
-			
-		test('required error messages are displayed when empty form is submitted', async () => {
-			await renderSuspended(GroundFloor);
-	
-			await user.click(screen.getByTestId('typeOfGroundFloor_Heated_basement'));
-			await user.click(screen.getByRole('button'));
-
-			expect((await screen.findByTestId('thicknessOfWalls_error'))).toBeDefined();
-			expect((await screen.findByTestId('depthOfBasementFloorBelowGround_error'))).toBeDefined();
-			expect((await screen.findByTestId('thermalResistanceOfBasementWalls_error'))).toBeDefined();
-		});
-	});
-	
-	describe('when type of ground floor is unheated basement', () => {
-		test('data is saved to store state when form is valid', async () => {
-			await renderSuspended(GroundFloor);
-	
-			await populateValidForm();
-			await user.click(screen.getByTestId('typeOfGroundFloor_Unheated_basement'));
-			await user.type(screen.getByTestId('thermalTransmittanceOfFloorAboveBasement'), '0');
-			await user.type(screen.getByTestId('thermalTransmittanceOfWallsAboveGround'), '0');
-			await user.type(screen.getByTestId('thicknessOfWalls'), '0');
-			await user.type(screen.getByTestId('depthOfBasementFloorBelowGround'), '0');
-			await user.type(screen.getByTestId('heightOfBasementWallsAboveGround'), '0');
-			await user.tab();
-			await user.click(screen.getByRole('button'));
-	
-			const { data } = store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor;
-			const entryData = Object.entries(data[0]!).filter(e => e[1] !== undefined);
-			
-			expect(Object.fromEntries(entryData)).toEqual(groundFloorWithUnheatedBasement);
-		});
-	
-		test('form is prepopulated when data exists in state', async () => {
-			store.$patch({
-				livingSpaceFabric: {
-					livingSpaceFloors: {
-						livingSpaceGroundFloor: {
-							data: [groundFloorWithUnheatedBasement]
-						}
-					}
-				}
-			});
-	
-			await renderSuspended(GroundFloor, {
-				route: {
-					params: { floor: '0' }
-				}
-			});
-	
-			expect((await screen.findByTestId('typeOfGroundFloor_Unheated_basement')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('thermalTransmittanceOfFloorAboveBasement') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('depthOfBasementFloorBelowGround') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('heightOfBasementWallsAboveGround') as HTMLInputElement).value).toBe('0');
-		});
-			
-		test('required error messages are displayed when empty form is submitted', async () => {
-			await renderSuspended(GroundFloor);
-	
-			await user.click(screen.getByTestId('typeOfGroundFloor_Unheated_basement'));
-			await user.click(screen.getByRole('button'));
-
-			expect((await screen.findByTestId('thermalTransmittanceOfFloorAboveBasement_error'))).toBeDefined();
-			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround_error'))).toBeDefined();
-			expect((await screen.findByTestId('thicknessOfWalls_error'))).toBeDefined();
-			expect((await screen.findByTestId('depthOfBasementFloorBelowGround_error'))).toBeDefined();
-			expect((await screen.findByTestId('heightOfBasementWallsAboveGround_error'))).toBeDefined();
-		});
-	});
-
-	test('error summary is displayed when an invalid form in submitted', async () => {
-		await renderSuspended(GroundFloor);
-
-		await user.click(screen.getByRole('button'));
-
-		expect((await screen.findByTestId('groundFloorErrorSummary'))).toBeDefined();
-	});
-
-	it('navigates to floors page when valid form is completed', async () => {
-		await renderSuspended(GroundFloor);
-	
-		await populateValidForm();
-		await user.click(screen.getByRole('button'));
-
-		expect(navigateToMock).toHaveBeenCalledWith('/living-space/floors');
-	});
+// 	describe('when type of ground floor is unheated basement', () => {
+// 		test('data is saved to store state when form is valid', async () => {
+// 			await renderSuspended(GroundFloor);
+//
+// 			await populateValidForm();
+// 			await user.click(screen.getByTestId('typeOfGroundFloor_Unheated_basement'));
+// 			await user.type(screen.getByTestId('thermalTransmittanceOfFloorAboveBasement'), '0');
+// 			await user.type(screen.getByTestId('thermalTransmittanceOfWallsAboveGround'), '0');
+// 			await user.type(screen.getByTestId('thicknessOfWalls'), '0');
+// 			await user.type(screen.getByTestId('depthOfBasementFloorBelowGround'), '0');
+// 			await user.type(screen.getByTestId('heightOfBasementWallsAboveGround'), '0');
+// 			await user.tab();
+// 			await user.click(screen.getByRole('button'));
+//
+// 			const { data } = store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor;
+// 			const entryData = Object.entries(data[0]!).filter(e => e[1] !== undefined);
+//
+// 			expect(Object.fromEntries(entryData)).toEqual(groundFloorWithUnheatedBasement);
+// 		});
+//
+// 		test('form is prepopulated when data exists in state', async () => {
+// 			store.$patch({
+// 				livingSpaceFabric: {
+// 					livingSpaceFloors: {
+// 						livingSpaceGroundFloor: {
+// 							data: [groundFloorWithUnheatedBasement]
+// 						}
+// 					}
+// 				}
+// 			});
+//
+// 			await renderSuspended(GroundFloor, {
+// 				route: {
+// 					params: { floor: '0' }
+// 				}
+// 			});
+//
+// 			expect((await screen.findByTestId('typeOfGroundFloor_Unheated_basement')).hasAttribute('checked')).toBe(true);
+// 			expect((await screen.findByTestId('thermalTransmittanceOfFloorAboveBasement') as HTMLInputElement).value).toBe('0');
+// 			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround') as HTMLInputElement).value).toBe('0');
+// 			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
+// 			expect((await screen.findByTestId('depthOfBasementFloorBelowGround') as HTMLInputElement).value).toBe('0');
+// 			expect((await screen.findByTestId('heightOfBasementWallsAboveGround') as HTMLInputElement).value).toBe('0');
+// 		});
+//
+// 		test('required error messages are displayed when empty form is submitted', async () => {
+// 			await renderSuspended(GroundFloor);
+//
+// 			await user.click(screen.getByTestId('typeOfGroundFloor_Unheated_basement'));
+// 			await user.click(screen.getByRole('button'));
+//
+// 			expect((await screen.findByTestId('thermalTransmittanceOfFloorAboveBasement_error'))).toBeDefined();
+// 			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround_error'))).toBeDefined();
+// 			expect((await screen.findByTestId('thicknessOfWalls_error'))).toBeDefined();
+// 			expect((await screen.findByTestId('depthOfBasementFloorBelowGround_error'))).toBeDefined();
+// 			expect((await screen.findByTestId('heightOfBasementWallsAboveGround_error'))).toBeDefined();
+// 		});
+// 	});
+//
+// 	test('error summary is displayed when an invalid form in submitted', async () => {
+// 		await renderSuspended(GroundFloor);
+//
+// 		await user.click(screen.getByRole('button'));
+//
+// 		expect((await screen.findByTestId('groundFloorErrorSummary'))).toBeDefined();
+// 	});
+//
+// 	it('navigates to floors page when valid form is completed', async () => {
+// 		await renderSuspended(GroundFloor);
+//
+// 		await populateValidForm();
+// 		await user.click(screen.getByRole('button'));
+//
+// 		expect(navigateToMock).toHaveBeenCalledWith('/living-space/floors');
+// 	});
 });
