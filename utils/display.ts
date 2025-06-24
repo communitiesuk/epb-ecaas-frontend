@@ -105,23 +105,6 @@ export function displayWwhrsType(value: WwhrsType): WwhrsTypeDisplay {
 
 export type WwhrsTypeDisplay = 'A' | 'B' | 'C';
 
-export const applianceDisplays = {
-	[ApplianceKey.Clothes_drying]: "Clothes drying",
-	[ApplianceKey.Clothes_washing]: "Clothes washing",
-	[ApplianceKey.Dishwasher]: "Dishwasher",
-	[ApplianceKey.Freezer]: "Freezer",
-	[ApplianceKey.Fridge]: "Fridge",
-	[ApplianceKey.Fridge_Freezer]: "Fridge freezer",
-	[ApplianceKey.Hobs]: "Hobs",
-	[ApplianceKey.Kettle]: "Kettle",
-	[ApplianceKey.Microwave]: "Microwave",
-	[ApplianceKey.Otherdevices]: "Other devices",
-	[ApplianceKey.Oven]: "Oven",
-	[ApplianceKey.lighting]: "Lighting"
-} as const;
-
-type ApplianceDisplay = typeof applianceDisplays[ApplianceKey];
-
-export function displayDeliveryEnergyUseKey<T extends string>(key: T): T extends ApplianceKey ? ApplianceDisplay : string {
-	return (Object.values(ApplianceKey).includes(key as ApplianceKey)) ? applianceDisplays[key as ApplianceKey] : key;
+export function displayDeliveryEnergyUseKey(key: string | ApplianceKey): string | ApplianceKeyDisplay {
+	return (Object.values(ApplianceKey).includes(key as ApplianceKey)) ? displayApplianceKey(key as ApplianceKey) : key;
 }

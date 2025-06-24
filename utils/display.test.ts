@@ -107,14 +107,10 @@ describe('displaySnakeToSentenceCase', () => {
 
 describe('displayDeliveryEnergyUseKey', () => {
 	it('should convert an appliance key to the correct display value', () => {
-		expect(displayDeliveryEnergyUseKey(ApplianceKey.Clothes_washing)).toBe("Clothes washing");
+		expect(displayDeliveryEnergyUseKey(ApplianceKey.Clothes_washing)).toBe("Washing machine");
 	});
 
 	it('should pass anything else through verbatim', () => {
 		expect(displayDeliveryEnergyUseKey('acme')).toBe('acme');
-	});
-
-	test('applianceDisplays are full ApplianceKey records', () => {
-		expectTypeOf(applianceDisplays).toMatchObjectType<Record<ApplianceKey, string>>();
 	});
 });
