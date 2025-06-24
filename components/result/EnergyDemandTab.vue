@@ -2,7 +2,6 @@
 import type { SchemaFhsEnergyDemand } from '~/schema/api-schema.types';
 
 const { selected, data } = defineProps<{ selected: boolean, data: SchemaFhsEnergyDemand }>();
-console.log('energy demand tab: ', data);
 </script>
 
 <template>
