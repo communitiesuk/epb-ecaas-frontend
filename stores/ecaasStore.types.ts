@@ -374,6 +374,8 @@ export type PointThermalBridgeData = {
 export type LivingSpaceZoneParametersData = {
 	area: number;
 	volume: number;
+	numberOfLEDBulbs: number;
+	numberOfIncandescentBulbs: number;
 	heatingControlType?: string;
 	spaceHeatingSystemForThisZone: string;
 	spaceCoolingSystemForThisZone?: SpaceCoolingSystemData[];

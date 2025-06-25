@@ -28,6 +28,8 @@ const saveForm = (fields: typeof model.value) => {
 				data: {
 					area: fields.area,
 					volume: fields.volume,
+					numberOfLEDBulbs: fields.numberOfLEDBulbs,
+					numberOfIncandescentBulbs: fields.numberOfIncandescentBulbs,
 					spaceHeatingSystemForThisZone: fields.spaceHeatingSystemForThisZone,
 					// heatingControlType: fields.heatingControlType,
 					// spaceCoolingSystemForThisZone: fields.spaceCoolingSystemForThisZone,
@@ -66,12 +68,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				Zone parameters guidance (opens in another window)
 			</a>
 		</p>
-		<!--<GovDetails
-			class="summary-text"
-			:summary-text="`Example values`"
-			text=""
-			classes="govuk-!-margin-bottom-4"
-		/>-->
 		<FormKit
 			id="area"
 			type="govInputWithSuffix"
@@ -90,7 +86,22 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Volume of the zone"
 			validation="required"
 		/>
-
+		<FormKit
+			id="numberOfLEDBulbs"
+			type="govInputInt"
+			label="Number of LED bulbs"
+			name="numberOfLEDBulbs"
+			help="Number of LED bulbs in the whole dwelling"
+			validation="required"
+		/>
+		<FormKit
+			id="numberOfIncandescentBulbs"
+			type="govInputInt"
+			label="Number of incandescent bulbs"
+			name="numberOfIncandescentBulbs"
+			help="Number of incandescent bulbs in the whole dwelling"
+			validation="required"
+		/>
 		<!-- <FormKit
 			id="heatingControlType"
 			type="govRadios"

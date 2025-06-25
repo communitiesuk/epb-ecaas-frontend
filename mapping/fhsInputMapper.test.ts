@@ -259,12 +259,12 @@ const expectedHouseInput: FhsInputSchema = {
 				efficacy: 56.0,
 				bulbs: {
 					incandescent: {
-						count: 5,
+						count: 0,
 						power: 8,
 						efficacy: 18
 					},
 					led: {
-						count: 10,
+						count: 6,
 						power: 3,
 						efficacy: 150
 					}
@@ -870,12 +870,12 @@ const expectedFlatInput: FhsInputSchema = {
 				efficacy: 56.0,
 				bulbs: {
 					incandescent: {
-						count: 5,
+						count: 2,
 						power: 8,
 						efficacy: 18
 					},
 					led: {
-						count: 10,
+						count: 5,
 						power: 3,
 						efficacy: 150
 					}
@@ -1009,6 +1009,8 @@ describe("FHS input mapper", () => {
 				data: {
 					area: 100,
 					volume: 300,
+					numberOfLEDBulbs: 6,
+					numberOfIncandescentBulbs: 0,
 					heatingControlType: HeatingControlType.SeparateTempControl,
 					spaceHeatingSystemForThisZone: "some-wet-distribution",
 					// spaceCoolingSystemForThisZone: [{
@@ -1408,6 +1410,8 @@ describe("FHS input mapper", () => {
 				data: {
 					area: 16,
 					volume: 550,
+					numberOfLEDBulbs: 5,
+					numberOfIncandescentBulbs: 2,
 					heatingControlType: HeatingControlType.SeparateTimeAndTempControl,
 					spaceHeatingSystemForThisZone: "instant elec heater 1",
 					// spaceCoolingSystemForThisZone: [],

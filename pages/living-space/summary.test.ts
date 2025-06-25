@@ -12,6 +12,8 @@ mockNuxtImport('navigateTo', () => {
 const zoneParametersData: LivingSpaceZoneParametersData = {
 	area: 10,
 	volume: 10,
+	numberOfLEDBulbs: 8,
+	numberOfIncandescentBulbs: 3,
 	heatingControlType: '',
 	spaceHeatingSystemForThisZone: 'elec heater',
 	spaceCoolingSystemForThisZone: [],
@@ -281,6 +283,8 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Area": "10",
 				"Volume": "10",
+				"Number of LED bulbs": "8",
+				"Number of incandescent bulbs": "3",
 				"Heat emitting system for this zone": "Elec heater",
 			};
 	

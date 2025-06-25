@@ -1,4 +1,4 @@
-import { FloorType, SpaceHeatControlType, WindowShadingObjectType, type SchemaBuildingElement, type SchemaHeatingControlType, type SchemaThermalBridgingDetails, type SchemaWindowPart, type SchemaZoneInput } from "~/schema/api-schema.types";
+import { FloorType, SpaceHeatControlType, WindowShadingObjectType, type SchemaBuildingElement, type SchemaHeatingControlType, type SchemaThermalBridgingDetails, type SchemaWindowPart, type SchemaZoneInput, type SchemaZoneLighting } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
 
@@ -10,7 +10,6 @@ export function mapLivingSpaceFabricData(state: ResolvedState): Partial<FhsInput
 	const doorData = mapDoorData(state);
 	const windowData = mapWindowData(state);
 	const thermalBridgingData = mapThermalBridgingData(state);
-	const lightingData = mapLightingData();
 
 	return merge.all([
 		zoneParameterData,
@@ -20,7 +19,6 @@ export function mapLivingSpaceFabricData(state: ResolvedState): Partial<FhsInput
 		doorData,
 		windowData,
 		thermalBridgingData,
-		lightingData
 	]);
 }
 
@@ -28,6 +26,22 @@ const defaultUValue = 0.01;
 
 export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'> {
 	const { livingSpaceZoneParameters } = state.livingSpaceFabric;
+
+	const lightingData: SchemaZoneLighting = {
+		efficacy: 56.0,
+		bulbs: {
+			incandescent: {
+				count: livingSpaceZoneParameters.numberOfIncandescentBulbs,
+				power: 8,
+				efficacy: 18
+			},
+			led: {
+				count: livingSpaceZoneParameters.numberOfLEDBulbs,
+				power: 3,
+				efficacy: 150
+			}
+		}
+	};
 
 	return {
 		HeatingControlType: livingSpaceZoneParameters.heatingControlType as SchemaHeatingControlType,
@@ -38,6 +52,7 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 				SpaceHeatControl: SpaceHeatControlType.livingroom,
 				area: livingSpaceZoneParameters.area,
 				volume: livingSpaceZoneParameters.volume,
+				Lighting: lightingData,
 			} as Partial<SchemaZoneInput>
 		}
 	} as Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'>;
@@ -532,30 +547,6 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 					...linearThermalBridgesData,
 					...pointThermalBridgesData
 				)
-			} as Partial<SchemaZoneInput>
-		}
-	} as Pick<FhsInputSchema, 'Zone'>;
-}
-
-function mapLightingData(): Pick<FhsInputSchema, 'Zone'> {
-	return {
-		Zone: {
-			"zone 1": {
-				Lighting: {
-					efficacy: 56.0,
-					bulbs: {
-						incandescent: {
-							count: 5,
-							power: 8,
-							efficacy: 18
-						},
-						led: {
-							count: 10,
-							power: 3,
-							efficacy: 150
-						}
-					}
-				}
 			} as Partial<SchemaZoneInput>
 		}
 	} as Pick<FhsInputSchema, 'Zone'>;

@@ -19,6 +19,8 @@ describe('living space fabric mapper', () => {
 		const state: LivingSpaceZoneParametersData = {
 			area: 10,
 			volume: 10,
+			numberOfLEDBulbs: 5,
+			numberOfIncandescentBulbs: 2,
 			heatingControlType: 'separateTempControl',
 			spaceHeatingSystemForThisZone: 'main 1',
 			spaceCoolingSystemForThisZone: [],
@@ -40,6 +42,8 @@ describe('living space fabric mapper', () => {
 		// Assert
 		expect(fhsInputData.Zone!['zone 1']?.area).toBe(state.area);
 		expect(fhsInputData.Zone!['zone 1']?.volume).toBe(state.volume);
+		expect(fhsInputData.Zone!['zone 1']?.Lighting?.bulbs?.led?.count).toBe(state.numberOfLEDBulbs);
+		expect(fhsInputData.Zone!['zone 1']?.Lighting?.bulbs?.incandescent?.count).toBe(state.numberOfIncandescentBulbs);
 		expect(fhsInputData.Zone!['zone 1']?.SpaceHeatSystem).toEqual('main 1');
 		expect(fhsInputData.Zone!['zone 1']?.SpaceHeatControl).toBe('livingroom');
 	});
