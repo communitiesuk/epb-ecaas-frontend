@@ -68,17 +68,11 @@ export default defineNuxtConfig({
 		autoImport: true,
 		configFile: './formkit.config.ts'
 	},
+	runtimeConfig: {
+		ELASTICACHE_ENDPOINT: ''
+	},
 	nitro: process.env.BUILD_FOR_AWS_LAMBDA ? {
 		preset: 'aws-lambda',
-		storage: {
-			cache: {
-				driver: 'redis',
-				port: 6379,
-				host: process.env.ELASTICACHE_ENDPOINT,
- 
-				tls: true 
-			}
-		},
 	} : undefined,
 	typescript: {
 		typeCheck: true,
