@@ -5,6 +5,10 @@ phases:
     commands:
       # update nodejs to version 22
       - n 22
+  env:
+    variables:
+      parameter-store:
+        ELASTICACHE_ENDPOINT: "ELASTICACHE_ENDPOINT"
 
   build:
     commands:
