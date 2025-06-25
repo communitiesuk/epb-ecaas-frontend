@@ -55,7 +55,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="altitude"
 			suffix-text="m"
 			validation="required | number | min:-150 | max:7200"
-			help="Metres the dwelling is above sea level."
+			help="Metres the dwelling is above sea level. There are free online tools which can help estimate this."
 		/>
 		<FormKit
 			id="typeOfExposure"
@@ -64,8 +64,53 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Type of exposure"
 			name="typeOfExposure"
 			validation="required"
-			help="The level of shielding or protection a building or a specific system has against external environmental factors such as wind, noise, or outdoor pollutants."
-		/>
+			help="The level of shielding or protection a building or a specific system has against external environmental factors such as wind, noise, or outdoor pollutants.">
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr>
+							<th scope="col" class="govuk-table__header">Option</th>
+							<th scope="col" class="govuk-table__header">Description</th>
+							<th scope="col" class="govuk-table__header">Examples</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Open</th>
+							<td class="govuk-table__cell">Highly exposed location with minimal natural or artificial barriers.</td>
+							<td class="govuk-table__cell">
+								<ul>
+									<li>Rural house in open land</li>
+									<li>Coastal home</li>
+									<li>Building next to open field or park</li>
+								</ul>
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Normal</th>
+							<td class="govuk-table__cell">Typical suburban or urban setting with average levels of protection.</td>
+							<td class="govuk-table__cell">
+								<ul>
+									<li>Residential neighbourhood with some trees/buildings</li>
+									<li>City apartment off main roads</li>
+								</ul>
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Shielded</th>
+							<td class="govuk-table__cell">Well protected by dense surroundings like trees, hills, or buildings.</td>
+							<td class="govuk-table__cell">
+								<ul>
+									<li>House in a forest</li>
+									<li>Building surrounded by taller structures</li>
+									<li>Courtyard setting</li>
+								</ul>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="terrainType"
 			type="govRadios"
@@ -73,8 +118,64 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Terrain Type"
 			name="terrainType"
 			validation="required"
-			help="The type of surrounding landscape or environment. Terrain class helps determine how external conditions, such as wind speed and turbulence, will impact ventilation and airflow around a building."
-		/>
+			help="The type of surrounding landscape or environment. Terrain class helps determine how external conditions, such as wind speed and turbulence, will impact ventilation and airflow around a building.">
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr>
+							<th scope="col" class="govuk-table__header">Option</th>
+							<th scope="col" class="govuk-table__header">Description</th>
+							<th scope="col" class="govuk-table__header">Examples</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Open water</th>
+							<td class="govuk-table__cell">Large, flat surface of water with no obstructions to airflow.</td>
+							<td class="govuk-table__cell">
+								<ul>
+									<li>Coastal areas</li>
+									<li>Lakeside or riverside properties</li>
+									<li>Offshore buildings</li>
+								</ul>
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Open field</th>
+							<td class="govuk-table__cell">Flat, unobstructed land with little to no buildings or trees.</td>
+							<td class="govuk-table__cell">
+								<ul>
+									<li>Farmland</li>
+									<li>Grasslands</li>
+									<li>Airfields</li>
+								</ul>
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Suburban</th>
+							<td class="govuk-table__cell">Mixed development with houses, gardens, and moderate vegetation.</td>
+							<td class="govuk-table__cell">
+								<ul>
+									<li>Residential neighbourhoods with spaced housing</li>
+									<li>Tree-lined streets</li>
+								</ul>
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Urban</th>
+							<td class="govuk-table__cell">Dense development with closely packed buildings and limited vegetation.</td>
+							<td class="govuk-table__cell">
+								<ul>
+									<li>City centres</li>
+									<li>Business districts</li>
+									<li>High-rise residential zones</li>
+								</ul>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="noiseNuisance"
 			type="govBoolean"
