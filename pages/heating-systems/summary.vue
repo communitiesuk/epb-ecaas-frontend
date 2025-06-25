@@ -125,6 +125,7 @@ const wetDistributionSummary: SummarySection = {
 			"Design temperature difference across the emitters":
 				wetDistribution.designTempDiffAcrossEmitters,
 			"Design flow temperature": wetDistribution.designFlowTemp,
+			"Design flow rate": wetDistribution.designFlowRate,
 			"Type of space heater": wetDistribution.typeOfSpaceHeater === "radiator"
 				? "Radiators"
 				: "Underfloor heating",

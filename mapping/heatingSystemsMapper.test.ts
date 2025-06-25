@@ -138,6 +138,7 @@ describe("heating systems mapper", () => {
 						thermalMass: 400,
 						designTempDiffAcrossEmitters: 4,
 						designFlowTemp: 35,
+						designFlowRate: 4,
 						ecoDesignControllerClass: '2',
 						minimumFlowTemp: 30,
 						minOutdoorTemp: -5,
@@ -173,7 +174,7 @@ describe("heating systems mapper", () => {
 						temp_flow_limit_upper: 65,
 					},
 					design_flow_temp: 35,
-					design_flow_rate: 12,
+					design_flow_rate: 4,
 					emitters: [{
 						wet_emitter_type: "radiator",
 						frac_convective: 0.7,
@@ -215,6 +216,7 @@ describe("heating systems mapper", () => {
 						thermalMass: 400,
 						designTempDiffAcrossEmitters: 4,
 						designFlowTemp: 35,
+						designFlowRate: 4,
 						ecoDesignControllerClass: '2',
 						minimumFlowTemp: 30,
 						minOutdoorTemp: -5,
@@ -250,7 +252,7 @@ describe("heating systems mapper", () => {
 						temp_flow_limit_upper: 65,
 					},
 					design_flow_temp: 35,
-					design_flow_rate: 12,
+					design_flow_rate: 4,
 					ecodesign_controller: {
 						ecodesign_control_class: 2,
 						min_flow_temp: 30,

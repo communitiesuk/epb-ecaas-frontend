@@ -210,7 +210,7 @@ const expectedHouseInput: FhsInputSchema = {
 			},
 			Zone: "zone 1",
 			design_flow_temp: 12,
-			design_flow_rate: 12,
+			design_flow_rate: 4,
 			ecodesign_controller: {
 				ecodesign_control_class: 8,
 				max_outdoor_temp: 34,
@@ -1131,6 +1131,7 @@ describe("FHS input mapper", () => {
 						thermalMass: 0.14,
 						designTempDiffAcrossEmitters: 31,
 						designFlowTemp: 12,
+						designFlowRate: 4,
 						ecoDesignControllerClass: "8",
 						minimumFlowTemp: 21,
 						minOutdoorTemp: 20,

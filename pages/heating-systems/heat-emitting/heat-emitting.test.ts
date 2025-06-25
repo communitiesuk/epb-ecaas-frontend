@@ -357,6 +357,7 @@ describe("heat emitting", () => {
 			thermalMass: 2,
 			designTempDiffAcrossEmitters: 0.4,
 			designFlowTemp: 32,
+			designFlowRate: 4,
 			typeOfSpaceHeater: "radiator",
 			exponent: 1.3,
 			constant: 0.08,

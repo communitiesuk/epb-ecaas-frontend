@@ -43,6 +43,7 @@ const saveForm = (fields: WetDistributionData) => {
 			thermalMass: fields.thermalMass,
 			designTempDiffAcrossEmitters: fields.designTempDiffAcrossEmitters,
 			designFlowTemp: fields.designFlowTemp,
+			designFlowRate: fields.designFlowRate,
 			convectionFractionWet: fields.convectionFractionWet,
 			ecoDesignControllerClass: fields.ecoDesignControllerClass,
 			minimumFlowTemp: fields.minimumFlowTemp,
@@ -227,6 +228,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</table>
 			</GovDetails>
 		</FormKit>
+		<FormKit
+			id="designFlowRate"
+			type="govInputWithSuffix"
+			label="Design flow rate"
+			help="Enter the volume of water flowing through the heater."
+			name="designFlowRate"
+			validation="required | number"
+			suffix-text="litres per minute"
+		/>
 		<FormKit
 			id="typeOfSpaceHeater"
 			type="govRadios"

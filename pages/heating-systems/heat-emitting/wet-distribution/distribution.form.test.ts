@@ -22,6 +22,7 @@ const wetDistribution1: WetDistributionData = {
 	thermalMass: 2,
 	designTempDiffAcrossEmitters: 0.4,
 	designFlowTemp: 32,
+	designFlowRate: 5,
 	typeOfSpaceHeater: "radiator",
 	exponent: 1.3,
 	constant: 0.08,
@@ -40,6 +41,7 @@ const wetDistribution1: WetDistributionData = {
 // 	thermalMass: 5,
 // 	designTempDiffAcrossEmitters: 0.2,
 // 	designFlowTemp: 32,
+//  designFlowRate: 5,
 // 	typeOfSpaceHeater: "ufh",
 // 	emitterFloorArea: 5,
 // 	ecoDesignControllerClass: "2",
@@ -57,6 +59,7 @@ const populateValidForm = async () => {
 	await user.type(screen.getByTestId("thermalMass"), "2");
 	await user.type(screen.getByTestId("designTempDiffAcrossEmitters"), "0.4");
 	await user.type(screen.getByTestId("designFlowTemp"), "32");
+	await user.type(screen.getByTestId("designFlowRate"), "5");
 	// await user.click(screen.getByTestId("typeOfSpaceHeater_radiator"));
 	await user.type(screen.getByTestId("numberOfRadiators"), "1");
 	await user.type(screen.getByTestId("convectionFractionWet"), "0.2");
@@ -91,6 +94,7 @@ describe("Wet distribution", () => {
 			screen.getByText("Design temperature difference across the emitters")
 		).toBeDefined();
 		expect(screen.getByText("Design flow temperature")).toBeDefined();
+		expect(screen.getByText("Design flow rate")).toBeDefined();
 		expect(screen.getByText("Type of space heater")).toBeDefined();
 		expect(screen.getByText("Eco design controller class")).toBeDefined();
 		expect(screen.getAllByText("Minimum flow temperature")).toBeDefined();
@@ -138,6 +142,7 @@ describe("Wet distribution", () => {
 			"thermalMass_error",
 			"designTempDiffAcrossEmitters_error",
 			"designFlowTemp_error",
+			"designFlowRate_error",
 			// "typeOfSpaceHeater_error",
 			"ecoDesignControllerClass_error",
 			"minimumFlowTemp_error",
@@ -211,6 +216,7 @@ describe("Wet distribution", () => {
 	// 	await user.type(screen.getByTestId("thermalMass"), "5");
 	// 	await user.type(screen.getByTestId("designTempDiffAcrossEmitters"), "0.2");
 	// 	await user.type(screen.getByTestId("designFlowTemp"), "32");
+	// 	await user.type(screen.getByTestId("designFlowRate"), "5");
 	// 	await user.click(screen.getByTestId("typeOfSpaceHeater_ufh"));
 	// 	await user.type(screen.getByTestId("emitterFloorArea"), "5");
 	// 	await user.selectOptions(
