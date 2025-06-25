@@ -32,13 +32,13 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 		bulbs: {
 			incandescent: {
 				count: livingSpaceZoneParameters.numberOfIncandescentBulbs,
-				power: 8,
-				efficacy: 18
+				power: 60,
+				efficacy: 14
 			},
 			led: {
 				count: livingSpaceZoneParameters.numberOfLEDBulbs,
-				power: 3,
-				efficacy: 150
+				power: 6,
+				efficacy: 120
 			}
 		}
 	};

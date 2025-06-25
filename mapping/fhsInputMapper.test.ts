@@ -260,13 +260,13 @@ const expectedHouseInput: FhsInputSchema = {
 				bulbs: {
 					incandescent: {
 						count: 0,
-						power: 8,
-						efficacy: 18
+						power: 60,
+						efficacy: 14
 					},
 					led: {
 						count: 6,
-						power: 3,
-						efficacy: 150
+						power: 6,
+						efficacy: 120
 					}
 				}
 			},
@@ -871,13 +871,13 @@ const expectedFlatInput: FhsInputSchema = {
 				bulbs: {
 					incandescent: {
 						count: 2,
-						power: 8,
-						efficacy: 18
+						power: 60,
+						efficacy: 14
 					},
 					led: {
 						count: 5,
-						power: 3,
-						efficacy: 150
+						power: 6,
+						efficacy: 120
 					}
 				}
 			},
