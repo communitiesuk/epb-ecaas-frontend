@@ -2,7 +2,7 @@ import { renderSuspended } from '@nuxt/test-utils/runtime';
 import { screen } from '@testing-library/vue';
 import userEvent from "@testing-library/user-event";
 import Results from './results.vue';
-import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrors } from "~/schema/api-schema.types";
+import type { SchemaFhsComplianceResponse } from "~/schema/api-schema.types";
 
 const response: SchemaFhsComplianceResponse = {
 	"dwelling_emission_rate": 1.8400410852634337,
