@@ -1,21 +1,9 @@
-// import { createStorage } from "unstorage";
-// import redisDriver from "unstorage/drivers/redis";
-// import type { EcaasState } from "~/stores/ecaasStore.types";
+import type { EcaasState } from "~/stores/ecaasStore.types";
 
-// export default defineEventHandler(async (event) => {
-//   const sessionId = getCookie(event, "sessionId");
-
-//   if (sessionId) {
-//     const storage = createStorage({
-//       driver: redisDriver({
-//         base: "{unstorage}",
-//         port: 6379,
-//         host: ,
-//         tls: true as any,
-//       }),
-//     });
-
-//     return await storage.getItem<EcaasState>(sessionId);
-//   }
-//   return null;
-// });
+export default defineEventHandler(async (event) => {
+	const sessionId = getCookie(event, "sessionId");
+	if (sessionId) {
+		return await useStorage("cache").getItem<EcaasState>(sessionId);
+	}
+	return null;
+});
