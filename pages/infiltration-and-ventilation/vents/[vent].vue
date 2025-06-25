@@ -35,6 +35,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<VentsInfo />
 	<FormKit
 		v-model="model"
 		type="form"
