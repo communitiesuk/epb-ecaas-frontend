@@ -30,7 +30,8 @@
     "pinia-plugin-persistedstate": "^4.3.0",
     "uuid": "^11.1.0",
     "vue": "^3.5.13",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@formkit/inputs": "^1.6.9",

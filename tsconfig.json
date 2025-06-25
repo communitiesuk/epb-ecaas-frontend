@@ -2,10 +2,10 @@
   // https://nuxt.com/docs/guide/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-	"types": ["vitest/globals"],
-    "noUncheckedIndexedAccess": true,
-    "target": "es2018",
-	"module": "ESNext",
-	"moduleResolution": "bundler"
+    "types": ["vitest/globals"],
+      "noUncheckedIndexedAccess": true,
+      "target": "es2018",
+    "module": "ESNext",
+    "moduleResolution": "bundler"
   }
 }
