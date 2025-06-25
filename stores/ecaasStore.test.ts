@@ -5,7 +5,7 @@ import { createPinia, setActivePinia } from 'pinia';
 import formStatus from '~/constants/formStatus';
 import pagesData from '~/data/pages/pages';
 import  MechanicalOverview  from '~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue';
-import { BuildType, DuctShape, DuctType, MVHRLocation, SupplyAirFlowRateControlType, VentType } from '~/schema/api-schema.types';
+import { BuildType, DuctShape, DuctType, MVHRLocation, VentType } from '~/schema/api-schema.types';
 const store = useEcaasStore();
 
 describe('Ecaas Store', () => {
@@ -213,8 +213,6 @@ describe('Ecaas Store', () => {
 		id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
-		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
 		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.2,
@@ -223,8 +221,6 @@ describe('Ecaas Store', () => {
 		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
-		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
 		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.1,

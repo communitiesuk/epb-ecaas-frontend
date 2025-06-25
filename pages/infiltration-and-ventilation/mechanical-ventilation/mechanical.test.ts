@@ -4,7 +4,7 @@ import MechanicalVentilationOverview from "./index.vue";
 import MechanicalVentilationForm from './[mechanical].vue';
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
-import { DuctShape, DuctType, MVHRLocation, SupplyAirFlowRateControlType, VentType } from "~/schema/api-schema.types";
+import { DuctShape, DuctType, MVHRLocation, VentType } from "~/schema/api-schema.types";
 
 describe("mechanical ventilation overview", () => {
 	const store = useEcaasStore();
@@ -19,8 +19,6 @@ describe("mechanical ventilation overview", () => {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
-		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
 		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.1,
@@ -31,8 +29,6 @@ describe("mechanical ventilation overview", () => {
 		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: VentType.Decentralised_continuous_MEV,
-		controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA,
-		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 14,
 	};
 
@@ -40,8 +36,6 @@ describe("mechanical ventilation overview", () => {
 		id: "6380f2fe-a78f-4a56-ba5a-1a7751ac502a",
 		name: "Mechanical name 3",
 		typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
-		controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA,
-		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 14,
 	};
 
@@ -49,8 +43,6 @@ describe("mechanical ventilation overview", () => {
 		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
 		name: "Mechanical name 4",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
-		supplyAirTemperatureControl: "odaComp",
 		airFlowRate: 12,
 		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.1,

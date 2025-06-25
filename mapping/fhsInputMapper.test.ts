@@ -157,7 +157,7 @@ const expectedHouseInput: FhsInputSchema = {
 			"kitchen exhaust fan": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 55,
-				sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
+				sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
 				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
 				vent_type: VentType.Intermittent_MEV,
 				measured_air_flow_rate: 37,
@@ -516,7 +516,7 @@ const expectedFlatInput: FhsInputSchema = {
 			"mvhr vent 2 name": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 3,
-				sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
+				sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
 				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
 				vent_type: VentType.MVHR,
 				measured_air_flow_rate: 37,
@@ -528,7 +528,7 @@ const expectedFlatInput: FhsInputSchema = {
 			"centralised MEV name": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 8,
-				sup_air_flw_ctrl: SupplyAirFlowRateControlType.LOAD,
+				sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
 				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
 				vent_type: VentType.Centralised_continuous_MEV,
 				measured_air_flow_rate: 37,
@@ -943,8 +943,6 @@ describe("FHS input mapper", () => {
 					id: "kitchen exhaust fan",
 					name: "kitchen exhaust fan",
 					typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
-					controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
-					supplyAirTemperatureControl: "TO_BE_REMOVED",
 					airFlowRate: 55,
 				}]
 			},
@@ -1314,8 +1312,6 @@ describe("FHS input mapper", () => {
 					id: "mvhr vent 1 id",
 					name: "mvhr vent 1 name",
 					typeOfMechanicalVentilationOptions: VentType.MVHR,
-					controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA,
-					supplyAirTemperatureControl: "TO_BE_REMOVED",
 					airFlowRate: 17,
 					mvhrLocation: MVHRLocation.inside,
 					mvhrEfficiency: 1
@@ -1324,8 +1320,6 @@ describe("FHS input mapper", () => {
 					id: "mvhr vent 2 id",
 					name: "mvhr vent 2 name",
 					typeOfMechanicalVentilationOptions: VentType.MVHR,
-					controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
-					supplyAirTemperatureControl: "TO_BE_REMOVED",
 					airFlowRate: 3,
 					mvhrLocation: MVHRLocation.outside,
 					mvhrEfficiency: 0
@@ -1334,8 +1328,6 @@ describe("FHS input mapper", () => {
 					id: "centralised MEV id",
 					name: "centralised MEV name",
 					typeOfMechanicalVentilationOptions: VentType.Centralised_continuous_MEV,
-					controlForSupplyAirflow: SupplyAirFlowRateControlType.LOAD,
-					supplyAirTemperatureControl: "TO_BE_REMOVED",
 					airFlowRate: 8,
 				}]
 			},

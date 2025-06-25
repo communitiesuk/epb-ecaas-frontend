@@ -17,8 +17,6 @@ const mechanicalVentilationSummary: SummarySection = {
 		return {
 			"Name": x.name,
 			"Type of mechanical ventilation": x.typeOfMechanicalVentilationOptions,
-			"Control for the supply airflow": x.controlForSupplyAirflow,
-			"Supply air temperature control": x.supplyAirTemperatureControl,
 			"Air flow rate": x.airFlowRate,
 			...(x.typeOfMechanicalVentilationOptions == VentType.MVHR ? {
 				"MVHR location": x.mvhrLocation,

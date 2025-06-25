@@ -11,8 +11,6 @@ describe('infiltration ventilation mapper', () => {
 		id: "bathroom exhaust fan",
 		name: "bathroom exhaust fan",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA, // to be removed (EC-540)
-		supplyAirTemperatureControl: "TO_BE_REMOVED", // to be removed (EC-540)
 		airFlowRate: 30,
 		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 1,
@@ -174,8 +172,6 @@ describe('infiltration ventilation mapper', () => {
 			id: "bathroom exhaust fan",
 			name: "bathroom exhaust fan",
 			typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
-			controlForSupplyAirflow: SupplyAirFlowRateControlType.ODA, // to be removed (EC-540)
-			supplyAirTemperatureControl: "TO_BE_REMOVED", // to be removed (EC-540)
 			airFlowRate: 30,
 		}];
 

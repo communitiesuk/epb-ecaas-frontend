@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
-import { SupplyAirFlowRateControlType, type MVHRLocation} from '~/schema/api-schema.types';
+import type { MVHRLocation} from '~/schema/api-schema.types';
 import { VentType } from '~/schema/api-schema.types';
 
 const title = "Mechanical ventilation";
@@ -23,11 +23,6 @@ const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation
 	outside: 'Outside'
 };
 
-const controlForSupplyAirflowOptions: Record<SupplyAirFlowRateControlType, string> = {
-	[SupplyAirFlowRateControlType.ODA]: 'Outdoor air',
-	[SupplyAirFlowRateControlType.LOAD]: 'Load'
-};
-
 const saveForm = (fields: MechanicalVentilationData) => {
 	store.$patch((state) => {
 		const { mechanicalVentilation } = state.infiltrationAndVentilation;
@@ -35,8 +30,6 @@ const saveForm = (fields: MechanicalVentilationData) => {
 		const commonFields = {
 			id: uuidv4(),
 			name: fields.name,
-			controlForSupplyAirflow: fields.controlForSupplyAirflow,
-			supplyAirTemperatureControl: fields.supplyAirTemperatureControl,
 			airFlowRate: fields.airFlowRate,
 		};
 
@@ -95,27 +88,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="ventTypeOptions"
 			label="Type of mechanical ventilation"
 			name="typeOfMechanicalVentilationOptions"
-			validation="required"
-		/>
-		<FormKit
-			id="controlForSupplyAirflow"
-			type="govRadios"
-			:options="controlForSupplyAirflowOptions"
-			label="Control for the supply airflow"
-			name="controlForSupplyAirflow"
-			validation="required"
-		/>
-		<FormKit
-			id="supplyAirTemperatureControl" 
-			type="govRadios"
-			:options="{
-				noControl: 'No control',
-				constant: 'Constant',
-				odaComp: 'Outdoor air compensation',
-				loadComp: 'Load compensation'
-			}"
-			label="Supply air temperature control"
-			name="supplyAirTemperatureControl"
 			validation="required"
 		/>
 		<FormKit
