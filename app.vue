@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import GovServiceNavigation from './components/gov/ServiceNavigation.vue';
 
-// flag for rebrand of GOV.UK, going live on June 25th 2025
-// NB. ALSO remember to update the htmlAttrs class value in nuxt.config.ts
-const usesRebrand = false;
+// flag for rebrand of GOV.UK
+const usesRebrand = true;
 </script>
 
 <template>
