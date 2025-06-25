@@ -1,5 +1,5 @@
 {
-    "id1234": {
+    "HEATPUMP-LARGE": {
         "ID": 1234,
         "manufacturer": {
             "ID": "345",
@@ -101,7 +101,7 @@
             }
         ]
     },
-    "id1235": {
+    "HEATPUMP-MEDIUM": {
         "ID": 1235,
         "manufacturer": {
             "ID": "345",
@@ -203,7 +203,7 @@
             }
         ]
     },
-    "id1236": {
+    "HEATPUMP-SMALL": {
         "ID": 1236,
         "manufacturer": {
             "ID": "345",
