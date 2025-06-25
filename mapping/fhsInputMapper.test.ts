@@ -235,7 +235,7 @@ const expectedHouseInput: FhsInputSchema = {
 			thermal_mass: 0.14,
 		}
 	},
-	GroundFloorArea: 50,
+	GroundFloorArea: 40,
 	HeatSourceWet: {"some-heat-pump-name": defaultHeatSourceWetDetails},
 	Zone: {
 		"zone 1": {
@@ -243,7 +243,7 @@ const expectedHouseInput: FhsInputSchema = {
 				"ground-floor": {
 					type: 'BuildingElementGround',
 					area: 40,
-					total_area: 50,
+					total_area: 40,
 					u_value: 1,
 					thermal_resistance_floor_construction: 1,
 					areal_heat_capacity: 50000,
@@ -595,7 +595,7 @@ const expectedFlatInput: FhsInputSchema = {
 			EnergySupply: "mains elec"
 		}
 	},
-	GroundFloorArea: 26,
+	GroundFloorArea: 12,
 	HeatSourceWet: {
 		"heat pump 1 name": defaultHeatSourceWetDetails,
 	},
@@ -605,7 +605,7 @@ const expectedFlatInput: FhsInputSchema = {
 				"ground floor 1": {
 					type: 'BuildingElementGround',
 					area: 12,
-					total_area: 26,
+					total_area: 12,
 					u_value: 5,
 					thermal_resistance_floor_construction: 2,
 					areal_heat_capacity: 50000,
@@ -623,7 +623,7 @@ const expectedFlatInput: FhsInputSchema = {
 				},
 				"ground floor 2": {
 					type: 'BuildingElementGround',
-					area: 9,
+					area: 26,
 					total_area: 26,
 					depth_basement_floor: 2,
 					u_value: 5,
@@ -1022,8 +1022,7 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [{
 						name: "ground-floor",
-						surfaceAreaInZone: 40,
-						surfaceAreaAllZones: 50,
+						surfaceArea: 40,
 						pitch: 0,
 						uValue: 1,
 						thermalResistanceOfFloorConstruction: 1,
@@ -1416,8 +1415,7 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [{
 						name: "ground floor 1",
-						surfaceAreaInZone: 12,
-						surfaceAreaAllZones: 26,
+						surfaceArea: 12,
 						pitch: 0,
 						uValue: 5,
 						thermalResistanceOfFloorConstruction: 2,
@@ -1432,8 +1430,7 @@ describe("FHS input mapper", () => {
 					},
 					{
 						name: "ground floor 2",
-						surfaceAreaInZone: 9,
-						surfaceAreaAllZones: 26,
+						surfaceArea: 26,
 						pitch: 0,
 						uValue: 5,
 						thermalResistanceOfFloorConstruction: 2,

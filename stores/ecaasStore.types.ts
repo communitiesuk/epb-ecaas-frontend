@@ -98,8 +98,7 @@ export type ExposedFloorData = {
 
 export type GroundFloorData = {
 	name: string;
-	surfaceAreaInZone: number;
-	surfaceAreaAllZones: number;
+	surfaceArea: number;
 	pitch: number;
 	uValue: number;
 	thermalResistanceOfFloorConstruction: number;

@@ -61,8 +61,7 @@ describe('living space fabric mapper', () => {
 		// Arrange
 		const groundFloor: GroundFloorData = {
 			name: "Ground 1",
-			surfaceAreaInZone: 5,
-			surfaceAreaAllZones: 10,
+			surfaceArea: 5,
 			pitch: 180,
 			uValue: 1,
 			thermalResistanceOfFloorConstruction: 1,
@@ -165,12 +164,12 @@ describe('living space fabric mapper', () => {
 		const internalFloorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[internalFloor.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
 		const exposedFloorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[exposedFloor.name] as BuildingElementOpaque;
 
-		expect(fhsInputData.GroundFloorArea).toBe(groundFloor.surfaceAreaAllZones);
+		expect(fhsInputData.GroundFloorArea).toBe(groundFloor.surfaceArea);
 
 		const expectedGroundFloor: BuildingElementGround = {
 			type: 'BuildingElementGround',
-			area: groundFloor.surfaceAreaInZone,
-			total_area: groundFloor.surfaceAreaAllZones,
+			area: groundFloor.surfaceArea,
+			total_area: groundFloor.surfaceArea,
 			pitch: groundFloor.pitch,
 			u_value: groundFloor.uValue,
 			thermal_resistance_floor_construction: groundFloor.thermalResistanceOfFloorConstruction,

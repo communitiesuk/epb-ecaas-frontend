@@ -30,8 +30,7 @@ const saveForm = (fields: GroundFloorData) => {
 
 		const commonFields = {
 			name: fields.name,
-			surfaceAreaInZone: fields.surfaceAreaInZone,
-			surfaceAreaAllZones: fields.surfaceAreaAllZones,
+			surfaceArea: fields.surfaceArea,
 			pitch: 180,
 			uValue: fields.uValue,
 			thermalResistanceOfFloorConstruction: fields.thermalResistanceOfFloorConstruction,
@@ -135,21 +134,12 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required"
 		/>
 		<FormKit
-			id="surfaceAreaInZone"
-			type="govInputWithSuffix"
-			label="Net area of this element within the current zone"
-			help="The surface area of only the part of this building element that is located inside the zone you are now defining. For a floor that spans multiple zones, enter the area of the floor within this specific zone."
-			name="surfaceAreaInZone"
-			validation="required | number | min:5 | max:10000"
-			suffix-text="m2"
-		/>
-		<FormKit
-			id="surfaceAreaAllZones"
+			id="surfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m2"
-			label="Total area of this element across all zones"
-			help="The total surface area of the entire building element, even if it extends into other zones. For a floor that spans multiple zones, enter the total area of the entire floor. If the ground floor does not span multiple zones, this value will be the same as above."
-			name="surfaceAreaAllZones"
+			label="Net surface area of this element"
+			help="Enter the total surface area of the entire building element in the dwelling."
+			name="surfaceArea"
 			validation="required | number | min:1"
 		/>
 		<FormKit

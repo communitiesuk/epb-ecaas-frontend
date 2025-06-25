@@ -82,8 +82,8 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 	const groundFloorData: { [key: string]: SchemaBuildingElement }[] = livingSpaceGroundFloor.map(x => ({
 		[x.name]: {
 			type: 'BuildingElementGround',
-			area: x.surfaceAreaInZone,
-			total_area: x.surfaceAreaAllZones,
+			area: x.surfaceArea,
+			total_area: x.surfaceArea,
 			u_value: x.uValue,
 			thermal_resistance_floor_construction: x.thermalResistanceOfFloorConstruction,
 			areal_heat_capacity: x.kappaValue,
@@ -152,7 +152,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 	})) || [];
 
 	return {
-		GroundFloorArea: livingSpaceGroundFloor.map(x => x.surfaceAreaAllZones)[0],
+		GroundFloorArea: livingSpaceGroundFloor.map(x => x.surfaceArea)[0],
 		Zone: {
 			"zone 1": {
 				BuildingElement: Object.assign(

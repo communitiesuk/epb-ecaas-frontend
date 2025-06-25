@@ -34,8 +34,7 @@ const groundFloorSummary: SummarySection = {
 	data: groundFloorData.map(x => {
 		return {
 			"Name": x.name,
-			"Net surface area in zone": x.surfaceAreaInZone,
-			"Surface area in all zones": x.surfaceAreaAllZones,
+			"Net surface area of this element": x.surfaceArea,
 			"Pitch": x.pitch,
 			"U-value": x.uValue,
 			"Thermal resistance of floor construction": x.thermalResistanceOfFloorConstruction,

@@ -24,8 +24,7 @@ const floorsData: FloorsData = {
 	livingSpaceGroundFloor: {
 		data: [{
 			name: "Ground 1",
-			surfaceAreaInZone: 5,
-			surfaceAreaAllZones: 0,
+			surfaceArea: 5,
 			pitch: 0,
 			uValue: 1,
 			thermalResistanceOfFloorConstruction: 1,
@@ -318,8 +317,7 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "Ground 1",
-				"Net surface area in zone": "5",
-				"Surface area in all zones": "0",
+				"Net surface area of this element": "5",
 				"Pitch": "0",
 				"U-value": "1",
 				"Thermal resistance of floor construction": "1",
