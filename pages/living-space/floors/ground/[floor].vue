@@ -259,8 +259,8 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 							<tr class="govuk-table__row">
 								<td class="govuk-table__cell">A general term referring to the coverage distance of edge insulation - either vertical down the edge or horizontal into the floor. It does not refer to insulation board thickness.</td>
 								<td class="govuk-table__cell">
-									Vertical: 150mm<br>
-									Horizontal: 300mm
+									Vertical: 150 mm<br>
+									Horizontal: 300 mm
 								</td>
 							</tr>
 						</tbody>
@@ -285,8 +285,26 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				label="Height of the floor upper surface"
 				help="Height of the floor upper surface, use an average value if it varies."
 				name="heightOfFloorUpperSurface"
-				validation="required | number | min:0 | max:100"
-			/>
+				validation="required | number | min:0 | max:100">
+				<GovDetails summary-text="Help with this input">
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header">Description</th>
+								<th scope="col" class="govuk-table__header govuk-!-width-one-third">Example value</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">The height of the top surface of the ground floor above external ground level. This is used to determine thermal bridging and ventilation requirements.</td>
+								<td class="govuk-table__cell">
+									0.15 - 0.6 m
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="thicknessOfWalls"
 				type="govInputWithSuffix"
@@ -299,29 +317,83 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FormKit
 				id="underfloorSpaceThermalResistance"
 				type="govInputWithSuffix"
-				suffix-text="m2·K/W"
+				suffix-text="(m²·K)/W"
 				label="Thermal resistance of insulation on base of underfloor space"
 				help="Thermal resistance of insulation on base of underfloor space."
 				name="underfloorSpaceThermalResistance"
-				validation="required | number"
-			/>
+				validation="required | number">
+				<GovDetails summary-text="Help with this input">
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header">Description</th>
+								<th scope="col" class="govuk-table__header govuk-!-width-one-third">Example value</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">The R-value (thermal resistance) of insulation installed at the base of any ventilated underfloor space.</td>
+								<td class="govuk-table__cell">
+									0.5 - 2.5 (m²·K)/W
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="thermalTransmittanceOfWallsAboveGround"
 				type="govInputWithSuffix"
-				suffix-text="W/(m2·K)"
+				suffix-text="W/(m²·K)"
 				label="Thermal transmittance of walls above ground"
 				help="in accordance with ISO 6946"
 				name="thermalTransmittanceOfWallsAboveGround"
-				validation="required | number"
-			/>
+				validation="required | number">
+				<GovDetails summary-text="Help with this input">
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header">Description</th>
+								<th scope="col" class="govuk-table__header govuk-!-width-one-third">Example value</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">The U-value of the external walls above ground level. A lower value indicates better insulation performance.</td>
+								<td class="govuk-table__cell">
+									0.13 - 0.25 W/(m²·K)
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="ventilationOpeningsArea"
 				type="govInputWithSuffix"
-				suffix-text="m2/m"
+				suffix-text="m²/m"
 				label="Area of ventilation openings per perimeter"
 				name="ventilationOpeningsArea"
-				validation="required | number"
-			/>
+				validation="required | number">
+				<GovDetails summary-text="Help with this input">
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header">Description</th>
+								<th scope="col" class="govuk-table__header govuk-!-width-one-third">Example value</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">The total area of ventilation openings (e.g., air bricks) per metre of external wall perimeter. Important for moisture control in suspended timber floors. Measured in m² of opening per metre of wall.</td>
+								<td class="govuk-table__cell">
+									0.001 - 0.01 m²/m
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="windShieldingFactor"
 				type="govRadios"
