@@ -91,7 +91,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputInt"
 			label="Number of LED bulbs"
 			name="numberOfLEDBulbs"
-			help="Number of LED bulbs in the whole dwelling"
+			help="Enter the number of LED bulbs in the whole dwelling"
 			validation="required"
 		/>
 		<FormKit
@@ -99,7 +99,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputInt"
 			label="Number of incandescent bulbs"
 			name="numberOfIncandescentBulbs"
-			help="Number of incandescent bulbs in the whole dwelling"
+			help="Enter the number of incandescent bulbs in the whole dwelling"
 			validation="required"
 		/>
 		<!-- <FormKit
