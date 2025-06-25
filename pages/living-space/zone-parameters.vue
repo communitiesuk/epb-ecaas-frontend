@@ -74,7 +74,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m2"
 			label="Area"
 			name="area"
-			help="Floor area of the zone"
+			help="Enter the area of the whole dwelling."
 			validation="required"
 		/>
 		<FormKit
@@ -83,7 +83,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m3"
 			label="Volume"
 			name="volume"
-			help="Volume of the zone"
+			help="Enter the volume of the whole dwelling."
 			validation="required"
 		/>
 		<FormKit
