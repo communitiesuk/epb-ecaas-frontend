@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 		// const newState = merge(state!, body);
 
 		// Update storage item
-		useStorage("cache").setItem<EcaasState>(sessionId, body);
+		await setStateOnCache(sessionId, body);
 	} else {
 		// Otherwise create new session Id
 		sessionId = uuidv4();
@@ -28,9 +28,13 @@ export default defineEventHandler(async (event) => {
 		});
 
 		// Save state to storage
-		await useStorage("cache").setItem<EcaasState>(sessionId, body, {
-			ttl: 1209600,
-		});
+		await setStateOnCache(sessionId, body);
 	}
 	event.node.res.end();
 });
+
+async function setStateOnCache(sessionId: string, body: EcaasState) {
+	return useStorage("cache").setItem(sessionId, body, {
+		ttl: 1209600,
+	});
+}
