@@ -16,7 +16,6 @@ const saveForm = (fields: VentData) => {
 			effectiveVentilationArea: fields.effectiveVentilationArea,
 			openingRatio: 1,
 			midHeightOfZone: fields.midHeightOfZone,
-			pressureDifference: fields.pressureDifference,
 			orientation: fields.orientation,
 			pitch: fields.pitch
 		};
@@ -109,21 +108,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			suffix-text="m">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p>Typical ranges - 1.2 - 1.8m</p>
-			</GovDetails>
-		</FormKit>
-		<FormKit
-			id="pressureDifference"
-			type="govInputWithSuffix"
-			label="Pressure difference"
-			help="The difference in pressure between inside and outside the building, which drives airflow"
-			name="pressureDifference"
-			validation="required | number"
-			suffix-text="Pa">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<p>
-					1 - 2 Pa for natural ventilation<br>
-					5 - 10 Pa for mechanical systems
-				</p>
 			</GovDetails>
 		</FormKit>
 		<FieldsOrientation />

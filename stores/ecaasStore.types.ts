@@ -574,7 +574,6 @@ export type VentData = {
 	effectiveVentilationArea: number;
 	openingRatio: number;
 	midHeightOfZone: number;
-	pressureDifference: number;
 	orientation: number;
 	pitch: number;
 };

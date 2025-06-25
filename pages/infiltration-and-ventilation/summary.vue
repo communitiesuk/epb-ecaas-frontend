@@ -64,7 +64,6 @@ const ventSummary: SummarySection = {
 			"Effective ventilation area": x.effectiveVentilationArea,
 			"Vent opening ratio": x.openingRatio,
 			"Mid height of zone": x.midHeightOfZone,
-			"Pressure difference": x.pressureDifference,
 			"Orientation": x.orientation,
 			"Pitch": x.pitch
 		};

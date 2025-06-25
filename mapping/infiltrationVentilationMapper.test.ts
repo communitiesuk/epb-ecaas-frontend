@@ -214,7 +214,6 @@ describe('infiltration ventilation mapper', () => {
 			effectiveVentilationArea: 100,
 			openingRatio: 0.6,
 			midHeightOfZone: 1.5,
-			pressureDifference: 20,
 			orientation: 180,
 			pitch: 45,
 		}];

@@ -171,7 +171,7 @@ const expectedHouseInput: FhsInputSchema = {
 				mid_height_air_flow_path: 1.9,
 				orientation360: 90,
 				pitch: 180,
-				pressure_difference_ref: 4
+				pressure_difference_ref: 20
 			}
 		},
 		ach_max_static_calcs: 2,
@@ -542,7 +542,7 @@ const expectedFlatInput: FhsInputSchema = {
 				mid_height_air_flow_path: 1.9,
 				orientation360: 90,
 				pitch: 180,
-				pressure_difference_ref: 4
+				pressure_difference_ref: 20
 			}
 		},
 		ach_max_static_calcs: 2,
@@ -959,7 +959,6 @@ describe("FHS input mapper", () => {
 					effectiveVentilationArea: 75,
 					openingRatio: 0.2,
 					midHeightOfZone: 1.9,
-					pressureDifference: 4,
 					orientation: 90,
 					pitch: 180,
 				}]
@@ -1360,7 +1359,6 @@ describe("FHS input mapper", () => {
 					effectiveVentilationArea: 75,
 					openingRatio: 0.2,
 					midHeightOfZone: 1.9,
-					pressureDifference: 4,
 					orientation: 90,
 					pitch: 180,
 				}]

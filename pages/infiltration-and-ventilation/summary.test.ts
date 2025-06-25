@@ -38,7 +38,6 @@ const ventData: VentData = {
 	effectiveVentilationArea: 10,
 	openingRatio: 1,
 	midHeightOfZone: 1,
-	pressureDifference: 1,
 	orientation: 0,
 	pitch: 0
 };
@@ -213,7 +212,6 @@ describe('Infiltration and ventilation summary', () => {
 			"Effective ventilation area": "10",
 			"Vent opening ratio": "1",
 			"Mid height of zone": "1",
-			"Pressure difference": "1",
 			"Orientation": "0",
 			"Pitch": "0"
 
