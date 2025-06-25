@@ -203,8 +203,35 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				}"
 				label="Edge insulation type"
 				name="edgeInsulationType"
-				validation="required"
-			/>
+				validation="required">
+				<GovDetails summary-text="Help with this input">
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header">Type</th>
+								<th scope="col" class="govuk-table__header">Description</th>
+								<th scope="col" class="govuk-table__header">Placement</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">Vertical</td>
+								<td class="govuk-table__cell">Insulation placed upright along the slab edge to reduce heat loss at the wall junction.</td>
+								<td class="govuk-table__cell">
+									Between floor slab and external wall (vertical orientation).
+								</td>
+							</tr>
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">Horizontal</td>
+								<td class="govuk-table__cell">Insulation laid flat, extending inward from the edge of the slab to enhance perimeter insulation.</td>
+								<td class="govuk-table__cell">
+									Flat under floor slab, near the edge (horizontal orientation).
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</GovDetails>
+			</Formkit>
 			<FormKit
 				id="edgeInsulationWidth"
 				type="govInputWithSuffix"
@@ -212,8 +239,27 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				label="Edge insulation width"
 				help="Width not thickness"
 				name="edgeInsulationWidth"
-				validation="required | number | min:0 | max:100"
-			/>
+				validation="required | number | min:0 | max:100">
+				<GovDetails summary-text="Help with this input">
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header">Description</th>
+								<th scope="col" class="govuk-table__header govuk-!-width-one-third">Example</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">A general term referring to the coverage distance of edge insulation - either vertical down the edge or horizontal into the floor. It does not refer to insulation board thickness.</td>
+								<td class="govuk-table__cell">
+									Vertical: 150mm<br>
+									Horizontal: 300mm
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="edgeInsulationThermalResistance"
 				type="govInputWithSuffix"
