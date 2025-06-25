@@ -1,4 +1,13 @@
-import { FloorType, MassDistributionClass, WindowShadingObjectType, WindowTreatmentType, type SchemaBuildingElement, type SchemaEdgeInsulation, type SchemaThermalBridgingDetails } from "~/schema/api-schema.types";
+import {
+	FloorType,
+	MassDistributionClass,
+	WindowShadingObjectType,
+	WindowTreatmentType,
+	type SchemaBuildingElement,
+	type SchemaEdgeInsulation,
+	type SchemaThermalBridgingDetails,
+	WindShieldLocation
+} from "~/schema/api-schema.types";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./livingSpaceFabricMapper";
 
 type BuildingElementGround = Extract<SchemaBuildingElement, { type: 'BuildingElementGround' }>;
@@ -81,7 +90,8 @@ describe('living space fabric mapper', () => {
 			thicknessOfWalls: 1,
 			underfloorSpaceThermalResistance: 1,
 			thermalTransmittanceOfWallsAboveGround: 1,
-			ventilationOpeningsArea: 1
+			ventilationOpeningsArea: 1,
+			windShieldingFactor: WindShieldLocation.Average
 		};
 
 		const groundFloorWithHeatedBasement: GroundFloorData = {
@@ -189,7 +199,8 @@ describe('living space fabric mapper', () => {
 			thickness_walls: groundFloorWithSuspendedFloor.thicknessOfWalls!,
 			thermal_resist_insul: groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
 			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
-			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea
+			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea,
+			shield_fact_location: groundFloorWithSuspendedFloor.windShieldingFactor
 		};
 
 		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);

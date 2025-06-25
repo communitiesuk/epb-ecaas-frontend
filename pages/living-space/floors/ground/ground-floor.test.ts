@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import GroundFloor from './[floor].vue';
-import { FloorType, MassDistributionClass } from "~/schema/api-schema.types";
+import { FloorType, MassDistributionClass, WindShieldLocation } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -42,7 +42,8 @@ describe('ground floor', () => {
 		thicknessOfWalls: 0,
 		underfloorSpaceThermalResistance: 0,
 		thermalTransmittanceOfWallsAboveGround: 0,
-		ventilationOpeningsArea: 0
+		ventilationOpeningsArea: 0,
+		windShieldingFactor: WindShieldLocation.Exposed
 	};
 
 	// const groundFloorWithHeatedBasement: GroundFloorData = {
@@ -202,6 +203,7 @@ describe('ground floor', () => {
 			await user.type(screen.getByTestId('underfloorSpaceThermalResistance'), '0');
 			await user.type(screen.getByTestId('thermalTransmittanceOfWallsAboveGround'), '0');
 			await user.type(screen.getByTestId('ventilationOpeningsArea'), '0');
+			await user.click(screen.getByTestId('windShieldingFactor_Exposed'));
 			await user.tab();
 			await user.click(screen.getByRole('button'));
 	
@@ -234,6 +236,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('underfloorSpaceThermalResistance') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('ventilationOpeningsArea') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId('windShieldingFactor_Exposed')).hasAttribute('checked')).toBe(true);
 		});
 			
 		test('required error messages are displayed when empty form is submitted', async () => {

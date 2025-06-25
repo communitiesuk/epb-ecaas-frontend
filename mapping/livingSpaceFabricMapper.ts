@@ -96,6 +96,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 			...(x.typeOfGroundFloor === FloorType.Suspended_floor ? {height_upper_surface: x.heightOfFloorUpperSurface} : {}),
 			thickness_walls: 'thicknessOfWalls' in x ? x.thicknessOfWalls : 0,
 			...('ventilationOpeningsArea' in x ? {area_per_perimeter_vent: x.ventilationOpeningsArea} : {}),
+			...('windShieldingFactor' in x ? {shield_fact_location: x.windShieldingFactor} : {}),
 			...('depthOfBasementFloorBelowGround' in x ? {depth_basement_floor: x.depthOfBasementFloorBelowGround} : {}),
 			...('heightOfBasementWallsAboveGround' in x ? {height_basement_walls: x.heightOfBasementWallsAboveGround} : {}),
 			...('underfloorSpaceThermalResistance' in x ? {thermal_resist_insul: x.underfloorSpaceThermalResistance} : {}),

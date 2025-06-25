@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FloorType } from '~/schema/api-schema.types';
+import { FloorType, WindShieldLocation } from '~/schema/api-schema.types';
 
 const title = "Ground floor";
 const store = useEcaasStore();
@@ -16,6 +16,12 @@ const typeOfGroundFloorOptions: Record<reducedGroundFloorOptions, SnakeToSentenc
 	[FloorType.Suspended_floor]: 'Suspended floor',
 	// [FloorType.Heated_basement]: 'Heated basement',
 	// [FloorType.Unheated_basement]: 'Unheated basement',
+};
+
+const windShieldingFactorOptions: Record<WindShieldLocation, SnakeToSentenceCase<WindShieldLocation>> = {
+	[WindShieldLocation.Sheltered]: 'Sheltered',
+	[WindShieldLocation.Average]: 'Average',
+	[WindShieldLocation.Exposed]: 'Exposed'
 };
 
 const saveForm = (fields: GroundFloorData) => {
@@ -62,6 +68,7 @@ const saveForm = (fields: GroundFloorData) => {
 					underfloorSpaceThermalResistance: fields.underfloorSpaceThermalResistance,
 					thermalTransmittanceOfWallsAboveGround: fields.thermalTransmittanceOfWallsAboveGround,
 					ventilationOpeningsArea: fields.ventilationOpeningsArea,
+					windShieldingFactor: fields.windShieldingFactor,
 				};
 				break;
 			case FloorType.Heated_basement:
@@ -314,6 +321,14 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				label="Area of ventilation openings per perimeter"
 				name="ventilationOpeningsArea"
 				validation="required | number"
+			/>
+			<FormKit
+				id="windShieldingFactor"
+				type="govRadios"
+				:options="windShieldingFactorOptions"
+				label="Wind shielding factor"
+				name="windShieldingFactor"
+				validation="required"
 			/>
 		</template>
 
