@@ -77,7 +77,7 @@ const ventilationSummary: SummarySection = {
 	id: 'ventilation',
 	label: 'Ventilation',
 	data: {
-		"Dwelling height": ventilationData.dwellingHeight,
+		"Ventilation zone height": ventilationData.ventilationZoneHeight,
 		"Dwelling envelope area": ventilationData.dwellingEnvelopeArea,
 		"Elevational height of dwelling at its base": ventilationData.dwellingElevationalLevelAtBase,
 		"Cross vent factor": displayBoolean(ventilationData.crossVentFactor),

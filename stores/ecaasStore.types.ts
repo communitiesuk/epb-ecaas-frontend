@@ -588,7 +588,7 @@ export type CombustionApplianceData = {
 };
 
 export interface VentilationData {
-	dwellingHeight: number;
+	ventilationZoneHeight: number;
 	dwellingEnvelopeArea: number;
 	dwellingElevationalLevelAtBase: number;
 	crossVentFactor: boolean;

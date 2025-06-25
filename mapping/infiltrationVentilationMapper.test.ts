@@ -242,7 +242,7 @@ describe('infiltration ventilation mapper', () => {
 	it('maps ventilation data to extract needed fields', async () => {
 		// Arrange
 		const ventilationData: VentilationData = {
-			dwellingHeight: 10,
+			ventilationZoneHeight: 10,
 			dwellingEnvelopeArea: 200,
 			dwellingElevationalLevelAtBase: 4,
 			crossVentFactor: true,

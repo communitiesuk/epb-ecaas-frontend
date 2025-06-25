@@ -18,7 +18,7 @@ describe('Ventilation', () => {
 	});
 
 	const state: VentilationData = {
-		dwellingHeight: 1,
+		ventilationZoneHeight: 1,
 		dwellingEnvelopeArea: 5,
 		dwellingElevationalLevelAtBase: 1,
 		crossVentFactor: true,
@@ -26,7 +26,7 @@ describe('Ventilation', () => {
 	};
 
 	const populateValidForm = async () => {
-		await user.type(screen.getByTestId('dwellingHeight'), '1');
+		await user.type(screen.getByTestId('ventilationZoneHeight'), '1');
 		await user.type(screen.getByTestId('dwellingEnvelopeArea'), '5');
 		await user.type(screen.getByTestId('dwellingElevationalLevelAtBase'), '1');
 		await user.click(screen.getByTestId('crossVentFactor_yes'));
@@ -55,7 +55,7 @@ describe('Ventilation', () => {
 
 		await renderSuspended(Ventilation);
 
-		expect((await screen.findByTestId('dwellingHeight') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId('ventilationZoneHeight') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('dwellingEnvelopeArea') as HTMLInputElement).value).toBe('5');
 		expect((await screen.findByTestId('dwellingElevationalLevelAtBase') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('crossVentFactor_yes')).hasAttribute('checked')).toBe(true);
@@ -66,7 +66,7 @@ describe('Ventilation', () => {
 
 		await user.click(screen.getByRole('button'));
 
-		expect((await screen.findByTestId('dwellingHeight_error'))).toBeDefined();
+		expect((await screen.findByTestId('ventilationZoneHeight_error'))).toBeDefined();
 		expect((await screen.findByTestId('dwellingEnvelopeArea_error'))).toBeDefined();
 		expect((await screen.findByTestId('dwellingElevationalLevelAtBase_error'))).toBeDefined();
 		expect((await screen.findByTestId('crossVentFactor_error'))).toBeDefined();

@@ -987,7 +987,7 @@ describe("FHS input mapper", () => {
 			naturalVentilation: {
 				...baseForm,
 				data: {
-					dwellingHeight: 8,
+					ventilationZoneHeight: 8,
 					dwellingEnvelopeArea: 320,
 					dwellingElevationalLevelAtBase: 3,
 					crossVentFactor: false,
@@ -1386,7 +1386,7 @@ describe("FHS input mapper", () => {
 			naturalVentilation: {
 				...baseForm,
 				data: {
-					dwellingHeight: 1,
+					ventilationZoneHeight: 1,
 					dwellingEnvelopeArea: 5,
 					dwellingElevationalLevelAtBase: 1,
 					crossVentFactor: true,

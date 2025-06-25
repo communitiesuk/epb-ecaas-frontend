@@ -11,7 +11,7 @@ const saveForm = (fields: VentilationData) => {
 		infiltrationAndVentilation: {
 			naturalVentilation: {
 				data: {
-					dwellingHeight: fields.dwellingHeight,
+					ventilationZoneHeight: fields.ventilationZoneHeight,
 					dwellingEnvelopeArea: fields.dwellingEnvelopeArea,
 					dwellingElevationalLevelAtBase: fields.dwellingElevationalLevelAtBase,
 					crossVentFactor: fields.crossVentFactor,
@@ -43,11 +43,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	>
 		<GovErrorSummary :error-list="errorMessages" test-id="ventilationErrorSummary"/>
 		<FormKit
-			id="dwellingHeight"
+			id="ventilationZoneHeight"
 			type="govInputWithSuffix"
-			label="Dwelling height"
-			help="Height of the whole dwelling"
-			name="dwellingHeight"
+			label="Ventilation zone height"
+			help="Used for ventilation calculations. Measured from the lowest finished floor level in the dwelling to the top of the ventilation zone."
+			name="ventilationZoneHeight"
 			validation="required | number | min:1 | max:20"
 			suffix-text="m"
 		/>
