@@ -4,7 +4,7 @@ import type { BuildType, BatteryLocation, CombustionAirSupplySituation, Combusti
 export interface EcaasState {
 	dwellingDetails: DwellingDetails;
 	domesticHotWater: DomesticHotWater;
-	livingSpaceFabric: LivingSpaceFabric;
+	dwellingFabric: DwellingFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
 	heatingSystems: HeatingSystems;
 	pvAndBatteries: PvAndBatteries;
@@ -51,20 +51,20 @@ export interface ExternalFactorsData {
 	noiseNuisance: boolean;
 }
 
-export interface LivingSpaceFabric {
-	livingSpaceZoneParameters: EcaasForm<LivingSpaceZoneParametersData>;
-	livingSpaceFloors: FloorsData;
-	livingSpaceWalls: WallsData;
-	livingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
-	livingSpaceDoors: DoorsData;
-	livingSpaceWindows: EcaasForm<WindowData[]>;
-	livingSpaceThermalBridging: ThermalBridgingData;
+export interface DwellingFabric {
+	dwellingSpaceZoneParameters: EcaasForm<DwellingSpaceZoneParametersData>;
+	dwellingSpaceFloors: FloorsData;
+	dwellingSpaceWalls: WallsData;
+	dwellingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
+	dwellingSpaceDoors: DoorsData;
+	dwellingSpaceWindows: EcaasForm<WindowData[]>;
+	dwellingSpaceThermalBridging: ThermalBridgingData;
 }
 
 export interface FloorsData {
-	livingSpaceGroundFloor: EcaasForm<GroundFloorData[]>,
-	livingSpaceInternalFloor: EcaasForm<InternalFloorData[]>,
-	livingSpaceExposedFloor: EcaasForm<ExposedFloorData[]>
+	dwellingSpaceGroundFloor: EcaasForm<GroundFloorData[]>,
+	dwellingSpaceInternalFloor: EcaasForm<InternalFloorData[]>,
+	dwellingSpaceExposedFloor: EcaasForm<ExposedFloorData[]>
 }
 
 export enum AdjacentSpaceType {
@@ -134,10 +134,10 @@ export type GroundFloorData = {
 }>;
 
 export interface WallsData {
-	livingSpaceExternalWall: EcaasForm<ExternalWallData[]>;
-	livingSpaceInternalWall: EcaasForm<InternalWallData[]>;
-	livingSpaceWallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData[]>;
-	livingSpacePartyWall: EcaasForm<PartyWallData[]>;
+	dwellingSpaceExternalWall: EcaasForm<ExternalWallData[]>;
+	dwellingSpaceInternalWall: EcaasForm<InternalWallData[]>;
+	dwellingSpaceWallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData[]>;
+	dwellingSpacePartyWall: EcaasForm<PartyWallData[]>;
 }
 
 type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
@@ -199,9 +199,9 @@ export type PartyWallData = {
 };
 
 export interface CeilingsAndRoofsData {
-	livingSpaceCeilings: EcaasForm<CeilingData[]>;
-	livingSpaceRoofs: EcaasForm<RoofData[]>;
-	livingSpaceUnheatedPitchedRoofs: EcaasForm<RoofData[]>;
+	dwellingSpaceCeilings: EcaasForm<CeilingData[]>;
+	dwellingSpaceRoofs: EcaasForm<RoofData[]>;
+	dwellingSpaceUnheatedPitchedRoofs: EcaasForm<RoofData[]>;
 }
 
 export type ZeroPitchOption = '0' | 'custom';
@@ -240,9 +240,9 @@ export type RoofData = {
 };
 
 export interface DoorsData {
-	livingSpaceExternalUnglazedDoor: EcaasForm<ExternalUnglazedDoorData[]>;
-	livingSpaceExternalGlazedDoor: EcaasForm<ExternalGlazedDoorData[]>;
-	livingSpaceInternalDoor: EcaasForm<InternalDoorData[]>;
+	dwellingSpaceExternalUnglazedDoor: EcaasForm<ExternalUnglazedDoorData[]>;
+	dwellingSpaceExternalGlazedDoor: EcaasForm<ExternalGlazedDoorData[]>;
+	dwellingSpaceInternalDoor: EcaasForm<InternalDoorData[]>;
 };
 
 export type ExternalUnglazedDoorData = {
@@ -353,8 +353,8 @@ export type WindowData = {
 });
 
 export interface ThermalBridgingData {
-	livingSpaceLinearThermalBridges: EcaasForm<LinearThermalBridgeData[]>;
-	livingSpacePointThermalBridges: EcaasForm<PointThermalBridgeData[]>;
+	dwellingSpaceLinearThermalBridges: EcaasForm<LinearThermalBridgeData[]>;
+	dwellingSpacePointThermalBridges: EcaasForm<PointThermalBridgeData[]>;
 }
 
 export type LinearThermalBridgeData = {
@@ -369,7 +369,7 @@ export type PointThermalBridgeData = {
 	heatTransferCoefficient: number;
 };
 
-export type LivingSpaceZoneParametersData = {
+export type DwellingSpaceZoneParametersData = {
 	area: number;
 	volume: number;
 	numberOfLEDBulbs: number;

@@ -61,22 +61,22 @@ describe('Ecaas Store', () => {
 	test('getStatus of a section containing grouped tasks returns in progress status when one of the grouped tasks is complete', () => {
 
 		store.$patch({
-			livingSpaceFabric: {
-				livingSpaceFloors: {
-					livingSpaceExposedFloor: {complete: true},
-					livingSpaceInternalFloor: {complete: true},
-					livingSpaceGroundFloor: {complete: true}
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceExposedFloor: {complete: true},
+					dwellingSpaceInternalFloor: {complete: true},
+					dwellingSpaceGroundFloor: {complete: true}
 				},
-				livingSpaceWalls: {
-					livingSpaceExternalWall: {complete: false},
-					livingSpaceInternalWall: {complete: false},
-					livingSpaceWallToUnheatedSpace: {complete: false},
-					livingSpacePartyWall: {complete: false}
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {complete: false},
+					dwellingSpaceInternalWall: {complete: false},
+					dwellingSpaceWallToUnheatedSpace: {complete: false},
+					dwellingSpacePartyWall: {complete: false}
 				}
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'livingSpaceFabric');
+		const page = pagesData.find(p => p.id === 'dwellingFabric');
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
@@ -107,37 +107,37 @@ describe('Ecaas Store', () => {
 	test('getStatus of a section containing a grouped tasks returns complete when all forms are complete', () => {
 
 		store.$patch({
-			livingSpaceFabric: {
-				livingSpaceFloors: {
-					livingSpaceExposedFloor: {complete: true},
-					livingSpaceInternalFloor: {complete: true},
-					livingSpaceGroundFloor: {complete: true}
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceExposedFloor: {complete: true},
+					dwellingSpaceInternalFloor: {complete: true},
+					dwellingSpaceGroundFloor: {complete: true}
 				},
-				livingSpaceWalls: {
-					livingSpaceExternalWall: {complete: true},
-					livingSpaceInternalWall: {complete: true},
-					livingSpaceWallToUnheatedSpace: {complete: true},
-					livingSpacePartyWall: {complete: true}
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {complete: true},
+					dwellingSpaceInternalWall: {complete: true},
+					dwellingSpaceWallToUnheatedSpace: {complete: true},
+					dwellingSpacePartyWall: {complete: true}
 				},
-				livingSpaceCeilingsAndRoofs: {
-					livingSpaceCeilings: {complete: true},
-					livingSpaceRoofs: {complete: true}
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceCeilings: {complete: true},
+					dwellingSpaceRoofs: {complete: true}
 				},
-				livingSpaceDoors: {
-					livingSpaceExternalUnglazedDoor: {complete: true},
-					livingSpaceExternalGlazedDoor: {complete: true},
-					livingSpaceInternalDoor: {complete: true}
+				dwellingSpaceDoors: {
+					dwellingSpaceExternalUnglazedDoor: {complete: true},
+					dwellingSpaceExternalGlazedDoor: {complete: true},
+					dwellingSpaceInternalDoor: {complete: true}
 				},
-				livingSpaceWindows: {complete: true},
-				livingSpaceThermalBridging: {
-					livingSpaceLinearThermalBridges: {complete: true},
-					livingSpacePointThermalBridges: {complete: true}
+				dwellingSpaceWindows: {complete: true},
+				dwellingSpaceThermalBridging: {
+					dwellingSpaceLinearThermalBridges: {complete: true},
+					dwellingSpacePointThermalBridges: {complete: true}
 				}, 
-				livingSpaceZoneParameters: {complete: true}
+				dwellingSpaceZoneParameters: {complete: true}
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'livingSpaceFabric');
+		const page = pagesData.find(p => p.id === 'dwellingFabric');
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
@@ -188,22 +188,22 @@ describe('Ecaas Store', () => {
 	test('getStatus of task returns complete status when required forms are complete', () => {
 
 		store.$patch({
-			livingSpaceFabric: {
-				livingSpaceFloors: {
-					livingSpaceGroundFloor: {
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceGroundFloor: {
 						complete: true
 					},
-					livingSpaceExposedFloor: {
+					dwellingSpaceExposedFloor: {
 						complete: true
 					},
-					livingSpaceInternalFloor: {
+					dwellingSpaceInternalFloor: {
 						complete: true
 					}
 				}
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'livingSpaceFloors');
+		const page = pagesData.find(p => p.id === 'dwellingSpaceFloors');
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);

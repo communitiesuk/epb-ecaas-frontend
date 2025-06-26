@@ -3,7 +3,7 @@ import domesticHotWaterPages from "./domesticHotWater";
 import dwellingDetailsPages from "./dwellingDetails";
 import heatingSystemsPages from "./heatingSystems";
 import infiltrationAndVentilationPages from "./infiltrationAndVentilation";
-import livingSpaceFabricPages from "./livingSpaceFabric";
+import dwellingFabricPages from "./dwellingFabric";
 import pvAndBatteriesPages from "./pvAndBatteries";
 
 const pagesData: Array<Page> = [
@@ -16,7 +16,7 @@ const pagesData: Array<Page> = [
 	...dwellingDetailsPages,
 	...infiltrationAndVentilationPages,
 	...heatingSystemsPages,
-	...livingSpaceFabricPages,
+	...dwellingFabricPages,
 	// ...restOfDwellingPages,
 	...domesticHotWaterPages,
 	...pvAndBatteriesPages,

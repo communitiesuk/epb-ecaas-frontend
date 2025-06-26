@@ -118,7 +118,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="zoneReference"
 			type="govRadios"
 			:options="{
-				livingSpace: 'Living space',
+				livingSpace: 'Dwelling space',
 				restOfDwelling: 'Rest of dwelling',
 			}"
 			label="Zone reference"

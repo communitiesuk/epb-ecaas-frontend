@@ -322,7 +322,7 @@ describe("Heating systems summary page", () => {
 
 		const wetDistribution1: WetDistributionData = {
 			name: "Wet distribution 1",
-			zoneReference: "livingSpace",
+			zoneReference: "dwellingSpace",
 			heatSource: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
 			thermalMass: 2,
 			designTempDiffAcrossEmitters: 0.4,
@@ -341,7 +341,7 @@ describe("Heating systems summary page", () => {
 
 		const wetDistribution2: WetDistributionData = {
 			name: "Wet distribution 2",
-			zoneReference: "livingSpace",
+			zoneReference: "dwellingSpace",
 			heatSource: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
 			thermalMass: 2,
 			designTempDiffAcrossEmitters: 0.4,
@@ -442,7 +442,7 @@ describe("Heating systems summary page", () => {
 
 			const expectedWetDistributionData = {
 				Name: "Wet distribution 1",
-				"Zone reference": "Living space",
+				"Zone reference": "Dwelling space",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": "2",
 				"Design temperature difference across the emitters": "0.4",
@@ -477,7 +477,7 @@ describe("Heating systems summary page", () => {
 
 			const expectedWetDistributionData = {
 				Name: "Wet distribution 2",
-				"Zone reference": "Living space",
+				"Zone reference": "Dwelling space",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": "2",
 				"Design temperature difference across the emitters": "0.4",
@@ -512,7 +512,7 @@ describe("Heating systems summary page", () => {
 
 			const expectedWetDistributionData = {
 				Name: "Wet distribution 1",
-				"Zone reference": "Living space",
+				"Zone reference": "Dwelling space",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": "2",
 				"Design temperature difference across the emitters": "0.4",

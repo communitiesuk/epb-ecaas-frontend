@@ -1001,8 +1001,8 @@ describe("FHS input mapper", () => {
 			},
 		};
 		
-		const livingSpaceFabric: LivingSpaceFabric = {
-			livingSpaceZoneParameters: {
+		const dwellingFabric: DwellingFabric = {
+			dwellingSpaceZoneParameters: {
 				...baseForm,
 				data: {
 					area: 100,
@@ -1017,8 +1017,8 @@ describe("FHS input mapper", () => {
 					// spaceHeatControlSystemForThisZone: []
 				}
 			},
-			livingSpaceFloors: {
-				livingSpaceGroundFloor: {
+			dwellingSpaceFloors: {
+				dwellingSpaceGroundFloor: {
 					...baseForm,
 					data: [{
 						name: "ground-floor",
@@ -1034,57 +1034,57 @@ describe("FHS input mapper", () => {
 						typeOfGroundFloor: FloorType.Slab_no_edge_insulation,
 					}]
 				},
-				livingSpaceInternalFloor: {
+				dwellingSpaceInternalFloor: {
 					...baseForm,
 				},
-				livingSpaceExposedFloor: {
+				dwellingSpaceExposedFloor: {
 					...baseForm,
 				}
 			},
-			livingSpaceWalls: {
-				livingSpaceExternalWall: {
+			dwellingSpaceWalls: {
+				dwellingSpaceExternalWall: {
 					...baseForm,
 				},
-				livingSpaceInternalWall: {
+				dwellingSpaceInternalWall: {
 					...baseForm,
 				},
-				livingSpacePartyWall: {
+				dwellingSpacePartyWall: {
 					...baseForm,
 				},
-				livingSpaceWallToUnheatedSpace: {
+				dwellingSpaceWallToUnheatedSpace: {
 					...baseForm,
 				}
 			},
-			livingSpaceCeilingsAndRoofs: {
-				livingSpaceCeilings: {
+			dwellingSpaceCeilingsAndRoofs: {
+				dwellingSpaceCeilings: {
 					...baseForm,
 				},
-				livingSpaceRoofs: {
+				dwellingSpaceRoofs: {
 					...baseForm,
 				},
-				livingSpaceUnheatedPitchedRoofs: {
+				dwellingSpaceUnheatedPitchedRoofs: {
 					...baseForm,
 				}
 			},
-			livingSpaceDoors: {
-				livingSpaceExternalUnglazedDoor: {
+			dwellingSpaceDoors: {
+				dwellingSpaceExternalUnglazedDoor: {
 					...baseForm,
 				},
-				livingSpaceExternalGlazedDoor: {
+				dwellingSpaceExternalGlazedDoor: {
 					...baseForm,
 				},
-				livingSpaceInternalDoor: {
+				dwellingSpaceInternalDoor: {
 					...baseForm,
 				}
 			},
-			livingSpaceWindows: {
+			dwellingSpaceWindows: {
 				...baseForm,
 			},
-			livingSpaceThermalBridging: {
-				livingSpaceLinearThermalBridges: {
+			dwellingSpaceThermalBridging: {
+				dwellingSpaceLinearThermalBridges: {
 					...baseForm,
 				},
-				livingSpacePointThermalBridges: {
+				dwellingSpacePointThermalBridges: {
 					...baseForm,
 				}
 			}
@@ -1246,7 +1246,7 @@ describe("FHS input mapper", () => {
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
-			livingSpaceFabric,
+			dwellingFabric,
 			infiltrationAndVentilation,
 			heatingSystems,
 			pvAndBatteries,
@@ -1397,8 +1397,8 @@ describe("FHS input mapper", () => {
 			},
 		};
 		
-		const livingSpaceFabric: LivingSpaceFabric = {
-			livingSpaceZoneParameters: {
+		const dwellingFabric: DwellingFabric = {
+			dwellingSpaceZoneParameters: {
 				...baseForm,
 				data: {
 					area: 16,
@@ -1411,8 +1411,8 @@ describe("FHS input mapper", () => {
 					// spaceHeatControlSystemForThisZone: []
 				}
 			},
-			livingSpaceFloors: {
-				livingSpaceGroundFloor: {
+			dwellingSpaceFloors: {
+				dwellingSpaceGroundFloor: {
 					...baseForm,
 					data: [{
 						name: "ground floor 1",
@@ -1446,7 +1446,7 @@ describe("FHS input mapper", () => {
 						thermalResistanceOfBasementWalls: 3,
 					}]
 				},
-				livingSpaceInternalFloor: {
+				dwellingSpaceInternalFloor: {
 					...baseForm,
 					data: [{
 						name: "internal floor 1",
@@ -1464,7 +1464,7 @@ describe("FHS input mapper", () => {
 						massDistributionClass: MassDistributionClass.M,
 					}]
 				},
-				livingSpaceExposedFloor: {
+				dwellingSpaceExposedFloor: {
 					...baseForm,
 					data: [{
 						name: "exposed floor 1",
@@ -1481,8 +1481,8 @@ describe("FHS input mapper", () => {
 					}]
 				}
 			},
-			livingSpaceWalls: {
-				livingSpacePartyWall: {
+			dwellingSpaceWalls: {
+				dwellingSpacePartyWall: {
 					...baseForm,
 					data: [{
 						name: "party wall 1",
@@ -1499,7 +1499,7 @@ describe("FHS input mapper", () => {
 						massDistributionClass: MassDistributionClass.E
 					}]
 				},
-				livingSpaceExternalWall: {
+				dwellingSpaceExternalWall: {
 					...baseForm,
 					data: [{
 						name: "external wall 1",
@@ -1516,7 +1516,7 @@ describe("FHS input mapper", () => {
 						massDistributionClass: MassDistributionClass.D
 					}]
 				},
-				livingSpaceInternalWall: {
+				dwellingSpaceInternalWall: {
 					...baseForm,
 					data: [{
 						name: "internal wall 1",
@@ -1527,7 +1527,7 @@ describe("FHS input mapper", () => {
 						massDistributionClass: MassDistributionClass.I,
 					}],
 				},
-				livingSpaceWallToUnheatedSpace: {
+				dwellingSpaceWallToUnheatedSpace: {
 					...baseForm,
 					data: [{
 						name: "wall to garage",
@@ -1541,8 +1541,8 @@ describe("FHS input mapper", () => {
 					}]
 				}
 			},
-			livingSpaceCeilingsAndRoofs: {
-				livingSpaceCeilings: {
+			dwellingSpaceCeilingsAndRoofs: {
+				dwellingSpaceCeilings: {
 					...baseForm,
 					data: [
 						{
@@ -1566,7 +1566,7 @@ describe("FHS input mapper", () => {
 						}
 					]
 				},
-				livingSpaceRoofs: {
+				dwellingSpaceRoofs: {
 					...baseForm,
 					data: [{
 						name: "roof 1",
@@ -1583,7 +1583,7 @@ describe("FHS input mapper", () => {
 						massDistributionClass: MassDistributionClass.I
 					}]
 				},
-				livingSpaceUnheatedPitchedRoofs: {
+				dwellingSpaceUnheatedPitchedRoofs: {
 					...baseForm,
 					data: [{
 						name: "unheated pitched roof",
@@ -1601,8 +1601,8 @@ describe("FHS input mapper", () => {
 					}]
 				}
 			},
-			livingSpaceDoors: {
-				livingSpaceExternalUnglazedDoor: {
+			dwellingSpaceDoors: {
+				dwellingSpaceExternalUnglazedDoor: {
 					...baseForm,
 					data: [{
 						name: "front door",
@@ -1619,7 +1619,7 @@ describe("FHS input mapper", () => {
 						massDistributionClass: MassDistributionClass.I
 					}]
 				},
-				livingSpaceExternalGlazedDoor: {
+				dwellingSpaceExternalGlazedDoor: {
 					...baseForm,
 					data: [{
 						name: "external glazed door",
@@ -1637,7 +1637,7 @@ describe("FHS input mapper", () => {
 						numberOpenableParts: "0",
 					}]
 				},
-				livingSpaceInternalDoor: {
+				dwellingSpaceInternalDoor: {
 					...baseForm,
 					data: [{
 						typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
@@ -1660,7 +1660,7 @@ describe("FHS input mapper", () => {
 					}]
 				}
 			},
-			livingSpaceWindows: {
+			dwellingSpaceWindows: {
 				...baseForm,
 				data: [{
 					name: "bedroom window",
@@ -1691,8 +1691,8 @@ describe("FHS input mapper", () => {
 					curtainsControlObject: WindowTreatmentControl.auto_motorised,
 				}]
 			},
-			livingSpaceThermalBridging: {
-				livingSpaceLinearThermalBridges: {
+			dwellingSpaceThermalBridging: {
+				dwellingSpaceLinearThermalBridges: {
 					...baseForm,
 					data: [{
 						name: "linear thermal bridge",
@@ -1701,7 +1701,7 @@ describe("FHS input mapper", () => {
 						length: 1.2
 					}]
 				},
-				livingSpacePointThermalBridges: {
+				dwellingSpacePointThermalBridges: {
 					...baseForm,
 					data: [{
 						name: "point thermal bridge 1",
@@ -1965,7 +1965,7 @@ describe("FHS input mapper", () => {
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
-			livingSpaceFabric,
+			dwellingFabric,
 			infiltrationAndVentilation,
 			heatingSystems,
 			pvAndBatteries,

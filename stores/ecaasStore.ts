@@ -53,34 +53,34 @@ function getInitialState(): EcaasState {
 			},
 			wwhrs: { data: [] }
 		},
-		livingSpaceFabric: {
-			livingSpaceFloors: {
-				livingSpaceGroundFloor: { data: [] },
-				livingSpaceInternalFloor: { data: [] },
-				livingSpaceExposedFloor: { data: [] },
+		dwellingFabric: {
+			dwellingSpaceFloors: {
+				dwellingSpaceGroundFloor: { data: [] },
+				dwellingSpaceInternalFloor: { data: [] },
+				dwellingSpaceExposedFloor: { data: [] },
 			},
-			livingSpaceWalls: {
-				livingSpaceExternalWall: { data: [] },
-				livingSpaceInternalWall: { data: [] },
-				livingSpaceWallToUnheatedSpace: { data: [] },
-				livingSpacePartyWall: { data: [] },
+			dwellingSpaceWalls: {
+				dwellingSpaceExternalWall: { data: [] },
+				dwellingSpaceInternalWall: { data: [] },
+				dwellingSpaceWallToUnheatedSpace: { data: [] },
+				dwellingSpacePartyWall: { data: [] },
 			},
-			livingSpaceCeilingsAndRoofs: {
-				livingSpaceCeilings: { data: [] },
-				livingSpaceRoofs: { data: [] },
-				livingSpaceUnheatedPitchedRoofs: { data: [] }
+			dwellingSpaceCeilingsAndRoofs: {
+				dwellingSpaceCeilings: { data: [] },
+				dwellingSpaceRoofs: { data: [] },
+				dwellingSpaceUnheatedPitchedRoofs: { data: [] }
 			},
-			livingSpaceDoors: {
-				livingSpaceExternalUnglazedDoor: { data: [] },
-				livingSpaceExternalGlazedDoor: { data: [] },
-				livingSpaceInternalDoor: { data: [] },
+			dwellingSpaceDoors: {
+				dwellingSpaceExternalUnglazedDoor: { data: [] },
+				dwellingSpaceExternalGlazedDoor: { data: [] },
+				dwellingSpaceInternalDoor: { data: [] },
 			},
-			livingSpaceWindows: { data: [] },
-			livingSpaceThermalBridging: {
-				livingSpaceLinearThermalBridges: { data: [] },
-				livingSpacePointThermalBridges: { data: [] }
+			dwellingSpaceWindows: { data: [] },
+			dwellingSpaceThermalBridging: {
+				dwellingSpaceLinearThermalBridges: { data: [] },
+				dwellingSpacePointThermalBridges: { data: [] }
 			}, 
-			livingSpaceZoneParameters: { data: {} }
+			dwellingSpaceZoneParameters: { data: {} }
 		},
 		heatingSystems: {
 			heatGeneration: {

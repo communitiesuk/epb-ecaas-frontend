@@ -4,7 +4,7 @@ import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 import merge from 'deepmerge';
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
 import { mapHeatingSystemsData } from './heatingSystemsMapper';
-import { mapLivingSpaceFabricData } from './livingSpaceFabricMapper';
+import { mapLivingSpaceFabricData as mapDwellingFabricData } from './dwellingFabricMapper';
 import { mapPvAndElectricBatteriesData } from './pvAndElectricBatteriesMapper';
 import { mapDomesticHotWaterData } from './domesticHotWaterMapper';
 import { defaultHeatSourceWetDetails } from "~/mapping/common";
@@ -14,7 +14,7 @@ export type ResolvedState = Resolved<EcaasState>;
 export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const dwellingDetailsData = mapDwellingDetailsData(state);
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
-	const livingSpaceFabricData = mapLivingSpaceFabricData(state);
+	const dwellingFabricData = mapDwellingFabricData(state);
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
 	// const coolingData = mapCoolingData(state);
 
@@ -56,7 +56,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const fhsInput = merge.all([
 		dwellingDetailsData,
 		infiltrationVentilationData,
-		livingSpaceFabricData,
+		dwellingFabricData,
 		defaultHeatSourceWetData,
 		heatingSystemsData,
 		domesticHotWaterData,

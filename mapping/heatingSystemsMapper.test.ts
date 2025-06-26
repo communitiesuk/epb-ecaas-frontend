@@ -133,7 +133,7 @@ describe("heating systems mapper", () => {
 				data: [
 					{
 						name: "Radiators",
-						zoneReference: "livingSpace",
+						zoneReference: "dwellingSpace",
 						heatSource: "Acme heat pump",
 						thermalMass: 400,
 						designTempDiffAcrossEmitters: 4,
@@ -195,7 +195,7 @@ describe("heating systems mapper", () => {
 					temp_diff_emit_dsgn: 4,
 					thermal_mass: 400,
 					type: "WetDistribution",
-					Zone: "livingSpace"
+					Zone: "dwellingSpace"
 				}
 			}
 		};
@@ -211,7 +211,7 @@ describe("heating systems mapper", () => {
 				data: [
 					{
 						name: "Under floor heating",
-						zoneReference: "livingSpace",
+						zoneReference: "dwellingSpace",
 						heatSource: "Acme heat pump",
 						thermalMass: 400,
 						designTempDiffAcrossEmitters: 4,
@@ -269,7 +269,7 @@ describe("heating systems mapper", () => {
 					temp_diff_emit_dsgn: 4,
 					thermal_mass: 400,
 					type: "WetDistribution",
-					Zone: "livingSpace"
+					Zone: "dwellingSpace"
 				}
 			}
 		};
