@@ -75,61 +75,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovDetails summary-text="Help with these inputs" possibly-llm-placeholder>
-		<table class="govuk-table">
-			<thead class="govuk-table__head">
-				<tr class="govuk-table__row">
-					<th scope="col" class="govuk-table__header">Parameter</th>
-					<th scope="col" class="govuk-table__header">Explanation</th>
-					<th scope="col" class="govuk-table__header">Typical range</th>
-				</tr>
-			</thead>
-			<tbody class="govuk-table__body">
-				<tr class="govuk-table__row">
-					<td class="govuk-table__cell">MVHR efficiency</td>
-					<td class="govuk-table__cell">How much heat the system recoers from outgoing air</td>
-					<td class="govuk-table__cell">
-						0.85 - 0.95<br>
-						(high performance systems recover around 0.90)
-					</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<td class="govuk-table__cell">Thermal insulation conductivity of ductwork</td>
-					<td class="govuk-table__cell">How well the insulation reduces heat transfer</td>
-					<td class="govuk-table__cell">
-						0.030 - 0.040<br>
-						(common materials: mineral wool, phenolic foam)
-					</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<td class="govuk-table__cell">Insulation thickness</td>
-					<td class="govuk-table__cell">Thickness of duct insulation to minimise heat loss and prevent condensation</td>
-					<td class="govuk-table__cell">25-50mm</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<td class="govuk-table__cell">External diameter of ductwork</td>
-					<td class="govuk-table__cell">Outer size of the duct, affecting airflow and space requirements</td>
-					<td class="govuk-table__cell">
-						125 - 160<br>
-						(standard domestic systems)
-					</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<td class="govuk-table__cell">Internal diameter of ductwork</td>
-					<td class="govuk-table__cell">Inner size of the duct, determining actual airflow capacity</td>
-					<td class="govuk-table__cell">
-						100 - 150mm<br>
-						(varies based on system needs)
-					</td>
-				</tr>
-				<tr class="govuk-table__row">
-					<td class="govuk-table__cell">Length of ductwork</td>
-					<td class="govuk-table__cell">Total duct length required, based on building size and layout</td>
-					<td class="govuk-table__cell">10 - 30 metres</td>
-				</tr>
-			</tbody>
-		</table>
-	</GovDetails>
 	<FormKit
 		v-model="model"
 		type="form"
@@ -156,8 +101,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === VentType.MVHR).map((x)=> [x.id, x.name]))"
 			label="MVHR unit" 
 			name="mvhrUnit" 
-			help="Select a MVHR unit that
-    has been added previously which this ductwork is attached to"
+			help="Select a MVHR unit that has been added previously which this ductwork is attached to"
 			validation="required" />
 
 		<FormKit
@@ -183,16 +127,54 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				suffix-text="mm"
 				label="Internal diameter of ductwork"
 				name="internalDiameterOfDuctwork"
-				validation="required | number | min:0 | max:1000"
-			/>
+				validation="required | number | min:0 | max:1000">
+				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header">Explanation</th>
+								<th scope="col" class="govuk-table__header">Typical range</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">Inner size of the duct, determining actual airflow capacity</td>
+								<td class="govuk-table__cell">
+									100 - 150mm<br>
+									(varies based on system needs)
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="externalDiameterOfDuctwork"
 				type="govInputWithSuffix"
 				suffix-text="mm"
 				label="External diameter of ductwork"
 				name="externalDiameterOfDuctwork"
-				validation="required | number | min:0 | max:1000"
-			/>
+				validation="required | number | min:0 | max:1000">
+				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header">Explanation</th>
+								<th scope="col" class="govuk-table__header">Typical range</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">Outer size of the duct, affecting airflow and space requirements</td>
+								<td class="govuk-table__cell">
+									125 - 160<br>
+									(standard domestic systems)
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</GovDetails>
+			</FormKit>
 		</template>
 
 		<FormKit
@@ -212,8 +194,24 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Insulation thickness"
 			help="The thickness of the duct insulation"
 			name="insulationThickness"
-			validation="required | number | min:0 | max:100"
-		/>
+			validation="required | number | min:0 | max:100">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Explanation</th>
+							<th scope="col" class="govuk-table__header">Typical range</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Thickness of duct insulation to minimise heat loss and prevent condensation</td>
+							<td class="govuk-table__cell">25-50mm</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="lengthOfDuctwork"
 			type="govInputWithSuffix"
@@ -221,8 +219,24 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Length of ductwork"
 			help="Length of the piece of ductwork specified in this sub-object"
 			name="lengthOfDuctwork"
-			validation="required | number | min:0"
-		/>
+			validation="required | number | min:0">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Explanation</th>
+							<th scope="col" class="govuk-table__header">Typical range</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Total duct length required, based on building size and layout</td>
+							<td class="govuk-table__cell">10 - 30 metres</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="thermalInsulationConductivityOfDuctwork"
 			type="govInputWithSuffix"
@@ -230,8 +244,27 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Thermal insulation conductivity of ductwork"
 			help="The thermal conductivity of the insulation"
 			name="thermalInsulationConductivityOfDuctwork"
-			validation="required | number | min:0"
-		/>
+			validation="required | number | min:0">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Explanation</th>
+							<th scope="col" class="govuk-table__header">Typical range</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">How well the insulation reduces heat transfer</td>
+							<td class="govuk-table__cell">
+								0.030 - 0.040<br>
+								(common materials: mineral wool, phenolic foam)
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="surfaceReflectivity"
 			type="govBoolean"

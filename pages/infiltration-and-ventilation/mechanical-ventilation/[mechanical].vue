@@ -148,8 +148,27 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="MVHR efficiency"
 				help="Heat recovery efficiency (0 to 1) allowing for in-use factor"
 				name="mvhrEfficiency"
-				validation="required | min:0 | max:1"
-			/>
+				validation="required | min:0 | max:1">
+				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header">Explanation</th>
+								<th scope="col" class="govuk-table__header">Typical range</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">How much heat the system recovers from outgoing air</td>
+								<td class="govuk-table__cell">
+									0.85 - 0.95<br>
+									(high performance systems recover around 0.90)
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</GovDetails>
+			</FormKit>
 		</template>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
