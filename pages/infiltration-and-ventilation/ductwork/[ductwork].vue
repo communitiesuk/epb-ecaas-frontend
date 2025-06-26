@@ -75,6 +75,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<p class="govuk-body">
+		<a href="/guidance/ductwork-lengths" target="_blank" class="govuk-link">
+			Ductwork lengths (opens in another window)
+		</a>
+	</p>
 	<FormKit
 		v-model="model"
 		type="form"
