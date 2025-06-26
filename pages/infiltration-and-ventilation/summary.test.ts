@@ -42,7 +42,7 @@ const ventData: VentData = {
 
 const ventilationData: VentilationData = {
 	dwellingElevationalLevelAtBase: 1,
-	crossVentFactor: true,
+	crossVentilation: true,
 	maxRequiredAirChangeRate: 1,
 	ventilationZoneHeight: 1,
 	dwellingEnvelopeArea: 1

@@ -21,7 +21,7 @@ describe('Ventilation', () => {
 		ventilationZoneHeight: 1,
 		dwellingEnvelopeArea: 5,
 		dwellingElevationalLevelAtBase: 1,
-		crossVentFactor: true,
+		crossVentilation: true,
 		maxRequiredAirChangeRate: 2
 	};
 
@@ -29,7 +29,7 @@ describe('Ventilation', () => {
 		await user.type(screen.getByTestId('ventilationZoneHeight'), '1');
 		await user.type(screen.getByTestId('dwellingEnvelopeArea'), '5');
 		await user.type(screen.getByTestId('dwellingElevationalLevelAtBase'), '1');
-		await user.click(screen.getByTestId('crossVentFactor_yes'));
+		await user.click(screen.getByTestId('crossVentilation_yes'));
 		await user.tab();
 	};
 
@@ -58,7 +58,7 @@ describe('Ventilation', () => {
 		expect((await screen.findByTestId('ventilationZoneHeight') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('dwellingEnvelopeArea') as HTMLInputElement).value).toBe('5');
 		expect((await screen.findByTestId('dwellingElevationalLevelAtBase') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('crossVentFactor_yes')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId('crossVentilation_yes')).hasAttribute('checked')).toBe(true);
 	});
 		
 	test('required error messages are displayed when empty form is submitted', async () => {
@@ -69,7 +69,7 @@ describe('Ventilation', () => {
 		expect((await screen.findByTestId('ventilationZoneHeight_error'))).toBeDefined();
 		expect((await screen.findByTestId('dwellingEnvelopeArea_error'))).toBeDefined();
 		expect((await screen.findByTestId('dwellingElevationalLevelAtBase_error'))).toBeDefined();
-		expect((await screen.findByTestId('crossVentFactor_error'))).toBeDefined();
+		expect((await screen.findByTestId('crossVentilation_error'))).toBeDefined();
 	});
 
 	test('error summary is displayed when an invalid form in submitted', async () => {

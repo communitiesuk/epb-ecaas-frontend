@@ -591,7 +591,7 @@ export interface VentilationData {
 	ventilationZoneHeight: number;
 	dwellingEnvelopeArea: number;
 	dwellingElevationalLevelAtBase: number;
-	crossVentFactor: boolean;
+	crossVentilation: boolean;
 	maxRequiredAirChangeRate: number;
 }
 

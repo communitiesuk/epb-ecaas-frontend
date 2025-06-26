@@ -4,7 +4,7 @@ import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
-	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentFactor } = mapVentilationData(state);
+	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilation } = mapVentilationData(state);
 	const mechanicalVentilation = mapMechanicalVentilationData(state);
 
 	const infiltrationVentiliation: Omit<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
@@ -16,7 +16,7 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 			...mapAirPermeabilityData(state),
 		},
 		CombustionAppliances: mapCombustionAppliancesData(state),
-		cross_vent_factor: crossVentFactor,
+		cross_vent_factor: crossVentilation,
 		ventilation_zone_base_height: dwellingElevationalLevelAtBase,
 		ach_max_static_calcs: 2, // suggested default
 		vent_opening_ratio_init: 1, // 1 is open
@@ -95,14 +95,14 @@ export function mapVentsData(state: ResolvedState) {
 	return objectFromEntries(entries);
 }
 
-export function mapVentilationData(state: ResolvedState): { dwellingElevationalLevelAtBase: number; dwellingHeight: number; dwellingEnvelopeArea: number; crossVentFactor: boolean; } {
-	const { dwellingElevationalLevelAtBase, ventilationZoneHeight: dwellingHeight, dwellingEnvelopeArea, crossVentFactor } = state.infiltrationAndVentilation.naturalVentilation;
+export function mapVentilationData(state: ResolvedState): { dwellingElevationalLevelAtBase: number; dwellingHeight: number; dwellingEnvelopeArea: number; crossVentilation: boolean; } {
+	const { dwellingElevationalLevelAtBase, ventilationZoneHeight: dwellingHeight, dwellingEnvelopeArea, crossVentilation: crossVentilation } = state.infiltrationAndVentilation.naturalVentilation;
 
 	return {
 		dwellingElevationalLevelAtBase,
 		dwellingHeight,
 		dwellingEnvelopeArea,
-		crossVentFactor
+		crossVentilation
 	};
 }
 

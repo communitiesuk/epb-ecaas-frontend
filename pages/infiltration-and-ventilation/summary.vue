@@ -78,7 +78,7 @@ const ventilationSummary: SummarySection = {
 		"Ventilation zone height": ventilationData.ventilationZoneHeight,
 		"Dwelling envelope area": ventilationData.dwellingEnvelopeArea,
 		"Elevational height of dwelling at its base": ventilationData.dwellingElevationalLevelAtBase,
-		"Cross vent factor": displayBoolean(ventilationData.crossVentFactor),
+		"Cross vent factor": displayBoolean(ventilationData.crossVentilation),
 		"Maximum required air change rate": ventilationData.maxRequiredAirChangeRate
 	},
 	editUrl: getUrl('ventilation')!

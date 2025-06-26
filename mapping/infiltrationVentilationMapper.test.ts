@@ -241,7 +241,7 @@ describe('infiltration ventilation mapper', () => {
 			ventilationZoneHeight: 10,
 			dwellingEnvelopeArea: 200,
 			dwellingElevationalLevelAtBase: 4,
-			crossVentFactor: true,
+			crossVentilation: true,
 			maxRequiredAirChangeRate: 1.5,
 		};
 
@@ -260,7 +260,7 @@ describe('infiltration ventilation mapper', () => {
 			dwellingHeight: 10,
 			dwellingEnvelopeArea: 200,
 			dwellingElevationalLevelAtBase: 4,
-			crossVentFactor: true,
+			crossVentilation: true,
 		};
 		expect(fhsInputData).toEqual(expectedVentilationData);
 	});

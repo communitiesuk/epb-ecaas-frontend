@@ -14,7 +14,7 @@ const saveForm = (fields: VentilationData) => {
 					ventilationZoneHeight: fields.ventilationZoneHeight,
 					dwellingEnvelopeArea: fields.dwellingEnvelopeArea,
 					dwellingElevationalLevelAtBase: fields.dwellingElevationalLevelAtBase,
-					crossVentFactor: fields.crossVentFactor,
+					crossVentilation: fields.crossVentilation,
 					maxRequiredAirChangeRate: 2
 				},
 				complete: true
@@ -62,11 +62,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FieldsElevationalHeight field="dwellingElevationalLevelAtBase" label="Elevational height of dwelling at its base" help="Elevational height of dwelling above ground datum level" :minmax="{ min: -150, max: 750 }" />
 		<FormKit
-			id="crossVentFactor"
+			id="crossVentilation"
 			type="govBoolean"
-			label="Cross vent factor"
-			help="A flag to indicate if cross ventilation is possible or not"
-			name="crossVentFactor"
+			label="Cross ventilation"
+			help="This input indicates whether cross ventilation is present in the building. To determine this, check if there are openings (e.g., windows, vents, or doors) on opposite sides of the space that can allow air to flow through the building. If these openings are aligned or positioned in such a way that air can pass through, then cross ventilation is present. If not, it may be absent."
+			name="crossVentilation"
 			validation="required"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
