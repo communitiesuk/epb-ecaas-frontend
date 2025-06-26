@@ -9,7 +9,7 @@ export default defineNitroPlugin(() => {
 			base: "unstorage",
 			port: 6379,
 			host: useRuntimeConfig().redisEndpoint,
-			// tls: true as any,
+			tls: {},
 		});
 
 		storage.mount("cache", driver);
