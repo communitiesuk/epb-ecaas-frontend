@@ -18,7 +18,7 @@
             "updated": "2025-06-25 11:54:30"
         },
         "technologyType": "Air Source Heat Pump",
-        "originalManufacturerName": "NULL",
+        "originalManufacturerName": "Ye Olde Acme Incorporated",
         "brandName": "Test",
         "modelName": "Large Heat Pump",
         "modelQualifier": "HPLARGE",
@@ -120,7 +120,7 @@
             "updated": "2025-06-25 11:54:30"
         },
         "technologyType": "Air Source Heat Pump",
-        "originalManufacturerName": "NULL",
+        "originalManufacturerName": null,
         "brandName": "Test",
         "modelName": "Medium Heat Pump",
         "modelQualifier": "HPMEDIUM",
@@ -222,7 +222,7 @@
             "updated": "2025-06-25 11:54:30"
         },
         "technologyType": "Air Source Heat Pump",
-        "originalManufacturerName": "NULL",
+        "originalManufacturerName": null,
         "brandName": "Test",
         "modelName": "Small Heat Pump",
         "modelQualifier": "HPSMALL",

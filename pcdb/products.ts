@@ -26,7 +26,7 @@ const Manufacturer = z.object({
 const BaseProduct = z.object({
 	ID: z.int(),
 	manufacturer: Manufacturer,
-	originalManufacturerName: z.union([z.literal('NULL'), z.string()]),
+	originalManufacturerName: z.nullable(z.string()),
 	brandName: z.string(),
 	modelName: z.string(),
 	modelQualifier: z.string(),
