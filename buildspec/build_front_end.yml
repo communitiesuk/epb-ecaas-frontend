@@ -1,9 +1,5 @@
 version: 0.2
 
-env:
-  parameter-store:
-    ELASTICACHE_ENDPOINT: "ELASTICACHE_ENDPOINT"
-
 phases:
   pre_build:
     commands:
