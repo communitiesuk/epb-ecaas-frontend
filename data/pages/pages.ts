@@ -1,5 +1,4 @@
 import { PageType, type Page } from "./pages.types";
-import coolingPages from "./cooling";
 import domesticHotWaterPages from "./domesticHotWater";
 import dwellingDetailsPages from "./dwellingDetails";
 import heatingSystemsPages from "./heatingSystems";
@@ -21,7 +20,6 @@ const pagesData: Array<Page> = [
 	// ...restOfDwellingPages,
 	...domesticHotWaterPages,
 	...pvAndBatteriesPages,
-	...coolingPages
 ];
 
 export default pagesData;
