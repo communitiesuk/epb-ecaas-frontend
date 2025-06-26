@@ -58,7 +58,7 @@ describe("PV system", () => {
 	it("should have a heading", async () => {
 		await renderSuspended(PVScreen);
 		expect(
-			screen.getByRole("heading", { name: "Photovoltaic (PV)" })
+			screen.getByRole("heading", { name: "PV (photovoltaic) system" })
 		).toBeDefined();
 	});
 
@@ -108,10 +108,10 @@ describe("PV system", () => {
 		expect(data[0]).toEqual(pvSystem);
 	});
 
-	it("should navigate to pv and electric batteries page when valid form is completed", async ()=> {
+	it("should navigate to pv system page when valid form is completed", async ()=> {
 		await renderSuspended(PVScreen);
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
-		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries');
+		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries/pv-systems');
 	});
 });

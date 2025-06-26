@@ -9,30 +9,30 @@ const pvAndBatteriesPages: Array<Page> = [
 		parentId: 'taskList'
 	},
 	{
-		id: 'pvSystem',
-		title: 'PV System',
-		url: '/pv-and-batteries/pv-system/create',
+		id: 'pvSystems',
+		title: 'PV Systems',
+		url: '/pv-and-batteries/pv-systems',
 		type: PageType.Task,
 		parentId: 'pvAndBatteries'
+	},
+	{
+		id: 'pvSystemCreate',
+		title: 'PV System',
+		url: '/pv-and-batteries/pv-systems/create',
+		type: PageType.Task,
+		parentId: 'pvSystems'
 	},
 	{
 		id: 'pvSystemEdit',
 		title: 'PV System',
-		url: '/pv-and-batteries/pv-system/:system',
+		url: '/pv-and-batteries/pv-systems/:system',
 		type: PageType.Task,
-		parentId: 'pvAndBatteries'
+		parentId: 'pvSystems'
 	},
 	{
 		id: 'electricBattery',
 		title: 'Electric battery',
-		url: '/pv-and-batteries/electric-battery/create',
-		type: PageType.Task,
-		parentId: 'pvAndBatteries'
-	},
-	{
-		id: 'electricBatteryEdit',
-		title: 'Electric battery',
-		url: '/pv-and-batteries/electric-battery/:battery',
+		url: '/pv-and-batteries/electric-battery',
 		type: PageType.Task,
 		parentId: 'pvAndBatteries'
 	},

@@ -42,11 +42,9 @@ export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, 'OnS
 }
 
 export function mapElectricBatteryData(state: ResolvedState): Record<string, SchemaElectricBattery> {
-	return objectFromEntries(state.pvAndBatteries.electricBattery.map((battery): [string, SchemaElectricBattery] => {
-		const { batteryAge, location, capacity, chargeEfficiency, gridChargingPossible, maximumChargeRate, maximumDischargeRate, minimumChargeRate } = battery;
-
-		return [
-			"ElectricBattery",
+	const { batteryAge, location, capacity, chargeEfficiency, gridChargingPossible, maximumChargeRate, maximumDischargeRate, minimumChargeRate } = state.pvAndBatteries.electricBattery;
+	return {
+		"ElectricBattery":
 			{
 				battery_age: batteryAge,
 				battery_location: location,
@@ -57,8 +55,7 @@ export function mapElectricBatteryData(state: ResolvedState): Record<string, Sch
 				maximum_discharge_rate_one_way_trip: maximumDischargeRate,
 				minimum_charge_rate_one_way_trip: minimumChargeRate
 			}
-		];
-	}));
+	};
 }
 
 /* Function unused yet while no diverter data to map. **/

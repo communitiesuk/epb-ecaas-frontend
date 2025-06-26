@@ -3,40 +3,40 @@ import type { BatteryLocation } from '~/schema/api-schema.types';
 
 const title = "Electric battery";
 const store = useEcaasStore();
-const { saveToList } = useForm();
 
-const electricBatteryData = useItemToEdit('battery', store.pvAndBatteries.electricBattery.data);
-const model: Ref<ElectricBatteryData> = ref(electricBatteryData!);
-
-const locationOptions: Record<BatteryLocation, SnakeToSentenceCase<BatteryLocation>> = {
-	inside: 'Inside',
-	outside: 'Outside',
-};
+const model: Ref<ElectricBatteryData> = ref({
+	...store.pvAndBatteries.electricBattery.data
+});
 
 const saveForm = (fields: ElectricBatteryData) => {
-	store.$patch((state) => {
-		const {electricBattery} = state.pvAndBatteries;
-
-		const electricBatteryItem: ElectricBatteryData = {
-			name: fields.name,
-			capacity: fields.capacity,
-			batteryAge: fields.batteryAge,
-			chargeEfficiency: fields.chargeEfficiency,
-			location: fields.location,
-			gridChargingPossible: fields.gridChargingPossible,
-			maximumChargeRate: fields.maximumChargeRate,
-			minimumChargeRate: fields.minimumChargeRate,
-			maximumDischargeRate: fields.maximumDischargeRate
-		};
-
-		saveToList(electricBatteryItem, electricBattery);
-		electricBattery.complete = false;
+	store.$patch({
+		pvAndBatteries: {
+			electricBattery: { 
+				data: {
+					name: fields.name,
+					capacity: fields.capacity,
+					batteryAge: fields.batteryAge,
+					chargeEfficiency: fields.chargeEfficiency,
+					location: fields.location,
+					gridChargingPossible: fields.gridChargingPossible,
+					maximumChargeRate: fields.maximumChargeRate,
+					minimumChargeRate: fields.minimumChargeRate,
+					maximumDischargeRate: fields.maximumDischargeRate
+				},
+				complete: true,
+			},
+		},
 	});
 
 	navigateTo("/pv-and-batteries");
 };
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+
+const locationOptions: Record<BatteryLocation, SnakeToSentenceCase<BatteryLocation>> = {
+	inside: 'Inside',
+	outside: 'Outside',
+};
 
 const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 	const parent = node.at("$parent");

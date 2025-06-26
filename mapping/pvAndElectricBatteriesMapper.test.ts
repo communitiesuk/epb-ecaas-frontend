@@ -97,35 +97,22 @@ describe("PV and electric batteries mapper", () => {
 
 	it("maps electric batteries to the correct form for FHS input", () => {
 		// Arrange
-		const batteries: ElectricBatteryData[] = [
-			{
-				name: "Acme Model II",
-				capacity: 10,
-				batteryAge: 2,
-				chargeEfficiency: 0.7,
-				location: BatteryLocation.inside,
-				gridChargingPossible: false,
-				maximumChargeRate: 6.2,
-				minimumChargeRate: 4.5,
-				maximumDischargeRate: 2.3,
-			},
-			// {
-			// 	name: "Acme Model III",
-			// 	capacity: 14,
-			// 	batteryAge: 0,
-			// 	chargeEfficiency: 0.8,
-			// 	location: BatteryLocation.outside,
-			// 	gridChargingPossible: true,
-			// 	maximumChargeRate: 7.4,
-			// 	minimumChargeRate: 4.2,
-			// 	maximumDischargeRate: 2.9,
-			// }
-		];
+		const battery: ElectricBatteryData = {
+			name: "Acme Model II",
+			capacity: 10,
+			batteryAge: 2,
+			chargeEfficiency: 0.7,
+			location: BatteryLocation.inside,
+			gridChargingPossible: false,
+			maximumChargeRate: 6.2,
+			minimumChargeRate: 4.5,
+			maximumDischargeRate: 2.3,
+		};
 
 		store.$patch({
 			pvAndBatteries: {
 				electricBattery: {
-					data: batteries,
+					data: battery,
 					complete: true
 				}
 			}
@@ -157,7 +144,6 @@ describe("PV and electric batteries mapper", () => {
 			// 	minimum_charge_rate_one_way_trip: 4.2
 			// },
 		};
-
 		expect(result).toEqual(expectedResult);
 	});
 });

@@ -100,7 +100,7 @@ function getInitialState(): EcaasState {
 		},
 		pvAndBatteries: {
 			pvSystem: { data: [] },
-			electricBattery: { data: [] }
+			electricBattery: { data: {} }
 		},
 		cooling: {
 			airConditioning: { data: [] }

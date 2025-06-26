@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { InverterType, OnSiteGenerationVentilationStrategy } from '~/schema/api-schema.types';
 
-const title = "Photovoltaic (PV)";
+const title = "PV (photovoltaic) system";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
@@ -54,7 +54,7 @@ const saveForm = (fields: PvSystemData) => {
 		pvSystem.complete = false;
 	});
 
-	navigateTo("/pv-and-batteries");
+	navigateTo("/pv-and-batteries/pv-systems");
 };
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

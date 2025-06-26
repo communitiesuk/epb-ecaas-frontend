@@ -1,4 +1,4 @@
-import ElectricBattery from "./[battery].vue";
+import ElectricBattery from "./electric-battery.vue";
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
@@ -52,7 +52,7 @@ describe('Electric battery', () => {
 
 		const { data } = store.pvAndBatteries.electricBattery;
 
-		expect(data[0]).toEqual(fullElectricBattery);
+		expect(data).toEqual(fullElectricBattery);
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {
@@ -63,7 +63,7 @@ describe('Electric battery', () => {
 		expect((await screen.findByTestId('electricBatteryErrorSummary'))).toBeDefined();
 	});
 
-	it('navigates to heating systems page when valid form is completed', async () => {
+	it('navigates to pv and batteries page when valid form is completed', async () => {
 		await renderSuspended(ElectricBattery);
         
 		await fillForm();
