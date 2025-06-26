@@ -4,14 +4,14 @@ export default defineNitroPlugin(() => {
 	console.log("Creating redis driver with:", useRuntimeConfig().redisEndpoint);
 	const storage = useStorage();
 
-	if (process.env.NODE_ENV === "production") {
-		const driver = redisDriver({
-			base: "{unstorage}",
-			port: 6379,
-			host: useRuntimeConfig().redisEndpoint,
-
-		});
-		storage.unmount("cache");
-		storage.mount("cache", driver);
-	}
+  if (process.env.NODE_ENV === "production") {
+    const driver = redisDriver({
+      base: "{unstorage}",
+      port: 6379,
+      host: useRuntimeConfig().redisEndpoint,
+			tls: {}
+    });
+		storage.unmount("cache")
+    storage.mount("cache", driver);
+  }
 });
