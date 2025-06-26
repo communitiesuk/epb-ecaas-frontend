@@ -13,7 +13,7 @@ function handleRemove(index: number) {
 	store.$patch({
 		dwellingDetails: {
 			shading: {
-				data: data,
+				data,
 				complete: false
 			}
 		}

@@ -18,7 +18,7 @@ function handleRemove(index: number) {
 	store.$patch({
 		infiltrationAndVentilation: {
 			mechanicalVentilation: {
-				data: data,
+				data,
 				complete: false
 			},
 		},

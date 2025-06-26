@@ -133,7 +133,7 @@ describe('domestic hot water mapper', () => {
 
 		store.$patch({
 			domesticHotWater: {
-				pipework: pipework,
+				pipework,
 				waterHeating: {
 					hotWaterCylinder: {
 						data: [hotWaterCylinder],
@@ -339,8 +339,7 @@ describe('domestic hot water mapper', () => {
 
 		store.$patch({
 			domesticHotWater: {
-				pipework: 
-					pipework
+				pipework
 			}
 		});
 

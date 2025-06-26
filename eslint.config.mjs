@@ -12,7 +12,8 @@ export default withNuxt(
 			'@stylistic/semi': 'error',
 			'@stylistic/indent': ['error', 'tab'],
 			'vue/html-indent': ['error', 'tab'],
-			'vue/no-multiple-template-root': 'off'
+			'vue/no-multiple-template-root': 'off',
+			'object-shorthand': 'error'
 		}
 	}
 )
