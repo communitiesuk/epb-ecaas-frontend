@@ -96,7 +96,7 @@ export function mapVentsData(state: ResolvedState) {
 }
 
 export function mapVentilationData(state: ResolvedState): { dwellingElevationalLevelAtBase: number; dwellingHeight: number; dwellingEnvelopeArea: number; crossVentilation: boolean; } {
-	const { dwellingElevationalLevelAtBase, ventilationZoneHeight: dwellingHeight, dwellingEnvelopeArea, crossVentilation: crossVentilation } = state.infiltrationAndVentilation.naturalVentilation;
+	const { dwellingElevationalLevelAtBase, ventilationZoneHeight: dwellingHeight, dwellingEnvelopeArea, crossVentilation } = state.infiltrationAndVentilation.naturalVentilation;
 
 	return {
 		dwellingElevationalLevelAtBase,
