@@ -17,7 +17,7 @@ const {
 const { mounted } = useMounted();
 
 const optionsSelectedValues = props.context._value || [];
-const optionsSelected = ref<string[]>(optionsSelectedValues);
+const optionsSelected = ref<string[]>([...optionsSelectedValues]);
 
 const handleChange = (value: string) => {
 	const index = optionsSelected.value.indexOf(value);
