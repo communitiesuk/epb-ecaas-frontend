@@ -64,11 +64,12 @@ describe('living space fabric mapper', () => {
 			surfaceArea: 5,
 			pitch: 180,
 			uValue: 1,
-			thermalResistanceOfFloorConstruction: 1,
+			thermalResistance: 1,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			perimeter: 0,
 			psiOfWallJunction: 0,
+			thicknessOfWalls: 0.3,
 			typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 		};
 
@@ -86,7 +87,6 @@ describe('living space fabric mapper', () => {
 			name: 'Ground 3',
 			typeOfGroundFloor: FloorType.Suspended_floor,
 			heightOfFloorUpperSurface: 1,
-			thicknessOfWalls: 1,
 			underfloorSpaceThermalResistance: 1,
 			thermalTransmittanceOfWallsAboveGround: 1,
 			ventilationOpeningsArea: 1,
@@ -97,7 +97,6 @@ describe('living space fabric mapper', () => {
 			...groundFloor,
 			name: 'Ground 4',
 			typeOfGroundFloor: FloorType.Heated_basement,
-			thicknessOfWalls: 1,
 			depthOfBasementFloorBelowGround: 1,
 			thermalResistanceOfBasementWalls: 1
 		};
@@ -108,7 +107,6 @@ describe('living space fabric mapper', () => {
 			typeOfGroundFloor: FloorType.Unheated_basement,
 			thermalTransmittanceOfFloorAboveBasement: 1,
 			thermalTransmittanceOfWallsAboveGround: 1,
-			thicknessOfWalls: 1,
 			depthOfBasementFloorBelowGround: 1,
 			heightOfBasementWallsAboveGround: 1
 		};
@@ -174,13 +172,13 @@ describe('living space fabric mapper', () => {
 			total_area: groundFloor.surfaceArea,
 			pitch: groundFloor.pitch,
 			u_value: groundFloor.uValue,
-			thermal_resistance_floor_construction: groundFloor.thermalResistanceOfFloorConstruction,
+			thermal_resistance_floor_construction: groundFloor.thermalResistance,
 			areal_heat_capacity: groundFloor.kappaValue,
 			mass_distribution_class: groundFloor.massDistributionClass,
 			perimeter: groundFloor.perimeter,
 			psi_wall_floor_junc: groundFloor.psiOfWallJunction,
+			thickness_walls: groundFloor.thicknessOfWalls,
 			floor_type: groundFloor.typeOfGroundFloor,
-			thickness_walls: 0
 		};
 
 		expect(groundFloorElement).toEqual(expectedGroundFloor);
@@ -211,7 +209,6 @@ describe('living space fabric mapper', () => {
 			floor_type: groundFloorWithHeatedBasement.typeOfGroundFloor,
 			depth_basement_floor: groundFloorWithHeatedBasement.depthOfBasementFloorBelowGround,
 			thermal_resist_walls_base: groundFloorWithHeatedBasement.thermalResistanceOfBasementWalls,
-			thickness_walls: groundFloorWithHeatedBasement.thicknessOfWalls!
 		};
 
 		expect(groundFloorWithHeatedBasementElement).toEqual(expectedGroundFloorWithHeatedBasement);
@@ -221,7 +218,6 @@ describe('living space fabric mapper', () => {
 			floor_type: groundFloorWithUnheatedBasement.typeOfGroundFloor,
 			thermal_transm_envi_base: groundFloorWithUnheatedBasement.thermalTransmittanceOfFloorAboveBasement,
 			height_basement_walls: groundFloorWithUnheatedBasement.heightOfBasementWallsAboveGround,
-			thickness_walls: groundFloorWithUnheatedBasement.thicknessOfWalls!,
 			thermal_transm_walls: groundFloorWithUnheatedBasement.thermalTransmittanceOfWallsAboveGround,
 			depth_basement_floor: groundFloorWithUnheatedBasement.depthOfBasementFloorBelowGround
 		};

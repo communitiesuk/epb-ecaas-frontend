@@ -27,11 +27,12 @@ const floorsData: FloorsData = {
 			surfaceArea: 5,
 			pitch: 0,
 			uValue: 1,
-			thermalResistanceOfFloorConstruction: 1,
+			thermalResistance: 1,
 			kappaValue: 100,
 			massDistributionClass: MassDistributionClass.I,
 			perimeter: 0,
 			psiOfWallJunction: 0,
+			thicknessOfWalls: 0.3,
 			typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 		}]
 	},
@@ -320,11 +321,12 @@ describe('Living space fabric summary', () => {
 				"Net surface area of this element": "5",
 				"Pitch": "0",
 				"U-value": "1",
-				"Thermal resistance of floor construction": "1",
+				"Thermal resistance": "1",
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
 				"Perimeter": "0",
 				"Psi of wall junction": "0",
+				"Thickness of walls for ground floor": "0.3",
 				"Type of ground floor": "Slab no edge insulation"
 
 			};

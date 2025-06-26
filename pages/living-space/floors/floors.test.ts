@@ -23,11 +23,12 @@ describe('floors', () => {
 		surfaceArea: 5,
 		pitch: 0,
 		uValue: 1,
-		thermalResistanceOfFloorConstruction: 1,
+		thermalResistance: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
+		thicknessOfWalls: 0.3,
 		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 	};
 
@@ -36,11 +37,12 @@ describe('floors', () => {
 		surfaceArea: 5,
 		pitch: 0,
 		uValue: 1,
-		thermalResistanceOfFloorConstruction: 1,
+		thermalResistance: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
+		thicknessOfWalls: 0.4,
 		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 	};
 
@@ -49,11 +51,12 @@ describe('floors', () => {
 		surfaceArea: 5,
 		pitch: 0,
 		uValue: 1,
-		thermalResistanceOfFloorConstruction: 1,
+		thermalResistance: 1,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
+		thicknessOfWalls: 0.5,
 		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 	};
 	
@@ -122,14 +125,13 @@ describe('floors', () => {
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I
 	};
-
-
+	
 	afterEach(() => {
 		store.$reset();
 	});
-	describe('ground floors', () => {
-
 	
+	describe('ground floors', () => {
+		
 		test('ground floor is removed when remove link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
@@ -169,8 +171,8 @@ describe('floors', () => {
 			expect(within(populatedList).getByText('ground1 name')).toBeDefined();
 			expect(within(populatedList).getByText('ground3 name')).toBeDefined();
 			expect(within(populatedList).queryByText('ground2 name')).toBeNull();
-	
 		});
+		
 		test('floor is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				livingSpaceFabric: {
@@ -377,8 +379,7 @@ describe('floors', () => {
 		};
 
 		type FloorType = keyof typeof store.livingSpaceFabric.livingSpaceFloors;
-
-	
+		
 		it('marks floors as complete when mark section as complete button is clicked', async () => {
 	
 			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
@@ -390,8 +391,7 @@ describe('floors', () => {
 			const {livingSpaceGroundFloor, livingSpaceInternalFloor, livingSpaceExposedFloor
 	
 			} = store.livingSpaceFabric.livingSpaceFloors;
-	
-	
+			
 			expect(livingSpaceGroundFloor?.complete).toBe(true);
 			expect(livingSpaceInternalFloor?.complete).toBe(true);
 			expect(livingSpaceExposedFloor?.complete).toBe(true);
@@ -417,7 +417,6 @@ describe('floors', () => {
 				await user.click(screen.getByTestId(floorData!.testId));
 				expect(store.livingSpaceFabric.livingSpaceFloors[typedKey]?.complete).toBe(false);
 				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
-	
 			}
 		});
 
@@ -438,13 +437,11 @@ describe('floors', () => {
 				expect(store.livingSpaceFabric.livingSpaceFloors[typedKey]?.complete).toBe(false);
 				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
 			}
-
 		});
 
 		it('marks floors as not complete when user saves a new or edited floor form after marking section as complete', async () => {
 
 			const floorsData = await getFloorData("");
-
 			const floors = Object.entries(store.livingSpaceFabric.livingSpaceFloors);
 	
 			for(const [key] of floors){

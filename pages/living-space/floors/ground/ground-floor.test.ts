@@ -18,11 +18,12 @@ describe('ground floor', () => {
 		surfaceArea: 5,
 		pitch: 180,
 		uValue: 1,
-		thermalResistanceOfFloorConstruction: 1,
+		thermalResistance: 1,
 		kappaValue: 50000,
 		massDistributionClass: MassDistributionClass.I,
 		perimeter: 0,
 		psiOfWallJunction: 0,
+		thicknessOfWalls: 0.8,
 		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 	};
 
@@ -38,7 +39,6 @@ describe('ground floor', () => {
 		...groundFloor,
 		typeOfGroundFloor: FloorType.Suspended_floor,
 		heightOfFloorUpperSurface: 0,
-		thicknessOfWalls: 0,
 		underfloorSpaceThermalResistance: 0,
 		thermalTransmittanceOfWallsAboveGround: 0,
 		ventilationOpeningsArea: 0,
@@ -48,7 +48,6 @@ describe('ground floor', () => {
 	// const groundFloorWithHeatedBasement: GroundFloorData = {
 	// 	...groundFloor,
 	// 	typeOfGroundFloor: FloorType.Heated_basement,
-	// 	thicknessOfWalls: 0,
 	// 	depthOfBasementFloorBelowGround: 0,
 	// 	thermalResistanceOfBasementWalls: 0
 	// };
@@ -58,7 +57,6 @@ describe('ground floor', () => {
 	// 	typeOfGroundFloor: FloorType.Unheated_basement,
 	// 	thermalTransmittanceOfFloorAboveBasement: 0,
 	// 	thermalTransmittanceOfWallsAboveGround: 0,
-	// 	thicknessOfWalls: 0,
 	// 	depthOfBasementFloorBelowGround: 0,
 	// 	heightOfBasementWallsAboveGround: 0
 	// };
@@ -71,11 +69,12 @@ describe('ground floor', () => {
 		await user.type(screen.getByTestId('name'), 'Ground 1');
 		await user.type(screen.getByTestId('surfaceArea'), '5');
 		await user.type(screen.getByTestId('uValue'), '1');
-		await user.type(screen.getByTestId('thermalResistanceOfFloorConstruction'), '1');
+		await user.type(screen.getByTestId('thermalResistance'), '1');
 		await user.click(screen.getByTestId('kappaValue_50000'));
 		await user.click(screen.getByTestId('massDistributionClass_I'));
 		await user.type(screen.getByTestId('perimeter'), '0');
 		await user.type(screen.getByTestId('psiOfWallJunction'), '0');
+		await user.type(screen.getByTestId('thicknessOfWalls'), '0.8');
 		await user.click(screen.getByTestId('typeOfGroundFloor_Slab_no_edge_insulation'));
 	};
 	
@@ -111,11 +110,12 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Ground 1');
 			expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('5');
 			expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
-			expect((await screen.findByTestId('thermalResistanceOfFloorConstruction') as HTMLInputElement).value).toBe('1');
+			expect((await screen.findByTestId('thermalResistance') as HTMLInputElement).value).toBe('1');
 			expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('perimeter') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('psiOfWallJunction') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0.8');
 			expect((await screen.findByTestId('typeOfGroundFloor_Slab_no_edge_insulation')).hasAttribute('checked')).toBe(true);
 		});
 			
@@ -127,11 +127,12 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('name_error'))).toBeDefined();
 			expect((await screen.findByTestId('surfaceArea_error'))).toBeDefined();
 			expect((await screen.findByTestId('uValue_error'))).toBeDefined();
-			expect((await screen.findByTestId('thermalResistanceOfFloorConstruction_error'))).toBeDefined();
+			expect((await screen.findByTestId('thermalResistance_error'))).toBeDefined();
 			expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();
 			expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();
 			expect((await screen.findByTestId('perimeter_error'))).toBeDefined();
 			expect((await screen.findByTestId('psiOfWallJunction_error'))).toBeDefined();
+			expect((await screen.findByTestId('thicknessOfWalls_error'))).toBeDefined();
 			expect((await screen.findByTestId('typeOfGroundFloor_error'))).toBeDefined();
 		});
 	});
@@ -228,7 +229,7 @@ describe('ground floor', () => {
 	
 			expect((await screen.findByTestId('typeOfGroundFloor_Suspended_floor')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('heightOfFloorUpperSurface') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0.8');
 			expect((await screen.findByTestId('underfloorSpaceThermalResistance') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround') as HTMLInputElement).value).toBe('0');
 			expect((await screen.findByTestId('ventilationOpeningsArea') as HTMLInputElement).value).toBe('0');
@@ -246,6 +247,7 @@ describe('ground floor', () => {
 			expect((await screen.findByTestId('underfloorSpaceThermalResistance_error'))).toBeDefined();
 			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround_error'))).toBeDefined();
 			expect((await screen.findByTestId('ventilationOpeningsArea_error'))).toBeDefined();
+			expect((await screen.findByTestId('windShieldingFactor_error'))).toBeDefined();
 		});
 	});
 	

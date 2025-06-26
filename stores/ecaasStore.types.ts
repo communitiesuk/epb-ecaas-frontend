@@ -101,11 +101,12 @@ export type GroundFloorData = {
 	surfaceArea: number;
 	pitch: number;
 	uValue: number;
-	thermalResistanceOfFloorConstruction: number;
+	thermalResistance: number;
 	kappaValue: number;
 	massDistributionClass: MassDistributionClass;
 	perimeter: number;
 	psiOfWallJunction: number;
+	thicknessOfWalls: number;
 } & TaggedUnion<'typeOfGroundFloor', {
 	[FloorType.Slab_edge_insulation]: {
 		edgeInsulationType: "horizontal" | "vertical";
@@ -115,21 +116,18 @@ export type GroundFloorData = {
 	[FloorType.Slab_no_edge_insulation]: EmptyObject,
 	[FloorType.Suspended_floor]: {
 		heightOfFloorUpperSurface: number;
-		thicknessOfWalls: number;
 		underfloorSpaceThermalResistance: number;
 		thermalTransmittanceOfWallsAboveGround: number;
 		ventilationOpeningsArea: number;
 		windShieldingFactor: WindShieldLocation;
 	},
 	[FloorType.Heated_basement]: {
-		thicknessOfWalls: number;
 		depthOfBasementFloorBelowGround: number;
 		thermalResistanceOfBasementWalls: number;
 	},
 	[FloorType.Unheated_basement]: {
 		thermalTransmittanceOfFloorAboveBasement: number;
 		thermalTransmittanceOfWallsAboveGround: number;
-		thicknessOfWalls: number;
 		depthOfBasementFloorBelowGround: number;
 		heightOfBasementWallsAboveGround: number;
 	}

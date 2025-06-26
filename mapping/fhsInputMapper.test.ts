@@ -250,9 +250,9 @@ const expectedHouseInput: FhsInputSchema = {
 					mass_distribution_class: MassDistributionClass.I,
 					perimeter: 100,
 					psi_wall_floor_junc: 1,
+					thickness_walls: 0.8,
 					floor_type: FloorType.Slab_no_edge_insulation,
-					pitch: 0,
-					thickness_walls: 0
+					pitch: 0
 				}
 			},
 			Lighting: {
@@ -617,9 +617,9 @@ const expectedFlatInput: FhsInputSchema = {
 						width: 7
 					}],
 					psi_wall_floor_junc: 0.4,
+					thickness_walls: 0.5,
 					floor_type: FloorType.Slab_edge_insulation,
 					pitch: 0,
-					thickness_walls: 0
 				},
 				"ground floor 2": {
 					type: 'BuildingElementGround',
@@ -633,9 +633,9 @@ const expectedFlatInput: FhsInputSchema = {
 					perimeter: 21,
 					thermal_resist_walls_base: 3,
 					psi_wall_floor_junc: 0.8,
+					thickness_walls: 0.4,
 					floor_type: FloorType.Heated_basement,
 					pitch: 0,
-					thickness_walls: 1
 				},
 				"internal floor 1": {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -1025,11 +1025,12 @@ describe("FHS input mapper", () => {
 						surfaceArea: 40,
 						pitch: 0,
 						uValue: 1,
-						thermalResistanceOfFloorConstruction: 1,
+						thermalResistance: 1,
 						kappaValue: 50000,
 						massDistributionClass: MassDistributionClass.I,
 						perimeter: 100,
 						psiOfWallJunction: 1,
+						thicknessOfWalls: 0.8,
 						typeOfGroundFloor: FloorType.Slab_no_edge_insulation,
 					}]
 				},
@@ -1418,11 +1419,12 @@ describe("FHS input mapper", () => {
 						surfaceArea: 12,
 						pitch: 0,
 						uValue: 5,
-						thermalResistanceOfFloorConstruction: 2,
+						thermalResistance: 2,
 						kappaValue: 50000,
 						massDistributionClass: MassDistributionClass.E,
 						perimeter: 40,
 						psiOfWallJunction: 0.4,
+						thicknessOfWalls: 0.5,
 						typeOfGroundFloor: FloorType.Slab_edge_insulation,
 						edgeInsulationType: "horizontal",
 						edgeInsulationWidth: 7,
@@ -1433,13 +1435,13 @@ describe("FHS input mapper", () => {
 						surfaceArea: 26,
 						pitch: 0,
 						uValue: 5,
-						thermalResistanceOfFloorConstruction: 2,
+						thermalResistance: 2,
 						kappaValue: 50000,
 						massDistributionClass: MassDistributionClass.D,
 						perimeter: 21,
 						psiOfWallJunction: 0.8,
 						typeOfGroundFloor: FloorType.Heated_basement,
-						thicknessOfWalls: 1,
+						thicknessOfWalls: 0.4,
 						depthOfBasementFloorBelowGround: 2,
 						thermalResistanceOfBasementWalls: 3,
 					}]
