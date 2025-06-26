@@ -152,6 +152,8 @@ describe('living space fabric mapper', () => {
 			}
 		});
 
+		const groundFloorsTotalArea = store.livingSpaceFabric.livingSpaceFloors.livingSpaceGroundFloor.data.length * groundFloor.surfaceArea;
+
 		// Act
 		const fhsInputData = mapFloorData(resolveState(store.$state));
 
@@ -164,7 +166,7 @@ describe('living space fabric mapper', () => {
 		const internalFloorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[internalFloor.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
 		const exposedFloorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[exposedFloor.name] as BuildingElementOpaque;
 
-		expect(fhsInputData.GroundFloorArea).toBe(groundFloor.surfaceArea);
+		expect(fhsInputData.GroundFloorArea).toBe(groundFloorsTotalArea);
 
 		const expectedGroundFloor: BuildingElementGround = {
 			type: 'BuildingElementGround',

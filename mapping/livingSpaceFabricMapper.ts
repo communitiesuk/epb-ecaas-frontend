@@ -152,7 +152,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 	})) || [];
 
 	return {
-		GroundFloorArea: livingSpaceGroundFloor.map(x => x.surfaceArea)[0],
+		GroundFloorArea: livingSpaceGroundFloor.reduce((sum, floor) => sum + floor.surfaceArea, 0),
 		Zone: {
 			"zone 1": {
 				BuildingElement: Object.assign(

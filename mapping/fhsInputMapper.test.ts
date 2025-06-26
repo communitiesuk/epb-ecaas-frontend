@@ -595,7 +595,7 @@ const expectedFlatInput: FhsInputSchema = {
 			EnergySupply: "mains elec"
 		}
 	},
-	GroundFloorArea: 12,
+	GroundFloorArea: 38,
 	HeatSourceWet: {
 		"heat pump 1 name": defaultHeatSourceWetDetails,
 	},
