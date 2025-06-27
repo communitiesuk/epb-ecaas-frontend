@@ -2,7 +2,7 @@ import type { EmptyObject, TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
 import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType, FuelType, SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta, WindShieldLocation } from "~/schema/api-schema.types";
 
-export type EcaasState = AssertKeysArePageIds<{
+export type EcaasState = AssertEachKeyIsPageId<{
 	dwellingDetails: DwellingDetails;
 	domesticHotWater: DomesticHotWater;
 	dwellingFabric: DwellingFabric;
@@ -599,7 +599,7 @@ export interface AirPermeabilityData {
 	airTightnessTestResult: number;
 }
 
-export type HeatingSystems = AssertKeysArePageIds<{
+export type HeatingSystems = AssertEachKeyIsPageId<{
 	heatGeneration: HeatGeneration,
 	energySupply: EcaasForm<EnergySupplyData>;
 	heatEmitting: HeatEmitting;
@@ -771,7 +771,7 @@ export type CorrectedJsonApiError = {
 };
 
 // type that enforces that all keys of wrapped type correspond to a page ID
-type AssertKeysArePageIds<T> = Exclude<keyof T, PageId> extends never ? T : never;
+type AssertEachKeyIsPageId<T> = { [P in keyof T]: P extends PageId ? T[P] : never };
 
 // type that enforces that all the keys that have forms correspond to a page ID
 type AssertFormKeysArePageIds<T> = { [P in keyof T]: T[P] extends EcaasForm<unknown> ? (P extends PageId ? T[P] : never) : T[P] };
