@@ -13,6 +13,8 @@ const ceilingPitchOptions: Record<ZeroPitchOption, Capitalize<ZeroPitchOption>> 
 	custom: 'Custom'
 };
 
+const typeOfCeilingOptions = adjacentSpaceTypeOptions('Ceiling');
+
 const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
 		const {dwellingSpaceCeilings} = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
@@ -74,10 +76,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="type"
 			type="govRadios"
-			:options="{
-				heatedSpace: 'Ceiling to heated space ',
-				unheatedSpace: 'Ceiling to unheated space',
-			}"
+			:options="typeOfCeilingOptions"
 			label="Type of ceiling"
 			help="This affects what inputs are necessary"
 			name="type"

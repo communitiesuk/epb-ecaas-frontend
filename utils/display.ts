@@ -1,3 +1,4 @@
+import { objectFromEntries } from 'ts-extras';
 import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass, WwhrsType } from '../schema/api-schema.types';
 
 export function displayBoolean(value: boolean | undefined): BooleanDisplay | undefined {
@@ -107,4 +108,43 @@ export type WwhrsTypeDisplay = 'A' | 'B' | 'C';
 
 export function displayDeliveryEnergyUseKey(key: string | ApplianceKey): string | ApplianceKeyDisplay {
 	return (Object.values(ApplianceKey).includes(key as ApplianceKey)) ? displayApplianceKey(key as ApplianceKey) : key;
+}
+
+export const arealHeatCapacityOptions = {
+	'50000': 'Very light',
+	'75000': 'Light',
+	'110000': 'Medium',
+	'175000': 'Heavy',
+	'250000': 'Very heavy'
+};
+
+export type ArealHeatCapacityValue = keyof typeof arealHeatCapacityOptions extends infer K
+	? K extends string
+		? K extends `${infer N extends number}` ? N : never
+		: never
+	: never;
+
+export function displayArealHeatCapacity(value: ArealHeatCapacityValue | undefined): (typeof arealHeatCapacityOptions)[keyof typeof arealHeatCapacityOptions] | undefined {
+	if (typeof value === 'undefined') {
+		return undefined;
+	}
+
+	return arealHeatCapacityOptions[value];
+}
+
+type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
+
+export function adjacentSpaceTypeOptions<T extends string>(element: T): Record<AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>> {
+	return objectFromEntries(Object.values(AdjacentSpaceType).map(key => [
+		key,
+		displayAdjacentSpaceType(key, element)!
+	] as const satisfies [AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>]));
+}
+
+export function displayAdjacentSpaceType<T extends string>(value: AdjacentSpaceType | undefined, element: T): AdjacentSpaceTypeDisplay<T> | undefined {
+	if (typeof value === 'undefined') {
+		return undefined;
+	}
+
+	return `${element} to ${ value === 'heatedSpace' ? 'heated space' : 'unheated space' }`;
 }

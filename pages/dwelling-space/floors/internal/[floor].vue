@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { AdjacentSpaceType } from '~/stores/ecaasStore.types';
+
 const title = "Internal floor";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const floorData = useItemToEdit('floor', store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data);
 const model: Ref<InternalFloorData> = ref(floorData!);
+
+const typeOfInternalFloorOptions = adjacentSpaceTypeOptions('Internal floor');
 
 const saveForm = (fields: InternalFloorData) => {
 	store.$patch((state) => {
@@ -64,10 +68,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="typeOfInternalFloor"
 			type="govRadios"
-			:options="{
-				heatedSpace: 'Internal floor to heated space',
-				unheatedSpace: 'Internal floor to unheated space'
-			}"
+			:options="typeOfInternalFloorOptions"
 			label="Type of internal floor"
 			help="This affects what inputs are necessary."
 			name="typeOfInternalFloor"
@@ -95,7 +96,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
 		<FormKit
-			v-if="model.typeOfInternalFloor === 'unheatedSpace'"
+			v-if="model.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"

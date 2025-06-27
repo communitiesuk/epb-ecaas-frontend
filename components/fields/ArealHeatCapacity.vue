@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { arealHeatCapacityOptions } from '#imports';
+
 defineProps<{
 	id: string,
 	name: string;
@@ -15,13 +17,7 @@ defineProps<{
 		:name="name"
 		:help="help ?? 'Effective areal heat capacity or kappa value. This is the total heat capacity of all the construction layers, that is, the sum of the heat capacities of each individual layers.'"
 		validation="required"
-		:options="{
-			'50000': 'Very light',
-			'75000': 'Light',
-			'110000': 'Medium',
-			'175000': 'Heavy',
-			'250000': 'Very heavy'
-		}"
+		:options="arealHeatCapacityOptions"
 		value-type="number"
 	>
 		<GovDetails summary-text="Help with this input" possibly-llm-placeholder>

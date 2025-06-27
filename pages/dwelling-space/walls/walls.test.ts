@@ -72,7 +72,7 @@ describe('walls', () => {
 		name: "Wall to heated space 1",
 		surfaceAreaOfElement: 500,
 		uValue: 10,
-		arealHeatCapacity:40000,
+		arealHeatCapacity: 110000,
 		massDistributionClass: MassDistributionClass.E,
 		pitchOption: '90',
 		pitch: 90,

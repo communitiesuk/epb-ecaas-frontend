@@ -8,6 +8,8 @@ const { saveToList } = useForm();
 const doorData = useItemToEdit('door', store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data);
 const model: Ref<InternalDoorData> = ref(doorData!);
 
+const typeOfInternalDoorOptions = adjacentSpaceTypeOptions('Internal door');
+
 const saveForm = (fields: InternalDoorData) => {
 	store.$patch((state) => {
 		const {dwellingSpaceInternalDoor} = state.dwellingFabric.dwellingSpaceDoors;
@@ -65,10 +67,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="typeOfInternalDoor"
 			type="govRadios"
-			:options="{
-				heatedSpace: 'Internal door to heated space',
-				unheatedSpace: 'Internal door to unheated space'
-			}"
+			:options="typeOfInternalDoorOptions"
 			label="Type"
 			help="This affects which inputs are necessary."
 			name="typeOfInternalDoor"

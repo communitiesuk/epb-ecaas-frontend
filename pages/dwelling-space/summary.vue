@@ -65,7 +65,7 @@ const internalFloorSummary: SummarySection = {
 	label: 'Internal floor',
 	data: internalFloorData?.map(x => {
 		return {
-			"Type of internal floor": x.typeOfInternalFloor,
+			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, 'Internal floor'),
 			"Name": x.name,
 			"Net surface area of element": x.surfaceAreaOfElement,
 			"Areal heat capacity": x.kappaValue,
@@ -152,7 +152,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 			"Name": x.name,
 			"Net surface area of element": x.surfaceAreaOfElement,
 			"U-value": x.uValue,
-			"Areal heat capacity": x.arealHeatCapacity,
+			"Areal heat capacity": displayArealHeatCapacity(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,
 			"Thermal resistance of adjacent unheated space": x.thermalResistanceOfAdjacentUnheatedSpace
@@ -198,7 +198,7 @@ const ceilingSummary: SummarySection = {
 	label: 'Ceiling',
 	data: ceilingData.map(x => {
 		return {
-			"Type of ceiling": x.type,
+			"Type of ceiling": displayAdjacentSpaceType(x.type, 'Ceiling'),
 			"Name": x.name,
 			"Net surface area": x.surfaceArea,
 			"U-value": x.type === 'unheatedSpace' ? x.uValue : undefined,
@@ -319,7 +319,7 @@ const internalDoorSummary: SummarySection = {
 	label: 'Internal door',
 	data: internalDoorData?.map(x => {
 		return {
-			"Type": x.typeOfInternalDoor,
+			"Type": displayAdjacentSpaceType(x.typeOfInternalDoor, 'Internal door'),
 			"Name": x.name,
 			"Net surface area of element": x.surfaceArea,
 			"Areal heat capacity": x.kappaValue,

@@ -178,7 +178,7 @@ export type WallsToUnheatedSpaceData = {
 	name: string;
 	surfaceAreaOfElement: number;
 	uValue: number;
-	arealHeatCapacity: number;
+	arealHeatCapacity: ArealHeatCapacityValue;
 	massDistributionClass: MassDistributionClass;
 	pitchOption: StandardPitchOption;
 	pitch?: number;

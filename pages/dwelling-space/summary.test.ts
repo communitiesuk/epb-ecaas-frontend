@@ -93,7 +93,7 @@ const wallsData: WallsData = {
 			name: 'Wall to unheated space 1',
 			surfaceAreaOfElement: 500,
 			uValue: 10,
-			arealHeatCapacity:40000,
+			arealHeatCapacity:50000,
 			massDistributionClass: MassDistributionClass.E,
 			pitchOption: '90',
 			pitch: 90,
@@ -349,7 +349,7 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type of internal floor": "Heated space",
+				"Type of internal floor": "Internal floor to heated space",
 				"Name": "Internal 1",
 				"Net surface area of element": "5",
 				"Areal heat capacity": "100",
@@ -481,7 +481,7 @@ describe('Living space fabric summary', () => {
 				"Name": "Wall to unheated space 1",
 				"Net surface area of element": "500",
 				"U-value": "10",
-				"Areal heat capacity": "40000",
+				"Areal heat capacity": "Very light",
 				"Mass distribution class": "External",
 				"Pitch": "90",
 				"Thermal resistance of adjacent unheated space": "1"
@@ -548,7 +548,7 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type of ceiling": "Heated space",
+				"Type of ceiling": "Ceiling to heated space",
 				"Name": "Ceiling 1",
 				"Net surface area": "5",
 				"Areal heat capacity": "100",
@@ -717,7 +717,7 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Type": "Heated space",
+				"Type": "Internal door to heated space",
 				"Name": "Internal 1",
 				"Net surface area of element": "5",
 				"Areal heat capacity": "100",

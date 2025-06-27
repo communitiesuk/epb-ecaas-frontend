@@ -114,3 +114,25 @@ describe('displayDeliveryEnergyUseKey', () => {
 		expect(displayDeliveryEnergyUseKey('acme')).toBe('acme');
 	});
 });
+
+describe('adjacentSpaceTypeOptions', () => {
+	it('generates options correctly', () => {
+		const expectedOptions = {
+			[AdjacentSpaceType.heatedSpace]: 'Trash compactor to heated space',
+			[AdjacentSpaceType.unheatedSpace]: 'Trash compactor to unheated space',
+		};
+		expect(adjacentSpaceTypeOptions('Trash compactor')).toStrictEqual(expectedOptions);
+	});
+});
+
+describe('displayAdjacentSpaceType', () => {
+	it("displays an adjacent space type correctly if provided", () => {
+		const expectedDisplay = 'Trash compactor to heated space';
+		expect(displayAdjacentSpaceType(AdjacentSpaceType.heatedSpace, 'Trash compactor')).toBe(expectedDisplay);
+	});
+
+	it("returns undefined if adjacent space type is undefined", () => {
+		expect(displayAdjacentSpaceType(undefined, 'Trash compactor')).toBeUndefined();
+	});
+});
+
