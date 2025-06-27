@@ -282,7 +282,7 @@ const expectedHouseInput: FhsInputSchema = {
 			},
 			// SpaceCoolSystem: ["some-aircon-unit-name"],
 			SpaceHeatControl: SpaceHeatControlType.livingroom,
-			SpaceHeatSystem: "some-wet-distribution",
+			SpaceHeatSystem: ["some-wet-distribution"],
 			ThermalBridging: {},
 			area: 100,
 			volume: 300,
@@ -855,7 +855,7 @@ const expectedFlatInput: FhsInputSchema = {
 			},
 			SpaceHeatControl: SpaceHeatControlType.livingroom,
 			// SpaceCoolSystem: [],
-			SpaceHeatSystem: "instant elec heater 1",
+			SpaceHeatSystem: ["instant elec heater 1", "instant elec heater 2"],
 			ThermalBridging: {
 				"linear thermal bridge": {
 					junction_type: "E3: SILL",
@@ -1019,7 +1019,7 @@ describe("FHS input mapper", () => {
 					volume: 300,
 					numberOfLEDBulbs: 6,
 					numberOfIncandescentBulbs: 0,
-					spaceHeatingSystemForThisZone: "some-wet-distribution",
+					// spaceHeatingSystemForThisZone: "some-wet-distribution",
 					// spaceCoolingSystemForThisZone: [{
 					// 	name: "some-aircon-unit-name",
 					// }],
@@ -1424,7 +1424,7 @@ describe("FHS input mapper", () => {
 					volume: 550,
 					numberOfLEDBulbs: 5,
 					numberOfIncandescentBulbs: 2,
-					spaceHeatingSystemForThisZone: "instant elec heater 1",
+					// spaceHeatingSystemForThisZone: "instant elec heater 1",
 					// spaceCoolingSystemForThisZone: [],
 					// spaceHeatControlSystemForThisZone: []
 				}

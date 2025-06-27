@@ -32,18 +32,34 @@ describe('dwelling fabric mapper', () => {
 			volume: 10,
 			numberOfLEDBulbs: 5,
 			numberOfIncandescentBulbs: 2,
-			spaceHeatingSystemForThisZone: 'main 1',
+			// spaceHeatingSystemForThisZone: 'main 1',
 			spaceCoolingSystemForThisZone: [],
 			spaceHeatControlSystemForThisZone: []
 		};
 
 		store.$patch({
+			heatingSystems: {
+				heatEmitting: {
+					wetDistribution: {
+						data: [{
+							name: 'radiator 1'
+						}],
+						complete: true
+					},
+					instantElectricHeater: {
+						data: [{
+							name: 'ieh 1'
+						}],
+						complete: true
+					}
+				}
+			},
 			dwellingFabric: {
 				dwellingSpaceZoneParameters: {
 					data: state,
 					complete: true
 				}
-			}
+			},
 		});
 
 		// Act
@@ -54,7 +70,7 @@ describe('dwelling fabric mapper', () => {
 		expect(fhsInputData.Zone![defaultZoneName]?.volume).toBe(state.volume);
 		expect(fhsInputData.Zone![defaultZoneName]?.Lighting?.bulbs?.led?.count).toBe(state.numberOfLEDBulbs);
 		expect(fhsInputData.Zone![defaultZoneName]?.Lighting?.bulbs?.incandescent?.count).toBe(state.numberOfIncandescentBulbs);
-		expect(fhsInputData.Zone![defaultZoneName]?.SpaceHeatSystem).toEqual('main 1');
+		expect(fhsInputData.Zone![defaultZoneName]?.SpaceHeatSystem).toEqual(['radiator 1', 'ieh 1']);
 		expect(fhsInputData.Zone![defaultZoneName]?.SpaceHeatControl).toBe('livingroom');
 	});
 

@@ -14,9 +14,9 @@ const zoneParametersData: DwellingSpaceZoneParametersData = {
 	volume: 10,
 	numberOfLEDBulbs: 8,
 	numberOfIncandescentBulbs: 3,
-	spaceHeatingSystemForThisZone: 'elec heater',
-	spaceCoolingSystemForThisZone: [],
-	spaceHeatControlSystemForThisZone: []
+	// spaceHeatingSystemForThisZone: 'elec heater',
+	// spaceCoolingSystemForThisZone: [],
+	// spaceHeatControlSystemForThisZone: []
 };
 
 const floorsData: FloorsData = {
@@ -284,7 +284,7 @@ describe('Living space fabric summary', () => {
 				"Volume": "10",
 				"Number of LED bulbs": "8",
 				"Number of incandescent bulbs": "3",
-				"Heat emitting system for this zone": "Elec heater",
+				// "Heat emitting system for this zone": "Elec heater",
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {

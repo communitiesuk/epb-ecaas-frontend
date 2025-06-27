@@ -16,7 +16,7 @@ const zoneParametersSummary: SummarySection = {
 	data: {
 		"Area": zoneParametersData.area,
 		"Volume": zoneParametersData.volume,
-		"Heat emitting system for this zone": zoneParametersData.spaceHeatingSystemForThisZone,
+		// "Heat emitting system for this zone": zoneParametersData.spaceHeatingSystemForThisZone,
 		"Number of LED bulbs": zoneParametersData.numberOfLEDBulbs,
 		"Number of incandescent bulbs": zoneParametersData.numberOfIncandescentBulbs,
 		// "Heating control type": zoneParametersData.heatingControlType

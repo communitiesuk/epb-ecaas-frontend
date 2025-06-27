@@ -2,7 +2,6 @@ import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatingSystemsSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
 import { FuelType } from "~/schema/api-schema.types";
-import { defaultZoneName } from "~/mapping/common";
 
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (

@@ -376,7 +376,7 @@ export type DwellingSpaceZoneParametersData = {
 	volume: number;
 	numberOfLEDBulbs: number;
 	numberOfIncandescentBulbs: number;
-	spaceHeatingSystemForThisZone: string;
+	spaceHeatingSystemForThisZone?: string;
 	spaceCoolingSystemForThisZone?: SpaceCoolingSystemData[];
 	spaceHeatControlSystemForThisZone?: SpaceHeatControlSystemData[];
 };

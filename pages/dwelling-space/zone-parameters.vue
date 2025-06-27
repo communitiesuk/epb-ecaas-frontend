@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { getUrl } from '#imports';
 
 const store = useEcaasStore();
 
@@ -16,10 +15,10 @@ const model = ref({
 // 	}
 // };
 
-const spaceHeatingSystemOptions = [
-	store.heatingSystems.heatEmitting.wetDistribution.data.map(x => [x.name, x.name] as [string, string]),
-	store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => [x.name, x.name] as [string, string]),
-].flat();
+// const spaceHeatingSystemOptions = [
+// 	store.heatingSystems.heatEmitting.wetDistribution.data.map(x => [x.name, x.name] as [string, string]),
+// 	store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => [x.name, x.name] as [string, string]),
+// ].flat();
 
 const saveForm = (fields: typeof model.value) => {
 	store.$patch({
@@ -63,11 +62,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			test-id="zoneParametersErrorSummary"
 		/>
 		<h1 class="govuk-heading-l">Zone parameters</h1>
-		<p class="govuk-body">
-			<a href="/guidance/zone-parameters" target="_blank" class="govuk-link">
-				Zone parameters guidance (opens in another window)
-			</a>
-		</p>
+		<!--		<p class="govuk-body">-->
+		<!--			<a href="/guidance/zone-parameters" target="_blank" class="govuk-link">-->
+		<!--				Zone parameters guidance (opens in another window)-->
+		<!--			</a>-->
+		<!--		</p>-->
 		<FormKit
 			id="area"
 			type="govInputWithSuffix"
@@ -112,25 +111,25 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Determines whether living-room and rest-of-dwelling have differing set-points/heating schedules"
 		/> -->
 
-		<FormKit
-			id="spaceHeatingSystemForThisZone"
-			type="govRadios"
-			label=" Heat emitting system for this zone"
-			name="spaceHeatingSystemForThisZone"
-			help="Select a heat emitting system that has already been added to the calculation. You can only add one heat emitting system for each zone."
-			:options="new Map(spaceHeatingSystemOptions)"
-			:link="getUrl('heatingSystems')"
-			validation="required">
-			<div v-if="!spaceHeatingSystemOptions.length">
-				<p class="govuk-error-message">No heat emitting systems added.</p>
-			</div>
-		</FormKit>
+		<!--		<FormKit-->
+		<!--			id="spaceHeatingSystemForThisZone"-->
+		<!--			type="govRadios"-->
+		<!--			label=" Heat emitting system for this zone"-->
+		<!--			name="spaceHeatingSystemForThisZone"-->
+		<!--			help="Select a heat emitting system that has already been added to the calculation. You can only add one heat emitting system for each zone."-->
+		<!--			:options="new Map(spaceHeatingSystemOptions)"-->
+		<!--			:link="getUrl('heatingSystems')"-->
+		<!--			validation="required">-->
+		<!--			<div v-if="!spaceHeatingSystemOptions.length">-->
+		<!--				<p class="govuk-error-message">No heat emitting systems added.</p>-->
+		<!--			</div>-->
+		<!--		</FormKit>-->
 
-		<p class="govuk-!-margin-bottom-5">
-			<NuxtLink :to="getUrl('heatEmitting')" class="govuk-link gov-radios-add-link">
-				{{spaceHeatingSystemOptions.length ? "Edit heat emitting systems" : "Add heat emitting system"}}
-			</NuxtLink>
-		</p>
+		<!--		<p class="govuk-!-margin-bottom-5">-->
+		<!--			<NuxtLink :to="getUrl('heatEmitting')" class="govuk-link gov-radios-add-link">-->
+		<!--				{{spaceHeatingSystemOptions.length ? "Edit heat emitting systems" : "Add heat emitting system"}}-->
+		<!--			</NuxtLink>-->
+		<!--		</p>-->
 
 		<!-- <FormKit
 			id="spaceCoolingSystem"
