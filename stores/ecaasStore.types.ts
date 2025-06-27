@@ -1,27 +1,29 @@
 import type { EmptyObject, TaggedUnion } from "type-fest";
+import type { PageId } from "~/data/pages/pages";
 import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType, FuelType, SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta, WindShieldLocation } from "~/schema/api-schema.types";
 
-export interface EcaasState {
+export type EcaasState = AssertKeysArePageIds<{
 	dwellingDetails: DwellingDetails;
 	domesticHotWater: DomesticHotWater;
 	dwellingFabric: DwellingFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
 	heatingSystems: HeatingSystems;
 	pvAndBatteries: PvAndBatteries;
-	cooling: Cooling;
+}> & { 
+	cooling: Cooling; // cooling doesn't have a corresponding page yet
 	lastResult?: ComplianceResult;
-}
+};
 
 export interface EcaasForm<T> {
 	complete?: boolean;
 	data: T;
 }
 
-export interface DwellingDetails {
+export type DwellingDetails = AssertFormKeysArePageIds<{
 	generalSpecifications: EcaasForm<Partial<GeneralSpecificationsData>>;
 	shading: EcaasForm<ShadingData[]>;
 	externalFactors: EcaasForm<ExternalFactorsData>;
-}
+}>;
 
 export type GeneralSpecificationsData = {
 	typeOfDwelling: BuildType;
@@ -133,12 +135,12 @@ export type GroundFloorData = {
 	}
 }>;
 
-export interface WallsData {
+export type WallsData = AssertFormKeysArePageIds<{
 	dwellingSpaceExternalWall: EcaasForm<ExternalWallData[]>;
 	dwellingSpaceInternalWall: EcaasForm<InternalWallData[]>;
 	dwellingSpaceWallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData[]>;
 	dwellingSpacePartyWall: EcaasForm<PartyWallData[]>;
-}
+}>;
 
 type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
 type NonZeroDigit = Exclude<Digit, "0">;
@@ -198,11 +200,11 @@ export type PartyWallData = {
 	massDistributionClass: MassDistributionClass;
 };
 
-export interface CeilingsAndRoofsData {
+export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
 	dwellingSpaceCeilings: EcaasForm<CeilingData[]>;
 	dwellingSpaceRoofs: EcaasForm<RoofData[]>;
 	dwellingSpaceUnheatedPitchedRoofs: EcaasForm<RoofData[]>;
-}
+}>;
 
 export type ZeroPitchOption = '0' | 'custom';
 
@@ -239,11 +241,11 @@ export type RoofData = {
 	massDistributionClass: MassDistributionClass;
 };
 
-export interface DoorsData {
+export type DoorsData = AssertFormKeysArePageIds<{
 	dwellingSpaceExternalUnglazedDoor: EcaasForm<ExternalUnglazedDoorData[]>;
 	dwellingSpaceExternalGlazedDoor: EcaasForm<ExternalGlazedDoorData[]>;
 	dwellingSpaceInternalDoor: EcaasForm<InternalDoorData[]>;
-};
+}>;
 
 export type ExternalUnglazedDoorData = {
 	name: string;
@@ -352,10 +354,10 @@ export type WindowData = {
 	solarTransmittanceReduction?: never;
 });
 
-export interface ThermalBridgingData {
+export type ThermalBridgingData = AssertFormKeysArePageIds<{
 	dwellingSpaceLinearThermalBridges: EcaasForm<LinearThermalBridgeData[]>;
 	dwellingSpacePointThermalBridges: EcaasForm<PointThermalBridgeData[]>;
-}
+}>;
 
 export type LinearThermalBridgeData = {
 	name: string;
@@ -396,7 +398,7 @@ export interface DomesticHotWater {
 	wwhrs: EcaasForm<WwhrsData[]>
 }
 
-export interface WaterHeating {
+export type WaterHeating = AssertFormKeysArePageIds<{
 	hotWaterCylinder: EcaasForm<HotWaterCylinderData[]>;
 	immersionHeater: EcaasForm<ImmersionHeaterData[]>;
 	solarThermal: EcaasForm<SolarThermalData[]>;
@@ -406,7 +408,7 @@ export interface WaterHeating {
 	heatBattery: EcaasForm<WaterHeatingHeatBatteryData[]>;
 	smartHotWaterTank: EcaasForm<SmartHotWaterTankData[]>;
 	heatInterfaceUnit: EcaasForm<WaterHeatingHeatInterfaceUnitData[]>;
-}
+}>;
 
 export type HotWaterCylinderData = {
 	readonly id: string;
@@ -455,12 +457,12 @@ export type WaterHeatingHeatInterfaceUnitData = {
 	name: string;
 };
 
-export interface HotWaterOutlets {
+export type HotWaterOutlets = AssertFormKeysArePageIds<{
 	mixedShower: EcaasForm<MixedShowerData[]>;
 	electricShower: EcaasForm<ElectricShowerData[]>;
 	bath: EcaasForm<BathData[]>;
 	otherOutlets: EcaasForm<OtherHotWaterOutletData[]>;
-}
+}>;
 
 export type MixedShowerData = {
 	readonly id: string;
@@ -487,10 +489,10 @@ export type OtherHotWaterOutletData = {
 	flowRate: number;
 };
 
-export interface Pipework {
+export type Pipework = AssertFormKeysArePageIds<{
 	primaryPipework: EcaasForm<PrimaryPipeworkData[]>;
 	secondaryPipework: EcaasForm<SecondaryPipeworkData[]>;
-}
+}>;
 
 export type PrimaryPipeworkData = {
 	name: string;
@@ -521,14 +523,14 @@ export type WwhrsData = {
 	proportionOfUse: number;
 };
 
-export interface InfiltrationAndVentilation {
+export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	mechanicalVentilation: EcaasForm<MechanicalVentilationData[]>;
 	ductwork: EcaasForm<DuctworkData[]>
 	vents: EcaasForm<VentData[]>;
 	combustionAppliances: CombustionAppliancesData;
 	naturalVentilation: EcaasForm<VentilationData>;
 	airPermeability: EcaasForm<AirPermeabilityData>;
-}
+}>;
 
 export type MechanicalVentilationData = {
 	readonly id: string;
@@ -597,19 +599,19 @@ export interface AirPermeabilityData {
 	airTightnessTestResult: number;
 }
 
-export interface HeatingSystems {
+export type HeatingSystems = AssertKeysArePageIds<{
 	heatGeneration: HeatGeneration,
 	energySupply: EcaasForm<EnergySupplyData>;
 	heatEmitting: HeatEmitting;
-}
+}>;
 
-export interface HeatGeneration {
+export type HeatGeneration = AssertFormKeysArePageIds<{
 	heatPump: EcaasForm<HeatPumpData[]>;
 	boiler: EcaasForm<BoilerData[]>;
 	heatBattery: EcaasForm<HeatBatteryData[]>;
 	heatNetwork: EcaasForm<HeatNetworkData[]>;
 	heatInterfaceUnit: EcaasForm<HeatInterfaceUnitData[]>;
-}
+}>;
 
 export type HeatPumpData = {
 	readonly id: string;
@@ -644,12 +646,12 @@ export interface EnergySupplyData {
 	exported?: boolean;
 }
 
-export interface HeatEmitting {
+export type HeatEmitting = AssertFormKeysArePageIds<{
 	wetDistribution: EcaasForm<WetDistributionData[]>;
 	instantElectricHeater: EcaasForm<InstantElectricStorageData[]>;
 	electricStorageHeater: EcaasForm<ElectricStorageHeaterData[]>;
 	warmAirHeatPump: EcaasForm<WarmAirHeatPumpData[]>;
-}
+}>;
 
 export type ElectricStorageHeaterData = {
 	name: string,
@@ -690,10 +692,10 @@ export type WetDistributionData = {
 	}
 }>;
 
-export interface PvAndBatteries {
+export type PvAndBatteries = AssertFormKeysArePageIds<{
 	pvSystems: EcaasForm<PvSystemData[]>;
 	electricBattery: EcaasForm<ElectricBatteryData>;
-}
+}>;
 
 export type PvSystemData = {
 	name: string;
@@ -767,3 +769,9 @@ export type CorrectedJsonApiError = {
 	source?: SchemaJsonApiOnePointOneErrorSource;
 	meta?: SchemaJsonApiOnePointOneMeta;
 };
+
+// type that enforces that all keys of wrapped type correspond to a page ID
+type AssertKeysArePageIds<T> = Exclude<keyof T, PageId> extends never ? T : never;
+
+// type that enforces that all the keys that have forms correspond to a page ID
+type AssertFormKeysArePageIds<T> = { [P in keyof T]: T[P] extends EcaasForm<unknown> ? (P extends PageId ? T[P] : never) : T[P] };

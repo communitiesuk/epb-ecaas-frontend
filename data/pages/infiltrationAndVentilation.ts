@@ -8,7 +8,7 @@ function noMhvrPresent():boolean {
 	return isEmpty(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === VentType.MVHR));
 }
 
-const infiltrationAndVentilationPages: Array<Page> = [
+const infiltrationAndVentilationPages = [
 	{
 		id: 'infiltrationAndVentilation',
 		title: 'Infiltration and ventilation',
@@ -150,6 +150,6 @@ const infiltrationAndVentilationPages: Array<Page> = [
 		type: PageType.Summary,
 		parentId: 'infiltrationAndVentilation'
 	}
-];
+] as const satisfies Array<Page>;
 
 export default infiltrationAndVentilationPages;

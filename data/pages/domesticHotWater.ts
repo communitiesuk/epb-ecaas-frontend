@@ -1,6 +1,6 @@
 import { PageType, type Page } from "./pages.types";
 
-const domesticHotWaterPages: Array<Page> = [
+const domesticHotWaterPages = [
 	{
 		id: 'domesticHotWater',
 		title: 'Domestic hot water',
@@ -260,6 +260,6 @@ const domesticHotWaterPages: Array<Page> = [
 		type: PageType.Summary,
 		parentId: 'domesticHotWater'
 	}
-];
+] as const satisfies Array<Page>;
 
 export default domesticHotWaterPages;

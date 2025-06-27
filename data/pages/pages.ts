@@ -6,7 +6,7 @@ import infiltrationAndVentilationPages from "./infiltrationAndVentilation";
 import dwellingFabricPages from "./dwellingFabric";
 import pvAndBatteriesPages from "./pvAndBatteries";
 
-const pagesData: Array<Page> = [
+const pagesData = [
 	{
 		id: 'taskList',
 		title: 'Task list',
@@ -20,6 +20,12 @@ const pagesData: Array<Page> = [
 	// ...restOfDwellingPages,
 	...domesticHotWaterPages,
 	...pvAndBatteriesPages,
-];
+] as const satisfies Array<Page>;
 
-export default pagesData;
+// above uses as const so we can export static PageId string union type here
+export type PageId = (typeof pagesData)[number]['id'];
+
+// now re-assign so we can export as Array<Page>
+const pagesDataAsArray: Array<Page> = pagesData;
+
+export default pagesDataAsArray;

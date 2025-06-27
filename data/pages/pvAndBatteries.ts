@@ -1,6 +1,6 @@
 import { PageType, type Page } from "./pages.types";
 
-const pvAndBatteriesPages: Array<Page> = [
+const pvAndBatteriesPages = [
 	{
 		id: 'pvAndBatteries',
 		title: 'PV and electric batteries',
@@ -43,6 +43,6 @@ const pvAndBatteriesPages: Array<Page> = [
 		type: PageType.Summary,
 		parentId: 'pvAndBatteries'
 	}
-];
+] as const satisfies Array<Page>;
 
 export default pvAndBatteriesPages;

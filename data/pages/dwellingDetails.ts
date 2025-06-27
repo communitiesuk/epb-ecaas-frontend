@@ -1,6 +1,6 @@
 import { PageType, type Page } from "./pages.types";
 
-const dwellingDetailsPages: Array<Page> = [
+const dwellingDetailsPages = [
 	{
 		id: 'dwellingDetails',
 		title: 'Dwelling details',
@@ -57,6 +57,6 @@ const dwellingDetailsPages: Array<Page> = [
 		type: PageType.Summary,
 		parentId: 'dwellingDetails'
 	}
-];
+] as const satisfies Array<Page>;
 
 export default dwellingDetailsPages;
