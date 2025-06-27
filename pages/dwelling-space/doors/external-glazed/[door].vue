@@ -145,7 +145,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="surfaceArea"
 			type="govInputWithSuffix"
-			suffix-text="m2"
+			suffix-text="m²"
 			label="Net surface area"
 			help="Net area of the building element. For non-rectangular windows, use the area of the window based on its shape"
 			name="surfaceArea"
@@ -154,7 +154,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="uValue"
 			type="govInputWithSuffix"
-			suffix-text="W/(m2.K)"
+			suffix-text="W/(m²·K)"
 			label="U-value"
 			help="Steady-state thermal transmittance of the building element"
 			name="uValue"
@@ -212,7 +212,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FormKit
 				id="maximumOpenableArea"
 				type="govInputWithSuffix"
-				suffix-text="m2"
+				suffix-text="m²"
 				label="Maximum openable area"
 				help="The total area of the window that can be opened for ventilation."
 				name="maximumOpenableArea"

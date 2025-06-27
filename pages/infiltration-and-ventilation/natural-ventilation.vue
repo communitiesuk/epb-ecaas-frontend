@@ -58,7 +58,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="The dwelling envelope area is the total surface area that separates the heated or cooled inside from the outside, including walls, roof, floors exposed to the ground or unheated spaces, windows, and external doors."
 			name="dwellingEnvelopeArea"
 			validation="required | number | min:5 | max:72000"
-			suffix-text="m2"
+			suffix-text="m²"
 		/>
 		<FieldsElevationalHeight field="dwellingElevationalLevelAtBase" label="Elevational height of dwelling at its base" help="Elevational height of dwelling above ground datum level" :minmax="{ min: -150, max: 750 }" />
 		<FormKit

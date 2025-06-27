@@ -110,7 +110,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Linear thermal transmittance of the thermal bridge"
 			name="linearThermalTransmittance"
 			validation="required | number | min:0 | max:2"
-			suffix-text="W / m.K"
+			suffix-text="W/(m·K)"
 		/>
 		<FormKit
 			id="length"

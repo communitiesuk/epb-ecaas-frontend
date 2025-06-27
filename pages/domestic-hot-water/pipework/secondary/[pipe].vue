@@ -61,8 +61,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					</tr>
 					<tr class="govuk-table__row">
 						<td class="govuk-table__cell">Length of pipework</td>
-						<td class="govuk-table__cell">5 - 15 meters → Small apartment or compact layout<br >15 - 30 meters →
-							Standard house with multiple outlets<br >30+ meters → Larger homes with complex pipe runs</td>
+						<td class="govuk-table__cell">5 - 15 m → Small apartment or compact layout<br >15 - 30 m →
+							Standard house with multiple outlets<br >30+ m → Larger homes with complex pipe runs</td>
 					</tr>
 
 				</tbody>

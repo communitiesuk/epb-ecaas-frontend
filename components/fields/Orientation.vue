@@ -10,7 +10,7 @@ defineProps<{
 	<FormKit
 		:id="id ?? 'orientation'"
 		type="govInputWithSuffix"
-		suffix-text="degrees"
+		suffix-text="°"
 		:label="label ?? 'Orientation'"
 		:name="name ?? 'orientation'"
 		validation="required | number | min:0 | max:360">

@@ -111,7 +111,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="The conductivity of the insulation around the pipe"
 			name="thermalConductivity"
 			validation="required | number"
-			suffix-text="W / m.K"
+			suffix-text="W/(m·K)"
 		><GovDetails class="summary-text" :summary-text="`Help with this input`" classes="govuk-!-margin-bottom-4">
 			<table class="govuk-table">
 				<tbody class="govuk-table__body">
@@ -119,11 +119,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<th class="govuk-table__header">Typical values</th>
 						<td class="govuk-table__cell">
 							<p>Mineral wool / fiberglass:<br>
-								0.035 - 0.045 W/m.K</p>
+								0.035 - 0.045 W/(m·K)</p>
 							<p>Polyethylene foam:<br>
-								0.035 - 0.0.40 W/m.K</p>
+								0.035 - 0.0.40 W/(m·K)</p>
 							<p>Elastomeric foam (e.g. Armaflex):<br>
-								0.033 - 0.040 W/m.K</p>
+								0.033 - 0.040 W/(m·K)</p>
 						</td>
 					</tr>
 				</tbody>

@@ -62,10 +62,10 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="tankVolume"
 			type="govInputWithSuffix"
 			label="Tank volume"
-			help="Total internal capacity of the tank in m3"
+			help="Total internal capacity of the tank in m³"
 			name="tankVolume"
 			validation="required | number | min:0 | max:200"
-			suffix-text="m3"
+			suffix-text="m³"
 		/>
 		<FormKit
 			id="dailyEnergyLoss"
@@ -74,7 +74,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Estimated energy lost  from the tank per day"
 			name="dailyEnergyLoss"
 			validation="required | number | min:0 | max:200"
-			suffix-text="kWh/24h"
+			suffix-text="kWh"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>

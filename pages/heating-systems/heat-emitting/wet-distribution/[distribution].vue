@@ -280,7 +280,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				name="emitterFloorArea"
 				validation="required | number"
 				help="The emitter floor area for an underfloor heating (UFH) system refers to the actual heated floor area that emits heat into the room. It is different from the total floor area because some areas may not have UFH installed (e.g. under kitchen units, bathtubs, or built-in furniture)."
-				suffix-text="m2"
+				suffix-text="m²"
 			/>
 		</template>
 

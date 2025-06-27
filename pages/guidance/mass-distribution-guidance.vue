@@ -12,7 +12,7 @@ const title = 'Understanding mass distribution class';
 		{{ title }}
 	</h1>
 	<p class="govuk-body">The thermal mass of building components is dealt with in the core heat balance equations, as described in BS EN ISO
-		52016-1:2017. In accordance with this standard, the areal heat capacity¹ (in J/(m2.K)) of each element is input
+		52016-1:2017. In accordance with this standard, the areal heat capacity¹ (in J/(m²·K)) of each element is input
 		along with one of 5 mass distribution classes describing in general terms the position of the mass (from internal to
 		external) relative to the thermal resistance:
 	</p>

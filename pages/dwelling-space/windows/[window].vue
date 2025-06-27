@@ -159,11 +159,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="width" validation="required | number | min:0.001 | max:50" />
 		<FieldsElevationalHeight />
 		<FormKit
-			id="surfaceArea" type="govInputWithSuffix" suffix-text="m2" label="Net surface area"
+			id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Net surface area"
 			help="Net area of the building element. For non-rectangular windows, use the area of the window based on its shape"
 			name="surfaceArea" validation="required | number | min:0.01 | max:10000" />
 		<FormKit
-			id="uValue" type="govInputWithSuffix" suffix-text="W/(m2.K)" label="U-value"
+			id="uValue" type="govInputWithSuffix" suffix-text="W/(m²·K)" label="U-value"
 			help="Steady-state thermal transmittance of the building element" name="uValue"
 			validation="required | number | min:0.01 | max:10" />
 		<FormKit
@@ -192,7 +192,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="The vertical measurement of the section of the window that can be opened"
 				name="heightOpenableArea" validation="required | number | min:0 | max:100" />
 			<FormKit
-				id="maximumOpenableArea" type="govInputWithSuffix" suffix-text="m2" label="Maximum openable area"
+				id="maximumOpenableArea" type="govInputWithSuffix" suffix-text="m²" label="Maximum openable area"
 				help="The total area of the window that can be opened for ventilation." name="maximumOpenableArea"
 				validation="required | number | min:0 | max:100" />
 			<FormKit
@@ -309,7 +309,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<FormKit
 					id="thermalResistivityIncrease"
 					type="govInputWithSuffix"
-					suffix-text="W / (m2.K)"
+					suffix-text="W/(m²·K)"
 					label="Thermal resistivity increase"
 					help="Additional thermal resistivity applied to window when curtain/blind is closed"
 					name="thermalResistivityIncrease"

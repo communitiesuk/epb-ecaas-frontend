@@ -94,7 +94,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				help="Net area of the building element"
 				name="surfaceArea"
 				validation="required | number | min:0 | max:10000"
-				suffix-text="m2"
+				suffix-text="m²"
 			/>
 			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
@@ -103,7 +103,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			v-if="model.typeOfInternalDoor === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
-			suffix-text="m2·K/W"
+			suffix-text="(m²·K)/W"
 			label="Thermal resistance of adjacent unheated space"
 			help="The effective thermal resistance of the unheated space. For example values, please refer to technical paper S11P-028. Max value in the paper is: Facing wall not exposed, 2.5 (m^2.K) / W."
 			name="thermalResistanceOfAdjacentUnheatedSpace"

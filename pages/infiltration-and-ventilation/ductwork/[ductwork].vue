@@ -245,7 +245,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="thermalInsulationConductivityOfDuctwork"
 			type="govInputWithSuffix"
-			suffix-text="W/m.K"
+			suffix-text="W/m·K"
 			label="Thermal insulation conductivity of ductwork"
 			help="The thermal conductivity of the insulation"
 			name="thermalInsulationConductivityOfDuctwork"

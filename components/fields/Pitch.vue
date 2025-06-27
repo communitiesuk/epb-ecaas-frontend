@@ -34,7 +34,7 @@ const help = 'Tilt angle of the surface from horizontal, between 0 and 180, wher
 			v-if="pitchOption === 'custom'"
 			:id="id ?? 'pitch'"
 			type="govInputWithSuffix"
-			suffix-text="degrees"
+			suffix-text="°"
 			:name="name ?? 'pitch'"
 			validation="required | number | min:0 | max:180"
 		/>
@@ -46,7 +46,7 @@ const help = 'Tilt angle of the surface from horizontal, between 0 and 180, wher
 		:label="label ?? 'Pitch'"
 		:name="name ?? 'pitch'"
 		validation="required | number | min:0 | max:180"
-		suffix-text="degrees">
+		suffix-text="°">
 		<p class="govuk-body">
 			<a href="/guidance/pitch" target="_blank" class="govuk-link">
 				Guidance (opens in another window)

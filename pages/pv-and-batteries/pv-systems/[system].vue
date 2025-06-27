@@ -197,7 +197,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="The tilt angle (inclination) of the PV panel from horizontal measured upwards facing, 0 to 90, in degrees. 0 = horizontal surface, 90 = vertical surface."
 			name="pitch"
 			validation="required | number | min:0 | max: 90"
-			suffix-text="degrees"
+			suffix-text="°"
 		/>
 		<FieldsOrientation />
 		<FormKit

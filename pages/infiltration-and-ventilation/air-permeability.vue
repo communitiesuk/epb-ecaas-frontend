@@ -52,10 +52,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="airTightnessTestResult"
 			type="govInputWithSuffix"
 			label="Air tightness test result"
-			help="The amount of air leakage (in m3/h) divided by the internal envelope area of the building (in m2), from an airtightness test at a given reference pressure difference, such as 50 Pa"
+			help="The amount of air leakage (in m³/h) divided by the internal envelope area of the building (in m²), from an airtightness test at a given reference pressure difference, such as 50 Pa"
 			name="airTightnessTestResult"
 			validation="required | number"
-			suffix-text="m3/(h.m2)"
+			suffix-text="m³/(h·m²)"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>

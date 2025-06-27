@@ -87,7 +87,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="surfaceArea"
 			type="govInputWithSuffix"
-			suffix-text="m2"
+			suffix-text="m²"
 			label="Net surface area"
 			help="Net area of the building element"
 			name="surfaceArea"
@@ -97,7 +97,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="uValue"
 			type="govInputWithSuffix"
-			suffix-text="W/(m2.K)"
+			suffix-text="W/(m²·K)"
 			label="U-value"
 			help="Steady-state thermal transmittance of the building element"
 			name="uValue"

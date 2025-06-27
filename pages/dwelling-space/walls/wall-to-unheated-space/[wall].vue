@@ -68,7 +68,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="surfaceAreaOfElement"
 			type="govInputWithSuffix"
-			suffix-text="m2"
+			suffix-text="m²"
 			label="Net surface area of element"
 			help="Net area of the opaque building element (i.e. area of all windows / doors should be subtracted before entry). If the element is not square or rectangular the area might not be equal to width x height, hence the need to ask for area in addition to width and height."
 			name="surfaceAreaOfElement"
@@ -77,7 +77,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="uValue"
 			type="govInputWithSuffix"
-			suffix-text="W/(m2.K)"
+			suffix-text="W/(m²·K)"
 			label="U-value"
 			help="Steady-state thermal transmittance of the building element"
 			name="uValue"
@@ -88,9 +88,9 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
-			suffix-text="m2.K/W"
+			suffix-text="(m²·K)/W"
 			label="Thermal resistance of adjacent unheated space"
-			help="The effective thermal resistance of the unheated space. For example values, please refer to technical paper S11P-028. Max value in the paper is: Facing wall not exposed, 2.5 (m^2.K) / W"
+			help="The effective thermal resistance of the unheated space. For example values, please refer to technical paper S11P-028. Max value in the paper is: Facing wall not exposed, 2.5 (m²·K)/W"
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
 		>

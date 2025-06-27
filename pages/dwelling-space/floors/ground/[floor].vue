@@ -172,7 +172,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="psiOfWallJunction"
 			type="govInputWithSuffix"
-			suffix-text="W/m.K"
+			suffix-text="W/(m·K)"
 			label="PSI value of E5 junction"
 			help="This is the linear thermal transmittance of the junction between the floor and the walls. This input needs to be entered here and in the thermal bridging section."
 			name="psiOfWallJunction"
@@ -267,7 +267,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FormKit
 				id="edgeInsulationThermalResistance"
 				type="govInputWithSuffix"
-				suffix-text="m2·K/W"
+				suffix-text="(m²·K)/W"
 				label="Edge insulation thermal resistance "
 				name="edgeInsulationThermalResistance"
 				validation="required"
@@ -404,7 +404,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FormKit
 				id="thermalResistanceOfBasementWalls"
 				type="govInputWithSuffix"
-				suffix-text="m2·K/W"
+				suffix-text="(m²·K)/W"
 				label="Thermal resistance of walls of basement"
 				name="thermalResistanceOfBasementWalls"
 				validation="required | number"
@@ -415,7 +415,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FormKit
 				id="thermalTransmittanceOfFloorAboveBasement"
 				type="govInputWithSuffix"
-				suffix-text="W/(m2·K)"
+				suffix-text="W/(m²·K)"
 				label="Thermal transmittance of floor above basement"
 				help="in accordance with ISO 6946"
 				name="thermalTransmittanceOfFloorAboveBasement"
@@ -424,7 +424,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FormKit
 				id="thermalTransmittanceOfWallsAboveGround"
 				type="govInputWithSuffix"
-				suffix-text="W/(m2·K)"
+				suffix-text="W/(m²·K)"
 				label="Thermal transmittance of walls above ground"
 				name="thermalTransmittanceOfWallsAboveGround"
 				validation="required | number"

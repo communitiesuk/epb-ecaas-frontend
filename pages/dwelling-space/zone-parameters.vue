@@ -70,7 +70,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="area"
 			type="govInputWithSuffix"
-			suffix-text="m2"
+			suffix-text="m²"
 			label="Area"
 			name="area"
 			help="Enter the area of the whole dwelling."
@@ -79,7 +79,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="volume"
 			type="govInputWithSuffix"
-			suffix-text="m3"
+			suffix-text="m³"
 			label="Volume"
 			name="volume"
 			help="Enter the volume of the whole dwelling."

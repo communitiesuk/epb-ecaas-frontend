@@ -68,7 +68,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Net area of the opaque building element. For an unheated pitched roof this input must be for the ceiling."
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
-			suffix-text="m2"
+			suffix-text="m²"
 		/>
 		<FieldsPitch label="Pitch of roof" />
 		<FieldsOrientation label="Orientation of roof" />
@@ -108,7 +108,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="For an unheated pitched roof, input the combined value of the ceiling and roof"
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
-			suffix-text="W/(m2.K)"
+			suffix-text="W/(m²·K)"
 		/>
 		<FieldsArealHeatCapacity 
 			id="kappaValue"
