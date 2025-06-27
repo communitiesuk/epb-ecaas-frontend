@@ -13,7 +13,6 @@ export default defineNitroPlugin(() => {
       username: useRuntimeConfig().redisUsername,
 			tls: {}
     });
-		storage.unmount("cache")
     storage.mount("cache", driver);
   }
 });
