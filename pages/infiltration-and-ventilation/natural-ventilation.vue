@@ -65,10 +65,26 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="crossVentilation"
 			type="govBoolean"
 			label="Cross ventilation"
-			help="This input indicates whether cross ventilation is present in the building. To determine this, check if there are openings (e.g., windows, vents, or doors) on opposite sides of the space that can allow air to flow through the building. If these openings are aligned or positioned in such a way that air can pass through, then cross ventilation is present. If not, it may be absent."
 			name="crossVentilation"
 			validation="required"
-		/>
+		>
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header govuk-!-width-one-third">Concept</th>
+							<th scope="col" class="govuk-table__header">Description</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Cross ventilation</th>
+							<td class="govuk-table__cell">This input indicates whether cross ventilation is present in the building. To determine this, check if there are openings (e.g., windows, vents, or doors) on opposite sides of the space that can allow air to flow through the building. If these openings are aligned or positioned in such a way that air can pass through, then cross ventilation is present. If not, it may be absent.</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>
