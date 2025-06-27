@@ -17,7 +17,7 @@ defineProps<{ selected: boolean, data: Omit<SchemaFhsComplianceResponse, 'energy
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table__header">
 						Emission rate<br>
-						<span class="govuk-!-font-weight-regular">kgCO2/m2</span>
+						<span class="govuk-!-font-weight-regular">kgCO₂/m²</span>
 					</th>
 					<td class="govuk-table__cell">
 						{{ data.dwelling_emission_rate?.toFixed(2) }}<br>
@@ -33,7 +33,7 @@ defineProps<{ selected: boolean, data: Omit<SchemaFhsComplianceResponse, 'energy
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table__header">
 						Primary energy rate<br>
-						<span class="govuk-!-font-weight-regular">kWh/m2</span>
+						<span class="govuk-!-font-weight-regular">kWh/m²</span>
 					</th>
 					<td class="govuk-table__cell">
 						{{ data.dwelling_primary_energy_rate?.toFixed(3) }}<br>
@@ -49,7 +49,7 @@ defineProps<{ selected: boolean, data: Omit<SchemaFhsComplianceResponse, 'energy
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table__header">
 						Fabric energy efficiency<br>
-						<span class="govuk-!-font-weight-regular">kWh/m2</span>
+						<span class="govuk-!-font-weight-regular">kWh/m²</span>
 					</th>
 					<td class="govuk-table__cell">
 						{{ data.dwelling_fabric_energy_efficiency?.toFixed(2) }}<br>

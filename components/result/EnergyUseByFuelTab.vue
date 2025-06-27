@@ -19,7 +19,7 @@ const { total: _total, ...systems } = data; // list can include total inside it,
 				<tr v-for="({actual = undefined, notional = undefined}, system) in systems" :key="`${system}-result`" class="govuk-table__row">
 					<th scope="row" class="govuk-table__header">
 						{{ sentenceCase(system as string) }}<br>
-						<span class="govuk-!-font-weight-regular">kWh/m2</span>
+						<span class="govuk-!-font-weight-regular">kWh/m²</span>
 					</th>
 					<td class="govuk-table__cell">
 						{{ actual?.toFixed(3) }}
