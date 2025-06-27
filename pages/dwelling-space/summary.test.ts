@@ -14,7 +14,6 @@ const zoneParametersData: DwellingSpaceZoneParametersData = {
 	volume: 10,
 	numberOfLEDBulbs: 8,
 	numberOfIncandescentBulbs: 3,
-	heatingControlType: '',
 	spaceHeatingSystemForThisZone: 'elec heater',
 	spaceCoolingSystemForThisZone: [],
 	spaceHeatControlSystemForThisZone: []

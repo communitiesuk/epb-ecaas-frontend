@@ -390,7 +390,7 @@ const expectedFlatInput: FhsInputSchema = {
 		storeys_in_building: 6,
 		storey_of_dwelling: 3
 	},
-	HeatingControlType: HeatingControlType.SeparateTimeAndTempControl,
+	HeatingControlType: HeatingControlType.SeparateTempControl,
 	HotWaterDemand: {
 		Shower: {
 			"mixed shower 1 name": {
@@ -1019,7 +1019,6 @@ describe("FHS input mapper", () => {
 					volume: 300,
 					numberOfLEDBulbs: 6,
 					numberOfIncandescentBulbs: 0,
-					heatingControlType: HeatingControlType.SeparateTempControl,
 					spaceHeatingSystemForThisZone: "some-wet-distribution",
 					// spaceCoolingSystemForThisZone: [{
 					// 	name: "some-aircon-unit-name",
@@ -1425,7 +1424,6 @@ describe("FHS input mapper", () => {
 					volume: 550,
 					numberOfLEDBulbs: 5,
 					numberOfIncandescentBulbs: 2,
-					heatingControlType: HeatingControlType.SeparateTimeAndTempControl,
 					spaceHeatingSystemForThisZone: "instant elec heater 1",
 					// spaceCoolingSystemForThisZone: [],
 					// spaceHeatControlSystemForThisZone: []

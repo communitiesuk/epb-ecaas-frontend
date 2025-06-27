@@ -32,7 +32,6 @@ describe('dwelling fabric mapper', () => {
 			volume: 10,
 			numberOfLEDBulbs: 5,
 			numberOfIncandescentBulbs: 2,
-			heatingControlType: 'separateTempControl',
 			spaceHeatingSystemForThisZone: 'main 1',
 			spaceCoolingSystemForThisZone: [],
 			spaceHeatControlSystemForThisZone: []

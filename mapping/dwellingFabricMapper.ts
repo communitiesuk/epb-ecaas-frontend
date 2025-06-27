@@ -1,4 +1,4 @@
-import { FloorType, SpaceHeatControlType, WindowShadingObjectType, type SchemaBuildingElement, type SchemaHeatingControlType, type SchemaThermalBridgingDetails, type SchemaWindowPart, type SchemaZoneInput, type SchemaZoneLighting } from "~/schema/api-schema.types";
+import { FloorType, HeatingControlType, SpaceHeatControlType, WindowShadingObjectType, type SchemaBuildingElement, type SchemaHeatingControlType, type SchemaThermalBridgingDetails, type SchemaWindowPart, type SchemaZoneInput, type SchemaZoneLighting } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
 import { defaultZoneName } from "./common";
@@ -45,7 +45,7 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 	};
 
 	return {
-		HeatingControlType: dwellingSpaceZoneParameters.heatingControlType as SchemaHeatingControlType,
+		HeatingControlType: HeatingControlType.SeparateTempControl, // sending this as a default value while we are only sending one zone
 		Zone: {
 			[defaultZoneName]: {
 				SpaceHeatSystem: dwellingSpaceZoneParameters.spaceHeatingSystemForThisZone,
