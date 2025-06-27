@@ -38,7 +38,6 @@ const saveForm = (fields: WetDistributionData) => {
 
 		const commonFields = {
 			name: fields.name,
-			zoneReference: fields.zoneReference,
 			heatSource: fields.heatSource,
 			thermalMass: fields.thermalMass,
 			designTempDiffAcrossEmitters: fields.designTempDiffAcrossEmitters,
@@ -113,19 +112,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
 			validation="required" />
-
-		<FormKit
-			id="zoneReference"
-			type="govRadios"
-			:options="{
-				livingSpace: 'Dwelling space',
-				restOfDwelling: 'Rest of dwelling',
-			}"
-			label="Zone reference"
-			name="zoneReference"
-			hint="Which zone is this emitter heating"
-			validation="required"
-		/>
 
 		<FieldsHeatGenerators
 			id="heatSource"
@@ -252,7 +238,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				name="numberOfRadiators"
 				type="govInputInt"
 				label="Number of radiators"
-				help="Specify how many radiators are in this zone"
+				help="Specify how many radiators are in this dwelling"
 				validation="required | integer | min: 1"
 			/>
 

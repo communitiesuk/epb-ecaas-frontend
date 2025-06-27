@@ -9,6 +9,8 @@ import {
 	WindShieldLocation
 } from "~/schema/api-schema.types";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
+import { defaultZoneName } from "./common";
+import type { DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.types";
 
 type BuildingElementGround = Extract<SchemaBuildingElement, { type: 'BuildingElementGround' }>;
 type BuildingElementOpaque = Extract<SchemaBuildingElement, { type: 'BuildingElementOpaque' }>;
@@ -49,12 +51,12 @@ describe('dwelling fabric mapper', () => {
 		const fhsInputData = mapZoneParametersData(resolveState(store.$state));
 
 		// Assert
-		expect(fhsInputData.Zone!['zone 1']?.area).toBe(state.area);
-		expect(fhsInputData.Zone!['zone 1']?.volume).toBe(state.volume);
-		expect(fhsInputData.Zone!['zone 1']?.Lighting?.bulbs?.led?.count).toBe(state.numberOfLEDBulbs);
-		expect(fhsInputData.Zone!['zone 1']?.Lighting?.bulbs?.incandescent?.count).toBe(state.numberOfIncandescentBulbs);
-		expect(fhsInputData.Zone!['zone 1']?.SpaceHeatSystem).toEqual('main 1');
-		expect(fhsInputData.Zone!['zone 1']?.SpaceHeatControl).toBe('livingroom');
+		expect(fhsInputData.Zone![defaultZoneName]?.area).toBe(state.area);
+		expect(fhsInputData.Zone![defaultZoneName]?.volume).toBe(state.volume);
+		expect(fhsInputData.Zone![defaultZoneName]?.Lighting?.bulbs?.led?.count).toBe(state.numberOfLEDBulbs);
+		expect(fhsInputData.Zone![defaultZoneName]?.Lighting?.bulbs?.incandescent?.count).toBe(state.numberOfIncandescentBulbs);
+		expect(fhsInputData.Zone![defaultZoneName]?.SpaceHeatSystem).toEqual('main 1');
+		expect(fhsInputData.Zone![defaultZoneName]?.SpaceHeatControl).toBe('livingroom');
 	});
 
 	it('maps floor input state to FHS input request', () => {
@@ -156,13 +158,13 @@ describe('dwelling fabric mapper', () => {
 		const fhsInputData = mapFloorData(resolveState(store.$state));
 
 		// Assert
-		const groundFloorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[groundFloor.name]! as BuildingElementGround;
-		const groundFloorWithEdgeInsulationElement = fhsInputData.Zone!['zone 1']!.BuildingElement[groundFloorWithEdgeInsulation.name]! as BuildingElementGround;
-		const groundFloorWithSuspendedFloorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[groundFloorWithSuspendedFloor.name]! as BuildingElementGround;
-		const groundFloorWithHeatedBasementElement = fhsInputData.Zone!['zone 1']!.BuildingElement[groundFloorWithHeatedBasement.name]! as BuildingElementGround;
-		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone!['zone 1']!.BuildingElement[groundFloorWithUnheatedBasement.name]! as BuildingElementGround;
-		const internalFloorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[internalFloor.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
-		const exposedFloorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[exposedFloor.name] as BuildingElementOpaque;
+		const groundFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloor.name]! as BuildingElementGround;
+		const groundFloorWithEdgeInsulationElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithEdgeInsulation.name]! as BuildingElementGround;
+		const groundFloorWithSuspendedFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithSuspendedFloor.name]! as BuildingElementGround;
+		const groundFloorWithHeatedBasementElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithHeatedBasement.name]! as BuildingElementGround;
+		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithUnheatedBasement.name]! as BuildingElementGround;
+		const internalFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[internalFloor.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const exposedFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[exposedFloor.name] as BuildingElementOpaque;
 
 		expect(fhsInputData.GroundFloorArea).toBe(groundFloorsTotalArea);
 
@@ -321,10 +323,10 @@ describe('dwelling fabric mapper', () => {
 		const fhsInputData = mapWallData(resolveState(store.$state));
 
 		// Assert
-		const externalWallElement = fhsInputData.Zone!['zone 1']!.BuildingElement[externalWall.name]! as BuildingElementOpaque;
-		const internalWallElement = fhsInputData.Zone!['zone 1']!.BuildingElement[internalWall.name]! as BuildingElementAdjacentConditionedSpace;
-		const partyWallElement = fhsInputData.Zone!['zone 1']!.BuildingElement[partyWall.name]! as BuildingElementOpaque;
-		const wallToUnheatedSpaceElement = fhsInputData.Zone!['zone 1']!.BuildingElement[wallToUnheatedSpace.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const externalWallElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[externalWall.name]! as BuildingElementOpaque;
+		const internalWallElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[internalWall.name]! as BuildingElementAdjacentConditionedSpace;
+		const partyWallElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[partyWall.name]! as BuildingElementOpaque;
+		const wallToUnheatedSpaceElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[wallToUnheatedSpace.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
 
 		const expectedExternalWall: BuildingElementOpaque = {
 			type: 'BuildingElementOpaque',
@@ -443,9 +445,9 @@ describe('dwelling fabric mapper', () => {
 		const fhsInputData = mapCeilingAndRoofData(resolveState(store.$state));
 
 		// Assert
-		const ceilingElement = fhsInputData.Zone!['zone 1']!.BuildingElement[ceiling.name]! as BuildingElementAdjacentUnconditionedSpaceSimple;
-		const roofElement = fhsInputData.Zone!['zone 1']!.BuildingElement[roof.name]! as BuildingElementOpaque;
-		const unheatedPitchedRoofElement = fhsInputData.Zone!['zone 1']!.BuildingElement[unheatedPitchedRoof.name]! as BuildingElementOpaque;
+		const ceilingElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[ceiling.name]! as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const roofElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[roof.name]! as BuildingElementOpaque;
+		const unheatedPitchedRoofElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[unheatedPitchedRoof.name]! as BuildingElementOpaque;
 
 		const expectedCeiling: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
@@ -557,9 +559,9 @@ describe('dwelling fabric mapper', () => {
 		const fhsInputData = mapDoorData(resolveState(store.$state));
 
 		// Assert
-		const internalDoorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[internalDoor.name]! as BuildingElementAdjacentUnconditionedSpaceSimple;
-		const externalGlazedDoorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[externalGlazedDoor.name]! as BuildingElementTransparent;
-		const externalUnglazedDoorElement = fhsInputData.Zone!['zone 1']!.BuildingElement[externalUnglazedDoor.name]! as BuildingElementOpaque;
+		const internalDoorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[internalDoor.name]! as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const externalGlazedDoorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[externalGlazedDoor.name]! as BuildingElementTransparent;
+		const externalUnglazedDoorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[externalUnglazedDoor.name]! as BuildingElementOpaque;
 
 		const expectedInternalDoor: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
@@ -653,7 +655,7 @@ describe('dwelling fabric mapper', () => {
 		const fhsInputData = mapWindowData(resolveState(store.$state));
 
 		// Assert
-		const windowElement = fhsInputData.Zone!['zone 1']!.BuildingElement[window.name]! as BuildingElementTransparent;
+		const windowElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[window.name]! as BuildingElementTransparent;
 
 		const expectedWindow: BuildingElementTransparent = {
 			type: 'BuildingElementTransparent',
@@ -727,7 +729,7 @@ describe('dwelling fabric mapper', () => {
 		type ThermalBridgeLinear = Extract<SchemaThermalBridgingDetails, { type: 'ThermalBridgeLinear' }>;
 		type ThermalBridgePoint = Extract<SchemaThermalBridgingDetails, { type: 'ThermalBridgePoint' }>;
 
-		const thermalBridging = fhsInputData.Zone!['zone 1']!.ThermalBridging as ThermalBridging;
+		const thermalBridging = fhsInputData.Zone![defaultZoneName]!.ThermalBridging as ThermalBridging;
 
 		const linearThermalBridgeElement = thermalBridging[linearThermalBridge.name]! as ThermalBridgeLinear;
 		const pointThermalBridgeElement = thermalBridging[pointThermalBridge.name]! as ThermalBridgePoint;

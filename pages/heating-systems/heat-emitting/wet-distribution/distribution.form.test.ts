@@ -17,7 +17,6 @@ const heatPump: HeatPumpData = {
 
 const wetDistribution1: WetDistributionData = {
 	name: "Wet distribution 1",
-	zoneReference: "livingSpace",
 	heatSource: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
 	thermalMass: 2,
 	designTempDiffAcrossEmitters: 0.4,
@@ -52,7 +51,6 @@ const wetDistribution1: WetDistributionData = {
 
 const populateValidForm = async () => {
 	await user.type(screen.getByTestId("name"), "Wet distribution 1");
-	await user.click(screen.getByTestId("zoneReference_livingSpace"));
 	await user.click(
 		screen.getByTestId("heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r")
 	);
@@ -87,7 +85,6 @@ describe("Wet distribution", () => {
 	it("should have the following inputs", async () => {
 		await renderSuspended(WetDistribution);
 		expect(screen.getByText("Name")).toBeDefined();
-		expect(screen.getByText("Zone reference")).toBeDefined();
 		expect(screen.getByText("Heat source")).toBeDefined();
 		expect(screen.getByText("Thermal mass")).toBeDefined();
 		expect(
@@ -137,7 +134,6 @@ describe("Wet distribution", () => {
 
 		const initialErrorIds: string[] = [
 			"name_error",
-			"zoneReference_error",
 			"heatSource_error",
 			"thermalMass_error",
 			"designTempDiffAcrossEmitters_error",
@@ -257,13 +253,6 @@ describe("Wet distribution", () => {
 		expect(
 			((await screen.findByTestId("name")) as HTMLInputElement).value
 		).toBe("Wet distribution 1");
-		expect(
-			(
-				(await screen.findByTestId(
-					"zoneReference_livingSpace"
-				)) as HTMLInputElement
-			).checked
-		).toBe(true);
 		expect(
 			(
 				(await screen.findByTestId(

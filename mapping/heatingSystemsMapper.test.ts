@@ -1,6 +1,7 @@
 import { FuelType } from "~/schema/api-schema.types";
 import { mapEnergySupplyData, mapHeatEmittingData } from "./heatingSystemsMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
+import { defaultZoneName } from "./common";
 
 const baseForm = {
 	data: [],
@@ -133,7 +134,6 @@ describe("heating systems mapper", () => {
 				data: [
 					{
 						name: "Radiators",
-						zoneReference: "dwellingSpace",
 						heatSource: "Acme heat pump",
 						thermalMass: 400,
 						designTempDiffAcrossEmitters: 4,
@@ -195,7 +195,7 @@ describe("heating systems mapper", () => {
 					temp_diff_emit_dsgn: 4,
 					thermal_mass: 400,
 					type: "WetDistribution",
-					Zone: "dwellingSpace"
+					Zone: defaultZoneName
 				}
 			}
 		};
@@ -211,7 +211,6 @@ describe("heating systems mapper", () => {
 				data: [
 					{
 						name: "Under floor heating",
-						zoneReference: "dwellingSpace",
 						heatSource: "Acme heat pump",
 						thermalMass: 400,
 						designTempDiffAcrossEmitters: 4,
@@ -269,7 +268,7 @@ describe("heating systems mapper", () => {
 					temp_diff_emit_dsgn: 4,
 					thermal_mass: 400,
 					type: "WetDistribution",
-					Zone: "dwellingSpace"
+					Zone: defaultZoneName
 				}
 			}
 		};

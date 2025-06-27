@@ -1,6 +1,7 @@
 import { objectFromEntries } from "ts-extras";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { FuelType, type SchemaSpaceHeatSystemDetails } from "~/schema/api-schema.types";
+import { defaultZoneName } from "./common";
 
 export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema, 'EnergySupply' | 'SpaceHeatSystem'> {
 	return {
@@ -35,7 +36,7 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 'SpaceHeatSystem'> {
 	const wetDistributions = state.heatingSystems.heatEmitting.wetDistribution;
 	const wetDistributionEntries = wetDistributions.map((distribution) => {
-		const { name, zoneReference, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, designFlowRate, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution;
+		const { name, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, designFlowRate, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution;
 
 		const distributionDetails: SchemaSpaceHeatSystemDetails = {
 			HeatSource: {
@@ -69,7 +70,7 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			temp_diff_emit_dsgn: designTempDiffAcrossEmitters,
 			thermal_mass: thermalMass,
 			type: "WetDistribution",
-			Zone: zoneReference,
+			Zone: defaultZoneName,
 		};
 		return [
 			name,

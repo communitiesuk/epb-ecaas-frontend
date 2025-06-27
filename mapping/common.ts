@@ -11,6 +11,8 @@ export const immersionHeaterPositionValues: Record<ImmersionHeaterPosition, numb
 	bottom: 0
 };
 
+export const defaultZoneName: string = 'dwellingspace';
+
 export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 	type: "HeatPump",
 	EnergySupply: "mains elec",

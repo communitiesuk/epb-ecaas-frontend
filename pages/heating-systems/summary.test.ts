@@ -2,6 +2,7 @@ import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatingSystemsSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
 import { FuelType } from "~/schema/api-schema.types";
+import { defaultZoneName } from "~/mapping/common";
 
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -322,7 +323,6 @@ describe("Heating systems summary page", () => {
 
 		const wetDistribution1: WetDistributionData = {
 			name: "Wet distribution 1",
-			zoneReference: "dwellingSpace",
 			heatSource: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
 			thermalMass: 2,
 			designTempDiffAcrossEmitters: 0.4,
@@ -341,7 +341,6 @@ describe("Heating systems summary page", () => {
 
 		const wetDistribution2: WetDistributionData = {
 			name: "Wet distribution 2",
-			zoneReference: "dwellingSpace",
 			heatSource: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
 			thermalMass: 2,
 			designTempDiffAcrossEmitters: 0.4,
@@ -442,7 +441,6 @@ describe("Heating systems summary page", () => {
 
 			const expectedWetDistributionData = {
 				Name: "Wet distribution 1",
-				"Zone reference": "Dwelling space",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": "2",
 				"Design temperature difference across the emitters": "0.4",
@@ -477,7 +475,6 @@ describe("Heating systems summary page", () => {
 
 			const expectedWetDistributionData = {
 				Name: "Wet distribution 2",
-				"Zone reference": "Dwelling space",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": "2",
 				"Design temperature difference across the emitters": "0.4",
@@ -512,7 +509,6 @@ describe("Heating systems summary page", () => {
 
 			const expectedWetDistributionData = {
 				Name: "Wet distribution 1",
-				"Zone reference": "Dwelling space",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": "2",
 				"Design temperature difference across the emitters": "0.4",

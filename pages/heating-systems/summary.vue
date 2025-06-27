@@ -117,7 +117,6 @@ const wetDistributionSummary: SummarySection = {
 	data: wetDistributions.map((wetDistribution) => {
 		const wetDistributionData: Record<string, string | number | undefined> = {
 			Name: wetDistribution.name,
-			"Zone reference": wetDistribution.zoneReference,
 			"Heat source": heatGenerationData.find(
 				(x) => x.id === wetDistribution.heatSource
 			)?.name,

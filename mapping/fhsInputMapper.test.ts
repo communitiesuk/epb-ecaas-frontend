@@ -28,7 +28,7 @@ import {
 } from "~/schema/api-schema.types";
 import { type FhsInputSchema, mapFhsInputData } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
-import { defaultHeatSourceWetDetails } from "~/mapping/common";
+import { defaultHeatSourceWetDetails, defaultZoneName } from "~/mapping/common";
 
 const baseForm = {
 	data: [],
@@ -218,7 +218,7 @@ const expectedHouseInput: FhsInputSchema = {
 				name: "some-heat-pump-name",
 				temp_flow_limit_upper: 65,
 			},
-			Zone: "zone 1",
+			Zone: defaultZoneName,
 			design_flow_temp: 12,
 			design_flow_rate: 4,
 			ecodesign_controller: {
@@ -248,7 +248,7 @@ const expectedHouseInput: FhsInputSchema = {
 	GroundFloorArea: 40,
 	HeatSourceWet: {"some-heat-pump-name": defaultHeatSourceWetDetails},
 	Zone: {
-		"zone 1": {
+		[defaultZoneName]: {
 			BuildingElement: {
 				"ground-floor": {
 					type: 'BuildingElementGround',
@@ -610,7 +610,7 @@ const expectedFlatInput: FhsInputSchema = {
 		"heat pump 1 name": defaultHeatSourceWetDetails,
 	},
 	Zone: {
-		"zone 1": {
+		[defaultZoneName]: {
 			BuildingElement: {
 				"ground floor 1": {
 					type: 'BuildingElementGround',
@@ -1134,7 +1134,6 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [{
 						name: "some-wet-distribution",
-						zoneReference: "zone 1",
 						heatSource: "some-heat-pump-name",
 						thermalMass: 0.14,
 						designTempDiffAcrossEmitters: 31,

@@ -668,7 +668,6 @@ export type WarmAirHeatPumpData = {
 
 export type WetDistributionData = {
 	name: string
-	zoneReference: string,
 	heatSource: string,
 	thermalMass: number,
 	designTempDiffAcrossEmitters: number,

@@ -352,7 +352,6 @@ describe("heat emitting", () => {
 		});
 		const wetDistribution1: WetDistributionData = {
 			name: "Wet distribution 1",
-			zoneReference: "dwellingSpace",
 			heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 			thermalMass: 2,
 			designTempDiffAcrossEmitters: 0.4,

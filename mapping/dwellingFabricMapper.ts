@@ -1,6 +1,7 @@
 import { FloorType, SpaceHeatControlType, WindowShadingObjectType, type SchemaBuildingElement, type SchemaHeatingControlType, type SchemaThermalBridgingDetails, type SchemaWindowPart, type SchemaZoneInput, type SchemaZoneLighting } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
+import { defaultZoneName } from "./common";
 
 export function mapLivingSpaceFabricData(state: ResolvedState): Partial<FhsInputSchema> {
 	const zoneParameterData = mapZoneParametersData(state);
@@ -46,7 +47,7 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 	return {
 		HeatingControlType: dwellingSpaceZoneParameters.heatingControlType as SchemaHeatingControlType,
 		Zone: {
-			"zone 1": {
+			[defaultZoneName]: {
 				SpaceHeatSystem: dwellingSpaceZoneParameters.spaceHeatingSystemForThisZone,
 				// SpaceCoolSystem: dwellingSpaceZoneParameters.spaceCoolingSystemForThisZone?.map(x => x.name),
 				SpaceHeatControl: SpaceHeatControlType.livingroom,
@@ -154,7 +155,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 	return {
 		GroundFloorArea: dwellingSpaceGroundFloor.reduce((sum, floor) => sum + floor.surfaceArea, 0),
 		Zone: {
-			"zone 1": {
+			[defaultZoneName]: {
 				BuildingElement: Object.assign(
 					{},
 					...groundFloorData,
@@ -228,7 +229,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 
 	return {
 		Zone: {
-			"zone 1": {
+			[defaultZoneName]: {
 				BuildingElement: Object.assign(
 					{},
 					...externalWallData,
@@ -310,7 +311,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 
 	return {
 		Zone: {
-			"zone 1": {
+			[defaultZoneName]: {
 				BuildingElement: Object.assign(
 					{},
 					...ceilingData,
@@ -428,7 +429,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 
 	return {
 		Zone: {
-			"zone 1": {
+			[defaultZoneName]: {
 				BuildingElement: Object.assign(
 					{},
 					...internalDoorData,
@@ -515,7 +516,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 
 	return {
 		Zone: {
-			"zone 1": {
+			[defaultZoneName]: {
 				BuildingElement: Object.assign({}, ...windowData)
 			} as Partial<SchemaZoneInput>
 		}
@@ -543,7 +544,7 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 
 	return {
 		Zone: {
-			"zone 1": {
+			[defaultZoneName]: {
 				ThermalBridging: Object.assign({},
 					...linearThermalBridgesData,
 					...pointThermalBridgesData
