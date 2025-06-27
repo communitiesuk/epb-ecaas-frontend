@@ -7,7 +7,7 @@ const { saveToList } = useForm();
 
 const pvSystemData = useItemToEdit(
 	"system",
-	store.pvAndBatteries.pvSystem.data
+	store.pvAndBatteries.pvSystems.data
 );
 const model: Ref<PvSystemData> = ref(pvSystemData!);
 
@@ -27,7 +27,7 @@ const inverterTypeOptions: Record<InverterType, string> = {
 
 const saveForm = (fields: PvSystemData) => {
 	store.$patch((state) => {
-		const { pvSystem } = state.pvAndBatteries;
+		const { pvSystems: pvSystem } = state.pvAndBatteries;
 
 		const pvSystemItem: PvSystemData = {
 			name: fields.name,

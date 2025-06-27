@@ -4,20 +4,20 @@ const page = usePage();
 const store = useEcaasStore();
 
 function handleRemove(index: number) {
-	const data = store.pvAndBatteries.pvSystem?.data;
+	const data = store.pvAndBatteries.pvSystems?.data;
 
 	if (data) {
 		data.splice(index, 1);
 
 		store.$patch((state) => {
-			state.pvAndBatteries.pvSystem!.data = data.length ? data : [];
-			state.pvAndBatteries.pvSystem!.complete = false;
+			state.pvAndBatteries.pvSystems!.data = data.length ? data : [];
+			state.pvAndBatteries.pvSystems!.complete = false;
 		});
 	}
 } 
 
 function handleDuplicate<T extends PvSystemData>(index: number) {
-	const data  = store.pvAndBatteries.pvSystem?.data;
+	const data  = store.pvAndBatteries.pvSystems?.data;
 	const item = data?.[index];
     
 	if (item) {
@@ -29,15 +29,15 @@ function handleDuplicate<T extends PvSystemData>(index: number) {
 				name: `${item.name} (${duplicates.length})`
 			} as T;
 
-			state.pvAndBatteries.pvSystem!.data.push(newItem);
-			state.pvAndBatteries.pvSystem.complete = false;
+			state.pvAndBatteries.pvSystems!.data.push(newItem);
+			state.pvAndBatteries.pvSystems.complete = false;
 		});
 	}
 }
 function handleComplete() {
 	store.$patch({
 		pvAndBatteries: {
-			pvSystem: {
+			pvSystems: {
 				complete: true
 			}
 		}
@@ -47,7 +47,7 @@ function handleComplete() {
 }
 
 function checkIsComplete(){
-	return store.pvAndBatteries.pvSystem.complete ? true : false;
+	return store.pvAndBatteries.pvSystems.complete ? true : false;
 }
 
 </script>
@@ -63,7 +63,7 @@ function checkIsComplete(){
 		id="pvSystems"
 		title="PV Systems"
 		:form-url="`${page?.url!}`"
-		:items="store.pvAndBatteries.pvSystem.data.map(x => x.name)"
+		:items="store.pvAndBatteries.pvSystems.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove(index)"
 		@duplicate="(index: number) => handleDuplicate(index)"
 	/>

@@ -693,7 +693,7 @@ export type WetDistributionData = {
 }>;
 
 export interface PvAndBatteries {
-	pvSystem: EcaasForm<PvSystemData[]>;
+	pvSystems: EcaasForm<PvSystemData[]>;
 	electricBattery: EcaasForm<ElectricBatteryData>;
 }
 

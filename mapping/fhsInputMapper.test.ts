@@ -1233,7 +1233,7 @@ describe("FHS input mapper", () => {
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
-			pvSystem: {
+			pvSystems: {
 				...baseForm,
 			},
 			electricBattery: {
@@ -1944,7 +1944,7 @@ describe("FHS input mapper", () => {
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
-			pvSystem: {
+			pvSystems: {
 				...baseForm,
 				data: [{
 					name: "pv system 1",
