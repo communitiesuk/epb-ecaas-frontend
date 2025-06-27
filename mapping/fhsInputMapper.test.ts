@@ -1133,7 +1133,7 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [{
 						name: "some-wet-distribution",
-						heatSource: "some-heat-pump-name",
+						heatSource: "some-heat-pump-id",
 						thermalMass: 0.14,
 						designTempDiffAcrossEmitters: 31,
 						designFlowTemp: 12,

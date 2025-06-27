@@ -37,10 +37,11 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 	const wetDistributions = state.heatingSystems.heatEmitting.wetDistribution;
 	const wetDistributionEntries = wetDistributions.map((distribution) => {
 		const { name, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, designFlowRate, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution;
+		const heatSourceName = state.heatingSystems.heatGeneration.heatPump.find(pump => pump.id === heatSource)!.name; // TODO: adapt this to work for all heat generators (not just heat pumps) once they are added
 
 		const distributionDetails: SchemaSpaceHeatSystemDetails = {
 			HeatSource: {
-				name: heatSource,
+				name: heatSourceName,
 				temp_flow_limit_upper: 65 // we've defaulted this field on our heat pump until it comes from PCDB
 			},
 			design_flow_temp: designFlowTemp,

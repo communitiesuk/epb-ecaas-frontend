@@ -128,13 +128,18 @@ describe("heating systems mapper", () => {
 
 	it("maps heat emitters with wet distribution (radiator only)", () => {
 		// Arrange
+		const heatPump: HeatPumpData = {
+			id: "some-heat-pump-id",
+			name: "Acme heat pump"
+		};
+
 		const heatEmitting: HeatEmitting = {
 			wetDistribution: {
 				...baseForm,
 				data: [
 					{
 						name: "Radiators",
-						heatSource: "Acme heat pump",
+						heatSource: "some-heat-pump-id",
 						thermalMass: 400,
 						designTempDiffAcrossEmitters: 4,
 						designFlowTemp: 35,
@@ -158,6 +163,12 @@ describe("heating systems mapper", () => {
 
 		store.$patch({
 			heatingSystems: {
+				heatGeneration: {
+					heatPump: {
+						...baseForm,
+						data: [heatPump]
+					}
+				},
 				heatEmitting
 			}
 		});
@@ -205,13 +216,18 @@ describe("heating systems mapper", () => {
 
 	it("maps heat emitters with wet distribution (ufh only)", () => {
 		// Arrange
+		const heatPump: HeatPumpData = {
+			id: "some-heat-pump-id",
+			name: "Acme heat pump"
+		};
+
 		const heatEmitting: HeatEmitting = {
 			wetDistribution: {
 				...baseForm,
 				data: [
 					{
 						name: "Under floor heating",
-						heatSource: "Acme heat pump",
+						heatSource: "some-heat-pump-id",
 						thermalMass: 400,
 						designTempDiffAcrossEmitters: 4,
 						designFlowTemp: 35,
@@ -235,7 +251,13 @@ describe("heating systems mapper", () => {
 
 		store.$patch({
 			heatingSystems: {
-				heatEmitting
+				heatGeneration: {
+					heatPump: {
+						...baseForm,
+						data: [heatPump]
+					}
+				},
+				heatEmitting,
 			}
 		});
 
