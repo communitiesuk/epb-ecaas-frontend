@@ -10,6 +10,7 @@ export default defineNitroPlugin(() => {
       port: 6379,
       host: useRuntimeConfig().redisEndpoint,
       password: useRuntimeConfig().redisPassword,
+      username: useRuntimeConfig().redisUsername,
 			tls: {}
     });
 		storage.unmount("cache")

@@ -100,7 +100,8 @@ export default defineNuxtConfig({
 	},
 	runtimeConfig: {
 		redisEndpoint: '',
-		redisPassword: ''
+		redisPassword: '',
+		redisUsername: ''
 	},
 	nitro: process.env.BUILD_FOR_AWS_LAMBDA
 		? {
