@@ -155,9 +155,9 @@ describe('show good response in result tabs', () => {
 		const tableTextContent = screen.getByRole('table').textContent;
 
 		const expectedTextsPresent = [
-			'1.840', // actual emission rate, rounded
+			'1.84', // actual emission rate, rounded
 			'Fabric energy efficiency', // FEE header
-			'+71.875%', // difference for primary energy rate
+			'+71.87%', // difference for primary energy rate
 		];
 
 		expectedTextsPresent.forEach(text => expect(tableTextContent).toContain(text));
