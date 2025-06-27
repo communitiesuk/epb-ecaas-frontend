@@ -371,6 +371,7 @@ describe("heat emitting", () => {
 			name: "Instant Electric Heater 1",
 			ratedPower: 30,
 			convectionFractionInstant: 1,
+			numberOfHeaters: 3
 		};
 		const addHeatEmittingDataToStore = async () => {
 			store.$patch({
@@ -535,6 +536,7 @@ describe("heat emitting", () => {
     		await user.click(
     			screen.getByRole("button", { name: "Save and continue" })
     		);
+
     		expect(
     			store.heatingSystems.heatEmitting[typedKey].complete
     		).toBe(false);

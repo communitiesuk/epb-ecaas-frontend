@@ -16,6 +16,7 @@ describe("instantElectricHeater", () => {
 		name: "Instant electric heater 1",
 		ratedPower: 3,
 		convectionFractionInstant: 0.2,
+		numberOfHeaters: 8
 	};
 
 	afterEach(() => {
@@ -26,6 +27,7 @@ describe("instantElectricHeater", () => {
 		await user.type(screen.getByTestId("name"), "Instant electric heater 1");
 		await user.type(screen.getByTestId("ratedPower"), "3");
 		await user.type(screen.getByTestId("convectionFractionInstant"), "0.2");
+		await user.type(screen.getByTestId("numberOfHeaters"), "8");
 		await user.tab();
 	};
 

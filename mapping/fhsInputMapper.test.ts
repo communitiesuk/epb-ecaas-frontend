@@ -1775,12 +1775,14 @@ describe("FHS input mapper", () => {
 					data: [{
 						name: "instant elec heater 1",
 						ratedPower: 10,
-						convectionFractionInstant: 1
+						convectionFractionInstant: 1,
+						numberOfHeaters: 2
 					},
 					{
 						name: "instant elec heater 2",
 						ratedPower: 13,
-						convectionFractionInstant: 0.8
+						convectionFractionInstant: 0.8,
+						numberOfHeaters: 1
 					}]
 				},
 				electricStorageHeater: {
