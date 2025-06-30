@@ -1,7 +1,7 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime';
 import { screen } from '@testing-library/vue';
 import userEvent from "@testing-library/user-event";
-import Results from './results.vue';
+import Outputs from './outputs.vue';
 import type { SchemaFhsComplianceResponse } from "~/schema/api-schema.types";
 
 const response: SchemaFhsComplianceResponse = {
@@ -142,13 +142,13 @@ describe('show good response in result tabs', () => {
 	});
 
 	it('should display some tabs', async () => {
-		const { container: dom } = await renderSuspended(Results);
+		const { container: dom } = await renderSuspended(Outputs);
 
 		expect(dom.querySelector('.govuk-tabs')).not.toBeNull();
 	});
 
 	it('should display primary output data', async () => {
-		await renderSuspended(Results);
+		await renderSuspended(Outputs);
 
 		await user.click(screen.getByRole('link', { name: 'Primary outputs' }));
 
@@ -164,7 +164,7 @@ describe('show good response in result tabs', () => {
 	});
 
 	it('should display energy demand data', async () => {
-		await renderSuspended(Results);
+		await renderSuspended(Outputs);
 
 		await user.click(screen.getByRole('link', { name: 'Energy demand' }));
 
@@ -181,7 +181,7 @@ describe('show good response in result tabs', () => {
 	});
 
 	it('should display delivered energy use tab', async () => {
-		await renderSuspended(Results);
+		await renderSuspended(Outputs);
 
 		await user.click(screen.getByRole('link', { name: 'Delivered energy use' }));
 
@@ -198,7 +198,7 @@ describe('show good response in result tabs', () => {
 	});
 
 	it('should display energy use by fuel tab', async () => {
-		await renderSuspended(Results);
+		await renderSuspended(Outputs);
 
 		await user.click(screen.getByRole('link', { name: 'Energy use by fuel' }));
 
@@ -229,13 +229,13 @@ describe('show error in result tabs', () => {
 	});
 
 	it('does not show any tabs', async () => {
-		const { container: dom } = await renderSuspended(Results);
+		const { container: dom } = await renderSuspended(Outputs);
 
 		expect(dom.querySelector('.govuk-tabs')).toBeNull();
 	});
 
 	it('shows the error from the API', async () => {
-		const { container: dom } = await renderSuspended(Results);
+		const { container: dom } = await renderSuspended(Outputs);
 
 		const paraContent = dom.querySelector('pre')!.textContent;
 		expect(paraContent).toContain('Something very specific happened, incorrectly.');
@@ -254,7 +254,7 @@ describe('shows a message if there is no result but a user has ended up here', (
 	});
 
 	it('shows the expected message to say there is no result to show', async () => {
-		const { container: dom } = await renderSuspended(Results);
+		const { container: dom } = await renderSuspended(Outputs);
 
 		const paraContent = dom.querySelector('p.govuk-body')!.textContent;
 		expect(paraContent).toContain('There are no results yet to show.');

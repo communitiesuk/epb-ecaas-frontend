@@ -4,7 +4,8 @@ export enum PageType {
 	Task,
 	TaskGroup,
 	Summary,
-	Content
+	Content,
+	Outputs,
 };
 
 export interface Page {

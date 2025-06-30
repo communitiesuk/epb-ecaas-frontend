@@ -39,7 +39,7 @@ const calculate = async () => {
 		calculatePending.value = false;
 	}
 
-	navigateTo('/results');
+	navigateTo('/outputs');
 };
 </script>
 
