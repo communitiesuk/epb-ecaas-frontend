@@ -62,6 +62,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			test-id="zoneParametersErrorSummary"
 		/>
 		<h1 class="govuk-heading-l">Zone parameters</h1>
+		<p class="govuk-hint">For this release the information required about zones has been simplified. Please be aware that input relating to zones may change in future releases as the calculation model is refined.</p>
 		<!--		<p class="govuk-body">-->
 		<!--			<a href="/guidance/zone-parameters" target="_blank" class="govuk-link">-->
 		<!--				Zone parameters guidance (opens in another window)-->
