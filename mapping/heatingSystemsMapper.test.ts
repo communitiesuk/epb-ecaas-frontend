@@ -309,7 +309,7 @@ describe("heating systems mapper", () => {
 						name: "Acme instant electric heater",
 						ratedPower: 100,
 						convectionFractionInstant: 0.8,
-						numberOfHeaters: 2,
+						numberOfHeaters: 2
 					}
 				]
 			},
@@ -333,7 +333,8 @@ describe("heating systems mapper", () => {
 					type: "InstantElecHeater",
 					rated_power: 100,
 					frac_convective: 0.8,
-					EnergySupply: 'mains elec'
+					EnergySupply: 'mains elec',
+
 				}
 			}
 		};

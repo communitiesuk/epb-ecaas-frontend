@@ -360,7 +360,7 @@ describe("Heating systems summary page", () => {
 			name: "Instant electric heater 1",
 			ratedPower: 3,
 			convectionFractionInstant: 0.2,
-			numberOfHeaters: 2,
+			numberOfHeaters: 2
 		};
 		const electricStorageHeater: ElectricStorageHeaterData = {
 			name: "Electric storage heater 1",
