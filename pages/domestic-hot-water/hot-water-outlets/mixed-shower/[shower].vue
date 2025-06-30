@@ -55,7 +55,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Flow rate"
 			name="flowRate"
 			validation="required | number | min:0 | max:15"
-			suffix-text="litres/min"
+			suffix-text="litres per min"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
