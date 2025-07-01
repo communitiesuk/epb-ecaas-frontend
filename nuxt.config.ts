@@ -127,7 +127,7 @@ export default defineNuxtConfig({
 				}
 			}
 
-			if (process.env.NODE_ENV === "production") {
+			if (process.env.NODE_ENV === "production" && process.env.BUILD_FOR_AWS_LAMBDA) {
 				setAuthMiddleware(pages);
 			}
 		},
