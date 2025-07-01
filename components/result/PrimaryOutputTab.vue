@@ -36,11 +36,11 @@ defineProps<{ selected: boolean, data: Omit<SchemaFhsComplianceResponse, 'energy
 						<span class="govuk-!-font-weight-regular">kWh/m²</span>
 					</th>
 					<td class="govuk-table__cell">
-						{{ data.dwelling_primary_energy_rate?.toFixed(3) }}<br>
+						{{ data.dwelling_primary_energy_rate?.toFixed(2) }}<br>
 						<span class="govuk-!-font-weight-bold">(DPER)</span>
 					</td>
 					<td class="govuk-table__cell">
-						{{ data.target_primary_energy_rate?.toFixed(3) }}<br>
+						{{ data.target_primary_energy_rate?.toFixed(2) }}<br>
 						<span class="govuk-!-font-weight-bold">(TPER)</span>
 					</td>
 					<td class="govuk-table__cell"><ResultComplianceBadge :is-compliant="data.primary_energy_rate_compliant!"/></td>

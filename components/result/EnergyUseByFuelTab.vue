@@ -11,7 +11,7 @@ const { total: _total, ...systems } = data; // list can include total inside it,
 		<table class="govuk-table">
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">
-					<th class="govuk-table__header" /><th scope="col" class="govuk-table__header">Actual dwelling</th>
+					<th class="govuk-table__header govuk-!-width-one-third" /><th scope="col" class="govuk-table__header">Actual dwelling</th>
 					<th scope="col" class="govuk-table__header">Notional dwelling</th>
 				</tr>
 			</thead>
@@ -22,10 +22,10 @@ const { total: _total, ...systems } = data; // list can include total inside it,
 						<span class="govuk-!-font-weight-regular">kWh/m²</span>
 					</th>
 					<td class="govuk-table__cell">
-						{{ actual?.toFixed(3) }}
+						{{ actual?.toFixed(2) }}
 					</td>
 					<td class="govuk-table__cell">
-						{{ notional?.toFixed(3) }}
+						{{ notional?.toFixed(2) }}
 					</td>
 				</tr>
 			</tbody>

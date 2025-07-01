@@ -11,7 +11,7 @@ const { total: _total, ...systems } = data.by_system || {}; // by_system can inc
 		<table class="govuk-table">
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">
-					<th class="govuk-table__header" /><th scope="col" class="govuk-table__header">Actual dwelling</th>
+					<th class="govuk-table__header govuk-!-width-one-third" /><th scope="col" class="govuk-table__header">Actual dwelling</th>
 					<th scope="col" class="govuk-table__header">Notional dwelling</th>
 				</tr>
 			</thead>

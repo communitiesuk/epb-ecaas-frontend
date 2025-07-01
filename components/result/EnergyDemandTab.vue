@@ -9,7 +9,7 @@ const { selected, data } = defineProps<{ selected: boolean, data: SchemaFhsEnerg
 		<table class="govuk-table">
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">
-					<th class="govuk-table__header" /><th scope="col" class="govuk-table__header">Actual dwelling</th>
+					<th class="govuk-table__header govuk-!-width-one-third" /><th scope="col" class="govuk-table__header">Actual dwelling</th>
 					<th scope="col" class="govuk-table__header">Notional dwelling</th>
 				</tr>
 			</thead>
@@ -20,10 +20,10 @@ const { selected, data } = defineProps<{ selected: boolean, data: SchemaFhsEnerg
 						<span class="govuk-!-font-weight-regular">kWh/m²</span>
 					</th>
 					<td class="govuk-table__cell">
-						{{ data?.space_heating?.actual?.toFixed(3) }}
+						{{ data?.space_heating?.actual?.toFixed(2) }}
 					</td>
 					<td class="govuk-table__cell">
-						{{ data?.space_heating?.notional?.toFixed(3) }}
+						{{ data?.space_heating?.notional?.toFixed(2) }}
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
@@ -32,10 +32,10 @@ const { selected, data } = defineProps<{ selected: boolean, data: SchemaFhsEnerg
 						<span class="govuk-!-font-weight-regular">kWh/m²</span>
 					</th>
 					<td class="govuk-table__cell">
-						{{ data?.space_cooling?.actual?.toFixed(3) }}<br>
+						{{ data?.space_cooling?.actual?.toFixed(2) }}<br>
 					</td>
 					<td class="govuk-table__cell">
-						{{ data?.space_cooling?.notional?.toFixed(3) }}<br>
+						{{ data?.space_cooling?.notional?.toFixed(2) }}<br>
 					</td>
 				</tr>
 			</tbody>
