@@ -1,13 +1,12 @@
 export type Resolved<T> = { readonly [P in keyof T]: T[P] extends EcaasForm<infer U> ? U : Resolved<T[P]> } & {};
 
-export function resolveState<T>(state: T): Resolved<T> {
+export function resolveState<T extends object>(state: T): Resolved<T> {
 	const resolvedState: Partial<Resolved<T>> = {};
-	const excludedKeys = ['$id', '_isOptionsAPI'];
 
 	for (const key in state) {
 		const value = state[key];
 
-		if (excludedKeys.includes(key) || typeof value === 'function') {
+		if (key.startsWith('$') || key.startsWith('_') || typeof value === 'function') {
 			continue;
 		}
 
