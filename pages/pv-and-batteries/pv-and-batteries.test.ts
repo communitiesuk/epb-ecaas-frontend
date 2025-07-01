@@ -18,7 +18,7 @@ describe('pv system', () => {
 	afterEach(() => {
 		store.$reset();
 	});
-	
+
 	const pvSystem1: PvSystemData = {
 		name: "PV System 1",
 		peakPower: 4,
@@ -53,7 +53,7 @@ describe('pv system', () => {
 	test('pv system is removed when remove link is clicked', async () => {
 		store.$patch({
 			pvAndBatteries: {
-				pvSystems: {
+				pvSystem: {
 					data: [pvSystem1]
 				}
 			}
@@ -61,26 +61,26 @@ describe('pv system', () => {
 	
 		await renderSuspended(PvSystem);
 	
-		expect(screen.getAllByTestId('pvSystems_items')).toBeDefined();
+		expect(screen.getAllByTestId('pvSystem_items')).toBeDefined();
 	
-		await user.click(screen.getByTestId('pvSystems_remove_0'));
+		await user.click(screen.getByTestId('pvSystem_remove_0'));
 	
-		expect(screen.queryByTestId('pvSystems_items')).toBeNull();
+		expect(screen.queryByTestId('pvSystem_items')).toBeNull();
 	});
 	
 	it('should only remove the pv system object that is clicked', async () => {
 		store.$patch({
 			pvAndBatteries: {
-				pvSystems: {
+				pvSystem: {
 					data:[pvSystem1, pvSystem2, pvSystem3]
 				}
 			}
 		});
 	
 		await renderSuspended(PvSystem);
-		await user.click(screen.getByTestId('pvSystems_remove_1'));
+		await user.click(screen.getByTestId('pvSystem_remove_1'));
 	
-		const populatedList = screen.getByTestId('pvSystems_items');
+		const populatedList = screen.getByTestId('pvSystem_items');
 	
 		expect(within(populatedList).getByText('PV System 1')).toBeDefined();
 		expect(within(populatedList).getByText('PV System 3')).toBeDefined();
@@ -90,19 +90,19 @@ describe('pv system', () => {
 	test('pv system is duplicated when duplicate link is clicked', async () => {
 		store.$patch({
 			pvAndBatteries: {
-				pvSystems: {
+				pvSystem: {
 					data:[pvSystem1, pvSystem2]
 				}
 			}
 		});
 	
 		await renderSuspended(PvSystem);
-		await userEvent.click(screen.getByTestId('pvSystems_duplicate_0'));
-		await userEvent.click(screen.getByTestId('pvSystems_duplicate_0'));
-		await userEvent.click(screen.getByTestId('pvSystems_duplicate_2'));
-		await userEvent.click(screen.getByTestId('pvSystems_duplicate_2'));
+		await userEvent.click(screen.getByTestId('pvSystem_duplicate_0'));
+		await userEvent.click(screen.getByTestId('pvSystem_duplicate_0'));
+		await userEvent.click(screen.getByTestId('pvSystem_duplicate_2'));
+		await userEvent.click(screen.getByTestId('pvSystem_duplicate_2'));
 	
-		expect(screen.queryAllByTestId('pvSystems_item').length).toBe(6);
+		expect(screen.queryAllByTestId('pvSystem_item').length).toBe(6);
 		expect(screen.getByText('PV System 1')).toBeDefined();
 		expect(screen.getByText('PV System 1 (1)')).toBeDefined();
 		expect(screen.getByText('PV System 1 (2)')).toBeDefined();
@@ -122,7 +122,7 @@ describe('pv system', () => {
 		const addPvDataToStore = async () => {
 			store.$patch({
 				pvAndBatteries: {
-					pvSystems: {
+					pvSystem: {
 						data: [pvSystem1],
 					},
 				}
@@ -132,7 +132,7 @@ describe('pv system', () => {
 		const getPvData = async (action: string) => {
 			return {
 				key: "pvSystem",
-				testId: `pvSystems_${action}_0`,
+				testId: `pvSystem_${action}_0`,
 				form: PvSystemForm,
 				params: "system",
 			};
@@ -151,22 +151,22 @@ describe('pv system', () => {
 
 			await user.click(screen.getByTestId("completeSectionButton"));
 
-			const pvSystemItems = store.pvAndBatteries.pvSystems;
+			const pvSystemItems = store.pvAndBatteries.pvSystem;
 			expect(pvSystemItems?.complete).toBe(true);
 			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
 			expect(completeStatus?.style.display).not.toBe("none");
 
-			expect(navigateToMock).toHaveBeenCalledWith("/pv-and-batteries");
+			expect(navigateToMock).toHaveBeenCalledWith("/");
 		});
 
 		it("marks as not complete if item is removed", async () => {
 			const items = await getPvData("remove");
 
 			await user.click(screen.getByTestId("completeSectionButton"));
-			expect(store.pvAndBatteries.pvSystems.complete).toBe(true);
+			expect(store.pvAndBatteries.pvSystem.complete).toBe(true);
 
 			await user.click(screen.getByTestId(items.testId));
-			expect(store.pvAndBatteries.pvSystems.complete).toBe(false);
+			expect(store.pvAndBatteries.pvSystem.complete).toBe(false);
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			
 		});
@@ -175,10 +175,10 @@ describe('pv system', () => {
 			const items = await getPvData("duplicate");
 
 			await user.click(screen.getByTestId("completeSectionButton"));
-			expect(store.pvAndBatteries.pvSystems.complete).toBe(true);
+			expect(store.pvAndBatteries.pvSystem.complete).toBe(true);
 
 			await user.click(screen.getByTestId(items.testId));
-			expect(store.pvAndBatteries.pvSystems.complete).toBe(false);
+			expect(store.pvAndBatteries.pvSystem.complete).toBe(false);
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 		});
 
@@ -186,14 +186,14 @@ describe('pv system', () => {
 			const items = await getPvData("");
 
 			await user.click(screen.getByTestId("completeSectionButton"));
-			expect(store.pvAndBatteries.pvSystems.complete).toBe(true);
+			expect(store.pvAndBatteries.pvSystem.complete).toBe(true);
 
 			const param = items.params;
 			await renderSuspended(items.form, {
 				route: { params: { [param]: "0" } },
 			});
 			await user.click(screen.getByRole("button", { name: "Save and continue" }));
-			expect(store.pvAndBatteries.pvSystems.complete).toBe(false);
+			expect(store.pvAndBatteries.pvSystem.complete).toBe(false);
 
 			await renderSuspended(PvSystem);
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();

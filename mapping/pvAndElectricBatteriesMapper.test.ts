@@ -44,7 +44,7 @@ describe("PV and electric batteries mapper", () => {
 
 		store.$patch({
 			pvAndBatteries: {
-				pvSystems: {
+				pvSystem: {
 					data: pvSystemData,
 					complete: true
 				}
@@ -112,7 +112,7 @@ describe("PV and electric batteries mapper", () => {
 		store.$patch({
 			pvAndBatteries: {
 				electricBattery: {
-					data: battery,
+					data: [battery],
 					complete: true
 				}
 			}

@@ -1231,12 +1231,12 @@ describe("FHS input mapper", () => {
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
-			pvSystems: {
+			pvSystem: {
 				...baseForm,
 			},
 			electricBattery: {
 				...baseForm,
-				data: {
+				data: [{
 					name: "some-electric-battery-name",
 					capacity: 2,
 					batteryAge: 5,
@@ -1246,7 +1246,7 @@ describe("FHS input mapper", () => {
 					minimumChargeRate: 0.001,
 					maximumChargeRate: 1.5,
 					maximumDischargeRate: 1.25,		
-				}
+				}]
 			}
 		};
 
@@ -1943,7 +1943,7 @@ describe("FHS input mapper", () => {
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
-			pvSystems: {
+			pvSystem: {
 				...baseForm,
 				data: [{
 					name: "pv system 1",
@@ -1962,7 +1962,7 @@ describe("FHS input mapper", () => {
 			},
 			electricBattery: {
 				...baseForm,
-				data: {
+				data: [{
 					name: "electric battery 1",
 					capacity: 12,
 					batteryAge: 0,
@@ -1972,7 +1972,7 @@ describe("FHS input mapper", () => {
 					maximumChargeRate: 90,
 					minimumChargeRate: 80,
 					maximumDischargeRate: 20,
-				}
+				}]
 			}
 		};
 

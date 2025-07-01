@@ -1,23 +1,26 @@
 <script setup lang="ts">
-const title = "Photovoltaic (PV) systems";
+const title = "Photovoltaic (PV) systems and electric batteries";
 const page = usePage();
 const store = useEcaasStore();
 
-function handleRemove(index: number) {
-	const data = store.pvAndBatteries.pvSystems?.data;
+type PvAndBatteryType = keyof typeof store.pvAndBatteries;
+type PvAndBatteryData = PvSystemData & ElectricBatteryData & PvDiverterData;
+
+function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
+	const data = store.pvAndBatteries[pvAndBatteryType]?.data;
 
 	if (data) {
 		data.splice(index, 1);
 
 		store.$patch((state) => {
-			state.pvAndBatteries.pvSystems!.data = data.length ? data : [];
-			state.pvAndBatteries.pvSystems!.complete = false;
+			state.pvAndBatteries[pvAndBatteryType]!.data = data.length ? data : [];
+			state.pvAndBatteries[pvAndBatteryType]!.complete = false;
 		});
 	}
 } 
 
-function handleDuplicate<T extends PvSystemData>(index: number) {
-	const data  = store.pvAndBatteries.pvSystems?.data;
+function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatteryType, index: number) {
+	const data  = store.pvAndBatteries[pvAndBatteryType]?.data;
 	const item = data?.[index];
     
 	if (item) {
@@ -29,27 +32,26 @@ function handleDuplicate<T extends PvSystemData>(index: number) {
 				name: `${item.name} (${duplicates.length})`
 			} as T;
 
-			state.pvAndBatteries.pvSystems!.data.push(newItem);
-			state.pvAndBatteries.pvSystems.complete = false;
+			state.pvAndBatteries[pvAndBatteryType]!.data.push(newItem);
+			state.pvAndBatteries[pvAndBatteryType].complete = false;
 		});
 	}
 }
 function handleComplete() {
 	store.$patch({
 		pvAndBatteries: {
-			pvSystems: {
-				complete: true
-			}
+			pvSystem: { complete: true },
+			electricBattery: { complete: true }
 		}
 	});
 
-	navigateTo('/pv-and-batteries');
+	navigateTo('/');
 }
 
 function checkIsComplete(){
-	return store.pvAndBatteries.pvSystems.complete ? true : false;
+	const pvAndBatteries = store.pvAndBatteries;
+	return Object.values(pvAndBatteries).every(pvAndBattery => pvAndBattery.complete);
 }
-
 </script>
 
 <template>
@@ -60,12 +62,20 @@ function checkIsComplete(){
 		{{ title }}
 	</h1>
 	<CustomList
-		id="pvSystems"
-		title="PV Systems"
+		id="pvSystem"
+		title="PV System"
 		:form-url="`${page?.url!}/pv-system`"
-		:items="store.pvAndBatteries.pvSystems.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove(index)"
-		@duplicate="(index: number) => handleDuplicate(index)"
+		:items="store.pvAndBatteries.pvSystem.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('pvSystem', index)"
+		@duplicate="(index: number) => handleDuplicate('pvSystem', index)"
+	/>
+	<CustomList
+		id="electricBattery"
+		title="Electric battery"
+		:form-url="`${page?.url!}/electric-battery`"
+		:items="store.pvAndBatteries.electricBattery.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('electricBattery', index)"
+		@duplicate="(index: number) => handleDuplicate('electricBattery', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton

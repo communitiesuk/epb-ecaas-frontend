@@ -15,7 +15,7 @@ export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsIn
 
 export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, 'OnSiteGeneration'> {
 	return {
-		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvSystems.map((system) => {
+		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvSystem.map((system) => {
 			const { name, elevationalHeight, lengthOfPV, widthOfPV, inverterIsInside, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = system;
 
 			return [
@@ -42,20 +42,23 @@ export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, 'OnS
 }
 
 export function mapElectricBatteryData(state: ResolvedState): Record<string, SchemaElectricBattery> {
-	const { batteryAge, location, capacity, chargeEfficiency, gridChargingPossible, maximumChargeRate, maximumDischargeRate, minimumChargeRate } = state.pvAndBatteries.electricBattery;
-	return {
-		"ElectricBattery":
-			{
-				battery_age: batteryAge,
-				battery_location: location,
-				capacity,
-				charge_discharge_efficiency_round_trip: chargeEfficiency,
-				grid_charging_possible: gridChargingPossible,
-				maximum_charge_rate_one_way_trip: maximumChargeRate,
-				maximum_discharge_rate_one_way_trip: maximumDischargeRate,
-				minimum_charge_rate_one_way_trip: minimumChargeRate
-			}
-	};
+	const electricBattery = state.pvAndBatteries.electricBattery[0];
+	if (electricBattery) {
+		return {
+			"ElectricBattery":
+				{
+					battery_age: electricBattery.batteryAge,
+					battery_location: electricBattery.location,
+					capacity: electricBattery.capacity,
+					charge_discharge_efficiency_round_trip: electricBattery.chargeEfficiency,
+					grid_charging_possible: electricBattery.gridChargingPossible,
+					maximum_charge_rate_one_way_trip: electricBattery.maximumChargeRate,
+					maximum_discharge_rate_one_way_trip: electricBattery.maximumDischargeRate,
+					minimum_charge_rate_one_way_trip: electricBattery.minimumChargeRate
+				}
+		};
+	}
+	return {}; 
 }
 
 /* Function unused yet while no diverter data to map. **/

@@ -1,4 +1,4 @@
-import ElectricBattery from "./electric-battery.vue";
+import ElectricBattery from "./[battery].vue";
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
@@ -52,7 +52,7 @@ describe('Electric battery', () => {
 
 		const { data } = store.pvAndBatteries.electricBattery;
 
-		expect(data).toEqual(fullElectricBattery);
+		expect(data).toEqual([fullElectricBattery]);
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

@@ -4,15 +4,14 @@ import type { BatteryLocation } from '~/schema/api-schema.types';
 const title = "Electric battery";
 const store = useEcaasStore();
 
-const model: Ref<ElectricBatteryData> = ref({
-	...store.pvAndBatteries.electricBattery.data
-});
+const electricBatteryData = useItemToEdit('battery', store.pvAndBatteries.electricBattery.data);
+const model: Ref<ElectricBatteryData> = ref(electricBatteryData!);
 
 const saveForm = (fields: ElectricBatteryData) => {
 	store.$patch({
 		pvAndBatteries: {
 			electricBattery: { 
-				data: {
+				data: [{
 					name: fields.name,
 					capacity: fields.capacity,
 					batteryAge: fields.batteryAge,
@@ -22,7 +21,7 @@ const saveForm = (fields: ElectricBatteryData) => {
 					maximumChargeRate: fields.maximumChargeRate,
 					minimumChargeRate: fields.minimumChargeRate,
 					maximumDischargeRate: fields.maximumDischargeRate
-				},
+				}],
 				complete: true,
 			},
 		},

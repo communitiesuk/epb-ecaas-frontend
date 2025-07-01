@@ -103,7 +103,7 @@ describe("PV system", () => {
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
 
-		const { data = [] } = store.pvAndBatteries.pvSystems;
+		const { data = [] } = store.pvAndBatteries.pvSystem;
 		
 		expect(data[0]).toEqual(pvSystem);
 	});
