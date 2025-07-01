@@ -111,7 +111,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="The cold water flow rate"
 			name="flowRate"
 			validation="required | number | between:0.1,500"
-			suffix-text="litres per min"
+			suffix-text="litres per minute"
 		/>
 		<FormKit
 			id="efficiency"
