@@ -9,9 +9,9 @@ defineProps<{ selected: boolean, data: Omit<SchemaFhsComplianceResponse, 'energy
 		<table class="govuk-table">
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">
-					<th/><th scope="col" class="govuk-table__header">Actual dwelling</th>
+					<th class="govuk-table__header" /><th scope="col" class="govuk-table__header">Actual dwelling</th>
 					<th scope="col" class="govuk-table__header">Notional dwelling</th>
-					<th/><th/></tr>
+					<th class="govuk-table__header" /><th class="govuk-table__header" /></tr>
 			</thead>
 			<tbody class="govuk-table__body">
 				<tr class="govuk-table__row">
