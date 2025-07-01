@@ -1,5 +1,9 @@
 <script lang="ts" setup>
+import { getInitialState } from '~/stores/ecaasStore';
+
 const title = 'Import a calculation';
+
+const store = useEcaasStore();
 
 const file: Ref<File | null> = ref(null);
 
@@ -19,10 +23,33 @@ const doImport = (_event: Event) => {
 	}
 	const reader = new FileReader();
 	reader.onload = () => {
-		console.log(reader.result);
+		if (reader.result === null) {
+			return;
+		}
+
+		let fileState: EcaasState | undefined;
+    
+		try {
+			fileState = JSON.parse(reader.result as string);
+		} catch (e) {
+			console.error(`could not parse this as JSON: ${e instanceof SyntaxError ? e.message : 'unknown error'}`);
+			return;
+		}
+		
+		console.log({
+			...getInitialState(),
+			...fileState!,
+			lastResult: undefined
+		});
+		store.$patch({
+			...getInitialState(),
+			...fileState!,
+			lastResult: undefined
+		});
+		navigateTo('/');
 	};
 	reader.onerror = () => {
-		console.error('could not read file');
+		console.error('could not read file!');
 	};
 	reader.readAsText(file.value);
 };
@@ -42,6 +69,6 @@ const doImport = (_event: Event) => {
 	<GovWarningText>Importing a file will override any data currently in the calculation. If you wish to save this data you must first export it.</GovWarningText>
 	<div class="govuk-button-group">
 		<GovButton :disabled="!hasFile || undefined" :click="doImport">Import</GovButton>
-		<GovButton href="/" secondary>Return to overview</GovButton>
+		<GovButton href="/" secondary>Return to task list</GovButton>
 	</div>
 </template>

@@ -7,7 +7,7 @@ import { CombustionApplianceType } from "~/schema/api-schema.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
 
-function getInitialState(): EcaasState {
+export function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
 		dwellingDetails: {
 			generalSpecifications: { data: {} },

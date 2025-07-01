@@ -18,7 +18,6 @@ const { id, label = { text: 'Upload a file' }, accept = undefined, change = unde
 const el = useTemplateRef('el');
 
 watch(el, async (el) => {
-	console.log('el: ', el);
 	if (!el) {
 		return;
 	}
