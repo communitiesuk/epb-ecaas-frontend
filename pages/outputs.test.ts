@@ -171,10 +171,10 @@ describe('show good response in result tabs', () => {
 		const tableTextContent = screen.getByRole('table').textContent;
 
 		const expectedFigures = [
-			'21.545',
-			'27.655',
-			'-0.867',
-			'-0.604'
+			'21.55',
+			'27.66',
+			'-0.87',
+			'-0.60'
 		];
 
 		expectedFigures.forEach(text => expect(tableTextContent).toContain(text));
@@ -205,8 +205,8 @@ describe('show good response in result tabs', () => {
 		const tableTextContent = screen.getByRole('table').textContent;
 
 		const expectedTextsPresent = [
-			'27254.758',
-			'20613.188',
+			'27254.76',
+			'20613.19',
 			'Energy from environment', // display value for energy from environment
 		];
 
