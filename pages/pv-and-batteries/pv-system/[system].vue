@@ -54,7 +54,7 @@ const saveForm = (fields: PvSystemData) => {
 		pvSystem.complete = false;
 	});
 
-	navigateTo("/pv-and-batteries/pv-systems");
+	navigateTo("/pv-and-batteries");
 };
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

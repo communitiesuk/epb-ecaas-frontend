@@ -112,6 +112,6 @@ describe("PV system", () => {
 		await renderSuspended(PVScreen);
 		await populateValidForm();
 		await user.click(screen.getByRole('button'));
-		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries/pv-systems');
+		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries');
 	});
 });

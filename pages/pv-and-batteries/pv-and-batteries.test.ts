@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import PvSystem from './index.vue';
-import PvSystemForm from "./[system].vue";
+import PvSystemForm from "./pv-system/[system].vue";
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
 import { InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
@@ -18,6 +18,7 @@ describe('pv system', () => {
 	afterEach(() => {
 		store.$reset();
 	});
+	
 	const pvSystem1: PvSystemData = {
 		name: "PV System 1",
 		peakPower: 4,

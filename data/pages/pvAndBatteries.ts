@@ -1,6 +1,6 @@
 import { PageType, type Page } from "./pages.types";
 
-const pvAndBatteriesPages = [
+const pvAndBatteriesPages: Array<Page> = [
 	{
 		id: 'pvAndBatteries',
 		title: 'PV and electric batteries',
@@ -9,30 +9,30 @@ const pvAndBatteriesPages = [
 		parentId: 'taskList'
 	},
 	{
-		id: 'pvSystems',
-		title: 'PV Systems',
-		url: '/pv-and-batteries/pv-systems',
+		id: 'pvSystem',
+		title: 'PV System',
+		url: '/pv-and-batteries/pv-system/create',
 		type: PageType.Task,
 		parentId: 'pvAndBatteries'
 	},
 	{
-		id: 'pvSystemCreate',
-		title: 'PV System',
-		url: '/pv-and-batteries/pv-systems/create',
-		type: PageType.Task,
-		parentId: 'pvSystems'
-	},
-	{
 		id: 'pvSystemEdit',
 		title: 'PV System',
-		url: '/pv-and-batteries/pv-systems/:system',
+		url: '/pv-and-batteries/pv-system/:system',
 		type: PageType.Task,
-		parentId: 'pvSystems'
+		parentId: 'pvAndBatteries'
 	},
 	{
 		id: 'electricBattery',
 		title: 'Electric battery',
-		url: '/pv-and-batteries/electric-battery',
+		url: '/pv-and-batteries/electric-battery/create',
+		type: PageType.Task,
+		parentId: 'pvAndBatteries'
+	},
+	{
+		id: 'electricBatteryEdit',
+		title: 'Electric battery',
+		url: '/pv-and-batteries/electric-battery/:battery',
 		type: PageType.Task,
 		parentId: 'pvAndBatteries'
 	},
@@ -43,6 +43,6 @@ const pvAndBatteriesPages = [
 		type: PageType.Summary,
 		parentId: 'pvAndBatteries'
 	}
-] as const satisfies Array<Page>;
+];
 
 export default pvAndBatteriesPages;

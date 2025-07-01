@@ -62,7 +62,7 @@ function checkIsComplete(){
 	<CustomList
 		id="pvSystems"
 		title="PV Systems"
-		:form-url="`${page?.url!}`"
+		:form-url="`${page?.url!}/pv-system`"
 		:items="store.pvAndBatteries.pvSystems.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove(index)"
 		@duplicate="(index: number) => handleDuplicate(index)"
