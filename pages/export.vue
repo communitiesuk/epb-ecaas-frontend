@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import type { ResolvedState } from '~/mapping/fhsInputMapper';
 
 const store = useEcaasStore();
 const title = 'Export a calculation';
@@ -14,8 +13,7 @@ const exportDate = ref<string | undefined>();
 const downloadTriggered = ref(false);
 
 const saveForm = (_: typeof model) => {
-	const resolvedState: ResolvedState = resolveState(store);
-	const stateValue = JSON.stringify(resolvedState);
+	const stateValue = JSON.stringify(store.$state);
 
 	const stateBytes = new TextEncoder().encode(stateValue);
 	const stateBlob = new Blob([stateBytes], { type: 'application/json;charset=utf-8' });
