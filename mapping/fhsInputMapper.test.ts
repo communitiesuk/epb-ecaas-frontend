@@ -46,16 +46,6 @@ const expectedHouseInput: FhsInputSchema = {
 	Control: {},
 	EnergySupply: {
 		['mains elec']: {
-			ElectricBattery: {
-				capacity: 2,
-				battery_age: 5,
-				charge_discharge_efficiency_round_trip: 0.8,
-				battery_location: BatteryLocation.inside,
-				grid_charging_possible: false,
-				minimum_charge_rate_one_way_trip: 0.001,
-				maximum_charge_rate_one_way_trip: 1.5,
-				maximum_discharge_rate_one_way_trip: 1.25,		
-			},
 			fuel: FuelType.electricity,
 			is_export_capable: true,
 		}
@@ -1236,17 +1226,6 @@ describe("FHS input mapper", () => {
 			},
 			electricBattery: {
 				...baseForm,
-				data: [{
-					name: "some-electric-battery-name",
-					capacity: 2,
-					batteryAge: 5,
-					chargeEfficiency: 0.8,
-					location: BatteryLocation.inside,
-					gridChargingPossible: false,
-					minimumChargeRate: 0.001,
-					maximumChargeRate: 1.5,
-					maximumDischargeRate: 1.25,		
-				}]
 			}
 		};
 
