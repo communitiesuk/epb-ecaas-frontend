@@ -2,9 +2,15 @@ export type Resolved<T> = { readonly [P in keyof T]: T[P] extends EcaasForm<infe
 
 export function resolveState<T>(state: T): Resolved<T> {
 	const resolvedState: Partial<Resolved<T>> = {};
+	const excludedKeys = ['$id', '_isOptionsAPI'];
 
 	for (const key in state) {
 		const value = state[key];
+
+		if (excludedKeys.includes(key) || typeof value === 'function') {
+			continue;
+		}
+
 		if (isEcaasForm(value)) {
 			if (value.complete) {
 				resolvedState[key] = value.data as Resolved<T>[typeof key];

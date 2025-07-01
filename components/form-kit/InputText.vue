@@ -10,7 +10,8 @@ const {
 	id,
 	node: { name },
 	label,
-	help
+	help,
+	attrs: { placeholder }
 } = props.context;
 
 const { mounted } = useMounted();
@@ -23,11 +24,9 @@ function handleInput(e: Event) {
 
 <template>
 	<div :class="`govuk-form-group ${showErrorState(props.context) ? 'govuk-form-group--error' : ''}`">
-		<h1 class="govuk-label-wrapper">
-			<label class="govuk-label govuk-label--m" :for="id">
-				{{ label }}
-			</label>
-		</h1>
+		<label class="govuk-label govuk-label--m" :for="id">
+			{{ label }}
+		</label>
 		<div v-if="help" :id="`${id}_hint`" class="govuk-hint">
 			{{ help }}
 		</div>
@@ -42,6 +41,7 @@ function handleInput(e: Event) {
 			:value="mounted ? props.context._value : ''"
 			:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 			:data-testid="id"
+			:placeholder="placeholder as string"
 			@change="handleInput"
 		>
 	</div>
