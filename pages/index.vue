@@ -23,8 +23,9 @@ const exportDate = lastExportDateCookie.value ? dayjs(lastExportDateCookie.value
 			<CalculateButton />
 		</ClientOnly>
 	</div>
-	<div class="govuk-!-margin-top-1">
+	<div class="govuk-!-margin-top-1 govuk-button-group">
 		<GovButton secondary href="/export">Export</GovButton>
+		<GovButton secondary href="/import">Import</GovButton>
 	</div>
 </template>
 
