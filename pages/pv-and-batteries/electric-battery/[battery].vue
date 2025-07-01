@@ -22,7 +22,7 @@ const saveForm = (fields: ElectricBatteryData) => {
 					minimumChargeRate: fields.minimumChargeRate,
 					maximumDischargeRate: fields.maximumDischargeRate
 				}],
-				complete: true,
+				complete: false,
 			},
 		},
 	});
