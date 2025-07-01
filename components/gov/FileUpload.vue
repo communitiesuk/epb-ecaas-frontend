@@ -10,9 +10,10 @@ interface FileUploadProps {
 		text: string;
 	};
 	accept?: string;
+	change?: (event: Event) => void;
 }
 
-const { id, label = { text: 'Upload a file' }, accept = undefined } = defineProps<FileUploadProps>();
+const { id, label = { text: 'Upload a file' }, accept = undefined, change = undefined } = defineProps<FileUploadProps>();
 
 const el = useTemplateRef('el');
 
@@ -35,7 +36,7 @@ watch(el, async (el) => {
 			{{ label.text }}
 		</label>
 		<div class="govuk-drop-zone" data-module="govuk-file-upload">
-			<input :id :name type="file" class="govuk-file-upload" :accept>
+			<input :id :name type="file" class="govuk-file-upload" :accept @change="change">
 		</div>
 	</div>
 </template>
