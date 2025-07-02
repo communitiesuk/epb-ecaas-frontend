@@ -45,7 +45,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<template v-if="downloadUrl">
 		<GovPanel title="Export complete">
 			<p>{{ `${model.fileName}.json` }}</p>
-			<p>{{ dayjs(exportDate).format('DD/MM/YYYY HH:mm') }}</p>
+			<p class="govuk-!-margin-bottom-0">{{ dayjs(exportDate).format('DD/MM/YYYY HH:mm') }}</p>
 		</GovPanel>
 		<div class="govuk-button-group govuk-!-margin-top-7">
 			<NuxtLink v-if="!downloadTriggered" v-show="false" id="download" :href="downloadUrl" :download="`${model.fileName}.json`" />

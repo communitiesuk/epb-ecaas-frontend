@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import dayjs, { type Dayjs } from 'dayjs';
 import { getInitialState } from '~/stores/ecaasStore';
 
 const title = 'Import a calculation';
@@ -6,6 +7,7 @@ const title = 'Import a calculation';
 const store = useEcaasStore();
 
 const file: Ref<File | null> = ref(null);
+const importedFile: Ref<{ name: string; datetime: Dayjs } | null> = ref(null);
 
 const hasFile: Ref<boolean> = computed(() => !!file.value);
 
@@ -35,18 +37,17 @@ const doImport = (_event: Event) => {
 			console.error(`could not parse this as JSON: ${e instanceof SyntaxError ? e.message : 'unknown error'}`);
 			return;
 		}
-		
-		console.log({
-			...getInitialState(),
-			...fileState!,
-			lastResult: undefined
-		});
+
 		store.$patch({
 			...getInitialState(),
 			...fileState!,
 			lastResult: undefined
 		});
-		navigateTo('/');
+
+		importedFile.value = {
+			name: file.value!.name,
+			datetime: dayjs()
+		};
 	};
 	reader.onerror = () => {
 		console.error('could not read file!');
@@ -61,21 +62,32 @@ const doImport = (_event: Event) => {
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<p class="govuk-body">To continue working on a calculation you must import a previously exported JSON file.</p>
-	<h2 class="govuk-heading-s">Upload a calculation</h2>
-	<ClientOnly>
-		<GovFileUpload
-			id="import"
-			name="import"
-			accept=".json,application/json"
-			:change="accessFile"
-			:label="{ text: 'Upload a JSON file', classes: 'govuk-!-display-none' }"
-			:hint="{ text: 'Select a JSON file that you have previously downloaded' }"
-		/>
-	</ClientOnly>
-	<GovWarningText>Importing a file will override any data currently in the calculation. If you wish to save this data you must first export it.</GovWarningText>
-	<div class="govuk-button-group">
-		<GovButton :disabled="!hasFile || undefined" :click="doImport">Import</GovButton>
-		<GovButton href="/" secondary>Return to task list</GovButton>
-	</div>
+	<template v-if="!importedFile">
+		<p class="govuk-body">To continue working on a calculation you must import a previously exported JSON file.</p>
+		<h2 class="govuk-heading-s">Upload a calculation</h2>
+		<ClientOnly>
+			<GovFileUpload
+				id="import"
+				name="import"
+				accept=".json,application/json"
+				:change="accessFile"
+				:label="{ text: 'Upload a JSON file', classes: 'govuk-!-display-none' }"
+				:hint="{ text: 'Select a JSON file that you have previously downloaded' }"
+			/>
+		</ClientOnly>
+		<GovWarningText>Importing a file will override any data currently in the calculation. If you wish to save this data you must first export it.</GovWarningText>
+		<div class="govuk-button-group">
+			<GovButton :disabled="!hasFile || undefined" :click="doImport">Import</GovButton>
+			<GovButton href="/" secondary>Return to task list</GovButton>
+		</div>
+	</template>
+	<template v-else>
+		<GovPanel title="Import complete">
+			<p>{{ importedFile.name }}</p>
+			<p class="govuk-!-margin-bottom-0">{{ importedFile.datetime.format('DD/MM/YYYY HH:mm') }}</p>
+		</GovPanel>
+		<div class="govuk-button-group govuk-!-margin-top-7">
+			<GovButton secondary href="/">Return to task list</GovButton>
+		</div>
+	</template>
 </template>
