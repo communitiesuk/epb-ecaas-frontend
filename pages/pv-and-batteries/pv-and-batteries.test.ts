@@ -156,6 +156,7 @@ describe('pv systems and electric battery', () => {
 	
 			await renderSuspended(PvAndBatteries);
 			expect(screen.queryByTestId('electricBattery_add')).toBeNull();
+			expect(screen.queryByTestId('electricBattery_duplicate_0')).toBeNull();
 		});
 	});
 
