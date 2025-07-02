@@ -1,102 +1,132 @@
-import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import {screen, within } from '@testing-library/vue';
-import { v4 as uuidv4 } from 'uuid';
+import {screen } from '@testing-library/vue';
 import WaterHeating from './index.vue';
 import type { HotWaterCylinderData } from "~/stores/ecaasStore.types";
 
-describe('water heating', () => {
+const navigateToMock = vi.hoisted(() => vi.fn());
+mockNuxtImport('navigateTo', () => {
+	return navigateToMock;
+});
 
-	describe('hot water cylinder', () => {
-		const store = useEcaasStore();
-		const user = userEvent.setup();
 
-		const hotWaterCylinder1: HotWaterCylinderData = {
-			id: uuidv4(),
-			heatSource: "🥕",
-			tankVolume: 5,
-			dailyEnergyLoss: 1,
-			name: "Hot water cylinder 1"
-		};
+describe('water heating (hot water cylinder)', () => {
+	const store = useEcaasStore();
+	const user = userEvent.setup();
 
-		const hotWaterCylinder2: HotWaterCylinderData = {
-			...hotWaterCylinder1,
-			name: "Hot water cylinder 2",
-		};
+	const expected: HotWaterCylinderData = {
+		id: "Any Id",
+		heatSource: "test-heat-pump",
+		tankVolume: 150,
+		dailyEnergyLoss: 73,
+		name: "Hot water cylinder 1"
+	};
 
-		const hotWaterCylinder3: HotWaterCylinderData = {
-			...hotWaterCylinder1,
-			name: "Hot water cylinder 3"
-		};
+	const populateValidForm = async () => {
+		await user.type(screen.getByTestId('name'), expected.name);
+		await user.click(screen.getByTestId('heatSource_' + expected.heatSource));
+		await user.type(screen.getByTestId('tankVolume'), expected.tankVolume.toString());
+		await user.type(screen.getByTestId('dailyEnergyLoss'), expected.dailyEnergyLoss.toString());
+		await user.tab();
+	};
 
-		afterEach(() => {
-			store.$reset();
+	beforeEach(() => {
+		store.$patch({
+			heatingSystems: {
+				heatGeneration: {
+					heatPump: {
+						data: [{
+							id: "test-heat-pump",
+							name: "Test Heat Pump"
+						}],
+						complete: true
+					},
+				}
+			}
 		});
+	});
 
-		test('hot water cylinder is removed when remove link is clicked', async () => {
-			store.$patch({
-				domesticHotWater: {
-					waterHeating: {
-						hotWaterCylinder: {
-							data: [hotWaterCylinder1]
-						}
+	afterEach(() => {
+		store.$reset();
+	});
+
+	test('data is saved to store state when form is valid', async () => {
+		await renderSuspended(WaterHeating);
+		
+		await populateValidForm();
+		await user.click(screen.getByRole('button'));
+		
+		const actual = store.domesticHotWater.waterHeating.hotWaterCylinder.data![0]!;
+		
+		expect(actual.id).toBeDefined();
+		expect(actual.heatSource).toEqual(expected.heatSource);
+		expect(actual.tankVolume).toEqual(expected.tankVolume);
+		expect(actual.dailyEnergyLoss).toEqual(expected.dailyEnergyLoss);
+		expect(actual.name).toEqual(expected.name);
+	});
+
+	test('form is prepopulated when data exists in state', async () => {
+		store.$patch({
+			domesticHotWater: {
+				waterHeating: {
+					hotWaterCylinder: {
+						data: [expected],
+						complete: true
 					}
 				}
-			});
-
-			await renderSuspended(WaterHeating);
-
-			expect(screen.getAllByTestId('hotWaterCylinder_items')).toBeDefined();
-
-			await user.click(screen.getByTestId('hotWaterCylinder_remove_0'));
-
-			expect(screen.queryByTestId('hotWaterCylinder_items')).toBeNull();
+			}
 		});
 
-		it('should only remove the hot water cylinder that is clicked', async () => {
-			store.$patch({
-				domesticHotWater: {
-					waterHeating: {
-						hotWaterCylinder: {
-							data:[hotWaterCylinder1, hotWaterCylinder2, hotWaterCylinder3]
-						}
-					}
-				}
-			});
+		await renderSuspended(WaterHeating);
 
-			await renderSuspended(WaterHeating);
-			await user.click(screen.getByTestId('hotWaterCylinder_remove_1'));
+		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe(expected.name);
+		expect((await screen.findByTestId('tankVolume') as HTMLInputElement).value).toBe(expected.tankVolume.toString());
+		expect((await screen.findByTestId('dailyEnergyLoss') as HTMLInputElement).value).toBe(expected.dailyEnergyLoss.toString());
+		expect((await screen.findByTestId('heatSource_test-heat-pump')).hasAttribute('checked')).toBe(true);
+	});
 
-			const populatedList = screen.getByTestId('hotWaterCylinder_items');
+	test('required error messages are displayed when empty form is submitted', async () => {
+		await renderSuspended(WaterHeating);
 
-			expect(within(populatedList).getByText('Hot water cylinder 1')).toBeDefined();
-			expect(within(populatedList).getByText('Hot water cylinder 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Hot water cylinder 2')).toBeNull();
-		});
+		await user.click(screen.getByRole('button'));
 
-		test('hot water cylinder is duplicated when duplicate link is clicked', async () => {
-			store.$patch({
-				domesticHotWater: {
-					waterHeating: {
-						hotWaterCylinder: {
-							data:[hotWaterCylinder1, hotWaterCylinder2]
-						}
-					}
-				}
-			});
+		expect((await screen.findByTestId('name_error'))).toBeDefined();
+		expect((await screen.findByTestId('tankVolume_error'))).toBeDefined();
+		expect((await screen.findByTestId('dailyEnergyLoss_error'))).toBeDefined();
+		expect((await screen.findByTestId('heatSource_error'))).toBeDefined();
+	});
 
-			await renderSuspended(WaterHeating);
-			await userEvent.click(screen.getByTestId('hotWaterCylinder_duplicate_0'));
-			await userEvent.click(screen.getByTestId('hotWaterCylinder_duplicate_0'));
-			await userEvent.click(screen.getByTestId('hotWaterCylinder_duplicate_2'));
-			await userEvent.click(screen.getByTestId('hotWaterCylinder_duplicate_2'));
+	test('error summary is displayed when an invalid form in submitted', async () => {
+		await renderSuspended(WaterHeating);
 
-			expect(screen.queryAllByTestId('hotWaterCylinder_item').length).toBe(6);
-			expect(screen.getByText('Hot water cylinder 1')).toBeDefined();
-			expect(screen.getByText('Hot water cylinder 1 (1)')).toBeDefined();
-			expect(screen.getByText('Hot water cylinder 1 (2)')).toBeDefined();
-			expect(screen.getByText('Hot water cylinder 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Hot water cylinder 1 (1) (2)')).toBeDefined();
-		});
+		await user.click(screen.getByRole('button'));
+
+		expect((await screen.findByTestId('waterHeatingErrorSummary'))).toBeDefined();
+	});
+
+	it('completes water heating when valid form is completed', async () => {
+		await renderSuspended(WaterHeating);
+		
+		await populateValidForm();
+		await user.click(screen.getByRole('button'));
+	
+		expect(store.domesticHotWater.waterHeating.combiBoiler.complete).toBeTruthy();
+		expect(store.domesticHotWater.waterHeating.heatBattery.complete).toBeTruthy();
+		expect(store.domesticHotWater.waterHeating.heatInterfaceUnit.complete).toBeTruthy();
+		expect(store.domesticHotWater.waterHeating.heatPump.complete).toBeTruthy();
+		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.complete).toBeTruthy();
+		expect(store.domesticHotWater.waterHeating.immersionHeater.complete).toBeTruthy();
+		expect(store.domesticHotWater.waterHeating.pointOfUse.complete).toBeTruthy();
+		expect(store.domesticHotWater.waterHeating.smartHotWaterTank.complete).toBeTruthy();
+		expect(store.domesticHotWater.waterHeating.solarThermal.complete).toBeTruthy();
+	});
+
+	it('navigates to domestic hot water page when valid form is completed', async () => {
+		await renderSuspended(WaterHeating);
+		
+		await populateValidForm();
+		await user.click(screen.getByRole('button'));
+	
+		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water');
 	});
 });

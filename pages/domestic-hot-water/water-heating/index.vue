@@ -83,7 +83,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		:incomplete-message="false"
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
-		<GovErrorSummary :error-list="errorMessages" test-id="hotWaterCylinderErrorSummary"/>
+		<GovErrorSummary :error-list="errorMessages" test-id="waterHeatingErrorSummary"/>
 		<FormKit
 			id="name"
 			type="govInputText"
