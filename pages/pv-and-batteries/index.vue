@@ -75,6 +75,7 @@ function checkIsComplete(){
 		hint="Only one electric battery can be added per energy supply"
 		:form-url="`${page?.url!}/electric-battery`"
 		:items="store.pvAndBatteries.electricBattery.data.map(x => x.name)"
+		:max-number-of-items=1
 		@remove="(index: number) => handleRemove('electricBattery', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">

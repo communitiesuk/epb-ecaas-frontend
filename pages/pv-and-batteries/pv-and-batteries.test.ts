@@ -144,6 +144,19 @@ describe('pv systems and electric battery', () => {
 	
 			expect(screen.queryByTestId('electricBattery_items')).toBeNull();
 		});
+
+		test('only one battery can be added', async () => {
+			store.$patch({
+				pvAndBatteries: {
+					electricBattery: {
+						data: [electricBattery]
+					}
+				}
+			});
+	
+			await renderSuspended(PvAndBatteries);
+			expect(screen.queryByTestId('electricBattery_add')).toBeNull();
+		});
 	});
 
 	describe("mark section as complete", () => {

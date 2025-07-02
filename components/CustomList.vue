@@ -5,6 +5,7 @@ const props = defineProps<{
 	formUrl: string;
 	hint?: string;
 	items?: string[];
+	maxNumberOfItems?: number;
 	onRemove?: (index: number) => void;
 	onDuplicate?: (index: number) => void;
 }>();
@@ -28,7 +29,7 @@ function handleDuplicate(index: number, e: MouseEvent) {
 					<h2 class="govuk-heading-m govuk-!-margin-0">{{ title }}</h2>
 					<p v-if="hint" class="govuk-hint govuk-!-margin-0">{{ hint }}</p>
 				</div>
-				<NuxtLink class="govuk-link" :href="`${formUrl}/create`">{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
+				<NuxtLink v-if="!maxNumberOfItems || !items || items?.length < maxNumberOfItems" class="govuk-link" :data-testid="`${id}_add`" :href="`${formUrl}/create`">{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
 			</div>
 			<div v-if="items && items.length" class="custom-list__body" :data-testid="`${id}_items`">
 				<table class="govuk-table govuk-!-margin-0 custom-list__table">
