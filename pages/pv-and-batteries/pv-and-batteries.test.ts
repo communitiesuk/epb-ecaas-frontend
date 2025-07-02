@@ -126,7 +126,7 @@ describe('pv systems and electric battery', () => {
 	});
 	
 	describe('electric batteries', () => {
-		test('pv system is removed when remove link is clicked', async () => {
+		test('battery is removed when remove link is clicked', async () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {

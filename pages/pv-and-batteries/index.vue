@@ -72,10 +72,10 @@ function checkIsComplete(){
 	<CustomList
 		id="electricBattery"
 		title="Electric battery"
+		hint="Only one electric battery can be added per energy supply"
 		:form-url="`${page?.url!}/electric-battery`"
 		:items="store.pvAndBatteries.electricBattery.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('electricBattery', index)"
-		@duplicate="(index: number) => handleDuplicate('electricBattery', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton
