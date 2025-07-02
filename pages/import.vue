@@ -9,6 +9,7 @@ const store = useEcaasStore();
 
 const file: Ref<File | null> = ref(null);
 const importedFile: Ref<{ name: string; datetime: Dayjs } | null> = ref(null);
+const errorMessage: Ref<string | null> = ref(null);
 
 const hasFile: Ref<boolean> = computed(() => !!file.value);
 
@@ -18,6 +19,7 @@ const accessFile = (event: Event) => {
 		return;
 	}
 	file.value = files[0] || null;
+	errorMessage.value = null;
 };
 
 const doImport = (_event: Event) => {
@@ -34,10 +36,12 @@ const doImport = (_event: Event) => {
     
 		try {
 			fileState = JSON.parse(reader.result as string);
-		} catch (e) {
-			console.error(`could not parse this as JSON: ${e instanceof SyntaxError ? e.message : 'unknown error'}`);
+		} catch {
+			errorMessage.value = 'The provided file is not recognised as containing JSON.';
 			return;
 		}
+
+		errorMessage.value = null;
 
 		store.$patch({
 			...getInitialState(),
@@ -51,7 +55,7 @@ const doImport = (_event: Event) => {
 		};
 	};
 	reader.onerror = () => {
-		console.error('could not read file!');
+		errorMessage.value = 'Unable to read file';
 	};
 	reader.readAsText(file.value);
 };
@@ -74,6 +78,7 @@ const doImport = (_event: Event) => {
 				:change="accessFile"
 				:label="{ text: 'Upload a JSON file', classes: 'govuk-!-display-none' }"
 				:hint="{ text: 'Select a JSON file that you have previously downloaded' }"
+				:error-message="errorMessage ? { text: errorMessage } : undefined"
 			/>
 		</ClientOnly>
 		<GovWarningText>Importing a file will override any data currently in the calculation. If you wish to save this data you must first export it.</GovWarningText>

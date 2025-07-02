@@ -19,10 +19,24 @@ interface FileUploadProps {
 	} | {
 		text: string;
 	});
+	errorMessage?: {
+		classes?: string;
+	} & ({
+		html: string;
+	} | {
+		text: string;
+	});
 	change?: (event: Event) => void;
 }
 
-const { id, label, accept = undefined, hint = undefined, change = undefined } = defineProps<FileUploadProps>();
+const {
+	id,
+	label,
+	accept = undefined,
+	hint = undefined,
+	errorMessage = undefined,
+	change = undefined
+} = defineProps<FileUploadProps>();
 
 const el = useTemplateRef('el');
 
@@ -47,6 +61,10 @@ watch(el, async (el) => {
 		<div v-else-if="hint" :id="`${id}-hint`" :class="`govuk-hint ${hint.classes}`">
 			{{ hint.text }}
 		</div>
+		<p v-if="errorMessage && 'html' in errorMessage" :id="`${id}-error`" :class="`govuk-error-message ${errorMessage.classes ?? ''}`" v-html="errorMessage.html" />
+		<p v-else-if="errorMessage" :id="`${id}-error`" :class="`govuk-error-message ${errorMessage.classes ?? ''}`">
+			{{ errorMessage.text }}
+		</p>
 		<div class="govuk-drop-zone" data-module="govuk-file-upload">
 			<input :id :name type="file" class="govuk-file-upload" :accept @change="change">
 		</div>
