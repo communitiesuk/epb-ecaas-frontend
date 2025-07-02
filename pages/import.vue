@@ -64,7 +64,14 @@ const doImport = (_event: Event) => {
 	<p class="govuk-body">To continue working on a calculation you must import a previously exported JSON file.</p>
 	<h2 class="govuk-heading-s">Upload a calculation</h2>
 	<ClientOnly>
-		<GovFileUpload id="import" name="import" accept=".json,application/json" :change="accessFile" />
+		<GovFileUpload
+			id="import"
+			name="import"
+			accept=".json,application/json"
+			:change="accessFile"
+			:label="{ text: '' }"
+			:hint="{ text: 'Select a JSON file that you have previously downloaded' }"
+		/>
 	</ClientOnly>
 	<GovWarningText>Importing a file will override any data currently in the calculation. If you wish to save this data you must first export it.</GovWarningText>
 	<div class="govuk-button-group">
