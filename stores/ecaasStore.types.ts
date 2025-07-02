@@ -694,7 +694,7 @@ export type WetDistributionData = {
 }>;
 
 export type PvAndBatteries = AssertFormKeysArePageIds<{
-	pvSystem: EcaasForm<PvSystemData[]>;
+	pvSystems: EcaasForm<PvSystemData[]>;
 	electricBattery: EcaasForm<ElectricBatteryData[]>;
 }>;
 

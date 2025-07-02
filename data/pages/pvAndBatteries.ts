@@ -10,16 +10,16 @@ const pvAndBatteriesPages: Array<Page> = [
 		parentId: 'taskList'
 	},
 	{
-		id: 'pvSystem',
+		id: 'pvSystems',
 		title: 'PV System',
-		url: '/pv-and-batteries/pv-system/create',
+		url: '/pv-and-batteries/pv-systems/create',
 		type: PageType.Task,
 		parentId: 'pvAndBatteries'
 	},
 	{
 		id: 'pvSystemEdit',
 		title: 'PV System',
-		url: '/pv-and-batteries/pv-system/:system',
+		url: '/pv-and-batteries/pv-systems/:system',
 		type: PageType.Task,
 		parentId: 'pvAndBatteries'
 	},

@@ -100,7 +100,7 @@ export function getInitialState(): EcaasState {
 			},
 		},
 		pvAndBatteries: {
-			pvSystem: { data: [] },
+			pvSystems: { data: [] },
 			electricBattery: { data: [] }
 		},
 		cooling: {

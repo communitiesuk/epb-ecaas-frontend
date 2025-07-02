@@ -40,7 +40,7 @@ function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatt
 function handleComplete() {
 	store.$patch({
 		pvAndBatteries: {
-			pvSystem: { complete: true },
+			pvSystems: { complete: true },
 			electricBattery: { complete: true }
 		}
 	});
@@ -62,12 +62,12 @@ function checkIsComplete(){
 		{{ title }}
 	</h1>
 	<CustomList
-		id="pvSystem"
-		title="PV System"
-		:form-url="`${page?.url!}/pv-system`"
-		:items="store.pvAndBatteries.pvSystem.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('pvSystem', index)"
-		@duplicate="(index: number) => handleDuplicate('pvSystem', index)"
+		id="pvSystems"
+		title="PV Systems"
+		:form-url="`${page?.url!}/pv-systems`"
+		:items="store.pvAndBatteries.pvSystems.data.map(x => x.name)"
+		@remove="(index: number) => handleRemove('pvSystems', index)"
+		@duplicate="(index: number) => handleDuplicate('pvSystems', index)"
 	/>
 	<CustomList
 		id="electricBattery"
