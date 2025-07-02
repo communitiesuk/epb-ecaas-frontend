@@ -83,7 +83,7 @@ const doImport = (_event: Event) => {
 		</ClientOnly>
 		<GovWarningText>Importing a file will override any data currently in the calculation. If you wish to save this data you must first export it.</GovWarningText>
 		<div class="govuk-button-group">
-			<GovButton :disabled="!hasFile || undefined" :click="doImport">Import</GovButton>
+			<GovButton :disabled="!hasFile || undefined" :click="doImport" data-testid="import-button">Import</GovButton>
 			<GovButton href="/" secondary>Return to task list</GovButton>
 		</div>
 	</template>
