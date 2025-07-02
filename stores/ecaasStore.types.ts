@@ -660,8 +660,7 @@ export type ElectricStorageHeaterData = {
 export type InstantElectricStorageData = {
 	name: string,
 	ratedPower: number,
-	convectionFractionInstant: number,
-	numberOfHeaters: number
+	convectionFractionInstant: number
 };
 
 export type WarmAirHeatPumpData = {

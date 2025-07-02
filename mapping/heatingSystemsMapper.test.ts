@@ -308,8 +308,7 @@ describe("heating systems mapper", () => {
 					{
 						name: "Acme instant electric heater",
 						ratedPower: 100,
-						convectionFractionInstant: 0.8,
-						numberOfHeaters: 2
+						convectionFractionInstant: 0.8
 					}
 				]
 			},

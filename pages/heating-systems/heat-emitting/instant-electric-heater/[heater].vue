@@ -14,7 +14,6 @@ const saveForm = (fields: InstantElectricStorageData) => {
 			name: fields.name,
 			ratedPower: fields.ratedPower,
 			convectionFractionInstant: fields.convectionFractionInstant,
-			numberOfHeaters: fields.numberOfHeaters
 		};
 
 		saveToList(instantElectricHeaterItem, instantElectricHeater);
@@ -97,13 +96,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				</table>
 			</GovDetails>
 		</FormKit>
-		<FormKit
-			id="numberOfHeaters"
-			type="govInputInt"
-			label="Number of instant electric heaters"
-			name="numberOfHeaters"
-			validation="required | number | min:1"
-		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

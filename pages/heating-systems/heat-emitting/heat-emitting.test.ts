@@ -370,8 +370,7 @@ describe("heat emitting", () => {
 		const instantElectricHeater1 = {
 			name: "Instant Electric Heater 1",
 			ratedPower: 30,
-			convectionFractionInstant: 1,
-			numberOfHeaters: 3
+			convectionFractionInstant: 1
 		};
 		const addHeatEmittingDataToStore = async () => {
 			store.$patch({
