@@ -14,7 +14,9 @@ export default withNuxt(
 			'vue/html-indent': ['error', 'tab'],
 			'vue/no-multiple-template-root': 'off',
 			'object-shorthand': 'error',
-			'no-useless-rename': 'error'
+			'no-useless-rename': 'error',
+			'no-unused-vars': 'off',
+    		'@typescript-eslint/no-unused-vars': ['error']
 		}
 	}
 )
