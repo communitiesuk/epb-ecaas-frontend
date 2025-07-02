@@ -81,7 +81,7 @@ const doImport = (_event: Event) => {
 				:error-message="errorMessage ? { text: errorMessage } : undefined"
 			/>
 		</ClientOnly>
-		<GovWarningText>Importing a file will override any data currently in the calculation. If you wish to save this data you must first export it.</GovWarningText>
+		<GovInset>Importing a file will override any data currently in the calculation. If you wish to save this data you must first export it.</GovInset>
 		<div class="govuk-button-group">
 			<GovButton :disabled="!hasFile || undefined" :click="doImport" data-testid="import-button">Import</GovButton>
 			<GovButton href="/" secondary>Return to task list</GovButton>
