@@ -69,7 +69,7 @@ const doImport = (_event: Event) => {
 			name="import"
 			accept=".json,application/json"
 			:change="accessFile"
-			:label="{ text: '' }"
+			:label="{ text: 'Upload a JSON file', classes: 'govuk-!-display-none' }"
 			:hint="{ text: 'Select a JSON file that you have previously downloaded' }"
 		/>
 	</ClientOnly>

@@ -40,10 +40,10 @@ watch(el, async (el) => {
 		<!-- eslint-disable vue/no-v-html -->
 		<label v-if="'html' in label" class="govuk-label" :for="id" v-html="label.html" />
 		<!-- eslint-enable -->
-		<label v-else :class="`govuk-label ${label.classes}`" :for="id">
+		<label v-else :class="`govuk-label ${label.classes ?? ''}`" :for="id">
 			{{ label.text ?? 'Upload a file' }}
 		</label>
-		<div v-if="hint && 'html' in hint" :id="`${id}-hint`" :class="`govuk-hint ${hint.classes}`" v-html="hint.html" />
+		<div v-if="hint && 'html' in hint" :id="`${id}-hint`" :class="`govuk-hint ${hint.classes ?? ''}`" v-html="hint.html" />
 		<div v-else-if="hint" :id="`${id}-hint`" :class="`govuk-hint ${hint.classes}`">
 			{{ hint.text }}
 		</div>
