@@ -2,8 +2,9 @@ import {
 	HeatPumpBackupControlType,
 	HeatPumpSinkType,
 	HeatPumpSourceType,
-	type SchemaHeatSourceWetDetails, TestLetter
+	TestLetter
 } from "~/schema/api-schema.types";
+import type {SchemaHeatSourceWetDetails} from "~/schema/api-schema.types";
 
 export const immersionHeaterPositionValues: Record<ImmersionHeaterPosition, number> = {
 	top: 1.0,

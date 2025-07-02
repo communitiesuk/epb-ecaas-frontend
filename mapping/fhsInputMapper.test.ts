@@ -1,4 +1,5 @@
-import Ajv2020, { type ValidateFunction } from "ajv/dist/2020";
+import Ajv2020 from "ajv/dist/2020";
+import type {ValidateFunction} from "ajv/dist/2020";
 import fhsSchema from "../schema/fhs_input.schema.json";
 import {
 	BatteryLocation,
@@ -26,7 +27,8 @@ import {
 	WindowTreatmentControl,
 	WindowTreatmentType
 } from "~/schema/api-schema.types";
-import { type FhsInputSchema, mapFhsInputData } from "./fhsInputMapper";
+import {  mapFhsInputData } from "./fhsInputMapper";
+import type {FhsInputSchema} from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
 import { defaultHeatSourceWetDetails, defaultZoneName } from "~/mapping/common";
 

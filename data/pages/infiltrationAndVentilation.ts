@@ -1,5 +1,6 @@
 import { VentType } from "~/schema/api-schema.types";
-import { PageType, type Page } from "./pages.types";
+import { PageType  } from "./pages.types";
+import type {Page} from "./pages.types";
 import { isEmpty } from "ts-extras";
 
 function noMhvrPresent():boolean {

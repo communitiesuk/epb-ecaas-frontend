@@ -1,4 +1,5 @@
-import { PageType, type Page } from "./pages.types";
+import { PageType  } from "./pages.types";
+import type {Page} from "./pages.types";
 import domesticHotWaterPages from "./domesticHotWater";
 import dwellingDetailsPages from "./dwellingDetails";
 import heatingSystemsPages from "./heatingSystems";

@@ -1,5 +1,6 @@
 import type { StripDefs } from './mapping.types';
-import { ColdWaterSourceType, type SchemaFhsInputSchema, type SchemaStorageTank } from '~/schema/api-schema.types';
+import { ColdWaterSourceType   } from '~/schema/api-schema.types';
+import type {SchemaFhsInputSchema, SchemaStorageTank} from '~/schema/api-schema.types';
 import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 import merge from 'deepmerge';
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
-import { getTabItems, getUrl, type ImmersionHeaterPosition } from '#imports';
+import { getTabItems, getUrl  } from '#imports';
+import type {ImmersionHeaterPosition} from '#imports';
 import { immersionHeaterPositionValues } from '~/mapping/common';
 
 definePageMeta({ layout: false });

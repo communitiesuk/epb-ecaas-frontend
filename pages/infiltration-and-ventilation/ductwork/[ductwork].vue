@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { DuctShape, type DuctType } from '~/schema/api-schema.types';
-import { VentType } from '~/schema/api-schema.types';
+import { DuctShape, VentType   } from '~/schema/api-schema.types';
+import type {DuctType} from '~/schema/api-schema.types';
 
 const title = "MVHR ductwork";
 const store = useEcaasStore();

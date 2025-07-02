@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import dayjs, { type Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import type {Dayjs} from 'dayjs';
 import { getInitialState } from '~/stores/ecaasStore';
 
 const title = 'Import a calculation';

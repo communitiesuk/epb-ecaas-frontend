@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { getUrl, type SnakeToSentenceCase } from '#imports';
+import { getUrl  } from '#imports';
+import type {SnakeToSentenceCase} from '#imports';
 import type { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
 
 const title = "Primary pipework";

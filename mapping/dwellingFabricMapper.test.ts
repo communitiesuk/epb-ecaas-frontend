@@ -3,11 +3,12 @@ import {
 	MassDistributionClass,
 	WindowShadingObjectType,
 	WindowTreatmentType,
-	type SchemaBuildingElement,
-	type SchemaEdgeInsulation,
-	type SchemaThermalBridgingDetails,
+	
+	
+	
 	WindShieldLocation
 } from "~/schema/api-schema.types";
+import type {SchemaBuildingElement, SchemaEdgeInsulation, SchemaThermalBridgingDetails} from "~/schema/api-schema.types";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type { DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.types";

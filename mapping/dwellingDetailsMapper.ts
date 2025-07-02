@@ -1,4 +1,5 @@
-import { BuildType, type SchemaInfiltrationVentilation, type SchemaShadingSegment } from "~/schema/api-schema.types";
+import { BuildType   } from "~/schema/api-schema.types";
+import type {SchemaInfiltrationVentilation, SchemaShadingSegment} from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSchema> {

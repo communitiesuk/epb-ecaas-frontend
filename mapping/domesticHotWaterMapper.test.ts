@@ -1,4 +1,5 @@
-import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation, type SchemaHotWaterDemand } from "~/schema/api-schema.types";
+import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation  } from "~/schema/api-schema.types";
+import type {SchemaHotWaterDemand} from "~/schema/api-schema.types";
 import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 

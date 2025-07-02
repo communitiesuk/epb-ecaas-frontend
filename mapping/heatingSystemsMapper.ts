@@ -1,6 +1,7 @@
 import { objectFromEntries } from "ts-extras";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
-import { FuelType, type SchemaSpaceHeatSystemDetails } from "~/schema/api-schema.types";
+import { FuelType  } from "~/schema/api-schema.types";
+import type {SchemaSpaceHeatSystemDetails} from "~/schema/api-schema.types";
 import { defaultZoneName } from "./common";
 
 export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema, 'EnergySupply' | 'SpaceHeatSystem'> {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { mapFhsInputData, type ResolvedState } from '~/mapping/fhsInputMapper';
+import { mapFhsInputData  } from '~/mapping/fhsInputMapper';
+import type {ResolvedState} from '~/mapping/fhsInputMapper';
 import type { FhsComplianceResponseIncludingErrors } from '~/server/server.types';
 import { hasCompleteState } from '~/stores/ecaasStore';
 

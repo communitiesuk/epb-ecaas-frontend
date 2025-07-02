@@ -1,13 +1,14 @@
 import {
-	ColdWaterSourceType,
-	type SchemaBathDetails,
-	type SchemaHotWaterSourceDetails,
-	type SchemaOtherWaterUseDetails,
-	type SchemaShower,
-	type SchemaStorageTank,
-	type SchemaWaterPipework,
-	type SchemaWaterPipeworkSimple
+	ColdWaterSourceType
+	
+	
+	
+	
+	
+	
+	
 } from "~/schema/api-schema.types";
+import type {SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaStorageTank, SchemaWaterPipework, SchemaWaterPipeworkSimple} from "~/schema/api-schema.types";
 import type {FhsInputSchema, ResolvedState} from "./fhsInputMapper";
 
 export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {

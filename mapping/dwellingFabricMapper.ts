@@ -1,4 +1,5 @@
-import { FloorType, HeatingControlType, SpaceHeatControlType, WindowShadingObjectType, type SchemaBuildingElement, type SchemaThermalBridgingDetails, type SchemaWindowPart, type SchemaZoneInput, type SchemaZoneLighting } from "~/schema/api-schema.types";
+import { FloorType, HeatingControlType, SpaceHeatControlType, WindowShadingObjectType      } from "~/schema/api-schema.types";
+import type {SchemaBuildingElement, SchemaThermalBridgingDetails, SchemaWindowPart, SchemaZoneInput, SchemaZoneLighting} from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
 import { defaultZoneName } from "./common";
