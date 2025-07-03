@@ -81,16 +81,6 @@
             },
             {
                 "designFlowTemperature": 55,
-                "testCondition": "E",
-                "testConditionTemperature": -10,
-                "inletTemperature": -10,
-                "outletTemperature": 52,
-                "heatingCapacity": 4.7,
-                "coefficientOfPerformance": 1.98,
-                "degradationCoefficient": 0.9
-            },
-            {
-                "designFlowTemperature": 55,
                 "testCondition": "F",
                 "testConditionTemperature": -3,
                 "inletTemperature": -3,
@@ -183,16 +173,6 @@
             },
             {
                 "designFlowTemperature": 55,
-                "testCondition": "E",
-                "testConditionTemperature": -10,
-                "inletTemperature": -10,
-                "outletTemperature": 52,
-                "heatingCapacity": 4.7,
-                "coefficientOfPerformance": 1.58,
-                "degradationCoefficient": 0.9
-            },
-            {
-                "designFlowTemperature": 55,
                 "testCondition": "F",
                 "testConditionTemperature": -3,
                 "inletTemperature": -3,
@@ -281,16 +261,6 @@
                 "outletTemperature": 30,
                 "heatingCapacity": 3.2,
                 "coefficientOfPerformance": 4.54,
-                "degradationCoefficient": 0.9
-            },
-            {
-                "designFlowTemperature": 55,
-                "testCondition": "E",
-                "testConditionTemperature": -10,
-                "inletTemperature": -10,
-                "outletTemperature": 52,
-                "heatingCapacity": 4.7,
-                "coefficientOfPerformance": 1.28,
                 "degradationCoefficient": 0.9
             },
             {
