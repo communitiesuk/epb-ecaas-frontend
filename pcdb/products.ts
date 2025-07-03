@@ -1,7 +1,7 @@
 import * as z from "zod/v4";
 import products from './products.json';
 import { HeatPumpBackupControlType, HeatPumpSinkType, HeatPumpSourceType } from "~/schema/api-schema.types";
-import { objectEntries } from "ts-extras";
+import { objectEntries, objectKeys } from "ts-extras";
 
 const IntString = z.string().regex(/^\d+$/);
 const NumericString = z.string().refine(v => { const n = Number(v); return !isNaN(n) && v?.length > 0;}, {message: "Invalid number"});
@@ -68,6 +68,29 @@ export const Products = z.map(z.string(), z.discriminatedUnion('technologyType',
 
 export type Products = z.infer<typeof Products>;
 
+export type Product = Products extends Map<string, infer I> ? I : never;
+
+export type TechnologyType = Product['technologyType'];
+
 const productsMap = new Map(objectEntries(products)) as Products;
+
+export const categoryTechnologies = {
+	heatPump: [
+		'Air Source Heat Pump',
+	],
+} as const satisfies Record<string, TechnologyType[]>;
+
+export const knownCategories = objectKeys(categoryTechnologies);
+
+export type Category = keyof typeof categoryTechnologies;
+
+export type ProductForCategory<T extends Category> = Extract<Product, { technologyType: (typeof categoryTechnologies)[T][number] }>;
+
+export type ProductReference = keyof typeof products;
+
+export type ProductEntity<T> = {
+	reference: ProductReference,
+	product: T
+};
 
 export default productsMap;
