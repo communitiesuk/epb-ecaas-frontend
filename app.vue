@@ -1,12 +1,5 @@
-<script setup lang="ts">
-import GovServiceNavigation from './components/gov/ServiceNavigation.vue';
-
-// flag for rebrand of GOV.UK
-const usesRebrand = true;
-</script>
-
 <template>
-	<GovHeader classes="govuk-header--full-width-border" :rebrand="usesRebrand" />
+	<GovHeader classes="govuk-header--full-width-border" />
 	<GovServiceNavigation service-name="Check Part L building compliance" />
 	<div class="govuk-width-container">
 		<GovPhaseBanner tag="Alpha">
@@ -25,5 +18,5 @@ const usesRebrand = true;
 			</div>
 		</main>
 	</div>
-	<GovFooter :rebrand="usesRebrand" />
+	<GovFooter />
 </template>
