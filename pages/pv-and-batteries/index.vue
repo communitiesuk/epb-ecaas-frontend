@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = "Photovoltaic (PV) systems and electric batteries";
+const title = "PV (photovoltaic) systems and electric batteries";
 const page = usePage();
 const store = useEcaasStore();
 
@@ -85,6 +85,7 @@ function checkIsComplete(){
 		>
 			Return to overview
 		</GovButton>
+		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
 		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>
 </template>
