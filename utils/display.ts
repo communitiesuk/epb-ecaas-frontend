@@ -90,6 +90,14 @@ export function displaySnakeToSentenceCase(value: string): string {
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1).toLowerCase();
 }
 
+export function displayCamelToSentenceCase(value: string): string {
+	// insert a space before any uppercase letter that is preceeded by a lower case letter
+	const inserted = value.replace(/((?<=[a-z])[A-Z])/g, ' $1');
+	// lower the case of any uppercase letter that is followed by a lower case letter
+	const replaced = inserted.replace(/((?<=\s)[A-Z](?=[a-z]))/g, x => x.toLowerCase());
+	return replaced.charAt(0).toUpperCase() + replaced.slice(1);
+}
+
 export function displayWwhrsType(value: WwhrsType): WwhrsTypeDisplay {
 	switch (value) {
 		case WwhrsType.WWHRS_InstantaneousSystemA:
