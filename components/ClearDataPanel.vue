@@ -1,5 +1,12 @@
 <script setup lang="ts">
 
+const store = useEcaasStore();
+
+const handleClearData = async () => {
+	store.clearState();
+	await navigateTo("/");
+};
+
 </script>
 
 <template>
@@ -12,7 +19,7 @@
 			<p>You can go back to undo this change.</p>
 		</div>
 		<div class="govuk-button-group">
-			<a href="#" role="button" class="govuk-button govuk-button--inverse" data-testid="clearDataButton">Clear data</a>
+			<a role="button" class="govuk-button govuk-button--inverse" data-testid="clearDataButton" @click="handleClearData">Clear data</a>
 			<a href="/" class="govuk-link"  data-testid="taskListLink">Go back to task list</a>
 		</div>
 	</div>

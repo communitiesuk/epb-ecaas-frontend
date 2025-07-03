@@ -156,6 +156,9 @@ export const useEcaasStore = defineStore("ecaas", {
 				console.error(`Failed to post data: ${error}`);
 			}
 		},
+		clearState() {
+			this.$reset();
+		}
 	},
 	persist: {
 		storage: piniaPluginPersistedstate.localStorage(),
