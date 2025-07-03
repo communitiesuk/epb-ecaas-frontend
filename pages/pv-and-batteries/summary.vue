@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl } from "#imports";
-const store = useEcaasStore();
+
 const title = "PV and electric batteries summary";
+const store = useEcaasStore();
 
 const pvSystems = store.pvAndBatteries.pvSystems.data;
 const pvSummary: SummarySection = {
@@ -19,6 +20,17 @@ const pvSummary: SummarySection = {
 	editUrl: "/pv-and-batteries",
 };
 
+const electricBattery = store.pvAndBatteries.electricBattery.data;
+const batterySummary: SummarySection = {
+	id: "electricBattery",
+	label: "Electric battery",
+	data: electricBattery.map((battery) => {
+		const displayBatteries = Object.entries(battery).map(([key, value]) => [displayCamelToSentenceCase(key), value]);
+		return Object.fromEntries(displayBatteries);
+	}),
+	editUrl: "/pv-and-batteries",
+};
+
 </script>
 <template>
 	<Head>
@@ -26,7 +38,7 @@ const pvSummary: SummarySection = {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovTabs v-slot="tabProps" :items="getTabItems([pvSummary])">
-		<TabPanel id="pvSystems" :selected="pvSummary.data.length === 0">
+		<TabPanel id="pvSystems" :selected="pvSystems.length === 0">
 			<h2 class="govuk-heading-m">No PV systems added</h2>
 			<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
 				Add PV systems
@@ -34,5 +46,15 @@ const pvSummary: SummarySection = {
 		</TabPanel>
 		<SummaryTab
 			:summary="pvSummary" :selected="tabProps.currentItem?.id === 'pvSystems'" />
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([batterySummary])">
+		<TabPanel id="electricBattery" :selected="electricBattery.length === 0">
+			<h2 class="govuk-heading-m">No electric battery added</h2>
+			<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
+				Add electric battery
+			</NuxtLink>
+		</TabPanel>
+		<SummaryTab
+			:summary="batterySummary" :selected="tabProps.currentItem?.id === 'electricBattery'" />
 	</GovTabs>
 </template>
