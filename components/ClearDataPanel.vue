@@ -20,7 +20,7 @@ const handleClearData = async () => {
 		</div>
 		<div class="govuk-button-group">
 			<a role="button" class="govuk-button govuk-button--inverse" data-testid="clearDataButton" @click="handleClearData">Clear data</a>
-			<a href="/" class="govuk-link"  data-testid="taskListLink">Go back to task list</a>
+			<a href="/" class="govuk-link govuk-link--inverse"  data-testid="taskListLink">Go back to task list</a>
 		</div>
 	</div>
 </template>
@@ -36,5 +36,6 @@ const handleClearData = async () => {
     }
 	.govuk-button-group {
 		margin-top: 40px;
+		margin-bottom: 0;
 	}
 </style>
