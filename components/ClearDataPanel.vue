@@ -30,12 +30,20 @@ const handleClearData = async () => {
 		background-color: #1d70b8;
         text-align: left;
         font-size: 1.1875rem;
-	}
-    .clear-data-panel h1 {
-        font-size: 2.25rem;
-    }
-	.govuk-button-group {
-		margin-top: 40px;
-		margin-bottom: 0;
+		margin-top: 20px;
+		padding-bottom: 20px;
+
+		h1 {
+			font-size: 2.25rem;
+		}
+
+		.govuk-button-group {
+			margin-top: 40px;
+			margin-bottom: 0;
+		}
+
+		.govuk-button {
+			margin-right: 30px;
+		}
 	}
 </style>
