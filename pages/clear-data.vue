@@ -10,6 +10,8 @@ const title = 'Clear data';
 		<Head>
 			<Title>{{ title }}</Title>
 		</Head>
+		
+		<a href="/" class="govuk-back-link" data-testid="backLink">Back to task list</a>
 
 		<ClearDataPanel />
 	</NuxtLayout>

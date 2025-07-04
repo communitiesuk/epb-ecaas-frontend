@@ -10,6 +10,7 @@ describe('clear data page', () => {
 		expect(screen.getByTestId('clearDataPanel')).toBeDefined();
 		expect(screen.getByTestId('clearDataButton')).toBeDefined();
 		expect(screen.getByTestId('taskListLink')).toBeDefined();
+		expect(screen.getByTestId('backLink')).toBeDefined();
 	});
 
 	it('clears state when clear data button is clicked', async () => {
