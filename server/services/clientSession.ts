@@ -9,7 +9,7 @@ const clientSession = () => {
 		const session = await useStorage().getItem<ClientSession>('client_session');
 
 		// Create new session if client data doesn't exist or access token has expired
-		if (!session || session.expires < new Date()) {
+		if (!session || session.expires < Date.now()) {
 			return create();
 		}
 
@@ -34,7 +34,7 @@ const clientSession = () => {
 		// Store access token and expiry in session
 		const sessionData: ClientSession = {
 			accessToken: tokenResponse.access_token,
-			expires: dayjs().add(tokenResponse.expires_in, 'second').toDate()
+			expires: dayjs().add(tokenResponse.expires_in, 'second').toDate().getTime()
 		};
 
 		await useStorage().setItem('client_session', sessionData);

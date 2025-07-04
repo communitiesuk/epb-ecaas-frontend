@@ -9,7 +9,7 @@ export interface TokenResponse {
 
 export interface ClientSession {
 	accessToken: string;
-	expires: Date;
+	expires: number;
 }
 
 export interface ParameterStoreResponse {
