@@ -31,14 +31,14 @@ const handleClearData = async () => {
         text-align: left;
         font-size: 1.1875rem;
 		margin-top: 20px;
-		padding-bottom: 20px;
+		padding-bottom: 25px;
 
 		h1 {
 			font-size: 2.25rem;
 		}
 
 		.govuk-button-group {
-			margin-top: 40px;
+			margin-top: 35px;
 			margin-bottom: 0;
 		}
 
