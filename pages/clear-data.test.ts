@@ -1,7 +1,12 @@
-import {renderSuspended} from "@nuxt/test-utils/runtime";
+import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
 import ClearData from './clear-data.vue';
 import {screen} from '@testing-library/vue';
 import userEvent from "@testing-library/user-event";
+
+const navigateToMock = vi.hoisted(() => vi.fn());
+mockNuxtImport('navigateTo', () => {
+	return navigateToMock;
+});
 
 describe('clear data page', () => {
 	it('renders page correctly', async () => {
@@ -13,7 +18,7 @@ describe('clear data page', () => {
 		expect(screen.getByTestId('backLink')).toBeDefined();
 	});
 
-	it('clears state when clear data button is clicked', async () => {
+	it('clears state and navigates to task list when clear data button is clicked', async () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
@@ -39,6 +44,27 @@ describe('clear data page', () => {
 
 		await user.click(screen.getByRole('button', { name: /Clear data/}));
 
-		expect(await store.dwellingFabric.dwellingSpaceZoneParameters).toStrictEqual({ data: {} });
+		expect(store.dwellingFabric.dwellingSpaceZoneParameters).toStrictEqual({ data: {} });
+		expect(navigateToMock).toBeCalledWith('/');
+	});
+
+	it('navigates to task list when back link is clicked', async () => {
+		const user = userEvent.setup();
+		
+		await renderSuspended(ClearData);
+
+		await user.click(screen.getByTestId('backLink'));
+
+		expect(navigateToMock).toBeCalledWith('/');
+	});
+
+	it('navigates to task list when go back to task list link is clicked', async () => {
+		const user = userEvent.setup();
+		
+		await renderSuspended(ClearData);
+
+		await user.click(screen.getByTestId('taskListLink'));
+
+		expect(navigateToMock).toBeCalledWith('/');
 	});
 });
