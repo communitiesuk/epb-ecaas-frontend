@@ -23,6 +23,7 @@ describe('water heating (hot water cylinder)', () => {
 	};
 
 	const populateValidForm = async () => {
+		await user.click(screen.getByTestId('waterHeaterType_hotWaterCylinder'));
 		await user.type(screen.getByTestId('name'), expected.name);
 		await user.click(screen.getByTestId('heatSource_' + expected.heatSource));
 		await user.type(screen.getByTestId('tankVolume'), expected.tankVolume.toString());
@@ -90,7 +91,16 @@ describe('water heating (hot water cylinder)', () => {
 
 		await user.click(screen.getByRole('button'));
 
+		expect((await screen.findByTestId('waterHeaterType_error'))).toBeDefined();
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
+	});
+
+	test('required error messages are displayed when empty hot water cylinder fields are submitted', async () => {
+		await renderSuspended(WaterHeating);
+
+		await user.click(screen.getByTestId('waterHeaterType_hotWaterCylinder'));
+		await user.click(screen.getByRole('button'));
+
 		expect((await screen.findByTestId('tankVolume_error'))).toBeDefined();
 		expect((await screen.findByTestId('dailyEnergyLoss_error'))).toBeDefined();
 		expect((await screen.findByTestId('heatSource_error'))).toBeDefined();
