@@ -55,8 +55,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="altitude"
 			suffix-text="m"
 			validation="required | number | min:-150 | max:7200"
-			help="Metres the dwelling is above sea level. There are free online tools which can help estimate this."
-		/>
+			help="Enter the number of metres the dwelling is above sea level.">
+			<GovDetails summary-text="Help with this input">
+				<p>There are free online tools which can help estimate this.</p>
+			</GovDetails>
+		</FormKit>
+
 		<FormKit
 			id="typeOfExposure"
 			type="govRadios"
@@ -64,7 +68,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Type of exposure"
 			name="typeOfExposure"
 			validation="required"
-			help="The level of shielding or protection a building or a specific system has against external environmental factors such as wind, noise, or outdoor pollutants.">
+			help="This is the level of shielding a dwelling has against external environmental factors such as wind, noise or outdoor pollutants.">
 			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
@@ -118,8 +122,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Terrain Type"
 			name="terrainType"
 			validation="required"
-			help="The type of surrounding landscape or environment. Terrain class helps determine how external conditions, such as wind speed and turbulence, will impact ventilation and airflow around a building.">
+			help="This is the type of surrounding landscape.">
 			<GovDetails summary-text="Help with this input">
+				<p>Terrain class helps determine how external conditions, such as wind speed and turbulence, will impact ventilation and airflow around a building.</p>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr>
