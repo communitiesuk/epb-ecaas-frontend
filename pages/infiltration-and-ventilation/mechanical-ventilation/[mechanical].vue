@@ -12,10 +12,10 @@ const model: Ref<MechanicalVentilationData> = ref(mechanicalVentilation!);
 
 /** 'PIV' is excluded from options here because it is in the schema currently but unsupported in HEM itself at 0.34 version */
 const ventTypeOptions: Record<Exclude<VentType, 'PIV'>, string> = {
-	[VentType.MVHR]: 'MVHR',
-	[VentType.Intermittent_MEV]: 'Intermittent MEV',
-	[VentType.Centralised_continuous_MEV]: 'Centralised continuous MEV',
-	[VentType.Decentralised_continuous_MEV]: 'Decentralised continuous MEV',
+	[VentType.MVHR]: 'MVHR (Mechanical Ventilation with Heat recovery)',
+	[VentType.Intermittent_MEV]: 'Intermittent MEV (Mechanical Extract Ventilation)',
+	[VentType.Centralised_continuous_MEV]: 'Centralised continuous MEV (Mechanical Extract Ventilation)',
+	[VentType.Decentralised_continuous_MEV]: 'Decentralised continuous MEV (Mechanical Extract Ventilation)',
 };
 
 const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation>> = {
@@ -95,16 +95,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m³/h"
 			label="Air flow rate"
-			help="The required design air flow rate to be supplied to or extracted from the ventilation zone by the system"
+			help="Enter the required design air flow rate that will be supplied to or extracted from the ventilation zone by the system"
 			name="airFlowRate" validation="required | number | min:0"
 		>
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr>
 							<th scope="col" class="govuk-table__header">Ventilation type</th>
-							<th scope="col" class="govuk-table__header">Typical airflow rates (m³/h)</th>
-							<th scope="col" class="govuk-table__header">Notes</th>
+							<th scope="col" class="govuk-table__header">Typical airflow rates</th>
+							<th scope="col" class="govuk-table__header">Description</th>
 						</tr>
 					</thead>
 					<tbody class="govuk-table__body">
@@ -116,7 +116,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<tr class="govuk-table__row">
 							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Intermittent MEV (Mechanical Extract Ventilation)</th>
 							<td class="govuk-table__cell">30 - 60 m³/h per fan (typically kitchen/bathroom)</td>
-							<td class="govuk-table__cell">Small fans that operate only when needed (e.g., humidistat or user control). Each wet room usually has its own fan.</td>
+							<td class="govuk-table__cell">Small fans that operate only when needed, for example a humidistat or user control. Each wet room usually has its own fan.</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Centralised Continuous MEV</th>
@@ -138,7 +138,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				type="govRadios"
 				:options="mvhrLocationOptions"
 				label="MVHR location"
-				help="Whether the MVHR unit is located inside or outside the thermal envelope"
+				help="Select whether the MVHR unit is located inside or outside the thermal envelope"
 				name="mvhrLocation"
 				validation="required"
 			/>
@@ -146,27 +146,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				id="mvhrEfficiency"
 				type="govInputFloat"
 				label="MVHR efficiency"
-				help="Heat recovery efficiency (0 to 1) allowing for in-use factor"
+				help="Enter the MVHR's heat recovery efficiency, allowing for in-use factor. The value should be between 0 and 1."
 				name="mvhrEfficiency"
 				validation="required | min:0 | max:1">
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-					<table class="govuk-table">
-						<thead class="govuk-table__head">
-							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header">Explanation</th>
-								<th scope="col" class="govuk-table__header">Typical range</th>
-							</tr>
-						</thead>
-						<tbody class="govuk-table__body">
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">How much heat the system recovers from outgoing air</td>
-								<td class="govuk-table__cell">
-									0.85 - 0.95<br>
-									(high performance systems recover around 0.90)
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					<p>The MVHR efficiency is how much heat the system recovers from outgoing air. A typical range is 0.85 to 0.95 for high performance systems.</p>
 				</GovDetails>
 			</FormKit>
 		</template>
