@@ -23,6 +23,9 @@ const tabs: TabItem[] = [
 			<ResultDeliveredEnergyUseTab :selected="tabProps.currentTab === 2" :data="result?.response?.delivered_energy_use!" />
 			<ResultEnergyUseByFuelTab :selected="tabProps.currentTab === 3" :data="result?.response?.energy_use_by_fuel!" />
 		</GovTabs>
+		<GovWarningText>
+			This is an indicative compliance report based on 0.34 home energy model. This is not the same model that will be used for future homes standard.
+		</GovWarningText>
 	</template>
 	<template v-if="result?.resultType === 'err'">
 		<p class="govuk-body">There were errors as follows:</p>
