@@ -89,7 +89,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="peakPower"
 			type="govInputWithSuffix"
 			label="Peak power"
-			help="The maximum power output the photovoltaic system can generate under ideal conditions"
+			help="Enter the maximum power output the photovoltaic system can generate under ideal conditions"
 			name="peakPower"
 			validation="required | number | min:0.001 | max: 100"
 			suffix-text="kW"
@@ -101,32 +101,32 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							<th scope="col" class="govuk-table__header">
 								Home type
 							</th>
-							<th scope="col" class="govuk-table__header">Example range</th>
+							<th scope="col" class="govuk-table__header">Typical peak power</th>
 						</tr>
 					</thead>
 					<tbody class="govuk-table__body">
 						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Small flat</td>
 							<td class="govuk-table__cell">
-								0.5 - 1.5
+								0.5 - 1.5 kW
 							</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Terraced house</td>
 							<td class="govuk-table__cell">
-								1.5 - 2.5
+								1.5 - 2.5 kW
 							</td>
 						</tr>
 						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">Semi-detached</td>
+							<td class="govuk-table__cell">Semi-detached house</td>
 							<td class="govuk-table__cell">
-								2 - 3.5
+								2 - 3.5 kW
 							</td>
 						</tr>
 						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">Detached</td>
+							<td class="govuk-table__cell">Detached house</td>
 							<td class="govuk-table__cell">
-								4 - 6
+								4 - 6 kW
 							</td>
 						</tr>
 					</tbody>
@@ -148,7 +148,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							<th scope="col" class="govuk-table__header">
 								Ventilation strategy
 							</th>
-							<th scope="col" class="govuk-table__header">Explanation</th>
+							<th scope="col" class="govuk-table__header">Description</th>
 						</tr>
 					</thead>
 					<tbody class="govuk-table__body">
@@ -194,7 +194,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="pitch"
 			type="govInputWithSuffix"
 			label="Pitch"
-			help="The tilt angle (inclination) of the PV panel from horizontal measured upwards facing, 0 to 90, in degrees. 0 = horizontal surface, 90 = vertical surface."
+			help="Enter the tilt angle, or inclination, of the PV panel from horizontal measured upwards facing, where 0° is a horizonal surface and 90° is a vertical surface"
 			name="pitch"
 			validation="required | number | min:0 | max: 90"
 			suffix-text="°"
@@ -204,7 +204,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="elevationalHeight"
 			type="govInputWithSuffix"
 			label="Elevational height of PV element at its base"
-			help="Distance between the ground and the lowest edge of the PV"
+			help="Enter the distance between the ground and the lowest edge of the PV"
 			name="elevationalHeight"
 			validation="required | number | min:0 | max: 500"
 			suffix-text="m"
@@ -213,7 +213,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="lengthOfPV"
 			type="govInputWithSuffix"
 			label="Length of PV"
-			help="Length x width provides area"
+			help="Enter the length of the PV so the area can be calculated"
 			name="lengthOfPV"
 			validation="required | number | min:0 | max: 100"
 			suffix-text="m"
@@ -222,7 +222,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="widthOfPV"
 			type="govInputWithSuffix"
 			label="Width of PV"
-			help="Length x width provides area"
+			help="Enter the width of the PV so the area can be calculated"
 			name="widthOfPV"
 			validation="required | number | min:0 | max: 100"
 			suffix-text="m"
@@ -231,7 +231,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="inverterPeakPowerAC"
 			type="govInputWithSuffix"
 			label="Inverter peak power AC"
-			help="The maximum power output the inverter can provide on the AC side"
+			help="Enter the maximum power output the inverter can provide on the AC side"
 			name="inverterPeakPowerAC"
 			validation="required | number"
 			suffix-text="kW"
@@ -240,7 +240,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="inverterPeakPowerDC"
 			type="govInputWithSuffix"
 			label="Inverter peak power DC"
-			help="The maximum power input the inverter can handle on the DC side"
+			help="Enter the maximum power input the inverter can handle on the DC side"
 			name="inverterPeakPowerDC"
 			validation="required | number"
 			suffix-text="kW"
@@ -250,8 +250,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govBoolean"
 			true-label="Inside"
 			false-label="Outside"
-			label="Inverter location"
-			help="Is the inverter inside the thermal envelope of the dwelling"
+			label="Location of inverter"
+			help="Is the inverter inside or outside the thermal envelope of the dwelling?"
 			name="inverterIsInside"
 			validation="required"
 		/>
