@@ -106,7 +106,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === VentType.MVHR).map((x)=> [x.id, x.name]))"
 			label="MVHR unit" 
 			name="mvhrUnit" 
-			help="Select a MVHR unit that has been added previously which this ductwork is attached to"
+			help="Select the MVHR unit that this ductwork is attached to"
 			validation="required" />
 
 		<FormKit
@@ -197,86 +197,35 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="mm"
 			label="Insulation thickness"
-			help="The thickness of the duct insulation"
+			help="Enter the thickness of the duct insulation. Typically between 25mm and 50mm."
 			name="insulationThickness"
-			validation="required | number | min:0 | max:100">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header">Explanation</th>
-							<th scope="col" class="govuk-table__header">Typical range</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">Thickness of duct insulation to minimise heat loss and prevent condensation</td>
-							<td class="govuk-table__cell">25-50mm</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+			validation="required | number | min:0 | max:100"/>
+			
 		<FormKit
 			id="lengthOfDuctwork"
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Length of ductwork"
-			help="Length of the piece of ductwork specified in this sub-object"
+			help="Enter the length of the piece of ductwork for this sub-object. Typically between 10m and 30m."
 			name="lengthOfDuctwork"
-			validation="required | number | min:0">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header">Explanation</th>
-							<th scope="col" class="govuk-table__header">Typical range</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">Total duct length required, based on building size and layout</td>
-							<td class="govuk-table__cell">10 - 30 metres</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+			validation="required | number | min:0"/>
+			
 		<FormKit
 			id="thermalInsulationConductivityOfDuctwork"
 			type="govInputWithSuffix"
 			suffix-text="W/m·K"
 			label="Thermal insulation conductivity of ductwork"
-			help="The thermal conductivity of the insulation"
+			help="Enter the thermal conductivity of the insulation. Typical values are between 0.03 and 0.04."
 			name="thermalInsulationConductivityOfDuctwork"
-			validation="required | number | min:0">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header">Explanation</th>
-							<th scope="col" class="govuk-table__header">Typical range</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">How well the insulation reduces heat transfer</td>
-							<td class="govuk-table__cell">
-								0.030 - 0.040<br>
-								(common materials: mineral wool, phenolic foam)
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+			validation="required | number | min:0"/>
+		
 		<FormKit
 			id="surfaceReflectivity"
 			type="govBoolean"
 			true-label="Reflective"
 			false-label="Not reflective"
 			label="Surface reflectivity"
-			help="Whether the surface is reflective or not"
+			help="Select whether the surface is reflective"
 			name="surfaceReflectivity"
 			validation="required"
 		/>
