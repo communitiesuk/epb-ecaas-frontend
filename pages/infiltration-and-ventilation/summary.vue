@@ -181,6 +181,7 @@ const summarySections: SummarySection[] = [
 					</template>
 				</SummaryTab> -->
 			</GovTabs>
+			<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 		</NuxtLayout>
 	</div>
 </template>
