@@ -74,7 +74,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m²"
 			label="Area"
 			name="area"
-			help="Enter the area of the whole dwelling."
+			help="Enter the floor area of the whole dwelling"
 			validation="required"
 		/>
 		<FormKit
@@ -83,7 +83,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m³"
 			label="Volume"
 			name="volume"
-			help="Enter the volume of the whole dwelling."
+			help="Enter the volume of the whole dwelling"
 			validation="required"
 		/>
 		<FormKit
@@ -91,7 +91,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputInt"
 			label="Number of LED bulbs"
 			name="numberOfLEDBulbs"
-			help="Enter the number of LED bulbs in the whole dwelling."
+			help="Enter the number of LED bulbs in the whole dwelling"
 			validation="required"
 		/>
 		<FormKit
@@ -99,7 +99,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputInt"
 			label="Number of incandescent bulbs"
 			name="numberOfIncandescentBulbs"
-			help="Enter the number of incandescent bulbs in the whole dwelling."
+			help="Enter the number of incandescent bulbs in the whole dwelling"
 			validation="required"
 		/>
 		<!-- <FormKit
