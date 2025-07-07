@@ -26,14 +26,7 @@ const pvAndBatteriesPages: Array<Page> = [
 	{
 		id: 'electricBattery',
 		title: 'Electric battery',
-		url: '/pv-and-batteries/electric-battery/create',
-		type: PageType.Task,
-		parentId: 'pvAndBatteries'
-	},
-	{
-		id: 'electricBatteryEdit',
-		title: 'Electric battery',
-		url: '/pv-and-batteries/electric-battery/:battery',
+		url: '/pv-and-batteries/electric-battery',
 		type: PageType.Task,
 		parentId: 'pvAndBatteries'
 	},

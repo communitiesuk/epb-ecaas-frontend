@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import PvAndBatteries from './index.vue';
 import PvSystemForm from "./pv-systems/[system].vue";
-import ElectricBatteryForm from "./electric-battery/[battery].vue";
+import ElectricBatteryForm from "./electric-battery/index.vue";
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
 import { BatteryLocation, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";

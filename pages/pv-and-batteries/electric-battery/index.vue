@@ -4,7 +4,7 @@ import type { BatteryLocation } from '~/schema/api-schema.types';
 const title = "Electric battery";
 const store = useEcaasStore();
 
-const electricBatteryData = useItemToEdit('battery', store.pvAndBatteries.electricBattery.data);
+const electricBatteryData = store.pvAndBatteries.electricBattery.data[0];
 const model: Ref<ElectricBatteryData> = ref(electricBatteryData!);
 
 const saveForm = (fields: ElectricBatteryData) => {
