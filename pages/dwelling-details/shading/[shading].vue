@@ -43,8 +43,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		{{ title }}
 	</h1>
 	<p class="govuk-body">
-		<a href="/guidance/calculating-distant-shading" target="_blank" class="govuk-link">Shading
-			guidance (opens in another window)</a>
+		<a href="/guidance/calculating-distant-shading" target="_blank" class="govuk-link">Guidance on shading (opens in another window)</a>
 	</p>
 	<FormKit
 		v-model="model"
@@ -70,7 +69,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="startAngle"
 			type="govInputWithSuffix"
 			label="Shading start angle"
-			help="Absolute start angle from compass North of the segment."
+			help="This is the absolute start angle from compass north of the segment"
 			name="startAngle"
 			validation="required | number | min:0 | max:360"
 			suffix-text="&deg"
@@ -79,7 +78,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="endAngle"
 			type="govInputWithSuffix"
 			label="Shading end angle"
-			help="Absolute end angle from compass North of the segment clockwise from the start angle. (E.g. the end angle must be greater than the start angle)."
+			help="This is the absolute end angle from compass north of the segment clockwise from the start angle. The end angle must be greater than the start angle."
 			name="endAngle"
 			validation="required | number | min:0 | max:360"
 			suffix-text="&deg"
@@ -88,7 +87,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="objectType"
 			type="govRadios"
 			label="Object Type"
-			help="Select what type of object is causing the shading"
+			help="Select the type of object causing the shading"
 			name="objectType"
 			:options="objectTypeOptions"
 			validation="required"
@@ -109,7 +108,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			suffix-text="m"
 			name="distance"
 			validation="required | number"
-			help="Provide the distance from the dwelling to the shading object"
+			help="Enter the distance from the dwelling to the shading object"
 		/>
 		<FormKit
 			type="govButton"
