@@ -49,7 +49,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Type of dwelling"
 			name="typeOfDwelling"
 			validation="required"
-			help="The broad dwelling type classification."
+			help="Select the broad dwelling classification."
 		/>
 		<FormKit
 			id="storeysInDwelling"
@@ -57,7 +57,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of storeys in building"
 			name="storeysInDwelling"
 			validation="required | number | min:1 | max:250"
-			help="Number of storeys in the building. For houses this will be the same as the number of storeys in the dwelling, for flats, this will be the total number of storeys of the whole building that the flat is part of."
+			help="For houses this is the same as the number of storeys in the dwelling. For flats this is the total number of stories of the whole building the flat is in."
 		/>
 		<FormKit
 			v-if="model.typeOfDwelling === 'flat'"
@@ -74,15 +74,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of bedrooms"
 			name="numOfBedrooms"
 			validation="required | number | min:1"
-			help="Number of bedrooms in dwelling. Affects predicted occupancy."
+			help="This affects the dwelling's predicted occupancy"
 		/>
 		<FormKit
 			id="coolingRequired"
 			type="govBoolean"
-			label="Cooling required"
+			label="Is cooling required for this dwelling?"
 			name="coolingRequired"
 			validation="required"
-			help="Is cooling required for this dwelling? This affects space cooling of notional building"
+			help="This affects the space cooling of the notional dwelling"
 		/>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
