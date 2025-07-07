@@ -1,11 +1,8 @@
 export const syncCacheToLocalStorage = async () => {
-	console.log("inside syncCacheToLocalStorage");
-	console.log(localStorage.getItem("ecaas"), "localStorage - ecaas");
 
 	try {
 		if (!localStorage.getItem("ecaas")) {
 			const cachedData = await $fetch("/api/getState", { method: "GET" , cache: "no-store"});
-			console.log(cachedData, "cachedData");
 
 			if (cachedData) {
 				localStorage.setItem("ecaas", JSON.stringify(cachedData));
