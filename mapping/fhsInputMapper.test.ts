@@ -1097,7 +1097,8 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [{
 						id: "some-heat-pump-id",
-						name: "some-heat-pump-name"
+						name: "some-heat-pump-name",
+						productReference: "HEATPUMP-LARGE"
 					}]
 				},
 				boiler: {
@@ -1724,7 +1725,8 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [{
 						id: "heat pump 1 id",
-						name: "heat pump 1 name"
+						name: "heat pump 1 name",
+						productReference: "HEATPUMP-SMALL"
 					}]
 				},
 				boiler: {

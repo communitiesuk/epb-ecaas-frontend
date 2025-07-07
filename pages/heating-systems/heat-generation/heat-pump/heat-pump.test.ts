@@ -1,8 +1,9 @@
-import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended, registerEndpoint  } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import HeatPump from './[pump].vue';
 import { v4 as uuidv4 } from 'uuid';
+import { productsInCategory } from "~/server/services/products";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -11,13 +12,16 @@ mockNuxtImport('navigateTo', () => {
 
 vi.mock('uuid');
 
+registerEndpoint('/api/products', async () => productsInCategory('heatPump'));
+
 describe('heatPump', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const heatPump: HeatPumpData = {
 		id: '463c94f6-566c-49b2-af27-57e5c68b5c30',
-		name: 'Heat pump 1'
+		name: 'Heat pump 1',
+		productReference: "HEATPUMP-LARGE"
 	};
 
 	afterEach(() => {
@@ -26,6 +30,7 @@ describe('heatPump', () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Heat pump 1');
+		await user.click(screen.getByTestId("productReference_HEATPUMP-LARGE"));
 		await user.tab();
 	};
 

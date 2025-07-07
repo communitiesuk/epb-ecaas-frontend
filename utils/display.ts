@@ -1,5 +1,6 @@
 import { objectFromEntries } from 'ts-extras';
 import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass, WwhrsType } from '../schema/api-schema.types';
+import type { DisplayProduct } from '~/pcdb/products';
 
 export function displayBoolean(value: boolean | undefined): BooleanDisplay | undefined {
 	if (typeof value === 'undefined') {
@@ -155,4 +156,10 @@ export function displayAdjacentSpaceType<T extends string>(value: AdjacentSpaceT
 	}
 
 	return `${element} to ${ value === 'heatedSpace' ? 'heated space' : 'unheated space' }`;
+}
+
+export type ProductDisplayString = `${DisplayProduct['brandName']} - ${DisplayProduct['modelName']}`;
+
+export function displayProduct(product: DisplayProduct): ProductDisplayString {
+	return `${product.brandName} - ${product.modelName}`;
 }

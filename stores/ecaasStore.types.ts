@@ -1,5 +1,6 @@
 import type { EmptyObject, TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
+import type { ProductReference } from "~/pcdb/products";
 import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType, FuelType, SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta, WindShieldLocation } from "~/schema/api-schema.types";
 
 export type EcaasState = AssertEachKeyIsPageId<{
@@ -616,6 +617,7 @@ export type HeatGeneration = AssertFormKeysArePageIds<{
 export type HeatPumpData = {
 	readonly id: string;
 	name: string;
+	productReference: ProductReference;
 };
 
 export type BoilerData = {

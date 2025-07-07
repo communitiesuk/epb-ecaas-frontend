@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { objectFromEntries } from 'ts-extras';
 import { v4 as uuidv4 } from 'uuid';
+import { displayProduct } from '~/utils/display';
 
 const title = "Heat pump";
 const store = useEcaasStore();
@@ -8,13 +10,18 @@ const { saveToList } = useForm();
 const heatPumpData = useItemToEdit('pump', store.heatingSystems.heatGeneration.heatPump.data);
 const model: Ref<HeatPumpData> = ref(heatPumpData!);
 
+const { data: heatPumps } = await useFetch('/api/products', { query: { category: 'heatPump' } });
+
+const heatPumpOptions = objectFromEntries(heatPumps.value!.map(entity => [entity.reference, displayProduct(entity.product)]));
+
 const saveForm = (fields: HeatPumpData) => {
 	store.$patch((state) => {
 		const {heatPump} = state.heatingSystems.heatGeneration;
 
 		const heatPumpItem: HeatPumpData = {
 			id: uuidv4(),
-			name: fields.name
+			name: fields.name,
+			productReference: fields.productReference,
 		};
 
 		saveToList(heatPumpItem, heatPump);
@@ -46,6 +53,14 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Name"
 			help="Provide a name for this heat pump so that it can be identified later"
 			name="name"
+			validation="required"
+		/>
+		<FormKit
+			id="productReference"
+			type="govRadios"
+			label="Heat pump"
+			:options="heatPumpOptions"
+			name="productReference"
 			validation="required"
 		/>
 		<FormKit type="govButton" label="Save and continue" />

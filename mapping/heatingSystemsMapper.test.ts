@@ -130,7 +130,8 @@ describe("heating systems mapper", () => {
 		// Arrange
 		const heatPump: HeatPumpData = {
 			id: "some-heat-pump-id",
-			name: "Acme heat pump"
+			name: "Acme heat pump",
+			productReference: "HEATPUMP-LARGE"
 		};
 
 		const heatEmitting: HeatEmitting = {
@@ -218,7 +219,8 @@ describe("heating systems mapper", () => {
 		// Arrange
 		const heatPump: HeatPumpData = {
 			id: "some-heat-pump-id",
-			name: "Acme heat pump"
+			name: "Acme heat pump",
+			productReference: "HEATPUMP-SMALL"
 		};
 
 		const heatEmitting: HeatEmitting = {

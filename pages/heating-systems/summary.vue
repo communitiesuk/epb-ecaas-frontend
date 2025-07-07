@@ -35,6 +35,7 @@ const heatPumpSummary: SummarySection = {
 		heatPumps.map((pump) => {
 			return {
 				Name: pump.name,
+				Product: pump.productReference,
 			};
 		}) || [],
 	editUrl: heatGenerationUrl,

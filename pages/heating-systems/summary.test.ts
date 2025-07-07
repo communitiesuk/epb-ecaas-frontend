@@ -124,6 +124,7 @@ describe("Heating systems summary page", () => {
 		const heatPump: HeatPumpData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 			name: "Heat pump 1",
+			productReference: "HEATPUMP-LARGE"
 		};
 		const boiler: BoilerData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
@@ -318,6 +319,7 @@ describe("Heating systems summary page", () => {
 		const heatPump: HeatPumpData = {
 			id: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
 			name: "Heat pump 1",
+			productReference: "HEATPUMP-LARGE"
 		};
 
 		const wetDistribution1: WetDistributionData = {

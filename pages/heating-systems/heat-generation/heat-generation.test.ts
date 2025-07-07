@@ -1,4 +1,4 @@
-import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, registerEndpoint, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
 import HeatGeneration from './index.vue';
@@ -9,6 +9,14 @@ import HeatNetworkForm from "./heat-network/[network].vue";
 import HeatInterfaceUnitForm from "./heat-interface-unit/[interface].vue";
 
 import { v4 as uuidv4 } from "uuid";
+import { productsInCategory } from "~/server/services/products";
+
+registerEndpoint('/api/products', async () => productsInCategory('heatPump'));
+
+const navigateToMock = vi.hoisted(() => vi.fn());
+mockNuxtImport("navigateTo", () => {
+	return navigateToMock;
+});
 
 describe('heat generation', () => {
 
@@ -18,17 +26,20 @@ describe('heat generation', () => {
 
 		const heatPump1: HeatPumpData = {
 			id: uuidv4(),
-			name: "Heat pump 1"
+			name: "Heat pump 1",
+			productReference: "HEATPUMP-LARGE"
 		};
 
 		const heatPump2: HeatPumpData = {
 			...heatPump1,
 			name: "Heat pump 2",
+			productReference: "HEATPUMP-MEDIUM"
 		};
 
 		const heatPump3: HeatPumpData = {
 			...heatPump1,
-			name: "Heat pump 3"
+			name: "Heat pump 3",
+			productReference: "HEATPUMP-SMALL"
 		};
 
 		afterEach(() => {
@@ -342,26 +353,28 @@ describe('heat generation', () => {
 	// 	});
 	// });
 
+	function heatingSystemsFunc(): Pick<HeatingSystems, 'heatGeneration'> {
+		return {
+			heatGeneration: {
+				heatPump: { data: [{ id: "1b6a1e50-0e1f-4bc1-b198-f84587a7fdf2", name: "Heat pump 1", productReference: "HEATPUMP-MEDIUM" }] },
+				boiler: { data: [{ id: "2eec2b28-7c7a-47c2-92bb-c13b1eaa9ae3", name: "Boiler 1" }] },
+				heatBattery: { data: [{ id: "3c4bc9a3-2e7c-419a-86c9-0cb2f4768a1c", name: "Battery 1" }] },
+				heatNetwork: { data: [{ id: "46d0c104-42a5-44f4-b250-f58c933b9f5e", name: "Network 1" }] },
+				heatInterfaceUnit: { data: [{ id: "55ab34d1-8238-4a90-bf3e-223a84c1f4dc", name: "Heat interface unit 1" }] },
+			},
+		};
+	}
+
+
 	describe("mark heat generation section as complete", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
-	
-		const navigateToMock = vi.hoisted(() => vi.fn());
-		mockNuxtImport("navigateTo", () => {
-			return navigateToMock;
-		});
+
+		const heatingSystems = heatingSystemsFunc();
 	
 		const addHeatGenerationDataToStore = async () => {
 			store.$patch({
-				heatingSystems: {
-					heatGeneration: {
-						heatPump: { data: [{ id: "1b6a1e50-0e1f-4bc1-b198-f84587a7fdf2", name: "Heat pump 1" }] },
-						boiler: { data: [{ id: "2eec2b28-7c7a-47c2-92bb-c13b1eaa9ae3", name: "Boiler 1" }] },
-						heatBattery: { data: [{ id: "3c4bc9a3-2e7c-419a-86c9-0cb2f4768a1c", name: "Battery 1" }] },
-						heatNetwork: { data: [{ id: "46d0c104-42a5-44f4-b250-f58c933b9f5e", name: "Network 1" }] },
-						heatInterfaceUnit: { data: [{ id: "55ab34d1-8238-4a90-bf3e-223a84c1f4dc", name: "Heat interface unit 1" }] },
-					},
-				},
+				heatingSystems,
 			});
 		};
 	
@@ -369,7 +382,11 @@ describe('heat generation', () => {
 			await addHeatGenerationDataToStore();
 			await renderSuspended(HeatGeneration);
 		});
-	
+
+		afterEach(() => {
+			store.$reset();
+		});
+
 		const getGeneratorsData = async (action: string) => {
 			return [
 				{ key: "heatPump", testId: `heatPump_${action}_0`, form: HeatPumpForm, params: "pump" },
@@ -379,7 +396,7 @@ describe('heat generation', () => {
 				{ key: "heatInterfaceUnit", testId: `heatInterfaceUnit_${action}_0`, form: HeatInterfaceUnitForm, params: "interface" },
 			];
 		};
-	
+
 		type HeatGenerationType = keyof typeof store.heatingSystems.heatGeneration;
 	
 		it("marks heat generation section as complete when button is clicked", async () => {
@@ -425,7 +442,41 @@ describe('heat generation', () => {
 			// 	expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			// }
 		});
+	});
+
+	describe("mark heat generation as not complete", () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+
+		const heatingSystems = heatingSystemsFunc();
 	
+		const addHeatGenerationDataToStore = async () => {
+			store.$patch({
+				heatingSystems,
+			});
+		};
+	
+		beforeEach(async () => {
+			await addHeatGenerationDataToStore();
+			await renderSuspended(HeatGeneration);
+		});
+
+		afterEach(() => {
+			store.$reset();
+		});
+
+		const getGeneratorsData = async (action: string) => {
+			return [
+				{ key: "heatPump", testId: `heatPump_${action}_0`, form: HeatPumpForm, params: "pump" },
+				{ key: "boiler", testId: `boiler_${action}_0`, form: BoilerForm, params: "boiler" },
+				{ key: "heatBattery", testId: `heatBattery_${action}_0`, form: HeatBatteryForm, params: "battery" },
+				{ key: "heatNetwork", testId: `heatNetwork_${action}_0`, form: HeatNetworkForm, params: "network" },
+				{ key: "heatInterfaceUnit", testId: `heatInterfaceUnit_${action}_0`, form: HeatInterfaceUnitForm, params: "interface" },
+			];
+		};
+
+		type HeatGenerationType = keyof typeof store.heatingSystems.heatGeneration;
+
 		it("marks as not complete after saving a new or edited generator item", async () => {
 			const generators = await getGeneratorsData("");
 	
