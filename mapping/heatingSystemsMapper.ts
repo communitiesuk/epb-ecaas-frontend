@@ -2,7 +2,7 @@ import { objectFromEntries } from "ts-extras";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { FuelType  } from "~/schema/api-schema.types";
 import type {SchemaSpaceHeatSystemDetails} from "~/schema/api-schema.types";
-import { defaultZoneName } from "./common";
+import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
 export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema, 'EnergySupply' | 'SpaceHeatSystem'> {
 	return {
@@ -17,7 +17,7 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 	return {
 		EnergySupply: {
 			...objectFromEntries(fuelType ? fuelType.map((fuelType) => ([
-				fuelType === FuelType.electricity ? 'mains elec' : fuelType,
+				fuelType === FuelType.electricity ? defaultElectricityEnergySupplyName : fuelType,
 				{
 					fuel: fuelType as FuelType,
 					...(fuelType === FuelType.electricity ? { is_export_capable: exported } : {}),
@@ -85,7 +85,7 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 		heater.name,
 		{
 			type: "InstantElecHeater",
-			EnergySupply: "mains elec",
+			EnergySupply: defaultElectricityEnergySupplyName,
 			rated_power: heater.ratedPower,
 			frac_convective: heater.convectionFractionInstant,
 		}

@@ -10,6 +10,7 @@ import {
 } from "~/schema/api-schema.types";
 import type {SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaStorageTank, SchemaWaterPipework, SchemaWaterPipeworkSimple} from "~/schema/api-schema.types";
 import type {FhsInputSchema, ResolvedState} from "./fhsInputMapper";
+import { defaultElectricityEnergySupplyName } from "./common";
 
 export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {
 	const showers = mapShowersData(state);
@@ -49,7 +50,7 @@ function mapShowersData(state: ResolvedState) {
 			type: "InstantElecShower",
 			ColdWaterSource: ColdWaterSourceType.mains_water,
 			rated_power: x.ratedPower,
-			EnergySupply: "mains elec"
+			EnergySupply: defaultElectricityEnergySupplyName
 		};
 
 		return [key, val];
@@ -122,7 +123,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				// Adding these values as default until heat pump is set up to come from PCDB
 				[heatPumpName]: {
 					name: heatPumpName,
-					EnergySupply: "mains elec", 
+					EnergySupply: defaultElectricityEnergySupplyName, 
 					heater_position: 0.1,
 					type: "HeatSourceWet",
 					temp_flow_limit_upper: 65,

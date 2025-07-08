@@ -3,6 +3,7 @@ import {  DuctShape,       SupplyAirFlowRateControlType, SupplyAirTemperatureCon
 import type {CombustionApplianceType, SchemaCombustionAppliance, SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks} from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
+import { defaultElectricityEnergySupplyName } from './common';
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilation } = mapVentilationData(state);
@@ -43,7 +44,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		const key = x.name;
 		const val: Omit<SchemaMechanicalVentilation, 'ductwork'> = {
 			vent_type: x.typeOfMechanicalVentilationOptions,
-			EnergySupply: "mains elec",
+			EnergySupply: defaultElectricityEnergySupplyName,
 			design_outdoor_air_flow_rate: x.airFlowRate,
 			sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
 			sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
