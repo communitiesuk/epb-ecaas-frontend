@@ -70,7 +70,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govRadios"
 			:options="typeOfInternalFloorOptions"
 			label="Type of internal floor"
-			help="This affects what inputs are necessary."
+			help="This affects the additional inputs needed."
 			name="typeOfInternalFloor"
 			validation="required"
 		/>
@@ -86,8 +86,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FormKit
 				id="surfaceAreaOfElement"
 				type="govInputWithSuffix"
-				label="Net surface area of element"
-				help="Net area of the building element"
+				label="Net surface area of the floor"
 				name="surfaceAreaOfElement"
 				validation="required | number | min:0 | max:10000"
 				suffix-text="m²"
@@ -101,12 +100,15 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance of adjacent unheated space"
-			help="The effective thermal resistance of the unheated space. For example values, please refer to technical paper S11P-028. Max value in the paper is: Facing wall not exposed, 2.5 (m^2.K) / W."
+			help="Enter the effective thermal resistance of the unheated space"
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
 		>
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m²·K)/W for when the facing wall is not exposed.</p>
+			</GovDetails>
 			<p class="govuk-body">
-				<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
+				<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">					
 					Guidance on thermal resistance of unheated spaces (opens in another window)
 				</a>
 			</p>
