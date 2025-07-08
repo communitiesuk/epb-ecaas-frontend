@@ -14,7 +14,7 @@ const saveForm = (fields: VentilationData) => {
 					ventilationZoneHeight: fields.ventilationZoneHeight,
 					dwellingEnvelopeArea: fields.dwellingEnvelopeArea,
 					dwellingElevationalLevelAtBase: fields.dwellingElevationalLevelAtBase,
-					crossVentilation: fields.crossVentilation,
+					crossVentilationPossible: fields.crossVentilationPossible,
 					maxRequiredAirChangeRate: 2
 				},
 				complete: true
@@ -46,7 +46,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="ventilationZoneHeight"
 			type="govInputWithSuffix"
 			label="Ventilation zone height"
-			help="Used for ventilation calculations. Measured from the lowest finished floor level in the dwelling to the top of the ventilation zone."
+			help="This is measured from the lowest finished floor level in the dwelling to the top of the ventilation zone."
 			name="ventilationZoneHeight"
 			validation="required | number | min:1 | max:20"
 			suffix-text="m"
@@ -55,17 +55,27 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="dwellingEnvelopeArea"
 			type="govInputWithSuffix"
 			label="Dwelling envelope area"
-			help="The dwelling envelope area is the total surface area that separates the heated or cooled inside from the outside, including walls, roof, floors exposed to the ground or unheated spaces, windows, and external doors."
+			help="This is the total surface area that separates the heated or cooled inside from the outside."
 			name="dwellingEnvelopeArea"
 			validation="required | number | min:5 | max:72000"
 			suffix-text="m²"
+		><GovDetails summary-text="Help with this input">	
+			<p class="govuk-hint">
+				It includes walls, roofs, floors exposed to the ground or unheated spaces, windows and external doors.
+			</p>
+		</GovDetails>
+		</FormKit>
+		<FieldsElevationalHeight
+			field="dwellingElevationalLevelAtBase"
+			label="Elevational height of dwelling at its base"
+			help="Enter elevational height of the dwelling above ground datum level."
+			:minmax="{ min: -150, max: 750 }"
 		/>
-		<FieldsElevationalHeight field="dwellingElevationalLevelAtBase" label="Elevational height of dwelling at its base" help="Elevational height of dwelling above ground datum level" :minmax="{ min: -150, max: 750 }" />
 		<FormKit
-			id="crossVentilation"
+			id="crossVentilationPossible"
 			type="govBoolean"
-			label="Cross ventilation"
-			name="crossVentilation"
+			label="Is cross ventilation possible?"
+			name="crossVentilationPossible"
 			validation="required"
 		>
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>	

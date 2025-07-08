@@ -990,7 +990,7 @@ describe("FHS input mapper", () => {
 					ventilationZoneHeight: 8,
 					dwellingEnvelopeArea: 320,
 					dwellingElevationalLevelAtBase: 3,
-					crossVentilation: false,
+					crossVentilationPossible: false,
 					maxRequiredAirChangeRate: 2.1,
 				}
 			},
@@ -1385,7 +1385,7 @@ describe("FHS input mapper", () => {
 					ventilationZoneHeight: 1,
 					dwellingEnvelopeArea: 5,
 					dwellingElevationalLevelAtBase: 1,
-					crossVentilation: true,
+					crossVentilationPossible: true,
 					maxRequiredAirChangeRate: 2,
 				}
 			},
