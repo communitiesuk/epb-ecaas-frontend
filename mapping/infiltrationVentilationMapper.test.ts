@@ -66,6 +66,7 @@ describe('infiltration ventilation mapper', () => {
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeDefined();
+		expect(firstMechVent?.SFP).not.toBeDefined();
 	});
 
 
@@ -198,6 +199,7 @@ describe('infiltration ventilation mapper', () => {
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeUndefined();
+		expect(firstMechVent?.SFP).toBe(1.5); // NOTE - hardcoded to sensible default for now
 	});
 
 	it('maps vents to FHS input request', async () => {
