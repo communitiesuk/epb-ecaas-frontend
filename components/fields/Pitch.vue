@@ -17,9 +17,11 @@ const help = 'Enter the tilt angle of the external surface. 0° means the extern
 			id="pitchOption" type="govRadios" :options="options" :label="label ?? 'Pitch'" :help=help name="pitchOption"
 			validation="required">
 			<GovDetails summary-text="Help with this input">
-				<a href="/guidance/pitch" target="_blank" class="govuk-link">
-					Guidance on pitch (opens in another window)
-				</a>
+				<div class="govuk-!-margin-bottom-3">
+					<a href="/guidance/pitch" target="_blank" class="govuk-link">
+						Guidance on pitch (opens in another window)
+					</a>
+				</div>
 				<TablesPitch/>
 			</GovDetails>
 		</FormKit>
