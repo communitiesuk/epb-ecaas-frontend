@@ -13,10 +13,11 @@ export const immersionHeaterPositionValues: Record<ImmersionHeaterPosition, numb
 };
 
 export const defaultZoneName: string = 'dwellingspace';
+export const defaultElectricityEnergySupplyName = "mains elec";
 
 export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 	type: "HeatPump",
-	EnergySupply: "mains elec",
+	EnergySupply: defaultElectricityEnergySupplyName,
 	backup_ctrl_type: HeatPumpBackupControlType.None,
 	min_temp_diff_flow_return_for_hp_to_operate: 0,
 	min_modulation_rate_35: 0.35,

@@ -59,7 +59,7 @@ describe("PV and electric batteries mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, 'OnSiteGeneration'> = {
 			OnSiteGeneration: {
 				"Roof": {
-					EnergySupply: FuelType.electricity,
+					EnergySupply: "mains elec",
 					base_height: 5,
 					height: 10,
 					inverter_is_inside: false,
@@ -75,7 +75,7 @@ describe("PV and electric batteries mapper", () => {
 					width: 4,
 				},
 				"Garden": {
-					EnergySupply: FuelType.electricity,
+					EnergySupply: "mains elec",
 					base_height: 2,
 					height: 3,
 					inverter_is_inside: false,

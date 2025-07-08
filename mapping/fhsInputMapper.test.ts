@@ -561,7 +561,7 @@ const expectedFlatInput: FhsInputSchema = {
 	NumberOfBedrooms: 2,
 	OnSiteGeneration: {
 		"pv system 1": {
-			EnergySupply: "electricity",
+			EnergySupply: "mains elec",
 			peak_power: 2,
 			ventilation_strategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
 			pitch: 15,

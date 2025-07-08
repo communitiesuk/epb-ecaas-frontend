@@ -8,7 +8,7 @@ import { mapHeatingSystemsData } from './heatingSystemsMapper';
 import { mapLivingSpaceFabricData as mapDwellingFabricData } from './dwellingFabricMapper';
 import { mapPvAndElectricBatteriesData } from './pvAndElectricBatteriesMapper';
 import { mapDomesticHotWaterData } from './domesticHotWaterMapper';
-import { defaultHeatSourceWetDetails } from "~/mapping/common";
+import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from "~/mapping/common";
 
 export type ResolvedState = Resolved<EcaasState>;
 
@@ -21,11 +21,10 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 
 	const [pvData, electricBatteries] = mapPvAndElectricBatteriesData(state);
 	const { EnergySupply, SpaceHeatSystem } = mapHeatingSystemsData(state);
-	const fuelType = "mains elec";
 	const heatingSystemsData = {
 		SpaceHeatSystem,
 		EnergySupply: {
-			[fuelType]: {...EnergySupply[fuelType], ...electricBatteries}
+			[defaultElectricityEnergySupplyName]: {...EnergySupply[defaultElectricityEnergySupplyName], ...electricBatteries}
 		}
 	};
 
