@@ -114,7 +114,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="kappaValue"
 			name="kappaValue"
 			label="Areal heat capacity of roof and ceiling"
-			help="This is the sum of the heat capacities of all the construction layers, also known as effective areal heat capacity or kappa value"
 		/>
 		<FieldsMassDistributionClass
 			id="massDistributionClass"

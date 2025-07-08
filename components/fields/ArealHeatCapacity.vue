@@ -15,7 +15,7 @@ defineProps<{
 		type="govRadios"
 		:label="label ?? 'Areal heat capacity'"
 		:name="name"
-		:help="help ?? 'Effective areal heat capacity or kappa value. This is the total heat capacity of all the construction layers, that is, the sum of the heat capacities of each individual layers.'"
+		:help="help ?? 'This is the sum of the heat capacities of all the construction layers, also known as effective areal heat capacity or kappa value'"
 		validation="required"
 		:options="arealHeatCapacityOptions"
 		value-type="number"
