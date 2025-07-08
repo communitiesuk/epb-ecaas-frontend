@@ -1,4 +1,4 @@
-import { objectEntries, objectFromEntries } from 'ts-extras';
+import { arrayIncludes, objectEntries, objectFromEntries } from 'ts-extras';
 import {  DuctShape,       SupplyAirFlowRateControlType, SupplyAirTemperatureControlType, VentType } from "~/schema/api-schema.types";
 import type {CombustionApplianceType, SchemaCombustionAppliance, SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks} from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
@@ -50,6 +50,8 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 			...(x.typeOfMechanicalVentilationOptions === VentType.MVHR ? {mvhr_location: x.mvhrLocation, mvhr_eff: x.mvhrEfficiency} : {}),
 			measured_air_flow_rate: 37,
 			measured_fan_power: 12.26,
+			// (TODO: REMOVE COMMENT WHEN USING HEM 0.37) more recent schema is more explicit about logic for SFP field, but following implements what is currently implicit logic: for following vent types, provide SFP (with a canned value), otherwise don't
+			...(arrayIncludes([VentType.Decentralised_continuous_MEV, VentType.Intermittent_MEV], x.typeOfMechanicalVentilationOptions) ? {SFP: 1.5} : {})
 		};
 
 		return [key, val];

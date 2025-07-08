@@ -164,6 +164,7 @@ const expectedHouseInput: FhsInputSchema = {
 				vent_type: VentType.Intermittent_MEV,
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
+				SFP: 1.5
 			}
 		},
 		PDUs: {},
