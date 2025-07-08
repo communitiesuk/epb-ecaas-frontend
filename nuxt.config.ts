@@ -7,9 +7,9 @@ export default defineNuxtConfig({
 	compatibilityDate: "2024-04-03",
 	devtools: {
 		enabled:
-      typeof process.env.DISABLE_DEVTOOLS !== "undefined"
-      	? !yn(process.env.DISABLE_DEVTOOLS)
-      	: true,
+			typeof process.env.DISABLE_DEVTOOLS !== "undefined"
+				? !yn(process.env.DISABLE_DEVTOOLS)
+				: true,
 	},
 	app: {
 		head: {
@@ -64,8 +64,8 @@ export default defineNuxtConfig({
 						"import",
 					],
 					additionalData: `
-																								@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
-																								@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`,
+																																																																																																@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
+																																																																																																@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`,
 				},
 			},
 		},
@@ -88,6 +88,7 @@ export default defineNuxtConfig({
 		"@nuxt/eslint",
 		"nuxt-auth-utils",
 		"@nuxtjs/robots",
+		"nuxt-security",
 	],
 	plugins: [
 		"~/plugins/xray-fetch.server",
@@ -136,4 +137,15 @@ export default defineNuxtConfig({
 		indexable: false,
 	},
 	ignore: ["**/*.test.ts"],
+	security: {
+		headers: {
+			strictTransportSecurity: process.env.BUILD_FOR_AWS_LAMBDA ? {
+				// TODO: Increase gradually (TBC), eventually with maxAge: 63072000 and preload: true
+				maxAge: 604800, // 1 week
+				includeSubdomains: true
+			} : false,
+			xFrameOptions: false,
+			xXSSProtection: false
+		}
+	}
 });

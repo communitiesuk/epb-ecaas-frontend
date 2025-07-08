@@ -26,6 +26,7 @@
     "deepmerge": "^4.3.1",
     "nuxt": "^3.15.4",
     "nuxt-auth-utils": "^0.5.20",
+    "nuxt-security": "^2.2.0",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.3.0",
     "uuid": "^11.1.0",
