@@ -11,7 +11,7 @@ defineProps<{
 		:id="id"
 		type="govInputFloat"
 		:label="label ?? 'Solar absorption coefficient'"
-		help="Solar absorption coefficient at the external surface (dimensionless), the proportion of solar radiation which is absorbed. Decimal between 0-1."
+		help="Enter the proportion of solar radiation which is absorbed. It should be a decimal between 0 and 1."
 		:name="name"
 		validation="required | number | min:0.01 | max:1">
 		<GovDetails summary-text="Help with this input" possibly-llm-placeholder>

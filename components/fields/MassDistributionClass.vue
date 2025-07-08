@@ -43,9 +43,9 @@ const options: Record<MassDistributionClass, RadioOption> = {
 		:help="help ?? 'Distribution of mass in building element'"
 		:name="name"
 		validation="required">
-		<div class="govuk__custom-link">
-			<a href="/guidance/mass-distribution-guidance" target="_blank" class="govuk-link govuk-link-text">Guidance (opens in another window)</a>	
-		</div>
+		<GovDetails summary-text="Help with this input">
+			<a href="/guidance/mass-distribution-guidance" target="_blank" class="govuk-link">Guidance on mass distribution (opens in another window)</a>	
+		</GovDetails>
 	</FormKit>
 </template>
 

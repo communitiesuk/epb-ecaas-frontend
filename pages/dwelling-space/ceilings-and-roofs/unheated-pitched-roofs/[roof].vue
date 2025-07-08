@@ -71,7 +71,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			suffix-text="m²"
 		/>
 		<FieldsPitch label="Pitch of roof" />
-		<FieldsOrientation label="Orientation of roof" />
+		<FieldsOrientation label="Orientation" />
 		<div v-if="!!model.orientation" class="govuk-error-summary">
 			<div role="alert" class="govuk-hint govuk-!-margin-bottom-0">
 				If the pitched roof has multiple orientations (e.g., a gable or hip roof), each orientation must be modelled as a separate roof element.
@@ -80,8 +80,8 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="length"
 			type="govInputWithSuffix"
-			label="Length of roof"
-			help="For unheated pitched roof, model the length of the roof"
+			label="Length"
+			help="Enter the length of the building element"
 			name="length"
 			validation="required | number | min:0.001 | max:50"
 			suffix-text="m"
@@ -89,8 +89,8 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="width"
 			type="govInputWithSuffix"
-			label="Width of roof"
-			help="For unheated pitched roof, model the width of the roof."
+			label="Width"
+			help="Enter the width of the building element"
 			name="width"
 			validation="required | number | min:0.001 | max:50"
 			suffix-text="m"
@@ -105,7 +105,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="uValue"
 			type="govInputWithSuffix"
 			label="U-value of roof and ceiling"
-			help="For an unheated pitched roof, input the combined value of the ceiling and roof"
+			help="Enter the steady state thermal transmittance of the ceiling and roof combined"
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
 			suffix-text="W/(m²·K)"
@@ -114,7 +114,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="kappaValue"
 			name="kappaValue"
 			label="Areal heat capacity of roof and ceiling"
-			help="For an unheated pitched roof, input the combined value of the ceiling and roof"
+			help="This is the sum of the heat capacities of all the construction layers, also known as effective areal heat capacity or kappa value"
 		/>
 		<FieldsMassDistributionClass
 			id="massDistributionClass"
