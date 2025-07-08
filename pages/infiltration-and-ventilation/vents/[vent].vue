@@ -66,7 +66,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="effectiveVentilationArea"
 			type="govInputWithSuffix"
 			label="Effective ventilation area"
-			help="The actual area through which air can flow, accounting for obstructions like grilles or mesh"
+			help="Enter the actual area through which air can flow, accounting for obstructions like grilles or mesh"
 			name="effectiveVentilationArea"
 			validation="required | number | min:1 | max:999999"
 			suffix-text="cm²">
@@ -75,24 +75,24 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
 							<th scope="col" class="govuk-table__header">Vent type</th>
-							<th scope="col" class="govuk-table__header govuk-!-width-one-third">Effective area (cm²)</th>
 							<th scope="col" class="govuk-table__header">Description</th>
+							<th scope="col" class="govuk-table__header govuk-!-width-one-third">Typical effective area</th>
 						</tr>
 					</thead>
 					<tbody class="govuk-table__body">
 						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Standard window trickle vent</td>
-							<td class="govuk-table__cell">40 - 80</td>
 							<td class="govuk-table__cell">
 								This is a common range for modern trickle vents designed to contribute to background ventilation in habitable rooms. Multiple vents per room might be needed.
 							</td>
+							<td class="govuk-table__cell">40 - 80 cm²</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Wall-mounted air brick</td>
-							<td class="govuk-table__cell">50 - 200</td>
 							<td class="govuk-table__cell">
 								Air bricks are generally larger and provide more airflow. The effective area depends significantly on the grill design and free area. Smaller air bricks might be around 50 to 100 cm², while larger ones can reach 200 cm² or more. Some manufacturers might quote the free area, which would be a higher number.
 							</td>
+							<td class="govuk-table__cell">50 - 200 cm²</td>
 						</tr>
 					</tbody>
 				</table>
@@ -102,15 +102,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="midHeightOfZone"
 			type="govInputWithSuffix"
 			label="Mid height of zone"
-			help="Mid height of the zone that the vent serves"
+			help="Enter the mid height of the zone that the vent serves. Typically between 1.2m and 1.8m."
 			name="midHeightOfZone"
 			validation="required | number | min:1 | max:60"
-			suffix-text="m">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<p>Typical ranges - 1.2 - 1.8m</p>
-			</GovDetails>
-		</FormKit>
-		<FieldsOrientation />
+			suffix-text="m"/>
+		<FieldsOrientation help="Enter the orientation of the vent's outside face, measured from true north."/>
 		<FieldsPitch />
 		<FormKit
 			type="govButton"
