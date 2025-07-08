@@ -311,32 +311,30 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="°C"
 		>
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<p class="govuk-hint">
+					The minimum flow temperature isn't fixed but is influenced by
+					the control logic and the building's heat demand. Weather
+					compensation adjusts the flow temperature of water sent to
+					radiators or underfloor heating based on the outdoor
+					temperature.
+				</p>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
 						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header">Description</th>
 							<th scope="col" class="govuk-table__header">System type</th>
 							<th scope="col" class="govuk-table__header">
-								Minimum flow temperature
+								Typical minimum flow temperature
 							</th>
 						</tr>
 					</thead>
 					<tbody class="govuk-table__body">
 						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">
-								The minimum flow temperature isn't fixed but is influenced by
-								the control logic and the building's heat demand. Weather
-								compensation adjusts the flow temperature of water sent to
-								radiators or underfloor heating based on the outdoor
-								temperature.
-							</td>
 							<td class="govuk-table__cell">Radiator</td>
-							<td class="govuk-table__cell">35-40</td>
+							<td class="govuk-table__cell">35-40°C</td>
 						</tr>
 						<tr class="govuk-table__row">
-							<td class="govuk-table__cell"/>
-							<td class="govuk-table__cell">UFH</td>
-							<td class="govuk-table__cell">25-35</td>
+							<td class="govuk-table__cell">Underfloor heating</td>
+							<td class="govuk-table__cell">25-35°C</td>
 						</tr>
 					</tbody>
 				</table>
