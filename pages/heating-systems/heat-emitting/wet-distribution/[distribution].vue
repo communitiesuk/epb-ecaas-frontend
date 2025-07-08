@@ -126,32 +126,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="thermalMass"
 			validation="required | number"
 			suffix-text="kJ/°C"
-		>
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header">Description</th>
-							<th scope="col" class="govuk-table__header">Example range</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">
-								The thermal mass of a wet distribution system refers to the
-								ability of the system's components (such as the floor or the
-								pipes carrying the heated water) to store and release heat. In
-								the context of underfloor heating (UFH) or other wet systems
-								(e.g., radiators), thermal mass is primarily influenced by the
-								material in which the heating pipes are embedded, such as
-								concrete, screed, or timber.
-							</td>
-							<td class="govuk-table__cell">0.1 - 0.5</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+			help="Enter the thermal mass of the wet distribution system. Typically between 0.1 and 0.5 kJ/oC"
+		/>
+			
 		<FormKit
 			id="designTempDiffAcrossEmitters"
 			type="govInputWithSuffix"
@@ -159,30 +136,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="designTempDiffAcrossEmitters"
 			validation="required | number"
 			suffix-text="°C"
-		>
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header">Description</th>
-							<th scope="col" class="govuk-table__header">Example range</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">
-								The difference between the water flow temperature (the
-								temperature of the water circulating through the heating system)
-								and the room air temperature (the ambient temperature in the
-								room) at the point where the heating is being emitted, such as
-								through radiators or underfloor heating (UFH).
-							</td>
-							<td class="govuk-table__cell">5 - 15</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+			help="Enter the difference between the water floor temperature and the room air temperature at the point where the heating is being emitted. Typically between 5 and 15 °C"
+		/>
+			
 		<FormKit
 			id="designFlowTemp"
 			type="govInputWithSuffix"
@@ -190,35 +146,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="designFlowTemp"
 			validation="required | number"
 			suffix-text="°C"
-		>
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header">Description</th>
-							<th scope="col" class="govuk-table__header">Example range</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">
-								The temperature at which water is delivered to the heating
-								system during the coldest expected conditions in a building. It
-								is the temperature chosen for the system's water supply to
-								ensure that enough heat is delivered to maintain the desired
-								indoor temperature under extreme conditions.
-							</td>
-							<td class="govuk-table__cell">35 - 55</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+			help="Enter the temperature at which water is delivered to the heating system during the coldest expected conditions. Typically between 35 and 55 °C"
+		/>
+			
 		<FormKit
 			id="designFlowRate"
 			type="govInputWithSuffix"
 			label="Design flow rate"
-			help="Enter the volume of water flowing through the heater."
+			help="Enter the volume of water flowing through the heater"
 			name="designFlowRate"
 			validation="required | number"
 			suffix-text="litres per minute"
@@ -238,7 +173,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				name="numberOfRadiators"
 				type="govInputInt"
 				label="Number of radiators"
-				help="Specify how many radiators are in this dwelling"
+				help="Enter the number of radiators in this wet distribution system"
 				validation="required | integer | min: 1"
 			/>
 
@@ -248,28 +183,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Convection fraction"
 				name="convectionFractionWet"
 				validation="required | number | min: 0 | max: 1 "
-			>
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-					<table class="govuk-table">
-						<thead class="govuk-table__head">
-							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header">Description</th>
-								<th scope="col" class="govuk-table__header">Example range</th>
-							</tr>
-						</thead>
-						<tbody class="govuk-table__body">
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">
-									The convection fraction for a radiator refers to the proportion
-									of heat that a radiator emits through convection as opposed to
-									radiation.
-								</td>
-								<td class="govuk-table__cell">0.2 - 0.8</td>
-							</tr>
-						</tbody>
-					</table>
-				</GovDetails>
-			</FormKit>
+				help="Enter the proportion of heat the radiator emits through convection. Typically between 0.2 and 0.8."
+			/>
 		</template>
 
 		<template v-if="model.typeOfSpaceHeater === 'ufh'">
@@ -294,11 +209,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="options"
 			
 		>
-
-			<p class="govuk-body">
-				<a href="/guidance/eco-design-control-guidance" target="_blank" class="govuk-link">
-					Eco design control guidance (opens in another window)
-				</a></p>
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-body">
+					<a href="/guidance/eco-design-control-guidance" target="_blank" class="govuk-link">
+						Eco design control guidance (opens in another window)
+					</a>
+				</p>
+			</GovDetails>
 		</FormKit>
 
 		<FormKit
@@ -338,8 +255,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						</tr>
 					</tbody>
 				</table>
-			</GovDetails>
-		</FormKit> 
+				<GovDetails summary-text="Help with this input" possibly-llm-placeholder/></govdetails></FormKit> 
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>
