@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { pitchOptions } from '#imports';
+import { standardPitchOptions } from '#imports';
 
 const title = "Internal door";
 const store = useEcaasStore();
@@ -84,7 +84,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 			<FieldsPitch
 				:pitch-option="model.pitchOption"
-				:options="pitchOptions()"
+				:options="standardPitchOptions()"
 			/>
 			<FormKit
 				id="surfaceArea"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ZeroPitchOption } from '~/stores/ecaasStore.types';
+import { zeroPitchOptions } from '#imports';
 
 const title = "Roof";
 const store = useEcaasStore();
@@ -12,10 +12,6 @@ const roofTypeOptions: Record<Exclude<RoofType, 'unheatedPitched'>, string> = {
 	flat: 'Flat roof',
 	pitchedInsulatedAtRoof: 'Pitched roof insulated at roof or rafter',
 	pitchedInsulatedAtCeiling: 'Pitched roof insulated at ceiling or joist'
-};
-const roofPitchOptions: Record<ZeroPitchOption, Capitalize<ZeroPitchOption>> = {
-	'0': '0',
-	custom: 'Custom'
 };
 
 const saveForm = (fields: RoofData) => {
@@ -80,7 +76,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FieldsPitch
 			v-if="model.typeOfRoof === 'flat'"
 			:pitch-option="model.pitchOption"
-			:options="roofPitchOptions"
+			:options="zeroPitchOptions()"
 		/>
 		<template v-if="['pitchedInsulatedAtRoof', 'pitchedInsulatedAtCeiling'].includes(model.typeOfRoof)">
 			<FieldsPitch />

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { pitchOptions } from '#imports';
+import { standardPitchOptions } from '#imports';
 import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
 
 const title = "Window";
@@ -148,7 +148,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
 		<FieldsPitch
 			:pitch-option="model.pitchOption"
-			:options="pitchOptions()"
+			:options="standardPitchOptions()"
 		/>
 		<FieldsOrientation />
 		<FormKit

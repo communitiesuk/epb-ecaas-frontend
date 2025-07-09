@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ZeroPitchOption } from '~/stores/ecaasStore.types';
+import { zeroPitchOptions } from '#imports';
 
 const title = "Ceiling";
 const store = useEcaasStore();
@@ -7,11 +7,6 @@ const { saveToList } = useForm();
 
 const ceilingData = useItemToEdit('ceiling', store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings?.data);
 const model: Ref<CeilingData> = ref(ceilingData!);
-
-const ceilingPitchOptions: Record<ZeroPitchOption, Capitalize<ZeroPitchOption>> = {
-	'0': '0',
-	custom: 'Custom'
-};
 
 const typeOfCeilingOptions = adjacentSpaceTypeOptions('Ceiling');
 
@@ -93,7 +88,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 			<FieldsPitch
 				:pitch-option="model.pitchOption"
-				:options="ceilingPitchOptions"
+				:options="zeroPitchOptions()"
 			/>
 			<FormKit
 				id="surfaceArea"
