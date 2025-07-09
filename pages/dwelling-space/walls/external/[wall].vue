@@ -87,7 +87,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Height"
-			help="The height of the building element"
+			help="Enter the height of the building element"
 			name="height"
 			validation="required | number | min:0.001 | max:50"
 		/>
@@ -96,7 +96,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Length"
-			help="The length of the building element"
+			help="Enter the length of the building element"
 			name="length"
 			validation="required | number | min:0.001 | max:50"
 		/>
@@ -106,7 +106,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Net surface area"
-			help="Net area of the opaque building element (i.e. area of all windows / doors should be subtracted before entry). If the element is not square or rectangular the area might not be equal to width x height, hence the need to ask for area in addition to width and height."
+			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
@@ -116,7 +116,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="W/(m²·K)"
 			label="U-value"
-			help="Steady-state thermal transmittance of the building element"
+			help="This is the steady state thermal transmittance of the building element"
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
 		/>
