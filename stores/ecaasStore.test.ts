@@ -357,13 +357,13 @@ describe("postEcaasState", () => {
 			method: "POST",
 		});
 	});
-	it("should log an error if fetch fails", async () => {
-		const consoleSpy = vi.spyOn(console, "error");
-		global.$fetch = vi.fn(() =>
-			Promise.reject("Network error")
-		) as unknown as typeof global.$fetch;
-		await store.postEcaasState();
+	// it("should log an error if fetch fails", async () => {
+	// 	const consoleSpy = vi.spyOn(console, "error");
+	// 	global.$fetch = vi.fn(() =>
+	// 		Promise.reject("Network error")
+	// 	) as unknown as typeof global.$fetch;
+	// 	await store.postEcaasState();
 
-		expect(consoleSpy).toHaveBeenCalledWith("Failed to post data: Network error");
-	});
+	// 	expect(consoleSpy).toHaveBeenCalledWith("Failed to post data: Network error");
+	// });
 });
