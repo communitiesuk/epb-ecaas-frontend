@@ -4,8 +4,6 @@ import { getTabItems, getUrl  } from '#imports';
 import type {ImmersionHeaterPosition} from '#imports';
 import { immersionHeaterPositionValues } from '~/mapping/common';
 
-definePageMeta({ layout: false });
-
 const title = "Domestic hot water";
 const store = useEcaasStore();
 
@@ -254,85 +252,81 @@ const pipeworkSummarySections: SummarySection[] = [
 </script>
 
 <template>
-	<div>
-		<NuxtLayout name="one-column">
-			<Head>
-				<Title>{{ title }}</Title>
-			</Head>
-			<h1 class="govuk-heading-l">{{ title }}</h1>
-			<h2 class="govuk-heading-m">Water heating</h2>
-			<GovTabs v-slot="tabProps" :items="getTabItems(waterHeatingSummarySections)">
-				<TabPanel id="waterHeating" :selected="!tabProps.currentItem">
-					<h2 class="govuk-heading-m">No water heating added</h2>
-					<NuxtLink class="govuk-link" :to="getUrl('waterHeating')">
-						Add water heating
-					</NuxtLink>
-				</TabPanel>
-				<SummaryTab :summary="hotWaterCylinderSummary" :selected="tabProps.currentItem?.id === 'hotWaterCylinder'" />
-				<SummaryTab :summary="immersionHeaterSummary" :selected="tabProps.currentItem?.id === 'immersionHeater'" />
-				<SummaryTab :summary="solarThermalSummary" :selected="tabProps.currentItem?.id === 'solarThermal'" />
-				<SummaryTab :summary="pointOfUseSummary" :selected="tabProps.currentItem?.id === 'pointOfUse'" />
-				<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentItem?.id === 'heatPump'" />
-				<SummaryTab :summary="combiBoilerSummary" :selected="tabProps.currentItem?.id === 'combiBoiler'" />
-				<SummaryTab :summary="heatBatterySummary" :selected="tabProps.currentItem?.id === 'heatBattery'" />
-				<SummaryTab :summary="smartHotWaterTankSummary" :selected="tabProps.currentItem?.id === 'smartHotWaterTank'" />
-				<SummaryTab :summary="heatInterfaceUnitSummary" :selected="tabProps.currentItem?.id === 'heatInterfaceUnit'" />
-			</GovTabs>
-			<h2 class="govuk-heading-m">Hot water outlets</h2>
-			<GovTabs v-slot="tabProps" :items="getTabItems(hotWaterOutletsSummarySections)">
-				<SummaryTab :summary="mixedShowerSummary" :selected="tabProps.currentTab === 0">
-					<template #empty>
-						<h2 class="govuk-heading-m">No mixed shower added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('mixedShowerCreate')">
-							Add mixed shower
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-				<SummaryTab :summary="electricShowerSummary" :selected="tabProps.currentTab === 1">
-					<template #empty>
-						<h2 class="govuk-heading-m">No electric shower added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('electricShowerCreate')">
-							Add electric shower
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-				<SummaryTab :summary="bathSummary" :selected="tabProps.currentTab === 2">
-					<template #empty>
-						<h2 class="govuk-heading-m">No bath added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('bathCreate')">
-							Add bath
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-				<SummaryTab :summary="otherOutletsSummary" :selected="tabProps.currentTab === 3">
-					<template #empty>
-						<h2 class="govuk-heading-m">No outlet added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('otherOutletsCreate')">
-							Add outlet
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-			</GovTabs>
-			<h2 class="govuk-heading-m">Pipework</h2>
-			<GovTabs v-slot="tabProps" :items="getTabItems(pipeworkSummarySections)">
-				<SummaryTab :summary="primaryPipeworkSummary" :selected="tabProps.currentTab === 0" :edit-url="getUrl('pipework')!">
-					<template #empty>
-						<h2 class="govuk-heading-m">No pipework added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('primaryPipeworkCreate')">
-							Add pipework
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-				<SummaryTab :summary="secondaryPipeworkSummary" :selected="tabProps.currentTab === 1" :edit-url="getUrl('pipework')!">
-					<template #empty>
-						<h2 class="govuk-heading-m">No pipework added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('secondaryPipeworkCreate')">
-							Add pipework
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-			</GovTabs>
-			<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
-		</NuxtLayout>
-	</div>
+	<Head>
+		<Title>{{ title }}</Title>
+	</Head>
+	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<h2 class="govuk-heading-m">Water heating</h2>
+	<GovTabs v-slot="tabProps" :items="getTabItems(waterHeatingSummarySections)">
+		<TabPanel id="waterHeating" :selected="!tabProps.currentItem">
+			<h2 class="govuk-heading-m">No water heating added</h2>
+			<NuxtLink class="govuk-link" :to="getUrl('waterHeating')">
+				Add water heating
+			</NuxtLink>
+		</TabPanel>
+		<SummaryTab :summary="hotWaterCylinderSummary" :selected="tabProps.currentItem?.id === 'hotWaterCylinder'" />
+		<SummaryTab :summary="immersionHeaterSummary" :selected="tabProps.currentItem?.id === 'immersionHeater'" />
+		<SummaryTab :summary="solarThermalSummary" :selected="tabProps.currentItem?.id === 'solarThermal'" />
+		<SummaryTab :summary="pointOfUseSummary" :selected="tabProps.currentItem?.id === 'pointOfUse'" />
+		<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentItem?.id === 'heatPump'" />
+		<SummaryTab :summary="combiBoilerSummary" :selected="tabProps.currentItem?.id === 'combiBoiler'" />
+		<SummaryTab :summary="heatBatterySummary" :selected="tabProps.currentItem?.id === 'heatBattery'" />
+		<SummaryTab :summary="smartHotWaterTankSummary" :selected="tabProps.currentItem?.id === 'smartHotWaterTank'" />
+		<SummaryTab :summary="heatInterfaceUnitSummary" :selected="tabProps.currentItem?.id === 'heatInterfaceUnit'" />
+	</GovTabs>
+	<h2 class="govuk-heading-m">Hot water outlets</h2>
+	<GovTabs v-slot="tabProps" :items="getTabItems(hotWaterOutletsSummarySections)">
+		<SummaryTab :summary="mixedShowerSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No mixed shower added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('mixedShowerCreate')">
+					Add mixed shower
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+		<SummaryTab :summary="electricShowerSummary" :selected="tabProps.currentTab === 1">
+			<template #empty>
+				<h2 class="govuk-heading-m">No electric shower added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('electricShowerCreate')">
+					Add electric shower
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+		<SummaryTab :summary="bathSummary" :selected="tabProps.currentTab === 2">
+			<template #empty>
+				<h2 class="govuk-heading-m">No bath added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('bathCreate')">
+					Add bath
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+		<SummaryTab :summary="otherOutletsSummary" :selected="tabProps.currentTab === 3">
+			<template #empty>
+				<h2 class="govuk-heading-m">No outlet added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('otherOutletsCreate')">
+					Add outlet
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+	</GovTabs>
+	<h2 class="govuk-heading-m">Pipework</h2>
+	<GovTabs v-slot="tabProps" :items="getTabItems(pipeworkSummarySections)">
+		<SummaryTab :summary="primaryPipeworkSummary" :selected="tabProps.currentTab === 0" :edit-url="getUrl('pipework')!">
+			<template #empty>
+				<h2 class="govuk-heading-m">No pipework added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('primaryPipeworkCreate')">
+					Add pipework
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+		<SummaryTab :summary="secondaryPipeworkSummary" :selected="tabProps.currentTab === 1" :edit-url="getUrl('pipework')!">
+			<template #empty>
+				<h2 class="govuk-heading-m">No pipework added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('secondaryPipeworkCreate')">
+					Add pipework
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+	</GovTabs>
+	<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 </template>

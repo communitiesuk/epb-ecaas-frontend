@@ -205,7 +205,6 @@ const heatEmittingSummary: SummarySection[] = [
 ].filter((x) => x.data.length);
 </script>
 <template>
-
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -242,4 +241,5 @@ const heatEmittingSummary: SummarySection[] = [
 			:selected="tabProps.currentItem?.id === 'electricStorageHeater'" />
 		<SummaryTab :summary="warmAirHeatPumpSummary" :selected="tabProps.currentItem?.id === 'warmAirHeatPump'" />
 	</GovTabs>
+	<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 </template>
