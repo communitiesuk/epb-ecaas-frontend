@@ -112,6 +112,9 @@ export function getSectionStatus(section: Record<string, object>): GovTagProps {
 
 			if (taskGroupStatus !== formStatus.notStarted) {
 				status = formStatus.inProgress;
+
+			}
+			if (taskGroupStatus === formStatus.complete) {
 				complete++;
 			}
 		}
