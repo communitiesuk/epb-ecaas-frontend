@@ -126,7 +126,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="thermalMass"
 			validation="required | number"
 			suffix-text="kJ/°C"
-			help="Enter the thermal mass of the wet distribution system. Typically between 0.1 and 0.5 kJ/oC"
+			help="Enter the thermal mass of the wet distribution system. Typically between 0.1 and 0.5 kJ/°C."
 		/>
 			
 		<FormKit
@@ -136,7 +136,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="designTempDiffAcrossEmitters"
 			validation="required | number"
 			suffix-text="°C"
-			help="Enter the difference between the water floor temperature and the room air temperature at the point where the heating is being emitted. Typically between 5 and 15 °C"
+			help="Enter the difference between the water floor temperature and the room air temperature at the point where the heating is being emitted. Typically between 5 and 15 °C."
 		/>
 			
 		<FormKit
@@ -146,7 +146,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="designFlowTemp"
 			validation="required | number"
 			suffix-text="°C"
-			help="Enter the temperature at which water is delivered to the heating system during the coldest expected conditions. Typically between 35 and 55 °C"
+			help="Enter the temperature at which water is delivered to the heating system during the coldest expected conditions. Typically between 35 and 55 °C."
 		/>
 			
 		<FormKit
@@ -224,7 +224,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Minimum flow temperature"
 			name="minimumFlowTemp"
 			validation="required | number | min: 20 | max: 120"
-			help="Minimum flow temperature when using weather compensation. "
+			help="Minimum flow temperature when using weather compensation"
 			suffix-text="°C"
 		>
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
