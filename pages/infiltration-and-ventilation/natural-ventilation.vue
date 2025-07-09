@@ -46,7 +46,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="ventilationZoneHeight"
 			type="govInputWithSuffix"
 			label="Ventilation zone height"
-			help="This is measured from the lowest finished floor level in the dwelling to the top of the ventilation zone."
+			help="This is measured from the lowest finished floor level in the dwelling to the top of the ventilation zone"
 			name="ventilationZoneHeight"
 			validation="required | number | min:1 | max:20"
 			suffix-text="m"
@@ -55,7 +55,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="dwellingEnvelopeArea"
 			type="govInputWithSuffix"
 			label="Dwelling envelope area"
-			help="This is the total surface area that separates the heated or cooled inside from the outside."
+			help="This is the total surface area that separates the heated or cooled inside from the outside"
 			name="dwellingEnvelopeArea"
 			validation="required | number | min:5 | max:72000"
 			suffix-text="m²"
@@ -68,7 +68,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsElevationalHeight
 			field="dwellingElevationalLevelAtBase"
 			label="Elevational height of dwelling at its base"
-			help="Enter elevational height of the dwelling above ground datum level."
+			help="Enter elevational height of the dwelling above ground datum level"
 			:minmax="{ min: -150, max: 750 }"
 		/>
 		<FormKit
