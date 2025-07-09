@@ -70,7 +70,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Net surface area of element"
-			help="Net area of the opaque building element (i.e. area of all windows / doors should be subtracted before entry). If the element is not square or rectangular the area might not be equal to width x height, hence the need to ask for area in addition to width and height."
+			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
 			name="surfaceAreaOfElement"
 			validation="required | number | min:0 | max:10000"
 		/>
@@ -79,7 +79,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="W/(m²·K)"
 			label="U-value"
-			help="Steady-state thermal transmittance of the building element"
+			help="This is the steady state thermal transmittance of the building element"
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
 		/>
@@ -90,22 +90,23 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance of adjacent unheated space"
-			help="The effective thermal resistance of the unheated space. For example values, please refer to technical paper S11P-028. Max value in the paper is: Facing wall not exposed, 2.5 (m²·K)/W"
+			help="Enter the effective thermal resistance of the unheated space"
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
 		>
-			<p class="govuk-body">
-				<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
-					Guidance on thermal resistance of unheated spaces (opens in another window)
-				</a>
-			</p>
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m²·K)/W for when the facing wall is not exposed.</p>
+				<p class="govuk-body">
+					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
+						Guidance on thermal resistance of unheated spaces (opens in another window)
+					</a>
+				</p>
+			</GovDetails>
 		</FormKit>
-
 		<FormKit
 			type="govButton"
 			label="Save and continue"
 		/>
-
 	</FormKit>
 
 </template>
