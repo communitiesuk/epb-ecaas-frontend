@@ -136,7 +136,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Net surface area of this element"
-			help="Enter the total surface area of the entire building element in the dwelling."
+			help="Enter the total surface area of the entire building element in the dwelling"
 			name="surfaceArea"
 			validation="required | number | min:1"
 		/>
@@ -145,7 +145,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="W/(m²·K)"
 			label="U-value"
-			help="Steady-state thermal transmittance of the building element"
+			help="This is the steady state thermal transmittance of the building element"
 			name="uValue"
 			validation="required | number | min:0.01 | max:10"
 		/>
@@ -154,10 +154,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance"
-			help="A property indicating a material's opposition to heat flow. Calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-value is the inverse of the total thermal resistance of a building element."
+			help="Enter the thermal resistance of all layers in the floor construction"
 			name="thermalResistance"
-			validation="required | number | min:0.00001 | max:50"
-		/>
+			validation="required | number | min:0.00001 | max:50">
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
+			</GovDetails>
+		</FormKit>
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
@@ -165,16 +168,19 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Perimeter"
-			help="Exposed perimeter of the floor, where heat loss may occur, usually the base of the external walls where they meet the ground floor. Do not include internal wall perimeters. "
+			help="Enter the length of the exposed perimeter of the floor"
 			name="perimeter"
-			validation="required | number | min:0 | max:1000"
-		/>
+			validation="required | number | min:0 | max:1000">
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor. Do not include internal wall perimeters.</p>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="psiOfWallJunction"
 			type="govInputWithSuffix"
 			suffix-text="W/(m·K)"
 			label="PSI value of E5 junction"
-			help="This is the linear thermal transmittance of the junction between the floor and the walls. This input needs to be entered here and in the thermal bridging section."
+			help="This is the linear thermal transmittance of the junction between the floor and the walls"
 			name="psiOfWallJunction"
 			validation="required | number | min:0 | max:2"
 		/>
@@ -183,16 +189,19 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Thickness of walls for ground floor"
-			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. This is usually measured from the inside surface to the outside surface. Typical range is 0.3 - 0.8."
+			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 0.3m to 0.8m."
 			name="thicknessOfWalls"
-			validation="required | number"
-		/>
+			validation="required | number">
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface.</p>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="typeOfGroundFloor"
 			type="govRadios"
 			:options="typeOfGroundFloorOptions"
 			label="Type of ground floor "
-			help="This affects what inputs are necessary"
+			help="The type of ground floor affects the additional inputs needed"
 			name="typeOfGroundFloor"
 			validation="required"
 		/>
@@ -207,12 +216,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				}"
 				label="Edge insulation type"
 				name="edgeInsulationType"
+				help="Select the type of edge insulation"
 				validation="required">
-				<GovDetails summary-text="Help with this input">
+				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 					<table class="govuk-table">
 						<thead class="govuk-table__head">
 							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header">Type</th>
+								<th scope="col" class="govuk-table__header">Edge insulation type</th>
 								<th scope="col" class="govuk-table__header">Description</th>
 								<th scope="col" class="govuk-table__header">Placement</th>
 							</tr>
@@ -241,24 +251,25 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Edge insulation width"
-				help="Width not thickness"
+				help="This is the coverage distance of edge insulation rather than the thickness of the insulation"
 				name="edgeInsulationWidth"
 				validation="required | number | min:0 | max:100">
-				<GovDetails summary-text="Help with this input">
+				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 					<table class="govuk-table">
-						<thead class="govuk-table__head">
+						<thead class="ovuk-table__head">
 							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header">Description</th>
-								<th scope="col" class="govuk-table__header govuk-!-width-one-third">Example</th>
+								<th scope="col" class="govuk-table__header">Edge insulation type</th>
+								<th scope="col" class="govuk-table__header">typical width</th>
 							</tr>
 						</thead>
-						<tbody class="govuk-table__body">
+						<tbody>
 							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">A general term referring to the coverage distance of edge insulation - either vertical down the edge or horizontal into the floor. It does not refer to insulation board thickness.</td>
-								<td class="govuk-table__cell">
-									Vertical: 150 mm<br>
-									Horizontal: 300 mm
-								</td>
+								<td class="govuk-table__cell">Vertical</td>
+								<td class="govuk-table__cell">150mm</td>
+							</tr>
+							<tr class="govuk-table__row">
+								<td class="govuk-table__cell">Horizontal</td>
+								<td class="govuk-table__cell">300mm</td>
 							</tr>
 						</tbody>
 					</table>
