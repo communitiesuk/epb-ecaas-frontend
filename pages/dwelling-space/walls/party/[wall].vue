@@ -97,15 +97,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
-		<FormKit
-			id="uValue"
-			type="govInputWithSuffix"
-			suffix-text="W/(m²·K)"
-			label="U-value"
-			help="This is the steady state thermal transmittance of the building element"
-			name="uValue"
-			validation="required | number | min:0 | max:10"
-		/>
+		<FieldsUValue id="uValue" name="uValue" />
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit

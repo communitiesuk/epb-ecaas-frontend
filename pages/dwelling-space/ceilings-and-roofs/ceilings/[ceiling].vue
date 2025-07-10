@@ -99,15 +99,10 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				name="surfaceArea"
 				validation="required | number | min:0 | max:10000"
 			/>
-			<FormKit
+			<FieldsUValue
 				v-if="model.type !== 'heatedSpace'"
 				id="uValue"
-				type="govInputWithSuffix"
-				suffix-text="W/(m²·K)"
-				label="U-value"
-				help="This is the steady thermal transmittance of the building element"
 				name="uValue"
-				validation="required | number | min:0.01 | max:10"
 			/>
 			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>

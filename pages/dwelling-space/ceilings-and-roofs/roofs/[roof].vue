@@ -116,15 +116,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			suffix-text="m²"
 		/>
 		<FieldsSolarAbsorptionCoefficient id="solarAbsorptionCoefficient" name="solarAbsorptionCoefficient"/>
-		<FormKit
-			id="uValue"
-			type="govInputWithSuffix"
-			label="U-value"
-			help="This is the steady state thermal transmittance of the building element"
-			name="uValue"
-			validation="required | number | min:0.01 | max:10"
-			suffix-text="W/(m²·K)"
-		/>
+		<FieldsUValue id="uValue" name="uValue" />
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit

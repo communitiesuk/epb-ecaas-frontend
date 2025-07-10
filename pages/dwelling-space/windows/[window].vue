@@ -162,10 +162,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Net surface area of element"
 			help="Enter the net area of the building element"
 			name="surfaceArea" validation="required | number | min:0.01 | max:10000" />
-		<FormKit
-			id="uValue" type="govInputWithSuffix" suffix-text="W/(m²·K)" label="U-value"
-			help="This is the steady state thermal transmittance of the building element" name="uValue"
-			validation="required | number | min:0.01 | max:10" />
+		<FieldsUValue id="uValue" name="uValue" />
 		<FormKit
 			id="solarTransmittance" type="govInputFloat" label="Transmittance of solar energy "
 			help="Enter the total solar energy transmittance, or G value, or the transparent part of the window. It should be a decimal between 0 and 1."
