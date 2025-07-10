@@ -4,8 +4,10 @@ import { BatteryLocation } from "~/schema/api-schema.types";
 describe("getSectionStatus util function" , () => {
 
 	it("should return a 'not started' form status given a section with no status", () => {
-		const pvAndBatteries = { pvSystems: { data: [] }, electricBattery: { data: [] } };
-		const actual = getSectionStatus(pvAndBatteries);
+		const pvAndBatteriesSection = { pvSystems: { data: [] }, electricBattery: { data: [] } };
+
+		const actual = getSectionStatus(pvAndBatteriesSection);
+
 		const expected: GovTagProps = {
 			text: "Not started",
 			color: "grey"
@@ -25,8 +27,10 @@ describe("getSectionStatus util function" , () => {
 			minimumChargeRate: 4.5,
 			maximumDischargeRate: 2.3,
 		};
-		const pvAndBatteries = { pvSystems: { data: [] }, electricBattery: { data: [battery], complete: false } };
-		const actual = getSectionStatus(pvAndBatteries);
+		const pvAndBatteriesSection = { pvSystems: { data: [] }, electricBattery: { data: [battery], complete: false } };
+
+		const actual = getSectionStatus(pvAndBatteriesSection);
+
 		const expected: GovTagProps = {
 			text: "In progress",
 			color: "yellow"
@@ -35,10 +39,23 @@ describe("getSectionStatus util function" , () => {
 	});
 
     
-	it("should return an 'complete' form status given a section marked as complete", () => {
-		
-		const pvAndBatteries = { pvSystems: { data: [], complete: true  }, electricBattery: { data: [], complete: true } };
-		const actual = getSectionStatus(pvAndBatteries);
+	it("should return an 'complete' form status given a pvAndBatteriesSection marked as complete", () => {
+		const pvAndBatteriesSection = { pvSystems: { data: [], complete: true  }, electricBattery: { data: [], complete: true } };
+
+		const actual = getSectionStatus(pvAndBatteriesSection);
+
+		const expected: GovTagProps = {
+			text: "Complete",
+			color: "green"
+		};
+		expect(actual).toStrictEqual(expected);
+	});
+
+	it("should return an 'complete' form status given a dwellingDetailsSection marked as complete", () => {
+		const dwellingDetailsSection = { generalSpecifications: { data: {}, complete: true }, shading: { data: [], complete: true }, externalFactors: { data: {}, complete: true } };
+
+		const actual = getSectionStatus(dwellingDetailsSection);
+
 		const expected: GovTagProps = {
 			text: "Complete",
 			color: "green"

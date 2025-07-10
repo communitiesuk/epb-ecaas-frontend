@@ -368,3 +368,40 @@ describe("postEcaasState", () => {
 	// 	expect(consoleSpy).toHaveBeenCalledWith("Failed to post data: Network error");
 	// });
 });
+
+describe("hasCompleteState function", () => {
+	it("returns false when given an empty state", async () => {
+		const result = hasCompleteState(store);
+
+		expect(result).toBe(false);
+	});
+
+	it("returns false when given state with dwelling details section complete only", async () => {
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					complete: true
+				},
+				externalFactors: {
+					complete: true
+				},
+				shading: {
+					complete: true
+				}
+			}
+		});
+
+		const result = hasCompleteState(store);
+
+		expect(result).toBe(false);
+	});
+
+	it("returns false when given state with pv battery section complete only", async () => {
+		const pvAndBatteriesSection = { pvSystems: { data: [], complete: true }, electricBattery: { data: [], complete: true } };
+		store.$patch({pvAndBatteries: pvAndBatteriesSection});
+
+		const result = hasCompleteState(store);
+
+		expect(result).toBe(false);
+	});
+});
