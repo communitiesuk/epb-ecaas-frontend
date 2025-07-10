@@ -251,7 +251,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 						<thead class="ovuk-table__head">
 							<tr class="govuk-table__row">
 								<th scope="col" class="govuk-table__header">Edge insulation type</th>
-								<th scope="col" class="govuk-table__header">typical width</th>
+								<th scope="col" class="govuk-table__header">Typical width</th>
 							</tr>
 						</thead>
 						<tbody>
