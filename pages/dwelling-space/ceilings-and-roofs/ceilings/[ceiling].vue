@@ -94,8 +94,8 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				id="surfaceArea"
 				type="govInputWithSuffix"
 				suffix-text="m²"
-				label="Net surface area"
-				help="Net area of the building element"
+				label="Net surface area of element"
+				help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
 				name="surfaceArea"
 				validation="required | number | min:0 | max:10000"
 			/>
@@ -105,7 +105,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="W/(m²·K)"
 				label="U-value"
-				help="Steady-state thermal transmittance of the building element"
+				help="This is the steady thermal transmittance of the building element"
 				name="uValue"
 				validation="required | number | min:0.01 | max:10"
 			/>
@@ -118,10 +118,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance of adjacent unheated space"
-			help="The effective thermal resistance of the unheated space. For example values, please refer to technical paper S11P-028. Max value in the paper is: Facing wall not exposed, 2.5 (m^2.K) / W."
+			help="Enter the effective thermal resistance of the unheated space"
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
 		>
+			<p class="govuk-hint">
+				For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m^2.K)/W for when the facing wall is not exposed.
+			</p>
 			<p class="govuk-body">
 				<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
 					Guidance on thermal resistance of unheated spaces (opens in another window)
