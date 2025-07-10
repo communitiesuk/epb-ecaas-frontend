@@ -80,7 +80,7 @@ export function getTaskStatus(task: EcaasForm<boolean>): GovTagProps {
  */
 export function getSectionStatus(section: Record<string, object>): GovTagProps {
 	let status = formStatus.notStarted;
-	let complete = 0;
+	let numberOfCompleteTasks = 0;
 
 	const tasks = objectEntries(section);
 
@@ -88,7 +88,7 @@ export function getSectionStatus(section: Record<string, object>): GovTagProps {
 		const taskPage: Page | undefined = pagesData.find((x) => x.id === task[0]);
 
 		if (!taskPage) {
-			complete++; // if there's no task page, it shouldn't affect whether we consider everything else to be complete
+			numberOfCompleteTasks++; // if there's no task page, it shouldn't affect whether we consider everything else to be complete
 		}
 
 		if (taskPage?.type === PageType.Task) {
@@ -99,11 +99,11 @@ export function getSectionStatus(section: Record<string, object>): GovTagProps {
 			}
 
 			if (form.complete) {
-				complete++;
+				numberOfCompleteTasks++;
 			}
 
 			if (taskPage.excludeFromNavigation?.call(globalThis)) {
-				complete++;
+				numberOfCompleteTasks++;
 			}
 		}
 
@@ -112,10 +112,10 @@ export function getSectionStatus(section: Record<string, object>): GovTagProps {
 
 			if (taskGroupStatus !== formStatus.notStarted) {
 				status = formStatus.inProgress;
-
 			}
+
 			if (taskGroupStatus === formStatus.complete) {
-				complete++;
+				numberOfCompleteTasks++;
 			}
 		}
 
@@ -124,7 +124,7 @@ export function getSectionStatus(section: Record<string, object>): GovTagProps {
 		}
 	});
 
-	if (complete === tasks.length) {
+	if (numberOfCompleteTasks === tasks.length) {
 		status = formStatus.complete;
 	}
 
