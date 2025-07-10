@@ -158,8 +158,18 @@ export function displayAdjacentSpaceType<T extends string>(value: AdjacentSpaceT
 	return `${element} to ${ value === 'heatedSpace' ? 'heated space' : 'unheated space' }`;
 }
 
-export type ProductDisplayString = `${DisplayProduct['brandName']} - ${DisplayProduct['modelName']}`;
+// better type/ function for displaying products once we're dealing with realistic products
+// export type ProductDisplayString = `${DisplayProduct['brandName']} - ${DisplayProduct['modelName']}`;
+
+// export function displayProduct(product: DisplayProduct): ProductDisplayString {
+// 	return `${product.brandName} - ${product.modelName}`;
+// }
+
+// temporary ones just for test fake heat pumps
+export type ProductDisplayString = FirstWord<DisplayProduct['modelName']>;
+
+type FirstWord<S extends string> = S extends `${infer Word} ${string}` ? Word : S;
 
 export function displayProduct(product: DisplayProduct): ProductDisplayString {
-	return `${product.brandName} - ${product.modelName}`;
+	return product.modelName.split(' ')[0]!;
 }
