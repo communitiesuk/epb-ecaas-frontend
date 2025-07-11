@@ -12,6 +12,9 @@ const model: Ref<HeatPumpData> = ref(heatPumpData!);
 
 const { data: heatPumps } = await useFetch('/api/products', { query: { category: 'heatPump' } });
 
+// sort into Small, Medium, Large (to retain while we are using test fake heat pumps and don't have better means to sort them by)
+heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
+
 const heatPumpOptions = objectFromEntries(heatPumps.value!.map(entity => [entity.reference, displayProduct(entity.product)]));
 
 const saveForm = (fields: HeatPumpData) => {
@@ -61,6 +64,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Heat pump"
 			:options="heatPumpOptions"
 			name="productReference"
+			help="For this release you will only be allowed to specify the approximate size of the heat pump. In future releases you will be able to select specific models."
 			validation="required"
 		/>
 		<FormKit type="govButton" label="Save and continue" />

@@ -3,10 +3,8 @@ import type { SummarySection } from '~/common.types';
 import { getUrl, getTabItems } from '#imports';
 import { FloorType } from '~/schema/api-schema.types';
 
-const title = "Living space fabric summary";
+const title = "Dwelling fabric summary";
 const store = useEcaasStore();
-
-definePageMeta({ layout: false });
 
 const zoneParametersData = store.dwellingFabric.dwellingSpaceZoneParameters.data;
 
@@ -414,172 +412,168 @@ const thermalBridgeSummarySections: SummarySection[] = [
 </script>
 
 <template>
-	<div>
-		<NuxtLayout name="one-column">
-			<Head>
-				<Title>{{ title }}</Title>
-			</Head>
-			<h1 class="govuk-heading-l">{{ title }}</h1>
-			<GovTabs v-slot="tabProps" :items="getTabItems([zoneParametersSummary])">
-				<SummaryTab :summary="zoneParametersSummary" :selected="tabProps.currentTab === 0" />
-			</GovTabs>
+	<Head>
+		<Title>{{ title }}</Title>
+	</Head>
+	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovTabs v-slot="tabProps" :items="getTabItems([zoneParametersSummary])">
+		<SummaryTab :summary="zoneParametersSummary" :selected="tabProps.currentTab === 0" />
+	</GovTabs>
 
-			<GovTabs v-slot="tabProps" :items="getTabItems(floorSummarySections)">
-				<SummaryTab :summary="groundFloorSummary" :selected="tabProps.currentTab === 0">
-					<template #empty>
-						<h2 class="govuk-heading-m">No ground floors added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceGroundFloorCreate')">
-							Add ground floors
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+	<GovTabs v-slot="tabProps" :items="getTabItems(floorSummarySections)">
+		<SummaryTab :summary="groundFloorSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No ground floors added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceGroundFloorCreate')">
+					Add ground floors
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="internalFloorSummary" :selected="tabProps.currentTab === 1">
-					<template #empty>
-						<h2 class="govuk-heading-m">No internal floors added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceInternalFloorCreate')">
-							Add internal floors
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+		<SummaryTab :summary="internalFloorSummary" :selected="tabProps.currentTab === 1">
+			<template #empty>
+				<h2 class="govuk-heading-m">No internal floors added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceInternalFloorCreate')">
+					Add internal floors
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="exposedFloorSummary" :selected="tabProps.currentTab === 2">
-					<template #empty>
-						<h2 class="govuk-heading-m">No exposed floors added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceExposedFloorCreate')">
-							Add exposed floors
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-			</GovTabs>
+		<SummaryTab :summary="exposedFloorSummary" :selected="tabProps.currentTab === 2">
+			<template #empty>
+				<h2 class="govuk-heading-m">No exposed floors added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceExposedFloorCreate')">
+					Add exposed floors
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+	</GovTabs>
 
-			<GovTabs v-slot="tabProps" :items="getTabItems(wallSummarySections)">
-				<SummaryTab :summary="externalWallSummary" :selected="tabProps.currentTab === 0">
-					<template #empty>
-						<h2 class="govuk-heading-m">No external walls added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceExternalWallCreate')">
-							Add external walls
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+	<GovTabs v-slot="tabProps" :items="getTabItems(wallSummarySections)">
+		<SummaryTab :summary="externalWallSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No external walls added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceExternalWallCreate')">
+					Add external walls
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="internalWallSummary" :selected="tabProps.currentTab === 1">
-					<template #empty>
-						<h2 class="govuk-heading-m">No internal walls added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceInternalWallCreate')">
-							Add internal walls
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+		<SummaryTab :summary="internalWallSummary" :selected="tabProps.currentTab === 1">
+			<template #empty>
+				<h2 class="govuk-heading-m">No internal walls added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceInternalWallCreate')">
+					Add internal walls
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="wallToUnheatedSpaceSummary" :selected="tabProps.currentTab === 2">
-					<template #empty>
-						<h2 class="govuk-heading-m">No walls to unheated spaces added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceWallToUnheatedSpaceCreate')">
-							Add walls to unheated spaces
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+		<SummaryTab :summary="wallToUnheatedSpaceSummary" :selected="tabProps.currentTab === 2">
+			<template #empty>
+				<h2 class="govuk-heading-m">No walls to unheated spaces added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceWallToUnheatedSpaceCreate')">
+					Add walls to unheated spaces
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="partyWallSummary" :selected="tabProps.currentTab === 3">
-					<template #empty>
-						<h2 class="govuk-heading-m">No party walls added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpacePartyWallCreate')">
-							Add party walls
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-			</GovTabs>
+		<SummaryTab :summary="partyWallSummary" :selected="tabProps.currentTab === 3">
+			<template #empty>
+				<h2 class="govuk-heading-m">No party walls added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpacePartyWallCreate')">
+					Add party walls
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+	</GovTabs>
 
-			<GovTabs v-slot="tabProps" :items="getTabItems(ceilingAndRoofSummarySections)">
-				<SummaryTab :summary="ceilingSummary" :selected="tabProps.currentTab === 0">
-					<template #empty>
-						<h2 class="govuk-heading-m">No ceilings added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceCeilingsCreate')">
-							Add ceilings
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+	<GovTabs v-slot="tabProps" :items="getTabItems(ceilingAndRoofSummarySections)">
+		<SummaryTab :summary="ceilingSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No ceilings added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceCeilingsCreate')">
+					Add ceilings
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="roofSummary" :selected="tabProps.currentTab === 1">
-					<template #empty>
-						<h2 class="govuk-heading-m">No roofs added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceRoofsCreate')">
-							Add roofs
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+		<SummaryTab :summary="roofSummary" :selected="tabProps.currentTab === 1">
+			<template #empty>
+				<h2 class="govuk-heading-m">No roofs added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceRoofsCreate')">
+					Add roofs
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="unheatedPitchedRoofSummary" :selected="tabProps.currentTab === 2">
-					<template #empty>
-						<h2 class="govuk-heading-m">No unheated pitched roofs added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceUnheatedPitchedRoofsCreate')">
-							Add unheated pitched roof
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-			</GovTabs>
+		<SummaryTab :summary="unheatedPitchedRoofSummary" :selected="tabProps.currentTab === 2">
+			<template #empty>
+				<h2 class="govuk-heading-m">No unheated pitched roofs added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceUnheatedPitchedRoofsCreate')">
+					Add unheated pitched roof
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+	</GovTabs>
 
-			<GovTabs v-slot="tabProps" :items="getTabItems(doorSummarySections)">
-				<SummaryTab :summary="unglazedDoorSummary" :selected="tabProps.currentTab === 0">
-					<template #empty>
-						<h2 class="govuk-heading-m">No external unglazed doors added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceExternalUnglazedDoorCreate')">
-							Add external unglazed doors
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+	<GovTabs v-slot="tabProps" :items="getTabItems(doorSummarySections)">
+		<SummaryTab :summary="unglazedDoorSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No external unglazed doors added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceExternalUnglazedDoorCreate')">
+					Add external unglazed doors
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="glazedDoorSummary" :selected="tabProps.currentTab === 1">
-					<template #empty>
-						<h2 class="govuk-heading-m">No external glazed doors added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceExternalGlazedDoorCreate')">
-							Add external glazed doors
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+		<SummaryTab :summary="glazedDoorSummary" :selected="tabProps.currentTab === 1">
+			<template #empty>
+				<h2 class="govuk-heading-m">No external glazed doors added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceExternalGlazedDoorCreate')">
+					Add external glazed doors
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="internalDoorSummary" :selected="tabProps.currentTab === 2">
-					<template #empty>
-						<h2 class="govuk-heading-m">No internal doors added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceInternalDoorCreate')">
-							Add internal doors
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-			</GovTabs>
+		<SummaryTab :summary="internalDoorSummary" :selected="tabProps.currentTab === 2">
+			<template #empty>
+				<h2 class="govuk-heading-m">No internal doors added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceInternalDoorCreate')">
+					Add internal doors
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+	</GovTabs>
 
-			<GovTabs v-slot="tabProps" :items="getTabItems([windowSummary])">
-				<SummaryTab :summary="windowSummary" :selected="tabProps.currentTab === 0">
-					<template #empty>
-						<h2 class="govuk-heading-m">No windows added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceWindowCreate')">
-							Add windows
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-			</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([windowSummary])">
+		<SummaryTab :summary="windowSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No windows added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceWindowCreate')">
+					Add windows
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+	</GovTabs>
 
-			<GovTabs v-slot="tabProps" :items="getTabItems(thermalBridgeSummarySections)">
-				<SummaryTab :summary="linearThermalBridgesSummary" :selected="tabProps.currentTab === 0">
-					<template #empty>
-						<h2 class="govuk-heading-m">No linear thermal bridges added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceLinearThermalBridgesCreate')">
-							Add linear thermal bridges
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+	<GovTabs v-slot="tabProps" :items="getTabItems(thermalBridgeSummarySections)">
+		<SummaryTab :summary="linearThermalBridgesSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No linear thermal bridges added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceLinearThermalBridgesCreate')">
+					Add linear thermal bridges
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="pointThermalBridgesSummary" :selected="tabProps.currentTab === 1">
-					<template #empty>
-						<h2 class="govuk-heading-m">No point thermal bridges added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('dwellingSpacePointThermalBridgesCreate')">
-							Add point thermal bridges
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-			</GovTabs>
-			<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
-		</NuxtLayout>
-	</div>
+		<SummaryTab :summary="pointThermalBridgesSummary" :selected="tabProps.currentTab === 1">
+			<template #empty>
+				<h2 class="govuk-heading-m">No point thermal bridges added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpacePointThermalBridgesCreate')">
+					Add point thermal bridges
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+	</GovTabs>
+	<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 </template>

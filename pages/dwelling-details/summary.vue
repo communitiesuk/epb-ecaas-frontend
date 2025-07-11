@@ -3,8 +3,6 @@ import type { SummarySection } from '~/common.types';
 import { getTabItems, getUrl } from '#imports';
 import { BuildType } from '~/schema/api-schema.types';
 
-definePageMeta({ layout: false });
-
 const title = "Dwelling details summary";
 const store = useEcaasStore();
 
@@ -61,25 +59,23 @@ const summarySections: SummarySection[] = [
 </script>
 
 <template>
-	<div>
-		<NuxtLayout name="one-column">
-			<Head>
-				<Title>{{ title }}</Title>
-			</Head>
-			<h1 class="govuk-heading-l">{{ title }}</h1>
-			<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
-				<SummaryTab :summary="generalSpecificationsSummary" :selected="tabProps.currentTab === 0"/>
-				<SummaryTab :summary="externalFactorsSummary" :selected="tabProps.currentTab === 1"/>
-				<SummaryTab :summary="shadingSummary" :selected="tabProps.currentTab === 2">
-					<template #empty>
-						<h2 class="govuk-heading-m">No shading added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('shadingCreate')">
-							Add shading
-						</NuxtLink>
-					</template>
-				</SummaryTab>
-			</GovTabs>
-			<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
-		</NuxtLayout>
-	</div>
+	<!-- <NuxtLayout name="one-column"> -->
+	<Head>
+		<Title>{{ title }}</Title>
+	</Head>
+	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
+		<SummaryTab :summary="generalSpecificationsSummary" :selected="tabProps.currentTab === 0"/>
+		<SummaryTab :summary="externalFactorsSummary" :selected="tabProps.currentTab === 1"/>
+		<SummaryTab :summary="shadingSummary" :selected="tabProps.currentTab === 2">
+			<template #empty>
+				<h2 class="govuk-heading-m">No shading added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('shadingCreate')">
+					Add shading
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+	</GovTabs>
+	<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
+	<!-- </NuxtLayout> -->
 </template>

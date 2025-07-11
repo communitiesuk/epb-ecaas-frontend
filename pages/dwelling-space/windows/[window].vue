@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { pitchOptions } from '#imports';
+import { standardPitchOptions } from '#imports';
 import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
 
 const title = "Window";
@@ -148,27 +148,24 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
 		<FieldsPitch
 			:pitch-option="model.pitchOption"
-			:options="pitchOptions()"
+			:options="standardPitchOptions()"
 		/>
 		<FieldsOrientation />
 		<FormKit
 			id="height" type="govInputWithSuffix" suffix-text="m" label="Height"
-			help="The height of the building element" name="height" validation="required | number | min:0.001 | max:50" />
+			help="Enter the height of the building element" name="height" validation="required | number | min:0.001 | max:50" />
 		<FormKit
-			id="width" type="govInputWithSuffix" suffix-text="m" label="Width" help="The width of the building element"
+			id="width" type="govInputWithSuffix" suffix-text="m" label="Width" help="Enter the width of the building element"
 			name="width" validation="required | number | min:0.001 | max:50" />
 		<FieldsElevationalHeight />
 		<FormKit
-			id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Net surface area"
-			help="Net area of the building element. For non-rectangular windows, use the area of the window based on its shape"
+			id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Net surface area of element"
+			help="Enter the net area of the building element"
 			name="surfaceArea" validation="required | number | min:0.01 | max:10000" />
-		<FormKit
-			id="uValue" type="govInputWithSuffix" suffix-text="W/(m²·K)" label="U-value"
-			help="Steady-state thermal transmittance of the building element" name="uValue"
-			validation="required | number | min:0.01 | max:10" />
+		<FieldsUValue id="uValue" name="uValue" />
 		<FormKit
 			id="solarTransmittance" type="govInputFloat" label="Transmittance of solar energy "
-			help="G value. Total solar energy transmittance of the transparent part of the window. Decimal between 0-1"
+			help="Enter the total solar energy transmittance, or G value, or the transparent part of the window. It should be a decimal between 0 and 1."
 			name="solarTransmittance" validation="required | number | min:0.01 | max:1" />
 		<FormKit
 			id="midHeight" type="govInputWithSuffix" suffix-text="m" label="Mid height"
@@ -176,7 +173,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max:100" />
 		<FormKit
 			id="frameToOpeningRatio" type="govInputFloat" label="Frame to opening ratio"
-			help="The proportion of the window area occupied by the frame, expressed as a decimal (e.g., 0.2)"
+			help="Enter the proportion of the window taken up by the frame compared to the total opening area. It should be a decimal between 0 and 1."
 			name="frameToOpeningRatio" validation="required | number | min:0 | max:100" />
 		<FormKit
 			id="numberOpenableParts" type="govRadios" :options="{
@@ -189,11 +186,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
 				id="heightOpenableArea" type="govInputWithSuffix" suffix-text="m" label="Height of the openable area"
-				help="The vertical measurement of the section of the window that can be opened"
+				help="Enter the vertical measurement of the section of the window that can be opened"
 				name="heightOpenableArea" validation="required | number | min:0 | max:100" />
 			<FormKit
 				id="maximumOpenableArea" type="govInputWithSuffix" suffix-text="m²" label="Maximum openable area"
-				help="The total area of the window that can be opened for ventilation." name="maximumOpenableArea"
+				help="Enter the total area of the window that can be opened for ventilation" name="maximumOpenableArea"
 				validation="required | number | min:0 | max:100" />
 			<FormKit
 				id="midHeightOpenablePart1" type="govInputWithSuffix" suffix-text="m"
@@ -235,7 +232,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<tr class="govuk-table__row">
 					<td class="govuk-table__guidance_link" colspan="3">
 						<a href="/guidance/window-shading-guidance" target="_blank" class="govuk-link">
-							Shading guidance (opens in another window)
+							Guidance on window shading (opens in another window)
 						</a>
 					</td>
 				</tr>	
@@ -294,7 +291,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					type="govRadios"
 					:options="windowTreatmentTypeOptions"
 					label="Type"
-					help="Determines behaviour (curtains are scheduled, blinds respond to sunlight)"
+					help="This determines the behaviour. Curtains are scheduled and blinds respond to sunlight."
 					name="treatmentType"
 				/>
 				<FormKit
@@ -311,7 +308,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					type="govInputWithSuffix"
 					suffix-text="W/(m²·K)"
 					label="Thermal resistivity increase"
-					help="Additional thermal resistivity applied to window when curtain/blind is closed"
+					help="Enter the additional thermal resistivity applied to window when the curtain or blind is closed"
 					name="thermalResistivityIncrease"
 					validation="number | min:0 | max:100"
 				/>
@@ -319,7 +316,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					id="solarTransmittanceReduction"
 					type="govInputFloat"
 					label="Solar transmittance reduction"
-					help="Proportion of solar energy allowed through the window which is allowed into the zone when curtain/blind is closed (ie this is an additional reduction in transmission after the initial reduction by the window). Decimal 0-1"
+					help="Enter the proportion of solar energy allowed through the window which is allowed into the zone when curtain or blind is closed. This should be a decimal between 0 and 1."
 					name="solarTransmittanceReduction"
 					validation="number | min:0 | max:1"
 				/>

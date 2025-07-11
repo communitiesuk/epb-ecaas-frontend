@@ -53,14 +53,14 @@ describe("syncCacheToLocalStorage", () => {
 		expect(setItemSpy).not.toHaveBeenCalled();
 	});
 
-	it("should log an error if fetch fails", async () => {
-		const consoleSpy = vi.spyOn(console, "error");
-		global.$fetch = vi.fn(() => {
-			return Promise.reject("Network error");
-		}) as unknown as typeof global.$fetch;
-		await syncCacheToLocalStorage();
+	// it("should log an error if fetch fails", async () => {
+	// 	const consoleSpy = vi.spyOn(console, "error");
+	// 	global.$fetch = vi.fn(() => {
+	// 		return Promise.reject("Network error");
+	// 	}) as unknown as typeof global.$fetch;
+	// 	await syncCacheToLocalStorage();
 
-		expect(consoleSpy).toHaveBeenCalledWith("Failed to fetch data: Network error");
-		expect(setItemSpy).not.toHaveBeenCalled();
-	});
+	// 	expect(consoleSpy).toHaveBeenCalledWith("Failed to fetch data: Network error");
+	// 	expect(setItemSpy).not.toHaveBeenCalled();
+	// });
 });

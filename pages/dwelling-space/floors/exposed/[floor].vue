@@ -66,7 +66,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Length"
-			help="The length of the building element"
+			help="Enter the length of the building element"
 			name="length"
 			validation="required | number | min:0.001 | max:50"
 		/>
@@ -75,7 +75,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Width"
-			help="The width of the building element"
+			help="Enter the width of the building element"
 			name="width"
 			validation="required | number | min:0.001 | max:50"
 		/>
@@ -85,20 +85,12 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Net surface area"
-			help="Net area of the building element"
+			help="Enter the net area of the building element"
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
 		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption"/>
-		<FormKit
-			id="uValue"
-			type="govInputWithSuffix"
-			suffix-text="W/(m²·K)"
-			label="U-value"
-			help="Steady-state thermal transmittance of the building element"
-			name="uValue"
-			validation="required | number | min:0.01 | max:10"
-		/>
+		<FieldsUValue id="uValue" name="uValue" />
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit

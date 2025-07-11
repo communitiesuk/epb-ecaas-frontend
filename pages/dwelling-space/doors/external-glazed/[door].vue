@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { pitchOptions } from '#imports';
+import { standardPitchOptions } from '#imports';
 
 const title = "External glazed door";
 const store = useEcaasStore();
@@ -120,7 +120,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		/>
 		<FieldsPitch
 			:pitch-option="model.pitchOption"
-			:options="pitchOptions()"
+			:options="standardPitchOptions()"
 		/>
 		<FieldsOrientation />
 		<FormKit
@@ -128,7 +128,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Height"
-			help="The height of the building element"
+			help="Enter the height of the building element"
 			name="height"
 			validation="required | number | min:0.001 | max:50"
 		/>
@@ -137,7 +137,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="m"
 			label="Width"
-			help="The width of the building element"
+			help="Enter the width of the building element"
 			name="width"
 			validation="required | number | min:0.001 | max:50"
 		/>
@@ -146,25 +146,17 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="surfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
-			label="Net surface area"
-			help="Net area of the building element. For non-rectangular windows, use the area of the window based on its shape"
+			label="Net surface area of element"
+			help="Enter the net area of the building element. The area of all windows should be subtracted before entry."
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
-		<FormKit
-			id="uValue"
-			type="govInputWithSuffix"
-			suffix-text="W/(m²·K)"
-			label="U-value"
-			help="Steady-state thermal transmittance of the building element"
-			name="uValue"
-			validation="required | number | min:0.01 | max:10"
-		/>
+		<FieldsUValue id="uValue" name="uValue" />
 		<FormKit
 			id="solarTransmittance"
 			type="govInputFloat"
 			label="Transmittance of solar energy "
-			help="G value. Total solar energy transmittance of the transparent part of the window. Decimal between 0-1"
+			help="Enter the total solar energy transmittance or G value, or the transparent part of the window. It should be a decimal between 0 and 1."
 			name="solarTransmittance"
 			validation="required | number | min:0.01 | max:1"
 		/>
@@ -181,7 +173,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="frameToOpeningRatio"
 			type="govInputFloat"
 			label="Frame to opening ratio"
-			help="The proportion of the window taken up by the frame compared to the total opening area."
+			help="Enter the proportion of the window taken up by the frame compared to the total opening area. It should be a decimal between 0 and 1."
 			name="frameToOpeningRatio"
 			validation="required | number | min:0 | max:100"
 		/>
@@ -205,7 +197,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Height of the openable area"
-				help="The vertical measurement of the section of the window that can be opened."
+				help="Enter the vertical measurement of the section of the window that can be opened"
 				name="heightOpenableArea"
 				validation="required | number | min:0 | max:100"
 			/>
@@ -214,7 +206,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="m²"
 				label="Maximum openable area"
-				help="The total area of the window that can be opened for ventilation."
+				help="Enter the total area of the window that can be opened for ventilation"
 				name="maximumOpenableArea"
 				validation="required | number | min:0 | max:100"
 			/>
@@ -223,7 +215,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="m"
 				label="Mid height of the air flow path for openable part 1 "
-				help="Enter the height from the ground to the midpoint of the openable section of the window."
+				help="Enter the height from the ground to the midpoint of the openable section of the window"
 				name="midHeightOpenablePart1"
 				validation="required | number | min:0 | max:100"
 			/>
@@ -233,7 +225,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 					type="govInputWithSuffix"
 					suffix-text="m"
 					label="Mid height of the air flow path for openable part 2 "
-					help="Enter the height from the ground to the midpoint of the openable section of the window."
+					help="Enter the height from the ground to the midpoint of the openable section of the window"
 					name="midHeightOpenablePart2"
 					validation="required | number | min:0 | max:100"
 				/>
@@ -243,7 +235,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 						type="govInputWithSuffix"
 						suffix-text="m"
 						label="Mid height of the air flow path for openable part 3 "
-						help="Enter the height from the ground to the midpoint of the openable section of the window."
+						help="Enter the height from the ground to the midpoint of the openable section of the window"
 						name="midHeightOpenablePart3"
 						validation="required | number | min:0 | max:100"
 					/>
@@ -253,7 +245,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 							type="govInputWithSuffix"
 							suffix-text="m"
 							label="Mid height of the air flow path for openable part 4 "
-							help="Enter the height from the ground to the midpoint of the openable section of the window."
+							help="Enter the height from the ground to the midpoint of the openable section of the window"
 							name="midHeightOpenablePart4"
 							validation="required | number | min:0 | max:100"
 						/>

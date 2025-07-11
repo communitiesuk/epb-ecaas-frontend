@@ -70,7 +70,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govRadios"
 			:options="typeOfInternalFloorOptions"
 			label="Type of internal floor"
-			help="This affects the additional inputs needed."
+			help="This affects the additional inputs needed"
 			name="typeOfInternalFloor"
 			validation="required"
 		/>
@@ -106,12 +106,12 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		>
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p>For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m²·K)/W for when the facing wall is not exposed.</p>
+				<p class="govuk-body">
+					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">					
+						Guidance on thermal resistance of unheated spaces (opens in another window)
+					</a>
+				</p>
 			</GovDetails>
-			<p class="govuk-body">
-				<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">					
-					Guidance on thermal resistance of unheated spaces (opens in another window)
-				</a>
-			</p>
 		</FormKit>
 
 		<FormKit

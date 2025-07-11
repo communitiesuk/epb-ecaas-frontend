@@ -101,14 +101,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="solarAbsorptionCoefficient"
 			label="Solar absorption coefficient of roof"
 		/>
-		<FormKit
+		<FieldsUValue
 			id="uValue"
-			type="govInputWithSuffix"
+			name="uValue"
 			label="U-value of roof and ceiling"
 			help="Enter the steady state thermal transmittance of the ceiling and roof combined"
-			name="uValue"
-			validation="required | number | min:0.01 | max:10"
-			suffix-text="W/(m²·K)"
 		/>
 		<FieldsArealHeatCapacity 
 			id="kappaValue"

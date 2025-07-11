@@ -38,23 +38,24 @@ const batterySummary: SummarySection = {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovTabs v-slot="tabProps" :items="getTabItems([pvSummary])">
-		<TabPanel id="pvSystems" :selected="pvSystems.length === 0">
-			<h2 class="govuk-heading-m">No PV systems added</h2>
-			<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
-				Add PV systems
-			</NuxtLink>
-		</TabPanel>
-		<SummaryTab
-			:summary="pvSummary" :selected="tabProps.currentItem?.id === 'pvSystems'" />
+		<SummaryTab :summary="pvSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No PV systems added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
+					Add PV systems
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems([batterySummary])">
-		<TabPanel id="electricBattery" :selected="electricBattery.length === 0">
-			<h2 class="govuk-heading-m">No electric battery added</h2>
-			<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
-				Add electric battery
-			</NuxtLink>
-		</TabPanel>
-		<SummaryTab
-			:summary="batterySummary" :selected="tabProps.currentItem?.id === 'electricBattery'" />
+		<SummaryTab :summary="batterySummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No electric battery added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
+					Add electric battery
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 	</GovTabs>
+	<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 </template>

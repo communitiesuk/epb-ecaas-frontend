@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ZeroPitchOption } from '~/stores/ecaasStore.types';
+import { zeroPitchOptions } from '#imports';
 
 const title = "Ceiling";
 const store = useEcaasStore();
@@ -7,11 +7,6 @@ const { saveToList } = useForm();
 
 const ceilingData = useItemToEdit('ceiling', store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings?.data);
 const model: Ref<CeilingData> = ref(ceilingData!);
-
-const ceilingPitchOptions: Record<ZeroPitchOption, Capitalize<ZeroPitchOption>> = {
-	'0': '0',
-	custom: 'Custom'
-};
 
 const typeOfCeilingOptions = adjacentSpaceTypeOptions('Ceiling');
 
@@ -93,26 +88,21 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 			<FieldsPitch
 				:pitch-option="model.pitchOption"
-				:options="ceilingPitchOptions"
+				:options="zeroPitchOptions()"
 			/>
 			<FormKit
 				id="surfaceArea"
 				type="govInputWithSuffix"
 				suffix-text="m²"
-				label="Net surface area"
-				help="Net area of the building element"
+				label="Net surface area of element"
+				help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
 				name="surfaceArea"
 				validation="required | number | min:0 | max:10000"
 			/>
-			<FormKit
+			<FieldsUValue
 				v-if="model.type !== 'heatedSpace'"
 				id="uValue"
-				type="govInputWithSuffix"
-				suffix-text="W/(m²·K)"
-				label="U-value"
-				help="Steady-state thermal transmittance of the building element"
 				name="uValue"
-				validation="required | number | min:0.01 | max:10"
 			/>
 			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
@@ -123,10 +113,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance of adjacent unheated space"
-			help="The effective thermal resistance of the unheated space. For example values, please refer to technical paper S11P-028. Max value in the paper is: Facing wall not exposed, 2.5 (m^2.K) / W."
+			help="Enter the effective thermal resistance of the unheated space"
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
 		>
+			<p class="govuk-hint">
+				For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m^2.K)/W for when the facing wall is not exposed.
+			</p>
 			<p class="govuk-body">
 				<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
 					Guidance on thermal resistance of unheated spaces (opens in another window)

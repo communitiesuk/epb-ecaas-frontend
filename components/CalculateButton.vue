@@ -7,9 +7,9 @@ import { hasCompleteState } from '~/stores/ecaasStore';
 const store = useEcaasStore();
 const calculatePending = ref(false);
 
-const isAvailable = hasCompleteState(store.$state);
+const formIsComplete = hasCompleteState(store.$state);
 
-const isDisabled = calculatePending.value || !isAvailable;
+const isDisabled = calculatePending.value || !formIsComplete;
 
 const calculate = async () => {
 	calculatePending.value = true;

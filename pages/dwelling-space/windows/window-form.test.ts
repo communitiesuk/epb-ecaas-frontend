@@ -196,7 +196,7 @@ describe('window', () => {
 
 	it('displays guidance link to window shading guidance page', async () => {
 		await renderSuspended(Window);
-		const guidance = screen.getByRole('link', {name : 'Shading guidance (opens in another window)'});
+		const guidance = screen.getByRole('link', {name : 'Guidance on window shading (opens in another window)'});
 		expect(guidance).toBeDefined();
 		expect(guidance.getAttribute('href')).toBe('/guidance/window-shading-guidance');
 	});

@@ -6,8 +6,6 @@ import { DuctShape, VentType } from '~/schema/api-schema.types';
 const title = "Infiltration and ventilation summary";
 const store = useEcaasStore();
 
-definePageMeta({ layout: false });
-
 const mechanicalVentilationData = store.infiltrationAndVentilation.mechanicalVentilation.data;
 
 const mechanicalVentilationSummary: SummarySection = {
@@ -134,45 +132,44 @@ const summarySections: SummarySection[] = [
 </script>
 
 <template>
-	<div>
-		<NuxtLayout name="one-column">
-			<Head>
-				<Title>{{ title }}</Title>
-			</Head>
-			<h1 class="govuk-heading-l">{{ title }}</h1>
-			<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
+
+	<Head>
+		<Title>{{ title }}</Title>
+	</Head>
+	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
 				
-				<SummaryTab :summary="mechanicalVentilationSummary" :selected="tabProps.currentTab === 0">
-					<template #empty>
-						<h2 class="govuk-heading-m">No mechanical ventilation added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('mechanicalVentilationCreate')">
-							Add mechanical ventilation
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+		<SummaryTab :summary="mechanicalVentilationSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No mechanical ventilation added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('mechanicalVentilationCreate')">
+					Add mechanical ventilation
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="ductworkSummary" :selected="tabProps.currentTab === 1">
-					<template #empty>
-						<h2 class="govuk-heading-m">No ductwork added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('ductworkCreate')">
-							Add ductwork
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+		<SummaryTab :summary="ductworkSummary" :selected="tabProps.currentTab === 1">
+			<template #empty>
+				<h2 class="govuk-heading-m">No ductwork added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('ductworkCreate')">
+					Add ductwork
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="ventSummary" :selected="tabProps.currentTab === 2">
-					<template #empty>
-						<h2 class="govuk-heading-m">No vents added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('ventCreate')">
-							Add vents
-						</NuxtLink>
-					</template>
-				</SummaryTab>
+		<SummaryTab :summary="ventSummary" :selected="tabProps.currentTab === 2">
+			<template #empty>
+				<h2 class="govuk-heading-m">No vents added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('ventCreate')">
+					Add vents
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 
-				<SummaryTab :summary="ventilationSummary" :selected="tabProps.currentTab === 3" />
-				<SummaryTab :summary="airPermeabilitySummary" :selected="tabProps.currentTab === 4" />
+		<SummaryTab :summary="ventilationSummary" :selected="tabProps.currentTab === 3" />
+		<SummaryTab :summary="airPermeabilitySummary" :selected="tabProps.currentTab === 4" />
 
-				<!-- <SummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 5">
+		<!-- <SummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 5">
 					<template #empty>
 						<h2 class="govuk-heading-m">No combustion appliances added</h2>
 						<NuxtLink class="govuk-link" :to="getUrl('combustionAppliances')">
@@ -180,8 +177,6 @@ const summarySections: SummarySection[] = [
 						</NuxtLink>
 					</template>
 				</SummaryTab> -->
-			</GovTabs>
-			<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
-		</NuxtLayout>
-	</div>
+	</GovTabs>
+	<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
 </template>

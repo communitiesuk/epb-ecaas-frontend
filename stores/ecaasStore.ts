@@ -181,8 +181,10 @@ export function hasCompleteState(state: EcaasState): boolean {
 		(e) => e[0] in getInitialState()
 	);
 	// go over section pages and check they are all complete
-	return pagesData.filter(page => page.type === PageType.Section).every(page => {
-		const section = getSection(page.id, Object.fromEntries(stateEntries))!;
+	const sectionPages = pagesData.filter(page => page.type === PageType.Section);
+
+	return sectionPages.every(page => {
+		const section = Object.fromEntries(stateEntries.filter(e => e[0] === page.id));
 		return getSectionStatus(section as Record<string, object>).text === 'Complete';
 	});
 }

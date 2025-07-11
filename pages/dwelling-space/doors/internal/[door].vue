@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { pitchOptions } from '#imports';
+import { standardPitchOptions } from '#imports';
 
 const title = "Internal door";
 const store = useEcaasStore();
@@ -84,13 +84,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 			<FieldsPitch
 				:pitch-option="model.pitchOption"
-				:options="pitchOptions()"
+				:options="standardPitchOptions()"
 			/>
 			<FormKit
 				id="surfaceArea"
 				type="govInputWithSuffix"
 				label="Net surface area of element"
-				help="Net area of the building element"
+				help="Enter the net area of the building element. The area of all windows should be subtracted before entry."
 				name="surfaceArea"
 				validation="required | number | min:0 | max:10000"
 				suffix-text="m²"
@@ -104,10 +104,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
 			label="Thermal resistance of adjacent unheated space"
-			help="The effective thermal resistance of the unheated space. For example values, please refer to technical paper S11P-028. Max value in the paper is: Facing wall not exposed, 2.5 (m^2.K) / W."
+			help="Enter the effective thermal resistance of the unheated space"
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
 		>
+			<p class="govuk-hint">
+				For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m^2.K)/W for when the facing wall is not exposed.
+			</p>
 			<p class="govuk-body">
 				<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
 					Guidance on thermal resistance of unheated spaces (opens in another window)

@@ -149,8 +149,6 @@ type AngleString = `${'' | '-'}${NonZeroDigit | ''}${NonZeroDigit | ''}${Digit |
 
 export type PitchOption = AngleString | 'custom';
 
-export type StandardPitchOption = '90' | 'custom';
-
 export type ExternalWallData = {
 	name: string;
 	pitchOption: StandardPitchOption;
@@ -206,8 +204,6 @@ export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
 	dwellingSpaceRoofs: EcaasForm<RoofData[]>;
 	dwellingSpaceUnheatedPitchedRoofs: EcaasForm<RoofData[]>;
 }>;
-
-export type ZeroPitchOption = '0' | 'custom';
 
 export type CeilingData = {
 	name: string;
