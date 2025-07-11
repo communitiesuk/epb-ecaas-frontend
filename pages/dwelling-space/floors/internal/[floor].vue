@@ -70,7 +70,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govRadios"
 			:options="typeOfInternalFloorOptions"
 			label="Type of internal floor"
-			help="This affects the additional inputs needed."
+			help="This affects the additional inputs needed"
 			name="typeOfInternalFloor"
 			validation="required"
 		/>
