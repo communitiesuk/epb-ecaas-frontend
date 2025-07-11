@@ -49,7 +49,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Type of dwelling"
 			name="typeOfDwelling"
 			validation="required"
-			help="Select the broad dwelling classification."
+			help="Select the broad dwelling classification"
 		/>
 		<FormKit
 			id="storeysInDwelling"
@@ -57,7 +57,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of storeys in building"
 			name="storeysInDwelling"
 			validation="required | number | min:1 | max:250"
-			help="For houses this is the same as the number of storeys in the dwelling. For flats this is the total number of stories of the whole building the flat is in."
+			help="For houses this is the same as the number of storeys in the dwelling. For flats this is the total number of stories of the whole building the flat is in"
 		/>
 		<FormKit
 			v-if="model.typeOfDwelling === 'flat'"
