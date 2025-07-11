@@ -291,7 +291,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="(m²·K)/W"
 				label="Thermal resistance of insulation on base of underfloor space"
-				help="Enter the thermal resistance or R-value or the insulation installed at the base of the underfloor space. Typically between 0.5 and 2.5 (m2.K)/W"
+				help="Enter the thermal resistance or R-value or the insulation installed at the base of the underfloor space. Typically between 0.5 and 2.5 (m².K)/W"
 				name="underfloorSpaceThermalResistance"
 				validation="required | number"/>
 			<FormKit
@@ -299,7 +299,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="W/(m²·K)"
 				label="Thermal transmittance of walls above ground"
-				help="Enter the thermal transmittance (or U-value) of the external walls above ground level. Typically between 0.13 and 0.25 W(m2.K)"
+				help="Enter the thermal transmittance (or U-value) of the external walls above ground level. Typically between 0.13 and 0.25 W(m².K)"
 				name="thermalTransmittanceOfWallsAboveGround"
 				validation="required | number"/>
 			<FormKit
@@ -307,7 +307,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="m²/m"
 				label="Area of ventilation openings per perimeter"
-				help="Enter the total area of the ventilation openings per metre of external wall perimeter. Typically 0.001 and 0.01 m2 of opening per metre of wall."
+				help="Enter the total area of the ventilation openings per metre of external wall perimeter. Typically 0.001 and 0.01 m² of opening per metre of wall."
 				name="ventilationOpeningsArea"
 				validation="required | number"/>
 			<FormKit
