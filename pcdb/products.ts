@@ -4,7 +4,6 @@ import { HeatPumpBackupControlType, HeatPumpSinkType, HeatPumpSourceType } from 
 import { objectEntries, objectKeys } from "ts-extras";
 
 const IntString = z.string().regex(/^\d+$/);
-const NumericString = z.string().refine(v => { const n = Number(v); return !isNaN(n) && v?.length > 0;}, {message: "Invalid number"});
 
 const Manufacturer = z.object({
 	ID: IntString,
@@ -41,15 +40,15 @@ const AirSourceHeatPump = BaseProduct.extend({
 	sinkType: z.enum(HeatPumpSinkType),
 	backupControlType: z.enum(HeatPumpBackupControlType),
 	modulatingControl: z.boolean(),
-	standardRatingCapacity20C: z.nullable(NumericString),
-	standardRatingCapacity35C: z.nullable(NumericString),
-	standardRatingCapacity55C: z.nullable(NumericString),
-	minimumModulationRate: NumericString,
+	standardRatingCapacity20C: z.nullable(z.number()),
+	standardRatingCapacity35C: z.nullable(z.number()),
+	standardRatingCapacity55C: z.nullable(z.number()),
+	minimumModulationRate: z.number(),
 	variableTempControl: z.boolean(),
-	powerStandby: NumericString,
-	powerCrankcaseHeater: z.nullable(NumericString),
-	powerOff: z.nullable(NumericString),
-	powerMaximumBackup: z.nullable(NumericString),
+	powerStandby: z.number(),
+	powerCrankcaseHeater: z.nullable(z.number()),
+	powerOff: z.nullable(z.number()),
+	powerMaximumBackup: z.nullable(z.number()),
 	testData: z.array(z.object({
 		designFlowTemperature: z.int(),
 		testCondition: z.enum(['A', 'B', 'C', 'D', 'E', 'F']), // we probably want to hook in to SchemaTestLetter here but need to check values align
