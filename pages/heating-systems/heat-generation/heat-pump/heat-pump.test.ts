@@ -67,6 +67,36 @@ describe('heatPump', () => {
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Heat pump 1');
 	});
 
+	test('heat pump is updated when data with id exists in store', async () => {
+		store.$patch({
+			heatingSystems: {
+				heatGeneration: {
+					heatPump: {
+						data: [heatPump]
+					}
+				}
+			}
+		});
+
+		await renderSuspended(HeatPump, {
+			route: {
+				params: { 'pump': '0' }
+			}
+		});
+
+		await user.clear(screen.getByTestId('name'));
+		await user.type(screen.getByTestId('name'), 'Heat pump 2');
+		await user.click(screen.getByTestId('productReference_HEATPUMP-SMALL'));
+		await user.tab();
+		await user.click(screen.getByRole('button'));
+
+		const { data } = store.heatingSystems.heatGeneration.heatPump;
+		
+		expect(data[0]?.id).toBe(heatPump.id);
+		expect(data[0]?.name).toBe('Heat pump 2');
+		expect(data[0]?.productReference).toBe('HEATPUMP-SMALL');
+	});
+
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(HeatPump);
 

@@ -22,7 +22,7 @@ const saveForm = (fields: HeatPumpData) => {
 		const {heatPump} = state.heatingSystems.heatGeneration;
 
 		const heatPumpItem: HeatPumpData = {
-			id: uuidv4(),
+			id: heatPumpData ? heatPumpData.id : uuidv4(),
 			name: fields.name,
 			productReference: fields.productReference,
 		};
