@@ -108,14 +108,16 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
 		>
-			<p class="govuk-hint">
-				For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m^2.K)/W for when the facing wall is not exposed.
-			</p>
-			<p class="govuk-body">
-				<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
-					Guidance on thermal resistance of unheated spaces (opens in another window)
-				</a>
-			</p>
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-hint">
+					For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m²·K)/W for when the facing wall is not exposed.
+				</p>
+				<p class="govuk-body">
+					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">
+						Guidance on thermal resistance of unheated spaces (opens in another window)
+					</a>
+				</p>
+			</GovDetails>
 		</FormKit>
 		<FormKit
 			type="govButton"
