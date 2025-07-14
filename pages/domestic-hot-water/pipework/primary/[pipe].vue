@@ -130,7 +130,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							<td class="govuk-table__cell">0.035 - 0.0.40 W/(m·K)</td>
 						</tr>
 						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">Elastomeric foam (e.g. Armaflex)</td>
+							<td class="govuk-table__cell">Elastomeric foam (for example Armaflex)</td>
 							<td class="govuk-table__cell">0.033 - 0.040 W/(m·K)</td>
 						</tr>
 					</tbody>
