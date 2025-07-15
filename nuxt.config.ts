@@ -5,12 +5,14 @@ import yn from "yn";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	compatibilityDate: "2024-04-03",
+
 	devtools: {
 		enabled:
-			typeof process.env.DISABLE_DEVTOOLS !== "undefined"
-				? !yn(process.env.DISABLE_DEVTOOLS)
-				: true,
+									typeof process.env.DISABLE_DEVTOOLS !== "undefined"
+										? !yn(process.env.DISABLE_DEVTOOLS)
+										: true,
 	},
+
 	app: {
 		head: {
 			titleTemplate: "%s - ECaaS GOV.UK",
@@ -52,7 +54,9 @@ export default defineNuxtConfig({
 			},
 		},
 	},
+
 	css: ["~/assets/scss/main.scss"],
+
 	vite: {
 		css: {
 			preprocessorOptions: {
@@ -64,8 +68,8 @@ export default defineNuxtConfig({
 						"import",
 					],
 					additionalData: `
-																																																																																																@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
-																																																																																																@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`,
+																																																																																																																																																																																																																																																																																																																																																																																													@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
+																																																																																																																																																																																																																																																																																																																																																																																													@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`,
 				},
 			},
 		},
@@ -80,6 +84,7 @@ export default defineNuxtConfig({
 			}),
 		],
 	},
+
 	modules: [
 		"@formkit/nuxt",
 		"@pinia/nuxt",
@@ -89,32 +94,45 @@ export default defineNuxtConfig({
 		"nuxt-auth-utils",
 		"@nuxtjs/robots",
 		"nuxt-security",
+		"@sentry/nuxt/module"
 	],
+
 	plugins: [
 		"~/plugins/xray-fetch.server",
 		// '~/plugins/load-store.client',
 		// '~/plugins/update-store.client',
 	],
+
 	formkit: {
 		autoImport: true,
 		configFile: "./formkit.config.ts",
 	},
+
 	runtimeConfig: {
 		redisEndpoint: '',
 		redisPassword: '',
-		redisUsername: ''
+		redisUsername: '',
+		public: {
+			sentry: {
+				dsn: process.env.SENTRY_DSN_PUBLIC,
+			},
+		},
 	},
+
 	nitro: process.env.BUILD_FOR_AWS_LAMBDA
 		? {
 			preset: "aws-lambda",
 		}
 		: undefined,
+
 	typescript: {
 		typeCheck: true,
 	},
+
 	experimental: {
 		watcher: "parcel",
 	},
+
 	hooks: {
 		"pages:extend"(pages) {
 			function setAuthMiddleware(pages: NuxtPage[]) {
@@ -133,10 +151,13 @@ export default defineNuxtConfig({
 			}
 		},
 	},
+
 	site: {
 		indexable: false,
 	},
+
 	ignore: ["**/*.test.ts"],
+
 	security: {
 		headers: {
 			strictTransportSecurity: process.env.BUILD_FOR_AWS_LAMBDA ? {
@@ -147,5 +168,17 @@ export default defineNuxtConfig({
 			xFrameOptions: false,
 			xXSSProtection: false
 		}
+	},
+
+	sentry: {
+		sourceMapsUploadOptions: {
+			org: "energy-performance-of-buildings",
+			project: "ecaas",
+			authToken: process.env.SENTRY_AUTH_TOKEN,
+		}
+	},
+
+	sourcemap: {
+		client: "hidden"
 	}
 });

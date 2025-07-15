@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import * as Sentry from "@sentry/nuxt";
 import { mapFhsInputData  } from '~/mapping/fhsInputMapper';
 import type {ResolvedState} from '~/mapping/fhsInputMapper';
 import type { FhsComplianceResponseIncludingErrors } from '~/server/server.types';
@@ -34,6 +35,10 @@ const calculate = async () => {
 				errors: response.errors,
 			},
 		});
+
+		if ('errors' in response) {
+			Sentry.captureMessage(`"ECaaS API error": ${response.errors}`);
+		}
 	} catch (error) {
 		console.error(error);
 	} finally {
