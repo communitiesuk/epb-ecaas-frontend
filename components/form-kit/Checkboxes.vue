@@ -20,6 +20,7 @@ const optionsSelectedValues = props.context._value || [];
 const optionsSelected = ref<string[]>([...optionsSelectedValues]);
 
 const handleChange = (value: string) => {
+	console.log('handleChange called with:', value);
 	const index = optionsSelected.value.indexOf(value);
 
 	if (index >= 0) {

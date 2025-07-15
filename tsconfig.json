@@ -2,7 +2,7 @@
   // https://nuxt.com/docs/guide/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "cypress"],
       "noUncheckedIndexedAccess": true,
       "target": "es2018",
     "module": "ESNext",

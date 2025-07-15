@@ -47,6 +47,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="energySupplyErrorSummary"/>
+		{{ console.log({model}) }}
 		<FormKit
 			id="fuelType"
 			type="govCheckboxes"
