@@ -1,4 +1,4 @@
-import { BatteryLocation, FuelType, InverterType, OnSiteGenerationVentilationStrategy  } from "~/schema/api-schema.types";
+import { BatteryLocation, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
 import type {SchemaElectricBattery} from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { mapElectricBatteryData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";

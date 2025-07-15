@@ -1,7 +1,6 @@
 import type { EmptyObject } from "type-fest";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
-import { FuelType   } from "~/schema/api-schema.types";
 import type {SchemaElectricBattery, SchemaWindowShadingObject} from "~/schema/api-schema.types";
 import { defaultElectricityEnergySupplyName } from "./common";
 
