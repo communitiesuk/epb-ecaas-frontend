@@ -6,21 +6,21 @@ import { BuildType } from '~/schema/api-schema.types';
 const title = "Dwelling details summary";
 const store = useEcaasStore();
 
-const generalSpecificationsData = store.dwellingDetails.generalSpecifications.data;
+const generalDetailsData = store.dwellingDetails.generalDetails.data;
 const shadingData = store.dwellingDetails.shading.data;
 const externalFactors = store.dwellingDetails.externalFactors.data;
 
-const generalSpecificationsSummary: SummarySection = {
-	id: 'generalSpecifications',
-	label: "General specifications",
+const generalDetailsSummary: SummarySection = {
+	id: 'generalDetails',
+	label: "General details",
 	data: {
-		"Type of dwelling": generalSpecificationsData.typeOfDwelling,
-		"Number of storeys in building": generalSpecificationsData.storeysInDwelling,
-		"Storey of flat": generalSpecificationsData.typeOfDwelling === BuildType.flat ? generalSpecificationsData.storeyOfFlat : undefined,
-		"Number of bedrooms": generalSpecificationsData.numOfBedrooms,
-		"Cooling required": displayBoolean(generalSpecificationsData.coolingRequired),
+		"Type of dwelling": generalDetailsData.typeOfDwelling,
+		"Number of storeys in building": generalDetailsData.storeysInDwelling,
+		"Storey of flat": generalDetailsData.typeOfDwelling === BuildType.flat ? generalDetailsData.storeyOfFlat : undefined,
+		"Number of bedrooms": generalDetailsData.numOfBedrooms,
+		"Cooling required": displayBoolean(generalDetailsData.coolingRequired),
 	},
-	editUrl: getUrl('generalSpecifications')!
+	editUrl: getUrl('generalDetails')!
 };
 
 const shadingSummary: SummarySection = {
@@ -52,7 +52,7 @@ const externalFactorsSummary: SummarySection = {
 };
 
 const summarySections: SummarySection[] = [
-	generalSpecificationsSummary,
+	generalDetailsSummary,
 	externalFactorsSummary,
 	shadingSummary
 ];
@@ -65,7 +65,7 @@ const summarySections: SummarySection[] = [
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
-		<SummaryTab :summary="generalSpecificationsSummary" :selected="tabProps.currentTab === 0"/>
+		<SummaryTab :summary="generalDetailsSummary" :selected="tabProps.currentTab === 0"/>
 		<SummaryTab :summary="externalFactorsSummary" :selected="tabProps.currentTab === 1"/>
 		<SummaryTab :summary="shadingSummary" :selected="tabProps.currentTab === 2">
 			<template #empty>

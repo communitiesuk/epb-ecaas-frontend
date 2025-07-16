@@ -909,7 +909,7 @@ describe("FHS input mapper", () => {
 	it("maps input state with a build type of house to an FHS input request", () => {
 		// Arrange
 		const dwellingDetails: DwellingDetails = {
-			generalSpecifications: {
+			generalDetails: {
 				...baseForm,
 				data: {
 					typeOfDwelling: BuildType.house,
@@ -1268,7 +1268,7 @@ describe("FHS input mapper", () => {
 	it("maps input state with a build type of flat to an FHS input request", () => {
 		// Arrange
 		const dwellingDetails: DwellingDetails = {
-			generalSpecifications: {
+			generalDetails: {
 				...baseForm,
 				data: {
 					typeOfDwelling: BuildType.flat,

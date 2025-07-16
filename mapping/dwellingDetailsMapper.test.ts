@@ -1,6 +1,6 @@
 import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass  } from '~/schema/api-schema.types';
 import type {SchemaShadingObject} from '~/schema/api-schema.types';
-import { mapDistantShadingData, mapExternalFactorsData, mapGeneralSpecificationsData } from './dwellingDetailsMapper';
+import { mapDistantShadingData, mapExternalFactorsData, mapGeneralDetailsData } from './dwellingDetailsMapper';
 import { resolveState } from '~/stores/resolve';
 
 describe('dwelling details mapper', () => {
@@ -10,9 +10,9 @@ describe('dwelling details mapper', () => {
 		store.$reset();
 	});
 
-	it('maps general specifications input state to FHS input request', () => {
+	it('maps general details input state to FHS input request', () => {
 		// Arrange
-		const state: GeneralSpecificationsData = {
+		const state: GeneralDetailsData = {
 			typeOfDwelling: BuildType.flat,
 			storeysInDwelling: 3,
 			storeyOfFlat: 1,
@@ -22,7 +22,7 @@ describe('dwelling details mapper', () => {
 
 		store.$patch({
 			dwellingDetails: {
-				generalSpecifications: {
+				generalDetails: {
 					complete: true,
 					data: state
 				}
@@ -30,7 +30,7 @@ describe('dwelling details mapper', () => {
 		});
 
 		// Act
-		const fhsInputData = mapGeneralSpecificationsData(resolveState(store.$state));
+		const fhsInputData = mapGeneralDetailsData(resolveState(store.$state));
 
 		// Assert
 		expect(fhsInputData.General!.build_type).toBe(state.typeOfDwelling);

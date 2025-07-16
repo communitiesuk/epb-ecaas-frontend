@@ -11,13 +11,13 @@ mockNuxtImport('navigateTo', () => {
 });
 
 interface DwellingDetailSummary {
-	generalSpecifications: GeneralSpecificationsData,
+	generalDetails: GeneralDetailsData,
 	shading: ShadingData[],
 	externalFactors: ExternalFactorsData
 }
 
 const state: DwellingDetailSummary = {
-	generalSpecifications: {
+	generalDetails: {
 		typeOfDwelling: BuildType.house,
 		storeysInDwelling: 2,
 		numOfBedrooms: 3,
@@ -49,16 +49,16 @@ describe('Dwelling details summary', () => {
 	it('should contain the correct tabs for dwelling details', async () => {
 		await renderSuspended(Summary);
   
-		expect(screen.getByRole('link', {name: 'General specifications'}));
+		expect(screen.getByRole('link', {name: 'General details'}));
 		expect(screen.getByRole('link', {name: 'Shading'}));
 
 	});
 
-	it('should display the correct data for the general specification section', async () => {
+	it('should display the correct data for the general details section', async () => {
 		store.$patch({
 			dwellingDetails: {
-				generalSpecifications: {
-					data: state.generalSpecifications
+				generalDetails: {
+					data: state.generalDetails
 				}
 			}
 		});
@@ -75,7 +75,7 @@ describe('Dwelling details summary', () => {
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-generalSpecifications-${hyphenate(key)}`));
+			const lineResult = (await screen.findByTestId(`summary-generalDetails-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}

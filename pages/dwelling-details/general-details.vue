@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { BuildType } from '~/schema/api-schema.types';
 
-const title = "General specifications";
+const title = "General details";
 const store = useEcaasStore();
 
 const model = ref({
-	...store.dwellingDetails.generalSpecifications.data
+	...store.dwellingDetails.generalDetails.data
 });
 
 const typeOfDwellingOptions: Record<BuildType, SnakeToSentenceCase<BuildType>> = {
@@ -16,7 +16,7 @@ const typeOfDwellingOptions: Record<BuildType, SnakeToSentenceCase<BuildType>> =
 const saveForm = (fields: typeof model.value) => {
 	store.$patch({
 		dwellingDetails: {
-			generalSpecifications: {
+			generalDetails: {
 				data: {
 					typeOfDwelling: fields.typeOfDwelling,
 					storeysInDwelling: fields.storeysInDwelling,
@@ -41,7 +41,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm" @submit-invalid="handleInvalidSubmit">
-		<GovErrorSummary :error-list="errorMessages" test-id="generalSpecificationsErrorSummary"/>
+		<GovErrorSummary :error-list="errorMessages" test-id="generalDetailsErrorSummary"/>
 		<FormKit
 			id="typeOfDwelling"
 			type="govRadios"

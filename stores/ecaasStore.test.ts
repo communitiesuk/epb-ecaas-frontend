@@ -28,7 +28,7 @@ describe('Ecaas Store', () => {
 
 		store.$patch({
 			dwellingDetails: {
-				generalSpecifications: {
+				generalDetails: {
 					complete: true
 				}
 			}
@@ -44,7 +44,7 @@ describe('Ecaas Store', () => {
 
 		store.$patch({
 			dwellingDetails: {
-				generalSpecifications: {
+				generalDetails: {
 					data: {
 						typeOfDwelling: BuildType.house
 					}
@@ -86,7 +86,7 @@ describe('Ecaas Store', () => {
 
 		store.$patch({
 			dwellingDetails: {
-				generalSpecifications: {
+				generalDetails: {
 					complete: true
 				},
 				shading: {
@@ -146,7 +146,7 @@ describe('Ecaas Store', () => {
 
 	test('getStatus of task returns not started status when form has no data', () => {
 
-		const page = pagesData.find(p => p.id === 'generalSpecifications');
+		const page = pagesData.find(p => p.id === 'generalDetails');
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.notStarted);
@@ -156,7 +156,7 @@ describe('Ecaas Store', () => {
 
 		store.$patch({
 			dwellingDetails: {
-				generalSpecifications: {
+				generalDetails: {
 					data: {
 						typeOfDwelling: BuildType.house
 					}
@@ -164,7 +164,7 @@ describe('Ecaas Store', () => {
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'generalSpecifications');
+		const page = pagesData.find(p => p.id === 'generalDetails');
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
@@ -174,13 +174,13 @@ describe('Ecaas Store', () => {
 
 		store.$patch({
 			dwellingDetails: {
-				generalSpecifications: {
+				generalDetails: {
 					complete: true
 				}
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'generalSpecifications');
+		const page = pagesData.find(p => p.id === 'generalDetails');
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
@@ -379,7 +379,7 @@ describe("hasCompleteState function", () => {
 	it("returns false when given state with dwelling details section complete only", async () => {
 		store.$patch({
 			dwellingDetails: {
-				generalSpecifications: {
+				generalDetails: {
 					complete: true
 				},
 				externalFactors: {

@@ -52,7 +52,7 @@ describe("getSectionStatus util function" , () => {
 	});
 
 	it("should return an 'complete' form status given a dwellingDetailsSection marked as complete", () => {
-		const dwellingDetailsSection = { generalSpecifications: { data: {}, complete: true }, shading: { data: [], complete: true }, externalFactors: { data: {}, complete: true } };
+		const dwellingDetailsSection = { generalDetails: { data: {}, complete: true }, shading: { data: [], complete: true }, externalFactors: { data: {}, complete: true } };
 
 		const actual = getSectionStatus(dwellingDetailsSection);
 

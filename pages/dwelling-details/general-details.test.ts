@@ -1,8 +1,8 @@
-import GeneralSpecifications from './general-specifications.vue';
+import GeneralDetails from './general-details.vue';
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
-import type { GeneralSpecificationsData } from '~/stores/ecaasStore.types';
+import type { GeneralDetailsData } from '~/stores/ecaasStore.types';
 import { BuildType } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -10,14 +10,14 @@ mockNuxtImport('navigateTo', () => {
 	return navigateToMock;
 });
 
-const state: GeneralSpecificationsData = {
+const state: GeneralDetailsData = {
 	typeOfDwelling: BuildType.house,
 	storeysInDwelling: 2,
 	numOfBedrooms: 3,
 	coolingRequired: false,
 };
 
-const stateWithFlat: GeneralSpecificationsData = {
+const stateWithFlat: GeneralDetailsData = {
 	typeOfDwelling: BuildType.flat,
 	storeysInDwelling: 7,
 	storeyOfFlat: 3,
@@ -25,7 +25,7 @@ const stateWithFlat: GeneralSpecificationsData = {
 	coolingRequired: false,
 };
 
-describe('General specifications', () => {
+describe('General details', () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
@@ -37,7 +37,7 @@ describe('General specifications', () => {
 		test('data is saved to store state when form is valid', async () => {
 			const user = userEvent.setup();
 	
-			await renderSuspended(GeneralSpecifications);
+			await renderSuspended(GeneralDetails);
 	
 			await user.click(screen.getByTestId('typeOfDwelling_house'));
 			await user.type(screen.getByTestId('storeysInDwelling'), '2');
@@ -45,7 +45,7 @@ describe('General specifications', () => {
 			await user.click(screen.getByTestId('coolingRequired_no'));
 			await user.click(screen.getByRole('button'));
 	
-			const { data, complete } = store.dwellingDetails.generalSpecifications;
+			const { data, complete } = store.dwellingDetails.generalDetails;
 			
 			expect(data).toEqual(state);
 			expect(complete).toBe(true);
@@ -55,13 +55,13 @@ describe('General specifications', () => {
 		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				dwellingDetails: {
-					generalSpecifications: {
+					generalDetails: {
 						data: state
 					}
 				}
 			});
 	
-			await renderSuspended(GeneralSpecifications);
+			await renderSuspended(GeneralDetails);
 			
 			expect((await screen.findByTestId('typeOfDwelling_house')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('storeysInDwelling') as HTMLInputElement).value).toBe('2');
@@ -73,7 +73,7 @@ describe('General specifications', () => {
 		test('required error messages are displayed when empty form is submitted', async () => {
 			const user = userEvent.setup();
 
-			await renderSuspended(GeneralSpecifications);
+			await renderSuspended(GeneralDetails);
 
 			await user.click(screen.getByRole('button'));
 
@@ -88,11 +88,11 @@ describe('General specifications', () => {
 		test('error summary is displayed when an invalid form in submitted', async () => {
 			const user = userEvent.setup();
 
-			await renderSuspended(GeneralSpecifications);
+			await renderSuspended(GeneralDetails);
 
 			await user.click(screen.getByRole('button'));
 
-			expect((await screen.findByTestId('generalSpecificationsErrorSummary'))).toBeDefined();
+			expect((await screen.findByTestId('generalDetailsErrorSummary'))).toBeDefined();
 		});
 	});
 
@@ -101,7 +101,7 @@ describe('General specifications', () => {
 		test('data is saved to store state when form is valid', async () => {
 			const user = userEvent.setup();
 
-			await renderSuspended(GeneralSpecifications);
+			await renderSuspended(GeneralDetails);
 
 			await user.click(screen.getByTestId('typeOfDwelling_flat'));
 			await user.type(screen.getByTestId('storeysInDwelling'), '7');
@@ -110,7 +110,7 @@ describe('General specifications', () => {
 			await user.click(screen.getByTestId('coolingRequired_no'));
 			await user.click(screen.getByRole('button'));
 
-			const { data, complete } = store.dwellingDetails.generalSpecifications;
+			const { data, complete } = store.dwellingDetails.generalDetails;
 			
 			expect(data).toEqual(stateWithFlat);
 			expect(complete).toBe(true);
@@ -120,13 +120,13 @@ describe('General specifications', () => {
 		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				dwellingDetails: {
-					generalSpecifications: {
+					generalDetails: {
 						data: stateWithFlat
 					}
 				}
 			});
 
-			await renderSuspended(GeneralSpecifications);
+			await renderSuspended(GeneralDetails);
 			
 			expect((await screen.findByTestId('typeOfDwelling_flat')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('storeysInDwelling') as HTMLInputElement).value).toBe('7');
@@ -138,7 +138,7 @@ describe('General specifications', () => {
 		test('required error messages are displayed when empty form is submitted', async () => {
 			const user = userEvent.setup();
 
-			await renderSuspended(GeneralSpecifications);
+			await renderSuspended(GeneralDetails);
 
 			await user.click(screen.getByTestId('typeOfDwelling_flat'));
 			await user.click(screen.getByRole('button'));

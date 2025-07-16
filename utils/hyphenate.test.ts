@@ -7,7 +7,7 @@ describe("hyphenate utils function", () => {
 	});
 
 	it("should return hyphenated string to lower case", () => {
-		expect(hyphenate("General specifications")).toBe("general-specifications");
+		expect(hyphenate("General details")).toBe("general-details");
 	});
 
 	it("should handle string with multiple spaces", () => {
@@ -21,7 +21,7 @@ describe("hyphenate utils function", () => {
 	it("should handle string with leading and trailing spaces", () => {
 		expect(hyphenate("  Shading")).toBe("shading");
 		expect(hyphenate("Shading   ")).toBe("shading");
-		expect(hyphenate("  General specifications   ")).toBe("general-specifications");
+		expect(hyphenate("  General details   ")).toBe("general-details");
 	});
 
 	it("should handle empty string", () => {

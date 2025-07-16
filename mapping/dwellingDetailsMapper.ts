@@ -3,29 +3,29 @@ import type {SchemaInfiltrationVentilation, SchemaShadingSegment} from "~/schema
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSchema> {
-	const generalSpecificationsData = mapGeneralSpecificationsData(state);
+	const generalDetailsData = mapGeneralDetailsData(state);
 	const externalFactorsData = mapExternalFactorsData(state);
 	const distantShadingData = mapDistantShadingData(state);
 
 	return {
-		...generalSpecificationsData,
+		...generalDetailsData,
 		...externalFactorsData,
 		...distantShadingData
 	};
 }
 
-export function mapGeneralSpecificationsData(state: ResolvedState): Pick<FhsInputSchema, 'General' | 'NumberOfBedrooms' | 'PartGcompliance' | 'PartO_active_cooling_required'> {
-	const { generalSpecifications } = state.dwellingDetails;
+export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema, 'General' | 'NumberOfBedrooms' | 'PartGcompliance' | 'PartO_active_cooling_required'> {
+	const { generalDetails } = state.dwellingDetails;
 	
 	return {
 		General: {
-			build_type: generalSpecifications.typeOfDwelling!,
-			storeys_in_building: generalSpecifications.storeysInDwelling!,
-			...(generalSpecifications.typeOfDwelling === BuildType.flat ? {storey_of_dwelling: generalSpecifications.storeyOfFlat} : {}),
+			build_type: generalDetails.typeOfDwelling!,
+			storeys_in_building: generalDetails.storeysInDwelling!,
+			...(generalDetails.typeOfDwelling === BuildType.flat ? {storey_of_dwelling: generalDetails.storeyOfFlat} : {}),
 		},
-		NumberOfBedrooms: generalSpecifications.numOfBedrooms,
+		NumberOfBedrooms: generalDetails.numOfBedrooms,
 		PartGcompliance: true,
-		...(generalSpecifications.coolingRequired !== undefined ? {PartO_active_cooling_required: generalSpecifications.coolingRequired} : {}),
+		...(generalDetails.coolingRequired !== undefined ? {PartO_active_cooling_required: generalDetails.coolingRequired} : {}),
 	};
 }
 
