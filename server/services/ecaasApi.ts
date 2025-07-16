@@ -1,6 +1,7 @@
 import {ApiPaths} from "~/schema/api-schema.types";
 import type { ApiInfoResponse, FhsComplianceResponseIncludingErrors, TokenResponse } from "../server.types";
 import clientSession from "../services/clientSession";
+import * as Sentry from "@sentry/nuxt";
 
 const ecaasApi = {
 	getToken: async (clientId: string, clientSecret: string) => {
@@ -34,7 +35,7 @@ const ecaasApi = {
 	checkCompliance: async (data: object) => {
 		const { accessToken } = (await clientSession.get());
 		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.FHSCompliance}`;
-		return $fetch<FhsComplianceResponseIncludingErrors>(uri, {
+		const response = await $fetch<FhsComplianceResponseIncludingErrors>(uri, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${accessToken}`
@@ -42,6 +43,12 @@ const ecaasApi = {
 			body: JSON.stringify(data),
 			ignoreResponseError: true
 		});
+
+		if ('errors' in response) {
+			Sentry.captureMessage(`"ECaaS API server error": ${data}`);
+		};
+
+		return response;
 	}
 };
 

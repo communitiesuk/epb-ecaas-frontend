@@ -37,7 +37,7 @@ const calculate = async () => {
 		});
 
 		if ('errors' in response) {
-			Sentry.captureMessage(`"ECaaS API error": ${response.errors}`);
+			Sentry.captureMessage(`"ECaaS API client error": ${response.errors}`);
 		}
 	} catch (error) {
 		console.error(error);
