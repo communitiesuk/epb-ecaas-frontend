@@ -38,23 +38,23 @@ test("saved energy supply form data is visible on the heating systems summary pa
 
 test("saved energy supply form data is persisted to local storage", async ({ page }) => {
 	await page.goto("");
-  
-	const localStorageDataBefore = await page.evaluate(() => {
-		return localStorage.getItem("ecaas") || "{}";
-	});
 
-	expect(localStorageDataBefore).toBe("{}");
+	const getLocalStorage = async () => {
+		return await page.evaluate(() => {
+			return localStorage.getItem("ecaas") || "{}";
+		});
+	};
+	//check localStorage is empty before adding form data
+	expect(await getLocalStorage()).toBe("{}");
 
+	//add form data
 	await fillEnergySupplyForm(page);
 
-	const localStorageDataAfter = await page.evaluate(() => {
-		return localStorage.getItem("ecaas") || "{}";
-	});
+	const storedData = JSON.parse(await getLocalStorage());
+	const { data } = storedData.heatingSystems.energySupply; 
 
-	const storedObject = JSON.parse(localStorageDataAfter);
-
-	expect(storedObject.heatingSystems.energySupply.data.fuelType[0]).toBe("electricity");
-	expect(storedObject.heatingSystems.energySupply.data.exported).toBe(true);
-
+	//check localStorage contains energy supply data
+	expect(data.fuelType[0]).toBe("electricity");
+	expect(data.exported).toBe(true);
 });
 
