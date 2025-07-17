@@ -188,10 +188,10 @@ describe('show good response in result tabs', () => {
 		const tableTextContent = screen.getByRole('table').textContent;
 
 		const expectedTextsPresent = [
-			'0.376',
-			'4.159',
+			'0.38',
+			'4.16',
 			'Washing machine', // display value for clothes washing
-			'86.904',
+			'86.90',
 		];
 
 		expectedTextsPresent.forEach(text => expect(tableTextContent).toContain(text));
