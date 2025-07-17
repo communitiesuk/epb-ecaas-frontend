@@ -58,3 +58,26 @@ test("saved energy supply form data is persisted to local storage", async ({ pag
 	expect(data.exported).toBe(true);
 });
 
+test("saved energy supply form data persists on reload and is reflected in the summary", async ({ page }) => {
+	await fillEnergySupplyForm(page);
+	await page.goto("/heating-systems/energy-supply");
+
+	//reload energy supply page to check data persists
+	await page.reload();
+
+	await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
+	await expect(page.getByTestId("exported_yes")).toBeChecked();
+	
+  //check data is persisted on the summary page
+  await page.goto("/heating-systems/summary");
+  
+	const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
+	const fuelType = await fuelTypeElement.locator("li").innerText();
+	expect(fuelType).toBe("Electricity");
+
+	const exportedElement = page.getByTestId("summary-energySupply-exported");
+	const exported = await exportedElement.locator("dd").innerText();
+	expect(exported.includes("Yes")).toBe(true);
+
+  
+});
