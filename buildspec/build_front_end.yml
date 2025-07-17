@@ -12,7 +12,6 @@ phases:
       - npm -v
       - npm ci
       - npm run build
-      - node --import ./.output/server/sentry.server.config.mjs
       - cd .output/server
       - zip -r nuxt-lambda.zip .
       - cd ../..
