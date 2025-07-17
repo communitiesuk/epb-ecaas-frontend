@@ -1,41 +1,28 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
+
+  const fillEnergySupplyForm = async (page: Page) => {
+    await page.goto("");
+    await page.getByRole('link', { name: 'Heating systems' }).click();
+    await page.getByRole('link', { name: 'Energy supply' }).nth(0).click();
+  
+    await page.getByTestId("fuelType_electricity").check();
+    await page.getByTestId("exported_yes").check();
+    await page.locator('button:text("Save and continue")').click();
+  }
 
 test("saved energy supply form data is visible when user revisits the energy supply page", async ({ page }) => {
-  await page.goto("");
-  await page.getByRole('link', { name: 'Heating systems' }).click();
-  await page.getByRole('link', { name: 'Energy supply' }).nth(0).click();
-
-  //add data to form page
-  const checkbox = page.getByTestId("fuelType_electricity");
-  await checkbox.check();
-
-  const radio = page.getByTestId("exported_yes");
-  await radio.check();
-
-  await page.locator('button:text("Save and continue")').click();
+  await fillEnergySupplyForm(page)
   //confirm redirect 
   await expect(page).toHaveURL("/heating-systems")
 
   // revisit the Energy Supply page to confirm data persistence
   await page.goto("/heating-systems/energy-supply");
-  await expect(checkbox).toBeChecked()
-  await expect(radio).toBeChecked()
+  await expect(page.getByTestId("fuelType_electricity")).toBeChecked()
+  await expect(page.getByTestId("exported_yes")).toBeChecked()
 });
 
 test("saved energy supply form data is visible on the heating systems summary page", async ({ page }) => {
-  await page.goto("");
-  await page.getByRole('link', { name: 'Heating systems' }).click();
-  await page.getByRole('link', { name: 'Energy supply' }).nth(0).click();
-
-  //add data to form page
-  const checkbox = page.getByTestId("fuelType_electricity");
-  await checkbox.check();
-
-  const radio = page.getByTestId("exported_yes");
-  await radio.check();
-
-  await page.locator('button:text("Save and continue")').click();
-
+  await fillEnergySupplyForm(page)
   //navigate to Heating systems summary page
   await page.goto("/heating-systems/summary");
   
