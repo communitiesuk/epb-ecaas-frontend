@@ -4,6 +4,16 @@ import { sentenceCase } from '#imports';
 
 const { selected, data } = defineProps<{ selected: boolean, data: Record<string, SchemaFhsEnergyPerformanceValue> }>();
 const { total: _total, ...systems } = data; // list can include total inside it, so remove if present
+
+const calculatePercentage = (value: number | undefined, totals: Array<number | undefined>): string | null => {
+	const total = totals.reduce((prev, current) => (prev || 0) + (current || 0), 0);
+
+	if (total === 0) {
+		return null;
+	}
+
+	return `(${((value || 0) / total! * 100).toFixed(1)}%)`;
+};
 </script>
 
 <template>
@@ -11,7 +21,8 @@ const { total: _total, ...systems } = data; // list can include total inside it,
 		<table class="govuk-table">
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">
-					<th class="govuk-table__header govuk-!-width-one-third">Energy source</th><th scope="col" class="govuk-table__header">Actual dwelling</th>
+					<th class="govuk-table__header govuk-!-width-one-third">Fuel</th>
+					<th scope="col" class="govuk-table__header">Actual dwelling</th>
 					<th scope="col" class="govuk-table__header">Notional dwelling</th>
 				</tr>
 			</thead>
@@ -22,10 +33,12 @@ const { total: _total, ...systems } = data; // list can include total inside it,
 						<span class="govuk-!-font-weight-regular">kWh/m²</span>
 					</th>
 					<td class="govuk-table__cell">
-						{{ actual?.toFixed(2) }}
+						{{ actual?.toFixed(2) }}<br >
+						{{ calculatePercentage(actual, [notional, actual]) }}
 					</td>
 					<td class="govuk-table__cell">
-						{{ notional?.toFixed(2) }}
+						{{ notional?.toFixed(2) }}<br >
+						{{ calculatePercentage(notional, [notional, actual]) }}
 					</td>
 				</tr>
 			</tbody>
