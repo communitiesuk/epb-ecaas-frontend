@@ -28,8 +28,7 @@ test("saved energy supply form data is visible on the heating systems summary pa
 	await page.goto("/heating-systems/summary");
   
 	const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
-	const fuelType = await fuelTypeElement.locator("li").innerText();
-	expect(fuelType).toBe("Electricity");
+	expect(fuelTypeElement.locator("li").innerText()).toBe("Electricity");
 
 	const exportedElement = page.getByTestId("summary-energySupply-exported");
 	const exported = await exportedElement.locator("dd").innerText();
@@ -72,12 +71,9 @@ test("saved energy supply form data persists on reload and is reflected in the s
   await page.goto("/heating-systems/summary");
   
 	const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
-	const fuelType = await fuelTypeElement.locator("li").innerText();
-	expect(fuelType).toBe("Electricity");
+	expect(fuelTypeElement.locator("li").innerText()).toBe("Electricity");
 
 	const exportedElement = page.getByTestId("summary-energySupply-exported");
 	const exported = await exportedElement.locator("dd").innerText();
 	expect(exported.includes("Yes")).toBe(true);
-
-  
 });
