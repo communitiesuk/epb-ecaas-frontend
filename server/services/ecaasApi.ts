@@ -45,7 +45,9 @@ const ecaasApi = {
 		});
 
 		if ('errors' in response) {
-			Sentry.captureMessage(`"ECaaS API server error": ${data}`);
+			console.log('INSIDE IF - ECaaS API returned errors.');
+			Sentry.captureMessage("ECaaS API server error");
+			await Sentry.flush(5000);
 		};
 
 		return response;
