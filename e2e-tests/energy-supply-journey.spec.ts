@@ -11,6 +11,12 @@ const fillEnergySupplyForm = async (page: Page) => {
 	await page.locator('button:text("Save and continue")').click();
 };
 
+	const getLocalStorage = async (page: Page) => {
+		return await page.evaluate(() => {
+			return localStorage.getItem("ecaas") || "{}";
+		});
+	};
+
 test("saved energy supply form data is visible when user revisits the energy supply page", async ({ page }) => {
 	await fillEnergySupplyForm(page);
 	//confirm redirect 
@@ -38,18 +44,13 @@ test("saved energy supply form data is visible on the heating systems summary pa
 test("saved energy supply form data is persisted to local storage", async ({ page }) => {
 	await page.goto("");
 
-	const getLocalStorage = async () => {
-		return await page.evaluate(() => {
-			return localStorage.getItem("ecaas") || "{}";
-		});
-	};
 	//check localStorage is empty before adding form data
-	expect(await getLocalStorage()).toBe("{}");
+	expect(await getLocalStorage(page)).toBe("{}");
 
 	//add form data
 	await fillEnergySupplyForm(page);
 
-	const storedData = JSON.parse(await getLocalStorage());
+	const storedData = JSON.parse(await getLocalStorage(page));
 	const { data } = storedData.heatingSystems.energySupply; 
 
 	//check localStorage contains energy supply data
@@ -84,20 +85,15 @@ test.skip("saved energy supply form data persists when local storage is cleared"
 	//clear localStorage
 	await page.evaluate(() => localStorage.clear());
   
-	const getLocalStorage = async () => {
-		return await page.evaluate(() => {
-			return localStorage.getItem("ecaas") || "{}";
-		});
-	};
 	//check localStorage is empty
-	expect(await getLocalStorage()).toBe("{}");
+	expect(await getLocalStorage(page)).toBe("{}");
   
 	//reload page and navigate to the heating systems summary page
 	await page.reload();
 	await page.goto("/heating-systems/summary");
 
-	//check data has been readded to localStorage 
-	expect(await getLocalStorage()).not.toBe("{}");
+	//check data is readded to localStorage 
+	expect(await getLocalStorage(page)).not.toBe("{}");
 
 	//check the UI reflects hydrated data
 	const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
