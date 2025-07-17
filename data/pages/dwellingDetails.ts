@@ -10,7 +10,7 @@ const dwellingDetailsPages = [
 		parentId: 'taskList'
 	},
 	{
-		id: 'generalDetails',
+		id: 'generalSpecifications',
 		title: 'General details',
 		url: '/dwelling-details/general-details',
 		type: PageType.Task,

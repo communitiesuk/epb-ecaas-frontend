@@ -11,7 +11,7 @@ import pagesData from "~/data/pages/pages";
 export function getInitialState(): EcaasState {
 	const store: NulledForms<EcaasState> = {
 		dwellingDetails: {
-			generalDetails: { data: {} },
+			generalSpecifications: { data: {} },
 			shading: { data: [] },
 			externalFactors: { data: {} }
 		},

@@ -57,7 +57,7 @@ describe('Dwelling details summary', () => {
 	it('should display the correct data for the general details section', async () => {
 		store.$patch({
 			dwellingDetails: {
-				generalDetails: {
+				generalSpecifications: {
 					data: state.generalDetails
 				}
 			}

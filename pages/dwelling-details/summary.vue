@@ -6,7 +6,7 @@ import { BuildType } from '~/schema/api-schema.types';
 const title = "Dwelling details summary";
 const store = useEcaasStore();
 
-const generalDetailsData = store.dwellingDetails.generalDetails.data;
+const generalDetailsData = store.dwellingDetails.generalSpecifications.data;
 const shadingData = store.dwellingDetails.shading.data;
 const externalFactors = store.dwellingDetails.externalFactors.data;
 

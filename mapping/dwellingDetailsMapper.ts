@@ -15,7 +15,7 @@ export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSc
 }
 
 export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema, 'General' | 'NumberOfBedrooms' | 'PartGcompliance' | 'PartO_active_cooling_required'> {
-	const { generalDetails } = state.dwellingDetails;
+	const { generalSpecifications: generalDetails } = state.dwellingDetails;
 	
 	return {
 		General: {

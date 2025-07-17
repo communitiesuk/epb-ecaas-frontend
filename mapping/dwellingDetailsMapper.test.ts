@@ -22,7 +22,7 @@ describe('dwelling details mapper', () => {
 
 		store.$patch({
 			dwellingDetails: {
-				generalDetails: {
+				generalSpecifications: {
 					complete: true,
 					data: state
 				}
