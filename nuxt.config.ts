@@ -114,7 +114,7 @@ export default defineNuxtConfig({
 		redisUsername: '',
 		public: {
 			sentry: {
-				dsn: process.env.SENTRY_DSN_PUBLIC,
+				dsn: process.env.SENTRY_DSN,
 			},
 		},
 	},
