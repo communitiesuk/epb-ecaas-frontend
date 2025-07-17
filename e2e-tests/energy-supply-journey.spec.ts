@@ -7,7 +7,7 @@ const fillEnergySupplyForm = async (page: Page) => {
 	await page.getByRole('link', { name: 'Energy supply' }).nth(0).click();
   
 	await page.getByTestId("fuelType_electricity").check();
-	await page.getByTestId("exported_yes").check();
+	await page.getByTestId("exported_yes").click();
 	await page.locator('button:text("Save and continue")').click();
 };
 
@@ -28,7 +28,7 @@ test("saved energy supply form data is visible on the heating systems summary pa
 	await page.goto("/heating-systems/summary");
   
 	const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
-	expect(fuelTypeElement.locator("li").innerText()).toBe("Electricity");
+	expect(await fuelTypeElement.locator("li").innerText()).toBe("Electricity");
 
 	const exportedElement = page.getByTestId("summary-energySupply-exported");
 	const exported = await exportedElement.locator("dd").innerText();
@@ -57,7 +57,7 @@ test("saved energy supply form data is persisted to local storage", async ({ pag
 	expect(data.exported).toBe(true);
 });
 
-test("saved energy supply form data persists on reload and is reflected in the summary", async ({ page }) => {
+test("saved energy supply form data persists on page reload and is reflected in the summary", async ({ page }) => {
 	await fillEnergySupplyForm(page);
 	await page.goto("/heating-systems/energy-supply");
 
@@ -67,12 +67,42 @@ test("saved energy supply form data persists on reload and is reflected in the s
 	await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
 	await expect(page.getByTestId("exported_yes")).toBeChecked();
 	
-  //check data is persisted on the summary page
-  await page.goto("/heating-systems/summary");
+	//check data is persisted on the summary page
+	await page.goto("/heating-systems/summary");
   
 	const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
-	expect(fuelTypeElement.locator("li").innerText()).toBe("Electricity");
+	expect(await fuelTypeElement.locator("li").innerText()).toBe("Electricity");
 
+	const exportedElement = page.getByTestId("summary-energySupply-exported");
+	const exported = await exportedElement.locator("dd").innerText();
+	expect(exported.includes("Yes")).toBe(true);
+});
+
+test.skip("saved energy supply form data persists when local storage is cleared", async ({ page }) => {
+	await fillEnergySupplyForm(page);
+
+	//clear localStorage
+	await page.evaluate(() => localStorage.clear());
+  
+	const getLocalStorage = async () => {
+		return await page.evaluate(() => {
+			return localStorage.getItem("ecaas") || "{}";
+		});
+	};
+	//check localStorage is empty
+	expect(await getLocalStorage()).toBe("{}");
+  
+	//reload page and navigate to the heating systems summary page
+	await page.reload();
+	await page.goto("/heating-systems/summary");
+
+	//check data has been readded to localStorage 
+	expect(await getLocalStorage()).not.toBe("{}");
+
+	//check the UI reflects hydrated data
+	const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
+	expect(await fuelTypeElement.locator("li").innerText()).toBe("Electricity");
+  
 	const exportedElement = page.getByTestId("summary-energySupply-exported");
 	const exported = await exportedElement.locator("dd").innerText();
 	expect(exported.includes("Yes")).toBe(true);
