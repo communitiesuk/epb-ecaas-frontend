@@ -4,6 +4,8 @@ import type {ResolvedState} from '~/mapping/fhsInputMapper';
 import type { FhsComplianceResponseIncludingErrors } from '~/server/server.types';
 import { hasCompleteState } from '~/stores/ecaasStore';
 
+const { onError } = defineProps<{ onError: (errors?: CorrectedJsonApiError[] | boolean) => void; }>();
+
 const store = useEcaasStore();
 const calculatePending = ref(false);
 
@@ -18,11 +20,12 @@ const emit = defineEmits<{
 
 const calculate = async () => {
 	calculatePending.value = true;
-
-	const inputPayload = mapFhsInputData(resolveState(store) as ResolvedState);
-	console.log(JSON.stringify(inputPayload));
+	let calculateError: CorrectedJsonApiError[] | boolean | undefined;
 
 	try {
+		const inputPayload = mapFhsInputData(resolveState(store) as ResolvedState);
+		console.log(JSON.stringify(inputPayload));
+
 		const response = await $fetch<FhsComplianceResponseIncludingErrors>('/api/check-compliance', {
 			method: 'POST',
 			body: inputPayload,
@@ -40,8 +43,8 @@ const calculate = async () => {
 			},
 		});
 
-		// TODO: Handle success and error responses
 		console.log('Compliance check response', response);
+
 		store.$patch({
 			lastResult: (!('errors' in response)) ? {
 				resultType: 'ok',
@@ -51,10 +54,20 @@ const calculate = async () => {
 				errors: response.errors,
 			},
 		});
+
+		if ('errors' in response) {
+			calculateError = response.errors;
+		}
 	} catch (error) {
 		console.error(error);
+		calculateError = true;
 	} finally {
 		calculatePending.value = false;
+	}
+
+	if (calculateError) {
+		onError(calculateError);
+		return;
 	}
 
 	navigateTo('/outputs');

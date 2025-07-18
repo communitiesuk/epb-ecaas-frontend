@@ -235,10 +235,14 @@ describe('show error in result tabs', () => {
 	});
 
 	it('shows the error from the API', async () => {
-		const { container: dom } = await renderSuspended(Outputs);
+		await renderSuspended(Outputs);
 
-		const paraContent = dom.querySelector('pre')!.textContent;
-		expect(paraContent).toContain('Something very specific happened, incorrectly.');
+		const errorSummary = await screen.findByTestId('resultsErrorSummary');
+
+		expect(errorSummary).toBeDefined();
+		const errorText = errorSummary.querySelector('li')?.textContent;
+
+		expect(errorText).toContain('Something very specific happened, incorrectly.');
 	});
 });
 

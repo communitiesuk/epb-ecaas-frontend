@@ -27,10 +27,12 @@ const tabs: TabItem[] = [
 		</GovTabs>
 	</template>
 	<template v-if="result?.resultType === 'err'">
-		<p class="govuk-body">There were errors as follows:</p>
-		<template v-for="(error, i) in result.errors" :key="i">
-			<pre>{{ error.detail }}</pre>
-		</template>
+		<GovErrorSummary
+			title="Sorry, there's been an error"
+			:error-list="result.errors.map(x => ({ id: x.id!, text: x.detail! }))"
+			:use-links="false"
+			test-id="resultsErrorSummary"
+		/>
 	</template>
 </template>
 
