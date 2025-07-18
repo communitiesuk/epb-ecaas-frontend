@@ -3,6 +3,7 @@ import { mapFhsInputData  } from '~/mapping/fhsInputMapper';
 import type {ResolvedState} from '~/mapping/fhsInputMapper';
 import type { FhsComplianceResponseIncludingErrors } from '~/server/server.types';
 import { hasCompleteState } from '~/stores/ecaasStore';
+import * as Sentry from "@sentry/nuxt";
 
 const store = useEcaasStore();
 const calculatePending = ref(false);
@@ -21,6 +22,14 @@ const calculate = async () => {
 
 	const inputPayload = mapFhsInputData(resolveState(store) as ResolvedState);
 	console.log(JSON.stringify(inputPayload));
+
+	if (import.meta.client) {
+		try {
+			throw new Error('Test client error for Sentry' + Date.now());
+		} catch (e) {
+			Sentry.captureException(e);
+		}
+	}
 
 	try {
 		const response = await $fetch<FhsComplianceResponseIncludingErrors>('/api/check-compliance', {
