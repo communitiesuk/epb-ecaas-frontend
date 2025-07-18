@@ -30,15 +30,15 @@ const calculatePercentage = (value: number | undefined, totals: Array<number | u
 				<tr v-for="({actual = undefined, notional = undefined}, system) in systems" :key="`${system}-result`" class="govuk-table__row">
 					<th scope="row" class="govuk-table__header">
 						{{ sentenceCase(system as string) }}<br>
-						<span class="govuk-!-font-weight-regular">kWh/m²</span>
+						<span class="govuk-!-font-weight-regular">kWh/m² per year</span>
 					</th>
 					<td class="govuk-table__cell">
 						{{ actual?.toFixed(2) }}<br >
-						{{ calculatePercentage(actual, [notional, actual]) }}
+						{{ calculatePercentage(actual, Object.entries(systems).map(x => x[1].actual)) }}
 					</td>
 					<td class="govuk-table__cell">
 						{{ notional?.toFixed(2) }}<br >
-						{{ calculatePercentage(notional, [notional, actual]) }}
+						{{ calculatePercentage(notional, Object.entries(systems).map(x => x[1].notional)) }}
 					</td>
 				</tr>
 			</tbody>

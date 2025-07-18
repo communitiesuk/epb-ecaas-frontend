@@ -21,7 +21,7 @@ const { total: _total, ...systems } = data.by_system || {}; // by_system can inc
 					<tr class="govuk-table__row">
 						<th scope="row" class="govuk-table__header">
 							{{ displayDeliveryEnergyUseKey(system as string) }}<br>
-							<span class="govuk-!-font-weight-regular">kWh/m²</span>
+							<span class="govuk-!-font-weight-regular">kWh/m² per year</span>
 						</th>
 						<td class="govuk-table__cell">
 							{{ actual?.toFixed(2) }}
@@ -34,7 +34,7 @@ const { total: _total, ...systems } = data.by_system || {}; // by_system can inc
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table__header">
 						Total<br>
-						<span class="govuk-!-font-weight-regular">kWh/m²</span>
+						<span class="govuk-!-font-weight-regular">kWh/m² per year</span>
 					</th>
 					<td class="govuk-table__cell">
 						{{ data?.total?.actual?.toFixed(2) }}<br>
