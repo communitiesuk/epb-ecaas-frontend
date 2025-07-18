@@ -32,7 +32,7 @@ const ecaasApi = {
 		return await response.json() as ApiInfoResponse;
 	},
 
-	checkCompliance: async (data: object) => {
+	checkCompliance: async function checkCompliance(data: object) {
 		const { accessToken } = (await clientSession.get());
 		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.FHSCompliance}`;
 		const response = await $fetch<FhsComplianceResponseIncludingErrors>(uri, {
@@ -45,7 +45,14 @@ const ecaasApi = {
 		});
 
 		if ('errors' in response) {
-			Sentry.captureMessage("ECaaS API server error");
+			const errorMessage = response.errors?.[0]?.detail ?? "Unknown error";
+
+			Sentry.withScope(scope => {
+				scope.setExtra("responseErrors", response.errors);
+				scope.setExtra("requestBody", JSON.parse(JSON.stringify(data)));
+				scope.setExtra("requestBodyString", JSON.stringify(data, null, 2));
+				Sentry.captureException(new Error(errorMessage));
+			});
 		};
 
 		return response;
