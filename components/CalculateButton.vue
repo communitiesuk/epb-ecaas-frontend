@@ -11,6 +11,11 @@ const formIsComplete = hasCompleteState(store.$state);
 
 const isDisabled = calculatePending.value || !formIsComplete;
 
+const emit = defineEmits<{
+	loading: [],
+	stopLoading: [],
+}>();
+
 const calculate = async () => {
 	calculatePending.value = true;
 
@@ -20,7 +25,19 @@ const calculate = async () => {
 	try {
 		const response = await $fetch<FhsComplianceResponseIncludingErrors>('/api/check-compliance', {
 			method: 'POST',
-			body: inputPayload
+			body: inputPayload,
+			async onRequest() {
+				emit("loading");
+			},
+			async onResponse() {
+				emit("stopLoading");
+			},
+			async onResponseError() {
+				emit("stopLoading");
+			},
+			async onRequestError() {
+				emit("stopLoading");
+			},
 		});
 
 		// TODO: Handle success and error responses
