@@ -6,9 +6,6 @@
 .cache
 dist
 
-# TypeScript possible build outputs
-tsconfig.tsbuildinfo
-
 # GOV.UK assets copied into public dir
 public/assets
 public/static/assets
