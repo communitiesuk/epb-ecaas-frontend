@@ -1,8 +1,14 @@
 <script lang="ts" setup>
-import type { SchemaFhsDeliveredEnergyUse } from '~/schema/api-schema.types';
+import type { SchemaFhsEnergyPerformanceValue } from '~/schema/api-schema.types';
 import { displayDeliveryEnergyUseKey } from '#imports';
 
-const { selected, data } = defineProps<{ selected: boolean, data: SchemaFhsDeliveredEnergyUse }>();
+// overrides because never types are currently generated from the OpenAPI erroneously
+export interface CorrectedFhsDeliveredEnergyUse {
+	total: SchemaFhsEnergyPerformanceValue,
+	by_system: Record<string, SchemaFhsEnergyPerformanceValue>
+}
+
+const { selected, data } = defineProps<{ selected: boolean, data: CorrectedFhsDeliveredEnergyUse }>();
 const { total: _total, ...systems } = data.by_system || {}; // by_system can include total inside it, so remove if present
 </script>
 

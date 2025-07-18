@@ -47,79 +47,71 @@ export interface components {
     schemas: {
         FhsComplianceResponse: {
             /** @description The calculated DER (Dwelling Emission Rate) of the building. Unit: kgCO₂e/m².yr. */
-            dwelling_emission_rate?: number;
+            dwelling_emission_rate: number;
             /** @description The determined TER (Target Emission Rate) used for the calculation for this building. Unit: kgCO₂e/m².yr. */
-            target_emission_rate?: number;
+            target_emission_rate: number;
             /** @description Whether this calculation determines that the building with the provided properties complies with the Future Homes Standard for emission rate. */
-            emission_rate_compliant?: boolean;
+            emission_rate_compliant: boolean;
             /** @description The calculated DPER (Dwelling Primary Energy Rate) of the building. Unit: kWh/m².yr. */
-            dwelling_primary_energy_rate?: number;
+            dwelling_primary_energy_rate: number;
             /** @description The determined TPER (Target Primary Energy Rate) used for the calculation for this building. Unit: kWh/m².yr. */
-            target_primary_energy_rate?: number;
+            target_primary_energy_rate: number;
             /** @description Whether the calculated Dwelling Primary Energy Rate is compliant with FHS. */
-            primary_energy_rate_compliant?: boolean;
+            primary_energy_rate_compliant: boolean;
             /** @description The calculated DFEE (Dwelling Fabric Energy Efficiency) of the building. Unit: kWh/m².yr. */
-            dwelling_fabric_energy_efficiency?: number;
+            dwelling_fabric_energy_efficiency: number;
             /** @description The determined TPEE (Target Fabric Energy Efficiency) of the building. Unit: kWh/m².yr. */
-            target_fabric_energy_efficiency?: number;
+            target_fabric_energy_efficiency: number;
             /** @description Whether the calculated Dwelling Fabric Energy Efficiency is compliant with FHS. */
-            fabric_energy_efficiency_compliant?: boolean;
-            energy_demand?: components["schemas"]["FhsEnergyDemand"];
-            delivered_energy_use?: components["schemas"]["FhsDeliveredEnergyUse"];
-            energy_use_by_fuel?: {
-                [key: string]: components["schemas"]["FhsEnergyPerformanceValue"];
-            };
-        };
-        FhsEnergyDemand: {
-            space_heating?: components["schemas"]["FhsEnergyPerformanceValue"];
-            space_cooling?: components["schemas"]["FhsEnergyPerformanceValue"];
+            fabric_energy_efficiency_compliant: boolean;
+            energy_demand: components["schemas"]["FhsEnergyDemand"];
+            delivered_energy_use: components["schemas"]["FhsDeliveredEnergyUse"];
+            energy_use_by_fuel: Record<string, never>;
         };
         FhsDeliveredEnergyUse: {
-            total?: components["schemas"]["FhsEnergyPerformanceValue"];
-            by_system?: {
-                [key: string]: components["schemas"]["FhsEnergyPerformanceValue"];
-            };
+            total: components["schemas"]["FhsEnergyPerformanceValue"];
+            by_system: Record<string, never>;
+        };
+        FhsEnergyDemand: {
+            space_heating: components["schemas"]["FhsEnergyPerformanceValue"];
+            space_cooling: components["schemas"]["FhsEnergyPerformanceValue"];
         };
         FhsEnergyPerformanceValue: {
             /** @description The actual measured energy performance for a particular metric. Unit: kWh/m².yr. */
-            actual?: number;
+            actual: number;
             /** @description The notional energy performance for a particular metric. Unit: kWh/m².yr. */
-            notional?: number;
+            notional: number;
+        };
+        FhsErrorResponseBody: {
+            errors: components["schemas"]["JsonApiOnePointOneErrors"];
+            meta: components["schemas"]["FhsMeta"];
+        };
+        FhsErrorResponseBodyNoMeta: {
+            errors: components["schemas"]["JsonApiOnePointOneErrors"];
         };
         FhsMeta: {
-            /**
-             * @description An identifier representing which version of HEM (the specification) was used, or available to be used, in this calculation.
-             * @example 0.32
-             */
+            /** @description An identifier representing which version of HEM (the specification) was used, or available to be used, in this calculation. */
             hem_version: string;
             /**
              * Format: date
              * @description The date when the version of the HEM specification being used was published. Format: YYYY-MM-DD.
-             * @example 2025-02-15
              */
             hem_version_date: string;
-            /**
-             * @description An identifier representing which version of FHS (Future Homes Standard) (the specification) was used, or available to be used, in this calculation.
-             * @example 0.23
-             */
+            /** @description An identifier representing which version of FHS (Future Homes Standard) (the specification) was used, or available to be used, in this calculation. */
             fhs_version: string;
             /**
              * Format: date
              * @description The date when the version of the FHS specification being used was published. Format: YYYY-MM-DD.
              */
             fhs_version_date: string;
-            /**
-             * @description A unique identifier, usually a SHA, for the version of the HEM software library being used for this calculation.
-             * @example 521c68bd9c715f82205d7d1afd7b88d038839d26
-             */
+            /** @description A unique identifier, usually a SHA, for the version of the HEM software library being used for this calculation. */
             software_version?: string;
-            /**
-             * @description A unique identifier for the request made against this ECaaS service. This can be referenced when e.g. raising support queries.
-             * @example b6e02d18-f919-490e-bd1b-40d85d8ac456
-             */
+            /** @description A unique identifier for the request made against this ECaaS service. This can be referenced when e.g. raising support queries. */
             ecaas_request_id?: string;
         };
-        JsonApiOnePointOneErrors: components["schemas"]["JsonApiOnePointOneError"][];
+        /** @description @member name may contain any valid JSON value. */
+        JsonApiOnePointOneAtMemberName: Record<string, never>;
+        /** @description A JSON API error object. At least of the properties must be set. */
         JsonApiOnePointOneError: {
             /** @description A unique identifier for this particular occurrence of the problem. */
             id?: string;
@@ -134,14 +126,12 @@ export interface components {
             detail?: string;
             source?: components["schemas"]["JsonApiOnePointOneErrorSource"];
             meta?: components["schemas"]["JsonApiOnePointOneMeta"];
-        } | unknown | unknown | unknown | unknown | unknown | unknown | unknown | unknown;
+        };
         /** @description The error links object **MAY** contain the following members: about. */
-        JsonApiOnePointOneErrorLinks: ({
-            /** @description A link that leads to further details about this particular occurrence of the problem. */
+        JsonApiOnePointOneErrorLinks: {
             about?: components["schemas"]["JsonApiOnePointOneLink"];
-            /** @description A link that identifies the type of error that this particular error is an instance of. */
             type?: components["schemas"]["JsonApiOnePointOneLink"];
-        } & components["schemas"]["JsonApiOnePointOneLinks"]) | components["schemas"]["JsonApiOnePointOneAtMemberName"];
+        };
         JsonApiOnePointOneErrorSource: {
             /** @description A JSON Pointer [RFC6901] to the associated entity in the request document [e.g. "/data" for a primary data object, or "/data/attributes/title" for a specific attribute]. */
             pointer?: string;
@@ -150,6 +140,9 @@ export interface components {
             /** @description A string indicating the name of a single request header which caused the error. */
             header?: string;
         };
+        JsonApiOnePointOneErrors: components["schemas"]["JsonApiOnePointOneError"][];
+        /** @description A link **MUST** be represented as either: a string containing the link's URL or a link object. */
+        JsonApiOnePointOneLink: components["schemas"]["JsonApiOnePointOneLinkUrl"] | components["schemas"]["JsonApiOnePointOneLinkObject"];
         JsonApiOnePointOneLinkObject: {
             href: components["schemas"]["JsonApiOnePointOneLinkUrl"];
             meta?: components["schemas"]["JsonApiOnePointOneMeta"];
@@ -164,15 +157,14 @@ export interface components {
          * @description A string containing the link's URL.
          */
         JsonApiOnePointOneLinkUrl: string;
-        /** @description A link **MUST** be represented as either: a string containing the link's URL or a link object. */
-        JsonApiOnePointOneLink: components["schemas"]["JsonApiOnePointOneLinkUrl"] | components["schemas"]["JsonApiOnePointOneLinkObject"];
-        JsonApiOnePointOneLinks: Record<string, never>;
-        /** @description Nonstandard meta-information that can not be represented as an attribute or relationship. */
-        JsonApiOnePointOneMeta: components["schemas"]["JsonApiOnePointOneMemberName"] | components["schemas"]["JsonApiOnePointOneAtMemberName"];
-        /** @description @member name may contain any valid JSON value. */
-        JsonApiOnePointOneAtMemberName: Record<string, never>;
         /** @description Member name may contain any valid JSON value. */
         JsonApiOnePointOneMemberName: Record<string, never>;
+        /** @description A valid string value for a JSON API member name. */
+        JsonApiOnePointOneMemberNameString: string;
+        /** @description Nonstandard meta-information that can not be represented as an attribute or relationship. */
+        JsonApiOnePointOneMeta: components["schemas"]["JsonApiOnePointOneMemberName"] | components["schemas"]["JsonApiOnePointOneAtMemberName"];
+        /** @enum {string} */
+        Versions: Versions;
         ApplianceLoadShifting: {
             Control?: string;
             /** Format: double */
@@ -245,9 +237,9 @@ export interface components {
         MassDistributionClass: MassDistributionClass;
         WindowShadingObject: {
             /** Format: double */
-            height: number;
-            /** Format: double */
             distance: number;
+            /** Format: double */
+            height: number;
             /** Format: double */
             transparency: number;
             /** @constant */
@@ -349,9 +341,9 @@ export interface components {
         ChargeLevel: number | number[] | components["schemas"]["Schedule_for_double"];
         ExternalSensorCorrelation: {
             /** Format: double */
-            temperature: number;
-            /** Format: double */
             max_charge: number;
+            /** Format: double */
+            temperature: number;
         };
         ExternalSensor: {
             correlation: components["schemas"]["ExternalSensorCorrelation"][];
@@ -836,8 +828,8 @@ export interface components {
         BoilerHotWaterTest: BoilerHotWaterTest;
         HotWaterSourceDetails: components["schemas"]["StorageTank"] | {
             ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-            HeatSourceWet: components["schemas"]["HeatSourceWetType"];
             Control: components["schemas"]["HeatSourceControlType"];
+            HeatSourceWet: components["schemas"]["HeatSourceWetType"];
             /** Format: double */
             daily_HW_usage: number;
             /** Format: double */
@@ -857,8 +849,8 @@ export interface components {
             type: "CombiBoiler";
         } | {
             ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-            HeatSourceWet: components["schemas"]["HeatSourceWetType"];
             Control?: components["schemas"]["HeatSourceControlType"] | null;
+            HeatSourceWet: components["schemas"]["HeatSourceWetType"];
             /** Format: double */
             setpoint_temp?: number | null;
             /** @constant */
@@ -1057,6 +1049,15 @@ export interface components {
             /** Format: double */
             temp_flow_limit_upper?: number | null;
         };
+        EcoDesignController: {
+            ecodesign_control_class: components["schemas"]["EcoDesignControllerClass"];
+            /** Format: double */
+            max_outdoor_temp?: number | null;
+            /** Format: double */
+            min_flow_temp?: number | null;
+            /** Format: double */
+            min_outdoor_temp?: number | null;
+        };
         FancoilTestData: {
             fan_power_W: number[];
             fan_speed_data: components["schemas"]["FanSpeedData"][];
@@ -1089,23 +1090,14 @@ export interface components {
             /** @constant */
             wet_emitter_type?: "fancoil";
         };
-        EcoDesignController: {
-            ecodesign_control_class: components["schemas"]["EcoDesignControllerClass"];
-            /** Format: double */
-            max_outdoor_temp?: number | null;
-            /** Format: double */
-            min_flow_temp?: number | null;
-            /** Format: double */
-            min_outdoor_temp?: number | null;
-        };
         ThermalBridgingDetails: {
+            junction_type?: string | null;
             /** Format: double */
             length: number;
             /** Format: double */
             linear_thermal_transmittance: number;
             /** @constant */
             type: "ThermalBridgeLinear";
-            junction_type?: string | null;
         } | {
             /** Format: double */
             heat_transfer_coeff: number;
@@ -1293,11 +1285,6 @@ export interface components {
             shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
             /**
              * Format: double
-             * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
-             */
-            thermal_resistance_floor_construction: number;
-            /**
-             * Format: double
              * @description Thermal resistance of insulation on base of underfloor space (unit: m².K/W)
              */
             thermal_resist_insul?: number | null;
@@ -1306,6 +1293,11 @@ export interface components {
              * @description Thermal resistance of walls of the basement (unit: m².K/W)
              */
             thermal_resist_walls_base?: number | null;
+            /**
+             * Format: double
+             * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+             */
+            thermal_resistance_floor_construction: number;
             /**
              * Format: double
              * @description Thermal transmittance of floor above basement (unit: W/m².K)
@@ -1400,11 +1392,11 @@ export interface components {
             power: number;
         };
         ZoneLighting: {
-            /** Format: double */
-            efficacy: number;
             bulbs?: {
                 [key: string]: components["schemas"]["ZoneLightingBulbs"];
             };
+            /** Format: double */
+            efficacy: number;
         };
         /** @enum {string} */
         SpaceHeatControlType: SpaceHeatControlType;
@@ -1414,6 +1406,7 @@ export interface components {
         /** @enum {string} */
         ZoneTemperatureControlBasis: ZoneTemperatureControlBasis;
         ApplianceGainsDetails: {
+            EnergySupply: string;
             /** @description List of appliance usage events */
             Events?: components["schemas"]["ApplianceGainsDetailsEvent"][] | null;
             /**
@@ -1421,7 +1414,6 @@ export interface components {
              * @description Appliance power consumption when not in use (unit: W)
              */
             Standby?: number | null;
-            EnergySupply: string;
             /**
              * Format: double
              * @description Proportion of appliance demand turned into heat gains (no unit)
@@ -1584,6 +1576,31 @@ export interface components {
             type: "HeatPump";
             var_flow_temp_ctrl_during_test: boolean;
         } | {
+            BufferTank?: components["schemas"]["HeatPumpBufferTank"] | null;
+            EnergySupply: string;
+            EnergySupply_heat_network?: string | null;
+            MechanicalVentilation?: string | null;
+            boiler?: components["schemas"]["HeatPumpBoiler"] | null;
+            /** Format: double */
+            eahp_mixed_max_temp?: number | null;
+            /** Format: double */
+            eahp_mixed_min_temp?: number | null;
+            /** Format: double */
+            min_modulation_rate_20?: number | null;
+            /** Format: double */
+            min_modulation_rate_35?: number | null;
+            /** Format: double */
+            min_modulation_rate_55?: number | null;
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+            /** Format: double */
+            temp_distribution_heat_network?: number | null;
+            /** @constant */
+            type: "HeatPump";
+        } | {
             EnergySupply: string;
             EnergySupply_aux: string;
             boiler_location: components["schemas"]["HeatSourceLocation"];
@@ -1635,9 +1652,9 @@ export interface components {
             /** Format: uint */
             number_of_units: number;
             /** Format: double */
-            phase_transition_temperature_upper: number;
-            /** Format: double */
             phase_transition_temperature_lower: number;
+            /** Format: double */
+            phase_transition_temperature_upper: number;
             /** Format: double */
             rated_charge_power: number;
             simultaneous_charging_and_discharging: boolean;
@@ -1700,13 +1717,13 @@ export interface components {
             noise_nuisance?: boolean | null;
             shield_class: components["schemas"]["VentilationShieldClass"];
             terrain_class: components["schemas"]["TerrainClass"];
+            /** Format: double */
+            vent_opening_ratio_init?: number | null;
             /**
              * Format: double
              * @description Base height of the ventilation zone relative to ground (m)
              */
             ventilation_zone_base_height: number;
-            /** Format: double */
-            vent_opening_ratio_init?: number | null;
         };
         InternalGains: {
             ColdWaterLosses?: components["schemas"]["InternalGainsDetails"] | null;
@@ -1806,10 +1823,10 @@ export interface components {
             type: components["schemas"]["SpaceCoolSystemType"];
         };
         SpaceHeatSystemDetails: {
+            Control?: string | null;
             EnergySupply: string;
             HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
             Zone?: string | null;
-            Control?: string | null;
             /** Format: double */
             advanced_start?: number | null;
             /**
@@ -1827,13 +1844,18 @@ export interface components {
             /** @constant */
             type: "InstantElecHeater";
         } | {
+            Control?: string | null;
             ControlCharger: string;
             ESH_max_output: number[][];
             ESH_min_output: number[][];
             EnergySupply: string;
+            HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
+            /** @description The zone where the unit(s) is/are installed */
+            Zone: string;
+            /** Format: double */
+            advanced_start?: number | null;
             /** @enum {string} */
             air_flow_type: SpaceHeatSystemDetailsAir_flow_type;
-            Control?: string | null;
             /**
              * Format: double
              * @description Fan power (unit: W)
@@ -1855,17 +1877,15 @@ export interface components {
             rated_power_instant: number;
             /** Format: double */
             storage_capacity: number;
-            /** @constant */
-            type: "ElecStorageHeater";
-            /** @description The zone where the unit(s) is/are installed */
-            Zone: string;
-            HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
             /** Format: double */
             temp_setback?: number | null;
-            /** Format: double */
-            advanced_start?: number | null;
+            /** @constant */
+            type: "ElecStorageHeater";
         } | {
+            Control?: string | null;
+            EnergySupply?: string | null;
             HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
+            Zone: string;
             /** Format: double */
             advanced_start?: number | null;
             /** Format: double */
@@ -1874,8 +1894,8 @@ export interface components {
             design_flow_rate?: number | null;
             /** Format: int32 */
             design_flow_temp: number;
-            emitters?: components["schemas"]["WetEmitter"][];
             ecodesign_controller: components["schemas"]["EcoDesignController"];
+            emitters?: components["schemas"]["WetEmitter"][];
             /** Format: double */
             frac_convective?: number;
             /** Format: double */
@@ -1894,18 +1914,15 @@ export interface components {
             type: "WetDistribution";
             variable_flow?: boolean | null;
             wet_emitter_type?: string | null;
-            Control?: string | null;
-            EnergySupply?: string | null;
-            Zone: string;
         } | {
-            HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
             Control?: string | null;
+            HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
+            /** Format: double */
+            advanced_start?: number | null;
             /** Format: double */
             frac_convective: number;
             /** Format: double */
             temp_diff_emit_dsgn: number;
-            /** Format: double */
-            advanced_start?: number | null;
             /** Format: double */
             temp_setback?: number | null;
             /** @constant */
@@ -2043,6 +2060,7 @@ export interface components {
                 };
                 ApplianceEntry: components["schemas"]["Appliance"] | components["schemas"]["ApplianceReference"];
                 ApplianceGainsDetails: {
+                    EnergySupply: string;
                     /** @description List of appliance usage events */
                     Events?: components["schemas"]["ApplianceGainsDetailsEvent"][] | null;
                     /**
@@ -2050,7 +2068,6 @@ export interface components {
                      * @description Appliance power consumption when not in use (unit: W)
                      */
                     Standby?: number | null;
-                    EnergySupply: string;
                     /**
                      * Format: double
                      * @description Proportion of appliance demand turned into heat gains (no unit)
@@ -2294,11 +2311,6 @@ export interface components {
                     shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
                     /**
                      * Format: double
-                     * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
-                     */
-                    thermal_resistance_floor_construction: number;
-                    /**
-                     * Format: double
                      * @description Thermal resistance of insulation on base of underfloor space (unit: m².K/W)
                      */
                     thermal_resist_insul?: number | null;
@@ -2307,6 +2319,11 @@ export interface components {
                      * @description Thermal resistance of walls of the basement (unit: m².K/W)
                      */
                     thermal_resist_walls_base?: number | null;
+                    /**
+                     * Format: double
+                     * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+                     */
+                    thermal_resistance_floor_construction: number;
                     /**
                      * Format: double
                      * @description Thermal transmittance of floor above basement (unit: W/m².K)
@@ -2687,9 +2704,9 @@ export interface components {
                 };
                 ExternalSensorCorrelation: {
                     /** Format: double */
-                    temperature: number;
-                    /** Format: double */
                     max_charge: number;
+                    /** Format: double */
+                    temperature: number;
                 };
                 FanSpeedData: {
                     power_output: number[];
@@ -2933,6 +2950,31 @@ export interface components {
                     type: "HeatPump";
                     var_flow_temp_ctrl_during_test: boolean;
                 } | {
+                    BufferTank?: components["schemas"]["HeatPumpBufferTank"] | null;
+                    EnergySupply: string;
+                    EnergySupply_heat_network?: string | null;
+                    MechanicalVentilation?: string | null;
+                    boiler?: components["schemas"]["HeatPumpBoiler"] | null;
+                    /** Format: double */
+                    eahp_mixed_max_temp?: number | null;
+                    /** Format: double */
+                    eahp_mixed_min_temp?: number | null;
+                    /** Format: double */
+                    min_modulation_rate_20?: number | null;
+                    /** Format: double */
+                    min_modulation_rate_35?: number | null;
+                    /** Format: double */
+                    min_modulation_rate_55?: number | null;
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                    /** Format: double */
+                    temp_distribution_heat_network?: number | null;
+                    /** @constant */
+                    type: "HeatPump";
+                } | {
                     EnergySupply: string;
                     EnergySupply_aux: string;
                     boiler_location: components["schemas"]["HeatSourceLocation"];
@@ -2984,9 +3026,9 @@ export interface components {
                     /** Format: uint */
                     number_of_units: number;
                     /** Format: double */
-                    phase_transition_temperature_upper: number;
-                    /** Format: double */
                     phase_transition_temperature_lower: number;
+                    /** Format: double */
+                    phase_transition_temperature_upper: number;
                     /** Format: double */
                     rated_charge_power: number;
                     simultaneous_charging_and_discharging: boolean;
@@ -3021,8 +3063,8 @@ export interface components {
                 };
                 HotWaterSourceDetails: components["schemas"]["StorageTank"] | {
                     ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-                    HeatSourceWet: components["schemas"]["HeatSourceWetType"];
                     Control: components["schemas"]["HeatSourceControlType"];
+                    HeatSourceWet: components["schemas"]["HeatSourceWetType"];
                     /** Format: double */
                     daily_HW_usage: number;
                     /** Format: double */
@@ -3042,8 +3084,8 @@ export interface components {
                     type: "CombiBoiler";
                 } | {
                     ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-                    HeatSourceWet: components["schemas"]["HeatSourceWetType"];
                     Control?: components["schemas"]["HeatSourceControlType"] | null;
+                    HeatSourceWet: components["schemas"]["HeatSourceWetType"];
                     /** Format: double */
                     setpoint_temp?: number | null;
                     /** @constant */
@@ -3119,13 +3161,13 @@ export interface components {
                     noise_nuisance?: boolean | null;
                     shield_class: components["schemas"]["VentilationShieldClass"];
                     terrain_class: components["schemas"]["TerrainClass"];
+                    /** Format: double */
+                    vent_opening_ratio_init?: number | null;
                     /**
                      * Format: double
                      * @description Base height of the ventilation zone relative to ground (m)
                      */
                     ventilation_zone_base_height: number;
-                    /** Format: double */
-                    vent_opening_ratio_init?: number | null;
                 };
                 InternalGains: {
                     ColdWaterLosses?: components["schemas"]["InternalGainsDetails"] | null;
@@ -3393,10 +3435,10 @@ export interface components {
                 /** @enum {string} */
                 SpaceHeatControlType: Fhs_inputSchema$defsSpaceHeatControlType;
                 SpaceHeatSystemDetails: {
+                    Control?: string | null;
                     EnergySupply: string;
                     HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
                     Zone?: string | null;
-                    Control?: string | null;
                     /** Format: double */
                     advanced_start?: number | null;
                     /**
@@ -3414,13 +3456,18 @@ export interface components {
                     /** @constant */
                     type: "InstantElecHeater";
                 } | {
+                    Control?: string | null;
                     ControlCharger: string;
                     ESH_max_output: number[][];
                     ESH_min_output: number[][];
                     EnergySupply: string;
+                    HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
+                    /** @description The zone where the unit(s) is/are installed */
+                    Zone: string;
+                    /** Format: double */
+                    advanced_start?: number | null;
                     /** @enum {string} */
                     air_flow_type: Fhs_inputSchema$defsSpaceHeatSystemDetailsAir_flow_type;
-                    Control?: string | null;
                     /**
                      * Format: double
                      * @description Fan power (unit: W)
@@ -3442,17 +3489,15 @@ export interface components {
                     rated_power_instant: number;
                     /** Format: double */
                     storage_capacity: number;
-                    /** @constant */
-                    type: "ElecStorageHeater";
-                    /** @description The zone where the unit(s) is/are installed */
-                    Zone: string;
-                    HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
                     /** Format: double */
                     temp_setback?: number | null;
-                    /** Format: double */
-                    advanced_start?: number | null;
+                    /** @constant */
+                    type: "ElecStorageHeater";
                 } | {
+                    Control?: string | null;
+                    EnergySupply?: string | null;
                     HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
+                    Zone: string;
                     /** Format: double */
                     advanced_start?: number | null;
                     /** Format: double */
@@ -3461,8 +3506,8 @@ export interface components {
                     design_flow_rate?: number | null;
                     /** Format: int32 */
                     design_flow_temp: number;
-                    emitters?: components["schemas"]["WetEmitter"][];
                     ecodesign_controller: components["schemas"]["EcoDesignController"];
+                    emitters?: components["schemas"]["WetEmitter"][];
                     /** Format: double */
                     frac_convective?: number;
                     /** Format: double */
@@ -3481,18 +3526,15 @@ export interface components {
                     type: "WetDistribution";
                     variable_flow?: boolean | null;
                     wet_emitter_type?: string | null;
-                    Control?: string | null;
-                    EnergySupply?: string | null;
-                    Zone: string;
                 } | {
-                    HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
                     Control?: string | null;
+                    HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
+                    /** Format: double */
+                    advanced_start?: number | null;
                     /** Format: double */
                     frac_convective: number;
                     /** Format: double */
                     temp_diff_emit_dsgn: number;
-                    /** Format: double */
-                    advanced_start?: number | null;
                     /** Format: double */
                     temp_setback?: number | null;
                     /** @constant */
@@ -3555,13 +3597,13 @@ export interface components {
                     [key: string]: components["schemas"]["ThermalBridgingDetails"];
                 } | number;
                 ThermalBridgingDetails: {
+                    junction_type?: string | null;
                     /** Format: double */
                     length: number;
                     /** Format: double */
                     linear_thermal_transmittance: number;
                     /** @constant */
                     type: "ThermalBridgeLinear";
-                    junction_type?: string | null;
                 } | {
                     /** Format: double */
                     heat_transfer_coeff: number;
@@ -3717,9 +3759,9 @@ export interface components {
                 };
                 WindowShadingObject: {
                     /** Format: double */
-                    height: number;
-                    /** Format: double */
                     distance: number;
+                    /** Format: double */
+                    height: number;
                     /** Format: double */
                     transparency: number;
                     /** @constant */
@@ -3787,11 +3829,11 @@ export interface components {
                     volume: number;
                 };
                 ZoneLighting: {
-                    /** Format: double */
-                    efficacy: number;
                     bulbs?: {
                         [key: string]: components["schemas"]["ZoneLightingBulbs"];
                     };
+                    /** Format: double */
+                    efficacy: number;
                 };
                 ZoneLightingBulbs: {
                     /**
@@ -3816,21 +3858,24 @@ export interface components {
     pathItems: never;
 }
 export type SchemaFhsComplianceResponse = components['schemas']['FhsComplianceResponse'];
-export type SchemaFhsEnergyDemand = components['schemas']['FhsEnergyDemand'];
 export type SchemaFhsDeliveredEnergyUse = components['schemas']['FhsDeliveredEnergyUse'];
+export type SchemaFhsEnergyDemand = components['schemas']['FhsEnergyDemand'];
 export type SchemaFhsEnergyPerformanceValue = components['schemas']['FhsEnergyPerformanceValue'];
+export type SchemaFhsErrorResponseBody = components['schemas']['FhsErrorResponseBody'];
+export type SchemaFhsErrorResponseBodyNoMeta = components['schemas']['FhsErrorResponseBodyNoMeta'];
 export type SchemaFhsMeta = components['schemas']['FhsMeta'];
-export type SchemaJsonApiOnePointOneErrors = components['schemas']['JsonApiOnePointOneErrors'];
+export type SchemaJsonApiOnePointOneAtMemberName = components['schemas']['JsonApiOnePointOneAtMemberName'];
 export type SchemaJsonApiOnePointOneError = components['schemas']['JsonApiOnePointOneError'];
 export type SchemaJsonApiOnePointOneErrorLinks = components['schemas']['JsonApiOnePointOneErrorLinks'];
 export type SchemaJsonApiOnePointOneErrorSource = components['schemas']['JsonApiOnePointOneErrorSource'];
+export type SchemaJsonApiOnePointOneErrors = components['schemas']['JsonApiOnePointOneErrors'];
+export type SchemaJsonApiOnePointOneLink = components['schemas']['JsonApiOnePointOneLink'];
 export type SchemaJsonApiOnePointOneLinkObject = components['schemas']['JsonApiOnePointOneLinkObject'];
 export type SchemaJsonApiOnePointOneLinkUrl = components['schemas']['JsonApiOnePointOneLinkUrl'];
-export type SchemaJsonApiOnePointOneLink = components['schemas']['JsonApiOnePointOneLink'];
-export type SchemaJsonApiOnePointOneLinks = components['schemas']['JsonApiOnePointOneLinks'];
-export type SchemaJsonApiOnePointOneMeta = components['schemas']['JsonApiOnePointOneMeta'];
-export type SchemaJsonApiOnePointOneAtMemberName = components['schemas']['JsonApiOnePointOneAtMemberName'];
 export type SchemaJsonApiOnePointOneMemberName = components['schemas']['JsonApiOnePointOneMemberName'];
+export type SchemaJsonApiOnePointOneMemberNameString = components['schemas']['JsonApiOnePointOneMemberNameString'];
+export type SchemaJsonApiOnePointOneMeta = components['schemas']['JsonApiOnePointOneMeta'];
+export type SchemaVersions = components['schemas']['Versions'];
 export type SchemaApplianceLoadShifting = components['schemas']['ApplianceLoadShifting'];
 export type SchemaAppliance = components['schemas']['Appliance'];
 export type SchemaApplianceReference = components['schemas']['ApplianceReference'];
@@ -3934,9 +3979,9 @@ export type SchemaApplianceKey = components['schemas']['ApplianceKey'];
 export type SchemaSmartApplianceBattery = components['schemas']['SmartApplianceBattery'];
 export type SchemaSpaceCoolSystemType = components['schemas']['SpaceCoolSystemType'];
 export type SchemaSpaceHeatSystemHeatSource = components['schemas']['SpaceHeatSystemHeatSource'];
+export type SchemaEcoDesignController = components['schemas']['EcoDesignController'];
 export type SchemaFancoilTestData = components['schemas']['FancoilTestData'];
 export type SchemaWetEmitter = components['schemas']['WetEmitter'];
-export type SchemaEcoDesignController = components['schemas']['EcoDesignController'];
 export type SchemaThermalBridgingDetails = components['schemas']['ThermalBridgingDetails'];
 export type SchemaWwhrsType = components['schemas']['WwhrsType'];
 export type SchemaWaterHeatingEvent = components['schemas']['WaterHeatingEvent'];
@@ -3982,7 +4027,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description OK */
+            /** @description The request has succeeded. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -4000,730 +4045,6 @@ export interface operations {
         };
         requestBody: {
             content: {
-                /** @example {
-                 *       "PartGcompliance": true,
-                 *       "PartO_active_cooling_required": true,
-                 *       "GroundFloorArea": 50,
-                 *       "NumberOfBedrooms": 2,
-                 *       "NumberOfWetRooms": 2,
-                 *       "HeatingControlType": "SeparateTempControl",
-                 *       "SimulationTime": {
-                 *         "start": 0,
-                 *         "end": 8,
-                 *         "step": 1
-                 *       },
-                 *       "Appliances": {
-                 *         "Dishwasher": "Not Installed",
-                 *         "Clothes_washing": "Default",
-                 *         "Clothes_drying": "Not Installed",
-                 *         "Fridge": "Default",
-                 *         "Freezer": "Not Installed",
-                 *         "Oven": {
-                 *           "Energysupply": "mains elec",
-                 *           "kWh_per_cycle": 0.8
-                 *         },
-                 *         "Kettle": "Default",
-                 *         "Microwave": "Default",
-                 *         "Hobs": {
-                 *           "Energysupply": "mains gas",
-                 *           "kWh_per_cycle": 0.8
-                 *         }
-                 *       },
-                 *       "Tariff": {
-                 *         "schedule": {
-                 *           "main": [
-                 *             {
-                 *               "repeat": 7,
-                 *               "value": "night"
-                 *             },
-                 *             {
-                 *               "repeat": 17,
-                 *               "value": "day"
-                 *             }
-                 *           ],
-                 *           "night": 9.4,
-                 *           "day": 19.6
-                 *         }
-                 *       },
-                 *       "ExternalConditions": {
-                 *         "air_temperatures": [
-                 *           0,
-                 *           2.5,
-                 *           5,
-                 *           7.5,
-                 *           10,
-                 *           12.5,
-                 *           15,
-                 *           20
-                 *         ],
-                 *         "wind_speeds": [
-                 *           3.9,
-                 *           3.8,
-                 *           3.9,
-                 *           4.1,
-                 *           3.8,
-                 *           4.2,
-                 *           4.3,
-                 *           4.1
-                 *         ],
-                 *         "diffuse_horizontal_radiation": [
-                 *           0,
-                 *           0,
-                 *           0,
-                 *           0,
-                 *           0,
-                 *           0,
-                 *           0,
-                 *           0
-                 *         ],
-                 *         "direct_beam_radiation": [
-                 *           0,
-                 *           0,
-                 *           0,
-                 *           0,
-                 *           0,
-                 *           0,
-                 *           0,
-                 *           0
-                 *         ],
-                 *         "solar_reflectivity_of_ground": [
-                 *           0.2,
-                 *           0.2,
-                 *           0.2,
-                 *           0.2,
-                 *           0.2,
-                 *           0.2,
-                 *           0.2,
-                 *           0.2
-                 *         ],
-                 *         "latitude": 51.42,
-                 *         "longitude": -0.75,
-                 *         "timezone": 0,
-                 *         "start_day": 0,
-                 *         "end_day": 0,
-                 *         "time_series_step": 1,
-                 *         "january_first": 1,
-                 *         "daylight_savings": "not applicable",
-                 *         "leap_day_included": false,
-                 *         "direct_beam_conversion_needed": false,
-                 *         "shading_segments": [
-                 *           {
-                 *             "number": 1,
-                 *             "start360": 0,
-                 *             "end360": 45
-                 *           },
-                 *           {
-                 *             "number": 2,
-                 *             "start360": 45,
-                 *             "end360": 90
-                 *           },
-                 *           {
-                 *             "number": 3,
-                 *             "start360": 90,
-                 *             "end360": 135
-                 *           },
-                 *           {
-                 *             "number": 4,
-                 *             "start360": 135,
-                 *             "end360": 180,
-                 *             "shading": [
-                 *               {
-                 *                 "type": "obstacle",
-                 *                 "height": 10.5,
-                 *                 "distance": 12
-                 *               }
-                 *             ]
-                 *           },
-                 *           {
-                 *             "number": 5,
-                 *             "start360": 180,
-                 *             "end360": 225
-                 *           },
-                 *           {
-                 *             "number": 6,
-                 *             "start360": 225,
-                 *             "end360": 270
-                 *           },
-                 *           {
-                 *             "number": 7,
-                 *             "start360": 270,
-                 *             "end360": 315
-                 *           },
-                 *           {
-                 *             "number": 8,
-                 *             "start360": 315,
-                 *             "end360": 360
-                 *           }
-                 *         ]
-                 *       },
-                 *       "InternalGains": {
-                 *         "metabolic gains": {
-                 *           "start_day": 0,
-                 *           "time_series_step": 1,
-                 *           "schedule": {
-                 *             "main": [
-                 *               3.2,
-                 *               4.6,
-                 *               7.3,
-                 *               5.2,
-                 *               8.9,
-                 *               5.6,
-                 *               10.2,
-                 *               8.1
-                 *             ]
-                 *           }
-                 *         }
-                 *       },
-                 *       "ApplianceGains": {
-                 *         "lighting": {
-                 *           "type": "lighting",
-                 *           "start_day": 0,
-                 *           "time_series_step": 1,
-                 *           "gains_fraction": 0.5,
-                 *           "EnergySupply": "mains elec",
-                 *           "schedule": {
-                 *             "main": [
-                 *               32,
-                 *               46,
-                 *               33,
-                 *               21,
-                 *               12,
-                 *               17,
-                 *               25,
-                 *               46
-                 *             ]
-                 *           }
-                 *         },
-                 *         "cooking1": {
-                 *           "type": "cooking",
-                 *           "start_day": 0,
-                 *           "time_series_step": 1,
-                 *           "gains_fraction": 1,
-                 *           "EnergySupply": "mains elec",
-                 *           "schedule": {
-                 *             "main": [
-                 *               300,
-                 *               120,
-                 *               220,
-                 *               750,
-                 *               890,
-                 *               150,
-                 *               550,
-                 *               280
-                 *             ]
-                 *           }
-                 *         },
-                 *         "cooking2": {
-                 *           "type": "cooking",
-                 *           "start_day": 0,
-                 *           "time_series_step": 1,
-                 *           "gains_fraction": 1,
-                 *           "EnergySupply": "mains gas",
-                 *           "schedule": {
-                 *             "main": [
-                 *               300,
-                 *               120,
-                 *               220,
-                 *               750,
-                 *               890,
-                 *               150,
-                 *               550,
-                 *               280
-                 *             ]
-                 *           }
-                 *         }
-                 *       },
-                 *       "ColdWaterSource": {
-                 *         "header tank": {
-                 *           "start_day": 0,
-                 *           "temperatures": [
-                 *             3,
-                 *             3.1,
-                 *             3.2,
-                 *             3.3,
-                 *             3.4,
-                 *             3.5,
-                 *             3.6,
-                 *             3.7
-                 *           ],
-                 *           "time_series_step": 1
-                 *         }
-                 *       },
-                 *       "EnergySupply": {
-                 *         "mains elec": {
-                 *           "fuel": "electricity",
-                 *           "ElectricBattery": {
-                 *             "capacity": 2,
-                 *             "charge_discharge_efficiency_round_trip": 0.8,
-                 *             "battery_age": 0,
-                 *             "minimum_charge_rate_one_way_trip": 0.001,
-                 *             "maximum_charge_rate_one_way_trip": 1.5,
-                 *             "maximum_discharge_rate_one_way_trip": 1.25,
-                 *             "battery_location": "inside"
-                 *           },
-                 *           "is_export_capable": true
-                 *         },
-                 *         "mains gas": {
-                 *           "fuel": "mains_gas",
-                 *           "is_export_capable": true
-                 *         }
-                 *       },
-                 *       "OnSiteGeneration": {
-                 *         "PV 1": {
-                 *           "type": "PhotovoltaicSystem",
-                 *           "peak_power": 3.5,
-                 *           "ventilation_strategy": "moderately_ventilated",
-                 *           "pitch": 30,
-                 *           "orientation360": 180,
-                 *           "base_height": 10,
-                 *           "height": 1,
-                 *           "width": 1,
-                 *           "EnergySupply": "mains elec",
-                 *           "shading": [],
-                 *           "inverter_peak_power": 3.5,
-                 *           "inverter_is_inside": false
-                 *         }
-                 *       },
-                 *       "Control": {
-                 *         "hw timer": {
-                 *           "type": "OnOffTimeControl",
-                 *           "start_day": 0,
-                 *           "time_series_step": 1,
-                 *           "schedule": {
-                 *             "main": [
-                 *               {
-                 *                 "value": true,
-                 *                 "repeat": 8760
-                 *               }
-                 *             ]
-                 *           }
-                 *         }
-                 *       },
-                 *       "HotWaterSource": {
-                 *         "hw cylinder": {
-                 *           "type": "StorageTank",
-                 *           "volume": 80,
-                 *           "daily_losses": 1.68,
-                 *           "min_temp": 52,
-                 *           "setpoint_temp": 55,
-                 *           "ColdWaterSource": "header tank",
-                 *           "HeatSource": {
-                 *             "immersion": {
-                 *               "type": "ImmersionHeater",
-                 *               "power": 3,
-                 *               "EnergySupply": "mains elec",
-                 *               "Control": "hw timer",
-                 *               "heater_position": 0.1,
-                 *               "thermostat_position": 0.33
-                 *             }
-                 *           }
-                 *         }
-                 *       },
-                 *       "HotWaterDemand": {
-                 *         "Shower": {
-                 *           "mixer": {
-                 *             "type": "MixerShower",
-                 *             "flowrate": 8,
-                 *             "ColdWaterSource": "header tank",
-                 *             "WWHRS": "Waste Water Heat Recovery System"
-                 *           }
-                 *         },
-                 *         "Bath": {
-                 *           "medium": {
-                 *             "size": 100,
-                 *             "ColdWaterSource": "header tank",
-                 *             "flowrate": 8
-                 *           }
-                 *         },
-                 *         "Other": {
-                 *           "other": {
-                 *             "flowrate": 8,
-                 *             "ColdWaterSource": "header tank"
-                 *           }
-                 *         },
-                 *         "Distribution": [
-                 *           {
-                 *             "location": "internal",
-                 *             "internal_diameter_mm": 25,
-                 *             "length": 8
-                 *           },
-                 *           {
-                 *             "location": "internal",
-                 *             "internal_diameter_mm": 25,
-                 *             "length": 8
-                 *           },
-                 *           {
-                 *             "location": "external",
-                 *             "internal_diameter_mm": 25,
-                 *             "length": 8
-                 *           },
-                 *           {
-                 *             "location": "external",
-                 *             "internal_diameter_mm": 25,
-                 *             "length": 8
-                 *           }
-                 *         ]
-                 *       },
-                 *       "Events": {
-                 *         "Shower": {
-                 *           "IES": [
-                 *             {
-                 *               "start": 4.1,
-                 *               "duration": 6,
-                 *               "temperature": 41
-                 *             },
-                 *             {
-                 *               "start": 6,
-                 *               "duration": 6,
-                 *               "temperature": 41
-                 *             }
-                 *           ],
-                 *           "mixer": [
-                 *             {
-                 *               "start": 7,
-                 *               "duration": 6,
-                 *               "temperature": 41
-                 *             }
-                 *           ]
-                 *         },
-                 *         "Bath": {
-                 *           "medium": [
-                 *             {
-                 *               "start": 6,
-                 *               "temperature": 41
-                 *             }
-                 *           ]
-                 *         },
-                 *         "Other": {
-                 *           "other": [
-                 *             {
-                 *               "start": 7,
-                 *               "duration": 1,
-                 *               "temperature": 41
-                 *             }
-                 *           ]
-                 *         }
-                 *       },
-                 *       "WWHRS": {
-                 *         "Waste Water Heat Recovery System": {
-                 *           "type": "WWHRS_InstantaneousSystemA",
-                 *           "ColdWaterSource": "header tank",
-                 *           "flow_rates": [
-                 *             5,
-                 *             7,
-                 *             9,
-                 *             11,
-                 *             13
-                 *           ],
-                 *           "efficiencies": [
-                 *             63,
-                 *             54.9,
-                 *             48.6,
-                 *             43.6,
-                 *             39.6
-                 *           ],
-                 *           "utilisation_factor": 0.972,
-                 *           "electrical_consumption": 0
-                 *         }
-                 *       },
-                 *       "SpaceHeatSystem": {
-                 *         "main 1": {
-                 *           "type": "InstantElecHeater",
-                 *           "rated_power": 6,
-                 *           "frac_convective": 0.4,
-                 *           "EnergySupply": "mains elec"
-                 *         },
-                 *         "main 2": {
-                 *           "type": "InstantElecHeater",
-                 *           "rated_power": 6,
-                 *           "frac_convective": 0.4,
-                 *           "EnergySupply": "mains elec"
-                 *         }
-                 *       },
-                 *       "SpaceCoolSystem": {
-                 *         "cooling system 1": {
-                 *           "type": "AirConditioning",
-                 *           "cooling_capacity": 3,
-                 *           "efficiency": 4.3,
-                 *           "frac_convective": 0.95,
-                 *           "EnergySupply": "mains elec"
-                 *         },
-                 *         "cooling system 2": {
-                 *           "type": "AirConditioning",
-                 *           "cooling_capacity": 3,
-                 *           "efficiency": 4.3,
-                 *           "frac_convective": 0.95,
-                 *           "EnergySupply": "mains elec"
-                 *         }
-                 *       },
-                 *       "General": {
-                 *         "storeys_in_building": 1,
-                 *         "build_type": "house"
-                 *       },
-                 *       "InfiltrationVentilation": {
-                 *         "cross_vent_factor": true,
-                 *         "shield_class": "Normal",
-                 *         "terrain_class": "Country",
-                 *         "altitude": 30,
-                 *         "noise_nuisance": true,
-                 *         "Vents": {
-                 *           "vent1": {
-                 *             "mid_height_air_flow_path": 1.5,
-                 *             "area_cm2": 100,
-                 *             "pressure_difference_ref": 20,
-                 *             "orientation360": 180,
-                 *             "pitch": 60
-                 *           },
-                 *           "vent2": {
-                 *             "mid_height_air_flow_path": 1.5,
-                 *             "area_cm2": 100,
-                 *             "pressure_difference_ref": 20,
-                 *             "orientation360": 0,
-                 *             "pitch": 60
-                 *           }
-                 *         },
-                 *         "Leaks": {
-                 *           "ventilation_zone_height": 6,
-                 *           "test_pressure": 50,
-                 *           "test_result": 1.2,
-                 *           "env_area": 220
-                 *         },
-                 *         "MechanicalVentilation": {
-                 *           "mechvent1": {
-                 *             "sup_air_flw_ctrl": "ODA",
-                 *             "sup_air_temp_ctrl": "CONST",
-                 *             "design_zone_cooling_covered_by_mech_vent": 3.4,
-                 *             "design_zone_heating_covered_by_mech_vent": 1,
-                 *             "vent_type": "Centralised continuous MEV",
-                 *             "measured_fan_power": 12.26,
-                 *             "measured_air_flow_rate": 37,
-                 *             "EnergySupply": "mains elec",
-                 *             "design_outdoor_air_flow_rate": 80
-                 *           }
-                 *         },
-                 *         "PDUs": {},
-                 *         "Cowls": {},
-                 *         "CombustionAppliances": {
-                 *           "Fireplace": {
-                 *             "supply_situation": "room_air",
-                 *             "exhaust_situation": "into_separate_duct",
-                 *             "fuel_type": "wood",
-                 *             "appliance_type": "open_fireplace"
-                 *           }
-                 *         }
-                 *       },
-                 *       "Zone": {
-                 *         "zone 1": {
-                 *           "SpaceHeatSystem": "main 1",
-                 *           "SpaceCoolSystem": "cooling system 1",
-                 *           "SpaceHeatControl": "livingroom",
-                 *           "area": 8,
-                 *           "volume": 250,
-                 *           "Lighting": {
-                 *             "efficacy": 56
-                 *           },
-                 *           "BuildingElement": {
-                 *             "wall 0": {
-                 *               "type": "BuildingElementOpaque",
-                 *               "a_sol": 0.6,
-                 *               "r_c": 0.7,
-                 *               "k_m": 19000,
-                 *               "mass_distribution_class": "IE",
-                 *               "pitch": 90,
-                 *               "is_external_door": false,
-                 *               "orientation360": 90,
-                 *               "base_height": 0,
-                 *               "height": 2.5,
-                 *               "width": 10,
-                 *               "area": 20
-                 *             },
-                 *             "wall 1": {
-                 *               "type": "BuildingElementOpaque",
-                 *               "a_sol": 0.61,
-                 *               "r_c": 0.71,
-                 *               "k_m": 19100,
-                 *               "mass_distribution_class": "M",
-                 *               "pitch": 90,
-                 *               "is_external_door": true,
-                 *               "orientation360": 270,
-                 *               "base_height": 0,
-                 *               "height": 2.5,
-                 *               "width": 10,
-                 *               "area": 25
-                 *             },
-                 *             "wall 2": {
-                 *               "type": "BuildingElementOpaque",
-                 *               "a_sol": 0.62,
-                 *               "r_c": 0.72,
-                 *               "k_m": 19200,
-                 *               "mass_distribution_class": "E",
-                 *               "pitch": 90,
-                 *               "is_external_door": false,
-                 *               "orientation360": 0,
-                 *               "base_height": 0,
-                 *               "height": 2.5,
-                 *               "width": 8,
-                 *               "area": 20
-                 *             },
-                 *             "wall 3": {
-                 *               "type": "BuildingElementOpaque",
-                 *               "a_sol": 0.63,
-                 *               "r_c": 0.73,
-                 *               "k_m": 19300,
-                 *               "mass_distribution_class": "I",
-                 *               "pitch": 90,
-                 *               "is_external_door": false,
-                 *               "orientation360": 180,
-                 *               "base_height": 0,
-                 *               "height": 2.5,
-                 *               "width": 6,
-                 *               "area": 15
-                 *             },
-                 *             "window 0": {
-                 *               "type": "BuildingElementTransparent",
-                 *               "r_c": 0.4,
-                 *               "pitch": 90,
-                 *               "orientation360": 90,
-                 *               "g_value": 0.75,
-                 *               "frame_area_fraction": 0.25,
-                 *               "base_height": 1,
-                 *               "height": 1.25,
-                 *               "width": 4,
-                 *               "free_area_height": 1.6,
-                 *               "mid_height": 1.5,
-                 *               "max_window_open_area": 3,
-                 *               "security_risk": true,
-                 *               "window_part_list": [
-                 *                 {
-                 *                   "mid_height_air_flow_path": 1.5
-                 *                 }
-                 *               ],
-                 *               "shading": [
-                 *                 {
-                 *                   "type": "overhang",
-                 *                   "depth": 0.5,
-                 *                   "distance": 0.5
-                 *                 },
-                 *                 {
-                 *                   "type": "sidefinleft",
-                 *                   "depth": 0.25,
-                 *                   "distance": 0.1
-                 *                 },
-                 *                 {
-                 *                   "type": "sidefinright",
-                 *                   "depth": 0.25,
-                 *                   "distance": 0.1
-                 *                 }
-                 *               ]
-                 *             },
-                 *             "ground": {
-                 *               "type": "BuildingElementGround",
-                 *               "total_area": 15,
-                 *               "area": 15,
-                 *               "pitch": 180,
-                 *               "u_value": 1.4,
-                 *               "r_f": 0.2,
-                 *               "k_m": 19300,
-                 *               "mass_distribution_class": "D",
-                 *               "floor_type": "Slab_no_edge_insulation",
-                 *               "thickness_walls": 0.2,
-                 *               "perimeter": 16,
-                 *               "psi_wall_floor_junc": 0.5
-                 *             },
-                 *             "wall 4": {
-                 *               "type": "BuildingElementAdjacentZTC",
-                 *               "area": 20,
-                 *               "pitch": 0,
-                 *               "r_c": 0.74,
-                 *               "k_m": 19400,
-                 *               "mass_distribution_class": "I"
-                 *             }
-                 *           },
-                 *           "ThermalBridging": {
-                 *             "TB1": {
-                 *               "type": "ThermalBridgeLinear",
-                 *               "linear_thermal_transmittance": 1,
-                 *               "length": 3,
-                 *               "junction_type": "R5"
-                 *             },
-                 *             "TB2": {
-                 *               "type": "ThermalBridgeLinear",
-                 *               "linear_thermal_transmittance": 0.1,
-                 *               "length": 2,
-                 *               "junction_type": "R5"
-                 *             },
-                 *             "TB3": {
-                 *               "type": "ThermalBridgePoint",
-                 *               "heat_transfer_coeff": 2
-                 *             }
-                 *           }
-                 *         },
-                 *         "zone 2": {
-                 *           "SpaceHeatSystem": "main 2",
-                 *           "SpaceCoolSystem": "cooling system 2",
-                 *           "SpaceHeatControl": "restofdwelling",
-                 *           "area": 400,
-                 *           "volume": 250,
-                 *           "Lighting": {
-                 *             "efficacy": 56
-                 *           },
-                 *           "BuildingElement": {
-                 *             "wall 0": {
-                 *               "type": "BuildingElementOpaque",
-                 *               "a_sol": 0.6,
-                 *               "r_c": 0.7,
-                 *               "k_m": 19000,
-                 *               "is_external_door": false,
-                 *               "mass_distribution_class": "IE",
-                 *               "pitch": 90,
-                 *               "orientation360": 90,
-                 *               "base_height": 0,
-                 *               "height": 2.5,
-                 *               "width": 10,
-                 *               "area": 20
-                 *             },
-                 *             "window 0": {
-                 *               "type": "BuildingElementTransparent",
-                 *               "r_c": 0.4,
-                 *               "pitch": 90,
-                 *               "orientation360": 90,
-                 *               "g_value": 0.75,
-                 *               "frame_area_fraction": 0.25,
-                 *               "base_height": 1,
-                 *               "height": 1.25,
-                 *               "width": 4,
-                 *               "free_area_height": 1.6,
-                 *               "mid_height": 1.5,
-                 *               "max_window_open_area": 3,
-                 *               "security_risk": true,
-                 *               "window_part_list": [
-                 *                 {
-                 *                   "mid_height_air_flow_path": 1.5
-                 *                 }
-                 *               ],
-                 *               "shading": [
-                 *                 {
-                 *                   "type": "overhang",
-                 *                   "depth": 0.5,
-                 *                   "distance": 0.5
-                 *                 },
-                 *                 {
-                 *                   "type": "sidefinleft",
-                 *                   "depth": 0.25,
-                 *                   "distance": 0.1
-                 *                 },
-                 *                 {
-                 *                   "type": "sidefinright",
-                 *                   "depth": 0.25,
-                 *                   "distance": 0.1
-                 *                 }
-                 *               ]
-                 *             }
-                 *           },
-                 *           "ThermalBridging": 1
-                 *         }
-                 *       }
-                 *     } */
                 "application/json": components["schemas"]["fhs_input.schema"];
             };
         };
@@ -4734,119 +4055,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /** @example {
-                     *       "data": {
-                     *         "dwelling_emission_rate": 29.85458751264378,
-                     *         "target_emission_rate": 31.61130283648656,
-                     *         "emission_rate_compliant": true,
-                     *         "dwelling_primary_energy_rate": 275.95387516860916,
-                     *         "target_primary_energy_rate": 254.87527761542435,
-                     *         "primary_energy_rate_compliant": false,
-                     *         "dwelling_fabric_energy_efficiency": 40.96297004171527,
-                     *         "target_fabric_energy_efficiency": 33.723746175514904,
-                     *         "fabric_energy_efficiency_compliant": false,
-                     *         "energy_demand": {
-                     *           "space_heating": {
-                     *             "actual": 17.16356340928921,
-                     *             "notional": 25.760607155988687
-                     *           },
-                     *           "space_cooling": {
-                     *             "actual": -64.17328615921666,
-                     *             "notional": -56.074844460081685
-                     *           }
-                     *         },
-                     *         "delivered_energy_use": {
-                     *           "total": {
-                     *             "actual": 175.24604509413854,
-                     *             "notional": 139.38990128808544
-                     *           },
-                     *           "by_system": {
-                     *             "mechvent1": {
-                     *               "actual": 0.34781063416353913,
-                     *               "notional": 0
-                     *             },
-                     *             "total": {
-                     *               "actual": 175.24604509413854,
-                     *               "notional": 139.38990128808544
-                     *             },
-                     *             "lighting": {
-                     *               "actual": 0.004627869797161936,
-                     *               "notional": 0.0021596725720089346
-                     *             },
-                     *             "Clothes_washing": {
-                     *               "actual": 108.1879413550729,
-                     *               "notional": 108.1879413550729
-                     *             },
-                     *             "Fridge": {
-                     *               "actual": 2.1862745085161106,
-                     *               "notional": 2.1862745085161106
-                     *             },
-                     *             "Oven": {
-                     *               "actual": 1.589614115685917,
-                     *               "notional": 1.589614115685917
-                     *             },
-                     *             "Kettle": {
-                     *               "actual": 1.0357616579409936,
-                     *               "notional": 1.0357616579409936
-                     *             },
-                     *             "Microwave": {
-                     *               "actual": 0.2989791338236019,
-                     *               "notional": 0.2989791338236019
-                     *             },
-                     *             "Otherdevices": {
-                     *               "actual": 8.318576377200134,
-                     *               "notional": 8.318576377200134
-                     *             },
-                     *             "immersion": {
-                     *               "actual": 14.483917676567225,
-                     *               "notional": 0
-                     *             },
-                     *             "main 1": {
-                     *               "actual": 31.70746941267138,
-                     *               "notional": 0
-                     *             },
-                     *             "main 2": {
-                     *               "actual": 1.3349625945025114,
-                     *               "notional": 0
-                     *             },
-                     *             "cooling system 1": {
-                     *               "actual": 0.05116606530398112,
-                     *               "notional": 0.04417504143392989
-                     *             },
-                     *             "cooling system 2": {
-                     *               "actual": 3.6066535193630824,
-                     *               "notional": 2.1109348259253
-                     *             },
-                     *             "Hobs": {
-                     *               "actual": 2.09229017353001,
-                     *               "notional": 2.09229017353001
-                     *             }
-                     *           }
-                     *         },
-                     *         "energy_use_by_fuel": {
-                     *           "total": {
-                     *             "actual": 71500.38639840852,
-                     *             "notional": 56871.07972553885
-                     *           },
-                     *           "mains elec": {
-                     *             "actual": 70646.73200760827,
-                     *             "notional": 56017.425334738604
-                     *           },
-                     *           "mains gas": {
-                     *             "actual": 853.6543908002442,
-                     *             "notional": 853.6543908002442
-                     *           }
-                     *         }
-                     *       },
-                     *       "meta": {
-                     *         "hem_version": "0.30",
-                     *         "hem_version_date": "2024-06-25",
-                     *         "fhs_version": "0.21",
-                     *         "fhs_version_date": "2024-06-25",
-                     *         "software_version": "f3303a81d75aaf8fda2d4d42b3eab7ead2b86dfa",
-                     *         "ecaas_request_id": "b6e02d18-f919-490e-bd1b-40d85d8ac456"
-                     *       }
-                     *     } */
                     "application/vnd.api+json": {
                         data: components["schemas"]["FhsComplianceResponse"];
                         meta: components["schemas"]["FhsMeta"];
@@ -4859,10 +4067,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/vnd.api+json": {
-                        errors: components["schemas"]["JsonApiOnePointOneErrors"];
-                        meta: components["schemas"]["FhsMeta"];
-                    };
+                    "application/vnd.api+json": components["schemas"]["FhsErrorResponseBody"];
                 };
             };
             /** @description An error denoting that an error happened at some stage in the ECaaS engine when processing the request. */
@@ -4871,10 +4076,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/vnd.api+json": {
-                        errors: components["schemas"]["JsonApiOnePointOneErrors"];
-                        meta: components["schemas"]["FhsMeta"];
-                    };
+                    "application/vnd.api+json": components["schemas"]["FhsErrorResponseBody"];
                 };
             };
             /** @description An error denoting that the request has exercised an area of the HEM engine that has not yet been implemented in the MHCLG project. */
@@ -4883,14 +4085,23 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/vnd.api+json": {
-                        errors: components["schemas"]["JsonApiOnePointOneErrors"];
-                        meta: components["schemas"]["FhsMeta"];
-                    };
+                    "application/vnd.api+json": components["schemas"]["FhsErrorResponseBody"];
+                };
+            };
+            /** @description An error denoting that a calculation in the ECaaS engine took too long, and the API timed out awaiting a response. */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/vnd.api+json": components["schemas"]["FhsErrorResponseBodyNoMeta"];
                 };
             };
         };
     };
+}
+export enum Versions {
+    Value0_1_0 = "0.1.0"
 }
 export enum ApplianceReference {
     Default = "Default",

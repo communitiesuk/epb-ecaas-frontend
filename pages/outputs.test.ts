@@ -2,9 +2,17 @@ import { renderSuspended } from '@nuxt/test-utils/runtime';
 import { screen } from '@testing-library/vue';
 import userEvent from "@testing-library/user-event";
 import Outputs from './outputs.vue';
-import type { SchemaFhsComplianceResponse } from "~/schema/api-schema.types";
+import type { SchemaFhsComplianceResponse, SchemaFhsEnergyPerformanceValue } from "~/schema/api-schema.types";
+import type { CorrectedFhsDeliveredEnergyUse } from '~/components/result/DeliveredEnergyUseTab.vue';
+import type { Simplify } from 'type-fest';
 
-const response: SchemaFhsComplianceResponse = {
+// overrides because never types are currently generated from the OpenAPI erroneously
+type CorrectedFhsComplianceResponse = Simplify<Omit<SchemaFhsComplianceResponse, 'delivered_energy_use' | 'energy_use_by_fuel'> & {
+	delivered_energy_use: CorrectedFhsDeliveredEnergyUse,
+	energy_use_by_fuel: Record<string, SchemaFhsEnergyPerformanceValue>
+}>;
+
+const response: CorrectedFhsComplianceResponse = {
 	"dwelling_emission_rate": 1.8400410852634337,
 	"target_emission_rate": 0.872446010777378,
 	"emission_rate_compliant": false,
@@ -132,7 +140,9 @@ describe('show good response in result tabs', () => {
 
 	beforeEach(() => {
 		store.$patch({ lastResult: {
-			response,
+			// using any as escape clause only while never types are being generated from OpenAPI
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			response: response as any,
 			resultType: 'ok',
 		} });
 	});
