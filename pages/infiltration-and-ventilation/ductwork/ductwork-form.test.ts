@@ -111,7 +111,10 @@ describe("ductwork form", async () => {
 		expect(form.getByText("Name")).toBeDefined();
 		expect(form.getByText("MVHR unit")).toBeDefined();
 		expect(form.getByText("Ductwork cross sectional shape")).toBeDefined();
-		expect(form.getByText("Duct type")).toBeDefined();
+		expect(form.getByTestId("ductType_supply")).toBeDefined();
+		expect(form.getByTestId("ductType_extract")).toBeDefined();
+		expect(form.getByTestId("ductType_intake")).toBeDefined();
+		expect(form.getByTestId("ductType_exhaust")).toBeDefined();
 		expect(form.queryByText("Internal diameter of ductwork")).toBeNull();
 		expect(form.queryByText("External diameter of ductwork")).toBeNull();
 		expect(form.queryByText("Perimeter of ductwork")).toBeNull();
