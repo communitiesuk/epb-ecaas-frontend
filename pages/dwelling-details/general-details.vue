@@ -5,7 +5,7 @@ const title = "General details";
 const store = useEcaasStore();
 
 const model = ref({
-	...store.dwellingDetails.generalDetails.data
+	...store.dwellingDetails.generalSpecifications.data
 });
 
 const typeOfDwellingOptions: Record<BuildType, SnakeToSentenceCase<BuildType>> = {
@@ -16,7 +16,7 @@ const typeOfDwellingOptions: Record<BuildType, SnakeToSentenceCase<BuildType>> =
 const saveForm = (fields: typeof model.value) => {
 	store.$patch({
 		dwellingDetails: {
-			generalDetails: {
+			generalSpecifications: {
 				data: {
 					typeOfDwelling: fields.typeOfDwelling,
 					storeysInDwelling: fields.storeysInDwelling,

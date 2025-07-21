@@ -16,22 +16,23 @@ const tabs: TabItem[] = [
 		<p class="govuk-body">There are no results yet to show.</p>
 	</template>
 	<template v-if="result?.resultType === 'ok'">
-		<p class="govuk-body">The figures shown are per year.</p>
+		<GovWarningText>
+			This is an indicative compliance report based on 0.34 home energy model. This is not the same model that will be used for future homes standard and shouldn't be used for compliance.
+		</GovWarningText>
 		<GovTabs v-slot="tabProps" :items="tabs">
 			<ResultPrimaryOutputTab :selected="tabProps.currentTab === 0" :data="result.response" />
 			<ResultEnergyDemandTab :selected="tabProps.currentTab === 1" :data="result?.response?.energy_demand!" />
 			<ResultDeliveredEnergyUseTab :selected="tabProps.currentTab === 2" :data="result?.response?.delivered_energy_use!" />
 			<ResultEnergyUseByFuelTab :selected="tabProps.currentTab === 3" :data="result?.response?.energy_use_by_fuel!" />
 		</GovTabs>
-		<GovWarningText>
-			This is an indicative compliance report based on 0.34 home energy model. This is not the same model that will be used for future homes standard.
-		</GovWarningText>
 	</template>
 	<template v-if="result?.resultType === 'err'">
-		<p class="govuk-body">There were errors as follows:</p>
-		<template v-for="(error, i) in result.errors" :key="i">
-			<pre>{{ error.detail }}</pre>
-		</template>
+		<GovErrorSummary
+			title="Sorry, there's been an error"
+			:error-list="result.errors.map(x => ({ id: x.id!, text: x.detail! }))"
+			:use-links="false"
+			test-id="resultsErrorSummary"
+		/>
 	</template>
 </template>
 

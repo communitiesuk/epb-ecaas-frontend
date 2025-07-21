@@ -9,7 +9,8 @@ const { selected, data } = defineProps<{ selected: boolean, data: SchemaFhsEnerg
 		<table class="govuk-table">
 			<thead class="govuk-table__head">
 				<tr class="govuk-table__row">
-					<th class="govuk-table__header govuk-!-width-one-third" /><th scope="col" class="govuk-table__header">Actual dwelling</th>
+					<th class="govuk-table__header govuk-!-width-one-third">Energy demand</th>
+					<th scope="col" class="govuk-table__header">Actual dwelling</th>
 					<th scope="col" class="govuk-table__header">Notional dwelling</th>
 				</tr>
 			</thead>
@@ -17,7 +18,7 @@ const { selected, data } = defineProps<{ selected: boolean, data: SchemaFhsEnerg
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table__header">
 						Space heating<br>
-						<span class="govuk-!-font-weight-regular">kWh/m²</span>
+						<span class="govuk-!-font-weight-regular">kWh/m² per year</span>
 					</th>
 					<td class="govuk-table__cell">
 						{{ data?.space_heating?.actual?.toFixed(2) }}
@@ -29,7 +30,7 @@ const { selected, data } = defineProps<{ selected: boolean, data: SchemaFhsEnerg
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-table__header">
 						Space cooling<br>
-						<span class="govuk-!-font-weight-regular">kWh/m²</span>
+						<span class="govuk-!-font-weight-regular">kWh/m² per year</span>
 					</th>
 					<td class="govuk-table__cell">
 						{{ data?.space_cooling?.actual?.toFixed(2) }}<br>

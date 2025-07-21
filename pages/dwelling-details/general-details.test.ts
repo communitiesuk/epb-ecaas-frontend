@@ -45,7 +45,7 @@ describe('General details', () => {
 			await user.click(screen.getByTestId('coolingRequired_no'));
 			await user.click(screen.getByRole('button'));
 	
-			const { data, complete } = store.dwellingDetails.generalDetails;
+			const { data, complete } = store.dwellingDetails.generalSpecifications;
 			
 			expect(data).toEqual(state);
 			expect(complete).toBe(true);
@@ -55,7 +55,7 @@ describe('General details', () => {
 		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				dwellingDetails: {
-					generalDetails: {
+					generalSpecifications: {
 						data: state
 					}
 				}
@@ -110,7 +110,7 @@ describe('General details', () => {
 			await user.click(screen.getByTestId('coolingRequired_no'));
 			await user.click(screen.getByRole('button'));
 
-			const { data, complete } = store.dwellingDetails.generalDetails;
+			const { data, complete } = store.dwellingDetails.generalSpecifications;
 			
 			expect(data).toEqual(stateWithFlat);
 			expect(complete).toBe(true);
@@ -120,7 +120,7 @@ describe('General details', () => {
 		test('form is prepopulated when data exists in state', async () => {
 			store.$patch({
 				dwellingDetails: {
-					generalDetails: {
+					generalSpecifications: {
 						data: stateWithFlat
 					}
 				}

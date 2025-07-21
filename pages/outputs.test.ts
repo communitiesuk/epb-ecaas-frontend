@@ -188,10 +188,10 @@ describe('show good response in result tabs', () => {
 		const tableTextContent = screen.getByRole('table').textContent;
 
 		const expectedTextsPresent = [
-			'0.376',
-			'4.159',
+			'0.38',
+			'4.16',
 			'Washing machine', // display value for clothes washing
-			'86.904',
+			'86.90',
 		];
 
 		expectedTextsPresent.forEach(text => expect(tableTextContent).toContain(text));
@@ -235,10 +235,14 @@ describe('show error in result tabs', () => {
 	});
 
 	it('shows the error from the API', async () => {
-		const { container: dom } = await renderSuspended(Outputs);
+		await renderSuspended(Outputs);
 
-		const paraContent = dom.querySelector('pre')!.textContent;
-		expect(paraContent).toContain('Something very specific happened, incorrectly.');
+		const errorSummary = await screen.findByTestId('resultsErrorSummary');
+
+		expect(errorSummary).toBeDefined();
+		const errorText = errorSummary.querySelector('li')?.textContent;
+
+		expect(errorText).toContain('Something very specific happened, incorrectly.');
 	});
 });
 
