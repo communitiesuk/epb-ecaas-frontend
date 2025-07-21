@@ -26,20 +26,16 @@ const calculate = async () => {
 		const inputPayload = mapFhsInputData(resolveState(store) as ResolvedState);
 		console.log(JSON.stringify(inputPayload));
 
+		// nix the stored lastResult before sending a request
+		store.$patch({
+			lastResult: undefined
+		});
+
 		const response = await $fetch<FhsComplianceResponseIncludingErrors>('/api/check-compliance', {
 			method: 'POST',
 			body: inputPayload,
 			async onRequest() {
 				emit("loading");
-			},
-			async onResponse() {
-				emit("stopLoading");
-			},
-			async onResponseError() {
-				emit("stopLoading");
-			},
-			async onRequestError() {
-				emit("stopLoading");
 			},
 		});
 
@@ -63,6 +59,7 @@ const calculate = async () => {
 		calculateError = true;
 	} finally {
 		calculatePending.value = false;
+		emit("stopLoading");
 	}
 
 	if (calculateError) {
