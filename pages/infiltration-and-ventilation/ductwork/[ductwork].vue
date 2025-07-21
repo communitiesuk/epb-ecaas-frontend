@@ -115,8 +115,36 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="ductTypeOptions"
 			label="Duct type"
 			name="ductType"
-			validation="required"
-		/>
+			validation="required">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<table class="govuk-table ductwork-table">
+					<thead class="govuk-table__head">
+						<tr>
+							<th scope="col" class="govuk-table__header">Duct type</th>
+							<th scope="col" class="govuk-table__header">Description</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Supply</th>
+							<td class="govuk-table__cell">Supply ducts distribute conditioned air (heated or cooled) into a space.</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Extract</th>
+							<td class="govuk-table__cell">Extract ducts remove stale air from a space.</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Intake</th>
+							<td class="govuk-table__cell">Intake ducts bring fresh, outside air into a system.</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Exhaust</th>
+							<td class="govuk-table__cell">Exhaust ducts expel air from a system to the outside.</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="ductworkCrossSectionalShape"
 			type="govRadios"
@@ -232,3 +260,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>
+
+<style lang="scss" scoped>
+.ductwork-table .govuk-table__header {
+	min-width: 100px;
+}
+</style>
