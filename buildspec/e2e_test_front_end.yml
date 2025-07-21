@@ -1,0 +1,19 @@
+version: 0.2
+env:
+  parameter-store:
+    LOGIN_USERNAME: "login_username"
+    LOGIN_PASSWORD: "login_password"
+    BASE_URL: "base_url"
+    LOGIN_URL: "login_url"
+
+    
+phases:
+  pre_build:
+    commands:
+      # update nodejs to version 22
+      - n 22
+
+  build:
+    commands:
+      - npm ci
+      - npm run e2e-test
