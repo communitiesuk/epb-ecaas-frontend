@@ -14,7 +14,8 @@
     "schema-ts": "npx openapi-typescript https://docs.building-energy-calculator.communities.gov.uk/openapi.yaml -o schema/api-schema.types.ts --path-params-as-types --make-paths-enum --root-types --enum",
     "test": "vitest --typecheck",
     "typecheck": "nuxt typecheck",
-    "typedtest": "nuxt typecheck && vitest run"
+    "typedtest": "nuxt typecheck && vitest run",
+    "e2e-test": "npx playwright test && rm -rf .nuxt/cache"
   },
   "dependencies": {
     "@formkit/nuxt": "^1.6.9",
