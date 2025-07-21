@@ -29,3 +29,11 @@ logs
 
 # Session state files
 tmp
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+playwright/.auth

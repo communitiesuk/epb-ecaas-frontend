@@ -1,0 +1,30 @@
+import { test as setup } from '@playwright/test';
+import path from 'path';
+
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const authFile = path.join(__dirname, '../playwright/.auth/user.json');
+
+const loginUrl = process.env.LOGIN_URL;
+const username = process.env.LOGIN_USERNAME; 
+const password = process.env.LOGIN_PASSWORD; 
+
+if( !loginUrl || !username || !password ){
+	throw new Error ("Missing authentication credentials");
+}
+
+setup('login authentication', async ({ page} ) => {
+
+	await page.goto(loginUrl);
+
+	await page.locator("#signInFormUsername").nth(1).fill(username);
+
+	await page.locator("#signInFormPassword").nth(1).fill(password);
+  
+	await page.getByRole("button", { name: "submit" }).click();
+	await page.waitForURL(process.env.BASE_URL || "", { timeout: 5000 });
+	// End of authentication steps.
+	await page.context().storageState({ path: authFile });
+
+});
