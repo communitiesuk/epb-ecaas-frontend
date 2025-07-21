@@ -112,12 +112,6 @@ export default defineNuxtConfig({
 		redisEndpoint: '',
 		redisPassword: '',
 		redisUsername: '',
-		public: {
-			sentry: {
-				dsn: process.env.SENTRY_DSN,
-				environment: process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || '',
-			} as Record<string, string>,
-		},
 	},
 
 	nitro: process.env.BUILD_FOR_AWS_LAMBDA
