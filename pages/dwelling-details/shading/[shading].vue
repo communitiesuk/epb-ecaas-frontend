@@ -90,8 +90,15 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Select the type of object causing the shading"
 			name="objectType"
 			:options="objectTypeOptions"
-			validation="required"
-		/>
+			validation="required">
+			<GovDetails summary-text="Help with this input">
+				<ul class="govuk-list govuk-list--bullet">
+					<li>An obstacle (for example, a tree or building) ends at a certain height above ground level.</li>
+					<li>An overhang (for example, a roof or balcony) starts at a certain height above ground level.</li>
+				</ul>
+				<img src="/img/overhang-and-obstacle.png" alt="Overhang and obstacle">
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"
