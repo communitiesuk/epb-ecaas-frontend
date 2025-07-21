@@ -5,5 +5,6 @@ export function showErrorState(context: FormKitFrameworkContext): boolean {
 }
 
 export function getErrorMessage(context: FormKitFrameworkContext): string | undefined {
-	return Object.values(context.messages).find(message => message.visible)?.value as string;
+	const errorMessageObject = Object.values(context.messages).find(message => message.visible);
+	return errorMessageObject ? errorMessageObject.value as string : undefined;
 }
