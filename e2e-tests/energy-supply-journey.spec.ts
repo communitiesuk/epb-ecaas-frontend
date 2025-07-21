@@ -9,7 +9,7 @@ const fillEnergySupplyForm = async (page: Page) => {
 	await page.getByRole('link', { name: 'Energy supply' }).nth(0).click();
 
 	//add form data
-	await page.getByTestId("fuelType_electricity").check();
+	await page.getByTestId("fuelType_electricity").click();
 	await page.getByTestId("exported_yes").click();
 
 	//save form
