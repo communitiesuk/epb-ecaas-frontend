@@ -122,7 +122,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Terrain Type"
 			name="terrainType"
 			validation="required"
-			help="This is the type of surrounding landscape">
+			help="This is the type of surrounding landscape once the dwelling has been built">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p>Providing the terrain type helps determine how external conditions, such as wind speed and turbulence, will impact ventilation and airflow around a building.</p>
 				<table class="govuk-table">
