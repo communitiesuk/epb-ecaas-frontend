@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import type {Dayjs} from 'dayjs';
 import { getInitialState } from '~/stores/ecaasStore';
 
-const title = 'Import a calculation';
+const title = 'Import data';
 
 const store = useEcaasStore();
 
@@ -68,7 +68,7 @@ const doImport = (_event: Event) => {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<template v-if="!importedFile">
-		<p class="govuk-body">To continue working on a calculation you must import a previously exported JSON file.</p>
+		<GovInset>Importing a file will override any data currently in the calculation. If you wish to save this data you must first export it.</GovInset>
 		<h2 class="govuk-heading-s">Upload a calculation</h2>
 		<ClientOnly>
 			<GovFileUpload
@@ -77,11 +77,10 @@ const doImport = (_event: Event) => {
 				accept=".json,application/json"
 				:change="accessFile"
 				:label="{ text: 'Upload a JSON file', classes: 'govuk-!-display-none' }"
-				:hint="{ text: 'Select a JSON file that you have previously downloaded' }"
+				:hint="{ text: 'Select a JSON file that you have previously exported' }"
 				:error-message="errorMessage ? { text: errorMessage } : undefined"
 			/>
 		</ClientOnly>
-		<GovInset>Importing a file will override any data currently in the calculation. If you wish to save this data you must first export it.</GovInset>
 		<div class="govuk-button-group">
 			<GovButton :disabled="!hasFile || undefined" :click="doImport" data-testid="import-button">Import</GovButton>
 			<GovButton href="/" secondary>Return to task list</GovButton>
