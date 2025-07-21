@@ -1,13 +1,18 @@
 import { test, expect  } from "@playwright/test";
-import type {Page} from "@playwright/test";
+import type { Page } from "@playwright/test";
+
 
 const fillEnergySupplyForm = async (page: Page) => {
+	//navigate to Energy supply page
 	await page.goto("");
 	await page.getByRole('link', { name: 'Heating systems' }).click();
 	await page.getByRole('link', { name: 'Energy supply' }).nth(0).click();
-  
+
+	//add form data
 	await page.getByTestId("fuelType_electricity").check();
 	await page.getByTestId("exported_yes").click();
+
+	//save form
 	await page.locator('button:text("Save and continue")').click();
 };
 
@@ -60,11 +65,13 @@ test("saved energy supply form data is persisted to local storage", async ({ pag
 test("saved energy supply form data persists on page reload and is reflected in the summary", async ({ page }) => {
 	await fillEnergySupplyForm(page);
 
-	//reload energy supply page to check data persists
-	await page.getByRole('link', { name: 'Energy supply' }).nth(0).click();
+	//reload page
 	await page.reload();
 
-	await expect(page.getByTestId("fuelType_electricity")).toBeChecked({timeout:10000});
+	//check data persists on the Energy supply page
+	await page.getByRole('link', { name: 'Energy supply' }).nth(0).click();
+
+	await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
 	await expect(page.getByTestId("exported_yes")).toBeChecked();
 	
 	//check data is persisted on the summary page
@@ -81,13 +88,20 @@ test("saved energy supply form data persists on page reload and is reflected in 
 test.skip("saved energy supply form data persists when local storage is cleared", async ({ page }) => {
 	await fillEnergySupplyForm(page);
 
+	//check localStorage contains energy supply data
+	const storedData = JSON.parse(await getLocalStorage(page));
+	const { data } = storedData.heatingSystems.energySupply; 
+
+	expect(data.fuelType[0]).toBe("electricity");
+	expect(data.exported).toBe(true);
+
 	//clear localStorage
 	await page.evaluate(() => localStorage.clear());
   
 	//check localStorage is empty
 	expect(await getLocalStorage(page)).toBe("{}");
 
-	//reload page and navigate to the heating systems summary page
+	//reload page and navigate to the Heating systems summary page
 	await page.reload();
 	await page.click('a[href="/heating-systems/summary"]');
 
