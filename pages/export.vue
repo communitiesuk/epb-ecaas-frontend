@@ -45,6 +45,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<template v-if="downloadUrl">
 		<GovPanel title="Export complete">
 			<p>{{ `${model.fileName}.json` }}</p>
+			<p>The file has been saved to your downloads folder.</p>
 			<p class="govuk-!-margin-bottom-0">{{ dayjs(exportDate).format('DD/MM/YYYY HH:mm') }}</p>
 		</GovPanel>
 		<div class="govuk-button-group govuk-!-margin-top-7">
