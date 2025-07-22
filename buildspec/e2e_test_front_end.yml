@@ -16,4 +16,4 @@ phases:
   build:
     commands:
       - npm ci
-      - npm run e2e-test
+      - npm run ci-e2e-test
