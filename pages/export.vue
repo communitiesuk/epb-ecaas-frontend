@@ -2,7 +2,7 @@
 import dayjs from 'dayjs';
 
 const store = useEcaasStore();
-const title = 'Export a calculation';
+const title = 'Export data';
 
 const model = ref<{ fileName?: string }>({
 	fileName: undefined
@@ -53,14 +53,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</div>
 	</template>
 	<template v-else>
-		<p class="govuk-body">To save a completed, or partially completed calculation, you must export it and save it locally. You can import a calculation to continue working on it.</p>
+		<p class="govuk-body">To save a completed, or partially completed calculation, you must export it and save it locally. You can import the data file to continue working on it.</p>
 		<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm" @submit-invalid="handleInvalidSubmit">
 			<GovErrorSummary :error-list="errorMessages" test-id="exportErrorSummary"/>
 			<FormKit
 				id="fileName"
 				type="govInputText"
-				label="Name your calculation"
-				help="Your calculation will be downloaded with this name."
+				label="Name your file"
+				help="Your file will be downloaded with this name"
 				name="fileName"
 				validation="required"
 				placeholder=".json"
