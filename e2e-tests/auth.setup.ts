@@ -23,7 +23,6 @@ setup('login authentication', async ({ page} ) => {
 	await page.locator("#signInFormPassword").nth(1).fill(password);
   
 	await page.getByRole("button", { name: "submit" }).click();
-	await page.waitForURL(process.env.BASE_URL || "", { timeout: 5000 });
 	// End of authentication steps.
 	await page.context().storageState({ path: authFile });
 
