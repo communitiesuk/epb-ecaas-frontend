@@ -58,12 +58,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<GovErrorSummary :error-list="errorMessages" test-id="exportErrorSummary"/>
 			<FormKit
 				id="fileName"
-				type="govInputText"
+				type="govInputTextWithSuffix"
 				label="Name your file"
 				help="Your file will be downloaded with this name"
 				name="fileName"
 				validation="required"
-				placeholder=".json"
+				suffix-text=".json"
 			/>
 			<div class="govuk-button-group">
 				<FormKit type="govButton" label="Export" />

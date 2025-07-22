@@ -11,6 +11,8 @@ import FormKitInputInt from './components/form-kit/InputInt.vue';
 import FormKitInputWithSuffix from './components/form-kit/InputWithSuffix.vue';
 import FormKitCheckboxes from './components/form-kit/Checkboxes.vue';
 import FormKitInputText from './components/form-kit/InputText.vue';
+import FormKitInputTextWithSuffix from './components/form-kit/InputTextWithSuffix.vue';
+
 import { FormKitBoolean } from '#components';
 
 // Enable TypeScript support for custom inputs
@@ -46,6 +48,10 @@ declare module '@formkit/inputs' {
 		'govInputText': {
 			type: 'govInputText'
 		}, 
+		'govInputTextWithSuffix': {
+			type: 'govInputWithSuffix',
+			suffixText: string
+		},
 		'govStoredList': {
 			type: 'govStoredList',
 			options: StoredListOption[]
@@ -93,6 +99,10 @@ export default defineFormKitConfig(() => {
 			govInputText: {
 				type: "input",
 				component: FormKitInputText
+			},
+			govInputTextWithSuffix: {
+				type: "input",
+				component: FormKitInputTextWithSuffix,
 			},
 			govStoredList: {
 				type: "input",
