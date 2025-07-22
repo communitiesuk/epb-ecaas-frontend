@@ -4,12 +4,15 @@ import type { Page } from "@playwright/test";
 
 const fillEnergySupplyForm = async (page: Page) => {
 	//navigate to Energy supply page
-	await page.goto("");
+	await page.waitForLoadState("load");
+	
 	await page.getByRole('link', { name: 'Heating systems' }).click();
 	await page.getByRole('link', { name: 'Energy supply' }).nth(0).click();
+	await page.waitForLoadState("load");
 
 	//add form data
 	await page.getByTestId("fuelType_electricity").click();
+	await expect(page.getByTestId("exported_yes")).toBeVisible();
 	await page.getByTestId("exported_yes").click();
 
 	//save form
@@ -23,6 +26,7 @@ const getLocalStorage = async (page: Page) => {
 };
 
 test("saved energy supply form data is visible when user revisits the energy supply page", async ({ page }) => {
+	await page.goto("/");
 	await fillEnergySupplyForm(page);
 
 	// revisit the Energy Supply page to confirm data persistence
@@ -33,7 +37,9 @@ test("saved energy supply form data is visible when user revisits the energy sup
 });
 
 test("saved energy supply form data is visible on the heating systems summary page", async ({ page }) => {
+	await page.goto("/");
 	await fillEnergySupplyForm(page);
+
 	//navigate to Heating systems summary page
 	await page.click('a[href="/heating-systems/summary"]');
   
@@ -46,7 +52,7 @@ test("saved energy supply form data is visible on the heating systems summary pa
 });
 
 test("saved energy supply form data is persisted to local storage", async ({ page }) => {
-	await page.goto("");
+	await page.goto("/");
 
 	//check localStorage is empty before adding form data
 	expect(await getLocalStorage(page)).toBe("{}");
@@ -63,6 +69,7 @@ test("saved energy supply form data is persisted to local storage", async ({ pag
 });
 
 test("saved energy supply form data persists on page reload and is reflected in the summary", async ({ page }) => {
+	await page.goto("/");
 	await fillEnergySupplyForm(page);
 
 	//reload page
@@ -86,6 +93,7 @@ test("saved energy supply form data persists on page reload and is reflected in 
 });
 
 test.skip("saved energy supply form data persists when local storage is cleared", async ({ page }) => {
+	await page.goto("/");
 	await fillEnergySupplyForm(page);
 
 	//check localStorage contains energy supply data
