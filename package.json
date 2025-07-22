@@ -15,7 +15,9 @@
     "test": "vitest --typecheck",
     "typecheck": "nuxt typecheck",
     "typedtest": "nuxt typecheck && vitest run",
-    "e2e-test": "npx playwright test && rm -rf .nuxt/cache"
+    "e2e-test": "npx playwright test && rm -rf .nuxt/cache",
+    "ci-e2e-test": "npx playwright test"
+
   },
   "dependencies": {
     "@formkit/nuxt": "^1.6.9",
