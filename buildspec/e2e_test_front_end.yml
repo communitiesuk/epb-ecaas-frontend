@@ -17,4 +17,5 @@ phases:
     commands:
       - npm ci
       - npx playwright install --with-deps
+      - mkdir -p playwright/.auth
       - npm run ci-e2e-test
