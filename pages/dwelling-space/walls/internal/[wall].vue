@@ -66,8 +66,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Net area of the opaque building element (i.e. area of all windows / doors should be subtracted before entry). If the element is not square or rectangular the area might not be equal to width x height, hence the need to ask for area in addition to width and height."
 			name="surfaceAreaOfElement"
 			validation="required | number | min:0 | max:10000"
-			suffix-text="m²"
-		/>
+			suffix-text="m²">
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-hint">The net surface area should only be for one side of the wall, not both.</p>
+			</GovDetails>
+		</FormKit>
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
