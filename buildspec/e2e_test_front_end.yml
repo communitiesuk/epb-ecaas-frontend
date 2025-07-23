@@ -17,4 +17,5 @@ phases:
   build:
     commands:
       - npm ci
+      - npx playwright install --with-deps
       - npm run ci-e2e-test
