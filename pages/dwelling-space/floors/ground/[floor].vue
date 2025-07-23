@@ -309,7 +309,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				label="Area of ventilation openings per perimeter"
 				help="Enter the total area of the ventilation openings per metre of external wall perimeter. Typically between 0.001 and 0.01 m² of opening per metre of wall."
 				name="ventilationOpeningsArea"
-				validation="required | number"/>
+				validation="required | number">
+				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+					<p class="govuk-hint">Often suspended floors require additional ventilation to prevent moisture build up and structural damage. While ventilation is crucial for moisture control, it can lead to heat loss from the building.</p>
+				</GovDetails>
+			</FormKit>
 			<FormKit
 				id="windShieldingFactor"
 				type="govRadios"
