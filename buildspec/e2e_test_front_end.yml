@@ -1,6 +1,6 @@
 version: 0.2
 env:
-  variables:
+  # variables:
     # BASE_URL: "ECAAS_URL"
   parameter-store:
     LOGIN_USERNAME: "LOGIN_USERNAME"
