@@ -3,6 +3,8 @@ import type {SchemaBuildingElement, SchemaThermalBridgingDetails, SchemaWindowPa
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
 import { defaultZoneName } from "./common";
+import { Length, LengthUnit } from "./units";
+
 
 export function mapLivingSpaceFabricData(state: ResolvedState): Partial<FhsInputSchema> {
 	const zoneParameterData = mapZoneParametersData(state);
@@ -69,10 +71,13 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor } = state.dwellingFabric.dwellingSpaceFloors;
 
 	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: FloorType.Slab_edge_insulation }>) {
+
+		const edgeInsulationWidthAsMeters = new Length(data.edgeInsulationWidth, LengthUnit.CENTIMETERS).inMeters();
+		
 		if (data.edgeInsulationType === 'horizontal') {
 			return [{
 				type: data.edgeInsulationType!,
-				width: data.edgeInsulationWidth!,
+				width: edgeInsulationWidthAsMeters!,
 				edge_thermal_resistance: data.edgeInsulationThermalResistance!
 			}];
 		}
@@ -80,7 +85,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 		if (data.edgeInsulationType === 'vertical') {
 			return [{
 				type: data.edgeInsulationType!,
-				depth: data.edgeInsulationWidth!,
+				depth: edgeInsulationWidthAsMeters!,
 				edge_thermal_resistance: data.edgeInsulationThermalResistance!
 			}];
 		}

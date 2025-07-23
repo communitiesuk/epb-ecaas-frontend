@@ -646,7 +646,7 @@ const expectedFlatInput: FhsInputSchema = {
 					edge_insulation: [{
 						edge_thermal_resistance: 2.4,
 						type: "horizontal",
-						width: 7
+						width: 0.32
 					}],
 					psi_wall_floor_junc: 0.4,
 					thickness_walls: 0.5,
@@ -1457,7 +1457,7 @@ describe("FHS input mapper", () => {
 						thicknessOfWalls: 0.5,
 						typeOfGroundFloor: FloorType.Slab_edge_insulation,
 						edgeInsulationType: "horizontal",
-						edgeInsulationWidth: 7,
+						edgeInsulationWidth: 32,
 						edgeInsulationThermalResistance: 2.4
 					},
 					{

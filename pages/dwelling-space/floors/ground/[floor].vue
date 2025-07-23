@@ -241,27 +241,30 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FormKit
 				id="edgeInsulationWidth"
 				type="govInputWithSuffix"
-				suffix-text="m"
+				suffix-text="cm"
 				label="Edge insulation width"
 				help="This is the coverage distance of edge insulation rather than the thickness of the insulation"
 				name="edgeInsulationWidth"
-				validation="required | number | min:0 | max:100">
+				validation="required | number | min:0 | max:10000">
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 					<table class="govuk-table">
 						<thead class="ovuk-table__head">
 							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header">Edge insulation type</th>
+								<th scope="col" class="govuk-table__header table-header-medium-width">Edge insulation type</th>
+								<th scope="col" class="govuk-table__header">Description</th>
 								<th scope="col" class="govuk-table__header">Typical width</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr class="govuk-table__row">
 								<td class="govuk-table__cell">Vertical</td>
-								<td class="govuk-table__cell">150mm</td>
+								<td class="govuk-table__cell">This is the height of the vertical edge insulation strips used around the perimeter of the floor.</td>
+								<td class="govuk-table__cell">10 - 15cm</td>
 							</tr>
 							<tr class="govuk-table__row">
 								<td class="govuk-table__cell">Horizontal</td>
-								<td class="govuk-table__cell">300mm</td>
+								<td class="govuk-table__cell">This is the width or extension of the insulation from the edge of the slab.</td>
+								<td class="govuk-table__cell">60 - 120cm</td>
 							</tr>
 						</tbody>
 					</table>
@@ -385,3 +388,9 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		/>
 	</FormKit>
 </template>
+
+<style>
+	.table-header-medium-width {
+	width: 28%;
+	}
+</style>
