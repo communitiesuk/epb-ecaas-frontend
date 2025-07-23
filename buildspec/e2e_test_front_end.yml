@@ -12,7 +12,7 @@ phases:
   pre_build:
     commands:
       # update nodejs to version 22
-      - n 22
+      - node -v
 
   build:
     commands:
