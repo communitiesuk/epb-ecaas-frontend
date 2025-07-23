@@ -164,7 +164,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="perimeter"
 			validation="required | number | min:0 | max:1000">
 			<GovDetails summary-text="Help with this input">
-				<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor. Do not include internal wall perimeters.</p>
+				<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor.</p>
 			</GovDetails>
 		</FormKit>
 		<FormKit
