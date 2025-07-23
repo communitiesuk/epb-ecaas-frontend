@@ -207,8 +207,28 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Convection fraction"
 				name="convectionFractionWet"
 				validation="required | number | min: 0 | max: 1 "
-				help="Enter the proportion of heat the radiator emits through convection. Typically between 0.2 and 0.8."
-			/>
+				help="Enter the proportion of heat the heater emits through convection">
+				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+					<table class="govuk-table">
+						<thead class="govuk-table__head">
+							<tr class="govuk-table__row">
+								<th scope="col" class="govuk-table__header govuk-!-width-one-third">Heat emitter type</th>
+								<th scope="col" class="govuk-table__header">Typical convection fraction</th>
+							</tr>
+						</thead>
+						<tbody class="govuk-table__body">
+							<tr class="govuk-table__row">
+								<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Radiators</th>
+								<td class="govuk-table__cell">0.6-0.8</td>
+							</tr>
+							<tr class="govuk-table__row">
+								<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Underfloor heating</th>
+								<td class="govuk-table__cell">0.2-0.4</td>
+							</tr>
+						</tbody>
+					</table>
+				</GovDetails>
+			</FormKit>
 		</template>
 
 		<template v-if="model.typeOfSpaceHeater === 'ufh'">
