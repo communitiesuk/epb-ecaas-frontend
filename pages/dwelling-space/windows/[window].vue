@@ -239,7 +239,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<tr class="govuk-table__row">
 					<th scope="col" class="govuk-!-text-align-left">Type of shading</th>
 					<th scope="col" class="govuk-!-text-align-left">Depth</th>
-					<th scope="col" class="govuk-!-text-align-left">Distance</th>
+					<th scope="col" class="govuk-!-text-align-left">Distance from glass</th>
 				</tr>
 			</thead>
 			<tbody class="govuk-table__body">
