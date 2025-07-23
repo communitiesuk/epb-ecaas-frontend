@@ -156,8 +156,32 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the volume of water flowing through the heater"
 			name="designFlowRate"
 			validation="required | number"
-			suffix-text="litres per minute"
-		/>
+			suffix-text="litres per minute">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header govuk-!-width-one-third">Duct type</th>
+							<th scope="col" class="govuk-table__header">Typical flow rate</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Small house or flat</th>
+							<td class="govuk-table__cell">10-12 litres per minute</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Medium house</th>
+							<td class="govuk-table__cell">12-15 litres per minute, as there is likely to be simultaneous use.</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Large house</th>
+							<td class="govuk-table__cell">15 litres per minute or more, to accomodate multiple bathrooms and higher occupancy.</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="typeOfSpaceHeater"
 			type="govRadios"
