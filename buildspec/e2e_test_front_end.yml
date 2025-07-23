@@ -1,7 +1,5 @@
 version: 0.2
 env:
-  # variables:
-    # BASE_URL: "ECAAS_URL"
   parameter-store:
     LOGIN_USERNAME: "LOGIN_USERNAME"
     LOGIN_PASSWORD: "LOGIN_PASSWORD"
@@ -17,5 +15,6 @@ phases:
     commands:
       - npm ci
       - npx playwright install --with-deps
+      - export BASE_URL=$ECAAS_URL
       - mkdir -p playwright/.auth
       - npm run ci-e2e-test
