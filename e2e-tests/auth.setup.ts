@@ -15,7 +15,7 @@ if( !username || !password ){
 
 setup('login authentication', async ({ page} ) => {
 	if(!process.env.BASE_URL) return;
-	await page.goto("/");
+	await page.goto(process.env.BASE_URL);
 
 	await page.locator("#signInFormUsername").nth(1).fill(username);
 
