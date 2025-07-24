@@ -25,7 +25,7 @@ describe('window', () => {
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
-		frameToOpeningRatio: 0.8,
+		frameToOpeningRatio: 0.2,
 		numberOpenableParts: '0',
 		overhangDepth: 1,
 		overhangDistance: 1,
