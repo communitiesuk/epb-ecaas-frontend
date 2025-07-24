@@ -23,7 +23,7 @@ export default defineConfig({
 	/* Fail the build on CI if you accidentally left test.only in the source code. */
 	forbidOnly: !!process.env.CI,
 	/* Retry on CI only */
-	retries: 3,
+	// retries: 3,
 	/* Opt out of parallel tests on CI. */
 	workers: process.env.CI ? 1 : undefined,
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -61,8 +61,13 @@ export default defineConfig({
 		},
 		{
 			name: 'webkit',
-			use: { ...devices['Desktop Safari'] },
-		},
+			use: { 
+				...devices['Desktop Safari'] ,
+				// Use prepared auth state.
+				storageState: 'playwright/.auth/user.json'
+			},
+			dependencies: ['setup'],
+			},
 
 		/* Test against mobile viewports. */
 		// {
