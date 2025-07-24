@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Length, LengthUnit } from '~/mapping/units';
+import { lengthCm } from '~/mapping/units';
 import { FloorType, WindShieldLocation } from '~/schema/api-schema.types';
 
 const title = "Ground floor";
@@ -53,7 +53,7 @@ const saveForm = (fields: GroundFloorData) => {
 		switch(fields.typeOfGroundFloor) {
 			case FloorType.Slab_edge_insulation:
 			{
-				const edgeInsulationWidth = typeof fields.edgeInsulationWidth === 'number' ? new Length(fields.edgeInsulationWidth, LengthUnit.CENTIMETERS) : fields.edgeInsulationWidth;
+				const edgeInsulationWidth = typeof fields.edgeInsulationWidth === 'number' ? lengthCm(fields.edgeInsulationWidth) : fields.edgeInsulationWidth;
 				
 				floor = {
 					...commonFields,
