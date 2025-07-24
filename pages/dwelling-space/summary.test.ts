@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
-import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData } from '~/stores/ecaasStore.types';
+import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from '~/stores/ecaasStore.types';
 import { FloorType, MassDistributionClass, WindowTreatmentType } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -12,11 +12,14 @@ mockNuxtImport('navigateTo', () => {
 const zoneParametersData: DwellingSpaceZoneParametersData = {
 	area: 10,
 	volume: 10,
-	numberOfLEDBulbs: 8,
-	numberOfIncandescentBulbs: 3,
 	// spaceHeatingSystemForThisZone: 'elec heater',
 	// spaceCoolingSystemForThisZone: [],
 	// spaceHeatControlSystemForThisZone: []
+};
+
+const lightingData: DwellingSpaceLightingData = {
+	numberOfLEDBulbs: 8,
+	numberOfIncandescentBulbs: 3,
 };
 
 const floorsData: FloorsData = {
@@ -282,13 +285,42 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Area": "10",
 				"Volume": "10",
-				"Number of LED bulbs": "8",
-				"Number of incandescent bulbs": "3",
 				// "Heat emitting system for this zone": "Elec heater",
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceZoneParameters-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+	});
+
+	describe('Living space lighting', () => {
+		it('should contain the correct tabs for dwelling space lighting', async () => {
+			await renderSuspended(Summary);
+	  
+			expect(screen.getByRole('link', {name: 'Lighting'}));
+		});
+
+		it('should display the correct data for the lighting section', async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceLighting: {
+						data: lightingData
+					}
+				}
+			});
+	
+			await renderSuspended(Summary);
+	
+			const expectedResult = {
+				"Number of LED bulbs": "8",
+				"Number of incandescent bulbs": "3"
+			};
+	
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceLighting-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}

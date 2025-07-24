@@ -11,8 +11,6 @@ mockNuxtImport('navigateTo', () => {
 const state: DwellingSpaceZoneParametersData = {
 	area: 10,
 	volume: 10,
-	numberOfLEDBulbs: 9,
-	numberOfIncandescentBulbs: 0,
 	// spaceHeatingSystemForThisZone: 'instant electric heater'
 };
 
@@ -53,8 +51,6 @@ describe('zone parameters', () => {
 
 		await user.type(screen.getByTestId('area'), '10');
 		await user.type(screen.getByTestId('volume'), '10');
-		await user.type(screen.getByTestId('numberOfLEDBulbs'), '9');
-		await user.type(screen.getByTestId('numberOfIncandescentBulbs'), '0');
 		// await user.click(screen.getByTestId('spaceHeatingSystemForThisZone_instant_electric_heater'));
 		await user.tab();
 		await user.click(screen.getByRole('button'));
@@ -77,8 +73,6 @@ describe('zone parameters', () => {
 
 		expect((await screen.findByTestId('area') as HTMLInputElement).value).toBe('10');
 		expect((await screen.findByTestId('volume') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('numberOfLEDBulbs') as HTMLInputElement).value).toBe('9');
-		expect((await screen.findByTestId('numberOfIncandescentBulbs') as HTMLInputElement).value).toBe('0');
 		// expect((await screen.findByTestId('spaceHeatingSystemForThisZone_instant_electric_heater')).hasAttribute('checked')).toBe(true);
 	});
 			
@@ -89,8 +83,6 @@ describe('zone parameters', () => {
 
 		expect((await screen.findByTestId('area_error'))).toBeDefined();
 		expect((await screen.findByTestId('volume_error'))).toBeDefined();
-		expect((await screen.findByTestId('numberOfLEDBulbs_error'))).toBeDefined();
-		expect((await screen.findByTestId('numberOfIncandescentBulbs_error'))).toBeDefined();
 		// expect((await screen.findByTestId('spaceHeatingSystemForThisZone_error'))).toBeDefined();
 	});
 

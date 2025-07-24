@@ -1039,13 +1039,18 @@ describe("FHS input mapper", () => {
 				data: {
 					area: 100,
 					volume: 300,
-					numberOfLEDBulbs: 6,
-					numberOfIncandescentBulbs: 0,
 					// spaceHeatingSystemForThisZone: "some-wet-distribution",
 					// spaceCoolingSystemForThisZone: [{
 					// 	name: "some-aircon-unit-name",
 					// }],
 					// spaceHeatControlSystemForThisZone: []
+				}
+			},
+			dwellingSpaceLighting: {
+				...baseForm,
+				data: {
+					numberOfLEDBulbs: 6,
+					numberOfIncandescentBulbs: 0,
 				}
 			},
 			dwellingSpaceFloors: {
@@ -1434,11 +1439,16 @@ describe("FHS input mapper", () => {
 				data: {
 					area: 16,
 					volume: 550,
-					numberOfLEDBulbs: 5,
-					numberOfIncandescentBulbs: 2,
 					// spaceHeatingSystemForThisZone: "instant elec heater 1",
 					// spaceCoolingSystemForThisZone: [],
 					// spaceHeatControlSystemForThisZone: []
+				}
+			},
+			dwellingSpaceLighting: {
+				...baseForm,
+				data: {
+					numberOfLEDBulbs: 5,
+					numberOfIncandescentBulbs: 2,
 				}
 			},
 			dwellingSpaceFloors: {

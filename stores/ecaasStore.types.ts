@@ -62,6 +62,7 @@ export interface DwellingFabric {
 	dwellingSpaceDoors: DoorsData;
 	dwellingSpaceWindows: EcaasForm<WindowData[]>;
 	dwellingSpaceThermalBridging: ThermalBridgingData;
+	dwellingSpaceLighting: EcaasForm<DwellingSpaceLightingData>;
 }
 
 export interface FloorsData {
@@ -371,11 +372,14 @@ export type PointThermalBridgeData = {
 export type DwellingSpaceZoneParametersData = {
 	area: number;
 	volume: number;
-	numberOfLEDBulbs: number;
-	numberOfIncandescentBulbs: number;
 	spaceHeatingSystemForThisZone?: string;
 	spaceCoolingSystemForThisZone?: SpaceCoolingSystemData[];
 	spaceHeatControlSystemForThisZone?: SpaceHeatControlSystemData[];
+};
+
+export type DwellingSpaceLightingData = {
+	numberOfLEDBulbs: number;
+	numberOfIncandescentBulbs: number;
 };
 
 export type SpaceHeatingSystemData = {

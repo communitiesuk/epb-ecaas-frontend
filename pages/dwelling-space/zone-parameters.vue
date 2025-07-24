@@ -27,8 +27,6 @@ const saveForm = (fields: typeof model.value) => {
 				data: {
 					area: fields.area,
 					volume: fields.volume,
-					numberOfLEDBulbs: fields.numberOfLEDBulbs,
-					numberOfIncandescentBulbs: fields.numberOfIncandescentBulbs,
 					spaceHeatingSystemForThisZone: fields.spaceHeatingSystemForThisZone,
 					// heatingControlType: fields.heatingControlType,
 					// spaceCoolingSystemForThisZone: fields.spaceCoolingSystemForThisZone,
@@ -84,22 +82,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Volume"
 			name="volume"
 			help="Enter the volume of the whole dwelling"
-			validation="required"
-		/>
-		<FormKit
-			id="numberOfLEDBulbs"
-			type="govInputInt"
-			label="Number of LED bulbs"
-			name="numberOfLEDBulbs"
-			help="Enter the number of LED bulbs in the whole dwelling"
-			validation="required"
-		/>
-		<FormKit
-			id="numberOfIncandescentBulbs"
-			type="govInputInt"
-			label="Number of incandescent bulbs"
-			name="numberOfIncandescentBulbs"
-			help="Enter the number of incandescent bulbs in the whole dwelling"
 			validation="required"
 		/>
 		<!-- <FormKit

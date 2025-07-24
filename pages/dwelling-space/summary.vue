@@ -15,11 +15,22 @@ const zoneParametersSummary: SummarySection = {
 		"Area": zoneParametersData.area,
 		"Volume": zoneParametersData.volume,
 		// "Heat emitting system for this zone": zoneParametersData.spaceHeatingSystemForThisZone,
-		"Number of LED bulbs": zoneParametersData.numberOfLEDBulbs,
-		"Number of incandescent bulbs": zoneParametersData.numberOfIncandescentBulbs,
+		
 		// "Heating control type": zoneParametersData.heatingControlType
 	},
 	editUrl: getUrl('dwellingSpaceZoneParameters')!
+};
+
+const lightingData = store.dwellingFabric.dwellingSpaceLighting.data;
+
+const lightingSummary: SummarySection = {
+	id: 'dwellingSpaceLighting',
+	label: 'Lighting',
+	data: {
+		"Number of LED bulbs": lightingData.numberOfLEDBulbs,
+		"Number of incandescent bulbs": lightingData.numberOfIncandescentBulbs,
+	},
+	editUrl: getUrl('dwellingSpaceLighting')!
 };
 
 const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
@@ -418,6 +429,10 @@ const thermalBridgeSummarySections: SummarySection[] = [
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovTabs v-slot="tabProps" :items="getTabItems([zoneParametersSummary])">
 		<SummaryTab :summary="zoneParametersSummary" :selected="tabProps.currentTab === 0" />
+	</GovTabs>
+
+	<GovTabs v-slot="tabProps" :items="getTabItems([lightingSummary])">
+		<SummaryTab :summary="lightingSummary" :selected="tabProps.currentTab === 0" />
 	</GovTabs>
 
 	<GovTabs v-slot="tabProps" :items="getTabItems(floorSummarySections)">

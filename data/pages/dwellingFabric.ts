@@ -17,6 +17,13 @@ const dwellingFabricPages = [
 		parentId: 'dwellingFabric'
 	},
 	{
+		id: 'dwellingSpaceLighting',
+		title: 'Lighting',
+		url: '/dwelling-space/lighting',
+		type: PageType.Task,
+		parentId: 'dwellingFabric'
+	},
+	{
 		id: 'dwellingSpaceFloors',
 		title: 'Floors',
 		url: '/dwelling-space/floors',

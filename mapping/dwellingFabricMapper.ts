@@ -8,6 +8,7 @@ import { Length, LengthUnit } from "./units";
 
 export function mapLivingSpaceFabricData(state: ResolvedState): Partial<FhsInputSchema> {
 	const zoneParameterData = mapZoneParametersData(state);
+	const lightingData = mapLightingData(state);
 	const floorData = mapFloorData(state);
 	const wallData = mapWallData(state);
 	const ceilingAndRoofData = mapCeilingAndRoofData(state);
@@ -17,6 +18,7 @@ export function mapLivingSpaceFabricData(state: ResolvedState): Partial<FhsInput
 
 	return merge.all([
 		zoneParameterData,
+		lightingData,
 		floorData,
 		wallData,
 		ceilingAndRoofData,
@@ -31,22 +33,6 @@ const defaultUValue = 0.01;
 export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'> {
 	const { dwellingSpaceZoneParameters } = state.dwellingFabric;
 
-	const lightingData: SchemaZoneLighting = {
-		efficacy: 56.0,
-		bulbs: {
-			incandescent: {
-				count: dwellingSpaceZoneParameters.numberOfIncandescentBulbs,
-				power: 60,
-				efficacy: 14
-			},
-			led: {
-				count: dwellingSpaceZoneParameters.numberOfLEDBulbs,
-				power: 6,
-				efficacy: 120
-			}
-		}
-	};
-
 	const spaceHeatingSystemNames = [
 		state.heatingSystems.heatEmitting.wetDistribution.map(x => x.name),
 		state.heatingSystems.heatEmitting.instantElectricHeater.map(x => x.name),
@@ -60,8 +46,35 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 				// SpaceCoolSystem: dwellingSpaceZoneParameters.spaceCoolingSystemForThisZone?.map(x => x.name),
 				SpaceHeatControl: SpaceHeatControlType.livingroom,
 				area: dwellingSpaceZoneParameters.area,
-				volume: dwellingSpaceZoneParameters.volume,
-				Lighting: lightingData,
+				volume: dwellingSpaceZoneParameters.volume
+			} as Partial<SchemaZoneInput>
+		}
+	} as Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'>;
+}
+
+export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> {
+	const { dwellingSpaceLighting } = state.dwellingFabric;
+
+	const lightingData: SchemaZoneLighting = {
+		efficacy: 56.0,
+		bulbs: {
+			incandescent: {
+				count: dwellingSpaceLighting.numberOfIncandescentBulbs,
+				power: 60,
+				efficacy: 14
+			},
+			led: {
+				count: dwellingSpaceLighting.numberOfLEDBulbs,
+				power: 6,
+				efficacy: 120
+			}
+		}
+	};
+
+	return {
+		Zone: {
+			[defaultZoneName]: {
+				Lighting: lightingData
 			} as Partial<SchemaZoneInput>
 		}
 	} as Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'>;

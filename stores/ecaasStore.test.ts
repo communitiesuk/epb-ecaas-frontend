@@ -134,7 +134,8 @@ describe('Ecaas Store', () => {
 					dwellingSpaceLinearThermalBridges: {complete: true},
 					dwellingSpacePointThermalBridges: {complete: true}
 				}, 
-				dwellingSpaceZoneParameters: {complete: true}
+				dwellingSpaceZoneParameters: {complete: true},
+				dwellingSpaceLighting: {complete: true}
 			}
 		});
 

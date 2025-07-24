@@ -25,8 +25,6 @@ describe('clear data page', () => {
 		const state: DwellingSpaceZoneParametersData = {
 			area: 10,
 			volume: 10,
-			numberOfLEDBulbs: 5,
-			numberOfIncandescentBulbs: 2,
 			spaceCoolingSystemForThisZone: [],
 			spaceHeatControlSystemForThisZone: []
 		};

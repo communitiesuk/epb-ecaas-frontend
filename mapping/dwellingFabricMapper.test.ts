@@ -3,15 +3,12 @@ import {
 	MassDistributionClass,
 	WindowShadingObjectType,
 	WindowTreatmentType,
-	
-	
-	
 	WindShieldLocation
 } from "~/schema/api-schema.types";
 import type {SchemaBuildingElement, SchemaEdgeInsulation, SchemaThermalBridgingDetails} from "~/schema/api-schema.types";
-import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
+import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
-import type { DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.types";
+import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.types";
 
 type BuildingElementGround = Extract<SchemaBuildingElement, { type: 'BuildingElementGround' }>;
 type BuildingElementOpaque = Extract<SchemaBuildingElement, { type: 'BuildingElementOpaque' }>;
@@ -31,8 +28,6 @@ describe('dwelling fabric mapper', () => {
 		const state: DwellingSpaceZoneParametersData = {
 			area: 10,
 			volume: 10,
-			numberOfLEDBulbs: 5,
-			numberOfIncandescentBulbs: 2,
 			// spaceHeatingSystemForThisZone: 'main 1',
 			spaceCoolingSystemForThisZone: [],
 			spaceHeatControlSystemForThisZone: []
@@ -69,10 +64,32 @@ describe('dwelling fabric mapper', () => {
 		// Assert
 		expect(fhsInputData.Zone![defaultZoneName]?.area).toBe(state.area);
 		expect(fhsInputData.Zone![defaultZoneName]?.volume).toBe(state.volume);
-		expect(fhsInputData.Zone![defaultZoneName]?.Lighting?.bulbs?.led?.count).toBe(state.numberOfLEDBulbs);
-		expect(fhsInputData.Zone![defaultZoneName]?.Lighting?.bulbs?.incandescent?.count).toBe(state.numberOfIncandescentBulbs);
 		expect(fhsInputData.Zone![defaultZoneName]?.SpaceHeatSystem).toEqual(['radiator 1', 'ieh 1']);
 		expect(fhsInputData.Zone![defaultZoneName]?.SpaceHeatControl).toBe('livingroom');
+	});
+
+	it('maps lighing input state to FHS input request', () => {
+		// Arrange
+		const state: DwellingSpaceLightingData = {
+			numberOfLEDBulbs: 5,
+			numberOfIncandescentBulbs: 2
+		};
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceLighting: {
+					data: state,
+					complete: true
+				}
+			},
+		});
+
+		// Act
+		const fhsInputData = mapLightingData(resolveState(store.$state));
+
+		// Assert
+		expect(fhsInputData.Zone![defaultZoneName]?.Lighting?.bulbs?.led?.count).toBe(state.numberOfLEDBulbs);
+		expect(fhsInputData.Zone![defaultZoneName]?.Lighting?.bulbs?.incandescent?.count).toBe(state.numberOfIncandescentBulbs);
 	});
 
 	it('maps floor input state to FHS input request', () => {
