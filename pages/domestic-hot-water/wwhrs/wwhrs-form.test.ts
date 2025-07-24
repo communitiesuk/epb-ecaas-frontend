@@ -32,7 +32,7 @@ describe('wwhrs form', () => {
 					mixedShower: {
 						data: [{
 							id: mixedShowerId,
-							name: 'Mixed shower 1'
+							name: 'Mixer shower 1'
 						}]
 					}
 				}

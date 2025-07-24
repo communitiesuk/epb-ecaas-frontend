@@ -70,8 +70,8 @@ function checkIsComplete() {
 	</h1>
 	<CustomList
 		id="mixedShower"
-		title="Mixed shower"
-		:form-url="`${page?.url!}/mixed-shower`"
+		title="Mixer shower"
+		:form-url="`${page?.url!}/mixer-shower`"
 		:items="store.domesticHotWater.hotWaterOutlets.mixedShower.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('mixedShower', index)"
 		@duplicate="(index: number) => handleDuplicate('mixedShower', index)"

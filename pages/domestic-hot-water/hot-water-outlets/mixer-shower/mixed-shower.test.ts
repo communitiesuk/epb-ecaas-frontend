@@ -11,13 +11,13 @@ mockNuxtImport('navigateTo', () => {
 
 vi.mock('uuid');
 
-describe('mixed shower', () => {
+describe('mixer shower', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const mixedShower: MixedShowerData = {
 		id: '4a93532e-a370-4015-9778-854661bf1627',
-		name: 'Mixed shower 1',
+		name: 'Mixer shower 1',
 		flowRate: 10
 	};
 
@@ -26,7 +26,7 @@ describe('mixed shower', () => {
 	});
 
 	const populateValidForm = async () => {
-		await user.type(screen.getByTestId('name'), 'Mixed shower 1');
+		await user.type(screen.getByTestId('name'), 'Mixer shower 1');
 		await user.type(screen.getByTestId('flowRate'), '10');
 		await user.tab();
 	};
@@ -61,7 +61,7 @@ describe('mixed shower', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Mixed shower 1');
+		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Mixer shower 1');
 		expect((await screen.findByTestId('flowRate') as HTMLInputElement).value).toBe('10');
 	});
 

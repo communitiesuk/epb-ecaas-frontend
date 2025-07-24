@@ -160,7 +160,7 @@ describe('Domestic hot water summary', () => {
 	describe('hot water outlets', () => {
 		const mixedShower: MixedShowerData = {
 			id: '4a93532e-a370-4015-9778-854661bf1627',
-			name: 'Mixed shower 1',
+			name: 'Mixer shower 1',
 			flowRate: 10
 		};
 
@@ -186,13 +186,13 @@ describe('Domestic hot water summary', () => {
 		it('should contain the correct tabs for hot water outlets', async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Mixed shower'})).toBeDefined();
+			expect(screen.getByRole('link', {name: 'Mixer shower'})).toBeDefined();
 			expect(screen.getByRole('link', {name: 'Electric shower'})).toBeDefined();
 			expect(screen.getByRole('link', {name: 'Bath'})).toBeDefined();
 			expect(screen.getByRole('link', {name: 'Other'})).toBeDefined();
 		});
 
-		it('should display the correct data for the mixed shower section', async () => {
+		it('should display the correct data for the mixer shower section', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -206,7 +206,7 @@ describe('Domestic hot water summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Name": "Mixed shower 1",
+				"Name": "Mixer shower 1",
 				"Flow rate": "10"
 			};
 	

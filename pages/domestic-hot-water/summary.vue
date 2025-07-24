@@ -151,7 +151,7 @@ const waterHeatingSummarySections: SummarySection[] = [
 const mixedShowerData = store.domesticHotWater.hotWaterOutlets.mixedShower.data;
 const mixedShowerSummary: SummarySection = {
 	id: 'mixedShower',
-	label: 'Mixed shower',
+	label: 'Mixer shower',
 	data: mixedShowerData.map(d => {
 		return {
 			"Name": d.name,
@@ -278,9 +278,9 @@ const pipeworkSummarySections: SummarySection[] = [
 	<GovTabs v-slot="tabProps" :items="getTabItems(hotWaterOutletsSummarySections)">
 		<SummaryTab :summary="mixedShowerSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
-				<h2 class="govuk-heading-m">No mixed shower added</h2>
+				<h2 class="govuk-heading-m">No mixer shower added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('mixedShowerCreate')">
-					Add mixed shower
+					Add mixer shower
 				</NuxtLink>
 			</template>
 		</SummaryTab>

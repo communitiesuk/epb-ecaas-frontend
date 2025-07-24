@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
 import { v4 as uuidv4 } from 'uuid';
 import HotWaterOutlets from './index.vue';
-import  MixedShowerForm from "./mixed-shower/[shower].vue";
+import  MixerShowerForm from "./mixer-shower/[shower].vue";
 import  ElectricShowerForm from "./electric-shower/[shower].vue";
 import  BathForm from "./bath/[bath].vue";
 import  OtherHotWaterOutletForm  from "./other/[outlet].vue";
@@ -11,31 +11,31 @@ import  OtherHotWaterOutletForm  from "./other/[outlet].vue";
 
 describe('hot water outlets', () => {
 
-	describe('mixed shower', () => {
+	describe('mixer shower', () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
 		const mixedShower1: MixedShowerData = {
 			id: uuidv4(),
-			name: "Mixed shower 1",
+			name: "Mixer shower 1",
 			flowRate: 10
 		};
 
 		const mixedShower2: MixedShowerData = {
 			...mixedShower1,
-			name: "Mixed shower 2",
+			name: "Mixer shower 2",
 		};
 
 		const mixedShower3: MixedShowerData = {
 			...mixedShower1,
-			name: "Mixed shower 3"
+			name: "Mixer shower 3"
 		};
 
 		afterEach(() => {
 			store.$reset();
 		});
 
-		test('mixed shower is removed when remove link is clicked', async () => {
+		test('mixer shower is removed when remove link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -55,7 +55,7 @@ describe('hot water outlets', () => {
 			expect(screen.queryByTestId('mixedShower_items')).toBeNull();
 		});
 
-		it('should only remove the mixed shower thats is clicked', async () => {
+		it('should only remove the mixer shower thats is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -71,13 +71,13 @@ describe('hot water outlets', () => {
 
 			const populatedList = screen.getByTestId('mixedShower_items');
 
-			expect(within(populatedList).getByText('Mixed shower 1')).toBeDefined();
-			expect(within(populatedList).getByText('Mixed shower 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Mixed shower 2')).toBeNull();
+			expect(within(populatedList).getByText('Mixer shower 1')).toBeDefined();
+			expect(within(populatedList).getByText('Mixer shower 3')).toBeDefined();
+			expect(within(populatedList).queryByText('Mixer shower 2')).toBeNull();
 
 		});
 
-		test('mixed shower is duplicated when duplicate link is clicked', async () => {
+		test('mixer shower is duplicated when duplicate link is clicked', async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -95,11 +95,11 @@ describe('hot water outlets', () => {
 			await userEvent.click(screen.getByTestId('mixedShower_duplicate_2'));
 
 			expect(screen.queryAllByTestId('mixedShower_item').length).toBe(6);
-			expect(screen.getByText('Mixed shower 1')).toBeDefined();
-			expect(screen.getByText('Mixed shower 1 (1)')).toBeDefined();
-			expect(screen.getByText('Mixed shower 1 (2)')).toBeDefined();
-			expect(screen.getByText('Mixed shower 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Mixed shower 1 (1) (2)')).toBeDefined();
+			expect(screen.getByText('Mixer shower 1')).toBeDefined();
+			expect(screen.getByText('Mixer shower 1 (1)')).toBeDefined();
+			expect(screen.getByText('Mixer shower 1 (2)')).toBeDefined();
+			expect(screen.getByText('Mixer shower 1 (1) (1)')).toBeDefined();
+			expect(screen.getByText('Mixer shower 1 (1) (2)')).toBeDefined();
 		});
 	});
 
@@ -390,7 +390,7 @@ describe('hot water outlets', () => {
 	
 		const mixedShower1: MixedShowerData = {
 			id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a3",
-			name: "Mixed Shower 1",
+			name: "Mixer Shower 1",
 			flowRate: 10,
 		};
 		const electricShower1: ElectricShowerData = {
@@ -433,7 +433,7 @@ describe('hot water outlets', () => {
 				{
 					key: "mixedShower",
 					testId: `mixedShower_${action}_0`,
-					form: MixedShowerForm,
+					form: MixerShowerForm,
 					params: "shower",
 				},
 				{

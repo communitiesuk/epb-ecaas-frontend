@@ -151,15 +151,15 @@ const domesticHotWaterPages = [
 	},
 	{
 		id: 'mixedShower',
-		title: 'Mixed shower',
-		url: '/domestic-hot-water/hot-water-outlets/mixed-shower/:shower',
+		title: 'Mixer shower',
+		url: '/domestic-hot-water/hot-water-outlets/mixer-shower/:shower',
 		type: PageType.Task,
 		parentId: 'hotWaterOutlets'
 	},
 	{
 		id: 'mixedShowerCreate',
-		title: 'Mixed shower',
-		url: '/domestic-hot-water/hot-water-outlets/mixed-shower/create',
+		title: 'Mixer shower',
+		url: '/domestic-hot-water/hot-water-outlets/mixer-shower/create',
 		type: PageType.Task,
 		parentId: 'hotWaterOutlets'
 	},

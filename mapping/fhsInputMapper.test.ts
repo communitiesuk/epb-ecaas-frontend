@@ -119,7 +119,7 @@ const expectedHouseInput: FhsInputSchema = {
 	HeatingControlType: HeatingControlType.SeparateTempControl,
 	HotWaterDemand: {
 		Shower: {
-			"some-mixed-shower-name": {
+			"some-mixer-shower-name": {
 				ColdWaterSource: ColdWaterSourceType.mains_water,
 				flowrate: 14,
 				type: "MixerShower"
@@ -416,12 +416,12 @@ const expectedFlatInput: FhsInputSchema = {
 	HeatingControlType: HeatingControlType.SeparateTempControl,
 	HotWaterDemand: {
 		Shower: {
-			"mixed shower 1 name": {
+			"mixer shower 1 name": {
 				ColdWaterSource: ColdWaterSourceType.mains_water,
 				flowrate: 19,
 				type: "MixerShower"
 			},
-			"mixed shower 2 name": {
+			"mixer shower 2 name": {
 				ColdWaterSource: ColdWaterSourceType.mains_water,
 				flowrate: 28,
 				type: "MixerShower"
@@ -1231,8 +1231,8 @@ describe("FHS input mapper", () => {
 				mixedShower: {
 					...baseForm,
 					data: [{
-						id: "some-mixed-shower-id",
-						name: "some-mixed-shower-name",
+						id: "some-mixer-shower-id",
+						name: "some-mixer-shower-name",
 						flowRate: 14
 					}]
 				},
@@ -1858,13 +1858,13 @@ describe("FHS input mapper", () => {
 				mixedShower: {
 					...baseForm,
 					data: [{
-						id: "mixed shower 1 id",
-						name: "mixed shower 1 name",
+						id: "mixer shower 1 id",
+						name: "mixer shower 1 name",
 						flowRate: 19
 					},
 					{
-						id: "mixed shower 2 id",
-						name: "mixed shower 2 name",
+						id: "mixer shower 2 id",
+						name: "mixer shower 2 name",
 						flowRate: 28
 					}]
 				},

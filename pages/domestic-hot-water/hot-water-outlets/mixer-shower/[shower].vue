@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
 
-const title = "Mixed shower";
+const title = "Mixer shower";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
