@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Length, LengthUnit } from '~/mapping/units';
 import { FloorType, WindShieldLocation } from '~/schema/api-schema.types';
 
 const title = "Ground floor";
@@ -6,6 +7,12 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const floorData = useItemToEdit('floor', store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
+
+if (floorData?.typeOfGroundFloor == FloorType.Slab_edge_insulation) {
+	const edgeInsulationWidth = typeof floorData.edgeInsulationWidth === 'number' ? floorData.edgeInsulationWidth : floorData.edgeInsulationWidth.amount;
+	floorData.edgeInsulationWidth = edgeInsulationWidth;
+};
+
 const model: Ref<GroundFloorData> = ref(floorData!);
 
 // Removed heated and unheated basement options for summer
@@ -45,14 +52,18 @@ const saveForm = (fields: GroundFloorData) => {
 
 		switch(fields.typeOfGroundFloor) {
 			case FloorType.Slab_edge_insulation:
+			{
+				const edgeInsulationWidth = typeof fields.edgeInsulationWidth === 'number' ? new Length(fields.edgeInsulationWidth, LengthUnit.CENTIMETERS) : fields.edgeInsulationWidth;
+				
 				floor = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					edgeInsulationType: fields.edgeInsulationType,
-					edgeInsulationWidth: fields.edgeInsulationWidth,
+					edgeInsulationWidth,
 					edgeInsulationThermalResistance: fields.edgeInsulationThermalResistance,
 				};
 				break;
+			}
 			case FloorType.Slab_no_edge_insulation:
 				floor = {
 					...commonFields,

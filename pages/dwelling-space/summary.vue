@@ -41,6 +41,8 @@ const groundFloorSummary: SummarySection = {
 	id: 'dwellingSpaceGroundFloors',
 	label: 'Ground floor',
 	data: groundFloorData.map(x => {
+		const edgeInsulationWidth = x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? (typeof x.edgeInsulationWidth === 'number' ? x.edgeInsulationWidth : x.edgeInsulationWidth.amount) : undefined;
+		
 		return {
 			"Name": x.name,
 			"Net surface area of this element": x.surfaceArea,
@@ -54,7 +56,7 @@ const groundFloorSummary: SummarySection = {
 			"Thickness of walls for ground floor": x.thicknessOfWalls,
 			"Type of ground floor": displaySnakeToSentenceCase(x.typeOfGroundFloor),
 			"Edge insulation type": x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? x.edgeInsulationType : undefined,
-			"Edge insulation width": x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? x.edgeInsulationWidth : undefined,
+			"Edge insulation width": edgeInsulationWidth,
 			"Edge insulation thermal resistance": x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? x.edgeInsulationThermalResistance : undefined,
 			"Height of the floor upper surface": x.typeOfGroundFloor === FloorType.Suspended_floor ? x.heightOfFloorUpperSurface : undefined,
 			"Thermal resistance of insulation on base of underfloor space": x.typeOfGroundFloor === FloorType.Suspended_floor ? x.underfloorSpaceThermalResistance : undefined,

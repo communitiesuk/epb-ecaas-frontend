@@ -1,5 +1,6 @@
 import type { EmptyObject, TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
+import type { Length } from "~/mapping/units";
 import type { ProductReference } from "~/pcdb/products";
 import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType, FuelType, SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta, WindShieldLocation } from "~/schema/api-schema.types";
 
@@ -114,7 +115,7 @@ export type GroundFloorData = {
 } & TaggedUnion<'typeOfGroundFloor', {
 	[FloorType.Slab_edge_insulation]: {
 		edgeInsulationType: "horizontal" | "vertical";
-		edgeInsulationWidth: number;
+		edgeInsulationWidth: Length | number;
 		edgeInsulationThermalResistance: number;
 	},
 	[FloorType.Slab_no_edge_insulation]: EmptyObject,

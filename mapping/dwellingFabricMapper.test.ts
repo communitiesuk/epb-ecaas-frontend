@@ -113,7 +113,7 @@ describe('dwelling fabric mapper', () => {
 			name: 'Ground 2',
 			typeOfGroundFloor: FloorType.Slab_edge_insulation,
 			edgeInsulationType: "horizontal",
-			edgeInsulationWidth: 0,
+			edgeInsulationWidth: 0.36,
 			edgeInsulationThermalResistance: 0
 		};
 
@@ -221,7 +221,7 @@ describe('dwelling fabric mapper', () => {
 		const expectedEdgeInsulation: SchemaEdgeInsulation = {
 			type: 'horizontal',
 			edge_thermal_resistance: groundFloorWithEdgeInsulation.edgeInsulationThermalResistance!,
-			width: groundFloorWithEdgeInsulation.edgeInsulationWidth!
+			width: 0.36
 		};
 
 		expect(groundFloorWithEdgeInsulationElement.edge_insulation![0]).toEqual(expectedEdgeInsulation);
