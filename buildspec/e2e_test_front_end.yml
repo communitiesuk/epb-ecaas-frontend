@@ -1,8 +1,5 @@
 version: 0.2
 env:
-  variables:
-    BASE_URL: "ECAAS_URL"
-    LOGIN_URL: "LOGIN_URL"
   parameter-store:
     LOGIN_USERNAME: "LOGIN_USERNAME"
     LOGIN_PASSWORD: "LOGIN_PASSWORD"
@@ -12,9 +9,12 @@ phases:
   pre_build:
     commands:
       # update nodejs to version 22
-      - n 22
+      - node -v
 
   build:
     commands:
       - npm ci
+      - npx playwright install --with-deps
+      - export BASE_URL=$ECAAS_URL
+      - mkdir -p playwright/.auth
       - npm run ci-e2e-test
