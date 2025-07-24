@@ -32,6 +32,7 @@ describe('windows', () => {
 		midHeight: 1,
 		numberOpenableParts: '0',
 		frameToOpeningRatio: 0.8,
+		curtainsOrBlinds: false
 	};
 
 	const window2: WindowData = {

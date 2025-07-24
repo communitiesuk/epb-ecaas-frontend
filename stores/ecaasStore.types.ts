@@ -326,6 +326,7 @@ export type WindowData = {
 	elevationalHeight: number;
 	midHeight: number;
 	frameToOpeningRatio: number;
+	curtainsOrBlinds: boolean;
 } & TaggedUnion<'numberOpenableParts', {
 	'0': EmptyObject;
 	'1': OnePartFields;

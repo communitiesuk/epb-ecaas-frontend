@@ -36,6 +36,7 @@ const saveForm = (fields: WindowData) => {
 			midHeight: fields.midHeight,
 			// Convert opening-frame ratio to frame-opening ratio
 			frameToOpeningRatio: parseFloat((1 - fields.frameToOpeningRatio).toFixed(1)),
+			curtainsOrBlinds: fields.curtainsOrBlinds,
 			overhangDepth: 'overhangDepth' in fields ? fields.overhangDepth : undefined,
 			overhangDistance: 'overhangDepth' in fields ? fields.overhangDistance: undefined,
 			sideFinRightDepth: 'sideFinRightDepth' in fields ? fields.sideFinRightDepth : undefined,
@@ -285,44 +286,54 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</tr>
 			</tbody>
 		</table>
-		<GovAccordion>
-			<GovAccordionSection id="curtainsAndBlinds" title="Curtains and blinds (optional inputs)" :index="0" heading-size="m">
-				<FormKit
-					id="treatmentType"
-					type="govRadios"
-					:options="windowTreatmentTypeOptions"
-					label="Type"
-					help="This determines the behaviour. Curtains are scheduled and blinds respond to sunlight."
-					name="treatmentType"
-				/>
-				<FormKit
-					v-if="model.treatmentType === 'curtains'"
-					id="curtainsControlObject"
-					type="govRadios"
-					:options="curtainsControlObjectOptions"
-					label="Curtains control object reference"
-					help="Reference to an OnOffTimeControl object that determines when curtains should open"
-					name="curtainsControlObject"
-				/>
-				<FormKit
-					id="thermalResistivityIncrease"
-					type="govInputWithSuffix"
-					suffix-text="W/(m²·K)"
-					label="Thermal resistivity increase"
-					help="Enter the additional thermal resistivity applied to window when the curtain or blind is closed"
-					name="thermalResistivityIncrease"
-					validation="number | min:0 | max:100"
-				/>
-				<FormKit
-					id="solarTransmittanceReduction"
-					type="govInputFloat"
-					label="Solar transmittance reduction"
-					help="Enter the proportion of solar energy allowed through the window which is allowed into the zone when curtain or blind is closed. This should be a decimal between 0 and 1."
-					name="solarTransmittanceReduction"
-					validation="number | min:0 | max:1"
-				/>
-			</GovAccordionSection>
-		</GovAccordion>
+
+		<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+		<h2 class="govuk-heading-l">Curtains and blinds</h2>
+		<FormKit
+			id="curtainsOrBlinds"
+			v-model="model.curtainsOrBlinds"
+			type="govBoolean"
+			label="Does this window have any curtains or blinds?"
+			name="curtainsOrBlinds"
+			validation="required"
+		/>
+		<template v-if="model.curtainsOrBlinds">
+			<FormKit
+				id="treatmentType"
+				type="govRadios"
+				:options="windowTreatmentTypeOptions"
+				label="Type"
+				help="This determines the behaviour. Curtains are scheduled and blinds respond to sunlight."
+				name="treatmentType"
+			/>
+			<FormKit
+				v-if="model.treatmentType === 'curtains'"
+				id="curtainsControlObject"
+				type="govRadios"
+				:options="curtainsControlObjectOptions"
+				label="Curtains control object reference"
+				help="Reference to an OnOffTimeControl object that determines when curtains should open"
+				name="curtainsControlObject"
+			/>
+			<FormKit
+				id="thermalResistivityIncrease"
+				type="govInputWithSuffix"
+				suffix-text="W/(m²·K)"
+				label="Thermal resistivity increase"
+				help="Enter the additional thermal resistivity applied to window when the curtain or blind is closed"
+				name="thermalResistivityIncrease"
+				validation="number | min:0 | max:100"
+			/>
+			<FormKit
+				id="solarTransmittanceReduction"
+				type="govInputFloat"
+				label="Solar transmittance reduction"
+				help="Enter the proportion of solar energy allowed through the window which is allowed into the zone when curtain or blind is closed. This should be a decimal between 0 and 1."
+				name="solarTransmittanceReduction"
+				validation="number | min:0 | max:1"
+			/>
+		</template>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

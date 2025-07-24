@@ -33,6 +33,7 @@ describe('window', () => {
 		sideFinRightDistance: 1,
 		sideFinLeftDepth: 1,
 		sideFinLeftDistance: 1,
+		curtainsOrBlinds: true,
 		treatmentType: WindowTreatmentType.blinds,
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
@@ -63,6 +64,7 @@ describe('window', () => {
 		await user.type(screen.getByTestId('sideFinRightDistance'), '1');
 		await user.type(screen.getByTestId('sideFinLeftDepth'), '1');
 		await user.type(screen.getByTestId('sideFinLeftDistance'), '1');
+		await user.click(screen.getByTestId('curtainsOrBlinds_yes'));
 		await user.click(screen.getByTestId('treatmentType_blinds'));
 		await user.type(screen.getByTestId('thermalResistivityIncrease'), '1');
 		await user.type(screen.getByTestId('solarTransmittanceReduction'), '0.1');
@@ -188,6 +190,7 @@ describe('window', () => {
 	it('displays curtainsControlObject when the curtains option is selected', async () => {
 		await renderSuspended(Window);
     
+		await user.click(screen.getByTestId('curtainsOrBlinds_yes'));
 		await user.click(screen.getByTestId('treatmentType_curtains'));
 		await user.tab();
     

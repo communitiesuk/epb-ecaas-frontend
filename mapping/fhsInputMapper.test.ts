@@ -1722,6 +1722,7 @@ describe("FHS input mapper", () => {
 					sideFinRightDistance: 1,
 					sideFinLeftDepth: 0.25,
 					sideFinLeftDistance: 1,
+					curtainsOrBlinds: true,
 					treatmentType: WindowTreatmentType.curtains,
 					thermalResistivityIncrease: 1,
 					solarTransmittanceReduction: 0.1,

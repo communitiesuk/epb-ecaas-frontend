@@ -235,6 +235,7 @@ const windowData: WindowData = {
 	sideFinRightDistance: 1,
 	sideFinLeftDepth: 1,
 	sideFinLeftDistance: 1,
+	curtainsOrBlinds: true,
 	treatmentType: WindowTreatmentType.blinds,
 	thermalResistivityIncrease: 1,
 	solarTransmittanceReduction: 0.1,
