@@ -83,6 +83,7 @@ function checkIsComplete(){
 	<CustomList
 		id="unheatedPitchedRoofs"
 		title="Unheated pitched roof"
+		hint="For unheated pitch roofs, input both the ceiling and roof details here"
 		:form-url="`${page?.url!}/unheated-pitched-roofs`"
 		:items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceUnheatedPitchedRoofs?.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('dwellingSpaceUnheatedPitchedRoofs', index)"

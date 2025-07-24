@@ -41,7 +41,7 @@ function routeForEditItem(index: number) {
 			<div class="custom-list__header">
 				<div>
 					<h2 class="govuk-heading-m govuk-!-margin-0">{{ title }}</h2>
-					<p v-if="hint" class="govuk-hint govuk-!-margin-0">{{ hint }}</p>
+					<p v-if="hint" class="govuk-hint govuk-!-margin-0 custom-list__hint">{{ hint }}</p>
 				</div>
 				<NuxtLink v-if="canAddMoreItems()" class="govuk-link" :data-testid="`${id}_add`" :href=routeForAddItem()>{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
 			</div>
@@ -77,6 +77,10 @@ function routeForEditItem(index: number) {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+	}
+
+	.custom-list__hint {
+		font-size: 1rem;
 	}
 
 	.custom-list__body {
