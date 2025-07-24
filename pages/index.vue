@@ -29,7 +29,7 @@ const handleCalculateError = (errors?: CorrectedJsonApiError[] | boolean) => {
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
-	<template v-if="!showLoadingIndicator">
+	<div v-show="!showLoadingIndicator">
 		<div v-if="calculateError">
 			<GovErrorSummary
 				title="Sorry, there's been an error"
@@ -53,8 +53,10 @@ const handleCalculateError = (errors?: CorrectedJsonApiError[] | boolean) => {
 			<GovButton secondary href="/import">Import</GovButton>
 			<GovButton secondary href="/clear-data">Clear data</GovButton>
 		</div>
-	</template>
-	<LoadingIndicator v-else>Loading results</LoadingIndicator>
+	</div>
+	<div v-show="showLoadingIndicator">
+		<LoadingIndicator>Loading results</LoadingIndicator>
+	</div>
 </template>
 
 <style lang="scss" scoped>
