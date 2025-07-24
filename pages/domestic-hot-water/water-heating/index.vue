@@ -129,8 +129,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				help="Enter the estimated energy lost from the tank per day"
 				name="dailyEnergyLoss"
 				validation="required | number | min:0 | max:200"
-				suffix-text="kWh"
-			/>
+				suffix-text="kWh">
+				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+					<p class="govuk-hint">Daily energy loss encompasses all energy used to heat the water, including the energy to replace heat lost through standing losses and the energy used for hot water draw-offs. Note that this is not standing heat loss, which refers to the heat lost from the cylinder to the surrounding environment over a specific period, typically measured over a 24-hour period.</p>
+				</GovDetails>
+			</FormKit>
 		</template>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
