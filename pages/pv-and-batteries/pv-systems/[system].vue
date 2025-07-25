@@ -261,13 +261,36 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="inverterTypeOptions"
 			label="Inverter type"
 			name="inverterType"
-			validation="required"
-		/>
+			validation="required">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Inverter type</th>
+							<th scope="col" class="govuk-table__header">Description</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">String</td>
+							<td class="govuk-table__cell">
+								String inverters are the traditional and most common type of inverter. They connect a series of solar panels together.
+							</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Optimised</td>
+							<td class="govuk-table__cell">
+								Optimised inverters are string inverters with DC optimisers, which are mounted on the back of the solar panel.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<template v-if="!shadingSectionDisabled">
 			<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 			<h2 class="govuk-heading-l">PV shading</h2>
-			<table class="govuk-table">		
-
+			<table class="govuk-table">
 				<thead class="govuk-table__head">
 					<tr class="govuk-table__row">
 						<td colspan="3" class="govuk-!-text-align-left">This refers to objects on the roof which might cause shading to the PV.</td>
