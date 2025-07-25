@@ -62,13 +62,27 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	// Below uses default values until heat pump is set up to come from PCDB
 	const { HotWaterSource } = domesticHotWaterData;
 	const heatPumpName: string = Object.keys((HotWaterSource!['hw cylinder'] as SchemaStorageTank).HeatSource)[0]!;
-	const defaultHeatSourceWetData = {"HeatSourceWet": {[heatPumpName]: defaultHeatSourceWetDetails}};
+	const heatPumps = state.heatingSystems.heatGeneration.heatPump;
+
+	// use the picked heat pump if one is picked, otherwise fall back to the default
+	// TODO: correct this at point other heat sources are being added
+	const heatSourceWetData: Pick<FhsInputSchema, 'HeatSourceWet'> = {
+		"HeatSourceWet": heatPumps.length === 0 ? {
+			[heatPumpName]: defaultHeatSourceWetDetails
+		} : {
+			[(heatPumps[0]!.name ?? heatPumpName)]: {
+				product_reference: heatPumps[0]!.productReference,
+				type: "HeatPump",
+				EnergySupply: defaultElectricityEnergySupplyName,
+			}
+		}
+	};
 
 	const fhsInput = merge.all([
 		dwellingDetailsData,
 		infiltrationVentilationData,
 		dwellingFabricData,
-		defaultHeatSourceWetData,
+		heatSourceWetData,
 		heatingSystemsData,
 		domesticHotWaterData,
 		pvData,

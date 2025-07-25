@@ -30,7 +30,7 @@ import {
 import {  mapFhsInputData } from "./fhsInputMapper";
 import type {FhsInputSchema} from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
-import { defaultHeatSourceWetDetails, defaultZoneName } from "~/mapping/common";
+import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { lengthCm } from "./units";
 
 const baseForm = {
@@ -240,7 +240,11 @@ const expectedHouseInput: FhsInputSchema = {
 		}
 	},
 	GroundFloorArea: 40,
-	HeatSourceWet: {"some-heat-pump-name": defaultHeatSourceWetDetails},
+	HeatSourceWet: {"some-heat-pump-name": {
+		EnergySupply: defaultElectricityEnergySupplyName,
+		type: "HeatPump",
+		product_reference: "HEATPUMP-LARGE"
+	}},
 	Zone: {
 		[defaultZoneName]: {
 			BuildingElement: {
@@ -630,7 +634,11 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	GroundFloorArea: 38,
 	HeatSourceWet: {
-		"heat pump 1 name": defaultHeatSourceWetDetails,
+		"heat pump 1 name": {
+			EnergySupply: defaultElectricityEnergySupplyName,
+			type: "HeatPump",
+			product_reference: "HEATPUMP-SMALL"
+		},
 	},
 	Zone: {
 		[defaultZoneName]: {
