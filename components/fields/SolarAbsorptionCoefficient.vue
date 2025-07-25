@@ -3,6 +3,7 @@ defineProps<{
 	id: string,
 	name: string;
 	label?: string;
+	additionalText?: string;
 }>();
 </script>
 
@@ -15,6 +16,8 @@ defineProps<{
 		:name="name"
 		validation="required | number | min:0.01 | max:1">
 		<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+			<p v-if="additionalText" class="govuk-body">{{ additionalText }}</p>
+
 			<table class="govuk-table">
 				<thead class="govuk-table__head">
 					<tr>

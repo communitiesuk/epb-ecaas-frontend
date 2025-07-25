@@ -89,7 +89,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption"/>
+		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption" additional-text="The solar absorption coefficient of a material in an exposed floor directly affects heat loss because it dictates how much solar radiation is absorbed and converted into heat within the floor material. A higher solar absorption coefficient means more solar energy is absorbed, potentially increasing the floor's temperature and, consequently, the amount of heat lost to the surrounding environment."/>
 		<FieldsUValue id="uValue" name="uValue" />
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
