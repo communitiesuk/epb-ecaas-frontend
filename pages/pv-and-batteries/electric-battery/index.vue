@@ -132,8 +132,28 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			name="minimumChargeRate"
 			:validation-rules="{ chargeRateMaxGreaterThanMin }"
 			validation="required | number | chargeRateMaxGreaterThanMin"
-			suffix-text="kW"
-		/>
+			suffix-text="kW">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header govuk-!-width-one-third">Energy source for the battery</th>
+							<th scope="col" class="govuk-table__header">Typical values</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">PV system</th>
+							<td class="govuk-table__cell">The minimum effective charge rate can literally be 0 kW when no solar energy is available, or as low as 0.1 kW - 0.5 kW in very poor light conditions, depending on the available surplus.</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Mains electricity</th>
+							<td class="govuk-table__cell">When actively charging from the grid, the battery system will generally aim for 2-3 kW or more to efficiently fill up within the off-peak window.</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="maximumDischargeRate"
 			type="govInputWithSuffix"
