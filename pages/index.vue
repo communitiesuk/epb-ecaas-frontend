@@ -23,6 +23,14 @@ const exportDate = lastExportDateCookie.value ? dayjs(lastExportDateCookie.value
 const handleCalculateError = (errors?: CorrectedJsonApiError[] | boolean) => {
 	calculateError.value = errors;
 };
+
+const firstError = computed(() => {
+	if (Array.isArray(calculateError.value) && calculateError.value.length > 0) {
+		return calculateError.value[0];
+	}
+	return null;
+});
+
 </script>
 
 <template>
@@ -37,7 +45,8 @@ const handleCalculateError = (errors?: CorrectedJsonApiError[] | boolean) => {
 				test-id="resultErrorSummary"
 			>
 				<p class="govuk-body govuk-!-margin-bottom-2">We have noted an unexpected error with the service and we will look into resolving it.</p>
-				<p v-if="Array.isArray(calculateError)" class="govuk-body">Error ID: {{ calculateError[0]?.id }}</p>
+				<p v-if="firstError?.detail" class="govuk-body govuk-!-margin-bottom-2">{{ firstError.detail }}</p>
+				<p v-if="firstError?.id" class="govuk-body">Error ID: {{ firstError.id }}</p>
 			</GovErrorSummary>
 		</div>
 		<h1 class="govuk-heading-l">{{ title }}</h1>
