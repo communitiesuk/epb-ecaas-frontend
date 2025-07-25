@@ -6,11 +6,6 @@ env:
 
     
 phases:
-  pre_build:
-    commands:
-      # update nodejs to version 22
-      - node -v
-
   build:
     commands:
       - npm ci
