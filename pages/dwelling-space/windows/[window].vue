@@ -306,6 +306,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Type"
 				help="This determines the behaviour. Curtains are scheduled and blinds respond to sunlight."
 				name="treatmentType"
+				validation="required"
 			/>
 			<FormKit
 				v-if="model.treatmentType === 'curtains'"
@@ -315,6 +316,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Curtains control object reference"
 				help="Reference to an OnOffTimeControl object that determines when curtains should open"
 				name="curtainsControlObject"
+				validation="required"
 			/>
 			<FormKit
 				id="thermalResistivityIncrease"
@@ -323,7 +325,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Thermal resistivity increase"
 				help="Enter the additional thermal resistivity applied to window when the curtain or blind is closed"
 				name="thermalResistivityIncrease"
-				validation="number | min:0 | max:100"
+				validation="required | number | min:0 | max:100"
 			/>
 			<FormKit
 				id="solarTransmittanceReduction"
@@ -331,7 +333,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Solar transmittance reduction"
 				help="Enter the proportion of solar energy allowed through the window which is allowed into the zone when curtain or blind is closed. This should be a decimal between 0 and 1."
 				name="solarTransmittanceReduction"
-				validation="number | min:0 | max:1"
+				validation="required | number | min:0 | max:1"
 			/>
 		</template>
 		<FormKit type="govButton" label="Save and continue" />
