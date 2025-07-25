@@ -75,7 +75,7 @@ describe("PV system", () => {
 		expect(screen.getByText("Inverter peak power AC")).toBeDefined();
 		expect(screen.getByText("Inverter peak power DC")).toBeDefined();
 		expect(screen.getByText("Location of inverter")).toBeDefined();
-		expect(screen.getByText("Inverter type")).toBeDefined();
+		expect(screen.getByText("Inverter type", { selector: 'legend' })).toBeDefined();
 		expect(screen.queryByText("PV shading")).toBeNull();
 	});
 
