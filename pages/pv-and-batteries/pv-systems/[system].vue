@@ -92,7 +92,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the maximum power output the photovoltaic system can generate under ideal conditions"
 			name="peakPower"
 			validation="required | number | min:0.001 | max: 100"
-			suffix-text="kW"
+			suffix-text="kWp"
 		>
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
@@ -108,25 +108,25 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Small flat</td>
 							<td class="govuk-table__cell">
-								0.5 - 1.5 kW
+								0.5 - 1.5 kWp
 							</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Terraced house</td>
 							<td class="govuk-table__cell">
-								1.5 - 2.5 kW
+								1.5 - 2.5 kWp
 							</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Semi-detached house</td>
 							<td class="govuk-table__cell">
-								2 - 3.5 kW
+								2 - 3.5 kWp
 							</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<td class="govuk-table__cell">Detached house</td>
 							<td class="govuk-table__cell">
-								4 - 6 kW
+								4 - 6 kWp
 							</td>
 						</tr>
 					</tbody>
