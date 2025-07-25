@@ -2,7 +2,7 @@
 	<GovHeader classes="govuk-header--full-width-border" />
 	<GovServiceNavigation service-name="Check Part L building compliance" />
 	<div class="govuk-width-container">
-		<GovPhaseBanner tag="BETA">
+		<GovPhaseBanner tag="Beta">
 			This is a new service. Help us to improve it and <NuxtLink href="/feedback" class="govuk-link">give your feedback</NuxtLink>.
 		</GovPhaseBanner>
 		<main class="govuk-main-wrapper govuk-!-padding-top-6">
