@@ -9,6 +9,7 @@ import { mapLivingSpaceFabricData as mapDwellingFabricData } from './dwellingFab
 import { mapPvAndElectricBatteriesData } from './pvAndElectricBatteriesMapper';
 import { mapDomesticHotWaterData } from './domesticHotWaterMapper';
 import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from "~/mapping/common";
+import { objectFromEntries } from 'ts-extras';
 
 export type ResolvedState = Resolved<EcaasState>;
 
@@ -69,13 +70,14 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const heatSourceWetData: Pick<FhsInputSchema, 'HeatSourceWet'> = {
 		"HeatSourceWet": heatPumps.length === 0 ? {
 			[heatPumpName]: defaultHeatSourceWetDetails
-		} : {
-			[(heatPumps[0]!.name ?? heatPumpName)]: {
-				product_reference: heatPumps[0]!.productReference,
+		} : objectFromEntries(heatPumps.map(heatPump => [
+			heatPump.name,
+			{
+				product_reference: heatPump.productReference,
 				type: "HeatPump",
 				EnergySupply: defaultElectricityEnergySupplyName,
 			}
-		}
+		] as const))
 	};
 
 	const fhsInput = merge.all([
