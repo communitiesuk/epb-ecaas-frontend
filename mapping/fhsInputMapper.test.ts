@@ -248,7 +248,7 @@ const expectedHouseInput: FhsInputSchema = {
 	Zone: {
 		[defaultZoneName]: {
 			BuildingElement: {
-				"ground-floor": {
+				"ground-floor (floor)": {
 					type: 'BuildingElementGround',
 					area: 40,
 					total_area: 40,
@@ -643,7 +643,7 @@ const expectedFlatInput: FhsInputSchema = {
 	Zone: {
 		[defaultZoneName]: {
 			BuildingElement: {
-				"ground floor 1": {
+				"ground floor 1 (floor)": {
 					type: 'BuildingElementGround',
 					area: 12,
 					total_area: 12,
@@ -662,7 +662,7 @@ const expectedFlatInput: FhsInputSchema = {
 					floor_type: FloorType.Slab_edge_insulation,
 					pitch: 0,
 				},
-				"ground floor 2": {
+				"ground floor 2 (floor)": {
 					type: 'BuildingElementGround',
 					area: 26,
 					total_area: 26,
@@ -678,7 +678,7 @@ const expectedFlatInput: FhsInputSchema = {
 					floor_type: FloorType.Heated_basement,
 					pitch: 0,
 				},
-				"internal floor 1": {
+				"internal floor 1 (floor)": {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					area: 6,
 					areal_heat_capacity: 50000,
@@ -687,7 +687,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 180,
 					u_value: 0.01
 				},
-				"internal floor 2": {
+				"internal floor 2 (floor)": {
 					type: "BuildingElementAdjacentConditionedSpace",
 					area: 4, 
 					u_value: 0.01,
@@ -695,7 +695,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: MassDistributionClass.M,
 					pitch: 180,
 				},
-				"exposed floor 1": {
+				"exposed floor 1 (floor)": {
 					height: 5,
 					width: 2,
 					base_height: 1,
@@ -709,7 +709,7 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementOpaque",
 					is_external_door: false
 				},
-				"party wall 1": {
+				"party wall 1 (wall)": {
 					area: 15,
 					areal_heat_capacity: 50000,
 					base_height: 1,
@@ -723,7 +723,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 1,
 					width: 5,
 				},
-				"external wall 1": {
+				"external wall 1 (wall)": {
 					type: "BuildingElementOpaque",
 					area: 20,
 					areal_heat_capacity: 75000,
@@ -737,7 +737,7 @@ const expectedFlatInput: FhsInputSchema = {
 					width: 3,
 					pitch: 90
 				},
-				"internal wall 1": {
+				"internal wall 1 (wall)": {
 					area: 15,
 					areal_heat_capacity: 50000,
 					mass_distribution_class: MassDistributionClass.I,
@@ -745,7 +745,7 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 0.01,
 				},
-				"front door": {
+				"front door (door)": {
 					area: 20,
 					areal_heat_capacity: 75000,
 					base_height: 1,
@@ -759,7 +759,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 1,
 					width: 1.2,
 				},
-				"external glazed door": {
+				"external glazed door (door)": {
 					area: 3,
 					base_height: 0.2,
 					frame_area_fraction: 0,
@@ -776,7 +776,7 @@ const expectedFlatInput: FhsInputSchema = {
 					width: 1,
 					window_part_list: []
 				},
-				"wall to garage": {
+				"wall to garage (wall)": {
 					area: 20,
 					areal_heat_capacity: 50000,
 					mass_distribution_class: MassDistributionClass.D,
@@ -785,7 +785,7 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					u_value: 1,
 				},
-				"ceiling to heated space": {
+				"ceiling to heated space (ceiling)": {
 					type: "BuildingElementAdjacentConditionedSpace",
 					area: 16,
 					areal_heat_capacity: 75000,
@@ -793,7 +793,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 0,
 					u_value: 0.01,
 				},	
-				"ceiling to unheated space": {
+				"ceiling to unheated space (ceiling)": {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					area: 20,
 					areal_heat_capacity: 60000,
@@ -802,7 +802,7 @@ const expectedFlatInput: FhsInputSchema = {
 					thermal_resistance_unconditioned_space: 3.4,
 					u_value: 2.2
 				},
-				"roof 1": {
+				"roof 1 (roof)": {
 					pitch: 20,
 					orientation360: 180,
 					height: 2.5,
@@ -817,7 +817,7 @@ const expectedFlatInput: FhsInputSchema = {
 					is_external_door: false,
 					is_unheated_pitched_roof: false
 				},
-				"unheated pitched roof": {
+				"unheated pitched roof (roof)": {
 					pitch: 0,
 					orientation360: 90,
 					height: 5,
@@ -832,7 +832,7 @@ const expectedFlatInput: FhsInputSchema = {
 					is_external_door: false,
 					type: "BuildingElementOpaque"
 				},
-				"bathroom door": {
+				"bathroom door (door)": {
 					area: 1.4,
 					areal_heat_capacity: 50000,
 					mass_distribution_class: MassDistributionClass.IE,
@@ -840,7 +840,7 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 0.01,
 				},
-				"door to garage": {
+				"door to garage (door)": {
 					area: 1.4,
 					areal_heat_capacity: 50000,
 					mass_distribution_class: MassDistributionClass.IE,
@@ -849,7 +849,7 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					u_value: 0.01,
 				},
-				"bedroom window": {
+				"bedroom window (window)": {
 					type: "BuildingElementTransparent",
 					pitch: 90,
 					orientation360: 90,
@@ -888,21 +888,21 @@ const expectedFlatInput: FhsInputSchema = {
 			// SpaceCoolSystem: [],
 			SpaceHeatSystem: ["instant elec heater 1", "instant elec heater 2"],
 			ThermalBridging: {
-				"linear thermal bridge": {
+				"linear thermal bridge (bridge)": {
 					junction_type: "E3: SILL",
 					length: 1.2,
 					linear_thermal_transmittance: 0.03,
 					type: "ThermalBridgeLinear"
 				},
-				"point thermal bridge 1": {
+				"point thermal bridge 1 (bridge)": {
 					heat_transfer_coeff: 0.045,
 					type: "ThermalBridgePoint"
 				},
-				"point thermal bridge 2": {
+				"point thermal bridge 2 (bridge)": {
 					heat_transfer_coeff: 0.035,
 					type: "ThermalBridgePoint"
 				},
-				"point thermal bridge 3": {
+				"point thermal bridge 3 (bridge)": {
 					heat_transfer_coeff: 0.067,
 					type: "ThermalBridgePoint"
 				},

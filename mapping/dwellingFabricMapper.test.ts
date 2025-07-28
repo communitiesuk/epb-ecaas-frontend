@@ -186,18 +186,19 @@ describe('dwelling fabric mapper', () => {
 		});
 
 		const groundFloorsTotalArea = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.length * groundFloor.surfaceArea;
+		const floorSuffix = ' (floor)';
 
 		// Act
 		const fhsInputData = mapFloorData(resolveState(store.$state));
 
 		// Assert
-		const groundFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloor.name]! as BuildingElementGround;
-		const groundFloorWithEdgeInsulationElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithEdgeInsulation.name]! as BuildingElementGround;
-		const groundFloorWithSuspendedFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithSuspendedFloor.name]! as BuildingElementGround;
-		const groundFloorWithHeatedBasementElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithHeatedBasement.name]! as BuildingElementGround;
-		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithUnheatedBasement.name]! as BuildingElementGround;
-		const internalFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[internalFloor.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
-		const exposedFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[exposedFloor.name] as BuildingElementOpaque;
+		const groundFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloor.name + floorSuffix]! as BuildingElementGround;
+		const groundFloorWithEdgeInsulationElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithEdgeInsulation.name + floorSuffix]! as BuildingElementGround;
+		const groundFloorWithSuspendedFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithSuspendedFloor.name + floorSuffix]! as BuildingElementGround;
+		const groundFloorWithHeatedBasementElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithHeatedBasement.name + floorSuffix]! as BuildingElementGround;
+		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[groundFloorWithUnheatedBasement.name + floorSuffix]! as BuildingElementGround;
+		const internalFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[internalFloor.name + floorSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const exposedFloorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[exposedFloor.name + floorSuffix] as BuildingElementOpaque;
 
 		expect(fhsInputData.GroundFloorArea).toBe(groundFloorsTotalArea);
 
@@ -341,6 +342,8 @@ describe('dwelling fabric mapper', () => {
 			thermalResistanceOfAdjacentUnheatedSpace: 1
 		};
 
+		const wallSuffix = ' (wall)';
+
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWalls: {
@@ -356,10 +359,10 @@ describe('dwelling fabric mapper', () => {
 		const fhsInputData = mapWallData(resolveState(store.$state));
 
 		// Assert
-		const externalWallElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[externalWall.name]! as BuildingElementOpaque;
-		const internalWallElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[internalWall.name]! as BuildingElementAdjacentConditionedSpace;
-		const partyWallElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[partyWall.name]! as BuildingElementOpaque;
-		const wallToUnheatedSpaceElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[wallToUnheatedSpace.name] as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const externalWallElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[externalWall.name + wallSuffix]! as BuildingElementOpaque;
+		const internalWallElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[internalWall.name + wallSuffix]! as BuildingElementAdjacentConditionedSpace;
+		const partyWallElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[partyWall.name + wallSuffix]! as BuildingElementOpaque;
+		const wallToUnheatedSpaceElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[wallToUnheatedSpace.name + wallSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
 
 		const expectedExternalWall: BuildingElementOpaque = {
 			type: 'BuildingElementOpaque',
@@ -464,6 +467,9 @@ describe('dwelling fabric mapper', () => {
 			massDistributionClass: MassDistributionClass.I
 		};
 
+		const ceilingSuffix = ' (ceiling)';
+		const roofSuffix = ' (roof)';
+
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceCeilingsAndRoofs: {
@@ -478,9 +484,9 @@ describe('dwelling fabric mapper', () => {
 		const fhsInputData = mapCeilingAndRoofData(resolveState(store.$state));
 
 		// Assert
-		const ceilingElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[ceiling.name]! as BuildingElementAdjacentUnconditionedSpaceSimple;
-		const roofElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[roof.name]! as BuildingElementOpaque;
-		const unheatedPitchedRoofElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[unheatedPitchedRoof.name]! as BuildingElementOpaque;
+		const ceilingElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[ceiling.name + ceilingSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const roofElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[roof.name + roofSuffix]! as BuildingElementOpaque;
+		const unheatedPitchedRoofElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[unheatedPitchedRoof.name + roofSuffix]! as BuildingElementOpaque;
 
 		const expectedCeiling: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
@@ -578,6 +584,8 @@ describe('dwelling fabric mapper', () => {
 			massDistributionClass: MassDistributionClass.I
 		};
 
+		const doorSuffix = ' (door)';
+		 
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceDoors: {
@@ -592,9 +600,9 @@ describe('dwelling fabric mapper', () => {
 		const fhsInputData = mapDoorData(resolveState(store.$state));
 
 		// Assert
-		const internalDoorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[internalDoor.name]! as BuildingElementAdjacentUnconditionedSpaceSimple;
-		const externalGlazedDoorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[externalGlazedDoor.name]! as BuildingElementTransparent;
-		const externalUnglazedDoorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[externalUnglazedDoor.name]! as BuildingElementOpaque;
+		const internalDoorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[internalDoor.name + doorSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const externalGlazedDoorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[externalGlazedDoor.name + doorSuffix]! as BuildingElementTransparent;
+		const externalUnglazedDoorElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[externalUnglazedDoor.name + doorSuffix]! as BuildingElementOpaque;
 
 		const expectedInternalDoor: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
@@ -679,6 +687,8 @@ describe('dwelling fabric mapper', () => {
 			heightOpenableArea: 1
 		};
 
+		const windowSuffix = ' (window)';
+
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: { data: [window], complete: true },
@@ -689,7 +699,7 @@ describe('dwelling fabric mapper', () => {
 		const fhsInputData = mapWindowData(resolveState(store.$state));
 
 		// Assert
-		const windowElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[window.name]! as BuildingElementTransparent;
+		const windowElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[window.name + windowSuffix]! as BuildingElementTransparent;
 
 		const expectedWindow: BuildingElementTransparent = {
 			type: 'BuildingElementTransparent',
@@ -749,6 +759,8 @@ describe('dwelling fabric mapper', () => {
 			dwellingSpacePointThermalBridges: { data: [pointThermalBridge], complete: true }
 		};
 
+		const bridgeSuffix = ' (bridge)';
+
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceThermalBridging
@@ -765,8 +777,8 @@ describe('dwelling fabric mapper', () => {
 
 		const thermalBridging = fhsInputData.Zone![defaultZoneName]!.ThermalBridging as ThermalBridging;
 
-		const linearThermalBridgeElement = thermalBridging[linearThermalBridge.name]! as ThermalBridgeLinear;
-		const pointThermalBridgeElement = thermalBridging[pointThermalBridge.name]! as ThermalBridgePoint;
+		const linearThermalBridgeElement = thermalBridging[linearThermalBridge.name + bridgeSuffix]! as ThermalBridgeLinear;
+		const pointThermalBridgeElement = thermalBridging[pointThermalBridge.name + bridgeSuffix]! as ThermalBridgePoint;
 
 		const expectedLinearThermalBridge: ThermalBridgeLinear = {
 			type: 'ThermalBridgeLinear',
