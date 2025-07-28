@@ -74,4 +74,9 @@ const firstError = computed(() => {
 .last-export {
 	color: map.get($govuk-colours, "dark-grey")
 }
+.govuk-error-summary {
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
 </style>
