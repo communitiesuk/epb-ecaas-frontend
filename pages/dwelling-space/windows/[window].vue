@@ -167,7 +167,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsUValue id="uValue" name="uValue" />
 		<FormKit
 			id="solarTransmittance" type="govInputFloat" label="Transmittance of solar energy "
-			help="Enter the total solar energy transmittance, or G value, or the transparent part of the window. It should be a decimal between 0 and 1."
+			help="Enter the total solar energy transmittance, or G value, of the transparent part of the window. It should be a decimal between 0 and 1."
 			name="solarTransmittance" validation="required | number | min:0.01 | max:1" />
 		<FormKit
 			id="midHeight" type="govInputWithSuffix" suffix-text="m" label="Mid height"
