@@ -266,11 +266,6 @@ const expectedHouseInput: FhsInputSchema = {
 			Lighting: {
 				efficacy: 56.0,
 				bulbs: {
-					incandescent: {
-						count: 0,
-						power: 60,
-						efficacy: 14
-					},
 					led: {
 						count: 6,
 						power: 6,

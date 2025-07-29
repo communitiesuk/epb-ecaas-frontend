@@ -69,11 +69,11 @@ describe('dwelling fabric mapper', () => {
 		expect(fhsInputData.Zone![defaultZoneName]?.SpaceHeatControl).toBe('livingroom');
 	});
 
-	it('maps lighing input state to FHS input request', () => {
+	it('maps lighting input state to FHS input request', () => {
 		// Arrange
 		const state: DwellingSpaceLightingData = {
 			numberOfLEDBulbs: 5,
-			numberOfIncandescentBulbs: 2
+			numberOfIncandescentBulbs: 0
 		};
 
 		store.$patch({
@@ -90,7 +90,7 @@ describe('dwelling fabric mapper', () => {
 
 		// Assert
 		expect(fhsInputData.Zone![defaultZoneName]?.Lighting?.bulbs?.led?.count).toBe(state.numberOfLEDBulbs);
-		expect(fhsInputData.Zone![defaultZoneName]?.Lighting?.bulbs?.incandescent?.count).toBe(state.numberOfIncandescentBulbs);
+		expect(fhsInputData.Zone![defaultZoneName]?.Lighting?.bulbs?.incandescent).toBeUndefined();
 	});
 
 	it('maps floor input state to FHS input request', () => {
