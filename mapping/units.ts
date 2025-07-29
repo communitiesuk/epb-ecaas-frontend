@@ -1,32 +1,39 @@
-export enum LengthUnit {
+export enum LengthUnitName {
 	METERS = 'meters',
 	CENTIMETERS = 'centimeters',
 	MILLIMETERS = 'millimeters',
 }
 
+export type LengthUnit = { name: LengthUnitName; suffix: string; };
+
+export const centimeter: LengthUnit = {
+	name: LengthUnitName.CENTIMETERS,
+	suffix: 'cm'
+};
+
 export interface Length {
 	amount: number;
-	unit: LengthUnit;
+	unit: LengthUnitName;
 }
 
-export function length(amount: number, unit: LengthUnit): Length {
-	return { amount, unit };
+export function length(amount: number, lengthUnit: LengthUnitName): Length {
+	return { amount, unit: lengthUnit };
 }
 
 export function lengthCm(amount: number): Length {
 	return {
 		amount,
-		unit: LengthUnit.CENTIMETERS
+		unit: LengthUnitName.CENTIMETERS
 	};
 }
 
 export function asMeters(length: Length): number {
 	const { amount, unit } = length;
-	if (unit === LengthUnit.CENTIMETERS) {
+	if (unit === LengthUnitName.CENTIMETERS) {
 		return amount * 0.01;
 	}
 		
-	if (unit === LengthUnit.MILLIMETERS) {
+	if (unit === LengthUnitName.MILLIMETERS) {
 		return amount * 0.001;
 	}
 

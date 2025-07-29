@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from '@formkit/core';
 import { showErrorState, getErrorMessage } from '#imports';
-import { lengthCm } from '~/mapping/units';
+import { length } from '~/mapping/units';
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -10,7 +10,7 @@ const props = defineProps<{
 const {
 	id,
 	node: { name },
-	attrs,
+	attrs: { unit },
 	label,
 	help,
 } = props.context;
@@ -29,7 +29,7 @@ function handleTyping(e: Event) {
 function handleInput(e: Event) {
 	const target = e.target as HTMLInputElement;
 	const value = target.value ? parseFloat(target.value) : '';
-	props.context.node.input(typeof value === 'number' ? lengthCm(value) : '');
+	props.context.node.input(typeof value === 'number' ? length(value, unit.name) : '');
 }
 </script>
 
@@ -55,7 +55,7 @@ function handleInput(e: Event) {
 				@input="handleTyping"
 				@change="handleInput"
 			>
-			<div class="govuk-input__suffix" aria-hidden="true">{{attrs['unit']}}</div>
+			<div class="govuk-input__suffix" aria-hidden="true">{{unit.suffix}}</div>
 		</div>
 	</div>
 </template>

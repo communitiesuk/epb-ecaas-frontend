@@ -13,8 +13,8 @@ import FormKitUnitInput from './components/form-kit/UnitInput.vue';
 import FormKitCheckboxes from './components/form-kit/Checkboxes.vue';
 import FormKitInputText from './components/form-kit/InputText.vue';
 import FormKitInputTextWithSuffix from './components/form-kit/InputTextWithSuffix.vue';
-
 import { FormKitBoolean } from '#components';
+import type { LengthUnit } from './mapping/units';
 
 // Enable TypeScript support for custom inputs
 declare module '@formkit/inputs' {
@@ -43,7 +43,7 @@ declare module '@formkit/inputs' {
 		},
 		'govUnitInput': {
 			type: 'govUnitInput',
-			unit: string,
+			unit: LengthUnit,
 		},
 		'govCheckboxes': {
 			type: 'govCheckboxes',

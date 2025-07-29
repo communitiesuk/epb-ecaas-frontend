@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { lengthCm, LengthUnit, type Length, length } from '~/mapping/units';
+import { lengthCm, type Length, centimeter } from '~/mapping/units';
 import { FloorType, WindShieldLocation } from '~/schema/api-schema.types';
 
 const title = "Ground floor";
@@ -256,14 +256,14 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			<FormKit
 				id="edgeInsulationWidth"
 				type="govUnitInput"
-				unit="cm"
+				:unit="centimeter"
 				label="Edge insulation width"
 				help="This is the coverage distance of edge insulation rather than the thickness of the insulation"
 				name="edgeInsulationWidth"
 				:validation-rules="{ withinMinAndMax }"
 				validation="required | withinMinAndMax:0,10000"
 				:validation-messages="{
-					withinMinAndMax: 'Edge insulation width must be at least 0 and no more than 10,000.',
+					withinMinAndMax: `Edge insulation width must be at least 0 and no more than 10,000 ${centimeter.name}.`,
 				}"
 			>
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
