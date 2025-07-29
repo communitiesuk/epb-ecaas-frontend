@@ -112,3 +112,22 @@ describe('Energy supply', () => {
 	// 	});
 	// });
 });
+
+describe("saving form updates", () => {
+	test("updated form data is automatically saved to store ", async () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+
+		store.$patch({
+			heatingSystems: {
+				energySupply: {
+					data: { fuelType: [FuelType.electricity], exported: true },
+				},
+			},
+		});
+
+		await renderSuspended(EnergySupply);
+		await user.click(screen.getByTestId('exported_no'));
+		expect(store.heatingSystems.energySupply.data.exported).toBe(false);
+	});
+});
