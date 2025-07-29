@@ -23,6 +23,27 @@ const saveForm = (fields: InstantElectricStorageData) => {
 	navigateTo("/heating-systems/heat-emitting");
 };
 
+
+watch(model, async (newData: InstantElectricStorageData, initialData: InstantElectricStorageData) => {
+	const route = useRoute();
+	const index = Number(route.params.heater);
+	const store = useEcaasStore();
+	if(initialData == undefined) return;
+	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
+
+		if (initialData[key] !== newData[key]) {
+				
+			store.$patch((state) => {
+				const target = state.heatingSystems.heatEmitting.instantElectricHeater.data[index]; 
+				if (target){
+					target[key] = newData[key];
+				}
+			});
+			store.heatingSystems.heatEmitting.instantElectricHeater.complete = false;
+		}}}
+);
+
+
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
