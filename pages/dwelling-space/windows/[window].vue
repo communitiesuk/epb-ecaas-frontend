@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { standardPitchOptions } from '#imports';
-import { millimeter, Length } from '~/mapping/units';
+import {millimeter, Length} from '~/mapping/units';
 import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
 
 const title = "Window";
@@ -44,6 +44,10 @@ const windowTreatmentTypeOptions: Record<WindowTreatmentType, SnakeToSentenceCas
 const curtainsControlObjectOptions: Record<Exclude<WindowTreatmentControl, 'manual_motorised' | 'combined_light_blind_HVAC'>, string> = {
 	[WindowTreatmentControl.auto_motorised]: 'Auto motorised',
 	[WindowTreatmentControl.manual]: 'Manual',
+};
+const shadingValidation = (siblingField: string) => {
+	const val = (model.value as Record<string, unknown>)[siblingField];
+	return val !== undefined && val !== null && val !== '' ? 'required' : '';
 };
 
 const saveForm = (fields: WindowData) => {
@@ -281,6 +285,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							name="overhangDepth"
 							type="govUnitInput"
 							:unit="millimeter"
+							:validation="shadingValidation('overhangDistance')"
 						/>
 					</td>
 					<td>
@@ -289,6 +294,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							name="overhangDistance"
 							type="govUnitInput"
 							:unit="millimeter"
+							:validation="shadingValidation('overhangDepth')"
 						/>
 					</td>
 				</tr>
@@ -300,6 +306,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							name="sideFinRightDepth"
 							type="govUnitInput"
 							:unit="millimeter"
+							:validation="shadingValidation('sideFinRightDistance')"
 						/>
 					</td>
 					<td>
@@ -308,6 +315,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							name="sideFinRightDistance"
 							type="govUnitInput"
 							:unit="millimeter"
+							:validation="shadingValidation('sideFinRightDepth')"
 						/>
 					</td>
 				</tr>
@@ -319,6 +327,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							name="sideFinLeftDepth"
 							type="govUnitInput"
 							:unit="millimeter"
+							:validation="shadingValidation('sideFinLeftDistance')"
 						/>
 					</td>
 					<td>
@@ -327,6 +336,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							name="sideFinLeftDistance"
 							type="govUnitInput"
 							:unit="millimeter"
+							:validation="shadingValidation('sideFinLeftDepth')"
 						/>
 					</td>
 				</tr>
