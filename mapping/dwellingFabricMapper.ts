@@ -3,7 +3,7 @@ import type {SchemaBuildingElement, SchemaThermalBridgingDetails, SchemaWindowPa
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
 import { defaultZoneName } from "./common";
-import { asMeters } from "./units";
+import  { Length, LengthUnit } from "./units";
 
 export function mapLivingSpaceFabricData(state: ResolvedState): Partial<FhsInputSchema> {
 	const zoneParameterData = mapZoneParametersData(state);
@@ -85,7 +85,15 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 	const floorSuffix = 'floor';
 
 	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: FloorType.Slab_edge_insulation }>) {
-		const edgeInsulationWidthInMeters = typeof data.edgeInsulationWidth === 'number' ? data.edgeInsulationWidth : asMeters(data.edgeInsulationWidth);
+		let edgeInsulationWidthInMeters: number;
+
+		if (typeof data.edgeInsulationWidth === 'number') {
+			edgeInsulationWidthInMeters = data.edgeInsulationWidth;
+		} else {
+			const lengthUnit = new LengthUnit(data.edgeInsulationWidth.unit);
+			const edgeInsulationWidth = new Length(data.edgeInsulationWidth.amount, lengthUnit);
+			edgeInsulationWidthInMeters = edgeInsulationWidth.asMeters().amount;
+		}
 		
 		if (data.edgeInsulationType === 'horizontal') {
 			return [{
@@ -531,6 +539,16 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 	const windowData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceWindows.map(x => {
 		const nameWithSuffix = suffixName(x.name, windowSuffix);
 
+		function inMeters(length: Length | number ): number {
+			if (typeof length === 'number') {
+				return length;
+			} else {
+				const lengthUnit = new LengthUnit(length.unit);
+				const lengthAsMeters = new Length(length.amount, lengthUnit).asMeters();
+				return lengthAsMeters.amount; 
+			}
+		}
+
 		return {[nameWithSuffix]: {
 			type: 'BuildingElementTransparent',
 			pitch: extractPitch(x),
@@ -549,18 +567,18 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 			shading: x.numberOpenableParts === '0' ? [] : [
 				{
 					type: WindowShadingObjectType.overhang,
-					depth: 'overhangDepth' in x ? (typeof x.overhangDepth === 'number' ? x.overhangDepth : asMeters(x.overhangDepth)): 0,
-					distance: 'overhangDistance' in x ? (typeof x.overhangDistance === 'number' ? x.overhangDistance : asMeters(x.overhangDistance)): 0,
+					depth: 'overhangDepth' in x ? inMeters(x.overhangDepth): 0,
+					distance: 'overhangDistance' in x ? inMeters(x.overhangDistance): 0,
 				},
 				{
 					type: WindowShadingObjectType.sidefinleft,
-					depth: 'sideFinLeftDepth' in x ? (typeof x.sideFinLeftDepth === 'number' ? x.sideFinLeftDepth : asMeters(x.sideFinLeftDepth)): 0,
-					distance: 'sideFinLeftDistance' in x ? (typeof x.sideFinLeftDistance === 'number' ? x.sideFinLeftDistance : asMeters(x.sideFinLeftDistance)): 0,
+					depth: 'sideFinLeftDepth' in x ? inMeters(x.sideFinLeftDepth): 0,
+					distance: 'sideFinLeftDistance' in x ? inMeters(x.sideFinLeftDistance): 0,
 				},
 				{
 					type: WindowShadingObjectType.sidefinright,
-					depth: 'sideFinRightDepth' in x ? (typeof x.sideFinRightDepth === 'number' ? x.sideFinRightDepth : asMeters(x.sideFinRightDepth)): 0,
-					distance: 'sideFinRightDistance' in x ? (typeof x.sideFinRightDistance === 'number' ? x.sideFinRightDistance : asMeters(x.sideFinRightDistance)): 0,
+					depth: 'sideFinRightDepth' in x ? inMeters(x.sideFinRightDepth): 0,
+					distance: 'sideFinRightDistance' in x ? inMeters(x.sideFinRightDistance): 0,
 
 				}
 			]

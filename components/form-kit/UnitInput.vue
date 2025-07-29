@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from '@formkit/core';
 import { showErrorState, getErrorMessage } from '#imports';
-import { length } from '~/mapping/units';
+import { Length } from '~/mapping/units';
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -29,7 +29,7 @@ function handleTyping(e: Event) {
 function handleInput(e: Event) {
 	const target = e.target as HTMLInputElement;
 	const value = target.value ? parseFloat(target.value) : '';
-	props.context.node.input(typeof value === 'number' ? length(value, unit.name) : '');
+	props.context.node.input(typeof value === 'number' ? new Length(value, unit) : '');
 }
 </script>
 

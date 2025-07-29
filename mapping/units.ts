@@ -4,43 +4,54 @@ export enum LengthUnitName {
 	MILLIMETERS = 'millimeters',
 }
 
-export type LengthUnit = { name: LengthUnitName; suffix: string; };
+enum LengthSuffix {
+	METERS = 'm',
+	CENTIMETERS = 'cm',
+	MILLIMETERS = 'mm',
+}
 
-export const centimeter: LengthUnit = {
-	name: LengthUnitName.CENTIMETERS,
-	suffix: 'cm'
-};
+export class LengthUnit {
+	name: LengthUnitName;
+	suffix: LengthSuffix;
 
-export const millimeter: LengthUnit = {
-	name: LengthUnitName.MILLIMETERS,
-	suffix: 'mm'
-};
+	constructor(name: LengthUnitName) {
+		this.name = name;
+		this.suffix = this.getSuffix();
+	}
 
-export interface Length {
+	private getSuffix() {
+		switch (this.name) {
+			case LengthUnitName.METERS: return LengthSuffix.METERS;
+			case LengthUnitName.CENTIMETERS: return LengthSuffix.CENTIMETERS;
+			case LengthUnitName.MILLIMETERS: return LengthSuffix.MILLIMETERS;
+		}
+	}
+}
+
+export const meter = new LengthUnit(LengthUnitName.METERS);
+export const centimeter = new LengthUnit(LengthUnitName.CENTIMETERS);
+export const millimeter = new LengthUnit(LengthUnitName.MILLIMETERS);
+
+export class Length {
 	amount: number;
 	unit: LengthUnitName;
-}
 
-export function length(amount: number, lengthUnit: LengthUnitName): Length {
-	return { amount, unit: lengthUnit };
-}
-
-export function lengthCm(amount: number): Length {
-	return {
-		amount,
-		unit: LengthUnitName.CENTIMETERS
-	};
-}
-
-export function asMeters(length: Length): number {
-	const { amount, unit } = length;
-	if (unit === LengthUnitName.CENTIMETERS) {
-		return amount * 0.01;
-	}
-		
-	if (unit === LengthUnitName.MILLIMETERS) {
-		return amount * 0.001;
+	constructor(amount: number, unit: LengthUnit) {
+		this.amount = amount;
+		this.unit = unit.name;
 	}
 
-	return amount;
+	asMeters(): Length {
+		if (this.unit === LengthUnitName.CENTIMETERS) {
+			const convertedAmount = this.amount * 0.01;
+			return new Length(convertedAmount, meter);
+		}
+
+		if (this.unit === LengthUnitName.MILLIMETERS) {
+			const convertedAmount = this.amount * 0.001;
+			return new Length(convertedAmount, millimeter);
+		}
+
+		return this;
+	}
 }

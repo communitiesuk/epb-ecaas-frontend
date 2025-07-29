@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { lengthCm, type Length, centimeter } from '~/mapping/units';
+import { Length, centimeter } from '~/mapping/units';
 import { FloorType, WindShieldLocation } from '~/schema/api-schema.types';
 
 const title = "Ground floor";
@@ -9,7 +9,7 @@ const { saveToList } = useForm();
 const floorData = useItemToEdit('floor', store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
 if (floorData?.typeOfGroundFloor == FloorType.Slab_edge_insulation) {
-	const edgeInsulationWidth = typeof floorData.edgeInsulationWidth === 'number' ? lengthCm(floorData.edgeInsulationWidth) : floorData.edgeInsulationWidth;
+	const edgeInsulationWidth = typeof floorData.edgeInsulationWidth === 'number' ? new Length(floorData.edgeInsulationWidth, centimeter) : floorData.edgeInsulationWidth;
 	floorData.edgeInsulationWidth = edgeInsulationWidth;
 };
 
@@ -255,11 +255,11 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			</Formkit>
 			<FormKit
 				id="edgeInsulationWidth"
-				type="govUnitInput"
-				:unit="centimeter"
+				name="edgeInsulationWidth"
 				label="Edge insulation width"
 				help="This is the coverage distance of edge insulation rather than the thickness of the insulation"
-				name="edgeInsulationWidth"
+				type="govUnitInput"
+				:unit="centimeter"
 				:validation-rules="{ withinMinAndMax }"
 				validation="required | withinMinAndMax:0,10000"
 				:validation-messages="{
