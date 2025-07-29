@@ -11,6 +11,11 @@ export const centimeter: LengthUnit = {
 	suffix: 'cm'
 };
 
+export const millimeter: LengthUnit = {
+	name: LengthUnitName.MILLIMETERS,
+	suffix: 'mm'
+};
+
 export interface Length {
 	amount: number;
 	unit: LengthUnitName;

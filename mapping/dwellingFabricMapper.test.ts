@@ -9,7 +9,7 @@ import type {SchemaBuildingElement, SchemaEdgeInsulation, SchemaThermalBridgingD
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.types";
-import { lengthCm } from "./units";
+import { length, lengthCm, LengthUnitName } from "./units";
 
 type BuildingElementGround = Extract<SchemaBuildingElement, { type: 'BuildingElementGround' }>;
 type BuildingElementOpaque = Extract<SchemaBuildingElement, { type: 'BuildingElementOpaque' }>;
@@ -672,12 +672,12 @@ describe('dwelling fabric mapper', () => {
 			elevationalHeight: 1,
 			midHeight: 1,
 			numberOpenableParts: '1',
-			overhangDepth: 1,
-			overhangDistance: 1,
-			sideFinRightDepth: 1,
-			sideFinRightDistance: 1,
-			sideFinLeftDepth: 1,
-			sideFinLeftDistance: 1,
+			overhangDepth: length(1000, LengthUnitName.MILLIMETERS),
+			overhangDistance: length(1000, LengthUnitName.MILLIMETERS),
+			sideFinRightDepth: length(1000, LengthUnitName.MILLIMETERS),
+			sideFinRightDistance: length(1000, LengthUnitName.MILLIMETERS),
+			sideFinLeftDepth: length(1000, LengthUnitName.MILLIMETERS),
+			sideFinLeftDistance: length(1000, LengthUnitName.MILLIMETERS),
 			curtainsOrBlinds: true,
 			treatmentType: WindowTreatmentType.blinds,
 			thermalResistivityIncrease: 1,
@@ -722,18 +722,18 @@ describe('dwelling fabric mapper', () => {
 			shading: [
 				{
 					type: WindowShadingObjectType.overhang,
-					depth: window.overhangDepth,
-					distance: window.overhangDistance
+					depth: 1,
+					distance: 1
 				},
 				{
 					type: WindowShadingObjectType.sidefinleft,
-					depth: window.sideFinLeftDepth,
-					distance: window.sideFinLeftDistance
+					depth: 1,
+					distance: 1
 				},
 				{
 					type: WindowShadingObjectType.sidefinright,
-					depth: window.sideFinRightDepth,
-					distance: window.sideFinRightDistance
+					depth: 1,
+					distance: 1
 				}
 			]
 		};

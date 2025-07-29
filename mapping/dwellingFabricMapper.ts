@@ -549,18 +549,19 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 			shading: x.numberOpenableParts === '0' ? [] : [
 				{
 					type: WindowShadingObjectType.overhang,
-					depth: 'overhangDepth' in x ? x.overhangDepth! : 0,
-					distance: 'overhangDistance' in x ? x.overhangDistance! : 0
+					depth: 'overhangDepth' in x ? (typeof x.overhangDepth === 'number' ? x.overhangDepth : asMeters(x.overhangDepth)): 0,
+					distance: 'overhangDistance' in x ? (typeof x.overhangDistance === 'number' ? x.overhangDistance : asMeters(x.overhangDistance)): 0,
 				},
 				{
 					type: WindowShadingObjectType.sidefinleft,
-					depth: 'sideFinLeftDepth' in x ? x.sideFinLeftDepth! : 0,
-					distance: 'sideFinLeftDistance' in x ? x.sideFinLeftDistance! : 0
+					depth: 'sideFinLeftDepth' in x ? (typeof x.sideFinLeftDepth === 'number' ? x.sideFinLeftDepth : asMeters(x.sideFinLeftDepth)): 0,
+					distance: 'sideFinLeftDistance' in x ? (typeof x.sideFinLeftDistance === 'number' ? x.sideFinLeftDistance : asMeters(x.sideFinLeftDistance)): 0,
 				},
 				{
 					type: WindowShadingObjectType.sidefinright,
-					depth: 'sideFinRightDepth' in x ? x.sideFinRightDepth! : 0,
-					distance: 'sideFinRightDistance' in x ? x.sideFinRightDistance! : 0
+					depth: 'sideFinRightDepth' in x ? (typeof x.sideFinRightDepth === 'number' ? x.sideFinRightDepth : asMeters(x.sideFinRightDepth)): 0,
+					distance: 'sideFinRightDistance' in x ? (typeof x.sideFinRightDistance === 'number' ? x.sideFinRightDistance : asMeters(x.sideFinRightDistance)): 0,
+
 				}
 			]
 		}};

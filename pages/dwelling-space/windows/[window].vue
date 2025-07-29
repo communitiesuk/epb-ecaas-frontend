@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { standardPitchOptions } from '#imports';
+import { millimeter, length } from '~/mapping/units';
 import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
 
 const title = "Window";
@@ -7,6 +8,33 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const window = useItemToEdit('window', store.dwellingFabric.dwellingSpaceWindows.data);
+
+// prepopulate shading data when using old input format for backwards compatibility
+
+if (window && 'overhangDepth' in window) {
+	window.overhangDepth = typeof window.overhangDepth === 'number' ? length(window.overhangDepth, millimeter.name) : window.overhangDepth;
+};
+
+if (window && 'overhangDistance' in window) {
+	window.overhangDistance = typeof window.overhangDistance === 'number' ? length(window.overhangDistance, millimeter.name) : window.overhangDistance;
+};
+
+if (window && 'sideFinRightDepth' in window) {
+	window.sideFinRightDepth = typeof window.sideFinRightDepth === 'number' ? length(window.sideFinRightDepth, millimeter.name) : window.sideFinRightDepth;
+};
+
+if (window && 'sideFinRightDistance' in window) {
+	window.sideFinRightDistance = typeof window.sideFinRightDistance === 'number' ? length(window.sideFinRightDistance, millimeter.name) : window.sideFinRightDistance;
+};
+
+if (window && 'sideFinLeftDepth' in window) {
+	window.sideFinLeftDepth = typeof window.sideFinLeftDepth === 'number' ? length(window.sideFinLeftDepth, millimeter.name) : window.sideFinLeftDepth;
+};
+
+if (window && 'sideFinLeftDistance' in window) {
+	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === 'number' ? length(window.sideFinLeftDistance, millimeter.name) : window.sideFinLeftDistance;
+};
+
 const model: Ref<WindowData> = ref(window!);
 
 const windowTreatmentTypeOptions: Record<WindowTreatmentType, SnakeToSentenceCase<WindowTreatmentType>> = {
@@ -38,11 +66,11 @@ const saveForm = (fields: WindowData) => {
 			frameToOpeningRatio: parseFloat((1 - fields.frameToOpeningRatio).toFixed(1)),
 			curtainsOrBlinds: fields.curtainsOrBlinds,
 			overhangDepth: 'overhangDepth' in fields ? fields.overhangDepth : undefined,
-			overhangDistance: 'overhangDepth' in fields ? fields.overhangDistance: undefined,
+			overhangDistance: 'overhangDistance' in fields ? fields.overhangDistance: undefined,
 			sideFinRightDepth: 'sideFinRightDepth' in fields ? fields.sideFinRightDepth : undefined,
-			sideFinRightDistance: 'sideFinRightDepth' in fields ? fields.sideFinRightDistance : undefined,
+			sideFinRightDistance: 'sideFinRightDistance' in fields ? fields.sideFinRightDistance : undefined,
 			sideFinLeftDepth: 'sideFinLeftDepth' in fields ? fields.sideFinLeftDepth : undefined,
-			sideFinLeftDistance: 'sideFinLeftDepth' in fields ? fields.sideFinLeftDistance : undefined,
+			sideFinLeftDistance: 'sideFinLeftDistance' in fields ? fields.sideFinLeftDistance : undefined,
 		};
 
 		let commonFieldsIncludingOpenableParts;
@@ -249,39 +277,57 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					<th scope="row" class="govuk-!-text-align-left">Overhang</th>
 					<td>
 						<FormKit
-							id="overhangDepth" type="govInputWithSuffix" suffix-text="m" name="overhangDepth"
-							validation="number | min:0" />
+							id="overhangDepth"
+							name="overhangDepth"
+							type="govUnitInput"
+							:unit="millimeter"
+						/>
 					</td>
 					<td>
 						<FormKit
-							id="overhangDistance" type="govInputWithSuffix" suffix-text="m" name="overhangDistance"
-							validation="number | min:0" />
+							id="overhangDistance"
+							name="overhangDistance"
+							type="govUnitInput"
+							:unit="millimeter"
+						/>
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-!-text-align-left">Side fin right</th>
 					<td>
 						<FormKit
-							id="sideFinRightDepth" type="govInputWithSuffix" suffix-text="m" name="sideFinRightDepth"
-							validation="number | min:0" />
+							id="sideFinRightDepth"
+							name="sideFinRightDepth"
+							type="govUnitInput"
+							:unit="millimeter"
+						/>
 					</td>
 					<td>
 						<FormKit
-							id="sideFinRightDistance" type="govInputWithSuffix" suffix-text="m" name="sideFinRightDistance"
-							validation="number | min:0" />
+							id="sideFinRightDistance"
+							name="sideFinRightDistance"
+							type="govUnitInput"
+							:unit="millimeter"
+						/>
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-!-text-align-left">Side fin left</th>
 					<td>
 						<FormKit
-							id="sideFinLeftDepth" type="govInputWithSuffix" suffix-text="m" name="sideFinLeftDepth"
-							validation="number | min:0" />
+							id="sideFinLeftDepth"
+							name="sideFinLeftDepth"
+							type="govUnitInput"
+							:unit="millimeter"
+						/>
 					</td>
 					<td>
 						<FormKit
-							id="sideFinLeftDistance" type="govInputWithSuffix" suffix-text="m" name="sideFinLeftDistance"
-							validation="number | min:0" />
+							id="sideFinLeftDistance"
+							name="sideFinLeftDistance"
+							type="govUnitInput"
+							:unit="millimeter"
+						/>
 					</td>
 				</tr>
 			</tbody>

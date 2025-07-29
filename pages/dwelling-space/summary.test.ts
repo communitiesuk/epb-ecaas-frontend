@@ -3,6 +3,7 @@ import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from '~/stores/ecaasStore.types';
 import { FloorType, MassDistributionClass, WindowTreatmentType } from '~/schema/api-schema.types';
+import { length, LengthUnitName } from '~/mapping/units';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -229,12 +230,12 @@ const windowData: WindowData = {
 	midHeight: 1,
 	frameToOpeningRatio: 0.8,
 	numberOpenableParts: '0',
-	overhangDepth: 1,
-	overhangDistance: 1,
-	sideFinRightDepth: 1,
-	sideFinRightDistance: 1,
-	sideFinLeftDepth: 1,
-	sideFinLeftDistance: 1,
+	overhangDepth: length(100, LengthUnitName.MILLIMETERS),
+	overhangDistance: length(100, LengthUnitName.MILLIMETERS),
+	sideFinRightDepth: length(100, LengthUnitName.MILLIMETERS),
+	sideFinRightDistance: length(100, LengthUnitName.MILLIMETERS),
+	sideFinLeftDepth: length(100, LengthUnitName.MILLIMETERS),
+	sideFinLeftDistance: length(100, LengthUnitName.MILLIMETERS),
 	curtainsOrBlinds: true,
 	treatmentType: WindowTreatmentType.blinds,
 	thermalResistivityIncrease: 1,
@@ -796,12 +797,12 @@ describe('Living space fabric summary', () => {
 				"Elevational height of building element at its base": "1",
 				"Mid height": "1",
 				"Number of openable parts": "0",
-				"Overhang depth": "1",
-				"Overhang distance from glass": "1",
-				"Side fin right depth": "1",
-				"Side fin right distance from glass": "1",
-				"Side fin left depth": "1",
-				"Side fin left distance from glass": "1",
+				"Overhang depth": "100",
+				"Overhang distance from glass": "100",
+				"Side fin right depth": "100",
+				"Side fin right distance from glass": "100",
+				"Side fin left depth": "100",
+				"Side fin left distance from glass": "100",
 				"Type": "Blinds",
 				"Thermal resistivity increase": "1",
 				"Solar transmittance reduction": "0.1"

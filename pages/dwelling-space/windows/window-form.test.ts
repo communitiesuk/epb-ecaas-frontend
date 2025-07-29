@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import Window from './[window].vue';
 import { WindowTreatmentType } from "~/schema/api-schema.types";
+import { length, LengthUnitName } from "~/mapping/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -27,12 +28,12 @@ describe('window', () => {
 		midHeight: 1,
 		frameToOpeningRatio: 0.2,
 		numberOpenableParts: '0',
-		overhangDepth: 1,
-		overhangDistance: 1,
-		sideFinRightDepth: 1,
-		sideFinRightDistance: 1,
-		sideFinLeftDepth: 1,
-		sideFinLeftDistance: 1,
+		overhangDepth: length(60, LengthUnitName.MILLIMETERS),
+		overhangDistance: length(60, LengthUnitName.MILLIMETERS),
+		sideFinRightDepth: length(60, LengthUnitName.MILLIMETERS),
+		sideFinRightDistance: length(60, LengthUnitName.MILLIMETERS),
+		sideFinLeftDepth: length(60, LengthUnitName.MILLIMETERS),
+		sideFinLeftDistance: length(60, LengthUnitName.MILLIMETERS),
 		curtainsOrBlinds: true,
 		treatmentType: WindowTreatmentType.blinds,
 		thermalResistivityIncrease: 1,
@@ -58,12 +59,12 @@ describe('window', () => {
 		await user.type(screen.getByTestId('midHeight'), '1');
 		await user.type(screen.getByTestId('frameToOpeningRatio'), '0.8');
 		await user.click(screen.getByTestId('numberOpenableParts_0'));
-		await user.type(screen.getByTestId('overhangDepth'), '1');
-		await user.type(screen.getByTestId('overhangDistance'), '1');
-		await user.type(screen.getByTestId('sideFinRightDepth'), '1');
-		await user.type(screen.getByTestId('sideFinRightDistance'), '1');
-		await user.type(screen.getByTestId('sideFinLeftDepth'), '1');
-		await user.type(screen.getByTestId('sideFinLeftDistance'), '1');
+		await user.type(screen.getByTestId('overhangDepth'), '60');
+		await user.type(screen.getByTestId('overhangDistance'), '60');
+		await user.type(screen.getByTestId('sideFinRightDepth'), '60');
+		await user.type(screen.getByTestId('sideFinRightDistance'), '60');
+		await user.type(screen.getByTestId('sideFinLeftDepth'), '60');
+		await user.type(screen.getByTestId('sideFinLeftDistance'), '60');
 		await user.click(screen.getByTestId('curtainsOrBlinds_yes'));
 		await user.click(screen.getByTestId('treatmentType_blinds'));
 		await user.type(screen.getByTestId('thermalResistivityIncrease'), '1');
@@ -103,12 +104,12 @@ describe('window', () => {
 		expect((await screen.findByTestId('elevationalHeight') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('midHeight') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('numberOpenableParts_0')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('overhangDepth') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('overhangDistance') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('sideFinRightDepth') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('sideFinRightDistance') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('sideFinLeftDepth') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('sideFinLeftDistance') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId('overhangDepth') as HTMLInputElement).value).toBe('60');
+		expect((await screen.findByTestId('overhangDistance') as HTMLInputElement).value).toBe('60');
+		expect((await screen.findByTestId('sideFinRightDepth') as HTMLInputElement).value).toBe('60');
+		expect((await screen.findByTestId('sideFinRightDistance') as HTMLInputElement).value).toBe('60');
+		expect((await screen.findByTestId('sideFinLeftDepth') as HTMLInputElement).value).toBe('60');
+		expect((await screen.findByTestId('sideFinLeftDistance') as HTMLInputElement).value).toBe('60');
 		expect((await screen.findByTestId('treatmentType_blinds')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('thermalResistivityIncrease') as HTMLInputElement).value).toBe('1');
 		expect((await screen.findByTestId('solarTransmittanceReduction') as HTMLInputElement).value).toBe('0.1');

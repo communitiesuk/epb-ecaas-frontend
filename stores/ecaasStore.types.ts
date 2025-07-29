@@ -115,7 +115,7 @@ export type GroundFloorData = {
 } & TaggedUnion<'typeOfGroundFloor', {
 	[FloorType.Slab_edge_insulation]: {
 		edgeInsulationType: "horizontal" | "vertical";
-		edgeInsulationWidth: Length | number; // number deprecated, preserved for backwards compatibility only
+		edgeInsulationWidth: Length | number; // number will be deprecated, preserved for backwards compatibility with old input data files
 		edgeInsulationThermalResistance: number;
 	},
 	[FloorType.Slab_no_edge_insulation]: EmptyObject,
@@ -334,14 +334,14 @@ export type WindowData = {
 	'3': ThreePartsFields;
 	'4': FourPartsFields;
 }> & ({
-	overhangDepth: number;
-	overhangDistance: number;
+	overhangDepth: Length | number; // number will be deprecated, preserved for backwards compatibility with old input data files
+	overhangDistance: Length | number; // number will be deprecated, preserved for backwards compatibility with old input data files
 } | EmptyObject) & ({
-	sideFinRightDepth: number;
-	sideFinRightDistance: number;
+	sideFinRightDepth: Length | number; // number will be deprecated, preserved for backwards compatibility with old input data files
+	sideFinRightDistance: Length | number; // number will be deprecated, preserved for backwards compatibility with old input data files
 } | EmptyObject) & ({
-	sideFinLeftDepth: number;
-	sideFinLeftDistance: number;
+	sideFinLeftDepth: Length | number; // number will be deprecated, preserved for backwards compatibility with old input data files
+	sideFinLeftDistance: Length | number; // number will be deprecated, preserved for backwards compatibility with old input data files
 } | EmptyObject) & ({
 	treatmentType: WindowTreatmentType;
 	curtainsControlObject?: WindowTreatmentControl;
