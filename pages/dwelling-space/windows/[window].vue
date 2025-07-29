@@ -69,12 +69,12 @@ const saveForm = (fields: WindowData) => {
 			// Convert opening-frame ratio to frame-opening ratio
 			frameToOpeningRatio: parseFloat((1 - fields.frameToOpeningRatio).toFixed(1)),
 			curtainsOrBlinds: fields.curtainsOrBlinds,
-			overhangDepth: 'overhangDepth' in fields ? fields.overhangDepth : undefined,
-			overhangDistance: 'overhangDistance' in fields ? fields.overhangDistance: undefined,
-			sideFinRightDepth: 'sideFinRightDepth' in fields ? fields.sideFinRightDepth : undefined,
-			sideFinRightDistance: 'sideFinRightDistance' in fields ? fields.sideFinRightDistance : undefined,
-			sideFinLeftDepth: 'sideFinLeftDepth' in fields ? fields.sideFinLeftDepth : undefined,
-			sideFinLeftDistance: 'sideFinLeftDistance' in fields ? fields.sideFinLeftDistance : undefined,
+			...('overhangDepth' in fields ? {overhangDepth: fields.overhangDepth} : {}),
+			...('overhangDistance' in fields ? {overhangDistance: fields.overhangDistance} : {}),
+			...('sideFinRightDepth' in fields ? {sideFinRightDepth: fields.sideFinRightDepth} : {}),
+			...('sideFinRightDistance' in fields ? {sideFinRightDistance: fields.sideFinRightDistance} : {}),
+			...('sideFinLeftDepth' in fields ? {sideFinLeftDepth: fields.sideFinLeftDepth} : {}),
+			...('sideFinLeftDistance' in fields ? {sideFinLeftDistance: fields.sideFinLeftDistance} : {}),
 		};
 
 		let commonFieldsIncludingOpenableParts;

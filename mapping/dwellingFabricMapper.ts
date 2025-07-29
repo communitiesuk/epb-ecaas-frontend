@@ -549,6 +549,24 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 			}
 		}
 
+		const overhang = 'overhangDepth' in x && 'overhangDistance' in x && x.overhangDepth && x.overhangDistance ? [{
+			type: WindowShadingObjectType.overhang,
+			depth: inMeters(x.overhangDepth),
+			distance: inMeters(x.overhangDistance),
+		}] : [];
+
+		const sideFinLeft = 'sideFinLeftDepth' in x && 'sideFinLeftDistance' in x && x.sideFinLeftDepth && x.sideFinLeftDistance ? [{
+			type: WindowShadingObjectType.sidefinleft,
+			depth: inMeters(x.sideFinLeftDepth),
+			distance: inMeters(x.sideFinLeftDistance),
+		}] : [];
+
+		const sideFinRight = 'sideFinRightDepth' in x && 'sideFinRightDistance' in x && x.sideFinRightDepth && x.sideFinRightDistance ? [{
+			type: WindowShadingObjectType.sidefinright,
+			depth: inMeters(x.sideFinRightDepth),
+			distance: inMeters(x.sideFinRightDistance),
+		}] : [];
+
 		return {[nameWithSuffix]: {
 			type: 'BuildingElementTransparent',
 			pitch: extractPitch(x),
@@ -564,24 +582,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 			max_window_open_area: x.numberOpenableParts === '0' ? 0 : x.maximumOpenableArea,
 			free_area_height: x.numberOpenableParts === '0' ? 0 : x.heightOpenableArea,
 			window_part_list: mapWindowPartList(x),
-			shading: x.numberOpenableParts === '0' ? [] : [
-				{
-					type: WindowShadingObjectType.overhang,
-					depth: 'overhangDepth' in x ? inMeters(x.overhangDepth): 0,
-					distance: 'overhangDistance' in x ? inMeters(x.overhangDistance): 0,
-				},
-				{
-					type: WindowShadingObjectType.sidefinleft,
-					depth: 'sideFinLeftDepth' in x ? inMeters(x.sideFinLeftDepth): 0,
-					distance: 'sideFinLeftDistance' in x ? inMeters(x.sideFinLeftDistance): 0,
-				},
-				{
-					type: WindowShadingObjectType.sidefinright,
-					depth: 'sideFinRightDepth' in x ? inMeters(x.sideFinRightDepth): 0,
-					distance: 'sideFinRightDistance' in x ? inMeters(x.sideFinRightDistance): 0,
-
-				}
-			]
+			shading: [...overhang, ...sideFinLeft, ...sideFinRight]
 		}};
 	});
 
