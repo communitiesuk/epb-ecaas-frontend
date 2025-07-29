@@ -250,7 +250,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					<td>
 						<FormKit
 							id="overhangDepth" type="govInputWithSuffix" suffix-text="m" name="overhangDepth"
-							validation="number" />
+							validation="number | min:0" />
 					</td>
 					<td>
 						<FormKit
