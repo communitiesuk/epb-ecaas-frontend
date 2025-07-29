@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { lengthCm } from '~/mapping/units';
+import { lengthCm, LengthUnit, type Length, length } from '~/mapping/units';
 import { FloorType, WindShieldLocation } from '~/schema/api-schema.types';
 
 const title = "Ground floor";
@@ -9,7 +9,7 @@ const { saveToList } = useForm();
 const floorData = useItemToEdit('floor', store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
 if (floorData?.typeOfGroundFloor == FloorType.Slab_edge_insulation) {
-	const edgeInsulationWidth = typeof floorData.edgeInsulationWidth === 'number' ? floorData.edgeInsulationWidth : floorData.edgeInsulationWidth.amount;
+	const edgeInsulationWidth = typeof floorData.edgeInsulationWidth === 'number' ? lengthCm(floorData.edgeInsulationWidth) : floorData.edgeInsulationWidth;
 	floorData.edgeInsulationWidth = edgeInsulationWidth;
 };
 
@@ -52,14 +52,12 @@ const saveForm = (fields: GroundFloorData) => {
 
 		switch(fields.typeOfGroundFloor) {
 			case FloorType.Slab_edge_insulation:
-			{
-				const edgeInsulationWidth = typeof fields.edgeInsulationWidth === 'number' ? lengthCm(fields.edgeInsulationWidth) : fields.edgeInsulationWidth;
-				
+			{				
 				floor = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					edgeInsulationType: fields.edgeInsulationType,
-					edgeInsulationWidth,
+					edgeInsulationWidth: fields.edgeInsulationWidth,
 					edgeInsulationThermalResistance: fields.edgeInsulationThermalResistance,
 				};
 				break;
@@ -118,6 +116,12 @@ const saveForm = (fields: GroundFloorData) => {
 };
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+
+const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
+	const value = node.value as Length;
+	return value.amount >= min && value.amount <= max;
+};
+
 </script>
 
 <template>
@@ -251,12 +255,17 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			</Formkit>
 			<FormKit
 				id="edgeInsulationWidth"
-				type="govInputWithSuffix"
-				suffix-text="cm"
+				type="govUnitInput"
+				unit="cm"
 				label="Edge insulation width"
 				help="This is the coverage distance of edge insulation rather than the thickness of the insulation"
 				name="edgeInsulationWidth"
-				validation="required | number | min:0 | max:10000">
+				:validation-rules="{ withinMinAndMax }"
+				validation="required | withinMinAndMax:0,10000"
+				:validation-messages="{
+					withinMinAndMax: 'Edge insulation width must be at least 0 and no more than 10,000.',
+				}"
+			>
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 					<table class="govuk-table">
 						<thead class="ovuk-table__head">

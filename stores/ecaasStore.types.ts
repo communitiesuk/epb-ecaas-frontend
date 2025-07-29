@@ -115,7 +115,7 @@ export type GroundFloorData = {
 } & TaggedUnion<'typeOfGroundFloor', {
 	[FloorType.Slab_edge_insulation]: {
 		edgeInsulationType: "horizontal" | "vertical";
-		edgeInsulationWidth: Length | number;
+		edgeInsulationWidth: Length | number; // number deprecated, preserved for backwards compatibility only
 		edgeInsulationThermalResistance: number;
 	},
 	[FloorType.Slab_no_edge_insulation]: EmptyObject,
