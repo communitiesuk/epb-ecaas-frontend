@@ -69,7 +69,7 @@ const doImport = (_event: Event) => {
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<template v-if="!importedFile">
 		<GovInset>Importing a file will override any data currently in the calculation. If you wish to save this data you must first export it.</GovInset>
-		<h2 class="govuk-heading-s">Upload a calculation</h2>
+		<h2 class="govuk-heading-s">Upload a data file</h2>
 		<ClientOnly>
 			<GovFileUpload
 				id="import"
