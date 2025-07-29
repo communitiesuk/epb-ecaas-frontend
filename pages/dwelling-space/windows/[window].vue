@@ -250,12 +250,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					<td>
 						<FormKit
 							id="overhangDepth" type="govInputWithSuffix" suffix-text="m" name="overhangDepth"
-							validation="number0" />
+							validation="number" />
 					</td>
 					<td>
 						<FormKit
 							id="overhangDistance" type="govInputWithSuffix" suffix-text="m" name="overhangDistance"
-							validation="number0" />
+							validation="number | min:0" />
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
@@ -263,12 +263,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					<td>
 						<FormKit
 							id="sideFinRightDepth" type="govInputWithSuffix" suffix-text="m" name="sideFinRightDepth"
-							validation="number0" />
+							validation="number | min:0" />
 					</td>
 					<td>
 						<FormKit
 							id="sideFinRightDistance" type="govInputWithSuffix" suffix-text="m" name="sideFinRightDistance"
-							validation="number0" />
+							validation="number | min:0" />
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
@@ -276,12 +276,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					<td>
 						<FormKit
 							id="sideFinLeftDepth" type="govInputWithSuffix" suffix-text="m" name="sideFinLeftDepth"
-							validation="number0" />
+							validation="number | min:0" />
 					</td>
 					<td>
 						<FormKit
 							id="sideFinLeftDistance" type="govInputWithSuffix" suffix-text="m" name="sideFinLeftDistance"
-							validation="number0" />
+							validation="number | min:0" />
 					</td>
 				</tr>
 			</tbody>
