@@ -31,6 +31,18 @@ const saveForm = (fields: EnergySupplyData) => {
 	navigateTo("/heating-systems");
 };
 
+watch(model, async (newData: EnergySupplyData, initialData: EnergySupplyData) => {
+
+	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
+		if (initialData[key]  !== newData[key]) {
+			store.$patch((state) => {
+				state.heatingSystems.energySupply.data[key] = newData[key];
+			});
+			store.heatingSystems.energySupply.complete = false;
+		}
+	}
+});
+
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
