@@ -54,7 +54,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Setpoint temperature which the heating system is set to raise the temperature of the hot water. Not recommended to heat above 65 °C due to scalding risk."
 			name="setpointTemperature"
 			validation="required | number"
-			suffix-text="&deg;C">
+			suffix-text="°C">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p>Typical range 25 - 44</p>
 			</GovDetails>

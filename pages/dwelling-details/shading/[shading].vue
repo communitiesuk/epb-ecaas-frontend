@@ -72,7 +72,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="This is the absolute start angle from compass north of the segment"
 			name="startAngle"
 			validation="required | number | min:0 | max:360"
-			suffix-text="&deg"
+			suffix-text="°"
 		/>
 		<FormKit
 			id="endAngle"
@@ -81,7 +81,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="This is the absolute end angle from compass north of the segment clockwise from the start angle. The end angle must be greater than the start angle."
 			name="endAngle"
 			validation="required | number | min:0 | max:360"
-			suffix-text="&deg"
+			suffix-text="°"
 		/>
 		<FormKit
 			id="objectType"
