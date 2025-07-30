@@ -9,7 +9,7 @@ import type {SchemaBuildingElement, SchemaEdgeInsulation, SchemaThermalBridgingD
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.types";
-import { Length, centimeter, millimeter } from "../utils/units/unitsLength";
+import { Length, centimeter, millimeter } from "../utils/units/length";
 
 type BuildingElementGround = Extract<SchemaBuildingElement, { type: 'BuildingElementGround' }>;
 type BuildingElementOpaque = Extract<SchemaBuildingElement, { type: 'BuildingElementOpaque' }>;

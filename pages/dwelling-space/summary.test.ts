@@ -3,7 +3,7 @@ import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from '~/stores/ecaasStore.types';
 import { FloorType, MassDistributionClass, WindowTreatmentType } from '~/schema/api-schema.types';
-import { Length, millimeter } from '~/utils/units/unitsLength';
+import { Length, millimeter } from '~/utils/units/length';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {

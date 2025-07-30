@@ -1,4 +1,4 @@
-import { Length, meter, centimeter, millimeter } from "./unitsLength";
+import { Length, meter, centimeter, millimeter } from "./length";
 
 describe('LengthUnit', () => {
 	test('suffix for meter is m', () => {

@@ -14,7 +14,7 @@ import FormKitCheckboxes from './components/form-kit/Checkboxes.vue';
 import FormKitInputText from './components/form-kit/InputText.vue';
 import FormKitInputTextWithSuffix from './components/form-kit/InputTextWithSuffix.vue';
 import { FormKitBoolean } from '#components';
-import type { LengthUnit,  } from './utils/units/unitsLength';
+import type { LengthUnit,  } from './utils/units/length';
 import type { VolumeUnit } from './utils/units/unitsVolume';
 
 // Enable TypeScript support for custom inputs

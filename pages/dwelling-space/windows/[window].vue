@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { standardPitchOptions } from '#imports';
-import { millimeter, Length } from '~/utils/units/unitsLength';
+import { millimeter, Length } from '~/utils/units/length';
 import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
 
 const title = "Window";

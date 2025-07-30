@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import GroundFloor from './[floor].vue';
 import { FloorType, MassDistributionClass, WindShieldLocation } from "~/schema/api-schema.types";
-import { Length, centimeter } from "~/utils/units/unitsLength";
+import { Length, centimeter } from "~/utils/units/length";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
