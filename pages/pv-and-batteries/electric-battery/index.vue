@@ -144,7 +144,7 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 					<tbody class="govuk-table__body">
 						<tr class="govuk-table__row">
 							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">PV system</th>
-							<td class="govuk-table__cell">The minimum effective charge rate can literally be 0 kW when no solar energy is available, or as low as 0.1 kW - 0.5 kW in very poor light conditions, depending on the available surplus.</td>
+							<td class="govuk-table__cell">The minimum effective charge rate can be 0 kW when no solar energy is available, or as low as 0.1 kW - 0.5 kW in very poor light conditions, depending on the available surplus.</td>
 						</tr>
 						<tr class="govuk-table__row">
 							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">Mains electricity</th>
