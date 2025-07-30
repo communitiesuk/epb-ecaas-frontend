@@ -457,8 +457,12 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 	</FormKit>
 </template>
 
-<style>
+<style scoped lang="scss">
 	.table-header-medium-width {
-	width: 28%;
+		width: 28%;
+	}
+
+	.govuk-table__cell ul {
+		margin: 0;
 	}
 </style>
