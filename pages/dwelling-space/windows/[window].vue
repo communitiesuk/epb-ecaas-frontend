@@ -44,9 +44,10 @@ const curtainsControlObjectOptions: Record<Exclude<WindowTreatmentControl, 'manu
 	[WindowTreatmentControl.auto_motorised]: 'Auto motorised',
 	[WindowTreatmentControl.manual]: 'Manual',
 };
+
 const shadingValidation = (siblingField: string) => {
 	const siblingValue = (model.value as Record<string, unknown>)[siblingField];
-	return siblingValue !== undefined && siblingValue !== null && siblingValue !== '' ? 'required' : '';
+	return siblingValue != null && siblingValue !== '' ? 'required' : '';
 };
 
 const saveForm = (fields: WindowData) => {
