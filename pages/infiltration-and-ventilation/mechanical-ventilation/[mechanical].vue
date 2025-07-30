@@ -102,7 +102,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="airFlowRate"
 			label="Air flow rate"
 			help="Enter the required design air flow rate that will be supplied to or extracted from the ventilation zone by the system"
-			type="govUnitInput"
+			type="govInputWithUnit"
 			:unit="literPerSecond"
 			validation="required"
 		>

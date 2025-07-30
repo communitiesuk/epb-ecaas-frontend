@@ -282,7 +282,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<FormKit
 							id="overhangDepth"
 							name="overhangDepth"
-							type="govUnitInput"
+							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('overhangDistance')"
 						/>
@@ -291,7 +291,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<FormKit
 							id="overhangDistance"
 							name="overhangDistance"
-							type="govUnitInput"
+							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('overhangDepth')"
 						/>
@@ -303,7 +303,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<FormKit
 							id="sideFinRightDepth"
 							name="sideFinRightDepth"
-							type="govUnitInput"
+							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('sideFinRightDistance')"
 						/>
@@ -312,7 +312,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<FormKit
 							id="sideFinRightDistance"
 							name="sideFinRightDistance"
-							type="govUnitInput"
+							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('sideFinRightDepth')"
 						/>
@@ -324,7 +324,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<FormKit
 							id="sideFinLeftDepth"
 							name="sideFinLeftDepth"
-							type="govUnitInput"
+							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('sideFinLeftDistance')"
 						/>
@@ -333,7 +333,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						<FormKit
 							id="sideFinLeftDistance"
 							name="sideFinLeftDistance"
-							type="govUnitInput"
+							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('sideFinLeftDepth')"
 						/>

@@ -74,7 +74,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			name="tankVolume"
 			label="Tank volume"
 			help="Enter the total internal capacity of the tank"
-			type="govUnitInput"
+			type="govInputWithUnit"
 			:unit="liter"
 			:validation-rules="{ withinMinAndMax }"
 			validation="required | withinMinAndMax:0,200000"

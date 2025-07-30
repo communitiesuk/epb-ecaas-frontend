@@ -9,7 +9,7 @@ import FormKitDropdown from './components/form-kit/Dropdown.vue';
 import FormKitInputFloat from './components/form-kit/InputFloat.vue';
 import FormKitInputInt from './components/form-kit/InputInt.vue';
 import FormKitInputWithSuffix from './components/form-kit/InputWithSuffix.vue';
-import FormKitUnitInput from './components/form-kit/UnitInput.vue';
+import FormKitInputWithUnit from './components/form-kit/InputWithUnit.vue';
 import FormKitCheckboxes from './components/form-kit/Checkboxes.vue';
 import FormKitInputText from './components/form-kit/InputText.vue';
 import FormKitInputTextWithSuffix from './components/form-kit/InputTextWithSuffix.vue';
@@ -43,8 +43,8 @@ declare module '@formkit/inputs' {
 			type: 'govInputWithSuffix',
 			suffixText: string
 		},
-		'govUnitInput': {
-			type: 'govUnitInput',
+		'govInputWithUnit': {
+			type: 'govInputWithUnit',
 			unit: LengthUnit | VolumeUnit | FlowRateUnit,
 		},
 		'govCheckboxes': {
@@ -99,9 +99,9 @@ export default defineFormKitConfig(() => {
 				type: "input",
 				component: FormKitInputWithSuffix
 			},
-			govUnitInput: {
+			govInputWithUnit: {
 				type: "input",
-				component: FormKitUnitInput
+				component: FormKitInputWithUnit
 			},
 			govCheckboxes: {
 				type: "input",

@@ -258,7 +258,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				name="edgeInsulationWidth"
 				label="Edge insulation width"
 				help="This is the coverage distance of edge insulation rather than the thickness of the insulation"
-				type="govUnitInput"
+				type="govInputWithUnit"
 				:unit="centimeter"
 				:validation-rules="{ withinMinAndMax }"
 				validation="required | withinMinAndMax:0,10000"
