@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Length, centimeter } from '~/utils/units/length';
+import { Length, centimetre } from '~/utils/units/length';
 import { FloorType, WindShieldLocation } from '~/schema/api-schema.types';
 
 const title = "Ground floor";
@@ -10,7 +10,7 @@ const floorData = useItemToEdit('floor', store.dwellingFabric.dwellingSpaceFloor
 
 // prepopulate edge insulation width when using old input format
 if (floorData?.typeOfGroundFloor === FloorType.Slab_edge_insulation && typeof floorData.edgeInsulationWidth === 'number') {
-	floorData.edgeInsulationWidth = new Length(floorData.edgeInsulationWidth, centimeter);
+	floorData.edgeInsulationWidth = new Length(floorData.edgeInsulationWidth, centimetre);
 };
 
 const model: Ref<GroundFloorData> = ref(floorData!);
@@ -259,11 +259,11 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Edge insulation width"
 				help="This is the coverage distance of edge insulation rather than the thickness of the insulation"
 				type="govInputWithUnit"
-				:unit="centimeter"
+				:unit="centimetre"
 				:validation-rules="{ withinMinAndMax }"
 				validation="required | withinMinAndMax:0,10000"
 				:validation-messages="{
-					withinMinAndMax: `Edge insulation width must be at least 0 and no more than 10,000 ${centimeter.name}.`,
+					withinMinAndMax: `Edge insulation width must be at least 0 and no more than 10,000 ${centimetre.name}.`,
 				}"
 			>
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>

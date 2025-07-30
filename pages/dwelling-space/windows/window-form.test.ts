@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import Window from './[window].vue';
 import { WindowTreatmentType } from "~/schema/api-schema.types";
-import { Length, millimeter } from "~/utils/units/length";
+import { Length, millimetre } from "~/utils/units/length";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -28,12 +28,12 @@ describe('window', () => {
 		midHeight: 1,
 		frameToOpeningRatio: 0.2,
 		numberOpenableParts: '0',
-		overhangDepth: new Length(60, millimeter),
-		overhangDistance: new Length(60, millimeter),
-		sideFinRightDepth: new Length(60, millimeter),
-		sideFinRightDistance: new Length(60, millimeter),
-		sideFinLeftDepth: new Length(60, millimeter),
-		sideFinLeftDistance: new Length(60, millimeter),
+		overhangDepth: new Length(60, millimetre),
+		overhangDistance: new Length(60, millimetre),
+		sideFinRightDepth: new Length(60, millimetre),
+		sideFinRightDistance: new Length(60, millimetre),
+		sideFinLeftDepth: new Length(60, millimetre),
+		sideFinLeftDistance: new Length(60, millimetre),
 		curtainsOrBlinds: true,
 		treatmentType: WindowTreatmentType.blinds,
 		thermalResistivityIncrease: 1,

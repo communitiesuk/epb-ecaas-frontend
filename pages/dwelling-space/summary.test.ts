@@ -3,7 +3,7 @@ import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from '~/stores/ecaasStore.types';
 import { FloorType, MassDistributionClass, WindowTreatmentType } from '~/schema/api-schema.types';
-import { Length, millimeter } from '~/utils/units/length';
+import { Length, millimetre } from '~/utils/units/length';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -230,12 +230,12 @@ const windowData: WindowData = {
 	midHeight: 1,
 	frameToOpeningRatio: 0.8,
 	numberOpenableParts: '0',
-	overhangDepth: new Length(100, millimeter),
-	overhangDistance: new Length(100, millimeter),
-	sideFinRightDepth: new Length(100, millimeter),
-	sideFinRightDistance: new Length(100, millimeter),
-	sideFinLeftDepth: new Length(100, millimeter),
-	sideFinLeftDistance: new Length(100, millimeter),
+	overhangDepth: new Length(100, millimetre),
+	overhangDistance: new Length(100, millimetre),
+	sideFinRightDepth: new Length(100, millimetre),
+	sideFinRightDistance: new Length(100, millimetre),
+	sideFinLeftDepth: new Length(100, millimetre),
+	sideFinLeftDistance: new Length(100, millimetre),
 	curtainsOrBlinds: true,
 	treatmentType: WindowTreatmentType.blinds,
 	thermalResistivityIncrease: 1,

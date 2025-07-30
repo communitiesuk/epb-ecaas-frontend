@@ -1,11 +1,11 @@
 export enum VolumeUnitName {
-	LITERS = 'liters',
-	CUBIC_METERS = 'cubic meters'
+	LITRES = 'litres',
+	CUBIC_METRES = 'cubic metres'
 }
 
 export enum VolumeSuffix {
-	LITERS = 'l',
-	CUBIC_METERS = 'm³'
+	LITRES = 'l',
+	CUBIC_METRES = 'm³'
 }
 export class VolumeUnit {
 	name: VolumeUnitName;
@@ -18,15 +18,15 @@ export class VolumeUnit {
 
 	private getSuffix() {
 		switch (this.name) {
-			case VolumeUnitName.LITERS: return VolumeSuffix.LITERS;
-			case VolumeUnitName.CUBIC_METERS: return VolumeSuffix.CUBIC_METERS;
+			case VolumeUnitName.LITRES: return VolumeSuffix.LITRES;
+			case VolumeUnitName.CUBIC_METRES: return VolumeSuffix.CUBIC_METRES;
 		}
 	}
 	
 }
 
-export const liter = new VolumeUnit(VolumeUnitName.LITERS);
-export const cubicMeter = new VolumeUnit(VolumeUnitName.CUBIC_METERS);
+export const litre = new VolumeUnit(VolumeUnitName.LITRES);
+export const cubicMetre = new VolumeUnit(VolumeUnitName.CUBIC_METRES);
 
 export class Volume {
 	amount: number;
@@ -37,10 +37,10 @@ export class Volume {
 		this.unit = unit.name;
 	}
 
-	asLiters(): Volume {
-		if (this.unit === VolumeUnitName.CUBIC_METERS) {
+	asLitres(): Volume {
+		if (this.unit === VolumeUnitName.CUBIC_METRES) {
 			const convertedAmount = this.amount * 1000;
-			return new Volume(convertedAmount, liter);
+			return new Volume(convertedAmount, litre);
 		}
 
 		return this;

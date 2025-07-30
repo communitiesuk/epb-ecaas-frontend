@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { MVHRLocation} from '~/schema/api-schema.types';
 import { VentType } from '~/schema/api-schema.types';
-import { FlowRate, literPerSecond } from '~/utils/units/flowRate';
+import { FlowRate, litrePerSecond } from '~/utils/units/flowRate';
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
@@ -12,7 +12,7 @@ const mechanicalVentilation = useItemToEdit('mechanical', store.infiltrationAndV
 
 // prepopulate airFlowRate correctly when using old input format
 if (typeof mechanicalVentilation?.airFlowRate === 'number') {
-	mechanicalVentilation.airFlowRate = new FlowRate(mechanicalVentilation.airFlowRate, literPerSecond);
+	mechanicalVentilation.airFlowRate = new FlowRate(mechanicalVentilation.airFlowRate, litrePerSecond);
 }
 
 const model: Ref<MechanicalVentilationData> = ref(mechanicalVentilation!);
@@ -103,7 +103,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Air flow rate"
 			help="Enter the required design air flow rate that will be supplied to or extracted from the ventilation zone by the system"
 			type="govInputWithUnit"
-			:unit="literPerSecond"
+			:unit="litrePerSecond"
 			validation="required"
 		>
 			<GovDetails summary-text="Help with this input">

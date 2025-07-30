@@ -31,7 +31,7 @@ import {  mapFhsInputData } from "./fhsInputMapper";
 import type {FhsInputSchema} from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
-import { centimeter, Length } from "../utils/units/length";
+import { centimetre, Length } from "../utils/units/length";
 
 const baseForm = {
 	data: [],
@@ -1471,7 +1471,7 @@ describe("FHS input mapper", () => {
 						thicknessOfWalls: 0.5,
 						typeOfGroundFloor: FloorType.Slab_edge_insulation,
 						edgeInsulationType: "horizontal",
-						edgeInsulationWidth: new Length(32, centimeter),
+						edgeInsulationWidth: new Length(32, centimetre),
 						edgeInsulationThermalResistance: 2.4
 					},
 					{

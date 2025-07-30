@@ -9,7 +9,7 @@ import type {SchemaBuildingElement, SchemaEdgeInsulation, SchemaThermalBridgingD
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.types";
-import { Length, centimeter, millimeter } from "../utils/units/length";
+import { Length, centimetre, millimetre } from "../utils/units/length";
 
 type BuildingElementGround = Extract<SchemaBuildingElement, { type: 'BuildingElementGround' }>;
 type BuildingElementOpaque = Extract<SchemaBuildingElement, { type: 'BuildingElementOpaque' }>;
@@ -114,7 +114,7 @@ describe('dwelling fabric mapper', () => {
 			name: 'Ground 2',
 			typeOfGroundFloor: FloorType.Slab_edge_insulation,
 			edgeInsulationType: "horizontal",
-			edgeInsulationWidth: new Length(36, centimeter),
+			edgeInsulationWidth: new Length(36, centimetre),
 			edgeInsulationThermalResistance: 0
 		};
 
@@ -672,12 +672,12 @@ describe('dwelling fabric mapper', () => {
 			elevationalHeight: 1,
 			midHeight: 1,
 			numberOpenableParts: '1',
-			overhangDepth: new Length(1000, millimeter),
-			overhangDistance: new Length(1000, millimeter),
-			sideFinRightDepth: new Length(1000, millimeter),
-			sideFinRightDistance: new Length(1000, millimeter),
-			sideFinLeftDepth: new Length(1000, millimeter),
-			sideFinLeftDistance: new Length(1000, millimeter),
+			overhangDepth: new Length(1000, millimetre),
+			overhangDistance: new Length(1000, millimetre),
+			sideFinRightDepth: new Length(1000, millimetre),
+			sideFinRightDistance: new Length(1000, millimetre),
+			sideFinLeftDepth: new Length(1000, millimetre),
+			sideFinLeftDistance: new Length(1000, millimetre),
 			curtainsOrBlinds: true,
 			treatmentType: WindowTreatmentType.blinds,
 			thermalResistivityIncrease: 1,

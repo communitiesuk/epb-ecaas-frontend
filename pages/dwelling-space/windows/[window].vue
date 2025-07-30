@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { standardPitchOptions } from '#imports';
-import { millimeter, Length } from '~/utils/units/length';
+import { millimetre, Length } from '~/utils/units/length';
 import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
 
 const title = "Window";
@@ -11,27 +11,27 @@ const window = useItemToEdit('window', store.dwellingFabric.dwellingSpaceWindows
 
 // prepopulate shading data when using old input format
 if (window && 'overhangDepth' in window && typeof window.overhangDepth === 'number') {
-	window.overhangDepth = new Length(window.overhangDepth, millimeter);
+	window.overhangDepth = new Length(window.overhangDepth, millimetre);
 };
 
 if (window && 'overhangDistance' in window) {
-	window.overhangDistance = typeof window.overhangDistance === 'number' ? new Length(window.overhangDistance, millimeter) : window.overhangDistance;
+	window.overhangDistance = typeof window.overhangDistance === 'number' ? new Length(window.overhangDistance, millimetre) : window.overhangDistance;
 };
 
 if (window && 'sideFinRightDepth' in window) {
-	window.sideFinRightDepth = typeof window.sideFinRightDepth === 'number' ? new Length(window.sideFinRightDepth, millimeter) : window.sideFinRightDepth;
+	window.sideFinRightDepth = typeof window.sideFinRightDepth === 'number' ? new Length(window.sideFinRightDepth, millimetre) : window.sideFinRightDepth;
 };
 
 if (window && 'sideFinRightDistance' in window) {
-	window.sideFinRightDistance = typeof window.sideFinRightDistance === 'number' ? new Length(window.sideFinRightDistance, millimeter) : window.sideFinRightDistance;
+	window.sideFinRightDistance = typeof window.sideFinRightDistance === 'number' ? new Length(window.sideFinRightDistance, millimetre) : window.sideFinRightDistance;
 };
 
 if (window && 'sideFinLeftDepth' in window) {
-	window.sideFinLeftDepth = typeof window.sideFinLeftDepth === 'number' ? new Length(window.sideFinLeftDepth, millimeter) : window.sideFinLeftDepth;
+	window.sideFinLeftDepth = typeof window.sideFinLeftDepth === 'number' ? new Length(window.sideFinLeftDepth, millimetre) : window.sideFinLeftDepth;
 };
 
 if (window && 'sideFinLeftDistance' in window) {
-	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === 'number' ? new Length(window.sideFinLeftDistance, millimeter) : window.sideFinLeftDistance;
+	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === 'number' ? new Length(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
 };
 
 const model: Ref<WindowData> = ref(window!);
@@ -284,7 +284,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							id="overhangDepth"
 							name="overhangDepth"
 							type="govInputWithUnit"
-							:unit="millimeter"
+							:unit="millimetre"
 							:validation="shadingValidation('overhangDistance')"
 							validation-label="Overhang depth "
 						/>
@@ -294,7 +294,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							id="overhangDistance"
 							name="overhangDistance"
 							type="govInputWithUnit"
-							:unit="millimeter"
+							:unit="millimetre"
 							:validation="shadingValidation('overhangDepth')"
 							validation-label="Overhang distance "
 						/>
@@ -307,7 +307,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							id="sideFinRightDepth"
 							name="sideFinRightDepth"
 							type="govInputWithUnit"
-							:unit="millimeter"
+							:unit="millimetre"
 							:validation="shadingValidation('sideFinRightDistance')"
 							validation-label="Side fin right depth "
 						/>
@@ -317,7 +317,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							id="sideFinRightDistance"
 							name="sideFinRightDistance"
 							type="govInputWithUnit"
-							:unit="millimeter"
+							:unit="millimetre"
 							:validation="shadingValidation('sideFinRightDepth')"
 							validation-label="Side fin right distance "
 						/>
@@ -330,7 +330,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							id="sideFinLeftDepth"
 							name="sideFinLeftDepth"
 							type="govInputWithUnit"
-							:unit="millimeter"
+							:unit="millimetre"
 							:validation="shadingValidation('sideFinLeftDistance')"
 							validation-label="Side fin left depth "
 						/>
@@ -340,7 +340,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							id="sideFinLeftDistance"
 							name="sideFinLeftDistance"
 							type="govInputWithUnit"
-							:unit="millimeter"
+							:unit="millimetre"
 							:validation="shadingValidation('sideFinLeftDepth')"
 							validation-label="Side fin left distance "
 						/>

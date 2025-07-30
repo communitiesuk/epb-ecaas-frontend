@@ -1,37 +1,37 @@
-import { Length, meter, centimeter, millimeter } from "./length";
+import { Length, metre, centimetre, millimetre } from "./length";
 
 describe('LengthUnit', () => {
-	test('suffix for meter is m', () => {
-		expect(meter.suffix).toEqual("m");
+	test('suffix for metre is m', () => {
+		expect(metre.suffix).toEqual("m");
 	});
 
-	test('suffix for centimeter is cm', () => {
-		expect(centimeter.suffix).toEqual("cm");
+	test('suffix for centimetre is cm', () => {
+		expect(centimetre.suffix).toEqual("cm");
 	});
 
-	test('suffix for millimeter is mm', () => {
-		expect(millimeter.suffix).toEqual("mm");
+	test('suffix for millimetre is mm', () => {
+		expect(millimetre.suffix).toEqual("mm");
 	});
 });
 
 describe('Length', () => {
-	test('32 centimeters is equivalent to 0.32 meters', () => {
-		const length1 = new Length(32, centimeter);
-		expect(length1.asMeters().amount).toEqual(0.32);
+	test('32 centimetres is equivalent to 0.32 metres', () => {
+		const length1 = new Length(32, centimetre);
+		expect(length1.asMetres().amount).toEqual(0.32);
 	});
 
-	test('0 centimeters is equivalent to 0 meters', () => {
-		const length1 = new Length(0, centimeter);
-		expect(length1.asMeters().amount).toEqual(0);
+	test('0 centimetres is equivalent to 0 metres', () => {
+		const length1 = new Length(0, centimetre);
+		expect(length1.asMetres().amount).toEqual(0);
 	});
     
-	test('1000 millimeters is equivalent to 1 meter', () => {
-		const length1 = new Length(1000, millimeter);
-		expect(length1.asMeters().amount).toEqual(1);
+	test('1000 millimetres is equivalent to 1 metre', () => {
+		const length1 = new Length(1000, millimetre);
+		expect(length1.asMetres().amount).toEqual(1);
 	});
 
-	test('0 millimeters is equivalent to 0 meters', () => {
-		const length1 = new Length(0, millimeter);
-		expect(length1.asMeters().amount).toEqual(0);
+	test('0 millimetres is equivalent to 0 metres', () => {
+		const length1 = new Length(0, millimetre);
+		expect(length1.asMetres().amount).toEqual(0);
 	});
 });

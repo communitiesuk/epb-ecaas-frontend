@@ -85,20 +85,20 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 	const floorSuffix = 'floor';
 
 	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: FloorType.Slab_edge_insulation }>) {
-		let edgeInsulationWidthInMeters: number;
+		let edgeInsulationWidthInMetres: number;
 
 		if (typeof data.edgeInsulationWidth === 'number') {
-			edgeInsulationWidthInMeters = data.edgeInsulationWidth;
+			edgeInsulationWidthInMetres = data.edgeInsulationWidth;
 		} else {
 			const lengthUnit = new LengthUnit(data.edgeInsulationWidth.unit);
 			const edgeInsulationWidth = new Length(data.edgeInsulationWidth.amount, lengthUnit);
-			edgeInsulationWidthInMeters = edgeInsulationWidth.asMeters().amount;
+			edgeInsulationWidthInMetres = edgeInsulationWidth.asMetres().amount;
 		}
 		
 		if (data.edgeInsulationType === 'horizontal') {
 			return [{
 				type: data.edgeInsulationType!,
-				width: edgeInsulationWidthInMeters,
+				width: edgeInsulationWidthInMetres,
 				edge_thermal_resistance: data.edgeInsulationThermalResistance!
 			}];
 		}
@@ -106,7 +106,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 		if (data.edgeInsulationType === 'vertical') {
 			return [{
 				type: data.edgeInsulationType!,
-				depth: edgeInsulationWidthInMeters,
+				depth: edgeInsulationWidthInMetres,
 				edge_thermal_resistance: data.edgeInsulationThermalResistance!
 			}];
 		}
@@ -539,35 +539,35 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 	const windowData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceWindows.map(x => {
 		const nameWithSuffix = suffixName(x.name, windowSuffix);
 
-		function inMeters(length: Length | number ): number {
+		function inMetres(length: Length | number ): number {
 			if (typeof length === 'number') {
 				return length;
 			} else {
 				const lengthUnit = new LengthUnit(length.unit);
-				const lengthAsMeters = new Length(length.amount, lengthUnit).asMeters();
-				return lengthAsMeters.amount; 
+				const lengthAsMetres = new Length(length.amount, lengthUnit).asMetres();
+				return lengthAsMetres.amount; 
 			}
 		}
 
 		const hasOverhang = 'overhangDepth' in x && 'overhangDistance' in x && x.overhangDepth && x.overhangDistance;
 		const overhang = hasOverhang ? [{
 			type: WindowShadingObjectType.overhang,
-			depth: inMeters(x.overhangDepth),
-			distance: inMeters(x.overhangDistance),
+			depth: inMetres(x.overhangDepth),
+			distance: inMetres(x.overhangDistance),
 		}] : [];
 
 		const hasSideFinLeft = 'sideFinLeftDepth' in x && 'sideFinLeftDistance' in x && x.sideFinLeftDepth && x.sideFinLeftDistance;
 		const sideFinLeft = hasSideFinLeft ? [{
 			type: WindowShadingObjectType.sidefinleft,
-			depth: inMeters(x.sideFinLeftDepth),
-			distance: inMeters(x.sideFinLeftDistance),
+			depth: inMetres(x.sideFinLeftDepth),
+			distance: inMetres(x.sideFinLeftDistance),
 		}] : [];
 
 		const hasSideFinRight = 'sideFinRightDepth' in x && 'sideFinRightDistance' in x && x.sideFinRightDepth && x.sideFinRightDistance;
 		const sideFinRight = hasSideFinRight ? [{
 			type: WindowShadingObjectType.sidefinright,
-			depth: inMeters(x.sideFinRightDepth),
-			distance: inMeters(x.sideFinRightDistance),
+			depth: inMetres(x.sideFinRightDepth),
+			distance: inMetres(x.sideFinRightDistance),
 		}] : [];
 
 		return {[nameWithSuffix]: {

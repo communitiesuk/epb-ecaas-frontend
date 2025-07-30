@@ -1,11 +1,11 @@
 export enum FlowRateUnitName {
-	CUBIC_METERS_PER_HOUR = 'cubic meters per hour',
-	LITERS_PER_SECOND = 'liters per second'
+	CUBIC_METRES_PER_HOUR = 'cubic metres per hour',
+	LITRES_PER_SECOND = 'litres per second'
 }
 
 export enum FlowRateSuffix {
-	CUBIC_METERS_PER_HOUR = 'm³/h',
-	LITERS_PER_SECOND = 'l/s'
+	CUBIC_METRES_PER_HOUR = 'm³/h',
+	LITRES_PER_SECOND = 'l/s'
 }
 export class FlowRateUnit {
 	name: FlowRateUnitName;
@@ -18,14 +18,14 @@ export class FlowRateUnit {
 
 	private getSuffix() {
 		switch (this.name) {
-			case FlowRateUnitName.CUBIC_METERS_PER_HOUR: return FlowRateSuffix.CUBIC_METERS_PER_HOUR;
-			case FlowRateUnitName.LITERS_PER_SECOND: return FlowRateSuffix.LITERS_PER_SECOND;
+			case FlowRateUnitName.CUBIC_METRES_PER_HOUR: return FlowRateSuffix.CUBIC_METRES_PER_HOUR;
+			case FlowRateUnitName.LITRES_PER_SECOND: return FlowRateSuffix.LITRES_PER_SECOND;
 		}
 	}
 }
 
-export const literPerSecond = new FlowRateUnit(FlowRateUnitName.LITERS_PER_SECOND);
-export const cubicMeterPerHour = new FlowRateUnit(FlowRateUnitName.CUBIC_METERS_PER_HOUR);
+export const litrePerSecond = new FlowRateUnit(FlowRateUnitName.LITRES_PER_SECOND);
+export const cubicMetrePerHour = new FlowRateUnit(FlowRateUnitName.CUBIC_METRES_PER_HOUR);
 
 export class FlowRate {
 	amount: number;
@@ -36,10 +36,10 @@ export class FlowRate {
 		this.unit = unit.name;
 	}
 
-	asCubicMetersPerHour(): FlowRate {
-		if (this.unit === FlowRateUnitName.LITERS_PER_SECOND) {
+	asCubicMetresPerHour(): FlowRate {
+		if (this.unit === FlowRateUnitName.LITRES_PER_SECOND) {
 			const convertedAmount = this.amount * 3.6;
-			return new FlowRate(convertedAmount, cubicMeterPerHour);
+			return new FlowRate(convertedAmount, cubicMetrePerHour);
 		}
 
 		return this;

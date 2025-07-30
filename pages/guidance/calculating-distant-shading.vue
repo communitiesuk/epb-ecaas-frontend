@@ -13,8 +13,8 @@ const title = 'Calculating distant shading';
 	<h2 class="govuk-heading-s">Required Inputs:</h2>
 	<ol class="govuk-list govuk-list--number">
 		<li>Shading Direction: Define the start and end angles (in degrees) where the shading occurs, measured from north (0°).</li>
-		<li>Obstacle Height: Enter the height (in meters) of the object causing the shading.</li>
-		<li>Obstacle Distance: Provide the distance (in meters) from the dwelling to the shading object.</li>
+		<li>Obstacle Height: Enter the height (in metres) of the object causing the shading.</li>
+		<li>Obstacle Distance: Provide the distance (in metres) from the dwelling to the shading object.</li>
 	</ol>
 	<p class="govuk-body">These inputs will help determine how much sunlight is blocked at different times of the day and year, which is crucial for energy efficiency and solar access planning.</p>
 	<img src="/img/shaded-segments.png" alt="Shaded segments" class="govuk-!-margin-bottom-3">

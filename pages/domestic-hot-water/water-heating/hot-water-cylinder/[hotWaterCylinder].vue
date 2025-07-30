@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
-import { liter, Volume } from '~/utils/units/volume';
+import { litre, Volume } from '~/utils/units/volume';
 import type { HotWaterCylinderData } from '~/stores/ecaasStore.types';
 
 const title = "Hot water cylinder";
@@ -10,7 +10,7 @@ const { saveToList } = useForm();
 const hotWaterCylinderData = useItemToEdit('hotWaterCylinder', store.domesticHotWater.waterHeating.hotWaterCylinder.data);
 
 if (typeof hotWaterCylinderData?.tankVolume === 'number') {
-	hotWaterCylinderData.tankVolume = new Volume(hotWaterCylinderData.tankVolume, liter);
+	hotWaterCylinderData.tankVolume = new Volume(hotWaterCylinderData.tankVolume, litre);
 }
 
 const model: Ref<HotWaterCylinderData> = ref(hotWaterCylinderData!);
@@ -75,11 +75,11 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			label="Tank volume"
 			help="Enter the total internal capacity of the tank"
 			type="govInputWithUnit"
-			:unit="liter"
+			:unit="litre"
 			:validation-rules="{ withinMinAndMax }"
 			validation="required | withinMinAndMax:0,200000"
 			:validation-messages="{
-				withinMinAndMax: `Tank volume must be at least 0 and no more than 200,000 ${liter.name}.`,
+				withinMinAndMax: `Tank volume must be at least 0 and no more than 200,000 ${litre.name}.`,
 			}"
 		/>
 		<FormKit

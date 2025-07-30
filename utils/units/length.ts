@@ -1,13 +1,13 @@
 export enum LengthUnitName {
-	METERS = 'meters',
-	CENTIMETERS = 'centimeters',
-	MILLIMETERS = 'millimeters',
+	METRES = 'metres',
+	CENTIMETRES = 'centimetres',
+	MILLIMETRES = 'millimetres',
 }
 
 enum LengthSuffix {
-	METERS = 'm',
-	CENTIMETERS = 'cm',
-	MILLIMETERS = 'mm',
+	METRES = 'm',
+	CENTIMETRES = 'cm',
+	MILLIMETRES = 'mm',
 }
 
 export class LengthUnit {
@@ -21,16 +21,16 @@ export class LengthUnit {
 
 	private getSuffix() {
 		switch (this.name) {
-			case LengthUnitName.METERS: return LengthSuffix.METERS;
-			case LengthUnitName.CENTIMETERS: return LengthSuffix.CENTIMETERS;
-			case LengthUnitName.MILLIMETERS: return LengthSuffix.MILLIMETERS;
+			case LengthUnitName.METRES: return LengthSuffix.METRES;
+			case LengthUnitName.CENTIMETRES: return LengthSuffix.CENTIMETRES;
+			case LengthUnitName.MILLIMETRES: return LengthSuffix.MILLIMETRES;
 		}
 	}
 }
 
-export const meter = new LengthUnit(LengthUnitName.METERS);
-export const centimeter = new LengthUnit(LengthUnitName.CENTIMETERS);
-export const millimeter = new LengthUnit(LengthUnitName.MILLIMETERS);
+export const metre = new LengthUnit(LengthUnitName.METRES);
+export const centimetre = new LengthUnit(LengthUnitName.CENTIMETRES);
+export const millimetre = new LengthUnit(LengthUnitName.MILLIMETRES);
 
 export class Length {
 	amount: number;
@@ -41,15 +41,15 @@ export class Length {
 		this.unit = unit.name;
 	}
 
-	asMeters(): Length {
-		if (this.unit === LengthUnitName.CENTIMETERS) {
+	asMetres(): Length {
+		if (this.unit === LengthUnitName.CENTIMETRES) {
 			const convertedAmount = this.amount * 0.01;
-			return new Length(convertedAmount, meter);
+			return new Length(convertedAmount, metre);
 		}
 
-		if (this.unit === LengthUnitName.MILLIMETERS) {
+		if (this.unit === LengthUnitName.MILLIMETRES) {
 			const convertedAmount = this.amount * 0.001;
-			return new Length(convertedAmount, millimeter);
+			return new Length(convertedAmount, millimetre);
 		}
 
 		return this;
