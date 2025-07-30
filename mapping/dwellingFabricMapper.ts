@@ -549,19 +549,22 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 			}
 		}
 
-		const overhang = 'overhangDepth' in x && 'overhangDistance' in x && x.overhangDepth && x.overhangDistance ? [{
+		const hasOverhang = 'overhangDepth' in x && 'overhangDistance' in x && x.overhangDepth && x.overhangDistance;
+		const overhang = hasOverhang ? [{
 			type: WindowShadingObjectType.overhang,
 			depth: inMeters(x.overhangDepth),
 			distance: inMeters(x.overhangDistance),
 		}] : [];
 
-		const sideFinLeft = 'sideFinLeftDepth' in x && 'sideFinLeftDistance' in x && x.sideFinLeftDepth && x.sideFinLeftDistance ? [{
+		const hasSideFinLeft = 'sideFinLeftDepth' in x && 'sideFinLeftDistance' in x && x.sideFinLeftDepth && x.sideFinLeftDistance;
+		const sideFinLeft = hasSideFinLeft ? [{
 			type: WindowShadingObjectType.sidefinleft,
 			depth: inMeters(x.sideFinLeftDepth),
 			distance: inMeters(x.sideFinLeftDistance),
 		}] : [];
 
-		const sideFinRight = 'sideFinRightDepth' in x && 'sideFinRightDistance' in x && x.sideFinRightDepth && x.sideFinRightDistance ? [{
+		const hasSideFinRight = 'sideFinRightDepth' in x && 'sideFinRightDistance' in x && x.sideFinRightDepth && x.sideFinRightDistance;
+		const sideFinRight = hasSideFinRight ? [{
 			type: WindowShadingObjectType.sidefinright,
 			depth: inMeters(x.sideFinRightDepth),
 			distance: inMeters(x.sideFinRightDistance),
