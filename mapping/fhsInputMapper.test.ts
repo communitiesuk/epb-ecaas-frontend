@@ -31,7 +31,7 @@ import {  mapFhsInputData } from "./fhsInputMapper";
 import type {FhsInputSchema} from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
-import { centimeter, Length } from "./units";
+import { centimeter, Length } from "../utils/units/unitsLength";
 
 const baseForm = {
 	data: [],

@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import Window from './[window].vue';
 import { WindowTreatmentType } from "~/schema/api-schema.types";
-import { Length, millimeter } from "~/mapping/units";
+import { Length, millimeter } from "~/utils/units/unitsLength";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Length, centimeter } from '~/mapping/units';
+import { Length, centimeter } from '~/utils/units/unitsLength';
 import { FloorType, WindShieldLocation } from '~/schema/api-schema.types';
 
 const title = "Ground floor";

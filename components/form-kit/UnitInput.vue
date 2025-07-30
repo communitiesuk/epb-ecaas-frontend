@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from '@formkit/core';
 import { showErrorState, getErrorMessage } from '#imports';
-import { Length } from '~/mapping/units';
+import { Length } from '~/utils/units/unitsLength';
 
 const props = defineProps<{
 	context: FormKitFrameworkContext

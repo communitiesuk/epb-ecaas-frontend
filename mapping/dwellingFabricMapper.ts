@@ -3,7 +3,7 @@ import type {SchemaBuildingElement, SchemaThermalBridgingDetails, SchemaWindowPa
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
 import { defaultZoneName } from "./common";
-import  { Length, LengthUnit } from "./units";
+import  { Length, LengthUnit } from "../utils/units/unitsLength";
 
 export function mapLivingSpaceFabricData(state: ResolvedState): Partial<FhsInputSchema> {
 	const zoneParameterData = mapZoneParametersData(state);

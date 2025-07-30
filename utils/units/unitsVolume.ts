@@ -1,13 +1,13 @@
-enum VolumeUnitName {
+export enum VolumeUnitName {
 	LITERS = 'liters',
 	CUBIC_METERS = 'cubic meters'
 }
 
-enum VolumeSuffix {
+export enum VolumeSuffix {
 	LITERS = 'l',
 	CUBIC_METERS = 'm³'
 }
-class VolumeUnit {
+export class VolumeUnit {
 	name: VolumeUnitName;
 	suffix: VolumeSuffix;
 
@@ -37,10 +37,10 @@ export class Volume {
 		this.unit = unit.name;
 	}
 
-	asCubicMeters(): Volume {
-		if (this.unit === VolumeUnitName.LITERS) {
-			const convertedAmount = this.amount * 0.001;
-			return new Volume(convertedAmount, cubicMeter);
+	asLiters(): Volume {
+		if (this.unit === VolumeUnitName.CUBIC_METERS) {
+			const convertedAmount = this.amount * 1000;
+			return new Volume(convertedAmount, liter);
 		}
 
 		return this;
