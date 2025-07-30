@@ -4,6 +4,7 @@ import type {CombustionApplianceType, SchemaCombustionAppliance, SchemaInfiltrat
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import { defaultElectricityEnergySupplyName } from './common';
+import { FlowRate, FlowRateUnit } from '~/utils/units/flowRate';
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilationPossible } = mapVentilationData(state);
@@ -41,11 +42,21 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 
 export function mapMechanicalVentilationData(state: ResolvedState) {
 	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x):[string, SchemaMechanicalVentilation] => {
+		let airFlowRateInCubicMetersPerHour: number;
+
+		if (typeof x.airFlowRate === 'number') {
+			airFlowRateInCubicMetersPerHour = x.airFlowRate;
+		} else {
+			const unit = new FlowRateUnit(x.airFlowRate.unit);
+			const airFlowRate = new FlowRate(x.airFlowRate.amount, unit);
+			airFlowRateInCubicMetersPerHour = airFlowRate.asCubicMetersPerHour().amount;
+		}
+		
 		const key = x.name;
 		const val: Omit<SchemaMechanicalVentilation, 'ductwork'> = {
 			vent_type: x.typeOfMechanicalVentilationOptions,
 			EnergySupply: defaultElectricityEnergySupplyName,
-			design_outdoor_air_flow_rate: typeof x.airFlowRate === 'number' ? x.airFlowRate : x.airFlowRate.amount,
+			design_outdoor_air_flow_rate: airFlowRateInCubicMetersPerHour,
 			sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
 			sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
 			...(x.typeOfMechanicalVentilationOptions === VentType.MVHR ? {mvhr_location: x.mvhrLocation, mvhr_eff: x.mvhrEfficiency} : {}),

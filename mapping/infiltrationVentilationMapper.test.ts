@@ -1,5 +1,6 @@
 import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType } from '~/schema/api-schema.types';
 import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from './infiltrationVentilationMapper';
+import { FlowRate, literPerSecond } from '~/utils/units/flowRate';
 
 const baseForm = {
 	data: [],
@@ -11,7 +12,7 @@ describe('infiltration ventilation mapper', () => {
 		id: "bathroom exhaust fan",
 		name: "bathroom exhaust fan",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		airFlowRate: 30,
+		airFlowRate: new FlowRate(30, literPerSecond),
 		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 1,
 	}];
@@ -58,7 +59,7 @@ describe('infiltration ventilation mapper', () => {
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
 		expect(firstMechVent?.vent_type).toBe(VentType.MVHR);
-		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(30);
+		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(108);
 		expect(firstMechVent?.sup_air_flw_ctrl).toBe(SupplyAirFlowRateControlType.ODA); 
 		expect(firstMechVent?.sup_air_temp_ctrl).toBe(SupplyAirTemperatureControlType.CONST);
 		expect(firstMechVent?.mvhr_location).toBe(MVHRLocation.inside);
@@ -173,7 +174,7 @@ describe('infiltration ventilation mapper', () => {
 			id: "bathroom exhaust fan",
 			name: "bathroom exhaust fan",
 			typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
-			airFlowRate: 30,
+			airFlowRate: new FlowRate(40, literPerSecond),
 		}];
 
 		store.$patch({
@@ -193,7 +194,7 @@ describe('infiltration ventilation mapper', () => {
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
 		expect(firstMechVent?.vent_type).toBe(VentType.Intermittent_MEV);
-		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(30);
+		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(144);
 		expect(firstMechVent?.sup_air_flw_ctrl).toBe(SupplyAirFlowRateControlType.ODA); 
 		expect(firstMechVent?.sup_air_temp_ctrl).toBe(SupplyAirTemperatureControlType.CONST);
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
