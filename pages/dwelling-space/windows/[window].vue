@@ -285,6 +285,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('overhangDistance')"
+							validation-label="Overhang depth "
 						/>
 					</td>
 					<td>
@@ -294,6 +295,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('overhangDepth')"
+							validation-label="Overhang distance "
 						/>
 					</td>
 				</tr>
@@ -306,6 +308,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('sideFinRightDistance')"
+							validation-label="Side fin right depth "
 						/>
 					</td>
 					<td>
@@ -315,6 +318,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('sideFinRightDepth')"
+							validation-label="Side fin right distance "
 						/>
 					</td>
 				</tr>
@@ -327,6 +331,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('sideFinLeftDistance')"
+							validation-label="Side fin left depth "
 						/>
 					</td>
 					<td>
@@ -336,6 +341,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							type="govInputWithUnit"
 							:unit="millimeter"
 							:validation="shadingValidation('sideFinLeftDepth')"
+							validation-label="Side fin left distance "
 						/>
 					</td>
 				</tr>
