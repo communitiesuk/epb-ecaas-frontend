@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from '@formkit/core';
 import { showErrorState, getErrorMessage } from '#imports';
-import { Length } from '~/utils/units/unitsLength';
+import { Length, LengthUnit } from '~/utils/units/unitsLength';
+import { Volume, VolumeUnit } from '~/utils/units/unitsVolume';
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -29,7 +30,18 @@ function handleTyping(e: Event) {
 function handleInput(e: Event) {
 	const target = e.target as HTMLInputElement;
 	const value = target.value ? parseFloat(target.value) : '';
-	props.context.node.input(typeof value === 'number' ? new Length(value, unit) : '');
+
+	if (typeof value === 'number') {
+		if (unit instanceof LengthUnit) {
+			props.context.node.input(new Length(value, unit));
+		}
+
+		if (unit instanceof VolumeUnit) {
+			props.context.node.input(new Volume(value, unit));
+		}
+	} else {
+		props.context.node.input('');
+	}
 }
 </script>
 

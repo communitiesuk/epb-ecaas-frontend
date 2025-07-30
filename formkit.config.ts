@@ -15,6 +15,7 @@ import FormKitInputText from './components/form-kit/InputText.vue';
 import FormKitInputTextWithSuffix from './components/form-kit/InputTextWithSuffix.vue';
 import { FormKitBoolean } from '#components';
 import type { LengthUnit,  } from './utils/units/unitsLength';
+import type { VolumeUnit } from './utils/units/unitsVolume';
 
 // Enable TypeScript support for custom inputs
 declare module '@formkit/inputs' {
@@ -43,7 +44,7 @@ declare module '@formkit/inputs' {
 		},
 		'govUnitInput': {
 			type: 'govUnitInput',
-			unit: LengthUnit,
+			unit: LengthUnit | VolumeUnit,
 		},
 		'govCheckboxes': {
 			type: 'govCheckboxes',
