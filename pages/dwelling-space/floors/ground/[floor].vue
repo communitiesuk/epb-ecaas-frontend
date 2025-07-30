@@ -8,9 +8,9 @@ const { saveToList } = useForm();
 
 const floorData = useItemToEdit('floor', store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
-if (floorData?.typeOfGroundFloor == FloorType.Slab_edge_insulation) {
-	const edgeInsulationWidth = typeof floorData.edgeInsulationWidth === 'number' ? new Length(floorData.edgeInsulationWidth, centimeter) : floorData.edgeInsulationWidth;
-	floorData.edgeInsulationWidth = edgeInsulationWidth;
+// prepopulate edge insulation width when using old input format
+if (floorData?.typeOfGroundFloor === FloorType.Slab_edge_insulation && typeof floorData.edgeInsulationWidth === 'number') {
+	floorData.edgeInsulationWidth = new Length(floorData.edgeInsulationWidth, centimeter);
 };
 
 const model: Ref<GroundFloorData> = ref(floorData!);

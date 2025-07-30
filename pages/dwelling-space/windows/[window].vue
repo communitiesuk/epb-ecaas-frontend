@@ -9,10 +9,9 @@ const { saveToList } = useForm();
 
 const window = useItemToEdit('window', store.dwellingFabric.dwellingSpaceWindows.data);
 
-// prepopulate shading data when using old input format for backwards compatibility
-
-if (window && 'overhangDepth' in window) {
-	window.overhangDepth = typeof window.overhangDepth === 'number' ? new Length(window.overhangDepth, millimeter) : window.overhangDepth;
+// prepopulate shading data when using old input format
+if (window && 'overhangDepth' in window && typeof window.overhangDepth === 'number') {
+	window.overhangDepth = new Length(window.overhangDepth, millimeter);
 };
 
 if (window && 'overhangDistance' in window) {
