@@ -1,4 +1,4 @@
-import { FlowRate, cubicMeterPerHour, literPerSecond } from "./unitsFlowRate";
+import { FlowRate, cubicMeterPerHour, literPerSecond } from "./flowRate";
 
 describe('FlowRateUnit', () => {
 	test('suffix for cubic meter per hour is m³/h', () => {
