@@ -16,6 +16,7 @@ import FormKitInputTextWithSuffix from './components/form-kit/InputTextWithSuffi
 import { FormKitBoolean } from '#components';
 import type { LengthUnit,  } from './utils/units/length';
 import type { VolumeUnit } from './utils/units/volume';
+import type { FlowRateUnit } from './utils/units/flowRate';
 
 // Enable TypeScript support for custom inputs
 declare module '@formkit/inputs' {
@@ -44,7 +45,7 @@ declare module '@formkit/inputs' {
 		},
 		'govUnitInput': {
 			type: 'govUnitInput',
-			unit: LengthUnit | VolumeUnit,
+			unit: LengthUnit | VolumeUnit | FlowRateUnit,
 		},
 		'govCheckboxes': {
 			type: 'govCheckboxes',

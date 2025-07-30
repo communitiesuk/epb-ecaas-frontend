@@ -3,6 +3,7 @@ import type { FormKitFrameworkContext } from '@formkit/core';
 import { showErrorState, getErrorMessage } from '#imports';
 import { Length, LengthUnit } from '~/utils/units/length';
 import { Volume, VolumeUnit } from '~/utils/units/volume';
+import { FlowRate, FlowRateUnit } from '~/utils/units/flowRate';
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -38,6 +39,10 @@ function handleInput(e: Event) {
 
 		if (unit instanceof VolumeUnit) {
 			props.context.node.input(new Volume(value, unit));
+		}
+
+		if (unit instanceof FlowRateUnit) {
+			props.context.node.input(new FlowRate(value, unit));
 		}
 	} else {
 		props.context.node.input('');
