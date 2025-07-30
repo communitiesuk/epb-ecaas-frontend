@@ -125,8 +125,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Thermal mass"
 			name="thermalMass"
 			validation="required | number"
-			suffix-text="kJ/°C"
-			help="Enter the thermal mass of the wet distribution system. Typically between 0.1 and 0.5 kJ/°C."
+			suffix-text="kWh/K"
+			help="Enter the thermal mass of the wet distribution system. Typically between 0.1 and 0.5 kWh/K."
 		/>
 			
 		<FormKit
