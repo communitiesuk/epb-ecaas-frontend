@@ -2,7 +2,7 @@ import { Volume, litre, cubicMetre } from "./volume";
 
 describe('VolumeUnit', () => {
 	test('suffix for litres is l', () => {
-		expect(litre.suffix).toEqual("l");
+		expect(litre.suffix).toEqual("litres");
 	});
 
 	test('suffix for cubic metre is m³', () => {

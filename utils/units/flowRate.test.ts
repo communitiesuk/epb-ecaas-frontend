@@ -6,7 +6,7 @@ describe('FlowRateUnit', () => {
 	});
 
 	test('suffix for litre per second is l/s', () => {
-		expect(litrePerSecond.suffix).toEqual("l/s");
+		expect(litrePerSecond.suffix).toEqual("litres per second");
 	});
 });
 
