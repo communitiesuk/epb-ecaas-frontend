@@ -5,7 +5,7 @@ export enum FlowRateUnitName {
 
 export enum FlowRateSuffix {
 	CUBIC_METRES_PER_HOUR = 'm³/h',
-	LITRES_PER_SECOND = 'l/s'
+	LITRES_PER_SECOND = 'litres per second'
 }
 export class FlowRateUnit {
 	name: FlowRateUnitName;

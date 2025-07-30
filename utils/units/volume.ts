@@ -4,7 +4,7 @@ export enum VolumeUnitName {
 }
 
 export enum VolumeSuffix {
-	LITRES = 'l',
+	LITRES = 'litres',
 	CUBIC_METRES = 'm³'
 }
 export class VolumeUnit {
