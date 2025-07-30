@@ -8,9 +8,9 @@ export default defineNuxtConfig({
 
 	devtools: {
 		enabled:
-									typeof process.env.DISABLE_DEVTOOLS !== "undefined"
-										? !yn(process.env.DISABLE_DEVTOOLS)
-										: true,
+			typeof process.env.DISABLE_DEVTOOLS !== "undefined"
+				? !yn(process.env.DISABLE_DEVTOOLS)
+				: true,
 	},
 
 	app: {
@@ -68,8 +68,8 @@ export default defineNuxtConfig({
 						"import",
 					],
 					additionalData: `
-																																																																																																																																																																																																																																																																																																																																																																																													@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
-																																																																																																																																																																																																																																																																																																																																																																																													@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`,
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				@use "/node_modules/govuk-frontend/dist/govuk/settings/colours-palette" as *;
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				@use "/node_modules/govuk-frontend/dist/govuk/settings/media-queries" as *;`,
 				},
 			},
 		},
@@ -94,7 +94,8 @@ export default defineNuxtConfig({
 		"nuxt-auth-utils",
 		"@nuxtjs/robots",
 		"nuxt-security",
-		"@sentry/nuxt/module"
+		"@sentry/nuxt/module",
+		"nuxt-gtag"
 	],
 
 	plugins: [
@@ -175,5 +176,16 @@ export default defineNuxtConfig({
 
 	sourcemap: {
 		client: "hidden"
+	},
+
+	gtag: {
+		initCommands: [
+			['consent', 'default', {
+				ad_user_data: 'denied',
+				ad_personalization: 'denied',
+				ad_storage: 'denied',
+				analytics_storage: 'denied'
+			}]
+		]
 	}
 });

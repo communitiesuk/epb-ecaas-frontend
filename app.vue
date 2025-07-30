@@ -1,4 +1,5 @@
 <template>
+	<GovCookieBanner />
 	<GovHeader classes="govuk-header--full-width-border" />
 	<GovServiceNavigation service-name="Check Part L building compliance" />
 	<div class="govuk-width-container">
@@ -17,6 +18,7 @@
 				</NuxtLayout>
 			</div>
 		</main>
+		<GovFeedback />
 	</div>
 	<GovFooter />
 </template>
