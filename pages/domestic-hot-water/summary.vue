@@ -24,7 +24,7 @@ const hotWaterCylinderSummary: SummarySection = {
 		return {
 			"Name": d.name,
 			"Heat source": heatGenerationData.find(x => x.id === d.heatSource)?.name,
-			"Tank volume": d.tankVolume,
+			"Tank volume": typeof d.tankVolume === 'number' ? d.tankVolume : d.tankVolume.amount,
 			"Daily energy loss": d.dailyEnergyLoss
 		};
 	}),

@@ -2,6 +2,7 @@ import { ColdWaterSourceType } from "~/schema/api-schema.types";
 import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaStorageTank, SchemaWaterPipework, SchemaWaterPipeworkSimple } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
+import { Volume, VolumeUnit } from "../utils/units/unitsVolume";
 
 export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {
 	const showers = mapShowersData(state);
@@ -106,11 +107,21 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 			};
 		});
 
+		let tankVolumeInLiters: number;
+
+		if (typeof x.tankVolume === 'number') {
+			tankVolumeInLiters = x.tankVolume;
+		} else  {
+			const volumeUnit = new VolumeUnit(x.tankVolume.unit);
+			const tankVolume = new Volume(x.tankVolume.amount, volumeUnit);
+			tankVolumeInLiters = tankVolume.asLiters().amount;
+		} 
+
 		const val: SchemaStorageTank = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
 			daily_losses: x.dailyEnergyLoss,
 			type: "StorageTank",
-			volume: x.tankVolume,
+			volume: tankVolumeInLiters,
 			HeatSource: {
 				// Adding these values as default until heat pump is set up to come from PCDB
 				[heatPumpName]: {

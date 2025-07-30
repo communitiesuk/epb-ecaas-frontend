@@ -2,6 +2,7 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
+import { liter, Volume } from '~/utils/units/unitsVolume';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -336,7 +337,8 @@ describe('Domestic hot water summary', () => {
 						hotWaterCylinder: {
 							data: [{
 								id: hotWaterCylinderId,
-								name: 'Hot water cylinder 1'
+								name: 'Hot water cylinder 1',
+								tankVolume: new Volume(100, liter)
 							}]
 						}
 					}

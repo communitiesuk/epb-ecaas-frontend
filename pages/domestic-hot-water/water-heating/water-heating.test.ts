@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import {screen } from '@testing-library/vue';
 import WaterHeating from './index.vue';
 import type { HotWaterCylinderData } from "~/stores/ecaasStore.types";
+import { liter, Volume } from "~/utils/units/unitsVolume";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -14,20 +15,20 @@ describe('water heating (hot water cylinder)', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const expected: HotWaterCylinderData = {
+	const cylinder: HotWaterCylinderData = {
 		id: "Any Id",
 		heatSource: "test-heat-pump",
-		tankVolume: 150,
+		tankVolume: new Volume(150, liter),
 		dailyEnergyLoss: 73,
 		name: "Hot water cylinder 1"
 	};
 
 	const populateValidForm = async () => {
 		await user.click(screen.getByTestId('waterHeaterType_hotWaterCylinder'));
-		await user.type(screen.getByTestId('name'), expected.name);
-		await user.click(screen.getByTestId('heatSource_' + expected.heatSource));
-		await user.type(screen.getByTestId('tankVolume'), expected.tankVolume.toString());
-		await user.type(screen.getByTestId('dailyEnergyLoss'), expected.dailyEnergyLoss.toString());
+		await user.type(screen.getByTestId('name'), cylinder.name);
+		await user.click(screen.getByTestId('heatSource_' + cylinder.heatSource));
+		await user.type(screen.getByTestId('tankVolume'), "150");
+		await user.type(screen.getByTestId('dailyEnergyLoss'), cylinder.dailyEnergyLoss.toString());
 		await user.tab();
 	};
 
@@ -60,10 +61,10 @@ describe('water heating (hot water cylinder)', () => {
 		const actual = store.domesticHotWater.waterHeating.hotWaterCylinder.data![0]!;
 		
 		expect(actual.id).toBeDefined();
-		expect(actual.heatSource).toEqual(expected.heatSource);
-		expect(actual.tankVolume).toEqual(expected.tankVolume);
-		expect(actual.dailyEnergyLoss).toEqual(expected.dailyEnergyLoss);
-		expect(actual.name).toEqual(expected.name);
+		expect(actual.heatSource).toEqual(cylinder.heatSource);
+		expect(actual.tankVolume).toEqual(cylinder.tankVolume);
+		expect(actual.dailyEnergyLoss).toEqual(cylinder.dailyEnergyLoss);
+		expect(actual.name).toEqual(cylinder.name);
 	});
 
 	test('form is prepopulated when data exists in state', async () => {
@@ -71,7 +72,7 @@ describe('water heating (hot water cylinder)', () => {
 			domesticHotWater: {
 				waterHeating: {
 					hotWaterCylinder: {
-						data: [expected],
+						data: [cylinder],
 						complete: true
 					}
 				}
@@ -80,9 +81,9 @@ describe('water heating (hot water cylinder)', () => {
 
 		await renderSuspended(WaterHeating);
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe(expected.name);
-		expect((await screen.findByTestId('tankVolume') as HTMLInputElement).value).toBe(expected.tankVolume.toString());
-		expect((await screen.findByTestId('dailyEnergyLoss') as HTMLInputElement).value).toBe(expected.dailyEnergyLoss.toString());
+		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe(cylinder.name);
+		expect((await screen.findByTestId('tankVolume') as HTMLInputElement).value).toBe("150");
+		expect((await screen.findByTestId('dailyEnergyLoss') as HTMLInputElement).value).toBe(cylinder.dailyEnergyLoss.toString());
 		expect((await screen.findByTestId('heatSource_test-heat-pump')).hasAttribute('checked')).toBe(true);
 	});
 

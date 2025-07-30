@@ -2,6 +2,7 @@ import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation  } fr
 import type {SchemaHotWaterDemand} from "~/schema/api-schema.types";
 import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
+import { liter, Volume } from "../utils/units/unitsVolume";
 
 describe('domestic hot water mapper', () => {
 	const store = useEcaasStore();
@@ -18,7 +19,7 @@ describe('domestic hot water mapper', () => {
 			id: "hot water cylinder",
 			name: "hot water cylinder",
 			heatSource: heatPumpName,
-			tankVolume: 10,
+			tankVolume: new Volume(100, liter),
 			dailyEnergyLoss: 3,
 		};
 
@@ -86,7 +87,7 @@ describe('domestic hot water mapper', () => {
 						}
 					},
 					daily_losses: 3,
-					volume: 10,
+					volume: 100,
 					type: "StorageTank",
 				}
 			}
@@ -104,7 +105,7 @@ describe('domestic hot water mapper', () => {
 			id: "hotWaterCylinderId",
 			name: "hotWaterCylinderName",
 			heatSource: heatPumpId,
-			tankVolume: 10,
+			tankVolume: new Volume(200, liter),
 			dailyEnergyLoss: 3,
 		};
 
@@ -188,7 +189,7 @@ describe('domestic hot water mapper', () => {
 						}
 					},
 					daily_losses: 3,
-					volume: 10,
+					volume: 200,
 					type: "StorageTank",
 					primary_pipework: [
 						{

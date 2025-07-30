@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
+import { liter, Volume } from '~/utils/units/unitsVolume';
 import type { HotWaterCylinderData } from '~/stores/ecaasStore.types';
 
 const title = "Water heating";
 const store = useEcaasStore();
 
 const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0];
+
+if (typeof hotWaterCylinderData?.tankVolume === 'number') {
+	hotWaterCylinderData.tankVolume = new Volume(hotWaterCylinderData.tankVolume, liter);
+}
 
 const waterHeaterTypeOptions = {
 	hotWaterCylinder: 'Hot water cylinder'
@@ -73,6 +78,11 @@ const saveForm = (fields: typeof model.value) => {
 	navigateTo("/domestic-hot-water");
 };
 
+const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
+	const value = node.value as Volume;
+	return value.amount >= min && value.amount <= max;
+};
+
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
@@ -115,12 +125,16 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			/>
 			<FormKit
 				id="tankVolume"
-				type="govInputWithSuffix"
+				name="tankVolume"
 				label="Tank volume"
 				help="Enter the total internal capacity of the tank"
-				name="tankVolume"
-				validation="required | number | min:0 | max:200"
-				suffix-text="m³"
+				type="govUnitInput"
+				:unit="liter"
+				:validation-rules="{ withinMinAndMax }"
+				validation="required | withinMinAndMax:0,200000"
+				:validation-messages="{
+					withinMinAndMax: `Tank volume must be at least 0 and no more than 200,000 ${liter.name}.`,
+				}"
 			/>
 			<FormKit
 				id="dailyEnergyLoss"
