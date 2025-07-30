@@ -2,12 +2,19 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { MVHRLocation} from '~/schema/api-schema.types';
 import { VentType } from '~/schema/api-schema.types';
+import { FlowRate, literPerSecond } from '~/utils/units/flowRate';
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const mechanicalVentilation = useItemToEdit('mechanical', store.infiltrationAndVentilation.mechanicalVentilation.data);
+
+// prepopulate airFlowRate correctly when using old input format
+if (typeof mechanicalVentilation?.airFlowRate === 'number') {
+	mechanicalVentilation.airFlowRate = new FlowRate(mechanicalVentilation.airFlowRate, literPerSecond);
+}
+
 const model: Ref<MechanicalVentilationData> = ref(mechanicalVentilation!);
 
 /** 'PIV' is excluded from options here because it is in the schema currently but unsupported in HEM itself at 0.34 version */
@@ -92,11 +99,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="airFlowRate"
-			type="govInputWithSuffix"
-			suffix-text="m³/h"
+			name="airFlowRate"
 			label="Air flow rate"
 			help="Enter the required design air flow rate that will be supplied to or extracted from the ventilation zone by the system"
-			name="airFlowRate" validation="required | number | min:0"
+			type="govUnitInput"
+			:unit="literPerSecond"
+			validation="required"
 		>
 			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">

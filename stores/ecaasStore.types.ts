@@ -4,6 +4,7 @@ import type { Length } from "~/utils/units/length";
 import type { Volume } from "~/utils/units/volume";
 import type { ProductReference } from "~/pcdb/products";
 import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType, FuelType, SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta, WindShieldLocation } from "~/schema/api-schema.types";
+import type { FlowRate } from "~/utils/units/flowRate";
 
 export type EcaasState = AssertEachKeyIsPageId<{
 	dwellingDetails: DwellingDetails;
@@ -540,7 +541,7 @@ export type MechanicalVentilationData = {
 	readonly id: string;
 	name: string;
 	typeOfMechanicalVentilationOptions: VentType;
-	airFlowRate: number;
+	airFlowRate: FlowRate | number; // number will be deprecated, preserved for backwards compatibility with old input data files
 } & TaggedUnion<'typeOfMechanicalVentilationOptions', {
 	[VentType.Intermittent_MEV]: EmptyObject;
 	[VentType.Centralised_continuous_MEV]: EmptyObject;

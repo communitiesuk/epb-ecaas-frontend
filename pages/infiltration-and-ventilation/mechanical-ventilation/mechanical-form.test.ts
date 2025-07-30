@@ -4,6 +4,7 @@ import { userEvent } from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import { v4 as uuidv4 } from 'uuid';
 import { MVHRLocation, VentType } from "~/schema/api-schema.types";
+import { FlowRate, literPerSecond } from "~/utils/units/flowRate";
 
 describe("mechanical ventilation form", () => {
 	const user = userEvent.setup();
@@ -16,7 +17,7 @@ describe("mechanical ventilation form", () => {
 		id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		airFlowRate: 12,
+		airFlowRate: new FlowRate(12, literPerSecond),
 		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 0.2,
 	};
@@ -25,7 +26,7 @@ describe("mechanical ventilation form", () => {
 		id: '7184f2fe-a78f-4a56-ba5a-1a7751ac506d',
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
-		airFlowRate: 14,
+		airFlowRate: new FlowRate(14, literPerSecond)
 	};
 
 	mockNuxtImport("navigateTo", () => {

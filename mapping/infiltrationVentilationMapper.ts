@@ -45,7 +45,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		const val: Omit<SchemaMechanicalVentilation, 'ductwork'> = {
 			vent_type: x.typeOfMechanicalVentilationOptions,
 			EnergySupply: defaultElectricityEnergySupplyName,
-			design_outdoor_air_flow_rate: x.airFlowRate,
+			design_outdoor_air_flow_rate: typeof x.airFlowRate === 'number' ? x.airFlowRate : x.airFlowRate.amount,
 			sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
 			sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
 			...(x.typeOfMechanicalVentilationOptions === VentType.MVHR ? {mvhr_location: x.mvhrLocation, mvhr_eff: x.mvhrEfficiency} : {}),
