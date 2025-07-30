@@ -1,4 +1,4 @@
-import { Volume, liter, cubicMeter } from "./unitsVolume";
+import { Volume, liter, cubicMeter } from "./volume";
 
 describe('VolumeUnit', () => {
 	test('suffix for litres is l', () => {

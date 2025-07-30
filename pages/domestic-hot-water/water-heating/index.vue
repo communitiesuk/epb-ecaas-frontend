@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
-import { liter, Volume } from '~/utils/units/unitsVolume';
+import { liter, Volume } from '~/utils/units/volume';
 import type { HotWaterCylinderData } from '~/stores/ecaasStore.types';
 
 const title = "Water heating";

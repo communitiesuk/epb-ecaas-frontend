@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import {screen } from '@testing-library/vue';
 import WaterHeating from './index.vue';
 import type { HotWaterCylinderData } from "~/stores/ecaasStore.types";
-import { liter, Volume } from "~/utils/units/unitsVolume";
+import { liter, Volume } from "~/utils/units/volume";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {

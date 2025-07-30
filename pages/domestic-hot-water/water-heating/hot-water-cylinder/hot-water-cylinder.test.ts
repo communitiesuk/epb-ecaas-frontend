@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import HotWaterCylinder from './[hotWaterCylinder].vue';
 import { v4 as uuidv4 } from 'uuid';
-import { Volume, liter } from "~/utils/units/unitsVolume";
+import { Volume, liter } from "~/utils/units/volume";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {

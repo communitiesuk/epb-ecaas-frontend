@@ -15,7 +15,7 @@ import FormKitInputText from './components/form-kit/InputText.vue';
 import FormKitInputTextWithSuffix from './components/form-kit/InputTextWithSuffix.vue';
 import { FormKitBoolean } from '#components';
 import type { LengthUnit,  } from './utils/units/length';
-import type { VolumeUnit } from './utils/units/unitsVolume';
+import type { VolumeUnit } from './utils/units/volume';
 
 // Enable TypeScript support for custom inputs
 declare module '@formkit/inputs' {

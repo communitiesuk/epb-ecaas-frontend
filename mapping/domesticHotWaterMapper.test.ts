@@ -2,7 +2,7 @@ import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation  } fr
 import type {SchemaHotWaterDemand} from "~/schema/api-schema.types";
 import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { liter, Volume } from "../utils/units/unitsVolume";
+import { liter, Volume } from "../utils/units/volume";
 
 describe('domestic hot water mapper', () => {
 	const store = useEcaasStore();

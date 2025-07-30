@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
-import { liter, Volume } from '~/utils/units/unitsVolume';
+import { liter, Volume } from '~/utils/units/volume';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
