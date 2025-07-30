@@ -38,7 +38,7 @@ export class FlowRate {
 
 	asCubicMetersPerHour(): FlowRate {
 		if (this.unit === FlowRateUnitName.LITERS_PER_SECOND) {
-			const convertedAmount = this.amount * 0.001;
+			const convertedAmount = this.amount * 3.6;
 			return new FlowRate(convertedAmount, cubicMeterPerHour);
 		}
 

@@ -17,15 +17,15 @@ describe('FlowRate', () => {
 		expect(flowRate1.asCubicMetersPerHour()).toStrictEqual(volume2);
 	});
     
-	test('1 liter per second is equivalent to 0.001 cubic meter per hour', () => {
+	test('1 liter per second is equivalent to 3.6 cubic meters per hour', () => {
 		const flowRate1 = new FlowRate(1, literPerSecond);
-		const flowRate2 = new FlowRate(0.001, cubicMeterPerHour);
+		const flowRate2 = new FlowRate(3.6, cubicMeterPerHour);
 		expect(flowRate1.asCubicMetersPerHour()).toStrictEqual(flowRate2);
 	});
 
-	test('30 liters per second is equivalent to 0.001 cubic meters per hour', () => {
+	test('30 liters per second is equivalent to 108 cubic meters per hour', () => {
 		const flowRate1 = new FlowRate(30, literPerSecond);
-		const flowRate2 = new FlowRate(0.03, cubicMeterPerHour);
+		const flowRate2 = new FlowRate(108, cubicMeterPerHour);
 		expect(flowRate1.asCubicMetersPerHour()).toStrictEqual(flowRate2);
 	});
 });
