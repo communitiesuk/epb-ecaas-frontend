@@ -270,16 +270,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						</a>
 					</td>
 				</tr>	
-				<tr class="govuk-table__row">
-					<th scope="col" class="govuk-!-text-align-left">Type of shading</th>
-					<th scope="col" class="govuk-!-text-align-left">Depth</th>
-					<th scope="col" class="govuk-!-text-align-left">Distance from glass</th>
+				<tr class="govuk-table__row shading-header-row">
+					<th scope="col" class="govuk-!-text-align-left shading-type-col">Type of shading</th>
+					<th scope="col" class="govuk-!-text-align-left govuk-!-width-one-third">Depth</th>
+					<th scope="col" class="govuk-!-text-align-left govuk-!-width-one-third">Distance from glass</th>
 				</tr>
 			</thead>
-			<tbody class="govuk-table__body">
+			<tbody class="govuk-table__body shading-table-body">
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-!-text-align-left">Overhang</th>
-					<td class="shading-cell">
+					<td>
 						<FormKit
 							id="overhangDepth"
 							name="overhangDepth"
@@ -289,7 +289,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							validation-label="Overhang depth "
 						/>
 					</td>
-					<td class="shading-cell">
+					<td>
 						<FormKit
 							id="overhangDistance"
 							name="overhangDistance"
@@ -302,7 +302,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</tr>
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-!-text-align-left">Side fin right</th>
-					<td class="shading-cell">
+					<td>
 						<FormKit
 							id="sideFinRightDepth"
 							name="sideFinRightDepth"
@@ -312,7 +312,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							validation-label="Side fin right depth "
 						/>
 					</td>
-					<td class="shading-cell">
+					<td>
 						<FormKit
 							id="sideFinRightDistance"
 							name="sideFinRightDistance"
@@ -324,8 +324,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-!-text-align-left shading-header">Side fin left</th>
-					<td class="shading-cell">
+					<th scope="row" class="govuk-!-text-align-left">Side fin left</th>
+					<td>
 						<FormKit
 							id="sideFinLeftDepth"
 							name="sideFinLeftDepth"
@@ -335,7 +335,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							validation-label="Side fin left depth "
 						/>
 					</td>
-					<td class="shading-cell">
+					<td>
 						<FormKit
 							id="sideFinLeftDistance"
 							name="sideFinLeftDistance"
@@ -406,7 +406,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	.govuk-table__guidance_link {
 		padding-bottom: 40px;
 	}
-	.shading-cell {
-		vertical-align: bottom;
+	.shading-table-body {
+		td {
+			vertical-align: bottom;
+		}
+		th {
+			vertical-align: bottom;
+			padding-bottom: 32px;
+		}
+	}
+	.shading-type-col {
+		width: 25%;
+	}
+	.shading-header-row th {
+		padding-bottom: 20px;
 	}
 </style>
