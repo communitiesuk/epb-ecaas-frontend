@@ -69,9 +69,9 @@ describe("PV system", () => {
 		expect(screen.getAllByText("Ventilation strategy")).toBeDefined();
 		expect(screen.getByText("Pitch")).toBeDefined();
 		expect(screen.getByText("Orientation")).toBeDefined();
-		expect(screen.getByText("Elevational height of PV element at its base")).toBeDefined();
-		expect(screen.getByText("Length of PV")).toBeDefined();
-		expect(screen.getByText("Width of PV")).toBeDefined();
+		expect(screen.getByText("Elevational height of PV array at its base")).toBeDefined();
+		expect(screen.getByText("Length of PV array")).toBeDefined();
+		expect(screen.getByText("Width of PV array")).toBeDefined();
 		expect(screen.getByText("Inverter peak power AC")).toBeDefined();
 		expect(screen.getByText("Inverter peak power DC")).toBeDefined();
 		expect(screen.getByText("Location of inverter")).toBeDefined();
