@@ -183,7 +183,7 @@ describe('wwhrs', () => {
 	it('should navigate to the domestic hot water overview page when return to overview is clicked', async () => {
 		await renderSuspended(Wwhrs);
 	
-		const returnToOverviewButton = screen.getByRole("button", { name: "Return to overview" });
+		const returnToOverviewButton = screen.getByRole("button", { name: "Return to domestic hot water" });
 		expect(returnToOverviewButton.getAttribute("href")).toBe("/domestic-hot-water");
 	});
 });

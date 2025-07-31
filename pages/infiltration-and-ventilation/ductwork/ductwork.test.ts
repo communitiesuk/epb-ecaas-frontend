@@ -196,7 +196,7 @@ describe('ductwork', async () => {
 	it('should navigate to the infiltration and ventilation overview page when return to overview is clicked', async () => {
 		await renderSuspended(DuctworkOverview);
 		
-		const returnToOverviewButton = screen.getByRole("button", {name : "Return to overview"});
+		const returnToOverviewButton = screen.getByRole("button", {name : "Return to infiltration and ventilation"});
 		expect(returnToOverviewButton.getAttribute("href")).toBe("/infiltration-and-ventilation");
 	
 	} );
