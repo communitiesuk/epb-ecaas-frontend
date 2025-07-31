@@ -76,8 +76,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Height"
 			help="Enter the height of the building element"
 			name="height"
-			validation="required | number | min:0.001 | max:50"
-		/>
+			validation="required | number | min:0.001 | max:50">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<p class="govuk-hint">Enter the height of the wall up to where the insulation stops.</p>
+				<p class="govuk-hint">If you have a non-rectangular wall and the insulation spans the entire wall then enter the height of the wall from the base to the very top. </p>
+				<p class="govuk-hint">If you have a non-rectangular wall (for example a gable end) and the insulation does not go all the way to the top, enter the maximum height of the part of the wall that has insulation.</p>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="length"
 			type="govInputWithSuffix"
