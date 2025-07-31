@@ -72,7 +72,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m²"
 			label="Area"
 			name="area"
-			help="Enter the floor area of the whole dwelling"
+			help="Enter the total area of the floors in the dwelling"
 			validation="required"
 		/>
 		<FormKit
