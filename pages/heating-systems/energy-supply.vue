@@ -92,6 +92,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="exported"
 			validation="required"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

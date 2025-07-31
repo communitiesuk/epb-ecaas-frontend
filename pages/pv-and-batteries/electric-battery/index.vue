@@ -163,6 +163,7 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			validation="required | number"
 			suffix-text="kW"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

@@ -57,6 +57,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number"
 			suffix-text="m³/(h·m²)"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

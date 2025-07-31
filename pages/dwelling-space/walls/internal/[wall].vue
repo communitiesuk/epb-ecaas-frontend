@@ -73,6 +73,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		</FormKit>
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<GovLLMWarning />
 		<FormKit
 			type="govButton"
 			label="Save and continue"

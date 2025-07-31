@@ -108,6 +108,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			suffix-text="m"/>
 		<FieldsOrientation help="Enter the orientation of the vent's outside face, measured from true north"/>
 		<FieldsPitch />
+		<GovLLMWarning />
 		<FormKit
 			type="govButton"
 			label="Save and continue"

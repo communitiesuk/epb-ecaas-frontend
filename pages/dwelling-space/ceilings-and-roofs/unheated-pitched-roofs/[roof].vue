@@ -118,6 +118,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Mass distribution class of roof and ceiling"
 			help="For an unheated pitched roof, input the combined value of the ceiling and roof"
 		/>
+		<GovLLMWarning />
 		<FormKit
 			type="govButton"
 			label="Save and continue"

@@ -81,6 +81,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="thermostatPosition"
 			validation="required"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

@@ -54,6 +54,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required | number"
 			suffix-text="W/K"
 		/>
+		<GovLLMWarning />
 		<FormKit
 			type="govButton"
 			label="Save and continue"

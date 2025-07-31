@@ -14,3 +14,9 @@ defineProps<{
 		</strong>
 	</div>
 </template>
+
+<style scoped lang="scss">
+	.govuk-warning-text__icon {
+		margin-top: 0;
+	}
+</style>

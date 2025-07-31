@@ -257,6 +257,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="surfaceReflectivity"
 			validation="required"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

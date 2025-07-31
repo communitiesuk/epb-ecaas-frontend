@@ -75,6 +75,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Enter the proportion of the system's sensible cooling output that is delivered through air movement as opposed to radiant cooling. Typically this is 1 as all cooling is by convection."
 			validation="required | number | between:0,1"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

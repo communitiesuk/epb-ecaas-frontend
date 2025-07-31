@@ -180,6 +180,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="location"
 			validation="required"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

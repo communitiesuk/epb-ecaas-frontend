@@ -189,6 +189,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			help="Is there environmental noise from the surrounding area, which can influence whether occupants keep windows closed?"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

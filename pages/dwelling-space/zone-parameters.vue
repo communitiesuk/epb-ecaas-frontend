@@ -132,6 +132,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="[]"
 			link="/"
 		/> -->
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue"  />
 	</FormKit>
 </template>

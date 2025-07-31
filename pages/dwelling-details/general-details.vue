@@ -84,6 +84,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			help="This affects the space cooling of the notional dwelling"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

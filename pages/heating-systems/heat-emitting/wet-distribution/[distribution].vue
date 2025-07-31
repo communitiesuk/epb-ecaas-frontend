@@ -299,7 +299,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 						</tr>
 					</tbody>
 				</table>
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder/></govdetails></FormKit> 
+			</GovDetails>
+		</FormKit>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

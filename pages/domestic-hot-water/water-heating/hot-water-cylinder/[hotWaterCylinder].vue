@@ -91,6 +91,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			validation="required | number | min:0 | max:200"
 			suffix-text="kWh"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

@@ -67,6 +67,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="heaterEfficiency"
 			validation="required | number | min:0 | max:1"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

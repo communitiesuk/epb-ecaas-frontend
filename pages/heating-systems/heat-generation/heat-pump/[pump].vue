@@ -67,6 +67,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="For this release you will only be allowed to specify the approximate size of the heat pump. In future releases you will be able to select specific models."
 			validation="required"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

@@ -54,6 +54,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FieldsAirSupplyToAppliance id="airSupplyToAppliance" name="airSupplyToAppliance"/>
 		<FieldsExhaustMethodFromAppliance id="exhaustMethodFromAppliance" name="exhaustMethodFromAppliance"/>
 		<FieldsTypeOfFuel id="typeOfFuel" name="typeOfFuel"/>
+		<GovLLMWarning />
 		<FormKit
 			type="govButton"
 			label="Save and continue"

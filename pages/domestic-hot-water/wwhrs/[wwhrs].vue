@@ -129,6 +129,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="proportionOfUse"
 			validation="required | number | between:0,1"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>

@@ -117,6 +117,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required | number"
 			help="Enter the distance from the dwelling to the shading object"
 		/>
+		<GovLLMWarning />
 		<FormKit
 			type="govButton"
 			label="Save and continue"

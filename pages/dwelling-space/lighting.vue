@@ -58,6 +58,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the number of incandescent bulbs in the whole dwelling"
 			validation="required"
 		/>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue"  />
 	</FormKit>
 </template>

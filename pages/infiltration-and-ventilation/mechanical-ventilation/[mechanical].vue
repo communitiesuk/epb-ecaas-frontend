@@ -162,6 +162,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</GovDetails>
 			</FormKit>
 		</template>
+		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>
