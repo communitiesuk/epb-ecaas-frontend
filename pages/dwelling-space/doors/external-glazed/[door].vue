@@ -206,7 +206,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				type="govInputWithSuffix"
 				suffix-text="m²"
 				label="Maximum openable area"
-				help="Enter the total area of the window that can be opened for ventilation"
+				help="Enter the total area of the gap created when the window is fully open"
 				name="maximumOpenableArea"
 				validation="required | number | min:0 | max:100"
 			/>
