@@ -50,7 +50,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</GovPanel>
 		<div class="govuk-button-group govuk-!-margin-top-7">
 			<NuxtLink v-if="!downloadTriggered" v-show="false" id="download" :href="downloadUrl" :download="`${model.fileName}.json`" />
-			<GovButton secondary href="/">Return to task list</GovButton>
+			<GovButton secondary href="/">Return to overview</GovButton>
 		</div>
 	</template>
 	<template v-else>

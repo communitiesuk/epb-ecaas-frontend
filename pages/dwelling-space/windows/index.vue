@@ -56,8 +56,8 @@ function handleComplete() {
 		@duplicate="handleDuplicate"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/dwelling-space">
-			Return to overview
+		<GovButton href="/dwelling-space" secondary>
+			Return to dwelling space
 		</GovButton>
 		<CompleteElement :is-complete="store.dwellingFabric.dwellingSpaceWindows?.complete ?? false" @completed="handleComplete"/>
 	</div>

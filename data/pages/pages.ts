@@ -10,7 +10,7 @@ import pvAndBatteriesPages from "./pvAndBatteries";
 const pagesData = [
 	{
 		id: 'taskList',
-		title: 'Task list',
+		title: 'Overview',
 		url: '/',
 		type: PageType.Root,
 	},

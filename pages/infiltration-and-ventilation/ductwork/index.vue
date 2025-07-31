@@ -71,8 +71,8 @@ function checkIsComplete(){
 		@duplicate="handleDuplicate"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/infiltration-and-ventilation">
-			Return to overview
+		<GovButton href="/infiltration-and-ventilation" secondary>
+			Return to infiltration and ventilation
 		</GovButton>
 		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>

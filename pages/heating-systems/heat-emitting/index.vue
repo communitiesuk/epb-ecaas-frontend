@@ -99,7 +99,7 @@ function checkIsComplete(){
 			href="/heating-systems"
 			secondary
 		>
-			Return to overview
+			Return to heating systems
 		</GovButton>
 		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>

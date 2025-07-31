@@ -107,7 +107,7 @@ function checkIsComplete() {
 			href="/domestic-hot-water"
 			secondary
 		>
-			Return to overview
+			Return to domestic hot water
 		</GovButton>
 		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>

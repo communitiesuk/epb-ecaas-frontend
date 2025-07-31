@@ -241,5 +241,5 @@ const heatEmittingSummary: SummarySection[] = [
 			:selected="tabProps.currentItem?.id === 'electricStorageHeater'" />
 		<SummaryTab :summary="warmAirHeatPumpSummary" :selected="tabProps.currentItem?.id === 'warmAirHeatPump'" />
 	</GovTabs>
-	<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
+	<GovButton href="/">Return to overview</GovButton>
 </template>

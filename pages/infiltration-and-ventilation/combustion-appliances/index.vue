@@ -123,7 +123,7 @@ function checkIsComplete(){
 			href="/infiltration-and-ventilation"
 			secondary
 		>
-			Return to overview
+			Return to infiltration and ventilation
 		</GovButton>
 		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 	</div>

@@ -80,8 +80,8 @@ function handleComplete() {
 		v-if="mvhrArray.length > 0"
 		class="govuk-body">Note if you remove a MVHR this will also remove any associated ductwork</p>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/infiltration-and-ventilation">
-			Return to overview
+		<GovButton href="/infiltration-and-ventilation" secondary>
+			Return to infiltration and ventilation
 		</GovButton>
 		<CompleteElement :is-complete="store.infiltrationAndVentilation.mechanicalVentilation?.complete ?? false" @completed="handleComplete"/>
 	</div>

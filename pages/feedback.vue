@@ -25,5 +25,5 @@ const router = useRouter();
 	</ul>
 	<p class="govuk-body">Please only send one email per bug.</p>
 	<p class="govuk-body">We will look at all feedback and bug reports, but due to the capacity of the team we are not be able to respond to all emails.</p>
-	<GovButton href="/">Return to task list</GovButton>
+	<GovButton href="/">Return to overview</GovButton>
 </template>

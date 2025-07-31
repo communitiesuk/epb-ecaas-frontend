@@ -63,7 +63,7 @@ function handleComplete() {
 		@duplicate="handleDuplicate"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/">
+		<GovButton href="/" secondary>
 			Return to overview
 		</GovButton>
 		<CompleteElement :is-complete="store.cooling.airConditioning?.complete ?? false" @completed="handleComplete"/>

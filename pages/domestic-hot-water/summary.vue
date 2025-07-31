@@ -328,5 +328,5 @@ const pipeworkSummarySections: SummarySection[] = [
 			</template>
 		</SummaryTab>
 	</GovTabs>
-	<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
+	<GovButton href="/">Return to overview</GovButton>
 </template>

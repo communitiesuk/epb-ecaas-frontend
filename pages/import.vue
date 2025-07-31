@@ -83,7 +83,7 @@ const doImport = (_event: Event) => {
 		</ClientOnly>
 		<div class="govuk-button-group">
 			<GovButton :disabled="!hasFile || undefined" :click="doImport" data-testid="import-button">Import</GovButton>
-			<GovButton href="/" secondary>Return to task list</GovButton>
+			<GovButton href="/" secondary>Return to overview</GovButton>
 		</div>
 	</template>
 	<template v-else>
@@ -92,7 +92,7 @@ const doImport = (_event: Event) => {
 			<p class="govuk-!-margin-bottom-0">{{ importedFile.datetime.format('DD/MM/YYYY HH:mm') }}</p>
 		</GovPanel>
 		<div class="govuk-button-group govuk-!-margin-top-7">
-			<GovButton secondary href="/">Return to task list</GovButton>
+			<GovButton secondary href="/">Return to overview</GovButton>
 		</div>
 	</template>
 </template>

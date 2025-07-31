@@ -32,7 +32,7 @@ const taskList: GovTaskListItemProps[] = createTaskList(page);
 		</template>
 	</ul>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<NuxtLink to="/" class="govuk-button">Return to task list</NuxtLink>
+		<GovButton href="/" secondary>Return to overview</GovButton>
 		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
 	</div>
 </template>
