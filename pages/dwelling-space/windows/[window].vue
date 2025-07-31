@@ -279,7 +279,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<tbody class="govuk-table__body">
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-!-text-align-left">Overhang</th>
-					<td>
+					<td class="shading-cell">
 						<FormKit
 							id="overhangDepth"
 							name="overhangDepth"
@@ -289,7 +289,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							validation-label="Overhang depth "
 						/>
 					</td>
-					<td>
+					<td class="shading-cell">
 						<FormKit
 							id="overhangDistance"
 							name="overhangDistance"
@@ -302,7 +302,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</tr>
 				<tr class="govuk-table__row">
 					<th scope="row" class="govuk-!-text-align-left">Side fin right</th>
-					<td>
+					<td class="shading-cell">
 						<FormKit
 							id="sideFinRightDepth"
 							name="sideFinRightDepth"
@@ -312,7 +312,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							validation-label="Side fin right depth "
 						/>
 					</td>
-					<td>
+					<td class="shading-cell">
 						<FormKit
 							id="sideFinRightDistance"
 							name="sideFinRightDistance"
@@ -324,8 +324,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					</td>
 				</tr>
 				<tr class="govuk-table__row">
-					<th scope="row" class="govuk-!-text-align-left">Side fin left</th>
-					<td>
+					<th scope="row" class="govuk-!-text-align-left shading-header">Side fin left</th>
+					<td class="shading-cell">
 						<FormKit
 							id="sideFinLeftDepth"
 							name="sideFinLeftDepth"
@@ -335,7 +335,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 							validation-label="Side fin left depth "
 						/>
 					</td>
-					<td>
+					<td class="shading-cell">
 						<FormKit
 							id="sideFinLeftDistance"
 							name="sideFinLeftDistance"
@@ -404,5 +404,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 <style scoped lang="scss">
 	.govuk-table__guidance_link {
 		padding-bottom: 40px;
+	}
+	.shading-cell {
+		vertical-align: bottom;
 	}
 </style>
