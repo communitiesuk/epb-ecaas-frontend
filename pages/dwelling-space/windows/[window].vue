@@ -271,7 +271,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					</td>
 				</tr>	
 				<tr class="govuk-table__row shading-header-row">
-					<th scope="col" class="govuk-!-text-align-left shading-type-col">Type of shading</th>
+					<th scope="col" class="govuk-!-text-align-left govuk-!-width-one-quarter">Type of shading</th>
 					<th scope="col" class="govuk-!-text-align-left govuk-!-width-one-third">Depth</th>
 					<th scope="col" class="govuk-!-text-align-left govuk-!-width-one-third">Distance from glass</th>
 				</tr>
@@ -414,9 +414,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			vertical-align: bottom;
 			padding-bottom: 32px;
 		}
-	}
-	.shading-type-col {
-		width: 25%;
 	}
 	.shading-header-row th {
 		padding-bottom: 20px;
