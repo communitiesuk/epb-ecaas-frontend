@@ -47,10 +47,17 @@ const ecaasApi = {
 		if ('errors' in response) {
 			const errorMessage = response.errors?.[0]?.detail ?? "Unknown error";
 
+			let requestBodyWithoutExternalConditions: object;
+
+			if ("ExternalConditions" in data ) {
+				const { ExternalConditions, ...rest } = data;
+				requestBodyWithoutExternalConditions = rest;
+			}
+			
 			Sentry.withScope(scope => {
 				scope.setExtra("responseErrors", response.errors);
 				scope.setExtra("requestBody", JSON.parse(JSON.stringify(data)));
-				scope.setExtra("requestBodyString", JSON.stringify(data, null, 2));
+				scope.setExtra("requestBody without External Conditions", JSON.stringify(requestBodyWithoutExternalConditions || data));
 				Sentry.captureException(new Error(errorMessage));
 			});
 		};
