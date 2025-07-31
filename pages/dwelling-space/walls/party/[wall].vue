@@ -79,7 +79,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required | number | min:0.001 | max:50">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p class="govuk-hint">Enter the height of the wall up to where the insulation stops.</p>
-				<p class="govuk-hint">If you have a non-rectangular wall and the insulation spans the entire wall then enter the height of the wall from the base to the very top. </p>
+				<p class="govuk-hint">If you have a non-rectangular wall and the insulation spans the entire wall then enter the height of the wall from the base to the very top.</p>
 				<p class="govuk-hint">If you have a non-rectangular wall (for example a gable end) and the insulation does not go all the way to the top, enter the maximum height of the part of the wall that has insulation.</p>
 			</GovDetails>
 		</FormKit>
@@ -102,7 +102,20 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
-		<FieldsUValue id="uValue" name="uValue" />
+		<FormKit
+			id="uValue"
+			type="govInputWithSuffix"
+			suffix-text="W/(m²·K)"
+			label="U-value"
+			help="This is the steady thermal transmittance of the materials that make up the building element"
+			name="uValue"
+			validation="required | number | min:0.01 | max:10">
+			<GovDetails summary-text="Help with this input">
+				<p class="govuk-hint">
+					For the u value of party walls, put the actual u-value of the materials of the wall. This helps determine the behaviour of the wall releasing heat back into the room.
+				</p>
+			</GovDetails>
+		</FormKit>
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
