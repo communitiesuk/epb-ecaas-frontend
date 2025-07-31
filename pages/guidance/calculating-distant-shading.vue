@@ -9,7 +9,7 @@ const title = 'Calculating distant shading';
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<p class="govuk-body">To assess the shading impact on a dwelling, you will need to input key details about surrounding obstacles that may block sunlight.</p>
+	<p class="govuk-body">To assess the shading impact on a dwelling, you will need to input key details about surrounding obstacles that may block sunlight. You do not need to include party walls.</p>
 	<h2 class="govuk-heading-s">Required Inputs:</h2>
 	<ol class="govuk-list govuk-list--number">
 		<li>Shading Direction: Define the start and end angles (in degrees) where the shading occurs, measured from north (0°).</li>
