@@ -19,7 +19,7 @@ const handleClearData = async () => {
 			<Title>{{ title }}</Title>
 		</Head>
 
-		<router-link to="/" class="govuk-back-link" data-testid="backLink">Back to task list</router-link>
+		<NuxtLink href="/" class="govuk-back-link" data-testid="backLink">Back to task list</NuxtLink>
 
 		<div class="govuk-panel govuk-panel--confirmation clear-data-panel" data-testid="clearDataPanel">
 			<h1 class="govuk-panel__title">
@@ -31,7 +31,7 @@ const handleClearData = async () => {
 			</div>
 			<div class="govuk-button-group">
 				<a role="button" class="govuk-button govuk-button--inverse" data-testid="clearDataButton" @click="handleClearData">Clear data</a>
-				<router-link to="/" class="govuk-link govuk-link--inverse"  data-testid="taskListLink">Go back to task list</router-link>
+				<NuxtLink href="/" class="govuk-link govuk-link--inverse" data-testid="taskListLink">Return to overview</NuxtLink>
 			</div>
 		</div>
 	</NuxtLayout>
