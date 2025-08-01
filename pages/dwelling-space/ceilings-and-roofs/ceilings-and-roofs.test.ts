@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import CeilingsAndRoofs from './index.vue';
 import CeilingForm from './ceilings/[ceiling].vue';
 import RoofForm from './roofs/[roof].vue';
-import UnheatedRoofForm from './unheated-pitched-roofs/[roof].vue';
 import { MassDistributionClass } from "~/schema/api-schema.types";
 
 import { screen } from '@testing-library/vue';
@@ -66,31 +65,7 @@ describe('ceilings and roofs', () => {
 		...roof1,
 		name: "Roof 3",
 	};
-	const pitchedRoof1: RoofData = {
-		name: "Unheated pitched roof 1",
-		typeOfRoof: 'flat',
-		pitchOption: 'custom',
-		pitch: 180,
-		orientation: 0,
-		length: 1,
-		width: 1,
-		elevationalHeightOfElement: 2,
-		surfaceArea: 1,
-		solarAbsorptionCoefficient: 0.5,
-		uValue: 1,
-		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I
-	};
 
-	const pitchedRoof2: RoofData = {
-		...pitchedRoof1,
-		name: "Unheated pitched roof 2"
-	};
-
-	const pitchedRoof3: RoofData = {
-		...pitchedRoof1,
-		name: "Unheated pitched roof 3"
-	};
 	describe('ceilings', () => {
 	
 		test('ceiling is removed when remove link is clicked', async () => {
@@ -231,76 +206,6 @@ describe('ceilings and roofs', () => {
 		});
 	});
 
-	describe('unheated pitched roofs', () => {
-	
-	
-		test('unheated pitched roof is removed when remove link is clicked', async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceUnheatedPitchedRoofs: {
-							data: [pitchedRoof1]
-						}
-					}
-				}
-			});
-	
-			await renderSuspended(CeilingsAndRoofs);
-	
-			expect(screen.getAllByTestId('unheatedPitchedRoofs_items')).toBeDefined();
-	
-			await user.click(screen.getByTestId('unheatedPitchedRoofs_remove_0'));
-	
-			expect(screen.queryByTestId('unheatedPitchedRoofs_items')).toBeNull();
-		});
-	
-		it('should only remove the unheated pitched roof object thats is clicked', async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceUnheatedPitchedRoofs: {
-							data: [pitchedRoof1, pitchedRoof2, pitchedRoof3]
-						}
-					}
-				}
-			});
-	
-			await renderSuspended(CeilingsAndRoofs);
-			await user.click(screen.getByTestId('unheatedPitchedRoofs_remove_1'));
-	
-			const populatedList = screen.getByTestId('unheatedPitchedRoofs_items');
-	
-			expect(within(populatedList).getByText('Unheated pitched roof 1')).toBeDefined();
-			expect(within(populatedList).getByText('Unheated pitched roof 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Unheated pitched roof 2')).toBeNull();
-	
-		});
-	
-		test('unheated pitched roof is duplicated when duplicate link is clicked', async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceUnheatedPitchedRoofs: {
-							data: [pitchedRoof1, pitchedRoof2]
-						}
-					}
-				}
-			});
-	
-			await renderSuspended(CeilingsAndRoofs);
-			await userEvent.click(screen.getByTestId('unheatedPitchedRoofs_duplicate_0'));
-			await userEvent.click(screen.getByTestId('unheatedPitchedRoofs_duplicate_0'));
-			await userEvent.click(screen.getByTestId('unheatedPitchedRoofs_duplicate_2'));
-			await userEvent.click(screen.getByTestId('unheatedPitchedRoofs_duplicate_2'));
-	
-			expect(screen.queryAllByTestId('unheatedPitchedRoofs_item').length).toBe(6);
-			expect(screen.getByText('Unheated pitched roof 1')).toBeDefined();
-			expect(screen.getByText('Unheated pitched roof 1 (1)')).toBeDefined();
-			expect(screen.getByText('Unheated pitched roof 1 (2)')).toBeDefined();
-			expect(screen.getByText('Unheated pitched roof 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Unheated pitched roof 1 (1) (2)')).toBeDefined();
-		});
-	});
 	describe('mark section as complete', () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
@@ -313,7 +218,6 @@ describe('ceilings and roofs', () => {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: { data: [ceiling1] },
 						dwellingSpaceRoofs: { data: [roof1] },
-						dwellingSpaceUnheatedPitchedRoofs: { data: [pitchedRoof1] }
 					}
 				}
 			});
@@ -331,8 +235,7 @@ describe('ceilings and roofs', () => {
 			params: string,
 		}[]> => ([
 			{ key: 'dwellingSpaceCeilings', testId: `ceilings_${action}_0`, form: CeilingForm, params: "ceiling"},
-			{ key: 'dwellingSpaceRoofs', testId: `roofs_${action}_0`, form: RoofForm, params: "roof"},
-			{ key: 'dwellingSpaceUnheatedPitchedRoofs', testId: `unheatedPitchedRoofs_${action}_0`, form: UnheatedRoofForm, params: "roof"}
+			{ key: 'dwellingSpaceRoofs', testId: `roofs_${action}_0`, form: RoofForm, params: "roof"}
 		]);
 	
 		type CeilingsAndRoofsType = keyof typeof store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
@@ -344,11 +247,10 @@ describe('ceilings and roofs', () => {
 	
 			await user.click(screen.getByTestId("completeSectionButton"));
 	
-			const { dwellingSpaceCeilings, dwellingSpaceRoofs, dwellingSpaceUnheatedPitchedRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+			const { dwellingSpaceCeilings, dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	
 			expect(dwellingSpaceCeilings?.complete).toBe(true);
 			expect(dwellingSpaceRoofs?.complete).toBe(true);
-			expect(dwellingSpaceUnheatedPitchedRoofs?.complete).toBe(true);
 	
 			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
 			expect(completedStatusElement?.style.display).not.toBe("none");

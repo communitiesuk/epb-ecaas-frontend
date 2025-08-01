@@ -812,21 +812,6 @@ const expectedFlatInput: FhsInputSchema = {
 					is_external_door: false,
 					is_unheated_pitched_roof: false
 				},
-				"unheated pitched roof (roof)": {
-					pitch: 0,
-					orientation360: 90,
-					height: 5,
-					width: 4,
-					base_height: 2,
-					area: 20,
-					solar_absorption_coeff: 0.1,
-					u_value: 0.6,
-					mass_distribution_class: MassDistributionClass.IE,
-					areal_heat_capacity: 50000,
-					is_unheated_pitched_roof: true,
-					is_external_door: false,
-					type: "BuildingElementOpaque"
-				},
 				"bathroom door (door)": {
 					area: 1.4,
 					areal_heat_capacity: 50000,
@@ -1100,9 +1085,6 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 				dwellingSpaceRoofs: {
-					...baseForm,
-				},
-				dwellingSpaceUnheatedPitchedRoofs: {
 					...baseForm,
 				}
 			},
@@ -1625,23 +1607,6 @@ describe("FHS input mapper", () => {
 						uValue: 0.1,
 						kappaValue: 19300,
 						massDistributionClass: MassDistributionClass.I
-					}]
-				},
-				dwellingSpaceUnheatedPitchedRoofs: {
-					...baseForm,
-					data: [{
-						name: "unheated pitched roof",
-						typeOfRoof: 'unheatedPitched',
-						pitch: 0,
-						orientation: 90,
-						length: 5,
-						width: 4,
-						elevationalHeightOfElement: 2,
-						surfaceArea: 20,
-						solarAbsorptionCoefficient: 0.1,
-						uValue: 0.6,
-						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.IE
 					}]
 				}
 			},

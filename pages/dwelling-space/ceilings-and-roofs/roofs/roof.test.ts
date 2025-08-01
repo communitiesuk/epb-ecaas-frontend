@@ -99,9 +99,6 @@ describe('roof', () => {
 		expect((await screen.findByTestId('elevationalHeightOfElement_error'))).toBeDefined();
 		expect((await screen.findByTestId('surfaceArea_error'))).toBeDefined();
 		expect((await screen.findByTestId('solarAbsorptionCoefficient_error'))).toBeDefined();
-		expect((await screen.findByTestId('uValue_error'))).toBeDefined();
-		expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();
-		expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();
 	});
 
 	test('error summary is displayed when an invalid form in submitted', async () => {
@@ -151,6 +148,9 @@ describe('roof', () => {
 
 		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
 		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
+		expect((await screen.findByTestId('uValue_error'))).toBeDefined();
+		expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();
+		expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();
 	});
 
 	it('saves additional fields when type of roof is pitched', async () => {

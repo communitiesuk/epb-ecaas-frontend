@@ -121,8 +121,7 @@ describe('Ecaas Store', () => {
 				},
 				dwellingSpaceCeilingsAndRoofs: {
 					dwellingSpaceCeilings: {complete: true},
-					dwellingSpaceRoofs: {complete: true},
-					dwellingSpaceUnheatedPitchedRoofs: {complete: true}
+					dwellingSpaceRoofs: {complete: true}
 				},
 				dwellingSpaceDoors: {
 					dwellingSpaceExternalUnglazedDoor: {complete: true},

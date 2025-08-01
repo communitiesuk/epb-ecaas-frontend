@@ -206,7 +206,6 @@ export type PartyWallData = {
 export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
 	dwellingSpaceCeilings: EcaasForm<CeilingData[]>;
 	dwellingSpaceRoofs: EcaasForm<RoofData[]>;
-	dwellingSpaceUnheatedPitchedRoofs: EcaasForm<RoofData[]>;
 }>;
 
 export type CeilingData = {

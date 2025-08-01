@@ -202,7 +202,6 @@ const wallSummarySections: SummarySection[] = [
 
 const ceilingData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data;
 const roofData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data;
-const unheatedPitchedRoofData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceUnheatedPitchedRoofs.data;
 
 const ceilingSummary: SummarySection = {
 	id: 'dwellingSpaceCeilings',
@@ -244,32 +243,9 @@ const roofSummary: SummarySection = {
 	editUrl: getUrl('dwellingSpaceCeilingsAndRoofs')!
 };
 
-const unheatedPitchedRoofSummary: SummarySection = {
-	id: 'dwellingSpaceUnheatedPitchedRoofs',
-	label: 'Unheated pitched roof',
-	data: unheatedPitchedRoofData.map(x => {
-		return {
-			"Name": x.name,
-			"Type of roof": x.typeOfRoof,
-			"Pitch": x.pitch,
-			"Orientation": x.orientation,
-			"Length": x.length,
-			"Width": x.width,
-			"Elevational height of building element at its base": x.elevationalHeightOfElement,
-			"Net surface area of ceiling": x.surfaceArea,
-			"Solar absorption coefficient": x.solarAbsorptionCoefficient,
-			"U-value": x.uValue,
-			"Areal heat capacity": x.kappaValue,
-			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
-		};
-	}),
-	editUrl: getUrl('dwellingSpaceCeilingsAndRoofs')!
-};
-
 const ceilingAndRoofSummarySections: SummarySection[] = [
 	ceilingSummary,
-	roofSummary,
-	unheatedPitchedRoofSummary
+	roofSummary
 ];
 
 const unglazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data;
@@ -519,15 +495,6 @@ const thermalBridgeSummarySections: SummarySection[] = [
 				<h2 class="govuk-heading-m">No roofs added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceRoofsCreate')">
 					Add roofs
-				</NuxtLink>
-			</template>
-		</SummaryTab>
-
-		<SummaryTab :summary="unheatedPitchedRoofSummary" :selected="tabProps.currentTab === 2">
-			<template #empty>
-				<h2 class="govuk-heading-m">No unheated pitched roofs added</h2>
-				<NuxtLink class="govuk-link" :to="getUrl('dwellingSpaceUnheatedPitchedRoofsCreate')">
-					Add unheated pitched roof
 				</NuxtLink>
 			</template>
 		</SummaryTab>

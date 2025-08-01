@@ -73,24 +73,34 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="typeOfRoof"
 			validation="required"
 		/>
+		<p v-if="model.typeOfRoof === 'pitchedInsulatedAtRoof' || model.typeOfRoof === 'pitchedInsulatedAtCeiling'" class="govuk-hint">
+			If the pitched roof has multiple orientations (for example, a gable or hip roof), each orientation must be added as a separate roof element.
+		</p>
 		<FieldsPitch
 			v-if="model.typeOfRoof === 'flat'"
+			label="Pitch of roof"
+			help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
 			:pitch-option="model.pitchOption"
 			:options="zeroPitchOptions()"
 		/>
-		<template v-if="['pitchedInsulatedAtRoof', 'pitchedInsulatedAtCeiling'].includes(model.typeOfRoof)">
-			<FieldsPitch />
-			<FieldsOrientation />
+
+		<template v-if="model.typeOfRoof === 'pitchedInsulatedAtRoof' || model.typeOfRoof === 'pitchedInsulatedAtCeiling'">
+			<FieldsPitch
+				label="Pitch of roof"
+				help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
+			/>
+			<FieldsOrientation label="Orientation of roof" />
 			<div v-if="!!model.orientation" class="govuk-error-summary">
 				<div role="alert" class="govuk-hint govuk-!-margin-bottom-0">
 					If the pitched roof has multiple orientations (e.g., a gable or hip roof), each orientation must be modelled as a separate roof element.
 				</div>
 			</div>
 		</template>
+
 		<FormKit
 			id="length"
 			type="govInputWithSuffix"
-			label="Length"
+			label="Length of roof"
 			help="Enter the length of the building element"
 			name="length"
 			validation="required | number | min:0.001 | max:50"
@@ -99,26 +109,57 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<FormKit
 			id="width"
 			type="govInputWithSuffix"
-			label="Width"
+			label="Width of roof"
 			help="Enter the width of the building element"
 			name="width"
 			validation="required | number | min:0.001 | max:50"
 			suffix-text="m"
 		/>
-		<FieldsElevationalHeight field="elevationalHeightOfElement" />
+		<FieldsElevationalHeight
+			field="elevationalHeightOfElement"
+			label="Elevational height of roof at its base"
+		/>
 		<FormKit
 			id="surfaceArea"
 			type="govInputWithSuffix"
-			label="Net surface area of element"
+			label="Net surface area of ceiling"
 			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 			suffix-text="m²"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorptionCoefficient" name="solarAbsorptionCoefficient"/>
-		<FieldsUValue id="uValue" name="uValue" />
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FieldsSolarAbsorptionCoefficient
+			id="solarAbsorptionCoefficient"
+			name="solarAbsorptionCoefficient"
+			label="Solar absorption coefficient of roof"
+		/>
+
+		<template v-if="model.typeOfRoof === 'flat' || model.typeOfRoof === 'pitchedInsulatedAtRoof'">
+			<FieldsUValue
+				label="U-value of roof"
+				help="This is the steady thermal transmittance of the roof and ceiling"
+			/>
+			<FieldsArealHeatCapacity
+				id="kappaValue"
+				name="kappaValue"
+				help="This is the sum of the heat capacities of all the construction layers in the roof and ceiling; also known as effective areal heat capacity or kappa value"
+			/>
+			<FieldsMassDistributionClass help="This is the distribution of mass in the roof and ceiling" />
+		</template>
+
+		<template v-if="model.typeOfRoof === 'pitchedInsulatedAtCeiling'">
+			<FieldsUValue
+				label="U-value of roof"
+				help="This is the steady thermal transmittance of the entire roof, including the unheated loft space"
+			/>
+			<FieldsArealHeatCapacity
+				id="kappaValue"
+				name="kappaValue"
+				help="This is the sum of the heat capacities of all the construction layers in the roof, loft space and ceiling; also known as effective areal heat capacity or kappa value"
+			/>
+			<FieldsMassDistributionClass help="This is the distribution of mass in the roof, loft space and ceiling" />
+		</template>
+		
 		<GovLLMWarning />
 		<FormKit
 			type="govButton"

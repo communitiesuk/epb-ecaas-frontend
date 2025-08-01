@@ -43,8 +43,7 @@ function handleComplete() {
 		dwellingFabric: {
 			dwellingSpaceCeilingsAndRoofs: {
 				dwellingSpaceCeilings: { complete: true },
-				dwellingSpaceRoofs: { complete: true },
-				dwellingSpaceUnheatedPitchedRoofs: { complete: true }
+				dwellingSpaceRoofs: { complete: true }
 			}
 		}
 	});
@@ -64,6 +63,7 @@ function checkIsComplete(){
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
+	<p class="govuk-hint">For ceilings next to roofs, both ceiling and roof details should be inputted as one roof element. Where you have a multiple storey dwelling, internal floors should be inputted as floors or ceilings. You do not need to enter both.</p>
 	<CustomList
 		id="ceilings"
 		title="Ceilings"
@@ -79,15 +79,6 @@ function checkIsComplete(){
 		:items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('dwellingSpaceRoofs', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceRoofs', index)"
-	/>
-	<CustomList
-		id="unheatedPitchedRoofs"
-		title="Unheated pitched roof"
-		hint="For unheated pitch roofs, input both the ceiling and roof details here"
-		:form-url="`${page?.url!}/unheated-pitched-roofs`"
-		:items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceUnheatedPitchedRoofs?.data.map(x => x.name)"
-		@remove="(index: number) => handleRemove('dwellingSpaceUnheatedPitchedRoofs', index)"
-		@duplicate="(index: number) => handleDuplicate('dwellingSpaceUnheatedPitchedRoofs', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton

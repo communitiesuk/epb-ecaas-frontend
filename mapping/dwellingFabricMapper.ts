@@ -288,7 +288,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 }
 
 export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> {
-	const { dwellingSpaceCeilings, dwellingSpaceRoofs, dwellingSpaceUnheatedPitchedRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+	const { dwellingSpaceCeilings, dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	const ceilingSuffix = 'ceiling';
 	const roofSuffix = 'roof';
 
@@ -337,27 +337,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
 			is_external_door: false,
-			is_unheated_pitched_roof: false
-		}};
-	});
-
-	const unheatedPitchedRoofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceUnheatedPitchedRoofs.map(x => {
-		const nameWithSuffix = suffixName(x.name, roofSuffix);
-
-		return {[nameWithSuffix]: {
-			type: 'BuildingElementOpaque',
-			pitch: x.pitch,
-			orientation360: x.orientation!,
-			height: x.length,
-			width: x.width,
-			base_height: x.elevationalHeightOfElement,
-			area: x.surfaceArea,
-			solar_absorption_coeff: x.solarAbsorptionCoefficient,
-			u_value: x.uValue,
-			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass,
-			is_external_door: false,
-			is_unheated_pitched_roof: true
+			is_unheated_pitched_roof: x.typeOfRoof === 'pitchedInsulatedAtCeiling'
 		}};
 	});
 
@@ -367,8 +347,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 				BuildingElement: Object.assign(
 					{},
 					...ceilingData,
-					...roofData,
-					...unheatedPitchedRoofData
+					...roofData
 				)
 			} as Partial<SchemaZoneInput>
 		}

@@ -68,8 +68,7 @@ export function getInitialState(): EcaasState {
 			},
 			dwellingSpaceCeilingsAndRoofs: {
 				dwellingSpaceCeilings: { data: [] },
-				dwellingSpaceRoofs: { data: [] },
-				dwellingSpaceUnheatedPitchedRoofs: { data: [] }
+				dwellingSpaceRoofs: { data: [] }
 			},
 			dwellingSpaceDoors: {
 				dwellingSpaceExternalUnglazedDoor: { data: [] },

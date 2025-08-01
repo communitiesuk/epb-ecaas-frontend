@@ -452,22 +452,6 @@ describe('dwelling fabric mapper', () => {
 			massDistributionClass: MassDistributionClass.I
 		};
 
-		const unheatedPitchedRoof: RoofData = {
-			name: "Unheated pitched roof 1",
-			typeOfRoof: 'unheatedPitched',
-			pitchOption: '0',
-			pitch: 0,
-			orientation: 90,
-			length: 1,
-			width: 1,
-			elevationalHeightOfElement: 2,
-			surfaceArea: 1,
-			solarAbsorptionCoefficient: 0.5,
-			uValue: 1,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I
-		};
-
 		const ceilingSuffix = ' (ceiling)';
 		const roofSuffix = ' (roof)';
 
@@ -475,8 +459,7 @@ describe('dwelling fabric mapper', () => {
 			dwellingFabric: {
 				dwellingSpaceCeilingsAndRoofs: {
 					dwellingSpaceCeilings: { data: [ceiling], complete: true, },
-					dwellingSpaceRoofs: { data: [roof], complete: true, },
-					dwellingSpaceUnheatedPitchedRoofs: { data: [unheatedPitchedRoof], complete: true, }
+					dwellingSpaceRoofs: { data: [roof], complete: true, }
 				}
 			}
 		});
@@ -487,7 +470,6 @@ describe('dwelling fabric mapper', () => {
 		// Assert
 		const ceilingElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[ceiling.name + ceilingSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
 		const roofElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[roof.name + roofSuffix]! as BuildingElementOpaque;
-		const unheatedPitchedRoofElement = fhsInputData.Zone![defaultZoneName]!.BuildingElement[unheatedPitchedRoof.name + roofSuffix]! as BuildingElementOpaque;
 
 		const expectedCeiling: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
@@ -518,24 +500,6 @@ describe('dwelling fabric mapper', () => {
 		};
 
 		expect(roofElement).toEqual(expectedRoof);
-
-		const expectedUnpitchedRoof: BuildingElementOpaque = {
-			type: 'BuildingElementOpaque',
-			pitch: unheatedPitchedRoof.pitch,
-			orientation360: unheatedPitchedRoof.orientation!,
-			height: unheatedPitchedRoof.length,
-			width: unheatedPitchedRoof.width,
-			base_height: unheatedPitchedRoof.elevationalHeightOfElement,
-			area: unheatedPitchedRoof.surfaceArea,
-			solar_absorption_coeff: unheatedPitchedRoof.solarAbsorptionCoefficient,
-			u_value: unheatedPitchedRoof.uValue,
-			areal_heat_capacity: unheatedPitchedRoof.kappaValue,
-			mass_distribution_class: unheatedPitchedRoof.massDistributionClass,
-			is_external_door: false,
-			is_unheated_pitched_roof: true
-		};
-
-		expect(unheatedPitchedRoofElement).toEqual(expectedUnpitchedRoof);
 	});
 
 	it('maps door input state to FHS input request', () => {

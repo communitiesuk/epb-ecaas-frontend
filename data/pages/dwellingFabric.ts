@@ -171,20 +171,6 @@ const dwellingFabricPages = [
 		parentId: 'dwellingSpaceCeilingsAndRoofs'
 	},
 	{
-		id: 'dwellingSpaceUnheatedPitchedRoofs',
-		title: 'Unheated pitched roof',
-		url: '/dwelling-space/ceilings-and-roofs/unheated-pitched-roofs/:roof',
-		type: PageType.Task,
-		parentId: 'dwellingSpaceCeilingsAndRoofs'
-	},
-	{
-		id: 'dwellingSpaceUnheatedPitchedRoofsCreate',
-		title: 'Unheated pitched roof',
-		url: '/dwelling-space/ceilings-and-roofs/unheated-pitched-roofs/create',
-		type: PageType.Task,
-		parentId: 'dwellingSpaceCeilingsAndRoofs'
-	},
-	{
 		id: 'dwellingSpaceDoors',
 		title: 'Doors',
 		url: '/dwelling-space/doors',

@@ -3,8 +3,8 @@ import { MassDistributionClass } from '~/schema/api-schema.types';
 import type { RadioOption } from '../form-kit/Radios.vue';
 
 defineProps<{
-	id: string,
-	name: string;
+	id?: string,
+	name?: string;
 	label?: string;
 	help?: string;
 }>();
@@ -36,12 +36,12 @@ const options: Record<MassDistributionClass, RadioOption> = {
 
 <template>
 	<FormKit
-		:id="id"
+		:id="id ?? 'massDistributionClass'"
 		type="govRadios"
 		:options="options"
 		:label="label ?? 'Mass distribution class'"
 		:help="help ?? 'This is the distribution of mass in the building element'"
-		:name="name"
+		:name="name ?? 'massDistributionClass'"
 		validation="required">
 		<GovDetails summary-text="Help with this input">
 			<a href="/guidance/mass-distribution-guidance" target="_blank" class="govuk-link">Guidance on mass distribution (opens in another window)</a>	
