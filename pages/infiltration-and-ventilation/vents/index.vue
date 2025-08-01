@@ -50,9 +50,6 @@ function handleComplete() {
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<VentsInfo />
-	<p v-if="store.infiltrationAndVentilation.vents.data.length === 0" class="govuk-hint">
-		Add vents below, after adding one you will have options to add others, edit and duplicate.
-	</p>
 	<CustomList
 		id="vents"
 		title="Vents"
