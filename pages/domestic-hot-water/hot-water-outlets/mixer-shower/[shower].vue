@@ -54,7 +54,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			type="govInputWithSuffix"
 			label="Flow rate"
 			name="flowRate"
-			validation="required | number | min:0 | max:15"
+			validation="required | number | min:8 | max:15"
 			suffix-text="litres per minute"
 		/>
 		<GovLLMWarning />
