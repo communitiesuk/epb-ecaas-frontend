@@ -112,7 +112,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required | number | min:0.01 | max:10">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">
-					For the u value of party walls, put the actual u-value of the materials of the wall. This helps determine the behaviour of the wall releasing heat back into the room.
+					For the U-value of party walls, put the actual U-value of the materials of the wall. This helps determine the behaviour of the wall releasing heat back into the room.
 				</p>
 			</GovDetails>
 		</FormKit>
