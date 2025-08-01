@@ -30,4 +30,5 @@ const title = 'Calculating distant shading';
 		<li>An overhang (e.g., a roof or balcony) starts at a certain height above ground level.</li>
 	</ul>
 	<img src="/img/overhang-and-obstacle.png" alt="Overhang and obstacle">
+	<GovLLMWarning classes="govuk-!-margin-top-8" />
 </template>

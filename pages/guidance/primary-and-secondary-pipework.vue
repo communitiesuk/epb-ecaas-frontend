@@ -17,4 +17,5 @@ const title = 'Primary and secondary pipework';
 	<p class="govuk-body">NOTE: Primary pipework is required whenever there is a hot water cylinder or a thermal storage tank in the heating system, and it has pipework connected to a separate heat source.</p>
 	<p class="govuk-body"/>
 	<img alt="Primary and secondary pipework" src="/img/primary-and-secondary-pipework.png">
+	<GovLLMWarning classes="govuk-!-margin-top-8" />
 </template>

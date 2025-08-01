@@ -22,4 +22,5 @@ const title = 'Unheated space guidance';
 	<h2 class="govuk-heading-m">Room in roof</h2>
 	<p class="govuk-body">In the case of room-in-roof construction where the insulation follows the shape of the room, use values of Rᵤ from the table 4. The same applies to the ceiling of the room below:</p>
 	<img src="/img/unheated-space-5.png" alt="Room in roof">
+	<GovLLMWarning classes="govuk-!-margin-top-8" />
 </template>

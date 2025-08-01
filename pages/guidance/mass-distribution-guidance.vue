@@ -36,6 +36,7 @@ const title = 'Understanding mass distribution class';
 		<img class="custom-govuk__img" src="/img/mass-equally-distributed.png" alt="Mass equally distributed">
 		<img class="custom-govuk__img" src="/img/mass-concentrated-inside.png" alt="Mass concenrated inside">
 	</div>
+	<GovLLMWarning classes="govuk-!-margin-top-8" />
 </template>
 
 

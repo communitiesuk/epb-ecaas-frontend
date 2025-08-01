@@ -20,4 +20,5 @@ const title = "Eco design control class";
 		<li><b>Class VII --  Weather compensator and room sensor, for use with on/off output heaters:</b> A heater flow temperature control that varies the flow temperature of water leaving the heater dependent upon prevailing outside temperature and selected weather compensation curve. A room temperature sensor monitors room temperature and adjusts the compensation curve parallel displacement to improve room comfort. Heater flow temperature is varied by controlling the on/off operation of the heater. </li>
 		<li><b>Class VIII --  Multi-sensor room temperature control, for use with modulating heaters:</b> An electronic control, equipped with 3 or more room sensors that varies the flow temperature of the water leaving the heater dependent upon the aggregated measured room temperature deviation from room sensor set points. Control is achieved by modulating the output of the heater. </li>
 	</ul>
+	<GovLLMWarning classes="govuk-!-margin-top-8" />
 </template>

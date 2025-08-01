@@ -21,4 +21,5 @@ const title = 'Window Shading: Modelling Overhangs and Side Fins';
 	<p class="govuk-body">Note: Overhang width and side fin height are assumed to be infinite.</p>
 	<p class="govuk-body">Perspective: Left and right side fins are defined from the perspective of looking out the window.</p>
 	<img src="/img/overhangs-and-side-fins.png" alt="Overhangs and side fins">
+	<GovLLMWarning classes="govuk-!-margin-top-8" />
 </template>

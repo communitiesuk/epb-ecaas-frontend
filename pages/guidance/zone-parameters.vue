@@ -19,4 +19,5 @@ const title = 'Measuring zone parameters';
 	<p class="govuk-body">The model distinguishes between these two types based on architectural and structural differences, considering factors like insulation and heating to accurately assess their distinct energy efficiency.</p>
 	<img src="/img/zone-parameter-measurement-house.png" alt="Example measurement conventions for a two storey house">
 	<img src="/img/zone-parameter-measurement-flat.png" alt="Example measurement conventions for a flat">
+	<GovLLMWarning classes="govuk-!-margin-top-8" />
 </template>
