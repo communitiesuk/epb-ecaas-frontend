@@ -159,7 +159,7 @@ describe('Infiltration and ventilation summary', () => {
 			"Duct type": 'Intake',
 			"Internal diameter of ductwork": '300',
 			"External diameter of ductwork": '1000',
-			"Thermal insulation conductivity of ductwork": '10',
+			"Thermal conductivity of ductwork insulation": '10',
 			"Surface reflectivity": 'Reflective'
 		};
 

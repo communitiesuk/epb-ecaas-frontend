@@ -219,7 +219,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="ductPerimeter"
 			validation="required | number | min:0 | max:1000"
 		/>
-		
+		<FormKit
+			id="lengthOfDuctwork"
+			type="govInputWithSuffix"
+			suffix-text="m"
+			label="Length of ductwork"
+			help="Enter the length of the piece of ductwork for this sub-object. Typically between 10m and 30m."
+			name="lengthOfDuctwork"
+			validation="required | number | min:0"/>
+
 		<FormKit
 			id="insulationThickness"
 			type="govInputWithSuffix"
@@ -230,19 +238,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max:100"/>
 			
 		<FormKit
-			id="lengthOfDuctwork"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Length of ductwork"
-			help="Enter the length of the piece of ductwork for this sub-object. Typically between 10m and 30m."
-			name="lengthOfDuctwork"
-			validation="required | number | min:0"/>
-			
-		<FormKit
 			id="thermalInsulationConductivityOfDuctwork"
 			type="govInputWithSuffix"
 			suffix-text="W/m·K"
-			label="Thermal insulation conductivity of ductwork"
+			label="Thermal conductivity of ductwork insulation"
 			help="Enter the thermal conductivity of the insulation. Typical values are between 0.03 and 0.04."
 			name="thermalInsulationConductivityOfDuctwork"
 			validation="required | number | min:0"/>

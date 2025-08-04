@@ -121,7 +121,7 @@ describe("ductwork form", async () => {
 		expect(form.getByText("Insulation thickness")).toBeDefined();
 		expect(form.getByText("Length of ductwork")).toBeDefined();
 		expect(
-			form.getByText("Thermal insulation conductivity of ductwork")
+			form.getByText("Thermal conductivity of ductwork insulation")
 		).toBeDefined();
 		expect(form.getByText("Surface reflectivity")).toBeDefined();
 	});
