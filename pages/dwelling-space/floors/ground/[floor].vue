@@ -314,7 +314,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				type="govInputWithSuffix"
 				suffix-text="(m²·K)/W"
 				label="Thermal resistance of insulation on base of underfloor space"
-				help="Enter the thermal resistance or R-value or the insulation installed at the base of the underfloor space. Typically between 0.5 and 2.5 (m²·K)/W"
+				help="Enter the thermal resistance or R-value of the insulation installed at the base of the underfloor space. Typically between 0.5 and 2.5 (m²·K)/W"
 				name="underfloorSpaceThermalResistance"
 				validation="required | number"/>
 			<FormKit
