@@ -114,7 +114,7 @@ export default defineNuxtConfig({
 		redisPassword: '',
 		redisUsername: '',
 		public: {
-			environment: process.env.NUXT_ENVIRONMENT
+			environment: process.env.NUXT_PUBLIC_ENVIRONMENT
 		}
 	},
 
