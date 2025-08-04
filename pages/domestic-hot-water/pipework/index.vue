@@ -73,7 +73,7 @@ function checkIsComplete(){
 	/>
 	<CustomList
 		id="secondaryPipework"
-		title="Seconday pipework (hot water distribution)"
+		title="Secondary pipework (hot water distribution)"
 		:form-url="`${page?.url!}/secondary`"
 		:items="store.domesticHotWater.pipework.secondaryPipework.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('secondaryPipework', index)"
