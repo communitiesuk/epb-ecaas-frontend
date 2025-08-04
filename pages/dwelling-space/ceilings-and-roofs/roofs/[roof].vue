@@ -73,9 +73,9 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="typeOfRoof"
 			validation="required"
 		/>
-		<p v-if="model.typeOfRoof === 'pitchedInsulatedAtRoof' || model.typeOfRoof === 'pitchedInsulatedAtCeiling'" class="govuk-hint">
+		<GovInset v-if="model.typeOfRoof === 'pitchedInsulatedAtRoof' || model.typeOfRoof === 'pitchedInsulatedAtCeiling'">
 			If the pitched roof has multiple orientations (for example, a gable or hip roof), each orientation must be added as a separate roof element.
-		</p>
+		</GovInset>
 		<FieldsPitch
 			v-if="model.typeOfRoof === 'flat'"
 			label="Pitch of roof"
