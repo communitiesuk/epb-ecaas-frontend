@@ -58,6 +58,7 @@ const ecaasApi = {
 				scope.setExtra("responseErrors", response.errors);
 				scope.setExtra("requestBody", JSON.parse(JSON.stringify(data)));
 				scope.setExtra("requestBody without External Conditions", JSON.stringify(requestBodyWithoutExternalConditions || data));
+				scope.setFingerprint([errorMessage]);
 				Sentry.captureException(new Error(errorMessage));
 			});
 		};
