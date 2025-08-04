@@ -41,6 +41,8 @@ const ductworkSummary: SummarySection = {
 			"Internal diameter of ductwork": x.ductworkCrossSectionalShape === DuctShape.circular ? x.internalDiameterOfDuctwork : undefined,
 			"External diameter of ductwork": x.ductworkCrossSectionalShape === DuctShape.circular ? x.externalDiameterOfDuctwork : undefined,
 			"Perimeter of ductwork": x.ductworkCrossSectionalShape === DuctShape.rectangular ? x.ductPerimeter : undefined,
+			"Length of ductwork": x.lengthOfDuctwork,
+			"Insulation thickness": x.insulationThickness,
 			"Thermal conductivity of ductwork insulation": x.thermalInsulationConductivityOfDuctwork,
 			"Surface reflectivity": x.surfaceReflectivity ? "reflective" : "not reflective",
 		};
