@@ -53,7 +53,7 @@ const groundFloorSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Perimeter": x.perimeter,
 			"Psi of wall junction": x.psiOfWallJunction,
-			"Thickness of walls for ground floor": x.thicknessOfWalls,
+			"Thickness of walls at the edge of the floor": x.thicknessOfWalls,
 			"Type of ground floor": displaySnakeToSentenceCase(x.typeOfGroundFloor),
 			"Edge insulation type": x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? x.edgeInsulationType : undefined,
 			"Edge insulation width": edgeInsulationWidth,

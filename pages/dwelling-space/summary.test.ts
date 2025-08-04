@@ -343,7 +343,7 @@ describe('Living space fabric summary', () => {
 				"Mass distribution class": "Internal",
 				"Perimeter": "0",
 				"Psi of wall junction": "0",
-				"Thickness of walls for ground floor": "0.3",
+				"Thickness of walls at the edge of the floor": "0.3",
 				"Type of ground floor": "Slab no edge insulation"
 
 			};
