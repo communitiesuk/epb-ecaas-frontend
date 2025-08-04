@@ -136,7 +136,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="designTempDiffAcrossEmitters"
 			validation="required | number"
 			suffix-text="°C"
-			help="Enter the difference between the water flow temperature and the room air temperature at the point where the heating is being emitted. Typically between 5 and 15 °C."
+			help="The temperature difference between the flow and return water temperatures at each emitter. Typically between 5 and 15°C."
 		/>
 			
 		<FormKit
