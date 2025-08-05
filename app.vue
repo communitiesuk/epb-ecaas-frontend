@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const runtimeConfig = useRuntimeConfig();
 const env = runtimeConfig.public.environment;
-const testSiteMessage = 'This is a test site. The data is not real and the certificates are not valid.';
+const testSiteMessage = 'This is a test site.';
 </script>
 
 <template>
