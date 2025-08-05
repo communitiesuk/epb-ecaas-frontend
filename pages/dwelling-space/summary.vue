@@ -372,7 +372,6 @@ const linearThermalBridgesSummary: SummarySection = {
 	label: 'Linear thermal bridges',
 	data: linearThermalBridgesData.map(x => {
 		return {
-			"Name": x.name,
 			"Type of thermal bridge": x.typeOfThermalBridge,
 			"Linear thermal transmittance": x.linearThermalTransmittance,
 			"Length of thermal bridge": x.length
