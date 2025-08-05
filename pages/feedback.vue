@@ -15,7 +15,7 @@ const router = useRouter();
 		Email <a href="mailto:ecaas@communities.gov.uk" class="govuk-link">ecaas@communities.gov.uk</a> to send your feedback.
 	</GovInset>
 	<p class="govuk-body">We appreciate any feedback you have, whether it's positive or negative. This helps us to make this tool better for everyone.</p>
-	<p class="govuk-body">If you are reporting an bug, please include the following in your email:</p>
+	<p class="govuk-body">If you are reporting a bug, please include the following in your email:</p>
 	<ul class="govuk-list govuk-list--bullet">
 		<li>Time and date you encountered the bug</li>
 		<li>Browser type you are using</li>
