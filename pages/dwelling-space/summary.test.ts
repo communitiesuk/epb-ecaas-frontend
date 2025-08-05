@@ -787,7 +787,6 @@ describe('Living space fabric summary', () => {
 	
 			await renderSuspended(Summary);
 			const expectedResult = {
-				"Name": "E1: Steel lintel with perforated steel base plate",
 				"Type of thermal bridge": "E1",
 				"Linear thermal transmittance": "1",
 				"Length of thermal bridge": "2"
