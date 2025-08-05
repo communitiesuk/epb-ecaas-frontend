@@ -20,6 +20,10 @@ function handleInput(e: Event) {
 	const value = target.value ? parseInt(target.value) : '';
 	props.context.node.input(value);
 }
+
+function handleBlur(e: FocusEvent) {
+	props.context.handlers.blur(e);
+}
 </script>
 
 <template>
@@ -43,6 +47,7 @@ function handleInput(e: Event) {
 				:data-testid="id"
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 				@input="handleInput"
+				@blur="handleBlur"
 			>
 		</div>
 	</div>

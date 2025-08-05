@@ -48,6 +48,10 @@ function handleInput(e: Event) {
 		props.context.node.input('');
 	}
 }
+
+function handleBlur(e: FocusEvent) {
+	props.context.handlers.blur(e);
+}
 </script>
 
 <template>
@@ -72,6 +76,7 @@ function handleInput(e: Event) {
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 				@input="handleTyping"
 				@change="handleInput"
+				@blur="handleBlur"
 			>
 			<div class="govuk-input__suffix" aria-hidden="true">{{unit.suffix}}</div>
 		</div>

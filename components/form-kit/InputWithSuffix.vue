@@ -21,6 +21,10 @@ function handleInput(e: Event) {
 	const value = target.value ? parseFloat(target.value) : '';
 	props.context.node.input(value);
 }
+
+function handleBlur(e: FocusEvent) {
+	props.context.handlers.blur(e);
+}
 </script>
 
 <template>
@@ -46,6 +50,7 @@ function handleInput(e: Event) {
 				:data-testId="id"
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 				@change="handleInput"
+				@blur="handleBlur"
 			>
 			<div class="govuk-input__suffix" aria-hidden="true">{{attrs['suffix-text']}}</div>
 		</div>

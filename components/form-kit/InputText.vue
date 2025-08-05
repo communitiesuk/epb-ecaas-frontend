@@ -20,6 +20,10 @@ function handleInput(e: Event) {
 	const target = e.target as HTMLInputElement;
 	props.context.node.input(target.value);
 }
+
+function handleBlur(e: FocusEvent) {
+	props.context.handlers.blur(e);
+}
 </script>
 
 <template>
@@ -43,6 +47,7 @@ function handleInput(e: Event) {
 			:data-testid="id"
 			:placeholder="placeholder as string"
 			@change="handleInput"
+			@blur="handleBlur"
 		>
 	</div>
 </template>
