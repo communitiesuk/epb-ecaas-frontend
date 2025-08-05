@@ -194,9 +194,9 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 		<FormKit
 			id="thicknessOfWalls"
 			type="govInputWithSuffix"
-			suffix-text="m"
+			suffix-text="mm"
 			label="Thickness of walls at the edge of the floor"
-			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 0.3m to 0.8m."
+			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm."
 			name="thicknessOfWalls"
 			validation="required | number">
 			<GovDetails summary-text="Help with this input">
