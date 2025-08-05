@@ -256,7 +256,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			<FormKit
 				id="edgeInsulationWidth"
 				name="edgeInsulationWidth"
-				label="Edge insulation width"
+				label="Edge insulation height or width"
 				help="This is the coverage distance of edge insulation rather than the thickness of the insulation"
 				type="govInputWithUnit"
 				:unit="centimetre"
