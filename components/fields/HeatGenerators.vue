@@ -25,21 +25,23 @@ const heatGenerators = [
 </script>
 
 <template>
-	<FormKit
-		:id="id"
-		type="govRadios"
-		:options="new Map(heatGenerators)"
-		:label="label"
-		:help="help"
-		:name="name"
-		:validation="validation ?? 'required'"
-		:validation-rules="validationRules"
-		:validation-messages="validationMessages">
-		<div v-if="!heatGenerators.length">
-			<p class="govuk-error-message">No heat generators added.</p>
-			<NuxtLink :to="getUrl('heatGeneration')" class="govuk-link gov-radios-add-link">
-				Click here to add a heat generator
-			</NuxtLink>
-		</div>
-	</FormKit>
+	<ClientOnly>
+		<FormKit
+			:id="id"
+			type="govRadios"
+			:options="new Map(heatGenerators)"
+			:label="label"
+			:help="help"
+			:name="name"
+			:validation="validation ?? 'required'"
+			:validation-rules="validationRules"
+			:validation-messages="validationMessages">
+			<div v-if="!heatGenerators.length">
+				<p class="govuk-error-message">No heat generators added.</p>
+				<NuxtLink :to="getUrl('heatGeneration')" class="govuk-link gov-radios-add-link">
+					Click here to add a heat generator
+				</NuxtLink>
+			</div>
+		</FormKit>
+	</ClientOnly>
 </template>

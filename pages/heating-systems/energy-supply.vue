@@ -57,41 +57,46 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<template v-if="model.fuelType?.includes(FuelType.custom)">
-			<FormKit
-				id="co2PerKwh"
-				type="govInputWithSuffix"
-				label="CO2 per kWh"
-				help="Equivalent amount of CO2 emissions per kWh used. CO2e is the CO2 equivalent, including other greenhouse gases like methane which may have been emitted in addition to CO2."
-				name="co2PerKwh"
-				validation="required | number"
-				suffix-text="kgCO2e/kWh"
-			/>
-			<FormKit
-				id="co2PerKwhIncludingOutOfScope"
-				type="govInputWithSuffix"
-				label="CO2 per kWh (including out of scope)"
-				help="Equivalent amount of CO2 emissions per kWh used, including out-of-scope emissions"
-				name="co2PerKwhIncludingOutOfScope"
-				validation="required | number"
-				suffix-text="kgCO2e/kWh"
-			/>
-			<FormKit
-				id="kwhPerKwhDelivered"
-				type="govInputFloat"
-				label="kWh per kWh delivered"
-				help="For every kWh delivered to the home, the actual amount of primary energy in kWh needed to deliver that kWh."
-				name="kwhPerKwhDelivered"
-				validation="required | number"
-			/>
+			<ClientOnly>
+				<FormKit
+					id="co2PerKwh"
+					type="govInputWithSuffix"
+					label="CO2 per kWh"
+					help="Equivalent amount of CO2 emissions per kWh used. CO2e is the CO2 equivalent, including other greenhouse gases like methane which may have been emitted in addition to CO2."
+					name="co2PerKwh"
+					validation="required | number"
+					suffix-text="kgCO2e/kWh"
+				/>
+				<FormKit
+					id="co2PerKwhIncludingOutOfScope"
+					type="govInputWithSuffix"
+					label="CO2 per kWh (including out of scope)"
+					help="Equivalent amount of CO2 emissions per kWh used, including out-of-scope emissions"
+					name="co2PerKwhIncludingOutOfScope"
+					validation="required | number"
+					suffix-text="kgCO2e/kWh"
+				/>
+				<FormKit
+					id="kwhPerKwhDelivered"
+					type="govInputFloat"
+					label="kWh per kWh delivered"
+					help="For every kWh delivered to the home, the actual amount of primary energy in kWh needed to deliver that kWh."
+					name="kwhPerKwhDelivered"
+					validation="required | number"
+				/>
+			</ClientOnly>
 		</template>
-		<FormKit
-			v-if="model.fuelType?.includes(FuelType.electricity)"
-			id="exported"
-			type="govBoolean"
-			label="Can electricity be exported back to the grid?"
-			name="exported"
-			validation="required"
-		/>
+		
+		<ClientOnly>
+			<FormKit
+				v-if="model.fuelType?.includes(FuelType.electricity)"
+				id="exported"
+				type="govBoolean"
+				label="Can electricity be exported back to the grid?"
+				name="exported"
+				validation="required"
+			/>
+		</ClientOnly>
 		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
