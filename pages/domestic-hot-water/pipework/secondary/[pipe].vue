@@ -57,31 +57,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="internalDiameter"
 			type="govInputWithSuffix"
 			label="Internal diameter"
-			help="This is the nominal internal width of the pipe"
+			help="This is the nominal internal width of the pipe. Typically between 13 and 25mm."
 			name="internalDiameter"
 			validation="number| min:1 | max:50"
-			suffix-text="mm">
-			<GovDetails class="summary-text" summary-text="Help with this input" possibly-llm-placeholder>
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th class="govuk-table__header">Pipework type</th>
-							<th class="govuk-table__header">Typical internal diameter</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">For individual outlets (for example taps or showers)</td>
-							<td class="govuk-table__cell">10 - 15mm</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<td class="govuk-table__cell">For main hot water distribution</td>
-							<td class="govuk-table__cell">15 - 22mm</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+			suffix-text="mm"/>
 		<FormKit
 			id="length"
 			type="govInputWithSuffix"
