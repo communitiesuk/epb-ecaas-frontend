@@ -328,9 +328,9 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			<FormKit
 				id="ventilationOpeningsArea"
 				type="govInputWithSuffix"
-				suffix-text="m²/m"
+				suffix-text="mm²/m"
 				label="Area of ventilation openings per perimeter"
-				help="Enter the total area of the ventilation openings per metre of external wall perimeter. Typically between 0.001 and 0.01 m² of opening per metre of wall."
+				help="Enter the total area of the ventilation openings per metre of external wall perimeter. Typically between 0.1 and 1 mm² of opening per metre of wall."
 				name="ventilationOpeningsArea"
 				validation="required | number">
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
