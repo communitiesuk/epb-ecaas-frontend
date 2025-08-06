@@ -105,7 +105,7 @@ describe('dwelling fabric mapper', () => {
 			massDistributionClass: MassDistributionClass.I,
 			perimeter: 0,
 			psiOfWallJunction: 0,
-			thicknessOfWalls: 0.3,
+			thicknessOfWalls: 30,
 			typeOfGroundFloor: FloorType.Slab_no_edge_insulation
 		};
 
@@ -122,10 +122,10 @@ describe('dwelling fabric mapper', () => {
 			...groundFloor,
 			name: 'Ground 3',
 			typeOfGroundFloor: FloorType.Suspended_floor,
-			heightOfFloorUpperSurface: 1,
+			heightOfFloorUpperSurface: 100,
 			underfloorSpaceThermalResistance: 1,
 			thermalTransmittanceOfWallsAboveGround: 1,
-			ventilationOpeningsArea: 1,
+			ventilationOpeningsArea: 100,
 			windShieldingFactor: WindShieldLocation.Average
 		};
 
@@ -214,7 +214,7 @@ describe('dwelling fabric mapper', () => {
 			mass_distribution_class: groundFloor.massDistributionClass,
 			perimeter: groundFloor.perimeter,
 			psi_wall_floor_junc: groundFloor.psiOfWallJunction,
-			thickness_walls: groundFloor.thicknessOfWalls,
+			thickness_walls: groundFloor.thicknessOfWalls / 100,
 			floor_type: groundFloor.typeOfGroundFloor,
 		};
 
@@ -231,11 +231,11 @@ describe('dwelling fabric mapper', () => {
 		const expectedGroundFloorSuspendedFloor: BuildingElementGround = {
 			...expectedGroundFloor,
 			floor_type: groundFloorWithSuspendedFloor.typeOfGroundFloor,
-			height_upper_surface: groundFloorWithSuspendedFloor.heightOfFloorUpperSurface,
-			thickness_walls: groundFloorWithSuspendedFloor.thicknessOfWalls!,
+			height_upper_surface: groundFloorWithSuspendedFloor.heightOfFloorUpperSurface / 100,
+			thickness_walls: groundFloorWithSuspendedFloor.thicknessOfWalls! / 100,
 			thermal_resist_insul: groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
 			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
-			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea,
+			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 100,
 			shield_fact_location: groundFloorWithSuspendedFloor.windShieldingFactor
 		};
 

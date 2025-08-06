@@ -1055,7 +1055,7 @@ describe("FHS input mapper", () => {
 						massDistributionClass: MassDistributionClass.I,
 						perimeter: 100,
 						psiOfWallJunction: 1,
-						thicknessOfWalls: 0.8,
+						thicknessOfWalls: 80,
 						typeOfGroundFloor: FloorType.Slab_no_edge_insulation,
 					}]
 				},
@@ -1450,7 +1450,7 @@ describe("FHS input mapper", () => {
 						massDistributionClass: MassDistributionClass.E,
 						perimeter: 40,
 						psiOfWallJunction: 0.4,
-						thicknessOfWalls: 0.5,
+						thicknessOfWalls: 50,
 						typeOfGroundFloor: FloorType.Slab_edge_insulation,
 						edgeInsulationType: "horizontal",
 						edgeInsulationWidth: new Length(32, centimetre),
@@ -1467,7 +1467,7 @@ describe("FHS input mapper", () => {
 						perimeter: 21,
 						psiOfWallJunction: 0.8,
 						typeOfGroundFloor: FloorType.Heated_basement,
-						thicknessOfWalls: 0.4,
+						thicknessOfWalls: 40,
 						depthOfBasementFloorBelowGround: 2,
 						thermalResistanceOfBasementWalls: 3,
 					}]
