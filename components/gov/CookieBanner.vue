@@ -60,8 +60,8 @@ const handleHide = () => hideCookieMessage.value = 'true';
 			<div class="govuk-grid-row">
 				<div class="govuk-grid-column-two-thirds">
 					<div class="govuk-cookie-banner__content">
-						<p v-if="cookieConsent === CookieConsent.Accepted" class="govuk-body">You've accepted additional cookies. You can <a class="govuk-link" href="#">change your cookie settings</a> at any time.</p>
-						<p v-if="cookieConsent === CookieConsent.Rejected" class="govuk-body">You've rejected analytics cookies. You can <a class="govuk-link" href="#">change your cookie settings</a> at any time.</p>
+						<p v-if="cookieConsent === CookieConsent.Accepted" class="govuk-body">You've accepted additional cookies. You can <a class="govuk-link" href="/cookies">change your cookie settings</a> at any time.</p>
+						<p v-if="cookieConsent === CookieConsent.Rejected" class="govuk-body">You've rejected analytics cookies. You can <a class="govuk-link" href="/cookies">change your cookie settings</a> at any time.</p>
 					</div>
 				</div>
 			</div>
