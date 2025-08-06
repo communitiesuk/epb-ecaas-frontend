@@ -28,6 +28,7 @@ const saveForm = (fields: InternalDoorData) => {
 			door = {
 				...commonFields,
 				typeOfInternalDoor: fields.typeOfInternalDoor,
+				uValue: fields.uValue,
 				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 			};
 		} else if (fields.typeOfInternalDoor === AdjacentSpaceType.heatedSpace) {
@@ -94,6 +95,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				name="surfaceArea"
 				validation="required | number | min:0 | max:10000"
 				suffix-text="m²"
+			/>
+			<FieldsUValue
+				v-if="model.typeOfInternalDoor === 'unheatedSpace'"
+				id="uValue"
+				name="uValue"
 			/>
 			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>

@@ -362,7 +362,6 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 		const commonFields = {
 			pitch: extractPitch(x),
 			area: x.surfaceArea,
-			u_value: defaultUValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
 		};
@@ -374,12 +373,14 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 			internalDoor = {
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+				u_value: x.uValue,
 				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace
 			};
 		} else {
 			internalDoor = {
 				...commonFields,
 				type: "BuildingElementAdjacentConditionedSpace",
+				u_value: defaultUValue // TODO: double check this is correct behaviour
 			};
 		};
 

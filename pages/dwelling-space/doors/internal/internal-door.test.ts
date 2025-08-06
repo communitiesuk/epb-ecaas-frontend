@@ -26,6 +26,7 @@ describe('internal door', () => {
 	const internalDoorWithUnheatedSpace: InternalDoorData = {
 		...internalDoor,
 		typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+		uValue: 0.1,
 		thermalResistanceOfAdjacentUnheatedSpace: 0
 	};
 
@@ -99,6 +100,7 @@ describe('internal door', () => {
 	
 			await user.click(screen.getByTestId('typeOfInternalDoor_unheatedSpace'));
 			await populateValidForm();
+			await user.type(screen.getByTestId('uValue'), '0.1');
 			await user.type(screen.getByTestId('thermalResistanceOfAdjacentUnheatedSpace'), '0');
 			await user.tab();
 			await user.click(screen.getByRole('button'));
@@ -134,12 +136,13 @@ describe('internal door', () => {
 	
 			await user.click(screen.getByTestId('typeOfInternalDoor_unheatedSpace'));
 			await user.click(screen.getByRole('button'));
-	
+
+			expect((await screen.findByTestId('uValue_error'))).toBeDefined();
 			expect((await screen.findByTestId('thermalResistanceOfAdjacentUnheatedSpace_error'))).toBeDefined();
 		});
 	});
 
-	it('shows type of ceiling required error message when empty form is submitted', async () => {
+	it('shows type of internal Door required error message when empty form is submitted', async () => {
 		await renderSuspended(InternalDoor);
 
 		await user.click(screen.getByRole('button'));

@@ -312,6 +312,7 @@ const internalDoorSummary: SummarySection = {
 			"Areal heat capacity": x.kappaValue,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Pitch": x.pitch,
+			"U-value": x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace ? x.uValue : undefined,
 			"Thermal resistance of adjacent unheated space": x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace ? x.thermalResistanceOfAdjacentUnheatedSpace : undefined,
 		};
 	}) || [],

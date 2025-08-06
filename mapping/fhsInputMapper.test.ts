@@ -827,7 +827,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 90,
 					thermal_resistance_unconditioned_space: 2.5,
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-					u_value: 0.01,
+					u_value: 1,
 				},
 				"bedroom window (window)": {
 					type: "BuildingElementTransparent",
@@ -1665,6 +1665,7 @@ describe("FHS input mapper", () => {
 						massDistributionClass: MassDistributionClass.IE,
 						pitchOption: "90",
 						pitch: 90,
+						uValue: 1,
 						thermalResistanceOfAdjacentUnheatedSpace: 2.5
 					}]
 				}

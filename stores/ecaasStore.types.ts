@@ -310,6 +310,7 @@ export type InternalDoorData = {
 } & TaggedUnion<'typeOfInternalDoor', {
 	[AdjacentSpaceType.heatedSpace]: EmptyObject;
 	[AdjacentSpaceType.unheatedSpace]: {
+		uValue: number,
 		thermalResistanceOfAdjacentUnheatedSpace: number;
 	}
 }>;

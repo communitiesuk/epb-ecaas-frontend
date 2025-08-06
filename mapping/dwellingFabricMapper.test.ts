@@ -512,6 +512,7 @@ describe('dwelling fabric mapper', () => {
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: '90',
 			pitch: 90,
+			uValue: 0.001,
 			thermalResistanceOfAdjacentUnheatedSpace: 1
 		};
 
@@ -573,7 +574,7 @@ describe('dwelling fabric mapper', () => {
 			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
 			pitch: internalDoor.pitch!,
 			area: internalDoor.surfaceArea,
-			u_value: 0.01,
+			u_value: internalDoor.uValue,
 			areal_heat_capacity: internalDoor.kappaValue,
 			mass_distribution_class: internalDoor.massDistributionClass,
 			thermal_resistance_unconditioned_space: internalDoor.thermalResistanceOfAdjacentUnheatedSpace
