@@ -7,7 +7,7 @@ const testSiteMessage = 'This is a test site.';
 <template>
 	<GovCookieBanner />
 	<GovHeader classes="govuk-header--full-width-border" />
-	<GovServiceNavigation service-name="Check Part L building compliance" />
+	<GovServiceNavigation service-name="Check Part L building compliance TESTING" />
 	<div class="govuk-width-container">
 		<GovPhaseBanner v-if="env === 'ecaas-intg'" tag="Integration" classes="govuk-tag--green">
 			{{ testSiteMessage }}
