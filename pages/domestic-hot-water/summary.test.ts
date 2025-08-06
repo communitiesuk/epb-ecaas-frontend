@@ -23,7 +23,7 @@ describe('Domestic hot water summary', () => {
 			id: 'c84528bb-f805-4f1e-95d3-2bd17384fdbe',
 			name: 'Hot water cylinder 1',
 			heatSource: heatPumpId,
-			tankVolume: 5,
+			storageCylinderVolume: 5,
 			dailyEnergyLoss: 1,
 		};
 
@@ -93,7 +93,7 @@ describe('Domestic hot water summary', () => {
 			const expectedResult = {
 				"Name": "Hot water cylinder 1",
 				"Heat source": "Heat pump",
-				"Tank volume": "5",
+				"Storage cylinder volume": "5",
 				"Daily energy loss": "1",
 			};
 	
@@ -338,7 +338,7 @@ describe('Domestic hot water summary', () => {
 							data: [{
 								id: hotWaterCylinderId,
 								name: 'Hot water cylinder 1',
-								tankVolume: new Volume(100, litre)
+								storageCylinderVolume: new Volume(100, litre)
 							}]
 						}
 					}

@@ -41,7 +41,7 @@ describe('Primary pipework form', () => {
 						data: [{
 							id: hotWaterCylinderId,
 							name: 'Hot water cylinder 1',
-							tankVolume: 5,
+							storageCylinderVolume: 5,
 							dailyEnergyLoss: 1,
 							heatSource: '463c94f6-566c-49b2-af27-57e5c68b5c30'
 						}]

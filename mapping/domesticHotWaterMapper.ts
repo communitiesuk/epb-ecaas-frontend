@@ -107,21 +107,21 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 			};
 		});
 
-		let tankVolumeInLitres: number;
+		let storageCylinderVolumeInLitres: number;
 
-		if (typeof x.tankVolume === 'number') {
-			tankVolumeInLitres = x.tankVolume;
+		if (typeof x.storageCylinderVolume === 'number') {
+			storageCylinderVolumeInLitres = x.storageCylinderVolume;
 		} else  {
-			const volumeUnit = new VolumeUnit(x.tankVolume.unit);
-			const tankVolume = new Volume(x.tankVolume.amount, volumeUnit);
-			tankVolumeInLitres = tankVolume.asLitres().amount;
+			const volumeUnit = new VolumeUnit(x.storageCylinderVolume.unit);
+			const storageCylinderVolume = new Volume(x.storageCylinderVolume.amount, volumeUnit);
+			storageCylinderVolumeInLitres = storageCylinderVolume.asLitres().amount;
 		} 
 
 		const val: SchemaStorageTank = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
 			daily_losses: x.dailyEnergyLoss,
 			type: "StorageTank",
-			volume: tankVolumeInLitres,
+			volume: storageCylinderVolumeInLitres,
 			HeatSource: {
 				// Adding these values as default until heat pump is set up to come from PCDB
 				[heatPumpName]: {

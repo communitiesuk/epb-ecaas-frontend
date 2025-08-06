@@ -1183,7 +1183,7 @@ describe("FHS input mapper", () => {
 						id: "some-hot-water-cyclinder",
 						name: "hw cylinder",
 						heatSource: "some-heat-pump-id",
-						tankVolume: 200,
+						storageCylinderVolume: 200,
 						dailyEnergyLoss: 34
 					}]
 				},
@@ -1794,7 +1794,7 @@ describe("FHS input mapper", () => {
 						id: "hw cylinder 1 id",
 						name: "hw cylinder 1 name",
 						heatSource: "heat pump 1 id",
-						tankVolume: 80,
+						storageCylinderVolume: 80,
 						dailyEnergyLoss: 10
 					}]
 				},

@@ -9,8 +9,8 @@ const { saveToList } = useForm();
 
 const hotWaterCylinderData = useItemToEdit('hotWaterCylinder', store.domesticHotWater.waterHeating.hotWaterCylinder.data);
 
-if (typeof hotWaterCylinderData?.tankVolume === 'number') {
-	hotWaterCylinderData.tankVolume = new Volume(hotWaterCylinderData.tankVolume, litre);
+if (typeof hotWaterCylinderData?.storageCylinderVolume === 'number') {
+	hotWaterCylinderData.storageCylinderVolume = new Volume(hotWaterCylinderData.storageCylinderVolume, litre);
 }
 
 const model: Ref<HotWaterCylinderData> = ref(hotWaterCylinderData!);
@@ -23,7 +23,7 @@ const saveForm = (fields: HotWaterCylinderData) => {
 			id: uuidv4(),
 			name: fields.name,
 			heatSource: fields.heatSource,
-			tankVolume: fields.tankVolume,
+			storageCylinderVolume: fields.storageCylinderVolume,
 			dailyEnergyLoss: fields.dailyEnergyLoss
 		};
 
@@ -70,16 +70,16 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			help="Select the relevant heat source that has been added previously"
 		/>
 		<FormKit
-			id="tankVolume"
-			name="tankVolume"
-			label="Tank volume"
+			id="storageCylinderVolume"
+			name="storageCylinderVolume"
+			label="Storage cylinder volume"
 			help="Enter the total internal capacity of the tank"
 			type="govInputWithUnit"
 			:unit="litre"
 			:validation-rules="{ withinMinAndMax }"
 			validation="required | withinMinAndMax:0,200000"
 			:validation-messages="{
-				withinMinAndMax: `Tank volume must be at least 0 and no more than 200,000 ${litre.name}.`,
+				withinMinAndMax: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
 			}"
 		/>
 		<FormKit

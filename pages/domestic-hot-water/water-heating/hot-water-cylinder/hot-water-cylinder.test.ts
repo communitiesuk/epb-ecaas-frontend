@@ -22,7 +22,7 @@ describe('hot water cylinder', () => {
 		id: 'c84528bb-f805-4f1e-95d3-2bd17384fdbe',
 		name: 'Hot water cylinder 1',
 		heatSource: heatPumpId,
-		tankVolume: new Volume(5, litre),
+		storageCylinderVolume: new Volume(5, litre),
 		dailyEnergyLoss: 1,
 	};
 
@@ -48,7 +48,7 @@ describe('hot water cylinder', () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId('name'), 'Hot water cylinder 1');
 		await user.click(screen.getByTestId(`heatSource_${heatPumpId}`));
-		await user.type(screen.getByTestId('tankVolume'), '5');
+		await user.type(screen.getByTestId('storageCylinderVolume'), '5');
 		await user.type(screen.getByTestId('dailyEnergyLoss'), '1');
 		await user.tab();
 	};
@@ -86,7 +86,7 @@ describe('hot water cylinder', () => {
 		});
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Hot water cylinder 1');
-		expect((await screen.findByTestId('tankVolume') as HTMLInputElement).value).toBe('5');
+		expect((await screen.findByTestId('storageCylinderVolume') as HTMLInputElement).value).toBe('5');
 		expect((await screen.findByTestId('dailyEnergyLoss') as HTMLInputElement).value).toBe('1');
 	});
 
@@ -96,7 +96,7 @@ describe('hot water cylinder', () => {
 		await user.click(screen.getByRole('button'));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
-		expect((await screen.findByTestId('tankVolume_error'))).toBeDefined();
+		expect((await screen.findByTestId('storageCylinderVolume_error'))).toBeDefined();
 		expect((await screen.findByTestId('dailyEnergyLoss_error'))).toBeDefined();
 
 	});

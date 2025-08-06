@@ -19,7 +19,7 @@ describe('domestic hot water mapper', () => {
 			id: "hot water cylinder",
 			name: "hot water cylinder",
 			heatSource: heatPumpName,
-			tankVolume: new Volume(100, litre),
+			storageCylinderVolume: new Volume(100, litre),
 			dailyEnergyLoss: 3,
 		};
 
@@ -105,7 +105,7 @@ describe('domestic hot water mapper', () => {
 			id: "hotWaterCylinderId",
 			name: "hotWaterCylinderName",
 			heatSource: heatPumpId,
-			tankVolume: new Volume(200, litre),
+			storageCylinderVolume: new Volume(200, litre),
 			dailyEnergyLoss: 3,
 		};
 

@@ -18,7 +18,7 @@ describe('water heating (hot water cylinder)', () => {
 	const cylinder: HotWaterCylinderData = {
 		id: "Any Id",
 		heatSource: "test-heat-pump",
-		tankVolume: new Volume(150, litre),
+		storageCylinderVolume: new Volume(150, litre),
 		dailyEnergyLoss: 73,
 		name: "Hot water cylinder 1"
 	};
@@ -27,7 +27,7 @@ describe('water heating (hot water cylinder)', () => {
 		await user.click(screen.getByTestId('waterHeaterType_hotWaterCylinder'));
 		await user.type(screen.getByTestId('name'), cylinder.name);
 		await user.click(screen.getByTestId('heatSource_' + cylinder.heatSource));
-		await user.type(screen.getByTestId('tankVolume'), "150");
+		await user.type(screen.getByTestId('storageCylinderVolume'), "150");
 		await user.type(screen.getByTestId('dailyEnergyLoss'), cylinder.dailyEnergyLoss.toString());
 		await user.tab();
 	};
@@ -62,7 +62,7 @@ describe('water heating (hot water cylinder)', () => {
 		
 		expect(actual.id).toBeDefined();
 		expect(actual.heatSource).toEqual(cylinder.heatSource);
-		expect(actual.tankVolume).toEqual(cylinder.tankVolume);
+		expect(actual.storageCylinderVolume).toEqual(cylinder.storageCylinderVolume);
 		expect(actual.dailyEnergyLoss).toEqual(cylinder.dailyEnergyLoss);
 		expect(actual.name).toEqual(cylinder.name);
 	});
@@ -82,7 +82,7 @@ describe('water heating (hot water cylinder)', () => {
 		await renderSuspended(WaterHeating);
 
 		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe(cylinder.name);
-		expect((await screen.findByTestId('tankVolume') as HTMLInputElement).value).toBe("150");
+		expect((await screen.findByTestId('storageCylinderVolume') as HTMLInputElement).value).toBe("150");
 		expect((await screen.findByTestId('dailyEnergyLoss') as HTMLInputElement).value).toBe(cylinder.dailyEnergyLoss.toString());
 		expect((await screen.findByTestId('heatSource_test-heat-pump')).hasAttribute('checked')).toBe(true);
 	});
@@ -102,7 +102,7 @@ describe('water heating (hot water cylinder)', () => {
 		await user.click(screen.getByTestId('waterHeaterType_hotWaterCylinder'));
 		await user.click(screen.getByRole('button'));
 
-		expect((await screen.findByTestId('tankVolume_error'))).toBeDefined();
+		expect((await screen.findByTestId('storageCylinderVolume_error'))).toBeDefined();
 		expect((await screen.findByTestId('dailyEnergyLoss_error'))).toBeDefined();
 		expect((await screen.findByTestId('heatSource_error'))).toBeDefined();
 	});

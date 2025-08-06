@@ -419,7 +419,7 @@ export type HotWaterCylinderData = {
 	readonly id: string;
 	name: string;
 	heatSource: string;
-	tankVolume: Volume | number; // number will be deprecated, preserved for backwards compatibility with old input data files
+	storageCylinderVolume: Volume | number; // number will be deprecated, preserved for backwards compatibility with old input data files
 	dailyEnergyLoss: number;
 };
 
