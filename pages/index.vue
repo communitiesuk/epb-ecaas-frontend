@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 
-const title = 'Check Part L building compliance';
+const title = '(Testing) Check Part L building compliance';
 	
 const page = usePage();
 const { createTaskList } = useTaskList();
