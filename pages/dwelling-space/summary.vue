@@ -289,7 +289,7 @@ const glazedDoorSummary: SummarySection = {
 			"Elevational height of building element at its base": x.elevationalHeight,
 			"Mid height": x.midHeight,
 			"Number of openable parts": x.numberOpenableParts,
-			"Frame to opening ratio": x.numberOpenableParts !== '0' ? x.frameToOpeningRatio : undefined,
+			"Opening to frame ratio": x.numberOpenableParts !== '0' ? x.openingToFrameRatio : undefined,
 			"Maximum openable area": x.numberOpenableParts !== '0' ? x.maximumOpenableArea : undefined,
 			"Height of the openable area": x.numberOpenableParts !== '0' ? x.heightOpenableArea : undefined,
 			"Mid height of the air flow path for openable part 1": x.numberOpenableParts !== '0' ? x.midHeightOpenablePart1 : undefined,
