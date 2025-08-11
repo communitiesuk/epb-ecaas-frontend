@@ -207,8 +207,29 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max:100" />
 		<FormKit
 			id="frameToOpeningRatio" type="govInputFloat" label="Opening to frame ratio"
-			help="Enter the proportion of the window taken up by the total opening area compared to the frame. It should be a decimal between 0 and 1."
-			name="frameToOpeningRatio" validation="required | number | min:0 | max:1" />
+			help="Enter the proportion of the window taken up by the total opening area compared to the frame"
+			name="frameToOpeningRatio" validation="required | number | min:0 | max:1">
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header govuk-!-width-one-half">Opening to frame ratio</th>
+							<th scope="col" class="govuk-table__header">Description</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">0</th>
+							<td class="govuk-table__cell">There is no opening.</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">1</th>
+							<td class="govuk-table__cell">There is no frame, only glass.</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="numberOpenableParts" type="govRadios" :options="{
 				1: '1',
