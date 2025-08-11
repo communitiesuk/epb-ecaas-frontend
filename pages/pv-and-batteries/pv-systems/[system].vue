@@ -199,7 +199,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max: 90"
 			suffix-text="°"
 		/>
-		<FieldsOrientation />
+		<FieldsOrientation details-caption="To define the orientation of the PV array, measure the angle of the panel clockwise from true North, accurate to the nearest degree. If the panel is facing true north then the orientation is 0°. If the panel is facing south then the orientation is 180°." cleared-non-llm />
 		<FormKit
 			id="elevationalHeight"
 			type="govInputWithSuffix"
