@@ -43,11 +43,32 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="testPressure"
 			type="govInputWithSuffix"
 			label="Test pressure"
-			help="Enter the reference pressure difference from the pressure test; for example, a blower door is 50Pa"
+			help="Enter the reference pressure difference from the pressure test"
 			name="testPressure"
 			validation="required | number | min:0 | max:500"
 			suffix-text="Pa"
-		/>
+		>
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header govuk-!-width-one-half">Type of test</th>
+							<th scope="col" class="govuk-table__header">Test pressure</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">Blower door</th>
+							<td class="govuk-table__cell">50 Pa</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header">Pulse</th>
+							<td class="govuk-table__cell">4 Pa</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="airTightnessTestResult"
 			type="govInputWithSuffix"
