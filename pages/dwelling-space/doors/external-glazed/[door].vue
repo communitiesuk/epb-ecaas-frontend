@@ -24,66 +24,17 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
-			frameToOpeningRatio: fields.frameToOpeningRatio,
+			openingToFrameRatio: fields.openingToFrameRatio
 		};
 
-		let door: ExternalGlazedDoorData;
+		const door: ExternalGlazedDoorData = {
+			...commonFields,
+			numberOpenableParts: "1",
+			maximumOpenableArea: fields.surfaceArea,
+			heightOpenableArea: fields.height,
+			midHeightOpenablePart1: fields.midHeight,
+		};
 
-		const numberParts = fields.numberOpenableParts;
-
-		switch (numberParts) {
-			case '0':
-				door = {
-					...commonFields,
-					numberOpenableParts: fields.numberOpenableParts,
-				};
-				break;
-			case '1':
-				door = {
-					...commonFields,
-					numberOpenableParts: fields.numberOpenableParts,
-					maximumOpenableArea: fields.maximumOpenableArea,
-					heightOpenableArea: fields.heightOpenableArea,
-					midHeightOpenablePart1: fields.midHeightOpenablePart1,
-				};
-				break;
-			case '2':
-				door = {
-					...commonFields,
-					numberOpenableParts: fields.numberOpenableParts,
-					maximumOpenableArea: fields.maximumOpenableArea,
-					heightOpenableArea: fields.heightOpenableArea,
-					midHeightOpenablePart1: fields.midHeightOpenablePart1,
-					midHeightOpenablePart2: fields.midHeightOpenablePart2,
-				};
-				break;
-			case '3':
-				door = {
-					...commonFields,
-					numberOpenableParts: fields.numberOpenableParts,
-					maximumOpenableArea: fields.maximumOpenableArea,
-					heightOpenableArea: fields.heightOpenableArea,
-					midHeightOpenablePart1: fields.midHeightOpenablePart1,
-					midHeightOpenablePart2: fields.midHeightOpenablePart2,
-					midHeightOpenablePart3: fields.midHeightOpenablePart3,
-				};
-				break;
-			case '4':
-				door = {
-					...commonFields,
-					numberOpenableParts: fields.numberOpenableParts,
-					maximumOpenableArea: fields.maximumOpenableArea,
-					heightOpenableArea: fields.heightOpenableArea,
-					midHeightOpenablePart1: fields.midHeightOpenablePart1,
-					midHeightOpenablePart2: fields.midHeightOpenablePart2,
-					midHeightOpenablePart3: fields.midHeightOpenablePart3,
-					midHeightOpenablePart4: fields.midHeightOpenablePart4,
-				};
-				break;
-			default:
-				door = { ...commonFields } as ExternalGlazedDoorData;
-		}
-			
 		dwellingSpaceExternalGlazedDoor.complete = false;
 		saveToList(door, dwellingSpaceExternalGlazedDoor);
 	});
@@ -170,89 +121,13 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required | number | min:0 | max:100"
 		/>
 		<FormKit
-			id="frameToOpeningRatio"
+			id="openingToFrameRatio"
 			type="govInputFloat"
-			label="Frame to opening ratio"
-			help="Enter the proportion of the window taken up by the frame compared to the total opening area. It should be a decimal between 0 and 1."
-			name="frameToOpeningRatio"
-			validation="required | number | min:0 | max:100"
+			label="Window to frame ratio"
+			help="Enter the proportion of the door taken up by the window. It should be a decimal between 0 and 1."
+			name="openingToFrameRatio"
+			validation="required | number | min:0 | max:1"
 		/>
-		<FormKit
-			id="numberOpenableParts"
-			type="govRadios"
-			:options="{
-				'1': '1',
-				'2': '2',
-				'3': '3',
-				'4': '4',
-				'0': 'None',
-			}"
-			label="Number of openable parts "
-			name="numberOpenableParts"
-			validation="required"
-		/>
-		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== '0'">
-			<FormKit
-				id="heightOpenableArea"
-				type="govInputWithSuffix"
-				suffix-text="m"
-				label="Height of the openable area"
-				help="Enter the vertical measurement of the section of the window that can be opened"
-				name="heightOpenableArea"
-				validation="required | number | min:0 | max:100"
-			/>
-			<FormKit
-				id="maximumOpenableArea"
-				type="govInputWithSuffix"
-				suffix-text="m²"
-				label="Maximum openable area"
-				help="Enter the total area of the gap created when the window is fully open"
-				name="maximumOpenableArea"
-				validation="required | number | min:0 | max:100"
-			/>
-			<FormKit
-				id="midHeightOpenablePart1"
-				type="govInputWithSuffix"
-				suffix-text="m"
-				label="Mid height of the air flow path for openable part 1 "
-				help="Enter the height from the ground to the midpoint of the openable section of the window"
-				name="midHeightOpenablePart1"
-				validation="required | number | min:0 | max:100"
-			/>
-			<template v-if="model.numberOpenableParts !== '1'">
-				<FormKit
-					id="midHeightOpenablePart2"
-					type="govInputWithSuffix"
-					suffix-text="m"
-					label="Mid height of the air flow path for openable part 2 "
-					help="Enter the height from the ground to the midpoint of the openable section of the window"
-					name="midHeightOpenablePart2"
-					validation="required | number | min:0 | max:100"
-				/>
-				<template v-if="model.numberOpenableParts !== '2'">
-					<FormKit
-						id="midHeightOpenablePart3"
-						type="govInputWithSuffix"
-						suffix-text="m"
-						label="Mid height of the air flow path for openable part 3 "
-						help="Enter the height from the ground to the midpoint of the openable section of the window"
-						name="midHeightOpenablePart3"
-						validation="required | number | min:0 | max:100"
-					/>
-					<template v-if="model.numberOpenableParts !== '3'">
-						<FormKit
-							id="midHeightOpenablePart4"
-							type="govInputWithSuffix"
-							suffix-text="m"
-							label="Mid height of the air flow path for openable part 4 "
-							help="Enter the height from the ground to the midpoint of the openable section of the window"
-							name="midHeightOpenablePart4"
-							validation="required | number | min:0 | max:100"
-						/>
-					</template>
-				</template>
-			</template>
-		</template>
 		<GovLLMWarning />
 		<FormKit
 			type="govButton"

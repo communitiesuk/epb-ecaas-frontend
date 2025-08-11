@@ -5,6 +5,11 @@ import merge from 'deepmerge';
 import { defaultZoneName } from "./common";
 import  { Length, LengthUnit } from "../utils/units/length";
 
+function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
+	// note - use parseFloat and toFixed to avoid JS precision issues
+	return parseFloat((1 - openingToFrameRatio).toFixed(10));
+}
+
 export function mapLivingSpaceFabricData(state: ResolvedState): Partial<FhsInputSchema> {
 	const zoneParameterData = mapZoneParametersData(state);
 	const lightingData = mapLightingData(state);
@@ -437,7 +442,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 				g_value: x.solarTransmittance,
 				u_value: x.uValue,
 				window_part_list: mapWindowPartList(x),
-				frame_area_fraction: x.numberOpenableParts === '0' ? 0 : x.frameToOpeningRatio!,
+				frame_area_fraction: x.numberOpenableParts === '0' ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio!),
 				max_window_open_area: x.numberOpenableParts === '0' ? 0 : x.maximumOpenableArea,
 				free_area_height: x.numberOpenableParts === '0' ? 0 : x.heightOpenableArea,
 				shading: []

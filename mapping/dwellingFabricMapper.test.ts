@@ -529,7 +529,7 @@ describe('dwelling fabric mapper', () => {
 			elevationalHeight: 1,
 			midHeight: 1,
 			numberOpenableParts: '1',
-			frameToOpeningRatio: 1,
+			openingToFrameRatio: 0.3,
 			midHeightOpenablePart1: 1,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1
@@ -593,7 +593,7 @@ describe('dwelling fabric mapper', () => {
 			area: externalGlazedDoor.surfaceArea,
 			g_value: externalGlazedDoor.solarTransmittance,
 			u_value: externalGlazedDoor.uValue,
-			frame_area_fraction: externalGlazedDoor.frameToOpeningRatio!,
+			frame_area_fraction: 1 - externalGlazedDoor.openingToFrameRatio!,
 			max_window_open_area: externalGlazedDoor.maximumOpenableArea,
 			free_area_height: externalGlazedDoor.heightOpenableArea,
 			window_part_list: [

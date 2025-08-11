@@ -67,7 +67,7 @@ const saveForm = (fields: WindowData) => {
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
 			// Convert opening-frame ratio to frame-opening ratio
-			frameToOpeningRatio: parseFloat((1 - fields.frameToOpeningRatio).toFixed(1)),
+			frameToOpeningRatio: parseFloat((1 - fields.frameToOpeningRatio).toFixed(5)),
 			curtainsOrBlinds: fields.curtainsOrBlinds,
 			...('overhangDepth' in fields ? {overhangDepth: fields.overhangDepth} : {}),
 			...('overhangDistance' in fields ? {overhangDistance: fields.overhangDistance} : {}),

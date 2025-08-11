@@ -1642,7 +1642,7 @@ describe("FHS input mapper", () => {
 						solarTransmittance: 0.5,
 						elevationalHeight: 0.2,
 						midHeight: 1.5,
-						frameToOpeningRatio: 1,
+						openingToFrameRatio: 0.7,
 						numberOpenableParts: "0",
 					}]
 				},

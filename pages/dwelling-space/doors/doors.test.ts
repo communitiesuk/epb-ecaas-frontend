@@ -80,7 +80,7 @@ describe('doors', () => {
 		elevationalHeight: 1,
 		midHeight: 1,
 		numberOpenableParts: '0',
-		frameToOpeningRatio: 0.8,
+		openingToFrameRatio: 0.2,
 	};
 
 	const externalGlazed2: ExternalGlazedDoorData = {
@@ -96,7 +96,7 @@ describe('doors', () => {
 		elevationalHeight: 1,
 		midHeight: 1,
 		numberOpenableParts: '0',
-		frameToOpeningRatio: 0.8,
+		openingToFrameRatio: 0.2
 	};
 
 	const externalGlazed3: ExternalGlazedDoorData = {
@@ -112,7 +112,7 @@ describe('doors', () => {
 		elevationalHeight: 1,
 		midHeight: 1,
 		numberOpenableParts: '0',
-		frameToOpeningRatio: 0.8,
+		openingToFrameRatio: 0.2
 	};
 	
 	const internal1: InternalDoorData = {

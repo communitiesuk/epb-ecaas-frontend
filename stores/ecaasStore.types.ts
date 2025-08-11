@@ -291,7 +291,7 @@ export type ExternalGlazedDoorData = {
 	solarTransmittance: number;
 	elevationalHeight: number;
 	midHeight: number;
-	frameToOpeningRatio: number;
+	openingToFrameRatio: number;
 } & TaggedUnion<'numberOpenableParts', {
 	'0': EmptyObject;
 	'1': OnePartFields;
