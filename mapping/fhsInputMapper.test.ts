@@ -1,6 +1,5 @@
-import Ajv2020 from "ajv/dist/2020";
 import type {ValidateFunction} from "ajv/dist/2020";
-import fhsSchema from "../schema/fhs_input.schema.json";
+import { ajv } from "../schema/validator";
 import {
 	BatteryLocation,
 	BuildType,
@@ -1997,9 +1996,7 @@ describe("FHS input mapper", () => {
 	test('the expected results pass against the current FHS input schema', () => {
 		const expectedsToTest = [expectedHouseInput, expectedFlatInput];
 
-		const ajv = new Ajv2020({ strict: false });
-
-		const validate = ajv.compile(fhsSchema);
+		const validate = ajv.getSchema("fhs")!;
 
 		for (const input of expectedsToTest) {
 			expect(validate(input)).toPassJsonSchema(validate);
