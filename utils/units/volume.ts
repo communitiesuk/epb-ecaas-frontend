@@ -7,6 +7,7 @@ export enum VolumeSuffix {
 	LITRES = 'litres',
 	CUBIC_METRES = 'm³'
 }
+
 export class VolumeUnit {
 	name: VolumeUnitName;
 	suffix: VolumeSuffix;

@@ -23,12 +23,12 @@ const overflow = Array.isArray(props.data) && props.data.length > 3;
 						<template v-if="Array.isArray(value)">
 							<ul>
 								<li v-for="item in value" :key="item">
-									{{ formatData(item, key, true) }}
+									{{ formatData(item, true) }}
 								</li>
 							</ul>
 						</template>
 						<template v-if="!Array.isArray(value)">
-							{{ formatData(value, key, true) }}
+							{{ value }}
 						</template>
 					</dd>
 				</div>
@@ -43,12 +43,12 @@ const overflow = Array.isArray(props.data) && props.data.length > 3;
 									<template v-if="Array.isArray(entryProp)">
 										<ul>
 											<li v-for="item in entryProp" :key="item">
-												{{ formatData(item, key, true) }}
+												{{ formatData(item, true) }}
 											</li>
 										</ul>
 									</template>
 									<template v-if="!Array.isArray(entryProp)">
-										{{ formatData(entryProp, key, true) }}
+										{{ entryProp }}
 									</template>
 								</dd>
 							</template>

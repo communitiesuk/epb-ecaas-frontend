@@ -33,9 +33,9 @@ const {
 				</li>
 			</ul>
 			<div v-else>
-				<p class="govuk-body govuk-error-message">No {{ formatData(id, "",false) }} has been added.</p>
+				<p class="govuk-body govuk-error-message">No {{ formatData(id, false) }} has been added.</p>
 				<NuxtLink class="govuk-link custom-add-list-item__link" :to="link">
-					Click here to add a {{ formatData(id,"",  false) }}
+					Click here to add a {{ formatData(id, false) }}
 				</NuxtLink>
 			</div>
 		</div>

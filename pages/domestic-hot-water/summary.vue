@@ -3,6 +3,12 @@ import type { SummarySection } from '~/common.types';
 import { getTabItems, getUrl  } from '#imports';
 import type {ImmersionHeaterPosition} from '#imports';
 import { immersionHeaterPositionValues } from '~/mapping/common';
+import { litre } from '~/utils/units/volume';
+import { kilowatt, kilowattHour } from '~/utils/units/power';
+import { celcius } from '~/utils/units/temperature';
+import { litrePerHour, litrePerMinute } from '~/utils/units/flowRate';
+import { metre, millimetre } from '~/utils/units/length';
+import { wattsPerMeterKelvin } from '~/utils/units/thermalConductivity';
 
 const title = "Domestic hot water";
 const store = useEcaasStore();
@@ -24,8 +30,8 @@ const hotWaterCylinderSummary: SummarySection = {
 		return {
 			"Name": d.name,
 			"Heat source": heatGenerationData.find(x => x.id === d.heatSource)?.name,
-			"Storage cylinder volume": typeof d.storageCylinderVolume === 'number' ? d.storageCylinderVolume : d.storageCylinderVolume.amount,
-			"Daily energy loss": d.dailyEnergyLoss
+			"Storage cylinder volume": `${typeof d.storageCylinderVolume === 'number' ? d.storageCylinderVolume : d.storageCylinderVolume.amount} ${litre.suffix}`,
+			"Daily energy loss": `${d.dailyEnergyLoss} ${kilowattHour.suffix}`
 		};
 	}),
 	editUrl: getUrl('waterHeating')!
@@ -38,7 +44,7 @@ const immersionHeaterSummary: SummarySection = {
 	data: immersionHeaterData.map(d => {
 		return {
 			"Name": d.name,
-			"Rated power": d.ratedPower,
+			"Rated power": `${d.ratedPower} ${kilowatt.suffix}`,
 			"Heater position": renderHeaterPosition(d.heaterPosition),
 			"Thermostat position": renderHeaterPosition(d.thermostatPosition)
 		};
@@ -47,7 +53,7 @@ const immersionHeaterSummary: SummarySection = {
 };
 
 function renderHeaterPosition(position: ImmersionHeaterPosition): string {
-	return `${ position } (${ immersionHeaterPositionValues[position] })`;
+	return `${ displayCamelToSentenceCase(position) } (${ immersionHeaterPositionValues[position] })`;
 }
 
 const solarThermalData = store.domesticHotWater.waterHeating.solarThermal.data;
@@ -69,7 +75,7 @@ const pointOfUseSummary: SummarySection = {
 	data: pointOfUseData.map(d => {
 		return {
 			"Name": d.name,
-			"Setpoint temperature": d.setpointTemperature,
+			"Setpoint temperature": `${d.setpointTemperature} ${celcius.suffix}`,
 			"Heater efficiency": d.heaterEfficiency
 		};
 	}),
@@ -155,7 +161,7 @@ const mixedShowerSummary: SummarySection = {
 	data: mixedShowerData.map(d => {
 		return {
 			"Name": d.name,
-			"Flow rate": d.flowRate
+			"Flow rate": `${d.flowRate} ${litrePerHour.suffix}`
 		};
 	}),
 	editUrl: getUrl('hotWaterOutlets')!
@@ -168,7 +174,7 @@ const electricShowerSummary: SummarySection = {
 	data: electricShowerData.map(d => {
 		return {
 			"Name": d.name,
-			"Rated power": d.ratedPower
+			"Rated power": `${d.ratedPower} ${kilowatt.suffix}`
 		};
 	}),
 	editUrl: getUrl('hotWaterOutlets')!
@@ -181,8 +187,8 @@ const bathSummary: SummarySection = {
 	data: bathData.map(d => {
 		return {
 			"Name": d.name,
-			"Size": d.size,
-			"Flow rate": d.flowRate
+			"Size": `${d.size} ${litre.suffix}`,
+			"Flow rate": `${d.flowRate} ${litrePerMinute.suffix}`
 		};
 	}),
 	editUrl: getUrl('hotWaterOutlets')!
@@ -195,7 +201,7 @@ const otherOutletsSummary: SummarySection = {
 	data: otherOutletsData.map(d => {
 		return {
 			"Name": d.name,
-			"Flow rate": d.flowRate
+			"Flow rate": `${d.flowRate} ${litrePerMinute.suffix}`
 		};
 	}),
 	editUrl: getUrl('hotWaterOutlets')!
@@ -215,15 +221,15 @@ const primaryPipeworkSummary: SummarySection = {
 	data: primaryPipeworkData.map(d => {
 		return {
 			"Name": d.name,
-			"Internal diameter": d.internalDiameter,
-			"External diameter": d.externalDiameter,
-			"Length": d.length,
-			"Insulation thickness": d.insulationThickness,
-			"Thermal conductivity": d.thermalConductivity,
+			"Internal diameter": `${d.internalDiameter} ${millimetre.suffix}`,
+			"External diameter": `${d.externalDiameter} ${millimetre.suffix}`,
+			"Length": `${d.length} ${metre.suffix}`,
+			"Insulation thickness": `${d.insulationThickness} ${millimetre.suffix}`,
+			"Thermal conductivity": `${d.thermalConductivity} ${wattsPerMeterKelvin.suffix}`,
 			"Surface reflectivity": d.surfaceReflectivity ? 'Reflective' : 'Not reflective',
-			"Pipe contents": d.pipeContents,
+			"Pipe contents": displayCamelToSentenceCase(d.pipeContents),
 			"Hot water cylinder": hotWaterCylinderData.find(x => x.id === d.hotWaterCylinder)?.name,
-			"Location": d.location,
+			"Location": displayCamelToSentenceCase(d.location),
 		};
 	}) || [],
 	editUrl: getUrl('pipework')!
@@ -236,9 +242,9 @@ const secondaryPipeworkSummary: SummarySection = {
 	data: secondaryPipeworkData.map(d => {
 		return {
 			"Name": d.name,
-			"Location": d.location,
-			"Length": d.length,
-			"Internal diameter": d.internalDiameter
+			"Location": displayCamelToSentenceCase(d.location),
+			"Length": `${d.length} ${metre.suffix}`,
+			"Internal diameter": `${d.internalDiameter} ${millimetre.suffix}`
 		};
 	}) || [],
 	editUrl: getUrl('pipework')!

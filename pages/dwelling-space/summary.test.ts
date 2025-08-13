@@ -3,7 +3,11 @@ import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from '~/stores/ecaasStore.types';
 import { FloorType, MassDistributionClass, WindowTreatmentType } from '~/schema/api-schema.types';
-import { Length, millimetre } from '~/utils/units/length';
+import { Length, metre, millimetre } from '~/utils/units/length';
+import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from '~/utils/units/thermalConductivity';
+import { degrees } from '~/utils/units/angle';
+import { metresSquare } from '~/utils/units/area';
+import { cubicMetre } from '~/utils/units/volume';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -257,7 +261,7 @@ describe('Living space fabric summary', () => {
 			expect(screen.getByRole('link', {name: 'Zone parameters'}));
 		});
 
-		it('should display the correct data for the ground floor section', async () => {
+		it('should display the correct data for the zone parameters section', async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceZoneParameters: {
@@ -269,8 +273,8 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
-				"Area": "10",
-				"Volume": "10",
+				"Area": `10 ${metresSquare.suffix}`,
+				"Volume": `10 ${cubicMetre.suffix}`,
 				// "Heat emitting system for this zone": "Elec heater",
 			};
 	
@@ -335,17 +339,16 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "Ground 1",
-				"Net surface area of this element": "5",
-				"Pitch": "0",
-				"U-value": "1",
-				"Thermal resistance": "1",
+				"Net surface area of this element": `5 ${metresSquare.suffix}`,
+				"Pitch": `0 ${degrees.suffix}`,
+				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+				"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
-				"Perimeter": "0",
-				"Psi of wall junction": "0",
-				"Thickness of walls at the edge of the floor": "0.3",
+				"Perimeter": `0 ${metre.suffix}`,
+				"Psi of wall junction": `0 ${wattsPerMeterKelvin.suffix}`,
+				"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
 				"Type of ground floor": "Slab no edge insulation"
-
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -369,7 +372,7 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Type of internal floor": "Internal floor to heated space",
 				"Name": "Internal 1",
-				"Net surface area of element": "5",
+				"Net surface area of element": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
 			};
@@ -394,14 +397,14 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "Exposed Floor 1",
-				"Pitch": "0",
-				"Orientation": "0",
-				"Length": "0.5",
-				"Width": "20",
-				"Elevational height of building element at its base": "20",
-				"Net surface area": "10",
+				"Pitch": `0 ${degrees.suffix}`,
+				"Orientation": `0 ${degrees.suffix}`,
+				"Length": `0.5 ${metre.suffix}`,
+				"Width": `20 ${metre.suffix}`,
+				"Elevational height of building element at its base": `20 ${metre.suffix}`,
+				"Net surface area": `10 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.1",
-				"U-value": "1",
+				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal"
 			};
@@ -438,14 +441,14 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "External wall 1",
-				"Pitch": "90",
-				"Orientation": "0",
-				"Height": "0.5",
-				"Length": "20",
-				"Elevational height of building element at its base": "20",
-				"Net surface area": "10",
+				"Pitch": `90 ${degrees.suffix}`,
+				"Orientation": `0 ${degrees.suffix}`,
+				"Height": `0.5 ${metre.suffix}`,
+				"Length": `20 ${metre.suffix}`,
+				"Elevational height of building element at its base": `20 ${metre.suffix}`,
+				"Net surface area": `10 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.1",
-				"U-value": "1",
+				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal"
 			};
@@ -470,10 +473,10 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "Internal 1",
-				"Net surface area of element": "5",
+				"Net surface area of element": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
-				"Pitch": "0"
+				"Pitch": `0 ${degrees.suffix}`
 			};
 			
 	
@@ -497,15 +500,14 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "Wall to unheated space 1",
-				"Net surface area of element": "500",
-				"U-value": "10",
+				"Net surface area of element": `500 ${metresSquare.suffix}`,
+				"U-value": `10 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "External",
-				"Pitch": "90",
-				"Thermal resistance of adjacent unheated space": "1"
+				"Pitch": `90 ${degrees.suffix}`,
+				"Thermal resistance of adjacent unheated space": `1 ${wattsPerSquareMeterKelvin.suffix}`
 			};
 			
-	
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceUnheatedSpaceWalls-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -526,14 +528,14 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "Party wall 1",
-				"Pitch": "90",
-				"Orientation": "0",
-				"Height": "0.5",
-				"Length": "20",
-				"Elevational height of building element at its base": "20",
-				"Net surface area": "10",
+				"Pitch": `90 ${degrees.suffix}`,
+				"Orientation": `0 ${degrees.suffix}`,
+				"Height": `0.5 ${metre.suffix}`,
+				"Length": `20 ${metre.suffix}`,
+				"Elevational height of building element at its base": `20 ${metre.suffix}`,
+				"Net surface area": `10 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.1",
-				"U-value": "1",
+				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal"
 			};
@@ -568,10 +570,10 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Type of ceiling": "Ceiling to heated space",
 				"Name": "Ceiling 1",
-				"Net surface area": "5",
+				"Net surface area": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
-				"Pitch": "180"
+				"Pitch": `180 ${degrees.suffix}`
 			};
 			
 	
@@ -595,14 +597,14 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Name": "Roof 1",
 				"Type of roof": "Flat",
-				"Pitch": "180",
-				"Orientation": "0",
-				"Length": "1",
-				"Width": "1",
-				"Elevational height of building element at its base": "2",
-				"Net surface area": "1",
+				"Pitch": `180 ${degrees.suffix}`,
+				"Orientation": `0 ${degrees.suffix}`,
+				"Length": `1 ${metre.suffix}`,
+				"Width": `1 ${metre.suffix}`,
+				"Elevational height of building element at its base": `2 ${metre.suffix}`,
+				"Net surface area": `1 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.5",
-				"U-value": "1",
+				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal"
 			};
@@ -638,14 +640,14 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "External unglazed door 1",
-				"Pitch": "90",
-				"Orientation": "0",
-				"Height": "0.5",
-				"Width": "20",
-				"Elevational height of building element at its base": "20",
-				"Net surface area": "10",
+				"Pitch": `90 ${degrees.suffix}`,
+				"Orientation": `0 ${degrees.suffix}`,
+				"Height": `0.5 ${metre.suffix}`,
+				"Width": `20 ${metre.suffix}`,
+				"Elevational height of building element at its base": `20 ${metre.suffix}`,
+				"Net surface area": `10 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.1",
-				"U-value": "1",
+				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal"
 			};
@@ -671,15 +673,15 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "External glazed door 1",
-				"Orientation": "1",
-				"Net surface area": "1",
-				"Height": "1",
-				"Width": "1",
-				"U-value": "1",
-				"Pitch": "90",
+				"Orientation": `1 ${degrees.suffix}`,
+				"Net surface area": `1 ${metresSquare.suffix}`,
+				"Height": `1 ${metre.suffix}`,
+				"Width": `1 ${metre.suffix}`,
+				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+				"Pitch": `90 ${degrees.suffix}`,
 				"Transmittance of solar energy": "0.1",
-				"Elevational height of building element at its base": "1",
-				"Mid height": "1",
+				"Elevational height of building element at its base": `1 ${metre.suffix}`,
+				"Mid height": `1 ${metre.suffix}`,
 				"Number of openable parts": "0"
 			};
 			
@@ -704,10 +706,10 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Type": "Internal door to heated space",
 				"Name": "Internal 1",
-				"Net surface area of element": "5",
+				"Net surface area of element": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "100",
 				"Mass distribution class": "Internal",
-				"Pitch": "90"
+				"Pitch": `90 ${degrees.suffix}`
 			};
 			
 	
@@ -738,24 +740,24 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 			const expectedResult = {
 				"Name": "Window 1",
-				"Orientation": "1",
-				"Net surface area": "1",
-				"Height": "1",
-				"Width": "1",
-				"U-value": "1",
-				"Pitch": "90",
+				"Orientation": `1 ${degrees.suffix}`,
+				"Net surface area": `1 ${metresSquare.suffix}`,
+				"Height": `1 ${metre.suffix}`,
+				"Width": `1 ${metre.suffix}`,
+				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+				"Pitch": `90 ${degrees.suffix}`,
 				"Transmittance of solar energy": "0.1",
-				"Elevational height of building element at its base": "1",
-				"Mid height": "1",
+				"Elevational height of building element at its base": `1 ${metre.suffix}`,
+				"Mid height": `1 ${metre.suffix}`,
 				"Number of openable parts": "0",
-				"Overhang depth": "100",
-				"Overhang distance from glass": "100",
-				"Side fin right depth": "100",
-				"Side fin right distance from glass": "100",
-				"Side fin left depth": "100",
-				"Side fin left distance from glass": "100",
+				"Overhang depth": `100 ${millimetre.suffix}`,
+				"Overhang distance from glass": `100 ${millimetre.suffix}`,
+				"Side fin right depth": `100 ${millimetre.suffix}`,
+				"Side fin right distance from glass": `100 ${millimetre.suffix}`,
+				"Side fin left depth": `100 ${millimetre.suffix}`,
+				"Side fin left distance from glass": `100 ${millimetre.suffix}`,
 				"Type": "Blinds",
-				"Thermal resistivity increase": "1",
+				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Solar transmittance reduction": "0.1"
 			};
 			
@@ -788,8 +790,8 @@ describe('Living space fabric summary', () => {
 			await renderSuspended(Summary);
 			const expectedResult = {
 				"Type of thermal bridge": "E1",
-				"Linear thermal transmittance": "1",
-				"Length of thermal bridge": "2"
+				"Linear thermal transmittance": `1 ${wattsPerMeterKelvin.suffix}`,
+				"Length of thermal bridge": `2 ${metre.suffix}`
 			};
 			
 	
@@ -813,7 +815,7 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "Point 1",
-				"Heat transfer coefficient": "1"
+				"Heat transfer coefficient": `1 ${wattsPerKelvin.suffix}`
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {

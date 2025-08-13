@@ -2,6 +2,12 @@
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl } from "#imports";
 import { FuelType } from "~/schema/api-schema.types";
+import { co2PerKilowattHour } from "~/utils/units/emissions";
+import { kilowattHourPerKelvin } from "~/utils/units/thermalConductivity";
+import { celcius } from "~/utils/units/temperature";
+import { litrePerMinute } from "~/utils/units/flowRate";
+import { metresSquare } from "~/utils/units/area";
+import { kilowatt } from "~/utils/units/power";
 const store = useEcaasStore();
 const title = "Heating system summary";
 
@@ -16,8 +22,8 @@ const energySupplySummary: SummarySection = {
 			Exported: displayBoolean(exported),
 		}),
 		...(fuelType?.includes(FuelType.custom) && {
-			"CO2 per kWh": co2PerKwh,
-			"CO2 per kWh (including out of scope)": co2PerKwhIncludingOutOfScope,
+			"CO2 per kWh": `${co2PerKwh} ${co2PerKilowattHour.suffix}`,
+			"CO2 per kWh (including out of scope)": `${co2PerKwhIncludingOutOfScope} ${co2PerKilowattHour.suffix}`,
 			"kWh per kWh delivered": kwhPerKwhDelivered,
 		}),
 	},
@@ -121,11 +127,11 @@ const wetDistributionSummary: SummarySection = {
 			"Heat source": heatGenerationData.find(
 				(x) => x.id === wetDistribution.heatSource
 			)?.name,
-			"Thermal mass": wetDistribution.thermalMass,
+			"Thermal mass": `${wetDistribution.thermalMass} ${kilowattHourPerKelvin.suffix}`,
 			"Design temperature difference across the emitters":
-				wetDistribution.designTempDiffAcrossEmitters,
-			"Design flow temperature": wetDistribution.designFlowTemp,
-			"Design flow rate": wetDistribution.designFlowRate,
+				`${wetDistribution.designTempDiffAcrossEmitters} ${celcius.suffix}`,
+			"Design flow temperature": `${wetDistribution.designFlowTemp} ${celcius.suffix}`,
+			"Design flow rate": `${wetDistribution.designFlowRate} ${litrePerMinute.suffix}`,
 			"Type of space heater": wetDistribution.typeOfSpaceHeater === "radiator"
 				? "Radiators"
 				: "Underfloor heating",
@@ -143,13 +149,13 @@ const wetDistributionSummary: SummarySection = {
 			wetDistribution.emitterFloorArea !== undefined
 		) {
 			wetDistributionData["Emitter floor area"] =
-				wetDistribution.emitterFloorArea;
+				`${wetDistribution.emitterFloorArea} ${metresSquare.suffix}`;
 		}
 
 		wetDistributionData["Eco design controller class"] =
 			wetDistribution.ecoDesignControllerClass;
 		wetDistributionData["Minimum flow temperature"] =
-			wetDistribution.minimumFlowTemp;
+			`${wetDistribution.minimumFlowTemp} ${celcius.suffix}`;
 
 		return wetDistributionData;
 	}) || [],
@@ -165,7 +171,7 @@ const instantElectricHeaterSummary: SummarySection = {
 	data: instantHeaters.map((instantHeater) => {
 		return {
 			Name: instantHeater.name,
-			"Rated power": instantHeater.ratedPower,
+			"Rated power": `${instantHeater.ratedPower} ${kilowatt.suffix}`,
 			"Convection fraction": instantHeater.convectionFractionInstant,
 		};
 	}) || [],

@@ -1,9 +1,9 @@
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
-import userEvent from '@testing-library/user-event';
 import hyphenate from '../../utils/hyphenate';
 import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
+import { metre } from '~/utils/units/length';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -63,8 +63,6 @@ describe('Dwelling details summary', () => {
 			}
 		});
 
-		userEvent.setup();
-
 		await renderSuspended(Summary);
 
 		const expectedResult = {
@@ -90,12 +88,10 @@ describe('Dwelling details summary', () => {
 			}
 		});
 
-		userEvent.setup();
-
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Altitude": "3",
+			"Altitude": `3 ${metre.suffix}`,
 			"Type of exposure": "Shielded",
 			"Terrain type": "Suburban",
 			"Noise nuisance": "No"

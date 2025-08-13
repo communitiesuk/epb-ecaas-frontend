@@ -4,6 +4,12 @@ import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
 import { DuctShape, DuctType, MVHRLocation, VentType } from "~/schema/api-schema.types";
+import { pascal } from "~/utils/units/pressure";
+import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
+import { centimetresSquare, metresSquare } from "~/utils/units/area";
+import { metre, millimetre } from "~/utils/units/length";
+import { degrees } from "~/utils/units/angle";
+import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 
 
 vi.mock('uuid');
@@ -126,7 +132,7 @@ describe('Infiltration and ventilation summary', () => {
 		const expectedResult = {
 			"Name": "Mechanical name 1",
 			"Type of mechanical ventilation": "MVHR",
-			"Air flow rate": "12",
+			"Air flow rate": `12 ${litrePerSecond.suffix}`,
 			"MVHR location": "Inside",
 			"MVHR efficiency": "0.2"
 		};
@@ -157,11 +163,11 @@ describe('Infiltration and ventilation summary', () => {
 			"MVHR unit": 'Mechanical name 1',
 			"Ductwork cross sectional shape": 'Circular',
 			"Duct type": 'Intake',
-			"Internal diameter of ductwork": '300',
-			"External diameter of ductwork": '1000',
-			"Length of ductwork": '100',
-			"Insulation thickness": '100',
-			"Thermal conductivity of ductwork insulation": '10',
+			"Internal diameter of ductwork": `300 ${millimetre.suffix}`,
+			"External diameter of ductwork": `1000 ${millimetre.suffix}`,
+			"Length of ductwork": `100 ${metre.suffix}`,
+			"Insulation thickness": `100 ${millimetre.suffix}`,
+			"Thermal conductivity of ductwork insulation": `10 ${wattsPerMeterKelvin.suffix}`,
 			"Surface reflectivity": 'Reflective'
 		};
 
@@ -207,12 +213,11 @@ describe('Infiltration and ventilation summary', () => {
 		const expectedResult = {
 			"Name": "Vent 1",
 			"Type of vent": "Trickle",
-			"Effective ventilation area": "10",
+			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
 			"Vent opening ratio": "1",
-			"Mid height of zone": "1",
-			"Orientation": "0",
-			"Pitch": "0"
-
+			"Mid height of zone": `1 ${metre.suffix}`,
+			"Orientation": `0 ${degrees.suffix}`,
+			"Pitch": `0 ${degrees.suffix}`
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -234,7 +239,7 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Elevational height of dwelling at its base": "1",
+			"Elevational height of dwelling at its base": `1 ${metresSquare.suffix}`,
 			"Cross vent factor": 'Yes',
 			"Maximum required air change rate": "1"
 		};
@@ -258,8 +263,8 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Test pressure": "1",
-			"Air tightness test result": "1"
+			"Test pressure": `1 ${pascal.suffix}`,
+			"Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

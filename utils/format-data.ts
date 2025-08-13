@@ -2,16 +2,12 @@ export default formatData;
 
 function formatData(
 	value: string | number | boolean | undefined,
-	key:  string | number | boolean | undefined,
 	capitaliseFirstLetter: boolean
 ) {
-
 	if (value === undefined) {
 		return "";
 	}
-	if(key === "Name"){
-		return value;  
-	}
+
 	if (typeof value == "string") {
 		const formattedString = value.split(/(?=[A-Z](?=[a-z]))/)
 			.map((s, i) => i > 0 ? s.toLowerCase() : s)

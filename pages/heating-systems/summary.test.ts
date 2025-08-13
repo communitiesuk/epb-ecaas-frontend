@@ -2,6 +2,12 @@ import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatingSystemsSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
 import { FuelType } from "~/schema/api-schema.types";
+import { kilowatt } from "~/utils/units/power";
+import { kilowattHourPerKelvin } from "~/utils/units/thermalConductivity";
+import { celcius } from "~/utils/units/temperature";
+import { litrePerMinute } from "~/utils/units/flowRate";
+import { metresSquare } from "~/utils/units/area";
+import { co2PerKilowattHour } from "~/utils/units/emissions";
 
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -76,8 +82,8 @@ describe("Heating systems summary page", () => {
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection("energySupply", {
 				"Fuel type": "Custom",
-				"CO2 per kWh": "1",
-				"CO2 per kWh (including out of scope)": "2",
+				"CO2 per kWh": `1 ${co2PerKilowattHour.suffix}`,
+				"CO2 per kWh (including out of scope)": `2 ${co2PerKilowattHour.suffix}`,
 				"kWh per kWh delivered": "3",
 			});
 		});
@@ -102,8 +108,8 @@ describe("Heating systems summary page", () => {
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection("energySupply", {
 				"Fuel type": "CustomElectricity",
-				"CO2 per kWh": "1",
-				"CO2 per kWh (including out of scope)": "2",
+				"CO2 per kWh": `1 ${co2PerKilowattHour.suffix}`,
+				"CO2 per kWh (including out of scope)": `2 ${co2PerKilowattHour.suffix}`,
 				"kWh per kWh delivered": "3",
 				"Exported": "Yes"
 			});
@@ -443,14 +449,14 @@ describe("Heating systems summary page", () => {
 			const expectedWetDistributionData = {
 				Name: "Wet distribution 1",
 				"Heat source": "Heat pump 1",
-				"Thermal mass": "2",
-				"Design temperature difference across the emitters": "0.4",
-				"Design flow temperature": "32",
-				"Design flow rate": "5",
+				"Thermal mass": `2 ${kilowattHourPerKelvin.suffix}`,
+				"Design temperature difference across the emitters": `0.4 ${celcius.suffix}`,
+				"Design flow temperature": `32 ${celcius.suffix}`,
+				"Design flow rate": `5 ${litrePerMinute.suffix}`,
 				"Type of space heater": "Radiators",
 				"Convection fraction": "0.2",
 				"Eco design controller class": "1",
-				"Minimum flow temperature": "20",
+				"Minimum flow temperature": `20 ${celcius.suffix}`,
 			};
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
@@ -477,15 +483,16 @@ describe("Heating systems summary page", () => {
 			const expectedWetDistributionData = {
 				Name: "Wet distribution 2",
 				"Heat source": "Heat pump 1",
-				"Thermal mass": "2",
-				"Design temperature difference across the emitters": "0.4",
-				"Design flow temperature": "32",
-				"Design flow rate": "5",
+				"Thermal mass": `2 ${kilowattHourPerKelvin.suffix}`,
+				"Design temperature difference across the emitters": `0.4 ${celcius.suffix}`,
+				"Design flow temperature": `32 ${celcius.suffix}`,
+				"Design flow rate": `5 ${litrePerMinute.suffix}`,
 				"Type of space heater": "Underfloor heating",
-				"Emitter floor area": "5",
+				"Emitter floor area": `5 ${metresSquare.suffix}`,
 				"Eco design controller class": "1",
-				"Minimum flow temperature": "20",
+				"Minimum flow temperature": `20 ${celcius.suffix}`,
 			};
+
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
 		});
@@ -511,15 +518,16 @@ describe("Heating systems summary page", () => {
 			const expectedWetDistributionData = {
 				Name: "Wet distribution 1",
 				"Heat source": "Heat pump 1",
-				"Thermal mass": "2",
-				"Design temperature difference across the emitters": "0.4",
-				"Design flow temperature": "32",
-				"Design flow rate": "5",
+				"Thermal mass": `2 ${kilowattHourPerKelvin.suffix}`,
+				"Design temperature difference across the emitters": `0.4 ${celcius.suffix}`,
+				"Design flow temperature": `32 ${celcius.suffix}`,
+				"Design flow rate": `5 ${litrePerMinute.suffix}`,
 				"Type of space heater": "Radiators",
 				"Convection fraction": "0.2",
 				"Eco design controller class": "1",
-				"Minimum flow temperature": "20",
+				"Minimum flow temperature": `20 ${celcius.suffix}`,
 			};
+
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
 		});
@@ -539,7 +547,7 @@ describe("Heating systems summary page", () => {
 
 			const expectedInstantElectricHeaterData = {
 				Name: "Instant electric heater 1",
-				"Rated power": "3",
+				"Rated power": `3 ${kilowatt.suffix}`,
 				"Convection fraction": "0.2",
 			};
 			await renderSuspended(HeatingSystemsSummary);

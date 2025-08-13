@@ -3,6 +3,11 @@ import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
 import { litre, Volume } from '~/utils/units/volume';
+import { metre, millimetre } from '~/utils/units/length';
+import { wattsPerMeterKelvin } from '~/utils/units/thermalConductivity';
+import { litrePerHour, litrePerMinute } from '~/utils/units/flowRate';
+import { kilowatt, kilowattHour } from '~/utils/units/power';
+import { celcius } from '~/utils/units/temperature';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -93,8 +98,8 @@ describe('Domestic hot water summary', () => {
 			const expectedResult = {
 				"Name": "Hot water cylinder 1",
 				"Heat source": "Heat pump",
-				"Storage cylinder volume": "5",
-				"Daily energy loss": "1",
+				"Storage cylinder volume": `5 ${litre.suffix}`,
+				"Daily energy loss": `1 ${kilowattHour.suffix}`,
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -119,7 +124,7 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Immersion heater",
-				"Rated power": "10",
+				"Rated power": `10 ${kilowatt.suffix}`,
 				"Heater position": "Top (1)",
 				"Thermostat position": "Top (1)",
 			};
@@ -146,7 +151,7 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Point of use",
-				"Setpoint temperature": "25",
+				"Setpoint temperature": `25 ${celcius.suffix}`,
 				"Heater efficiency": "0.5"
 			};
 	
@@ -208,7 +213,7 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Mixer shower 1",
-				"Flow rate": "10"
+				"Flow rate": `10 ${litrePerHour.suffix}`
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -233,7 +238,7 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Electric shower 1",
-				"Rated power": "10"
+				"Rated power": `10 ${kilowatt.suffix}`
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -258,8 +263,8 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Bath 1",
-				"Size": "170",
-				"Flow rate": "10"
+				"Size": `170 ${litre.suffix}`,
+				"Flow rate": `10 ${litrePerMinute.suffix}`
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -284,7 +289,7 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Basin tap 1",
-				"Flow rate": "10"
+				"Flow rate": `10 ${litrePerMinute.suffix}`
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -349,11 +354,11 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Pipework Kitchen Sink Primary",
-				"Internal diameter": "10",
-				"External diameter": "10",
-				"Length": "3",
-				"Insulation thickness": "5",
-				"Thermal conductivity": "1",
+				"Internal diameter": `10 ${millimetre.suffix}`,
+				"External diameter": `10 ${millimetre.suffix}`,
+				"Length": `3 ${metre.suffix}`,
+				"Insulation thickness": `5 ${millimetre.suffix}`,
+				"Thermal conductivity": `1 ${wattsPerMeterKelvin.suffix}`,
 				"Surface reflectivity": "Reflective",
 				"Pipe contents": "Water",
 				"Hot water cylinder": 'Hot water cylinder 1',
@@ -383,9 +388,9 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Pipework Kitchen Sink Secondary",
-				"Length": "3",
+				"Length": `3 ${metre.suffix}`,
 				"Location": "Internal",
-				"Internal diameter": "9"
+				"Internal diameter": `9 ${millimetre.suffix}`
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {

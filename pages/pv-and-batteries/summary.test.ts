@@ -2,6 +2,9 @@ import { renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from "@testing-library/vue";
 import PVAndElectricBatteriesSummary from "./summary.vue";
 import { BatteryLocation, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
+import { kilowatt, kilowattHour, kilowattPeak } from "~/utils/units/power";
+import { degrees } from "~/utils/units/angle";
+import { metre } from "~/utils/units/length";
 
 describe("PV and electric batteries summary page", () => {
 	it("displays the correct title", async () => {
@@ -61,16 +64,16 @@ describe("PV and electric batteries summary page", () => {
 
 			const expectedResult = {
 				Name: "PV Roof",
-				"Peak power": "3.5",
+				"Peak power": `3.5 ${kilowattPeak.suffix}`,
 				"Ventilation strategy": "Moderately ventilated",
-				Pitch: "30",
-				Orientation: "180",
-				"Elevational height": "10",
-				"Length of PV": "1",
-				"Width of PV": "1",
-				"Inverter peak power AC": "2.4",
-				"Inverter peak power DC": "3.5",
-				"Inverter is inside": "false",
+				Pitch: `30 ${degrees.suffix}`,
+				Orientation: `180 ${degrees.suffix}`,
+				"Elevational height of PV": `10 ${metre.suffix}`,
+				"Length of PV": `1 ${metre.suffix}`,
+				"Width of PV": `1 ${metre.suffix}`,
+				"Inverter peak power AC": `2.4 ${kilowatt.suffix}`,
+				"Inverter peak power DC": `3.5 ${kilowatt.suffix}`,
+				"Inverter is inside": "No",
 				"Inverter type": "Optimised inverter",
 			};
 
@@ -130,14 +133,14 @@ describe("PV and electric batteries summary page", () => {
 
 			const expectedResult = {
 				Name: "Acme Model II",
-				Capacity: "10",
-				"Battery age": "2",
+				Capacity: `10 ${kilowattHour.suffix}`,
+				"Battery age": "2 years",
 				"Charge efficiency": "0.7",
 				Location: "Inside",
-				"Grid charging possible" : "false",
-				"Maximum charge rate": "6.2",
-				"Minimum charge rate": "4.5",
-				"Maximum discharge rate": "2.3",
+				"Grid charging possible" : "No",
+				"Maximum charge rate": `6.2 ${kilowatt.suffix}`,
+				"Minimum charge rate": `4.5 ${kilowatt.suffix}`,
+				"Maximum discharge rate": `2.3 ${kilowatt.suffix}`,
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {

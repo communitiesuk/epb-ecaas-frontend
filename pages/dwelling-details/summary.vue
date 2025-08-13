@@ -2,6 +2,8 @@
 import type { SummarySection } from '~/common.types';
 import { getTabItems, getUrl } from '#imports';
 import { BuildType } from '~/schema/api-schema.types';
+import { degrees } from '~/utils/units/angle';
+import { metre } from '~/utils/units/length';
 
 const title = "Dwelling details summary";
 const store = useEcaasStore();
@@ -14,7 +16,7 @@ const generalDetailsSummary: SummarySection = {
 	id: 'generalDetails',
 	label: "General details",
 	data: {
-		"Type of dwelling": generalDetailsData.typeOfDwelling,
+		"Type of dwelling": generalDetailsData.typeOfDwelling ? displayCamelToSentenceCase(generalDetailsData.typeOfDwelling) : undefined,
 		"Number of storeys in building": generalDetailsData.storeysInDwelling,
 		"Storey of flat": generalDetailsData.typeOfDwelling === BuildType.flat ? generalDetailsData.storeyOfFlat : undefined,
 		"Number of bedrooms": generalDetailsData.numOfBedrooms,
@@ -29,11 +31,11 @@ const shadingSummary: SummarySection = {
 	data: shadingData.map(s => {
 		return {
 			"Name": s.name,
-			"Shading start angle": s.startAngle,
-			"Shading end angle": s.endAngle,
-			"Shading type": s.objectType,
-			"Height": s.height,
-			"Distance": s.distance
+			"Shading start angle": `${s.startAngle} ${degrees.suffix}`,
+			"Shading end angle": `${s.endAngle} ${degrees.suffix}`,
+			"Shading type": s.objectType ? displayCamelToSentenceCase(s.objectType) : undefined,
+			"Height": `${s.height} ${metre.suffix}`,
+			"Distance": `${s.distance} ${metre.suffix}`
 		};
 	}) || [],
 	editUrl: getUrl('shading')!
@@ -43,9 +45,9 @@ const externalFactorsSummary: SummarySection = {
 	id: 'externalFactors',
 	label: 'External factors',
 	data: {
-		"Altitude": externalFactors.altitude,
+		"Altitude": `${externalFactors.altitude} ${metre.suffix}`,
 		"Type of exposure": externalFactors.typeOfExposure,
-		"Terrain type": externalFactors.terrainType,
+		"Terrain type": externalFactors.terrainType ? displayCamelToSentenceCase(externalFactors.terrainType) : undefined,
 		"Noise nuisance": displayBoolean(externalFactors.noiseNuisance)
 	},
 	editUrl: getUrl('externalFactors')!
