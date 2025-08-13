@@ -1,7 +1,10 @@
 import {ApiPaths} from "~/schema/api-schema.types";
 import type { ApiInfoResponse, FhsComplianceResponseIncludingErrors, TokenResponse } from "../server.types";
 import clientSession from "../services/clientSession";
+import { ajv, humanReadable } from "~/schema/validator";
 import * as Sentry from "@sentry/nuxt";
+import type { CorrectedJsonApiError } from "~/stores/ecaasStore.types";
+import type { ErrorObject } from "ajv";
 
 const ecaasApi = {
 	getToken: async (clientId: string, clientSecret: string) => {
@@ -33,6 +36,16 @@ const ecaasApi = {
 	},
 
 	checkCompliance: async function checkCompliance(data: object) {
+		// first, perform validation against the schema
+		const validate = ajv.getSchema("fhs")!;
+		const isValid = validate(data);
+		if (!isValid) {
+			const validationErrors = validate.errors!;
+			reportErrors(data, humanReadable(validationErrors, data), "Schema validation error");
+			return responseForValidationErrors(validate.errors!, data);
+		}
+
+		// second, send to ECaaS API
 		const { accessToken } = (await clientSession.get());
 		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.FHSCompliance}`;
 		const response = await $fetch<FhsComplianceResponseIncludingErrors>(uri, {
@@ -47,24 +60,46 @@ const ecaasApi = {
 		if ('errors' in response) {
 			const errorMessage = response.errors?.[0]?.detail ?? "Unknown error";
 
-			let requestBodyWithoutExternalConditions: object;
-
-			if ("ExternalConditions" in data ) {
-				const { ExternalConditions, ...rest } = data;
-				requestBodyWithoutExternalConditions = rest;
-			}
-			
-			Sentry.withScope(scope => {
-				scope.setExtra("responseErrors", response.errors);
-				scope.setExtra("requestBody", JSON.parse(JSON.stringify(data)));
-				scope.setExtra("requestBody without External Conditions", JSON.stringify(requestBodyWithoutExternalConditions || data));
-				scope.setFingerprint([errorMessage]);
-				Sentry.captureException(new Error(errorMessage));
-			});
+			reportErrors(data, response.errors, errorMessage);
 		};
 
 		return response;
 	}
 };
+
+function reportErrors(requestData: object, responseErrors: CorrectedJsonApiError[] | string, errorMessage: string): void {
+	let requestBodyWithoutExternalConditions: object;
+
+	if ("ExternalConditions" in requestData) {
+		const { ExternalConditions, ...rest } = requestData;
+		requestBodyWithoutExternalConditions = rest;
+	}
+			
+	Sentry.withScope(scope => {
+		scope.setExtra("responseErrors", responseErrors);
+		scope.setExtra("requestBody", JSON.parse(JSON.stringify(requestData)));
+		scope.setExtra("requestBody without External Conditions", JSON.stringify(requestBodyWithoutExternalConditions || requestData));
+		scope.setFingerprint([errorMessage]);
+		Sentry.captureException(new Error(errorMessage));
+	});
+}
+
+function responseForValidationErrors(errors: ErrorObject[], data: object): Promise<FhsComplianceResponseIncludingErrors> {
+	const errorPart = validationErrorsAsApiErrors(errors, data);
+
+	return Promise.resolve(
+		{
+			errors: errorPart,
+		}
+	);
+}
+
+function validationErrorsAsApiErrors(errors: ErrorObject[], data: object): CorrectedJsonApiError[] {
+	return [{
+		status: "422",
+		title: "JSON Schema validation error",
+		detail: humanReadable(errors, data),
+	}];
+}
 
 export default ecaasApi;

@@ -146,7 +146,7 @@
         },
         "start_day": {
           "description": "First day of the time series, day of the year, 0 to 365",
-          "format": "uint32",
+          "format": "int32",
           "minimum": 0.0,
           "type": "integer"
         },
@@ -315,7 +315,7 @@
           "$ref": "#/$defs/Schedule_for_double"
         },
         "cost_schedule_start_day": {
-          "format": "uint32",
+          "format": "int32",
           "minimum": 0.0,
           "type": "integer"
         },
@@ -902,7 +902,7 @@
       "properties": {
         "start_day": {
           "description": "First day of the time series, day of the year, 0 to 365",
-          "format": "uint32",
+          "format": "int32",
           "minimum": 0.0,
           "type": "integer"
         },
@@ -1096,7 +1096,7 @@
             },
             "start_day": {
               "description": "First day of the time series, day of the year, 0 to 365",
-              "format": "uint32",
+              "format": "int32",
               "minimum": 0.0,
               "type": "integer"
             },
@@ -1138,7 +1138,7 @@
             },
             "start_day": {
               "description": "First day of the time series, day of the year, 0 to 365",
-              "format": "uint32",
+              "format": "int32",
               "minimum": 0.0,
               "type": "integer"
             },
@@ -1219,7 +1219,7 @@
             },
             "start_day": {
               "description": "First day of the time series, day of the year, 0 to 365",
-              "format": "uint32",
+              "format": "int32",
               "minimum": 0.0,
               "type": "integer"
             },
@@ -1296,7 +1296,7 @@
             },
             "start_day": {
               "description": "First day of the time series, day of the year, 0 to 365",
-              "format": "uint32",
+              "format": "int32",
               "minimum": 0.0,
               "type": "integer"
             },
@@ -1745,7 +1745,7 @@
         },
         "end_day": {
           "description": "Last day of the time series, day of the year, 0 to 365",
-          "format": "uint32",
+          "format": "int32",
           "minimum": 0.0,
           "type": [
             "integer",
@@ -1765,7 +1765,7 @@
         },
         "january_first": {
           "description": "Day of the week for January 1st, Monday to Sunday, 1 to 7",
-          "format": "uint32",
+          "format": "int32",
           "minimum": 0.0,
           "type": [
             "integer",
@@ -1815,7 +1815,7 @@
         },
         "start_day": {
           "description": "First day of the time series, day of the year, 0 to 365",
-          "format": "uint32",
+          "format": "int32",
           "minimum": 0.0,
           "type": [
             "integer",
@@ -1832,7 +1832,7 @@
         },
         "timezone": {
           "description": "Timezone of weather station, -12 to 12",
-          "format": "uint32",
+          "format": "int32",
           "minimum": 0.0,
           "type": [
             "integer",
@@ -1980,7 +1980,7 @@
           "$ref": "#/$defs/BuildType"
         },
         "storey_of_dwelling": {
-          "format": "uint",
+          "format": "int32",
           "minimum": 0.0,
           "type": [
             "integer",
@@ -1988,7 +1988,7 @@
           ]
         },
         "storeys_in_building": {
-          "format": "uint",
+          "format": "int32",
           "minimum": 0.0,
           "type": "integer"
         }
@@ -2346,7 +2346,7 @@
               "type": "number"
             },
             "modules": {
-              "format": "uint",
+              "format": "int32",
               "minimum": 0.0,
               "type": "integer"
             },
@@ -2999,7 +2999,7 @@
               "type": "number"
             },
             "number_of_units": {
-              "format": "uint",
+              "format": "int32",
               "minimum": 0.0,
               "type": "integer"
             },
@@ -3614,7 +3614,7 @@
           "$ref": "#/$defs/Schedule_for_double"
         },
         "start_day": {
-          "format": "uint32",
+          "format": "int32",
           "minimum": 0.0,
           "type": "integer"
         },
@@ -4058,7 +4058,7 @@
     "ScheduleRepeater_for_Boolean": {
       "properties": {
         "repeat": {
-          "format": "uint",
+          "format": "int32",
           "minimum": 0.0,
           "type": "integer"
         },
@@ -4075,7 +4075,7 @@
     "ScheduleRepeater_for_double": {
       "properties": {
         "repeat": {
-          "format": "uint",
+          "format": "int32",
           "minimum": 0.0,
           "type": "integer"
         },
@@ -4165,7 +4165,7 @@
           "type": "number"
         },
         "number": {
-          "format": "uint",
+          "format": "int32",
           "minimum": 0.0,
           "type": "integer"
         },
@@ -4595,7 +4595,7 @@
               "type": "number"
             },
             "n_units": {
-              "format": "uint32",
+              "format": "int32",
               "minimum": 0.0,
               "type": "integer"
             },
@@ -5893,7 +5893,7 @@
       "$ref": "#/$defs/InternalGains"
     },
     "NumberOfBedrooms": {
-      "format": "uint",
+      "format": "int32",
       "minimum": 0.0,
       "type": [
         "integer",
@@ -5901,7 +5901,7 @@
       ]
     },
     "NumberOfWetRooms": {
-      "format": "uint",
+      "format": "int32",
       "minimum": 0.0,
       "type": [
         "integer",

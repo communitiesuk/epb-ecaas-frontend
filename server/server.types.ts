@@ -35,5 +35,5 @@ export type FhsComplianceResponseIncludingErrors = {
 	meta: SchemaFhsMeta,
 } | {
 	errors: CorrectedJsonApiError[],
-	meta: SchemaFhsMeta,
+	meta?: SchemaFhsMeta,
 };

@@ -24,6 +24,7 @@ const calculate = async () => {
 
 	try {
 		const inputPayload = mapFhsInputData(resolveState(store) as ResolvedState);
+
 		console.log(JSON.stringify(inputPayload));
 
 		// nix the stored lastResult before sending a request
