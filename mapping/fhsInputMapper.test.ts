@@ -839,7 +839,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 0.1,
 					g_value: 0.2,
 					mid_height: 2,
-					frame_area_fraction: 1,
+					frame_area_fraction: 0.2, // inverse openingToFrameRatio (1 - 0.8) 
 					max_window_open_area: 1,
 					free_area_height: 1,
 					window_part_list: [{
@@ -1695,7 +1695,7 @@ describe("FHS input mapper", () => {
 					thermalResistivityIncrease: 1,
 					solarTransmittanceReduction: 0.1,
 					midHeightOpenablePart1: 1,
-					frameToOpeningRatio: 1,
+					openingToFrameRatio: 0.8,
 					maximumOpenableArea: 1,
 					heightOpenableArea: 1,
 					curtainsControlObject: WindowTreatmentControl.auto_motorised,

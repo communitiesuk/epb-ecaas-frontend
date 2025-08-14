@@ -66,8 +66,7 @@ const saveForm = (fields: WindowData) => {
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
-			// Convert opening-frame ratio to frame-opening ratio
-			frameToOpeningRatio: parseFloat((1 - fields.frameToOpeningRatio).toFixed(5)),
+			openingToFrameRatio: fields.openingToFrameRatio,
 			curtainsOrBlinds: fields.curtainsOrBlinds,
 			...('overhangDepth' in fields ? {overhangDepth: fields.overhangDepth} : {}),
 			...('overhangDistance' in fields ? {overhangDistance: fields.overhangDistance} : {}),
@@ -206,9 +205,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the height from the ground to the midpoint of the window" name="midHeight"
 			validation="required | number | min:0 | max:100" />
 		<FormKit
-			id="frameToOpeningRatio" type="govInputFloat" label="Opening to frame ratio"
+			id="openingToFrameRatio" type="govInputFloat" label="Opening to frame ratio"
 			help="Enter the proportion of the window taken up by the total opening area compared to the frame"
-			name="frameToOpeningRatio" validation="required | number | min:0 | max:1">
+			name="openingToFrameRatio" validation="required | number | min:0 | max:1">
 			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">

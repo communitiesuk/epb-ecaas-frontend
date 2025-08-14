@@ -26,7 +26,7 @@ describe('window', () => {
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
-		frameToOpeningRatio: 0.2,
+		openingToFrameRatio: 0.8,
 		numberOpenableParts: '0',
 		overhangDepth: new Length(60, millimetre),
 		overhangDistance: new Length(60, millimetre),
@@ -57,7 +57,7 @@ describe('window', () => {
 		await user.type(screen.getByTestId('solarTransmittance'), '0.1');
 		await user.type(screen.getByTestId('elevationalHeight'), '1');
 		await user.type(screen.getByTestId('midHeight'), '1');
-		await user.type(screen.getByTestId('frameToOpeningRatio'), '0.8');
+		await user.type(screen.getByTestId('openingToFrameRatio'), '0.8');
 		await user.click(screen.getByTestId('numberOpenableParts_0'));
 		await user.type(screen.getByTestId('overhangDepth'), '60');
 		await user.type(screen.getByTestId('overhangDistance'), '60');
@@ -166,7 +166,7 @@ describe('window', () => {
 		await user.click(screen.getByTestId('numberOpenableParts_4'));
 		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
     
-		expect((await screen.findByTestId('frameToOpeningRatio_error'))).toBeDefined();
+		expect((await screen.findByTestId('openingToFrameRatio_error'))).toBeDefined();
 		expect((await screen.findByTestId('maximumOpenableArea_error'))).toBeDefined();
 		expect((await screen.findByTestId('heightOpenableArea_error'))).toBeDefined();
 		expect((await screen.findByTestId('midHeightOpenablePart1_error'))).toBeDefined();

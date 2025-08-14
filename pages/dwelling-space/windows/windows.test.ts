@@ -31,7 +31,7 @@ describe('windows', () => {
 		elevationalHeight: 1,
 		midHeight: 1,
 		numberOpenableParts: '0',
-		frameToOpeningRatio: 0.8,
+		openingToFrameRatio: 0.2,
 		curtainsOrBlinds: false
 	};
 

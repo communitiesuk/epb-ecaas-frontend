@@ -2,6 +2,11 @@
 import type { SummarySection } from '~/common.types';
 import { getUrl, getTabItems } from '#imports';
 import { FloorType } from '~/schema/api-schema.types';
+
+function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
+	// note - use parseFloat and toFixed to avoid JS precision issues
+	return parseFloat((1 - openingToFrameRatio).toFixed(10));
+}
 import { metresSquare, millimetresSquarePerMetre } from '~/utils/units/area';
 import { degrees } from '~/utils/units/angle';
 import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from '~/utils/units/thermalConductivity';
@@ -347,7 +352,7 @@ const windowSummary: SummarySection = {
 			"Elevational height of building element at its base": `${x.elevationalHeight} ${metre.suffix}`,
 			"Mid height": `${x.midHeight} ${metre.suffix}`,
 			"Number of openable parts": x.numberOpenableParts,
-			"Frame to opening ratio": x.numberOpenableParts !== '0' ? x.frameToOpeningRatio : undefined,
+			"Frame to opening ratio": x.numberOpenableParts !== '0' ? calculateFrameToOpeningRatio(x.openingToFrameRatio) : undefined,
 			"Maximum openable area": x.numberOpenableParts !== '0' ? `${x.maximumOpenableArea} ${metresSquare.suffix}` : undefined,
 			"Height of the openable area": x.numberOpenableParts !== '0' ? `${x.heightOpenableArea} ${metre.name}` : undefined,
 			"Mid height of the air flow path for openable part 1": x.numberOpenableParts !== '0' ? x.midHeightOpenablePart1 : undefined,

@@ -216,7 +216,7 @@ const windowData: WindowData = {
 	solarTransmittance: 0.1,
 	elevationalHeight: 1,
 	midHeight: 1,
-	frameToOpeningRatio: 0.8,
+	openingToFrameRatio: 0.2,
 	numberOpenableParts: '0',
 	overhangDepth: new Length(100, millimetre),
 	overhangDistance: new Length(100, millimetre),

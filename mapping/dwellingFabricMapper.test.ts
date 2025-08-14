@@ -648,7 +648,7 @@ describe('dwelling fabric mapper', () => {
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
 			midHeightOpenablePart1: 1,
-			frameToOpeningRatio: 1,
+			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1
 		};
@@ -678,7 +678,7 @@ describe('dwelling fabric mapper', () => {
 			u_value: window.uValue,
 			g_value: window.solarTransmittance,
 			mid_height: window.midHeight,
-			frame_area_fraction: window.frameToOpeningRatio!,
+			frame_area_fraction: 1 - window.openingToFrameRatio!,
 			max_window_open_area: window.maximumOpenableArea,
 			free_area_height: window.heightOpenableArea,
 			window_part_list: [{
