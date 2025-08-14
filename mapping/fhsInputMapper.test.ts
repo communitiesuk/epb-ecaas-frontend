@@ -257,7 +257,7 @@ const expectedHouseInput: FhsInputSchema = {
 					mass_distribution_class: MassDistributionClass.I,
 					perimeter: 100,
 					psi_wall_floor_junc: 1,
-					thickness_walls: 0.8,
+					thickness_walls: 0.08,
 					floor_type: FloorType.Slab_no_edge_insulation,
 					pitch: 0
 				}
@@ -652,7 +652,7 @@ const expectedFlatInput: FhsInputSchema = {
 						width: 0.32
 					}],
 					psi_wall_floor_junc: 0.4,
-					thickness_walls: 0.5,
+					thickness_walls: 0.05,
 					floor_type: FloorType.Slab_edge_insulation,
 					pitch: 0,
 				},
@@ -668,7 +668,7 @@ const expectedFlatInput: FhsInputSchema = {
 					perimeter: 21,
 					thermal_resist_walls_base: 3,
 					psi_wall_floor_junc: 0.8,
-					thickness_walls: 0.4,
+					thickness_walls: 0.04,
 					floor_type: FloorType.Heated_basement,
 					pitch: 0,
 				},

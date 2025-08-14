@@ -214,7 +214,7 @@ describe('dwelling fabric mapper', () => {
 			mass_distribution_class: groundFloor.massDistributionClass,
 			perimeter: groundFloor.perimeter,
 			psi_wall_floor_junc: groundFloor.psiOfWallJunction,
-			thickness_walls: groundFloor.thicknessOfWalls / 100,
+			thickness_walls: groundFloor.thicknessOfWalls / 1000,
 			floor_type: groundFloor.typeOfGroundFloor,
 		};
 
@@ -231,11 +231,11 @@ describe('dwelling fabric mapper', () => {
 		const expectedGroundFloorSuspendedFloor: BuildingElementGround = {
 			...expectedGroundFloor,
 			floor_type: groundFloorWithSuspendedFloor.typeOfGroundFloor,
-			height_upper_surface: groundFloorWithSuspendedFloor.heightOfFloorUpperSurface / 100,
-			thickness_walls: groundFloorWithSuspendedFloor.thicknessOfWalls! / 100,
+			height_upper_surface: groundFloorWithSuspendedFloor.heightOfFloorUpperSurface / 1000,
+			thickness_walls: groundFloorWithSuspendedFloor.thicknessOfWalls! / 1000,
 			thermal_resist_insul: groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
 			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
-			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 100,
+			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 1e6,
 			shield_fact_location: groundFloorWithSuspendedFloor.windShieldingFactor
 		};
 
