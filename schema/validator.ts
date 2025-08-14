@@ -1,4 +1,4 @@
-import Ajv2020, { type ErrorObject } from "ajv/dist/2020";
+import Ajv2020, { type ErrorObject } from "ajv/dist/2020.js";
 import betterAjvErrors from "@readme/better-ajv-errors";
 import addFormats from "ajv-formats";
 import * as fhsSchema from "./fhs_input.schema.json";
