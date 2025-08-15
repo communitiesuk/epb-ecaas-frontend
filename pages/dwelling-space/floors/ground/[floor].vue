@@ -308,7 +308,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Height of the floor upper surface"
 				help="Enter the height of the top surface of the ground floor above the external ground level. Typically between 15mm and 60mm."
 				name="heightOfFloorUpperSurface"
-				validation="required | number | min:0 | max:100"/>
+				validation="required | number | min:0 | max:100000"/>
 			<FormKit
 				id="underfloorSpaceThermalResistance"
 				type="govInputWithSuffix"
