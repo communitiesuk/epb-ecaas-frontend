@@ -114,7 +114,7 @@ describe('Infiltration and ventilation summary', () => {
 		expect(screen.getByRole('link', {name: 'Mechanical ventilation'}));
 		expect(screen.getByRole('link', {name: 'Ductwork'}));
 		expect(screen.getByRole('link', {name: 'Vents'}));
-		expect(screen.getByRole('link', {name: 'Ventilation'}));
+		expect(screen.getByRole('link', {name: 'Natural ventilation'}));
 		expect(screen.getByRole('link', {name: 'Air permeability'}));
 		// expect(screen.getByRole('link', {name: 'Combustion appliances'}));
 	});
@@ -239,9 +239,10 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Elevational height of dwelling at its base": `1 ${metresSquare.suffix}`,
-			"Cross vent factor": 'Yes',
-			"Maximum required air change rate": "1"
+			"Ventilation zone height": `1 ${metre.suffix}`,
+			"Dwelling envelope area": `1 ${metresSquare.suffix}`,
+			"Elevational height of dwelling at its base": `1 ${metre.suffix}`,
+			"Cross ventilation possible": 'Yes'
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

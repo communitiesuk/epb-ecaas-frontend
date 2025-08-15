@@ -36,7 +36,6 @@ const heatPumps = store.heatingSystems.heatGeneration.heatPump.data;
 const heatPumpSummary: SummarySection = {
 	id: "heatPump",
 	label: "Heat pump",
-
 	data:
 		heatPumps.map((pump) => {
 			return {
@@ -135,6 +134,8 @@ const wetDistributionSummary: SummarySection = {
 			"Type of space heater": wetDistribution.typeOfSpaceHeater === "radiator"
 				? "Radiators"
 				: "Underfloor heating",
+			"Number of radiators": wetDistribution.typeOfSpaceHeater === "radiator" ?
+				wetDistribution.numberOfRadiators : undefined
 		};
 		if (
 			wetDistribution.typeOfSpaceHeater === "radiator" &&

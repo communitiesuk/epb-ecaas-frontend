@@ -242,9 +242,9 @@ const secondaryPipeworkSummary: SummarySection = {
 	data: secondaryPipeworkData.map(d => {
 		return {
 			"Name": d.name,
-			"Location": displayCamelToSentenceCase(d.location),
+			"Internal diameter": `${d.internalDiameter} ${millimetre.suffix}`,
 			"Length": `${d.length} ${metre.suffix}`,
-			"Internal diameter": `${d.internalDiameter} ${millimetre.suffix}`
+			"Location": displayCamelToSentenceCase(d.location)
 		};
 	}) || [],
 	editUrl: getUrl('pipework')!

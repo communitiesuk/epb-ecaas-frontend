@@ -42,15 +42,15 @@ const ductworkSummary: SummarySection = {
 		return {
 			"Name": x.name,
 			"MVHR unit": mvhr[0]?.name,
-			"Ductwork cross sectional shape": displayCamelToSentenceCase(x.ductworkCrossSectionalShape),
 			"Duct type": displayCamelToSentenceCase(x.ductType),
+			"Ductwork cross sectional shape": displayCamelToSentenceCase(x.ductworkCrossSectionalShape),
 			"Internal diameter of ductwork": x.ductworkCrossSectionalShape === DuctShape.circular ? `${x.internalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
 			"External diameter of ductwork": x.ductworkCrossSectionalShape === DuctShape.circular ? `${x.externalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
 			"Perimeter of ductwork": x.ductworkCrossSectionalShape === DuctShape.rectangular ? `${x.ductPerimeter} ${millimetre.suffix}` : undefined,
 			"Length of ductwork": `${x.lengthOfDuctwork} ${metre.suffix}`,
 			"Insulation thickness": `${x.insulationThickness} ${millimetre.suffix}`,
 			"Thermal conductivity of ductwork insulation": `${x.thermalInsulationConductivityOfDuctwork} ${wattsPerMeterKelvin.suffix}`,
-			"Surface reflectivity": x.surfaceReflectivity ? "Reflective" : "Not reflective",
+			"Surface reflectivity": x.surfaceReflectivity ? "Reflective" : "Not reflective"
 		};
 	}) || [],
 	editUrl: getUrl('ductwork')!
@@ -79,15 +79,14 @@ const ventilationData = store.infiltrationAndVentilation.naturalVentilation.data
 
 const ventilationSummary: SummarySection = {
 	id: 'ventilation',
-	label: 'Ventilation',
+	label: 'Natural ventilation',
 	data: {
 		"Ventilation zone height": `${ventilationData.ventilationZoneHeight} ${metre.suffix}`,
 		"Dwelling envelope area": `${ventilationData.dwellingEnvelopeArea} ${metresSquare.suffix}`,
-		"Elevational height of dwelling at its base": `${ventilationData.dwellingElevationalLevelAtBase} ${metresSquare.suffix}`,
-		"Cross vent factor": displayBoolean(ventilationData.crossVentilationPossible),
-		"Maximum required air change rate": ventilationData.maxRequiredAirChangeRate
+		"Elevational height of dwelling at its base": `${ventilationData.dwellingElevationalLevelAtBase} ${metre.suffix}`,
+		"Cross ventilation possible": displayBoolean(ventilationData.crossVentilationPossible)
 	},
-	editUrl: getUrl('ventilation')!
+	editUrl: getUrl('naturalVentilation')!
 };
 
 const airPermeabilityData = store.infiltrationAndVentilation.airPermeability.data;

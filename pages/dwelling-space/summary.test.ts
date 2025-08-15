@@ -35,7 +35,7 @@ const floorsData: FloorsData = {
 			pitch: 0,
 			uValue: 1,
 			thermalResistance: 1,
-			kappaValue: 100,
+			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			perimeter: 0,
 			psiOfWallJunction: 0,
@@ -48,7 +48,7 @@ const floorsData: FloorsData = {
 			typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
-			kappaValue: 100,
+			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 		}]
 	},
@@ -63,7 +63,7 @@ const floorsData: FloorsData = {
 			surfaceArea: 10,
 			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 100,
+			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I
 		}]
 	}
@@ -82,7 +82,7 @@ const wallsData: WallsData = {
 			surfaceArea: 10,
 			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 100,
+			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I
 		}]
 	},
@@ -90,7 +90,7 @@ const wallsData: WallsData = {
 		data: [{
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
-			kappaValue: 100,
+			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: 'custom',
 			pitch: 0
@@ -120,7 +120,7 @@ const wallsData: WallsData = {
 			surfaceArea: 10,
 			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 100,
+			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I
 		}]
 	}
@@ -132,7 +132,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 			type: AdjacentSpaceType.heatedSpace,
 			name: "Ceiling 1",
 			surfaceArea: 5,
-			kappaValue: 100,
+			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: 'custom',
 			pitch: 180
@@ -151,7 +151,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 			surfaceArea: 1,
 			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
-			kappaValue: 100,
+			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I
 		}]
 	}
@@ -170,7 +170,7 @@ const doorsData: DoorsData = {
 			surfaceArea: 10,
 			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 100,
+			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I
 		}]
 	},
@@ -196,7 +196,7 @@ const doorsData: DoorsData = {
 			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 1",
 			surfaceArea: 5,
-			kappaValue: 100,
+			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: '90',
 			pitch: 90
@@ -343,7 +343,7 @@ describe('Living space fabric summary', () => {
 				"Pitch": `0 ${degrees.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
-				"Areal heat capacity": "100",
+				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 				"Perimeter": `0 ${metre.suffix}`,
 				"Psi of wall junction": `0 ${wattsPerMeterKelvin.suffix}`,
@@ -373,7 +373,7 @@ describe('Living space fabric summary', () => {
 				"Type of internal floor": "Internal floor to heated space",
 				"Name": "Internal 1",
 				"Net surface area of element": `5 ${metresSquare.suffix}`,
-				"Areal heat capacity": "100",
+				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 			};
 			
@@ -397,15 +397,13 @@ describe('Living space fabric summary', () => {
 	
 			const expectedResult = {
 				"Name": "Exposed Floor 1",
-				"Pitch": `0 ${degrees.suffix}`,
-				"Orientation": `0 ${degrees.suffix}`,
 				"Length": `0.5 ${metre.suffix}`,
 				"Width": `20 ${metre.suffix}`,
 				"Elevational height of building element at its base": `20 ${metre.suffix}`,
 				"Net surface area": `10 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "100",
+				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal"
 			};
 			
@@ -449,7 +447,7 @@ describe('Living space fabric summary', () => {
 				"Net surface area": `10 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "100",
+				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal"
 			};
 			
@@ -474,7 +472,7 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Name": "Internal 1",
 				"Net surface area of element": `5 ${metresSquare.suffix}`,
-				"Areal heat capacity": "100",
+				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 				"Pitch": `0 ${degrees.suffix}`
 			};
@@ -534,9 +532,8 @@ describe('Living space fabric summary', () => {
 				"Length": `20 ${metre.suffix}`,
 				"Elevational height of building element at its base": `20 ${metre.suffix}`,
 				"Net surface area": `10 ${metresSquare.suffix}`,
-				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "100",
+				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal"
 			};
 			
@@ -571,7 +568,7 @@ describe('Living space fabric summary', () => {
 				"Type of ceiling": "Ceiling to heated space",
 				"Name": "Ceiling 1",
 				"Net surface area": `5 ${metresSquare.suffix}`,
-				"Areal heat capacity": "100",
+				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 				"Pitch": `180 ${degrees.suffix}`
 			};
@@ -605,7 +602,7 @@ describe('Living space fabric summary', () => {
 				"Net surface area": `1 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.5",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "100",
+				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal"
 			};
 			
@@ -648,7 +645,7 @@ describe('Living space fabric summary', () => {
 				"Net surface area": `10 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Areal heat capacity": "100",
+				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal"
 			};
 			
@@ -681,8 +678,7 @@ describe('Living space fabric summary', () => {
 				"Pitch": `90 ${degrees.suffix}`,
 				"Transmittance of solar energy": "0.1",
 				"Elevational height of building element at its base": `1 ${metre.suffix}`,
-				"Mid height": `1 ${metre.suffix}`,
-				"Number of openable parts": "0"
+				"Mid height": `1 ${metre.suffix}`
 			};
 			
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -707,7 +703,7 @@ describe('Living space fabric summary', () => {
 				"Type": "Internal door to heated space",
 				"Name": "Internal 1",
 				"Net surface area of element": `5 ${metresSquare.suffix}`,
-				"Areal heat capacity": "100",
+				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 				"Pitch": `90 ${degrees.suffix}`
 			};
