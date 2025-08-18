@@ -1,4 +1,4 @@
-import * as z from "zod/v4";
+import * as z from "zod";
 import products from './products.json';
 import { HeatPumpBackupControlType, HeatPumpSinkType, HeatPumpSourceType } from "~/schema/api-schema.types";
 import { objectEntries, objectKeys } from "ts-extras";
