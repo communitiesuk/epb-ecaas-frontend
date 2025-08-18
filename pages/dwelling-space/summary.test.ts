@@ -503,7 +503,7 @@ describe('Living space fabric summary', () => {
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "External",
 				"Pitch": `90 ${degrees.suffix}`,
-				"Thermal resistance of adjacent unheated space": `1 ${wattsPerSquareMeterKelvin.suffix}`
+				"Thermal resistance of adjacent unheated space": `1 ${squareMeterKelvinPerWatt.suffix}`
 			};
 			
 			for (const [key, value] of Object.entries(expectedResult)) {
