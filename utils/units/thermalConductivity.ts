@@ -28,7 +28,7 @@ export class ThermalConductivityUnit {
 			case ThermalConductivityUnitName.WATTS_PER_KELVIN: return ThermalConductivitySuffix.WATTS_PER_KELVIN;
 			case ThermalConductivityUnitName.WATTS_PER_METER_KELVIN: return ThermalConductivitySuffix.WATTS_PER_METER_KELVIN;
 			case ThermalConductivityUnitName.WATTS_PER_SQUARE_METER_KELVIN: return ThermalConductivitySuffix.WATTS_PER_SQUARE_METER_KELVIN;
-			case ThermalConductivityUnitName.SQUARE_METER_KELVIN_PER_WATT: return ThermalConductivitySuffix.WATTS_PER_SQUARE_METER_KELVIN;
+			case ThermalConductivityUnitName.SQUARE_METER_KELVIN_PER_WATT: return ThermalConductivitySuffix.SQUARE_METER_KELVIN_PER_WATT;
 			case ThermalConductivityUnitName.KILOWATT_HOUR_PER_KELVIN: return ThermalConductivitySuffix.KILOWATT_HOUR_PER_KELVIN;
 		}
 	}

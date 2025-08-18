@@ -22,8 +22,8 @@ const zoneParametersSummary: SummarySection = {
 	id: 'dwellingSpaceZoneParameters',
 	label: 'Zone parameters',
 	data: {
-		"Area": `${zoneParametersData.area} ${metresSquare.suffix}`,
-		"Volume": `${zoneParametersData.volume} ${cubicMetre.suffix}`,
+		"Area": zoneParametersData.area ? `${zoneParametersData.area} ${metresSquare.suffix}` : undefined,
+		"Volume": zoneParametersData.volume ? `${zoneParametersData.volume} ${cubicMetre.suffix}` : undefined,
 		// "Heat emitting system for this zone": zoneParametersData.spaceHeatingSystemForThisZone,
 		// "Heating control type": zoneParametersData.heatingControlType
 	},
