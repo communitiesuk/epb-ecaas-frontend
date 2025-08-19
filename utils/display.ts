@@ -133,12 +133,12 @@ export type ArealHeatCapacityValue = keyof typeof arealHeatCapacityOptions exten
 		: never
 	: never;
 
-export function displayArealHeatCapacity(value: ArealHeatCapacityValue | undefined): (typeof arealHeatCapacityOptions)[keyof typeof arealHeatCapacityOptions] | undefined {
+export function displayArealHeatCapacity(value: ArealHeatCapacityValue | undefined): string | undefined {
 	if (typeof value === 'undefined') {
 		return undefined;
 	}
 
-	return arealHeatCapacityOptions[value];
+	return arealHeatCapacityOptions[value] ?? ('' + value);
 }
 
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;

@@ -209,7 +209,7 @@ describe('infiltration ventilation mapper', () => {
 		// Arrange
 		const ventData: VentData[] = [{
 			name: ventName,
-			typeOfVent: "Air brick",
+			typeOfVent: "airBrick",
 			effectiveVentilationArea: 100,
 			openingRatio: 0.6,
 			midHeightOfZone: 1.5,

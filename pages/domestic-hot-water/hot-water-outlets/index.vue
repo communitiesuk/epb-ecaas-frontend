@@ -6,7 +6,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type HotWaterOutletType = keyof typeof store.domesticHotWater.hotWaterOutlets;
-interface HotWaterOutletData extends MixedShowerData, ElectricShowerData, BathData, OtherHotWaterOutletData {};
+type HotWaterOutletData = MixedShowerData & ElectricShowerData & BathData & OtherHotWaterOutletData;
 
 function handleRemove(outletType: HotWaterOutletType, index: number) {
 	const outlets = store.domesticHotWater.hotWaterOutlets[outletType]?.data;

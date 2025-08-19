@@ -4,7 +4,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type WallType = keyof typeof store.dwellingFabric.dwellingSpaceWalls;
-interface WallData extends ExternalWallData, InternalWallData, WallsToUnheatedSpaceData, PartyWallData {}
+type WallData = ExternalWallData & InternalWallData & WallsToUnheatedSpaceData & PartyWallData;
 
 function handleRemove( wallType: WallType, index: number) {
 	const walls = store.dwellingFabric.dwellingSpaceWalls[wallType]?.data;

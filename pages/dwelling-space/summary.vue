@@ -172,7 +172,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 			"Pitch": `${x.pitch} ${degrees.suffix}`,
 			"Net surface area of element": `${x.surfaceAreaOfElement} ${metresSquare.suffix}`,
 			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
-			"Areal heat capacity": displayArealHeatCapacity(x.arealHeatCapacity),
+			"Areal heat capacity": displayArealHeatCapacity(x.arealHeatCapacity as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}`
 		};

@@ -4,7 +4,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type PipeworkType = keyof typeof store.domesticHotWater.pipework;
-interface PipeworkData extends PrimaryPipeworkData, SecondaryPipeworkData {};
+type PipeworkData = PrimaryPipeworkData & SecondaryPipeworkData;
 
 function handleRemove(pipeworkType: PipeworkType, index: number) {
 	const pipework = store.domesticHotWater.pipework[pipeworkType].data;

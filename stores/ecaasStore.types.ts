@@ -3,8 +3,21 @@ import type { PageId } from "~/data/pages/pages";
 import type { Length } from "~/utils/units/length";
 import type { Volume } from "~/utils/units/volume";
 import type { ProductReference } from "~/pcdb/products";
-import type { BuildType, BatteryLocation, CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, DuctShape, DuctType, FloorType, FlueGasExhaustSituation, MassDistributionClass, MVHRLocation, OnSiteGenerationVentilationStrategy, ShadingObjectType, TerrainClass, VentilationShieldClass, VentType, WaterPipeContentsType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WwhrsType, InverterType, FuelType, SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta, WindShieldLocation } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, FlueGasExhaustSituation, MassDistributionClass, WaterPipeContentsType, OnSiteGenerationVentilationStrategy, type BuildType, BatteryLocation, CombustionFuelType, FuelType, InverterType, ShadingObjectType, TerrainClass, VentilationShieldClass, WaterPipeworkLocation, WwhrsType, type CombustionApplianceType, type DuctShape, type DuctType, type FloorType, type MVHRLocation, type VentType, type WindowTreatmentControl, type WindowTreatmentType, type SchemaFhsComplianceResponse, type SchemaJsonApiOnePointOneErrorLinks, type SchemaJsonApiOnePointOneErrorSource, type SchemaJsonApiOnePointOneMeta, type WindShieldLocation } from "~/schema/api-schema.types";
 import type { FlowRate } from "~/utils/units/flowRate";
+import * as z from "zod";
+import { zeroPitchOption } from "~/utils/pitchOptions";
+
+const fraction = z.number().min(0).max(1);
+const orientation = z.number().min(0).lt(360);
+const percentage = z.number().min(0).max(100);
+const named = z.object({
+	name: z.string().trim().min(1),
+});
+const namedWithId = named.extend({
+	id: z.uuidv4().readonly(),
+});
+const massDistributionClass = z.enum(MassDistributionClass);
 
 export type EcaasState = AssertEachKeyIsPageId<{
 	dwellingDetails: DwellingDetails;
@@ -41,21 +54,24 @@ export type GeneralDetailsData = {
 	[BuildType.house]: EmptyObject;
 }>;
 
-export type ShadingData = {
-	name: string;
-	startAngle: number;
-	endAngle: number;
-	objectType: ShadingObjectType;
-	height: number;
-	distance: number;
-};
+const _shadingData = named.extend({
+	startAngle: z.number().min(0).lt(360),
+	endAngle: z.number().min(0).lt(360),
+	objectType: z.enum(ShadingObjectType),
+	height: z.number(),
+	distance: z.number(),
+});
 
-export interface ExternalFactorsData {
-	altitude: number;
-	typeOfExposure: VentilationShieldClass;
-	terrainType: TerrainClass;
-	noiseNuisance: boolean;
-}
+export type ShadingData = z.infer<typeof _shadingData>;
+
+const _externalFactorsData = z.object({
+	altitude: z.number().min(-150).max(7200),
+	typeOfExposure: z.enum(VentilationShieldClass),
+	terrainType: z.enum(TerrainClass),
+	noiseNuisance: z.boolean(),
+});
+
+export type ExternalFactorsData = z.infer<typeof _externalFactorsData>;
 
 export interface DwellingFabric {
 	dwellingSpaceZoneParameters: EcaasForm<DwellingSpaceZoneParametersData>;
@@ -89,19 +105,20 @@ export type InternalFloorData = {
 	[AdjacentSpaceType.heatedSpace]: EmptyObject;
 }>;
 
-export type ExposedFloorData = {
-	name: string;
-	pitch: number;
-	orientation: number;
-	length: number;
-	width: number;
-	elevationalHeight: number;
-	surfaceArea: number;
-	solarAbsorption: number;
-	uValue: number;
-	kappaValue: number;
-	massDistributionClass: MassDistributionClass;
-};
+const _exposedFloorData = named.extend({
+	pitch: z.number().min(0).lt(180),
+	orientation,
+	length: z.number().min(0.001).max(50),
+	width: z.number().min(0.001).max(50),
+	elevationalHeight: z.number().min(0).max(500),
+	surfaceArea: z.number().min(0.01).max(10000),
+	solarAbsorption: z.number(),
+	uValue: z.number().min(0.01).max(10),
+	kappaValue: z.number(),
+	massDistributionClass,
+});
+
+export type ExposedFloorData = z.infer<typeof _exposedFloorData>;
 
 export type GroundFloorData = {
 	name: string;
@@ -153,55 +170,59 @@ type AngleString = `${'' | '-'}${NonZeroDigit | ''}${NonZeroDigit | ''}${Digit |
 
 export type PitchOption = AngleString | 'custom';
 
-export type ExternalWallData = {
-	name: string;
-	pitchOption: StandardPitchOption;
-	pitch?: number;
-	orientation: number;
-	height: number;
-	length: number;
-	elevationalHeight: number;
-	surfaceArea: number;
-	solarAbsorption: number;
-	uValue: number;
-	kappaValue: number;
-	massDistributionClass: MassDistributionClass;
-};
+const _externalWallData = named.extend({
+	pitchOption: standardPitchOption,
+	pitch: z.optional(z.number().min(0).lt(180)),
+	orientation,
+	height: z.number().min(0.001).max(50),
+	length: z.number().min(0.001).max(50),
+	elevationalHeight: z.number().min(0).max(500),
+	surfaceArea: z.number().min(0.01).max(10000),
+	solarAbsorption: z.number(),
+	uValue: z.number().min(0.01).max(10),
+	kappaValue: z.number(),
+	massDistributionClass,
+});
 
-export type InternalWallData = {
-	name: string;
-	surfaceAreaOfElement: number;
-	kappaValue: number;
-	massDistributionClass: MassDistributionClass;
-	pitchOption: StandardPitchOption;
-	pitch?: number;
-};
+export type ExternalWallData = z.infer<typeof _externalWallData>;
 
-export type WallsToUnheatedSpaceData = {
-	name: string;
-	surfaceAreaOfElement: number;
-	uValue: number;
-	arealHeatCapacity: ArealHeatCapacityValue;
-	massDistributionClass: MassDistributionClass;
-	pitchOption: StandardPitchOption;
-	pitch?: number;
-	thermalResistanceOfAdjacentUnheatedSpace: number;
-};
+const _internalWallData = named.extend({
+	surfaceAreaOfElement: z.number().min(0).max(10000),
+	kappaValue: z.number(),
+	massDistributionClass,
+	pitchOption: standardPitchOption,
+	pitch: z.optional(z.number().min(0).lt(180)),
+});
 
-export type PartyWallData = {
-	name: string;
-	pitchOption: StandardPitchOption;
-	pitch?: number;
-	orientation: number;
-	length: number;
-	height: number;
-	elevationalHeight: number;
-	surfaceArea: number;
-	solarAbsorption: number;
-	uValue: number;
-	kappaValue: number;
-	massDistributionClass: MassDistributionClass;
-};
+export type InternalWallData = z.infer<typeof _internalWallData>;
+
+const _wallsToUnheatedSpaceData = named.extend({
+	surfaceAreaOfElement: z.number().min(0).max(10000),
+	uValue: z.number().min(0.01).max(10),
+	arealHeatCapacity: z.number(),
+	massDistributionClass,
+	pitchOption: standardPitchOption,
+	pitch: z.optional(z.number().min(0).lt(180)),
+	thermalResistanceOfAdjacentUnheatedSpace: z.number().min(0).max(3),
+});
+
+export type WallsToUnheatedSpaceData = z.infer<typeof _wallsToUnheatedSpaceData>;
+
+const _partyWallData = named.extend({
+	pitchOption: standardPitchOption,
+	pitch: z.optional(z.number().min(0).lt(180)),
+	orientation,
+	length: z.number().min(0.001).max(50),
+	height: z.number().min(0.001).max(50),
+	elevationalHeight: z.number().min(0).max(500),
+	surfaceArea: z.number().min(0.01).max(10000),
+	solarAbsorption: z.number(),
+	uValue: z.number().min(0.01).max(10),
+	kappaValue: z.number(),
+	massDistributionClass,
+});
+
+export type PartyWallData = z.infer<typeof _partyWallData>;
 
 export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
 	dwellingSpaceCeilings: EcaasForm<CeilingData[]>;
@@ -223,23 +244,26 @@ export type CeilingData = {
 	}
 }>;
 
-export type RoofType = 'flat' | 'pitchedInsulatedAtRoof' | 'pitchedInsulatedAtCeiling' | 'unheatedPitched';
+const roofType = z.enum(['flat', 'pitchedInsulatedAtRoof', 'pitchedInsulatedAtCeiling', 'unheatedPitched']);
 
-export type RoofData = {
-	name: string;
-	typeOfRoof: RoofType;
-	pitchOption?: ZeroPitchOption;
-	pitch: number;
-	orientation?: number;
-	length: number;
-	width: number;
-	elevationalHeightOfElement: number;
-	surfaceArea: number;
-	solarAbsorptionCoefficient: number;
-	uValue: number;
-	kappaValue: number;
-	massDistributionClass: MassDistributionClass;
-};
+export type RoofType = z.infer<typeof roofType>;
+
+const _roofData = named.extend({
+	typeOfRoof: roofType,
+	pitchOption: z.optional(zeroPitchOption),
+	pitch: z.number().min(0).lt(180),
+	orientation: z.optional(orientation),
+	length: z.number().min(0.001).max(50),
+	width: z.number().min(0.001).max(50),
+	elevationalHeightOfElement: z.number().min(0).max(500),
+	surfaceArea: z.number().min(0.01).max(10000),
+	solarAbsorptionCoefficient: z.number().min(0.01).max(1),
+	uValue: z.number().min(0.01).max(10),
+	kappaValue: z.number(),
+	massDistributionClass,
+});
+
+export type RoofData = z.infer<typeof _roofData>;
 
 export type DoorsData = AssertFormKeysArePageIds<{
 	dwellingSpaceExternalUnglazedDoor: EcaasForm<ExternalUnglazedDoorData[]>;
@@ -247,20 +271,21 @@ export type DoorsData = AssertFormKeysArePageIds<{
 	dwellingSpaceInternalDoor: EcaasForm<InternalDoorData[]>;
 }>;
 
-export type ExternalUnglazedDoorData = {
-	name: string;
-	pitchOption: StandardPitchOption;
-	pitch?: number;
-	orientation: number;
-	height: number;
-	width: number;
-	elevationalHeight: number;
-	surfaceArea: number;
-	solarAbsorption: number;
-	uValue: number;
-	kappaValue: number;
-	massDistributionClass: MassDistributionClass;
-};
+const _externalUnglazedDoorData = named.extend({
+	pitchOption: standardPitchOption,
+	pitch: z.optional(z.number().min(0).lt(180)),
+	orientation,
+	height: z.number().min(0.001).max(50),
+	width: z.number().min(0.001).max(50),
+	elevationalHeight: z.number().min(0).max(500),
+	surfaceArea: z.number().min(0.01).max(10000),
+	solarAbsorption: z.number().min(0.01).max(1),
+	uValue: z.number().min(0.01).max(10),
+	kappaValue: z.number(),
+	massDistributionClass,
+});
+
+export type ExternalUnglazedDoorData = z.infer<typeof _externalUnglazedDoorData>;
 
 type CommonOpenablePartsFields = {
 	maximumOpenableArea: number;
@@ -361,40 +386,47 @@ export type ThermalBridgingData = AssertFormKeysArePageIds<{
 	dwellingSpacePointThermalBridges: EcaasForm<PointThermalBridgeData[]>;
 }>;
 
-export type LinearThermalBridgeData = {
-	name: string;
-	typeOfThermalBridge: string;
-	linearThermalTransmittance: number;
-	length: number;
-};
+const _linearThermalBridgeData = named.extend({
+	typeOfThermalBridge: z.string(),
+	linearThermalTransmittance: z.number().min(0).max(2),
+	length: z.number().min(0).max(10000),
+});
 
-export type PointThermalBridgeData = {
-	name: string;
-	heatTransferCoefficient: number;
-};
+export type LinearThermalBridgeData = z.infer<typeof _linearThermalBridgeData>;
 
-export type DwellingSpaceZoneParametersData = {
-	area: number;
-	volume: number;
-	spaceHeatingSystemForThisZone?: string;
-	spaceCoolingSystemForThisZone?: SpaceCoolingSystemData[];
-	spaceHeatControlSystemForThisZone?: SpaceHeatControlSystemData[];
-};
+const _pointThermalBridgeData = named.extend({
+	heatTransferCoefficient: z.number(),
+});
 
-export type DwellingSpaceLightingData = {
-	numberOfLEDBulbs: number;
-	numberOfIncandescentBulbs: number;
-};
+export type PointThermalBridgeData = z.infer<typeof _pointThermalBridgeData>;
 
-export type SpaceHeatingSystemData = {
-	name: string
-};
-export type SpaceCoolingSystemData = {
-	name: string
-};
-export type SpaceHeatControlSystemData = {
-	name: string
-};
+const spaceCoolingSystemData = named;
+const spaceHeatControlSystemData = named;
+
+const _dwellingSpaceZoneParameterData = z.object({
+	area: z.number().min(0),
+	volume: z.number().min(0),
+	spaceHeatingSystemForThisZone: z.optional(z.string()),
+	spaceCoolingSystemForThisZone: z.optional(z.array(spaceCoolingSystemData)),
+	spaceHeatControlSystemForThisZone: z.optional(z.array(spaceHeatControlSystemData)),
+});
+
+export type DwellingSpaceZoneParametersData = z.infer<typeof _dwellingSpaceZoneParameterData>;
+
+const _dwellingSpaceLightingData = z.object({
+	numberOfLEDBulbs: z.int().min(0),
+	numberOfIncandescentBulbs: z.int().min(0),
+});
+
+export type DwellingSpaceLightingData = z.infer<typeof _dwellingSpaceLightingData>;
+
+const _spaceHeatingSystemData = named;
+
+export type SpaceHeatingSystemData = z.infer<typeof _spaceHeatingSystemData>;
+
+export type SpaceCoolingSystemData = z.infer<typeof spaceCoolingSystemData>;
+
+export type SpaceHeatControlSystemData = z.infer<typeof spaceHeatControlSystemData>;
 
 export interface DomesticHotWater {
 	waterHeating: WaterHeating;
@@ -423,44 +455,36 @@ export type HotWaterCylinderData = {
 	dailyEnergyLoss: number;
 };
 
-export type ImmersionHeaterData = {
-	name: string;
-	ratedPower: number;
-	heaterPosition: ImmersionHeaterPosition;
-	thermostatPosition: ImmersionHeaterPosition;
-};
+const immersionHeaterPosition = () => z.enum(['top', 'middle', 'bottom']);
 
-export type ImmersionHeaterPosition = 'top' | 'middle' | 'bottom';
+export type ImmersionHeaterPosition = z.infer<ReturnType<typeof immersionHeaterPosition>>;
 
-export type SolarThermalData = {
-	name: string;
-};
+const _immersionHeaterData = named.extend({
+	ratedPower: z.number(),
+	heaterPosition: immersionHeaterPosition(),
+	thermostatPosition: immersionHeaterPosition(),
+});
 
-export type PointOfUseData = {
-	name: string;
-	setpointTemperature: number;
-	heaterEfficiency: number;
-};
+export type ImmersionHeaterData = z.infer<typeof _immersionHeaterData>;
 
-export type HotWaterHeatPumpData = {
-	name: string;
-};
+export type SolarThermalData = z.infer<typeof named>;
 
-export type CombiBoilerData = {
-	name: string;
-};
+const _pointOfUseData = named.extend({
+	setpointTemperature: z.number(),
+	heaterEfficiency: fraction,
+});
 
-export type WaterHeatingHeatBatteryData = {
-	name: string;
-};
+export type PointOfUseData = z.infer<typeof _pointOfUseData>;
 
-export type SmartHotWaterTankData = {
-	name: string;
-};
+export type HotWaterHeatPumpData = z.infer<typeof named>;
 
-export type WaterHeatingHeatInterfaceUnitData = {
-	name: string;
-};
+export type CombiBoilerData = z.infer<typeof named>;
+
+export type WaterHeatingHeatBatteryData = z.infer<typeof named>;
+
+export type SmartHotWaterTankData = z.infer<typeof named>;
+
+export type WaterHeatingHeatInterfaceUnitData = z.infer<typeof named>;
 
 export type HotWaterOutlets = AssertFormKeysArePageIds<{
 	mixedShower: EcaasForm<MixedShowerData[]>;
@@ -469,64 +493,70 @@ export type HotWaterOutlets = AssertFormKeysArePageIds<{
 	otherOutlets: EcaasForm<OtherHotWaterOutletData[]>;
 }>;
 
-export type MixedShowerData = {
-	readonly id: string;
-	name: string;
-	flowRate: number;
-};
+const _mixedShowerData = namedWithId.extend({
+	flowRate: z.number().min(8).max(15),
+});
 
-export type ElectricShowerData = {
-	readonly id: string;
-	name: string;
-	ratedPower: number;
-};
+export type MixedShowerData = z.infer<typeof _mixedShowerData>;
 
-export type BathData = {
-	readonly id: string;
-	name: string;
-	size: number;
-	flowRate: number;
-};
+const _electricShowerData = namedWithId.extend({
+	ratedPower: z.number().min(0).max(30),
+});
 
-export type OtherHotWaterOutletData = {
-	readonly id: string;
-	name: string;
-	flowRate: number;
-};
+export type ElectricShowerData = z.infer<typeof _electricShowerData>;
+
+const _bathData = namedWithId.extend({
+	size: z.number().min(0).max(500),
+	flowRate: z.number().min(0).max(15),
+});
+
+export type BathData = z.infer<typeof _bathData>;
+
+const _otherHotWaterOutletData = namedWithId.extend({
+	flowRate: z.number().min(0).max(15),
+});
+
+export type OtherHotWaterOutletData = z.infer<typeof _otherHotWaterOutletData>;
 
 export type Pipework = AssertFormKeysArePageIds<{
 	primaryPipework: EcaasForm<PrimaryPipeworkData[]>;
 	secondaryPipework: EcaasForm<SecondaryPipeworkData[]>;
 }>;
 
-export type PrimaryPipeworkData = {
-	name: string;
-	internalDiameter: number;
-	externalDiameter: number;
-	length: number;
-	insulationThickness: number;
-	thermalConductivity: number;
-	surfaceReflectivity: boolean;
-	pipeContents: WaterPipeContentsType;
-	hotWaterCylinder: string;
-	location: WaterPipeworkLocation;
-};
+const _primaryPipeworkData = z.object({
+	name: z.string().trim().min(1),
+	internalDiameter: z.number(),
+	externalDiameter: z.number(),
+	length: z.number().min(0).max(200),
+	insulationThickness: z.number(),
+	thermalConductivity: z.number(),
+	surfaceReflectivity: z.boolean(),
+	pipeContents: z.enum(WaterPipeContentsType),
+	hotWaterCylinder: z.string(),
+	location: z.enum(WaterPipeworkLocation),
+});
 
-export type SecondaryPipeworkData = {
-	name: string;
-	length: number;
-	location: WaterPipeworkLocation;
-	internalDiameter: number;
-};
+export type PrimaryPipeworkData = z.infer<typeof _primaryPipeworkData>;
 
-export type WwhrsData = {
-	name: string;
-	outlet: string;
-	type: WwhrsType;
-	flowRate: number;
-	efficiency: number;
-	proportionOfUse: number;
-};
+const _secondaryPipeworkData = z.object({
+	name: z.string().trim().min(1),
+	length: z.number().min(0).max(200),
+	location: z.enum(WaterPipeworkLocation),
+	internalDiameter: z.number().min(1).max(50),
+});
+
+export type SecondaryPipeworkData = z.infer<typeof _secondaryPipeworkData>;
+
+const _wwhrsData = z.object({
+	name: z.string().trim().min(1),
+	outlet: z.string(),
+	type: z.enum(WwhrsType),
+	flowRate: z.number().min(0.1).max(500),
+	efficiency: percentage,
+	proportionOfUse: fraction,
+});
+
+export type WwhrsData = z.infer<typeof _wwhrsData>;
 
 export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	mechanicalVentilation: EcaasForm<MechanicalVentilationData[]>;
@@ -572,37 +602,44 @@ export type DuctworkData = {
 	};
 }>;
 
-export type VentData = {
-	name: string;
-	typeOfVent: string;
-	effectiveVentilationArea: number;
-	openingRatio: number;
-	midHeightOfZone: number;
-	orientation: number;
-	pitch: number;
-};
+const _ventData = z.object({
+	name: z.string().trim().min(1),
+	typeOfVent: z.enum(['trickle', 'airBrick']),
+	effectiveVentilationArea: z.number().min(1).max(999999),
+	openingRatio: z.number(),
+	midHeightOfZone: z.number().min(1).max(60),
+	orientation,
+	pitch: z.number().min(0).lt(180),
+});
+
+export type VentData = z.infer<typeof _ventData>;
 
 export type CombustionAppliancesData = Record<CombustionApplianceType, EcaasForm<CombustionApplianceData[]>>;
 
-export type CombustionApplianceData = {
-	name: string;
-	airSupplyToAppliance: CombustionAirSupplySituation;
-	exhaustMethodFromAppliance: FlueGasExhaustSituation;
-	typeOfFuel: CombustionFuelType;
-};
+const _combustionApplianceData = named.extend({
+	airSupplyToAppliance: z.enum(CombustionAirSupplySituation),
+	exhaustMethodFromAppliance: z.enum(FlueGasExhaustSituation),
+	typeOfFuel: z.enum(CombustionFuelType),
+});
 
-export interface VentilationData {
-	ventilationZoneHeight: number;
-	dwellingEnvelopeArea: number;
-	dwellingElevationalLevelAtBase: number;
-	crossVentilationPossible: boolean;
-	maxRequiredAirChangeRate: number;
-}
+export type CombustionApplianceData = z.infer<typeof _combustionApplianceData>;
 
-export interface AirPermeabilityData {
-	testPressure: number;
-	airTightnessTestResult: number;
-}
+const _ventilationData = z.object({
+	ventilationZoneHeight: z.number().min(1).max(20),
+	dwellingEnvelopeArea: z.number().min(5).max(72000),
+	dwellingElevationalLevelAtBase: z.number().min(-150).max(750),
+	crossVentilationPossible: z.boolean(),
+	maxRequiredAirChangeRate: z.number(),
+});
+
+export type VentilationData = z.infer<typeof _ventilationData>;
+
+const _airPermeability = z.object({
+	testPressure: z.number().min(0).max(500),
+	airTightnessTestResult: z.number(),
+});
+
+export type AirPermeabilityData = z.infer<typeof _airPermeability>;
 
 export type HeatingSystems = AssertEachKeyIsPageId<{
 	heatGeneration: HeatGeneration,
@@ -624,33 +661,23 @@ export type HeatPumpData = {
 	productReference: ProductReference;
 };
 
-export type BoilerData = {
-	readonly id: string;
-	name: string;
-};
+export type BoilerData = z.infer<typeof namedWithId>;
 
-export type HeatBatteryData = {
-	readonly id: string;
-	name: string;
-};
+export type HeatBatteryData = z.infer<typeof namedWithId>;
 
-export type HeatNetworkData = {
-	readonly id: string;
-	name: string;
-};
+export type HeatNetworkData = z.infer<typeof namedWithId>;
 
-export type HeatInterfaceUnitData = {
-	readonly id: string;
-	name: string;
-};
+export type HeatInterfaceUnitData = z.infer<typeof namedWithId>;
 
-export interface EnergySupplyData {
-	fuelType: FuelType[];
-	co2PerKwh?: number;
-	co2PerKwhIncludingOutOfScope?: number;
-	kwhPerKwhDelivered?: number;
-	exported?: boolean;
-}
+const _energySupplyData = z.object({
+	fuelType: z.array(z.enum(FuelType)),
+	co2PerKwh: z.optional(z.number()),
+	co2PerKwhIncludingOutOfScope: z.optional(z.number()),
+	kwhPerKwhDelivered: z.optional(z.number()),
+	exported: z.optional(z.boolean()),
+});
+
+export type EnergySupplyData = z.infer<typeof _energySupplyData>;
 
 export type HeatEmitting = AssertFormKeysArePageIds<{
 	wetDistribution: EcaasForm<WetDistributionData[]>;
@@ -659,19 +686,16 @@ export type HeatEmitting = AssertFormKeysArePageIds<{
 	warmAirHeatPump: EcaasForm<WarmAirHeatPumpData[]>;
 }>;
 
-export type ElectricStorageHeaterData = {
-	name: string,
-};
+export type ElectricStorageHeaterData = z.infer<typeof named>;
 
-export type InstantElectricStorageData = {
-	name: string,
-	ratedPower: number,
-	convectionFractionInstant: number
-};
+const _instantElectricStorageData = named.extend({
+	ratedPower: z.number().min(0).max(70),
+	convectionFractionInstant: z.number().min(0.01).max(1),
+});
 
-export type WarmAirHeatPumpData = {
-	name: string,
-};
+export type InstantElectricStorageData = z.infer<typeof _instantElectricStorageData>;
+
+export type WarmAirHeatPumpData = z.infer<typeof named>;
 
 export type WetDistributionData = {
 	name: string
@@ -703,38 +727,42 @@ export type PvAndBatteries = AssertFormKeysArePageIds<{
 	electricBattery: EcaasForm<ElectricBatteryData[]>;
 }>;
 
-export type PvSystemData = {
-	name: string;
-	peakPower: number;
-	ventilationStrategy: OnSiteGenerationVentilationStrategy;
-	pitch: number;
-	orientation: number;
-	elevationalHeight: number;
-	lengthOfPV: number;
-	widthOfPV: number;
-	inverterPeakPowerAC: number;
-	inverterPeakPowerDC: number;
-	inverterIsInside: boolean;
-	inverterType: InverterType;
-	aboveDepth?: number;
-	aboveDistance?: number;
-	leftDepth?: number;
-	leftDistance?: number;
-	rightDepth?: number;
-	rightDistance?: number;
-};
+const _pvSystemData = z.object({
+	name: z.string().trim().min(1),
+	peakPower: z.number().min(0.001).max(100),
+	ventilationStrategy: z.enum(OnSiteGenerationVentilationStrategy),
+	pitch: z.number().min(0).max(90),
+	orientation,
+	elevationalHeight: z.number().min(0).max(500),
+	lengthOfPV: z.number().min(0).max(100),
+	widthOfPV: z.number().min(0).max(100),
+	inverterPeakPowerAC: z.number(),
+	inverterPeakPowerDC: z.number(),
+	inverterIsInside: z.boolean(),
+	inverterType: z.enum(InverterType),
+	aboveDepth: z.optional(z.number()),
+	aboveDistance: z.optional(z.number()),
+	leftDepth: z.optional(z.number()),
+	leftDistance: z.optional(z.number()),
+	rightDepth: z.optional(z.number()),
+	rightDistance: z.optional(z.number()),
+});
 
-export type ElectricBatteryData = {
-	name: string;
-	capacity: number;
-	batteryAge: number;
-	chargeEfficiency: number;
-	location: BatteryLocation;
-	gridChargingPossible: boolean;
-	maximumChargeRate: number;
-	minimumChargeRate: number;
-	maximumDischargeRate: number;
-};
+export type PvSystemData = z.infer<typeof _pvSystemData>;
+
+const _electricBatteryData = z.object({
+	name: z.string().trim().min(1),
+	capacity: z.number().min(0).max(50),
+	batteryAge: z.number().min(0).max(100),
+	chargeEfficiency: fraction,
+	location: z.enum(BatteryLocation),
+	gridChargingPossible: z.boolean(),
+	maximumChargeRate: z.number(),
+	minimumChargeRate: z.number(),
+	maximumDischargeRate: z.number(),
+}).refine((val) => val.maximumChargeRate >= val.minimumChargeRate, { error: "Maximum charge rate should be greater or equal to minimum charge rate.", abort: true });
+
+export type ElectricBatteryData = z.infer<typeof _electricBatteryData>;
 
 export type PvDiverterData = {
 	name: string;
@@ -744,12 +772,14 @@ export interface Cooling {
 	airConditioning: EcaasForm<AirConditioningData[]>;
 }
 
-export type AirConditioningData = {
-	name: string;
-	coolingCapacity: number;
-	seasonalEnergyEfficiencyRatio: number;
-	convectionFraction: number;
-};
+const _airConditioningData = z.object({
+	name: z.string().trim().min(1),
+	coolingCapacity: z.number(),
+	seasonalEnergyEfficiencyRatio: z.number().min(0).max(25),
+	convectionFraction: fraction,
+});
+
+export type AirConditioningData = z.infer<typeof _airConditioningData>;
 
 export type UsesPitchComponent = {
 	pitch?: number;
