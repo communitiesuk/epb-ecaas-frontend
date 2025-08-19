@@ -26,22 +26,42 @@ const saveForm = (fields: InstantElectricStorageData) => {
 
 watch(model, async (newData: InstantElectricStorageData, initialData: InstantElectricStorageData) => {
 	const route = useRoute();
-	const index = Number(route.params.heater);
 	const store = useEcaasStore();
-	if(initialData == undefined) return;
-	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
+	const storeData = store.heatingSystems.heatEmitting.instantElectricHeater.data;
 
-		if (initialData[key] !== newData[key]) {
-				
-			store.$patch((state) => {
-				const target = state.heatingSystems.heatEmitting.instantElectricHeater.data[index]; 
-				if (target){
-					target[key] = newData[key];
-				}
+	const index = Number(route.params.heater) || storeData.length - 1;
+
+	if (initialData === undefined) {
+		return;
+	}
+
+	const defaultName = 'Instant electric heater';
+	const duplicates = storeData.filter(x => x.name.match(duplicateNamePattern(defaultName)));
+
+	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
+		Object.values(newData).some(x => x !== undefined);
+
+	if (route.params.heater === 'create' && isFirstEdit) {
+
+		store.$patch(state => {
+			state.heatingSystems.heatEmitting.instantElectricHeater.data.push({
+				...newData,
+				name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
 			});
-			store.heatingSystems.heatEmitting.instantElectricHeater.complete = false;
-		}}}
-);
+		});
+
+		return;
+	}
+
+	store.$patch((state) => {
+
+		state.heatingSystems.heatEmitting.instantElectricHeater.data[index] = {
+			...newData,
+			name: newData.name ?? state.heatingSystems.heatEmitting.instantElectricHeater.data[index]?.name
+		};
+		state.heatingSystems.heatEmitting.instantElectricHeater.complete = false;
+	});
+});
 
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
