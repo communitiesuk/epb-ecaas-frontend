@@ -92,7 +92,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				v-if="model.fuelType?.includes(FuelType.electricity)"
 				id="exported"
 				type="govBoolean"
-				label="Can electricity be exported back to the grid?"
+				label="Can electricity be exported back to the grid?."
 				name="exported"
 				validation="required"
 			/>
