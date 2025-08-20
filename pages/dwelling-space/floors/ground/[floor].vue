@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Length, centimetre } from '~/utils/units/length';
+import { centimetre, type Length } from '~/utils/units/length';
 import { FloorType, WindShieldLocation } from '~/schema/api-schema.types';
+import { unitValue } from '~/utils/units/types';
 
 const title = "Ground floor";
 const store = useEcaasStore();
@@ -10,7 +11,7 @@ const floorData = useItemToEdit('floor', store.dwellingFabric.dwellingSpaceFloor
 
 // prepopulate edge insulation width when using old input format
 if (floorData?.typeOfGroundFloor === FloorType.Slab_edge_insulation && typeof floorData.edgeInsulationWidth === 'number') {
-	floorData.edgeInsulationWidth = new Length(floorData.edgeInsulationWidth, centimetre);
+	floorData.edgeInsulationWidth = unitValue(floorData.edgeInsulationWidth, centimetre);
 };
 
 const model: Ref<GroundFloorData> = ref(floorData!);

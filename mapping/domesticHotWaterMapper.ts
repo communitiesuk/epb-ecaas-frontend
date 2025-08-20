@@ -2,7 +2,7 @@ import { ColdWaterSourceType } from "~/schema/api-schema.types";
 import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaStorageTank, SchemaWaterPipework, SchemaWaterPipeworkSimple } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
-import { Volume, VolumeUnit } from "../utils/units/volume";
+import { asLitres } from "../utils/units/volume";
 
 export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputSchema> {
 	const showers = mapShowersData(state);
@@ -112,9 +112,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 		if (typeof x.storageCylinderVolume === 'number') {
 			storageCylinderVolumeInLitres = x.storageCylinderVolume;
 		} else  {
-			const volumeUnit = new VolumeUnit(x.storageCylinderVolume.unit);
-			const storageCylinderVolume = new Volume(x.storageCylinderVolume.amount, volumeUnit);
-			storageCylinderVolumeInLitres = storageCylinderVolume.asLitres();
+			storageCylinderVolumeInLitres = asLitres(x.storageCylinderVolume);
 		} 
 
 		const val: SchemaStorageTank = {

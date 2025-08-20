@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { standardPitchOptions } from '#imports';
-import { millimetre, Length } from '~/utils/units/length';
+import { millimetre } from '~/utils/units/length';
 import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
+import { unitValue } from '~/utils/units/types';
 
 const title = "Window";
 const store = useEcaasStore();
@@ -11,27 +12,27 @@ const window = useItemToEdit('window', store.dwellingFabric.dwellingSpaceWindows
 
 // prepopulate shading data when using old input format
 if (window && 'overhangDepth' in window && typeof window.overhangDepth === 'number') {
-	window.overhangDepth = new Length(window.overhangDepth, millimetre);
+	window.overhangDepth = unitValue(window.overhangDepth, millimetre);
 };
 
 if (window && 'overhangDistance' in window) {
-	window.overhangDistance = typeof window.overhangDistance === 'number' ? new Length(window.overhangDistance, millimetre) : window.overhangDistance;
+	window.overhangDistance = typeof window.overhangDistance === 'number' ? unitValue(window.overhangDistance, millimetre) : window.overhangDistance;
 };
 
 if (window && 'sideFinRightDepth' in window) {
-	window.sideFinRightDepth = typeof window.sideFinRightDepth === 'number' ? new Length(window.sideFinRightDepth, millimetre) : window.sideFinRightDepth;
+	window.sideFinRightDepth = typeof window.sideFinRightDepth === 'number' ? unitValue(window.sideFinRightDepth, millimetre) : window.sideFinRightDepth;
 };
 
 if (window && 'sideFinRightDistance' in window) {
-	window.sideFinRightDistance = typeof window.sideFinRightDistance === 'number' ? new Length(window.sideFinRightDistance, millimetre) : window.sideFinRightDistance;
+	window.sideFinRightDistance = typeof window.sideFinRightDistance === 'number' ? unitValue(window.sideFinRightDistance, millimetre) : window.sideFinRightDistance;
 };
 
 if (window && 'sideFinLeftDepth' in window) {
-	window.sideFinLeftDepth = typeof window.sideFinLeftDepth === 'number' ? new Length(window.sideFinLeftDepth, millimetre) : window.sideFinLeftDepth;
+	window.sideFinLeftDepth = typeof window.sideFinLeftDepth === 'number' ? unitValue(window.sideFinLeftDepth, millimetre) : window.sideFinLeftDepth;
 };
 
 if (window && 'sideFinLeftDistance' in window) {
-	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === 'number' ? new Length(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
+	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === 'number' ? unitValue(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
 };
 
 const model: Ref<WindowData> = ref(window!);

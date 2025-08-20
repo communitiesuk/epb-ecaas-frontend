@@ -3,7 +3,8 @@ import type {SchemaBuildingElement, SchemaThermalBridgingDetails, SchemaWindowPa
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
 import { defaultZoneName } from "./common";
-import  { Length, LengthUnit } from "../utils/units/length";
+import type { Length } from "../utils/units/length";
+import  { asMetres } from "../utils/units/length";
 
 function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
 	// note - use parseFloat and toFixed to avoid JS precision issues
@@ -95,9 +96,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 		if (typeof data.edgeInsulationWidth === 'number') {
 			edgeInsulationWidthInMetres = data.edgeInsulationWidth;
 		} else {
-			const lengthUnit = new LengthUnit(data.edgeInsulationWidth.unit);
-			const edgeInsulationWidth = new Length(data.edgeInsulationWidth.amount, lengthUnit);
-			edgeInsulationWidthInMetres = edgeInsulationWidth.asMetres();
+			edgeInsulationWidthInMetres = asMetres(data.edgeInsulationWidth);
 		}
 		
 		if (data.edgeInsulationType === 'horizontal') {
@@ -528,8 +527,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 			if (typeof length === 'number') {
 				return length;
 			} else {
-				const lengthUnit = new LengthUnit(length.unit);
-				return new Length(length.amount, lengthUnit).asMetres();
+				return asMetres(length);
 			}
 		}
 

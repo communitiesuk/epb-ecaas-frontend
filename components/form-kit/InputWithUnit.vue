@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import type { FormKitFrameworkContext } from '@formkit/core';
 import { showErrorState, getErrorMessage } from '#imports';
-import { Length, LengthUnit } from '~/utils/units/length';
-import { Volume, VolumeUnit } from '~/utils/units/volume';
-import { FlowRate, FlowRateUnit } from '~/utils/units/flowRate';
+import type { Unit } from '~/utils/units/types';
 
 const props = defineProps<{
-	context: FormKitFrameworkContext
+	context: FormKitFrameworkContext & { attrs: { unit: Unit } }
 }>();
 
 const {
@@ -33,17 +31,10 @@ function handleInput(e: Event) {
 	const value = target.value ? parseFloat(target.value) : '';
 
 	if (typeof value === 'number') {
-		if (unit instanceof LengthUnit) {
-			props.context.node.input(new Length(value, unit));
-		}
-
-		if (unit instanceof VolumeUnit) {
-			props.context.node.input(new Volume(value, unit));
-		}
-
-		if (unit instanceof FlowRateUnit) {
-			props.context.node.input(new FlowRate(value, unit));
-		}
+		props.context.node.input({
+			amount: value,
+			unit: unit.name,
+		});
 	} else {
 		props.context.node.input('');
 	}

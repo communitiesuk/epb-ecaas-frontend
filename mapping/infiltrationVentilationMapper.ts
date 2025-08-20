@@ -4,7 +4,7 @@ import type {CombustionApplianceType, SchemaCombustionAppliance, SchemaInfiltrat
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import { defaultElectricityEnergySupplyName } from './common';
-import { FlowRate, FlowRateUnit } from '~/utils/units/flowRate';
+import { asCubicMetresPerHour } from '~/utils/units/flowRate';
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilationPossible } = mapVentilationData(state);
@@ -47,9 +47,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		if (typeof x.airFlowRate === 'number') {
 			airFlowRateInCubicMetresPerHour = x.airFlowRate;
 		} else {
-			const unit = new FlowRateUnit(x.airFlowRate.unit);
-			const airFlowRate = new FlowRate(x.airFlowRate.amount, unit);
-			airFlowRateInCubicMetresPerHour = airFlowRate.asCubicMetresPerHour();
+			airFlowRateInCubicMetresPerHour = asCubicMetresPerHour(x.airFlowRate);
 		}
 		
 		const key = x.name;

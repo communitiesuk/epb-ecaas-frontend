@@ -3,7 +3,8 @@ import userEvent from "@testing-library/user-event";
 import {screen } from '@testing-library/vue';
 import WaterHeating from './index.vue';
 import type { HotWaterCylinderData } from "~/stores/ecaasStore.types";
-import { litre, Volume } from "~/utils/units/volume";
+import { litre } from "~/utils/units/volume";
+import { unitValue } from "~/utils/units/types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -18,7 +19,7 @@ describe('water heating (hot water cylinder)', () => {
 	const cylinder: HotWaterCylinderData = {
 		id: "Any Id",
 		heatSource: "test-heat-pump",
-		storageCylinderVolume: new Volume(150, litre),
+		storageCylinderVolume: unitValue(150, litre),
 		dailyEnergyLoss: 73,
 		name: "Hot water cylinder 1"
 	};

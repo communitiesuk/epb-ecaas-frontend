@@ -2,12 +2,13 @@ import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
 import { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
-import { litre, Volume } from '~/utils/units/volume';
+import { litre } from '~/utils/units/volume';
 import { metre, millimetre } from '~/utils/units/length';
 import { wattsPerMeterKelvin } from '~/utils/units/thermalConductivity';
 import { litrePerHour, litrePerMinute } from '~/utils/units/flowRate';
 import { kilowatt, kilowattHour } from '~/utils/units/power';
 import { celsius } from '~/utils/units/temperature';
+import { unitValue } from '~/utils/units/types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -343,7 +344,7 @@ describe('Domestic hot water summary', () => {
 							data: [{
 								id: hotWaterCylinderId,
 								name: 'Hot water cylinder 1',
-								storageCylinderVolume: new Volume(100, litre)
+								storageCylinderVolume: unitValue(100, litre)
 							}]
 						}
 					}

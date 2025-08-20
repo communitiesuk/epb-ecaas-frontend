@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
-import { litre, Volume } from '~/utils/units/volume';
+import { litre, type Volume } from '~/utils/units/volume';
 import type { HotWaterCylinderData } from '~/stores/ecaasStore.types';
+import { unitValue } from '~/utils/units/types';
 
 const title = "Water heating";
 const store = useEcaasStore();
@@ -9,7 +10,7 @@ const store = useEcaasStore();
 const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0];
 
 if (typeof hotWaterCylinderData?.storageCylinderVolume === 'number') {
-	hotWaterCylinderData.storageCylinderVolume = new Volume(hotWaterCylinderData.storageCylinderVolume, litre);
+	hotWaterCylinderData.storageCylinderVolume = unitValue(hotWaterCylinderData.storageCylinderVolume, litre);
 }
 
 const waterHeaterTypeOptions = {

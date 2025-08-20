@@ -1,6 +1,7 @@
 import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType } from '~/schema/api-schema.types';
 import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from './infiltrationVentilationMapper';
-import { FlowRate, litrePerSecond } from '~/utils/units/flowRate';
+import { litrePerSecond } from '~/utils/units/flowRate';
+import { unitValue } from '~/utils/units/types';
 
 const baseForm = {
 	data: [],
@@ -12,7 +13,7 @@ describe('infiltration ventilation mapper', () => {
 		id: "bathroom exhaust fan",
 		name: "bathroom exhaust fan",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		airFlowRate: new FlowRate(30, litrePerSecond),
+		airFlowRate: unitValue(30, litrePerSecond),
 		mvhrLocation: MVHRLocation.inside,
 		mvhrEfficiency: 1,
 	}];
@@ -174,7 +175,7 @@ describe('infiltration ventilation mapper', () => {
 			id: "bathroom exhaust fan",
 			name: "bathroom exhaust fan",
 			typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
-			airFlowRate: new FlowRate(40, litrePerSecond),
+			airFlowRate: unitValue(40, litrePerSecond),
 		}];
 
 		store.$patch({
