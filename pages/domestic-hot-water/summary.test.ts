@@ -7,7 +7,7 @@ import { metre, millimetre } from '~/utils/units/length';
 import { wattsPerMeterKelvin } from '~/utils/units/thermalConductivity';
 import { litrePerHour, litrePerMinute } from '~/utils/units/flowRate';
 import { kilowatt, kilowattHour } from '~/utils/units/power';
-import { celcius } from '~/utils/units/temperature';
+import { celsius } from '~/utils/units/temperature';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -151,7 +151,7 @@ describe('Domestic hot water summary', () => {
 	
 			const expectedResult = {
 				"Name": "Point of use",
-				"Setpoint temperature": `25 ${celcius.suffix}`,
+				"Setpoint temperature": `25 ${celsius.suffix}`,
 				"Heater efficiency": "0.5"
 			};
 	

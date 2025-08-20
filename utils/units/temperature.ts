@@ -1,9 +1,9 @@
 export enum TemperatureUnitName {
-	CELCIUS = 'celcius',
+	CELSIUS = 'celsius',
 }
 
 enum TemperatureSuffix {
-	CELCIUS = '°C'
+	CELSIUS = '°C'
 }
 
 export class TemperatureUnit {
@@ -17,9 +17,9 @@ export class TemperatureUnit {
 
 	private getSuffix() {
 		switch (this.name) {
-			case TemperatureUnitName.CELCIUS: return TemperatureSuffix.CELCIUS;
+			case TemperatureUnitName.CELSIUS: return TemperatureSuffix.CELSIUS;
 		}
 	}
 }
 
-export const celcius = new TemperatureUnit(TemperatureUnitName.CELCIUS);
+export const celsius = new TemperatureUnit(TemperatureUnitName.CELSIUS);
