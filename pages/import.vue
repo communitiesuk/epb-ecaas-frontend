@@ -2,6 +2,7 @@
 import dayjs from 'dayjs';
 import type {Dayjs} from 'dayjs';
 import { getInitialState } from '~/stores/ecaasStore';
+import { clearLastExportDate } from "~/utils/exportDate";
 
 const title = 'Import data';
 
@@ -53,6 +54,8 @@ const doImport = (_event: Event) => {
 			name: file.value!.name,
 			datetime: dayjs()
 		};
+
+		clearLastExportDate();
 	};
 	reader.onerror = () => {
 		errorMessage.value = 'Unable to read file';

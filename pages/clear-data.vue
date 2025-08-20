@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import { clearLastExportDate } from "~/utils/exportDate";
+
 definePageMeta({ layout: false });
 
 const title = 'Clear data';
@@ -8,6 +10,7 @@ const store = useEcaasStore();
 
 const handleClearData = async () => {
 	store.clearState();
+	clearLastExportDate();
 	await navigateTo("/");
 };
 
