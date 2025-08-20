@@ -38,12 +38,12 @@ export class Volume {
 		this.unit = unit.name;
 	}
 
-	asLitres(): Volume {
+	asLitres(): number {
 		if (this.unit === VolumeUnitName.CUBIC_METRES) {
 			const convertedAmount = this.amount * 1000;
-			return new Volume(convertedAmount, litre);
+			return convertedAmount;
 		}
 
-		return this;
+		return this.amount;
 	}
 }

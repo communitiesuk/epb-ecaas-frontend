@@ -49,7 +49,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		} else {
 			const unit = new FlowRateUnit(x.airFlowRate.unit);
 			const airFlowRate = new FlowRate(x.airFlowRate.amount, unit);
-			airFlowRateInCubicMetresPerHour = airFlowRate.asCubicMetresPerHour().amount;
+			airFlowRateInCubicMetresPerHour = airFlowRate.asCubicMetresPerHour();
 		}
 		
 		const key = x.name;

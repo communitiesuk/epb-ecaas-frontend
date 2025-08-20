@@ -49,12 +49,12 @@ export class FlowRate {
 		this.unit = unit.name;
 	}
 
-	asCubicMetresPerHour(): FlowRate {
+	asCubicMetresPerHour(): number {
 		if (this.unit === FlowRateUnitName.LITRES_PER_SECOND) {
 			const convertedAmount = this.amount * 3.6;
-			return new FlowRate(convertedAmount, cubicMetrePerHour);
+			return convertedAmount;
 		}
 
-		return this;
+		return this.amount;
 	}
 }

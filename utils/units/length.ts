@@ -41,17 +41,17 @@ export class Length {
 		this.unit = unit.name;
 	}
 
-	asMetres(): Length {
+	asMetres(): number {
 		if (this.unit === LengthUnitName.CENTIMETRES) {
 			const convertedAmount = this.amount * 0.01;
-			return new Length(convertedAmount, metre);
+			return convertedAmount;
 		}
 
 		if (this.unit === LengthUnitName.MILLIMETRES) {
 			const convertedAmount = this.amount * 0.001;
-			return new Length(convertedAmount, millimetre);
+			return convertedAmount;
 		}
 
-		return this;
+		return this.amount;
 	}
 }

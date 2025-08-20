@@ -97,7 +97,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 		} else {
 			const lengthUnit = new LengthUnit(data.edgeInsulationWidth.unit);
 			const edgeInsulationWidth = new Length(data.edgeInsulationWidth.amount, lengthUnit);
-			edgeInsulationWidthInMetres = edgeInsulationWidth.asMetres().amount;
+			edgeInsulationWidthInMetres = edgeInsulationWidth.asMetres();
 		}
 		
 		if (data.edgeInsulationType === 'horizontal') {
@@ -529,8 +529,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 				return length;
 			} else {
 				const lengthUnit = new LengthUnit(length.unit);
-				const lengthAsMetres = new Length(length.amount, lengthUnit).asMetres();
-				return lengthAsMetres.amount; 
+				return new Length(length.amount, lengthUnit).asMetres();
 			}
 		}
 

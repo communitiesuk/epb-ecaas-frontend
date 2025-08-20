@@ -114,7 +114,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 		} else  {
 			const volumeUnit = new VolumeUnit(x.storageCylinderVolume.unit);
 			const storageCylinderVolume = new Volume(x.storageCylinderVolume.amount, volumeUnit);
-			storageCylinderVolumeInLitres = storageCylinderVolume.asLitres().amount;
+			storageCylinderVolumeInLitres = storageCylinderVolume.asLitres();
 		} 
 
 		const val: SchemaStorageTank = {
