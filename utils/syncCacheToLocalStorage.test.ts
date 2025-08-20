@@ -53,6 +53,8 @@ describe("syncCacheToLocalStorage", () => {
 		expect(setItemSpy).not.toHaveBeenCalled();
 	});
 
+	//try assigning the console to a variable
+
 	// it("should log an error if fetch fails", async () => {
 	// 	const consoleSpy = vi.spyOn(console, "error");
 	// 	global.$fetch = vi.fn(() => {
