@@ -2,11 +2,6 @@
 import type { SummarySection } from '~/common.types';
 import { getUrl, getTabItems, type ArealHeatCapacityValue } from '#imports';
 import { FloorType } from '~/schema/api-schema.types';
-
-function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
-	// note - use parseFloat and toFixed to avoid JS precision issues
-	return parseFloat((1 - openingToFrameRatio).toFixed(10));
-}
 import { metresSquare, millimetresSquarePerMetre } from '~/utils/units/area';
 import { degrees } from '~/utils/units/angle';
 import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from '~/utils/units/thermalConductivity';
@@ -15,6 +10,11 @@ import { cubicMetre } from '~/utils/units/volume';
 
 const title = "Dwelling fabric summary";
 const store = useEcaasStore();
+
+function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
+	// note - use parseFloat and toFixed to avoid JS precision issues
+	return parseFloat((1 - openingToFrameRatio).toFixed(10));
+}
 
 const zoneParametersData = store.dwellingFabric.dwellingSpaceZoneParameters.data;
 
