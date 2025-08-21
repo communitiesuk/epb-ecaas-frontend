@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { isInteger } from "~/utils/validation";
+
 const title = "General details";
 const store = useEcaasStore();
 
@@ -48,7 +50,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of LED bulbs"
 			name="numberOfLEDBulbs"
 			help="Enter the number of LED bulbs in the whole dwelling"
-			validation="required"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger"
+			:validation-messages="{
+				isInteger: `Number of LED bulbs must be an integer.`,
+			}"
 		/>
 		<FormKit
 			id="numberOfIncandescentBulbs"
@@ -56,7 +62,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Number of incandescent bulbs"
 			name="numberOfIncandescentBulbs"
 			help="Enter the number of incandescent bulbs in the whole dwelling"
-			validation="required"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger"
+			:validation-messages="{
+				isInteger: `Number of incandescent bulbs must be an integer.`,
+			}"
 		/>
 		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue"  />

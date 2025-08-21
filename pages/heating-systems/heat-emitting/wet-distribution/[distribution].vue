@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FormKitOptionsProp } from "@formkit/inputs";
+import { isInteger } from "~/utils/validation";
 const title = "Wet distribution";
 const store = useEcaasStore();
 const { saveToList } = useForm();
@@ -198,7 +199,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				type="govInputInt"
 				label="Number of radiators"
 				help="Enter the number of radiators in this wet distribution system"
-				validation="required | integer | min: 1"
+				:validation-rules="{ isInteger }"
+				validation="required | isInteger | min: 1"
+				:validation-messages="{
+					isInteger: `Number of radiators must be an integer.`,
+				}"
 			/>
 
 			<FormKit

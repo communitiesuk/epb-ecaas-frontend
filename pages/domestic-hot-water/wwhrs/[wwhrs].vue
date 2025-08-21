@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getUrl } from '#imports';
 import { WwhrsType } from '~/schema/api-schema.types';
+import { isInteger } from "~/utils/validation";
 
 const title = "Waste water heat recovery system";
 const store = useEcaasStore();
@@ -119,7 +120,11 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Efficiency"
 			help="The efficiency of the WWHRS. Percentage  (0 to 100)"
 			name="efficiency"
-			validation="required | number | between:0,100"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger | between:0,100"
+			:validation-messages="{
+				isInteger: `Efficiency must be an integer.`,
+			}"
 		/>
 		<FormKit
 			id="proportionOfUse"

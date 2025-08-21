@@ -17,11 +17,19 @@ const { mounted } = useMounted();
 
 function handleInput(e: Event) {
 	const target = e.target as HTMLInputElement;
-	const value = target.value ? parseInt(target.value) : '';
-	props.context.node.input(value);
+	props.context.node.input(target.value);
 }
 
 function handleBlur(e: FocusEvent) {
+	const target = e.target as HTMLInputElement;
+	const value = target.value.trim();
+
+	if (value !== '' && Number.isInteger(Number(value))) {
+		props.context.node.input(Number(value));
+	} else {
+		props.context.node.input(value);
+	}
+
 	props.context.handlers.blur(e);
 }
 </script>
@@ -42,7 +50,8 @@ function handleBlur(e: FocusEvent) {
 				:id="id"
 				:class="`govuk-input govuk-input--width-5 ${props.context.state.invalid ? 'govuk-input--error' : ''}`"
 				:name="name"
-				type="number"
+				type="text"
+				inputmode="numeric"
 				:value="mounted ? props.context._value : ''"
 				:data-testid="id"
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"

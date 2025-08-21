@@ -8,3 +8,7 @@ export function getErrorMessage(context: FormKitFrameworkContext): string | unde
 	const errorMessageObject = Object.values(context.messages).find(message => message.visible);
 	return errorMessageObject ? errorMessageObject.value as string : undefined;
 }
+
+export function isInteger(node: FormKitNode): boolean {
+	return Number.isInteger(Number(node.value));
+}
