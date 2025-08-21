@@ -8,6 +8,7 @@ const props = defineProps<{
 	maxNumberOfItems?: number;
 	onRemove?: (index: number) => void;
 	onDuplicate?: (index: number) => void;
+	showStatus?: boolean;
 }>();
 
 function handleRemove(index: number, e: MouseEvent) {
@@ -50,6 +51,9 @@ function routeForEditItem(index: number) {
 					<tbody class="govuk-table__body">
 						<tr v-for="(item, index) in items" :key="index" class="govuk-table__row" :data-testid="`${id}_item`">
 							<th scope="row" class="govuk-table__header custom-list__table-header">{{ item }}</th>
+							<td v-if="showStatus" class="govuk-table__cell">
+								<GovTag text="In progress" color="yellow" :testId="`${id}_status_${index}`" />
+							</td>
 							<td class="govuk-table__cell govuk-!-text-align-right">
 								<NuxtLink class="govuk-link custom-list__action-link" :href=routeForEditItem(index)>Edit</NuxtLink>
 								<a v-if="onDuplicate && canAddMoreItems()" href="#" class="govuk-link custom-list__action-link" :data-testid="`${id}_duplicate_${index}`" @click="handleDuplicate(index, $event)">Duplicate</a>

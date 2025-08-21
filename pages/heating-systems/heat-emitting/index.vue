@@ -112,7 +112,8 @@ function hasIncompleteEntries() {
 		:form-url="`${page?.url!}/instant-electric-heater`"
 		:items="store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => x.data?.name)"
 		@remove="(index: number) => handleRemove('instantElectricHeater', index)"
-		@duplicate="(index: number) => handleDuplicate('instantElectricHeater', index)" />
+		@duplicate="(index: number) => handleDuplicate('instantElectricHeater', index)"
+		:show-status="true" />
 
 	<CustomList
 		v-if="false"

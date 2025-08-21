@@ -7,6 +7,7 @@ import InstantElectricHeaterForm from "./instant-electric-heater/[heater].vue";
 
 import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
+import formStatus from "~/constants/formStatus";
 
 describe("heat emitting", () => {
 	describe("wet distribution", async () => {
@@ -181,6 +182,26 @@ describe("heat emitting", () => {
 			expect(
 				screen.getByText("Instant Electric Heater 1 (1) (2)")
 			).toBeDefined();
+		});
+
+		it('should display an in-progress indicator when an entry is not marked as complete', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						instantElectricHeater: {
+							data: [{
+								data: {
+									name: 'Instant electric heater'
+								}
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(HeatEmitting);
+
+			expect(screen.getByTestId('instantElectricHeater_status_0').textContent).toBe(formStatus.inProgress.text);
 		});
 	});
 
