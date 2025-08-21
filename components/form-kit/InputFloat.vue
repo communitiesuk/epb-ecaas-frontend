@@ -22,12 +22,12 @@ function handleInput(e: Event) {
 
 function handleBlur(e: FocusEvent) {
 	const target = e.target as HTMLInputElement;
-	const value = target.value;
+	const value = target.value.trim();
 
-	if (value === '' || isNaN(Number(value))) {
-		props.context.node.input(value);
-	} else {
+	if (value !== '' && !isNaN(Number(value))) {
 		props.context.node.input(Number(value));
+	} else {
+		props.context.node.input(value);
 	}
 
 	props.context.handlers.blur(e);
