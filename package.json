@@ -68,7 +68,7 @@
     "tsx": "^4.19.2",
     "type-fest": "^4.41.0",
     "typescript": "^5.9.0",
-    "vite-plugin-static-copy": "^2.1.0",
+    "vite-plugin-static-copy": "^2.3.2",
     "vitest": "^3.0.9",
     "vue-tsc": "^2.2.10",
     "yn": "^5.0.0"
