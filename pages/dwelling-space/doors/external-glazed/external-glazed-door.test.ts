@@ -49,6 +49,7 @@ describe('external glazed door', () => {
 		await user.type(screen.getByTestId('elevationalHeight'), '14');
 		await user.type(screen.getByTestId('midHeight'), '11');
 		await user.type(screen.getByTestId('openingToFrameRatio'), '0.2');
+		await user.tab();
 
 		await user.click(screen.getByRole('button'));
 

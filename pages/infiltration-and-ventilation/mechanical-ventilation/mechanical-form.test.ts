@@ -49,6 +49,7 @@ describe("mechanical ventilation form", () => {
 		await user.type(screen.getByTestId("airFlowRate"), "12");
 		await user.click(screen.getByTestId("mvhrLocation_inside"));
 		await user.type(screen.getByTestId("mvhrEfficiency"), "0.2");
+		await user.tab();
 
 		await user.click(screen.getByRole("button"));
 		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;

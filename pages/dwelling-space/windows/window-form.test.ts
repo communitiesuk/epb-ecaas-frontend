@@ -69,6 +69,7 @@ describe('window', () => {
 		await user.click(screen.getByTestId('treatmentType_blinds'));
 		await user.type(screen.getByTestId('thermalResistivityIncrease'), '1');
 		await user.type(screen.getByTestId('solarTransmittanceReduction'), '0.1');
+		await user.tab();
 
 		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
 
