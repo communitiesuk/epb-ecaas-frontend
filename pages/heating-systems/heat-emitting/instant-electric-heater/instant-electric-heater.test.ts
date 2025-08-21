@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen, waitFor } from "@testing-library/vue";
+import { screen } from "@testing-library/vue";
 import InstantElectricHeater from "./[heater].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -12,16 +12,20 @@ describe("instantElectricHeater", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const instantElectricHeater: InstantElectricStorageData = {
-		name: "Instant electric heater 1",
-		ratedPower: 3,
-		convectionFractionInstant: 0.2
+	const instantElectricHeater: EcaasForm<InstantElectricStorageData> = {
+		data: {
+			name: "Instant electric heater 1",
+			ratedPower: 3,
+			convectionFractionInstant: 0.2
+		}
 	};
 
-	const instantElectricHeater2: InstantElectricStorageData = {
-		name: "Instant electric heater 2",
-		ratedPower: 14,
-		convectionFractionInstant: 1
+	const instantElectricHeater2: EcaasForm<InstantElectricStorageData> = {
+		data: {
+			name: "Instant electric heater 2",
+			ratedPower: 14,
+			convectionFractionInstant: 1
+		}
 	};
 
 	afterEach(() => {
@@ -36,14 +40,22 @@ describe("instantElectricHeater", () => {
 	};
 
 	test("data is saved to store state when form is valid", async () => {
-		await renderSuspended(InstantElectricHeater);
+		await renderSuspended(InstantElectricHeater, {
+			route: {
+				params: { heater: "create" },
+			},
+		});
 
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.heatingSystems.heatEmitting.instantElectricHeater;
 
-		expect(data[0]).toEqual(instantElectricHeater);
+		expect(data[0]).toEqual({
+			...instantElectricHeater,
+			complete: true
+		});
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
@@ -81,7 +93,7 @@ describe("instantElectricHeater", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(InstantElectricHeater);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(await screen.findByTestId("name_error")).toBeDefined();
 		expect(await screen.findByTestId("ratedPower_error")).toBeDefined();
@@ -93,7 +105,7 @@ describe("instantElectricHeater", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(InstantElectricHeater);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(
 			await screen.findByTestId("instantElectricHeaterErrorSummary")
@@ -125,43 +137,48 @@ describe("instantElectricHeater", () => {
 
 		await user.type(screen.getByTestId("name"), "Updated Instant electric heater 1");
 		await user.type(screen.getByTestId("ratedPower"), "5");
-		waitFor(() => {
-			expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.name).toBe("Updated Instant electric heater 1");
-			expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.ratedPower).toBe(5);
-		});
+		await user.tab();
+
+		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.name).toBe("Updated Instant electric heater 1");
+		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.ratedPower).toBe(5);
 	});
 	
-	test("updated form data is automatically saved to store when there is one instant electric heater added", async () => {
+	test("partial form data is saved automatically with default name to store when adding new heater", async () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
-		store.$patch({
-			heatingSystems: {
-				heatEmitting: {
-					instantElectricHeater: {
-						data: [instantElectricHeater]
-					}		
-				},
-			},
-		});
-
 		await renderSuspended(InstantElectricHeater, {
 			route: {
-				params: { heater: "0" },
+				params: { heater: "create" },
 			},
 		});
 		
-		await user.clear(screen.getByTestId("name"));
-		await user.clear(screen.getByTestId("ratedPower"));
-
-		await user.type(screen.getByTestId("name"), "Updated Instant electric heater 1");
 		await user.type(screen.getByTestId("ratedPower"), "5");
-		waitFor(() => {
-			expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.name).toBe("Updated Instant electric heater 1");
-			expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.ratedPower).toBe(5);
-		});
+		await user.type(screen.getByTestId("convectionFractionInstant"), "1");
+		await user.tab();
+
+		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.name).toBe("Instant electric heater");
+		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.ratedPower).toBe(5);
+		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.convectionFractionInstant).toBe(1);
 	});
 
+	test("creates a new heater automatically with given name", async () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+
+		await renderSuspended(InstantElectricHeater, {
+			route: {
+				params: { heater: "create" },
+			},
+		});
+		
+		await user.type(screen.getByTestId("name"), "Heater 1");
+		await user.tab();
+
+		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.name).toBe("Heater 1");
+		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.ratedPower).toBeUndefined();
+		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.convectionFractionInstant).toBeUndefined();
+	});
 
 	test("updated form data is automatically saved to the correct store object when there are multiple instant electric heaters added", async () => {
 		const store = useEcaasStore();
@@ -188,10 +205,9 @@ describe("instantElectricHeater", () => {
 
 		await user.type(screen.getByTestId("name"), "Updated Instant electric heater 2");
 		await user.type(screen.getByTestId("ratedPower"), "1");
+		await user.tab();
 
-		waitFor(() => {
-			expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[1]?.name).toBe("Updated Instant electric heater 2");
-			expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[1]?.ratedPower).toBe(1);
-		});
+		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[1]?.data.name).toBe("Updated Instant electric heater 2");
+		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[1]?.data.ratedPower).toBe(1);
 	});
 });

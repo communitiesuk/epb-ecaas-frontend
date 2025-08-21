@@ -45,7 +45,9 @@ describe('dwelling fabric mapper', () => {
 					},
 					instantElectricHeater: {
 						data: [{
-							name: 'ieh 1'
+							data: {
+								name: 'ieh 1'
+							}
 						}],
 						complete: true
 					}

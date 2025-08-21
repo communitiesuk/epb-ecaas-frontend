@@ -4,7 +4,7 @@ const title = "Heat emitting";
 const store = useEcaasStore();
 
 type HeatEmittingType = keyof typeof store.heatingSystems.heatEmitting;
-type HeatEmittingData = ElectricStorageHeaterData & InstantElectricStorageData & WetDistributionData & WarmAirHeatPumpData;
+type HeatEmittingData = ElectricStorageHeaterData & EcaasForm<InstantElectricStorageData> & WetDistributionData & WarmAirHeatPumpData;
 
 function handleRemove(emittingType: HeatEmittingType, index: number) {
 	const emitters = store.heatingSystems.heatEmitting[emittingType]?.data;
@@ -21,14 +21,38 @@ function handleRemove(emittingType: HeatEmittingType, index: number) {
 function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingType, index: number) {
 	const emitters = store.heatingSystems.heatEmitting[emittingType]?.data;
 	const emitter = emitters?.[index];
+	let name: string;
+
 	if (emitter) {
-		const duplicates = emitters.filter(f => f.name.match(duplicateNamePattern(emitter.name)));
+		const duplicates = emitters.filter(f => {
+			if ("data" in f && "data" in emitter) {
+				name = emitter.data.name;
+				return f.data.name.match(duplicateNamePattern(emitter.data.name));
+			} else if ("name" in f && "name" in emitter) {
+				name = emitter.name
+				return f.name.match(duplicateNamePattern(emitter.name))
+			}
+
+			return false;
+		});
 
 		store.$patch((state) => {
-			const newItem = {
-				...emitter,
-				name: `${emitter.name} (${duplicates.length})`
-			} as T;
+			let newItem;
+
+			if ("data" in emitter) {
+				newItem = {
+					complete: emitter.complete,
+					data: {
+						...emitter.data,
+						name: `${name} (${duplicates.length})`
+					}
+				} as T;
+			} else {
+				newItem = {
+					...emitter,
+					name: `${name} (${duplicates.length})`
+				} as T;
+			}
 
 			state.heatingSystems.heatEmitting[emittingType]!.data.push(newItem);
 			state.heatingSystems.heatEmitting[emittingType].complete = false;
@@ -54,6 +78,17 @@ function checkIsComplete(){
 	const emitters = store.heatingSystems.heatEmitting;
 	return Object.values(emitters).every(emitter => emitter.complete);
 }
+
+function hasIncompleteEntries() {
+	const emitterTypes = store.heatingSystems.heatEmitting;
+	return Object.values(emitterTypes).some(emitters => emitters.data.some(emitter => {
+		if ("data" in emitter) {
+			return !emitter.complete
+		} else {
+			return false
+		}
+	}));
+}
 </script>
 
 <template>
@@ -75,7 +110,7 @@ function checkIsComplete(){
 	<CustomList
 		id="instantElectricHeater" title="Instant electric heater"
 		:form-url="`${page?.url!}/instant-electric-heater`"
-		:items="store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => x.name)"
+		:items="store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => x.data?.name)"
 		@remove="(index: number) => handleRemove('instantElectricHeater', index)"
 		@duplicate="(index: number) => handleDuplicate('instantElectricHeater', index)" />
 
@@ -101,6 +136,6 @@ function checkIsComplete(){
 		>
 			Return to heating systems
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 	</div>
 </template>

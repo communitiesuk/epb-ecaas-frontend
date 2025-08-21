@@ -681,7 +681,7 @@ export type EnergySupplyData = z.infer<typeof _energySupplyData>;
 
 export type HeatEmitting = AssertFormKeysArePageIds<{
 	wetDistribution: EcaasForm<WetDistributionData[]>;
-	instantElectricHeater: EcaasForm<InstantElectricStorageData[]>;
+	instantElectricHeater: EcaasForm<EcaasForm<InstantElectricStorageData>[]>;
 	electricStorageHeater: EcaasForm<ElectricStorageHeaterData[]>;
 	warmAirHeatPump: EcaasForm<WarmAirHeatPumpData[]>;
 }>;

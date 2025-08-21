@@ -91,14 +91,18 @@ describe("heat emitting", () => {
 		const user = userEvent.setup();
 
 		const instantElectricHeater1 = {
-			name: "Instant Electric Heater 1",
+			data: { 
+				name: "Instant Electric Heater 1",
+			}
 		};
 		const instantElectricHeater2 = {
-			name: "Instant Electric Heater 2",
-		};
+			data: { 
+				name: "Instant Electric Heater 2",
+			}		};
 		const instantElectricHeater3 = {
-			name: "Instant Electric Heater 3",
-		};
+			data: { 
+				name: "Instant Electric Heater 3",
+			}		};
 
 		it("should remove instant electric heater when remove link is clicked", async () => {
 			store.$patch({
@@ -368,9 +372,12 @@ describe("heat emitting", () => {
 			numberOfRadiators: 1,
 		};
 		const instantElectricHeater1 = {
-			name: "Instant Electric Heater 1",
-			ratedPower: 30,
-			convectionFractionInstant: 1
+			data: {
+				name: "Instant Electric Heater 1",
+				ratedPower: 30,
+				convectionFractionInstant: 1
+			},
+			complete: true,
 		};
 		const addHeatEmittingDataToStore = async () => {
 			store.$patch({
@@ -429,122 +436,146 @@ describe("heat emitting", () => {
 			];
 		};
 
-    type HeatEmittingType = keyof typeof store.heatingSystems.heatEmitting;
+		type HeatEmittingType = keyof typeof store.heatingSystems.heatEmitting;
 
-    it("marks heat emitting section as complete when button is clicked", async () => {
-    	expect(
-    		screen.getByRole("button", { name: "Mark section as complete" })
-    	).not.toBeNull();
-    	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted"
-    	);
-    	expect(completedStatusElement?.style.display).toBe("none");
+		it('disables the mark section as complete button when emitter is incomplete', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						instantElectricHeater: { 
+							data: [
+								{
+									data: {
+										name: "Instant Electric Heater 1",
+										ratedPower: 30,
+									},
+									complete: false,
+								}
+							]
+						},
+					}
+				}
+			});
 
-    	await user.click(screen.getByTestId("completeSectionButton"));
+			await renderSuspended(HeatEmitting);
+			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+			expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
+		});
 
-    	const {
-    		wetDistribution,
-    		instantElectricHeater,
-    		electricStorageHeater,
-    		warmAirHeatPump,
-    	} = store.heatingSystems.heatEmitting;
+		it("marks heat emitting section as complete when button is clicked", async () => {
+			expect(
+				screen.getByRole("button", { name: "Mark section as complete" })
+			).not.toBeNull();
+			const completedStatusElement = screen.queryByTestId(
+				"completeSectionCompleted"
+			);
+			expect(completedStatusElement?.style.display).toBe("none");
 
-    	expect(wetDistribution?.complete).toBe(true);
-    	expect(instantElectricHeater?.complete).toBe(true);
-    	expect(electricStorageHeater?.complete).toBe(true);
-    	expect(warmAirHeatPump?.complete).toBe(true);
-    	expect(
-    		screen.queryByRole("button", { name: "Mark section as complete" })
-    	).toBeNull();
-    	expect(completedStatusElement?.style.display).not.toBe("none");
+			await user.click(screen.getByTestId("completeSectionButton"));
 
-    	expect(navigateToMock).toHaveBeenCalledWith("/heating-systems");
-    });
-
-    it("marks as not complete if an item is removed after marking complete", async () => {
-    	const emitters = await getEmittersData("remove");
-
-    	for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
-    		const typedKey = key as HeatEmittingType;
-
-    		await user.click(screen.getByTestId("completeSectionButton"));
-    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
-    			true
-    		);
-
-    		const emitterData = emitters.find((e) => e.key === typedKey);
-    		if (!emitterData) {
-    			continue;
-    		}
-    		await user.click(screen.getByTestId(emitterData!.testId));
-    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
-    			false
-    		);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
-    		).not.toBeNull();
-    	}
-    });
-
-    it("marks as not complete if an item is duplicated after marking complete", async () => {
-    	const emitters = await getEmittersData("duplicate");
-
-    	for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
-    		const typedKey = key as HeatEmittingType;
-
-    		await user.click(screen.getByTestId("completeSectionButton"));
-    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
-    			true
-    		);
-
-    		const emitterData = emitters.find((e) => e.key === typedKey);
-    		if (!emitterData) {
-    			continue;
-    		}
-    		await user.click(screen.getByTestId(emitterData!.testId));
-    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
-    			false
-    		);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
-    		).not.toBeNull();
-    	}
-    });
-
-    it("marks as not complete after saving a new or edited emitter item", async () => {
+			const {
+				wetDistribution,
+				instantElectricHeater,
+				electricStorageHeater,
+				warmAirHeatPump,
+			} = store.heatingSystems.heatEmitting;
 			
-    	for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
-    		const emitters = await getEmittersData("");
-    		const typedKey = key as HeatEmittingType;
+			expect(wetDistribution?.complete).toBe(true);
+			expect(instantElectricHeater?.complete).toBe(true);
+			expect(electricStorageHeater?.complete).toBe(true);
+			expect(warmAirHeatPump?.complete).toBe(true);
+			expect(
+				screen.queryByRole("button", { name: "Mark section as complete" })
+			).toBeNull();
+			expect(completedStatusElement?.style.display).not.toBe("none");
 
-    		await user.click(screen.getByTestId("completeSectionButton"));
-    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
-    			true
-    		);
+			expect(navigateToMock).toHaveBeenCalledWith("/heating-systems");
+		});
 
-    		const emitterData = emitters.find((e) => e.key === typedKey);
-    		if (!emitterData) {
-    			continue;
-    		}
-    		const params: string = emitterData!.params;
-    		await renderSuspended(emitterData?.form, {
-    			route: {
-    				params: { [params]: "0" },
-    			},
-    		});
-    		await user.click(
-    			screen.getByRole("button", { name: "Save and continue" })
-    		);
+		it("marks as not complete if an item is removed after marking complete", async () => {
+			const emitters = await getEmittersData("remove");
 
-    		expect(
-    			store.heatingSystems.heatEmitting[typedKey].complete
-    		).toBe(false);
+			for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
+				const typedKey = key as HeatEmittingType;
 
-    		await renderSuspended(HeatEmitting);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
-    		).not.toBeNull();
-    	}
-    });
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
+					true
+				);
+
+				const emitterData = emitters.find((e) => e.key === typedKey);
+				if (!emitterData) {
+					continue;
+				}
+				await user.click(screen.getByTestId(emitterData!.testId));
+				expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
+					false
+				);
+				expect(
+					screen.getByRole("button", { name: "Mark section as complete" })
+				).not.toBeNull();
+			}
+		});
+
+		it("marks as not complete if an item is duplicated after marking complete", async () => {
+			const emitters = await getEmittersData("duplicate");
+
+			for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
+				const typedKey = key as HeatEmittingType;
+
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
+					true
+				);
+
+				const emitterData = emitters.find((e) => e.key === typedKey);
+				if (!emitterData) {
+					continue;
+				}
+				await user.click(screen.getByTestId(emitterData!.testId));
+				expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
+					false
+				);
+				expect(
+					screen.getByRole("button", { name: "Mark section as complete" })
+				).not.toBeNull();
+			}
+		});
+
+		it("marks as not complete after saving a new or edited emitter item", async () => {
+
+			for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
+				const emitters = await getEmittersData("");
+				const typedKey = key as HeatEmittingType;
+
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
+					true
+				);
+
+				const emitterData = emitters.find((e) => e.key === typedKey);
+				if (!emitterData) {
+					continue;
+				}
+				const params: string = emitterData!.params;
+				await renderSuspended(emitterData?.form, {
+					route: {
+						params: { [params]: "0" },
+					},
+				});
+				await user.click(
+					screen.getByTestId("saveAndComplete")
+				);
+
+				expect(
+					store.heatingSystems.heatEmitting[typedKey].complete
+				).toBe(false);
+
+				await renderSuspended(HeatEmitting);
+				expect(
+					screen.getByRole("button", { name: "Mark section as complete" })
+				).not.toBeNull();
+			}
+		});
 	});
 });

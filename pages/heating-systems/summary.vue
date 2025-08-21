@@ -171,9 +171,9 @@ const instantElectricHeaterSummary: SummarySection = {
 	label: "Instant electric heater",
 	data: instantHeaters.map((instantHeater) => {
 		return {
-			Name: instantHeater.name,
-			"Rated power": `${instantHeater.ratedPower} ${kilowatt.suffix}`,
-			"Convection fraction": instantHeater.convectionFractionInstant,
+			Name: instantHeater.data.name,
+			"Rated power": `${instantHeater.data.ratedPower} ${kilowatt.suffix}`,
+			"Convection fraction": instantHeater.data.convectionFractionInstant,
 		};
 	}) || [],
 	editUrl: heatEmittingUrl,

@@ -1,22 +1,28 @@
 <script setup lang="ts">
+import { getUrl } from "#imports";
 const title = "Instant electric heater";
 const store = useEcaasStore();
-const { saveToList } = useForm();
 
 const instantElectricHeaterData = useItemToEdit('heater', store.heatingSystems.heatEmitting.instantElectricHeater.data);
-const model: Ref<InstantElectricStorageData> = ref(instantElectricHeaterData!);
+const model: Ref<InstantElectricStorageData> = ref(instantElectricHeaterData?.data!);
 
 const saveForm = (fields: InstantElectricStorageData) => {
 	store.$patch((state) => {
 		const {instantElectricHeater} = state.heatingSystems.heatEmitting;
+		const storeData = store.heatingSystems.heatEmitting.instantElectricHeater.data;
 
-		const instantElectricHeaterItem: InstantElectricStorageData = {
-			name: fields.name,
-			ratedPower: fields.ratedPower,
-			convectionFractionInstant: fields.convectionFractionInstant,
+		const index = storeData.length - 1;
+
+		const instantElectricHeaterItem: EcaasForm<InstantElectricStorageData> = {
+			data: {
+				name: fields.name,
+				ratedPower: fields.ratedPower,
+				convectionFractionInstant: fields.convectionFractionInstant,
+			},
+			complete: true
 		};
 
-		saveToList(instantElectricHeaterItem, instantElectricHeater);
+		instantElectricHeater.data[index] = instantElectricHeaterItem;
 		instantElectricHeater.complete = false;
 	});
 
@@ -29,14 +35,12 @@ watch(model, async (newData: InstantElectricStorageData, initialData: InstantEle
 	const store = useEcaasStore();
 	const storeData = store.heatingSystems.heatEmitting.instantElectricHeater.data;
 
-	const index = Number(route.params.heater) || storeData.length - 1;
-
 	if (initialData === undefined) {
 		return;
 	}
 
 	const defaultName = 'Instant electric heater';
-	const duplicates = storeData.filter(x => x.name.match(duplicateNamePattern(defaultName)));
+	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
 
 	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
 		Object.values(newData).some(x => x !== undefined);
@@ -45,8 +49,10 @@ watch(model, async (newData: InstantElectricStorageData, initialData: InstantEle
 
 		store.$patch(state => {
 			state.heatingSystems.heatEmitting.instantElectricHeater.data.push({
-				...newData,
-				name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+				data: {
+					...newData,
+					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+				}
 			});
 		});
 
@@ -54,10 +60,13 @@ watch(model, async (newData: InstantElectricStorageData, initialData: InstantEle
 	}
 
 	store.$patch((state) => {
+		const index = storeData.length - 1;
 
 		state.heatingSystems.heatEmitting.instantElectricHeater.data[index] = {
-			...newData,
-			name: newData.name ?? state.heatingSystems.heatEmitting.instantElectricHeater.data[index]?.name
+			data: {
+				...newData,
+				name: newData.name ?? state.heatingSystems.heatEmitting.instantElectricHeater.data[index]?.data.name
+			}
 		};
 		state.heatingSystems.heatEmitting.instantElectricHeater.complete = false;
 	});
@@ -138,6 +147,9 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" testId="saveAndComplete" />
+			<GovButton :href="getUrl('heatEmitting')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

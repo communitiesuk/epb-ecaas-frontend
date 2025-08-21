@@ -364,10 +364,12 @@ describe("Heating systems summary page", () => {
 			maxOutdoorTemp: 15,
 		};
 
-		const instantElectricHeater: InstantElectricStorageData = {
-			name: "Instant electric heater 1",
-			ratedPower: 3,
-			convectionFractionInstant: 0.2
+		const instantElectricHeater: EcaasForm<InstantElectricStorageData> = {
+			data: {
+				name: "Instant electric heater 1",
+				ratedPower: 3,
+				convectionFractionInstant: 0.2
+			}
 		};
 		const electricStorageHeater: ElectricStorageHeaterData = {
 			name: "Electric storage heater 1",

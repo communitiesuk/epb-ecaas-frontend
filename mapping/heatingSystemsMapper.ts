@@ -82,12 +82,12 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 
 	const instantElectricHeaters = state.heatingSystems.heatEmitting.instantElectricHeater;
 	const instantElectricHeaterEntries = instantElectricHeaters.map((heater): [string, SchemaSpaceHeatSystemDetails] => [
-		heater.name,
+		heater.data.name,
 		{
 			type: "InstantElecHeater",
 			EnergySupply: defaultElectricityEnergySupplyName,
-			rated_power: heater.ratedPower,
-			frac_convective: heater.convectionFractionInstant,
+			rated_power: heater.data.ratedPower,
+			frac_convective: heater.data.convectionFractionInstant,
 		}
 	]);
 

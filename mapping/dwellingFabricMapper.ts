@@ -40,7 +40,7 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 
 	const spaceHeatingSystemNames = [
 		state.heatingSystems.heatEmitting.wetDistribution.map(x => x.name),
-		state.heatingSystems.heatEmitting.instantElectricHeater.map(x => x.name),
+		state.heatingSystems.heatEmitting.instantElectricHeater.map(x => x.data.name),
 	].flat();
 
 	return {
