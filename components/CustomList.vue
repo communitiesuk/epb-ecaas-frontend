@@ -1,10 +1,17 @@
 <script setup lang="ts">
+import type { GovTagProps } from '~/common.types';
+
+interface CustomListItem {
+	name: string;
+	status?: GovTagProps;
+}
+
 const props = defineProps<{
 	id: string;
 	title: string;
 	formUrl: string;
 	hint?: string;
-	items?: string[];
+	items?: string[] | CustomListItem[];
 	maxNumberOfItems?: number;
 	onRemove?: (index: number) => void;
 	onDuplicate?: (index: number) => void;
@@ -50,9 +57,9 @@ function routeForEditItem(index: number) {
 				<table class="govuk-table govuk-!-margin-0 custom-list__table">
 					<tbody class="govuk-table__body">
 						<tr v-for="(item, index) in items" :key="index" class="govuk-table__row" :data-testid="`${id}_item`">
-							<th scope="row" class="govuk-table__header custom-list__table-header">{{ item }}</th>
+							<th scope="row" class="govuk-table__header custom-list__table-header">{{ typeof item === 'string' ? item : item.name }}</th>
 							<td v-if="showStatus" class="govuk-table__cell">
-								<GovTag text="In progress" color="yellow" :testId="`${id}_status_${index}`" />
+								<GovTag v-if="(typeof item) !== 'string' && item.status" :text="item.status.text" :color="item.status.color" :testId="`${id}_status_${index}`" />
 							</td>
 							<td class="govuk-table__cell govuk-!-text-align-right">
 								<NuxtLink class="govuk-link custom-list__action-link" :href=routeForEditItem(index)>Edit</NuxtLink>

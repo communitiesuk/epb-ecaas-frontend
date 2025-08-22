@@ -203,6 +203,29 @@ describe("heat emitting", () => {
 
 			expect(screen.getByTestId('instantElectricHeater_status_0').textContent).toBe(formStatus.inProgress.text);
 		});
+
+		it ('should display a complete indicator when an entry is marked as complete', async () => {
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						instantElectricHeater: {
+							data: [{
+								data: {
+									name: 'Instant electric heater',
+									ratedPower: 10,
+									convectionFractionInstant: 0.5
+								},
+								complete: true
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(HeatEmitting);
+
+			expect(screen.getByTestId('instantElectricHeater_status_0').textContent).toBe(formStatus.complete.text);
+		});
 	});
 
 	// describe("electric storage heater", async () => {

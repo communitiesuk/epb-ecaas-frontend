@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import formStatus from '~/constants/formStatus';
+
 const page = usePage();
 const title = "Heat emitting";
 const store = useEcaasStore();
@@ -110,7 +112,10 @@ function hasIncompleteEntries() {
 	<CustomList
 		id="instantElectricHeater" title="Instant electric heater"
 		:form-url="`${page?.url!}/instant-electric-heater`"
-		:items="store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => x.data?.name)"
+		:items="store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
 		@remove="(index: number) => handleRemove('instantElectricHeater', index)"
 		@duplicate="(index: number) => handleDuplicate('instantElectricHeater', index)"
 		:show-status="true" />

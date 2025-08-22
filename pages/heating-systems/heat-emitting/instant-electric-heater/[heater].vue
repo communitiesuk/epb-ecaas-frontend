@@ -2,6 +2,7 @@
 import { getUrl } from "#imports";
 const title = "Instant electric heater";
 const store = useEcaasStore();
+const route = useRoute();
 
 const instantElectricHeaterData = useItemToEdit('heater', store.heatingSystems.heatEmitting.instantElectricHeater.data);
 const model: Ref<InstantElectricStorageData> = ref(instantElectricHeaterData?.data!);
@@ -11,7 +12,7 @@ const saveForm = (fields: InstantElectricStorageData) => {
 		const {instantElectricHeater} = state.heatingSystems.heatEmitting;
 		const storeData = store.heatingSystems.heatEmitting.instantElectricHeater.data;
 
-		const index = storeData.length - 1;
+		const index = route.params.heater === 'create' ? storeData.length - 1 : Number(route.params.heater);
 
 		const instantElectricHeaterItem: EcaasForm<InstantElectricStorageData> = {
 			data: {
@@ -29,10 +30,7 @@ const saveForm = (fields: InstantElectricStorageData) => {
 	navigateTo("/heating-systems/heat-emitting");
 };
 
-
 watch(model, async (newData: InstantElectricStorageData, initialData: InstantElectricStorageData) => {
-	const route = useRoute();
-	const store = useEcaasStore();
 	const storeData = store.heatingSystems.heatEmitting.instantElectricHeater.data;
 
 	if (initialData === undefined) {
@@ -60,7 +58,7 @@ watch(model, async (newData: InstantElectricStorageData, initialData: InstantEle
 	}
 
 	store.$patch((state) => {
-		const index = storeData.length - 1;
+		const index = route.params.heater === 'create' ? storeData.length - 1 : Number(route.params.heater);
 
 		state.heatingSystems.heatEmitting.instantElectricHeater.data[index] = {
 			data: {
@@ -68,6 +66,7 @@ watch(model, async (newData: InstantElectricStorageData, initialData: InstantEle
 				name: newData.name ?? state.heatingSystems.heatEmitting.instantElectricHeater.data[index]?.data.name
 			}
 		};
+
 		state.heatingSystems.heatEmitting.instantElectricHeater.complete = false;
 	});
 });
