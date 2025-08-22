@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
+import { lastExportDateCookieName } from '~/utils/exportDate';
 
 const title = '(Testing) Check Part L building compliance';
 	
@@ -17,7 +18,7 @@ const hideLoading = () => {
 	showLoadingIndicator.value = false;
 };
 
-const lastExportDateCookie = useCookie('last_export_date');
+const lastExportDateCookie = useCookie(lastExportDateCookieName);
 const exportDate = lastExportDateCookie.value ? dayjs(lastExportDateCookie.value) : undefined;
 
 const handleCalculateError = (errors?: CorrectedJsonApiError[] | boolean) => {

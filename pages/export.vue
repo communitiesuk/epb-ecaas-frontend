@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
+import { lastExportDateCookieName } from '~/utils/exportDate';
 
 const store = useEcaasStore();
 const title = 'Export data';
@@ -21,7 +22,7 @@ const saveForm = (_: typeof model) => {
 	downloadUrl.value = URL.createObjectURL(stateBlob);
 	exportDate.value = (new Date()).toISOString();
 
-	const lastExportDateCookie = useCookie('last_export_date');
+	const lastExportDateCookie = useCookie(lastExportDateCookieName);
 	lastExportDateCookie.value = exportDate.value;
 
 	setTimeout(() => {
