@@ -38,7 +38,7 @@ export interface EcaasForm<T> {
 }
 
 export type DwellingDetails = AssertFormKeysArePageIds<{
-	generalSpecifications: EcaasForm<Partial<GeneralDetailsData>>;
+	generalSpecifications: EcaasForm<GeneralDetailsData>;
 	shading: EcaasForm<ShadingData[]>;
 	externalFactors: EcaasForm<ExternalFactorsData>;
 }>;

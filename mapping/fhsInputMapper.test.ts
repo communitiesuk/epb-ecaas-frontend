@@ -191,6 +191,7 @@ const expectedHouseInput: FhsInputSchema = {
 	NumberOfBedrooms: 7,
 	OnSiteGeneration: {},
 	PartGcompliance: true,
+	PartO_active_cooling_required: false,
 	SimulationTime: {
 		start: 0,
 		end: 8,
@@ -607,6 +608,7 @@ const expectedFlatInput: FhsInputSchema = {
 		}
 	},
 	PartGcompliance: true,
+	PartO_active_cooling_required: true,
 	SimulationTime: {
 		start: 0,
 		end: 8,
@@ -933,6 +935,7 @@ describe("FHS input mapper", () => {
 					typeOfDwelling: BuildType.house,
 					storeysInDwelling: 2,
 					numOfBedrooms: 7,
+					coolingRequired: false,
 				}
 			},
 			shading: {
@@ -1295,6 +1298,7 @@ describe("FHS input mapper", () => {
 					storeysInDwelling: 6,
 					storeyOfFlat: 3,
 					numOfBedrooms: 2,
+					coolingRequired: true,
 				}
 			},
 			shading: {
