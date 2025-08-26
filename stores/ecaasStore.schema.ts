@@ -353,7 +353,6 @@ export type WindowData = {
 	elevationalHeight: number;
 	midHeight: number;
 	openingToFrameRatio: number;
-	curtainsOrBlinds: boolean;
 } & TaggedUnion<'numberOpenableParts', {
 	'0': EmptyObject;
 	'1': OnePartFields;
@@ -370,11 +369,13 @@ export type WindowData = {
 	sideFinLeftDepth: Length | number; // number will be deprecated, preserved for backwards compatibility with old input data files
 	sideFinLeftDistance: Length | number; // number will be deprecated, preserved for backwards compatibility with old input data files
 } | EmptyObject) & ({
+	curtainsOrBlinds: true;
 	treatmentType: WindowTreatmentType;
 	curtainsControlObject?: WindowTreatmentControl;
 	thermalResistivityIncrease: number;
 	solarTransmittanceReduction: number;
 } | {
+	curtainsOrBlinds: false;
 	treatmentType?: undefined;
 	curtainsControlObject?: never;
 	thermalResistivityIncrease?: never;
