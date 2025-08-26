@@ -2,7 +2,7 @@ import GeneralDetails from './general-details.vue';
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
-import type { GeneralDetailsData } from '~/stores/ecaasStore.schema';
+import type { GeneralDetailsData } from '~/stores/ecaasStore.types';
 import { BuildType } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());

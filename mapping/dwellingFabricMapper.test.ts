@@ -8,7 +8,7 @@ import {
 import type {SchemaBuildingElement, SchemaEdgeInsulation, SchemaThermalBridgingDetails} from "~/schema/api-schema.types";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
-import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.schema";
+import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.types";
 import { centimetre, millimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units/types";
 

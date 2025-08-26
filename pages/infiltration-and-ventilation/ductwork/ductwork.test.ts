@@ -3,7 +3,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import DuctworkOverview from "./index.vue";
 import DuctworkForm from './[ductwork].vue';
 import userEvent from '@testing-library/user-event';
-import type {DuctworkData} from '../../../stores/ecaasStore.schema';
+import type {DuctworkData} from '../../../stores/ecaasStore.types';
 import { DuctShape, DuctType } from '~/schema/api-schema.types';
 
 describe('ductwork', async () => {

@@ -1,5 +1,5 @@
 import WwhrsForm from './[wwhrs].vue';
-import type { WwhrsData } from '~/stores/ecaasStore.schema';
+import type { WwhrsData } from '~/stores/ecaasStore.types';
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';

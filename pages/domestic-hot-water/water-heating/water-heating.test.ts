@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen } from '@testing-library/vue';
 import WaterHeating from './index.vue';
-import type { HotWaterCylinderData } from "~/stores/ecaasStore.schema";
+import type { HotWaterCylinderData } from "~/stores/ecaasStore.types";
 import { litre } from "~/utils/units/volume";
 import { unitValue } from "~/utils/units/types";
 

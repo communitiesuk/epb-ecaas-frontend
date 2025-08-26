@@ -4,7 +4,7 @@ import Cooling from './index.vue';
 import AirConditioningForm from './air-conditioning/[airConditioning].vue';
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
-import type { AirConditioningData } from "~/stores/ecaasStore.schema";
+import type { AirConditioningData } from "~/stores/ecaasStore.types";
 
 describe('cooling', () => {
 	const store = useEcaasStore();

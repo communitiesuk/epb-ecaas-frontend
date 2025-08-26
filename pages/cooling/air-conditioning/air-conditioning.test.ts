@@ -2,7 +2,7 @@ import AirConditioning from './[airConditioning].vue';
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
-import type { AirConditioningData } from '~/stores/ecaasStore.schema';
+import type { AirConditioningData } from '~/stores/ecaasStore.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {

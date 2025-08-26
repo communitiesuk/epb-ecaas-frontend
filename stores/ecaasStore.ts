@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.schema";
+import type { EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.types";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
 import { PageType  } from "~/data/pages/pages.types";

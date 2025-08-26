@@ -1,4 +1,4 @@
-import type { EcaasState } from "~/stores/ecaasStore.schema";
+import type { EcaasState } from "~/stores/ecaasStore.types";
 import { v4 as uuidv4 } from "uuid";
 
 export default defineEventHandler(async (event) => {
