@@ -44,64 +44,71 @@ function routeForEditItem(index: number) {
 </script>
 
 <template>
-	<ClientOnly>		
-		<div class="custom-list">
-			<div class="custom-list__header">
+	<ClientOnly>
+		<div class="govuk-summary-card">
+			<div class="govuk-summary-card__title-wrapper">
 				<div>
-					<h2 class="govuk-heading-m govuk-!-margin-0">{{ title }}</h2>
-					<p v-if="hint" class="govuk-hint govuk-!-margin-0 custom-list__hint">{{ hint }}</p>
+					<h2 class="govuk-summary-card__title">
+						{{ title }}
+					</h2>
+					<p v-if="hint" class="govuk-hint govuk-!-margin-0 custom-summary-card__hint">{{ hint }}</p>
 				</div>
-				<NuxtLink v-if="canAddMoreItems()" class="govuk-link" :data-testid="`${id}_add`" :href=routeForAddItem()>{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
+				<ul class="govuk-summary-card__actions">
+					<li class="govuk-summary-card__action">
+						<NuxtLink v-if="canAddMoreItems()" class="govuk-link" :data-testid="`${id}_add`"
+							:href=routeForAddItem()>{{ items && items.length > 0 ? "Add more" : "Add" }}</NuxtLink>
+					</li>
+				</ul>
 			</div>
-			<div v-if="items && items.length" class="custom-list__body" :data-testid="`${id}_items`">
-				<table class="govuk-table govuk-!-margin-0 custom-list__table">
-					<tbody class="govuk-table__body">
-						<tr v-for="(item, index) in items" :key="index" class="govuk-table__row" :data-testid="`${id}_item`">
-							<th scope="row" class="govuk-table__header custom-list__table-header">{{ typeof item === 'string' ? item : item.name }}</th>
-							<td v-if="showStatus" class="govuk-table__cell">
+			<div v-if="items && items.length" class="govuk-summary-card__content" :data-testid="`${id}_items`">
+				<dl class="govuk-summary-list">
+					<div v-for="(item, index) in items" :key="index" class="govuk-summary-list__row"
+						:data-testid="`${id}_item`">
+						<dt class="govuk-summary-list__key">
+							{{ typeof item === 'string' ? item : item.name }}
+						</dt>
+						<dd class="govuk-summary-list__value">
+							<div v-if="showStatus">
 								<GovTag v-if="(typeof item) !== 'string' && item.status" :text="item.status.text" :color="item.status.color" :testId="`${id}_status_${index}`" />
-							</td>
-							<td class="govuk-table__cell govuk-!-text-align-right">
-								<NuxtLink class="govuk-link custom-list__action-link" :href=routeForEditItem(index)>Edit</NuxtLink>
-								<a v-if="onDuplicate && canAddMoreItems()" href="#" class="govuk-link custom-list__action-link" :data-testid="`${id}_duplicate_${index}`" @click="handleDuplicate(index, $event)">Duplicate</a>
-								<a href="#" class="govuk-link custom-list__action-link" :data-testid="`${id}_remove_${index}`" @click="handleRemove(index, $event)">Remove</a>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+							</div>
+						</dd>
+						<dd class="govuk-summary-list__actions">
+							<ul class="govuk-summary-list__actions-list">
+								<li class="govuk-summary-list__actions-list-item">
+									<NuxtLink class="govuk-link" :href=routeForEditItem(index)>Edit</NuxtLink>
+								</li>
+								<li v-if="onDuplicate && canAddMoreItems()"
+									class="govuk-summary-list__actions-list-item">
+									<a href="#" class="govuk-link" :data-testid="`${id}_duplicate_${index}`"
+										@click="handleDuplicate(index, $event)">Duplicate</a>
+								</li>
+								<li class="govuk-summary-list__actions-list-item">
+									<a href="#" class="govuk-link" :data-testid="`${id}_remove_${index}`"
+										@click="handleRemove(index, $event)">Remove</a>
+								</li>
+							</ul>
+						</dd>
+					</div>
+				</dl>
 			</div>
 		</div>
 	</ClientOnly>
 </template>
 
 <style scoped lang="scss">
-	@use "sass:map";
-	
-	.custom-list {
-		border: 1px solid map.get($govuk-colours, "mid-grey");
-		margin-bottom: 30px;
-	}
+@use "sass:map";
 
-	.custom-list__header {
-		padding: 15px 20px;
-		background: #f3f2f1;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
+.govuk-summary-list__value {
+	width: 20%;
+	white-space: nowrap;
+}
 
-	.custom-list__hint {
-		font-size: 1rem;
-	}
+.govuk-summary-list__actions {
+	width: auto;
+	margin-right: 25px;
+}
 
-	.custom-list__body {
-		padding: 15px 20px;
-	}
-
-	.custom-list__action-link {
-		margin-left: 25px;
-	}
-	.custom-list__table-header {
-		overflow-wrap: anywhere;
-	}
+.custom-summary-card__hint {
+	font-size: 1rem;
+}
 </style>
