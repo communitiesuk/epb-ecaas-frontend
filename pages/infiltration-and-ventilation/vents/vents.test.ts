@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import {screen, within } from '@testing-library/vue';
-import type { VentData } from "~/stores/ecaasStore.types";
+import type { VentData } from "~/stores/ecaasStore.schema";
 import Vents from './index.vue';
 import VentsForm from './[vent].vue';
 

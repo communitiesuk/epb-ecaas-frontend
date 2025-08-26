@@ -2,7 +2,7 @@ import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
 import PipeworkForm from './[pipe].vue';
-import type { SecondaryPipeworkData } from '~/stores/ecaasStore.types';
+import type { SecondaryPipeworkData } from '~/stores/ecaasStore.schema';
 import { WaterPipeworkLocation } from '~/schema/api-schema.types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());

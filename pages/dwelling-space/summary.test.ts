@@ -1,7 +1,7 @@
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
-import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from '~/stores/ecaasStore.types';
+import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from '~/stores/ecaasStore.schema';
 import { FloorType, MassDistributionClass, WindowTreatmentType } from '~/schema/api-schema.types';
 import { metre, millimetre } from '~/utils/units/length';
 import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from '~/utils/units/thermalConductivity';
