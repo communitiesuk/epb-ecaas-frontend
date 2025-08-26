@@ -2,6 +2,7 @@ import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
 import PipeworkForm from './[pipe].vue';
+import WaterHeatingForm from '../../water-heating/index.vue';
 import type { PrimaryPipeworkData } from '~/stores/ecaasStore.schema';
 import { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
 
@@ -106,6 +107,32 @@ describe('Primary pipework form', () => {
 		expect((await screen.findByTestId(`hotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);
 	});
+
+	test('hot water cylinder option remains checked on pipework page when user re-saves the hot water cylinder form (Water heating)', async () => {
+		addHotWaterCylinder();
+
+		store.$patch({
+			domesticHotWater: {
+				pipework: {
+					primaryPipework: {
+						data: [state]
+					}
+				}
+			}
+		});
+
+		await renderSuspended(WaterHeatingForm); 
+		await(user.click(screen.getByRole('button')));
+
+		expect(store.domesticHotWater.pipework.primaryPipework.data[0]?.hotWaterCylinder).toBe(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.id);
+		
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: '0' }
+			}
+		});
+		expect((await screen.findByTestId(`hotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute('checked')).toBe(true);
+	});	
 
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(PipeworkForm);
