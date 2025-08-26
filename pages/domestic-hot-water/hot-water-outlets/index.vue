@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BathData, ElectricShowerData, MixedShowerData, OtherHotWaterOutletData } from '~/stores/ecaasStore.types';
+import type { BathData, ElectricShowerData, MixedShowerData, OtherHotWaterOutletData } from '~/stores/ecaasStore.schema';
 
 const title = "Hot water outlets";
 const page = usePage();
