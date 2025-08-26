@@ -68,7 +68,6 @@ const saveForm = (fields: WindowData) => {
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
 			openingToFrameRatio: fields.openingToFrameRatio,
-			curtainsOrBlinds: fields.curtainsOrBlinds,
 			...('overhangDepth' in fields ? {overhangDepth: fields.overhangDepth} : {}),
 			...('overhangDistance' in fields ? {overhangDistance: fields.overhangDistance} : {}),
 			...('sideFinRightDepth' in fields ? {sideFinRightDepth: fields.sideFinRightDepth} : {}),
@@ -137,9 +136,10 @@ const saveForm = (fields: WindowData) => {
 
 		let window: WindowData;
 
-		if (fields.treatmentType) {
+		if (fields.curtainsOrBlinds) {
 			window = {
 				...commonFieldsIncludingOpenableParts,
+				curtainsOrBlinds: true,
 				treatmentType: fields.treatmentType,
 				thermalResistivityIncrease: fields.thermalResistivityIncrease,
 				solarTransmittanceReduction: fields.solarTransmittanceReduction,
@@ -152,6 +152,7 @@ const saveForm = (fields: WindowData) => {
 			}
 		} else {
 			window = {
+				curtainsOrBlinds: false,
 				...commonFieldsIncludingOpenableParts,
 			};
 		}
