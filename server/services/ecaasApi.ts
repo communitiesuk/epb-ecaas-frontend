@@ -77,7 +77,7 @@ function reportErrors(requestData: object, responseErrors: CorrectedJsonApiError
 			
 	Sentry.withScope(scope => {
 		scope.setExtra("responseErrors", responseErrors);
-		scope.setExtra("requestBody", JSON.parse(JSON.stringify(requestData)));
+		scope.setExtra("requestBody", JSON.stringify(requestData));
 		scope.setExtra("requestBody without External Conditions", JSON.stringify(requestBodyWithoutExternalConditions || requestData));
 		scope.setFingerprint([errorMessage]);
 		Sentry.captureException(new Error(errorMessage));
