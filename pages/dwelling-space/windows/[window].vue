@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { standardPitchOptions } from '#imports';
+import { standardPitchOptions, type WindowData } from '#imports';
 import { millimetre } from '~/utils/units/length';
 import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
 import { unitValue } from '~/utils/units/types';
@@ -68,12 +68,23 @@ const saveForm = (fields: WindowData) => {
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
 			openingToFrameRatio: fields.openingToFrameRatio,
-			...('overhangDepth' in fields ? {overhangDepth: fields.overhangDepth} : {}),
-			...('overhangDistance' in fields ? {overhangDistance: fields.overhangDistance} : {}),
-			...('sideFinRightDepth' in fields ? {sideFinRightDepth: fields.sideFinRightDepth} : {}),
-			...('sideFinRightDistance' in fields ? {sideFinRightDistance: fields.sideFinRightDistance} : {}),
-			...('sideFinLeftDepth' in fields ? {sideFinLeftDepth: fields.sideFinLeftDepth} : {}),
-			...('sideFinLeftDistance' in fields ? {sideFinLeftDistance: fields.sideFinLeftDistance} : {}),
+			...('overhangDepth' in fields && 'overhangDistance' in fields
+				? {
+					overhangDepth: fields.overhangDepth,
+					overhangDistance: fields.overhangDistance,
+				} : {}
+			),
+			...('sideFinRightDepth' in fields && 'sideFinRightDistance' in fields
+				? {
+					sideFinRightDepth: fields.sideFinRightDepth,
+					sideFinRightDistance: fields.sideFinRightDistance,
+				} : {}
+			),
+			...('sideFinLeftDepth' in fields && 'sideFinLeftDistance' in fields ? {
+				sideFinLeftDepth: fields.sideFinLeftDepth,
+				sideFinLeftDistance: fields.sideFinLeftDistance,
+			} : {}
+			),
 		};
 
 		let commonFieldsIncludingOpenableParts;
@@ -137,24 +148,21 @@ const saveForm = (fields: WindowData) => {
 		let window: WindowData;
 
 		if (fields.curtainsOrBlinds) {
-			window = {
+			const newWindowValue = {
 				...commonFieldsIncludingOpenableParts,
 				curtainsOrBlinds: true,
 				treatmentType: fields.treatmentType,
 				thermalResistivityIncrease: fields.thermalResistivityIncrease,
 				solarTransmittanceReduction: fields.solarTransmittanceReduction,
-			};
-			if (fields.treatmentType === WindowTreatmentType.curtains) {
-				window = {
-					...window,
-					curtainsControlObject: fields.curtainsControlObject,
-				};
-			}
+				...(fields.treatmentType === WindowTreatmentType.curtains ? { curtainsControlObject: fields.curtainsControlObject } : {}),
+			} as WindowData;
+			window = newWindowValue;
 		} else {
-			window = {
+			const newWindowValue = {
 				curtainsOrBlinds: false,
 				...commonFieldsIncludingOpenableParts,
-			};
+			} as WindowData;
+			window = newWindowValue;
 		}
 
 		saveToList(window, dwellingSpaceWindows);

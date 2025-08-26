@@ -356,7 +356,7 @@ const windowSummary: SummarySection = {
 			"Side fin right distance from glass": 'sideFinRightDistance' in x  && x.sideFinRightDistance ? (typeof x.sideFinRightDistance === 'number' ? `${x.sideFinRightDistance} ${millimetre.suffix}` : `${x.sideFinRightDistance.amount} ${millimetre.suffix}`) : undefined,
 			"Side fin left depth": 'sideFinLeftDepth' in x && x.sideFinLeftDepth ? (typeof x.sideFinLeftDepth === 'number' ? `${x.sideFinLeftDepth} ${millimetre.suffix}` : `${x.sideFinLeftDepth.amount} ${millimetre.suffix}`) : undefined,
 			"Side fin left distance from glass": 'sideFinLeftDistance' in x && x.sideFinLeftDistance ? (typeof x.sideFinLeftDistance === 'number' ? `${x.sideFinLeftDistance} ${millimetre.suffix}` : `${x.sideFinLeftDistance.amount} ${millimetre.suffix}`) : undefined,
-			"Type": x.treatmentType ? displayCamelToSentenceCase(x.treatmentType) : undefined,
+			"Type": x.curtainsOrBlinds ? displayCamelToSentenceCase(x.treatmentType) : undefined,
 			"Curtains control object reference": 'curtainsControlObject' in x ? displaySnakeToSentenceCase(x.curtainsControlObject!) : undefined,
 			"Thermal resistivity increase": 'thermalResistivityIncrease' in x ? `${x.thermalResistivityIncrease} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
 			"Solar transmittance reduction": 'solarTransmittanceReduction' in x ? x.solarTransmittanceReduction : undefined
