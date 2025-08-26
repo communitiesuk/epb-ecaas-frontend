@@ -156,21 +156,23 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="pipeContents"
 			validation="required"
 		/>
-		<FormKit
-			id="hotWaterCylinder"
-			type="govRadios"
-			:options="new Map(store.domesticHotWater.waterHeating.hotWaterCylinder.data.map(x => [x.id, x.name]))"
-			label="Hot water cylinder"
-			help="Select a hot water cylinder that this pipework is connected to"
-			name="hotWaterCylinder"
-			validation="required">
-			<div v-if="!store.domesticHotWater.waterHeating.hotWaterCylinder.data.length">
-				<p class="govuk-error-message">No hot water cylinder added.</p>
-				<NuxtLink :to="getUrl('hotWaterCylinderCreate')" class="govuk-link gov-radios-add-link">
-					Click here to add a hot water cylinder
-				</NuxtLink>
-			</div>
-		</FormKit>
+		<ClientOnly>
+			<FormKit
+				id="hotWaterCylinder"
+				type="govRadios"
+				:options="new Map(store.domesticHotWater.waterHeating.hotWaterCylinder.data.map(x => [x.id, x.name]))"
+				label="Hot water cylinder"
+				help="Select a hot water cylinder that this pipework is connected to"
+				name="hotWaterCylinder"
+				validation="required">
+				<div v-if="!store.domesticHotWater.waterHeating.hotWaterCylinder.data.length">
+					<p class="govuk-error-message">No hot water cylinder added.</p>
+					<NuxtLink :to="getUrl('hotWaterCylinderCreate')" class="govuk-link gov-radios-add-link">
+						Click here to add a hot water cylinder
+					</NuxtLink>
+				</div>
+			</FormKit>
+		</ClientOnly>
 		<FormKit
 			id="location"
 			type="govRadios"

@@ -120,6 +120,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
+		<ClientOnly>
 		<template v-if="model.waterHeaterType?.includes('hotWaterCylinder')">
 			<FieldsHeatGenerators
 				id="heatSource"
@@ -153,6 +154,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				</GovDetails>
 			</FormKit>
 		</template>
+		</ClientOnly>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>
