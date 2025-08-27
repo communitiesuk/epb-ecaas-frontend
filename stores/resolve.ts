@@ -24,6 +24,6 @@ export function resolveState<T extends object>(state: T): Resolved<T> {
 	return resolvedState as Resolved<T>;
 }
 
-function isEcaasForm(value: unknown): value is EcaasForm<unknown> {
+export function isEcaasForm(value: unknown): value is EcaasForm<unknown> {
 	return typeof value === 'object' && value !== null && 'data' in value && Object.keys(value).length <= 2;
 }
