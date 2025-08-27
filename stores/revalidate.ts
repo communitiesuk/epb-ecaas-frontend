@@ -58,9 +58,8 @@ function formPath(path: string[], currentKey: string): EcaasFormPath {
 
 function revalidateForm(form: EcaasForm<unknown>, path: EcaasFormPath): [true, ZodError<unknown>[]] | [false] {
 	const formSchema = formSchemas[path];
-	// following definitionally shouldn't happen, but if it did we're probably OK taking no action
+	// following could happen if state contains nodes no longer in the schema, but if so we should just ignore these nodes
 	if (!formSchema) {
-		console.warn(`An unknown path ${path} was unexpectedly referenced during revalidation of form state`);
 		return [false];
 	}
 	const formData = form.data;
