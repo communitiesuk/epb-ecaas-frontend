@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import formStatus from '~/constants/formStatus';
+import { isEcaasForm } from '#imports';
 
 const page = usePage();
 const title = "Heat emitting";
@@ -27,10 +28,11 @@ function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingT
 
 	if (emitter) {
 		const duplicates = emitters.filter(f => {
-			if ("data" in f && "data" in emitter) {
+			if (isEcaasForm(f) && isEcaasForm(emitter)) {
 				name = emitter.data.name;
 				return f.data.name.match(duplicateNamePattern(emitter.data.name));
-			} else if ("name" in f && "name" in emitter) {
+			}
+			else if (!isEcaasForm(f) && !isEcaasForm(emitter)) {
 				name = emitter.name
 				return f.name.match(duplicateNamePattern(emitter.name))
 			}
@@ -41,7 +43,7 @@ function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingT
 		store.$patch((state) => {
 			let newItem;
 
-			if ("data" in emitter) {
+			if (isEcaasForm(emitter)) {
 				newItem = {
 					complete: emitter.complete,
 					data: {
@@ -83,13 +85,10 @@ function checkIsComplete(){
 
 function hasIncompleteEntries() {
 	const emitterTypes = store.heatingSystems.heatEmitting;
-	return Object.values(emitterTypes).some(emitters => emitters.data.some(emitter => {
-		if ("data" in emitter) {
-			return !emitter.complete
-		} else {
-			return false
-		}
-	}));
+	
+	return Object.values(emitterTypes).some(
+		emitters => emitters.data.some(
+			emitter => isEcaasForm(emitter) ? !emitter.complete : false));
 }
 </script>
 
@@ -112,8 +111,8 @@ function hasIncompleteEntries() {
 	<CustomList
 		id="instantElectricHeater" title="Instant electric heater"
 		:form-url="`${page?.url!}/instant-electric-heater`"
-		:items="store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => ({
-			name: x.data.name,
+		:items="store.heatingSystems.heatEmitting.instantElectricHeater.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
 		@remove="(index: number) => handleRemove('instantElectricHeater', index)"
