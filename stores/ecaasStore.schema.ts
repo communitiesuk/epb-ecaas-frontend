@@ -534,9 +534,9 @@ const dwellingSpaceLightingDataZod = z.object({
 
 export type DwellingSpaceLightingData = z.infer<typeof dwellingSpaceLightingDataZod>;
 
-const spaceHeatingSystemDataZod = named;
+const _spaceHeatingSystemDataZod = named;
 
-export type SpaceHeatingSystemData = z.infer<typeof spaceHeatingSystemDataZod>;
+export type SpaceHeatingSystemData = z.infer<typeof _spaceHeatingSystemDataZod>;
 
 export type SpaceCoolingSystemData = z.infer<typeof spaceCoolingSystemData>;
 
@@ -592,9 +592,9 @@ const pointOfUseDataZod = named.extend({
 
 export type PointOfUseData = z.infer<typeof pointOfUseDataZod>;
 
-const hotWaterHeatPumpDataZod = named;
+const _hotWaterHeatPumpDataZod = named;
 
-export type HotWaterHeatPumpData = z.infer<typeof hotWaterHeatPumpDataZod>;
+export type HotWaterHeatPumpData = z.infer<typeof _hotWaterHeatPumpDataZod>;
 
 const combiBoilerDataZod = named;
 
@@ -929,7 +929,7 @@ const electricBatteryDataZod = z.object({
 
 export type ElectricBatteryData = z.infer<typeof electricBatteryDataZod>;
 
-const pvDiverterDataZod = named.and(z.union([
+const _pvDiverterDataZod = named.and(z.union([
 	z.object({
 		energyDivertedToHeatGeneration: z.string(),
 	}),
@@ -938,7 +938,7 @@ const pvDiverterDataZod = named.and(z.union([
 	}),
 ]));
 
-export type PvDiverterData = z.infer<typeof pvDiverterDataZod>;
+export type PvDiverterData = z.infer<typeof _pvDiverterDataZod>;
 
 export interface Cooling {
 	airConditioning: EcaasForm<AirConditioningData[]>;
@@ -985,21 +985,21 @@ type AssertEachKeyIsPageId<T> = { [P in keyof T]: P extends PageId ? T[P] : neve
 type AssertFormKeysArePageIds<T> = { [P in keyof T]: T[P] extends EcaasForm<unknown> ? (P extends PageId ? T[P] : never) : T[P] };
 
 // a type representing the set of paths in EcaasState down to instances of EcaasForm
-type IsEcaasForm<T> = T extends EcaasForm<any> ? true : false;
+type IsEcaasForm<T> = T extends EcaasForm<unknown> ? true : false;
 
 type Join<K, P> = K extends string | number
-  ? P extends string | number
-    ? `${K}/${P}`
-    : never
-  : never;
+	? P extends string | number
+		? `${K}/${P}`
+		: never
+	: never;
 
 type EcaasFormPaths<T> = {
-  [K in keyof T]:
-    IsEcaasForm<T[K]> extends true
-      ? K
-      : T[K] extends object
-        ? Join<K, EcaasFormPaths<T[K]>>
-        : never
+	[K in keyof T]:
+	IsEcaasForm<T[K]> extends true
+		? K
+		: T[K] extends object
+			? Join<K, EcaasFormPaths<T[K]>>
+			: never
 }[keyof T];
 
 export type EcaasFormPath = Exclude<EcaasFormPaths<EcaasState>, undefined>;
