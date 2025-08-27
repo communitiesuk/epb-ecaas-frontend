@@ -8,7 +8,7 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const heatPumpData = useItemToEdit('pump', store.heatingSystems.heatGeneration.heatPump.data);
-const model: Ref<HeatPumpData> = ref(heatPumpData!);
+const model: Ref<HeatPumpData> = ref(heatPumpData?.data!);
 
 const { data: heatPumps } = await useFetch('/api/products', { query: { category: 'heatPump' } });
 
@@ -21,10 +21,13 @@ const saveForm = (fields: HeatPumpData) => {
 	store.$patch((state) => {
 		const {heatPump} = state.heatingSystems.heatGeneration;
 
-		const heatPumpItem: HeatPumpData = {
-			id: heatPumpData ? heatPumpData.id : uuidv4(),
-			name: fields.name,
-			productReference: fields.productReference,
+		const heatPumpItem: EcaasForm<HeatPumpData> = {
+			data: {
+				id: heatPumpData ? heatPumpData.data.id : uuidv4(),
+				name: fields.name,
+				productReference: fields.productReference,
+			},
+			complete: true
 		};
 
 		saveToList(heatPumpItem, heatPump);

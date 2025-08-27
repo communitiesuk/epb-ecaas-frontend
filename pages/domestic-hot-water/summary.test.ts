@@ -59,8 +59,10 @@ describe('Domestic hot water summary', () => {
 					heatGeneration: {
 						heatPump: {
 							data: [{
-								id: heatPumpId,
-								name: 'Heat pump'
+								data: {
+									id: heatPumpId,
+									name: 'Heat pump'
+								}
 							}]
 						}
 					}

@@ -55,7 +55,7 @@ function checkIsComplete(){
 		id="heatPump"
 		title="Heat pump"
 		:form-url="`${page?.url!}/heat-pump`"
-		:items="store.heatingSystems.heatGeneration.heatPump.data.map(x => x.name)"
+		:items="store.heatingSystems.heatGeneration.heatPump.data.map(x => x.data.name)"
 		@remove="(index: number) => handleRemove('heatPump', index)"
 	/>
 	<!--	<CustomList-->

@@ -16,7 +16,7 @@ const store = useEcaasStore();
 const { heatPump, boiler, heatBattery, heatNetwork, heatInterfaceUnit } = store.heatingSystems.heatGeneration;
 
 const heatGenerators = [
-	heatPump.data.map(x => [x.id, x.name] as [string, string]),
+	heatPump.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	boiler.data.map(x => [x.id, x.name] as [string, string]),
 	heatBattery.data.map(x => [x.id, x.name] as [string, string]),
 	heatNetwork.data.map(x => [x.id, x.name] as [string, string]),

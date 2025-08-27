@@ -51,7 +51,7 @@ describe('heat generation', () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [heatPump1]
+							data: [{data: heatPump1}]
 						}
 					}
 				}
@@ -71,7 +71,7 @@ describe('heat generation', () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data:[heatPump1, heatPump2, heatPump3]
+							data:[{data: heatPump1}, {data: heatPump2}, {data: heatPump3}]
 						}
 					}
 				}
@@ -356,7 +356,7 @@ describe('heat generation', () => {
 	function heatingSystemsFunc(): Pick<HeatingSystems, 'heatGeneration'> {
 		return {
 			heatGeneration: {
-				heatPump: { data: [{ id: "1b6a1e50-0e1f-4bc1-b198-f84587a7fdf2", name: "Heat pump 1", productReference: "HEATPUMP-MEDIUM" }] },
+				heatPump: { data: [{ data: { id: "1b6a1e50-0e1f-4bc1-b198-f84587a7fdf2", name: "Heat pump 1", productReference: "HEATPUMP-MEDIUM" }}] },
 				boiler: { data: [{ id: "2eec2b28-7c7a-47c2-92bb-c13b1eaa9ae3", name: "Boiler 1" }] },
 				heatBattery: { data: [{ id: "3c4bc9a3-2e7c-419a-86c9-0cb2f4768a1c", name: "Battery 1" }] },
 				heatNetwork: { data: [{ id: "46d0c104-42a5-44f4-b250-f58c933b9f5e", name: "Network 1" }] },

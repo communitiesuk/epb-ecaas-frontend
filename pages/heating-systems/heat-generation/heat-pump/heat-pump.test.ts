@@ -44,7 +44,7 @@ describe('heatPump', () => {
 
 		const { data } = store.heatingSystems.heatGeneration.heatPump;
 		
-		expect(data[0]).toEqual(heatPump);
+		expect(data[0]?.data).toEqual(heatPump);
 	});
 
 	test('form is prepopulated when data exists in state', async () => {
@@ -52,7 +52,9 @@ describe('heatPump', () => {
 			heatingSystems: {
 				heatGeneration: {
 					heatPump: {
-						data: [heatPump]
+						data: [{
+							data: heatPump
+						}]
 					}
 				}
 			}
@@ -72,7 +74,9 @@ describe('heatPump', () => {
 			heatingSystems: {
 				heatGeneration: {
 					heatPump: {
-						data: [heatPump]
+						data: [{
+							data: heatPump
+						}]
 					}
 				}
 			}
@@ -92,9 +96,9 @@ describe('heatPump', () => {
 
 		const { data } = store.heatingSystems.heatGeneration.heatPump;
 		
-		expect(data[0]?.id).toBe(heatPump.id);
-		expect(data[0]?.name).toBe('Heat pump 2');
-		expect(data[0]?.productReference).toBe('HEATPUMP-SMALL');
+		expect(data[0]?.data.id).toBe(heatPump.id);
+		expect(data[0]?.data.name).toBe('Heat pump 2');
+		expect(data[0]?.data.productReference).toBe('HEATPUMP-SMALL');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

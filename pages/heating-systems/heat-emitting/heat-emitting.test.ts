@@ -99,11 +99,13 @@ describe("heat emitting", () => {
 		const instantElectricHeater2 = {
 			data: { 
 				name: "Instant Electric Heater 2",
-			}		};
+			}
+		};
 		const instantElectricHeater3 = {
 			data: { 
 				name: "Instant Electric Heater 3",
-			}		};
+			}
+		};
 
 		it("should remove instant electric heater when remove link is clicked", async () => {
 			store.$patch({
@@ -434,12 +436,12 @@ describe("heat emitting", () => {
 					},
 					heatGeneration: {
 						heatPump: {
-							data: [
-								{
+							data: [{
+								data: {
 									id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 									name: "Heat pump 1",
 								},
-							],
+							}],
 						},
 					},
 				},

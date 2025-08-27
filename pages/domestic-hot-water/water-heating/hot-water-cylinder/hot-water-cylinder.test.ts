@@ -37,8 +37,10 @@ describe('hot water cylinder', () => {
 				heatGeneration: {
 					heatPump: {
 						data: [{
-							id: heatPumpId,
-							name: 'Heat pump'
+							data: {
+								id: heatPumpId,
+								name: 'Heat pump'
+							}
 						}]
 					}
 				}

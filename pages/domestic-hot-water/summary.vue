@@ -13,14 +13,14 @@ import { wattsPerMeterKelvin } from '~/utils/units/thermalConductivity';
 const title = "Domestic hot water";
 const store = useEcaasStore();
 
-const { heatPump, boiler, heatBattery, heatNetwork, heatInterfaceUnit } = store.heatingSystems.heatGeneration;
+const { heatPump } = store.heatingSystems.heatGeneration;
 const heatGenerationData = [
 	heatPump.data,
-	boiler.data,
-	heatBattery.data,
-	heatNetwork.data,
-	heatInterfaceUnit.data
-].flat().map(x => ({ id: x.id, name: x.name }));
+	// boiler.data,
+	// heatBattery.data,
+	// heatNetwork.data,
+	// heatInterfaceUnit.data
+].flat().map(x => ({ id: x.data.id, name: x.data.name }));
 
 const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
 const hotWaterCylinderSummary: SummarySection = {

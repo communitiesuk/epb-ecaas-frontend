@@ -92,8 +92,8 @@ export function mapDistributionData(state: ResolvedState) {
 
 export function mapHotWaterSourcesData(state: ResolvedState) {
 	return state.domesticHotWater.waterHeating.hotWaterCylinder.map((x): SchemaHotWaterSourceDetails => {
-		const referencedHeatPump = state.heatingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.id === x.heatSource);
-		const heatPumpName = referencedHeatPump ? referencedHeatPump.name : "Heat pump";
+		const referencedHeatPump = state.heatingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.data.id === x.heatSource);
+		const heatPumpName = referencedHeatPump ? referencedHeatPump.data.name : "Heat pump";
 		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
 			return {
 				location: x.location,

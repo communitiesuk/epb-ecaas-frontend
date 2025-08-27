@@ -167,7 +167,10 @@ describe("heating systems mapper", () => {
 				heatGeneration: {
 					heatPump: {
 						...baseForm,
-						data: [heatPump]
+						data: [{
+							...baseForm,
+							data: heatPump,
+						}]
 					}
 				},
 				heatEmitting
@@ -256,7 +259,10 @@ describe("heating systems mapper", () => {
 				heatGeneration: {
 					heatPump: {
 						...baseForm,
-						data: [heatPump]
+						data: [{
+							...baseForm,
+							data: heatPump
+						}]
 					}
 				},
 				heatEmitting,

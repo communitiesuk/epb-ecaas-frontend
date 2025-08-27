@@ -779,7 +779,7 @@ export type HeatingSystems = AssertEachKeyIsPageId<{
 }>;
 
 export type HeatGeneration = AssertFormKeysArePageIds<{
-	heatPump: EcaasForm<HeatPumpData[]>;
+	heatPump: EcaasForm<EcaasForm<HeatPumpData>[]>;
 	boiler: EcaasForm<BoilerData[]>;
 	heatBattery: EcaasForm<HeatBatteryData[]>;
 	heatNetwork: EcaasForm<HeatNetworkData[]>;

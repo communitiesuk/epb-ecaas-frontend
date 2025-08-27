@@ -39,8 +39,8 @@ const heatPumpSummary: SummarySection = {
 	data:
 		heatPumps.map((pump) => {
 			return {
-				Name: pump.name,
-				Product: pump.productReference,
+				Name: pump.data.name,
+				Product: pump.data.productReference,
 			};
 		}) || [],
 	editUrl: heatGenerationUrl,
@@ -96,23 +96,23 @@ const heatInterfaceUnitSummary: SummarySection = {
 
 const heatGenerationSummary: SummarySection[] = [
 	heatPumpSummary,
-	boilerSummary,
-	heatBatterySummary,
-	heatNetworkSummary,
-	heatInterfaceUnitSummary,
+	// boilerSummary,
+	// heatBatterySummary,
+	// heatNetworkSummary,
+	// heatInterfaceUnitSummary,
 ].filter((x) => x.data.length);
 
 const { heatPump, boiler, heatBattery, heatNetwork, heatInterfaceUnit } =
 	store.heatingSystems.heatGeneration;
 const heatGenerationData = [
 	heatPump.data,
-	boiler.data,
-	heatBattery.data,
-	heatNetwork.data,
-	heatInterfaceUnit.data,
+	// boiler.data,
+	// heatBattery.data,
+	// heatNetwork.data,
+	// heatInterfaceUnit.data,
 ]
 	.flat()
-	.map((x) => ({ id: x.id, name: x.name }));
+	.map((x) => ({ id: x.data.id, name: x.data.name }));
 
 const heatEmittingUrl = "/heating-systems/heat-emitting";
 
