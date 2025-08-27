@@ -33,16 +33,19 @@ const doImport = (_event: Event) => {
 			return;
 		}
 
-		let fileState: EcaasState | undefined;
+		let fileState: EcaasState;
     
 		try {
-			fileState = JSON.parse(reader.result as string);
+			fileState = JSON.parse(reader.result as string)!;
 		} catch {
 			errorMessage.value = 'The provided file is not recognised as containing JSON.';
 			return;
 		}
 
 		errorMessage.value = null;
+
+		const { newState: newValidatedState } = revalidateState(fileState);
+		fileState = newValidatedState as EcaasState;
 
 		store.$patch({
 			...getInitialState(),
