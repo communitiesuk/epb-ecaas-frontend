@@ -167,7 +167,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required">
 				<div v-if="!store.domesticHotWater.waterHeating.hotWaterCylinder.data.length">
 					<p class="govuk-error-message">No hot water cylinder added.</p>
-					<NuxtLink :to="getUrl('hotWaterCylinderCreate')" class="govuk-link gov-radios-add-link">
+					<NuxtLink :to="getUrl('waterHeating')" class="govuk-link gov-radios-add-link">
 						Click here to add a hot water cylinder
 					</NuxtLink>
 				</div>
