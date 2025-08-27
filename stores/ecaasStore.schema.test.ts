@@ -1,5 +1,5 @@
 import { WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
-import { windowData } from "./ecaasStore.schema";
+import { windowDataZod } from "./ecaasStore.schema";
 
 describe('windowData Zod schema', () => {
 	it('correctly validates a valid window shape with one openable part', () => {
@@ -34,7 +34,7 @@ describe('windowData Zod schema', () => {
 		};
 		expect(
 			() => {
-				windowData.parse(windowFormData);
+				windowDataZod.parse(windowFormData);
 			}
 		).not.toThrowError();
 	});
@@ -71,7 +71,7 @@ describe('windowData Zod schema', () => {
 		};
 		expect(
 			() => {
-				windowData.parse(windowFormData);
+				windowDataZod.parse(windowFormData);
 			}
 		).toThrowError();
 	});
@@ -107,7 +107,7 @@ describe('windowData Zod schema', () => {
 		};
 		expect(
 			() => {
-				windowData.parse(windowFormData);
+				windowDataZod.parse(windowFormData);
 			}
 		).toThrowError();
 	});

@@ -1,3 +1,5 @@
+import { isEcaasForm } from "./ecaasStore.schema";
+
 export type Resolved<T> = { readonly [P in keyof T]: T[P] extends EcaasForm<infer U> ? U : Resolved<T[P]> } & {};
 
 export function resolveState<T extends object>(state: T): Resolved<T> {
@@ -22,8 +24,4 @@ export function resolveState<T extends object>(state: T): Resolved<T> {
 	}
 
 	return resolvedState as Resolved<T>;
-}
-
-export function isEcaasForm(value: unknown): value is EcaasForm<unknown> {
-	return typeof value === 'object' && value !== null && 'data' in value && Object.keys(value).length <= 2;
 }
