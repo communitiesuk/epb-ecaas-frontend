@@ -3,7 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import GroundFloor from './[floor].vue';
 import { FloorType, MassDistributionClass, WindShieldLocation } from "~/schema/api-schema.types";
-import { Length, centimetre } from "~/utils/units/length";
+import { centimetre } from "~/utils/units/length";
+import { unitValue } from "~/utils/units/types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -32,7 +33,7 @@ describe('ground floor', () => {
 		...groundFloor,
 		typeOfGroundFloor: FloorType.Slab_edge_insulation,
 		edgeInsulationType: "horizontal",
-		edgeInsulationWidth: new Length(0, centimetre),
+		edgeInsulationWidth: unitValue(0, centimetre),
 		edgeInsulationThermalResistance: 0
 	};
 

@@ -2,7 +2,7 @@ import Ventilation from './natural-ventilation.vue';
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
-import type { VentilationData } from '~/stores/ecaasStore.types';
+import type { VentilationData } from '~/stores/ecaasStore.schema';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {

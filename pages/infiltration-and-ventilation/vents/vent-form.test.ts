@@ -2,7 +2,7 @@ import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { userEvent } from '@testing-library/user-event';
 import Vent from './[vent].vue';
-import type { VentData } from '~/stores/ecaasStore.types';
+import type { VentData } from '~/stores/ecaasStore.schema';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {

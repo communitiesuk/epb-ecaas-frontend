@@ -4,7 +4,7 @@ import { screen, within } from "@testing-library/vue";
 import { FuelType } from "~/schema/api-schema.types";
 import { kilowatt } from "~/utils/units/power";
 import { kilowattHourPerKelvin } from "~/utils/units/thermalConductivity";
-import { celcius } from "~/utils/units/temperature";
+import { celsius } from "~/utils/units/temperature";
 import { litrePerMinute } from "~/utils/units/flowRate";
 import { metresSquare } from "~/utils/units/area";
 import { co2PerKilowattHour } from "~/utils/units/emissions";
@@ -452,13 +452,13 @@ describe("Heating systems summary page", () => {
 				Name: "Wet distribution 1",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": `2 ${kilowattHourPerKelvin.suffix}`,
-				"Design temperature difference across the emitters": `0.4 ${celcius.suffix}`,
-				"Design flow temperature": `32 ${celcius.suffix}`,
+				"Design temperature difference across the emitters": `0.4 ${celsius.suffix}`,
+				"Design flow temperature": `32 ${celsius.suffix}`,
 				"Design flow rate": `5 ${litrePerMinute.suffix}`,
 				"Type of space heater": "Radiators",
 				"Convection fraction": "0.2",
 				"Eco design controller class": "1",
-				"Minimum flow temperature": `20 ${celcius.suffix}`,
+				"Minimum flow temperature": `20 ${celsius.suffix}`,
 			};
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
@@ -486,13 +486,13 @@ describe("Heating systems summary page", () => {
 				Name: "Wet distribution 2",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": `2 ${kilowattHourPerKelvin.suffix}`,
-				"Design temperature difference across the emitters": `0.4 ${celcius.suffix}`,
-				"Design flow temperature": `32 ${celcius.suffix}`,
+				"Design temperature difference across the emitters": `0.4 ${celsius.suffix}`,
+				"Design flow temperature": `32 ${celsius.suffix}`,
 				"Design flow rate": `5 ${litrePerMinute.suffix}`,
 				"Type of space heater": "Underfloor heating",
 				"Emitter floor area": `5 ${metresSquare.suffix}`,
 				"Eco design controller class": "1",
-				"Minimum flow temperature": `20 ${celcius.suffix}`,
+				"Minimum flow temperature": `20 ${celsius.suffix}`,
 			};
 
 			await renderSuspended(HeatingSystemsSummary);
@@ -521,13 +521,13 @@ describe("Heating systems summary page", () => {
 				Name: "Wet distribution 1",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": `2 ${kilowattHourPerKelvin.suffix}`,
-				"Design temperature difference across the emitters": `0.4 ${celcius.suffix}`,
-				"Design flow temperature": `32 ${celcius.suffix}`,
+				"Design temperature difference across the emitters": `0.4 ${celsius.suffix}`,
+				"Design flow temperature": `32 ${celsius.suffix}`,
 				"Design flow rate": `5 ${litrePerMinute.suffix}`,
 				"Type of space heater": "Radiators",
 				"Convection fraction": "0.2",
 				"Eco design controller class": "1",
-				"Minimum flow temperature": `20 ${celcius.suffix}`,
+				"Minimum flow temperature": `20 ${celsius.suffix}`,
 			};
 
 			await renderSuspended(HeatingSystemsSummary);

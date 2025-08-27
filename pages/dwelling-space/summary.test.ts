@@ -1,13 +1,14 @@
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import Summary from './summary.vue';
 import { screen } from '@testing-library/vue';
-import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from '~/stores/ecaasStore.types';
+import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from '~/stores/ecaasStore.schema';
 import { FloorType, MassDistributionClass, WindowTreatmentType } from '~/schema/api-schema.types';
-import { Length, metre, millimetre } from '~/utils/units/length';
+import { metre, millimetre } from '~/utils/units/length';
 import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from '~/utils/units/thermalConductivity';
 import { degrees } from '~/utils/units/angle';
 import { metresSquare } from '~/utils/units/area';
 import { cubicMetre } from '~/utils/units/volume';
+import { unitValue } from '~/utils/units/types';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -218,12 +219,12 @@ const windowData: WindowData = {
 	midHeight: 1,
 	openingToFrameRatio: 0.2,
 	numberOpenableParts: '0',
-	overhangDepth: new Length(100, millimetre),
-	overhangDistance: new Length(100, millimetre),
-	sideFinRightDepth: new Length(100, millimetre),
-	sideFinRightDistance: new Length(100, millimetre),
-	sideFinLeftDepth: new Length(100, millimetre),
-	sideFinLeftDistance: new Length(100, millimetre),
+	overhangDepth: unitValue(100, millimetre),
+	overhangDistance: unitValue(100, millimetre),
+	sideFinRightDepth: unitValue(100, millimetre),
+	sideFinRightDistance: unitValue(100, millimetre),
+	sideFinLeftDepth: unitValue(100, millimetre),
+	sideFinLeftDistance: unitValue(100, millimetre),
 	curtainsOrBlinds: true,
 	treatmentType: WindowTreatmentType.blinds,
 	thermalResistivityIncrease: 1,

@@ -1,4 +1,5 @@
-import { Volume, litre, cubicMetre } from "./volume";
+import { unitValue } from "./types";
+import { litre, cubicMetre, asLitres } from "./volume";
 
 describe('VolumeUnit', () => {
 	test('suffix for litres is l', () => {
@@ -12,20 +13,17 @@ describe('VolumeUnit', () => {
 
 describe('Volume', () => {
 	test('0 cubic metres is equivalent to 0 litres', () => {
-		const volume1 = new Volume(0, cubicMetre);
-		const volume2 = new Volume(0, litre);
-		expect(volume1.asLitres()).toStrictEqual(volume2);
+		const volume = unitValue(0, cubicMetre);
+		expect(asLitres(volume)).toEqual(0);
 	});
     
 	test('0.01 cubic metre is equivalent to 10 litre', () => {
-		const volume1 = new Volume(0.01, cubicMetre);
-		const volume2 = new Volume(10, litre);
-		expect(volume1.asLitres()).toStrictEqual(volume2);
+		const volume = unitValue(0.01, cubicMetre);
+		expect(asLitres(volume)).toEqual(10);
 	});
 
 	test('1 cubic metres is equivalent to 1000 litres', () => {
-		const volume1 = new Volume(1, cubicMetre);
-		const volume2 = new Volume(1000, litre);
-		expect(volume1.asLitres()).toStrictEqual(volume2);
+		const volume = unitValue(1, cubicMetre);
+		expect(asLitres(volume)).toEqual(1000);
 	});
 });

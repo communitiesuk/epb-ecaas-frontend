@@ -8,8 +8,9 @@ import {
 import type {SchemaBuildingElement, SchemaEdgeInsulation, SchemaThermalBridgingDetails} from "~/schema/api-schema.types";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
-import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.types";
-import { Length, centimetre, millimetre } from "../utils/units/length";
+import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.schema";
+import { centimetre, millimetre } from "../utils/units/length";
+import { unitValue } from "~/utils/units/types";
 
 type BuildingElementGround = Extract<SchemaBuildingElement, { type: 'BuildingElementGround' }>;
 type BuildingElementOpaque = Extract<SchemaBuildingElement, { type: 'BuildingElementOpaque' }>;
@@ -116,7 +117,7 @@ describe('dwelling fabric mapper', () => {
 			name: 'Ground 2',
 			typeOfGroundFloor: FloorType.Slab_edge_insulation,
 			edgeInsulationType: "horizontal",
-			edgeInsulationWidth: new Length(36, centimetre),
+			edgeInsulationWidth: unitValue(36, centimetre),
 			edgeInsulationThermalResistance: 0
 		};
 
@@ -639,12 +640,12 @@ describe('dwelling fabric mapper', () => {
 			elevationalHeight: 1,
 			midHeight: 1,
 			numberOpenableParts: '1',
-			overhangDepth: new Length(1000, millimetre),
-			overhangDistance: new Length(1000, millimetre),
-			sideFinRightDepth: new Length(1000, millimetre),
-			sideFinRightDistance: new Length(1000, millimetre),
-			sideFinLeftDepth: new Length(1000, millimetre),
-			sideFinLeftDistance: new Length(1000, millimetre),
+			overhangDepth: unitValue(1000, millimetre),
+			overhangDistance: unitValue(1000, millimetre),
+			sideFinRightDepth: unitValue(1000, millimetre),
+			sideFinRightDistance: unitValue(1000, millimetre),
+			sideFinLeftDepth: unitValue(1000, millimetre),
+			sideFinLeftDistance: unitValue(1000, millimetre),
 			curtainsOrBlinds: true,
 			treatmentType: WindowTreatmentType.blinds,
 			thermalResistivityIncrease: 1,

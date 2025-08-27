@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { BuildType } from '~/schema/api-schema.types';
+import { isInteger } from "~/utils/validation";
 
 const title = "General details";
 const store = useEcaasStore();
@@ -56,7 +57,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputInt"
 			label="Number of storeys in building"
 			name="storeysInDwelling"
-			validation="required | number | min:1 | max:250"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger | min:1 | max:250"
+			:validation-messages="{
+				isInteger: `Number of storeys in building must be an integer.`,
+			}"
 			help="For houses this is the same as the number of storeys in the dwelling. For flats this is the total number of stories of the whole building the flat is in"
 		/>
 		<FormKit
@@ -65,7 +70,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputInt"
 			label="Storey of flat"
 			name="storeyOfFlat"
-			validation="required | number | min:-50 | max:199"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger | min:-50 | max:199"
+			:validation-messages="{
+				isInteger: `Storey of flat must be an integer.`,
+			}"
 			help="The vertical position of the flat expressed by the storey it is on. 0 represents the ground floor."
 		/>
 		<FormKit
@@ -73,7 +82,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputInt"
 			label="Number of bedrooms"
 			name="numOfBedrooms"
-			validation="required | number | min:1"
+			:validation-rules="{ isInteger }"
+			validation="required | isInteger | min:1"
+			:validation-messages="{
+				isInteger: `Number of bedrooms must be an integer.`,
+			}"
 			help="This affects the dwelling's predicted occupancy"
 		/>
 		<FormKit

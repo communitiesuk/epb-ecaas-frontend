@@ -149,3 +149,37 @@ describe('Get error message', () => {
 		expect(result).toBe('Invalid length.');
 	});
 });
+
+describe('Is integer', () => {
+	const makeNode = (value: string | number | null | undefined): FormKitNode => ({
+		value
+	} as unknown as FormKitNode);
+
+	it('returns true for integer numbers', () => {
+		expect(isInteger(makeNode(0))).toBe(true);
+		expect(isInteger(makeNode(42))).toBe(true);
+		expect(isInteger(makeNode(-7))).toBe(true);
+	});
+
+	it('returns true for integer strings', () => {
+		expect(isInteger(makeNode('0'))).toBe(true);
+		expect(isInteger(makeNode('42'))).toBe(true);
+		expect(isInteger(makeNode('-7'))).toBe(true);
+	});
+
+	it('returns false for decimal numbers', () => {
+		expect(isInteger(makeNode(3.14))).toBe(false);
+		expect(isInteger(makeNode(-2.7))).toBe(false);
+	});
+
+	it('returns false for decimal strings', () => {
+		expect(isInteger(makeNode('3.14'))).toBe(false);
+		expect(isInteger(makeNode('-2.7'))).toBe(false);
+	});
+
+	it('returns false for non-numeric strings', () => {
+		expect(isInteger(makeNode('abc'))).toBe(false);
+		expect(isInteger(makeNode('42abc'))).toBe(false);
+		expect(isInteger(makeNode('abc42'))).toBe(false);
+	});
+});

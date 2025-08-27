@@ -3,7 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import HotWaterCylinder from './[hotWaterCylinder].vue';
 import { v4 as uuidv4 } from 'uuid';
-import { Volume, litre } from "~/utils/units/volume";
+import { litre } from "~/utils/units/volume";
+import { unitValue } from "~/utils/units/types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -22,7 +23,7 @@ describe('hot water cylinder', () => {
 		id: 'c84528bb-f805-4f1e-95d3-2bd17384fdbe',
 		name: 'Hot water cylinder 1',
 		heatSource: heatPumpId,
-		storageCylinderVolume: new Volume(5, litre),
+		storageCylinderVolume: unitValue(5, litre),
 		dailyEnergyLoss: 1,
 	};
 

@@ -1,5 +1,5 @@
 import type { SchemaFhsComplianceResponse, SchemaFhsMeta } from "~/schema/api-schema.types";
-import type { CorrectedJsonApiError } from "~/stores/ecaasStore.types";
+import type { CorrectedJsonApiError } from "~/stores/ecaasStore.schema";
 
 export interface TokenResponse {
 	access_token: string;

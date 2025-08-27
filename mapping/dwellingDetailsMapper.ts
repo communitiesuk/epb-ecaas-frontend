@@ -25,7 +25,7 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 		},
 		NumberOfBedrooms: generalDetails.numOfBedrooms,
 		PartGcompliance: true,
-		...(generalDetails.coolingRequired !== undefined ? {PartO_active_cooling_required: generalDetails.coolingRequired} : {}),
+		PartO_active_cooling_required: generalDetails.coolingRequired,
 	};
 }
 

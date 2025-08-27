@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AdjacentSpaceType } from '~/stores/ecaasStore.types';
+import { AdjacentSpaceType } from '~/stores/ecaasStore.schema';
 
 const title = "Internal floor";
 const store = useEcaasStore();

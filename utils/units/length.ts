@@ -1,57 +1,26 @@
-export enum LengthUnitName {
-	METRES = 'metres',
-	CENTIMETRES = 'centimetres',
-	MILLIMETRES = 'millimetres',
-}
+import type { Dimension, UnitForDimension } from "./types";
+import { unit } from "./units";
 
-enum LengthSuffix {
-	METRES = 'm',
-	CENTIMETRES = 'cm',
-	MILLIMETRES = 'mm',
-}
+export type LengthUnit = UnitForDimension<'length'>;
 
-export class LengthUnit {
-	name: LengthUnitName;
-	suffix: LengthSuffix;
+export const metre = unit('metres');
+export const centimetre = unit('centimetres');
+export const millimetre = unit('millimetres');
 
-	constructor(name: LengthUnitName) {
-		this.name = name;
-		this.suffix = this.getSuffix();
+export type Length = Dimension<LengthUnit['name']>;
+
+export function asMetres(length: Length): number {
+	const { unit, amount } = length;
+
+	if (unit === 'centimetres') {
+		const convertedAmount = amount * 0.01;
+		return convertedAmount;
 	}
 
-	private getSuffix() {
-		switch (this.name) {
-			case LengthUnitName.METRES: return LengthSuffix.METRES;
-			case LengthUnitName.CENTIMETRES: return LengthSuffix.CENTIMETRES;
-			case LengthUnitName.MILLIMETRES: return LengthSuffix.MILLIMETRES;
-		}
-	}
-}
-
-export const metre = new LengthUnit(LengthUnitName.METRES);
-export const centimetre = new LengthUnit(LengthUnitName.CENTIMETRES);
-export const millimetre = new LengthUnit(LengthUnitName.MILLIMETRES);
-
-export class Length {
-	amount: number;
-	unit: LengthUnitName;
-
-	constructor(amount: number, unit: LengthUnit) {
-		this.amount = amount;
-		this.unit = unit.name;
+	if (unit === 'millimetres') {
+		const convertedAmount = amount * 0.001;
+		return convertedAmount;
 	}
 
-	asMetres(): Length {
-		if (this.unit === LengthUnitName.CENTIMETRES) {
-			const convertedAmount = this.amount * 0.01;
-			return new Length(convertedAmount, metre);
-		}
-
-		if (this.unit === LengthUnitName.MILLIMETRES) {
-			const convertedAmount = this.amount * 0.001;
-			return new Length(convertedAmount, millimetre);
-		}
-
-		return this;
-	}
+	return amount;
 }

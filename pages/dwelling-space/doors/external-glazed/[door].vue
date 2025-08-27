@@ -124,10 +124,31 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			id="openingToFrameRatio"
 			type="govInputFloat"
 			label="Window to frame ratio"
-			help="Enter the proportion of the door taken up by the window. It should be a decimal between 0 and 1."
+			help="Enter the proportion of the door taken up by the window"
 			name="openingToFrameRatio"
 			validation="required | number | min:0 | max:1"
-		/>
+		>
+			<GovDetails summary-text="Help with this input">
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header govuk-!-width-one-third">Window to door ratio</th>
+							<th scope="col" class="govuk-table__header">Description</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">0</th>
+							<td class="govuk-table__cell">There is no window in the door.</td>
+						</tr>
+						<tr class="govuk-table__row">
+							<th scope="row" class="govuk-table__header govuk-!-font-weight-regular">1</th>
+							<td class="govuk-table__cell">There is no frame, only glass.</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<GovLLMWarning />
 		<FormKit
 			type="govButton"

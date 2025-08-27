@@ -4,7 +4,7 @@ import { getTabItems, getUrl } from "#imports";
 import { FuelType } from "~/schema/api-schema.types";
 import { co2PerKilowattHour } from "~/utils/units/emissions";
 import { kilowattHourPerKelvin } from "~/utils/units/thermalConductivity";
-import { celcius } from "~/utils/units/temperature";
+import { celsius } from "~/utils/units/temperature";
 import { litrePerMinute } from "~/utils/units/flowRate";
 import { metresSquare } from "~/utils/units/area";
 import { kilowatt } from "~/utils/units/power";
@@ -128,8 +128,8 @@ const wetDistributionSummary: SummarySection = {
 			)?.name,
 			"Thermal mass": `${wetDistribution.thermalMass} ${kilowattHourPerKelvin.suffix}`,
 			"Design temperature difference across the emitters":
-				`${wetDistribution.designTempDiffAcrossEmitters} ${celcius.suffix}`,
-			"Design flow temperature": `${wetDistribution.designFlowTemp} ${celcius.suffix}`,
+				`${wetDistribution.designTempDiffAcrossEmitters} ${celsius.suffix}`,
+			"Design flow temperature": `${wetDistribution.designFlowTemp} ${celsius.suffix}`,
 			"Design flow rate": `${wetDistribution.designFlowRate} ${litrePerMinute.suffix}`,
 			"Type of space heater": wetDistribution.typeOfSpaceHeater === "radiator"
 				? "Radiators"
@@ -156,7 +156,7 @@ const wetDistributionSummary: SummarySection = {
 		wetDistributionData["Eco design controller class"] =
 			wetDistribution.ecoDesignControllerClass;
 		wetDistributionData["Minimum flow temperature"] =
-			`${wetDistribution.minimumFlowTemp} ${celcius.suffix}`;
+			`${wetDistribution.minimumFlowTemp} ${celsius.suffix}`;
 
 		return wetDistributionData;
 	}) || [],

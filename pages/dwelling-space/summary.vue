@@ -2,11 +2,6 @@
 import type { SummarySection } from '~/common.types';
 import { getUrl, getTabItems, type ArealHeatCapacityValue } from '#imports';
 import { FloorType } from '~/schema/api-schema.types';
-
-function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
-	// note - use parseFloat and toFixed to avoid JS precision issues
-	return parseFloat((1 - openingToFrameRatio).toFixed(10));
-}
 import { metresSquare, millimetresSquarePerMetre } from '~/utils/units/area';
 import { degrees } from '~/utils/units/angle';
 import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from '~/utils/units/thermalConductivity';
@@ -15,6 +10,11 @@ import { cubicMetre } from '~/utils/units/volume';
 
 const title = "Dwelling fabric summary";
 const store = useEcaasStore();
+
+function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
+	// note - use parseFloat and toFixed to avoid JS precision issues
+	return parseFloat((1 - openingToFrameRatio).toFixed(10));
+}
 
 const zoneParametersData = store.dwellingFabric.dwellingSpaceZoneParameters.data;
 
@@ -356,7 +356,7 @@ const windowSummary: SummarySection = {
 			"Side fin right distance from glass": 'sideFinRightDistance' in x  && x.sideFinRightDistance ? (typeof x.sideFinRightDistance === 'number' ? `${x.sideFinRightDistance} ${millimetre.suffix}` : `${x.sideFinRightDistance.amount} ${millimetre.suffix}`) : undefined,
 			"Side fin left depth": 'sideFinLeftDepth' in x && x.sideFinLeftDepth ? (typeof x.sideFinLeftDepth === 'number' ? `${x.sideFinLeftDepth} ${millimetre.suffix}` : `${x.sideFinLeftDepth.amount} ${millimetre.suffix}`) : undefined,
 			"Side fin left distance from glass": 'sideFinLeftDistance' in x && x.sideFinLeftDistance ? (typeof x.sideFinLeftDistance === 'number' ? `${x.sideFinLeftDistance} ${millimetre.suffix}` : `${x.sideFinLeftDistance.amount} ${millimetre.suffix}`) : undefined,
-			"Type": x.treatmentType ? displayCamelToSentenceCase(x.treatmentType) : undefined,
+			"Type": x.curtainsOrBlinds ? displayCamelToSentenceCase(x.treatmentType) : undefined,
 			"Curtains control object reference": 'curtainsControlObject' in x ? displaySnakeToSentenceCase(x.curtainsControlObject!) : undefined,
 			"Thermal resistivity increase": 'thermalResistivityIncrease' in x ? `${x.thermalResistivityIncrease} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
 			"Solar transmittance reduction": 'solarTransmittanceReduction' in x ? x.solarTransmittanceReduction : undefined

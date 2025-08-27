@@ -1,3 +1,5 @@
+export const lastExportDateCookieName = 'last_export_date' as const;
+
 export const clearLastExportDate = () => {
-	useCookie('last_export_date').value = undefined;
+	useCookie(lastExportDateCookieName).value = undefined;
 };

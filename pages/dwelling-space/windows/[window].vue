@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { standardPitchOptions } from '#imports';
-import { millimetre, Length } from '~/utils/units/length';
+import { standardPitchOptions, type WindowData } from '#imports';
+import { millimetre } from '~/utils/units/length';
 import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
+import { unitValue } from '~/utils/units/types';
 
 const title = "Window";
 const store = useEcaasStore();
@@ -11,27 +12,27 @@ const window = useItemToEdit('window', store.dwellingFabric.dwellingSpaceWindows
 
 // prepopulate shading data when using old input format
 if (window && 'overhangDepth' in window && typeof window.overhangDepth === 'number') {
-	window.overhangDepth = new Length(window.overhangDepth, millimetre);
+	window.overhangDepth = unitValue(window.overhangDepth, millimetre);
 };
 
 if (window && 'overhangDistance' in window) {
-	window.overhangDistance = typeof window.overhangDistance === 'number' ? new Length(window.overhangDistance, millimetre) : window.overhangDistance;
+	window.overhangDistance = typeof window.overhangDistance === 'number' ? unitValue(window.overhangDistance, millimetre) : window.overhangDistance;
 };
 
 if (window && 'sideFinRightDepth' in window) {
-	window.sideFinRightDepth = typeof window.sideFinRightDepth === 'number' ? new Length(window.sideFinRightDepth, millimetre) : window.sideFinRightDepth;
+	window.sideFinRightDepth = typeof window.sideFinRightDepth === 'number' ? unitValue(window.sideFinRightDepth, millimetre) : window.sideFinRightDepth;
 };
 
 if (window && 'sideFinRightDistance' in window) {
-	window.sideFinRightDistance = typeof window.sideFinRightDistance === 'number' ? new Length(window.sideFinRightDistance, millimetre) : window.sideFinRightDistance;
+	window.sideFinRightDistance = typeof window.sideFinRightDistance === 'number' ? unitValue(window.sideFinRightDistance, millimetre) : window.sideFinRightDistance;
 };
 
 if (window && 'sideFinLeftDepth' in window) {
-	window.sideFinLeftDepth = typeof window.sideFinLeftDepth === 'number' ? new Length(window.sideFinLeftDepth, millimetre) : window.sideFinLeftDepth;
+	window.sideFinLeftDepth = typeof window.sideFinLeftDepth === 'number' ? unitValue(window.sideFinLeftDepth, millimetre) : window.sideFinLeftDepth;
 };
 
 if (window && 'sideFinLeftDistance' in window) {
-	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === 'number' ? new Length(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
+	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === 'number' ? unitValue(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
 };
 
 const model: Ref<WindowData> = ref(window!);
@@ -67,13 +68,23 @@ const saveForm = (fields: WindowData) => {
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
 			openingToFrameRatio: fields.openingToFrameRatio,
-			curtainsOrBlinds: fields.curtainsOrBlinds,
-			...('overhangDepth' in fields ? {overhangDepth: fields.overhangDepth} : {}),
-			...('overhangDistance' in fields ? {overhangDistance: fields.overhangDistance} : {}),
-			...('sideFinRightDepth' in fields ? {sideFinRightDepth: fields.sideFinRightDepth} : {}),
-			...('sideFinRightDistance' in fields ? {sideFinRightDistance: fields.sideFinRightDistance} : {}),
-			...('sideFinLeftDepth' in fields ? {sideFinLeftDepth: fields.sideFinLeftDepth} : {}),
-			...('sideFinLeftDistance' in fields ? {sideFinLeftDistance: fields.sideFinLeftDistance} : {}),
+			...('overhangDepth' in fields && 'overhangDistance' in fields
+				? {
+					overhangDepth: fields.overhangDepth,
+					overhangDistance: fields.overhangDistance,
+				} : {}
+			),
+			...('sideFinRightDepth' in fields && 'sideFinRightDistance' in fields
+				? {
+					sideFinRightDepth: fields.sideFinRightDepth,
+					sideFinRightDistance: fields.sideFinRightDistance,
+				} : {}
+			),
+			...('sideFinLeftDepth' in fields && 'sideFinLeftDistance' in fields ? {
+				sideFinLeftDepth: fields.sideFinLeftDepth,
+				sideFinLeftDistance: fields.sideFinLeftDistance,
+			} : {}
+			),
 		};
 
 		let commonFieldsIncludingOpenableParts;
@@ -136,23 +147,22 @@ const saveForm = (fields: WindowData) => {
 
 		let window: WindowData;
 
-		if (fields.treatmentType) {
-			window = {
+		if (fields.curtainsOrBlinds) {
+			const newWindowValue = {
 				...commonFieldsIncludingOpenableParts,
+				curtainsOrBlinds: true,
 				treatmentType: fields.treatmentType,
 				thermalResistivityIncrease: fields.thermalResistivityIncrease,
 				solarTransmittanceReduction: fields.solarTransmittanceReduction,
-			};
-			if (fields.treatmentType === WindowTreatmentType.curtains) {
-				window = {
-					...window,
-					curtainsControlObject: fields.curtainsControlObject,
-				};
-			}
+				...(fields.treatmentType === WindowTreatmentType.curtains ? { curtainsControlObject: fields.curtainsControlObject } : {}),
+			} as WindowData;
+			window = newWindowValue;
 		} else {
-			window = {
+			const newWindowValue = {
+				curtainsOrBlinds: false,
 				...commonFieldsIncludingOpenableParts,
-			};
+			} as WindowData;
+			window = newWindowValue;
 		}
 
 		saveToList(window, dwellingSpaceWindows);

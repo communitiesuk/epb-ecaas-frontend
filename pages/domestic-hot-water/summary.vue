@@ -5,7 +5,7 @@ import type {ImmersionHeaterPosition} from '#imports';
 import { immersionHeaterPositionValues } from '~/mapping/common';
 import { litre } from '~/utils/units/volume';
 import { kilowatt, kilowattHour } from '~/utils/units/power';
-import { celcius } from '~/utils/units/temperature';
+import { celsius } from '~/utils/units/temperature';
 import { litrePerHour, litrePerMinute } from '~/utils/units/flowRate';
 import { metre, millimetre } from '~/utils/units/length';
 import { wattsPerMeterKelvin } from '~/utils/units/thermalConductivity';
@@ -75,7 +75,7 @@ const pointOfUseSummary: SummarySection = {
 	data: pointOfUseData.map(d => {
 		return {
 			"Name": d.name,
-			"Setpoint temperature": `${d.setpointTemperature} ${celcius.suffix}`,
+			"Setpoint temperature": `${d.setpointTemperature} ${celsius.suffix}`,
 			"Heater efficiency": d.heaterEfficiency
 		};
 	}),

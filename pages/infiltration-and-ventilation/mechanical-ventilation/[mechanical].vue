@@ -2,7 +2,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { MVHRLocation} from '~/schema/api-schema.types';
 import { VentType } from '~/schema/api-schema.types';
-import { FlowRate, litrePerSecond } from '~/utils/units/flowRate';
+import { litrePerSecond } from '~/utils/units/flowRate';
+import { unitValue } from '~/utils/units/types';
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
@@ -12,7 +13,7 @@ const mechanicalVentilation = useItemToEdit('mechanical', store.infiltrationAndV
 
 // prepopulate airFlowRate correctly when using old input format
 if (typeof mechanicalVentilation?.airFlowRate === 'number') {
-	mechanicalVentilation.airFlowRate = new FlowRate(mechanicalVentilation.airFlowRate, litrePerSecond);
+	mechanicalVentilation.airFlowRate = unitValue(mechanicalVentilation.airFlowRate, litrePerSecond);
 }
 
 const model: Ref<MechanicalVentilationData> = ref(mechanicalVentilation!);

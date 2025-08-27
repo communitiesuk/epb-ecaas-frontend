@@ -3,7 +3,8 @@ import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import Window from './[window].vue';
 import { WindowTreatmentType } from "~/schema/api-schema.types";
-import { Length, millimetre } from "~/utils/units/length";
+import { millimetre } from "~/utils/units/length";
+import { unitValue } from "~/utils/units/types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -28,12 +29,12 @@ describe('window', () => {
 		midHeight: 1,
 		openingToFrameRatio: 0.8,
 		numberOpenableParts: '0',
-		overhangDepth: new Length(60, millimetre),
-		overhangDistance: new Length(60, millimetre),
-		sideFinRightDepth: new Length(60, millimetre),
-		sideFinRightDistance: new Length(60, millimetre),
-		sideFinLeftDepth: new Length(60, millimetre),
-		sideFinLeftDistance: new Length(60, millimetre),
+		overhangDepth: unitValue(60, millimetre),
+		overhangDistance: unitValue(60, millimetre),
+		sideFinRightDepth: unitValue(60, millimetre),
+		sideFinRightDistance: unitValue(60, millimetre),
+		sideFinLeftDepth: unitValue(60, millimetre),
+		sideFinLeftDistance: unitValue(60, millimetre),
 		curtainsOrBlinds: true,
 		treatmentType: WindowTreatmentType.blinds,
 		thermalResistivityIncrease: 1,
@@ -69,6 +70,7 @@ describe('window', () => {
 		await user.click(screen.getByTestId('treatmentType_blinds'));
 		await user.type(screen.getByTestId('thermalResistivityIncrease'), '1');
 		await user.type(screen.getByTestId('solarTransmittanceReduction'), '0.1');
+		await user.tab();
 
 		await user.click(screen.getByRole('button', { name: 'Save and continue' }));
 

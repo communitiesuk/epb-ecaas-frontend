@@ -3,7 +3,7 @@ import type { ApiInfoResponse, FhsComplianceResponseIncludingErrors, TokenRespon
 import clientSession from "../services/clientSession";
 import { ajv, humanReadable } from "~/schema/validator";
 import * as Sentry from "@sentry/nuxt";
-import type { CorrectedJsonApiError } from "~/stores/ecaasStore.types";
+import type { CorrectedJsonApiError } from "~/stores/ecaasStore.schema";
 import type { ErrorObject } from "ajv";
 
 const ecaasApi = {
@@ -77,7 +77,7 @@ function reportErrors(requestData: object, responseErrors: CorrectedJsonApiError
 			
 	Sentry.withScope(scope => {
 		scope.setExtra("responseErrors", responseErrors);
-		scope.setExtra("requestBody", JSON.parse(JSON.stringify(requestData)));
+		scope.setExtra("requestBody", JSON.stringify(requestData));
 		scope.setExtra("requestBody without External Conditions", JSON.stringify(requestBodyWithoutExternalConditions || requestData));
 		scope.setFingerprint([errorMessage]);
 		Sentry.captureException(new Error(errorMessage));

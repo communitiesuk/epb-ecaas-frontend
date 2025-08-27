@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
-import { litre, Volume } from '~/utils/units/volume';
-import type { HotWaterCylinderData } from '~/stores/ecaasStore.types';
+import { litre, type Volume } from '~/utils/units/volume';
+import type { HotWaterCylinderData } from '~/stores/ecaasStore.schema';
+import { unitValue } from '~/utils/units/types';
 
 const title = "Water heating";
 const store = useEcaasStore();
@@ -9,7 +10,7 @@ const store = useEcaasStore();
 const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0];
 
 if (typeof hotWaterCylinderData?.storageCylinderVolume === 'number') {
-	hotWaterCylinderData.storageCylinderVolume = new Volume(hotWaterCylinderData.storageCylinderVolume, litre);
+	hotWaterCylinderData.storageCylinderVolume = unitValue(hotWaterCylinderData.storageCylinderVolume, litre);
 }
 
 const waterHeaterTypeOptions = {
@@ -24,12 +25,15 @@ const model: Ref<HotWaterCylinderData & { waterHeaterType: WaterHeaterType[] }> 
 });
 
 const saveForm = (fields: typeof model.value) => {
+	let hotWaterCylinderId; 
+	if(hotWaterCylinderData){ hotWaterCylinderId = hotWaterCylinderData.id;} else {hotWaterCylinderId = uuidv4();};
+
 	store.$patch({
 		domesticHotWater: {
 			waterHeating: {
 				hotWaterCylinder: {
 					data: [{
-						id: uuidv4(),
+						id: hotWaterCylinderId, 
 						name: fields.name,
 						heatSource: fields.heatSource,
 						storageCylinderVolume: fields.storageCylinderVolume,
@@ -116,6 +120,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
+		<ClientOnly>
 		<template v-if="model.waterHeaterType?.includes('hotWaterCylinder')">
 			<FieldsHeatGenerators
 				id="heatSource"
@@ -149,6 +154,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				</GovDetails>
 			</FormKit>
 		</template>
+		</ClientOnly>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>
 </template>
