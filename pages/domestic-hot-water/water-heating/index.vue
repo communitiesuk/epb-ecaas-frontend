@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { litre, type Volume } from '~/utils/units/volume';
 import type { HotWaterCylinderData } from '~/stores/ecaasStore.schema';
 import { unitValue } from '~/utils/units/types';
+import { getUrl } from "#imports";
 
 const title = "Water heating";
 const store = useEcaasStore();
@@ -22,6 +23,24 @@ type WaterHeaterType = keyof typeof waterHeaterTypeOptions | null;
 const model: Ref<HotWaterCylinderData & { waterHeaterType: WaterHeaterType[] }> = ref({
 	...hotWaterCylinderData!,
 	waterHeaterType: hotWaterCylinderData ? ['hotWaterCylinder'] : []
+});
+
+watch(model, async (newData: HotWaterCylinderData, initialData: HotWaterCylinderData) => {
+
+	if (model.value.waterHeaterType === undefined && initialData.name === undefined) {
+		store.$patch((state) => {
+			state.domesticHotWater.waterHeating.hotWaterCylinder.data = [];
+		});
+		store.domesticHotWater.waterHeating.hotWaterCylinder.complete = false;
+	}
+	else if (initialData !== newData) {
+		store.$patch((state) => {
+			state.domesticHotWater.waterHeating.hotWaterCylinder.data[0] = {
+				...newData
+			};
+		});
+		store.domesticHotWater.waterHeating.hotWaterCylinder.complete = false;
+	}
 });
 
 const saveForm = (fields: typeof model.value) => {
@@ -153,6 +172,9 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				</FormKit>
 			</template>
 		</ClientOnly>
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('domesticHotWater')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
