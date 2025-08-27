@@ -17,14 +17,11 @@ if (typeof hotWaterCylinderData?.storageCylinderVolume === 'number') {
 const model: Ref<HotWaterCylinderData> = ref(hotWaterCylinderData!);
 
 const saveForm = (fields: HotWaterCylinderData) => {
-	let hotWaterCylinderId; 
-	if(hotWaterCylinderData){ hotWaterCylinderId = hotWaterCylinderData.id;} else {hotWaterCylinderId = uuidv4();};
-
 	store.$patch((state) => {
 		const {hotWaterCylinder} = state.domesticHotWater.waterHeating;
 
 		const hotWaterCylinderItem: HotWaterCylinderData = {
-			id: hotWaterCylinderId,
+			id: hotWaterCylinderData ? hotWaterCylinderData.id : uuidv4(),
 			name: fields.name,
 			heatSource: fields.heatSource,
 			storageCylinderVolume: fields.storageCylinderVolume,

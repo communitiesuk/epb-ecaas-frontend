@@ -25,15 +25,13 @@ const model: Ref<HotWaterCylinderData & { waterHeaterType: WaterHeaterType[] }> 
 });
 
 const saveForm = (fields: typeof model.value) => {
-	let hotWaterCylinderId; 
-	if(hotWaterCylinderData){ hotWaterCylinderId = hotWaterCylinderData.id;} else {hotWaterCylinderId = uuidv4();};
 
 	store.$patch({
 		domesticHotWater: {
 			waterHeating: {
 				hotWaterCylinder: {
 					data: [{
-						id: hotWaterCylinderId, 
+						id: hotWaterCylinderData ? hotWaterCylinderData.id : uuidv4(), 
 						name: fields.name,
 						heatSource: fields.heatSource,
 						storageCylinderVolume: fields.storageCylinderVolume,
