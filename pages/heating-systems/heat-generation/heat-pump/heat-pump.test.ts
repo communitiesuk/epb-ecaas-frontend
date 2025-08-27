@@ -40,7 +40,7 @@ describe('heatPump', () => {
 		await renderSuspended(HeatPump);
 
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.heatingSystems.heatGeneration.heatPump;
 		
@@ -92,7 +92,7 @@ describe('heatPump', () => {
 		await user.type(screen.getByTestId('name'), 'Heat pump 2');
 		await user.click(screen.getByTestId('productReference_HEATPUMP-SMALL'));
 		await user.tab();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.heatingSystems.heatGeneration.heatPump;
 		
@@ -104,7 +104,7 @@ describe('heatPump', () => {
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(HeatPump);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 	});
@@ -112,7 +112,7 @@ describe('heatPump', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(HeatPump);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('heatPumpErrorSummary'))).toBeDefined();
 	});
@@ -121,7 +121,7 @@ describe('heatPump', () => {
 		await renderSuspended(HeatPump);
 	
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 		
 		expect(navigateToMock).toHaveBeenCalledWith('/heating-systems/heat-generation');
 	});
