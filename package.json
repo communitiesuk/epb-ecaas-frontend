@@ -63,6 +63,7 @@
     "eslint": "^9.34.0",
     "govuk-frontend": "^5.10.2",
     "happy-dom": "^15.11.6",
+    "object-path-immutable": "4.1.2",
     "openapi-typescript": "^7.6.1",
     "sass": "^1.81.0",
     "ts-extras": "^0.14.0",

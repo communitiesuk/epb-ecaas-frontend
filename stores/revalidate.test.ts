@@ -1,152 +1,99 @@
+import * as immutable from 'object-path-immutable';
+import { BuildType, MassDistributionClass } from "~/schema/api-schema.types";
+
+// define some structures for the test fixtures using types
+
+const simpleCaseOnlyOneForm: Pick<EcaasState, 'dwellingDetails'> = {
+	"dwellingDetails": {
+		"generalSpecifications": {
+			"data": {
+				"typeOfDwelling": BuildType.house,
+				"storeysInDwelling": 3,
+				"numOfBedrooms": 3,
+				"coolingRequired": false
+			},
+			"complete": true
+		},
+		"shading": {
+			"data": []
+		},
+		"externalFactors": {
+			"data": {} as ExternalFactorsData
+		}
+	}
+};
+
+const simpleCaseOneFieldOutOfRange = immutable.set(simpleCaseOnlyOneForm, 'dwellingDetails.generalSpecifications.data.storeysInDwelling', 666); // max storeysInDwelling should be 250
+
+const simpleCaseFieldMissing = immutable.del(simpleCaseOnlyOneForm, 'dwellingDetails.generalSpecifications.data.numOfBedrooms');
+
+const twoCompleteValidWalls: Pick<WallsData, 'dwellingSpaceExternalWall'> = {
+	"dwellingSpaceExternalWall": {
+		"data": [
+			{
+				"name": "Wall 1",
+				"pitchOption": "90",
+				"pitch": 90,
+				"orientation": 140,
+				"height": 6,
+				"length": 5,
+				"elevationalHeight": 25,
+				"surfaceArea": 40,
+				"solarAbsorption": 0.9,
+				"uValue": 5,
+				"kappaValue": 110000,
+				"massDistributionClass": MassDistributionClass.E
+			},
+			{
+				"name": "Wall 2",
+				"pitchOption": "90",
+				"pitch": 90,
+				"orientation": 90,
+				"height": 30,
+				"length": 34,
+				"elevationalHeight": 20,
+				"surfaceArea": 30,
+				"solarAbsorption": 0.7,
+				"uValue": 6,
+				"kappaValue": 175000,
+				"massDistributionClass": MassDistributionClass.I
+			}
+		],
+		"complete": true
+	}
+};
+
+const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, 'dwellingSpaceExternalWall.data.1.solarAbsorption');
+
+const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingField, 'dwellingSpaceExternalWall.data.0.massDistributionClass', 'X'); // 'X' is invalid for a mass distribution class value
+
 const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> | undefined, number][] = [
 	[
 		'simple case with only one form complete',
-		{
-			"dwellingDetails": {
-				"generalSpecifications": {
-					"data": {
-						"typeOfDwelling": "house",
-						"storeysInDwelling": 3,
-						"numOfBedrooms": 3,
-						"coolingRequired": false
-					},
-					"complete": true
-				},
-				"shading": {
-					"data": []
-				},
-				"externalFactors": {
-					"data": {}
-				}
-			}
-		},
+		simpleCaseOnlyOneForm,
 		false,
 		undefined,
 		0,
 	],
 	[
 		'simple case with a form marked complete but missing a field',
-		{
-			"dwellingDetails": {
-				"generalSpecifications": {
-					"data": {
-						"typeOfDwelling": "house",
-						"storeysInDwelling": 3,
-						"coolingRequired": false
-					},
-					"complete": true
-				},
-				"shading": {
-					"data": []
-				},
-				"externalFactors": {
-					"data": {}
-				}
-			}
-		},
+		simpleCaseFieldMissing,
 		true,
-		{
-			"dwellingDetails": {
-				"generalSpecifications": {
-					"data": {
-						"typeOfDwelling": "house",
-						"storeysInDwelling": 3,
-						"coolingRequired": false
-					},
-					"complete": false
-				},
-				"shading": {
-					"data": []
-				},
-				"externalFactors": {
-					"data": {}
-				}
-			}
-		},
+		immutable.set(simpleCaseFieldMissing, 'dwellingDetails.generalSpecifications.complete', false),
 		1,
 	],
 	[
 		'simple case where form marked complete but a value is out of expected range',
-		{
-			"dwellingDetails": {
-				"generalSpecifications": {
-					"data": {
-						"typeOfDwelling": "house",
-						"storeysInDwelling": 666, // max is 250
-						"numOfBedrooms": 3,
-						"coolingRequired": false
-					},
-					"complete": true
-				},
-				"shading": {
-					"data": []
-				},
-				"externalFactors": {
-					"data": {}
-				}
-			}
-		},
+		simpleCaseOneFieldOutOfRange,
 		true,
-		{
-			"dwellingDetails": {
-				"generalSpecifications": {
-					"data": {
-						"typeOfDwelling": "house",
-						"storeysInDwelling": 666,
-						"numOfBedrooms": 3,
-						"coolingRequired": false
-					},
-					"complete": false
-				},
-				"shading": {
-					"data": []
-				},
-				"externalFactors": {
-					"data": {}
-				}
-			}
-		},
+		immutable.set(simpleCaseOneFieldOutOfRange, 'dwellingDetails.generalSpecifications.complete', false),
 		1,
 	],
 	[
 		'case where there are two valid walls already marked complete',
 		{
 			"dwellingFabric": {
-				"dwellingSpaceWalls": {
-					"dwellingSpaceExternalWall": {
-						"data": [
-							{
-								"name": "Wall 1",
-								"pitchOption": "90",
-								"pitch": 90,
-								"orientation": 140,
-								"height": 6,
-								"length": 5,
-								"elevationalHeight": 25,
-								"surfaceArea": 40,
-								"solarAbsorption": 0.9,
-								"uValue": 5,
-								"kappaValue": 110000,
-								"massDistributionClass": "E"
-							},
-							{
-								"name": "Wall 2",
-								"pitchOption": "90",
-								"pitch": 90,
-								"orientation": 90,
-								"height": 30,
-								"length": 34,
-								"elevationalHeight": 20,
-								"surfaceArea": 30,
-								"solarAbsorption": 0.7,
-								"uValue": 6,
-								"kappaValue": 175000,
-								"massDistributionClass": "I"
-							}
-						],
-						"complete": true
-					}
-				}
+				"dwellingSpaceWalls": twoCompleteValidWalls,
 			}
 		},
 		false,
@@ -157,79 +104,13 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		'case where there are two walls already marked complete but one is missing a field',
 		{
 			"dwellingFabric": {
-				"dwellingSpaceWalls": {
-					"dwellingSpaceExternalWall": {
-						"data": [
-							{
-								"name": "Wall 1",
-								"pitchOption": "90",
-								"pitch": 90,
-								"orientation": 140,
-								"height": 6,
-								"length": 5,
-								"elevationalHeight": 25,
-								"surfaceArea": 40,
-								"solarAbsorption": 0.9,
-								"uValue": 5,
-								"kappaValue": 110000,
-								"massDistributionClass": "E"
-							},
-							{
-								"name": "Wall 2",
-								"pitchOption": "90",
-								"pitch": 90,
-								"orientation": 90,
-								"height": 30,
-								"length": 34,
-								"elevationalHeight": 20,
-								"surfaceArea": 30,
-								"uValue": 6,
-								"kappaValue": 175000,
-								"massDistributionClass": "I"
-							}
-						],
-						"complete": true
-					}
-				}
+				"dwellingSpaceWalls": twoWallsOneMissingField,
 			}
 		},
 		true,
 		{
 			"dwellingFabric": {
-				"dwellingSpaceWalls": {
-					"dwellingSpaceExternalWall": {
-						"data": [
-							{
-								"name": "Wall 1",
-								"pitchOption": "90",
-								"pitch": 90,
-								"orientation": 140,
-								"height": 6,
-								"length": 5,
-								"elevationalHeight": 25,
-								"surfaceArea": 40,
-								"solarAbsorption": 0.9,
-								"uValue": 5,
-								"kappaValue": 110000,
-								"massDistributionClass": "E"
-							},
-							{
-								"name": "Wall 2",
-								"pitchOption": "90",
-								"pitch": 90,
-								"orientation": 90,
-								"height": 30,
-								"length": 34,
-								"elevationalHeight": 20,
-								"surfaceArea": 30,
-								"uValue": 6,
-								"kappaValue": 175000,
-								"massDistributionClass": "I"
-							}
-						],
-						"complete": false
-					}
-				}
+				"dwellingSpaceWalls": immutable.set(twoWallsOneMissingField, 'dwellingSpaceExternalWall.complete', false),
 			}
 		},
 		1,
@@ -238,77 +119,13 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		'case where there are two walls already marked complete but one is missing a field and one has an illegal value',
 		{
 			"dwellingFabric": {
-				"dwellingSpaceWalls": {
-					"dwellingSpaceExternalWall": {
-						"data": [
-							{
-								"name": "Wall 1",
-								"pitchOption": "90",
-								"pitch": 90,
-								"orientation": 140,
-								"height": 6,
-								"length": 5,
-								"elevationalHeight": 25,
-								"solarAbsorption": 0.9,
-								"uValue": 5,
-								"kappaValue": 110000,
-								"massDistributionClass": "E"
-							},
-							{
-								"name": "Wall 2",
-								"pitchOption": "90",
-								"pitch": 90,
-								"orientation": 90,
-								"height": 30,
-								"length": 34,
-								"elevationalHeight": 20,
-								"surfaceArea": 30,
-								"uValue": 6,
-								"kappaValue": 175000,
-								"massDistributionClass": "X" // unknown value
-							}
-						],
-						"complete": true
-					}
-				}
+				"dwellingSpaceWalls": twoWallsOneMissingFieldOneInvalidValue,
 			}
 		},
 		true,
 		{
 			"dwellingFabric": {
-				"dwellingSpaceWalls": {
-					"dwellingSpaceExternalWall": {
-						"data": [
-							{
-								"name": "Wall 1",
-								"pitchOption": "90",
-								"pitch": 90,
-								"orientation": 140,
-								"height": 6,
-								"length": 5,
-								"elevationalHeight": 25,
-								"solarAbsorption": 0.9,
-								"uValue": 5,
-								"kappaValue": 110000,
-								"massDistributionClass": "E"
-							},
-							{
-								"name": "Wall 2",
-								"pitchOption": "90",
-								"pitch": 90,
-								"orientation": 90,
-								"height": 30,
-								"length": 34,
-								"elevationalHeight": 20,
-								"surfaceArea": 30,
-								"uValue": 6,
-								"kappaValue": 175000,
-								"massDistributionClass": "X" // unknown value
-							}
-						],
-						"complete": false
-					}
-				}
+				"dwellingSpaceWalls": immutable.set(twoWallsOneMissingFieldOneInvalidValue, 'dwellingSpaceExternalWall.complete', false),
 			}
 		},
 		2,
