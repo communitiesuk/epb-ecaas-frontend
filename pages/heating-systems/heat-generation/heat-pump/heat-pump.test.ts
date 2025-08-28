@@ -40,11 +40,15 @@ describe('heatPump', () => {
 		await user.tab();
 	};
 
-	test('data is saved to store state when form is valid', async () => {
+	test('heat pump data is saved to store state when form is valid', async () => {
 		vi.mocked(uuidv4).mockReturnValue(largeHeatPump.id as unknown as Buffer);
 
-		await renderSuspended(HeatPump);
-
+		await renderSuspended(HeatPump, {
+			route: {
+				params: { pump: "create" },
+			},
+		});
+				
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 

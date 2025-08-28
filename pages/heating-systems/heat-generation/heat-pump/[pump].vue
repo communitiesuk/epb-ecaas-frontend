@@ -7,7 +7,6 @@ import { getUrl } from "#imports";
 const title = "Heat pump";
 const store = useEcaasStore();
 const route = useRoute();
-const { saveToList } = useForm();
 
 const heatPumpData = useItemToEdit('pump', store.heatingSystems.heatGeneration.heatPump.data);
 const model: Ref<HeatPumpData | undefined> = ref(heatPumpData?.data);
@@ -21,18 +20,20 @@ const heatPumpOptions = objectFromEntries(heatPumps.value!.map(entity => [entity
 
 const saveForm = (fields: HeatPumpData) => {
 	store.$patch((state) => {
-		const {heatPump} = state.heatingSystems.heatGeneration;
+		const { heatPump } = state.heatingSystems.heatGeneration;
+		const index = route.params.pump === 'create' ? heatPump.data.length - 1 : Number(route.params.pump);
+		const currentId = heatPumpData?.data.id;
 
 		const heatPumpItem: EcaasForm<HeatPumpData> = {
 			data: {
-				id: heatPumpData ? heatPumpData.data.id : uuidv4(),
+				id: currentId ? currentId : uuidv4(),
 				name: fields.name,
 				productReference: fields.productReference,
 			},
 			complete: true
 		};
 
-		saveToList(heatPumpItem, heatPump);
+		heatPump.data[index] = heatPumpItem;
 		heatPump.complete = false;
 	});
 
