@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import formStatus from '~/constants/formStatus';
 
 const title = "Heat generation";
 const page = usePage();
@@ -40,7 +41,13 @@ function checkIsComplete(){
 	return Object.values(generators).every(generator => generator.complete);
 }
 
-
+function hasIncompleteEntries() {
+	const heatGenerationTypes = store.heatingSystems.heatGeneration;
+	
+	return Object.values(heatGenerationTypes).some(
+		generators => generators.data.some(
+			generator => isEcaasForm(generator) ? !generator.complete : false));
+}
 </script>
 
 <template>
@@ -55,7 +62,11 @@ function checkIsComplete(){
 		id="heatPump"
 		title="Heat pump"
 		:form-url="`${page?.url!}/heat-pump`"
-		:items="store.heatingSystems.heatGeneration.heatPump.data.map(x => x.data.name)"
+		:items="store.heatingSystems.heatGeneration.heatPump.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('heatPump', index)"
 	/>
 	<!--	<CustomList-->
@@ -93,6 +104,6 @@ function checkIsComplete(){
 		>
 			Return to heating systems
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 	</div>
 </template>
