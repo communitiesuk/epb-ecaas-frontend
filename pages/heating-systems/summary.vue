@@ -102,7 +102,7 @@ const heatGenerationSummary: SummarySection[] = [
 	// heatInterfaceUnitSummary,
 ].filter((x) => x.data.length);
 
-const { heatPump, boiler, heatBattery, heatNetwork, heatInterfaceUnit } =
+const { heatPump } =
 	store.heatingSystems.heatGeneration;
 const heatGenerationData = [
 	heatPump.data,

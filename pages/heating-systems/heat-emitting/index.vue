@@ -33,8 +33,8 @@ function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingT
 				return f.data.name.match(duplicateNamePattern(emitter.data.name));
 			}
 			else if (!isEcaasForm(f) && !isEcaasForm(emitter)) {
-				name = emitter.name
-				return f.name.match(duplicateNamePattern(emitter.name))
+				name = emitter.name;
+				return f.name.match(duplicateNamePattern(emitter.name));
 			}
 
 			return false;
@@ -115,9 +115,9 @@ function hasIncompleteEntries() {
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('instantElectricHeater', index)"
-		@duplicate="(index: number) => handleDuplicate('instantElectricHeater', index)"
-		:show-status="true" />
+		@duplicate="(index: number) => handleDuplicate('instantElectricHeater', index)" />
 
 	<CustomList
 		v-if="false"

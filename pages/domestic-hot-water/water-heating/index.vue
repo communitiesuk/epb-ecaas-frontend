@@ -119,39 +119,39 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required"
 		/>
 		<ClientOnly>
-		<template v-if="model.waterHeaterType?.includes('hotWaterCylinder')">
-			<FieldsHeatGenerators
-				id="heatSource"
-				name="heatSource"
-				label="Heat source"
-				help="Select the relevant heat source that has been added previously"
-			/>
-			<FormKit
-				id="storageCylinderVolume"
-				name="storageCylinderVolume"
-				label="Storage cylinder volume"
-				help="Enter the total internal capacity of the tank"
-				type="govInputWithUnit"
-				:unit="litre"
-				:validation-rules="{ withinMinAndMax }"
-				validation="required | withinMinAndMax:0,200000"
-				:validation-messages="{
-					withinMinAndMax: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
-				}"
-			/>
-			<FormKit
-				id="dailyEnergyLoss"
-				type="govInputWithSuffix"
-				label="Daily energy loss"
-				help="Enter the estimated energy lost from the tank per day"
-				name="dailyEnergyLoss"
-				validation="required | number | min:0 | max:200"
-				suffix-text="kWh">
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-					<p class="govuk-hint">Daily energy loss encompasses all energy used to heat the water, including the energy to replace heat lost through standing losses and the energy used for hot water draw-offs. Note that this is not standing heat loss, which refers to the heat lost from the cylinder to the surrounding environment over a specific period, typically measured over a 24-hour period.</p>
-				</GovDetails>
-			</FormKit>
-		</template>
+			<template v-if="model.waterHeaterType?.includes('hotWaterCylinder')">
+				<FieldsHeatGenerators
+					id="heatSource"
+					name="heatSource"
+					label="Heat source"
+					help="Select the relevant heat source that has been added previously"
+				/>
+				<FormKit
+					id="storageCylinderVolume"
+					name="storageCylinderVolume"
+					label="Storage cylinder volume"
+					help="Enter the total internal capacity of the tank"
+					type="govInputWithUnit"
+					:unit="litre"
+					:validation-rules="{ withinMinAndMax }"
+					validation="required | withinMinAndMax:0,200000"
+					:validation-messages="{
+						withinMinAndMax: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
+					}"
+				/>
+				<FormKit
+					id="dailyEnergyLoss"
+					type="govInputWithSuffix"
+					label="Daily energy loss"
+					help="Enter the estimated energy lost from the tank per day"
+					name="dailyEnergyLoss"
+					validation="required | number | min:0 | max:200"
+					suffix-text="kWh">
+					<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+						<p class="govuk-hint">Daily energy loss encompasses all energy used to heat the water, including the energy to replace heat lost through standing losses and the energy used for hot water draw-offs. Note that this is not standing heat loss, which refers to the heat lost from the cylinder to the surrounding environment over a specific period, typically measured over a 24-hour period.</p>
+					</GovDetails>
+				</FormKit>
+			</template>
 		</ClientOnly>
 		<FormKit type="govButton" label="Save and continue" />
 	</FormKit>

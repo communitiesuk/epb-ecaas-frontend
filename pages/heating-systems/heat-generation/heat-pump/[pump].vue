@@ -71,6 +71,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required"
 		/>
 		<GovLLMWarning />
-			<FormKit type="govButton" label="Save and mark as complete" testId="saveAndComplete" />
+		<FormKit type="govButton" label="Save and mark as complete" testId="saveAndComplete" />
 	</FormKit>
 </template>
