@@ -1,42 +1,42 @@
-import { PageType  } from "./pages.types";
-import type {Page} from "./pages.types";
+import { PageType } from "./pages.types";
+import type { Page } from "./pages.types";
 
-const pvAndBatteriesPages: Array<Page> = [
+const pvAndBatteriesPages = [
 	{
-		id: 'pvAndBatteries',
-		title: 'PV and electric batteries',
-		url: '/pv-and-batteries',
+		id: "pvAndBatteries",
+		title: "PV and electric batteries",
+		url: "/pv-and-batteries",
 		type: PageType.Section,
-		parentId: 'taskList'
+		parentId: "taskList",
 	},
 	{
-		id: 'pvSystems',
-		title: 'PV System',
-		url: '/pv-and-batteries/pv-systems/create',
+		id: "pvSystems",
+		title: "PV System",
+		url: "/pv-and-batteries/pv-systems/create",
 		type: PageType.Task,
-		parentId: 'pvAndBatteries'
+		parentId: "pvAndBatteries",
 	},
 	{
-		id: 'pvSystemEdit',
-		title: 'PV System',
-		url: '/pv-and-batteries/pv-systems/:system',
+		id: "pvSystemEdit",
+		title: "PV System",
+		url: "/pv-and-batteries/pv-systems/:system",
 		type: PageType.Task,
-		parentId: 'pvAndBatteries'
+		parentId: "pvAndBatteries",
 	},
 	{
-		id: 'electricBattery',
-		title: 'Electric battery',
-		url: '/pv-and-batteries/electric-battery',
+		id: "electricBattery",
+		title: "Electric battery",
+		url: "/pv-and-batteries/electric-battery",
 		type: PageType.Task,
-		parentId: 'pvAndBatteries'
+		parentId: "pvAndBatteries",
 	},
 	{
-		id: 'pvStorageSummary',
-		title: 'Summary',
-		url: '/pv-and-batteries/summary',
+		id: "pvStorageSummary",
+		title: "Summary",
+		url: "/pv-and-batteries/summary",
 		type: PageType.Summary,
-		parentId: 'pvAndBatteries'
-	}
-];
+		parentId: "pvAndBatteries",
+	},
+] as const satisfies Array<Page>;
 
 export default pvAndBatteriesPages;
