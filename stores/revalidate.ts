@@ -72,8 +72,25 @@ function revalidateForm(form: EcaasForm<unknown>, path: EcaasFormPath): [true, Z
 			form.complete = false;
 			return [true, [validationResult.error]];
 		}
+	} else if (formData.every(isEcaasForm)) {
+		// it could be an array of sub-forms
+		const [changed, errors]: [boolean, ZodError<unknown>[]] = formData.reduce(([changed, errors], current) => {
+			const validationResult = formSchema.safeParse(current.data);
+			if (!validationResult.success) {
+				current.complete = false;
+			}
+            
+			return [!validationResult.success || changed, validationResult.error ? [...errors, validationResult.error] : errors];
+		}, [false as boolean, [] as ZodError<unknown>[]]);
+
+		if (changed) {
+			form.complete = false;
+			return [changed, errors];
+		} else {
+			return [false];
+		}
 	} else {
-		// it could also be an array of forms
+		// it could also be an array of data
 		const [changed, errors]: [boolean, ZodError<unknown>[]] = formData.reduce(([changed, errors], current) => {
 			const validationResult = formSchema.safeParse(current);
             
