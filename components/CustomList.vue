@@ -71,7 +71,7 @@ function routeForEditItem(index: number) {
 						</dt>
 						<dd class="govuk-summary-list__value">
 							<div v-if="showStatus">
-								<GovTag v-if="(typeof item) !== 'string' && item.status" :text="item.status.text" :color="item.status.color" :testId="`${id}_status_${index}`" />
+								<GovTag v-if="(typeof item) !== 'string' && item.status" :text="item.status.text" :color="item.status.color" :test-id="`${id}_status_${index}`" />
 							</div>
 						</dd>
 						<dd class="govuk-summary-list__actions">

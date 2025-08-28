@@ -5,7 +5,7 @@ const store = useEcaasStore();
 const route = useRoute();
 
 const instantElectricHeaterData = useItemToEdit('heater', store.heatingSystems.heatEmitting.instantElectricHeater.data);
-const model: Ref<InstantElectricStorageData> = ref(instantElectricHeaterData?.data!);
+const model: Ref<InstantElectricStorageData | undefined> = ref(instantElectricHeaterData?.data);
 
 const saveForm = (fields: InstantElectricStorageData) => {
 	store.$patch((state) => {
@@ -30,10 +30,10 @@ const saveForm = (fields: InstantElectricStorageData) => {
 	navigateTo("/heating-systems/heat-emitting");
 };
 
-watch(model, async (newData: InstantElectricStorageData, initialData: InstantElectricStorageData) => {
+watch(model, async (newData: InstantElectricStorageData | undefined, initialData: InstantElectricStorageData | undefined) => {
 	const storeData = store.heatingSystems.heatEmitting.instantElectricHeater.data;
 
-	if (initialData === undefined) {
+	if (initialData === undefined || newData === undefined) {
 		return;
 	}
 
@@ -147,7 +147,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		</FormKit>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" testId="saveAndComplete" />
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 			<GovButton :href="getUrl('heatEmitting')" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>

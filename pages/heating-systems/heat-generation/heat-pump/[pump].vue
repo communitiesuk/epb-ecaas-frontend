@@ -8,7 +8,7 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const heatPumpData = useItemToEdit('pump', store.heatingSystems.heatGeneration.heatPump.data);
-const model: Ref<HeatPumpData> = ref(heatPumpData?.data!);
+const model: Ref<HeatPumpData | undefined> = ref(heatPumpData?.data);
 
 const { data: heatPumps } = await useFetch('/api/products', { query: { category: 'heatPump' } });
 
@@ -71,6 +71,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and mark as complete" testId="saveAndComplete" />
+		<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
 	</FormKit>
 </template>

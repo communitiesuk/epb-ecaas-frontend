@@ -5,7 +5,7 @@ const props = defineProps<{
 	context: FormKitFrameworkContext
 }>();
 
-const { label, attrs: { testId } } = props.context;
+const { label, attrs: { 'test-id': testId } } = props.context;
 </script>
 
 <template>
