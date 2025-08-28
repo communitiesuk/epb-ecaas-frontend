@@ -221,5 +221,13 @@ describe('heatPump', () => {
 			expect(actualHeatPump?.data.name).toBe("Updated heat pump");
 			expect(actualHeatPump?.data.productReference).toBe("HEATPUMP-MEDIUM");
 		});
+
+		it('navigates to heat generation page when valid form is completed', async () => {
+			await renderSuspended(HeatPump);
+	
+			await user.type(screen.getByTestId("name"), "Heat pump");
+			await user.click(screen.getByTestId("saveProgress"));
+			expect(navigateToMock).toHaveBeenCalledWith('/heating-systems/heat-generation');
+		});
 	});
 });

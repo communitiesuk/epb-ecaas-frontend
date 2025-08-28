@@ -2,6 +2,7 @@
 import { objectFromEntries } from 'ts-extras';
 import { v4 as uuidv4 } from 'uuid';
 import { displayProduct } from '~/utils/display';
+import { getUrl } from "#imports";
 
 const title = "Heat pump";
 const store = useEcaasStore();
@@ -40,7 +41,7 @@ const saveForm = (fields: HeatPumpData) => {
 
 watch(model, async (newData: HeatPumpData | undefined, initialData: HeatPumpData | undefined) => {
 	const storeData = store.heatingSystems.heatGeneration.heatPump.data;
-	
+
 	if (initialData === undefined || newData === undefined) {
 		return;
 	}
@@ -112,6 +113,10 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			validation="required"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('heatGeneration')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
