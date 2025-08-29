@@ -226,7 +226,7 @@ describe('heatPump', () => {
 			expect(actualHeatPump?.data.productReference).toBe("HEATPUMP-MEDIUM");
 		});
 
-		it('navigates to heat generation page when valid form is completed', async () => {
+		it('navigates to heat generation page on clicking Save progress', async () => {
 			await renderSuspended(HeatPump);
 	
 			await user.type(screen.getByTestId("name"), "Heat pump");

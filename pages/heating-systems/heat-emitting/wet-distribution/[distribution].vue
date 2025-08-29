@@ -3,6 +3,8 @@ import type { FormKitOptionsProp } from "@formkit/inputs";
 import { isInteger } from "~/utils/validation";
 const title = "Wet distribution";
 const store = useEcaasStore();
+const route = useRoute();
+
 const { saveToList } = useForm();
 
 const wetDistributionData = useItemToEdit(
@@ -85,6 +87,47 @@ const saveForm = (fields: WetDistributionData) => {
 
 	navigateTo("/heating-systems/heat-emitting");
 };
+
+watch(model, async (newData: WetDistributionData, initialData: WetDistributionData) => {
+	const storeData = store.heatingSystems.heatEmitting.wetDistribution.data;
+
+	if (initialData === undefined || newData === undefined) {
+		return;
+	}
+
+	const defaultName = 'Wet distribution';
+	const duplicates = storeData.filter(x => x.name.match(duplicateNamePattern(defaultName)));
+
+	// filtering out typeOfSpaceHeater for now as it is always checked, would need to change this in future when there are more than one option to choose from
+	const {typeOfSpaceHeater, ...rest } = initialData;
+	const {typeOfSpaceHeater: newTypeOfSpaceHeater, ...newDataRest } = newData;
+
+	const isFirstEdit = Object.values(rest).every(x => x === undefined) &&
+		Object.values(newDataRest).some(x => x !== undefined);
+
+	if (route.params.distribution === 'create' && isFirstEdit) {
+		store.$patch(state => {
+			state.heatingSystems.heatEmitting.wetDistribution.data.push({
+				...newData,
+				name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+			});
+		});
+
+		return;
+	}
+
+	store.$patch((state) => {
+		const index = route.params.distribution === 'create' ? storeData.length - 1 : Number(route.params.distribution);
+
+		state.heatingSystems.heatEmitting.wetDistribution.data[index] = {
+			...newData,
+			name: newData.name ?? state.heatingSystems.heatEmitting.wetDistribution.data[index]?.name
+			
+		};
+
+		state.heatingSystems.heatEmitting.wetDistribution.complete = false;
+	});
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
