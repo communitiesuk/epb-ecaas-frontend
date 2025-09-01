@@ -113,9 +113,6 @@ describe("instantElectricHeater", () => {
 	});
 
 	test("updated form data is automatically saved to store", async () => {
-		const store = useEcaasStore();
-		const user = userEvent.setup();
-
 		store.$patch({
 			heatingSystems: {
 				heatEmitting: {
@@ -144,9 +141,6 @@ describe("instantElectricHeater", () => {
 	});
 	
 	test("partial form data is saved automatically with default name to store when adding new heater", async () => {
-		const store = useEcaasStore();
-		const user = userEvent.setup();
-
 		await renderSuspended(InstantElectricHeater, {
 			route: {
 				params: { heater: "create" },
@@ -163,9 +157,6 @@ describe("instantElectricHeater", () => {
 	});
 
 	test("creates a new heater automatically with given name", async () => {
-		const store = useEcaasStore();
-		const user = userEvent.setup();
-
 		await renderSuspended(InstantElectricHeater, {
 			route: {
 				params: { heater: "create" },
@@ -181,9 +172,6 @@ describe("instantElectricHeater", () => {
 	});
 
 	test("updated form data is automatically saved to the correct store object when there are multiple instant electric heaters added", async () => {
-		const store = useEcaasStore();
-		const user = userEvent.setup();
-
 		store.$patch({
 			heatingSystems: {
 				heatEmitting: {

@@ -30,12 +30,12 @@ const shadingSummary: SummarySection = {
 	label: "Shading",
 	data: shadingData.map(s => {
 		return {
-			"Name": s.name,
-			"Shading start angle": `${s.startAngle} ${degrees.suffix}`,
-			"Shading end angle": `${s.endAngle} ${degrees.suffix}`,
-			"Shading type": s.objectType ? displayCamelToSentenceCase(s.objectType) : undefined,
-			"Height": `${s.height} ${metre.suffix}`,
-			"Distance": `${s.distance} ${metre.suffix}`
+			"Name": s.data.name,
+			"Shading start angle": `${s.data.startAngle} ${degrees.suffix}`,
+			"Shading end angle": `${s.data.endAngle} ${degrees.suffix}`,
+			"Shading type": s.data.objectType ? displayCamelToSentenceCase(s.data.objectType) : undefined,
+			"Height": `${s.data.height} ${metre.suffix}`,
+			"Distance": `${s.data.distance} ${metre.suffix}`
 		};
 	}) || [],
 	editUrl: getUrl('shading')!

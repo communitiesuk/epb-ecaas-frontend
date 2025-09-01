@@ -33,7 +33,11 @@ describe('shading form', () => {
 	});
 
 	test('data is saved to store state when form is valid', async () => {
-		await renderSuspended(ShadingForm);
+		await renderSuspended(ShadingForm, {
+			route: {
+				params: { shading: 'create' }
+			}
+		});
 
 		await user.type(screen.getByTestId('name'), 'Big Tree');
 		await user.type(screen.getByTestId('startAngle'), '10');
@@ -42,11 +46,14 @@ describe('shading form', () => {
 		await user.type(screen.getByTestId('height'), '3');
 		await user.type(screen.getByTestId('distance'), '2');
 		await user.tab();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.dwellingDetails.shading;
 
-		expect(data[0]).toEqual(shading1);
+		expect(data[0]).toEqual({
+			data: shading1,
+			complete: true
+		});
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details/shading');
 	});
 
@@ -54,7 +61,11 @@ describe('shading form', () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
-					data: [shading1, shading2]
+					data: [{
+						data: {...shading1}
+					}, {
+						data: {...shading2}
+					}]
 				}
 			}}
 		);
@@ -65,23 +76,25 @@ describe('shading form', () => {
 			}
 		});
 
-		await user.tab();
 		await user.clear(screen.getByTestId('name'));
 		await user.type(screen.getByTestId('name'), 'Wall');
 		await user.tab();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.dwellingDetails.shading;
 
-		expect(data[0]).toEqual(shading1);
-		expect(data[1]?.name).toBe('Wall');
+		expect(data[1]?.data.name).toEqual('Wall');
 	});
 
 	test('form is prepopulated correctly when data exists in state', async () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
-					data: [shading1, shading2]
+					data: [{
+						data: {...shading1}
+					}, {
+						data: {...shading2}
+					}]
 				}
 			}}
 		);
@@ -109,9 +122,13 @@ describe('shading form', () => {
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {
-		await renderSuspended(ShadingForm);
+		await renderSuspended(ShadingForm, {
+			route: {
+				params: { shading: 'create' }
+			}
+		});
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(await screen.findByTestId('name_error')).toBeDefined();
 		expect(await screen.findByTestId('startAngle_error')).toBeDefined();
@@ -124,8 +141,69 @@ describe('shading form', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(ShadingForm);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('ShadingErrorSummary'))).toBeDefined();
+	});
+
+	test("updated form data is automatically saved to store", async () => {
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: [{
+						data: {...shading1}
+					}]
+				}
+			}
+		});
+
+		await renderSuspended(ShadingForm, {
+			route: {
+				params: { shading: "0" },
+			},
+		});
+	
+		await user.clear(screen.getByTestId('name'));
+
+		await user.type(screen.getByTestId('name'), 'Small Tree');
+		await user.type(screen.getByTestId('startAngle'), '10');
+
+		const { data } = store.dwellingDetails.shading;
+
+		expect(data[0]?.data.name).toBe("Small Tree");
+		expect(data[0]?.data.startAngle).toBe(10);
+	});
+	
+	test("partial form data is saved automatically with default name to store when adding new heater", async () => {
+		await renderSuspended(ShadingForm, {
+			route: {
+				params: { shading: "create" },
+			},
+		});
+		
+		await user.type(screen.getByTestId('startAngle'), '10');
+		await user.type(screen.getByTestId('endAngle'), '20');
+		await user.tab();
+
+		const { data } = store.dwellingDetails.shading;
+
+		expect(data[0]?.data.name).toBe("Shading");
+		expect(data[0]?.data.startAngle).toBe(10);
+		expect(data[0]?.data.endAngle).toBe(20);
+	});
+
+	test("creates a new heater automatically with given name", async () => {
+		await renderSuspended(ShadingForm, {
+			route: {
+				params: { shading: "create" },
+			},
+		});
+		
+		await user.type(screen.getByTestId("name"), "Shading 1");
+		await user.tab();
+
+		const { data } = store.dwellingDetails.shading;
+
+		expect(data[0]?.data.name).toBe("Shading 1");
 	});
 });

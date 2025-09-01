@@ -4,9 +4,9 @@ import {within} from '@testing-library/dom';
 import Shading from './index.vue';
 import ShadingForm from './[shading].vue';
 
-
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { ShadingObjectType } from "~/schema/api-schema.types";
+import formStatus from "~/constants/formStatus";
 
 describe('shading', () => {
 	const store = useEcaasStore();
@@ -16,23 +16,29 @@ describe('shading', () => {
 	mockNuxtImport('navigateTo', () => {
 		return navigateToMock;
 	});
-	const shading1: ShadingData = {
-		name: "Cherry Tree",
-		startAngle: 10,
-		endAngle: 20,
-		objectType: ShadingObjectType.obstacle,
-		height: 3,
-		distance: 2
+	const shading1: EcaasForm<ShadingData> = {
+		data: {
+			name: "Cherry Tree",
+			startAngle: 10,
+			endAngle: 20,
+			objectType: ShadingObjectType.obstacle,
+			height: 3,
+			distance: 2
+		}
 	};
 
-	const shading2: ShadingData = {
-		...shading1,
-		name: 'Apple Tree'
+	const shading2: EcaasForm<ShadingData> = {
+		data: {
+			...shading1.data,
+			name: 'Apple Tree'
+		}
 	};
 
-	const shading3: ShadingData = {
-		...shading1,
-		name: 'Cherry Tree out front'
+	const shading3: EcaasForm<ShadingData> = {
+		data: {
+			...shading1.data,
+			name: 'Cherry Tree out front'
+		}
 	};
 
 	afterEach(() => {
@@ -178,7 +184,7 @@ describe('shading', () => {
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), "Cherry tree edited");
 		await user.tab();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { complete } = store.dwellingDetails.shading;
 		expect(complete).toBe(false);
@@ -188,5 +194,37 @@ describe('shading', () => {
 		
 	});
 
+	it('should display an in-progress indicator when an entry is not marked as complete', async () => {
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: [{
+						data: { name: 'Shading 1' }
+					}]
+				}
+			}
+		});
+
+		await renderSuspended(Shading);
+
+		expect(screen.getByTestId('shading_status_0').textContent).toBe(formStatus.inProgress.text);
+	});
+
+	it ('should display a complete indicator when an entry is marked as complete', async () => {
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: [{
+						...shading1,
+						complete: true
+					}]
+				}
+			}
+		});
+
+		await renderSuspended(Shading);
+
+		expect(screen.getByTestId('shading_status_0').textContent).toBe(formStatus.complete.text);
+	});
 });
 

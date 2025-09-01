@@ -71,7 +71,6 @@ watch(model, async (newData: InstantElectricStorageData | undefined, initialData
 	});
 });
 
-
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 

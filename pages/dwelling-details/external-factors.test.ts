@@ -19,27 +19,38 @@ const state: ExternalFactorsData = {
 
 describe('External factors', () => {
 	const store = useEcaasStore();
+	const user = userEvent.setup();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
 	test('data is saved to store state when form is valid', async () => {
-		const user = userEvent.setup();
-
 		await renderSuspended(ExternalFactors);
 
 		await user.type(screen.getByTestId('altitude'), '3');
 		await user.click(screen.getByTestId('typeOfExposure_Shielded'));
 		await user.click(screen.getByTestId('terrainType_Suburban'));
 		await user.click(screen.getByTestId('noiseNuisance_no'));
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data, complete } = store.dwellingDetails.externalFactors;
 		
 		expect(data).toEqual(state);
 		expect(complete).toBe(true);
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details');
+	});
+
+	test("updated form data is automatically saved to store", async () => {
+		await renderSuspended(ExternalFactors);
+		
+		await user.type(screen.getByTestId('altitude'), '3');
+		await user.click(screen.getByTestId('typeOfExposure_Shielded'));
+
+		const { data } = store.dwellingDetails.externalFactors;
+
+		expect(data.altitude).toBe(3);
+		expect(data.typeOfExposure).toBe('Shielded');
 	});
 
 	test('form is prepopulated when data exists in state', async () => {
@@ -60,11 +71,9 @@ describe('External factors', () => {
 	});
 		
 	test('required error messages are displayed when empty form is submitted', async () => {
-		const user = userEvent.setup();
-
 		await renderSuspended(ExternalFactors);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('altitude_error'))).toBeDefined();
 		expect((await screen.findByTestId('typeOfExposure_error'))).toBeDefined();
@@ -73,11 +82,9 @@ describe('External factors', () => {
 	});
 
 	test('error summary is displayed when an invalid form in submitted', async () => {
-		const user = userEvent.setup();
-
 		await renderSuspended(ExternalFactors);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('externalFactorsErrorSummary'))).toBeDefined();
 	});

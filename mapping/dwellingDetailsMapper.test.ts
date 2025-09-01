@@ -84,7 +84,10 @@ describe('dwelling details mapper', () => {
 			dwellingDetails: {
 				shading: {
 					complete: true,
-					data: [state]
+					data: [{
+						data: state,
+						complete: true
+					}]
 				}
 			}
 		});

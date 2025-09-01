@@ -941,12 +941,14 @@ describe("FHS input mapper", () => {
 			shading: {
 				...baseForm,
 				data: [{
-					name: "Tree",
-					startAngle: 60,
-					endAngle: 90,
-					objectType: ShadingObjectType.obstacle,
-					height: 2,
-					distance: 1
+					data: {
+						name: "Tree",
+						startAngle: 60,
+						endAngle: 90,
+						objectType: ShadingObjectType.obstacle,
+						height: 2,
+						distance: 1
+					}
 				}]
 			},
 			externalFactors: {
@@ -1306,20 +1308,24 @@ describe("FHS input mapper", () => {
 			shading: {
 				...baseForm,
 				data: [{
-					name: "tree house",
-					startAngle: 10,
-					endAngle: 40,
-					objectType: ShadingObjectType.overhang,
-					height: 5,
-					distance: 2
+					data: {
+						name: "tree house",
+						startAngle: 10,
+						endAngle: 40,
+						objectType: ShadingObjectType.overhang,
+						height: 5,
+						distance: 2
+					}
 				},
 				{
-					name: "obstacle",
-					startAngle: 1,
-					endAngle: 12,
-					objectType: ShadingObjectType.obstacle,
-					height: 1,
-					distance: 0.5
+					data: {
+						name: "obstacle",
+						startAngle: 1,
+						endAngle: 12,
+						objectType: ShadingObjectType.obstacle,
+						height: 1,
+						distance: 0.5
+					}
 				}]
 			},
 			externalFactors: {

@@ -75,7 +75,7 @@ export type ExternalFactorsData = z.infer<typeof externalFactorsDataZod>;
 
 export type DwellingDetails = AssertFormKeysArePageIds<{
 	generalSpecifications: EcaasForm<GeneralDetailsData>;
-	shading: EcaasForm<ShadingData[]>;
+	shading: EcaasForm<EcaasForm<ShadingData>[]>;
 	externalFactors: EcaasForm<ExternalFactorsData>;
 }>;
 

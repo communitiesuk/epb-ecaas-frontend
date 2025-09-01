@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { BuildType } from '~/schema/api-schema.types';
 import { isInteger } from "~/utils/validation";
+import { getUrl } from "#imports";
 
 const title = "General details";
 const store = useEcaasStore();
@@ -32,6 +33,20 @@ const saveForm = (fields: typeof model.value) => {
 
 	navigateTo("/dwelling-details");
 };
+
+watch(model, async (newData: GeneralDetailsData, initialData: GeneralDetailsData) => {
+
+	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
+		if (initialData[key] !== newData[key]) {
+			store.$patch((state) => {
+				state.dwellingDetails.generalSpecifications = {
+					data: newData,
+					complete: false
+				}
+			});
+		}
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -98,6 +113,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="This affects the space cooling of the notional dwelling"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('dwellingDetails')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

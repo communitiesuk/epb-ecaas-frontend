@@ -27,6 +27,7 @@ const stateWithFlat: GeneralDetailsData = {
 
 describe('General details', () => {
 	const store = useEcaasStore();
+	const user = userEvent.setup();
 
 	afterEach(() => {
 		store.$reset();
@@ -35,21 +36,29 @@ describe('General details', () => {
 	describe('When the dwelling type is a house', () => {
 
 		test('data is saved to store state when form is valid', async () => {
-			const user = userEvent.setup();
-	
 			await renderSuspended(GeneralDetails);
 	
 			await user.click(screen.getByTestId('typeOfDwelling_house'));
 			await user.type(screen.getByTestId('storeysInDwelling'), '2');
 			await user.type(screen.getByTestId('numOfBedrooms'), '3');
 			await user.click(screen.getByTestId('coolingRequired_no'));
-			await user.click(screen.getByRole('button'));
+			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			const { data, complete } = store.dwellingDetails.generalSpecifications;
 			
 			expect(data).toEqual(state);
 			expect(complete).toBe(true);
 			expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details');
+		});
+
+		test("updated form data is automatically saved to store", async () => {
+			await renderSuspended(GeneralDetails);
+			
+			await user.click(screen.getByTestId('typeOfDwelling_house'));
+			await user.type(screen.getByTestId('storeysInDwelling'), '2');
+	
+			expect(store.dwellingDetails.generalSpecifications.data.typeOfDwelling).toBe(BuildType.house);
+			expect(store.dwellingDetails.generalSpecifications.data.storeysInDwelling).toBe('2');
 		});
 
 		test('form is prepopulated when data exists in state', async () => {
@@ -75,14 +84,14 @@ describe('General details', () => {
 
 			await renderSuspended(GeneralDetails);
 
-			await user.click(screen.getByRole('button'));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId('typeOfDwelling_error'))).toBeDefined();
 			expect((await screen.findByTestId('storeysInDwelling_error'))).toBeDefined();
 			expect((await screen.findByTestId('numOfBedrooms_error'))).toBeDefined();
 			expect((await screen.findByTestId('coolingRequired_error'))).toBeDefined();
 
-			expect((await screen.queryByTestId('storeyOfFlat_error'))).toBe(null);
+			expect(screen.queryByTestId('storeyOfFlat_error')).toBe(null);
 		});
 
 		test('error summary is displayed when an invalid form in submitted', async () => {
@@ -90,7 +99,7 @@ describe('General details', () => {
 
 			await renderSuspended(GeneralDetails);
 
-			await user.click(screen.getByRole('button'));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId('generalDetailsErrorSummary'))).toBeDefined();
 		});
@@ -108,7 +117,7 @@ describe('General details', () => {
 			await user.type(screen.getByTestId('storeyOfFlat'), '3');
 			await user.type(screen.getByTestId('numOfBedrooms'), '3');
 			await user.click(screen.getByTestId('coolingRequired_no'));
-			await user.click(screen.getByRole('button'));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { data, complete } = store.dwellingDetails.generalSpecifications;
 			
@@ -141,7 +150,7 @@ describe('General details', () => {
 			await renderSuspended(GeneralDetails);
 
 			await user.click(screen.getByTestId('typeOfDwelling_flat'));
-			await user.click(screen.getByRole('button'));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId('storeyOfFlat_error'))).toBeDefined();
 

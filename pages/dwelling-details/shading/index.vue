@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import formStatus from '~/constants/formStatus';
 
 const title = "Distant shading";
 const page = usePage();
 const store = useEcaasStore();
 
 const { data = [] } = store.dwellingDetails.shading;
-
 
 function handleRemove(index: number) {
 	data.splice(index, 1);
@@ -25,15 +25,19 @@ function handleDuplicate(index: number) {
 	const shading = data[index];
 	
 	if (shading) {
-		const duplicates = data.filter(s => s.name.match(duplicateNamePattern(shading.name)));
+		const duplicates = data.filter(s => s.data.name.match(duplicateNamePattern(shading.data.name)));
 		
 		store.$patch((state) => {
 			state.dwellingDetails.shading.data.push({
-				...shading,
-				name: `${shading.name} (${duplicates.length})`
+				complete: shading.complete,
+				data: {
+					...shading.data,
+					name: `${shading.data.name} (${duplicates.length})`
+				}
 			});
+
+			state.dwellingDetails.shading.complete = false;
 		});
-		store.dwellingDetails.shading.complete = false;
 	}
 }
 
@@ -59,8 +63,17 @@ function handleComplete() {
 		{{ title }}
 	</h1>
 	<CustomList
-		id="shading" title="Shading" :form-url="page?.url!"
-		:items="store.dwellingDetails.shading?.data?.map(x => x.name)" @remove="handleRemove" @duplicate="handleDuplicate" />
+		id="shading"
+		title="Shading"
+		:form-url="page?.url!"
+		:items="store.dwellingDetails.shading?.data?.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
+		@remove="handleRemove"
+		@duplicate="handleDuplicate"
+	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-details" secondary>
 			Return to dwelling details

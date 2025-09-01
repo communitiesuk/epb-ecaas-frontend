@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { ShadingObjectType } from '~/schema/api-schema.types';
+import { getUrl, type ShadingData } from "#imports";
 
 const title = "Distant shading";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const route = useRoute();
 
-const shading = useItemToEdit('shading', store.dwellingDetails.shading.data);
-const model: Ref<ShadingData> = ref(shading!);
+const shadingData = useItemToEdit('shading', store.dwellingDetails.shading.data);
+const model: Ref<ShadingData | undefined> = ref(shadingData?.data);
 
 const objectTypeOptions: Record<ShadingObjectType, Capitalize<ShadingObjectType>> = {
 	obstacle: 'Obstacle',
@@ -14,24 +15,71 @@ const objectTypeOptions: Record<ShadingObjectType, Capitalize<ShadingObjectType>
 };
 
 const saveForm = (fields: ShadingData) => {
-	store.dwellingDetails.shading.complete = false;
 	store.$patch((state) => {
-		const {shading} = state.dwellingDetails;
+		const storeData = state.dwellingDetails.shading.data;
 
-		const shadingItem: ShadingData = {
-			name: fields.name,
-			startAngle: fields.startAngle,
-			endAngle: fields.endAngle,
-			objectType: fields.objectType,
-			height: fields.height,
-			distance: fields.distance
+		const index = route.params.shading === 'create' ? storeData.length - 1 : Number(route.params.shading);
+
+		const shadingItem: EcaasForm<ShadingData> = {
+			data: {
+				name: fields.name,
+				startAngle: fields.startAngle,
+				endAngle: fields.endAngle,
+				objectType: fields.objectType,
+				height: fields.height,
+				distance: fields.distance
+			},
+			complete: true
 		};
 
-		saveToList(shadingItem, shading);
+		state.dwellingDetails.shading.data[index] = shadingItem;
+		state.dwellingDetails.shading.complete = false;
 	});
 
 	navigateTo("/dwelling-details/shading");
 };
+
+watch(model, async (newData: ShadingData | undefined, initialData: ShadingData | undefined) => {
+	const storeData = store.dwellingDetails.shading.data;
+
+	if (initialData === undefined || newData === undefined) {
+		return;
+	}
+
+	const defaultName = 'Shading';
+	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
+
+	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
+		Object.values(newData).some(x => x !== undefined);
+
+	if (route.params.shading === 'create' && isFirstEdit) {
+
+		store.$patch(state => {
+			state.dwellingDetails.shading.data.push({
+				data: {
+					...newData,
+					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+				}
+			});
+		});
+
+		return;
+	}
+
+	store.$patch((state) => {
+		const index = route.params.shading === 'create' ? storeData.length - 1 : Number(route.params.shading);
+
+		state.dwellingDetails.shading.data[index] = {
+			data: {
+				...newData,
+				name: newData.name ?? state.dwellingDetails.shading.data[index]?.data.name
+			}
+		};
+
+		state.dwellingDetails.shading.complete = false;
+	});
+});
+
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 
@@ -118,10 +166,10 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			help="Enter the distance from the dwelling to the shading object"
 		/>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('heatEmitting')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
 

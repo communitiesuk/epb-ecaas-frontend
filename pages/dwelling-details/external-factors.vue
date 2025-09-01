@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
+import { getUrl } from "#imports";
 
 const title = "External factors";
 const store = useEcaasStore();
@@ -37,6 +38,20 @@ const saveForm = (fields: typeof model.value) => {
 
 	navigateTo("/dwelling-details");
 };
+
+watch(model, async (newData: ExternalFactorsData, initialData: ExternalFactorsData) => {
+
+	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
+		if (initialData[key] !== newData[key]) {
+			store.$patch((state) => {
+				state.dwellingDetails.externalFactors = {
+					data: newData,
+					complete: false
+				}
+			});
+		}
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -190,7 +205,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Is there environmental noise from the surrounding area, which can influence whether occupants keep windows closed?"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('dwellingDetails')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
 <style scoped lang="scss">
