@@ -105,10 +105,33 @@ describe('shading', () => {
 		expect(screen.getByText('Cherry Tree (1) (2)')).toBeDefined();
 	});
 
-	it('marks shading as complete when mark section as complete button is clicked', async () => {
+	it('disables the mark section as complete button when shading element is incomplete', async () => {
+		store.$patch({
+			dwellingDetails: {
+				shading: {
+					data: [
+						{
+							data: {
+								name: "Shading 1",
+								startAngle: 10
+							},
+							complete: false,
+						}
+					]
+				}
+			}
+		});
 
 		await renderSuspended(Shading);
+		const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+		expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
+	});
+
+	it('marks shading as complete when mark section as complete button is clicked', async () => {
+		await renderSuspended(Shading);
+
 		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+
 		const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
 		expect(completedStatusElement?.style.display).toBe("none");
 
@@ -125,14 +148,20 @@ describe('shading', () => {
 
 
 	it('marks shading as not complete when complete button is clicked then user removes a shading item', async () => {
-		
 		store.$patch({
 			dwellingDetails: {
 				shading: {
-					data: [shading1, shading2]
+					data: [{
+						data: {...shading1.data},
+						complete: true
+					}, {
+						data: {...shading2.data},
+						complete: true
+					}]
 				}
 			}
 		});
+
 		await renderSuspended(Shading);
 
 		await user.click(screen.getByTestId('completeSectionButton'));
@@ -145,14 +174,17 @@ describe('shading', () => {
 	});
 
 	it('marks shading as not complete when complete button is clicked then user duplicates a shading item', async () => {
-		
 		store.$patch({
 			dwellingDetails: {
 				shading: {
-					data: [shading1]
+					data: [{
+						data: {...shading1.data},
+						complete: true
+					}]
 				}
 			}
 		});
+
 		await renderSuspended(Shading);
 		await user.click(screen.getByTestId('completeSectionButton'));
 		expect(store.dwellingDetails.shading.complete).toBe(true);
@@ -167,7 +199,11 @@ describe('shading', () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
-					data: [shading1]
+					data: [{
+						data: {...shading1.data},
+						complete: true
+					}],
+					complete: true
 				}
 			}
 		});
@@ -180,7 +216,7 @@ describe('shading', () => {
 				params: {shading: '0'}
 			}
 		});
-		await user.tab();
+		
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), "Cherry tree edited");
 		await user.tab();
@@ -191,7 +227,6 @@ describe('shading', () => {
 
 		await renderSuspended(Shading);
 		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
-		
 	});
 
 	it('should display an in-progress indicator when an entry is not marked as complete', async () => {

@@ -52,10 +52,16 @@ function handleComplete() {
 	navigateTo('/dwelling-details');		
 }
 
+function checkIsComplete() {
+	return store.dwellingDetails.shading.complete ? true : false;
+}
+
+function hasIncompleteEntries() {
+	return store.dwellingDetails.shading.data.some(s => !s.complete);
+}
 </script>
 
 <template>
-	
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -78,8 +84,7 @@ function handleComplete() {
 		<GovButton href="/dwelling-details" secondary>
 			Return to dwelling details
 		</GovButton>
-		<CompleteElement :is-complete="store.dwellingDetails.shading?.complete ?? false" @completed="handleComplete"/>
-
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 	</div>
 </template>
 
