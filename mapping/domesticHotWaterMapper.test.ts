@@ -113,17 +113,19 @@ describe('domestic hot water mapper', () => {
 			dailyEnergyLoss: 3,
 		};
 
-		const primaryPipework: PrimaryPipeworkData = {
-			name: "primaryPipework1",
-			location: WaterPipeworkLocation.internal,
-			internalDiameter: 24,
-			externalDiameter: 26,
-			length: 10.0,
-			thermalConductivity: 0.040,
-			insulationThickness: 40,
-			surfaceReflectivity: false,
-			pipeContents: WaterPipeContentsType.water,
-			hotWaterCylinder: hotWaterCylinder.id
+		const primaryPipework: EcaasForm<PrimaryPipeworkData> = {
+			data: {
+				name: "primaryPipework1",
+				location: WaterPipeworkLocation.internal,
+				internalDiameter: 24,
+				externalDiameter: 26,
+				length: 10.0,
+				thermalConductivity: 0.040,
+				insulationThickness: 40,
+				surfaceReflectivity: false,
+				pipeContents: WaterPipeContentsType.water,
+				hotWaterCylinder: hotWaterCylinder.id
+			}
 		};
 
 		const pipework: Pipework = {
@@ -337,10 +339,12 @@ describe('domestic hot water mapper', () => {
 			},
 			secondaryPipework: {
 				data: [{
-					name: "secondaryPipework1",
-					length: 111, 
-					location: WaterPipeworkLocation.internal,
-					internalDiameter: 6
+					data: {
+						name: "secondaryPipework1",
+						length: 111, 
+						location: WaterPipeworkLocation.internal,
+						internalDiameter: 6
+					}
 				}],
 				complete: true,
 			}

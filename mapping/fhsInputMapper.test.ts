@@ -1907,43 +1907,51 @@ describe("FHS input mapper", () => {
 				primaryPipework: {
 					...baseForm,
 					data: [{
-						name: "pipework 1",
-						internalDiameter: 15,
-						externalDiameter: 22,
-						length: 5,
-						insulationThickness: 13,
-						thermalConductivity: 0.035,
-						surfaceReflectivity: true,
-						pipeContents: WaterPipeContentsType.water,
-						hotWaterCylinder: "hw cylinder 1 id",
-						location: WaterPipeworkLocation.internal
+						data: {
+							name: "pipework 1",
+							internalDiameter: 15,
+							externalDiameter: 22,
+							length: 5,
+							insulationThickness: 13,
+							thermalConductivity: 0.035,
+							surfaceReflectivity: true,
+							pipeContents: WaterPipeContentsType.water,
+							hotWaterCylinder: "hw cylinder 1 id",
+							location: WaterPipeworkLocation.internal
+						}
 					},
 					{
-						name: "external pipework",
-						internalDiameter: 28,
-						externalDiameter: 28,
-						length: 32,
-						insulationThickness: 13,
-						thermalConductivity: 0.040,
-						surfaceReflectivity: false,
-						pipeContents: WaterPipeContentsType.air,
-						hotWaterCylinder: "hw cylinder 1 id",
-						location: WaterPipeworkLocation.external
+						data: {
+							name: "external pipework",
+							internalDiameter: 28,
+							externalDiameter: 28,
+							length: 32,
+							insulationThickness: 13,
+							thermalConductivity: 0.040,
+							surfaceReflectivity: false,
+							pipeContents: WaterPipeContentsType.air,
+							hotWaterCylinder: "hw cylinder 1 id",
+							location: WaterPipeworkLocation.external
+						}
 					}]
 				},
 				secondaryPipework: {
 					...baseForm,
 					data: [{
-						name: "secondary pipework",
-						length: 5,
-						location: WaterPipeworkLocation.internal,
-						internalDiameter: 14
+						data: {
+							name: "secondary pipework",
+							length: 5,
+							location: WaterPipeworkLocation.internal,
+							internalDiameter: 14
+						}
 					},
 					{
-						name: "external secondary pipework",
-						length: 15,
-						location: WaterPipeworkLocation.external,
-						internalDiameter: 20
+						data: {
+							name: "external secondary pipework",
+							length: 15,
+							location: WaterPipeworkLocation.external,
+							internalDiameter: 20
+						}
 					}]
 				}
 			},

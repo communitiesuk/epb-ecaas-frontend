@@ -13,17 +13,34 @@ mockNuxtImport('navigateTo', () => {
 
 const hotWaterCylinderId = 'c84528bb-f805-4f1e-95d3-2bd17384fdbe';
 
-const state: PrimaryPipeworkData = {
-	name: 'Pipework Kitchen Sink',
-	internalDiameter: 10,
-	externalDiameter: 10,
-	length: 3,
-	insulationThickness: 5,
-	thermalConductivity: 1,
-	surfaceReflectivity: true,
-	pipeContents: WaterPipeContentsType.water,
-	hotWaterCylinder: hotWaterCylinderId,
-	location: WaterPipeworkLocation.internal
+const pipework1: EcaasForm<PrimaryPipeworkData> = {
+	data: {
+		name: 'Pipework Kitchen Sink',
+		internalDiameter: 10,
+		externalDiameter: 10,
+		length: 3,
+		insulationThickness: 5,
+		thermalConductivity: 1,
+		surfaceReflectivity: true,
+		pipeContents: WaterPipeContentsType.water,
+		hotWaterCylinder: hotWaterCylinderId,
+		location: WaterPipeworkLocation.internal
+	}
+};
+
+const pipework2: EcaasForm<PrimaryPipeworkData> = {
+	data: {
+		name: 'Pipework Kitchen Sink 2',
+		internalDiameter: 11,
+		externalDiameter: 11,
+		length: 2,
+		insulationThickness: 4,
+		thermalConductivity: 1,
+		surfaceReflectivity: true,
+		pipeContents: WaterPipeContentsType.water,
+		hotWaterCylinder: hotWaterCylinderId,
+		location: WaterPipeworkLocation.internal
+	}
 };
 
 describe('Primary pipework form', () => {
@@ -65,16 +82,25 @@ describe('Primary pipework form', () => {
 		await user.click(screen.getByTestId('location_internal'));
 	};
 
-	test('data is saved to store state when form is valid', async () => {
+	test("data is saved to store state when form is valid", async () => {
 		addHotWaterCylinder();
-		await renderSuspended(PipeworkForm);
-		
-		await populateValidForm();
-		await user.click(screen.getByRole('button'));
-		
-		const { data } = store.domesticHotWater.pipework.primaryPipework;
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "create" },
+			},
+		});
 
-		expect(data[0]).toEqual(state);
+		await populateValidForm();
+
+		await user.click(
+			screen.getByRole("button", { name: "Save and mark as complete" })
+		);
+
+		const { data } = store.domesticHotWater.pipework.primaryPipework;
+		expect(data[0]).toEqual({
+			...pipework1,
+			complete: true,
+		});
 	});
 
 	test('form is prepopulated when data exists in state', async () => {
@@ -84,7 +110,7 @@ describe('Primary pipework form', () => {
 			domesticHotWater: {
 				pipework: {
 					primaryPipework: {
-						data: [state]
+						data: [pipework1]
 					}
 				}
 			}
@@ -115,16 +141,16 @@ describe('Primary pipework form', () => {
 			domesticHotWater: {
 				pipework: {
 					primaryPipework: {
-						data: [state]
+						data: [pipework1]
 					}
 				}
 			}
 		});
 
 		await renderSuspended(WaterHeatingForm); 
-		await(user.click(screen.getByRole('button')));
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
 
-		expect(store.domesticHotWater.pipework.primaryPipework.data[0]?.hotWaterCylinder).toBe(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.id);
+		expect(store.domesticHotWater.pipework.primaryPipework.data[0]?.data.hotWaterCylinder).toBe(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.id);
 		
 		await renderSuspended(PipeworkForm, {
 			route: {
@@ -137,7 +163,7 @@ describe('Primary pipework form', () => {
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(PipeworkForm);
 
-		await user.click(screen.getByRole('button'));
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('internalDiameter_error'))).toBeDefined();
@@ -152,20 +178,108 @@ describe('Primary pipework form', () => {
 	});
 
 	test('error summary is displayed when an invalid form in submitted', async () => {
-		await renderSuspended(PipeworkForm);
 
-		await user.click(screen.getByRole('button'));
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: 'create' }
+			}
+		});
 
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
 		expect((await screen.findByTestId('pipeworkErrorSummary'))).toBeDefined();
 	});
 
-	it('navigates to pipework page when valid form is completed', async () => {
+	test("form data is automatically saved to store", async () => {
+
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId('name'), 'Pipework Kitchen Sink');
+		await user.type(screen.getByTestId('internalDiameter'), '10');
+		await user.tab();
+		const { data } = store.domesticHotWater.pipework.primaryPipework;
+
+		expect(data[0]!.data.name).toBe("Pipework Kitchen Sink");
+		expect(data[0]!.data.internalDiameter).toBe(10);
+	});
+
+	test("partial form data automatically saved to store with default name if no name has been added", async () => {
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId('internalDiameter'), '10');
+		await user.tab();
+		const { data } = store.domesticHotWater.pipework.primaryPipework;
+
+		expect(data[0]!.data.name).toBe("Primary pipework");
+		expect(data[0]!.data.internalDiameter).toBe(10);
+	});
+
+	test('save progress button navigates user to the pipework overview page', async () => {
 		addHotWaterCylinder();
-		await renderSuspended(PipeworkForm);
-	
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "create" },
+			},
+		});
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		const saveProcess = screen.getByRole("button", { name: "Save progress" });
+
+		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/pipework");
+	});
+
+	test("creates a new primary pipework automatically when a user adds only the name value", async () => {
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId('name'), 'Pipework Kitchen Sink');
+
+		await user.tab();
+		const { data } = store.domesticHotWater.pipework.primaryPipework;
+
+		expect(data[0]!.data.name).toBe("Pipework Kitchen Sink");
+		expect(data[0]!.data.internalDiameter).toBeUndefined();
+	});
+
+	test("updated form data is automatically saved to the correct store object when there are multiple instant electric heaters added", async () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+		addHotWaterCylinder();
+
+		store.$patch({
+			domesticHotWater: {
+				pipework: {
+					primaryPipework: {
+						data: [pipework1, pipework2]
+					}
+				}
+			}
+		});    
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "1" },
+			},
+		});
+
+					
+		await user.clear(screen.getByTestId("name"));
+		await user.clear(screen.getByTestId("internalDiameter"));
 		
-		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/pipework');
+		await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink 2");
+		await user.type(screen.getByTestId("internalDiameter"), "1");
+		await user.tab();
+		const { data } = store.domesticHotWater.pipework.primaryPipework;
+
+		expect(data[1]?.data.name).toBe("Pipework Kitchen Sink 2");
+		expect(data[1]?.data.internalDiameter).toBe(1);
 	});
 });

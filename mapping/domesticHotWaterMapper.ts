@@ -83,9 +83,9 @@ function mapOthersData(state: ResolvedState) {
 export function mapDistributionData(state: ResolvedState) {
 	return state.domesticHotWater.pipework.secondaryPipework.map((x): SchemaWaterPipeworkSimple => {
 		return {
-			length: x.length,
-			location: x.location,
-			internal_diameter_mm: x.internalDiameter
+			length: x.data.length,
+			location: x.data.location,
+			internal_diameter_mm: x.data.internalDiameter
 		};
 	});
 }
@@ -94,16 +94,16 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 	return state.domesticHotWater.waterHeating.hotWaterCylinder.map((x): SchemaHotWaterSourceDetails => {
 		const referencedHeatPump = state.heatingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.data.id === x.heatSource);
 		const heatPumpName = referencedHeatPump ? referencedHeatPump.data.name : "Heat pump";
-		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
+		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.filter(pipework => pipework.data.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
 			return {
-				location: x.location,
-				internal_diameter_mm: x.internalDiameter,
-				external_diameter_mm: x.externalDiameter,
-				length: x.length,
-				insulation_thermal_conductivity: x.thermalConductivity,
-				insulation_thickness_mm: x.insulationThickness,
-				surface_reflectivity: x.surfaceReflectivity,
-				pipe_contents: x.pipeContents
+				location: x.data.location,
+				internal_diameter_mm: x.data.internalDiameter,
+				external_diameter_mm: x.data.externalDiameter,
+				length: x.data.length,
+				insulation_thermal_conductivity: x.data.thermalConductivity,
+				insulation_thickness_mm: x.data.insulationThickness,
+				surface_reflectivity: x.data.surfaceReflectivity,
+				pipe_contents: x.data.pipeContents
 			};
 		});
 

@@ -4,7 +4,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type PipeworkType = keyof typeof store.domesticHotWater.pipework;
-type PipeworkData = PrimaryPipeworkData & SecondaryPipeworkData;
+type PipeworkData = EcaasForm<PrimaryPipeworkData> & EcaasForm<SecondaryPipeworkData>;
 
 function handleRemove(pipeworkType: PipeworkType, index: number) {
 	const pipework = store.domesticHotWater.pipework[pipeworkType].data;
@@ -20,23 +20,35 @@ function handleRemove(pipeworkType: PipeworkType, index: number) {
 }
 
 function handleDuplicate<T extends PipeworkData>(pipeworkType: PipeworkType, index: number) {
-	const pipework = store.domesticHotWater.pipework[pipeworkType].data;
-	const pipeworkItem = pipework[index];
+	const pipework = store.domesticHotWater.pipework[pipeworkType]?.data;
+	const pipeworkItem = pipework?.[index];
+	let name: string;
 
 	if (pipeworkItem) {
-		const duplicates = pipework.filter(d => d.name.match(duplicateNamePattern(pipeworkItem.name)));
-
+		const duplicates = pipework.filter(d => {
+			if(isEcaasForm(d) && isEcaasForm(pipeworkItem)) {
+				name = pipeworkItem.data.name;
+				return d.data.name.match(duplicateNamePattern(pipeworkItem.data.name));
+			}
+			return false;
+		});
+		
 		store.$patch((state) => {
-			const newPipework = {
-				...pipeworkItem,
-				name: `${pipeworkItem.name} (${duplicates.length})`
-			} as T;
 
-			state.domesticHotWater.pipework[pipeworkType].data.push(newPipework);
+			const newItem = {
+				complete: pipeworkItem.complete,
+				data: {
+					...pipeworkItem.data,
+					name: `${name} (${duplicates.length})`
+				}
+			} as T;
+			
+			state.domesticHotWater.pipework[pipeworkType].data.push(newItem);
 			state.domesticHotWater.pipework[pipeworkType].complete = false;
 		});
 	}
 }
+
 
 function handleComplete() {
 	store.$patch({
@@ -67,7 +79,7 @@ function checkIsComplete(){
 		id="primaryPipework"
 		title="Primary pipework"
 		:form-url="`${page?.url!}/primary`"
-		:items="store.domesticHotWater.pipework.primaryPipework.data.map(x => x.name)"
+		:items="store.domesticHotWater.pipework.primaryPipework.data.map(x => x.data.name)"
 		@remove="(index: number) => handleRemove('primaryPipework', index)"
 		@duplicate="(index: number) => handleDuplicate('primaryPipework', index)"
 	/>
@@ -75,7 +87,7 @@ function checkIsComplete(){
 		id="secondaryPipework"
 		title="Secondary pipework (hot water distribution)"
 		:form-url="`${page?.url!}/secondary`"
-		:items="store.domesticHotWater.pipework.secondaryPipework.data.map(x => x.name)"
+		:items="store.domesticHotWater.pipework.secondaryPipework.data.map(x => x.data?.name)"
 		@remove="(index: number) => handleRemove('secondaryPipework', index)"
 		@duplicate="(index: number) => handleDuplicate('secondaryPipework', index)"
 	/>
@@ -86,6 +98,6 @@ function checkIsComplete(){
 		>
 			Return to domestic hot water
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()"  @complete="handleComplete"/>
 	</div>
 </template>

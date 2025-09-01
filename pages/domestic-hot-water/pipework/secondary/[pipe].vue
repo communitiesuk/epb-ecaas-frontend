@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { WaterPipeworkLocation } from '~/schema/api-schema.types';
+import { getUrl  } from '#imports';
 
 const title = "Secondary pipework";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const route = useRoute();
 
 const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.secondaryPipework.data);
-const model: Ref<SecondaryPipeworkData> = ref(pipeworkData!);
+const model: Ref<SecondaryPipeworkData | undefined > = ref(pipeworkData?.data);
 
 const locationOptions: Record<WaterPipeworkLocation, SnakeToSentenceCase<WaterPipeworkLocation>> = {
 	internal: 'Internal',
@@ -16,20 +17,63 @@ const locationOptions: Record<WaterPipeworkLocation, SnakeToSentenceCase<WaterPi
 const saveForm = (fields: SecondaryPipeworkData) => {
 	store.$patch((state) => {
 		const {secondaryPipework} = state.domesticHotWater.pipework;
-
-		const pipeworkItem: SecondaryPipeworkData = {
-			name: fields.name,
-			location: fields.location,
-			length: fields.length,
-			internalDiameter: fields.internalDiameter,
+		const storeData = store.domesticHotWater.pipework.secondaryPipework.data;
+		const index = route.params.pipe === 'create' ? storeData.length -1 : Number(route.params.pipe);
+		const pipeworkItem: EcaasForm<SecondaryPipeworkData> = {
+			data: {
+				name: fields.name,
+				location: fields.location,
+				length: fields.length,
+				internalDiameter: fields.internalDiameter,
+			}
 		};
-
-		saveToList(pipeworkItem, secondaryPipework);
+		secondaryPipework.data[index] = pipeworkItem;
 		secondaryPipework.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/pipework");
 };
+
+watch(model, async (newData: SecondaryPipeworkData | undefined, initialData: SecondaryPipeworkData | undefined) => {
+	const storeData = store.domesticHotWater.pipework.secondaryPipework.data;
+
+	if (initialData === undefined || newData === undefined) {
+		return;
+	}
+
+	const defaultName = 'Secondary pipework';
+	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
+
+	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
+		Object.values(newData).some(x => x !== undefined);
+
+	if (route.params.pipe === 'create' && isFirstEdit) {
+
+		store.$patch(state => {
+			state.domesticHotWater.pipework.secondaryPipework.data.push({
+				data: {
+					...newData,
+					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+				}
+			});
+		});
+
+		return;
+	}
+
+	store.$patch((state) => {
+		const index = route.params.pipe === 'create' ? storeData.length - 1 : Number(route.params.pipe);
+
+		state.domesticHotWater.pipework.secondaryPipework.data[index] = {
+			data: {
+				...newData,
+				name: newData.name ?? state.domesticHotWater.pipework.secondaryPipework.data[index]?.data.name
+			}
+		};
+
+		state.domesticHotWater.pipework.secondaryPipework.complete = false;
+	});
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -104,7 +148,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('pipework')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
 

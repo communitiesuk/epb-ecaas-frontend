@@ -645,8 +645,8 @@ const otherHotWaterOutletDataZod = namedWithId.extend({
 export type OtherHotWaterOutletData = z.infer<typeof otherHotWaterOutletDataZod>;
 
 export type Pipework = AssertFormKeysArePageIds<{
-	primaryPipework: EcaasForm<PrimaryPipeworkData[]>;
-	secondaryPipework: EcaasForm<SecondaryPipeworkData[]>;
+	primaryPipework: EcaasForm<EcaasForm<PrimaryPipeworkData>[]>;
+	secondaryPipework: EcaasForm<EcaasForm<SecondaryPipeworkData>[]>;
 }>;
 
 const primaryPipeworkDataZod = z.object({

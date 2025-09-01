@@ -306,24 +306,28 @@ describe('Domestic hot water summary', () => {
 	describe('pipework', () => {
 		const hotWaterCylinderId = 'c84528bb-f805-4f1e-95d3-2bd17384fdbe';
 
-		const primaryPipework: PrimaryPipeworkData = {
-			name: 'Pipework Kitchen Sink Primary',
-			internalDiameter: 10,
-			externalDiameter: 10,
-			length: 3,
-			insulationThickness: 5,
-			thermalConductivity: 1,
-			surfaceReflectivity: true,
-			pipeContents: WaterPipeContentsType.water,
-			hotWaterCylinder: hotWaterCylinderId,
-			location: WaterPipeworkLocation.internal
+		const primaryPipework: EcaasForm<Partial<PrimaryPipeworkData>> = {
+			data: {
+				name: 'Pipework Kitchen Sink Primary',
+				internalDiameter: 10,
+				externalDiameter: 10,
+				length: 3,
+				insulationThickness: 5,
+				thermalConductivity: 1,
+				surfaceReflectivity: true,
+				pipeContents: WaterPipeContentsType.water,
+				hotWaterCylinder: hotWaterCylinderId,
+				location: WaterPipeworkLocation.internal
+			}
 		};
 
-		const secondaryPipework: SecondaryPipeworkData = {
-			name: 'Pipework Kitchen Sink Secondary',
-			length: 3,
-			location: WaterPipeworkLocation.internal,
-			internalDiameter: 9
+		const secondaryPipework: EcaasForm<Partial<SecondaryPipeworkData>> = {
+			data: {
+				name: 'Pipework Kitchen Sink Secondary',
+				length: 3,
+				location: WaterPipeworkLocation.internal,
+				internalDiameter: 9
+			}
 		};
 
 		it('should contain the correct tabs for pipework details', async () => {

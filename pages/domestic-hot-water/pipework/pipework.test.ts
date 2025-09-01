@@ -11,24 +11,30 @@ describe("Pipeworks", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const pipework1: Partial<PrimaryPipeworkData> = {
-		name: "Pipework Kitchen Sink",
-		internalDiameter: 20,
-		externalDiameter: 25,
-		length: 10,
-		insulationThickness: 5,
-		thermalConductivity: 0.5,
-		surfaceReflectivity: false,
-		pipeContents: WaterPipeContentsType.water,
-		hotWaterCylinder: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
-		location: WaterPipeworkLocation.internal,
+	const pipework1: EcaasForm<Partial<PrimaryPipeworkData>> = {
+		data: {
+			name: "Pipework Kitchen Sink",
+			internalDiameter: 20,
+			externalDiameter: 25,
+			length: 10,
+			insulationThickness: 5,
+			thermalConductivity: 0.5,
+			surfaceReflectivity: false,
+			pipeContents: WaterPipeContentsType.water,
+			hotWaterCylinder: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
+			location: WaterPipeworkLocation.internal,
+		}, 
+		complete: true
 	};
 
-	const pipework2: Partial<SecondaryPipeworkData> = {
-		name: "Pipework Kitchen",
-		length: 3,
-		location: WaterPipeworkLocation.internal,
-		internalDiameter: 9
+	const pipework2: EcaasForm<Partial<SecondaryPipeworkData>> = {
+		data: {
+			name: "Pipework Kitchen",
+			length: 3,
+			location: WaterPipeworkLocation.internal,
+			internalDiameter: 9
+		},
+		complete: true
 	};
 
 	afterEach(() => {

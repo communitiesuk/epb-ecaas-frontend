@@ -5,10 +5,10 @@ import type { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-
 
 const title = "Primary pipework";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const route = useRoute();
 
 const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.primaryPipework.data);
-const model: Ref<PrimaryPipeworkData> = ref(pipeworkData!);
+const model: Ref<PrimaryPipeworkData | undefined > = ref(pipeworkData?.data);
 
 const pipeContentsOptions: Record<WaterPipeContentsType, string> = {
 	water: 'Water',
@@ -24,27 +24,72 @@ const locationOptions: Record<WaterPipeworkLocation, SnakeToSentenceCase<WaterPi
 const saveForm = (fields: PrimaryPipeworkData) => {
 	store.$patch((state) => {
 		const {primaryPipework} = state.domesticHotWater.pipework;
+		const storeData = store.domesticHotWater.pipework.primaryPipework.data;
 
-		const pipeworkItem: PrimaryPipeworkData = {
-			name: fields.name,
-			internalDiameter: fields.internalDiameter,
-			externalDiameter: fields.externalDiameter,
-			length: fields.length,
-			insulationThickness: fields.insulationThickness,
-			thermalConductivity: fields.thermalConductivity,
-			surfaceReflectivity: fields.surfaceReflectivity,
-			pipeContents: fields.pipeContents,
-			hotWaterCylinder: fields.hotWaterCylinder,
-			location: fields.location,
+		const index = route.params.pipe === 'create' ? storeData.length - 1 : Number(route.params.pipe);
+
+		const pipeworkItem: EcaasForm<PrimaryPipeworkData> = {
+			data: {
+				name: fields.name,
+				internalDiameter: fields.internalDiameter,
+				externalDiameter: fields.externalDiameter,
+				length: fields.length,
+				insulationThickness: fields.insulationThickness,
+				thermalConductivity: fields.thermalConductivity,
+				surfaceReflectivity: fields.surfaceReflectivity,
+				pipeContents: fields.pipeContents,
+				hotWaterCylinder: fields.hotWaterCylinder,
+				location: fields.location,
+			},
+			complete: true
 		};
-
-		saveToList(pipeworkItem, primaryPipework);
-		
+		primaryPipework.data[index] = pipeworkItem;
 		primaryPipework.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/pipework");
 };
+
+watch(model, async (newData: PrimaryPipeworkData | undefined, initialData: PrimaryPipeworkData | undefined) => {
+	const storeData = store.domesticHotWater.pipework.primaryPipework.data;
+
+	if (initialData === undefined || newData === undefined) {
+		return;
+	}
+
+	const defaultName = 'Primary pipework';
+	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
+
+	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
+		Object.values(newData).some(x => x !== undefined);
+
+	if (route.params.pipe === 'create' && isFirstEdit) {
+
+		store.$patch(state => {
+			state.domesticHotWater.pipework.primaryPipework.data.push({
+				data: {
+					...newData,
+					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+				}
+			});
+		});
+
+		return;
+	}
+
+	store.$patch((state) => {
+		const index = route.params.pipe === 'create' ? storeData.length - 1 : Number(route.params.pipe);
+		
+		state.domesticHotWater.pipework.primaryPipework.data[index] = {
+			data: {
+				...newData,
+				name: newData.name ?? state.domesticHotWater.pipework.primaryPipework.data[index]?.data.name
+			}
+		};
+
+		state.domesticHotWater.pipework.primaryPipework.complete = false;
+	});
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -183,7 +228,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('pipework')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
 

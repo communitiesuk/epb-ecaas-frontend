@@ -220,16 +220,16 @@ const primaryPipeworkSummary: SummarySection = {
 	label: "Primary pipework",
 	data: primaryPipeworkData.map(d => {
 		return {
-			"Name": d.name,
-			"Internal diameter": `${d.internalDiameter} ${millimetre.suffix}`,
-			"External diameter": `${d.externalDiameter} ${millimetre.suffix}`,
-			"Length": `${d.length} ${metre.suffix}`,
-			"Insulation thickness": `${d.insulationThickness} ${millimetre.suffix}`,
-			"Thermal conductivity": `${d.thermalConductivity} ${wattsPerMeterKelvin.suffix}`,
-			"Surface reflectivity": d.surfaceReflectivity ? 'Reflective' : 'Not reflective',
-			"Pipe contents": displayCamelToSentenceCase(d.pipeContents),
-			"Hot water cylinder": hotWaterCylinderData.find(x => x.id === d.hotWaterCylinder)?.name,
-			"Location": displayCamelToSentenceCase(d.location),
+			"Name": d.data.name,
+			"Internal diameter": `${d.data.internalDiameter} ${millimetre.suffix}`,
+			"External diameter": `${d.data.externalDiameter} ${millimetre.suffix}`,
+			"Length": `${d.data.length} ${metre.suffix}`,
+			"Insulation thickness": `${d.data.insulationThickness} ${millimetre.suffix}`,
+			"Thermal conductivity": `${d.data.thermalConductivity} ${wattsPerMeterKelvin.suffix}`,
+			"Surface reflectivity": d.data.surfaceReflectivity ? 'Reflective' : 'Not reflective',
+			"Pipe contents": displayCamelToSentenceCase(d.data.pipeContents),
+			"Hot water cylinder": hotWaterCylinderData.find(x => x.id === d.data.hotWaterCylinder)?.name,
+			"Location": displayCamelToSentenceCase(d.data.location),
 		};
 	}) || [],
 	editUrl: getUrl('pipework')!
@@ -241,10 +241,10 @@ const secondaryPipeworkSummary: SummarySection = {
 	label: "Secondary pipework",
 	data: secondaryPipeworkData.map(d => {
 		return {
-			"Name": d.name,
-			"Internal diameter": `${d.internalDiameter} ${millimetre.suffix}`,
-			"Length": `${d.length} ${metre.suffix}`,
-			"Location": displayCamelToSentenceCase(d.location)
+			"Name": d.data.name,
+			"Internal diameter": `${d.data.internalDiameter} ${millimetre.suffix}`,
+			"Length": `${d.data.length} ${metre.suffix}`,
+			"Location": displayCamelToSentenceCase(d.data.location)
 		};
 	}) || [],
 	editUrl: getUrl('pipework')!
