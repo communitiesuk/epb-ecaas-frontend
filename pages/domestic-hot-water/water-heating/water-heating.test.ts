@@ -5,6 +5,9 @@ import WaterHeating from './index.vue';
 import type { HotWaterCylinderData } from "~/stores/ecaasStore.schema";
 import { litre } from "~/utils/units/volume";
 import { unitValue } from "~/utils/units/types";
+import { v4 as uuidv4 } from 'uuid';
+
+vi.mock('uuid');
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -56,14 +59,15 @@ describe('water heating (hot water cylinder)', () => {
 	});
 
 	test('data is saved to store state when form is valid', async () => {
+		vi.mocked(uuidv4).mockReturnValue("test-id" as unknown as Buffer);
 		await renderSuspended(WaterHeating);
-		
-		await populateValidForm();
-		await user.click(screen.getByRole('button'));
-		
+		await populateValidForm();	
+
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+
 		const actual = store.domesticHotWater.waterHeating.hotWaterCylinder.data![0]!;
-		
-		expect(actual.id).toBeDefined();
+
+		expect(actual.id).toBe("test-id");
 		expect(actual.heatSource).toEqual(cylinder.heatSource);
 		expect(actual.storageCylinderVolume).toEqual(cylinder.storageCylinderVolume);
 		expect(actual.dailyEnergyLoss).toEqual(cylinder.dailyEnergyLoss);
@@ -93,7 +97,8 @@ describe('water heating (hot water cylinder)', () => {
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(WaterHeating);
 
-		await user.click(screen.getByRole('button'));
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+
 
 		expect((await screen.findByTestId('waterHeaterType_error'))).toBeDefined();
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
@@ -103,7 +108,8 @@ describe('water heating (hot water cylinder)', () => {
 		await renderSuspended(WaterHeating);
 
 		await user.click(screen.getByTestId('waterHeaterType_hotWaterCylinder'));
-		await user.click(screen.getByRole('button'));
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+
 
 		expect((await screen.findByTestId('storageCylinderVolume_error'))).toBeDefined();
 		expect((await screen.findByTestId('dailyEnergyLoss_error'))).toBeDefined();
@@ -113,17 +119,17 @@ describe('water heating (hot water cylinder)', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(WaterHeating);
 
-		await user.click(screen.getByRole('button'));
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
 
 		expect((await screen.findByTestId('waterHeatingErrorSummary'))).toBeDefined();
 	});
 
-	it('completes water heating when valid form is completed', async () => {
+	test('completes water heating when valid form is completed', async () => {
 		await renderSuspended(WaterHeating);
 		
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
-	
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+
 		expect(store.domesticHotWater.waterHeating.combiBoiler.complete).toBeTruthy();
 		expect(store.domesticHotWater.waterHeating.heatBattery.complete).toBeTruthy();
 		expect(store.domesticHotWater.waterHeating.heatInterfaceUnit.complete).toBeTruthy();
@@ -135,12 +141,34 @@ describe('water heating (hot water cylinder)', () => {
 		expect(store.domesticHotWater.waterHeating.solarThermal.complete).toBeTruthy();
 	});
 
-	it('navigates to domestic hot water page when valid form is completed', async () => {
+	test("form data is automatically saved to store", async () => {
+		vi.mocked(uuidv4).mockReturnValue("test-id" as unknown as Buffer);
+
 		await renderSuspended(WaterHeating);
-		
-		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("waterHeaterType_hotWaterCylinder"));
+		await user.type(screen.getByTestId("name"), "Cylinder 1");
+		await user.click(
+			screen.getByTestId("heatSource_test-heat-pump")
+		);
+		await user.tab();
 	
-		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water');
+		expect(
+			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.name
+		).toBe("Cylinder 1");
+		expect(
+			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.heatSource
+		).toBe("test-heat-pump");
+		expect(
+			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.id
+		).toBe("test-id");
+	});
+
+	test('save progress button navigates user to the pipework overview page', async () => {
+		await renderSuspended(WaterHeating);
+		await populateValidForm();
+
+		const saveProcess = screen.getByRole("button", { name: "Save progress" });
+
+		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water");
 	});
 });

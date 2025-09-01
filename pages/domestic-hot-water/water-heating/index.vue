@@ -36,7 +36,8 @@ watch(model, async (newData: HotWaterCylinderData, initialData: HotWaterCylinder
 	else if (initialData !== newData) {
 		store.$patch((state) => {
 			state.domesticHotWater.waterHeating.hotWaterCylinder.data[0] = {
-				...newData
+				...newData,
+				id: store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.id ?? uuidv4()
 			};
 		});
 		store.domesticHotWater.waterHeating.hotWaterCylinder.complete = false;
