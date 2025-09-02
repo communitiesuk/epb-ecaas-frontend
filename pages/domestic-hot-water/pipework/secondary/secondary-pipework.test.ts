@@ -157,7 +157,7 @@ describe('Secondary pipework form', () => {
 		expect(data[0]!.data.internalDiameter).toBeUndefined();
 	});
 	
-	test("updated form data is automatically saved to the correct store object when there are multiple instant electric heaters added", async () => {
+	test("updated form data is automatically saved to the correct store object when there are multiple secondary pipeworks added", async () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 	
