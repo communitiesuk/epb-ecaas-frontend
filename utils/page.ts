@@ -1,6 +1,5 @@
-import pagesData from "~/data/pages/pages";
+import { page, type PageId } from "~/data/pages/pages";
 
-export function getUrl(pageId: string): string | undefined {
-	const page = pagesData.find(p => pageId === p.id);
-	return page?.url;
+export function getUrl(pageId: PageId): string {
+	return page(pageId).url;
 }

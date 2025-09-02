@@ -22,7 +22,7 @@ const generalDetailsSummary: SummarySection = {
 		"Number of bedrooms": generalDetailsData.numOfBedrooms,
 		"Cooling required": displayBoolean(generalDetailsData.coolingRequired),
 	},
-	editUrl: getUrl('generalDetails')!
+	editUrl: getUrl('generalSpecifications')
 };
 
 const shadingSummary: SummarySection = {
