@@ -888,7 +888,7 @@ const wetDistributionDataZod = z.discriminatedUnion(
 export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;
 
 export type PvAndBatteries = AssertFormKeysArePageIds<{
-	pvSystems: EcaasForm<PvSystemData[]>;
+	pvSystems: EcaasForm<EcaasForm<PvSystemData>[]>;
 	electricBattery: EcaasForm<ElectricBatteryData[]>;
 }>;
 

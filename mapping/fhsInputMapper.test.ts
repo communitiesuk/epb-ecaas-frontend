@@ -1964,18 +1964,20 @@ describe("FHS input mapper", () => {
 			pvSystems: {
 				...baseForm,
 				data: [{
-					name: "pv system 1",
-					peakPower: 2,
-					ventilationStrategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
-					pitch: 15,
-					orientation: 90,
-					elevationalHeight: 1,
-					lengthOfPV: 0.4,
-					widthOfPV: 0.5,
-					inverterPeakPowerAC: 3,
-					inverterPeakPowerDC: 3.8,
-					inverterIsInside: true,
-					inverterType: InverterType.optimised_inverter
+					data: {
+						name: "pv system 1",
+						peakPower: 2,
+						ventilationStrategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
+						pitch: 15,
+						orientation: 90,
+						elevationalHeight: 1,
+						lengthOfPV: 0.4,
+						widthOfPV: 0.5,
+						inverterPeakPowerAC: 3,
+						inverterPeakPowerDC: 3.8,
+						inverterIsInside: true,
+						inverterType: InverterType.optimised_inverter
+					}
 				}]
 			},
 			electricBattery: {

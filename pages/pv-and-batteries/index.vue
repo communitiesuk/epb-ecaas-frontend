@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import type {EcaasForm} from "~/stores/ecaasStore.schema";
+import formStatus from '~/constants/formStatus';
+import { isEcaasForm } from '#imports';
+
 const title = "PV (photovoltaic) systems and electric batteries";
 const page = usePage();
 const store = useEcaasStore();
 
 type PvAndBatteryType = keyof typeof store.pvAndBatteries;
-type PvAndBatteryData = PvSystemData & ElectricBatteryData & PvDiverterData;
+type PvAndBatteryData = EcaasForm<PvSystemData> & ElectricBatteryData & PvDiverterData;
 
 function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
 	const data = store.pvAndBatteries[pvAndBatteryType]?.data;
@@ -22,15 +26,38 @@ function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
 function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatteryType, index: number) {
 	const data  = store.pvAndBatteries[pvAndBatteryType]?.data;
 	const item = data?.[index];
+	let name: string;
     
 	if (item) {
-		const duplicates = data.filter(f => f.name.match(duplicateNamePattern(item.name)));
+		const duplicates = data.filter(f => {
+			if (isEcaasForm(f) && isEcaasForm(item)) {
+				name = item.data.name;
+				return f.data.name.match(duplicateNamePattern(item.data.name));
+			} else if (!isEcaasForm(f) && !isEcaasForm(item)) {
+				name = item.name;
+				return f.name.match(duplicateNamePattern(item.name));
+			}
+
+			return false;
+		});
 
 		store.$patch((state) => {
-			const newItem = {
-				...item,
-				name: `${item.name} (${duplicates.length})`
-			} as T;
+			let newItem;
+
+			if (isEcaasForm(item)) {
+				newItem = {
+					complete: item.complete,
+					data: {
+						...item.data,
+						name: `${name} (${duplicates.length})`
+					}
+				} as T;
+			} else {
+				newItem = {
+					...item,
+					name: `${name} (${duplicates.length})`
+				} as T;
+			}
 
 			state.pvAndBatteries[pvAndBatteryType].data.push(newItem);
 			state.pvAndBatteries[pvAndBatteryType].complete = false;
@@ -52,6 +79,14 @@ function checkIsComplete(){
 	const pvAndBatteries = store.pvAndBatteries;
 	return Object.values(pvAndBatteries).every(pvAndBattery => pvAndBattery.complete);
 }
+
+function hasIncompleteEntries() {
+	const types = store.pvAndBatteries;
+
+	return Object.values(types).some(
+		pvAndBatteries => pvAndBatteries.data.some(
+			pvAndBattery => isEcaasForm(pvAndBattery) ? !pvAndBattery.complete : false));
+}
 </script>
 
 <template>
@@ -65,7 +100,11 @@ function checkIsComplete(){
 		id="pvSystems"
 		title="PV Systems"
 		:form-url="`${page?.url!}/pv-systems`"
-		:items="store.pvAndBatteries.pvSystems.data.map(x => x.name)"
+		:items="store.pvAndBatteries.pvSystems.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('pvSystems', index)"
 		@duplicate="(index: number) => handleDuplicate('pvSystems', index)"
 	/>
@@ -86,6 +125,6 @@ function checkIsComplete(){
 			Return to overview
 		</GovButton>
 		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 	</div>
 </template>

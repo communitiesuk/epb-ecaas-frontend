@@ -3,6 +3,11 @@ import type {SchemaElectricBattery} from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { mapElectricBatteryData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
 
+const baseForm = {
+	data: [],
+	complete: true,
+};
+
 describe("PV and electric batteries mapper", () => {
 	const store = useEcaasStore();
 
@@ -12,8 +17,8 @@ describe("PV and electric batteries mapper", () => {
     
 	it("maps PV systems to the FHS input", () => {
 		// Arrange
-		const pvSystemData: PvSystemData[] = [
-			{
+		const pvSystem1: EcaasForm<PvSystemData> = {
+			data: {
 				name: "Roof",
 				peakPower: 50,
 				pitch: 45,
@@ -26,8 +31,10 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerDC: 60,
 				inverterIsInside: false,
 				inverterType: InverterType.string_inverter,
-			},
-			{
+			}};
+
+		const pvSystem2: EcaasForm<PvSystemData> = {
+			data: {
 				name: "Garden",
 				peakPower: 100,
 				pitch: 45,
@@ -39,15 +46,13 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerAC: 96,
 				inverterPeakPowerDC: 120,
 				inverterIsInside: false,
-				inverterType: InverterType.optimised_inverter
-			}
-		];
+				inverterType: InverterType.optimised_inverter}};
 
 		store.$patch({
 			pvAndBatteries: {
 				pvSystems: {
-					data: pvSystemData,
-					complete: true
+					...baseForm,
+					data: [pvSystem1, pvSystem2],
 				}
 			}
 		});
