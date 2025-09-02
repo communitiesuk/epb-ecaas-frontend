@@ -18,16 +18,18 @@ describe('Electric battery', () => {
 		store.$reset();
 	});
 
-	const fullElectricBattery: ElectricBatteryData = {
-		name: 'Acme battery mk II',
-		capacity: 40,
-		batteryAge: 12,
-		chargeEfficiency: 0.9,
-		location: BatteryLocation.inside,
-		gridChargingPossible: false,
-		maximumChargeRate: 30,
-		minimumChargeRate: 20,
-		maximumDischargeRate: 35
+	const fullElectricBattery: EcaasForm<ElectricBatteryData> = {
+		data: {
+			name: 'Acme battery mk II',
+			capacity: 40,
+			batteryAge: 12,
+			chargeEfficiency: 0.9,
+			location: BatteryLocation.inside,
+			gridChargingPossible: false,
+			maximumChargeRate: 30,
+			minimumChargeRate: 20,
+			maximumDischargeRate: 35
+		}
 	};
 
 	const fillForm = async () => {
@@ -52,7 +54,7 @@ describe('Electric battery', () => {
 
 		const { data } = store.pvAndBatteries.electricBattery;
 
-		expect(data).toEqual([fullElectricBattery]);
+		expect(data[0]).toEqual({...fullElectricBattery, complete: true});
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

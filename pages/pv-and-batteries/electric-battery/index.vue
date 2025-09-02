@@ -6,26 +6,29 @@ const title = "Electric battery";
 const store = useEcaasStore();
 
 const electricBatteryData = store.pvAndBatteries.electricBattery.data[0];
-const model: Ref<ElectricBatteryData> = ref(electricBatteryData!);
+const model: Ref<ElectricBatteryData | undefined> = ref(electricBatteryData?.data);
 
 const saveForm = (fields: ElectricBatteryData) => {
-	store.$patch({
-		pvAndBatteries: {
-			electricBattery: { 
-				data: [{
-					name: fields.name,
-					capacity: fields.capacity,
-					batteryAge: fields.batteryAge,
-					chargeEfficiency: fields.chargeEfficiency,
-					location: fields.location,
-					gridChargingPossible: fields.gridChargingPossible,
-					maximumChargeRate: fields.maximumChargeRate,
-					minimumChargeRate: fields.minimumChargeRate,
-					maximumDischargeRate: fields.maximumDischargeRate
-				}],
-				complete: false,
+	store.$patch((state) => {
+		const { electricBattery } = state.pvAndBatteries;
+
+		const batteryItem: EcaasForm<ElectricBatteryData> = {
+			data: {
+				name: fields.name,
+				capacity: fields.capacity,
+				batteryAge: fields.batteryAge,
+				chargeEfficiency: fields.chargeEfficiency,
+				location: fields.location,
+				gridChargingPossible: fields.gridChargingPossible,
+				maximumChargeRate: fields.maximumChargeRate,
+				minimumChargeRate: fields.minimumChargeRate,
+				maximumDischargeRate: fields.maximumDischargeRate
 			},
-		},
+			complete: true,
+		};
+		
+		electricBattery.data[0] = batteryItem;
+		electricBattery.complete = false;
 	});
 
 	navigateTo("/pv-and-batteries");

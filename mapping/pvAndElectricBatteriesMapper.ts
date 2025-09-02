@@ -43,7 +43,7 @@ export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, 'OnS
 }
 
 export function mapElectricBatteryData(state: ResolvedState): {"ElectricBattery": SchemaElectricBattery} | EmptyObject {
-	const electricBattery = state.pvAndBatteries.electricBattery[0];
+	const electricBattery = state.pvAndBatteries.electricBattery[0]?.data;
 	if (electricBattery) {
 		return {
 			"ElectricBattery":

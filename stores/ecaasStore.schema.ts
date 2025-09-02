@@ -889,7 +889,7 @@ export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;
 
 export type PvAndBatteries = AssertFormKeysArePageIds<{
 	pvSystems: EcaasForm<EcaasForm<PvSystemData>[]>;
-	electricBattery: EcaasForm<ElectricBatteryData[]>;
+	electricBattery: EcaasForm<EcaasForm<ElectricBatteryData>[]>;
 }>;
 
 const pvSystemDataZod = z.object({

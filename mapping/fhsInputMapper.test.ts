@@ -2011,15 +2011,18 @@ describe("FHS input mapper", () => {
 			electricBattery: {
 				...baseForm,
 				data: [{
-					name: "electric battery 1",
-					capacity: 12,
-					batteryAge: 0,
-					chargeEfficiency: 1,
-					location: BatteryLocation.inside,
-					gridChargingPossible: true,
-					maximumChargeRate: 90,
-					minimumChargeRate: 80,
-					maximumDischargeRate: 20,
+					data:
+							{
+								name: "electric battery 1",
+								capacity: 12,
+								batteryAge: 0,
+								chargeEfficiency: 1,
+								location: BatteryLocation.inside,
+								gridChargingPossible: true,
+								maximumChargeRate: 90,
+								minimumChargeRate: 80,
+								maximumDischargeRate: 20,
+							}
 				}]
 			}
 		};

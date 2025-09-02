@@ -35,7 +35,7 @@ const electricBattery = store.pvAndBatteries.electricBattery.data;
 const batterySummary: SummarySection = {
 	id: "electricBattery",
 	label: "Electric battery",
-	data: electricBattery.map(x => {
+	data: electricBattery.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Capacity": `${x.capacity} ${kilowattHour.suffix}`,

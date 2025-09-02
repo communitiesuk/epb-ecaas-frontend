@@ -88,16 +88,18 @@ describe("PV and electric batteries summary page", () => {
 	});
 
 	describe("Electric battery section", () => {
-		const battery: ElectricBatteryData = {
-			name: "Acme Model II",
-			capacity: 10,
-			batteryAge: 2,
-			chargeEfficiency: 0.7,
-			location: BatteryLocation.inside,
-			gridChargingPossible: false,
-			maximumChargeRate: 6.2,
-			minimumChargeRate: 4.5,
-			maximumDischargeRate: 2.3,
+		const battery: EcaasForm<ElectricBatteryData> = {
+			data: {
+				name: "Acme Model II",
+				capacity: 10,
+				batteryAge: 2,
+				chargeEfficiency: 0.7,
+				location: BatteryLocation.inside,
+				gridChargingPossible: false,
+				maximumChargeRate: 6.2,
+				minimumChargeRate: 4.5,
+				maximumDischargeRate: 2.3,
+			}
 		};
 		
 		it("displays the battery tab", async () => {

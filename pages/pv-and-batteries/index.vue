@@ -8,7 +8,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type PvAndBatteryType = keyof typeof store.pvAndBatteries;
-type PvAndBatteryData = EcaasForm<PvSystemData> & ElectricBatteryData & PvDiverterData;
+type PvAndBatteryData = EcaasForm<PvSystemData> & EcaasForm<ElectricBatteryData> & PvDiverterData;
 
 function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
 	const data = store.pvAndBatteries[pvAndBatteryType]?.data;
@@ -33,31 +33,18 @@ function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatt
 			if (isEcaasForm(f) && isEcaasForm(item)) {
 				name = item.data.name;
 				return f.data.name.match(duplicateNamePattern(item.data.name));
-			} else if (!isEcaasForm(f) && !isEcaasForm(item)) {
-				name = item.name;
-				return f.name.match(duplicateNamePattern(item.name));
 			}
-
 			return false;
 		});
 
 		store.$patch((state) => {
-			let newItem;
-
-			if (isEcaasForm(item)) {
-				newItem = {
-					complete: item.complete,
-					data: {
-						...item.data,
-						name: `${name} (${duplicates.length})`
-					}
-				} as T;
-			} else {
-				newItem = {
-					...item,
+			const newItem = {
+				complete: item.complete,
+				data: {
+					...item.data,
 					name: `${name} (${duplicates.length})`
-				} as T;
-			}
+				}
+			} as T;
 
 			state.pvAndBatteries[pvAndBatteryType].data.push(newItem);
 			state.pvAndBatteries[pvAndBatteryType].complete = false;
@@ -113,7 +100,10 @@ function hasIncompleteEntries() {
 		title="Electric battery"
 		hint="Only one electric battery can be added per energy supply"
 		:form-url="`${page?.url!}/electric-battery`"
-		:items="store.pvAndBatteries.electricBattery.data.map(x => x.name)"
+		:items="store.pvAndBatteries.electricBattery.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
 		:max-number-of-items=1
 		@remove="(index: number) => handleRemove('electricBattery', index)"
 	/>
