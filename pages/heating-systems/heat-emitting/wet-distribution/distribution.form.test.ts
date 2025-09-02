@@ -333,9 +333,9 @@ describe('partially saving data', () => {
 		await user.type(screen.getByTestId('name'), 'New wet distribution');
 		await user.tab();
 
-		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0];
-		expect(actual?.name).toBe("New wet distribution");
-		expect(actual?.designFlowRate).toBeUndefined();
+		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!;
+		expect(actual.name).toBe("New wet distribution");
+		expect(actual.designFlowRate).toBeUndefined();
 	});
 
 	it('creates a new wet distribution automatically with default name after other data is entered', async () => {
@@ -348,9 +348,9 @@ describe('partially saving data', () => {
 		await user.type(screen.getByTestId('thermalMass'), '0.5');
 		await user.tab();
 
-		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0];
-		expect(actual?.name).toBe("Wet distribution");
-		expect(actual?.thermalMass).toBe(0.5);
+		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!;
+		expect(actual.name).toBe("Wet distribution");
+		expect(actual.thermalMass).toBe(0.5);
 	});
 
 	it('saves updated form data to store automatically', async () => {
@@ -381,10 +381,10 @@ describe('partially saving data', () => {
 
 		await user.tab();
 
-		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0];
-		expect(actual?.name).toBe("Updated wet distribution");
-		expect(actual?.thermalMass).toBe(1);
-		expect(actual?.designFlowTemp).toBe(30);
+		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!;
+		expect(actual.name).toBe("Updated wet distribution");
+		expect(actual.thermalMass).toBe(1);
+		expect(actual.designFlowTemp).toBe(30);
 
 	});
 
@@ -413,8 +413,8 @@ describe('partially saving data', () => {
 		await user.selectOptions(screen.getByTestId("ecoDesignControllerClass"), "1");
 		await user.tab();
 
-		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[1];
-		expect(actual?.name).toBe("Updated wet distribution");
-		expect(actual?.ecoDesignControllerClass).toBe("1");
+		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[1]!;
+		expect(actual.name).toBe("Updated wet distribution");
+		expect(actual.ecoDesignControllerClass).toBe("1");
 	});
 });

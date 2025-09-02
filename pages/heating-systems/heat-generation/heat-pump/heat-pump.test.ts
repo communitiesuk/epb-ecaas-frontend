@@ -106,9 +106,9 @@ describe('heatPump', () => {
 
 		const { data } = store.heatingSystems.heatGeneration.heatPump;
 		
-		expect(data[0]?.data.id).toBe(largeHeatPump.id);
-		expect(data[0]?.data.name).toBe('Heat pump 2');
-		expect(data[0]?.data.productReference).toBe('HEATPUMP-SMALL');
+		expect(data[0]!.data.id).toBe(largeHeatPump.id);
+		expect(data[0]!.data.name).toBe('Heat pump 2');
+		expect(data[0]!.data.productReference).toBe('HEATPUMP-SMALL');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {
@@ -147,9 +147,9 @@ describe('heatPump', () => {
 			await user.type(screen.getByTestId('name'), 'New heat pump');
 			await user.tab();
 
-			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[0];
-			expect(actualHeatPump?.data.name).toBe("New heat pump");
-			expect(actualHeatPump?.data.productReference).toBeUndefined();
+			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[0]!;
+			expect(actualHeatPump.data.name).toBe("New heat pump");
+			expect(actualHeatPump.data.productReference).toBeUndefined();
 		});
 
 		it('creates a new heat pump automatically with default name after other data is entered', async () => {
@@ -162,9 +162,9 @@ describe('heatPump', () => {
 			await user.click(screen.getByTestId("productReference_HEATPUMP-LARGE"));
 			await user.tab();
 
-			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[0];
-			expect(actualHeatPump?.data.name).toBe("Heat pump");
-			expect(actualHeatPump?.data.productReference).toBe("HEATPUMP-LARGE");
+			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[0]!;
+			expect(actualHeatPump.data.name).toBe("Heat pump");
+			expect(actualHeatPump.data.productReference).toBe("HEATPUMP-LARGE");
 		});
 
 		it('saves updated form data to store automatically', async () => {
@@ -191,9 +191,9 @@ describe('heatPump', () => {
 			await user.click(screen.getByTestId("productReference_HEATPUMP-SMALL"));
 			await user.tab();
 
-			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[0];
-			expect(actualHeatPump?.data.name).toBe("Updated heat pump");
-			expect(actualHeatPump?.data.productReference).toBe("HEATPUMP-SMALL");
+			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[0]!;
+			expect(actualHeatPump.data.name).toBe("Updated heat pump");
+			expect(actualHeatPump.data.productReference).toBe("HEATPUMP-SMALL");
 		});
 
 		it('saves updated form data to correct store object automatically', async () => {
@@ -221,9 +221,9 @@ describe('heatPump', () => {
 			await user.click(screen.getByTestId("productReference_HEATPUMP-MEDIUM"));
 			await user.tab();
 
-			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[1];
-			expect(actualHeatPump?.data.name).toBe("Updated heat pump");
-			expect(actualHeatPump?.data.productReference).toBe("HEATPUMP-MEDIUM");
+			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[1]!;
+			expect(actualHeatPump.data.name).toBe("Updated heat pump");
+			expect(actualHeatPump.data.productReference).toBe("HEATPUMP-MEDIUM");
 		});
 
 		it('navigates to heat generation page on clicking Save progress', async () => {
