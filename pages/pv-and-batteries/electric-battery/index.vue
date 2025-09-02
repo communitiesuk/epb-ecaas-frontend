@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { BatteryLocation } from '~/schema/api-schema.types';
+import {getUrl} from "~/utils/page";
 
 const title = "Electric battery";
 const store = useEcaasStore();
@@ -164,6 +165,9 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			suffix-text="kW"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('pvAndBatteries')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

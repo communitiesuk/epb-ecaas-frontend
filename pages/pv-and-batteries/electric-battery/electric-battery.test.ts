@@ -48,7 +48,7 @@ describe('Electric battery', () => {
 		await renderSuspended(ElectricBattery);
 
 		await fillForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.pvAndBatteries.electricBattery;
 
@@ -58,7 +58,7 @@ describe('Electric battery', () => {
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(ElectricBattery);
     
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
     
 		expect((await screen.findByTestId('electricBatteryErrorSummary'))).toBeDefined();
 	});
@@ -67,8 +67,16 @@ describe('Electric battery', () => {
 		await renderSuspended(ElectricBattery);
         
 		await fillForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
     
+		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries');
+	});
+
+	it('navigates to pv and batteries page when save progress button is clicked', async () => {
+		await renderSuspended(ElectricBattery);
+
+		await user.type(screen.getByTestId("name"), "Test battery");
+		await user.click(screen.getByTestId("saveProgress"));
 		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries');
 	});
 
@@ -87,7 +95,7 @@ describe('Electric battery', () => {
 
 		await user.tab();
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('electricBatteryErrorSummary'))).toBeDefined();
 	});
@@ -107,7 +115,7 @@ describe('Electric battery', () => {
 
 		await user.tab();
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('electricBatteryErrorSummary'))).toBeDefined();
 	});
