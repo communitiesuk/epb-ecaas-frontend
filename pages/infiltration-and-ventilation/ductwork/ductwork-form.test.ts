@@ -187,56 +187,56 @@ describe("ductwork form", async () => {
 			},
 		});
 		expect(
-			((await screen.findByTestId("name")) as HTMLInputElement).value
+			((await screen.findByTestId<HTMLInputElement>("name"))).value
 		).toBe("Ductwork 1");
 		expect(
-			((await screen.findByTestId("mvhrUnit_5124f2fe-f15b-4a56-ba5a-1a7751ac506f")) as HTMLInputElement).checked
+			((await screen.findByTestId<HTMLInputElement>("mvhrUnit_5124f2fe-f15b-4a56-ba5a-1a7751ac506f"))).checked
 		).toBe(true);
 
 		expect(
 			(
-				(await screen.findByTestId(
+				(await screen.findByTestId<HTMLInputElement>(
 					"ductworkCrossSectionalShape_circular"
-				)) as HTMLInputElement
+				))
 			).checked
 		).toBe(true);
 		expect(
-			((await screen.findByTestId("ductType_intake")) as HTMLInputElement)
+			((await screen.findByTestId<HTMLInputElement>("ductType_intake")))
 				.checked
 		).toBe(true);
 		expect(
 			(
-				(await screen.findByTestId(
+				(await screen.findByTestId<HTMLInputElement>(
 					"internalDiameterOfDuctwork"
-				)) as HTMLInputElement
+				))
 			).value
 		).toBe("300");
 		expect(
 			(
-				(await screen.findByTestId(
+				(await screen.findByTestId<HTMLInputElement>(
 					"externalDiameterOfDuctwork"
-				)) as HTMLInputElement
+				))
 			).value
 		).toBe("1000");
 		expect(
-			((await screen.findByTestId("insulationThickness")) as HTMLInputElement)
+			((await screen.findByTestId<HTMLInputElement>("insulationThickness")))
 				.value
 		).toBe("100");
 		expect(
-			((await screen.findByTestId("lengthOfDuctwork")) as HTMLInputElement).value
+			((await screen.findByTestId<HTMLInputElement>("lengthOfDuctwork"))).value
 		).toBe("100");
 		expect(
 			(
-				(await screen.findByTestId(
+				(await screen.findByTestId<HTMLInputElement>(
 					"thermalInsulationConductivityOfDuctwork"
-				)) as HTMLInputElement
+				))
 			).value
 		).toBe("10");
 		expect(
 			(
-				(await screen.findByTestId(
+				(await screen.findByTestId<HTMLInputElement>(
 					"surfaceReflectivity_yes"
-				)) as HTMLInputElement
+				))
 			).checked
 		).toBe(true);
 	});

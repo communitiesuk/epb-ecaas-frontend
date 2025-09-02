@@ -27,7 +27,7 @@ const zoneParametersSummary: SummarySection = {
 		// "Heat emitting system for this zone": zoneParametersData.spaceHeatingSystemForThisZone,
 		// "Heating control type": zoneParametersData.heatingControlType
 	},
-	editUrl: getUrl('dwellingSpaceZoneParameters')!
+	editUrl: getUrl('dwellingSpaceZoneParameters')
 };
 
 const lightingData = store.dwellingFabric.dwellingSpaceLighting.data;
@@ -39,7 +39,7 @@ const lightingSummary: SummarySection = {
 		"Number of LED bulbs": lightingData.numberOfLEDBulbs,
 		"Number of incandescent bulbs": lightingData.numberOfIncandescentBulbs,
 	},
-	editUrl: getUrl('dwellingSpaceLighting')!
+	editUrl: getUrl('dwellingSpaceLighting')
 };
 
 const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
@@ -78,7 +78,7 @@ const groundFloorSummary: SummarySection = {
 			"Height of the basement walls above ground level": x.typeOfGroundFloor === FloorType.Unheated_basement ? `${x.heightOfBasementWallsAboveGround} ${metre.suffix}` : undefined
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceFloors')!
+	editUrl: getUrl('dwellingSpaceFloors')
 };
 
 const internalFloorSummary: SummarySection = {
@@ -94,7 +94,7 @@ const internalFloorSummary: SummarySection = {
 			...(x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace ? {"Thermal resistance of adjacent unheated space": `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}`} : {})
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceFloors')!
+	editUrl: getUrl('dwellingSpaceFloors')
 };
 
 const exposedFloorSummary: SummarySection = {
@@ -113,7 +113,7 @@ const exposedFloorSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceFloors')!
+	editUrl: getUrl('dwellingSpaceFloors')
 };
 
 const floorSummarySections: SummarySection[] = [
@@ -145,7 +145,7 @@ const externalWallSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceWalls')!
+	editUrl: getUrl('dwellingSpaceWalls')
 };
 
 const internalWallSummary: SummarySection = {
@@ -160,7 +160,7 @@ const internalWallSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceWalls')!
+	editUrl: getUrl('dwellingSpaceWalls')
 };
 
 const wallToUnheatedSpaceSummary: SummarySection = {
@@ -177,7 +177,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 			"Thermal resistance of adjacent unheated space": `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}`
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceWalls')!
+	editUrl: getUrl('dwellingSpaceWalls')
 };
 
 const partyWallSummary: SummarySection = {
@@ -197,7 +197,7 @@ const partyWallSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceWalls')!
+	editUrl: getUrl('dwellingSpaceWalls')
 };
 
 const wallSummarySections: SummarySection[] = [
@@ -225,7 +225,7 @@ const ceilingSummary: SummarySection = {
 			"Thermal resistance of adjacent unheated space": x.type === 'unheatedSpace' ? `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}` : undefined,
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceCeilingsAndRoofs')!
+	editUrl: getUrl('dwellingSpaceCeilingsAndRoofs')
 };
 
 const roofSummary: SummarySection = {
@@ -247,7 +247,7 @@ const roofSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceCeilingsAndRoofs')!
+	editUrl: getUrl('dwellingSpaceCeilingsAndRoofs')
 };
 
 const ceilingAndRoofSummarySections: SummarySection[] = [
@@ -277,7 +277,7 @@ const unglazedDoorSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceDoors')!
+	editUrl: getUrl('dwellingSpaceDoors')
 };
 
 const glazedDoorSummary: SummarySection = {
@@ -298,7 +298,7 @@ const glazedDoorSummary: SummarySection = {
 			"Opening to frame ratio": x.numberOpenableParts !== '0' ? x.openingToFrameRatio : undefined
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceDoors')!
+	editUrl: getUrl('dwellingSpaceDoors')
 };
 
 const internalDoorSummary: SummarySection = {
@@ -316,7 +316,7 @@ const internalDoorSummary: SummarySection = {
 			"Thermal resistance of adjacent unheated space": x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace ? `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}` : undefined,
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceDoors')!
+	editUrl: getUrl('dwellingSpaceDoors')
 };
 
 const doorSummarySections: SummarySection[] = [
@@ -362,7 +362,7 @@ const windowSummary: SummarySection = {
 			"Solar transmittance reduction": 'solarTransmittanceReduction' in x ? x.solarTransmittanceReduction : undefined
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceWindows')!
+	editUrl: getUrl('dwellingSpaceWindows')
 };
 
 const linearThermalBridgesData = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data;
@@ -378,7 +378,7 @@ const linearThermalBridgesSummary: SummarySection = {
 			"Length of thermal bridge": `${x.length} ${metre.suffix}`
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceThermalBridging')!
+	editUrl: getUrl('dwellingSpaceThermalBridging')
 };
 
 const pointThermalBridgesSummary: SummarySection = {
@@ -390,7 +390,7 @@ const pointThermalBridgesSummary: SummarySection = {
 			"Heat transfer coefficient": `${x.heatTransferCoefficient} ${wattsPerKelvin.suffix}`
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceThermalBridging')!
+	editUrl: getUrl('dwellingSpaceThermalBridging')
 };
 
 const thermalBridgeSummarySections: SummarySection[] = [

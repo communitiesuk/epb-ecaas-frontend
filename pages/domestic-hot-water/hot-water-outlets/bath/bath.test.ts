@@ -63,9 +63,9 @@ describe('bath', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Bath 1');
-		expect((await screen.findByTestId('size') as HTMLInputElement).value).toBe('170');
-		expect((await screen.findByTestId('flowRate') as HTMLInputElement).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Bath 1');
+		expect((await screen.findByTestId<HTMLInputElement>('size')).value).toBe('170');
+		expect((await screen.findByTestId<HTMLInputElement>('flowRate')).value).toBe('10');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

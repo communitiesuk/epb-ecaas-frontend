@@ -65,13 +65,13 @@ describe('wall to unheated space', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Wall to unheated space 1');
-		expect((await screen.findByTestId('surfaceAreaOfElement') as HTMLInputElement).value).toBe('500');
-		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Wall to unheated space 1');
+		expect((await screen.findByTestId<HTMLInputElement>('surfaceAreaOfElement')).value).toBe('500');
+		expect((await screen.findByTestId<HTMLInputElement>('uValue')).value).toBe('10');
 		expect((await screen.findByTestId('arealHeatCapacity_50000')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('massDistributionClass_E')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('thermalResistanceOfAdjacentUnheatedSpace') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('thermalResistanceOfAdjacentUnheatedSpace')).value).toBe('1');
 	
 	});
 

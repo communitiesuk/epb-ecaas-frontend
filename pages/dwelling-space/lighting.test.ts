@@ -45,8 +45,8 @@ describe('lighting', () => {
 
 		await renderSuspended(Lighting);
 
-		expect((await screen.findByTestId('numberOfLEDBulbs') as HTMLInputElement).value).toBe('9');
-		expect((await screen.findByTestId('numberOfIncandescentBulbs') as HTMLInputElement).value).toBe('0');
+		expect((await screen.findByTestId<HTMLInputElement>('numberOfLEDBulbs')).value).toBe('9');
+		expect((await screen.findByTestId<HTMLInputElement>('numberOfIncandescentBulbs')).value).toBe('0');
 	});
 			
 	test('required error messages are displayed when empty form is submitted', async () => {

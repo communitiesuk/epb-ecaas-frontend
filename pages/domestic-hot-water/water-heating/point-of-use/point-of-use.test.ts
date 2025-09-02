@@ -57,9 +57,9 @@ describe('point of use', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Point of use');
-		expect((await screen.findByTestId('setpointTemperature') as HTMLInputElement).value).toBe('25');
-		expect((await screen.findByTestId('heaterEfficiency') as HTMLInputElement).value).toBe('0.5');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Point of use');
+		expect((await screen.findByTestId<HTMLInputElement>('setpointTemperature')).value).toBe('25');
+		expect((await screen.findByTestId<HTMLInputElement>('heaterEfficiency')).value).toBe('0.5');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

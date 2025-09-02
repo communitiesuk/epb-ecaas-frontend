@@ -14,8 +14,8 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 		outlets.splice(index, 1);
 
 		store.$patch((state) => {
-			state.heatingSystems.heatGeneration[outletType]!.data = outlets.length ? outlets : [];
-			state.heatingSystems.heatGeneration[outletType]!.complete = false;
+			state.heatingSystems.heatGeneration[outletType].data = outlets.length ? outlets : [];
+			state.heatingSystems.heatGeneration[outletType].complete = false;
 		});
 	}
 } 

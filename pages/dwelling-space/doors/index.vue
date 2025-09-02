@@ -14,8 +14,8 @@ function handleRemove(doorType: DoorType, index: number) {
 		doors.splice(index, 1);
 
 		store.$patch((state) => {
-			state.dwellingFabric.dwellingSpaceDoors[doorType]!.data = doors.length ? doors : [];
-			state.dwellingFabric.dwellingSpaceDoors[doorType]!.complete = false;
+			state.dwellingFabric.dwellingSpaceDoors[doorType].data = doors.length ? doors : [];
+			state.dwellingFabric.dwellingSpaceDoors[doorType].complete = false;
 		});
 	}
 } 
@@ -33,7 +33,7 @@ function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) 
 				name: `${door.name} (${duplicates.length})`
 			} as T;
 
-			state.dwellingFabric.dwellingSpaceDoors[doorType]!.data.push(newDoor);
+			state.dwellingFabric.dwellingSpaceDoors[doorType].data.push(newDoor);
 		});
 		store.dwellingFabric.dwellingSpaceDoors[doorType].complete = false;
 	}

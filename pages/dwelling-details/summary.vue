@@ -38,7 +38,7 @@ const shadingSummary: SummarySection = {
 			"Distance": `${s.data.distance} ${metre.suffix}`
 		};
 	}) || [],
-	editUrl: getUrl('shading')!
+	editUrl: getUrl('shading')
 };
 
 const externalFactorsSummary: SummarySection = {
@@ -50,7 +50,7 @@ const externalFactorsSummary: SummarySection = {
 		"Terrain type": externalFactors.terrainType ? displayCamelToSentenceCase(externalFactors.terrainType) : undefined,
 		"Noise nuisance": displayBoolean(externalFactors.noiseNuisance)
 	},
-	editUrl: getUrl('externalFactors')!
+	editUrl: getUrl('externalFactors')
 };
 
 const summarySections: SummarySection[] = [

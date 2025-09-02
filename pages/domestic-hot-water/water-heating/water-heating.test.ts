@@ -65,7 +65,7 @@ describe('water heating (hot water cylinder)', () => {
 
 		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
 
-		const actual = store.domesticHotWater.waterHeating.hotWaterCylinder.data![0]!;
+		const actual = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!;
 
 		expect(actual.id).toBe("test-id");
 		expect(actual.heatSource).toEqual(cylinder.heatSource);
@@ -88,9 +88,9 @@ describe('water heating (hot water cylinder)', () => {
 
 		await renderSuspended(WaterHeating);
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe(cylinder.name);
-		expect((await screen.findByTestId('storageCylinderVolume') as HTMLInputElement).value).toBe("150");
-		expect((await screen.findByTestId('dailyEnergyLoss') as HTMLInputElement).value).toBe(cylinder.dailyEnergyLoss.toString());
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe(cylinder.name);
+		expect((await screen.findByTestId<HTMLInputElement>('storageCylinderVolume')).value).toBe("150");
+		expect((await screen.findByTestId<HTMLInputElement>('dailyEnergyLoss')).value).toBe(cylinder.dailyEnergyLoss.toString());
 		expect((await screen.findByTestId('heatSource_test-heat-pump')).hasAttribute('checked')).toBe(true);
 	});
 

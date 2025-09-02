@@ -55,8 +55,8 @@ describe('point thermal bridges', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Point 1');
-		expect((await screen.findByTestId('heatTransferCoefficient') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Point 1');
+		expect((await screen.findByTestId<HTMLInputElement>('heatTransferCoefficient')).value).toBe('1');
 	});
 
 	it('shows required error messages when empty form is submitted', async () => {

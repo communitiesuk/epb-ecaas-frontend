@@ -13,8 +13,8 @@ function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 		items.splice(index, 1);
 
 		store.$patch((state) => {
-			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType]!.data = items.length ? items : [];
-			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType]!.complete = false;
+			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].data = items.length ? items : [];
+			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].complete = false;
 		});
 	}
 } 
@@ -32,7 +32,7 @@ function handleDuplicate<T extends CeilingAndRoofData>(ceilingAndRoofType: Ceili
 				name: `${item.name} (${duplicates.length})`
 			} as T;
 
-			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType]!.data.push(newItem);
+			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].data.push(newItem);
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].complete = false;
 		});
 	}

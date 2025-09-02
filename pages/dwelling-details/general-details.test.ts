@@ -73,9 +73,9 @@ describe('General details', () => {
 			await renderSuspended(GeneralDetails);
 			
 			expect((await screen.findByTestId('typeOfDwelling_house')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('storeysInDwelling') as HTMLInputElement).value).toBe('2');
+			expect((await screen.findByTestId<HTMLInputElement>('storeysInDwelling')).value).toBe('2');
 			expect((await screen.queryByTestId('storeyOfFlat') as HTMLInputElement)).toBe(null);
-			expect((await screen.findByTestId('numOfBedrooms') as HTMLInputElement).value).toBe('3');
+			expect((await screen.findByTestId<HTMLInputElement>('numOfBedrooms')).value).toBe('3');
 			expect((await screen.findByTestId('coolingRequired_no')).hasAttribute('checked')).toBe(true);
 		});
 			
@@ -138,9 +138,9 @@ describe('General details', () => {
 			await renderSuspended(GeneralDetails);
 			
 			expect((await screen.findByTestId('typeOfDwelling_flat')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('storeysInDwelling') as HTMLInputElement).value).toBe('7');
-			expect((await screen.findByTestId('storeyOfFlat') as HTMLInputElement).value).toBe('3');
-			expect((await screen.findByTestId('numOfBedrooms') as HTMLInputElement).value).toBe('3');
+			expect((await screen.findByTestId<HTMLInputElement>('storeysInDwelling')).value).toBe('7');
+			expect((await screen.findByTestId<HTMLInputElement>('storeyOfFlat')).value).toBe('3');
+			expect((await screen.findByTestId<HTMLInputElement>('numOfBedrooms')).value).toBe('3');
 			expect((await screen.findByTestId('coolingRequired_no')).hasAttribute('checked')).toBe(true);
 		});
 

@@ -41,9 +41,9 @@ describe("PV and electric batteries summary page", () => {
         
 			expect(screen.getByText("No PV systems added")).not.toBeNull();
             
-			const addPVSystemsLink = screen.getByRole("link", {
+			const addPVSystemsLink: HTMLAnchorElement = screen.getByRole("link", {
 				name: "Add PV systems",
-			}) as HTMLAnchorElement;
+			});
 
 			expect(new URL(addPVSystemsLink.href).pathname).toBe(
 				getUrl("pvAndBatteries")
@@ -110,9 +110,9 @@ describe("PV and electric batteries summary page", () => {
         
 			expect(screen.getByText("No electric battery added")).not.toBeNull();
             
-			const addPVSystemsLink = screen.getByRole("link", {
+			const addPVSystemsLink: HTMLAnchorElement = screen.getByRole("link", {
 				name: "Add electric battery",
-			}) as HTMLAnchorElement;
+			});
 
 			expect(new URL(addPVSystemsLink.href).pathname).toBe(
 				getUrl("pvAndBatteries")

@@ -14,8 +14,8 @@ function handleRemove(applianceType: ApplianceType, index: number) {
 		appliances.splice(index, 1);
 
 		store.$patch((state) => {
-			state.infiltrationAndVentilation.combustionAppliances[applianceType]!.data = appliances.length ? appliances : [];
-			state.infiltrationAndVentilation.combustionAppliances[applianceType]!.complete = false;
+			state.infiltrationAndVentilation.combustionAppliances[applianceType].data = appliances.length ? appliances : [];
+			state.infiltrationAndVentilation.combustionAppliances[applianceType].complete = false;
 		});
 	}
 }
@@ -33,7 +33,7 @@ function handleDuplicate(applianceType: ApplianceType, index: number) {
 				name: `${appliance.name} (${duplicates.length})`
 			};
 
-			state.infiltrationAndVentilation.combustionAppliances[applianceType]!.data.push(newAppliance);
+			state.infiltrationAndVentilation.combustionAppliances[applianceType].data.push(newAppliance);
 			state.infiltrationAndVentilation.combustionAppliances[applianceType].complete = false;
 		});
 	}

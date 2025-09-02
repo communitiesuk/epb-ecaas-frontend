@@ -13,8 +13,8 @@ function handleRemove(floorType: FloorType, index: number) {
 		floors.splice(index, 1);
 
 		store.$patch((state) => {
-			state.dwellingFabric.dwellingSpaceFloors[floorType]!.data = floors.length ? floors : [];
-			state.dwellingFabric.dwellingSpaceFloors[floorType]!.complete = false;
+			state.dwellingFabric.dwellingSpaceFloors[floorType].data = floors.length ? floors : [];
+			state.dwellingFabric.dwellingSpaceFloors[floorType].complete = false;
 		});
 	}
 } 
@@ -32,9 +32,9 @@ function handleDuplicate<T extends FloorData>(floorType: FloorType, index: numbe
 				name: `${floor.name} (${duplicates.length})`
 			} as T;
 
-			state.dwellingFabric.dwellingSpaceFloors[floorType]!.data.push(newFloor);
+			state.dwellingFabric.dwellingSpaceFloors[floorType].data.push(newFloor);
 		});
-		store.dwellingFabric.dwellingSpaceFloors[floorType]!.complete = false;
+		store.dwellingFabric.dwellingSpaceFloors[floorType].complete = false;
 	}
 }
 

@@ -13,8 +13,8 @@ function handleRemove( wallType: WallType, index: number) {
 		walls.splice(index, 1);
 
 		store.$patch((state) => {
-			state.dwellingFabric.dwellingSpaceWalls[wallType]!.data = walls.length ? walls : [];
-			state.dwellingFabric.dwellingSpaceWalls[wallType]!.complete = false;
+			state.dwellingFabric.dwellingSpaceWalls[wallType].data = walls.length ? walls : [];
+			state.dwellingFabric.dwellingSpaceWalls[wallType].complete = false;
 		});
 	}
 }
@@ -32,8 +32,8 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 				name: `${wall.name} (${duplicates.length})`
 			} as T;
 
-			state.dwellingFabric.dwellingSpaceWalls[wallType]!.data.push(newWall);
-			state.dwellingFabric.dwellingSpaceWalls[wallType]!.complete = false;
+			state.dwellingFabric.dwellingSpaceWalls[wallType].data.push(newWall);
+			state.dwellingFabric.dwellingSpaceWalls[wallType].complete = false;
 		});
 	}
 }

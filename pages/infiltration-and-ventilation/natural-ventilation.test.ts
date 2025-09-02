@@ -55,9 +55,9 @@ describe('Ventilation', () => {
 
 		await renderSuspended(Ventilation);
 
-		expect((await screen.findByTestId('ventilationZoneHeight') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('dwellingEnvelopeArea') as HTMLInputElement).value).toBe('5');
-		expect((await screen.findByTestId('dwellingElevationalLevelAtBase') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('ventilationZoneHeight')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('dwellingEnvelopeArea')).value).toBe('5');
+		expect((await screen.findByTestId<HTMLInputElement>('dwellingElevationalLevelAtBase')).value).toBe('1');
 		expect((await screen.findByTestId('crossVentilationPossible_yes')).hasAttribute('checked')).toBe(true);
 	});
 		

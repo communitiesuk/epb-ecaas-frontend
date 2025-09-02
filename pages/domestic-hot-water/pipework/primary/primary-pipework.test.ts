@@ -122,12 +122,12 @@ describe('Primary pipework form', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Pipework Kitchen Sink');
-		expect((await screen.findByTestId('internalDiameter') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('externalDiameter') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('3');
-		expect((await screen.findByTestId('insulationThickness') as HTMLInputElement).value).toBe('5');
-		expect((await screen.findByTestId('thermalConductivity') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Pipework Kitchen Sink');
+		expect((await screen.findByTestId<HTMLInputElement>('internalDiameter')).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('externalDiameter')).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('length')).value).toBe('3');
+		expect((await screen.findByTestId<HTMLInputElement>('insulationThickness')).value).toBe('5');
+		expect((await screen.findByTestId<HTMLInputElement>('thermalConductivity')).value).toBe('1');
 		expect((await screen.findByTestId('surfaceReflectivity_yes')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('pipeContents_water')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId(`hotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute('checked')).toBe(true);

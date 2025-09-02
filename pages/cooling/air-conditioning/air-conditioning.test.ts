@@ -58,10 +58,10 @@ describe('Air conditioning', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Air conditioner 1');
-		expect((await screen.findByTestId('coolingCapacity') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('seasonalEnergyEfficiencyRatio') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('convectionFraction') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Air conditioner 1');
+		expect((await screen.findByTestId<HTMLInputElement>('coolingCapacity')).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('seasonalEnergyEfficiencyRatio')).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('convectionFraction')).value).toBe('1');
 	});
 		
 	test('required error messages are displayed when empty form is submitted', async () => {

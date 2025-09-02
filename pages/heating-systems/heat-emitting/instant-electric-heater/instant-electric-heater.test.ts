@@ -76,16 +76,16 @@ describe("instantElectricHeater", () => {
 		});
 
 		expect(
-			((await screen.findByTestId("name")) as HTMLInputElement).value
+			((await screen.findByTestId<HTMLInputElement>("name"))).value
 		).toBe("Instant electric heater 1");
 		expect(
-			((await screen.findByTestId("ratedPower")) as HTMLInputElement).value
+			((await screen.findByTestId<HTMLInputElement>("ratedPower"))).value
 		).toBe("3");
 		expect(
 			(
-				(await screen.findByTestId(
+				(await screen.findByTestId<HTMLInputElement>(
 					"convectionFractionInstant"
-				)) as HTMLInputElement
+				))
 			).value
 		).toBe("0.2");
 	});

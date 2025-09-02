@@ -127,24 +127,24 @@ describe("mechanical ventilation form", () => {
 		});
 
 		expect(
-			((await screen.findByTestId("name")) as HTMLInputElement).value
+			((await screen.findByTestId<HTMLInputElement>("name"))).value
 		).toBe("Mechanical name 1");
 		expect(
 			(
-				(await screen.findByTestId(
+				(await screen.findByTestId<HTMLInputElement>(
 					"typeOfMechanicalVentilationOptions_MVHR"
-				)) as HTMLInputElement
+				))
 			).checked
 		).toBe(true);
 		expect(
-			((await screen.findByTestId("airFlowRate")) as HTMLInputElement).value
+			((await screen.findByTestId<HTMLInputElement>("airFlowRate"))).value
 		).toBe("12");
 		expect(
-			((await screen.findByTestId("mvhrLocation_inside")) as HTMLInputElement)
+			((await screen.findByTestId<HTMLInputElement>("mvhrLocation_inside")))
 				.checked
 		).toBe(true);
 		expect(
-			((await screen.findByTestId("mvhrEfficiency")) as HTMLInputElement).value
+			((await screen.findByTestId<HTMLInputElement>("mvhrEfficiency"))).value
 		).toBe("0.2");
    
 	});

@@ -13,8 +13,8 @@ function handleRemove(thermalBridgingType: ThermalBridgingType, index: number) {
 		items.splice(index, 1);
 
 		store.$patch((state) => {
-			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType]!.data = items.length ? items : [];
-			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType]!.complete = false;
+			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].data = items.length ? items : [];
+			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].complete = false;
 		});
 	}
 } 
@@ -32,7 +32,7 @@ function handleDuplicate<T extends ThermalBridgingData>(thermalBridgingType: The
 				name: `${item.name} (${duplicates.length})`
 			} as T;
 
-			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType]!.data.push(newItem);
+			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].data.push(newItem);
 			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].complete = false;
 		});
 	}

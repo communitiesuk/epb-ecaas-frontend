@@ -15,8 +15,8 @@ function handleRemove(emittingType: HeatEmittingType, index: number) {
 		emitters.splice(index, 1);
 
 		store.$patch((state) => {
-			state.heatingSystems.heatEmitting[emittingType]!.data = emitters.length ? emitters : [];
-			state.heatingSystems.heatEmitting[emittingType]!.complete = false;
+			state.heatingSystems.heatEmitting[emittingType].data = emitters.length ? emitters : [];
+			state.heatingSystems.heatEmitting[emittingType].complete = false;
 		});
 	}
 }
@@ -58,7 +58,7 @@ function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingT
 				} as T;
 			}
 
-			state.heatingSystems.heatEmitting[emittingType]!.data.push(newItem);
+			state.heatingSystems.heatEmitting[emittingType].data.push(newItem);
 			state.heatingSystems.heatEmitting[emittingType].complete = false;
 		});
 	}

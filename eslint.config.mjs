@@ -16,7 +16,16 @@ export default withNuxt(
 			'object-shorthand': 'error',
 			'no-useless-rename': 'error',
 			'no-unused-vars': 'off',
-    		'@typescript-eslint/no-unused-vars': ['error']
+    		'@typescript-eslint/no-unused-vars': ['error'],
+			'@typescript-eslint/no-unnecessary-type-assertion': 'error'
 		}
 	}
-)
+).append({
+	// adds support for lints that need typechecking (i.e. ability to load TypeScript types)
+	languageOptions: {
+		parserOptions: {
+			projectService: true,
+			tsConfigRootDir: import.meta.dirname
+		}
+	}
+});

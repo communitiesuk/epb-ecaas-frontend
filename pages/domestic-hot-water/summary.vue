@@ -34,7 +34,7 @@ const hotWaterCylinderSummary: SummarySection = {
 			"Daily energy loss": `${d.dailyEnergyLoss} ${kilowattHour.suffix}`
 		};
 	}),
-	editUrl: getUrl('waterHeating')!
+	editUrl: getUrl('waterHeating')
 };
 
 const immersionHeaterData = store.domesticHotWater.waterHeating.immersionHeater.data;
@@ -49,7 +49,7 @@ const immersionHeaterSummary: SummarySection = {
 			"Thermostat position": renderHeaterPosition(d.thermostatPosition)
 		};
 	}),
-	editUrl: getUrl('waterHeating')!
+	editUrl: getUrl('waterHeating')
 };
 
 function renderHeaterPosition(position: ImmersionHeaterPosition): string {
@@ -65,7 +65,7 @@ const solarThermalSummary: SummarySection = {
 			"Name": d.name
 		};
 	}),
-	editUrl: getUrl('waterHeating')!
+	editUrl: getUrl('waterHeating')
 };
 
 const pointOfUseData = store.domesticHotWater.waterHeating.pointOfUse.data;
@@ -79,7 +79,7 @@ const pointOfUseSummary: SummarySection = {
 			"Heater efficiency": d.heaterEfficiency
 		};
 	}),
-	editUrl: getUrl('waterHeating')!
+	editUrl: getUrl('waterHeating')
 };
 
 const heatPumpData = store.domesticHotWater.waterHeating.heatPump.data;
@@ -91,7 +91,7 @@ const heatPumpSummary: SummarySection = {
 			"Name": d.name
 		};
 	}),
-	editUrl: getUrl('waterHeating')!
+	editUrl: getUrl('waterHeating')
 };
 
 const combiBoilerData = store.domesticHotWater.waterHeating.combiBoiler.data;
@@ -103,7 +103,7 @@ const combiBoilerSummary: SummarySection = {
 			"Name": d.name
 		};
 	}),
-	editUrl: getUrl('waterHeating')!
+	editUrl: getUrl('waterHeating')
 };
 
 const heatBatteryData = store.domesticHotWater.waterHeating.heatBattery.data;
@@ -115,7 +115,7 @@ const heatBatterySummary: SummarySection = {
 			"Name": d.name
 		};
 	}),
-	editUrl: getUrl('waterHeating')!
+	editUrl: getUrl('waterHeating')
 };
 
 const smartHotWaterTankData = store.domesticHotWater.waterHeating.smartHotWaterTank.data;
@@ -127,7 +127,7 @@ const smartHotWaterTankSummary: SummarySection = {
 			"Name": d.name
 		};
 	}),
-	editUrl: getUrl('waterHeating')!
+	editUrl: getUrl('waterHeating')
 };
 
 const heatInterfaceUnitData = store.domesticHotWater.waterHeating.heatInterfaceUnit.data;
@@ -139,7 +139,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 			"Name": d.name
 		};
 	}),
-	editUrl: getUrl('waterHeating')!
+	editUrl: getUrl('waterHeating')
 };
 
 const waterHeatingSummarySections: SummarySection[] = [
@@ -164,7 +164,7 @@ const mixedShowerSummary: SummarySection = {
 			"Flow rate": `${d.flowRate} ${litrePerHour.suffix}`
 		};
 	}),
-	editUrl: getUrl('hotWaterOutlets')!
+	editUrl: getUrl('hotWaterOutlets')
 };
 
 const electricShowerData = store.domesticHotWater.hotWaterOutlets.electricShower.data;
@@ -177,7 +177,7 @@ const electricShowerSummary: SummarySection = {
 			"Rated power": `${d.ratedPower} ${kilowatt.suffix}`
 		};
 	}),
-	editUrl: getUrl('hotWaterOutlets')!
+	editUrl: getUrl('hotWaterOutlets')
 };
 
 const bathData = store.domesticHotWater.hotWaterOutlets.bath.data;
@@ -191,7 +191,7 @@ const bathSummary: SummarySection = {
 			"Flow rate": `${d.flowRate} ${litrePerMinute.suffix}`
 		};
 	}),
-	editUrl: getUrl('hotWaterOutlets')!
+	editUrl: getUrl('hotWaterOutlets')
 };
 
 const otherOutletsData = store.domesticHotWater.hotWaterOutlets.otherOutlets.data;
@@ -204,7 +204,7 @@ const otherOutletsSummary: SummarySection = {
 			"Flow rate": `${d.flowRate} ${litrePerMinute.suffix}`
 		};
 	}),
-	editUrl: getUrl('hotWaterOutlets')!
+	editUrl: getUrl('hotWaterOutlets')
 };
 
 const hotWaterOutletsSummarySections: SummarySection[] = [
@@ -232,7 +232,7 @@ const primaryPipeworkSummary: SummarySection = {
 			"Location": displayCamelToSentenceCase(d.data.location),
 		};
 	}) || [],
-	editUrl: getUrl('pipework')!
+	editUrl: getUrl('pipework')
 };
 
 const secondaryPipeworkData = store.domesticHotWater.pipework.secondaryPipework.data;
@@ -247,7 +247,7 @@ const secondaryPipeworkSummary: SummarySection = {
 			"Location": displayCamelToSentenceCase(d.data.location)
 		};
 	}) || [],
-	editUrl: getUrl('pipework')!
+	editUrl: getUrl('pipework')
 };
 
 const pipeworkSummarySections: SummarySection[] = [

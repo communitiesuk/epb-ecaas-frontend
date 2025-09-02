@@ -71,8 +71,8 @@ describe('zone parameters', () => {
 
 		await renderSuspended(ZoneParameters);
 
-		expect((await screen.findByTestId('area') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('volume') as HTMLInputElement).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('area')).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('volume')).value).toBe('10');
 		// expect((await screen.findByTestId('spaceHeatingSystemForThisZone_instant_electric_heater')).hasAttribute('checked')).toBe(true);
 	});
 			

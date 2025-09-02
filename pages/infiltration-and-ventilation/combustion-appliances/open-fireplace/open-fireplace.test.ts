@@ -58,7 +58,7 @@ describe('open fireplace', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Open fireplace 1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Open fireplace 1');
 		expect((await screen.findByTestId('airSupplyToAppliance_room_air')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('exhaustMethodFromAppliance_into_separate_duct')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('typeOfFuel_coal')).hasAttribute('checked')).toBe(true);

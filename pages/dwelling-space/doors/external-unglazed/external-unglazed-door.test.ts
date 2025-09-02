@@ -72,15 +72,15 @@ describe('external unglazed door', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('External unglazed door 1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('External unglazed door 1');
 		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('orientation') as HTMLInputElement).value).toBe('0');
-		expect((await screen.findByTestId('height') as HTMLInputElement).value).toBe('0.5');
-		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('20');
-		expect((await screen.findByTestId('elevationalHeight') as HTMLInputElement).value).toBe('20');
-		expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('solarAbsorption') as HTMLInputElement).value).toBe('0.1');
-		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('orientation')).value).toBe('0');
+		expect((await screen.findByTestId<HTMLInputElement>('height')).value).toBe('0.5');
+		expect((await screen.findByTestId<HTMLInputElement>('width')).value).toBe('20');
+		expect((await screen.findByTestId<HTMLInputElement>('elevationalHeight')).value).toBe('20');
+		expect((await screen.findByTestId<HTMLInputElement>('surfaceArea')).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('solarAbsorption')).value).toBe('0.1');
+		expect((await screen.findByTestId<HTMLInputElement>('uValue')).value).toBe('1');
 		expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 	});

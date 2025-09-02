@@ -58,7 +58,7 @@ describe('closed fire', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Closed fire 1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Closed fire 1');
 		expect((await screen.findByTestId('airSupplyToAppliance_outside')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('exhaustMethodFromAppliance_into_mech_vent')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('typeOfFuel_coal')).hasAttribute('checked')).toBe(true);

@@ -50,8 +50,8 @@ describe('Air permeability', () => {
 
 		await renderSuspended(AirPermeability);
 
-		expect((await screen.findByTestId('testPressure') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('airTightnessTestResult') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('testPressure')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('airTightnessTestResult')).value).toBe('1');
 	});
 		
 	test('required error messages are displayed when empty form is submitted', async () => {

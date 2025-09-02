@@ -73,8 +73,8 @@ describe('internal door', () => {
 			});
 	
 			expect((await screen.findByTestId('typeOfInternalDoor_heatedSpace')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Internal 1');
-			expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('5');
+			expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Internal 1');
+			expect((await screen.findByTestId<HTMLInputElement>('surfaceArea')).value).toBe('5');
 			expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
@@ -128,7 +128,7 @@ describe('internal door', () => {
 			});
 	
 			expect((await screen.findByTestId('typeOfInternalDoor_unheatedSpace')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('thermalResistanceOfAdjacentUnheatedSpace') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId<HTMLInputElement>('thermalResistanceOfAdjacentUnheatedSpace')).value).toBe('0');
 		});
 
 		it('requires additional fields when heated space is selected', async () => {

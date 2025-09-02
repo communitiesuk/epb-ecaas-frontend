@@ -64,7 +64,7 @@ describe('External factors', () => {
 
 		await renderSuspended(ExternalFactors);
 		
-		expect((await screen.findByTestId('altitude') as HTMLInputElement).value).toBe('3');
+		expect((await screen.findByTestId<HTMLInputElement>('altitude')).value).toBe('3');
 		expect((await screen.findByTestId('typeOfExposure_Shielded')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('terrainType_Suburban')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('noiseNuisance_no')).hasAttribute('checked')).toBe(true);

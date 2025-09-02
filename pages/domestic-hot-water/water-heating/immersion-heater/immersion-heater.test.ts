@@ -59,8 +59,8 @@ describe('immersion heater', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Immersion heater');
-		expect((await screen.findByTestId('ratedPower') as HTMLInputElement).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Immersion heater');
+		expect((await screen.findByTestId<HTMLInputElement>('ratedPower')).value).toBe('10');
 		expect((await screen.findByTestId('heaterPosition_top')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('thermostatPosition_top')).hasAttribute('checked')).toBe(true);
 	});

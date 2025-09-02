@@ -95,9 +95,9 @@ describe('Energy supply', () => {
 	// 		await renderSuspended(EnergySupply);
 			
 	// 		expect((await screen.findByTestId('fuelType_custom')).hasAttribute('checked')).toBe(true);
-	// 		expect((await screen.findByTestId('co2PerKwh') as HTMLInputElement).value).toBe('1');
-	// 		expect((await screen.findByTestId('co2PerKwhIncludingOutOfScope') as HTMLInputElement).value).toBe('1');
-	// 		expect((await screen.findByTestId('kwhPerKwhDelivered') as HTMLInputElement).value).toBe('1');
+	// 		expect((await screen.findByTestId<HTMLInputElement>('co2PerKwh')).value).toBe('1');
+	// 		expect((await screen.findByTestId<HTMLInputElement>('co2PerKwhIncludingOutOfScope')).value).toBe('1');
+	// 		expect((await screen.findByTestId<HTMLInputElement>('kwhPerKwhDelivered')).value).toBe('1');
 	// 	});
 			
 	// 	test('required error messages are displayed when empty form is submitted', async () => {

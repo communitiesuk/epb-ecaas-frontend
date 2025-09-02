@@ -74,15 +74,15 @@ describe('roof', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Roof 1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Roof 1');
 		expect((await screen.findByTestId('typeOfRoof_flat')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('pitchOption_0')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('elevationalHeightOfElement') as HTMLInputElement).value).toBe('2');
-		expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('solarAbsorptionCoefficient') as HTMLInputElement).value).toBe('0.5');
-		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('length')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('width')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('elevationalHeightOfElement')).value).toBe('2');
+		expect((await screen.findByTestId<HTMLInputElement>('surfaceArea')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('solarAbsorptionCoefficient')).value).toBe('0.5');
+		expect((await screen.findByTestId<HTMLInputElement>('uValue')).value).toBe('1');
 		expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 	});

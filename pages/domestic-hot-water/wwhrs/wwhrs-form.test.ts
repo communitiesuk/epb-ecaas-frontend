@@ -82,12 +82,12 @@ describe('wwhrs form', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('WWHRS 1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('WWHRS 1');
 		expect((await screen.findByTestId(`outlet_${mixedShowerId}`)).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('type_WWHRS_InstantaneousSystemA')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('flowRate') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('efficiency') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('proportionOfUse') as HTMLInputElement).value).toBe('0.5');
+		expect((await screen.findByTestId<HTMLInputElement>('flowRate')).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('efficiency')).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('proportionOfUse')).value).toBe('0.5');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

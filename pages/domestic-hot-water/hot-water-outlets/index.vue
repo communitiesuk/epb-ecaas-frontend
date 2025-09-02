@@ -15,8 +15,8 @@ function handleRemove(outletType: HotWaterOutletType, index: number) {
 		outlets.splice(index, 1);
 
 		store.$patch((state) => {
-			state.domesticHotWater.hotWaterOutlets[outletType]!.data = outlets.length ? outlets : [];
-			state.domesticHotWater.hotWaterOutlets[outletType]!.complete = false;
+			state.domesticHotWater.hotWaterOutlets[outletType].data = outlets.length ? outlets : [];
+			state.domesticHotWater.hotWaterOutlets[outletType].complete = false;
 		});
 	}
 } 
@@ -34,7 +34,7 @@ function handleDuplicate<T extends HotWaterOutletData>(outletType: HotWaterOutle
 				name: `${outlet.name} (${duplicates.length})`
 			} as T;
 
-			state.domesticHotWater.hotWaterOutlets[outletType]!.data.push(newItem);
+			state.domesticHotWater.hotWaterOutlets[outletType].data.push(newItem);
 			state.domesticHotWater.hotWaterOutlets[outletType].complete = false;
 		});
 	}

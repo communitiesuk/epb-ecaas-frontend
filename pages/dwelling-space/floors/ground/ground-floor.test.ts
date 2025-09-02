@@ -109,15 +109,15 @@ describe('ground floor', () => {
 				}
 			});
 	
-			expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Ground 1');
-			expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('5');
-			expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
-			expect((await screen.findByTestId('thermalResistance') as HTMLInputElement).value).toBe('1');
+			expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Ground 1');
+			expect((await screen.findByTestId<HTMLInputElement>('surfaceArea')).value).toBe('5');
+			expect((await screen.findByTestId<HTMLInputElement>('uValue')).value).toBe('1');
+			expect((await screen.findByTestId<HTMLInputElement>('thermalResistance')).value).toBe('1');
 			expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('perimeter') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('psiOfWallJunction') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0.8');
+			expect((await screen.findByTestId<HTMLInputElement>('perimeter')).value).toBe('0');
+			expect((await screen.findByTestId<HTMLInputElement>('psiOfWallJunction')).value).toBe('0');
+			expect((await screen.findByTestId<HTMLInputElement>('thicknessOfWalls')).value).toBe('0.8');
 			expect((await screen.findByTestId('typeOfGroundFloor_Slab_no_edge_insulation')).hasAttribute('checked')).toBe(true);
 		});
 			
@@ -175,8 +175,8 @@ describe('ground floor', () => {
 	
 			expect((await screen.findByTestId('typeOfGroundFloor_Slab_edge_insulation')).hasAttribute('checked')).toBe(true);
 			expect((await screen.findByTestId('edgeInsulationType_horizontal')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('edgeInsulationWidth') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('edgeInsulationThermalResistance') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId<HTMLInputElement>('edgeInsulationWidth')).value).toBe('0');
+			expect((await screen.findByTestId<HTMLInputElement>('edgeInsulationThermalResistance')).value).toBe('0');
 		});
 			
 		test('required error messages are displayed when empty form is submitted', async () => {
@@ -230,11 +230,11 @@ describe('ground floor', () => {
 			});
 	
 			expect((await screen.findByTestId('typeOfGroundFloor_Suspended_floor')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('heightOfFloorUpperSurface') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0.8');
-			expect((await screen.findByTestId('underfloorSpaceThermalResistance') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround') as HTMLInputElement).value).toBe('0');
-			expect((await screen.findByTestId('ventilationOpeningsArea') as HTMLInputElement).value).toBe('0');
+			expect((await screen.findByTestId<HTMLInputElement>('heightOfFloorUpperSurface')).value).toBe('0');
+			expect((await screen.findByTestId<HTMLInputElement>('thicknessOfWalls')).value).toBe('0.8');
+			expect((await screen.findByTestId<HTMLInputElement>('underfloorSpaceThermalResistance')).value).toBe('0');
+			expect((await screen.findByTestId<HTMLInputElement>('thermalTransmittanceOfWallsAboveGround')).value).toBe('0');
+			expect((await screen.findByTestId<HTMLInputElement>('ventilationOpeningsArea')).value).toBe('0');
 			expect((await screen.findByTestId('windShieldingFactor_Exposed')).hasAttribute('checked')).toBe(true);
 		});
 			
@@ -289,9 +289,9 @@ describe('ground floor', () => {
 	// 		});
 	//
 	// 		expect((await screen.findByTestId('typeOfGroundFloor_Heated_basement')).hasAttribute('checked')).toBe(true);
-	// 		expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
-	// 		expect((await screen.findByTestId('depthOfBasementFloorBelowGround') as HTMLInputElement).value).toBe('0');
-	// 		expect((await screen.findByTestId('thermalResistanceOfBasementWalls') as HTMLInputElement).value).toBe('0');
+	// 		expect((await screen.findByTestId<HTMLInputElement>('thicknessOfWalls')).value).toBe('0');
+	// 		expect((await screen.findByTestId<HTMLInputElement>('depthOfBasementFloorBelowGround')).value).toBe('0');
+	// 		expect((await screen.findByTestId<HTMLInputElement>('thermalResistanceOfBasementWalls')).value).toBe('0');
 	// 	});
 	//
 	// 	test('required error messages are displayed when empty form is submitted', async () => {
@@ -344,11 +344,11 @@ describe('ground floor', () => {
 // 			});
 //
 // 			expect((await screen.findByTestId('typeOfGroundFloor_Unheated_basement')).hasAttribute('checked')).toBe(true);
-// 			expect((await screen.findByTestId('thermalTransmittanceOfFloorAboveBasement') as HTMLInputElement).value).toBe('0');
-// 			expect((await screen.findByTestId('thermalTransmittanceOfWallsAboveGround') as HTMLInputElement).value).toBe('0');
-// 			expect((await screen.findByTestId('thicknessOfWalls') as HTMLInputElement).value).toBe('0');
-// 			expect((await screen.findByTestId('depthOfBasementFloorBelowGround') as HTMLInputElement).value).toBe('0');
-// 			expect((await screen.findByTestId('heightOfBasementWallsAboveGround') as HTMLInputElement).value).toBe('0');
+// 			expect((await screen.findByTestId<HTMLInputElement>('thermalTransmittanceOfFloorAboveBasement')).value).toBe('0');
+// 			expect((await screen.findByTestId<HTMLInputElement>('thermalTransmittanceOfWallsAboveGround')).value).toBe('0');
+// 			expect((await screen.findByTestId<HTMLInputElement>('thicknessOfWalls')).value).toBe('0');
+// 			expect((await screen.findByTestId<HTMLInputElement>('depthOfBasementFloorBelowGround')).value).toBe('0');
+// 			expect((await screen.findByTestId<HTMLInputElement>('heightOfBasementWallsAboveGround')).value).toBe('0');
 // 		});
 //
 // 		test('required error messages are displayed when empty form is submitted', async () => {

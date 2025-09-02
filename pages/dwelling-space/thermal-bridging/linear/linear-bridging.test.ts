@@ -58,9 +58,9 @@ describe('linear thermal bridges', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('typeOfThermalBridge') as HTMLSelectElement).value).toBe('e1');
-		expect((await screen.findByTestId('linearThermalTransmittance') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('2');
+		expect((await screen.findByTestId<HTMLSelectElement>('typeOfThermalBridge')).value).toBe('e1');
+		expect((await screen.findByTestId<HTMLInputElement>('linearThermalTransmittance')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('length')).value).toBe('2');
 	});
 
 	it('shows required error messages when empty form is submitted', async () => {

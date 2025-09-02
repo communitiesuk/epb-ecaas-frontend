@@ -76,16 +76,16 @@ describe('external glazed door', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('External glazed door 1');
-		expect((await screen.findByTestId('orientation') as HTMLInputElement).value).toBe('12');
-		expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('13');
-		expect((await screen.findByTestId('height') as HTMLInputElement).value).toBe('14');
-		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('48');
-		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('0.45');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('External glazed door 1');
+		expect((await screen.findByTestId<HTMLInputElement>('orientation')).value).toBe('12');
+		expect((await screen.findByTestId<HTMLInputElement>('surfaceArea')).value).toBe('13');
+		expect((await screen.findByTestId<HTMLInputElement>('height')).value).toBe('14');
+		expect((await screen.findByTestId<HTMLInputElement>('width')).value).toBe('48');
+		expect((await screen.findByTestId<HTMLInputElement>('uValue')).value).toBe('0.45');
 		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('solarTransmittance') as HTMLInputElement).value).toBe('0.1');
-		expect((await screen.findByTestId('elevationalHeight') as HTMLInputElement).value).toBe('14');
-		expect((await screen.findByTestId('midHeight') as HTMLInputElement).value).toBe('11');
+		expect((await screen.findByTestId<HTMLInputElement>('solarTransmittance')).value).toBe('0.1');
+		expect((await screen.findByTestId<HTMLInputElement>('elevationalHeight')).value).toBe('14');
+		expect((await screen.findByTestId<HTMLInputElement>('midHeight')).value).toBe('11');
 	});
 		
 	test('only required error messages are displayed when empty form is submitted', async () => {

@@ -63,12 +63,12 @@ describe('vent', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Vent 1');
-		expect((await screen.findByTestId('typeOfVent_trickle')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('effectiveVentilationArea') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('midHeightOfZone') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('orientation') as HTMLInputElement).value).toBe('0');
-		expect((await screen.findByTestId('pitch') as HTMLInputElement).value).toBe('0');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Vent 1');
+		expect((await screen.findByTestId<HTMLInputElement>('typeOfVent_trickle')).hasAttribute('checked')).toBe(true);
+		expect((await screen.findByTestId<HTMLInputElement>('effectiveVentilationArea')).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('midHeightOfZone')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('orientation')).value).toBe('0');
+		expect((await screen.findByTestId<HTMLInputElement>('pitch')).value).toBe('0');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {
@@ -91,5 +91,4 @@ describe('vent', () => {
 
 		expect((await screen.findByTestId('ventErrorSummary'))).toBeDefined();
 	});
-
 });

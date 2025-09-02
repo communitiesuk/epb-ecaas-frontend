@@ -59,7 +59,7 @@ describe('heatNetwork', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Heat network 1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Heat network 1');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

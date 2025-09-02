@@ -61,8 +61,8 @@ describe('electric shower', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Electric shower 1');
-		expect((await screen.findByTestId('ratedPower') as HTMLInputElement).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Electric shower 1');
+		expect((await screen.findByTestId<HTMLInputElement>('ratedPower')).value).toBe('10');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

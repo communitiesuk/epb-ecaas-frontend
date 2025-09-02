@@ -42,7 +42,7 @@ const saveForm = (fields: InternalFloorData) => {
 		if (!dwellingSpaceFloors.dwellingSpaceInternalFloor) {
 			dwellingSpaceFloors.dwellingSpaceInternalFloor = {data: []};
 		}
-		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor!.complete = false;
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 		saveToList(floor, dwellingSpaceFloors.dwellingSpaceInternalFloor);
 	});
 	navigateTo("/dwelling-space/floors");

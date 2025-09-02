@@ -58,7 +58,7 @@ describe('open gas kitchen stove', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Open gas kitchen stove 1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Open gas kitchen stove 1');
 		expect((await screen.findByTestId('airSupplyToAppliance_outside')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('exhaustMethodFromAppliance_into_room')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('typeOfFuel_oil')).hasAttribute('checked')).toBe(true);

@@ -241,48 +241,48 @@ describe("Wet distribution", () => {
 			},
 		});
 		expect(
-			((await screen.findByTestId("name")) as HTMLInputElement).value
+			((await screen.findByTestId<HTMLInputElement>("name"))).value
 		).toBe("Wet distribution 1");
 		expect(
 			(
-				(await screen.findByTestId(
+				(await screen.findByTestId<HTMLInputElement>(
 					"heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r"
-				)) as HTMLInputElement
+				))
 			).checked
 		).toBe(true);
 		expect(
-			((await screen.findByTestId("thermalMass")) as HTMLInputElement).value
+			((await screen.findByTestId<HTMLInputElement>("thermalMass"))).value
 		).toBe("2");
 		expect(
 			(
-				(await screen.findByTestId(
+				(await screen.findByTestId<HTMLInputElement>(
 					"designTempDiffAcrossEmitters"
-				)) as HTMLInputElement
+				))
 			).value
 		).toBe("0.4");
 		expect(
-			((await screen.findByTestId("designFlowTemp")) as HTMLInputElement).value
+			((await screen.findByTestId<HTMLInputElement>("designFlowTemp"))).value
 		).toBe("32");
 		expect(
 			(
-				(await screen.findByTestId(
+				(await screen.findByTestId<HTMLInputElement>(
 					"typeOfSpaceHeater_radiator"
-				)) as HTMLInputElement
+				))
 			).checked
 		).toBe(true);
 		expect(
-			((await screen.findByTestId("convectionFractionWet")) as HTMLInputElement)
+			((await screen.findByTestId<HTMLInputElement>("convectionFractionWet")))
 				.value
 		).toBe("0.2");
 		expect(
 			(
-				(await screen.findByTestId(
+				(await screen.findByTestId<HTMLSelectElement>(
 					"ecoDesignControllerClass"
-				)) as HTMLSelectElement
+				))
 			).value
 		).toBe("1");
 		expect(
-			((await screen.findByTestId("minimumFlowTemp")) as HTMLInputElement).value
+			((await screen.findByTestId<HTMLInputElement>("minimumFlowTemp"))).value
 		).toBe("20");
 	});
 

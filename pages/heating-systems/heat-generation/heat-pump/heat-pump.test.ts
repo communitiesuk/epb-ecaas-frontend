@@ -76,7 +76,7 @@ describe('heatPump', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Heat pump 1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Heat pump 1');
 	});
 
 	test('heat pump is updated when data with id exists in store', async () => {

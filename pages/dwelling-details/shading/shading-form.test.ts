@@ -105,12 +105,12 @@ describe('shading form', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Big Tree');
-		expect((await screen.findByTestId('startAngle') as HTMLInputElement).value).toBe('10');
-		expect((await screen.findByTestId('endAngle') as HTMLInputElement).value).toBe('20');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Big Tree');
+		expect((await screen.findByTestId<HTMLInputElement>('startAngle')).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('endAngle')).value).toBe('20');
 		expect(((await screen.findByTestId('objectType_obstacle')).hasAttribute('checked'))).toBe(true);
-		expect((await screen.findByTestId('height') as HTMLInputElement).value).toBe('3');
-		expect((await screen.findByTestId('distance') as HTMLInputElement).value).toBe('2');
+		expect((await screen.findByTestId<HTMLInputElement>('height')).value).toBe('3');
+		expect((await screen.findByTestId<HTMLInputElement>('distance')).value).toBe('2');
 
 		await renderSuspended(ShadingForm, {
 			route: {
@@ -118,7 +118,7 @@ describe('shading form', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Small Tree');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Small Tree');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

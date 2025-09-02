@@ -101,17 +101,17 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 		
 		if (data.edgeInsulationType === 'horizontal') {
 			return [{
-				type: data.edgeInsulationType!,
+				type: data.edgeInsulationType,
 				width: edgeInsulationWidthInMetres,
-				edge_thermal_resistance: data.edgeInsulationThermalResistance!
+				edge_thermal_resistance: data.edgeInsulationThermalResistance
 			}];
 		}
 
 		if (data.edgeInsulationType === 'vertical') {
 			return [{
-				type: data.edgeInsulationType!,
+				type: data.edgeInsulationType,
 				depth: edgeInsulationWidthInMetres,
-				edge_thermal_resistance: data.edgeInsulationThermalResistance!
+				edge_thermal_resistance: data.edgeInsulationThermalResistance
 			}];
 		}
 	}
@@ -216,7 +216,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 
 		return {[nameWithSuffix]: {
 			type: 'BuildingElementOpaque',
-			pitch: extractPitch(x)!,
+			pitch: extractPitch(x),
 			orientation360: x.orientation,
 			height: x.height,
 			width: x.length,
@@ -441,7 +441,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 				g_value: x.solarTransmittance,
 				u_value: x.uValue,
 				window_part_list: mapWindowPartList(x),
-				frame_area_fraction: x.numberOpenableParts === '0' ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio!),
+				frame_area_fraction: x.numberOpenableParts === '0' ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 				max_window_open_area: x.numberOpenableParts === '0' ? 0 : x.maximumOpenableArea,
 				free_area_height: x.numberOpenableParts === '0' ? 0 : x.heightOpenableArea,
 				shading: []
@@ -489,31 +489,31 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 	function mapWindowPartList(data: WindowData): SchemaWindowPart[] {
 		if (data.numberOpenableParts === '1') {
 			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1! }
+				{ mid_height_air_flow_path: data.midHeightOpenablePart1 }
 			];
 		}
 
 		if (data.numberOpenableParts === '2') {
 			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1! },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart2! }
+				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+				{ mid_height_air_flow_path: data.midHeightOpenablePart2 }
 			];
 		}
 
 		if (data.numberOpenableParts === '3') {
 			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1! },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart2! },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart3! }
+				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+				{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
+				{ mid_height_air_flow_path: data.midHeightOpenablePart3 }
 			];
 		}
 
 		if (data.numberOpenableParts === '4') {
 			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1! },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart2! },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart3! },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart4! }
+				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
+				{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
+				{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
+				{ mid_height_air_flow_path: data.midHeightOpenablePart4 }
 			];
 		}
 
@@ -563,7 +563,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 			u_value: x.uValue,
 			g_value: x.solarTransmittance,
 			mid_height: x.midHeight,
-			frame_area_fraction: x.numberOpenableParts === '0' ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio!),
+			frame_area_fraction: x.numberOpenableParts === '0' ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 			max_window_open_area: x.numberOpenableParts === '0' ? 0 : x.maximumOpenableArea,
 			free_area_height: x.numberOpenableParts === '0' ? 0 : x.heightOpenableArea,
 			window_part_list: mapWindowPartList(x),

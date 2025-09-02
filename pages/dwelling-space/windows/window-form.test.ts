@@ -95,26 +95,26 @@ describe('window', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Window 1');
-		expect((await screen.findByTestId('orientation') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('surfaceArea') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('height') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('width') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('uValue') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Window 1');
+		expect((await screen.findByTestId<HTMLInputElement>('orientation')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('surfaceArea')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('height')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('width')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('uValue')).value).toBe('1');
 		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('solarTransmittance') as HTMLInputElement).value).toBe('0.1');
-		expect((await screen.findByTestId('elevationalHeight') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('midHeight') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('solarTransmittance')).value).toBe('0.1');
+		expect((await screen.findByTestId<HTMLInputElement>('elevationalHeight')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('midHeight')).value).toBe('1');
 		expect((await screen.findByTestId('numberOpenableParts_0')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('overhangDepth') as HTMLInputElement).value).toBe('60');
-		expect((await screen.findByTestId('overhangDistance') as HTMLInputElement).value).toBe('60');
-		expect((await screen.findByTestId('sideFinRightDepth') as HTMLInputElement).value).toBe('60');
-		expect((await screen.findByTestId('sideFinRightDistance') as HTMLInputElement).value).toBe('60');
-		expect((await screen.findByTestId('sideFinLeftDepth') as HTMLInputElement).value).toBe('60');
-		expect((await screen.findByTestId('sideFinLeftDistance') as HTMLInputElement).value).toBe('60');
+		expect((await screen.findByTestId<HTMLInputElement>('overhangDepth')).value).toBe('60');
+		expect((await screen.findByTestId<HTMLInputElement>('overhangDistance')).value).toBe('60');
+		expect((await screen.findByTestId<HTMLInputElement>('sideFinRightDepth')).value).toBe('60');
+		expect((await screen.findByTestId<HTMLInputElement>('sideFinRightDistance')).value).toBe('60');
+		expect((await screen.findByTestId<HTMLInputElement>('sideFinLeftDepth')).value).toBe('60');
+		expect((await screen.findByTestId<HTMLInputElement>('sideFinLeftDistance')).value).toBe('60');
 		expect((await screen.findByTestId('treatmentType_blinds')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('thermalResistivityIncrease') as HTMLInputElement).value).toBe('1');
-		expect((await screen.findByTestId('solarTransmittanceReduction') as HTMLInputElement).value).toBe('0.1');
+		expect((await screen.findByTestId<HTMLInputElement>('thermalResistivityIncrease')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('solarTransmittanceReduction')).value).toBe('0.1');
 	});
 		
 	test('only required error messages are displayed when empty form is submitted', async () => {

@@ -62,8 +62,8 @@ describe('internal wall', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Internal 1');
-		expect((await screen.findByTestId('surfaceAreaOfElement') as HTMLInputElement).value).toBe('5');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Internal 1');
+		expect((await screen.findByTestId<HTMLInputElement>('surfaceAreaOfElement')).value).toBe('5');
 		expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('pitchOption_90')).hasAttribute('checked')).toBe(true);

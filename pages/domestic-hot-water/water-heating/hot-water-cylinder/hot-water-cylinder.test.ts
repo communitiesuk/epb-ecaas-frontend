@@ -88,9 +88,9 @@ describe('hot water cylinder', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Hot water cylinder 1');
-		expect((await screen.findByTestId('storageCylinderVolume') as HTMLInputElement).value).toBe('5');
-		expect((await screen.findByTestId('dailyEnergyLoss') as HTMLInputElement).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Hot water cylinder 1');
+		expect((await screen.findByTestId<HTMLInputElement>('storageCylinderVolume')).value).toBe('5');
+		expect((await screen.findByTestId<HTMLInputElement>('dailyEnergyLoss')).value).toBe('1');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

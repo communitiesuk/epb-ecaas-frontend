@@ -28,7 +28,7 @@ const saveForm = (fields: ExposedFloorData) => {
 		if (!dwellingSpaceFloors.dwellingSpaceExposedFloor) {
 			dwellingSpaceFloors.dwellingSpaceExposedFloor = { data: [] };
 		}
-		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor!.complete = false;
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
 		saveToList(floor, dwellingSpaceFloors.dwellingSpaceExposedFloor);
 	}); 
 	navigateTo("/dwelling-space/floors");

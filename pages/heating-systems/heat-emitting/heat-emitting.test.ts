@@ -553,7 +553,7 @@ describe("heat emitting", () => {
 				if (!emitterData) {
 					continue;
 				}
-				await user.click(screen.getByTestId(emitterData!.testId));
+				await user.click(screen.getByTestId(emitterData.testId));
 				expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
 					false
 				);
@@ -578,7 +578,7 @@ describe("heat emitting", () => {
 				if (!emitterData) {
 					continue;
 				}
-				await user.click(screen.getByTestId(emitterData!.testId));
+				await user.click(screen.getByTestId(emitterData.testId));
 				expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
 					false
 				);
@@ -603,7 +603,7 @@ describe("heat emitting", () => {
 				if (!emitterData) {
 					continue;
 				}
-				const params: string = emitterData!.params;
+				const params: string = emitterData.params;
 				await renderSuspended(emitterData?.form, {
 					route: {
 						params: { [params]: "0" },

@@ -28,7 +28,7 @@ const mechanicalVentilationSummary: SummarySection = {
 			} : {})
 		};
 	}) || [],
-	editUrl: getUrl('mechanicalVentilation')!
+	editUrl: getUrl('mechanicalVentilation')
 };
 
 const ductworkData = store.infiltrationAndVentilation.ductwork.data;
@@ -53,7 +53,7 @@ const ductworkSummary: SummarySection = {
 			"Surface reflectivity": x.surfaceReflectivity ? "Reflective" : "Not reflective"
 		};
 	}) || [],
-	editUrl: getUrl('ductwork')!
+	editUrl: getUrl('ductwork')
 };
 
 const ventData = store.infiltrationAndVentilation.vents.data;
@@ -72,7 +72,7 @@ const ventSummary: SummarySection = {
 			"Pitch": `${x.pitch} ${degrees.suffix}`
 		};
 	}),
-	editUrl: getUrl('vents')!
+	editUrl: getUrl('vents')
 };
 
 const ventilationData = store.infiltrationAndVentilation.naturalVentilation.data;
@@ -86,7 +86,7 @@ const ventilationSummary: SummarySection = {
 		"Elevational height of dwelling at its base": `${ventilationData.dwellingElevationalLevelAtBase} ${metre.suffix}`,
 		"Cross ventilation possible": displayBoolean(ventilationData.crossVentilationPossible)
 	},
-	editUrl: getUrl('naturalVentilation')!
+	editUrl: getUrl('naturalVentilation')
 };
 
 const airPermeabilityData = store.infiltrationAndVentilation.airPermeability.data;
@@ -98,7 +98,7 @@ const airPermeabilitySummary: SummarySection = {
 		"Test pressure": `${airPermeabilityData.testPressure} ${pascal.suffix}`,
 		"Air tightness test result": `${airPermeabilityData.airTightnessTestResult} ${cubicMetrePerHourPerSquareMetre.suffix}`
 	},
-	editUrl: getUrl('airPermeability')!
+	editUrl: getUrl('airPermeability')
 };
 
 // const { combustionAppliances } = store.infiltrationAndVentilation;
@@ -126,7 +126,7 @@ const airPermeabilitySummary: SummarySection = {
 // 		getCombustionApplianceData('Open gas flue balancer', combustionAppliances[CombustionApplianceType.open_gas_flue_balancer].data),
 // 		getCombustionApplianceData('Open gas kitchen stove', combustionAppliances[CombustionApplianceType.open_gas_kitchen_stove].data)
 // 	].flat(),
-// 	editUrl: getUrl('combustionAppliances')!
+// 	editUrl: getUrl('combustionAppliances')
 // };
 
 const summarySections: SummarySection[] = [

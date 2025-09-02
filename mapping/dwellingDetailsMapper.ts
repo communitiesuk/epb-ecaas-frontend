@@ -19,8 +19,8 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 	
 	return {
 		General: {
-			build_type: generalDetails.typeOfDwelling!,
-			storeys_in_building: generalDetails.storeysInDwelling!,
+			build_type: generalDetails.typeOfDwelling,
+			storeys_in_building: generalDetails.storeysInDwelling,
 			...(generalDetails.typeOfDwelling === BuildType.flat ? {storey_of_dwelling: generalDetails.storeyOfFlat} : {}),
 		},
 		NumberOfBedrooms: generalDetails.numOfBedrooms,
@@ -35,9 +35,9 @@ export function mapExternalFactorsData(state: ResolvedState): Pick<FhsInputSchem
 	const { externalFactors } = state.dwellingDetails;
 
 	const infiltrationVentilation: Pick<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
-		altitude: externalFactors.altitude!,
-		shield_class: externalFactors.typeOfExposure!,
-		terrain_class: externalFactors.terrainType!,
+		altitude: externalFactors.altitude,
+		shield_class: externalFactors.typeOfExposure,
+		terrain_class: externalFactors.terrainType,
 		noise_nuisance: externalFactors.noiseNuisance
 	};
 

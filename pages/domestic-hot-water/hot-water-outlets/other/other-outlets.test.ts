@@ -61,8 +61,8 @@ describe('other outlets', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Basin tap 1');
-		expect((await screen.findByTestId('flowRate') as HTMLInputElement).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Basin tap 1');
+		expect((await screen.findByTestId<HTMLInputElement>('flowRate')).value).toBe('10');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

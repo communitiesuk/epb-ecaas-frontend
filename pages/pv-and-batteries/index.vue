@@ -13,8 +13,8 @@ function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
 		data.splice(index, 1);
 
 		store.$patch((state) => {
-			state.pvAndBatteries[pvAndBatteryType]!.data = data.length ? data : [];
-			state.pvAndBatteries[pvAndBatteryType]!.complete = false;
+			state.pvAndBatteries[pvAndBatteryType].data = data.length ? data : [];
+			state.pvAndBatteries[pvAndBatteryType].complete = false;
 		});
 	}
 } 
@@ -32,7 +32,7 @@ function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatt
 				name: `${item.name} (${duplicates.length})`
 			} as T;
 
-			state.pvAndBatteries[pvAndBatteryType]!.data.push(newItem);
+			state.pvAndBatteries[pvAndBatteryType].data.push(newItem);
 			state.pvAndBatteries[pvAndBatteryType].complete = false;
 		});
 	}

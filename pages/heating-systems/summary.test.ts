@@ -117,9 +117,9 @@ describe("Heating systems summary page", () => {
     
 		it("displays an edit link that navigates to the energy supply form page when clicked", async () => {
 			await renderSuspended(HeatingSystemsSummary);
-			const editLink = screen.getByRole("link", {
+			const editLink = screen.getByRole<HTMLAnchorElement>("link", {
 				name: "Edit",
-			}) as HTMLAnchorElement;
+			});
 			expect(new URL(editLink.href).pathname).toBe(
 				"/heating-systems/energy-supply"
 			);
@@ -153,9 +153,9 @@ describe("Heating systems summary page", () => {
 			await renderSuspended(HeatingSystemsSummary);
 
 			expect(screen.getByText("No heat generators added")).not.toBeNull();
-			const addHeatGenerationLink = screen.getByRole("link", {
+			const addHeatGenerationLink: HTMLAnchorElement = screen.getByRole("link", {
 				name: "Add heat generators",
-			}) as HTMLAnchorElement;
+			});
 			expect(new URL(addHeatGenerationLink.href).pathname).toBe(
 				getUrl("heatGeneration")
 			);
@@ -310,9 +310,9 @@ describe("Heating systems summary page", () => {
 			for (const [key] of Object.entries(store.heatingSystems.heatGeneration)) {
 				const heatGenerationSection = screen.getByTestId(key);
 
-				const editLink = within(heatGenerationSection).getByText(
+				const editLink: HTMLAnchorElement = within(heatGenerationSection).getByText(
 					"Edit"
-				) as HTMLAnchorElement;
+				);
 				expect(editLink).not.toBeNull();
 				expect(new URL(editLink.href).pathname).toBe(
 					"/heating-systems/heat-generation"
@@ -382,9 +382,9 @@ describe("Heating systems summary page", () => {
 			await renderSuspended(HeatingSystemsSummary);
 
 			expect(screen.getByText("No heat emitters added")).not.toBeNull();
-			const addHeatEmittingLink = screen.getByRole("link", {
+			const addHeatEmittingLink: HTMLAnchorElement = screen.getByRole("link", {
 				name: "Add heat emitters",
-			}) as HTMLAnchorElement;
+			});
 			expect(new URL(addHeatEmittingLink.href).pathname).toBe(
 				getUrl("heatEmitting")
 			);
@@ -636,9 +636,9 @@ describe("Heating systems summary page", () => {
 			for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
 				const heatEmittingSection = screen.getByTestId(key);
 
-				const editLink = within(heatEmittingSection).getByText(
+				const editLink: HTMLAnchorElement = within(heatEmittingSection).getByText(
 					"Edit"
-				) as HTMLAnchorElement;
+				);
 				expect(editLink).not.toBeNull();
 				expect(new URL(editLink.href).pathname).toBe(
 					"/heating-systems/heat-emitting"
