@@ -1,9 +1,9 @@
-import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Pipework from "./index.vue";
-import PrimaryPipeworkForm from "./primary/[pipe].vue";
-import SecondaryPipeworkForm from "./secondary/[pipe].vue";
+// import PrimaryPipeworkForm from "./primary/[pipe].vue";
+// import SecondaryPipeworkForm from "./secondary/[pipe].vue";
 import { WaterPipeContentsType, WaterPipeworkLocation } from "~/schema/api-schema.types";
 
 

@@ -42,7 +42,7 @@ watch(model, async (newData: GeneralDetailsData, initialData: GeneralDetailsData
 				state.dwellingDetails.generalSpecifications = {
 					data: newData,
 					complete: false
-				}
+				};
 			});
 		}
 	}

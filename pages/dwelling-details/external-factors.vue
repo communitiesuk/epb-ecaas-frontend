@@ -47,7 +47,7 @@ watch(model, async (newData: ExternalFactorsData, initialData: ExternalFactorsDa
 				state.dwellingDetails.externalFactors = {
 					data: newData,
 					complete: false
-				}
+				};
 			});
 		}
 	}
