@@ -68,64 +68,64 @@ const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, 'dwellingSp
 const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingField, 'dwellingSpaceExternalWall.data.0.massDistributionClass', 'X'); // 'X' is invalid for a mass distribution class value
 
 const twoHeatPumps: Pick<EcaasState, 'heatingSystems'> = {
-    "heatingSystems": {
-        "heatGeneration": {
-            "heatPump": {
-                "data": [
-                    {
-                        "data": {
-                            "id": "1049a8a3-e520-4058-8f18-fdfbf2dde19a",
-                            "name": "Heat pump 1",
-                            "productReference": "HEATPUMP-SMALL"
-                        },
-                        "complete": true
-                    },
-                    {
-                        "data": {
-                            "id": "2fa843a1-b774-42f8-b3ca-1f5f5a8a576a",
-                            "name": "Heat pump 2",
-                            "productReference": "HEATPUMP-LARGE"
-                        },
-                        "complete": true
-                    }
-                ],
-                "complete": true
-            },
-            "boiler": {
-                "data": [],
-                "complete": true
-            },
-            "heatBattery": {
-                "data": [],
-                "complete": true
-            },
-            "heatNetwork": {
-                "data": [],
-                "complete": true
-            },
-            "heatInterfaceUnit": {
-                "data": [],
-                "complete": true
-            }
-        },
-        "energySupply": {
-            "data": {} as EnergySupplyData
-        },
-        "heatEmitting": {
-            "wetDistribution": {
-                "data": []
-            },
-            "instantElectricHeater": {
-                "data": []
-            },
-            "electricStorageHeater": {
-                "data": []
-            },
-            "warmAirHeatPump": {
-                "data": []
-            }
-        }
-    }
+	"heatingSystems": {
+		"heatGeneration": {
+			"heatPump": {
+				"data": [
+					{
+						"data": {
+							"id": "1049a8a3-e520-4058-8f18-fdfbf2dde19a",
+							"name": "Heat pump 1",
+							"productReference": "HEATPUMP-SMALL"
+						},
+						"complete": true
+					},
+					{
+						"data": {
+							"id": "2fa843a1-b774-42f8-b3ca-1f5f5a8a576a",
+							"name": "Heat pump 2",
+							"productReference": "HEATPUMP-LARGE"
+						},
+						"complete": true
+					}
+				],
+				"complete": true
+			},
+			"boiler": {
+				"data": [],
+				"complete": true
+			},
+			"heatBattery": {
+				"data": [],
+				"complete": true
+			},
+			"heatNetwork": {
+				"data": [],
+				"complete": true
+			},
+			"heatInterfaceUnit": {
+				"data": [],
+				"complete": true
+			}
+		},
+		"energySupply": {
+			"data": {} as EnergySupplyData
+		},
+		"heatEmitting": {
+			"wetDistribution": {
+				"data": []
+			},
+			"instantElectricHeater": {
+				"data": []
+			},
+			"electricStorageHeater": {
+				"data": []
+			},
+			"warmAirHeatPump": {
+				"data": []
+			}
+		}
+	}
 };
 
 const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, 'heatingSystems.heatGeneration.heatPump.data.1.data.productReference');
