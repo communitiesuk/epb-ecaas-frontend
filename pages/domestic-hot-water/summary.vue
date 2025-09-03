@@ -158,10 +158,10 @@ const mixedShowerData = store.domesticHotWater.hotWaterOutlets.mixedShower.data;
 const mixedShowerSummary: SummarySection = {
 	id: 'mixedShower',
 	label: 'Mixer shower',
-	data: mixedShowerData.map(d => {
+	data: mixedShowerData.map(d => { 
 		return {
-			"Name": d.name,
-			"Flow rate": `${d.flowRate} ${litrePerHour.suffix}`
+			"Name": d.data.name,
+			"Flow rate": `${d.data.flowRate} ${litrePerHour.suffix}`
 		};
 	}),
 	editUrl: getUrl('hotWaterOutlets')
@@ -171,10 +171,10 @@ const electricShowerData = store.domesticHotWater.hotWaterOutlets.electricShower
 const electricShowerSummary: SummarySection = {
 	id: 'electricShower',
 	label: 'Electric shower',
-	data: electricShowerData.map(d => {
+	data: electricShowerData.map(d => {   
 		return {
-			"Name": d.name,
-			"Rated power": `${d.ratedPower} ${kilowatt.suffix}`
+			"Name": d.data.name,
+			"Rated power": `${d.data.ratedPower} ${kilowatt.suffix}`
 		};
 	}),
 	editUrl: getUrl('hotWaterOutlets')
@@ -186,9 +186,9 @@ const bathSummary: SummarySection = {
 	label: 'Bath',
 	data: bathData.map(d => {
 		return {
-			"Name": d.name,
-			"Size": `${d.size} ${litre.suffix}`,
-			"Flow rate": `${d.flowRate} ${litrePerMinute.suffix}`
+			"Name": d.data.name,
+			"Size": `${d.data.size} ${litre.suffix}`,
+			"Flow rate": `${d.data.flowRate} ${litrePerMinute.suffix}`
 		};
 	}),
 	editUrl: getUrl('hotWaterOutlets')
@@ -200,8 +200,8 @@ const otherOutletsSummary: SummarySection = {
 	label: 'Other',
 	data: otherOutletsData.map(d => {
 		return {
-			"Name": d.name,
-			"Flow rate": `${d.flowRate} ${litrePerMinute.suffix}`
+			"Name": d.data.name,
+			"Flow rate": `${d.data.flowRate} ${litrePerMinute.suffix}`
 		};
 	}),
 	editUrl: getUrl('hotWaterOutlets')

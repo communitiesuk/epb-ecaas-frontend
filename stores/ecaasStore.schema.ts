@@ -613,10 +613,10 @@ const waterHeatingHeatInterfaceUnitDataZod = named;
 export type WaterHeatingHeatInterfaceUnitData = z.infer<typeof waterHeatingHeatInterfaceUnitDataZod>;
 
 export type HotWaterOutlets = AssertFormKeysArePageIds<{
-	mixedShower: EcaasForm<MixedShowerData[]>;
-	electricShower: EcaasForm<ElectricShowerData[]>;
-	bath: EcaasForm<BathData[]>;
-	otherOutlets: EcaasForm<OtherHotWaterOutletData[]>;
+	mixedShower: EcaasForm<EcaasForm<MixedShowerData>[]>;
+	electricShower:EcaasForm<EcaasForm<ElectricShowerData>[]>;
+	bath: EcaasForm<EcaasForm<BathData>[]>;
+	otherOutlets: EcaasForm<EcaasForm<OtherHotWaterOutletData>[]>;
 }>;
 
 const mixedShowerDataZod = namedWithId.extend({

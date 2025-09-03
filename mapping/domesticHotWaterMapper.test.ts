@@ -232,29 +232,38 @@ describe('domestic hot water mapper', () => {
 
 	it('maps hot water outlets input state to FHS input request', () => {
 		// Arrange
-		const mixedShower: MixedShowerData = {
-			id: "shower1",
-			name: "shower1",
-			flowRate: 3
+		const mixedShower: EcaasForm<MixedShowerData> = {
+			data: {
+				id: "shower1",
+				name: "shower1",
+				flowRate: 3
+			}
 		};
 
-		const electricShower: ElectricShowerData = {
-			id: "shower2",
-			name: "shower2",
-			ratedPower: 10,
+		const electricShower: EcaasForm<ElectricShowerData> = {
+			data: {
+				id: "shower2",
+				name: "shower2",
+				ratedPower: 10,
+			}
 		};
 
-		const bath: BathData = {
-			id: "bath1",
-			name: "bath1",
-			size: 70,
-			flowRate: 1,
+		const bath: EcaasForm<BathData> = {
+			data: {
+				id: "bath1",
+				name: "bath1",
+				size: 70,
+				flowRate: 1,
+			}
 		};
 
-		const other: OtherHotWaterOutletData = {
-			id: "other1",
-			name: "other1",
-			flowRate: 4,
+		const other: EcaasForm<OtherHotWaterOutletData> = {
+			data: {
+
+				id: "other1",
+				name: "other1",
+				flowRate: 4,
+			}
 		};
 
 		store.$patch({

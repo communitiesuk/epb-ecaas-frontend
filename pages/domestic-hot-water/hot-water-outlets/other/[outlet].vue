@@ -1,29 +1,78 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
+import { getUrl  } from '#imports';
 
 const title = "Other outlets";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const route = useRoute();
 
 const otherOutletsData = useItemToEdit('outlet', store.domesticHotWater.hotWaterOutlets.otherOutlets.data);
-const model: Ref<OtherHotWaterOutletData> = ref(otherOutletsData!);
+const model: Ref<OtherHotWaterOutletData | undefined> = ref(otherOutletsData?.data);
 
 const saveForm = (fields: OtherHotWaterOutletData) => {
 	store.$patch((state) => {
 		const {otherOutlets} = state.domesticHotWater.hotWaterOutlets;
+		const storeData = store.domesticHotWater.hotWaterOutlets.otherOutlets.data;
+		
+		const index = route.params.outlet === 'create' ? storeData.length - 1 : Number(route.params.outlet);
 
-		const outletItem: OtherHotWaterOutletData = {
-			id: uuidv4(),
-			name: fields.name,
-			flowRate: fields.flowRate,
+		const outletItem: EcaasForm<OtherHotWaterOutletData> = {
+			data: {
+				id: otherOutletsData ? otherOutletsData.data.id : uuidv4(),
+				name: fields.name,
+				flowRate: fields.flowRate,
+			},
+			complete: true
 		};
 
-		saveToList(outletItem, otherOutlets);
+		otherOutlets.data[index] = outletItem;
 		otherOutlets.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/hot-water-outlets");
 };
+
+watch(model, async (newData: OtherHotWaterOutletData | undefined, initialData: OtherHotWaterOutletData | undefined) => {
+	const storeData = store.domesticHotWater.hotWaterOutlets.otherOutlets.data;
+
+	if (initialData === undefined || newData === undefined) {
+		return;
+	}
+
+	const defaultName = 'Other outlet';
+	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
+
+	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
+		Object.values(newData).some(x => x !== undefined);
+
+	if (route.params.outlet === 'create' && isFirstEdit) {
+
+		store.$patch(state => {
+			state.domesticHotWater.hotWaterOutlets.otherOutlets.data.push({
+				data: {
+					...newData,
+					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+				}
+			});
+		});
+
+		return;
+	}
+
+	store.$patch((state) => {
+		const index = route.params.outlet === 'create' ? storeData.length - 1 : Number(route.params.outlet);
+
+		state.domesticHotWater.hotWaterOutlets.otherOutlets.data[index] = {
+			data: {
+				...newData,
+				name: newData.name ?? state.domesticHotWater.hotWaterOutlets.electricShower.data[index]?.data.name,
+				id: store.domesticHotWater.hotWaterOutlets.otherOutlets.data[index]?.data.id ?? uuidv4()
+			}
+		};
+
+		state.domesticHotWater.hotWaterOutlets.otherOutlets.complete = false;
+	});
+});
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
@@ -58,6 +107,9 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			suffix-text="litres per minute"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('otherOutlets')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

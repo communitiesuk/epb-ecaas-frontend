@@ -13,10 +13,10 @@ const model: Ref<WwhrsData> = ref(wwhrsData!);
 const { bath, electricShower, mixedShower, otherOutlets } = store.domesticHotWater.hotWaterOutlets;
 
 const hotWaterOutlets = [
-	bath.data.map(x => [x.id, x.name] as [string, string]),
-	electricShower.data.map(x => [x.id, x.name] as [string, string]),
-	mixedShower.data.map(x => [x.id, x.name] as [string, string]),
-	otherOutlets.data.map(x => [x.id, x.name] as [string, string])
+	bath.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	electricShower.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	mixedShower.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	otherOutlets.data.map(x => [x.data.id, x.data.name] as [string, string])
 ].flat();
 
 const wwhrsTypeOptions: Record<WwhrsType, string> = {

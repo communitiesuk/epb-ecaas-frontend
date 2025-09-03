@@ -15,10 +15,22 @@ describe('other outlets', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const outlet: OtherHotWaterOutletData = {
-		id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e',
-		name: "Basin tap 1",
-		flowRate: 10
+	const outlet: EcaasForm<OtherHotWaterOutletData> = {
+		data: {
+			id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e',
+			name: "Basin tap 1",
+			flowRate: 10
+		},
+		complete: true
+	};
+
+	const outlet2: EcaasForm<OtherHotWaterOutletData> = {
+		data: {
+			id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8123',
+			name: "Basin tap 2",
+			flowRate: 11
+		},
+		complete: true
 	};
 
 	afterEach(() => {
@@ -32,12 +44,17 @@ describe('other outlets', () => {
 	};
 
 	test('data is saved to store state when form is valid', async () => {
-		vi.mocked(uuidv4).mockReturnValue(outlet.id as unknown as Buffer);
+		vi.mocked(uuidv4).mockReturnValue(outlet.data.id as unknown as Buffer);
 
-		await renderSuspended(OtherOutlet);
+		await renderSuspended(OtherOutlet, {
+			route: {
+				params: { outlet: 'create' }
+			}
+		});
 
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+
 
 		const { data } = store.domesticHotWater.hotWaterOutlets.otherOutlets;
 		
@@ -57,7 +74,7 @@ describe('other outlets', () => {
 
 		await renderSuspended(OtherOutlet, {
 			route: {
-				params: { 'outlet': '0' }
+				params: { outlet: '0' }
 			}
 		});
 
@@ -68,7 +85,8 @@ describe('other outlets', () => {
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(OtherOutlet);
 
-		await user.click(screen.getByRole('button'));
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('flowRate_error'))).toBeDefined();
@@ -77,17 +95,115 @@ describe('other outlets', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(OtherOutlet);
 
-		await user.click(screen.getByRole('button'));
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+
 
 		expect((await screen.findByTestId('otherOutletsErrorSummary'))).toBeDefined();
 	});
 
+	test("form data is automatically saved to store", async () => {
+	
+		await renderSuspended(OtherOutlet, {
+			route: {
+				params: { outlet: 'create' }
+			}
+		});
+	
+		await user.type(screen.getByTestId('name'), 'Other outlet 1');
+		await user.type(screen.getByTestId('flowRate'), '17');
+		await user.tab();
+	
+		const { data } = store.domesticHotWater.hotWaterOutlets.otherOutlets;
+		expect(data[0]!.data.name).toBe("Other outlet 1");
+		expect(data[0]!.data.flowRate).toBe(17);
+	});
+	
+	test("partial form data automatically saved to store with default name if no name has been added", async () => {
+		await renderSuspended(OtherOutlet, {
+			route: {
+				params: { outlet: 'create' }
+			}
+		});
+	
+		await user.type(screen.getByTestId('flowRate'), '17');
+		await user.tab();
+		const { data } = store.domesticHotWater.hotWaterOutlets.otherOutlets;
+	
+		expect(data[0]!.data.name).toBe("Other outlet");
+		expect(data[0]!.data.flowRate).toBe(17);
+	});
+	
+	test('save progress button navigates user to the hot water outlets overview page', async () => {
+	
+		await renderSuspended(OtherOutlet, {
+			route: {
+				params: { outlet: 'create' }
+			}
+		});
+	
+		await populateValidForm();
+		const saveProcess = screen.getByRole("button", { name: "Save progress" });
+	
+		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets/other/:outlet");
+	});
+	
+	test("creates a new 'other' item automatically when a user adds only the name value", async () => {
+		await renderSuspended(OtherOutlet, {
+			route: {
+				params: { outlet: 'create' }
+			}
+		});
+	
+		await user.type(screen.getByTestId('name'), 'Other outlet 1');
+	
+		await user.tab();
+		const { data } = store.domesticHotWater.hotWaterOutlets.otherOutlets;
+	
+		expect(data[0]!.data.name).toBe("Other outlet 1");
+		expect(data[0]!.data.flowRate).toBeUndefined();
+	});
+	
+	test("updated form data is automatically saved to the correct store object when there are multiple 'other' items added", async () => {
+		
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+	
+	
+		store.$patch({
+			domesticHotWater: {
+				hotWaterOutlets: {
+					otherOutlets: {
+						data: [outlet, outlet2]
+					}
+				}
+			}
+		});    
+		await renderSuspended(OtherOutlet, {
+			route: {
+				params: { outlet: "1" },
+			},
+		});
+	
+						
+		await user.clear(screen.getByTestId("name"));
+		await user.clear(screen.getByTestId("flowRate"));
+			
+		await user.type(screen.getByTestId("name"), "Updated Other outlet 2");
+		await user.type(screen.getByTestId("flowRate"), "1");
+		await user.tab();
+		const { data } = store.domesticHotWater.hotWaterOutlets.otherOutlets;
+	
+		expect(data[1]?.data.name).toBe("Updated Other outlet 2");
+		expect(data[1]?.data.flowRate).toBe(1);
+		expect(data[1]?.data.id).toBe(outlet2.data.id);
+	});
+	
 	it('navigates to hot water outlets page when valid form is completed', async () => {
 		await renderSuspended(OtherOutlet);
 	
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
-		
+		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/hot-water-outlets');
 	});
 });
