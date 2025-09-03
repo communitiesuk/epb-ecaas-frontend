@@ -1,4 +1,4 @@
-import { VentType } from "~/schema/api-schema.types";
+import { VentType } from "~/schema/aliases";
 import { PageType  } from "./pages.types";
 import type {Page} from "./pages.types";
 import { isEmpty } from "ts-extras";

@@ -2,9 +2,10 @@ import {
 	HeatPumpBackupControlType,
 	HeatPumpSinkType,
 	HeatPumpSourceType,
+	HeatSourceWetHeatPumpType,
 	TestLetter
 } from "~/schema/api-schema.types";
-import type {SchemaHeatSourceWetDetails} from "~/schema/api-schema.types";
+import type { SchemaHeatSourceWetDetails } from "~/schema/aliases";
 
 export const immersionHeaterPositionValues: Record<ImmersionHeaterPosition, number> = {
 	top: 1.0,
@@ -16,7 +17,7 @@ export const defaultZoneName: string = 'dwellingspace';
 export const defaultElectricityEnergySupplyName = "mains elec";
 
 export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
-	type: "HeatPump",
+	type: HeatSourceWetHeatPumpType.HeatPump,
 	EnergySupply: defaultElectricityEnergySupplyName,
 	backup_ctrl_type: HeatPumpBackupControlType.None,
 	min_temp_diff_flow_return_for_hp_to_operate: 0,
@@ -34,51 +35,61 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 	temp_return_feed_max: 70,
 	test_data_EN14825: [
 		{
+			air_flow_rate: null,
 			test_letter: TestLetter.A,
 			capacity: 8.4,
 			cop: 4.6,
 			degradation_coeff: 0.90,
 			design_flow_temp: 35,
+			eahp_mixed_ext_air_ratio: null,
 			temp_outlet: 34,
 			temp_source: 0,
 			temp_test: -7
 		},
 		{
+			air_flow_rate: null,
 			test_letter: TestLetter.B,
 			capacity: 8.3,
 			cop: 4.9,
 			degradation_coeff: 0.90,
 			design_flow_temp: 35,
+			eahp_mixed_ext_air_ratio: null,
 			temp_outlet: 30,
 			temp_source: 0,
 			temp_test: 2
 		},
 		{
+			air_flow_rate: null,
 			test_letter: TestLetter.C,
 			capacity: 8.3,
 			cop: 5.1,
 			degradation_coeff: 0.90,
 			design_flow_temp: 35,
+			eahp_mixed_ext_air_ratio: null,
 			temp_outlet: 27,
 			temp_source: 0,
 			temp_test: 7
 		},
 		{
+			air_flow_rate: null,
 			test_letter: TestLetter.D,
 			capacity: 8.2,
 			cop: 5.4,
 			degradation_coeff: 0.95,
 			design_flow_temp: 35,
+			eahp_mixed_ext_air_ratio: null,
 			temp_outlet: 24,
 			temp_source: 0,
 			temp_test: 12
 		},
 		{
+			air_flow_rate: null,
 			test_letter: TestLetter.F,
 			capacity: 8.4,
 			cop: 4.6,
 			degradation_coeff: 0.90,
 			design_flow_temp: 35,
+			eahp_mixed_ext_air_ratio: null,
 			temp_outlet: 34,
 			temp_source: 0,
 			temp_test: -7

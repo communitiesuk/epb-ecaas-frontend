@@ -5,7 +5,8 @@ import PvSystemForm from "./pv-systems/[system].vue";
 import ElectricBatteryForm from "./electric-battery/index.vue";
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
-import { BatteryLocation, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
+import { BatteryLocation, InverterType } from "~/schema/api-schema.types";
+import { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
 
 describe('pv systems and electric battery', () => {
 	const store = useEcaasStore();

@@ -2,7 +2,8 @@ import { screen } from "@testing-library/vue";
 import PVScreen from "./[system].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from '@testing-library/user-event';
-import { InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
+import { InverterType } from "~/schema/api-schema.types";
+import { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {

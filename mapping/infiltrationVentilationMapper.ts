@@ -1,10 +1,11 @@
 import { arrayIncludes, objectEntries, objectFromEntries } from 'ts-extras';
-import {  DuctShape,       SupplyAirFlowRateControlType, SupplyAirTemperatureControlType, VentType } from "~/schema/api-schema.types";
+import { DuctShape, SupplyAirFlowRateControlType, SupplyAirTemperatureControlType } from "~/schema/api-schema.types";
 import type {CombustionApplianceType, SchemaCombustionAppliance, SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks} from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import { defaultElectricityEnergySupplyName } from './common';
 import { asCubicMetresPerHour } from '~/utils/units/flowRate';
+import { VentType } from '~/schema/aliases';
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilationPossible } = mapVentilationData(state);

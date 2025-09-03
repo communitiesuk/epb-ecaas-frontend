@@ -2,7 +2,8 @@ import InfiltrationAndVentilationTaskPage from './index.vue';
 import { screen } from '@testing-library/vue';
 import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
 import { v4 as uuidv4 } from "uuid";
-import { MVHRLocation, VentType } from '~/schema/api-schema.types';
+import { MVHRLocation } from '~/schema/api-schema.types';
+import { VentType } from '~/schema/aliases';
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {

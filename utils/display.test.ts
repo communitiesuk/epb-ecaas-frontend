@@ -1,4 +1,4 @@
-import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass } from "~/schema/api-schema.types";
+import { FlueGasExhaustSituation, MassDistributionClass } from "~/schema/api-schema.types";
 
 describe('Show boolean in display', () => {
 	it('should return Yes when value is true', () => {
@@ -107,7 +107,7 @@ describe('displaySnakeToSentenceCase', () => {
 
 describe('displayDeliveryEnergyUseKey', () => {
 	it('should convert an appliance key to the correct display value', () => {
-		expect(displayDeliveryEnergyUseKey(ApplianceKey.Clothes_washing)).toBe("Washing machine");
+		expect(displayDeliveryEnergyUseKey('Clothes_washing')).toBe("Washing machine");
 	});
 
 	it('should pass anything else through verbatim', () => {

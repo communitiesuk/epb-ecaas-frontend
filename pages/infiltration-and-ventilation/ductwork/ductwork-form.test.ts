@@ -3,7 +3,8 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Ductwork from "./[ductwork].vue";
 import userEvent from "@testing-library/user-event";
 import { within } from "@testing-library/dom";
-import { DuctShape, DuctType, VentType } from "~/schema/api-schema.types";
+import { DuctShape, DuctType } from "~/schema/api-schema.types";
+import { VentType } from "~/schema/aliases";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {

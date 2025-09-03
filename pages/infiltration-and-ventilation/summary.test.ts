@@ -3,13 +3,14 @@ import { screen } from '@testing-library/vue';
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { DuctShape, DuctType, MVHRLocation, VentType } from "~/schema/api-schema.types";
+import { DuctShape, DuctType, MVHRLocation } from "~/schema/api-schema.types";
 import { pascal } from "~/utils/units/pressure";
 import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
 import { centimetresSquare, metresSquare } from "~/utils/units/area";
 import { metre, millimetre } from "~/utils/units/length";
 import { degrees } from "~/utils/units/angle";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
+import { VentType } from "~/schema/aliases";
 
 
 vi.mock('uuid');

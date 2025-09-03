@@ -5,7 +5,8 @@ import { createPinia, setActivePinia } from 'pinia';
 import formStatus from '~/constants/formStatus';
 import pagesData from '~/data/pages/pages';
 import  MechanicalOverview  from '~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue';
-import { BuildType, DuctShape, DuctType, MVHRLocation, VentType } from '~/schema/api-schema.types';
+import { BuildType, DuctShape, DuctType, MVHRLocation } from '~/schema/api-schema.types';
+import { VentType } from '~/schema/aliases';
 const store = useEcaasStore();
 
 describe('Ecaas Store', () => {

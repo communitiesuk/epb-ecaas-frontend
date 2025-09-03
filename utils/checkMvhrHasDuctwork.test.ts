@@ -1,4 +1,5 @@
-import { DuctShape, DuctType, MVHRLocation, VentType } from "~/schema/api-schema.types";
+import { VentType } from "~/schema/aliases";
+import { DuctShape, DuctType, MVHRLocation } from "~/schema/api-schema.types";
 import { checkMvhrHasDuctwork } from "~/utils/checkMvhrHasDuctwork";
 
 describe('checkMvhrHasDuctwork', () => {

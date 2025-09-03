@@ -1,4 +1,4 @@
-import { VentType } from "~/schema/api-schema.types";
+import { VentType } from "~/schema/aliases";
 
 export const checkMvhrHasDuctwork = () => {
 	const store = useEcaasStore();

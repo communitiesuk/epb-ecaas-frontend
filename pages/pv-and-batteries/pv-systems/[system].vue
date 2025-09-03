@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { InverterType, OnSiteGenerationVentilationStrategy } from '~/schema/api-schema.types';
+import { OnSiteGenerationVentilationStrategy } from '~/schema/aliases';
+import { InverterType } from '~/schema/api-schema.types';
 
 const title = "PV (photovoltaic) system";
 const store = useEcaasStore();

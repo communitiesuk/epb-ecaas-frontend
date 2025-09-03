@@ -1,6 +1,7 @@
 import { objectFromEntries } from 'ts-extras';
-import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass, WwhrsType } from '../schema/api-schema.types';
+import { FlueGasExhaustSituation, MassDistributionClass } from '../schema/api-schema.types';
 import type { DisplayProduct } from '~/pcdb/products';
+import { WwhrsType, type ApplianceKey } from '~/schema/aliases';
 
 export function displayBoolean(value: boolean | undefined): BooleanDisplay | undefined {
 	if (typeof value === 'undefined') {
@@ -56,29 +57,27 @@ export type ApplianceKeyDisplay = 'Fridge' | 'Freezer' | 'Fridge freezer' | 'Dis
 
 export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
 	switch (value) {
-		case ApplianceKey.Fridge:
+		case 'Fridge':
 			return 'Fridge';
-		case ApplianceKey.Freezer:
+		case 'Freezer':
 			return 'Freezer';
-		case ApplianceKey.Fridge_Freezer:
+		case 'Fridge-Freezer':
 			return 'Fridge freezer';
-		case ApplianceKey.Dishwasher:
+		case 'Dishwasher':
 			return 'Dishwasher';
-		case ApplianceKey.Oven:
+		case 'Oven':
 			return 'Oven';
-		case ApplianceKey.Clothes_washing:
+		case 'Clothes_washing':
 			return 'Washing machine';
-		case ApplianceKey.Clothes_drying:
+		case 'Clothes_drying':
 			return 'Tumble dryer';
-		case ApplianceKey.Hobs:
+		case 'Hobs':
 			return 'Hobs';
-		case ApplianceKey.Kettle:
+		case 'Kettle':
 			return 'Kettle';
-		case ApplianceKey.Microwave:
+		case 'Microwave':
 			return 'Microwave';
-		case ApplianceKey.lighting:
-			return 'Lighting';
-		case ApplianceKey.Otherdevices:
+		case 'Otherdevices':
 			return 'Other';
 		default:
 			value satisfies never;
@@ -115,8 +114,27 @@ export function displayWwhrsType(value: WwhrsType): WwhrsTypeDisplay {
 
 export type WwhrsTypeDisplay = 'A' | 'B' | 'C';
 
+// NB. this list is written out to be available at runtime, and could drift from all upstream values over time
+const applianceKeys: ApplianceKey[] = [
+	'Clothes_drying',
+	'Clothes_washing',
+	'Dishwasher',
+	'Freezer',
+	'Fridge',
+	'Fridge-Freezer',
+	'Hobs',
+	'Kettle',
+	'Microwave',
+	'Otherdevices',
+	'Oven'
+];
+
+function isApplianceKey(value: string): value is ApplianceKey {
+	return applianceKeys.includes(value as ApplianceKey);
+}
+
 export function displayDeliveryEnergyUseKey(key: string | ApplianceKey): string | ApplianceKeyDisplay {
-	return (Object.values(ApplianceKey).includes(key as ApplianceKey)) ? displayApplianceKey(key as ApplianceKey) : key;
+	return (isApplianceKey(key)) ? displayApplianceKey(key) : key;
 }
 
 export const arealHeatCapacityOptions = {

@@ -1,10 +1,11 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from "@testing-library/vue";
 import PVAndElectricBatteriesSummary from "./summary.vue";
-import { BatteryLocation, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
+import { BatteryLocation, InverterType } from "~/schema/api-schema.types";
 import { kilowatt, kilowattHour, kilowattPeak } from "~/utils/units/power";
 import { degrees } from "~/utils/units/angle";
 import { metre } from "~/utils/units/length";
+import { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
 
 describe("PV and electric batteries summary page", () => {
 	it("displays the correct title", async () => {

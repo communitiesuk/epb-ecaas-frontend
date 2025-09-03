@@ -3,9 +3,10 @@ import MechanicalVentilationForm from "./[mechanical].vue";
 import { userEvent } from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import { v4 as uuidv4 } from 'uuid';
-import { MVHRLocation, VentType } from "~/schema/api-schema.types";
+import { MVHRLocation } from "~/schema/api-schema.types";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units/types";
+import { VentType } from "~/schema/aliases";
 
 describe("mechanical ventilation form", () => {
 	const user = userEvent.setup();

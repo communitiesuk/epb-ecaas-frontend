@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
 import { getTabItems, getUrl } from '#imports';
-import { DuctShape, VentType } from '~/schema/api-schema.types';
+import { DuctShape } from '~/schema/api-schema.types';
 import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from '~/utils/units/flowRate';
 import { metre, millimetre } from '~/utils/units/length';
 import { wattsPerMeterKelvin } from '~/utils/units/thermalConductivity';
 import { centimetresSquare, metresSquare } from '~/utils/units/area';
 import { degrees } from '~/utils/units/angle';
 import { pascal } from '~/utils/units/pressure';
+import { VentType } from '~/schema/aliases';
 
 const title = "Infiltration and ventilation summary";
 const store = useEcaasStore();

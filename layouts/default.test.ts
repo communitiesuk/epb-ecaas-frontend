@@ -1,7 +1,8 @@
 import { renderSuspended } from '@nuxt/test-utils/runtime';
 import DefaultPage from './default.vue';
 import { screen } from '@testing-library/vue';
-import { MVHRLocation, VentType } from '~/schema/api-schema.types';
+import { MVHRLocation } from '~/schema/api-schema.types';
+import { VentType } from '~/schema/aliases';
 
 
 describe('nav bar with ductwork', () => {

@@ -4,7 +4,8 @@ import MechanicalVentilationOverview from "./index.vue";
 import MechanicalVentilationForm from './[mechanical].vue';
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
-import { DuctShape, DuctType, MVHRLocation, VentType } from "~/schema/api-schema.types";
+import { DuctShape, DuctType, MVHRLocation } from "~/schema/api-schema.types";
+import { VentType } from "~/schema/aliases";
 
 describe("mechanical ventilation overview", () => {
 	const store = useEcaasStore();

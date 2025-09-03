@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from 'uuid';
-import { VentType } from '~/schema/api-schema.types';
+import { VentType } from '~/schema/aliases';
 
 const page = usePage();
 const title = "Mechanical ventilation";
