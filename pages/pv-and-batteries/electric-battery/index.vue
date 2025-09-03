@@ -34,6 +34,36 @@ const saveForm = (fields: ElectricBatteryData) => {
 	navigateTo("/pv-and-batteries");
 };
 
+watch(model, async (newData: ElectricBatteryData | undefined, initialData: ElectricBatteryData | undefined) => {
+	const storeData = store.pvAndBatteries.electricBattery.data[0];
+
+	if (initialData === undefined || newData === undefined) {
+		return;
+	}
+
+	const defaultName = 'Electric battery';
+	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
+			Object.values(newData).some(x => x !== undefined);
+
+	store.$patch(state => {
+		if (!storeData && isFirstEdit) {
+			state.pvAndBatteries.electricBattery.data = [{
+				data: {
+					...newData,
+					name: newData.name || defaultName,
+				},
+			}];
+		} else {
+			state.pvAndBatteries.electricBattery.data[0] = {
+				data: {
+					...newData,
+					name: newData.name ?? storeData?.data.name ?? defaultName,
+				},
+			};
+		}
+	});
+});
+
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 
 const locationOptions: Record<BatteryLocation, SnakeToSentenceCase<BatteryLocation>> = {
