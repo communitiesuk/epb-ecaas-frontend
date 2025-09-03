@@ -18,16 +18,18 @@ describe('Electric battery', () => {
 		store.$reset();
 	});
 
-	const fullElectricBattery: ElectricBatteryData = {
-		name: 'Acme battery mk II',
-		capacity: 40,
-		batteryAge: 12,
-		chargeEfficiency: 0.9,
-		location: BatteryLocation.inside,
-		gridChargingPossible: false,
-		maximumChargeRate: 30,
-		minimumChargeRate: 20,
-		maximumDischargeRate: 35
+	const fullElectricBattery: EcaasForm<ElectricBatteryData> = {
+		data: {
+			name: 'Acme battery mk II',
+			capacity: 40,
+			batteryAge: 12,
+			chargeEfficiency: 0.9,
+			location: BatteryLocation.inside,
+			gridChargingPossible: false,
+			maximumChargeRate: 30,
+			minimumChargeRate: 20,
+			maximumDischargeRate: 35
+		}
 	};
 
 	const fillForm = async () => {
@@ -48,17 +50,17 @@ describe('Electric battery', () => {
 		await renderSuspended(ElectricBattery);
 
 		await fillForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.pvAndBatteries.electricBattery;
 
-		expect(data).toEqual([fullElectricBattery]);
+		expect(data[0]).toEqual({...fullElectricBattery, complete: true});
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(ElectricBattery);
     
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
     
 		expect((await screen.findByTestId('electricBatteryErrorSummary'))).toBeDefined();
 	});
@@ -67,8 +69,16 @@ describe('Electric battery', () => {
 		await renderSuspended(ElectricBattery);
         
 		await fillForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
     
+		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries');
+	});
+
+	it('navigates to pv and batteries page when save progress button is clicked', async () => {
+		await renderSuspended(ElectricBattery);
+
+		await user.type(screen.getByTestId("name"), "Test battery");
+		await user.click(screen.getByTestId("saveProgress"));
 		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries');
 	});
 
@@ -87,7 +97,7 @@ describe('Electric battery', () => {
 
 		await user.tab();
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('electricBatteryErrorSummary'))).toBeDefined();
 	});
@@ -107,8 +117,61 @@ describe('Electric battery', () => {
 
 		await user.tab();
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('electricBatteryErrorSummary'))).toBeDefined();
+	});
+
+	describe('partially saving data', () => {
+		it('creates a new battery automatically with given name', async () => {
+			await renderSuspended(ElectricBattery);
+
+			await user.type(screen.getByTestId('name'), 'New battery');
+			await user.tab();
+
+			const actualBattery = store.pvAndBatteries.electricBattery.data[0]!;
+
+			expect(actualBattery.data.name).toBe("New battery");
+			expect(actualBattery.data.capacity).toBeUndefined();
+			expect(actualBattery.data.location).toBeUndefined();
+		});
+
+		it('creates a new battery automatically with default name after other data is entered', async () => {
+			await renderSuspended(ElectricBattery);
+
+			await user.type(screen.getByTestId('chargeEfficiency'), '1');
+			await user.tab();
+
+			const actualBattery = store.pvAndBatteries.electricBattery.data[0]!;
+
+			expect(actualBattery.data.name).toBe("Electric battery");
+			expect(actualBattery.data.chargeEfficiency).toBe(1);
+			expect(actualBattery.data.capacity).toBeUndefined();
+			expect(actualBattery.data.location).toBeUndefined();
+		});
+
+		it("automatically saves updated from data to store", async () => {
+			store.$patch({
+				pvAndBatteries: {
+					electricBattery: {
+						data: [fullElectricBattery]
+					},
+				},
+			});
+
+			await renderSuspended(ElectricBattery);
+
+			await user.clear(screen.getByTestId("name"));
+			await user.clear(screen.getByTestId("capacity"));
+
+			await user.type(screen.getByTestId("name"), "Updated battery");
+			await user.type(screen.getByTestId("capacity"), "12");
+			await user.tab();
+
+			const actualBattery = store.pvAndBatteries.electricBattery.data[0]!;
+
+			expect(actualBattery.data.name).toBe("Updated battery");
+			expect(actualBattery.data.capacity).toBe(12);
+		});
 	});
 });

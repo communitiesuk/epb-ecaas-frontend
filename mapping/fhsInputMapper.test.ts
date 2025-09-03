@@ -1223,9 +1223,11 @@ describe("FHS input mapper", () => {
 				mixedShower: {
 					...baseForm,
 					data: [{
-						id: "some-mixer-shower-id",
-						name: "some-mixer-shower-name",
-						flowRate: 14
+						data: {
+							id: "some-mixer-shower-id",
+							name: "some-mixer-shower-name",
+							flowRate: 14
+						}
 					}]
 				},
 				electricShower: {
@@ -1844,63 +1846,89 @@ describe("FHS input mapper", () => {
 			hotWaterOutlets: {
 				mixedShower: {
 					...baseForm,
-					data: [{
-						id: "mixer shower 1 id",
-						name: "mixer shower 1 name",
-						flowRate: 19
-					},
-					{
-						id: "mixer shower 2 id",
-						name: "mixer shower 2 name",
-						flowRate: 28
-					}]
+					data: [
+						{
+							data: {
+								id: "mixer shower 1 id",
+								name: "mixer shower 1 name",
+								flowRate: 19
+							}
+						},
+						{
+							data: {
+								id: "mixer shower 2 id",
+								name: "mixer shower 2 name",
+								flowRate: 28
+							}
+						}
+					]
 				},
 				electricShower: {
 					...baseForm,
-					data: [{
-						id: "electric shower 1 id",
-						name: "electric shower 1 name",
-						ratedPower: 20
-					}]
+					data: [
+						{
+							data: {
+								id: "electric shower 1 id",
+								name: "electric shower 1 name",
+								ratedPower: 20
+							}
+						}
+					]
 				},
 				bath: {
 					...baseForm,
-					data: [{
-						name: "small bath name",
-						id: "small bath id",
-						size: 80,
-						flowRate: 8
-					},
-					{
-						name: "medium bath name",
-						id: "medium bath id",
-						size: 180,
-						flowRate: 8
-					},
-					{
-						name: "large bath name",
-						id: "large bath id",
-						size: 400,
-						flowRate: 14
-					}]
+					data: [
+						{
+							data: {
+								name: "small bath name",
+								id: "small bath id",
+								size: 80,
+								flowRate: 8
+							}
+						},
+						{
+							data: {
+								name: "medium bath name",
+								id: "medium bath id",
+								size: 180,
+								flowRate: 8
+							}
+						},
+						{
+							data: {
+								name: "large bath name",
+								id: "large bath id",
+								size: 400,
+								flowRate: 14
+							}
+						}
+					]
 				},
 				otherOutlets: {
 					...baseForm,
-					data: [{
-						id: "kitchen sink id",
-						name: "kitchen sink name",
-						flowRate: 7.4
-					},
-					{
-						id: "bathroom basin id",
-						name: "bathroom basin name",
-						flowRate: 6.4
-					},
-					{
-						id: "cloakroom basin id",
-						name: "cloakroom basin name",
-						flowRate: 6.4
-					}]
+					data: [
+						{
+							data: {
+								id: "kitchen sink id",
+								name: "kitchen sink name",
+								flowRate: 7.4
+							}
+						},
+						{
+							data: {
+								id: "bathroom basin id",
+								name: "bathroom basin name",
+								flowRate: 6.4
+							}
+						},
+						{
+							data: {
+								id: "cloakroom basin id",
+								name: "cloakroom basin name",
+								flowRate: 6.4
+							}
+						}
+					]
 				}
 			},
 			pipework: {
@@ -1964,32 +1992,37 @@ describe("FHS input mapper", () => {
 			pvSystems: {
 				...baseForm,
 				data: [{
-					name: "pv system 1",
-					peakPower: 2,
-					ventilationStrategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
-					pitch: 15,
-					orientation: 90,
-					elevationalHeight: 1,
-					lengthOfPV: 0.4,
-					widthOfPV: 0.5,
-					inverterPeakPowerAC: 3,
-					inverterPeakPowerDC: 3.8,
-					inverterIsInside: true,
-					inverterType: InverterType.optimised_inverter
+					data: {
+						name: "pv system 1",
+						peakPower: 2,
+						ventilationStrategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
+						pitch: 15,
+						orientation: 90,
+						elevationalHeight: 1,
+						lengthOfPV: 0.4,
+						widthOfPV: 0.5,
+						inverterPeakPowerAC: 3,
+						inverterPeakPowerDC: 3.8,
+						inverterIsInside: true,
+						inverterType: InverterType.optimised_inverter
+					}
 				}]
 			},
 			electricBattery: {
 				...baseForm,
 				data: [{
-					name: "electric battery 1",
-					capacity: 12,
-					batteryAge: 0,
-					chargeEfficiency: 1,
-					location: BatteryLocation.inside,
-					gridChargingPossible: true,
-					maximumChargeRate: 90,
-					minimumChargeRate: 80,
-					maximumDischargeRate: 20,
+					data:
+							{
+								name: "electric battery 1",
+								capacity: 12,
+								batteryAge: 0,
+								chargeEfficiency: 1,
+								location: BatteryLocation.inside,
+								gridChargingPossible: true,
+								maximumChargeRate: 90,
+								minimumChargeRate: 80,
+								maximumDischargeRate: 20,
+							}
 				}]
 			}
 		};

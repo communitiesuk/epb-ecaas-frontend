@@ -6,7 +6,8 @@ const page = usePage();
 const store = useEcaasStore();
 
 type HotWaterOutletType = keyof typeof store.domesticHotWater.hotWaterOutlets;
-type HotWaterOutletData = MixedShowerData & ElectricShowerData & BathData & OtherHotWaterOutletData;
+type HotWaterOutletData = EcaasForm<MixedShowerData> & EcaasForm<ElectricShowerData> & EcaasForm<BathData> & EcaasForm<OtherHotWaterOutletData>;
+
 
 function handleRemove(outletType: HotWaterOutletType, index: number) {
 	const outlets = store.domesticHotWater.hotWaterOutlets[outletType]?.data;
@@ -22,16 +23,25 @@ function handleRemove(outletType: HotWaterOutletType, index: number) {
 } 
 
 function handleDuplicate<T extends HotWaterOutletData>(outletType: HotWaterOutletType, index: number) {
-	const outlets  = store.domesticHotWater.hotWaterOutlets[outletType]?.data;
+	const outlets = store.domesticHotWater.hotWaterOutlets[outletType]?.data;
 	const outlet = outlets?.[index];
-    
-	if (outlet) {
-		const duplicates = outlets.filter(f => f.name.match(duplicateNamePattern(outlet.name)));
+	let name: string;
 
+	if (outlet) {
+		const duplicates = outlets.filter(f => {
+			if (isEcaasForm(f) && isEcaasForm(outlet)) {
+				name = outlet.data.name;
+				return f.data.name.match(duplicateNamePattern(outlet.data.name));
+			}
+			return false;
+		});
 		store.$patch((state) => {
 			const newItem = {
-				...outlet,
-				name: `${outlet.name} (${duplicates.length})`
+				complete: outlet.complete,
+				data: {
+					...outlet.data,
+					name: `${name} (${duplicates.length})`
+				}
 			} as T;
 
 			state.domesticHotWater.hotWaterOutlets[outletType].data.push(newItem);
@@ -72,7 +82,7 @@ function checkIsComplete() {
 		id="mixedShower"
 		title="Mixer shower"
 		:form-url="`${page?.url!}/mixer-shower`"
-		:items="store.domesticHotWater.hotWaterOutlets.mixedShower.data.map(x => x.name)"
+		:items="store.domesticHotWater.hotWaterOutlets.mixedShower.data.map(x => x.data.name)"
 		@remove="(index: number) => handleRemove('mixedShower', index)"
 		@duplicate="(index: number) => handleDuplicate('mixedShower', index)"
 	/>
@@ -80,7 +90,7 @@ function checkIsComplete() {
 		id="electricShower"
 		title="Instant electric shower"
 		:form-url="`${page?.url!}/electric-shower`"
-		:items="store.domesticHotWater.hotWaterOutlets.electricShower.data.map(x => x.name)"
+		:items="store.domesticHotWater.hotWaterOutlets.electricShower.data.map(x => x.data.name)"
 		@remove="(index: number) => handleRemove('electricShower', index)"
 		@duplicate="(index: number) => handleDuplicate('electricShower', index)"
 	/>
@@ -88,7 +98,7 @@ function checkIsComplete() {
 		id="bath"
 		title="Bath"
 		:form-url="`${page?.url!}/bath`"
-		:items="store.domesticHotWater.hotWaterOutlets.bath.data.map(x => x.name)"
+		:items="store.domesticHotWater.hotWaterOutlets.bath.data.map(x => x.data.name)"
 		@remove="(index: number) => handleRemove('bath', index)"
 		@duplicate="(index: number) => handleDuplicate('bath', index)"
 	/>
@@ -97,7 +107,7 @@ function checkIsComplete() {
 		title="Other"
 		hint="(basin tap, kitchen sink etc)"
 		:form-url="`${page?.url!}/other`"
-		:items="store.domesticHotWater.hotWaterOutlets.otherOutlets.data.map(x => x.name)"
+		:items="store.domesticHotWater.hotWaterOutlets.otherOutlets.data.map(x => x.data.name)"
 		@remove="(index: number) => handleRemove('otherOutlets', index)"
 		@duplicate="(index: number) => handleDuplicate('otherOutlets', index)"
 	/>

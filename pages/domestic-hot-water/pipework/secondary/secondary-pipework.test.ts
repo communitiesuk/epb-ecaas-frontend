@@ -74,10 +74,10 @@ describe('Secondary pipework form', () => {
 			}
 		});
 
-		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Pipework Kitchen Sink');
+		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Pipework Kitchen Sink');
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>('length')).value).toBe('3');
-		expect((await screen.findByTestId<HTMLInputElement>('internalDiameter')).value).toBe('9');
+		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('3');
+		expect((await screen.findByTestId('internalDiameter') as HTMLInputElement).value).toBe('9');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {
@@ -127,6 +127,49 @@ describe('Secondary pipework form', () => {
 		expect(data[0]!.data.name).toBe("Secondary pipework");
 		expect(data[0]!.data.location).toBe("internal");
 	});
+
+		test("default name is used if name is added then deleted", async () => {
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "create" },
+			},
+		});
+		await user.type(screen.getByTestId('name'), 'Pipework Kitchen Sink');
+		await user.clear(screen.getByTestId("name"));
+		await user.tab();
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+
+		const { data } = store.domesticHotWater.pipework.secondaryPipework;
+	
+		expect(data[0]!.data.name).toBe("Secondary pipework");
+	});
+
+		test("default name is used if name added is whitespace", async () => {
+	
+			await renderSuspended(PipeworkForm, {
+				route: {
+					params: { pipe: "create" },
+				},
+			});
+	
+			await user.type(screen.getByTestId('name'), ' ');
+			await user.click(screen.getByRole("button", { name: "Save progress" }));
+	
+			
+			expect(store.domesticHotWater.pipework.secondaryPipework.data[0]!.data.name).toBe("Secondary pipework");
+	
+			await renderSuspended(PipeworkForm, {
+				route: {
+					params: { pipe: "0" },
+				},
+			});
+	
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId('name'), ' ');
+			await user.tab()
+			
+			expect(store.domesticHotWater.pipework.secondaryPipework.data[0]!.data.name).toBe("Secondary pipework");
+		});
 	
 	test('save progress button navigates user to the pipework overview page', async () => {
 
@@ -157,7 +200,7 @@ describe('Secondary pipework form', () => {
 		expect(data[0]!.data.internalDiameter).toBeUndefined();
 	});
 	
-	test("updated form data is automatically saved to the correct store object when there are multiple instant electric heaters added", async () => {
+	test("updated form data is automatically saved to the correct store object when there are multiple secondary pipeworks added", async () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 	

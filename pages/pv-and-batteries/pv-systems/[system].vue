@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { OnSiteGenerationVentilationStrategy } from '~/schema/aliases';
 import { InverterType } from '~/schema/api-schema.types';
+import { OnSiteGenerationVentilationStrategy } from '~/schema/aliases';
+import { getUrl } from "#imports";
 
 const title = "PV (photovoltaic) system";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const route = useRoute();
 
 const pvSystemData = useItemToEdit(
 	"system",
 	store.pvAndBatteries.pvSystems.data
 );
-const model: Ref<PvSystemData> = ref(pvSystemData!);
+const model: Ref<PvSystemData | undefined> = ref(pvSystemData?.data);
 
 const shadingSectionDisabled = true;
 
@@ -29,34 +30,80 @@ const inverterTypeOptions: Record<InverterType, string> = {
 const saveForm = (fields: PvSystemData) => {
 	store.$patch((state) => {
 		const { pvSystems } = state.pvAndBatteries;
+		const storeData = store.pvAndBatteries.pvSystems.data;
 
-		const pvSystemItem: PvSystemData = {
-			name: fields.name,
-			peakPower: fields.peakPower,
-			ventilationStrategy: fields.ventilationStrategy,
-			pitch: fields.pitch,
-			orientation: fields.orientation,
-			elevationalHeight: fields.elevationalHeight,
-			lengthOfPV: fields.lengthOfPV,
-			widthOfPV: fields.widthOfPV,
-			inverterPeakPowerAC: fields.inverterPeakPowerAC,
-			inverterPeakPowerDC: fields.inverterPeakPowerDC,
-			inverterIsInside: fields.inverterIsInside,
-			inverterType: fields.inverterType,
-			aboveDepth: fields.aboveDepth,
-			aboveDistance: fields.aboveDistance,
-			leftDepth: fields.leftDepth,
-			leftDistance: fields.leftDistance,
-			rightDepth: fields.rightDepth,
-			rightDistance: fields.rightDistance,
+		const index = route.params.system === 'create' ? storeData.length - 1 : Number(route.params.system);
+
+		const pvSystemItem: EcaasForm<PvSystemData> = {
+			data: {
+				name: fields.name,
+				peakPower: fields.peakPower,
+				ventilationStrategy: fields.ventilationStrategy,
+				pitch: fields.pitch,
+				orientation: fields.orientation,
+				elevationalHeight: fields.elevationalHeight,
+				lengthOfPV: fields.lengthOfPV,
+				widthOfPV: fields.widthOfPV,
+				inverterPeakPowerAC: fields.inverterPeakPowerAC,
+				inverterPeakPowerDC: fields.inverterPeakPowerDC,
+				inverterIsInside: fields.inverterIsInside,
+				inverterType: fields.inverterType,
+				aboveDepth: fields.aboveDepth,
+				aboveDistance: fields.aboveDistance,
+				leftDepth: fields.leftDepth,
+				leftDistance: fields.leftDistance,
+				rightDepth: fields.rightDepth,
+				rightDistance: fields.rightDistance,
+			},
+			complete: true
 		};
 
-		saveToList(pvSystemItem, pvSystems);
+		pvSystems.data[index] = pvSystemItem;
 		pvSystems.complete = false;
 	});
 
 	navigateTo("/pv-and-batteries");
 };
+
+watch(model, async (newData: PvSystemData | undefined, initialData: PvSystemData | undefined) => {
+	const storeData = store.pvAndBatteries.pvSystems.data;
+
+	if (initialData === undefined || newData === undefined) {
+		return;
+	}
+
+	const defaultName = 'PV system';
+	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
+
+	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
+			Object.values(newData).some(x => x !== undefined);
+
+	if (route.params.system === 'create' && isFirstEdit) {
+		store.$patch(state => {
+			state.pvAndBatteries.pvSystems.data.push({
+				data: {
+					...newData,
+					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+				}
+			});
+		});
+
+		return;
+	}
+
+	store.$patch((state) => {
+		const index = route.params.system === 'create' ? storeData.length - 1 : Number(route.params.system);
+
+		state.pvAndBatteries.pvSystems.data[index] = {
+			data: {
+				...newData,
+				name: newData.name?.trim() || defaultName
+			}
+		};
+
+		state.pvAndBatteries.pvSystems.complete = false;
+	});
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -349,7 +396,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</table>
 		</template>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('pvAndBatteries')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
 

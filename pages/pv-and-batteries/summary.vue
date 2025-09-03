@@ -12,7 +12,7 @@ const pvSystems = store.pvAndBatteries.pvSystems.data;
 const pvSummary: SummarySection = {
 	id: "pvSystems",
 	label: "PV systems",
-	data: pvSystems.map(x => {
+	data: pvSystems.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Peak power": `${x.peakPower} ${kilowattPeak.suffix}`,
@@ -35,7 +35,7 @@ const electricBattery = store.pvAndBatteries.electricBattery.data;
 const batterySummary: SummarySection = {
 	id: "electricBattery",
 	label: "Electric battery",
-	data: electricBattery.map(x => {
+	data: electricBattery.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Capacity": `${x.capacity} ${kilowattHour.suffix}`,

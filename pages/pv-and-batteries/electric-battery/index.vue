@@ -1,34 +1,68 @@
 <script setup lang="ts">
 import type { BatteryLocation } from '~/schema/api-schema.types';
+import {getUrl} from "~/utils/page";
 
 const title = "Electric battery";
 const store = useEcaasStore();
 
 const electricBatteryData = store.pvAndBatteries.electricBattery.data[0];
-const model: Ref<ElectricBatteryData> = ref(electricBatteryData!);
+const model: Ref<ElectricBatteryData | undefined> = ref(electricBatteryData?.data);
 
 const saveForm = (fields: ElectricBatteryData) => {
-	store.$patch({
-		pvAndBatteries: {
-			electricBattery: { 
-				data: [{
-					name: fields.name,
-					capacity: fields.capacity,
-					batteryAge: fields.batteryAge,
-					chargeEfficiency: fields.chargeEfficiency,
-					location: fields.location,
-					gridChargingPossible: fields.gridChargingPossible,
-					maximumChargeRate: fields.maximumChargeRate,
-					minimumChargeRate: fields.minimumChargeRate,
-					maximumDischargeRate: fields.maximumDischargeRate
-				}],
-				complete: false,
+	store.$patch((state) => {
+		const { electricBattery } = state.pvAndBatteries;
+
+		const batteryItem: EcaasForm<ElectricBatteryData> = {
+			data: {
+				name: fields.name,
+				capacity: fields.capacity,
+				batteryAge: fields.batteryAge,
+				chargeEfficiency: fields.chargeEfficiency,
+				location: fields.location,
+				gridChargingPossible: fields.gridChargingPossible,
+				maximumChargeRate: fields.maximumChargeRate,
+				minimumChargeRate: fields.minimumChargeRate,
+				maximumDischargeRate: fields.maximumDischargeRate
 			},
-		},
+			complete: true,
+		};
+		
+		electricBattery.data = [batteryItem];
+		electricBattery.complete = false;
 	});
 
 	navigateTo("/pv-and-batteries");
 };
+
+watch(model, async (newData: ElectricBatteryData | undefined, initialData: ElectricBatteryData | undefined) => {
+	const storeData = store.pvAndBatteries.electricBattery.data[0];
+
+	if (initialData === undefined || newData === undefined) {
+		return;
+	}
+
+	const defaultName = 'Electric battery';
+	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
+			Object.values(newData).some(x => x !== undefined);
+
+	store.$patch(state => {
+		if (!storeData && isFirstEdit) {
+			state.pvAndBatteries.electricBattery.data = [{
+				data: {
+					...newData,
+					name: newData.name || defaultName,
+				},
+			}];
+		} else {
+			state.pvAndBatteries.electricBattery.data[0] = {
+				data: {
+					...newData,
+					name: newData.name?.trim() || defaultName,
+				},
+			};
+		}
+	});
+});
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 
@@ -164,6 +198,9 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			suffix-text="kW"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('pvAndBatteries')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

@@ -15,19 +15,21 @@ describe("PV and electric batteries summary page", () => {
 
 	describe("PV systems section", () => {
 
-		const pvSystem: PvSystemData = {
-			name: "PV Roof",
-			peakPower: 3.5,
-			ventilationStrategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
-			pitch: 30,
-			orientation: 180,
-			elevationalHeight:10,
-			lengthOfPV:1,
-			widthOfPV:1,
-			inverterPeakPowerDC: 3.5,
-			inverterPeakPowerAC: 2.4,
-			inverterIsInside: false,
-			inverterType: InverterType.optimised_inverter,
+		const pvSystem: EcaasForm<PvSystemData> = {
+			data: {
+				name: "PV Roof",
+				peakPower: 3.5,
+				ventilationStrategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
+				pitch: 30,
+				orientation: 180,
+				elevationalHeight: 10,
+				lengthOfPV: 1,
+				widthOfPV: 1,
+				inverterPeakPowerDC: 3.5,
+				inverterPeakPowerAC: 2.4,
+				inverterIsInside: false,
+				inverterType: InverterType.optimised_inverter,
+			}
 		};
 		
 		it("displays the pv systems tab", async () => {
@@ -87,16 +89,18 @@ describe("PV and electric batteries summary page", () => {
 	});
 
 	describe("Electric battery section", () => {
-		const battery: ElectricBatteryData = {
-			name: "Acme Model II",
-			capacity: 10,
-			batteryAge: 2,
-			chargeEfficiency: 0.7,
-			location: BatteryLocation.inside,
-			gridChargingPossible: false,
-			maximumChargeRate: 6.2,
-			minimumChargeRate: 4.5,
-			maximumDischargeRate: 2.3,
+		const battery: EcaasForm<ElectricBatteryData> = {
+			data: {
+				name: "Acme Model II",
+				capacity: 10,
+				batteryAge: 2,
+				chargeEfficiency: 0.7,
+				location: BatteryLocation.inside,
+				gridChargingPossible: false,
+				maximumChargeRate: 6.2,
+				minimumChargeRate: 4.5,
+				maximumDischargeRate: 2.3,
+			}
 		};
 		
 		it("displays the battery tab", async () => {

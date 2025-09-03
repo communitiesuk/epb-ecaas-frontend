@@ -3,10 +3,15 @@ import userEvent from "@testing-library/user-event";
 import PvAndBatteries from './index.vue';
 import PvSystemForm from "./pv-systems/[system].vue";
 import ElectricBatteryForm from "./electric-battery/index.vue";
-import {screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom';
+import { screen } from '@testing-library/vue';
+import { within } from '@testing-library/dom';
 import { BatteryLocation, InverterType } from "~/schema/api-schema.types";
 import { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
+
+const baseForm = {
+	data: [],
+	complete: true,
+};
 
 describe('pv systems and electric battery', () => {
 	const store = useEcaasStore();
@@ -21,47 +26,55 @@ describe('pv systems and electric battery', () => {
 		store.$reset();
 	});
 
-	const pvSystem1: PvSystemData = {
-		name: "PV System 1",
-		peakPower: 4,
-		ventilationStrategy: OnSiteGenerationVentilationStrategy.unventilated,
-		pitch: 45,
-		orientation: 20,
-		elevationalHeight: 100,
-		lengthOfPV: 20,
-		widthOfPV: 20,
-		inverterPeakPowerAC: 4,
-		inverterPeakPowerDC: 5,
-		inverterIsInside: true,
-		inverterType: InverterType.string_inverter,
-		// aboveDepth: 20,
-		// aboveDistance: 4,
-		// leftDepth: 10,
-		// leftDistance: 7,
-		// rightDepth: 2,
-		// rightDistance: 10
+	const pvSystem1: EcaasForm<PvSystemData> = {
+		data: {
+			name: "PV System 1",
+			peakPower: 4,
+			ventilationStrategy: OnSiteGenerationVentilationStrategy.unventilated,
+			pitch: 45,
+			orientation: 20,
+			elevationalHeight: 100,
+			lengthOfPV: 20,
+			widthOfPV: 20,
+			inverterPeakPowerAC: 4,
+			inverterPeakPowerDC: 5,
+			inverterIsInside: true,
+			inverterType: InverterType.string_inverter,
+			// aboveDepth: 20,
+			// aboveDistance: 4,
+			// leftDepth: 10,
+			// leftDistance: 7,
+			// rightDepth: 2,
+			// rightDistance: 10
+		}
 	};
 
-	const pvSystem2: PvSystemData = {
-		...pvSystem1,
-		name: "PV System 2"
+	const pvSystem2: EcaasForm<PvSystemData> = {
+		data: {
+			...pvSystem1.data,
+			name: "PV System 2"
+		}
 	};
 
-	const pvSystem3: PvSystemData = {
-		...pvSystem1,
-		name: "PV System 3"
+	const pvSystem3: EcaasForm<PvSystemData> = {
+		data: {
+			...pvSystem1.data,
+			name: "PV System 3"
+		}
 	};
 
-	const electricBattery: ElectricBatteryData = {
-		name: "Electric Battery 1",
-		capacity: 2,
-		chargeEfficiency: 0.8,
-		batteryAge: 0,
-		minimumChargeRate: 0.001,
-		maximumChargeRate: 1.5,
-		maximumDischargeRate: 1.25,
-		location: BatteryLocation.outside,
-		gridChargingPossible: false,
+	const electricBattery: EcaasForm<ElectricBatteryData> = {
+		data: {
+			name: "Electric Battery 1",
+			capacity: 2,
+			chargeEfficiency: 0.8,
+			batteryAge: 0,
+			minimumChargeRate: 0.001,
+			maximumChargeRate: 1.5,
+			maximumDischargeRate: 1.25,
+			location: BatteryLocation.outside,
+			gridChargingPossible: false,
+		}
 	};
 
 	describe('pv systems', () => {
@@ -69,6 +82,7 @@ describe('pv systems and electric battery', () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
+						...baseForm,
 						data: [pvSystem1]
 					}
 				}
@@ -87,6 +101,7 @@ describe('pv systems and electric battery', () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
+						...baseForm,
 						data:[pvSystem1, pvSystem2, pvSystem3]
 					}
 				}
@@ -169,12 +184,11 @@ describe('pv systems and electric battery', () => {
 			return navigateToMock;
 		});
 
-
 		const addPvDataToStore = async () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
-						data: [pvSystem1],
+						data: [{...pvSystem1, complete: true}],
 					},
 				}
 			});
@@ -184,7 +198,7 @@ describe('pv systems and electric battery', () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
-						data: [electricBattery],
+						data: [{...electricBattery, complete: true}],
 					},
 				}
 			});
@@ -225,15 +239,13 @@ describe('pv systems and electric battery', () => {
 			expect(store.pvAndBatteries.pvSystems?.complete).toBe(true);
 			expect(store.pvAndBatteries.electricBattery?.complete).toBe(true);
 
-			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+			expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
 			expect(completeStatus?.style.display).not.toBe("none");
 
 			expect(navigateToMock).toHaveBeenCalledWith("/");
 		});
 
 		it("marks section as complete when just batteries have been added", async () => {
-			await addElectricBatteryToStore();
-
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			const completeStatus = screen.queryByTestId("completeSectionCompleted");
 			expect(completeStatus?.style.display).toBe("none");
@@ -248,8 +260,7 @@ describe('pv systems and electric battery', () => {
 
 			expect(navigateToMock).toHaveBeenCalledWith("/");
 		});
-
-
+        
 		it("marks section as complete when nothing has been added", async () => {
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			const completeStatus = screen.queryByTestId("completeSectionCompleted");
@@ -317,7 +328,8 @@ describe('pv systems and electric battery', () => {
 			await renderSuspended(items.form, {
 				route: { params: { [param]: "0" } },
 			});
-			await user.click(screen.getByRole("button", { name: "Save and continue" }));
+			await user.click(screen.getByTestId("saveAndComplete")
+			);
 			expect(store.pvAndBatteries.pvSystems.complete).toBe(false);
 
 			await renderSuspended(PvAndBatteries);
@@ -326,7 +338,7 @@ describe('pv systems and electric battery', () => {
 
 		it("marks as not complete after electric battery form save", async () => {
 			await addElectricBatteryToStore();
-			
+
 			const items = await getElectricBatteryData("");
 
 			await user.click(screen.getByTestId("completeSectionButton"));
@@ -336,11 +348,25 @@ describe('pv systems and electric battery', () => {
 			await renderSuspended(items.form, {
 				route: { params: { [param]: "0" } },
 			});
-			await user.click(screen.getByRole("button", { name: "Save and continue" }));
+			await user.click(screen.getByRole("button", { name: "Save and mark as complete" }));
 			expect(store.pvAndBatteries.electricBattery.complete).toBe(false);
 
 			await renderSuspended(PvAndBatteries);
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		});
+
+		it('disables the mark section as complete button when item is incomplete', async () => {
+			store.$patch({
+				pvAndBatteries: {
+					electricBattery: {
+						data: [{data: {name: "Battery", capacity: 2}, complete: false}]
+					},
+				}
+			});
+
+			await renderSuspended(PvAndBatteries);
+			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+			expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
 		});
 	});
 });

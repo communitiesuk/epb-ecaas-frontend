@@ -31,8 +31,10 @@ describe('wwhrs form', () => {
 				hotWaterOutlets: {
 					mixedShower: {
 						data: [{
-							id: mixedShowerId,
-							name: 'Mixer shower 1'
+							data: {
+								id: mixedShowerId,
+								name: 'Mixer shower 1'
+							}
 						}]
 					}
 				}

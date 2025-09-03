@@ -26,22 +26,22 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 
 function mapShowersData(state: ResolvedState) {
 	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.mixedShower.map((x):[string, SchemaShower] => {
-		const key = x.name;
+		const key = x.data.name;
 		const val: SchemaShower = {
 			type: "MixerShower",
 			ColdWaterSource: ColdWaterSourceType.mains_water,
-			flowrate: x.flowRate,
+			flowrate: x.data.flowRate,
 		};
 
 		return [key, val];
 	});
 
 	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.electricShower.map((x):[string, SchemaShower] => {
-		const key = x.name;
+		const key = x.data.name;
 		const val: SchemaShower = {
 			type: "InstantElecShower",
 			ColdWaterSource: ColdWaterSourceType.mains_water,
-			rated_power: x.ratedPower,
+			rated_power: x.data.ratedPower,
 			EnergySupply: defaultElectricityEnergySupplyName
 		};
 
@@ -53,11 +53,11 @@ function mapShowersData(state: ResolvedState) {
 
 function mapBathsData(state: ResolvedState) {
 	const bathEntries = state.domesticHotWater.hotWaterOutlets.bath.map((x):[string, SchemaBathDetails] => {
-		const key = x.name;
+		const key = x.data.name;
 		const val: SchemaBathDetails = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
-			flowrate: x.flowRate,
-			size: x.size
+			flowrate: x.data.flowRate,
+			size: x.data.size
 		};
 
 		return [key, val];
@@ -68,10 +68,10 @@ function mapBathsData(state: ResolvedState) {
 
 function mapOthersData(state: ResolvedState) {
 	const otherEntries = state.domesticHotWater.hotWaterOutlets.otherOutlets.map((x):[string, SchemaOtherWaterUseDetails] => {
-		const key = x.name;
+		const key = x.data.name;
 		const val: SchemaOtherWaterUseDetails = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
-			flowrate: x.flowRate,
+			flowrate: x.data.flowRate,
 		};
 
 		return [key, val];
