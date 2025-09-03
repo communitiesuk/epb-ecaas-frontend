@@ -239,14 +239,10 @@ export type WallsToUnheatedSpaceData = z.infer<typeof wallsToUnheatedSpaceDataZo
 const partyWallDataZod = named.extend({
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
-	orientation,
-	length: z.number().min(0.001).max(50),
-	height: z.number().min(0.001).max(50),
-	elevationalHeight: z.number().min(0).max(500),
 	surfaceArea: z.number().min(0.01).max(10000),
-	solarAbsorption: z.number(),
 	uValue,
 	kappaValue: z.number(),
+	thermalResistance: z.number().min(0.01).max(50),
 	massDistributionClass,
 });
 

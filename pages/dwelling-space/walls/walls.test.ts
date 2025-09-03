@@ -94,16 +94,11 @@ describe('walls', () => {
 		name: "Party wall 1",
 		pitchOption: '90',
 		pitch: 90,
-		orientation: 200,
-		height: 5,
-		length: 20,
-		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorption: 0.1,
 		uValue: 0.01,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I
-		
+		massDistributionClass: MassDistributionClass.I,
+		thermalResistance: 3.3
 	};
 
 	const party2: PartyWallData = {
