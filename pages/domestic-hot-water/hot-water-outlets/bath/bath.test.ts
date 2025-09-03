@@ -142,7 +142,7 @@ describe('bath', () => {
 		await populateValidForm();
 		const saveProcess = screen.getByRole("button", { name: "Save progress" });
 
-		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets/bath/:bath");
+		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets");
 	});
 
 	test("creates a new bath automatically when a user adds only the name value", async () => {

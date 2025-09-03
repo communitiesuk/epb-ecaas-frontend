@@ -119,7 +119,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('bath')" secondary>Save progress</GovButton>
+			<GovButton :href="getUrl('hotWaterOutlets')" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

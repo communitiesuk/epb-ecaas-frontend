@@ -140,7 +140,7 @@ describe('electric shower', () => {
 		await populateValidForm();
 		const saveProcess = screen.getByRole("button", { name: "Save progress" });
 
-		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets/electric-shower/:shower");
+		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets");
 	});
 
 	test("creates a new electric shower automatically when a user adds only the name value", async () => {

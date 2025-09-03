@@ -140,7 +140,7 @@ describe('mixer shower', () => {
 		await populateValidForm();
 
 		const saveProgressBtn = screen.getByRole("button", { name: "Save progress" });
-		expect(saveProgressBtn.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets/mixer-shower/:shower");
+		expect(saveProgressBtn.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets");
 	});
 
 	test('creates a new mixed shower entry when only name is entered', async () => {
