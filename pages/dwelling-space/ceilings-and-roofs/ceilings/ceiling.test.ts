@@ -53,8 +53,8 @@ describe('ceiling', () => {
 	
 			await user.click(screen.getByTestId('type_heatedSpace'));
 			await populateValidForm();
-			await user.click(screen.getByRole('button'));
-	
+			await user.click(screen.getByTestId("saveAndComplete"));
+
 			const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 			
 			expect(dwellingSpaceCeilings?.data[0]).toEqual(internalFloor);
@@ -89,8 +89,8 @@ describe('ceiling', () => {
 			await renderSuspended(Ceiling);
 	
 			await user.click(screen.getByTestId('type_heatedSpace'));
-			await user.click(screen.getByRole('button'));
-	
+			await user.click(screen.getByTestId("saveAndComplete"));
+
 			expect((await screen.findByTestId('name_error'))).toBeDefined();
 			expect((await screen.findByTestId('surfaceArea_error'))).toBeDefined();
 			expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();
@@ -107,8 +107,8 @@ describe('ceiling', () => {
 			await populateValidFormUnheated();
 			await user.type(screen.getByTestId('thermalResistanceOfAdjacentUnheatedSpace'), '0');
 			await user.tab();
-			await user.click(screen.getByRole('button'));
-	
+			await user.click(screen.getByTestId("saveAndComplete"));
+
 			const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 			
 			expect(dwellingSpaceCeilings?.data[0]).toEqual(internalFloorWithUnheated);
@@ -139,8 +139,8 @@ describe('ceiling', () => {
 			await renderSuspended(Ceiling);
 	
 			await user.click(screen.getByTestId('type_unheatedSpace'));
-			await user.click(screen.getByRole('button'));
-	
+			await user.click(screen.getByTestId("saveAndComplete"));
+
 			expect((await screen.findByTestId('thermalResistanceOfAdjacentUnheatedSpace_error'))).toBeDefined();
 		});
 	});
@@ -148,7 +148,7 @@ describe('ceiling', () => {
 	it('shows type of ceiling required error message when empty form is submitted', async () => {
 		await renderSuspended(Ceiling);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('type_error'))).toBeDefined();
 	});
@@ -156,7 +156,7 @@ describe('ceiling', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(Ceiling);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('ceilingErrorSummary'))).toBeDefined();
 	});
@@ -166,7 +166,7 @@ describe('ceiling', () => {
 
 		await user.click(screen.getByTestId('type_heatedSpace'));
 		await user.click(screen.getByTestId('pitchOption_custom'));
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
 	});
@@ -179,7 +179,7 @@ describe('ceiling', () => {
 		await user.click(screen.getByTestId('pitchOption_custom'));
 		await user.type(screen.getByTestId('pitch'), '90');
 		await user.tab();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
@@ -191,7 +191,17 @@ describe('ceiling', () => {
 	
 		await user.click(screen.getByTestId('type_heatedSpace'));
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/ceilings-and-roofs');
+	});
+
+	it('navigates to ceilings and roofs page when save progress button is clicked', async () => {
+		await renderSuspended(Ceiling);
+
+		await user.click(screen.getByTestId('type_heatedSpace'));
+		await user.type(screen.getByTestId("name"), "Test ceiling");
+		await user.click(screen.getByTestId("saveProgress"));
 
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/ceilings-and-roofs');
 	});

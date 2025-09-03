@@ -305,7 +305,7 @@ describe('ceilings and roofs', () => {
 				await renderSuspended(ceilingAndRoofItem?.form, {
 					route: { params: { [ceilingAndRoofItem!.params]: "0" } }
 				});
-				await user.click(screen.getByRole("button", { name: "Save and continue" }));
+				await user.click(screen.getByTestId("saveAndComplete"));
 	
 				expect(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete).toBe(false);
 				await renderSuspended(CeilingsAndRoofs);

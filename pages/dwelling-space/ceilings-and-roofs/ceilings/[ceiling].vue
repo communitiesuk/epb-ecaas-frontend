@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { zeroPitchOptions } from '#imports';
+import { getUrl, zeroPitchOptions } from '#imports';
 
 const title = "Ceiling";
 const store = useEcaasStore();
@@ -129,9 +129,9 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('dwellingSpaceCeilingsAndRoofs')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

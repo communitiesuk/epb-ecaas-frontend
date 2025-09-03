@@ -50,7 +50,7 @@ describe('roof', () => {
 		await renderSuspended(Roof);
 
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const  { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
@@ -90,7 +90,7 @@ describe('roof', () => {
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(Roof);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('typeOfRoof_error'))).toBeDefined();
@@ -104,7 +104,7 @@ describe('roof', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(Roof);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('roofErrorSummary'))).toBeDefined();
 	});
@@ -112,7 +112,7 @@ describe('roof', () => {
 	it('requires pitch option when type of roof is flat', async () => {
 		await renderSuspended(Roof);
 		await user.click(screen.getByTestId('typeOfRoof_flat'));
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('pitchOption_error'))).toBeDefined();
 	});
@@ -122,7 +122,7 @@ describe('roof', () => {
 
 		await user.click(screen.getByTestId('typeOfRoof_flat'));
 		await user.click(screen.getByTestId('pitchOption_custom'));
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
 	});
@@ -134,7 +134,7 @@ describe('roof', () => {
 		await user.click(screen.getByTestId('pitchOption_custom'));
 		await user.type(screen.getByTestId('pitch'), '90');
 		await user.tab();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
@@ -144,7 +144,7 @@ describe('roof', () => {
 	it('requires additional fields when type of roof is pitched', async () => {
 		await renderSuspended(Roof);
 		await user.click(screen.getByTestId('typeOfRoof_pitchedInsulatedAtRoof'));
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
 		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
@@ -161,7 +161,7 @@ describe('roof', () => {
 		await user.type(screen.getByTestId('pitch'), '90');
 		await user.type(screen.getByTestId('orientation'), '90');
 		await user.tab();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
@@ -173,7 +173,16 @@ describe('roof', () => {
 		await renderSuspended(Roof);
 	
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/ceilings-and-roofs');
+	});
+
+	it('navigates to ceilings and roofs page when save progress button is clicked', async () => {
+		await renderSuspended(Roof);
+
+		await user.type(screen.getByTestId("name"), "Test roof");
+		await user.click(screen.getByTestId("saveProgress"));
 
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/ceilings-and-roofs');
 	});
