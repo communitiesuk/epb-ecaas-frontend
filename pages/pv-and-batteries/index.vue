@@ -104,6 +104,7 @@ function hasIncompleteEntries() {
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
+		:show-status="true"
 		:max-number-of-items=1
 		@remove="(index: number) => handleRemove('electricBattery', index)"
 	/>
