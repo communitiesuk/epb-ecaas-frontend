@@ -117,8 +117,7 @@ const wallsData: WallsData = {
 			surfaceArea: 10,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
-			thermalResistance: 4.3
+			massDistributionClass: MassDistributionClass.I
 		}]
 	}
 };
@@ -527,7 +526,6 @@ describe('Living space fabric summary', () => {
 				"Net surface area": `10 ${metresSquare.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
-				"Thermal resistance": `4.3 ${squareMeterKelvinPerWatt.suffix}`,
 				"Mass distribution class": "Internal"
 			};
 			

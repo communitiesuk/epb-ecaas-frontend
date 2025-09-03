@@ -97,8 +97,7 @@ describe('walls', () => {
 		surfaceArea: 10,
 		uValue: 0.01,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
-		thermalResistance: 3.3
+		massDistributionClass: MassDistributionClass.I
 	};
 
 	const party2: PartyWallData = {

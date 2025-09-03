@@ -242,7 +242,6 @@ const partyWallDataZod = named.extend({
 	surfaceArea: z.number().min(0.01).max(10000),
 	uValue,
 	kappaValue: z.number(),
-	thermalResistance: z.number().min(0.01).max(50),
 	massDistributionClass,
 });
 

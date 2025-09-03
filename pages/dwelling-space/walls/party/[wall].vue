@@ -20,7 +20,6 @@ const saveForm = (fields: PartyWallData) => {
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
-			thermalResistance: fields.thermalResistance,
 		};
 
 		if (!dwellingSpaceWalls.dwellingSpacePartyWall) {
@@ -87,14 +86,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				</p>
 			</GovDetails>
 		</FormKit>
-		<FormKit
-			id="thermalResistance"
-			type="govInputWithSuffix"
-			suffix-text="(m²·K)/W"
-			label="Thermal resistance"
-			name="thermalResistance"
-			validation="required | number | min:0.01 | max:50"
-		/>
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />

@@ -712,8 +712,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: MassDistributionClass.E,
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
-					u_value: 1,
-					thermal_resistance_construction: 8.4
+					u_value: 1
 				},
 				"external wall 1 (wall)": {
 					type: "BuildingElementOpaque",
@@ -1526,8 +1525,7 @@ describe("FHS input mapper", () => {
 						surfaceArea: 15,
 						uValue: 1,
 						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.E,
-						thermalResistance: 8.4
+						massDistributionClass: MassDistributionClass.E
 					}]
 				},
 				dwellingSpaceExternalWall: {

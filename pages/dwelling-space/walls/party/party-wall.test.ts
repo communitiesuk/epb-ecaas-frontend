@@ -20,8 +20,7 @@ describe('party wall', () => {
 		surfaceArea: 10,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
-		thermalResistance: 5.2
+		massDistributionClass: MassDistributionClass.I
 	};
 
 	afterEach(() => {
@@ -36,7 +35,6 @@ describe('party wall', () => {
 		await user.type(screen.getByTestId('surfaceArea'), '10');
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.click(screen.getByTestId('kappaValue_50000'));
-		await user.type(screen.getByTestId('thermalResistance'), '5.2');
 		await user.click(screen.getByTestId('massDistributionClass_I'));
 
 		await user.click(screen.getByRole('button'));
@@ -68,7 +66,6 @@ describe('party wall', () => {
 		expect((await screen.findByTestId<HTMLInputElement>('pitchOption_90')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>('surfaceArea')).value).toBe('10');
 		expect((await screen.findByTestId<HTMLInputElement>('uValue')).value).toBe('1');
-		expect((await screen.findByTestId<HTMLInputElement>('thermalResistance')).value).toBe('5.2');
 		expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
 		expect((await screen.findByTestId('massDistributionClass_I')).hasAttribute('checked')).toBe(true);
 	});
@@ -84,7 +81,6 @@ describe('party wall', () => {
 		expect((await screen.findByTestId('uValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('massDistributionClass_error'))).toBeDefined();
-		expect((await screen.findByTestId('thermalResistance_error'))).toBeDefined();
 
 	});
 

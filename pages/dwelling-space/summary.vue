@@ -190,7 +190,6 @@ const partyWallSummary: SummarySection = {
 			"Net surface area": `${x.surfaceArea} ${metresSquare.suffix}`,
 			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
-			"Thermal resistance": `${x.thermalResistance} ${squareMeterKelvinPerWatt.suffix}`,
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}) || [],

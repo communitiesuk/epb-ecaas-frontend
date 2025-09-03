@@ -253,7 +253,6 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
-			thermal_resistance_construction: x.thermalResistance
 		}};
 	}) || [];
 

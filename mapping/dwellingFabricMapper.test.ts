@@ -327,8 +327,7 @@ describe('dwelling fabric mapper', () => {
 			surfaceArea: 10,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
-			thermalResistance: 7.2
+			massDistributionClass: MassDistributionClass.I
 		};
 
 		const wallToUnheatedSpace: WallsToUnheatedSpaceData ={
@@ -398,8 +397,7 @@ describe('dwelling fabric mapper', () => {
 			area: partyWall.surfaceArea,
 			u_value: partyWall.uValue,
 			areal_heat_capacity: partyWall.kappaValue,
-			mass_distribution_class: partyWall.massDistributionClass,
-			thermal_resistance_construction: partyWall.thermalResistance
+			mass_distribution_class: partyWall.massDistributionClass
 		};
 
 		expect(partyWallElement).toEqual(expectedPartyWall);
