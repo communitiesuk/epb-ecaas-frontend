@@ -96,7 +96,7 @@ watch(model, async (newData: PvSystemData | undefined, initialData: PvSystemData
 		state.pvAndBatteries.pvSystems.data[index] = {
 			data: {
 				...newData,
-				name: newData.name ?? state.pvAndBatteries.pvSystems.data[index]?.data.name
+				name: newData.name?.trim() || defaultName
 			}
 		};
 

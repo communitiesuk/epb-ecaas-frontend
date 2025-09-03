@@ -27,7 +27,7 @@ const saveForm = (fields: ElectricBatteryData) => {
 			complete: true,
 		};
 		
-		electricBattery.data[0] = batteryItem;
+		electricBattery.data = [batteryItem];
 		electricBattery.complete = false;
 	});
 
@@ -57,7 +57,7 @@ watch(model, async (newData: ElectricBatteryData | undefined, initialData: Elect
 			state.pvAndBatteries.electricBattery.data[0] = {
 				data: {
 					...newData,
-					name: newData.name ?? storeData?.data.name ?? defaultName,
+					name: newData.name?.trim() || defaultName,
 				},
 			};
 		}
