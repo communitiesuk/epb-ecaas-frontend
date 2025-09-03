@@ -130,6 +130,49 @@ describe('mixer shower', () => {
 		expect(data[0]?.data.flowRate).toBe(9);
 	});
 
+	test("default name is used if name is added then deleted", async () => {
+		await renderSuspended(MixerShower, {
+			route: {
+				params: { shower: "create" },
+			},
+		});
+		await user.type(screen.getByTestId('name'), 'Mixer shower 1');
+		await user.clear(screen.getByTestId("name"));
+		await user.tab();
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+
+		const { data } = store.domesticHotWater.hotWaterOutlets.mixedShower;
+	
+		expect(data[0]!.data.name).toBe("Mixer shower");
+	});
+
+	test("default name is used if name added is whitespace", async () => {
+	
+		await renderSuspended(MixerShower, {
+			route: {
+				params: { shower: "create" },
+			},
+		});
+	
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+	
+			
+		expect(store.domesticHotWater.hotWaterOutlets.mixedShower.data[0]!.data.name).toBe("Mixer shower");
+	
+		await renderSuspended(MixerShower, {
+			route: {
+				params: { shower: "0" },
+			},
+		});
+	
+		await user.clear(screen.getByTestId("name"));
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.tab();
+			
+		expect(store.domesticHotWater.hotWaterOutlets.mixedShower.data[0]!.data.name).toBe("Mixer shower");
+	});
+		
 	test('save progress button href is correct', async () => {
 		await renderSuspended(MixerShower, {
 			route: {

@@ -53,7 +53,7 @@ watch(model, async (newData: BathData | undefined, initialData: BathData | undef
 			state.domesticHotWater.hotWaterOutlets.bath.data.push({
 				data: {
 					...newData,
-					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName),
+					name: newData.name?.trim() || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName),
 				}
 			});
 		});
@@ -67,7 +67,7 @@ watch(model, async (newData: BathData | undefined, initialData: BathData | undef
 		state.domesticHotWater.hotWaterOutlets.bath.data[index] = {
 			data: {
 				...newData,
-				name: newData.name ?? state.domesticHotWater.hotWaterOutlets.bath.data[index]?.data.name,
+				name: newData.name?.trim() || defaultName,
 				id: store.domesticHotWater.hotWaterOutlets.bath.data[index]?.data.id ?? uuidv4()
 			}
 		};

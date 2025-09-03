@@ -132,7 +132,50 @@ describe('other outlets', () => {
 		expect(data[0]!.data.name).toBe("Other outlet");
 		expect(data[0]!.data.flowRate).toBe(17);
 	});
+
+	test("default name is used if name is added then deleted", async () => {
+		await renderSuspended(OtherOutlet, {
+			route: {
+				params: { outlet: "create" },
+			},
+		});
+		await user.type(screen.getByTestId('name'), 'Other outlet 1');
+		await user.clear(screen.getByTestId("name"));
+		await user.tab();
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+
+		const { data } = store.domesticHotWater.hotWaterOutlets.otherOutlets;
 	
+		expect(data[0]!.data.name).toBe("Other outlet");
+	});
+	
+	test("default name is used if name added is whitespace", async () => {
+
+		await renderSuspended(OtherOutlet, {
+			route: {
+				params: { outlet: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+
+		
+		expect(store.domesticHotWater.hotWaterOutlets.otherOutlets.data[0]!.data.name).toBe("Other outlet");
+
+		await renderSuspended(OtherOutlet, {
+			route: {
+				params: { outlet: "0" },
+			},
+		});
+
+		await user.clear(screen.getByTestId("name"));
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.tab();
+		
+		expect(store.domesticHotWater.hotWaterOutlets.otherOutlets.data[0]!.data.name).toBe("Other outlet");
+	});
+
 	test('save progress button navigates user to the hot water outlets overview page', async () => {
 	
 		await renderSuspended(OtherOutlet, {

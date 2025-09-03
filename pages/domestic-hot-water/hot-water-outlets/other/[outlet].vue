@@ -51,7 +51,7 @@ watch(model, async (newData: OtherHotWaterOutletData | undefined, initialData: O
 			state.domesticHotWater.hotWaterOutlets.otherOutlets.data.push({
 				data: {
 					...newData,
-					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+					name: newData.name?.trim() || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
 				}
 			});
 		});
@@ -65,7 +65,7 @@ watch(model, async (newData: OtherHotWaterOutletData | undefined, initialData: O
 		state.domesticHotWater.hotWaterOutlets.otherOutlets.data[index] = {
 			data: {
 				...newData,
-				name: newData.name ?? state.domesticHotWater.hotWaterOutlets.electricShower.data[index]?.data.name,
+				name: newData.name?.trim() || defaultName,
 				id: store.domesticHotWater.hotWaterOutlets.otherOutlets.data[index]?.data.id ?? uuidv4()
 			}
 		};

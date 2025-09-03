@@ -53,7 +53,7 @@ watch(model, async (newData: SecondaryPipeworkData | undefined, initialData: Sec
 			state.domesticHotWater.pipework.secondaryPipework.data.push({
 				data: {
 					...newData,
-					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+					name: newData.name?.trim() || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
 				}
 			});
 		});
@@ -67,7 +67,7 @@ watch(model, async (newData: SecondaryPipeworkData | undefined, initialData: Sec
 		state.domesticHotWater.pipework.secondaryPipework.data[index] = {
 			data: {
 				...newData,
-				name: newData.name ?? state.domesticHotWater.pipework.secondaryPipework.data[index]?.data.name
+				name: newData.name?.trim() || defaultName,
 			}
 		};
 

@@ -131,6 +131,51 @@ describe('bath', () => {
 		expect(data[0]!.data.size).toBe(170);
 	});
 
+	test("default name is used if name is added then deleted", async () => {
+
+		await renderSuspended(Bath, {
+			route: {
+				params: { bath: "create" },
+			},
+		});
+	
+		await user.type(screen.getByTestId('name'), 'Bath 1');
+		await user.clear(screen.getByTestId("name"));
+		await user.tab();
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		
+		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
+	
+		expect(data[0]!.data.name).toBe("Bath");
+	});
+
+	test("default name is used if name added is whitespace", async () => {
+
+		await renderSuspended(Bath, {
+			route: {
+				params: { bath: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+
+		
+		expect(store.domesticHotWater.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");
+
+		await renderSuspended(Bath, {
+			route: {
+				params: { bath: "0" },
+			},
+		});
+
+		await user.clear(screen.getByTestId("name"));
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.tab();
+		
+		expect(store.domesticHotWater.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");
+	});
+
 	test('save progress button navigates user to the hot water outlets overview page', async () => {
 
 		await renderSuspended(Bath, {

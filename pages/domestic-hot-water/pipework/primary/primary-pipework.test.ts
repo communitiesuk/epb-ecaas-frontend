@@ -221,6 +221,49 @@ describe('Primary pipework form', () => {
 		expect(data[0]!.data.internalDiameter).toBe(10);
 	});
 
+	test("default name is used if name is added then deleted", async () => {
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "create" },
+			},
+		});
+		await user.type(screen.getByTestId('name'), 'Pipework Kitchen Sink');
+		await user.clear(screen.getByTestId("name"));
+		await user.tab();
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+
+		const { data } = store.domesticHotWater.pipework.primaryPipework;
+	
+		expect(data[0]!.data.name).toBe("Primary pipework");
+	});
+
+	test("default name is used if name added is whitespace", async () => {
+
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+
+		
+		expect(store.domesticHotWater.pipework.primaryPipework.data[0]!.data.name).toBe("Primary pipework");
+
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "0" },
+			},
+		});
+
+		await user.clear(screen.getByTestId("name"));
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.tab();
+		
+		expect(store.domesticHotWater.pipework.primaryPipework.data[0]!.data.name).toBe("Primary pipework");
+	});
+
 	test('save progress button navigates user to the pipework overview page', async () => {
 		addHotWaterCylinder();
 		await renderSuspended(PipeworkForm, {
