@@ -454,8 +454,8 @@ describe('dwelling fabric mapper', () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceCeilings: { data: [ceiling], complete: true, },
-					dwellingSpaceRoofs: { data: [roof], complete: true, }
+					dwellingSpaceCeilings: { data: [{data: ceiling}], complete: true, },
+					dwellingSpaceRoofs: { data: [{data: roof}], complete: true, }
 				}
 			}
 		});

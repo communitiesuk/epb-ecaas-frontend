@@ -175,30 +175,30 @@ describe('Domestic hot water summary', () => {
 			}
 		};
 
-const electricShower: EcaasForm<ElectricShowerData> = {
-	data: {
-		id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e',
-		name: 'Electric shower 1',
-		ratedPower: 10
-	}
-};
+		const electricShower: EcaasForm<ElectricShowerData> = {
+			data: {
+				id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e',
+				name: 'Electric shower 1',
+				ratedPower: 10
+			}
+		};
 
-const bathData: EcaasForm<BathData> = {
-	data: {
-		id: 'd3883380-885b-48fd-9425-9f9fac7587fb',
-		name: 'Bath 1',
-		size: 170,
-		flowRate: 10
-	}
-};
+		const bathData: EcaasForm<BathData> = {
+			data: {
+				id: 'd3883380-885b-48fd-9425-9f9fac7587fb',
+				name: 'Bath 1',
+				size: 170,
+				flowRate: 10
+			}
+		};
 
-const otherOutletsData: EcaasForm<OtherHotWaterOutletData> = {
-	data: {
-		id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e',
-		name: "Basin tap 1",
-		flowRate: 10
-	}
-};
+		const otherOutletsData: EcaasForm<OtherHotWaterOutletData> = {
+			data: {
+				id: '0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e',
+				name: "Basin tap 1",
+				flowRate: 10
+			}
+		};
 
 		it('should contain the correct tabs for hot water outlets', async () => {
 			await renderSuspended(Summary);

@@ -209,7 +209,7 @@ const roofData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpac
 const ceilingSummary: SummarySection = {
 	id: 'dwellingSpaceCeilings',
 	label: 'Ceiling',
-	data: ceilingData.map(x => {
+	data: ceilingData.map(({ data: x }) => {
 		return {
 			"Type of ceiling": displayAdjacentSpaceType(x.type, 'Ceiling'),
 			"Name": x.name,
@@ -227,7 +227,7 @@ const ceilingSummary: SummarySection = {
 const roofSummary: SummarySection = {
 	id: 'dwellingSpaceRoofs',
 	label: 'Roof',
-	data: roofData.map(x => {
+	data: roofData.map(({ data: x}) => {
 		return {
 			"Name": x.name,
 			"Type of roof": displayCamelToSentenceCase(x.typeOfRoof),

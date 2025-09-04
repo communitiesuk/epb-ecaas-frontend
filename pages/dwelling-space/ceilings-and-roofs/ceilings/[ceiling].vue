@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { zeroPitchOptions } from '#imports';
+import { getUrl, zeroPitchOptions } from '#imports';
 
 const title = "Ceiling";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const route = useRoute();
 
-const ceilingData = useItemToEdit('ceiling', store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings?.data);
-const model: Ref<CeilingData> = ref(ceilingData!);
+const ceilingData = useItemToEdit('ceiling', store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
+const model: Ref<CeilingData | undefined> = ref(ceilingData?.data);
 
 const typeOfCeilingOptions = adjacentSpaceTypeOptions('Ceiling');
 
 const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceCeilings} = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		const { dwellingSpaceCeilings } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		const storeData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data;
+
+		const index = route.params.ceiling === 'create' ? storeData.length - 1 : Number(route.params.ceiling);
 
 		const commonFields = {
 			name: fields.name,
@@ -23,30 +26,76 @@ const saveForm = (fields: CeilingData) => {
 			pitch: fields.pitchOption === '0' ? 0 : fields.pitch,
 		};
 
-		let ceiling: CeilingData;
+		let ceiling: EcaasForm<CeilingData>;
 
 		if (fields.type === 'unheatedSpace') {
 			ceiling = {
-				...commonFields,
-				type: fields.type,
-				uValue: fields.uValue,
-				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
+				data: {
+					...commonFields,
+					type: fields.type,
+					uValue: fields.uValue,
+					thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
+				},
+				complete: true
 			};
 		} else if (fields.type === 'heatedSpace') {
 			ceiling = {
-				...commonFields,
-				type: fields.type,
+				data: {
+					...commonFields,
+					type: fields.type,
+				},
+				complete: true
 			};
 		} else {
 			throw new Error("Invalid ceiling type");
 		}
 
+		dwellingSpaceCeilings.data[index] = ceiling;
 		dwellingSpaceCeilings.complete = false;
-		saveToList(ceiling, dwellingSpaceCeilings);
 	});
 
 	navigateTo("/dwelling-space/ceilings-and-roofs");
 };
+
+watch(model, async (newData: CeilingData | undefined, initialData: CeilingData | undefined) => {
+	const storeData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data;
+
+	if (initialData === undefined || newData === undefined) {
+		return;
+	}
+
+	const defaultName = 'Ceiling';
+	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
+
+	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
+			Object.values(newData).some(x => x !== undefined);
+
+	if (route.params.ceiling === 'create' && isFirstEdit) {
+		store.$patch(state => {
+			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data.push({
+				data: {
+					...newData,
+					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+				}
+			});
+		});
+
+		return;
+	}
+
+	store.$patch((state) => {
+		const index = route.params.ceiling === 'create' ? storeData.length - 1 : Number(route.params.ceiling);
+
+		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[index] = {
+			data: {
+				...newData,
+				name: newData.name?.trim() || defaultName
+			}
+		};
+
+		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.complete = false;
+	});
+});
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
@@ -77,7 +126,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="type"
 			validation="required"
 		/>
-		<template v-if="!!model.type">
+		<template v-if="!!model?.type">
 			<FormKit
 				id="name"
 				type="govInputText"
@@ -87,7 +136,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 				validation="required"
 			/>
 			<FieldsPitch
-				:pitch-option="model.pitchOption"
+				:pitch-option="model?.pitchOption"
 				:options="zeroPitchOptions()"
 			/>
 			<FormKit
@@ -108,7 +157,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
 		<FormKit
-			v-if="model.type === 'unheatedSpace'"
+			v-if="model?.type === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
@@ -129,9 +178,9 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('dwellingSpaceCeilingsAndRoofs')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

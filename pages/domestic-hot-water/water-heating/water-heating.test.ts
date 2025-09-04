@@ -146,7 +146,7 @@ describe('water heating (hot water cylinder)', () => {
 
 		await renderSuspended(WaterHeating);
 		await user.click(screen.getByTestId("waterHeaterType_hotWaterCylinder"));
-		await user.type(screen.getByTestId("name"), "Cylinder 1");
+		await user.type(screen.getByTestId("name"), cylinder.name);
 		await user.click(
 			screen.getByTestId("heatSource_test-heat-pump")
 		);
@@ -154,7 +154,7 @@ describe('water heating (hot water cylinder)', () => {
 	
 		expect(
 			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.name
-		).toBe("Cylinder 1");
+		).toBe("Hot water cylinder 1");
 		expect(
 			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.heatSource
 		).toBe("test-heat-pump");
@@ -162,7 +162,62 @@ describe('water heating (hot water cylinder)', () => {
 			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.id
 		).toBe("test-id");
 	});
+	test("partial form data automatically saved to store with default name if no name has been added", async () => {
 
+		await renderSuspended(WaterHeating);
+		
+		await user.click(screen.getByTestId('waterHeaterType_hotWaterCylinder'));
+		await user.tab();
+		const { data } = store.domesticHotWater.waterHeating.hotWaterCylinder;
+	
+		expect(data[0]!.name).toBe("Hot water cylinder");
+
+	});
+
+	test("default name is used if name is added then deleted", async () => {
+
+		store.$patch({
+			domesticHotWater: {
+				waterHeating: {
+					hotWaterCylinder: {
+						data: [cylinder],
+						complete: true
+					}
+				}
+			}
+		});
+		await renderSuspended(WaterHeating);
+		
+		await user.type(screen.getByTestId('name'), cylinder.name);
+		await user.clear(screen.getByTestId("name"));
+		await user.tab();
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+
+		const { data } = store.domesticHotWater.waterHeating.hotWaterCylinder;
+	
+		expect(data[0]!.name).toBe("Hot water cylinder");
+	});
+
+	test("default name is used if name added is whitespace", async () => {
+	
+		await renderSuspended(WaterHeating);
+	
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+	
+			
+		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.name).toBe("Hot water cylinder");
+	
+		await renderSuspended(WaterHeating);
+	
+		await user.clear(screen.getByTestId("name"));
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.tab();
+			
+		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.name).toBe("Hot water cylinder");
+
+	});
+	
 	test('save progress button navigates user to the pipework overview page', async () => {
 		await renderSuspended(WaterHeating);
 		await populateValidForm();

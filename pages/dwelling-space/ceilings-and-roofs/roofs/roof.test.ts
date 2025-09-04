@@ -13,19 +13,21 @@ describe('roof', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const roof: RoofData = {
-		name: "Roof 1",
-		typeOfRoof: 'flat',
-		pitchOption: '0',
-		pitch: 0,
-		length: 1,
-		width: 1,
-		elevationalHeightOfElement: 2,
-		surfaceArea: 1,
-		solarAbsorptionCoefficient: 0.5,
-		uValue: 1,
-		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I
+	const roof: EcaasForm<RoofData> = {
+		data: {
+			name: "Roof 1",
+			typeOfRoof: 'flat',
+			pitchOption: '0',
+			pitch: 0,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			solarAbsorptionCoefficient: 0.5,
+			uValue: 1,
+			kappaValue: 50000,
+			massDistributionClass: MassDistributionClass.I
+		}
 	};
 
 	afterEach(() => {
@@ -47,14 +49,18 @@ describe('roof', () => {
 	};
 
 	test('data is saved to store state when form is valid', async () => {
-		await renderSuspended(Roof);
+		await renderSuspended(Roof, {
+			route: {
+				params: { roof: "create" },
+			},
+		});
 
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const  { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
-		expect(dwellingSpaceRoofs?.data[0]).toEqual(roof);
+		expect(dwellingSpaceRoofs.data[0]).toEqual({...roof, complete: true});
 	});
 
 	test('form is prepopulated when data exists in state', async () => {
@@ -90,7 +96,7 @@ describe('roof', () => {
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(Roof);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('typeOfRoof_error'))).toBeDefined();
@@ -104,7 +110,7 @@ describe('roof', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(Roof);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('roofErrorSummary'))).toBeDefined();
 	});
@@ -112,7 +118,7 @@ describe('roof', () => {
 	it('requires pitch option when type of roof is flat', async () => {
 		await renderSuspended(Roof);
 		await user.click(screen.getByTestId('typeOfRoof_flat'));
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('pitchOption_error'))).toBeDefined();
 	});
@@ -122,29 +128,33 @@ describe('roof', () => {
 
 		await user.click(screen.getByTestId('typeOfRoof_flat'));
 		await user.click(screen.getByTestId('pitchOption_custom'));
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
 	});
 
 	it('saves custom pitch when custom pitch option is selected', async () => {
-		await renderSuspended(Roof);
+		await renderSuspended(Roof, {
+			route: {
+				params: { roof: "create" },
+			},
+		});
 
 		await populateValidForm();
 		await user.click(screen.getByTestId('pitchOption_custom'));
 		await user.type(screen.getByTestId('pitch'), '90');
 		await user.tab();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
-		expect(dwellingSpaceRoofs?.data[0]?.pitch).toEqual(90);
+		expect(dwellingSpaceRoofs.data[0]!.data.pitch).toEqual(90);
 	});
 
 	it('requires additional fields when type of roof is pitched', async () => {
 		await renderSuspended(Roof);
 		await user.click(screen.getByTestId('typeOfRoof_pitchedInsulatedAtRoof'));
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
 		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
@@ -154,26 +164,39 @@ describe('roof', () => {
 	});
 
 	it('saves additional fields when type of roof is pitched', async () => {
-		await renderSuspended(Roof);
+		await renderSuspended(Roof, {
+			route: {
+				params: { roof: "create" },
+			},
+		});
 
 		await populateValidForm();
 		await user.click(screen.getByTestId('typeOfRoof_pitchedInsulatedAtRoof'));
 		await user.type(screen.getByTestId('pitch'), '90');
 		await user.type(screen.getByTestId('orientation'), '90');
 		await user.tab();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
-		expect(dwellingSpaceRoofs?.data[0]?.pitch).toEqual(90);
-		expect(dwellingSpaceRoofs?.data[0]?.orientation).toEqual(90);
+		expect(dwellingSpaceRoofs.data[0]!.data.pitch).toEqual(90);
+		expect(dwellingSpaceRoofs.data[0]!.data.orientation).toEqual(90);
 	});
 
 	it('navigates to ceilings and roofs page when valid form is completed', async () => {
 		await renderSuspended(Roof);
 	
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/ceilings-and-roofs');
+	});
+
+	it('navigates to ceilings and roofs page when save progress button is clicked', async () => {
+		await renderSuspended(Roof);
+
+		await user.type(screen.getByTestId("name"), "Test roof");
+		await user.click(screen.getByTestId("saveProgress"));
 
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/ceilings-and-roofs');
 	});

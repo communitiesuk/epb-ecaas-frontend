@@ -22,48 +22,62 @@ describe('ceilings and roofs', () => {
 		store.$reset();
 	});
 
-	const ceiling1: CeilingData = {
-		name: "Ceiling 1",
-		type: AdjacentSpaceType.heatedSpace,
-		surfaceArea: 5,
-		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
-		pitchOption: 'custom',
-		pitch: 180
+	const ceiling1: EcaasForm<CeilingData> = {
+		data: {
+			name: "Ceiling 1",
+			type: AdjacentSpaceType.heatedSpace,
+			surfaceArea: 5,
+			kappaValue: 100,
+			massDistributionClass: MassDistributionClass.I,
+			pitchOption: 'custom',
+			pitch: 180
+		}
 	};
 
-	const ceiling2: CeilingData = {
-		...ceiling1,
-		name: "Ceiling 2",
+	const ceiling2: EcaasForm<CeilingData> = {
+		data: {
+			...ceiling1.data,
+			name: "Ceiling 2",
+		}};
+
+	const ceiling3: EcaasForm<CeilingData> = {
+		data: {
+			...ceiling1.data,
+			name
+			:
+		"Ceiling 3",
+		}
 	};
 
-	const ceiling3: CeilingData = {
-		...ceiling1,
-		name: "Ceiling 3",
-	};
-	const roof1: RoofData = {
-		name: "Roof 1",
-		typeOfRoof: 'flat',
-		pitchOption: '0',
-		pitch: 0,
-		length: 1,
-		width: 1,
-		elevationalHeightOfElement: 2,
-		surfaceArea: 1,
-		solarAbsorptionCoefficient: 0.5,
-		uValue: 1,
-		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I
+	const roof1: EcaasForm<RoofData> = {
+		data: {
+			name: "Roof 1",
+			typeOfRoof: 'flat',
+			pitchOption: '0',
+			pitch: 0,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			solarAbsorptionCoefficient: 0.5,
+			uValue: 1,
+			kappaValue: 50000,
+			massDistributionClass: MassDistributionClass.I
+		}
 	};
 
-	const roof2: RoofData = {
-		...roof1,
-		name: "Roof 2",
+	const roof2: EcaasForm<RoofData> = {
+		data: {
+			...roof1.data,
+			name: "Roof 2",
+		}
 	};
 
-	const roof3: RoofData = {
-		...roof1,
-		name: "Roof 3",
+	const roof3: EcaasForm<RoofData> = {
+		data: {
+			...roof1.data,
+			name: "Roof 3",
+		}
 	};
 
 	describe('ceilings', () => {
@@ -216,8 +230,8 @@ describe('ceilings and roofs', () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceCeilings: { data: [ceiling1] },
-						dwellingSpaceRoofs: { data: [roof1] },
+						dwellingSpaceCeilings: { data: [{...ceiling1, complete: true}] },
+						dwellingSpaceRoofs: { data: [{...roof1, complete: true}] },
 					}
 				}
 			});
@@ -305,12 +319,28 @@ describe('ceilings and roofs', () => {
 				await renderSuspended(ceilingAndRoofItem?.form, {
 					route: { params: { [ceilingAndRoofItem!.params]: "0" } }
 				});
-				await user.click(screen.getByRole("button", { name: "Save and continue" }));
+				await user.click(screen.getByTestId("saveAndComplete"));
 	
 				expect(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete).toBe(false);
 				await renderSuspended(CeilingsAndRoofs);
 				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			}
+		});
+
+		it('disables the mark section as complete button when item is incomplete', async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceCeilings: {
+							data: [{data: {name: "Ceiling", surfaceArea: 20}, complete: false}]
+						},
+					}
+				}
+			});
+
+			await renderSuspended(CeilingsAndRoofs);
+			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+			expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
 		});
 	});
 });

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { zeroPitchOptions } from '#imports';
+import { getUrl, zeroPitchOptions } from '#imports';
 
 const title = "Roof";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const route = useRoute();
 
 const roofData = useItemToEdit('roof', store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
-const model: Ref<RoofData> = ref(roofData!);
+const model: Ref<RoofData | undefined> = ref(roofData?.data);
 
 const roofTypeOptions: Record<Exclude<RoofType, 'unheatedPitched'>, string> = {
 	flat: 'Flat roof',
@@ -16,29 +16,76 @@ const roofTypeOptions: Record<Exclude<RoofType, 'unheatedPitched'>, string> = {
 
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceRoofs} = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		const storeData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data;
 
-		const roof: RoofData = {
-			name: fields.name,
-			typeOfRoof: fields.typeOfRoof,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '0' ? 0 : fields.pitch,
-			orientation: fields.orientation,
-			length: fields.length,
-			width: fields.width,
-			elevationalHeightOfElement: fields.elevationalHeightOfElement,
-			surfaceArea: fields.surfaceArea,
-			solarAbsorptionCoefficient: fields.solarAbsorptionCoefficient,
-			uValue: fields.uValue,
-			kappaValue: fields.kappaValue,
-			massDistributionClass: fields.massDistributionClass
+		const index = route.params.roof === 'create' ? storeData.length - 1 : Number(route.params.roof);
+
+		const roof: EcaasForm<RoofData> = {
+			data: {
+				name: fields.name,
+				typeOfRoof: fields.typeOfRoof,
+				pitchOption: fields.pitchOption,
+				pitch: fields.pitchOption === '0' ? 0 : fields.pitch,
+				orientation: fields.orientation,
+				length: fields.length,
+				width: fields.width,
+				elevationalHeightOfElement: fields.elevationalHeightOfElement,
+				surfaceArea: fields.surfaceArea,
+				solarAbsorptionCoefficient: fields.solarAbsorptionCoefficient,
+				uValue: fields.uValue,
+				kappaValue: fields.kappaValue,
+				massDistributionClass: fields.massDistributionClass
+			},
+			complete: true
 		};
+
+		dwellingSpaceRoofs.data[index] = roof;
 		dwellingSpaceRoofs.complete = false;
-		saveToList(roof, dwellingSpaceRoofs);
 	});
 
 	navigateTo("/dwelling-space/ceilings-and-roofs");
 };
+
+watch(model, async (newData: RoofData | undefined, initialData: RoofData | undefined) => {
+	const storeData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data;
+
+	if (initialData === undefined || newData === undefined) {
+		return;
+	}
+
+	const defaultName = 'Roof';
+	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
+
+	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
+			Object.values(newData).some(x => x !== undefined);
+
+	if (route.params.roof === 'create' && isFirstEdit) {
+		store.$patch(state => {
+			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.push({
+				data: {
+					...newData,
+					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+				}
+			});
+		});
+
+		return;
+	}
+
+	store.$patch((state) => {
+		const index = route.params.roof === 'create' ? storeData.length - 1 : Number(route.params.roof);
+
+		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[index] = {
+			data: {
+				...newData,
+				name: newData.name?.trim() || defaultName
+			}
+		};
+
+		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.complete = false;
+	});
+});
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
@@ -73,24 +120,24 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			name="typeOfRoof"
 			validation="required"
 		/>
-		<GovInset v-if="model.typeOfRoof === 'pitchedInsulatedAtRoof' || model.typeOfRoof === 'pitchedInsulatedAtCeiling'">
+		<GovInset v-if="model?.typeOfRoof === 'pitchedInsulatedAtRoof' || model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
 			If the pitched roof has multiple orientations (for example, a gable or hip roof), each orientation must be added as a separate roof element.
 		</GovInset>
 		<FieldsPitch
-			v-if="model.typeOfRoof === 'flat'"
+			v-if="model?.typeOfRoof === 'flat'"
 			label="Pitch of roof"
 			help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
-			:pitch-option="model.pitchOption"
+			:pitch-option="model?.pitchOption"
 			:options="zeroPitchOptions()"
 		/>
 
-		<template v-if="model.typeOfRoof === 'pitchedInsulatedAtRoof' || model.typeOfRoof === 'pitchedInsulatedAtCeiling'">
+		<template v-if="model?.typeOfRoof === 'pitchedInsulatedAtRoof' || model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
 			<FieldsPitch
 				label="Pitch of roof"
 				help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
 			/>
 			<FieldsOrientation label="Orientation of roof" />
-			<div v-if="!!model.orientation" class="govuk-error-summary">
+			<div v-if="!!model?.orientation" class="govuk-error-summary">
 				<div role="alert" class="govuk-hint govuk-!-margin-bottom-0">
 					If the pitched roof has multiple orientations (e.g., a gable or hip roof), each orientation must be modelled as a separate roof element.
 				</div>
@@ -134,7 +181,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			label="Solar absorption coefficient of roof"
 		/>
 
-		<template v-if="model.typeOfRoof === 'flat' || model.typeOfRoof === 'pitchedInsulatedAtRoof'">
+		<template v-if="model?.typeOfRoof === 'flat' || model?.typeOfRoof === 'pitchedInsulatedAtRoof'">
 			<FieldsUValue
 				label="U-value of roof"
 				help="This is the steady thermal transmittance of the roof and ceiling"
@@ -147,7 +194,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			<FieldsMassDistributionClass help="This is the distribution of mass in the roof and ceiling" />
 		</template>
 
-		<template v-if="model.typeOfRoof === 'pitchedInsulatedAtCeiling'">
+		<template v-if="model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
 			<FieldsUValue
 				label="U-value of roof"
 				help="This is the steady thermal transmittance of the entire roof, including the unheated loft space"
@@ -161,9 +208,9 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		</template>
 		
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('dwellingSpaceCeilingsAndRoofs')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

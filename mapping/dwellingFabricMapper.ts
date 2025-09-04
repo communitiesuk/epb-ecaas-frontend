@@ -290,7 +290,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 	const ceilingSuffix = 'ceiling';
 	const roofSuffix = 'roof';
 
-	const ceilingData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceCeilings.map(x => {
+	const ceilingData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceCeilings.map(({ data: x }) => {
 		const commonFields = {
 			pitch: extractPitch(x),
 			area: x.surfaceArea,
@@ -319,7 +319,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 		return {[nameWithSuffix]: ceiling};
 	});
 
-	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map(x => {
+	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map(({ data: x }) => {
 		const nameWithSuffix = suffixName(x.name, roofSuffix);
 
 		return {[nameWithSuffix]: {

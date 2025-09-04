@@ -1576,16 +1576,18 @@ describe("FHS input mapper", () => {
 			dwellingSpaceCeilingsAndRoofs: {
 				dwellingSpaceCeilings: {
 					...baseForm,
-					data: [
-						{
+					data: [{
+						data: {
 							name: "ceiling to heated space",
 							type: AdjacentSpaceType.heatedSpace,
 							surfaceArea: 16,
 							kappaValue: 75000,
 							massDistributionClass: MassDistributionClass.I,
 							pitchOption: '0'
-						},
-						{
+						}
+					},
+					{
+						data: {
 							name: "ceiling to unheated space",
 							type: AdjacentSpaceType.unheatedSpace,
 							surfaceArea: 20,
@@ -1596,23 +1598,26 @@ describe("FHS input mapper", () => {
 							thermalResistanceOfAdjacentUnheatedSpace: 3.4,
 							uValue: 2.2
 						}
+					}
 					]
 				},
 				dwellingSpaceRoofs: {
 					...baseForm,
 					data: [{
-						name: "roof 1",
-						typeOfRoof: "flat",
-						pitch: 20,
-						orientation: 180,
-						length: 2.5,
-						width: 10,
-						elevationalHeightOfElement: 0,
-						surfaceArea: 25,
-						solarAbsorptionCoefficient: 0.63,
-						uValue: 0.1,
-						kappaValue: 19300,
-						massDistributionClass: MassDistributionClass.I
+						data: {
+							name: "roof 1",
+							typeOfRoof: "flat",
+							pitch: 20,
+							orientation: 180,
+							length: 2.5,
+							width: 10,
+							elevationalHeightOfElement: 0,
+							surfaceArea: 25,
+							solarAbsorptionCoefficient: 0.63,
+							uValue: 0.1,
+							kappaValue: 19300,
+							massDistributionClass: MassDistributionClass.I
+						}
 					}]
 				}
 			},

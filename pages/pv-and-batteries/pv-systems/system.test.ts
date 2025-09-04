@@ -163,7 +163,7 @@ describe("PV system", () => {
 		it('creates a new pv system automatically with default name after other data is entered', async () => {
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { pump: 'create' }
+					params: { system: 'create' }
 				}
 			});
 

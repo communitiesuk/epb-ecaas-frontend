@@ -24,7 +24,8 @@ describe('Secondary pipework form', () => {
 			length: 3,
 			location: WaterPipeworkLocation.internal,
 			internalDiameter: 9
-		}
+		}, 
+		complete: true
 	};
 	const pipework2: EcaasForm<SecondaryPipeworkData> = {
 		data: {
@@ -32,7 +33,9 @@ describe('Secondary pipework form', () => {
 			length: 1,
 			location: WaterPipeworkLocation.internal,
 			internalDiameter: 4
-		}
+		},
+		complete: true
+
 	};
 	test('data is saved to store state when form is valid', async () => {
 
@@ -128,7 +131,7 @@ describe('Secondary pipework form', () => {
 		expect(data[0]!.data.location).toBe("internal");
 	});
 
-		test("default name is used if name is added then deleted", async () => {
+	test("default name is used if name is added then deleted", async () => {
 		await renderSuspended(PipeworkForm, {
 			route: {
 				params: { pipe: "create" },
@@ -144,32 +147,32 @@ describe('Secondary pipework form', () => {
 		expect(data[0]!.data.name).toBe("Secondary pipework");
 	});
 
-		test("default name is used if name added is whitespace", async () => {
+	test("default name is used if name added is whitespace", async () => {
 	
-			await renderSuspended(PipeworkForm, {
-				route: {
-					params: { pipe: "create" },
-				},
-			});
-	
-			await user.type(screen.getByTestId('name'), ' ');
-			await user.click(screen.getByRole("button", { name: "Save progress" }));
-	
-			
-			expect(store.domesticHotWater.pipework.secondaryPipework.data[0]!.data.name).toBe("Secondary pipework");
-	
-			await renderSuspended(PipeworkForm, {
-				route: {
-					params: { pipe: "0" },
-				},
-			});
-	
-			await user.clear(screen.getByTestId("name"));
-			await user.type(screen.getByTestId('name'), ' ');
-			await user.tab()
-			
-			expect(store.domesticHotWater.pipework.secondaryPipework.data[0]!.data.name).toBe("Secondary pipework");
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "create" },
+			},
 		});
+	
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+	
+			
+		expect(store.domesticHotWater.pipework.secondaryPipework.data[0]!.data.name).toBe("Secondary pipework");
+	
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "0" },
+			},
+		});
+	
+		await user.clear(screen.getByTestId("name"));
+		await user.type(screen.getByTestId('name'), ' ');
+		await user.tab();
+			
+		expect(store.domesticHotWater.pipework.secondaryPipework.data[0]!.data.name).toBe("Secondary pipework");
+	});
 	
 	test('save progress button navigates user to the pipework overview page', async () => {
 

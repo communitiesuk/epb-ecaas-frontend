@@ -20,6 +20,7 @@ const waterHeaterTypeOptions = {
 
 type WaterHeaterType = keyof typeof waterHeaterTypeOptions | null;
 
+
 const model: Ref<HotWaterCylinderData & { waterHeaterType: WaterHeaterType[] }> = ref({
 	...hotWaterCylinderData!,
 	waterHeaterType: hotWaterCylinderData ? ['hotWaterCylinder'] : []
@@ -27,20 +28,17 @@ const model: Ref<HotWaterCylinderData & { waterHeaterType: WaterHeaterType[] }> 
 
 watch(model, async (newData: HotWaterCylinderData, initialData: HotWaterCylinderData) => {
 
-	if (model.value.waterHeaterType === undefined && initialData.name === undefined) {
-		store.$patch((state) => {
-			state.domesticHotWater.waterHeating.hotWaterCylinder.data = [];
-		});
-		store.domesticHotWater.waterHeating.hotWaterCylinder.complete = false;
-	}
-	else if (initialData !== newData) {
-		store.$patch((state) => {
-			state.domesticHotWater.waterHeating.hotWaterCylinder.data[0] = {
-				...newData,
-				id: store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.id ?? uuidv4()
-			};
-		});
-		store.domesticHotWater.waterHeating.hotWaterCylinder.complete = false;
+	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
+		if (initialData[key]  !== newData[key]) {
+			store.$patch((state) => {
+				state.domesticHotWater.waterHeating.hotWaterCylinder.data[0] = {
+					...newData,
+					id: store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.id ?? uuidv4(),
+					name: newData.name?.trim() || "Hot water cylinder"
+				};
+			});
+			store.domesticHotWater.waterHeating.hotWaterCylinder.complete = false;
+		}
 	}
 });
 
