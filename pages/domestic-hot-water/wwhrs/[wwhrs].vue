@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getUrl } from '#imports';
-import { WwhrsType } from '~/schema/api-schema.types';
+import { WwhrsType } from '~/schema/aliases';
 import { isInteger } from "~/utils/validation";
 
 const title = "Waste water heat recovery system";

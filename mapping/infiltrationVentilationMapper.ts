@@ -1,26 +1,25 @@
 import { arrayIncludes, objectEntries, objectFromEntries } from 'ts-extras';
 import { DuctShape, SupplyAirFlowRateControlType, SupplyAirTemperatureControlType } from "~/schema/api-schema.types";
-import type {CombustionApplianceType, SchemaCombustionAppliance, SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks} from "~/schema/api-schema.types";
+import type {CombustionApplianceType, SchemaCombustionAppliance, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks} from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import { defaultElectricityEnergySupplyName } from './common';
 import { asCubicMetresPerHour } from '~/utils/units/flowRate';
+import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation } from '~/schema/aliases';
 import { VentType } from '~/schema/aliases';
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilationPossible } = mapVentilationData(state);
 	const mechanicalVentilation = mapMechanicalVentilationData(state);
 
-	const infiltrationVentiliation: Omit<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
-		Cowls: {},
-		PDUs: {},
+	const infiltrationVentilation: Omit<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
 		Leaks: {
 			ventilation_zone_height: dwellingHeight,
 			env_area: dwellingEnvelopeArea,
 			...mapAirPermeabilityData(state),
 		},
 		CombustionAppliances: mapCombustionAppliancesData(state),
-		cross_vent_factor: crossVentilationPossible,
+		cross_vent_possible: crossVentilationPossible,
 		ventilation_zone_base_height: dwellingElevationalLevelAtBase,
 		ach_max_static_calcs: 2, // suggested default
 		vent_opening_ratio_init: 1, // 1 is open
@@ -37,7 +36,7 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 	};
 
 	return {
-		InfiltrationVentilation: infiltrationVentiliation
+		InfiltrationVentilation: infiltrationVentilation
 	} as Pick<FhsInputSchema, 'InfiltrationVentilation'>;
 }
 

@@ -4,7 +4,7 @@ import { screen, within } from '@testing-library/vue';
 import Wwhrs from './index.vue';
 import WwhrsForm from './[wwhrs].vue';
 import type { WwhrsData } from "~/stores/ecaasStore.schema";
-import { WwhrsType } from "~/schema/api-schema.types";
+import { WwhrsType } from "~/schema/aliases";
 
 describe('wwhrs', () => {
 	const store = useEcaasStore();

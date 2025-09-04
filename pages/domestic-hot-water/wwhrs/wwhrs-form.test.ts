@@ -3,7 +3,7 @@ import type { WwhrsData } from '~/stores/ecaasStore.schema';
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';
-import { WwhrsType } from '~/schema/api-schema.types';
+import { WwhrsType } from '~/schema/aliases';
 
 describe('wwhrs form', () => {
 	const store = useEcaasStore();

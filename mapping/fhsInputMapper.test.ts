@@ -3,29 +3,31 @@ import { ajv } from "../schema/validator";
 import {
 	BatteryLocation,
 	BuildType,
-	ColdWaterSourceType,
 	DuctShape,
 	DuctType,
-	FloorType,
 	FuelType,
 	HeatingControlType,
+	HeatSourceWetHeatPumpType,
+	HeatSourceWetServiceWaterRegularType,
 	InverterType,
 	MassDistributionClass,
 	MVHRLocation,
-	OnSiteGenerationVentilationStrategy,
+	PhotovoltaicSystemType,
 	ShadingObjectType,
 	SpaceHeatControlType,
+	SpaceHeatSystemInstantElectricHeaterFHSType,
+	StorageTankType,
 	SupplyAirFlowRateControlType,
 	SupplyAirTemperatureControlType,
 	TerrainClass,
 	VentilationShieldClass,
-	VentType,
 	WaterPipeContentsType,
 	WaterPipeworkLocation,
-	WindowShadingObjectType,
+	WetEmitterRadiatorWet_emitter_type,
 	WindowTreatmentControl,
 	WindowTreatmentType
 } from "~/schema/api-schema.types";
+import { ColdWaterSourceType, FloorType, OnSiteGenerationVentilationStrategy, segment, VentType, WindowShadingObjectType } from "~/schema/aliases";
 import {  mapFhsInputData } from "./fhsInputMapper";
 import type {FhsInputSchema} from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
@@ -110,7 +112,7 @@ const expectedHouseInput: FhsInputSchema = {
 			{ number: 34, start360: 330, end360: 340 },
 			{ number: 35, start360: 340, end360: 350 },
 			{ number: 36, start360: 350, end360: 360 }
-		]
+		].map(segment)
 	},
 	General: {
 		build_type: BuildType.house,
@@ -137,7 +139,7 @@ const expectedHouseInput: FhsInputSchema = {
 					name: "some-heat-pump-name",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
-					type: "HeatSourceWet",
+					type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33
 				},
@@ -227,13 +229,13 @@ const expectedHouseInput: FhsInputSchema = {
 					c: 9,
 					frac_convective: 4,
 					n: 3,
-					wet_emitter_type: "radiator"
+					wet_emitter_type: WetEmitterRadiatorWet_emitter_type.radiator
 				},
 				{
 					c: 9,
 					frac_convective: 4,
 					n: 3,
-					wet_emitter_type: "radiator"
+					wet_emitter_type: WetEmitterRadiatorWet_emitter_type.radiator
 				}
 			],
 			temp_diff_emit_dsgn: 31,
@@ -406,7 +408,7 @@ const expectedFlatInput: FhsInputSchema = {
 			{ number: 34, start360: 330, end360: 340 },
 			{ number: 35, start360: 340, end360: 350 },
 			{ number: 36, start360: 350, end360: 360 }
-		]
+		].map(segment)
 	},
 	General: {
 		build_type: BuildType.flat,
@@ -485,14 +487,14 @@ const expectedFlatInput: FhsInputSchema = {
 					name: "heat pump 1 name",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
-					type: "HeatSourceWet",
+					type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33
 				},
 			},
 			daily_losses: 10,
 			volume: 80,
-			type: "StorageTank",
+			type: StorageTankType.StorageTank,
 			primary_pipework: [{
 				internal_diameter_mm: 15,
 				external_diameter_mm: 22,
@@ -510,7 +512,7 @@ const expectedFlatInput: FhsInputSchema = {
 				insulation_thickness_mm: 13,
 				insulation_thermal_conductivity: 0.040,
 				surface_reflectivity: false,
-				pipe_contents: WaterPipeContentsType.air,
+				pipe_contents: WaterPipeContentsType.glycol25,
 				location: WaterPipeworkLocation.external
 			}]
 		}
@@ -543,7 +545,8 @@ const expectedFlatInput: FhsInputSchema = {
 					insulation_thermal_conductivity: 1,
 					insulation_thickness_mm: 5,
 					length: 4,
-					reflective: true
+					reflective: true,
+					duct_perimeter_mm: null,
 				}]
 			},
 			"mvhr vent 2 name": {
@@ -603,7 +606,7 @@ const expectedFlatInput: FhsInputSchema = {
 			inverter_peak_power_dc: 3.8,
 			inverter_is_inside: true,
 			inverter_type: InverterType.optimised_inverter,
-			type: "PhotovoltaicSystem",
+			type: PhotovoltaicSystemType.PhotovoltaicSystem,
 			shading: []
 		}
 	},
@@ -619,13 +622,13 @@ const expectedFlatInput: FhsInputSchema = {
 		"instant elec heater 1": {
 			rated_power: 10,
 			frac_convective: 1,
-			type: "InstantElecHeater",
+			type: SpaceHeatSystemInstantElectricHeaterFHSType.InstantElecHeater,
 			EnergySupply: "mains elec"
 		},
 		"instant elec heater 2": {
 			rated_power: 13,
 			frac_convective: 0.8,
-			type: "InstantElecHeater",
+			type: SpaceHeatSystemInstantElectricHeaterFHSType.InstantElecHeater,
 			EnergySupply: "mains elec"
 		}
 	},
@@ -633,7 +636,7 @@ const expectedFlatInput: FhsInputSchema = {
 	HeatSourceWet: {
 		"heat pump 1 name": {
 			EnergySupply: defaultElectricityEnergySupplyName,
-			type: "HeatPump",
+			type: HeatSourceWetHeatPumpType.HeatPump,
 			product_reference: "HEATPUMP-SMALL"
 		},
 	},
@@ -1946,7 +1949,7 @@ describe("FHS input mapper", () => {
 							insulationThickness: 13,
 							thermalConductivity: 0.040,
 							surfaceReflectivity: false,
-							pipeContents: WaterPipeContentsType.air,
+							pipeContents: WaterPipeContentsType.glycol25,
 							hotWaterCylinder: "hw cylinder 1 id",
 							location: WaterPipeworkLocation.external
 						}

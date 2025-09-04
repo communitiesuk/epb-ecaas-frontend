@@ -1,4 +1,4 @@
-import { ColdWaterSourceType } from "~/schema/api-schema.types";
+import { ColdWaterSourceType } from "~/schema/aliases";
 import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaStorageTank, SchemaWaterPipework, SchemaWaterPipeworkSimple } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";

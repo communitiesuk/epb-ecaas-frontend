@@ -1,7 +1,7 @@
 import type { EmptyObject } from "type-fest";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
-import type {SchemaElectricBattery, SchemaWindowShadingObject} from "~/schema/api-schema.types";
+import {PhotovoltaicSystemType, type SchemaElectricBattery, type SchemaWindowShadingObject} from "~/schema/api-schema.types";
 import { defaultElectricityEnergySupplyName } from "./common";
 
 export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, 'OnSiteGeneration'>, {"ElectricBattery": SchemaElectricBattery} | EmptyObject] {
@@ -34,7 +34,7 @@ export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, 'OnS
 					peak_power: peakPower,
 					pitch,
 					shading: [] as SchemaWindowShadingObject[], // not included yet
-					type: "PhotovoltaicSystem",
+					type: PhotovoltaicSystemType.PhotovoltaicSystem,
 					ventilation_strategy: ventilationStrategy,
 				}
 			] as const;

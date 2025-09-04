@@ -1,7 +1,8 @@
-import { BatteryLocation, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
+import { BatteryLocation, InverterType, PhotovoltaicSystemType } from "~/schema/api-schema.types";
 import type {SchemaElectricBattery} from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { mapElectricBatteryData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
+import { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -75,7 +76,7 @@ describe("PV and electric batteries mapper", () => {
 					peak_power: 50,
 					pitch: 45,
 					shading: [],
-					type: "PhotovoltaicSystem",
+					type: PhotovoltaicSystemType.PhotovoltaicSystem,
 					ventilation_strategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
 					width: 4,
 				},
@@ -91,7 +92,7 @@ describe("PV and electric batteries mapper", () => {
 					peak_power: 100,
 					pitch: 45,
 					shading: [],
-					type: "PhotovoltaicSystem",
+					type: PhotovoltaicSystemType.PhotovoltaicSystem,
 					ventilation_strategy: OnSiteGenerationVentilationStrategy.rear_surface_free,
 					width: 15,
 				},

@@ -1,4 +1,5 @@
-import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation  } from "~/schema/api-schema.types";
+import { HeatSourceWetServiceWaterRegularType, ShowerInstantElectricType, ShowerMixerType, StorageTankType, WaterPipeContentsType, WaterPipeworkLocation  } from "~/schema/api-schema.types";
+import { ColdWaterSourceType } from "~/schema/aliases";
 import type {SchemaHotWaterDemand} from "~/schema/api-schema.types";
 import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
@@ -84,7 +85,7 @@ describe('domestic hot water mapper', () => {
 						[heatPumpName]: {
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
-							type: "HeatSourceWet",
+							type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33
@@ -92,7 +93,7 @@ describe('domestic hot water mapper', () => {
 					},
 					daily_losses: 3,
 					volume: 100,
-					type: "StorageTank",
+					type: StorageTankType.StorageTank
 				}
 			}
 		};
@@ -191,7 +192,7 @@ describe('domestic hot water mapper', () => {
 						[heatPumpName]: {
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
-							type: "HeatSourceWet",
+							type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33
@@ -199,7 +200,7 @@ describe('domestic hot water mapper', () => {
 					},
 					daily_losses: 3,
 					volume: 200,
-					type: "StorageTank",
+					type: StorageTankType.StorageTank,
 					primary_pipework: [
 						{
 							location: WaterPipeworkLocation.internal,
@@ -309,12 +310,12 @@ describe('domestic hot water mapper', () => {
 			HotWaterDemand: {
 				Shower: {
 					"shower1": {
-						type: "MixerShower",
+						type: ShowerMixerType.MixerShower,
 						flowrate: 3,
 						ColdWaterSource: ColdWaterSourceType.mains_water
 					},
 					"shower2": {
-						type: "InstantElecShower",
+						type: ShowerInstantElectricType.InstantElecShower,
 						rated_power: 10,
 						ColdWaterSource: ColdWaterSourceType.mains_water,
 						EnergySupply: "mains elec"

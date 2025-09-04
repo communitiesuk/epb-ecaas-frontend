@@ -7,7 +7,8 @@ import ExposedFloorForm from './exposed/[floor].vue';
 
 import {screen } from '@testing-library/vue';
 import {within} from '@testing-library/dom';
-import { FloorType, MassDistributionClass } from "~/schema/api-schema.types";
+import { MassDistributionClass } from "~/schema/api-schema.types";
+import { FloorType } from "~/schema/aliases";
 import type { Component } from "vue";
 
 describe('floors', () => {

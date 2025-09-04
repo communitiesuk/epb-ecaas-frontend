@@ -2,7 +2,8 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
 import GroundFloor from './[floor].vue';
-import { FloorType, MassDistributionClass, WindShieldLocation } from "~/schema/api-schema.types";
+import { MassDistributionClass, WindShieldLocation } from "~/schema/api-schema.types";
+import { FloorType } from "~/schema/aliases";
 import { centimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units/types";
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { centimetre, type Length } from '~/utils/units/length';
-import { FloorType, WindShieldLocation } from '~/schema/api-schema.types';
+import { BuildingElementGroundSlabEdgeInsulationFloor_type, BuildingElementGroundSlabNoEdgeInsulationFloor_type, BuildingElementGroundSuspendedFloorFloor_type, WindShieldLocation } from '~/schema/api-schema.types';
+import { FloorType } from '~/schema/aliases';
 import { unitValue } from '~/utils/units/types';
 
 const title = "Ground floor";
@@ -17,7 +18,7 @@ if (floorData?.typeOfGroundFloor === FloorType.Slab_edge_insulation && typeof fl
 const model: Ref<GroundFloorData> = ref(floorData!);
 
 // Removed heated and unheated basement options for summer
-type reducedGroundFloorOptions = FloorType.Slab_no_edge_insulation | FloorType.Slab_edge_insulation | FloorType.Suspended_floor;
+type reducedGroundFloorOptions = BuildingElementGroundSlabNoEdgeInsulationFloor_type | BuildingElementGroundSlabEdgeInsulationFloor_type | BuildingElementGroundSuspendedFloorFloor_type;
 const typeOfGroundFloorOptions: Record<reducedGroundFloorOptions, SnakeToSentenceCase<reducedGroundFloorOptions>> = {
 	[FloorType.Slab_no_edge_insulation]: 'Slab no edge insulation',
 	[FloorType.Slab_edge_insulation]: 'Slab edge insulation',

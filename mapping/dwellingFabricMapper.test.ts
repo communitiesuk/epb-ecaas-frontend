@@ -1,22 +1,26 @@
 import {
-	FloorType,
+	BuildingElementAdjacentConditionedSpaceType,
+	BuildingElementAdjacentUnconditionedSpace_SimpleType,
+	BuildingElementGroundType,
+	BuildingElementOpaqueFHSType,
+	BuildingElementTransparentFHSType,
 	MassDistributionClass,
-	WindowShadingObjectType,
 	WindowTreatmentType,
 	WindShieldLocation
 } from "~/schema/api-schema.types";
-import type {SchemaBuildingElement, SchemaEdgeInsulation, SchemaThermalBridgingDetails} from "~/schema/api-schema.types";
+import { FloorType, WindowShadingObjectType } from "~/schema/aliases";
+import type { SchemaBuildingElementAdjacentConditionedSpace, SchemaBuildingElementAdjacentUnconditionedSpaceSimple, SchemaBuildingElementGround, SchemaBuildingElementOpaqueFhs, SchemaBuildingElementTransparentFhs, SchemaEdgeInsulation, SchemaThermalBridgingDetails} from "~/schema/api-schema.types";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.schema";
 import { centimetre, millimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units/types";
 
-type BuildingElementGround = Extract<SchemaBuildingElement, { type: 'BuildingElementGround' }>;
-type BuildingElementOpaque = Extract<SchemaBuildingElement, { type: 'BuildingElementOpaque' }>;
-type BuildingElementAdjacentConditionedSpace = Extract<SchemaBuildingElement, { type: 'BuildingElementAdjacentConditionedSpace' }>;
-type BuildingElementAdjacentUnconditionedSpaceSimple = Extract<SchemaBuildingElement, { type: 'BuildingElementAdjacentUnconditionedSpace_Simple' }>;
-type BuildingElementTransparent = Extract<SchemaBuildingElement, { type: 'BuildingElementTransparent' }>;
+type BuildingElementGround = SchemaBuildingElementGround;
+type BuildingElementOpaque = SchemaBuildingElementOpaqueFhs;
+type BuildingElementAdjacentConditionedSpace = SchemaBuildingElementAdjacentConditionedSpace;
+type BuildingElementAdjacentUnconditionedSpaceSimple = SchemaBuildingElementAdjacentUnconditionedSpaceSimple;
+type BuildingElementTransparent = SchemaBuildingElementTransparentFhs;
 
 describe('dwelling fabric mapper', () => {
 	const store = useEcaasStore();
@@ -207,7 +211,7 @@ describe('dwelling fabric mapper', () => {
 		expect(fhsInputData.GroundFloorArea).toBe(groundFloorsTotalArea);
 
 		const expectedGroundFloor: BuildingElementGround = {
-			type: 'BuildingElementGround',
+			type: BuildingElementGroundType.BuildingElementGround,
 			area: groundFloor.surfaceArea,
 			total_area: groundFloor.surfaceArea,
 			pitch: groundFloor.pitch,
@@ -265,7 +269,7 @@ describe('dwelling fabric mapper', () => {
 		expect(groundFloorWithUnheatedBasementElement).toEqual(expectedGroundFloorWithUnheatedBasement);
 
 		const expectedInternalFloor: BuildingElementAdjacentUnconditionedSpaceSimple = {
-			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
+			type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 			area: internalFloor.surfaceAreaOfElement,
 			pitch: 180,
 			u_value: 0.01,
@@ -277,7 +281,7 @@ describe('dwelling fabric mapper', () => {
 		expect(internalFloorElement).toEqual(expectedInternalFloor);
 
 		const expectedExposedFloor: BuildingElementOpaque = {
-			type: 'BuildingElementOpaque',
+			type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 			area: exposedFloor.surfaceArea,
 			height: exposedFloor.length,
 			width: exposedFloor.width,
@@ -364,7 +368,7 @@ describe('dwelling fabric mapper', () => {
 		const wallToUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[wallToUnheatedSpace.name + wallSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
 
 		const expectedExternalWall: BuildingElementOpaque = {
-			type: 'BuildingElementOpaque',
+			type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 			pitch: externalWall.pitch!,
 			orientation360: externalWall.orientation,
 			height: externalWall.height,
@@ -381,7 +385,7 @@ describe('dwelling fabric mapper', () => {
 		expect(externalWallElement).toEqual(expectedExternalWall);
 
 		const expectedInternalWall: BuildingElementAdjacentConditionedSpace = {
-			type: 'BuildingElementAdjacentConditionedSpace',
+			type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 			pitch: internalWall.pitch!,
 			area: internalWall.surfaceAreaOfElement,
 			u_value: 0.01,
@@ -392,7 +396,7 @@ describe('dwelling fabric mapper', () => {
 		expect(internalWallElement).toEqual(expectedInternalWall);
 
 		const expectedPartyWall: BuildingElementAdjacentConditionedSpace = {
-			type: 'BuildingElementAdjacentConditionedSpace',
+			type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 			pitch: partyWall.pitch!,
 			area: partyWall.surfaceArea,
 			u_value: partyWall.uValue,
@@ -403,7 +407,7 @@ describe('dwelling fabric mapper', () => {
 		expect(partyWallElement).toEqual(expectedPartyWall);
 
 		const expectedWallToUnheatedSpace: BuildingElementAdjacentUnconditionedSpaceSimple = {
-			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
+			type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 			pitch: wallToUnheatedSpace.pitch!,
 			area: wallToUnheatedSpace.surfaceAreaOfElement,
 			u_value: wallToUnheatedSpace.uValue,
@@ -464,7 +468,7 @@ describe('dwelling fabric mapper', () => {
 		const roofElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roof.name + roofSuffix]! as BuildingElementOpaque;
 
 		const expectedCeiling: BuildingElementAdjacentUnconditionedSpaceSimple = {
-			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
+			type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 			pitch: extractPitch(ceiling),
 			area: ceiling.surfaceArea,
 			u_value: ceiling.uValue,
@@ -476,7 +480,7 @@ describe('dwelling fabric mapper', () => {
 		expect(ceilingElement).toEqual(expectedCeiling);
 
 		const expectedRoof: BuildingElementOpaque = {
-			type: 'BuildingElementOpaque',
+			type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 			pitch: roof.pitch,
 			orientation360: 0,
 			height: roof.length,
@@ -563,7 +567,7 @@ describe('dwelling fabric mapper', () => {
 		const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalUnglazedDoor.name + doorSuffix]! as BuildingElementOpaque;
 
 		const expectedInternalDoor: BuildingElementAdjacentUnconditionedSpaceSimple = {
-			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
+			type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 			pitch: internalDoor.pitch!,
 			area: internalDoor.surfaceArea,
 			u_value: internalDoor.uValue,
@@ -575,7 +579,7 @@ describe('dwelling fabric mapper', () => {
 		expect(internalDoorElement).toEqual(expectedInternalDoor);
 
 		const expectedExternalGlazedDoor: BuildingElementTransparent = {
-			type: 'BuildingElementTransparent',
+			type: BuildingElementTransparentFHSType.BuildingElementTransparent,
 			pitch: expectedInternalDoor.pitch,
 			orientation360: externalGlazedDoor.orientation,
 			height: externalGlazedDoor.height,
@@ -597,7 +601,7 @@ describe('dwelling fabric mapper', () => {
 		expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
 
 		const expectedUnglazedDoor: BuildingElementOpaque = {
-			type: 'BuildingElementOpaque',
+			type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 			pitch: externalUnglazedDoor.pitch!,
 			orientation360: externalUnglazedDoor.orientation,
 			height: externalUnglazedDoor.height,
@@ -660,7 +664,7 @@ describe('dwelling fabric mapper', () => {
 		const windowElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[window.name + windowSuffix]! as BuildingElementTransparent;
 
 		const expectedWindow: BuildingElementTransparent = {
-			type: 'BuildingElementTransparent',
+			type: BuildingElementTransparentFHSType.BuildingElementTransparent,
 			pitch: window.pitch!,
 			orientation360: window.orientation,
 			height: window.height,
@@ -731,12 +735,11 @@ describe('dwelling fabric mapper', () => {
 		// Assert
 		type ThermalBridging = { [key: string]: SchemaThermalBridgingDetails; };
 		type ThermalBridgeLinear = Extract<SchemaThermalBridgingDetails, { type: 'ThermalBridgeLinear' }>;
-		type ThermalBridgePoint = Extract<SchemaThermalBridgingDetails, { type: 'ThermalBridgePoint' }>;
 
 		const thermalBridging = fhsInputData.Zone[defaultZoneName]!.ThermalBridging as ThermalBridging;
 
-		const linearThermalBridgeElement = thermalBridging[linearThermalBridge.name + bridgeSuffix]! as ThermalBridgeLinear;
-		const pointThermalBridgeElement = thermalBridging[pointThermalBridge.name + bridgeSuffix]! as ThermalBridgePoint;
+		const linearThermalBridgeElement = thermalBridging[linearThermalBridge.name + bridgeSuffix]!;
+		const pointThermalBridgeElement = thermalBridging[pointThermalBridge.name + bridgeSuffix]!;
 
 		const expectedLinearThermalBridge: ThermalBridgeLinear = {
 			type: 'ThermalBridgeLinear',

@@ -12,7 +12,6 @@ const model: Ref<PrimaryPipeworkData | undefined > = ref(pipeworkData?.data);
 
 const pipeContentsOptions: Record<WaterPipeContentsType, string> = {
 	water: 'Water',
-	air: 'Air',
 	glycol25: 'Glycol 25',
 };
 

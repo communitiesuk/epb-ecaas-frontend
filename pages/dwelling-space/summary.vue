@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
 import { getUrl, getTabItems, type ArealHeatCapacityValue } from '#imports';
-import { FloorType } from '~/schema/api-schema.types';
+import { FloorType } from '~/schema/aliases';
 import { metresSquare, millimetresSquarePerMetre } from '~/utils/units/area';
 import { degrees } from '~/utils/units/angle';
 import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from '~/utils/units/thermalConductivity';
