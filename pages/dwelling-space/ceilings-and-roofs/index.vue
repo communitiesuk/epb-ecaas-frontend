@@ -67,6 +67,15 @@ function checkIsComplete(){
 	const ceilingsAndRoofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	return Object.values(ceilingsAndRoofs).every(ceilingAndRoof => ceilingAndRoof.complete);
 }
+
+function hasIncompleteEntries() {
+	const types = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+	return Object.values(types).some(
+		ceilingsAndRoofs => ceilingsAndRoofs.data.some(
+			ceilingsAndRoof => isEcaasForm(ceilingsAndRoof) ? !ceilingsAndRoof.complete : false));
+}
+
 </script>
 
 <template>
@@ -108,6 +117,6 @@ function checkIsComplete(){
 		>
 			Return to dwelling space
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 	</div>
 </template>

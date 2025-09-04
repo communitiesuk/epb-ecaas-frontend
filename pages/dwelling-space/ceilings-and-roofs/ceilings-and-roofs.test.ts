@@ -230,8 +230,8 @@ describe('ceilings and roofs', () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceCeilings: { data: [ceiling1] },
-						dwellingSpaceRoofs: { data: [roof1] },
+						dwellingSpaceCeilings: { data: [{...ceiling1, complete: true}] },
+						dwellingSpaceRoofs: { data: [{...roof1, complete: true}] },
 					}
 				}
 			});
