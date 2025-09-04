@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import formStatus from '~/constants/formStatus';
+
 const title = "Pipework";
 const page = usePage();
 const store = useEcaasStore();
@@ -67,6 +69,16 @@ function checkIsComplete(){
 	const pipes = store.domesticHotWater.pipework;
 	return Object.values(pipes).every(pipe => pipe.complete);
 }
+
+function hasIncompleteEntries(){
+
+	const pipeworkTypes = store.domesticHotWater.pipework;
+
+	return Object.values(pipeworkTypes).some(
+		pipeworks => pipeworks.data.some(
+			pipework => isEcaasForm(pipework) ? !pipework.complete : false));
+}
+
 </script>
 
 <template>
@@ -79,7 +91,10 @@ function checkIsComplete(){
 		id="primaryPipework"
 		title="Primary pipework"
 		:form-url="`${page?.url!}/primary`"
-		:items="store.domesticHotWater.pipework.primaryPipework.data.map(x => x.data.name)"
+		:items="store.domesticHotWater.pipework.primaryPipework.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('primaryPipework', index)"
 		@duplicate="(index: number) => handleDuplicate('primaryPipework', index)"
 	/>
@@ -87,7 +102,10 @@ function checkIsComplete(){
 		id="secondaryPipework"
 		title="Secondary pipework (hot water distribution)"
 		:form-url="`${page?.url!}/secondary`"
-		:items="store.domesticHotWater.pipework.secondaryPipework.data.map(x => x.data?.name)"
+		:items="store.domesticHotWater.pipework.secondaryPipework.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('secondaryPipework', index)"
 		@duplicate="(index: number) => handleDuplicate('secondaryPipework', index)"
 	/>
@@ -98,6 +116,6 @@ function checkIsComplete(){
 		>
 			Return to domestic hot water
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()"  @complete="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 	</div>
 </template>
