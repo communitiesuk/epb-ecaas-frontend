@@ -13,21 +13,24 @@ describe('ceiling', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const internalFloor: CeilingData = {
-		type: AdjacentSpaceType.heatedSpace,
-		name: "Ceiling 1",
-		surfaceArea: 5,
-		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
-		pitchOption: '0',
-		pitch: 0
+	const internalFloor: EcaasForm<CeilingData> = {
+		data: {
+			type: AdjacentSpaceType.heatedSpace,
+			name: "Ceiling 1",
+			surfaceArea: 5,
+			kappaValue: 50000,
+			massDistributionClass: MassDistributionClass.I,
+			pitchOption: '0',
+			pitch: 0}
 	};
 
-	const internalFloorWithUnheated: CeilingData = {
-		...internalFloor,
-		type: AdjacentSpaceType.unheatedSpace,
-		uValue: 1,
-		thermalResistanceOfAdjacentUnheatedSpace: 0
+	const internalFloorWithUnheated: EcaasForm<CeilingData> = {
+		data: {
+			...internalFloor.data,
+			type: AdjacentSpaceType.unheatedSpace,
+			uValue: 1,
+			thermalResistanceOfAdjacentUnheatedSpace: 0
+		}
 	};
 
 	afterEach(() => {
@@ -49,7 +52,11 @@ describe('ceiling', () => {
 	
 	describe('when type of ceiling is heated space', () => {
 		test('data is saved to store state when form is valid', async () => {
-			await renderSuspended(Ceiling);
+			await renderSuspended(Ceiling, {
+				route: {
+					params: { ceiling: "create" },
+				},
+			});
 	
 			await user.click(screen.getByTestId('type_heatedSpace'));
 			await populateValidForm();
@@ -57,7 +64,7 @@ describe('ceiling', () => {
 
 			const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 			
-			expect(dwellingSpaceCeilings?.data[0]).toEqual(internalFloor);
+			expect(dwellingSpaceCeilings.data[0]).toEqual({ ...internalFloor, complete: true});
 		});
 	
 		test('form is prepopulated when data exists in state', async () => {
@@ -101,7 +108,11 @@ describe('ceiling', () => {
 	
 	describe('when type of ceiling is unheated space', () => {
 		test('data is saved to store state when form is valid', async () => {
-			await renderSuspended(Ceiling);
+			await renderSuspended(Ceiling, {
+				route: {
+					params: { ceiling: "create" },
+				},
+			});
 	
 			await user.click(screen.getByTestId('type_unheatedSpace'));
 			await populateValidFormUnheated();
@@ -111,7 +122,7 @@ describe('ceiling', () => {
 
 			const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 			
-			expect(dwellingSpaceCeilings?.data[0]).toEqual(internalFloorWithUnheated);
+			expect(dwellingSpaceCeilings?.data[0]).toEqual({...internalFloorWithUnheated, complete: true});
 		});
 	
 		test('form is prepopulated when data exists in state', async () => {
@@ -172,7 +183,11 @@ describe('ceiling', () => {
 	});
 
 	it('saves custom pitch when custom pitch option is selected', async () => {
-		await renderSuspended(Ceiling);
+		await renderSuspended(Ceiling, {
+			route: {
+				params: { ceiling: "create" },
+			},
+		});
 
 		await user.click(screen.getByTestId('type_heatedSpace'));
 		await populateValidForm();
@@ -183,7 +198,7 @@ describe('ceiling', () => {
 
 		const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
-		expect(dwellingSpaceCeilings?.data[0]?.pitch).toEqual(90);
+		expect(dwellingSpaceCeilings.data[0]!.data.pitch).toEqual(90);
 	});
 
 	it('navigates to ceilings and roofs page when valid form is completed', async () => {

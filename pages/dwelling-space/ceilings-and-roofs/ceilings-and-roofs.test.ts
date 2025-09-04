@@ -22,25 +22,33 @@ describe('ceilings and roofs', () => {
 		store.$reset();
 	});
 
-	const ceiling1: CeilingData = {
-		name: "Ceiling 1",
-		type: AdjacentSpaceType.heatedSpace,
-		surfaceArea: 5,
-		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
-		pitchOption: 'custom',
-		pitch: 180
+	const ceiling1: EcaasForm<CeilingData> = {
+		data: {
+			name: "Ceiling 1",
+			type: AdjacentSpaceType.heatedSpace,
+			surfaceArea: 5,
+			kappaValue: 100,
+			massDistributionClass: MassDistributionClass.I,
+			pitchOption: 'custom',
+			pitch: 180
+		}
 	};
 
-	const ceiling2: CeilingData = {
-		...ceiling1,
-		name: "Ceiling 2",
+	const ceiling2: EcaasForm<CeilingData> = {
+		data: {
+			...ceiling1.data,
+			name: "Ceiling 2",
+		}};
+
+	const ceiling3: EcaasForm<CeilingData> = {
+		data: {
+			...ceiling1.data,
+			name
+			:
+		"Ceiling 3",
+		}
 	};
 
-	const ceiling3: CeilingData = {
-		...ceiling1,
-		name: "Ceiling 3",
-	};
 	const roof1: RoofData = {
 		name: "Roof 1",
 		typeOfRoof: 'flat',

@@ -125,13 +125,15 @@ const wallsData: WallsData = {
 const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 	dwellingSpaceCeilings: {
 		data: [{
-			type: AdjacentSpaceType.heatedSpace,
-			name: "Ceiling 1",
-			surfaceArea: 5,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
-			pitchOption: 'custom',
-			pitch: 180
+			data: {
+				type: AdjacentSpaceType.heatedSpace,
+				name: "Ceiling 1",
+				surfaceArea: 5,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+				pitchOption: 'custom',
+				pitch: 180
+			}
 		}]
 	},
 	dwellingSpaceRoofs: {

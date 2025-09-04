@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { isEcaasForm } from "~/stores/ecaasStore.schema";
+import formStatus from "~/constants/formStatus";
+
 const title = "Ceilings and roofs";
 const page = usePage();
 const store = useEcaasStore();
 
 type CeilingAndRoofType = keyof typeof store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-type CeilingAndRoofData = CeilingData & RoofData;
+type CeilingAndRoofData = EcaasForm<CeilingData> & RoofData;
 
 function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 	const items = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType]?.data;
@@ -22,15 +25,37 @@ function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 function handleDuplicate<T extends CeilingAndRoofData>(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 	const items  = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType]?.data;
 	const item = items?.[index];
-    
+	let name: string;
+
 	if (item) {
-		const duplicates = items.filter(f => f.name.match(duplicateNamePattern(item.name)));
+		const duplicates = items.filter(f => {
+			if (isEcaasForm(f) && isEcaasForm(item)) {
+				name = item.data.name;
+				return f.data.name.match(duplicateNamePattern(item.data.name));
+			} else if (!isEcaasForm(f) && !isEcaasForm(item)) {
+				name = item.name;
+				return f.name.match(duplicateNamePattern(item.name));
+			}
+			return false;
+		});
 
 		store.$patch((state) => {
-			const newItem = {
-				...item,
-				name: `${item.name} (${duplicates.length})`
-			} as T;
+			let newItem;
+
+			if (isEcaasForm(item)) {
+				newItem = {
+					complete: item.complete,
+					data: {
+						...item.data,
+						name: `${name} (${duplicates.length})`
+					}
+				} as T;
+			} else {
+				newItem = {
+					...item,
+					name: `${item.name} (${duplicates.length})`
+				} as T;
+			}
 
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].data.push(newItem);
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].complete = false;
@@ -68,7 +93,10 @@ function checkIsComplete(){
 		id="ceilings"
 		title="Ceilings"
 		:form-url="`${page?.url!}/ceilings`"
-		:items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
 		@remove="(index: number) => handleRemove('dwellingSpaceCeilings', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceCeilings', index)"
 	/>
