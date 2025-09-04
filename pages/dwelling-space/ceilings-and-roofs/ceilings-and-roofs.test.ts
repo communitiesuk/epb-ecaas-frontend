@@ -326,5 +326,21 @@ describe('ceilings and roofs', () => {
 				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			}
 		});
+
+		it('disables the mark section as complete button when item is incomplete', async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceCeilings: {
+							data: [{data: {name: "Ceiling", surfaceArea: 20}, complete: false}]
+						},
+					}
+				}
+			});
+
+			await renderSuspended(CeilingsAndRoofs);
+			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+			expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
+		});
 	});
 });
