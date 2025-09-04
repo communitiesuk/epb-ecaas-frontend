@@ -709,16 +709,10 @@ const expectedFlatInput: FhsInputSchema = {
 				"party wall 1 (wall)": {
 					area: 15,
 					areal_heat_capacity: 50000,
-					base_height: 1,
-					height: 3,
-					is_external_door: false,
 					mass_distribution_class: MassDistributionClass.E,
-					orientation360: 80,
 					pitch: 90,
-					solar_absorption_coeff: 0.6,
-					type: "BuildingElementOpaque",
-					u_value: 1,
-					width: 5,
+					type: "BuildingElementAdjacentConditionedSpace",
+					u_value: 1
 				},
 				"external wall 1 (wall)": {
 					type: "BuildingElementOpaque",
@@ -1528,12 +1522,7 @@ describe("FHS input mapper", () => {
 						name: "party wall 1",
 						pitchOption: "90",
 						pitch: 45,
-						orientation: 80,
-						height: 3,
-						length: 5,
-						elevationalHeight: 1,
 						surfaceArea: 15,
-						solarAbsorption: 0.6,
 						uValue: 1,
 						kappaValue: 50000,
 						massDistributionClass: MassDistributionClass.E

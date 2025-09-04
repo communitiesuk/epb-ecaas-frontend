@@ -16,15 +16,10 @@ const saveForm = (fields: PartyWallData) => {
 			name: fields.name,
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
-			orientation: fields.orientation,
-			length: fields.length,
-			height: fields.height,
-			elevationalHeight: fields.elevationalHeight,
 			surfaceArea: fields.surfaceArea,
-			solarAbsorption: 0,
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
-			massDistributionClass: fields.massDistributionClass
+			massDistributionClass: fields.massDistributionClass,
 		};
 
 		if (!dwellingSpaceWalls.dwellingSpacePartyWall) {
@@ -68,31 +63,6 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			:pitch-option="model.pitchOption"
 			:options="standardPitchOptions()"
 		/>
-		<FieldsOrientation />
-		<FormKit
-			id="height"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Height"
-			help="Enter the height of the building element"
-			name="height"
-			validation="required | number | min:0.001 | max:50">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<p class="govuk-hint">Enter the height of the wall up to where the insulation stops.</p>
-				<p class="govuk-hint">If you have a non-rectangular wall and the insulation spans the entire wall then enter the height of the wall from the base to the very top.</p>
-				<p class="govuk-hint">If you have a non-rectangular wall and the insulation does not go all the way to the top, enter the maximum height of the part of the wall that has insulation.</p>
-			</GovDetails>
-		</FormKit>
-		<FormKit
-			id="length"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Length"
-			help="Enter the length of the building element"
-			name="length"
-			validation="required | number | min:0.001 | max:50"
-		/>
-		<FieldsElevationalHeight />
 		<FormKit
 			id="surfaceArea"
 			type="govInputWithSuffix"

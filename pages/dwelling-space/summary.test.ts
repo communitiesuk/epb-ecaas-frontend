@@ -114,12 +114,7 @@ const wallsData: WallsData = {
 			name: "Party wall 1",
 			pitchOption: '90',
 			pitch: 90,
-			orientation: 0,
-			height: 0.5,
-			length: 20,
-			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I
@@ -528,10 +523,6 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Name": "Party wall 1",
 				"Pitch": `90 ${degrees.suffix}`,
-				"Orientation": `0 ${degrees.suffix}`,
-				"Height": `0.5 ${metre.suffix}`,
-				"Length": `20 ${metre.suffix}`,
-				"Elevational height of building element at its base": `20 ${metre.suffix}`,
 				"Net surface area": `10 ${metresSquare.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",

@@ -324,12 +324,7 @@ describe('dwelling fabric mapper', () => {
 			name: "Party wall 1",
 			pitchOption: '90',
 			pitch: 90,
-			orientation: 0,
-			length: 0.5,
-			height: 20,
-			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0,
 			uValue: 1,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I
@@ -396,19 +391,13 @@ describe('dwelling fabric mapper', () => {
 
 		expect(internalWallElement).toEqual(expectedInternalWall);
 
-		const expectedPartyWall: BuildingElementOpaque = {
-			type: 'BuildingElementOpaque',
+		const expectedPartyWall: BuildingElementAdjacentConditionedSpace = {
+			type: 'BuildingElementAdjacentConditionedSpace',
 			pitch: partyWall.pitch!,
-			orientation360: partyWall.orientation,
-			height: partyWall.height,
-			width: partyWall.length,
-			base_height: partyWall.elevationalHeight,
 			area: partyWall.surfaceArea,
-			solar_absorption_coeff: partyWall.solarAbsorption,
 			u_value: partyWall.uValue,
 			areal_heat_capacity: partyWall.kappaValue,
-			mass_distribution_class: partyWall.massDistributionClass,
-			is_external_door: false
+			mass_distribution_class: partyWall.massDistributionClass
 		};
 
 		expect(partyWallElement).toEqual(expectedPartyWall);

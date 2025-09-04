@@ -17,12 +17,7 @@ describe('party wall', () => {
 		name: "Party wall 1",
 		pitchOption: '90',
 		pitch: 90,
-		orientation: 0,
-		length: 0.5,
-		height: 20,
-		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorption: 0,
 		uValue: 1,
 		kappaValue: 50000,
 		massDistributionClass: MassDistributionClass.I
@@ -37,10 +32,6 @@ describe('party wall', () => {
 
 		await user.type(screen.getByTestId('name'), 'Party wall 1');
 		await user.click(screen.getByTestId('pitchOption_90'));
-		await user.type(screen.getByTestId('orientation'), '0');
-		await user.type(screen.getByTestId('length'), '0.5');
-		await user.type(screen.getByTestId('height'), '20');
-		await user.type(screen.getByTestId('elevationalHeight'), '20');
 		await user.type(screen.getByTestId('surfaceArea'), '10');
 		await user.type(screen.getByTestId('uValue'), '1');
 		await user.click(screen.getByTestId('kappaValue_50000'));
@@ -73,10 +64,6 @@ describe('party wall', () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Party wall 1');
 		expect((await screen.findByTestId<HTMLInputElement>('pitchOption_90')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>('orientation')).value).toBe('0');
-		expect((await screen.findByTestId<HTMLInputElement>('length')).value).toBe('0.5');
-		expect((await screen.findByTestId<HTMLInputElement>('height')).value).toBe('20');
-		expect((await screen.findByTestId<HTMLInputElement>('elevationalHeight')).value).toBe('20');
 		expect((await screen.findByTestId<HTMLInputElement>('surfaceArea')).value).toBe('10');
 		expect((await screen.findByTestId<HTMLInputElement>('uValue')).value).toBe('1');
 		expect((await screen.findByTestId('kappaValue_50000')).hasAttribute('checked')).toBe(true);
@@ -90,10 +77,6 @@ describe('party wall', () => {
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('pitchOption_error'))).toBeDefined();
-		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
-		expect((await screen.findByTestId('length_error'))).toBeDefined();
-		expect((await screen.findByTestId('height_error'))).toBeDefined();
-		expect((await screen.findByTestId('elevationalHeight_error'))).toBeDefined();
 		expect((await screen.findByTestId('surfaceArea_error'))).toBeDefined();
 		expect((await screen.findByTestId('uValue_error'))).toBeDefined();
 		expect((await screen.findByTestId('kappaValue_error'))).toBeDefined();

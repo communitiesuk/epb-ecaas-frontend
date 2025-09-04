@@ -247,18 +247,12 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 		const nameWithSuffix = suffixName(x.name, wallSuffix);
 
 		return {[nameWithSuffix]: {
-			type: 'BuildingElementOpaque',
+			type: 'BuildingElementAdjacentConditionedSpace',
 			pitch: extractPitch(x),
-			orientation360: x.orientation,
-			height: x.height,
-			width: x.length,
-			base_height: x.elevationalHeight,
 			area: x.surfaceArea,
-			solar_absorption_coeff: x.solarAbsorption,
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
-			is_external_door: false
 		}};
 	}) || [];
 

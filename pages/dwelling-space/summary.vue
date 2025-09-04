@@ -187,10 +187,6 @@ const partyWallSummary: SummarySection = {
 		return {
 			"Name": x.name,
 			"Pitch": `${x.pitch} ${degrees.suffix}`,
-			"Orientation": `${x.orientation} ${degrees.suffix}`,
-			"Height": `${x.height} ${metre.suffix}`,
-			"Length": `${x.length} ${metre.suffix}`,
-			"Elevational height of building element at its base": `${x.elevationalHeight} ${metre.suffix}`,
 			"Net surface area": `${x.surfaceArea} ${metresSquare.suffix}`,
 			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
