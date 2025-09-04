@@ -220,4 +220,72 @@ describe('ceiling', () => {
 
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/ceilings-and-roofs');
 	});
+
+	describe('partially saving data', () => {
+		it('creates a new ceiling automatically with given name', async () => {
+			await renderSuspended(Ceiling, {
+				route: {
+					params: {ceiling: 'create'}
+				}
+			});
+
+			await user.click(screen.getByTestId('type_heatedSpace'));
+			await user.type(screen.getByTestId('name'), 'New ceiling');
+			await user.tab();
+
+			const actualCeiling = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[0]!;
+
+			expect(actualCeiling.data.name).toBe("New ceiling");
+			expect(actualCeiling.data.surfaceArea).toBeUndefined();
+			expect(actualCeiling.data.kappaValue).toBeUndefined();
+		});
+
+		it('creates a new ceiling automatically with default name after other data is entered', async () => {
+			await renderSuspended(Ceiling, {
+				route: {
+					params: {ceiling: 'create'}
+				}
+			});
+
+			await user.click(screen.getByTestId('type_unheatedSpace'));
+			await user.type(screen.getByTestId('thermalResistanceOfAdjacentUnheatedSpace'), '0.7');
+			await user.tab();
+
+			const actualCeiling = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[0]!.data as Partial<Extract<CeilingData, { type: AdjacentSpaceType.unheatedSpace }>>;
+
+			expect(actualCeiling.name).toBe("Ceiling");
+			expect(actualCeiling.thermalResistanceOfAdjacentUnheatedSpace).toBe(0.7);
+			expect(actualCeiling.surfaceArea).toBeUndefined();
+			expect(actualCeiling.kappaValue).toBeUndefined();
+		});
+
+		it('saves updated form data to correct store object automatically', async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceCeilings: {
+							data: [internalFloor, internalFloorWithUnheated]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(Ceiling, {
+				route: {
+					params: {ceiling: '1'}
+				}
+			});
+
+			await user.clear(screen.getByTestId("name"));
+			await user.clear(screen.getByTestId("surfaceArea"));
+
+			await user.type(screen.getByTestId("name"), "Updated ceiling");
+			await user.type(screen.getByTestId("surfaceArea"), "17");
+			await user.tab();
+
+			const actualCeiling = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[1]!;
+			expect(actualCeiling.data.name).toBe("Updated ceiling");
+			expect(actualCeiling.data.surfaceArea).toBe(17);
+		});
+	});
 });
