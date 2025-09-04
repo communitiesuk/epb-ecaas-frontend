@@ -4,7 +4,7 @@ import { getUrl, type ShadingData } from "#imports";
 
 const title = "Distant shading";
 const store = useEcaasStore();
-const route = useRoute();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const shadingData = useItemToEdit('shading', store.dwellingDetails.shading.data);
 const model: Ref<ShadingData | undefined> = ref(shadingData?.data);
@@ -16,11 +16,10 @@ const objectTypeOptions: Record<ShadingObjectType, Capitalize<ShadingObjectType>
 
 const saveForm = (fields: ShadingData) => {
 	store.$patch((state) => {
-		const storeData = state.dwellingDetails.shading.data;
+		const { shading } = state.dwellingDetails;
+		const index = getStoreIndex(shading.data)
 
-		const index = route.params.shading === 'create' ? storeData.length - 1 : Number(route.params.shading);
-
-		const shadingItem: EcaasForm<ShadingData> = {
+		shading.data[index] = {
 			data: {
 				name: fields.name,
 				startAngle: fields.startAngle,
@@ -31,53 +30,21 @@ const saveForm = (fields: ShadingData) => {
 			},
 			complete: true
 		};
-
-		state.dwellingDetails.shading.data[index] = shadingItem;
-		state.dwellingDetails.shading.complete = false;
+		shading.complete = false;
 	});
 
 	navigateTo("/dwelling-details/shading");
 };
 
-watch(model, async (newData: ShadingData | undefined, initialData: ShadingData | undefined) => {
-	const storeData = store.dwellingDetails.shading.data;
-
-	if (initialData === undefined || newData === undefined) {
-		return;
-	}
-
-	const defaultName = 'Shading';
-	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
-
-	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-		Object.values(newData).some(x => x !== undefined);
-
-	if (route.params.shading === 'create' && isFirstEdit) {
-
-		store.$patch(state => {
-			state.dwellingDetails.shading.data.push({
-				data: {
-					...newData,
-					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
-				}
-			});
-		});
-
-		return;
-	}
-
-	store.$patch((state) => {
-		const index = route.params.shading === 'create' ? storeData.length - 1 : Number(route.params.shading);
-
-		state.dwellingDetails.shading.data[index] = {
-			data: {
-				...newData,
-				name: newData.name ?? state.dwellingDetails.shading.data[index]?.data.name
-			}
-		};
-
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingDetails.shading,
+	defaultName: 'Shading',
+	onPatchCreate: (state, newData) => state.dwellingDetails.shading.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingDetails.shading.data[index] = newData;
 		state.dwellingDetails.shading.complete = false;
-	});
+	}
 });
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
@@ -168,7 +135,7 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
-			<GovButton :href="getUrl('heatEmitting')" secondary>Save progress</GovButton>
+			<GovButton :href="getUrl('shading')" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>
