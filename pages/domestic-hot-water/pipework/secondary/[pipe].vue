@@ -25,7 +25,8 @@ const saveForm = (fields: SecondaryPipeworkData) => {
 				location: fields.location,
 				length: fields.length,
 				internalDiameter: fields.internalDiameter,
-			}
+			},
+			complete: true
 		};
 		secondaryPipework.data[index] = pipeworkItem;
 		secondaryPipework.complete = false;
@@ -62,6 +63,7 @@ watch(model, async (newData: SecondaryPipeworkData | undefined, initialData: Sec
 	}
 
 	store.$patch((state) => {
+
 		const index = route.params.pipe === 'create' ? storeData.length - 1 : Number(route.params.pipe);
 
 		state.domesticHotWater.pipework.secondaryPipework.data[index] = {
@@ -70,7 +72,6 @@ watch(model, async (newData: SecondaryPipeworkData | undefined, initialData: Sec
 				name: newData.name?.trim() || defaultName,
 			}
 		};
-
 		state.domesticHotWater.pipework.secondaryPipework.complete = false;
 	});
 });
@@ -79,7 +80,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
-
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>

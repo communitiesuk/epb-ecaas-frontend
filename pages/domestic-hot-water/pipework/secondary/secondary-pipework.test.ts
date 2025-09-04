@@ -24,7 +24,8 @@ describe('Secondary pipework form', () => {
 			length: 3,
 			location: WaterPipeworkLocation.internal,
 			internalDiameter: 9
-		}
+		}, 
+		complete: true
 	};
 	const pipework2: EcaasForm<SecondaryPipeworkData> = {
 		data: {
@@ -32,7 +33,9 @@ describe('Secondary pipework form', () => {
 			length: 1,
 			location: WaterPipeworkLocation.internal,
 			internalDiameter: 4
-		}
+		},
+		complete: true
+
 	};
 	test('data is saved to store state when form is valid', async () => {
 
