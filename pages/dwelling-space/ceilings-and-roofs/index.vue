@@ -7,7 +7,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type CeilingAndRoofType = keyof typeof store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-type CeilingAndRoofData = EcaasForm<CeilingData> & RoofData;
+type CeilingAndRoofData = EcaasForm<CeilingData> & EcaasForm<RoofData>;
 
 function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 	const items = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType]?.data;
@@ -32,30 +32,18 @@ function handleDuplicate<T extends CeilingAndRoofData>(ceilingAndRoofType: Ceili
 			if (isEcaasForm(f) && isEcaasForm(item)) {
 				name = item.data.name;
 				return f.data.name.match(duplicateNamePattern(item.data.name));
-			} else if (!isEcaasForm(f) && !isEcaasForm(item)) {
-				name = item.name;
-				return f.name.match(duplicateNamePattern(item.name));
 			}
 			return false;
 		});
 
 		store.$patch((state) => {
-			let newItem;
-
-			if (isEcaasForm(item)) {
-				newItem = {
-					complete: item.complete,
-					data: {
-						...item.data,
-						name: `${name} (${duplicates.length})`
-					}
-				} as T;
-			} else {
-				newItem = {
-					...item,
-					name: `${item.name} (${duplicates.length})`
-				} as T;
-			}
+			const newItem = {
+				complete: item.complete,
+				data: {
+					...item.data,
+					name: `${name} (${duplicates.length})`
+				}
+			} as T;
 
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].data.push(newItem);
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].complete = false;
@@ -105,7 +93,10 @@ function checkIsComplete(){
 		id="roofs"
 		title="Roofs"
 		:form-url="`${page?.url!}/roofs`"
-		:items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
 		@remove="(index: number) => handleRemove('dwellingSpaceRoofs', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceRoofs', index)"
 	/>

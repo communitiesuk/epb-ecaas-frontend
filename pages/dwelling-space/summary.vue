@@ -227,7 +227,7 @@ const ceilingSummary: SummarySection = {
 const roofSummary: SummarySection = {
 	id: 'dwellingSpaceRoofs',
 	label: 'Roof',
-	data: roofData.map(x => {
+	data: roofData.map(({ data: x}) => {
 		return {
 			"Name": x.name,
 			"Type of roof": displayCamelToSentenceCase(x.typeOfRoof),

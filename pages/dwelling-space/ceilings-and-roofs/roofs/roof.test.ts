@@ -13,19 +13,21 @@ describe('roof', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const roof: RoofData = {
-		name: "Roof 1",
-		typeOfRoof: 'flat',
-		pitchOption: '0',
-		pitch: 0,
-		length: 1,
-		width: 1,
-		elevationalHeightOfElement: 2,
-		surfaceArea: 1,
-		solarAbsorptionCoefficient: 0.5,
-		uValue: 1,
-		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I
+	const roof: EcaasForm<RoofData> = {
+		data: {
+			name: "Roof 1",
+			typeOfRoof: 'flat',
+			pitchOption: '0',
+			pitch: 0,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			solarAbsorptionCoefficient: 0.5,
+			uValue: 1,
+			kappaValue: 50000,
+			massDistributionClass: MassDistributionClass.I
+		}
 	};
 
 	afterEach(() => {
@@ -47,14 +49,18 @@ describe('roof', () => {
 	};
 
 	test('data is saved to store state when form is valid', async () => {
-		await renderSuspended(Roof);
+		await renderSuspended(Roof, {
+			route: {
+				params: { roof: "create" },
+			},
+		});
 
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const  { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
-		expect(dwellingSpaceRoofs?.data[0]).toEqual(roof);
+		expect(dwellingSpaceRoofs.data[0]).toEqual({...roof, complete: true});
 	});
 
 	test('form is prepopulated when data exists in state', async () => {
@@ -128,7 +134,11 @@ describe('roof', () => {
 	});
 
 	it('saves custom pitch when custom pitch option is selected', async () => {
-		await renderSuspended(Roof);
+		await renderSuspended(Roof, {
+			route: {
+				params: { roof: "create" },
+			},
+		});
 
 		await populateValidForm();
 		await user.click(screen.getByTestId('pitchOption_custom'));
@@ -138,7 +148,7 @@ describe('roof', () => {
 
 		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
-		expect(dwellingSpaceRoofs?.data[0]?.pitch).toEqual(90);
+		expect(dwellingSpaceRoofs.data[0]!.data.pitch).toEqual(90);
 	});
 
 	it('requires additional fields when type of roof is pitched', async () => {
@@ -154,7 +164,11 @@ describe('roof', () => {
 	});
 
 	it('saves additional fields when type of roof is pitched', async () => {
-		await renderSuspended(Roof);
+		await renderSuspended(Roof, {
+			route: {
+				params: { roof: "create" },
+			},
+		});
 
 		await populateValidForm();
 		await user.click(screen.getByTestId('typeOfRoof_pitchedInsulatedAtRoof'));
@@ -165,8 +179,8 @@ describe('roof', () => {
 
 		const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
-		expect(dwellingSpaceRoofs?.data[0]?.pitch).toEqual(90);
-		expect(dwellingSpaceRoofs?.data[0]?.orientation).toEqual(90);
+		expect(dwellingSpaceRoofs.data[0]!.data.pitch).toEqual(90);
+		expect(dwellingSpaceRoofs.data[0]!.data.orientation).toEqual(90);
 	});
 
 	it('navigates to ceilings and roofs page when valid form is completed', async () => {

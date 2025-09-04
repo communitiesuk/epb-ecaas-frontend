@@ -138,19 +138,21 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 	},
 	dwellingSpaceRoofs: {
 		data: [{
-			name: "Roof 1",
-			typeOfRoof: 'flat',
-			pitchOption: 'custom',
-			pitch: 180,
-			orientation: 0,
-			length: 1,
-			width: 1,
-			elevationalHeightOfElement: 2,
-			surfaceArea: 1,
-			solarAbsorptionCoefficient: 0.5,
-			uValue: 1,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I
+			data: {
+				name: "Roof 1",
+				typeOfRoof: 'flat',
+				pitchOption: 'custom',
+				pitch: 180,
+				orientation: 0,
+				length: 1,
+				width: 1,
+				elevationalHeightOfElement: 2,
+				surfaceArea: 1,
+				solarAbsorptionCoefficient: 0.5,
+				uValue: 1,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I
+			}
 		}]
 	}
 };

@@ -64,7 +64,7 @@ describe('ceiling', () => {
 
 			const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 			
-			expect(dwellingSpaceCeilings.data[0]).toEqual({ ...internalFloor, complete: true});
+			expect(dwellingSpaceCeilings.data[0]).toEqual({...internalFloor, complete: true});
 		});
 	
 		test('form is prepopulated when data exists in state', async () => {

@@ -319,7 +319,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 		return {[nameWithSuffix]: ceiling};
 	});
 
-	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map(x => {
+	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map(({ data: x }) => {
 		const nameWithSuffix = suffixName(x.name, roofSuffix);
 
 		return {[nameWithSuffix]: {

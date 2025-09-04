@@ -1601,18 +1601,20 @@ describe("FHS input mapper", () => {
 				dwellingSpaceRoofs: {
 					...baseForm,
 					data: [{
-						name: "roof 1",
-						typeOfRoof: "flat",
-						pitch: 20,
-						orientation: 180,
-						length: 2.5,
-						width: 10,
-						elevationalHeightOfElement: 0,
-						surfaceArea: 25,
-						solarAbsorptionCoefficient: 0.63,
-						uValue: 0.1,
-						kappaValue: 19300,
-						massDistributionClass: MassDistributionClass.I
+						data: {
+							name: "roof 1",
+							typeOfRoof: "flat",
+							pitch: 20,
+							orientation: 180,
+							length: 2.5,
+							width: 10,
+							elevationalHeightOfElement: 0,
+							surfaceArea: 25,
+							solarAbsorptionCoefficient: 0.63,
+							uValue: 0.1,
+							kappaValue: 19300,
+							massDistributionClass: MassDistributionClass.I
+						}
 					}]
 				}
 			},

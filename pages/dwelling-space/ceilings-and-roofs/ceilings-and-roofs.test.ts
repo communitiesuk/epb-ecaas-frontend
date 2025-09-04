@@ -49,29 +49,35 @@ describe('ceilings and roofs', () => {
 		}
 	};
 
-	const roof1: RoofData = {
-		name: "Roof 1",
-		typeOfRoof: 'flat',
-		pitchOption: '0',
-		pitch: 0,
-		length: 1,
-		width: 1,
-		elevationalHeightOfElement: 2,
-		surfaceArea: 1,
-		solarAbsorptionCoefficient: 0.5,
-		uValue: 1,
-		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I
+	const roof1: EcaasForm<RoofData> = {
+		data: {
+			name: "Roof 1",
+			typeOfRoof: 'flat',
+			pitchOption: '0',
+			pitch: 0,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			solarAbsorptionCoefficient: 0.5,
+			uValue: 1,
+			kappaValue: 50000,
+			massDistributionClass: MassDistributionClass.I
+		}
 	};
 
-	const roof2: RoofData = {
-		...roof1,
-		name: "Roof 2",
+	const roof2: EcaasForm<RoofData> = {
+		data: {
+			...roof1.data,
+			name: "Roof 2",
+		}
 	};
 
-	const roof3: RoofData = {
-		...roof1,
-		name: "Roof 3",
+	const roof3: EcaasForm<RoofData> = {
+		data: {
+			...roof1.data,
+			name: "Roof 3",
+		}
 	};
 
 	describe('ceilings', () => {

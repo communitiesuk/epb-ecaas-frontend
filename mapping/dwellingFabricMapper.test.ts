@@ -451,7 +451,7 @@ describe('dwelling fabric mapper', () => {
 			dwellingFabric: {
 				dwellingSpaceCeilingsAndRoofs: {
 					dwellingSpaceCeilings: { data: [{data: ceiling}], complete: true, },
-					dwellingSpaceRoofs: { data: [roof], complete: true, }
+					dwellingSpaceRoofs: { data: [{data: roof}], complete: true, }
 				}
 			}
 		});

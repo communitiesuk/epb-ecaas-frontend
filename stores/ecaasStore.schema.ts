@@ -249,7 +249,7 @@ export type PartyWallData = z.infer<typeof partyWallDataZod>;
 
 export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
 	dwellingSpaceCeilings: EcaasForm<EcaasForm<CeilingData>[]>;
-	dwellingSpaceRoofs: EcaasForm<RoofData[]>;
+	dwellingSpaceRoofs: EcaasForm<EcaasForm<RoofData>[]>;
 }>;
 
 const baseCeilingData = named.extend({
