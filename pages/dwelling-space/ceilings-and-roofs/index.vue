@@ -97,6 +97,7 @@ function checkIsComplete(){
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceRoofs', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceRoofs', index)"
 	/>
