@@ -62,18 +62,10 @@ function handleComplete() {
 	navigateTo('/');
 }
 
-function checkIsComplete(){
-	const pvAndBatteries = store.pvAndBatteries;
-	return Object.values(pvAndBatteries).every(pvAndBattery => pvAndBattery.complete);
-}
+const hasIncompleteEntries = () =>
+	Object.values(store.pvAndBatteries)
+		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
 
-function hasIncompleteEntries() {
-	const types = store.pvAndBatteries;
-
-	return Object.values(types).some(
-		pvAndBatteries => pvAndBatteries.data.some(
-			pvAndBattery => isEcaasForm(pvAndBattery) ? !pvAndBattery.complete : false));
-}
 </script>
 
 <template>
@@ -116,6 +108,9 @@ function hasIncompleteEntries() {
 			Return to overview
 		</GovButton>
 		<NuxtLink :to="`${page?.url}/summary`" class="govuk-button govuk-button--secondary">View summary</NuxtLink>
-		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
+		<CompleteElement
+			:is-complete="Object.values(store.pvAndBatteries).every(section => section.complete)"
+			:disabled="hasIncompleteEntries()"
+			@completed="handleComplete"/>
 	</div>
 </template>

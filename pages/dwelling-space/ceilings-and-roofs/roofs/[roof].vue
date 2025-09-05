@@ -3,7 +3,7 @@ import { getUrl, zeroPitchOptions } from '#imports';
 
 const title = "Roof";
 const store = useEcaasStore();
-const route = useRoute();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const roofData = useItemToEdit('roof', store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
 const model: Ref<RoofData | undefined> = ref(roofData?.data);
@@ -17,11 +17,9 @@ const roofTypeOptions: Record<Exclude<RoofType, 'unheatedPitched'>, string> = {
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-		const storeData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data;
+		const index = getStoreIndex(dwellingSpaceRoofs.data);
 
-		const index = route.params.roof === 'create' ? storeData.length - 1 : Number(route.params.roof);
-
-		const roof: EcaasForm<RoofData> = {
+		dwellingSpaceRoofs.data[index] = {
 			data: {
 				name: fields.name,
 				typeOfRoof: fields.typeOfRoof,
@@ -39,52 +37,21 @@ const saveForm = (fields: RoofData) => {
 			},
 			complete: true
 		};
-
-		dwellingSpaceRoofs.data[index] = roof;
 		dwellingSpaceRoofs.complete = false;
 	});
 
 	navigateTo("/dwelling-space/ceilings-and-roofs");
 };
 
-watch(model, async (newData: RoofData | undefined, initialData: RoofData | undefined) => {
-	const storeData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data;
-
-	if (initialData === undefined || newData === undefined) {
-		return;
-	}
-
-	const defaultName = 'Roof';
-	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
-
-	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-			Object.values(newData).some(x => x !== undefined);
-
-	if (route.params.roof === 'create' && isFirstEdit) {
-		store.$patch(state => {
-			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.push({
-				data: {
-					...newData,
-					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
-				}
-			});
-		});
-
-		return;
-	}
-
-	store.$patch((state) => {
-		const index = route.params.roof === 'create' ? storeData.length - 1 : Number(route.params.roof);
-
-		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[index] = {
-			data: {
-				...newData,
-				name: newData.name?.trim() || defaultName
-			}
-		};
-
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs,
+	defaultName: 'Roof',
+	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.complete = false;
-	});
+	},
 });
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();

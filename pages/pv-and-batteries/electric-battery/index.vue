@@ -45,23 +45,28 @@ watch(model, async (newData: ElectricBatteryData | undefined, initialData: Elect
 	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
 			Object.values(newData).some(x => x !== undefined);
 
-	store.$patch(state => {
-		if (!storeData && isFirstEdit) {
-			state.pvAndBatteries.electricBattery.data = [{
-				data: {
-					...newData,
-					name: newData.name || defaultName,
-				},
-			}];
-		} else {
-			state.pvAndBatteries.electricBattery.data[0] = {
-				data: {
-					...newData,
-					name: newData.name?.trim() || defaultName,
-				},
-			};
-		}
-	});
+	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
+		if (initialData[key]  !== newData[key]) {
+			store.$patch(state => {
+				if (!storeData && isFirstEdit) {
+					state.pvAndBatteries.electricBattery.data = [{
+						data: {
+							...newData,
+							name: newData.name || defaultName,
+						},
+					}];
+				} else {
+					state.pvAndBatteries.electricBattery.data[0] = {
+						data: {
+							...newData,
+							name: newData.name?.trim() || defaultName,
+						},
+					};
+				}
+
+				state.pvAndBatteries.electricBattery.complete = false;
+			});
+		}}
 });
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();

@@ -108,19 +108,22 @@ export function useForm() {
 
 				return;
 			}
-
-			store.$patch((state) => {
-				const index = getStoreIndex(storeData.data);
-				const storeElementData = storeData.data[index]?.data;
-				const name = ('name' in newData ? newData.name : undefined) ??
+			for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
+				if (initialData[key]  !== newData[key]) {
+					store.$patch((state) => {
+						const index = getStoreIndex(storeData.data);
+						const storeElementData = storeData.data[index]?.data;
+						const name = ('name' in newData ? newData.name : undefined) ??
 					('name' in storeElementData! ? storeElementData.name : defaultName);
 
-				const elementData: EcaasForm<T> = {
-					data: { ...newData, name }
-				};
+						const elementData: EcaasForm<T> = {
+							data: { ...newData, name }
+						};
 
-				onPatchUpdate(state, elementData, index);
-			});
+						onPatchUpdate(state, elementData, index);
+					});
+				}
+			}
 		});
 	};
 

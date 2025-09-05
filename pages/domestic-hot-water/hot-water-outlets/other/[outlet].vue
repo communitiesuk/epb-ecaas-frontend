@@ -4,7 +4,7 @@ import { getUrl  } from '#imports';
 
 const title = "Other outlets";
 const store = useEcaasStore();
-const route = useRoute();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const otherOutletsData = useItemToEdit('outlet', store.domesticHotWater.hotWaterOutlets.otherOutlets.data);
 const model: Ref<OtherHotWaterOutletData | undefined> = ref(otherOutletsData?.data);
@@ -12,67 +12,32 @@ const model: Ref<OtherHotWaterOutletData | undefined> = ref(otherOutletsData?.da
 const saveForm = (fields: OtherHotWaterOutletData) => {
 	store.$patch((state) => {
 		const {otherOutlets} = state.domesticHotWater.hotWaterOutlets;
-		const storeData = store.domesticHotWater.hotWaterOutlets.otherOutlets.data;
-		
-		const index = route.params.outlet === 'create' ? storeData.length - 1 : Number(route.params.outlet);
 
-		const outletItem: EcaasForm<OtherHotWaterOutletData> = {
+		const index = getStoreIndex(otherOutlets.data);
+
+		otherOutlets.data[index] = {
 			data: {
-				id: otherOutletsData ? otherOutletsData.data.id : uuidv4(),
+				id: otherOutletsData?.data.id || uuidv4(),
 				name: fields.name,
 				flowRate: fields.flowRate,
 			},
 			complete: true
 		};
-
-		otherOutlets.data[index] = outletItem;
 		otherOutlets.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/hot-water-outlets");
 };
 
-watch(model, async (newData: OtherHotWaterOutletData | undefined, initialData: OtherHotWaterOutletData | undefined) => {
-	const storeData = store.domesticHotWater.hotWaterOutlets.otherOutlets.data;
-
-	if (initialData === undefined || newData === undefined) {
-		return;
-	}
-
-	const defaultName = 'Other outlet';
-	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
-
-	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-		Object.values(newData).some(x => x !== undefined);
-
-	if (route.params.outlet === 'create' && isFirstEdit) {
-
-		store.$patch(state => {
-			state.domesticHotWater.hotWaterOutlets.otherOutlets.data.push({
-				data: {
-					...newData,
-					name: newData.name?.trim() || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
-				}
-			});
-		});
-
-		return;
-	}
-
-	store.$patch((state) => {
-		const index = route.params.outlet === 'create' ? storeData.length - 1 : Number(route.params.outlet);
-
-		state.domesticHotWater.hotWaterOutlets.otherOutlets.data[index] = {
-			data: {
-				...newData,
-				name: newData.name?.trim() || defaultName,
-				id: store.domesticHotWater.hotWaterOutlets.otherOutlets.data[index]?.data.id ?? uuidv4()
-			}
-		};
-
+autoSaveElementForm({
+	model,
+	storeData: store.domesticHotWater.hotWaterOutlets.otherOutlets,
+	defaultName: 'Other outlet',
+	onPatchCreate: (state, newData) => state.domesticHotWater.hotWaterOutlets.otherOutlets.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.domesticHotWater.hotWaterOutlets.otherOutlets.data[index] = newData;
 		state.domesticHotWater.hotWaterOutlets.otherOutlets.complete = false;
-	});
-});
+	}});
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>

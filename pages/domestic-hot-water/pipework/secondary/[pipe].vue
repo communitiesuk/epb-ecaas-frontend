@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { WaterPipeworkLocation } from '~/schema/api-schema.types';
 import { getUrl  } from '#imports';
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const title = "Secondary pipework";
 const store = useEcaasStore();
-const route = useRoute();
 
 const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.secondaryPipework.data);
 const model: Ref<SecondaryPipeworkData | undefined > = ref(pipeworkData?.data);
@@ -17,9 +17,9 @@ const locationOptions: Record<WaterPipeworkLocation, SnakeToSentenceCase<WaterPi
 const saveForm = (fields: SecondaryPipeworkData) => {
 	store.$patch((state) => {
 		const {secondaryPipework} = state.domesticHotWater.pipework;
-		const storeData = store.domesticHotWater.pipework.secondaryPipework.data;
-		const index = route.params.pipe === 'create' ? storeData.length -1 : Number(route.params.pipe);
-		const pipeworkItem: EcaasForm<SecondaryPipeworkData> = {
+
+		const index = getStoreIndex(secondaryPipework.data);
+		secondaryPipework.data[index] = {
 			data: {
 				name: fields.name,
 				location: fields.location,
@@ -28,53 +28,21 @@ const saveForm = (fields: SecondaryPipeworkData) => {
 			},
 			complete: true
 		};
-		secondaryPipework.data[index] = pipeworkItem;
 		secondaryPipework.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/pipework");
 };
 
-watch(model, async (newData: SecondaryPipeworkData | undefined, initialData: SecondaryPipeworkData | undefined) => {
-	const storeData = store.domesticHotWater.pipework.secondaryPipework.data;
-
-	if (initialData === undefined || newData === undefined) {
-		return;
-	}
-
-	const defaultName = 'Secondary pipework';
-	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
-
-	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-		Object.values(newData).some(x => x !== undefined);
-
-	if (route.params.pipe === 'create' && isFirstEdit) {
-
-		store.$patch(state => {
-			state.domesticHotWater.pipework.secondaryPipework.data.push({
-				data: {
-					...newData,
-					name: newData.name?.trim() || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
-				}
-			});
-		});
-
-		return;
-	}
-
-	store.$patch((state) => {
-
-		const index = route.params.pipe === 'create' ? storeData.length - 1 : Number(route.params.pipe);
-
-		state.domesticHotWater.pipework.secondaryPipework.data[index] = {
-			data: {
-				...newData,
-				name: newData.name?.trim() || defaultName,
-			}
-		};
+autoSaveElementForm({
+	model,
+	storeData: store.domesticHotWater.pipework.secondaryPipework,
+	defaultName: 'Secondary pipework',
+	onPatchCreate: (state, newData) => state.domesticHotWater.pipework.secondaryPipework.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.domesticHotWater.pipework.secondaryPipework.data[index] = newData;
 		state.domesticHotWater.pipework.secondaryPipework.complete = false;
-	});
-});
+	}});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
