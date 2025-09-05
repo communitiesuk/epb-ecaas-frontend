@@ -205,7 +205,7 @@ export interface components {
             /** Kg Load */
             kg_load: number;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
         };
         /** ClothesWashing */
         ClothesWashing: {
@@ -214,28 +214,28 @@ export interface components {
             /** Kg Load */
             kg_load: number;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
         };
         /** Dishwasher */
         Dishwasher: {
             /** Kwh Per 100Cycle */
             kWh_per_100cycle: number;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
         };
         /** Freezer */
         Freezer: {
             /** Kwh Per Annum */
             kWh_per_annum: number;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
         };
         /** Fridge */
         Fridge: {
             /** Kwh Per Annum */
             kWh_per_annum: number;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
         };
         /**
          * EnergySupplyType
@@ -245,19 +245,19 @@ export interface components {
         /** FridgeFreezer */
         FridgeFreezer: {
             /** @default null */
-            Energysupply: components["schemas"]["EnergySupplyType"] | null;
+            Energysupply?: components["schemas"]["EnergySupplyType"] | null;
             /**
              * Kwh Per Annum
              * @default null
              */
-            kWh_per_annum: number | null;
+            kWh_per_annum?: number | null;
             /**
              * Kwh Per Cycle
              * @default null
              */
-            kWh_per_cycle: number | null;
+            kWh_per_cycle?: number | null;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
         };
         /** Hobs */
         Hobs: {
@@ -265,28 +265,28 @@ export interface components {
             /** Kwh Per Cycle */
             kWh_per_cycle: number;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
         };
         /** Kettle */
         Kettle: {
             /** Kwh Per Cycle */
             kWh_per_cycle: number;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
         };
         /** Microwave */
         Microwave: {
             /** Kwh Per Cycle */
             kWh_per_cycle: number;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
         };
         /** ApplianceEnergyPerAnnum */
         ApplianceEnergyPerAnnum: {
             /** Kwh Per Annum */
             kWh_per_annum: number;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
         };
         /** Oven */
         Oven: {
@@ -294,7 +294,7 @@ export interface components {
             /** Kwh Per Cycle */
             kWh_per_cycle: number;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
         };
         /**
          * MassDistributionClass
@@ -354,7 +354,7 @@ export interface components {
              * Edge Insulation
              * @default null
              */
-            edge_insulation: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+            edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -365,12 +365,12 @@ export interface components {
              * @description Height of the basement walls above ground level (unit: m)
              * @default null
              */
-            height_basement_walls: number | null;
+            height_basement_walls?: number | null;
             /**
              * Height Upper Surface
              * @default null
              */
-            height_upper_surface: number | null;
+            height_upper_surface?: number | null;
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
             /**
              * Perimeter
@@ -391,7 +391,7 @@ export interface components {
              * @description Wind shielding factor
              * @default null
              */
-            shield_fact_location: components["schemas"]["WindShieldLocation"] | null;
+            shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
             /**
              * Thermal Resist Walls Base
              * @description Thermal resistance of walls of the basement (unit: m².K/W)
@@ -407,13 +407,13 @@ export interface components {
              * @description Thermal transmittance of floor above basement (unit: W/m².K)
              * @default null
              */
-            thermal_transm_envi_base: number | null;
+            thermal_transm_envi_base?: number | null;
             /**
              * Thermal Transm Walls
              * @description Thermal transmittance of walls above ground (unit: W/m².K)
              * @default null
              */
-            thermal_transm_walls: number | null;
+            thermal_transm_walls?: number | null;
             /**
              * Thickness Walls
              * @description Thickness of the walls (unit: m)
@@ -454,7 +454,7 @@ export interface components {
              * Edge Insulation
              * @default null
              */
-            edge_insulation: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+            edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -464,7 +464,7 @@ export interface components {
              * Height Upper Surface
              * @default null
              */
-            height_upper_surface: number | null;
+            height_upper_surface?: number | null;
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
             /**
              * Perimeter
@@ -485,7 +485,7 @@ export interface components {
              * @description Wind shielding factor
              * @default null
              */
-            shield_fact_location: components["schemas"]["WindShieldLocation"] | null;
+            shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
             /**
              * Thermal Resistance Floor Construction
              * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
@@ -531,7 +531,7 @@ export interface components {
              * Edge Insulation
              * @default null
              */
-            edge_insulation: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+            edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -541,7 +541,7 @@ export interface components {
              * Height Upper Surface
              * @default null
              */
-            height_upper_surface: number | null;
+            height_upper_surface?: number | null;
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
             /**
              * Perimeter
@@ -562,7 +562,7 @@ export interface components {
              * @description Wind shielding factor
              * @default null
              */
-            shield_fact_location: components["schemas"]["WindShieldLocation"] | null;
+            shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
             /**
              * Thermal Resistance Floor Construction
              * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
@@ -604,7 +604,7 @@ export interface components {
              * @description Area of ventilation openings per perimeter (unit: m²/m)
              * @default null
              */
-            area_per_perimeter_vent: number | null;
+            area_per_perimeter_vent?: number | null;
             /**
              * Areal Heat Capacity
              * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
@@ -614,7 +614,7 @@ export interface components {
              * Edge Insulation
              * @default null
              */
-            edge_insulation: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+            edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -624,7 +624,7 @@ export interface components {
              * Height Upper Surface
              * @default null
              */
-            height_upper_surface: number | null;
+            height_upper_surface?: number | null;
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
             /**
              * Perimeter
@@ -645,13 +645,13 @@ export interface components {
              * @description Wind shielding factor
              * @default null
              */
-            shield_fact_location: components["schemas"]["WindShieldLocation"] | null;
+            shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
             /**
              * Thermal Resist Insul
              * @description Thermal resistance of insulation on base of underfloor space (unit: m².K/W)
              * @default null
              */
-            thermal_resist_insul: number | null;
+            thermal_resist_insul?: number | null;
             /**
              * Thermal Resistance Floor Construction
              * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
@@ -662,7 +662,7 @@ export interface components {
              * @description Thermal transmittance of walls above ground (unit: W/m².K)
              * @default null
              */
-            thermal_transm_walls: number | null;
+            thermal_transm_walls?: number | null;
             /**
              * Thickness Walls
              * @description Thickness of the walls (unit: m)
@@ -708,7 +708,7 @@ export interface components {
              * Edge Insulation
              * @default null
              */
-            edge_insulation: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+            edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -723,7 +723,7 @@ export interface components {
              * Height Upper Surface
              * @default null
              */
-            height_upper_surface: number | null;
+            height_upper_surface?: number | null;
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
             /**
              * Perimeter
@@ -744,7 +744,7 @@ export interface components {
              * @description Wind shielding factor
              * @default null
              */
-            shield_fact_location: components["schemas"]["WindShieldLocation"] | null;
+            shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
             /**
              * Thermal Resist Walls Base
              * @description Thermal resistance of walls of the basement (unit: m².K/W)
@@ -829,17 +829,17 @@ export interface components {
              * Control Closing Irrad
              * @default null
              */
-            Control_closing_irrad: string | null;
+            Control_closing_irrad?: string | null;
             /**
              * Control Open
              * @default null
              */
-            Control_open: string | null;
+            Control_open?: string | null;
             /**
              * Control Opening Irrad
              * @default null
              */
-            Control_opening_irrad: string | null;
+            Control_opening_irrad?: string | null;
             controls: components["schemas"]["WindowTreatmentControl"];
             /** Delta R */
             delta_r: number;
@@ -848,12 +848,12 @@ export interface components {
              * @description This field should be a boolean - any string provided will be ignored and treated as a null.
              * @default null
              */
-            is_open: boolean | null;
+            is_open?: boolean | null;
             /**
              * Opening Delay Hrs
              * @default null
              */
-            opening_delay_hrs: number | null;
+            opening_delay_hrs?: number | null;
             /** Trans Red */
             trans_red: number;
             type: components["schemas"]["WindowTreatmentType"];
@@ -1021,32 +1021,32 @@ export interface components {
              * End
              * @default null
              */
-            end: number | null;
+            end?: number | null;
             /**
              * End360
              * @default null
              */
-            end360: number | null;
+            end360?: number | null;
             /**
              * Number
              * @default null
              */
-            number: number | null;
+            number?: number | null;
             /**
              * Shading
              * @default null
              */
-            shading: components["schemas"]["ShadingObject"][] | null;
+            shading?: components["schemas"]["ShadingObject"][] | null;
             /**
              * Start
              * @default null
              */
-            start: number | null;
+            start?: number | null;
             /**
              * Start360
              * @default null
              */
-            start360: number | null;
+            start360?: number | null;
         };
         /** FanSpeedData */
         FanSpeedData: {
@@ -1087,7 +1087,7 @@ export interface components {
         /** HeatPumpHotWaterTestData */
         HeatPumpHotWaterTestData: {
             /** @default null */
-            L: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"] | null;
+            L?: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"] | null;
             M: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"];
         };
         /**
@@ -1122,7 +1122,7 @@ export interface components {
             EnergySupply_aux: string;
             boiler_location: components["schemas"]["HeatSourceLocation"];
             /** @default null */
-            cost_schedule_hybrid: components["schemas"]["BoilerCostScheduleHybrid"] | null;
+            cost_schedule_hybrid?: components["schemas"]["BoilerCostScheduleHybrid"] | null;
             /** Efficiency Full Load */
             efficiency_full_load: number;
             /** Efficiency Part Load */
@@ -1156,7 +1156,7 @@ export interface components {
              * Air Flow Rate
              * @default null
              */
-            air_flow_rate: number | null;
+            air_flow_rate?: number | null;
             /** Capacity */
             capacity: number;
             /** Cop */
@@ -1169,7 +1169,7 @@ export interface components {
              * Eahp Mixed Ext Air Ratio
              * @default null
              */
-            eahp_mixed_ext_air_ratio: number | null;
+            eahp_mixed_ext_air_ratio?: number | null;
             /** Temp Outlet */
             temp_outlet: number;
             /** Temp Source */
@@ -1239,7 +1239,7 @@ export interface components {
              * @description Reference to a key in Input.WWHRS
              * @default null
              */
-            WWHRS: string | null;
+            WWHRS?: string | null;
             /**
              * Flowrate
              * @description Shower flow rate (unit: litre/minute)
@@ -1268,12 +1268,12 @@ export interface components {
              * Rejected Energy 1
              * @default null
              */
-            rejected_energy_1: number | null;
+            rejected_energy_1?: number | null;
             /**
              * Rejected Factor 3
              * @default null
              */
-            rejected_factor_3: number | null;
+            rejected_factor_3?: number | null;
             separate_DHW_tests: components["schemas"]["BoilerHotWaterTest"];
             /** Setpoint Temp */
             setpoint_temp: number;
@@ -1281,7 +1281,7 @@ export interface components {
              * Storage Loss Factor 2
              * @default null
              */
-            storage_loss_factor_2: number | null;
+            storage_loss_factor_2?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1298,7 +1298,7 @@ export interface components {
              * Setpoint Temp
              * @default null
              */
-            setpoint_temp: number | null;
+            setpoint_temp?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1365,7 +1365,7 @@ export interface components {
              * @description Required for StorageTank but not for SmartHotWaterTank
              * @default null
              */
-            thermostat_position: number | null;
+            thermostat_position?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1396,13 +1396,13 @@ export interface components {
              * Temp Flow Limit Upper
              * @default null
              */
-            temp_flow_limit_upper: number | null;
+            temp_flow_limit_upper?: number | null;
             /**
              * Thermostat Position
              * @description Required for StorageTank but not for SmartHotWaterTank
              * @default null
              */
-            thermostat_position: number | null;
+            thermostat_position?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1434,12 +1434,12 @@ export interface components {
              * Temp Setpnt Max
              * @default null
              */
-            temp_setpnt_max: string | null;
+            temp_setpnt_max?: string | null;
             /**
              * Thermostat Position
              * @default null
              */
-            thermostat_position: number | null;
+            thermostat_position?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1497,7 +1497,7 @@ export interface components {
              * @description Required for StorageTank but not for SmartHotWaterTank
              * @default null
              */
-            thermostat_position: number | null;
+            thermostat_position?: number | null;
             /** Tilt */
             tilt: number;
             /**
@@ -1553,7 +1553,7 @@ export interface components {
              * Primary Pipework
              * @default null
              */
-            primary_pipework: components["schemas"]["WaterPipework"][] | null;
+            primary_pipework?: components["schemas"]["WaterPipework"][] | null;
             /**
              * Temp Setpnt Max
              * @description Reference to a control schedule of maximum state of charge values
@@ -1591,7 +1591,7 @@ export interface components {
              * Thermostat Position
              * @default null
              */
-            thermostat_position: number | null;
+            thermostat_position?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1615,14 +1615,14 @@ export interface components {
              * Heat Exchanger Surface Area
              * @default null
              */
-            heat_exchanger_surface_area: number | null;
+            heat_exchanger_surface_area?: number | null;
             /** Init Temp */
             init_temp: number;
             /**
              * Primary Pipework
              * @default null
              */
-            primary_pipework: components["schemas"]["WaterPipework"][] | null;
+            primary_pipework?: components["schemas"]["WaterPipework"][] | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1678,13 +1678,13 @@ export interface components {
              * Duct Perimeter Mm
              * @default null
              */
-            duct_perimeter_mm: number | null;
+            duct_perimeter_mm?: number | null;
             duct_type: components["schemas"]["DuctType"];
             /**
              * External Diameter Mm
              * @default null
              */
-            external_diameter_mm: number | null;
+            external_diameter_mm?: number | null;
             /** Insulation Thermal Conductivity */
             insulation_thermal_conductivity: number;
             /** Insulation Thickness Mm */
@@ -1693,7 +1693,7 @@ export interface components {
              * Internal Diameter Mm
              * @default null
              */
-            internal_diameter_mm: number | null;
+            internal_diameter_mm?: number | null;
             /** Length */
             length: number;
             /** Reflective */
@@ -1725,7 +1725,7 @@ export interface components {
              * Control
              * @default null
              */
-            Control: string | null;
+            Control?: string | null;
             /** Energysupply */
             EnergySupply: string;
             /**
@@ -1742,25 +1742,25 @@ export interface components {
              * Ductwork
              * @default null
              */
-            ductwork: components["schemas"]["MechanicalVentilationDuctwork"][] | null;
+            ductwork?: components["schemas"]["MechanicalVentilationDuctwork"][] | null;
             /**
              * Measured Air Flow Rate
              * @default null
              */
-            measured_air_flow_rate: number | null;
+            measured_air_flow_rate?: number | null;
             /**
              * Measured Fan Power
              * @default null
              */
-            measured_fan_power: number | null;
+            measured_fan_power?: number | null;
             /**
              * Mvhr Eff
              * @description MVHR efficiency
              * @default null
              */
-            mvhr_eff: number | null;
+            mvhr_eff?: number | null;
             /** @default null */
-            mvhr_location: components["schemas"]["MVHRLocation"] | null;
+            mvhr_location?: components["schemas"]["MVHRLocation"] | null;
             sup_air_flw_ctrl: components["schemas"]["SupplyAirFlowRateControlType"];
             sup_air_temp_ctrl: components["schemas"]["SupplyAirTemperatureControlType"];
             vent_type: components["schemas"]["MechVentType"];
@@ -1816,7 +1816,7 @@ export interface components {
              * Efficacy
              * @default null
              */
-            efficacy: number | null;
+            efficacy?: number | null;
             /** Power */
             power: number;
         };
@@ -1862,7 +1862,7 @@ export interface components {
              * Temp Flow Limit Upper
              * @default null
              */
-            temp_flow_limit_upper: number | null;
+            temp_flow_limit_upper?: number | null;
         };
         /** EcoDesignController */
         EcoDesignController: {
@@ -1871,17 +1871,17 @@ export interface components {
              * Max Outdoor Temp
              * @default null
              */
-            max_outdoor_temp: number | null;
+            max_outdoor_temp?: number | null;
             /**
              * Min Flow Temp
              * @default null
              */
-            min_flow_temp: number | null;
+            min_flow_temp?: number | null;
             /**
              * Min Outdoor Temp
              * @default null
              */
-            min_outdoor_temp: number | null;
+            min_outdoor_temp?: number | null;
         };
         /** FancoilTestData */
         FancoilTestData: {
@@ -1899,7 +1899,7 @@ export interface components {
              * N Units
              * @default 1
              */
-            n_units: number | null;
+            n_units?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1947,7 +1947,7 @@ export interface components {
              * Duration
              * @default null
              */
-            duration: number | null;
+            duration?: number | null;
             /** Start */
             start: number;
             /** Temperature */
@@ -1956,7 +1956,7 @@ export interface components {
              * Volume
              * @default null
              */
-            volume: number | null;
+            volume?: number | null;
         };
         /** BuildingElementAdjacentConditionedSpace */
         BuildingElementAdjacentConditionedSpace: {
@@ -1978,7 +1978,7 @@ export interface components {
              * @description Thermal resistance (unit: m².K/W)
              * @default null
              */
-            thermal_resistance_construction: number | null;
+            thermal_resistance_construction?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1988,7 +1988,7 @@ export interface components {
              * U Value
              * @default null
              */
-            u_value: number | null;
+            u_value?: number | null;
         };
         /** BuildingElementAdjacentUnconditionedSpace_Simple */
         BuildingElementAdjacentUnconditionedSpace_Simple: {
@@ -2013,7 +2013,7 @@ export interface components {
              * @description Thermal resistance (unit: m2.K/W)
              * @default null
              */
-            thermal_resistance_construction: number | null;
+            thermal_resistance_construction?: number | null;
             /**
              * Thermal Resistance Unconditioned Space
              * @description Effective thermal resistance of unheated space (unit: m².K/W)
@@ -2028,7 +2028,7 @@ export interface components {
              * U Value
              * @default null
              */
-            u_value: number | null;
+            u_value?: number | null;
         };
         /** BuildingElementGround */
         BuildingElementGround: {
@@ -2069,12 +2069,12 @@ export interface components {
              * Is External Door
              * @default null
              */
-            is_external_door: boolean | null;
+            is_external_door?: boolean | null;
             /**
              * Is Unheated Pitched Roof
              * @default null
              */
-            is_unheated_pitched_roof: boolean | null;
+            is_unheated_pitched_roof?: boolean | null;
             /** @description Mass distribution class of the building element, one of: evenly distributed (D); concentrated on external side (E); concentrated on internal side (I); concentrated on internal and external sides (IE); concentrated in middle (M). */
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
             /**
@@ -2097,7 +2097,7 @@ export interface components {
              * @description Thermal resistance (unit: m².K/W)
              * @default null
              */
-            thermal_resistance_construction: number | null;
+            thermal_resistance_construction?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -2107,7 +2107,7 @@ export interface components {
              * U Value
              * @default null
              */
-            u_value: number | null;
+            u_value?: number | null;
             /**
              * Width
              * @description The width of the building element (unit: m)
@@ -2123,7 +2123,7 @@ export interface components {
              * Control Windowopenable
              * @default null
              */
-            Control_WindowOpenable: string | null;
+            Control_WindowOpenable?: string | null;
             /**
              * Base Height
              * @description The distance between the ground and the lowest edge of the element (unit: m)
@@ -2164,7 +2164,7 @@ export interface components {
              * Security Risk
              * @default null
              */
-            security_risk: boolean | null;
+            security_risk?: boolean | null;
             /** Shading */
             shading: (components["schemas"]["WindowShadingObject"] | components["schemas"]["WindowShadingObstacle"])[];
             /**
@@ -2172,12 +2172,12 @@ export interface components {
              * @description Thermal resistance (unit: m².K/W)
              * @default null
              */
-            thermal_resistance_construction: number | null;
+            thermal_resistance_construction?: number | null;
             /**
              * Treatment
              * @default null
              */
-            treatment: components["schemas"]["WindowTreatment"][] | null;
+            treatment?: components["schemas"]["WindowTreatment"][] | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -2187,7 +2187,7 @@ export interface components {
              * U Value
              * @default null
              */
-            u_value: number | null;
+            u_value?: number | null;
             /**
              * Width
              * @description The width of the building element (unit: m)
@@ -2202,14 +2202,14 @@ export interface components {
              * Bulbs
              * @default null
              */
-            bulbs: {
+            bulbs?: {
                 [key: string]: components["schemas"]["LightingBulbs"];
             } | null;
             /**
              * Efficacy
              * @default null
              */
-            efficacy: number | null;
+            efficacy?: number | null;
         };
         /**
          * SpaceHeatControlType
@@ -2225,7 +2225,7 @@ export interface components {
              * Junction Type
              * @default null
              */
-            junction_type: string | null;
+            junction_type?: string | null;
             /** Length */
             length: number;
             /** Linear Thermal Transmittance */
@@ -2260,27 +2260,27 @@ export interface components {
              * @description List of appliance usage events
              * @default null
              */
-            Events: components["schemas"]["ApplianceGainsEvent"][] | null;
+            Events?: components["schemas"]["ApplianceGainsEvent"][] | null;
             /**
              * Standby
              * @description Appliance power consumption when not in use (unit: W)
              * @default null
              */
-            Standby: number | null;
+            Standby?: number | null;
             /**
              * Gains Fraction
              * @description Proportion of appliance demand turned into heat gains (no unit)
              */
             gains_fraction: number;
             /** @default null */
-            loadshifting: components["schemas"]["LoadShifting"] | null;
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
             /**
              * Priority
              * @default null
              */
-            priority: number | null;
+            priority?: number | null;
             /** @default null */
-            schedule: components["schemas"]["ScheduleForDouble"] | null;
+            schedule?: components["schemas"]["ScheduleForDouble"] | null;
             /**
              * Start Day
              * @description First day of the time series, day of the year, 0 to 365
@@ -2295,7 +2295,7 @@ export interface components {
              * Type
              * @default null
              */
-            type: string | null;
+            type?: string | null;
         };
         /**
          * Appliances
@@ -2308,57 +2308,57 @@ export interface components {
              * Clothes Drying
              * @default Not Installed
              */
-            Clothes_drying: components["schemas"]["ClothesDrying"] | AppliancesClothes_drying;
+            Clothes_drying?: components["schemas"]["ClothesDrying"] | AppliancesClothes_drying;
             /**
              * Clothes Washing
              * @default Not Installed
              */
-            Clothes_washing: components["schemas"]["ClothesWashing"] | AppliancesClothes_washing;
+            Clothes_washing?: components["schemas"]["ClothesWashing"] | AppliancesClothes_washing;
             /**
              * Dishwasher
              * @default Not Installed
              */
-            Dishwasher: components["schemas"]["Dishwasher"] | AppliancesDishwasher;
+            Dishwasher?: components["schemas"]["Dishwasher"] | AppliancesDishwasher;
             /**
              * Freezer
              * @default Not Installed
              */
-            Freezer: components["schemas"]["Freezer"] | AppliancesFreezer;
+            Freezer?: components["schemas"]["Freezer"] | AppliancesFreezer;
             /**
              * Fridge
              * @default Not Installed
              */
-            Fridge: components["schemas"]["Fridge"] | AppliancesFridge;
+            Fridge?: components["schemas"]["Fridge"] | AppliancesFridge;
             /**
              * Fridge-Freezer
              * @default Not Installed
              */
-            "Fridge-Freezer": components["schemas"]["FridgeFreezer"] | AppliancesFridgeFreezer;
+            "Fridge-Freezer"?: components["schemas"]["FridgeFreezer"] | AppliancesFridgeFreezer;
             /**
              * Hobs
              * @default Not Installed
              */
-            Hobs: components["schemas"]["Hobs"] | AppliancesHobs;
+            Hobs?: components["schemas"]["Hobs"] | AppliancesHobs;
             /**
              * Kettle
              * @default Not Installed
              */
-            Kettle: components["schemas"]["Kettle"] | AppliancesKettle;
+            Kettle?: components["schemas"]["Kettle"] | AppliancesKettle;
             /**
              * Microwave
              * @default Not Installed
              */
-            Microwave: components["schemas"]["Microwave"] | AppliancesMicrowave;
+            Microwave?: components["schemas"]["Microwave"] | AppliancesMicrowave;
             /**
              * Otherdevices
              * @default Not Installed
              */
-            Otherdevices: components["schemas"]["ApplianceEnergyPerAnnum"] | AppliancesOtherdevices;
+            Otherdevices?: components["schemas"]["ApplianceEnergyPerAnnum"] | AppliancesOtherdevices;
             /**
              * Oven
              * @default Not Installed
              */
-            Oven: components["schemas"]["Oven"] | AppliancesOven;
+            Oven?: components["schemas"]["Oven"] | AppliancesOven;
         };
         /** ColdWaterSource */
         ColdWaterSource: {
@@ -2384,11 +2384,11 @@ export interface components {
              * @description Proportion of the charge targeted for each day
              * @default null
              */
-            charge_level: components["schemas"]["ChargeLevel"] | null;
+            charge_level?: components["schemas"]["ChargeLevel"] | null;
             /** @default null */
-            external_sensor: components["schemas"]["ExternalSensor"] | null;
+            external_sensor?: components["schemas"]["ExternalSensor"] | null;
             /** @default null */
-            logic_type: components["schemas"]["ControlLogicType"] | null;
+            logic_type?: components["schemas"]["ControlLogicType"] | null;
             /** @description List of boolean values where true means 'on' (one entry per hour) */
             schedule: components["schemas"]["ScheduleForBoolean"];
             /**
@@ -2400,9 +2400,9 @@ export interface components {
              * Temp Charge Cut
              * @default null
              */
-            temp_charge_cut: number | null;
+            temp_charge_cut?: number | null;
             /** @default null */
-            temp_charge_cut_delta: components["schemas"]["ScheduleForDouble"] | null;
+            temp_charge_cut_delta?: components["schemas"]["ScheduleForDouble"] | null;
             /**
              * Time Series Step
              * @description Timestep of the time series data (unit: hours)
@@ -2454,7 +2454,7 @@ export interface components {
              * Allow Null
              * @default null
              */
-            allow_null: boolean | null;
+            allow_null?: boolean | null;
             /** @description List of boolean values where true means on, one entry per hour */
             schedule: components["schemas"]["ScheduleForBoolean"];
             /**
@@ -2480,13 +2480,13 @@ export interface components {
              * @description How long before heating period the system should switch on (unit: hours)
              * @default null
              */
-            advanced_start: number | null;
+            advanced_start?: number | null;
             /**
              * Default To Max
              * @description If both min and max limits are set but setpoint is not, whether to default to min (false) or max (true)
              * @default null
              */
-            default_to_max: boolean | null;
+            default_to_max?: boolean | null;
             /** @description list of float values (one entry per hour) */
             schedule: components["schemas"]["ScheduleForDouble"];
             /**
@@ -2494,13 +2494,13 @@ export interface components {
              * @description Maximum setpoint allowed
              * @default null
              */
-            setpoint_max: number | null;
+            setpoint_max?: number | null;
             /**
              * Setpoint Min
              * @description Minimum setpoint allowed
              * @default null
              */
-            setpoint_min: number | null;
+            setpoint_min?: number | null;
             /**
              * Start Day
              * @description First day of the time series, day of the year, 0 to 365
@@ -2520,11 +2520,11 @@ export interface components {
         /** EnergySupply */
         EnergySupply: {
             /** @default null */
-            ElectricBattery: components["schemas"]["ElectricBattery"] | null;
+            ElectricBattery?: components["schemas"]["ElectricBattery"] | null;
             /** @default null */
-            diverter: components["schemas"]["EnergyDiverter"] | null;
+            diverter?: components["schemas"]["EnergyDiverter"] | null;
             /** @default null */
-            factor: components["schemas"]["CustomEnergySourceFactor"] | null;
+            factor?: components["schemas"]["CustomEnergySourceFactor"] | null;
             fuel: components["schemas"]["FuelType"];
             /**
              * Is Export Capable
@@ -2535,22 +2535,22 @@ export interface components {
              * Priority
              * @default null
              */
-            priority: components["schemas"]["EnergySupplyPriorityEntry"][] | null;
+            priority?: components["schemas"]["EnergySupplyPriorityEntry"][] | null;
             /**
              * Tariff
              * @default null
              */
-            tariff: string | null;
+            tariff?: string | null;
             /**
              * Threshold Charges
              * @default null
              */
-            threshold_charges: number[] | null;
+            threshold_charges?: number[] | null;
             /**
              * Threshold Prices
              * @default null
              */
-            threshold_prices: number[] | null;
+            threshold_prices?: number[] | null;
         };
         /** WaterHeatingEvents */
         WaterHeatingEvents: {
@@ -2558,21 +2558,21 @@ export interface components {
              * Bath
              * @default null
              */
-            Bath: {
+            Bath?: {
                 [key: string]: components["schemas"]["WaterHeatingEvent"][];
             } | null;
             /**
              * Other
              * @default null
              */
-            Other: {
+            Other?: {
                 [key: string]: components["schemas"]["WaterHeatingEvent"][];
             } | null;
             /**
              * Shower
              * @default null
              */
-            Shower: {
+            Shower?: {
                 [key: string]: components["schemas"]["WaterHeatingEvent"][];
             } | null;
         };
@@ -2586,61 +2586,61 @@ export interface components {
              * @description List of external air temperatures, one entry per hour (unit: ˚C)
              * @default null
              */
-            air_temperatures: number[] | null;
+            air_temperatures?: number[] | null;
             /**
              * Diffuse Horizontal Radiation
              * @description List of diffuse horizontal radiation values, one entry per hour (unit: W/m²)
              * @default null
              */
-            diffuse_horizontal_radiation: number[] | null;
+            diffuse_horizontal_radiation?: number[] | null;
             /**
              * Direct Beam Conversion Needed
              * @description A flag to indicate whether direct beam radiation from climate data needs to be converted from horizontal to normal incidence; if normal direct beam radiation values are provided then no conversion is needed
              * @default null
              */
-            direct_beam_conversion_needed: boolean | null;
+            direct_beam_conversion_needed?: boolean | null;
             /**
              * Direct Beam Radiation
              * @description List of direct beam radiation values, one entry per hour (unit: W/m²)
              * @default null
              */
-            direct_beam_radiation: number[] | null;
+            direct_beam_radiation?: number[] | null;
             /**
              * Latitude
              * @description Latitude of weather station, angle from south (unit: ˚)
              * @default null
              */
-            latitude: number | null;
+            latitude?: number | null;
             /**
              * Longitude
              * @description Longitude of weather station, easterly +ve westerly -ve (unit: ˚)
              * @default null
              */
-            longitude: number | null;
+            longitude?: number | null;
             /**
              * Shading Segments
              * @description Data splitting the ground plane into segments (8-36) and giving height and distance to shading objects surrounding the building
              * @default null
              */
-            shading_segments: components["schemas"]["ShadingSegmentFHS"][] | null;
+            shading_segments?: components["schemas"]["ShadingSegmentFHS"][] | null;
             /**
              * Solar Reflectivity Of Ground
              * @description List of ground reflectivity values, 0 to 1, one entry per hour
              * @default null
              */
-            solar_reflectivity_of_ground: number[] | null;
+            solar_reflectivity_of_ground?: number[] | null;
             /**
              * Wind Directions
              * @description List of wind directions in degrees where North=0, East=90, South=180, West=270. Values range: 0 to 360. Wind direction is reported by the direction from which it originates, e.g. a southerly (180 degree) wind blows from the south to the north. (unit: ˚)
              * @default null
              */
-            wind_directions: number[] | null;
+            wind_directions?: number[] | null;
             /**
              * Wind Speeds
              * @description List of wind speeds, one entry per hour (unit: m/s)
              * @default null
              */
-            wind_speeds: number[] | null;
+            wind_speeds?: number[] | null;
         };
         General: {
             build_type: components["schemas"]["BuildType"];
@@ -2748,47 +2748,47 @@ export interface components {
         /** HeatSourceWetHeatPump */
         HeatSourceWetHeatPump: {
             /** @default null */
-            BufferTank: components["schemas"]["HeatPumpBufferTank"] | null;
+            BufferTank?: components["schemas"]["HeatPumpBufferTank"] | null;
             /** Energysupply */
             EnergySupply: string;
             /**
              * Energysupply Heat Network
              * @default null
              */
-            EnergySupply_heat_network: string | null;
+            EnergySupply_heat_network?: string | null;
             /**
              * Mechanicalventilation
              * @default null
              */
-            MechanicalVentilation: string | null;
+            MechanicalVentilation?: string | null;
             backup_ctrl_type: components["schemas"]["HeatPumpBackupControlType"];
             /** @default null */
-            boiler: components["schemas"]["HeatPumpBoiler"] | null;
+            boiler?: components["schemas"]["HeatPumpBoiler"] | null;
             /**
              * Eahp Mixed Max Temp
              * @default null
              */
-            eahp_mixed_max_temp: number | null;
+            eahp_mixed_max_temp?: number | null;
             /**
              * Eahp Mixed Min Temp
              * @default null
              */
-            eahp_mixed_min_temp: number | null;
+            eahp_mixed_min_temp?: number | null;
             /**
              * Min Modulation Rate 20
              * @default null
              */
-            min_modulation_rate_20: number | null;
+            min_modulation_rate_20?: number | null;
             /**
              * Min Modulation Rate 35
              * @default null
              */
-            min_modulation_rate_35: number | null;
+            min_modulation_rate_35?: number | null;
             /**
              * Min Modulation Rate 55
              * @default null
              */
-            min_modulation_rate_55: number | null;
+            min_modulation_rate_55?: number | null;
             /** Min Temp Diff Flow Return For Hp To Operate */
             min_temp_diff_flow_return_for_hp_to_operate: number;
             /** Modulating Control */
@@ -2799,17 +2799,17 @@ export interface components {
              * Power Heating Circ Pump
              * @default null
              */
-            power_heating_circ_pump: number | null;
+            power_heating_circ_pump?: number | null;
             /**
              * Power Heating Warm Air Fan
              * @default null
              */
-            power_heating_warm_air_fan: number | null;
+            power_heating_warm_air_fan?: number | null;
             /**
              * Power Max Backup
              * @default null
              */
-            power_max_backup: number | null;
+            power_max_backup?: number | null;
             /** Power Off */
             power_off: number;
             /** Power Source Circ Pump */
@@ -2822,14 +2822,14 @@ export interface components {
              * Temp Distribution Heat Network
              * @default null
              */
-            temp_distribution_heat_network: number | null;
+            temp_distribution_heat_network?: number | null;
             /** Temp Lower Operating Limit */
             temp_lower_operating_limit: number;
             /**
              * Temp Return Feed Max
              * @default null
              */
-            temp_return_feed_max: number | null;
+            temp_return_feed_max?: number | null;
             /** Test Data En14825 */
             test_data_EN14825: components["schemas"]["HeatPumpTestDatum"][];
             /** Time Constant Onoff Operation */
@@ -2838,7 +2838,7 @@ export interface components {
              * Time Delay Backup
              * @default null
              */
-            time_delay_backup: number | null;
+            time_delay_backup?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -2850,46 +2850,46 @@ export interface components {
         /** HeatSourceWetHeatPumpWithProductReference */
         HeatSourceWetHeatPumpWithProductReference: {
             /** @default null */
-            BufferTank: components["schemas"]["HeatPumpBufferTank"] | null;
+            BufferTank?: components["schemas"]["HeatPumpBufferTank"] | null;
             /** Energysupply */
             EnergySupply: string;
             /**
              * Energysupply Heat Network
              * @default null
              */
-            EnergySupply_heat_network: string | null;
+            EnergySupply_heat_network?: string | null;
             /**
              * Mechanicalventilation
              * @default null
              */
-            MechanicalVentilation: string | null;
+            MechanicalVentilation?: string | null;
             /** @default null */
-            boiler: components["schemas"]["HeatPumpBoiler"] | null;
+            boiler?: components["schemas"]["HeatPumpBoiler"] | null;
             /**
              * Eahp Mixed Max Temp
              * @default null
              */
-            eahp_mixed_max_temp: number | null;
+            eahp_mixed_max_temp?: number | null;
             /**
              * Eahp Mixed Min Temp
              * @default null
              */
-            eahp_mixed_min_temp: number | null;
+            eahp_mixed_min_temp?: number | null;
             /**
              * Min Modulation Rate 20
              * @default null
              */
-            min_modulation_rate_20: number | null;
+            min_modulation_rate_20?: number | null;
             /**
              * Min Modulation Rate 35
              * @default null
              */
-            min_modulation_rate_35: number | null;
+            min_modulation_rate_35?: number | null;
             /**
              * Min Modulation Rate 55
              * @default null
              */
-            min_modulation_rate_55: number | null;
+            min_modulation_rate_55?: number | null;
             /**
              * Reference to the product in the HEM database
              * @description A unique reference to a product held within the HEM database (PCDB)
@@ -2899,7 +2899,7 @@ export interface components {
              * Temp Distribution Heat Network
              * @default null
              */
-            temp_distribution_heat_network: number | null;
+            temp_distribution_heat_network?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -2917,26 +2917,26 @@ export interface components {
              * Bath
              * @default null
              */
-            Bath: {
+            Bath?: {
                 [key: string]: components["schemas"]["Bath"];
             } | null;
             /**
              * Distribution
              * @default null
              */
-            Distribution: components["schemas"]["WaterPipeworkSimple"][] | null;
+            Distribution?: components["schemas"]["WaterPipeworkSimple"][] | null;
             /**
              * Other
              * @default null
              */
-            Other: {
+            Other?: {
                 [key: string]: components["schemas"]["OtherWaterUse"];
             } | null;
             /**
              * Shower
              * @default null
              */
-            Shower: {
+            Shower?: {
                 [key: string]: components["schemas"]["ShowerMixer"] | components["schemas"]["ShowerInstantElectric"];
             } | null;
         };
@@ -2955,23 +2955,23 @@ export interface components {
              * Control Ventadjustmax
              * @default null
              */
-            Control_VentAdjustMax: string | null;
+            Control_VentAdjustMax?: string | null;
             /**
              * Control Ventadjustmin
              * @default null
              */
-            Control_VentAdjustMin: string | null;
+            Control_VentAdjustMin?: string | null;
             /**
              * Control Windowadjust
              * @default null
              */
-            Control_WindowAdjust: string | null;
+            Control_WindowAdjust?: string | null;
             Leaks: components["schemas"]["VentilationLeaks"];
             /**
              * Mechanicalventilation
              * @default null
              */
-            MechanicalVentilation: {
+            MechanicalVentilation?: {
                 [key: string]: components["schemas"]["MechanicalVentilationFHS"];
             } | null;
             /** Vents */
@@ -2982,12 +2982,12 @@ export interface components {
              * Ach Max Static Calcs
              * @default null
              */
-            ach_max_static_calcs: number | null;
+            ach_max_static_calcs?: number | null;
             /**
              * Ach Min Static Calcs
              * @default null
              */
-            ach_min_static_calcs: number | null;
+            ach_min_static_calcs?: number | null;
             /** Altitude */
             altitude: number;
             /** Cross Vent Possible */
@@ -2996,14 +2996,14 @@ export interface components {
              * Noise Nuisance
              * @default null
              */
-            noise_nuisance: boolean | null;
+            noise_nuisance?: boolean | null;
             shield_class: components["schemas"]["VentilationShieldClass"];
             terrain_class: components["schemas"]["TerrainClass"];
             /**
              * Vent Opening Ratio Init
              * @default null
              */
-            vent_opening_ratio_init: number | null;
+            vent_opening_ratio_init?: number | null;
             /**
              * Ventilation Zone Base Height
              * @description Base height of the ventilation zone relative to ground (m)
@@ -3111,7 +3111,7 @@ export interface components {
              * Advanced Start
              * @default null
              */
-            advanced_start: number | null;
+            advanced_start?: number | null;
             /**
              * Cooling Capacity
              * @description Maximum cooling capacity of the system (unit: kW)
@@ -3128,7 +3128,7 @@ export interface components {
              * Temp Setback
              * @default null
              */
-            temp_setback: number | null;
+            temp_setback?: number | null;
             /**
              * Type
              * @constant
@@ -3156,7 +3156,7 @@ export interface components {
              * Advanced Start
              * @default null
              */
-            advanced_start: number | null;
+            advanced_start?: number | null;
             air_flow_type: components["schemas"]["AirFlowType"];
             /**
              * Fan Pwr
@@ -3183,7 +3183,7 @@ export interface components {
              * Temp Setback
              * @default null
              */
-            temp_setback: number | null;
+            temp_setback?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -3203,7 +3203,7 @@ export interface components {
              * Advanced Start
              * @default null
              */
-            advanced_start: number | null;
+            advanced_start?: number | null;
             /**
              * Frac Convective
              * @description Convective fraction for heating
@@ -3218,7 +3218,7 @@ export interface components {
              * Temp Setback
              * @default null
              */
-            temp_setback: number | null;
+            temp_setback?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -3237,14 +3237,14 @@ export interface components {
              * Advanced Start
              * @default null
              */
-            advanced_start: number | null;
+            advanced_start?: number | null;
             /** Frac Convective */
             frac_convective: number;
             /**
              * Temp Setback
              * @default null
              */
-            temp_setback: number | null;
+            temp_setback?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -3262,7 +3262,7 @@ export interface components {
              * Energysupply
              * @default null
              */
-            EnergySupply: string | null;
+            EnergySupply?: string | null;
             HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
             /** Zone */
             Zone: string;
@@ -3270,17 +3270,17 @@ export interface components {
              * Advanced Start
              * @default null
              */
-            advanced_start: number | null;
+            advanced_start?: number | null;
             /**
              * Bypass Percentage Recirculated
              * @default null
              */
-            bypass_percentage_recirculated: number | null;
+            bypass_percentage_recirculated?: number | null;
             /**
              * Design Flow Rate
              * @default null
              */
-            design_flow_rate: number | null;
+            design_flow_rate?: number | null;
             /** Design Flow Temp */
             design_flow_temp: number;
             ecodesign_controller: components["schemas"]["EcoDesignController"];
@@ -3290,24 +3290,24 @@ export interface components {
              * Max Flow Rate
              * @default null
              */
-            max_flow_rate: number | null;
+            max_flow_rate?: number | null;
             /**
              * Min Flow Rate
              * @default null
              */
-            min_flow_rate: number | null;
+            min_flow_rate?: number | null;
             /** Temp Diff Emit Dsgn */
             temp_diff_emit_dsgn: number;
             /**
              * Temp Setback
              * @default null
              */
-            temp_setback: number | null;
+            temp_setback?: number | null;
             /**
              * Thermal Mass
              * @default null
              */
-            thermal_mass: number | null;
+            thermal_mass?: number | null;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -3342,19 +3342,19 @@ export interface components {
                 [key: string]: components["schemas"]["BuildingElementOpaqueFHS"] | components["schemas"]["BuildingElementTransparentFHS"] | (components["schemas"]["BuildingElementGroundSlabNoEdgeInsulation"] | components["schemas"]["BuildingElementGroundSlabEdgeInsulation"] | components["schemas"]["BuildingElementGroundSuspendedFloor"] | components["schemas"]["BuildingElementGroundHeatedBasement"] | components["schemas"]["BuildingElementGroundUnheatedBasement"]) | components["schemas"]["BuildingElementAdjacentConditionedSpace"] | components["schemas"]["BuildingElementAdjacentUnconditionedSpace_Simple"];
             };
             /** @default null */
-            Lighting: components["schemas"]["Lighting"] | null;
+            Lighting?: components["schemas"]["Lighting"] | null;
             /**
              * Spacecoolsystem
              * @default null
              */
-            SpaceCoolSystem: string | string[] | null;
+            SpaceCoolSystem?: string | string[] | null;
             /** @default null */
-            SpaceHeatControl: components["schemas"]["SpaceHeatControlType"] | null;
+            SpaceHeatControl?: components["schemas"]["SpaceHeatControlType"] | null;
             /**
              * Spaceheatsystem
              * @default null
              */
-            SpaceHeatSystem: string | string[] | null;
+            SpaceHeatSystem?: string | string[] | null;
             /** Thermalbridging */
             ThermalBridging: number | {
                 [key: string]: components["schemas"]["ThermalBridgingLinearFHS"] | components["schemas"]["ThermalBridgingPoint"];
@@ -3365,7 +3365,7 @@ export interface components {
              */
             area: number;
             /** @default null */
-            temp_setpnt_basis: components["schemas"]["ZoneTemperatureControlBasis"] | null;
+            temp_setpnt_basis?: components["schemas"]["ZoneTemperatureControlBasis"] | null;
             /**
              * Temp Setpnt Init
              * @description Setpoint temperature to use during initialisation (unit: ˚C)
@@ -3383,11 +3383,11 @@ export interface components {
              * Appliancegains
              * @default null
              */
-            ApplianceGains: {
+            ApplianceGains?: {
                 [key: string]: components["schemas"]["ApplianceGainsFHS"];
             } | null;
             /** @default null */
-            Appliances: components["schemas"]["Appliances"] | null;
+            Appliances?: components["schemas"]["Appliances"] | null;
             /**
              * Coldwatersource
              * @description Requires specific keys for FHS wrapper
@@ -3406,22 +3406,22 @@ export interface components {
             Events: components["schemas"]["WaterHeatingEvents"];
             ExternalConditions: components["schemas"]["ExternalConditionsInputFHS"];
             /** @default null */
-            General: components["schemas"]["General"] | null;
+            General?: components["schemas"]["General"] | null;
             /**
              * Groundfloorarea
              * @description For a house, the area of the ground floor (unit: m²)
              * @default null
              */
-            GroundFloorArea: number | null;
+            GroundFloorArea?: number | null;
             /**
              * Heatsourcewet
              * @default null
              */
-            HeatSourceWet: {
+            HeatSourceWet?: {
                 [key: string]: components["schemas"]["HeatSourceWetHeatPump"] | components["schemas"]["HeatSourceWetHeatPumpWithProductReference"] | components["schemas"]["HeatSourceWetBoiler"] | components["schemas"]["HeatSourceWetHeatBattery"] | components["schemas"]["HeatSourceWetHIU"];
             } | null;
             /** @default null */
-            HeatingControlType: components["schemas"]["HeatingControlType"] | null;
+            HeatingControlType?: components["schemas"]["HeatingControlType"] | null;
             HotWaterDemand: components["schemas"]["HotWaterDemand"];
             HotWaterSource: components["schemas"]["HotWaterSourceFHS"];
             InfiltrationVentilation: components["schemas"]["InfiltrationVentilationFHS"];
@@ -3430,34 +3430,34 @@ export interface components {
              * Numberofbedrooms
              * @default null
              */
-            NumberOfBedrooms: number | null;
+            NumberOfBedrooms?: number | null;
             /**
              * Numberofwetrooms
              * @default null
              */
-            NumberOfWetRooms: number | null;
+            NumberOfWetRooms?: number | null;
             /**
              * Onsitegeneration
              * @default null
              */
-            OnSiteGeneration: {
+            OnSiteGeneration?: {
                 [key: string]: components["schemas"]["PhotovoltaicSystem"];
             } | null;
             /**
              * Partgcompliance
              * @default null
              */
-            PartGcompliance: boolean | null;
+            PartGcompliance?: boolean | null;
             /**
              * Parto Active Cooling Required
              * @default null
              */
-            PartO_active_cooling_required: boolean | null;
+            PartO_active_cooling_required?: boolean | null;
             /**
              * Preheatedwatersource
              * @default null
              */
-            PreHeatedWaterSource: {
+            PreHeatedWaterSource?: {
                 [key: string]: components["schemas"]["StorageTank"];
             } | null;
             SimulationTime: components["schemas"]["SimulationTime"];
@@ -3465,41 +3465,41 @@ export interface components {
              * Smartappliancecontrols
              * @default null
              */
-            SmartApplianceControls: {
+            SmartApplianceControls?: {
                 [key: string]: components["schemas"]["SmartApplianceControl"];
             } | null;
             /**
              * Spacecoolsystem
              * @default null
              */
-            SpaceCoolSystem: {
+            SpaceCoolSystem?: {
                 [key: string]: components["schemas"]["SpaceCoolSystemFHS"];
             } | null;
             /**
              * Spaceheatsystem
              * @default null
              */
-            SpaceHeatSystem: {
+            SpaceHeatSystem?: {
                 [key: string]: components["schemas"]["SpaceHeatSystemInstantElectricHeaterFHS"] | components["schemas"]["SpaceHeatSystemElectricStorageHeater"] | components["schemas"]["SpaceHeatSystemWetDistributionFHS"] | components["schemas"]["SpaceHeatSystemWarmAirFHS"];
             } | null;
             /** @default null */
-            Tariff: components["schemas"]["Tariff"] | null;
+            Tariff?: components["schemas"]["Tariff"] | null;
             /**
              * Thermalbridginglinear
              * @default null
              */
-            ThermalBridgingLinear: {
+            ThermalBridgingLinear?: {
                 [key: string]: components["schemas"]["ThermalBridgingLinearFHS"];
             } | null;
             /**
              * Wwhrs
              * @default null
              */
-            WWHRS: {
+            WWHRS?: {
                 [key: string]: components["schemas"]["WasteWaterHeatRecoverySystem"];
             } | null;
             /** @default null */
-            WaterHeatSchedDefault: components["schemas"]["WaterHeatingSchedule"] | null;
+            WaterHeatSchedDefault?: components["schemas"]["WaterHeatingSchedule"] | null;
             /** Zone */
             Zone: {
                 [key: string]: components["schemas"]["ZoneFHS"];
@@ -3517,7 +3517,7 @@ export interface components {
                     /** Kwh Per Annum */
                     kWh_per_annum: number;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
                 /** ApplianceGainsEvent */
                 ApplianceGainsEvent: {
@@ -3537,27 +3537,27 @@ export interface components {
                      * @description List of appliance usage events
                      * @default null
                      */
-                    Events: components["schemas"]["ApplianceGainsEvent"][] | null;
+                    Events?: components["schemas"]["ApplianceGainsEvent"][] | null;
                     /**
                      * Standby
                      * @description Appliance power consumption when not in use (unit: W)
                      * @default null
                      */
-                    Standby: number | null;
+                    Standby?: number | null;
                     /**
                      * Gains Fraction
                      * @description Proportion of appliance demand turned into heat gains (no unit)
                      */
                     gains_fraction: number;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                     /**
                      * Priority
                      * @default null
                      */
-                    priority: number | null;
+                    priority?: number | null;
                     /** @default null */
-                    schedule: components["schemas"]["ScheduleForDouble"] | null;
+                    schedule?: components["schemas"]["ScheduleForDouble"] | null;
                     /**
                      * Start Day
                      * @description First day of the time series, day of the year, 0 to 365
@@ -3572,7 +3572,7 @@ export interface components {
                      * Type
                      * @default null
                      */
-                    type: string | null;
+                    type?: string | null;
                 };
                 /**
                  * Appliances
@@ -3585,57 +3585,57 @@ export interface components {
                      * Clothes Drying
                      * @default Not Installed
                      */
-                    Clothes_drying: components["schemas"]["ClothesDrying"] | Fhs_inputSchema$defsAppliancesClothes_drying;
+                    Clothes_drying?: components["schemas"]["ClothesDrying"] | Fhs_inputSchema$defsAppliancesClothes_drying;
                     /**
                      * Clothes Washing
                      * @default Not Installed
                      */
-                    Clothes_washing: components["schemas"]["ClothesWashing"] | Fhs_inputSchema$defsAppliancesClothes_washing;
+                    Clothes_washing?: components["schemas"]["ClothesWashing"] | Fhs_inputSchema$defsAppliancesClothes_washing;
                     /**
                      * Dishwasher
                      * @default Not Installed
                      */
-                    Dishwasher: components["schemas"]["Dishwasher"] | Fhs_inputSchema$defsAppliancesDishwasher;
+                    Dishwasher?: components["schemas"]["Dishwasher"] | Fhs_inputSchema$defsAppliancesDishwasher;
                     /**
                      * Freezer
                      * @default Not Installed
                      */
-                    Freezer: components["schemas"]["Freezer"] | Fhs_inputSchema$defsAppliancesFreezer;
+                    Freezer?: components["schemas"]["Freezer"] | Fhs_inputSchema$defsAppliancesFreezer;
                     /**
                      * Fridge
                      * @default Not Installed
                      */
-                    Fridge: components["schemas"]["Fridge"] | Fhs_inputSchema$defsAppliancesFridge;
+                    Fridge?: components["schemas"]["Fridge"] | Fhs_inputSchema$defsAppliancesFridge;
                     /**
                      * Fridge-Freezer
                      * @default Not Installed
                      */
-                    "Fridge-Freezer": components["schemas"]["FridgeFreezer"] | Fhs_inputSchema$defsAppliancesFridgeFreezer;
+                    "Fridge-Freezer"?: components["schemas"]["FridgeFreezer"] | Fhs_inputSchema$defsAppliancesFridgeFreezer;
                     /**
                      * Hobs
                      * @default Not Installed
                      */
-                    Hobs: components["schemas"]["Hobs"] | Fhs_inputSchema$defsAppliancesHobs;
+                    Hobs?: components["schemas"]["Hobs"] | Fhs_inputSchema$defsAppliancesHobs;
                     /**
                      * Kettle
                      * @default Not Installed
                      */
-                    Kettle: components["schemas"]["Kettle"] | Fhs_inputSchema$defsAppliancesKettle;
+                    Kettle?: components["schemas"]["Kettle"] | Fhs_inputSchema$defsAppliancesKettle;
                     /**
                      * Microwave
                      * @default Not Installed
                      */
-                    Microwave: components["schemas"]["Microwave"] | Fhs_inputSchema$defsAppliancesMicrowave;
+                    Microwave?: components["schemas"]["Microwave"] | Fhs_inputSchema$defsAppliancesMicrowave;
                     /**
                      * Otherdevices
                      * @default Not Installed
                      */
-                    Otherdevices: components["schemas"]["ApplianceEnergyPerAnnum"] | Fhs_inputSchema$defsAppliancesOtherdevices;
+                    Otherdevices?: components["schemas"]["ApplianceEnergyPerAnnum"] | Fhs_inputSchema$defsAppliancesOtherdevices;
                     /**
                      * Oven
                      * @default Not Installed
                      */
-                    Oven: components["schemas"]["Oven"] | Fhs_inputSchema$defsAppliancesOven;
+                    Oven?: components["schemas"]["Oven"] | Fhs_inputSchema$defsAppliancesOven;
                 };
                 /** Bath */
                 Bath: {
@@ -3693,7 +3693,7 @@ export interface components {
                      * @description Thermal resistance (unit: m².K/W)
                      * @default null
                      */
-                    thermal_resistance_construction: number | null;
+                    thermal_resistance_construction?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -3703,7 +3703,7 @@ export interface components {
                      * U Value
                      * @default null
                      */
-                    u_value: number | null;
+                    u_value?: number | null;
                 };
                 /** BuildingElementAdjacentUnconditionedSpace_Simple */
                 BuildingElementAdjacentUnconditionedSpace_Simple: {
@@ -3728,7 +3728,7 @@ export interface components {
                      * @description Thermal resistance (unit: m2.K/W)
                      * @default null
                      */
-                    thermal_resistance_construction: number | null;
+                    thermal_resistance_construction?: number | null;
                     /**
                      * Thermal Resistance Unconditioned Space
                      * @description Effective thermal resistance of unheated space (unit: m².K/W)
@@ -3743,7 +3743,7 @@ export interface components {
                      * U Value
                      * @default null
                      */
-                    u_value: number | null;
+                    u_value?: number | null;
                 };
                 /** BuildingElementGround */
                 BuildingElementGround: {
@@ -3779,7 +3779,7 @@ export interface components {
                      * Edge Insulation
                      * @default null
                      */
-                    edge_insulation: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+                    edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -3790,12 +3790,12 @@ export interface components {
                      * @description Height of the basement walls above ground level (unit: m)
                      * @default null
                      */
-                    height_basement_walls: number | null;
+                    height_basement_walls?: number | null;
                     /**
                      * Height Upper Surface
                      * @default null
                      */
-                    height_upper_surface: number | null;
+                    height_upper_surface?: number | null;
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
                     /**
                      * Perimeter
@@ -3816,7 +3816,7 @@ export interface components {
                      * @description Wind shielding factor
                      * @default null
                      */
-                    shield_fact_location: components["schemas"]["WindShieldLocation"] | null;
+                    shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
                     /**
                      * Thermal Resist Walls Base
                      * @description Thermal resistance of walls of the basement (unit: m².K/W)
@@ -3832,13 +3832,13 @@ export interface components {
                      * @description Thermal transmittance of floor above basement (unit: W/m².K)
                      * @default null
                      */
-                    thermal_transm_envi_base: number | null;
+                    thermal_transm_envi_base?: number | null;
                     /**
                      * Thermal Transm Walls
                      * @description Thermal transmittance of walls above ground (unit: W/m².K)
                      * @default null
                      */
-                    thermal_transm_walls: number | null;
+                    thermal_transm_walls?: number | null;
                     /**
                      * Thickness Walls
                      * @description Thickness of the walls (unit: m)
@@ -3879,7 +3879,7 @@ export interface components {
                      * Edge Insulation
                      * @default null
                      */
-                    edge_insulation: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+                    edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -3889,7 +3889,7 @@ export interface components {
                      * Height Upper Surface
                      * @default null
                      */
-                    height_upper_surface: number | null;
+                    height_upper_surface?: number | null;
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
                     /**
                      * Perimeter
@@ -3910,7 +3910,7 @@ export interface components {
                      * @description Wind shielding factor
                      * @default null
                      */
-                    shield_fact_location: components["schemas"]["WindShieldLocation"] | null;
+                    shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
                     /**
                      * Thermal Resistance Floor Construction
                      * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
@@ -3956,7 +3956,7 @@ export interface components {
                      * Edge Insulation
                      * @default null
                      */
-                    edge_insulation: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+                    edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -3966,7 +3966,7 @@ export interface components {
                      * Height Upper Surface
                      * @default null
                      */
-                    height_upper_surface: number | null;
+                    height_upper_surface?: number | null;
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
                     /**
                      * Perimeter
@@ -3987,7 +3987,7 @@ export interface components {
                      * @description Wind shielding factor
                      * @default null
                      */
-                    shield_fact_location: components["schemas"]["WindShieldLocation"] | null;
+                    shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
                     /**
                      * Thermal Resistance Floor Construction
                      * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
@@ -4029,7 +4029,7 @@ export interface components {
                      * @description Area of ventilation openings per perimeter (unit: m²/m)
                      * @default null
                      */
-                    area_per_perimeter_vent: number | null;
+                    area_per_perimeter_vent?: number | null;
                     /**
                      * Areal Heat Capacity
                      * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
@@ -4039,7 +4039,7 @@ export interface components {
                      * Edge Insulation
                      * @default null
                      */
-                    edge_insulation: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+                    edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -4049,7 +4049,7 @@ export interface components {
                      * Height Upper Surface
                      * @default null
                      */
-                    height_upper_surface: number | null;
+                    height_upper_surface?: number | null;
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
                     /**
                      * Perimeter
@@ -4070,13 +4070,13 @@ export interface components {
                      * @description Wind shielding factor
                      * @default null
                      */
-                    shield_fact_location: components["schemas"]["WindShieldLocation"] | null;
+                    shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
                     /**
                      * Thermal Resist Insul
                      * @description Thermal resistance of insulation on base of underfloor space (unit: m².K/W)
                      * @default null
                      */
-                    thermal_resist_insul: number | null;
+                    thermal_resist_insul?: number | null;
                     /**
                      * Thermal Resistance Floor Construction
                      * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
@@ -4087,7 +4087,7 @@ export interface components {
                      * @description Thermal transmittance of walls above ground (unit: W/m².K)
                      * @default null
                      */
-                    thermal_transm_walls: number | null;
+                    thermal_transm_walls?: number | null;
                     /**
                      * Thickness Walls
                      * @description Thickness of the walls (unit: m)
@@ -4133,7 +4133,7 @@ export interface components {
                      * Edge Insulation
                      * @default null
                      */
-                    edge_insulation: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+                    edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -4148,7 +4148,7 @@ export interface components {
                      * Height Upper Surface
                      * @default null
                      */
-                    height_upper_surface: number | null;
+                    height_upper_surface?: number | null;
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
                     /**
                      * Perimeter
@@ -4169,7 +4169,7 @@ export interface components {
                      * @description Wind shielding factor
                      * @default null
                      */
-                    shield_fact_location: components["schemas"]["WindShieldLocation"] | null;
+                    shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
                     /**
                      * Thermal Resist Walls Base
                      * @description Thermal resistance of walls of the basement (unit: m².K/W)
@@ -4240,12 +4240,12 @@ export interface components {
                      * Is External Door
                      * @default null
                      */
-                    is_external_door: boolean | null;
+                    is_external_door?: boolean | null;
                     /**
                      * Is Unheated Pitched Roof
                      * @default null
                      */
-                    is_unheated_pitched_roof: boolean | null;
+                    is_unheated_pitched_roof?: boolean | null;
                     /** @description Mass distribution class of the building element, one of: evenly distributed (D); concentrated on external side (E); concentrated on internal side (I); concentrated on internal and external sides (IE); concentrated in middle (M). */
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
                     /**
@@ -4268,7 +4268,7 @@ export interface components {
                      * @description Thermal resistance (unit: m².K/W)
                      * @default null
                      */
-                    thermal_resistance_construction: number | null;
+                    thermal_resistance_construction?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -4278,7 +4278,7 @@ export interface components {
                      * U Value
                      * @default null
                      */
-                    u_value: number | null;
+                    u_value?: number | null;
                     /**
                      * Width
                      * @description The width of the building element (unit: m)
@@ -4294,7 +4294,7 @@ export interface components {
                      * Control Windowopenable
                      * @default null
                      */
-                    Control_WindowOpenable: string | null;
+                    Control_WindowOpenable?: string | null;
                     /**
                      * Base Height
                      * @description The distance between the ground and the lowest edge of the element (unit: m)
@@ -4335,7 +4335,7 @@ export interface components {
                      * Security Risk
                      * @default null
                      */
-                    security_risk: boolean | null;
+                    security_risk?: boolean | null;
                     /** Shading */
                     shading: (components["schemas"]["WindowShadingObject"] | components["schemas"]["WindowShadingObstacle"])[];
                     /**
@@ -4343,12 +4343,12 @@ export interface components {
                      * @description Thermal resistance (unit: m².K/W)
                      * @default null
                      */
-                    thermal_resistance_construction: number | null;
+                    thermal_resistance_construction?: number | null;
                     /**
                      * Treatment
                      * @default null
                      */
-                    treatment: components["schemas"]["WindowTreatment"][] | null;
+                    treatment?: components["schemas"]["WindowTreatment"][] | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -4358,7 +4358,7 @@ export interface components {
                      * U Value
                      * @default null
                      */
-                    u_value: number | null;
+                    u_value?: number | null;
                     /**
                      * Width
                      * @description The width of the building element (unit: m)
@@ -4376,7 +4376,7 @@ export interface components {
                     /** Kg Load */
                     kg_load: number;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
                 /** ClothesWashing */
                 ClothesWashing: {
@@ -4385,7 +4385,7 @@ export interface components {
                     /** Kg Load */
                     kg_load: number;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
                 /** ColdWaterSource */
                 ColdWaterSource: {
@@ -4433,11 +4433,11 @@ export interface components {
                      * @description Proportion of the charge targeted for each day
                      * @default null
                      */
-                    charge_level: components["schemas"]["ChargeLevel"] | null;
+                    charge_level?: components["schemas"]["ChargeLevel"] | null;
                     /** @default null */
-                    external_sensor: components["schemas"]["ExternalSensor"] | null;
+                    external_sensor?: components["schemas"]["ExternalSensor"] | null;
                     /** @default null */
-                    logic_type: components["schemas"]["ControlLogicType"] | null;
+                    logic_type?: components["schemas"]["ControlLogicType"] | null;
                     /** @description List of boolean values where true means 'on' (one entry per hour) */
                     schedule: components["schemas"]["ScheduleForBoolean"];
                     /**
@@ -4449,9 +4449,9 @@ export interface components {
                      * Temp Charge Cut
                      * @default null
                      */
-                    temp_charge_cut: number | null;
+                    temp_charge_cut?: number | null;
                     /** @default null */
-                    temp_charge_cut_delta: components["schemas"]["ScheduleForDouble"] | null;
+                    temp_charge_cut_delta?: components["schemas"]["ScheduleForDouble"] | null;
                     /**
                      * Time Series Step
                      * @description Timestep of the time series data (unit: hours)
@@ -4529,7 +4529,7 @@ export interface components {
                      * Allow Null
                      * @default null
                      */
-                    allow_null: boolean | null;
+                    allow_null?: boolean | null;
                     /** @description List of boolean values where true means on, one entry per hour */
                     schedule: components["schemas"]["ScheduleForBoolean"];
                     /**
@@ -4555,13 +4555,13 @@ export interface components {
                      * @description How long before heating period the system should switch on (unit: hours)
                      * @default null
                      */
-                    advanced_start: number | null;
+                    advanced_start?: number | null;
                     /**
                      * Default To Max
                      * @description If both min and max limits are set but setpoint is not, whether to default to min (false) or max (true)
                      * @default null
                      */
-                    default_to_max: boolean | null;
+                    default_to_max?: boolean | null;
                     /** @description list of float values (one entry per hour) */
                     schedule: components["schemas"]["ScheduleForDouble"];
                     /**
@@ -4569,13 +4569,13 @@ export interface components {
                      * @description Maximum setpoint allowed
                      * @default null
                      */
-                    setpoint_max: number | null;
+                    setpoint_max?: number | null;
                     /**
                      * Setpoint Min
                      * @description Minimum setpoint allowed
                      * @default null
                      */
-                    setpoint_min: number | null;
+                    setpoint_min?: number | null;
                     /**
                      * Start Day
                      * @description First day of the time series, day of the year, 0 to 365
@@ -4606,7 +4606,7 @@ export interface components {
                     /** Kwh Per 100Cycle */
                     kWh_per_100cycle: number;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
                 /**
                  * DuctShape
@@ -4625,17 +4625,17 @@ export interface components {
                      * Max Outdoor Temp
                      * @default null
                      */
-                    max_outdoor_temp: number | null;
+                    max_outdoor_temp?: number | null;
                     /**
                      * Min Flow Temp
                      * @default null
                      */
-                    min_flow_temp: number | null;
+                    min_flow_temp?: number | null;
                     /**
                      * Min Outdoor Temp
                      * @default null
                      */
-                    min_outdoor_temp: number | null;
+                    min_outdoor_temp?: number | null;
                 };
                 /**
                  * EcoDesignControllerClass
@@ -4694,11 +4694,11 @@ export interface components {
                 /** EnergySupply */
                 EnergySupply: {
                     /** @default null */
-                    ElectricBattery: components["schemas"]["ElectricBattery"] | null;
+                    ElectricBattery?: components["schemas"]["ElectricBattery"] | null;
                     /** @default null */
-                    diverter: components["schemas"]["EnergyDiverter"] | null;
+                    diverter?: components["schemas"]["EnergyDiverter"] | null;
                     /** @default null */
-                    factor: components["schemas"]["CustomEnergySourceFactor"] | null;
+                    factor?: components["schemas"]["CustomEnergySourceFactor"] | null;
                     fuel: components["schemas"]["FuelType"];
                     /**
                      * Is Export Capable
@@ -4709,22 +4709,22 @@ export interface components {
                      * Priority
                      * @default null
                      */
-                    priority: components["schemas"]["EnergySupplyPriorityEntry"][] | null;
+                    priority?: components["schemas"]["EnergySupplyPriorityEntry"][] | null;
                     /**
                      * Tariff
                      * @default null
                      */
-                    tariff: string | null;
+                    tariff?: string | null;
                     /**
                      * Threshold Charges
                      * @default null
                      */
-                    threshold_charges: number[] | null;
+                    threshold_charges?: number[] | null;
                     /**
                      * Threshold Prices
                      * @default null
                      */
-                    threshold_prices: number[] | null;
+                    threshold_prices?: number[] | null;
                 };
                 /**
                  * EnergySupplyPriorityEntry
@@ -4746,61 +4746,61 @@ export interface components {
                      * @description List of external air temperatures, one entry per hour (unit: ˚C)
                      * @default null
                      */
-                    air_temperatures: number[] | null;
+                    air_temperatures?: number[] | null;
                     /**
                      * Diffuse Horizontal Radiation
                      * @description List of diffuse horizontal radiation values, one entry per hour (unit: W/m²)
                      * @default null
                      */
-                    diffuse_horizontal_radiation: number[] | null;
+                    diffuse_horizontal_radiation?: number[] | null;
                     /**
                      * Direct Beam Conversion Needed
                      * @description A flag to indicate whether direct beam radiation from climate data needs to be converted from horizontal to normal incidence; if normal direct beam radiation values are provided then no conversion is needed
                      * @default null
                      */
-                    direct_beam_conversion_needed: boolean | null;
+                    direct_beam_conversion_needed?: boolean | null;
                     /**
                      * Direct Beam Radiation
                      * @description List of direct beam radiation values, one entry per hour (unit: W/m²)
                      * @default null
                      */
-                    direct_beam_radiation: number[] | null;
+                    direct_beam_radiation?: number[] | null;
                     /**
                      * Latitude
                      * @description Latitude of weather station, angle from south (unit: ˚)
                      * @default null
                      */
-                    latitude: number | null;
+                    latitude?: number | null;
                     /**
                      * Longitude
                      * @description Longitude of weather station, easterly +ve westerly -ve (unit: ˚)
                      * @default null
                      */
-                    longitude: number | null;
+                    longitude?: number | null;
                     /**
                      * Shading Segments
                      * @description Data splitting the ground plane into segments (8-36) and giving height and distance to shading objects surrounding the building
                      * @default null
                      */
-                    shading_segments: components["schemas"]["ShadingSegmentFHS"][] | null;
+                    shading_segments?: components["schemas"]["ShadingSegmentFHS"][] | null;
                     /**
                      * Solar Reflectivity Of Ground
                      * @description List of ground reflectivity values, 0 to 1, one entry per hour
                      * @default null
                      */
-                    solar_reflectivity_of_ground: number[] | null;
+                    solar_reflectivity_of_ground?: number[] | null;
                     /**
                      * Wind Directions
                      * @description List of wind directions in degrees where North=0, East=90, South=180, West=270. Values range: 0 to 360. Wind direction is reported by the direction from which it originates, e.g. a southerly (180 degree) wind blows from the south to the north. (unit: ˚)
                      * @default null
                      */
-                    wind_directions: number[] | null;
+                    wind_directions?: number[] | null;
                     /**
                      * Wind Speeds
                      * @description List of wind speeds, one entry per hour (unit: m/s)
                      * @default null
                      */
-                    wind_speeds: number[] | null;
+                    wind_speeds?: number[] | null;
                 };
                 /** ExternalSensor */
                 ExternalSensor: {
@@ -4838,31 +4838,31 @@ export interface components {
                     /** Kwh Per Annum */
                     kWh_per_annum: number;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
                 /** Fridge */
                 Fridge: {
                     /** Kwh Per Annum */
                     kWh_per_annum: number;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
                 /** FridgeFreezer */
                 FridgeFreezer: {
                     /** @default null */
-                    Energysupply: components["schemas"]["EnergySupplyType"] | null;
+                    Energysupply?: components["schemas"]["EnergySupplyType"] | null;
                     /**
                      * Kwh Per Annum
                      * @default null
                      */
-                    kWh_per_annum: number | null;
+                    kWh_per_annum?: number | null;
                     /**
                      * Kwh Per Cycle
                      * @default null
                      */
-                    kWh_per_cycle: number | null;
+                    kWh_per_cycle?: number | null;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
                 /**
                  * FuelType
@@ -4892,7 +4892,7 @@ export interface components {
                     EnergySupply_aux: string;
                     boiler_location: components["schemas"]["HeatSourceLocation"];
                     /** @default null */
-                    cost_schedule_hybrid: components["schemas"]["BoilerCostScheduleHybrid"] | null;
+                    cost_schedule_hybrid?: components["schemas"]["BoilerCostScheduleHybrid"] | null;
                     /** Efficiency Full Load */
                     efficiency_full_load: number;
                     /** Efficiency Part Load */
@@ -4953,7 +4953,7 @@ export interface components {
                      * @description Required for StorageTank but not for SmartHotWaterTank
                      * @default null
                      */
-                    thermostat_position: number | null;
+                    thermostat_position?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -4978,7 +4978,7 @@ export interface components {
                 /** HeatPumpHotWaterTestData */
                 HeatPumpHotWaterTestData: {
                     /** @default null */
-                    L: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"] | null;
+                    L?: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"] | null;
                     M: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"];
                 };
                 /**
@@ -4997,7 +4997,7 @@ export interface components {
                      * Air Flow Rate
                      * @default null
                      */
-                    air_flow_rate: number | null;
+                    air_flow_rate?: number | null;
                     /** Capacity */
                     capacity: number;
                     /** Cop */
@@ -5010,7 +5010,7 @@ export interface components {
                      * Eahp Mixed Ext Air Ratio
                      * @default null
                      */
-                    eahp_mixed_ext_air_ratio: number | null;
+                    eahp_mixed_ext_air_ratio?: number | null;
                     /** Temp Outlet */
                     temp_outlet: number;
                     /** Temp Source */
@@ -5123,47 +5123,47 @@ export interface components {
                 /** HeatSourceWetHeatPump */
                 HeatSourceWetHeatPump: {
                     /** @default null */
-                    BufferTank: components["schemas"]["HeatPumpBufferTank"] | null;
+                    BufferTank?: components["schemas"]["HeatPumpBufferTank"] | null;
                     /** Energysupply */
                     EnergySupply: string;
                     /**
                      * Energysupply Heat Network
                      * @default null
                      */
-                    EnergySupply_heat_network: string | null;
+                    EnergySupply_heat_network?: string | null;
                     /**
                      * Mechanicalventilation
                      * @default null
                      */
-                    MechanicalVentilation: string | null;
+                    MechanicalVentilation?: string | null;
                     backup_ctrl_type: components["schemas"]["HeatPumpBackupControlType"];
                     /** @default null */
-                    boiler: components["schemas"]["HeatPumpBoiler"] | null;
+                    boiler?: components["schemas"]["HeatPumpBoiler"] | null;
                     /**
                      * Eahp Mixed Max Temp
                      * @default null
                      */
-                    eahp_mixed_max_temp: number | null;
+                    eahp_mixed_max_temp?: number | null;
                     /**
                      * Eahp Mixed Min Temp
                      * @default null
                      */
-                    eahp_mixed_min_temp: number | null;
+                    eahp_mixed_min_temp?: number | null;
                     /**
                      * Min Modulation Rate 20
                      * @default null
                      */
-                    min_modulation_rate_20: number | null;
+                    min_modulation_rate_20?: number | null;
                     /**
                      * Min Modulation Rate 35
                      * @default null
                      */
-                    min_modulation_rate_35: number | null;
+                    min_modulation_rate_35?: number | null;
                     /**
                      * Min Modulation Rate 55
                      * @default null
                      */
-                    min_modulation_rate_55: number | null;
+                    min_modulation_rate_55?: number | null;
                     /** Min Temp Diff Flow Return For Hp To Operate */
                     min_temp_diff_flow_return_for_hp_to_operate: number;
                     /** Modulating Control */
@@ -5174,17 +5174,17 @@ export interface components {
                      * Power Heating Circ Pump
                      * @default null
                      */
-                    power_heating_circ_pump: number | null;
+                    power_heating_circ_pump?: number | null;
                     /**
                      * Power Heating Warm Air Fan
                      * @default null
                      */
-                    power_heating_warm_air_fan: number | null;
+                    power_heating_warm_air_fan?: number | null;
                     /**
                      * Power Max Backup
                      * @default null
                      */
-                    power_max_backup: number | null;
+                    power_max_backup?: number | null;
                     /** Power Off */
                     power_off: number;
                     /** Power Source Circ Pump */
@@ -5197,14 +5197,14 @@ export interface components {
                      * Temp Distribution Heat Network
                      * @default null
                      */
-                    temp_distribution_heat_network: number | null;
+                    temp_distribution_heat_network?: number | null;
                     /** Temp Lower Operating Limit */
                     temp_lower_operating_limit: number;
                     /**
                      * Temp Return Feed Max
                      * @default null
                      */
-                    temp_return_feed_max: number | null;
+                    temp_return_feed_max?: number | null;
                     /** Test Data En14825 */
                     test_data_EN14825: components["schemas"]["HeatPumpTestDatum"][];
                     /** Time Constant Onoff Operation */
@@ -5213,7 +5213,7 @@ export interface components {
                      * Time Delay Backup
                      * @default null
                      */
-                    time_delay_backup: number | null;
+                    time_delay_backup?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -5225,46 +5225,46 @@ export interface components {
                 /** HeatSourceWetHeatPumpWithProductReference */
                 HeatSourceWetHeatPumpWithProductReference: {
                     /** @default null */
-                    BufferTank: components["schemas"]["HeatPumpBufferTank"] | null;
+                    BufferTank?: components["schemas"]["HeatPumpBufferTank"] | null;
                     /** Energysupply */
                     EnergySupply: string;
                     /**
                      * Energysupply Heat Network
                      * @default null
                      */
-                    EnergySupply_heat_network: string | null;
+                    EnergySupply_heat_network?: string | null;
                     /**
                      * Mechanicalventilation
                      * @default null
                      */
-                    MechanicalVentilation: string | null;
+                    MechanicalVentilation?: string | null;
                     /** @default null */
-                    boiler: components["schemas"]["HeatPumpBoiler"] | null;
+                    boiler?: components["schemas"]["HeatPumpBoiler"] | null;
                     /**
                      * Eahp Mixed Max Temp
                      * @default null
                      */
-                    eahp_mixed_max_temp: number | null;
+                    eahp_mixed_max_temp?: number | null;
                     /**
                      * Eahp Mixed Min Temp
                      * @default null
                      */
-                    eahp_mixed_min_temp: number | null;
+                    eahp_mixed_min_temp?: number | null;
                     /**
                      * Min Modulation Rate 20
                      * @default null
                      */
-                    min_modulation_rate_20: number | null;
+                    min_modulation_rate_20?: number | null;
                     /**
                      * Min Modulation Rate 35
                      * @default null
                      */
-                    min_modulation_rate_35: number | null;
+                    min_modulation_rate_35?: number | null;
                     /**
                      * Min Modulation Rate 55
                      * @default null
                      */
-                    min_modulation_rate_55: number | null;
+                    min_modulation_rate_55?: number | null;
                     /**
                      * Reference to the product in the HEM database
                      * @description A unique reference to a product held within the HEM database (PCDB)
@@ -5274,7 +5274,7 @@ export interface components {
                      * Temp Distribution Heat Network
                      * @default null
                      */
-                    temp_distribution_heat_network: number | null;
+                    temp_distribution_heat_network?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -5303,13 +5303,13 @@ export interface components {
                      * Temp Flow Limit Upper
                      * @default null
                      */
-                    temp_flow_limit_upper: number | null;
+                    temp_flow_limit_upper?: number | null;
                     /**
                      * Thermostat Position
                      * @description Required for StorageTank but not for SmartHotWaterTank
                      * @default null
                      */
-                    thermostat_position: number | null;
+                    thermostat_position?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -5327,7 +5327,7 @@ export interface components {
                     /** Kwh Per Cycle */
                     kWh_per_cycle: number;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
                 /** HotWaterDemand */
                 HotWaterDemand: {
@@ -5335,26 +5335,26 @@ export interface components {
                      * Bath
                      * @default null
                      */
-                    Bath: {
+                    Bath?: {
                         [key: string]: components["schemas"]["Bath"];
                     } | null;
                     /**
                      * Distribution
                      * @default null
                      */
-                    Distribution: components["schemas"]["WaterPipeworkSimple"][] | null;
+                    Distribution?: components["schemas"]["WaterPipeworkSimple"][] | null;
                     /**
                      * Other
                      * @default null
                      */
-                    Other: {
+                    Other?: {
                         [key: string]: components["schemas"]["OtherWaterUse"];
                     } | null;
                     /**
                      * Shower
                      * @default null
                      */
-                    Shower: {
+                    Shower?: {
                         [key: string]: components["schemas"]["ShowerMixer"] | components["schemas"]["ShowerInstantElectric"];
                     } | null;
                 };
@@ -5370,12 +5370,12 @@ export interface components {
                      * Rejected Energy 1
                      * @default null
                      */
-                    rejected_energy_1: number | null;
+                    rejected_energy_1?: number | null;
                     /**
                      * Rejected Factor 3
                      * @default null
                      */
-                    rejected_factor_3: number | null;
+                    rejected_factor_3?: number | null;
                     separate_DHW_tests: components["schemas"]["BoilerHotWaterTest"];
                     /** Setpoint Temp */
                     setpoint_temp: number;
@@ -5383,7 +5383,7 @@ export interface components {
                      * Storage Loss Factor 2
                      * @default null
                      */
-                    storage_loss_factor_2: number | null;
+                    storage_loss_factor_2?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -5405,7 +5405,7 @@ export interface components {
                      * Setpoint Temp
                      * @default null
                      */
-                    setpoint_temp: number | null;
+                    setpoint_temp?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -5465,7 +5465,7 @@ export interface components {
                      * Primary Pipework
                      * @default null
                      */
-                    primary_pipework: components["schemas"]["WaterPipework"][] | null;
+                    primary_pipework?: components["schemas"]["WaterPipework"][] | null;
                     /**
                      * Temp Setpnt Max
                      * @description Reference to a control schedule of maximum state of charge values
@@ -5503,7 +5503,7 @@ export interface components {
                      * Thermostat Position
                      * @default null
                      */
-                    thermostat_position: number | null;
+                    thermostat_position?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -5535,12 +5535,12 @@ export interface components {
                      * Temp Setpnt Max
                      * @default null
                      */
-                    temp_setpnt_max: string | null;
+                    temp_setpnt_max?: string | null;
                     /**
                      * Thermostat Position
                      * @default null
                      */
-                    thermostat_position: number | null;
+                    thermostat_position?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -5557,23 +5557,23 @@ export interface components {
                      * Control Ventadjustmax
                      * @default null
                      */
-                    Control_VentAdjustMax: string | null;
+                    Control_VentAdjustMax?: string | null;
                     /**
                      * Control Ventadjustmin
                      * @default null
                      */
-                    Control_VentAdjustMin: string | null;
+                    Control_VentAdjustMin?: string | null;
                     /**
                      * Control Windowadjust
                      * @default null
                      */
-                    Control_WindowAdjust: string | null;
+                    Control_WindowAdjust?: string | null;
                     Leaks: components["schemas"]["VentilationLeaks"];
                     /**
                      * Mechanicalventilation
                      * @default null
                      */
-                    MechanicalVentilation: {
+                    MechanicalVentilation?: {
                         [key: string]: components["schemas"]["MechanicalVentilationFHS"];
                     } | null;
                     /** Vents */
@@ -5584,12 +5584,12 @@ export interface components {
                      * Ach Max Static Calcs
                      * @default null
                      */
-                    ach_max_static_calcs: number | null;
+                    ach_max_static_calcs?: number | null;
                     /**
                      * Ach Min Static Calcs
                      * @default null
                      */
-                    ach_min_static_calcs: number | null;
+                    ach_min_static_calcs?: number | null;
                     /** Altitude */
                     altitude: number;
                     /** Cross Vent Possible */
@@ -5598,14 +5598,14 @@ export interface components {
                      * Noise Nuisance
                      * @default null
                      */
-                    noise_nuisance: boolean | null;
+                    noise_nuisance?: boolean | null;
                     shield_class: components["schemas"]["VentilationShieldClass"];
                     terrain_class: components["schemas"]["TerrainClass"];
                     /**
                      * Vent Opening Ratio Init
                      * @default null
                      */
-                    vent_opening_ratio_init: number | null;
+                    vent_opening_ratio_init?: number | null;
                     /**
                      * Ventilation Zone Base Height
                      * @description Base height of the ventilation zone relative to ground (m)
@@ -5640,7 +5640,7 @@ export interface components {
                     /** Kwh Per Cycle */
                     kWh_per_cycle: number;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
                 /** Lighting */
                 Lighting: {
@@ -5648,14 +5648,14 @@ export interface components {
                      * Bulbs
                      * @default null
                      */
-                    bulbs: {
+                    bulbs?: {
                         [key: string]: components["schemas"]["LightingBulbs"];
                     } | null;
                     /**
                      * Efficacy
                      * @default null
                      */
-                    efficacy: number | null;
+                    efficacy?: number | null;
                 };
                 /** LightingBulbs */
                 LightingBulbs: {
@@ -5668,7 +5668,7 @@ export interface components {
                      * Efficacy
                      * @default null
                      */
-                    efficacy: number | null;
+                    efficacy?: number | null;
                     /** Power */
                     power: number;
                 };
@@ -5696,13 +5696,13 @@ export interface components {
                      * Duct Perimeter Mm
                      * @default null
                      */
-                    duct_perimeter_mm: number | null;
+                    duct_perimeter_mm?: number | null;
                     duct_type: components["schemas"]["DuctType"];
                     /**
                      * External Diameter Mm
                      * @default null
                      */
-                    external_diameter_mm: number | null;
+                    external_diameter_mm?: number | null;
                     /** Insulation Thermal Conductivity */
                     insulation_thermal_conductivity: number;
                     /** Insulation Thickness Mm */
@@ -5711,7 +5711,7 @@ export interface components {
                      * Internal Diameter Mm
                      * @default null
                      */
-                    internal_diameter_mm: number | null;
+                    internal_diameter_mm?: number | null;
                     /** Length */
                     length: number;
                     /** Reflective */
@@ -5723,7 +5723,7 @@ export interface components {
                      * Control
                      * @default null
                      */
-                    Control: string | null;
+                    Control?: string | null;
                     /** Energysupply */
                     EnergySupply: string;
                     /**
@@ -5740,25 +5740,25 @@ export interface components {
                      * Ductwork
                      * @default null
                      */
-                    ductwork: components["schemas"]["MechanicalVentilationDuctwork"][] | null;
+                    ductwork?: components["schemas"]["MechanicalVentilationDuctwork"][] | null;
                     /**
                      * Measured Air Flow Rate
                      * @default null
                      */
-                    measured_air_flow_rate: number | null;
+                    measured_air_flow_rate?: number | null;
                     /**
                      * Measured Fan Power
                      * @default null
                      */
-                    measured_fan_power: number | null;
+                    measured_fan_power?: number | null;
                     /**
                      * Mvhr Eff
                      * @description MVHR efficiency
                      * @default null
                      */
-                    mvhr_eff: number | null;
+                    mvhr_eff?: number | null;
                     /** @default null */
-                    mvhr_location: components["schemas"]["MVHRLocation"] | null;
+                    mvhr_location?: components["schemas"]["MVHRLocation"] | null;
                     sup_air_flw_ctrl: components["schemas"]["SupplyAirFlowRateControlType"];
                     sup_air_temp_ctrl: components["schemas"]["SupplyAirTemperatureControlType"];
                     vent_type: components["schemas"]["MechVentType"];
@@ -5768,7 +5768,7 @@ export interface components {
                     /** Kwh Per Cycle */
                     kWh_per_cycle: number;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
                 /** OtherWaterUse */
                 OtherWaterUse: {
@@ -5786,7 +5786,7 @@ export interface components {
                     /** Kwh Per Cycle */
                     kWh_per_cycle: number;
                     /** @default null */
-                    loadshifting: components["schemas"]["LoadShifting"] | null;
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
                 /** PhotovoltaicSystem */
                 PhotovoltaicSystem: {
@@ -5912,32 +5912,32 @@ export interface components {
                      * End
                      * @default null
                      */
-                    end: number | null;
+                    end?: number | null;
                     /**
                      * End360
                      * @default null
                      */
-                    end360: number | null;
+                    end360?: number | null;
                     /**
                      * Number
                      * @default null
                      */
-                    number: number | null;
+                    number?: number | null;
                     /**
                      * Shading
                      * @default null
                      */
-                    shading: components["schemas"]["ShadingObject"][] | null;
+                    shading?: components["schemas"]["ShadingObject"][] | null;
                     /**
                      * Start
                      * @default null
                      */
-                    start: number | null;
+                    start?: number | null;
                     /**
                      * Start360
                      * @default null
                      */
-                    start360: number | null;
+                    start360?: number | null;
                 };
                 /** ShowerInstantElectric */
                 ShowerInstantElectric: {
@@ -5962,7 +5962,7 @@ export interface components {
                      * @description Reference to a key in Input.WWHRS
                      * @default null
                      */
-                    WWHRS: string | null;
+                    WWHRS?: string | null;
                     /**
                      * Flowrate
                      * @description Shower flow rate (unit: litre/minute)
@@ -6069,7 +6069,7 @@ export interface components {
                      * @description Required for StorageTank but not for SmartHotWaterTank
                      * @default null
                      */
-                    thermostat_position: number | null;
+                    thermostat_position?: number | null;
                     /** Tilt */
                     tilt: number;
                     /**
@@ -6091,7 +6091,7 @@ export interface components {
                      * Advanced Start
                      * @default null
                      */
-                    advanced_start: number | null;
+                    advanced_start?: number | null;
                     /**
                      * Cooling Capacity
                      * @description Maximum cooling capacity of the system (unit: kW)
@@ -6108,7 +6108,7 @@ export interface components {
                      * Temp Setback
                      * @default null
                      */
-                    temp_setback: number | null;
+                    temp_setback?: number | null;
                     /**
                      * Type
                      * @constant
@@ -6141,7 +6141,7 @@ export interface components {
                      * Advanced Start
                      * @default null
                      */
-                    advanced_start: number | null;
+                    advanced_start?: number | null;
                     air_flow_type: components["schemas"]["AirFlowType"];
                     /**
                      * Fan Pwr
@@ -6168,7 +6168,7 @@ export interface components {
                      * Temp Setback
                      * @default null
                      */
-                    temp_setback: number | null;
+                    temp_setback?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -6183,7 +6183,7 @@ export interface components {
                      * Temp Flow Limit Upper
                      * @default null
                      */
-                    temp_flow_limit_upper: number | null;
+                    temp_flow_limit_upper?: number | null;
                 };
                 /**
                  * SpaceHeatSystemInstantElectricHeaterFHS
@@ -6198,7 +6198,7 @@ export interface components {
                      * Advanced Start
                      * @default null
                      */
-                    advanced_start: number | null;
+                    advanced_start?: number | null;
                     /**
                      * Frac Convective
                      * @description Convective fraction for heating
@@ -6213,7 +6213,7 @@ export interface components {
                      * Temp Setback
                      * @default null
                      */
-                    temp_setback: number | null;
+                    temp_setback?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -6232,14 +6232,14 @@ export interface components {
                      * Advanced Start
                      * @default null
                      */
-                    advanced_start: number | null;
+                    advanced_start?: number | null;
                     /** Frac Convective */
                     frac_convective: number;
                     /**
                      * Temp Setback
                      * @default null
                      */
-                    temp_setback: number | null;
+                    temp_setback?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -6257,7 +6257,7 @@ export interface components {
                      * Energysupply
                      * @default null
                      */
-                    EnergySupply: string | null;
+                    EnergySupply?: string | null;
                     HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
                     /** Zone */
                     Zone: string;
@@ -6265,17 +6265,17 @@ export interface components {
                      * Advanced Start
                      * @default null
                      */
-                    advanced_start: number | null;
+                    advanced_start?: number | null;
                     /**
                      * Bypass Percentage Recirculated
                      * @default null
                      */
-                    bypass_percentage_recirculated: number | null;
+                    bypass_percentage_recirculated?: number | null;
                     /**
                      * Design Flow Rate
                      * @default null
                      */
-                    design_flow_rate: number | null;
+                    design_flow_rate?: number | null;
                     /** Design Flow Temp */
                     design_flow_temp: number;
                     ecodesign_controller: components["schemas"]["EcoDesignController"];
@@ -6285,24 +6285,24 @@ export interface components {
                      * Max Flow Rate
                      * @default null
                      */
-                    max_flow_rate: number | null;
+                    max_flow_rate?: number | null;
                     /**
                      * Min Flow Rate
                      * @default null
                      */
-                    min_flow_rate: number | null;
+                    min_flow_rate?: number | null;
                     /** Temp Diff Emit Dsgn */
                     temp_diff_emit_dsgn: number;
                     /**
                      * Temp Setback
                      * @default null
                      */
-                    temp_setback: number | null;
+                    temp_setback?: number | null;
                     /**
                      * Thermal Mass
                      * @default null
                      */
-                    thermal_mass: number | null;
+                    thermal_mass?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -6328,14 +6328,14 @@ export interface components {
                      * Heat Exchanger Surface Area
                      * @default null
                      */
-                    heat_exchanger_surface_area: number | null;
+                    heat_exchanger_surface_area?: number | null;
                     /** Init Temp */
                     init_temp: number;
                     /**
                      * Primary Pipework
                      * @default null
                      */
-                    primary_pipework: components["schemas"]["WaterPipework"][] | null;
+                    primary_pipework?: components["schemas"]["WaterPipework"][] | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -6378,7 +6378,7 @@ export interface components {
                      * Junction Type
                      * @default null
                      */
-                    junction_type: string | null;
+                    junction_type?: string | null;
                     /** Length */
                     length: number;
                     /** Linear Thermal Transmittance */
@@ -6469,7 +6469,7 @@ export interface components {
                      * Duration
                      * @default null
                      */
-                    duration: number | null;
+                    duration?: number | null;
                     /** Start */
                     start: number;
                     /** Temperature */
@@ -6478,7 +6478,7 @@ export interface components {
                      * Volume
                      * @default null
                      */
-                    volume: number | null;
+                    volume?: number | null;
                 };
                 /** WaterHeatingEvents */
                 WaterHeatingEvents: {
@@ -6486,21 +6486,21 @@ export interface components {
                      * Bath
                      * @default null
                      */
-                    Bath: {
+                    Bath?: {
                         [key: string]: components["schemas"]["WaterHeatingEvent"][];
                     } | null;
                     /**
                      * Other
                      * @default null
                      */
-                    Other: {
+                    Other?: {
                         [key: string]: components["schemas"]["WaterHeatingEvent"][];
                     } | null;
                     /**
                      * Shower
                      * @default null
                      */
-                    Shower: {
+                    Shower?: {
                         [key: string]: components["schemas"]["WaterHeatingEvent"][];
                     } | null;
                 };
@@ -6553,7 +6553,7 @@ export interface components {
                      * N Units
                      * @default 1
                      */
-                    n_units: number | null;
+                    n_units?: number | null;
                     /**
                      * @description discriminator enum property added by openapi-typescript
                      * @enum {string}
@@ -6633,17 +6633,17 @@ export interface components {
                      * Control Closing Irrad
                      * @default null
                      */
-                    Control_closing_irrad: string | null;
+                    Control_closing_irrad?: string | null;
                     /**
                      * Control Open
                      * @default null
                      */
-                    Control_open: string | null;
+                    Control_open?: string | null;
                     /**
                      * Control Opening Irrad
                      * @default null
                      */
-                    Control_opening_irrad: string | null;
+                    Control_opening_irrad?: string | null;
                     controls: components["schemas"]["WindowTreatmentControl"];
                     /** Delta R */
                     delta_r: number;
@@ -6652,12 +6652,12 @@ export interface components {
                      * @description This field should be a boolean - any string provided will be ignored and treated as a null.
                      * @default null
                      */
-                    is_open: boolean | null;
+                    is_open?: boolean | null;
                     /**
                      * Opening Delay Hrs
                      * @default null
                      */
-                    opening_delay_hrs: number | null;
+                    opening_delay_hrs?: number | null;
                     /** Trans Red */
                     trans_red: number;
                     type: components["schemas"]["WindowTreatmentType"];
@@ -6679,19 +6679,19 @@ export interface components {
                         [key: string]: components["schemas"]["BuildingElementOpaqueFHS"] | components["schemas"]["BuildingElementTransparentFHS"] | (components["schemas"]["BuildingElementGroundSlabNoEdgeInsulation"] | components["schemas"]["BuildingElementGroundSlabEdgeInsulation"] | components["schemas"]["BuildingElementGroundSuspendedFloor"] | components["schemas"]["BuildingElementGroundHeatedBasement"] | components["schemas"]["BuildingElementGroundUnheatedBasement"]) | components["schemas"]["BuildingElementAdjacentConditionedSpace"] | components["schemas"]["BuildingElementAdjacentUnconditionedSpace_Simple"];
                     };
                     /** @default null */
-                    Lighting: components["schemas"]["Lighting"] | null;
+                    Lighting?: components["schemas"]["Lighting"] | null;
                     /**
                      * Spacecoolsystem
                      * @default null
                      */
-                    SpaceCoolSystem: string | string[] | null;
+                    SpaceCoolSystem?: string | string[] | null;
                     /** @default null */
-                    SpaceHeatControl: components["schemas"]["SpaceHeatControlType"] | null;
+                    SpaceHeatControl?: components["schemas"]["SpaceHeatControlType"] | null;
                     /**
                      * Spaceheatsystem
                      * @default null
                      */
-                    SpaceHeatSystem: string | string[] | null;
+                    SpaceHeatSystem?: string | string[] | null;
                     /** Thermalbridging */
                     ThermalBridging: number | {
                         [key: string]: components["schemas"]["ThermalBridgingLinearFHS"] | components["schemas"]["ThermalBridgingPoint"];
@@ -6702,7 +6702,7 @@ export interface components {
                      */
                     area: number;
                     /** @default null */
-                    temp_setpnt_basis: components["schemas"]["ZoneTemperatureControlBasis"] | null;
+                    temp_setpnt_basis?: components["schemas"]["ZoneTemperatureControlBasis"] | null;
                     /**
                      * Temp Setpnt Init
                      * @description Setpoint temperature to use during initialisation (unit: ˚C)
