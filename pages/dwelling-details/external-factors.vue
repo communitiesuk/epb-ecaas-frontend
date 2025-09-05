@@ -4,6 +4,7 @@ import { getUrl } from "#imports";
 
 const title = "External factors";
 const store = useEcaasStore();
+const { autoSaveForm } = useForm();
 
 const model = ref({
 	...store.dwellingDetails.externalFactors.data
@@ -39,18 +40,8 @@ const saveForm = (fields: typeof model.value) => {
 	navigateTo("/dwelling-details");
 };
 
-watch(model, async (newData: ExternalFactorsData, initialData: ExternalFactorsData) => {
-
-	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
-		if (initialData[key] !== newData[key]) {
-			store.$patch((state) => {
-				state.dwellingDetails.externalFactors = {
-					data: newData,
-					complete: false
-				};
-			});
-		}
-	}
+autoSaveForm(model, (state, newData) => {
+	state.dwellingDetails.externalFactors = newData;
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

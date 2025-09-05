@@ -18,7 +18,6 @@ function handleRemove(index: number) {
 			}
 		}
 	});
-	
 }
 
 function handleDuplicate(index: number) {
@@ -51,14 +50,6 @@ function handleComplete() {
 		
 	navigateTo('/dwelling-details');		
 }
-
-function checkIsComplete() {
-	return store.dwellingDetails.shading.complete ? true : false;
-}
-
-function hasIncompleteEntries() {
-	return store.dwellingDetails.shading.data.some(s => !s.complete);
-}
 </script>
 
 <template>
@@ -84,7 +75,11 @@ function hasIncompleteEntries() {
 		<GovButton href="/dwelling-details" secondary>
 			Return to dwelling details
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
+		<CompleteElement
+			:is-complete="!!store.dwellingDetails.shading.complete"
+			:disabled="store.dwellingDetails.shading.data.some(s => !s.complete)"
+			@completed="handleComplete"
+		/>
 	</div>
 </template>
 

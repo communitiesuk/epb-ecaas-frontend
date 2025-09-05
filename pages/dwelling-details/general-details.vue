@@ -5,6 +5,7 @@ import { getUrl } from "#imports";
 
 const title = "General details";
 const store = useEcaasStore();
+const { autoSaveForm } = useForm();
 
 const model = ref({
 	...store.dwellingDetails.generalSpecifications.data
@@ -34,18 +35,8 @@ const saveForm = (fields: typeof model.value) => {
 	navigateTo("/dwelling-details");
 };
 
-watch(model, async (newData: GeneralDetailsData, initialData: GeneralDetailsData) => {
-
-	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
-		if (initialData[key] !== newData[key]) {
-			store.$patch((state) => {
-				state.dwellingDetails.generalSpecifications = {
-					data: newData,
-					complete: false
-				};
-			});
-		}
-	}
+autoSaveForm(model, (state, newData) => {
+	state.dwellingDetails.generalSpecifications = newData;
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
