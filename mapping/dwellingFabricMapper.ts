@@ -1,7 +1,7 @@
-import { BuildingElementAdjacentConditionedSpaceType, BuildingElementAdjacentUnconditionedSpace_SimpleType, BuildingElementGroundType, BuildingElementOpaqueFHSType, BuildingElementTransparentFHSType, HeatingControlType, SpaceHeatControlType, ThermalBridgingLinearFHSType, ThermalBridgingPointType } from "~/schema/api-schema.types";
+import { BuildingElementAdjacentConditionedSpaceType, BuildingElementAdjacentUnconditionedSpace_SimpleType, BuildingElementGroundSuspendedFloorFloor_type, BuildingElementGroundType, BuildingElementOpaqueFHSType, BuildingElementTransparentFHSType, HeatingControlType, SpaceHeatControlType, ThermalBridgingLinearFHSType, ThermalBridgingPointType } from "~/schema/api-schema.types";
 import type { BuildingElementGround, SchemaBuildingElement, SchemaZoneInput } from "~/schema/aliases";
 import { FloorType, WindowShadingObjectType } from "~/schema/aliases";
-import type { BuildingElementGroundSlabEdgeInsulationFloor_type, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart } from "~/schema/api-schema.types";
+import { BuildingElementGroundSlabEdgeInsulationFloor_type, type SchemaLighting, type SchemaThermalBridgingLinearFhs, type SchemaThermalBridgingPoint, type SchemaWindowPart } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
 import { defaultZoneName } from "./common";
@@ -133,8 +133,8 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 			psi_wall_floor_junc: x.psiOfWallJunction,
 			thickness_walls: x.thicknessOfWalls / 1000,
 			floor_type: x.typeOfGroundFloor,
-			...(x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? {edge_insulation: mapEdgeInsulation(x)} : {}),
-			...(x.typeOfGroundFloor === FloorType.Suspended_floor ? {height_upper_surface: x.heightOfFloorUpperSurface / 1000} : {}),
+			...(x.typeOfGroundFloor === BuildingElementGroundSlabEdgeInsulationFloor_type.Slab_edge_insulation ? {edge_insulation: mapEdgeInsulation(x)} : {}),
+			...(x.typeOfGroundFloor === BuildingElementGroundSuspendedFloorFloor_type.Suspended_floor ? {height_upper_surface: x.heightOfFloorUpperSurface / 1000} : {}),
 			pitch: x.pitch,
 			...('ventilationOpeningsArea' in x ? {area_per_perimeter_vent: x.ventilationOpeningsArea / 1e6} : {}),
 			...('windShieldingFactor' in x ? {shield_fact_location: x.windShieldingFactor} : {}),

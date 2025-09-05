@@ -1,6 +1,6 @@
 import type { StripDefs } from './mapping.types';
 import { ColdWaterSourceType, noEvents } from '~/schema/aliases';
-import {HeatSourceWetHeatPumpType, HeatSourceWetHeatPumpWithProductReferenceType, type SchemaEnergySupply, type SchemaFhsInputSchema, type SchemaHeatSourceWetHeatPumpWithProductReference, type SchemaStorageTank} from '~/schema/api-schema.types';
+import { HeatSourceWetHeatPumpWithProductReferenceType, type SchemaEnergySupply, type SchemaFhsInputSchema, type SchemaHeatSourceWetHeatPumpWithProductReference, type SchemaStorageTank } from '~/schema/api-schema.types';
 import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 import merge from 'deepmerge';
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
@@ -75,17 +75,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 				product_reference: heatPump.data.productReference,
 				type: HeatSourceWetHeatPumpWithProductReferenceType.HeatSourceWetHeatPumpWithProductReference,
 				EnergySupply: defaultElectricityEnergySupplyName,
-				backup_ctrl_type: null,
-				min_temp_diff_flow_return_for_hp_to_operate: null,
-				modulating_control: null,
-				power_crankcase_heater: null,
-				power_off: null,
-				power_source_circ_pump: null,
-				power_standby: null,
-				sink_type: null,
-				source_type: null,
-				temp_lower_operating_limit: null,
-				test_data_EN14825: null,
 			};
 			return  [
 				heatPump.data.name,

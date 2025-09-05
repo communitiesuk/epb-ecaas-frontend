@@ -7383,7 +7383,9 @@ export enum HeatSourceWetHeatPumpType {
     HeatPump = "HeatPump"
 }
 export enum HeatSourceWetHeatPumpWithProductReferenceType {
-    HeatSourceWetHeatPumpWithProductReference = "HeatSourceWetHeatPumpWithProductReference"
+    // changed manually to correct value:
+    // HeatSourceWetHeatPumpWithProductReference = "HeatSourceWetHeatPumpWithProductReference"
+    HeatSourceWetHeatPumpWithProductReference = "HeatPump"
 }
 export enum HeatingControlType {
     SeparateTimeAndTempControl = "SeparateTimeAndTempControl",

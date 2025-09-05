@@ -1,5 +1,5 @@
 import type { TaggedUnion } from "type-fest";
-import type { BuildingElementAdjacentConditionedSpaceType, BuildingElementAdjacentUnconditionedSpace_SimpleType, BuildingElementGroundType, BuildingElementOpaqueFHSType, BuildingElementTransparentFHSType, components, SchemaBuildingElementAdjacentConditionedSpace, SchemaBuildingElementAdjacentUnconditionedSpaceSimple, SchemaBuildingElementGroundHeatedBasement, SchemaBuildingElementGroundSlabEdgeInsulation, SchemaBuildingElementGroundSlabNoEdgeInsulation, SchemaBuildingElementGroundSuspendedFloor, SchemaBuildingElementGroundUnheatedBasement, SchemaBuildingElementOpaqueFhs, SchemaBuildingElementTransparentFhs, SchemaEnergySupply, SchemaExternalConditionsInputFhs, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaInfiltrationVentilationFhs, SchemaMechanicalVentilationFhs, SchemaShadingObject, SchemaShadingSegmentFhs, SchemaSpaceCoolSystemFhs, SchemaSpaceHeatSystemElectricStorageHeater, SchemaSpaceHeatSystemInstantElectricHeaterFhs, SchemaSpaceHeatSystemWarmAirFhs, SchemaSpaceHeatSystemWetDistributionFhs, SchemaWaterHeatingEvents, SchemaZoneFhs } from "./api-schema.types";
+import type { BuildingElementAdjacentConditionedSpaceType, BuildingElementAdjacentUnconditionedSpace_SimpleType, BuildingElementGroundType, BuildingElementOpaqueFHSType, BuildingElementTransparentFHSType, components, HotWaterSourceCombiBoilerType, HotWaterSourceHeatBatteryType, HotWaterSourceHUIType, HotWaterSourcePointOfUseType, HotWaterSourceSmartHotWaterTankFHSType, SchemaBath, SchemaBuildingElementAdjacentConditionedSpace, SchemaBuildingElementAdjacentUnconditionedSpaceSimple, SchemaBuildingElementGroundHeatedBasement, SchemaBuildingElementGroundSlabEdgeInsulation, SchemaBuildingElementGroundSlabNoEdgeInsulation, SchemaBuildingElementGroundSuspendedFloor, SchemaBuildingElementGroundUnheatedBasement, SchemaBuildingElementOpaqueFhs, SchemaBuildingElementTransparentFhs, SchemaEnergySupply, SchemaExternalConditionsInputFhs, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaHotWaterSourceCombiBoiler, SchemaHotWaterSourceHeatBattery, SchemaHotWaterSourceHui, SchemaHotWaterSourcePointOfUse, SchemaHotWaterSourceSmartHotWaterTankFhs, SchemaInfiltrationVentilationFhs, SchemaMechanicalVentilationFhs, SchemaOtherWaterUse, SchemaShadingSegmentFhs, SchemaShowerInstantElectric, SchemaShowerMixer, SchemaSpaceCoolSystemFhs, SchemaSpaceHeatSystemElectricStorageHeater, SchemaSpaceHeatSystemInstantElectricHeaterFhs, SchemaSpaceHeatSystemWarmAirFhs, SchemaSpaceHeatSystemWetDistributionFhs, SchemaWaterHeatingEvents, SchemaZoneFhs, ShowerInstantElectricType, ShowerMixerType } from "./api-schema.types";
 import { BuildingElementGroundHeatedBasementFloor_type, BuildingElementGroundSlabEdgeInsulationFloor_type, BuildingElementGroundSlabNoEdgeInsulationFloor_type, BuildingElementGroundSuspendedFloorFloor_type, BuildingElementGroundUnheatedBasementFloor_type, MechVentType, PhotovoltaicVentilationStrategy, WasteWaterHeatRecoverySystemType, WindowShadingType } from "./api-schema.types";
 
 // Some aliases to names in the API schema generated types, sometimes for more graceful backwards compatibility
@@ -15,6 +15,19 @@ export type SchemaSpaceHeatSystemDetails = SchemaSpaceHeatSystemInstantElectricH
 export type SchemaSpaceCoolSystemDetails = SchemaSpaceCoolSystemFhs;
 export type SchemaShadingSegment = SchemaShadingSegmentFhs;
 export type SchemaZoneInput = SchemaZoneFhs;
+export type SchemaShower = TaggedUnion<'type', {
+	[ShowerMixerType.MixerShower]: SchemaShowerMixer,
+	[ShowerInstantElectricType.InstantElecShower]: SchemaShowerInstantElectric,
+}>;
+export type SchemaBathDetails = SchemaBath;
+export type SchemaOtherWaterUseDetails = SchemaOtherWaterUse;
+export type SchemaHotWaterSourceDetails = TaggedUnion<'type', {
+	[HotWaterSourceCombiBoilerType.CombiBoiler]: SchemaHotWaterSourceCombiBoiler,
+	[HotWaterSourceHUIType.HIU]: SchemaHotWaterSourceHui,
+	[HotWaterSourcePointOfUseType.PointOfUse]: SchemaHotWaterSourcePointOfUse,
+	[HotWaterSourceSmartHotWaterTankFHSType.SmartHotWaterTank]: SchemaHotWaterSourceSmartHotWaterTankFhs,
+	[HotWaterSourceHeatBatteryType.HeatBattery]: SchemaHotWaterSourceHeatBattery,
+}>;
 export type ApplianceKey = keyof components['schemas']['Appliances'];
 export const FloorType = {
 	...BuildingElementGroundHeatedBasementFloor_type,

@@ -1,5 +1,5 @@
-import { ColdWaterSourceType } from "~/schema/aliases";
-import { HeatSourceWetServiceWaterRegularType, StorageTankType, type SchemaBathDetails, type SchemaHotWaterSourceDetails, type SchemaOtherWaterUseDetails, type SchemaShower, type SchemaStorageTank, type SchemaWaterPipework, type SchemaWaterPipeworkSimple } from "~/schema/api-schema.types";
+import { ColdWaterSourceType, type SchemaBathDetails, type SchemaHotWaterSourceDetails, type SchemaOtherWaterUseDetails, type SchemaShower } from "~/schema/aliases";
+import { HeatSourceWetServiceWaterRegularType, ShowerInstantElectricType, ShowerMixerType, StorageTankType, type SchemaStorageTank, type SchemaWaterPipework, type SchemaWaterPipeworkSimple } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { asLitres } from "../utils/units/volume";
@@ -28,7 +28,7 @@ function mapShowersData(state: ResolvedState) {
 	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.mixedShower.map((x):[string, SchemaShower] => {
 		const key = x.data.name;
 		const val: SchemaShower = {
-			type: "MixerShower",
+			type: ShowerMixerType.MixerShower,
 			ColdWaterSource: ColdWaterSourceType.mains_water,
 			flowrate: x.data.flowRate,
 		};
@@ -39,7 +39,7 @@ function mapShowersData(state: ResolvedState) {
 	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.electricShower.map((x):[string, SchemaShower] => {
 		const key = x.data.name;
 		const val: SchemaShower = {
-			type: "InstantElecShower",
+			type: ShowerInstantElectricType.InstantElecShower,
 			ColdWaterSource: ColdWaterSourceType.mains_water,
 			rated_power: x.data.ratedPower,
 			EnergySupply: defaultElectricityEnergySupplyName

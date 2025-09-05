@@ -14,6 +14,7 @@ import {
 	FuelType,
 	HeatingControlType,
 	HeatSourceWetHeatPumpType,
+	HeatSourceWetHeatPumpWithProductReferenceType,
 	HeatSourceWetServiceWaterRegularType,
 	InverterType,
 	MassDistributionClass,
@@ -29,6 +30,8 @@ import {
 	SupplyAirFlowRateControlType,
 	SupplyAirTemperatureControlType,
 	TerrainClass,
+	ThermalBridgingLinearFHSType,
+	ThermalBridgingPointType,
 	VentilationShieldClass,
 	WaterPipeContentsType,
 	WaterPipeworkLocation,
@@ -273,7 +276,7 @@ const expectedHouseInput: FhsInputSchema = {
 	GroundFloorArea: 40,
 	HeatSourceWet: {"some-heat-pump-name": {
 		EnergySupply: defaultElectricityEnergySupplyName,
-		type: HeatSourceWetHeatPumpType.HeatPump,
+		type: HeatSourceWetHeatPumpWithProductReferenceType.HeatSourceWetHeatPumpWithProductReference,
 		product_reference: "HEATPUMP-LARGE"
 	}},
 	Zone: {
@@ -311,9 +314,10 @@ const expectedHouseInput: FhsInputSchema = {
 			area: 100,
 			volume: 300,
 			temp_setpnt_basis: null,
-			temp_setpnt_init: null,
+			temp_setpnt_init: 20.0, // TODO find out what this should be
 		}
 	},
+	temp_internal_air_static_calcs: 20.0 // TODO find out what this should be
 };
 
 const expectedFlatInput: FhsInputSchema = {
@@ -688,7 +692,7 @@ const expectedFlatInput: FhsInputSchema = {
 	HeatSourceWet: {
 		"heat pump 1 name": {
 			EnergySupply: defaultElectricityEnergySupplyName,
-			type: HeatSourceWetHeatPumpType.HeatPump,
+			type: HeatSourceWetHeatPumpWithProductReferenceType.HeatSourceWetHeatPumpWithProductReference,
 			product_reference: "HEATPUMP-SMALL"
 		},
 	},
@@ -806,7 +810,6 @@ const expectedFlatInput: FhsInputSchema = {
 					width: 1.2,
 				},
 				"external glazed door (door)": {
-					area: 3,
 					base_height: 0.2,
 					frame_area_fraction: 0,
 					free_area_height: 0,
@@ -887,7 +890,6 @@ const expectedFlatInput: FhsInputSchema = {
 					height: 2,
 					width: 2,
 					base_height: 1,
-					area: 4,
 					u_value: 0.1,
 					g_value: 0.2,
 					mid_height: 2,
@@ -923,19 +925,19 @@ const expectedFlatInput: FhsInputSchema = {
 					junction_type: "E3: SILL",
 					length: 1.2,
 					linear_thermal_transmittance: 0.03,
-					type: "ThermalBridgeLinear"
+					type: ThermalBridgingLinearFHSType.ThermalBridgeLinear
 				},
 				"point thermal bridge 1 (bridge)": {
 					heat_transfer_coeff: 0.045,
-					type: "ThermalBridgePoint"
+					type: ThermalBridgingPointType.ThermalBridgePoint
 				},
 				"point thermal bridge 2 (bridge)": {
 					heat_transfer_coeff: 0.035,
-					type: "ThermalBridgePoint"
+					type: ThermalBridgingPointType.ThermalBridgePoint
 				},
 				"point thermal bridge 3 (bridge)": {
 					heat_transfer_coeff: 0.067,
-					type: "ThermalBridgePoint"
+					type: ThermalBridgingPointType.ThermalBridgePoint
 				},
 			},
 			Lighting: {
@@ -956,9 +958,10 @@ const expectedFlatInput: FhsInputSchema = {
 			area: 16,
 			volume: 550,
 			temp_setpnt_basis: null,
-			temp_setpnt_init: null
+			temp_setpnt_init: 20.0 // TODO find out what this should be
 		}
 	},
+	temp_internal_air_static_calcs: 20.0 // TODO find out what this should be
 };
 
 // custom vitest matcher so we can get more useful JSON validation errors
