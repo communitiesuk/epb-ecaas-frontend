@@ -4,7 +4,7 @@ import { getUrl } from "#imports";
 
 const title = "PV (photovoltaic) system";
 const store = useEcaasStore();
-const route = useRoute();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const pvSystemData = useItemToEdit(
 	"system",
@@ -29,11 +29,9 @@ const inverterTypeOptions: Record<InverterType, string> = {
 const saveForm = (fields: PvSystemData) => {
 	store.$patch((state) => {
 		const { pvSystems } = state.pvAndBatteries;
-		const storeData = store.pvAndBatteries.pvSystems.data;
+		const index = getStoreIndex(pvSystems.data);
 
-		const index = route.params.system === 'create' ? storeData.length - 1 : Number(route.params.system);
-
-		const pvSystemItem: EcaasForm<PvSystemData> = {
+		pvSystems.data[index] = {
 			data: {
 				name: fields.name,
 				peakPower: fields.peakPower,
@@ -56,52 +54,21 @@ const saveForm = (fields: PvSystemData) => {
 			},
 			complete: true
 		};
-
-		pvSystems.data[index] = pvSystemItem;
 		pvSystems.complete = false;
 	});
 
 	navigateTo("/pv-and-batteries");
 };
 
-watch(model, async (newData: PvSystemData | undefined, initialData: PvSystemData | undefined) => {
-	const storeData = store.pvAndBatteries.pvSystems.data;
-
-	if (initialData === undefined || newData === undefined) {
-		return;
-	}
-
-	const defaultName = 'PV system';
-	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
-
-	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-			Object.values(newData).some(x => x !== undefined);
-
-	if (route.params.system === 'create' && isFirstEdit) {
-		store.$patch(state => {
-			state.pvAndBatteries.pvSystems.data.push({
-				data: {
-					...newData,
-					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
-				}
-			});
-		});
-
-		return;
-	}
-
-	store.$patch((state) => {
-		const index = route.params.system === 'create' ? storeData.length - 1 : Number(route.params.system);
-
-		state.pvAndBatteries.pvSystems.data[index] = {
-			data: {
-				...newData,
-				name: newData.name?.trim() || defaultName
-			}
-		};
-
+autoSaveElementForm({
+	model,
+	storeData: store.pvAndBatteries.pvSystems,
+	defaultName: 'PV system',
+	onPatchCreate: (state, newData) => state.pvAndBatteries.pvSystems.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.pvAndBatteries.pvSystems.data[index] = newData;
 		state.pvAndBatteries.pvSystems.complete = false;
-	});
+	}
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
