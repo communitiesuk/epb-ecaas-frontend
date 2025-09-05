@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {getUrl} from "~/utils/page";
+
 const title = "Point thermal bridges";
 const store = useEcaasStore();
 const { saveToList } = useForm();
@@ -55,9 +57,9 @@ const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 			suffix-text="W/K"
 		/>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('dwellingSpaceThermalBridging')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

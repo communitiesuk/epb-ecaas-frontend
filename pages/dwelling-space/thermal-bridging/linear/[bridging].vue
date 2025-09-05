@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FormKitOptionsProp } from '@formkit/inputs';
+import { getUrl } from "#imports";
 
 const title = "Linear thermal bridges";
 const store = useEcaasStore();
@@ -121,9 +122,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m"
 		/>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('dwellingSpaceThermalBridging')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

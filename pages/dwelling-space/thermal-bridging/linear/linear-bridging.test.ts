@@ -34,7 +34,7 @@ describe('linear thermal bridges', () => {
 		await renderSuspended(LinearBridging);
 
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceLinearThermalBridges } = store.dwellingFabric.dwellingSpaceThermalBridging;
 		
@@ -66,7 +66,7 @@ describe('linear thermal bridges', () => {
 	it('shows required error messages when empty form is submitted', async () => {
 		await renderSuspended(LinearBridging);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('typeOfThermalBridge_error'))).toBeDefined();
 		expect((await screen.findByTestId('linearThermalTransmittance_error'))).toBeDefined();
@@ -76,7 +76,7 @@ describe('linear thermal bridges', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(LinearBridging);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('linearBridgeErrorSummary'))).toBeDefined();
 	});
@@ -85,7 +85,16 @@ describe('linear thermal bridges', () => {
 		await renderSuspended(LinearBridging);
 	
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/thermal-bridging');
+	});
+
+	it('navigates to thermal bridging page when save progress button is clicked', async () => {
+		await renderSuspended(LinearBridging);
+
+		await populateValidForm();
+		await user.click(screen.getByTestId("saveProgress"));
 
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/thermal-bridging');
 	});

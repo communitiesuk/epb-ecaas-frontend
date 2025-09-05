@@ -290,7 +290,7 @@ describe('thermal bridges', () => {
 				}
 			});
 
-			await user.click(screen.getByRole("button", { name: "Save and continue" }));
+			await user.click(screen.getByTestId("saveAndComplete"));
 			expect(store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete).toBe(false);
 
 			await renderSuspended(ThermalBridges);
