@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { isEcaasForm } from "~/stores/ecaasStore.schema";
+import formStatus from "~/constants/formStatus";
+
 const title = "Thermal bridging";
 const page = usePage();
 const store = useEcaasStore();
 
 type ThermalBridgingType = keyof typeof store.dwellingFabric.dwellingSpaceThermalBridging;
-interface ThermalBridgingData extends LinearThermalBridgeData, PointThermalBridgeData {};
+type ThermalBridgingData = EcaasForm<LinearThermalBridgeData> & EcaasForm<PointThermalBridgeData>;
 
 function handleRemove(thermalBridgingType: ThermalBridgingType, index: number) {
 	const items = store.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType]?.data;
@@ -22,14 +25,24 @@ function handleRemove(thermalBridgingType: ThermalBridgingType, index: number) {
 function handleDuplicate<T extends ThermalBridgingData>(thermalBridgingType: ThermalBridgingType, index: number) {
 	const items  = store.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType]?.data;
 	const item = items?.[index];
+	let name: string;
     
 	if (item) {
-		const duplicates = items.filter(f => f.name.match(duplicateNamePattern(item.name)));
+		const duplicates = items.filter(f => {
+			if (isEcaasForm(f) && isEcaasForm(item)) {
+				name = item.data.name;
+				return f.data.name.match(duplicateNamePattern(item.data.name));
+			}
+			return false;
+		});
 
 		store.$patch((state) => {
 			const newItem = {
-				...item,
-				name: `${item.name} (${duplicates.length})`
+				complete: item.complete,
+				data: {
+					...item.data,
+					name: `${name} (${duplicates.length})`
+				}
 			} as T;
 
 			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].data.push(newItem);
@@ -68,7 +81,10 @@ function checkIsComplete(){
 		id="linearThermalBridges"
 		title="Linear thermal bridges"
 		:form-url="`${page?.url!}/linear`"
-		:items="store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
 		@remove="(index: number) => handleRemove('dwellingSpaceLinearThermalBridges', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceLinearThermalBridges', index)"
 	/>
@@ -76,7 +92,10 @@ function checkIsComplete(){
 		id="pointThermalBridges"
 		title="Point thermal bridges"
 		:form-url="`${page?.url!}/point`"
-		:items="store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges?.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
 		@remove="(index: number) => handleRemove('dwellingSpacePointThermalBridges', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpacePointThermalBridges', index)"
 	/>

@@ -12,11 +12,13 @@ describe('linear thermal bridges', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const state: LinearThermalBridgeData = {
-		name: 'E1: Steel lintel with perforated steel base plate',
-		typeOfThermalBridge: 'e1',
-		linearThermalTransmittance: 1,
-		length: 2
+	const state: EcaasForm<LinearThermalBridgeData> = {
+		data: {
+			name: 'E1: Steel lintel with perforated steel base plate',
+			typeOfThermalBridge: 'e1',
+			linearThermalTransmittance: 1,
+			length: 2
+		}
 	};
 
 	afterEach(() => {
@@ -31,14 +33,18 @@ describe('linear thermal bridges', () => {
 	};
 	
 	test('data is saved to store state when form is valid', async () => {
-		await renderSuspended(LinearBridging);
+		await renderSuspended(LinearBridging, {
+			route: {
+				params: { system: "create" },
+			},
+		});
 
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { dwellingSpaceLinearThermalBridges } = store.dwellingFabric.dwellingSpaceThermalBridging;
-		
-		expect(dwellingSpaceLinearThermalBridges?.data[0]).toEqual(state);
+		const { data } = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges;
+
+		expect(data[0]).toEqual({...state, complete: true});
 	});
 
 	test('form is prepopulated when data exists in state', async () => {

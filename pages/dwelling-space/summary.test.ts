@@ -233,16 +233,20 @@ const windowData: WindowData = {
 const thermalBridgingData: ThermalBridgingData = {
 	dwellingSpaceLinearThermalBridges: {
 		data: [{
-			name: 'E1: Steel lintel with perforated steel base plate',
-			typeOfThermalBridge: 'e1',
-			linearThermalTransmittance: 1,
-			length: 2
+			data: {
+				name: 'E1: Steel lintel with perforated steel base plate',
+				typeOfThermalBridge: 'e1',
+				linearThermalTransmittance: 1,
+				length: 2
+			}
 		}]
 	},
 	dwellingSpacePointThermalBridges: {
 		data: [{
-			name: 'Point 1',
-			heatTransferCoefficient: 1
+			data: {
+				name: 'Point 1',
+				heatTransferCoefficient: 1
+			}
 		}]
 	}
 };

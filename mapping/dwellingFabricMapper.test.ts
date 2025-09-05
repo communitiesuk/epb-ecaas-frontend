@@ -713,8 +713,8 @@ describe('dwelling fabric mapper', () => {
 		};
 
 		const dwellingSpaceThermalBridging: ThermalBridgingData = {
-			dwellingSpaceLinearThermalBridges: { data: [linearThermalBridge], complete: true },
-			dwellingSpacePointThermalBridges: { data: [pointThermalBridge], complete: true }
+			dwellingSpaceLinearThermalBridges: { data: [{data: linearThermalBridge}], complete: true },
+			dwellingSpacePointThermalBridges: { data: [{data: pointThermalBridge}], complete: true }
 		};
 
 		const bridgeSuffix = ' (bridge)';

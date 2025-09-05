@@ -3,25 +3,40 @@ import {getUrl} from "~/utils/page";
 
 const title = "Point thermal bridges";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const thermalBridgeData = useItemToEdit('bridging', store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data);
-const model: Ref<PointThermalBridgeData> = ref(thermalBridgeData!);
+const model: Ref<PointThermalBridgeData | undefined> = ref(thermalBridgeData?.data);
 
 const saveForm = (fields: PointThermalBridgeData) => {
 	store.$patch((state) => {
 		const {dwellingSpacePointThermalBridges} = state.dwellingFabric.dwellingSpaceThermalBridging;
+		const index = getStoreIndex(dwellingSpacePointThermalBridges.data);
 
-		const thermalBridge: PointThermalBridgeData = {
-			name: fields.name,
-			heatTransferCoefficient: fields.heatTransferCoefficient
+		dwellingSpacePointThermalBridges.data[index] = {
+			data: {
+				name: fields.name,
+				heatTransferCoefficient: fields.heatTransferCoefficient
+			},
+			complete: true
 		};
+
 		dwellingSpacePointThermalBridges.complete = false;
-		saveToList(thermalBridge, dwellingSpacePointThermalBridges);
 	});
 
 	navigateTo("/dwelling-space/thermal-bridging");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges,
+	defaultName: 'Point thermal bridge',
+	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.complete = false;
+	},
+});
 
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>

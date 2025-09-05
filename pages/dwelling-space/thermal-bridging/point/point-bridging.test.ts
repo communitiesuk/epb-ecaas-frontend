@@ -12,9 +12,11 @@ describe('point thermal bridges', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const state: PointThermalBridgeData = {
-		name: 'Point 1',
-		heatTransferCoefficient: 1
+	const state: EcaasForm<PointThermalBridgeData> = {
+		data: {
+			name: 'Point 1',
+			heatTransferCoefficient: 1
+		}
 	};
 
 	afterEach(() => {
@@ -28,14 +30,17 @@ describe('point thermal bridges', () => {
 	};
 	
 	test('data is saved to store state when form is valid', async () => {
-		await renderSuspended(PointBridging);
+		await renderSuspended(PointBridging, {
+			route: {
+				params: { system: "create" },
+			},
+		});
 
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { dwellingSpacePointThermalBridges } = store.dwellingFabric.dwellingSpaceThermalBridging;
-		
-		expect(dwellingSpacePointThermalBridges?.data[0]).toEqual(state);
+		const { data } = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges;
+		expect(data[0]).toEqual({...state, complete: true});
 	});
 
 	test('form is prepopulated when data exists in state', async () => {

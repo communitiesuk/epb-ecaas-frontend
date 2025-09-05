@@ -21,35 +21,46 @@ describe('thermal bridges', () => {
 		store.$reset();
 	});
 
-	const linear1: LinearThermalBridgeData = {
-		name: "Linear 1",
-		typeOfThermalBridge: 'e1',
-		linearThermalTransmittance: 1,
-		length: 2
+	const linear1: EcaasForm<LinearThermalBridgeData> = {
+		data: {
+			name: "Linear 1",
+			typeOfThermalBridge: 'e1',
+			linearThermalTransmittance: 1,
+			length: 2
+		}
 	};
 
-	const linear2: LinearThermalBridgeData = {
-		...linear1,
-		name: "Linear 2"
+	const linear2: EcaasForm<LinearThermalBridgeData> = {
+		data: {
+			...linear1.data,
+			name: "Linear 2"
+		}
 	};
 
-	const linear3: LinearThermalBridgeData = {
-		...linear1,
-		name: "Linear 3"
-	};
-	const point1: PointThermalBridgeData = {
-		name: "Point 1",
-		heatTransferCoefficient: 1
+	const linear3: EcaasForm<LinearThermalBridgeData> = {
+		data: {
+			...linear1.data,
+			name: "Linear 3"
+		}
 	};
 
-	const point2: PointThermalBridgeData = {
-		...point1,
-		name: "Point 2"
+	const point1: EcaasForm<PointThermalBridgeData> = {
+		data: {
+			name: "Point 1",
+			heatTransferCoefficient: 1
+		}
 	};
 
-	const point3: PointThermalBridgeData = {
-		...point1,
-		name: "Point 3"
+	const point2: EcaasForm<PointThermalBridgeData> = {
+		data: {
+			...point1.data,
+			name: "Point 2"}
+	};
+
+	const point3: EcaasForm<PointThermalBridgeData> = {
+		data: {
+			...point1.data,
+			name: "Point 3"}
 	};
 
 	describe('linear thermal bridges', () => {

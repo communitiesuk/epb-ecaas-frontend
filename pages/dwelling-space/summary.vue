@@ -367,7 +367,7 @@ const pointThermalBridgesData = store.dwellingFabric.dwellingSpaceThermalBridgin
 const linearThermalBridgesSummary: SummarySection = {
 	id: 'dwellingSpaceLinearThermalBridging',
 	label: 'Linear thermal bridges',
-	data: linearThermalBridgesData.map(x => {
+	data: linearThermalBridgesData.map(({ data: x }) => {
 		return {
 			"Type of thermal bridge": displayCamelToSentenceCase(x.typeOfThermalBridge),
 			"Linear thermal transmittance": `${x.linearThermalTransmittance} ${wattsPerMeterKelvin.suffix}`,
@@ -380,7 +380,7 @@ const linearThermalBridgesSummary: SummarySection = {
 const pointThermalBridgesSummary: SummarySection = {
 	id: 'dwellingSpacePointThermalBridging',
 	label: 'Point thermal bridges',
-	data: pointThermalBridgesData.map(x => {
+	data: pointThermalBridgesData.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Heat transfer coefficient": `${x.heatTransferCoefficient} ${wattsPerKelvin.suffix}`
