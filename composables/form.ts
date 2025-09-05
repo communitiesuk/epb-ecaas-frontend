@@ -108,7 +108,8 @@ export function useForm() {
 
 				return;
 			}
-
+	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
+		if (initialData[key]  !== newData[key]) {
 			store.$patch((state) => {
 				const index = getStoreIndex(storeData.data);
 				const storeElementData = storeData.data[index]?.data;
@@ -121,6 +122,8 @@ export function useForm() {
 
 				onPatchUpdate(state, elementData, index);
 			});
+		}
+	}
 		});
 	};
 
