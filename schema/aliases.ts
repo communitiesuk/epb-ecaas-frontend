@@ -1,4 +1,4 @@
-import type { components, SchemaExternalConditionsInputFhs, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaInfiltrationVentilationFhs, SchemaMechanicalVentilationFhs, SchemaShadingObject, SchemaShadingSegmentFhs, SchemaSpaceCoolSystemFhs } from "./api-schema.types";
+import type { components, SchemaEnergySupply, SchemaExternalConditionsInputFhs, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaInfiltrationVentilationFhs, SchemaMechanicalVentilationFhs, SchemaShadingObject, SchemaShadingSegmentFhs, SchemaSpaceCoolSystemFhs, SchemaSpaceHeatSystemElectricStorageHeater, SchemaSpaceHeatSystemInstantElectricHeaterFhs, SchemaSpaceHeatSystemWarmAirFhs, SchemaSpaceHeatSystemWetDistributionFhs, SchemaWaterHeatingEvents, SchemaZoneFhs } from "./api-schema.types";
 import { BuildingElementGroundHeatedBasementFloor_type, BuildingElementGroundSlabEdgeInsulationFloor_type, BuildingElementGroundSlabNoEdgeInsulationFloor_type, BuildingElementGroundSuspendedFloorFloor_type, BuildingElementGroundUnheatedBasementFloor_type, MechVentType, PhotovoltaicVentilationStrategy, WasteWaterHeatRecoverySystemType, WindowShadingType } from "./api-schema.types";
 
 // Some aliases to names in the API schema generated types, sometimes for more graceful backwards compatibility
@@ -10,8 +10,10 @@ export { PhotovoltaicVentilationStrategy as OnSiteGenerationVentilationStrategy 
 export { WindowShadingType as WindowShadingObjectType };
 export type SchemaInfiltrationVentilation = SchemaInfiltrationVentilationFhs;
 export type SchemaMechanicalVentilation = SchemaMechanicalVentilationFhs;
+export type SchemaSpaceHeatSystemDetails = SchemaSpaceHeatSystemInstantElectricHeaterFhs | SchemaSpaceHeatSystemElectricStorageHeater | SchemaSpaceHeatSystemWetDistributionFhs | SchemaSpaceHeatSystemWarmAirFhs;
 export type SchemaSpaceCoolSystemDetails = SchemaSpaceCoolSystemFhs;
 export type SchemaShadingSegment = SchemaShadingSegmentFhs;
+export type SchemaZoneInput = SchemaZoneFhs;
 export type ApplianceKey = keyof components['schemas']['Appliances'];
 export const FloorType = {
 	...BuildingElementGroundHeatedBasementFloor_type,
@@ -44,6 +46,7 @@ export function segment(shading: Partial<SchemaShadingSegment>): SchemaShadingSe
 		...shading,
 	};
 }
+// utility function to make shading into valid external conditions
 const baseExternalConditions: SchemaExternalConditionsInputFhs = {
 	air_temperatures: null,
 	diffuse_horizontal_radiation: null,
@@ -62,3 +65,28 @@ export function externalConditions(shading: SchemaShadingSegment[]): SchemaExter
 		shading_segments: shading,
 	};
 }
+// utility function to make valid energy supply object from partial
+const baseEnergySupply: Omit<SchemaEnergySupply, 'fuel'> = {
+	ElectricBattery: null,
+	diverter: null,
+	factor: null,
+	is_export_capable: false,
+	priority: null,
+	tariff: null,
+	threshold_charges: null,
+	threshold_prices: null,
+};
+// LegacyEnergySupply allows all fields on energy supply to be missing aside from fuel
+type LegacyEnergySupply = Pick<SchemaEnergySupply, 'fuel'> & Partial<Omit<SchemaEnergySupply, 'fuel'>>;
+export function energySupply(supply: LegacyEnergySupply): SchemaEnergySupply {
+	return {
+		...baseEnergySupply,
+		...supply,
+	};
+}
+// value representing default water heating events for sending
+export const noEvents: SchemaWaterHeatingEvents = {
+	Bath: null,
+	Shower: null,
+	Other: null
+};

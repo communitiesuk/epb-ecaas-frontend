@@ -1,10 +1,13 @@
-import { FloorType, HeatingControlType, SpaceHeatControlType, WindowShadingObjectType      } from "~/schema/api-schema.types";
-import type {SchemaBuildingElement, SchemaThermalBridgingDetails, SchemaWindowPart, SchemaZoneInput, SchemaZoneLighting} from "~/schema/api-schema.types";
+import { HeatingControlType, SpaceHeatControlType, ThermalBridgingLinearFHSType, ThermalBridgingPointType } from "~/schema/api-schema.types";
+import type { SchemaZoneInput } from "~/schema/aliases";
+import { FloorType, WindowShadingObjectType } from "~/schema/aliases";
+import type {BuildingElementGroundHeatedBasementFloor_type, BuildingElementGroundSlabEdgeInsulationFloor_type, BuildingElementGroundSlabNoEdgeInsulationFloor_type, BuildingElementGroundSuspendedFloorFloor_type, BuildingElementGroundUnheatedBasementFloor_type, SchemaBuildingElement, SchemaBuildingElementGroundHeatedBasement, SchemaBuildingElementGroundSlabEdgeInsulation, SchemaBuildingElementGroundSlabNoEdgeInsulation, SchemaBuildingElementGroundSuspendedFloor, SchemaBuildingElementGroundUnheatedBasement, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
 import { defaultZoneName } from "./common";
 import type { Length } from "../utils/units/length";
 import  { asMetres } from "../utils/units/length";
+import type { TaggedUnion } from "type-fest";
 
 function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
 	// note - use parseFloat and toFixed to avoid JS precision issues
@@ -61,7 +64,7 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> {
 	const { dwellingSpaceLighting: { numberOfIncandescentBulbs, numberOfLEDBulbs } } = state.dwellingFabric;
 
-	const lightingData: SchemaZoneLighting = {
+	const lightingData: SchemaLighting = {
 		efficacy: 56.0,
 		bulbs: {
 			...(numberOfIncandescentBulbs >= 1 ? {incandescent: {
@@ -86,11 +89,20 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, 'Zon
 	} as Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'>;
 }
 
+// work round apparent bug in type generation
+export type BuildingElementGround = TaggedUnion<'floor_type', {
+	[BuildingElementGroundSlabNoEdgeInsulationFloor_type.Slab_no_edge_insulation]: SchemaBuildingElementGroundSlabNoEdgeInsulation,
+	[BuildingElementGroundSlabEdgeInsulationFloor_type.Slab_edge_insulation]: SchemaBuildingElementGroundSlabEdgeInsulation,
+	[BuildingElementGroundSuspendedFloorFloor_type.Suspended_floor]: SchemaBuildingElementGroundSuspendedFloor,
+	[BuildingElementGroundHeatedBasementFloor_type.Heated_basement]: SchemaBuildingElementGroundHeatedBasement,
+	[BuildingElementGroundUnheatedBasementFloor_type.Unheated_basement]: SchemaBuildingElementGroundUnheatedBasement,
+}>;
+
 export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'GroundFloorArea' | 'Zone'> {
 	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor } = state.dwellingFabric.dwellingSpaceFloors;
 	const floorSuffix = 'floor';
 
-	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: FloorType.Slab_edge_insulation }>) {
+	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: BuildingElementGroundSlabEdgeInsulationFloor_type.Slab_edge_insulation }>) {
 		let edgeInsulationWidthInMetres: number;
 
 		if (typeof data.edgeInsulationWidth === 'number') {
@@ -116,7 +128,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 		}
 	}
 
-	const groundFloorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceGroundFloor.map(x => {
+	const groundFloorData: { [key: string]: BuildingElementGround }[] = dwellingSpaceGroundFloor.map(x => {
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
 		return {[nameWithSuffix]: {
@@ -130,7 +142,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 			perimeter: x.perimeter,
 			psi_wall_floor_junc: x.psiOfWallJunction,
 			thickness_walls: x.thicknessOfWalls / 1000,
-			floor_type: x.typeOfGroundFloor as FloorType,
+			floor_type: x.typeOfGroundFloor,
 			...(x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? {edge_insulation: mapEdgeInsulation(x)} : {}),
 			...(x.typeOfGroundFloor === FloorType.Suspended_floor ? {height_upper_surface: x.heightOfFloorUpperSurface / 1000} : {}),
 			pitch: x.pitch,
@@ -553,7 +565,6 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 			height: x.height,
 			width: x.width,
 			base_height: x.elevationalHeight,
-			area: x.surfaceArea,
 			u_value: x.uValue,
 			g_value: x.solarTransmittance,
 			mid_height: x.midHeight,
@@ -578,22 +589,22 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 	const { dwellingSpaceLinearThermalBridges, dwellingSpacePointThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
 	const bridgeSuffix = 'bridge';
 
-	const linearThermalBridgesData: Record<string, SchemaThermalBridgingDetails>[] = dwellingSpaceLinearThermalBridges.map(x => {
+	const linearThermalBridgesData: Record<string, SchemaThermalBridgingLinearFhs>[] = dwellingSpaceLinearThermalBridges.map(x => {
 		const nameWithSuffix = suffixName(x.name, bridgeSuffix);
 
 		return {[nameWithSuffix]: {
-			type: 'ThermalBridgeLinear',
+			type: ThermalBridgingLinearFHSType.ThermalBridgeLinear,
 			junction_type: x.typeOfThermalBridge.toUpperCase(),
 			linear_thermal_transmittance: x.linearThermalTransmittance,
 			length: x.length
 		}};
 	});
 
-	const pointThermalBridgesData: Record<string, SchemaThermalBridgingDetails>[] = dwellingSpacePointThermalBridges.map(x => {
+	const pointThermalBridgesData: Record<string, SchemaThermalBridgingPoint>[] = dwellingSpacePointThermalBridges.map(x => {
 		const nameWithSuffix = suffixName(x.name, bridgeSuffix);
 
 		return {[nameWithSuffix]: {
-			type: 'ThermalBridgePoint',
+			type: ThermalBridgingPointType.ThermalBridgePoint,
 			heat_transfer_coeff: x.heatTransferCoefficient
 		}};
 	});

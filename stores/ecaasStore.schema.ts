@@ -1,6 +1,6 @@
 import type { TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
-import { CombustionAirSupplySituation, FlueGasExhaustSituation, MassDistributionClass, WaterPipeContentsType, BatteryLocation, BuildType, CombustionFuelType, DuctShape, DuctType, FuelType, InverterType, MVHRLocation, ShadingObjectType, TerrainClass, VentilationShieldClass, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WindShieldLocation, type CombustionApplianceType, type SchemaFhsComplianceResponse, type SchemaJsonApiOnePointOneErrorLinks, type SchemaJsonApiOnePointOneErrorSource, type SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
+import { CombustionAirSupplySituation, FlueGasExhaustSituation, MassDistributionClass, WaterPipeContentsType, BatteryLocation, BuildType, CombustionFuelType, DuctShape, DuctType, FuelType, InverterType, MVHRLocation, ShadingObjectType, TerrainClass, VentilationShieldClass, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WindShieldLocation, type CombustionApplianceType, type SchemaFhsComplianceResponse, type SchemaJsonApiOnePointOneErrorLinks, type SchemaJsonApiOnePointOneErrorSource, type SchemaJsonApiOnePointOneMeta, BuildingElementGroundUnheatedBasementFloor_type, BuildingElementGroundHeatedBasementFloor_type, BuildingElementGroundSuspendedFloorFloor_type, BuildingElementGroundSlabNoEdgeInsulationFloor_type, BuildingElementGroundSlabEdgeInsulationFloor_type } from "~/schema/api-schema.types";
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
@@ -152,17 +152,17 @@ const groundFloorDataZod = z.discriminatedUnion(
 	"typeOfGroundFloor",
 	[
 		baseGroundFloorData.extend({
-			typeOfGroundFloor: z.literal('Slab_edge_insulation'),
+			typeOfGroundFloor: z.enum(BuildingElementGroundSlabEdgeInsulationFloor_type),
 			edgeInsulationType: z.enum(['horizontal', 'vertical']),
 			// TODO constraints have not been put on zodUnit yet!
 			edgeInsulationWidth: z.union([zodUnit('length'), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
 			edgeInsulationThermalResistance: z.number(),
 		}),
 		baseGroundFloorData.extend({
-			typeOfGroundFloor: z.literal('Slab_no_edge_insulation'),
+			typeOfGroundFloor: z.enum(BuildingElementGroundSlabNoEdgeInsulationFloor_type),
 		}),
 		baseGroundFloorData.extend({
-			typeOfGroundFloor: z.literal('Suspended_floor'),
+			typeOfGroundFloor: z.enum(BuildingElementGroundSuspendedFloorFloor_type),
 			heightOfFloorUpperSurface: z.number().min(0).max(100000),
 			underfloorSpaceThermalResistance: z.number(),
 			thermalTransmittanceOfWallsAboveGround: z.number(),
@@ -170,14 +170,15 @@ const groundFloorDataZod = z.discriminatedUnion(
 			windShieldingFactor: z.enum(WindShieldLocation),
 		}),
 		baseGroundFloorData.extend({
-			typeOfGroundFloor: z.literal('Heated_basement'),
+			typeOfGroundFloor: z.enum(BuildingElementGroundHeatedBasementFloor_type),
 			depthOfBasementFloorBelowGround: z.number(),
 			thermalResistanceOfBasementWalls: z.number(),
 		}),
 		baseGroundFloorData.extend({
-			typeOfGroundFloor: z.literal('Unheated_basement'),
+			typeOfGroundFloor: z.enum(BuildingElementGroundUnheatedBasementFloor_type),
 			thermalTransmittanceOfFloorAboveBasement: z.number(),
 			thermalTransmittanceOfWallsAboveGround: z.number(),
+			thermalResistanceOfBasementWalls: z.number(),
 			depthOfBasementFloorBelowGround: z.number(),
 			heightOfBasementWallsAboveGround: z.number(),
 		}),
@@ -393,7 +394,7 @@ export type InternalDoorData = z.infer<typeof internalDoorDataZod>;
 
 const baseWindowData = named.extend({
 	orientation,
-	surfaceArea: z.number().min(0.01).max(10000),
+	// surfaceArea: z.number().min(0.01).max(10000),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	uValue,

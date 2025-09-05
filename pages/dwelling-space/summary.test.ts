@@ -208,7 +208,6 @@ const doorsData: DoorsData = {
 const windowData: WindowData = {
 	name: "Window 1",
 	orientation: 1,
-	surfaceArea: 1,
 	height: 1,
 	width: 1,
 	uValue: 1,
@@ -734,7 +733,6 @@ describe('Living space fabric summary', () => {
 			const expectedResult = {
 				"Name": "Window 1",
 				"Orientation": `1 ${degrees.suffix}`,
-				"Net surface area": `1 ${metresSquare.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,

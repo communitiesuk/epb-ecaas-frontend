@@ -32,7 +32,11 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 				}
 			];
 		})),
-		Vents: mapVentsData(state)
+		Vents: mapVentsData(state),
+		Control_VentAdjustMin: null,
+		Control_VentAdjustMax: null,
+		Control_WindowAdjust: null,
+		ach_min_static_calcs: null
 	};
 
 	return {
@@ -51,7 +55,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		}
 		
 		const key = x.name;
-		const val: Omit<SchemaMechanicalVentilation, 'ductwork'> = {
+		const val: SchemaMechanicalVentilation = {
 			vent_type: x.typeOfMechanicalVentilationOptions,
 			EnergySupply: defaultElectricityEnergySupplyName,
 			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
@@ -61,7 +65,12 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 			measured_air_flow_rate: 37,
 			measured_fan_power: 12.26,
 			// (TODO: REMOVE COMMENT WHEN USING HEM 0.37) more recent schema is more explicit about logic for SFP field, but following implements what is currently implicit logic: for following vent types, provide SFP (with a canned value), otherwise don't
-			...(arrayIncludes([VentType.Decentralised_continuous_MEV, VentType.Intermittent_MEV], x.typeOfMechanicalVentilationOptions) ? {SFP: 1.5} : {})
+			...(arrayIncludes([VentType.Decentralised_continuous_MEV, VentType.Intermittent_MEV], x.typeOfMechanicalVentilationOptions) ? {SFP: 1.5} : {}),
+			Control: 'ventilation', // TODO this might need to refer to a real control,
+			SFP: 1.0, // TODO this may be incorrect, or need input from a form
+			mvhr_eff: null,
+			mvhr_location: null,
+			ductwork: null
 		};
 
 		return [key, val];
@@ -85,7 +94,10 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 			...(x.ductworkCrossSectionalShape === DuctShape.circular ? {internal_diameter_mm: x.internalDiameterOfDuctwork, external_diameter_mm: x.externalDiameterOfDuctwork} : {}),
 			...(x.ductworkCrossSectionalShape === DuctShape.rectangular ? {duct_perimeter_mm: x.ductPerimeter} : {}),
 			length: x.lengthOfDuctwork,
-			reflective: x.surfaceReflectivity
+			reflective: x.surfaceReflectivity,
+			duct_perimeter_mm: null,
+			external_diameter_mm: null,
+			internal_diameter_mm: null,
 		};
 		return val;
 	});

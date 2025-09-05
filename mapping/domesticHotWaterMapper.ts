@@ -1,5 +1,5 @@
 import { ColdWaterSourceType } from "~/schema/aliases";
-import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaStorageTank, SchemaWaterPipework, SchemaWaterPipeworkSimple } from "~/schema/api-schema.types";
+import { HeatSourceWetServiceWaterRegularType, StorageTankType, type SchemaBathDetails, type SchemaHotWaterSourceDetails, type SchemaOtherWaterUseDetails, type SchemaShower, type SchemaStorageTank, type SchemaWaterPipework, type SchemaWaterPipeworkSimple } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { asLitres } from "../utils/units/volume";
@@ -118,7 +118,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 		const val: SchemaStorageTank = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
 			daily_losses: x.dailyEnergyLoss,
-			type: "StorageTank",
+			type: StorageTankType.StorageTank,
 			volume: storageCylinderVolumeInLitres,
 			HeatSource: {
 				// Adding these values as default until heat pump is set up to come from PCDB
@@ -126,12 +126,16 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 					name: heatPumpName,
 					EnergySupply: defaultElectricityEnergySupplyName, 
 					heater_position: 0.1,
-					type: "HeatSourceWet",
+					type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 					temp_flow_limit_upper: 65,
-					thermostat_position: 0.33
+					thermostat_position: 0.33,
+					Controlmax: 'heating', // TODO this may need to refer to a real control
+					Controlmin: 'heating', // TODO this may need to refer to a real control
 				}
 			},
-			...(primaryPipeworkEntries.length !== 0 ? { primary_pipework: primaryPipeworkEntries } : {}),
+			primary_pipework: primaryPipeworkEntries.length !== 0 ? primaryPipeworkEntries : null,
+			heat_exchanger_surface_area: null,
+			init_temp: 20.0 // TODO this is an initial guess; decide on number, if one needs to be passed
 		};
 
 		return val;		

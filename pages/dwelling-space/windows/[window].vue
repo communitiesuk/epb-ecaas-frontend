@@ -58,7 +58,6 @@ const saveForm = (fields: WindowData) => {
 		const commonFields = {
 			name: fields.name,
 			orientation: fields.orientation,
-			surfaceArea: fields.surfaceArea,
 			height: fields.height,
 			width: fields.width,
 			uValue: fields.uValue,
@@ -201,10 +200,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="width" type="govInputWithSuffix" suffix-text="m" label="Width" help="Enter the width of the building element"
 			name="width" validation="required | number | min:0.001 | max:50" />
 		<FieldsElevationalHeight />
-		<FormKit
-			id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Net surface area of element"
-			help="Enter the net area of the building element"
-			name="surfaceArea" validation="required | number | min:0.01 | max:10000" />
 		<FieldsUValue id="uValue" name="uValue" />
 		<FormKit
 			id="solarTransmittance" type="govInputFloat" label="Transmittance of solar energy "

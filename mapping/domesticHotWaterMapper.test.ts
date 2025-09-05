@@ -88,12 +88,17 @@ describe('domestic hot water mapper', () => {
 							type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
-							thermostat_position: 0.33
+							thermostat_position: 0.33,
+							Controlmin: '',
+							Controlmax: '',
 						}
 					},
 					daily_losses: 3,
 					volume: 100,
-					type: StorageTankType.StorageTank
+					type: StorageTankType.StorageTank,
+					heat_exchanger_surface_area: null,
+					init_temp: 20.0,
+					primary_pipework: null,
 				}
 			}
 		};
@@ -195,7 +200,9 @@ describe('domestic hot water mapper', () => {
 							type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
-							thermostat_position: 0.33
+							thermostat_position: 0.33,
+							Controlmax: '', // TODO may need to be a real control
+							Controlmin: '', // TODO may need to be a real control
 						}
 					},
 					daily_losses: 3,
@@ -222,7 +229,9 @@ describe('domestic hot water mapper', () => {
 							surface_reflectivity: false,
 							pipe_contents: WaterPipeContentsType.water
 						},
-					]
+					],
+					heat_exchanger_surface_area: null,
+					init_temp: 20.0,
 				}
 			}
 		};
@@ -312,7 +321,8 @@ describe('domestic hot water mapper', () => {
 					"shower1": {
 						type: ShowerMixerType.MixerShower,
 						flowrate: 3,
-						ColdWaterSource: ColdWaterSourceType.mains_water
+						ColdWaterSource: ColdWaterSourceType.mains_water,
+						WWHRS: null
 					},
 					"shower2": {
 						type: ShowerInstantElectricType.InstantElecShower,

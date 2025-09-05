@@ -95,6 +95,7 @@ const saveForm = (fields: GroundFloorData) => {
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					thermalTransmittanceOfFloorAboveBasement: fields.thermalTransmittanceOfFloorAboveBasement,
 					thermalTransmittanceOfWallsAboveGround: fields.thermalTransmittanceOfWallsAboveGround,
+					thermalResistanceOfBasementWalls: fields.thermalResistanceOfBasementWalls,
 					depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
 					heightOfBasementWallsAboveGround: fields.heightOfBasementWallsAboveGround,
 				};
@@ -432,6 +433,14 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				suffix-text="W/(m²·K)"
 				label="Thermal transmittance of walls above ground"
 				name="thermalTransmittanceOfWallsAboveGround"
+				validation="required | number"
+			/>
+			<FormKit
+				id="thermalResistanceOfBasementWalls"
+				type="govInputWithSuffix"
+				suffix-text="(m²·K)/W"
+				label="Thermal resistance of walls of basement"
+				name="thermalResistanceOfBasementWalls"
 				validation="required | number"
 			/>
 			<FormKit

@@ -6,7 +6,6 @@ describe('windowData Zod schema', () => {
 		const windowFormData: WindowData = {
 			name: "bedroom window",
 			orientation: 90,
-			surfaceArea: 4,
 			height: 2,
 			width: 2,
 			uValue: 0.1,
@@ -43,7 +42,6 @@ describe('windowData Zod schema', () => {
 		const windowFormData = {
 			name: "bedroom window",
 			orientation: 90,
-			surfaceArea: 4,
 			height: 2,
 			width: 2,
 			uValue: 0.1,

@@ -1,7 +1,8 @@
-import { FuelType } from "~/schema/api-schema.types";
+import { FuelType, SpaceHeatSystemInstantElectricHeaterFHSType, SpaceHeatSystemWetDistributionFHSType, WetEmitterRadiatorWet_emitter_type, WetEmitterUFHWet_emitter_type } from "~/schema/api-schema.types";
 import { mapEnergySupplyData, mapHeatEmittingData } from "./heatingSystemsMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { defaultZoneName } from "./common";
+import { energySupply } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -36,9 +37,9 @@ describe("heating systems mapper", () => {
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
 			EnergySupply: {
-				mains_gas: {
+				mains_gas: energySupply({
 					fuel: FuelType.mains_gas,
-				}
+				})
 			},
 		};
 
@@ -67,13 +68,13 @@ describe("heating systems mapper", () => {
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
 			EnergySupply: {
-				mains_gas: {
+				mains_gas: energySupply({
 					fuel: FuelType.mains_gas,
-				},
-				'mains elec': {
+				}),
+				'mains elec': energySupply({
 					fuel: FuelType.electricity,
 					is_export_capable: true
-				}
+				})
 			},
 		};
 
@@ -105,21 +106,21 @@ describe("heating systems mapper", () => {
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
 			EnergySupply: {
-				'mains elec': {
+				'mains elec': energySupply({
 					fuel: FuelType.electricity,
 					is_export_capable: true
-				},
-				custom: {
+				}),
+				custom: energySupply({
 					fuel: FuelType.custom,
 					factor: {
 						"Emissions Factor kgCO2e/kWh": 3.2,
 						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": 4.8,
 						"Primary Energy Factor kWh/kWh delivered": 1.0,
 					}
-				},
-				mains_gas: {
+				}),
+				mains_gas: energySupply({
 					fuel: FuelType.mains_gas,
-				}
+				})
 			},
 		};
 
@@ -191,12 +192,12 @@ describe("heating systems mapper", () => {
 					design_flow_temp: 35,
 					design_flow_rate: 4,
 					emitters: [{
-						wet_emitter_type: "radiator",
+						wet_emitter_type: WetEmitterRadiatorWet_emitter_type.radiator,
 						frac_convective: 0.7,
 						c: 0.08,
 						n: 1.3,
 					}, {
-						wet_emitter_type: "radiator",
+						wet_emitter_type: WetEmitterRadiatorWet_emitter_type.radiator,
 						frac_convective: 0.7,
 						c: 0.08,
 						n: 1.3,
@@ -209,8 +210,16 @@ describe("heating systems mapper", () => {
 					},
 					temp_diff_emit_dsgn: 4,
 					thermal_mass: 400,
-					type: "WetDistribution",
-					Zone: defaultZoneName
+					type: SpaceHeatSystemWetDistributionFHSType.WetDistribution,
+					Zone: defaultZoneName,
+					Control: 'heating', // TODO this may need to refer to a real control
+					advanced_start: null,
+					bypass_percentage_recirculated: null,
+					variable_flow: false,
+					EnergySupply: null,
+					min_flow_rate: null,
+					max_flow_rate: null,
+					temp_setback: null,
 				}
 			}
 		};
@@ -289,7 +298,7 @@ describe("heating systems mapper", () => {
 						max_outdoor_temp: 32,
 					},
 					emitters: [{
-						wet_emitter_type: "ufh",
+						wet_emitter_type: WetEmitterUFHWet_emitter_type.ufh,
 						emitter_floor_area: 1.5,
 						system_performance_factor: 5,
 						equivalent_specific_thermal_mass: 80,
@@ -297,8 +306,16 @@ describe("heating systems mapper", () => {
 					}],
 					temp_diff_emit_dsgn: 4,
 					thermal_mass: 400,
-					type: "WetDistribution",
-					Zone: defaultZoneName
+					type: SpaceHeatSystemWetDistributionFHSType.WetDistribution,
+					Zone: defaultZoneName,
+					Control: 'heating', // TODO this may need to refer to a real control
+					advanced_start: null,
+					EnergySupply: null,
+					bypass_percentage_recirculated: null,
+					max_flow_rate: null,
+					min_flow_rate: null,
+					temp_setback: null,
+					variable_flow: false,
 				}
 			}
 		};
@@ -339,11 +356,13 @@ describe("heating systems mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
 			SpaceHeatSystem: {
 				"Acme instant electric heater": {
-					type: "InstantElecHeater",
+					type: SpaceHeatSystemInstantElectricHeaterFHSType.InstantElecHeater,
 					rated_power: 100,
 					frac_convective: 0.8,
 					EnergySupply: 'mains elec',
-
+					advanced_start: null,
+					temp_setback: null,
+					Control: 'heating', // TODO: this may need to refer to a real control
 				}
 			}
 		};

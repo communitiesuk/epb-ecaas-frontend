@@ -60,6 +60,7 @@ describe('ground floor', () => {
 	// 	typeOfGroundFloor: FloorType.Unheated_basement,
 	// 	thermalTransmittanceOfFloorAboveBasement: 0,
 	// 	thermalTransmittanceOfWallsAboveGround: 0,
+	//  thermalResistanceOfBasementWalls: 0,
 	// 	depthOfBasementFloorBelowGround: 0,
 	// 	heightOfBasementWallsAboveGround: 0
 	// };

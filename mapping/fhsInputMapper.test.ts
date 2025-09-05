@@ -2,9 +2,15 @@ import type {ValidateFunction} from "ajv/dist/2020";
 import { ajv } from "../schema/validator";
 import {
 	BatteryLocation,
+	BuildingElementAdjacentConditionedSpaceType,
+	BuildingElementAdjacentUnconditionedSpace_SimpleType,
+	BuildingElementGroundType,
+	BuildingElementOpaqueFHSType,
+	BuildingElementTransparentFHSType,
 	BuildType,
 	DuctShape,
 	DuctType,
+	EdgeInsulationHorizontalType,
 	FuelType,
 	HeatingControlType,
 	HeatSourceWetHeatPumpType,
@@ -14,8 +20,11 @@ import {
 	MVHRLocation,
 	PhotovoltaicSystemType,
 	ShadingObjectType,
+	ShowerInstantElectricType,
+	ShowerMixerType,
 	SpaceHeatControlType,
 	SpaceHeatSystemInstantElectricHeaterFHSType,
+	SpaceHeatSystemWetDistributionFHSType,
 	StorageTankType,
 	SupplyAirFlowRateControlType,
 	SupplyAirTemperatureControlType,
@@ -27,7 +36,7 @@ import {
 	WindowTreatmentControl,
 	WindowTreatmentType
 } from "~/schema/api-schema.types";
-import { ColdWaterSourceType, FloorType, OnSiteGenerationVentilationStrategy, segment, VentType, WindowShadingObjectType } from "~/schema/aliases";
+import { ColdWaterSourceType, energySupply, externalConditions, FloorType, noEvents, OnSiteGenerationVentilationStrategy, segment, VentType, WindowShadingObjectType } from "~/schema/aliases";
 import {  mapFhsInputData } from "./fhsInputMapper";
 import type {FhsInputSchema} from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
@@ -50,70 +59,69 @@ const expectedHouseInput: FhsInputSchema = {
 	},
 	Control: {},
 	EnergySupply: {
-		['mains elec']: {
+		['mains elec']: energySupply({
 			fuel: FuelType.electricity,
 			is_export_capable: true,
-		}
+		})
 	},
-	Events: {},
-	ExternalConditions: {
-		shading_segments: [
-			{ number: 1, start360: 0, end360: 10 },
-			{ number: 2, start360: 10, end360: 20 },
-			{ number: 3, start360: 20, end360: 30 },
-			{ number: 4, start360: 30, end360: 40 },
-			{ number: 5, start360: 40, end360: 50 },
-			{ number: 6, start360: 50, end360: 60 },
-			{ number: 7, start360: 60, end360: 70, shading: [
-				{
-					distance: 1,
-					height: 2,
-					type: ShadingObjectType.obstacle
-				}
-			] },
-			{ number: 8, start360: 70, end360: 80, shading: [
-				{
-					distance: 1,
-					height: 2,
-					type: ShadingObjectType.obstacle
-				}
-			] },
-			{ number: 9, start360: 80, end360: 90, shading: [
-				{
-					distance: 1,
-					height: 2,
-					type: ShadingObjectType.obstacle
-				}
-			] },
-			{ number: 10, start360: 90, end360: 100 },
-			{ number: 11, start360: 100, end360: 110 },
-			{ number: 12, start360: 110, end360: 120 },
-			{ number: 13, start360: 120, end360: 130 },
-			{ number: 14, start360: 130, end360: 140 },
-			{ number: 15, start360: 140, end360: 150 },
-			{ number: 16, start360: 150, end360: 160 },
-			{ number: 17, start360: 160, end360: 170 },
-			{ number: 18, start360: 170, end360: 180 },
-			{ number: 19, start360: 180, end360: 190 },
-			{ number: 20, start360: 190, end360: 200 },
-			{ number: 21, start360: 200, end360: 210 },
-			{ number: 22, start360: 210, end360: 220 },
-			{ number: 23, start360: 220, end360: 230 },
-			{ number: 24, start360: 230, end360: 240 },
-			{ number: 25, start360: 240, end360: 250 },
-			{ number: 26, start360: 250, end360: 260 },
-			{ number: 27, start360: 260, end360: 270 },
-			{ number: 28, start360: 270, end360: 280 },
-			{ number: 29, start360: 280, end360: 290 },
-			{ number: 30, start360: 290, end360: 300 },
-			{ number: 31, start360: 300, end360: 310 },
-			{ number: 32, start360: 310, end360: 320 },
-			{ number: 33, start360: 320, end360: 330 },
-			{ number: 34, start360: 330, end360: 340 },
-			{ number: 35, start360: 340, end360: 350 },
-			{ number: 36, start360: 350, end360: 360 }
-		].map(segment)
-	},
+	Events: noEvents,
+	ExternalConditions: externalConditions([
+		{ number: 1, start360: 0, end360: 10 },
+		{ number: 2, start360: 10, end360: 20 },
+		{ number: 3, start360: 20, end360: 30 },
+		{ number: 4, start360: 30, end360: 40 },
+		{ number: 5, start360: 40, end360: 50 },
+		{ number: 6, start360: 50, end360: 60 },
+		{ number: 7, start360: 60, end360: 70, shading: [
+			{
+				distance: 1,
+				height: 2,
+				type: ShadingObjectType.obstacle
+			}
+		] },
+		{ number: 8, start360: 70, end360: 80, shading: [
+			{
+				distance: 1,
+				height: 2,
+				type: ShadingObjectType.obstacle
+			}
+		] },
+		{ number: 9, start360: 80, end360: 90, shading: [
+			{
+				distance: 1,
+				height: 2,
+				type: ShadingObjectType.obstacle
+			}
+		] },
+		{ number: 10, start360: 90, end360: 100 },
+		{ number: 11, start360: 100, end360: 110 },
+		{ number: 12, start360: 110, end360: 120 },
+		{ number: 13, start360: 120, end360: 130 },
+		{ number: 14, start360: 130, end360: 140 },
+		{ number: 15, start360: 140, end360: 150 },
+		{ number: 16, start360: 150, end360: 160 },
+		{ number: 17, start360: 160, end360: 170 },
+		{ number: 18, start360: 170, end360: 180 },
+		{ number: 19, start360: 180, end360: 190 },
+		{ number: 20, start360: 190, end360: 200 },
+		{ number: 21, start360: 200, end360: 210 },
+		{ number: 22, start360: 210, end360: 220 },
+		{ number: 23, start360: 220, end360: 230 },
+		{ number: 24, start360: 230, end360: 240 },
+		{ number: 25, start360: 240, end360: 250 },
+		{ number: 26, start360: 250, end360: 260 },
+		{ number: 27, start360: 260, end360: 270 },
+		{ number: 28, start360: 270, end360: 280 },
+		{ number: 29, start360: 280, end360: 290 },
+		{ number: 30, start360: 290, end360: 300 },
+		{ number: 31, start360: 300, end360: 310 },
+		{ number: 32, start360: 310, end360: 320 },
+		{ number: 33, start360: 320, end360: 330 },
+		{ number: 34, start360: 330, end360: 340 },
+		{ number: 35, start360: 340, end360: 350 },
+		{ number: 36, start360: 350, end360: 360 }
+	].map(segment)
+	),
 	General: {
 		build_type: BuildType.house,
 		storeys_in_building: 2,
@@ -124,7 +132,8 @@ const expectedHouseInput: FhsInputSchema = {
 			"some-mixer-shower-name": {
 				ColdWaterSource: ColdWaterSourceType.mains_water,
 				flowrate: 14,
-				type: "MixerShower"
+				type: ShowerMixerType.MixerShower,
+				WWHRS: null
 			},
 		},
 		Bath: {},
@@ -141,17 +150,21 @@ const expectedHouseInput: FhsInputSchema = {
 					heater_position: 0.1,
 					type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 					temp_flow_limit_upper: 65,
-					thermostat_position: 0.33
+					thermostat_position: 0.33,
+					Controlmin: 'min',
+					Controlmax: 'max',
 				},
 			},
 			daily_losses: 34,
 			volume: 200,
-			type: "StorageTank"
+			type: StorageTankType.StorageTank,
+			heat_exchanger_surface_area: null,
+			init_temp: 20.0,
+			primary_pipework: null
 		}
 	},
 	InfiltrationVentilation: {
 		CombustionAppliances: {},
-		Cowls: {},
 		Leaks: {
 			ventilation_zone_height: 8,
 			env_area: 320,
@@ -167,10 +180,13 @@ const expectedHouseInput: FhsInputSchema = {
 				vent_type: VentType.Intermittent_MEV,
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
-				SFP: 1.5
+				SFP: 1.5,
+				Control: 'fan',
+				ductwork: null,
+				mvhr_eff: null,
+				mvhr_location: null
 			}
 		},
-		PDUs: {},
 		Vents: {
 			"only vent": {
 				area_cm2: 75,
@@ -182,12 +198,16 @@ const expectedHouseInput: FhsInputSchema = {
 		},
 		ach_max_static_calcs: 2,
 		altitude: 100,
-		cross_vent_factor: false,
+		cross_vent_possible: false,
 		noise_nuisance: false,
 		shield_class: VentilationShieldClass.Shielded,
 		terrain_class: TerrainClass.Suburban,
 		vent_opening_ratio_init: 1,
 		ventilation_zone_base_height: 3,
+		Control_VentAdjustMin: null,
+		Control_VentAdjustMax: null,
+		Control_WindowAdjust: null,
+		ach_min_static_calcs: null
 	},
 	InternalGains: {},
 	NumberOfBedrooms: 7,
@@ -210,7 +230,7 @@ const expectedHouseInput: FhsInputSchema = {
 	// },
 	SpaceHeatSystem: {
 		"some-wet-distribution": {
-			type: "WetDistribution",
+			type: SpaceHeatSystemWetDistributionFHSType.WetDistribution,
 			HeatSource: {
 				name: "some-heat-pump-name",
 				temp_flow_limit_upper: 65,
@@ -240,19 +260,27 @@ const expectedHouseInput: FhsInputSchema = {
 			],
 			temp_diff_emit_dsgn: 31,
 			thermal_mass: 0.14,
+			Control: 'heating',
+			EnergySupply: null,
+			advanced_start: null,
+			bypass_percentage_recirculated: null,
+			min_flow_rate: null,
+			max_flow_rate: null,
+			temp_setback: null,
+			variable_flow: false,
 		}
 	},
 	GroundFloorArea: 40,
 	HeatSourceWet: {"some-heat-pump-name": {
 		EnergySupply: defaultElectricityEnergySupplyName,
-		type: "HeatPump",
+		type: HeatSourceWetHeatPumpType.HeatPump,
 		product_reference: "HEATPUMP-LARGE"
 	}},
 	Zone: {
 		[defaultZoneName]: {
 			BuildingElement: {
 				"ground-floor (floor)": {
-					type: 'BuildingElementGround',
+					type: BuildingElementGroundType.BuildingElementGround,
 					area: 40,
 					total_area: 40,
 					u_value: 1,
@@ -276,12 +304,14 @@ const expectedHouseInput: FhsInputSchema = {
 					}
 				}
 			},
-			// SpaceCoolSystem: ["some-aircon-unit-name"],
+			SpaceCoolSystem: null,
 			SpaceHeatControl: SpaceHeatControlType.livingroom,
 			SpaceHeatSystem: ["some-wet-distribution"],
 			ThermalBridging: {},
 			area: 100,
 			volume: 300,
+			temp_setpnt_basis: null,
+			temp_setpnt_init: null,
 		}
 	},
 };
@@ -296,7 +326,7 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	Control: {},
 	EnergySupply: {
-		['mains elec']: {
+		['mains elec']: energySupply({
 			fuel: FuelType.electricity,
 			is_export_capable: false,
 			ElectricBattery: {
@@ -338,78 +368,77 @@ const expectedFlatInput: FhsInputSchema = {
 				20,
 				20,
 			],
-		}
+		})
 	},
-	Events: {},
-	ExternalConditions: {
-		shading_segments: [
-			{ number: 1, start360: 0, end360: 10, shading: [
-				{
-					distance: 0.5,
-					height: 1,
-					type: ShadingObjectType.obstacle
-				}
-			] },
-			{ number: 2, start360: 10, end360: 20, shading: [
-				{
-					distance: 2,
-					height: 5,
-					type: ShadingObjectType.overhang
-				},
-				{
-					distance: 0.5,
-					height: 1,
-					type: ShadingObjectType.obstacle
-				},
-			] },
-			{ number: 3, start360: 20, end360: 30, shading: [
-				{
-					distance: 2,
-					height: 5,
-					type: ShadingObjectType.overhang
-				}
-			] },
-			{ number: 4, start360: 30, end360: 40, shading: [
-				{
-					distance: 2,
-					height: 5,
-					type: ShadingObjectType.overhang
-				}
-			] },
-			{ number: 5, start360: 40, end360: 50 },
-			{ number: 6, start360: 50, end360: 60 },
-			{ number: 7, start360: 60, end360: 70 },
-			{ number: 8, start360: 70, end360: 80 },
-			{ number: 9, start360: 80, end360: 90 },
-			{ number: 10, start360: 90, end360: 100 },
-			{ number: 11, start360: 100, end360: 110 },
-			{ number: 12, start360: 110, end360: 120 },
-			{ number: 13, start360: 120, end360: 130 },
-			{ number: 14, start360: 130, end360: 140 },
-			{ number: 15, start360: 140, end360: 150 },
-			{ number: 16, start360: 150, end360: 160 },
-			{ number: 17, start360: 160, end360: 170 },
-			{ number: 18, start360: 170, end360: 180 },
-			{ number: 19, start360: 180, end360: 190 },
-			{ number: 20, start360: 190, end360: 200 },
-			{ number: 21, start360: 200, end360: 210 },
-			{ number: 22, start360: 210, end360: 220 },
-			{ number: 23, start360: 220, end360: 230 },
-			{ number: 24, start360: 230, end360: 240 },
-			{ number: 25, start360: 240, end360: 250 },
-			{ number: 26, start360: 250, end360: 260 },
-			{ number: 27, start360: 260, end360: 270 },
-			{ number: 28, start360: 270, end360: 280 },
-			{ number: 29, start360: 280, end360: 290 },
-			{ number: 30, start360: 290, end360: 300 },
-			{ number: 31, start360: 300, end360: 310 },
-			{ number: 32, start360: 310, end360: 320 },
-			{ number: 33, start360: 320, end360: 330 },
-			{ number: 34, start360: 330, end360: 340 },
-			{ number: 35, start360: 340, end360: 350 },
-			{ number: 36, start360: 350, end360: 360 }
-		].map(segment)
-	},
+	Events: noEvents,
+	ExternalConditions: externalConditions([
+		{ number: 1, start360: 0, end360: 10, shading: [
+			{
+				distance: 0.5,
+				height: 1,
+				type: ShadingObjectType.obstacle
+			}
+		] },
+		{ number: 2, start360: 10, end360: 20, shading: [
+			{
+				distance: 2,
+				height: 5,
+				type: ShadingObjectType.overhang
+			},
+			{
+				distance: 0.5,
+				height: 1,
+				type: ShadingObjectType.obstacle
+			},
+		] },
+		{ number: 3, start360: 20, end360: 30, shading: [
+			{
+				distance: 2,
+				height: 5,
+				type: ShadingObjectType.overhang
+			}
+		] },
+		{ number: 4, start360: 30, end360: 40, shading: [
+			{
+				distance: 2,
+				height: 5,
+				type: ShadingObjectType.overhang
+			}
+		] },
+		{ number: 5, start360: 40, end360: 50 },
+		{ number: 6, start360: 50, end360: 60 },
+		{ number: 7, start360: 60, end360: 70 },
+		{ number: 8, start360: 70, end360: 80 },
+		{ number: 9, start360: 80, end360: 90 },
+		{ number: 10, start360: 90, end360: 100 },
+		{ number: 11, start360: 100, end360: 110 },
+		{ number: 12, start360: 110, end360: 120 },
+		{ number: 13, start360: 120, end360: 130 },
+		{ number: 14, start360: 130, end360: 140 },
+		{ number: 15, start360: 140, end360: 150 },
+		{ number: 16, start360: 150, end360: 160 },
+		{ number: 17, start360: 160, end360: 170 },
+		{ number: 18, start360: 170, end360: 180 },
+		{ number: 19, start360: 180, end360: 190 },
+		{ number: 20, start360: 190, end360: 200 },
+		{ number: 21, start360: 200, end360: 210 },
+		{ number: 22, start360: 210, end360: 220 },
+		{ number: 23, start360: 220, end360: 230 },
+		{ number: 24, start360: 230, end360: 240 },
+		{ number: 25, start360: 240, end360: 250 },
+		{ number: 26, start360: 250, end360: 260 },
+		{ number: 27, start360: 260, end360: 270 },
+		{ number: 28, start360: 270, end360: 280 },
+		{ number: 29, start360: 280, end360: 290 },
+		{ number: 30, start360: 290, end360: 300 },
+		{ number: 31, start360: 300, end360: 310 },
+		{ number: 32, start360: 310, end360: 320 },
+		{ number: 33, start360: 320, end360: 330 },
+		{ number: 34, start360: 330, end360: 340 },
+		{ number: 35, start360: 340, end360: 350 },
+		{ number: 36, start360: 350, end360: 360 }
+	].map(segment)
+	),
 	General: {
 		build_type: BuildType.flat,
 		storeys_in_building: 6,
@@ -421,18 +450,20 @@ const expectedFlatInput: FhsInputSchema = {
 			"mixer shower 1 name": {
 				ColdWaterSource: ColdWaterSourceType.mains_water,
 				flowrate: 19,
-				type: "MixerShower"
+				type: ShowerMixerType.MixerShower,
+				WWHRS: null
 			},
 			"mixer shower 2 name": {
 				ColdWaterSource: ColdWaterSourceType.mains_water,
 				flowrate: 28,
-				type: "MixerShower"
+				type: ShowerMixerType.MixerShower,
+				WWHRS: null
 			},
 			"electric shower 1 name": {
 				ColdWaterSource: ColdWaterSourceType.mains_water,
 				rated_power: 20,
 				EnergySupply: "mains elec",
-				type: "InstantElecShower"
+				type: ShowerInstantElectricType.InstantElecShower
 			}
 		},
 		Bath: {
@@ -489,7 +520,9 @@ const expectedFlatInput: FhsInputSchema = {
 					heater_position: 0.1,
 					type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 					temp_flow_limit_upper: 65,
-					thermostat_position: 0.33
+					thermostat_position: 0.33,
+					Controlmin: 'min',
+					Controlmax: 'max',
 				},
 			},
 			daily_losses: 10,
@@ -514,12 +547,13 @@ const expectedFlatInput: FhsInputSchema = {
 				surface_reflectivity: false,
 				pipe_contents: WaterPipeContentsType.glycol25,
 				location: WaterPipeworkLocation.external
-			}]
+			}],
+			heat_exchanger_surface_area: null,
+			init_temp: 20.0
 		}
 	},
 	InfiltrationVentilation: {
 		CombustionAppliances: {},
-		Cowls: {},
 		Leaks: {
 			ventilation_zone_height: 1,
 			env_area: 5,
@@ -547,7 +581,9 @@ const expectedFlatInput: FhsInputSchema = {
 					length: 4,
 					reflective: true,
 					duct_perimeter_mm: null,
-				}]
+				}],
+				Control: 'mvhr',
+				SFP: 2.3
 			},
 			"mvhr vent 2 name": {
 				EnergySupply: "mains elec",
@@ -559,7 +595,9 @@ const expectedFlatInput: FhsInputSchema = {
 				measured_fan_power: 12.26,
 				mvhr_eff: 0,
 				mvhr_location: MVHRLocation.outside,
-				ductwork: []
+				ductwork: [],
+				Control: 'mvhr',
+				SFP: 3
 			},
 			"centralised MEV name": {
 				EnergySupply: "mains elec",
@@ -569,9 +607,13 @@ const expectedFlatInput: FhsInputSchema = {
 				vent_type: VentType.Centralised_continuous_MEV,
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
+				Control: 'mev',
+				SFP: 2,
+				ductwork: null,
+				mvhr_eff: null,
+				mvhr_location: null
 			}
 		},
-		PDUs: {},
 		Vents: {
 			"only vent": {
 				area_cm2: 75,
@@ -583,12 +625,16 @@ const expectedFlatInput: FhsInputSchema = {
 		},
 		ach_max_static_calcs: 2,
 		altitude: 30,
-		cross_vent_factor: true,
+		cross_vent_possible: true,
 		noise_nuisance: true,
 		shield_class: VentilationShieldClass.Normal,
 		terrain_class: TerrainClass.OpenField,
 		vent_opening_ratio_init: 1,
 		ventilation_zone_base_height: 1,
+		Control_VentAdjustMin: null,
+		Control_VentAdjustMax: null,
+		Control_WindowAdjust: null,
+		ach_min_static_calcs: null
 	},
 	InternalGains: {},
 	NumberOfBedrooms: 2,
@@ -623,13 +669,19 @@ const expectedFlatInput: FhsInputSchema = {
 			rated_power: 10,
 			frac_convective: 1,
 			type: SpaceHeatSystemInstantElectricHeaterFHSType.InstantElecHeater,
-			EnergySupply: "mains elec"
+			EnergySupply: "mains elec",
+			Control: "heating",
+			advanced_start: null,
+			temp_setback: null
 		},
 		"instant elec heater 2": {
 			rated_power: 13,
 			frac_convective: 0.8,
 			type: SpaceHeatSystemInstantElectricHeaterFHSType.InstantElecHeater,
-			EnergySupply: "mains elec"
+			EnergySupply: "mains elec",
+			Control: "heating",
+			advanced_start: null,
+			temp_setback: null
 		}
 	},
 	GroundFloorArea: 38,
@@ -644,7 +696,7 @@ const expectedFlatInput: FhsInputSchema = {
 		[defaultZoneName]: {
 			BuildingElement: {
 				"ground floor 1 (floor)": {
-					type: 'BuildingElementGround',
+					type: BuildingElementGroundType.BuildingElementGround,
 					area: 12,
 					total_area: 12,
 					u_value: 5,
@@ -654,7 +706,7 @@ const expectedFlatInput: FhsInputSchema = {
 					perimeter: 40,
 					edge_insulation: [{
 						edge_thermal_resistance: 2.4,
-						type: "horizontal",
+						type: EdgeInsulationHorizontalType.horizontal,
 						width: 0.32
 					}],
 					psi_wall_floor_junc: 0.4,
@@ -663,7 +715,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 0,
 				},
 				"ground floor 2 (floor)": {
-					type: 'BuildingElementGround',
+					type: BuildingElementGroundType.BuildingElementGround,
 					area: 26,
 					total_area: 26,
 					depth_basement_floor: 2,
@@ -679,7 +731,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 0,
 				},
 				"internal floor 1 (floor)": {
-					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+					type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 					area: 6,
 					areal_heat_capacity: 50000,
 					mass_distribution_class: MassDistributionClass.IE,
@@ -688,7 +740,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 0.01
 				},
 				"internal floor 2 (floor)": {
-					type: "BuildingElementAdjacentConditionedSpace",
+					type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 					area: 4, 
 					u_value: 0.01,
 					areal_heat_capacity: 110000,
@@ -706,7 +758,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 180,
 					orientation360: 0,
 					u_value: 0.1,
-					type: "BuildingElementOpaque",
+					type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 					is_external_door: false
 				},
 				"party wall 1 (wall)": {
@@ -714,11 +766,11 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: 50000,
 					mass_distribution_class: MassDistributionClass.E,
 					pitch: 90,
-					type: "BuildingElementAdjacentConditionedSpace",
+					type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 					u_value: 1
 				},
 				"external wall 1 (wall)": {
-					type: "BuildingElementOpaque",
+					type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 					area: 20,
 					areal_heat_capacity: 75000,
 					base_height: 1,
@@ -736,7 +788,7 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: 50000,
 					mass_distribution_class: MassDistributionClass.I,
 					pitch: 90,
-					type: "BuildingElementAdjacentConditionedSpace",
+					type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 					u_value: 0.01,
 				},
 				"front door (door)": {
@@ -749,7 +801,7 @@ const expectedFlatInput: FhsInputSchema = {
 					orientation360: 30,
 					pitch: 90,
 					solar_absorption_coeff: 0.2,
-					type: "BuildingElementOpaque",
+					type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 					u_value: 1,
 					width: 1.2,
 				},
@@ -765,7 +817,7 @@ const expectedFlatInput: FhsInputSchema = {
 					orientation360: 20,
 					pitch: 90,
 					shading: [],
-					type: "BuildingElementTransparent",
+					type: BuildingElementTransparentFHSType.BuildingElementTransparent,
 					u_value: 0.8,
 					width: 1,
 					window_part_list: []
@@ -776,11 +828,11 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: MassDistributionClass.D,
 					pitch: 90,
 					thermal_resistance_unconditioned_space: 2.5,
-					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+					type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 					u_value: 1,
 				},
 				"ceiling to heated space (ceiling)": {
-					type: "BuildingElementAdjacentConditionedSpace",
+					type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 					area: 16,
 					areal_heat_capacity: 75000,
 					mass_distribution_class: MassDistributionClass.I,
@@ -788,7 +840,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 0.01,
 				},	
 				"ceiling to unheated space (ceiling)": {
-					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+					type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 					area: 20,
 					areal_heat_capacity: 60000,
 					mass_distribution_class: MassDistributionClass.IE,
@@ -807,7 +859,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 0.1,
 					areal_heat_capacity: 19300,
 					mass_distribution_class: MassDistributionClass.I,
-					type: "BuildingElementOpaque",
+					type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 					is_external_door: false,
 					is_unheated_pitched_roof: false
 				},
@@ -816,7 +868,7 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: 50000,
 					mass_distribution_class: MassDistributionClass.IE,
 					pitch: 90,
-					type: "BuildingElementAdjacentConditionedSpace",
+					type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 					u_value: 0.01,
 				},
 				"door to garage (door)": {
@@ -825,11 +877,11 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: MassDistributionClass.IE,
 					pitch: 90,
 					thermal_resistance_unconditioned_space: 2.5,
-					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+					type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 					u_value: 1,
 				},
 				"bedroom window (window)": {
-					type: "BuildingElementTransparent",
+					type: BuildingElementTransparentFHSType.BuildingElementTransparent,
 					pitch: 90,
 					orientation360: 90,
 					height: 2,
@@ -864,7 +916,7 @@ const expectedFlatInput: FhsInputSchema = {
 				}
 			},
 			SpaceHeatControl: SpaceHeatControlType.livingroom,
-			// SpaceCoolSystem: [],
+			SpaceCoolSystem: null,
 			SpaceHeatSystem: ["instant elec heater 1", "instant elec heater 2"],
 			ThermalBridging: {
 				"linear thermal bridge (bridge)": {
@@ -903,6 +955,8 @@ const expectedFlatInput: FhsInputSchema = {
 			},
 			area: 16,
 			volume: 550,
+			temp_setpnt_basis: null,
+			temp_setpnt_init: null
 		}
 	},
 };
@@ -1686,7 +1740,6 @@ describe("FHS input mapper", () => {
 				data: [{
 					name: "bedroom window",
 					orientation: 90,
-					surfaceArea: 4,
 					height: 2,
 					width: 2,
 					uValue: 0.1,

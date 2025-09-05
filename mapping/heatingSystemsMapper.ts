@@ -1,7 +1,7 @@
 import { objectFromEntries } from "ts-extras";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
-import { FuelType  } from "~/schema/api-schema.types";
-import type {SchemaSpaceHeatSystemDetails} from "~/schema/api-schema.types";
+import { FuelType, SpaceHeatSystemInstantElectricHeaterFHSType, SpaceHeatSystemWetDistributionFHSType  } from "~/schema/api-schema.types";
+import { energySupply, type SchemaSpaceHeatSystemDetails } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
 export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema, 'EnergySupply' | 'SpaceHeatSystem'> {
@@ -18,7 +18,7 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 		EnergySupply: {
 			...objectFromEntries(fuelType ? fuelType.map((fuelType) => ([
 				fuelType === FuelType.electricity ? defaultElectricityEnergySupplyName : fuelType,
-				{
+				energySupply({
 					fuel: fuelType as FuelType,
 					...(fuelType === FuelType.electricity ? { is_export_capable: exported } : {}),
 					...(fuelType === FuelType.custom ? { factor: {
@@ -26,7 +26,7 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": co2PerKwhIncludingOutOfScope!,
 						"Primary Energy Factor kWh/kWh delivered": kwhPerKwhDelivered!
 					} } : {}),
-				}
+				})
 			])) : [])
 		}
 	};
@@ -71,8 +71,16 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			},
 			temp_diff_emit_dsgn: designTempDiffAcrossEmitters,
 			thermal_mass: thermalMass,
-			type: "WetDistribution",
+			type: SpaceHeatSystemWetDistributionFHSType.WetDistribution,
 			Zone: defaultZoneName,
+			Control: 'heating', // this may need to be a real control
+			EnergySupply: null,
+			advanced_start: null,
+			bypass_percentage_recirculated: null,
+			variable_flow: false,
+			min_flow_rate: null,
+			max_flow_rate: null,
+			temp_setback: null,
 		};
 		return [
 			name,
@@ -84,10 +92,13 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 	const instantElectricHeaterEntries = instantElectricHeaters.map((heater): [string, SchemaSpaceHeatSystemDetails] => [
 		heater.data.name,
 		{
-			type: "InstantElecHeater",
+			type: SpaceHeatSystemInstantElectricHeaterFHSType.InstantElecHeater,
 			EnergySupply: defaultElectricityEnergySupplyName,
 			rated_power: heater.data.ratedPower,
 			frac_convective: heater.data.convectionFractionInstant,
+			advanced_start: null,
+			temp_setback: null,
+			Control: 'heating', // TODO this may need to be a real control
 		}
 	]);
 
