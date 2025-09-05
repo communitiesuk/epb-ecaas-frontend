@@ -61,6 +61,8 @@ watch(model, async (newData: ElectricBatteryData | undefined, initialData: Elect
 				},
 			};
 		}
+
+		state.pvAndBatteries.electricBattery.complete = false;
 	});
 });
 
