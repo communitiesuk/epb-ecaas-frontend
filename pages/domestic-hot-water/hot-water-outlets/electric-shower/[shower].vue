@@ -4,7 +4,8 @@ import { getUrl  } from '#imports';
  
 const title = "Electric shower";
 const store = useEcaasStore();
-const route = useRoute();
+const { autoSaveElementForm, getStoreIndex } = useForm();
+
 
 const electricShowerData = useItemToEdit('shower', store.domesticHotWater.hotWaterOutlets.electricShower.data);
 const model: Ref<ElectricShowerData | undefined> = ref(electricShowerData?.data);
@@ -12,65 +13,34 @@ const model: Ref<ElectricShowerData | undefined> = ref(electricShowerData?.data)
 const saveForm = (fields: ElectricShowerData) => {
 	store.$patch((state) => {
 		const {electricShower} = state.domesticHotWater.hotWaterOutlets;
-		const storeData = store.domesticHotWater.hotWaterOutlets.electricShower.data;
 		
-		const index = route.params.shower === 'create' ? storeData.length - 1 : Number(route.params.shower);
+		const index = getStoreIndex(electricShower.data);
 
-		const electricShowerItem: EcaasForm<ElectricShowerData> = {
+		electricShower.data[index] = {
 			data : {
-				id: electricShowerData ? electricShowerData.data.id : uuidv4(),
+				id: electricShowerData?.data.id || uuidv4(),
 				name: fields.name,
 				ratedPower: fields.ratedPower,
 			},
 			complete: true
 		};
-		electricShower.data[index] = electricShowerItem;
+
 		electricShower.complete = false;
 	});
 
 	navigateTo("/domestic-hot-water/hot-water-outlets");
 };
-watch(model, async (newData: ElectricShowerData | undefined, initialData: ElectricShowerData | undefined) => {
-	const storeData = store.domesticHotWater.hotWaterOutlets.electricShower.data;
 
-	if (initialData === undefined || newData === undefined) {
-		return;
-	}
-
-	const defaultName = 'Electric shower';
-	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
-
-	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-		Object.values(newData).some(x => x !== undefined);
-
-	if (route.params.shower === 'create' && isFirstEdit) {
-
-		store.$patch(state => {
-			state.domesticHotWater.hotWaterOutlets.electricShower.data.push({
-				data: {
-					...newData,
-					name: newData.name?.trim() || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
-				}
-			});
-		});
-
-		return;
-	}
-
-	store.$patch((state) => {
-		const index = route.params.shower === 'create' ? storeData.length - 1 : Number(route.params.shower);
-
-		state.domesticHotWater.hotWaterOutlets.electricShower.data[index] = {
-			data: {
-				...newData,
-				name: newData.name?.trim() || defaultName,
-				id: store.domesticHotWater.hotWaterOutlets.electricShower.data[index]?.data.id ?? uuidv4()
-			}
-		};
-
+autoSaveElementForm({
+	model,
+	storeData: store.domesticHotWater.hotWaterOutlets.electricShower,
+	defaultName: 'Electric shower',
+	onPatchCreate: (state, newData) => state.domesticHotWater.hotWaterOutlets.electricShower.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.domesticHotWater.hotWaterOutlets.electricShower.data[index] = newData;
 		state.domesticHotWater.hotWaterOutlets.electricShower.complete = false;
-	});
-});
+	}});
+
 const {handleInvalidSubmit, errorMessages} = useErrorSummary();
 </script>
 

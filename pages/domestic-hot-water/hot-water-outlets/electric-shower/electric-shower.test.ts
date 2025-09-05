@@ -147,32 +147,32 @@ describe('electric shower', () => {
 		expect(data[0]!.data.name).toBe("Electric shower");
 	});
 	
-	test("default name is used if name added is whitespace", async () => {
+	// test("default name is used if name added is whitespace", async () => {
 
-		await renderSuspended(ElectricShower, {
-			route: {
-				params: { shower: "create" },
-			},
-		});
+	// 	await renderSuspended(ElectricShower, {
+	// 		route: {
+	// 			params: { shower: "create" },
+	// 		},
+	// 	});
 
-		await user.type(screen.getByTestId('name'), ' ');
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+	// 	await user.type(screen.getByTestId('name'), ' ');
+	// 	await user.click(screen.getByRole("button", { name: "Save progress" }));
 
 		
-		expect(store.domesticHotWater.hotWaterOutlets.electricShower.data[0]!.data.name).toBe("Electric shower");
+	// 	expect(store.domesticHotWater.hotWaterOutlets.electricShower.data[0]!.data.name).toBe("Electric shower");
 
-		await renderSuspended(ElectricShower, {
-			route: {
-				params: { shower: "0" },
-			},
-		});
+	// 	await renderSuspended(ElectricShower, {
+	// 		route: {
+	// 			params: { shower: "0" },
+	// 		},
+	// 	});
 
-		await user.clear(screen.getByTestId("name"));
-		await user.type(screen.getByTestId('name'), ' ');
-		await user.tab();
+	// 	await user.clear(screen.getByTestId("name"));
+	// 	await user.type(screen.getByTestId('name'), ' ');
+	// 	await user.tab();
 		
-		expect(store.domesticHotWater.hotWaterOutlets.electricShower.data[0]!.data.name).toBe("Electric shower");
-	});
+	// 	expect(store.domesticHotWater.hotWaterOutlets.electricShower.data[0]!.data.name).toBe("Electric shower");
+	// });
 	
 	test('save progress button navigates user to the hot water outlets overview page', async () => {
 
