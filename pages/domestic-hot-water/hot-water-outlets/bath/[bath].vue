@@ -17,7 +17,7 @@ const saveForm = (fields: BathData) => {
 		const index = getStoreIndex(bath.data);
 		bath.data[index] = {
 			data: {
-				id: bathData ? bathData.data.id :uuidv4(),
+				id: bathData?.data.id || uuidv4(),
 				name: fields.name,
 				size: fields.size,
 				flowRate: fields.flowRate

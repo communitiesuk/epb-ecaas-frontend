@@ -416,7 +416,8 @@ describe('hot water outlets', () => {
 				id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a3",
 				name: "Mixer Shower 1",
 				flowRate: 10
-			}
+			},
+			complete: true
 		};
 
 		const electricShower1: EcaasForm<ElectricShowerData> = {
@@ -424,7 +425,8 @@ describe('hot water outlets', () => {
 				id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a4",
 				name: "Electric Shower 1",
 				ratedPower: 8
-			}
+				},
+			complete: true
 		};
 
 		const bath1: EcaasForm<BathData> = {
@@ -433,7 +435,8 @@ describe('hot water outlets', () => {
 				name: "Bath 1",
 				size: 200,
 				flowRate: 15
-			}
+			},
+			complete: true
 		};
 
 		const otherHotWaterOutlet1: EcaasForm<OtherHotWaterOutletData> = {
@@ -441,7 +444,8 @@ describe('hot water outlets', () => {
 				id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
 				name: "Other Outlet 1",
 				flowRate: 5
-			}
+			},
+			complete: true
 		};
 	
 		const addHotWaterOutletsDataToStore = async () => {
@@ -501,7 +505,7 @@ describe('hot water outlets', () => {
 			expect(completedStatusElement?.style.display).toBe("none");
 	
 			await user.click(screen.getByTestId("completeSectionButton"));
-	
+
 			const { mixedShower, electricShower, bath, otherOutlets } = store.domesticHotWater.hotWaterOutlets;
 	
 			expect(mixedShower?.complete).toBe(true);
@@ -546,27 +550,27 @@ describe('hot water outlets', () => {
 			}
 		});
 	
-		// it("marks as not complete after saving a new or edited hot water outlet item", async () => {
-		// 	for (const [key] of Object.entries(store.domesticHotWater.hotWaterOutlets)) {
-		// 		const outlets = await getHotWaterOutletsData("");
-		// 		const typedKey = key as HotWaterOutletsType;
+		it("marks as not complete after saving a new or edited hot water outlet item", async () => {
+			for (const [key] of Object.entries(store.domesticHotWater.hotWaterOutlets)) {
+				const outlets = await getHotWaterOutletsData("");
+				const typedKey = key as HotWaterOutletsType;
 	
-		// 		await user.click(screen.getByTestId("completeSectionButton"));
-		// 		expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(true);
+				await user.click(screen.getByTestId("completeSectionButton"));
+				expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(true);
 	
-		// 		const outletData = outlets.find((e) => e.key === typedKey);
-		// 		const params: string = outletData!.params;
-		// 		await renderSuspended(outletData?.form, {
-		// 			route: {
-		// 				params: { [params]: "0" },
-		// 			},
-		// 		});
-		// 		await user.click(screen.getByRole("button", { name: "Save and continue" }));
-		// 		expect(store.domesticHotWater.hotWaterOutlets[typedKey].complete).toBe(false);
+				const outletData = outlets.find((e) => e.key === typedKey);
+				const params: string = outletData!.params;
+				await renderSuspended(outletData?.form, {
+					route: {
+						params: { [params]: "0" },
+					},
+				});
+					await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+				expect(store.domesticHotWater.hotWaterOutlets[typedKey].complete).toBe(false);
 	
-		// 		await renderSuspended(HotWaterOutlets);
-		// 		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		// 	}
-		// });
+				await renderSuspended(HotWaterOutlets);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
 	});
 });

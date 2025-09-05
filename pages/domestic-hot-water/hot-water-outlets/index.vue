@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { BathData, ElectricShowerData, MixedShowerData, OtherHotWaterOutletData } from '~/stores/ecaasStore.schema';
+import formStatus from '~/constants/formStatus';
 
 const title = "Hot water outlets";
 const page = usePage();
@@ -69,6 +70,16 @@ function checkIsComplete() {
 	const outlets = store.domesticHotWater.hotWaterOutlets;
 	return Object.values(outlets).every(outlet => outlet.complete);
 }
+
+function hasIncompleteEntries(){
+
+	const outletsTypes = store.domesticHotWater.hotWaterOutlets;
+
+	return Object.values(outletsTypes).some(
+		outlets => outlets.data.some(
+			outlet => isEcaasForm(outlet) ? !outlet.complete : false));
+}
+
 </script>
 
 <template>
@@ -82,7 +93,10 @@ function checkIsComplete() {
 		id="mixedShower"
 		title="Mixer shower"
 		:form-url="`${page?.url!}/mixer-shower`"
-		:items="store.domesticHotWater.hotWaterOutlets.mixedShower.data.map(x => x.data.name)"
+		:items="store.domesticHotWater.hotWaterOutlets.mixedShower.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('mixedShower', index)"
 		@duplicate="(index: number) => handleDuplicate('mixedShower', index)"
 	/>
@@ -90,7 +104,10 @@ function checkIsComplete() {
 		id="electricShower"
 		title="Instant electric shower"
 		:form-url="`${page?.url!}/electric-shower`"
-		:items="store.domesticHotWater.hotWaterOutlets.electricShower.data.map(x => x.data.name)"
+		:items="store.domesticHotWater.hotWaterOutlets.electricShower.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('electricShower', index)"
 		@duplicate="(index: number) => handleDuplicate('electricShower', index)"
 	/>
@@ -98,7 +115,10 @@ function checkIsComplete() {
 		id="bath"
 		title="Bath"
 		:form-url="`${page?.url!}/bath`"
-		:items="store.domesticHotWater.hotWaterOutlets.bath.data.map(x => x.data.name)"
+		:items="store.domesticHotWater.hotWaterOutlets.bath.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('bath', index)"
 		@duplicate="(index: number) => handleDuplicate('bath', index)"
 	/>
@@ -107,7 +127,10 @@ function checkIsComplete() {
 		title="Other"
 		hint="(basin tap, kitchen sink etc)"
 		:form-url="`${page?.url!}/other`"
-		:items="store.domesticHotWater.hotWaterOutlets.otherOutlets.data.map(x => x.data.name)"
+		:items="store.domesticHotWater.hotWaterOutlets.otherOutlets.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('otherOutlets', index)"
 		@duplicate="(index: number) => handleDuplicate('otherOutlets', index)"
 	/>
@@ -119,6 +142,6 @@ function checkIsComplete() {
 		>
 			Return to domestic hot water
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 	</div>
 </template>
