@@ -85,6 +85,7 @@ function checkIsComplete(){
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceLinearThermalBridges', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceLinearThermalBridges', index)"
 	/>
@@ -96,6 +97,7 @@ function checkIsComplete(){
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpacePointThermalBridges', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpacePointThermalBridges', index)"
 	/>
