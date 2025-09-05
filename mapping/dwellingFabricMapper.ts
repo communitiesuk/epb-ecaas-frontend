@@ -1,13 +1,12 @@
-import { HeatingControlType, SpaceHeatControlType, ThermalBridgingLinearFHSType, ThermalBridgingPointType } from "~/schema/api-schema.types";
-import type { SchemaZoneInput } from "~/schema/aliases";
+import { BuildingElementAdjacentConditionedSpaceType, BuildingElementAdjacentUnconditionedSpace_SimpleType, BuildingElementGroundType, BuildingElementOpaqueFHSType, BuildingElementTransparentFHSType, HeatingControlType, SpaceHeatControlType, ThermalBridgingLinearFHSType, ThermalBridgingPointType } from "~/schema/api-schema.types";
+import type { BuildingElementGround, SchemaBuildingElement, SchemaZoneInput } from "~/schema/aliases";
 import { FloorType, WindowShadingObjectType } from "~/schema/aliases";
-import type {BuildingElementGroundHeatedBasementFloor_type, BuildingElementGroundSlabEdgeInsulationFloor_type, BuildingElementGroundSlabNoEdgeInsulationFloor_type, BuildingElementGroundSuspendedFloorFloor_type, BuildingElementGroundUnheatedBasementFloor_type, SchemaBuildingElement, SchemaBuildingElementGroundHeatedBasement, SchemaBuildingElementGroundSlabEdgeInsulation, SchemaBuildingElementGroundSlabNoEdgeInsulation, SchemaBuildingElementGroundSuspendedFloor, SchemaBuildingElementGroundUnheatedBasement, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart } from "~/schema/api-schema.types";
+import type { BuildingElementGroundSlabEdgeInsulationFloor_type, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from 'deepmerge';
 import { defaultZoneName } from "./common";
 import type { Length } from "../utils/units/length";
 import  { asMetres } from "../utils/units/length";
-import type { TaggedUnion } from "type-fest";
 
 function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
 	// note - use parseFloat and toFixed to avoid JS precision issues
@@ -89,15 +88,6 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, 'Zon
 	} as Pick<FhsInputSchema, 'HeatingControlType' | 'Zone'>;
 }
 
-// work round apparent bug in type generation
-export type BuildingElementGround = TaggedUnion<'floor_type', {
-	[BuildingElementGroundSlabNoEdgeInsulationFloor_type.Slab_no_edge_insulation]: SchemaBuildingElementGroundSlabNoEdgeInsulation,
-	[BuildingElementGroundSlabEdgeInsulationFloor_type.Slab_edge_insulation]: SchemaBuildingElementGroundSlabEdgeInsulation,
-	[BuildingElementGroundSuspendedFloorFloor_type.Suspended_floor]: SchemaBuildingElementGroundSuspendedFloor,
-	[BuildingElementGroundHeatedBasementFloor_type.Heated_basement]: SchemaBuildingElementGroundHeatedBasement,
-	[BuildingElementGroundUnheatedBasementFloor_type.Unheated_basement]: SchemaBuildingElementGroundUnheatedBasement,
-}>;
-
 export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'GroundFloorArea' | 'Zone'> {
 	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor } = state.dwellingFabric.dwellingSpaceFloors;
 	const floorSuffix = 'floor';
@@ -132,7 +122,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
 		return {[nameWithSuffix]: {
-			type: 'BuildingElementGround',
+			type: BuildingElementGroundType.BuildingElementGround,
 			area: x.surfaceArea,
 			total_area: x.surfaceArea,
 			u_value: x.uValue,
@@ -172,13 +162,13 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 		if (x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace) {
 			internalFloor = {
 				...commonFields,
-				type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
+				type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
 			};
 		} else {
 			internalFloor = {
 				...commonFields,
-				type: 'BuildingElementAdjacentConditionedSpace',
+				type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 			};
 		}
 		
@@ -189,7 +179,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, 'Ground
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
 		return {[nameWithSuffix]: {
-			type: 'BuildingElementOpaque',
+			type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 			height: x.length,
 			width: x.width,
 			base_height: x.elevationalHeight,
@@ -227,7 +217,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 		const nameWithSuffix = suffixName(x.name, wallSuffix);
 
 		return {[nameWithSuffix]: {
-			type: 'BuildingElementOpaque',
+			type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 			pitch: extractPitch(x),
 			orientation360: x.orientation,
 			height: x.height,
@@ -246,7 +236,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 		const nameWithSuffix = suffixName(x.name, wallSuffix);
 
 		return {[nameWithSuffix]: {
-			type: 'BuildingElementAdjacentConditionedSpace',
+			type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 			pitch: extractPitch(x),
 			area: x.surfaceAreaOfElement,
 			u_value: defaultUValue,
@@ -259,7 +249,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 		const nameWithSuffix = suffixName(x.name, wallSuffix);
 
 		return {[nameWithSuffix]: {
-			type: 'BuildingElementAdjacentConditionedSpace',
+			type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 			pitch: extractPitch(x),
 			area: x.surfaceArea,
 			u_value: x.uValue,
@@ -272,7 +262,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 		const nameWithSuffix = suffixName(x.name, wallSuffix);
 
 		return {[nameWithSuffix]: {
-			type: 'BuildingElementAdjacentUnconditionedSpace_Simple',
+			type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 			pitch: extractPitch(x),
 			area: x.surfaceAreaOfElement,
 			u_value: x.uValue,
@@ -316,14 +306,14 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 		if (x.type === AdjacentSpaceType.unheatedSpace) {
 			ceiling = {
 				...commonFields,
-				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+				type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
 				u_value: x.uValue
 			};
 		} else {
 			ceiling = {
 				...commonFields,
-				type: "BuildingElementAdjacentConditionedSpace",
+				type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 				u_value: defaultUValue
 			};
 		};
@@ -335,7 +325,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 		const nameWithSuffix = suffixName(x.name, roofSuffix);
 
 		return {[nameWithSuffix]: {
-			type: 'BuildingElementOpaque',
+			type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 			pitch: x.pitch,
 			orientation360: x.orientation ?? 0,
 			height: x.length,
@@ -382,14 +372,14 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 		if (x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace) {
 			internalDoor = {
 				...commonFields,
-				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+				type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
 				u_value: x.uValue,
 				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace
 			};
 		} else {
 			internalDoor = {
 				...commonFields,
-				type: "BuildingElementAdjacentConditionedSpace",
+				type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
 				u_value: defaultUValue // TODO: double check this is correct behaviour
 			};
 		};
@@ -436,7 +426,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 
 		return {
 			[nameWithSuffix]: {
-				type: 'BuildingElementTransparent',
+				type: BuildingElementTransparentFHSType.BuildingElementTransparent,
 				pitch: extractPitch(x),
 				orientation360: x.orientation,
 				height: x.height,
@@ -459,7 +449,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'> 
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 		
 		return {[nameWithSuffix]: {
-			type: 'BuildingElementOpaque',
+			type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
 			pitch: extractPitch(x),
 			orientation360: x.orientation,
 			height: x.height,
@@ -559,7 +549,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, 'Zone'
 		}] : [];
 
 		return {[nameWithSuffix]: {
-			type: 'BuildingElementTransparent',
+			type: BuildingElementTransparentFHSType.BuildingElementTransparent,
 			pitch: extractPitch(x),
 			orientation360: x.orientation,
 			height: x.height,

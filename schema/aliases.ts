@@ -1,4 +1,5 @@
-import type { components, SchemaEnergySupply, SchemaExternalConditionsInputFhs, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaInfiltrationVentilationFhs, SchemaMechanicalVentilationFhs, SchemaShadingObject, SchemaShadingSegmentFhs, SchemaSpaceCoolSystemFhs, SchemaSpaceHeatSystemElectricStorageHeater, SchemaSpaceHeatSystemInstantElectricHeaterFhs, SchemaSpaceHeatSystemWarmAirFhs, SchemaSpaceHeatSystemWetDistributionFhs, SchemaWaterHeatingEvents, SchemaZoneFhs } from "./api-schema.types";
+import type { TaggedUnion } from "type-fest";
+import type { BuildingElementAdjacentConditionedSpaceType, BuildingElementAdjacentUnconditionedSpace_SimpleType, BuildingElementGroundType, BuildingElementOpaqueFHSType, BuildingElementTransparentFHSType, components, SchemaBuildingElementAdjacentConditionedSpace, SchemaBuildingElementAdjacentUnconditionedSpaceSimple, SchemaBuildingElementGroundHeatedBasement, SchemaBuildingElementGroundSlabEdgeInsulation, SchemaBuildingElementGroundSlabNoEdgeInsulation, SchemaBuildingElementGroundSuspendedFloor, SchemaBuildingElementGroundUnheatedBasement, SchemaBuildingElementOpaqueFhs, SchemaBuildingElementTransparentFhs, SchemaEnergySupply, SchemaExternalConditionsInputFhs, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaInfiltrationVentilationFhs, SchemaMechanicalVentilationFhs, SchemaShadingObject, SchemaShadingSegmentFhs, SchemaSpaceCoolSystemFhs, SchemaSpaceHeatSystemElectricStorageHeater, SchemaSpaceHeatSystemInstantElectricHeaterFhs, SchemaSpaceHeatSystemWarmAirFhs, SchemaSpaceHeatSystemWetDistributionFhs, SchemaWaterHeatingEvents, SchemaZoneFhs } from "./api-schema.types";
 import { BuildingElementGroundHeatedBasementFloor_type, BuildingElementGroundSlabEdgeInsulationFloor_type, BuildingElementGroundSlabNoEdgeInsulationFloor_type, BuildingElementGroundSuspendedFloorFloor_type, BuildingElementGroundUnheatedBasementFloor_type, MechVentType, PhotovoltaicVentilationStrategy, WasteWaterHeatRecoverySystemType, WindowShadingType } from "./api-schema.types";
 
 // Some aliases to names in the API schema generated types, sometimes for more graceful backwards compatibility
@@ -22,6 +23,21 @@ export const FloorType = {
 	...BuildingElementGroundSuspendedFloorFloor_type,
 	...BuildingElementGroundUnheatedBasementFloor_type,
 };
+// work round apparent bug in type generation
+export type BuildingElementGround = TaggedUnion<'floor_type', {
+	[BuildingElementGroundSlabNoEdgeInsulationFloor_type.Slab_no_edge_insulation]: SchemaBuildingElementGroundSlabNoEdgeInsulation,
+	[BuildingElementGroundSlabEdgeInsulationFloor_type.Slab_edge_insulation]: SchemaBuildingElementGroundSlabEdgeInsulation,
+	[BuildingElementGroundSuspendedFloorFloor_type.Suspended_floor]: SchemaBuildingElementGroundSuspendedFloor,
+	[BuildingElementGroundHeatedBasementFloor_type.Heated_basement]: SchemaBuildingElementGroundHeatedBasement,
+	[BuildingElementGroundUnheatedBasementFloor_type.Unheated_basement]: SchemaBuildingElementGroundUnheatedBasement,
+}>;
+export type SchemaBuildingElement = TaggedUnion<'type', {
+	[BuildingElementGroundType.BuildingElementGround]: BuildingElementGround,
+	[BuildingElementOpaqueFHSType.BuildingElementOpaque]: SchemaBuildingElementOpaqueFhs,
+	[BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace]: SchemaBuildingElementAdjacentConditionedSpace,
+	[BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple]: SchemaBuildingElementAdjacentUnconditionedSpaceSimple,
+	[BuildingElementTransparentFHSType.BuildingElementTransparent]: SchemaBuildingElementTransparentFhs,
+}>;
 export type SchemaHeatSourceWetDetails = SchemaHeatSourceWetBoiler | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
 // some string-based enums seem to just be replaced by a string upstream, so retaining this from previous versions
 export enum ColdWaterSourceType {

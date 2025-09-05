@@ -12,8 +12,8 @@ import {
 	type SchemaBuildingElementAdjacentConditionedSpace,
 	type SchemaBuildingElementAdjacentUnconditionedSpaceSimple, BuildingElementGroundSlabNoEdgeInsulationFloor_type, type SchemaBuildingElementOpaqueFhs, type SchemaBuildingElementTransparentFhs, type SchemaEdgeInsulationHorizontal, type SchemaThermalBridgingLinearFhs, type SchemaThermalBridgingPoint
 } from "~/schema/api-schema.types";
-import { FloorType, WindowShadingObjectType } from "~/schema/aliases";
-import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData, type BuildingElementGround } from "./dwellingFabricMapper";
+import { FloorType, WindowShadingObjectType, type BuildingElementGround } from "~/schema/aliases";
+import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.schema";
 import { centimetre, millimetre } from "../utils/units/length";

@@ -98,14 +98,4 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 	time_constant_onoff_operation: 140,
 	time_delay_backup: 2,
 	var_flow_temp_ctrl_during_test: true,
-	BufferTank: null,
-	EnergySupply_heat_network: null,
-	MechanicalVentilation: null,
-	boiler: null,
-	eahp_mixed_min_temp: null,
-	eahp_mixed_max_temp: null,
-	min_modulation_rate_20: null,
-	power_heating_warm_air_fan: null,
-	power_max_backup: null,
-	temp_distribution_heat_network: null
 };

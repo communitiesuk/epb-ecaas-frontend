@@ -1,6 +1,6 @@
 import type { StripDefs } from './mapping.types';
 import { ColdWaterSourceType, noEvents } from '~/schema/aliases';
-import type {SchemaEnergySupply, SchemaFhsInputSchema, SchemaStorageTank} from '~/schema/api-schema.types';
+import {HeatSourceWetHeatPumpType, HeatSourceWetHeatPumpWithProductReferenceType, type SchemaEnergySupply, type SchemaFhsInputSchema, type SchemaHeatSourceWetHeatPumpWithProductReference, type SchemaStorageTank} from '~/schema/api-schema.types';
 import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 import merge from 'deepmerge';
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
@@ -70,18 +70,28 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const heatSourceWetData: Pick<FhsInputSchema, 'HeatSourceWet'> = {
 		"HeatSourceWet": heatPumps.length === 0 ? {
 			[heatPumpName]: defaultHeatSourceWetDetails
-		} : objectFromEntries(heatPumps.map(heatPump => [
-			heatPump.data.name,
-			{
+		} : objectFromEntries(heatPumps.map(heatPump => {
+			const heatPumpWithProductReference: SchemaHeatSourceWetHeatPumpWithProductReference = {
 				product_reference: heatPump.data.productReference,
-				type: "HeatPump",
+				type: HeatSourceWetHeatPumpWithProductReferenceType.HeatSourceWetHeatPumpWithProductReference,
 				EnergySupply: defaultElectricityEnergySupplyName,
-				BufferTank: null,
-				EnergySupply_heat_network: null,
-				MechanicalVentilation: null,
-				boiler: null,
-			}
-		] as const))
+				backup_ctrl_type: null,
+				min_temp_diff_flow_return_for_hp_to_operate: null,
+				modulating_control: null,
+				power_crankcase_heater: null,
+				power_off: null,
+				power_source_circ_pump: null,
+				power_standby: null,
+				sink_type: null,
+				source_type: null,
+				temp_lower_operating_limit: null,
+				test_data_EN14825: null,
+			};
+			return  [
+				heatPump.data.name,
+				heatPumpWithProductReference
+			] as const;
+		}))
 	};
 
 	const fhsInput = merge.all([
