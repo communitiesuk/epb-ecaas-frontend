@@ -93,11 +93,12 @@ export function useForm() {
 
 			const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
 				Object.values(newData).some(x => x !== undefined);
-
-			if (routeParam === 'create' && isFirstEdit) {
-				const name = ('name' in newData ? newData.name : undefined) ||
-					(duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
-
+				
+				if (routeParam === 'create' && isFirstEdit) {
+			
+					const name = ('name' in newData && typeof newData.name === 'string' ? newData.name.trim() : undefined) ||
+					(duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName) || defaultName;
+			
 				store.$patch(state => {
 					const elementData: EcaasForm<T> = {
 						data: { ...newData, name }
@@ -113,11 +114,11 @@ export function useForm() {
 					store.$patch((state) => {
 						const index = getStoreIndex(storeData.data);
 						const storeElementData = storeData.data[index]?.data;
-						const name = ('name' in newData ? newData.name : undefined) ??
-					('name' in storeElementData! ? storeElementData.name : defaultName);
-
+						const name = ('name' in newData && typeof newData.name === 'string' ? newData.name.trim() : undefined) ||
+					('name' in storeElementData! && typeof storeElementData.name === 'string' ? storeElementData.name.trim() : defaultName) || defaultName;
+			
 						const elementData: EcaasForm<T> = {
-							data: { ...newData, name }
+							data: { ...newData,	name }
 						};
 
 						onPatchUpdate(state, elementData, index);
