@@ -64,10 +64,10 @@ function handleComplete() {
 	navigateTo('/dwelling-space');
 }
 
-function checkIsComplete(){
-	const bridges = store.dwellingFabric.dwellingSpaceThermalBridging;
-	return Object.values(bridges).every(bridge => bridge.complete);
-}
+const hasIncompleteEntries = () =>
+	Object.values(store.dwellingFabric.dwellingSpaceThermalBridging)
+		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
+
 </script>
 
 <template>
@@ -108,6 +108,9 @@ function checkIsComplete(){
 		>
 			Return to dwelling space
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement
+			:is-complete="Object.values(store.dwellingFabric.dwellingSpaceThermalBridging).every(section => section.complete)"
+			:disabled="hasIncompleteEntries()"
+			@completed="handleComplete"/>
 	</div>
 </template>

@@ -212,8 +212,8 @@ describe('thermal bridges', () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
-						dwellingSpaceLinearThermalBridges: { data: [linear1] },
-						dwellingSpacePointThermalBridges: { data: [point1] },
+						dwellingSpaceLinearThermalBridges: { data: [{...linear1, complete: true}] },
+						dwellingSpacePointThermalBridges: { data: [{...point1, complete: true}] },
 					},
 				},
 			});
@@ -307,6 +307,22 @@ describe('thermal bridges', () => {
 			await renderSuspended(ThermalBridges);
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 		}
+	});
+
+	it('disables the mark section as complete button when item is incomplete', async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceThermalBridging: {
+					dwellingSpaceLinearThermalBridges: {
+						data: [{data: {linearThermalTransmittance: 2}, complete: false}]
+					},
+				}
+			}
+		});
+
+		await renderSuspended(ThermalBridges);
+		const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+		expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
 	});
 	});
 });
