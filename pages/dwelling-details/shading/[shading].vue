@@ -17,7 +17,7 @@ const objectTypeOptions: Record<ShadingObjectType, Capitalize<ShadingObjectType>
 const saveForm = (fields: ShadingData) => {
 	store.$patch((state) => {
 		const { shading } = state.dwellingDetails;
-		const index = getStoreIndex(shading.data)
+		const index = getStoreIndex(shading.data);
 
 		shading.data[index] = {
 			data: {

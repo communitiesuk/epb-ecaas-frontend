@@ -18,7 +18,7 @@ const saveForm = (fields: SecondaryPipeworkData) => {
 	store.$patch((state) => {
 		const {secondaryPipework} = state.domesticHotWater.pipework;
 
-		const index = getStoreIndex(secondaryPipework.data)
+		const index = getStoreIndex(secondaryPipework.data);
 		secondaryPipework.data[index] = {
 			data: {
 				name: fields.name,
@@ -34,15 +34,15 @@ const saveForm = (fields: SecondaryPipeworkData) => {
 	navigateTo("/domestic-hot-water/pipework");
 };
 
-	autoSaveElementForm({
-		model,
-		storeData: store.domesticHotWater.pipework.secondaryPipework,
-		defaultName: 'Secondary pipework',
-		onPatchCreate: (state, newData) => state.domesticHotWater.pipework.secondaryPipework.data.push(newData),
-		onPatchUpdate: (state, newData, index) => {
+autoSaveElementForm({
+	model,
+	storeData: store.domesticHotWater.pipework.secondaryPipework,
+	defaultName: 'Secondary pipework',
+	onPatchCreate: (state, newData) => state.domesticHotWater.pipework.secondaryPipework.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
 		state.domesticHotWater.pipework.secondaryPipework.data[index] = newData;
-		state.domesticHotWater.pipework.secondaryPipework.complete = false
-	 }})
+		state.domesticHotWater.pipework.secondaryPipework.complete = false;
+	}});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>

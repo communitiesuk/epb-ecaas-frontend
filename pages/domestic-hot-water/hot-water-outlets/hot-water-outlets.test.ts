@@ -425,7 +425,7 @@ describe('hot water outlets', () => {
 				id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a4",
 				name: "Electric Shower 1",
 				ratedPower: 8
-				},
+			},
 			complete: true
 		};
 
@@ -565,7 +565,7 @@ describe('hot water outlets', () => {
 						params: { [params]: "0" },
 					},
 				});
-					await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+				await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
 				expect(store.domesticHotWater.hotWaterOutlets[typedKey].complete).toBe(false);
 	
 				await renderSuspended(HotWaterOutlets);
