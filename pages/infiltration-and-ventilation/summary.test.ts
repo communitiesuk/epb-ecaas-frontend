@@ -156,7 +156,9 @@ describe("Infiltration and ventilation summary", () => {
 					]
 				},
 				ductwork: {
-					data: [ductworkData]
+					data: [
+						{ data: ductworkData }
+					]
 				}
 			}
 		});
@@ -194,7 +196,9 @@ describe("Infiltration and ventilation summary", () => {
 					]
 				},
 				ductwork: {
-					data: [ductworkData]
+					data: [
+						{ data: ductworkData }
+					]
 				}
 			}
 		});

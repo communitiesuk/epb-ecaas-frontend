@@ -72,20 +72,20 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedState): SchemaMechanicalVentilationDuctwork[] {
 	const mvhrductworks = state.infiltrationAndVentilation.ductwork?.filter(hasMechanicalVentilation) ?? [];
 
-	function hasMechanicalVentilation(ductwork: DuctworkData) {
-		return mechanicalVentilationName === ductwork.mvhrUnit;
+	function hasMechanicalVentilation(ductwork: EcaasForm<DuctworkData>) {
+		return mechanicalVentilationName === ductwork.data.mvhrUnit;
 	}
 
 	return mvhrductworks.map((x) => {
 		const val: SchemaMechanicalVentilationDuctwork = {
-			cross_section_shape: x.ductworkCrossSectionalShape,
-			duct_type: x.ductType,
-			insulation_thermal_conductivity: x.thermalInsulationConductivityOfDuctwork,
-			insulation_thickness_mm: x.insulationThickness,
-			...(x.ductworkCrossSectionalShape === DuctShape.circular ? { internal_diameter_mm: x.internalDiameterOfDuctwork, external_diameter_mm: x.externalDiameterOfDuctwork } : {}),
-			...(x.ductworkCrossSectionalShape === DuctShape.rectangular ? { duct_perimeter_mm: x.ductPerimeter } : {}),
-			length: x.lengthOfDuctwork,
-			reflective: x.surfaceReflectivity
+			cross_section_shape: x.data.ductworkCrossSectionalShape,
+			duct_type: x.data.ductType,
+			insulation_thermal_conductivity: x.data.thermalInsulationConductivityOfDuctwork,
+			insulation_thickness_mm: x.data.insulationThickness,
+			...(x.data.ductworkCrossSectionalShape === DuctShape.circular ? { internal_diameter_mm: x.data.internalDiameterOfDuctwork, external_diameter_mm: x.data.externalDiameterOfDuctwork } : {}),
+			...(x.data.ductworkCrossSectionalShape === DuctShape.rectangular ? { duct_perimeter_mm: x.data.ductPerimeter } : {}),
+			length: x.data.lengthOfDuctwork,
+			reflective: x.data.surfaceReflectivity
 		};
 		return val;
 	});

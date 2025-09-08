@@ -148,16 +148,16 @@ describe("mechanical ventilation overview", () => {
 				},
 				ductwork :{
 					data: [
-						ductwork1,
-						ductwork2,
-						ductwork3
+						{ data: ductwork1 },
+						{ data: ductwork2 },
+						{ data: ductwork3 }
 					]
 				}
 			},
 		});
 		await renderSuspended(MechanicalVentilationOverview);
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
-		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([ductwork3]);
+		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([{ data: ductwork3 }]);
 
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
 		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([]);

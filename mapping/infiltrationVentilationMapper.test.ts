@@ -77,17 +77,19 @@ describe("infiltration ventilation mapper", () => {
 	it("maps ductwork input state to FHS input request", () => {
 		// Arrange
 		
-		const ductwork: DuctworkData[] = [{
-			name: "ductwork 1",
-			mvhrUnit: "bathroom exhaust fan",
-			ductworkCrossSectionalShape: DuctShape.circular,
-			internalDiameterOfDuctwork: 200,
-			externalDiameterOfDuctwork: 300,
-			lengthOfDuctwork: 10.0,
-			thermalInsulationConductivityOfDuctwork: 0.023,
-			insulationThickness: 100,
-			surfaceReflectivity: false,
-			ductType: DuctType.extract
+		const ductwork: EcaasForm<DuctworkData>[] = [{
+			data: {
+				name: "ductwork 1",
+				mvhrUnit: "bathroom exhaust fan",
+				ductworkCrossSectionalShape: DuctShape.circular,
+				internalDiameterOfDuctwork: 200,
+				externalDiameterOfDuctwork: 300,
+				lengthOfDuctwork: 10.0,
+				thermalInsulationConductivityOfDuctwork: 0.023,
+				insulationThickness: 100,
+				surfaceReflectivity: false,
+				ductType: DuctType.extract
+			}
 		}];
 
 		store.$patch({

@@ -62,7 +62,9 @@ describe("checkMvhrHasDuctwork", () => {
 					]
 				},
 				ductwork: {
-					data: [ductworkData1]
+					data: [
+						{ data: ductworkData1 }
+					]
 				}
 			}
 		});
@@ -80,7 +82,10 @@ describe("checkMvhrHasDuctwork", () => {
 					]
 				},
 				ductwork: {
-					data: [ductworkData1, ductworkData1]
+					data: [
+						{ data: ductworkData1 },
+						{ data: ductworkData1 }
+					]
 				}
 			}
 		});
@@ -99,7 +104,11 @@ describe("checkMvhrHasDuctwork", () => {
 					]
 				},
 				ductwork: {
-					data: [ductworkData1, ductworkData1, ductworkData2]
+					data: [
+						{ data: ductworkData1 },
+						{ data: ductworkData1 },
+						{ data: ductworkData2 }
+					]
 				}
 			}
 		});

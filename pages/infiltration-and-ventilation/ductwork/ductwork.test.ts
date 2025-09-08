@@ -5,6 +5,7 @@ import DuctworkForm from "./[ductwork].vue";
 import userEvent from "@testing-library/user-event";
 import type { DuctworkData } from "../../../stores/ecaasStore.schema";
 import { DuctShape, DuctType } from "~/schema/api-schema.types";
+import formStatus from "~/constants/formStatus";
 
 describe("ductwork", async () => {
 	const user = userEvent.setup();
@@ -64,7 +65,7 @@ describe("ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
-					data: [ductwork1]
+					data: [{ data: ductwork1 }]
 				}
 			} 
 		});
@@ -80,7 +81,11 @@ describe("ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation:{
 				ductwork: {
-					data: [ductwork1, ductwork2, ductwork3]
+					data: [
+						{ data: ductwork1 },
+						{ data: ductwork2 },
+						{ data: ductwork3 }
+					]
 				}
 			}
 		});
@@ -95,7 +100,10 @@ describe("ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation:{
 				ductwork: {
-					data: [ductwork1, ductwork2]
+					data: [
+						{ data: ductwork1 },
+						{ data: ductwork2 }
+					]
 				}
 			}
 		});
@@ -109,6 +117,29 @@ describe("ductwork", async () => {
 		expect(screen.getByText("Ductwork 1 (2)")).toBeDefined();
 		expect(screen.getByText("Ductwork 1 (1) (1)")).toBeDefined();
 		expect(screen.getByText("Ductwork 1 (1) (2)")).toBeDefined();
+	});
+
+	it("disables the mark section as complete button when shading element is incomplete", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				ductwork: {
+					data: [
+						{
+							data: {
+								name: "Ductwork 1",
+								ductType: DuctType.intake
+							},
+							complete: false,
+						}
+					]
+				}
+			}
+		});
+
+		await renderSuspended(DuctworkOverview);
+
+		const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 	});
 
 	it("marks ductwork as complete when mark section as complete button is clicked", async () => {
@@ -132,7 +163,10 @@ describe("ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
-					data: [ductwork1, ductwork2],
+					data: [
+						{ data: ductwork1, complete: true },
+						{ data: ductwork2, complete: true }
+					],
 				},
 			},
 		});
@@ -151,7 +185,7 @@ describe("ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
-					data: [ductwork1],
+					data: [{ data: ductwork1, complete: true }]
 				},
 			},
 		});
@@ -170,7 +204,7 @@ describe("ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
-					data: [ductwork1],
+					data: [{ data: ductwork1 }],
 				},
 			},
 		});
@@ -184,7 +218,7 @@ describe("ductwork", async () => {
 			},
 		});
 	
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 	
 		const { complete } = store.infiltrationAndVentilation.ductwork;
 		expect(complete).toBe(false);
@@ -198,6 +232,38 @@ describe("ductwork", async () => {
 		
 		const returnToOverviewButton = screen.getByRole("button", { name : "Return to infiltration and ventilation" });
 		expect(returnToOverviewButton.getAttribute("href")).toBe("/infiltration-and-ventilation");
-	
 	} );
+
+	it("should display an in-progress indicator when an entry is not marked as complete", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				ductwork: {
+					data: [{
+						data: { name: "Ductwork 1" }
+					}]
+				}
+			}
+		});
+
+		await renderSuspended(DuctworkOverview);
+
+		expect(screen.getByTestId("ductwork_status_0").textContent).toBe(formStatus.inProgress.text);
+	});
+
+	it ("should display a complete indicator when an entry is marked as complete", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				ductwork: {
+					data: [{
+						data: ductwork1,
+						complete: true
+					}]
+				}
+			}
+		});
+
+		await renderSuspended(DuctworkOverview);
+
+		expect(screen.getByTestId("ductwork_status_0").textContent).toBe(formStatus.complete.text);
+	});
 });

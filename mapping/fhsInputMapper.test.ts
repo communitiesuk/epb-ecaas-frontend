@@ -1372,16 +1372,18 @@ describe("FHS input mapper", () => {
 			ductwork: {
 				...baseForm,
 				data: [{
-					name: "ductwork 1",
-					mvhrUnit: "mvhr vent 1 name",
-					ductType: DuctType.supply,
-					ductworkCrossSectionalShape: DuctShape.circular,
-					internalDiameterOfDuctwork: 50,
-					externalDiameterOfDuctwork: 55,
-					insulationThickness: 5,
-					lengthOfDuctwork: 4,
-					thermalInsulationConductivityOfDuctwork: 1,
-					surfaceReflectivity: true,
+					data: {
+						name: "ductwork 1",
+						mvhrUnit: "mvhr vent 1 name",
+						ductType: DuctType.supply,
+						ductworkCrossSectionalShape: DuctShape.circular,
+						internalDiameterOfDuctwork: 50,
+						externalDiameterOfDuctwork: 55,
+						insulationThickness: 5,
+						lengthOfDuctwork: 4,
+						thermalInsulationConductivityOfDuctwork: 1,
+						surfaceReflectivity: true
+					}
 				}]
 			},
 			vents: {

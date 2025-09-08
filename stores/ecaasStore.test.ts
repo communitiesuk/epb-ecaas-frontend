@@ -263,7 +263,9 @@ describe("Ecaas Store", () => {
 					complete: true
 				},
 				ductwork: {
-					data: [ductwork1],
+					data: [
+						{ data: ductwork1 }
+					],
 					complete: true
 				}
 			}
@@ -291,7 +293,10 @@ describe("Ecaas Store", () => {
 					complete: true
 				},
 				ductwork: {
-					data: [ductwork1, ductwork2],
+					data: [
+						{ data: ductwork1 },
+						{ data: ductwork2 }
+					],
 					complete: true 
 				}
 			}
@@ -314,7 +319,9 @@ describe("Ecaas Store", () => {
 					complete: true
 				},
 				ductwork: {
-					data: [ductwork1],
+					data: [
+						{ data: ductwork1 }
+					],
 					complete: true
 				}
 			}

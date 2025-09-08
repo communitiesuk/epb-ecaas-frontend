@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { DuctShape, VentType   } from "~/schema/api-schema.types";
 import type { DuctType } from "~/schema/api-schema.types";
+import { getUrl } from "#imports";
 
 const title = "MVHR ductwork";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { getStoreIndex, autoSaveElementForm } = useForm();
 
 const ductwork = useItemToEdit(
 	"ductwork",
 	store.infiltrationAndVentilation.ductwork.data
 );
 
-const model: Ref<DuctworkData> = ref(ductwork!);
+const model: Ref<DuctworkData> = ref(ductwork?.data!);
 store.infiltrationAndVentilation.ductwork.complete = false;
 
 const ductworkCrossSectionalShapeOptions: Record<DuctShape, SnakeToSentenceCase<DuctShape>> = {
@@ -28,6 +29,7 @@ const ductTypeOptions: Record<DuctType, SnakeToSentenceCase<DuctType>> = {
 const saveForm = (fields: DuctworkData) => {
 	store.$patch((state) => {
 		const { ductwork } = state.infiltrationAndVentilation;
+		const index = getStoreIndex(ductwork.data);
 
 		const commonFields = {
 			name: fields.name,
@@ -35,8 +37,7 @@ const saveForm = (fields: DuctworkData) => {
 			ductType: fields.ductType,
 			insulationThickness: fields.insulationThickness,
 			lengthOfDuctwork: fields.lengthOfDuctwork,
-			thermalInsulationConductivityOfDuctwork:
-        fields.thermalInsulationConductivityOfDuctwork,
+			thermalInsulationConductivityOfDuctwork: fields.thermalInsulationConductivityOfDuctwork,
 			surfaceReflectivity: fields.surfaceReflectivity,
 		};
 
@@ -62,10 +63,27 @@ const saveForm = (fields: DuctworkData) => {
 				throw new Error("Missed a duct shape case");
 		}
 
-		saveToList(ductworkItem, ductwork);
+		ductwork.data[index] = {
+			data: ductworkItem,
+			complete: true
+		};
+
+		ductwork.complete = false;
 	});
+
 	navigateTo("/infiltration-and-ventilation/ductwork");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.infiltrationAndVentilation.ductwork,
+	defaultName: "Ductwork",
+	onPatchCreate: (state, newData) => state.infiltrationAndVentilation.ductwork.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.infiltrationAndVentilation.ductwork.data[index] = newData;
+		state.infiltrationAndVentilation.ductwork.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -257,7 +275,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('ductwork')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
 

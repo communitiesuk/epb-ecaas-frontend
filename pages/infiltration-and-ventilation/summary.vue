@@ -37,20 +37,20 @@ const ductworkSummary: SummarySection = {
 	id: "ductwork",
 	label: "Ductwork",
 	data: ductworkData?.map(x => {
-		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.data.id === x.mvhrUnit);
+		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.data.id === x.data.mvhrUnit);
 
 		return {
-			"Name": x.name,
+			"Name": x.data.name,
 			"MVHR unit": mvhr[0]?.data.name,
-			"Duct type": displayCamelToSentenceCase(x.ductType),
-			"Ductwork cross sectional shape": displayCamelToSentenceCase(x.ductworkCrossSectionalShape),
-			"Internal diameter of ductwork": x.ductworkCrossSectionalShape === DuctShape.circular ? `${x.internalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
-			"External diameter of ductwork": x.ductworkCrossSectionalShape === DuctShape.circular ? `${x.externalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
-			"Perimeter of ductwork": x.ductworkCrossSectionalShape === DuctShape.rectangular ? `${x.ductPerimeter} ${millimetre.suffix}` : undefined,
-			"Length of ductwork": `${x.lengthOfDuctwork} ${metre.suffix}`,
-			"Insulation thickness": `${x.insulationThickness} ${millimetre.suffix}`,
-			"Thermal conductivity of ductwork insulation": `${x.thermalInsulationConductivityOfDuctwork} ${wattsPerMeterKelvin.suffix}`,
-			"Surface reflectivity": x.surfaceReflectivity ? "Reflective" : "Not reflective"
+			"Duct type": displayCamelToSentenceCase(x.data.ductType),
+			"Ductwork cross sectional shape": displayCamelToSentenceCase(x.data.ductworkCrossSectionalShape),
+			"Internal diameter of ductwork": x.data.ductworkCrossSectionalShape === DuctShape.circular ? `${x.data.internalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
+			"External diameter of ductwork": x.data.ductworkCrossSectionalShape === DuctShape.circular ? `${x.data.externalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
+			"Perimeter of ductwork": x.data.ductworkCrossSectionalShape === DuctShape.rectangular ? `${x.data.ductPerimeter} ${millimetre.suffix}` : undefined,
+			"Length of ductwork": `${x.data.lengthOfDuctwork} ${metre.suffix}`,
+			"Insulation thickness": `${x.data.insulationThickness} ${millimetre.suffix}`,
+			"Thermal conductivity of ductwork insulation": `${x.data.thermalInsulationConductivityOfDuctwork} ${wattsPerMeterKelvin.suffix}`,
+			"Surface reflectivity": x.data.surfaceReflectivity ? "Reflective" : "Not reflective"
 		};
 	}) || [],
 	editUrl: getUrl("ductwork")

@@ -681,7 +681,7 @@ export type WwhrsData = z.infer<typeof wwhrsDataZod>;
 
 export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	mechanicalVentilation: EcaasForm<EcaasForm<MechanicalVentilationData>[]>;
-	ductwork: EcaasForm<DuctworkData[]>
+	ductwork: EcaasForm<EcaasForm<DuctworkData>[]>;
 	vents: EcaasForm<VentData[]>;
 	combustionAppliances: CombustionAppliancesData;
 	naturalVentilation: EcaasForm<VentilationData>;

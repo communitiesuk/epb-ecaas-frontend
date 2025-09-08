@@ -25,7 +25,7 @@ function handleRemove(index: number) {
 		},
 	});
 
-	const matchingDuctwork = store.infiltrationAndVentilation.ductwork.data.filter(x => x.mvhrUnit !== mvhrID);
+	const matchingDuctwork = store.infiltrationAndVentilation.ductwork.data.filter(x => x.data.mvhrUnit !== mvhrID);
 
 	store.$patch({
 		infiltrationAndVentilation: {
