@@ -24,15 +24,26 @@ function handleDuplicate<T extends FloorData>(floorType: FloorType, index: numbe
 	const floor = floors?.[index];
     
 	if (floor) {
-		const duplicates = floors.filter(f => f.name.match(duplicateNamePattern(floor.name)));
-
+		const newName = "data" in floor ? floor.data.name : floor.name;
+		const duplicates = floors.filter(f => "data" in f ? f.data.name.match(duplicateNamePattern(newName)) : f.name.match(duplicateNamePattern(newName)));
+		
 		store.$patch((state) => {
 			const newFloor = {
 				...floor,
-				name: `${floor.name} (${duplicates.length})`
+				name: `${newName} (${duplicates.length})`
 			} as T;
-
-			state.dwellingFabric.dwellingSpaceFloors[floorType].data.push(newFloor);
+			
+			if (floorType === "dwellingSpaceGroundFloor" && "data" in floor) {
+				state.dwellingFabric.dwellingSpaceFloors[floorType].data.push({
+					data: {
+						...floor.data,
+						name: `${newName} (${duplicates.length})`
+					},
+					complete: floor.complete
+				});
+			} else if (floorType === "dwellingSpaceInternalFloor" || floorType === "dwellingSpaceExposedFloor") {
+				state.dwellingFabric.dwellingSpaceFloors[floorType].data.push(newFloor);
+			}
 		});
 		store.dwellingFabric.dwellingSpaceFloors[floorType].complete = false;
 	}
@@ -70,7 +81,7 @@ function checkIsComplete(){
 		id="ground"
 		title="Ground floor"
 		:form-url="`${page?.url!}/ground`"
-		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.map(x => x.data.name)"
 		@remove="(index: number) => handleRemove('dwellingSpaceGroundFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceGroundFloor', index)"
 	/>

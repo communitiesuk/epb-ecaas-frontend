@@ -31,17 +31,19 @@ const lightingData: DwellingSpaceLightingData = {
 const floorsData: FloorsData = {
 	dwellingSpaceGroundFloor: {
 		data: [{
-			name: "Ground 1",
-			surfaceArea: 5,
-			pitch: 0,
-			uValue: 1,
-			thermalResistance: 1,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
-			perimeter: 0,
-			psiOfWallJunction: 0,
-			thicknessOfWalls: 0.3,
-			typeOfGroundFloor: FloorType.Slab_no_edge_insulation
+			data: {
+				name: "Ground 1",
+				surfaceArea: 5,
+				pitch: 0,
+				uValue: 1,
+				thermalResistance: 1,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+				perimeter: 0,
+				psiOfWallJunction: 0,
+				thicknessOfWalls: 0.3,
+				typeOfGroundFloor: FloorType.Slab_no_edge_insulation
+			}
 		}]
 	},
 	dwellingSpaceInternalFloor: {

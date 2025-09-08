@@ -89,7 +89,7 @@ describe("ground floor", () => {
 	
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 			
-			expect(data[0]).toEqual(groundFloor);
+			expect(data[0]?.data).toEqual(groundFloor);
 		});
 	
 		test("form is prepopulated when data exists in state", async () => {
@@ -97,7 +97,7 @@ describe("ground floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data: [groundFloor]
+							data: [{ data: groundFloor }]
 						}
 					}
 				}
@@ -153,7 +153,7 @@ describe("ground floor", () => {
 	
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 			
-			expect(data[0]).toEqual(groundFloorWithEdgeInsulation);
+			expect(data[0]?.data).toEqual(groundFloorWithEdgeInsulation);
 		});
 	
 		test("form is prepopulated when data exists in state", async () => {
@@ -161,7 +161,7 @@ describe("ground floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data: [groundFloorWithEdgeInsulation]
+							data: [{ data: groundFloorWithEdgeInsulation }]
 						}
 					}
 				}
@@ -209,7 +209,7 @@ describe("ground floor", () => {
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 			const entryData = Object.entries(data[0]!).filter(e => e[1] !== undefined);
 			
-			expect(Object.fromEntries(entryData)).toEqual(groundFloorWithSuspendedFloor);
+			expect(Object.fromEntries(entryData).data).toEqual(groundFloorWithSuspendedFloor);
 		});
 		
 		test("form is prepopulated when data exists in state", async () => {
@@ -217,7 +217,7 @@ describe("ground floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data: [groundFloorWithSuspendedFloor]
+							data: [{ data: groundFloorWithSuspendedFloor }]
 						}
 					}
 				}

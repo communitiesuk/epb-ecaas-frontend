@@ -117,31 +117,31 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 	}
 
 	const groundFloorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceGroundFloor.map(x => {
-		const nameWithSuffix = suffixName(x.name, floorSuffix);
+		const nameWithSuffix = suffixName(x.data.name, floorSuffix);
 
 		return { [nameWithSuffix]: {
 			type: "BuildingElementGround",
-			area: x.surfaceArea,
-			total_area: x.surfaceArea,
-			u_value: x.uValue,
-			thermal_resistance_floor_construction: x.thermalResistance,
-			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass,
-			perimeter: x.perimeter,
-			psi_wall_floor_junc: x.psiOfWallJunction,
-			thickness_walls: x.thicknessOfWalls / 1000,
-			floor_type: x.typeOfGroundFloor as FloorType,
-			...(x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? { edge_insulation: mapEdgeInsulation(x) } : {}),
-			...(x.typeOfGroundFloor === FloorType.Suspended_floor ? { height_upper_surface: x.heightOfFloorUpperSurface / 1000 } : {}),
-			pitch: x.pitch,
-			...("ventilationOpeningsArea" in x ? { area_per_perimeter_vent: x.ventilationOpeningsArea / 1e6 } : {}),
-			...("windShieldingFactor" in x ? { shield_fact_location: x.windShieldingFactor } : {}),
-			...("depthOfBasementFloorBelowGround" in x ? { depth_basement_floor: x.depthOfBasementFloorBelowGround } : {}),
-			...("heightOfBasementWallsAboveGround" in x ? { height_basement_walls: x.heightOfBasementWallsAboveGround } : {}),
-			...("underfloorSpaceThermalResistance" in x ? { thermal_resist_insul: x.underfloorSpaceThermalResistance } : {}),
-			...("thermalTransmittanceOfWallsAboveGround" in x ? { thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround } : {}),
-			...("thermalResistanceOfBasementWalls" in x ? { thermal_resist_walls_base: x.thermalResistanceOfBasementWalls } : {}),
-			...("thermalTransmittanceOfFloorAboveBasement" in x ? { thermal_transm_envi_base: x.thermalTransmittanceOfFloorAboveBasement } : {}),
+			area: x.data.surfaceArea,
+			total_area: x.data.surfaceArea,
+			u_value: x.data.uValue,
+			thermal_resistance_floor_construction: x.data.thermalResistance,
+			areal_heat_capacity: x.data.kappaValue,
+			mass_distribution_class: x.data.massDistributionClass,
+			perimeter: x.data.perimeter,
+			psi_wall_floor_junc: x.data.psiOfWallJunction,
+			thickness_walls: x.data.thicknessOfWalls / 1000,
+			floor_type: x.data.typeOfGroundFloor as FloorType,
+			...(x.data.typeOfGroundFloor === FloorType.Slab_edge_insulation ? { edge_insulation: mapEdgeInsulation(x.data) } : {}),
+			...(x.data.typeOfGroundFloor === FloorType.Suspended_floor ? { height_upper_surface: x.data.heightOfFloorUpperSurface / 1000 } : {}),
+			pitch: x.data.pitch,
+			...("ventilationOpeningsArea" in x.data ? { area_per_perimeter_vent: x.data.ventilationOpeningsArea / 1e6 } : {}),
+			...("windShieldingFactor" in x.data ? { shield_fact_location: x.data.windShieldingFactor } : {}),
+			...("depthOfBasementFloorBelowGround" in x.data ? { depth_basement_floor: x.data.depthOfBasementFloorBelowGround } : {}),
+			...("heightOfBasementWallsAboveGround" in x.data ? { height_basement_walls: x.data.heightOfBasementWallsAboveGround } : {}),
+			...("underfloorSpaceThermalResistance" in x.data ? { thermal_resist_insul: x.data.underfloorSpaceThermalResistance } : {}),
+			...("thermalTransmittanceOfWallsAboveGround" in x.data ? { thermal_transm_walls: x.data.thermalTransmittanceOfWallsAboveGround } : {}),
+			...("thermalResistanceOfBasementWalls" in x.data ? { thermal_resist_walls_base: x.data.thermalResistanceOfBasementWalls } : {}),
+			...("thermalTransmittanceOfFloorAboveBasement" in x.data ? { thermal_transm_envi_base: x.data.thermalTransmittanceOfFloorAboveBasement } : {}),
 		} };
 	});
 
@@ -193,7 +193,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 	}) || [];
 
 	return {
-		GroundFloorArea: dwellingSpaceGroundFloor.reduce((sum, floor) => sum + floor.surfaceArea, 0),
+		GroundFloorArea: dwellingSpaceGroundFloor.reduce((sum, floor) => sum + floor.data.surfaceArea, 0),
 		Zone: {
 			[defaultZoneName]: {
 				BuildingElement: Object.assign(

@@ -138,7 +138,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data:[ground1]
+							data:[{ data: ground1 }]
 						}
 					}
 				}
@@ -158,7 +158,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data:[ground1, ground2, ground3]
+							data:[{ data: ground1 }, { data: ground2 }, { data: ground3 }]
 						}
 					}
 				}
@@ -179,7 +179,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data:[ground1, ground2]
+							data:[{ data: ground1 }, { data: ground2 }]
 						}
 					}
 				}
@@ -345,7 +345,7 @@ describe("floors", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
-						dwellingSpaceGroundFloor: { data: [ground1] },
+						dwellingSpaceGroundFloor: { data: [{ data: ground1 }] },
 						dwellingSpaceInternalFloor: { data: [internal1] },
 						dwellingSpaceExposedFloor: { data: [exposed1] },
 					},
@@ -427,7 +427,7 @@ describe("floors", () => {
 			}
 		});
 
-		it("marks floors as not complete when complete button is clicked then user duplicates a floor item", async () => {
+		it("marks floors as not complete when complete button is clicked after user duplicates a floor item", async () => {
 
 			const floorsData = await getFloorData("duplicate");
 			const floors = Object.entries(store.dwellingFabric.dwellingSpaceFloors);

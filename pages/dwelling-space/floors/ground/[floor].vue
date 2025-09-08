@@ -10,11 +10,11 @@ const { saveToList } = useForm();
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
 // prepopulate edge insulation width when using old input format
-if (floorData?.typeOfGroundFloor === FloorType.Slab_edge_insulation && typeof floorData.edgeInsulationWidth === "number") {
-	floorData.edgeInsulationWidth = unitValue(floorData.edgeInsulationWidth, centimetre);
+if (floorData?.data.typeOfGroundFloor === FloorType.Slab_edge_insulation && typeof floorData.data.edgeInsulationWidth === "number") {
+	floorData.data.edgeInsulationWidth = unitValue(floorData.data.edgeInsulationWidth, centimetre);
 };
 
-const model: Ref<GroundFloorData> = ref(floorData!);
+const model: Ref<GroundFloorData | undefined> = ref(floorData?.data);
 
 // Removed heated and unheated basement options for summer
 type reducedGroundFloorOptions = FloorType.Slab_no_edge_insulation | FloorType.Slab_edge_insulation | FloorType.Suspended_floor;
@@ -49,12 +49,12 @@ const saveForm = (fields: GroundFloorData) => {
 			thicknessOfWalls: fields.thicknessOfWalls
 		};
 
-		let floor: GroundFloorData;
+		let floorData: GroundFloorData;
 
 		switch(fields.typeOfGroundFloor) {
 			case FloorType.Slab_edge_insulation:
 			{				
-				floor = {
+				floorData = { 
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					edgeInsulationType: fields.edgeInsulationType,
@@ -64,13 +64,13 @@ const saveForm = (fields: GroundFloorData) => {
 				break;
 			}
 			case FloorType.Slab_no_edge_insulation:
-				floor = {
+				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 				};
 				break;
 			case FloorType.Suspended_floor:
-				floor = {
+				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					heightOfFloorUpperSurface: fields.heightOfFloorUpperSurface,
@@ -81,7 +81,7 @@ const saveForm = (fields: GroundFloorData) => {
 				};
 				break;
 			case FloorType.Heated_basement:
-				floor = {
+				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
@@ -89,7 +89,7 @@ const saveForm = (fields: GroundFloorData) => {
 				};
 				break;
 			case FloorType.Unheated_basement:
-				floor = {
+				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					thermalTransmittanceOfFloorAboveBasement: fields.thermalTransmittanceOfFloorAboveBasement,
@@ -109,7 +109,7 @@ const saveForm = (fields: GroundFloorData) => {
 		}
 		
 		dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
-		
+		const floor: EcaasForm<GroundFloorData> = { data: floorData, complete: true };
 		saveToList(floor, dwellingSpaceFloors.dwellingSpaceGroundFloor);
 	});
 
@@ -214,7 +214,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			validation="required"
 		/>
 
-		<template v-if="model.typeOfGroundFloor === FloorType.Slab_edge_insulation">
+		<template v-if="model?.typeOfGroundFloor === FloorType.Slab_edge_insulation">
 			<FormKit
 				id="edgeInsulationType"
 				type="govRadios"
@@ -301,7 +301,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			/>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === FloorType.Suspended_floor">
+		<template v-if="model?.typeOfGroundFloor === FloorType.Suspended_floor">
 			<FormKit
 				id="heightOfFloorUpperSurface"
 				type="govInputWithSuffix"
@@ -396,7 +396,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			</FormKit>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === FloorType.Heated_basement">
+		<template v-if="model?.typeOfGroundFloor === FloorType.Heated_basement">
 			<FormKit
 				id="depthOfBasementFloorBelowGround"
 				type="govInputWithSuffix"
@@ -415,7 +415,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			/>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === FloorType.Unheated_basement">
+		<template v-if="model?.typeOfGroundFloor === FloorType.Unheated_basement">
 			<FormKit
 				id="thermalTransmittanceOfFloorAboveBasement"
 				type="govInputWithSuffix"
