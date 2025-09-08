@@ -34,7 +34,7 @@ const windShieldingFactorOptions: Record<WindShieldLocation, SnakeToSentenceCase
 
 const saveForm = (fields: GroundFloorData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceFloors} = state.dwellingFabric;
+		const { dwellingSpaceFloors } = state.dwellingFabric;
 
 		const commonFields = {
 			name: fields.name,
@@ -116,7 +116,7 @@ const saveForm = (fields: GroundFloorData) => {
 	navigateTo("/dwelling-space/floors");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 	const value = node.value as Length;

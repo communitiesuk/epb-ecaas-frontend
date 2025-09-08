@@ -14,7 +14,7 @@ const heaterPositionOptions: Record<ImmersionHeaterPosition, Capitalize<Immersio
 
 const saveForm = (fields: ImmersionHeaterData) => {
 	store.$patch((state) => {
-		const {immersionHeater} = state.domesticHotWater.waterHeating;
+		const { immersionHeater } = state.domesticHotWater.waterHeating;
 
 		const immersionHeaterItem: ImmersionHeaterData = {
 			name: fields.name,
@@ -30,7 +30,7 @@ const saveForm = (fields: ImmersionHeaterData) => {
 	navigateTo("/domestic-hot-water/water-heating");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

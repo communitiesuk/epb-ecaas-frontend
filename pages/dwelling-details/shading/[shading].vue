@@ -47,7 +47,7 @@ autoSaveElementForm({
 	}
 });
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

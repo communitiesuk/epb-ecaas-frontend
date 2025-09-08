@@ -8,7 +8,7 @@ const model: Ref<WaterHeatingHeatBatteryData> = ref(heatBatteryData!);
 
 const saveForm = (fields: WaterHeatingHeatBatteryData) => {
 	store.$patch((state) => {
-		const {heatBattery} = state.domesticHotWater.waterHeating;
+		const { heatBattery } = state.domesticHotWater.waterHeating;
 
 		const heatBatteryItem: WaterHeatingHeatBatteryData = {
 			name: fields.name
@@ -20,7 +20,7 @@ const saveForm = (fields: WaterHeatingHeatBatteryData) => {
 	navigateTo("/domestic-hot-water/water-heating");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

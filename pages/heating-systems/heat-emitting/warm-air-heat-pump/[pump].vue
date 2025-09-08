@@ -8,7 +8,7 @@ const model: Ref<WarmAirHeatPumpData> = ref(warmAirHeatPumpData!);
 
 const saveForm = (fields: WarmAirHeatPumpData) => {
 	store.$patch((state) => {
-		const {warmAirHeatPump} = state.heatingSystems.heatEmitting;
+		const { warmAirHeatPump } = state.heatingSystems.heatEmitting;
 
 		const item: WarmAirHeatPumpData = {
 			name: fields.name
@@ -21,7 +21,7 @@ const saveForm = (fields: WarmAirHeatPumpData) => {
 	navigateTo("/heating-systems/heat-emitting");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

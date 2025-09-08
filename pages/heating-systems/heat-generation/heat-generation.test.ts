@@ -1,6 +1,6 @@
 import { mockNuxtImport, registerEndpoint, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import {screen, within } from '@testing-library/vue';
+import { screen, within } from '@testing-library/vue';
 import HeatGeneration from './index.vue';
 import HeatPumpForm from "./heat-pump/[pump].vue";
 import BoilerForm from "./boiler/[boiler].vue";
@@ -80,7 +80,7 @@ describe('heat generation', () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [{data: heatPump1}]
+							data: [{ data: heatPump1 }]
 						}
 					}
 				}
@@ -98,7 +98,7 @@ describe('heat generation', () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data:[{data: heatPump1}, {data: heatPump2}, {data: heatPump3}]
+							data:[{ data: heatPump1 }, { data: heatPump2 }, { data: heatPump3 }]
 						}
 					}
 				}

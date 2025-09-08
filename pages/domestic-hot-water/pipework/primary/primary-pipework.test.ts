@@ -148,7 +148,7 @@ describe('Primary pipework form', () => {
 		});
 
 		await renderSuspended(WaterHeatingForm); 
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 		expect(store.domesticHotWater.pipework.primaryPipework.data[0]?.data.hotWaterCylinder).toBe(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.id);
 		
@@ -163,7 +163,7 @@ describe('Primary pipework form', () => {
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(PipeworkForm);
 
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('internalDiameter_error'))).toBeDefined();
@@ -185,7 +185,7 @@ describe('Primary pipework form', () => {
 			}
 		});
 
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 		expect((await screen.findByTestId('pipeworkErrorSummary'))).toBeDefined();
 	});
 

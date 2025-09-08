@@ -1,5 +1,5 @@
 import { BuildType   } from "~/schema/api-schema.types";
-import type {SchemaInfiltrationVentilation, SchemaShadingSegment} from "~/schema/api-schema.types";
+import type { SchemaInfiltrationVentilation, SchemaShadingSegment } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSchema> {
@@ -21,7 +21,7 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 		General: {
 			build_type: generalDetails.typeOfDwelling,
 			storeys_in_building: generalDetails.storeysInDwelling,
-			...(generalDetails.typeOfDwelling === BuildType.flat ? {storey_of_dwelling: generalDetails.storeyOfFlat} : {}),
+			...(generalDetails.typeOfDwelling === BuildType.flat ? { storey_of_dwelling: generalDetails.storeyOfFlat } : {}),
 		},
 		NumberOfBedrooms: generalDetails.numOfBedrooms,
 		PartGcompliance: true,

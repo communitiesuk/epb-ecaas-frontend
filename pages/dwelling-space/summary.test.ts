@@ -262,7 +262,7 @@ describe('Living space fabric summary', () => {
 		it('should contain the correct tabs for dwelling space zone parameters', async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Zone parameters'}));
+			expect(screen.getByRole('link', { name: 'Zone parameters' }));
 		});
 
 		it('should display the correct data for the zone parameters section', async () => {
@@ -294,7 +294,7 @@ describe('Living space fabric summary', () => {
 		it('should contain the correct tabs for dwelling space lighting', async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Lighting'}));
+			expect(screen.getByRole('link', { name: 'Lighting' }));
 		});
 
 		it('should display the correct data for the lighting section', async () => {
@@ -325,9 +325,9 @@ describe('Living space fabric summary', () => {
 		it('should contain the correct tabs for dwelling space floors', async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Ground floor'}));
-			expect(screen.getByRole('link', {name: 'Internal floor'}));
-			expect(screen.getByRole('link', {name: 'Exposed floor'}));
+			expect(screen.getByRole('link', { name: 'Ground floor' }));
+			expect(screen.getByRole('link', { name: 'Internal floor' }));
+			expect(screen.getByRole('link', { name: 'Exposed floor' }));
 		});
 	
 		it('should display the correct data for the ground floor section', async () => {
@@ -424,10 +424,10 @@ describe('Living space fabric summary', () => {
 		it('should contain the correct tabs for dwelling space walls', async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'External wall'}));
-			expect(screen.getByRole('link', {name: 'Internal wall'}));
-			expect(screen.getByRole('link', {name: 'Wall to unheated space'}));
-			expect(screen.getByRole('link', {name: 'Party wall'}));
+			expect(screen.getByRole('link', { name: 'External wall' }));
+			expect(screen.getByRole('link', { name: 'Internal wall' }));
+			expect(screen.getByRole('link', { name: 'Wall to unheated space' }));
+			expect(screen.getByRole('link', { name: 'Party wall' }));
 		});
 	
 		it('should display the correct data for the external wall section', async () => {
@@ -549,8 +549,8 @@ describe('Living space fabric summary', () => {
 		it('should contain the correct tabs for dwelling space walls', async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Ceiling'}));
-			expect(screen.getByRole('link', {name: 'Roof'}));
+			expect(screen.getByRole('link', { name: 'Ceiling' }));
+			expect(screen.getByRole('link', { name: 'Roof' }));
 		});
 	
 		it('should display the correct data for the ceilings section', async () => {
@@ -619,9 +619,9 @@ describe('Living space fabric summary', () => {
 		it('should contain the correct tabs for dwelling space doors', async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'External unglazed door'}));
-			expect(screen.getByRole('link', {name: 'External glazed door'}));
-			expect(screen.getByRole('link', {name: 'Internal door'}));
+			expect(screen.getByRole('link', { name: 'External unglazed door' }));
+			expect(screen.getByRole('link', { name: 'External glazed door' }));
+			expect(screen.getByRole('link', { name: 'Internal door' }));
 		});
 	
 		it('should display the correct data for the external unglazed doors section', async () => {
@@ -721,7 +721,7 @@ describe('Living space fabric summary', () => {
 		it('should contain the correct tabs for dwelling space windows', async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Windows'}));
+			expect(screen.getByRole('link', { name: 'Windows' }));
 		});
 	
 		it('should display the correct data for the windows section', async () => {
@@ -770,8 +770,8 @@ describe('Living space fabric summary', () => {
 		it('should contain the correct tabs for dwelling space thermal bridges', async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Linear thermal bridges'}));
-			expect(screen.getByRole('link', {name: 'Point thermal bridges'}));
+			expect(screen.getByRole('link', { name: 'Linear thermal bridges' }));
+			expect(screen.getByRole('link', { name: 'Point thermal bridges' }));
 		});
 	
 		it('should display the correct data for the linear thermal bridges section', async () => {

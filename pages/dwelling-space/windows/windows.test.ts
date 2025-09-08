@@ -2,8 +2,8 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import Windows from './index.vue';
 import WindowsForm from './[window].vue';
-import {screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom';
+import { screen } from '@testing-library/vue';
+import { within } from '@testing-library/dom';
 
 describe('windows', () => {
 	const store = useEcaasStore();
@@ -183,7 +183,7 @@ describe('windows', () => {
 			},
 		});
 
-		await user.click(screen.getByRole('button', {name: "Save and continue"})); 
+		await user.click(screen.getByRole('button', { name: "Save and continue" })); 
 		expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
 	
 		await renderSuspended(Windows);

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getUrl  } from '#imports';
-import type {SnakeToSentenceCase} from '#imports';
+import type { SnakeToSentenceCase } from '#imports';
 import type { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
@@ -23,7 +23,7 @@ const locationOptions: Record<WaterPipeworkLocation, SnakeToSentenceCase<WaterPi
 
 const saveForm = (fields: PrimaryPipeworkData) => {
 	store.$patch((state) => {
-		const {primaryPipework} = state.domesticHotWater.pipework;
+		const { primaryPipework } = state.domesticHotWater.pipework;
 		
 		const index = getStoreIndex(primaryPipework.data);
 
@@ -57,7 +57,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.domesticHotWater.pipework.primaryPipework.data[index] = newData;
 		state.domesticHotWater.pipework.primaryPipework.complete = false;
-	}});
+	} });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>

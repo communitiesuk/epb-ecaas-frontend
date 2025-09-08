@@ -1,4 +1,4 @@
-import {ApiPaths} from "~/schema/api-schema.types";
+import { ApiPaths } from "~/schema/api-schema.types";
 import type { ApiInfoResponse, FhsComplianceResponseIncludingErrors, TokenResponse } from "../server.types";
 import clientSession from "../services/clientSession";
 import { ajv, humanReadable } from "~/schema/validator";

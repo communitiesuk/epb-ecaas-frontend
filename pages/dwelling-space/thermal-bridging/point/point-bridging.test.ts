@@ -40,7 +40,7 @@ describe('point thermal bridges', () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges;
-		expect(data[0]).toEqual({...state, complete: true});
+		expect(data[0]).toEqual({ ...state, complete: true });
 	});
 
 	test('form is prepopulated when data exists in state', async () => {

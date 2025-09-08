@@ -38,7 +38,7 @@ describe('ceilings and roofs', () => {
 		data: {
 			...ceiling1.data,
 			name: "Ceiling 2",
-		}};
+		} };
 
 	const ceiling3: EcaasForm<CeilingData> = {
 		data: {
@@ -230,8 +230,8 @@ describe('ceilings and roofs', () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceCeilings: { data: [{...ceiling1, complete: true}] },
-						dwellingSpaceRoofs: { data: [{...roof1, complete: true}] },
+						dwellingSpaceCeilings: { data: [{ ...ceiling1, complete: true }] },
+						dwellingSpaceRoofs: { data: [{ ...roof1, complete: true }] },
 					}
 				}
 			});
@@ -248,8 +248,8 @@ describe('ceilings and roofs', () => {
 			form: Component,
 			params: string,
 		}[]> => ([
-			{ key: 'dwellingSpaceCeilings', testId: `ceilings_${action}_0`, form: CeilingForm, params: "ceiling"},
-			{ key: 'dwellingSpaceRoofs', testId: `roofs_${action}_0`, form: RoofForm, params: "roof"}
+			{ key: 'dwellingSpaceCeilings', testId: `ceilings_${action}_0`, form: CeilingForm, params: "ceiling" },
+			{ key: 'dwellingSpaceRoofs', testId: `roofs_${action}_0`, form: RoofForm, params: "roof" }
 		]);
 	
 		type CeilingsAndRoofsType = keyof typeof store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
@@ -332,7 +332,7 @@ describe('ceilings and roofs', () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data: [{data: {name: "Ceiling", surfaceArea: 20}, complete: false}]
+							data: [{ data: { name: "Ceiling", surfaceArea: 20 }, complete: false }]
 						},
 					}
 				}

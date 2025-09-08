@@ -187,7 +187,7 @@ describe('pv systems and electric battery', () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
-						data: [{...pvSystem1, complete: true}],
+						data: [{ ...pvSystem1, complete: true }],
 					},
 				}
 			});
@@ -197,7 +197,7 @@ describe('pv systems and electric battery', () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
-						data: [{...electricBattery, complete: true}],
+						data: [{ ...electricBattery, complete: true }],
 					},
 				}
 			});
@@ -238,7 +238,7 @@ describe('pv systems and electric battery', () => {
 			expect(store.pvAndBatteries.pvSystems?.complete).toBe(true);
 			expect(store.pvAndBatteries.electricBattery?.complete).toBe(true);
 
-			expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
+			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
 			expect(completeStatus?.style.display).not.toBe("none");
 
 			expect(navigateToMock).toHaveBeenCalledWith("/");
@@ -358,7 +358,7 @@ describe('pv systems and electric battery', () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
-						data: [{data: {name: "Battery", capacity: 2}, complete: false}]
+						data: [{ data: { name: "Battery", capacity: 2 }, complete: false }]
 					},
 				}
 			});

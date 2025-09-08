@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {EcaasForm} from "~/stores/ecaasStore.schema";
+import type { EcaasForm } from "~/stores/ecaasStore.schema";
 import formStatus from '~/constants/formStatus';
 import { isEcaasForm } from '#imports';
 

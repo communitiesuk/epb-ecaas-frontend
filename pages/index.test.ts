@@ -1,6 +1,6 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import { mapFhsInputData  } from "~/mapping/fhsInputMapper";
-import type {FhsInputSchema} from "~/mapping/fhsInputMapper";
+import type { FhsInputSchema } from "~/mapping/fhsInputMapper";
 import type { FhsComplianceResponseIncludingErrors } from "~/server/server.types";
 import Index from "./index.vue";
 import { screen } from '@testing-library/vue';

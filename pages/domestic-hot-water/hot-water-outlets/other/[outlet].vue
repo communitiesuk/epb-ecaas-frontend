@@ -11,7 +11,7 @@ const model: Ref<OtherHotWaterOutletData | undefined> = ref(otherOutletsData?.da
 
 const saveForm = (fields: OtherHotWaterOutletData) => {
 	store.$patch((state) => {
-		const {otherOutlets} = state.domesticHotWater.hotWaterOutlets;
+		const { otherOutlets } = state.domesticHotWater.hotWaterOutlets;
 
 		const index = getStoreIndex(otherOutlets.data);
 
@@ -37,9 +37,9 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.domesticHotWater.hotWaterOutlets.otherOutlets.data[index] = newData;
 		state.domesticHotWater.hotWaterOutlets.otherOutlets.complete = false;
-	}});
+	} });
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

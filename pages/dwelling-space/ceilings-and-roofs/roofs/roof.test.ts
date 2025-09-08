@@ -60,7 +60,7 @@ describe('roof', () => {
 
 		const  { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		
-		expect(dwellingSpaceRoofs.data[0]).toEqual({...roof, complete: true});
+		expect(dwellingSpaceRoofs.data[0]).toEqual({ ...roof, complete: true });
 	});
 
 	test('form is prepopulated when data exists in state', async () => {

@@ -5,8 +5,8 @@ import GroundFloorForm from './ground/[floor].vue';
 import InternalFloorForm from './internal/[floor].vue';
 import ExposedFloorForm from './exposed/[floor].vue';
 
-import {screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom';
+import { screen } from '@testing-library/vue';
+import { within } from '@testing-library/dom';
 import { FloorType, MassDistributionClass } from "~/schema/api-schema.types";
 import type { Component } from "vue";
 
@@ -387,13 +387,13 @@ describe('floors', () => {
 
 		it('marks floors as complete when mark section as complete button is clicked', async () => {
 	
-			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
 			expect(completedStatusElement?.style.display).toBe("none");
 	
 			await user.click(screen.getByTestId('completeSectionButton'));
 	
-			const {dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor
+			const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor
 	
 
 			} = store.dwellingFabric.dwellingSpaceFloors;
@@ -402,7 +402,7 @@ describe('floors', () => {
 			expect(dwellingSpaceGroundFloor?.complete).toBe(true);
 			expect(dwellingSpaceInternalFloor?.complete).toBe(true);
 			expect(dwellingSpaceExposedFloor?.complete).toBe(true);
-			expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
+			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
 			expect(completedStatusElement?.style.display).not.toBe("none");
 	
 			expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space');
@@ -423,7 +423,7 @@ describe('floors', () => {
 	
 				await user.click(screen.getByTestId(floorData!.testId));
 				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(false);
-				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			}
 		});
 
@@ -442,7 +442,7 @@ describe('floors', () => {
 
 				await user.click(screen.getByTestId(floorData!.testId));
 				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(false);
-				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			}
 		});
 
@@ -461,15 +461,15 @@ describe('floors', () => {
 
 				await renderSuspended(floorData?.form, {
 					route: {
-						params: {floor: '0'}
+						params: { floor: '0' }
 					}
 				});
 
-				await user.click(screen.getByRole('button', {name: "Save and continue"}));
+				await user.click(screen.getByRole('button', { name: "Save and continue" }));
 				
 				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(false);
 				await renderSuspended(Floors);
-				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			}
 		});
 	});

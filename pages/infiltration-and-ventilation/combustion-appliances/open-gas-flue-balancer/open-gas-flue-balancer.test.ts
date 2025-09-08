@@ -1,8 +1,8 @@
 import userEvent from "@testing-library/user-event";
 import OpenGasFlueBalancer from './[combustion].vue';
 import { CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
-import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
-import {screen} from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { screen } from "@testing-library/vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport('navigateTo', () => {
@@ -35,7 +35,7 @@ describe('open gas flue balancer', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const {data} = store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_gas_flue_balancer];
+		const { data } = store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_gas_flue_balancer];
 
 		expect(data[0]).toEqual(openGasFlueBalancer);
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
@@ -54,7 +54,7 @@ describe('open gas flue balancer', () => {
 
 		await renderSuspended(OpenGasFlueBalancer, {
 			route: {
-				params: {combustion: '0'}
+				params: { combustion: '0' }
 			}
 		});
 

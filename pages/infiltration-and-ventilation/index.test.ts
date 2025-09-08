@@ -31,7 +31,7 @@ describe('the ventilation task page', async ()=>{
 				path: '/infiltration-and-ventilation'
 			}
 		});
-		expect(screen.getByRole('heading', {name: 'Infiltration and ventilation'}));
+		expect(screen.getByRole('heading', { name: 'Infiltration and ventilation' }));
 	});
 
 	it('should find a list item', async ()=> {

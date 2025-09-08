@@ -39,7 +39,7 @@ describe("Heating systems summary page", () => {
 		it("displays an empty section if no energy supply data has been added", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 	
-			await verifyDataInSection("energySupply", {"Fuel type": ""});
+			await verifyDataInSection("energySupply", { "Fuel type": "" });
 		});
 
 		it("displays the correct fields when electricity is selected", async () => {
@@ -168,7 +168,7 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [{ data:heatPump}]
+							data: [{ data:heatPump }]
 						},
 						boiler: {
 							data: [boiler],
@@ -202,14 +202,14 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [{ data: heatPump}]
+							data: [{ data: heatPump }]
 						},
 					},
 				},
 			});
 			await renderSuspended(HeatingSystemsSummary);
 
-			await verifyDataInSection("heatPump", {"Name": "Heat pump 1" });
+			await verifyDataInSection("heatPump", { "Name": "Heat pump 1" });
 
 		});
 
@@ -289,7 +289,7 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [{data: heatPump}],
+							data: [{ data: heatPump }],
 						},
 						boiler: {
 							data: [boiler],
@@ -410,7 +410,7 @@ describe("Heating systems summary page", () => {
 					},
 					heatGeneration: {
 						heatPump: {
-							data: [{data: heatPump}],
+							data: [{ data: heatPump }],
 						},
 					},
 				},
@@ -442,7 +442,7 @@ describe("Heating systems summary page", () => {
 					},
 					heatGeneration: {
 						heatPump: {
-							data: [{data: heatPump}],
+							data: [{ data: heatPump }],
 						},
 					},
 				},
@@ -476,7 +476,7 @@ describe("Heating systems summary page", () => {
 					},
 					heatGeneration: {
 						heatPump: {
-							data: [{data: heatPump}],
+							data: [{ data: heatPump }],
 						},
 					},
 				},
@@ -511,7 +511,7 @@ describe("Heating systems summary page", () => {
 					},
 					heatGeneration: {
 						heatPump: {
-							data: [{data: heatPump}],
+							data: [{ data: heatPump }],
 						},
 					},
 				},
@@ -627,7 +627,7 @@ describe("Heating systems summary page", () => {
 					},
 					heatGeneration: {
 						heatPump: {
-							data: [{data: heatPump}],
+							data: [{ data: heatPump }],
 						},
 					},
 				},

@@ -3,7 +3,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import DuctworkOverview from "./index.vue";
 import DuctworkForm from './[ductwork].vue';
 import userEvent from '@testing-library/user-event';
-import type {DuctworkData} from '../../../stores/ecaasStore.schema';
+import type { DuctworkData } from '../../../stores/ecaasStore.schema';
 import { DuctShape, DuctType } from '~/schema/api-schema.types';
 
 describe('ductwork', async () => {
@@ -57,7 +57,7 @@ describe('ductwork', async () => {
 
 	it('should have the correct heading', async () => {
 		await renderSuspended(DuctworkOverview);
-		expect(screen.getByRole('heading', {name: 'MVHR ductwork'}));
+		expect(screen.getByRole('heading', { name: 'MVHR ductwork' }));
 	}); 
 
 	it('should allow users to remove a ductwork when remove button is clicked', async() => {
@@ -196,7 +196,7 @@ describe('ductwork', async () => {
 	it('should navigate to the infiltration and ventilation overview page when return to overview is clicked', async () => {
 		await renderSuspended(DuctworkOverview);
 		
-		const returnToOverviewButton = screen.getByRole("button", {name : "Return to infiltration and ventilation"});
+		const returnToOverviewButton = screen.getByRole("button", { name : "Return to infiltration and ventilation" });
 		expect(returnToOverviewButton.getAttribute("href")).toBe("/infiltration-and-ventilation");
 	
 	} );

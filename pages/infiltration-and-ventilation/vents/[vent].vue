@@ -8,7 +8,7 @@ const model: Ref<VentData> = ref(ventData!);
 
 const saveForm = (fields: VentData) => {
 	store.$patch((state) => {
-		const {vents} = state.infiltrationAndVentilation;
+		const { vents } = state.infiltrationAndVentilation;
 
 		const vent: VentData = {
 			name: fields.name,
@@ -26,7 +26,7 @@ const saveForm = (fields: VentData) => {
 	navigateTo("/infiltration-and-ventilation/vents");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

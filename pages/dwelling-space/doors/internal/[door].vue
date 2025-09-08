@@ -12,7 +12,7 @@ const typeOfInternalDoorOptions = adjacentSpaceTypeOptions('Internal door');
 
 const saveForm = (fields: InternalDoorData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceInternalDoor} = state.dwellingFabric.dwellingSpaceDoors;
+		const { dwellingSpaceInternalDoor } = state.dwellingFabric.dwellingSpaceDoors;
 
 		const commonFields = {
 			name: fields.name,
@@ -46,7 +46,7 @@ const saveForm = (fields: InternalDoorData) => {
 	navigateTo("/dwelling-space/doors");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

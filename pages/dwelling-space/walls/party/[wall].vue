@@ -10,7 +10,7 @@ const model: Ref<PartyWallData> = ref(wallData!);
 
 const saveForm = (fields: PartyWallData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceWalls} = state.dwellingFabric;
+		const { dwellingSpaceWalls } = state.dwellingFabric;
 
 		const wall: PartyWallData = {
 			name: fields.name,
@@ -32,7 +32,7 @@ const saveForm = (fields: PartyWallData) => {
 	navigateTo("/dwelling-space/walls");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

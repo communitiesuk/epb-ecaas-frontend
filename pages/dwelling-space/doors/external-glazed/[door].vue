@@ -10,7 +10,7 @@ const model: Ref<ExternalGlazedDoorData> = ref(doorData!);
 
 const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceExternalGlazedDoor} = state.dwellingFabric.dwellingSpaceDoors;
+		const { dwellingSpaceExternalGlazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 
 		const commonFields = {
 			name: fields.name,
@@ -42,7 +42,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 	navigateTo("/dwelling-space/doors");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

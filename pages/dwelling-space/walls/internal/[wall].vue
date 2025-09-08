@@ -10,7 +10,7 @@ const model: Ref<InternalWallData> = ref(wallData!);
 
 const saveForm = (fields: InternalWallData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceWalls} = state.dwellingFabric;
+		const { dwellingSpaceWalls } = state.dwellingFabric;
 
 		const wall: InternalWallData = {
 			name: fields.name,
@@ -31,7 +31,7 @@ const saveForm = (fields: InternalWallData) => {
 	navigateTo("/dwelling-space/walls");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

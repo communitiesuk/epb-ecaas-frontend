@@ -16,7 +16,7 @@ const locationOptions: Record<WaterPipeworkLocation, SnakeToSentenceCase<WaterPi
 
 const saveForm = (fields: SecondaryPipeworkData) => {
 	store.$patch((state) => {
-		const {secondaryPipework} = state.domesticHotWater.pipework;
+		const { secondaryPipework } = state.domesticHotWater.pipework;
 
 		const index = getStoreIndex(secondaryPipework.data);
 		secondaryPipework.data[index] = {
@@ -42,7 +42,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.domesticHotWater.pipework.secondaryPipework.data[index] = newData;
 		state.domesticHotWater.pipework.secondaryPipework.complete = false;
-	}});
+	} });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>

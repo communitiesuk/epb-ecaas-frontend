@@ -26,7 +26,7 @@ const saveForm = (fields: CombustionApplianceData) => {
 	navigateTo("/infiltration-and-ventilation/combustion-appliances");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

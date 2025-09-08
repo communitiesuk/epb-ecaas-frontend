@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import {screen, within } from '@testing-library/vue';
+import { screen, within } from '@testing-library/vue';
 import { v4 as uuidv4 } from 'uuid';
 import HotWaterOutlets from './index.vue';
 import  MixerShowerForm from "./mixer-shower/[shower].vue";
@@ -565,7 +565,7 @@ describe('hot water outlets', () => {
 						params: { [params]: "0" },
 					},
 				});
-				await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+				await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 				expect(store.domesticHotWater.hotWaterOutlets[typedKey].complete).toBe(false);
 	
 				await renderSuspended(HotWaterOutlets);

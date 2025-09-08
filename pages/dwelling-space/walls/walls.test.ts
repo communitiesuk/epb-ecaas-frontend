@@ -7,8 +7,8 @@ import PartyWallForm from './party/[wall].vue';
 import WallToUnheatedForm from './wall-to-unheated-space/[wall].vue';
 import { MassDistributionClass } from "~/schema/api-schema.types";
 
-import {screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom';
+import { screen } from '@testing-library/vue';
+import { within } from '@testing-library/dom';
 import type { Component } from "vue";
 
 describe('walls', () => {

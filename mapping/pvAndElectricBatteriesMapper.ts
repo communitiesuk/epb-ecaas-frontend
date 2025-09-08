@@ -1,10 +1,10 @@
 import type { EmptyObject } from "type-fest";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
-import type {SchemaElectricBattery, SchemaWindowShadingObject} from "~/schema/api-schema.types";
+import type { SchemaElectricBattery, SchemaWindowShadingObject } from "~/schema/api-schema.types";
 import { defaultElectricityEnergySupplyName } from "./common";
 
-export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, 'OnSiteGeneration'>, {"ElectricBattery": SchemaElectricBattery} | EmptyObject] {
+export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, 'OnSiteGeneration'>, { "ElectricBattery": SchemaElectricBattery } | EmptyObject] {
 	return [
 		{
 			...mapPvSystemData(state),
@@ -42,7 +42,7 @@ export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, 'OnS
 	};
 }
 
-export function mapElectricBatteryData(state: ResolvedState): {"ElectricBattery": SchemaElectricBattery} | EmptyObject {
+export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery": SchemaElectricBattery } | EmptyObject {
 	const electricBattery = state.pvAndBatteries.electricBattery[0]?.data;
 	if (electricBattery) {
 		return {

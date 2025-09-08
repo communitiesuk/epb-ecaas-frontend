@@ -10,7 +10,7 @@ const model: Ref<HeatInterfaceUnitData> = ref(heatInterfaceUnitData!);
 
 const saveForm = (fields: HeatInterfaceUnitData) => {
 	store.$patch((state) => {
-		const {heatInterfaceUnit} = state.heatingSystems.heatGeneration;
+		const { heatInterfaceUnit } = state.heatingSystems.heatGeneration;
 
 		const heatInterfaceUnitItem: HeatInterfaceUnitData = {
 			id: uuidv4(),
@@ -24,7 +24,7 @@ const saveForm = (fields: HeatInterfaceUnitData) => {
 	navigateTo("/heating-systems/heat-generation");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

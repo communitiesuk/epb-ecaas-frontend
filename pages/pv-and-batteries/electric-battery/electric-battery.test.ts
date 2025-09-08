@@ -54,7 +54,7 @@ describe('Electric battery', () => {
 
 		const { data } = store.pvAndBatteries.electricBattery;
 
-		expect(data[0]).toEqual({...fullElectricBattery, complete: true});
+		expect(data[0]).toEqual({ ...fullElectricBattery, complete: true });
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

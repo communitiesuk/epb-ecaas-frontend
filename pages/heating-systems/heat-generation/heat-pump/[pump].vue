@@ -80,7 +80,7 @@ watch(model, async (newData: HeatPumpData | undefined, initialData: HeatPumpData
 	});
 });
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

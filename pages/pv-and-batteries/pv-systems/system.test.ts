@@ -62,7 +62,7 @@ describe("PV system", () => {
 	};
 
 	const pvSystem2: EcaasForm<PvSystemData> = {
-		data: {...pvSystem.data, name: 'PV 2'}
+		data: { ...pvSystem.data, name: 'PV 2' }
 	};
 
 	it("should have a heading", async () => {
@@ -122,9 +122,9 @@ describe("PV system", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data} = store.pvAndBatteries.pvSystems;
+		const { data } = store.pvAndBatteries.pvSystems;
 		
-		expect(data[0]).toEqual({...pvSystem, complete: true});
+		expect(data[0]).toEqual({ ...pvSystem, complete: true });
 	});
 
 	it("navigates to pv and batteries page when valid form is completed", async ()=> {
@@ -146,7 +146,7 @@ describe("PV system", () => {
 		it('creates a new pv system automatically with given name', async () => {
 			await renderSuspended(PVScreen, {
 				route: {
-					params: {system: 'create'}
+					params: { system: 'create' }
 				}
 			});
 

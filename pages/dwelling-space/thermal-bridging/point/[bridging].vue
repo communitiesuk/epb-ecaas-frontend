@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {getUrl} from "~/utils/page";
+import { getUrl } from "~/utils/page";
 
 const title = "Point thermal bridges";
 const store = useEcaasStore();
@@ -10,7 +10,7 @@ const model: Ref<PointThermalBridgeData | undefined> = ref(thermalBridgeData?.da
 
 const saveForm = (fields: PointThermalBridgeData) => {
 	store.$patch((state) => {
-		const {dwellingSpacePointThermalBridges} = state.dwellingFabric.dwellingSpaceThermalBridging;
+		const { dwellingSpacePointThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
 		const index = getStoreIndex(dwellingSpacePointThermalBridges.data);
 
 		dwellingSpacePointThermalBridges.data[index] = {
@@ -38,7 +38,7 @@ autoSaveElementForm({
 	},
 });
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

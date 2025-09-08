@@ -11,7 +11,7 @@ type RevalidateResult = {
 });
 
 export function revalidateState(state: Record<string, unknown>, path: string[] = []): RevalidateResult {
-	const newState = {...state};
+	const newState = { ...state };
 	const errors: ZodError<unknown>[] = [];
     
 	for (const key in state) {

@@ -1,9 +1,9 @@
 import FormKitStoredList from './components/form-kit/StoredList.vue';
-import type {StoredListOption} from './components/form-kit/StoredList.vue';
+import type { StoredListOption } from './components/form-kit/StoredList.vue';
 import { defineFormKitConfig } from '@formkit/vue';
 import FormKitButton from './components/form-kit/Button.vue';
 import FormKitRadios from './components/form-kit/Radios.vue';
-import type {RadioOption} from './components/form-kit/Radios.vue';
+import type { RadioOption } from './components/form-kit/Radios.vue';
 import type { FormKitInputs, FormKitOptionsProp } from '@formkit/inputs';
 import FormKitDropdown from './components/form-kit/Dropdown.vue';
 import FormKitInputFloat from './components/form-kit/InputFloat.vue';

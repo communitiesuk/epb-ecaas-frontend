@@ -38,7 +38,7 @@ describe('wwhrs form', () => {
 						}]
 					}
 				}
-			}}
+			} }
 		);
 	};
 
@@ -74,7 +74,7 @@ describe('wwhrs form', () => {
 				wwhrs: {
 					data: [state]
 				}
-			}}
+			} }
 		);
 
 		addStoreData();

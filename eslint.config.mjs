@@ -11,6 +11,7 @@ export default withNuxt(
 		rules: {
 			'@stylistic/semi': 'error',
 			'@stylistic/indent': ['error', 'tab'],
+			'@stylistic/object-curly-spacing': ["error", "always"],
 			'vue/html-indent': ['error', 'tab'],
 			'vue/no-multiple-template-root': 'off',
 			'object-shorthand': 'error',

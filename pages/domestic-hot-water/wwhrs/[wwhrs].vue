@@ -27,7 +27,7 @@ const wwhrsTypeOptions: Record<WwhrsType, string> = {
 
 const saveForm = (fields: WwhrsData) => {
 	store.$patch((state) => {
-		const {wwhrs} = state.domesticHotWater;
+		const { wwhrs } = state.domesticHotWater;
 
 		const item: WwhrsData = {
 			name: fields.name,
@@ -44,7 +44,7 @@ const saveForm = (fields: WwhrsData) => {
 	navigateTo("/domestic-hot-water/wwhrs");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

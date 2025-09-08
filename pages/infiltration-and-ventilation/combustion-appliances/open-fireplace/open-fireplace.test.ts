@@ -1,5 +1,5 @@
-import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
-import {screen} from '@testing-library/vue';
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { screen } from '@testing-library/vue';
 import OpenFireplace from './[combustion].vue';
 import userEvent from "@testing-library/user-event";
 import { CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
@@ -35,7 +35,7 @@ describe('open fireplace', () => {
 		await user.tab();
 		await user.click(screen.getByRole('button'));
 
-		const {data} = store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_fireplace];
+		const { data } = store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_fireplace];
 
 		expect(data[0]).toEqual(openFireplace);
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation/combustion-appliances');
@@ -54,7 +54,7 @@ describe('open fireplace', () => {
 
 		await renderSuspended(OpenFireplace, {
 			route: {
-				params: {combustion: '0'}
+				params: { combustion: '0' }
 			}
 		});
 

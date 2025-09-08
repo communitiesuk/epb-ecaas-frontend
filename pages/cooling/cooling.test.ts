@@ -2,8 +2,8 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import Cooling from './index.vue';
 import AirConditioningForm from './air-conditioning/[airConditioning].vue';
-import {screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom';
+import { screen } from '@testing-library/vue';
+import { within } from '@testing-library/dom';
 import type { AirConditioningData } from "~/stores/ecaasStore.schema";
 
 describe('cooling', () => {

@@ -63,15 +63,15 @@ describe('Ecaas Store', () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceFloors: {
-					dwellingSpaceExposedFloor: {complete: true},
-					dwellingSpaceInternalFloor: {complete: true},
-					dwellingSpaceGroundFloor: {complete: true}
+					dwellingSpaceExposedFloor: { complete: true },
+					dwellingSpaceInternalFloor: { complete: true },
+					dwellingSpaceGroundFloor: { complete: true }
 				},
 				dwellingSpaceWalls: {
-					dwellingSpaceExternalWall: {complete: false},
-					dwellingSpaceInternalWall: {complete: false},
-					dwellingSpaceWallToUnheatedSpace: {complete: false},
-					dwellingSpacePartyWall: {complete: false}
+					dwellingSpaceExternalWall: { complete: false },
+					dwellingSpaceInternalWall: { complete: false },
+					dwellingSpaceWallToUnheatedSpace: { complete: false },
+					dwellingSpacePartyWall: { complete: false }
 				}
 			}
 		});
@@ -109,32 +109,32 @@ describe('Ecaas Store', () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceFloors: {
-					dwellingSpaceExposedFloor: {complete: true},
-					dwellingSpaceInternalFloor: {complete: true},
-					dwellingSpaceGroundFloor: {complete: true}
+					dwellingSpaceExposedFloor: { complete: true },
+					dwellingSpaceInternalFloor: { complete: true },
+					dwellingSpaceGroundFloor: { complete: true }
 				},
 				dwellingSpaceWalls: {
-					dwellingSpaceExternalWall: {complete: true},
-					dwellingSpaceInternalWall: {complete: true},
-					dwellingSpaceWallToUnheatedSpace: {complete: true},
-					dwellingSpacePartyWall: {complete: true}
+					dwellingSpaceExternalWall: { complete: true },
+					dwellingSpaceInternalWall: { complete: true },
+					dwellingSpaceWallToUnheatedSpace: { complete: true },
+					dwellingSpacePartyWall: { complete: true }
 				},
 				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceCeilings: {complete: true},
-					dwellingSpaceRoofs: {complete: true}
+					dwellingSpaceCeilings: { complete: true },
+					dwellingSpaceRoofs: { complete: true }
 				},
 				dwellingSpaceDoors: {
-					dwellingSpaceExternalUnglazedDoor: {complete: true},
-					dwellingSpaceExternalGlazedDoor: {complete: true},
-					dwellingSpaceInternalDoor: {complete: true}
+					dwellingSpaceExternalUnglazedDoor: { complete: true },
+					dwellingSpaceExternalGlazedDoor: { complete: true },
+					dwellingSpaceInternalDoor: { complete: true }
 				},
-				dwellingSpaceWindows: {complete: true},
+				dwellingSpaceWindows: { complete: true },
 				dwellingSpaceThermalBridging: {
-					dwellingSpaceLinearThermalBridges: {complete: true},
-					dwellingSpacePointThermalBridges: {complete: true}
+					dwellingSpaceLinearThermalBridges: { complete: true },
+					dwellingSpacePointThermalBridges: { complete: true }
 				}, 
-				dwellingSpaceZoneParameters: {complete: true},
-				dwellingSpaceLighting: {complete: true}
+				dwellingSpaceZoneParameters: { complete: true },
+				dwellingSpaceLighting: { complete: true }
 			}
 		});
 
@@ -398,7 +398,7 @@ describe("hasCompleteState function", () => {
 
 	it("returns false when given state with pv battery section complete only", async () => {
 		const pvAndBatteriesSection = { pvSystems: { data: [], complete: true }, electricBattery: { data: [], complete: true } };
-		store.$patch({pvAndBatteries: pvAndBatteriesSection});
+		store.$patch({ pvAndBatteries: pvAndBatteriesSection });
 
 		const result = hasCompleteState(store);
 

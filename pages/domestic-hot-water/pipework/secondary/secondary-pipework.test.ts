@@ -52,7 +52,7 @@ describe('Secondary pipework form', () => {
 		
 		await user.tab();
 		
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 		const { data } = store.domesticHotWater.pipework.secondaryPipework;
 
@@ -86,7 +86,7 @@ describe('Secondary pipework form', () => {
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(PipeworkForm);
 
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('location_error'))).toBeDefined();
@@ -96,7 +96,7 @@ describe('Secondary pipework form', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(PipeworkForm);
 
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 		expect((await screen.findByTestId('pipeworkErrorSummary'))).toBeDefined();
 	});

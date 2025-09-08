@@ -202,8 +202,8 @@ describe('heatPump', () => {
 					heatGeneration: {
 						heatPump: {
 							data: [
-								{data: smallHeatPump},
-								{data: largeHeatPump}
+								{ data: smallHeatPump },
+								{ data: largeHeatPump }
 							]
 						}	
 					},

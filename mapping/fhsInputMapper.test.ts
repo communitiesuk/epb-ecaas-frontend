@@ -1,4 +1,4 @@
-import type {ValidateFunction} from "ajv/dist/2020";
+import type { ValidateFunction } from "ajv/dist/2020";
 import { ajv } from "../schema/validator";
 import {
 	BatteryLocation,
@@ -27,7 +27,7 @@ import {
 	WindowTreatmentType
 } from "~/schema/api-schema.types";
 import {  mapFhsInputData } from "./fhsInputMapper";
-import type {FhsInputSchema} from "./fhsInputMapper";
+import type { FhsInputSchema } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { centimetre } from "../utils/units/length";
@@ -241,11 +241,11 @@ const expectedHouseInput: FhsInputSchema = {
 		}
 	},
 	GroundFloorArea: 40,
-	HeatSourceWet: {"some-heat-pump-name": {
+	HeatSourceWet: { "some-heat-pump-name": {
 		EnergySupply: defaultElectricityEnergySupplyName,
 		type: "HeatPump",
 		product_reference: "HEATPUMP-LARGE"
-	}},
+	} },
 	Zone: {
 		[defaultZoneName]: {
 			BuildingElement: {

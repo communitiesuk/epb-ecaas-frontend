@@ -91,7 +91,7 @@ const internalFloorSummary: SummarySection = {
 			"Net surface area of element": `${x.surfaceAreaOfElement} ${metresSquare.suffix}`,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			...(x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace ? {"Thermal resistance of adjacent unheated space": `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}`} : {})
+			...(x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace ? { "Thermal resistance of adjacent unheated space": `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}` } : {})
 		};
 	}) || [],
 	editUrl: getUrl('dwellingSpaceFloors')
@@ -227,7 +227,7 @@ const ceilingSummary: SummarySection = {
 const roofSummary: SummarySection = {
 	id: 'dwellingSpaceRoofs',
 	label: 'Roof',
-	data: roofData.map(({ data: x}) => {
+	data: roofData.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Type of roof": displayCamelToSentenceCase(x.typeOfRoof),

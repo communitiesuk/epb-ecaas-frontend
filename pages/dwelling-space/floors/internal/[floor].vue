@@ -12,7 +12,7 @@ const typeOfInternalFloorOptions = adjacentSpaceTypeOptions('Internal floor');
 
 const saveForm = (fields: InternalFloorData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceFloors} = state.dwellingFabric;
+		const { dwellingSpaceFloors } = state.dwellingFabric;
 
 		const commonFields = {
 			name: fields.name,
@@ -40,7 +40,7 @@ const saveForm = (fields: InternalFloorData) => {
 		}
 
 		if (!dwellingSpaceFloors.dwellingSpaceInternalFloor) {
-			dwellingSpaceFloors.dwellingSpaceInternalFloor = {data: []};
+			dwellingSpaceFloors.dwellingSpaceInternalFloor = { data: [] };
 		}
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 		saveToList(floor, dwellingSpaceFloors.dwellingSpaceInternalFloor);
@@ -48,7 +48,7 @@ const saveForm = (fields: InternalFloorData) => {
 	navigateTo("/dwelling-space/floors");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

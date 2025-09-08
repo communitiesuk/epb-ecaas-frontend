@@ -18,7 +18,7 @@ const model: Ref<HotWaterCylinderData> = ref(hotWaterCylinderData!);
 
 const saveForm = (fields: HotWaterCylinderData) => {
 	store.$patch((state) => {
-		const {hotWaterCylinder} = state.domesticHotWater.waterHeating;
+		const { hotWaterCylinder } = state.domesticHotWater.waterHeating;
 
 		const hotWaterCylinderItem: HotWaterCylinderData = {
 			id: hotWaterCylinderData ? hotWaterCylinderData.id : uuidv4(),
@@ -35,7 +35,7 @@ const saveForm = (fields: HotWaterCylinderData) => {
 	navigateTo("/domestic-hot-water/water-heating");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 	const value = node.value as Volume;

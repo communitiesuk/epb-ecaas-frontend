@@ -1,5 +1,5 @@
 import { resolveState  } from './resolve';
-import type {Resolved} from './resolve';
+import type { Resolved } from './resolve';
 
 describe('Resolved Type', () => {
 	it('should match a resolved state with complete EcaasForm', () => {

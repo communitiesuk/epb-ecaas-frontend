@@ -1,6 +1,6 @@
-import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import {screen, within} from '@testing-library/vue';
+import { screen, within } from '@testing-library/vue';
 import CombustionAppliances from './index.vue';
 import OpenFireplaceForm from './open-fireplace/[combustion].vue';
 import ClosedFireplaceWithFanForm from './closed-fireplace-with-fan/[combustion].vue';
@@ -9,7 +9,7 @@ import OpenGasKitchenStoveForm from './open-gas-kitchen-stove/[combustion].vue';
 import OpenGasFireForm from './open-gas-fire/[combustion].vue';
 import ClosedFireForm from './closed-fire/[combustion].vue';
 
-import {expect} from "vitest";
+import { expect } from "vitest";
 import { CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
 import type { Entries } from "type-fest";
 

@@ -8,7 +8,7 @@ const model: Ref<PointOfUseData> = ref(pointOfUseData!);
 
 const saveForm = (fields: PointOfUseData) => {
 	store.$patch((state) => {
-		const {pointOfUse} = state.domesticHotWater.waterHeating;
+		const { pointOfUse } = state.domesticHotWater.waterHeating;
 
 		const pointOfUseItem: PointOfUseData = {
 			name: fields.name,
@@ -23,7 +23,7 @@ const saveForm = (fields: PointOfUseData) => {
 	navigateTo("/domestic-hot-water/water-heating");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

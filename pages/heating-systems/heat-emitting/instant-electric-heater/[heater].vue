@@ -9,7 +9,7 @@ const model: Ref<InstantElectricStorageData | undefined> = ref(instantElectricHe
 
 const saveForm = (fields: InstantElectricStorageData) => {
 	store.$patch((state) => {
-		const {instantElectricHeater} = state.heatingSystems.heatEmitting;
+		const { instantElectricHeater } = state.heatingSystems.heatEmitting;
 		const storeData = store.heatingSystems.heatEmitting.instantElectricHeater.data;
 
 		const index = route.params.heater === 'create' ? storeData.length - 1 : Number(route.params.heater);
@@ -71,7 +71,7 @@ watch(model, async (newData: InstantElectricStorageData | undefined, initialData
 	});
 });
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

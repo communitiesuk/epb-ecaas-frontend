@@ -1,5 +1,5 @@
 import { BatteryLocation, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
-import type {SchemaElectricBattery} from "~/schema/api-schema.types";
+import type { SchemaElectricBattery } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { mapElectricBatteryData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
 
@@ -31,7 +31,7 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerDC: 60,
 				inverterIsInside: false,
 				inverterType: InverterType.string_inverter,
-			}};
+			} };
 
 		const pvSystem2: EcaasForm<PvSystemData> = {
 			data: {
@@ -46,7 +46,7 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerAC: 96,
 				inverterPeakPowerDC: 120,
 				inverterIsInside: false,
-				inverterType: InverterType.optimised_inverter}};
+				inverterType: InverterType.optimised_inverter } };
 
 		store.$patch({
 			pvAndBatteries: {

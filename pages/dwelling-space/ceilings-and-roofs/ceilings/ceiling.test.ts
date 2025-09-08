@@ -21,7 +21,7 @@ describe('ceiling', () => {
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: '0',
-			pitch: 0}
+			pitch: 0 }
 	};
 
 	const internalFloorWithUnheated: EcaasForm<CeilingData> = {
@@ -64,7 +64,7 @@ describe('ceiling', () => {
 
 			const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 			
-			expect(dwellingSpaceCeilings.data[0]).toEqual({...internalFloor, complete: true});
+			expect(dwellingSpaceCeilings.data[0]).toEqual({ ...internalFloor, complete: true });
 		});
 	
 		test('form is prepopulated when data exists in state', async () => {
@@ -122,7 +122,7 @@ describe('ceiling', () => {
 
 			const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 			
-			expect(dwellingSpaceCeilings?.data[0]).toEqual({...internalFloorWithUnheated, complete: true});
+			expect(dwellingSpaceCeilings?.data[0]).toEqual({ ...internalFloorWithUnheated, complete: true });
 		});
 	
 		test('form is prepopulated when data exists in state', async () => {
@@ -225,7 +225,7 @@ describe('ceiling', () => {
 		it('creates a new ceiling automatically with given name', async () => {
 			await renderSuspended(Ceiling, {
 				route: {
-					params: {ceiling: 'create'}
+					params: { ceiling: 'create' }
 				}
 			});
 
@@ -243,7 +243,7 @@ describe('ceiling', () => {
 		it('creates a new ceiling automatically with default name after other data is entered', async () => {
 			await renderSuspended(Ceiling, {
 				route: {
-					params: {ceiling: 'create'}
+					params: { ceiling: 'create' }
 				}
 			});
 
@@ -272,7 +272,7 @@ describe('ceiling', () => {
 
 			await renderSuspended(Ceiling, {
 				route: {
-					params: {ceiling: '1'}
+					params: { ceiling: '1' }
 				}
 			});
 

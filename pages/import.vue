@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs';
-import type {Dayjs} from 'dayjs';
+import type { Dayjs } from 'dayjs';
 import { getInitialState } from '~/stores/ecaasStore';
 import { clearLastExportDate } from "~/utils/exportDate";
 

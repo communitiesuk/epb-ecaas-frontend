@@ -1,6 +1,6 @@
 import type { StripDefs } from './mapping.types';
 import { ColdWaterSourceType   } from '~/schema/api-schema.types';
-import type {SchemaEnergySupplyDetails, SchemaFhsInputSchema, SchemaStorageTank} from '~/schema/api-schema.types';
+import type { SchemaEnergySupplyDetails, SchemaFhsInputSchema, SchemaStorageTank } from '~/schema/api-schema.types';
 import { mapDwellingDetailsData } from './dwellingDetailsMapper';
 import merge from 'deepmerge';
 import { mapInfiltrationVentilationData } from './infiltrationVentilationMapper';
@@ -40,9 +40,9 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		}
 	};
 
-	const control: Pick<FhsInputSchema, 'Control'> = {Control: {}};
-	const events: Pick<FhsInputSchema, 'Events'> = {Events: {}};
-	const internalGains: Pick<FhsInputSchema, 'InternalGains'> = {InternalGains: {}};
+	const control: Pick<FhsInputSchema, 'Control'> = { Control: {} };
+	const events: Pick<FhsInputSchema, 'Events'> = { Events: {} };
+	const internalGains: Pick<FhsInputSchema, 'InternalGains'> = { InternalGains: {} };
 	
 	const defaultColdWaterSource: Pick<FhsInputSchema, 'ColdWaterSource'> = { 
 		ColdWaterSource: {

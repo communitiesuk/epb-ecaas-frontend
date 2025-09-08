@@ -4,8 +4,8 @@ import ThermalBridges from './index.vue';
 import LinearThermalBridgeForm from './linear/[bridging].vue';
 import PointThermalBridgeForm from './point/[bridging].vue';
 
-import {screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom';
+import { screen } from '@testing-library/vue';
+import { within } from '@testing-library/dom';
 import type { Component } from "vue";
 
 describe('thermal bridges', () => {
@@ -54,13 +54,13 @@ describe('thermal bridges', () => {
 	const point2: EcaasForm<PointThermalBridgeData> = {
 		data: {
 			...point1.data,
-			name: "Point 2"}
+			name: "Point 2" }
 	};
 
 	const point3: EcaasForm<PointThermalBridgeData> = {
 		data: {
 			...point1.data,
-			name: "Point 3"}
+			name: "Point 3" }
 	};
 
 	describe('linear thermal bridges', () => {
@@ -212,8 +212,8 @@ describe('thermal bridges', () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
-						dwellingSpaceLinearThermalBridges: { data: [{...linear1, complete: true}] },
-						dwellingSpacePointThermalBridges: { data: [{...point1, complete: true}] },
+						dwellingSpaceLinearThermalBridges: { data: [{ ...linear1, complete: true }] },
+						dwellingSpacePointThermalBridges: { data: [{ ...point1, complete: true }] },
 					},
 				},
 			});
@@ -314,7 +314,7 @@ describe('thermal bridges', () => {
 			dwellingFabric: {
 				dwellingSpaceThermalBridging: {
 					dwellingSpaceLinearThermalBridges: {
-						data: [{data: {linearThermalTransmittance: 2}, complete: false}]
+						data: [{ data: { linearThermalTransmittance: 2 }, complete: false }]
 					},
 				}
 			}

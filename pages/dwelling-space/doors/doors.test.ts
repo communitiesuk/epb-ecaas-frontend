@@ -1,8 +1,8 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import Doors from './index.vue';
-import {screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom';
+import { screen } from '@testing-library/vue';
+import { within } from '@testing-library/dom';
 import UnglazedDoorForm from './external-unglazed/[door].vue';
 import glazedDoorForm from './external-glazed/[door].vue';
 import internalDoorForm from './internal/[door].vue';
@@ -400,7 +400,7 @@ describe('doors', () => {
 	
 		it('marks doors as complete when mark section as complete button is clicked', async () => {
 	
-			expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
 			expect(completedStatusElement?.style.display).toBe("none");
 	
@@ -416,7 +416,7 @@ describe('doors', () => {
 			expect(dwellingSpaceExternalGlazedDoor.complete).toBe(true);
 			expect(dwellingSpaceExternalUnglazedDoor.complete).toBe(true);
 			expect(dwellingSpaceInternalDoor.complete).toBe(true);
-			expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
+			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
 			expect(completedStatusElement?.style.display).not.toBe("none");
 	
 			expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space');
@@ -437,7 +437,7 @@ describe('doors', () => {
 	
 				await user.click(screen.getByTestId(doorData!.testId));
 				expect(store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete).toBe(false);
-				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 	
 			}
 		});
@@ -457,7 +457,7 @@ describe('doors', () => {
 
 				await user.click(screen.getByTestId(doorData!.testId));
 				expect(store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete).toBe(false);
-				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			}
 
 		});
@@ -477,15 +477,15 @@ describe('doors', () => {
 
 				await renderSuspended(doorData?.form, {
 					route: {
-						params: {door: '0'}
+						params: { door: '0' }
 					}
 				});
 			
-				await user.click(screen.getByRole('button', {name: "Save and continue"}));
+				await user.click(screen.getByRole('button', { name: "Save and continue" }));
 
 				expect(store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete).toBe(false);
 				await renderSuspended(Doors);
-				expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			}
 		});
 	});

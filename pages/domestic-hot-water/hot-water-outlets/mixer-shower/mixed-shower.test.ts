@@ -51,7 +51,7 @@ describe('mixer shower', () => {
 		});
 
 		await populateValidForm();
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 		const { data } = store.domesticHotWater.hotWaterOutlets.mixedShower;
 		
@@ -82,7 +82,7 @@ describe('mixer shower', () => {
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(MixerShower);
 
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
@@ -92,7 +92,7 @@ describe('mixer shower', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(MixerShower);
 
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 
 		expect((await screen.findByTestId('mixedShowerErrorSummary'))).toBeDefined();
@@ -235,7 +235,7 @@ describe('mixer shower', () => {
 		await renderSuspended(MixerShower);
 	
 		await populateValidForm();
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 
 		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/hot-water-outlets');

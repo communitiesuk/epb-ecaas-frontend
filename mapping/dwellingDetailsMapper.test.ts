@@ -1,5 +1,5 @@
 import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass  } from '~/schema/api-schema.types';
-import type {SchemaShadingObject} from '~/schema/api-schema.types';
+import type { SchemaShadingObject } from '~/schema/api-schema.types';
 import { mapDistantShadingData, mapExternalFactorsData, mapGeneralDetailsData } from './dwellingDetailsMapper';
 import { resolveState } from '~/stores/resolve';
 

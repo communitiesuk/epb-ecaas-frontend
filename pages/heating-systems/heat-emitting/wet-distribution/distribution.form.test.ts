@@ -108,7 +108,7 @@ describe("Wet distribution", () => {
 			heatingSystems: {
 				heatGeneration: {
 					heatPump: {
-						data: [{ data: heatPump}],
+						data: [{ data: heatPump }],
 					},
 				},
 			},
@@ -163,7 +163,7 @@ describe("Wet distribution", () => {
 			heatingSystems: {
 				heatGeneration: {
 					heatPump: {
-						data: [{ data: heatPump}],
+						data: [{ data: heatPump }],
 					},
 				},
 			},
@@ -225,7 +225,7 @@ describe("Wet distribution", () => {
 			heatingSystems: {
 				heatGeneration: {
 					heatPump: {
-						data: [{ data: heatPump}],
+						data: [{ data: heatPump }],
 					},
 				},
 				heatEmitting: {
@@ -302,7 +302,7 @@ describe("Wet distribution", () => {
 			heatingSystems: {
 				heatGeneration: {
 					heatPump: {
-						data: [{data: heatPump}],
+						data: [{ data: heatPump }],
 					},
 				},
 			},

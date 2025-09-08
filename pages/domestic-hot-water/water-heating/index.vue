@@ -103,7 +103,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 	return value.amount >= min && value.amount <= max;
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

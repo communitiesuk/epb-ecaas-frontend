@@ -151,7 +151,7 @@ describe("Pipeworks", () => {
 						secondaryPipework: { data: [pipework2] },
 					},
 					waterHeating:{
-						hotWaterCylinder: { data: [{name: "Cylinder 1", id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36"}]}
+						hotWaterCylinder: { data: [{ name: "Cylinder 1", id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36" }] }
 					}
 				},
 					
@@ -253,7 +253,7 @@ describe("Pipeworks", () => {
 						},
 					});
 				 
-					await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+					await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 					expect(store.domesticHotWater.pipework[typedKey].complete).toBe(false);
 	

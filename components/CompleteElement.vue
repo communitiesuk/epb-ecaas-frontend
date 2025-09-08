@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const emit = defineEmits(["completed"]);
 
-defineProps<{isComplete: boolean, disabled?: boolean}>();
+defineProps<{ isComplete: boolean, disabled?: boolean }>();
 </script>
 
 <template>

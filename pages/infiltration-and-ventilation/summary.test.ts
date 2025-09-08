@@ -111,11 +111,11 @@ describe('Infiltration and ventilation summary', () => {
 	it('should contain the correct tabs for infiltration and ventilation', async () => {
 		await renderSuspended(Summary);
 	
-		expect(screen.getByRole('link', {name: 'Mechanical ventilation'}));
-		expect(screen.getByRole('link', {name: 'Ductwork'}));
-		expect(screen.getByRole('link', {name: 'Vents'}));
-		expect(screen.getByRole('link', {name: 'Natural ventilation'}));
-		expect(screen.getByRole('link', {name: 'Air permeability'}));
+		expect(screen.getByRole('link', { name: 'Mechanical ventilation' }));
+		expect(screen.getByRole('link', { name: 'Ductwork' }));
+		expect(screen.getByRole('link', { name: 'Vents' }));
+		expect(screen.getByRole('link', { name: 'Natural ventilation' }));
+		expect(screen.getByRole('link', { name: 'Air permeability' }));
 		// expect(screen.getByRole('link', {name: 'Combustion appliances'}));
 	});
 

@@ -44,7 +44,7 @@ describe('linear thermal bridges', () => {
 
 		const { data } = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges;
 
-		expect(data[0]).toEqual({...state, complete: true});
+		expect(data[0]).toEqual({ ...state, complete: true });
 	});
 
 	test('form is prepopulated when data exists in state', async () => {

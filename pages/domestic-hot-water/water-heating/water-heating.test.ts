@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import {screen } from '@testing-library/vue';
+import { screen } from '@testing-library/vue';
 import WaterHeating from './index.vue';
 import type { HotWaterCylinderData } from "~/stores/ecaasStore.schema";
 import { litre } from "~/utils/units/volume";
@@ -63,7 +63,7 @@ describe('water heating (hot water cylinder)', () => {
 		await renderSuspended(WaterHeating);
 		await populateValidForm();	
 
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 		const actual = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!;
 
@@ -97,7 +97,7 @@ describe('water heating (hot water cylinder)', () => {
 	test('required error messages are displayed when empty form is submitted', async () => {
 		await renderSuspended(WaterHeating);
 
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 
 		expect((await screen.findByTestId('waterHeaterType_error'))).toBeDefined();
@@ -108,7 +108,7 @@ describe('water heating (hot water cylinder)', () => {
 		await renderSuspended(WaterHeating);
 
 		await user.click(screen.getByTestId('waterHeaterType_hotWaterCylinder'));
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 
 		expect((await screen.findByTestId('storageCylinderVolume_error'))).toBeDefined();
@@ -119,7 +119,7 @@ describe('water heating (hot water cylinder)', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(WaterHeating);
 
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 		expect((await screen.findByTestId('waterHeatingErrorSummary'))).toBeDefined();
 	});
@@ -128,7 +128,7 @@ describe('water heating (hot water cylinder)', () => {
 		await renderSuspended(WaterHeating);
 		
 		await populateValidForm();
-		await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+		await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
 
 		expect(store.domesticHotWater.waterHeating.combiBoiler.complete).toBeTruthy();
 		expect(store.domesticHotWater.waterHeating.heatBattery.complete).toBeTruthy();

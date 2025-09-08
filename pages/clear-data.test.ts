@@ -1,6 +1,6 @@
-import {mockNuxtImport, renderSuspended} from "@nuxt/test-utils/runtime";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import ClearData from './clear-data.vue';
-import {screen} from '@testing-library/vue';
+import { screen } from '@testing-library/vue';
 import userEvent from "@testing-library/user-event";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -40,7 +40,7 @@ describe('clear data page', () => {
 
 		await renderSuspended(ClearData);
 
-		await user.click(screen.getByRole('button', { name: /Clear data/}));
+		await user.click(screen.getByRole('button', { name: /Clear data/ }));
 
 		expect(store.dwellingFabric.dwellingSpaceZoneParameters).toStrictEqual({ data: {} });
 		expect(navigateToMock).toBeCalledWith('/');

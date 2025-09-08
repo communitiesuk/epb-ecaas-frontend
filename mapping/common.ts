@@ -4,7 +4,7 @@ import {
 	HeatPumpSourceType,
 	TestLetter
 } from "~/schema/api-schema.types";
-import type {SchemaHeatSourceWetDetails} from "~/schema/api-schema.types";
+import type { SchemaHeatSourceWetDetails } from "~/schema/api-schema.types";
 
 export const immersionHeaterPositionValues: Record<ImmersionHeaterPosition, number> = {
 	top: 1.0,

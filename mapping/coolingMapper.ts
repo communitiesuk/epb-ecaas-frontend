@@ -1,5 +1,5 @@
 import { SpaceCoolSystemType  } from "~/schema/api-schema.types";
-import type {SchemaSpaceCoolSystemDetails} from "~/schema/api-schema.types";
+import type { SchemaSpaceCoolSystemDetails } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 

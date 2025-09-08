@@ -1,5 +1,5 @@
 import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation  } from "~/schema/api-schema.types";
-import type {SchemaHotWaterDemand} from "~/schema/api-schema.types";
+import type { SchemaHotWaterDemand } from "~/schema/api-schema.types";
 import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
@@ -65,7 +65,7 @@ describe('domestic hot water mapper', () => {
 				heatGeneration: {
 					heatPump: {
 						data: [{
-							data: {name: heatPumpName, id: heatPumpName},
+							data: { name: heatPumpName, id: heatPumpName },
 							complete: true,
 						}],
 						complete: true
@@ -171,7 +171,7 @@ describe('domestic hot water mapper', () => {
 				heatGeneration: {
 					heatPump: {
 						data: [{
-							data: {name: heatPumpName, id: heatPumpId},
+							data: { name: heatPumpName, id: heatPumpId },
 							complete: true,
 						}],
 						complete: true,

@@ -247,7 +247,7 @@ describe("mechanical ventilation overview", () => {
 	it('marks mechanical ventilation as complete when mark section as complete button is clicked', async () => {
 	
 		await renderSuspended(MechanicalVentilationOverview);
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 		const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
 		expect(completedStatusElement?.style.display).toBe("none");
 	
@@ -256,7 +256,7 @@ describe("mechanical ventilation overview", () => {
 		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
 	
 		expect(complete).toBe(true);
-		expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
+		expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
 		expect(completedStatusElement?.style.display).not.toBe("none");
 	
 		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation');
@@ -280,7 +280,7 @@ describe("mechanical ventilation overview", () => {
 		
 		await user.click(screen.getByTestId('mechanicalVentilation_remove_0'));
 		expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(false);
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 		
 	});
 
@@ -301,7 +301,7 @@ describe("mechanical ventilation overview", () => {
 			
 		await user.click(screen.getByTestId('mechanicalVentilation_duplicate_0'));
 		expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(false);
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			
 	});
 	it('marks mechanical ventilation as not complete when user saves a new or edited form after marking section as complete', async () => {
@@ -318,7 +318,7 @@ describe("mechanical ventilation overview", () => {
 			
 		await renderSuspended(MechanicalVentilationForm, {
 			route: {
-				params: {mechanical: '0'}
+				params: { mechanical: '0' }
 			}
 		});
 		
@@ -328,12 +328,12 @@ describe("mechanical ventilation overview", () => {
 		expect(complete).toBe(false);
 			
 		await renderSuspended(MechanicalVentilationOverview);
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 	});
 	it('should navigate to the infiltration and ventilation overview page when return to overview is clicked', async () => {
 		await renderSuspended(MechanicalVentilationOverview);
 	
-		const returnToOverviewButton = screen.getByRole("button", {name : "Return to infiltration and ventilation"});
+		const returnToOverviewButton = screen.getByRole("button", { name : "Return to infiltration and ventilation" });
 		expect(returnToOverviewButton.getAttribute("href")).toBe("/infiltration-and-ventilation");
 
 	} );

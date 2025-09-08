@@ -49,8 +49,8 @@ describe('Dwelling details summary', () => {
 	it('should contain the correct tabs for dwelling details', async () => {
 		await renderSuspended(Summary);
   
-		expect(screen.getByRole('link', {name: 'General details'}));
-		expect(screen.getByRole('link', {name: 'Shading'}));
+		expect(screen.getByRole('link', { name: 'General details' }));
+		expect(screen.getByRole('link', { name: 'Shading' }));
 
 	});
 

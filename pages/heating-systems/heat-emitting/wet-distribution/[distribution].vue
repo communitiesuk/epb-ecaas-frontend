@@ -99,8 +99,8 @@ watch(model, async (newData: WetDistributionData, initialData: WetDistributionDa
 	const duplicates = storeData.filter(x => x.name.match(duplicateNamePattern(defaultName)));
 
 	// filtering out typeOfSpaceHeater for now as it is always checked, would need to change this in future when there are more than one option to choose from
-	const {typeOfSpaceHeater, ...rest } = initialData;
-	const {typeOfSpaceHeater: newTypeOfSpaceHeater, ...newDataRest } = newData;
+	const { typeOfSpaceHeater, ...rest } = initialData;
+	const { typeOfSpaceHeater: newTypeOfSpaceHeater, ...newDataRest } = newData;
 
 	const isFirstEdit = Object.values(rest).every(x => x === undefined) &&
 		Object.values(newDataRest).some(x => x !== undefined);

@@ -13,7 +13,7 @@ if( !username || !password ){
 	throw new Error ("Missing authentication credentials");
 }
 
-setup('login authentication', async ({ page} ) => {
+setup('login authentication', async ({ page } ) => {
 	if(!process.env.BASE_URL) return;
 	await page.goto("/");
 

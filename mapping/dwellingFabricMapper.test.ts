@@ -5,7 +5,7 @@ import {
 	WindowTreatmentType,
 	WindShieldLocation
 } from "~/schema/api-schema.types";
-import type {SchemaBuildingElement, SchemaEdgeInsulation, SchemaThermalBridgingDetails} from "~/schema/api-schema.types";
+import type { SchemaBuildingElement, SchemaEdgeInsulation, SchemaThermalBridgingDetails } from "~/schema/api-schema.types";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.schema";
@@ -450,8 +450,8 @@ describe('dwelling fabric mapper', () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceCeilings: { data: [{data: ceiling}], complete: true, },
-					dwellingSpaceRoofs: { data: [{data: roof}], complete: true, }
+					dwellingSpaceCeilings: { data: [{ data: ceiling }], complete: true, },
+					dwellingSpaceRoofs: { data: [{ data: roof }], complete: true, }
 				}
 			}
 		});
@@ -713,8 +713,8 @@ describe('dwelling fabric mapper', () => {
 		};
 
 		const dwellingSpaceThermalBridging: ThermalBridgingData = {
-			dwellingSpaceLinearThermalBridges: { data: [{data: linearThermalBridge}], complete: true },
-			dwellingSpacePointThermalBridges: { data: [{data: pointThermalBridge}], complete: true }
+			dwellingSpaceLinearThermalBridges: { data: [{ data: linearThermalBridge }], complete: true },
+			dwellingSpacePointThermalBridges: { data: [{ data: pointThermalBridge }], complete: true }
 		};
 
 		const bridgeSuffix = ' (bridge)';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from '~/common.types';
 import { getTabItems, getUrl  } from '#imports';
-import type {ImmersionHeaterPosition} from '#imports';
+import type { ImmersionHeaterPosition } from '#imports';
 import { immersionHeaterPositionValues } from '~/mapping/common';
 import { litre } from '~/utils/units/volume';
 import { kilowatt, kilowattHour } from '~/utils/units/power';

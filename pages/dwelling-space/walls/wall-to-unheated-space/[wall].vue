@@ -10,7 +10,7 @@ const model: Ref<WallsToUnheatedSpaceData> = ref(wallData!);
 
 const saveForm = (fields: WallsToUnheatedSpaceData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceWalls} = state.dwellingFabric;
+		const { dwellingSpaceWalls } = state.dwellingFabric;
 
 		const wall: WallsToUnheatedSpaceData = {
 			name: fields.name,
@@ -34,7 +34,7 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 };
 
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

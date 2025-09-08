@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {checkMvhrHasDuctwork} from "../../../utils/checkMvhrHasDuctwork";
+import { checkMvhrHasDuctwork } from "../../../utils/checkMvhrHasDuctwork";
 const title = "MVHR ductwork";
 const page = usePage();
 const store = useEcaasStore();

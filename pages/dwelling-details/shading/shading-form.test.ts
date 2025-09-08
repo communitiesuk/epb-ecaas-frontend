@@ -62,12 +62,12 @@ describe('shading form', () => {
 			dwellingDetails: {
 				shading: {
 					data: [{
-						data: {...shading1}
+						data: { ...shading1 }
 					}, {
-						data: {...shading2}
+						data: { ...shading2 }
 					}]
 				}
-			}}
+			} }
 		);
 
 		await renderSuspended(ShadingForm, {
@@ -91,12 +91,12 @@ describe('shading form', () => {
 			dwellingDetails: {
 				shading: {
 					data: [{
-						data: {...shading1}
+						data: { ...shading1 }
 					}, {
-						data: {...shading2}
+						data: { ...shading2 }
 					}]
 				}
-			}}
+			} }
 		);
 
 		await renderSuspended(ShadingForm, {
@@ -151,7 +151,7 @@ describe('shading form', () => {
 			dwellingDetails: {
 				shading: {
 					data: [{
-						data: {...shading1}
+						data: { ...shading1 }
 					}]
 				}
 			}

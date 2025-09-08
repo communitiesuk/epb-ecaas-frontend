@@ -1,7 +1,7 @@
 import type { GovTaskListItemProps } from "~/components/gov/TaskList.vue";
 import pagesData from "~/data/pages/pages";
 import { PageType  } from "~/data/pages/pages.types";
-import type {Page} from "~/data/pages/pages.types";
+import type { Page } from "~/data/pages/pages.types";
 
 /**
  * Creates a list of tasks to be used as props for the GovTaskList component

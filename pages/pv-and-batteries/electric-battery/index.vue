@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { BatteryLocation } from '~/schema/api-schema.types';
-import {getUrl} from "~/utils/page";
+import { getUrl } from "~/utils/page";
 
 const title = "Electric battery";
 const store = useEcaasStore();
@@ -69,7 +69,7 @@ watch(model, async (newData: ElectricBatteryData | undefined, initialData: Elect
 		}}
 });
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const locationOptions: Record<BatteryLocation, SnakeToSentenceCase<BatteryLocation>> = {
 	inside: 'Inside',

@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import { screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom';
+import { within } from '@testing-library/dom';
 import Shading from './index.vue';
 import ShadingForm from './[shading].vue';
 
@@ -130,7 +130,7 @@ describe('shading', () => {
 	it('marks shading as complete when mark section as complete button is clicked', async () => {
 		await renderSuspended(Shading);
 
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 
 		const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
 		expect(completedStatusElement?.style.display).toBe("none");
@@ -140,7 +140,7 @@ describe('shading', () => {
 		const { complete } = store.dwellingDetails.shading;
 
 		expect(complete).toBe(true);
-		expect(screen.queryByRole("button", {name: "Mark section as complete"})).toBeNull();
+		expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
 		expect(completedStatusElement?.style.display).not.toBe("none");
 
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-details');
@@ -152,10 +152,10 @@ describe('shading', () => {
 			dwellingDetails: {
 				shading: {
 					data: [{
-						data: {...shading1.data},
+						data: { ...shading1.data },
 						complete: true
 					}, {
-						data: {...shading2.data},
+						data: { ...shading2.data },
 						complete: true
 					}]
 				}
@@ -169,7 +169,7 @@ describe('shading', () => {
 
 		await user.click(screen.getByTestId('shading_remove_0'));
 		expect(store.dwellingDetails.shading.complete).toBe(false);
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 
 	});
 
@@ -178,7 +178,7 @@ describe('shading', () => {
 			dwellingDetails: {
 				shading: {
 					data: [{
-						data: {...shading1.data},
+						data: { ...shading1.data },
 						complete: true
 					}]
 				}
@@ -191,7 +191,7 @@ describe('shading', () => {
 
 		await user.click(screen.getByTestId('shading_duplicate_0'));
 		expect(store.dwellingDetails.shading.complete).toBe(false);
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 
 	});
 
@@ -200,7 +200,7 @@ describe('shading', () => {
 			dwellingDetails: {
 				shading: {
 					data: [{
-						data: {...shading1.data},
+						data: { ...shading1.data },
 						complete: true
 					}],
 					complete: true
@@ -213,7 +213,7 @@ describe('shading', () => {
 
 		await renderSuspended(ShadingForm, {
 			route: {
-				params: {shading: '0'}
+				params: { shading: '0' }
 			}
 		});
 		
@@ -226,7 +226,7 @@ describe('shading', () => {
 		expect(complete).toBe(false);
 
 		await renderSuspended(Shading);
-		expect(screen.getByRole("button", {name: "Mark section as complete"})).not.toBeNull();
+		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 	});
 
 	it('should display an in-progress indicator when an entry is not marked as complete', async () => {

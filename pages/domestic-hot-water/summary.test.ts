@@ -74,21 +74,21 @@ describe('Domestic hot water summary', () => {
 			addHotWaterCylinderData();
 			await renderSuspended(Summary);
 	  
-			expect(screen.queryByRole('link', {name: 'Hot water cylinder'})).toBeDefined();
-			expect(screen.queryByRole('link', {name: 'Immersion heater'})).toBeNull();
-			expect(screen.queryByRole('link', {name: 'Solar thermal'})).toBeNull();
-			expect(screen.queryByRole('link', {name: 'Point of use'})).toBeNull();
-			expect(screen.queryByRole('link', {name: 'Heat pump'})).toBeNull();
-			expect(screen.queryByRole('link', {name: 'Combi boiler'})).toBeNull();
-			expect(screen.queryByRole('link', {name: 'Heat battery'})).toBeNull();
-			expect(screen.queryByRole('link', {name: 'Smart hot water tank'})).toBeNull();
-			expect(screen.queryByRole('link', {name: 'Heat interface unit'})).toBeNull();
+			expect(screen.queryByRole('link', { name: 'Hot water cylinder' })).toBeDefined();
+			expect(screen.queryByRole('link', { name: 'Immersion heater' })).toBeNull();
+			expect(screen.queryByRole('link', { name: 'Solar thermal' })).toBeNull();
+			expect(screen.queryByRole('link', { name: 'Point of use' })).toBeNull();
+			expect(screen.queryByRole('link', { name: 'Heat pump' })).toBeNull();
+			expect(screen.queryByRole('link', { name: 'Combi boiler' })).toBeNull();
+			expect(screen.queryByRole('link', { name: 'Heat battery' })).toBeNull();
+			expect(screen.queryByRole('link', { name: 'Smart hot water tank' })).toBeNull();
+			expect(screen.queryByRole('link', { name: 'Heat interface unit' })).toBeNull();
 		});
 
 		it('should display an empty state when no water heating data is present', async () => {
 			await renderSuspended(Summary);
 
-			const addWaterHeatingLink = screen.queryByRole('link', {name: 'Add water heating'}) as HTMLAnchorElement;
+			const addWaterHeatingLink = screen.queryByRole('link', { name: 'Add water heating' }) as HTMLAnchorElement;
 
 			expect(screen.queryByText('No water heating added')).toBeDefined();
 			expect(new URL(addWaterHeatingLink.href).pathname).toBe(getUrl('waterHeating'));
@@ -203,10 +203,10 @@ describe('Domestic hot water summary', () => {
 		it('should contain the correct tabs for hot water outlets', async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Mixer shower'})).toBeDefined();
-			expect(screen.getByRole('link', {name: 'Electric shower'})).toBeDefined();
-			expect(screen.getByRole('link', {name: 'Bath'})).toBeDefined();
-			expect(screen.getByRole('link', {name: 'Other'})).toBeDefined();
+			expect(screen.getByRole('link', { name: 'Mixer shower' })).toBeDefined();
+			expect(screen.getByRole('link', { name: 'Electric shower' })).toBeDefined();
+			expect(screen.getByRole('link', { name: 'Bath' })).toBeDefined();
+			expect(screen.getByRole('link', { name: 'Other' })).toBeDefined();
 		});
 
 		it('should display the correct data for the mixer shower section', async () => {
@@ -341,8 +341,8 @@ describe('Domestic hot water summary', () => {
 		it('should contain the correct tabs for pipework details', async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Primary pipework'})).toBeDefined();
-			expect(screen.getByRole('link', {name: 'Secondary pipework'})).toBeDefined();
+			expect(screen.getByRole('link', { name: 'Primary pipework' })).toBeDefined();
+			expect(screen.getByRole('link', { name: 'Secondary pipework' })).toBeDefined();
 		});
 	
 		it('should display the correct data for the primary pipework section', async () => {
