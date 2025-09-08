@@ -21,35 +21,46 @@ describe('thermal bridges', () => {
 		store.$reset();
 	});
 
-	const linear1: LinearThermalBridgeData = {
-		name: "Linear 1",
-		typeOfThermalBridge: 'e1',
-		linearThermalTransmittance: 1,
-		length: 2
+	const linear1: EcaasForm<LinearThermalBridgeData> = {
+		data: {
+			name: "Linear 1",
+			typeOfThermalBridge: 'e1',
+			linearThermalTransmittance: 1,
+			length: 2
+		}
 	};
 
-	const linear2: LinearThermalBridgeData = {
-		...linear1,
-		name: "Linear 2"
+	const linear2: EcaasForm<LinearThermalBridgeData> = {
+		data: {
+			...linear1.data,
+			name: "Linear 2"
+		}
 	};
 
-	const linear3: LinearThermalBridgeData = {
-		...linear1,
-		name: "Linear 3"
-	};
-	const point1: PointThermalBridgeData = {
-		name: "Point 1",
-		heatTransferCoefficient: 1
+	const linear3: EcaasForm<LinearThermalBridgeData> = {
+		data: {
+			...linear1.data,
+			name: "Linear 3"
+		}
 	};
 
-	const point2: PointThermalBridgeData = {
-		...point1,
-		name: "Point 2"
+	const point1: EcaasForm<PointThermalBridgeData> = {
+		data: {
+			name: "Point 1",
+			heatTransferCoefficient: 1
+		}
 	};
 
-	const point3: PointThermalBridgeData = {
-		...point1,
-		name: "Point 3"
+	const point2: EcaasForm<PointThermalBridgeData> = {
+		data: {
+			...point1.data,
+			name: "Point 2"}
+	};
+
+	const point3: EcaasForm<PointThermalBridgeData> = {
+		data: {
+			...point1.data,
+			name: "Point 3"}
 	};
 
 	describe('linear thermal bridges', () => {
@@ -201,8 +212,8 @@ describe('thermal bridges', () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
-						dwellingSpaceLinearThermalBridges: { data: [linear1] },
-						dwellingSpacePointThermalBridges: { data: [point1] },
+						dwellingSpaceLinearThermalBridges: { data: [{...linear1, complete: true}] },
+						dwellingSpacePointThermalBridges: { data: [{...point1, complete: true}] },
 					},
 				},
 			});
@@ -290,12 +301,28 @@ describe('thermal bridges', () => {
 				}
 			});
 
-			await user.click(screen.getByRole("button", { name: "Save and continue" }));
+			await user.click(screen.getByTestId("saveAndComplete"));
 			expect(store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete).toBe(false);
 
 			await renderSuspended(ThermalBridges);
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 		}
+	});
+
+	it('disables the mark section as complete button when item is incomplete', async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceThermalBridging: {
+					dwellingSpaceLinearThermalBridges: {
+						data: [{data: {linearThermalTransmittance: 2}, complete: false}]
+					},
+				}
+			}
+		});
+
+		await renderSuspended(ThermalBridges);
+		const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+		expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
 	});
 	});
 });

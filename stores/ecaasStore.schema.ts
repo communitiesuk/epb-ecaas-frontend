@@ -493,8 +493,8 @@ export const windowDataZod = z.intersection(
 export type WindowData = z.infer<typeof windowDataZod>;
 
 export type ThermalBridgingData = AssertFormKeysArePageIds<{
-	dwellingSpaceLinearThermalBridges: EcaasForm<LinearThermalBridgeData[]>;
-	dwellingSpacePointThermalBridges: EcaasForm<PointThermalBridgeData[]>;
+	dwellingSpaceLinearThermalBridges: EcaasForm<EcaasForm<LinearThermalBridgeData>[]>;
+	dwellingSpacePointThermalBridges: EcaasForm<EcaasForm<PointThermalBridgeData>[]>;
 }>;
 
 const linearThermalBridgeDataZod = named.extend({

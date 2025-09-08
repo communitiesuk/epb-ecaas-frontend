@@ -1773,25 +1773,33 @@ describe("FHS input mapper", () => {
 				dwellingSpaceLinearThermalBridges: {
 					...baseForm,
 					data: [{
-						name: "linear thermal bridge",
-						typeOfThermalBridge: "E3: Sill",
-						linearThermalTransmittance: 0.03,
-						length: 1.2
+						data: {
+							name: "linear thermal bridge",
+							typeOfThermalBridge: "E3: Sill",
+							linearThermalTransmittance: 0.03,
+							length: 1.2
+						}
 					}]
 				},
 				dwellingSpacePointThermalBridges: {
 					...baseForm,
 					data: [{
-						name: "point thermal bridge 1",
-						heatTransferCoefficient: 0.045
+						data: {
+							name: "point thermal bridge 1",
+							heatTransferCoefficient: 0.045
+						}
 					},
 					{
-						name: "point thermal bridge 2",
-						heatTransferCoefficient: 0.035
+						data: {
+							name: "point thermal bridge 2",
+							heatTransferCoefficient: 0.035
+						}
 					},
 					{
-						name: "point thermal bridge 3",
-						heatTransferCoefficient: 0.067
+						data: {
+							name: "point thermal bridge 3",
+							heatTransferCoefficient: 0.067
+						}
 					}]
 				}
 			}

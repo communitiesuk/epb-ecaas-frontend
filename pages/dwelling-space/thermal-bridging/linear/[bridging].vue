@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { FormKitOptionsProp } from '@formkit/inputs';
+import { getUrl } from "#imports";
 
 const title = "Linear thermal bridges";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const thermalBridgeData = useItemToEdit('bridging', store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data);
-const model: Ref<LinearThermalBridgeData> = ref(thermalBridgeData!);
+const model: Ref<LinearThermalBridgeData | undefined> = ref(thermalBridgeData?.data);
 
 const options: FormKitOptionsProp[] = [{
 	e1: 'E1: Steel lintel with perforated steel base plate',
@@ -60,22 +61,36 @@ const options: FormKitOptionsProp[] = [{
 const saveForm = (fields: LinearThermalBridgeData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceLinearThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
+		const index = getStoreIndex(dwellingSpaceLinearThermalBridges.data);
 
 		const option = options.find(o => Object.keys(o).includes(fields.typeOfThermalBridge));
 		const entry = Object.entries(option!).find(o => o[0] === fields.typeOfThermalBridge);
 
-		const thermalBridge: LinearThermalBridgeData = {
-			name: entry?.[1],
-			typeOfThermalBridge: fields.typeOfThermalBridge,
-			linearThermalTransmittance: fields.linearThermalTransmittance,
-			length: fields.length
+		dwellingSpaceLinearThermalBridges.data[index] = {
+			data: {
+				name: entry?.[1],
+				typeOfThermalBridge: fields.typeOfThermalBridge,
+				linearThermalTransmittance: fields.linearThermalTransmittance,
+				length: fields.length
+			},
+			complete: true
 		};
 		dwellingSpaceLinearThermalBridges.complete = false;
-		saveToList(thermalBridge, dwellingSpaceLinearThermalBridges);
 	});
 
 	navigateTo("/dwelling-space/thermal-bridging");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
+	defaultName: 'Linear thermal bridge',
+	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
+	},
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -121,9 +136,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m"
 		/>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('dwellingSpaceThermalBridging')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

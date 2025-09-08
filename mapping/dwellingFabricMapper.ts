@@ -579,7 +579,7 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 	const { dwellingSpaceLinearThermalBridges, dwellingSpacePointThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
 	const bridgeSuffix = 'bridge';
 
-	const linearThermalBridgesData: Record<string, SchemaThermalBridgingLinearFhs>[] = dwellingSpaceLinearThermalBridges.map(x => {
+	const linearThermalBridgesData: Record<string, SchemaThermalBridgingLinearFhs>[] = dwellingSpaceLinearThermalBridges.map(({ data: x }) => {
 		const nameWithSuffix = suffixName(x.name, bridgeSuffix);
 
 		return {[nameWithSuffix]: {
@@ -590,7 +590,7 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 		}};
 	});
 
-	const pointThermalBridgesData: Record<string, SchemaThermalBridgingPoint>[] = dwellingSpacePointThermalBridges.map(x => {
+	const pointThermalBridgesData: Record<string, SchemaThermalBridgingPoint>[] = dwellingSpacePointThermalBridges.map(({ data: x }) => {
 		const nameWithSuffix = suffixName(x.name, bridgeSuffix);
 
 		return {[nameWithSuffix]: {

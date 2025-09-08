@@ -12,9 +12,11 @@ describe('point thermal bridges', () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const state: PointThermalBridgeData = {
-		name: 'Point 1',
-		heatTransferCoefficient: 1
+	const state: EcaasForm<PointThermalBridgeData> = {
+		data: {
+			name: 'Point 1',
+			heatTransferCoefficient: 1
+		}
 	};
 
 	afterEach(() => {
@@ -28,14 +30,17 @@ describe('point thermal bridges', () => {
 	};
 	
 	test('data is saved to store state when form is valid', async () => {
-		await renderSuspended(PointBridging);
+		await renderSuspended(PointBridging, {
+			route: {
+				params: { system: "create" },
+			},
+		});
 
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { dwellingSpacePointThermalBridges } = store.dwellingFabric.dwellingSpaceThermalBridging;
-		
-		expect(dwellingSpacePointThermalBridges?.data[0]).toEqual(state);
+		const { data } = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges;
+		expect(data[0]).toEqual({...state, complete: true});
 	});
 
 	test('form is prepopulated when data exists in state', async () => {
@@ -62,7 +67,7 @@ describe('point thermal bridges', () => {
 	it('shows required error messages when empty form is submitted', async () => {
 		await renderSuspended(PointBridging);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('name_error'))).toBeDefined();
 		expect((await screen.findByTestId('heatTransferCoefficient_error'))).toBeDefined();
@@ -71,7 +76,7 @@ describe('point thermal bridges', () => {
 	test('error summary is displayed when an invalid form in submitted', async () => {
 		await renderSuspended(PointBridging);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId('pointBridgeErrorSummary'))).toBeDefined();
 	});
@@ -80,8 +85,17 @@ describe('point thermal bridges', () => {
 		await renderSuspended(PointBridging);
 	
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByTestId("saveAndComplete"));
 		
+		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/thermal-bridging');
+	});
+
+	it('navigates to thermal bridging page when save progress button is clicked', async () => {
+		await renderSuspended(PointBridging);
+
+		await populateValidForm();
+		await user.click(screen.getByTestId("saveProgress"));
+
 		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/thermal-bridging');
 	});
 });
