@@ -14,49 +14,49 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+const store = useEcaasStore();
+const user = userEvent.setup();
+
+const cylinder: HotWaterCylinderData = {
+	id: "Any Id",
+	heatSource: "test-heat-pump",
+	storageCylinderVolume: unitValue(150, litre),
+	dailyEnergyLoss: 73,
+	name: "Hot water cylinder 1"
+};
+
+const populateValidForm = async () => {
+	await user.click(screen.getByTestId("waterHeaterType_hotWaterCylinder"));
+	await user.type(screen.getByTestId("name"), cylinder.name);
+	await user.click(screen.getByTestId("heatSource_" + cylinder.heatSource));
+	await user.type(screen.getByTestId("storageCylinderVolume"), "150");
+	await user.type(screen.getByTestId("dailyEnergyLoss"), cylinder.dailyEnergyLoss.toString());
+	await user.tab();
+};
+
+beforeEach(() => {
+	store.$patch({
+		heatingSystems: {
+			heatGeneration: {
+				heatPump: {
+					data: [{
+						data: {
+							id: "test-heat-pump",
+							name: "Test Heat Pump"
+						}
+					}],
+					complete: true
+				},
+			}
+		}
+	});
+});
+
+afterEach(() => {
+	store.$reset();
+});
 
 describe("water heating (hot water cylinder)", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
-
-	const cylinder: HotWaterCylinderData = {
-		id: "Any Id",
-		heatSource: "test-heat-pump",
-		storageCylinderVolume: unitValue(150, litre),
-		dailyEnergyLoss: 73,
-		name: "Hot water cylinder 1"
-	};
-
-	const populateValidForm = async () => {
-		await user.click(screen.getByTestId("waterHeaterType_hotWaterCylinder"));
-		await user.type(screen.getByTestId("name"), cylinder.name);
-		await user.click(screen.getByTestId("heatSource_" + cylinder.heatSource));
-		await user.type(screen.getByTestId("storageCylinderVolume"), "150");
-		await user.type(screen.getByTestId("dailyEnergyLoss"), cylinder.dailyEnergyLoss.toString());
-		await user.tab();
-	};
-
-	beforeEach(() => {
-		store.$patch({
-			heatingSystems: {
-				heatGeneration: {
-					heatPump: {
-						data: [{
-							data: {
-								id: "test-heat-pump",
-								name: "Test Heat Pump"
-							}
-						}],
-						complete: true
-					},
-				}
-			}
-		});
-	});
-
-	afterEach(() => {
-		store.$reset();
-	});
 
 	test("data is saved to store state when form is valid", async () => {
 		vi.mocked(uuidv4).mockReturnValue("test-id" as unknown as Buffer);
@@ -141,6 +141,18 @@ describe("water heating (hot water cylinder)", () => {
 		expect(store.domesticHotWater.waterHeating.solarThermal.complete).toBeTruthy();
 	});
 
+	test("save progress button navigates user to the pipework overview page", async () => {
+		await renderSuspended(WaterHeating);
+		await populateValidForm();
+
+		const saveProcess = screen.getByRole("button", { name: "Save progress" });
+
+		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water");
+	});
+});
+
+describe("Partially saving data", () => {
+
 	test("form data is automatically saved to store", async () => {
 		vi.mocked(uuidv4).mockReturnValue("test-id" as unknown as Buffer);
 
@@ -216,14 +228,5 @@ describe("water heating (hot water cylinder)", () => {
 			
 		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.name).toBe("Hot water cylinder");
 
-	});
-	
-	test("save progress button navigates user to the pipework overview page", async () => {
-		await renderSuspended(WaterHeating);
-		await populateValidForm();
-
-		const saveProcess = screen.getByRole("button", { name: "Save progress" });
-
-		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water");
 	});
 });

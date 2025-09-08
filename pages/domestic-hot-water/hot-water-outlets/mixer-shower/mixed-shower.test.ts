@@ -11,35 +11,35 @@ mockNuxtImport("navigateTo", () => {
 
 vi.mock("uuid");
 
+const store = useEcaasStore();
+const user = userEvent.setup();
+
+const mixerShower: EcaasForm<MixedShowerData> = {
+	data: {
+		id: "4a93532e-a370-4015-9778-854661bf1627",
+		name: "Mixer shower 1",
+		flowRate: 10
+	},
+	complete: true
+};
+const mixerShower2: EcaasForm<MixedShowerData> = {
+	data: {
+		id: "4a93532e-a370-4015-9778-854661bf1123",
+		name: "Mixer shower 2",
+		flowRate: 11
+	},
+	complete: true
+};
+afterEach(() => {
+	store.$reset();
+});
+
+const populateValidForm = async () => {
+	await user.type(screen.getByTestId("name"), "Mixer shower 1");
+	await user.type(screen.getByTestId("flowRate"), "10");
+	await user.tab();
+};
 describe("mixer shower", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
-
-	const mixerShower: EcaasForm<MixedShowerData> = {
-		data: {
-			id: "4a93532e-a370-4015-9778-854661bf1627",
-			name: "Mixer shower 1",
-			flowRate: 10
-		},
-		complete: true
-	};
-	const mixerShower2: EcaasForm<MixedShowerData> = {
-		data: {
-			id: "4a93532e-a370-4015-9778-854661bf1123",
-			name: "Mixer shower 2",
-			flowRate: 11
-		},
-		complete: true
-	};
-	afterEach(() => {
-		store.$reset();
-	});
-
-	const populateValidForm = async () => {
-		await user.type(screen.getByTestId("name"), "Mixer shower 1");
-		await user.type(screen.getByTestId("flowRate"), "10");
-		await user.tab();
-	};
 
 	test("data is saved to store state when form is valid", async () => {
 		vi.mocked(uuidv4).mockReturnValue(mixerShower.data.id as unknown as Buffer);
@@ -98,7 +98,31 @@ describe("mixer shower", () => {
 		expect((await screen.findByTestId("mixedShowerErrorSummary"))).toBeDefined();
 	});
 
+	test("save progress button href is correct", async () => {
+		await renderSuspended(MixerShower, {
+			route: {
+				params: { shower: "create" }
+			}
+		});
 
+		await populateValidForm();
+
+		const saveProgressBtn = screen.getByRole("button", { name: "Save progress" });
+		expect(saveProgressBtn.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets");
+	});
+
+	it("navigates to hot water outlets page when valid form is completed", async () => {
+		await renderSuspended(MixerShower);
+	
+		await populateValidForm();
+		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+
+
+		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
+	});
+});
+
+describe("Partially saving data", () => {
 	test("form data is automatically saved to store", async () => {
 		await renderSuspended(MixerShower, {
 			route: {
@@ -129,6 +153,21 @@ describe("mixer shower", () => {
 		expect(data[0]?.data.name).toBe("Mixer shower");
 		expect(data[0]?.data.flowRate).toBe(9);
 	});
+	test("creates a new mixed shower entry when only name is entered", async () => {
+		await renderSuspended(MixerShower, {
+			route: {
+				params: { shower: "create" }
+			}
+		});
+
+		await user.type(screen.getByTestId("name"), "Mixer shower 1");
+		await user.tab();
+
+		const { data } = store.domesticHotWater.hotWaterOutlets.mixedShower;
+		expect(data[0]?.data.name).toBe("Mixer shower 1");
+		expect(data[0]?.data.flowRate).toBeUndefined();
+	});
+
 
 	test("default name is used if name is added then deleted", async () => {
 		await renderSuspended(MixerShower, {
@@ -172,35 +211,6 @@ describe("mixer shower", () => {
 			
 		expect(store.domesticHotWater.hotWaterOutlets.mixedShower.data[0]!.data.name).toBe("Mixer shower");
 	});
-		
-	test("save progress button href is correct", async () => {
-		await renderSuspended(MixerShower, {
-			route: {
-				params: { shower: "create" }
-			}
-		});
-
-		await populateValidForm();
-
-		const saveProgressBtn = screen.getByRole("button", { name: "Save progress" });
-		expect(saveProgressBtn.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets");
-	});
-
-	test("creates a new mixed shower entry when only name is entered", async () => {
-		await renderSuspended(MixerShower, {
-			route: {
-				params: { shower: "create" }
-			}
-		});
-
-		await user.type(screen.getByTestId("name"), "Mixer shower 1");
-		await user.tab();
-
-		const { data } = store.domesticHotWater.hotWaterOutlets.mixedShower;
-		expect(data[0]?.data.name).toBe("Mixer shower 1");
-		expect(data[0]?.data.flowRate).toBeUndefined();
-	});
-
 	test("updated form data is saved to correct object when multiple mixed showers exist", async () => {
 		store.$patch({
 			domesticHotWater: {
@@ -231,13 +241,4 @@ describe("mixer shower", () => {
 		expect(data[1]?.data.id).toBe(mixerShower2.data.id);
 	});
 
-	it("navigates to hot water outlets page when valid form is completed", async () => {
-		await renderSuspended(MixerShower);
-	
-		await populateValidForm();
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
-
-
-		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
-	});
 });
