@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { isInteger } from "~/utils/validation";
+import { getUrl } from "#imports";
 
 const title = "General details";
 const store = useEcaasStore();
+const { autoSaveForm } = useForm();
+
 
 const model = ref({
 	...store.dwellingFabric.dwellingSpaceLighting.data,
@@ -23,6 +26,9 @@ const saveForm = (fields: typeof model.value) => {
 
 	navigateTo("/dwelling-space");
 };
+autoSaveForm(model, (state, newData) => {
+	state.dwellingFabric.dwellingSpaceLighting = newData;
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -69,6 +75,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue"  />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('dwellingFabric')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
