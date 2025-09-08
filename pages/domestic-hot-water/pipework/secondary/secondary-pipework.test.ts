@@ -77,10 +77,10 @@ describe('Secondary pipework form', () => {
 			}
 		});
 
-		expect((await screen.findByTestId('name') as HTMLInputElement).value).toBe('Pipework Kitchen Sink');
+		expect((await screen.findByTestId('name')).value).toBe('Pipework Kitchen Sink');
 		expect((await screen.findByTestId('location_internal')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId('length') as HTMLInputElement).value).toBe('3');
-		expect((await screen.findByTestId('internalDiameter') as HTMLInputElement).value).toBe('9');
+		expect((await screen.findByTestId('length')).value).toBe('3');
+		expect((await screen.findByTestId('internalDiameter')).value).toBe('9');
 	});
 
 	test('required error messages are displayed when empty form is submitted', async () => {

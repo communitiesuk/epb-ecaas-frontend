@@ -94,9 +94,9 @@ export function useForm() {
 			const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
 				Object.values(newData).some(x => x !== undefined);
 				
-				if (routeParam === 'create' && isFirstEdit) {
+			if (routeParam === 'create' && isFirstEdit) {
 			
-					const name = ('name' in newData && typeof newData.name === 'string' ? newData.name.trim() : undefined) ||
+				const name = ('name' in newData && typeof newData.name === 'string' ? newData.name.trim() : undefined) ||
 					(duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName) || defaultName;
 			
 				store.$patch(state => {
