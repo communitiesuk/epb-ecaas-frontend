@@ -5,7 +5,7 @@ import { unitValue } from "~/utils/units/types";
 
 const title = "Ground floor";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
@@ -35,6 +35,7 @@ const windShieldingFactorOptions: Record<WindShieldLocation, SnakeToSentenceCase
 const saveForm = (fields: GroundFloorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
+		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
 		const commonFields = {
 			name: fields.name,
@@ -108,13 +109,23 @@ const saveForm = (fields: GroundFloorData) => {
 			dwellingSpaceFloors.dwellingSpaceGroundFloor = { data: [] };
 		}
 		
+		dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = { data: floorData, complete: true };
 		dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
-		const floor: EcaasForm<GroundFloorData> = { data: floorData, complete: true };
-		saveToList(floor, dwellingSpaceFloors.dwellingSpaceGroundFloor);
 	});
 
 	navigateTo("/dwelling-space/floors");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor,
+	defaultName: "Ground floor",
+	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 

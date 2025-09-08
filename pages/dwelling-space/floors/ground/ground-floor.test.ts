@@ -82,8 +82,12 @@ describe("ground floor", () => {
 	
 	describe("when type of ground floor is slab no edge insulation", () => {
 		test("data is saved to store state when form is valid", async () => {
-			await renderSuspended(GroundFloor);
-	
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});
+
 			await populateValidForm();
 			await user.click(screen.getByRole("button"));
 	
@@ -141,8 +145,11 @@ describe("ground floor", () => {
 	
 	describe("when type of ground floor is slab edge insulation", () => {
 		test("data is saved to store state when form is valid", async () => {
-			await renderSuspended(GroundFloor);
-	
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});
 			await populateValidForm();
 			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
 			await user.click(screen.getByTestId("edgeInsulationType_horizontal"));
@@ -193,8 +200,11 @@ describe("ground floor", () => {
 	
 	describe("when type of ground floor is suspended floor", () => {
 		test("data is saved to store state when form is valid", async () => {
-			await renderSuspended(GroundFloor);
-	
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});	
 			await populateValidForm();
 			await user.click(screen.getByTestId("typeOfGroundFloor_Suspended_floor"));
 			await user.type(screen.getByTestId("heightOfFloorUpperSurface"), "0");
@@ -250,6 +260,77 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("thermalTransmittanceOfWallsAboveGround_error"))).toBeDefined();
 			expect((await screen.findByTestId("ventilationOpeningsArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("windShieldingFactor_error"))).toBeDefined();
+		});
+	});
+
+	describe("partially saving data", () => {
+		test("new form data is automatically saved to store with default name", async () => {
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});
+			
+			await user.type(screen.getByTestId("surfaceArea"), "170");
+			await user.tab();
+			
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
+			expect(data[0]!.data.name).toBe("Ground floor");
+			expect(data[0]!.data.surfaceArea).toBe(170);
+		});
+		test("new form data is automatically saved to store", async () => {
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});
+			
+			await user.type(screen.getByTestId("name"), "Ground floor");
+			await user.type(screen.getByTestId("uValue"), "1");
+			await user.click(screen.getByTestId("kappaValue_50000"));
+			await user.click(screen.getByTestId("massDistributionClass_I"));
+			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_no_edge_insulation"));
+			await user.tab();
+			
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
+			expect(data[0]!.data.name).toBe("Ground floor");
+			expect(data[0]!.data.uValue).toBe(1);
+			expect(data[0]!.data.kappaValue).toBe(50000);
+			expect(data[0]!.data.massDistributionClass).toBe("I");
+			expect(data[0]!.data.typeOfGroundFloor).toBe("Slab_no_edge_insulation");
+
+		});
+
+		test("updated form data is automatically saved to store", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{ data: groundFloorWithSuspendedFloor }]
+						}
+					}
+				}
+			});
+			
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: 0 }
+				}
+			});
+			
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
+
+			expect(data[0]!.data.name).toBe("Ground 1");
+			expect(data[0]!.data.surfaceArea).toBe(5);
+
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), "Ground floor");
+			await user.clear(screen.getByTestId("surfaceArea"));
+			await user.type(screen.getByTestId("surfaceArea"), "170");
+			await user.tab();
+
+			expect(data[0]!.data.name).toBe("Ground floor");
+			expect(data[0]!.data.surfaceArea).toBe(170);
 		});
 	});
 	
