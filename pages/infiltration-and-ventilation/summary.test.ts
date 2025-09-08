@@ -123,7 +123,9 @@ describe("Infiltration and ventilation summary", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [mechanicalVentilationData]
+					data: [
+						{ data: mechanicalVentilationData }
+					]
 				}
 			}
 		});
@@ -149,7 +151,9 @@ describe("Infiltration and ventilation summary", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data:[mechanicalVentilationData]
+					data:[
+						{ data: mechanicalVentilationData }
+					]
 				},
 				ductwork: {
 					data: [ductworkData]
@@ -185,7 +189,9 @@ describe("Infiltration and ventilation summary", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data:[mechanicalVentilationData]
+					data:[
+						{ data: mechanicalVentilationData }
+					]
 				},
 				ductwork: {
 					data: [ductworkData]

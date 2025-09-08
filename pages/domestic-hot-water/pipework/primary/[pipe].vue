@@ -78,7 +78,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required | length:1,50"
+			validation="required:trim | length:1,50"
 		/>
 		<FormKit
 			id="internalDiameter"

@@ -257,7 +257,9 @@ describe("Ecaas Store", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [mechanicalVentilation1],
+					data: [
+						{ data: mechanicalVentilation1 }
+					],
 					complete: true
 				},
 				ductwork: {
@@ -282,7 +284,10 @@ describe("Ecaas Store", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [mechanicalVentilation1, mechanicalVentilation2],
+					data: [
+						{ data: mechanicalVentilation1 },
+						{ data: mechanicalVentilation2 }
+					],
 					complete: true
 				},
 				ductwork: {
@@ -303,7 +308,9 @@ describe("Ecaas Store", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [mechanicalVentilation1],
+					data: [
+						{ data: mechanicalVentilation1 }
+					],
 					complete: true
 				},
 				ductwork: {

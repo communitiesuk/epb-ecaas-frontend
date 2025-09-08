@@ -44,24 +44,24 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x):[string, SchemaMechanicalVentilation] => {
 		let airFlowRateInCubicMetresPerHour: number;
 
-		if (typeof x.airFlowRate === "number") {
-			airFlowRateInCubicMetresPerHour = x.airFlowRate;
+		if (typeof x.data.airFlowRate === "number") {
+			airFlowRateInCubicMetresPerHour = x.data.airFlowRate;
 		} else {
-			airFlowRateInCubicMetresPerHour = asCubicMetresPerHour(x.airFlowRate);
+			airFlowRateInCubicMetresPerHour = asCubicMetresPerHour(x.data.airFlowRate);
 		}
 		
-		const key = x.name;
+		const key = x.data.name;
 		const val: Omit<SchemaMechanicalVentilation, "ductwork"> = {
-			vent_type: x.typeOfMechanicalVentilationOptions,
+			vent_type: x.data.typeOfMechanicalVentilationOptions,
 			EnergySupply: defaultElectricityEnergySupplyName,
 			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
 			sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
 			sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
-			...(x.typeOfMechanicalVentilationOptions === VentType.MVHR ? { mvhr_location: x.mvhrLocation, mvhr_eff: x.mvhrEfficiency } : {}),
+			...(x.data.typeOfMechanicalVentilationOptions === VentType.MVHR ? { mvhr_location: x.data.mvhrLocation, mvhr_eff: x.data.mvhrEfficiency } : {}),
 			measured_air_flow_rate: 37,
 			measured_fan_power: 12.26,
 			// (TODO: REMOVE COMMENT WHEN USING HEM 0.37) more recent schema is more explicit about logic for SFP field, but following implements what is currently implicit logic: for following vent types, provide SFP (with a canned value), otherwise don't
-			...(arrayIncludes([VentType.Decentralised_continuous_MEV, VentType.Intermittent_MEV], x.typeOfMechanicalVentilationOptions) ? { SFP: 1.5 } : {})
+			...(arrayIncludes([VentType.Decentralised_continuous_MEV, VentType.Intermittent_MEV], x.data.typeOfMechanicalVentilationOptions) ? { SFP: 1.5 } : {})
 		};
 
 		return [key, val];

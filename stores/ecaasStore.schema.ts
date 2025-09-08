@@ -680,7 +680,7 @@ const wwhrsDataZod = z.object({
 export type WwhrsData = z.infer<typeof wwhrsDataZod>;
 
 export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
-	mechanicalVentilation: EcaasForm<MechanicalVentilationData[]>;
+	mechanicalVentilation: EcaasForm<EcaasForm<MechanicalVentilationData>[]>;
 	ductwork: EcaasForm<DuctworkData[]>
 	vents: EcaasForm<VentData[]>;
 	combustionAppliances: CombustionAppliancesData;

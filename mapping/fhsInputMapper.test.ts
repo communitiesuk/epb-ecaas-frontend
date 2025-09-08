@@ -960,10 +960,12 @@ describe("FHS input mapper", () => {
 			mechanicalVentilation: {
 				...baseForm,
 				data: [{
-					id: "kitchen exhaust fan",
-					name: "kitchen exhaust fan",
-					typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
-					airFlowRate: 55,
+					data: {
+						id: "kitchen exhaust fan",
+						name: "kitchen exhaust fan",
+						typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
+						airFlowRate: 55,
+					}
 				}]
 			},
 			ductwork: {
@@ -1339,26 +1341,32 @@ describe("FHS input mapper", () => {
 			mechanicalVentilation: {
 				...baseForm,
 				data: [{
-					id: "mvhr vent 1 id",
-					name: "mvhr vent 1 name",
-					typeOfMechanicalVentilationOptions: VentType.MVHR,
-					airFlowRate: 17,
-					mvhrLocation: MVHRLocation.inside,
-					mvhrEfficiency: 1
+					data: {
+						id: "mvhr vent 1 id",
+						name: "mvhr vent 1 name",
+						typeOfMechanicalVentilationOptions: VentType.MVHR,
+						airFlowRate: 17,
+						mvhrLocation: MVHRLocation.inside,
+						mvhrEfficiency: 1
+					}
 				},
 				{
-					id: "mvhr vent 2 id",
-					name: "mvhr vent 2 name",
-					typeOfMechanicalVentilationOptions: VentType.MVHR,
-					airFlowRate: 3,
-					mvhrLocation: MVHRLocation.outside,
-					mvhrEfficiency: 0
+					data: {
+						id: "mvhr vent 2 id",
+						name: "mvhr vent 2 name",
+						typeOfMechanicalVentilationOptions: VentType.MVHR,
+						airFlowRate: 3,
+						mvhrLocation: MVHRLocation.outside,
+						mvhrEfficiency: 0
+					}
 				},
 				{
-					id: "centralised MEV id",
-					name: "centralised MEV name",
-					typeOfMechanicalVentilationOptions: VentType.Centralised_continuous_MEV,
-					airFlowRate: 8,
+					data: {
+						id: "centralised MEV id",
+						name: "centralised MEV name",
+						typeOfMechanicalVentilationOptions: VentType.Centralised_continuous_MEV,
+						airFlowRate: 8,
+					}
 				}]
 			},
 			ductwork: {

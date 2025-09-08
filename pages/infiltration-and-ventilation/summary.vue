@@ -19,12 +19,12 @@ const mechanicalVentilationSummary: SummarySection = {
 	label: "Mechanical ventilation",
 	data: mechanicalVentilationData?.map(x => {
 		return {
-			"Name": x.name,
-			"Type of mechanical ventilation": x.typeOfMechanicalVentilationOptions,
-			"Air flow rate": typeof x.airFlowRate === "number" ? `${x.airFlowRate} ${litrePerSecond.suffix}` : `${x.airFlowRate.amount} ${litrePerSecond.suffix}`,
-			...(x.typeOfMechanicalVentilationOptions == VentType.MVHR ? {
-				"MVHR location": displayCamelToSentenceCase(x.mvhrLocation),
-				"MVHR efficiency": x.mvhrEfficiency,
+			"Name": x.data.name,
+			"Type of mechanical ventilation": x.data.typeOfMechanicalVentilationOptions,
+			"Air flow rate": typeof x.data.airFlowRate === "number" ? `${x.data.airFlowRate} ${litrePerSecond.suffix}` : `${x.data.airFlowRate.amount} ${litrePerSecond.suffix}`,
+			...(x.data.typeOfMechanicalVentilationOptions == VentType.MVHR ? {
+				"MVHR location": displayCamelToSentenceCase(x.data.mvhrLocation),
+				"MVHR efficiency": x.data.mvhrEfficiency,
 			} : {})
 		};
 	}) || [],
@@ -37,11 +37,11 @@ const ductworkSummary: SummarySection = {
 	id: "ductwork",
 	label: "Ductwork",
 	data: ductworkData?.map(x => {
-		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.id === x.mvhrUnit);
+		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.data.id === x.mvhrUnit);
 
 		return {
 			"Name": x.name,
-			"MVHR unit": mvhr[0]?.name,
+			"MVHR unit": mvhr[0]?.data.name,
 			"Duct type": displayCamelToSentenceCase(x.ductType),
 			"Ductwork cross sectional shape": displayCamelToSentenceCase(x.ductworkCrossSectionalShape),
 			"Internal diameter of ductwork": x.ductworkCrossSectionalShape === DuctShape.circular ? `${x.internalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,

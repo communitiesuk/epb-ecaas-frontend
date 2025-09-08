@@ -103,7 +103,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 		<FormKit
 			id="mvhrUnit" type="govRadios" :options="new
-				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === VentType.MVHR).map((x)=> [x.id, x.name]))"
+				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === VentType.MVHR).map((x)=> [x.data.id, x.data.name]))"
 			label="MVHR unit" 
 			name="mvhrUnit" 
 			help="Select the MVHR unit that this ductwork is attached to"

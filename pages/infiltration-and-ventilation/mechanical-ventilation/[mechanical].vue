@@ -4,19 +4,21 @@ import type { MVHRLocation } from "~/schema/api-schema.types";
 import { VentType } from "~/schema/api-schema.types";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units/types";
+import { getUrl } from "#imports";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { getStoreIndex, autoSaveElementForm } = useForm();
 
 const mechanicalVentilation = useItemToEdit("mechanical", store.infiltrationAndVentilation.mechanicalVentilation.data);
+const id = mechanicalVentilation?.data.id ?? uuidv4();
 
 // prepopulate airFlowRate correctly when using old input format
-if (typeof mechanicalVentilation?.airFlowRate === "number") {
-	mechanicalVentilation.airFlowRate = unitValue(mechanicalVentilation.airFlowRate, litrePerSecond);
+if (typeof mechanicalVentilation?.data.airFlowRate === "number") {
+	mechanicalVentilation.data.airFlowRate = unitValue(mechanicalVentilation.data.airFlowRate, litrePerSecond);
 }
 
-const model: Ref<MechanicalVentilationData> = ref(mechanicalVentilation!);
+const model: Ref<MechanicalVentilationData | undefined> = ref(mechanicalVentilation?.data);
 
 /** 'PIV' is excluded from options here because it is in the schema currently but unsupported in HEM itself at 0.34 version */
 const ventTypeOptions: Record<Exclude<VentType, "PIV">, string> = {
@@ -34,9 +36,10 @@ const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation
 const saveForm = (fields: MechanicalVentilationData) => {
 	store.$patch((state) => {
 		const { mechanicalVentilation } = state.infiltrationAndVentilation;
+		const index = getStoreIndex(mechanicalVentilation.data);
 
 		const commonFields = {
-			id: uuidv4(),
+			id,
 			name: fields.name,
 			airFlowRate: fields.airFlowRate,
 		};
@@ -57,12 +60,31 @@ const saveForm = (fields: MechanicalVentilationData) => {
 			};
 		}
 
-		saveToList(mechanicalVentilationItem, mechanicalVentilation);
-		store.infiltrationAndVentilation.mechanicalVentilation.complete = false;
+		mechanicalVentilation.data[index] = {
+			data: mechanicalVentilationItem,
+			complete: true
+		};
+
+		mechanicalVentilation.complete = false;
 	});
 
 	navigateTo("/infiltration-and-ventilation/mechanical-ventilation");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.infiltrationAndVentilation.mechanicalVentilation,
+	defaultName: 'Mechanical ventilation',
+	onPatchCreate: (state, newData) => {
+		newData.data.id ??= id;
+		state.infiltrationAndVentilation.mechanicalVentilation.data.push(newData);
+	},
+	onPatchUpdate: (state, newData, index) => {
+		newData.data.id ??= id;
+		state.infiltrationAndVentilation.mechanicalVentilation.data[index] = newData;
+		state.infiltrationAndVentilation.mechanicalVentilation.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -141,7 +163,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</table>
 			</GovDetails>
 		</FormKit>
-		<template v-if="model.typeOfMechanicalVentilationOptions === VentType.MVHR">
+		<template v-if="model?.typeOfMechanicalVentilationOptions === VentType.MVHR">
 			<FormKit
 				id="mvhrLocation"
 				type="govRadios"
@@ -164,7 +186,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</FormKit>
 		</template>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('mechanicalVentilation')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
 

@@ -57,7 +57,9 @@ describe("checkMvhrHasDuctwork", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [mechanicalVentilationData1]
+					data: [
+						{ data: mechanicalVentilationData1 }
+					]
 				},
 				ductwork: {
 					data: [ductworkData1]
@@ -72,7 +74,10 @@ describe("checkMvhrHasDuctwork", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [mechanicalVentilationData1, mechanicalVentilationData2]
+					data: [
+						{ data: mechanicalVentilationData1 },
+						{ data: mechanicalVentilationData2 }
+					]
 				},
 				ductwork: {
 					data: [ductworkData1, ductworkData1]
@@ -87,7 +92,11 @@ describe("checkMvhrHasDuctwork", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [mechanicalVentilationData1, mechanicalVentilationData2, mechanicalVentilationData3]
+					data: [
+						{ data: mechanicalVentilationData1 },
+						{ data: mechanicalVentilationData2 },
+						{ data: mechanicalVentilationData3 }
+					]
 				},
 				ductwork: {
 					data: [ductworkData1, ductworkData1, ductworkData2]

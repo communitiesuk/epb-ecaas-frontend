@@ -9,13 +9,15 @@ const baseForm = {
 };
 
 describe("infiltration ventilation mapper", () => {
-	const mechVentMvhr: MechanicalVentilationData[] = [{
-		id: "bathroom exhaust fan",
-		name: "bathroom exhaust fan",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
-		airFlowRate: unitValue(30, litrePerSecond),
-		mvhrLocation: MVHRLocation.inside,
-		mvhrEfficiency: 1,
+	const mechVentMvhr: EcaasForm<MechanicalVentilationData>[] = [{
+		data: {
+			id: "bathroom exhaust fan",
+			name: "bathroom exhaust fan",
+			typeOfMechanicalVentilationOptions: VentType.MVHR,
+			airFlowRate: unitValue(30, litrePerSecond),
+			mvhrLocation: MVHRLocation.inside,
+			mvhrEfficiency: 1,
+		}
 	}];
 
 	const store = useEcaasStore();
@@ -171,11 +173,13 @@ describe("infiltration ventilation mapper", () => {
 
 	it("maps mechanical ventilation of type intermittent MEV input state to FHS input request", () => {
 		// Arrange
-		const mechVent: MechanicalVentilationData[] = [{
-			id: "bathroom exhaust fan",
-			name: "bathroom exhaust fan",
-			typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
-			airFlowRate: unitValue(40, litrePerSecond),
+		const mechVent: EcaasForm<MechanicalVentilationData>[] = [{
+			data: {
+				id: "bathroom exhaust fan",
+				name: "bathroom exhaust fan",
+				typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
+				airFlowRate: unitValue(40, litrePerSecond)
+			}
 		}];
 
 		store.$patch({

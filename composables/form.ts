@@ -109,23 +109,25 @@ export function useForm() {
 
 				return;
 			}
-			for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
-				if (initialData[key]  !== newData[key]) {
-					store.$patch((state) => {
-						const index = getStoreIndex(storeData.data);
-						const storeElementData = storeData.data[index]?.data;
-						const name = "name" in newData && typeof newData.name === "string" && newData.name.trim() ||
-											"name" in storeElementData! && typeof storeElementData.name === "string"  && storeElementData.name.trim() || 
-											(duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
 
-						const elementData: EcaasForm<T> = {
-							data: { ...newData,	name }
-						};
+			store.$patch((state) => {
+				const index = getStoreIndex(storeData.data);
+				const storeElementData = storeData.data[index]?.data;
+				let name: string = defaultName;
 
-						onPatchUpdate(state, elementData, index);
-					});
+				if ("name" in newData && typeof newData.name === "string") {
+					name = newData.name.trim() || defaultName;
 				}
-			}
+				else if (storeElementData && "name" in storeElementData && typeof storeElementData.name === "string") {
+					name = storeElementData.name.trim() || defaultName;
+				}
+
+				const elementData: EcaasForm<T> = {
+					data: { ...newData, name }
+				};
+
+				onPatchUpdate(state, elementData, index);
+			});
 		});
 	};
 

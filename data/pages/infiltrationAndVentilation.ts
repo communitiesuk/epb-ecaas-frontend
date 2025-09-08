@@ -6,7 +6,7 @@ import { isEmpty } from "ts-extras";
 function noMhvrPresent():boolean {
 	const store = useEcaasStore();
 
-	return isEmpty(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === VentType.MVHR));
+	return isEmpty(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === VentType.MVHR));
 }
 
 const infiltrationAndVentilationPages = [
