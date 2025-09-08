@@ -217,7 +217,6 @@ describe("Partially saving data", () => {
 		await user.type(screen.getByTestId("name"), " ");
 		await user.click(screen.getByRole("button", { name: "Save progress" }));
 	
-			
 		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.name).toBe("Hot water cylinder");
 	
 		await renderSuspended(WaterHeating);
@@ -227,6 +226,5 @@ describe("Partially saving data", () => {
 		await user.tab();
 			
 		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.name).toBe("Hot water cylinder");
-
 	});
 });
