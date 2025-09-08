@@ -3,12 +3,12 @@ const title = "Solar thermal";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const solarThermalData = useItemToEdit('solarThermal', store.domesticHotWater.waterHeating.solarThermal.data);
+const solarThermalData = useItemToEdit("solarThermal", store.domesticHotWater.waterHeating.solarThermal.data);
 const model: Ref<SolarThermalData> = ref(solarThermalData!);
 
 const saveForm = (fields: SolarThermalData) => {
 	store.$patch((state) => {
-		const {solarThermal} = state.domesticHotWater.waterHeating;
+		const { solarThermal } = state.domesticHotWater.waterHeating;
 
 		const solarThermalItem: SolarThermalData = {
 			name: fields.name
@@ -20,7 +20,7 @@ const saveForm = (fields: SolarThermalData) => {
 	navigateTo("/domestic-hot-water/water-heating");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

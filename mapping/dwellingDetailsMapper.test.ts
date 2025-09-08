@@ -1,16 +1,16 @@
-import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass  } from '~/schema/api-schema.types';
-import type {SchemaShadingObject} from '~/schema/api-schema.types';
-import { mapDistantShadingData, mapExternalFactorsData, mapGeneralDetailsData } from './dwellingDetailsMapper';
-import { resolveState } from '~/stores/resolve';
+import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass  } from "~/schema/api-schema.types";
+import type { SchemaShadingObject } from "~/schema/api-schema.types";
+import { mapDistantShadingData, mapExternalFactorsData, mapGeneralDetailsData } from "./dwellingDetailsMapper";
+import { resolveState } from "~/stores/resolve";
 
-describe('dwelling details mapper', () => {
+describe("dwelling details mapper", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	it('maps general details input state to FHS input request', () => {
+	it("maps general details input state to FHS input request", () => {
 		// Arrange
 		const state: GeneralDetailsData = {
 			typeOfDwelling: BuildType.flat,
@@ -41,7 +41,7 @@ describe('dwelling details mapper', () => {
 		expect(fhsInputData.PartO_active_cooling_required).toBe(false);
 	});
 
-	it('maps external factors input state to FHS input request', () => {
+	it("maps external factors input state to FHS input request", () => {
 		// Arrange
 		const state: ExternalFactorsData = {
 			altitude: 30,
@@ -64,12 +64,12 @@ describe('dwelling details mapper', () => {
 
 		// Assert
 		expect(fhsInputData.InfiltrationVentilation?.altitude).toBe(state.altitude);
-		expect(fhsInputData.InfiltrationVentilation?.shield_class).toBe('Normal');
-		expect(fhsInputData.InfiltrationVentilation?.terrain_class).toBe('OpenField');
+		expect(fhsInputData.InfiltrationVentilation?.shield_class).toBe("Normal");
+		expect(fhsInputData.InfiltrationVentilation?.terrain_class).toBe("OpenField");
 		expect(fhsInputData.InfiltrationVentilation?.noise_nuisance).toBe(true);
 	});
 
-	it('maps shading input state to FHS input request', () => {
+	it("maps shading input state to FHS input request", () => {
 		// Arrange
 		const state: ShadingData = {
 			name: "Big Tree",

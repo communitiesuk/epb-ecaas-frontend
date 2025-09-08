@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { mapFhsInputData  } from '~/mapping/fhsInputMapper';
-import type {ResolvedState} from '~/mapping/fhsInputMapper';
-import type { FhsComplianceResponseIncludingErrors } from '~/server/server.types';
-import { hasCompleteState } from '~/stores/ecaasStore';
+import { mapFhsInputData  } from "~/mapping/fhsInputMapper";
+import type { ResolvedState } from "~/mapping/fhsInputMapper";
+import type { FhsComplianceResponseIncludingErrors } from "~/server/server.types";
+import { hasCompleteState } from "~/stores/ecaasStore";
 
 const { onError } = defineProps<{ onError: (errors?: CorrectedJsonApiError[] | boolean) => void; }>();
 
@@ -32,27 +32,27 @@ const calculate = async () => {
 			lastResult: undefined
 		});
 
-		const response = await $fetch<FhsComplianceResponseIncludingErrors>('/api/check-compliance', {
-			method: 'POST',
+		const response = await $fetch<FhsComplianceResponseIncludingErrors>("/api/check-compliance", {
+			method: "POST",
 			body: inputPayload,
 			async onRequest() {
 				emit("loading");
 			},
 		});
 
-		console.log('Compliance check response', response);
+		console.log("Compliance check response", response);
 
 		store.$patch({
-			lastResult: (!('errors' in response)) ? {
-				resultType: 'ok',
+			lastResult: (!("errors" in response)) ? {
+				resultType: "ok",
 				response: response.data,
 			} : {
-				resultType: 'err',
+				resultType: "err",
 				errors: response.errors,
 			},
 		});
 
-		if ('errors' in response) {
+		if ("errors" in response) {
 			calculateError = response.errors;
 		}
 	} catch (error) {
@@ -68,7 +68,7 @@ const calculate = async () => {
 		return;
 	}
 
-	navigateTo('/outputs');
+	navigateTo("/outputs");
 };
 </script>
 

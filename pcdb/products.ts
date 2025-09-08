@@ -1,5 +1,5 @@
 import * as z from "zod";
-import products from './products.json';
+import products from "./products.json";
 import { HeatPumpBackupControlType, HeatPumpSinkType, HeatPumpSourceType } from "~/schema/api-schema.types";
 import { objectEntries, objectKeys } from "ts-extras";
 
@@ -30,11 +30,11 @@ const BaseProduct = z.object({
 	modelName: z.string(),
 	modelQualifier: z.string(),
 	firstYearOfManufacture: z.int(),
-	finalYearOfManufacture: z.union([z.literal('current'), z.int()]),
+	finalYearOfManufacture: z.union([z.literal("current"), z.int()]),
 });
 
 const AirSourceHeatPump = BaseProduct.extend({
-	technologyType: z.literal('Air Source Heat Pump'),
+	technologyType: z.literal("Air Source Heat Pump"),
 	fuel: z.string(), // need a better type for this
 	sourceType: z.enum(HeatPumpSourceType),
 	sinkType: z.enum(HeatPumpSinkType),
@@ -58,7 +58,7 @@ const AirSourceHeatPump = BaseProduct.extend({
 	powerMaximumBackup: z.nullable(z.number()),
 	testData: z.array(z.object({
 		designFlowTemperature: z.int(),
-		testCondition: z.enum(['A', 'B', 'C', 'D', 'E', 'F']), // there is a possible 'E' value here, which diverges from SchemaTestLetter
+		testCondition: z.enum(["A", "B", "C", "D", "E", "F"]), // there is a possible 'E' value here, which diverges from SchemaTestLetter
 		testConditionTemperature: z.int(),
 		inletTemperature: z.number(),
 		outletTemperature: z.number(),
@@ -68,7 +68,7 @@ const AirSourceHeatPump = BaseProduct.extend({
 	}))
 });
 
-export const Products = z.map(z.string(), z.discriminatedUnion('technologyType', [
+export const Products = z.map(z.string(), z.discriminatedUnion("technologyType", [
 	AirSourceHeatPump,
 ]));
 
@@ -76,13 +76,13 @@ export type Products = z.infer<typeof Products>;
 
 export type Product = Products extends Map<string, infer I> ? I : never;
 
-export type TechnologyType = Product['technologyType'];
+export type TechnologyType = Product["technologyType"];
 
 const productsMap = new Map(objectEntries(products)) as Products;
 
 export const categoryTechnologies = {
 	heatPump: [
-		'Air Source Heat Pump',
+		"Air Source Heat Pump",
 	],
 } as const satisfies Record<string, TechnologyType[]>;
 
@@ -99,6 +99,6 @@ export type ProductEntity<T> = {
 	product: T
 };
 
-export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, 'brandName' | 'modelName' | 'modelQualifier' | 'firstYearOfManufacture'> & { technologyType: TechnologyType };
+export type DisplayProduct = Pick<z.infer<typeof BaseProduct>, "brandName" | "modelName" | "modelQualifier" | "firstYearOfManufacture"> & { technologyType: TechnologyType };
 
 export default productsMap;

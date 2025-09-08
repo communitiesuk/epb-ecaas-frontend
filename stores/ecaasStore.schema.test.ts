@@ -1,8 +1,8 @@
 import { WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
 import { windowDataZod } from "./ecaasStore.schema";
 
-describe('windowData Zod schema', () => {
-	it('correctly validates a valid window shape with one openable part', () => {
+describe("windowData Zod schema", () => {
+	it("correctly validates a valid window shape with one openable part", () => {
 		const windowFormData: WindowData = {
 			name: "bedroom window",
 			orientation: 90,
@@ -38,7 +38,7 @@ describe('windowData Zod schema', () => {
 		).not.toThrowError();
 	});
 
-	it('correctly does not validate a invalid window shape with four openable parts', () => {
+	it("correctly does not validate a invalid window shape with four openable parts", () => {
 		const windowFormData = {
 			name: "bedroom window",
 			orientation: 90,
@@ -74,7 +74,7 @@ describe('windowData Zod schema', () => {
 		).toThrowError();
 	});
 
-	it('correctly does not validate a invalid window shape with one openable part and an overhang depth missing', () => {
+	it("correctly does not validate a invalid window shape with one openable part and an overhang depth missing", () => {
 		const windowFormData = {
 			name: "bedroom window",
 			orientation: 90,

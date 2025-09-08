@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SummarySection } from '~/common.types';
+import type { SummarySection } from "~/common.types";
 
 defineProps<{ summary: SummarySection, selected: boolean }>();
 </script>

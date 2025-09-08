@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { standardPitchOptions } from '#imports';
+import { standardPitchOptions } from "#imports";
 
 const title = "Wall to unheated space";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const wallData = useItemToEdit('wall', store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data);
+const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data);
 const model: Ref<WallsToUnheatedSpaceData> = ref(wallData!);
 
 const saveForm = (fields: WallsToUnheatedSpaceData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceWalls} = state.dwellingFabric;
+		const { dwellingSpaceWalls } = state.dwellingFabric;
 
 		const wall: WallsToUnheatedSpaceData = {
 			name: fields.name,
@@ -19,7 +19,7 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
+			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace
 		};
 
@@ -34,7 +34,7 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 };
 
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

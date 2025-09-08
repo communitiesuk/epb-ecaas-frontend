@@ -1,21 +1,21 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from '@testing-library/vue';
-import LinearBridging from './[bridging].vue';
+import { screen } from "@testing-library/vue";
+import LinearBridging from "./[bridging].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport('navigateTo', () => {
+mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-describe('linear thermal bridges', () => {
+describe("linear thermal bridges", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const state: EcaasForm<LinearThermalBridgeData> = {
 		data: {
-			name: 'E1: Steel lintel with perforated steel base plate',
-			typeOfThermalBridge: 'e1',
+			name: "E1: Steel lintel with perforated steel base plate",
+			typeOfThermalBridge: "e1",
 			linearThermalTransmittance: 1,
 			length: 2
 		}
@@ -26,13 +26,13 @@ describe('linear thermal bridges', () => {
 	});
 
 	const populateValidForm = async () => {
-		await user.selectOptions(screen.getByTestId('typeOfThermalBridge'), 'e1');
-		await user.type(screen.getByTestId('linearThermalTransmittance'), '1');
-		await user.type(screen.getByTestId('length'), '2');
+		await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "e1");
+		await user.type(screen.getByTestId("linearThermalTransmittance"), "1");
+		await user.type(screen.getByTestId("length"), "2");
 		await user.tab();
 	};
 	
-	test('data is saved to store state when form is valid', async () => {
+	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(LinearBridging, {
 			route: {
 				params: { system: "create" },
@@ -44,10 +44,10 @@ describe('linear thermal bridges', () => {
 
 		const { data } = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges;
 
-		expect(data[0]).toEqual({...state, complete: true});
+		expect(data[0]).toEqual({ ...state, complete: true });
 	});
 
-	test('form is prepopulated when data exists in state', async () => {
+	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceThermalBridging: {
@@ -60,48 +60,48 @@ describe('linear thermal bridges', () => {
 
 		await renderSuspended(LinearBridging, {
 			route: {
-				params: { bridging: '0' }
+				params: { bridging: "0" }
 			}
 		});
 
-		expect((await screen.findByTestId<HTMLSelectElement>('typeOfThermalBridge')).value).toBe('e1');
-		expect((await screen.findByTestId<HTMLInputElement>('linearThermalTransmittance')).value).toBe('1');
-		expect((await screen.findByTestId<HTMLInputElement>('length')).value).toBe('2');
+		expect((await screen.findByTestId<HTMLSelectElement>("typeOfThermalBridge")).value).toBe("e1");
+		expect((await screen.findByTestId<HTMLInputElement>("linearThermalTransmittance")).value).toBe("1");
+		expect((await screen.findByTestId<HTMLInputElement>("length")).value).toBe("2");
 	});
 
-	it('shows required error messages when empty form is submitted', async () => {
+	it("shows required error messages when empty form is submitted", async () => {
 		await renderSuspended(LinearBridging);
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		expect((await screen.findByTestId('typeOfThermalBridge_error'))).toBeDefined();
-		expect((await screen.findByTestId('linearThermalTransmittance_error'))).toBeDefined();
-		expect((await screen.findByTestId('length_error'))).toBeDefined();
+		expect((await screen.findByTestId("typeOfThermalBridge_error"))).toBeDefined();
+		expect((await screen.findByTestId("linearThermalTransmittance_error"))).toBeDefined();
+		expect((await screen.findByTestId("length_error"))).toBeDefined();
 	});
 
-	test('error summary is displayed when an invalid form in submitted', async () => {
+	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(LinearBridging);
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		expect((await screen.findByTestId('linearBridgeErrorSummary'))).toBeDefined();
+		expect((await screen.findByTestId("linearBridgeErrorSummary"))).toBeDefined();
 	});
 
-	it('navigates to thermal bridging page when valid form is completed', async () => {
+	it("navigates to thermal bridging page when valid form is completed", async () => {
 		await renderSuspended(LinearBridging);
 	
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/thermal-bridging');
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/thermal-bridging");
 	});
 
-	it('navigates to thermal bridging page when save progress button is clicked', async () => {
+	it("navigates to thermal bridging page when save progress button is clicked", async () => {
 		await renderSuspended(LinearBridging);
 
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveProgress"));
 
-		expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space/thermal-bridging');
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/thermal-bridging");
 	});
 });

@@ -50,7 +50,7 @@ function handleComplete() {
 		}
 	});
 
-	navigateTo('/dwelling-space');
+	navigateTo("/dwelling-space");
 }
 
 function checkIsComplete(){

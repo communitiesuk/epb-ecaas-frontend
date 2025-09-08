@@ -3,12 +3,12 @@ const title = "Heat interface unit";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const heatInterfaceUnitData = useItemToEdit('hotWaterHeatInterfaceUnit', store.domesticHotWater.waterHeating.heatInterfaceUnit.data);
+const heatInterfaceUnitData = useItemToEdit("hotWaterHeatInterfaceUnit", store.domesticHotWater.waterHeating.heatInterfaceUnit.data);
 const model: Ref<WaterHeatingHeatInterfaceUnitData> = ref(heatInterfaceUnitData!);
 
 const saveForm = (fields: WaterHeatingHeatInterfaceUnitData) => {
 	store.$patch((state) => {
-		const {heatInterfaceUnit} = state.domesticHotWater.waterHeating;
+		const { heatInterfaceUnit } = state.domesticHotWater.waterHeating;
 
 		const heatInterfaceUnitItem: WaterHeatingHeatInterfaceUnitData = {
 			name: fields.name
@@ -20,7 +20,7 @@ const saveForm = (fields: WaterHeatingHeatInterfaceUnitData) => {
 	navigateTo("/domestic-hot-water/water-heating");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

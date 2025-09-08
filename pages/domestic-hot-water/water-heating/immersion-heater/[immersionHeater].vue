@@ -3,18 +3,18 @@ const title = "Immersion heater";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const immersionHeaterData = useItemToEdit('immersionHeater', store.domesticHotWater.waterHeating.immersionHeater.data);
+const immersionHeaterData = useItemToEdit("immersionHeater", store.domesticHotWater.waterHeating.immersionHeater.data);
 const model: Ref<ImmersionHeaterData> = ref(immersionHeaterData!);
 
 const heaterPositionOptions: Record<ImmersionHeaterPosition, Capitalize<ImmersionHeaterPosition>> = {
-	top: 'Top',
-	middle: 'Middle',
-	bottom: 'Bottom'
+	top: "Top",
+	middle: "Middle",
+	bottom: "Bottom"
 };
 
 const saveForm = (fields: ImmersionHeaterData) => {
 	store.$patch((state) => {
-		const {immersionHeater} = state.domesticHotWater.waterHeating;
+		const { immersionHeater } = state.domesticHotWater.waterHeating;
 
 		const immersionHeaterItem: ImmersionHeaterData = {
 			name: fields.name,
@@ -30,7 +30,7 @@ const saveForm = (fields: ImmersionHeaterData) => {
 	navigateTo("/domestic-hot-water/water-heating");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

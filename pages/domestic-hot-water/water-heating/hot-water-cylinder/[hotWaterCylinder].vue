@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid';
-import { litre, type Volume } from '~/utils/units/volume';
-import type { HotWaterCylinderData } from '~/stores/ecaasStore.schema';
-import { unitValue } from '~/utils/units/types';
+import { v4 as uuidv4 } from "uuid";
+import { litre, type Volume } from "~/utils/units/volume";
+import type { HotWaterCylinderData } from "~/stores/ecaasStore.schema";
+import { unitValue } from "~/utils/units/types";
 
 const title = "Hot water cylinder";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const hotWaterCylinderData = useItemToEdit('hotWaterCylinder', store.domesticHotWater.waterHeating.hotWaterCylinder.data);
+const hotWaterCylinderData = useItemToEdit("hotWaterCylinder", store.domesticHotWater.waterHeating.hotWaterCylinder.data);
 
-if (typeof hotWaterCylinderData?.storageCylinderVolume === 'number') {
+if (typeof hotWaterCylinderData?.storageCylinderVolume === "number") {
 	hotWaterCylinderData.storageCylinderVolume = unitValue(hotWaterCylinderData.storageCylinderVolume, litre);
 }
 
@@ -18,7 +18,7 @@ const model: Ref<HotWaterCylinderData> = ref(hotWaterCylinderData!);
 
 const saveForm = (fields: HotWaterCylinderData) => {
 	store.$patch((state) => {
-		const {hotWaterCylinder} = state.domesticHotWater.waterHeating;
+		const { hotWaterCylinder } = state.domesticHotWater.waterHeating;
 
 		const hotWaterCylinderItem: HotWaterCylinderData = {
 			id: hotWaterCylinderData ? hotWaterCylinderData.id : uuidv4(),
@@ -35,7 +35,7 @@ const saveForm = (fields: HotWaterCylinderData) => {
 	navigateTo("/domestic-hot-water/water-heating");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 	const value = node.value as Volume;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = 'Ductwork lengths';
+const title = "Ductwork lengths";
 </script>
 
 <template>

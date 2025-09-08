@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { SchemaFhsEnergyPerformanceValue } from '~/schema/api-schema.types';
-import { sentenceCase } from '#imports';
+import type { SchemaFhsEnergyPerformanceValue } from "~/schema/api-schema.types";
+import { sentenceCase } from "#imports";
 
 const { selected, data } = defineProps<{ selected: boolean, data: Record<string, SchemaFhsEnergyPerformanceValue> }>();
 const { total: _total, ...systems } = data; // list can include total inside it, so remove if present

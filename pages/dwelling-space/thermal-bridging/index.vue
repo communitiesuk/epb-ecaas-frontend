@@ -61,7 +61,7 @@ function handleComplete() {
 		}
 	});
 
-	navigateTo('/dwelling-space');
+	navigateTo("/dwelling-space");
 }
 
 const hasIncompleteEntries = () =>

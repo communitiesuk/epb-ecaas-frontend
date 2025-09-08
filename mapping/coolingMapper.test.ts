@@ -1,16 +1,15 @@
 import { SpaceCoolSystemType } from "~/schema/aliases";
-import type {SchemaSpaceCoolSystemDetails} from "~/schema/aliases";
+import type { SchemaSpaceCoolSystemDetails } from "~/schema/aliases";
 import { mapSpaceCoolSystems } from "./coolingMapper";
 
-
-describe('cooling mapper', () => {
+describe("cooling mapper", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	it('maps air conditioning input state to FHS input request', () => {
+	it("maps air conditioning input state to FHS input request", () => {
 		// Arrange
 		const airConditioning: AirConditioningData = {
 			name: "airCon1",
@@ -41,14 +40,14 @@ describe('cooling mapper', () => {
 				type: SpaceCoolSystemType.AirConditioning,
 				advanced_start: null,
 				temp_setback: null,
-				Control: 'cooling'
+				Control: "cooling"
 			}
 		};
 
 		expect(result).toEqual(expectedResult);
 	});
 
-	it('maps two air conditioners to an FHS input request', () => {
+	it("maps two air conditioners to an FHS input request", () => {
 		// Arrange
 		const airConditioner1: AirConditioningData = {
 			name: "airConditioner1",
@@ -86,7 +85,7 @@ describe('cooling mapper', () => {
 				type: SpaceCoolSystemType.AirConditioning,
 				temp_setback: null,
 				advanced_start: null,
-				Control: 'cooling'
+				Control: "cooling"
 			},
 			"airConditioner2": {
 				EnergySupply: "mains elec",
@@ -96,7 +95,7 @@ describe('cooling mapper', () => {
 				type: SpaceCoolSystemType.AirConditioning,
 				temp_setback: null,
 				advanced_start: null,
-				Control: 'cooling'
+				Control: "cooling"
 			},
 		};
 

@@ -1,27 +1,27 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from '@testing-library/vue';
-import HotWaterCylinder from './[hotWaterCylinder].vue';
-import { v4 as uuidv4 } from 'uuid';
+import { screen } from "@testing-library/vue";
+import HotWaterCylinder from "./[hotWaterCylinder].vue";
+import { v4 as uuidv4 } from "uuid";
 import { litre } from "~/utils/units/volume";
 import { unitValue } from "~/utils/units/types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport('navigateTo', () => {
+mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-vi.mock('uuid');
+vi.mock("uuid");
 
-describe('hot water cylinder', () => {
+describe("hot water cylinder", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const heatPumpId = '463c94f6-566c-49b2-af27-57e5c68b5c30';
+	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
 	const hotWaterCylinder: HotWaterCylinderData = {
-		id: 'c84528bb-f805-4f1e-95d3-2bd17384fdbe',
-		name: 'Hot water cylinder 1',
+		id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
+		name: "Hot water cylinder 1",
 		heatSource: heatPumpId,
 		storageCylinderVolume: unitValue(5, litre),
 		dailyEnergyLoss: 1,
@@ -39,7 +39,7 @@ describe('hot water cylinder', () => {
 						data: [{
 							data: {
 								id: heatPumpId,
-								name: 'Heat pump'
+								name: "Heat pump"
 							}
 						}]
 					}
@@ -49,28 +49,28 @@ describe('hot water cylinder', () => {
 	};
 
 	const populateValidForm = async () => {
-		await user.type(screen.getByTestId('name'), 'Hot water cylinder 1');
+		await user.type(screen.getByTestId("name"), "Hot water cylinder 1");
 		await user.click(screen.getByTestId(`heatSource_${heatPumpId}`));
-		await user.type(screen.getByTestId('storageCylinderVolume'), '5');
-		await user.type(screen.getByTestId('dailyEnergyLoss'), '1');
+		await user.type(screen.getByTestId("storageCylinderVolume"), "5");
+		await user.type(screen.getByTestId("dailyEnergyLoss"), "1");
 		await user.tab();
 	};
 
-	test('data is saved to store state when form is valid', async () => {
+	test("data is saved to store state when form is valid", async () => {
 		addStoreData();
 
 		vi.mocked(uuidv4).mockReturnValue(hotWaterCylinder.id as unknown as Buffer);
 		await renderSuspended(HotWaterCylinder);
 
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
 		const { data } = store.domesticHotWater.waterHeating.hotWaterCylinder;
 
 		expect(data[0]).toEqual(hotWaterCylinder);
 	});
 
-	test('form is prepopulated when data exists in state', async () => {
+	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			domesticHotWater: {
 				waterHeating: {
@@ -84,41 +84,41 @@ describe('hot water cylinder', () => {
 		addStoreData();
 		await renderSuspended(HotWaterCylinder, {
 			route: {
-				params: { 'hotWaterCylinder': '0' }
+				params: { "hotWaterCylinder": "0" }
 			}
 		});
 
-		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Hot water cylinder 1');
-		expect((await screen.findByTestId<HTMLInputElement>('storageCylinderVolume')).value).toBe('5');
-		expect((await screen.findByTestId<HTMLInputElement>('dailyEnergyLoss')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Hot water cylinder 1");
+		expect((await screen.findByTestId<HTMLInputElement>("storageCylinderVolume")).value).toBe("5");
+		expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe("1");
 	});
 
-	test('required error messages are displayed when empty form is submitted', async () => {
+	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(HotWaterCylinder);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
-		expect((await screen.findByTestId('name_error'))).toBeDefined();
-		expect((await screen.findByTestId('storageCylinderVolume_error'))).toBeDefined();
-		expect((await screen.findByTestId('dailyEnergyLoss_error'))).toBeDefined();
+		expect((await screen.findByTestId("name_error"))).toBeDefined();
+		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
+		expect((await screen.findByTestId("dailyEnergyLoss_error"))).toBeDefined();
 
 	});
 
-	test('error summary is displayed when an invalid form in submitted', async () => {
+	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(HotWaterCylinder);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
-		expect((await screen.findByTestId('hotWaterCylinderErrorSummary'))).toBeDefined();
+		expect((await screen.findByTestId("hotWaterCylinderErrorSummary"))).toBeDefined();
 	});
 
-	it('navigates to hot water outlets page when valid form is completed', async () => {
+	it("navigates to hot water outlets page when valid form is completed", async () => {
 		addStoreData();
 		await renderSuspended(HotWaterCylinder);
 
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 		
-		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water/water-heating');
+		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/water-heating");
 	});
 });

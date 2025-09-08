@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { BatteryLocation } from '~/schema/api-schema.types';
-import {getUrl} from "~/utils/page";
+import type { BatteryLocation } from "~/schema/api-schema.types";
+import { getUrl } from "~/utils/page";
 
 const title = "Electric battery";
 const store = useEcaasStore();
@@ -41,7 +41,7 @@ watch(model, async (newData: ElectricBatteryData | undefined, initialData: Elect
 		return;
 	}
 
-	const defaultName = 'Electric battery';
+	const defaultName = "Electric battery";
 	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
 			Object.values(newData).some(x => x !== undefined);
 
@@ -69,11 +69,11 @@ watch(model, async (newData: ElectricBatteryData | undefined, initialData: Elect
 		}}
 });
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const locationOptions: Record<BatteryLocation, SnakeToSentenceCase<BatteryLocation>> = {
-	inside: 'Inside',
-	outside: 'Outside',
+	inside: "Inside",
+	outside: "Outside",
 };
 
 const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {

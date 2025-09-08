@@ -36,7 +36,7 @@ function handleDuplicate(index: number) {
 
 function handleComplete() {
 	store.dwellingFabric.dwellingSpaceWindows.complete = true;
-	navigateTo('/dwelling-space');
+	navigateTo("/dwelling-space");
 }
 </script>
 

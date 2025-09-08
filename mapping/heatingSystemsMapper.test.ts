@@ -35,7 +35,7 @@ describe("heating systems mapper", () => {
 		const result = mapEnergySupplyData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
+		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
 				mains_gas: energySupply({
 					fuel: FuelType.mains_gas,
@@ -66,12 +66,12 @@ describe("heating systems mapper", () => {
 		const result = mapEnergySupplyData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
+		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
 				mains_gas: energySupply({
 					fuel: FuelType.mains_gas,
 				}),
-				'mains elec': energySupply({
+				"mains elec": energySupply({
 					fuel: FuelType.electricity,
 					is_export_capable: true
 				})
@@ -104,9 +104,9 @@ describe("heating systems mapper", () => {
 		const result = mapEnergySupplyData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
+		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
-				'mains elec': energySupply({
+				"mains elec": energySupply({
 					fuel: FuelType.electricity,
 					is_export_capable: true
 				}),
@@ -146,7 +146,7 @@ describe("heating systems mapper", () => {
 						designTempDiffAcrossEmitters: 4,
 						designFlowTemp: 35,
 						designFlowRate: 4,
-						ecoDesignControllerClass: '2',
+						ecoDesignControllerClass: "2",
 						minimumFlowTemp: 30,
 						minOutdoorTemp: -5,
 						maxOutdoorTemp: 32,
@@ -182,7 +182,7 @@ describe("heating systems mapper", () => {
 		const result = mapHeatEmittingData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
+		const expectedResult: Pick<FhsInputSchema, "SpaceHeatSystem"> = {
 			SpaceHeatSystem: {
 				"Radiators": {
 					HeatSource: {
@@ -212,7 +212,7 @@ describe("heating systems mapper", () => {
 					thermal_mass: 400,
 					type: SpaceHeatSystemWetDistributionFHSType.WetDistribution,
 					Zone: defaultZoneName,
-					Control: 'heating', // TODO this may need to refer to a real control
+					Control: "heating", // TODO this may need to refer to a real control
 					advanced_start: null,
 					bypass_percentage_recirculated: null,
 					variable_flow: false,
@@ -246,7 +246,7 @@ describe("heating systems mapper", () => {
 						designTempDiffAcrossEmitters: 4,
 						designFlowTemp: 35,
 						designFlowRate: 4,
-						ecoDesignControllerClass: '2',
+						ecoDesignControllerClass: "2",
 						minimumFlowTemp: 30,
 						minOutdoorTemp: -5,
 						maxOutdoorTemp: 32,
@@ -282,7 +282,7 @@ describe("heating systems mapper", () => {
 		const result = mapHeatEmittingData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
+		const expectedResult: Pick<FhsInputSchema, "SpaceHeatSystem"> = {
 			SpaceHeatSystem: {
 				"Under floor heating": {
 					HeatSource: {
@@ -308,7 +308,7 @@ describe("heating systems mapper", () => {
 					thermal_mass: 400,
 					type: SpaceHeatSystemWetDistributionFHSType.WetDistribution,
 					Zone: defaultZoneName,
-					Control: 'heating', // TODO this may need to refer to a real control
+					Control: "heating", // TODO this may need to refer to a real control
 					advanced_start: null,
 					EnergySupply: null,
 					bypass_percentage_recirculated: null,
@@ -353,16 +353,16 @@ describe("heating systems mapper", () => {
 		const result = mapHeatEmittingData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
+		const expectedResult: Pick<FhsInputSchema, "SpaceHeatSystem"> = {
 			SpaceHeatSystem: {
 				"Acme instant electric heater": {
 					type: SpaceHeatSystemInstantElectricHeaterFHSType.InstantElecHeater,
 					rated_power: 100,
 					frac_convective: 0.8,
-					EnergySupply: 'mains elec',
+					EnergySupply: "mains elec",
 					advanced_start: null,
 					temp_setback: null,
-					Control: 'heating', // TODO: this may need to refer to a real control
+					Control: "heating", // TODO: this may need to refer to a real control
 				}
 			}
 		};

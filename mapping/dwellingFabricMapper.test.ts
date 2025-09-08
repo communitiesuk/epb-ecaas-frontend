@@ -24,14 +24,14 @@ type BuildingElementAdjacentConditionedSpace = SchemaBuildingElementAdjacentCond
 type BuildingElementAdjacentUnconditionedSpaceSimple = SchemaBuildingElementAdjacentUnconditionedSpaceSimple;
 type BuildingElementTransparent = SchemaBuildingElementTransparentFhs;
 
-describe('dwelling fabric mapper', () => {
+describe("dwelling fabric mapper", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	it('maps zone parameters input state to FHS input request', () => {
+	it("maps zone parameters input state to FHS input request", () => {
 		// Arrange
 		const state: DwellingSpaceZoneParametersData = {
 			area: 10,
@@ -46,14 +46,14 @@ describe('dwelling fabric mapper', () => {
 				heatEmitting: {
 					wetDistribution: {
 						data: [{
-							name: 'radiator 1'
+							name: "radiator 1"
 						}],
 						complete: true
 					},
 					instantElectricHeater: {
 						data: [{
 							data: {
-								name: 'ieh 1'
+								name: "ieh 1"
 							}
 						}],
 						complete: true
@@ -74,11 +74,11 @@ describe('dwelling fabric mapper', () => {
 		// Assert
 		expect(fhsInputData.Zone[defaultZoneName]?.area).toBe(state.area);
 		expect(fhsInputData.Zone[defaultZoneName]?.volume).toBe(state.volume);
-		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toEqual(['radiator 1', 'ieh 1']);
-		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatControl).toBe('livingroom');
+		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toEqual(["radiator 1", "ieh 1"]);
+		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatControl).toBe("livingroom");
 	});
 
-	it('maps lighting input state to FHS input request', () => {
+	it("maps lighting input state to FHS input request", () => {
 		// Arrange
 		const state: DwellingSpaceLightingData = {
 			numberOfLEDBulbs: 5,
@@ -102,7 +102,7 @@ describe('dwelling fabric mapper', () => {
 		expect(fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs?.incandescent).toBeUndefined();
 	});
 
-	it('maps floor input state to FHS input request', () => {
+	it("maps floor input state to FHS input request", () => {
 		// Arrange
 		const groundFloor: GroundFloorData = {
 			name: "Ground 1",
@@ -120,7 +120,7 @@ describe('dwelling fabric mapper', () => {
 
 		const groundFloorWithEdgeInsulation: GroundFloorData = {
 			...groundFloor,
-			name: 'Ground 2',
+			name: "Ground 2",
 			typeOfGroundFloor: FloorType.Slab_edge_insulation,
 			edgeInsulationType: "horizontal",
 			edgeInsulationWidth: unitValue(36, centimetre),
@@ -129,7 +129,7 @@ describe('dwelling fabric mapper', () => {
 
 		const groundFloorWithSuspendedFloor: GroundFloorData = {
 			...groundFloor,
-			name: 'Ground 3',
+			name: "Ground 3",
 			typeOfGroundFloor: FloorType.Suspended_floor,
 			heightOfFloorUpperSurface: 100,
 			underfloorSpaceThermalResistance: 1,
@@ -140,7 +140,7 @@ describe('dwelling fabric mapper', () => {
 
 		const groundFloorWithHeatedBasement: GroundFloorData = {
 			...groundFloor,
-			name: 'Ground 4',
+			name: "Ground 4",
 			typeOfGroundFloor: FloorType.Heated_basement,
 			depthOfBasementFloorBelowGround: 1,
 			thermalResistanceOfBasementWalls: 1
@@ -148,7 +148,7 @@ describe('dwelling fabric mapper', () => {
 
 		const groundFloorWithUnheatedBasement: GroundFloorData = {
 			...groundFloor,
-			name: 'Ground 5',
+			name: "Ground 5",
 			typeOfGroundFloor: FloorType.Unheated_basement,
 			thermalTransmittanceOfFloorAboveBasement: 1,
 			thermalTransmittanceOfWallsAboveGround: 1,
@@ -197,7 +197,7 @@ describe('dwelling fabric mapper', () => {
 		});
 
 		const groundFloorsTotalArea = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.length * groundFloor.surfaceArea;
-		const floorSuffix = ' (floor)';
+		const floorSuffix = " (floor)";
 
 		// Act
 		const fhsInputData = mapFloorData(resolveState(store.$state));
@@ -312,11 +312,11 @@ describe('dwelling fabric mapper', () => {
 		expect(exposedFloorElement).toEqual(expectedExposedFloor);
 	});
 
-	it('maps wall input state to FHS input request', () => {
+	it("maps wall input state to FHS input request", () => {
 		// Arrange
 		const externalWall: ExternalWallData = {
 			name: "External wall 1",
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			orientation: 0,
 			length: 20,
@@ -334,13 +334,13 @@ describe('dwelling fabric mapper', () => {
 			surfaceAreaOfElement: 5,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90
 		};
 
 		const partyWall: PartyWallData = {
 			name: "Party wall 1",
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			surfaceArea: 10,
 			uValue: 1,
@@ -349,17 +349,17 @@ describe('dwelling fabric mapper', () => {
 		};
 
 		const wallToUnheatedSpace: WallsToUnheatedSpaceData ={
-			name: 'Wall to unheated space 1',
+			name: "Wall to unheated space 1",
 			surfaceAreaOfElement: 500,
 			uValue: 10,
 			arealHeatCapacity: 50000,
 			massDistributionClass: MassDistributionClass.E,
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			thermalResistanceOfAdjacentUnheatedSpace: 1
 		};
 
-		const wallSuffix = ' (wall)';
+		const wallSuffix = " (wall)";
 
 		store.$patch({
 			dwellingFabric: {
@@ -438,7 +438,7 @@ describe('dwelling fabric mapper', () => {
 		expect(wallToUnheatedSpaceElement).toEqual(expectedWallToUnheatedSpace);
 	});
 
-	it('maps ceiling and roof input state to FHS input request', () => {
+	it("maps ceiling and roof input state to FHS input request", () => {
 		// Arrange
 		const ceiling: CeilingData = {
 			type: AdjacentSpaceType.unheatedSpace,
@@ -447,15 +447,15 @@ describe('dwelling fabric mapper', () => {
 			uValue: 1,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
-			pitchOption: '0',
+			pitchOption: "0",
 			pitch: 0,
 			thermalResistanceOfAdjacentUnheatedSpace: 1
 		};
 
 		const roof: RoofData = {
 			name: "Roof 1",
-			typeOfRoof: 'flat',
-			pitchOption: 'custom',
+			typeOfRoof: "flat",
+			pitchOption: "custom",
 			pitch: 0,
 			length: 1,
 			width: 1,
@@ -467,14 +467,14 @@ describe('dwelling fabric mapper', () => {
 			massDistributionClass: MassDistributionClass.I
 		};
 
-		const ceilingSuffix = ' (ceiling)';
-		const roofSuffix = ' (roof)';
+		const ceilingSuffix = " (ceiling)";
+		const roofSuffix = " (roof)";
 
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceCeilings: { data: [{data: ceiling}], complete: true, },
-					dwellingSpaceRoofs: { data: [{data: roof}], complete: true, }
+					dwellingSpaceCeilings: { data: [{ data: ceiling }], complete: true, },
+					dwellingSpaceRoofs: { data: [{ data: roof }], complete: true, }
 				}
 			}
 		});
@@ -519,7 +519,7 @@ describe('dwelling fabric mapper', () => {
 		expect(roofElement).toEqual(expectedRoof);
 	});
 
-	it('maps door input state to FHS input request', () => {
+	it("maps door input state to FHS input request", () => {
 		// Arrange
 		const internalDoor: InternalDoorData = {
 			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
@@ -527,7 +527,7 @@ describe('dwelling fabric mapper', () => {
 			surfaceArea: 5,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			uValue: 0.001,
 			thermalResistanceOfAdjacentUnheatedSpace: 1
@@ -540,12 +540,12 @@ describe('dwelling fabric mapper', () => {
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
-			numberOpenableParts: '1',
+			numberOpenableParts: "1",
 			openingToFrameRatio: 0.3,
 			midHeightOpenablePart1: 1,
 			maximumOpenableArea: 1,
@@ -554,7 +554,7 @@ describe('dwelling fabric mapper', () => {
 
 		const externalUnglazedDoor: ExternalUnglazedDoorData = {
 			name: "External unglazed door 1",
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			orientation: 0,
 			height: 0.5,
@@ -567,7 +567,7 @@ describe('dwelling fabric mapper', () => {
 			massDistributionClass: MassDistributionClass.I
 		};
 
-		const doorSuffix = ' (door)';
+		const doorSuffix = " (door)";
 		 
 		store.$patch({
 			dwellingFabric: {
@@ -645,7 +645,7 @@ describe('dwelling fabric mapper', () => {
 		expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);
 	});
 
-	it('maps windows input state to FHS input request', () => {
+	it("maps windows input state to FHS input request", () => {
 		// Arrange
 		const window: WindowData = {
 			name: "Window 1",
@@ -654,12 +654,12 @@ describe('dwelling fabric mapper', () => {
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
-			numberOpenableParts: '1',
+			numberOpenableParts: "1",
 			overhangDepth: unitValue(1000, millimetre),
 			overhangDistance: unitValue(1000, millimetre),
 			sideFinRightDepth: unitValue(1000, millimetre),
@@ -676,7 +676,7 @@ describe('dwelling fabric mapper', () => {
 			heightOpenableArea: 1
 		};
 
-		const windowSuffix = ' (window)';
+		const windowSuffix = " (window)";
 
 		store.$patch({
 			dwellingFabric: {
@@ -732,26 +732,26 @@ describe('dwelling fabric mapper', () => {
 		expect(windowElement).toEqual(expectedWindow);
 	});
 
-	it('maps thermal bridging input state to FHS input request', () => {
+	it("maps thermal bridging input state to FHS input request", () => {
 		// Arrange
 		const linearThermalBridge: LinearThermalBridgeData = {
-			name: 'E1: Steel lintel with perforated steel base plate',
-			typeOfThermalBridge: 'e1',
+			name: "E1: Steel lintel with perforated steel base plate",
+			typeOfThermalBridge: "e1",
 			linearThermalTransmittance: 1,
 			length: 2
 		};
 
 		const pointThermalBridge: PointThermalBridgeData = {
-			name: 'Point 1',
+			name: "Point 1",
 			heatTransferCoefficient: 1
 		};
 
 		const dwellingSpaceThermalBridging: ThermalBridgingData = {
-			dwellingSpaceLinearThermalBridges: { data: [{data: linearThermalBridge}], complete: true },
-			dwellingSpacePointThermalBridges: { data: [{data: pointThermalBridge}], complete: true }
+			dwellingSpaceLinearThermalBridges: { data: [{ data: linearThermalBridge }], complete: true },
+			dwellingSpacePointThermalBridges: { data: [{ data: pointThermalBridge }], complete: true }
 		};
 
-		const bridgeSuffix = ' (bridge)';
+		const bridgeSuffix = " (bridge)";
 
 		store.$patch({
 			dwellingFabric: {
@@ -772,7 +772,7 @@ describe('dwelling fabric mapper', () => {
 
 		const expectedLinearThermalBridge: SchemaThermalBridgingLinearFhs = {
 			type: ThermalBridgingLinearFHSType.ThermalBridgeLinear,
-			junction_type: 'E1',
+			junction_type: "E1",
 			linear_thermal_transmittance: linearThermalBridge.linearThermalTransmittance,
 			length: linearThermalBridge.length
 		};

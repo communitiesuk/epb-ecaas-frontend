@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CombustionFuelType } from '~/schema/api-schema.types';
+import type { CombustionFuelType } from "~/schema/api-schema.types";
 
 defineProps<{
 	id: string,
@@ -7,10 +7,10 @@ defineProps<{
 }>();
 
 const options: Record<CombustionFuelType, SnakeToSentenceCase<CombustionFuelType>> = {
-	wood: 'Wood',
-	oil: 'Oil',
-	gas: 'Gas',
-	coal: 'Coal'
+	wood: "Wood",
+	oil: "Oil",
+	gas: "Gas",
+	coal: "Coal"
 };
 </script>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import formStatus from '~/constants/formStatus';
+import formStatus from "~/constants/formStatus";
 
 const title = "Distant shading";
 const page = usePage();
@@ -48,7 +48,7 @@ function handleComplete() {
 		}
 	});
 		
-	navigateTo('/dwelling-details');		
+	navigateTo("/dwelling-details");		
 }
 </script>
 

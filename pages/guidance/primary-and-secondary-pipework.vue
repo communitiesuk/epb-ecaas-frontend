@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = 'Primary and secondary pipework';
+const title = "Primary and secondary pipework";
 </script>
 
 <template>

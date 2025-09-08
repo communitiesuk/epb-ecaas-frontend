@@ -1,6 +1,6 @@
 import { VentType } from "~/schema/aliases";
 import { PageType  } from "./pages.types";
-import type {Page} from "./pages.types";
+import type { Page } from "./pages.types";
 import { isEmpty } from "ts-extras";
 
 function noMhvrPresent():boolean {
@@ -11,89 +11,89 @@ function noMhvrPresent():boolean {
 
 const infiltrationAndVentilationPages = [
 	{
-		id: 'infiltrationAndVentilation',
-		title: 'Infiltration and ventilation',
-		url: '/infiltration-and-ventilation',
+		id: "infiltrationAndVentilation",
+		title: "Infiltration and ventilation",
+		url: "/infiltration-and-ventilation",
 		type: PageType.Section,
-		parentId: 'taskList'
+		parentId: "taskList"
 	},
 	{
-		id: 'mechanicalVentilation',
-		title: 'Mechanical ventilation',
-		url: '/infiltration-and-ventilation/mechanical-ventilation',
+		id: "mechanicalVentilation",
+		title: "Mechanical ventilation",
+		url: "/infiltration-and-ventilation/mechanical-ventilation",
 		type: PageType.Task,
-		parentId: 'infiltrationAndVentilation'
+		parentId: "infiltrationAndVentilation"
 	},
 	{
-		id: 'mechanicalVentilationCreate',
-		title: 'Create',
-		url: '/infiltration-and-ventilation/mechanical-ventilation/create',
+		id: "mechanicalVentilationCreate",
+		title: "Create",
+		url: "/infiltration-and-ventilation/mechanical-ventilation/create",
 		type: PageType.Task,
-		parentId: 'mechanicalVentilation'
+		parentId: "mechanicalVentilation"
 	},
 	{
-		id: 'mechanicalVentilationEdit',
-		title: 'Edit',
-		url: '/infiltration-and-ventilation/mechanical-ventilation/:mechanical',
+		id: "mechanicalVentilationEdit",
+		title: "Edit",
+		url: "/infiltration-and-ventilation/mechanical-ventilation/:mechanical",
 		type: PageType.Task,
-		parentId: 'mechanicalVentilation'
+		parentId: "mechanicalVentilation"
 	},
 	{
-		id: 'ductwork',
-		title: 'MVHR ductwork',
-		url: '/infiltration-and-ventilation/ductwork',
+		id: "ductwork",
+		title: "MVHR ductwork",
+		url: "/infiltration-and-ventilation/ductwork",
 		type: PageType.Task,
-		parentId: 'infiltrationAndVentilation',
+		parentId: "infiltrationAndVentilation",
 		excludeFromNavigation: noMhvrPresent
 	},
 	{
-		id: 'ductworkCreate',
-		title: 'Create',
-		url: '/infiltration-and-ventilation/ductwork/create',
+		id: "ductworkCreate",
+		title: "Create",
+		url: "/infiltration-and-ventilation/ductwork/create",
 		type: PageType.Task,
-		parentId: 'ductwork'
+		parentId: "ductwork"
 	},
 	{
-		id: 'ductworkEdit',
-		title: 'Edit',
-		url: '/infiltration-and-ventilation/ductwork/:ductwork',
+		id: "ductworkEdit",
+		title: "Edit",
+		url: "/infiltration-and-ventilation/ductwork/:ductwork",
 		type: PageType.Task,
-		parentId: 'ductwork'
+		parentId: "ductwork"
 	},
 	{
-		id: 'vents',
-		title: 'Vents',
-		url: '/infiltration-and-ventilation/vents',
+		id: "vents",
+		title: "Vents",
+		url: "/infiltration-and-ventilation/vents",
 		type: PageType.Task,
-		parentId: 'infiltrationAndVentilation'
+		parentId: "infiltrationAndVentilation"
 	},
 	{
-		id: 'vent',
-		title: 'Vent',
-		url: '/infiltration-and-ventilation/vents/:vent',
+		id: "vent",
+		title: "Vent",
+		url: "/infiltration-and-ventilation/vents/:vent",
 		type: PageType.Task,
-		parentId: 'vents'
+		parentId: "vents"
 	},
 	{
-		id: 'ventCreate',
-		title: 'Vent',
-		url: '/infiltration-and-ventilation/vents/create',
+		id: "ventCreate",
+		title: "Vent",
+		url: "/infiltration-and-ventilation/vents/create",
 		type: PageType.Task,
-		parentId: 'vents'
+		parentId: "vents"
 	},
 	{
-		id: 'naturalVentilation',
-		title: 'Natural ventilation',
-		url: '/infiltration-and-ventilation/natural-ventilation',
+		id: "naturalVentilation",
+		title: "Natural ventilation",
+		url: "/infiltration-and-ventilation/natural-ventilation",
 		type: PageType.Task,
-		parentId: 'infiltrationAndVentilation'
+		parentId: "infiltrationAndVentilation"
 	},
 	{
-		id: 'airPermeability',
-		title: 'Air permeability',
-		url: '/infiltration-and-ventilation/air-permeability',
+		id: "airPermeability",
+		title: "Air permeability",
+		url: "/infiltration-and-ventilation/air-permeability",
 		type: PageType.Task,
-		parentId: 'infiltrationAndVentilation'
+		parentId: "infiltrationAndVentilation"
 	},
 	// {
 	// 	id: 'combustionAppliances',
@@ -103,53 +103,53 @@ const infiltrationAndVentilationPages = [
 	// 	parentId: 'infiltrationAndVentilation'
 	// },
 	{
-		id: 'openFireplace',
-		title: 'Open fireplace',
-		url: '/infiltration-and-ventilation/combustion-appliances/open-fireplace/:combustion',
+		id: "openFireplace",
+		title: "Open fireplace",
+		url: "/infiltration-and-ventilation/combustion-appliances/open-fireplace/:combustion",
 		type: PageType.Task,
-		parentId: 'combustionAppliances'
+		parentId: "combustionAppliances"
 	},
 	{
-		id: 'closedFireplaceWithFan',
-		title: 'Closed fireplace with fan',
-		url: '/infiltration-and-ventilation/combustion-appliances/closed-fireplace-with-fan/:combustion',
+		id: "closedFireplaceWithFan",
+		title: "Closed fireplace with fan",
+		url: "/infiltration-and-ventilation/combustion-appliances/closed-fireplace-with-fan/:combustion",
 		type: PageType.Task,
-		parentId: 'combustionAppliances'
+		parentId: "combustionAppliances"
 	},
 	{
-		id: 'openGasFlueBalancer',
-		title: 'Open gas flue balancer',
-		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-flue-balancer/:combustion',
+		id: "openGasFlueBalancer",
+		title: "Open gas flue balancer",
+		url: "/infiltration-and-ventilation/combustion-appliances/open-gas-flue-balancer/:combustion",
 		type: PageType.Task,
-		parentId: 'combustionAppliances'
+		parentId: "combustionAppliances"
 	},
 	{
-		id: 'openGasKitchenStove',
-		title: 'Open gas kitchen stove',
-		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-kitchen-stove/:combustion',
+		id: "openGasKitchenStove",
+		title: "Open gas kitchen stove",
+		url: "/infiltration-and-ventilation/combustion-appliances/open-gas-kitchen-stove/:combustion",
 		type: PageType.Task,
-		parentId: 'combustionAppliances'
+		parentId: "combustionAppliances"
 	},
 	{
-		id: 'openGasFire',
-		title: 'Open gas fire',
-		url: '/infiltration-and-ventilation/combustion-appliances/open-gas-fire/:combustion',
+		id: "openGasFire",
+		title: "Open gas fire",
+		url: "/infiltration-and-ventilation/combustion-appliances/open-gas-fire/:combustion",
 		type: PageType.Task,
-		parentId: 'combustionAppliances'
+		parentId: "combustionAppliances"
 	},
 	{
-		id: 'closedFire',
-		title: 'Closed fire',
-		url: '/infiltration-and-ventilation/combustion-appliances/closed-fire/:combustion',
+		id: "closedFire",
+		title: "Closed fire",
+		url: "/infiltration-and-ventilation/combustion-appliances/closed-fire/:combustion",
 		type: PageType.Task,
-		parentId: 'combustionAppliances'
+		parentId: "combustionAppliances"
 	},
 	{
-		id: 'infiltrationAndVentilationSummary',
-		title: 'Summary',
-		url: '/infiltration-and-ventilation/summary',
+		id: "infiltrationAndVentilationSummary",
+		title: "Summary",
+		url: "/infiltration-and-ventilation/summary",
 		type: PageType.Summary,
-		parentId: 'infiltrationAndVentilation'
+		parentId: "infiltrationAndVentilation"
 	}
 ] as const satisfies Array<Page>;
 

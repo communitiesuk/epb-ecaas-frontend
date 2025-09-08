@@ -14,14 +14,14 @@ export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSc
 	};
 }
 
-export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema, 'General' | 'NumberOfBedrooms' | 'PartGcompliance' | 'PartO_active_cooling_required'> {
+export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema, "General" | "NumberOfBedrooms" | "PartGcompliance" | "PartO_active_cooling_required"> {
 	const { generalSpecifications: generalDetails } = state.dwellingDetails;
 	
 	return {
 		General: {
 			build_type: generalDetails.typeOfDwelling,
 			storeys_in_building: generalDetails.storeysInDwelling,
-			...(generalDetails.typeOfDwelling === BuildType.flat ? {storey_of_dwelling: generalDetails.storeyOfFlat} : {}),
+			...(generalDetails.typeOfDwelling === BuildType.flat ? { storey_of_dwelling: generalDetails.storeyOfFlat } : {}),
 		},
 		NumberOfBedrooms: generalDetails.numOfBedrooms,
 		PartGcompliance: true,
@@ -29,9 +29,9 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 	};
 }
 
-export type InfiltrationFieldsFromDwelling = 'altitude' | 'shield_class' | 'terrain_class' | 'noise_nuisance';
+export type InfiltrationFieldsFromDwelling = "altitude" | "shield_class" | "terrain_class" | "noise_nuisance";
 
-export function mapExternalFactorsData(state: ResolvedState): Pick<FhsInputSchema, 'InfiltrationVentilation'> {
+export function mapExternalFactorsData(state: ResolvedState): Pick<FhsInputSchema, "InfiltrationVentilation"> {
 	const { externalFactors } = state.dwellingDetails;
 
 	const infiltrationVentilation: Pick<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
@@ -45,10 +45,10 @@ export function mapExternalFactorsData(state: ResolvedState): Pick<FhsInputSchem
 		InfiltrationVentilation: {
 			...infiltrationVentilation,
 		}
-	} as Pick<FhsInputSchema, 'InfiltrationVentilation'>;
+	} as Pick<FhsInputSchema, "InfiltrationVentilation">;
 }
 
-export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema, 'ExternalConditions'> {
+export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema, "ExternalConditions"> {
 	const { shading } = state.dwellingDetails;
 
 	const range = 10;

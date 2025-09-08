@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import formStatus from '~/constants/formStatus';
+import formStatus from "~/constants/formStatus";
 
 const title = "Pipework";
 const page = usePage();
@@ -62,7 +62,7 @@ function handleComplete() {
 		}
 	});
 
-	navigateTo('/domestic-hot-water');
+	navigateTo("/domestic-hot-water");
 }
 
 function checkIsComplete(){

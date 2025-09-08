@@ -1,6 +1,6 @@
 function hyphenate(value: string | undefined) {
 	if (value === undefined) {
-		return '';
+		return "";
 	}
 	const formattedString = value.trim().replaceAll(" ","-");
 

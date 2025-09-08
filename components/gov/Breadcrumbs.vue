@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Page } from '~/data/pages/pages.types';
-import pagesData from '../../data/pages/pages';
+import type { Page } from "~/data/pages/pages.types";
+import pagesData from "../../data/pages/pages";
 
 const getBreadcrumbs = (id: string | undefined, breadcrumbs: Array<Page>): Array<Page> => {
 	const currentPage = pagesData.find(page => page.id === id);
@@ -21,12 +21,12 @@ const pages = computed(() => {
 	let currentPage = pagesData.find(page => page.url === path);
 
 	if (!currentPage && params.length) {
-		const segments = route.path.split('/');
+		const segments = route.path.split("/");
 		segments.splice(segments.length - params.length, 1);
 
 		params.forEach(p => segments.push(`:${p}`));
 
-		path = segments.join('/');
+		path = segments.join("/");
 
 		currentPage = pagesData.find(page => page.url === path);
 	}

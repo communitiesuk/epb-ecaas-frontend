@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { FormKitFrameworkContext } from '@formkit/core';
-import { showErrorState, getErrorMessage } from '#imports';
-import type { RadioOption } from './Radios.vue';
+import type { FormKitFrameworkContext } from "@formkit/core";
+import { showErrorState, getErrorMessage } from "#imports";
+import type { RadioOption } from "./Radios.vue";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext<boolean>
@@ -10,13 +10,13 @@ const props = defineProps<{
 const {
 	id,
 	node: { name },
-	attrs: { ['true-label']: trueLabel = 'Yes', ['false-label']: falseLabel = 'No' },
+	attrs: { ["true-label"]: trueLabel = "Yes", ["false-label"]: falseLabel = "No" },
 	label,
 	help,
 } = props.context;
 
-const yesValue = 'yes';
-const noValue = 'no';
+const yesValue = "yes";
+const noValue = "no";
 
 type BooleanValue = typeof yesValue | typeof noValue;
 

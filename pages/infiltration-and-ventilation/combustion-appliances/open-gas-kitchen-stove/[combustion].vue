@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { CombustionApplianceType } from '~/schema/api-schema.types';
+import { CombustionApplianceType } from "~/schema/api-schema.types";
 
 const title = "Open gas kitchen stove";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const applianceData = useItemToEdit('combustion', store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_gas_kitchen_stove].data);
+const applianceData = useItemToEdit("combustion", store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_gas_kitchen_stove].data);
 const model: Ref<CombustionApplianceData> = ref(applianceData!);
 
 const saveForm = (fields: CombustionApplianceData) => {
@@ -26,7 +26,7 @@ const saveForm = (fields: CombustionApplianceData) => {
 	navigateTo("/infiltration-and-ventilation/combustion-appliances");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

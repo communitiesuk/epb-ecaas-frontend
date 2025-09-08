@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import type { TabItem } from '~/components/gov/Tabs.vue';
+import type { TabItem } from "~/components/gov/Tabs.vue";
 
 const store = useEcaasStore();
 const { lastResult: result } = store.$state;
 const tabs: TabItem[] = [
-	{id: 'primary_tab', label: 'Primary outputs'},
-	{id: 'energy_demand_tab', label: 'Energy demand'},
-	{id: 'delivered_energy_use_tab', label: 'Delivered energy use'},
-	{id: 'energy_use_by_fuel', label: 'Energy use by fuel'}
+	{ id: "primary_tab", label: "Primary outputs" },
+	{ id: "energy_demand_tab", label: "Energy demand" },
+	{ id: "delivered_energy_use_tab", label: "Delivered energy use" },
+	{ id: "energy_use_by_fuel", label: "Energy use by fuel" }
 ];
 </script>
 

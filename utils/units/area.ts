@@ -1,13 +1,13 @@
 export enum AreaUnitName {
-	METRES_SQUARE = 'metres square',
-	CENTIMETRE_SQUARE = 'centimetres square',
-	MILLIMETRES_SQUARE_PER_METRE = 'millimetres square per metre'
+	METRES_SQUARE = "metres square",
+	CENTIMETRE_SQUARE = "centimetres square",
+	MILLIMETRES_SQUARE_PER_METRE = "millimetres square per metre"
 }
 
 enum AreaSuffix {
-	METRES_SQUARE = 'm²',
-	CENTIMETRE_SQUARE = 'cm²',
-	MILLIMETRES_SQUARE_PER_METRE = 'mm²/m'
+	METRES_SQUARE = "m²",
+	CENTIMETRE_SQUARE = "cm²",
+	MILLIMETRES_SQUARE_PER_METRE = "mm²/m"
 }
 
 export class AreaUnit {

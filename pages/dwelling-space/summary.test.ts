@@ -1,18 +1,18 @@
-import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
-import Summary from './summary.vue';
-import { screen } from '@testing-library/vue';
-import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from '~/stores/ecaasStore.schema';
-import { MassDistributionClass, WindowTreatmentType } from '~/schema/api-schema.types';
-import { FloorType } from '~/schema/aliases';
-import { metre, millimetre } from '~/utils/units/length';
-import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from '~/utils/units/thermalConductivity';
-import { degrees } from '~/utils/units/angle';
-import { metresSquare } from '~/utils/units/area';
-import { cubicMetre } from '~/utils/units/volume';
-import { unitValue } from '~/utils/units/types';
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import Summary from "./summary.vue";
+import { screen } from "@testing-library/vue";
+import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from "~/stores/ecaasStore.schema";
+import { MassDistributionClass, WindowTreatmentType } from "~/schema/api-schema.types";
+import { FloorType } from "~/schema/aliases";
+import { metre, millimetre } from "~/utils/units/length";
+import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from "~/utils/units/thermalConductivity";
+import { degrees } from "~/utils/units/angle";
+import { metresSquare } from "~/utils/units/area";
+import { cubicMetre } from "~/utils/units/volume";
+import { unitValue } from "~/utils/units/types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport('navigateTo', () => {
+mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
@@ -75,7 +75,7 @@ const wallsData: WallsData = {
 	dwellingSpaceExternalWall: {
 		data: [{
 			name: "External wall 1",
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			orientation: 0,
 			height: 0.5,
@@ -94,18 +94,18 @@ const wallsData: WallsData = {
 			surfaceAreaOfElement: 5,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
-			pitchOption: 'custom',
+			pitchOption: "custom",
 			pitch: 0
 		}]
 	},
 	dwellingSpaceWallToUnheatedSpace: {
 		data: [{
-			name: 'Wall to unheated space 1',
+			name: "Wall to unheated space 1",
 			surfaceAreaOfElement: 500,
 			uValue: 10,
 			arealHeatCapacity:50000,
 			massDistributionClass: MassDistributionClass.E,
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			thermalResistanceOfAdjacentUnheatedSpace: 1
 		}]
@@ -113,7 +113,7 @@ const wallsData: WallsData = {
 	dwellingSpacePartyWall: {
 		data: [{
 			name: "Party wall 1",
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			surfaceArea: 10,
 			uValue: 1,
@@ -132,7 +132,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 				surfaceArea: 5,
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,
-				pitchOption: 'custom',
+				pitchOption: "custom",
 				pitch: 180
 			}
 		}]
@@ -141,8 +141,8 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 		data: [{
 			data: {
 				name: "Roof 1",
-				typeOfRoof: 'flat',
-				pitchOption: 'custom',
+				typeOfRoof: "flat",
+				pitchOption: "custom",
 				pitch: 180,
 				orientation: 0,
 				length: 1,
@@ -162,7 +162,7 @@ const doorsData: DoorsData = {
 	dwellingSpaceExternalUnglazedDoor: {
 		data: [{
 			name: "External unglazed door 1",
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			orientation: 0,
 			height: 0.5,
@@ -183,12 +183,12 @@ const doorsData: DoorsData = {
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
-			numberOpenableParts: '0',
+			numberOpenableParts: "0",
 			openingToFrameRatio: 0.2
 		}]
 	},
@@ -199,7 +199,7 @@ const doorsData: DoorsData = {
 			surfaceArea: 5,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
-			pitchOption: '90',
+			pitchOption: "90",
 			pitch: 90
 		}]
 	}
@@ -211,13 +211,13 @@ const windowData: WindowData = {
 	height: 1,
 	width: 1,
 	uValue: 1,
-	pitchOption: '90',
+	pitchOption: "90",
 	pitch: 90,
 	solarTransmittance: 0.1,
 	elevationalHeight: 1,
 	midHeight: 1,
 	openingToFrameRatio: 0.2,
-	numberOpenableParts: '0',
+	numberOpenableParts: "0",
 	overhangDepth: unitValue(100, millimetre),
 	overhangDistance: unitValue(100, millimetre),
 	sideFinRightDepth: unitValue(100, millimetre),
@@ -234,8 +234,8 @@ const thermalBridgingData: ThermalBridgingData = {
 	dwellingSpaceLinearThermalBridges: {
 		data: [{
 			data: {
-				name: 'E1: Steel lintel with perforated steel base plate',
-				typeOfThermalBridge: 'e1',
+				name: "E1: Steel lintel with perforated steel base plate",
+				typeOfThermalBridge: "e1",
 				linearThermalTransmittance: 1,
 				length: 2
 			}
@@ -244,28 +244,28 @@ const thermalBridgingData: ThermalBridgingData = {
 	dwellingSpacePointThermalBridges: {
 		data: [{
 			data: {
-				name: 'Point 1',
+				name: "Point 1",
 				heatTransferCoefficient: 1
 			}
 		}]
 	}
 };
 
-describe('Living space fabric summary', () => {
+describe("Living space fabric summary", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	describe('Living space zone parameters', () => {
-		it('should contain the correct tabs for dwelling space zone parameters', async () => {
+	describe("Living space zone parameters", () => {
+		it("should contain the correct tabs for dwelling space zone parameters", async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Zone parameters'}));
+			expect(screen.getByRole("link", { name: "Zone parameters" }));
 		});
 
-		it('should display the correct data for the zone parameters section', async () => {
+		it("should display the correct data for the zone parameters section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceZoneParameters: {
@@ -290,14 +290,14 @@ describe('Living space fabric summary', () => {
 		});
 	});
 
-	describe('Living space lighting', () => {
-		it('should contain the correct tabs for dwelling space lighting', async () => {
+	describe("Living space lighting", () => {
+		it("should contain the correct tabs for dwelling space lighting", async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Lighting'}));
+			expect(screen.getByRole("link", { name: "Lighting" }));
 		});
 
-		it('should display the correct data for the lighting section', async () => {
+		it("should display the correct data for the lighting section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceLighting: {
@@ -321,16 +321,16 @@ describe('Living space fabric summary', () => {
 		});
 	});
 
-	describe('Living space floors', () => {
-		it('should contain the correct tabs for dwelling space floors', async () => {
+	describe("Living space floors", () => {
+		it("should contain the correct tabs for dwelling space floors", async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Ground floor'}));
-			expect(screen.getByRole('link', {name: 'Internal floor'}));
-			expect(screen.getByRole('link', {name: 'Exposed floor'}));
+			expect(screen.getByRole("link", { name: "Ground floor" }));
+			expect(screen.getByRole("link", { name: "Internal floor" }));
+			expect(screen.getByRole("link", { name: "Exposed floor" }));
 		});
 	
-		it('should display the correct data for the ground floor section', async () => {
+		it("should display the correct data for the ground floor section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -362,7 +362,7 @@ describe('Living space fabric summary', () => {
 			}
 		});
 
-		it('should display the correct data for the internal floor section', async () => {
+		it("should display the correct data for the internal floor section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -388,7 +388,7 @@ describe('Living space fabric summary', () => {
 			}
 		});
 
-		it('should display the correct data for the exposed floor section', async () => {
+		it("should display the correct data for the exposed floor section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -420,17 +420,17 @@ describe('Living space fabric summary', () => {
 		});
 	});
 
-	describe('Living space walls', () => {
-		it('should contain the correct tabs for dwelling space walls', async () => {
+	describe("Living space walls", () => {
+		it("should contain the correct tabs for dwelling space walls", async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'External wall'}));
-			expect(screen.getByRole('link', {name: 'Internal wall'}));
-			expect(screen.getByRole('link', {name: 'Wall to unheated space'}));
-			expect(screen.getByRole('link', {name: 'Party wall'}));
+			expect(screen.getByRole("link", { name: "External wall" }));
+			expect(screen.getByRole("link", { name: "Internal wall" }));
+			expect(screen.getByRole("link", { name: "Wall to unheated space" }));
+			expect(screen.getByRole("link", { name: "Party wall" }));
 		});
 	
-		it('should display the correct data for the external wall section', async () => {
+		it("should display the correct data for the external wall section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -462,7 +462,7 @@ describe('Living space fabric summary', () => {
 			}
 		});
 
-		it('should display the correct data for the internal wall section', async () => {
+		it("should display the correct data for the internal wall section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -489,7 +489,7 @@ describe('Living space fabric summary', () => {
 			}
 		});
 
-		it('should display the correct data for the wall to unheated space section', async () => {
+		it("should display the correct data for the wall to unheated space section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -517,7 +517,7 @@ describe('Living space fabric summary', () => {
 			}
 		});
 
-		it('should display the correct data for the party wall section', async () => {
+		it("should display the correct data for the party wall section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -545,15 +545,15 @@ describe('Living space fabric summary', () => {
 		});
 	});
 
-	describe('dwelling space ceilings and roofs', () => {
-		it('should contain the correct tabs for dwelling space walls', async () => {
+	describe("dwelling space ceilings and roofs", () => {
+		it("should contain the correct tabs for dwelling space walls", async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Ceiling'}));
-			expect(screen.getByRole('link', {name: 'Roof'}));
+			expect(screen.getByRole("link", { name: "Ceiling" }));
+			expect(screen.getByRole("link", { name: "Roof" }));
 		});
 	
-		it('should display the correct data for the ceilings section', async () => {
+		it("should display the correct data for the ceilings section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -581,7 +581,7 @@ describe('Living space fabric summary', () => {
 			}
 		});
 
-		it('should display the correct data for the roof section', async () => {
+		it("should display the correct data for the roof section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -615,16 +615,16 @@ describe('Living space fabric summary', () => {
 		});
 	});
 
-	describe('dwelling space doors', () => {
-		it('should contain the correct tabs for dwelling space doors', async () => {
+	describe("dwelling space doors", () => {
+		it("should contain the correct tabs for dwelling space doors", async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'External unglazed door'}));
-			expect(screen.getByRole('link', {name: 'External glazed door'}));
-			expect(screen.getByRole('link', {name: 'Internal door'}));
+			expect(screen.getByRole("link", { name: "External unglazed door" }));
+			expect(screen.getByRole("link", { name: "External glazed door" }));
+			expect(screen.getByRole("link", { name: "Internal door" }));
 		});
 	
-		it('should display the correct data for the external unglazed doors section', async () => {
+		it("should display the correct data for the external unglazed doors section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -657,7 +657,7 @@ describe('Living space fabric summary', () => {
 			}
 		});
 
-		it('should display the correct data for the external glazed doors section', async () => {
+		it("should display the correct data for the external glazed doors section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -688,7 +688,7 @@ describe('Living space fabric summary', () => {
 			}
 		});
 
-		it('should display the correct data for the internal doors section', async () => {
+		it("should display the correct data for the internal doors section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -717,14 +717,14 @@ describe('Living space fabric summary', () => {
 		});
 	});
 
-	describe('dwelling space windows', () => {
-		it('should contain the correct tabs for dwelling space windows', async () => {
+	describe("dwelling space windows", () => {
+		it("should contain the correct tabs for dwelling space windows", async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Windows'}));
+			expect(screen.getByRole("link", { name: "Windows" }));
 		});
 	
-		it('should display the correct data for the windows section', async () => {
+		it("should display the correct data for the windows section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWindows: {
@@ -765,15 +765,15 @@ describe('Living space fabric summary', () => {
 		});
 	});
 
-	describe('dwelling space thermal bridges', () => {
-		it('should contain the correct tabs for dwelling space thermal bridges', async () => {
+	describe("dwelling space thermal bridges", () => {
+		it("should contain the correct tabs for dwelling space thermal bridges", async () => {
 			await renderSuspended(Summary);
 	  
-			expect(screen.getByRole('link', {name: 'Linear thermal bridges'}));
-			expect(screen.getByRole('link', {name: 'Point thermal bridges'}));
+			expect(screen.getByRole("link", { name: "Linear thermal bridges" }));
+			expect(screen.getByRole("link", { name: "Point thermal bridges" }));
 		});
 	
-		it('should display the correct data for the linear thermal bridges section', async () => {
+		it("should display the correct data for the linear thermal bridges section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -797,7 +797,7 @@ describe('Living space fabric summary', () => {
 			}
 		});
 
-		it('should display the correct data for the point thermal bridges section', async () => {
+		it("should display the correct data for the point thermal bridges section", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {

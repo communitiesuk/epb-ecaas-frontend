@@ -3,12 +3,12 @@ const title = "Smart hot water tank";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const smartHotWaterTankData = useItemToEdit('smartHotWaterTank', store.domesticHotWater.waterHeating.smartHotWaterTank.data);
+const smartHotWaterTankData = useItemToEdit("smartHotWaterTank", store.domesticHotWater.waterHeating.smartHotWaterTank.data);
 const model: Ref<SmartHotWaterTankData> = ref(smartHotWaterTankData!);
 
 const saveForm = (fields: SmartHotWaterTankData) => {
 	store.$patch((state) => {
-		const {smartHotWaterTank} = state.domesticHotWater.waterHeating;
+		const { smartHotWaterTank } = state.domesticHotWater.waterHeating;
 
 		const smartHotWaterTankItem: SmartHotWaterTankData = {
 			name: fields.name
@@ -20,7 +20,7 @@ const saveForm = (fields: SmartHotWaterTankData) => {
 	navigateTo("/domestic-hot-water/water-heating");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

@@ -1,15 +1,15 @@
-import AirPermeability from './air-permeability.vue';
-import { screen } from '@testing-library/vue';
-import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
-import { userEvent } from '@testing-library/user-event';
-import type { AirPermeabilityData } from '~/stores/ecaasStore.schema';
+import AirPermeability from "./air-permeability.vue";
+import { screen } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { userEvent } from "@testing-library/user-event";
+import type { AirPermeabilityData } from "~/stores/ecaasStore.schema";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport('navigateTo', () => {
+mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-describe('Air permeability', () => {
+describe("Air permeability", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -23,23 +23,23 @@ describe('Air permeability', () => {
 	};
 
 	const populateValidForm = async () => {
-		await user.type(screen.getByTestId('testPressure'), '1');
-		await user.type(screen.getByTestId('airTightnessTestResult'), '1');
+		await user.type(screen.getByTestId("testPressure"), "1");
+		await user.type(screen.getByTestId("airTightnessTestResult"), "1");
 		await user.tab();
 	};
 
-	test('data is saved to store state when form is valid', async () => {
+	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(AirPermeability);
 
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
 		const { data } = store.infiltrationAndVentilation.airPermeability;
 		
 		expect(data).toEqual(state);
 	});
 
-	test('form is prepopulated when data exists in state', async () => {
+	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				airPermeability: {
@@ -50,36 +50,36 @@ describe('Air permeability', () => {
 
 		await renderSuspended(AirPermeability);
 
-		expect((await screen.findByTestId<HTMLInputElement>('testPressure')).value).toBe('1');
-		expect((await screen.findByTestId<HTMLInputElement>('airTightnessTestResult')).value).toBe('1');
+		expect((await screen.findByTestId<HTMLInputElement>("testPressure")).value).toBe("1");
+		expect((await screen.findByTestId<HTMLInputElement>("airTightnessTestResult")).value).toBe("1");
 	});
 		
-	test('required error messages are displayed when empty form is submitted', async () => {
+	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(AirPermeability);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
-		expect((await screen.findByTestId('testPressure_error'))).toBeDefined();
-		expect((await screen.findByTestId('airTightnessTestResult_error'))).toBeDefined();
+		expect((await screen.findByTestId("testPressure_error"))).toBeDefined();
+		expect((await screen.findByTestId("airTightnessTestResult_error"))).toBeDefined();
 	});
 
-	test('error summary is displayed when an invalid form in submitted', async () => {
+	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(AirPermeability);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
-		expect((await screen.findByTestId('airPermeabilityErrorSummary'))).toBeDefined();
+		expect((await screen.findByTestId("airPermeabilityErrorSummary"))).toBeDefined();
 	});
 
-	it('navigates to infiltration and ventilation page when valid form is completed', async () => {
+	it("navigates to infiltration and ventilation page when valid form is completed", async () => {
 		await renderSuspended(AirPermeability);
 	
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
 		const { complete } = store.infiltrationAndVentilation.airPermeability;
 		
 		expect(complete).toBe(true);
-		expect(navigateToMock).toHaveBeenCalledWith('/infiltration-and-ventilation');
+		expect(navigateToMock).toHaveBeenCalledWith("/infiltration-and-ventilation");
 	});
 });

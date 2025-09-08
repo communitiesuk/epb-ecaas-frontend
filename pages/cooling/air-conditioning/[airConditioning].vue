@@ -3,12 +3,12 @@ const title = "Air conditioning";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const airConditioningData = useItemToEdit('airConditioning', store.cooling.airConditioning.data);
+const airConditioningData = useItemToEdit("airConditioning", store.cooling.airConditioning.data);
 const model: Ref<AirConditioningData> = ref(airConditioningData!);
 
 const saveForm = (fields: AirConditioningData) => {
 	store.$patch((state) => {
-		const {airConditioning} = state.cooling;
+		const { airConditioning } = state.cooling;
 
 		const airConditioningItem: AirConditioningData = {
 			name: fields.name,
@@ -24,7 +24,7 @@ const saveForm = (fields: AirConditioningData) => {
 	navigateTo("/cooling");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

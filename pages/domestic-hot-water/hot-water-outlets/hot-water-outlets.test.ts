@@ -1,17 +1,17 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import {screen, within } from '@testing-library/vue';
-import { v4 as uuidv4 } from 'uuid';
-import HotWaterOutlets from './index.vue';
+import { screen, within } from "@testing-library/vue";
+import { v4 as uuidv4 } from "uuid";
+import HotWaterOutlets from "./index.vue";
 import  MixerShowerForm from "./mixer-shower/[shower].vue";
 import  ElectricShowerForm from "./electric-shower/[shower].vue";
 import  BathForm from "./bath/[bath].vue";
 import  OtherHotWaterOutletForm  from "./other/[outlet].vue";
 
 
-describe('hot water outlets', () => {
+describe("hot water outlets", () => {
 
-	describe('mixer shower', () => {
+	describe("mixer shower", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 		const mixedShower1: EcaasForm<MixedShowerData> = {
@@ -40,7 +40,7 @@ describe('hot water outlets', () => {
 			store.$reset();
 		});
 
-		test('mixer shower is removed when remove link is clicked', async () => {
+		test("mixer shower is removed when remove link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -53,14 +53,14 @@ describe('hot water outlets', () => {
 
 			await renderSuspended(HotWaterOutlets);
 
-			expect(screen.getAllByTestId('mixedShower_items')).toBeDefined();
+			expect(screen.getAllByTestId("mixedShower_items")).toBeDefined();
 
-			await user.click(screen.getByTestId('mixedShower_remove_0'));
+			await user.click(screen.getByTestId("mixedShower_remove_0"));
 
-			expect(screen.queryByTestId('mixedShower_items')).toBeNull();
+			expect(screen.queryByTestId("mixedShower_items")).toBeNull();
 		});
 
-		it('should only remove the mixer shower thats is clicked', async () => {
+		it("should only remove the mixer shower thats is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -72,17 +72,17 @@ describe('hot water outlets', () => {
 			});
 
 			await renderSuspended(HotWaterOutlets);
-			await user.click(screen.getByTestId('mixedShower_remove_1'));
+			await user.click(screen.getByTestId("mixedShower_remove_1"));
 
-			const populatedList = screen.getByTestId('mixedShower_items');
+			const populatedList = screen.getByTestId("mixedShower_items");
 
-			expect(within(populatedList).getByText('Mixer shower 1')).toBeDefined();
-			expect(within(populatedList).getByText('Mixer shower 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Mixer shower 2')).toBeNull();
+			expect(within(populatedList).getByText("Mixer shower 1")).toBeDefined();
+			expect(within(populatedList).getByText("Mixer shower 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Mixer shower 2")).toBeNull();
 
 		});
 
-		test('mixer shower is duplicated when duplicate link is clicked', async () => {
+		test("mixer shower is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -94,21 +94,21 @@ describe('hot water outlets', () => {
 			});
 
 			await renderSuspended(HotWaterOutlets);
-			await userEvent.click(screen.getByTestId('mixedShower_duplicate_0'));
-			await userEvent.click(screen.getByTestId('mixedShower_duplicate_0'));
-			await userEvent.click(screen.getByTestId('mixedShower_duplicate_2'));
-			await userEvent.click(screen.getByTestId('mixedShower_duplicate_2'));
+			await userEvent.click(screen.getByTestId("mixedShower_duplicate_0"));
+			await userEvent.click(screen.getByTestId("mixedShower_duplicate_0"));
+			await userEvent.click(screen.getByTestId("mixedShower_duplicate_2"));
+			await userEvent.click(screen.getByTestId("mixedShower_duplicate_2"));
 
-			expect(screen.queryAllByTestId('mixedShower_item').length).toBe(6);
-			expect(screen.getByText('Mixer shower 1')).toBeDefined();
-			expect(screen.getByText('Mixer shower 1 (1)')).toBeDefined();
-			expect(screen.getByText('Mixer shower 1 (2)')).toBeDefined();
-			expect(screen.getByText('Mixer shower 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Mixer shower 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("mixedShower_item").length).toBe(6);
+			expect(screen.getByText("Mixer shower 1")).toBeDefined();
+			expect(screen.getByText("Mixer shower 1 (1)")).toBeDefined();
+			expect(screen.getByText("Mixer shower 1 (2)")).toBeDefined();
+			expect(screen.getByText("Mixer shower 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Mixer shower 1 (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('electric shower', () => {
+	describe("electric shower", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
@@ -138,7 +138,7 @@ describe('hot water outlets', () => {
 			store.$reset();
 		});
 
-		test('electric shower is removed when remove link is clicked', async () => {
+		test("electric shower is removed when remove link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -151,14 +151,14 @@ describe('hot water outlets', () => {
 
 			await renderSuspended(HotWaterOutlets);
 
-			expect(screen.getAllByTestId('electricShower_items')).toBeDefined();
+			expect(screen.getAllByTestId("electricShower_items")).toBeDefined();
 
-			await user.click(screen.getByTestId('electricShower_remove_0'));
+			await user.click(screen.getByTestId("electricShower_remove_0"));
 
-			expect(screen.queryByTestId('electricShower_items')).toBeNull();
+			expect(screen.queryByTestId("electricShower_items")).toBeNull();
 		});
 
-		it('should only remove the electric shower thats is clicked', async () => {
+		it("should only remove the electric shower thats is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -170,17 +170,17 @@ describe('hot water outlets', () => {
 			});
 
 			await renderSuspended(HotWaterOutlets);
-			await user.click(screen.getByTestId('electricShower_remove_1'));
+			await user.click(screen.getByTestId("electricShower_remove_1"));
 
-			const populatedList = screen.getByTestId('electricShower_items');
+			const populatedList = screen.getByTestId("electricShower_items");
 
-			expect(within(populatedList).getByText('Electric shower 1')).toBeDefined();
-			expect(within(populatedList).getByText('Electric shower 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Electric shower 2')).toBeNull();
+			expect(within(populatedList).getByText("Electric shower 1")).toBeDefined();
+			expect(within(populatedList).getByText("Electric shower 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Electric shower 2")).toBeNull();
 
 		});
 
-		test('electric shower is duplicated when duplicate link is clicked', async () => {
+		test("electric shower is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -192,21 +192,21 @@ describe('hot water outlets', () => {
 			});
 
 			await renderSuspended(HotWaterOutlets);
-			await userEvent.click(screen.getByTestId('electricShower_duplicate_0'));
-			await userEvent.click(screen.getByTestId('electricShower_duplicate_0'));
-			await userEvent.click(screen.getByTestId('electricShower_duplicate_2'));
-			await userEvent.click(screen.getByTestId('electricShower_duplicate_2'));
+			await userEvent.click(screen.getByTestId("electricShower_duplicate_0"));
+			await userEvent.click(screen.getByTestId("electricShower_duplicate_0"));
+			await userEvent.click(screen.getByTestId("electricShower_duplicate_2"));
+			await userEvent.click(screen.getByTestId("electricShower_duplicate_2"));
 
-			expect(screen.queryAllByTestId('electricShower_item').length).toBe(6);
-			expect(screen.getByText('Electric shower 1')).toBeDefined();
-			expect(screen.getByText('Electric shower 1 (1)')).toBeDefined();
-			expect(screen.getByText('Electric shower 1 (2)')).toBeDefined();
-			expect(screen.getByText('Electric shower 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Electric shower 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("electricShower_item").length).toBe(6);
+			expect(screen.getByText("Electric shower 1")).toBeDefined();
+			expect(screen.getByText("Electric shower 1 (1)")).toBeDefined();
+			expect(screen.getByText("Electric shower 1 (2)")).toBeDefined();
+			expect(screen.getByText("Electric shower 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Electric shower 1 (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('bath', () => {
+	describe("bath", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
@@ -237,7 +237,7 @@ describe('hot water outlets', () => {
 			store.$reset();
 		});
 
-		test('bath is removed when remove link is clicked', async () => {
+		test("bath is removed when remove link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -250,14 +250,14 @@ describe('hot water outlets', () => {
 
 			await renderSuspended(HotWaterOutlets);
 
-			expect(screen.getAllByTestId('bath_items')).toBeDefined();
+			expect(screen.getAllByTestId("bath_items")).toBeDefined();
 
-			await user.click(screen.getByTestId('bath_remove_0'));
+			await user.click(screen.getByTestId("bath_remove_0"));
 
-			expect(screen.queryByTestId('bath_items')).toBeNull();
+			expect(screen.queryByTestId("bath_items")).toBeNull();
 		});
 
-		it('should only remove the bath thats is clicked', async () => {
+		it("should only remove the bath thats is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -269,17 +269,17 @@ describe('hot water outlets', () => {
 			});
 
 			await renderSuspended(HotWaterOutlets);
-			await user.click(screen.getByTestId('bath_remove_1'));
+			await user.click(screen.getByTestId("bath_remove_1"));
 
-			const populatedList = screen.getByTestId('bath_items');
+			const populatedList = screen.getByTestId("bath_items");
 
-			expect(within(populatedList).getByText('Bath 1')).toBeDefined();
-			expect(within(populatedList).getByText('Bath 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Bath 2')).toBeNull();
+			expect(within(populatedList).getByText("Bath 1")).toBeDefined();
+			expect(within(populatedList).getByText("Bath 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Bath 2")).toBeNull();
 
 		});
 
-		test('bath is duplicated when duplicate link is clicked', async () => {
+		test("bath is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -291,21 +291,21 @@ describe('hot water outlets', () => {
 			});
 
 			await renderSuspended(HotWaterOutlets);
-			await userEvent.click(screen.getByTestId('bath_duplicate_0'));
-			await userEvent.click(screen.getByTestId('bath_duplicate_0'));
-			await userEvent.click(screen.getByTestId('bath_duplicate_2'));
-			await userEvent.click(screen.getByTestId('bath_duplicate_2'));
+			await userEvent.click(screen.getByTestId("bath_duplicate_0"));
+			await userEvent.click(screen.getByTestId("bath_duplicate_0"));
+			await userEvent.click(screen.getByTestId("bath_duplicate_2"));
+			await userEvent.click(screen.getByTestId("bath_duplicate_2"));
 
-			expect(screen.queryAllByTestId('bath_item').length).toBe(6);
-			expect(screen.getByText('Bath 1')).toBeDefined();
-			expect(screen.getByText('Bath 1 (1)')).toBeDefined();
-			expect(screen.getByText('Bath 1 (2)')).toBeDefined();
-			expect(screen.getByText('Bath 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Bath 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("bath_item").length).toBe(6);
+			expect(screen.getByText("Bath 1")).toBeDefined();
+			expect(screen.getByText("Bath 1 (1)")).toBeDefined();
+			expect(screen.getByText("Bath 1 (2)")).toBeDefined();
+			expect(screen.getByText("Bath 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Bath 1 (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('other outlets', () => {
+	describe("other outlets", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
@@ -336,7 +336,7 @@ describe('hot water outlets', () => {
 			store.$reset();
 		});
 
-		test('outlet is removed when remove link is clicked', async () => {
+		test("outlet is removed when remove link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -349,14 +349,14 @@ describe('hot water outlets', () => {
 
 			await renderSuspended(HotWaterOutlets);
 
-			expect(screen.getAllByTestId('otherOutlets_items')).toBeDefined();
+			expect(screen.getAllByTestId("otherOutlets_items")).toBeDefined();
 
-			await user.click(screen.getByTestId('otherOutlets_remove_0'));
+			await user.click(screen.getByTestId("otherOutlets_remove_0"));
 
-			expect(screen.queryByTestId('otherOutlets_items')).toBeNull();
+			expect(screen.queryByTestId("otherOutlets_items")).toBeNull();
 		});
 
-		it('should only remove the outlet thats is clicked', async () => {
+		it("should only remove the outlet thats is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -368,17 +368,17 @@ describe('hot water outlets', () => {
 			});
 
 			await renderSuspended(HotWaterOutlets);
-			await user.click(screen.getByTestId('otherOutlets_remove_1'));
+			await user.click(screen.getByTestId("otherOutlets_remove_1"));
 
-			const populatedList = screen.getByTestId('otherOutlets_items');
+			const populatedList = screen.getByTestId("otherOutlets_items");
 
-			expect(within(populatedList).getByText('Basin tap 1')).toBeDefined();
-			expect(within(populatedList).getByText('Basin tap 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Basin tap 2')).toBeNull();
+			expect(within(populatedList).getByText("Basin tap 1")).toBeDefined();
+			expect(within(populatedList).getByText("Basin tap 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Basin tap 2")).toBeNull();
 
 		});
 
-		test('outlet is duplicated when duplicate link is clicked', async () => {
+		test("outlet is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -390,17 +390,17 @@ describe('hot water outlets', () => {
 			});
 
 			await renderSuspended(HotWaterOutlets);
-			await userEvent.click(screen.getByTestId('otherOutlets_duplicate_0'));
-			await userEvent.click(screen.getByTestId('otherOutlets_duplicate_0'));
-			await userEvent.click(screen.getByTestId('otherOutlets_duplicate_2'));
-			await userEvent.click(screen.getByTestId('otherOutlets_duplicate_2'));
+			await userEvent.click(screen.getByTestId("otherOutlets_duplicate_0"));
+			await userEvent.click(screen.getByTestId("otherOutlets_duplicate_0"));
+			await userEvent.click(screen.getByTestId("otherOutlets_duplicate_2"));
+			await userEvent.click(screen.getByTestId("otherOutlets_duplicate_2"));
 
-			expect(screen.queryAllByTestId('otherOutlets_item').length).toBe(6);
-			expect(screen.getByText('Basin tap 1')).toBeDefined();
-			expect(screen.getByText('Basin tap 1 (1)')).toBeDefined();
-			expect(screen.getByText('Basin tap 1 (2)')).toBeDefined();
-			expect(screen.getByText('Basin tap 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Basin tap 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("otherOutlets_item").length).toBe(6);
+			expect(screen.getByText("Basin tap 1")).toBeDefined();
+			expect(screen.getByText("Basin tap 1 (1)")).toBeDefined();
+			expect(screen.getByText("Basin tap 1 (2)")).toBeDefined();
+			expect(screen.getByText("Basin tap 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Basin tap 1 (1) (2)")).toBeDefined();
 		});
 	});
 	describe("mark section as complete", () => {
@@ -565,7 +565,7 @@ describe('hot water outlets', () => {
 						params: { [params]: "0" },
 					},
 				});
-				await(user.click(screen.getByRole('button', {name: 'Save and mark as complete'})));
+				await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
 				expect(store.domesticHotWater.hotWaterOutlets[typedKey].complete).toBe(false);
 	
 				await renderSuspended(HotWaterOutlets);

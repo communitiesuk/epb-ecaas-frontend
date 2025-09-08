@@ -1,7 +1,7 @@
 import { mockNuxtImport, registerEndpoint, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import {screen, within } from '@testing-library/vue';
-import HeatGeneration from './index.vue';
+import { screen, within } from "@testing-library/vue";
+import HeatGeneration from "./index.vue";
 import HeatPumpForm from "./heat-pump/[pump].vue";
 import BoilerForm from "./boiler/[boiler].vue";
 import HeatBatteryForm from "./heat-battery/[battery].vue";
@@ -12,14 +12,14 @@ import { v4 as uuidv4 } from "uuid";
 import { productsInCategory } from "~/server/services/products";
 import formStatus from "~/constants/formStatus";
 
-registerEndpoint('/api/products', async () => productsInCategory('heatPump'));
+registerEndpoint("/api/products", async () => productsInCategory("heatPump"));
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-const heatGenerationData = (): Pick<HeatingSystems, 'heatGeneration'> => {
+const heatGenerationData = (): Pick<HeatingSystems, "heatGeneration"> => {
 	return {
 		heatGeneration: {
 			heatPump: { data: [{ data: { id: "1b6a1e50-0e1f-4bc1-b198-f84587a7fdf2", name: "Heat pump 1", productReference: "HEATPUMP-MEDIUM" }, complete: true }] },
@@ -47,9 +47,9 @@ const firstActionTestId = (generator: string, action: string) => {
 	return `${generator}_${action}_0`;
 };
 
-describe('heat generation', () => {
+describe("heat generation", () => {
 	
-	describe('heat pump', () => {
+	describe("heat pump", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
@@ -75,12 +75,12 @@ describe('heat generation', () => {
 			store.$reset();
 		});
 
-		test('heat pump is removed when remove link is clicked', async () => {
+		test("heat pump is removed when remove link is clicked", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [{data: heatPump1}]
+							data: [{ data: heatPump1 }]
 						}
 					}
 				}
@@ -88,31 +88,31 @@ describe('heat generation', () => {
 
 			await renderSuspended(HeatGeneration);
 
-			expect(screen.getAllByTestId('heatPump_items')).toBeDefined();
+			expect(screen.getAllByTestId("heatPump_items")).toBeDefined();
 			await user.click(await screen.findByTestId(firstActionTestId("heatPump", "remove")));
-			expect(screen.queryByTestId('heatPump_items')).toBeNull();
+			expect(screen.queryByTestId("heatPump_items")).toBeNull();
 		});
 
-		it('only removes the heat pump thats is clicked', async () => {
+		it("only removes the heat pump thats is clicked", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data:[{data: heatPump1}, {data: heatPump2}, {data: heatPump3}]
+							data:[{ data: heatPump1 }, { data: heatPump2 }, { data: heatPump3 }]
 						}
 					}
 				}
 			});
 			await renderSuspended(HeatGeneration);
-			await user.click(await screen.findByTestId('heatPump_remove_1'));
+			await user.click(await screen.findByTestId("heatPump_remove_1"));
 
-			const populatedList = screen.getByTestId('heatPump_items');
-			expect(within(populatedList).getByText('Heat pump 1')).toBeDefined();
-			expect(within(populatedList).getByText('Heat pump 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Heat pump 2')).toBeNull();
+			const populatedList = screen.getByTestId("heatPump_items");
+			expect(within(populatedList).getByText("Heat pump 1")).toBeDefined();
+			expect(within(populatedList).getByText("Heat pump 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Heat pump 2")).toBeNull();
 		});
 
-		it('should display an in-progress indicator when an entry is not marked as complete', async () => {
+		it("should display an in-progress indicator when an entry is not marked as complete", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatGeneration: {
@@ -127,10 +127,10 @@ describe('heat generation', () => {
 
 			await renderSuspended(HeatGeneration);
 
-			expect(screen.getByTestId('heatPump_status_0').textContent).toBe(formStatus.inProgress.text);
+			expect(screen.getByTestId("heatPump_status_0").textContent).toBe(formStatus.inProgress.text);
 		});
 
-		it ('should display a complete indicator when an entry is marked as complete', async () => {
+		it ("should display a complete indicator when an entry is marked as complete", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatGeneration: {
@@ -146,7 +146,7 @@ describe('heat generation', () => {
 
 			await renderSuspended(HeatGeneration);
 
-			expect(screen.getByTestId('heatPump_status_0').textContent).toBe(formStatus.complete.text);
+			expect(screen.getByTestId("heatPump_status_0").textContent).toBe(formStatus.complete.text);
 		});
 	});
 
@@ -192,7 +192,7 @@ describe('heat generation', () => {
 			}
 		});
 
-		it('disables the mark section as complete button when data is incomplete', async () => {
+		it("disables the mark section as complete button when data is incomplete", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatGeneration: {
@@ -211,7 +211,7 @@ describe('heat generation', () => {
 		
 			await renderSuspended(HeatGeneration);
 			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
-			expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 		});
 	});
 
@@ -245,7 +245,7 @@ describe('heat generation', () => {
 			// 	expect(heatGenerators[heatGenerator as HeatGenerationType]?.complete).toBe(false);
 			// }
 
-			expect(store.heatingSystems.heatGeneration['heatPump']?.complete).toBe(false);
+			expect(store.heatingSystems.heatGeneration["heatPump"]?.complete).toBe(false);
 			expect(screen.getByTestId("completeSectionButton")).not.toBeNull();
 		});
 

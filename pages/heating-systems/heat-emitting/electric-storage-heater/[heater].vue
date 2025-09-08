@@ -3,12 +3,12 @@ const title = "Electric storage heater";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const electricStorageHeaterData = useItemToEdit('heater', store.heatingSystems.heatEmitting.electricStorageHeater.data);
+const electricStorageHeaterData = useItemToEdit("heater", store.heatingSystems.heatEmitting.electricStorageHeater.data);
 const model: Ref<ElectricStorageHeaterData> = ref(electricStorageHeaterData!);
 
 const saveForm = (fields: ElectricStorageHeaterData) => {
 	store.$patch((state) => {
-		const {electricStorageHeater} = state.heatingSystems.heatEmitting;
+		const { electricStorageHeater } = state.heatingSystems.heatEmitting;
 
 		const item: ElectricStorageHeaterData = {
 			name: fields.name
@@ -21,7 +21,7 @@ const saveForm = (fields: ElectricStorageHeaterData) => {
 	navigateTo("/heating-systems/heat-emitting");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

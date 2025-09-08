@@ -1,15 +1,15 @@
-import { screen } from '@testing-library/vue';
-import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
-import { userEvent } from '@testing-library/user-event';
-import Vent from './[vent].vue';
-import type { VentData } from '~/stores/ecaasStore.schema';
+import { screen } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { userEvent } from "@testing-library/user-event";
+import Vent from "./[vent].vue";
+import type { VentData } from "~/stores/ecaasStore.schema";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport('navigateTo', () => {
+mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-describe('vent', () => {
+describe("vent", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -18,8 +18,8 @@ describe('vent', () => {
 	});
 
 	const state: VentData = {
-		name: 'Vent 1',
-		typeOfVent: 'trickle',
+		name: "Vent 1",
+		typeOfVent: "trickle",
 		effectiveVentilationArea: 10,
 		openingRatio: 1,
 		midHeightOfZone: 1,
@@ -28,27 +28,27 @@ describe('vent', () => {
 	};
 
 	const populateValidForm = async () => {
-		await user.type(screen.getByTestId('name'), 'Vent 1');
-		await user.click(screen.getByTestId('typeOfVent_trickle'));
-		await user.type(screen.getByTestId('effectiveVentilationArea'), '10');
-		await user.type(screen.getByTestId('midHeightOfZone'), '1');
-		await user.type(screen.getByTestId('orientation'), '0');
-		await user.type(screen.getByTestId('pitch'), '0');
+		await user.type(screen.getByTestId("name"), "Vent 1");
+		await user.click(screen.getByTestId("typeOfVent_trickle"));
+		await user.type(screen.getByTestId("effectiveVentilationArea"), "10");
+		await user.type(screen.getByTestId("midHeightOfZone"), "1");
+		await user.type(screen.getByTestId("orientation"), "0");
+		await user.type(screen.getByTestId("pitch"), "0");
 		await user.tab();
 	};
 
-	test('data is saved to store state when form is valid', async () => {
+	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(Vent);
 		
 		await populateValidForm();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 		
 		const { data } = store.infiltrationAndVentilation.vents;
 
 		expect(data[0]).toEqual(state);
 	});
 
-	test('form is prepopulated when data exists in state', async () => {
+	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
@@ -59,36 +59,36 @@ describe('vent', () => {
 
 		await renderSuspended(Vent, {
 			route: {
-				params: { vent: '0' }
+				params: { vent: "0" }
 			}
 		});
 
-		expect((await screen.findByTestId<HTMLInputElement>('name')).value).toBe('Vent 1');
-		expect((await screen.findByTestId<HTMLInputElement>('typeOfVent_trickle')).hasAttribute('checked')).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>('effectiveVentilationArea')).value).toBe('10');
-		expect((await screen.findByTestId<HTMLInputElement>('midHeightOfZone')).value).toBe('1');
-		expect((await screen.findByTestId<HTMLInputElement>('orientation')).value).toBe('0');
-		expect((await screen.findByTestId<HTMLInputElement>('pitch')).value).toBe('0');
+		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Vent 1");
+		expect((await screen.findByTestId<HTMLInputElement>("typeOfVent_trickle")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId<HTMLInputElement>("effectiveVentilationArea")).value).toBe("10");
+		expect((await screen.findByTestId<HTMLInputElement>("midHeightOfZone")).value).toBe("1");
+		expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("0");
+		expect((await screen.findByTestId<HTMLInputElement>("pitch")).value).toBe("0");
 	});
 
-	test('required error messages are displayed when empty form is submitted', async () => {
+	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(Vent);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
-		expect((await screen.findByTestId('name_error'))).toBeDefined();
-		expect((await screen.findByTestId('typeOfVent_error'))).toBeDefined();
-		expect((await screen.findByTestId('effectiveVentilationArea_error'))).toBeDefined();
-		expect((await screen.findByTestId('midHeightOfZone_error'))).toBeDefined();
-		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
-		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
+		expect((await screen.findByTestId("name_error"))).toBeDefined();
+		expect((await screen.findByTestId("typeOfVent_error"))).toBeDefined();
+		expect((await screen.findByTestId("effectiveVentilationArea_error"))).toBeDefined();
+		expect((await screen.findByTestId("midHeightOfZone_error"))).toBeDefined();
+		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
+		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
-	test('error summary is displayed when an invalid form in submitted', async () => {
+	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Vent);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
-		expect((await screen.findByTestId('ventErrorSummary'))).toBeDefined();
+		expect((await screen.findByTestId("ventErrorSummary"))).toBeDefined();
 	});
 });

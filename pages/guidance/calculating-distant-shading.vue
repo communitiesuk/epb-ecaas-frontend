@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = 'Calculating distant shading';
+const title = "Calculating distant shading";
 </script>
 
 <template>

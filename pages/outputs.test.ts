@@ -1,13 +1,13 @@
-import { renderSuspended } from '@nuxt/test-utils/runtime';
-import { screen } from '@testing-library/vue';
+import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { screen } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
-import Outputs from './outputs.vue';
+import Outputs from "./outputs.vue";
 import type { SchemaFhsComplianceResponse, SchemaFhsEnergyPerformanceValue } from "~/schema/api-schema.types";
-import type { CorrectedFhsDeliveredEnergyUse } from '~/components/result/DeliveredEnergyUseTab.vue';
-import type { Simplify } from 'type-fest';
+import type { CorrectedFhsDeliveredEnergyUse } from "~/components/result/DeliveredEnergyUseTab.vue";
+import type { Simplify } from "type-fest";
 
 // overrides because never types are currently generated from the OpenAPI erroneously
-type CorrectedFhsComplianceResponse = Simplify<Omit<SchemaFhsComplianceResponse, 'delivered_energy_use' | 'energy_use_by_fuel'> & {
+type CorrectedFhsComplianceResponse = Simplify<Omit<SchemaFhsComplianceResponse, "delivered_energy_use" | "energy_use_by_fuel"> & {
 	delivered_energy_use: CorrectedFhsDeliveredEnergyUse,
 	energy_use_by_fuel: Record<string, SchemaFhsEnergyPerformanceValue>
 }>;
@@ -130,11 +130,11 @@ const response: CorrectedFhsComplianceResponse = {
 
 const errors: CorrectedJsonApiError[] = [
 	{
-		detail: 'Something very specific happened, incorrectly.'
+		detail: "Something very specific happened, incorrectly."
 	}
 ];
 
-describe('show good response in result tabs', () => {
+describe("show good response in result tabs", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -143,7 +143,7 @@ describe('show good response in result tabs', () => {
 			// using any as escape clause only while never types are being generated from OpenAPI
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			response: response as any,
-			resultType: 'ok',
+			resultType: "ok",
 		} });
 	});
 
@@ -151,86 +151,86 @@ describe('show good response in result tabs', () => {
 		store.$reset();
 	});
 
-	it('should display some tabs', async () => {
+	it("should display some tabs", async () => {
 		const { container: dom } = await renderSuspended(Outputs);
 
-		expect(dom.querySelector('.govuk-tabs')).not.toBeNull();
+		expect(dom.querySelector(".govuk-tabs")).not.toBeNull();
 	});
 
-	it('should display primary output data', async () => {
+	it("should display primary output data", async () => {
 		await renderSuspended(Outputs);
 
-		await user.click(screen.getByRole('link', { name: 'Primary outputs' }));
+		await user.click(screen.getByRole("link", { name: "Primary outputs" }));
 
-		const tableTextContent = screen.getByRole('table').textContent;
+		const tableTextContent = screen.getByRole("table").textContent;
 
 		const expectedTextsPresent = [
-			'1.84', // actual emission rate, rounded
-			'Fabric energy efficiency', // FEE header
-			'+71.87%', // difference for primary energy rate
+			"1.84", // actual emission rate, rounded
+			"Fabric energy efficiency", // FEE header
+			"+71.87%", // difference for primary energy rate
 		];
 
 		expectedTextsPresent.forEach(text => expect(tableTextContent).toContain(text));
 	});
 
-	it('should display energy demand data', async () => {
+	it("should display energy demand data", async () => {
 		await renderSuspended(Outputs);
 
-		await user.click(screen.getByRole('link', { name: 'Energy demand' }));
+		await user.click(screen.getByRole("link", { name: "Energy demand" }));
 
-		const tableTextContent = screen.getByRole('table').textContent;
+		const tableTextContent = screen.getByRole("table").textContent;
 
 		const expectedFigures = [
-			'21.55',
-			'27.66',
-			'-0.87',
-			'-0.60'
+			"21.55",
+			"27.66",
+			"-0.87",
+			"-0.60"
 		];
 
 		expectedFigures.forEach(text => expect(tableTextContent).toContain(text));
 	});
 
-	it('should display delivered energy use tab', async () => {
+	it("should display delivered energy use tab", async () => {
 		await renderSuspended(Outputs);
 
-		await user.click(screen.getByRole('link', { name: 'Delivered energy use' }));
+		await user.click(screen.getByRole("link", { name: "Delivered energy use" }));
 
-		const tableTextContent = screen.getByRole('table').textContent;
+		const tableTextContent = screen.getByRole("table").textContent;
 
 		const expectedTextsPresent = [
-			'0.38',
-			'4.16',
-			'Washing machine', // display value for clothes washing
-			'86.90',
+			"0.38",
+			"4.16",
+			"Washing machine", // display value for clothes washing
+			"86.90",
 		];
 
 		expectedTextsPresent.forEach(text => expect(tableTextContent).toContain(text));
 	});
 
-	it('should display energy use by fuel tab', async () => {
+	it("should display energy use by fuel tab", async () => {
 		await renderSuspended(Outputs);
 
-		await user.click(screen.getByRole('link', { name: 'Energy use by fuel' }));
+		await user.click(screen.getByRole("link", { name: "Energy use by fuel" }));
 
-		const tableTextContent = screen.getByRole('table').textContent;
+		const tableTextContent = screen.getByRole("table").textContent;
 
 		const expectedTextsPresent = [
-			'27254.76',
-			'20613.19',
-			'Energy from environment', // display value for energy from environment
+			"27254.76",
+			"20613.19",
+			"Energy from environment", // display value for energy from environment
 		];
 
 		expectedTextsPresent.forEach(text => expect(tableTextContent).toContain(text));
 	});
 });
 
-describe('show error in result tabs', () => {
+describe("show error in result tabs", () => {
 	const store = useEcaasStore();
 
 	beforeEach(() => {
 		store.$patch({ lastResult: {
 			errors,
-			resultType: 'err',
+			resultType: "err",
 		} });
 	});
 
@@ -238,25 +238,25 @@ describe('show error in result tabs', () => {
 		store.$reset();
 	});
 
-	it('does not show any tabs', async () => {
+	it("does not show any tabs", async () => {
 		const { container: dom } = await renderSuspended(Outputs);
 
-		expect(dom.querySelector('.govuk-tabs')).toBeNull();
+		expect(dom.querySelector(".govuk-tabs")).toBeNull();
 	});
 
-	it('shows the error from the API', async () => {
+	it("shows the error from the API", async () => {
 		await renderSuspended(Outputs);
 
-		const errorSummary = await screen.findByTestId('resultsErrorSummary');
+		const errorSummary = await screen.findByTestId("resultsErrorSummary");
 
 		expect(errorSummary).toBeDefined();
-		const errorText = errorSummary.querySelector('li')?.textContent;
+		const errorText = errorSummary.querySelector("li")?.textContent;
 
-		expect(errorText).toContain('Something very specific happened, incorrectly.');
+		expect(errorText).toContain("Something very specific happened, incorrectly.");
 	});
 });
 
-describe('shows a message if there is no result but a user has ended up here', () => {
+describe("shows a message if there is no result but a user has ended up here", () => {
 	const store = useEcaasStore();
 
 	beforeEach(() => {
@@ -267,10 +267,10 @@ describe('shows a message if there is no result but a user has ended up here', (
 		store.$reset();
 	});
 
-	it('shows the expected message to say there is no result to show', async () => {
+	it("shows the expected message to say there is no result to show", async () => {
 		const { container: dom } = await renderSuspended(Outputs);
 
-		const paraContent = dom.querySelector('p.govuk-body')!.textContent;
-		expect(paraContent).toContain('There are no results yet to show.');
+		const paraContent = dom.querySelector("p.govuk-body")!.textContent;
+		expect(paraContent).toContain("There are no results yet to show.");
 	});
 });

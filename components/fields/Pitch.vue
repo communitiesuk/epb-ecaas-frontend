@@ -8,7 +8,7 @@ const props = defineProps<{
 	help?: string;
 }>();
 
-const helpText = props.help ?? 'Enter the tilt angle of the external surface. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors.';
+const helpText = props.help ?? "Enter the tilt angle of the external surface. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors.";
 </script>
 
 <template>

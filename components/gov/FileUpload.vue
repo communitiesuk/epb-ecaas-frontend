@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { createAll, FileUpload } from 'govuk-frontend';
+import { createAll, FileUpload } from "govuk-frontend";
 
 interface FileUploadProps {
 	id: string,
@@ -38,7 +38,7 @@ const {
 	change = undefined
 } = defineProps<FileUploadProps>();
 
-const el = useTemplateRef('el');
+const el = useTemplateRef("el");
 
 watch(el, async (el) => {
 	if (!el) {

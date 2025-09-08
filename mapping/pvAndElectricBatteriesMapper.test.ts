@@ -1,5 +1,5 @@
 import { BatteryLocation, InverterType, PhotovoltaicSystemType } from "~/schema/api-schema.types";
-import type {SchemaElectricBattery} from "~/schema/api-schema.types";
+import type { SchemaElectricBattery } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { mapElectricBatteryData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
 import { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
@@ -32,7 +32,7 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerDC: 60,
 				inverterIsInside: false,
 				inverterType: InverterType.string_inverter,
-			}};
+			} };
 
 		const pvSystem2: EcaasForm<PvSystemData> = {
 			data: {
@@ -47,7 +47,7 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerAC: 96,
 				inverterPeakPowerDC: 120,
 				inverterIsInside: false,
-				inverterType: InverterType.optimised_inverter}};
+				inverterType: InverterType.optimised_inverter } };
 
 		store.$patch({
 			pvAndBatteries: {
@@ -62,7 +62,7 @@ describe("PV and electric batteries mapper", () => {
 		const result = mapPvSystemData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'OnSiteGeneration'> = {
+		const expectedResult: Pick<FhsInputSchema, "OnSiteGeneration"> = {
 			OnSiteGeneration: {
 				"Roof": {
 					EnergySupply: "mains elec",

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CombustionApplianceType } from '~/schema/api-schema.types';
+import { CombustionApplianceType } from "~/schema/api-schema.types";
 
 const page = usePage();
 const title = "Combustion appliances";
@@ -52,7 +52,7 @@ function handleComplete() {
 		}
 	});
 
-	navigateTo('/infiltration-and-ventilation');
+	navigateTo("/infiltration-and-ventilation");
 }
 
 function checkIsComplete(){

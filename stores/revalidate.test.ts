@@ -1,9 +1,9 @@
-import * as immutable from 'object-path-immutable';
+import * as immutable from "object-path-immutable";
 import { BuildType, MassDistributionClass } from "~/schema/api-schema.types";
 
 // define some structures for the test fixtures using types
 
-const simpleCaseOnlyOneForm: Pick<EcaasState, 'dwellingDetails'> = {
+const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 	"dwellingDetails": {
 		"generalSpecifications": {
 			"data": {
@@ -23,11 +23,11 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, 'dwellingDetails'> = {
 	}
 };
 
-const simpleCaseOneFieldOutOfRange = immutable.set(simpleCaseOnlyOneForm, 'dwellingDetails.generalSpecifications.data.storeysInDwelling', 666); // max storeysInDwelling should be 250
+const simpleCaseOneFieldOutOfRange = immutable.set(simpleCaseOnlyOneForm, "dwellingDetails.generalSpecifications.data.storeysInDwelling", 666); // max storeysInDwelling should be 250
 
-const simpleCaseFieldMissing = immutable.del(simpleCaseOnlyOneForm, 'dwellingDetails.generalSpecifications.data.numOfBedrooms');
+const simpleCaseFieldMissing = immutable.del(simpleCaseOnlyOneForm, "dwellingDetails.generalSpecifications.data.numOfBedrooms");
 
-const twoCompleteValidWalls: Pick<WallsData, 'dwellingSpaceExternalWall'> = {
+const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 	"dwellingSpaceExternalWall": {
 		"data": [
 			{
@@ -63,11 +63,11 @@ const twoCompleteValidWalls: Pick<WallsData, 'dwellingSpaceExternalWall'> = {
 	}
 };
 
-const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, 'dwellingSpaceExternalWall.data.1.solarAbsorption');
+const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSpaceExternalWall.data.1.solarAbsorption");
 
-const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingField, 'dwellingSpaceExternalWall.data.0.massDistributionClass', 'X'); // 'X' is invalid for a mass distribution class value
+const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingField, "dwellingSpaceExternalWall.data.0.massDistributionClass", "X"); // 'X' is invalid for a mass distribution class value
 
-const twoHeatPumps: Pick<EcaasState, 'heatingSystems'> = {
+const twoHeatPumps: Pick<EcaasState, "heatingSystems"> = {
 	"heatingSystems": {
 		"heatGeneration": {
 			"heatPump": {
@@ -128,32 +128,32 @@ const twoHeatPumps: Pick<EcaasState, 'heatingSystems'> = {
 	}
 };
 
-const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, 'heatingSystems.heatGeneration.heatPump.data.1.data.productReference');
+const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, "heatingSystems.heatGeneration.heatPump.data.1.data.productReference");
 
 const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> | undefined, number][] = [
 	[
-		'simple case with only one form complete',
+		"simple case with only one form complete",
 		simpleCaseOnlyOneForm,
 		false,
 		undefined,
 		0,
 	],
 	[
-		'simple case with a form marked complete but missing a field',
+		"simple case with a form marked complete but missing a field",
 		simpleCaseFieldMissing,
 		true,
-		immutable.set(simpleCaseFieldMissing, 'dwellingDetails.generalSpecifications.complete', false),
+		immutable.set(simpleCaseFieldMissing, "dwellingDetails.generalSpecifications.complete", false),
 		1,
 	],
 	[
-		'simple case where form marked complete but a value is out of expected range',
+		"simple case where form marked complete but a value is out of expected range",
 		simpleCaseOneFieldOutOfRange,
 		true,
-		immutable.set(simpleCaseOneFieldOutOfRange, 'dwellingDetails.generalSpecifications.complete', false),
+		immutable.set(simpleCaseOneFieldOutOfRange, "dwellingDetails.generalSpecifications.complete", false),
 		1,
 	],
 	[
-		'case where there are two valid walls already marked complete',
+		"case where there are two valid walls already marked complete",
 		{
 			"dwellingFabric": {
 				"dwellingSpaceWalls": twoCompleteValidWalls,
@@ -164,7 +164,7 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		0
 	],
 	[
-		'case where there are two walls already marked complete but one is missing a field',
+		"case where there are two walls already marked complete but one is missing a field",
 		{
 			"dwellingFabric": {
 				"dwellingSpaceWalls": twoWallsOneMissingField,
@@ -173,13 +173,13 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		true,
 		{
 			"dwellingFabric": {
-				"dwellingSpaceWalls": immutable.set(twoWallsOneMissingField, 'dwellingSpaceExternalWall.complete', false),
+				"dwellingSpaceWalls": immutable.set(twoWallsOneMissingField, "dwellingSpaceExternalWall.complete", false),
 			}
 		},
 		1,
 	],
 	[
-		'case where there are two walls already marked complete but one is missing a field and one has an illegal value',
+		"case where there are two walls already marked complete but one is missing a field and one has an illegal value",
 		{
 			"dwellingFabric": {
 				"dwellingSpaceWalls": twoWallsOneMissingFieldOneInvalidValue,
@@ -188,29 +188,29 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		true,
 		{
 			"dwellingFabric": {
-				"dwellingSpaceWalls": immutable.set(twoWallsOneMissingFieldOneInvalidValue, 'dwellingSpaceExternalWall.complete', false),
+				"dwellingSpaceWalls": immutable.set(twoWallsOneMissingFieldOneInvalidValue, "dwellingSpaceExternalWall.complete", false),
 			}
 		},
 		2,
 	],
 	[
-		'case where there are two heat pumps (lists of items each with complete states), all complete and valid',
+		"case where there are two heat pumps (lists of items each with complete states), all complete and valid",
 		twoHeatPumps,
 		false,
 		undefined,
 		0,
 	],
 	[
-		'case where there are two heat pumps but one has missing field: individual heat pump and whole section should be marked invalid',
+		"case where there are two heat pumps but one has missing field: individual heat pump and whole section should be marked invalid",
 		twoHeatPumpsOneWithMissingFields,
 		true,
-		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, 'heatingSystems.heatGeneration.heatPump.data.1.complete', false), 'heatingSystems.heatGeneration.heatPump.complete', false),
+		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, "heatingSystems.heatGeneration.heatPump.data.1.complete", false), "heatingSystems.heatGeneration.heatPump.complete", false),
 		1,
 	]
 ];
 
-describe('revalidate ECaaS states', () => {
-	test.each(cases)('revalidating: %s', (_message, state, stateChanged, newState, expectedErrorCount) => {
+describe("revalidate ECaaS states", () => {
+	test.each(cases)("revalidating: %s", (_message, state, stateChanged, newState, expectedErrorCount) => {
 		const validationResult = revalidateState(state);
 		expect(validationResult.changed).toBe(stateChanged);
 		if (newState) {

@@ -3,7 +3,7 @@ import type { EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.sch
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
 import { PageType  } from "~/data/pages/pages.types";
-import type {Page} from "~/data/pages/pages.types";
+import type { Page } from "~/data/pages/pages.types";
 import { CombustionApplianceType } from "~/schema/api-schema.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
@@ -17,7 +17,7 @@ export function getInitialState(): EcaasState {
 		},
 		infiltrationAndVentilation: {
 			mechanicalVentilation: { data: [] },
-			ductwork: {data: []},
+			ductwork: { data: [] },
 			vents: { data: [] },
 			combustionAppliances: {
 				[CombustionApplianceType.open_fireplace]: { data: [] },
@@ -93,7 +93,7 @@ export function getInitialState(): EcaasState {
 			},
 			energySupply: { data: {} },
 			heatEmitting: {
-				wetDistribution: { data: []},
+				wetDistribution: { data: [] },
 				instantElectricHeater: { data: [] },
 				electricStorageHeater: { data: [] },
 				warmAirHeatPump: { data: [] },
@@ -185,6 +185,6 @@ export function hasCompleteState(state: EcaasState): boolean {
 
 	return sectionPages.every(page => {
 		const section = Object.fromEntries(stateEntries.filter(e => e[0] === page.id));
-		return getSectionStatus(section as Record<string, object>).text === 'Complete';
+		return getSectionStatus(section as Record<string, object>).text === "Complete";
 	});
 }

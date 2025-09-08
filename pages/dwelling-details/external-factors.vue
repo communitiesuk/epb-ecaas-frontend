@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
+import type { TerrainClass, VentilationShieldClass } from "~/schema/api-schema.types";
 import { getUrl } from "#imports";
 
 const title = "External factors";

@@ -1,70 +1,70 @@
-import FormKitStoredList from './components/form-kit/StoredList.vue';
-import type {StoredListOption} from './components/form-kit/StoredList.vue';
-import { defineFormKitConfig } from '@formkit/vue';
-import FormKitButton from './components/form-kit/Button.vue';
-import FormKitRadios from './components/form-kit/Radios.vue';
-import type {RadioOption} from './components/form-kit/Radios.vue';
-import type { FormKitInputs, FormKitOptionsProp } from '@formkit/inputs';
-import FormKitDropdown from './components/form-kit/Dropdown.vue';
-import FormKitInputFloat from './components/form-kit/InputFloat.vue';
-import FormKitInputInt from './components/form-kit/InputInt.vue';
-import FormKitInputWithSuffix from './components/form-kit/InputWithSuffix.vue';
-import FormKitInputWithUnit from './components/form-kit/InputWithUnit.vue';
-import FormKitCheckboxes from './components/form-kit/Checkboxes.vue';
-import FormKitInputText from './components/form-kit/InputText.vue';
-import FormKitInputTextWithSuffix from './components/form-kit/InputTextWithSuffix.vue';
-import { FormKitBoolean } from '#components';
-import type { LengthUnit } from './utils/units/length';
-import type { VolumeUnit } from './utils/units/volume';
-import type { FlowRateUnit } from './utils/units/flowRate';
+import FormKitStoredList from "./components/form-kit/StoredList.vue";
+import type { StoredListOption } from "./components/form-kit/StoredList.vue";
+import { defineFormKitConfig } from "@formkit/vue";
+import FormKitButton from "./components/form-kit/Button.vue";
+import FormKitRadios from "./components/form-kit/Radios.vue";
+import type { RadioOption } from "./components/form-kit/Radios.vue";
+import type { FormKitInputs, FormKitOptionsProp } from "@formkit/inputs";
+import FormKitDropdown from "./components/form-kit/Dropdown.vue";
+import FormKitInputFloat from "./components/form-kit/InputFloat.vue";
+import FormKitInputInt from "./components/form-kit/InputInt.vue";
+import FormKitInputWithSuffix from "./components/form-kit/InputWithSuffix.vue";
+import FormKitInputWithUnit from "./components/form-kit/InputWithUnit.vue";
+import FormKitCheckboxes from "./components/form-kit/Checkboxes.vue";
+import FormKitInputText from "./components/form-kit/InputText.vue";
+import FormKitInputTextWithSuffix from "./components/form-kit/InputTextWithSuffix.vue";
+import { FormKitBoolean } from "#components";
+import type { LengthUnit } from "./utils/units/length";
+import type { VolumeUnit } from "./utils/units/volume";
+import type { FlowRateUnit } from "./utils/units/flowRate";
 
 // Enable TypeScript support for custom inputs
-declare module '@formkit/inputs' {
+declare module "@formkit/inputs" {
 	interface FormKitInputProps<Props extends FormKitInputs<Props>> {
-		'govRadios': {
-			type: 'govRadios',
+		"govRadios": {
+			type: "govRadios",
 			options: Record<string, string | RadioOption> | Map<string, string>,
-			valueType?: 'string' | 'number'
+			valueType?: "string" | "number"
 		},
-		'govButton': {
-			type: 'govButton'
+		"govButton": {
+			type: "govButton"
 		},
-		'govDropdown': {
-			type: 'govDropdown',
+		"govDropdown": {
+			type: "govDropdown",
 			options: FormKitOptionsProp | FormKitOptionsProp[]
 		},
-		'govInputFloat': {
-			type: 'GovInputFloat'
+		"govInputFloat": {
+			type: "GovInputFloat"
 		},
-		'govInputInt': {
-			type: 'govInputInt'
+		"govInputInt": {
+			type: "govInputInt"
 		},
-		'govInputWithSuffix': {
-			type: 'govInputWithSuffix',
+		"govInputWithSuffix": {
+			type: "govInputWithSuffix",
 			suffixText: string
 		},
-		'govInputWithUnit': {
-			type: 'govInputWithUnit',
+		"govInputWithUnit": {
+			type: "govInputWithUnit",
 			unit: LengthUnit | VolumeUnit | FlowRateUnit,
 		},
-		'govCheckboxes': {
-			type: 'govCheckboxes',
+		"govCheckboxes": {
+			type: "govCheckboxes",
 			options: FormKitOptionsProp,
 			help?: string
 		},
-		'govInputText': {
-			type: 'govInputText'
+		"govInputText": {
+			type: "govInputText"
 		}, 
-		'govInputTextWithSuffix': {
-			type: 'govInputWithSuffix',
+		"govInputTextWithSuffix": {
+			type: "govInputWithSuffix",
 			suffixText: string
 		},
-		'govStoredList': {
-			type: 'govStoredList',
+		"govStoredList": {
+			type: "govStoredList",
 			options: StoredListOption[]
 		},
-		'govBoolean': {
-			type: 'govBoolean',
+		"govBoolean": {
+			type: "govBoolean",
 			trueLabel?: string,
 			falseLabel?: string
 		}
@@ -76,23 +76,23 @@ export default defineFormKitConfig(() => {
 	return {
 		inputs: {
 			govRadios: {
-				type: 'input',
+				type: "input",
 				component: FormKitRadios
 			},
 			govButton: {
-				type: 'input',
+				type: "input",
 				component: FormKitButton
 			},
 			govDropdown: {
-				type: 'input',
+				type: "input",
 				component: FormKitDropdown
 			},
 			govInputFloat: {
-				type: 'input',
+				type: "input",
 				component: FormKitInputFloat
 			},
 			govInputInt: {
-				type: 'input',
+				type: "input",
 				component: FormKitInputInt
 			},
 			govInputWithSuffix: {

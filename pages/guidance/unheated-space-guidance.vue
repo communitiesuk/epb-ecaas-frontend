@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = 'Unheated space guidance';
+const title = "Unheated space guidance";
 </script>
 
 <template>

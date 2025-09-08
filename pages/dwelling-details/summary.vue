@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { SummarySection } from '~/common.types';
-import { getTabItems, getUrl } from '#imports';
-import { BuildType } from '~/schema/api-schema.types';
-import { degrees } from '~/utils/units/angle';
-import { metre } from '~/utils/units/length';
+import type { SummarySection } from "~/common.types";
+import { getTabItems, getUrl } from "#imports";
+import { BuildType } from "~/schema/api-schema.types";
+import { degrees } from "~/utils/units/angle";
+import { metre } from "~/utils/units/length";
 
 const title = "Dwelling details summary";
 const store = useEcaasStore();
@@ -13,7 +13,7 @@ const shadingData = store.dwellingDetails.shading.data;
 const externalFactors = store.dwellingDetails.externalFactors.data;
 
 const generalDetailsSummary: SummarySection = {
-	id: 'generalDetails',
+	id: "generalDetails",
 	label: "General details",
 	data: {
 		"Type of dwelling": generalDetailsData.typeOfDwelling ? displayCamelToSentenceCase(generalDetailsData.typeOfDwelling) : undefined,
@@ -22,11 +22,11 @@ const generalDetailsSummary: SummarySection = {
 		"Number of bedrooms": generalDetailsData.numOfBedrooms,
 		"Cooling required": displayBoolean(generalDetailsData.coolingRequired),
 	},
-	editUrl: getUrl('generalSpecifications')
+	editUrl: getUrl("generalSpecifications")
 };
 
 const shadingSummary: SummarySection = {
-	id: 'shading',
+	id: "shading",
 	label: "Shading",
 	data: shadingData.map(s => {
 		return {
@@ -38,19 +38,19 @@ const shadingSummary: SummarySection = {
 			"Distance": `${s.data.distance} ${metre.suffix}`
 		};
 	}) || [],
-	editUrl: getUrl('shading')
+	editUrl: getUrl("shading")
 };
 
 const externalFactorsSummary: SummarySection = {
-	id: 'externalFactors',
-	label: 'External factors',
+	id: "externalFactors",
+	label: "External factors",
 	data: {
 		"Altitude": `${externalFactors.altitude} ${metre.suffix}`,
 		"Type of exposure": externalFactors.typeOfExposure,
 		"Terrain type": externalFactors.terrainType ? displayCamelToSentenceCase(externalFactors.terrainType) : undefined,
 		"Noise nuisance": displayBoolean(externalFactors.noiseNuisance)
 	},
-	editUrl: getUrl('externalFactors')
+	editUrl: getUrl("externalFactors")
 };
 
 const summarySections: SummarySection[] = [

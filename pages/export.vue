@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { lastExportDateCookieName } from '~/utils/exportDate';
+import dayjs from "dayjs";
+import { lastExportDateCookieName } from "~/utils/exportDate";
 
 const store = useEcaasStore();
-const title = 'Export data';
+const title = "Export data";
 
 const model = ref<{ fileName?: string }>({
 	fileName: undefined
@@ -17,7 +17,7 @@ const saveForm = (_: typeof model) => {
 	const stateValue = JSON.stringify(store.$state);
 
 	const stateBytes = new TextEncoder().encode(stateValue);
-	const stateBlob = new Blob([stateBytes], { type: 'application/json;charset=utf-8' });
+	const stateBlob = new Blob([stateBytes], { type: "application/json;charset=utf-8" });
 
 	downloadUrl.value = URL.createObjectURL(stateBlob);
 	exportDate.value = (new Date()).toISOString();
@@ -26,7 +26,7 @@ const saveForm = (_: typeof model) => {
 	lastExportDateCookie.value = exportDate.value;
 
 	setTimeout(() => {
-		document.getElementById('download')?.click();
+		document.getElementById("download")?.click();
 
 		URL.revokeObjectURL(downloadUrl.value!);
 		downloadTriggered.value = true;

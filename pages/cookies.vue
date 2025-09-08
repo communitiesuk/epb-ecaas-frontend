@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import CookieConsent from '~/constants/cookieConsent';
+import CookieConsent from "~/constants/cookieConsent";
 
-const title = 'Cookies on our service';
-const serviceName = 'Check Part L building compliance';
+const title = "Cookies on our service";
+const serviceName = "Check Part L building compliance";
 
 const cookieOptions = {
-	[CookieConsent.Accepted]: 'Use cookies that measure my website use',
-	[CookieConsent.Rejected]: 'Do not use cookies that measure my website use'
+	[CookieConsent.Accepted]: "Use cookies that measure my website use",
+	[CookieConsent.Rejected]: "Do not use cookies that measure my website use"
 };
 
 type CookieOption = keyof typeof cookieOptions | null | undefined;
 
-const cookieConsent = useCookie('cookieConsent');
+const cookieConsent = useCookie("cookieConsent");
 
 const model = ref<{
 	acceptCookies: CookieOption
@@ -24,11 +24,11 @@ const { gtag } = useGtag();
 const saveForm = (fields: typeof model.value) => {
 	cookieConsent.value = fields.acceptCookies;
 
-	gtag('consent', 'update', {
-		analytics_storage: fields.acceptCookies === CookieConsent.Accepted ? 'granted' : 'denied'
+	gtag("consent", "update", {
+		analytics_storage: fields.acceptCookies === CookieConsent.Accepted ? "granted" : "denied"
 	});
 
-	navigateTo('/');
+	navigateTo("/");
 };
 </script>
 

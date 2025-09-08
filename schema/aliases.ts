@@ -15,20 +15,20 @@ export type SchemaSpaceHeatSystemDetails = SchemaSpaceHeatSystemInstantElectricH
 export type SchemaSpaceCoolSystemDetails = SchemaSpaceCoolSystemFhs;
 export type SchemaShadingSegment = SchemaShadingSegmentFhs;
 export type SchemaZoneInput = SchemaZoneFhs;
-export type SchemaShower = TaggedUnion<'type', {
+export type SchemaShower = TaggedUnion<"type", {
 	[ShowerMixerType.MixerShower]: SchemaShowerMixer,
 	[ShowerInstantElectricType.InstantElecShower]: SchemaShowerInstantElectric,
 }>;
 export type SchemaBathDetails = SchemaBath;
 export type SchemaOtherWaterUseDetails = SchemaOtherWaterUse;
-export type SchemaHotWaterSourceDetails = TaggedUnion<'type', {
+export type SchemaHotWaterSourceDetails = TaggedUnion<"type", {
 	[HotWaterSourceCombiBoilerType.CombiBoiler]: SchemaHotWaterSourceCombiBoiler,
 	[HotWaterSourceHUIType.HIU]: SchemaHotWaterSourceHui,
 	[HotWaterSourcePointOfUseType.PointOfUse]: SchemaHotWaterSourcePointOfUse,
 	[HotWaterSourceSmartHotWaterTankFHSType.SmartHotWaterTank]: SchemaHotWaterSourceSmartHotWaterTankFhs,
 	[HotWaterSourceHeatBatteryType.HeatBattery]: SchemaHotWaterSourceHeatBattery,
 }>;
-export type ApplianceKey = keyof components['schemas']['Appliances'];
+export type ApplianceKey = keyof components["schemas"]["Appliances"];
 export const FloorType = {
 	...BuildingElementGroundHeatedBasementFloor_type,
 	...BuildingElementGroundSlabEdgeInsulationFloor_type,
@@ -37,14 +37,14 @@ export const FloorType = {
 	...BuildingElementGroundUnheatedBasementFloor_type,
 };
 // work round apparent bug in type generation
-export type BuildingElementGround = TaggedUnion<'floor_type', {
+export type BuildingElementGround = TaggedUnion<"floor_type", {
 	[BuildingElementGroundSlabNoEdgeInsulationFloor_type.Slab_no_edge_insulation]: SchemaBuildingElementGroundSlabNoEdgeInsulation,
 	[BuildingElementGroundSlabEdgeInsulationFloor_type.Slab_edge_insulation]: SchemaBuildingElementGroundSlabEdgeInsulation,
 	[BuildingElementGroundSuspendedFloorFloor_type.Suspended_floor]: SchemaBuildingElementGroundSuspendedFloor,
 	[BuildingElementGroundHeatedBasementFloor_type.Heated_basement]: SchemaBuildingElementGroundHeatedBasement,
 	[BuildingElementGroundUnheatedBasementFloor_type.Unheated_basement]: SchemaBuildingElementGroundUnheatedBasement,
 }>;
-export type SchemaBuildingElement = TaggedUnion<'type', {
+export type SchemaBuildingElement = TaggedUnion<"type", {
 	[BuildingElementGroundType.BuildingElementGround]: BuildingElementGround,
 	[BuildingElementOpaqueFHSType.BuildingElementOpaque]: SchemaBuildingElementOpaqueFhs,
 	[BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace]: SchemaBuildingElementAdjacentConditionedSpace,
@@ -95,7 +95,7 @@ export function externalConditions(shading: SchemaShadingSegment[]): SchemaExter
 	};
 }
 // utility function to make valid energy supply object from partial
-const baseEnergySupply: Omit<SchemaEnergySupply, 'fuel'> = {
+const baseEnergySupply: Omit<SchemaEnergySupply, "fuel"> = {
 	ElectricBattery: null,
 	diverter: null,
 	factor: null,
@@ -106,7 +106,7 @@ const baseEnergySupply: Omit<SchemaEnergySupply, 'fuel'> = {
 	threshold_prices: null,
 };
 // LegacyEnergySupply allows all fields on energy supply to be missing aside from fuel
-type LegacyEnergySupply = Pick<SchemaEnergySupply, 'fuel'> & Partial<Omit<SchemaEnergySupply, 'fuel'>>;
+type LegacyEnergySupply = Pick<SchemaEnergySupply, "fuel"> & Partial<Omit<SchemaEnergySupply, "fuel">>;
 export function energySupply(supply: LegacyEnergySupply): SchemaEnergySupply {
 	return {
 		...baseEnergySupply,

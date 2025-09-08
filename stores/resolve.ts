@@ -8,7 +8,7 @@ export function resolveState<T extends object>(state: T): Resolved<T> {
 	for (const key in state) {
 		const value = state[key];
 
-		if (key.startsWith('$') || key.startsWith('_') || typeof value === 'function') {
+		if (key.startsWith("$") || key.startsWith("_") || typeof value === "function") {
 			continue;
 		}
 
@@ -16,7 +16,7 @@ export function resolveState<T extends object>(state: T): Resolved<T> {
 			if (value.complete) {
 				resolvedState[key] = value.data as Resolved<T>[typeof key];
 			}
-		} else if (typeof value === 'object' && value !== null) {
+		} else if (typeof value === "object" && value !== null) {
 			resolvedState[key] = resolveState(value) as Resolved<T>[typeof key];
 		} else {
 			resolvedState[key] = value as Resolved<T>[typeof key];

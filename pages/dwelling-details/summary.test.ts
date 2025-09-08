@@ -1,12 +1,12 @@
-import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
-import Summary from './summary.vue';
-import { screen } from '@testing-library/vue';
-import hyphenate from '../../utils/hyphenate';
-import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from '~/schema/api-schema.types';
-import { metre } from '~/utils/units/length';
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import Summary from "./summary.vue";
+import { screen } from "@testing-library/vue";
+import hyphenate from "../../utils/hyphenate";
+import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from "~/schema/api-schema.types";
+import { metre } from "~/utils/units/length";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport('navigateTo', () => {
+mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
@@ -24,7 +24,7 @@ const state: DwellingDetailSummary = {
 		coolingRequired: false,
 	},
 	shading: [{
-		name: 'Shading 1',
+		name: "Shading 1",
 		startAngle: 0,
 		endAngle: 90,
 		objectType: ShadingObjectType.obstacle,
@@ -39,22 +39,22 @@ const state: DwellingDetailSummary = {
 	}
 };
 
-describe('Dwelling details summary', () => {
+describe("Dwelling details summary", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	it('should contain the correct tabs for dwelling details', async () => {
+	it("should contain the correct tabs for dwelling details", async () => {
 		await renderSuspended(Summary);
   
-		expect(screen.getByRole('link', {name: 'General details'}));
-		expect(screen.getByRole('link', {name: 'Shading'}));
+		expect(screen.getByRole("link", { name: "General details" }));
+		expect(screen.getByRole("link", { name: "Shading" }));
 
 	});
 
-	it('should display the correct data for the general details section', async () => {
+	it("should display the correct data for the general details section", async () => {
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
@@ -79,7 +79,7 @@ describe('Dwelling details summary', () => {
 		}
 	});
 
-	it('should display the correct data for the external factors section', async () => {
+	it("should display the correct data for the external factors section", async () => {
 		store.$patch({
 			dwellingDetails: {
 				externalFactors: {

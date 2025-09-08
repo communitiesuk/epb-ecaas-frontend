@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { BathData, ElectricShowerData, MixedShowerData, OtherHotWaterOutletData } from '~/stores/ecaasStore.schema';
-import formStatus from '~/constants/formStatus';
+import type { BathData, ElectricShowerData, MixedShowerData, OtherHotWaterOutletData } from "~/stores/ecaasStore.schema";
+import formStatus from "~/constants/formStatus";
 
 const title = "Hot water outlets";
 const page = usePage();
@@ -62,7 +62,7 @@ function handleComplete() {
 			}
 		}
 	});
-	navigateTo('/domestic-hot-water');
+	navigateTo("/domestic-hot-water");
 }
 
 

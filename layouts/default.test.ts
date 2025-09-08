@@ -1,15 +1,14 @@
-import { renderSuspended } from '@nuxt/test-utils/runtime';
-import DefaultPage from './default.vue';
-import { screen } from '@testing-library/vue';
-import { MVHRLocation } from '~/schema/api-schema.types';
-import { VentType } from '~/schema/aliases';
+import { renderSuspended } from "@nuxt/test-utils/runtime";
+import DefaultPage from "./default.vue";
+import { screen } from "@testing-library/vue";
+import { MVHRLocation } from "~/schema/api-schema.types";
+import { VentType } from "~/schema/aliases";
 
-
-describe('nav bar with ductwork', () => {
+describe("nav bar with ductwork", () => {
 	const store = useEcaasStore();
 
 	const mechanicalVentilation1: MechanicalVentilationData = {
-		id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
 		airFlowRate: 12,
@@ -17,13 +16,13 @@ describe('nav bar with ductwork', () => {
 		mvhrEfficiency: 0.2,
 	};
 
-	it('should not show the mvhr ductwork link when no mechanical ventilations of type mvhr have been added', async () => {
+	it("should not show the mvhr ductwork link when no mechanical ventilations of type mvhr have been added", async () => {
 		await renderSuspended(DefaultPage);
-		expect(screen.queryByText('MVHR ductwork')).toBeNull();
+		expect(screen.queryByText("MVHR ductwork")).toBeNull();
 
 	});
 
-	it('should show the mvhr ductwork link when mechanical ventilations of type mvhr have been added', async () => {
+	it("should show the mvhr ductwork link when mechanical ventilations of type mvhr have been added", async () => {
 		store.$patch({
 			infiltrationAndVentilation:{
 				mechanicalVentilation: {
@@ -32,6 +31,6 @@ describe('nav bar with ductwork', () => {
 			}
 		});
 		await renderSuspended(DefaultPage);
-		expect(screen.getByText('MVHR ductwork'));
+		expect(screen.getByText("MVHR ductwork"));
 	});
 });

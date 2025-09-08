@@ -1,4 +1,4 @@
-import type {ValidateFunction} from "ajv/dist/2020";
+import type { ValidateFunction } from "ajv/dist/2020";
 import { ajv } from "../schema/validator";
 import {
 	BatteryLocation,
@@ -13,7 +13,6 @@ import {
 	EdgeInsulationHorizontalType,
 	FuelType,
 	HeatingControlType,
-	HeatSourceWetHeatPumpType,
 	HeatSourceWetHeatPumpWithProductReferenceType,
 	HeatSourceWetServiceWaterRegularType,
 	InverterType,
@@ -39,9 +38,9 @@ import {
 	WindowTreatmentControl,
 	WindowTreatmentType
 } from "~/schema/api-schema.types";
-import { ColdWaterSourceType, energySupply, externalConditions, FloorType, noEvents, OnSiteGenerationVentilationStrategy, segment, VentType, WindowShadingObjectType } from "~/schema/aliases";
+import { ColdWaterSourceType, energySupply, externalConditions, FloorType, noEvents, OnSiteGenerationVentilationStrategy, VentType, WindowShadingObjectType } from "~/schema/aliases";
 import {  mapFhsInputData } from "./fhsInputMapper";
-import type {FhsInputSchema} from "./fhsInputMapper";
+import type { FhsInputSchema } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { centimetre } from "../utils/units/length";
@@ -62,10 +61,10 @@ const expectedHouseInput: FhsInputSchema = {
 	},
 	Control: {},
 	EnergySupply: {
-		['mains elec']: energySupply({
+		["mains elec"]: {
 			fuel: FuelType.electricity,
 			is_export_capable: true,
-		})
+		}
 	},
 	Events: noEvents,
 	ExternalConditions: externalConditions([
@@ -123,7 +122,7 @@ const expectedHouseInput: FhsInputSchema = {
 		{ number: 34, start360: 330, end360: 340 },
 		{ number: 35, start360: 340, end360: 350 },
 		{ number: 36, start360: 350, end360: 360 }
-	].map(segment)
+	]
 	),
 	General: {
 		build_type: BuildType.house,
@@ -154,8 +153,8 @@ const expectedHouseInput: FhsInputSchema = {
 					type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
-					Controlmin: 'min',
-					Controlmax: 'max',
+					Controlmin: "min",
+					Controlmax: "max",
 				},
 			},
 			daily_losses: 34,
@@ -184,7 +183,7 @@ const expectedHouseInput: FhsInputSchema = {
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
 				SFP: 1.5,
-				Control: 'fan',
+				Control: "fan",
 				ductwork: null,
 				mvhr_eff: null,
 				mvhr_location: null
@@ -263,7 +262,7 @@ const expectedHouseInput: FhsInputSchema = {
 			],
 			temp_diff_emit_dsgn: 31,
 			thermal_mass: 0.14,
-			Control: 'heating',
+			Control: "heating",
 			EnergySupply: null,
 			advanced_start: null,
 			bypass_percentage_recirculated: null,
@@ -274,11 +273,11 @@ const expectedHouseInput: FhsInputSchema = {
 		}
 	},
 	GroundFloorArea: 40,
-	HeatSourceWet: {"some-heat-pump-name": {
+	HeatSourceWet: { "some-heat-pump-name": {
 		EnergySupply: defaultElectricityEnergySupplyName,
 		type: HeatSourceWetHeatPumpWithProductReferenceType.HeatSourceWetHeatPumpWithProductReference,
 		product_reference: "HEATPUMP-LARGE"
-	}},
+	} },
 	Zone: {
 		[defaultZoneName]: {
 			BuildingElement: {
@@ -330,7 +329,7 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	Control: {},
 	EnergySupply: {
-		['mains elec']: energySupply({
+		["mains elec"]: energySupply({
 			fuel: FuelType.electricity,
 			is_export_capable: false,
 			ElectricBattery: {
@@ -441,7 +440,7 @@ const expectedFlatInput: FhsInputSchema = {
 		{ number: 34, start360: 330, end360: 340 },
 		{ number: 35, start360: 340, end360: 350 },
 		{ number: 36, start360: 350, end360: 360 }
-	].map(segment)
+	]
 	),
 	General: {
 		build_type: BuildType.flat,
@@ -525,8 +524,8 @@ const expectedFlatInput: FhsInputSchema = {
 					type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
-					Controlmin: 'min',
-					Controlmax: 'max',
+					Controlmin: "min",
+					Controlmax: "max",
 				},
 			},
 			daily_losses: 10,
@@ -586,7 +585,7 @@ const expectedFlatInput: FhsInputSchema = {
 					reflective: true,
 					duct_perimeter_mm: null,
 				}],
-				Control: 'mvhr',
+				Control: "mvhr",
 				SFP: 2.3
 			},
 			"mvhr vent 2 name": {
@@ -600,7 +599,7 @@ const expectedFlatInput: FhsInputSchema = {
 				mvhr_eff: 0,
 				mvhr_location: MVHRLocation.outside,
 				ductwork: [],
-				Control: 'mvhr',
+				Control: "mvhr",
 				SFP: 3
 			},
 			"centralised MEV name": {
@@ -611,7 +610,7 @@ const expectedFlatInput: FhsInputSchema = {
 				vent_type: VentType.Centralised_continuous_MEV,
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
-				Control: 'mev',
+				Control: "mev",
 				SFP: 2,
 				ductwork: null,
 				mvhr_eff: null,
@@ -969,7 +968,7 @@ expect.extend({
 	toPassJsonSchema(isValid: boolean, validator: ValidateFunction<unknown>) {
 		const errors = validator.errors?.map(({ message }) => message).join("; ");
 		return {
-			message: () => isValid ? '' : `JSON validation errors: ${ errors }`,
+			message: () => isValid ? "" : `JSON validation errors: ${ errors }`,
 			pass: isValid		
 		};
 	}
@@ -1640,7 +1639,7 @@ describe("FHS input mapper", () => {
 							surfaceArea: 16,
 							kappaValue: 75000,
 							massDistributionClass: MassDistributionClass.I,
-							pitchOption: '0'
+							pitchOption: "0"
 						}
 					},
 					{
@@ -1651,7 +1650,7 @@ describe("FHS input mapper", () => {
 							kappaValue: 60000,
 							massDistributionClass: MassDistributionClass.IE,
 							pitch: 45,
-							pitchOption: 'custom',
+							pitchOption: "custom",
 							thermalResistanceOfAdjacentUnheatedSpace: 3.4,
 							uValue: 2.2
 						}
@@ -2114,7 +2113,7 @@ describe("FHS input mapper", () => {
 		expect(fhsInputData).toEqual(expectedResult);   
 	});
 
-	test('the expected results pass against the current FHS input schema', () => {
+	test("the expected results pass against the current FHS input schema", () => {
 		const expectedsToTest = [expectedHouseInput, expectedFlatInput];
 
 		const validate = ajv.getSchema("fhs")!;

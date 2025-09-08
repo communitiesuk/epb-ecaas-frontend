@@ -2,7 +2,7 @@ import { VentType } from "~/schema/aliases";
 import { DuctShape, DuctType, MVHRLocation } from "~/schema/api-schema.types";
 import { checkMvhrHasDuctwork } from "~/utils/checkMvhrHasDuctwork";
 
-describe('checkMvhrHasDuctwork', () => {
+describe("checkMvhrHasDuctwork", () => {
 	const store = useEcaasStore();
 	const mechanicalVentilationData1: MechanicalVentilationData = {
 		name: "Mechanical name 1",
@@ -54,7 +54,7 @@ describe('checkMvhrHasDuctwork', () => {
 		surfaceReflectivity: true,
 	};
 
-	it('should return true if one mvhr has a ductwork ', async () => {
+	it("should return true if one mvhr has a ductwork ", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -69,7 +69,7 @@ describe('checkMvhrHasDuctwork', () => {
 		expect(checkMvhrHasDuctwork()).toBe(true);
 	});
 
-	it('should return false if at least one mvhr does not have a corresponding ductwork', async () => {
+	it("should return false if at least one mvhr does not have a corresponding ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -84,7 +84,7 @@ describe('checkMvhrHasDuctwork', () => {
 		expect(checkMvhrHasDuctwork()).toBe(false);
 	});
 
-	it('should handle multiple mechanical ventilation objects of different types', async () => {
+	it("should handle multiple mechanical ventilation objects of different types", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {

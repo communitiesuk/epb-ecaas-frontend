@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Boiler";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const boilerData = useItemToEdit('boiler', store.heatingSystems.heatGeneration.boiler.data);
+const boilerData = useItemToEdit("boiler", store.heatingSystems.heatGeneration.boiler.data);
 const model: Ref<BoilerData> = ref(boilerData!);
 
 const saveForm = (fields: BoilerData) => {
 	store.$patch((state) => {
-		const {boiler} = state.heatingSystems.heatGeneration;
+		const { boiler } = state.heatingSystems.heatGeneration;
 
 		const boilerItem: BoilerData = {
 			id: uuidv4(),
@@ -24,7 +24,7 @@ const saveForm = (fields: BoilerData) => {
 	navigateTo("/heating-systems/heat-generation");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

@@ -1,22 +1,22 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import Walls from './index.vue';
-import ExternalWallForm from './external/[wall].vue';
-import InternalWallForm from './internal/[wall].vue';
-import PartyWallForm from './party/[wall].vue';
-import WallToUnheatedForm from './wall-to-unheated-space/[wall].vue';
+import Walls from "./index.vue";
+import ExternalWallForm from "./external/[wall].vue";
+import InternalWallForm from "./internal/[wall].vue";
+import PartyWallForm from "./party/[wall].vue";
+import WallToUnheatedForm from "./wall-to-unheated-space/[wall].vue";
 import { MassDistributionClass } from "~/schema/api-schema.types";
 
-import {screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom';
+import { screen } from "@testing-library/vue";
+import { within } from "@testing-library/dom";
 import type { Component } from "vue";
 
-describe('walls', () => {
+describe("walls", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 	const navigateToMock = vi.hoisted(() => vi.fn());
 
-	mockNuxtImport('navigateTo', () => {
+	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
 	});
 
@@ -25,7 +25,7 @@ describe('walls', () => {
 	});
 	const external1: ExternalWallData = {
 		name: "External wall 1",
-		pitchOption: '90',
+		pitchOption: "90",
 		pitch: 90,
 		orientation: 0,
 		height: 0.5,
@@ -54,7 +54,7 @@ describe('walls', () => {
 		surfaceAreaOfElement: 5,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
-		pitchOption: 'custom',
+		pitchOption: "custom",
 		pitch: 3
 	};
 	
@@ -74,7 +74,7 @@ describe('walls', () => {
 		uValue: 10,
 		arealHeatCapacity: 110000,
 		massDistributionClass: MassDistributionClass.E,
-		pitchOption: '90',
+		pitchOption: "90",
 		pitch: 90,
 		thermalResistanceOfAdjacentUnheatedSpace: 1
 		
@@ -92,7 +92,7 @@ describe('walls', () => {
 
 	const party1: PartyWallData = {
 		name: "Party wall 1",
-		pitchOption: '90',
+		pitchOption: "90",
 		pitch: 90,
 		surfaceArea: 10,
 		uValue: 0.01,
@@ -110,9 +110,9 @@ describe('walls', () => {
 		name: "Party wall 3",
 	};
 
-	describe('External walls', () => {
+	describe("External walls", () => {
 	
-		test('ground wall is removed when remove link is clicked', async () => {
+		test("ground wall is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -125,14 +125,14 @@ describe('walls', () => {
 	
 			await renderSuspended(Walls);
 	
-			expect(screen.getAllByTestId('external_items')).toBeDefined();
+			expect(screen.getAllByTestId("external_items")).toBeDefined();
 	
-			await user.click(screen.getByTestId('external_remove_0'));
+			await user.click(screen.getByTestId("external_remove_0"));
 	
-			expect(screen.queryByTestId('external_items')).toBeNull();
+			expect(screen.queryByTestId("external_items")).toBeNull();
 		});
 	
-		it('should only remove the external wall object thats is clicked', async () => {
+		it("should only remove the external wall object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -144,17 +144,17 @@ describe('walls', () => {
 			});
 	
 			await renderSuspended(Walls);
-			await user.click(screen.getByTestId('external_remove_1'));
+			await user.click(screen.getByTestId("external_remove_1"));
 	
-			const populatedList = screen.getByTestId('external_items');
+			const populatedList = screen.getByTestId("external_items");
 	
-			expect(within(populatedList).getByText('External wall 1')).toBeDefined();
-			expect(within(populatedList).getByText('External wall 3')).toBeDefined();
-			expect(within(populatedList).queryByText('External wall 2')).toBeNull();
+			expect(within(populatedList).getByText("External wall 1")).toBeDefined();
+			expect(within(populatedList).getByText("External wall 3")).toBeDefined();
+			expect(within(populatedList).queryByText("External wall 2")).toBeNull();
 	
 		});
 	
-		test('wall is duplicated when duplicate link is clicked', async () => {
+		test("wall is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -166,24 +166,24 @@ describe('walls', () => {
 			});
 	
 			await renderSuspended(Walls);
-			await userEvent.click(screen.getByTestId('external_duplicate_0'));
-			await userEvent.click(screen.getByTestId('external_duplicate_0'));
-			await userEvent.click(screen.getByTestId('external_duplicate_2'));
-			await userEvent.click(screen.getByTestId('external_duplicate_2'));
+			await userEvent.click(screen.getByTestId("external_duplicate_0"));
+			await userEvent.click(screen.getByTestId("external_duplicate_0"));
+			await userEvent.click(screen.getByTestId("external_duplicate_2"));
+			await userEvent.click(screen.getByTestId("external_duplicate_2"));
 	
-			expect(screen.queryAllByTestId('external_item').length).toBe(6);
-			expect(screen.getByText('External wall 1')).toBeDefined();
-			expect(screen.getByText('External wall 1 (1)')).toBeDefined();
-			expect(screen.getByText('External wall 1 (2)')).toBeDefined();
-			expect(screen.getByText('External wall 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('External wall 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("external_item").length).toBe(6);
+			expect(screen.getByText("External wall 1")).toBeDefined();
+			expect(screen.getByText("External wall 1 (1)")).toBeDefined();
+			expect(screen.getByText("External wall 1 (2)")).toBeDefined();
+			expect(screen.getByText("External wall 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("External wall 1 (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('Internal walls', () => {
+	describe("Internal walls", () => {
 
 	  
-		test('internal wall is removed when remove link is clicked', async () => {
+		test("internal wall is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -196,14 +196,14 @@ describe('walls', () => {
 	  
 			await renderSuspended(Walls);
 	  
-			expect(screen.getAllByTestId('internal_items')).toBeDefined();
+			expect(screen.getAllByTestId("internal_items")).toBeDefined();
 	  
-			await user.click(screen.getByTestId('internal_remove_0'));
+			await user.click(screen.getByTestId("internal_remove_0"));
 	  
-			expect(screen.queryByTestId('internal_items')).toBeNull();
+			expect(screen.queryByTestId("internal_items")).toBeNull();
 		});
 	  
-		it('should only remove the internal wall object thats is clicked', async () => {
+		it("should only remove the internal wall object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -215,17 +215,17 @@ describe('walls', () => {
 			});
 	  
 			await renderSuspended(Walls);
-			await user.click(screen.getByTestId('internal_remove_1'));
+			await user.click(screen.getByTestId("internal_remove_1"));
 	  
-			const populatedList = screen.getByTestId('internal_items');
+			const populatedList = screen.getByTestId("internal_items");
 	  
-			expect(within(populatedList).getByText('Internal wall 1')).toBeDefined();
-			expect(within(populatedList).getByText('Internal wall 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Internal wall 2')).toBeNull();
+			expect(within(populatedList).getByText("Internal wall 1")).toBeDefined();
+			expect(within(populatedList).getByText("Internal wall 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Internal wall 2")).toBeNull();
 	  
 		});
 	  
-		test('wall is duplicated when duplicate link is clicked', async () => {
+		test("wall is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -237,24 +237,24 @@ describe('walls', () => {
 			});
 	  
 			await renderSuspended(Walls);
-			await userEvent.click(screen.getByTestId('internal_duplicate_0'));
-			await userEvent.click(screen.getByTestId('internal_duplicate_0'));
-			await userEvent.click(screen.getByTestId('internal_duplicate_2'));
-			await userEvent.click(screen.getByTestId('internal_duplicate_2'));
+			await userEvent.click(screen.getByTestId("internal_duplicate_0"));
+			await userEvent.click(screen.getByTestId("internal_duplicate_0"));
+			await userEvent.click(screen.getByTestId("internal_duplicate_2"));
+			await userEvent.click(screen.getByTestId("internal_duplicate_2"));
 	  
-			expect(screen.queryAllByTestId('internal_item').length).toBe(6);
-			expect(screen.getByText('Internal wall 1')).toBeDefined();
-			expect(screen.getByText('Internal wall 1 (1)')).toBeDefined();
-			expect(screen.getByText('Internal wall 1 (2)')).toBeDefined();
-			expect(screen.getByText('Internal wall 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Internal wall 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("internal_item").length).toBe(6);
+			expect(screen.getByText("Internal wall 1")).toBeDefined();
+			expect(screen.getByText("Internal wall 1 (1)")).toBeDefined();
+			expect(screen.getByText("Internal wall 1 (2)")).toBeDefined();
+			expect(screen.getByText("Internal wall 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Internal wall 1 (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('Wall to unheated space', () => {
+	describe("Wall to unheated space", () => {
 
 	  
-		test('wall-to-heated-space is removed when remove link is clicked', async () => {
+		test("wall-to-heated-space is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -267,14 +267,14 @@ describe('walls', () => {
 	  
 			await renderSuspended(Walls);
 	  
-			expect(screen.getAllByTestId('toHeatedSpace_items')).toBeDefined();
+			expect(screen.getAllByTestId("toHeatedSpace_items")).toBeDefined();
 	  
-			await user.click(screen.getByTestId('toHeatedSpace_remove_0'));
+			await user.click(screen.getByTestId("toHeatedSpace_remove_0"));
 	  
-			expect(screen.queryByTestId('toHeatedSpace_items')).toBeNull();
+			expect(screen.queryByTestId("toHeatedSpace_items")).toBeNull();
 		});
 	  
-		it('should only remove the wall-to-heated-space object thats is clicked', async () => {
+		it("should only remove the wall-to-heated-space object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -286,16 +286,16 @@ describe('walls', () => {
 			});
 	  
 			await renderSuspended(Walls);
-			await user.click(screen.getByTestId('toHeatedSpace_remove_1'));
+			await user.click(screen.getByTestId("toHeatedSpace_remove_1"));
 	  
-			const populatedList = screen.getByTestId('toHeatedSpace_items');
+			const populatedList = screen.getByTestId("toHeatedSpace_items");
 	  
-			expect(within(populatedList).getByText('Wall to heated space 1')).toBeDefined();
-			expect(within(populatedList).getByText('Wall to heated space 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Wall to heated space 2')).toBeNull();
+			expect(within(populatedList).getByText("Wall to heated space 1")).toBeDefined();
+			expect(within(populatedList).getByText("Wall to heated space 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Wall to heated space 2")).toBeNull();
 		});
 	  
-		test('wall is duplicated when duplicate link is clicked', async () => {
+		test("wall is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -307,23 +307,23 @@ describe('walls', () => {
 			});
 	  
 			await renderSuspended(Walls);
-			await userEvent.click(screen.getByTestId('toHeatedSpace_duplicate_0'));
-			await userEvent.click(screen.getByTestId('toHeatedSpace_duplicate_0'));
-			await userEvent.click(screen.getByTestId('toHeatedSpace_duplicate_2'));
-			await userEvent.click(screen.getByTestId('toHeatedSpace_duplicate_2'));
+			await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_0"));
+			await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_0"));
+			await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_2"));
+			await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_2"));
 	  
-			expect(screen.queryAllByTestId('toHeatedSpace_item').length).toBe(6);
-			expect(screen.getByText('Wall to heated space 1')).toBeDefined();
-			expect(screen.getByText('Wall to heated space 1 (1)')).toBeDefined();
-			expect(screen.getByText('Wall to heated space 1 (2)')).toBeDefined();
-			expect(screen.getByText('Wall to heated space 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Wall to heated space 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("toHeatedSpace_item").length).toBe(6);
+			expect(screen.getByText("Wall to heated space 1")).toBeDefined();
+			expect(screen.getByText("Wall to heated space 1 (1)")).toBeDefined();
+			expect(screen.getByText("Wall to heated space 1 (2)")).toBeDefined();
+			expect(screen.getByText("Wall to heated space 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Wall to heated space 1 (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('Party walls', () => {
+	describe("Party walls", () => {
 
-		test('party wall is removed when remove link is clicked', async () => {
+		test("party wall is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -336,14 +336,14 @@ describe('walls', () => {
 	
 			await renderSuspended(Walls);
 	
-			expect(screen.getAllByTestId('party_items')).toBeDefined();
+			expect(screen.getAllByTestId("party_items")).toBeDefined();
 	
-			await user.click(screen.getByTestId('party_remove_0'));
+			await user.click(screen.getByTestId("party_remove_0"));
 	
-			expect(screen.queryByTestId('party_items')).toBeNull();
+			expect(screen.queryByTestId("party_items")).toBeNull();
 		});
 	
-		it('should only remove the party wall object thats is clicked', async () => {
+		it("should only remove the party wall object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -355,17 +355,17 @@ describe('walls', () => {
 			});
 	
 			await renderSuspended(Walls);
-			await user.click(screen.getByTestId('party_remove_1'));
+			await user.click(screen.getByTestId("party_remove_1"));
 	
-			const populatedList = screen.getByTestId('party_items');
+			const populatedList = screen.getByTestId("party_items");
 	
-			expect(within(populatedList).getByText('Party wall 1')).toBeDefined();
-			expect(within(populatedList).getByText('Party wall 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Party wall 2')).toBeNull();
+			expect(within(populatedList).getByText("Party wall 1")).toBeDefined();
+			expect(within(populatedList).getByText("Party wall 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Party wall 2")).toBeNull();
 	
 		});
 	
-		test('wall is duplicated when duplicate link is clicked', async () => {
+		test("wall is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -377,20 +377,20 @@ describe('walls', () => {
 			});
 	
 			await renderSuspended(Walls);
-			await userEvent.click(screen.getByTestId('party_duplicate_0'));
-			await userEvent.click(screen.getByTestId('party_duplicate_0'));
-			await userEvent.click(screen.getByTestId('party_duplicate_2'));
-			await userEvent.click(screen.getByTestId('party_duplicate_2'));
+			await userEvent.click(screen.getByTestId("party_duplicate_0"));
+			await userEvent.click(screen.getByTestId("party_duplicate_0"));
+			await userEvent.click(screen.getByTestId("party_duplicate_2"));
+			await userEvent.click(screen.getByTestId("party_duplicate_2"));
 	
-			expect(screen.queryAllByTestId('party_item').length).toBe(6);
-			expect(screen.getByText('Party wall 1')).toBeDefined();
-			expect(screen.getByText('Party wall 1 (1)')).toBeDefined();
-			expect(screen.getByText('Party wall 1 (2)')).toBeDefined();
-			expect(screen.getByText('Party wall 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Party wall 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("party_item").length).toBe(6);
+			expect(screen.getByText("Party wall 1")).toBeDefined();
+			expect(screen.getByText("Party wall 1 (1)")).toBeDefined();
+			expect(screen.getByText("Party wall 1 (2)")).toBeDefined();
+			expect(screen.getByText("Party wall 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Party wall 1 (1) (2)")).toBeDefined();
 		});
 	});
-	describe('mark section as complete', () => {
+	describe("mark section as complete", () => {
 		const addWallsDataToStore = async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -416,22 +416,22 @@ describe('walls', () => {
 		}[]> => {
 			return [
 				{
-					key: 'dwellingSpaceExternalWall',
+					key: "dwellingSpaceExternalWall",
 					testId: `external_${action}_0`,
 					form: ExternalWallForm
 				},
 				{
-					key: 'dwellingSpaceInternalWall',
+					key: "dwellingSpaceInternalWall",
 					testId: `internal_${action}_0`,
 					form: InternalWallForm
 				},
 				{
-					key: 'dwellingSpacePartyWall',
+					key: "dwellingSpacePartyWall",
 					testId: `party_${action}_0`,
 					form: PartyWallForm
 				},
 				{
-					key: 'dwellingSpaceWallToUnheatedSpace',
+					key: "dwellingSpaceWallToUnheatedSpace",
 					testId: `toHeatedSpace_${action}_0`,
 					form: WallToUnheatedForm
 				}
@@ -440,12 +440,12 @@ describe('walls', () => {
 	
 		type WallType = keyof typeof store.dwellingFabric.dwellingSpaceWalls;
 	
-		it('marks walls as complete when mark section as complete button is clicked', async () => {
+		it("marks walls as complete when mark section as complete button is clicked", async () => {
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-			const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
+			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
 			expect(completedStatusElement?.style.display).toBe("none");
 	
-			await user.click(screen.getByTestId('completeSectionButton'));
+			await user.click(screen.getByTestId("completeSectionButton"));
 	
 			const {
 				dwellingSpaceExternalWall,
@@ -461,17 +461,17 @@ describe('walls', () => {
 			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
 			expect(completedStatusElement?.style.display).not.toBe("none");
 	
-			expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space');
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space");
 		});
 	
-		it('marks walls as not complete when complete button is clicked then user removes a wall item', async () => {
+		it("marks walls as not complete when complete button is clicked then user removes a wall item", async () => {
 			const wallData = await getWallData("remove");
 			const walls = Object.entries(store.dwellingFabric.dwellingSpaceWalls);
 	
 			for (const [key] of walls) {
 				const typedKey = key as WallType;
 	
-				await user.click(screen.getByTestId('completeSectionButton'));
+				await user.click(screen.getByTestId("completeSectionButton"));
 				expect(store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete).toBe(true);
 	
 				const item = wallData.find(x => x.key === typedKey)!;
@@ -482,14 +482,14 @@ describe('walls', () => {
 			}
 		});
 	
-		it('marks walls as not complete when complete button is clicked then user duplicates a wall item', async () => {
+		it("marks walls as not complete when complete button is clicked then user duplicates a wall item", async () => {
 			const wallData = await getWallData("duplicate");
 			const walls = Object.entries(store.dwellingFabric.dwellingSpaceWalls);
 	
 			for (const [key] of walls) {
 				const typedKey = key as WallType;
 	
-				await user.click(screen.getByTestId('completeSectionButton'));
+				await user.click(screen.getByTestId("completeSectionButton"));
 				expect(store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete).toBe(true);
 	
 				const item = wallData.find(x => x.key === typedKey)!;
@@ -500,23 +500,23 @@ describe('walls', () => {
 			}
 		});
 	
-		it('marks walls as not complete when user saves a new or edited wall form after marking section as complete', async () => {
+		it("marks walls as not complete when user saves a new or edited wall form after marking section as complete", async () => {
 			const wallData = await getWallData("");
 			const walls = Object.entries(store.dwellingFabric.dwellingSpaceWalls);
 	
 			for (const [key] of walls) {
 				const typedKey = key as WallType;
 	
-				await user.click(screen.getByTestId('completeSectionButton'));
+				await user.click(screen.getByTestId("completeSectionButton"));
 				expect(store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete).toBe(true);
 	
 				const item = wallData.find(x => x.key === typedKey)!;
 	
 				await renderSuspended(item.form, {
-					route: { params: { wall: '0' } }
+					route: { params: { wall: "0" } }
 				});
 	
-				await user.click(screen.getByRole('button', { name: "Save and continue" }));
+				await user.click(screen.getByRole("button", { name: "Save and continue" }));
 	
 				expect(store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete).toBe(false);
 				await renderSuspended(Walls);

@@ -3,13 +3,13 @@ const title = "Exposed floor";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const floorData = useItemToEdit('floor', store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
+const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
 const model: Ref<ExposedFloorData> = ref(floorData!);
 
 const saveForm = (fields: ExposedFloorData) => {	
 
 	store.$patch((state) => {
-		const {dwellingSpaceFloors} = state.dwellingFabric;
+		const { dwellingSpaceFloors } = state.dwellingFabric;
 
 		const floor: ExposedFloorData = {
 			name: fields.name,
@@ -34,7 +34,7 @@ const saveForm = (fields: ExposedFloorData) => {
 	navigateTo("/dwelling-space/floors");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import type { SummarySection } from '~/common.types';
-import { getTabItems, getUrl } from '#imports';
-import { DuctShape } from '~/schema/api-schema.types';
-import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from '~/utils/units/flowRate';
-import { metre, millimetre } from '~/utils/units/length';
-import { wattsPerMeterKelvin } from '~/utils/units/thermalConductivity';
-import { centimetresSquare, metresSquare } from '~/utils/units/area';
-import { degrees } from '~/utils/units/angle';
-import { pascal } from '~/utils/units/pressure';
-import { VentType } from '~/schema/aliases';
+import type { SummarySection } from "~/common.types";
+import { getTabItems, getUrl } from "#imports";
+import { DuctShape } from "~/schema/api-schema.types";
+import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
+import { metre, millimetre } from "~/utils/units/length";
+import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
+import { centimetresSquare, metresSquare } from "~/utils/units/area";
+import { degrees } from "~/utils/units/angle";
+import { pascal } from "~/utils/units/pressure";
+import { VentType } from "~/schema/aliases";
 
 const title = "Infiltration and ventilation summary";
 const store = useEcaasStore();
@@ -16,27 +16,27 @@ const store = useEcaasStore();
 const mechanicalVentilationData = store.infiltrationAndVentilation.mechanicalVentilation.data;
 
 const mechanicalVentilationSummary: SummarySection = {
-	id: 'mechanicalVentilation',
-	label: 'Mechanical ventilation',
+	id: "mechanicalVentilation",
+	label: "Mechanical ventilation",
 	data: mechanicalVentilationData?.map(x => {
 		return {
 			"Name": x.name,
 			"Type of mechanical ventilation": x.typeOfMechanicalVentilationOptions,
-			"Air flow rate": typeof x.airFlowRate === 'number' ? `${x.airFlowRate} ${litrePerSecond.suffix}` : `${x.airFlowRate.amount} ${litrePerSecond.suffix}`,
+			"Air flow rate": typeof x.airFlowRate === "number" ? `${x.airFlowRate} ${litrePerSecond.suffix}` : `${x.airFlowRate.amount} ${litrePerSecond.suffix}`,
 			...(x.typeOfMechanicalVentilationOptions == VentType.MVHR ? {
 				"MVHR location": displayCamelToSentenceCase(x.mvhrLocation),
 				"MVHR efficiency": x.mvhrEfficiency,
 			} : {})
 		};
 	}) || [],
-	editUrl: getUrl('mechanicalVentilation')
+	editUrl: getUrl("mechanicalVentilation")
 };
 
 const ductworkData = store.infiltrationAndVentilation.ductwork.data;
 
 const ductworkSummary: SummarySection = {
-	id: 'ductwork',
-	label: 'Ductwork',
+	id: "ductwork",
+	label: "Ductwork",
 	data: ductworkData?.map(x => {
 		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.id === x.mvhrUnit);
 
@@ -54,14 +54,14 @@ const ductworkSummary: SummarySection = {
 			"Surface reflectivity": x.surfaceReflectivity ? "Reflective" : "Not reflective"
 		};
 	}) || [],
-	editUrl: getUrl('ductwork')
+	editUrl: getUrl("ductwork")
 };
 
 const ventData = store.infiltrationAndVentilation.vents.data;
 
 const ventSummary: SummarySection = {
-	id: 'vents',
-	label: 'Vents',
+	id: "vents",
+	label: "Vents",
 	data: ventData.map(x => {
 		return {
 			"Name": x.name,
@@ -73,33 +73,33 @@ const ventSummary: SummarySection = {
 			"Pitch": `${x.pitch} ${degrees.suffix}`
 		};
 	}),
-	editUrl: getUrl('vents')
+	editUrl: getUrl("vents")
 };
 
 const ventilationData = store.infiltrationAndVentilation.naturalVentilation.data;
 
 const ventilationSummary: SummarySection = {
-	id: 'ventilation',
-	label: 'Natural ventilation',
+	id: "ventilation",
+	label: "Natural ventilation",
 	data: {
 		"Ventilation zone height": `${ventilationData.ventilationZoneHeight} ${metre.suffix}`,
 		"Dwelling envelope area": `${ventilationData.dwellingEnvelopeArea} ${metresSquare.suffix}`,
 		"Elevational height of dwelling at its base": `${ventilationData.dwellingElevationalLevelAtBase} ${metre.suffix}`,
 		"Cross ventilation possible": displayBoolean(ventilationData.crossVentilationPossible)
 	},
-	editUrl: getUrl('naturalVentilation')
+	editUrl: getUrl("naturalVentilation")
 };
 
 const airPermeabilityData = store.infiltrationAndVentilation.airPermeability.data;
 
 const airPermeabilitySummary: SummarySection = {
-	id: 'airPermeability',
-	label: 'Air permeability',
+	id: "airPermeability",
+	label: "Air permeability",
 	data: {
 		"Test pressure": `${airPermeabilityData.testPressure} ${pascal.suffix}`,
 		"Air tightness test result": `${airPermeabilityData.airTightnessTestResult} ${cubicMetrePerHourPerSquareMetre.suffix}`
 	},
-	editUrl: getUrl('airPermeability')
+	editUrl: getUrl("airPermeability")
 };
 
 // const { combustionAppliances } = store.infiltrationAndVentilation;

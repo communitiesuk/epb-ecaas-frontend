@@ -1,6 +1,6 @@
-import { arrayIncludes } from 'ts-extras';
-import type { Category, DisplayProduct, ProductEntity, ProductReference, TechnologyType } from '~/pcdb/products';
-import products, { categoryTechnologies } from '~/pcdb/products';
+import { arrayIncludes } from "ts-extras";
+import type { Category, DisplayProduct, ProductEntity, ProductReference, TechnologyType } from "~/pcdb/products";
+import products, { categoryTechnologies } from "~/pcdb/products";
 
 export async function productsInCategory(category: Category): Promise<ProductEntity<DisplayProduct>[]> {
 	return productsForTechnologies(categoryTechnologies[category]);
@@ -8,7 +8,7 @@ export async function productsInCategory(category: Category): Promise<ProductEnt
 
 async function productsForTechnologies<T extends TechnologyType[]>(technologies: T) {
 	const technologyProducts = Array.from(products.entries())
-		.filter(([_, product]) => arrayIncludes(technologies, product['technologyType']))
+		.filter(([_, product]) => arrayIncludes(technologies, product["technologyType"]))
 		.map(([reference, product]) => {
 			const {
 				brandName,

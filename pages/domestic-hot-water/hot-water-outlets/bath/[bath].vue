@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid';
-import { getUrl  } from '#imports';
+import { v4 as uuidv4 } from "uuid";
+import { getUrl  } from "#imports";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const title = "Bath";
 const store = useEcaasStore();
 
-const bathData = useItemToEdit('bath', store.domesticHotWater.hotWaterOutlets.bath.data);
+const bathData = useItemToEdit("bath", store.domesticHotWater.hotWaterOutlets.bath.data);
 const model: Ref<BathData | undefined> = ref(bathData?.data);
 
 const saveForm = (fields: BathData) => {
 
 	store.$patch((state) => {
-		const {bath} = state.domesticHotWater.hotWaterOutlets;
+		const { bath } = state.domesticHotWater.hotWaterOutlets;
 	
 		const index = getStoreIndex(bath.data);
 		bath.data[index] = {
@@ -34,15 +34,15 @@ const saveForm = (fields: BathData) => {
 autoSaveElementForm({
 	model,
 	storeData: store.domesticHotWater.hotWaterOutlets.bath,
-	defaultName: 'Bath',
+	defaultName: "Bath",
 	onPatchCreate: (state, newData) => state.domesticHotWater.hotWaterOutlets.bath.data.push(newData),
 	onPatchUpdate: (state, newData, index) => {
 		state.domesticHotWater.hotWaterOutlets.bath.data[index] = newData;
 		state.domesticHotWater.hotWaterOutlets.bath.complete = false;
-	}});
+	} });
 
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

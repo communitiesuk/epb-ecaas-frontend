@@ -1,19 +1,19 @@
 import { HeatSourceWetServiceWaterRegularType, ShowerInstantElectricType, ShowerMixerType, StorageTankType, WaterPipeContentsType, WaterPipeworkLocation  } from "~/schema/api-schema.types";
 import { ColdWaterSourceType } from "~/schema/aliases";
-import type {SchemaHotWaterDemand} from "~/schema/api-schema.types";
+import type { SchemaHotWaterDemand } from "~/schema/api-schema.types";
 import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
 import { unitValue } from "~/utils/units/types";
 
-describe('domestic hot water mapper', () => {
+describe("domestic hot water mapper", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	it('maps hot water cylinder input state to FHS input request', () => {
+	it("maps hot water cylinder input state to FHS input request", () => {
 		// Arrange
 		const heatPumpName = "heat pump";
 
@@ -66,7 +66,7 @@ describe('domestic hot water mapper', () => {
 				heatGeneration: {
 					heatPump: {
 						data: [{
-							data: {name: heatPumpName, id: heatPumpName},
+							data: { name: heatPumpName, id: heatPumpName },
 							complete: true,
 						}],
 						complete: true
@@ -77,7 +77,7 @@ describe('domestic hot water mapper', () => {
 
 		// Acts
 		const result = mapDomesticHotWaterData(resolveState(store.$state));
-		const expectedResult: Pick<FhsInputSchema, 'HotWaterSource'> = {
+		const expectedResult: Pick<FhsInputSchema, "HotWaterSource"> = {
 			HotWaterSource: {
 				"hw cylinder": {
 					ColdWaterSource: ColdWaterSourceType.mains_water,
@@ -89,8 +89,8 @@ describe('domestic hot water mapper', () => {
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
-							Controlmin: '',
-							Controlmax: '',
+							Controlmin: "",
+							Controlmax: "",
 						}
 					},
 					daily_losses: 3,
@@ -107,7 +107,7 @@ describe('domestic hot water mapper', () => {
 		expect(result["HotWaterSource"]).toEqual(expectedResult["HotWaterSource"]);
 	});
 
-	it('maps hot water cylinder with primary pipework input state to FHS input request', () => {
+	it("maps hot water cylinder with primary pipework input state to FHS input request", () => {
 		// Arrange
 		const heatPumpName = "heatPump1";
 		const heatPumpId = "heatPump1Id";
@@ -177,7 +177,7 @@ describe('domestic hot water mapper', () => {
 				heatGeneration: {
 					heatPump: {
 						data: [{
-							data: {name: heatPumpName, id: heatPumpId},
+							data: { name: heatPumpName, id: heatPumpId },
 							complete: true,
 						}],
 						complete: true,
@@ -189,7 +189,7 @@ describe('domestic hot water mapper', () => {
 		// Acts
 		const result = mapDomesticHotWaterData(resolveState(store.$state));
 
-		const expectedResult: Pick<FhsInputSchema, 'HotWaterSource'> = {
+		const expectedResult: Pick<FhsInputSchema, "HotWaterSource"> = {
 			HotWaterSource: {
 				"hw cylinder": {
 					ColdWaterSource: ColdWaterSourceType.mains_water,
@@ -201,8 +201,8 @@ describe('domestic hot water mapper', () => {
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
-							Controlmax: '', // TODO may need to be a real control
-							Controlmin: '', // TODO may need to be a real control
+							Controlmax: "", // TODO may need to be a real control
+							Controlmin: "", // TODO may need to be a real control
 						}
 					},
 					daily_losses: 3,
@@ -240,7 +240,7 @@ describe('domestic hot water mapper', () => {
 		expect(result["HotWaterSource"]).toEqual(expectedResult["HotWaterSource"]);
 	});
 
-	it('maps hot water outlets input state to FHS input request', () => {
+	it("maps hot water outlets input state to FHS input request", () => {
 		// Arrange
 		const mixedShower: EcaasForm<MixedShowerData> = {
 			data: {
@@ -315,7 +315,7 @@ describe('domestic hot water mapper', () => {
 		const result = mapDomesticHotWaterData(resolveState(store.$state));
 		
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'HotWaterDemand'> = {
+		const expectedResult: Pick<FhsInputSchema, "HotWaterDemand"> = {
 			HotWaterDemand: {
 				Shower: {
 					"shower1": {
@@ -351,7 +351,7 @@ describe('domestic hot water mapper', () => {
 		expect(result["HotWaterDemand"]).toEqual(expectedResult["HotWaterDemand"]);
 	});
 
-	it('maps secondary pipework input state to FHS input request', () => {
+	it("maps secondary pipework input state to FHS input request", () => {
 		// Arrange
 		const pipework: Pipework = {
 			primaryPipework: {
@@ -378,7 +378,7 @@ describe('domestic hot water mapper', () => {
 
 		// Acts
 		const result = mapDistributionData(resolveState(store.$state));
-		const expectedResult: SchemaHotWaterDemand['Distribution'] = [{
+		const expectedResult: SchemaHotWaterDemand["Distribution"] = [{
 			internal_diameter_mm: 6,
 			length: 111,
 			location: WaterPipeworkLocation.internal

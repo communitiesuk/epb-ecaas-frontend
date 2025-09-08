@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = 'Measuring zone parameters';
+const title = "Measuring zone parameters";
 </script>
 
 <template>

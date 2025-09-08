@@ -39,7 +39,7 @@ export interface EcaasForm<T> {
 }
 
 export function isEcaasForm(value: unknown): value is EcaasForm<unknown> {
-	return typeof value === 'object' && value !== null && 'data' in value && Object.keys(value).length <= 2;
+	return typeof value === "object" && value !== null && "data" in value && Object.keys(value).length <= 2;
 }
 
 const baseGeneralDetails = z.object({
@@ -153,9 +153,9 @@ const groundFloorDataZod = z.discriminatedUnion(
 	[
 		baseGroundFloorData.extend({
 			typeOfGroundFloor: z.enum(BuildingElementGroundSlabEdgeInsulationFloor_type),
-			edgeInsulationType: z.enum(['horizontal', 'vertical']),
+			edgeInsulationType: z.enum(["horizontal", "vertical"]),
 			// TODO constraints have not been put on zodUnit yet!
-			edgeInsulationWidth: z.union([zodUnit('length'), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
+			edgeInsulationWidth: z.union([zodUnit("length"), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
 			edgeInsulationThermalResistance: z.number(),
 		}),
 		baseGroundFloorData.extend({
@@ -196,9 +196,9 @@ export type WallsData = AssertFormKeysArePageIds<{
 
 type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
 type NonZeroDigit = Exclude<Digit, "0">;
-type AngleString = `${'' | '-'}${NonZeroDigit | ''}${NonZeroDigit | ''}${Digit | ''}`;
+type AngleString = `${"" | "-"}${NonZeroDigit | ""}${NonZeroDigit | ""}${Digit | ""}`;
 
-export type PitchOption = AngleString | 'custom';
+export type PitchOption = AngleString | "custom";
 
 const externalWallDataZod = named.extend({
 	pitchOption: standardPitchOption,
@@ -262,7 +262,7 @@ const baseCeilingData = named.extend({
 	pitch: z.optional(z.number().min(0).lt(180)),
 });
 const ceilingDataZod = z.discriminatedUnion(
-	'type',
+	"type",
 	[
 		baseCeilingData.extend({
 			type: z.literal(AdjacentSpaceType.heatedSpace),
@@ -277,7 +277,7 @@ const ceilingDataZod = z.discriminatedUnion(
 
 export type CeilingData = z.infer<typeof ceilingDataZod>;
 
-const roofType = z.enum(['flat', 'pitchedInsulatedAtRoof', 'pitchedInsulatedAtCeiling', 'unheatedPitched']);
+const roofType = z.enum(["flat", "pitchedInsulatedAtRoof", "pitchedInsulatedAtCeiling", "unheatedPitched"]);
 
 export type RoofType = z.infer<typeof roofType>;
 
@@ -343,25 +343,25 @@ const baseExternalGlazedDoorData = named.extend({
 	openingToFrameRatio: fraction,
 });
 const externalGlazedDoorDataZod = z.discriminatedUnion(
-	'numberOpenableParts',
+	"numberOpenableParts",
 	[
 		baseExternalGlazedDoorData.extend({
-			numberOpenableParts: z.literal('0'),
+			numberOpenableParts: z.literal("0"),
 		}),
 		baseExternalGlazedDoorData.extend({
-			numberOpenableParts: z.literal('1'),
+			numberOpenableParts: z.literal("1"),
 			...onePartFields,
 		}),
 		baseExternalGlazedDoorData.extend({
-			numberOpenableParts: z.literal('2'),
+			numberOpenableParts: z.literal("2"),
 			...twoPartFields,
 		}),
 		baseExternalGlazedDoorData.extend({
-			numberOpenableParts: z.literal('3'),
+			numberOpenableParts: z.literal("3"),
 			...threePartFields,
 		}),
 		baseExternalGlazedDoorData.extend({
-			numberOpenableParts: z.literal('4'),
+			numberOpenableParts: z.literal("4"),
 			...fourPartFields,
 		}),
 	]
@@ -377,7 +377,7 @@ const baseInternalDoorData = named.extend({
 	pitch: z.optional(z.number().min(0).lt(180)),
 });
 const internalDoorDataZod = z.discriminatedUnion(
-	'typeOfInternalDoor',
+	"typeOfInternalDoor",
 	[
 		baseInternalDoorData.extend({
 			typeOfInternalDoor: z.literal(AdjacentSpaceType.heatedSpace),
@@ -406,25 +406,25 @@ const baseWindowData = named.extend({
 	openingToFrameRatio: fraction,
 });
 const baseWindowPlusOpenableParts = z.discriminatedUnion(
-	'numberOpenableParts',
+	"numberOpenableParts",
 	[
 		baseWindowData.extend({
-			numberOpenableParts: z.literal('0'),
+			numberOpenableParts: z.literal("0"),
 		}),
 		baseWindowData.extend({
-			numberOpenableParts: z.literal('1'),
+			numberOpenableParts: z.literal("1"),
 			...onePartFields,
 		}),
 		baseWindowData.extend({
-			numberOpenableParts: z.literal('2'),
+			numberOpenableParts: z.literal("2"),
 			...twoPartFields,
 		}),
 		baseWindowData.extend({
-			numberOpenableParts: z.literal('3'),
+			numberOpenableParts: z.literal("3"),
 			...threePartFields,
 		}),
 		baseWindowData.extend({
-			numberOpenableParts: z.literal('4'),
+			numberOpenableParts: z.literal("4"),
 			...fourPartFields,
 		}),
 	]
@@ -432,8 +432,8 @@ const baseWindowPlusOpenableParts = z.discriminatedUnion(
 
 const overhangFields = z.union([
 	z.object({
-		overhangDepth: z.union([zodUnit('length'), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-		overhangDistance: z.union([zodUnit('length'), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+		overhangDepth: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+		overhangDistance: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
 	}),
 	z.object({
 		overhangDepth: z.optional(z.undefined()),
@@ -443,8 +443,8 @@ const overhangFields = z.union([
 
 const sideFinRightFields = z.union([
 	z.object({
-		sideFinRightDepth: z.union([zodUnit('length'), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-		sideFinRightDistance: z.union([zodUnit('length'), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+		sideFinRightDepth: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+		sideFinRightDistance: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
 	}),
 	z.object({
 		sideFinRightDepth: z.optional(z.undefined()),
@@ -454,8 +454,8 @@ const sideFinRightFields = z.union([
 
 const sideFinLeftFields = z.union([
 	z.object({
-		sideFinLeftDepth: z.union([zodUnit('length'), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
-		sideFinLeftDistance: z.union([zodUnit('length'), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+		sideFinLeftDepth: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+		sideFinLeftDistance: z.union([zodUnit("length"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
 	}),
 	z.object({
 		sideFinLeftDepth: z.optional(z.undefined()),
@@ -560,13 +560,13 @@ export type WaterHeating = AssertFormKeysArePageIds<{
 
 const hotWaterCylinderDataZod = namedWithId.extend({
 	heatSource: z.string(),
-	storageCylinderVolume: z.union([zodUnit('volume'), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
+	storageCylinderVolume: z.union([zodUnit("volume"), z.number()]), // number will be deprecated, preserved for backwards compatibility with old input data files
 	dailyEnergyLoss: z.number(),
 });
 
 export type HotWaterCylinderData = z.infer<typeof hotWaterCylinderDataZod>;
 
-const immersionHeaterPosition = z.enum(['top', 'middle', 'bottom']);
+const immersionHeaterPosition = z.enum(["top", "middle", "bottom"]);
 
 export type ImmersionHeaterPosition = z.infer<typeof immersionHeaterPosition>;
 
@@ -691,11 +691,11 @@ export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 }>;
 
 const baseMechanicalVentilationData = namedWithId.extend({
-	airFlowRate: z.union([zodUnit('flow rate'), z.number()]),
+	airFlowRate: z.union([zodUnit("flow rate"), z.number()]),
 });
 
 const mechanicalVentilationDataZod = z.discriminatedUnion(
-	'typeOfMechanicalVentilationOptions',
+	"typeOfMechanicalVentilationOptions",
 	[
 		baseMechanicalVentilationData.extend({
 			typeOfMechanicalVentilationOptions: z.literal(VentType.Intermittent_MEV),
@@ -726,7 +726,7 @@ const baseDuctworkData = named.extend({
 	surfaceReflectivity: z.boolean(),
 });
 const ductworkDataZod = z.discriminatedUnion(
-	'ductworkCrossSectionalShape',
+	"ductworkCrossSectionalShape",
 	[
 		baseDuctworkData.extend({
 			ductworkCrossSectionalShape: z.literal(DuctShape.circular),
@@ -744,7 +744,7 @@ export type DuctworkData = z.infer<typeof ductworkDataZod>;
 
 const ventDataZod = z.object({
 	name: z.string().trim().min(1),
-	typeOfVent: z.enum(['trickle', 'airBrick']),
+	typeOfVent: z.enum(["trickle", "airBrick"]),
 	effectiveVentilationArea: z.number().min(1).max(999999),
 	openingRatio: z.number(),
 	midHeightOfZone: z.number().min(1).max(60),
@@ -855,23 +855,23 @@ const baseWetDistributionData = named.extend({
 	designTempDiffAcrossEmitters: z.number(),
 	designFlowTemp: z.number(),
 	designFlowRate: z.number(),
-	ecoDesignControllerClass: z.enum(['1', '2', '3', '4', '5', '6', '7', '8']),
+	ecoDesignControllerClass: z.enum(["1", "2", "3", "4", "5", "6", "7", "8"]),
 	minimumFlowTemp: z.number().min(20).max(120),
 	minOutdoorTemp: z.number(),
 	maxOutdoorTemp: z.number(),
 	convectionFractionWet: fraction,
 });
 const wetDistributionDataZod = z.discriminatedUnion(
-	'typeOfSpaceHeater',
+	"typeOfSpaceHeater",
 	[
 		baseWetDistributionData.extend({
-			typeOfSpaceHeater: z.literal('radiator'),
+			typeOfSpaceHeater: z.literal("radiator"),
 			numberOfRadiators: z.int().min(1),
 			exponent: z.number(),
 			constant: z.number(),
 		}),
 		baseWetDistributionData.extend({
-			typeOfSpaceHeater: z.literal('ufh'),
+			typeOfSpaceHeater: z.literal("ufh"),
 			emitterFloorArea: z.number(),
 			equivalentThermalMass: z.number(),
 			systemPerformanceFactor: z.number(),
@@ -952,7 +952,7 @@ export type UsesPitchComponent = {
 	pitchOption: PitchOption;
 };
 
-export type ComplianceResult = TaggedUnion<'resultType', {
+export type ComplianceResult = TaggedUnion<"resultType", {
 	ok: {
 		response: SchemaFhsComplianceResponse,
 	},

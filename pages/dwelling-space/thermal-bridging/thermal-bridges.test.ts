@@ -1,19 +1,19 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import ThermalBridges from './index.vue';
-import LinearThermalBridgeForm from './linear/[bridging].vue';
-import PointThermalBridgeForm from './point/[bridging].vue';
+import ThermalBridges from "./index.vue";
+import LinearThermalBridgeForm from "./linear/[bridging].vue";
+import PointThermalBridgeForm from "./point/[bridging].vue";
 
-import {screen } from '@testing-library/vue';
-import {within} from '@testing-library/dom';
+import { screen } from "@testing-library/vue";
+import { within } from "@testing-library/dom";
 import type { Component } from "vue";
 
-describe('thermal bridges', () => {
+describe("thermal bridges", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 	const navigateToMock = vi.hoisted(() => vi.fn());
 
-	mockNuxtImport('navigateTo', () => {
+	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
 	});
 
@@ -24,7 +24,7 @@ describe('thermal bridges', () => {
 	const linear1: EcaasForm<LinearThermalBridgeData> = {
 		data: {
 			name: "Linear 1",
-			typeOfThermalBridge: 'e1',
+			typeOfThermalBridge: "e1",
 			linearThermalTransmittance: 1,
 			length: 2
 		}
@@ -54,18 +54,18 @@ describe('thermal bridges', () => {
 	const point2: EcaasForm<PointThermalBridgeData> = {
 		data: {
 			...point1.data,
-			name: "Point 2"}
+			name: "Point 2" }
 	};
 
 	const point3: EcaasForm<PointThermalBridgeData> = {
 		data: {
 			...point1.data,
-			name: "Point 3"}
+			name: "Point 3" }
 	};
 
-	describe('linear thermal bridges', () => {
+	describe("linear thermal bridges", () => {
 	
-		test('linear thermal bridge is removed when remove link is clicked', async () => {
+		test("linear thermal bridge is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -78,14 +78,14 @@ describe('thermal bridges', () => {
 	
 			await renderSuspended(ThermalBridges);
 	
-			expect(screen.getAllByTestId('linearThermalBridges_items')).toBeDefined();
+			expect(screen.getAllByTestId("linearThermalBridges_items")).toBeDefined();
 	
-			await user.click(screen.getByTestId('linearThermalBridges_remove_0'));
+			await user.click(screen.getByTestId("linearThermalBridges_remove_0"));
 	
-			expect(screen.queryByTestId('linearThermalBridges_items')).toBeNull();
+			expect(screen.queryByTestId("linearThermalBridges_items")).toBeNull();
 		});
 	
-		it('should only remove the linear thermal bridge object thats is clicked', async () => {
+		it("should only remove the linear thermal bridge object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -97,16 +97,16 @@ describe('thermal bridges', () => {
 			});
 	
 			await renderSuspended(ThermalBridges);
-			await user.click(screen.getByTestId('linearThermalBridges_remove_1'));
+			await user.click(screen.getByTestId("linearThermalBridges_remove_1"));
 	
-			const populatedList = screen.getByTestId('linearThermalBridges_items');
+			const populatedList = screen.getByTestId("linearThermalBridges_items");
 	
-			expect(within(populatedList).getByText('Linear 1')).toBeDefined();
-			expect(within(populatedList).getByText('Linear 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Linear 2')).toBeNull();
+			expect(within(populatedList).getByText("Linear 1")).toBeDefined();
+			expect(within(populatedList).getByText("Linear 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Linear 2")).toBeNull();
 		});
 	
-		test('linear thermal bridge is duplicated when duplicate link is clicked', async () => {
+		test("linear thermal bridge is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -118,23 +118,23 @@ describe('thermal bridges', () => {
 			});
 	
 			await renderSuspended(ThermalBridges);
-			await userEvent.click(screen.getByTestId('linearThermalBridges_duplicate_0'));
-			await userEvent.click(screen.getByTestId('linearThermalBridges_duplicate_0'));
-			await userEvent.click(screen.getByTestId('linearThermalBridges_duplicate_2'));
-			await userEvent.click(screen.getByTestId('linearThermalBridges_duplicate_2'));
+			await userEvent.click(screen.getByTestId("linearThermalBridges_duplicate_0"));
+			await userEvent.click(screen.getByTestId("linearThermalBridges_duplicate_0"));
+			await userEvent.click(screen.getByTestId("linearThermalBridges_duplicate_2"));
+			await userEvent.click(screen.getByTestId("linearThermalBridges_duplicate_2"));
 	
-			expect(screen.queryAllByTestId('linearThermalBridges_item').length).toBe(6);
-			expect(screen.getByText('Linear 1')).toBeDefined();
-			expect(screen.getByText('Linear 1 (1)')).toBeDefined();
-			expect(screen.getByText('Linear 1 (2)')).toBeDefined();
-			expect(screen.getByText('Linear 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Linear 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("linearThermalBridges_item").length).toBe(6);
+			expect(screen.getByText("Linear 1")).toBeDefined();
+			expect(screen.getByText("Linear 1 (1)")).toBeDefined();
+			expect(screen.getByText("Linear 1 (2)")).toBeDefined();
+			expect(screen.getByText("Linear 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Linear 1 (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('point thermal bridges', () => {
+	describe("point thermal bridges", () => {
 
-		test('point thermal bridge is removed when remove link is clicked', async () => {
+		test("point thermal bridge is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -147,14 +147,14 @@ describe('thermal bridges', () => {
 	
 			await renderSuspended(ThermalBridges);
 	
-			expect(screen.getAllByTestId('pointThermalBridges_items')).toBeDefined();
+			expect(screen.getAllByTestId("pointThermalBridges_items")).toBeDefined();
 	
-			await user.click(screen.getByTestId('pointThermalBridges_remove_0'));
+			await user.click(screen.getByTestId("pointThermalBridges_remove_0"));
 	
-			expect(screen.queryByTestId('pointThermalBridges_items')).toBeNull();
+			expect(screen.queryByTestId("pointThermalBridges_items")).toBeNull();
 		});
 	
-		it('should only remove the point thermal bridge object thats is clicked', async () => {
+		it("should only remove the point thermal bridge object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -166,16 +166,16 @@ describe('thermal bridges', () => {
 			});
 	
 			await renderSuspended(ThermalBridges);
-			await user.click(screen.getByTestId('pointThermalBridges_remove_1'));
+			await user.click(screen.getByTestId("pointThermalBridges_remove_1"));
 	
-			const populatedList = screen.getByTestId('pointThermalBridges_items');
+			const populatedList = screen.getByTestId("pointThermalBridges_items");
 	
-			expect(within(populatedList).getByText('Point 1')).toBeDefined();
-			expect(within(populatedList).getByText('Point 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Point 2')).toBeNull();
+			expect(within(populatedList).getByText("Point 1")).toBeDefined();
+			expect(within(populatedList).getByText("Point 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Point 2")).toBeNull();
 		});
 	
-		test('point thermal bridge is duplicated when duplicate link is clicked', async () => {
+		test("point thermal bridge is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -187,17 +187,17 @@ describe('thermal bridges', () => {
 			});
 	
 			await renderSuspended(ThermalBridges);
-			await userEvent.click(screen.getByTestId('pointThermalBridges_duplicate_0'));
-			await userEvent.click(screen.getByTestId('pointThermalBridges_duplicate_0'));
-			await userEvent.click(screen.getByTestId('pointThermalBridges_duplicate_2'));
-			await userEvent.click(screen.getByTestId('pointThermalBridges_duplicate_2'));
+			await userEvent.click(screen.getByTestId("pointThermalBridges_duplicate_0"));
+			await userEvent.click(screen.getByTestId("pointThermalBridges_duplicate_0"));
+			await userEvent.click(screen.getByTestId("pointThermalBridges_duplicate_2"));
+			await userEvent.click(screen.getByTestId("pointThermalBridges_duplicate_2"));
 	
-			expect(screen.queryAllByTestId('pointThermalBridges_item').length).toBe(6);
-			expect(screen.getByText('Point 1')).toBeDefined();
-			expect(screen.getByText('Point 1 (1)')).toBeDefined();
-			expect(screen.getByText('Point 1 (2)')).toBeDefined();
-			expect(screen.getByText('Point 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Point 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("pointThermalBridges_item").length).toBe(6);
+			expect(screen.getByText("Point 1")).toBeDefined();
+			expect(screen.getByText("Point 1 (1)")).toBeDefined();
+			expect(screen.getByText("Point 1 (2)")).toBeDefined();
+			expect(screen.getByText("Point 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Point 1 (1) (2)")).toBeDefined();
 		});
 	});
 
@@ -212,8 +212,8 @@ describe('thermal bridges', () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
-						dwellingSpaceLinearThermalBridges: { data: [{...linear1, complete: true}] },
-						dwellingSpacePointThermalBridges: { data: [{...point1, complete: true}] },
+						dwellingSpaceLinearThermalBridges: { data: [{ ...linear1, complete: true }] },
+						dwellingSpacePointThermalBridges: { data: [{ ...point1, complete: true }] },
 					},
 				},
 			});
@@ -309,12 +309,12 @@ describe('thermal bridges', () => {
 		}
 	});
 
-	it('disables the mark section as complete button when item is incomplete', async () => {
+	it("disables the mark section as complete button when item is incomplete", async () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceThermalBridging: {
 					dwellingSpaceLinearThermalBridges: {
-						data: [{data: {linearThermalTransmittance: 2}, complete: false}]
+						data: [{ data: { linearThermalTransmittance: 2 }, complete: false }]
 					},
 				}
 			}
@@ -322,7 +322,7 @@ describe('thermal bridges', () => {
 
 		await renderSuspended(ThermalBridges);
 		const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
-		expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
+		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 	});
 	});
 });

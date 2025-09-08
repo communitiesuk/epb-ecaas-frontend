@@ -16,7 +16,7 @@ export function useForm() {
 
 		const routeParam = route.params[Object.keys(route.params)[0]!];
 	
-		if (routeParam && routeParam !== 'create') {
+		if (routeParam && routeParam !== "create") {
 			const index = parseInt(routeParam as string);
 			form.data[index] = item;
 		} else {
@@ -31,7 +31,7 @@ export function useForm() {
 	 */
 	const getStoreIndex = <T>(data: EcaasForm<T>[]): number => {
 		const routeParam = route.params[Object.keys(route.params)[0]!];
-		return routeParam === 'create' ? data.length - 1 : Number(routeParam);
+		return routeParam === "create" ? data.length - 1 : Number(routeParam);
 	};
 
 	/**
@@ -84,7 +84,7 @@ export function useForm() {
 			}
 
 			const duplicates = storeData.data.filter(x => {
-				if ('name' in x.data && typeof x.data.name === 'string') {
+				if ("name" in x.data && typeof x.data.name === "string") {
 					return x.data.name.match(duplicateNamePattern(defaultName));
 				}
 				
@@ -93,11 +93,12 @@ export function useForm() {
 
 			const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
 				Object.values(newData).some(x => x !== undefined);
-
-			if (routeParam === 'create' && isFirstEdit) {
-				const name = ('name' in newData ? newData.name : undefined) ||
-					(duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
-
+				
+			if (routeParam === "create" && isFirstEdit) {
+			
+				const name = ("name" in newData && typeof newData.name === "string" ? newData.name.trim() : undefined) ||
+					(duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName) || defaultName;
+			
 				store.$patch(state => {
 					const elementData: EcaasForm<T> = {
 						data: { ...newData, name }
@@ -113,11 +114,11 @@ export function useForm() {
 					store.$patch((state) => {
 						const index = getStoreIndex(storeData.data);
 						const storeElementData = storeData.data[index]?.data;
-						const name = ('name' in newData ? newData.name : undefined) ??
-					('name' in storeElementData! ? storeElementData.name : defaultName);
-
+						const name = ("name" in newData && typeof newData.name === "string" ? newData.name.trim() : undefined) ||
+					("name" in storeElementData! && typeof storeElementData.name === "string" ? storeElementData.name.trim() : defaultName) || defaultName;
+			
 						const elementData: EcaasForm<T> = {
-							data: { ...newData, name }
+							data: { ...newData,	name }
 						};
 
 						onPatchUpdate(state, elementData, index);

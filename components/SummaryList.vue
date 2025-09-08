@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import formatData from '~/utils/format-data';
-import hyphenate from '~/utils/hyphenate';
+import formatData from "~/utils/format-data";
+import hyphenate from "~/utils/hyphenate";
 
 export type SummaryData = {
 	[key: string]: string | number | boolean | string[] | undefined;

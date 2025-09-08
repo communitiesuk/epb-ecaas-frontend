@@ -11,13 +11,13 @@ type RevalidateResult = {
 });
 
 export function revalidateState(state: Record<string, unknown>, path: string[] = []): RevalidateResult {
-	const newState = {...state};
+	const newState = { ...state };
 	const errors: ZodError<unknown>[] = [];
     
 	for (const key in state) {
 		const value = state[key];
 
-		if (key.startsWith('$') || key.startsWith('_') || typeof value === 'function') {
+		if (key.startsWith("$") || key.startsWith("_") || typeof value === "function") {
 			continue;
 		}
 
@@ -29,7 +29,7 @@ export function revalidateState(state: Record<string, unknown>, path: string[] =
 			if (formIsInvalid) {
 				errors.push(...formErrors);
 			}
-		} else if (typeof value === 'object' && value !== null) {
+		} else if (typeof value === "object" && value !== null) {
 			const nodeResult = revalidateState(value as Record<string, unknown>, [...path, key]);
 			if (nodeResult.changed) {
 				errors.push(...nodeResult.errors);
@@ -53,7 +53,7 @@ export function revalidateState(state: Record<string, unknown>, path: string[] =
 }
 
 function formPath(path: string[], currentKey: string): EcaasFormPath {
-	return [...path, currentKey].join('/') as EcaasFormPath;
+	return [...path, currentKey].join("/") as EcaasFormPath;
 }
 
 function revalidateForm(form: EcaasForm<unknown>, path: EcaasFormPath): [true, ZodError<unknown>[]] | [false] {

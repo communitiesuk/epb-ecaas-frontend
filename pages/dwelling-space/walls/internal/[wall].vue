@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { standardPitchOptions } from '#imports';
+import { standardPitchOptions } from "#imports";
 
 const title = "Internal wall";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const wallData = useItemToEdit('wall', store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data);
+const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data);
 const model: Ref<InternalWallData> = ref(wallData!);
 
 const saveForm = (fields: InternalWallData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceWalls} = state.dwellingFabric;
+		const { dwellingSpaceWalls } = state.dwellingFabric;
 
 		const wall: InternalWallData = {
 			name: fields.name,
@@ -18,7 +18,7 @@ const saveForm = (fields: InternalWallData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '90' ? 90 : fields.pitch
+			pitch: fields.pitchOption === "90" ? 90 : fields.pitch
 		};
 
 		if (!dwellingSpaceWalls.dwellingSpaceInternalWall) {
@@ -31,7 +31,7 @@ const saveForm = (fields: InternalWallData) => {
 	navigateTo("/dwelling-space/walls");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

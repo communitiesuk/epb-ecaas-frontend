@@ -4,7 +4,7 @@ import { clearLastExportDate } from "~/utils/exportDate";
 
 definePageMeta({ layout: false });
 
-const title = 'Clear data';
+const title = "Clear data";
 
 const store = useEcaasStore();
 

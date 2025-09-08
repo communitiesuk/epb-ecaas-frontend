@@ -6,7 +6,7 @@ const handleFeedback = (isSatisfied: boolean | null) => {
 	satisfied.value = isSatisfied;
 
 	if (isSatisfied !== null) {
-		useTrackEvent('page_feedback', {
+		useTrackEvent("page_feedback", {
 			satisfied: `${isSatisfied}`
 		});
 	}

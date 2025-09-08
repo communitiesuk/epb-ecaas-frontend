@@ -110,9 +110,9 @@ export default defineNuxtConfig({
 	},
 
 	runtimeConfig: {
-		redisEndpoint: '',
-		redisPassword: '',
-		redisUsername: '',
+		redisEndpoint: "",
+		redisPassword: "",
+		redisUsername: "",
 		public: {
 			environment: process.env.NUXT_PUBLIC_ENVIRONMENT
 		}
@@ -183,11 +183,11 @@ export default defineNuxtConfig({
 
 	gtag: {
 		initCommands: [
-			['consent', 'default', {
-				ad_user_data: 'denied',
-				ad_personalization: 'denied',
-				ad_storage: 'denied',
-				analytics_storage: 'denied'
+			["consent", "default", {
+				ad_user_data: "denied",
+				ad_personalization: "denied",
+				ad_storage: "denied",
+				analytics_storage: "denied"
 			}]
 		]
 	}

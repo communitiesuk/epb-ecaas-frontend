@@ -1,12 +1,12 @@
 import { screen } from "@testing-library/vue";
 import PVScreen from "./[system].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import { userEvent } from '@testing-library/user-event';
+import { userEvent } from "@testing-library/user-event";
 import { InverterType } from "~/schema/api-schema.types";
 import { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport('navigateTo', () => {
+mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
@@ -19,18 +19,18 @@ describe("PV system", () => {
 	});
 
 	const populateValidForm = async () => {
-		await user.type(screen.getByTestId('name'), 'PV 1');
-		await user.type(screen.getByTestId('peakPower'), '4');
-		await user.click(screen.getByTestId('ventilationStrategy_unventilated'));
-		await user.type(screen.getByTestId('pitch'), '45');
-		await user.type(screen.getByTestId('orientation'), '20');
-		await user.type(screen.getByTestId('elevationalHeight'), '100');
-		await user.type(screen.getByTestId('lengthOfPV'), '20');
-		await user.type(screen.getByTestId('widthOfPV'), '20');
-		await user.type(screen.getByTestId('inverterPeakPowerAC'), '4');
-		await user.type(screen.getByTestId('inverterPeakPowerDC'), '5');
-		await user.click(screen.getByTestId('inverterIsInside_yes'));
-		await user.click(screen.getByTestId('inverterType_optimised_inverter'));
+		await user.type(screen.getByTestId("name"), "PV 1");
+		await user.type(screen.getByTestId("peakPower"), "4");
+		await user.click(screen.getByTestId("ventilationStrategy_unventilated"));
+		await user.type(screen.getByTestId("pitch"), "45");
+		await user.type(screen.getByTestId("orientation"), "20");
+		await user.type(screen.getByTestId("elevationalHeight"), "100");
+		await user.type(screen.getByTestId("lengthOfPV"), "20");
+		await user.type(screen.getByTestId("widthOfPV"), "20");
+		await user.type(screen.getByTestId("inverterPeakPowerAC"), "4");
+		await user.type(screen.getByTestId("inverterPeakPowerDC"), "5");
+		await user.click(screen.getByTestId("inverterIsInside_yes"));
+		await user.click(screen.getByTestId("inverterType_optimised_inverter"));
 		// await user.type(screen.getByTestId('aboveDepth'), '20');
 		// await user.type(screen.getByTestId('aboveDistance'), '4');
 		// await user.type(screen.getByTestId('leftDepth'), '10');
@@ -41,7 +41,7 @@ describe("PV system", () => {
 
 	const pvSystem: EcaasForm<PvSystemData> = {
 		data: {
-			name: 'PV 1',
+			name: "PV 1",
 			peakPower: 4,
 			ventilationStrategy: OnSiteGenerationVentilationStrategy.unventilated,
 			pitch: 45,
@@ -63,7 +63,7 @@ describe("PV system", () => {
 	};
 
 	const pvSystem2: EcaasForm<PvSystemData> = {
-		data: {...pvSystem.data, name: 'PV 2'}
+		data: { ...pvSystem.data, name: "PV 2" }
 	};
 
 	it("should have a heading", async () => {
@@ -86,7 +86,7 @@ describe("PV system", () => {
 		expect(screen.getByText("Inverter peak power AC")).toBeDefined();
 		expect(screen.getByText("Inverter peak power DC")).toBeDefined();
 		expect(screen.getByText("Location of inverter")).toBeDefined();
-		expect(screen.getByText("Inverter type", { selector: 'legend' })).toBeDefined();
+		expect(screen.getByText("Inverter type", { selector: "legend" })).toBeDefined();
 		expect(screen.queryByText("PV shading")).toBeNull();
 	});
 
@@ -98,20 +98,20 @@ describe("PV system", () => {
 		});
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		expect((await screen.findByTestId('name_error'))).toBeDefined();
-		expect((await screen.findByTestId('peakPower_error'))).toBeDefined();
-		expect((await screen.findByTestId('ventilationStrategy_error'))).toBeDefined();
-		expect((await screen.findByTestId('pitch_error'))).toBeDefined();
-		expect((await screen.findByTestId('orientation_error'))).toBeDefined();
-		expect((await screen.findByTestId('elevationalHeight_error'))).toBeDefined();
-		expect((await screen.findByTestId('lengthOfPV_error'))).toBeDefined();
-		expect((await screen.findByTestId('widthOfPV_error'))).toBeDefined();
-		expect((await screen.findByTestId('inverterPeakPowerAC_error'))).toBeDefined();
-		expect((await screen.findByTestId('inverterPeakPowerDC_error'))).toBeDefined();
-		expect((await screen.findByTestId('inverterIsInside_error'))).toBeDefined();
-		expect((await screen.findByTestId('inverterType_error'))).toBeDefined();
+		expect((await screen.findByTestId("name_error"))).toBeDefined();
+		expect((await screen.findByTestId("peakPower_error"))).toBeDefined();
+		expect((await screen.findByTestId("ventilationStrategy_error"))).toBeDefined();
+		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
+		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
+		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
+		expect((await screen.findByTestId("lengthOfPV_error"))).toBeDefined();
+		expect((await screen.findByTestId("widthOfPV_error"))).toBeDefined();
+		expect((await screen.findByTestId("inverterPeakPowerAC_error"))).toBeDefined();
+		expect((await screen.findByTestId("inverterPeakPowerDC_error"))).toBeDefined();
+		expect((await screen.findByTestId("inverterIsInside_error"))).toBeDefined();
+		expect((await screen.findByTestId("inverterType_error"))).toBeDefined();
 
-		expect((await screen.findByTestId('photovoltaicErrorSummary'))).toBeDefined();
+		expect((await screen.findByTestId("photovoltaicErrorSummary"))).toBeDefined();
 	});
 
 	test("data is saved to store when form is valid", async () => {
@@ -123,35 +123,35 @@ describe("PV system", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data} = store.pvAndBatteries.pvSystems;
+		const { data } = store.pvAndBatteries.pvSystems;
 		
-		expect(data[0]).toEqual({...pvSystem, complete: true});
+		expect(data[0]).toEqual({ ...pvSystem, complete: true });
 	});
 
 	it("navigates to pv and batteries page when valid form is completed", async ()=> {
 		await renderSuspended(PVScreen);
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
-		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries');
+		expect(navigateToMock).toHaveBeenCalledWith("/pv-and-batteries");
 	});
 
-	it('navigates to pv and batteries page when save progress button is clicked', async () => {
+	it("navigates to pv and batteries page when save progress button is clicked", async () => {
 		await renderSuspended(PVScreen);
 
 		await user.type(screen.getByTestId("name"), "Test PV");
 		await user.click(screen.getByTestId("saveProgress"));
-		expect(navigateToMock).toHaveBeenCalledWith('/pv-and-batteries');
+		expect(navigateToMock).toHaveBeenCalledWith("/pv-and-batteries");
 	});
 
-	describe('partially saving data', () => {
-		it('creates a new pv system automatically with given name', async () => {
+	describe("partially saving data", () => {
+		it("creates a new pv system automatically with given name", async () => {
 			await renderSuspended(PVScreen, {
 				route: {
-					params: {system: 'create'}
+					params: { system: "create" }
 				}
 			});
 
-			await user.type(screen.getByTestId('name'), 'New pv system');
+			await user.type(screen.getByTestId("name"), "New pv system");
 			await user.tab();
 
 			const actualPvSystem = store.pvAndBatteries.pvSystems.data[0]!;
@@ -160,14 +160,14 @@ describe("PV system", () => {
 			expect(actualPvSystem.data.inverterType).toBeUndefined();
 		});
 
-		it('creates a new pv system automatically with default name after other data is entered', async () => {
+		it("creates a new pv system automatically with default name after other data is entered", async () => {
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { system: 'create' }
+					params: { system: "create" }
 				}
 			});
 
-			await user.type(screen.getByTestId('elevationalHeight'), '7');
+			await user.type(screen.getByTestId("elevationalHeight"), "7");
 			await user.tab();
 
 			const actualPvSystem = store.pvAndBatteries.pvSystems.data[0]!;
@@ -177,7 +177,7 @@ describe("PV system", () => {
 			expect(actualPvSystem.data.elevationalHeight).toBe(7);
 		});
 
-		it('saves updated form data to correct store object automatically', async () => {
+		it("saves updated form data to correct store object automatically", async () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
@@ -188,7 +188,7 @@ describe("PV system", () => {
 
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { system: '1' }
+					params: { system: "1" }
 				}
 			});
 

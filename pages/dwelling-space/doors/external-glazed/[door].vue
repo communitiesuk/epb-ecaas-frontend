@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { standardPitchOptions } from '#imports';
+import { standardPitchOptions } from "#imports";
 
 const title = "External glazed door";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const doorData = useItemToEdit('door', store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor?.data);
+const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor?.data);
 const model: Ref<ExternalGlazedDoorData> = ref(doorData!);
 
 const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
-		const {dwellingSpaceExternalGlazedDoor} = state.dwellingFabric.dwellingSpaceDoors;
+		const { dwellingSpaceExternalGlazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 
 		const commonFields = {
 			name: fields.name,
@@ -20,7 +20,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			width: fields.width,
 			uValue: fields.uValue,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
+			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
@@ -42,7 +42,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 	navigateTo("/dwelling-space/doors");
 };
 
-const {handleInvalidSubmit, errorMessages} = useErrorSummary();
+const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>

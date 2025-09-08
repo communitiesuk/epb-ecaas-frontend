@@ -109,7 +109,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 
 		let storageCylinderVolumeInLitres: number;
 
-		if (typeof x.storageCylinderVolume === 'number') {
+		if (typeof x.storageCylinderVolume === "number") {
 			storageCylinderVolumeInLitres = x.storageCylinderVolume;
 		} else  {
 			storageCylinderVolumeInLitres = asLitres(x.storageCylinderVolume);
@@ -129,8 +129,8 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 					type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
 					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
-					Controlmax: 'heating', // TODO this may need to refer to a real control
-					Controlmin: 'heating', // TODO this may need to refer to a real control
+					Controlmax: "heating", // TODO this may need to refer to a real control
+					Controlmin: "heating", // TODO this may need to refer to a real control
 				}
 			},
 			primary_pipework: primaryPipeworkEntries.length !== 0 ? primaryPipeworkEntries : null,
