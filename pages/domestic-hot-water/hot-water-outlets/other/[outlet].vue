@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid';
-import { getUrl  } from '#imports';
+import { v4 as uuidv4 } from "uuid";
+import { getUrl  } from "#imports";
 
 const title = "Other outlets";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const otherOutletsData = useItemToEdit('outlet', store.domesticHotWater.hotWaterOutlets.otherOutlets.data);
+const otherOutletsData = useItemToEdit("outlet", store.domesticHotWater.hotWaterOutlets.otherOutlets.data);
 const model: Ref<OtherHotWaterOutletData | undefined> = ref(otherOutletsData?.data);
 
 const saveForm = (fields: OtherHotWaterOutletData) => {
@@ -32,7 +32,7 @@ const saveForm = (fields: OtherHotWaterOutletData) => {
 autoSaveElementForm({
 	model,
 	storeData: store.domesticHotWater.hotWaterOutlets.otherOutlets,
-	defaultName: 'Other outlet',
+	defaultName: "Other outlet",
 	onPatchCreate: (state, newData) => state.domesticHotWater.hotWaterOutlets.otherOutlets.data.push(newData),
 	onPatchUpdate: (state, newData, index) => {
 		state.domesticHotWater.hotWaterOutlets.otherOutlets.data[index] = newData;

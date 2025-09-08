@@ -1,20 +1,20 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import CeilingsAndRoofs from './index.vue';
-import CeilingForm from './ceilings/[ceiling].vue';
-import RoofForm from './roofs/[roof].vue';
+import CeilingsAndRoofs from "./index.vue";
+import CeilingForm from "./ceilings/[ceiling].vue";
+import RoofForm from "./roofs/[roof].vue";
 import { MassDistributionClass } from "~/schema/api-schema.types";
 
-import { screen } from '@testing-library/vue';
-import { within } from '@testing-library/dom';
+import { screen } from "@testing-library/vue";
+import { within } from "@testing-library/dom";
 import type { Component } from "vue";
 
-describe('ceilings and roofs', () => {
+describe("ceilings and roofs", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 	const navigateToMock = vi.hoisted(() => vi.fn());
 
-	mockNuxtImport('navigateTo', () => {
+	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
 	});
 
@@ -29,7 +29,7 @@ describe('ceilings and roofs', () => {
 			surfaceArea: 5,
 			kappaValue: 100,
 			massDistributionClass: MassDistributionClass.I,
-			pitchOption: 'custom',
+			pitchOption: "custom",
 			pitch: 180
 		}
 	};
@@ -52,8 +52,8 @@ describe('ceilings and roofs', () => {
 	const roof1: EcaasForm<RoofData> = {
 		data: {
 			name: "Roof 1",
-			typeOfRoof: 'flat',
-			pitchOption: '0',
+			typeOfRoof: "flat",
+			pitchOption: "0",
 			pitch: 0,
 			length: 1,
 			width: 1,
@@ -80,9 +80,9 @@ describe('ceilings and roofs', () => {
 		}
 	};
 
-	describe('ceilings', () => {
+	describe("ceilings", () => {
 	
-		test('ceiling is removed when remove link is clicked', async () => {
+		test("ceiling is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -95,14 +95,14 @@ describe('ceilings and roofs', () => {
 	
 			await renderSuspended(CeilingsAndRoofs);
 	
-			expect(screen.getAllByTestId('ceilings_items')).toBeDefined();
+			expect(screen.getAllByTestId("ceilings_items")).toBeDefined();
 	
-			await user.click(screen.getByTestId('ceilings_remove_0'));
+			await user.click(screen.getByTestId("ceilings_remove_0"));
 	
-			expect(screen.queryByTestId('ceilings_items')).toBeNull();
+			expect(screen.queryByTestId("ceilings_items")).toBeNull();
 		});
 	
-		it('should only remove the ceiling object thats is clicked', async () => {
+		it("should only remove the ceiling object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -114,17 +114,17 @@ describe('ceilings and roofs', () => {
 			});
 	
 			await renderSuspended(CeilingsAndRoofs);
-			await user.click(screen.getByTestId('ceilings_remove_1'));
+			await user.click(screen.getByTestId("ceilings_remove_1"));
 	
-			const populatedList = screen.getByTestId('ceilings_items');
+			const populatedList = screen.getByTestId("ceilings_items");
 	
-			expect(within(populatedList).getByText('Ceiling 1')).toBeDefined();
-			expect(within(populatedList).getByText('Ceiling 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Ceiling 2')).toBeNull();
+			expect(within(populatedList).getByText("Ceiling 1")).toBeDefined();
+			expect(within(populatedList).getByText("Ceiling 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Ceiling 2")).toBeNull();
 	
 		});
 	
-		test('ceiling is duplicated when duplicate link is clicked', async () => {
+		test("ceiling is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -136,23 +136,23 @@ describe('ceilings and roofs', () => {
 			});
 	
 			await renderSuspended(CeilingsAndRoofs);
-			await userEvent.click(screen.getByTestId('ceilings_duplicate_0'));
-			await userEvent.click(screen.getByTestId('ceilings_duplicate_0'));
-			await userEvent.click(screen.getByTestId('ceilings_duplicate_2'));
-			await userEvent.click(screen.getByTestId('ceilings_duplicate_2'));
+			await userEvent.click(screen.getByTestId("ceilings_duplicate_0"));
+			await userEvent.click(screen.getByTestId("ceilings_duplicate_0"));
+			await userEvent.click(screen.getByTestId("ceilings_duplicate_2"));
+			await userEvent.click(screen.getByTestId("ceilings_duplicate_2"));
 	
-			expect(screen.queryAllByTestId('ceilings_item').length).toBe(6);
-			expect(screen.getByText('Ceiling 1')).toBeDefined();
-			expect(screen.getByText('Ceiling 1 (1)')).toBeDefined();
-			expect(screen.getByText('Ceiling 1 (2)')).toBeDefined();
-			expect(screen.getByText('Ceiling 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Ceiling 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("ceilings_item").length).toBe(6);
+			expect(screen.getByText("Ceiling 1")).toBeDefined();
+			expect(screen.getByText("Ceiling 1 (1)")).toBeDefined();
+			expect(screen.getByText("Ceiling 1 (2)")).toBeDefined();
+			expect(screen.getByText("Ceiling 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Ceiling 1 (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('roofs', () => {
+	describe("roofs", () => {
 	
-		test('roof is removed when remove link is clicked', async () => {
+		test("roof is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -165,14 +165,14 @@ describe('ceilings and roofs', () => {
 	
 			await renderSuspended(CeilingsAndRoofs);
 	
-			expect(screen.getAllByTestId('roofs_items')).toBeDefined();
+			expect(screen.getAllByTestId("roofs_items")).toBeDefined();
 	
-			await user.click(screen.getByTestId('roofs_remove_0'));
+			await user.click(screen.getByTestId("roofs_remove_0"));
 	
-			expect(screen.queryByTestId('roofs_items')).toBeNull();
+			expect(screen.queryByTestId("roofs_items")).toBeNull();
 		});
 	
-		it('should only remove the roof object thats is clicked', async () => {
+		it("should only remove the roof object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -184,17 +184,17 @@ describe('ceilings and roofs', () => {
 			});
 	
 			await renderSuspended(CeilingsAndRoofs);
-			await user.click(screen.getByTestId('roofs_remove_1'));
+			await user.click(screen.getByTestId("roofs_remove_1"));
 	
-			const populatedList = screen.getByTestId('roofs_items');
+			const populatedList = screen.getByTestId("roofs_items");
 	
-			expect(within(populatedList).getByText('Roof 1')).toBeDefined();
-			expect(within(populatedList).getByText('Roof 3')).toBeDefined();
-			expect(within(populatedList).queryByText('Roof 2')).toBeNull();
+			expect(within(populatedList).getByText("Roof 1")).toBeDefined();
+			expect(within(populatedList).getByText("Roof 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Roof 2")).toBeNull();
 	
 		});
 	
-		test('roof is duplicated when duplicate link is clicked', async () => {
+		test("roof is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -206,21 +206,21 @@ describe('ceilings and roofs', () => {
 			});
 	
 			await renderSuspended(CeilingsAndRoofs);
-			await userEvent.click(screen.getByTestId('roofs_duplicate_0'));
-			await userEvent.click(screen.getByTestId('roofs_duplicate_0'));
-			await userEvent.click(screen.getByTestId('roofs_duplicate_2'));
-			await userEvent.click(screen.getByTestId('roofs_duplicate_2'));
+			await userEvent.click(screen.getByTestId("roofs_duplicate_0"));
+			await userEvent.click(screen.getByTestId("roofs_duplicate_0"));
+			await userEvent.click(screen.getByTestId("roofs_duplicate_2"));
+			await userEvent.click(screen.getByTestId("roofs_duplicate_2"));
 	
-			expect(screen.queryAllByTestId('roofs_item').length).toBe(6);
-			expect(screen.getByText('Roof 1')).toBeDefined();
-			expect(screen.getByText('Roof 1 (1)')).toBeDefined();
-			expect(screen.getByText('Roof 1 (2)')).toBeDefined();
-			expect(screen.getByText('Roof 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('Roof 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("roofs_item").length).toBe(6);
+			expect(screen.getByText("Roof 1")).toBeDefined();
+			expect(screen.getByText("Roof 1 (1)")).toBeDefined();
+			expect(screen.getByText("Roof 1 (2)")).toBeDefined();
+			expect(screen.getByText("Roof 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Roof 1 (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('mark section as complete', () => {
+	describe("mark section as complete", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 	
@@ -248,13 +248,13 @@ describe('ceilings and roofs', () => {
 			form: Component,
 			params: string,
 		}[]> => ([
-			{ key: 'dwellingSpaceCeilings', testId: `ceilings_${action}_0`, form: CeilingForm, params: "ceiling" },
-			{ key: 'dwellingSpaceRoofs', testId: `roofs_${action}_0`, form: RoofForm, params: "roof" }
+			{ key: "dwellingSpaceCeilings", testId: `ceilings_${action}_0`, form: CeilingForm, params: "ceiling" },
+			{ key: "dwellingSpaceRoofs", testId: `roofs_${action}_0`, form: RoofForm, params: "roof" }
 		]);
 	
 		type CeilingsAndRoofsType = keyof typeof store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	
-		it('marks ceilings and roofs as complete when mark section as complete button is clicked', async () => {
+		it("marks ceilings and roofs as complete when mark section as complete button is clicked", async () => {
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
 			expect(completedStatusElement?.style.display).toBe("none");
@@ -327,7 +327,7 @@ describe('ceilings and roofs', () => {
 			}
 		});
 
-		it('disables the mark section as complete button when item is incomplete', async () => {
+		it("disables the mark section as complete button when item is incomplete", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -340,7 +340,7 @@ describe('ceilings and roofs', () => {
 
 			await renderSuspended(CeilingsAndRoofs);
 			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
-			expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 		});
 	});
 });

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { FlueGasExhaustSituation } from '~/schema/api-schema.types';
-import type { FlueGasExhaustSituationDisplay } from '~/utils/display';
+import { FlueGasExhaustSituation } from "~/schema/api-schema.types";
+import type { FlueGasExhaustSituationDisplay } from "~/utils/display";
 
 defineProps<{
 	id: string,
@@ -8,9 +8,9 @@ defineProps<{
 }>();
 
 const exhaustMethodOptions: Record<FlueGasExhaustSituation, FlueGasExhaustSituationDisplay> = {
-	[FlueGasExhaustSituation.into_room]: 'Into room',
-	[FlueGasExhaustSituation.into_separate_duct]: 'Into separate duct',
-	[FlueGasExhaustSituation.into_mech_vent]: 'Into mechanical vent',
+	[FlueGasExhaustSituation.into_room]: "Into room",
+	[FlueGasExhaustSituation.into_separate_duct]: "Into separate duct",
+	[FlueGasExhaustSituation.into_mech_vent]: "Into mechanical vent",
 };
 </script>
 

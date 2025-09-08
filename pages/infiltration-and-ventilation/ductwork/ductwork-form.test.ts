@@ -6,7 +6,7 @@ import { within } from "@testing-library/dom";
 import { DuctShape, DuctType, VentType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport('navigateTo', () => {
+mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 const user = userEvent.setup();
@@ -54,13 +54,13 @@ describe("ductwork form", async () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [{
-						name: 'MVHR_1',
-						id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+						name: "MVHR_1",
+						id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 						typeOfMechanicalVentilationOptions: VentType.MVHR
 					},
 					{
-						name: 'MVHR_2',
-						id: '7184f2fe-a78f-4a56-ba5a-1a7751ac506d',
+						name: "MVHR_2",
+						id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 						typeOfMechanicalVentilationOptions: VentType.MVHR
 
 					}]

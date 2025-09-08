@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { getUrl } from '#imports';
-import { WwhrsType } from '~/schema/api-schema.types';
+import { getUrl } from "#imports";
+import { WwhrsType } from "~/schema/api-schema.types";
 import { isInteger } from "~/utils/validation";
 
 const title = "Waste water heat recovery system";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const wwhrsData = useItemToEdit('wwhrs', store.domesticHotWater.wwhrs.data);
+const wwhrsData = useItemToEdit("wwhrs", store.domesticHotWater.wwhrs.data);
 const model: Ref<WwhrsData> = ref(wwhrsData!);
 
 const { bath, electricShower, mixedShower, otherOutlets } = store.domesticHotWater.hotWaterOutlets;
@@ -20,9 +20,9 @@ const hotWaterOutlets = [
 ].flat();
 
 const wwhrsTypeOptions: Record<WwhrsType, string> = {
-	[WwhrsType.WWHRS_InstantaneousSystemA]: 'System A',
-	[WwhrsType.WWHRS_InstantaneousSystemB]: 'System B',
-	[WwhrsType.WWHRS_InstantaneousSystemC]: 'System C'
+	[WwhrsType.WWHRS_InstantaneousSystemA]: "System A",
+	[WwhrsType.WWHRS_InstantaneousSystemB]: "System B",
+	[WwhrsType.WWHRS_InstantaneousSystemC]: "System C"
 };
 
 const saveForm = (fields: WwhrsData) => {

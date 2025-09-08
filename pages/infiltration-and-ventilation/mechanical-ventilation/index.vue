@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid';
-import { VentType } from '~/schema/api-schema.types';
+import { v4 as uuidv4 } from "uuid";
+import { VentType } from "~/schema/api-schema.types";
 
 const page = usePage();
 const title = "Mechanical ventilation";
@@ -60,7 +60,7 @@ function handleComplete() {
 		}
 	});
 		
-	navigateTo('/infiltration-and-ventilation');		
+	navigateTo("/infiltration-and-ventilation");		
 }
 
 </script>

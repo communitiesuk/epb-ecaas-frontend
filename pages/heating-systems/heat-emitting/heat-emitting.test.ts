@@ -186,14 +186,14 @@ describe("heat emitting", () => {
 			).toBeDefined();
 		});
 
-		it('should display an in-progress indicator when an entry is not marked as complete', async () => {
+		it("should display an in-progress indicator when an entry is not marked as complete", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
 						instantElectricHeater: {
 							data: [{
 								data: {
-									name: 'Instant electric heater'
+									name: "Instant electric heater"
 								}
 							}],
 						},
@@ -203,17 +203,17 @@ describe("heat emitting", () => {
 
 			await renderSuspended(HeatEmitting);
 
-			expect(screen.getByTestId('instantElectricHeater_status_0').textContent).toBe(formStatus.inProgress.text);
+			expect(screen.getByTestId("instantElectricHeater_status_0").textContent).toBe(formStatus.inProgress.text);
 		});
 
-		it ('should display a complete indicator when an entry is marked as complete', async () => {
+		it ("should display a complete indicator when an entry is marked as complete", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
 						instantElectricHeater: {
 							data: [{
 								data: {
-									name: 'Instant electric heater',
+									name: "Instant electric heater",
 									ratedPower: 10,
 									convectionFractionInstant: 0.5
 								},
@@ -226,7 +226,7 @@ describe("heat emitting", () => {
 
 			await renderSuspended(HeatEmitting);
 
-			expect(screen.getByTestId('instantElectricHeater_status_0').textContent).toBe(formStatus.complete.text);
+			expect(screen.getByTestId("instantElectricHeater_status_0").textContent).toBe(formStatus.complete.text);
 		});
 	});
 
@@ -484,7 +484,7 @@ describe("heat emitting", () => {
 
 		type HeatEmittingType = keyof typeof store.heatingSystems.heatEmitting;
 
-		it('disables the mark section as complete button when emitter is incomplete', async () => {
+		it("disables the mark section as complete button when emitter is incomplete", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatEmitting: {
@@ -505,7 +505,7 @@ describe("heat emitting", () => {
 
 			await renderSuspended(HeatEmitting);
 			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
-			expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 		});
 
 		it("marks heat emitting section as complete when button is clicked", async () => {

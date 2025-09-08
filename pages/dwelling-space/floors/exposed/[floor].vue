@@ -3,7 +3,7 @@ const title = "Exposed floor";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const floorData = useItemToEdit('floor', store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
+const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
 const model: Ref<ExposedFloorData> = ref(floorData!);
 
 const saveForm = (fields: ExposedFloorData) => {	

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { CombustionApplianceType } from '~/schema/api-schema.types';
+import { CombustionApplianceType } from "~/schema/api-schema.types";
 
 const title = "Closed fireplace with fan";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const applianceData = useItemToEdit('combustion', store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.closed_with_fan].data);
+const applianceData = useItemToEdit("combustion", store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.closed_with_fan].data);
 const model: Ref<CombustionApplianceData> = ref(applianceData!);
 
 const saveForm = (fields: CombustionApplianceData) => {

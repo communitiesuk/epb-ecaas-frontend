@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { standardPitchOptions } from '#imports';
+import { standardPitchOptions } from "#imports";
 
 const title = "Party wall";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const wallData = useItemToEdit('wall', store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data);
+const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data);
 const model: Ref<PartyWallData> = ref(wallData!);
 
 const saveForm = (fields: PartyWallData) => {
@@ -15,7 +15,7 @@ const saveForm = (fields: PartyWallData) => {
 		const wall: PartyWallData = {
 			name: fields.name,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
+			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 			surfaceArea: fields.surfaceArea,
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,

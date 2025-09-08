@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BuildType } from '~/schema/api-schema.types';
+import { BuildType } from "~/schema/api-schema.types";
 import { isInteger } from "~/utils/validation";
 import { getUrl } from "#imports";
 

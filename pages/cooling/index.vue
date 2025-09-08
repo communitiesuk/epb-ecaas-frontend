@@ -42,7 +42,7 @@ function handleComplete() {
 		}
 	});
 		
-	navigateTo('/');		
+	navigateTo("/");		
 }
 
 </script>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = 'Understanding mass distribution class';
+const title = "Understanding mass distribution class";
 
 </script>
 

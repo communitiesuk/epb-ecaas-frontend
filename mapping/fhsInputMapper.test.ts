@@ -48,7 +48,7 @@ const expectedHouseInput: FhsInputSchema = {
 	},
 	Control: {},
 	EnergySupply: {
-		['mains elec']: {
+		["mains elec"]: {
 			fuel: FuelType.electricity,
 			is_export_capable: true,
 		}
@@ -250,7 +250,7 @@ const expectedHouseInput: FhsInputSchema = {
 		[defaultZoneName]: {
 			BuildingElement: {
 				"ground-floor (floor)": {
-					type: 'BuildingElementGround',
+					type: "BuildingElementGround",
 					area: 40,
 					total_area: 40,
 					u_value: 1,
@@ -294,7 +294,7 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	Control: {},
 	EnergySupply: {
-		['mains elec']: {
+		["mains elec"]: {
 			fuel: FuelType.electricity,
 			is_export_capable: false,
 			ElectricBattery: {
@@ -641,7 +641,7 @@ const expectedFlatInput: FhsInputSchema = {
 		[defaultZoneName]: {
 			BuildingElement: {
 				"ground floor 1 (floor)": {
-					type: 'BuildingElementGround',
+					type: "BuildingElementGround",
 					area: 12,
 					total_area: 12,
 					u_value: 5,
@@ -660,7 +660,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 0,
 				},
 				"ground floor 2 (floor)": {
-					type: 'BuildingElementGround',
+					type: "BuildingElementGround",
 					area: 26,
 					total_area: 26,
 					depth_basement_floor: 2,
@@ -909,7 +909,7 @@ expect.extend({
 	toPassJsonSchema(isValid: boolean, validator: ValidateFunction<unknown>) {
 		const errors = validator.errors?.map(({ message }) => message).join("; ");
 		return {
-			message: () => isValid ? '' : `JSON validation errors: ${ errors }`,
+			message: () => isValid ? "" : `JSON validation errors: ${ errors }`,
 			pass: isValid		
 		};
 	}
@@ -1580,7 +1580,7 @@ describe("FHS input mapper", () => {
 							surfaceArea: 16,
 							kappaValue: 75000,
 							massDistributionClass: MassDistributionClass.I,
-							pitchOption: '0'
+							pitchOption: "0"
 						}
 					},
 					{
@@ -1591,7 +1591,7 @@ describe("FHS input mapper", () => {
 							kappaValue: 60000,
 							massDistributionClass: MassDistributionClass.IE,
 							pitch: 45,
-							pitchOption: 'custom',
+							pitchOption: "custom",
 							thermalResistanceOfAdjacentUnheatedSpace: 3.4,
 							uValue: 2.2
 						}
@@ -2055,7 +2055,7 @@ describe("FHS input mapper", () => {
 		expect(fhsInputData).toEqual(expectedResult);   
 	});
 
-	test('the expected results pass against the current FHS input schema', () => {
+	test("the expected results pass against the current FHS input schema", () => {
 		const expectedsToTest = [expectedHouseInput, expectedFlatInput];
 
 		const validate = ajv.getSchema("fhs")!;

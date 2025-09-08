@@ -1,8 +1,8 @@
-import { resolveState  } from './resolve';
-import type { Resolved } from './resolve';
+import { resolveState  } from "./resolve";
+import type { Resolved } from "./resolve";
 
-describe('Resolved Type', () => {
-	it('should match a resolved state with complete EcaasForm', () => {
+describe("Resolved Type", () => {
+	it("should match a resolved state with complete EcaasForm", () => {
         type TestState = {
         	simpleForm: { complete: true; data: { value: string } };
         	incompleteForm: { complete: false; data: { value: string } };
@@ -14,24 +14,24 @@ describe('Resolved Type', () => {
 	});
 });
 
-describe('resolveState', () => {
-	it('should resolve a simple state with complete EcaasForm', () => {
+describe("resolveState", () => {
+	it("should resolve a simple state with complete EcaasForm", () => {
 		const state = {
-			simpleForm: { complete: true, data: { value: 'test' } },
+			simpleForm: { complete: true, data: { value: "test" } },
 			incompleteForm: { complete: false, data: {} }
 		};
 
 		const resolved = resolveState(state);
     
-		expect(resolved.simpleForm).toEqual({ value: 'test' });
+		expect(resolved.simpleForm).toEqual({ value: "test" });
 		expect(resolved.incompleteForm).toBeUndefined();
 	});
 
-	it('should resolve nested state with complete EcaasForm', () => {
+	it("should resolve nested state with complete EcaasForm", () => {
 		const state = {
 			nestedForm: {
 				level1: {
-					level2: { complete: true, data: { value: 'nested' } },
+					level2: { complete: true, data: { value: "nested" } },
 					incompleteForm: { complete: false, data: {} }
 				}
 			}
@@ -39,14 +39,14 @@ describe('resolveState', () => {
 
 		const resolved = resolveState(state);
     
-		expect(resolved.nestedForm.level1.level2).toEqual({ value: 'nested' });
+		expect(resolved.nestedForm.level1.level2).toEqual({ value: "nested" });
 		expect(resolved.nestedForm.level1.incompleteForm).toBeUndefined();
 	});
 
-	it('should resolve state with mixed EcaasForm and non-EcaasForm values', () => {
+	it("should resolve state with mixed EcaasForm and non-EcaasForm values", () => {
 		const state = {
 			mixedForm: {
-				completeForm: { complete: true, data: { value: 'complete' } },
+				completeForm: { complete: true, data: { value: "complete" } },
 				incompleteForm: { complete: false, data: {} },
 				regularValue: 42
 			}
@@ -54,12 +54,12 @@ describe('resolveState', () => {
 
 		const resolved = resolveState(state);
     
-		expect(resolved.mixedForm.completeForm).toEqual({ value: 'complete' });
+		expect(resolved.mixedForm.completeForm).toEqual({ value: "complete" });
 		expect(resolved.mixedForm.incompleteForm).toBeUndefined();
 		expect(resolved.mixedForm.regularValue).toBe(42);
 	});
 
-	it('should handle empty state', () => {
+	it("should handle empty state", () => {
 		const state = {};
 
 		const resolved = resolveState(state);

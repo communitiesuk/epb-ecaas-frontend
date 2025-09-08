@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { standardPitchOptions } from '#imports';
+import { standardPitchOptions } from "#imports";
 
 const title = "External unglazed door";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const doorData = useItemToEdit('door', store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor?.data);
+const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor?.data);
 const model: Ref<ExternalUnglazedDoorData> = ref(doorData!);
 
 const saveForm = (fields: ExternalUnglazedDoorData) => {
@@ -15,7 +15,7 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 		const door: ExternalUnglazedDoorData = {
 			name: fields.name,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
+			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 			orientation: fields.orientation,
 			height: fields.height,
 			width: fields.width,

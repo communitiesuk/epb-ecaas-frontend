@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const runtimeConfig = useRuntimeConfig();
 const env = runtimeConfig.public.environment;
-const testSiteMessage = 'This is a test site.';
+const testSiteMessage = "This is a test site.";
 </script>
 
 <template>

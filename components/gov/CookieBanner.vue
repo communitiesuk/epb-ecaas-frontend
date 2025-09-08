@@ -1,30 +1,30 @@
 <script setup lang="ts">
-import CookieConsent from '~/constants/cookieConsent';
+import CookieConsent from "~/constants/cookieConsent";
 
-const serviceName = 'Cookies on Check Part L building compliance';
+const serviceName = "Cookies on Check Part L building compliance";
 
-const cookieConsent = useCookie('cookieConsent');
-const hideCookieMessage = useCookie('hideCookieMessage');
+const cookieConsent = useCookie("cookieConsent");
+const hideCookieMessage = useCookie("hideCookieMessage");
 
 const { gtag } = useGtag();
 
 const handleAccept = () => {
 	cookieConsent.value = CookieConsent.Accepted;
 
-	gtag('consent', 'update', {
-		analytics_storage: 'granted'
+	gtag("consent", "update", {
+		analytics_storage: "granted"
 	});
 };
 
 const handleReject = () => {
 	cookieConsent.value = CookieConsent.Rejected;
 
-	gtag('consent', 'update', {
-		analytics_storage: 'denied'
+	gtag("consent", "update", {
+		analytics_storage: "denied"
 	});
 };
 
-const handleHide = () => hideCookieMessage.value = 'true';
+const handleHide = () => hideCookieMessage.value = "true";
 </script>
 
 <template>

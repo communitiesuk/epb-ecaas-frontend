@@ -1,10 +1,10 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import { screen } from '@testing-library/vue';
+import { screen } from "@testing-library/vue";
 import ZoneParameters from "./zone-parameters.vue";
 import userEvent from "@testing-library/user-event";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport('navigateTo', () => {
+mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
@@ -14,7 +14,7 @@ const state: DwellingSpaceZoneParametersData = {
 	// spaceHeatingSystemForThisZone: 'instant electric heater'
 };
 
-describe('zone parameters', () => {
+describe("zone parameters", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -46,23 +46,23 @@ describe('zone parameters', () => {
 	// 	expect(screen.getByTestId('spaceHeatingSystemForThisZone_instant_electric_heater')).toBeDefined();
 	// });
 
-	test('data is saved to store state when form is valid', async () => {
+	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await user.type(screen.getByTestId('area'), '10');
-		await user.type(screen.getByTestId('volume'), '10');
+		await user.type(screen.getByTestId("area"), "10");
+		await user.type(screen.getByTestId("volume"), "10");
 		// await user.click(screen.getByTestId('spaceHeatingSystemForThisZone_instant_electric_heater'));
 		await user.tab();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
 		const { data, complete } = store.dwellingFabric.dwellingSpaceZoneParameters;
 
 		expect(data).toEqual(state);
 		expect(complete).toBe(true);
-		expect(navigateToMock).toBeCalledWith('/dwelling-space');
+		expect(navigateToMock).toBeCalledWith("/dwelling-space");
 	});
 
-	test('form is prepopulated when data exists in state', async () => {
+	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceZoneParameters: { data: state }
@@ -71,26 +71,26 @@ describe('zone parameters', () => {
 
 		await renderSuspended(ZoneParameters);
 
-		expect((await screen.findByTestId<HTMLInputElement>('area')).value).toBe('10');
-		expect((await screen.findByTestId<HTMLInputElement>('volume')).value).toBe('10');
+		expect((await screen.findByTestId<HTMLInputElement>("area")).value).toBe("10");
+		expect((await screen.findByTestId<HTMLInputElement>("volume")).value).toBe("10");
 		// expect((await screen.findByTestId('spaceHeatingSystemForThisZone_instant_electric_heater')).hasAttribute('checked')).toBe(true);
 	});
 			
-	test('required error messages are displayed when empty form is submitted', async () => {
+	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
-		expect((await screen.findByTestId('area_error'))).toBeDefined();
-		expect((await screen.findByTestId('volume_error'))).toBeDefined();
+		expect((await screen.findByTestId("area_error"))).toBeDefined();
+		expect((await screen.findByTestId("volume_error"))).toBeDefined();
 		// expect((await screen.findByTestId('spaceHeatingSystemForThisZone_error'))).toBeDefined();
 	});
 
-	test('error summary is displayed when an invalid form in submitted', async () => {
+	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
-		expect((await screen.findByTestId('zoneParametersErrorSummary'))).toBeDefined();
+		expect((await screen.findByTestId("zoneParametersErrorSummary"))).toBeDefined();
 	});
 });

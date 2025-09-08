@@ -3,13 +3,13 @@ const title = "Immersion heater";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const immersionHeaterData = useItemToEdit('immersionHeater', store.domesticHotWater.waterHeating.immersionHeater.data);
+const immersionHeaterData = useItemToEdit("immersionHeater", store.domesticHotWater.waterHeating.immersionHeater.data);
 const model: Ref<ImmersionHeaterData> = ref(immersionHeaterData!);
 
 const heaterPositionOptions: Record<ImmersionHeaterPosition, Capitalize<ImmersionHeaterPosition>> = {
-	top: 'Top',
-	middle: 'Middle',
-	bottom: 'Bottom'
+	top: "Top",
+	middle: "Middle",
+	bottom: "Bottom"
 };
 
 const saveForm = (fields: ImmersionHeaterData) => {

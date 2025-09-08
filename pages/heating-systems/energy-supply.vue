@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FuelType } from '~/schema/api-schema.types';
+import { FuelType } from "~/schema/api-schema.types";
 
 const title = "Energy supply";
 const store = useEcaasStore();
@@ -9,7 +9,7 @@ const model = ref({
 });
 
 const fuelTypeOptions: Record<FuelType.electricity, Capitalize<FuelType.electricity>> = {
-	[FuelType.electricity]: 'Electricity'
+	[FuelType.electricity]: "Electricity"
 };
 
 const saveForm = (fields: EnergySupplyData) => {

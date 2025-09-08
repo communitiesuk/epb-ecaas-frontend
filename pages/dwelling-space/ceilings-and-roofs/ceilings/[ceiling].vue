@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { getUrl, zeroPitchOptions } from '#imports';
+import { getUrl, zeroPitchOptions } from "#imports";
 
 const title = "Ceiling";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const ceilingData = useItemToEdit('ceiling', store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
+const ceilingData = useItemToEdit("ceiling", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
 const model: Ref<CeilingData | undefined> = ref(ceilingData?.data);
 
-const typeOfCeilingOptions = adjacentSpaceTypeOptions('Ceiling');
+const typeOfCeilingOptions = adjacentSpaceTypeOptions("Ceiling");
 
 const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
@@ -21,12 +21,12 @@ const saveForm = (fields: CeilingData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '0' ? 0 : fields.pitch,
+			pitch: fields.pitchOption === "0" ? 0 : fields.pitch,
 		};
 
 		let ceiling: EcaasForm<CeilingData>;
 
-		if (fields.type === 'unheatedSpace') {
+		if (fields.type === "unheatedSpace") {
 			ceiling = {
 				data: {
 					...commonFields,
@@ -36,7 +36,7 @@ const saveForm = (fields: CeilingData) => {
 				},
 				complete: true
 			};
-		} else if (fields.type === 'heatedSpace') {
+		} else if (fields.type === "heatedSpace") {
 			ceiling = {
 				data: {
 					...commonFields,
@@ -58,7 +58,7 @@ const saveForm = (fields: CeilingData) => {
 autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings,
-	defaultName: 'Ceiling',
+	defaultName: "Ceiling",
 	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data.push(newData),
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[index] = newData;

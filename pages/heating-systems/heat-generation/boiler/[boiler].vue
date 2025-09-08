@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Boiler";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const boilerData = useItemToEdit('boiler', store.heatingSystems.heatGeneration.boiler.data);
+const boilerData = useItemToEdit("boiler", store.heatingSystems.heatGeneration.boiler.data);
 const model: Ref<BoilerData> = ref(boilerData!);
 
 const saveForm = (fields: BoilerData) => {

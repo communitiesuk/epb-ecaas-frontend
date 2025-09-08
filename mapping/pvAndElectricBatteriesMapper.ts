@@ -4,7 +4,7 @@ import { objectFromEntries } from "ts-extras";
 import type { SchemaElectricBattery, SchemaWindowShadingObject } from "~/schema/api-schema.types";
 import { defaultElectricityEnergySupplyName } from "./common";
 
-export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, 'OnSiteGeneration'>, { "ElectricBattery": SchemaElectricBattery } | EmptyObject] {
+export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, "OnSiteGeneration">, { "ElectricBattery": SchemaElectricBattery } | EmptyObject] {
 	return [
 		{
 			...mapPvSystemData(state),
@@ -14,7 +14,7 @@ export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsIn
 	];
 }
 
-export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, 'OnSiteGeneration'> {
+export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGeneration"> {
 	return {
 		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvSystems.map((system) => {
 			const { name, elevationalHeight, lengthOfPV, widthOfPV, inverterIsInside, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = system.data;

@@ -2,7 +2,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import MechanicalVentilationForm from "./[mechanical].vue";
 import { userEvent } from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { MVHRLocation, VentType } from "~/schema/api-schema.types";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units/types";
@@ -12,10 +12,10 @@ describe("mechanical ventilation form", () => {
 	const store = useEcaasStore();
 	
 	const navigateToMock = vi.hoisted(() => vi.fn());
-	vi.mock('uuid');
+	vi.mock("uuid");
 
 	const mechanicalVentilation1: MechanicalVentilationData = {
-		id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
 		airFlowRate: unitValue(12, litrePerSecond),
@@ -24,7 +24,7 @@ describe("mechanical ventilation form", () => {
 	};
 
 	const mechanicalVentilation2: MechanicalVentilationData = {
-		id: '7184f2fe-a78f-4a56-ba5a-1a7751ac506d',
+		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
 		airFlowRate: unitValue(14, litrePerSecond)
@@ -39,7 +39,7 @@ describe("mechanical ventilation form", () => {
 	});
 
 	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions_MVHR is MVHR", async () => {
-		vi.mocked(uuidv4).mockReturnValue('5124f2fe-f15b-4a56-ba5a-1a7751ac506f' as unknown as Buffer);
+		vi.mocked(uuidv4).mockReturnValue("5124f2fe-f15b-4a56-ba5a-1a7751ac506f" as unknown as Buffer);
 
 		await renderSuspended(MechanicalVentilationForm);
 
@@ -61,7 +61,7 @@ describe("mechanical ventilation form", () => {
 	});
 
 	test("data is saved to store state when form is valid and typeOfMechanicalVentilationOptions is not mvhr", async () => {
-		vi.mocked(uuidv4).mockReturnValue('7184f2fe-a78f-4a56-ba5a-1a7751ac506d' as unknown as Buffer);
+		vi.mocked(uuidv4).mockReturnValue("7184f2fe-a78f-4a56-ba5a-1a7751ac506d" as unknown as Buffer);
 
 		await renderSuspended(MechanicalVentilationForm);
 

@@ -1,10 +1,10 @@
-import { arrayIncludes, objectEntries, objectFromEntries } from 'ts-extras';
+import { arrayIncludes, objectEntries, objectFromEntries } from "ts-extras";
 import {  DuctShape,       SupplyAirFlowRateControlType, SupplyAirTemperatureControlType, VentType } from "~/schema/api-schema.types";
 import type { CombustionApplianceType, SchemaCombustionAppliance, SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
-import { defaultElectricityEnergySupplyName } from './common';
-import { asCubicMetresPerHour } from '~/utils/units/flowRate';
+import { defaultElectricityEnergySupplyName } from "./common";
+import { asCubicMetresPerHour } from "~/utils/units/flowRate";
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilationPossible } = mapVentilationData(state);
@@ -37,21 +37,21 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 
 	return {
 		InfiltrationVentilation: infiltrationVentiliation
-	} as Pick<FhsInputSchema, 'InfiltrationVentilation'>;
+	} as Pick<FhsInputSchema, "InfiltrationVentilation">;
 }
 
 export function mapMechanicalVentilationData(state: ResolvedState) {
 	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x):[string, SchemaMechanicalVentilation] => {
 		let airFlowRateInCubicMetresPerHour: number;
 
-		if (typeof x.airFlowRate === 'number') {
+		if (typeof x.airFlowRate === "number") {
 			airFlowRateInCubicMetresPerHour = x.airFlowRate;
 		} else {
 			airFlowRateInCubicMetresPerHour = asCubicMetresPerHour(x.airFlowRate);
 		}
 		
 		const key = x.name;
-		const val: Omit<SchemaMechanicalVentilation, 'ductwork'> = {
+		const val: Omit<SchemaMechanicalVentilation, "ductwork"> = {
 			vent_type: x.typeOfMechanicalVentilationOptions,
 			EnergySupply: defaultElectricityEnergySupplyName,
 			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
@@ -119,7 +119,7 @@ export function mapVentilationData(state: ResolvedState): { dwellingElevationalL
 	};
 }
 
-export function mapAirPermeabilityData(state: ResolvedState): Pick<SchemaVentilationLeaks, 'test_pressure' | 'test_result'> {
+export function mapAirPermeabilityData(state: ResolvedState): Pick<SchemaVentilationLeaks, "test_pressure" | "test_result"> {
 	const { testPressure, airTightnessTestResult } = state.infiltrationAndVentilation.airPermeability;
 
 	return {

@@ -4,14 +4,14 @@ import { FuelType  } from "~/schema/api-schema.types";
 import type { SchemaSpaceHeatSystemDetails } from "~/schema/api-schema.types";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
-export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema, 'EnergySupply' | 'SpaceHeatSystem'> {
+export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply" | "SpaceHeatSystem"> {
 	return {
 		...mapEnergySupplyData(state),
 		...mapHeatEmittingData(state),
 	};
 }
 
-export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 'EnergySupply'> {
+export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply"> {
 	const { fuelType, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered, exported } = state.heatingSystems.energySupply;
 	
 	return {
@@ -34,7 +34,7 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 
 // TODO need a mapHeatGenerationData function here, though this specifies products in the PCDB, heat pumps initially
 
-export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 'SpaceHeatSystem'> {
+export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, "SpaceHeatSystem"> {
 	const wetDistributions = state.heatingSystems.heatEmitting.wetDistribution;
 	const wetDistributionEntries = wetDistributions.map((distribution) => {
 		const { name, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, designFlowRate, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution;

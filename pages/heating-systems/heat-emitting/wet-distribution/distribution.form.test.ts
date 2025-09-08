@@ -316,21 +316,21 @@ describe("Wet distribution", () => {
 	});
 });
 
-describe('partially saving data', () => {
+describe("partially saving data", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	it('creates a new wet distribution automatically with given name', async () => {
+	it("creates a new wet distribution automatically with given name", async () => {
 		await renderSuspended(WetDistribution, {
 			route: {
-				params: { distribution: 'create' }
+				params: { distribution: "create" }
 			}
 		});
 
-		await user.type(screen.getByTestId('name'), 'New wet distribution');
+		await user.type(screen.getByTestId("name"), "New wet distribution");
 		await user.tab();
 
 		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!;
@@ -338,14 +338,14 @@ describe('partially saving data', () => {
 		expect(actual.designFlowRate).toBeUndefined();
 	});
 
-	it('creates a new wet distribution automatically with default name after other data is entered', async () => {
+	it("creates a new wet distribution automatically with default name after other data is entered", async () => {
 		await renderSuspended(WetDistribution, {
 			route: {
-				params: { distribution: 'create' }
+				params: { distribution: "create" }
 			}
 		});
 
-		await user.type(screen.getByTestId('thermalMass'), '0.5');
+		await user.type(screen.getByTestId("thermalMass"), "0.5");
 		await user.tab();
 
 		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!;
@@ -353,7 +353,7 @@ describe('partially saving data', () => {
 		expect(actual.thermalMass).toBe(0.5);
 	});
 
-	it('saves updated form data to store automatically', async () => {
+	it("saves updated form data to store automatically", async () => {
 		store.$patch({
 			heatingSystems: {
 				heatEmitting: {
@@ -368,7 +368,7 @@ describe('partially saving data', () => {
 
 		await renderSuspended(WetDistribution, {
 			route: {
-				params: { distribution: '0' }
+				params: { distribution: "0" }
 			}
 		});
 
@@ -388,7 +388,7 @@ describe('partially saving data', () => {
 
 	});
 
-	it('saves updated form data to correct store object automatically', async () => {
+	it("saves updated form data to correct store object automatically", async () => {
 		store.$patch({
 			heatingSystems: {
 				heatEmitting: {
@@ -404,7 +404,7 @@ describe('partially saving data', () => {
 
 		await renderSuspended(WetDistribution, {
 			route: {
-				params: { distribution: '1' }
+				params: { distribution: "1" }
 			}
 		});
 

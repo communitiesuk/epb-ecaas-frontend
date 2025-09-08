@@ -1,10 +1,10 @@
-import { defineVitestConfig } from '@nuxt/test-utils/config';
+import { defineVitestConfig } from "@nuxt/test-utils/config";
 
 export default defineVitestConfig({
 	test: {
-		environment: 'nuxt',
+		environment: "nuxt",
 		globals: true,
 		silent: true,
-		exclude: ['**/node_modules/**', 'e2e-tests/**'],
+		exclude: ["**/node_modules/**", "e2e-tests/**"],
 	}
 });

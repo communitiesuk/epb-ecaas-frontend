@@ -7,7 +7,7 @@
 export function useItemToEdit<T>(indexRouteParam: string, list?: Array<T>): T | undefined {
 	const route = useRoute();
 
-	if (route.params[indexRouteParam] && route.params[indexRouteParam] !== 'create') {
+	if (route.params[indexRouteParam] && route.params[indexRouteParam] !== "create") {
 		const index = parseInt(route.params[indexRouteParam] as string);
 		const item = list?.[index];
 

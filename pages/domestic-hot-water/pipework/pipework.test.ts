@@ -41,8 +41,8 @@ describe("Pipeworks", () => {
 		store.$reset();
 	});
 
-	describe('primary pipework', () => {
-		test('pipework is removed when remove link is clicked', async () => {
+	describe("primary pipework", () => {
+		test("pipework is removed when remove link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					pipework: {
@@ -55,15 +55,15 @@ describe("Pipeworks", () => {
 	
 			await renderSuspended(Pipework);
 	
-			const populatedList = screen.queryByTestId('primaryPipework_items');
+			const populatedList = screen.queryByTestId("primaryPipework_items");
 	
-			await user.click(screen.getByTestId('primaryPipework_remove_0'));
+			await user.click(screen.getByTestId("primaryPipework_remove_0"));
 	
 			expect(populatedList).toBeDefined();
-			expect(screen.queryByTestId('primaryPipework_items')).toBeNull();
+			expect(screen.queryByTestId("primaryPipework_items")).toBeNull();
 		});
 	
-		it('duplicates pipework in list when duplicate link is clicked', async () => {
+		it("duplicates pipework in list when duplicate link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					pipework: {
@@ -76,19 +76,19 @@ describe("Pipeworks", () => {
 	
 			await renderSuspended(Pipework);
 	
-			await user.click(screen.getByTestId('primaryPipework_duplicate_0'));
-			await user.click(screen.getByTestId('primaryPipework_duplicate_0'));
-			await user.click(screen.getByTestId('primaryPipework_duplicate_1'));
+			await user.click(screen.getByTestId("primaryPipework_duplicate_0"));
+			await user.click(screen.getByTestId("primaryPipework_duplicate_0"));
+			await user.click(screen.getByTestId("primaryPipework_duplicate_1"));
 	
-			expect(screen.queryAllByTestId('primaryPipework_item').length).toBe(5);
-			expect(screen.getByText('Pipework Kitchen Sink (1)')).toBeDefined();
-			expect(screen.getByText('Pipework Kitchen Sink (2)')).toBeDefined();
-			expect(screen.getByText('Pipework Kitchen (1)')).toBeDefined();
+			expect(screen.queryAllByTestId("primaryPipework_item").length).toBe(5);
+			expect(screen.getByText("Pipework Kitchen Sink (1)")).toBeDefined();
+			expect(screen.getByText("Pipework Kitchen Sink (2)")).toBeDefined();
+			expect(screen.getByText("Pipework Kitchen (1)")).toBeDefined();
 		});
 	});
 
-	describe('secondary pipework', () => {
-		test('pipework is removed when remove link is clicked', async () => {
+	describe("secondary pipework", () => {
+		test("pipework is removed when remove link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					pipework: {
@@ -101,15 +101,15 @@ describe("Pipeworks", () => {
 	
 			await renderSuspended(Pipework);
 	
-			const populatedList = screen.queryByTestId('secondaryPipework_items');
+			const populatedList = screen.queryByTestId("secondaryPipework_items");
 	
-			await user.click(screen.getByTestId('secondaryPipework_remove_0'));
+			await user.click(screen.getByTestId("secondaryPipework_remove_0"));
 	
 			expect(populatedList).toBeDefined();
-			expect(screen.queryByTestId('secondaryPipework_items')).toBeNull();
+			expect(screen.queryByTestId("secondaryPipework_items")).toBeNull();
 		});
 	
-		it('duplicates pipework in list when duplicate link is clicked', async () => {
+		it("duplicates pipework in list when duplicate link is clicked", async () => {
 			store.$patch({
 				domesticHotWater: {
 					pipework: {
@@ -122,14 +122,14 @@ describe("Pipeworks", () => {
 	
 			await renderSuspended(Pipework);
 	
-			await user.click(screen.getByTestId('secondaryPipework_duplicate_0'));
-			await user.click(screen.getByTestId('secondaryPipework_duplicate_0'));
-			await user.click(screen.getByTestId('secondaryPipework_duplicate_1'));
+			await user.click(screen.getByTestId("secondaryPipework_duplicate_0"));
+			await user.click(screen.getByTestId("secondaryPipework_duplicate_0"));
+			await user.click(screen.getByTestId("secondaryPipework_duplicate_1"));
 	
-			expect(screen.queryAllByTestId('secondaryPipework_item').length).toBe(5);
-			expect(screen.getByText('Pipework Kitchen Sink (1)')).toBeDefined();
-			expect(screen.getByText('Pipework Kitchen Sink (2)')).toBeDefined();
-			expect(screen.getByText('Pipework Kitchen (1)')).toBeDefined();
+			expect(screen.queryAllByTestId("secondaryPipework_item").length).toBe(5);
+			expect(screen.getByText("Pipework Kitchen Sink (1)")).toBeDefined();
+			expect(screen.getByText("Pipework Kitchen Sink (2)")).toBeDefined();
+			expect(screen.getByText("Pipework Kitchen (1)")).toBeDefined();
 		});
 	});
 
@@ -253,7 +253,7 @@ describe("Pipeworks", () => {
 						},
 					});
 				 
-					await(user.click(screen.getByRole('button', { name: 'Save and mark as complete' })));
+					await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
 
 					expect(store.domesticHotWater.pipework[typedKey].complete).toBe(false);
 	

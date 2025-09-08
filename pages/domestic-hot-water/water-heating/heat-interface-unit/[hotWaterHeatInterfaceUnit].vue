@@ -3,7 +3,7 @@ const title = "Heat interface unit";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const heatInterfaceUnitData = useItemToEdit('hotWaterHeatInterfaceUnit', store.domesticHotWater.waterHeating.heatInterfaceUnit.data);
+const heatInterfaceUnitData = useItemToEdit("hotWaterHeatInterfaceUnit", store.domesticHotWater.waterHeating.heatInterfaceUnit.data);
 const model: Ref<WaterHeatingHeatInterfaceUnitData> = ref(heatInterfaceUnitData!);
 
 const saveForm = (fields: WaterHeatingHeatInterfaceUnitData) => {

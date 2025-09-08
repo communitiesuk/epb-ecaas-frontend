@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import formStatus from '~/constants/formStatus';
+import formStatus from "~/constants/formStatus";
 
 const title = "Heat generation";
 const page = usePage();
@@ -33,7 +33,7 @@ function handleComplete() {
 		}
 	});
 
-	navigateTo('/heating-systems');
+	navigateTo("/heating-systems");
 }
 
 function checkIsComplete(){

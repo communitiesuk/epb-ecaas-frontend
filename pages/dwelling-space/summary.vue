@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { SummarySection } from '~/common.types';
-import { getUrl, getTabItems, type ArealHeatCapacityValue } from '#imports';
-import { FloorType } from '~/schema/api-schema.types';
-import { metresSquare, millimetresSquarePerMetre } from '~/utils/units/area';
-import { degrees } from '~/utils/units/angle';
-import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from '~/utils/units/thermalConductivity';
-import { centimetre, metre, millimetre } from '~/utils/units/length';
-import { cubicMetre } from '~/utils/units/volume';
+import type { SummarySection } from "~/common.types";
+import { getUrl, getTabItems, type ArealHeatCapacityValue } from "#imports";
+import { FloorType } from "~/schema/api-schema.types";
+import { metresSquare, millimetresSquarePerMetre } from "~/utils/units/area";
+import { degrees } from "~/utils/units/angle";
+import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from "~/utils/units/thermalConductivity";
+import { centimetre, metre, millimetre } from "~/utils/units/length";
+import { cubicMetre } from "~/utils/units/volume";
 
 const title = "Dwelling fabric summary";
 const store = useEcaasStore();
@@ -19,27 +19,27 @@ function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
 const zoneParametersData = store.dwellingFabric.dwellingSpaceZoneParameters.data;
 
 const zoneParametersSummary: SummarySection = {
-	id: 'dwellingSpaceZoneParameters',
-	label: 'Zone parameters',
+	id: "dwellingSpaceZoneParameters",
+	label: "Zone parameters",
 	data: {
 		"Area": zoneParametersData.area ? `${zoneParametersData.area} ${metresSquare.suffix}` : undefined,
 		"Volume": zoneParametersData.volume ? `${zoneParametersData.volume} ${cubicMetre.suffix}` : undefined,
 		// "Heat emitting system for this zone": zoneParametersData.spaceHeatingSystemForThisZone,
 		// "Heating control type": zoneParametersData.heatingControlType
 	},
-	editUrl: getUrl('dwellingSpaceZoneParameters')
+	editUrl: getUrl("dwellingSpaceZoneParameters")
 };
 
 const lightingData = store.dwellingFabric.dwellingSpaceLighting.data;
 
 const lightingSummary: SummarySection = {
-	id: 'dwellingSpaceLighting',
-	label: 'Lighting',
+	id: "dwellingSpaceLighting",
+	label: "Lighting",
 	data: {
 		"Number of LED bulbs": lightingData.numberOfLEDBulbs,
 		"Number of incandescent bulbs": lightingData.numberOfIncandescentBulbs,
 	},
-	editUrl: getUrl('dwellingSpaceLighting')
+	editUrl: getUrl("dwellingSpaceLighting")
 };
 
 const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
@@ -47,10 +47,10 @@ const internalFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpace
 const exposedFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data;
 
 const groundFloorSummary: SummarySection = {
-	id: 'dwellingSpaceGroundFloors',
-	label: 'Ground floor',
+	id: "dwellingSpaceGroundFloors",
+	label: "Ground floor",
 	data: groundFloorData.map(x => {
-		const edgeInsulationWidth = x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? (typeof x.edgeInsulationWidth === 'number' ? x.edgeInsulationWidth : x.edgeInsulationWidth.amount) : undefined;
+		const edgeInsulationWidth = x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? (typeof x.edgeInsulationWidth === "number" ? x.edgeInsulationWidth : x.edgeInsulationWidth.amount) : undefined;
 		
 		return {
 			"Name": x.name,
@@ -78,15 +78,15 @@ const groundFloorSummary: SummarySection = {
 			"Height of the basement walls above ground level": x.typeOfGroundFloor === FloorType.Unheated_basement ? `${x.heightOfBasementWallsAboveGround} ${metre.suffix}` : undefined
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceFloors')
+	editUrl: getUrl("dwellingSpaceFloors")
 };
 
 const internalFloorSummary: SummarySection = {
-	id: 'dwellingSpaceInternalFloors',
-	label: 'Internal floor',
+	id: "dwellingSpaceInternalFloors",
+	label: "Internal floor",
 	data: internalFloorData?.map(x => {
 		return {
-			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, 'Internal floor'),
+			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, "Internal floor"),
 			"Name": x.name,
 			"Net surface area of element": `${x.surfaceAreaOfElement} ${metresSquare.suffix}`,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
@@ -94,12 +94,12 @@ const internalFloorSummary: SummarySection = {
 			...(x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace ? { "Thermal resistance of adjacent unheated space": `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}` } : {})
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceFloors')
+	editUrl: getUrl("dwellingSpaceFloors")
 };
 
 const exposedFloorSummary: SummarySection = {
-	id: 'dwellingSpaceExposedFloors',
-	label: 'Exposed floor',
+	id: "dwellingSpaceExposedFloors",
+	label: "Exposed floor",
 	data: exposedFloorData?.map(x => {
 		return {
 			"Name": x.name,
@@ -113,7 +113,7 @@ const exposedFloorSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceFloors')
+	editUrl: getUrl("dwellingSpaceFloors")
 };
 
 const floorSummarySections: SummarySection[] = [
@@ -128,8 +128,8 @@ const wallToUnheatedSpaceData = store.dwellingFabric.dwellingSpaceWalls.dwelling
 const partyWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data;
 
 const externalWallSummary: SummarySection = {
-	id: 'dwellingSpaceExternalWalls',
-	label: 'External wall',
+	id: "dwellingSpaceExternalWalls",
+	label: "External wall",
 	data: externalWallData?.map(x => {
 		return {
 			"Name": x.name,
@@ -145,12 +145,12 @@ const externalWallSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceWalls')
+	editUrl: getUrl("dwellingSpaceWalls")
 };
 
 const internalWallSummary: SummarySection = {
-	id: 'dwellingSpaceInternalWalls',
-	label: 'Internal wall',
+	id: "dwellingSpaceInternalWalls",
+	label: "Internal wall",
 	data: internalWallData?.map(x => {
 		return {
 			"Name": x.name,
@@ -160,12 +160,12 @@ const internalWallSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceWalls')
+	editUrl: getUrl("dwellingSpaceWalls")
 };
 
 const wallToUnheatedSpaceSummary: SummarySection = {
-	id: 'dwellingSpaceUnheatedSpaceWalls',
-	label: 'Wall to unheated space',
+	id: "dwellingSpaceUnheatedSpaceWalls",
+	label: "Wall to unheated space",
 	data: wallToUnheatedSpaceData?.map(x => {
 		return {
 			"Name": x.name,
@@ -177,12 +177,12 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 			"Thermal resistance of adjacent unheated space": `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}`
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceWalls')
+	editUrl: getUrl("dwellingSpaceWalls")
 };
 
 const partyWallSummary: SummarySection = {
-	id: 'dwellingSpacePartyWalls',
-	label: 'Party wall',
+	id: "dwellingSpacePartyWalls",
+	label: "Party wall",
 	data: partyWallData?.map(x => {
 		return {
 			"Name": x.name,
@@ -193,7 +193,7 @@ const partyWallSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceWalls')
+	editUrl: getUrl("dwellingSpaceWalls")
 };
 
 const wallSummarySections: SummarySection[] = [
@@ -207,26 +207,26 @@ const ceilingData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingS
 const roofData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data;
 
 const ceilingSummary: SummarySection = {
-	id: 'dwellingSpaceCeilings',
-	label: 'Ceiling',
+	id: "dwellingSpaceCeilings",
+	label: "Ceiling",
 	data: ceilingData.map(({ data: x }) => {
 		return {
-			"Type of ceiling": displayAdjacentSpaceType(x.type, 'Ceiling'),
+			"Type of ceiling": displayAdjacentSpaceType(x.type, "Ceiling"),
 			"Name": x.name,
 			"Pitch": `${x.pitch} ${degrees.suffix}`,
 			"Net surface area": `${x.surfaceArea} ${metresSquare.suffix}`,
-			"U-value": x.type === 'unheatedSpace' ? `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
+			"U-value": x.type === "unheatedSpace" ? `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			"Thermal resistance of adjacent unheated space": x.type === 'unheatedSpace' ? `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}` : undefined,
+			"Thermal resistance of adjacent unheated space": x.type === "unheatedSpace" ? `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}` : undefined,
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceCeilingsAndRoofs')
+	editUrl: getUrl("dwellingSpaceCeilingsAndRoofs")
 };
 
 const roofSummary: SummarySection = {
-	id: 'dwellingSpaceRoofs',
-	label: 'Roof',
+	id: "dwellingSpaceRoofs",
+	label: "Roof",
 	data: roofData.map(({ data: x }) => {
 		return {
 			"Name": x.name,
@@ -243,7 +243,7 @@ const roofSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceCeilingsAndRoofs')
+	editUrl: getUrl("dwellingSpaceCeilingsAndRoofs")
 };
 
 const ceilingAndRoofSummarySections: SummarySection[] = [
@@ -256,8 +256,8 @@ const glazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExte
 const internalDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data;
 
 const unglazedDoorSummary: SummarySection = {
-	id: 'dwellingSpaceUnglazedDoors',
-	label: 'External unglazed door',
+	id: "dwellingSpaceUnglazedDoors",
+	label: "External unglazed door",
 	data: unglazedDoorData.map(x => {
 		return {
 			"Name": x.name,
@@ -273,12 +273,12 @@ const unglazedDoorSummary: SummarySection = {
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceDoors')
+	editUrl: getUrl("dwellingSpaceDoors")
 };
 
 const glazedDoorSummary: SummarySection = {
-	id: 'dwellingSpaceGlazedDoors',
-	label: 'External glazed door',
+	id: "dwellingSpaceGlazedDoors",
+	label: "External glazed door",
 	data: glazedDoorData.map(x => {
 		return {
 			"Name": x.name,
@@ -291,18 +291,18 @@ const glazedDoorSummary: SummarySection = {
 			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
 			"Transmittance of solar energy": x.solarTransmittance,
 			"Mid height": `${x.midHeight} ${metre.suffix}`,
-			"Opening to frame ratio": x.numberOpenableParts !== '0' ? x.openingToFrameRatio : undefined
+			"Opening to frame ratio": x.numberOpenableParts !== "0" ? x.openingToFrameRatio : undefined
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceDoors')
+	editUrl: getUrl("dwellingSpaceDoors")
 };
 
 const internalDoorSummary: SummarySection = {
-	id: 'dwellingSpaceInternalDoors',
-	label: 'Internal door',
+	id: "dwellingSpaceInternalDoors",
+	label: "Internal door",
 	data: internalDoorData?.map(x => {
 		return {
-			"Type": displayAdjacentSpaceType(x.typeOfInternalDoor, 'Internal door'),
+			"Type": displayAdjacentSpaceType(x.typeOfInternalDoor, "Internal door"),
 			"Name": x.name,
 			"Pitch": `${x.pitch} ${degrees.suffix}`,
 			"Net surface area of element": `${x.surfaceArea} ${metresSquare.suffix}`,
@@ -312,7 +312,7 @@ const internalDoorSummary: SummarySection = {
 			"Thermal resistance of adjacent unheated space": x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace ? `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}` : undefined,
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceDoors')
+	editUrl: getUrl("dwellingSpaceDoors")
 };
 
 const doorSummarySections: SummarySection[] = [
@@ -324,8 +324,8 @@ const doorSummarySections: SummarySection[] = [
 const windowData = store.dwellingFabric.dwellingSpaceWindows.data;
 
 const windowSummary: SummarySection = {
-	id: 'dwellingSpaceWindows',
-	label: 'Windows',
+	id: "dwellingSpaceWindows",
+	label: "Windows",
 	data: windowData.map(x => {
 		return {
 			"Name": x.name,
@@ -338,35 +338,35 @@ const windowSummary: SummarySection = {
 			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
 			"Transmittance of solar energy": x.solarTransmittance,
 			"Mid height": `${x.midHeight} ${metre.suffix}`,
-			"Frame to opening ratio": x.numberOpenableParts !== '0' ? calculateFrameToOpeningRatio(x.openingToFrameRatio) : undefined,
+			"Frame to opening ratio": x.numberOpenableParts !== "0" ? calculateFrameToOpeningRatio(x.openingToFrameRatio) : undefined,
 			"Number of openable parts": x.numberOpenableParts,
-			"Height of the openable area": x.numberOpenableParts !== '0' ? `${x.heightOpenableArea} ${metre.suffix}` : undefined,
-			"Maximum openable area": x.numberOpenableParts !== '0' ? `${x.maximumOpenableArea} ${metresSquare.suffix}` : undefined,
-			"Mid height of the air flow path for openable part 1": x.numberOpenableParts !== '0' ? `${x.midHeightOpenablePart1} ${metre.suffix}` : undefined,
-			"Mid height of the air flow path for openable part 2": x.numberOpenableParts !== '0' && x.numberOpenableParts !== '1' ? `${x.midHeightOpenablePart2} ${metre.suffix}` : undefined,
-			"Mid height of the air flow path for openable part 3": x.numberOpenableParts === '3' || x.numberOpenableParts === '4' ? `${x.midHeightOpenablePart3} ${metre.suffix}` : undefined,
-			"Mid height of the air flow path for openable part 4": x.numberOpenableParts === '4' ? `${x.midHeightOpenablePart4} ${metre.suffix}` : undefined,
-			"Overhang depth": 'overhangDepth' in x && x.overhangDepth ? (typeof x.overhangDepth === 'number' ? `${x.overhangDepth} ${millimetre.suffix}` : `${x.overhangDepth.amount} ${millimetre.suffix}`) : undefined,
-			"Overhang distance from glass": 'overhangDistance' in x && x.overhangDistance ? (typeof x.overhangDistance === 'number' ? `${x.overhangDistance} ${millimetre.suffix}` : `${x.overhangDistance.amount} ${millimetre.suffix}`): undefined,
-			"Side fin right depth": 'sideFinRightDepth' in x && x.sideFinRightDepth ? (typeof x.sideFinRightDepth === 'number' ? `${x.sideFinRightDepth} ${millimetre.suffix}` : `${x.sideFinRightDepth.amount} ${millimetre.suffix}`) : undefined,
-			"Side fin right distance from glass": 'sideFinRightDistance' in x  && x.sideFinRightDistance ? (typeof x.sideFinRightDistance === 'number' ? `${x.sideFinRightDistance} ${millimetre.suffix}` : `${x.sideFinRightDistance.amount} ${millimetre.suffix}`) : undefined,
-			"Side fin left depth": 'sideFinLeftDepth' in x && x.sideFinLeftDepth ? (typeof x.sideFinLeftDepth === 'number' ? `${x.sideFinLeftDepth} ${millimetre.suffix}` : `${x.sideFinLeftDepth.amount} ${millimetre.suffix}`) : undefined,
-			"Side fin left distance from glass": 'sideFinLeftDistance' in x && x.sideFinLeftDistance ? (typeof x.sideFinLeftDistance === 'number' ? `${x.sideFinLeftDistance} ${millimetre.suffix}` : `${x.sideFinLeftDistance.amount} ${millimetre.suffix}`) : undefined,
+			"Height of the openable area": x.numberOpenableParts !== "0" ? `${x.heightOpenableArea} ${metre.suffix}` : undefined,
+			"Maximum openable area": x.numberOpenableParts !== "0" ? `${x.maximumOpenableArea} ${metresSquare.suffix}` : undefined,
+			"Mid height of the air flow path for openable part 1": x.numberOpenableParts !== "0" ? `${x.midHeightOpenablePart1} ${metre.suffix}` : undefined,
+			"Mid height of the air flow path for openable part 2": x.numberOpenableParts !== "0" && x.numberOpenableParts !== "1" ? `${x.midHeightOpenablePart2} ${metre.suffix}` : undefined,
+			"Mid height of the air flow path for openable part 3": x.numberOpenableParts === "3" || x.numberOpenableParts === "4" ? `${x.midHeightOpenablePart3} ${metre.suffix}` : undefined,
+			"Mid height of the air flow path for openable part 4": x.numberOpenableParts === "4" ? `${x.midHeightOpenablePart4} ${metre.suffix}` : undefined,
+			"Overhang depth": "overhangDepth" in x && x.overhangDepth ? (typeof x.overhangDepth === "number" ? `${x.overhangDepth} ${millimetre.suffix}` : `${x.overhangDepth.amount} ${millimetre.suffix}`) : undefined,
+			"Overhang distance from glass": "overhangDistance" in x && x.overhangDistance ? (typeof x.overhangDistance === "number" ? `${x.overhangDistance} ${millimetre.suffix}` : `${x.overhangDistance.amount} ${millimetre.suffix}`): undefined,
+			"Side fin right depth": "sideFinRightDepth" in x && x.sideFinRightDepth ? (typeof x.sideFinRightDepth === "number" ? `${x.sideFinRightDepth} ${millimetre.suffix}` : `${x.sideFinRightDepth.amount} ${millimetre.suffix}`) : undefined,
+			"Side fin right distance from glass": "sideFinRightDistance" in x  && x.sideFinRightDistance ? (typeof x.sideFinRightDistance === "number" ? `${x.sideFinRightDistance} ${millimetre.suffix}` : `${x.sideFinRightDistance.amount} ${millimetre.suffix}`) : undefined,
+			"Side fin left depth": "sideFinLeftDepth" in x && x.sideFinLeftDepth ? (typeof x.sideFinLeftDepth === "number" ? `${x.sideFinLeftDepth} ${millimetre.suffix}` : `${x.sideFinLeftDepth.amount} ${millimetre.suffix}`) : undefined,
+			"Side fin left distance from glass": "sideFinLeftDistance" in x && x.sideFinLeftDistance ? (typeof x.sideFinLeftDistance === "number" ? `${x.sideFinLeftDistance} ${millimetre.suffix}` : `${x.sideFinLeftDistance.amount} ${millimetre.suffix}`) : undefined,
 			"Type": x.curtainsOrBlinds ? displayCamelToSentenceCase(x.treatmentType) : undefined,
-			"Curtains control object reference": 'curtainsControlObject' in x ? displaySnakeToSentenceCase(x.curtainsControlObject!) : undefined,
-			"Thermal resistivity increase": 'thermalResistivityIncrease' in x ? `${x.thermalResistivityIncrease} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
-			"Solar transmittance reduction": 'solarTransmittanceReduction' in x ? x.solarTransmittanceReduction : undefined
+			"Curtains control object reference": "curtainsControlObject" in x ? displaySnakeToSentenceCase(x.curtainsControlObject!) : undefined,
+			"Thermal resistivity increase": "thermalResistivityIncrease" in x ? `${x.thermalResistivityIncrease} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
+			"Solar transmittance reduction": "solarTransmittanceReduction" in x ? x.solarTransmittanceReduction : undefined
 		};
 	}) || [],
-	editUrl: getUrl('dwellingSpaceWindows')
+	editUrl: getUrl("dwellingSpaceWindows")
 };
 
 const linearThermalBridgesData = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data;
 const pointThermalBridgesData = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data;
 
 const linearThermalBridgesSummary: SummarySection = {
-	id: 'dwellingSpaceLinearThermalBridging',
-	label: 'Linear thermal bridges',
+	id: "dwellingSpaceLinearThermalBridging",
+	label: "Linear thermal bridges",
 	data: linearThermalBridgesData.map(({ data: x }) => {
 		return {
 			"Type of thermal bridge": displayCamelToSentenceCase(x.typeOfThermalBridge),
@@ -374,19 +374,19 @@ const linearThermalBridgesSummary: SummarySection = {
 			"Length of thermal bridge": `${x.length} ${metre.suffix}`
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceThermalBridging')
+	editUrl: getUrl("dwellingSpaceThermalBridging")
 };
 
 const pointThermalBridgesSummary: SummarySection = {
-	id: 'dwellingSpacePointThermalBridging',
-	label: 'Point thermal bridges',
+	id: "dwellingSpacePointThermalBridging",
+	label: "Point thermal bridges",
 	data: pointThermalBridgesData.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Heat transfer coefficient": `${x.heatTransferCoefficient} ${wattsPerKelvin.suffix}`
 		};
 	}),
-	editUrl: getUrl('dwellingSpaceThermalBridging')
+	editUrl: getUrl("dwellingSpaceThermalBridging")
 };
 
 const thermalBridgeSummarySections: SummarySection[] = [

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = 'Send your feedback';
+const title = "Send your feedback";
 const router = useRouter();
 </script>
 

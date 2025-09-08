@@ -43,7 +43,7 @@ function handleComplete() {
 				ductwork: { complete: true }
 			}
 		});
-		navigateTo('/infiltration-and-ventilation');		
+		navigateTo("/infiltration-and-ventilation");		
 	}
 		
 }

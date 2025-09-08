@@ -6,8 +6,8 @@ const fillEnergySupplyForm = async (page: Page) => {
 	//navigate to Energy supply page
 	await page.waitForLoadState("load");
 	
-	await page.getByRole('link', { name: 'Heating systems' }).click();
-	await page.getByRole('link', { name: 'Energy supply' }).nth(0).click();
+	await page.getByRole("link", { name: "Heating systems" }).click();
+	await page.getByRole("link", { name: "Energy supply" }).nth(0).click();
 	await page.waitForLoadState("load");
 
 	//add form data
@@ -76,7 +76,7 @@ test("saved energy supply form data persists on page reload and is reflected in 
 	await page.reload();
 
 	//check data persists on the Energy supply page
-	await page.getByRole('link', { name: 'Energy supply' }).nth(0).click();
+	await page.getByRole("link", { name: "Energy supply" }).nth(0).click();
 
 	await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
 	await expect(page.getByTestId("exported_yes")).toBeChecked();

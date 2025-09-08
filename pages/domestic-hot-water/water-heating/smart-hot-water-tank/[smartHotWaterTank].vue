@@ -3,7 +3,7 @@ const title = "Smart hot water tank";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const smartHotWaterTankData = useItemToEdit('smartHotWaterTank', store.domesticHotWater.waterHeating.smartHotWaterTank.data);
+const smartHotWaterTankData = useItemToEdit("smartHotWaterTank", store.domesticHotWater.waterHeating.smartHotWaterTank.data);
 const model: Ref<SmartHotWaterTankData> = ref(smartHotWaterTankData!);
 
 const saveForm = (fields: SmartHotWaterTankData) => {

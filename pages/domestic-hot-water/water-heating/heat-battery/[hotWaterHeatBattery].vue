@@ -3,7 +3,7 @@ const title = "Heat battery";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const heatBatteryData = useItemToEdit('hotWaterHeatBattery', store.domesticHotWater.waterHeating.heatBattery.data);
+const heatBatteryData = useItemToEdit("hotWaterHeatBattery", store.domesticHotWater.waterHeating.heatBattery.data);
 const model: Ref<WaterHeatingHeatBatteryData> = ref(heatBatteryData!);
 
 const saveForm = (fields: WaterHeatingHeatBatteryData) => {

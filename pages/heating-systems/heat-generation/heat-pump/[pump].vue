@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { objectFromEntries } from 'ts-extras';
-import { v4 as uuidv4 } from 'uuid';
-import { displayProduct } from '~/utils/display';
+import { objectFromEntries } from "ts-extras";
+import { v4 as uuidv4 } from "uuid";
+import { displayProduct } from "~/utils/display";
 import { getUrl } from "#imports";
 
 const title = "Heat pump";
 const store = useEcaasStore();
 const route = useRoute();
 
-const heatPumpData = useItemToEdit('pump', store.heatingSystems.heatGeneration.heatPump.data);
+const heatPumpData = useItemToEdit("pump", store.heatingSystems.heatGeneration.heatPump.data);
 const model: Ref<HeatPumpData | undefined> = ref(heatPumpData?.data);
 
-const { data: heatPumps } = await useFetch('/api/products', { query: { category: 'heatPump' } });
+const { data: heatPumps } = await useFetch("/api/products", { query: { category: "heatPump" } });
 
 // sort into Small, Medium, Large (to retain while we are using test fake heat pumps and don't have better means to sort them by)
 heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
@@ -21,7 +21,7 @@ const heatPumpOptions = objectFromEntries(heatPumps.value!.map(entity => [entity
 const saveForm = (fields: HeatPumpData) => {
 	store.$patch((state) => {
 		const { heatPump } = state.heatingSystems.heatGeneration;
-		const index = route.params.pump === 'create' ? heatPump.data.length - 1 : Number(route.params.pump);
+		const index = route.params.pump === "create" ? heatPump.data.length - 1 : Number(route.params.pump);
 		const currentId = heatPumpData?.data.id;
 
 		const heatPumpItem: EcaasForm<HeatPumpData> = {
@@ -47,13 +47,13 @@ watch(model, async (newData: HeatPumpData | undefined, initialData: HeatPumpData
 		return;
 	}
 
-	const defaultName = 'Heat pump';
+	const defaultName = "Heat pump";
 	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
 
 	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
 		Object.values(newData).some(x => x !== undefined);
 
-	if (route.params.pump === 'create' && isFirstEdit) {
+	if (route.params.pump === "create" && isFirstEdit) {
 		store.$patch(state => {
 			state.heatingSystems.heatGeneration.heatPump.data.push({
 				data: {
@@ -67,7 +67,7 @@ watch(model, async (newData: HeatPumpData | undefined, initialData: HeatPumpData
 	}
 
 	store.$patch((state) => {
-		const index = route.params.pump === 'create' ? storeData.length - 1 : Number(route.params.pump);
+		const index = route.params.pump === "create" ? storeData.length - 1 : Number(route.params.pump);
 
 		state.heatingSystems.heatGeneration.heatPump.data[index] = {
 			data: {

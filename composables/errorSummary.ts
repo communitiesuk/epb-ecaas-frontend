@@ -1,4 +1,4 @@
-import { getValidationMessages } from '@formkit/validation';
+import { getValidationMessages } from "@formkit/validation";
 
 /**
  * Handles invalid form submission and populates error messages to be displayed as an error summary

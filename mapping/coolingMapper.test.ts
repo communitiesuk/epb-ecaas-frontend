@@ -3,14 +3,14 @@ import type { SchemaSpaceCoolSystemDetails } from "~/schema/api-schema.types";
 import { mapSpaceCoolSystems } from "./coolingMapper";
 
 
-describe('cooling mapper', () => {
+describe("cooling mapper", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	it('maps air conditioning input state to FHS input request', () => {
+	it("maps air conditioning input state to FHS input request", () => {
 		// Arrange
 		const airConditioning: AirConditioningData = {
 			name: "airCon1",
@@ -45,7 +45,7 @@ describe('cooling mapper', () => {
 		expect(result).toEqual(expectedResult);
 	});
 
-	it('maps two air conditioners to an FHS input request', () => {
+	it("maps two air conditioners to an FHS input request", () => {
 		// Arrange
 		const airConditioner1: AirConditioningData = {
 			name: "airConditioner1",

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SchemaFhsEnergyDemand } from '~/schema/api-schema.types';
+import type { SchemaFhsEnergyDemand } from "~/schema/api-schema.types";
 
 const { selected, data } = defineProps<{ selected: boolean, data: SchemaFhsEnergyDemand }>();
 </script>

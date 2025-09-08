@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { FormKitFrameworkContext } from '@formkit/core';
-import { showErrorState, getErrorMessage } from '#imports';
-import type { Unit } from '~/utils/units/types';
+import type { FormKitFrameworkContext } from "@formkit/core";
+import { showErrorState, getErrorMessage } from "#imports";
+import type { Unit } from "~/utils/units/types";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext & { attrs: { unit: Unit } }
@@ -19,24 +19,24 @@ const { mounted } = useMounted();
 
 function handleTyping(e: Event) {
 	const target = e.target as HTMLInputElement;
-	const value = target.value ? parseFloat(target.value) : '';
+	const value = target.value ? parseFloat(target.value) : "";
 	
 	if (Number.isNaN(value)) {
-		props.context.node.input('');
+		props.context.node.input("");
 	}
 }
 
 function handleInput(e: Event) {
 	const target = e.target as HTMLInputElement;
-	const value = target.value ? parseFloat(target.value) : '';
+	const value = target.value ? parseFloat(target.value) : "";
 
-	if (typeof value === 'number') {
+	if (typeof value === "number") {
 		props.context.node.input({
 			amount: value,
 			unit: unit.name,
 		});
 	} else {
-		props.context.node.input('');
+		props.context.node.input("");
 	}
 }
 

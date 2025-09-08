@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { arealHeatCapacityOptions } from '#imports';
+import { arealHeatCapacityOptions } from "#imports";
 
 defineProps<{
 	id: string,

@@ -109,7 +109,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 
 		let storageCylinderVolumeInLitres: number;
 
-		if (typeof x.storageCylinderVolume === 'number') {
+		if (typeof x.storageCylinderVolume === "number") {
 			storageCylinderVolumeInLitres = x.storageCylinderVolume;
 		} else  {
 			storageCylinderVolumeInLitres = asLitres(x.storageCylinderVolume);

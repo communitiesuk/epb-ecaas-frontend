@@ -3,7 +3,7 @@ const title = "Solar thermal";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const solarThermalData = useItemToEdit('solarThermal', store.domesticHotWater.waterHeating.solarThermal.data);
+const solarThermalData = useItemToEdit("solarThermal", store.domesticHotWater.waterHeating.solarThermal.data);
 const model: Ref<SolarThermalData> = ref(solarThermalData!);
 
 const saveForm = (fields: SolarThermalData) => {

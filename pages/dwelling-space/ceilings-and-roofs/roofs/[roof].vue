@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { getUrl, zeroPitchOptions } from '#imports';
+import { getUrl, zeroPitchOptions } from "#imports";
 
 const title = "Roof";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const roofData = useItemToEdit('roof', store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
+const roofData = useItemToEdit("roof", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
 const model: Ref<RoofData | undefined> = ref(roofData?.data);
 
-const roofTypeOptions: Record<Exclude<RoofType, 'unheatedPitched'>, string> = {
-	flat: 'Flat roof',
-	pitchedInsulatedAtRoof: 'Pitched roof insulated at roof or rafter',
-	pitchedInsulatedAtCeiling: 'Pitched roof insulated at ceiling or joist'
+const roofTypeOptions: Record<Exclude<RoofType, "unheatedPitched">, string> = {
+	flat: "Flat roof",
+	pitchedInsulatedAtRoof: "Pitched roof insulated at roof or rafter",
+	pitchedInsulatedAtCeiling: "Pitched roof insulated at ceiling or joist"
 };
 
 const saveForm = (fields: RoofData) => {
@@ -24,7 +24,7 @@ const saveForm = (fields: RoofData) => {
 				name: fields.name,
 				typeOfRoof: fields.typeOfRoof,
 				pitchOption: fields.pitchOption,
-				pitch: fields.pitchOption === '0' ? 0 : fields.pitch,
+				pitch: fields.pitchOption === "0" ? 0 : fields.pitch,
 				orientation: fields.orientation,
 				length: fields.length,
 				width: fields.width,
@@ -46,7 +46,7 @@ const saveForm = (fields: RoofData) => {
 autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs,
-	defaultName: 'Roof',
+	defaultName: "Roof",
 	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.push(newData),
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[index] = newData;

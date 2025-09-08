@@ -40,7 +40,7 @@ function handleComplete() {
 		}
 	});
 		
-	navigateTo('/infiltration-and-ventilation');		
+	navigateTo("/infiltration-and-ventilation");		
 }
 </script>
 

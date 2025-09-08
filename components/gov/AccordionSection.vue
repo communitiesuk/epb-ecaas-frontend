@@ -5,7 +5,7 @@ defineProps<{
 	id?: string;
 	title: string;
 	index: number;
-	headingSize?: 's' | 'm' | 'l';
+	headingSize?: "s" | "m" | "l";
 }>();
 
 const expanded = ref(false);

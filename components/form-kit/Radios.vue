@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { FormKitFrameworkContext } from '@formkit/core';
-import { showErrorState, getErrorMessage } from '#imports';
+import type { FormKitFrameworkContext } from "@formkit/core";
+import { showErrorState, getErrorMessage } from "#imports";
 
 export type RadioOption = {
 	label: string;
@@ -21,9 +21,9 @@ const {
 
 function handleInput(e: Event) {
 	const target = e.target as HTMLInputElement;
-	const valueType = props.context.attrs['value-type'];
+	const valueType = props.context.attrs["value-type"];
 	
-	if (valueType === 'number') {
+	if (valueType === "number") {
 		props.context.node.input(parseInt(target.value));
 	} else {
 		props.context.node.input(target.value);

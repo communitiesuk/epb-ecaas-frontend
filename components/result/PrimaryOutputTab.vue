@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type { SchemaFhsComplianceResponse } from '~/schema/api-schema.types';
+import type { SchemaFhsComplianceResponse } from "~/schema/api-schema.types";
 
-defineProps<{ selected: boolean, data: Omit<SchemaFhsComplianceResponse, 'energy_demand' | 'delivered_energy_use' | 'energy_use_by_fuel'> }>();
+defineProps<{ selected: boolean, data: Omit<SchemaFhsComplianceResponse, "energy_demand" | "delivered_energy_use" | "energy_use_by_fuel"> }>();
 </script>
 
 <template>

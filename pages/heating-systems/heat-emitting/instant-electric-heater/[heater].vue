@@ -4,7 +4,7 @@ const title = "Instant electric heater";
 const store = useEcaasStore();
 const route = useRoute();
 
-const instantElectricHeaterData = useItemToEdit('heater', store.heatingSystems.heatEmitting.instantElectricHeater.data);
+const instantElectricHeaterData = useItemToEdit("heater", store.heatingSystems.heatEmitting.instantElectricHeater.data);
 const model: Ref<InstantElectricStorageData | undefined> = ref(instantElectricHeaterData?.data);
 
 const saveForm = (fields: InstantElectricStorageData) => {
@@ -12,7 +12,7 @@ const saveForm = (fields: InstantElectricStorageData) => {
 		const { instantElectricHeater } = state.heatingSystems.heatEmitting;
 		const storeData = store.heatingSystems.heatEmitting.instantElectricHeater.data;
 
-		const index = route.params.heater === 'create' ? storeData.length - 1 : Number(route.params.heater);
+		const index = route.params.heater === "create" ? storeData.length - 1 : Number(route.params.heater);
 
 		const instantElectricHeaterItem: EcaasForm<InstantElectricStorageData> = {
 			data: {
@@ -37,13 +37,13 @@ watch(model, async (newData: InstantElectricStorageData | undefined, initialData
 		return;
 	}
 
-	const defaultName = 'Instant electric heater';
+	const defaultName = "Instant electric heater";
 	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
 
 	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
 		Object.values(newData).some(x => x !== undefined);
 
-	if (route.params.heater === 'create' && isFirstEdit) {
+	if (route.params.heater === "create" && isFirstEdit) {
 
 		store.$patch(state => {
 			state.heatingSystems.heatEmitting.instantElectricHeater.data.push({
@@ -58,7 +58,7 @@ watch(model, async (newData: InstantElectricStorageData | undefined, initialData
 	}
 
 	store.$patch((state) => {
-		const index = route.params.heater === 'create' ? storeData.length - 1 : Number(route.params.heater);
+		const index = route.params.heater === "create" ? storeData.length - 1 : Number(route.params.heater);
 
 		state.heatingSystems.heatEmitting.instantElectricHeater.data[index] = {
 			data: {

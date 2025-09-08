@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type { ShadingObjectType } from '~/schema/api-schema.types';
+import type { ShadingObjectType } from "~/schema/api-schema.types";
 import { getUrl, type ShadingData } from "#imports";
 
 const title = "Distant shading";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const shadingData = useItemToEdit('shading', store.dwellingDetails.shading.data);
+const shadingData = useItemToEdit("shading", store.dwellingDetails.shading.data);
 const model: Ref<ShadingData | undefined> = ref(shadingData?.data);
 
 const objectTypeOptions: Record<ShadingObjectType, Capitalize<ShadingObjectType>> = {
-	obstacle: 'Obstacle',
-	overhang: 'Overhang',
+	obstacle: "Obstacle",
+	overhang: "Overhang",
 };
 
 const saveForm = (fields: ShadingData) => {
@@ -39,7 +39,7 @@ const saveForm = (fields: ShadingData) => {
 autoSaveElementForm({
 	model,
 	storeData: store.dwellingDetails.shading,
-	defaultName: 'Shading',
+	defaultName: "Shading",
 	onPatchCreate: (state, newData) => state.dwellingDetails.shading.data.push(newData),
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingDetails.shading.data[index] = newData;

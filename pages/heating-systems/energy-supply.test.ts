@@ -1,16 +1,16 @@
-import EnergySupply from './energy-supply.vue';
-import { screen } from '@testing-library/vue';
-import { mockNuxtImport, renderSuspended } from '@nuxt/test-utils/runtime';
-import { userEvent } from '@testing-library/user-event';
-import type { EnergySupplyData } from '~/stores/ecaasStore.schema';
-import { FuelType } from '~/schema/api-schema.types';
+import EnergySupply from "./energy-supply.vue";
+import { screen } from "@testing-library/vue";
+import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
+import { userEvent } from "@testing-library/user-event";
+import type { EnergySupplyData } from "~/stores/ecaasStore.schema";
+import { FuelType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport('navigateTo', () => {
+mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-describe('Energy supply', () => {
+describe("Energy supply", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -30,20 +30,20 @@ describe('Energy supply', () => {
 		kwhPerKwhDelivered: 1
 	};
 
-	describe('when fuel type is electricity', () => {
-		test('data is saved to store state when form is valid', async () => {
+	describe("when fuel type is electricity", () => {
+		test("data is saved to store state when form is valid", async () => {
 			await renderSuspended(EnergySupply);
 	
-			await user.click(screen.getByTestId('fuelType_electricity'));
-			await user.click(screen.getByTestId('exported_yes'));
-			await user.click(screen.getByRole('button'));
+			await user.click(screen.getByTestId("fuelType_electricity"));
+			await user.click(screen.getByTestId("exported_yes"));
+			await user.click(screen.getByRole("button"));
 	
 			const { data } = store.heatingSystems.energySupply;
 			
 			expect(data).toEqual(energySupplyWithElectricity);
 		});
 	
-		test('form is prepopulated when data exists in state', async () => {
+		test("form is prepopulated when data exists in state", async () => {
 			store.$patch({
 				heatingSystems: {
 					energySupply: {
@@ -54,17 +54,17 @@ describe('Energy supply', () => {
 	
 			await renderSuspended(EnergySupply);
 			
-			expect((await screen.findByTestId('fuelType_electricity')).hasAttribute('checked')).toBe(true);
-			expect((await screen.findByTestId('exported_yes')).hasAttribute('checked')).toBe(true);
+			expect((await screen.findByTestId("fuelType_electricity")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("exported_yes")).hasAttribute("checked")).toBe(true);
 		});
 			
-		test('required error messages are displayed when empty form is submitted', async () => {
+		test("required error messages are displayed when empty form is submitted", async () => {
 			await renderSuspended(EnergySupply);
 	
-			await user.click(screen.getByTestId('fuelType_electricity'));
-			await user.click(screen.getByRole('button'));
+			await user.click(screen.getByTestId("fuelType_electricity"));
+			await user.click(screen.getByRole("button"));
 	
-			expect((await screen.findByTestId('exported_error'))).toBeDefined();
+			expect((await screen.findByTestId("exported_error"))).toBeDefined();
 		});
 	});
 
@@ -127,7 +127,7 @@ describe("saving form updates", () => {
 		});
 
 		await renderSuspended(EnergySupply);
-		await user.click(screen.getByTestId('exported_no'));
+		await user.click(screen.getByTestId("exported_no"));
 		expect(store.heatingSystems.energySupply.data.exported).toBe(false);
 	});
 });

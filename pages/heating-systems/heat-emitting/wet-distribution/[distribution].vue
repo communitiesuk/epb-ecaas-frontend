@@ -29,8 +29,8 @@ const options: FormKitOptionsProp[] = [
 	},
 ];
 
-const typeOfSpaceHeaterOptions: Record<'radiator', string> = {
-	radiator: 'Radiators',
+const typeOfSpaceHeaterOptions: Record<"radiator", string> = {
+	radiator: "Radiators",
 	// remove under-floor heating (UFH) option for now
 	// ufh: 'Under floor heating (UFH)',
 };
@@ -95,7 +95,7 @@ watch(model, async (newData: WetDistributionData, initialData: WetDistributionDa
 		return;
 	}
 
-	const defaultName = 'Wet distribution';
+	const defaultName = "Wet distribution";
 	const duplicates = storeData.filter(x => x.name.match(duplicateNamePattern(defaultName)));
 
 	// filtering out typeOfSpaceHeater for now as it is always checked, would need to change this in future when there are more than one option to choose from
@@ -105,7 +105,7 @@ watch(model, async (newData: WetDistributionData, initialData: WetDistributionDa
 	const isFirstEdit = Object.values(rest).every(x => x === undefined) &&
 		Object.values(newDataRest).some(x => x !== undefined);
 
-	if (route.params.distribution === 'create' && isFirstEdit) {
+	if (route.params.distribution === "create" && isFirstEdit) {
 		store.$patch(state => {
 			state.heatingSystems.heatEmitting.wetDistribution.data.push({
 				...newData,
@@ -117,7 +117,7 @@ watch(model, async (newData: WetDistributionData, initialData: WetDistributionDa
 	}
 
 	store.$patch((state) => {
-		const index = route.params.distribution === 'create' ? storeData.length - 1 : Number(route.params.distribution);
+		const index = route.params.distribution === "create" ? storeData.length - 1 : Number(route.params.distribution);
 
 		state.heatingSystems.heatEmitting.wetDistribution.data[index] = {
 			...newData,

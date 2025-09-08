@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { FormKitFrameworkContext } from '@formkit/core';
-import { showErrorState, getErrorMessage } from '#imports';
+import type { FormKitFrameworkContext } from "@formkit/core";
+import { showErrorState, getErrorMessage } from "#imports";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext

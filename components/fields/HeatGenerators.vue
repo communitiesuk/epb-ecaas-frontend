@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getUrl } from '#imports';
+import { getUrl } from "#imports";
 
 defineProps<{
 	id: string;

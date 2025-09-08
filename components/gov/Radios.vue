@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import type { RadioOption } from '../form-kit/Radios.vue';
+import type { RadioOption } from "../form-kit/Radios.vue";
 
 interface RadiosProps {
 	id: string;
@@ -26,7 +26,7 @@ const {
 
 const { mounted } = useMounted();
 
-const idWithKey = (key: string) => `${id}_${key.replaceAll(/ /g, '_')}`;
+const idWithKey = (key: string) => `${id}_${key.replaceAll(/ /g, "_")}`;
 
 </script>
 

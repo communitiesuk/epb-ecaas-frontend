@@ -1,21 +1,21 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import Floors from './index.vue';
-import GroundFloorForm from './ground/[floor].vue';
-import InternalFloorForm from './internal/[floor].vue';
-import ExposedFloorForm from './exposed/[floor].vue';
+import Floors from "./index.vue";
+import GroundFloorForm from "./ground/[floor].vue";
+import InternalFloorForm from "./internal/[floor].vue";
+import ExposedFloorForm from "./exposed/[floor].vue";
 
-import { screen } from '@testing-library/vue';
-import { within } from '@testing-library/dom';
+import { screen } from "@testing-library/vue";
+import { within } from "@testing-library/dom";
 import { FloorType, MassDistributionClass } from "~/schema/api-schema.types";
 import type { Component } from "vue";
 
-describe('floors', () => {
+describe("floors", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 	const navigateToMock = vi.hoisted(() => vi.fn());
 
-	mockNuxtImport('navigateTo', () => {
+	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
 	});
 
@@ -131,9 +131,9 @@ describe('floors', () => {
 		store.$reset();
 	});
 	
-	describe('ground floors', () => {
+	describe("ground floors", () => {
 		
-		test('ground floor is removed when remove link is clicked', async () => {
+		test("ground floor is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -146,14 +146,14 @@ describe('floors', () => {
 	
 			await renderSuspended(Floors);
 	
-			expect(screen.getAllByTestId('ground_items')).toBeDefined();
+			expect(screen.getAllByTestId("ground_items")).toBeDefined();
 	
-			await user.click(screen.getByTestId('ground_remove_0'));
+			await user.click(screen.getByTestId("ground_remove_0"));
 	
-			expect(screen.queryByTestId('ground_items')).toBeNull();
+			expect(screen.queryByTestId("ground_items")).toBeNull();
 		});
 	
-		it('should only remove the ground floor object thats is clicked', async () => {
+		it("should only remove the ground floor object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -165,16 +165,16 @@ describe('floors', () => {
 			});
 	
 			await renderSuspended(Floors);
-			await user.click(screen.getByTestId('ground_remove_1'));
+			await user.click(screen.getByTestId("ground_remove_1"));
 	
-			const populatedList = screen.getByTestId('ground_items');
+			const populatedList = screen.getByTestId("ground_items");
 	
-			expect(within(populatedList).getByText('ground1 name')).toBeDefined();
-			expect(within(populatedList).getByText('ground3 name')).toBeDefined();
-			expect(within(populatedList).queryByText('ground2 name')).toBeNull();
+			expect(within(populatedList).getByText("ground1 name")).toBeDefined();
+			expect(within(populatedList).getByText("ground3 name")).toBeDefined();
+			expect(within(populatedList).queryByText("ground2 name")).toBeNull();
 		});
 		
-		test('floor is duplicated when duplicate link is clicked', async () => {
+		test("floor is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -186,23 +186,23 @@ describe('floors', () => {
 			});
 	
 			await renderSuspended(Floors);
-			await userEvent.click(screen.getByTestId('ground_duplicate_0'));
-			await userEvent.click(screen.getByTestId('ground_duplicate_0'));
-			await userEvent.click(screen.getByTestId('ground_duplicate_2'));
-			await userEvent.click(screen.getByTestId('ground_duplicate_2'));
+			await userEvent.click(screen.getByTestId("ground_duplicate_0"));
+			await userEvent.click(screen.getByTestId("ground_duplicate_0"));
+			await userEvent.click(screen.getByTestId("ground_duplicate_2"));
+			await userEvent.click(screen.getByTestId("ground_duplicate_2"));
 	
-			expect(screen.queryAllByTestId('ground_item').length).toBe(6);
-			expect(screen.getByText('ground1 name')).toBeDefined();
-			expect(screen.getByText('ground1 name (1)')).toBeDefined();
-			expect(screen.getByText('ground1 name (2)')).toBeDefined();
-			expect(screen.getByText('ground1 name (1) (1)')).toBeDefined();
-			expect(screen.getByText('ground1 name (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("ground_item").length).toBe(6);
+			expect(screen.getByText("ground1 name")).toBeDefined();
+			expect(screen.getByText("ground1 name (1)")).toBeDefined();
+			expect(screen.getByText("ground1 name (2)")).toBeDefined();
+			expect(screen.getByText("ground1 name (1) (1)")).toBeDefined();
+			expect(screen.getByText("ground1 name (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('internal floors', () => {
+	describe("internal floors", () => {
 	
-		test('internal floor is removed when remove link is clicked', async () => {
+		test("internal floor is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -215,14 +215,14 @@ describe('floors', () => {
 	
 			await renderSuspended(Floors);
 	
-			expect(screen.getAllByTestId('internal_items')).toBeDefined();
+			expect(screen.getAllByTestId("internal_items")).toBeDefined();
 	
-			await user.click(screen.getByTestId('internal_remove_0'));
+			await user.click(screen.getByTestId("internal_remove_0"));
 	
-			expect(screen.queryByTestId('internal_items')).toBeNull();
+			expect(screen.queryByTestId("internal_items")).toBeNull();
 		});
 	
-		it('should only remove the internal floor object thats is clicked', async () => {
+		it("should only remove the internal floor object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -234,17 +234,17 @@ describe('floors', () => {
 			});
 	
 			await renderSuspended(Floors);
-			await user.click(screen.getByTestId('internal_remove_1'));
+			await user.click(screen.getByTestId("internal_remove_1"));
 	
-			const populatedList = screen.getByTestId('internal_items');
+			const populatedList = screen.getByTestId("internal_items");
 	
-			expect(within(populatedList).getByText('internal1 name')).toBeDefined();
-			expect(within(populatedList).getByText('internal3 name')).toBeDefined();
-			expect(within(populatedList).queryByText('internal2 name')).toBeNull();
+			expect(within(populatedList).getByText("internal1 name")).toBeDefined();
+			expect(within(populatedList).getByText("internal3 name")).toBeDefined();
+			expect(within(populatedList).queryByText("internal2 name")).toBeNull();
 	
 		});
 	
-		test('floor is duplicated when duplicate link is clicked', async () => {
+		test("floor is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -256,23 +256,23 @@ describe('floors', () => {
 			});
 	
 			await renderSuspended(Floors);
-			await userEvent.click(screen.getByTestId('internal_duplicate_0'));
-			await userEvent.click(screen.getByTestId('internal_duplicate_0'));
-			await userEvent.click(screen.getByTestId('internal_duplicate_2'));
-			await userEvent.click(screen.getByTestId('internal_duplicate_2'));
+			await userEvent.click(screen.getByTestId("internal_duplicate_0"));
+			await userEvent.click(screen.getByTestId("internal_duplicate_0"));
+			await userEvent.click(screen.getByTestId("internal_duplicate_2"));
+			await userEvent.click(screen.getByTestId("internal_duplicate_2"));
 	
-			expect(screen.queryAllByTestId('internal_item').length).toBe(6);
-			expect(screen.getByText('internal1 name')).toBeDefined();
-			expect(screen.getByText('internal1 name (1)')).toBeDefined();
-			expect(screen.getByText('internal1 name (2)')).toBeDefined();
-			expect(screen.getByText('internal1 name (1) (1)')).toBeDefined();
-			expect(screen.getByText('internal1 name (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("internal_item").length).toBe(6);
+			expect(screen.getByText("internal1 name")).toBeDefined();
+			expect(screen.getByText("internal1 name (1)")).toBeDefined();
+			expect(screen.getByText("internal1 name (2)")).toBeDefined();
+			expect(screen.getByText("internal1 name (1) (1)")).toBeDefined();
+			expect(screen.getByText("internal1 name (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('exposed floors', () => {
+	describe("exposed floors", () => {
 
-		test('exposed floor is removed when remove link is clicked', async () => {
+		test("exposed floor is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -285,14 +285,14 @@ describe('floors', () => {
 	
 			await renderSuspended(Floors);
 	
-			expect(screen.getAllByTestId('exposed_items')).toBeDefined();
+			expect(screen.getAllByTestId("exposed_items")).toBeDefined();
 	
-			await user.click(screen.getByTestId('exposed_remove_0'));
+			await user.click(screen.getByTestId("exposed_remove_0"));
 	
-			expect(screen.queryByTestId('exposed_items')).toBeNull();
+			expect(screen.queryByTestId("exposed_items")).toBeNull();
 		});
 	
-		it('should only remove the exposed floor object thats is clicked', async () => {
+		it("should only remove the exposed floor object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -304,16 +304,16 @@ describe('floors', () => {
 			});
 	
 			await renderSuspended(Floors);
-			await user.click(screen.getByTestId('exposed_remove_1'));
-			const populatedList = screen.getByTestId('exposed_items');
+			await user.click(screen.getByTestId("exposed_remove_1"));
+			const populatedList = screen.getByTestId("exposed_items");
 	
-			expect(within(populatedList).getByText('exposed1 name')).toBeDefined();
-			expect(within(populatedList).getByText('exposed3 name')).toBeDefined();
-			expect(within(populatedList).queryByText('exposed2 name')).toBeNull();
+			expect(within(populatedList).getByText("exposed1 name")).toBeDefined();
+			expect(within(populatedList).getByText("exposed3 name")).toBeDefined();
+			expect(within(populatedList).queryByText("exposed2 name")).toBeNull();
 	
 		});
 		
-		test('floor is duplicated when duplicate link is clicked', async () => {
+		test("floor is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
@@ -325,21 +325,21 @@ describe('floors', () => {
 			});
 	
 			await renderSuspended(Floors);
-			await userEvent.click(screen.getByTestId('exposed_duplicate_0'));
-			await userEvent.click(screen.getByTestId('exposed_duplicate_0'));
-			await userEvent.click(screen.getByTestId('exposed_duplicate_2'));
-			await userEvent.click(screen.getByTestId('exposed_duplicate_2'));
+			await userEvent.click(screen.getByTestId("exposed_duplicate_0"));
+			await userEvent.click(screen.getByTestId("exposed_duplicate_0"));
+			await userEvent.click(screen.getByTestId("exposed_duplicate_2"));
+			await userEvent.click(screen.getByTestId("exposed_duplicate_2"));
 	
-			expect(screen.queryAllByTestId('exposed_item').length).toBe(6);
-			expect(screen.getByText('exposed1 name')).toBeDefined();
-			expect(screen.getByText('exposed1 name (1)')).toBeDefined();
-			expect(screen.getByText('exposed1 name (2)')).toBeDefined();
-			expect(screen.getByText('exposed1 name (1) (1)')).toBeDefined();
-			expect(screen.getByText('exposed1 name (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("exposed_item").length).toBe(6);
+			expect(screen.getByText("exposed1 name")).toBeDefined();
+			expect(screen.getByText("exposed1 name (1)")).toBeDefined();
+			expect(screen.getByText("exposed1 name (2)")).toBeDefined();
+			expect(screen.getByText("exposed1 name (1) (1)")).toBeDefined();
+			expect(screen.getByText("exposed1 name (1) (2)")).toBeDefined();
 		});
 	});
 
-	describe('mark section as complete', () =>  {
+	describe("mark section as complete", () =>  {
 		
 		const addFloorsDataToStore = async () => {
 			store.$patch({
@@ -365,17 +365,17 @@ describe('floors', () => {
 				form: Component
 			}[] = [
 				{
-					key: 'dwellingSpaceGroundFloor',
+					key: "dwellingSpaceGroundFloor",
 					testId: `ground_${action}_0`,
 					form: GroundFloorForm
 				},
 				{
-					key: 'dwellingSpaceInternalFloor',
+					key: "dwellingSpaceInternalFloor",
 					testId: `internal_${action}_0`,
 					form: InternalFloorForm
 				},
 				{
-					key: 'dwellingSpaceExposedFloor',
+					key: "dwellingSpaceExposedFloor",
 					testId: `exposed_${action}_0`,
 					form: ExposedFloorForm
 				}
@@ -385,13 +385,13 @@ describe('floors', () => {
 
 		type FloorType = keyof typeof store.dwellingFabric.dwellingSpaceFloors;
 
-		it('marks floors as complete when mark section as complete button is clicked', async () => {
+		it("marks floors as complete when mark section as complete button is clicked", async () => {
 	
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-			const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
+			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
 			expect(completedStatusElement?.style.display).toBe("none");
 	
-			await user.click(screen.getByTestId('completeSectionButton'));
+			await user.click(screen.getByTestId("completeSectionButton"));
 	
 			const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor
 	
@@ -405,10 +405,10 @@ describe('floors', () => {
 			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
 			expect(completedStatusElement?.style.display).not.toBe("none");
 	
-			expect(navigateToMock).toHaveBeenCalledWith('/dwelling-space');
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space");
 		});
 	
-		it('marks floors as not complete when mark as complete button is clicked then user removes a floor item', async () => {
+		it("marks floors as not complete when mark as complete button is clicked then user removes a floor item", async () => {
 
 			const floorsData = await getFloorData("remove");
 			const floors = Object.entries(store.dwellingFabric.dwellingSpaceFloors);
@@ -416,7 +416,7 @@ describe('floors', () => {
 			for (const [key] of floors) {
 				const typedKey = key as FloorType;
 		
-				await user.click(screen.getByTestId('completeSectionButton'));
+				await user.click(screen.getByTestId("completeSectionButton"));
 				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(true);
 					
 				const floorData = floorsData.find(x => x.key === typedKey);
@@ -427,7 +427,7 @@ describe('floors', () => {
 			}
 		});
 
-		it('marks floors as not complete when complete button is clicked then user duplicates a floor item', async () => {
+		it("marks floors as not complete when complete button is clicked then user duplicates a floor item", async () => {
 
 			const floorsData = await getFloorData("duplicate");
 			const floors = Object.entries(store.dwellingFabric.dwellingSpaceFloors);
@@ -435,7 +435,7 @@ describe('floors', () => {
 			for (const [key] of floors) {
 				const typedKey = key as FloorType;
 	
-				await user.click(screen.getByTestId('completeSectionButton'));
+				await user.click(screen.getByTestId("completeSectionButton"));
 				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(true);
 				
 				const floorData = floorsData.find(x => x.key === typedKey);
@@ -446,7 +446,7 @@ describe('floors', () => {
 			}
 		});
 
-		it('marks floors as not complete when user saves a new or edited floor form after marking section as complete', async () => {
+		it("marks floors as not complete when user saves a new or edited floor form after marking section as complete", async () => {
 
 			const floorsData = await getFloorData("");
 
@@ -454,18 +454,18 @@ describe('floors', () => {
 	
 			for(const [key] of floors){
 				const typedKey = key as FloorType;
-				await user.click(screen.getByTestId('completeSectionButton'));
+				await user.click(screen.getByTestId("completeSectionButton"));
 				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(true);
 
 				const floorData = floorsData.find(x => x.key === typedKey);
 
 				await renderSuspended(floorData?.form, {
 					route: {
-						params: { floor: '0' }
+						params: { floor: "0" }
 					}
 				});
 
-				await user.click(screen.getByRole('button', { name: "Save and continue" }));
+				await user.click(screen.getByRole("button", { name: "Save and continue" }));
 				
 				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(false);
 				await renderSuspended(Floors);

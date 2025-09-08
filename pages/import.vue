@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import dayjs from 'dayjs';
-import type { Dayjs } from 'dayjs';
-import { getInitialState } from '~/stores/ecaasStore';
+import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
+import { getInitialState } from "~/stores/ecaasStore";
 import { clearLastExportDate } from "~/utils/exportDate";
 
-const title = 'Import data';
+const title = "Import data";
 
 const store = useEcaasStore();
 
@@ -38,7 +38,7 @@ const doImport = (_event: Event) => {
 		try {
 			fileState = JSON.parse(reader.result as string)!;
 		} catch {
-			errorMessage.value = 'The provided file is not recognised as containing JSON.';
+			errorMessage.value = "The provided file is not recognised as containing JSON.";
 			return;
 		}
 
@@ -61,7 +61,7 @@ const doImport = (_event: Event) => {
 		clearLastExportDate();
 	};
 	reader.onerror = () => {
-		errorMessage.value = 'Unable to read file';
+		errorMessage.value = "Unable to read file";
 	};
 	reader.readAsText(file.value);
 };

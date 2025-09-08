@@ -1,10 +1,10 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import { screen } from '@testing-library/vue';
+import { screen } from "@testing-library/vue";
 import Lighting from "./lighting.vue";
 import userEvent from "@testing-library/user-event";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
-mockNuxtImport('navigateTo', () => {
+mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
@@ -13,7 +13,7 @@ const state: DwellingSpaceLightingData = {
 	numberOfIncandescentBulbs: 0,
 };
 
-describe('lighting', () => {
+describe("lighting", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
@@ -21,22 +21,22 @@ describe('lighting', () => {
 		store.$reset();
 	});
 
-	test('data is saved to store state when form is valid', async () => {
+	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(Lighting);
 
-		await user.type(screen.getByTestId('numberOfLEDBulbs'), '9');
-		await user.type(screen.getByTestId('numberOfIncandescentBulbs'), '0');
+		await user.type(screen.getByTestId("numberOfLEDBulbs"), "9");
+		await user.type(screen.getByTestId("numberOfIncandescentBulbs"), "0");
 		await user.tab();
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
 		const { data, complete } = store.dwellingFabric.dwellingSpaceLighting;
 
 		expect(data).toEqual(state);
 		expect(complete).toBe(true);
-		expect(navigateToMock).toBeCalledWith('/dwelling-space');
+		expect(navigateToMock).toBeCalledWith("/dwelling-space");
 	});
 
-	test('form is prepopulated when data exists in state', async () => {
+	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceLighting: { data: state }
@@ -45,24 +45,24 @@ describe('lighting', () => {
 
 		await renderSuspended(Lighting);
 
-		expect((await screen.findByTestId<HTMLInputElement>('numberOfLEDBulbs')).value).toBe('9');
-		expect((await screen.findByTestId<HTMLInputElement>('numberOfIncandescentBulbs')).value).toBe('0');
+		expect((await screen.findByTestId<HTMLInputElement>("numberOfLEDBulbs")).value).toBe("9");
+		expect((await screen.findByTestId<HTMLInputElement>("numberOfIncandescentBulbs")).value).toBe("0");
 	});
 			
-	test('required error messages are displayed when empty form is submitted', async () => {
+	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(Lighting);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
-		expect((await screen.findByTestId('numberOfLEDBulbs_error'))).toBeDefined();
-		expect((await screen.findByTestId('numberOfIncandescentBulbs_error'))).toBeDefined();
+		expect((await screen.findByTestId("numberOfLEDBulbs_error"))).toBeDefined();
+		expect((await screen.findByTestId("numberOfIncandescentBulbs_error"))).toBeDefined();
 	});
 
-	test('error summary is displayed when an invalid form in submitted', async () => {
+	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Lighting);
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 
-		expect((await screen.findByTestId('lightingErrorSummary'))).toBeDefined();
+		expect((await screen.findByTestId("lightingErrorSummary"))).toBeDefined();
 	});
 });

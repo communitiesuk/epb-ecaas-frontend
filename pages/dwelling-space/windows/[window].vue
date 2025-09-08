@@ -1,54 +1,54 @@
 <script setup lang="ts">
-import { standardPitchOptions, type WindowData } from '#imports';
-import { millimetre } from '~/utils/units/length';
-import { WindowTreatmentControl, WindowTreatmentType } from '~/schema/api-schema.types';
-import { unitValue } from '~/utils/units/types';
+import { standardPitchOptions, type WindowData } from "#imports";
+import { millimetre } from "~/utils/units/length";
+import { WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
+import { unitValue } from "~/utils/units/types";
 
 const title = "Window";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const window = useItemToEdit('window', store.dwellingFabric.dwellingSpaceWindows.data);
+const window = useItemToEdit("window", store.dwellingFabric.dwellingSpaceWindows.data);
 
 // prepopulate shading data when using old input format
-if (window && 'overhangDepth' in window && typeof window.overhangDepth === 'number') {
+if (window && "overhangDepth" in window && typeof window.overhangDepth === "number") {
 	window.overhangDepth = unitValue(window.overhangDepth, millimetre);
 };
 
-if (window && 'overhangDistance' in window) {
-	window.overhangDistance = typeof window.overhangDistance === 'number' ? unitValue(window.overhangDistance, millimetre) : window.overhangDistance;
+if (window && "overhangDistance" in window) {
+	window.overhangDistance = typeof window.overhangDistance === "number" ? unitValue(window.overhangDistance, millimetre) : window.overhangDistance;
 };
 
-if (window && 'sideFinRightDepth' in window) {
-	window.sideFinRightDepth = typeof window.sideFinRightDepth === 'number' ? unitValue(window.sideFinRightDepth, millimetre) : window.sideFinRightDepth;
+if (window && "sideFinRightDepth" in window) {
+	window.sideFinRightDepth = typeof window.sideFinRightDepth === "number" ? unitValue(window.sideFinRightDepth, millimetre) : window.sideFinRightDepth;
 };
 
-if (window && 'sideFinRightDistance' in window) {
-	window.sideFinRightDistance = typeof window.sideFinRightDistance === 'number' ? unitValue(window.sideFinRightDistance, millimetre) : window.sideFinRightDistance;
+if (window && "sideFinRightDistance" in window) {
+	window.sideFinRightDistance = typeof window.sideFinRightDistance === "number" ? unitValue(window.sideFinRightDistance, millimetre) : window.sideFinRightDistance;
 };
 
-if (window && 'sideFinLeftDepth' in window) {
-	window.sideFinLeftDepth = typeof window.sideFinLeftDepth === 'number' ? unitValue(window.sideFinLeftDepth, millimetre) : window.sideFinLeftDepth;
+if (window && "sideFinLeftDepth" in window) {
+	window.sideFinLeftDepth = typeof window.sideFinLeftDepth === "number" ? unitValue(window.sideFinLeftDepth, millimetre) : window.sideFinLeftDepth;
 };
 
-if (window && 'sideFinLeftDistance' in window) {
-	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === 'number' ? unitValue(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
+if (window && "sideFinLeftDistance" in window) {
+	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === "number" ? unitValue(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
 };
 
 const model: Ref<WindowData> = ref(window!);
 
 const windowTreatmentTypeOptions: Record<WindowTreatmentType, SnakeToSentenceCase<WindowTreatmentType>> = {
-	curtains: 'Curtains',
-	blinds: 'Blinds',
+	curtains: "Curtains",
+	blinds: "Blinds",
 };
-const curtainsControlObjectOptions: Record<Exclude<WindowTreatmentControl, 'manual_motorised' | 'combined_light_blind_HVAC'>, string> = {
-	[WindowTreatmentControl.auto_motorised]: 'Auto motorised',
-	[WindowTreatmentControl.manual]: 'Manual',
+const curtainsControlObjectOptions: Record<Exclude<WindowTreatmentControl, "manual_motorised" | "combined_light_blind_HVAC">, string> = {
+	[WindowTreatmentControl.auto_motorised]: "Auto motorised",
+	[WindowTreatmentControl.manual]: "Manual",
 };
 
 const shadingValidation = (siblingField: string) => {
 	const siblingValue = (model.value as Record<string, unknown>)[siblingField];
-	return siblingValue != null && siblingValue !== '' ? 'required' : '';
+	return siblingValue != null && siblingValue !== "" ? "required" : "";
 };
 
 const saveForm = (fields: WindowData) => {
@@ -63,24 +63,24 @@ const saveForm = (fields: WindowData) => {
 			width: fields.width,
 			uValue: fields.uValue,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
+			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
 			openingToFrameRatio: fields.openingToFrameRatio,
-			...('overhangDepth' in fields && 'overhangDistance' in fields
+			...("overhangDepth" in fields && "overhangDistance" in fields
 				? {
 					overhangDepth: fields.overhangDepth,
 					overhangDistance: fields.overhangDistance,
 				} : {}
 			),
-			...('sideFinRightDepth' in fields && 'sideFinRightDistance' in fields
+			...("sideFinRightDepth" in fields && "sideFinRightDistance" in fields
 				? {
 					sideFinRightDepth: fields.sideFinRightDepth,
 					sideFinRightDistance: fields.sideFinRightDistance,
 				} : {}
 			),
-			...('sideFinLeftDepth' in fields && 'sideFinLeftDistance' in fields ? {
+			...("sideFinLeftDepth" in fields && "sideFinLeftDistance" in fields ? {
 				sideFinLeftDepth: fields.sideFinLeftDepth,
 				sideFinLeftDistance: fields.sideFinLeftDistance,
 			} : {}
@@ -92,13 +92,13 @@ const saveForm = (fields: WindowData) => {
 		const numberParts = fields.numberOpenableParts;
 
 		switch (numberParts) {
-			case '0':
+			case "0":
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
 				};
 				break;
-			case '1':
+			case "1":
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
@@ -107,7 +107,7 @@ const saveForm = (fields: WindowData) => {
 					midHeightOpenablePart1: fields.midHeightOpenablePart1,
 				};
 				break;
-			case '2':
+			case "2":
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
@@ -117,7 +117,7 @@ const saveForm = (fields: WindowData) => {
 					midHeightOpenablePart2: fields.midHeightOpenablePart2,
 				};
 				break;
-			case '3':
+			case "3":
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,
@@ -128,7 +128,7 @@ const saveForm = (fields: WindowData) => {
 					midHeightOpenablePart3: fields.midHeightOpenablePart3,
 				};
 				break;
-			case '4':
+			case "4":
 				commonFieldsIncludingOpenableParts = {
 					...commonFields,
 					numberOpenableParts: fields.numberOpenableParts,

@@ -1,14 +1,14 @@
-import { renderSuspended } from '@nuxt/test-utils/runtime';
-import { screen } from '@testing-library/vue';
-import userEvent from '@testing-library/user-event';
-import { createPinia, setActivePinia } from 'pinia';
-import formStatus from '~/constants/formStatus';
-import pagesData from '~/data/pages/pages';
-import  MechanicalOverview  from '~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue';
-import { BuildType, DuctShape, DuctType, MVHRLocation, VentType } from '~/schema/api-schema.types';
+import { renderSuspended } from "@nuxt/test-utils/runtime";
+import { screen } from "@testing-library/vue";
+import userEvent from "@testing-library/user-event";
+import { createPinia, setActivePinia } from "pinia";
+import formStatus from "~/constants/formStatus";
+import pagesData from "~/data/pages/pages";
+import  MechanicalOverview  from "~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue";
+import { BuildType, DuctShape, DuctType, MVHRLocation, VentType } from "~/schema/api-schema.types";
 const store = useEcaasStore();
 
-describe('Ecaas Store', () => {
+describe("Ecaas Store", () => {
 	beforeEach(() => {
 		setActivePinia(createPinia());
 	});
@@ -16,15 +16,15 @@ describe('Ecaas Store', () => {
 		store.$reset();
 	});
 
-	test('getStatus of section returns not started status when no forms are complete', () => {
+	test("getStatus of section returns not started status when no forms are complete", () => {
 
-		const page = pagesData.find(p => p.id === 'dwellingDetails');
+		const page = pagesData.find(p => p.id === "dwellingDetails");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
-	test('getStatus of section returns in progress status when some forms are complete', () => {
+	test("getStatus of section returns in progress status when some forms are complete", () => {
 
 		store.$patch({
 			dwellingDetails: {
@@ -34,13 +34,13 @@ describe('Ecaas Store', () => {
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'dwellingDetails');
+		const page = pagesData.find(p => p.id === "dwellingDetails");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
-	test('getStatus of section returns in progress status when forms have saved data', () => {
+	test("getStatus of section returns in progress status when forms have saved data", () => {
 
 		store.$patch({
 			dwellingDetails: {
@@ -52,13 +52,13 @@ describe('Ecaas Store', () => {
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'dwellingDetails');
+		const page = pagesData.find(p => p.id === "dwellingDetails");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
-	test('getStatus of a section containing grouped tasks returns in progress status when one of the grouped tasks is complete', () => {
+	test("getStatus of a section containing grouped tasks returns in progress status when one of the grouped tasks is complete", () => {
 
 		store.$patch({
 			dwellingFabric: {
@@ -76,13 +76,13 @@ describe('Ecaas Store', () => {
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'dwellingFabric');
+		const page = pagesData.find(p => p.id === "dwellingFabric");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
-	test('getStatus of section returns complete status when all forms are complete', () => {
+	test("getStatus of section returns complete status when all forms are complete", () => {
 
 		store.$patch({
 			dwellingDetails: {
@@ -98,13 +98,13 @@ describe('Ecaas Store', () => {
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'dwellingDetails');
+		const page = pagesData.find(p => p.id === "dwellingDetails");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
 	});
 
-	test('getStatus of a section containing a grouped tasks returns complete when all forms are complete', () => {
+	test("getStatus of a section containing a grouped tasks returns complete when all forms are complete", () => {
 
 		store.$patch({
 			dwellingFabric: {
@@ -138,21 +138,21 @@ describe('Ecaas Store', () => {
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'dwellingFabric');
+		const page = pagesData.find(p => p.id === "dwellingFabric");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
 	});
 
-	test('getStatus of task returns not started status when form has no data', () => {
+	test("getStatus of task returns not started status when form has no data", () => {
 
-		const page = pagesData.find(p => p.id === 'generalSpecifications');
+		const page = pagesData.find(p => p.id === "generalSpecifications");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
-	test('getStatus of task returns in progress status when form has saved data', () => {
+	test("getStatus of task returns in progress status when form has saved data", () => {
 
 		store.$patch({
 			dwellingDetails: {
@@ -164,13 +164,13 @@ describe('Ecaas Store', () => {
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'generalSpecifications');
+		const page = pagesData.find(p => p.id === "generalSpecifications");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
-	test('getStatus of task returns complete status when form is complete', () => {
+	test("getStatus of task returns complete status when form is complete", () => {
 
 		store.$patch({
 			dwellingDetails: {
@@ -180,13 +180,13 @@ describe('Ecaas Store', () => {
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'generalSpecifications');
+		const page = pagesData.find(p => p.id === "generalSpecifications");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
 	});
 
-	test('getStatus of task returns complete status when required forms are complete', () => {
+	test("getStatus of task returns complete status when required forms are complete", () => {
 
 		store.$patch({
 			dwellingFabric: {
@@ -204,14 +204,14 @@ describe('Ecaas Store', () => {
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'dwellingSpaceFloors');
+		const page = pagesData.find(p => p.id === "dwellingSpaceFloors");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
 	});
 
 	const mechanicalVentilation1: MechanicalVentilationData = {
-		id: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
 		typeOfMechanicalVentilationOptions: VentType.MVHR,
 		airFlowRate: 12,
@@ -227,8 +227,8 @@ describe('Ecaas Store', () => {
 		mvhrEfficiency: 0.1,
 	};
 	const ductwork1: DuctworkData = {
-		name: 'Ductwork 1',
-		mvhrUnit: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+		name: "Ductwork 1",
+		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		ductworkCrossSectionalShape: DuctShape.circular,
 		ductType: DuctType.intake,
 		internalDiameterOfDuctwork: 300,
@@ -239,8 +239,8 @@ describe('Ecaas Store', () => {
 		surfaceReflectivity: true,
 	};
 	const ductwork2: DuctworkData = {
-		name: 'Ductwork 2',
-		mvhrUnit: '5124f2fe-f15b-4a56-ba5a-1a7751ac506f',
+		name: "Ductwork 2",
+		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		ductworkCrossSectionalShape: DuctShape.circular,
 		ductType: DuctType.intake,
 		internalDiameterOfDuctwork: 300,
@@ -250,7 +250,7 @@ describe('Ecaas Store', () => {
 		thermalInsulationConductivityOfDuctwork: 10,
 		surfaceReflectivity: true,
 	};
-	test('getStatus of ductwork task returns not started status when mvhr and ductwork is added then mvhr is removed', async() => {
+	test("getStatus of ductwork task returns not started status when mvhr and ductwork is added then mvhr is removed", async() => {
 
 		const user = userEvent.setup();
 		
@@ -268,15 +268,15 @@ describe('Ecaas Store', () => {
 		});
 		await renderSuspended(MechanicalOverview);
 
-		await user.click(screen.getByTestId('mechanicalVentilation_remove_0'));
+		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
 
-		const page = pagesData.find(p => p.id === 'ductwork');
+		const page = pagesData.find(p => p.id === "ductwork");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.notStarted);
 	});
 
-	test('getStatus of ductwork task returns in progress status when multiple mvhrs are added but they dont all have an associated ductwork', async() => {
+	test("getStatus of ductwork task returns in progress status when multiple mvhrs are added but they dont all have an associated ductwork", async() => {
 
 		
 		store.$patch({
@@ -292,13 +292,13 @@ describe('Ecaas Store', () => {
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'ductwork');
+		const page = pagesData.find(p => p.id === "ductwork");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.inProgress);
 	});
 
-	test('getStatus of ductwork task returns complete status when a mvhr has an associated ductwork', async() => {
+	test("getStatus of ductwork task returns complete status when a mvhr has an associated ductwork", async() => {
 
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -313,32 +313,32 @@ describe('Ecaas Store', () => {
 			}
 		});
 
-		const page = pagesData.find(p => p.id === 'ductwork');
+		const page = pagesData.find(p => p.id === "ductwork");
 		const status = store.getStatus(page!);
 
 		expect(status).toStrictEqual(formStatus.complete);
 	});
 });
 
-describe('extractPitch', () => {
-	it('should return the pitch from a string with a pitch', () => {
+describe("extractPitch", () => {
+	it("should return the pitch from a string with a pitch", () => {
 		const result = extractPitch({
 			pitch: 45,
-			pitchOption: 'custom',
+			pitchOption: "custom",
 		});
 		expect(result).toBe(45);
 	});
 
-	it('should return undefined when no pitch is present', () => {
+	it("should return undefined when no pitch is present", () => {
 		const result = extractPitch({
-			pitchOption: 'custom',
+			pitchOption: "custom",
 		});
 		expect(result).toBeUndefined();
 	});
 
-	it('should return number 90 when selected as pitchOption', () => {
+	it("should return number 90 when selected as pitchOption", () => {
 		const result = extractPitch({
-			pitchOption: '90',
+			pitchOption: "90",
 		});
 		expect(result).toBe(90);
 	});

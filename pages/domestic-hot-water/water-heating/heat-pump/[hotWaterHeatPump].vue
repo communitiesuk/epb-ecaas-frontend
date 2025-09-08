@@ -3,7 +3,7 @@ const title = "Heat pump (hot water only)";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const heatPumpData = useItemToEdit('hotWaterHeatPump', store.domesticHotWater.waterHeating.heatPump.data);
+const heatPumpData = useItemToEdit("hotWaterHeatPump", store.domesticHotWater.waterHeating.heatPump.data);
 const model: Ref<HotWaterHeatPumpData> = ref(heatPumpData!);
 
 const saveForm = (fields: HotWaterHeatPumpData) => {

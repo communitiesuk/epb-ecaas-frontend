@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { centimetre, type Length } from '~/utils/units/length';
-import { FloorType, WindShieldLocation } from '~/schema/api-schema.types';
-import { unitValue } from '~/utils/units/types';
+import { centimetre, type Length } from "~/utils/units/length";
+import { FloorType, WindShieldLocation } from "~/schema/api-schema.types";
+import { unitValue } from "~/utils/units/types";
 
 const title = "Ground floor";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const floorData = useItemToEdit('floor', store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
+const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
 // prepopulate edge insulation width when using old input format
-if (floorData?.typeOfGroundFloor === FloorType.Slab_edge_insulation && typeof floorData.edgeInsulationWidth === 'number') {
+if (floorData?.typeOfGroundFloor === FloorType.Slab_edge_insulation && typeof floorData.edgeInsulationWidth === "number") {
 	floorData.edgeInsulationWidth = unitValue(floorData.edgeInsulationWidth, centimetre);
 };
 
@@ -19,17 +19,17 @@ const model: Ref<GroundFloorData> = ref(floorData!);
 // Removed heated and unheated basement options for summer
 type reducedGroundFloorOptions = FloorType.Slab_no_edge_insulation | FloorType.Slab_edge_insulation | FloorType.Suspended_floor;
 const typeOfGroundFloorOptions: Record<reducedGroundFloorOptions, SnakeToSentenceCase<reducedGroundFloorOptions>> = {
-	[FloorType.Slab_no_edge_insulation]: 'Slab no edge insulation',
-	[FloorType.Slab_edge_insulation]: 'Slab edge insulation',
-	[FloorType.Suspended_floor]: 'Suspended floor',
+	[FloorType.Slab_no_edge_insulation]: "Slab no edge insulation",
+	[FloorType.Slab_edge_insulation]: "Slab edge insulation",
+	[FloorType.Suspended_floor]: "Suspended floor",
 	// [FloorType.Heated_basement]: 'Heated basement',
 	// [FloorType.Unheated_basement]: 'Unheated basement',
 };
 
 const windShieldingFactorOptions: Record<WindShieldLocation, SnakeToSentenceCase<WindShieldLocation>> = {
-	[WindShieldLocation.Sheltered]: 'Sheltered',
-	[WindShieldLocation.Average]: 'Average',
-	[WindShieldLocation.Exposed]: 'Exposed'
+	[WindShieldLocation.Sheltered]: "Sheltered",
+	[WindShieldLocation.Average]: "Average",
+	[WindShieldLocation.Exposed]: "Exposed"
 };
 
 const saveForm = (fields: GroundFloorData) => {

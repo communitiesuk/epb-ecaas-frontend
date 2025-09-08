@@ -42,7 +42,7 @@ function handleComplete() {
 		}
 	});
 		
-	navigateTo('/domestic-hot-water');		
+	navigateTo("/domestic-hot-water");		
 }
 
 </script>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { AdjacentSpaceType } from '~/stores/ecaasStore.schema';
+import { AdjacentSpaceType } from "~/stores/ecaasStore.schema";
 
 const title = "Internal floor";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const floorData = useItemToEdit('floor', store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data);
+const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data);
 const model: Ref<InternalFloorData> = ref(floorData!);
 
-const typeOfInternalFloorOptions = adjacentSpaceTypeOptions('Internal floor');
+const typeOfInternalFloorOptions = adjacentSpaceTypeOptions("Internal floor");
 
 const saveForm = (fields: InternalFloorData) => {
 	store.$patch((state) => {
@@ -23,14 +23,14 @@ const saveForm = (fields: InternalFloorData) => {
 
 		let floor: InternalFloorData;
 
-		if (fields.typeOfInternalFloor === 'unheatedSpace') {
+		if (fields.typeOfInternalFloor === "unheatedSpace") {
 			floor = {
 				...commonFields,
 				typeOfInternalFloor: fields.typeOfInternalFloor,
 				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 			
 			};
-		} else if (fields.typeOfInternalFloor === 'heatedSpace') {
+		} else if (fields.typeOfInternalFloor === "heatedSpace") {
 			floor = {
 				...commonFields,
 				typeOfInternalFloor: fields.typeOfInternalFloor,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = 'Window Shading: Modelling Overhangs and Side Fins';
+const title = "Window Shading: Modelling Overhangs and Side Fins";
 </script>
 
 <template>

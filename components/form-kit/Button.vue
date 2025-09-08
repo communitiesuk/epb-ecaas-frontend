@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { FormKitFrameworkContext } from '@formkit/core';
+import type { FormKitFrameworkContext } from "@formkit/core";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
 }>();
 
-const { label, attrs: { 'test-id': testId } } = props.context;
+const { label, attrs: { "test-id": testId } } = props.context;
 </script>
 
 <template>

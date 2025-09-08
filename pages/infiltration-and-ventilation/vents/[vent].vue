@@ -3,7 +3,7 @@ const title = "Vent";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const ventData = useItemToEdit('vent', store.infiltrationAndVentilation.vents.data);
+const ventData = useItemToEdit("vent", store.infiltrationAndVentilation.vents.data);
 const model: Ref<VentData> = ref(ventData!);
 
 const saveForm = (fields: VentData) => {

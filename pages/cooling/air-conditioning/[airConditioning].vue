@@ -3,7 +3,7 @@ const title = "Air conditioning";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const airConditioningData = useItemToEdit('airConditioning', store.cooling.airConditioning.data);
+const airConditioningData = useItemToEdit("airConditioning", store.cooling.airConditioning.data);
 const model: Ref<AirConditioningData> = ref(airConditioningData!);
 
 const saveForm = (fields: AirConditioningData) => {

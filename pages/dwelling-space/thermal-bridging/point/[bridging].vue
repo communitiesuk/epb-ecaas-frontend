@@ -5,7 +5,7 @@ const title = "Point thermal bridges";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const thermalBridgeData = useItemToEdit('bridging', store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data);
+const thermalBridgeData = useItemToEdit("bridging", store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data);
 const model: Ref<PointThermalBridgeData | undefined> = ref(thermalBridgeData?.data);
 
 const saveForm = (fields: PointThermalBridgeData) => {
@@ -30,7 +30,7 @@ const saveForm = (fields: PointThermalBridgeData) => {
 autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges,
-	defaultName: 'Point thermal bridge',
+	defaultName: "Point thermal bridge",
 	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data.push(newData),
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data[index] = newData;

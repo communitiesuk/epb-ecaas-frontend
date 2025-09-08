@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { FormKitFrameworkContext } from '@formkit/core';
-import { showErrorState, getErrorMessage } from '#imports';
+import type { FormKitFrameworkContext } from "@formkit/core";
+import { showErrorState, getErrorMessage } from "#imports";
 
 const props = defineProps<{
 	context: FormKitFrameworkContext
@@ -24,7 +24,7 @@ function handleBlur(e: FocusEvent) {
 	const target = e.target as HTMLInputElement;
 	const value = target.value.trim();
 
-	if (value !== '' && !isNaN(Number(value))) {
+	if (value !== "" && !isNaN(Number(value))) {
 		props.context.node.input(Number(value));
 	} else {
 		props.context.node.input(value);

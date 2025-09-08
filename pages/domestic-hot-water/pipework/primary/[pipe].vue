@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { getUrl  } from '#imports';
-import type { SnakeToSentenceCase } from '#imports';
-import type { WaterPipeContentsType, WaterPipeworkLocation } from '~/schema/api-schema.types';
+import { getUrl  } from "#imports";
+import type { SnakeToSentenceCase } from "#imports";
+import type { WaterPipeContentsType, WaterPipeworkLocation } from "~/schema/api-schema.types";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const title = "Primary pipework";
 const store = useEcaasStore();
 
-const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.primaryPipework.data);
+const pipeworkData = useItemToEdit("pipe", store.domesticHotWater.pipework.primaryPipework.data);
 const model: Ref<PrimaryPipeworkData | undefined > = ref(pipeworkData?.data);
 
 const pipeContentsOptions: Record<WaterPipeContentsType, string> = {
-	water: 'Water',
-	air: 'Air',
-	glycol25: 'Glycol 25',
+	water: "Water",
+	air: "Air",
+	glycol25: "Glycol 25",
 };
 
 const locationOptions: Record<WaterPipeworkLocation, SnakeToSentenceCase<WaterPipeworkLocation>> = {
-	internal: 'Internal',
-	external: 'External',
+	internal: "Internal",
+	external: "External",
 };
 
 const saveForm = (fields: PrimaryPipeworkData) => {
@@ -52,7 +52,7 @@ const saveForm = (fields: PrimaryPipeworkData) => {
 autoSaveElementForm({
 	model,
 	storeData: store.domesticHotWater.pipework.primaryPipework,
-	defaultName: 'Primary pipework',
+	defaultName: "Primary pipework",
 	onPatchCreate: (state, newData) => state.domesticHotWater.pipework.primaryPipework.data.push(newData),
 	onPatchUpdate: (state, newData, index) => {
 		state.domesticHotWater.pipework.primaryPipework.data[index] = newData;

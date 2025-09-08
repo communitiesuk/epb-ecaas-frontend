@@ -1,5 +1,5 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
-import { screen } from '@testing-library/vue';
+import { screen } from "@testing-library/vue";
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
@@ -12,7 +12,7 @@ import { degrees } from "~/utils/units/angle";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 
 
-vi.mock('uuid');
+vi.mock("uuid");
 
 const mechanicalVentilationData: MechanicalVentilationData = {
 	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
@@ -37,8 +37,8 @@ const ductworkData: DuctworkData = {
 };
 
 const ventData: VentData = {
-	name: 'Vent 1',
-	typeOfVent: 'trickle',
+	name: "Vent 1",
+	typeOfVent: "trickle",
 	effectiveVentilationArea: 10,
 	openingRatio: 1,
 	midHeightOfZone: 1,
@@ -101,25 +101,25 @@ const airPermeabilityData: AirPermeabilityData = {
 // 	typeOfFuel: CombustionFuelType.coal
 // };
 
-describe('Infiltration and ventilation summary', () => {
+describe("Infiltration and ventilation summary", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	it('should contain the correct tabs for infiltration and ventilation', async () => {
+	it("should contain the correct tabs for infiltration and ventilation", async () => {
 		await renderSuspended(Summary);
 	
-		expect(screen.getByRole('link', { name: 'Mechanical ventilation' }));
-		expect(screen.getByRole('link', { name: 'Ductwork' }));
-		expect(screen.getByRole('link', { name: 'Vents' }));
-		expect(screen.getByRole('link', { name: 'Natural ventilation' }));
-		expect(screen.getByRole('link', { name: 'Air permeability' }));
+		expect(screen.getByRole("link", { name: "Mechanical ventilation" }));
+		expect(screen.getByRole("link", { name: "Ductwork" }));
+		expect(screen.getByRole("link", { name: "Vents" }));
+		expect(screen.getByRole("link", { name: "Natural ventilation" }));
+		expect(screen.getByRole("link", { name: "Air permeability" }));
 		// expect(screen.getByRole('link', {name: 'Combustion appliances'}));
 	});
 
-	it('should display the correct data for the mechanical ventilation section', async () => {
+	it("should display the correct data for the mechanical ventilation section", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -145,7 +145,7 @@ describe('Infiltration and ventilation summary', () => {
 		}
 	});
 
-	it('should display the correct data for the ductwork section', async () => {
+	it("should display the correct data for the ductwork section", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -160,15 +160,15 @@ describe('Infiltration and ventilation summary', () => {
 		await renderSuspended(Summary);
 		const expectedResult = {
 			"Name": "Ducktwork 1",
-			"MVHR unit": 'Mechanical name 1',
-			"Ductwork cross sectional shape": 'Circular',
-			"Duct type": 'Intake',
+			"MVHR unit": "Mechanical name 1",
+			"Ductwork cross sectional shape": "Circular",
+			"Duct type": "Intake",
 			"Internal diameter of ductwork": `300 ${millimetre.suffix}`,
 			"External diameter of ductwork": `1000 ${millimetre.suffix}`,
 			"Length of ductwork": `100 ${metre.suffix}`,
 			"Insulation thickness": `100 ${millimetre.suffix}`,
 			"Thermal conductivity of ductwork insulation": `10 ${wattsPerMeterKelvin.suffix}`,
-			"Surface reflectivity": 'Reflective'
+			"Surface reflectivity": "Reflective"
 		};
 
 		for(const [key, value] of Object.entries(expectedResult)){
@@ -180,7 +180,7 @@ describe('Infiltration and ventilation summary', () => {
 		}
 	});
 
-	it('should not display the ductwork section when there are no mechanical ventilations created of type mvhr', async () => {
+	it("should not display the ductwork section when there are no mechanical ventilations created of type mvhr", async () => {
 		const user = userEvent.setup();
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -199,7 +199,7 @@ describe('Infiltration and ventilation summary', () => {
 		expect(screen.getByText("No ductwork added")).toBeDefined();
 	});
 
-	it('should display the correct data for the vents section', async () => {
+	it("should display the correct data for the vents section", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
@@ -227,7 +227,7 @@ describe('Infiltration and ventilation summary', () => {
 		}
 	});
 
-	it('should display the correct data for the ventilation section', async () => {
+	it("should display the correct data for the ventilation section", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				naturalVentilation: {
@@ -242,7 +242,7 @@ describe('Infiltration and ventilation summary', () => {
 			"Ventilation zone height": `1 ${metre.suffix}`,
 			"Dwelling envelope area": `1 ${metresSquare.suffix}`,
 			"Elevational height of dwelling at its base": `1 ${metre.suffix}`,
-			"Cross ventilation possible": 'Yes'
+			"Cross ventilation possible": "Yes"
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -252,7 +252,7 @@ describe('Infiltration and ventilation summary', () => {
 		}
 	});
 
-	it('should display the correct data for the air permeability section', async () => {
+	it("should display the correct data for the air permeability section", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				airPermeability: {

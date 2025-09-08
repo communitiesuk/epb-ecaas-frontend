@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid';
-import { litre, type Volume } from '~/utils/units/volume';
-import type { HotWaterCylinderData } from '~/stores/ecaasStore.schema';
-import { unitValue } from '~/utils/units/types';
+import { v4 as uuidv4 } from "uuid";
+import { litre, type Volume } from "~/utils/units/volume";
+import type { HotWaterCylinderData } from "~/stores/ecaasStore.schema";
+import { unitValue } from "~/utils/units/types";
 import { getUrl } from "#imports";
 
 const title = "Water heating";
@@ -10,12 +10,12 @@ const store = useEcaasStore();
 
 const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0];
 
-if (typeof hotWaterCylinderData?.storageCylinderVolume === 'number') {
+if (typeof hotWaterCylinderData?.storageCylinderVolume === "number") {
 	hotWaterCylinderData.storageCylinderVolume = unitValue(hotWaterCylinderData.storageCylinderVolume, litre);
 }
 
 const waterHeaterTypeOptions = {
-	hotWaterCylinder: 'Hot water cylinder'
+	hotWaterCylinder: "Hot water cylinder"
 };
 
 type WaterHeaterType = keyof typeof waterHeaterTypeOptions | null;
@@ -23,7 +23,7 @@ type WaterHeaterType = keyof typeof waterHeaterTypeOptions | null;
 
 const model: Ref<HotWaterCylinderData & { waterHeaterType: WaterHeaterType[] }> = ref({
 	...hotWaterCylinderData!,
-	waterHeaterType: hotWaterCylinderData ? ['hotWaterCylinder'] : []
+	waterHeaterType: hotWaterCylinderData ? ["hotWaterCylinder"] : []
 });
 
 watch(model, async (newData: HotWaterCylinderData, initialData: HotWaterCylinderData) => {

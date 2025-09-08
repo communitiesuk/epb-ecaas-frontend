@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { SchemaFhsEnergyPerformanceValue } from '~/schema/api-schema.types';
-import { displayDeliveryEnergyUseKey } from '#imports';
+import type { SchemaFhsEnergyPerformanceValue } from "~/schema/api-schema.types";
+import { displayDeliveryEnergyUseKey } from "#imports";
 
 // overrides because never types are currently generated from the OpenAPI erroneously
 export interface CorrectedFhsDeliveredEnergyUse {

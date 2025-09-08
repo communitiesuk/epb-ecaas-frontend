@@ -1,10 +1,10 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import PvAndBatteries from './index.vue';
+import PvAndBatteries from "./index.vue";
 import PvSystemForm from "./pv-systems/[system].vue";
 import ElectricBatteryForm from "./electric-battery/index.vue";
-import { screen } from '@testing-library/vue';
-import { within } from '@testing-library/dom';
+import { screen } from "@testing-library/vue";
+import { within } from "@testing-library/dom";
 import { BatteryLocation, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
 
 const baseForm = {
@@ -12,12 +12,12 @@ const baseForm = {
 	complete: true,
 };
 
-describe('pv systems and electric battery', () => {
+describe("pv systems and electric battery", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 	const navigateToMock = vi.hoisted(() => vi.fn());
 
-	mockNuxtImport('navigateTo', () => {
+	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
 	});
 
@@ -76,8 +76,8 @@ describe('pv systems and electric battery', () => {
 		}
 	};
 
-	describe('pv systems', () => {
-		test('pv system is removed when remove link is clicked', async () => {
+	describe("pv systems", () => {
+		test("pv system is removed when remove link is clicked", async () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
@@ -89,14 +89,14 @@ describe('pv systems and electric battery', () => {
 	
 			await renderSuspended(PvAndBatteries);
 	
-			expect(screen.getAllByTestId('pvSystems_items')).toBeDefined();
+			expect(screen.getAllByTestId("pvSystems_items")).toBeDefined();
 	
-			await user.click(screen.getByTestId('pvSystems_remove_0'));
+			await user.click(screen.getByTestId("pvSystems_remove_0"));
 	
-			expect(screen.queryByTestId('pvSystems_items')).toBeNull();
+			expect(screen.queryByTestId("pvSystems_items")).toBeNull();
 		});
 	
-		it('should only remove the pv system object that is clicked', async () => {
+		it("should only remove the pv system object that is clicked", async () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
@@ -107,16 +107,16 @@ describe('pv systems and electric battery', () => {
 			});
 	
 			await renderSuspended(PvAndBatteries);
-			await user.click(screen.getByTestId('pvSystems_remove_1'));
+			await user.click(screen.getByTestId("pvSystems_remove_1"));
 	
-			const populatedList = screen.getByTestId('pvSystems_items');
+			const populatedList = screen.getByTestId("pvSystems_items");
 	
-			expect(within(populatedList).getByText('PV System 1')).toBeDefined();
-			expect(within(populatedList).getByText('PV System 3')).toBeDefined();
-			expect(within(populatedList).queryByText('PV System 2')).toBeNull();
+			expect(within(populatedList).getByText("PV System 1")).toBeDefined();
+			expect(within(populatedList).getByText("PV System 3")).toBeDefined();
+			expect(within(populatedList).queryByText("PV System 2")).toBeNull();
 		});
 
-		test('pv system is duplicated when duplicate link is clicked', async () => {
+		test("pv system is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
@@ -126,22 +126,22 @@ describe('pv systems and electric battery', () => {
 			});
 	
 			await renderSuspended(PvAndBatteries);
-			await userEvent.click(screen.getByTestId('pvSystems_duplicate_0'));
-			await userEvent.click(screen.getByTestId('pvSystems_duplicate_0'));
-			await userEvent.click(screen.getByTestId('pvSystems_duplicate_2'));
-			await userEvent.click(screen.getByTestId('pvSystems_duplicate_2'));
+			await userEvent.click(screen.getByTestId("pvSystems_duplicate_0"));
+			await userEvent.click(screen.getByTestId("pvSystems_duplicate_0"));
+			await userEvent.click(screen.getByTestId("pvSystems_duplicate_2"));
+			await userEvent.click(screen.getByTestId("pvSystems_duplicate_2"));
 	
-			expect(screen.queryAllByTestId('pvSystems_item').length).toBe(6);
-			expect(screen.getByText('PV System 1')).toBeDefined();
-			expect(screen.getByText('PV System 1 (1)')).toBeDefined();
-			expect(screen.getByText('PV System 1 (2)')).toBeDefined();
-			expect(screen.getByText('PV System 1 (1) (1)')).toBeDefined();
-			expect(screen.getByText('PV System 1 (1) (2)')).toBeDefined();
+			expect(screen.queryAllByTestId("pvSystems_item").length).toBe(6);
+			expect(screen.getByText("PV System 1")).toBeDefined();
+			expect(screen.getByText("PV System 1 (1)")).toBeDefined();
+			expect(screen.getByText("PV System 1 (2)")).toBeDefined();
+			expect(screen.getByText("PV System 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("PV System 1 (1) (2)")).toBeDefined();
 		});
 	});
 	
-	describe('electric batteries', () => {
-		test('battery is removed when remove link is clicked', async () => {
+	describe("electric batteries", () => {
+		test("battery is removed when remove link is clicked", async () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
@@ -152,15 +152,15 @@ describe('pv systems and electric battery', () => {
 	
 			await renderSuspended(PvAndBatteries);
 	
-			expect(screen.getAllByTestId('electricBattery_items')).toBeDefined();
-			expect(screen.getAllByTestId('electricBattery_item').length).toBe(1);
+			expect(screen.getAllByTestId("electricBattery_items")).toBeDefined();
+			expect(screen.getAllByTestId("electricBattery_item").length).toBe(1);
 
-			await user.click(screen.getByTestId('electricBattery_remove_0'));
+			await user.click(screen.getByTestId("electricBattery_remove_0"));
 	
-			expect(screen.queryByTestId('electricBattery_items')).toBeNull();
+			expect(screen.queryByTestId("electricBattery_items")).toBeNull();
 		});
 
-		test('only one battery can be added', async () => {
+		test("only one battery can be added", async () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
@@ -170,8 +170,8 @@ describe('pv systems and electric battery', () => {
 			});
 	
 			await renderSuspended(PvAndBatteries);
-			expect(screen.queryByTestId('electricBattery_add')).toBeNull();
-			expect(screen.queryByTestId('electricBattery_duplicate_0')).toBeNull();
+			expect(screen.queryByTestId("electricBattery_add")).toBeNull();
+			expect(screen.queryByTestId("electricBattery_duplicate_0")).toBeNull();
 		});
 	});
 
@@ -354,7 +354,7 @@ describe('pv systems and electric battery', () => {
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 		});
 
-		it('disables the mark section as complete button when item is incomplete', async () => {
+		it("disables the mark section as complete button when item is incomplete", async () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
@@ -365,7 +365,7 @@ describe('pv systems and electric battery', () => {
 
 			await renderSuspended(PvAndBatteries);
 			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
-			expect(markAsCompleteButton.hasAttribute('disabled')).toBeTruthy();
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 		});
 	});
 });

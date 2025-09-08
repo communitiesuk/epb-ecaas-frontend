@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import formStatus from '~/constants/formStatus';
-import { isEcaasForm } from '#imports';
+import formStatus from "~/constants/formStatus";
+import { isEcaasForm } from "#imports";
 
 const page = usePage();
 const title = "Heat emitting";
@@ -75,7 +75,7 @@ function handleComplete() {
 		}
 	});
 
-	navigateTo('/heating-systems');
+	navigateTo("/heating-systems");
 }
 
 function checkIsComplete(){

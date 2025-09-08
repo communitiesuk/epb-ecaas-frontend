@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { FormKitFrameworkContext } from '@formkit/core';
-import formatData from '~/utils/format-data';
+import type { FormKitFrameworkContext } from "@formkit/core";
+import formatData from "~/utils/format-data";
 
 export type StoredListOption = {
 	id: string;

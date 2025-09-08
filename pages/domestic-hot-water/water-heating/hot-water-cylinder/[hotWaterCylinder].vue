@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid';
-import { litre, type Volume } from '~/utils/units/volume';
-import type { HotWaterCylinderData } from '~/stores/ecaasStore.schema';
-import { unitValue } from '~/utils/units/types';
+import { v4 as uuidv4 } from "uuid";
+import { litre, type Volume } from "~/utils/units/volume";
+import type { HotWaterCylinderData } from "~/stores/ecaasStore.schema";
+import { unitValue } from "~/utils/units/types";
 
 const title = "Hot water cylinder";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const hotWaterCylinderData = useItemToEdit('hotWaterCylinder', store.domesticHotWater.waterHeating.hotWaterCylinder.data);
+const hotWaterCylinderData = useItemToEdit("hotWaterCylinder", store.domesticHotWater.waterHeating.hotWaterCylinder.data);
 
-if (typeof hotWaterCylinderData?.storageCylinderVolume === 'number') {
+if (typeof hotWaterCylinderData?.storageCylinderVolume === "number") {
 	hotWaterCylinderData.storageCylinderVolume = unitValue(hotWaterCylinderData.storageCylinderVolume, litre);
 }
 

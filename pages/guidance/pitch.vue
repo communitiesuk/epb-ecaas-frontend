@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const title = 'Understanding pitch and perimeter';
+const title = "Understanding pitch and perimeter";
 </script>
 
 <template>

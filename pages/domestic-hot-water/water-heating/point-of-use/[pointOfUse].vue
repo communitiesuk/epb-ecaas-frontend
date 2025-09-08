@@ -3,7 +3,7 @@ const title = "Point of use";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const pointOfUseData = useItemToEdit('pointOfUse', store.domesticHotWater.waterHeating.pointOfUse.data);
+const pointOfUseData = useItemToEdit("pointOfUse", store.domesticHotWater.waterHeating.pointOfUse.data);
 const model: Ref<PointOfUseData> = ref(pointOfUseData!);
 
 const saveForm = (fields: PointOfUseData) => {

@@ -3,7 +3,7 @@ const title = "Warm air heat pump";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const warmAirHeatPumpData = useItemToEdit('pump', store.heatingSystems.heatEmitting.warmAirHeatPump.data);
+const warmAirHeatPumpData = useItemToEdit("pump", store.heatingSystems.heatEmitting.warmAirHeatPump.data);
 const model: Ref<WarmAirHeatPumpData> = ref(warmAirHeatPumpData!);
 
 const saveForm = (fields: WarmAirHeatPumpData) => {

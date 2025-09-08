@@ -12,7 +12,7 @@ export const immersionHeaterPositionValues: Record<ImmersionHeaterPosition, numb
 	bottom: 0
 };
 
-export const defaultZoneName: string = 'dwellingspace';
+export const defaultZoneName: string = "dwellingspace";
 export const defaultElectricityEnergySupplyName = "mains elec";
 
 export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {

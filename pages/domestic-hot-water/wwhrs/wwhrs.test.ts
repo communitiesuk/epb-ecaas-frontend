@@ -1,17 +1,17 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen, within } from '@testing-library/vue';
-import Wwhrs from './index.vue';
-import WwhrsForm from './[wwhrs].vue';
+import { screen, within } from "@testing-library/vue";
+import Wwhrs from "./index.vue";
+import WwhrsForm from "./[wwhrs].vue";
 import type { WwhrsData } from "~/stores/ecaasStore.schema";
 import { WwhrsType } from "~/schema/api-schema.types";
 
-describe('wwhrs', () => {
+describe("wwhrs", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const navigateToMock = vi.hoisted(() => vi.fn());
-	mockNuxtImport('navigateTo', () => {
+	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
 	});
 	const wwhrs1: Partial<WwhrsData> = {
@@ -37,7 +37,7 @@ describe('wwhrs', () => {
 		store.$reset();
 	});
 
-	test('wwhrs is removed when remove link is clicked', async () => {
+	test("wwhrs is removed when remove link is clicked", async () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
@@ -48,14 +48,14 @@ describe('wwhrs', () => {
 
 		await renderSuspended(Wwhrs);
 
-		expect(screen.getAllByTestId('wwhrs_items')).toBeDefined();
+		expect(screen.getAllByTestId("wwhrs_items")).toBeDefined();
 
-		await user.click(screen.getByTestId('wwhrs_remove_0'));
+		await user.click(screen.getByTestId("wwhrs_remove_0"));
 
-		expect(screen.queryByTestId('wwhrs_items')).toBeNull();
+		expect(screen.queryByTestId("wwhrs_items")).toBeNull();
 	});
 
-	it('should only remove the wwhrs thats is clicked', async () => {
+	it("should only remove the wwhrs thats is clicked", async () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
@@ -65,17 +65,17 @@ describe('wwhrs', () => {
 		});
 
 		await renderSuspended(Wwhrs);
-		await user.click(screen.getByTestId('wwhrs_remove_1'));
+		await user.click(screen.getByTestId("wwhrs_remove_1"));
 
-		const populatedList = screen.getByTestId('wwhrs_items');
+		const populatedList = screen.getByTestId("wwhrs_items");
 
-		expect(within(populatedList).getByText('WWHRS 1')).toBeDefined();
-		expect(within(populatedList).getByText('WWHRS 3')).toBeDefined();
-		expect(within(populatedList).queryByText('WWHRS 2')).toBeNull();
+		expect(within(populatedList).getByText("WWHRS 1")).toBeDefined();
+		expect(within(populatedList).getByText("WWHRS 3")).toBeDefined();
+		expect(within(populatedList).queryByText("WWHRS 2")).toBeNull();
 
 	});
 
-	test('wwhrs is duplicated when duplicate link is clicked', async () => {
+	test("wwhrs is duplicated when duplicate link is clicked", async () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
@@ -85,27 +85,27 @@ describe('wwhrs', () => {
 		});
 
 		await renderSuspended(Wwhrs);
-		await userEvent.click(screen.getByTestId('wwhrs_duplicate_0'));
-		await userEvent.click(screen.getByTestId('wwhrs_duplicate_0'));
-		await userEvent.click(screen.getByTestId('wwhrs_duplicate_2'));
-		await userEvent.click(screen.getByTestId('wwhrs_duplicate_2'));
+		await userEvent.click(screen.getByTestId("wwhrs_duplicate_0"));
+		await userEvent.click(screen.getByTestId("wwhrs_duplicate_0"));
+		await userEvent.click(screen.getByTestId("wwhrs_duplicate_2"));
+		await userEvent.click(screen.getByTestId("wwhrs_duplicate_2"));
 
-		expect(screen.queryAllByTestId('wwhrs_item').length).toBe(6);
-		expect(screen.getByText('WWHRS 1')).toBeDefined();
-		expect(screen.getByText('WWHRS 1 (1)')).toBeDefined();
-		expect(screen.getByText('WWHRS 1 (2)')).toBeDefined();
-		expect(screen.getByText('WWHRS 1 (1) (1)')).toBeDefined();
-		expect(screen.getByText('WWHRS 1 (1) (2)')).toBeDefined();
+		expect(screen.queryAllByTestId("wwhrs_item").length).toBe(6);
+		expect(screen.getByText("WWHRS 1")).toBeDefined();
+		expect(screen.getByText("WWHRS 1 (1)")).toBeDefined();
+		expect(screen.getByText("WWHRS 1 (2)")).toBeDefined();
+		expect(screen.getByText("WWHRS 1 (1) (1)")).toBeDefined();
+		expect(screen.getByText("WWHRS 1 (1) (2)")).toBeDefined();
 	});
 
-	it('marks wwhrs as complete when mark section as complete button is clicked', async () => {
+	it("marks wwhrs as complete when mark section as complete button is clicked", async () => {
 		await renderSuspended(Wwhrs);
 		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 	
-		const completedStatusElement = screen.queryByTestId('completeSectionCompleted');
+		const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
 		expect(completedStatusElement?.style.display).toBe("none");
 	
-		await user.click(screen.getByTestId('completeSectionButton'));
+		await user.click(screen.getByTestId("completeSectionButton"));
 	
 		const { complete } = store.domesticHotWater.wwhrs;
 	
@@ -113,9 +113,9 @@ describe('wwhrs', () => {
 		expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
 		expect(completedStatusElement?.style.display).not.toBe("none");
 	
-		expect(navigateToMock).toHaveBeenCalledWith('/domestic-hot-water');
+		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
 	});
-	it('marks wwhrs as not complete when complete button is clicked then user removes a wwhr item', async () => {
+	it("marks wwhrs as not complete when complete button is clicked then user removes a wwhr item", async () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
@@ -126,15 +126,15 @@ describe('wwhrs', () => {
 	
 		await renderSuspended(Wwhrs);
 	
-		await user.click(screen.getByTestId('completeSectionButton'));
+		await user.click(screen.getByTestId("completeSectionButton"));
 		expect(store.domesticHotWater.wwhrs.complete).toBe(true);
 	
-		await user.click(screen.getByTestId('wwhrs_remove_0'));
+		await user.click(screen.getByTestId("wwhrs_remove_0"));
 		expect(store.domesticHotWater.wwhrs.complete).toBe(false);
 		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 	});
 	
-	it('marks wwhrs as not complete when complete button is clicked then user duplicates a wwhr item', async () => {
+	it("marks wwhrs as not complete when complete button is clicked then user duplicates a wwhr item", async () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
@@ -145,15 +145,15 @@ describe('wwhrs', () => {
 	
 		await renderSuspended(Wwhrs);
 	
-		await user.click(screen.getByTestId('completeSectionButton'));
+		await user.click(screen.getByTestId("completeSectionButton"));
 		expect(store.domesticHotWater.wwhrs.complete).toBe(true);
 	
-		await user.click(screen.getByTestId('wwhrs_duplicate_0'));
+		await user.click(screen.getByTestId("wwhrs_duplicate_0"));
 		expect(store.domesticHotWater.wwhrs.complete).toBe(false);
 		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 	});
 	
-	it('marks wwhrs as not complete when user saves a new or edited form after marking section as complete', async () => {
+	it("marks wwhrs as not complete when user saves a new or edited form after marking section as complete", async () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
@@ -163,15 +163,15 @@ describe('wwhrs', () => {
 		});
 	
 		await renderSuspended(Wwhrs);
-		await user.click(screen.getByTestId('completeSectionButton'));
+		await user.click(screen.getByTestId("completeSectionButton"));
 	
 		await renderSuspended(WwhrsForm, {
 			route: {
-				params: { wwhrs: '0' },
+				params: { wwhrs: "0" },
 			},
 		});
 
-		await user.click(screen.getByRole('button'));
+		await user.click(screen.getByRole("button"));
 	
 		const { complete } = store.domesticHotWater.wwhrs;
 		expect(complete).toBe(false);
@@ -180,7 +180,7 @@ describe('wwhrs', () => {
 		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 	});
 	
-	it('should navigate to the domestic hot water overview page when return to overview is clicked', async () => {
+	it("should navigate to the domestic hot water overview page when return to overview is clicked", async () => {
 		await renderSuspended(Wwhrs);
 	
 		const returnToOverviewButton = screen.getByRole("button", { name: "Return to domestic hot water" });

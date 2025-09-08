@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import { v4 as uuidv4 } from 'uuid';
-import type { MVHRLocation } from '~/schema/api-schema.types';
-import { VentType } from '~/schema/api-schema.types';
-import { litrePerSecond } from '~/utils/units/flowRate';
-import { unitValue } from '~/utils/units/types';
+import { v4 as uuidv4 } from "uuid";
+import type { MVHRLocation } from "~/schema/api-schema.types";
+import { VentType } from "~/schema/api-schema.types";
+import { litrePerSecond } from "~/utils/units/flowRate";
+import { unitValue } from "~/utils/units/types";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const mechanicalVentilation = useItemToEdit('mechanical', store.infiltrationAndVentilation.mechanicalVentilation.data);
+const mechanicalVentilation = useItemToEdit("mechanical", store.infiltrationAndVentilation.mechanicalVentilation.data);
 
 // prepopulate airFlowRate correctly when using old input format
-if (typeof mechanicalVentilation?.airFlowRate === 'number') {
+if (typeof mechanicalVentilation?.airFlowRate === "number") {
 	mechanicalVentilation.airFlowRate = unitValue(mechanicalVentilation.airFlowRate, litrePerSecond);
 }
 
 const model: Ref<MechanicalVentilationData> = ref(mechanicalVentilation!);
 
 /** 'PIV' is excluded from options here because it is in the schema currently but unsupported in HEM itself at 0.34 version */
-const ventTypeOptions: Record<Exclude<VentType, 'PIV'>, string> = {
-	[VentType.MVHR]: 'MVHR (Mechanical Ventilation with Heat recovery)',
-	[VentType.Intermittent_MEV]: 'Intermittent MEV (Mechanical Extract Ventilation)',
-	[VentType.Centralised_continuous_MEV]: 'Centralised continuous MEV (Mechanical Extract Ventilation)',
-	[VentType.Decentralised_continuous_MEV]: 'Decentralised continuous MEV (Mechanical Extract Ventilation)',
+const ventTypeOptions: Record<Exclude<VentType, "PIV">, string> = {
+	[VentType.MVHR]: "MVHR (Mechanical Ventilation with Heat recovery)",
+	[VentType.Intermittent_MEV]: "Intermittent MEV (Mechanical Extract Ventilation)",
+	[VentType.Centralised_continuous_MEV]: "Centralised continuous MEV (Mechanical Extract Ventilation)",
+	[VentType.Decentralised_continuous_MEV]: "Decentralised continuous MEV (Mechanical Extract Ventilation)",
 };
 
 const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation>> = {
-	inside: 'Inside',
-	outside: 'Outside'
+	inside: "Inside",
+	outside: "Outside"
 };
 
 const saveForm = (fields: MechanicalVentilationData) => {

@@ -61,7 +61,7 @@ describe("PV and electric batteries mapper", () => {
 		const result = mapPvSystemData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'OnSiteGeneration'> = {
+		const expectedResult: Pick<FhsInputSchema, "OnSiteGeneration"> = {
 			OnSiteGeneration: {
 				"Roof": {
 					EnergySupply: "mains elec",

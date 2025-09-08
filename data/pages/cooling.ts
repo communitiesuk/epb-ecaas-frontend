@@ -3,32 +3,32 @@ import type { Page } from "./pages.types";
 
 const coolingPages: Array<Page> = [
 	{
-		id: 'cooling',
-		title: 'Cooling',
-		url: '/cooling',
+		id: "cooling",
+		title: "Cooling",
+		url: "/cooling",
 		type: PageType.Section,
-		parentId: 'taskList'
+		parentId: "taskList"
 	},
 	{
-		id: 'airConditioning',
-		title: 'Air conditioning',
-		url: '/cooling/air-conditioning/create',
+		id: "airConditioning",
+		title: "Air conditioning",
+		url: "/cooling/air-conditioning/create",
 		type: PageType.Task,
-		parentId: 'cooling'
+		parentId: "cooling"
 	},
 	{
-		id: 'airConditioningEdit',
-		title: 'Air conditioning',
-		url: '/cooling/air-conditioning/:airConditioning',
+		id: "airConditioningEdit",
+		title: "Air conditioning",
+		url: "/cooling/air-conditioning/:airConditioning",
 		type: PageType.Task,
-		parentId: 'cooling'
+		parentId: "cooling"
 	},
 	{
-		id: 'coolingSummary',
-		title: 'Summary',
-		url: '/cooling/summary',
+		id: "coolingSummary",
+		title: "Summary",
+		url: "/cooling/summary",
 		type: PageType.Summary,
-		parentId: 'cooling'
+		parentId: "cooling"
 	}
 ];
 

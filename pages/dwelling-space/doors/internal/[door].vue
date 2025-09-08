@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { standardPitchOptions } from '#imports';
+import { standardPitchOptions } from "#imports";
 
 const title = "Internal door";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const doorData = useItemToEdit('door', store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data);
+const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data);
 const model: Ref<InternalDoorData> = ref(doorData!);
 
-const typeOfInternalDoorOptions = adjacentSpaceTypeOptions('Internal door');
+const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 
 const saveForm = (fields: InternalDoorData) => {
 	store.$patch((state) => {
@@ -20,7 +20,7 @@ const saveForm = (fields: InternalDoorData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === '90' ? 90 : fields.pitch,
+			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 		};
 
 		let door: InternalDoorData;

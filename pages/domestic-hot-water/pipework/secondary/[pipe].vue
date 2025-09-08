@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import type { WaterPipeworkLocation } from '~/schema/api-schema.types';
-import { getUrl  } from '#imports';
+import type { WaterPipeworkLocation } from "~/schema/api-schema.types";
+import { getUrl  } from "#imports";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const title = "Secondary pipework";
 const store = useEcaasStore();
 
-const pipeworkData = useItemToEdit('pipe', store.domesticHotWater.pipework.secondaryPipework.data);
+const pipeworkData = useItemToEdit("pipe", store.domesticHotWater.pipework.secondaryPipework.data);
 const model: Ref<SecondaryPipeworkData | undefined > = ref(pipeworkData?.data);
 
 const locationOptions: Record<WaterPipeworkLocation, SnakeToSentenceCase<WaterPipeworkLocation>> = {
-	internal: 'Internal',
-	external: 'External',
+	internal: "Internal",
+	external: "External",
 };
 
 const saveForm = (fields: SecondaryPipeworkData) => {
@@ -37,7 +37,7 @@ const saveForm = (fields: SecondaryPipeworkData) => {
 autoSaveElementForm({
 	model,
 	storeData: store.domesticHotWater.pipework.secondaryPipework,
-	defaultName: 'Secondary pipework',
+	defaultName: "Secondary pipework",
 	onPatchCreate: (state, newData) => state.domesticHotWater.pipework.secondaryPipework.data.push(newData),
 	onPatchUpdate: (state, newData, index) => {
 		state.domesticHotWater.pipework.secondaryPipework.data[index] = newData;

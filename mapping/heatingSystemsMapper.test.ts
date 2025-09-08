@@ -34,7 +34,7 @@ describe("heating systems mapper", () => {
 		const result = mapEnergySupplyData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
+		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
 				mains_gas: {
 					fuel: FuelType.mains_gas,
@@ -65,12 +65,12 @@ describe("heating systems mapper", () => {
 		const result = mapEnergySupplyData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
+		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
 				mains_gas: {
 					fuel: FuelType.mains_gas,
 				},
-				'mains elec': {
+				"mains elec": {
 					fuel: FuelType.electricity,
 					is_export_capable: true
 				}
@@ -103,9 +103,9 @@ describe("heating systems mapper", () => {
 		const result = mapEnergySupplyData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'EnergySupply'> = {
+		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
-				'mains elec': {
+				"mains elec": {
 					fuel: FuelType.electricity,
 					is_export_capable: true
 				},
@@ -145,7 +145,7 @@ describe("heating systems mapper", () => {
 						designTempDiffAcrossEmitters: 4,
 						designFlowTemp: 35,
 						designFlowRate: 4,
-						ecoDesignControllerClass: '2',
+						ecoDesignControllerClass: "2",
 						minimumFlowTemp: 30,
 						minOutdoorTemp: -5,
 						maxOutdoorTemp: 32,
@@ -181,7 +181,7 @@ describe("heating systems mapper", () => {
 		const result = mapHeatEmittingData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
+		const expectedResult: Pick<FhsInputSchema, "SpaceHeatSystem"> = {
 			SpaceHeatSystem: {
 				"Radiators": {
 					HeatSource: {
@@ -237,7 +237,7 @@ describe("heating systems mapper", () => {
 						designTempDiffAcrossEmitters: 4,
 						designFlowTemp: 35,
 						designFlowRate: 4,
-						ecoDesignControllerClass: '2',
+						ecoDesignControllerClass: "2",
 						minimumFlowTemp: 30,
 						minOutdoorTemp: -5,
 						maxOutdoorTemp: 32,
@@ -273,7 +273,7 @@ describe("heating systems mapper", () => {
 		const result = mapHeatEmittingData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
+		const expectedResult: Pick<FhsInputSchema, "SpaceHeatSystem"> = {
 			SpaceHeatSystem: {
 				"Under floor heating": {
 					HeatSource: {
@@ -336,13 +336,13 @@ describe("heating systems mapper", () => {
 		const result = mapHeatEmittingData(resolveState(store.$state));
 
 		// Assert
-		const expectedResult: Pick<FhsInputSchema, 'SpaceHeatSystem'> = {
+		const expectedResult: Pick<FhsInputSchema, "SpaceHeatSystem"> = {
 			SpaceHeatSystem: {
 				"Acme instant electric heater": {
 					type: "InstantElecHeater",
 					rated_power: 100,
 					frac_convective: 0.8,
-					EnergySupply: 'mains elec',
+					EnergySupply: "mains elec",
 
 				}
 			}

@@ -1,14 +1,14 @@
-import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType } from '~/schema/api-schema.types';
-import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from './infiltrationVentilationMapper';
-import { litrePerSecond } from '~/utils/units/flowRate';
-import { unitValue } from '~/utils/units/types';
+import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType } from "~/schema/api-schema.types";
+import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
+import { litrePerSecond } from "~/utils/units/flowRate";
+import { unitValue } from "~/utils/units/types";
 
 const baseForm = {
 	data: [],
 	complete: true,
 };
 
-describe('infiltration ventilation mapper', () => {
+describe("infiltration ventilation mapper", () => {
 	const mechVentMvhr: MechanicalVentilationData[] = [{
 		id: "bathroom exhaust fan",
 		name: "bathroom exhaust fan",
@@ -24,7 +24,7 @@ describe('infiltration ventilation mapper', () => {
 		store.$reset();
 	});
 
-	it('maps mechanical ventilation of type MVHR input state to FHS input request', () => {
+	it("maps mechanical ventilation of type MVHR input state to FHS input request", () => {
 		// Arrange
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -56,7 +56,7 @@ describe('infiltration ventilation mapper', () => {
 		expect(fhsInputData.InfiltrationVentilation).toBeDefined();
 		expect(fhsInputData.InfiltrationVentilation?.MechanicalVentilation).toBeDefined();
 
-		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!['bathroom exhaust fan'];
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"];
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
 		expect(firstMechVent?.vent_type).toBe(VentType.MVHR);
@@ -72,7 +72,7 @@ describe('infiltration ventilation mapper', () => {
 	});
 
 
-	it('maps ductwork input state to FHS input request', () => {
+	it("maps ductwork input state to FHS input request", () => {
 		// Arrange
 		
 		const ductwork: DuctworkData[] = [{
@@ -119,7 +119,7 @@ describe('infiltration ventilation mapper', () => {
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
 		// Assert
-		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!['bathroom exhaust fan'];
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"];
 		const firstDuctwork = firstMechVent!.ductwork![0];
 
 		expect(firstDuctwork?.cross_section_shape).toBe(DuctShape.circular);
@@ -132,7 +132,7 @@ describe('infiltration ventilation mapper', () => {
 		expect(firstDuctwork?.duct_type).toBe(DuctType.extract);
 	});
 
-	it('maps input state for MVHR without ductwork to FHS input request', () => {
+	it("maps input state for MVHR without ductwork to FHS input request", () => {
 		// Arrange
 
 		store.$patch({
@@ -162,14 +162,14 @@ describe('infiltration ventilation mapper', () => {
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
 		// Assert
-		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!['bathroom exhaust fan'];
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"];
 
 		expect(firstMechVent!.ductwork).toStrictEqual([]);
 	});
 
 
 
-	it('maps mechanical ventilation of type intermittent MEV input state to FHS input request', () => {
+	it("maps mechanical ventilation of type intermittent MEV input state to FHS input request", () => {
 		// Arrange
 		const mechVent: MechanicalVentilationData[] = [{
 			id: "bathroom exhaust fan",
@@ -191,7 +191,7 @@ describe('infiltration ventilation mapper', () => {
 		const fhsInputData = mapMechanicalVentilationData(resolveState(store.$state));
     
 		// Assert
-		const firstMechVent = fhsInputData['bathroom exhaust fan'];
+		const firstMechVent = fhsInputData["bathroom exhaust fan"];
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
 		expect(firstMechVent?.vent_type).toBe(VentType.Intermittent_MEV);
@@ -204,8 +204,8 @@ describe('infiltration ventilation mapper', () => {
 		expect(firstMechVent?.SFP).toBe(1.5); // NOTE - hardcoded to sensible default for now
 	});
 
-	it('maps vents to FHS input request', async () => {
-		const ventName = 'Acme'; 
+	it("maps vents to FHS input request", async () => {
+		const ventName = "Acme"; 
 
 		// Arrange
 		const ventData: VentData[] = [{
@@ -239,7 +239,7 @@ describe('infiltration ventilation mapper', () => {
 		expect(vent?.pitch).toBe(45);
 	});
 
-	it('maps ventilation data to extract needed fields', async () => {
+	it("maps ventilation data to extract needed fields", async () => {
 		// Arrange
 		const ventilationData: VentilationData = {
 			ventilationZoneHeight: 10,
@@ -269,7 +269,7 @@ describe('infiltration ventilation mapper', () => {
 		expect(fhsInputData).toEqual(expectedVentilationData);
 	});
 
-	it('maps air permeability data to extract needed fields', async () => {
+	it("maps air permeability data to extract needed fields", async () => {
 		// Arrange
 		const airPermeabilityData: AirPermeabilityData = {
 			testPressure: 50,
@@ -293,7 +293,7 @@ describe('infiltration ventilation mapper', () => {
 		expect(fhsInputData.test_result).toBe(5);
 	});
 
-	it('maps combustion appliances data to FHS input request', () => {
+	it("maps combustion appliances data to FHS input request", () => {
 		// Arrange
 		const combustionAppliances: CombustionApplianceData[] = [{
 			name: "Gas Boiler",

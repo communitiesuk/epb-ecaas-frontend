@@ -1,4 +1,4 @@
-import type { FormKitFrameworkContext } from '@formkit/core';
+import type { FormKitFrameworkContext } from "@formkit/core";
 
 export function showErrorState(context: FormKitFrameworkContext): boolean {
 	return context.state.invalid && Object.values(context.messages).some(message => message.visible);
