@@ -1,4 +1,3 @@
-import { BuildType } from "~/schema/api-schema.types";
 import { type SchemaShadingSegment, type SchemaInfiltrationVentilation, segment, externalConditions } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
@@ -21,7 +20,7 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 		General: {
 			build_type: generalDetails.typeOfDwelling,
 			storeys_in_building: generalDetails.storeysInDwelling,
-			...(generalDetails.typeOfDwelling === BuildType.flat ? { storey_of_dwelling: generalDetails.storeyOfFlat } : {}),
+			...(generalDetails.typeOfDwelling === "flat" ? { storey_of_dwelling: generalDetails.storeyOfFlat } : {}),
 		},
 		NumberOfBedrooms: generalDetails.numOfBedrooms,
 		PartGcompliance: true,

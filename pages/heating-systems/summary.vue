@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl } from "#imports";
-import { FuelType } from "~/schema/api-schema.types";
 import { co2PerKilowattHour } from "~/utils/units/emissions";
 import { kilowattHourPerKelvin } from "~/utils/units/thermalConductivity";
 import { celsius } from "~/utils/units/temperature";
@@ -18,10 +17,10 @@ const energySupplySummary: SummarySection = {
 	label: "Energy supply",
 	data: {
 		"Fuel type": fuelType,
-		...(fuelType?.includes(FuelType.electricity) && {
+		...(fuelType?.includes("electricity") && {
 			Exported: displayBoolean(exported),
 		}),
-		...(fuelType?.includes(FuelType.custom) && {
+		...(fuelType?.includes("custom") && {
 			"CO2 per kWh": `${co2PerKwh} ${co2PerKilowattHour.suffix}`,
 			"CO2 per kWh (including out of scope)": `${co2PerKwhIncludingOutOfScope} ${co2PerKilowattHour.suffix}`,
 			"kWh per kWh delivered": kwhPerKwhDelivered,

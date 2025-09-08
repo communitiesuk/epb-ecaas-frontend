@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
-import { WwhrsType } from "~/schema/aliases";
+import type { WwhrsType } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
 
 const title = "Waste water heat recovery system";
@@ -20,9 +20,9 @@ const hotWaterOutlets = [
 ].flat();
 
 const wwhrsTypeOptions: Record<WwhrsType, string> = {
-	[WwhrsType.WWHRS_InstantaneousSystemA]: "System A",
-	[WwhrsType.WWHRS_InstantaneousSystemB]: "System B",
-	[WwhrsType.WWHRS_InstantaneousSystemC]: "System C"
+	WWHRS_InstantaneousSystemA: "System A",
+	WWHRS_InstantaneousSystemB: "System B",
+	WWHRS_InstantaneousSystemC: "System C"
 };
 
 const saveForm = (fields: WwhrsData) => {

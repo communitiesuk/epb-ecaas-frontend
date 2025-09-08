@@ -1,9 +1,7 @@
-import { VentType } from "~/schema/aliases";
-
 export const checkMvhrHasDuctwork = () => {
 	const store = useEcaasStore();
 
-	let mvhrArray = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === VentType.MVHR);
+	let mvhrArray = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === "MVHR");
 
 	const ductworkArray = store.infiltrationAndVentilation.ductwork.data.map(x => x.mvhrUnit);
 	const uniqueDuctworkArray = [...new Set(ductworkArray)];

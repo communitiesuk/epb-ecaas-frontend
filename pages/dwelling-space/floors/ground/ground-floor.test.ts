@@ -2,8 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import GroundFloor from "./[floor].vue";
-import { MassDistributionClass, WindShieldLocation } from "~/schema/api-schema.types";
-import { FloorType } from "~/schema/aliases";
 import { centimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units/types";
 
@@ -23,16 +21,16 @@ describe("ground floor", () => {
 		uValue: 1,
 		thermalResistance: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		thicknessOfWalls: 0.8,
-		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
+		typeOfGroundFloor: "Slab_no_edge_insulation"
 	};
 
 	const groundFloorWithEdgeInsulation: GroundFloorData = {
 		...groundFloor,
-		typeOfGroundFloor: FloorType.Slab_edge_insulation,
+		typeOfGroundFloor: "Slab_edge_insulation",
 		edgeInsulationType: "horizontal",
 		edgeInsulationWidth: unitValue(0, centimetre),
 		edgeInsulationThermalResistance: 0
@@ -40,12 +38,12 @@ describe("ground floor", () => {
 
 	const groundFloorWithSuspendedFloor: GroundFloorData = {
 		...groundFloor,
-		typeOfGroundFloor: FloorType.Suspended_floor,
+		typeOfGroundFloor: "Suspended_floor",
 		heightOfFloorUpperSurface: 0,
 		underfloorSpaceThermalResistance: 0,
 		thermalTransmittanceOfWallsAboveGround: 0,
 		ventilationOpeningsArea: 0,
-		windShieldingFactor: WindShieldLocation.Exposed
+		windShieldingFactor: "Exposed"
 	};
 
 	// const groundFloorWithHeatedBasement: GroundFloorData = {

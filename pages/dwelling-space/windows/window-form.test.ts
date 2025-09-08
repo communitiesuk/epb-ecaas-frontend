@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Window from "./[window].vue";
-import { WindowTreatmentType } from "~/schema/api-schema.types";
 import { millimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units/types";
 
@@ -35,7 +34,7 @@ describe("window", () => {
 		sideFinLeftDepth: unitValue(60, millimetre),
 		sideFinLeftDistance: unitValue(60, millimetre),
 		curtainsOrBlinds: true,
-		treatmentType: WindowTreatmentType.blinds,
+		treatmentType: "blinds",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
 	};

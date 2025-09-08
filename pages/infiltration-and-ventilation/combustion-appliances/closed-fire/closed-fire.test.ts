@@ -2,7 +2,6 @@ import userEvent from "@testing-library/user-event";
 import ClosedFire from "./[combustion].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from "@testing-library/vue";
-import { CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -15,9 +14,9 @@ describe("closed fire", () => {
 
 	const closedFire: CombustionApplianceData = {
 		name: "Closed fire 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
-		typeOfFuel: CombustionFuelType.coal,
+		airSupplyToAppliance: "outside",
+		exhaustMethodFromAppliance: "into_mech_vent",
+		typeOfFuel: "coal",
 	};
 
 	afterEach(() => {
@@ -35,7 +34,7 @@ describe("closed fire", () => {
 		await user.tab();
 		await user.click(screen.getByRole("button"));
 
-		const { data } = store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.closed_fire];
+		const { data } = store.infiltrationAndVentilation.combustionAppliances["closed_fire"];
 
 		expect(data[0]).toEqual(closedFire);
 		expect(navigateToMock).toHaveBeenCalledWith("/infiltration-and-ventilation/combustion-appliances");
@@ -45,7 +44,7 @@ describe("closed fire", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.closed_fire]: {
+					closed_fire: {
 						data: [closedFire]
 					}
 				}

@@ -3,32 +3,29 @@ import { screen } from "@testing-library/vue";
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { DuctShape, DuctType, MVHRLocation } from "~/schema/api-schema.types";
 import { pascal } from "~/utils/units/pressure";
 import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
 import { centimetresSquare, metresSquare } from "~/utils/units/area";
 import { metre, millimetre } from "~/utils/units/length";
 import { degrees } from "~/utils/units/angle";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
-import { VentType } from "~/schema/aliases";
-
 
 vi.mock("uuid");
 
 const mechanicalVentilationData: MechanicalVentilationData = {
 	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
 	name: "Mechanical name 1",
-	typeOfMechanicalVentilationOptions: VentType.MVHR,
+	typeOfMechanicalVentilationOptions: "MVHR",
 	airFlowRate: 12,
-	mvhrLocation: MVHRLocation.inside,
+	mvhrLocation: "inside",
 	mvhrEfficiency: 0.2
 };
 
 const ductworkData: DuctworkData = {
 	name: "Ducktwork 1",
 	mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
-	ductworkCrossSectionalShape: DuctShape.circular,
-	ductType: DuctType.intake,
+	ductworkCrossSectionalShape: "circular",
+	ductType: "intake",
 	internalDiameterOfDuctwork: 300,
 	externalDiameterOfDuctwork: 1000,
 	insulationThickness: 100,

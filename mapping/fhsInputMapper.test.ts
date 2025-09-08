@@ -1,44 +1,6 @@
 import type { ValidateFunction } from "ajv/dist/2020";
 import { ajv } from "../schema/validator";
-import {
-	BatteryLocation,
-	BuildingElementAdjacentConditionedSpaceType,
-	BuildingElementAdjacentUnconditionedSpace_SimpleType,
-	BuildingElementGroundType,
-	BuildingElementOpaqueFHSType,
-	BuildingElementTransparentFHSType,
-	BuildType,
-	DuctShape,
-	DuctType,
-	EdgeInsulationHorizontalType,
-	FuelType,
-	HeatingControlType,
-	HeatSourceWetHeatPumpWithProductReferenceType,
-	HeatSourceWetServiceWaterRegularType,
-	InverterType,
-	MassDistributionClass,
-	MVHRLocation,
-	PhotovoltaicSystemType,
-	ShadingObjectType,
-	ShowerInstantElectricType,
-	ShowerMixerType,
-	SpaceHeatControlType,
-	SpaceHeatSystemInstantElectricHeaterFHSType,
-	SpaceHeatSystemWetDistributionFHSType,
-	StorageTankType,
-	SupplyAirFlowRateControlType,
-	SupplyAirTemperatureControlType,
-	TerrainClass,
-	ThermalBridgingLinearFHSType,
-	ThermalBridgingPointType,
-	VentilationShieldClass,
-	WaterPipeContentsType,
-	WaterPipeworkLocation,
-	WetEmitterRadiatorWet_emitter_type,
-	WindowTreatmentControl,
-	WindowTreatmentType
-} from "~/schema/api-schema.types";
-import { ColdWaterSourceType, energySupply, externalConditions, FloorType, noEvents, OnSiteGenerationVentilationStrategy, VentType, WindowShadingObjectType } from "~/schema/aliases";
+import { ColdWaterSourceType, energySupply, externalConditions, noEvents } from "~/schema/aliases";
 import {  mapFhsInputData } from "./fhsInputMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
@@ -62,7 +24,7 @@ const expectedHouseInput: FhsInputSchema = {
 	Control: {},
 	EnergySupply: {
 		["mains elec"]: {
-			fuel: FuelType.electricity,
+			fuel: "electricity",
 			is_export_capable: true,
 		}
 	},
@@ -78,21 +40,21 @@ const expectedHouseInput: FhsInputSchema = {
 			{
 				distance: 1,
 				height: 2,
-				type: ShadingObjectType.obstacle
+				type: "obstacle"
 			}
 		] },
 		{ number: 8, start360: 70, end360: 80, shading: [
 			{
 				distance: 1,
 				height: 2,
-				type: ShadingObjectType.obstacle
+				type: "obstacle"
 			}
 		] },
 		{ number: 9, start360: 80, end360: 90, shading: [
 			{
 				distance: 1,
 				height: 2,
-				type: ShadingObjectType.obstacle
+				type: "obstacle"
 			}
 		] },
 		{ number: 10, start360: 90, end360: 100 },
@@ -125,16 +87,16 @@ const expectedHouseInput: FhsInputSchema = {
 	]
 	),
 	General: {
-		build_type: BuildType.house,
+		build_type: "house",
 		storeys_in_building: 2,
 	},
-	HeatingControlType: HeatingControlType.SeparateTempControl,
+	HeatingControlType: "SeparateTempControl",
 	HotWaterDemand: {
 		Shower: {
 			"some-mixer-shower-name": {
-				ColdWaterSource: ColdWaterSourceType.mains_water,
+				ColdWaterSource: "mains_water",
 				flowrate: 14,
-				type: ShowerMixerType.MixerShower,
+				type: "MixerShower",
 				WWHRS: null
 			},
 		},
@@ -144,13 +106,13 @@ const expectedHouseInput: FhsInputSchema = {
 	},
 	HotWaterSource: {
 		"hw cylinder": {
-			ColdWaterSource: ColdWaterSourceType.mains_water,
+			ColdWaterSource: "mains_water",
 			HeatSource: {
 				["some-heat-pump-name"]: {
 					name: "some-heat-pump-name",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
-					type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
+					type: "HeatSourceWet",
 					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
 					Controlmin: "min",
@@ -159,7 +121,7 @@ const expectedHouseInput: FhsInputSchema = {
 			},
 			daily_losses: 34,
 			volume: 200,
-			type: StorageTankType.StorageTank,
+			type: "StorageTank",
 			heat_exchanger_surface_area: null,
 			init_temp: 20.0,
 			primary_pipework: null
@@ -177,9 +139,9 @@ const expectedHouseInput: FhsInputSchema = {
 			"kitchen exhaust fan": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 55,
-				sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
-				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
-				vent_type: VentType.Intermittent_MEV,
+				sup_air_flw_ctrl: "ODA",
+				sup_air_temp_ctrl: "CONST",
+				vent_type: "Intermittent MEV",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
 				SFP: 1.5,
@@ -202,8 +164,8 @@ const expectedHouseInput: FhsInputSchema = {
 		altitude: 100,
 		cross_vent_possible: false,
 		noise_nuisance: false,
-		shield_class: VentilationShieldClass.Shielded,
-		terrain_class: TerrainClass.Suburban,
+		shield_class: "Shielded",
+		terrain_class: "Suburban",
 		vent_opening_ratio_init: 1,
 		ventilation_zone_base_height: 3,
 		Control_VentAdjustMin: null,
@@ -232,7 +194,7 @@ const expectedHouseInput: FhsInputSchema = {
 	// },
 	SpaceHeatSystem: {
 		"some-wet-distribution": {
-			type: SpaceHeatSystemWetDistributionFHSType.WetDistribution,
+			type: "WetDistribution",
 			HeatSource: {
 				name: "some-heat-pump-name",
 				temp_flow_limit_upper: 65,
@@ -251,13 +213,13 @@ const expectedHouseInput: FhsInputSchema = {
 					c: 9,
 					frac_convective: 4,
 					n: 3,
-					wet_emitter_type: WetEmitterRadiatorWet_emitter_type.radiator
+					wet_emitter_type: "radiator"
 				},
 				{
 					c: 9,
 					frac_convective: 4,
 					n: 3,
-					wet_emitter_type: WetEmitterRadiatorWet_emitter_type.radiator
+					wet_emitter_type: "radiator"
 				}
 			],
 			temp_diff_emit_dsgn: 31,
@@ -275,24 +237,24 @@ const expectedHouseInput: FhsInputSchema = {
 	GroundFloorArea: 40,
 	HeatSourceWet: { "some-heat-pump-name": {
 		EnergySupply: defaultElectricityEnergySupplyName,
-		type: HeatSourceWetHeatPumpWithProductReferenceType.HeatSourceWetHeatPumpWithProductReference,
+		type: "HeatPump",
 		product_reference: "HEATPUMP-LARGE"
 	} },
 	Zone: {
 		[defaultZoneName]: {
 			BuildingElement: {
 				"ground-floor (floor)": {
-					type: BuildingElementGroundType.BuildingElementGround,
+					type: "BuildingElementGround",
 					area: 40,
 					total_area: 40,
 					u_value: 1,
 					thermal_resistance_floor_construction: 1,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: MassDistributionClass.I,
+					mass_distribution_class: "I",
 					perimeter: 100,
 					psi_wall_floor_junc: 1,
 					thickness_walls: 0.08,
-					floor_type: FloorType.Slab_no_edge_insulation,
+					floor_type: "Slab_no_edge_insulation",
 					pitch: 0
 				}
 			},
@@ -307,7 +269,7 @@ const expectedHouseInput: FhsInputSchema = {
 				}
 			},
 			SpaceCoolSystem: null,
-			SpaceHeatControl: SpaceHeatControlType.livingroom,
+			SpaceHeatControl: "livingroom",
 			SpaceHeatSystem: ["some-wet-distribution"],
 			ThermalBridging: {},
 			area: 100,
@@ -330,13 +292,13 @@ const expectedFlatInput: FhsInputSchema = {
 	Control: {},
 	EnergySupply: {
 		["mains elec"]: energySupply({
-			fuel: FuelType.electricity,
+			fuel: "electricity",
 			is_export_capable: false,
 			ElectricBattery: {
 				capacity: 12,
 				battery_age: 0,
 				charge_discharge_efficiency_round_trip: 1,
-				battery_location: BatteryLocation.inside,
+				battery_location: "inside",
 				grid_charging_possible: true,
 				maximum_charge_rate_one_way_trip: 90,
 				minimum_charge_rate_one_way_trip: 80,
@@ -379,33 +341,33 @@ const expectedFlatInput: FhsInputSchema = {
 			{
 				distance: 0.5,
 				height: 1,
-				type: ShadingObjectType.obstacle
+				type: "obstacle"
 			}
 		] },
 		{ number: 2, start360: 10, end360: 20, shading: [
 			{
 				distance: 2,
 				height: 5,
-				type: ShadingObjectType.overhang
+				type: "overhang"
 			},
 			{
 				distance: 0.5,
 				height: 1,
-				type: ShadingObjectType.obstacle
+				type: "obstacle"
 			},
 		] },
 		{ number: 3, start360: 20, end360: 30, shading: [
 			{
 				distance: 2,
 				height: 5,
-				type: ShadingObjectType.overhang
+				type: "overhang"
 			}
 		] },
 		{ number: 4, start360: 30, end360: 40, shading: [
 			{
 				distance: 2,
 				height: 5,
-				type: ShadingObjectType.overhang
+				type: "overhang"
 			}
 		] },
 		{ number: 5, start360: 40, end360: 50 },
@@ -443,30 +405,30 @@ const expectedFlatInput: FhsInputSchema = {
 	]
 	),
 	General: {
-		build_type: BuildType.flat,
+		build_type: "flat",
 		storeys_in_building: 6,
 		storey_of_dwelling: 3
 	},
-	HeatingControlType: HeatingControlType.SeparateTempControl,
+	HeatingControlType: "SeparateTempControl",
 	HotWaterDemand: {
 		Shower: {
 			"mixer shower 1 name": {
-				ColdWaterSource: ColdWaterSourceType.mains_water,
+				ColdWaterSource: "mains_water",
 				flowrate: 19,
-				type: ShowerMixerType.MixerShower,
+				type: "MixerShower",
 				WWHRS: null
 			},
 			"mixer shower 2 name": {
-				ColdWaterSource: ColdWaterSourceType.mains_water,
+				ColdWaterSource: "mains_water",
 				flowrate: 28,
-				type: ShowerMixerType.MixerShower,
+				type: "MixerShower",
 				WWHRS: null
 			},
 			"electric shower 1 name": {
-				ColdWaterSource: ColdWaterSourceType.mains_water,
+				ColdWaterSource: "mains_water",
 				rated_power: 20,
 				EnergySupply: "mains elec",
-				type: ShowerInstantElectricType.InstantElecShower
+				type: "InstantElecShower"
 			}
 		},
 		Bath: {
@@ -490,12 +452,12 @@ const expectedFlatInput: FhsInputSchema = {
 			{
 				length: 5,
 				internal_diameter_mm: 14,
-				location: WaterPipeworkLocation.internal
+				location: "internal"
 			},
 			{
 				length: 15,
 				internal_diameter_mm: 20,
-				location: WaterPipeworkLocation.external
+				location: "external"
 			}
 		],
 		Other: {
@@ -521,7 +483,7 @@ const expectedFlatInput: FhsInputSchema = {
 					name: "heat pump 1 name",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
-					type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
+					type: "HeatSourceWet",
 					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
 					Controlmin: "min",
@@ -530,7 +492,7 @@ const expectedFlatInput: FhsInputSchema = {
 			},
 			daily_losses: 10,
 			volume: 80,
-			type: StorageTankType.StorageTank,
+			type: "StorageTank",
 			primary_pipework: [{
 				internal_diameter_mm: 15,
 				external_diameter_mm: 22,
@@ -538,8 +500,8 @@ const expectedFlatInput: FhsInputSchema = {
 				insulation_thickness_mm: 13,
 				insulation_thermal_conductivity: 0.035,
 				surface_reflectivity: true,
-				pipe_contents: WaterPipeContentsType.water,
-				location: WaterPipeworkLocation.internal
+				pipe_contents: "water",
+				location: "internal"
 			},
 			{
 				internal_diameter_mm: 28,
@@ -548,8 +510,8 @@ const expectedFlatInput: FhsInputSchema = {
 				insulation_thickness_mm: 13,
 				insulation_thermal_conductivity: 0.040,
 				surface_reflectivity: false,
-				pipe_contents: WaterPipeContentsType.glycol25,
-				location: WaterPipeworkLocation.external
+				pipe_contents: "glycol25",
+				location: "external"
 			}],
 			heat_exchanger_surface_area: null,
 			init_temp: 20.0
@@ -567,16 +529,16 @@ const expectedFlatInput: FhsInputSchema = {
 			"mvhr vent 1 name": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 17,
-				sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
-				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
-				vent_type: VentType.MVHR,
+				sup_air_flw_ctrl: "ODA",
+				sup_air_temp_ctrl: "CONST",
+				vent_type: "MVHR",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
 				mvhr_eff: 1,
-				mvhr_location: MVHRLocation.inside,
+				mvhr_location: "inside",
 				ductwork: [{
-					cross_section_shape: DuctShape.circular,
-					duct_type: DuctType.supply,
+					cross_section_shape: "circular",
+					duct_type: "supply",
 					internal_diameter_mm: 50,
 					external_diameter_mm: 55,
 					insulation_thermal_conductivity: 1,
@@ -591,13 +553,13 @@ const expectedFlatInput: FhsInputSchema = {
 			"mvhr vent 2 name": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 3,
-				sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
-				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
-				vent_type: VentType.MVHR,
+				sup_air_flw_ctrl: "ODA",
+				sup_air_temp_ctrl: "CONST",
+				vent_type: "MVHR",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
 				mvhr_eff: 0,
-				mvhr_location: MVHRLocation.outside,
+				mvhr_location: "outside",
 				ductwork: [],
 				Control: "mvhr",
 				SFP: 3
@@ -605,9 +567,9 @@ const expectedFlatInput: FhsInputSchema = {
 			"centralised MEV name": {
 				EnergySupply: "mains elec",
 				design_outdoor_air_flow_rate: 8,
-				sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
-				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
-				vent_type: VentType.Centralised_continuous_MEV,
+				sup_air_flw_ctrl: "ODA",
+				sup_air_temp_ctrl: "CONST",
+				vent_type: "Centralised continuous MEV",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
 				Control: "mev",
@@ -630,8 +592,8 @@ const expectedFlatInput: FhsInputSchema = {
 		altitude: 30,
 		cross_vent_possible: true,
 		noise_nuisance: true,
-		shield_class: VentilationShieldClass.Normal,
-		terrain_class: TerrainClass.OpenField,
+		shield_class: "Normal",
+		terrain_class: "OpenField",
 		vent_opening_ratio_init: 1,
 		ventilation_zone_base_height: 1,
 		Control_VentAdjustMin: null,
@@ -645,7 +607,7 @@ const expectedFlatInput: FhsInputSchema = {
 		"pv system 1": {
 			EnergySupply: "mains elec",
 			peak_power: 2,
-			ventilation_strategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
+			ventilation_strategy: "moderately_ventilated",
 			pitch: 15,
 			orientation360: 90,
 			base_height: 1,
@@ -654,8 +616,8 @@ const expectedFlatInput: FhsInputSchema = {
 			inverter_peak_power_ac: 3,
 			inverter_peak_power_dc: 3.8,
 			inverter_is_inside: true,
-			inverter_type: InverterType.optimised_inverter,
-			type: PhotovoltaicSystemType.PhotovoltaicSystem,
+			inverter_type: "optimised_inverter",
+			type: "PhotovoltaicSystem",
 			shading: []
 		}
 	},
@@ -671,7 +633,7 @@ const expectedFlatInput: FhsInputSchema = {
 		"instant elec heater 1": {
 			rated_power: 10,
 			frac_convective: 1,
-			type: SpaceHeatSystemInstantElectricHeaterFHSType.InstantElecHeater,
+			type: "InstantElecHeater",
 			EnergySupply: "mains elec",
 			Control: "heating",
 			advanced_start: null,
@@ -680,7 +642,7 @@ const expectedFlatInput: FhsInputSchema = {
 		"instant elec heater 2": {
 			rated_power: 13,
 			frac_convective: 0.8,
-			type: SpaceHeatSystemInstantElectricHeaterFHSType.InstantElecHeater,
+			type: "InstantElecHeater",
 			EnergySupply: "mains elec",
 			Control: "heating",
 			advanced_start: null,
@@ -691,7 +653,7 @@ const expectedFlatInput: FhsInputSchema = {
 	HeatSourceWet: {
 		"heat pump 1 name": {
 			EnergySupply: defaultElectricityEnergySupplyName,
-			type: HeatSourceWetHeatPumpWithProductReferenceType.HeatSourceWetHeatPumpWithProductReference,
+			type: "HeatPump",
 			product_reference: "HEATPUMP-SMALL"
 		},
 	},
@@ -699,55 +661,55 @@ const expectedFlatInput: FhsInputSchema = {
 		[defaultZoneName]: {
 			BuildingElement: {
 				"ground floor 1 (floor)": {
-					type: BuildingElementGroundType.BuildingElementGround,
+					type: "BuildingElementGround",
 					area: 12,
 					total_area: 12,
 					u_value: 5,
 					thermal_resistance_floor_construction: 2,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: MassDistributionClass.E,
+					mass_distribution_class: "E",
 					perimeter: 40,
 					edge_insulation: [{
 						edge_thermal_resistance: 2.4,
-						type: EdgeInsulationHorizontalType.horizontal,
+						type: "horizontal",
 						width: 0.32
 					}],
 					psi_wall_floor_junc: 0.4,
 					thickness_walls: 0.05,
-					floor_type: FloorType.Slab_edge_insulation,
+					floor_type: "Slab_edge_insulation",
 					pitch: 0,
 				},
 				"ground floor 2 (floor)": {
-					type: BuildingElementGroundType.BuildingElementGround,
+					type: "BuildingElementGround",
 					area: 26,
 					total_area: 26,
 					depth_basement_floor: 2,
 					u_value: 5,
 					thermal_resistance_floor_construction: 2,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: MassDistributionClass.D,
+					mass_distribution_class: "D",
 					perimeter: 21,
 					thermal_resist_walls_base: 3,
 					psi_wall_floor_junc: 0.8,
 					thickness_walls: 0.04,
-					floor_type: FloorType.Heated_basement,
+					floor_type: "Heated_basement",
 					pitch: 0,
 				},
 				"internal floor 1 (floor)": {
-					type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
+					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					area: 6,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: MassDistributionClass.IE,
+					mass_distribution_class: "IE",
 					thermal_resistance_unconditioned_space: 1,
 					pitch: 180,
 					u_value: 0.01
 				},
 				"internal floor 2 (floor)": {
-					type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
+					type: "BuildingElementAdjacentConditionedSpace",
 					area: 4, 
 					u_value: 0.01,
 					areal_heat_capacity: 110000,
-					mass_distribution_class: MassDistributionClass.M,
+					mass_distribution_class: "M",
 					pitch: 180,
 				},
 				"exposed floor 1 (floor)": {
@@ -757,29 +719,29 @@ const expectedFlatInput: FhsInputSchema = {
 					area: 10,
 					solar_absorption_coeff: 0.4,
 					areal_heat_capacity: 110000,
-					mass_distribution_class: MassDistributionClass.D,
+					mass_distribution_class: "D",
 					pitch: 180,
 					orientation360: 0,
 					u_value: 0.1,
-					type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
+					type: "BuildingElementOpaque",
 					is_external_door: false
 				},
 				"party wall 1 (wall)": {
 					area: 15,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: MassDistributionClass.E,
+					mass_distribution_class: "E",
 					pitch: 90,
-					type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
+					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 1
 				},
 				"external wall 1 (wall)": {
-					type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
+					type: "BuildingElementOpaque",
 					area: 20,
 					areal_heat_capacity: 75000,
 					base_height: 1,
 					height: 2.6,
 					is_external_door: false,
-					mass_distribution_class: MassDistributionClass.D,
+					mass_distribution_class: "D",
 					orientation360: 30,
 					solar_absorption_coeff: 0.2,
 					u_value: 1,
@@ -789,9 +751,9 @@ const expectedFlatInput: FhsInputSchema = {
 				"internal wall 1 (wall)": {
 					area: 15,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: MassDistributionClass.I,
+					mass_distribution_class: "I",
 					pitch: 90,
-					type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
+					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 0.01,
 				},
 				"front door (door)": {
@@ -800,11 +762,11 @@ const expectedFlatInput: FhsInputSchema = {
 					base_height: 1,
 					height: 2.6,
 					is_external_door: true,
-					mass_distribution_class: MassDistributionClass.I,
+					mass_distribution_class: "I",
 					orientation360: 30,
 					pitch: 90,
 					solar_absorption_coeff: 0.2,
-					type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
+					type: "BuildingElementOpaque",
 					u_value: 1,
 					width: 1.2,
 				},
@@ -819,7 +781,7 @@ const expectedFlatInput: FhsInputSchema = {
 					orientation360: 20,
 					pitch: 90,
 					shading: [],
-					type: BuildingElementTransparentFHSType.BuildingElementTransparent,
+					type: "BuildingElementTransparent",
 					u_value: 0.8,
 					width: 1,
 					window_part_list: []
@@ -827,25 +789,25 @@ const expectedFlatInput: FhsInputSchema = {
 				"wall to garage (wall)": {
 					area: 20,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: MassDistributionClass.D,
+					mass_distribution_class: "D",
 					pitch: 90,
 					thermal_resistance_unconditioned_space: 2.5,
-					type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
+					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					u_value: 1,
 				},
 				"ceiling to heated space (ceiling)": {
-					type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
+					type: "BuildingElementAdjacentConditionedSpace",
 					area: 16,
 					areal_heat_capacity: 75000,
-					mass_distribution_class: MassDistributionClass.I,
+					mass_distribution_class: "I",
 					pitch: 0,
 					u_value: 0.01,
 				},	
 				"ceiling to unheated space (ceiling)": {
-					type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
+					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					area: 20,
 					areal_heat_capacity: 60000,
-					mass_distribution_class: MassDistributionClass.IE,
+					mass_distribution_class: "IE",
 					pitch: 45,
 					thermal_resistance_unconditioned_space: 3.4,
 					u_value: 2.2
@@ -860,30 +822,30 @@ const expectedFlatInput: FhsInputSchema = {
 					solar_absorption_coeff: 0.63,
 					u_value: 0.1,
 					areal_heat_capacity: 19300,
-					mass_distribution_class: MassDistributionClass.I,
-					type: BuildingElementOpaqueFHSType.BuildingElementOpaque,
+					mass_distribution_class: "I",
+					type: "BuildingElementOpaque",
 					is_external_door: false,
 					is_unheated_pitched_roof: false
 				},
 				"bathroom door (door)": {
 					area: 1.4,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: MassDistributionClass.IE,
+					mass_distribution_class: "IE",
 					pitch: 90,
-					type: BuildingElementAdjacentConditionedSpaceType.BuildingElementAdjacentConditionedSpace,
+					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 0.01,
 				},
 				"door to garage (door)": {
 					area: 1.4,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: MassDistributionClass.IE,
+					mass_distribution_class: "IE",
 					pitch: 90,
 					thermal_resistance_unconditioned_space: 2.5,
-					type: BuildingElementAdjacentUnconditionedSpace_SimpleType.BuildingElementAdjacentUnconditionedSpace_Simple,
+					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					u_value: 1,
 				},
 				"bedroom window (window)": {
-					type: BuildingElementTransparentFHSType.BuildingElementTransparent,
+					type: "BuildingElementTransparent",
 					pitch: 90,
 					orientation360: 90,
 					height: 2,
@@ -900,23 +862,23 @@ const expectedFlatInput: FhsInputSchema = {
 					}],
 					shading: [
 						{
-							type: WindowShadingObjectType.overhang,
+							type: "overhang",
 							depth: 0.5,
 							distance: 0.5
 						},
 						{
-							type: WindowShadingObjectType.sidefinleft,
+							type: "sidefinleft",
 							depth: 0.25,
 							distance: 1
 						},
 						{
-							type: WindowShadingObjectType.sidefinright,
+							type: "sidefinright",
 							depth: 0.25,
 							distance: 1
 						}]
 				}
 			},
-			SpaceHeatControl: SpaceHeatControlType.livingroom,
+			SpaceHeatControl: "livingroom",
 			SpaceCoolSystem: null,
 			SpaceHeatSystem: ["instant elec heater 1", "instant elec heater 2"],
 			ThermalBridging: {
@@ -924,19 +886,19 @@ const expectedFlatInput: FhsInputSchema = {
 					junction_type: "E3: SILL",
 					length: 1.2,
 					linear_thermal_transmittance: 0.03,
-					type: ThermalBridgingLinearFHSType.ThermalBridgeLinear
+					type: "ThermalBridgeLinear"
 				},
 				"point thermal bridge 1 (bridge)": {
 					heat_transfer_coeff: 0.045,
-					type: ThermalBridgingPointType.ThermalBridgePoint
+					type: "ThermalBridgePoint"
 				},
 				"point thermal bridge 2 (bridge)": {
 					heat_transfer_coeff: 0.035,
-					type: ThermalBridgingPointType.ThermalBridgePoint
+					type: "ThermalBridgePoint"
 				},
 				"point thermal bridge 3 (bridge)": {
 					heat_transfer_coeff: 0.067,
-					type: ThermalBridgingPointType.ThermalBridgePoint
+					type: "ThermalBridgePoint"
 				},
 			},
 			Lighting: {
@@ -985,7 +947,7 @@ describe("FHS input mapper", () => {
 			generalSpecifications: {
 				...baseForm,
 				data: {
-					typeOfDwelling: BuildType.house,
+					typeOfDwelling: "house",
 					storeysInDwelling: 2,
 					numOfBedrooms: 7,
 					coolingRequired: false,
@@ -998,7 +960,7 @@ describe("FHS input mapper", () => {
 						name: "Tree",
 						startAngle: 60,
 						endAngle: 90,
-						objectType: ShadingObjectType.obstacle,
+						objectType: "obstacle",
 						height: 2,
 						distance: 1
 					}
@@ -1008,8 +970,8 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					altitude: 100,
-					typeOfExposure: VentilationShieldClass.Shielded,
-					terrainType: TerrainClass.Suburban,
+					typeOfExposure: "Shielded",
+					terrainType: "Suburban",
 					noiseNuisance: false,
 				}
 			},
@@ -1021,7 +983,7 @@ describe("FHS input mapper", () => {
 				data: [{
 					id: "kitchen exhaust fan",
 					name: "kitchen exhaust fan",
-					typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
+					typeOfMechanicalVentilationOptions: "Intermittent MEV",
 					airFlowRate: 55,
 				}]
 			},
@@ -1110,11 +1072,11 @@ describe("FHS input mapper", () => {
 						uValue: 1,
 						thermalResistance: 1,
 						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.I,
+						massDistributionClass: "I",
 						perimeter: 100,
 						psiOfWallJunction: 1,
 						thicknessOfWalls: 80,
-						typeOfGroundFloor: FloorType.Slab_no_edge_insulation,
+						typeOfGroundFloor: "Slab_no_edge_insulation",
 					}]
 				},
 				dwellingSpaceInternalFloor: {
@@ -1198,7 +1160,7 @@ describe("FHS input mapper", () => {
 			energySupply: {
 				...baseForm,
 				data: {
-					fuelType: [FuelType.electricity],
+					fuelType: ["electricity"],
 					exported: true,
 				}
 			},
@@ -1353,7 +1315,7 @@ describe("FHS input mapper", () => {
 			generalSpecifications: {
 				...baseForm,
 				data: {
-					typeOfDwelling: BuildType.flat,
+					typeOfDwelling: "flat",
 					storeysInDwelling: 6,
 					storeyOfFlat: 3,
 					numOfBedrooms: 2,
@@ -1367,7 +1329,7 @@ describe("FHS input mapper", () => {
 						name: "tree house",
 						startAngle: 10,
 						endAngle: 40,
-						objectType: ShadingObjectType.overhang,
+						objectType: "overhang",
 						height: 5,
 						distance: 2
 					}
@@ -1377,7 +1339,7 @@ describe("FHS input mapper", () => {
 						name: "obstacle",
 						startAngle: 1,
 						endAngle: 12,
-						objectType: ShadingObjectType.obstacle,
+						objectType: "obstacle",
 						height: 1,
 						distance: 0.5
 					}
@@ -1387,8 +1349,8 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					altitude: 30,
-					typeOfExposure: VentilationShieldClass.Normal,
-					terrainType: TerrainClass.OpenField,
+					typeOfExposure: "Normal",
+					terrainType: "OpenField",
 					noiseNuisance: true,
 				}
 			},
@@ -1400,23 +1362,23 @@ describe("FHS input mapper", () => {
 				data: [{
 					id: "mvhr vent 1 id",
 					name: "mvhr vent 1 name",
-					typeOfMechanicalVentilationOptions: VentType.MVHR,
+					typeOfMechanicalVentilationOptions: "MVHR",
 					airFlowRate: 17,
-					mvhrLocation: MVHRLocation.inside,
+					mvhrLocation: "inside",
 					mvhrEfficiency: 1
 				},
 				{
 					id: "mvhr vent 2 id",
 					name: "mvhr vent 2 name",
-					typeOfMechanicalVentilationOptions: VentType.MVHR,
+					typeOfMechanicalVentilationOptions: "MVHR",
 					airFlowRate: 3,
-					mvhrLocation: MVHRLocation.outside,
+					mvhrLocation: "outside",
 					mvhrEfficiency: 0
 				},
 				{
 					id: "centralised MEV id",
 					name: "centralised MEV name",
-					typeOfMechanicalVentilationOptions: VentType.Centralised_continuous_MEV,
+					typeOfMechanicalVentilationOptions: "Centralised continuous MEV",
 					airFlowRate: 8,
 				}]
 			},
@@ -1425,8 +1387,8 @@ describe("FHS input mapper", () => {
 				data: [{
 					name: "ductwork 1",
 					mvhrUnit: "mvhr vent 1 name",
-					ductType: DuctType.supply,
-					ductworkCrossSectionalShape: DuctShape.circular,
+					ductType: "supply",
+					ductworkCrossSectionalShape: "circular",
 					internalDiameterOfDuctwork: 50,
 					externalDiameterOfDuctwork: 55,
 					insulationThickness: 5,
@@ -1514,11 +1476,11 @@ describe("FHS input mapper", () => {
 						uValue: 5,
 						thermalResistance: 2,
 						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.E,
+						massDistributionClass: "E",
 						perimeter: 40,
 						psiOfWallJunction: 0.4,
 						thicknessOfWalls: 50,
-						typeOfGroundFloor: FloorType.Slab_edge_insulation,
+						typeOfGroundFloor: "Slab_edge_insulation",
 						edgeInsulationType: "horizontal",
 						edgeInsulationWidth: unitValue(32, centimetre),
 						edgeInsulationThermalResistance: 2.4
@@ -1530,10 +1492,10 @@ describe("FHS input mapper", () => {
 						uValue: 5,
 						thermalResistance: 2,
 						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.D,
+						massDistributionClass: "D",
 						perimeter: 21,
 						psiOfWallJunction: 0.8,
-						typeOfGroundFloor: FloorType.Heated_basement,
+						typeOfGroundFloor: "Heated_basement",
 						thicknessOfWalls: 40,
 						depthOfBasementFloorBelowGround: 2,
 						thermalResistanceOfBasementWalls: 3,
@@ -1546,7 +1508,7 @@ describe("FHS input mapper", () => {
 						typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
 						surfaceAreaOfElement: 6,
 						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.IE,
+						massDistributionClass: "IE",
 						thermalResistanceOfAdjacentUnheatedSpace: 1,
 					}, 
 					{
@@ -1554,7 +1516,7 @@ describe("FHS input mapper", () => {
 						typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 						surfaceAreaOfElement: 4,
 						kappaValue: 110000,
-						massDistributionClass: MassDistributionClass.M,
+						massDistributionClass: "M",
 					}]
 				},
 				dwellingSpaceExposedFloor: {
@@ -1567,7 +1529,7 @@ describe("FHS input mapper", () => {
 						surfaceArea: 10,
 						solarAbsorption: 0.4,
 						kappaValue: 110000,
-						massDistributionClass: MassDistributionClass.D,
+						massDistributionClass: "D",
 						pitch: 180,
 						orientation: 0,
 						uValue: 0.1,
@@ -1584,7 +1546,7 @@ describe("FHS input mapper", () => {
 						surfaceArea: 15,
 						uValue: 1,
 						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.E
+						massDistributionClass: "E"
 					}]
 				},
 				dwellingSpaceExternalWall: {
@@ -1601,7 +1563,7 @@ describe("FHS input mapper", () => {
 						solarAbsorption: 0.2,
 						uValue: 1, 
 						kappaValue: 75000,
-						massDistributionClass: MassDistributionClass.D
+						massDistributionClass: "D"
 					}]
 				},
 				dwellingSpaceInternalWall: {
@@ -1612,7 +1574,7 @@ describe("FHS input mapper", () => {
 						pitch: 90,
 						surfaceAreaOfElement: 15,
 						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.I,
+						massDistributionClass: "I",
 					}],
 				},
 				dwellingSpaceWallToUnheatedSpace: {
@@ -1624,7 +1586,7 @@ describe("FHS input mapper", () => {
 						surfaceAreaOfElement: 20,
 						uValue: 1, 
 						arealHeatCapacity: 50000,
-						massDistributionClass: MassDistributionClass.D,
+						massDistributionClass: "D",
 						thermalResistanceOfAdjacentUnheatedSpace: 2.5,
 					}]
 				}
@@ -1638,7 +1600,7 @@ describe("FHS input mapper", () => {
 							type: AdjacentSpaceType.heatedSpace,
 							surfaceArea: 16,
 							kappaValue: 75000,
-							massDistributionClass: MassDistributionClass.I,
+							massDistributionClass: "I",
 							pitchOption: "0"
 						}
 					},
@@ -1648,7 +1610,7 @@ describe("FHS input mapper", () => {
 							type: AdjacentSpaceType.unheatedSpace,
 							surfaceArea: 20,
 							kappaValue: 60000,
-							massDistributionClass: MassDistributionClass.IE,
+							massDistributionClass: "IE",
 							pitch: 45,
 							pitchOption: "custom",
 							thermalResistanceOfAdjacentUnheatedSpace: 3.4,
@@ -1672,7 +1634,7 @@ describe("FHS input mapper", () => {
 							solarAbsorptionCoefficient: 0.63,
 							uValue: 0.1,
 							kappaValue: 19300,
-							massDistributionClass: MassDistributionClass.I
+							massDistributionClass: "I"
 						}
 					}]
 				}
@@ -1692,7 +1654,7 @@ describe("FHS input mapper", () => {
 						solarAbsorption: 0.2,
 						uValue: 1, 
 						kappaValue: 75000,
-						massDistributionClass: MassDistributionClass.I
+						massDistributionClass: "I"
 					}]
 				},
 				dwellingSpaceExternalGlazedDoor: {
@@ -1720,7 +1682,7 @@ describe("FHS input mapper", () => {
 						name: "bathroom door",
 						surfaceArea: 1.4,
 						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.IE,
+						massDistributionClass: "IE",
 						pitchOption: "90",
 						pitch: 90,
 					},
@@ -1729,7 +1691,7 @@ describe("FHS input mapper", () => {
 						name: "door to garage",
 						surfaceArea: 1.4,
 						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.IE,
+						massDistributionClass: "IE",
 						pitchOption: "90",
 						pitch: 90,
 						uValue: 1,
@@ -1758,14 +1720,14 @@ describe("FHS input mapper", () => {
 					sideFinLeftDepth: 0.25,
 					sideFinLeftDistance: 1,
 					curtainsOrBlinds: true,
-					treatmentType: WindowTreatmentType.curtains,
+					treatmentType: "curtains",
 					thermalResistivityIncrease: 1,
 					solarTransmittanceReduction: 0.1,
 					midHeightOpenablePart1: 1,
 					openingToFrameRatio: 0.8,
 					maximumOpenableArea: 1,
 					heightOpenableArea: 1,
-					curtainsControlObject: WindowTreatmentControl.auto_motorised,
+					curtainsControlObject: "auto_motorised",
 				}]
 			},
 			dwellingSpaceThermalBridging: {
@@ -1832,7 +1794,7 @@ describe("FHS input mapper", () => {
 			energySupply: {
 				...baseForm,
 				data: {
-					fuelType: [FuelType.electricity],
+					fuelType: ["electricity"],
 					exported: false,
 				}
 			},
@@ -2003,9 +1965,9 @@ describe("FHS input mapper", () => {
 							insulationThickness: 13,
 							thermalConductivity: 0.035,
 							surfaceReflectivity: true,
-							pipeContents: WaterPipeContentsType.water,
+							pipeContents: "water",
 							hotWaterCylinder: "hw cylinder 1 id",
-							location: WaterPipeworkLocation.internal
+							location: "internal"
 						}
 					},
 					{
@@ -2017,9 +1979,9 @@ describe("FHS input mapper", () => {
 							insulationThickness: 13,
 							thermalConductivity: 0.040,
 							surfaceReflectivity: false,
-							pipeContents: WaterPipeContentsType.glycol25,
+							pipeContents: "glycol25",
 							hotWaterCylinder: "hw cylinder 1 id",
-							location: WaterPipeworkLocation.external
+							location: "external"
 						}
 					}]
 				},
@@ -2029,7 +1991,7 @@ describe("FHS input mapper", () => {
 						data: {
 							name: "secondary pipework",
 							length: 5,
-							location: WaterPipeworkLocation.internal,
+							location: "internal",
 							internalDiameter: 14
 						}
 					},
@@ -2037,7 +1999,7 @@ describe("FHS input mapper", () => {
 						data: {
 							name: "external secondary pipework",
 							length: 15,
-							location: WaterPipeworkLocation.external,
+							location: "external",
 							internalDiameter: 20
 						}
 					}]
@@ -2055,7 +2017,7 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "pv system 1",
 						peakPower: 2,
-						ventilationStrategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
+						ventilationStrategy: "moderately_ventilated",
 						pitch: 15,
 						orientation: 90,
 						elevationalHeight: 1,
@@ -2064,7 +2026,7 @@ describe("FHS input mapper", () => {
 						inverterPeakPowerAC: 3,
 						inverterPeakPowerDC: 3.8,
 						inverterIsInside: true,
-						inverterType: InverterType.optimised_inverter
+						inverterType: "optimised_inverter"
 					}
 				}]
 			},
@@ -2077,7 +2039,7 @@ describe("FHS input mapper", () => {
 								capacity: 12,
 								batteryAge: 0,
 								chargeEfficiency: 1,
-								location: BatteryLocation.inside,
+								location: "inside",
 								gridChargingPossible: true,
 								maximumChargeRate: 90,
 								minimumChargeRate: 80,

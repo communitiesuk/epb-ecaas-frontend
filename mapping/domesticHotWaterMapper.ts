@@ -1,5 +1,5 @@
-import { ColdWaterSourceType, type SchemaBathDetails, type SchemaHotWaterSourceDetails, type SchemaOtherWaterUseDetails, type SchemaShower } from "~/schema/aliases";
-import { HeatSourceWetServiceWaterRegularType, ShowerInstantElectricType, ShowerMixerType, StorageTankType, type SchemaStorageTank, type SchemaWaterPipework, type SchemaWaterPipeworkSimple } from "~/schema/api-schema.types";
+import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower } from "~/schema/aliases";
+import type { SchemaStorageTank, SchemaWaterPipework, SchemaWaterPipeworkSimple } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { asLitres } from "../utils/units/volume";
@@ -28,8 +28,8 @@ function mapShowersData(state: ResolvedState) {
 	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.mixedShower.map((x):[string, SchemaShower] => {
 		const key = x.data.name;
 		const val: SchemaShower = {
-			type: ShowerMixerType.MixerShower,
-			ColdWaterSource: ColdWaterSourceType.mains_water,
+			type: "MixerShower",
+			ColdWaterSource: "mains_water",
 			flowrate: x.data.flowRate,
 		};
 
@@ -39,8 +39,8 @@ function mapShowersData(state: ResolvedState) {
 	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.electricShower.map((x):[string, SchemaShower] => {
 		const key = x.data.name;
 		const val: SchemaShower = {
-			type: ShowerInstantElectricType.InstantElecShower,
-			ColdWaterSource: ColdWaterSourceType.mains_water,
+			type: "InstantElecShower",
+			ColdWaterSource: "mains_water",
 			rated_power: x.data.ratedPower,
 			EnergySupply: defaultElectricityEnergySupplyName
 		};
@@ -55,7 +55,7 @@ function mapBathsData(state: ResolvedState) {
 	const bathEntries = state.domesticHotWater.hotWaterOutlets.bath.map((x):[string, SchemaBathDetails] => {
 		const key = x.data.name;
 		const val: SchemaBathDetails = {
-			ColdWaterSource: ColdWaterSourceType.mains_water,
+			ColdWaterSource: "mains_water",
 			flowrate: x.data.flowRate,
 			size: x.data.size
 		};
@@ -70,7 +70,7 @@ function mapOthersData(state: ResolvedState) {
 	const otherEntries = state.domesticHotWater.hotWaterOutlets.otherOutlets.map((x):[string, SchemaOtherWaterUseDetails] => {
 		const key = x.data.name;
 		const val: SchemaOtherWaterUseDetails = {
-			ColdWaterSource: ColdWaterSourceType.mains_water,
+			ColdWaterSource: "mains_water",
 			flowrate: x.data.flowRate,
 		};
 
@@ -116,9 +116,9 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 		} 
 
 		const val: SchemaStorageTank = {
-			ColdWaterSource: ColdWaterSourceType.mains_water,
+			ColdWaterSource: "mains_water",
 			daily_losses: x.dailyEnergyLoss,
-			type: StorageTankType.StorageTank,
+			type: "StorageTank",
 			volume: storageCylinderVolumeInLitres,
 			HeatSource: {
 				// Adding these values as default until heat pump is set up to come from PCDB
@@ -126,7 +126,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 					name: heatPumpName,
 					EnergySupply: defaultElectricityEnergySupplyName, 
 					heater_position: 0.1,
-					type: HeatSourceWetServiceWaterRegularType.HeatSourceWet,
+					type: "HeatSourceWet",
 					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
 					Controlmax: "heating", // TODO this may need to refer to a real control

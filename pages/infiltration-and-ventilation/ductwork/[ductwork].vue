@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { VentType } from "~/schema/aliases";
-import { DuctShape } from "~/schema/api-schema.types";
-import type { DuctType } from "~/schema/api-schema.types";
+import type { SchemaDuctShape, SchemaDuctType } from "~/schema/api-schema.types";
 
 const title = "MVHR ductwork";
 const store = useEcaasStore();
@@ -15,11 +13,11 @@ const ductwork = useItemToEdit(
 const model: Ref<DuctworkData> = ref(ductwork!);
 store.infiltrationAndVentilation.ductwork.complete = false;
 
-const ductworkCrossSectionalShapeOptions: Record<DuctShape, SnakeToSentenceCase<DuctShape>> = {
+const ductworkCrossSectionalShapeOptions: Record<SchemaDuctShape, SnakeToSentenceCase<SchemaDuctShape>> = {
 	circular: "Circular",
 	rectangular: "Rectangular",
 };
-const ductTypeOptions: Record<DuctType, SnakeToSentenceCase<DuctType>> = {
+const ductTypeOptions: Record<SchemaDuctType, SnakeToSentenceCase<SchemaDuctType>> = {
 	supply: "Supply",
 	extract: "Extract",
 	intake: "Intake",
@@ -44,7 +42,7 @@ const saveForm = (fields: DuctworkData) => {
 		let ductworkItem: DuctworkData;
 
 		switch (fields.ductworkCrossSectionalShape) {
-			case DuctShape.circular:
+			case "circular":
 				ductworkItem = {
 					...commonFields,
 					ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
@@ -52,7 +50,7 @@ const saveForm = (fields: DuctworkData) => {
 					externalDiameterOfDuctwork: fields.externalDiameterOfDuctwork,
 				};
 				break;
-			case DuctShape.rectangular:
+			case "rectangular":
 				ductworkItem = {
 					...commonFields,
 					ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
@@ -104,7 +102,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 		<FormKit
 			id="mvhrUnit" type="govRadios" :options="new
-				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === VentType.MVHR).map((x)=> [x.id, x.name]))"
+				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.typeOfMechanicalVentilationOptions === 'MVHR').map((x)=> [x.id, x.name]))"
 			label="MVHR unit" 
 			name="mvhrUnit" 
 			help="Select the MVHR unit that this ductwork is attached to"
@@ -154,7 +152,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="ductworkCrossSectionalShape"
 			validation="required"
 		/>
-		<template v-if="model.ductworkCrossSectionalShape === DuctShape.circular">
+		<template v-if="model.ductworkCrossSectionalShape === 'circular'">
 			<FormKit
 				id="internalDiameterOfDuctwork"
 				type="govInputWithSuffix"
@@ -212,7 +210,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</template>
 
 		<FormKit
-			v-if="model.ductworkCrossSectionalShape === DuctShape.rectangular"
+			v-if="model.ductworkCrossSectionalShape === 'rectangular'"
 			id="ductPerimeter"
 			type="govInputWithSuffix"
 			suffix-text="mm"

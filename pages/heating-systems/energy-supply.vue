@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { FuelType } from "~/schema/api-schema.types";
 
 const title = "Energy supply";
 const store = useEcaasStore();
@@ -8,9 +7,10 @@ const model = ref({
 	...store.heatingSystems.energySupply.data
 });
 
-const fuelTypeOptions: Record<FuelType.electricity, Capitalize<FuelType.electricity>> = {
-	[FuelType.electricity]: "Electricity"
-};
+const fuelTypeOptions = {
+	electricity: "Electricity"
+} as const satisfies Record<"electricity", Capitalize<"electricity">>;
+fuelTypeOptions;
 
 const saveForm = (fields: EnergySupplyData) => {
 	store.$patch({
@@ -70,7 +70,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="fuelTypeOptions"
 			validation="required"
 		/>
-		<template v-if="model.fuelType?.includes(FuelType.custom)">
+		<template v-if="model.fuelType?.includes('custom')">
 			<ClientOnly>
 				<FormKit
 					id="co2PerKwh"
@@ -103,7 +103,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		
 		<ClientOnly>
 			<FormKit
-				v-if="model.fuelType?.includes(FuelType.electricity)"
+				v-if="model.fuelType?.includes('electricity')"
 				id="exported"
 				type="govBoolean"
 				label="Can electricity be exported back to the grid?"

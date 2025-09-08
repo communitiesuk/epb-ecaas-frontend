@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { VentType } from "~/schema/aliases";
 
 const page = usePage();
 const title = "Mechanical ventilation";
@@ -51,7 +50,7 @@ function handleDuplicate(index: number) {
 		store.infiltrationAndVentilation.mechanicalVentilation.complete = false;
 	}
 }
-const mvhrArray = store.infiltrationAndVentilation.mechanicalVentilation.data?.filter(x => x.typeOfMechanicalVentilationOptions === VentType.MVHR);
+const mvhrArray = store.infiltrationAndVentilation.mechanicalVentilation.data?.filter(x => x.typeOfMechanicalVentilationOptions === "MVHR");
 
 function handleComplete() {
 	store.$patch({

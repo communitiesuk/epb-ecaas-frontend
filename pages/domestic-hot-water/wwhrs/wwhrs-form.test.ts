@@ -3,7 +3,6 @@ import type { WwhrsData } from "~/stores/ecaasStore.schema";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import { WwhrsType } from "~/schema/aliases";
 
 describe("wwhrs form", () => {
 	const store = useEcaasStore();
@@ -19,7 +18,7 @@ describe("wwhrs form", () => {
 	const state: WwhrsData = {
 		name: "WWHRS 1",
 		outlet: mixedShowerId,
-		type: WwhrsType.WWHRS_InstantaneousSystemA,
+		type: "WWHRS_InstantaneousSystemA",
 		flowRate: 10,
 		efficiency: 10,
 		proportionOfUse: 0.5

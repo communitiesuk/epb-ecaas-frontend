@@ -1,8 +1,6 @@
-import { BatteryLocation, InverterType, PhotovoltaicSystemType } from "~/schema/api-schema.types";
 import type { SchemaElectricBattery } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { mapElectricBatteryData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
-import { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -24,14 +22,14 @@ describe("PV and electric batteries mapper", () => {
 				peakPower: 50,
 				pitch: 45,
 				orientation: 270,
-				ventilationStrategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
+				ventilationStrategy: "moderately_ventilated",
 				elevationalHeight: 5,
 				lengthOfPV: 10,
 				widthOfPV: 4,
 				inverterPeakPowerAC: 48,
 				inverterPeakPowerDC: 60,
 				inverterIsInside: false,
-				inverterType: InverterType.string_inverter,
+				inverterType: "string_inverter",
 			} };
 
 		const pvSystem2: EcaasForm<PvSystemData> = {
@@ -40,14 +38,14 @@ describe("PV and electric batteries mapper", () => {
 				peakPower: 100,
 				pitch: 45,
 				orientation: 180,
-				ventilationStrategy: OnSiteGenerationVentilationStrategy.rear_surface_free,
+				ventilationStrategy: "rear_surface_free",
 				elevationalHeight: 2,
 				lengthOfPV: 3,
 				widthOfPV: 15,
 				inverterPeakPowerAC: 96,
 				inverterPeakPowerDC: 120,
 				inverterIsInside: false,
-				inverterType: InverterType.optimised_inverter } };
+				inverterType: "optimised_inverter" } };
 
 		store.$patch({
 			pvAndBatteries: {
@@ -71,13 +69,13 @@ describe("PV and electric batteries mapper", () => {
 					inverter_is_inside: false,
 					inverter_peak_power_ac: 48,
 					inverter_peak_power_dc: 60,
-					inverter_type: InverterType.string_inverter,
+					inverter_type: "string_inverter",
 					orientation360: 270,
 					peak_power: 50,
 					pitch: 45,
 					shading: [],
-					type: PhotovoltaicSystemType.PhotovoltaicSystem,
-					ventilation_strategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
+					type: "PhotovoltaicSystem",
+					ventilation_strategy: "moderately_ventilated",
 					width: 4,
 				},
 				"Garden": {
@@ -87,13 +85,13 @@ describe("PV and electric batteries mapper", () => {
 					inverter_is_inside: false,
 					inverter_peak_power_ac: 96,
 					inverter_peak_power_dc: 120,
-					inverter_type: InverterType.optimised_inverter,
+					inverter_type: "optimised_inverter",
 					orientation360: 180,
 					peak_power: 100,
 					pitch: 45,
 					shading: [],
-					type: PhotovoltaicSystemType.PhotovoltaicSystem,
-					ventilation_strategy: OnSiteGenerationVentilationStrategy.rear_surface_free,
+					type: "PhotovoltaicSystem",
+					ventilation_strategy: "rear_surface_free",
 					width: 15,
 				},
 			}
@@ -111,7 +109,7 @@ describe("PV and electric batteries mapper", () => {
 						capacity: 10,
 						batteryAge: 2,
 						chargeEfficiency: 0.7,
-						location: BatteryLocation.inside,
+						location: "inside",
 						gridChargingPossible: false,
 						maximumChargeRate: 6.2,
 						minimumChargeRate: 4.5,
@@ -135,7 +133,7 @@ describe("PV and electric batteries mapper", () => {
 		const expectedResult: Record<string, SchemaElectricBattery> = {
 			"ElectricBattery": {
 				battery_age: 2,
-				battery_location: BatteryLocation.inside,
+				battery_location: "inside",
 				capacity: 10,
 				charge_discharge_efficiency_round_trip: 0.7,
 				grid_charging_possible: false,
@@ -145,7 +143,7 @@ describe("PV and electric batteries mapper", () => {
 			},
 			// "ElectricBattery1": {
 			// 	battery_age: 0,
-			// 	battery_location: BatteryLocation.outside,
+			// 	battery_location: "outside",
 			// 	capacity: 14,
 			// 	charge_discharge_efficiency_round_trip: 0.8,
 			// 	grid_charging_possible: true,

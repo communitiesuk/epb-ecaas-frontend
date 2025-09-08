@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WaterPipeworkLocation } from "~/schema/api-schema.types";
+import type { SchemaWaterPipeworkLocation } from "~/schema/api-schema.types";
 import { getUrl  } from "#imports";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
@@ -9,7 +9,7 @@ const store = useEcaasStore();
 const pipeworkData = useItemToEdit("pipe", store.domesticHotWater.pipework.secondaryPipework.data);
 const model: Ref<SecondaryPipeworkData | undefined > = ref(pipeworkData?.data);
 
-const locationOptions: Record<WaterPipeworkLocation, SnakeToSentenceCase<WaterPipeworkLocation>> = {
+const locationOptions: Record<SchemaWaterPipeworkLocation, SnakeToSentenceCase<SchemaWaterPipeworkLocation>> = {
 	internal: "Internal",
 	external: "External",
 };

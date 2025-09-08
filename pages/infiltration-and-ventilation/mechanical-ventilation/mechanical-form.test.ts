@@ -3,10 +3,8 @@ import MechanicalVentilationForm from "./[mechanical].vue";
 import { userEvent } from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import { v4 as uuidv4 } from "uuid";
-import { MVHRLocation } from "~/schema/api-schema.types";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units/types";
-import { VentType } from "~/schema/aliases";
 
 describe("mechanical ventilation form", () => {
 	const user = userEvent.setup();
@@ -18,16 +16,16 @@ describe("mechanical ventilation form", () => {
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: unitValue(12, litrePerSecond),
-		mvhrLocation: MVHRLocation.inside,
+		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
 	};
 
 	const mechanicalVentilation2: MechanicalVentilationData = {
 		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 2",
-		typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
+		typeOfMechanicalVentilationOptions: "Intermittent MEV",
 		airFlowRate: unitValue(14, litrePerSecond)
 	};
 

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { CombustionAirSupplySituation } from "~/schema/api-schema.types";
+import type { SchemaCombustionAirSupplySituation } from "~/schema/api-schema.types";
 
 defineProps<{
 	id: string,
 	name: string;
 }>();
 
-const options: Record<CombustionAirSupplySituation, SnakeToSentenceCase<CombustionAirSupplySituation>> = {
+const options: Record<SchemaCombustionAirSupplySituation, SnakeToSentenceCase<SchemaCombustionAirSupplySituation>> = {
 	room_air: "Room air",
 	outside: "Outside"
 };

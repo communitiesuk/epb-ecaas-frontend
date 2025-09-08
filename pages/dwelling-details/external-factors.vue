@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TerrainClass, VentilationShieldClass } from "~/schema/api-schema.types";
+import type { SchemaTerrainClass, SchemaVentilationShieldClass } from "~/schema/api-schema.types";
 import { getUrl } from "#imports";
 
 const title = "External factors";
@@ -10,12 +10,12 @@ const model = ref({
 	...store.dwellingDetails.externalFactors.data
 });
 
-const typeOfExposureOptions: Record<VentilationShieldClass, SnakeToSentenceCase<VentilationShieldClass>> = {
+const typeOfExposureOptions: Record<SchemaVentilationShieldClass, SnakeToSentenceCase<SchemaVentilationShieldClass>> = {
 	Open: "Open",
 	Normal: "Normal",
 	Shielded: "Shielded"
 };
-const terrainTypeOptions: Record<TerrainClass, PascalToSentenceCase<TerrainClass>> = {
+const terrainTypeOptions: Record<SchemaTerrainClass, PascalToSentenceCase<SchemaTerrainClass>> = {
 	OpenWater: "Open water",
 	OpenField: "Open field",
 	Suburban: "Suburban",

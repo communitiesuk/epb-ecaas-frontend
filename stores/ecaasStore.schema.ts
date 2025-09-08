@@ -1,10 +1,11 @@
 import type { TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
-import { CombustionAirSupplySituation, FlueGasExhaustSituation, MassDistributionClass, WaterPipeContentsType, BatteryLocation, BuildType, CombustionFuelType, DuctShape, DuctType, FuelType, InverterType, MVHRLocation, ShadingObjectType, TerrainClass, VentilationShieldClass, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WindShieldLocation, type CombustionApplianceType, type SchemaFhsComplianceResponse, type SchemaJsonApiOnePointOneErrorLinks, type SchemaJsonApiOnePointOneErrorSource, type SchemaJsonApiOnePointOneMeta, BuildingElementGroundUnheatedBasementFloor_type, BuildingElementGroundHeatedBasementFloor_type, BuildingElementGroundSuspendedFloorFloor_type, BuildingElementGroundSlabNoEdgeInsulationFloor_type, BuildingElementGroundSlabEdgeInsulationFloor_type } from "~/schema/api-schema.types";
+import type { SchemaCombustionApplianceType, SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta, SchemaMechVentType } from "~/schema/api-schema.types";
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { OnSiteGenerationVentilationStrategy, VentType, WwhrsType } from "~/schema/aliases";
+import { batteryLocationZod, combustionAirSupplySituationZod, combustionFuelTypeZod, ductShapeZod, flueGasExhaustSituationZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, wwhrsTypeZod, zodLiteralFromUnionType } from "./zod";
+import type { FloorType } from "~/schema/aliases";
 
 const fraction = z.number().min(0).max(1);
 const percentage = z.number().min(0).max(100);
@@ -17,7 +18,7 @@ const namedWithId = named.extend({
 
 // some standard field definitions
 const orientation = z.number().min(0).lt(360);
-const massDistributionClass = z.enum(MassDistributionClass);
+const massDistributionClass = massDistributionClassZod;
 const uValue = z.number().min(0.01).max(10);
 const thermalResistanceOfAdjacentUnheatedSpace = z.number().min(0).max(3);
 
@@ -49,8 +50,8 @@ const baseGeneralDetails = z.object({
 });
 
 const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [
-	baseGeneralDetails.extend({ typeOfDwelling: z.literal(BuildType.flat), storeyOfFlat: z.number().min(-50).max(199) }),
-	baseGeneralDetails.extend({ typeOfDwelling: z.literal(BuildType.house) })
+	baseGeneralDetails.extend({ typeOfDwelling: z.literal("flat"), storeyOfFlat: z.number().min(-50).max(199) }),
+	baseGeneralDetails.extend({ typeOfDwelling: z.literal("house") })
 ]);
 
 export type GeneralDetailsData = z.infer<typeof generalDetailsDataZod>;
@@ -58,7 +59,7 @@ export type GeneralDetailsData = z.infer<typeof generalDetailsDataZod>;
 const shadingDataZod = named.extend({
 	startAngle: z.number().min(0).lt(360),
 	endAngle: z.number().min(0).lt(360),
-	objectType: z.enum(ShadingObjectType),
+	objectType: shadingObjectTypeZod,
 	height: z.number(),
 	distance: z.number(),
 });
@@ -67,8 +68,8 @@ export type ShadingData = z.infer<typeof shadingDataZod>;
 
 const externalFactorsDataZod = z.object({
 	altitude: z.number().min(-150).max(7200),
-	typeOfExposure: z.enum(VentilationShieldClass),
-	terrainType: z.enum(TerrainClass),
+	typeOfExposure: ventilationShieldClassZod,
+	terrainType: terrainClassZod,
 	noiseNuisance: z.boolean(),
 });
 
@@ -152,30 +153,30 @@ const groundFloorDataZod = z.discriminatedUnion(
 	"typeOfGroundFloor",
 	[
 		baseGroundFloorData.extend({
-			typeOfGroundFloor: z.enum(BuildingElementGroundSlabEdgeInsulationFloor_type),
+			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_edge_insulation">("Slab_edge_insulation"),
 			edgeInsulationType: z.enum(["horizontal", "vertical"]),
 			// TODO constraints have not been put on zodUnit yet!
 			edgeInsulationWidth: z.union([zodUnit("length"), z.number().min(0).max(10000)]), // number will be deprecated, preserved for backwards compatibility with old input data files
 			edgeInsulationThermalResistance: z.number(),
 		}),
 		baseGroundFloorData.extend({
-			typeOfGroundFloor: z.enum(BuildingElementGroundSlabNoEdgeInsulationFloor_type),
+			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Slab_no_edge_insulation">("Slab_no_edge_insulation"),
 		}),
 		baseGroundFloorData.extend({
-			typeOfGroundFloor: z.enum(BuildingElementGroundSuspendedFloorFloor_type),
+			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Suspended_floor">("Suspended_floor"),
 			heightOfFloorUpperSurface: z.number().min(0).max(100000),
 			underfloorSpaceThermalResistance: z.number(),
 			thermalTransmittanceOfWallsAboveGround: z.number(),
 			ventilationOpeningsArea: z.number(),
-			windShieldingFactor: z.enum(WindShieldLocation),
+			windShieldingFactor: windShieldLocationZod,
 		}),
 		baseGroundFloorData.extend({
-			typeOfGroundFloor: z.enum(BuildingElementGroundHeatedBasementFloor_type),
+			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Heated_basement">("Heated_basement"),
 			depthOfBasementFloorBelowGround: z.number(),
 			thermalResistanceOfBasementWalls: z.number(),
 		}),
 		baseGroundFloorData.extend({
-			typeOfGroundFloor: z.enum(BuildingElementGroundUnheatedBasementFloor_type),
+			typeOfGroundFloor: zodLiteralFromUnionType<FloorType, "Unheated_basement">("Unheated_basement"),
 			thermalTransmittanceOfFloorAboveBasement: z.number(),
 			thermalTransmittanceOfWallsAboveGround: z.number(),
 			thermalResistanceOfBasementWalls: z.number(),
@@ -466,8 +467,8 @@ const sideFinLeftFields = z.union([
 const curtainsOrBlindsFields = z.union([
 	z.object({
 		curtainsOrBlinds: z.literal(true),
-		treatmentType: z.enum(WindowTreatmentType),
-		curtainsControlObject: z.optional(z.enum(WindowTreatmentControl)),
+		treatmentType: windowTreatmentTypeZod,
+		curtainsControlObject: z.optional(windowTreatmentControlZod),
 		thermalResistivityIncrease: z.number().min(0).max(100),
 		solarTransmittanceReduction: fraction,
 	}),
@@ -654,9 +655,9 @@ const primaryPipeworkDataZod = z.object({
 	insulationThickness: z.number(),
 	thermalConductivity: z.number(),
 	surfaceReflectivity: z.boolean(),
-	pipeContents: z.enum(WaterPipeContentsType),
+	pipeContents: waterPipeContentsTypeZod,
 	hotWaterCylinder: z.string(),
-	location: z.enum(WaterPipeworkLocation),
+	location: waterPipeworkLocationZod,
 });
 
 export type PrimaryPipeworkData = z.infer<typeof primaryPipeworkDataZod>;
@@ -664,7 +665,7 @@ export type PrimaryPipeworkData = z.infer<typeof primaryPipeworkDataZod>;
 const secondaryPipeworkDataZod = z.object({
 	name: z.string().trim().min(1),
 	length: z.number().min(0).max(200),
-	location: z.enum(WaterPipeworkLocation),
+	location: waterPipeworkLocationZod,
 	internalDiameter: z.number().min(1).max(50),
 });
 
@@ -673,7 +674,7 @@ export type SecondaryPipeworkData = z.infer<typeof secondaryPipeworkDataZod>;
 const wwhrsDataZod = z.object({
 	name: z.string().trim().min(1),
 	outlet: z.string(),
-	type: z.enum(WwhrsType),
+	type: wwhrsTypeZod,
 	flowRate: z.number().min(0.1).max(500),
 	efficiency: percentage,
 	proportionOfUse: fraction,
@@ -698,17 +699,17 @@ const mechanicalVentilationDataZod = z.discriminatedUnion(
 	"typeOfMechanicalVentilationOptions",
 	[
 		baseMechanicalVentilationData.extend({
-			typeOfMechanicalVentilationOptions: z.literal(VentType.Intermittent_MEV),
+			typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Intermittent MEV">("Intermittent MEV"),
 		}),
 		baseMechanicalVentilationData.extend({
-			typeOfMechanicalVentilationOptions: z.literal(VentType.Centralised_continuous_MEV),
+			typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Centralised continuous MEV">("Centralised continuous MEV"),
 		}),
 		baseMechanicalVentilationData.extend({
-			typeOfMechanicalVentilationOptions: z.literal(VentType.Decentralised_continuous_MEV),
+			typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "Decentralised continuous MEV">("Decentralised continuous MEV"),
 		}),
 		baseMechanicalVentilationData.extend({
-			typeOfMechanicalVentilationOptions: z.literal(VentType.MVHR),
-			mvhrLocation: z.enum(MVHRLocation),
+			typeOfMechanicalVentilationOptions: zodLiteralFromUnionType<SchemaMechVentType, "MVHR">("MVHR"),
+			mvhrLocation: mvhrLocationZod,
 			mvhrEfficiency: fraction,
 		}),
 	]
@@ -718,8 +719,8 @@ export type MechanicalVentilationData = z.infer<typeof mechanicalVentilationData
 
 const baseDuctworkData = named.extend({
 	mvhrUnit: z.string(),
-	ductworkCrossSectionalShape: z.enum(DuctShape),
-	ductType: z.enum(DuctType),
+	ductworkCrossSectionalShape: ductShapeZod,
+	ductType: ductTypeZod,
 	insulationThickness: z.number().min(0).max(100),
 	lengthOfDuctwork: z.number().min(0),
 	thermalInsulationConductivityOfDuctwork: z.number().min(0),
@@ -729,12 +730,12 @@ const ductworkDataZod = z.discriminatedUnion(
 	"ductworkCrossSectionalShape",
 	[
 		baseDuctworkData.extend({
-			ductworkCrossSectionalShape: z.literal(DuctShape.circular),
+			ductworkCrossSectionalShape: z.literal("circular"),
 			internalDiameterOfDuctwork: z.number().min(0).max(1000),
 			externalDiameterOfDuctwork: z.number().min(0).max(1000),
 		}),
 		baseDuctworkData.extend({
-			ductworkCrossSectionalShape: z.literal(DuctShape.rectangular),
+			ductworkCrossSectionalShape: z.literal("rectangular"),
 			ductPerimeter: z.number().min(0).max(1000),
 		}),
 	]
@@ -754,12 +755,12 @@ const ventDataZod = z.object({
 
 export type VentData = z.infer<typeof ventDataZod>;
 
-export type CombustionAppliancesData = Record<CombustionApplianceType, EcaasForm<CombustionApplianceData[]>>;
+export type CombustionAppliancesData = Record<SchemaCombustionApplianceType, EcaasForm<CombustionApplianceData[]>>;
 
 const combustionApplianceDataZod = named.extend({
-	airSupplyToAppliance: z.enum(CombustionAirSupplySituation),
-	exhaustMethodFromAppliance: z.enum(FlueGasExhaustSituation),
-	typeOfFuel: z.enum(CombustionFuelType),
+	airSupplyToAppliance: combustionAirSupplySituationZod,
+	exhaustMethodFromAppliance: flueGasExhaustSituationZod,
+	typeOfFuel: combustionFuelTypeZod,
 });
 
 export type CombustionApplianceData = z.infer<typeof combustionApplianceDataZod>;
@@ -818,7 +819,7 @@ const heatInterfaceUnitDataZod = namedWithId;
 export type HeatInterfaceUnitData = z.infer<typeof heatInterfaceUnitDataZod>;
 
 const energySupplyDataZod = z.object({
-	fuelType: z.array(z.enum(FuelType)),
+	fuelType: z.array(fuelTypeZod),
 	co2PerKwh: z.optional(z.number()),
 	co2PerKwhIncludingOutOfScope: z.optional(z.number()),
 	kwhPerKwhDelivered: z.optional(z.number()),
@@ -889,7 +890,7 @@ export type PvAndBatteries = AssertFormKeysArePageIds<{
 const pvSystemDataZod = z.object({
 	name: z.string().trim().min(1),
 	peakPower: z.number().min(0.001).max(100),
-	ventilationStrategy: z.enum(OnSiteGenerationVentilationStrategy),
+	ventilationStrategy: photovoltaicVentilationStrategyZod,
 	pitch: z.number().min(0).max(90),
 	orientation,
 	elevationalHeight: z.number().min(0).max(500),
@@ -898,7 +899,7 @@ const pvSystemDataZod = z.object({
 	inverterPeakPowerAC: z.number(),
 	inverterPeakPowerDC: z.number(),
 	inverterIsInside: z.boolean(),
-	inverterType: z.enum(InverterType),
+	inverterType: inverterTypeZod,
 	aboveDepth: z.optional(z.number()),
 	aboveDistance: z.optional(z.number()),
 	leftDepth: z.optional(z.number()),
@@ -914,7 +915,7 @@ const electricBatteryDataZod = z.object({
 	capacity: z.number().min(0).max(50),
 	batteryAge: z.number().min(0).max(100),
 	chargeEfficiency: fraction,
-	location: z.enum(BatteryLocation),
+	location: batteryLocationZod,
 	gridChargingPossible: z.boolean(),
 	maximumChargeRate: z.number(),
 	minimumChargeRate: z.number(),

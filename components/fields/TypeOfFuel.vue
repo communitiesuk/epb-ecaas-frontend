@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CombustionFuelType } from "~/schema/api-schema.types";
+import type { CombustionFuelType } from "~/schema/aliases";
 
 defineProps<{
 	id: string,

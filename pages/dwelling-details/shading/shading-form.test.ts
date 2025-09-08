@@ -3,7 +3,6 @@ import type { ShadingData } from "~/stores/ecaasStore.schema";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
-import { ShadingObjectType } from "~/schema/api-schema.types";
 
 describe("shading form", () => {
 	const store = useEcaasStore();
@@ -14,7 +13,7 @@ describe("shading form", () => {
 		name: "Big Tree",
 		startAngle: 10,
 		endAngle: 20,
-		objectType: ShadingObjectType.obstacle,
+		objectType: "obstacle",
 		height: 3,
 		distance: 2
 	};

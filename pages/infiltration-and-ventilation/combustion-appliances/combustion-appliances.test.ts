@@ -10,7 +10,6 @@ import OpenGasFireForm from "./open-gas-fire/[combustion].vue";
 import ClosedFireForm from "./closed-fire/[combustion].vue";
 
 import { expect } from "vitest";
-import { CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
 import type { Entries } from "type-fest";
 
 describe("open fireplace", () => {
@@ -19,9 +18,9 @@ describe("open fireplace", () => {
 
 	const openFireplace1: CombustionApplianceData = {
 		name: "Open fireplace 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.room_air,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_separate_duct,
-		typeOfFuel: CombustionFuelType.coal,
+		airSupplyToAppliance: "room_air",
+		exhaustMethodFromAppliance: "into_separate_duct",
+		typeOfFuel: "coal",
 	};
 
 	const openFireplace2: CombustionApplianceData = {
@@ -42,7 +41,7 @@ describe("open fireplace", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_fireplace]: {
+					open_fireplace: {
 						data: [openFireplace1]
 					}
 				}
@@ -62,7 +61,7 @@ describe("open fireplace", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_fireplace]: {
+					open_fireplace: {
 						data: [openFireplace1, openFireplace2, openFireplace3]
 					}
 				}
@@ -84,7 +83,7 @@ describe("open fireplace", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_fireplace]: {
+					open_fireplace: {
 						data: [openFireplace1, openFireplace2]
 					}
 				}
@@ -112,9 +111,9 @@ describe("closed fireplace with fan", () => {
 
 	const closedFireplaceWithFan1: CombustionApplianceData = {
 		name: "Closed fireplace with fan 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.room_air,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_separate_duct,
-		typeOfFuel: CombustionFuelType.wood
+		airSupplyToAppliance: "room_air",
+		exhaustMethodFromAppliance: "into_separate_duct",
+		typeOfFuel: "wood"
 	};
 
 	const closedFireplaceWithFan2: CombustionApplianceData = {
@@ -135,7 +134,7 @@ describe("closed fireplace with fan", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.closed_with_fan]: {
+					closed_with_fan: {
 						data: [closedFireplaceWithFan1]
 					}
 				}
@@ -155,7 +154,7 @@ describe("closed fireplace with fan", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.closed_with_fan]: {
+					closed_with_fan: {
 						data: [closedFireplaceWithFan1, closedFireplaceWithFan2, closedFireplaceWithFan3]
 					}
 				}
@@ -177,7 +176,7 @@ describe("closed fireplace with fan", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.closed_with_fan]: {
+					closed_with_fan: {
 						data: [closedFireplaceWithFan1, closedFireplaceWithFan2]
 					}
 				}
@@ -205,9 +204,9 @@ describe("open gas flue balancer", () => {
 
 	const openGasFlueBalancer1: CombustionApplianceData = {
 		name: "Open gas flue balancer 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_room,
-		typeOfFuel: CombustionFuelType.gas,
+		airSupplyToAppliance: "outside",
+		exhaustMethodFromAppliance: "into_room",
+		typeOfFuel: "gas",
 	};
 
 	const openGasFlueBalancer2: CombustionApplianceData = {
@@ -228,7 +227,7 @@ describe("open gas flue balancer", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_gas_flue_balancer]: {
+					open_gas_flue_balancer: {
 						data: [openGasFlueBalancer1]
 					}
 				}
@@ -248,7 +247,7 @@ describe("open gas flue balancer", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_gas_flue_balancer]: {
+					open_gas_flue_balancer: {
 						data: [openGasFlueBalancer1, openGasFlueBalancer2, openGasFlueBalancer3]
 					}
 				}
@@ -270,7 +269,7 @@ describe("open gas flue balancer", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_gas_flue_balancer]: {
+					open_gas_flue_balancer: {
 						data: [openGasFlueBalancer1, openGasFlueBalancer2]
 					}
 				}
@@ -298,9 +297,9 @@ describe("open gas kitchen stove", () => {
 
 	const openGasKitchenStove1: CombustionApplianceData = {
 		name: "Open gas kitchen stove 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_room,
-		typeOfFuel: CombustionFuelType.oil,
+		airSupplyToAppliance: "outside",
+		exhaustMethodFromAppliance: "into_room",
+		typeOfFuel: "oil",
 	};
 
 	const openGasKitchenStove2: CombustionApplianceData = {
@@ -321,7 +320,7 @@ describe("open gas kitchen stove", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_gas_kitchen_stove]: {
+					open_gas_kitchen_stove: {
 						data: [openGasKitchenStove1]
 					}
 				}
@@ -341,7 +340,7 @@ describe("open gas kitchen stove", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_gas_kitchen_stove]: {
+					open_gas_kitchen_stove: {
 						data: [openGasKitchenStove1, openGasKitchenStove2, openGasKitchenStove3]
 					}
 				}
@@ -363,7 +362,7 @@ describe("open gas kitchen stove", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_gas_kitchen_stove]: {
+					open_gas_kitchen_stove: {
 						data: [openGasKitchenStove1, openGasKitchenStove2]
 					}
 				}
@@ -391,9 +390,9 @@ describe("open gas fire", () => {
 
 	const openGasFire1: CombustionApplianceData = {
 		name: "Open gas fire 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
-		typeOfFuel: CombustionFuelType.oil,
+		airSupplyToAppliance: "outside",
+		exhaustMethodFromAppliance: "into_mech_vent",
+		typeOfFuel: "oil",
 	};
 
 	const openGasFire2: CombustionApplianceData = {
@@ -414,7 +413,7 @@ describe("open gas fire", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_gas_fire]: {
+					open_gas_fire: {
 						data: [openGasFire1]
 					}
 				}
@@ -434,7 +433,7 @@ describe("open gas fire", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_gas_fire]: {
+					open_gas_fire: {
 						data: [openGasFire1, openGasFire2, openGasFire3]
 					}
 				}
@@ -456,7 +455,7 @@ describe("open gas fire", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_gas_fire]: {
+					open_gas_fire: {
 						data: [openGasFire1, openGasFire2]
 					}
 				}
@@ -484,9 +483,9 @@ describe("closed fire", () => {
 
 	const closedFire1: CombustionApplianceData = {
 		name: "Closed fire 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
-		typeOfFuel: CombustionFuelType.coal,
+		airSupplyToAppliance: "outside",
+		exhaustMethodFromAppliance: "into_mech_vent",
+		typeOfFuel: "coal",
 	};
 
 	const closedFire2: CombustionApplianceData = {
@@ -507,7 +506,7 @@ describe("closed fire", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.closed_fire]: {
+					closed_fire: {
 						data: [closedFire1]
 					}
 				}
@@ -527,7 +526,7 @@ describe("closed fire", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.closed_fire]: {
+					closed_fire: {
 						data: [closedFire1, closedFire2, closedFire3]
 					}
 				}
@@ -549,7 +548,7 @@ describe("closed fire", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.closed_fire]: {
+					closed_fire: {
 						data: [closedFire1, closedFire2]
 					}
 				}
@@ -579,40 +578,40 @@ describe("mark section as complete", () => {
 	
 	const openFireplace1: CombustionApplianceData = {
 		name: "Open fireplace 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.room_air,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_separate_duct,
-		typeOfFuel: CombustionFuelType.coal,
+		airSupplyToAppliance: "room_air",
+		exhaustMethodFromAppliance: "into_separate_duct",
+		typeOfFuel: "coal",
 	};
 	const closedFireplaceWithFan1: CombustionApplianceData = {
 		name: "Closed fireplace with fan 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.room_air,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_separate_duct,
-		typeOfFuel: CombustionFuelType.wood
+		airSupplyToAppliance: "room_air",
+		exhaustMethodFromAppliance: "into_separate_duct",
+		typeOfFuel: "wood"
 	};
 	const openGasFlueBalancer1: CombustionApplianceData = {
 		name: "Open gas flue balancer 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_room,
-		typeOfFuel: CombustionFuelType.gas,
+		airSupplyToAppliance: "outside",
+		exhaustMethodFromAppliance: "into_room",
+		typeOfFuel: "gas",
 	};
 	const openGasKitchenStove1: CombustionApplianceData = {
 		name: "Open gas kitchen stove 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_room,
-		typeOfFuel: CombustionFuelType.oil,
+		airSupplyToAppliance: "outside",
+		exhaustMethodFromAppliance: "into_room",
+		typeOfFuel: "oil",
 	};
 	const openGasFire1: CombustionApplianceData = {
 		name: "Open gas fire 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
-		typeOfFuel: CombustionFuelType.oil,
+		airSupplyToAppliance: "outside",
+		exhaustMethodFromAppliance: "into_mech_vent",
+		typeOfFuel: "oil",
 	};
 
 	const closedFire1: CombustionApplianceData = {
 		name: "Closed fire 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
-		typeOfFuel: CombustionFuelType.coal,
+		airSupplyToAppliance: "outside",
+		exhaustMethodFromAppliance: "into_mech_vent",
+		typeOfFuel: "coal",
 	};
 
 	const store = useEcaasStore();
@@ -622,12 +621,12 @@ describe("mark section as complete", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_fireplace]: { data: [openFireplace1] },
-					[CombustionApplianceType.closed_with_fan]: { data: [closedFireplaceWithFan1] },
-					[CombustionApplianceType.open_gas_flue_balancer]: { data: [openGasFlueBalancer1] },
-					[CombustionApplianceType.open_gas_kitchen_stove]: { data: [openGasKitchenStove1] },
-					[CombustionApplianceType.open_gas_fire]: { data: [openGasFire1] },
-					[CombustionApplianceType.closed_fire]: { data: [closedFire1] },
+					open_fireplace: { data: [openFireplace1] },
+					closed_with_fan: { data: [closedFireplaceWithFan1] },
+					open_gas_flue_balancer: { data: [openGasFlueBalancer1] },
+					open_gas_kitchen_stove: { data: [openGasKitchenStove1] },
+					open_gas_fire: { data: [openGasFire1] },
+					closed_fire: { data: [closedFire1] },
 				}
 			}
 		});
@@ -640,12 +639,12 @@ describe("mark section as complete", () => {
 
 	const getCombustionApplianceData = async (action: string) => {
 		return [
-			{ key: CombustionApplianceType.open_fireplace, testId: `openFireplace_${action}_0`, form: OpenFireplaceForm },
-			{ key: CombustionApplianceType.closed_with_fan, testId: `closedFireplaceWithFan_${action}_0`, form: ClosedFireplaceWithFanForm },
-			{ key: CombustionApplianceType.open_gas_flue_balancer, testId: `openGasFlueBalancer_${action}_0`, form: OpenGasFlueBalancerForm },
-			{ key: CombustionApplianceType.open_gas_kitchen_stove, testId: `openGasKitchenStove_${action}_0`, form: OpenGasKitchenStoveForm },
-			{ key: CombustionApplianceType.open_gas_fire, testId: `openGasFire_${action}_0`, form: OpenGasFireForm },
-			{ key: CombustionApplianceType.closed_fire, testId: `closedFire_${action}_0`, form: ClosedFireForm }
+			{ key: "open_fireplace", testId: `openFireplace_${action}_0`, form: OpenFireplaceForm },
+			{ key: "closed_with_fan", testId: `closedFireplaceWithFan_${action}_0`, form: ClosedFireplaceWithFanForm },
+			{ key: "open_gas_flue_balancer", testId: `openGasFlueBalancer_${action}_0`, form: OpenGasFlueBalancerForm },
+			{ key: "open_gas_kitchen_stove", testId: `openGasKitchenStove_${action}_0`, form: OpenGasKitchenStoveForm },
+			{ key: "open_gas_fire", testId: `openGasFire_${action}_0`, form: OpenGasFireForm },
+			{ key: "closed_fire", testId: `closedFire_${action}_0`, form: ClosedFireForm }
 		];
 	};
 

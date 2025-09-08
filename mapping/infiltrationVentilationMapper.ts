@@ -1,12 +1,10 @@
 import { arrayIncludes, objectEntries, objectFromEntries } from "ts-extras";
-import { DuctShape, SupplyAirFlowRateControlType, SupplyAirTemperatureControlType } from "~/schema/api-schema.types";
-import type { CombustionApplianceType, SchemaCombustionAppliance, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/api-schema.types";
+import type { SchemaCombustionAppliance, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { asCubicMetresPerHour } from "~/utils/units/flowRate";
 import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation } from "~/schema/aliases";
-import { VentType } from "~/schema/aliases";
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilationPossible } = mapVentilationData(state);
@@ -28,7 +26,7 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 				name,
 				{
 					...mechanicalVentData,
-					...(mechanicalVentData.vent_type === VentType.MVHR ? { ductwork: mapMvhrDuctworkData(name, state) } : {})
+					...(mechanicalVentData.vent_type === "MVHR" ? { ductwork: mapMvhrDuctworkData(name, state) } : {})
 				}
 			];
 		})),
@@ -59,13 +57,13 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 			vent_type: x.typeOfMechanicalVentilationOptions,
 			EnergySupply: defaultElectricityEnergySupplyName,
 			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
-			sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
-			sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
-			...(x.typeOfMechanicalVentilationOptions === VentType.MVHR ? { mvhr_location: x.mvhrLocation, mvhr_eff: x.mvhrEfficiency } : {}),
+			sup_air_flw_ctrl: "ODA",
+			sup_air_temp_ctrl: "CONST",
+			...(x.typeOfMechanicalVentilationOptions === "MVHR" ? { mvhr_location: x.mvhrLocation, mvhr_eff: x.mvhrEfficiency } : {}),
 			measured_air_flow_rate: 37,
 			measured_fan_power: 12.26,
 			// (TODO: REMOVE COMMENT WHEN USING HEM 0.37) more recent schema is more explicit about logic for SFP field, but following implements what is currently implicit logic: for following vent types, provide SFP (with a canned value), otherwise don't
-			...(arrayIncludes([VentType.Decentralised_continuous_MEV, VentType.Intermittent_MEV], x.typeOfMechanicalVentilationOptions) ? { SFP: 1.5 } : {}),
+			...(arrayIncludes(["Decentralised continuous MEV", "Intermittent MEV"], x.typeOfMechanicalVentilationOptions) ? { SFP: 1.5 } : {}),
 			Control: "ventilation", // TODO this might need to refer to a real control,
 			SFP: 1.0, // TODO this may be incorrect, or need input from a form
 			mvhr_eff: null,
@@ -91,8 +89,8 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 			duct_type: x.ductType,
 			insulation_thermal_conductivity: x.thermalInsulationConductivityOfDuctwork,
 			insulation_thickness_mm: x.insulationThickness,
-			...(x.ductworkCrossSectionalShape === DuctShape.circular ? { internal_diameter_mm: x.internalDiameterOfDuctwork, external_diameter_mm: x.externalDiameterOfDuctwork } : {}),
-			...(x.ductworkCrossSectionalShape === DuctShape.rectangular ? { duct_perimeter_mm: x.ductPerimeter } : {}),
+			...(x.ductworkCrossSectionalShape === "circular" ? { internal_diameter_mm: x.internalDiameterOfDuctwork, external_diameter_mm: x.externalDiameterOfDuctwork } : {}),
+			...(x.ductworkCrossSectionalShape === "rectangular" ? { duct_perimeter_mm: x.ductPerimeter } : {}),
 			length: x.lengthOfDuctwork,
 			reflective: x.surfaceReflectivity,
 			duct_perimeter_mm: null,
@@ -145,7 +143,7 @@ export function mapCombustionAppliancesData(state: ResolvedState): Record<string
 		return value.map<[string, SchemaCombustionAppliance]>((appliance) => {
 			const { name, airSupplyToAppliance, exhaustMethodFromAppliance, typeOfFuel } = appliance;
 			const applianceInput: SchemaCombustionAppliance = {
-				appliance_type: key as CombustionApplianceType,
+				appliance_type: key,
 				exhaust_situation: exhaustMethodFromAppliance,
 				fuel_type: typeOfFuel,
 				supply_situation: airSupplyToAppliance,

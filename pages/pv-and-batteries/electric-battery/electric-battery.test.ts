@@ -3,7 +3,6 @@ import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import type { ElectricBatteryData } from "~/stores/ecaasStore.schema";
-import { BatteryLocation } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -24,7 +23,7 @@ describe("Electric battery", () => {
 			capacity: 40,
 			batteryAge: 12,
 			chargeEfficiency: 0.9,
-			location: BatteryLocation.inside,
+			location: "inside",
 			gridChargingPossible: false,
 			maximumChargeRate: 30,
 			minimumChargeRate: 20,

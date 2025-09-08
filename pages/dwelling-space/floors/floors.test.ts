@@ -6,8 +6,6 @@ import InternalFloorForm from "./internal/[floor].vue";
 import ExposedFloorForm from "./exposed/[floor].vue";
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
-import { MassDistributionClass } from "~/schema/api-schema.types";
-import { FloorType } from "~/schema/aliases";
 import type { Component } from "vue";
 
 describe("floors", () => {
@@ -26,11 +24,11 @@ describe("floors", () => {
 		uValue: 1,
 		thermalResistance: 1,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		thicknessOfWalls: 0.3,
-		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
+		typeOfGroundFloor: "Slab_no_edge_insulation"
 	};
 
 	const ground2: GroundFloorData = {
@@ -40,11 +38,11 @@ describe("floors", () => {
 		uValue: 1,
 		thermalResistance: 1,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		thicknessOfWalls: 0.4,
-		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
+		typeOfGroundFloor: "Slab_no_edge_insulation"
 	};
 
 	const ground3: GroundFloorData = {
@@ -54,11 +52,11 @@ describe("floors", () => {
 		uValue: 1,
 		thermalResistance: 1,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		thicknessOfWalls: 0.5,
-		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
+		typeOfGroundFloor: "Slab_no_edge_insulation"
 	};
 	
 	const internal1: InternalFloorData = {
@@ -66,7 +64,7 @@ describe("floors", () => {
 		name: "internal1 name",
 		surfaceAreaOfElement: 5,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	};
 
 	const internal2: InternalFloorData = {
@@ -74,7 +72,7 @@ describe("floors", () => {
 		name: "internal2 name",
 		surfaceAreaOfElement: 5,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	};
 
 	const internal3: InternalFloorData = {
@@ -82,7 +80,7 @@ describe("floors", () => {
 		name: "internal3 name",
 		surfaceAreaOfElement: 5,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	};
 
 	const exposed1: ExposedFloorData = {
@@ -96,7 +94,7 @@ describe("floors", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I
+		massDistributionClass: "I"
 	};
 
 	const exposed2: ExposedFloorData = {
@@ -110,7 +108,7 @@ describe("floors", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I
+		massDistributionClass: "I"
 	};
 
 	const exposed3: ExposedFloorData = {
@@ -124,7 +122,7 @@ describe("floors", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I
+		massDistributionClass: "I"
 	};
 	
 	afterEach(() => {

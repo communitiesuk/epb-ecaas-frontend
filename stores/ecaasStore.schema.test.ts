@@ -1,4 +1,3 @@
-import { WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
 import { windowDataZod } from "./ecaasStore.schema";
 
 describe("windowData Zod schema", () => {
@@ -22,14 +21,14 @@ describe("windowData Zod schema", () => {
 			sideFinLeftDepth: 0.25,
 			sideFinLeftDistance: 1,
 			curtainsOrBlinds: true,
-			treatmentType: WindowTreatmentType.curtains,
+			treatmentType: "curtains",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.8,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
-			curtainsControlObject: WindowTreatmentControl.auto_motorised,
+			curtainsControlObject: "auto_motorised",
 		};
 		expect(
 			() => {
@@ -58,14 +57,14 @@ describe("windowData Zod schema", () => {
 			sideFinLeftDepth: 0.25,
 			sideFinLeftDistance: 1,
 			curtainsOrBlinds: true,
-			treatmentType: WindowTreatmentType.curtains,
+			treatmentType: "curtains",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.8,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
-			curtainsControlObject: WindowTreatmentControl.auto_motorised,
+			curtainsControlObject: "auto_motorised",
 		};
 		expect(
 			() => {
@@ -94,14 +93,14 @@ describe("windowData Zod schema", () => {
 			sideFinLeftDepth: 0.25,
 			sideFinLeftDistance: 1,
 			curtainsOrBlinds: true,
-			treatmentType: WindowTreatmentType.curtains,
+			treatmentType: "curtains",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.8,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
-			curtainsControlObject: WindowTreatmentControl.auto_motorised,
+			curtainsControlObject: "auto_motorised",
 		};
 		expect(
 			() => {

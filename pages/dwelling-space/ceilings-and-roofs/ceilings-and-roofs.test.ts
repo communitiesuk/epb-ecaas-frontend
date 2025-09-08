@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import CeilingsAndRoofs from "./index.vue";
 import CeilingForm from "./ceilings/[ceiling].vue";
 import RoofForm from "./roofs/[roof].vue";
-import { MassDistributionClass } from "~/schema/api-schema.types";
 
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
@@ -28,7 +27,7 @@ describe("ceilings and roofs", () => {
 			type: AdjacentSpaceType.heatedSpace,
 			surfaceArea: 5,
 			kappaValue: 100,
-			massDistributionClass: MassDistributionClass.I,
+			massDistributionClass: "I",
 			pitchOption: "custom",
 			pitch: 180
 		}
@@ -62,7 +61,7 @@ describe("ceilings and roofs", () => {
 			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I
+			massDistributionClass: "I"
 		}
 	};
 

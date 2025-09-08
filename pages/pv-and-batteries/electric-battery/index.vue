@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BatteryLocation } from "~/schema/api-schema.types";
+import type { SchemaBatteryLocation } from "~/schema/api-schema.types";
 import { getUrl } from "~/utils/page";
 
 const title = "Electric battery";
@@ -71,7 +71,7 @@ watch(model, async (newData: ElectricBatteryData | undefined, initialData: Elect
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
-const locationOptions: Record<BatteryLocation, SnakeToSentenceCase<BatteryLocation>> = {
+const locationOptions: Record<SchemaBatteryLocation, SnakeToSentenceCase<SchemaBatteryLocation>> = {
 	inside: "Inside",
 	outside: "Outside",
 };

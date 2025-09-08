@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { InverterType } from "~/schema/api-schema.types";
-import { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
+import type { SchemaInverterType } from "~/schema/api-schema.types";
+import type { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
 import { getUrl } from "#imports";
 
 const title = "PV (photovoltaic) system";
@@ -16,15 +16,15 @@ const model: Ref<PvSystemData | undefined> = ref(pvSystemData?.data);
 const shadingSectionDisabled = true;
 
 const ventilationStrategyOptions: Record<OnSiteGenerationVentilationStrategy, string> = {
-	[OnSiteGenerationVentilationStrategy.unventilated]: "Unventilated",
-	[OnSiteGenerationVentilationStrategy.moderately_ventilated]: "Moderately ventilated",
-	[OnSiteGenerationVentilationStrategy.strongly_or_forced_ventilated]: "Strongly or forced ventilated",
-	[OnSiteGenerationVentilationStrategy.rear_surface_free]: "Rear surface free",
+	unventilated: "Unventilated",
+	moderately_ventilated: "Moderately ventilated",
+	strongly_or_forced_ventilated: "Strongly or forced ventilated",
+	rear_surface_free: "Rear surface free",
 };
 
-const inverterTypeOptions: Record<InverterType, string> = {
-	[InverterType.optimised_inverter]: "Optimised",
-	[InverterType.string_inverter]: "String",
+const inverterTypeOptions: Record<SchemaInverterType, string> = {
+	optimised_inverter: "Optimised",
+	string_inverter: "String",
 };
 
 const saveForm = (fields: PvSystemData) => {

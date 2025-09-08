@@ -1,7 +1,7 @@
 import * as z from "zod";
 import products from "./products.json";
-import { HeatPumpBackupControlType, HeatPumpSinkType, HeatPumpSourceType } from "~/schema/api-schema.types";
 import { objectEntries, objectKeys } from "ts-extras";
+import { heatPumpBackupControlTypeZod, heatPumpSinkTypeZod, heatPumpSourceTypeZod } from "~/stores/zod";
 
 const IntString = z.string().regex(/^\d+$/);
 
@@ -36,9 +36,9 @@ const BaseProduct = z.object({
 const AirSourceHeatPump = BaseProduct.extend({
 	technologyType: z.literal("Air Source Heat Pump"),
 	fuel: z.string(), // need a better type for this
-	sourceType: z.enum(HeatPumpSourceType),
-	sinkType: z.enum(HeatPumpSinkType),
-	backupControlType: z.enum(HeatPumpBackupControlType),
+	sourceType: heatPumpSourceTypeZod,
+	sinkType: heatPumpSinkTypeZod,
+	backupControlType: heatPumpBackupControlTypeZod,
 	modulatingControl: z.boolean(),
 	standardRatingCapacity20C: z.nullable(z.number()),
 	standardRatingCapacity35C: z.nullable(z.number()),

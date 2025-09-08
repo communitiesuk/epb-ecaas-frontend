@@ -1,4 +1,3 @@
-import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass  } from "~/schema/api-schema.types";
 import type { SchemaShadingObject } from "~/schema/api-schema.types";
 import { mapDistantShadingData, mapExternalFactorsData, mapGeneralDetailsData } from "./dwellingDetailsMapper";
 import { resolveState } from "~/stores/resolve";
@@ -13,7 +12,7 @@ describe("dwelling details mapper", () => {
 	it("maps general details input state to FHS input request", () => {
 		// Arrange
 		const state: GeneralDetailsData = {
-			typeOfDwelling: BuildType.flat,
+			typeOfDwelling: "flat",
 			storeysInDwelling: 3,
 			storeyOfFlat: 1,
 			numOfBedrooms: 2,
@@ -45,8 +44,8 @@ describe("dwelling details mapper", () => {
 		// Arrange
 		const state: ExternalFactorsData = {
 			altitude: 30,
-			typeOfExposure: VentilationShieldClass.Normal,
-			terrainType: TerrainClass.OpenField,
+			typeOfExposure: "Normal",
+			terrainType: "OpenField",
 			noiseNuisance: true
 		};
 
@@ -75,7 +74,7 @@ describe("dwelling details mapper", () => {
 			name: "Big Tree",
 			startAngle: 5,
 			endAngle: 25,
-			objectType: ShadingObjectType.obstacle,
+			objectType: "obstacle",
 			height: 3,
 			distance: 2
 		};

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import type { MVHRLocation } from "~/schema/api-schema.types";
-import { VentType } from "~/schema/aliases";
+import type { VentType } from "~/schema/aliases";
+import type { SchemaMvhrLocation } from "~/schema/api-schema.types";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units/types";
 
@@ -18,15 +18,14 @@ if (typeof mechanicalVentilation?.airFlowRate === "number") {
 
 const model: Ref<MechanicalVentilationData> = ref(mechanicalVentilation!);
 
-/** 'PIV' is excluded from options here because it is in the schema currently but unsupported in HEM itself at 0.34 version */
-const ventTypeOptions: Record<Exclude<VentType, "PIV">, string> = {
-	[VentType.MVHR]: "MVHR (Mechanical Ventilation with Heat recovery)",
-	[VentType.Intermittent_MEV]: "Intermittent MEV (Mechanical Extract Ventilation)",
-	[VentType.Centralised_continuous_MEV]: "Centralised continuous MEV (Mechanical Extract Ventilation)",
-	[VentType.Decentralised_continuous_MEV]: "Decentralised continuous MEV (Mechanical Extract Ventilation)",
+const ventTypeOptions: Record<VentType, string> = {
+	MVHR: "MVHR (Mechanical Ventilation with Heat recovery)",
+	["Intermittent MEV"]: "Intermittent MEV (Mechanical Extract Ventilation)",
+	["Centralised continuous MEV"]: "Centralised continuous MEV (Mechanical Extract Ventilation)",
+	["Decentralised continuous MEV"]: "Decentralised continuous MEV (Mechanical Extract Ventilation)",
 };
 
-const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation>> = {
+const mvhrLocationOptions: Record<SchemaMvhrLocation, SnakeToSentenceCase<SchemaMvhrLocation>> = {
 	inside: "Inside",
 	outside: "Outside"
 };
@@ -43,10 +42,10 @@ const saveForm = (fields: MechanicalVentilationData) => {
 
 		let mechanicalVentilationItem: MechanicalVentilationData;
 
-		if (fields.typeOfMechanicalVentilationOptions === VentType.MVHR) {
+		if (fields.typeOfMechanicalVentilationOptions === "MVHR") {
 			mechanicalVentilationItem = {
 				...commonFields,
-				typeOfMechanicalVentilationOptions: fields.typeOfMechanicalVentilationOptions,
+				typeOfMechanicalVentilationOptions: "MVHR",
 				mvhrLocation: fields.mvhrLocation,
 				mvhrEfficiency: fields.mvhrEfficiency,
 			};
@@ -141,7 +140,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</table>
 			</GovDetails>
 		</FormKit>
-		<template v-if="model.typeOfMechanicalVentilationOptions === VentType.MVHR">
+		<template v-if="model.typeOfMechanicalVentilationOptions === 'MVHR'">
 			<FormKit
 				id="mvhrLocation"
 				type="govRadios"

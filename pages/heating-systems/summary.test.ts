@@ -1,7 +1,6 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import HeatingSystemsSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
-import { FuelType } from "~/schema/api-schema.types";
 import { kilowatt } from "~/utils/units/power";
 import { kilowattHourPerKelvin } from "~/utils/units/thermalConductivity";
 import { celsius } from "~/utils/units/temperature";
@@ -49,7 +48,7 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					energySupply: {
 						data: {
-							fuelType: [FuelType.electricity],
+							fuelType: ["electricity"],
 							exported: false
 						},
 					},
@@ -70,7 +69,7 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					energySupply: {
 						data: {
-							fuelType: [FuelType.custom],
+							fuelType: ["custom"],
 							co2PerKwh: 1,
 							co2PerKwhIncludingOutOfScope: 2,
 							kwhPerKwhDelivered: 3,
@@ -95,7 +94,7 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					energySupply: {
 						data: {
-							fuelType: [FuelType.custom, FuelType.electricity],
+							fuelType: ["custom", "electricity"],
 							co2PerKwh: 1,
 							co2PerKwhIncludingOutOfScope: 2,
 							kwhPerKwhDelivered: 3,

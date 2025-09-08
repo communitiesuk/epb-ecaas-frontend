@@ -5,7 +5,6 @@ import ExternalWallForm from "./external/[wall].vue";
 import InternalWallForm from "./internal/[wall].vue";
 import PartyWallForm from "./party/[wall].vue";
 import WallToUnheatedForm from "./wall-to-unheated-space/[wall].vue";
-import { MassDistributionClass } from "~/schema/api-schema.types";
 
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
@@ -35,7 +34,7 @@ describe("walls", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I
+		massDistributionClass: "I"
 		
 	};
 
@@ -53,7 +52,7 @@ describe("walls", () => {
 		name: "Internal wall 1",
 		surfaceAreaOfElement: 5,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 		pitchOption: "custom",
 		pitch: 3
 	};
@@ -73,7 +72,7 @@ describe("walls", () => {
 		surfaceAreaOfElement: 500,
 		uValue: 10,
 		arealHeatCapacity: 110000,
-		massDistributionClass: MassDistributionClass.E,
+		massDistributionClass: "E",
 		pitchOption: "90",
 		pitch: 90,
 		thermalResistanceOfAdjacentUnheatedSpace: 1
@@ -97,7 +96,7 @@ describe("walls", () => {
 		surfaceArea: 10,
 		uValue: 0.01,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I
+		massDistributionClass: "I"
 	};
 
 	const party2: PartyWallData = {

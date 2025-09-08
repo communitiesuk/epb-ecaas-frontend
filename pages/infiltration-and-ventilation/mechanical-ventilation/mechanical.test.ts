@@ -4,8 +4,6 @@ import MechanicalVentilationOverview from "./index.vue";
 import MechanicalVentilationForm from "./[mechanical].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
-import { DuctShape, DuctType, MVHRLocation } from "~/schema/api-schema.types";
-import { VentType } from "~/schema/aliases";
 
 describe("mechanical ventilation overview", () => {
 	const store = useEcaasStore();
@@ -19,9 +17,9 @@ describe("mechanical ventilation overview", () => {
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
+		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
 
 	};
@@ -29,23 +27,23 @@ describe("mechanical ventilation overview", () => {
 	const mechanicalVentilation2: MechanicalVentilationData = {
 		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 2",
-		typeOfMechanicalVentilationOptions: VentType.Decentralised_continuous_MEV,
+		typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
 		airFlowRate: 14,
 	};
 
 	const mechanicalVentilation3: MechanicalVentilationData = {
 		id: "6380f2fe-a78f-4a56-ba5a-1a7751ac502a",
 		name: "Mechanical name 3",
-		typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
+		typeOfMechanicalVentilationOptions: "Intermittent MEV",
 		airFlowRate: 14,
 	};
 
 	const mechanicalVentilation4: MechanicalVentilationData = {
 		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
 		name: "Mechanical name 4",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
+		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
 
 	};
@@ -54,8 +52,8 @@ describe("mechanical ventilation overview", () => {
 	const ductwork1: DuctworkData = {
 		name: "Ductwork 1",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -68,8 +66,8 @@ describe("mechanical ventilation overview", () => {
 	const ductwork2: DuctworkData = {
 		name: "Ductwork 2",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -82,8 +80,8 @@ describe("mechanical ventilation overview", () => {
 	const ductwork3: DuctworkData = {
 		name: "Ductwork 3",
 		mvhrUnit: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,

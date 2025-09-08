@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { centimetre, type Length } from "~/utils/units/length";
-import type { BuildingElementGroundSlabEdgeInsulationFloor_type, BuildingElementGroundSlabNoEdgeInsulationFloor_type, BuildingElementGroundSuspendedFloorFloor_type } from "~/schema/api-schema.types";
-import { WindShieldLocation } from "~/schema/api-schema.types";
-import { FloorType } from "~/schema/aliases";
+import type { SchemaWindShieldLocation } from "~/schema/api-schema.types";
 import { unitValue } from "~/utils/units/types";
 
 const title = "Ground floor";
@@ -12,26 +10,26 @@ const { saveToList } = useForm();
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
 // prepopulate edge insulation width when using old input format
-if (floorData?.typeOfGroundFloor === FloorType.Slab_edge_insulation && typeof floorData.edgeInsulationWidth === "number") {
+if (floorData?.typeOfGroundFloor === "Slab_edge_insulation" && typeof floorData.edgeInsulationWidth === "number") {
 	floorData.edgeInsulationWidth = unitValue(floorData.edgeInsulationWidth, centimetre);
 };
 
 const model: Ref<GroundFloorData> = ref(floorData!);
 
 // Removed heated and unheated basement options for summer
-type reducedGroundFloorOptions = BuildingElementGroundSlabNoEdgeInsulationFloor_type | BuildingElementGroundSlabEdgeInsulationFloor_type | BuildingElementGroundSuspendedFloorFloor_type;
+type reducedGroundFloorOptions = "Slab_no_edge_insulation" | "Slab_edge_insulation" | "Suspended_floor";
 const typeOfGroundFloorOptions: Record<reducedGroundFloorOptions, SnakeToSentenceCase<reducedGroundFloorOptions>> = {
-	[FloorType.Slab_no_edge_insulation]: "Slab no edge insulation",
-	[FloorType.Slab_edge_insulation]: "Slab edge insulation",
-	[FloorType.Suspended_floor]: "Suspended floor",
-	// [FloorType.Heated_basement]: 'Heated basement',
-	// [FloorType.Unheated_basement]: 'Unheated basement',
+	Slab_no_edge_insulation: "Slab no edge insulation",
+	Slab_edge_insulation: "Slab edge insulation",
+	Suspended_floor: "Suspended floor",
+	// Heated_basement: 'Heated basement',
+	// Unheated_basement: 'Unheated basement',
 };
 
-const windShieldingFactorOptions: Record<WindShieldLocation, SnakeToSentenceCase<WindShieldLocation>> = {
-	[WindShieldLocation.Sheltered]: "Sheltered",
-	[WindShieldLocation.Average]: "Average",
-	[WindShieldLocation.Exposed]: "Exposed"
+const windShieldingFactorOptions: Record<SchemaWindShieldLocation, SnakeToSentenceCase<SchemaWindShieldLocation>> = {
+	Sheltered: "Sheltered",
+	Average: "Average",
+	Exposed: "Exposed"
 };
 
 const saveForm = (fields: GroundFloorData) => {
@@ -54,7 +52,7 @@ const saveForm = (fields: GroundFloorData) => {
 		let floor: GroundFloorData;
 
 		switch(fields.typeOfGroundFloor) {
-			case FloorType.Slab_edge_insulation:
+			case "Slab_edge_insulation":
 			{				
 				floor = {
 					...commonFields,
@@ -65,13 +63,13 @@ const saveForm = (fields: GroundFloorData) => {
 				};
 				break;
 			}
-			case FloorType.Slab_no_edge_insulation:
+			case "Slab_no_edge_insulation":
 				floor = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 				};
 				break;
-			case FloorType.Suspended_floor:
+			case "Suspended_floor":
 				floor = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
@@ -82,7 +80,7 @@ const saveForm = (fields: GroundFloorData) => {
 					windShieldingFactor: fields.windShieldingFactor,
 				};
 				break;
-			case FloorType.Heated_basement:
+			case "Heated_basement":
 				floor = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
@@ -90,7 +88,7 @@ const saveForm = (fields: GroundFloorData) => {
 					thermalResistanceOfBasementWalls: fields.thermalResistanceOfBasementWalls,
 				};
 				break;
-			case FloorType.Unheated_basement:
+			case "Unheated_basement":
 				floor = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
@@ -103,7 +101,7 @@ const saveForm = (fields: GroundFloorData) => {
 				break;
 			default:
 				fields satisfies never;
-				throw new Error(`Did not handle floor type '${ (fields as GroundFloorData).typeOfGroundFloor }'`);
+				throw new Error(`Did not handle floor type '${ (fields as { typeOfGroundFloor: string }).typeOfGroundFloor }'`);
 
 		}
 
@@ -217,7 +215,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			validation="required"
 		/>
 
-		<template v-if="model.typeOfGroundFloor === FloorType.Slab_edge_insulation">
+		<template v-if="model.typeOfGroundFloor === 'Slab_edge_insulation'">
 			<FormKit
 				id="edgeInsulationType"
 				type="govRadios"
@@ -304,7 +302,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			/>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === FloorType.Suspended_floor">
+		<template v-if="model.typeOfGroundFloor === 'Suspended_floor'">
 			<FormKit
 				id="heightOfFloorUpperSurface"
 				type="govInputWithSuffix"
@@ -399,7 +397,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			</FormKit>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === FloorType.Heated_basement">
+		<template v-if="model.typeOfGroundFloor === 'Heated_basement'">
 			<FormKit
 				id="depthOfBasementFloorBelowGround"
 				type="govInputWithSuffix"
@@ -418,7 +416,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			/>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === FloorType.Unheated_basement">
+		<template v-if="model.typeOfGroundFloor === 'Unheated_basement'">
 			<FormKit
 				id="thermalTransmittanceOfFloorAboveBasement"
 				type="govInputWithSuffix"

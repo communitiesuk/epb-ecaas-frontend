@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/vue";
 import WallToUnheatedSpace from "./[wall].vue";
-import { MassDistributionClass } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -18,7 +17,7 @@ describe("wall to unheated space", () => {
 		surfaceAreaOfElement: 500,
 		uValue: 10,
 		arealHeatCapacity: 50000,
-		massDistributionClass: MassDistributionClass.E,
+		massDistributionClass: "E",
 		pitchOption: "90",
 		pitch: 90,
 		thermalResistanceOfAdjacentUnheatedSpace: 1

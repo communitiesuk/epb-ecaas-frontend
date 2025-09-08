@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getUrl, getTabItems, type ArealHeatCapacityValue } from "#imports";
-import { FloorType } from "~/schema/aliases";
 import { metresSquare, millimetresSquarePerMetre } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
 import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from "~/utils/units/thermalConductivity";
@@ -50,7 +49,7 @@ const groundFloorSummary: SummarySection = {
 	id: "dwellingSpaceGroundFloors",
 	label: "Ground floor",
 	data: groundFloorData.map(x => {
-		const edgeInsulationWidth = x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? (typeof x.edgeInsulationWidth === "number" ? x.edgeInsulationWidth : x.edgeInsulationWidth.amount) : undefined;
+		const edgeInsulationWidth = x.typeOfGroundFloor === "Slab_edge_insulation" ? (typeof x.edgeInsulationWidth === "number" ? x.edgeInsulationWidth : x.edgeInsulationWidth.amount) : undefined;
 		
 		return {
 			"Name": x.name,
@@ -64,18 +63,18 @@ const groundFloorSummary: SummarySection = {
 			"Psi of wall junction": `${x.psiOfWallJunction} ${wattsPerMeterKelvin.suffix}`,
 			"Thickness of walls at the edge of the floor": `${x.thicknessOfWalls} ${millimetre.suffix}`,
 			"Type of ground floor": displaySnakeToSentenceCase(x.typeOfGroundFloor),
-			"Edge insulation type": x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? displayCamelToSentenceCase(x.edgeInsulationType) : undefined,
+			"Edge insulation type": x.typeOfGroundFloor === "Slab_edge_insulation" ? displayCamelToSentenceCase(x.edgeInsulationType) : undefined,
 			"Edge insulation width": edgeInsulationWidth ? `${edgeInsulationWidth} ${centimetre.suffix}` : undefined,
-			"Edge insulation thermal resistance": x.typeOfGroundFloor === FloorType.Slab_edge_insulation ? `${x.edgeInsulationThermalResistance} ${squareMeterKelvinPerWatt.suffix}` : undefined,
-			"Height of the floor upper surface": x.typeOfGroundFloor === FloorType.Suspended_floor ? `${x.heightOfFloorUpperSurface} ${millimetre.suffix}` : undefined,
-			"Thermal resistance of insulation on base of underfloor space": x.typeOfGroundFloor === FloorType.Suspended_floor ? `${x.underfloorSpaceThermalResistance} ${squareMeterKelvinPerWatt.suffix}` : undefined,
-			"Thermal transmittance of walls above ground": x.typeOfGroundFloor === FloorType.Suspended_floor ? `${x.thermalTransmittanceOfWallsAboveGround} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
-			"Area of ventilation openings per perimeter": x.typeOfGroundFloor === FloorType.Suspended_floor ? `${x.ventilationOpeningsArea} ${millimetresSquarePerMetre.suffix}` : undefined,
-			"Wind shielding factor": x.typeOfGroundFloor === FloorType.Suspended_floor ? x.windShieldingFactor : undefined,
-			"Depth of basement floor below ground level": x.typeOfGroundFloor === FloorType.Heated_basement || x.typeOfGroundFloor === FloorType.Unheated_basement ? `${x.depthOfBasementFloorBelowGround} ${metre.suffix}` : undefined,
-			"Thermal resistance of walls of basement": x.typeOfGroundFloor === FloorType.Heated_basement ? `${x.thermalResistanceOfBasementWalls} ${squareMeterKelvinPerWatt.suffix}` : undefined,
-			"Thermal transmittance of floor above basement": x.typeOfGroundFloor === FloorType.Unheated_basement ? `${x.thermalTransmittanceOfFloorAboveBasement} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
-			"Height of the basement walls above ground level": x.typeOfGroundFloor === FloorType.Unheated_basement ? `${x.heightOfBasementWallsAboveGround} ${metre.suffix}` : undefined
+			"Edge insulation thermal resistance": x.typeOfGroundFloor === "Slab_edge_insulation" ? `${x.edgeInsulationThermalResistance} ${squareMeterKelvinPerWatt.suffix}` : undefined,
+			"Height of the floor upper surface": x.typeOfGroundFloor === "Suspended_floor" ? `${x.heightOfFloorUpperSurface} ${millimetre.suffix}` : undefined,
+			"Thermal resistance of insulation on base of underfloor space": x.typeOfGroundFloor === "Suspended_floor" ? `${x.underfloorSpaceThermalResistance} ${squareMeterKelvinPerWatt.suffix}` : undefined,
+			"Thermal transmittance of walls above ground": x.typeOfGroundFloor === "Suspended_floor" ? `${x.thermalTransmittanceOfWallsAboveGround} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
+			"Area of ventilation openings per perimeter": x.typeOfGroundFloor === "Suspended_floor" ? `${x.ventilationOpeningsArea} ${millimetresSquarePerMetre.suffix}` : undefined,
+			"Wind shielding factor": x.typeOfGroundFloor === "Suspended_floor" ? x.windShieldingFactor : undefined,
+			"Depth of basement floor below ground level": x.typeOfGroundFloor === "Heated_basement" || x.typeOfGroundFloor === "Unheated_basement" ? `${x.depthOfBasementFloorBelowGround} ${metre.suffix}` : undefined,
+			"Thermal resistance of walls of basement": x.typeOfGroundFloor === "Heated_basement" ? `${x.thermalResistanceOfBasementWalls} ${squareMeterKelvinPerWatt.suffix}` : undefined,
+			"Thermal transmittance of floor above basement": x.typeOfGroundFloor === "Unheated_basement" ? `${x.thermalTransmittanceOfFloorAboveBasement} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
+			"Height of the basement walls above ground level": x.typeOfGroundFloor === "Unheated_basement" ? `${x.heightOfBasementWallsAboveGround} ${metre.suffix}` : undefined
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceFloors")
@@ -352,7 +351,7 @@ const windowSummary: SummarySection = {
 			"Side fin left depth": "sideFinLeftDepth" in x && x.sideFinLeftDepth ? (typeof x.sideFinLeftDepth === "number" ? `${x.sideFinLeftDepth} ${millimetre.suffix}` : `${x.sideFinLeftDepth.amount} ${millimetre.suffix}`) : undefined,
 			"Side fin left distance from glass": "sideFinLeftDistance" in x && x.sideFinLeftDistance ? (typeof x.sideFinLeftDistance === "number" ? `${x.sideFinLeftDistance} ${millimetre.suffix}` : `${x.sideFinLeftDistance.amount} ${millimetre.suffix}`) : undefined,
 			"Type": x.curtainsOrBlinds ? displayCamelToSentenceCase(x.treatmentType) : undefined,
-			"Curtains control object reference": "curtainsControlObject" in x ? displaySnakeToSentenceCase(x.curtainsControlObject!) : undefined,
+			"Curtains control object reference": "curtainsControlObject" in x && x.curtainsControlObject !== undefined ? displaySnakeToSentenceCase(x.curtainsControlObject) : undefined,
 			"Thermal resistivity increase": "thermalResistivityIncrease" in x ? `${x.thermalResistivityIncrease} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
 			"Solar transmittance reduction": "solarTransmittanceReduction" in x ? x.solarTransmittanceReduction : undefined
 		};

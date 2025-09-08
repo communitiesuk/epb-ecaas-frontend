@@ -1,5 +1,4 @@
 import type { GovTagProps } from "~/common.types";
-import { BatteryLocation } from "~/schema/api-schema.types";
 
 describe("getSectionStatus util function" , () => {
 
@@ -21,7 +20,7 @@ describe("getSectionStatus util function" , () => {
 			capacity: 10,
 			batteryAge: 2,
 			chargeEfficiency: 0.7,
-			location: BatteryLocation.inside,
+			location: "inside",
 			gridChargingPossible: false,
 			maximumChargeRate: 6.2,
 			minimumChargeRate: 4.5,

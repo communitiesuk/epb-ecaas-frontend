@@ -2,7 +2,6 @@ import userEvent from "@testing-library/user-event";
 import OpenGasKitchenStove from "./[combustion].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from "@testing-library/vue";
-import { CombustionAirSupplySituation, CombustionApplianceType, CombustionFuelType, FlueGasExhaustSituation } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -15,9 +14,9 @@ describe("open gas kitchen stove", () => {
 
 	const openGasKitchenStove: CombustionApplianceData = {
 		name: "Open gas kitchen stove 1",
-		airSupplyToAppliance: CombustionAirSupplySituation.outside,
-		exhaustMethodFromAppliance: FlueGasExhaustSituation.into_room,
-		typeOfFuel: CombustionFuelType.oil,
+		airSupplyToAppliance: "outside",
+		exhaustMethodFromAppliance: "into_room",
+		typeOfFuel: "oil",
 	};
 
 	afterEach(() => {
@@ -35,7 +34,7 @@ describe("open gas kitchen stove", () => {
 		await user.tab();
 		await user.click(screen.getByRole("button"));
 
-		const { data } = store.infiltrationAndVentilation.combustionAppliances[CombustionApplianceType.open_gas_kitchen_stove];
+		const { data } = store.infiltrationAndVentilation.combustionAppliances["open_gas_kitchen_stove"];
 
 		expect(data[0]).toEqual(openGasKitchenStove);
 		expect(navigateToMock).toHaveBeenCalledWith("/infiltration-and-ventilation/combustion-appliances");
@@ -45,7 +44,7 @@ describe("open gas kitchen stove", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_gas_kitchen_stove]: {
+					open_gas_kitchen_stove: {
 						data: [openGasKitchenStove]
 					}
 				}

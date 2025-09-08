@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl } from "#imports";
-import { DuctShape } from "~/schema/api-schema.types";
 import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
 import { metre, millimetre } from "~/utils/units/length";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 import { centimetresSquare, metresSquare } from "~/utils/units/area";
 import { degrees } from "~/utils/units/angle";
 import { pascal } from "~/utils/units/pressure";
-import { VentType } from "~/schema/aliases";
 
 const title = "Infiltration and ventilation summary";
 const store = useEcaasStore();
@@ -23,7 +21,7 @@ const mechanicalVentilationSummary: SummarySection = {
 			"Name": x.name,
 			"Type of mechanical ventilation": x.typeOfMechanicalVentilationOptions,
 			"Air flow rate": typeof x.airFlowRate === "number" ? `${x.airFlowRate} ${litrePerSecond.suffix}` : `${x.airFlowRate.amount} ${litrePerSecond.suffix}`,
-			...(x.typeOfMechanicalVentilationOptions == VentType.MVHR ? {
+			...(x.typeOfMechanicalVentilationOptions == "MVHR" ? {
 				"MVHR location": displayCamelToSentenceCase(x.mvhrLocation),
 				"MVHR efficiency": x.mvhrEfficiency,
 			} : {})
@@ -45,9 +43,9 @@ const ductworkSummary: SummarySection = {
 			"MVHR unit": mvhr[0]?.name,
 			"Duct type": displayCamelToSentenceCase(x.ductType),
 			"Ductwork cross sectional shape": displayCamelToSentenceCase(x.ductworkCrossSectionalShape),
-			"Internal diameter of ductwork": x.ductworkCrossSectionalShape === DuctShape.circular ? `${x.internalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
-			"External diameter of ductwork": x.ductworkCrossSectionalShape === DuctShape.circular ? `${x.externalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
-			"Perimeter of ductwork": x.ductworkCrossSectionalShape === DuctShape.rectangular ? `${x.ductPerimeter} ${millimetre.suffix}` : undefined,
+			"Internal diameter of ductwork": x.ductworkCrossSectionalShape === "circular" ? `${x.internalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
+			"External diameter of ductwork": x.ductworkCrossSectionalShape === "circular" ? `${x.externalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
+			"Perimeter of ductwork": x.ductworkCrossSectionalShape === "rectangular" ? `${x.ductPerimeter} ${millimetre.suffix}` : undefined,
 			"Length of ductwork": `${x.lengthOfDuctwork} ${metre.suffix}`,
 			"Insulation thickness": `${x.insulationThickness} ${millimetre.suffix}`,
 			"Thermal conductivity of ductwork insulation": `${x.thermalInsulationConductivityOfDuctwork} ${wattsPerMeterKelvin.suffix}`,

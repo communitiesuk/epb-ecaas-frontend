@@ -1,4 +1,3 @@
-import { FuelType, SpaceHeatSystemInstantElectricHeaterFHSType, SpaceHeatSystemWetDistributionFHSType, WetEmitterRadiatorWet_emitter_type, WetEmitterUFHWet_emitter_type } from "~/schema/api-schema.types";
 import { mapEnergySupplyData, mapHeatEmittingData } from "./heatingSystemsMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { defaultZoneName } from "./common";
@@ -19,7 +18,7 @@ describe("heating systems mapper", () => {
 	it("maps energy supplies that include gas only", () => {
 		// Arrange
 		const energySupplyData: EnergySupplyData = {
-			fuelType: [FuelType.mains_gas],
+			fuelType: ["mains_gas"],
 		};
 
 		store.$patch({
@@ -38,7 +37,7 @@ describe("heating systems mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
 				mains_gas: energySupply({
-					fuel: FuelType.mains_gas,
+					fuel: "mains_gas",
 				})
 			},
 		};
@@ -49,7 +48,7 @@ describe("heating systems mapper", () => {
 	it("maps energy supplies that include exported electricity", () => {
 		// Arrange
 		const energySupplyData: EnergySupplyData = {
-			fuelType: [FuelType.mains_gas, FuelType.electricity],
+			fuelType: ["mains_gas", "electricity"],
 			exported: true
 		};
 
@@ -69,10 +68,10 @@ describe("heating systems mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
 				mains_gas: energySupply({
-					fuel: FuelType.mains_gas,
+					fuel: "mains_gas",
 				}),
 				"mains elec": energySupply({
-					fuel: FuelType.electricity,
+					fuel: "electricity",
 					is_export_capable: true
 				})
 			},
@@ -84,7 +83,7 @@ describe("heating systems mapper", () => {
 	it("maps energy supplies that include electricity and custom fuel types", () => {
 		// Arrange
 		const energySupplyData: EnergySupplyData = {
-			fuelType: [FuelType.electricity, FuelType.custom, FuelType.mains_gas],
+			fuelType: ["electricity", "custom", "mains_gas"],
 			exported: true,
 			co2PerKwh: 3.2,
 			co2PerKwhIncludingOutOfScope: 4.8,
@@ -107,11 +106,11 @@ describe("heating systems mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
 				"mains elec": energySupply({
-					fuel: FuelType.electricity,
+					fuel: "electricity",
 					is_export_capable: true
 				}),
 				custom: energySupply({
-					fuel: FuelType.custom,
+					fuel: "custom",
 					factor: {
 						"Emissions Factor kgCO2e/kWh": 3.2,
 						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": 4.8,
@@ -119,7 +118,7 @@ describe("heating systems mapper", () => {
 					}
 				}),
 				mains_gas: energySupply({
-					fuel: FuelType.mains_gas,
+					fuel: "mains_gas",
 				})
 			},
 		};
@@ -192,12 +191,12 @@ describe("heating systems mapper", () => {
 					design_flow_temp: 35,
 					design_flow_rate: 4,
 					emitters: [{
-						wet_emitter_type: WetEmitterRadiatorWet_emitter_type.radiator,
+						wet_emitter_type: "radiator",
 						frac_convective: 0.7,
 						c: 0.08,
 						n: 1.3,
 					}, {
-						wet_emitter_type: WetEmitterRadiatorWet_emitter_type.radiator,
+						wet_emitter_type: "radiator",
 						frac_convective: 0.7,
 						c: 0.08,
 						n: 1.3,
@@ -210,7 +209,7 @@ describe("heating systems mapper", () => {
 					},
 					temp_diff_emit_dsgn: 4,
 					thermal_mass: 400,
-					type: SpaceHeatSystemWetDistributionFHSType.WetDistribution,
+					type: "WetDistribution",
 					Zone: defaultZoneName,
 					Control: "heating", // TODO this may need to refer to a real control
 					advanced_start: null,
@@ -298,7 +297,7 @@ describe("heating systems mapper", () => {
 						max_outdoor_temp: 32,
 					},
 					emitters: [{
-						wet_emitter_type: WetEmitterUFHWet_emitter_type.ufh,
+						wet_emitter_type: "ufh",
 						emitter_floor_area: 1.5,
 						system_performance_factor: 5,
 						equivalent_specific_thermal_mass: 80,
@@ -306,7 +305,7 @@ describe("heating systems mapper", () => {
 					}],
 					temp_diff_emit_dsgn: 4,
 					thermal_mass: 400,
-					type: SpaceHeatSystemWetDistributionFHSType.WetDistribution,
+					type: "WetDistribution",
 					Zone: defaultZoneName,
 					Control: "heating", // TODO this may need to refer to a real control
 					advanced_start: null,
@@ -356,7 +355,7 @@ describe("heating systems mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "SpaceHeatSystem"> = {
 			SpaceHeatSystem: {
 				"Acme instant electric heater": {
-					type: SpaceHeatSystemInstantElectricHeaterFHSType.InstantElecHeater,
+					type: "InstantElecHeater",
 					rated_power: 100,
 					frac_convective: 0.8,
 					EnergySupply: "mains elec",

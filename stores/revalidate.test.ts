@@ -1,5 +1,4 @@
 import * as immutable from "object-path-immutable";
-import { BuildType, MassDistributionClass } from "~/schema/api-schema.types";
 
 // define some structures for the test fixtures using types
 
@@ -7,7 +6,7 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 	"dwellingDetails": {
 		"generalSpecifications": {
 			"data": {
-				"typeOfDwelling": BuildType.house,
+				"typeOfDwelling": "house",
 				"storeysInDwelling": 3,
 				"numOfBedrooms": 3,
 				"coolingRequired": false
@@ -42,7 +41,7 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 				"solarAbsorption": 0.9,
 				"uValue": 5,
 				"kappaValue": 110000,
-				"massDistributionClass": MassDistributionClass.E
+				"massDistributionClass": "E"
 			},
 			{
 				"name": "Wall 2",
@@ -56,7 +55,7 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 				"solarAbsorption": 0.7,
 				"uValue": 6,
 				"kappaValue": 175000,
-				"massDistributionClass": MassDistributionClass.I
+				"massDistributionClass": "I"
 			}
 		],
 		"complete": true

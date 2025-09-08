@@ -1,7 +1,7 @@
 import { objectFromEntries } from "ts-extras";
-import { FlueGasExhaustSituation, MassDistributionClass } from "../schema/api-schema.types";
+import type { SchemaFlueGasExhaustSituation } from "../schema/api-schema.types";
 import type { DisplayProduct } from "~/pcdb/products";
-import { WwhrsType, type ApplianceKey } from "~/schema/aliases";
+import type { ApplianceKey, MassDistributionClass, WwhrsType } from "~/schema/aliases";
 
 export function displayBoolean(value: boolean | undefined): BooleanDisplay | undefined {
 	if (typeof value === "undefined") {
@@ -15,15 +15,15 @@ type BooleanDisplay = "Yes" | "No";
 
 export function displayMassDistributionClass(value: MassDistributionClass | undefined): MassDistributionClassDisplay | undefined {
 	switch (value) {
-		case MassDistributionClass.I:
+		case "I":
 			return "Internal";
-		case MassDistributionClass.E:
+		case "E":
 			return "External";
-		case MassDistributionClass.IE:
+		case "IE":
 			return "Divided";
-		case MassDistributionClass.D:
+		case "D":
 			return "Equally";
-		case MassDistributionClass.M:
+		case "M":
 			return "Inside";
 		default:
 			return undefined;
@@ -39,13 +39,13 @@ export function sentenceCase(value: string): string {
 
 export type FlueGasExhaustSituationDisplay = "Into separate duct" | "Into room" | "Into mechanical vent";
 
-export function displayFlueGasExhaustSituation(value: FlueGasExhaustSituation): FlueGasExhaustSituationDisplay {
+export function displayFlueGasExhaustSituation(value: SchemaFlueGasExhaustSituation): FlueGasExhaustSituationDisplay {
 	switch (value) {
-		case FlueGasExhaustSituation.into_separate_duct:
+		case "into_separate_duct":
 			return "Into separate duct";
-		case FlueGasExhaustSituation.into_room:
+		case "into_room":
 			return "Into room";
-		case FlueGasExhaustSituation.into_mech_vent:
+		case "into_mech_vent":
 			return "Into mechanical vent";
 		default:
 			value satisfies never;
@@ -100,11 +100,11 @@ export function displayCamelToSentenceCase(value: string): string {
 
 export function displayWwhrsType(value: WwhrsType): WwhrsTypeDisplay {
 	switch (value) {
-		case WwhrsType.WWHRS_InstantaneousSystemA:
+		case "WWHRS_InstantaneousSystemA":
 			return "A";
-		case WwhrsType.WWHRS_InstantaneousSystemB:
+		case "WWHRS_InstantaneousSystemB":
 			return "B";
-		case WwhrsType.WWHRS_InstantaneousSystemC:
+		case "WWHRS_InstantaneousSystemC":
 			return "C";
 		default:
 			value satisfies never;

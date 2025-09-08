@@ -6,7 +6,6 @@ import { within } from "@testing-library/dom";
 import UnglazedDoorForm from "./external-unglazed/[door].vue";
 import glazedDoorForm from "./external-glazed/[door].vue";
 import internalDoorForm from "./internal/[door].vue";
-import { MassDistributionClass } from "~/schema/api-schema.types";
 import type { Component } from "vue";
 
 describe("doors", () => {
@@ -34,7 +33,7 @@ describe("doors", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I
+		massDistributionClass: "I"
 	};
 
 	const externalUnglazed2: ExternalUnglazedDoorData = {
@@ -49,7 +48,7 @@ describe("doors", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I
+		massDistributionClass: "I"
 	};
 
 	const externalUnglazed3: ExternalUnglazedDoorData = {
@@ -64,7 +63,7 @@ describe("doors", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I
+		massDistributionClass: "I"
 	};
 
 	const externalGlazed1: ExternalGlazedDoorData = {
@@ -120,7 +119,7 @@ describe("doors", () => {
 		name: "Internal 1",
 		surfaceArea: 5,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 		pitchOption: "90",
 		pitch: 90
 	};
@@ -130,7 +129,7 @@ describe("doors", () => {
 		name: "Internal 2",
 		surfaceArea: 5,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 		pitchOption: "90",
 		pitch: 90
 	};
@@ -140,7 +139,7 @@ describe("doors", () => {
 		name: "Internal 3",
 		surfaceArea: 5,
 		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 		pitchOption: "90",
 		pitch: 90
 	};

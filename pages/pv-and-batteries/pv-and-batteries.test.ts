@@ -5,8 +5,6 @@ import PvSystemForm from "./pv-systems/[system].vue";
 import ElectricBatteryForm from "./electric-battery/index.vue";
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
-import { BatteryLocation, InverterType } from "~/schema/api-schema.types";
-import { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -30,7 +28,7 @@ describe("pv systems and electric battery", () => {
 		data: {
 			name: "PV System 1",
 			peakPower: 4,
-			ventilationStrategy: OnSiteGenerationVentilationStrategy.unventilated,
+			ventilationStrategy: "unventilated",
 			pitch: 45,
 			orientation: 20,
 			elevationalHeight: 100,
@@ -39,7 +37,7 @@ describe("pv systems and electric battery", () => {
 			inverterPeakPowerAC: 4,
 			inverterPeakPowerDC: 5,
 			inverterIsInside: true,
-			inverterType: InverterType.string_inverter,
+			inverterType: "string_inverter",
 			// aboveDepth: 20,
 			// aboveDistance: 4,
 			// leftDepth: 10,
@@ -72,7 +70,7 @@ describe("pv systems and electric battery", () => {
 			minimumChargeRate: 0.001,
 			maximumChargeRate: 1.5,
 			maximumDischargeRate: 1.25,
-			location: BatteryLocation.outside,
+			location: "outside",
 			gridChargingPossible: false,
 		}
 	};

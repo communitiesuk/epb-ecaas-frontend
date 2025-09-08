@@ -4,7 +4,6 @@ import { screen, within } from "@testing-library/vue";
 import Wwhrs from "./index.vue";
 import WwhrsForm from "./[wwhrs].vue";
 import type { WwhrsData } from "~/stores/ecaasStore.schema";
-import { WwhrsType } from "~/schema/aliases";
 
 describe("wwhrs", () => {
 	const store = useEcaasStore();
@@ -17,7 +16,7 @@ describe("wwhrs", () => {
 	const wwhrs1: Partial<WwhrsData> = {
 		name: "WWHRS 1",
 		outlet: "7184f2fe-a78f-4a56-ba5a-1a7751ac509z",
-		type: WwhrsType.WWHRS_InstantaneousSystemA,
+		type: "WWHRS_InstantaneousSystemA",
 		flowRate: 100,
 		efficiency: 50,
 		proportionOfUse: 1

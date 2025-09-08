@@ -1,8 +1,6 @@
-import { SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType } from "~/schema/api-schema.types";
 import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units/types";
-import { VentType } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -13,9 +11,9 @@ describe("infiltration ventilation mapper", () => {
 	const mechVentMvhr: MechanicalVentilationData[] = [{
 		id: "bathroom exhaust fan",
 		name: "bathroom exhaust fan",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: unitValue(30, litrePerSecond),
-		mvhrLocation: MVHRLocation.inside,
+		mvhrLocation: "inside",
 		mvhrEfficiency: 1,
 	}];
 
@@ -60,11 +58,11 @@ describe("infiltration ventilation mapper", () => {
 		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"];
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
-		expect(firstMechVent?.vent_type).toBe(VentType.MVHR);
+		expect(firstMechVent?.vent_type).toBe("MVHR");
 		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(108);
-		expect(firstMechVent?.sup_air_flw_ctrl).toBe(SupplyAirFlowRateControlType.ODA); 
-		expect(firstMechVent?.sup_air_temp_ctrl).toBe(SupplyAirTemperatureControlType.CONST);
-		expect(firstMechVent?.mvhr_location).toBe(MVHRLocation.inside);
+		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA"); 
+		expect(firstMechVent?.sup_air_temp_ctrl).toBe("CONST");
+		expect(firstMechVent?.mvhr_location).toBe("inside");
 		expect(firstMechVent?.mvhr_eff).toBe(1);
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
@@ -79,14 +77,14 @@ describe("infiltration ventilation mapper", () => {
 		const ductwork: DuctworkData[] = [{
 			name: "ductwork 1",
 			mvhrUnit: "bathroom exhaust fan",
-			ductworkCrossSectionalShape: DuctShape.circular,
+			ductworkCrossSectionalShape: "circular",
 			internalDiameterOfDuctwork: 200,
 			externalDiameterOfDuctwork: 300,
 			lengthOfDuctwork: 10.0,
 			thermalInsulationConductivityOfDuctwork: 0.023,
 			insulationThickness: 100,
 			surfaceReflectivity: false,
-			ductType: DuctType.extract
+			ductType: "extract"
 		}];
 
 		store.$patch({
@@ -123,14 +121,14 @@ describe("infiltration ventilation mapper", () => {
 		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"];
 		const firstDuctwork = firstMechVent!.ductwork![0];
 
-		expect(firstDuctwork?.cross_section_shape).toBe(DuctShape.circular);
+		expect(firstDuctwork?.cross_section_shape).toBe("circular");
 		expect(firstDuctwork?.internal_diameter_mm).toBe(200);
 		expect(firstDuctwork?.external_diameter_mm).toBe(300);
 		expect(firstDuctwork?.length).toBe(10);
 		expect(firstDuctwork?.insulation_thermal_conductivity).toBe(0.023);
 		expect(firstDuctwork?.insulation_thickness_mm).toBe(100);
 		expect(firstDuctwork?.reflective).toBe(false);
-		expect(firstDuctwork?.duct_type).toBe(DuctType.extract);
+		expect(firstDuctwork?.duct_type).toBe("extract");
 	});
 
 	it("maps input state for MVHR without ductwork to FHS input request", () => {
@@ -175,7 +173,7 @@ describe("infiltration ventilation mapper", () => {
 		const mechVent: MechanicalVentilationData[] = [{
 			id: "bathroom exhaust fan",
 			name: "bathroom exhaust fan",
-			typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
+			typeOfMechanicalVentilationOptions: "Intermittent MEV",
 			airFlowRate: unitValue(40, litrePerSecond),
 		}];
 
@@ -195,10 +193,10 @@ describe("infiltration ventilation mapper", () => {
 		const firstMechVent = fhsInputData["bathroom exhaust fan"];
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
-		expect(firstMechVent?.vent_type).toBe(VentType.Intermittent_MEV);
+		expect(firstMechVent?.vent_type).toBe("Intermittent_MEV");
 		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(144);
-		expect(firstMechVent?.sup_air_flw_ctrl).toBe(SupplyAirFlowRateControlType.ODA); 
-		expect(firstMechVent?.sup_air_temp_ctrl).toBe(SupplyAirTemperatureControlType.CONST);
+		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA"); 
+		expect(firstMechVent?.sup_air_temp_ctrl).toBe("CONST");
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeUndefined();
@@ -298,15 +296,15 @@ describe("infiltration ventilation mapper", () => {
 		// Arrange
 		const combustionAppliances: CombustionApplianceData[] = [{
 			name: "Gas Boiler",
-			airSupplyToAppliance: CombustionAirSupplySituation.room_air,
-			exhaustMethodFromAppliance: FlueGasExhaustSituation.into_mech_vent,
-			typeOfFuel: CombustionFuelType.gas
+			airSupplyToAppliance: "room_air",
+			exhaustMethodFromAppliance: "into_mech_vent",
+			typeOfFuel: "gas"
 		}];
 
 		store.$patch({
 			infiltrationAndVentilation: {
 				combustionAppliances: {
-					[CombustionApplianceType.open_gas_fire]: {
+					open_gas_fire: {
 						...baseForm,
 						data: combustionAppliances,
 					}
@@ -320,9 +318,9 @@ describe("infiltration ventilation mapper", () => {
 		// Assert
 		const gasBoiler = fhsInputData["Gas Boiler"];
 		expect(gasBoiler).toBeDefined();
-		expect(gasBoiler?.supply_situation).toBe(CombustionAirSupplySituation.room_air);
-		expect(gasBoiler?.exhaust_situation).toBe(FlueGasExhaustSituation.into_mech_vent);
-		expect(gasBoiler?.fuel_type).toBe(CombustionFuelType.gas);
-		expect(gasBoiler?.appliance_type).toBe(CombustionApplianceType.open_gas_fire);
+		expect(gasBoiler?.supply_situation).toBe("room_air");
+		expect(gasBoiler?.exhaust_situation).toBe("into_mech_vent");
+		expect(gasBoiler?.fuel_type).toBe("gas");
+		expect(gasBoiler?.appliance_type).toBe("open_gas_fire");
 	});
 });

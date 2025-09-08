@@ -2,8 +2,6 @@ import { screen } from "@testing-library/vue";
 import PVScreen from "./[system].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
-import { InverterType } from "~/schema/api-schema.types";
-import { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -43,7 +41,7 @@ describe("PV system", () => {
 		data: {
 			name: "PV 1",
 			peakPower: 4,
-			ventilationStrategy: OnSiteGenerationVentilationStrategy.unventilated,
+			ventilationStrategy: "unventilated",
 			pitch: 45,
 			orientation: 20,
 			elevationalHeight: 100,
@@ -52,7 +50,7 @@ describe("PV system", () => {
 			inverterPeakPowerAC: 4,
 			inverterPeakPowerDC: 5,
 			inverterIsInside: true,
-			inverterType: InverterType.optimised_inverter,
+			inverterType: "optimised_inverter",
 			// aboveDepth: 20,
 			// aboveDistance: 4,
 			// leftDepth: 10,

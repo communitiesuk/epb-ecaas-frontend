@@ -4,7 +4,6 @@ import { screen } from "@testing-library/vue";
 import Pipework from "./index.vue";
 import PrimaryPipeworkForm from "./primary/[pipe].vue";
 import SecondaryPipeworkForm from "./secondary/[pipe].vue";
-import { WaterPipeContentsType, WaterPipeworkLocation } from "~/schema/api-schema.types";
 
 
 describe("Pipeworks", () => {
@@ -20,9 +19,9 @@ describe("Pipeworks", () => {
 			insulationThickness: 5,
 			thermalConductivity: 0.5,
 			surfaceReflectivity: false,
-			pipeContents: WaterPipeContentsType.water,
+			pipeContents: "water",
 			hotWaterCylinder: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
-			location: WaterPipeworkLocation.internal,
+			location: "internal",
 		}, 
 		complete: true
 	};
@@ -31,7 +30,7 @@ describe("Pipeworks", () => {
 		data: {
 			name: "Pipework Kitchen",
 			length: 3,
-			location: WaterPipeworkLocation.internal,
+			location: "internal",
 			internalDiameter: 9
 		},
 		complete: true

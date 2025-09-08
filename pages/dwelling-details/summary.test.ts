@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
 import { screen } from "@testing-library/vue";
 import hyphenate from "../../utils/hyphenate";
-import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass } from "~/schema/api-schema.types";
 import { metre } from "~/utils/units/length";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -18,7 +17,7 @@ interface DwellingDetailSummary {
 
 const state: DwellingDetailSummary = {
 	generalDetails: {
-		typeOfDwelling: BuildType.house,
+		typeOfDwelling: "house",
 		storeysInDwelling: 2,
 		numOfBedrooms: 3,
 		coolingRequired: false,
@@ -27,14 +26,14 @@ const state: DwellingDetailSummary = {
 		name: "Shading 1",
 		startAngle: 0,
 		endAngle: 90,
-		objectType: ShadingObjectType.obstacle,
+		objectType: "obstacle",
 		height: 1,
 		distance: 4
 	}],
 	externalFactors: {
 		altitude: 3,
-		typeOfExposure: VentilationShieldClass.Shielded,
-		terrainType: TerrainClass.Suburban,
+		typeOfExposure: "Shielded",
+		terrainType: "Suburban",
 		noiseNuisance: false
 	}
 };
