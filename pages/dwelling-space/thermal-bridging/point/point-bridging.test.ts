@@ -148,9 +148,7 @@ describe("point thermal bridges", () => {
 			});
 
 			await user.clear(screen.getByTestId("name"));
-			await user.tab();
 			await user.clear(screen.getByTestId("heatTransferCoefficient"));
-			await user.tab();
 
 			await user.type(screen.getByTestId("name"), "Updated point bridge");
 			await user.type(screen.getByTestId("heatTransferCoefficient"), "4");
