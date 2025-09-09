@@ -3,7 +3,7 @@ import { AdjacentSpaceType } from "~/stores/ecaasStore.schema";
 
 const title = "Internal floor";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { getStoreIndex, autoSaveElementForm } = useForm();
 
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data);
 const model: Ref<InternalFloorData | undefined> = ref(floorData?.data);
@@ -21,17 +21,17 @@ const saveForm = (fields: InternalFloorData) => {
 			massDistributionClass: fields.massDistributionClass,
 		};
 
-		let floorData: InternalFloorData;
+		let floor: InternalFloorData;
 
 		if (fields.typeOfInternalFloor === "unheatedSpace") {
-			floorData = {
+			floor = {
 				...commonFields,
 				typeOfInternalFloor: fields.typeOfInternalFloor,
 				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 			
 			};
 		} else if (fields.typeOfInternalFloor === "heatedSpace") {
-			floorData = {
+			floor = {
 				...commonFields,
 				typeOfInternalFloor: fields.typeOfInternalFloor,
 			};
@@ -42,13 +42,24 @@ const saveForm = (fields: InternalFloorData) => {
 		if (!dwellingSpaceFloors.dwellingSpaceInternalFloor) {
 			dwellingSpaceFloors.dwellingSpaceInternalFloor = { data: [] };
 		}
-		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
-
-		const floor = { data: floorData, complete: true };
-		saveToList(floor, dwellingSpaceFloors.dwellingSpaceInternalFloor);
+		
+		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceInternalFloor.data);
+		dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] =  { data: floor, complete: true };
+		dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 	});
 	navigateTo("/dwelling-space/floors");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor,
+	defaultName: "Internal floor",
+	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>

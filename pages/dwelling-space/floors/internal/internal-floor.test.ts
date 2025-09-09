@@ -40,7 +40,11 @@ describe("internal floor", () => {
 	
 	describe("when type of internal floor is heated space", () => {
 		test("data is saved to store state when form is valid", async () => {
-			await renderSuspended(InternalFloor);
+			await renderSuspended(InternalFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});	
 	
 			await user.click(screen.getByTestId("typeOfInternalFloor_heatedSpace"));
 			await populateValidForm();
@@ -90,8 +94,11 @@ describe("internal floor", () => {
 	
 	describe("when type of internal floor is unheated space", () => {
 		test("data is saved to store state when form is valid", async () => {
-			await renderSuspended(InternalFloor);
-	
+			await renderSuspended(InternalFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});	
 			await user.click(screen.getByTestId("typeOfInternalFloor_unheatedSpace"));
 			await populateValidForm();
 			await user.type(screen.getByTestId("thermalResistanceOfAdjacentUnheatedSpace"), "0");
@@ -158,5 +165,74 @@ describe("internal floor", () => {
 		await user.click(screen.getByRole("button"));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");
+	});
+
+	describe("partially saving data", () => {
+		test("new form data is automatically saved to store with default name", async () => {
+			await renderSuspended(InternalFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});
+			
+			await user.click(screen.getByTestId("typeOfInternalFloor_heatedSpace"));
+			await user.type(screen.getByTestId("surfaceAreaOfElement"), "5");
+			await user.tab();
+				
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor;
+			expect(data[0]!.data.name).toBe("Internal floor");
+			expect(data[0]!.data.surfaceAreaOfElement).toBe(5);
+		});
+
+		test("new form data is automatically saved to store", async () => {
+			await renderSuspended(InternalFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});
+				
+			await user.click(screen.getByTestId("typeOfInternalFloor_heatedSpace"));
+			await user.type(screen.getByTestId("name"), "Internal floor kitchen");
+			await user.type(screen.getByTestId("surfaceAreaOfElement"), "5");
+			await user.click(screen.getByTestId("kappaValue_50000"));
+			await user.click(screen.getByTestId("massDistributionClass_I"));
+			await user.tab();
+				
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor;
+			expect(data[0]!.data.name).toBe("Internal floor kitchen");
+			expect(data[0]!.data.surfaceAreaOfElement).toBe(5);
+			expect(data[0]!.data.kappaValue).toBe(50000);
+			expect(data[0]!.data.massDistributionClass).toBe("I");	
+		});
+	
+		test("updated form data is automatically saved to store", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceInternalFloor: {
+							data: [{ data: internalFloorWithUnheatedSpace }]
+						}
+					}
+				}
+			});
+				
+			await renderSuspended(InternalFloor, {
+				route: {
+					params: { floor: 0 }
+				}
+			});
+	
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor;
+			expect(data[0]!.data.name).toBe("Internal 1");
+			expect(data[0]!.data.typeOfInternalFloor).toBe(AdjacentSpaceType.unheatedSpace);
+	
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), "Main internal floor");
+			await user.click(screen.getByTestId("typeOfInternalFloor_heatedSpace"));
+			await user.tab();
+	
+			expect(data[0]!.data.name).toBe("Main internal floor");
+			expect(data[0]!.data.typeOfInternalFloor).toBe(AdjacentSpaceType.heatedSpace);
+		});
 	});
 });
