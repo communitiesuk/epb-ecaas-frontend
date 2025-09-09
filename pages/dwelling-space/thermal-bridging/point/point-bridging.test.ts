@@ -32,7 +32,7 @@ describe("point thermal bridges", () => {
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(PointBridging, {
 			route: {
-				params: { system: "create" },
+				params: { point: "create" },
 			},
 		});
 
@@ -97,5 +97,68 @@ describe("point thermal bridges", () => {
 		await user.click(screen.getByTestId("saveProgress"));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/thermal-bridging");
+	});
+
+	describe("partially saving data", () => {
+		it("creates a new thermal point bridge automatically with given name", async () => {
+			await renderSuspended(PointBridging, {
+				route: {
+					params: { point: "create" }
+				}
+			});
+
+			await user.type(screen.getByTestId("name"), "New point bridge");
+			await user.tab();
+
+			const actualPointBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data[0]!;
+			expect(actualPointBridge.data.name).toBe("New point bridge");
+			expect(actualPointBridge.data.heatTransferCoefficient).toBeUndefined();
+		});
+
+		it("creates a new thermal point bridge automatically with default name after other data is entered", async () => {
+			await renderSuspended(PointBridging, {
+				route: {
+					params: { point: "create" }
+				}
+			});
+
+			await user.type(screen.getByTestId("heatTransferCoefficient"), "2");
+			await user.tab();
+
+			const actualPointBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data[0]!;
+			expect(actualPointBridge.data.name).toBe("Point thermal bridge");
+			expect(actualPointBridge.data.heatTransferCoefficient).toBe(2);
+		});
+
+		it("saves updated form data to correct store object automatically", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceThermalBridging: {
+						dwellingSpacePointThermalBridges: {
+							data: [state]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(PointBridging, {
+				route: {
+					params: { point: "0" }
+				}
+			});
+
+			await user.clear(screen.getByTestId("name"));
+			await user.tab();
+			await user.clear(screen.getByTestId("heatTransferCoefficient"));
+			await user.tab();
+
+			await user.type(screen.getByTestId("name"), "Updated point bridge");
+			await user.type(screen.getByTestId("heatTransferCoefficient"), "4");
+			await user.tab();
+
+			const actualPointBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data[0]!;
+			expect(actualPointBridge.data.name).toBe("Updated point bridge");
+			expect(actualPointBridge.data.heatTransferCoefficient).toBe(4);
+		});
 	});
 });
