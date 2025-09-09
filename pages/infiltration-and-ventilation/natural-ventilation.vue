@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { getUrl } from "#imports";
+
 const title = "Natural ventilation";
 const store = useEcaasStore();
+const { autoSaveForm } = useForm();
 
 const model = ref({
 	...store.infiltrationAndVentilation.naturalVentilation.data
@@ -24,6 +27,10 @@ const saveForm = (fields: VentilationData) => {
 
 	navigateTo("/infiltration-and-ventilation");
 };
+
+autoSaveForm(model, (state, newData) => {
+	state.infiltrationAndVentilation.naturalVentilation = newData;
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -85,6 +92,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('infiltrationAndVentilation')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
