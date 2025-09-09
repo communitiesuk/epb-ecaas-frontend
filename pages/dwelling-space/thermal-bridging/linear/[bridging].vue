@@ -58,17 +58,22 @@ const options: FormKitOptionsProp[] = [{
 	r11: "R11: Upstands or kerbs of rooflights"
 }];
 
+function getName(fields: LinearThermalBridgeData) {
+	const option = options.find(o => Object.keys(o).includes(fields.typeOfThermalBridge));
+	const entry = option ? Object.entries(option).find(o => o[0] === fields.typeOfThermalBridge) : undefined;
+	return entry?.[1] ?? "Linear thermal bridge";
+}
+
 const saveForm = (fields: LinearThermalBridgeData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceLinearThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
 		const index = getStoreIndex(dwellingSpaceLinearThermalBridges.data);
 
-		const option = options.find(o => Object.keys(o).includes(fields.typeOfThermalBridge));
-		const entry = Object.entries(option!).find(o => o[0] === fields.typeOfThermalBridge);
+		const name = getName(fields);
 
 		dwellingSpaceLinearThermalBridges.data[index] = {
 			data: {
-				name: entry?.[1],
+				name,
 				typeOfThermalBridge: fields.typeOfThermalBridge,
 				linearThermalTransmittance: fields.linearThermalTransmittance,
 				length: fields.length
@@ -85,11 +90,25 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
 	defaultName: "Linear thermal bridge",
-	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data.push(newData),
-	onPatchUpdate: (state, newData, index) => {
-		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = newData;
-		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
+	onPatchCreate: (state, newData) => {
+		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data.push({
+			...newData,
+			data: {
+				...newData.data,
+				name: getName(newData.data)
+			}
+		});
 	},
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = {
+			...newData,
+			data: {
+				...newData.data,
+				name: getName(newData.data)
+			}
+		};
+		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
+	}
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
