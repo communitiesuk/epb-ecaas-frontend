@@ -164,18 +164,21 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 const doorsData: DoorsData = {
 	dwellingSpaceExternalUnglazedDoor: {
 		data: [{
-			name: "External unglazed door 1",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
-			height: 0.5,
-			width: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I
+			data:
+					{
+						name: "External unglazed door 1",
+						pitchOption: "90",
+						pitch: 90,
+						orientation: 0,
+						height: 0.5,
+						width: 20,
+						elevationalHeight: 20,
+						surfaceArea: 10,
+						solarAbsorption: 0.1,
+						uValue: 1,
+						kappaValue: 50000,
+						massDistributionClass: MassDistributionClass.I
+					}
 		}]
 	},
 	dwellingSpaceExternalGlazedDoor: {

@@ -1647,18 +1647,21 @@ describe("FHS input mapper", () => {
 				dwellingSpaceExternalUnglazedDoor: {
 					...baseForm,
 					data: [{
-						name: "front door",
-						pitchOption: "90",
-						pitch: 90,
-						orientation: 30,
-						height: 2.6,
-						width: 1.2,
-						elevationalHeight: 1,
-						surfaceArea: 20,
-						solarAbsorption: 0.2,
-						uValue: 1, 
-						kappaValue: 75000,
-						massDistributionClass: MassDistributionClass.I
+						data:
+								{
+									name: "front door",
+									pitchOption: "90",
+									pitch: 90,
+									orientation: 30,
+									height: 2.6,
+									width: 1.2,
+									elevationalHeight: 1,
+									surfaceArea: 20,
+									solarAbsorption: 0.2,
+									uValue: 1,
+									kappaValue: 75000,
+									massDistributionClass: MassDistributionClass.I
+								}
 					}]
 				},
 				dwellingSpaceExternalGlazedDoor: {

@@ -527,19 +527,21 @@ describe("dwelling fabric mapper", () => {
 			heightOpenableArea: 1
 		};
 
-		const externalUnglazedDoor: ExternalUnglazedDoorData = {
-			name: "External unglazed door 1",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
-			height: 0.5,
-			width: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I
+		const externalUnglazedDoor: EcaasForm<ExternalUnglazedDoorData> = {
+			data: {
+				name: "External unglazed door 1",
+				pitchOption: "90",
+				pitch: 90,
+				orientation: 0,
+				height: 0.5,
+				width: 20,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				solarAbsorption: 0.1,
+				uValue: 1,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I
+			}
 		};
 
 		const doorSuffix = " (door)";
@@ -560,7 +562,7 @@ describe("dwelling fabric mapper", () => {
 		// Assert
 		const internalDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalDoor.name + doorSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
 		const externalGlazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalGlazedDoor.name + doorSuffix]! as BuildingElementTransparent;
-		const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalUnglazedDoor.name + doorSuffix]! as BuildingElementOpaque;
+		const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalUnglazedDoor.data.name + doorSuffix]! as BuildingElementOpaque;
 
 		const expectedInternalDoor: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -598,16 +600,16 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedUnglazedDoor: BuildingElementOpaque = {
 			type: "BuildingElementOpaque",
-			pitch: externalUnglazedDoor.pitch!,
-			orientation360: externalUnglazedDoor.orientation,
-			height: externalUnglazedDoor.height,
-			width: externalUnglazedDoor.width,
-			base_height: externalUnglazedDoor.elevationalHeight,
-			area: externalUnglazedDoor.surfaceArea,
-			solar_absorption_coeff: externalUnglazedDoor.solarAbsorption,
-			u_value: externalUnglazedDoor.uValue,
-			areal_heat_capacity: externalUnglazedDoor.kappaValue,
-			mass_distribution_class: externalUnglazedDoor.massDistributionClass,
+			pitch: externalUnglazedDoor.data.pitch!,
+			orientation360: externalUnglazedDoor.data.orientation,
+			height: externalUnglazedDoor.data.height,
+			width: externalUnglazedDoor.data.width,
+			base_height: externalUnglazedDoor.data.elevationalHeight,
+			area: externalUnglazedDoor.data.surfaceArea,
+			solar_absorption_coeff: externalUnglazedDoor.data.solarAbsorption,
+			u_value: externalUnglazedDoor.data.uValue,
+			areal_heat_capacity: externalUnglazedDoor.data.kappaValue,
+			mass_distribution_class: externalUnglazedDoor.data.massDistributionClass,
 			is_external_door: true
 		};
 

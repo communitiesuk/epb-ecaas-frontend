@@ -258,7 +258,7 @@ const internalDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceIn
 const unglazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceUnglazedDoors",
 	label: "External unglazed door",
-	data: unglazedDoorData.map(x => {
+	data: unglazedDoorData.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Pitch": `${x.pitch} ${degrees.suffix}`,

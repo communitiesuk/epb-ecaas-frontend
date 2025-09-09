@@ -6,13 +6,13 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor?.data);
-const model: Ref<ExternalUnglazedDoorData> = ref(doorData!);
+const model: Ref<ExternalUnglazedDoorData | undefined> = ref(doorData?.data);
 
 const saveForm = (fields: ExternalUnglazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 
-		const door: ExternalUnglazedDoorData = {
+		const doorData: ExternalUnglazedDoorData = {
 			name: fields.name,
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
@@ -26,7 +26,7 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass
 		};
-
+		const door: EcaasForm<ExternalUnglazedDoorData> = { data: doorData, complete: true };
 		saveToList(door, dwellingSpaceExternalUnglazedDoor);
 	});
 	store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.complete = false;
@@ -61,7 +61,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<FieldsPitch
-			:pitch-option="model.pitchOption"
+			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
 		/>
 		<FieldsOrientation />
