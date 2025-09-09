@@ -2663,102 +2663,6 @@ export interface components {
             /** Format: int32 */
             storeys_in_building: number;
         };
-        /**
-         * HeatSourceWetBoiler
-         * @description Standalone boiler heat source
-         */
-        HeatSourceWetBoiler: {
-            /** Energysupply */
-            EnergySupply: string;
-            /** Energysupply Aux */
-            EnergySupply_aux: string;
-            boiler_location: components["schemas"]["HeatSourceLocation"];
-            /** Efficiency Full Load */
-            efficiency_full_load: number;
-            /** Efficiency Part Load */
-            efficiency_part_load: number;
-            /** Electricity Circ Pump */
-            electricity_circ_pump: number;
-            /** Electricity Full Load */
-            electricity_full_load: number;
-            /** Electricity Part Load */
-            electricity_part_load: number;
-            /** Electricity Standby */
-            electricity_standby: number;
-            /** Modulation Load */
-            modulation_load: number;
-            /** Rated Power */
-            rated_power: number;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "Boiler";
-        };
-        /** HeatSourceWetHIU */
-        HeatSourceWetHIU: {
-            /** Energysupply */
-            EnergySupply: string;
-            /** Hiu Daily Loss */
-            HIU_daily_loss: number;
-            /** Building Level Distribution Losses */
-            building_level_distribution_losses: number;
-            /** Power Max */
-            power_max: number;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "HIU";
-        };
-        /** HeatSourceWetHeatBattery */
-        HeatSourceWetHeatBattery: {
-            /** A */
-            A: number;
-            /** B */
-            B: number;
-            /** Controlcharge */
-            ControlCharge: string;
-            /** Energysupply */
-            EnergySupply: string;
-            /** Capillary Diameter M */
-            capillary_diameter_m: number;
-            /** Electricity Circ Pump */
-            electricity_circ_pump: number;
-            /** Electricity Standby */
-            electricity_standby: number;
-            /** Flow Rate L Per Min */
-            flow_rate_l_per_min: number;
-            /** Heat Exchanger Surface Area M2 */
-            heat_exchanger_surface_area_m2: number;
-            /** Heat Storage Zone Material Kj Per K Above Phase Transition */
-            heat_storage_zone_material_kJ_per_K_above_Phase_transition: number;
-            /** Heat Storage Zone Material Kj Per K Below Phase Transition */
-            heat_storage_zone_material_kJ_per_K_below_Phase_transition: number;
-            /** Heat Storage Zone Material Kj Per K During Phase Transition */
-            heat_storage_zone_material_kJ_per_K_during_Phase_transition: number;
-            /** Max Rated Losses */
-            max_rated_losses: number;
-            /** Max Temperature */
-            max_temperature: number;
-            /** Number Of Units */
-            number_of_units: number;
-            /** Phase Transition Temperature Lower */
-            phase_transition_temperature_lower: number;
-            /** Phase Transition Temperature Upper */
-            phase_transition_temperature_upper: number;
-            /** Rated Charge Power */
-            rated_charge_power: number;
-            /** Simultaneous Charging And Discharging */
-            simultaneous_charging_and_discharging: boolean;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "HeatBattery";
-            /** Velocity In Hex Tube At 1 L Per Min M Per S */
-            velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
-        };
         /** HeatSourceWetHeatPump */
         HeatSourceWetHeatPump: {
             /** @default null */
@@ -2854,8 +2758,8 @@ export interface components {
              */
             time_delay_backup?: number | null;
             /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
+             * Type
+             * @constant
              */
             type: "HeatPump";
             /** Var Flow Temp Ctrl During Test */
@@ -2915,10 +2819,106 @@ export interface components {
              */
             temp_distribution_heat_network?: number | null;
             /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
+             * Type
+             * @constant
              */
-            type: "HeatSourceWetHeatPumpWithProductReference";
+            type: "HeatPump";
+        };
+        /**
+         * HeatSourceWetBoiler
+         * @description Standalone boiler heat source
+         */
+        HeatSourceWetBoiler: {
+            /** Energysupply */
+            EnergySupply: string;
+            /** Energysupply Aux */
+            EnergySupply_aux: string;
+            boiler_location: components["schemas"]["HeatSourceLocation"];
+            /** Efficiency Full Load */
+            efficiency_full_load: number;
+            /** Efficiency Part Load */
+            efficiency_part_load: number;
+            /** Electricity Circ Pump */
+            electricity_circ_pump: number;
+            /** Electricity Full Load */
+            electricity_full_load: number;
+            /** Electricity Part Load */
+            electricity_part_load: number;
+            /** Electricity Standby */
+            electricity_standby: number;
+            /** Modulation Load */
+            modulation_load: number;
+            /** Rated Power */
+            rated_power: number;
+            /**
+             * Type
+             * @constant
+             */
+            type: "Boiler";
+        };
+        /** HeatSourceWetHeatBattery */
+        HeatSourceWetHeatBattery: {
+            /** A */
+            A: number;
+            /** B */
+            B: number;
+            /** Controlcharge */
+            ControlCharge: string;
+            /** Energysupply */
+            EnergySupply: string;
+            /** Capillary Diameter M */
+            capillary_diameter_m: number;
+            /** Electricity Circ Pump */
+            electricity_circ_pump: number;
+            /** Electricity Standby */
+            electricity_standby: number;
+            /** Flow Rate L Per Min */
+            flow_rate_l_per_min: number;
+            /** Heat Exchanger Surface Area M2 */
+            heat_exchanger_surface_area_m2: number;
+            /** Heat Storage Zone Material Kj Per K Above Phase Transition */
+            heat_storage_zone_material_kJ_per_K_above_Phase_transition: number;
+            /** Heat Storage Zone Material Kj Per K Below Phase Transition */
+            heat_storage_zone_material_kJ_per_K_below_Phase_transition: number;
+            /** Heat Storage Zone Material Kj Per K During Phase Transition */
+            heat_storage_zone_material_kJ_per_K_during_Phase_transition: number;
+            /** Max Rated Losses */
+            max_rated_losses: number;
+            /** Max Temperature */
+            max_temperature: number;
+            /** Number Of Units */
+            number_of_units: number;
+            /** Phase Transition Temperature Lower */
+            phase_transition_temperature_lower: number;
+            /** Phase Transition Temperature Upper */
+            phase_transition_temperature_upper: number;
+            /** Rated Charge Power */
+            rated_charge_power: number;
+            /** Simultaneous Charging And Discharging */
+            simultaneous_charging_and_discharging: boolean;
+            /**
+             * Type
+             * @constant
+             */
+            type: "HeatBattery";
+            /** Velocity In Hex Tube At 1 L Per Min M Per S */
+            velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
+        };
+        /** HeatSourceWetHIU */
+        HeatSourceWetHIU: {
+            /** Energysupply */
+            EnergySupply: string;
+            /** Hiu Daily Loss */
+            HIU_daily_loss: number;
+            /** Building Level Distribution Losses */
+            building_level_distribution_losses: number;
+            /** Power Max */
+            power_max: number;
+            /**
+             * Type
+             * @constant
+             */
+            type: "HIU";
         };
         /**
          * HeatingControlType
@@ -5065,8 +5065,8 @@ export interface components {
                     /** Rated Power */
                     rated_power: number;
                     /**
-                     * @description discriminator enum property added by openapi-typescript
-                     * @enum {string}
+                     * Type
+                     * @constant
                      */
                     type: "Boiler";
                 };
@@ -5081,8 +5081,8 @@ export interface components {
                     /** Power Max */
                     power_max: number;
                     /**
-                     * @description discriminator enum property added by openapi-typescript
-                     * @enum {string}
+                     * Type
+                     * @constant
                      */
                     type: "HIU";
                 };
@@ -5127,8 +5127,8 @@ export interface components {
                     /** Simultaneous Charging And Discharging */
                     simultaneous_charging_and_discharging: boolean;
                     /**
-                     * @description discriminator enum property added by openapi-typescript
-                     * @enum {string}
+                     * Type
+                     * @constant
                      */
                     type: "HeatBattery";
                     /** Velocity In Hex Tube At 1 L Per Min M Per S */
@@ -5229,8 +5229,8 @@ export interface components {
                      */
                     time_delay_backup?: number | null;
                     /**
-                     * @description discriminator enum property added by openapi-typescript
-                     * @enum {string}
+                     * Type
+                     * @constant
                      */
                     type: "HeatPump";
                     /** Var Flow Temp Ctrl During Test */
@@ -5290,10 +5290,10 @@ export interface components {
                      */
                     temp_distribution_heat_network?: number | null;
                     /**
-                     * @description discriminator enum property added by openapi-typescript
-                     * @enum {string}
+                     * Type
+                     * @constant
                      */
-                    type: "HeatSourceWetHeatPumpWithProductReference";
+                    type: "HeatPump";
                 };
                 /** HeatSourceWetServiceWaterRegular */
                 HeatSourceWetServiceWaterRegular: {
@@ -6902,11 +6902,11 @@ export type SchemaEnergySupply = components['schemas']['EnergySupply'];
 export type SchemaWaterHeatingEvents = components['schemas']['WaterHeatingEvents'];
 export type SchemaExternalConditionsInputFhs = components['schemas']['ExternalConditionsInputFHS'];
 export type SchemaGeneral = components['schemas']['General'];
-export type SchemaHeatSourceWetBoiler = components['schemas']['HeatSourceWetBoiler'];
-export type SchemaHeatSourceWetHiu = components['schemas']['HeatSourceWetHIU'];
-export type SchemaHeatSourceWetHeatBattery = components['schemas']['HeatSourceWetHeatBattery'];
 export type SchemaHeatSourceWetHeatPump = components['schemas']['HeatSourceWetHeatPump'];
 export type SchemaHeatSourceWetHeatPumpWithProductReference = components['schemas']['HeatSourceWetHeatPumpWithProductReference'];
+export type SchemaHeatSourceWetBoiler = components['schemas']['HeatSourceWetBoiler'];
+export type SchemaHeatSourceWetHeatBattery = components['schemas']['HeatSourceWetHeatBattery'];
+export type SchemaHeatSourceWetHiu = components['schemas']['HeatSourceWetHIU'];
 export type SchemaHeatingControlType = components['schemas']['HeatingControlType'];
 export type SchemaHotWaterDemand = components['schemas']['HotWaterDemand'];
 export type SchemaHotWaterSourceFhs = components['schemas']['HotWaterSourceFHS'];
