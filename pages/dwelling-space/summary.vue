@@ -86,12 +86,12 @@ const internalFloorSummary: SummarySection = {
 	label: "Internal floor",
 	data: internalFloorData?.map(x => {
 		return {
-			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, "Internal floor"),
-			"Name": x.name,
-			"Net surface area of element": `${x.surfaceAreaOfElement} ${metresSquare.suffix}`,
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
-			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			...(x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace ? { "Thermal resistance of adjacent unheated space": `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}` } : {})
+			"Type of internal floor": displayAdjacentSpaceType(x.data.typeOfInternalFloor, "Internal floor"),
+			"Name": x.data.name,
+			"Net surface area of element": `${x.data.surfaceAreaOfElement} ${metresSquare.suffix}`,
+			"Areal heat capacity": displayArealHeatCapacity(x.data.kappaValue as ArealHeatCapacityValue),
+			"Mass distribution class": displayMassDistributionClass(x.data.massDistributionClass),
+			...(x.data.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace ? { "Thermal resistance of adjacent unheated space": `${x.data.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}` } : {})
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceFloors")
@@ -102,15 +102,15 @@ const exposedFloorSummary: SummarySection = {
 	label: "Exposed floor",
 	data: exposedFloorData?.map(x => {
 		return {
-			"Name": x.name,
-			"Length": `${x.length} ${metre.suffix}`,
-			"Width": `${x.width} ${metre.suffix}`,
-			"Elevational height of building element at its base": `${x.elevationalHeight} ${metre.suffix}`,
-			"Net surface area": `${x.surfaceArea} ${metresSquare.suffix}`,
-			"Solar absorption coefficient": x.solarAbsorption,
-			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
-			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass)
+			"Name": x.data.name,
+			"Length": `${x.data.length} ${metre.suffix}`,
+			"Width": `${x.data.width} ${metre.suffix}`,
+			"Elevational height of building element at its base": `${x.data.elevationalHeight} ${metre.suffix}`,
+			"Net surface area": `${x.data.surfaceArea} ${metresSquare.suffix}`,
+			"Solar absorption coefficient": x.data.solarAbsorption,
+			"U-value": `${x.data.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
+			"Areal heat capacity": displayArealHeatCapacity(x.data.kappaValue as ArealHeatCapacityValue),
+			"Mass distribution class": displayMassDistributionClass(x.data.massDistributionClass)
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceFloors")

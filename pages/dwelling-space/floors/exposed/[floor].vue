@@ -4,14 +4,14 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
-const model: Ref<ExposedFloorData> = ref(floorData!);
+const model: Ref<ExposedFloorData | undefined> = ref(floorData?.data);
 
 const saveForm = (fields: ExposedFloorData) => {	
 
 	store.$patch((state) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
 
-		const floor: ExposedFloorData = {
+		const floorData: ExposedFloorData = {
 			name: fields.name,
 			pitch: 180,
 			orientation: 0,
@@ -24,6 +24,8 @@ const saveForm = (fields: ExposedFloorData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass
 		};
+
+		const floor = { data: floorData, complete: true };
 
 		if (!dwellingSpaceFloors.dwellingSpaceExposedFloor) {
 			dwellingSpaceFloors.dwellingSpaceExposedFloor = { data: [] };

@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data);
-const model: Ref<InternalFloorData> = ref(floorData!);
+const model: Ref<InternalFloorData | undefined> = ref(floorData?.data);
 
 const typeOfInternalFloorOptions = adjacentSpaceTypeOptions("Internal floor");
 
@@ -21,17 +21,17 @@ const saveForm = (fields: InternalFloorData) => {
 			massDistributionClass: fields.massDistributionClass,
 		};
 
-		let floor: InternalFloorData;
+		let floorData: InternalFloorData;
 
 		if (fields.typeOfInternalFloor === "unheatedSpace") {
-			floor = {
+			floorData = {
 				...commonFields,
 				typeOfInternalFloor: fields.typeOfInternalFloor,
 				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 			
 			};
 		} else if (fields.typeOfInternalFloor === "heatedSpace") {
-			floor = {
+			floorData = {
 				...commonFields,
 				typeOfInternalFloor: fields.typeOfInternalFloor,
 			};
@@ -43,6 +43,8 @@ const saveForm = (fields: InternalFloorData) => {
 			dwellingSpaceFloors.dwellingSpaceInternalFloor = { data: [] };
 		}
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
+
+		const floor = { data: floorData, complete: true };
 		saveToList(floor, dwellingSpaceFloors.dwellingSpaceInternalFloor);
 	});
 	navigateTo("/dwelling-space/floors");
@@ -74,7 +76,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfInternalFloor"
 			validation="required"
 		/>
-		<template v-if="!!model.typeOfInternalFloor">
+		<template v-if="!!model?.typeOfInternalFloor">
 			<FormKit
 				id="name"
 				type="govInputText"
@@ -95,7 +97,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
 		<FormKit
-			v-if="model.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace"
+			v-if="model?.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"

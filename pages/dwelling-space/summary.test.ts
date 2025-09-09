@@ -47,16 +47,18 @@ const floorsData: FloorsData = {
 		}]
 	},
 	dwellingSpaceInternalFloor: {
-		data: [{
-			typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
-			name: "Internal 1",
-			surfaceAreaOfElement: 5,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
+		data: [{ 
+			data: {
+				typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+				name: "Internal 1",
+				surfaceAreaOfElement: 5,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+			}
 		}]
 	},
 	dwellingSpaceExposedFloor: {
-		data: [{
+		data: [{ data: {
 			name: "Exposed Floor 1",
 			pitch: 0,
 			orientation: 0,
@@ -68,7 +70,7 @@ const floorsData: FloorsData = {
 			uValue: 1,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I
-		}]
+		} }]
 	}
 };
 

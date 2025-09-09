@@ -183,8 +183,8 @@ describe("dwelling fabric mapper", () => {
 						{ data: groundFloorWithHeatedBasement },
 						{ data: groundFloorWithUnheatedBasement },			
 					], complete: true },
-					dwellingSpaceInternalFloor: { data: [internalFloor], complete: true },
-					dwellingSpaceExposedFloor: { data: [exposedFloor], complete: true }
+					dwellingSpaceInternalFloor: { data: [{ data: internalFloor }], complete: true },
+					dwellingSpaceExposedFloor: { data: [{ data: exposedFloor }], complete: true }
 				}
 			}
 		});

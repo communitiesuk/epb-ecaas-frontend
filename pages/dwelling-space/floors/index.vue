@@ -4,7 +4,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type FloorType = keyof typeof store.dwellingFabric.dwellingSpaceFloors;
-type FloorData = GroundFloorData & InternalFloorData & ExposedFloorData;
+type FloorData = EcaasForm<GroundFloorData> & EcaasForm<InternalFloorData> & EcaasForm<ExposedFloorData>;
 
 function handleRemove(floorType: FloorType, index: number) {
 	const floors = store.dwellingFabric.dwellingSpaceFloors[floorType]?.data;
@@ -21,31 +21,21 @@ function handleRemove(floorType: FloorType, index: number) {
 
 function handleDuplicate<T extends FloorData>(floorType: FloorType, index: number) {
 	const floors  = store.dwellingFabric.dwellingSpaceFloors[floorType]?.data;
-	const floor = floors?.[index];
+	const floorToDuplicate = floors?.[index];
     
-	if (floor) {
-		const newName = "data" in floor ? floor.data.name : floor.name;
-		const duplicates = floors.filter(f => "data" in f ? f.data.name.match(duplicateNamePattern(newName)) : f.name.match(duplicateNamePattern(newName)));
-		
-		store.$patch((state) => {
-			const newFloor = {
-				...floor,
-				name: `${newName} (${duplicates.length})`
-			} as T;
-			
-			if (floorType === "dwellingSpaceGroundFloor" && "data" in floor) {
-				state.dwellingFabric.dwellingSpaceFloors[floorType].data.push({
-					data: {
-						...floor.data,
-						name: `${newName} (${duplicates.length})`
-					},
-					complete: floor.complete
-				});
-			} else if (floorType === "dwellingSpaceInternalFloor" || floorType === "dwellingSpaceExposedFloor") {
-				state.dwellingFabric.dwellingSpaceFloors[floorType].data.push(newFloor);
-			}
+	if (floorToDuplicate) {
+		const numberOfFloorsWithSameName = floors.filter(f => f.data.name.match(duplicateNamePattern(floorToDuplicate.data.name))).length;
+
+		store.$patch((state) => {			
+			state.dwellingFabric.dwellingSpaceFloors[floorType].data.push({
+				complete: floorToDuplicate.complete,
+				data: {
+					...floorToDuplicate.data,
+					name: `${floorToDuplicate.data.name} (${numberOfFloorsWithSameName})`
+				}
+			} as T);
+			state.dwellingFabric.dwellingSpaceFloors[floorType].complete = false;
 		});
-		store.dwellingFabric.dwellingSpaceFloors[floorType].complete = false;
 	}
 }
 
@@ -89,7 +79,7 @@ function checkIsComplete(){
 		id="internal"
 		title="Internal floor"
 		:form-url="`${page?.url!}/internal`"
-		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data?.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data?.map(x => x.data.name)"
 		@remove="(index: number) => handleRemove('dwellingSpaceInternalFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceInternalFloor', index)"
 	/>
@@ -97,7 +87,7 @@ function checkIsComplete(){
 		id="exposed"
 		title="Exposed floor"
 		:form-url="`${page?.url!}/exposed`"
-		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data?.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data?.map(x => x.data.name)"
 		@remove="(index: number) => handleRemove('dwellingSpaceExposedFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceExposedFloor', index)"
 

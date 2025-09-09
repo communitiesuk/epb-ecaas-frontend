@@ -92,8 +92,8 @@ export interface DwellingFabric {
 
 export interface FloorsData {
 	dwellingSpaceGroundFloor: EcaasForm<EcaasForm<GroundFloorData>[]>,
-	dwellingSpaceInternalFloor: EcaasForm<InternalFloorData[]>,
-	dwellingSpaceExposedFloor: EcaasForm<ExposedFloorData[]>
+	dwellingSpaceInternalFloor: EcaasForm<EcaasForm<InternalFloorData>[]>,
+	dwellingSpaceExposedFloor: EcaasForm<EcaasForm<ExposedFloorData>[]>
 }
 
 export enum AdjacentSpaceType {

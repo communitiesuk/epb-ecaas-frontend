@@ -207,7 +207,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data:[internal1]
+							data:[{ data: internal1 }]
 						}
 					}
 				}
@@ -227,7 +227,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data:[internal1, internal2, internal3]
+							data:[{ data: internal1 }, { data: internal2 }, { data: internal3 }]
 						}
 					}
 				}
@@ -249,7 +249,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data:[internal1, internal2]
+							data:[{ data: internal1 }, { data: internal2 }]
 						}
 					}
 				}
@@ -277,7 +277,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceExposedFloor: {
-							data:[exposed1]
+							data:[{ data: exposed1 }]
 						}
 					}
 				}
@@ -297,7 +297,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceExposedFloor: {
-							data:[exposed1, exposed2, exposed3]
+							data:[{ data: exposed1 }, { data: exposed2 }, { data: exposed3 }]
 						}
 					}
 				}
@@ -318,7 +318,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceExposedFloor: {
-							data:[exposed1, exposed2]
+							data:[{ data: exposed1 }, { data: exposed2 }]
 						}
 					}
 				}
@@ -346,8 +346,8 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: { data: [{ data: ground1 }] },
-						dwellingSpaceInternalFloor: { data: [internal1] },
-						dwellingSpaceExposedFloor: { data: [exposed1] },
+						dwellingSpaceInternalFloor: { data: [{ data: internal1 }] },
+						dwellingSpaceExposedFloor: { data: [{ data: exposed1 }] },
 					},
 				}
 			});

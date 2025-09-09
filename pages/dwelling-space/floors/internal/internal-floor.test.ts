@@ -48,7 +48,7 @@ describe("internal floor", () => {
 	
 			const  { dwellingSpaceInternalFloor } = store.dwellingFabric.dwellingSpaceFloors;
 			
-			expect(dwellingSpaceInternalFloor?.data[0]).toEqual(internalFloor);
+			expect(dwellingSpaceInternalFloor?.data[0]?.data).toEqual(internalFloor);
 		});
 	
 		test("form is prepopulated when data exists in state", async () => {
@@ -56,7 +56,7 @@ describe("internal floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data: [internalFloor]
+							data: [{ data: internalFloor }]
 						}
 					}
 				}
@@ -100,7 +100,7 @@ describe("internal floor", () => {
 	
 			const { dwellingSpaceInternalFloor } = store.dwellingFabric.dwellingSpaceFloors;
 			
-			expect(dwellingSpaceInternalFloor?.data[0]).toEqual(internalFloorWithUnheatedSpace);
+			expect(dwellingSpaceInternalFloor?.data[0]?.data).toEqual(internalFloorWithUnheatedSpace);
 		});
 	
 		test("form is prepopulated when data exists in state", async () => {
@@ -108,7 +108,7 @@ describe("internal floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data: [internalFloorWithUnheatedSpace]
+							data: [{ data: internalFloorWithUnheatedSpace }]
 						}
 					}
 				}

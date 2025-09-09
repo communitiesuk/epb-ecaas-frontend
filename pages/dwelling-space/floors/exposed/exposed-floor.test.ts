@@ -48,7 +48,7 @@ describe("exposed floor", () => {
 
 		const { data = [] } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor || {};
 		
-		expect(data[0]).toEqual(state);
+		expect(data[0]?.data).toEqual(state);
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");
 	});
 	
@@ -57,7 +57,7 @@ describe("exposed floor", () => {
 			dwellingFabric: {
 				dwellingSpaceFloors: {
 					dwellingSpaceExposedFloor: {
-						data: [state]
+						data: [{ data: state }]
 					}
 				}
 			}

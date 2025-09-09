@@ -1504,25 +1504,28 @@ describe("FHS input mapper", () => {
 				},
 				dwellingSpaceInternalFloor: {
 					...baseForm,
-					data: [{
-						name: "internal floor 1",
-						typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
-						surfaceAreaOfElement: 6,
-						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.IE,
-						thermalResistanceOfAdjacentUnheatedSpace: 1,
-					}, 
-					{
-						name: "internal floor 2",
-						typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
-						surfaceAreaOfElement: 4,
-						kappaValue: 110000,
-						massDistributionClass: MassDistributionClass.M,
-					}]
+					data: [
+						{ data: {
+							name: "internal floor 1",
+							typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
+							surfaceAreaOfElement: 6,
+							kappaValue: 50000,
+							massDistributionClass: MassDistributionClass.IE,
+							thermalResistanceOfAdjacentUnheatedSpace: 1,
+						} },
+						{ data: {
+							name: "internal floor 2",
+							typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+							surfaceAreaOfElement: 4,
+							kappaValue: 110000,
+							massDistributionClass: MassDistributionClass.M,
+						}
+						}
+					]
 				},
 				dwellingSpaceExposedFloor: {
 					...baseForm,
-					data: [{
+					data: [{ data: {
 						name: "exposed floor 1",
 						length: 5,
 						width: 2,
@@ -1534,7 +1537,7 @@ describe("FHS input mapper", () => {
 						pitch: 180,
 						orientation: 0,
 						uValue: 0.1,
-					}]
+					} }]
 				}
 			},
 			dwellingSpaceWalls: {
