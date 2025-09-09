@@ -12,23 +12,26 @@ describe("external glazed door", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const state: ExternalGlazedDoorData = {
-		name: "External glazed door 1",
-		orientation: 12,
-		surfaceArea: 13,
-		height: 14,
-		width: 48,
-		uValue: 0.45,
-		pitchOption: "90",
-		pitch: 90,
-		solarTransmittance: 0.1,
-		elevationalHeight: 14,
-		midHeight: 11,
-		numberOpenableParts: "1",
-		openingToFrameRatio: 0.2,
-		heightOpenableArea: 14,
-		maximumOpenableArea: 13,
-		midHeightOpenablePart1: 11,
+	const state: EcaasForm<ExternalGlazedDoorData> = {
+		data:
+				{
+					name: "External glazed door 1",
+					orientation: 12,
+					surfaceArea: 13,
+					height: 14,
+					width: 48,
+					uValue: 0.45,
+					pitchOption: "90",
+					pitch: 90,
+					solarTransmittance: 0.1,
+					elevationalHeight: 14,
+					midHeight: 11,
+					numberOpenableParts: "1",
+					openingToFrameRatio: 0.2,
+					heightOpenableArea: 14,
+					maximumOpenableArea: 13,
+					midHeightOpenablePart1: 11,
+				}
 	};
 
 	afterEach(() => {
@@ -51,11 +54,20 @@ describe("external glazed door", () => {
 		await user.type(screen.getByTestId("openingToFrameRatio"), "0.2");
 		await user.tab();
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data = [] } = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor || {};
 	
-		expect(data[0]).toEqual(state);
+		expect(data[0]).toEqual({ ...state, complete: true });
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/doors");
+	});
+
+	it("navigates to doors page when save progress button is clicked", async () => {
+		await renderSuspended(ExternalGlazedDoor);
+
+		await user.type(screen.getByTestId("name"), "Test door");
+		await user.click(screen.getByTestId("saveProgress"));
+
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/doors");
 	});
 
@@ -91,7 +103,7 @@ describe("external glazed door", () => {
 	test("only required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(ExternalGlazedDoor);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
@@ -108,7 +120,7 @@ describe("external glazed door", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(ExternalGlazedDoor);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("externalGlazedDoorErrorSummary"))).toBeDefined();
 	});
@@ -117,7 +129,7 @@ describe("external glazed door", () => {
 		await renderSuspended(ExternalGlazedDoor);
     
 		await user.click(screen.getByTestId("pitchOption_custom"));
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
     
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});

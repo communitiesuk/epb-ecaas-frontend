@@ -20,7 +20,7 @@ const heatGenerationData = [
 	// heatBattery.data,
 	// heatNetwork.data,
 	// heatInterfaceUnit.data
-].flat().map(x => ({ id: x.data.id, name: x.data.name }));
+].flat().filter(x => !!x.data).map(x => ({ id: x.data.id, name: x.data.name }));
 
 const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
 const hotWaterCylinderSummary: SummarySection = {
