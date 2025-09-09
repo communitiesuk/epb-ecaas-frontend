@@ -7,7 +7,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
-type DoorData = EcaasForm<ExternalUnglazedDoorData> & ExternalGlazedDoorData & InternalDoorData;
+type DoorData = EcaasForm<ExternalUnglazedDoorData> & EcaasForm<ExternalGlazedDoorData> & InternalDoorData;
 
 function handleRemove(doorType: DoorType, index: number) {
 	const doors = store.dwellingFabric.dwellingSpaceDoors[doorType]?.data;
@@ -108,7 +108,11 @@ function checkIsComplete(){
 		id="externalGlazed"
 		title="External glazed door"
 		:form-url="`${page?.url!}/external-glazed`"
-		:items="store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceExternalGlazedDoor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceExternalGlazedDoor', index)"
 	/>

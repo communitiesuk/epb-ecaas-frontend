@@ -385,7 +385,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		return { [nameWithSuffix]: internalDoor };
 	});
 
-	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map(x => {
+	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map(({ data: x }) => {
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
 		function mapWindowPartList(data: ExternalGlazedDoorData): SchemaWindowPart[] {

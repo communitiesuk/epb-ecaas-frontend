@@ -279,7 +279,7 @@ const unglazedDoorSummary: SummarySection = {
 const glazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceGlazedDoors",
 	label: "External glazed door",
-	data: glazedDoorData.map(x => {
+	data: glazedDoorData.map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Pitch": `${x.pitch} ${degrees.suffix}`,

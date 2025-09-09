@@ -73,52 +73,60 @@ describe("doors", () => {
 				}
 	};
 
-	const externalGlazed1: ExternalGlazedDoorData = {
-		name: "externalGlazed1 name",
-		orientation: 1,
-		surfaceArea: 1,
-		height: 1,
-		width: 1,
-		uValue: 1,
-		pitchOption: "90",
-		pitch: 90,
-		solarTransmittance: 0.1,
-		elevationalHeight: 1,
-		midHeight: 1,
-		numberOpenableParts: "0",
-		openingToFrameRatio: 0.2,
+	const externalGlazed1: EcaasForm<ExternalGlazedDoorData> = {
+		data: {
+			name: "externalGlazed1 name",
+			orientation: 1,
+			surfaceArea: 1,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			pitchOption: "90",
+			pitch: 90,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			numberOpenableParts: "0",
+			openingToFrameRatio: 0.2,
+		}
 	};
 
-	const externalGlazed2: ExternalGlazedDoorData = {
-		name: "externalGlazed2 name",
-		orientation: 1,
-		surfaceArea: 1,
-		height: 1,
-		width: 1,
-		uValue: 1,
-		pitchOption: "90",
-		pitch: 90,
-		solarTransmittance: 0.1,
-		elevationalHeight: 1,
-		midHeight: 1,
-		numberOpenableParts: "0",
-		openingToFrameRatio: 0.2
+	const externalGlazed2: EcaasForm<ExternalGlazedDoorData> = {
+		data:
+				{
+					name: "externalGlazed2 name",
+					orientation: 1,
+					surfaceArea: 1,
+					height: 1,
+					width: 1,
+					uValue: 1,
+					pitchOption: "90",
+					pitch: 90,
+					solarTransmittance: 0.1,
+					elevationalHeight: 1,
+					midHeight: 1,
+					numberOpenableParts: "0",
+					openingToFrameRatio: 0.2
+				}
 	};
 
-	const externalGlazed3: ExternalGlazedDoorData = {
-		name: "externalGlazed3 name",
-		orientation: 1,
-		surfaceArea: 1,
-		height: 1,
-		width: 1,
-		uValue: 1,
-		pitchOption: "90",
-		pitch: 90,
-		solarTransmittance: 0.1,
-		elevationalHeight: 1,
-		midHeight: 1,
-		numberOpenableParts: "0",
-		openingToFrameRatio: 0.2
+	const externalGlazed3: EcaasForm<ExternalGlazedDoorData> = {
+		data:
+				{
+					name: "externalGlazed3 name",
+					orientation: 1,
+					surfaceArea: 1,
+					height: 1,
+					width: 1,
+					uValue: 1,
+					pitchOption: "90",
+					pitch: 90,
+					solarTransmittance: 0.1,
+					elevationalHeight: 1,
+					midHeight: 1,
+					numberOpenableParts: "0",
+					openingToFrameRatio: 0.2
+				}
 	};
 	
 	const internal1: InternalDoorData = {

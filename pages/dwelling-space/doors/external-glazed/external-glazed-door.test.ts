@@ -12,23 +12,26 @@ describe("external glazed door", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const state: ExternalGlazedDoorData = {
-		name: "External glazed door 1",
-		orientation: 12,
-		surfaceArea: 13,
-		height: 14,
-		width: 48,
-		uValue: 0.45,
-		pitchOption: "90",
-		pitch: 90,
-		solarTransmittance: 0.1,
-		elevationalHeight: 14,
-		midHeight: 11,
-		numberOpenableParts: "1",
-		openingToFrameRatio: 0.2,
-		heightOpenableArea: 14,
-		maximumOpenableArea: 13,
-		midHeightOpenablePart1: 11,
+	const state: EcaasForm<ExternalGlazedDoorData> = {
+		data:
+				{
+					name: "External glazed door 1",
+					orientation: 12,
+					surfaceArea: 13,
+					height: 14,
+					width: 48,
+					uValue: 0.45,
+					pitchOption: "90",
+					pitch: 90,
+					solarTransmittance: 0.1,
+					elevationalHeight: 14,
+					midHeight: 11,
+					numberOpenableParts: "1",
+					openingToFrameRatio: 0.2,
+					heightOpenableArea: 14,
+					maximumOpenableArea: 13,
+					midHeightOpenablePart1: 11,
+				}
 	};
 
 	afterEach(() => {
@@ -55,7 +58,7 @@ describe("external glazed door", () => {
 
 		const { data = [] } = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor || {};
 	
-		expect(data[0]).toEqual(state);
+		expect(data[0]).toEqual({ ...state, complete: true });
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/doors");
 	});
 

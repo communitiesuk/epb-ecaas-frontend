@@ -183,19 +183,21 @@ const doorsData: DoorsData = {
 	},
 	dwellingSpaceExternalGlazedDoor: {
 		data: [{
-			name: "External glazed door 1",
-			orientation: 1,
-			surfaceArea: 1,
-			height: 1,
-			width: 1,
-			uValue: 1,
-			pitchOption: "90",
-			pitch: 90,
-			solarTransmittance: 0.1,
-			elevationalHeight: 1,
-			midHeight: 1,
-			numberOpenableParts: "0",
-			openingToFrameRatio: 0.2
+			data: {
+				name: "External glazed door 1",
+				orientation: 1,
+				surfaceArea: 1,
+				height: 1,
+				width: 1,
+				uValue: 1,
+				pitchOption: "90",
+				pitch: 90,
+				solarTransmittance: 0.1,
+				elevationalHeight: 1,
+				midHeight: 1,
+				numberOpenableParts: "0",
+				openingToFrameRatio: 0.2
+			}
 		}]
 	},
 	dwellingSpaceInternalDoor: {

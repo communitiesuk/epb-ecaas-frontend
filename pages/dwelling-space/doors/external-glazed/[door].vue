@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor?.data);
-const model: Ref<ExternalGlazedDoorData> = ref(doorData!);
+const model: Ref<ExternalGlazedDoorData | undefined> = ref(doorData?.data);
 
 const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
@@ -27,7 +27,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			openingToFrameRatio: fields.openingToFrameRatio
 		};
 
-		const door: ExternalGlazedDoorData = {
+		const doorData: ExternalGlazedDoorData = {
 			...commonFields,
 			numberOpenableParts: "1",
 			maximumOpenableArea: fields.surfaceArea,
@@ -36,6 +36,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 		};
 
 		dwellingSpaceExternalGlazedDoor.complete = false;
+		const door: EcaasForm<ExternalGlazedDoorData> = { data: doorData, complete: true };
 		saveToList(door, dwellingSpaceExternalGlazedDoor);
 	});
 	
@@ -70,7 +71,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<FieldsPitch
-			:pitch-option="model.pitchOption"
+			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
 		/>
 		<FieldsOrientation />
