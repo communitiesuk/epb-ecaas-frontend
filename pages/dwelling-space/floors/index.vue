@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import formStatus from "~/constants/formStatus";
+
 const title = "Floor elements";
 const page = usePage();
 const store = useEcaasStore();
@@ -71,7 +73,11 @@ function checkIsComplete(){
 		id="ground"
 		title="Ground floor"
 		:form-url="`${page?.url!}/ground`"
-		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.map(x => x.data.name)"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceGroundFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceGroundFloor', index)"
 	/>
@@ -79,7 +85,11 @@ function checkIsComplete(){
 		id="internal"
 		title="Internal floor"
 		:form-url="`${page?.url!}/internal`"
-		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data?.map(x => x.data.name)"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceInternalFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceInternalFloor', index)"
 	/>
@@ -87,7 +97,11 @@ function checkIsComplete(){
 		id="exposed"
 		title="Exposed floor"
 		:form-url="`${page?.url!}/exposed`"
-		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data?.map(x => x.data.name)"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceExposedFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceExposedFloor', index)"
 
