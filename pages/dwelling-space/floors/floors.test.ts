@@ -488,6 +488,8 @@ describe("floors", () => {
 				}
 			});
 			await user.type(screen.getByTestId("name"), "Ground floor 1");
+			await user.tab();
+
 			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete).toBe(false);
 
 			await renderSuspended(Floors);
