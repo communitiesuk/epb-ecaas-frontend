@@ -38,21 +38,25 @@ describe("vent", () => {
 	};
 
 	test("data is saved to store state when form is valid", async () => {
-		await renderSuspended(Vent);
+		await renderSuspended(Vent, {
+			route: {
+				params: { vent: "create" }
+			}
+		});
 		
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 		
 		const { data } = store.infiltrationAndVentilation.vents;
 
-		expect(data[0]).toEqual(state);
+		expect(data[0]?.data).toEqual(state);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [state]
+					data: [{ data: state }]
 				}
 			}
 		});
@@ -74,7 +78,7 @@ describe("vent", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(Vent);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("typeOfVent_error"))).toBeDefined();
@@ -87,8 +91,52 @@ describe("vent", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Vent);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("ventErrorSummary"))).toBeDefined();
+	});
+
+	test("updated form data is automatically saved to store", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					data: [{
+						data: { ...state }
+					}]
+				}
+			}
+		});
+
+		await renderSuspended(Vent, {
+			route: {
+				params: { vent: "0" },
+			},
+		});
+	
+		await user.clear(screen.getByTestId("name"));
+
+		await user.type(screen.getByTestId("name"), "Vent 2");
+		await user.click(screen.getByTestId("typeOfVent_airBrick"));
+		await user.tab();
+
+		const { data } = store.infiltrationAndVentilation.vents;
+
+		expect(data[0]?.data.name).toBe("Vent 2");
+		expect(data[0]?.data.typeOfVent).toBe("airBrick");
+	});
+	
+	test("partial form data is saved automatically with default name to store when adding new heater", async () => {
+		await renderSuspended(Vent, {
+			route: {
+				params: { vent: "create" },
+			},
+		});
+		
+		await user.click(screen.getByTestId("typeOfVent_airBrick"));
+		await user.tab();
+
+		const { data } = store.infiltrationAndVentilation.vents;
+
+		expect(data[0]?.data.name).toBe("Vent");
 	});
 });

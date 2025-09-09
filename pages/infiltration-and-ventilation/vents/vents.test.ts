@@ -4,6 +4,7 @@ import { screen, within } from "@testing-library/vue";
 import type { VentData } from "~/stores/ecaasStore.schema";
 import Vents from "./index.vue";
 import VentsForm from "./[vent].vue";
+import formStatus from "~/constants/formStatus";
 
 describe("vents", () => {
 	const store = useEcaasStore();
@@ -41,7 +42,7 @@ describe("vents", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [vent1]
+					data: [{ data: vent1 }]
 				}
 			}
 		});
@@ -59,7 +60,11 @@ describe("vents", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [vent1, vent2, vent3]
+					data: [
+						{ data: vent1 },
+						{ data: vent2 },
+						{ data: vent3 }
+					]
 				}
 			}
 		});
@@ -79,7 +84,10 @@ describe("vents", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [vent1, vent2]
+					data: [
+						{ data: vent1 },
+						{ data: vent2 }
+					]
 				}
 			}
 		});
@@ -96,6 +104,23 @@ describe("vents", () => {
 		expect(screen.getByText("Vent 1 (2)")).toBeDefined();
 		expect(screen.getByText("Vent 1 (1) (1)")).toBeDefined();
 		expect(screen.getByText("Vent 1 (1) (2)")).toBeDefined();
+	});
+
+	it("disables the mark section as complete button when shading element is incomplete", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					data: [{
+						data: { name: "Vent 1" },
+						complete: false,
+					}]
+				}
+			}
+		});
+
+		await renderSuspended(Vents);
+		const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 	});
 
 	it("marks vents as complete when mark section as complete button is clicked", async () => {
@@ -120,7 +145,10 @@ describe("vents", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [vent1, vent2],
+					data: [
+						{ data: vent1, complete: true },
+						{ data: vent2, complete: true }
+					]
 				},
 			},
 		});
@@ -139,7 +167,7 @@ describe("vents", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [vent1],
+					data: [{ data: vent1, complete: true }],
 				},
 			},
 		});
@@ -158,7 +186,7 @@ describe("vents", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [vent1],
+					data: [{ data: vent1 }],
 				},
 			},
 		});
@@ -172,7 +200,7 @@ describe("vents", () => {
 			},
 		});
 	
-		await user.click(screen.getByRole("button")); 
+		await user.click(screen.getByTestId("saveAndComplete"));
 	
 		const { complete } = store.infiltrationAndVentilation.vents;
 		expect(complete).toBe(false);
@@ -188,4 +216,36 @@ describe("vents", () => {
 		expect(returnToOverviewButton.getAttribute("href")).toBe("/infiltration-and-ventilation");
 	});
 	
+	it("should display an in-progress indicator when an entry is not marked as complete", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					data: [{
+						data: { name: "Vent 1" }
+					}]
+				}
+			}
+		});
+
+		await renderSuspended(Vents);
+
+		expect(screen.getByTestId("vents_status_0").textContent).toBe(formStatus.inProgress.text);
+	});
+
+	it ("should display a complete indicator when an entry is marked as complete", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				vents: {
+					data: [{
+						data: vent1,
+						complete: true
+					}]
+				}
+			}
+		});
+
+		await renderSuspended(Vents);
+
+		expect(screen.getByTestId("vents_status_0").textContent).toBe(formStatus.complete.text);
+	});
 });

@@ -1,30 +1,47 @@
 <script setup lang="ts">
+import { getUrl } from "#imports";
+
 const title = "Vent";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const ventData = useItemToEdit("vent", store.infiltrationAndVentilation.vents.data);
-const model: Ref<VentData> = ref(ventData!);
+const model: Ref<VentData> = ref(ventData?.data!);
 
 const saveForm = (fields: VentData) => {
 	store.$patch((state) => {
 		const { vents } = state.infiltrationAndVentilation;
+		const index = getStoreIndex(vents.data);
 
-		const vent: VentData = {
-			name: fields.name,
-			typeOfVent: fields.typeOfVent,
-			effectiveVentilationArea: fields.effectiveVentilationArea,
-			openingRatio: 1,
-			midHeightOfZone: fields.midHeightOfZone,
-			orientation: fields.orientation,
-			pitch: fields.pitch
+		vents.data[index] = {
+			data: {
+				name: fields.name,
+				typeOfVent: fields.typeOfVent,
+				effectiveVentilationArea: fields.effectiveVentilationArea,
+				openingRatio: 1,
+				midHeightOfZone: fields.midHeightOfZone,
+				orientation: fields.orientation,
+				pitch: fields.pitch
+			},
+			complete: true
 		};
 
-		saveToList(vent, vents);
+		vents.complete = false;
 	});
-	store.infiltrationAndVentilation.vents.complete = false;
+	
 	navigateTo("/infiltration-and-ventilation/vents");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.infiltrationAndVentilation.vents,
+	defaultName: "Vent",
+	onPatchCreate: (state, newData) => state.infiltrationAndVentilation.vents.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.infiltrationAndVentilation.vents.data[index] = newData;
+		state.infiltrationAndVentilation.vents.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -109,9 +126,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsOrientation help="Enter the orientation of the vent's outside face, measured from true north"/>
 		<FieldsPitch />
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('vents')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

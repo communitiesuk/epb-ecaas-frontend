@@ -974,13 +974,15 @@ describe("FHS input mapper", () => {
 			vents: {
 				...baseForm,
 				data: [{
-					name: "only vent",
-					typeOfVent: "airBrick",
-					effectiveVentilationArea: 75,
-					openingRatio: 0.2,
-					midHeightOfZone: 1.9,
-					orientation: 90,
-					pitch: 180,
+					data: {
+						name: "only vent",
+						typeOfVent: "airBrick",
+						effectiveVentilationArea: 75,
+						openingRatio: 0.2,
+						midHeightOfZone: 1.9,
+						orientation: 90,
+						pitch: 180
+					}
 				}]
 			},
 			combustionAppliances: {
@@ -1391,13 +1393,15 @@ describe("FHS input mapper", () => {
 			vents: {
 				...baseForm,
 				data: [{
-					name: "only vent",
-					typeOfVent: "airBrick",
-					effectiveVentilationArea: 75,
-					openingRatio: 0.2,
-					midHeightOfZone: 1.9,
-					orientation: 90,
-					pitch: 180,
+					data: {
+						name: "only vent",
+						typeOfVent: "airBrick",
+						effectiveVentilationArea: 75,
+						openingRatio: 0.2,
+						midHeightOfZone: 1.9,
+						orientation: 90,
+						pitch: 180
+					}
 				}]
 			},
 			combustionAppliances: {

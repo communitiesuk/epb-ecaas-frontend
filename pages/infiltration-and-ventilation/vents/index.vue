@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import formStatus from '~/constants/formStatus';
+
 const title = "Vents";
 const page = usePage();
 const store = useEcaasStore();
@@ -22,12 +24,14 @@ function handleDuplicate(index: number) {
 	const vent = data[index];
 
 	if (vent) {
-		const duplicates = data.filter(d => d.name.match(duplicateNamePattern(vent.name)));
+		const duplicates = data.filter(d => d.data.name.match(duplicateNamePattern(vent.data.name)));
 
 		store.$patch((state) => {
 			state.infiltrationAndVentilation.vents.data.push({
-				...vent,
-				name: `${vent.name} (${duplicates.length})`
+				data: {
+					...vent.data,
+					name: `${vent.data.name} (${duplicates.length})`
+				}
 			});
 		});
 		store.infiltrationAndVentilation.vents.complete = false;
@@ -54,7 +58,11 @@ function handleComplete() {
 		id="vents"
 		title="Vents"
 		:form-url="page?.url!"
-		:items="store.infiltrationAndVentilation.vents.data.map(x => x.name)"
+		:items="store.infiltrationAndVentilation.vents.data?.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
@@ -62,6 +70,10 @@ function handleComplete() {
 		<GovButton href="/infiltration-and-ventilation" secondary>
 			Return to infiltration and ventilation
 		</GovButton>
-		<CompleteElement :is-complete="store.infiltrationAndVentilation.vents?.complete ?? false" @completed="handleComplete"/>
+		<CompleteElement
+			:is-complete="store.infiltrationAndVentilation.vents?.complete ?? false"
+			:disabled="store.infiltrationAndVentilation.vents.data.some(s => !s.complete)"
+			@completed="handleComplete"
+		/>
 	</div>
 </template>

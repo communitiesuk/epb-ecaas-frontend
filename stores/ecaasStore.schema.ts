@@ -27,7 +27,7 @@ export type EcaasState = AssertEachKeyIsPageId<{
 	infiltrationAndVentilation: InfiltrationAndVentilation;
 	heatingSystems: HeatingSystems;
 	pvAndBatteries: PvAndBatteries;
-}> & { 
+}> & {
 	cooling: Cooling; // cooling doesn't have a corresponding page yet
 	lastResult?: ComplianceResult;
 };
@@ -682,7 +682,7 @@ export type WwhrsData = z.infer<typeof wwhrsDataZod>;
 export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
 	mechanicalVentilation: EcaasForm<EcaasForm<MechanicalVentilationData>[]>;
 	ductwork: EcaasForm<EcaasForm<DuctworkData>[]>;
-	vents: EcaasForm<VentData[]>;
+	vents: EcaasForm<EcaasForm<VentData>[]>;
 	combustionAppliances: CombustionAppliancesData;
 	naturalVentilation: EcaasForm<VentilationData>;
 	airPermeability: EcaasForm<AirPermeabilityData>;

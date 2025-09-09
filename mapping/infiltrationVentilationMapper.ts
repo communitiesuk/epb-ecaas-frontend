@@ -93,12 +93,12 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 
 export function mapVentsData(state: ResolvedState) {
 	const entries = state.infiltrationAndVentilation.vents.map((x): [string, SchemaVent] => {
-		const key = x.name;
+		const key = x.data.name;
 		const val: SchemaVent = {
-			area_cm2: x.effectiveVentilationArea,
-			mid_height_air_flow_path: x.midHeightOfZone,
-			orientation360: x.orientation,
-			pitch: x.pitch,
+			area_cm2: x.data.effectiveVentilationArea,
+			mid_height_air_flow_path: x.data.midHeightOfZone,
+			orientation360: x.data.orientation,
+			pitch: x.data.pitch,
 			pressure_difference_ref: 20 // stock value
 		};
 

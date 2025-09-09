@@ -214,14 +214,16 @@ describe("infiltration ventilation mapper", () => {
 		const ventName = "Acme"; 
 
 		// Arrange
-		const ventData: VentData[] = [{
-			name: ventName,
-			typeOfVent: "airBrick",
-			effectiveVentilationArea: 100,
-			openingRatio: 0.6,
-			midHeightOfZone: 1.5,
-			orientation: 180,
-			pitch: 45,
+		const ventData: EcaasForm<VentData>[] = [{
+			data: {
+				name: ventName,
+				typeOfVent: "airBrick",
+				effectiveVentilationArea: 100,
+				openingRatio: 0.6,
+				midHeightOfZone: 1.5,
+				orientation: 180,
+				pitch: 45
+			}
 		}];
 
 		store.$patch({

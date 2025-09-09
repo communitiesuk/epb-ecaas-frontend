@@ -63,13 +63,13 @@ const ventSummary: SummarySection = {
 	label: "Vents",
 	data: ventData.map(x => {
 		return {
-			"Name": x.name,
-			"Type of vent": displayCamelToSentenceCase(x.typeOfVent),
-			"Effective ventilation area": `${x.effectiveVentilationArea} ${centimetresSquare.suffix}`,
-			"Vent opening ratio": x.openingRatio,
-			"Mid height of zone": `${x.midHeightOfZone} ${metre.suffix}`,
-			"Orientation": `${x.orientation} ${degrees.suffix}`,
-			"Pitch": `${x.pitch} ${degrees.suffix}`
+			"Name": x.data.name,
+			"Type of vent": displayCamelToSentenceCase(x.data.typeOfVent),
+			"Effective ventilation area": `${x.data.effectiveVentilationArea} ${centimetresSquare.suffix}`,
+			"Vent opening ratio": x.data.openingRatio,
+			"Mid height of zone": `${x.data.midHeightOfZone} ${metre.suffix}`,
+			"Orientation": `${x.data.orientation} ${degrees.suffix}`,
+			"Pitch": `${x.data.pitch} ${degrees.suffix}`
 		};
 	}),
 	editUrl: getUrl("vents")
