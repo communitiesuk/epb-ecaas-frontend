@@ -7,6 +7,7 @@ import ExposedFloorForm from "./exposed/[floor].vue";
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
 import type { Component } from "vue";
+import formStatus from "~/constants/formStatus";
 
 describe("floors", () => {
 	const store = useEcaasStore();
@@ -130,13 +131,12 @@ describe("floors", () => {
 	});
 	
 	describe("ground floors", () => {
-		
 		test("ground floor is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data:[ground1]
+							data:[{ data: ground1 }]
 						}
 					}
 				}
@@ -156,7 +156,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data:[ground1, ground2, ground3]
+							data:[{ data: ground1 }, { data: ground2 }, { data: ground3 }]
 						}
 					}
 				}
@@ -165,19 +165,19 @@ describe("floors", () => {
 			await renderSuspended(Floors);
 			await user.click(screen.getByTestId("ground_remove_1"));
 	
-			const populatedList = screen.getByTestId("ground_items");
+			const groundFloors = screen.getByTestId("ground_items");
 	
-			expect(within(populatedList).getByText("ground1 name")).toBeDefined();
-			expect(within(populatedList).getByText("ground3 name")).toBeDefined();
-			expect(within(populatedList).queryByText("ground2 name")).toBeNull();
+			expect(within(groundFloors).getByText("ground1 name")).toBeDefined();
+			expect(within(groundFloors).getByText("ground3 name")).toBeDefined();
+			expect(within(groundFloors).queryByText("ground2 name")).toBeNull();
 		});
 		
-		test("floor is duplicated when duplicate link is clicked", async () => {
+		test("ground floor is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data:[ground1, ground2]
+							data:[{ data: ground1 }, { data: ground2 }]
 						}
 					}
 				}
@@ -196,16 +196,52 @@ describe("floors", () => {
 			expect(screen.getByText("ground1 name (1) (1)")).toBeDefined();
 			expect(screen.getByText("ground1 name (1) (2)")).toBeDefined();
 		});
+
+		it("should display an in-progress indicator when an entry is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{
+								data: ground1
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Floors);
+
+			expect(screen.getByTestId("ground_status_0").textContent).toBe(formStatus.inProgress.text);
+		});
+
+		it ("should display a complete indicator when an entry is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{
+								data: ground1,
+								complete: true
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Floors);
+
+			expect(screen.getByTestId("ground_status_0").textContent).toBe(formStatus.complete.text);
+		});
 	});
 
 	describe("internal floors", () => {
-	
 		test("internal floor is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data:[internal1]
+							data:[{ data: internal1 }]
 						}
 					}
 				}
@@ -225,7 +261,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data:[internal1, internal2, internal3]
+							data:[{ data: internal1 }, { data: internal2 }, { data: internal3 }]
 						}
 					}
 				}
@@ -234,11 +270,11 @@ describe("floors", () => {
 			await renderSuspended(Floors);
 			await user.click(screen.getByTestId("internal_remove_1"));
 	
-			const populatedList = screen.getByTestId("internal_items");
+			const internalFloors = screen.getByTestId("internal_items");
 	
-			expect(within(populatedList).getByText("internal1 name")).toBeDefined();
-			expect(within(populatedList).getByText("internal3 name")).toBeDefined();
-			expect(within(populatedList).queryByText("internal2 name")).toBeNull();
+			expect(within(internalFloors).getByText("internal1 name")).toBeDefined();
+			expect(within(internalFloors).getByText("internal3 name")).toBeDefined();
+			expect(within(internalFloors).queryByText("internal2 name")).toBeNull();
 	
 		});
 	
@@ -247,7 +283,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data:[internal1, internal2]
+							data:[{ data: internal1 }, { data: internal2 }]
 						}
 					}
 				}
@@ -266,16 +302,52 @@ describe("floors", () => {
 			expect(screen.getByText("internal1 name (1) (1)")).toBeDefined();
 			expect(screen.getByText("internal1 name (1) (2)")).toBeDefined();
 		});
+
+		it("should display an in-progress indicator when an entry is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceInternalFloor: {
+							data: [{
+								data: internal1
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Floors);
+
+			expect(screen.getByTestId("internal_status_0").textContent).toBe(formStatus.inProgress.text);
+		});
+
+		it ("should display a complete indicator when an entry is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceInternalFloor: {
+							data: [{
+								data: internal1,
+								complete: true
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Floors);
+
+			expect(screen.getByTestId("internal_status_0").textContent).toBe(formStatus.complete.text);
+		});
 	});
 
 	describe("exposed floors", () => {
-
 		test("exposed floor is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceExposedFloor: {
-							data:[exposed1]
+							data:[{ data: exposed1 }]
 						}
 					}
 				}
@@ -295,7 +367,7 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceExposedFloor: {
-							data:[exposed1, exposed2, exposed3]
+							data:[{ data: exposed1 }, { data: exposed2 }, { data: exposed3 }]
 						}
 					}
 				}
@@ -311,12 +383,12 @@ describe("floors", () => {
 	
 		});
 		
-		test("floor is duplicated when duplicate link is clicked", async () => {
+		test("exposed floor is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceExposedFloor: {
-							data:[exposed1, exposed2]
+							data:[{ data: exposed1 }, { data: exposed2 }]
 						}
 					}
 				}
@@ -335,6 +407,43 @@ describe("floors", () => {
 			expect(screen.getByText("exposed1 name (1) (1)")).toBeDefined();
 			expect(screen.getByText("exposed1 name (1) (2)")).toBeDefined();
 		});
+
+		it("should display an in-progress indicator when an entry is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceExposedFloor: {
+							data: [{
+								data: exposed1
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Floors);
+
+			expect(screen.getByTestId("exposed_status_0").textContent).toBe(formStatus.inProgress.text);
+		});
+
+		it ("should display a complete indicator when an entry is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceExposedFloor: {
+							data: [{
+								data: exposed1,
+								complete: true
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Floors);
+
+			expect(screen.getByTestId("exposed_status_0").textContent).toBe(formStatus.complete.text);
+		});
 	});
 
 	describe("mark section as complete", () =>  {
@@ -343,9 +452,9 @@ describe("floors", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
-						dwellingSpaceGroundFloor: { data: [ground1] },
-						dwellingSpaceInternalFloor: { data: [internal1] },
-						dwellingSpaceExposedFloor: { data: [exposed1] },
+						dwellingSpaceGroundFloor: { data: [{ data: ground1, complete: true }] },
+						dwellingSpaceInternalFloor: { data: [{ data: internal1, complete: true }] },
+						dwellingSpaceExposedFloor: { data: [{ data: exposed1, complete: true }] },
 					},
 				}
 			});
@@ -391,11 +500,7 @@ describe("floors", () => {
 	
 			await user.click(screen.getByTestId("completeSectionButton"));
 	
-			const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor
-	
-
-			} = store.dwellingFabric.dwellingSpaceFloors;
-	
+			const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor } = store.dwellingFabric.dwellingSpaceFloors;
 	
 			expect(dwellingSpaceGroundFloor?.complete).toBe(true);
 			expect(dwellingSpaceInternalFloor?.complete).toBe(true);
@@ -407,14 +512,12 @@ describe("floors", () => {
 		});
 	
 		it("marks floors as not complete when mark as complete button is clicked then user removes a floor item", async () => {
-
 			const floorsData = await getFloorData("remove");
 			const floors = Object.entries(store.dwellingFabric.dwellingSpaceFloors);
 			
 			for (const [key] of floors) {
 				const typedKey = key as FloorType;
-		
-				await user.click(screen.getByTestId("completeSectionButton"));
+				await user.click(await screen.findByTestId("completeSectionButton"));
 				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(true);
 					
 				const floorData = floorsData.find(x => x.key === typedKey);
@@ -425,7 +528,7 @@ describe("floors", () => {
 			}
 		});
 
-		it("marks floors as not complete when complete button is clicked then user duplicates a floor item", async () => {
+		it("marks floors as not complete after user duplicates a floor item", async () => {
 
 			const floorsData = await getFloorData("duplicate");
 			const floors = Object.entries(store.dwellingFabric.dwellingSpaceFloors);
@@ -444,31 +547,77 @@ describe("floors", () => {
 			}
 		});
 
-		it("marks floors as not complete when user saves a new or edited floor form after marking section as complete", async () => {
+		it("marks complete floors as not complete when user saves a ground floor form", async () => {
+			await user.click(screen.getByTestId("completeSectionButton"));
+			await renderSuspended(GroundFloorForm, {
+				route: {
+					params: { floor: "0" }
+				}
+			});
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete).toBe(false);
 
-			const floorsData = await getFloorData("");
-
-			const floors = Object.entries(store.dwellingFabric.dwellingSpaceFloors);
-	
-			for(const [key] of floors){
-				const typedKey = key as FloorType;
-				await user.click(screen.getByTestId("completeSectionButton"));
-				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(true);
-
-				const floorData = floorsData.find(x => x.key === typedKey);
-
-				await renderSuspended(floorData?.form, {
-					route: {
-						params: { floor: "0" }
-					}
-				});
-
-				await user.click(screen.getByRole("button", { name: "Save and continue" }));
-				
-				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(false);
-				await renderSuspended(Floors);
-				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-			}
+			await renderSuspended(Floors);
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 		});
-	});
+
+		it("marks complete floors as not complete when user saves an internal floor form", async () => {
+			await user.click(screen.getByTestId("completeSectionButton"));
+			await renderSuspended(InternalFloorForm, {
+				route: {
+					params: { floor: "0" }
+				}
+			});
+			
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete).toBe(false);
+		});
+
+		it("marks complete floors as not complete when user saves an exposed floor form", async () => {
+			await user.click(screen.getByTestId("completeSectionButton"));
+			await renderSuspended(ExposedFloorForm, {
+				route: {
+					params: { floor: "0" }
+				}
+			});
+			
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete).toBe(false);
+		});
+
+		it("marks complete floors as not complete when user edits a ground floor without marking it as complete", async () => {
+			await user.click(screen.getByTestId("completeSectionButton"));
+			await renderSuspended(GroundFloorForm, {
+				route: {
+					params: { floor: "0" }
+				}
+			});
+			await user.type(screen.getByTestId("name"), "Ground floor 1");
+			await user.tab();
+
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete).toBe(false);
+
+			await renderSuspended(Floors);
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		});
+
+		it("disables the mark section as complete button when data is incomplete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: { 
+							data: [{
+								data: ground1,
+								complete: false,
+							}]
+						},
+					}
+				}
+			});
+				
+			await renderSuspended(Floors);
+			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
+		});
+	});		
 });

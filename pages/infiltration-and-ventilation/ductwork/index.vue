@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import formStatus from "~/constants/formStatus";
 import { checkMvhrHasDuctwork } from "../../../utils/checkMvhrHasDuctwork";
 const title = "MVHR ductwork";
 const page = usePage();
@@ -24,12 +25,15 @@ function handleDuplicate(index: number) {
 	const ductwork = data[index];
 	if (ductwork) {
 		const duplicates = data.filter((x) =>
-			x.name.match(duplicateNamePattern(ductwork.name))
+			x.data.name.match(duplicateNamePattern(ductwork.data.name))
 		);
 		store.$patch((state) => {
 			state.infiltrationAndVentilation.ductwork.data?.push({
 				...ductwork,
-				name: `${ductwork.name} (${duplicates.length})`,
+				data: {
+					...ductwork.data,
+					name: `${ductwork.data.name} (${duplicates.length})`
+				}
 			});
 		});
 		store.infiltrationAndVentilation.ductwork.complete = false;
@@ -66,7 +70,11 @@ function checkIsComplete(){
 		id="ductwork"
 		title="Ductwork"
 		:form-url="page?.url!"
-		:items="store.infiltrationAndVentilation.ductwork.data?.map((x) => x.name)"
+		:items="store.infiltrationAndVentilation.ductwork.data?.map((x) => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
@@ -74,7 +82,11 @@ function checkIsComplete(){
 		<GovButton href="/infiltration-and-ventilation" secondary>
 			Return to infiltration and ventilation
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement
+			:is-complete="checkIsComplete()"
+			:disabled="store.infiltrationAndVentilation.ductwork.data?.some(s => !s.complete)"
+			@completed="handleComplete"
+		/>
 	</div>
 
 </template>

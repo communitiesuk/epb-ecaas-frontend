@@ -2,19 +2,20 @@
 import { centimetre, type Length } from "~/utils/units/length";
 import type { SchemaWindShieldLocation } from "~/schema/api-schema.types";
 import { unitValue } from "~/utils/units/types";
+import { getUrl } from "#imports";
 
 const title = "Ground floor";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
 // prepopulate edge insulation width when using old input format
-if (floorData?.typeOfGroundFloor === "Slab_edge_insulation" && typeof floorData.edgeInsulationWidth === "number") {
-	floorData.edgeInsulationWidth = unitValue(floorData.edgeInsulationWidth, centimetre);
+if (floorData?.data.typeOfGroundFloor === "Slab_edge_insulation" && typeof floorData.data.edgeInsulationWidth === "number") {
+	floorData.data.edgeInsulationWidth = unitValue(floorData.data.edgeInsulationWidth, centimetre);
 };
 
-const model: Ref<GroundFloorData> = ref(floorData!);
+const model: Ref<GroundFloorData | undefined> = ref(floorData?.data);
 
 // Removed heated and unheated basement options for summer
 type reducedGroundFloorOptions = "Slab_no_edge_insulation" | "Slab_edge_insulation" | "Suspended_floor";
@@ -35,6 +36,7 @@ const windShieldingFactorOptions: Record<SchemaWindShieldLocation, SnakeToSenten
 const saveForm = (fields: GroundFloorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
+		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
 		const commonFields = {
 			name: fields.name,
@@ -49,12 +51,12 @@ const saveForm = (fields: GroundFloorData) => {
 			thicknessOfWalls: fields.thicknessOfWalls
 		};
 
-		let floor: GroundFloorData;
+		let floorData: GroundFloorData;
 
 		switch(fields.typeOfGroundFloor) {
 			case "Slab_edge_insulation":
 			{				
-				floor = {
+				floorData = { 
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					edgeInsulationType: fields.edgeInsulationType,
@@ -64,13 +66,13 @@ const saveForm = (fields: GroundFloorData) => {
 				break;
 			}
 			case "Slab_no_edge_insulation":
-				floor = {
+				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 				};
 				break;
 			case "Suspended_floor":
-				floor = {
+				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					heightOfFloorUpperSurface: fields.heightOfFloorUpperSurface,
@@ -81,7 +83,7 @@ const saveForm = (fields: GroundFloorData) => {
 				};
 				break;
 			case "Heated_basement":
-				floor = {
+				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
@@ -89,7 +91,7 @@ const saveForm = (fields: GroundFloorData) => {
 				};
 				break;
 			case "Unheated_basement":
-				floor = {
+				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					thermalTransmittanceOfFloorAboveBasement: fields.thermalTransmittanceOfFloorAboveBasement,
@@ -109,13 +111,26 @@ const saveForm = (fields: GroundFloorData) => {
 			dwellingSpaceFloors.dwellingSpaceGroundFloor = { data: [] };
 		}
 		
+		dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = { data: floorData, complete: true };
 		dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
-		
-		saveToList(floor, dwellingSpaceFloors.dwellingSpaceGroundFloor);
 	});
 
 	navigateTo("/dwelling-space/floors");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor,
+	defaultName: "Ground floor",
+	onPatchCreate: (state, newData) => {
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.push(newData);
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
+	},
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
@@ -215,7 +230,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			validation="required"
 		/>
 
-		<template v-if="model.typeOfGroundFloor === 'Slab_edge_insulation'">
+		<template v-if="model?.typeOfGroundFloor === 'Slab_edge_insulation'">
 			<FormKit
 				id="edgeInsulationType"
 				type="govRadios"
@@ -302,7 +317,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			/>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === 'Suspended_floor'">
+		<template v-if="model?.typeOfGroundFloor === 'Suspended_floor'">
 			<FormKit
 				id="heightOfFloorUpperSurface"
 				type="govInputWithSuffix"
@@ -397,7 +412,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			</FormKit>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === 'Heated_basement'">
+		<template v-if="model?.typeOfGroundFloor === 'Heated_basement'">
 			<FormKit
 				id="depthOfBasementFloorBelowGround"
 				type="govInputWithSuffix"
@@ -416,7 +431,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			/>
 		</template>
 
-		<template v-if="model.typeOfGroundFloor === 'Unheated_basement'">
+		<template v-if="model?.typeOfGroundFloor === 'Unheated_basement'">
 			<FormKit
 				id="thermalTransmittanceOfFloorAboveBasement"
 				type="govInputWithSuffix"
@@ -460,10 +475,10 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			/>
 		</template>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
 

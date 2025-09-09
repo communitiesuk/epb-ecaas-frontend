@@ -8,13 +8,15 @@ const baseForm = {
 };
 
 describe("infiltration ventilation mapper", () => {
-	const mechVentMvhr: MechanicalVentilationData[] = [{
-		id: "bathroom exhaust fan",
-		name: "bathroom exhaust fan",
-		typeOfMechanicalVentilationOptions: "MVHR",
-		airFlowRate: unitValue(30, litrePerSecond),
-		mvhrLocation: "inside",
-		mvhrEfficiency: 1,
+	const mechVentMvhr: EcaasForm<MechanicalVentilationData>[] = [{
+		data: {
+			id: "bathroom exhaust fan",
+			name: "bathroom exhaust fan",
+			typeOfMechanicalVentilationOptions: "MVHR",
+			airFlowRate: unitValue(30, litrePerSecond),
+			mvhrLocation: "inside",
+			mvhrEfficiency: 1,
+		}
 	}];
 
 	const store = useEcaasStore();
@@ -74,17 +76,19 @@ describe("infiltration ventilation mapper", () => {
 	it("maps ductwork input state to FHS input request", () => {
 		// Arrange
 		
-		const ductwork: DuctworkData[] = [{
-			name: "ductwork 1",
-			mvhrUnit: "bathroom exhaust fan",
-			ductworkCrossSectionalShape: "circular",
-			internalDiameterOfDuctwork: 200,
-			externalDiameterOfDuctwork: 300,
-			lengthOfDuctwork: 10.0,
-			thermalInsulationConductivityOfDuctwork: 0.023,
-			insulationThickness: 100,
-			surfaceReflectivity: false,
-			ductType: "extract"
+		const ductwork: EcaasForm<DuctworkData>[] = [{
+			data: {
+				name: "ductwork 1",
+				mvhrUnit: "bathroom exhaust fan",
+				ductworkCrossSectionalShape: "circular",
+				internalDiameterOfDuctwork: 200,
+				externalDiameterOfDuctwork: 300,
+				lengthOfDuctwork: 10.0,
+				thermalInsulationConductivityOfDuctwork: 0.023,
+				insulationThickness: 100,
+				surfaceReflectivity: false,
+				ductType: "extract"
+			}
 		}];
 
 		store.$patch({
@@ -170,11 +174,13 @@ describe("infiltration ventilation mapper", () => {
 
 	it("maps mechanical ventilation of type intermittent MEV input state to FHS input request", () => {
 		// Arrange
-		const mechVent: MechanicalVentilationData[] = [{
-			id: "bathroom exhaust fan",
-			name: "bathroom exhaust fan",
-			typeOfMechanicalVentilationOptions: "Intermittent MEV",
-			airFlowRate: unitValue(40, litrePerSecond),
+		const mechVent: EcaasForm<MechanicalVentilationData>[] = [{
+			data: {
+				id: "bathroom exhaust fan",
+				name: "bathroom exhaust fan",
+				typeOfMechanicalVentilationOptions: "Intermittent MEV",
+				airFlowRate: unitValue(40, litrePerSecond)
+			}
 		}];
 
 		store.$patch({
@@ -207,14 +213,16 @@ describe("infiltration ventilation mapper", () => {
 		const ventName = "Acme"; 
 
 		// Arrange
-		const ventData: VentData[] = [{
-			name: ventName,
-			typeOfVent: "airBrick",
-			effectiveVentilationArea: 100,
-			openingRatio: 0.6,
-			midHeightOfZone: 1.5,
-			orientation: 180,
-			pitch: 45,
+		const ventData: EcaasForm<VentData>[] = [{
+			data: {
+				name: ventName,
+				typeOfVent: "airBrick",
+				effectiveVentilationArea: 100,
+				openingRatio: 0.6,
+				midHeightOfZone: 1.5,
+				orientation: 180,
+				pitch: 45
+			}
 		}];
 
 		store.$patch({

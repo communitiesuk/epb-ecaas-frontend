@@ -77,7 +77,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required | length:1,50"
+			validation="required:trim | length:1,50"
 		/>
 		<FormKit
 			id="internalDiameter"
@@ -196,7 +196,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('pipework')" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>

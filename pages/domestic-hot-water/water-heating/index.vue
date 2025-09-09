@@ -7,6 +7,7 @@ import { getUrl } from "#imports";
 
 const title = "Water heating";
 const store = useEcaasStore();
+const { autoSaveForm } = useForm();
 
 const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0];
 
@@ -26,20 +27,10 @@ const model: Ref<HotWaterCylinderData & { waterHeaterType: WaterHeaterType[] }> 
 	waterHeaterType: hotWaterCylinderData ? ["hotWaterCylinder"] : []
 });
 
-watch(model, async (newData: HotWaterCylinderData, initialData: HotWaterCylinderData) => {
-
-	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
-		if (initialData[key]  !== newData[key]) {
-			store.$patch((state) => {
-				state.domesticHotWater.waterHeating.hotWaterCylinder.data[0] = {
-					...newData,
-					id: store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.id ?? uuidv4(),
-					name: newData.name?.trim() || "Hot water cylinder"
-				};
-			});
-			store.domesticHotWater.waterHeating.hotWaterCylinder.complete = false;
-		}
-	}
+autoSaveForm(model, (state, newData) => {
+	state.domesticHotWater.waterHeating.hotWaterCylinder.data[0] = 
+	{ ...newData.data,	name: newData.data.name?.trim() || "Hot water cylinder", 
+	id: store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.id ?? uuidv4() } ;
 });
 
 const saveForm = (fields: typeof model.value) => {
@@ -172,7 +163,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</template>
 		</ClientOnly>
 		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('domesticHotWater')" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>

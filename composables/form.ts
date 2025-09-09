@@ -44,16 +44,16 @@ export function useForm() {
 		onPatch: (state: EcaasState, newData: EcaasForm<T>) => void
 	) => {
 		watch(model, async (newData: T, initialData: T) => {
-			for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
-				if (initialData[key] !== newData[key]) {
-					store.$patch((state) => {
-						onPatch(state, {
-							data: newData,
-							complete: false
-						});
-					});
-				}
+			if (!hasChangedFields(newData, initialData)) {
+				return;
 			}
+
+			store.$patch((state) => {
+				onPatch(state, {
+					data: newData,
+					complete: false
+				});
+			});
 		});
 	};
 
@@ -96,8 +96,8 @@ export function useForm() {
 				
 			if (routeParam === "create" && isFirstEdit) {
 			
-				const name = ("name" in newData && typeof newData.name === "string" ? newData.name.trim() : undefined) ||
-					(duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName) || defaultName;
+				const name = "name" in newData && typeof newData.name === "string" && newData.name.trim() ||
+					(duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
 			
 				store.$patch(state => {
 					const elementData: EcaasForm<T> = {
@@ -109,23 +109,41 @@ export function useForm() {
 
 				return;
 			}
-			for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
-				if (initialData[key]  !== newData[key]) {
-					store.$patch((state) => {
-						const index = getStoreIndex(storeData.data);
-						const storeElementData = storeData.data[index]?.data;
-						const name = ("name" in newData && typeof newData.name === "string" ? newData.name.trim() : undefined) ||
-					("name" in storeElementData! && typeof storeElementData.name === "string" ? storeElementData.name.trim() : defaultName) || defaultName;
-			
-						const elementData: EcaasForm<T> = {
-							data: { ...newData,	name }
-						};
 
-						onPatchUpdate(state, elementData, index);
-					});
+			store.$patch((state) => {
+				if (!hasChangedFields(newData, initialData)) {
+					return;
 				}
-			}
+
+				const index = getStoreIndex(storeData.data);
+				const storeElementData = storeData.data[index]?.data;
+				let name: string = defaultName;
+
+				if ("name" in newData && typeof newData.name === "string") {
+					name = newData.name.trim() || defaultName;
+				}
+				else if (storeElementData && "name" in storeElementData && typeof storeElementData.name === "string") {
+					name = storeElementData.name.trim() || defaultName;
+				}
+
+				const elementData: EcaasForm<T> = {
+					data: { ...newData, name }
+				};
+
+				onPatchUpdate(state, elementData, index);
+			});
 		});
+	};
+
+	/**
+	 * Checks if there are any properties which have changed, between two objects
+	 * @param newData 
+	 * @param initialData 
+	 * @returns Boolean
+	 */
+	const hasChangedFields = <T extends object>(newData: T, initialData: T) => {
+		const initialDataKeys = Object.keys(initialData) as (keyof typeof initialData)[];
+		return initialDataKeys.some(x => initialData[x] !== newData[x]);
 	};
 
 	return { saveToList, getStoreIndex, autoSaveForm, autoSaveElementForm };

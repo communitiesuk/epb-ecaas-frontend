@@ -1,4 +1,4 @@
-import { arrayIncludes, objectEntries, objectFromEntries } from "ts-extras";
+import { objectEntries, objectFromEntries } from "ts-extras";
 import type { SchemaCombustionAppliance, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
@@ -46,29 +46,23 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x):[string, SchemaMechanicalVentilation] => {
 		let airFlowRateInCubicMetresPerHour: number;
 
-		if (typeof x.airFlowRate === "number") {
-			airFlowRateInCubicMetresPerHour = x.airFlowRate;
+		if (typeof x.data.airFlowRate === "number") {
+			airFlowRateInCubicMetresPerHour = x.data.airFlowRate;
 		} else {
-			airFlowRateInCubicMetresPerHour = asCubicMetresPerHour(x.airFlowRate);
+			airFlowRateInCubicMetresPerHour = asCubicMetresPerHour(x.data.airFlowRate);
 		}
 		
-		const key = x.name;
-		const val: SchemaMechanicalVentilation = {
-			vent_type: x.typeOfMechanicalVentilationOptions,
+		const key = x.data.name;
+		const val: Omit<SchemaMechanicalVentilation, "ductwork"> = {
+			vent_type: x.data.typeOfMechanicalVentilationOptions,
 			EnergySupply: defaultElectricityEnergySupplyName,
 			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
 			sup_air_flw_ctrl: "ODA",
 			sup_air_temp_ctrl: "CONST",
-			...(x.typeOfMechanicalVentilationOptions === "MVHR" ? { mvhr_location: x.mvhrLocation, mvhr_eff: x.mvhrEfficiency } : {}),
+			...(x.data.typeOfMechanicalVentilationOptions === "MVHR" ? { mvhr_location: x.data.mvhrLocation, mvhr_eff: x.data.mvhrEfficiency } : {}),
 			measured_air_flow_rate: 37,
 			measured_fan_power: 12.26,
-			// (TODO: REMOVE COMMENT WHEN USING HEM 0.37) more recent schema is more explicit about logic for SFP field, but following implements what is currently implicit logic: for following vent types, provide SFP (with a canned value), otherwise don't
-			...(arrayIncludes(["Decentralised continuous MEV", "Intermittent MEV"], x.typeOfMechanicalVentilationOptions) ? { SFP: 1.5 } : {}),
-			Control: "ventilation", // TODO this might need to refer to a real control,
-			SFP: 1.0, // TODO this may be incorrect, or need input from a form
-			mvhr_eff: null,
-			mvhr_location: null,
-			ductwork: null
+			SFP: 1.5 // canned value for now
 		};
 
 		return [key, val];
@@ -79,23 +73,20 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedState): SchemaMechanicalVentilationDuctwork[] {
 	const mvhrductworks = state.infiltrationAndVentilation.ductwork?.filter(hasMechanicalVentilation) ?? [];
 
-	function hasMechanicalVentilation(ductwork: DuctworkData) {
-		return mechanicalVentilationName === ductwork.mvhrUnit;
+	function hasMechanicalVentilation(ductwork: EcaasForm<DuctworkData>) {
+		return mechanicalVentilationName === ductwork.data.mvhrUnit;
 	}
 
 	return mvhrductworks.map((x) => {
 		const val: SchemaMechanicalVentilationDuctwork = {
-			cross_section_shape: x.ductworkCrossSectionalShape,
-			duct_type: x.ductType,
-			insulation_thermal_conductivity: x.thermalInsulationConductivityOfDuctwork,
-			insulation_thickness_mm: x.insulationThickness,
-			...(x.ductworkCrossSectionalShape === "circular" ? { internal_diameter_mm: x.internalDiameterOfDuctwork, external_diameter_mm: x.externalDiameterOfDuctwork } : {}),
-			...(x.ductworkCrossSectionalShape === "rectangular" ? { duct_perimeter_mm: x.ductPerimeter } : {}),
-			length: x.lengthOfDuctwork,
-			reflective: x.surfaceReflectivity,
-			duct_perimeter_mm: null,
-			external_diameter_mm: null,
-			internal_diameter_mm: null,
+			cross_section_shape: x.data.ductworkCrossSectionalShape,
+			duct_type: x.data.ductType,
+			insulation_thermal_conductivity: x.data.thermalInsulationConductivityOfDuctwork,
+			insulation_thickness_mm: x.data.insulationThickness,
+			...(x.data.ductworkCrossSectionalShape === "circular" ? { internal_diameter_mm: x.data.internalDiameterOfDuctwork, external_diameter_mm: x.data.externalDiameterOfDuctwork } : {}),
+			...(x.data.ductworkCrossSectionalShape === "rectangular" ? { duct_perimeter_mm: x.data.ductPerimeter } : {}),
+			length: x.data.lengthOfDuctwork,
+			reflective: x.data.surfaceReflectivity
 		};
 		return val;
 	});
@@ -103,12 +94,12 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 
 export function mapVentsData(state: ResolvedState) {
 	const entries = state.infiltrationAndVentilation.vents.map((x): [string, SchemaVent] => {
-		const key = x.name;
+		const key = x.data.name;
 		const val: SchemaVent = {
-			area_cm2: x.effectiveVentilationArea,
-			mid_height_air_flow_path: x.midHeightOfZone,
-			orientation360: x.orientation,
-			pitch: x.pitch,
+			area_cm2: x.data.effectiveVentilationArea,
+			mid_height_air_flow_path: x.data.midHeightOfZone,
+			orientation360: x.data.orientation,
+			pitch: x.data.pitch,
 			pressure_difference_ref: 20 // stock value
 		};
 

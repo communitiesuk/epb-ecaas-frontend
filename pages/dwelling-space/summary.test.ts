@@ -30,30 +30,34 @@ const lightingData: DwellingSpaceLightingData = {
 const floorsData: FloorsData = {
 	dwellingSpaceGroundFloor: {
 		data: [{
-			name: "Ground 1",
-			surfaceArea: 5,
-			pitch: 0,
-			uValue: 1,
-			thermalResistance: 1,
-			kappaValue: 50000,
-			massDistributionClass: "I",
-			perimeter: 0,
-			psiOfWallJunction: 0,
-			thicknessOfWalls: 0.3,
-			typeOfGroundFloor: "Slab_no_edge_insulation"
+			data: {
+				name: "Ground 1",
+				surfaceArea: 5,
+				pitch: 0,
+				uValue: 1,
+				thermalResistance: 1,
+				kappaValue: 50000,
+				massDistributionClass: "I",
+				perimeter: 0,
+				psiOfWallJunction: 0,
+				thicknessOfWalls: 0.3,
+				typeOfGroundFloor: "Slab_no_edge_insulation"
+			}
 		}]
 	},
 	dwellingSpaceInternalFloor: {
-		data: [{
-			typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
-			name: "Internal 1",
-			surfaceAreaOfElement: 5,
-			kappaValue: 50000,
-			massDistributionClass: "I",
+		data: [{ 
+			data: {
+				typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+				name: "Internal 1",
+				surfaceAreaOfElement: 5,
+				kappaValue: 50000,
+				massDistributionClass: "I",
+			}
 		}]
 	},
 	dwellingSpaceExposedFloor: {
-		data: [{
+		data: [{ data: {
 			name: "Exposed Floor 1",
 			pitch: 0,
 			orientation: 0,
@@ -65,7 +69,7 @@ const floorsData: FloorsData = {
 			uValue: 1,
 			kappaValue: 50000,
 			massDistributionClass: "I"
-		}]
+		} }]
 	}
 };
 
@@ -159,18 +163,21 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 const doorsData: DoorsData = {
 	dwellingSpaceExternalUnglazedDoor: {
 		data: [{
-			name: "External unglazed door 1",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
-			height: 0.5,
-			width: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 50000,
-			massDistributionClass: "I"
+			data:
+					{
+						name: "External unglazed door 1",
+						pitchOption: "90",
+						pitch: 90,
+						orientation: 0,
+						height: 0.5,
+						width: 20,
+						elevationalHeight: 20,
+						surfaceArea: 10,
+						solarAbsorption: 0.1,
+						uValue: 1,
+						kappaValue: 50000,
+						massDistributionClass: "I"
+					}
 		}]
 	},
 	dwellingSpaceExternalGlazedDoor: {

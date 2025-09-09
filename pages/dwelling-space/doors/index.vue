@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { isEcaasForm } from "~/stores/ecaasStore.schema";
+import formStatus from "~/constants/formStatus";
 
 const title = "Doors";
 const page = usePage();
 const store = useEcaasStore();
 
 type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
-type DoorData = ExternalUnglazedDoorData & ExternalGlazedDoorData & InternalDoorData;
+type DoorData = EcaasForm<ExternalUnglazedDoorData> & ExternalGlazedDoorData & InternalDoorData;
 
 function handleRemove(doorType: DoorType, index: number) {
 	const doors = store.dwellingFabric.dwellingSpaceDoors[doorType]?.data;
@@ -23,19 +25,42 @@ function handleRemove(doorType: DoorType, index: number) {
 function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) {
 	const doors  = store.dwellingFabric.dwellingSpaceDoors[doorType]?.data;
 	const door = doors?.[index];
+	let name: string;
     
 	if (door) {
-		const duplicates = doors.filter(f => f.name.match(duplicateNamePattern(door.name)));
+		const duplicates = doors.filter(f => {
+			if (isEcaasForm(f) && isEcaasForm(door)) {
+				name = door.data.name;
+				return f.data.name.match(duplicateNamePattern(door.data.name));
+			} else if (!isEcaasForm(f) && !isEcaasForm(door)) {
+				name = door.name;
+				return f.name.match(duplicateNamePattern(door.name));
+			}
+
+			return false;
+		});
 
 		store.$patch((state) => {
-			const newDoor = {
-				...door,
-				name: `${door.name} (${duplicates.length})`
-			} as T;
+			let newItem;
 
-			state.dwellingFabric.dwellingSpaceDoors[doorType].data.push(newDoor);
+			if (isEcaasForm(door)) {
+				newItem = {
+					complete: door.complete,
+					data: {
+						...door.data,
+						name: `${name} (${duplicates.length})`
+					}
+				} as T;
+			} else {
+				newItem = {
+					...door,
+					name: `${name} (${duplicates.length})`
+				} as T;
+			}
+
+			state.dwellingFabric.dwellingSpaceDoors[doorType].data.push(newItem);
+			store.dwellingFabric.dwellingSpaceDoors[doorType].complete = false;
 		});
-		store.dwellingFabric.dwellingSpaceDoors[doorType].complete = false;
 	}
 }
 
@@ -71,7 +96,11 @@ function checkIsComplete(){
 		id="externalUnglazed"
 		title="External unglazed door"
 		:form-url="`${page?.url!}/external-unglazed`"
-		:items="store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceExternalUnglazedDoor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceExternalUnglazedDoor', index)"
 	/>

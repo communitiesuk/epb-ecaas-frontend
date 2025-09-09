@@ -82,14 +82,18 @@ describe("ground floor", () => {
 	
 	describe("when type of ground floor is slab no edge insulation", () => {
 		test("data is saved to store state when form is valid", async () => {
-			await renderSuspended(GroundFloor);
-	
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});
+
 			await populateValidForm();
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 			
-			expect(data[0]).toEqual(groundFloor);
+			expect(data[0]?.data).toEqual(groundFloor);
 		});
 	
 		test("form is prepopulated when data exists in state", async () => {
@@ -97,7 +101,7 @@ describe("ground floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data: [groundFloor]
+							data: [{ data: groundFloor }]
 						}
 					}
 				}
@@ -124,7 +128,7 @@ describe("ground floor", () => {
 		test("required error messages are displayed when empty form is submitted", async () => {
 			await renderSuspended(GroundFloor);
 	
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
 			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
@@ -141,19 +145,22 @@ describe("ground floor", () => {
 	
 	describe("when type of ground floor is slab edge insulation", () => {
 		test("data is saved to store state when form is valid", async () => {
-			await renderSuspended(GroundFloor);
-	
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});
 			await populateValidForm();
 			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
 			await user.click(screen.getByTestId("edgeInsulationType_horizontal"));
 			await user.type(screen.getByTestId("edgeInsulationWidth"), "0");
 			await user.type(screen.getByTestId("edgeInsulationThermalResistance"), "0");
 			await user.tab();
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 			
-			expect(data[0]).toEqual(groundFloorWithEdgeInsulation);
+			expect(data[0]?.data).toEqual(groundFloorWithEdgeInsulation);
 		});
 	
 		test("form is prepopulated when data exists in state", async () => {
@@ -161,7 +168,7 @@ describe("ground floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data: [groundFloorWithEdgeInsulation]
+							data: [{ data: groundFloorWithEdgeInsulation }]
 						}
 					}
 				}
@@ -183,7 +190,7 @@ describe("ground floor", () => {
 			await renderSuspended(GroundFloor);
 	
 			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("edgeInsulationType_error"))).toBeDefined();
 			expect((await screen.findByTestId("edgeInsulationWidth_error"))).toBeDefined();
@@ -193,8 +200,11 @@ describe("ground floor", () => {
 	
 	describe("when type of ground floor is suspended floor", () => {
 		test("data is saved to store state when form is valid", async () => {
-			await renderSuspended(GroundFloor);
-	
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});	
 			await populateValidForm();
 			await user.click(screen.getByTestId("typeOfGroundFloor_Suspended_floor"));
 			await user.type(screen.getByTestId("heightOfFloorUpperSurface"), "0");
@@ -204,12 +214,12 @@ describe("ground floor", () => {
 			await user.type(screen.getByTestId("ventilationOpeningsArea"), "0");
 			await user.click(screen.getByTestId("windShieldingFactor_Exposed"));
 			await user.tab();
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 			const entryData = Object.entries(data[0]!).filter(e => e[1] !== undefined);
 			
-			expect(Object.fromEntries(entryData)).toEqual(groundFloorWithSuspendedFloor);
+			expect(Object.fromEntries(entryData).data).toEqual(groundFloorWithSuspendedFloor);
 		});
 		
 		test("form is prepopulated when data exists in state", async () => {
@@ -217,7 +227,7 @@ describe("ground floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data: [groundFloorWithSuspendedFloor]
+							data: [{ data: groundFloorWithSuspendedFloor }]
 						}
 					}
 				}
@@ -242,7 +252,7 @@ describe("ground floor", () => {
 			await renderSuspended(GroundFloor);
 	
 			await user.click(screen.getByTestId("typeOfGroundFloor_Suspended_floor"));
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("heightOfFloorUpperSurface_error"))).toBeDefined();
 			expect((await screen.findByTestId("thicknessOfWalls_error"))).toBeDefined();
@@ -250,6 +260,83 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("thermalTransmittanceOfWallsAboveGround_error"))).toBeDefined();
 			expect((await screen.findByTestId("ventilationOpeningsArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("windShieldingFactor_error"))).toBeDefined();
+		});
+	});
+
+	describe("partially saving data", () => {
+		test("new form data is automatically saved to store with default name", async () => {
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});
+			
+			await user.type(screen.getByTestId("surfaceArea"), "170");
+			await user.tab();
+			
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
+			expect(data[0]!.data.name).toBe("Ground floor");
+			expect(data[0]!.data.surfaceArea).toBe(170);
+		});
+		test("new form data is automatically saved to store", async () => {
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});
+			
+			await user.type(screen.getByTestId("name"), "Ground floor");
+			await user.type(screen.getByTestId("uValue"), "1");
+			await user.click(screen.getByTestId("kappaValue_50000"));
+			await user.click(screen.getByTestId("massDistributionClass_I"));
+			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_no_edge_insulation"));
+			await user.tab();
+			
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
+			expect(data[0]!.data.name).toBe("Ground floor");
+			expect(data[0]!.data.uValue).toBe(1);
+			expect(data[0]!.data.kappaValue).toBe(50000);
+			expect(data[0]!.data.massDistributionClass).toBe("I");
+			expect(data[0]!.data.typeOfGroundFloor).toBe("Slab_no_edge_insulation");
+
+		});
+
+		test("updated form data is automatically saved to store", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: {
+							data: [{ data: groundFloorWithSuspendedFloor }]
+						}
+					}
+				}
+			});
+			
+			await renderSuspended(GroundFloor, {
+				route: {
+					params: { floor: 0 }
+				}
+			});
+
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
+
+			expect(data[0]!.data.name).toBe("Ground 1");
+			expect(data[0]!.data.surfaceArea).toBe(5);
+
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), "Ground floor");
+			await user.clear(screen.getByTestId("surfaceArea"));
+			await user.type(screen.getByTestId("surfaceArea"), "170");
+			await user.tab();
+
+			expect(data[0]!.data.name).toBe("Ground floor");
+			expect(data[0]!.data.surfaceArea).toBe(170);
+		});
+
+		it("navigates to floors overview page on clicking Save progress", async () => {
+			await renderSuspended(GroundFloor);
+			await user.click(screen.getByTestId("saveProgress"));
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");
 		});
 	});
 	

@@ -14,30 +14,32 @@ const state: DwellingSpaceZoneParametersData = {
 	// spaceHeatingSystemForThisZone: 'instant electric heater'
 };
 
+const store = useEcaasStore();
+const user = userEvent.setup();
+
+beforeEach(() => {
+	store.$reset();
+});
+
 describe("zone parameters", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
 
-	beforeEach(() => {
-		store.$reset();
-
-		// store.$patch({
-		// 	heatingSystems: {
-		// 		heatEmitting: {
-		// 			wetDistribution: {
-		// 				data: [{
-		// 					name: 'radiators'
-		// 				}]
-		// 			},
-		// 			instantElectricHeater: {
-		// 				data: [{
-		// 					name: 'instant electric heater'
-		// 				}]
-		// 			}
-		// 		}
-		// 	}
-		// });
-	});
+	// store.$patch({
+	// 	heatingSystems: {
+	// 		heatEmitting: {
+	// 			wetDistribution: {
+	// 				data: [{
+	// 					name: 'radiators'
+	// 				}]
+	// 			},
+	// 			instantElectricHeater: {
+	// 				data: [{
+	// 					name: 'instant electric heater'
+	// 				}]
+	// 			}
+	// 		}
+	// 	}
+	// });
+	// });
 
 	// it('populates heat emitting system options from state', async () => {
 	// 	await renderSuspended(ZoneParameters);
@@ -53,7 +55,8 @@ describe("zone parameters", () => {
 		await user.type(screen.getByTestId("volume"), "10");
 		// await user.click(screen.getByTestId('spaceHeatingSystemForThisZone_instant_electric_heater'));
 		await user.tab();
-		await user.click(screen.getByRole("button"));
+		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+
 
 		const { data, complete } = store.dwellingFabric.dwellingSpaceZoneParameters;
 
@@ -79,7 +82,8 @@ describe("zone parameters", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await user.click(screen.getByRole("button"));
+		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+
 
 		expect((await screen.findByTestId("area_error"))).toBeDefined();
 		expect((await screen.findByTestId("volume_error"))).toBeDefined();
@@ -89,8 +93,35 @@ describe("zone parameters", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await user.click(screen.getByRole("button"));
+		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+
 
 		expect((await screen.findByTestId("zoneParametersErrorSummary"))).toBeDefined();
+	});
+	test("save progress button navigates user to the pipework overview page", async () => {
+		await renderSuspended(ZoneParameters);
+
+		await user.type(screen.getByTestId("area"), "10");
+	
+		const saveProcess = screen.getByRole("button", { name: "Save progress" });
+	
+		expect(saveProcess.getAttribute("href")).toBe("/dwelling-space");
+	});
+});
+
+describe("Partially saving data", () => {
+  
+	test("form data is automatically saved to store", async () => {
+		await renderSuspended(ZoneParameters);
+
+		await user.type(screen.getByTestId("area"), "11");
+		await user.tab();
+
+		expect(
+			store.dwellingFabric.dwellingSpaceZoneParameters.data.area
+		).toBe(11);
+		expect(
+			store.dwellingFabric.dwellingSpaceZoneParameters.data.volume
+		).toBeUndefined();
 	});
 });

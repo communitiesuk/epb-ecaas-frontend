@@ -13,13 +13,14 @@ const state: DwellingSpaceLightingData = {
 	numberOfIncandescentBulbs: 0,
 };
 
-describe("lighting", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
+const store = useEcaasStore();
+const user = userEvent.setup();
 
-	beforeEach(() => {
-		store.$reset();
-	});
+beforeEach(() => {
+	store.$reset();
+});
+
+describe("lighting", () => {
 
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(Lighting);
@@ -27,7 +28,8 @@ describe("lighting", () => {
 		await user.type(screen.getByTestId("numberOfLEDBulbs"), "9");
 		await user.type(screen.getByTestId("numberOfIncandescentBulbs"), "0");
 		await user.tab();
-		await user.click(screen.getByRole("button"));
+		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+
 
 		const { data, complete } = store.dwellingFabric.dwellingSpaceLighting;
 
@@ -52,7 +54,8 @@ describe("lighting", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(Lighting);
 
-		await user.click(screen.getByRole("button"));
+		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+
 
 		expect((await screen.findByTestId("numberOfLEDBulbs_error"))).toBeDefined();
 		expect((await screen.findByTestId("numberOfIncandescentBulbs_error"))).toBeDefined();
@@ -61,8 +64,37 @@ describe("lighting", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Lighting);
 
-		await user.click(screen.getByRole("button"));
+		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+
 
 		expect((await screen.findByTestId("lightingErrorSummary"))).toBeDefined();
+	});
+
+	test("save progress button navigates user to the pipework overview page", async () => {
+		await renderSuspended(Lighting);
+	
+		await user.type(screen.getByTestId("numberOfLEDBulbs"), "10");
+		
+		const saveProcess = screen.getByRole("button", { name: "Save progress" });
+		
+		expect(saveProcess.getAttribute("href")).toBe("/dwelling-space");
+	});
+});
+
+
+describe("Partially saving data", () => {
+	
+	test("form data is automatically saved to store", async () => {
+		await renderSuspended(Lighting);
+
+		await user.type(screen.getByTestId("numberOfLEDBulbs"), "9");
+		await user.tab();
+
+		expect(
+			store.dwellingFabric.dwellingSpaceLighting.data.numberOfLEDBulbs
+		).toBe(9);
+		expect(
+			store.dwellingFabric.dwellingSpaceLighting.data.numberOfIncandescentBulbs
+		).toBeUndefined();
 	});
 });

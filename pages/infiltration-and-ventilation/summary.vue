@@ -18,12 +18,12 @@ const mechanicalVentilationSummary: SummarySection = {
 	label: "Mechanical ventilation",
 	data: mechanicalVentilationData?.map(x => {
 		return {
-			"Name": x.name,
-			"Type of mechanical ventilation": x.typeOfMechanicalVentilationOptions,
-			"Air flow rate": typeof x.airFlowRate === "number" ? `${x.airFlowRate} ${litrePerSecond.suffix}` : `${x.airFlowRate.amount} ${litrePerSecond.suffix}`,
-			...(x.typeOfMechanicalVentilationOptions == "MVHR" ? {
-				"MVHR location": displayCamelToSentenceCase(x.mvhrLocation),
-				"MVHR efficiency": x.mvhrEfficiency,
+			"Name": x.data.name,
+			"Type of mechanical ventilation": x.data.typeOfMechanicalVentilationOptions,
+			"Air flow rate": typeof x.data.airFlowRate === "number" ? `${x.data.airFlowRate} ${litrePerSecond.suffix}` : `${x.data.airFlowRate.amount} ${litrePerSecond.suffix}`,
+			...(x.data.typeOfMechanicalVentilationOptions == "MVHR" ? {
+				"MVHR location": displayCamelToSentenceCase(x.data.mvhrLocation),
+				"MVHR efficiency": x.data.mvhrEfficiency,
 			} : {})
 		};
 	}) || [],
@@ -36,20 +36,20 @@ const ductworkSummary: SummarySection = {
 	id: "ductwork",
 	label: "Ductwork",
 	data: ductworkData?.map(x => {
-		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.id === x.mvhrUnit);
+		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.data.id === x.data.mvhrUnit);
 
 		return {
-			"Name": x.name,
-			"MVHR unit": mvhr[0]?.name,
-			"Duct type": displayCamelToSentenceCase(x.ductType),
-			"Ductwork cross sectional shape": displayCamelToSentenceCase(x.ductworkCrossSectionalShape),
-			"Internal diameter of ductwork": x.ductworkCrossSectionalShape === "circular" ? `${x.internalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
-			"External diameter of ductwork": x.ductworkCrossSectionalShape === "circular" ? `${x.externalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
-			"Perimeter of ductwork": x.ductworkCrossSectionalShape === "rectangular" ? `${x.ductPerimeter} ${millimetre.suffix}` : undefined,
-			"Length of ductwork": `${x.lengthOfDuctwork} ${metre.suffix}`,
-			"Insulation thickness": `${x.insulationThickness} ${millimetre.suffix}`,
-			"Thermal conductivity of ductwork insulation": `${x.thermalInsulationConductivityOfDuctwork} ${wattsPerMeterKelvin.suffix}`,
-			"Surface reflectivity": x.surfaceReflectivity ? "Reflective" : "Not reflective"
+			"Name": x.data.name,
+			"MVHR unit": mvhr[0]?.data.name,
+			"Duct type": displayCamelToSentenceCase(x.data.ductType),
+			"Ductwork cross sectional shape": displayCamelToSentenceCase(x.data.ductworkCrossSectionalShape),
+			"Internal diameter of ductwork": x.data.ductworkCrossSectionalShape === "circular" ? `${x.data.internalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
+			"External diameter of ductwork": x.data.ductworkCrossSectionalShape === "circular" ? `${x.data.externalDiameterOfDuctwork} ${millimetre.suffix}` : undefined,
+			"Perimeter of ductwork": x.data.ductworkCrossSectionalShape === "rectangular" ? `${x.data.ductPerimeter} ${millimetre.suffix}` : undefined,
+			"Length of ductwork": `${x.data.lengthOfDuctwork} ${metre.suffix}`,
+			"Insulation thickness": `${x.data.insulationThickness} ${millimetre.suffix}`,
+			"Thermal conductivity of ductwork insulation": `${x.data.thermalInsulationConductivityOfDuctwork} ${wattsPerMeterKelvin.suffix}`,
+			"Surface reflectivity": x.data.surfaceReflectivity ? "Reflective" : "Not reflective"
 		};
 	}) || [],
 	editUrl: getUrl("ductwork")
@@ -62,13 +62,13 @@ const ventSummary: SummarySection = {
 	label: "Vents",
 	data: ventData.map(x => {
 		return {
-			"Name": x.name,
-			"Type of vent": displayCamelToSentenceCase(x.typeOfVent),
-			"Effective ventilation area": `${x.effectiveVentilationArea} ${centimetresSquare.suffix}`,
-			"Vent opening ratio": x.openingRatio,
-			"Mid height of zone": `${x.midHeightOfZone} ${metre.suffix}`,
-			"Orientation": `${x.orientation} ${degrees.suffix}`,
-			"Pitch": `${x.pitch} ${degrees.suffix}`
+			"Name": x.data.name,
+			"Type of vent": displayCamelToSentenceCase(x.data.typeOfVent),
+			"Effective ventilation area": `${x.data.effectiveVentilationArea} ${centimetresSquare.suffix}`,
+			"Vent opening ratio": x.data.openingRatio,
+			"Mid height of zone": `${x.data.midHeightOfZone} ${metre.suffix}`,
+			"Orientation": `${x.data.orientation} ${degrees.suffix}`,
+			"Pitch": `${x.data.pitch} ${degrees.suffix}`
 		};
 	}),
 	editUrl: getUrl("vents")

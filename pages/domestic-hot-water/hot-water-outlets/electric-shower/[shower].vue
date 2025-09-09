@@ -9,6 +9,8 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const electricShowerData = useItemToEdit("shower", store.domesticHotWater.hotWaterOutlets.electricShower.data);
 const model: Ref<ElectricShowerData | undefined> = ref(electricShowerData?.data);
+const id = electricShowerData?.data.id ?? uuidv4();
+
 
 const saveForm = (fields: ElectricShowerData) => {
 	store.$patch((state) => {
@@ -18,7 +20,7 @@ const saveForm = (fields: ElectricShowerData) => {
 
 		electricShower.data[index] = {
 			data : {
-				id: electricShowerData?.data.id || uuidv4(),
+				id: id,
 				name: fields.name,
 				ratedPower: fields.ratedPower,
 			},
@@ -35,8 +37,11 @@ autoSaveElementForm({
 	model,
 	storeData: store.domesticHotWater.hotWaterOutlets.electricShower,
 	defaultName: "Electric shower",
-	onPatchCreate: (state, newData) => state.domesticHotWater.hotWaterOutlets.electricShower.data.push(newData),
+	onPatchCreate: (state, newData) => {
+		newData.data.id ??= id;
+		state.domesticHotWater.hotWaterOutlets.electricShower.data.push(newData)},
 	onPatchUpdate: (state, newData, index) => {
+		newData.data.id ??= id;
 		state.domesticHotWater.hotWaterOutlets.electricShower.data[index] = newData;
 		state.domesticHotWater.hotWaterOutlets.electricShower.complete = false;
 	} });
@@ -75,7 +80,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('hotWaterOutlets')" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>

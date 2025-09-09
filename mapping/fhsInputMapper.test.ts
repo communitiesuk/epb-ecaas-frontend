@@ -981,10 +981,12 @@ describe("FHS input mapper", () => {
 			mechanicalVentilation: {
 				...baseForm,
 				data: [{
-					id: "kitchen exhaust fan",
-					name: "kitchen exhaust fan",
-					typeOfMechanicalVentilationOptions: "Intermittent MEV",
-					airFlowRate: 55,
+					data: {
+						id: "kitchen exhaust fan",
+						name: "kitchen exhaust fan",
+						typeOfMechanicalVentilationOptions: "Intermittent MEV",
+						airFlowRate: 55,
+					}
 				}]
 			},
 			ductwork: {
@@ -993,13 +995,15 @@ describe("FHS input mapper", () => {
 			vents: {
 				...baseForm,
 				data: [{
-					name: "only vent",
-					typeOfVent: "airBrick",
-					effectiveVentilationArea: 75,
-					openingRatio: 0.2,
-					midHeightOfZone: 1.9,
-					orientation: 90,
-					pitch: 180,
+					data: {
+						name: "only vent",
+						typeOfVent: "airBrick",
+						effectiveVentilationArea: 75,
+						openingRatio: 0.2,
+						midHeightOfZone: 1.9,
+						orientation: 90,
+						pitch: 180
+					}
 				}]
 			},
 			combustionAppliances: {
@@ -1066,17 +1070,19 @@ describe("FHS input mapper", () => {
 				dwellingSpaceGroundFloor: {
 					...baseForm,
 					data: [{
-						name: "ground-floor",
-						surfaceArea: 40,
-						pitch: 0,
-						uValue: 1,
-						thermalResistance: 1,
-						kappaValue: 50000,
-						massDistributionClass: "I",
-						perimeter: 100,
-						psiOfWallJunction: 1,
-						thicknessOfWalls: 80,
-						typeOfGroundFloor: "Slab_no_edge_insulation",
+						data: {
+							name: "ground-floor",
+							surfaceArea: 40,
+							pitch: 0,
+							uValue: 1,
+							thermalResistance: 1,
+							kappaValue: 50000,
+							massDistributionClass: "I",
+							perimeter: 100,
+							psiOfWallJunction: 1,
+							thicknessOfWalls: 80,
+							typeOfGroundFloor: "Slab_no_edge_insulation",
+						}
 					}]
 				},
 				dwellingSpaceInternalFloor: {
@@ -1360,53 +1366,63 @@ describe("FHS input mapper", () => {
 			mechanicalVentilation: {
 				...baseForm,
 				data: [{
-					id: "mvhr vent 1 id",
-					name: "mvhr vent 1 name",
-					typeOfMechanicalVentilationOptions: "MVHR",
-					airFlowRate: 17,
-					mvhrLocation: "inside",
-					mvhrEfficiency: 1
+					data: {
+						id: "mvhr vent 1 id",
+						name: "mvhr vent 1 name",
+						typeOfMechanicalVentilationOptions: "MVHR",
+						airFlowRate: 17,
+						mvhrLocation: "inside",
+						mvhrEfficiency: 1
+					}
 				},
 				{
-					id: "mvhr vent 2 id",
-					name: "mvhr vent 2 name",
-					typeOfMechanicalVentilationOptions: "MVHR",
-					airFlowRate: 3,
-					mvhrLocation: "outside",
-					mvhrEfficiency: 0
+					data: {
+						id: "mvhr vent 2 id",
+						name: "mvhr vent 2 name",
+						typeOfMechanicalVentilationOptions: "MVHR",
+						airFlowRate: 3,
+						mvhrLocation: "outside",
+						mvhrEfficiency: 0
+					}
 				},
 				{
-					id: "centralised MEV id",
-					name: "centralised MEV name",
-					typeOfMechanicalVentilationOptions: "Centralised continuous MEV",
-					airFlowRate: 8,
+					data: {
+						id: "centralised MEV id",
+						name: "centralised MEV name",
+						typeOfMechanicalVentilationOptions: "Centralised continuous MEV",
+						airFlowRate: 8,
+					}
 				}]
 			},
 			ductwork: {
 				...baseForm,
 				data: [{
-					name: "ductwork 1",
-					mvhrUnit: "mvhr vent 1 name",
-					ductType: "supply",
-					ductworkCrossSectionalShape: "circular",
-					internalDiameterOfDuctwork: 50,
-					externalDiameterOfDuctwork: 55,
-					insulationThickness: 5,
-					lengthOfDuctwork: 4,
-					thermalInsulationConductivityOfDuctwork: 1,
-					surfaceReflectivity: true,
+					data: {
+						name: "ductwork 1",
+						mvhrUnit: "mvhr vent 1 name",
+						ductType: "supply",
+						ductworkCrossSectionalShape: "circular",
+						internalDiameterOfDuctwork: 50,
+						externalDiameterOfDuctwork: 55,
+						insulationThickness: 5,
+						lengthOfDuctwork: 4,
+						thermalInsulationConductivityOfDuctwork: 1,
+						surfaceReflectivity: true
+					}
 				}]
 			},
 			vents: {
 				...baseForm,
 				data: [{
-					name: "only vent",
-					typeOfVent: "airBrick",
-					effectiveVentilationArea: 75,
-					openingRatio: 0.2,
-					midHeightOfZone: 1.9,
-					orientation: 90,
-					pitch: 180,
+					data: {
+						name: "only vent",
+						typeOfVent: "airBrick",
+						effectiveVentilationArea: 75,
+						openingRatio: 0.2,
+						midHeightOfZone: 1.9,
+						orientation: 90,
+						pitch: 180
+					}
 				}]
 			},
 			combustionAppliances: {
@@ -1469,59 +1485,68 @@ describe("FHS input mapper", () => {
 			dwellingSpaceFloors: {
 				dwellingSpaceGroundFloor: {
 					...baseForm,
-					data: [{
-						name: "ground floor 1",
-						surfaceArea: 12,
-						pitch: 0,
-						uValue: 5,
-						thermalResistance: 2,
-						kappaValue: 50000,
-						massDistributionClass: "E",
-						perimeter: 40,
-						psiOfWallJunction: 0.4,
-						thicknessOfWalls: 50,
-						typeOfGroundFloor: "Slab_edge_insulation",
-						edgeInsulationType: "horizontal",
-						edgeInsulationWidth: unitValue(32, centimetre),
-						edgeInsulationThermalResistance: 2.4
-					},
-					{
-						name: "ground floor 2",
-						surfaceArea: 26,
-						pitch: 0,
-						uValue: 5,
-						thermalResistance: 2,
-						kappaValue: 50000,
-						massDistributionClass: "D",
-						perimeter: 21,
-						psiOfWallJunction: 0.8,
-						typeOfGroundFloor: "Heated_basement",
-						thicknessOfWalls: 40,
-						depthOfBasementFloorBelowGround: 2,
-						thermalResistanceOfBasementWalls: 3,
-					}]
+					data: [
+						{
+							data: {
+								name: "ground floor 1",
+								surfaceArea: 12,
+								pitch: 0,
+								uValue: 5,
+								thermalResistance: 2,
+								kappaValue: 50000,
+								massDistributionClass: "E",
+								perimeter: 40,
+								psiOfWallJunction: 0.4,
+								thicknessOfWalls: 50,
+								typeOfGroundFloor: "Slab_edge_insulation",
+								edgeInsulationType: "horizontal",
+								edgeInsulationWidth: unitValue(32, centimetre),
+								edgeInsulationThermalResistance: 2.4
+							}
+						},
+						{
+							data: {
+								name: "ground floor 2",
+								surfaceArea: 26,
+								pitch: 0,
+								uValue: 5,
+								thermalResistance: 2,
+								kappaValue: 50000,
+								massDistributionClass: "D",
+								perimeter: 21,
+								psiOfWallJunction: 0.8,
+								typeOfGroundFloor: "Heated_basement",
+								thicknessOfWalls: 40,
+								depthOfBasementFloorBelowGround: 2,
+								thermalResistanceOfBasementWalls: 3,
+							}
+						}
+					]
 				},
 				dwellingSpaceInternalFloor: {
 					...baseForm,
-					data: [{
-						name: "internal floor 1",
-						typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
-						surfaceAreaOfElement: 6,
-						kappaValue: 50000,
-						massDistributionClass: "IE",
-						thermalResistanceOfAdjacentUnheatedSpace: 1,
-					}, 
-					{
-						name: "internal floor 2",
-						typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
-						surfaceAreaOfElement: 4,
-						kappaValue: 110000,
-						massDistributionClass: "M",
-					}]
+					data: [
+						{ data: {
+							name: "internal floor 1",
+							typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
+							surfaceAreaOfElement: 6,
+							kappaValue: 50000,
+							massDistributionClass: "IE",
+							thermalResistanceOfAdjacentUnheatedSpace: 1,
+						} },
+						{ data: {
+							name: "internal floor 2",
+							typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+							surfaceAreaOfElement: 4,
+							kappaValue: 110000,
+							massDistributionClass: "M",
+						}
+						}
+					]
 				},
 				dwellingSpaceExposedFloor: {
 					...baseForm,
-					data: [{
+					data: [{ data: {
 						name: "exposed floor 1",
 						length: 5,
 						width: 2,
@@ -1533,7 +1558,7 @@ describe("FHS input mapper", () => {
 						pitch: 180,
 						orientation: 0,
 						uValue: 0.1,
-					}]
+					} }]
 				}
 			},
 			dwellingSpaceWalls: {
@@ -1643,18 +1668,21 @@ describe("FHS input mapper", () => {
 				dwellingSpaceExternalUnglazedDoor: {
 					...baseForm,
 					data: [{
-						name: "front door",
-						pitchOption: "90",
-						pitch: 90,
-						orientation: 30,
-						height: 2.6,
-						width: 1.2,
-						elevationalHeight: 1,
-						surfaceArea: 20,
-						solarAbsorption: 0.2,
-						uValue: 1, 
-						kappaValue: 75000,
-						massDistributionClass: "I"
+						data:
+								{
+									name: "front door",
+									pitchOption: "90",
+									pitch: 90,
+									orientation: 30,
+									height: 2.6,
+									width: 1.2,
+									elevationalHeight: 1,
+									surfaceArea: 20,
+									solarAbsorption: 0.2,
+									uValue: 1,
+									kappaValue: 75000,
+									massDistributionClass: "I"
+								}
 					}]
 				},
 				dwellingSpaceExternalGlazedDoor: {

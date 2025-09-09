@@ -12,36 +12,36 @@ mockNuxtImport("navigateTo", () => {
 
 vi.mock("uuid");
 
+const store = useEcaasStore();
+const user = userEvent.setup();
+
+const electricShower: EcaasForm<ElectricShowerData> = {
+	data: {
+		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
+		name: "Electric shower 1",
+		ratedPower: 10
+	},
+	complete: true
+};
+const electricShower2: EcaasForm<ElectricShowerData> = {
+	data: {
+		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8123",
+		name: "Electric shower 2",
+		ratedPower: 11
+	},
+	complete: true
+};
+
+afterEach(() => {
+	store.$reset();
+});
+
+const populateValidForm = async () => {
+	await user.type(screen.getByTestId("name"), "Electric shower 1");
+	await user.type(screen.getByTestId("ratedPower"), "10");
+	await user.tab();
+};
 describe("electric shower", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
-
-	const electricShower: EcaasForm<ElectricShowerData> = {
-		data: {
-			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
-			name: "Electric shower 1",
-			ratedPower: 10
-		},
-		complete: true
-	};
-	const electricShower2: EcaasForm<ElectricShowerData> = {
-		data: {
-			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8123",
-			name: "Electric shower 2",
-			ratedPower: 11
-		},
-		complete: true
-	};
-
-	afterEach(() => {
-		store.$reset();
-	});
-
-	const populateValidForm = async () => {
-		await user.type(screen.getByTestId("name"), "Electric shower 1");
-		await user.type(screen.getByTestId("ratedPower"), "10");
-		await user.tab();
-	};
 
 	test("data is saved to store state when form is valid", async () => {
 		vi.mocked(uuidv4).mockReturnValue(electricShower.data.id as unknown as Buffer);
@@ -100,6 +100,30 @@ describe("electric shower", () => {
 		expect((await screen.findByTestId("electricShowerErrorSummary"))).toBeDefined();
 	});
 
+	test("save progress button navigates user to the hot water outlets overview page", async () => {
+
+		await renderSuspended(ElectricShower, {
+			route: {
+				params: { shower: "create" }
+			}
+		});
+		await populateValidForm();
+		const saveProcess = screen.getByRole("button", { name: "Save progress" });
+
+		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets");
+	});
+
+	it("navigates to hot water outlets page when valid form is completed", async () => {
+		await renderSuspended(ElectricShower);
+	
+		await populateValidForm();
+		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+
+		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
+	});
+});
+
+describe("Partially saving data", () => {
 	test("form data is automatically saved to store", async () => {
 
 		await renderSuspended(ElectricShower, {
@@ -174,19 +198,6 @@ describe("electric shower", () => {
 		expect(store.domesticHotWater.hotWaterOutlets.electricShower.data[0]!.data.name).toBe("Electric shower");
 	});
 	
-	test("save progress button navigates user to the hot water outlets overview page", async () => {
-
-		await renderSuspended(ElectricShower, {
-			route: {
-				params: { shower: "create" }
-			}
-		});
-		await populateValidForm();
-		const saveProcess = screen.getByRole("button", { name: "Save progress" });
-
-		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets");
-	});
-
 	test("creates a new electric shower automatically when a user adds only the name value", async () => {
 		await renderSuspended(ElectricShower, {
 			route: {
@@ -235,14 +246,5 @@ describe("electric shower", () => {
 		expect(data[1]?.data.name).toBe("Updated Electric shower 2");
 		expect(data[1]?.data.ratedPower).toBe(1);
 		expect(data[1]?.data.id).toBe(electricShower2.data.id);
-	});
-
-	it("navigates to hot water outlets page when valid form is completed", async () => {
-		await renderSuspended(ElectricShower);
-	
-		await populateValidForm();
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
-
-		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
 	});
 });

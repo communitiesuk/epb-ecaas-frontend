@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { AdjacentSpaceType } from "~/stores/ecaasStore.schema";
+import { getUrl } from "#imports";
 
 const title = "Internal floor";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { getStoreIndex, autoSaveElementForm } = useForm();
 
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data);
-const model: Ref<InternalFloorData> = ref(floorData!);
+const model: Ref<InternalFloorData | undefined> = ref(floorData?.data);
 
 const typeOfInternalFloorOptions = adjacentSpaceTypeOptions("Internal floor");
 
@@ -42,11 +43,27 @@ const saveForm = (fields: InternalFloorData) => {
 		if (!dwellingSpaceFloors.dwellingSpaceInternalFloor) {
 			dwellingSpaceFloors.dwellingSpaceInternalFloor = { data: [] };
 		}
-		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
-		saveToList(floor, dwellingSpaceFloors.dwellingSpaceInternalFloor);
+		
+		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceInternalFloor.data);
+		dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] =  { data: floor, complete: true };
+		dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 	});
 	navigateTo("/dwelling-space/floors");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor,
+	defaultName: "Internal floor",
+	onPatchCreate: (state, newData) => {
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.data.push(newData);
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
+	},
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -74,7 +91,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfInternalFloor"
 			validation="required"
 		/>
-		<template v-if="!!model.typeOfInternalFloor">
+		<template v-if="!!model?.typeOfInternalFloor">
 			<FormKit
 				id="name"
 				type="govInputText"
@@ -95,7 +112,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
 		<FormKit
-			v-if="model.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace"
+			v-if="model?.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"
@@ -114,9 +131,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

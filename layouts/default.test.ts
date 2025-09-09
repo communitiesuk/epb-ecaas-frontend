@@ -24,7 +24,9 @@ describe("nav bar with ductwork", () => {
 		store.$patch({
 			infiltrationAndVentilation:{
 				mechanicalVentilation: {
-					data: [mechanicalVentilation1]
+					data: [{
+						data: mechanicalVentilation1
+					}]
 				}
 			}
 		});

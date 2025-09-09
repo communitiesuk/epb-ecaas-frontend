@@ -37,11 +37,25 @@ describe("Ventilation", () => {
 		await renderSuspended(Ventilation);
 
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.infiltrationAndVentilation.naturalVentilation;
 		
 		expect(data).toEqual(state);
+	});
+
+	test("partial form data is automatically saved to store", async () => {
+		await renderSuspended(Ventilation);
+
+		await user.type(screen.getByTestId("ventilationZoneHeight"), "1");
+		await user.type(screen.getByTestId("dwellingEnvelopeArea"), "5");
+		await user.tab();
+
+		const { data, complete } = store.infiltrationAndVentilation.naturalVentilation;
+		
+		expect(data.ventilationZoneHeight).toBe(1);
+		expect(data.dwellingEnvelopeArea).toBe(5);
+		expect(complete).toBe(false);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
@@ -64,7 +78,7 @@ describe("Ventilation", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(Ventilation);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("ventilationZoneHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("dwellingEnvelopeArea_error"))).toBeDefined();
@@ -75,7 +89,7 @@ describe("Ventilation", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Ventilation);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("ventilationErrorSummary"))).toBeDefined();
 	});
@@ -84,7 +98,7 @@ describe("Ventilation", () => {
 		await renderSuspended(Ventilation);
 	
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { complete } = store.infiltrationAndVentilation.naturalVentilation;
 		

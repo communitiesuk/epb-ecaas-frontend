@@ -53,15 +53,18 @@ describe("ductwork form", async () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [{
-						name: "MVHR_1",
-						id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-						typeOfMechanicalVentilationOptions: "MVHR"
+						data: {
+							name: "MVHR_1",
+							id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
+							typeOfMechanicalVentilationOptions: "MVHR"
+						}
 					},
 					{
-						name: "MVHR_2",
-						id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
-						typeOfMechanicalVentilationOptions: "MVHR"
-
+						data: {
+							name: "MVHR_2",
+							id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
+							typeOfMechanicalVentilationOptions: "MVHR"
+						}
 					}]
 				}
 			}
@@ -98,14 +101,23 @@ describe("ductwork form", async () => {
 	});
 
 	it("should have the correct heading", async () => {
-		await renderSuspended(Ductwork);
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" }
+			}
+		});
 		expect(
 			screen.getByRole("heading", { name: "MVHR ductwork" })
 		).toBeDefined();
 	});
 
 	it("should have the following inputs", async () => {
-		await renderSuspended(Ductwork);
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" }
+			}
+		});
+
 		const form = within(document.getElementsByTagName("form")[0]!);
 		expect(form.getByText("Name")).toBeDefined();
 		expect(form.getByText("MVHR unit")).toBeDefined();
@@ -127,13 +139,24 @@ describe("ductwork form", async () => {
 
 	it("should list MVHR units previously added", async() => {
 		addStoreData();
-		await renderSuspended(Ductwork);
+
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" }
+			}
+		});
+
 		expect(screen.getByText("MVHR_1")).toBeDefined();
 		expect(screen.getByText("MVHR_2")).toBeDefined();
 	});
 
 	it("should show relevant inputs for circular duct shape", async() => {
-		await renderSuspended(Ductwork);
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" }
+			}
+		});
+
 		await user.click(screen.getByTestId("ductworkCrossSectionalShape_circular"));
 
 		expect(screen.getByTestId("internalDiameterOfDuctwork")).toBeDefined();
@@ -142,7 +165,12 @@ describe("ductwork form", async () => {
 	});
 
 	it("should show relevant inputs for rectangular duct shape", async() => {
-		await renderSuspended(Ductwork);
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" }
+			}
+		});
+
 		await user.click(screen.getByTestId("ductworkCrossSectionalShape_rectangular"));
 
 		expect(screen.queryByTestId("internalDiameterOfDuctwork")).toBeNull();
@@ -152,22 +180,34 @@ describe("ductwork form", async () => {
 
 	test("data with circular shape is saved to store when form is valid", async () => {
 		addStoreData();
-		await renderSuspended(Ductwork);
+
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" }
+			}
+		});
+
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 		const { data } = store.infiltrationAndVentilation.ductwork;
 
-		expect(data[0]).toEqual(ductwork1);
+		expect(data[0]?.data).toEqual(ductwork1);
 	});
 
 	test("data with rectangular shape is saved to store when form is valid", async () => {
 		addStoreData();
-		await renderSuspended(Ductwork);
+
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" }
+			}
+		});
+
 		await populateValidFormWithRectangularShape();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 		const { data } = store.infiltrationAndVentilation.ductwork;
 
-		expect(data[0]).toEqual(ductwork2);
+		expect(data[0]?.data).toEqual(ductwork2);
 	});
 
 	test("form populated when data exists in state", async () => {
@@ -175,7 +215,7 @@ describe("ductwork form", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
-					data: [ductwork1],
+					data: [{ data: ductwork1 }],
 				},
 			},
 		});
@@ -242,9 +282,13 @@ describe("ductwork form", async () => {
   
 	test("required error messages are displayed when empty form is submitted", async () => {
 		addStoreData();
-		await renderSuspended(Ductwork);
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" }
+			}
+		});
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const initialErrorIds: string[] = [
 			"name_error",
@@ -261,13 +305,61 @@ describe("ductwork form", async () => {
 		}
 	});
 	test("error summary is displayed when an invalid form in submitted", async () => {
-		await renderSuspended(Ductwork);
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" }
+			}
+		});
   
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
   
 		expect(
 			await screen.findByTestId("ductworkErrorSummary")
 		).toBeDefined();
 	});
 
+	test("updated form data is automatically saved to store", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				ductwork: {
+					data: [{
+						data: { ...ductwork1 }
+					}]
+				}
+			}
+		});
+
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "0" },
+			},
+		});
+	
+		await user.clear(screen.getByTestId("name"));
+
+		await user.type(screen.getByTestId("name"), "New ductwork");
+		await user.click(screen.getByTestId("ductType_extract"));
+		await user.tab();
+
+		const { data } = store.infiltrationAndVentilation.ductwork;
+
+		expect(data[0]?.data.name).toBe("New ductwork");
+		expect(data[0]?.data.ductType).toBe("extract");
+	});
+	
+	test("partial form data is saved automatically with default name to store when adding new heater", async () => {
+		await renderSuspended(Ductwork, {
+			route: {
+				params: { ductwork: "create" },
+			},
+		});
+		
+		await user.click(screen.getByTestId("ductType_intake"));
+		await user.tab();
+
+		const { data } = store.infiltrationAndVentilation.ductwork;
+
+		expect(data[0]?.data.name).toBe("Ductwork");
+		expect(data[0]?.data.ductType).toBe("intake");
+	});
 });

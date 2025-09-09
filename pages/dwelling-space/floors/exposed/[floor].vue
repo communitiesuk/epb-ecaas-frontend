@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import { getUrl } from "#imports";
 const title = "Exposed floor";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
-const model: Ref<ExposedFloorData> = ref(floorData!);
+const model: Ref<ExposedFloorData | undefined> = ref(floorData?.data);
 
 const saveForm = (fields: ExposedFloorData) => {	
-
 	store.$patch((state) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
 
@@ -28,11 +28,27 @@ const saveForm = (fields: ExposedFloorData) => {
 		if (!dwellingSpaceFloors.dwellingSpaceExposedFloor) {
 			dwellingSpaceFloors.dwellingSpaceExposedFloor = { data: [] };
 		}
-		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
-		saveToList(floor, dwellingSpaceFloors.dwellingSpaceExposedFloor);
+		
+		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceExposedFloor.data);
+		dwellingSpaceFloors.dwellingSpaceExposedFloor.data[index] =  { data: floor, complete: true };
+		dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
 	}); 
 	navigateTo("/dwelling-space/floors");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor,
+	defaultName: "Exposed floor",
+	onPatchCreate: (state, newData) => {
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.data.push(newData);
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
+	},
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -94,9 +110,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

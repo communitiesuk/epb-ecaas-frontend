@@ -116,7 +116,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 		}
 	}
 
-	const groundFloorData: { [key: string]: BuildingElementGround }[] = dwellingSpaceGroundFloor.map(x => {
+	const groundFloorData: { [key: string]: BuildingElementGround }[] = dwellingSpaceGroundFloor.map(({ data: x }) => {
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
 		let groundFloor: BuildingElementGround;
@@ -229,21 +229,21 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 
 	const internalFloorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceInternalFloor?.map(x => {
 		const commonFields = {
-			area: x.surfaceAreaOfElement,
-			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass,
+			area: x.data.surfaceAreaOfElement,
+			areal_heat_capacity: x.data.kappaValue,
+			mass_distribution_class: x.data.massDistributionClass,
 			pitch: 180,
 			u_value: defaultUValue
 		};
-		const nameWithSuffix = suffixName(x.name, floorSuffix);
+		const nameWithSuffix = suffixName(x.data.name, floorSuffix);
 
 		let internalFloor: SchemaBuildingElement;
 
-		if (x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace) {
+		if (x.data.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace) {
 			internalFloor = {
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
+				thermal_resistance_unconditioned_space: x.data.thermalResistanceOfAdjacentUnheatedSpace,
 			};
 		} else {
 			internalFloor = {
@@ -256,26 +256,26 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 	}) || [];
 
 	const exposedFloorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExposedFloor.map(x => {
-		const nameWithSuffix = suffixName(x.name, floorSuffix);
+		const nameWithSuffix = suffixName(x.data.name, floorSuffix);
 
 		return { [nameWithSuffix]: {
 			type: "BuildingElementOpaque",
-			height: x.length,
-			width: x.width,
-			base_height: x.elevationalHeight,
-			area: x.surfaceArea,
-			solar_absorption_coeff: x.solarAbsorption,
-			u_value: x.uValue,
-			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass,
-			pitch: x.pitch,
-			orientation360: x.orientation,
+			height: x.data.length,
+			width: x.data.width,
+			base_height: x.data.elevationalHeight,
+			area: x.data.surfaceArea,
+			solar_absorption_coeff: x.data.solarAbsorption,
+			u_value: x.data.uValue,
+			areal_heat_capacity: x.data.kappaValue,
+			mass_distribution_class: x.data.massDistributionClass,
+			pitch: x.data.pitch,
+			orientation360: x.data.orientation,
 			is_external_door: false
 		} };
 	}) || [];
 
 	return {
-		GroundFloorArea: dwellingSpaceGroundFloor.reduce((sum, floor) => sum + floor.surfaceArea, 0),
+		GroundFloorArea: dwellingSpaceGroundFloor.reduce((sum, floor) => sum + floor.data.surfaceArea, 0),
 		Zone: {
 			[defaultZoneName]: {
 				BuildingElement: Object.assign(
@@ -525,7 +525,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		};
 	});
 
-	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map(x => {
+	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map(({ data: x }) => {
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 		
 		return { [nameWithSuffix]: {

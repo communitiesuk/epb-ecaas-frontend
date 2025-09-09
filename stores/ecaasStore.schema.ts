@@ -29,7 +29,7 @@ export type EcaasState = AssertEachKeyIsPageId<{
 	infiltrationAndVentilation: InfiltrationAndVentilation;
 	heatingSystems: HeatingSystems;
 	pvAndBatteries: PvAndBatteries;
-}> & { 
+}> & {
 	cooling: Cooling; // cooling doesn't have a corresponding page yet
 	lastResult?: ComplianceResult;
 };
@@ -93,9 +93,9 @@ export interface DwellingFabric {
 }
 
 export interface FloorsData {
-	dwellingSpaceGroundFloor: EcaasForm<GroundFloorData[]>,
-	dwellingSpaceInternalFloor: EcaasForm<InternalFloorData[]>,
-	dwellingSpaceExposedFloor: EcaasForm<ExposedFloorData[]>
+	dwellingSpaceGroundFloor: EcaasForm<EcaasForm<GroundFloorData>[]>,
+	dwellingSpaceInternalFloor: EcaasForm<EcaasForm<InternalFloorData>[]>,
+	dwellingSpaceExposedFloor: EcaasForm<EcaasForm<ExposedFloorData>[]>
 }
 
 export enum AdjacentSpaceType {
@@ -300,7 +300,7 @@ const roofDataZod = named.extend({
 export type RoofData = z.infer<typeof roofDataZod>;
 
 export type DoorsData = AssertFormKeysArePageIds<{
-	dwellingSpaceExternalUnglazedDoor: EcaasForm<ExternalUnglazedDoorData[]>;
+	dwellingSpaceExternalUnglazedDoor: EcaasForm<EcaasForm<ExternalUnglazedDoorData>[]>;
 	dwellingSpaceExternalGlazedDoor: EcaasForm<ExternalGlazedDoorData[]>;
 	dwellingSpaceInternalDoor: EcaasForm<InternalDoorData[]>;
 }>;
@@ -683,9 +683,9 @@ const wwhrsDataZod = z.object({
 export type WwhrsData = z.infer<typeof wwhrsDataZod>;
 
 export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
-	mechanicalVentilation: EcaasForm<MechanicalVentilationData[]>;
-	ductwork: EcaasForm<DuctworkData[]>
-	vents: EcaasForm<VentData[]>;
+	mechanicalVentilation: EcaasForm<EcaasForm<MechanicalVentilationData>[]>;
+	ductwork: EcaasForm<EcaasForm<DuctworkData>[]>;
+	vents: EcaasForm<EcaasForm<VentData>[]>;
 	combustionAppliances: CombustionAppliancesData;
 	naturalVentilation: EcaasForm<VentilationData>;
 	airPermeability: EcaasForm<AirPermeabilityData>;

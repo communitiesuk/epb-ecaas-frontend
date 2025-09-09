@@ -21,49 +21,55 @@ describe("doors", () => {
 		store.$reset();
 	});
 
-	const externalUnglazed1: ExternalUnglazedDoorData = {
-		name: "external unglazed 1 name",
-		pitchOption: "90",
-		pitch: 90,
-		orientation: 0,
-		height: 0.5,
-		width: 20,
-		elevationalHeight: 20,
-		surfaceArea: 10,
-		solarAbsorption: 0.1,
-		uValue: 1,
-		kappaValue: 100,
-		massDistributionClass: "I"
+	const externalUnglazed1: EcaasForm<ExternalUnglazedDoorData> = {
+		data: {
+			name: "external unglazed 1 name",
+			pitchOption: "90",
+			pitch: 90,
+			orientation: 0,
+			height: 0.5,
+			width: 20,
+			elevationalHeight: 20,
+			surfaceArea: 10,
+			solarAbsorption: 0.1,
+			uValue: 1,
+			kappaValue: 100,
+			massDistributionClass: "I"
+		}
 	};
 
-	const externalUnglazed2: ExternalUnglazedDoorData = {
-		name: "external unglazed 2 name",
-		pitchOption: "90",
-		pitch: 90,
-		orientation: 0,
-		height: 0.5,
-		width: 20,
-		elevationalHeight: 20,
-		surfaceArea: 10,
-		solarAbsorption: 0.1,
-		uValue: 1,
-		kappaValue: 100,
-		massDistributionClass: "I"
+	const externalUnglazed2: EcaasForm<ExternalUnglazedDoorData> = {
+		data: {
+			name: "external unglazed 2 name",
+			pitchOption: "90",
+			pitch: 90,
+			orientation: 0,
+			height: 0.5,
+			width: 20,
+			elevationalHeight: 20,
+			surfaceArea: 10,
+			solarAbsorption: 0.1,
+			uValue: 1,
+			kappaValue: 100,
+			massDistributionClass: "I" }
 	};
 
-	const externalUnglazed3: ExternalUnglazedDoorData = {
-		name: "external unglazed 3 name",
-		pitchOption: "90",
-		pitch: 90,
-		orientation: 0,
-		height: 0.5,
-		width: 20,
-		elevationalHeight: 20,
-		surfaceArea: 10,
-		solarAbsorption: 0.1,
-		uValue: 1,
-		kappaValue: 100,
-		massDistributionClass: "I"
+	const externalUnglazed3: EcaasForm<ExternalUnglazedDoorData> = {
+		data:
+				{
+					name: "external unglazed 3 name",
+					pitchOption: "90",
+					pitch: 90,
+					orientation: 0,
+					height: 0.5,
+					width: 20,
+					elevationalHeight: 20,
+					surfaceArea: 10,
+					solarAbsorption: 0.1,
+					uValue: 1,
+					kappaValue: 100,
+					massDistributionClass: "I"
+				}
 	};
 
 	const externalGlazed1: ExternalGlazedDoorData = {

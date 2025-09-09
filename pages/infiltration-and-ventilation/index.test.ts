@@ -55,9 +55,9 @@ describe("the ventilation task page", async ()=>{
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [
-						mechanicalVentilation1,
-					],
+					data: [{
+						data: mechanicalVentilation1
+					}],
 				}
 			},
 		});

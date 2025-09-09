@@ -11,37 +11,37 @@ mockNuxtImport("navigateTo", () => {
 
 vi.mock("uuid");
 
+const store = useEcaasStore();
+const user = userEvent.setup();
+
+const outlet: EcaasForm<OtherHotWaterOutletData> = {
+	data: {
+		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
+		name: "Basin tap 1",
+		flowRate: 10
+	},
+	complete: true
+};
+
+const outlet2: EcaasForm<OtherHotWaterOutletData> = {
+	data: {
+		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8123",
+		name: "Basin tap 2",
+		flowRate: 11
+	},
+	complete: true
+};
+
+afterEach(() => {
+	store.$reset();
+});
+
+const populateValidForm = async () => {
+	await user.type(screen.getByTestId("name"), "Basin tap 1");
+	await user.type(screen.getByTestId("flowRate"), "10");
+	await user.tab();
+};
 describe("other outlets", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
-
-	const outlet: EcaasForm<OtherHotWaterOutletData> = {
-		data: {
-			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
-			name: "Basin tap 1",
-			flowRate: 10
-		},
-		complete: true
-	};
-
-	const outlet2: EcaasForm<OtherHotWaterOutletData> = {
-		data: {
-			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8123",
-			name: "Basin tap 2",
-			flowRate: 11
-		},
-		complete: true
-	};
-
-	afterEach(() => {
-		store.$reset();
-	});
-
-	const populateValidForm = async () => {
-		await user.type(screen.getByTestId("name"), "Basin tap 1");
-		await user.type(screen.getByTestId("flowRate"), "10");
-		await user.tab();
-	};
 
 	test("data is saved to store state when form is valid", async () => {
 		vi.mocked(uuidv4).mockReturnValue(outlet.data.id as unknown as Buffer);
@@ -101,6 +101,31 @@ describe("other outlets", () => {
 		expect((await screen.findByTestId("otherOutletsErrorSummary"))).toBeDefined();
 	});
 
+	test("save progress button navigates user to the hot water outlets overview page", async () => {
+	
+		await renderSuspended(OtherOutlet, {
+			route: {
+				params: { outlet: "create" }
+			}
+		});
+	
+		await populateValidForm();
+		const saveProcess = screen.getByRole("button", { name: "Save progress" });
+	
+		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets");
+	});
+		
+	it("navigates to hot water outlets page when valid form is completed", async () => {
+		await renderSuspended(OtherOutlet);
+	
+		await populateValidForm();
+		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+
+		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
+	});
+});
+
+describe("Partially saving data", () => {
 	test("form data is automatically saved to store", async () => {
 	
 		await renderSuspended(OtherOutlet, {
@@ -176,20 +201,6 @@ describe("other outlets", () => {
 		expect(store.domesticHotWater.hotWaterOutlets.otherOutlets.data[0]!.data.name).toBe("Other outlet");
 	});
 
-	test("save progress button navigates user to the hot water outlets overview page", async () => {
-	
-		await renderSuspended(OtherOutlet, {
-			route: {
-				params: { outlet: "create" }
-			}
-		});
-	
-		await populateValidForm();
-		const saveProcess = screen.getByRole("button", { name: "Save progress" });
-	
-		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets");
-	});
-	
 	test("creates a new 'other' item automatically when a user adds only the name value", async () => {
 		await renderSuspended(OtherOutlet, {
 			route: {
@@ -239,14 +250,5 @@ describe("other outlets", () => {
 		expect(data[1]?.data.name).toBe("Updated Other outlet 2");
 		expect(data[1]?.data.flowRate).toBe(1);
 		expect(data[1]?.data.id).toBe(outlet2.data.id);
-	});
-	
-	it("navigates to hot water outlets page when valid form is completed", async () => {
-		await renderSuspended(OtherOutlet);
-	
-		await populateValidForm();
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
-
-		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
 	});
 });

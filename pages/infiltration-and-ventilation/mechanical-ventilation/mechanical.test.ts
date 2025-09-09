@@ -98,7 +98,9 @@ describe("mechanical ventilation overview", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [mechanicalVentilation1],
+					data: [{
+						data: mechanicalVentilation1
+					}],
 				},
 			},
 		});
@@ -117,9 +119,9 @@ describe("mechanical ventilation overview", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						mechanicalVentilation1,
-						mechanicalVentilation2,
-						mechanicalVentilation3
+						{ data: mechanicalVentilation1 },
+						{ data: mechanicalVentilation2 },
+						{ data: mechanicalVentilation3 }
 					],
 				},
 			},
@@ -139,22 +141,22 @@ describe("mechanical ventilation overview", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						mechanicalVentilation1,
-						mechanicalVentilation4,
+						{ data: mechanicalVentilation1 },
+						{ data: mechanicalVentilation4 },
 					],
 				},
 				ductwork :{
 					data: [
-						ductwork1,
-						ductwork2,
-						ductwork3
+						{ data: ductwork1 },
+						{ data: ductwork2 },
+						{ data: ductwork3 }
 					]
 				}
 			},
 		});
 		await renderSuspended(MechanicalVentilationOverview);
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
-		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([ductwork3]);
+		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([{ data: ductwork3 }]);
 
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
 		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([]);
@@ -172,8 +174,8 @@ describe("mechanical ventilation overview", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						mechanicalVentilation1,
-						mechanicalVentilation2
+						{ data: mechanicalVentilation1 },
+						{ data: mechanicalVentilation2 }
 					],
 				},
 			},
@@ -209,7 +211,7 @@ describe("mechanical ventilation overview", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						mechanicalVentilation1
+						{ data: mechanicalVentilation1 }
 					],
 				},
 			},
@@ -218,7 +220,7 @@ describe("mechanical ventilation overview", () => {
 		await userEvent.click(
 			screen.getByTestId("mechanicalVentilation_duplicate_0")
 		);
-		expect(store.infiltrationAndVentilation.mechanicalVentilation.data[0]?.id).not.toBe(store.infiltrationAndVentilation.mechanicalVentilation.data[1]?.id);
+		expect(store.infiltrationAndVentilation.mechanicalVentilation.data[0]?.data.id).not.toBe(store.infiltrationAndVentilation.mechanicalVentilation.data[1]?.data.id);
 	});
 
 	it("should only display warning message when mechanical ventilations of type mvhr have been added", async() => {
@@ -232,7 +234,7 @@ describe("mechanical ventilation overview", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						mechanicalVentilation1
+						{ data: mechanicalVentilation1 }
 					],
 				},
 			},
@@ -267,7 +269,8 @@ describe("mechanical ventilation overview", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						mechanicalVentilation1, mechanicalVentilation2
+						{ data: mechanicalVentilation1, complete: true },
+						{ data: mechanicalVentilation2, complete: true }
 					],
 				},
 			},
@@ -288,7 +291,9 @@ describe("mechanical ventilation overview", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [mechanicalVentilation1]
+					data: [
+						{ data: mechanicalVentilation1, complete: true }
+					]
 				}
 			}
 		});
@@ -307,7 +312,9 @@ describe("mechanical ventilation overview", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [mechanicalVentilation1]
+					data: [
+						{ data: mechanicalVentilation1 }
+					]
 				}
 			}
 		});
@@ -321,7 +328,7 @@ describe("mechanical ventilation overview", () => {
 			}
 		});
 		
-		await user.click(screen.getByRole("button")); 
+		await user.click(screen.getByTestId("saveAndComplete")); 
 			
 		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
 		expect(complete).toBe(false);

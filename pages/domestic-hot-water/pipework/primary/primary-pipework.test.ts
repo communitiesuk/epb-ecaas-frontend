@@ -42,44 +42,45 @@ const pipework2: EcaasForm<PrimaryPipeworkData> = {
 	}
 };
 
-describe("Primary pipework form", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
+const store = useEcaasStore();
+const user = userEvent.setup();
 
-	afterEach(() => {
-		store.$reset();
-	});
+afterEach(() => {
+	store.$reset();
+});
 
-	const addHotWaterCylinder = () => {
-		store.$patch({
-			domesticHotWater: {
-				waterHeating: {
-					hotWaterCylinder: {
-						data: [{
-							id: hotWaterCylinderId,
-							name: "Hot water cylinder 1",
-							storageCylinderVolume: 5,
-							dailyEnergyLoss: 1,
-							heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30"
-						}]
-					}
+const addHotWaterCylinder = () => {
+	store.$patch({
+		domesticHotWater: {
+			waterHeating: {
+				hotWaterCylinder: {
+					data: [{
+						id: hotWaterCylinderId,
+						name: "Hot water cylinder 1",
+						storageCylinderVolume: 5,
+						dailyEnergyLoss: 1,
+						heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30"
+					}]
 				}
 			}
-		});
-	};
+		}
+	});
+};
 
-	const populateValidForm = async () => {
-		await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink");
-		await user.type(screen.getByTestId("internalDiameter"), "10");
-		await user.type(screen.getByTestId("externalDiameter"), "10");
-		await user.type(screen.getByTestId("length"), "3");
-		await user.type(screen.getByTestId("insulationThickness"), "5");
-		await user.type(screen.getByTestId("thermalConductivity"), "1");
-		await user.click(screen.getByTestId("surfaceReflectivity_yes"));
-		await user.click(screen.getByTestId("pipeContents_water"));
-		await user.click(screen.getByTestId(`hotWaterCylinder_${hotWaterCylinderId}`));
-		await user.click(screen.getByTestId("location_internal"));
-	};
+const populateValidForm = async () => {
+	await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink");
+	await user.type(screen.getByTestId("internalDiameter"), "10");
+	await user.type(screen.getByTestId("externalDiameter"), "10");
+	await user.type(screen.getByTestId("length"), "3");
+	await user.type(screen.getByTestId("insulationThickness"), "5");
+	await user.type(screen.getByTestId("thermalConductivity"), "1");
+	await user.click(screen.getByTestId("surfaceReflectivity_yes"));
+	await user.click(screen.getByTestId("pipeContents_water"));
+	await user.click(screen.getByTestId(`hotWaterCylinder_${hotWaterCylinderId}`));
+	await user.click(screen.getByTestId("location_internal"));
+};
+
+describe("Primary pipework form", () => {
 
 	test("data is saved to store state when form is valid", async () => {
 		addHotWaterCylinder();
@@ -188,6 +189,21 @@ describe("Primary pipework form", () => {
 		expect((await screen.findByTestId("pipeworkErrorSummary"))).toBeDefined();
 	});
 
+	test("save progress button navigates user to the pipework overview page", async () => {
+		addHotWaterCylinder();
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "create" },
+			},
+		});
+		await populateValidForm();
+		const saveProcess = screen.getByRole("button", { name: "Save progress" });
+
+		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/pipework");
+	});
+});
+
+describe("partially saving data", () => {
 	test("form data is automatically saved to store", async () => {
 
 		await renderSuspended(PipeworkForm, {
@@ -236,44 +252,31 @@ describe("Primary pipework form", () => {
 		expect(data[0]!.data.name).toBe("Primary pipework");
 	});
 
-	// test("default name is used if name added is whitespace", async () => {
+	test("default name is used if name added is whitespace", async () => {
 
-	// 	await renderSuspended(PipeworkForm, {
-	// 		route: {
-	// 			params: { pipe: "create" },
-	// 		},
-	// 	});
-
-	// 	await user.type(screen.getByTestId('name'), ' ');
-	// 	await user.click(screen.getByRole("button", { name: "Save progress" }));
-
-		
-	// 	expect(store.domesticHotWater.pipework.primaryPipework.data[0]!.data.name).toBe("Primary pipework");
-
-	// 	await renderSuspended(PipeworkForm, {
-	// 		route: {
-	// 			params: { pipe: "0" },
-	// 		},
-	// 	});
-
-	// 	await user.clear(screen.getByTestId("name"));
-	// 	await user.type(screen.getByTestId('name'), ' ');
-	// 	await user.tab();
-		
-	// 	expect(store.domesticHotWater.pipework.primaryPipework.data[0]!.data.name).toBe("Primary pipework");
-	// });
-
-	test("save progress button navigates user to the pipework overview page", async () => {
-		addHotWaterCylinder();
 		await renderSuspended(PipeworkForm, {
 			route: {
 				params: { pipe: "create" },
 			},
 		});
-		await populateValidForm();
-		const saveProcess = screen.getByRole("button", { name: "Save progress" });
 
-		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/pipework");
+		await user.type(screen.getByTestId("name"), " ");
+		await user.click(screen.getByRole("button", { name: "Save progress" }));
+
+		
+		expect(store.domesticHotWater.pipework.primaryPipework.data[0]!.data.name).toBe("Primary pipework");
+
+		await renderSuspended(PipeworkForm, {
+			route: {
+				params: { pipe: "0" },
+			},
+		});
+
+		await user.clear(screen.getByTestId("name"));
+		await user.type(screen.getByTestId("name"), " ");
+		await user.tab();
+		
+		expect(store.domesticHotWater.pipework.primaryPipework.data[0]!.data.name).toBe("Primary pipework");
 	});
 
 	test("creates a new primary pipework automatically when a user adds only the name value", async () => {

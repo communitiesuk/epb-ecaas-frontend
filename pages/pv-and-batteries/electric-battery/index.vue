@@ -52,7 +52,7 @@ watch(model, async (newData: ElectricBatteryData | undefined, initialData: Elect
 					state.pvAndBatteries.electricBattery.data = [{
 						data: {
 							...newData,
-							name: newData.name || defaultName,
+							name: newData.name?.trim() || defaultName,
 						},
 					}];
 				} else {

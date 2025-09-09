@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import formStatus from "~/constants/formStatus";
+
 const title = "Floor elements";
 const page = usePage();
 const store = useEcaasStore();
 
 type FloorType = keyof typeof store.dwellingFabric.dwellingSpaceFloors;
-type FloorData = GroundFloorData & InternalFloorData & ExposedFloorData;
+type FloorData = EcaasForm<GroundFloorData> & EcaasForm<InternalFloorData> & EcaasForm<ExposedFloorData>;
 
 function handleRemove(floorType: FloorType, index: number) {
 	const floors = store.dwellingFabric.dwellingSpaceFloors[floorType]?.data;
@@ -21,20 +23,21 @@ function handleRemove(floorType: FloorType, index: number) {
 
 function handleDuplicate<T extends FloorData>(floorType: FloorType, index: number) {
 	const floors  = store.dwellingFabric.dwellingSpaceFloors[floorType]?.data;
-	const floor = floors?.[index];
+	const floorToDuplicate = floors?.[index];
     
-	if (floor) {
-		const duplicates = floors.filter(f => f.name.match(duplicateNamePattern(floor.name)));
+	if (floorToDuplicate) {
+		const numberOfFloorsWithSameName = floors.filter(f => f.data.name.match(duplicateNamePattern(floorToDuplicate.data.name))).length;
 
-		store.$patch((state) => {
-			const newFloor = {
-				...floor,
-				name: `${floor.name} (${duplicates.length})`
-			} as T;
-
-			state.dwellingFabric.dwellingSpaceFloors[floorType].data.push(newFloor);
+		store.$patch((state) => {			
+			state.dwellingFabric.dwellingSpaceFloors[floorType].data.push({
+				complete: floorToDuplicate.complete,
+				data: {
+					...floorToDuplicate.data,
+					name: `${floorToDuplicate.data.name} (${numberOfFloorsWithSameName})`
+				}
+			} as T);
+			state.dwellingFabric.dwellingSpaceFloors[floorType].complete = false;
 		});
-		store.dwellingFabric.dwellingSpaceFloors[floorType].complete = false;
 	}
 }
 
@@ -56,6 +59,14 @@ function checkIsComplete(){
 	const floors = store.dwellingFabric.dwellingSpaceFloors;
 	return Object.values(floors).every(floor => floor.complete);
 }
+
+function hasIncompleteEntries() {
+	const floorTypes = store.dwellingFabric.dwellingSpaceFloors;
+	
+	return Object.values(floorTypes).some(
+		floors => floors.data.some(
+			floor => !floor.complete));
+}
 </script>
 
 <template>
@@ -70,7 +81,11 @@ function checkIsComplete(){
 		id="ground"
 		title="Ground floor"
 		:form-url="`${page?.url!}/ground`"
-		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceGroundFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceGroundFloor', index)"
 	/>
@@ -78,7 +93,11 @@ function checkIsComplete(){
 		id="internal"
 		title="Internal floor"
 		:form-url="`${page?.url!}/internal`"
-		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data?.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceInternalFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceInternalFloor', index)"
 	/>
@@ -86,7 +105,11 @@ function checkIsComplete(){
 		id="exposed"
 		title="Exposed floor"
 		:form-url="`${page?.url!}/exposed`"
-		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data?.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.data.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceExposedFloor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceExposedFloor', index)"
 
@@ -98,7 +121,7 @@ function checkIsComplete(){
 		>
 			Return to dwelling space
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 
 	</div>
 </template>

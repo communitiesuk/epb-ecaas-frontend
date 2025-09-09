@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { getUrl } from "#imports";
 
+const { autoSaveForm } = useForm();
 const store = useEcaasStore();
 
 const model = ref({
@@ -39,6 +41,10 @@ const saveForm = (fields: typeof model.value) => {
 
 	navigateTo("/dwelling-space");
 };
+
+autoSaveForm(model, (state, newData) => {
+	state.dwellingFabric.dwellingSpaceZoneParameters = newData ;
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -133,6 +139,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			link="/"
 		/> -->
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue"  />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('dwellingFabric')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

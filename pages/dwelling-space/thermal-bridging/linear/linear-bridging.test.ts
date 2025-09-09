@@ -35,7 +35,7 @@ describe("linear thermal bridges", () => {
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(LinearBridging, {
 			route: {
-				params: { system: "create" },
+				params: { linear: "create" },
 			},
 		});
 
@@ -103,5 +103,68 @@ describe("linear thermal bridges", () => {
 		await user.click(screen.getByTestId("saveProgress"));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/thermal-bridging");
+	});
+
+	describe("partially saving data", () => {
+		it("creates a new thermal linear bridge automatically with name derived from selected type", async () => {
+			await renderSuspended(LinearBridging, {
+				route: {
+					params: { linear: "create" }
+				}
+			});
+
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "e1");
+			await user.tab();
+
+			const actualLinearBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[0]!;
+			expect(actualLinearBridge.data.name).toBe("E1: Steel lintel with perforated steel base plate");
+			expect(actualLinearBridge.data.length).toBeUndefined();
+		});
+
+		it("creates a new thermal linear bridge automatically with default name after other data is entered", async () => {
+			await renderSuspended(LinearBridging, {
+				route: {
+					params: { linear: "create" }
+				}
+			});
+
+			await user.type(screen.getByTestId("linearThermalTransmittance"), "5");
+			await user.tab();
+
+			const actualLinearBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[0]!;
+			expect(actualLinearBridge.data.name).toBe("Linear thermal bridge");
+			expect(actualLinearBridge.data.linearThermalTransmittance).toBe(5);
+			expect(actualLinearBridge.data.length).toBeUndefined();
+		});
+
+		it("saves updated form data to correct store object automatically", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceThermalBridging: {
+						dwellingSpaceLinearThermalBridges: {
+							data: [state, state]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(LinearBridging, {
+				route: {
+					params: { linear: "1" }
+				}
+			});
+
+			await user.clear(screen.getByTestId("length"));
+			await user.clear(screen.getByTestId("linearThermalTransmittance"));
+			await user.tab();
+
+			await user.type(screen.getByTestId("length"), "14");
+			await user.type(screen.getByTestId("linearThermalTransmittance"), "6");
+			await user.tab();
+
+			const actualLinearBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[1]!;
+			expect(actualLinearBridge.data.length).toBe(14);
+			expect(actualLinearBridge.data.linearThermalTransmittance).toBe(6);
+		});
 	});
 });
