@@ -61,7 +61,7 @@ const options: FormKitOptionsProp[] = [{
 function getName(fields: LinearThermalBridgeData) {
 	const option = options.find(o => Object.keys(o).includes(fields.typeOfThermalBridge));
 	const entry = option ? Object.entries(option).find(o => o[0] === fields.typeOfThermalBridge) : undefined;
-	return entry?.[1] ?? "Linear thermal bridge";
+	return entry?.[1];
 }
 
 const saveForm = (fields: LinearThermalBridgeData) => {
@@ -95,7 +95,7 @@ autoSaveElementForm({
 			...newData,
 			data: {
 				...newData.data,
-				name: getName(newData.data)
+				...(getName(newData.data) ? { name: getName(newData.data) } : {})
 			}
 		});
 	},
@@ -104,7 +104,7 @@ autoSaveElementForm({
 			...newData,
 			data: {
 				...newData.data,
-				name: getName(newData.data)
+				...(getName(newData.data) ? { name: getName(newData.data) } : {})
 			}
 		};
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
