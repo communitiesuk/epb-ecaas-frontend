@@ -393,11 +393,7 @@ describe("floors", () => {
 	
 			await user.click(screen.getByTestId("completeSectionButton"));
 	
-			const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor
-	
-
-			} = store.dwellingFabric.dwellingSpaceFloors;
-	
+			const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor } = store.dwellingFabric.dwellingSpaceFloors;
 	
 			expect(dwellingSpaceGroundFloor?.complete).toBe(true);
 			expect(dwellingSpaceInternalFloor?.complete).toBe(true);
@@ -446,31 +442,56 @@ describe("floors", () => {
 			}
 		});
 
-		it("marks floors as not complete when user saves a new or edited floor form after marking section as complete", async () => {
+		it("marks complete floors as not complete when user saves a ground floor form", async () => {
+			await user.click(screen.getByTestId("completeSectionButton"));
+			await renderSuspended(GroundFloorForm, {
+				route: {
+					params: { floor: "0" }
+				}
+			});
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete).toBe(false);
 
-			const floorsData = await getFloorData("");
+			await renderSuspended(Floors);
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		});
 
-			const floors = Object.entries(store.dwellingFabric.dwellingSpaceFloors);
-	
-			for(const [key] of floors){
-				const typedKey = key as FloorType;
-				await user.click(screen.getByTestId("completeSectionButton"));
-				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(true);
+		it("marks complete floors as not complete when user saves an internal floor form", async () => {
+			await user.click(screen.getByTestId("completeSectionButton"));
+			await renderSuspended(InternalFloorForm, {
+				route: {
+					params: { floor: "0" }
+				}
+			});
+			
+			await user.click(screen.getByRole("button", { name: "Save and continue" }));
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete).toBe(false);
+		});
 
-				const floorData = floorsData.find(x => x.key === typedKey);
+		it("marks complete floors as not complete when user saves an exposed floor form", async () => {
+			await user.click(screen.getByTestId("completeSectionButton"));
+			await renderSuspended(ExposedFloorForm, {
+				route: {
+					params: { floor: "0" }
+				}
+			});
+			
+			await user.click(screen.getByRole("button", { name: "Save and continue" }));
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete).toBe(false);
+		});
 
-				await renderSuspended(floorData?.form, {
-					route: {
-						params: { floor: "0" }
-					}
-				});
+		it("marks complete floors as not complete when user edits a ground floor", async () => {
+			await user.click(screen.getByTestId("completeSectionButton"));
+			await renderSuspended(GroundFloorForm, {
+				route: {
+					params: { floor: "0" }
+				}
+			});
+			await user.type(screen.getByTestId("name"), "Ground floor 1");
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete).toBe(false);
 
-				await user.click(screen.getByRole("button", { name: "Save and continue" }));
-				
-				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(false);
-				await renderSuspended(Floors);
-				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-			}
+			await renderSuspended(Floors);
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 		});
 	});
 });

@@ -89,7 +89,7 @@ describe("ground floor", () => {
 			});
 
 			await populateValidForm();
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 			
@@ -128,7 +128,7 @@ describe("ground floor", () => {
 		test("required error messages are displayed when empty form is submitted", async () => {
 			await renderSuspended(GroundFloor);
 	
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
 			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
@@ -156,7 +156,7 @@ describe("ground floor", () => {
 			await user.type(screen.getByTestId("edgeInsulationWidth"), "0");
 			await user.type(screen.getByTestId("edgeInsulationThermalResistance"), "0");
 			await user.tab();
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 			
@@ -190,7 +190,7 @@ describe("ground floor", () => {
 			await renderSuspended(GroundFloor);
 	
 			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("edgeInsulationType_error"))).toBeDefined();
 			expect((await screen.findByTestId("edgeInsulationWidth_error"))).toBeDefined();
@@ -214,7 +214,7 @@ describe("ground floor", () => {
 			await user.type(screen.getByTestId("ventilationOpeningsArea"), "0");
 			await user.click(screen.getByTestId("windShieldingFactor_Exposed"));
 			await user.tab();
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 			const entryData = Object.entries(data[0]!).filter(e => e[1] !== undefined);
@@ -252,7 +252,7 @@ describe("ground floor", () => {
 			await renderSuspended(GroundFloor);
 	
 			await user.click(screen.getByTestId("typeOfGroundFloor_Suspended_floor"));
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("heightOfFloorUpperSurface_error"))).toBeDefined();
 			expect((await screen.findByTestId("thicknessOfWalls_error"))).toBeDefined();
@@ -317,7 +317,7 @@ describe("ground floor", () => {
 					params: { floor: 0 }
 				}
 			});
-			
+
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 
 			expect(data[0]!.data.name).toBe("Ground 1");
@@ -331,6 +331,12 @@ describe("ground floor", () => {
 
 			expect(data[0]!.data.name).toBe("Ground floor");
 			expect(data[0]!.data.surfaceArea).toBe(170);
+		});
+
+		it("navigates to floors overview page on clicking Save progress", async () => {
+			await renderSuspended(GroundFloor);
+			await user.click(screen.getByTestId("saveProgress"));
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");
 		});
 	});
 	

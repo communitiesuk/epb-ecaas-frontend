@@ -2,6 +2,8 @@
 import { centimetre, type Length } from "~/utils/units/length";
 import { FloorType, WindShieldLocation } from "~/schema/api-schema.types";
 import { unitValue } from "~/utils/units/types";
+import { getUrl } from "#imports";
+
 
 const title = "Ground floor";
 const store = useEcaasStore();
@@ -462,10 +464,10 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			/>
 		</template>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
 
