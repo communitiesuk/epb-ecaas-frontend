@@ -3,7 +3,7 @@ import { standardPitchOptions } from "#imports";
 
 const title = "External unglazed door";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor?.data);
 const model: Ref<ExternalUnglazedDoorData | undefined> = ref(doorData?.data);
@@ -11,27 +11,40 @@ const model: Ref<ExternalUnglazedDoorData | undefined> = ref(doorData?.data);
 const saveForm = (fields: ExternalUnglazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
+		const index = getStoreIndex(dwellingSpaceExternalUnglazedDoor.data);
 
-		const doorData: ExternalUnglazedDoorData = {
-			name: fields.name,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
-			orientation: fields.orientation,
-			height: fields.height,
-			width: fields.width,
-			elevationalHeight: fields.elevationalHeight,
-			surfaceArea: fields.surfaceArea,
-			solarAbsorption: fields.solarAbsorption,
-			uValue: fields.uValue,
-			kappaValue: fields.kappaValue,
-			massDistributionClass: fields.massDistributionClass
+		dwellingSpaceExternalUnglazedDoor.data[index] = {
+			data: {
+				name: fields.name,
+				pitchOption: fields.pitchOption,
+				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
+				orientation: fields.orientation,
+				height: fields.height,
+				width: fields.width,
+				elevationalHeight: fields.elevationalHeight,
+				surfaceArea: fields.surfaceArea,
+				solarAbsorption: fields.solarAbsorption,
+				uValue: fields.uValue,
+				kappaValue: fields.kappaValue,
+				massDistributionClass: fields.massDistributionClass
+			},
+			complete: true
 		};
-		const door: EcaasForm<ExternalUnglazedDoorData> = { data: doorData, complete: true };
-		saveToList(door, dwellingSpaceExternalUnglazedDoor);
+		store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.complete = false;
 	});
-	store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.complete = false;
 	navigateTo("/dwelling-space/doors");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor,
+	defaultName: "External unglazed door",
+	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>

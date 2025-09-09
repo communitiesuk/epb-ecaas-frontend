@@ -35,7 +35,11 @@ describe("external unglazed door", () => {
 	});
 
 	test("data is saved to store state when form is valid", async () => {
-		await renderSuspended(ExternalUnglazedDoor);
+		await renderSuspended(ExternalUnglazedDoor, {
+			route: {
+				params: { externalUnglazed: "create" }
+			}
+		});
 
 		await user.type(screen.getByTestId("name"), "External unglazed door 1");
 		await user.click(screen.getByTestId("pitchOption_90"));
@@ -121,5 +125,40 @@ describe("external unglazed door", () => {
 		await user.click(screen.getByRole("button"));
     
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
+	});
+
+	describe("partially saving data", () => {
+		it("creates a new door automatically with given name", async () => {
+			await renderSuspended(ExternalUnglazedDoor, {
+				route: {
+					params: { externalUnglazed: "create" }
+				}
+			});
+
+			await user.type(screen.getByTestId("name"), "New door");
+			await user.tab();
+
+			const actualDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data[0]!;
+			expect(actualDoor.data.name).toBe("New door");
+			expect(actualDoor.data.height).toBeUndefined();
+			expect(actualDoor.data.kappaValue).toBeUndefined();
+		});
+
+		it("creates a new door automatically with default name after other data is entered", async () => {
+			await renderSuspended(ExternalUnglazedDoor, {
+				route: {
+					params: { externalUnglazed: "create" }
+				}
+			});
+
+			await user.type(screen.getByTestId("elevationalHeight"), "7");
+			await user.tab();
+
+			const actualDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data[0]!;
+			expect(actualDoor.data.name).toBe("External unglazed door");
+			expect(actualDoor.data.height).toBeUndefined();
+			expect(actualDoor.data.width).toBeUndefined();
+			expect(actualDoor.data.elevationalHeight).toBe(7);
+		});
 	});
 });
