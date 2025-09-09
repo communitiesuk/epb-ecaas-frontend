@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { AdjacentSpaceType } from "~/stores/ecaasStore.schema";
+import { getUrl } from "#imports";
 
 const title = "Internal floor";
 const store = useEcaasStore();
@@ -127,9 +128,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
