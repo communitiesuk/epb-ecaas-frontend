@@ -35,7 +35,7 @@ describe("linear thermal bridges", () => {
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(LinearBridging, {
 			route: {
-				params: { system: "create" },
+				params: { linear: "create" },
 			},
 		});
 
