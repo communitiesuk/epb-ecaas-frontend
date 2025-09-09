@@ -3,6 +3,7 @@ import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWater
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
 import { unitValue } from "~/utils/units/types";
+import { defaultControlMaxName, defaultControlMinName } from "./common";
 
 describe("domestic hot water mapper", () => {
 	const store = useEcaasStore();
@@ -78,7 +79,7 @@ describe("domestic hot water mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "HotWaterSource"> = {
 			HotWaterSource: {
 				"hw cylinder": {
-					ColdWaterSource: "mains_water",
+					ColdWaterSource: "mains water",
 					HeatSource: {
 						[heatPumpName]: {
 							EnergySupply: "mains elec",
@@ -87,8 +88,8 @@ describe("domestic hot water mapper", () => {
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
-							Controlmin: "",
-							Controlmax: "",
+							Controlmin: defaultControlMinName,
+							Controlmax: defaultControlMaxName,
 						}
 					},
 					daily_losses: 3,
@@ -188,7 +189,7 @@ describe("domestic hot water mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "HotWaterSource"> = {
 			HotWaterSource: {
 				"hw cylinder": {
-					ColdWaterSource: "mains_water",
+					ColdWaterSource: "mains water",
 					HeatSource: {
 						[heatPumpName]: {
 							EnergySupply: "mains elec",
@@ -197,8 +198,8 @@ describe("domestic hot water mapper", () => {
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
-							Controlmax: "", // TODO may need to be a real control
-							Controlmin: "", // TODO may need to be a real control
+							Controlmax: defaultControlMaxName,
+							Controlmin: defaultControlMinName,
 						}
 					},
 					daily_losses: 3,
@@ -226,7 +227,6 @@ describe("domestic hot water mapper", () => {
 							pipe_contents: "water"
 						},
 					],
-					heat_exchanger_surface_area: null,
 					init_temp: 20.0,
 				}
 			}
@@ -317,26 +317,25 @@ describe("domestic hot water mapper", () => {
 					"shower1": {
 						type: "MixerShower",
 						flowrate: 3,
-						ColdWaterSource: "mains_water",
-						WWHRS: null
+						ColdWaterSource: "mains water",
 					},
 					"shower2": {
 						type: "InstantElecShower",
 						rated_power: 10,
-						ColdWaterSource: "mains_water",
+						ColdWaterSource: "mains water",
 						EnergySupply: "mains elec"
 					}
 				},
 				Bath: {
 					"bath1": {
-						ColdWaterSource: "mains_water",
+						ColdWaterSource: "mains water",
 						flowrate: 1,
 						size: 70,
 					}
 				},
 				Other: {
 					"other1": {
-						ColdWaterSource: "mains_water",
+						ColdWaterSource: "mains water",
 						flowrate: 4,
 					}
 				},

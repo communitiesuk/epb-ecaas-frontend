@@ -1,5 +1,6 @@
 import type { SchemaSpaceCoolSystemDetails } from "~/schema/aliases";
 import { mapSpaceCoolSystems } from "./coolingMapper";
+import { defaultControlName } from "./common";
 
 describe("cooling mapper", () => {
 	const store = useEcaasStore();
@@ -39,7 +40,7 @@ describe("cooling mapper", () => {
 				type: "AirConditioning",
 				advanced_start: null,
 				temp_setback: null,
-				Control: "cooling"
+				Control: defaultControlName,
 			}
 		};
 
@@ -84,7 +85,7 @@ describe("cooling mapper", () => {
 				type: "AirConditioning",
 				temp_setback: null,
 				advanced_start: null,
-				Control: "cooling"
+				Control: defaultControlName,
 			},
 			"airConditioner2": {
 				EnergySupply: "mains elec",
@@ -94,7 +95,7 @@ describe("cooling mapper", () => {
 				type: "AirConditioning",
 				temp_setback: null,
 				advanced_start: null,
-				Control: "cooling"
+				Control: defaultControlName,
 			},
 		};
 

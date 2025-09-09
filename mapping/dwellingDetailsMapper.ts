@@ -1,4 +1,4 @@
-import { type SchemaShadingSegment, type SchemaInfiltrationVentilation, segment, externalConditions } from "~/schema/aliases";
+import { type SchemaShadingSegment, type SchemaInfiltrationVentilation, externalConditions } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSchema> {
@@ -56,11 +56,11 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 	const segments: SchemaShadingSegment[] = [];
 
 	for (let index = 0; index < segmentCount; index++) {
-		segments.push(segment({
+		segments.push({
 			number: index + 1,
 			start360: index * range,
 			end360: (index * range) + range
-		}));
+		});
 	}
 
 	shading.forEach(s => {

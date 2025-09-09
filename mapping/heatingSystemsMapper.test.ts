@@ -1,7 +1,6 @@
 import { mapEnergySupplyData, mapHeatEmittingData } from "./heatingSystemsMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { defaultZoneName } from "./common";
-import { energySupply } from "~/schema/aliases";
+import { defaultControlName, defaultZoneName } from "./common";
 
 const baseForm = {
 	data: [],
@@ -36,9 +35,10 @@ describe("heating systems mapper", () => {
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
-				mains_gas: energySupply({
+				mains_gas: {
 					fuel: "mains_gas",
-				})
+					is_export_capable: false
+				}
 			},
 		};
 
@@ -67,13 +67,14 @@ describe("heating systems mapper", () => {
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
-				mains_gas: energySupply({
+				mains_gas: {
 					fuel: "mains_gas",
-				}),
-				"mains elec": energySupply({
+					is_export_capable: false,
+				},
+				"mains elec": {
 					fuel: "electricity",
 					is_export_capable: true
-				})
+				}
 			},
 		};
 
@@ -105,21 +106,23 @@ describe("heating systems mapper", () => {
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
-				"mains elec": energySupply({
+				"mains elec": {
 					fuel: "electricity",
 					is_export_capable: true
-				}),
-				custom: energySupply({
+				},
+				custom: {
 					fuel: "custom",
 					factor: {
 						"Emissions Factor kgCO2e/kWh": 3.2,
 						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": 4.8,
 						"Primary Energy Factor kWh/kWh delivered": 1.0,
-					}
-				}),
-				mains_gas: energySupply({
+					},
+					is_export_capable: false,
+				},
+				mains_gas: {
 					fuel: "mains_gas",
-				})
+					is_export_capable: false,
+				}
 			},
 		};
 
@@ -211,7 +214,7 @@ describe("heating systems mapper", () => {
 					thermal_mass: 400,
 					type: "WetDistribution",
 					Zone: defaultZoneName,
-					Control: "heating", // TODO this may need to refer to a real control
+					Control: defaultControlName, // TODO this may need to refer to a real control
 					advanced_start: null,
 					bypass_percentage_recirculated: null,
 					variable_flow: false,
@@ -307,7 +310,7 @@ describe("heating systems mapper", () => {
 					thermal_mass: 400,
 					type: "WetDistribution",
 					Zone: defaultZoneName,
-					Control: "heating", // TODO this may need to refer to a real control
+					Control: defaultControlName,
 					advanced_start: null,
 					EnergySupply: null,
 					bypass_percentage_recirculated: null,
@@ -361,7 +364,7 @@ describe("heating systems mapper", () => {
 					EnergySupply: "mains elec",
 					advanced_start: null,
 					temp_setback: null,
-					Control: "heating", // TODO: this may need to refer to a real control
+					Control: defaultControlName,
 				}
 			}
 		};

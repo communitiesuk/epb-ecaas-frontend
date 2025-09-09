@@ -1,7 +1,7 @@
 import { objectFromEntries } from "ts-extras";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
-import { energySupply, type SchemaSpaceHeatSystemDetails } from "~/schema/aliases";
-import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
+import type { SchemaSpaceHeatSystemDetails } from "~/schema/aliases";
+import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
 export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply" | "SpaceHeatSystem"> {
 	return {
@@ -17,15 +17,15 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 		EnergySupply: {
 			...objectFromEntries(fuelType ? fuelType.map((fuelType) => ([
 				fuelType === "electricity" ? defaultElectricityEnergySupplyName : fuelType,
-				energySupply({
+				{
 					fuel: fuelType,
-					...(fuelType === "electricity" ? { is_export_capable: exported } : {}),
+					is_export_capable: fuelType === "electricity" ? exported ?? false : false,
 					...(fuelType === "custom" ? { factor: {
 						"Emissions Factor kgCO2e/kWh": co2PerKwh!,
 						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": co2PerKwhIncludingOutOfScope!,
 						"Primary Energy Factor kWh/kWh delivered": kwhPerKwhDelivered!
 					} } : {}),
-				})
+				}
 			])) : [])
 		}
 	};
@@ -72,7 +72,7 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			thermal_mass: thermalMass,
 			type: "WetDistribution",
 			Zone: defaultZoneName,
-			Control: "heating", // this may need to be a real control
+			Control: defaultControlName,
 			EnergySupply: null,
 			advanced_start: null,
 			bypass_percentage_recirculated: null,
@@ -97,7 +97,7 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			frac_convective: heater.data.convectionFractionInstant,
 			advanced_start: null,
 			temp_setback: null,
-			Control: "heating", // TODO this may need to be a real control
+			Control: defaultControlName,
 		}
 	]);
 

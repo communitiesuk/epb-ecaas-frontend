@@ -69,7 +69,7 @@ describe("infiltration ventilation mapper", () => {
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeDefined();
-		expect(firstMechVent?.SFP).not.toBeDefined();
+		expect(firstMechVent?.SFP).toBe(1.5);
 	});
 
 
@@ -199,7 +199,7 @@ describe("infiltration ventilation mapper", () => {
 		const firstMechVent = fhsInputData["bathroom exhaust fan"];
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
-		expect(firstMechVent?.vent_type).toBe("Intermittent_MEV");
+		expect(firstMechVent?.vent_type).toBe("Intermittent MEV");
 		expect(firstMechVent?.design_outdoor_air_flow_rate).toBe(144);
 		expect(firstMechVent?.sup_air_flw_ctrl).toBe("ODA"); 
 		expect(firstMechVent?.sup_air_temp_ctrl).toBe("CONST");

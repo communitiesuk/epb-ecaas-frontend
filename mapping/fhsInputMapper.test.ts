@@ -1,10 +1,10 @@
 import type { ValidateFunction } from "ajv/dist/2020";
 import { ajv } from "../schema/validator";
-import { energySupply, externalConditions, noEvents } from "~/schema/aliases";
+import { externalConditions, noEvents } from "~/schema/aliases";
 import { mapFhsInputData } from "./fhsInputMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
-import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
+import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { centimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units/types";
 
@@ -94,10 +94,9 @@ const expectedHouseInput: FhsInputSchema = {
 	HotWaterDemand: {
 		Shower: {
 			"some-mixer-shower-name": {
-				ColdWaterSource: "mains_water",
+				ColdWaterSource: "mains water",
 				flowrate: 14,
 				type: "MixerShower",
-				WWHRS: null
 			},
 		},
 		Bath: {},
@@ -106,7 +105,7 @@ const expectedHouseInput: FhsInputSchema = {
 	},
 	HotWaterSource: {
 		"hw cylinder": {
-			ColdWaterSource: "mains_water",
+			ColdWaterSource: "mains water",
 			HeatSource: {
 				["some-heat-pump-name"]: {
 					name: "some-heat-pump-name",
@@ -122,9 +121,7 @@ const expectedHouseInput: FhsInputSchema = {
 			daily_losses: 34,
 			volume: 200,
 			type: "StorageTank",
-			heat_exchanger_surface_area: null,
-			init_temp: 20.0,
-			primary_pipework: null
+			init_temp: 20.0
 		}
 	},
 	InfiltrationVentilation: {
@@ -145,10 +142,6 @@ const expectedHouseInput: FhsInputSchema = {
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
 				SFP: 1.5,
-				Control: "fan",
-				ductwork: null,
-				mvhr_eff: null,
-				mvhr_location: null
 			}
 		},
 		Vents: {
@@ -224,7 +217,7 @@ const expectedHouseInput: FhsInputSchema = {
 			],
 			temp_diff_emit_dsgn: 31,
 			thermal_mass: 0.14,
-			Control: "heating",
+			Control: defaultControlName,
 			EnergySupply: null,
 			advanced_start: null,
 			bypass_percentage_recirculated: null,
@@ -268,13 +261,11 @@ const expectedHouseInput: FhsInputSchema = {
 					}
 				}
 			},
-			SpaceCoolSystem: null,
 			SpaceHeatControl: "livingroom",
 			SpaceHeatSystem: ["some-wet-distribution"],
 			ThermalBridging: {},
 			area: 100,
 			volume: 300,
-			temp_setpnt_basis: null,
 			temp_setpnt_init: 20.0, // TODO find out what this should be
 		}
 	},
@@ -291,7 +282,7 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	Control: {},
 	EnergySupply: {
-		["mains elec"]: energySupply({
+		["mains elec"]: {
 			fuel: "electricity",
 			is_export_capable: false,
 			ElectricBattery: {
@@ -333,7 +324,7 @@ const expectedFlatInput: FhsInputSchema = {
 				20,
 				20,
 			],
-		})
+		}
 	},
 	Events: noEvents,
 	ExternalConditions: externalConditions([
@@ -413,19 +404,17 @@ const expectedFlatInput: FhsInputSchema = {
 	HotWaterDemand: {
 		Shower: {
 			"mixer shower 1 name": {
-				ColdWaterSource: "mains_water",
+				ColdWaterSource: "mains water",
 				flowrate: 19,
 				type: "MixerShower",
-				WWHRS: null
 			},
 			"mixer shower 2 name": {
-				ColdWaterSource: "mains_water",
+				ColdWaterSource: "mains water",
 				flowrate: 28,
 				type: "MixerShower",
-				WWHRS: null
 			},
 			"electric shower 1 name": {
-				ColdWaterSource: "mains_water",
+				ColdWaterSource: "mains water",
 				rated_power: 20,
 				EnergySupply: "mains elec",
 				type: "InstantElecShower"
@@ -513,7 +502,6 @@ const expectedFlatInput: FhsInputSchema = {
 				pipe_contents: "glycol25",
 				location: "external"
 			}],
-			heat_exchanger_surface_area: null,
 			init_temp: 20.0
 		}
 	},
@@ -545,10 +533,8 @@ const expectedFlatInput: FhsInputSchema = {
 					insulation_thickness_mm: 5,
 					length: 4,
 					reflective: true,
-					duct_perimeter_mm: null,
 				}],
-				Control: "mvhr",
-				SFP: 2.3
+				SFP: 1.5,
 			},
 			"mvhr vent 2 name": {
 				EnergySupply: "mains elec",
@@ -561,8 +547,7 @@ const expectedFlatInput: FhsInputSchema = {
 				mvhr_eff: 0,
 				mvhr_location: "outside",
 				ductwork: [],
-				Control: "mvhr",
-				SFP: 3
+				SFP: 1.5,
 			},
 			"centralised MEV name": {
 				EnergySupply: "mains elec",
@@ -572,11 +557,7 @@ const expectedFlatInput: FhsInputSchema = {
 				vent_type: "Centralised continuous MEV",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
-				Control: "mev",
-				SFP: 2,
-				ductwork: null,
-				mvhr_eff: null,
-				mvhr_location: null
+				SFP: 1.5,
 			}
 		},
 		Vents: {
@@ -635,7 +616,7 @@ const expectedFlatInput: FhsInputSchema = {
 			frac_convective: 1,
 			type: "InstantElecHeater",
 			EnergySupply: "mains elec",
-			Control: "heating",
+			Control: defaultControlName,
 			advanced_start: null,
 			temp_setback: null
 		},
@@ -644,7 +625,7 @@ const expectedFlatInput: FhsInputSchema = {
 			frac_convective: 0.8,
 			type: "InstantElecHeater",
 			EnergySupply: "mains elec",
-			Control: "heating",
+			Control: defaultControlName,
 			advanced_start: null,
 			temp_setback: null
 		}
@@ -881,7 +862,6 @@ const expectedFlatInput: FhsInputSchema = {
 				}
 			},
 			SpaceHeatControl: "livingroom",
-			SpaceCoolSystem: null,
 			SpaceHeatSystem: ["instant elec heater 1", "instant elec heater 2"],
 			ThermalBridging: {
 				"linear thermal bridge (bridge)": {
@@ -920,7 +900,6 @@ const expectedFlatInput: FhsInputSchema = {
 			},
 			area: 16,
 			volume: 550,
-			temp_setpnt_basis: null,
 			temp_setpnt_init: 20.0 // TODO find out what this should be
 		}
 	},

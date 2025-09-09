@@ -49,21 +49,6 @@ export type SchemaBuildingElement = TaggedUnion<"type", {
 	BuildingElementTransparent: SchemaBuildingElementTransparentFhs,
 }>;
 export type SchemaHeatSourceWetDetails = SchemaHeatSourceWetBoiler | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
-// utility function to make shading segment compatible with new upstream type (as nulls are explicit)
-const baseShading: SchemaShadingSegment = {
-	end: null,
-	end360: null,
-	number: null,
-	shading: null,
-	start: null,
-	start360: null
-};
-export function segment(shading: Partial<SchemaShadingSegment>): SchemaShadingSegment {
-	return {
-		...baseShading,
-		...shading,
-	};
-}
 // utility function to make shading into valid external conditions
 const baseExternalConditions: SchemaExternalConditionsInputFhs = {
 	air_temperatures: null,
@@ -81,25 +66,6 @@ export function externalConditions(shading: SchemaShadingSegment[]): SchemaExter
 	return {
 		...baseExternalConditions,
 		shading_segments: shading,
-	};
-}
-// utility function to make valid energy supply object from partial
-const baseEnergySupply: Omit<SchemaEnergySupply, "fuel"> = {
-	ElectricBattery: null,
-	diverter: null,
-	factor: null,
-	is_export_capable: false,
-	priority: null,
-	tariff: null,
-	threshold_charges: null,
-	threshold_prices: null,
-};
-// LegacyEnergySupply allows all fields on energy supply to be missing aside from fuel
-type LegacyEnergySupply = Pick<SchemaEnergySupply, "fuel"> & Partial<Omit<SchemaEnergySupply, "fuel">>;
-export function energySupply(supply: LegacyEnergySupply): SchemaEnergySupply {
-	return {
-		...baseEnergySupply,
-		...supply,
 	};
 }
 // value representing default water heating events for sending
