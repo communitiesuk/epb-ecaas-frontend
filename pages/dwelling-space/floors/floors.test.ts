@@ -454,9 +454,9 @@ describe("floors", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
-						dwellingSpaceGroundFloor: { data: [{ data: ground1 }] },
-						dwellingSpaceInternalFloor: { data: [{ data: internal1 }] },
-						dwellingSpaceExposedFloor: { data: [{ data: exposed1 }] },
+						dwellingSpaceGroundFloor: { data: [{ data: ground1, complete: true }] },
+						dwellingSpaceInternalFloor: { data: [{ data: internal1, complete: true }] },
+						dwellingSpaceExposedFloor: { data: [{ data: exposed1, complete: true }] },
 					},
 				}
 			});
@@ -514,14 +514,12 @@ describe("floors", () => {
 		});
 	
 		it("marks floors as not complete when mark as complete button is clicked then user removes a floor item", async () => {
-
 			const floorsData = await getFloorData("remove");
 			const floors = Object.entries(store.dwellingFabric.dwellingSpaceFloors);
 			
 			for (const [key] of floors) {
 				const typedKey = key as FloorType;
-		
-				await user.click(screen.getByTestId("completeSectionButton"));
+				await user.click(await screen.findByTestId("completeSectionButton"));
 				expect(store.dwellingFabric.dwellingSpaceFloors[typedKey]?.complete).toBe(true);
 					
 				const floorData = floorsData.find(x => x.key === typedKey);
@@ -532,7 +530,7 @@ describe("floors", () => {
 			}
 		});
 
-		it("marks floors as not complete when complete button is clicked after user duplicates a floor item", async () => {
+		it("marks floors as not complete after user duplicates a floor item", async () => {
 
 			const floorsData = await getFloorData("duplicate");
 			const floors = Object.entries(store.dwellingFabric.dwellingSpaceFloors);
@@ -589,7 +587,7 @@ describe("floors", () => {
 			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete).toBe(false);
 		});
 
-		it("marks complete floors as not complete when user edits a ground floor", async () => {
+		it("marks complete floors as not complete when user edits a ground floor without marking it as complete", async () => {
 			await user.click(screen.getByTestId("completeSectionButton"));
 			await renderSuspended(GroundFloorForm, {
 				route: {
@@ -604,8 +602,24 @@ describe("floors", () => {
 			await renderSuspended(Floors);
 			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 		});
-	});
 
-	// 	describe("status indicators", () =>  {
-		
+		it("disables the mark section as complete button when data is incomplete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceGroundFloor: { 
+							data: [{
+								data: ground1,
+								complete: false,
+							}]
+						},
+					}
+				}
+			});
+				
+			await renderSuspended(Floors);
+			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
+		});
+	});		
 });

@@ -59,6 +59,14 @@ function checkIsComplete(){
 	const floors = store.dwellingFabric.dwellingSpaceFloors;
 	return Object.values(floors).every(floor => floor.complete);
 }
+
+function hasIncompleteEntries() {
+	const floorTypes = store.dwellingFabric.dwellingSpaceFloors;
+	
+	return Object.values(floorTypes).some(
+		floors => floors.data.some(
+			floor => !floor.complete));
+}
 </script>
 
 <template>
@@ -113,7 +121,7 @@ function checkIsComplete(){
 		>
 			Return to dwelling space
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 
 	</div>
 </template>
