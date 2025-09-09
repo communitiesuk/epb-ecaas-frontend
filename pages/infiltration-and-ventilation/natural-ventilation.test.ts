@@ -44,17 +44,18 @@ describe("Ventilation", () => {
 		expect(data).toEqual(state);
 	});
 
-	test("data is automatically saved to store", async () => {
+	test("partial form data is automatically saved to store", async () => {
 		await renderSuspended(Ventilation);
 
 		await user.type(screen.getByTestId("ventilationZoneHeight"), "1");
 		await user.type(screen.getByTestId("dwellingEnvelopeArea"), "5");
 		await user.tab();
 
-		const { data } = store.infiltrationAndVentilation.naturalVentilation;
+		const { data, complete } = store.infiltrationAndVentilation.naturalVentilation;
 		
 		expect(data.ventilationZoneHeight).toBe(1);
 		expect(data.dwellingEnvelopeArea).toBe(5);
+		expect(complete).toBe(false);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {

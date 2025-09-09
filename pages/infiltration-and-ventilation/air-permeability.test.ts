@@ -32,11 +32,23 @@ describe("Air permeability", () => {
 		await renderSuspended(AirPermeability);
 
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.infiltrationAndVentilation.airPermeability;
 		
 		expect(data).toEqual(state);
+	});
+
+	test("partial form data is automatically saved to store", async () => {
+		await renderSuspended(AirPermeability);
+
+		await user.type(screen.getByTestId("testPressure"), "1");
+		await user.tab();
+
+		const { data, complete } = store.infiltrationAndVentilation.airPermeability;
+		
+		expect(data.testPressure).toBe(1);
+		expect(complete).toBe(false);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
@@ -57,7 +69,7 @@ describe("Air permeability", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(AirPermeability);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("testPressure_error"))).toBeDefined();
 		expect((await screen.findByTestId("airTightnessTestResult_error"))).toBeDefined();
@@ -66,7 +78,7 @@ describe("Air permeability", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(AirPermeability);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("airPermeabilityErrorSummary"))).toBeDefined();
 	});
@@ -75,7 +87,7 @@ describe("Air permeability", () => {
 		await renderSuspended(AirPermeability);
 	
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { complete } = store.infiltrationAndVentilation.airPermeability;
 		
