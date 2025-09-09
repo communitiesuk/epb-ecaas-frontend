@@ -8,7 +8,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const otherOutletsData = useItemToEdit("outlet", store.domesticHotWater.hotWaterOutlets.otherOutlets.data);
 const model: Ref<OtherHotWaterOutletData | undefined> = ref(otherOutletsData?.data);
-
+const id = otherOutletsData?.data.id || uuidv4()
 const saveForm = (fields: OtherHotWaterOutletData) => {
 	store.$patch((state) => {
 		const { otherOutlets } = state.domesticHotWater.hotWaterOutlets;
@@ -17,7 +17,7 @@ const saveForm = (fields: OtherHotWaterOutletData) => {
 
 		otherOutlets.data[index] = {
 			data: {
-				id: otherOutletsData?.data.id || uuidv4(),
+				id: id,
 				name: fields.name,
 				flowRate: fields.flowRate,
 			},
@@ -33,8 +33,11 @@ autoSaveElementForm({
 	model,
 	storeData: store.domesticHotWater.hotWaterOutlets.otherOutlets,
 	defaultName: "Other outlet",
-	onPatchCreate: (state, newData) => state.domesticHotWater.hotWaterOutlets.otherOutlets.data.push(newData),
+	onPatchCreate: (state, newData) => {
+		newData.data.id ??= id;
+		state.domesticHotWater.hotWaterOutlets.otherOutlets.data.push(newData)},
 	onPatchUpdate: (state, newData, index) => {
+		newData.data.id ??= id;
 		state.domesticHotWater.hotWaterOutlets.otherOutlets.data[index] = newData;
 		state.domesticHotWater.hotWaterOutlets.otherOutlets.complete = false;
 	} });

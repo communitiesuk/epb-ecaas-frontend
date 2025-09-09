@@ -8,6 +8,7 @@ const store = useEcaasStore();
 
 const bathData = useItemToEdit("bath", store.domesticHotWater.hotWaterOutlets.bath.data);
 const model: Ref<BathData | undefined> = ref(bathData?.data);
+const id = bathData?.data.id ?? uuidv4();
 
 const saveForm = (fields: BathData) => {
 
@@ -17,7 +18,7 @@ const saveForm = (fields: BathData) => {
 		const index = getStoreIndex(bath.data);
 		bath.data[index] = {
 			data: {
-				id: bathData?.data.id || uuidv4(),
+				id: id,
 				name: fields.name,
 				size: fields.size,
 				flowRate: fields.flowRate
@@ -35,8 +36,11 @@ autoSaveElementForm({
 	model,
 	storeData: store.domesticHotWater.hotWaterOutlets.bath,
 	defaultName: "Bath",
-	onPatchCreate: (state, newData) => state.domesticHotWater.hotWaterOutlets.bath.data.push(newData),
+	onPatchCreate: (state, newData) => {
+				newData.data.id ??= id,
+				state.domesticHotWater.hotWaterOutlets.bath.data.push(newData)},
 	onPatchUpdate: (state, newData, index) => {
+		newData.data.id ??= id;
 		state.domesticHotWater.hotWaterOutlets.bath.data[index] = newData;
 		state.domesticHotWater.hotWaterOutlets.bath.complete = false;
 	} });
