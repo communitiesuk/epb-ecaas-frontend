@@ -122,7 +122,10 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor,
 	defaultName: "Ground floor",
-	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.push(newData),
+	onPatchCreate: (state, newData) => {
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.push(newData);
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
+	},
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
