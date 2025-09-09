@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getUrl } from "#imports";
 const title = "Exposed floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
@@ -106,9 +107,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

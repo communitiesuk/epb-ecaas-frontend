@@ -476,7 +476,7 @@ describe("floors", () => {
 				}
 			});
 			
-			await user.click(screen.getByRole("button", { name: "Save and continue" }));
+			await user.click(screen.getByTestId("saveAndComplete"));
 			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete).toBe(false);
 		});
 

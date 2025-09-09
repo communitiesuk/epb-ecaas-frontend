@@ -48,7 +48,7 @@ describe("exposed floor", () => {
 		await user.click(screen.getByTestId("kappaValue_50000"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data = [] } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor || {};
 		
@@ -90,7 +90,7 @@ describe("exposed floor", () => {
 				params: { floor: "create" }
 			}
 		});
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("length_error"))).toBeDefined();
@@ -109,7 +109,7 @@ describe("exposed floor", () => {
 				params: { floor: "create" }
 			}
 		});
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("exposedFloorErrorSummary"))).toBeDefined();
 	});
@@ -181,10 +181,10 @@ describe("exposed floor", () => {
 			expect(data[0]!.data.length).toBe(9);
 		});
 		
-		// it("navigates to floors overview page on clicking Save progress", async () => {
-		// 	await renderSuspended(ExposedFloor);
-		// 	await user.click(screen.getByTestId("saveProgress"));
-		// 	expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");
-		// });
+		it("navigates to floors overview page on clicking Save progress", async () => {
+			await renderSuspended(ExposedFloor);
+			await user.click(screen.getByTestId("saveProgress"));
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");
+		});
 	});
 });
