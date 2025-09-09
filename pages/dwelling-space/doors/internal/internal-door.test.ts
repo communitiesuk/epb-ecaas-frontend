@@ -48,8 +48,8 @@ describe("internal door", () => {
 	
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 			await populateValidForm();
-			await user.click(screen.getByRole("button"));
-	
+			await user.click(screen.getByTestId("saveAndComplete"));
+
 			const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
 			
 			expect(dwellingSpaceInternalDoor?.data[0]).toEqual(internalDoor);
@@ -84,8 +84,8 @@ describe("internal door", () => {
 			await renderSuspended(InternalDoor);
 	
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
-			await user.click(screen.getByRole("button"));
-	
+			await user.click(screen.getByTestId("saveAndComplete"));
+
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
 			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
@@ -103,8 +103,8 @@ describe("internal door", () => {
 			await user.type(screen.getByTestId("uValue"), "0.1");
 			await user.type(screen.getByTestId("thermalResistanceOfAdjacentUnheatedSpace"), "0");
 			await user.tab();
-			await user.click(screen.getByRole("button"));
-	
+			await user.click(screen.getByTestId("saveAndComplete"));
+
 			const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
 			
 			expect(dwellingSpaceInternalDoor?.data[0]).toEqual(internalDoorWithUnheatedSpace);
@@ -135,7 +135,7 @@ describe("internal door", () => {
 			await renderSuspended(InternalDoor);
 	
 			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 			expect((await screen.findByTestId("thermalResistanceOfAdjacentUnheatedSpace_error"))).toBeDefined();
@@ -145,7 +145,7 @@ describe("internal door", () => {
 	it("shows type of internal Door required error message when empty form is submitted", async () => {
 		await renderSuspended(InternalDoor);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("typeOfInternalDoor_error"))).toBeDefined();
 	});
@@ -153,7 +153,7 @@ describe("internal door", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(InternalDoor);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("internalDoorErrorSummary"))).toBeDefined();
 	});
@@ -163,7 +163,7 @@ describe("internal door", () => {
 
 		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 		await user.click(screen.getByTestId("pitchOption_custom"));
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
@@ -176,7 +176,7 @@ describe("internal door", () => {
 		await user.click(screen.getByTestId("pitchOption_custom"));
 		await user.type(screen.getByTestId("pitch"), "90");
 		await user.tab();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
 		
@@ -188,7 +188,17 @@ describe("internal door", () => {
 	
 		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/doors");
+	});
+
+	it("navigates to doors page when save progress button is clicked", async () => {
+		await renderSuspended(InternalDoor);
+
+		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+		await user.type(screen.getByTestId("name"), "Test door");
+		await user.click(screen.getByTestId("saveProgress"));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/doors");
 	});

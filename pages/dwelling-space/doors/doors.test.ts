@@ -486,8 +486,8 @@ describe("doors", () => {
 						params: { door: "0" }
 					}
 				});
-			
-				await user.click(screen.getByRole("button", { name: "Save and continue" }));
+
+				await user.click(screen.getByTestId("saveAndComplete"));
 
 				expect(store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete).toBe(false);
 				await renderSuspended(Doors);

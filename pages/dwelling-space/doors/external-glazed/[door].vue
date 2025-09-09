@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { standardPitchOptions } from "#imports";
+import { getUrl, standardPitchOptions } from "#imports";
 
 const title = "External glazed door";
 const store = useEcaasStore();
@@ -150,9 +150,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('dwellingSpaceDoors')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

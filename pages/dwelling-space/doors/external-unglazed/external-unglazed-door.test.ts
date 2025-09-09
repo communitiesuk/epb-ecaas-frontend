@@ -53,11 +53,20 @@ describe("external unglazed door", () => {
 		await user.click(screen.getByTestId("kappaValue_50000"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data = [] } = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor || {};
 		
 		expect(data[0]).toEqual({ ...state, complete: true });
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/doors");
+	});
+
+	it("navigates to doors page when save progress button is clicked", async () => {
+		await renderSuspended(ExternalUnglazedDoor);
+
+		await user.type(screen.getByTestId("name"), "Test door");
+		await user.click(screen.getByTestId("saveProgress"));
+
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/doors");
 	});
 
@@ -94,7 +103,7 @@ describe("external unglazed door", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(ExternalUnglazedDoor);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
@@ -113,7 +122,7 @@ describe("external unglazed door", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(ExternalUnglazedDoor);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("externalUnglazedDoorErrorSummary"))).toBeDefined();
 	});
@@ -122,7 +131,7 @@ describe("external unglazed door", () => {
 		await renderSuspended(ExternalUnglazedDoor);
     
 		await user.click(screen.getByTestId("pitchOption_custom"));
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
     
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
