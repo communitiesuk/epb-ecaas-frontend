@@ -1,17 +1,16 @@
 <script setup lang="ts">
 const title = "Exposed floor";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
 const model: Ref<ExposedFloorData | undefined> = ref(floorData?.data);
 
 const saveForm = (fields: ExposedFloorData) => {	
-
 	store.$patch((state) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
 
-		const floorData: ExposedFloorData = {
+		const floor: ExposedFloorData = {
 			name: fields.name,
 			pitch: 180,
 			orientation: 0,
@@ -25,16 +24,27 @@ const saveForm = (fields: ExposedFloorData) => {
 			massDistributionClass: fields.massDistributionClass
 		};
 
-		const floor = { data: floorData, complete: true };
-
 		if (!dwellingSpaceFloors.dwellingSpaceExposedFloor) {
 			dwellingSpaceFloors.dwellingSpaceExposedFloor = { data: [] };
 		}
-		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
-		saveToList(floor, dwellingSpaceFloors.dwellingSpaceExposedFloor);
+		
+		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceExposedFloor.data);
+		dwellingSpaceFloors.dwellingSpaceExposedFloor.data[index] =  { data: floor, complete: true };
+		dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
 	}); 
 	navigateTo("/dwelling-space/floors");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor,
+	defaultName: "Exposed floor",
+	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
