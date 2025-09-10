@@ -30,7 +30,7 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 			},
 			complete: true
 		};
-		store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.complete = false;
+		dwellingSpaceExternalUnglazedDoor.complete = false;
 	});
 	navigateTo("/dwelling-space/doors");
 };
