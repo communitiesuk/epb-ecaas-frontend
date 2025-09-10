@@ -17,7 +17,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			data: {
 				name: fields.name,
 				orientation: fields.orientation,
-				surfaceArea: fields.surfaceArea,
 				height: fields.height,
 				width: fields.width,
 				uValue: fields.uValue,
@@ -104,12 +103,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FieldsElevationalHeight />
 		<FormKit
-			id="surfaceArea"
+			id="maximumOpenableArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
-			label="Net surface area of element"
-			help="Enter the net area of the building element. The area of all windows should be subtracted before entry."
-			name="surfaceArea"
+			label="Maximum openable area of door"
+			help="TODO - provide an area of the door for now, though we may be able to calculate this from width and height"
+			name="maximumOpenableArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>
 		<FieldsUValue id="uValue" name="uValue" />

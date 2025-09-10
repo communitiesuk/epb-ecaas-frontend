@@ -470,25 +470,27 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map(({ data: x }) => {
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
+		const glazedDoor = {
+			type: "BuildingElementTransparent",
+			pitch: extractPitch(x),
+			orientation360: x.orientation,
+			height: x.height,
+			mid_height: x.midHeight,
+			width: x.width,
+			base_height: x.elevationalHeight,
+			g_value: x.solarTransmittance,
+			u_value: x.uValue,
+			window_part_list: [
+				{ mid_height_air_flow_path: x.midHeightOpenablePart1 }
+			],
+			frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
+			max_window_open_area: x.maximumOpenableArea,
+			free_area_height: x.heightOpenableArea,
+			shading: []
+		} as const satisfies SchemaBuildingElement;
+
 		return {
-			[nameWithSuffix]: {
-				type: "BuildingElementTransparent",
-				pitch: extractPitch(x),
-				orientation360: x.orientation,
-				height: x.height,
-				mid_height: x.midHeight,
-				width: x.width,
-				base_height: x.elevationalHeight,
-				g_value: x.solarTransmittance,
-				u_value: x.uValue,
-				window_part_list: [
-					{ mid_height_air_flow_path: x.midHeightOpenablePart1 }
-				],
-				frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
-				max_window_open_area: x.maximumOpenableArea,
-				free_area_height: x.heightOpenableArea,
-				shading: []
-			}
+			[nameWithSuffix]: glazedDoor,
 		};
 	});
 

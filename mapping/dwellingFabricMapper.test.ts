@@ -526,7 +526,6 @@ describe("dwelling fabric mapper", () => {
 		const externalGlazedDoor: ExternalGlazedDoorData = {
 			name: "External glazed door 1",
 			orientation: 1,
-			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,

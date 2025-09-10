@@ -12,25 +12,25 @@ describe("external glazed door", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
+	const doorForState = {
+		name: "External glazed door 1",
+		orientation: 12,
+		height: 14,
+		width: 48,
+		uValue: 0.45,
+		pitchOption: "90",
+		pitch: 90,
+		solarTransmittance: 0.1,
+		elevationalHeight: 14,
+		midHeight: 11,
+		openingToFrameRatio: 0.2,
+		heightOpenableArea: 14,
+		maximumOpenableArea: 13,
+		midHeightOpenablePart1: 11,
+	} as const satisfies ExternalGlazedDoorData;
+
 	const state: EcaasForm<ExternalGlazedDoorData> = {
-		data:
-				{
-					name: "External glazed door 1",
-					orientation: 12,
-					surfaceArea: 13,
-					height: 14,
-					width: 48,
-					uValue: 0.45,
-					pitchOption: "90",
-					pitch: 90,
-					solarTransmittance: 0.1,
-					elevationalHeight: 14,
-					midHeight: 11,
-					openingToFrameRatio: 0.2,
-					heightOpenableArea: 14,
-					maximumOpenableArea: 13,
-					midHeightOpenablePart1: 11,
-				}
+		data: doorForState
 	};
 
 	afterEach(() => {
@@ -46,9 +46,9 @@ describe("external glazed door", () => {
 
 		await user.type(screen.getByTestId("name"), "External glazed door 1");
 		await user.type(screen.getByTestId("orientation"), "12");
-		await user.type(screen.getByTestId("surfaceArea"), "13");
 		await user.type(screen.getByTestId("height"), "14");
-		await user.type(screen.getByTestId("width"), "48"); 
+		await user.type(screen.getByTestId("width"), "48");
+		await user.type(screen.getByTestId("maximumOpenableArea"), "13");
 		await user.type(screen.getByTestId("uValue"), "0.45");
 		await user.click(screen.getByTestId("pitchOption_90"));
 		await user.type(screen.getByTestId("solarTransmittance"), "0.1");
@@ -93,7 +93,6 @@ describe("external glazed door", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External glazed door 1");
 		expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("12");
-		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("13");
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("14");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("48");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.45");
@@ -110,7 +109,6 @@ describe("external glazed door", () => {
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
-		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("width_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
@@ -151,7 +149,6 @@ describe("external glazed door", () => {
 			const actualDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[0]!;
 			expect(actualDoor.data.name).toBe("New door");
 			expect(actualDoor.data.height).toBeUndefined();
-			expect(actualDoor.data.surfaceArea).toBeUndefined();
 		});
 
 		it("creates a new door automatically with default name after other data is entered", async () => {

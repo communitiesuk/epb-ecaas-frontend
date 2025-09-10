@@ -1693,7 +1693,6 @@ describe("FHS input mapper", () => {
 						data:
 								{
 									name: "external glazed door",
-									surfaceArea: 3,
 									height: 3,
 									width: 1,
 									uValue: 0.8,

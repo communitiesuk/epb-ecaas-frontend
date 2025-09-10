@@ -333,7 +333,6 @@ const fourPartFields = { ...threePartFields, midHeightOpenablePart4: z.number().
 
 const externalGlazedDoorDataZod = named.extend({
 	orientation,
-	surfaceArea: z.number().min(0.01).max(10000),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	uValue,

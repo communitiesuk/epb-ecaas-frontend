@@ -76,7 +76,6 @@ describe("doors", () => {
 		data: {
 			name: "externalGlazed1 name",
 			orientation: 1,
-			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,
@@ -97,7 +96,6 @@ describe("doors", () => {
 				{
 					name: "externalGlazed2 name",
 					orientation: 1,
-					surfaceArea: 1,
 					height: 1,
 					width: 1,
 					uValue: 1,
@@ -118,7 +116,6 @@ describe("doors", () => {
 				{
 					name: "externalGlazed3 name",
 					orientation: 1,
-					surfaceArea: 1,
 					height: 1,
 					width: 1,
 					uValue: 1,
@@ -519,7 +516,7 @@ describe("doors", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data: [{ data: { surfaceArea: 2 }, complete: false }]
+							data: [{ data: { height: 2 }, complete: false }]
 						},
 					}
 				}

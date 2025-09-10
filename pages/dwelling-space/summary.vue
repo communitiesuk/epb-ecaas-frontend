@@ -287,7 +287,6 @@ const glazedDoorSummary: SummarySection = {
 			"Height": `${x.height} ${metre.suffix}`,
 			"Width": `${x.width} ${metre.suffix}`,
 			"Elevational height of building element at its base": `${x.elevationalHeight} ${metre.suffix}`,
-			"Net surface area": `${x.surfaceArea} ${metresSquare.suffix}`,
 			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
 			"Transmittance of solar energy": x.solarTransmittance,
 			"Mid height": `${x.midHeight} ${metre.suffix}`,
