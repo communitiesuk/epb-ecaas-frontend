@@ -88,7 +88,7 @@ const heatPumpSummary: SummarySection = {
 	label: "Heat pump",
 	data: heatPumpData.map(d => {
 		return {
-			"Name": d.name
+			"Name": d.data.name
 		};
 	}),
 	editUrl: getUrl("waterHeating")

@@ -549,7 +549,7 @@ export type WaterHeating = AssertFormKeysArePageIds<{
 	immersionHeater: EcaasForm<ImmersionHeaterData[]>;
 	solarThermal: EcaasForm<SolarThermalData[]>;
 	pointOfUse: EcaasForm<PointOfUseData[]>;
-	heatPump: EcaasForm<HotWaterHeatPumpData[]>;
+	heatPump: EcaasForm<EcaasForm<HotWaterHeatPumpData>[]>;
 	combiBoiler: EcaasForm<CombiBoilerData[]>;
 	heatBattery: EcaasForm<WaterHeatingHeatBatteryData[]>;
 	smartHotWaterTank: EcaasForm<SmartHotWaterTankData[]>;

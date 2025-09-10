@@ -1,24 +1,43 @@
 <script setup lang="ts">
+import { getUrl } from "#imports";
+
 const title = "Heat pump (hot water only)";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { getStoreIndex, autoSaveElementForm } = useForm();
 
 const heatPumpData = useItemToEdit("hotWaterHeatPump", store.domesticHotWater.waterHeating.heatPump.data);
-const model: Ref<HotWaterHeatPumpData> = ref(heatPumpData!);
+const model: Ref<HotWaterHeatPumpData> = ref(heatPumpData!.data);
 
 const saveForm = (fields: HotWaterHeatPumpData) => {
 	store.$patch((state) => {
 		const { heatPump } = state.domesticHotWater.waterHeating;
+		const index = getStoreIndex(heatPump.data);
 
 		const heatPumpItem: HotWaterHeatPumpData = {
 			name: fields.name
 		};
+
+		heatPump.data[index] = {
+			data: heatPumpItem,
+			complete: true
+		};
+
 		heatPump.complete = false;
-		saveToList(heatPumpItem, heatPump);
 	});
 
 	navigateTo("/domestic-hot-water/water-heating");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.domesticHotWater.waterHeating.heatPump,
+	defaultName: "Heat pump",
+	onPatchCreate: (state, newData) => state.domesticHotWater.waterHeating.heatPump.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.domesticHotWater.waterHeating.heatPump.data[index] = newData;
+		state.domesticHotWater.waterHeating.heatPump.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -45,6 +64,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('hotWaterheatPump')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
