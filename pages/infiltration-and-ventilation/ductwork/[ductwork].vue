@@ -10,9 +10,9 @@ const { getStoreIndex, autoSaveElementForm } = useForm();
 const ductwork = useItemToEdit(
 	"ductwork",
 	store.infiltrationAndVentilation.ductwork.data
-);
+)!;
 
-const model: Ref<DuctworkData> = ref(ductwork?.data!);
+const model: Ref<DuctworkData> = ref(ductwork.data);
 store.infiltrationAndVentilation.ductwork.complete = false;
 
 const ductworkCrossSectionalShapeOptions: Record<DuctShape, SnakeToSentenceCase<DuctShape>> = {
