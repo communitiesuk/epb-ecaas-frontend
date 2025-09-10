@@ -170,14 +170,24 @@ describe("Partially saving data", () => {
 
 
 	test("default name is used if name is added then deleted", async () => {
+		store.$patch({
+			domesticHotWater: {
+				hotWaterOutlets: {
+					mixedShower: {
+						data: [mixerShower]
+					}
+				}
+			}
+		});
+
 		await renderSuspended(MixerShower, {
 			route: {
-				params: { shower: "create" },
-			},
+				params: { "shower": "0" }
+			}
 		});
+
 		await user.type(screen.getByTestId("name"), "Mixer shower 1");
 		await user.clear(screen.getByTestId("name"));
-		await user.tab();
 		await user.click(screen.getByRole("button", { name: "Save progress" }));
 
 		const { data } = store.domesticHotWater.hotWaterOutlets.mixedShower;
