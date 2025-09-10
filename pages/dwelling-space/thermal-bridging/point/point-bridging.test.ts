@@ -29,7 +29,7 @@ describe("point thermal bridges", () => {
 		await user.tab();
 	};
 	
-	test("data is saved to store state when form is valid", async () => {
+	it("data is saved to store state when form is valid", async () => {
 		await renderSuspended(PointBridging, {
 			route: {
 				params: { point: "create" },
@@ -43,7 +43,7 @@ describe("point thermal bridges", () => {
 		expect(data[0]).toEqual({ ...state, complete: true });
 	});
 
-	test("form is prepopulated when data exists in state", async () => {
+	it("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceThermalBridging: {

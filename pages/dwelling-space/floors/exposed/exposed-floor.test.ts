@@ -181,7 +181,7 @@ describe("exposed floor", () => {
 			expect(data[0]!.data.length).toBe(9);
 		});
 		
-		it("navigates to floors overview page on clicking Save progress", async () => {
+		test("navigates to floors overview page on clicking Save progress", async () => {
 			await renderSuspended(ExposedFloor);
 			await user.click(screen.getByTestId("saveProgress"));
 			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");

@@ -99,7 +99,7 @@ describe("wall to unheated space", () => {
 	});
 
 
-	it("requires pitch when custom pitch option is selected", async () => {
+	test("requires pitch when custom pitch option is selected", async () => {
 		await renderSuspended(WallToUnheatedSpace);
 				
 		await user.click(screen.getByTestId("pitchOption_custom"));

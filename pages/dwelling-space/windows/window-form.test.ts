@@ -165,7 +165,7 @@ describe ("window", () => {
 		expect((await screen.findByTestId("windowErrorSummary"))).toBeDefined();
 	});
 
-	it("requires pitch when custom pitch option is selected", async () => {
+	test("requires pitch when custom pitch option is selected", async () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("pitchOption_custom"));
@@ -174,7 +174,7 @@ describe ("window", () => {
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
-	it("requires further data when four openable parts option is selected", async () => {
+	test("requires further data when four openable parts option is selected", async () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("numberOpenableParts_4"));
@@ -190,7 +190,7 @@ describe ("window", () => {
 		expect((await screen.findByTestId("midHeightOpenablePart4_error"))).toBeDefined();
 	});
 
-	it("does not require the mid height of more parts than have been selected", async () => {
+	test("does not require the mid height of more parts than have been selected", async () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("numberOpenableParts_1"));
@@ -204,7 +204,7 @@ describe ("window", () => {
 		expect((await screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
 	});
 
-	it("displays curtainsControlObject when the curtains option is selected", async () => {
+	test("displays curtainsControlObject when the curtains option is selected", async () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
@@ -214,7 +214,7 @@ describe ("window", () => {
 		expect((await screen.getByTestId("curtainsControlObject_auto_motorised"))).toBeDefined();
 	});
 
-	it("displays guidance link to window shading guidance page", async () => {
+	test("displays guidance link to window shading guidance page", async () => {
 		await renderSuspended(Window);
 		const guidance = screen.getByRole("link", { name : "Guidance on window shading (opens in another window)" });
 		expect(guidance).toBeDefined();

@@ -78,7 +78,7 @@ describe("boiler", () => {
 		expect((await screen.findByTestId("boilerErrorSummary"))).toBeDefined();
 	});
 
-	it("navigates to heat generation page when valid form is completed", async () => {
+	test("navigates to heat generation page when valid form is completed", async () => {
 		await renderSuspended(Boiler);
 	
 		await populateValidForm();

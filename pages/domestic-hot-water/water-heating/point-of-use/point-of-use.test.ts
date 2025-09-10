@@ -80,7 +80,7 @@ describe("point of use", () => {
 		expect((await screen.findByTestId("pointOfUseErrorSummary"))).toBeDefined();
 	});
 
-	it("navigates to water heating page when valid form is completed", async () => {
+	test("navigates to water heating page when valid form is completed", async () => {
 		await renderSuspended(PointOfUse);
 
 		await populateValidForm();

@@ -78,7 +78,7 @@ describe("heatInterfaceUnit", () => {
 		expect((await screen.findByTestId("heatInterfaceUnitErrorSummary"))).toBeDefined();
 	});
 
-	it("navigates to hot water outlets page when valid form is completed", async () => {
+	test("navigates to hot water outlets page when valid form is completed", async () => {
 		await renderSuspended(HeatInterfaceUnit);
 	
 		await populateValidForm();

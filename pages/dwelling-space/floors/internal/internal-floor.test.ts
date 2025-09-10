@@ -141,7 +141,7 @@ describe("internal floor", () => {
 		});
 	});
 
-	it("shows type of internal floor required error message when empty form is submitted", async () => {
+	test("shows type of internal floor required error message when empty form is submitted", async () => {
 		await renderSuspended(InternalFloor);
 
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -157,7 +157,7 @@ describe("internal floor", () => {
 		expect((await screen.findByTestId("internalFloorErrorSummary"))).toBeDefined();
 	});
 
-	it("navigates to floors page when valid form is completed", async () => {
+	test("navigates to floors page when valid form is completed", async () => {
 		await renderSuspended(InternalFloor);
 	
 		await user.click(screen.getByTestId("typeOfInternalFloor_heatedSpace"));
@@ -235,7 +235,7 @@ describe("internal floor", () => {
 			expect(data[0]!.data.typeOfInternalFloor).toBe(AdjacentSpaceType.heatedSpace);
 		});
 	
-		it("navigates to floors overview page on clicking Save progress", async () => {
+		test("navigates to floors overview page on clicking Save progress", async () => {
 			await renderSuspended(InternalFloor);
 			await user.click(screen.getByTestId("saveProgress"));
 			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");

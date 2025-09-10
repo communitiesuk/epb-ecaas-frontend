@@ -84,7 +84,7 @@ describe("immersion heater", () => {
 		expect((await screen.findByTestId("immersionHeaterErrorSummary"))).toBeDefined();
 	});
 
-	it("navigates to water heating page when valid form is completed", async () => {
+	test("navigates to water heating page when valid form is completed", async () => {
 		await renderSuspended(ImmersionHeater);
 	
 		await populateValidForm();

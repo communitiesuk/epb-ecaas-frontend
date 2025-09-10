@@ -112,7 +112,7 @@ describe("external wall", () => {
 		expect((await screen.findByTestId("externalWallErrorSummary"))).toBeDefined();
 	});
 
-	it("requires pitch when custom pitch option is selected", async () => {
+	test("requires pitch when custom pitch option is selected", async () => {
 		await renderSuspended(ExternalWall);
     
 		await user.click(screen.getByTestId("pitchOption_custom"));

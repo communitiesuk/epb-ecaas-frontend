@@ -89,7 +89,7 @@ describe("internal wall", () => {
 		expect((await screen.findByTestId("internalWallErrorSummary"))).toBeDefined();
 	});
 
-	it("requires pitch when custom pitch option is selected", async () => {
+	test("requires pitch when custom pitch option is selected", async () => {
 		await renderSuspended(InternalWall);
 
 		await user.click(screen.getByTestId("pitchOption_custom"));
@@ -98,7 +98,7 @@ describe("internal wall", () => {
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
-	it("saves custom pitch when custom pitch option is selected", async () => {
+	test("saves custom pitch when custom pitch option is selected", async () => {
 		await renderSuspended(InternalWall);
 
 		await populateValidForm();
@@ -112,7 +112,7 @@ describe("internal wall", () => {
 		expect(dwellingSpaceInternalWall?.data[0]?.pitch).toEqual(100);
 	});
 
-	it("navigates to walls page when valid form is completed", async () => {
+	test("navigates to walls page when valid form is completed", async () => {
 		await renderSuspended(InternalWall);
 	
 		await populateValidForm();

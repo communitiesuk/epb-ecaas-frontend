@@ -333,7 +333,7 @@ describe("ground floor", () => {
 			expect(data[0]!.data.surfaceArea).toBe(170);
 		});
 
-		it("navigates to floors overview page on clicking Save progress", async () => {
+		test("navigates to floors overview page on clicking Save progress", async () => {
 			await renderSuspended(GroundFloor);
 			await user.click(screen.getByTestId("saveProgress"));
 			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");

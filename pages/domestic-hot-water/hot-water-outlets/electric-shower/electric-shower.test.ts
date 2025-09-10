@@ -113,7 +113,7 @@ describe("electric shower", () => {
 		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
 	});
 
-	it("navigates to hot water outlets page when valid form is completed", async () => {
+	test("navigates to hot water outlets page when valid form is completed", async () => {
 		await renderSuspended(ElectricShower);
 	
 		await populateValidForm();

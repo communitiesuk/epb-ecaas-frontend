@@ -78,7 +78,7 @@ describe("heatNetwork", () => {
 		expect((await screen.findByTestId("heatNetworkErrorSummary"))).toBeDefined();
 	});
 
-	it("navigates to heat generation page when valid form is completed", async () => {
+	test("navigates to heat generation page when valid form is completed", async () => {
 		await renderSuspended(HeatNetwork);
 	
 		await populateValidForm();
