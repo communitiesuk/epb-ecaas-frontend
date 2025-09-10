@@ -2,7 +2,6 @@ import { objectFromEntries } from "ts-extras";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { energySupply, type SchemaSpaceHeatSystemDetails } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
-import type { SchemaEcoDesignControllerClass } from "~/schema/api-schema.types";
 
 export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply" | "SpaceHeatSystem"> {
 	return {
