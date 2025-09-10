@@ -1,43 +1,75 @@
 <script setup lang="ts">
+import formStatus from "~/constants/formStatus";
+
 const title = "Windows";
 const page = usePage();
 const store = useEcaasStore();
 
-const { data = [] } = store.dwellingFabric.dwellingSpaceWindows;
-
 function handleRemove(index: number) {
-	data.splice(index, 1);
+	const windows = store.dwellingFabric.dwellingSpaceWindows?.data;
+	if(windows){
+		windows.splice(index, 1);
 
-	store.$patch({
-		dwellingFabric: {
-			dwellingSpaceWindows: {
-				data,
-				complete: false
+		
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data:  windows.length ? windows : [],
+					complete: false
+				}
 			}
-		}
-	});
+		});
+	}
 }
 
 function handleDuplicate(index: number) {
-	const window = data[index];
+	const windows = store.dwellingFabric.dwellingSpaceWindows.data;
+	const window = windows?.[index];
+	let name: string;
 
 	if (window) {
-		const duplicates = data.filter(s => s.name.match(duplicateNamePattern(window.name)));
-
-		store.$patch((state) => {
-			state.dwellingFabric.dwellingSpaceWindows.data.push({
-				...window,
-				name: `${window.name} (${duplicates.length})`
-			});
+		const duplicates = windows.filter(w => 
+		{
+			if (isEcaasForm(w) && isEcaasForm(window)) {
+				name = window.data.name;
+				return w.data.name.match(duplicateNamePattern(window.data.name));
+			}
+			return false;
 		});
-		store.dwellingFabric.dwellingSpaceWindows.complete = false;
+		store.$patch((state) => {
+			const newItem = {
+				complete: window.complete,
+				data: {
+					...window.data,
+					name: `${name} (${duplicates.length})`
+				}
+			};
+
+			state.dwellingFabric.dwellingSpaceWindows.data.push(newItem);
+			state.dwellingFabric.dwellingSpaceWindows.complete = false;
+		});
 	}
 }
 
 function handleComplete() {
-	store.dwellingFabric.dwellingSpaceWindows.complete = true;
+	store.$patch({
+		dwellingFabric: {
+			dwellingSpaceWindows: {
+				complete: true
+			}
+		}
+	});
 	navigateTo("/dwelling-space");
+
 }
+
+function hasIncompleteEntries(){
+
+	const windows = store.dwellingFabric.dwellingSpaceWindows;
+	return windows.data.some(
+		window => isEcaasForm(window) ? !window.complete : false);
+}
+
 </script>
 
 <template>
@@ -51,7 +83,10 @@ function handleComplete() {
 		id="windows"
 		title="Window"
 		:form-url="page?.url!"
-		:items="store.dwellingFabric.dwellingSpaceWindows.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceWindows.data.map(x =>  ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
+		:show-status="true"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
@@ -59,6 +94,6 @@ function handleComplete() {
 		<GovButton href="/dwelling-space" secondary>
 			Return to dwelling space
 		</GovButton>
-		<CompleteElement :is-complete="store.dwellingFabric.dwellingSpaceWindows?.complete ?? false" @completed="handleComplete"/>
+		<CompleteElement :is-complete="store.dwellingFabric.dwellingSpaceWindows.complete ?? false" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 	</div>
 </template>

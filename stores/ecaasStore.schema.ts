@@ -85,7 +85,7 @@ export interface DwellingFabric {
 	dwellingSpaceWalls: WallsData;
 	dwellingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
 	dwellingSpaceDoors: DoorsData;
-	dwellingSpaceWindows: EcaasForm<WindowData[]>;
+	dwellingSpaceWindows: EcaasForm<EcaasForm<WindowData>[]>;
 	dwellingSpaceThermalBridging: ThermalBridgingData;
 	dwellingSpaceLighting: EcaasForm<DwellingSpaceLightingData>;
 }
