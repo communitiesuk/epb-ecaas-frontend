@@ -13,21 +13,25 @@ describe("internal door", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const internalDoor: InternalDoorData = {
-		typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-		name: "Internal 1",
-		surfaceArea: 5,
-		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
-		pitchOption: "90",
-		pitch: 90
+	const internalDoor: EcaasForm<InternalDoorData> = {
+		data: {
+			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+			name: "Internal 1",
+			surfaceArea: 5,
+			kappaValue: 50000,
+			massDistributionClass: MassDistributionClass.I,
+			pitchOption: "90",
+			pitch: 90
+		}
 	};
 
-	const internalDoorWithUnheatedSpace: InternalDoorData = {
-		...internalDoor,
-		typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
-		uValue: 0.1,
-		thermalResistanceOfAdjacentUnheatedSpace: 0
+	const internalDoorWithUnheatedSpace: EcaasForm<InternalDoorData> = {
+		data: {
+			...internalDoor.data,
+			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+			uValue: 0.1,
+			thermalResistanceOfAdjacentUnheatedSpace: 0
+		}
 	};
 
 	afterEach(() => {
@@ -50,9 +54,9 @@ describe("internal door", () => {
 			await populateValidForm();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
-			
-			expect(dwellingSpaceInternalDoor?.data[0]).toEqual(internalDoor);
+			const { data } = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor;
+
+			expect(data[0]).toEqual({ ...internalDoor, complete: true });
 		});
 	
 		test("form is prepopulated when data exists in state", async () => {
@@ -105,9 +109,9 @@ describe("internal door", () => {
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+			const { data } = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor;
 			
-			expect(dwellingSpaceInternalDoor?.data[0]).toEqual(internalDoorWithUnheatedSpace);
+			expect(data[0]).toEqual({ ...internalDoorWithUnheatedSpace, complete: true });
 		});
 	
 		test("form is prepopulated when data exists in state", async () => {
@@ -178,9 +182,9 @@ describe("internal door", () => {
 		await user.tab();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors;
+		const actualDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]!;
 		
-		expect(dwellingSpaceInternalDoor?.data[0]?.pitch).toEqual(90);
+		expect(actualDoor.data.pitch).toEqual(90);
 	});
 
 	it("navigates to doors page when valid form is completed", async () => {

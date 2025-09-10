@@ -547,7 +547,7 @@ describe("dwelling fabric mapper", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceDoors: {
-					dwellingSpaceInternalDoor: { data: [internalDoor], complete: true },
+					dwellingSpaceInternalDoor: { data: [{ data: internalDoor }], complete: true },
 					dwellingSpaceExternalGlazedDoor: { data: [{ data: externalGlazedDoor }], complete: true },
 					dwellingSpaceExternalUnglazedDoor: { data: [{ data: externalUnglazedDoor }], complete: true }
 				}

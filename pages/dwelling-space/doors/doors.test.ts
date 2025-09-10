@@ -129,34 +129,40 @@ describe("doors", () => {
 				}
 	};
 	
-	const internal1: InternalDoorData = {
-		typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-		name: "Internal 1",
-		surfaceArea: 5,
-		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
-		pitchOption: "90",
-		pitch: 90
+	const internal1: EcaasForm<InternalDoorData> = {
+		data: {
+			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+			name: "Internal 1",
+			surfaceArea: 5,
+			kappaValue: 100,
+			massDistributionClass: MassDistributionClass.I,
+			pitchOption: "90",
+			pitch: 90
+		}
 	};
 
-	const internal2: InternalDoorData = {
-		typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-		name: "Internal 2",
-		surfaceArea: 5,
-		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
-		pitchOption: "90",
-		pitch: 90
+	const internal2: EcaasForm<InternalDoorData> = {
+		data: {
+			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+			name: "Internal 2",
+			surfaceArea: 5,
+			kappaValue: 100,
+			massDistributionClass: MassDistributionClass.I,
+			pitchOption: "90",
+			pitch: 90
+		}
 	};
 
-	const internal3: InternalDoorData = {
-		typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-		name: "Internal 3",
-		surfaceArea: 5,
-		kappaValue: 100,
-		massDistributionClass: MassDistributionClass.I,
-		pitchOption: "90",
-		pitch: 90
+	const internal3: EcaasForm<InternalDoorData> = {
+		data: {
+			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+			name: "Internal 3",
+			surfaceArea: 5,
+			kappaValue: 100,
+			massDistributionClass: MassDistributionClass.I,
+			pitchOption: "90",
+			pitch: 90
+		}
 	};
 	
 	describe("external unglazed doors", () => {

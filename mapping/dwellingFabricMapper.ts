@@ -356,7 +356,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const doorSuffix = "door";
 
-	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map(x => {
+	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map(({ data: x }) => {
 		const commonFields = {
 			pitch: extractPitch(x),
 			area: x.surfaceArea,

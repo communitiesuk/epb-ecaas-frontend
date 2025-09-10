@@ -300,7 +300,7 @@ const glazedDoorSummary: SummarySection = {
 const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
 	label: "Internal door",
-	data: internalDoorData?.map(x => {
+	data: internalDoorData?.map(({ data: x }) => {
 		return {
 			"Type": displayAdjacentSpaceType(x.typeOfInternalDoor, "Internal door"),
 			"Name": x.name,

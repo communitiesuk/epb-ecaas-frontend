@@ -202,13 +202,15 @@ const doorsData: DoorsData = {
 	},
 	dwellingSpaceInternalDoor: {
 		data: [{
-			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-			name: "Internal 1",
-			surfaceArea: 5,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
-			pitchOption: "90",
-			pitch: 90
+			data: {
+				typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+				name: "Internal 1",
+				surfaceArea: 5,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+				pitchOption: "90",
+				pitch: 90
+			}
 		}]
 	}
 };

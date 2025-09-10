@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { saveToList } = useForm();
 
 const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data);
-const model: Ref<InternalDoorData> = ref(doorData!);
+const model: Ref<InternalDoorData | undefined> = ref(doorData?.data);
 
 const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 
@@ -23,23 +23,23 @@ const saveForm = (fields: InternalDoorData) => {
 			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 		};
 
-		let door: InternalDoorData;
+		let doorData: InternalDoorData;
 		if (fields.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace) {
-			door = {
+			doorData = {
 				...commonFields,
 				typeOfInternalDoor: fields.typeOfInternalDoor,
 				uValue: fields.uValue,
 				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 			};
 		} else if (fields.typeOfInternalDoor === AdjacentSpaceType.heatedSpace) {
-			door = {
+			doorData = {
 				...commonFields,
 				typeOfInternalDoor: fields.typeOfInternalDoor,
 			};
 		} else {
 			throw new Error("Invalid type of ceiling");
 		}
-
+		const door: EcaasForm<InternalDoorData> = { data: doorData, complete: true };
 		saveToList(door, dwellingSpaceInternalDoor);
 	});
 	store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
@@ -74,7 +74,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfInternalDoor"
 			validation="required"
 		/>
-		<template v-if="!!model.typeOfInternalDoor">
+		<template v-if="!!model?.typeOfInternalDoor">
 			<FormKit
 				id="name"
 				type="govInputText"
@@ -84,7 +84,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required"
 			/>
 			<FieldsPitch
-				:pitch-option="model.pitchOption"
+				:pitch-option="model?.pitchOption"
 				:options="standardPitchOptions()"
 			/>
 			<FormKit
@@ -105,7 +105,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
 		<FormKit
-			v-if="model.typeOfInternalDoor === 'unheatedSpace'"
+			v-if="model?.typeOfInternalDoor === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"

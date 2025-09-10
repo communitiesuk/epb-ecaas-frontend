@@ -1688,24 +1688,28 @@ describe("FHS input mapper", () => {
 				dwellingSpaceInternalDoor: {
 					...baseForm,
 					data: [{
-						typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-						name: "bathroom door",
-						surfaceArea: 1.4,
-						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.IE,
-						pitchOption: "90",
-						pitch: 90,
+						data: {
+							typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+							name: "bathroom door",
+							surfaceArea: 1.4,
+							kappaValue: 50000,
+							massDistributionClass: MassDistributionClass.IE,
+							pitchOption: "90",
+							pitch: 90,
+						}
 					},
 					{
-						typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
-						name: "door to garage",
-						surfaceArea: 1.4,
-						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.IE,
-						pitchOption: "90",
-						pitch: 90,
-						uValue: 1,
-						thermalResistanceOfAdjacentUnheatedSpace: 2.5
+						data: {
+							typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+							name: "door to garage",
+							surfaceArea: 1.4,
+							kappaValue: 50000,
+							massDistributionClass: MassDistributionClass.IE,
+							pitchOption: "90",
+							pitch: 90,
+							uValue: 1,
+							thermalResistanceOfAdjacentUnheatedSpace: 2.5
+						}
 					}]
 				}
 			},

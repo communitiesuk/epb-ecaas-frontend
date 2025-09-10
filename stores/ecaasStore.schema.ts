@@ -299,7 +299,7 @@ export type RoofData = z.infer<typeof roofDataZod>;
 export type DoorsData = AssertFormKeysArePageIds<{
 	dwellingSpaceExternalUnglazedDoor: EcaasForm<EcaasForm<ExternalUnglazedDoorData>[]>;
 	dwellingSpaceExternalGlazedDoor: EcaasForm<EcaasForm<ExternalGlazedDoorData>[]>;
-	dwellingSpaceInternalDoor: EcaasForm<InternalDoorData[]>;
+	dwellingSpaceInternalDoor: EcaasForm<EcaasForm<InternalDoorData>[]>;
 }>;
 
 const externalUnglazedDoorDataZod = named.extend({
