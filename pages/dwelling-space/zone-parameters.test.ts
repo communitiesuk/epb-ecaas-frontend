@@ -98,7 +98,7 @@ describe("zone parameters", () => {
 
 		expect((await screen.findByTestId("zoneParametersErrorSummary"))).toBeDefined();
 	});
-	test("save progress button navigates user to the pipework overview page", async () => {
+	test("save progress button navigates user to the dwelling fabric overview page", async () => {
 		await renderSuspended(ZoneParameters);
 
 		await user.type(screen.getByTestId("area"), "10");

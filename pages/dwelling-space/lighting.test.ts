@@ -70,7 +70,7 @@ describe("lighting", () => {
 		expect((await screen.findByTestId("lightingErrorSummary"))).toBeDefined();
 	});
 
-	test("save progress button navigates user to the pipework overview page", async () => {
+	test("save progress button navigates user to the dwelling fabric overview page", async () => {
 		await renderSuspended(Lighting);
 	
 		await user.type(screen.getByTestId("numberOfLEDBulbs"), "10");
