@@ -45,7 +45,7 @@ const externalFactorsSummary: SummarySection = {
 	id: "externalFactors",
 	label: "External factors",
 	data: {
-		"Altitude": `${externalFactors.altitude} ${metre.suffix}`,
+		"Altitude": externalFactors.altitude ? `${externalFactors.altitude} ${metre.suffix}` : undefined,
 		"Type of exposure": externalFactors.typeOfExposure,
 		"Terrain type": externalFactors.terrainType ? displayCamelToSentenceCase(externalFactors.terrainType) : undefined,
 		"Noise nuisance": displayBoolean(externalFactors.noiseNuisance)
