@@ -378,9 +378,9 @@ describe("doors", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
-						dwellingSpaceExternalUnglazedDoor: { data: [externalUnglazed1] },
-						dwellingSpaceExternalGlazedDoor: { data: [externalGlazed1] },
-						dwellingSpaceInternalDoor: { data: [internal1] },
+						dwellingSpaceExternalUnglazedDoor: { data: [{ ...externalUnglazed1, complete: true }] },
+						dwellingSpaceExternalGlazedDoor: { data: [{ ...externalGlazed1, complete: true }] },
+						dwellingSpaceInternalDoor: { data: [{ ...internal1, complete: true }] },
 					},
 				}
 			});
@@ -507,6 +507,22 @@ describe("doors", () => {
 				await renderSuspended(Doors);
 				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			}
+		});
+
+		it("disables the mark section as complete button when item is incomplete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: { surfaceArea: 2 }, complete: false }]
+						},
+					}
+				}
+			});
+
+			await renderSuspended(Doors);
+			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 		});
 	});
 });
