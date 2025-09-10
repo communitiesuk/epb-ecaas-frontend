@@ -3,7 +3,7 @@ import { standardPitchOptions, getUrl } from "#imports";
 
 const title = "Internal door";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data);
 const model: Ref<InternalDoorData | undefined> = ref(doorData?.data);
@@ -13,6 +13,7 @@ const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 const saveForm = (fields: InternalDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceInternalDoor } = state.dwellingFabric.dwellingSpaceDoors;
+		const index = getStoreIndex(dwellingSpaceInternalDoor.data);
 
 		const commonFields = {
 			name: fields.name,
@@ -23,28 +24,48 @@ const saveForm = (fields: InternalDoorData) => {
 			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 		};
 
-		let doorData: InternalDoorData;
+		let door: EcaasForm<InternalDoorData>;
+
 		if (fields.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace) {
-			doorData = {
-				...commonFields,
-				typeOfInternalDoor: fields.typeOfInternalDoor,
-				uValue: fields.uValue,
-				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
+			door = {
+				data: {
+					...commonFields,
+					typeOfInternalDoor: fields.typeOfInternalDoor,
+					uValue: fields.uValue,
+					thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
+				},
+				complete: true
 			};
 		} else if (fields.typeOfInternalDoor === AdjacentSpaceType.heatedSpace) {
-			doorData = {
-				...commonFields,
-				typeOfInternalDoor: fields.typeOfInternalDoor,
+			door = {
+				data: {
+					...commonFields,
+					typeOfInternalDoor: fields.typeOfInternalDoor,
+				},
+				complete: true
 			};
 		} else {
-			throw new Error("Invalid type of ceiling");
+			throw new Error("Invalid type of door");
 		}
-		const door: EcaasForm<InternalDoorData> = { data: doorData, complete: true };
-		saveToList(door, dwellingSpaceInternalDoor);
+		dwellingSpaceInternalDoor.data[index] = door;
+		store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
 	});
-	store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
 	navigateTo("/dwelling-space/doors");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor,
+	defaultName: "Internal door",
+	onPatchCreate: (state, newData) => {
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data.push(newData);
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
+	},
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
