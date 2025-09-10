@@ -145,9 +145,8 @@ describe("water heating (hot water cylinder)", () => {
 		await renderSuspended(WaterHeating);
 		await populateValidForm();
 
-		const saveProcess = screen.getByRole("button", { name: "Save progress" });
-
-		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water");
+		await user.click(screen.getByTestId("saveProgress"));
+		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
 	});
 });
 
@@ -203,7 +202,7 @@ describe("Partially saving data", () => {
 		await user.type(screen.getByTestId("name"), cylinder.name);
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		await user.click(screen.getByTestId("saveProgress"));
 
 		const { data } = store.domesticHotWater.waterHeating.hotWaterCylinder;
 	
@@ -215,7 +214,7 @@ describe("Partially saving data", () => {
 		await renderSuspended(WaterHeating);
 	
 		await user.type(screen.getByTestId("name"), " ");
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		await user.click(screen.getByTestId("saveProgress"));
 	
 		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.name).toBe("Hot water cylinder");
 	

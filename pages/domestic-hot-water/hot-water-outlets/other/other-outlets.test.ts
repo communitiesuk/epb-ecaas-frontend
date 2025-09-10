@@ -110,9 +110,9 @@ describe("other outlets", () => {
 		});
 	
 		await populateValidForm();
-		const saveProcess = screen.getByRole("button", { name: "Save progress" });
+		await user.click(screen.getByTestId("saveProgress"));
 	
-		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets");
+		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
 	});
 		
 	it("navigates to hot water outlets page when valid form is completed", async () => {
@@ -167,7 +167,7 @@ describe("Partially saving data", () => {
 		await user.type(screen.getByTestId("name"), "Other outlet 1");
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		await user.click(screen.getByTestId("saveProgress"));
 
 		const { data } = store.domesticHotWater.hotWaterOutlets.otherOutlets;
 	
@@ -183,7 +183,7 @@ describe("Partially saving data", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), " ");
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		await user.click(screen.getByTestId("saveProgress"));
 
 		
 		expect(store.domesticHotWater.hotWaterOutlets.otherOutlets.data[0]!.data.name).toBe("Other outlet");

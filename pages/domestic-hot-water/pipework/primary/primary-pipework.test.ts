@@ -197,9 +197,8 @@ describe("Primary pipework form", () => {
 			},
 		});
 		await populateValidForm();
-		const saveProcess = screen.getByRole("button", { name: "Save progress" });
-
-		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/pipework");
+		await user.click(screen.getByTestId("saveProgress"));
+		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/pipework");
 	});
 });
 
@@ -245,7 +244,7 @@ describe("partially saving data", () => {
 		await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink");
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		await user.click(screen.getByTestId("saveProgress"));
 
 		const { data } = store.domesticHotWater.pipework.primaryPipework;
 	
@@ -261,7 +260,7 @@ describe("partially saving data", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), " ");
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		await user.click(screen.getByTestId("saveProgress"));
 
 		
 		expect(store.domesticHotWater.pipework.primaryPipework.data[0]!.data.name).toBe("Primary pipework");

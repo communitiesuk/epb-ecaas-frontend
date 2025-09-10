@@ -220,6 +220,15 @@ describe ("window", () => {
 		expect(guidance).toBeDefined();
 		expect(guidance.getAttribute("href")).toBe("/guidance/window-shading-guidance");
 	});
+
+	test("save progress button navigates user to the dwelling fabric overview page", async () => {
+		await renderSuspended(Window);
+		
+		await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
+		await user.click(screen.getByTestId("saveProgress"));
+					
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/windows");
+	});
 });
 
 describe("Partially saving data", () => {
