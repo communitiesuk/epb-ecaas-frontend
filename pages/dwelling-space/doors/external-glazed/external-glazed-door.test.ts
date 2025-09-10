@@ -26,7 +26,6 @@ describe("external glazed door", () => {
 					solarTransmittance: 0.1,
 					elevationalHeight: 14,
 					midHeight: 11,
-					numberOpenableParts: "1",
 					openingToFrameRatio: 0.2,
 					heightOpenableArea: 14,
 					maximumOpenableArea: 13,

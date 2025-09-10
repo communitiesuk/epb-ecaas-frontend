@@ -194,8 +194,10 @@ const doorsData: DoorsData = {
 				solarTransmittance: 0.1,
 				elevationalHeight: 1,
 				midHeight: 1,
-				numberOpenableParts: "0",
-				openingToFrameRatio: 0.2
+				openingToFrameRatio: 0.2,
+				maximumOpenableArea: 1,
+				midHeightOpenablePart1: 1,
+				heightOpenableArea: 1
 			}
 		}]
 	},

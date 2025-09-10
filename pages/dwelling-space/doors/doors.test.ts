@@ -85,8 +85,10 @@ describe("doors", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
-			numberOpenableParts: "0",
 			openingToFrameRatio: 0.2,
+			midHeightOpenablePart1: 2,
+			heightOpenableArea: 1,
+			maximumOpenableArea: 1,
 		}
 	};
 
@@ -104,8 +106,10 @@ describe("doors", () => {
 					solarTransmittance: 0.1,
 					elevationalHeight: 1,
 					midHeight: 1,
-					numberOpenableParts: "0",
-					openingToFrameRatio: 0.2
+					openingToFrameRatio: 0.2,
+					midHeightOpenablePart1: 2,
+					heightOpenableArea: 1,
+					maximumOpenableArea: 1,
 				}
 	};
 
@@ -123,8 +127,10 @@ describe("doors", () => {
 					solarTransmittance: 0.1,
 					elevationalHeight: 1,
 					midHeight: 1,
-					numberOpenableParts: "0",
-					openingToFrameRatio: 0.2
+					openingToFrameRatio: 0.2,
+					midHeightOpenablePart1: 2,
+					heightOpenableArea: 1,
+					maximumOpenableArea: 1,
 				}
 	};
 	

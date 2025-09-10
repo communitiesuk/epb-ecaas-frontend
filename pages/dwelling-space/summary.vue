@@ -291,7 +291,7 @@ const glazedDoorSummary: SummarySection = {
 			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
 			"Transmittance of solar energy": x.solarTransmittance,
 			"Mid height": `${x.midHeight} ${metre.suffix}`,
-			"Opening to frame ratio": x.numberOpenableParts !== "0" ? x.openingToFrameRatio : undefined
+			"Opening to frame ratio": x.openingToFrameRatio
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceDoors")

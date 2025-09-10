@@ -772,11 +772,11 @@ const expectedFlatInput: FhsInputSchema = {
 				},
 				"external glazed door (door)": {
 					base_height: 0.2,
-					frame_area_fraction: 0,
-					free_area_height: 0,
+					frame_area_fraction: 0.3,
+					free_area_height: 3,
 					g_value: 0.5,
 					height: 3,
-					max_window_open_area: 0,
+					max_window_open_area: 3,
 					mid_height: 1.5,
 					orientation360: 20,
 					pitch: 90,
@@ -784,7 +784,9 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementTransparent",
 					u_value: 0.8,
 					width: 1,
-					window_part_list: []
+					window_part_list: [{
+						mid_height_air_flow_path: 2,
+					}]
 				},
 				"wall to garage (wall)": {
 					area: 20,
@@ -1702,7 +1704,9 @@ describe("FHS input mapper", () => {
 									elevationalHeight: 0.2,
 									midHeight: 1.5,
 									openingToFrameRatio: 0.7,
-									numberOpenableParts: "0",
+									maximumOpenableArea: 3,
+									heightOpenableArea: 3,
+									midHeightOpenablePart1: 2,
 								}
 					}]
 				},

@@ -535,7 +535,6 @@ describe("dwelling fabric mapper", () => {
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
-			numberOpenableParts: "1",
 			openingToFrameRatio: 0.3,
 			midHeightOpenablePart1: 1,
 			maximumOpenableArea: 1,

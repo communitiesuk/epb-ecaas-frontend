@@ -330,7 +330,8 @@ const onePartFields = { ...commonOpenablePartsFields, midHeightOpenablePart1: z.
 const twoPartFields = { ...onePartFields, midHeightOpenablePart2: z.number().min(0).max(100) };
 const threePartFields = { ...twoPartFields, midHeightOpenablePart3: z.number().min(0).max(100) };
 const fourPartFields = { ...threePartFields, midHeightOpenablePart4: z.number().min(0).max(100) };
-const baseExternalGlazedDoorData = named.extend({
+
+const externalGlazedDoorDataZod = named.extend({
 	orientation,
 	surfaceArea: z.number().min(0.01).max(10000),
 	height: z.number().min(0.001).max(50),
@@ -342,31 +343,8 @@ const baseExternalGlazedDoorData = named.extend({
 	elevationalHeight: z.number().min(0).max(500),
 	midHeight: z.number().min(0).max(100),
 	openingToFrameRatio: fraction,
+	...onePartFields,
 });
-const externalGlazedDoorDataZod = z.discriminatedUnion(
-	"numberOpenableParts",
-	[
-		baseExternalGlazedDoorData.extend({
-			numberOpenableParts: z.literal("0"),
-		}),
-		baseExternalGlazedDoorData.extend({
-			numberOpenableParts: z.literal("1"),
-			...onePartFields,
-		}),
-		baseExternalGlazedDoorData.extend({
-			numberOpenableParts: z.literal("2"),
-			...twoPartFields,
-		}),
-		baseExternalGlazedDoorData.extend({
-			numberOpenableParts: z.literal("3"),
-			...threePartFields,
-		}),
-		baseExternalGlazedDoorData.extend({
-			numberOpenableParts: z.literal("4"),
-			...fourPartFields,
-		}),
-	]
-);
 
 export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorDataZod>;
 

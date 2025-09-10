@@ -470,40 +470,6 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map(({ data: x }) => {
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
-		function mapWindowPartList(data: ExternalGlazedDoorData): SchemaWindowPart[] {
-			if (data.numberOpenableParts === "1") {
-				return [
-					{ mid_height_air_flow_path: data.midHeightOpenablePart1 }
-				];
-			}
-
-			if (data.numberOpenableParts === "2") {
-				return [
-					{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-					{ mid_height_air_flow_path: data.midHeightOpenablePart2 }
-				];
-			}
-
-			if (data.numberOpenableParts === "3") {
-				return [
-					{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-					{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-					{ mid_height_air_flow_path: data.midHeightOpenablePart3 }
-				];
-			}
-
-			if (data.numberOpenableParts === "4") {
-				return [
-					{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-					{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-					{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
-					{ mid_height_air_flow_path: data.midHeightOpenablePart4 }
-				];
-			}
-
-			return [];
-		}
-
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementTransparent",
@@ -513,13 +479,14 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				mid_height: x.midHeight,
 				width: x.width,
 				base_height: x.elevationalHeight,
-				area: x.surfaceArea,
 				g_value: x.solarTransmittance,
 				u_value: x.uValue,
-				window_part_list: mapWindowPartList(x),
-				frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
-				max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
-				free_area_height: x.numberOpenableParts === "0" ? 0 : x.heightOpenableArea,
+				window_part_list: [
+					{ mid_height_air_flow_path: x.midHeightOpenablePart1 }
+				],
+				frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
+				max_window_open_area: x.maximumOpenableArea,
+				free_area_height: x.heightOpenableArea,
 				shading: []
 			}
 		};
