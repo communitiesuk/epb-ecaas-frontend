@@ -112,7 +112,7 @@ describe("hot water cylinder", () => {
 		expect((await screen.findByTestId("hotWaterCylinderErrorSummary"))).toBeDefined();
 	});
 
-test("navigates to hot water outlets page when valid form is completed", async () => {
+	test("navigates to hot water outlets page when valid form is completed", async () => {
 		addStoreData();
 		await renderSuspended(HotWaterCylinder);
 
