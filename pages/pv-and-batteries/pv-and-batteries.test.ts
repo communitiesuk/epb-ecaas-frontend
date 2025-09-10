@@ -347,7 +347,7 @@ describe("pv systems and electric battery", () => {
 			await renderSuspended(items.form, {
 				route: { params: { [param]: "0" } },
 			});
-			await user.click(screen.getByRole("button", { name: "Save and mark as complete" }));
+			await(user.click(screen.getByTestId("saveAndComplete")));
 			expect(store.pvAndBatteries.electricBattery.complete).toBe(false);
 
 			await renderSuspended(PvAndBatteries);

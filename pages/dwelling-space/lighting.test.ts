@@ -28,7 +28,7 @@ describe("lighting", () => {
 		await user.type(screen.getByTestId("numberOfLEDBulbs"), "9");
 		await user.type(screen.getByTestId("numberOfIncandescentBulbs"), "0");
 		await user.tab();
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		const { data, complete } = store.dwellingFabric.dwellingSpaceLighting;
@@ -54,8 +54,7 @@ describe("lighting", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(Lighting);
 
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
-
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("numberOfLEDBulbs_error"))).toBeDefined();
 		expect((await screen.findByTestId("numberOfIncandescentBulbs_error"))).toBeDefined();
@@ -64,7 +63,7 @@ describe("lighting", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Lighting);
 
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect((await screen.findByTestId("lightingErrorSummary"))).toBeDefined();

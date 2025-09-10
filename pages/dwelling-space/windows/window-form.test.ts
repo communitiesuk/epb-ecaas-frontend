@@ -83,7 +83,7 @@ describe ("window", () => {
 		await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
 		await user.tab();
 
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		const { data } = store.dwellingFabric.dwellingSpaceWindows;
@@ -132,8 +132,7 @@ describe ("window", () => {
 	test("only required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(Window);
 
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
-
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
@@ -161,8 +160,7 @@ describe ("window", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Window);
 
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
-
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("windowErrorSummary"))).toBeDefined();
 	});
@@ -171,9 +169,8 @@ describe ("window", () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("pitchOption_custom"));
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
-    
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
@@ -181,7 +178,7 @@ describe ("window", () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("numberOpenableParts_4"));
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
     
 		expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
@@ -197,7 +194,7 @@ describe ("window", () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("numberOpenableParts_1"));
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
     
 		expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
@@ -277,8 +274,7 @@ describe("Partially saving data", () => {
 
 		await user.type(screen.getByTestId("name"), "Window 1");
 		await user.clear(screen.getByTestId("name"));
-
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		await user.tab();
 
 		const { data } = store.dwellingFabric.dwellingSpaceWindows;
 
@@ -294,8 +290,7 @@ describe("Partially saving data", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), " ");
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
-
+		await user.tab();
 		
 		expect(store.dwellingFabric.dwellingSpaceWindows.data[0]!.data.name).toBe("Window");
 
@@ -320,8 +315,8 @@ describe("Partially saving data", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), "window 1");
-
 		await user.tab();
+
 		const { data } = store.dwellingFabric.dwellingSpaceWindows;
 
 		expect(data[0]!.data.name).toBe("window 1");

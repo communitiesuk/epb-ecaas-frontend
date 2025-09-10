@@ -741,7 +741,7 @@ describe("Living space fabric summary", () => {
 				dwellingFabric: {
 					dwellingSpaceWindows: {
 						data: [windowData],
-							complete: true
+						complete: true
 					}
 				}
 			});

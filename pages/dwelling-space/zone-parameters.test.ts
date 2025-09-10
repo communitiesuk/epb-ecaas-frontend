@@ -55,7 +55,7 @@ describe("zone parameters", () => {
 		await user.type(screen.getByTestId("volume"), "10");
 		// await user.click(screen.getByTestId('spaceHeatingSystemForThisZone_instant_electric_heater'));
 		await user.tab();
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		const { data, complete } = store.dwellingFabric.dwellingSpaceZoneParameters;
@@ -82,7 +82,7 @@ describe("zone parameters", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect((await screen.findByTestId("area_error"))).toBeDefined();
@@ -93,7 +93,7 @@ describe("zone parameters", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect((await screen.findByTestId("zoneParametersErrorSummary"))).toBeDefined();

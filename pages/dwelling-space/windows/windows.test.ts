@@ -209,7 +209,7 @@ describe("windows", () => {
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), "Updated window");
 		await user.tab();
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 		expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
 		
 		await renderSuspended(Windows);
