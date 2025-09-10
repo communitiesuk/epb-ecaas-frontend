@@ -8,7 +8,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const mixedShowerData = useItemToEdit("shower", store.domesticHotWater.hotWaterOutlets.mixedShower.data);
 const model: Ref<MixedShowerData | undefined > = ref(mixedShowerData?.data      );
-const id = mixedShowerData?.data.id || uuidv4()
+const id = mixedShowerData?.data.id || uuidv4();
 const saveForm = (fields: MixedShowerData) => {
 	store.$patch((state) => {
 		const { mixedShower } = state.domesticHotWater.hotWaterOutlets;
@@ -17,7 +17,7 @@ const saveForm = (fields: MixedShowerData) => {
 
 		mixedShower.data[index] = {
 			data: {
-				id: id,
+				id,
 				name: fields.name,
 				flowRate: fields.flowRate,
 			},
@@ -36,7 +36,7 @@ autoSaveElementForm({
 	defaultName: "Mixer shower",
 	onPatchCreate: (state, newData) => {
 		newData.data.id ??= id;
-		state.domesticHotWater.hotWaterOutlets.mixedShower.data.push(newData)},
+		state.domesticHotWater.hotWaterOutlets.mixedShower.data.push(newData);},
 	onPatchUpdate: (state, newData, index) => {
 		newData.data.id ??= id;
 		state.domesticHotWater.hotWaterOutlets.mixedShower.data[index] = newData;

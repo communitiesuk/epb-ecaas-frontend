@@ -18,7 +18,7 @@ const saveForm = (fields: BathData) => {
 		const index = getStoreIndex(bath.data);
 		bath.data[index] = {
 			data: {
-				id: id,
+				id,
 				name: fields.name,
 				size: fields.size,
 				flowRate: fields.flowRate
@@ -37,8 +37,9 @@ autoSaveElementForm({
 	storeData: store.domesticHotWater.hotWaterOutlets.bath,
 	defaultName: "Bath",
 	onPatchCreate: (state, newData) => {
-				newData.data.id ??= id,
-				state.domesticHotWater.hotWaterOutlets.bath.data.push(newData)},
+		newData.data.id ??= id;
+		state.domesticHotWater.hotWaterOutlets.bath.data.push(newData);
+	},
 	onPatchUpdate: (state, newData, index) => {
 		newData.data.id ??= id;
 		state.domesticHotWater.hotWaterOutlets.bath.data[index] = newData;

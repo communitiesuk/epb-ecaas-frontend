@@ -74,7 +74,7 @@ const saveForm = (fields: MechanicalVentilationData) => {
 autoSaveElementForm({
 	model,
 	storeData: store.infiltrationAndVentilation.mechanicalVentilation,
-	defaultName: 'Mechanical ventilation',
+	defaultName: "Mechanical ventilation",
 	onPatchCreate: (state, newData) => {
 		newData.data.id ??= id;
 		state.infiltrationAndVentilation.mechanicalVentilation.data.push(newData);

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import formStatus from '~/constants/formStatus';
+import formStatus from "~/constants/formStatus";
 
 const title = "Vents";
 const page = usePage();
