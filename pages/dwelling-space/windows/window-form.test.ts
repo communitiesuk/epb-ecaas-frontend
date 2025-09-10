@@ -5,7 +5,6 @@ import Window from "./[window].vue";
 import { WindowTreatmentType } from "~/schema/api-schema.types";
 import { millimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units/types";
-import { orientAngle } from "happy-dom/lib/PropertySymbol.js";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -45,7 +44,7 @@ const window1: EcaasForm<WindowData> = {
 };
 
 const window2: EcaasForm<WindowData>  = {
-	data: {	...window1.data, 	name: "Window 2"},
+	data: {	...window1.data, 	name: "Window 2" },
 };
 
 afterEach(() => {
