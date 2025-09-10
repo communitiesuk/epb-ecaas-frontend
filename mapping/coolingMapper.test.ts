@@ -1,4 +1,3 @@
-import { SpaceCoolSystemType } from "~/schema/aliases";
 import type { SchemaSpaceCoolSystemDetails } from "~/schema/aliases";
 import { mapSpaceCoolSystems } from "./coolingMapper";
 
@@ -37,7 +36,7 @@ describe("cooling mapper", () => {
 				cooling_capacity: 4,
 				frac_convective: 1,
 				efficiency: 1,
-				type: SpaceCoolSystemType.AirConditioning,
+				type: "AirConditioning",
 				advanced_start: null,
 				temp_setback: null,
 				Control: "cooling"
@@ -82,7 +81,7 @@ describe("cooling mapper", () => {
 				cooling_capacity: 1,
 				frac_convective: 3,
 				efficiency: 2,
-				type: SpaceCoolSystemType.AirConditioning,
+				type: "AirConditioning",
 				temp_setback: null,
 				advanced_start: null,
 				Control: "cooling"
@@ -92,7 +91,7 @@ describe("cooling mapper", () => {
 				cooling_capacity: 7,
 				frac_convective: 5,
 				efficiency: 6,
-				type: SpaceCoolSystemType.AirConditioning,
+				type: "AirConditioning",
 				temp_setback: null,
 				advanced_start: null,
 				Control: "cooling"

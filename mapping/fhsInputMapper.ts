@@ -46,7 +46,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	
 	const defaultColdWaterSource: Pick<FhsInputSchema, "ColdWaterSource"> = { 
 		ColdWaterSource: {
-			[ColdWaterSourceType.mains_water]: {
+			"mains water": {
 				start_day: 0,
 				temperatures: [3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
 				time_series_step: 1

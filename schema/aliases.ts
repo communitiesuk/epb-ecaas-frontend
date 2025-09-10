@@ -49,14 +49,6 @@ export type SchemaBuildingElement = TaggedUnion<"type", {
 	BuildingElementTransparent: SchemaBuildingElementTransparentFhs,
 }>;
 export type SchemaHeatSourceWetDetails = SchemaHeatSourceWetBoiler | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
-// some string-based enums seem to just be replaced by a string upstream, so retaining this from previous versions
-export enum ColdWaterSourceType {
-	mains_water = "mains water",
-	header_tank = "header tank"
-}
-export enum SpaceCoolSystemType {
-	AirConditioning = "AirConditioning"
-}
 // utility function to make shading segment compatible with new upstream type (as nulls are explicit)
 const baseShading: SchemaShadingSegment = {
 	end: null,

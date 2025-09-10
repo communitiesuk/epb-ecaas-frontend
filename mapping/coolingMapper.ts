@@ -1,4 +1,3 @@
-import { SpaceCoolSystemType } from "~/schema/aliases";
 import type { SchemaSpaceCoolSystemDetails } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
@@ -22,7 +21,7 @@ export function mapSpaceCoolSystems(state: ResolvedState) {
 			efficiency: x.seasonalEnergyEfficiencyRatio,
 			temp_setback: null,
 			advanced_start: null,
-			type: SpaceCoolSystemType.AirConditioning,
+			type: "AirConditioning",
 		};
 
 		return [key, val];

@@ -1,7 +1,7 @@
 import type { ValidateFunction } from "ajv/dist/2020";
 import { ajv } from "../schema/validator";
-import { ColdWaterSourceType, energySupply, externalConditions, noEvents } from "~/schema/aliases";
-import {  mapFhsInputData } from "./fhsInputMapper";
+import { energySupply, externalConditions, noEvents } from "~/schema/aliases";
+import { mapFhsInputData } from "./fhsInputMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
@@ -15,7 +15,7 @@ const baseForm = {
 
 const expectedHouseInput: FhsInputSchema = {
 	ColdWaterSource: {
-		[ColdWaterSourceType.mains_water]: {
+		"mains water": {
 			start_day: 0,
 			temperatures: [3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
 			time_series_step: 1
@@ -185,7 +185,7 @@ const expectedHouseInput: FhsInputSchema = {
 	},
 	// SpaceCoolSystem: {
 	// 	"some-aircon-unit-name": {
-	// 		type: SpaceCoolSystemType.AirConditioning,
+	// 		type: "AirConditioning",
 	// 		EnergySupply: "mains elec",
 	// 		cooling_capacity: 60,
 	// 		efficiency: 4,
@@ -283,7 +283,7 @@ const expectedHouseInput: FhsInputSchema = {
 
 const expectedFlatInput: FhsInputSchema = {
 	ColdWaterSource: {
-		[ColdWaterSourceType.mains_water]: {
+		"mains water": {
 			start_day: 0,
 			temperatures: [3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
 			time_series_step: 1
@@ -433,17 +433,17 @@ const expectedFlatInput: FhsInputSchema = {
 		},
 		Bath: {
 			"small bath name": {
-				ColdWaterSource: ColdWaterSourceType.mains_water,
+				ColdWaterSource: "mains water",
 				size: 80,
 				flowrate: 8,
 			},
 			"medium bath name": {
-				ColdWaterSource: ColdWaterSourceType.mains_water,
+				ColdWaterSource: "mains water",
 				size: 180,
 				flowrate: 8,
 			},
 			"large bath name": {
-				ColdWaterSource: ColdWaterSourceType.mains_water,
+				ColdWaterSource: "mains water",
 				size: 400,
 				flowrate: 14,
 			}
@@ -462,22 +462,22 @@ const expectedFlatInput: FhsInputSchema = {
 		],
 		Other: {
 			"kitchen sink name": {
-				ColdWaterSource: ColdWaterSourceType.mains_water,
+				ColdWaterSource: "mains water",
 				flowrate: 7.4,
 			},
 			"bathroom basin name": {
-				ColdWaterSource: ColdWaterSourceType.mains_water,
+				ColdWaterSource: "mains water",
 				flowrate: 6.4,
 			},
 			"cloakroom basin name": {
-				ColdWaterSource: ColdWaterSourceType.mains_water,
+				ColdWaterSource: "mains water",
 				flowrate: 6.4,
 			},
 		}
 	},
 	HotWaterSource: {
 		"hw cylinder": {
-			ColdWaterSource: ColdWaterSourceType.mains_water,
+			ColdWaterSource: "mains water",
 			HeatSource: {
 				["heat pump 1 name"]: {
 					name: "heat pump 1 name",
