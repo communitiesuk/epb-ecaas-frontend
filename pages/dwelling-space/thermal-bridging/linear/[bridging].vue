@@ -98,6 +98,7 @@ autoSaveElementForm({
 				...(getName(newData.data) ? { name: getName(newData.data) } : {})
 			}
 		});
+		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
 	},
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = {

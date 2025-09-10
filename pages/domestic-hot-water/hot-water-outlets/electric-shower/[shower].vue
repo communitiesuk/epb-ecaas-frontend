@@ -20,7 +20,7 @@ const saveForm = (fields: ElectricShowerData) => {
 
 		electricShower.data[index] = {
 			data : {
-				id: id,
+				id,
 				name: fields.name,
 				ratedPower: fields.ratedPower,
 			},
@@ -39,7 +39,7 @@ autoSaveElementForm({
 	defaultName: "Electric shower",
 	onPatchCreate: (state, newData) => {
 		newData.data.id ??= id;
-		state.domesticHotWater.hotWaterOutlets.electricShower.data.push(newData)},
+		state.domesticHotWater.hotWaterOutlets.electricShower.data.push(newData);},
 	onPatchUpdate: (state, newData, index) => {
 		newData.data.id ??= id;
 		state.domesticHotWater.hotWaterOutlets.electricShower.data[index] = newData;

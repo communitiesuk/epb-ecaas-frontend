@@ -3,16 +3,17 @@ import { standardPitchOptions, getUrl } from "#imports";
 
 const title = "Internal door";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data);
-const model: Ref<InternalDoorData> = ref(doorData!);
+const model: Ref<InternalDoorData | undefined> = ref(doorData?.data);
 
 const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 
 const saveForm = (fields: InternalDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceInternalDoor } = state.dwellingFabric.dwellingSpaceDoors;
+		const index = getStoreIndex(dwellingSpaceInternalDoor.data);
 
 		const commonFields = {
 			name: fields.name,
@@ -23,28 +24,48 @@ const saveForm = (fields: InternalDoorData) => {
 			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 		};
 
-		let door: InternalDoorData;
+		let door: EcaasForm<InternalDoorData>;
+
 		if (fields.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace) {
 			door = {
-				...commonFields,
-				typeOfInternalDoor: fields.typeOfInternalDoor,
-				uValue: fields.uValue,
-				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
+				data: {
+					...commonFields,
+					typeOfInternalDoor: fields.typeOfInternalDoor,
+					uValue: fields.uValue,
+					thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
+				},
+				complete: true
 			};
 		} else if (fields.typeOfInternalDoor === AdjacentSpaceType.heatedSpace) {
 			door = {
-				...commonFields,
-				typeOfInternalDoor: fields.typeOfInternalDoor,
+				data: {
+					...commonFields,
+					typeOfInternalDoor: fields.typeOfInternalDoor,
+				},
+				complete: true
 			};
 		} else {
-			throw new Error("Invalid type of ceiling");
+			throw new Error("Invalid type of door");
 		}
-
-		saveToList(door, dwellingSpaceInternalDoor);
+		dwellingSpaceInternalDoor.data[index] = door;
+		store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
 	});
-	store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
 	navigateTo("/dwelling-space/doors");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor,
+	defaultName: "Internal door",
+	onPatchCreate: (state, newData) => {
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data.push(newData);
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
+	},
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -74,7 +95,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfInternalDoor"
 			validation="required"
 		/>
-		<template v-if="!!model.typeOfInternalDoor">
+		<template v-if="!!model?.typeOfInternalDoor">
 			<FormKit
 				id="name"
 				type="govInputText"
@@ -84,7 +105,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required"
 			/>
 			<FieldsPitch
-				:pitch-option="model.pitchOption"
+				:pitch-option="model?.pitchOption"
 				:options="standardPitchOptions()"
 			/>
 			<FormKit
@@ -105,7 +126,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
 		<FormKit
-			v-if="model.typeOfInternalDoor === 'unheatedSpace'"
+			v-if="model?.typeOfInternalDoor === 'unheatedSpace'"
 			id="thermalResistanceOfAdjacentUnheatedSpace"
 			type="govInputWithSuffix"
 			suffix-text="(m²·K)/W"

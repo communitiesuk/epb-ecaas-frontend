@@ -53,7 +53,7 @@ describe("other outlets", () => {
 		});
 
 		await populateValidForm();
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		const { data } = store.domesticHotWater.hotWaterOutlets.otherOutlets;
@@ -85,7 +85,7 @@ describe("other outlets", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(OtherOutlet);
 
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
@@ -95,7 +95,7 @@ describe("other outlets", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(OtherOutlet);
 
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect((await screen.findByTestId("otherOutletsErrorSummary"))).toBeDefined();
@@ -119,7 +119,7 @@ describe("other outlets", () => {
 		await renderSuspended(OtherOutlet);
 	
 		await populateValidForm();
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
 	});

@@ -30,7 +30,7 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 			},
 			complete: true
 		};
-		store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.complete = false;
+		dwellingSpaceExternalUnglazedDoor.complete = false;
 	});
 	navigateTo("/dwelling-space/doors");
 };
@@ -39,7 +39,10 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor,
 	defaultName: "External unglazed door",
-	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data.push(newData),
+	onPatchCreate: (state, newData) => {
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data.push(newData);
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.complete = false;
+	},
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.complete = false;

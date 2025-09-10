@@ -10,11 +10,11 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-describe("window", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
+const store = useEcaasStore();
+const user = userEvent.setup();
 
-	const state: WindowData = {
+const window1: EcaasForm<WindowData> = {
+	data: {
 		name: "Window 1",
 		orientation: 1,
 		height: 1,
@@ -37,14 +37,25 @@ describe("window", () => {
 		treatmentType: "blinds",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
-	};
+	} as WindowData,
+	complete: true
+};
 
-	afterEach(() => {
-		store.$reset();
-	});
+const window2: EcaasForm<WindowData>  = {
+	data: {	...window1.data, 	name: "Window 2" },
+};
+
+afterEach(() => {
+	store.$reset();
+});
+describe ("window", () => {
 
 	test("data is saved to store state when form is valid", async () => {
-		await renderSuspended(Window);
+		await renderSuspended(Window, {
+			route: {
+				params: { window: "create" }
+			}
+		});
 
 		await user.type(screen.getByTestId("name"), "Window 1");
 		await user.type(screen.getByTestId("orientation"), "1");
@@ -69,11 +80,12 @@ describe("window", () => {
 		await user.type(screen.getByTestId("solarTransmittanceReduction"), "0.1");
 		await user.tab();
 
-		await user.click(screen.getByRole("button", { name: "Save and continue" }));
+		await(user.click(screen.getByTestId("saveAndComplete")));
+
 
 		const { data } = store.dwellingFabric.dwellingSpaceWindows;
 		
-		expect(data[0]).toEqual(state);
+		expect(data[0]).toEqual(window1);
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/windows");
 	});
 
@@ -81,7 +93,7 @@ describe("window", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data: [state]
+					data: [window1]
 				}
 			}
 		});
@@ -116,7 +128,7 @@ describe("window", () => {
 	test("only required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(Window);
 
-		await user.click(screen.getByRole("button", { name: "Save and continue" }));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
@@ -142,7 +154,7 @@ describe("window", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Window);
 
-		await user.click(screen.getByRole("button", { name: "Save and continue" }));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("windowErrorSummary"))).toBeDefined();
 	});
@@ -151,8 +163,8 @@ describe("window", () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("pitchOption_custom"));
-		await user.click(screen.getByRole("button", { name: "Save and continue" }));
-    
+		await(user.click(screen.getByTestId("saveAndComplete")));
+
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
@@ -160,7 +172,8 @@ describe("window", () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("numberOpenableParts_4"));
-		await user.click(screen.getByRole("button", { name: "Save and continue" }));
+		await(user.click(screen.getByTestId("saveAndComplete")));
+
     
 		expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
 		expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
@@ -175,7 +188,8 @@ describe("window", () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("numberOpenableParts_1"));
-		await user.click(screen.getByRole("button", { name: "Save and continue" }));
+		await(user.click(screen.getByTestId("saveAndComplete")));
+
     
 		expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
         
@@ -199,5 +213,138 @@ describe("window", () => {
 		const guidance = screen.getByRole("link", { name : "Guidance on window shading (opens in another window)" });
 		expect(guidance).toBeDefined();
 		expect(guidance.getAttribute("href")).toBe("/guidance/window-shading-guidance");
+	});
+});
+
+describe("Partially saving data", () => {
+	test("form data is automatically saved to store", async () => {
+
+		await renderSuspended(Window, {
+			route: {
+				params: { window: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId("name"), "Window 1");
+		await user.type(screen.getByTestId("orientation"), "1");
+		await user.tab();
+
+		const { data } = store.dwellingFabric.dwellingSpaceWindows;
+
+		expect(data[0]!.data.name).toBe("Window 1");
+		expect(data[0]!.data.orientation).toBe(1);
+	});
+
+	test("partial form data automatically saved to store with default name if no name has been added", async () => {
+		await renderSuspended(Window, {
+			route: {
+				params: { window: "create" },
+			},
+		});
+		await user.type(screen.getByTestId("orientation"), "1");
+		await user.tab();
+
+		const { data } = store.dwellingFabric.dwellingSpaceWindows;
+
+		expect(data[0]!.data.name).toBe("Window");
+		expect(data[0]!.data.orientation).toBe(1);
+	});
+
+	test("default name is used if name is added then deleted", async () => {
+		
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [window1]
+				}
+			}
+		});
+
+		await renderSuspended(Window, {
+			route: {
+				params: { window: "0" }
+			}
+		});
+
+		await user.type(screen.getByTestId("name"), "Window 1");
+		await user.clear(screen.getByTestId("name"));
+		await user.tab();
+
+		const { data } = store.dwellingFabric.dwellingSpaceWindows;
+
+		expect(data[0]!.data.name).toBe("Window");
+	});
+
+	test("default name is used if name added is whitespace", async () => {
+
+		await renderSuspended(Window, {
+			route: {
+				params: { window: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId("name"), " ");
+		await user.tab();
+		
+		expect(store.dwellingFabric.dwellingSpaceWindows.data[0]!.data.name).toBe("Window");
+
+		await renderSuspended(Window, {
+			route: {
+				params: { window: "0" },
+			},
+		});
+
+		await user.clear(screen.getByTestId("name"));
+		await user.type(screen.getByTestId("name"), " ");
+		await user.tab();
+		
+		expect(store.dwellingFabric.dwellingSpaceWindows.data[0]!.data.name).toBe("Window");
+	});
+
+	test("creates a new window automatically when a user adds only the name value", async () => {
+		await renderSuspended(Window, {
+			route: {
+				params: { window: "create" },
+			},
+		});
+
+		await user.type(screen.getByTestId("name"), "window 1");
+		await user.tab();
+
+		const { data } = store.dwellingFabric.dwellingSpaceWindows;
+
+		expect(data[0]!.data.name).toBe("window 1");
+		expect(data[0]!.data.orientation).toBeUndefined();
+	});
+
+	test("updated form data is automatically saved to the correct store object when there are multiple windows added", async () => {
+		const store = useEcaasStore();
+		const user = userEvent.setup();
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [window1, window2]
+				}
+			}
+		});
+  
+		await renderSuspended(Window, {
+			route: {
+				params: { window: "1" },
+			},
+		});
+
+					
+		await user.clear(screen.getByTestId("name"));
+		await user.clear(screen.getByTestId("orientation"));
+		
+		await user.type(screen.getByTestId("name"), "Updated Window 2");
+		await user.type(screen.getByTestId("orientation"), "15");
+		await user.tab();
+		const { data } = store.dwellingFabric.dwellingSpaceWindows;
+
+		expect(data[1]?.data.name).toBe("Updated Window 2");
+		expect(data[1]?.data.orientation).toBe(15);
 	});
 });

@@ -565,7 +565,7 @@ describe("hot water outlets", () => {
 						params: { [params]: "0" },
 					},
 				});
-				await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+				await(user.click(screen.getByTestId("saveAndComplete")));
 				expect(store.domesticHotWater.hotWaterOutlets[typedKey].complete).toBe(false);
 	
 				await renderSuspended(HotWaterOutlets);

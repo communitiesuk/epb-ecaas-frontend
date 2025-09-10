@@ -3,10 +3,12 @@ import { standardPitchOptions, type WindowData } from "#imports";
 import { millimetre } from "~/utils/units/length";
 import type { SchemaWindowTreatmentControl, SchemaWindowTreatmentType } from "~/schema/api-schema.types";
 import { unitValue } from "~/utils/units/types";
+import { getUrl } from "#imports";
+
 
 const title = "Window";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const window = useItemToEdit("window", store.dwellingFabric.dwellingSpaceWindows.data);
 
@@ -35,7 +37,7 @@ if (window && "sideFinLeftDistance" in window) {
 	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === "number" ? unitValue(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
 };
 
-const model: Ref<WindowData> = ref(window!);
+const model: Ref<WindowData > = ref(window?.data!);
 
 const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSentenceCase<SchemaWindowTreatmentType>> = {
 	curtains: "Curtains",
@@ -53,7 +55,9 @@ const shadingValidation = (siblingField: string) => {
 
 const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
+
 		const { dwellingSpaceWindows } = state.dwellingFabric;
+		const index = getStoreIndex(dwellingSpaceWindows.data);
 
 		const commonFields = {
 			name: fields.name,
@@ -143,10 +147,9 @@ const saveForm = (fields: WindowData) => {
 				commonFieldsIncludingOpenableParts = { ...commonFields } as WindowData;
 				break;
 		}
-
-		let window: WindowData;
-
+		
 		if (fields.curtainsOrBlinds) {
+
 			const newWindowValue = {
 				...commonFieldsIncludingOpenableParts,
 				curtainsOrBlinds: true,
@@ -155,20 +158,38 @@ const saveForm = (fields: WindowData) => {
 				solarTransmittanceReduction: fields.solarTransmittanceReduction,
 				...(fields.treatmentType === "curtains" ? { curtainsControlObject: fields.curtainsControlObject } : {}),
 			} as WindowData;
-			window = newWindowValue;
+			
+			dwellingSpaceWindows.data[index] = {
+				data: newWindowValue,
+				complete: true
+			};
 		} else {
+			
 			const newWindowValue = {
 				curtainsOrBlinds: false,
 				...commonFieldsIncludingOpenableParts,
 			} as WindowData;
-			window = newWindowValue;
-		}
 
-		saveToList(window, dwellingSpaceWindows);
+			dwellingSpaceWindows.data[index] = {
+				data: newWindowValue,
+				complete: true
+			};
+		}
+		dwellingSpaceWindows.complete = false;
 	});
-	store.dwellingFabric.dwellingSpaceWindows.complete = false;
 	navigateTo("/dwelling-space/windows");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceWindows,
+	defaultName: "Window",
+	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceWindows.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceWindows.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceWindows.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -424,7 +445,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			/>
 		</template>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('dwellingSpaceWindows')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
 <style scoped lang="scss">

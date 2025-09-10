@@ -128,34 +128,40 @@ describe("doors", () => {
 				}
 	};
 	
-	const internal1: InternalDoorData = {
-		typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-		name: "Internal 1",
-		surfaceArea: 5,
-		kappaValue: 100,
-		massDistributionClass: "I",
-		pitchOption: "90",
-		pitch: 90
+	const internal1: EcaasForm<InternalDoorData> = {
+		data: {
+			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+			name: "Internal 1",
+			surfaceArea: 5,
+			kappaValue: 100,
+			massDistributionClass: "I",
+			pitchOption: "90",
+			pitch: 90
+		}
 	};
 
-	const internal2: InternalDoorData = {
-		typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-		name: "Internal 2",
-		surfaceArea: 5,
-		kappaValue: 100,
-		massDistributionClass: "I",
-		pitchOption: "90",
-		pitch: 90
+	const internal2: EcaasForm<InternalDoorData> = {
+		data: {
+			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+			name: "Internal 2",
+			surfaceArea: 5,
+			kappaValue: 100,
+			massDistributionClass: "I",
+			pitchOption: "90",
+			pitch: 90
+		}
 	};
 
-	const internal3: InternalDoorData = {
-		typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-		name: "Internal 3",
-		surfaceArea: 5,
-		kappaValue: 100,
-		massDistributionClass: "I",
-		pitchOption: "90",
-		pitch: 90
+	const internal3: EcaasForm<InternalDoorData> = {
+		data: {
+			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+			name: "Internal 3",
+			surfaceArea: 5,
+			kappaValue: 100,
+			massDistributionClass: "I",
+			pitchOption: "90",
+			pitch: 90
+		}
 	};
 	
 	describe("external unglazed doors", () => {
@@ -371,9 +377,9 @@ describe("doors", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
-						dwellingSpaceExternalUnglazedDoor: { data: [externalUnglazed1] },
-						dwellingSpaceExternalGlazedDoor: { data: [externalGlazed1] },
-						dwellingSpaceInternalDoor: { data: [internal1] },
+						dwellingSpaceExternalUnglazedDoor: { data: [{ ...externalUnglazed1, complete: true }] },
+						dwellingSpaceExternalGlazedDoor: { data: [{ ...externalGlazed1, complete: true }] },
+						dwellingSpaceInternalDoor: { data: [{ ...internal1, complete: true }] },
 					},
 				}
 			});
@@ -500,6 +506,22 @@ describe("doors", () => {
 				await renderSuspended(Doors);
 				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 			}
+		});
+
+		it("disables the mark section as complete button when item is incomplete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: { surfaceArea: 2 }, complete: false }]
+						},
+					}
+				}
+			});
+
+			await renderSuspended(Doors);
+			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 		});
 	});
 });

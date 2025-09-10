@@ -252,7 +252,7 @@ describe("Pipeworks", () => {
 						},
 					});
 				 
-					await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+					await(user.click(screen.getByTestId("saveAndComplete")));
 
 					expect(store.domesticHotWater.pipework[typedKey].complete).toBe(false);
 	

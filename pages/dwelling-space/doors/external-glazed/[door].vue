@@ -3,7 +3,7 @@ import { getUrl, standardPitchOptions } from "#imports";
 
 const title = "External glazed door";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor?.data);
 const model: Ref<ExternalGlazedDoorData | undefined> = ref(doorData?.data);
@@ -11,37 +11,47 @@ const model: Ref<ExternalGlazedDoorData | undefined> = ref(doorData?.data);
 const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalGlazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
+		const index = getStoreIndex(dwellingSpaceExternalGlazedDoor.data);
 
-		const commonFields = {
-			name: fields.name,
-			orientation: fields.orientation,
-			surfaceArea: fields.surfaceArea,
-			height: fields.height,
-			width: fields.width,
-			uValue: fields.uValue,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
-			solarTransmittance: fields.solarTransmittance,
-			elevationalHeight: fields.elevationalHeight,
-			midHeight: fields.midHeight,
-			openingToFrameRatio: fields.openingToFrameRatio
+		dwellingSpaceExternalGlazedDoor.data[index] = {
+			data: {
+				name: fields.name,
+				orientation: fields.orientation,
+				surfaceArea: fields.surfaceArea,
+				height: fields.height,
+				width: fields.width,
+				uValue: fields.uValue,
+				pitchOption: fields.pitchOption,
+				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
+				solarTransmittance: fields.solarTransmittance,
+				elevationalHeight: fields.elevationalHeight,
+				midHeight: fields.midHeight,
+				openingToFrameRatio: fields.openingToFrameRatio,
+				numberOpenableParts: "1",
+				maximumOpenableArea: fields.surfaceArea,
+				heightOpenableArea: fields.height,
+				midHeightOpenablePart1: fields.midHeight,
+			},
+			complete: true
 		};
-
-		const doorData: ExternalGlazedDoorData = {
-			...commonFields,
-			numberOpenableParts: "1",
-			maximumOpenableArea: fields.surfaceArea,
-			heightOpenableArea: fields.height,
-			midHeightOpenablePart1: fields.midHeight,
-		};
-
 		dwellingSpaceExternalGlazedDoor.complete = false;
-		const door: EcaasForm<ExternalGlazedDoorData> = { data: doorData, complete: true };
-		saveToList(door, dwellingSpaceExternalGlazedDoor);
 	});
-	
 	navigateTo("/dwelling-space/doors");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor,
+	defaultName: "External glazed door",
+	onPatchCreate: (state, newData) => {
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data.push(newData);
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.complete = false;
+	},
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.complete = false;
+	}
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>

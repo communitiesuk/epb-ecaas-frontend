@@ -7,7 +7,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
-type DoorData = EcaasForm<ExternalUnglazedDoorData> & EcaasForm<ExternalGlazedDoorData> & InternalDoorData;
+type DoorData = EcaasForm<ExternalUnglazedDoorData> & EcaasForm<ExternalGlazedDoorData> & EcaasForm<InternalDoorData>;
 
 function handleRemove(doorType: DoorType, index: number) {
 	const doors = store.dwellingFabric.dwellingSpaceDoors[doorType]?.data;
@@ -32,31 +32,18 @@ function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) 
 			if (isEcaasForm(f) && isEcaasForm(door)) {
 				name = door.data.name;
 				return f.data.name.match(duplicateNamePattern(door.data.name));
-			} else if (!isEcaasForm(f) && !isEcaasForm(door)) {
-				name = door.name;
-				return f.name.match(duplicateNamePattern(door.name));
 			}
-
 			return false;
 		});
 
 		store.$patch((state) => {
-			let newItem;
-
-			if (isEcaasForm(door)) {
-				newItem = {
-					complete: door.complete,
-					data: {
-						...door.data,
-						name: `${name} (${duplicates.length})`
-					}
-				} as T;
-			} else {
-				newItem = {
-					...door,
+			const newItem = {
+				complete: door.complete,
+				data: {
+					...door.data,
 					name: `${name} (${duplicates.length})`
-				} as T;
-			}
+				}
+			} as T;
 
 			state.dwellingFabric.dwellingSpaceDoors[doorType].data.push(newItem);
 			store.dwellingFabric.dwellingSpaceDoors[doorType].complete = false;
@@ -78,10 +65,9 @@ function handleComplete() {
 	navigateTo("/dwelling-space");
 }
 
-function checkIsComplete(){
-	const doors = store.dwellingFabric.dwellingSpaceDoors;
-	return Object.values(doors).every(door => door.complete);
-}
+const hasIncompleteEntries = () =>
+	Object.values(store.dwellingFabric.dwellingSpaceDoors)
+		.some(section => section.data.some(item => isEcaasForm(item) && !item.complete));
 
 </script>
 
@@ -120,7 +106,11 @@ function checkIsComplete(){
 		id="internal"
 		title="Internal door"
 		:form-url="`${page?.url!}/internal`"
-		:items="store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceInternalDoor', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceInternalDoor', index)"
 	/>
@@ -131,7 +121,9 @@ function checkIsComplete(){
 		>
 			Return to dwelling space
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
-
+		<CompleteElement
+			:is-complete="Object.values(store.dwellingFabric.dwellingSpaceDoors).every(section => section.complete)"
+			:disabled="hasIncompleteEntries()"
+			@completed="handleComplete"/>
 	</div>
 </template>

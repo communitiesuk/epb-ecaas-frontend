@@ -562,7 +562,7 @@ describe("dwelling fabric mapper", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceDoors: {
-					dwellingSpaceInternalDoor: { data: [internalDoor], complete: true },
+					dwellingSpaceInternalDoor: { data: [{ data: internalDoor }], complete: true },
 					dwellingSpaceExternalGlazedDoor: { data: [{ data: externalGlazedDoor }], complete: true },
 					dwellingSpaceExternalUnglazedDoor: { data: [{ data: externalUnglazedDoor }], complete: true }
 				}
@@ -668,7 +668,13 @@ describe("dwelling fabric mapper", () => {
 
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceWindows: { data: [window], complete: true },
+				dwellingSpaceWindows: { 
+					data: [{
+						data: window, 
+						complete: true 
+					}],
+					complete: true 
+				}
 			}
 		});
 
@@ -689,10 +695,10 @@ describe("dwelling fabric mapper", () => {
 			g_value: window.solarTransmittance,
 			mid_height: window.midHeight,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
-			max_window_open_area: window.maximumOpenableArea,
-			free_area_height: window.heightOpenableArea,
+			max_window_open_area:window.maximumOpenableArea,
+			free_area_height:window.heightOpenableArea,
 			window_part_list: [{
-				mid_height_air_flow_path: window.midHeightOpenablePart1
+				mid_height_air_flow_path:window .midHeightOpenablePart1
 			}],
 			shading: [
 				{
@@ -716,7 +722,6 @@ describe("dwelling fabric mapper", () => {
 			thermal_resistance_construction: null,
 			treatment: null
 		};
-
 		expect(windowElement).toEqual(expectedWindow);
 	});
 

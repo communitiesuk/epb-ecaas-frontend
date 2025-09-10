@@ -51,7 +51,7 @@ describe("mixer shower", () => {
 		});
 
 		await populateValidForm();
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 		const { data } = store.domesticHotWater.hotWaterOutlets.mixedShower;
 		
@@ -82,7 +82,7 @@ describe("mixer shower", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(MixerShower);
 
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
@@ -92,7 +92,7 @@ describe("mixer shower", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(MixerShower);
 
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect((await screen.findByTestId("mixedShowerErrorSummary"))).toBeDefined();
@@ -115,7 +115,7 @@ describe("mixer shower", () => {
 		await renderSuspended(MixerShower);
 	
 		await populateValidForm();
-		await(user.click(screen.getByRole("button", { name: "Save and mark as complete" })));
+		await(user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
@@ -170,14 +170,24 @@ describe("Partially saving data", () => {
 
 
 	test("default name is used if name is added then deleted", async () => {
+		store.$patch({
+			domesticHotWater: {
+				hotWaterOutlets: {
+					mixedShower: {
+						data: [mixerShower]
+					}
+				}
+			}
+		});
+
 		await renderSuspended(MixerShower, {
 			route: {
-				params: { shower: "create" },
-			},
+				params: { "shower": "0" }
+			}
 		});
+
 		await user.type(screen.getByTestId("name"), "Mixer shower 1");
 		await user.clear(screen.getByTestId("name"));
-		await user.tab();
 		await user.click(screen.getByRole("button", { name: "Save progress" }));
 
 		const { data } = store.domesticHotWater.hotWaterOutlets.mixedShower;

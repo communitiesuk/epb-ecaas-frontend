@@ -438,7 +438,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const doorSuffix = "door";
 
-	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map(x => {
+	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map(({ data: x }) => {
 		const commonFields = {
 			pitch: extractPitch(x),
 			area: x.surfaceArea,
@@ -597,7 +597,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 	}
 
 	const windowData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceWindows.map(x => {
-		const nameWithSuffix = suffixName(x.name, windowSuffix);
+		const nameWithSuffix = suffixName(x.data.name, windowSuffix);
 
 		function inMetres(length: Length | number ): number {
 			if (typeof length === "number") {
@@ -607,41 +607,41 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			}
 		}
 
-		const hasOverhang = "overhangDepth" in x && "overhangDistance" in x && x.overhangDepth && x.overhangDistance;
+		const hasOverhang = "overhangDepth" in x.data && "overhangDistance" in x.data && x.data.overhangDepth && x.data.overhangDistance;
 		const overhang = hasOverhang ? [{
 			type: "overhang" as const,
-			depth: inMetres(x.overhangDepth),
-			distance: inMetres(x.overhangDistance),
+			depth: inMetres(x.data.overhangDepth!),
+			distance: inMetres(x.data.overhangDistance!),
 		}] : [];
 
-		const hasSideFinLeft = "sideFinLeftDepth" in x && "sideFinLeftDistance" in x && x.sideFinLeftDepth && x.sideFinLeftDistance;
+		const hasSideFinLeft = "sideFinLeftDepth" in x.data && "sideFinLeftDistance" in x.data && x.data.sideFinLeftDepth && x.data.sideFinLeftDistance;
 		const sideFinLeft = hasSideFinLeft ? [{
 			type: "sidefinleft" as const,
-			depth: inMetres(x.sideFinLeftDepth),
-			distance: inMetres(x.sideFinLeftDistance),
+			depth: inMetres(x.data.sideFinLeftDepth!),
+			distance: inMetres(x.data.sideFinLeftDistance!),
 		}] : [];
 
-		const hasSideFinRight = "sideFinRightDepth" in x && "sideFinRightDistance" in x && x.sideFinRightDepth && x.sideFinRightDistance;
+		const hasSideFinRight = "sideFinRightDepth" in x.data && "sideFinRightDistance" in x.data && x.data.sideFinRightDepth && x.data.sideFinRightDistance;
 		const sideFinRight = hasSideFinRight ? [{
 			type: "sidefinright" as const,
-			depth: inMetres(x.sideFinRightDepth),
-			distance: inMetres(x.sideFinRightDistance),
+			depth: inMetres(x.data.sideFinRightDepth!),
+			distance: inMetres(x.data.sideFinRightDistance!),
 		}] : [];
 
 		return { [nameWithSuffix]: {
 			type: "BuildingElementTransparent",
-			pitch: extractPitch(x),
-			orientation360: x.orientation,
-			height: x.height,
-			width: x.width,
-			base_height: x.elevationalHeight,
-			u_value: x.uValue,
-			g_value: x.solarTransmittance,
-			mid_height: x.midHeight,
-			frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
-			max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
-			free_area_height: x.numberOpenableParts === "0" ? 0 : x.heightOpenableArea,
-			window_part_list: mapWindowPartList(x),
+			pitch: extractPitch(x.data),
+			orientation360: x.data.orientation,
+			height: x.data.height,
+			width: x.data.width,
+			base_height: x.data.elevationalHeight,
+			u_value: x.data.uValue,
+			g_value: x.data.solarTransmittance,
+			mid_height: x.data.midHeight,
+			frame_area_fraction: x.data.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.data.openingToFrameRatio),
+			max_window_open_area: x.data.numberOpenableParts === "0" ? 0 : x.data.maximumOpenableArea,
+			free_area_height: x.data.numberOpenableParts === "0" ? 0 : x.data.heightOpenableArea,
+			window_part_list: mapWindowPartList(x.data),
 			shading: [...overhang, ...sideFinLeft, ...sideFinRight]
 		} };
 	});

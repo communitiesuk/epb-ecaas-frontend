@@ -201,40 +201,45 @@ const doorsData: DoorsData = {
 	},
 	dwellingSpaceInternalDoor: {
 		data: [{
-			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
-			name: "Internal 1",
-			surfaceArea: 5,
-			kappaValue: 50000,
-			massDistributionClass: "I",
-			pitchOption: "90",
-			pitch: 90
+			data: {
+				typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+				name: "Internal 1",
+				surfaceArea: 5,
+				kappaValue: 50000,
+				massDistributionClass: "I",
+				pitchOption: "90",
+				pitch: 90
+			}
 		}]
 	}
 };
 
-const windowData: WindowData = {
-	name: "Window 1",
-	orientation: 1,
-	height: 1,
-	width: 1,
-	uValue: 1,
-	pitchOption: "90",
-	pitch: 90,
-	solarTransmittance: 0.1,
-	elevationalHeight: 1,
-	midHeight: 1,
-	openingToFrameRatio: 0.2,
-	numberOpenableParts: "0",
-	overhangDepth: unitValue(100, millimetre),
-	overhangDistance: unitValue(100, millimetre),
-	sideFinRightDepth: unitValue(100, millimetre),
-	sideFinRightDistance: unitValue(100, millimetre),
-	sideFinLeftDepth: unitValue(100, millimetre),
-	sideFinLeftDistance: unitValue(100, millimetre),
-	curtainsOrBlinds: true,
-	treatmentType: "blinds",
-	thermalResistivityIncrease: 1,
-	solarTransmittanceReduction: 0.1,
+const windowData: EcaasForm<WindowData> = {
+	data: {
+		name: "Window 1",
+		orientation: 1,
+		height: 1,
+		width: 1,
+		uValue: 1,
+		pitchOption: "90",
+		pitch: 90,
+		solarTransmittance: 0.1,
+		elevationalHeight: 1,
+		midHeight: 1,
+		openingToFrameRatio: 0.2,
+		numberOpenableParts: "0",
+		overhangDepth: unitValue(100, millimetre),
+		overhangDistance: unitValue(100, millimetre),
+		sideFinRightDepth: unitValue(100, millimetre),
+		sideFinRightDistance: unitValue(100, millimetre),
+		sideFinLeftDepth: unitValue(100, millimetre),
+		sideFinLeftDistance: unitValue(100, millimetre),
+		curtainsOrBlinds: true,
+		treatmentType: "blinds",
+		thermalResistivityIncrease: 1,
+		solarTransmittanceReduction: 0.1,
+
+	}
 };
 
 const thermalBridgingData: ThermalBridgingData = {
@@ -735,7 +740,8 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWindows: {
-						data: [windowData]
+						data: [windowData],
+						complete: true
 					}
 				}
 			});

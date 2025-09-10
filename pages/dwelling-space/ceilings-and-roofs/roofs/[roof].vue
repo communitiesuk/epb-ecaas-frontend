@@ -47,7 +47,10 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs,
 	defaultName: "Roof",
-	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.push(newData),
+	onPatchCreate: (state, newData) => {
+		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.push(newData);
+		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.complete = false;
+	},
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.complete = false;

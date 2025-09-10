@@ -168,5 +168,34 @@ describe("external unglazed door", () => {
 			expect(actualDoor.data.width).toBeUndefined();
 			expect(actualDoor.data.elevationalHeight).toBe(7);
 		});
+
+		it("saves updated form data to correct store object automatically", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalUnglazedDoor: {
+							data: [state, state]
+						}
+					}
+				}
+			});
+
+			await renderSuspended(ExternalUnglazedDoor, {
+				route: {
+					params: { externalUnglazed: "1" }
+				}
+			});
+
+			await user.clear(screen.getByTestId("name"));
+			await user.clear(screen.getByTestId("elevationalHeight"));
+
+			await user.type(screen.getByTestId("name"), "Updated door");
+			await user.type(screen.getByTestId("elevationalHeight"), "12");
+			await user.tab();
+
+			const actualDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data[1]!;
+			expect(actualDoor.data.name).toBe("Updated door");
+			expect(actualDoor.data.elevationalHeight).toBe(12);
+		});
 	});
 });
