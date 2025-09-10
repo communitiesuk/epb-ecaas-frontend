@@ -66,7 +66,7 @@ describe("external glazed door", () => {
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/doors");
 	});
 
-	it("navigates to doors page when save progress button is clicked", async () => {
+	test("navigates to doors page when save progress button is clicked", async () => {
 		await renderSuspended(ExternalGlazedDoor);
 
 		await user.type(screen.getByTestId("name"), "Test door");

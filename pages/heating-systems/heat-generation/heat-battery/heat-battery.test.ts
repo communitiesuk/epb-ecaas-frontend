@@ -78,7 +78,7 @@ describe("heatBattery", () => {
 		expect((await screen.findByTestId("heatBatteryErrorSummary"))).toBeDefined();
 	});
 
-	it("navigates to heat generation page when valid form is completed", async () => {
+	test("navigates to heat generation page when valid form is completed", async () => {
 		await renderSuspended(HeatBattery);
 	
 		await populateValidForm();

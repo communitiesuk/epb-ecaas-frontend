@@ -112,7 +112,7 @@ describe("PV system", () => {
 		expect((await screen.findByTestId("photovoltaicErrorSummary"))).toBeDefined();
 	});
 
-	test("data is saved to store when form is valid", async () => {
+	it("data is saved to store when form is valid", async () => {
 		await renderSuspended(PVScreen, {
 			route: {
 				params: { system: "create" },

@@ -46,7 +46,7 @@ describe("internal door", () => {
 	};
 	
 	describe("when type of internal door is heated space", () => {
-		test("data is saved to store state when form is valid", async () => {
+		it("data is saved to store state when form is valid", async () => {
 			await renderSuspended(InternalDoor, {
 				route: {
 					params: { internalDoor: "create" }
@@ -62,7 +62,7 @@ describe("internal door", () => {
 			expect(data[0]).toEqual({ ...internalDoor, complete: true });
 		});
 	
-		test("form is prepopulated when data exists in state", async () => {
+		it("form is prepopulated when data exists in state", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -102,7 +102,7 @@ describe("internal door", () => {
 	});
 	
 	describe("when type of internal door is unheated space", () => {
-		test("data is saved to store state when form is valid", async () => {
+		it("data is saved to store state when form is valid", async () => {
 			await renderSuspended(InternalDoor, {
 				route: {
 					params: { internalDoor: "create" }
@@ -121,7 +121,7 @@ describe("internal door", () => {
 			expect(data[0]).toEqual({ ...internalDoorWithUnheatedSpace, complete: true });
 		});
 	
-		test("form is prepopulated when data exists in state", async () => {
+		it("form is prepopulated when data exists in state", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -161,7 +161,7 @@ describe("internal door", () => {
 		expect((await screen.findByTestId("typeOfInternalDoor_error"))).toBeDefined();
 	});
 
-	test("error summary is displayed when an invalid form in submitted", async () => {
+	it("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(InternalDoor);
 
 		await user.click(screen.getByTestId("saveAndComplete"));

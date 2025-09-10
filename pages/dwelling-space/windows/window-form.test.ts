@@ -140,15 +140,15 @@ describe ("window", () => {
 		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("midHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("numberOpenableParts_error"))).toBeDefined();
-		expect((await screen.queryByTestId("treatmentType_error"))).toBeNull();
-		expect((await screen.queryByTestId("thermalResistivityIncrease_error"))).toBeNull();
-		expect((await screen.queryByTestId("solarTransmittanceReduction_error"))).toBeNull();
-		expect((await screen.queryByTestId("overhangDepth_error"))).toBeNull();
-		expect((await screen.queryByTestId("overhangDistance_error"))).toBeNull();
-		expect((await screen.queryByTestId("sideFinRightDepth_error"))).toBeNull();
-		expect((await screen.queryByTestId("sideFinRightDistance_error"))).toBeNull();
-		expect((await screen.queryByTestId("sideFinLeftDepth_error"))).toBeNull();
-		expect((await screen.queryByTestId("sideFinLeftDistance_error"))).toBeNull();
+		expect((screen.queryByTestId("treatmentType_error"))).toBeNull();
+		expect((screen.queryByTestId("thermalResistivityIncrease_error"))).toBeNull();
+		expect((screen.queryByTestId("solarTransmittanceReduction_error"))).toBeNull();
+		expect((screen.queryByTestId("overhangDepth_error"))).toBeNull();
+		expect((screen.queryByTestId("overhangDistance_error"))).toBeNull();
+		expect((screen.queryByTestId("sideFinRightDepth_error"))).toBeNull();
+		expect((screen.queryByTestId("sideFinRightDistance_error"))).toBeNull();
+		expect((screen.queryByTestId("sideFinLeftDepth_error"))).toBeNull();
+		expect((screen.queryByTestId("sideFinLeftDistance_error"))).toBeNull();
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
@@ -159,7 +159,7 @@ describe ("window", () => {
 		expect((await screen.findByTestId("windowErrorSummary"))).toBeDefined();
 	});
 
-	it("requires pitch when custom pitch option is selected", async () => {
+	test("requires pitch when custom pitch option is selected", async () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("pitchOption_custom"));
@@ -168,7 +168,7 @@ describe ("window", () => {
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
-	it("requires further data when four openable parts option is selected", async () => {
+	test("requires further data when four openable parts option is selected", async () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("numberOpenableParts_4"));
@@ -184,7 +184,7 @@ describe ("window", () => {
 		expect((await screen.findByTestId("midHeightOpenablePart4_error"))).toBeDefined();
 	});
 
-	it("does not require the mid height of more parts than have been selected", async () => {
+	test("does not require the mid height of more parts than have been selected", async () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("numberOpenableParts_1"));
@@ -193,26 +193,35 @@ describe ("window", () => {
     
 		expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
         
-		expect((await screen.queryByTestId("midHeightOpenablePart2_error"))).toBeNull();
-		expect((await screen.queryByTestId("midHeightOpenablePart3_error"))).toBeNull();
-		expect((await screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
+		expect((screen.queryByTestId("midHeightOpenablePart2_error"))).toBeNull();
+		expect((screen.queryByTestId("midHeightOpenablePart3_error"))).toBeNull();
+		expect((screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
 	});
 
-	it("displays curtainsControlObject when the curtains option is selected", async () => {
+	test("displays curtainsControlObject when the curtains option is selected", async () => {
 		await renderSuspended(Window);
     
 		await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
 		await user.click(screen.getByTestId("treatmentType_curtains"));
 		await user.tab();
     
-		expect((await screen.getByTestId("curtainsControlObject_auto_motorised"))).toBeDefined();
+		expect((screen.getByTestId("curtainsControlObject_auto_motorised"))).toBeDefined();
 	});
 
-	it("displays guidance link to window shading guidance page", async () => {
+	test("displays guidance link to window shading guidance page", async () => {
 		await renderSuspended(Window);
 		const guidance = screen.getByRole("link", { name : "Guidance on window shading (opens in another window)" });
 		expect(guidance).toBeDefined();
 		expect(guidance.getAttribute("href")).toBe("/guidance/window-shading-guidance");
+	});
+
+	test("save progress button navigates user to the dwelling fabric overview page", async () => {
+		await renderSuspended(Window);
+		
+		await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
+		await user.click(screen.getByTestId("saveProgress"));
+					
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/windows");
 	});
 });
 

@@ -142,7 +142,7 @@ describe("bath", () => {
 		await user.type(screen.getByTestId("name"), "Bath 1");
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		await user.click(screen.getByTestId("saveProgress"));
 		
 		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
 	
@@ -158,7 +158,7 @@ describe("bath", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), " ");
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		await user.click(screen.getByTestId("saveProgress"));
 
 		
 		expect(store.domesticHotWater.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");
@@ -185,9 +185,8 @@ describe("bath", () => {
 		});
 
 		await populateValidForm();
-		const saveProcess = screen.getByRole("button", { name: "Save progress" });
-
-		expect(saveProcess.getAttribute("href")).toBe("/domestic-hot-water/hot-water-outlets");
+		await user.click(screen.getByTestId("saveProgress"));
+		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/hot-water-outlets");
 	});
 
 	test("creates a new bath automatically when a user adds only the name value", async () => {
@@ -297,7 +296,7 @@ describe("Partially saving data", () => {
 		await user.type(screen.getByTestId("name"), "Bath 1");
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		await user.click(screen.getByTestId("saveProgress"));
 		
 		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
 	
@@ -313,7 +312,7 @@ describe("Partially saving data", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), " ");
-		await user.click(screen.getByRole("button", { name: "Save progress" }));
+		await user.click(screen.getByTestId("saveProgress"));
 
 		
 		expect(store.domesticHotWater.hotWaterOutlets.bath.data[0]!.data.name).toBe("Bath");

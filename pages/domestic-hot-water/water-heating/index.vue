@@ -164,7 +164,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</ClientOnly>
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
-			<GovButton :href="getUrl('domesticHotWater')" secondary>Save progress</GovButton>
+			<GovButton :href="getUrl('domesticHotWater')" test-id="saveProgress" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

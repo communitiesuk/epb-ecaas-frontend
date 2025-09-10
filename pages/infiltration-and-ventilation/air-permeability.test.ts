@@ -83,7 +83,7 @@ describe("Air permeability", () => {
 		expect((await screen.findByTestId("airPermeabilityErrorSummary"))).toBeDefined();
 	});
 
-	it("navigates to infiltration and ventilation page when valid form is completed", async () => {
+	test("navigates to infiltration and ventilation page when valid form is completed", async () => {
 		await renderSuspended(AirPermeability);
 	
 		await populateValidForm();

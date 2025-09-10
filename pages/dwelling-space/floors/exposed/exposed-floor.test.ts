@@ -30,7 +30,7 @@ describe("exposed floor", () => {
 		store.$reset();
 	});
 
-	test("data is saved to store state when form is valid", async () => {
+	test("data is saved to store state and marked as complete when form is valid", async () => {
 		await renderSuspended(ExposedFloor, {
 			route: {
 				params: { floor: "create" }
@@ -49,10 +49,10 @@ describe("exposed floor", () => {
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data = [] } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor || {};
+		const { dwellingSpaceExposedFloor } = store.dwellingFabric.dwellingSpaceFloors;
 		
-		expect(data[0]?.data).toEqual(exposedFloor);
-		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");
+		expect(dwellingSpaceExposedFloor?.data[0]?.data).toEqual(exposedFloor);
+		expect(dwellingSpaceExposedFloor?.data[0]?.complete).toEqual(true);
 	});
 	
 	test("form is prepopulated when data exists in state", async () => {
@@ -113,25 +113,54 @@ describe("exposed floor", () => {
 		expect((await screen.findByTestId("exposedFloorErrorSummary"))).toBeDefined();
 	});
 
-	describe("partially saving data", () => {
-		test("new form data is automatically saved to store with default name", async () => {
-			await renderSuspended(ExposedFloor, {
-				route: {
-					params: { floor: "create" }
-				}
-			});
-				
-			await user.type(screen.getByTestId("length"), "0.5");
-			await user.type(screen.getByTestId("width"), "20"); 
-			await user.tab();
-					
-			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor;
-			expect(data[0]!.data.name).toBe("Exposed floor");
-			expect(data[0]!.data.length).toBe(0.5);
-			expect(data[0]!.data.width).toBe(20);
-		});
+	test("app navigates to floors page when valid form is completed", async () => {
+		// Arrange
+		await renderSuspended(ExposedFloor);
+		
+		// Act
+		await user.type(screen.getByTestId("name"), "Exposed Floor 1");
+		await user.type(screen.getByTestId("length"), "0.5");
+		await user.type(screen.getByTestId("width"), "20"); 
+		await user.type(screen.getByTestId("elevationalHeight"), "20");
+		await user.type(screen.getByTestId("surfaceArea"), "10");
+		await user.type(screen.getByTestId("solarAbsorption"), "0.1");
+		await user.type(screen.getByTestId("uValue"), "1");
+		await user.click(screen.getByTestId("kappaValue_50000"));
+		await user.click(screen.getByTestId("massDistributionClass_I"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 	
-		test("new form data is automatically saved to store", async () => {
+		// Assert
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");
+	});
+
+	test("exposed floors section is marked as 'not complete' after form is saved and marked as complete", async () => {
+		// Arrange
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceExposedFloor: {
+						data: [{ data: exposedFloor, complete: true }],
+						complete: true
+					}
+				}
+			}
+		});
+		
+		await renderSuspended(ExposedFloor, {
+			route: {
+				params: { floor: "0" }
+			}
+		});
+				
+		// Act
+		await user.click(screen.getByTestId("saveAndComplete"));
+		
+		// Assert
+		expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete).not.toBe(true);
+	});
+
+	describe("partially saving data", () => {
+		test("new form data is automatically saved to store with given name", async () => {
 			await renderSuspended(ExposedFloor, {
 				route: {
 					params: { floor: "create" }
@@ -146,6 +175,23 @@ describe("exposed floor", () => {
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor;
 			expect(data[0]!.data.name).toBe("Exposed floor 1");
 			expect(data[0]!.data.length).toBe(5);
+			expect(data[0]!.data.width).toBe(20);
+		});
+
+		test("new form data is automatically saved to store with default name", async () => {
+			await renderSuspended(ExposedFloor, {
+				route: {
+					params: { floor: "create" }
+				}
+			});
+				
+			await user.type(screen.getByTestId("length"), "0.5");
+			await user.type(screen.getByTestId("width"), "20"); 
+			await user.tab();
+					
+			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor;
+			expect(data[0]!.data.name).toBe("Exposed floor");
+			expect(data[0]!.data.length).toBe(0.5);
 			expect(data[0]!.data.width).toBe(20);
 		});
 		
@@ -180,7 +226,35 @@ describe("exposed floor", () => {
 			expect(data[0]!.data.length).toBe(9);
 		});
 		
-		it("navigates to floors overview page on clicking Save progress", async () => {
+		test("exposed floor and exposed floor section are set as 'not complete' after user edits an exposed floor", async () => {
+			// Arrange
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceFloors: {
+						dwellingSpaceExposedFloor: {
+							data: [{ data: exposedFloor, complete: true }],
+							complete: true
+						}
+					}
+				}
+			});
+				
+			await renderSuspended(ExposedFloor, {
+				route: {
+					params: { floor: "0" }
+				}
+			});
+						
+			// Act
+			await user.type(screen.getByTestId("name"), "Exposed");
+			await user.tab();
+						
+			// Assert
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.data[0]?.complete).not.toBe(true);
+			expect(store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete).not.toBe(true);
+		});
+
+		test("app navigates to floors overview page on clicking Save progress", async () => {
 			await renderSuspended(ExposedFloor);
 			await user.click(screen.getByTestId("saveProgress"));
 			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space/floors");

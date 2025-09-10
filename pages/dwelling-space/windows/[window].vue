@@ -37,7 +37,7 @@ if (window && "sideFinLeftDistance" in window) {
 	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === "number" ? unitValue(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
 };
 
-const model: Ref<WindowData > = ref(window?.data!);
+const model: Ref<WindowData | undefined > = ref(window && window.data);
 
 const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSentenceCase<SchemaWindowTreatmentType>> = {
 	curtains: "Curtains",
@@ -195,7 +195,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
-
+	
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -210,7 +210,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="name" type="govInputText" label="Name"
 			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
 		<FieldsPitch
-			:pitch-option="model.pitchOption"
+			:pitch-option="model && model.pitchOption"
 			:options="standardPitchOptions()"
 		/>
 		<FieldsOrientation />
@@ -263,7 +263,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				4: '4',
 				0: 'None',
 			}" label="Number of openable parts " name="numberOpenableParts" validation="required" />
-		<template v-if="!!model.numberOpenableParts && model.numberOpenableParts !== '0'">
+		<template v-if="!!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
 				id="heightOpenableArea" type="govInputWithSuffix" suffix-text="m" label="Height of the openable area"
 				help="Enter the vertical measurement of the section of the window that can be opened"
@@ -400,13 +400,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<h2 class="govuk-heading-l">Curtains and blinds</h2>
 		<FormKit
 			id="curtainsOrBlinds"
-			v-model="model.curtainsOrBlinds"
+			v-model="model!.curtainsOrBlinds"
 			type="govBoolean"
 			label="Does this window have any curtains or blinds?"
 			name="curtainsOrBlinds"
 			validation="required"
 		/>
-		<template v-if="model.curtainsOrBlinds">
+		<template v-if="model && model.curtainsOrBlinds">
 			<FormKit
 				id="treatmentType"
 				type="govRadios"
@@ -417,7 +417,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required"
 			/>
 			<FormKit
-				v-if="model.treatmentType === 'curtains'"
+				v-if="model && model.treatmentType === 'curtains'"
 				id="curtainsControlObject"
 				type="govRadios"
 				:options="curtainsControlObjectOptions"
@@ -447,7 +447,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
-			<GovButton :href="getUrl('dwellingSpaceWindows')" secondary>Save progress</GovButton>
+			<GovButton :href="getUrl('dwellingSpaceWindows')" test-id="saveProgress" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

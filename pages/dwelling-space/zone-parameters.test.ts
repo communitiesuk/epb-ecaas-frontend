@@ -102,10 +102,9 @@ describe("zone parameters", () => {
 		await renderSuspended(ZoneParameters);
 
 		await user.type(screen.getByTestId("area"), "10");
-	
-		const saveProcess = screen.getByRole("button", { name: "Save progress" });
-	
-		expect(saveProcess.getAttribute("href")).toBe("/dwelling-space");
+		await user.click(screen.getByTestId("saveProgress"));
+
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-space");
 	});
 });
 
