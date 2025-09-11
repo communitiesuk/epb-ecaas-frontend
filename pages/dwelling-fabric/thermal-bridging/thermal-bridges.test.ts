@@ -7,6 +7,7 @@ import PointThermalBridgeForm from "./point/[bridging].vue";
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
 import type { Component } from "vue";
+import formStatus from "~/constants/formStatus";
 
 describe("thermal bridges", () => {
 	const store = useEcaasStore();
@@ -323,6 +324,22 @@ describe("thermal bridges", () => {
 		await renderSuspended(ThermalBridges);
 		const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
 		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
+	});
+
+	test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceThermalBridging: {
+					dwellingSpacePointThermalBridges: {
+						data: [point1],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(ThermalBridges);
+
+		expect(screen.getByTestId("pointThermalBridges_status_0").textContent).toBe(formStatus.inProgress.text);
 	});
 	});
 });
