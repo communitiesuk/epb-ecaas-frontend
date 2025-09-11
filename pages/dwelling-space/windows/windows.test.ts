@@ -214,12 +214,25 @@ describe("windows", () => {
 		await renderSuspended(Windows);
 		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
 	});
-	
-	test("should navigate to the dwelling fabric overview page when return to overview is clicked", async () => {
-		await renderSuspended(Windows);
-	
-		const returnToOverviewButton = screen.getByRole("button", { name: "Return to dwelling space" });
-		expect(returnToOverviewButton.getAttribute("href")).toBe("/dwelling-space");
+
+	test("marks windows as not complete when window item is complete, then user adds another window item and makes first edit", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [window1],
+					complete: true
+				}, 
+			},
+		});
+
+		await renderSuspended(WindowsForm, {
+			route: {
+				params: { window: "create" },
+			},
+		});
+		await user.type(screen.getByTestId("name"), "Window 2");
+		await user.tab();
+		expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
 	});
 
 	test("should display an in-progress indicator when an entry is not marked as complete", async () => {
@@ -227,13 +240,13 @@ describe("windows", () => {
 			dwellingFabric: {
 				dwellingSpaceWindows: {
 					data: [{ data: { ...window1.data }, complete: false }]
-
+					
 				},
 			},
 		});
-	
+		
 		await renderSuspended(Windows);
-	
+		
 		expect(screen.getByTestId("windows_status_0").textContent).toBe(formStatus.inProgress.text);
 	});
 	
@@ -242,13 +255,20 @@ describe("windows", () => {
 			dwellingFabric: {
 				dwellingSpaceWindows: {
 					data: [window1]
-
+					
 				},
 			},
 		});
 		
 		await renderSuspended(Windows);
-	
+		
 		expect(screen.getByTestId("windows_status_0").textContent).toBe(formStatus.complete.text);
+	});
+		
+	test("should navigate to the dwelling fabric overview page when return to overview is clicked", async () => {
+		await renderSuspended(Windows);
+	
+		const returnToOverviewButton = screen.getByRole("button", { name: "Return to dwelling fabric" });
+		expect(returnToOverviewButton.getAttribute("href")).toBe("/dwelling-space");
 	});
 });
