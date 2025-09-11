@@ -200,5 +200,32 @@ describe("external glazed door", () => {
 			expect(actualDoor.data.name).toBe("Updated door");
 			expect(actualDoor.data.elevationalHeight).toBe(12);
 		});
+
+		test("external glazed door and section are set as 'not complete' after user edits an item", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ ...state, complete: true }],
+							complete: true
+						}
+					}
+				}
+			});
+
+			await renderSuspended(ExternalGlazedDoor, {
+				route: {
+					params: { externalGlazed: "0" }
+				}
+			});
+
+			await user.type(screen.getByTestId("name"), "Door");
+			await user.tab();
+
+			const externalGlazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor;
+
+			expect(externalGlazedDoors.data[0]!.complete).not.toBe(true);
+			expect(externalGlazedDoors.complete).not.toBe(true);
+		});
 	});
 });

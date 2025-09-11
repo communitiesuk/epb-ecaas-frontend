@@ -8,6 +8,7 @@ import glazedDoorForm from "./external-glazed/[door].vue";
 import internalDoorForm from "./internal/[door].vue";
 import { MassDistributionClass } from "~/schema/api-schema.types";
 import type { Component } from "vue";
+import formStatus from "~/constants/formStatus";
 
 describe("doors", () => {
 	const store = useEcaasStore();
@@ -523,6 +524,22 @@ describe("doors", () => {
 			await renderSuspended(Doors);
 			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
 			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
+		});
+
+		test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [externalGlazed1],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Doors);
+
+			expect(screen.getByTestId("externalGlazed_status_0").textContent).toBe(formStatus.inProgress.text);
 		});
 	});
 });
