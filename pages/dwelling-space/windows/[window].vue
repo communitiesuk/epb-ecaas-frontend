@@ -37,7 +37,7 @@ if (window && "sideFinLeftDistance" in window) {
 	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === "number" ? unitValue(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
 };
 
-const model: Ref<WindowData | undefined > = ref(window && window.data);
+const model: Ref<WindowData | undefined > = ref(window?.data);
 
 const windowTreatmentTypeOptions: Record<WindowTreatmentType, SnakeToSentenceCase<WindowTreatmentType>> = {
 	curtains: "Curtains",
