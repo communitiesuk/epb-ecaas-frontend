@@ -100,17 +100,15 @@ describe("cooling", () => {
 
 		it("marks cooling as complete when mark section as complete button is clicked", async () => {
 			await renderSuspended(Cooling);
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		
-			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
-			expect(completedStatusElement?.style.display).toBe("none");
-		
+
+			const markAsCompleteButton = screen.getByTestId("completeSectionButton");
+			expect(markAsCompleteButton?.style.display).not.toBe("none");
+			
 			await user.click(screen.getByTestId("completeSectionButton"));
-		
-			const { complete } = store.cooling.airConditioning;
-		
-			expect(complete).toBe(true);
-			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+			
+			expect(store.cooling.airConditioning.complete).toBe(true);
+			
+			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
 			expect(completedStatusElement?.style.display).not.toBe("none");
 		
 			expect(navigateToMock).toHaveBeenCalledWith("/");
@@ -133,7 +131,10 @@ describe("cooling", () => {
 			await user.click(screen.getByTestId("airConditioning_remove_0"));
 		
 			expect(store.cooling.airConditioning.complete).toBe(false);
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+
+			const markAsCompleteButton = screen.getByTestId("completeSectionButton");
+			expect(markAsCompleteButton?.style.display).not.toBe("none");
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeFalsy();
 		});
 		
 		it("marks cooling as not complete when complete button is clicked then user duplicates an item", async () => {
@@ -153,7 +154,9 @@ describe("cooling", () => {
 			await user.click(screen.getByTestId("airConditioning_duplicate_0"));
 		
 			expect(store.cooling.airConditioning.complete).toBe(false);
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			const markAsCompleteButton = screen.getByTestId("completeSectionButton");
+			expect(markAsCompleteButton?.style.display).not.toBe("none");
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeFalsy();
 		});
 		
 		it("marks cooling as not complete when user saves a new or edited form after marking section as complete", async () => {
@@ -179,7 +182,9 @@ describe("cooling", () => {
 			expect(store.cooling.airConditioning.complete).toBe(false);
 		
 			await renderSuspended(Cooling);
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			const markAsCompleteButton = screen.getByTestId("completeSectionButton");
+			expect(markAsCompleteButton?.style.display).not.toBe("none");
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeFalsy();
 		});
 		
 		it("should navigate to the main overview page when return to overview is clicked", async () => {
