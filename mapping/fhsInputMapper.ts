@@ -96,7 +96,8 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		control,
 		events,
 		internalGains,
-		defaultSimulationTime
+		defaultSimulationTime,
+		{ temp_internal_air_static_calcs: 20.0 }, // temporary dummy, expected value for this - this field is removed in later schemas
 	]) as FhsInputSchema;
 
 	console.log(fhsInput);

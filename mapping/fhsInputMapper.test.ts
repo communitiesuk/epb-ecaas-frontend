@@ -269,7 +269,7 @@ const expectedHouseInput: FhsInputSchema = {
 			temp_setpnt_init: 20.0, // TODO find out what this should be
 		}
 	},
-	temp_internal_air_static_calcs: 20.0 // TODO find out what this should be
+	temp_internal_air_static_calcs: 20.0 // dummy value - this goes away in later schemas
 };
 
 const expectedFlatInput: FhsInputSchema = {
@@ -903,7 +903,7 @@ const expectedFlatInput: FhsInputSchema = {
 			temp_setpnt_init: 20.0 // TODO find out what this should be
 		}
 	},
-	temp_internal_air_static_calcs: 20.0 // TODO find out what this should be
+	temp_internal_air_static_calcs: 20.0 // dummy value - this goes away in later schemas
 };
 
 // custom vitest matcher so we can get more useful JSON validation errors
