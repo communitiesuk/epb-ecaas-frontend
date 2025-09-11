@@ -200,4 +200,31 @@ describe("roof", () => {
 
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/ceilings-and-roofs");
 	});
+
+	test("roof and roofs section are set as 'not complete' after user edits an item", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						data: [{ ...roof, complete: true }],
+						complete: true
+					}
+				}
+			}
+		});
+
+		await renderSuspended(Roof, {
+			route: {
+				params: { roof: "0" }
+			}
+		});
+
+		await user.type(screen.getByTestId("name"), "Roof");
+		await user.tab();
+
+		const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs;
+
+		expect(roofs.data[0]!.complete).not.toBe(true);
+		expect(roofs.complete).not.toBe(true);
+	});
 });
