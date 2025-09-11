@@ -44,14 +44,15 @@ const window1: EcaasForm<WindowData> = {
 };
 
 const window2: EcaasForm<WindowData>  = {
-	data: {	...window1.data, 	name: "Window 2" },
+	data: {
+		...window1.data, 	name: "Window 2" },
 };
 
 afterEach(() => {
 	store.$reset();
 });
-describe ("window", () => {
 
+describe ("window", () => {
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(Window, {
 			route: {
@@ -180,7 +181,6 @@ describe ("window", () => {
 		await user.click(screen.getByTestId("numberOpenableParts_4"));
 		await(user.click(screen.getByTestId("saveAndComplete")));
 
-    
 		expect((await screen.findByTestId("openingToFrameRatio_error"))).toBeDefined();
 		expect((await screen.findByTestId("maximumOpenableArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("heightOpenableArea_error"))).toBeDefined();
@@ -195,10 +195,8 @@ describe ("window", () => {
     
 		await user.click(screen.getByTestId("numberOpenableParts_1"));
 		await(user.click(screen.getByTestId("saveAndComplete")));
-
     
 		expect((await screen.findByTestId("midHeightOpenablePart1_error"))).toBeDefined();
-        
 		expect((screen.queryByTestId("midHeightOpenablePart2_error"))).toBeNull();
 		expect((screen.queryByTestId("midHeightOpenablePart3_error"))).toBeNull();
 		expect((screen.queryByTestId("midHeightOpenablePart4_error"))).toBeNull();
@@ -216,12 +214,13 @@ describe ("window", () => {
 
 	test("displays guidance link to window shading guidance page", async () => {
 		await renderSuspended(Window);
+
 		const guidance = screen.getByRole("link", { name : "Guidance on window shading (opens in another window)" });
 		expect(guidance).toBeDefined();
 		expect(guidance.getAttribute("href")).toBe("/guidance/window-shading-guidance");
 	});
 
-	test("save progress button navigates user to the dwelling fabric overview page", async () => {
+	test("save progress button navigates user to the windows overview page", async () => {
 		await renderSuspended(Window);
 		
 		await user.click(screen.getByTestId("curtainsOrBlinds_yes"));
@@ -233,7 +232,6 @@ describe ("window", () => {
 
 describe("Partially saving data", () => {
 	test("form data is automatically saved to store", async () => {
-
 		await renderSuspended(Window, {
 			route: {
 				params: { window: "create" },
@@ -266,7 +264,6 @@ describe("Partially saving data", () => {
 	});
 
 	test("default name is used if name is added then deleted", async () => {
-		
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
@@ -291,7 +288,6 @@ describe("Partially saving data", () => {
 	});
 
 	test("default name is used if name added is whitespace", async () => {
-
 		await renderSuspended(Window, {
 			route: {
 				params: { window: "create" },
@@ -349,8 +345,7 @@ describe("Partially saving data", () => {
 				params: { window: "1" },
 			},
 		});
-
-					
+		
 		await user.clear(screen.getByTestId("name"));
 		await user.clear(screen.getByTestId("orientation"));
 		
