@@ -92,7 +92,7 @@ function hasIncompleteEntries(){
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-space" secondary>
-			Return to dwelling space
+			Return to dwelling fabric
 		</GovButton>
 		<CompleteElement :is-complete="store.dwellingFabric.dwellingSpaceWindows.complete ?? false" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 	</div>

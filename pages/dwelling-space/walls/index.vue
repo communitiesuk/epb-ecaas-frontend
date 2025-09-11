@@ -102,7 +102,7 @@ function checkIsComplete(){
 			href="/dwelling-space"
 			secondary
 		>
-			Return to dwelling space
+			Return to dwelling fabric
 		</GovButton>
 		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
 

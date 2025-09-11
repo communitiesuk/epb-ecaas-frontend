@@ -106,7 +106,7 @@ const hasIncompleteEntries = () =>
 			href="/dwelling-space"
 			secondary
 		>
-			Return to dwelling space
+			Return to dwelling fabric
 		</GovButton>
 		<CompleteElement
 			:is-complete="Object.values(store.dwellingFabric.dwellingSpaceThermalBridging).every(section => section.complete)"

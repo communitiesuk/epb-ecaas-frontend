@@ -269,7 +269,7 @@ describe("windows", () => {
 	test("should navigate to the dwelling fabric overview page when return to overview is clicked", async () => {
 		await renderSuspended(Windows);
 	
-		const returnToOverviewButton = screen.getByRole("button", { name: "Return to dwelling space" });
+		const returnToOverviewButton = screen.getByRole("button", { name: "Return to dwelling fabric" });
 		expect(returnToOverviewButton.getAttribute("href")).toBe("/dwelling-space");
 	});
 });
