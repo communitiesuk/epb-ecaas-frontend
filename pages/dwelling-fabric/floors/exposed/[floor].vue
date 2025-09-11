@@ -24,10 +24,6 @@ const saveForm = (fields: ExposedFloorData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass
 		};
-
-		if (!dwellingSpaceFloors.dwellingSpaceExposedFloor) {
-			dwellingSpaceFloors.dwellingSpaceExposedFloor = { data: [] };
-		}
 		
 		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceExposedFloor.data);
 		dwellingSpaceFloors.dwellingSpaceExposedFloor.data[index] =  { data: floor, complete: true };

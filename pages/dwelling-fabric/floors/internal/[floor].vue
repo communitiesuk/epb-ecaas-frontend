@@ -39,10 +39,6 @@ const saveForm = (fields: InternalFloorData) => {
 		} else {
 			throw new Error("Invalid floor type");
 		}
-
-		if (!dwellingSpaceFloors.dwellingSpaceInternalFloor) {
-			dwellingSpaceFloors.dwellingSpaceInternalFloor = { data: [] };
-		}
 		
 		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceInternalFloor.data);
 		dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] =  { data: floor, complete: true };

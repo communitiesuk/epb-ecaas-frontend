@@ -104,11 +104,6 @@ const saveForm = (fields: GroundFloorData) => {
 			default:
 				fields satisfies never;
 				throw new Error(`Did not handle floor type '${ (fields as GroundFloorData).typeOfGroundFloor }'`);
-
-		}
-
-		if (!dwellingSpaceFloors.dwellingSpaceGroundFloor) {
-			dwellingSpaceFloors.dwellingSpaceGroundFloor = { data: [] };
 		}
 		
 		dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = { data: floorData, complete: true };
