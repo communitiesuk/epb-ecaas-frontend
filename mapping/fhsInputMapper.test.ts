@@ -29,63 +29,64 @@ const expectedHouseInput: FhsInputSchema = {
 		}
 	},
 	Events: noEvents,
-	ExternalConditions: externalConditions([
-		{ number: 1, start360: 0, end360: 10 },
-		{ number: 2, start360: 10, end360: 20 },
-		{ number: 3, start360: 20, end360: 30 },
-		{ number: 4, start360: 30, end360: 40 },
-		{ number: 5, start360: 40, end360: 50 },
-		{ number: 6, start360: 50, end360: 60 },
-		{ number: 7, start360: 60, end360: 70, shading: [
-			{
-				distance: 1,
-				height: 2,
-				type: "obstacle"
-			}
-		] },
-		{ number: 8, start360: 70, end360: 80, shading: [
-			{
-				distance: 1,
-				height: 2,
-				type: "obstacle"
-			}
-		] },
-		{ number: 9, start360: 80, end360: 90, shading: [
-			{
-				distance: 1,
-				height: 2,
-				type: "obstacle"
-			}
-		] },
-		{ number: 10, start360: 90, end360: 100 },
-		{ number: 11, start360: 100, end360: 110 },
-		{ number: 12, start360: 110, end360: 120 },
-		{ number: 13, start360: 120, end360: 130 },
-		{ number: 14, start360: 130, end360: 140 },
-		{ number: 15, start360: 140, end360: 150 },
-		{ number: 16, start360: 150, end360: 160 },
-		{ number: 17, start360: 160, end360: 170 },
-		{ number: 18, start360: 170, end360: 180 },
-		{ number: 19, start360: 180, end360: 190 },
-		{ number: 20, start360: 190, end360: 200 },
-		{ number: 21, start360: 200, end360: 210 },
-		{ number: 22, start360: 210, end360: 220 },
-		{ number: 23, start360: 220, end360: 230 },
-		{ number: 24, start360: 230, end360: 240 },
-		{ number: 25, start360: 240, end360: 250 },
-		{ number: 26, start360: 250, end360: 260 },
-		{ number: 27, start360: 260, end360: 270 },
-		{ number: 28, start360: 270, end360: 280 },
-		{ number: 29, start360: 280, end360: 290 },
-		{ number: 30, start360: 290, end360: 300 },
-		{ number: 31, start360: 300, end360: 310 },
-		{ number: 32, start360: 310, end360: 320 },
-		{ number: 33, start360: 320, end360: 330 },
-		{ number: 34, start360: 330, end360: 340 },
-		{ number: 35, start360: 340, end360: 350 },
-		{ number: 36, start360: 350, end360: 360 }
-	]
-	),
+	ExternalConditions: {
+		shading_segments: [
+			{ number: 1, start360: 0, end360: 10 },
+			{ number: 2, start360: 10, end360: 20 },
+			{ number: 3, start360: 20, end360: 30 },
+			{ number: 4, start360: 30, end360: 40 },
+			{ number: 5, start360: 40, end360: 50 },
+			{ number: 6, start360: 50, end360: 60 },
+			{ number: 7, start360: 60, end360: 70, shading: [
+				{
+					distance: 1,
+					height: 2,
+					type: "obstacle"
+				}
+			] },
+			{ number: 8, start360: 70, end360: 80, shading: [
+				{
+					distance: 1,
+					height: 2,
+					type: "obstacle"
+				}
+			] },
+			{ number: 9, start360: 80, end360: 90, shading: [
+				{
+					distance: 1,
+					height: 2,
+					type: "obstacle"
+				}
+			] },
+			{ number: 10, start360: 90, end360: 100 },
+			{ number: 11, start360: 100, end360: 110 },
+			{ number: 12, start360: 110, end360: 120 },
+			{ number: 13, start360: 120, end360: 130 },
+			{ number: 14, start360: 130, end360: 140 },
+			{ number: 15, start360: 140, end360: 150 },
+			{ number: 16, start360: 150, end360: 160 },
+			{ number: 17, start360: 160, end360: 170 },
+			{ number: 18, start360: 170, end360: 180 },
+			{ number: 19, start360: 180, end360: 190 },
+			{ number: 20, start360: 190, end360: 200 },
+			{ number: 21, start360: 200, end360: 210 },
+			{ number: 22, start360: 210, end360: 220 },
+			{ number: 23, start360: 220, end360: 230 },
+			{ number: 24, start360: 230, end360: 240 },
+			{ number: 25, start360: 240, end360: 250 },
+			{ number: 26, start360: 250, end360: 260 },
+			{ number: 27, start360: 260, end360: 270 },
+			{ number: 28, start360: 270, end360: 280 },
+			{ number: 29, start360: 280, end360: 290 },
+			{ number: 30, start360: 290, end360: 300 },
+			{ number: 31, start360: 300, end360: 310 },
+			{ number: 32, start360: 310, end360: 320 },
+			{ number: 33, start360: 320, end360: 330 },
+			{ number: 34, start360: 330, end360: 340 },
+			{ number: 35, start360: 340, end360: 350 },
+			{ number: 36, start360: 350, end360: 360 }
+		]
+	},
 	General: {
 		build_type: "house",
 		storeys_in_building: 2,
@@ -327,74 +328,75 @@ const expectedFlatInput: FhsInputSchema = {
 		}
 	},
 	Events: noEvents,
-	ExternalConditions: externalConditions([
-		{ number: 1, start360: 0, end360: 10, shading: [
-			{
-				distance: 0.5,
-				height: 1,
-				type: "obstacle"
-			}
-		] },
-		{ number: 2, start360: 10, end360: 20, shading: [
-			{
-				distance: 2,
-				height: 5,
-				type: "overhang"
-			},
-			{
-				distance: 0.5,
-				height: 1,
-				type: "obstacle"
-			},
-		] },
-		{ number: 3, start360: 20, end360: 30, shading: [
-			{
-				distance: 2,
-				height: 5,
-				type: "overhang"
-			}
-		] },
-		{ number: 4, start360: 30, end360: 40, shading: [
-			{
-				distance: 2,
-				height: 5,
-				type: "overhang"
-			}
-		] },
-		{ number: 5, start360: 40, end360: 50 },
-		{ number: 6, start360: 50, end360: 60 },
-		{ number: 7, start360: 60, end360: 70 },
-		{ number: 8, start360: 70, end360: 80 },
-		{ number: 9, start360: 80, end360: 90 },
-		{ number: 10, start360: 90, end360: 100 },
-		{ number: 11, start360: 100, end360: 110 },
-		{ number: 12, start360: 110, end360: 120 },
-		{ number: 13, start360: 120, end360: 130 },
-		{ number: 14, start360: 130, end360: 140 },
-		{ number: 15, start360: 140, end360: 150 },
-		{ number: 16, start360: 150, end360: 160 },
-		{ number: 17, start360: 160, end360: 170 },
-		{ number: 18, start360: 170, end360: 180 },
-		{ number: 19, start360: 180, end360: 190 },
-		{ number: 20, start360: 190, end360: 200 },
-		{ number: 21, start360: 200, end360: 210 },
-		{ number: 22, start360: 210, end360: 220 },
-		{ number: 23, start360: 220, end360: 230 },
-		{ number: 24, start360: 230, end360: 240 },
-		{ number: 25, start360: 240, end360: 250 },
-		{ number: 26, start360: 250, end360: 260 },
-		{ number: 27, start360: 260, end360: 270 },
-		{ number: 28, start360: 270, end360: 280 },
-		{ number: 29, start360: 280, end360: 290 },
-		{ number: 30, start360: 290, end360: 300 },
-		{ number: 31, start360: 300, end360: 310 },
-		{ number: 32, start360: 310, end360: 320 },
-		{ number: 33, start360: 320, end360: 330 },
-		{ number: 34, start360: 330, end360: 340 },
-		{ number: 35, start360: 340, end360: 350 },
-		{ number: 36, start360: 350, end360: 360 }
-	]
-	),
+	ExternalConditions: {
+		shading_segments: [
+			{ number: 1, start360: 0, end360: 10, shading: [
+				{
+					distance: 0.5,
+					height: 1,
+					type: "obstacle"
+				}
+			] },
+			{ number: 2, start360: 10, end360: 20, shading: [
+				{
+					distance: 2,
+					height: 5,
+					type: "overhang"
+				},
+				{
+					distance: 0.5,
+					height: 1,
+					type: "obstacle"
+				},
+			] },
+			{ number: 3, start360: 20, end360: 30, shading: [
+				{
+					distance: 2,
+					height: 5,
+					type: "overhang"
+				}
+			] },
+			{ number: 4, start360: 30, end360: 40, shading: [
+				{
+					distance: 2,
+					height: 5,
+					type: "overhang"
+				}
+			] },
+			{ number: 5, start360: 40, end360: 50 },
+			{ number: 6, start360: 50, end360: 60 },
+			{ number: 7, start360: 60, end360: 70 },
+			{ number: 8, start360: 70, end360: 80 },
+			{ number: 9, start360: 80, end360: 90 },
+			{ number: 10, start360: 90, end360: 100 },
+			{ number: 11, start360: 100, end360: 110 },
+			{ number: 12, start360: 110, end360: 120 },
+			{ number: 13, start360: 120, end360: 130 },
+			{ number: 14, start360: 130, end360: 140 },
+			{ number: 15, start360: 140, end360: 150 },
+			{ number: 16, start360: 150, end360: 160 },
+			{ number: 17, start360: 160, end360: 170 },
+			{ number: 18, start360: 170, end360: 180 },
+			{ number: 19, start360: 180, end360: 190 },
+			{ number: 20, start360: 190, end360: 200 },
+			{ number: 21, start360: 200, end360: 210 },
+			{ number: 22, start360: 210, end360: 220 },
+			{ number: 23, start360: 220, end360: 230 },
+			{ number: 24, start360: 230, end360: 240 },
+			{ number: 25, start360: 240, end360: 250 },
+			{ number: 26, start360: 250, end360: 260 },
+			{ number: 27, start360: 260, end360: 270 },
+			{ number: 28, start360: 270, end360: 280 },
+			{ number: 29, start360: 280, end360: 290 },
+			{ number: 30, start360: 290, end360: 300 },
+			{ number: 31, start360: 300, end360: 310 },
+			{ number: 32, start360: 310, end360: 320 },
+			{ number: 33, start360: 320, end360: 330 },
+			{ number: 34, start360: 330, end360: 340 },
+			{ number: 35, start360: 340, end360: 350 },
+			{ number: 36, start360: 350, end360: 360 }
+		]
+	},
 	General: {
 		build_type: "flat",
 		storeys_in_building: 6,
