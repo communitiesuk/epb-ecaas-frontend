@@ -37,7 +37,7 @@ if (window && "sideFinLeftDistance" in window) {
 	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === "number" ? unitValue(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
 };
 
-const model: Ref<WindowData | undefined > = ref(window?.data);
+const model = ref(window?.data);
 
 const windowTreatmentTypeOptions: Record<WindowTreatmentType, SnakeToSentenceCase<WindowTreatmentType>> = {
 	curtains: "Curtains",
@@ -179,7 +179,7 @@ const saveForm = (fields: WindowData) => {
 	navigateTo("/dwelling-fabric/windows");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<WindowData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceWindows,
 	defaultName: "Window",
@@ -419,7 +419,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required"
 			/>
 			<FormKit
-				v-if="model && model.treatmentType === 'curtains'"
+				v-if="model && 'treatmentType' in model && model.treatmentType === 'curtains'"
 				id="curtainsControlObject"
 				type="govRadios"
 				:options="curtainsControlObjectOptions"

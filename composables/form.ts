@@ -1,3 +1,5 @@
+import type { EcaasFormList, PartialExceptName } from "~/stores/ecaasStore.schema";
+
 export function useForm() {
 	const route = useRoute();
 	const store = useEcaasStore();
@@ -52,14 +54,14 @@ export function useForm() {
 				onPatch(state, {
 					data: newData,
 					complete: false,
-				});
+				} as EcaasForm<T>);
 			});
 		});
 	};
 
-	interface AutoSaveElementFormOptions<T> {
-		model: Ref<T | undefined>;
-		storeData: EcaasForm<EcaasForm<T>[]>;
+	interface AutoSaveElementFormOptions<T extends { name: string }> {
+		model: Ref<PartialExceptName<T> | undefined>;
+		storeData: EcaasFormList<T>;
 		defaultName: string;
 		onPatch: (state: EcaasState, newData: EcaasForm<T>, index: number) => void;
 	}
@@ -68,13 +70,13 @@ export function useForm() {
 	 * Watches for changes on an element form model, creating or updating the store accordingly
 	 * @param options
 	 */
-	const autoSaveElementForm = <T extends object>({
+	const autoSaveElementForm = <T extends { name: string }>({
 		model,
 		storeData,
 		defaultName,
 		onPatch,
 	}: AutoSaveElementFormOptions<T>) => {
-		watch(model, async (newData: T | undefined, initialData: T | undefined) => {
+		watch(model, async (newData: PartialExceptName<T> | undefined, initialData: PartialExceptName<T> | undefined) => {
 			const routeParam = route.params[Object.keys(route.params)[0]!];
 			if (initialData === undefined || newData === undefined || routeParam === undefined) {
 				return;
@@ -98,8 +100,10 @@ export function useForm() {
 
 			store.$patch((state) => {
 				const name = getName(newData, defaultName);
+				const dataToPatch: PartialExceptName<T> = { ...newData, name };
+
 				const elementData: EcaasForm<T> = {
-					data: { ...newData, name },
+					data: dataToPatch as T,
 				};
 
 				onPatch(state, elementData, index);

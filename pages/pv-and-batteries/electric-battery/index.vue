@@ -6,7 +6,7 @@ const title = "Electric battery";
 const store = useEcaasStore();
 
 const electricBatteryData = store.pvAndBatteries.electricBattery.data[0];
-const model: Ref<ElectricBatteryData | undefined> = ref(electricBatteryData?.data);
+const model = ref(electricBatteryData?.data);
 
 const saveForm = (fields: ElectricBatteryData) => {
 	store.$patch((state) => {
@@ -34,7 +34,7 @@ const saveForm = (fields: ElectricBatteryData) => {
 	navigateTo("/pv-and-batteries");
 };
 
-watch(model, async (newData: ElectricBatteryData | undefined, initialData: ElectricBatteryData | undefined) => {
+watch(model, async (newData, initialData) => {
 	const storeData = store.pvAndBatteries.electricBattery.data[0];
 
 	if (initialData === undefined || newData === undefined) {

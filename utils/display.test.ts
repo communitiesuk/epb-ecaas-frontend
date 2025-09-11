@@ -1,4 +1,24 @@
 import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass } from "~/schema/api-schema.types";
+import { show } from "./display";
+
+describe("Show function to make showable value", () => {
+	it("renders a string as-is", () => {
+		const str = "Acme";
+		expect(show(str)).toEqual(str);
+	});
+
+	it("renders a number as a string", () => {
+		expect(show(4.2)).toBe("4.2");
+	});
+
+	it("renders null as a hyphen", () => {
+		expect(show(null)).toBe("-");
+	});
+
+	it("renders undefined as a hyphen", () => {
+		expect(show(undefined)).toBe("-");
+	});
+});
 
 describe("Show boolean in display", () => {
 	it("should return Yes when value is true", () => {

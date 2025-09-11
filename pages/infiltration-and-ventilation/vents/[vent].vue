@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const ventData = useItemToEdit("vent", store.infiltrationAndVentilation.vents.data);
-const model: Ref<VentData | undefined> = ref(ventData?.data);
+const model = ref(ventData?.data);
 
 const saveForm = (fields: VentData) => {
 	store.$patch((state) => {
@@ -32,7 +32,7 @@ const saveForm = (fields: VentData) => {
 	navigateTo("/infiltration-and-ventilation/vents");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<VentData>({
 	model,
 	storeData: store.infiltrationAndVentilation.vents,
 	defaultName: "Vent",

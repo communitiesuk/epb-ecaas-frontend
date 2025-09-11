@@ -33,7 +33,7 @@ function handleDuplicate(index: number) {
 					...shading.data,
 					name: `${shading.data.name} (${duplicates.length})`,
 				},
-			});
+			} as EcaasForm<ShadingData>);
 
 			state.dwellingDetails.shading.complete = false;
 		});

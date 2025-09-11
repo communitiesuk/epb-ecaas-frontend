@@ -12,11 +12,11 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
 // prepopulate edge insulation width when using old input format
-if (floorData?.data.typeOfGroundFloor === FloorType.Slab_edge_insulation && typeof floorData.data.edgeInsulationWidth === "number") {
+if (floorData?.data && "edgeInsulationWidth" in floorData.data && typeof floorData.data.edgeInsulationWidth === "number") {
 	floorData.data.edgeInsulationWidth = unitValue(floorData.data.edgeInsulationWidth, centimetre);
 };
 
-const model: Ref<GroundFloorData | undefined> = ref(floorData?.data);
+const model = ref(floorData?.data);
 
 // Removed heated and unheated basement options for summer
 type reducedGroundFloorOptions = FloorType.Slab_no_edge_insulation | FloorType.Slab_edge_insulation | FloorType.Suspended_floor;
@@ -113,7 +113,7 @@ const saveForm = (fields: GroundFloorData) => {
 	navigateTo("/dwelling-fabric/floors");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<GroundFloorData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor,
 	defaultName: "Ground floor",

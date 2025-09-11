@@ -35,7 +35,7 @@ const saveForm = (fields: typeof model.value) => {
 	navigateTo("/dwelling-details");
 };
 
-autoSaveForm(model, (state, newData) => {
+autoSaveForm<GeneralDetailsData>(model, (state, newData) => {
 	state.dwellingDetails.generalSpecifications = newData;
 });
 

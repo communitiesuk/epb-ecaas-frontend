@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const roofData = useItemToEdit("roof", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
-const model: Ref<RoofData | undefined> = ref(roofData?.data);
+const model = ref(roofData?.data);
 
 const roofTypeOptions: Record<Exclude<RoofType, "unheatedPitched">, string> = {
 	flat: "Flat roof",
@@ -43,7 +43,7 @@ const saveForm = (fields: RoofData) => {
 	navigateTo("/dwelling-fabric/ceilings-and-roofs");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<RoofData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs,
 	defaultName: "Roof",
