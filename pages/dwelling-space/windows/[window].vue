@@ -148,10 +148,11 @@ const saveForm = (fields: WindowData) => {
 				commonFieldsIncludingOpenableParts = { ...commonFields } as WindowData;
 				break;
 		}
-		
+		let newWindowValue : WindowData;
+
 		if (fields.curtainsOrBlinds) {
 
-			const newWindowValue = {
+			newWindowValue = {
 				...commonFieldsIncludingOpenableParts,
 				curtainsOrBlinds: true,
 				treatmentType: fields.treatmentType,
@@ -159,23 +160,20 @@ const saveForm = (fields: WindowData) => {
 				solarTransmittanceReduction: fields.solarTransmittanceReduction,
 				...(fields.treatmentType === WindowTreatmentType.curtains ? { curtainsControlObject: fields.curtainsControlObject } : {}),
 			} as WindowData;
-			
-			dwellingSpaceWindows.data[index] = {
-				data: newWindowValue,
-				complete: true
-			};
+		
 		} else {
 			
-			const newWindowValue = {
+			newWindowValue = {
 				curtainsOrBlinds: false,
 				...commonFieldsIncludingOpenableParts,
 			} as WindowData;
-
-			dwellingSpaceWindows.data[index] = {
-				data: newWindowValue,
-				complete: true
-			};
 		}
+
+		dwellingSpaceWindows.data[index] = {
+			data: newWindowValue,
+			complete: true
+		};
+
 		dwellingSpaceWindows.complete = false;
 	});
 	navigateTo("/dwelling-space/windows");
