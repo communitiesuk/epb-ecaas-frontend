@@ -1,3 +1,5 @@
+import type { EcaasFormList, PartialExceptName } from "~/stores/ecaasStore.schema";
+
 export function useForm() {
 	const route = useRoute();
 	const store = useEcaasStore();
@@ -52,14 +54,14 @@ export function useForm() {
 				onPatch(state, {
 					data: newData,
 					complete: false,
-				});
+				} as EcaasForm<T>);
 			});
 		});
 	};
 
-	interface AutoSaveElementFormOptions<T> {
-		model: Ref<T | undefined>;
-		storeData: EcaasForm<EcaasForm<T>[]>;
+	interface AutoSaveElementFormOptions<T extends { name: string }> {
+		model: Ref<PartialExceptName<T> | undefined>;
+		storeData: EcaasFormList<T>;
 		defaultName: string;
 		onPatchCreate: (state: EcaasState, newData: EcaasForm<T>) => void;
 		onPatchUpdate: (state: EcaasState, newData: EcaasForm<T>, index: number) => void;
@@ -69,14 +71,14 @@ export function useForm() {
 	 * Watches for changes on an element form model, creating or updating the store accordingly
 	 * @param options
 	 */
-	const autoSaveElementForm = <T extends object>({
+	const autoSaveElementForm = <T extends { name: string }>({
 		model,
 		storeData,
 		defaultName,
 		onPatchCreate,
 		onPatchUpdate,
 	}: AutoSaveElementFormOptions<T>) => {
-		watch(model, async (newData: T | undefined, initialData: T | undefined) => {
+		watch(model, async (newData: PartialExceptName<T> | undefined, initialData: PartialExceptName<T> | undefined) => {
 			const routeParam = route.params[Object.keys(route.params)[0]!];
 
 			if (initialData === undefined || newData === undefined || routeParam === undefined) {
@@ -84,7 +86,7 @@ export function useForm() {
 			}
 
 			const duplicates = storeData.data.filter(x => {
-				if ("name" in x.data && typeof x.data.name === "string") {
+				if (x && "name" in x.data && typeof x.data.name === "string") {
 					return x.data.name.match(duplicateNamePattern(defaultName));
 				}
 				
@@ -98,13 +100,15 @@ export function useForm() {
 			
 				const name = "name" in newData && typeof newData.name === "string" && newData.name.trim() ||
 					(duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
+
+				const dataToPatch: PartialExceptName<T> = { ...newData, name };
 			
 				store.$patch(state => {
-					const elementData: EcaasForm<T> = {
-						data: { ...newData, name },
+					const elementData: EcaasForm<T, "name"> = {
+						data: dataToPatch as T,
 					};
 
-					onPatchCreate(state, elementData);
+					onPatchCreate(state, elementData as EcaasForm<T>);
 				});
 
 				return;
@@ -115,7 +119,7 @@ export function useForm() {
 					return;
 				}
 
-				const index = getStoreIndex(storeData.data);
+				const index = getStoreIndex(storeData.data as EcaasForm<T>[]);
 				const storeElementData = storeData.data[index]?.data;
 				let name: string = defaultName;
 
@@ -126,8 +130,10 @@ export function useForm() {
 					name = storeElementData.name.trim() || defaultName;
 				}
 
+				const dataToPatch: PartialExceptName<T> = { ...newData, name };
+
 				const elementData: EcaasForm<T> = {
-					data: { ...newData, name },
+					data: dataToPatch as T,
 				};
 
 				onPatchUpdate(state, elementData, index);

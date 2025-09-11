@@ -20,7 +20,7 @@ type BuildingElementTransparent = Extract<SchemaBuildingElement, { type: "Buildi
 
 const baseForm = {
 	data: [],
-	complete: true,
+	complete: true as const,
 };
 
 describe("dwelling fabric mapper", () => {

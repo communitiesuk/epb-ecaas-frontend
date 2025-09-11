@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { DuctShape, VentType   } from "~/schema/api-schema.types";
 import type { DuctType } from "~/schema/api-schema.types";
+import type { DuctworkData } from "#imports";
 import { getUrl } from "#imports";
 
 const title = "MVHR ductwork";
@@ -12,7 +13,7 @@ const ductwork = useItemToEdit(
 	store.infiltrationAndVentilation.ductwork.data,
 );
 
-const model: Ref<DuctworkData | undefined> = ref(ductwork?.data);
+const model = ref(ductwork?.data);
 store.infiltrationAndVentilation.ductwork.complete = false;
 
 const ductworkCrossSectionalShapeOptions: Record<DuctShape, SnakeToSentenceCase<DuctShape>> = {
@@ -74,7 +75,7 @@ const saveForm = (fields: DuctworkData) => {
 	navigateTo("/infiltration-and-ventilation/ductwork");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<DuctworkData>({
 	model,
 	storeData: store.infiltrationAndVentilation.ductwork,
 	defaultName: "Ductwork",
@@ -121,7 +122,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 		<FormKit
 			id="mvhrUnit" type="govRadios" :options="new
-				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === VentType.MVHR).map((x)=> [x.data.id, x.data.name]))"
+				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === VentType.MVHR).map((x)=> [x.data.id!, x.data.name]))"
 			label="MVHR unit" 
 			name="mvhrUnit" 
 			help="Select the MVHR unit that this ductwork is attached to"

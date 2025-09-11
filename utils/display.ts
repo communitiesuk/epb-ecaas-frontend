@@ -2,6 +2,22 @@ import { objectFromEntries } from "ts-extras";
 import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass, WwhrsType } from "../schema/api-schema.types";
 import type { DisplayProduct } from "~/pcdb/products";
 
+const emptyValueRendering = "-";
+
+/** Turns a value into something that can be shown on e.g. a summary page */
+export function show(value: string | number | undefined | null): string {
+	return value != null ? value.toString() : emptyValueRendering;
+}
+
+/** render function for rendering a value that could be undefined/null, where we want display logic only if a value is set */
+export function r(data: unknown, renderIfDefinedFn: (data: unknown) => string): string {
+	if (data == null) {
+		return emptyValueRendering;
+	}
+
+	return renderIfDefinedFn(data);
+}
+
 export function displayBoolean(value: boolean | undefined): BooleanDisplay | undefined {
 	if (typeof value === "undefined") {
 		return undefined;

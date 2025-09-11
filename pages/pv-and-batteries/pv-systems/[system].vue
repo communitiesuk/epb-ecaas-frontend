@@ -10,7 +10,7 @@ const pvSystemData = useItemToEdit(
 	"system",
 	store.pvAndBatteries.pvSystems.data,
 );
-const model: Ref<PvSystemData | undefined> = ref(pvSystemData?.data);
+const model = ref(pvSystemData?.data);
 
 const shadingSectionDisabled = true;
 
@@ -60,7 +60,7 @@ const saveForm = (fields: PvSystemData) => {
 	navigateTo("/pv-and-batteries");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<PvSystemData>({
 	model,
 	storeData: store.pvAndBatteries.pvSystems,
 	defaultName: "PV system",

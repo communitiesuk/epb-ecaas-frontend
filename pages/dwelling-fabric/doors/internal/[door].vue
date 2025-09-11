@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data);
-const model: Ref<InternalDoorData | undefined> = ref(doorData?.data);
+const model = ref(doorData?.data);
 
 const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 
@@ -53,7 +53,7 @@ const saveForm = (fields: InternalDoorData) => {
 	navigateTo("/dwelling-fabric/doors");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<InternalDoorData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor,
 	defaultName: "Internal door",

@@ -18,7 +18,7 @@ if (typeof mechanicalVentilation?.data.airFlowRate === "number") {
 	mechanicalVentilation.data.airFlowRate = unitValue(mechanicalVentilation.data.airFlowRate, litrePerSecond);
 }
 
-const model: Ref<MechanicalVentilationData | undefined> = ref(mechanicalVentilation?.data);
+const model = ref(mechanicalVentilation?.data);
 
 /** 'PIV' is excluded from options here because it is in the schema currently but unsupported in HEM itself at 0.34 version */
 const ventTypeOptions: Record<Exclude<VentType, "PIV">, string> = {
@@ -71,7 +71,7 @@ const saveForm = (fields: MechanicalVentilationData) => {
 	navigateTo("/infiltration-and-ventilation/mechanical-ventilation");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<MechanicalVentilationData>({
 	model,
 	storeData: store.infiltrationAndVentilation.mechanicalVentilation,
 	defaultName: "Mechanical ventilation",

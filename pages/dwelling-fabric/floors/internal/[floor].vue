@@ -7,7 +7,7 @@ const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data);
-const model: Ref<InternalFloorData | undefined> = ref(floorData?.data);
+const model = ref(floorData?.data);
 
 const typeOfInternalFloorOptions = adjacentSpaceTypeOptions("Internal floor");
 
@@ -47,7 +47,7 @@ const saveForm = (fields: InternalFloorData) => {
 	navigateTo("/dwelling-fabric/floors");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<InternalFloorData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor,
 	defaultName: "Internal floor",

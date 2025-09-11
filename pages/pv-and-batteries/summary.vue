@@ -16,7 +16,7 @@ const pvSummary: SummarySection = {
 		return {
 			"Name": x.name,
 			"Peak power": `${x.peakPower} ${kilowattPeak.suffix}`,
-			"Ventilation strategy": displaySnakeToSentenceCase(x.ventilationStrategy),
+			"Ventilation strategy": displaySnakeToSentenceCase(show(x.ventilationStrategy)),
 			"Pitch": `${x.pitch} ${degrees.suffix}`,
 			"Orientation": `${x.orientation} ${degrees.suffix}`,
 			"Elevational height of PV": `${x.elevationalHeight} ${metre.suffix}`,
@@ -25,7 +25,7 @@ const pvSummary: SummarySection = {
 			"Inverter peak power AC": `${x.inverterPeakPowerAC} ${kilowatt.suffix}`,
 			"Inverter peak power DC": `${x.inverterPeakPowerDC} ${kilowatt.suffix}`,
 			"Inverter is inside": displayBoolean(x.inverterIsInside),
-			"Inverter type": displaySnakeToSentenceCase(x.inverterType),
+			"Inverter type": displaySnakeToSentenceCase(show(x.inverterType)),
 		};
 	}),
 	editUrl: "/pv-and-batteries",
@@ -41,7 +41,7 @@ const batterySummary: SummarySection = {
 			"Capacity": `${x.capacity} ${kilowattHour.suffix}`,
 			"Battery age": `${x.batteryAge} years`,
 			"Charge efficiency": x.chargeEfficiency,
-			"Location": displayCamelToSentenceCase(x.location),
+			"Location": displayCamelToSentenceCase(show(x.location)),
 			"Grid charging possible": displayBoolean(x.gridChargingPossible),
 			"Maximum charge rate": `${x.maximumChargeRate} ${kilowatt.suffix}`,
 			"Minimum charge rate": `${x.minimumChargeRate} ${kilowatt.suffix}`,

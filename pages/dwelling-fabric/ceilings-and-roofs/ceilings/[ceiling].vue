@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { CeilingData } from "#imports";
 import { getUrl, zeroPitchOptions } from "#imports";
 
 const title = "Ceiling";
@@ -6,7 +7,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const ceilingData = useItemToEdit("ceiling", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
-const model: Ref<CeilingData | undefined> = ref(ceilingData?.data);
+const model = ref(ceilingData?.data);
 
 const typeOfCeilingOptions = adjacentSpaceTypeOptions("Ceiling");
 
@@ -55,7 +56,7 @@ const saveForm = (fields: CeilingData) => {
 	navigateTo("/dwelling-fabric/ceilings-and-roofs");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<CeilingData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings,
 	defaultName: "Ceiling",

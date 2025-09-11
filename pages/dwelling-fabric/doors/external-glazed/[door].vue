@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor?.data);
-const model: Ref<ExternalGlazedDoorData | undefined> = ref(doorData?.data);
+const model = ref(doorData?.data);
 
 const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
@@ -39,7 +39,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 	navigateTo("/dwelling-fabric/doors");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<ExternalGlazedDoorData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor,
 	defaultName: "External glazed door",

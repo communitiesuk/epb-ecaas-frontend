@@ -7,7 +7,7 @@ import { unitValue } from "~/utils/units/types";
 
 const baseForm = {
 	data: [],
-	complete: true,
+	complete: true as const,
 };
 
 describe("domestic hot water mapper", () => {

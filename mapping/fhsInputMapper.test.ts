@@ -35,7 +35,7 @@ import { unitValue } from "~/utils/units/types";
 
 const baseForm = {
 	data: [],
-	complete: true,
+	complete: true as const,
 };
 
 const expectedHouseInput: FhsInputSchema = {
@@ -1495,7 +1495,7 @@ describe("FHS input mapper", () => {
 								psiOfWallJunction: 0.4,
 								thicknessOfWalls: 50,
 								typeOfGroundFloor: FloorType.Slab_edge_insulation,
-								edgeInsulationType: "horizontal",
+								edgeInsulationType: "horizontal" as const,
 								edgeInsulationWidth: unitValue(32, centimetre),
 								edgeInsulationThermalResistance: 2.4,
 							},

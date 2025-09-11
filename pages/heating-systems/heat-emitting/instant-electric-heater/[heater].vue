@@ -7,7 +7,7 @@ const route = useRoute();
 const { autoSaveElementForm } = useForm();
 
 const instantElectricHeaterData = useItemToEdit("heater", store.heatingSystems.heatEmitting.instantElectricHeater.data);
-const model: Ref<InstantElectricStorageData | undefined> = ref(instantElectricHeaterData?.data);
+const model = ref(instantElectricHeaterData?.data);
 
 const saveForm = (fields: InstantElectricStorageData) => {
 	store.$patch((state) => {
@@ -32,7 +32,7 @@ const saveForm = (fields: InstantElectricStorageData) => {
 	navigateTo("/heating-systems/heat-emitting");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<InstantElectricStorageData>({
 	model,
 	storeData: store.heatingSystems.heatEmitting.instantElectricHeater,
 	defaultName: "Instant electric heater",

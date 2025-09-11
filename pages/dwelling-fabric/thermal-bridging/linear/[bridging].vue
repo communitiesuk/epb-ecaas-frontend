@@ -7,7 +7,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const thermalBridgeData = useItemToEdit("bridging", store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data);
-const model: Ref<LinearThermalBridgeData | undefined> = ref(thermalBridgeData?.data);
+const model = ref(thermalBridgeData?.data);
 
 const options: FormKitOptionsProp[] = [{
 	e1: "E1: Steel lintel with perforated steel base plate",
@@ -86,7 +86,7 @@ const saveForm = (fields: LinearThermalBridgeData) => {
 	navigateTo("/dwelling-fabric/thermal-bridging");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<LinearThermalBridgeData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
 	defaultName: "Linear thermal bridge",

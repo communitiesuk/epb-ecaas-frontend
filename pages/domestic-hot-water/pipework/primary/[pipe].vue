@@ -8,7 +8,7 @@ const title = "Primary pipework";
 const store = useEcaasStore();
 
 const pipeworkData = useItemToEdit("pipe", store.domesticHotWater.pipework.primaryPipework.data);
-const model: Ref<PrimaryPipeworkData | undefined > = ref(pipeworkData?.data);
+const model = ref(pipeworkData?.data);
 
 const pipeContentsOptions: Record<WaterPipeContentsType, string> = {
 	water: "Water",
@@ -49,7 +49,7 @@ const saveForm = (fields: PrimaryPipeworkData) => {
 };
 
 
-autoSaveElementForm({
+autoSaveElementForm<PrimaryPipeworkData>({
 	model,
 	storeData: store.domesticHotWater.pipework.primaryPipework,
 	defaultName: "Primary pipework",

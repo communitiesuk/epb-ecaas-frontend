@@ -9,7 +9,6 @@ function handleRemove(index: number) {
 	const windows = store.dwellingFabric.dwellingSpaceWindows?.data;
 	if(windows){
 		windows.splice(index, 1);
-
 		
 		store.$patch({
 			dwellingFabric: {
@@ -37,10 +36,10 @@ function handleDuplicate(index: number) {
 			return false;
 		});
 		store.$patch((state) => {
-			const newItem = {
+			const newItem: EcaasForm<WindowData> = {
 				complete: window.complete,
 				data: {
-					...window.data,
+					...(window.data as WindowData),
 					name: `${name} (${duplicates.length})`,
 				},
 			};
