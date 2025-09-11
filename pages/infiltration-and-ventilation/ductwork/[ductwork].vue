@@ -10,9 +10,9 @@ const { getStoreIndex, autoSaveElementForm } = useForm();
 const ductwork = useItemToEdit(
 	"ductwork",
 	store.infiltrationAndVentilation.ductwork.data
-)!;
+);
 
-const model: Ref<DuctworkData> = ref(ductwork.data);
+const model: Ref<DuctworkData | undefined> = ref(ductwork?.data);
 store.infiltrationAndVentilation.ductwork.complete = false;
 
 const ductworkCrossSectionalShapeOptions: Record<DuctShape, SnakeToSentenceCase<DuctShape>> = {
@@ -171,7 +171,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="ductworkCrossSectionalShape"
 			validation="required"
 		/>
-		<template v-if="model.ductworkCrossSectionalShape === DuctShape.circular">
+		<template v-if="model && model.ductworkCrossSectionalShape === DuctShape.circular">
 			<FormKit
 				id="internalDiameterOfDuctwork"
 				type="govInputWithSuffix"
@@ -229,7 +229,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</template>
 
 		<FormKit
-			v-if="model.ductworkCrossSectionalShape === DuctShape.rectangular"
+			v-if="model && model.ductworkCrossSectionalShape === DuctShape.rectangular"
 			id="ductPerimeter"
 			type="govInputWithSuffix"
 			suffix-text="mm"
