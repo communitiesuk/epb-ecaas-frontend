@@ -52,7 +52,8 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 				// SpaceCoolSystem: dwellingSpaceZoneParameters.spaceCoolingSystemForThisZone?.map(x => x.name),
 				SpaceHeatControl: "livingroom",
 				area: dwellingSpaceZoneParameters.area,
-				volume: dwellingSpaceZoneParameters.volume
+				volume: dwellingSpaceZoneParameters.volume,
+				temp_setpnt_init: 20, // temporary dummy - this field is removed in subsequent schemas
 			} as Partial<SchemaZoneInput>
 		}
 	} as Pick<FhsInputSchema, "HeatingControlType" | "Zone">;
