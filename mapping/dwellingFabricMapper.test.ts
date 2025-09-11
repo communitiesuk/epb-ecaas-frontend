@@ -216,9 +216,6 @@ describe("dwelling fabric mapper", () => {
 			psi_wall_floor_junc: groundFloor.psiOfWallJunction,
 			thickness_walls: groundFloor.thicknessOfWalls / 1000,
 			floor_type: groundFloor.typeOfGroundFloor,
-			edge_insulation: null,
-			height_upper_surface: null,
-			shield_fact_location: null,
 		};
 
 		expect(groundFloorElement).toEqual(expectedGroundFloor);
@@ -249,10 +246,6 @@ describe("dwelling fabric mapper", () => {
 			floor_type: groundFloorWithHeatedBasement.typeOfGroundFloor,
 			depth_basement_floor: groundFloorWithHeatedBasement.depthOfBasementFloorBelowGround,
 			thermal_resist_walls_base: groundFloorWithHeatedBasement.thermalResistanceOfBasementWalls,
-			height_basement_walls: null,
-			height_upper_surface: null,
-			thermal_transm_envi_base: null,
-			thermal_transm_walls: null
 		};
 
 		expect(groundFloorWithHeatedBasementElement).toEqual(expectedGroundFloorWithHeatedBasement);
@@ -277,7 +270,6 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: internalFloor.kappaValue,
 			mass_distribution_class: internalFloor.massDistributionClass,
 			thermal_resistance_unconditioned_space: internalFloor.thermalResistanceOfAdjacentUnheatedSpace,
-			thermal_resistance_construction: null
 		};
 
 		expect(internalFloorElement).toEqual(expectedInternalFloor);
@@ -295,8 +287,6 @@ describe("dwelling fabric mapper", () => {
 			mass_distribution_class: exposedFloor.massDistributionClass,
 			orientation360: exposedFloor.orientation,
 			is_external_door: false,
-			is_unheated_pitched_roof: null,
-			thermal_resistance_construction: null,
 		};
 
 		expect(exposedFloorElement).toEqual(expectedExposedFloor);
@@ -384,8 +374,6 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: externalWall.kappaValue,
 			mass_distribution_class: externalWall.massDistributionClass,
 			is_external_door: false,
-			is_unheated_pitched_roof: null,
-			thermal_resistance_construction: null
 		};
 
 		expect(externalWallElement).toEqual(expectedExternalWall);
@@ -397,7 +385,6 @@ describe("dwelling fabric mapper", () => {
 			u_value: 0.01,
 			areal_heat_capacity: internalWall.kappaValue,
 			mass_distribution_class: internalWall.massDistributionClass,
-			thermal_resistance_construction: null
 		};
 
 		expect(internalWallElement).toEqual(expectedInternalWall);
@@ -409,7 +396,6 @@ describe("dwelling fabric mapper", () => {
 			u_value: partyWall.uValue,
 			areal_heat_capacity: partyWall.kappaValue,
 			mass_distribution_class: partyWall.massDistributionClass,
-			thermal_resistance_construction: null
 		};
 
 		expect(partyWallElement).toEqual(expectedPartyWall);
@@ -422,7 +408,6 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: wallToUnheatedSpace.arealHeatCapacity,
 			mass_distribution_class: wallToUnheatedSpace.massDistributionClass,
 			thermal_resistance_unconditioned_space: wallToUnheatedSpace.thermalResistanceOfAdjacentUnheatedSpace,
-			thermal_resistance_construction: null
 		};
 
 		expect(wallToUnheatedSpaceElement).toEqual(expectedWallToUnheatedSpace);
@@ -484,7 +469,6 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: ceiling.kappaValue,
 			mass_distribution_class: ceiling.massDistributionClass,
 			thermal_resistance_unconditioned_space: ceiling.thermalResistanceOfAdjacentUnheatedSpace,
-			thermal_resistance_construction: null
 		};
 
 		expect(ceilingElement).toEqual(expectedCeiling);
@@ -503,7 +487,6 @@ describe("dwelling fabric mapper", () => {
 			mass_distribution_class: roof.massDistributionClass,
 			is_external_door: false,
 			is_unheated_pitched_roof: false,
-			thermal_resistance_construction: null
 		};
 
 		expect(roofElement).toEqual(expectedRoof);
@@ -583,7 +566,6 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: internalDoor.kappaValue,
 			mass_distribution_class: internalDoor.massDistributionClass,
 			thermal_resistance_unconditioned_space: internalDoor.thermalResistanceOfAdjacentUnheatedSpace,
-			thermal_resistance_construction: null
 		};
 
 		expect(internalDoorElement).toEqual(expectedInternalDoor);
@@ -605,10 +587,6 @@ describe("dwelling fabric mapper", () => {
 				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 }
 			],
 			shading: [],
-			Control_WindowOpenable: null,
-			security_risk: null,
-			treatment: null,
-			thermal_resistance_construction: null
 		};
 
 		expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
@@ -715,10 +693,6 @@ describe("dwelling fabric mapper", () => {
 					distance: 1
 				}
 			],
-			Control_WindowOpenable: null,
-			security_risk: null,
-			thermal_resistance_construction: null,
-			treatment: null
 		};
 		expect(windowElement).toEqual(expectedWindow);
 	});
