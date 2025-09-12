@@ -62,7 +62,6 @@ export default defineNuxtConfig({
 			preprocessorOptions: {
 				scss: {
 					silenceDeprecations: [
-						"mixed-decls",
 						"global-builtin",
 						"slash-div",
 						"import",
