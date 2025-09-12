@@ -173,5 +173,30 @@ describe("Electric battery", () => {
 			expect(actualBattery.data.name).toBe("Updated battery");
 			expect(actualBattery.data.capacity).toBe(12);
 		});
+
+		test("battery and section are set as 'not complete' after user edits an item", async () => {
+			store.$patch({
+				pvAndBatteries: {
+					electricBattery: {
+						data: [{ ...fullElectricBattery, complete: true }],
+						complete: true
+					}
+				}
+			});
+
+			await renderSuspended(ElectricBattery, {
+				route: {
+					params: { electricBattery: "0" }
+				}
+			});
+
+			await user.type(screen.getByTestId("name"), "Battery");
+			await user.tab();
+
+			const batteries = store.pvAndBatteries.electricBattery;
+
+			expect(batteries.data[0]!.complete).not.toBe(true);
+			expect(batteries.complete).not.toBe(true);
+		});
 	});
 });
