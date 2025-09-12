@@ -492,9 +492,8 @@ describe("hot water outlets", () => {
     	expect(bath?.complete).toBe(true);
     	expect(otherOutlets?.complete).toBe(true);
 
-    	const markAsCompleteButton = screen.queryByTestId("markAsCompleteButton");
-
-    	expect(markAsCompleteButton?.style.display).toBe("none");
+    	expect(
+    		screen.queryByTestId("markAsCompleteButton")?.style.display).toBe("none");
     	expect(completedStatusElement?.style.display).not.toBe("none");
 
     	expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
