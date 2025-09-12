@@ -9,7 +9,7 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-describe("the ventilation task page", async ()=>{
+describe("the ventilation task page", async () => {
 	const store = useEcaasStore();
 
 	const mechanicalVentilation1: MechanicalVentilationData = {
@@ -25,7 +25,7 @@ describe("the ventilation task page", async ()=>{
 		store.$reset();
 	});
 
-	it("should find the header", async ()=> {
+	it("should find the header", async () => {
 		await renderSuspended(InfiltrationAndVentilationTaskPage, {
 			route: {
 				path: "/infiltration-and-ventilation",
@@ -34,7 +34,7 @@ describe("the ventilation task page", async ()=>{
 		expect(screen.getByRole("heading", { name: "Infiltration and ventilation" }));
 	});
 
-	it("should find a list item", async ()=> {
+	it("should find a list item", async () => {
 		await renderSuspended(InfiltrationAndVentilationTaskPage, {
 			route: {
 				path: "/infiltration-and-ventilation",
@@ -43,7 +43,7 @@ describe("the ventilation task page", async ()=>{
 		expect(screen.getByText("Mechanical ventilation")).toBeDefined();
 	});
 
-	it("does not show ductwork", async ()=> {
+	it("does not show ductwork", async () => {
 		await renderSuspended(InfiltrationAndVentilationTaskPage, {
 			route: {
 				path: "/infiltration-and-ventilation",
@@ -52,7 +52,7 @@ describe("the ventilation task page", async ()=>{
 		expect(screen.queryByText("MVHR ductwork")).toBeNull();
 	});
 
-	it("shows ductwork when there is a MVHR mechanical ventilation object", async ()=>{
+	it("shows ductwork when there is a MVHR mechanical ventilation object", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
