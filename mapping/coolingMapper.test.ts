@@ -50,7 +50,7 @@ describe("cooling mapper", () => {
 		const airConditioner1: AirConditioningData = {
 			name: "airConditioner1",
 			coolingCapacity: 1,
-			seasonalEnergyEfficiencyRatio:2,
+			seasonalEnergyEfficiencyRatio: 2,
 			convectionFraction: 3,
 		};
 

@@ -55,7 +55,7 @@ export const units = [
 		"name": "litres per hour",
 		"suffix": "litres per hour",
 		"multiplier": 0.001,
-		"dimension":"flow rate",
+		"dimension": "flow rate",
 	},
 	{
 		"name": "cubic metres per hour per square metre",

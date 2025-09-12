@@ -13,6 +13,7 @@ export default withNuxt(
 			'@stylistic/arrow-spacing': 'error',
 			'@stylistic/comma-dangle': ['error', 'always-multiline'],
 			'@stylistic/indent': ['error', 'tab'],
+			'@stylistic/key-spacing': 'error',
 			'@stylistic/object-curly-spacing': ["error", "always"],
 			'@stylistic/quotes': ['error', 'double', { avoidEscape: true, allowTemplateLiterals: 'always' }],
 			'vue/html-indent': ['error', 'tab'],

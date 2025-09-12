@@ -19,7 +19,7 @@ const saveForm = (fields: ElectricShowerData) => {
 		const index = getStoreIndex(electricShower.data);
 
 		electricShower.data[index] = {
-			data : {
+			data: {
 				id,
 				name: fields.name,
 				ratedPower: fields.ratedPower,

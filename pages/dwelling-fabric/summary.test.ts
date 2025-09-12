@@ -106,7 +106,7 @@ const wallsData: WallsData = {
 			name: "Wall to unheated space 1",
 			surfaceAreaOfElement: 500,
 			uValue: 10,
-			arealHeatCapacity:50000,
+			arealHeatCapacity: 50000,
 			massDistributionClass: MassDistributionClass.E,
 			pitchOption: "90",
 			pitch: 90,

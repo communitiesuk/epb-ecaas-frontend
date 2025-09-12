@@ -667,20 +667,20 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedWindow: BuildingElementTransparent = {
 			type: "BuildingElementTransparent",
-			pitch:window.pitch!,
-			orientation360:window.orientation,
-			height:window.height,
-			width:window.width,
-			base_height:window.elevationalHeight,
-			area:window.surfaceArea,
-			u_value:window.uValue,
-			g_value:window.solarTransmittance,
-			mid_height:window.midHeight,
+			pitch: window.pitch!,
+			orientation360: window.orientation,
+			height: window.height,
+			width: window.width,
+			base_height: window.elevationalHeight,
+			area: window.surfaceArea,
+			u_value: window.uValue,
+			g_value: window.solarTransmittance,
+			mid_height: window.midHeight,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
-			max_window_open_area:window.maximumOpenableArea,
-			free_area_height:window.heightOpenableArea,
+			max_window_open_area: window.maximumOpenableArea,
+			free_area_height: window.heightOpenableArea,
 			window_part_list: [{
-				mid_height_air_flow_path:window .midHeightOpenablePart1,
+				mid_height_air_flow_path: window .midHeightOpenablePart1,
 			}],
 			shading: [
 				{

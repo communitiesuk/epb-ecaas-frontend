@@ -609,7 +609,7 @@ export type WaterHeatingHeatInterfaceUnitData = z.infer<typeof waterHeatingHeatI
 
 export type HotWaterOutlets = AssertFormKeysArePageIds<{
 	mixedShower: EcaasForm<EcaasForm<MixedShowerData>[]>;
-	electricShower:EcaasForm<EcaasForm<ElectricShowerData>[]>;
+	electricShower: EcaasForm<EcaasForm<ElectricShowerData>[]>;
 	bath: EcaasForm<EcaasForm<BathData>[]>;
 	otherOutlets: EcaasForm<EcaasForm<OtherHotWaterOutletData>[]>;
 }>;
