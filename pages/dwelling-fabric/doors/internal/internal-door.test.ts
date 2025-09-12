@@ -282,5 +282,34 @@ describe("internal door", () => {
 			expect(actualDoor.data.name).toBe("Updated door");
 			expect(actualDoor.data.surfaceArea).toBe(13);
 		});
+
+		test("internal door and section are set as 'not complete' after user edits an item", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceInternalDoor: {
+							data: [{ ...internalDoor, complete: true }],
+							complete: true
+						}
+					}
+				}
+			});
+
+			await renderSuspended(InternalDoor, {
+				route: {
+					params: { internalDoor: "0" }
+				}
+			});
+
+			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+			await user.tab();
+			await user.type(screen.getByTestId("name"), "Door");
+			await user.tab();
+
+			const internalDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor;
+
+			expect(internalDoors.data[0]!.complete).not.toBe(true);
+			expect(internalDoors.complete).not.toBe(true);
+		});
 	});
 });

@@ -203,5 +203,30 @@ describe("PV system", () => {
 			expect(actualPvSystem.data.name).toBe("Updated PV 2");
 			expect(actualPvSystem.data.peakPower).toBe(22);
 		});
+
+		test("pv system and pv systems section are set as 'not complete' after user edits an item", async () => {
+			store.$patch({
+				pvAndBatteries: {
+					pvSystems: {
+						data: [{ ...pvSystem, complete: true }],
+						complete: true
+					}
+				}
+			});
+
+			await renderSuspended(PVScreen, {
+				route: {
+					params: { system: "0" }
+				}
+			});
+
+			await user.type(screen.getByTestId("name"), "PV system");
+			await user.tab();
+
+			const pvSystems = store.pvAndBatteries.pvSystems;
+
+			expect(pvSystems.data[0]!.complete).not.toBe(true);
+			expect(pvSystems.complete).not.toBe(true);
+		});
 	});
 });

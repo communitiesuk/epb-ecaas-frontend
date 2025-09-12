@@ -158,5 +158,32 @@ describe("point thermal bridges", () => {
 			expect(actualPointBridge.data.name).toBe("Updated point bridge");
 			expect(actualPointBridge.data.heatTransferCoefficient).toBe(4);
 		});
+
+		test("point bridge and point bridges section are set as 'not complete' after user edits an item", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceThermalBridging: {
+						dwellingSpacePointThermalBridges: {
+							data: [{ ...state, complete: true }],
+							complete: true
+						}
+					}
+				}
+			});
+
+			await renderSuspended(PointBridging, {
+				route: {
+					params: { point: "0" }
+				}
+			});
+
+			await user.type(screen.getByTestId("name"), "Point bridge");
+			await user.tab();
+
+			const pointBridging = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges;
+
+			expect(pointBridging.data[0]!.complete).not.toBe(true);
+			expect(pointBridging.complete).not.toBe(true);
+		});
 	});
 });

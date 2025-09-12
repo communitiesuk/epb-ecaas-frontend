@@ -5,6 +5,7 @@ import PvSystemForm from "./pv-systems/[system].vue";
 import ElectricBatteryForm from "./electric-battery/index.vue";
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
+import formStatus from "~/constants/formStatus";
 
 const baseForm = {
 	data: [],
@@ -365,6 +366,20 @@ describe("pv systems and electric battery", () => {
 			await renderSuspended(PvAndBatteries);
 			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
 			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
+		});
+
+		test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
+			store.$patch({
+				pvAndBatteries: {
+					pvSystems: {
+						data: [pvSystem1],
+					},
+				},
+			});
+
+			await renderSuspended(PvAndBatteries);
+
+			expect(screen.getByTestId("pvSystems_status_0").textContent).toBe(formStatus.inProgress.text);
 		});
 	});
 });

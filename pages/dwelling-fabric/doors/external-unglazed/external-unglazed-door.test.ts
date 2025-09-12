@@ -197,5 +197,32 @@ describe("external unglazed door", () => {
 			expect(actualDoor.data.name).toBe("Updated door");
 			expect(actualDoor.data.elevationalHeight).toBe(12);
 		});
+
+		test("external unglazed door and section are set as 'not complete' after user edits an item", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalUnglazedDoor: {
+							data: [{ ...state, complete: true }],
+							complete: true
+						}
+					}
+				}
+			});
+
+			await renderSuspended(ExternalUnglazedDoor, {
+				route: {
+					params: { externalUnglazed: "0" }
+				}
+			});
+
+			await user.type(screen.getByTestId("name"), "Door");
+			await user.tab();
+
+			const externalUnglazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor;
+
+			expect(externalUnglazedDoors.data[0]!.complete).not.toBe(true);
+			expect(externalUnglazedDoors.complete).not.toBe(true);
+		});
 	});
 });

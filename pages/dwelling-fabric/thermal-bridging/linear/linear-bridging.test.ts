@@ -166,5 +166,32 @@ describe("linear thermal bridges", () => {
 			expect(actualLinearBridge.data.length).toBe(14);
 			expect(actualLinearBridge.data.linearThermalTransmittance).toBe(6);
 		});
+
+		test("linear bridge and linear bridges section are set as 'not complete' after user edits an item", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceThermalBridging: {
+						dwellingSpaceLinearThermalBridges: {
+							data: [{ ...state, complete: true }],
+							complete: true
+						}
+					}
+				}
+			});
+
+			await renderSuspended(LinearBridging, {
+				route: {
+					params: { linear: "0" }
+				}
+			});
+
+			await user.type(screen.getByTestId("length"), "10");
+			await user.tab();
+
+			const linearBridging = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges;
+
+			expect(linearBridging.data[0]!.complete).not.toBe(true);
+			expect(linearBridging.complete).not.toBe(true);
+		});
 	});
 });

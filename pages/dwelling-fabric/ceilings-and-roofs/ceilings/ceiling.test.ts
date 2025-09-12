@@ -12,7 +12,7 @@ describe("ceiling", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const internalFloor: EcaasForm<CeilingData> = {
+	const ceiling: EcaasForm<CeilingData> = {
 		data: {
 			type: AdjacentSpaceType.heatedSpace,
 			name: "Ceiling 1",
@@ -23,9 +23,9 @@ describe("ceiling", () => {
 			pitch: 0 }
 	};
 
-	const internalFloorWithUnheated: EcaasForm<CeilingData> = {
+	const ceilingUnheatedSpace: EcaasForm<CeilingData> = {
 		data: {
-			...internalFloor.data,
+			...ceiling.data,
 			type: AdjacentSpaceType.unheatedSpace,
 			uValue: 1,
 			thermalResistanceOfAdjacentUnheatedSpace: 0
@@ -63,7 +63,7 @@ describe("ceiling", () => {
 
 			const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 			
-			expect(dwellingSpaceCeilings.data[0]).toEqual({ ...internalFloor, complete: true });
+			expect(dwellingSpaceCeilings.data[0]).toEqual({ ...ceiling, complete: true });
 		});
 	
 		it("form is prepopulated when data exists in state", async () => {
@@ -71,7 +71,7 @@ describe("ceiling", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data: [internalFloor]
+							data: [ceiling]
 						}
 					}
 				}
@@ -121,7 +121,7 @@ describe("ceiling", () => {
 
 			const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 			
-			expect(dwellingSpaceCeilings?.data[0]).toEqual({ ...internalFloorWithUnheated, complete: true });
+			expect(dwellingSpaceCeilings?.data[0]).toEqual({ ...ceilingUnheatedSpace, complete: true });
 		});
 	
 		it("form is prepopulated when data exists in state", async () => {
@@ -129,7 +129,7 @@ describe("ceiling", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data: [internalFloorWithUnheated]
+							data: [ceilingUnheatedSpace]
 						}
 					}
 				}
@@ -263,7 +263,7 @@ describe("ceiling", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data: [internalFloor, internalFloorWithUnheated]
+							data: [ceiling, ceilingUnheatedSpace]
 						}
 					}
 				}
@@ -285,6 +285,33 @@ describe("ceiling", () => {
 			const actualCeiling = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[1]!;
 			expect(actualCeiling.data.name).toBe("Updated ceiling");
 			expect(actualCeiling.data.surfaceArea).toBe(17);
+		});
+
+		test("ceiling and ceilings section are set as 'not complete' after user edits an item", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceCeilings: {
+							data: [{ ...ceiling, complete: true }],
+							complete: true
+						}
+					}
+				}
+			});
+
+			await renderSuspended(Ceiling, {
+				route: {
+					params: { ceiling: "0" }
+				}
+			});
+
+			await user.type(screen.getByTestId("name"), "Ceiling");
+			await user.tab();
+
+			const ceilings = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings;
+
+			expect(ceilings.data[0]!.complete).not.toBe(true);
+			expect(ceilings.complete).not.toBe(true);
 		});
 	});
 });
