@@ -10,6 +10,7 @@ import { MassDistributionClass } from "~/schema/api-schema.types";
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
 import type { Component } from "vue";
+import formStatus from "~/constants/formStatus";
 
 describe("walls", () => {
 	const store = useEcaasStore();
@@ -109,12 +110,12 @@ describe("walls", () => {
 	};
 
 	describe("External walls", () => {
-		test("ground wall is removed when remove link is clicked", async () => {
+		test("external wall is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceExternalWall: {
-							data: [external1],
+							data: [{ data: external1 }],
 						},
 					},
 				},
@@ -134,7 +135,11 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceExternalWall: {
-							data: [external1, external2, external3],
+							data: [
+								{ data: external1 },
+								{ data: external2 },
+								{ data: external3 },
+							],
 						},
 					},
 				},
@@ -155,7 +160,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceExternalWall: {
-							data: [external1, external2],
+							data: [
+								{ data: external1 },
+								{ data: external2 },
+							],
 						},
 					},
 				},
@@ -174,6 +182,43 @@ describe("walls", () => {
 			expect(screen.getByText("External wall 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("External wall 1 (1) (2)")).toBeDefined();
 		});
+
+		it("should display an in-progress indicator when an external wall is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{
+								data: { name: "External wall 1" },
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Walls);
+
+			expect(screen.getByTestId("external_status_0").textContent).toBe(formStatus.inProgress.text);
+		});
+
+		it("should display a complete indicator when an external wall is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{
+								data: external1,
+								complete: true,
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Walls);
+
+			expect(screen.getByTestId("external_status_0").textContent).toBe(formStatus.complete.text);
+		});
 	});
 
 	describe("Internal walls", () => {
@@ -182,7 +227,7 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceInternalWall: {
-							data: [internal1],
+							data: [{ data: internal1 }],
 						},
 					},
 				},
@@ -202,7 +247,11 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceInternalWall: {
-							data: [internal1, internal2, internal3],
+							data: [
+								{ data: internal1 },
+								{ data: internal2 },
+								{ data: internal3 },
+							],
 						},
 					},
 				},
@@ -223,7 +272,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceInternalWall: {
-							data: [internal1, internal2],
+							data: [
+								{ data: internal1 },
+								{ data: internal2 },
+							],
 						},
 					},
 				},
@@ -242,6 +294,43 @@ describe("walls", () => {
 			expect(screen.getByText("Internal wall 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("Internal wall 1 (1) (2)")).toBeDefined();
 		});
+
+		it("should display an in-progress indicator when an internal wall is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: {
+							data: [{
+								data: { name: "Internal wall 1" },
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Walls);
+
+			expect(screen.getByTestId("internal_status_0").textContent).toBe(formStatus.inProgress.text);
+		});
+
+		it("should display a complete indicator when an internal wall is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: {
+							data: [{
+								data: internal1,
+								complete: true,
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Walls);
+
+			expect(screen.getByTestId("internal_status_0").textContent).toBe(formStatus.complete.text);
+		});
 	});
 
 	describe("Wall to unheated space", () => {
@@ -250,7 +339,7 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceWallToUnheatedSpace: {
-							data: [toUnheatedSpace1],
+							data: [{ data: toUnheatedSpace1 }],
 						},
 					},
 				},
@@ -270,7 +359,11 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceWallToUnheatedSpace: {
-							data: [toUnheatedSpace1, toUnheatedSpace2, toUnheatedSpace3],
+							data: [
+								{ data: toUnheatedSpace1 },
+								{ data: toUnheatedSpace2 },
+								{ data: toUnheatedSpace3 },
+							],
 						},
 					},
 				},
@@ -297,7 +390,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceWallToUnheatedSpace: {
-							data: [toUnheatedSpace1, toUnheatedSpace2],
+							data: [
+								{ data: toUnheatedSpace1 },
+								{ data: toUnheatedSpace2 },
+							],
 						},
 					},
 				},
@@ -316,6 +412,43 @@ describe("walls", () => {
 			expect(screen.getByText("Wall to heated space 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("Wall to heated space 1 (1) (2)")).toBeDefined();
 		});
+
+		it("should display an in-progress indicator when a wall to unheated space is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceWallToUnheatedSpace: {
+							data: [{
+								data: { name: "Wall to unheated space 1" },
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Walls);
+
+			expect(screen.getByTestId("toHeatedSpace_status_0").textContent).toBe(formStatus.inProgress.text);
+		});
+
+		it("should display a complete indicator when a wall to unheated space is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceWallToUnheatedSpace: {
+							data: [{
+								data: toUnheatedSpace1,
+								complete: true,
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Walls);
+
+			expect(screen.getByTestId("toHeatedSpace_status_0").textContent).toBe(formStatus.complete.text);
+		});
 	});
 
 	describe("Party walls", () => {
@@ -324,7 +457,7 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpacePartyWall: {
-							data: [party1],
+							data: [{ data: party1 }],
 						},
 					},
 				},
@@ -344,7 +477,11 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpacePartyWall: {
-							data: [party1, party2, party3],
+							data: [
+								{ data: party1 },
+								{ data: party2 },
+								{ data: party3 },
+							],
 						},
 					},
 				},
@@ -365,7 +502,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpacePartyWall: {
-							data: [party1, party2],
+							data: [
+								{ data: party1 },
+								{ data: party2 },
+							],
 						},
 					},
 				},
@@ -384,16 +524,54 @@ describe("walls", () => {
 			expect(screen.getByText("Party wall 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("Party wall 1 (1) (2)")).toBeDefined();
 		});
+
+		it("should display an in-progress indicator when a party wall is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpacePartyWall: {
+							data: [{
+								data: { name: "Party wall 1" },
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Walls);
+
+			expect(screen.getByTestId("party_status_0").textContent).toBe(formStatus.inProgress.text);
+		});
+
+		it("should display a complete indicator when a party wall is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpacePartyWall: {
+							data: [{
+								data: party1,
+								complete: true,
+							}],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(Walls);
+
+			expect(screen.getByTestId("party_status_0").textContent).toBe(formStatus.complete.text);
+		});
 	});
+
 	describe("mark section as complete", () => {
 		const addWallsDataToStore = async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
-						dwellingSpaceExternalWall: { data: [external1] },
-						dwellingSpaceInternalWall: { data: [internal1] },
-						dwellingSpacePartyWall: { data: [party1] },
-						dwellingSpaceWallToUnheatedSpace: { data: [toUnheatedSpace1] },
+						dwellingSpaceExternalWall: { data: [{ data: external1, complete: true }] },
+						dwellingSpaceInternalWall: { data: [{ data: internal1, complete: true }] },
+						dwellingSpacePartyWall: { data: [{ data: party1, complete: true }] },
+						dwellingSpaceWallToUnheatedSpace: { data: [{ data: toUnheatedSpace1, complete: true }] },
 					},
 				},
 			});
@@ -436,117 +614,109 @@ describe("walls", () => {
 				},
 			];
 		};
+	
+		type WallType = keyof typeof store.dwellingFabric.dwellingSpaceWalls;
+	
+		it("marks walls as complete when mark section as complete button is clicked", async () => {
+			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
+			expect(completedStatusElement?.style.display).toBe("none");
+	
+			await user.click(screen.getByTestId("markAsCompleteButton"));
+	
+			const {
+				dwellingSpaceExternalWall,
+				dwellingSpaceInternalWall,
+				dwellingSpacePartyWall,
+				dwellingSpaceWallToUnheatedSpace,
+			} = store.dwellingFabric.dwellingSpaceWalls;
+	
+			expect(dwellingSpaceExternalWall?.complete).toBe(true);
+			expect(dwellingSpaceInternalWall?.complete).toBe(true);
+			expect(dwellingSpacePartyWall?.complete).toBe(true);
+			expect(dwellingSpaceWallToUnheatedSpace?.complete).toBe(true);
+			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+			expect(completedStatusElement?.style.display).not.toBe("none");
+	
+			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
+		});
+	
+		it("marks walls as not complete when complete button is clicked then user removes a wall item", async () => {
+			const wallData = await getWallData("remove");
+			const walls = Object.entries(store.dwellingFabric.dwellingSpaceWalls);
+	
+			for (const [key] of walls) {
+				const typedKey = key as WallType;
+	
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+				expect(store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete).toBe(true);
+	
+				const item = wallData.find(x => x.key === typedKey)!;
+				await user.click(screen.getByTestId(item.testId));
+	
+				expect(store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+	
+		it("marks walls as not complete when complete button is clicked then user duplicates a wall item", async () => {
+			const wallData = await getWallData("duplicate");
+			const walls = Object.entries(store.dwellingFabric.dwellingSpaceWalls);
+	
+			for (const [key] of walls) {
+				const typedKey = key as WallType;
+	
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+				expect(store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete).toBe(true);
+	
+				const item = wallData.find(x => x.key === typedKey)!;
+				await user.click(screen.getByTestId(item.testId));
+	
+				expect(store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete).toBe(false);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
+	
+		it("marks walls as not complete when user saves a new or edited wall form after marking section as complete", async () => {
+			const wallData = await getWallData("");
+			const walls = Object.entries(store.dwellingFabric.dwellingSpaceWalls);
+	
+			for (const [key] of walls) {
+				const typedKey = key as WallType;
+	
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+				expect(store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete).toBe(true);
+	
+				const item = wallData.find(x => x.key === typedKey)!;
+	
+				await renderSuspended(item.form, {
+					route: { params: { wall: "0" } },
+				});
+	
+				await user.click(screen.getByTestId("saveAndComplete"));
+	
+				expect(store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete).toBe(false);
+				await renderSuspended(Walls);
+				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			}
+		});
 
-    type WallType = keyof typeof store.dwellingFabric.dwellingSpaceWalls;
-
-    it("marks walls as complete when mark section as complete button is clicked", async () => {
-    	expect(
-    		screen.getByRole("button", { name: "Mark section as complete" }),
-    	).not.toBeNull();
-    	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted",
-    	);
-    	expect(completedStatusElement?.style.display).toBe("none");
-
-    	await user.click(screen.getByTestId("markAsCompleteButton"));
-
-    	const {
-    		dwellingSpaceExternalWall,
-    		dwellingSpaceInternalWall,
-    		dwellingSpacePartyWall,
-    		dwellingSpaceWallToUnheatedSpace,
-    	} = store.dwellingFabric.dwellingSpaceWalls;
-
-    	expect(dwellingSpaceExternalWall?.complete).toBe(true);
-    	expect(dwellingSpaceInternalWall?.complete).toBe(true);
-    	expect(dwellingSpacePartyWall?.complete).toBe(true);
-    	expect(dwellingSpaceWallToUnheatedSpace?.complete).toBe(true);
-    	expect(
-    		screen.queryByRole("button", { name: "Mark section as complete" }),
-    	).toBeNull();
-    	expect(completedStatusElement?.style.display).not.toBe("none");
-
-    	expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
-    });
-
-    it("marks walls as not complete when complete button is clicked then user removes a wall item", async () => {
-    	const wallData = await getWallData("remove");
-    	const walls = Object.entries(store.dwellingFabric.dwellingSpaceWalls);
-
-    	for (const [key] of walls) {
-    		const typedKey = key as WallType;
-
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
-    		).toBe(true);
-
-    		const item = wallData.find((x) => x.key === typedKey)!;
-    		await user.click(screen.getByTestId(item.testId));
-
-    		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
-    		).toBe(false);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
-
-    it("marks walls as not complete when complete button is clicked then user duplicates a wall item", async () => {
-    	const wallData = await getWallData("duplicate");
-    	const walls = Object.entries(store.dwellingFabric.dwellingSpaceWalls);
-
-    	for (const [key] of walls) {
-    		const typedKey = key as WallType;
-
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
-    		).toBe(true);
-
-    		const item = wallData.find((x) => x.key === typedKey)!;
-    		await user.click(screen.getByTestId(item.testId));
-
-    		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
-    		).toBe(false);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
-
-    it("marks walls as not complete when user saves a new or edited wall form after marking section as complete", async () => {
-    	const wallData = await getWallData("");
-    	const walls = Object.entries(store.dwellingFabric.dwellingSpaceWalls);
-
-    	for (const [key] of walls) {
-    		const typedKey = key as WallType;
-
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
-    		).toBe(true);
-
-    		const item = wallData.find((x) => x.key === typedKey)!;
-
-    		await renderSuspended(item.form, {
-    			route: { params: { wall: "0" } },
-    		});
-
-    		await user.click(
-    			screen.getByRole("button", { name: "Save and continue" }),
-    		);
-
-    		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
-    		).toBe(false);
-    		await renderSuspended(Walls);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
+		it("disables the mark section as complete button when wall element is incomplete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{
+								data: { name: "External wall 1" },
+							}],
+						},
+					},
+				},
+			});
+	
+			await renderSuspended(Walls);
+			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
+		});
 	});
 });

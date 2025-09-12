@@ -296,49 +296,57 @@ describe("dwelling fabric mapper", () => {
 
 	it("maps wall input state to FHS input request", () => {
 		// Arrange
-		const externalWall: ExternalWallData = {
-			name: "External wall 1",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
-			length: 20,
-			height: 0.5,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
+		const externalWall: EcaasForm<ExternalWallData> = {
+			data: {
+				name: "External wall 1",
+				pitchOption: "90",
+				pitch: 90,
+				orientation: 0,
+				length: 20,
+				height: 0.5,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				solarAbsorption: 0.1,
+				uValue: 1,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+			},
 		};
 
-		const internalWall: InternalWallData = {
-			name: "Internal 1",
-			surfaceAreaOfElement: 5,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
-			pitchOption: "90",
-			pitch: 90,
+		const internalWall: EcaasForm<InternalWallData> = {
+			data: {
+				name: "Internal 1",
+				surfaceAreaOfElement: 5,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+				pitchOption: "90",
+				pitch: 90,
+			},
 		};
 
-		const partyWall: PartyWallData = {
-			name: "Party wall 1",
-			pitchOption: "90",
-			pitch: 90,
-			surfaceArea: 10,
-			uValue: 1,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
+		const partyWall: EcaasForm<PartyWallData> = {
+			data: {
+				name: "Party wall 1",
+				pitchOption: "90",
+				pitch: 90,
+				surfaceArea: 10,
+				uValue: 1,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+			},
 		};
 
-		const wallToUnheatedSpace: WallsToUnheatedSpaceData ={
-			name: "Wall to unheated space 1",
-			surfaceAreaOfElement: 500,
-			uValue: 10,
-			arealHeatCapacity: 50000,
-			massDistributionClass: MassDistributionClass.E,
-			pitchOption: "90",
-			pitch: 90,
-			thermalResistanceOfAdjacentUnheatedSpace: 1,
+		const wallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData> = {
+			data: {
+				name: "Wall to unheated space 1",
+				surfaceAreaOfElement: 500,
+				uValue: 10,
+				arealHeatCapacity: 50000,
+				massDistributionClass: MassDistributionClass.E,
+				pitchOption: "90",
+				pitch: 90,
+				thermalResistanceOfAdjacentUnheatedSpace: 1,
+			},
 		};
 
 		const wallSuffix = " (wall)";
@@ -358,23 +366,23 @@ describe("dwelling fabric mapper", () => {
 		const fhsInputData = mapWallData(resolveState(store.$state));
 
 		// Assert
-		const externalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalWall.name + wallSuffix]! as BuildingElementOpaque;
-		const internalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalWall.name + wallSuffix]! as BuildingElementAdjacentConditionedSpace;
-		const partyWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWall.name + wallSuffix]! as BuildingElementOpaque;
-		const wallToUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[wallToUnheatedSpace.name + wallSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const externalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalWall.data.name + wallSuffix]! as BuildingElementOpaque;
+		const internalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalWall.data.name + wallSuffix]! as BuildingElementAdjacentConditionedSpace;
+		const partyWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWall.data.name + wallSuffix]! as BuildingElementOpaque;
+		const wallToUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[wallToUnheatedSpace.data.name + wallSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
 
 		const expectedExternalWall: BuildingElementOpaque = {
 			type: "BuildingElementOpaque",
-			pitch: externalWall.pitch!,
-			orientation360: externalWall.orientation,
-			height: externalWall.height,
-			width: externalWall.length,
-			base_height: externalWall.elevationalHeight,
-			area: externalWall.surfaceArea,
-			solar_absorption_coeff: externalWall.solarAbsorption,
-			u_value: externalWall.uValue,
-			areal_heat_capacity: externalWall.kappaValue,
-			mass_distribution_class: externalWall.massDistributionClass,
+			pitch: externalWall.data.pitch!,
+			orientation360: externalWall.data.orientation,
+			height: externalWall.data.height,
+			width: externalWall.data.length,
+			base_height: externalWall.data.elevationalHeight,
+			area: externalWall.data.surfaceArea,
+			solar_absorption_coeff: externalWall.data.solarAbsorption,
+			u_value: externalWall.data.uValue,
+			areal_heat_capacity: externalWall.data.kappaValue,
+			mass_distribution_class: externalWall.data.massDistributionClass,
 			is_external_door: false,
 		};
 
@@ -382,34 +390,34 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedInternalWall: BuildingElementAdjacentConditionedSpace = {
 			type: "BuildingElementAdjacentConditionedSpace",
-			pitch: internalWall.pitch!,
-			area: internalWall.surfaceAreaOfElement,
+			pitch: internalWall.data.pitch!,
+			area: internalWall.data.surfaceAreaOfElement,
 			u_value: 0.01,
-			areal_heat_capacity: internalWall.kappaValue,
-			mass_distribution_class: internalWall.massDistributionClass,
+			areal_heat_capacity: internalWall.data.kappaValue,
+			mass_distribution_class: internalWall.data.massDistributionClass,
 		};
 
 		expect(internalWallElement).toEqual(expectedInternalWall);
 
 		const expectedPartyWall: BuildingElementAdjacentConditionedSpace = {
 			type: "BuildingElementAdjacentConditionedSpace",
-			pitch: partyWall.pitch!,
-			area: partyWall.surfaceArea,
-			u_value: partyWall.uValue,
-			areal_heat_capacity: partyWall.kappaValue,
-			mass_distribution_class: partyWall.massDistributionClass,
+			pitch: partyWall.data.pitch!,
+			area: partyWall.data.surfaceArea,
+			u_value: partyWall.data.uValue,
+			areal_heat_capacity: partyWall.data.kappaValue,
+			mass_distribution_class: partyWall.data.massDistributionClass,
 		};
 
 		expect(partyWallElement).toEqual(expectedPartyWall);
 
 		const expectedWallToUnheatedSpace: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-			pitch: wallToUnheatedSpace.pitch!,
-			area: wallToUnheatedSpace.surfaceAreaOfElement,
-			u_value: wallToUnheatedSpace.uValue,
-			areal_heat_capacity: wallToUnheatedSpace.arealHeatCapacity,
-			mass_distribution_class: wallToUnheatedSpace.massDistributionClass,
-			thermal_resistance_unconditioned_space: wallToUnheatedSpace.thermalResistanceOfAdjacentUnheatedSpace,
+			pitch: wallToUnheatedSpace.data.pitch!,
+			area: wallToUnheatedSpace.data.surfaceAreaOfElement,
+			u_value: wallToUnheatedSpace.data.uValue,
+			areal_heat_capacity: wallToUnheatedSpace.data.arealHeatCapacity,
+			mass_distribution_class: wallToUnheatedSpace.data.massDistributionClass,
+			thermal_resistance_unconditioned_space: wallToUnheatedSpace.data.thermalResistanceOfAdjacentUnheatedSpace,
 		};
 
 		expect(wallToUnheatedSpaceElement).toEqual(expectedWallToUnheatedSpace);

@@ -1,38 +1,51 @@
 <script setup lang="ts">
-import { standardPitchOptions } from "#imports";
+import { standardPitchOptions, getUrl } from "#imports";
 
 const title = "Wall to unheated space";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { getStoreIndex, autoSaveElementForm } = useForm();
 
 const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data);
-const model: Ref<WallsToUnheatedSpaceData> = ref(wallData!);
+const model: Ref<WallsToUnheatedSpaceData | undefined> = ref(wallData?.data);
 
 const saveForm = (fields: WallsToUnheatedSpaceData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWalls } = state.dwellingFabric;
+		const index = getStoreIndex(dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data);
 
-		const wall: WallsToUnheatedSpaceData = {
-			name: fields.name,
-			surfaceAreaOfElement: fields.surfaceAreaOfElement,
-			uValue: fields.uValue,
-			arealHeatCapacity: fields.arealHeatCapacity,
-			massDistributionClass: fields.massDistributionClass,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
-			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
+		dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data[index] = {
+			data: {
+				name: fields.name,
+				surfaceAreaOfElement: fields.surfaceAreaOfElement,
+				uValue: fields.uValue,
+				arealHeatCapacity: fields.arealHeatCapacity,
+				massDistributionClass: fields.massDistributionClass,
+				pitchOption: fields.pitchOption,
+				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
+				thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
+			},
+			complete: true,
 		};
 
-		if (!dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace) {
-			dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace = { data: [] };
-		}
 		dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.complete = false;
-		saveToList(wall, dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace);
 	});
 
 	navigateTo("/dwelling-fabric/walls");
 };
 
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace,
+	defaultName: "Wall to unheated space",
+	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data.push(newData),
+	onPatchUpdate: (state, newData, index) => {
+		const { pitchOption, pitch } = newData.data;
+
+		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
+		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.complete = false;
+	},
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -62,7 +75,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<FieldsPitch
-			:pitch-option="model.pitchOption"
+			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
 		/>
 		<FormKit
@@ -96,10 +109,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('dwellingSpaceWalls')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 
 </template>

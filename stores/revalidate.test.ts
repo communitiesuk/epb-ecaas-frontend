@@ -31,39 +31,45 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 	"dwellingSpaceExternalWall": {
 		"data": [
 			{
-				"name": "Wall 1",
-				"pitchOption": "90",
-				"pitch": 90,
-				"orientation": 140,
-				"height": 6,
-				"length": 5,
-				"elevationalHeight": 25,
-				"surfaceArea": 40,
-				"solarAbsorption": 0.9,
-				"uValue": 5,
-				"kappaValue": 110000,
-				"massDistributionClass": MassDistributionClass.E,
+				"data": {
+					"name": "Wall 1",
+					"pitchOption": "90",
+					"pitch": 90,
+					"orientation": 140,
+					"height": 6,
+					"length": 5,
+					"elevationalHeight": 25,
+					"surfaceArea": 40,
+					"solarAbsorption": 0.9,
+					"uValue": 5,
+					"kappaValue": 110000,
+					"massDistributionClass": MassDistributionClass.E,
+				},
+				"complete": true,
 			},
 			{
-				"name": "Wall 2",
-				"pitchOption": "90",
-				"pitch": 90,
-				"orientation": 90,
-				"height": 30,
-				"length": 34,
-				"elevationalHeight": 20,
-				"surfaceArea": 30,
-				"solarAbsorption": 0.7,
-				"uValue": 6,
-				"kappaValue": 175000,
-				"massDistributionClass": MassDistributionClass.I,
+				"data": {
+					"name": "Wall 2",
+					"pitchOption": "90",
+					"pitch": 90,
+					"orientation": 90,
+					"height": 30,
+					"length": 34,
+					"elevationalHeight": 20,
+					"surfaceArea": 30,
+					"solarAbsorption": 0.7,
+					"uValue": 6,
+					"kappaValue": 175000,
+					"massDistributionClass": MassDistributionClass.I,
+				},
+				"complete": true,
 			},
 		],
 		"complete": true,
 	},
 };
 
-const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSpaceExternalWall.data.1.solarAbsorption");
+const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSpaceExternalWall.data.1.data.solarAbsorption");
 
 const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingField, "dwellingSpaceExternalWall.data.0.massDistributionClass", "X"); // 'X' is invalid for a mass distribution class value
 

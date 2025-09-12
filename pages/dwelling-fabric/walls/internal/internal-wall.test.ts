@@ -35,14 +35,18 @@ describe("internal wall", () => {
 	};
 	
 	test("data is saved to store state when form is valid", async () => {
-		await renderSuspended(InternalWall);
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
 
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
 		
-		expect(dwellingSpaceInternalWall?.data[0]).toEqual(internalWall);
+		expect(dwellingSpaceInternalWall?.data[0]?.data).toEqual(internalWall);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
@@ -50,7 +54,7 @@ describe("internal wall", () => {
 			dwellingFabric: {
 				dwellingSpaceWalls: {
 					dwellingSpaceInternalWall: {
-						data: [internalWall],
+						data: [{ data: internalWall }],
 					},
 				},
 			},
@@ -70,9 +74,13 @@ describe("internal wall", () => {
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
-		await renderSuspended(InternalWall);
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceAreaOfElement_error"))).toBeDefined();
@@ -82,42 +90,107 @@ describe("internal wall", () => {
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
-		await renderSuspended(InternalWall);
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("internalWallErrorSummary"))).toBeDefined();
 	});
 
-	test("requires pitch when custom pitch option is selected", async () => {
-		await renderSuspended(InternalWall);
+	it("requires pitch when custom pitch option is selected", async () => {
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
 
 		await user.click(screen.getByTestId("pitchOption_custom"));
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
-	test("saves custom pitch when custom pitch option is selected", async () => {
-		await renderSuspended(InternalWall);
+	it("saves custom pitch when custom pitch option is selected", async () => {
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
 
 		await populateValidForm();
 		await user.click(screen.getByTestId("pitchOption_custom"));
 		await user.type(screen.getByTestId("pitch"), "100");
 		await user.tab();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
 		
-		expect(dwellingSpaceInternalWall?.data[0]?.pitch).toEqual(100);
+		expect(dwellingSpaceInternalWall?.data[0]?.data.pitch).toEqual(100);
 	});
 
-	test("navigates to walls page when valid form is completed", async () => {
-		await renderSuspended(InternalWall);
+	it("navigates to walls page when valid form is completed", async () => {
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
 	
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/walls");
+	});
+
+	test("updated form data is automatically saved to store", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceInternalWall: {
+						data: [{
+							data: { ...internalWall },
+						}],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "0" },
+			},
+		});
+	
+		await user.clear(screen.getByTestId("name"));
+		await user.tab();
+		await user.clear(screen.getByTestId("surfaceAreaOfElement"));
+
+		await user.type(screen.getByTestId("name"), "Internal wall 2");
+		await user.type(screen.getByTestId("surfaceAreaOfElement"), "10");
+		await user.tab();
+
+		const { data } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall;
+
+		expect(data[0]?.data.name).toBe("Internal wall 2");
+		expect(data[0]?.data.surfaceAreaOfElement).toBe(10);
+	});
+	
+	test("partial form data is saved automatically with default name to store", async () => {
+		await renderSuspended(InternalWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
+		
+		await user.type(screen.getByTestId("surfaceAreaOfElement"), "10");
+		await user.tab();
+
+		const { data } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall;
+
+		expect(data[0]?.data.name).toBe("Internal wall");
+		expect(data[0]?.data.surfaceAreaOfElement).toBe(10);
 	});
 });

@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import formStatus from "~/constants/formStatus";
+
 const title = "Walls";
 const page = usePage();
 const store = useEcaasStore();
 
 type WallType = keyof typeof store.dwellingFabric.dwellingSpaceWalls;
-type WallData = ExternalWallData & InternalWallData & WallsToUnheatedSpaceData & PartyWallData;
+type WallData = EcaasForm<ExternalWallData> & EcaasForm<InternalWallData> & EcaasForm<WallsToUnheatedSpaceData> & EcaasForm<PartyWallData>;
 
 function handleRemove( wallType: WallType, index: number) {
 	const walls = store.dwellingFabric.dwellingSpaceWalls[wallType]?.data;
@@ -24,12 +26,14 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 	const wall = walls?.[index];
 
 	if (wall) {
-		const duplicates = walls.filter(w => w.name.match(duplicateNamePattern(wall.name)));
+		const duplicates = walls.filter(w => w.data.name.match(duplicateNamePattern(wall.data.name)));
 	
 		store.$patch((state) => {
 			const newWall = {
-				...wall, 
-				name: `${wall.name} (${duplicates.length})`,
+				data: {
+					...wall.data, 
+					name: `${wall.data.name} (${duplicates.length})`,
+				},
 			} as T;
 
 			state.dwellingFabric.dwellingSpaceWalls[wallType].data.push(newWall);
@@ -52,11 +56,19 @@ function handleComplete() {
 
 	navigateTo("/dwelling-fabric");
 }
+
 function checkIsComplete(){
 	const walls = store.dwellingFabric.dwellingSpaceWalls;
 	return Object.values(walls).every(wall => wall.complete);
 }
 
+function hasIncompleteEntries() {
+	const wallTypes = store.dwellingFabric.dwellingSpaceWalls;
+	
+	return Object.values(wallTypes).some(
+		walls => walls.data.some(
+			wall => isEcaasForm(wall) ? !wall.complete : false));
+}
 </script>
 <template>
 	<Head>
@@ -69,7 +81,11 @@ function checkIsComplete(){
 		id="external"
 		title="External wall"
 		:form-url="`${page?.url!}/external`"
-		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data.map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceExternalWall', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceExternalWall', index)"
 	/>
@@ -77,7 +93,11 @@ function checkIsComplete(){
 		id="internal"
 		title="Internal wall"
 		:form-url="`${page?.url!}/internal`"
-		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data.map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceInternalWall', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceInternalWall', index)"
 	/>
@@ -85,7 +105,11 @@ function checkIsComplete(){
 		id="toHeatedSpace"
 		title="Wall to unheated space"
 		:form-url="`${page?.url!}/wall-to-unheated-space`"
-		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data.map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpaceWallToUnheatedSpace', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceWallToUnheatedSpace', index)"
 	/>
@@ -93,7 +117,11 @@ function checkIsComplete(){
 		id="party"
 		title="Party wall"
 		:form-url="`${page?.url!}/party`"
-		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data.map(x => x.name)"
+		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data.map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('dwellingSpacePartyWall', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpacePartyWall', index)"
 	/>
@@ -104,7 +132,10 @@ function checkIsComplete(){
 		>
 			Return to dwelling fabric
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" @completed="handleComplete"/>
-
+		<CompleteElement
+			:is-complete="checkIsComplete()"
+			:disabled="hasIncompleteEntries()"
+			@completed="handleComplete"
+		/>
 	</div>
 </template>

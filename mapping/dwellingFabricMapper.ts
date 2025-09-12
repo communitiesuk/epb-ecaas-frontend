@@ -212,61 +212,61 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const wallSuffix = "wall";
 
 	const externalWallData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalWall?.map(x => {
-		const nameWithSuffix = suffixName(x.name, wallSuffix);
+		const nameWithSuffix = suffixName(x.data.name, wallSuffix);
 
 		return { [nameWithSuffix]: {
 			type: "BuildingElementOpaque",
-			pitch: extractPitch(x),
-			orientation360: x.orientation,
-			height: x.height,
-			width: x.length,
-			base_height: x.elevationalHeight,
-			area: x.surfaceArea,
-			solar_absorption_coeff: x.solarAbsorption,
-			u_value: x.uValue,
-			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass,
+			pitch: extractPitch(x.data),
+			orientation360: x.data.orientation,
+			height: x.data.height,
+			width: x.data.length,
+			base_height: x.data.elevationalHeight,
+			area: x.data.surfaceArea,
+			solar_absorption_coeff: x.data.solarAbsorption,
+			u_value: x.data.uValue,
+			areal_heat_capacity: x.data.kappaValue,
+			mass_distribution_class: x.data.massDistributionClass,
 			is_external_door: false,
 		} };
 	}) || [];
 
 	const internalWallData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceInternalWall?.map(x => {
-		const nameWithSuffix = suffixName(x.name, wallSuffix);
+		const nameWithSuffix = suffixName(x.data.name, wallSuffix);
 
 		return { [nameWithSuffix]: {
 			type: "BuildingElementAdjacentConditionedSpace",
-			pitch: extractPitch(x),
-			area: x.surfaceAreaOfElement,
+			pitch: extractPitch(x.data),
+			area: x.data.surfaceAreaOfElement,
 			u_value: defaultUValue,
-			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass,
+			areal_heat_capacity: x.data.kappaValue,
+			mass_distribution_class: x.data.massDistributionClass,
 		} };
 	}) || [];
 
 	const partyWallData: { [key: string]: SchemaBuildingElement }[] = dwellingSpacePartyWall?.map(x => {
-		const nameWithSuffix = suffixName(x.name, wallSuffix);
+		const nameWithSuffix = suffixName(x.data.name, wallSuffix);
 
 		return { [nameWithSuffix]: {
 			type: "BuildingElementAdjacentConditionedSpace",
-			pitch: extractPitch(x),
-			area: x.surfaceArea,
-			u_value: x.uValue,
-			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass,
+			pitch: extractPitch(x.data),
+			area: x.data.surfaceArea,
+			u_value: x.data.uValue,
+			areal_heat_capacity: x.data.kappaValue,
+			mass_distribution_class: x.data.massDistributionClass,
 		} };
 	}) || [];
 
 	const wallToUnheatedSpaceData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceWallToUnheatedSpace?.map(x => {
-		const nameWithSuffix = suffixName(x.name, wallSuffix);
+		const nameWithSuffix = suffixName(x.data.name, wallSuffix);
 
 		return { [nameWithSuffix]: {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-			pitch: extractPitch(x),
-			area: x.surfaceAreaOfElement,
-			u_value: x.uValue,
-			areal_heat_capacity: x.arealHeatCapacity,
-			mass_distribution_class: x.massDistributionClass,
-			thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
+			pitch: extractPitch(x.data),
+			area: x.data.surfaceAreaOfElement,
+			u_value: x.data.uValue,
+			areal_heat_capacity: x.data.arealHeatCapacity,
+			mass_distribution_class: x.data.massDistributionClass,
+			thermal_resistance_unconditioned_space: x.data.thermalResistanceOfAdjacentUnheatedSpace,
 		} };
 	}) || [];
 

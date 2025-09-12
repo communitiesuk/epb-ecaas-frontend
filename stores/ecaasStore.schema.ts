@@ -186,10 +186,10 @@ const groundFloorDataZod = z.discriminatedUnion(
 export type GroundFloorData = z.infer<typeof groundFloorDataZod>;
 
 export type WallsData = AssertFormKeysArePageIds<{
-	dwellingSpaceExternalWall: EcaasForm<ExternalWallData[]>;
-	dwellingSpaceInternalWall: EcaasForm<InternalWallData[]>;
-	dwellingSpaceWallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData[]>;
-	dwellingSpacePartyWall: EcaasForm<PartyWallData[]>;
+	dwellingSpaceExternalWall: EcaasForm<EcaasForm<ExternalWallData>[]>;
+	dwellingSpaceInternalWall: EcaasForm<EcaasForm<InternalWallData>[]>;
+	dwellingSpaceWallToUnheatedSpace: EcaasForm<EcaasForm<WallsToUnheatedSpaceData>[]>;
+	dwellingSpacePartyWall: EcaasForm<EcaasForm<PartyWallData>[]>;
 }>;
 
 type Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
