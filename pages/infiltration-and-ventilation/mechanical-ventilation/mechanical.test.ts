@@ -21,7 +21,6 @@ describe("mechanical ventilation overview", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
-
 	};
 
 	const mechanicalVentilation2: MechanicalVentilationData = {
@@ -45,7 +44,6 @@ describe("mechanical ventilation overview", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
-
 	};
 
 	// linked to mechanicalVentilation1
@@ -98,9 +96,11 @@ describe("mechanical ventilation overview", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [{
-						data: mechanicalVentilation1,
-					}],
+					data: [
+						{
+							data: mechanicalVentilation1,
+						},
+					],
 				},
 			},
 		});
@@ -127,16 +127,14 @@ describe("mechanical ventilation overview", () => {
 			},
 		});
 		await renderSuspended(MechanicalVentilationOverview);
-		expect(
-			screen.getAllByTestId("mechanicalVentilation_items"),
-		).toBeDefined();
+		expect(screen.getAllByTestId("mechanicalVentilation_items")).toBeDefined();
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_1"));
 		expect(screen.queryByTestId("mechanicalVentilation_1")).toBeNull();
 		expect(screen.queryByTestId("mechanicalVentilation_0")).toBeDefined();
 		expect(screen.queryByTestId("mechanicalVentilation_2")).toBeDefined();
 	});
 
-	it("should remove the associated ductwork when a MVHR mechanical ventilation object is removed", async() => {
+	it("should remove the associated ductwork when a MVHR mechanical ventilation object is removed", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -156,12 +154,14 @@ describe("mechanical ventilation overview", () => {
 		});
 		await renderSuspended(MechanicalVentilationOverview);
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
-		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([{ data: ductwork3 }]);
+		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([
+			{ data: ductwork3 },
+		]);
 
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
 		expect(store.infiltrationAndVentilation.ductwork.data).toEqual([]);
 
-		await renderSuspended(InfiltrationAndVentilationTaskPage,{
+		await renderSuspended(InfiltrationAndVentilationTaskPage, {
 			route: {
 				path: "/infiltration-and-ventilation",
 			},
@@ -206,7 +206,7 @@ describe("mechanical ventilation overview", () => {
 		expect(screen.getByText("Mechanical name 1 (1) (2)")).toBeDefined();
 	});
 
-	it("should not duplicate the id when duplicating the mechanical ventilation object", async() => {
+	it("should not duplicate the id when duplicating the mechanical ventilation object", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -220,16 +220,20 @@ describe("mechanical ventilation overview", () => {
 		await userEvent.click(
 			screen.getByTestId("mechanicalVentilation_duplicate_0"),
 		);
-		expect(store.infiltrationAndVentilation.mechanicalVentilation.data[0]?.data.id).not.toBe(store.infiltrationAndVentilation.mechanicalVentilation.data[1]?.data.id);
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.data[0]?.data.id,
+		).not.toBe(
+			store.infiltrationAndVentilation.mechanicalVentilation.data[1]?.data.id,
+		);
 	});
 
-	it("should only display warning message when mechanical ventilations of type mvhr have been added", async() => {
-
-		const warningMessage = "Note if you remove a MVHR this will also remove any associated ductwork";
+	it("should only display warning message when mechanical ventilations of type mvhr have been added", async () => {
+		const warningMessage =
+      "Note if you remove a MVHR this will also remove any associated ductwork";
 		await renderSuspended(MechanicalVentilationOverview);
 
 		expect(screen.queryByText(warningMessage)).toBeNull();
-		
+
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -242,29 +246,34 @@ describe("mechanical ventilation overview", () => {
 		await renderSuspended(MechanicalVentilationOverview);
 
 		expect(screen.getByText(warningMessage)).toBeDefined();
-
 	});
 
 	it("marks mechanical ventilation as complete when mark section as complete button is clicked", async () => {
-	
 		await renderSuspended(MechanicalVentilationOverview);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
+		const completedStatusElement = screen.queryByTestId(
+			"completeSectionCompleted",
+		);
 		expect(completedStatusElement?.style.display).toBe("none");
-	
-		await user.click(screen.getByTestId("completeSectionButton"));
-	
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+
 		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
-	
+
 		expect(complete).toBe(true);
-		expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+		expect(
+			screen.queryByRole("button", { name: "Mark section as complete" }),
+		).toBeNull();
 		expect(completedStatusElement?.style.display).not.toBe("none");
-	
-		expect(navigateToMock).toHaveBeenCalledWith("/infiltration-and-ventilation");
+
+		expect(navigateToMock).toHaveBeenCalledWith(
+			"/infiltration-and-ventilation",
+		);
 	});
-	
+
 	it("marks shading as not complete when complete button is clicked then user removes a shading item", async () => {
-				
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -276,18 +285,22 @@ describe("mechanical ventilation overview", () => {
 			},
 		});
 		await renderSuspended(MechanicalVentilationOverview);
-		
-		await user.click(screen.getByTestId("completeSectionButton"));
-		expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(true);
-		
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.complete,
+		).toBe(true);
+
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
-		expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(false);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.complete,
+		).toBe(false);
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
 	});
 
 	it("marks mechanical ventilation as not complete when complete button is clicked then user duplicates a mechanical ventilation item", async () => {
-
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
@@ -297,16 +310,21 @@ describe("mechanical ventilation overview", () => {
 				},
 			},
 		});
-			
+
 		await renderSuspended(MechanicalVentilationOverview);
-			
-		await user.click(screen.getByTestId("completeSectionButton"));
-		expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(true);
-			
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.complete,
+		).toBe(true);
+
 		await user.click(screen.getByTestId("mechanicalVentilation_duplicate_0"));
-		expect(store.infiltrationAndVentilation.mechanicalVentilation.complete).toBe(false);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-			
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.complete,
+		).toBe(false);
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
 	});
 	it("marks mechanical ventilation as not complete when user saves a new or edited form after marking section as complete", async () => {
 		store.$patch({
@@ -318,29 +336,34 @@ describe("mechanical ventilation overview", () => {
 				},
 			},
 		});
-			
+
 		await renderSuspended(MechanicalVentilationOverview);
-		await user.click(screen.getByTestId("completeSectionButton"));
-			
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+
 		await renderSuspended(MechanicalVentilationForm, {
 			route: {
 				params: { mechanical: "0" },
 			},
 		});
-		
-		await user.click(screen.getByTestId("saveAndComplete")); 
-			
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
 		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
 		expect(complete).toBe(false);
-			
+
 		await renderSuspended(MechanicalVentilationOverview);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
 	});
 	it("should navigate to the infiltration and ventilation overview page when return to overview is clicked", async () => {
 		await renderSuspended(MechanicalVentilationOverview);
-	
-		const returnToOverviewButton = screen.getByRole("button", { name : "Return to infiltration and ventilation" });
-		expect(returnToOverviewButton.getAttribute("href")).toBe("/infiltration-and-ventilation");
 
-	} );
+		const returnToOverviewButton = screen.getByRole("button", {
+			name: "Return to infiltration and ventilation",
+		});
+		expect(returnToOverviewButton.getAttribute("href")).toBe(
+			"/infiltration-and-ventilation",
+		);
+	});
 });

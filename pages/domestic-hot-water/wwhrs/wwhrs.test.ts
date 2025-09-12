@@ -58,7 +58,7 @@ describe("wwhrs", () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
-					data:[wwhrs1, wwhrs2, wwhrs3],
+					data: [wwhrs1, wwhrs2, wwhrs3],
 				},
 			},
 		});
@@ -71,7 +71,6 @@ describe("wwhrs", () => {
 		expect(within(populatedList).getByText("WWHRS 1")).toBeDefined();
 		expect(within(populatedList).getByText("WWHRS 3")).toBeDefined();
 		expect(within(populatedList).queryByText("WWHRS 2")).toBeNull();
-
 	});
 
 	test("wwhrs is duplicated when duplicate link is clicked", async () => {
@@ -99,19 +98,25 @@ describe("wwhrs", () => {
 
 	it("marks wwhrs as complete when mark section as complete button is clicked", async () => {
 		await renderSuspended(Wwhrs);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-	
-		const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
+
+		const completedStatusElement = screen.queryByTestId(
+			"completeSectionCompleted",
+		);
 		expect(completedStatusElement?.style.display).toBe("none");
-	
-		await user.click(screen.getByTestId("completeSectionButton"));
-	
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+
 		const { complete } = store.domesticHotWater.wwhrs;
-	
+
 		expect(complete).toBe(true);
-		expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+		expect(
+			screen.queryByRole("button", { name: "Mark section as complete" }),
+		).toBeNull();
 		expect(completedStatusElement?.style.display).not.toBe("none");
-	
+
 		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
 	});
 	it("marks wwhrs as not complete when complete button is clicked then user removes a wwhr item", async () => {
@@ -122,17 +127,19 @@ describe("wwhrs", () => {
 				},
 			},
 		});
-	
+
 		await renderSuspended(Wwhrs);
-	
-		await user.click(screen.getByTestId("completeSectionButton"));
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
 		expect(store.domesticHotWater.wwhrs.complete).toBe(true);
-	
+
 		await user.click(screen.getByTestId("wwhrs_remove_0"));
 		expect(store.domesticHotWater.wwhrs.complete).toBe(false);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
 	});
-	
+
 	it("marks wwhrs as not complete when complete button is clicked then user duplicates a wwhr item", async () => {
 		store.$patch({
 			domesticHotWater: {
@@ -141,17 +148,19 @@ describe("wwhrs", () => {
 				},
 			},
 		});
-	
+
 		await renderSuspended(Wwhrs);
-	
-		await user.click(screen.getByTestId("completeSectionButton"));
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
 		expect(store.domesticHotWater.wwhrs.complete).toBe(true);
-	
+
 		await user.click(screen.getByTestId("wwhrs_duplicate_0"));
 		expect(store.domesticHotWater.wwhrs.complete).toBe(false);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
 	});
-	
+
 	it("marks wwhrs as not complete when user saves a new or edited form after marking section as complete", async () => {
 		store.$patch({
 			domesticHotWater: {
@@ -160,10 +169,10 @@ describe("wwhrs", () => {
 				},
 			},
 		});
-	
+
 		await renderSuspended(Wwhrs);
-		await user.click(screen.getByTestId("completeSectionButton"));
-	
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+
 		await renderSuspended(WwhrsForm, {
 			route: {
 				params: { wwhrs: "0" },
@@ -171,18 +180,24 @@ describe("wwhrs", () => {
 		});
 
 		await user.click(screen.getByRole("button"));
-	
+
 		const { complete } = store.domesticHotWater.wwhrs;
 		expect(complete).toBe(false);
-	
+
 		await renderSuspended(Wwhrs);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
 	});
-	
+
 	it("should navigate to the domestic hot water overview page when return to overview is clicked", async () => {
 		await renderSuspended(Wwhrs);
-	
-		const returnToOverviewButton = screen.getByRole("button", { name: "Return to domestic hot water" });
-		expect(returnToOverviewButton.getAttribute("href")).toBe("/domestic-hot-water");
+
+		const returnToOverviewButton = screen.getByRole("button", {
+			name: "Return to domestic hot water",
+		});
+		expect(returnToOverviewButton.getAttribute("href")).toBe(
+			"/domestic-hot-water",
+		);
 	});
 });

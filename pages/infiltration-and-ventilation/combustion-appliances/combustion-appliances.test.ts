@@ -8,7 +8,6 @@ import OpenGasFlueBalancerForm from "./open-gas-flue-balancer/[combustion].vue";
 import OpenGasKitchenStoveForm from "./open-gas-kitchen-stove/[combustion].vue";
 import OpenGasFireForm from "./open-gas-fire/[combustion].vue";
 import ClosedFireForm from "./closed-fire/[combustion].vue";
-
 import { expect } from "vitest";
 import type { Entries } from "type-fest";
 
@@ -76,7 +75,6 @@ describe("open fireplace", () => {
 		expect(within(populatedList).getByText("Open fireplace 1")).toBeDefined();
 		expect(within(populatedList).getByText("Open fireplace 3")).toBeDefined();
 		expect(within(populatedList).queryByText("Open fireplace 2")).toBeNull();
-
 	});
 
 	test("open fireplace is duplicated when duplicate link is clicked", async () => {
@@ -155,7 +153,11 @@ describe("closed fireplace with fan", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					closed_with_fan: {
-						data: [closedFireplaceWithFan1, closedFireplaceWithFan2, closedFireplaceWithFan3],
+						data: [
+							closedFireplaceWithFan1,
+							closedFireplaceWithFan2,
+							closedFireplaceWithFan3,
+						],
 					},
 				},
 			},
@@ -166,10 +168,15 @@ describe("closed fireplace with fan", () => {
 
 		const populatedList = screen.getByTestId("closedFireplaceWithFan_items");
 
-		expect(within(populatedList).getByText("Closed fireplace with fan 1")).toBeDefined();
-		expect(within(populatedList).getByText("Closed fireplace with fan 3")).toBeDefined();
-		expect(within(populatedList).queryByText("Closed fireplace with fan 2")).toBeNull();
-
+		expect(
+			within(populatedList).getByText("Closed fireplace with fan 1"),
+		).toBeDefined();
+		expect(
+			within(populatedList).getByText("Closed fireplace with fan 3"),
+		).toBeDefined();
+		expect(
+			within(populatedList).queryByText("Closed fireplace with fan 2"),
+		).toBeNull();
 	});
 
 	test("closed fireplace is duplicated when duplicate link is clicked", async () => {
@@ -184,17 +191,31 @@ describe("closed fireplace with fan", () => {
 		});
 
 		await renderSuspended(CombustionAppliances);
-		await userEvent.click(screen.getByTestId("closedFireplaceWithFan_duplicate_0"));
-		await userEvent.click(screen.getByTestId("closedFireplaceWithFan_duplicate_0"));
-		await userEvent.click(screen.getByTestId("closedFireplaceWithFan_duplicate_2"));
-		await userEvent.click(screen.getByTestId("closedFireplaceWithFan_duplicate_2"));
+		await userEvent.click(
+			screen.getByTestId("closedFireplaceWithFan_duplicate_0"),
+		);
+		await userEvent.click(
+			screen.getByTestId("closedFireplaceWithFan_duplicate_0"),
+		);
+		await userEvent.click(
+			screen.getByTestId("closedFireplaceWithFan_duplicate_2"),
+		);
+		await userEvent.click(
+			screen.getByTestId("closedFireplaceWithFan_duplicate_2"),
+		);
 
-		expect(screen.queryAllByTestId("closedFireplaceWithFan_item").length).toBe(6);
+		expect(screen.queryAllByTestId("closedFireplaceWithFan_item").length).toBe(
+			6,
+		);
 		expect(screen.getByText("Closed fireplace with fan 1")).toBeDefined();
 		expect(screen.getByText("Closed fireplace with fan 1 (1)")).toBeDefined();
 		expect(screen.getByText("Closed fireplace with fan 1 (2)")).toBeDefined();
-		expect(screen.getByText("Closed fireplace with fan 1 (1) (1)")).toBeDefined();
-		expect(screen.getByText("Closed fireplace with fan 1 (1) (2)")).toBeDefined();
+		expect(
+			screen.getByText("Closed fireplace with fan 1 (1) (1)"),
+		).toBeDefined();
+		expect(
+			screen.getByText("Closed fireplace with fan 1 (1) (2)"),
+		).toBeDefined();
 	});
 });
 
@@ -248,7 +269,11 @@ describe("open gas flue balancer", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_flue_balancer: {
-						data: [openGasFlueBalancer1, openGasFlueBalancer2, openGasFlueBalancer3],
+						data: [
+							openGasFlueBalancer1,
+							openGasFlueBalancer2,
+							openGasFlueBalancer3,
+						],
 					},
 				},
 			},
@@ -259,10 +284,15 @@ describe("open gas flue balancer", () => {
 
 		const populatedList = screen.getByTestId("openGasFlueBalancer_items");
 
-		expect(within(populatedList).getByText("Open gas flue balancer 1")).toBeDefined();
-		expect(within(populatedList).getByText("Open gas flue balancer 3")).toBeDefined();
-		expect(within(populatedList).queryByText("Open gas flue balancer 2")).toBeNull();
-
+		expect(
+			within(populatedList).getByText("Open gas flue balancer 1"),
+		).toBeDefined();
+		expect(
+			within(populatedList).getByText("Open gas flue balancer 3"),
+		).toBeDefined();
+		expect(
+			within(populatedList).queryByText("Open gas flue balancer 2"),
+		).toBeNull();
 	});
 
 	test("open gas flue balancer is duplicated when duplicate link is clicked", async () => {
@@ -277,10 +307,18 @@ describe("open gas flue balancer", () => {
 		});
 
 		await renderSuspended(CombustionAppliances);
-		await userEvent.click(screen.getByTestId("openGasFlueBalancer_duplicate_0"));
-		await userEvent.click(screen.getByTestId("openGasFlueBalancer_duplicate_0"));
-		await userEvent.click(screen.getByTestId("openGasFlueBalancer_duplicate_2"));
-		await userEvent.click(screen.getByTestId("openGasFlueBalancer_duplicate_2"));
+		await userEvent.click(
+			screen.getByTestId("openGasFlueBalancer_duplicate_0"),
+		);
+		await userEvent.click(
+			screen.getByTestId("openGasFlueBalancer_duplicate_0"),
+		);
+		await userEvent.click(
+			screen.getByTestId("openGasFlueBalancer_duplicate_2"),
+		);
+		await userEvent.click(
+			screen.getByTestId("openGasFlueBalancer_duplicate_2"),
+		);
 
 		expect(screen.queryAllByTestId("openGasFlueBalancer_item").length).toBe(6);
 		expect(screen.getByText("Open gas flue balancer 1")).toBeDefined();
@@ -341,7 +379,11 @@ describe("open gas kitchen stove", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_kitchen_stove: {
-						data: [openGasKitchenStove1, openGasKitchenStove2, openGasKitchenStove3],
+						data: [
+							openGasKitchenStove1,
+							openGasKitchenStove2,
+							openGasKitchenStove3,
+						],
 					},
 				},
 			},
@@ -352,10 +394,15 @@ describe("open gas kitchen stove", () => {
 
 		const populatedList = screen.getByTestId("openGasKitchenStove_items");
 
-		expect(within(populatedList).getByText("Open gas kitchen stove 1")).toBeDefined();
-		expect(within(populatedList).getByText("Open gas kitchen stove 3")).toBeDefined();
-		expect(within(populatedList).queryByText("Open gas kitchen stove 2")).toBeNull();
-
+		expect(
+			within(populatedList).getByText("Open gas kitchen stove 1"),
+		).toBeDefined();
+		expect(
+			within(populatedList).getByText("Open gas kitchen stove 3"),
+		).toBeDefined();
+		expect(
+			within(populatedList).queryByText("Open gas kitchen stove 2"),
+		).toBeNull();
 	});
 
 	test("open gas kitchen stove is duplicated when duplicate link is clicked", async () => {
@@ -370,10 +417,18 @@ describe("open gas kitchen stove", () => {
 		});
 
 		await renderSuspended(CombustionAppliances);
-		await userEvent.click(screen.getByTestId("openGasKitchenStove_duplicate_0"));
-		await userEvent.click(screen.getByTestId("openGasKitchenStove_duplicate_0"));
-		await userEvent.click(screen.getByTestId("openGasKitchenStove_duplicate_2"));
-		await userEvent.click(screen.getByTestId("openGasKitchenStove_duplicate_2"));
+		await userEvent.click(
+			screen.getByTestId("openGasKitchenStove_duplicate_0"),
+		);
+		await userEvent.click(
+			screen.getByTestId("openGasKitchenStove_duplicate_0"),
+		);
+		await userEvent.click(
+			screen.getByTestId("openGasKitchenStove_duplicate_2"),
+		);
+		await userEvent.click(
+			screen.getByTestId("openGasKitchenStove_duplicate_2"),
+		);
 
 		expect(screen.queryAllByTestId("openGasKitchenStove_item").length).toBe(6);
 		expect(screen.getByText("Open gas kitchen stove 1")).toBeDefined();
@@ -448,7 +503,6 @@ describe("open gas fire", () => {
 		expect(within(populatedList).getByText("Open gas fire 1")).toBeDefined();
 		expect(within(populatedList).getByText("Open gas fire 3")).toBeDefined();
 		expect(within(populatedList).queryByText("Open gas fire 2")).toBeNull();
-
 	});
 
 	test("open gas fire is duplicated when duplicate link is clicked", async () => {
@@ -541,7 +595,6 @@ describe("closed fire", () => {
 		expect(within(populatedList).getByText("Closed fire 1")).toBeDefined();
 		expect(within(populatedList).getByText("Closed fire 3")).toBeDefined();
 		expect(within(populatedList).queryByText("Closed fire 2")).toBeNull();
-
 	});
 
 	test("closed fire is duplicated when duplicate link is clicked", async () => {
@@ -570,12 +623,11 @@ describe("closed fire", () => {
 	});
 });
 describe("mark section as complete", () => {
-	
 	const navigateToMock = vi.hoisted(() => vi.fn());
 	mockNuxtImport("navigateTo", () => {
 		return navigateToMock;
 	});
-	
+
 	const openFireplace1: CombustionApplianceData = {
 		name: "Open fireplace 1",
 		airSupplyToAppliance: "room_air",
@@ -648,80 +700,121 @@ describe("mark section as complete", () => {
 		];
 	};
 
-	type CombustionKey = keyof typeof store.infiltrationAndVentilation.combustionAppliances;
+  type CombustionKey =
+    keyof typeof store.infiltrationAndVentilation.combustionAppliances;
 
-	it("marks combustion appliances as complete when mark section as complete button is clicked", async () => {
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
-		expect(completedStatusElement?.style.display).toBe("none");
+  it("marks combustion appliances as complete when mark section as complete button is clicked", async () => {
+  	expect(
+  		screen.getByRole("button", { name: "Mark section as complete" }),
+  	).not.toBeNull();
+  	const completedStatusElement = screen.queryByTestId(
+  		"completeSectionCompleted",
+  	);
+  	expect(completedStatusElement?.style.display).toBe("none");
 
-		await user.click(screen.getByTestId("completeSectionButton"));
+  	await user.click(screen.getByTestId("markAsCompleteButton"));
 
-		const appliances = store.infiltrationAndVentilation.combustionAppliances;
+  	const appliances = store.infiltrationAndVentilation.combustionAppliances;
 
-		for (const key in appliances) {
-			expect(appliances[key as CombustionKey]?.complete).toBe(true);
-		}
+  	for (const key in appliances) {
+  		expect(appliances[key as CombustionKey]?.complete).toBe(true);
+  	}
 
-		expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
-		expect(completedStatusElement?.style.display).not.toBe("none");
-		expect(navigateToMock).toHaveBeenCalledWith("/infiltration-and-ventilation");
-	});
+  	expect(
+  		screen.queryByRole("button", { name: "Mark section as complete" }),
+  	).toBeNull();
+  	expect(completedStatusElement?.style.display).not.toBe("none");
+  	expect(navigateToMock).toHaveBeenCalledWith(
+  		"/infiltration-and-ventilation",
+  	);
+  });
 
-	it("marks combustion appliances as not complete when user removes an item after completion", async () => {
-		const applianceData = await getCombustionApplianceData("remove");
-		const appliances = Object.entries(store.infiltrationAndVentilation.combustionAppliances) as Entries<typeof store.infiltrationAndVentilation.combustionAppliances>;
+  it("marks combustion appliances as not complete when user removes an item after completion", async () => {
+  	const applianceData = await getCombustionApplianceData("remove");
+  	const appliances = Object.entries(
+  		store.infiltrationAndVentilation.combustionAppliances,
+  	) as Entries<typeof store.infiltrationAndVentilation.combustionAppliances>;
 
-		for (const [key] of appliances) {
-			const typedKey = key;
-			await user.click(screen.getByTestId("completeSectionButton"));
-			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(true);
+  	for (const [key] of appliances) {
+  		const typedKey = key;
+  		await user.click(screen.getByTestId("markAsCompleteButton"));
+  		expect(
+  			store.infiltrationAndVentilation.combustionAppliances[typedKey]
+  				?.complete,
+  		).toBe(true);
 
-			const item = applianceData.find(x => x.key === typedKey);
-			await user.click(screen.getByTestId(item!.testId));
-			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(false);
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		}
-	});
+  		const item = applianceData.find((x) => x.key === typedKey);
+  		await user.click(screen.getByTestId(item!.testId));
+  		expect(
+  			store.infiltrationAndVentilation.combustionAppliances[typedKey]
+  				?.complete,
+  		).toBe(false);
+  		expect(
+  			screen.getByRole("button", { name: "Mark section as complete" }),
+  		).not.toBeNull();
+  	}
+  });
 
-	it("marks combustion appliances as not complete when user duplicates an item after completion", async () => {
-		const applianceData = await getCombustionApplianceData("duplicate");
-		const appliances = Object.entries(store.infiltrationAndVentilation.combustionAppliances) as Entries<typeof store.infiltrationAndVentilation.combustionAppliances>;
+  it("marks combustion appliances as not complete when user duplicates an item after completion", async () => {
+  	const applianceData = await getCombustionApplianceData("duplicate");
+  	const appliances = Object.entries(
+  		store.infiltrationAndVentilation.combustionAppliances,
+  	) as Entries<typeof store.infiltrationAndVentilation.combustionAppliances>;
 
-		for (const [key] of appliances) {
-			const typedKey = key;
-			await user.click(screen.getByTestId("completeSectionButton"));
-			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(true);
+  	for (const [key] of appliances) {
+  		const typedKey = key;
+  		await user.click(screen.getByTestId("markAsCompleteButton"));
+  		expect(
+  			store.infiltrationAndVentilation.combustionAppliances[typedKey]
+  				?.complete,
+  		).toBe(true);
 
-			const item = applianceData.find(x => x.key === typedKey);
-			await user.click(screen.getByTestId(item!.testId));
-			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(false);
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		}
-	});
+  		const item = applianceData.find((x) => x.key === typedKey);
+  		await user.click(screen.getByTestId(item!.testId));
+  		expect(
+  			store.infiltrationAndVentilation.combustionAppliances[typedKey]
+  				?.complete,
+  		).toBe(false);
+  		expect(
+  			screen.getByRole("button", { name: "Mark section as complete" }),
+  		).not.toBeNull();
+  	}
+  });
 
-	it("marks combustion appliances as not complete when user saves a new or edited appliance form after marking complete", async () => {
-		const applianceData = await getCombustionApplianceData("");
-		const appliances = Object.entries(store.infiltrationAndVentilation.combustionAppliances) as Entries<typeof store.infiltrationAndVentilation.combustionAppliances>;
+  it("marks combustion appliances as not complete when user saves a new or edited appliance form after marking complete", async () => {
+  	const applianceData = await getCombustionApplianceData("");
+  	const appliances = Object.entries(
+  		store.infiltrationAndVentilation.combustionAppliances,
+  	) as Entries<typeof store.infiltrationAndVentilation.combustionAppliances>;
 
-		for (const [key] of appliances) {
-			const typedKey = key;
-			await user.click(screen.getByTestId("completeSectionButton"));
-			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(true);
+  	for (const [key] of appliances) {
+  		const typedKey = key;
+  		await user.click(screen.getByTestId("markAsCompleteButton"));
+  		expect(
+  			store.infiltrationAndVentilation.combustionAppliances[typedKey]
+  				?.complete,
+  		).toBe(true);
 
-			const item = applianceData.find(x => x.key === typedKey);
+  		const item = applianceData.find((x) => x.key === typedKey);
 
-			await renderSuspended(item?.form, {
-				route: {
-					params: { combustion: "0" },
-				},
-			});
+  		await renderSuspended(item?.form, {
+  			route: {
+  				params: { combustion: "0" },
+  			},
+  		});
 
-			await user.click(screen.getByRole("button", { name: "Save and continue" }));
-			expect(store.infiltrationAndVentilation.combustionAppliances[typedKey]?.complete).toBe(false);
+  		await user.click(
+  			screen.getByRole("button", { name: "Save and continue" }),
+  		);
+  		expect(
+  			store.infiltrationAndVentilation.combustionAppliances[typedKey]
+  				?.complete,
+  		).toBe(false);
 
-			await renderSuspended(CombustionAppliances);
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-		}
-	});
+  		await renderSuspended(CombustionAppliances);
+  		expect(
+  			screen.getByRole("button", { name: "Mark section as complete" }),
+  		).not.toBeNull();
+  	}
+  });
 });

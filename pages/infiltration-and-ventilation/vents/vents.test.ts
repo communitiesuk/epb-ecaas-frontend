@@ -77,9 +77,8 @@ describe("vents", () => {
 		expect(within(populatedList).getByText("Vent 1")).toBeDefined();
 		expect(within(populatedList).getByText("Vent 3")).toBeDefined();
 		expect(within(populatedList).queryByText("Vent 2")).toBeNull();
-
 	});
-	
+
 	test("vent is duplicated when duplicate link is clicked", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -110,37 +109,49 @@ describe("vents", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [{
-						data: { name: "Vent 1" },
-						complete: false,
-					}],
+					data: [
+						{
+							data: { name: "Vent 1" },
+							complete: false,
+						},
+					],
 				},
 			},
 		});
 
 		await renderSuspended(Vents);
-		const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+		const markAsCompleteButton = screen.getByRole("button", {
+			name: "Mark section as complete",
+		});
 		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 	});
 
 	it("marks vents as complete when mark section as complete button is clicked", async () => {
 		await renderSuspended(Vents);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-	
-		const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
+
+		const completedStatusElement = screen.queryByTestId(
+			"completeSectionCompleted",
+		);
 		expect(completedStatusElement?.style.display).toBe("none");
-	
-		await user.click(screen.getByTestId("completeSectionButton"));
-	
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+
 		const { complete } = store.infiltrationAndVentilation.vents;
-	
+
 		expect(complete).toBe(true);
-		expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
+		expect(
+			screen.queryByRole("button", { name: "Mark section as complete" }),
+		).toBeNull();
 		expect(completedStatusElement?.style.display).not.toBe("none");
-	
-		expect(navigateToMock).toHaveBeenCalledWith("/infiltration-and-ventilation");
+
+		expect(navigateToMock).toHaveBeenCalledWith(
+			"/infiltration-and-ventilation",
+		);
 	});
-	
+
 	it("marks vents as not complete when complete button is clicked then user removes a vent item", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -152,17 +163,19 @@ describe("vents", () => {
 				},
 			},
 		});
-	
+
 		await renderSuspended(Vents);
-	
-		await user.click(screen.getByTestId("completeSectionButton"));
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
 		expect(store.infiltrationAndVentilation.vents.complete).toBe(true);
-	
+
 		await user.click(screen.getByTestId("vents_remove_0"));
 		expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
 	});
-	
+
 	it("marks vents as not complete when complete button is clicked then user duplicates a vent item", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -171,17 +184,19 @@ describe("vents", () => {
 				},
 			},
 		});
-	
+
 		await renderSuspended(Vents);
-	
-		await user.click(screen.getByTestId("completeSectionButton"));
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
 		expect(store.infiltrationAndVentilation.vents.complete).toBe(true);
-	
+
 		await user.click(screen.getByTestId("vents_duplicate_0"));
 		expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
 	});
-	
+
 	it("marks vents as not complete when user saves a new or edited form after marking section as complete", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
@@ -190,62 +205,76 @@ describe("vents", () => {
 				},
 			},
 		});
-	
+
 		await renderSuspended(Vents);
-		await user.click(screen.getByTestId("completeSectionButton"));
-	
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+
 		await renderSuspended(VentsForm, {
 			route: {
 				params: { vent: "0" },
 			},
 		});
-	
+
 		await user.click(screen.getByTestId("saveAndComplete"));
-	
+
 		const { complete } = store.infiltrationAndVentilation.vents;
 		expect(complete).toBe(false);
-	
+
 		await renderSuspended(Vents);
-		expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
 	});
-	
+
 	it("should navigate to the infiltration and ventilation overview page when return to overview is clicked", async () => {
 		await renderSuspended(Vents);
-	
-		const returnToOverviewButton = screen.getByRole("button", { name: "Return to infiltration and ventilation" });
-		expect(returnToOverviewButton.getAttribute("href")).toBe("/infiltration-and-ventilation");
+
+		const returnToOverviewButton = screen.getByRole("button", {
+			name: "Return to infiltration and ventilation",
+		});
+		expect(returnToOverviewButton.getAttribute("href")).toBe(
+			"/infiltration-and-ventilation",
+		);
 	});
-	
+
 	it("should display an in-progress indicator when an entry is not marked as complete", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [{
-						data: { name: "Vent 1" },
-					}],
+					data: [
+						{
+							data: { name: "Vent 1" },
+						},
+					],
 				},
 			},
 		});
 
 		await renderSuspended(Vents);
 
-		expect(screen.getByTestId("vents_status_0").textContent).toBe(formStatus.inProgress.text);
+		expect(screen.getByTestId("vents_status_0").textContent).toBe(
+			formStatus.inProgress.text,
+		);
 	});
 
-	it ("should display a complete indicator when an entry is marked as complete", async () => {
+	it("should display a complete indicator when an entry is marked as complete", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [{
-						data: vent1,
-						complete: true,
-					}],
+					data: [
+						{
+							data: vent1,
+							complete: true,
+						},
+					],
 				},
 			},
 		});
 
 		await renderSuspended(Vents);
 
-		expect(screen.getByTestId("vents_status_0").textContent).toBe(formStatus.complete.text);
+		expect(screen.getByTestId("vents_status_0").textContent).toBe(
+			formStatus.complete.text,
+		);
 	});
 });

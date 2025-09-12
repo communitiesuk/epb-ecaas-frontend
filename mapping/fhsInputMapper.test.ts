@@ -6,6 +6,7 @@ import { resolveState } from "~/stores/resolve";
 import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { centimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units/types";
+import { noEvents } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],

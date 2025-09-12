@@ -214,7 +214,7 @@ describe("heating systems mapper", () => {
 					thermal_mass: 400,
 					type: "WetDistribution",
 					Zone: defaultZoneName,
-					Control: defaultControlName, // TODO this may need to refer to a real control
+					Control: defaultControlName,
 					advanced_start: null,
 					bypass_percentage_recirculated: null,
 					variable_flow: false,

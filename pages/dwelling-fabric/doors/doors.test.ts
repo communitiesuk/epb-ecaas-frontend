@@ -52,25 +52,25 @@ describe("doors", () => {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: "I" },
+			massDistributionClass: "I",
+		},
 	};
 
 	const externalUnglazed3: EcaasForm<ExternalUnglazedDoorData> = {
-		data:
-				{
-					name: "external unglazed 3 name",
-					pitchOption: "90",
-					pitch: 90,
-					orientation: 0,
-					height: 0.5,
-					width: 20,
-					elevationalHeight: 20,
-					surfaceArea: 10,
-					solarAbsorption: 0.1,
-					uValue: 1,
-					kappaValue: 100,
-					massDistributionClass: "I",
-				},
+		data: {
+			name: "external unglazed 3 name",
+			pitchOption: "90",
+			pitch: 90,
+			orientation: 0,
+			height: 0.5,
+			width: 20,
+			elevationalHeight: 20,
+			surfaceArea: 10,
+			solarAbsorption: 0.1,
+			uValue: 1,
+			kappaValue: 100,
+			massDistributionClass: "I",
+		},
 	};
 
 	const externalGlazed1: EcaasForm<ExternalGlazedDoorData> = {
@@ -93,45 +93,43 @@ describe("doors", () => {
 	};
 
 	const externalGlazed2: EcaasForm<ExternalGlazedDoorData> = {
-		data:
-				{
-					name: "externalGlazed2 name",
-					orientation: 1,
-					height: 1,
-					width: 1,
-					uValue: 1,
-					pitchOption: "90",
-					pitch: 90,
-					solarTransmittance: 0.1,
-					elevationalHeight: 1,
-					midHeight: 1,
-					openingToFrameRatio: 0.2,
-					midHeightOpenablePart1: 2,
-					heightOpenableArea: 1,
-					maximumOpenableArea: 1,
-				},
+		data: {
+			name: "externalGlazed2 name",
+			orientation: 1,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			pitchOption: "90",
+			pitch: 90,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			openingToFrameRatio: 0.2,
+			midHeightOpenablePart1: 2,
+			heightOpenableArea: 1,
+			maximumOpenableArea: 1,
+		},
 	};
 
 	const externalGlazed3: EcaasForm<ExternalGlazedDoorData> = {
-		data:
-				{
-					name: "externalGlazed3 name",
-					orientation: 1,
-					height: 1,
-					width: 1,
-					uValue: 1,
-					pitchOption: "90",
-					pitch: 90,
-					solarTransmittance: 0.1,
-					elevationalHeight: 1,
-					midHeight: 1,
-					openingToFrameRatio: 0.2,
-					midHeightOpenablePart1: 2,
-					heightOpenableArea: 1,
-					maximumOpenableArea: 1,
-				},
+		data: {
+			name: "externalGlazed3 name",
+			orientation: 1,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			pitchOption: "90",
+			pitch: 90,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			openingToFrameRatio: 0.2,
+			midHeightOpenablePart1: 2,
+			heightOpenableArea: 1,
+			maximumOpenableArea: 1,
+		},
 	};
-	
+
 	const internal1: EcaasForm<InternalDoorData> = {
 		data: {
 			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
@@ -167,137 +165,149 @@ describe("doors", () => {
 			pitch: 90,
 		},
 	};
-	
+
 	describe("external unglazed doors", () => {
-	
 		test("external unglazed door is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalUnglazedDoor: {
-							data:[externalUnglazed1],
+							data: [externalUnglazed1],
 						},
 					},
 				},
 			});
-	
+
 			await renderSuspended(Doors);
-	
+
 			expect(screen.getAllByTestId("externalUnglazed_items")).toBeDefined();
-	
+
 			await user.click(screen.getByTestId("externalUnglazed_remove_0"));
-	
+
 			expect(screen.queryByTestId("externalUnglazed_items")).toBeNull();
 		});
-	
+
 		it("should only remove the door object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalUnglazedDoor: {
-							data:[externalUnglazed1, externalUnglazed2, externalUnglazed3],
+							data: [externalUnglazed1, externalUnglazed2, externalUnglazed3],
 						},
 					},
 				},
 			});
-	
+
 			await renderSuspended(Doors);
 			await user.click(screen.getByTestId("externalUnglazed_remove_1"));
-	
+
 			const populatedList = screen.getByTestId("externalUnglazed_items");
-	
-			expect(within(populatedList).getByText("external unglazed 1 name")).toBeDefined();
-			expect(within(populatedList).getByText("external unglazed 3 name")).toBeDefined();
-			expect(within(populatedList).queryByText("external unglazed 2 name")).toBeNull();
-	
+
+			expect(
+				within(populatedList).getByText("external unglazed 1 name"),
+			).toBeDefined();
+			expect(
+				within(populatedList).getByText("external unglazed 3 name"),
+			).toBeDefined();
+			expect(
+				within(populatedList).queryByText("external unglazed 2 name"),
+			).toBeNull();
 		});
 		test("door is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalUnglazedDoor: {
-							data:[externalUnglazed1, externalUnglazed2],
+							data: [externalUnglazed1, externalUnglazed2],
 						},
 					},
 				},
 			});
-	
+
 			await renderSuspended(Doors);
 			await userEvent.click(screen.getByTestId("externalUnglazed_duplicate_0"));
 			await userEvent.click(screen.getByTestId("externalUnglazed_duplicate_0"));
 			await userEvent.click(screen.getByTestId("externalUnglazed_duplicate_2"));
 			await userEvent.click(screen.getByTestId("externalUnglazed_duplicate_2"));
-	
+
 			expect(screen.queryAllByTestId("externalUnglazed_item").length).toBe(6);
 			expect(screen.getByText("external unglazed 1 name")).toBeDefined();
 			expect(screen.getByText("external unglazed 1 name (1)")).toBeDefined();
 			expect(screen.getByText("external unglazed 1 name (2)")).toBeDefined();
-			expect(screen.getByText("external unglazed 1 name (1) (1)")).toBeDefined();
-			expect(screen.getByText("external unglazed 1 name (1) (2)")).toBeDefined();
+			expect(
+				screen.getByText("external unglazed 1 name (1) (1)"),
+			).toBeDefined();
+			expect(
+				screen.getByText("external unglazed 1 name (1) (2)"),
+			).toBeDefined();
 		});
 	});
 
 	describe("external glazed doors", () => {
-	
 		test("external glazed door is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data:[externalGlazed1],
+							data: [externalGlazed1],
 						},
 					},
 				},
 			});
-			
+
 			await renderSuspended(Doors);
-			
+
 			expect(screen.getAllByTestId("externalGlazed_items")).toBeDefined();
-			
+
 			await user.click(screen.getByTestId("externalGlazed_remove_0"));
-	
+
 			expect(screen.queryByTestId("externalGlazed_items")).toBeNull();
 		});
-	
+
 		it("should only remove the internal door object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data:[externalGlazed1, externalGlazed2, externalGlazed3],
+							data: [externalGlazed1, externalGlazed2, externalGlazed3],
 						},
 					},
 				},
 			});
-	
+
 			await renderSuspended(Doors);
 			await user.click(screen.getByTestId("externalGlazed_remove_1"));
-	
+
 			const populatedList = screen.getByTestId("externalGlazed_items");
-	
-			expect(within(populatedList).getByText("externalGlazed1 name")).toBeDefined();
-			expect(within(populatedList).getByText("externalGlazed3 name")).toBeDefined();
-			expect(within(populatedList).queryByText("externalGlazed2 name")).toBeNull();
-	
+
+			expect(
+				within(populatedList).getByText("externalGlazed1 name"),
+			).toBeDefined();
+			expect(
+				within(populatedList).getByText("externalGlazed3 name"),
+			).toBeDefined();
+			expect(
+				within(populatedList).queryByText("externalGlazed2 name"),
+			).toBeNull();
 		});
-	
+
 		test("door is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data:[externalGlazed1, externalGlazed2],
+							data: [externalGlazed1, externalGlazed2],
 						},
 					},
 				},
 			});
-	
+
 			await renderSuspended(Doors);
 			await userEvent.click(screen.getByTestId("externalGlazed_duplicate_0"));
 			await userEvent.click(screen.getByTestId("externalGlazed_duplicate_0"));
 			await userEvent.click(screen.getByTestId("externalGlazed_duplicate_2"));
 			await userEvent.click(screen.getByTestId("externalGlazed_duplicate_2"));
-	
+
 			expect(screen.queryAllByTestId("externalGlazed_item").length).toBe(6);
 			expect(screen.getByText("externalGlazed1 name")).toBeDefined();
 			expect(screen.getByText("externalGlazed1 name (1)")).toBeDefined();
@@ -308,64 +318,62 @@ describe("doors", () => {
 	});
 
 	describe("internal door", () => {
-	
 		test("internal door is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceInternalDoor: {
-							data:[internal1],
+							data: [internal1],
 						},
 					},
 				},
 			});
-	
+
 			await renderSuspended(Doors);
-	
+
 			expect(screen.getAllByTestId("internal_items")).toBeDefined();
-	
+
 			await user.click(screen.getByTestId("internal_remove_0"));
-	
+
 			expect(screen.queryByTestId("internal_items")).toBeNull();
 		});
-	
+
 		it("should only remove the exposed door object thats is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceInternalDoor: {
-							data:[internal1, internal2, internal3],
+							data: [internal1, internal2, internal3],
 						},
 					},
 				},
 			});
-	
+
 			await renderSuspended(Doors);
 			await user.click(screen.getByTestId("internal_remove_1"));
 			const populatedList = screen.getByTestId("internal_items");
-	
+
 			expect(within(populatedList).getByText("Internal 1")).toBeDefined();
 			expect(within(populatedList).getByText("Internal 3")).toBeDefined();
 			expect(within(populatedList).queryByText("Internal 2")).toBeNull();
-	
 		});
 		test("door is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceInternalDoor: {
-							data:[internal1, internal2],
+							data: [internal1, internal2],
 						},
 					},
 				},
 			});
-	
+
 			await renderSuspended(Doors);
 			await userEvent.click(screen.getByTestId("internal_duplicate_0"));
 			await userEvent.click(screen.getByTestId("internal_duplicate_0"));
 			await userEvent.click(screen.getByTestId("internal_duplicate_2"));
 			await userEvent.click(screen.getByTestId("internal_duplicate_2"));
-	
+
 			expect(screen.queryAllByTestId("internal_item").length).toBe(6);
 			expect(screen.getByText("Internal 1")).toBeDefined();
 			expect(screen.getByText("Internal 1 (1)")).toBeDefined();
@@ -374,30 +382,35 @@ describe("doors", () => {
 			expect(screen.getByText("Internal 1 (1) (2)")).toBeDefined();
 		});
 	});
-	
+
 	describe("mark section as complete", () => {
-		
 		const addDoorsDataToStore = async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
-						dwellingSpaceExternalUnglazedDoor: { data: [{ ...externalUnglazed1, complete: true }] },
-						dwellingSpaceExternalGlazedDoor: { data: [{ ...externalGlazed1, complete: true }] },
-						dwellingSpaceInternalDoor: { data: [{ ...internal1, complete: true }] },
+						dwellingSpaceExternalUnglazedDoor: {
+							data: [{ ...externalUnglazed1, complete: true }],
+						},
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ ...externalGlazed1, complete: true }],
+						},
+						dwellingSpaceInternalDoor: {
+							data: [{ ...internal1, complete: true }],
+						},
 					},
 				},
 			});
 		};
-		beforeEach(async () =>{
+		beforeEach(async () => {
 			await addDoorsDataToStore();
 			await renderSuspended(Doors);
 		});
 
 		const getDoorData = async (action: string) => {
 			const doors: {
-				key: keyof DoorsData,
-				testId: string,
-				form: Component
+				key: keyof DoorsData;
+				testId: string;
+				form: Component;
 			}[] = [
 				{
 					key: "dwellingSpaceExternalUnglazedDoor",
@@ -418,130 +431,150 @@ describe("doors", () => {
 			return doors;
 		};
 
-		type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
+    type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
 
-	
-		it("marks doors as complete when mark section as complete button is clicked", async () => {
-	
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
-			expect(completedStatusElement?.style.display).toBe("none");
-	
-			await user.click(screen.getByTestId("completeSectionButton"));
-	
-			const {
-				dwellingSpaceExternalGlazedDoor,
-				dwellingSpaceExternalUnglazedDoor,
-				dwellingSpaceInternalDoor,
-			} = store.dwellingFabric.dwellingSpaceDoors;
-	
-	
-			expect(dwellingSpaceExternalGlazedDoor.complete).toBe(true);
-			expect(dwellingSpaceExternalUnglazedDoor.complete).toBe(true);
-			expect(dwellingSpaceInternalDoor.complete).toBe(true);
-			expect(screen.queryByRole("button", { name: "Mark section as complete" })).toBeNull();
-			expect(completedStatusElement?.style.display).not.toBe("none");
-	
-			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
-		});
-	
-		it("marks doors as not complete when mark as complete button is clicked then user removes a door item", async () => {
+    it("marks doors as complete when mark section as complete button is clicked", async () => {
+    	expect(
+    		screen.getByRole("button", { name: "Mark section as complete" }),
+    	).not.toBeNull();
+    	const completedStatusElement = screen.queryByTestId(
+    		"completeSectionCompleted",
+    	);
+    	expect(completedStatusElement?.style.display).toBe("none");
 
-			const doorsData = await getDoorData("remove");
-			const doors = Object.entries(store.dwellingFabric.dwellingSpaceDoors);
-			
-			for (const [key] of doors) {
-				const typedKey = key as DoorType;
-		
-				await user.click(screen.getByTestId("completeSectionButton"));
-				expect(store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete).toBe(true);
-					
-				const doorData = doorsData.find(x => x.key === typedKey);
-	
-				await user.click(screen.getByTestId(doorData!.testId));
-				expect(store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete).toBe(false);
-				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-	
-			}
-		});
+    	await user.click(screen.getByTestId("markAsCompleteButton"));
 
-		it("marks doors as not complete when complete button is clicked then user duplicates a door item", async () => {
+    	const {
+    		dwellingSpaceExternalGlazedDoor,
+    		dwellingSpaceExternalUnglazedDoor,
+    		dwellingSpaceInternalDoor,
+    	} = store.dwellingFabric.dwellingSpaceDoors;
 
-			const doorsData = await getDoorData("duplicate");
-			const doors = Object.entries(store.dwellingFabric.dwellingSpaceDoors);
-		
-			for (const [key] of doors) {
-				const typedKey = key as DoorType;
-	
-				await user.click(screen.getByTestId("completeSectionButton"));
-				expect(store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete).toBe(true);
-				
-				const doorData = doorsData.find(x => x.key === typedKey);
+    	expect(dwellingSpaceExternalGlazedDoor.complete).toBe(true);
+    	expect(dwellingSpaceExternalUnglazedDoor.complete).toBe(true);
+    	expect(dwellingSpaceInternalDoor.complete).toBe(true);
+    	expect(
+    		screen.queryByRole("button", { name: "Mark section as complete" }),
+    	).toBeNull();
+    	expect(completedStatusElement?.style.display).not.toBe("none");
 
-				await user.click(screen.getByTestId(doorData!.testId));
-				expect(store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete).toBe(false);
-				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-			}
+    	expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
+    });
 
-		});
+    it("marks doors as not complete when mark as complete button is clicked then user removes a door item", async () => {
+    	const doorsData = await getDoorData("remove");
+    	const doors = Object.entries(store.dwellingFabric.dwellingSpaceDoors);
 
-		it("marks doors as not complete when user saves a new or edited door form after marking section as complete", async () => {
+    	for (const [key] of doors) {
+    		const typedKey = key as DoorType;
 
-			const doorsData = await getDoorData("");
+    		await user.click(screen.getByTestId("markAsCompleteButton"));
+    		expect(
+    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
+    		).toBe(true);
 
-			const doors = Object.entries(store.dwellingFabric.dwellingSpaceDoors);
-	
-			for(const [key] of doors){
-				const typedKey = key as DoorType;
-				await user.click(screen.getByTestId("completeSectionButton"));
-				expect(store.dwellingFabric.dwellingSpaceDoors[typedKey].complete).toBe(true);
+    		const doorData = doorsData.find((x) => x.key === typedKey);
 
-				const doorData = doorsData.find(x => x.key === typedKey);
+    		await user.click(screen.getByTestId(doorData!.testId));
+    		expect(
+    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
+    		).toBe(false);
+    		expect(
+    			screen.getByRole("button", { name: "Mark section as complete" }),
+    		).not.toBeNull();
+    	}
+    });
 
-				await renderSuspended(doorData?.form, {
-					route: {
-						params: { door: "0" },
-					},
-				});
+    it("marks doors as not complete when complete button is clicked then user duplicates a door item", async () => {
+    	const doorsData = await getDoorData("duplicate");
+    	const doors = Object.entries(store.dwellingFabric.dwellingSpaceDoors);
 
-				await user.click(screen.getByTestId("saveAndComplete"));
+    	for (const [key] of doors) {
+    		const typedKey = key as DoorType;
 
-				expect(store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete).toBe(false);
-				await renderSuspended(Doors);
-				expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
-			}
-		});
+    		await user.click(screen.getByTestId("markAsCompleteButton"));
+    		expect(
+    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
+    		).toBe(true);
 
-		it("disables the mark section as complete button when item is incomplete", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceDoors: {
-						dwellingSpaceExternalGlazedDoor: {
-							data: [{ data: { height: 2 }, complete: false }],
-						},
-					},
-				},
-			});
+    		const doorData = doorsData.find((x) => x.key === typedKey);
 
-			await renderSuspended(Doors);
-			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
-			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
-		});
+    		await user.click(screen.getByTestId(doorData!.testId));
+    		expect(
+    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
+    		).toBe(false);
+    		expect(
+    			screen.getByRole("button", { name: "Mark section as complete" }),
+    		).not.toBeNull();
+    	}
+    });
 
-		test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceDoors: {
-						dwellingSpaceExternalGlazedDoor: {
-							data: [externalGlazed1],
-						},
-					},
-				},
-			});
+    it("marks doors as not complete when user saves a new or edited door form after marking section as complete", async () => {
+    	const doorsData = await getDoorData("");
 
-			await renderSuspended(Doors);
+    	const doors = Object.entries(store.dwellingFabric.dwellingSpaceDoors);
 
-			expect(screen.getByTestId("externalGlazed_status_0").textContent).toBe(formStatus.inProgress.text);
-		});
+    	for (const [key] of doors) {
+    		const typedKey = key as DoorType;
+    		await user.click(screen.getByTestId("markAsCompleteButton"));
+    		expect(store.dwellingFabric.dwellingSpaceDoors[typedKey].complete).toBe(
+    			true,
+    		);
+
+    		const doorData = doorsData.find((x) => x.key === typedKey);
+
+    		await renderSuspended(doorData?.form, {
+    			route: {
+    				params: { door: "0" },
+    			},
+    		});
+
+    		await user.click(screen.getByTestId("saveAndComplete"));
+
+    		expect(
+    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
+    		).toBe(false);
+    		await renderSuspended(Doors);
+    		expect(
+    			screen.getByRole("button", { name: "Mark section as complete" }),
+    		).not.toBeNull();
+    	}
+    });
+
+    it("disables the mark section as complete button when item is incomplete", async () => {
+    	store.$patch({
+    		dwellingFabric: {
+    			dwellingSpaceDoors: {
+    				dwellingSpaceExternalGlazedDoor: {
+    					data: [{ data: { height: 2 }, complete: false }],
+    				},
+    			},
+    		},
+    	});
+
+    	await renderSuspended(Doors);
+    	const markAsCompleteButton = screen.getByRole("button", {
+    		name: "Mark section as complete",
+    	});
+    	expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
+    });
+
+    test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
+    	store.$patch({
+    		dwellingFabric: {
+    			dwellingSpaceDoors: {
+    				dwellingSpaceExternalGlazedDoor: {
+    					data: [externalGlazed1],
+    				},
+    			},
+    		},
+    	});
+
+    	await renderSuspended(Doors);
+
+    	expect(screen.getByTestId("externalGlazed_status_0").textContent).toBe(
+    		formStatus.inProgress.text,
+    	);
+    });
 	});
 });

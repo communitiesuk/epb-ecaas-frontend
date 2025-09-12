@@ -1,4 +1,8 @@
-import { mockNuxtImport, registerEndpoint, renderSuspended } from "@nuxt/test-utils/runtime";
+import {
+	mockNuxtImport,
+	registerEndpoint,
+	renderSuspended,
+} from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen, within } from "@testing-library/vue";
 import HeatGeneration from "./index.vue";
@@ -22,25 +26,59 @@ mockNuxtImport("navigateTo", () => {
 const heatGenerationData = (): Pick<HeatingSystems, "heatGeneration"> => {
 	return {
 		heatGeneration: {
-			heatPump: { data: [{ data: { id: "1b6a1e50-0e1f-4bc1-b198-f84587a7fdf2", name: "Heat pump 1", productReference: "HEATPUMP-MEDIUM" }, complete: true }] },
-			boiler: { data: [{ id: "2eec2b28-7c7a-47c2-92bb-c13b1eaa9ae3", name: "Boiler 1" }] },
-			heatBattery: { data: [{ id: "3c4bc9a3-2e7c-419a-86c9-0cb2f4768a1c", name: "Battery 1" }] },
-			heatNetwork: { data: [{ id: "46d0c104-42a5-44f4-b250-f58c933b9f5e", name: "Network 1" }] },
-			heatInterfaceUnit: { data: [{ id: "55ab34d1-8238-4a90-bf3e-223a84c1f4dc", name: "Heat interface unit 1" }] },
+			heatPump: {
+				data: [
+					{
+						data: {
+							id: "1b6a1e50-0e1f-4bc1-b198-f84587a7fdf2",
+							name: "Heat pump 1",
+							productReference: "HEATPUMP-MEDIUM",
+						},
+						complete: true,
+					},
+				],
+			},
+			boiler: {
+				data: [
+					{ id: "2eec2b28-7c7a-47c2-92bb-c13b1eaa9ae3", name: "Boiler 1" },
+				],
+			},
+			heatBattery: {
+				data: [
+					{ id: "3c4bc9a3-2e7c-419a-86c9-0cb2f4768a1c", name: "Battery 1" },
+				],
+			},
+			heatNetwork: {
+				data: [
+					{ id: "46d0c104-42a5-44f4-b250-f58c933b9f5e", name: "Network 1" },
+				],
+			},
+			heatInterfaceUnit: {
+				data: [
+					{
+						id: "55ab34d1-8238-4a90-bf3e-223a84c1f4dc",
+						name: "Heat interface unit 1",
+					},
+				],
+			},
 		},
 	};
 };
 
 const generatorFormAndParams = (generator: string) => {
-	const data =  [
+	const data = [
 		{ key: "heatPump", form: HeatPumpForm, params: "pump" },
 		{ key: "boiler", form: BoilerForm, params: "boiler" },
 		{ key: "heatBattery", form: HeatBatteryForm, params: "battery" },
 		{ key: "heatNetwork", form: HeatNetworkForm, params: "network" },
-		{ key: "heatInterfaceUnit", form: HeatInterfaceUnitForm, params: "interface" },
+		{
+			key: "heatInterfaceUnit",
+			form: HeatInterfaceUnitForm,
+			params: "interface",
+		},
 	];
 
-	return data.find(g => g.key === generator);
+	return data.find((g) => g.key === generator);
 };
 
 const firstActionTestId = (generator: string, action: string) => {
@@ -48,7 +86,6 @@ const firstActionTestId = (generator: string, action: string) => {
 };
 
 describe("heat generation", () => {
-	
 	describe("heat pump", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
@@ -89,7 +126,9 @@ describe("heat generation", () => {
 			await renderSuspended(HeatGeneration);
 
 			expect(screen.getAllByTestId("heatPump_items")).toBeDefined();
-			await user.click(await screen.findByTestId(firstActionTestId("heatPump", "remove")));
+			await user.click(
+				await screen.findByTestId(firstActionTestId("heatPump", "remove")),
+			);
 			expect(screen.queryByTestId("heatPump_items")).toBeNull();
 		});
 
@@ -98,7 +137,11 @@ describe("heat generation", () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data:[{ data: heatPump1 }, { data: heatPump2 }, { data: heatPump3 }],
+							data: [
+								{ data: heatPump1 },
+								{ data: heatPump2 },
+								{ data: heatPump3 },
+							],
 						},
 					},
 				},
@@ -117,9 +160,11 @@ describe("heat generation", () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [{
-								data: heatPump1,
-							}],
+							data: [
+								{
+									data: heatPump1,
+								},
+							],
 						},
 					},
 				},
@@ -127,18 +172,22 @@ describe("heat generation", () => {
 
 			await renderSuspended(HeatGeneration);
 
-			expect(screen.getByTestId("heatPump_status_0").textContent).toBe(formStatus.inProgress.text);
+			expect(screen.getByTestId("heatPump_status_0").textContent).toBe(
+				formStatus.inProgress.text,
+			);
 		});
 
-		it ("should display a complete indicator when an entry is marked as complete", async () => {
+		it("should display a complete indicator when an entry is marked as complete", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [{
-								data: heatPump1,
-								complete: true,
-							}],
+							data: [
+								{
+									data: heatPump1,
+									complete: true,
+								},
+							],
 						},
 					},
 				},
@@ -146,20 +195,22 @@ describe("heat generation", () => {
 
 			await renderSuspended(HeatGeneration);
 
-			expect(screen.getByTestId("heatPump_status_0").textContent).toBe(formStatus.complete.text);
+			expect(screen.getByTestId("heatPump_status_0").textContent).toBe(
+				formStatus.complete.text,
+			);
 		});
 	});
 
 	describe("mark heat generation section as complete", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
-	
+
 		const addHeatGenerationDataToStore = async () => {
 			store.$patch({
 				heatingSystems: heatGenerationData(),
 			});
 		};
-	
+
 		beforeEach(async () => {
 			await addHeatGenerationDataToStore();
 			await renderSuspended(HeatGeneration);
@@ -168,63 +219,76 @@ describe("heat generation", () => {
 		afterEach(() => {
 			store.$reset();
 		});
-		
+
 		it("shows the 'mark as complete' button initially", async () => {
-			expect(screen.getByTestId("completeSectionButton")?.style.display).not.toBe("none");
-			expect(screen.getByTestId("completeSectionCompleted")?.style.display).toBe("none");
+			expect(
+				screen.getByTestId("markAsCompleteButton")?.style.display,
+			).not.toBe("none");
+			expect(
+				screen.getByTestId("completeSectionCompleted")?.style.display,
+			).toBe("none");
 		});
 
 		it("shows 'section completed' button after 'mark as complete' button is clicked", async () => {
-			await user.click(await screen.findByTestId("completeSectionButton"));
+			await user.click(await screen.findByTestId("markAsCompleteButton"));
 
-			expect(screen.getByTestId("completeSectionButton")?.style.display).toBe("none");
-			expect(screen.getByTestId("completeSectionCompleted")?.style.display).not.toBe("none");
+			expect(screen.getByTestId("markAsCompleteButton")?.style.display).toBe(
+				"none",
+			);
+			expect(
+				screen.getByTestId("completeSectionCompleted")?.style.display,
+			).not.toBe("none");
 			expect(navigateToMock).toHaveBeenCalledWith("/heating-systems");
 		});
 
 		it("marks heat generation section as complete after 'mark as complete' button is clicked", async () => {
-			await user.click(await screen.findByTestId("completeSectionButton"));
+			await user.click(await screen.findByTestId("markAsCompleteButton"));
 
-			type HeatGenerationType = keyof typeof store.heatingSystems.heatGeneration;
-			const heatGenerators = store.heatingSystems.heatGeneration;
-			for (const key in heatGenerators) {
-				expect(heatGenerators[key as HeatGenerationType]?.complete).toBe(true);
-			}
+      type HeatGenerationType =
+        keyof typeof store.heatingSystems.heatGeneration;
+      const heatGenerators = store.heatingSystems.heatGeneration;
+      for (const key in heatGenerators) {
+      	expect(heatGenerators[key as HeatGenerationType]?.complete).toBe(true);
+      }
 		});
 
 		it("disables the mark section as complete button when data is incomplete", async () => {
 			store.$patch({
 				heatingSystems: {
 					heatGeneration: {
-						heatPump: { 
-							data: [{
-								data: {	
-									name: "Heat pump 1",
-									productReference: "HEATPUMP-LARGE",
+						heatPump: {
+							data: [
+								{
+									data: {
+										name: "Heat pump 1",
+										productReference: "HEATPUMP-LARGE",
+									},
+									complete: false,
 								},
-								complete: false,
-							}],
+							],
 						},
 					},
 				},
 			});
-		
+
 			await renderSuspended(HeatGeneration);
-			const markAsCompleteButton = screen.getByRole("button", { name: "Mark section as complete" });
+			const markAsCompleteButton = screen.getByRole("button", {
+				name: "Mark section as complete",
+			});
 			expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
 		});
 	});
 
-	describe("mark heat generation as not complete", () => {		
+	describe("mark heat generation as not complete", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
-	
+
 		const addHeatGenerationDataToStore = async () => {
 			store.$patch({
 				heatingSystems: heatGenerationData(),
 			});
 		};
-	
+
 		beforeEach(async () => {
 			await addHeatGenerationDataToStore();
 			await renderSuspended(HeatGeneration);
@@ -235,8 +299,10 @@ describe("heat generation", () => {
 		});
 
 		it("marks heat pump section as not complete if a heat pump is removed after marking complete", async () => {
-			await user.click(await screen.findByTestId("completeSectionButton"));
-			await user.click(await screen.findByTestId(firstActionTestId("heatPump", "remove")));
+			await user.click(await screen.findByTestId("markAsCompleteButton"));
+			await user.click(
+				await screen.findByTestId(firstActionTestId("heatPump", "remove")),
+			);
 
 			// const heatGenerators = store.heatingSystems.heatGeneration;
 			// type HeatGenerationType = keyof typeof store.heatingSystems.heatGeneration;
@@ -245,12 +311,14 @@ describe("heat generation", () => {
 			// 	expect(heatGenerators[heatGenerator as HeatGenerationType]?.complete).toBe(false);
 			// }
 
-			expect(store.heatingSystems.heatGeneration["heatPump"]?.complete).toBe(false);
-			expect(screen.getByTestId("completeSectionButton")).not.toBeNull();
+			expect(store.heatingSystems.heatGeneration["heatPump"]?.complete).toBe(
+				false,
+			);
+			expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
 		});
 
 		it("marks heat pump section as not complete after saving an existing heat pump", async () => {
-			await user.click(await screen.findByTestId("completeSectionButton"));
+			await user.click(await screen.findByTestId("markAsCompleteButton"));
 			expect(store.heatingSystems.heatGeneration.heatPump?.complete).toBe(true);
 
 			const { form, params } = generatorFormAndParams("heatPump") || {};
@@ -263,7 +331,9 @@ describe("heat generation", () => {
 			expect(store.heatingSystems.heatGeneration.heatPump.complete).toBe(false);
 
 			await renderSuspended(HeatGeneration);
-			expect(screen.getByRole("button", { name: "Mark section as complete" })).not.toBeNull();
+			expect(
+				screen.getByRole("button", { name: "Mark section as complete" }),
+			).not.toBeNull();
 		});
 	});
 });

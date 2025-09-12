@@ -112,6 +112,6 @@ describe("dwelling details mapper", () => {
 			expect(x.shading).toEqual([expectedShading]);
 		});
 
-		expect(segmentsWithShading?.every(x => expectedSegmentNumbers.includes(x.number!))).toBe(true);
+		expect(segmentsWithShading?.every(x => x.number && expectedSegmentNumbers.includes(x.number))).toBe(true);
 	});
 });
