@@ -680,7 +680,7 @@ describe("dwelling fabric mapper", () => {
 			max_window_open_area: window.maximumOpenableArea,
 			free_area_height: window.heightOpenableArea,
 			window_part_list: [{
-				mid_height_air_flow_path: window .midHeightOpenablePart1,
+				mid_height_air_flow_path: window.midHeightOpenablePart1,
 			}],
 			shading: [
 				{
