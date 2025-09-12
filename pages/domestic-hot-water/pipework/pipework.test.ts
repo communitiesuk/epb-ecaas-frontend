@@ -200,7 +200,7 @@ describe("Pipeworks", () => {
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(store.domesticHotWater.pipework[pipework]?.complete).toBe(true);
 
-				await user.click(screen.getByTestId(`${pipework}_remove_0`))
+    		await user.click(screen.getByTestId(`${pipework}_remove_0`));
     		expect(store.domesticHotWater.pipework[pipework]?.complete).toBe(false);
     		expect(
     			screen.queryByTestId("markAsCompleteButton")?.style.display,
@@ -215,7 +215,7 @@ describe("Pipeworks", () => {
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(store.domesticHotWater.pipework[pipework]?.complete).toBe(true);
 
-				await user.click(screen.getByTestId(`${pipework}_duplicate_0`))
+    		await user.click(screen.getByTestId(`${pipework}_duplicate_0`));
     		expect(store.domesticHotWater.pipework[pipework]?.complete).toBe(false);
     		expect(
     			screen.queryByTestId("markAsCompleteButton")?.style.display,
@@ -249,7 +249,7 @@ describe("Pipeworks", () => {
     	}
     });
 
-		it("marks section as not complete after editing a pipework item", async () => {
+    it("marks section as not complete after editing a pipework item", async () => {
     	for (const pipework of Object.keys(store.domesticHotWater.pipework) as PipeworkType[]) {
 
     		await user.click(screen.getByTestId("markAsCompleteButton"));
@@ -261,7 +261,7 @@ describe("Pipeworks", () => {
     			},
     		});
 
-				await user.clear(screen.getByTestId("name"));
+    		await user.clear(screen.getByTestId("name"));
     		await user.type(screen.getByTestId("name"), "Updated pipework");
     		await user.tab();
 
