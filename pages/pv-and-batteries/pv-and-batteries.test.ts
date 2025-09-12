@@ -45,21 +45,21 @@ describe("pv systems and electric battery", () => {
 			// leftDistance: 7,
 			// rightDepth: 2,
 			// rightDistance: 10
-		}
+		},
 	};
 
 	const pvSystem2: EcaasForm<PvSystemData> = {
 		data: {
 			...pvSystem1.data,
-			name: "PV System 2"
-		}
+			name: "PV System 2",
+		},
 	};
 
 	const pvSystem3: EcaasForm<PvSystemData> = {
 		data: {
 			...pvSystem1.data,
-			name: "PV System 3"
-		}
+			name: "PV System 3",
+		},
 	};
 
 	const electricBattery: EcaasForm<ElectricBatteryData> = {
@@ -73,7 +73,7 @@ describe("pv systems and electric battery", () => {
 			maximumDischargeRate: 1.25,
 			location: "outside",
 			gridChargingPossible: false,
-		}
+		},
 	};
 
 	describe("pv systems", () => {
@@ -82,9 +82,9 @@ describe("pv systems and electric battery", () => {
 				pvAndBatteries: {
 					pvSystems: {
 						...baseForm,
-						data: [pvSystem1]
-					}
-				}
+						data: [pvSystem1],
+					},
+				},
 			});
 	
 			await renderSuspended(PvAndBatteries);
@@ -101,9 +101,9 @@ describe("pv systems and electric battery", () => {
 				pvAndBatteries: {
 					pvSystems: {
 						...baseForm,
-						data:[pvSystem1, pvSystem2, pvSystem3]
-					}
-				}
+						data:[pvSystem1, pvSystem2, pvSystem3],
+					},
+				},
 			});
 	
 			await renderSuspended(PvAndBatteries);
@@ -120,9 +120,9 @@ describe("pv systems and electric battery", () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
-						data:[pvSystem1, pvSystem2]
-					}
-				}
+						data:[pvSystem1, pvSystem2],
+					},
+				},
 			});
 	
 			await renderSuspended(PvAndBatteries);
@@ -145,9 +145,9 @@ describe("pv systems and electric battery", () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
-						data: [electricBattery]
-					}
-				}
+						data: [electricBattery],
+					},
+				},
 			});
 	
 			await renderSuspended(PvAndBatteries);
@@ -164,9 +164,9 @@ describe("pv systems and electric battery", () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
-						data: [electricBattery]
-					}
-				}
+						data: [electricBattery],
+					},
+				},
 			});
 	
 			await renderSuspended(PvAndBatteries);
@@ -189,7 +189,7 @@ describe("pv systems and electric battery", () => {
 					pvSystems: {
 						data: [{ ...pvSystem1, complete: true }],
 					},
-				}
+				},
 			});
 		};
 
@@ -199,7 +199,7 @@ describe("pv systems and electric battery", () => {
 					electricBattery: {
 						data: [{ ...electricBattery, complete: true }],
 					},
-				}
+				},
 			});
 		};
 
@@ -327,7 +327,7 @@ describe("pv systems and electric battery", () => {
 			await renderSuspended(items.form, {
 				route: { params: { [param]: "0" } },
 			});
-			await user.click(screen.getByTestId("saveAndComplete")
+			await user.click(screen.getByTestId("saveAndComplete"),
 			);
 			expect(store.pvAndBatteries.pvSystems.complete).toBe(false);
 
@@ -358,9 +358,9 @@ describe("pv systems and electric battery", () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
-						data: [{ data: { name: "Battery", capacity: 2 }, complete: false }]
+						data: [{ data: { name: "Battery", capacity: 2 }, complete: false }],
 					},
-				}
+				},
 			});
 
 			await renderSuspended(PvAndBatteries);

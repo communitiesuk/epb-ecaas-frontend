@@ -18,7 +18,7 @@ const mechanicalVentilationData: MechanicalVentilationData = {
 	typeOfMechanicalVentilationOptions: "MVHR",
 	airFlowRate: 12,
 	mvhrLocation: "inside",
-	mvhrEfficiency: 0.2
+	mvhrEfficiency: 0.2,
 };
 
 const ductworkData: DuctworkData = {
@@ -41,7 +41,7 @@ const ventData: VentData = {
 	openingRatio: 1,
 	midHeightOfZone: 1,
 	orientation: 0,
-	pitch: 0
+	pitch: 0,
 };
 
 const ventilationData: VentilationData = {
@@ -49,12 +49,12 @@ const ventilationData: VentilationData = {
 	crossVentilationPossible: true,
 	maxRequiredAirChangeRate: 1,
 	ventilationZoneHeight: 1,
-	dwellingEnvelopeArea: 1
+	dwellingEnvelopeArea: 1,
 };
 
 const airPermeabilityData: AirPermeabilityData = {
 	testPressure: 1,
-	airTightnessTestResult: 1
+	airTightnessTestResult: 1,
 };
 
 // const openFireplaceData: CombustionApplianceData = {
@@ -122,10 +122,10 @@ describe("Infiltration and ventilation summary", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilationData }
-					]
-				}
-			}
+						{ data: mechanicalVentilationData },
+					],
+				},
+			},
 		});
 
 		await renderSuspended(Summary);
@@ -134,7 +134,7 @@ describe("Infiltration and ventilation summary", () => {
 			"Type of mechanical ventilation": "MVHR",
 			"Air flow rate": `12 ${litrePerSecond.suffix}`,
 			"MVHR location": "Inside",
-			"MVHR efficiency": "0.2"
+			"MVHR efficiency": "0.2",
 		};
 		
 
@@ -150,15 +150,15 @@ describe("Infiltration and ventilation summary", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data:[
-						{ data: mechanicalVentilationData }
-					]
+						{ data: mechanicalVentilationData },
+					],
 				},
 				ductwork: {
 					data: [
-						{ data: ductworkData }
-					]
-				}
-			}
+						{ data: ductworkData },
+					],
+				},
+			},
 		});
 
 		await renderSuspended(Summary);
@@ -172,7 +172,7 @@ describe("Infiltration and ventilation summary", () => {
 			"Length of ductwork": `100 ${metre.suffix}`,
 			"Insulation thickness": `100 ${millimetre.suffix}`,
 			"Thermal conductivity of ductwork insulation": `10 ${wattsPerMeterKelvin.suffix}`,
-			"Surface reflectivity": "Reflective"
+			"Surface reflectivity": "Reflective",
 		};
 
 		for(const [key, value] of Object.entries(expectedResult)){
@@ -190,15 +190,15 @@ describe("Infiltration and ventilation summary", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data:[
-						{ data: mechanicalVentilationData }
-					]
+						{ data: mechanicalVentilationData },
+					],
 				},
 				ductwork: {
 					data: [
-						{ data: ductworkData }
-					]
-				}
-			}
+						{ data: ductworkData },
+					],
+				},
+			},
 		});
     
 		await renderSuspended(MechanicalVentilationOverview);
@@ -211,9 +211,9 @@ describe("Infiltration and ventilation summary", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [{ data: ventData }]
-				}
-			}
+					data: [{ data: ventData }],
+				},
+			},
 		});
 
 		await renderSuspended(Summary);
@@ -225,7 +225,7 @@ describe("Infiltration and ventilation summary", () => {
 			"Vent opening ratio": "1",
 			"Mid height of zone": `1 ${metre.suffix}`,
 			"Orientation": `0 ${degrees.suffix}`,
-			"Pitch": `0 ${degrees.suffix}`
+			"Pitch": `0 ${degrees.suffix}`,
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -239,9 +239,9 @@ describe("Infiltration and ventilation summary", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				naturalVentilation: {
-					data: ventilationData
-				}
-			}
+					data: ventilationData,
+				},
+			},
 		});
 
 		await renderSuspended(Summary);
@@ -250,7 +250,7 @@ describe("Infiltration and ventilation summary", () => {
 			"Ventilation zone height": `1 ${metre.suffix}`,
 			"Dwelling envelope area": `1 ${metresSquare.suffix}`,
 			"Elevational height of dwelling at its base": `1 ${metre.suffix}`,
-			"Cross ventilation possible": "Yes"
+			"Cross ventilation possible": "Yes",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -264,16 +264,16 @@ describe("Infiltration and ventilation summary", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				airPermeability: {
-					data: airPermeabilityData
-				}
-			}
+					data: airPermeabilityData,
+				},
+			},
 		});
 
 		await renderSuspended(Summary);
 
 		const expectedResult = {
 			"Test pressure": `1 ${pascal.suffix}`,
-			"Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`
+			"Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`,
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

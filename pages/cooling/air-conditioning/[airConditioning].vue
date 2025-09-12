@@ -14,7 +14,7 @@ const saveForm = (fields: AirConditioningData) => {
 			name: fields.name,
 			coolingCapacity: fields.coolingCapacity,
 			seasonalEnergyEfficiencyRatio: fields.seasonalEnergyEfficiencyRatio,
-			convectionFraction: fields.convectionFraction
+			convectionFraction: fields.convectionFraction,
 		};
 
 		saveToList(airConditioningItem, airConditioning);

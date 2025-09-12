@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { autoSaveForm } = useForm();
 
 const model = ref({
-	...store.infiltrationAndVentilation.naturalVentilation.data
+	...store.infiltrationAndVentilation.naturalVentilation.data,
 });
 
 const saveForm = (fields: VentilationData) => {
@@ -18,9 +18,9 @@ const saveForm = (fields: VentilationData) => {
 					dwellingEnvelopeArea: fields.dwellingEnvelopeArea,
 					dwellingElevationalLevelAtBase: fields.dwellingElevationalLevelAtBase,
 					crossVentilationPossible: fields.crossVentilationPossible,
-					maxRequiredAirChangeRate: 2
+					maxRequiredAirChangeRate: 2,
 				},
-				complete: true
+				complete: true,
 			},
 		},
 	});

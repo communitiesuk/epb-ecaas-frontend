@@ -27,8 +27,8 @@ describe("Electric battery", () => {
 			gridChargingPossible: false,
 			maximumChargeRate: 30,
 			minimumChargeRate: 20,
-			maximumDischargeRate: 35
-		}
+			maximumDischargeRate: 35,
+		},
 	};
 
 	const fillForm = async () => {
@@ -153,7 +153,7 @@ describe("Electric battery", () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
-						data: [fullElectricBattery]
+						data: [fullElectricBattery],
 					},
 				},
 			});
@@ -178,15 +178,15 @@ describe("Electric battery", () => {
 				pvAndBatteries: {
 					electricBattery: {
 						data: [{ ...fullElectricBattery, complete: true }],
-						complete: true
-					}
-				}
+						complete: true,
+					},
+				},
 			});
 
 			await renderSuspended(ElectricBattery, {
 				route: {
-					params: { electricBattery: "0" }
-				}
+					params: { electricBattery: "0" },
+				},
 			});
 
 			await user.type(screen.getByTestId("name"), "Battery");

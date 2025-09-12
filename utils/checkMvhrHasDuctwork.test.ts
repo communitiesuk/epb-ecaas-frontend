@@ -8,7 +8,7 @@ describe("checkMvhrHasDuctwork", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
-		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g"
+		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
 	};
 	const mechanicalVentilationData2: MechanicalVentilationData = {
 		name: "Mechanical name 2",
@@ -16,7 +16,7 @@ describe("checkMvhrHasDuctwork", () => {
 		airFlowRate: 12,
 		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
-		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506h"
+		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506h",
 	};
 
 	const mechanicalVentilationData3: MechanicalVentilationData = {
@@ -57,15 +57,15 @@ describe("checkMvhrHasDuctwork", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilationData1 }
-					]
+						{ data: mechanicalVentilationData1 },
+					],
 				},
 				ductwork: {
 					data: [
-						{ data: ductworkData1 }
-					]
-				}
-			}
+						{ data: ductworkData1 },
+					],
+				},
+			},
 		});
 
 		expect(checkMvhrHasDuctwork()).toBe(true);
@@ -77,16 +77,16 @@ describe("checkMvhrHasDuctwork", () => {
 				mechanicalVentilation: {
 					data: [
 						{ data: mechanicalVentilationData1 },
-						{ data: mechanicalVentilationData2 }
-					]
+						{ data: mechanicalVentilationData2 },
+					],
 				},
 				ductwork: {
 					data: [
 						{ data: ductworkData1 },
-						{ data: ductworkData1 }
-					]
-				}
-			}
+						{ data: ductworkData1 },
+					],
+				},
+			},
 		});
 
 		expect(checkMvhrHasDuctwork()).toBe(false);
@@ -99,17 +99,17 @@ describe("checkMvhrHasDuctwork", () => {
 					data: [
 						{ data: mechanicalVentilationData1 },
 						{ data: mechanicalVentilationData2 },
-						{ data: mechanicalVentilationData3 }
-					]
+						{ data: mechanicalVentilationData3 },
+					],
 				},
 				ductwork: {
 					data: [
 						{ data: ductworkData1 },
 						{ data: ductworkData1 },
-						{ data: ductworkData2 }
-					]
-				}
-			}
+						{ data: ductworkData2 },
+					],
+				},
+			},
 		});
 		expect(checkMvhrHasDuctwork()).toBe(true);
 	});

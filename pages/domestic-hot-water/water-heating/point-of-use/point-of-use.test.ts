@@ -45,16 +45,16 @@ describe("point of use", () => {
 			domesticHotWater: {
 				waterHeating: {
 					pointOfUse: {
-						data: [pointOfUse]
-					}
-				}
-			}
+						data: [pointOfUse],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(PointOfUse, {
 			route: {
-				params: { "pointOfUse": "0" }
-			}
+				params: { "pointOfUse": "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Point of use");

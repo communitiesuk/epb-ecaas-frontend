@@ -19,7 +19,7 @@ function handleRemove(index: number) {
 		infiltrationAndVentilation: {
 			mechanicalVentilation: {
 				data,
-				complete: false
+				complete: false,
 			},
 		},
 	});
@@ -29,9 +29,9 @@ function handleRemove(index: number) {
 	store.$patch({
 		infiltrationAndVentilation: {
 			ductwork: {
-				data: matchingDuctwork
-			}
-		}
+				data: matchingDuctwork,
+			},
+		},
 	});
 }
 
@@ -46,8 +46,8 @@ function handleDuplicate(index: number) {
 				data: {
 					...mechanicalVentilation.data,
 					name: `${mechanicalVentilation.data.name} (${duplicates.length})`,
-					id: uuidv4()
-				}
+					id: uuidv4(),
+				},
 			});
 
 			state.infiltrationAndVentilation.mechanicalVentilation.complete = false;
@@ -61,8 +61,8 @@ const mvhrArray = store.infiltrationAndVentilation.mechanicalVentilation.data?.f
 function handleComplete() {
 	store.$patch({
 		infiltrationAndVentilation: {
-			mechanicalVentilation: { complete: true }
-		}
+			mechanicalVentilation: { complete: true },
+		},
 	});
 		
 	navigateTo("/infiltration-and-ventilation");		

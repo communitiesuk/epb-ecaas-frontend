@@ -9,7 +9,7 @@ export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSc
 	return {
 		...generalDetailsData,
 		...externalFactorsData,
-		...distantShadingData
+		...distantShadingData,
 	};
 }
 
@@ -37,13 +37,13 @@ export function mapExternalFactorsData(state: ResolvedState): Pick<FhsInputSchem
 		altitude: externalFactors.altitude,
 		shield_class: externalFactors.typeOfExposure,
 		terrain_class: externalFactors.terrainType,
-		noise_nuisance: externalFactors.noiseNuisance
+		noise_nuisance: externalFactors.noiseNuisance,
 	};
 
 	return {
 		InfiltrationVentilation: {
 			...infiltrationVentilation,
-		}
+		},
 	} as Pick<FhsInputSchema, "InfiltrationVentilation">;
 }
 
@@ -59,7 +59,7 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 		segments.push({
 			number: index + 1,
 			start360: index * range,
-			end360: (index * range) + range
+			end360: (index * range) + range,
 		});
 	}
 
@@ -75,7 +75,7 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 				x.shading.push({
 					type: s.data.objectType,
 					distance: s.data.distance,
-					height: s.data.height
+					height: s.data.height,
 				});
 			}
 		});
@@ -84,6 +84,6 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 	return {
 		ExternalConditions: {
 			shading_segments: segments,
-		}
+		},
 	};
 }

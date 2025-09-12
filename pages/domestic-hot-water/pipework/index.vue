@@ -41,8 +41,8 @@ function handleDuplicate<T extends PipeworkData>(pipeworkType: PipeworkType, ind
 				complete: pipeworkItem.complete,
 				data: {
 					...pipeworkItem.data,
-					name: `${name} (${duplicates.length})`
-				}
+					name: `${name} (${duplicates.length})`,
+				},
 			} as T;
 			
 			state.domesticHotWater.pipework[pipeworkType].data.push(newItem);
@@ -58,8 +58,8 @@ function handleComplete() {
 			pipework: {
 				primaryPipework: { complete: true },
 				secondaryPipework: { complete: true },
-			}
-		}
+			},
+		},
 	});
 
 	navigateTo("/domestic-hot-water");

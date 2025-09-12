@@ -1,6 +1,6 @@
 import type {
 	SchemaBuildingElementAdjacentConditionedSpace,
-	SchemaBuildingElementAdjacentUnconditionedSpaceSimple, SchemaBuildingElementOpaqueFhs, SchemaBuildingElementTransparentFhs, SchemaEdgeInsulationHorizontal, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint
+	SchemaBuildingElementAdjacentUnconditionedSpaceSimple, SchemaBuildingElementOpaqueFhs, SchemaBuildingElementTransparentFhs, SchemaEdgeInsulationHorizontal, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint,
 } from "~/schema/api-schema.types";
 import type { BuildingElementGround } from "~/schema/aliases";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
@@ -28,7 +28,7 @@ describe("dwelling fabric mapper", () => {
 			volume: 10,
 			// spaceHeatingSystemForThisZone: 'main 1',
 			spaceCoolingSystemForThisZone: [],
-			spaceHeatControlSystemForThisZone: []
+			spaceHeatControlSystemForThisZone: [],
 		};
 
 		store.$patch({
@@ -36,25 +36,25 @@ describe("dwelling fabric mapper", () => {
 				heatEmitting: {
 					wetDistribution: {
 						data: [{
-							name: "radiator 1"
+							name: "radiator 1",
 						}],
-						complete: true
+						complete: true,
 					},
 					instantElectricHeater: {
 						data: [{
 							data: {
-								name: "ieh 1"
-							}
+								name: "ieh 1",
+							},
 						}],
-						complete: true
-					}
-				}
+						complete: true,
+					},
+				},
 			},
 			dwellingFabric: {
 				dwellingSpaceZoneParameters: {
 					data: state,
-					complete: true
-				}
+					complete: true,
+				},
 			},
 		});
 
@@ -72,15 +72,15 @@ describe("dwelling fabric mapper", () => {
 		// Arrange
 		const state: DwellingSpaceLightingData = {
 			numberOfLEDBulbs: 5,
-			numberOfIncandescentBulbs: 0
+			numberOfIncandescentBulbs: 0,
 		};
 
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceLighting: {
 					data: state,
-					complete: true
-				}
+					complete: true,
+				},
 			},
 		});
 
@@ -105,7 +105,7 @@ describe("dwelling fabric mapper", () => {
 			perimeter: 0,
 			psiOfWallJunction: 0,
 			thicknessOfWalls: 30,
-			typeOfGroundFloor: "Slab_no_edge_insulation"
+			typeOfGroundFloor: "Slab_no_edge_insulation",
 		};
 
 		const groundFloorWithEdgeInsulation: GroundFloorData = {
@@ -114,7 +114,7 @@ describe("dwelling fabric mapper", () => {
 			typeOfGroundFloor: "Slab_edge_insulation",
 			edgeInsulationType: "horizontal",
 			edgeInsulationWidth: unitValue(36, centimetre),
-			edgeInsulationThermalResistance: 0
+			edgeInsulationThermalResistance: 0,
 		};
 
 		const groundFloorWithSuspendedFloor: GroundFloorData = {
@@ -125,7 +125,7 @@ describe("dwelling fabric mapper", () => {
 			underfloorSpaceThermalResistance: 1,
 			thermalTransmittanceOfWallsAboveGround: 1,
 			ventilationOpeningsArea: 100,
-			windShieldingFactor: "Average"
+			windShieldingFactor: "Average",
 		};
 
 		const groundFloorWithHeatedBasement: GroundFloorData = {
@@ -133,7 +133,7 @@ describe("dwelling fabric mapper", () => {
 			name: "Ground 4",
 			typeOfGroundFloor: "Heated_basement",
 			depthOfBasementFloorBelowGround: 1,
-			thermalResistanceOfBasementWalls: 1
+			thermalResistanceOfBasementWalls: 1,
 		};
 
 		const groundFloorWithUnheatedBasement: GroundFloorData = {
@@ -153,7 +153,7 @@ describe("dwelling fabric mapper", () => {
 			surfaceAreaOfElement: 5,
 			kappaValue: 50000,
 			massDistributionClass: "I",
-			thermalResistanceOfAdjacentUnheatedSpace: 1
+			thermalResistanceOfAdjacentUnheatedSpace: 1,
 		};
 
 		const exposedFloor: ExposedFloorData = {
@@ -167,7 +167,7 @@ describe("dwelling fabric mapper", () => {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: "I"
+			massDistributionClass: "I",
 		};
 
 		store.$patch({
@@ -181,9 +181,9 @@ describe("dwelling fabric mapper", () => {
 						{ data: groundFloorWithUnheatedBasement },			
 					], complete: true },
 					dwellingSpaceInternalFloor: { data: [{ data: internalFloor }], complete: true },
-					dwellingSpaceExposedFloor: { data: [{ data: exposedFloor }], complete: true }
-				}
-			}
+					dwellingSpaceExposedFloor: { data: [{ data: exposedFloor }], complete: true },
+				},
+			},
 		});
 
 		const groundFloorsTotalArea = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.length * groundFloor.surfaceArea;
@@ -223,7 +223,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedEdgeInsulation: SchemaEdgeInsulationHorizontal = {
 			type: "horizontal",
 			edge_thermal_resistance: groundFloorWithEdgeInsulation.edgeInsulationThermalResistance,
-			width: 0.36
+			width: 0.36,
 		};
 
 		expect(groundFloorWithEdgeInsulationElement.edge_insulation![0]).toEqual(expectedEdgeInsulation);
@@ -236,7 +236,7 @@ describe("dwelling fabric mapper", () => {
 			thermal_resist_insul: groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
 			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
 			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 1e6,
-			shield_fact_location: groundFloorWithSuspendedFloor.windShieldingFactor
+			shield_fact_location: groundFloorWithSuspendedFloor.windShieldingFactor,
 		};
 
 		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);
@@ -306,7 +306,7 @@ describe("dwelling fabric mapper", () => {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: "I"
+			massDistributionClass: "I",
 		};
 
 		const internalWall: InternalWallData = {
@@ -315,7 +315,7 @@ describe("dwelling fabric mapper", () => {
 			kappaValue: 50000,
 			massDistributionClass: "I",
 			pitchOption: "90",
-			pitch: 90
+			pitch: 90,
 		};
 
 		const partyWall: PartyWallData = {
@@ -325,7 +325,7 @@ describe("dwelling fabric mapper", () => {
 			surfaceArea: 10,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: "I"
+			massDistributionClass: "I",
 		};
 
 		const wallToUnheatedSpace: WallsToUnheatedSpaceData ={
@@ -336,7 +336,7 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "E",
 			pitchOption: "90",
 			pitch: 90,
-			thermalResistanceOfAdjacentUnheatedSpace: 1
+			thermalResistanceOfAdjacentUnheatedSpace: 1,
 		};
 
 		const wallSuffix = " (wall)";
@@ -347,9 +347,9 @@ describe("dwelling fabric mapper", () => {
 					dwellingSpaceExternalWall: { data: [externalWall], complete: true },
 					dwellingSpaceInternalWall: { data: [internalWall], complete: true },
 					dwellingSpacePartyWall: { data: [partyWall], complete: true },
-					dwellingSpaceWallToUnheatedSpace: { data: [wallToUnheatedSpace], complete: true }
-				}
-			}
+					dwellingSpaceWallToUnheatedSpace: { data: [wallToUnheatedSpace], complete: true },
+				},
+			},
 		});
 
 		// Act
@@ -424,7 +424,7 @@ describe("dwelling fabric mapper", () => {
 			massDistributionClass: "I",
 			pitchOption: "0",
 			pitch: 0,
-			thermalResistanceOfAdjacentUnheatedSpace: 1
+			thermalResistanceOfAdjacentUnheatedSpace: 1,
 		};
 
 		const roof: RoofData = {
@@ -439,7 +439,7 @@ describe("dwelling fabric mapper", () => {
 			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: "I"
+			massDistributionClass: "I",
 		};
 
 		const ceilingSuffix = " (ceiling)";
@@ -448,10 +448,10 @@ describe("dwelling fabric mapper", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceCeilings: { data: [{ data: ceiling }], complete: true, },
-					dwellingSpaceRoofs: { data: [{ data: roof }], complete: true, }
-				}
-			}
+					dwellingSpaceCeilings: { data: [{ data: ceiling }], complete: true },
+					dwellingSpaceRoofs: { data: [{ data: roof }], complete: true },
+				},
+			},
 		});
 
 		// Act
@@ -503,7 +503,7 @@ describe("dwelling fabric mapper", () => {
 			pitchOption: "90",
 			pitch: 90,
 			uValue: 0.001,
-			thermalResistanceOfAdjacentUnheatedSpace: 1
+			thermalResistanceOfAdjacentUnheatedSpace: 1,
 		};
 
 		const externalGlazedDoor: ExternalGlazedDoorData = {
@@ -520,7 +520,7 @@ describe("dwelling fabric mapper", () => {
 			openingToFrameRatio: 0.3,
 			midHeightOpenablePart1: 1,
 			maximumOpenableArea: 1,
-			heightOpenableArea: 1
+			heightOpenableArea: 1,
 		};
 
 		const externalUnglazedDoor: ExternalUnglazedDoorData = {
@@ -535,7 +535,7 @@ describe("dwelling fabric mapper", () => {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: "I"
+			massDistributionClass: "I",
 		};
 
 		const doorSuffix = " (door)";
@@ -545,9 +545,9 @@ describe("dwelling fabric mapper", () => {
 				dwellingSpaceDoors: {
 					dwellingSpaceInternalDoor: { data: [{ data: internalDoor }], complete: true },
 					dwellingSpaceExternalGlazedDoor: { data: [{ data: externalGlazedDoor }], complete: true },
-					dwellingSpaceExternalUnglazedDoor: { data: [{ data: externalUnglazedDoor }], complete: true }
-				}
-			}
+					dwellingSpaceExternalUnglazedDoor: { data: [{ data: externalUnglazedDoor }], complete: true },
+				},
+			},
 		});
 
 		// Act
@@ -584,7 +584,7 @@ describe("dwelling fabric mapper", () => {
 			max_window_open_area: externalGlazedDoor.maximumOpenableArea,
 			free_area_height: externalGlazedDoor.heightOpenableArea,
 			window_part_list: [
-				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 }
+				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
 			],
 			shading: [],
 		};
@@ -603,7 +603,7 @@ describe("dwelling fabric mapper", () => {
 			u_value: externalUnglazedDoor.uValue,
 			areal_heat_capacity: externalUnglazedDoor.kappaValue,
 			mass_distribution_class: externalUnglazedDoor.massDistributionClass,
-			is_external_door: true
+			is_external_door: true,
 		};
 
 		expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);
@@ -637,7 +637,7 @@ describe("dwelling fabric mapper", () => {
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
-			heightOpenableArea: 1
+			heightOpenableArea: 1,
 		};
 
 		const windowSuffix = " (window)";
@@ -647,11 +647,11 @@ describe("dwelling fabric mapper", () => {
 				dwellingSpaceWindows: { 
 					data: [{
 						data: window, 
-						complete: true 
+						complete: true, 
 					}],
-					complete: true 
-				}
-			}
+					complete: true, 
+				},
+			},
 		});
 
 		// Act
@@ -674,24 +674,24 @@ describe("dwelling fabric mapper", () => {
 			max_window_open_area:window.maximumOpenableArea,
 			free_area_height:window.heightOpenableArea,
 			window_part_list: [{
-				mid_height_air_flow_path:window .midHeightOpenablePart1
+				mid_height_air_flow_path:window .midHeightOpenablePart1,
 			}],
 			shading: [
 				{
 					type: "overhang",
 					depth: 1,
-					distance: 1
+					distance: 1,
 				},
 				{
 					type: "sidefinleft",
 					depth: 1,
-					distance: 1
+					distance: 1,
 				},
 				{
 					type: "sidefinright",
 					depth: 1,
-					distance: 1
-				}
+					distance: 1,
+				},
 			],
 		};
 		expect(windowElement).toEqual(expectedWindow);
@@ -703,25 +703,25 @@ describe("dwelling fabric mapper", () => {
 			name: "E1: Steel lintel with perforated steel base plate",
 			typeOfThermalBridge: "e1",
 			linearThermalTransmittance: 1,
-			length: 2
+			length: 2,
 		};
 
 		const pointThermalBridge: PointThermalBridgeData = {
 			name: "Point 1",
-			heatTransferCoefficient: 1
+			heatTransferCoefficient: 1,
 		};
 
 		const dwellingSpaceThermalBridging: ThermalBridgingData = {
 			dwellingSpaceLinearThermalBridges: { data: [{ data: linearThermalBridge }], complete: true },
-			dwellingSpacePointThermalBridges: { data: [{ data: pointThermalBridge }], complete: true }
+			dwellingSpacePointThermalBridges: { data: [{ data: pointThermalBridge }], complete: true },
 		};
 
 		const bridgeSuffix = " (bridge)";
 
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceThermalBridging
-			}
+				dwellingSpaceThermalBridging,
+			},
 		});
 
 		// Act
@@ -739,7 +739,7 @@ describe("dwelling fabric mapper", () => {
 			type: "ThermalBridgeLinear",
 			junction_type: "E1",
 			linear_thermal_transmittance: linearThermalBridge.linearThermalTransmittance,
-			length: linearThermalBridge.length
+			length: linearThermalBridge.length,
 		};
 
 		expect(linearThermalBridgeElement).toEqual(expectedLinearThermalBridge);

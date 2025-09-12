@@ -26,19 +26,19 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 				name,
 				{
 					...mechanicalVentData,
-					...(mechanicalVentData.vent_type === "MVHR" ? { ductwork: mapMvhrDuctworkData(name, state) } : {})
-				}
+					...(mechanicalVentData.vent_type === "MVHR" ? { ductwork: mapMvhrDuctworkData(name, state) } : {}),
+				},
 			];
 		})),
 		Vents: mapVentsData(state),
 		Control_VentAdjustMin: null,
 		Control_VentAdjustMax: null,
 		Control_WindowAdjust: null,
-		ach_min_static_calcs: null
+		ach_min_static_calcs: null,
 	};
 
 	return {
-		InfiltrationVentilation: infiltrationVentilation
+		InfiltrationVentilation: infiltrationVentilation,
 	} as Pick<FhsInputSchema, "InfiltrationVentilation">;
 }
 
@@ -62,7 +62,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 			...(x.data.typeOfMechanicalVentilationOptions === "MVHR" ? { mvhr_location: x.data.mvhrLocation, mvhr_eff: x.data.mvhrEfficiency } : {}),
 			measured_air_flow_rate: 37,
 			measured_fan_power: 12.26,
-			SFP: 1.5 // canned value for now
+			SFP: 1.5, // canned value for now
 		};
 
 		return [key, val];
@@ -86,7 +86,7 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 			...(x.data.ductworkCrossSectionalShape === "circular" ? { internal_diameter_mm: x.data.internalDiameterOfDuctwork, external_diameter_mm: x.data.externalDiameterOfDuctwork } : {}),
 			...(x.data.ductworkCrossSectionalShape === "rectangular" ? { duct_perimeter_mm: x.data.ductPerimeter } : {}),
 			length: x.data.lengthOfDuctwork,
-			reflective: x.data.surfaceReflectivity
+			reflective: x.data.surfaceReflectivity,
 		};
 		return val;
 	});
@@ -100,7 +100,7 @@ export function mapVentsData(state: ResolvedState) {
 			mid_height_air_flow_path: x.data.midHeightOfZone,
 			orientation360: x.data.orientation,
 			pitch: x.data.pitch,
-			pressure_difference_ref: 20 // stock value
+			pressure_difference_ref: 20, // stock value
 		};
 
 		return [key, val];
@@ -116,7 +116,7 @@ export function mapVentilationData(state: ResolvedState): { dwellingElevationalL
 		dwellingElevationalLevelAtBase,
 		dwellingHeight,
 		dwellingEnvelopeArea,
-		crossVentilationPossible
+		crossVentilationPossible,
 	};
 }
 
@@ -125,7 +125,7 @@ export function mapAirPermeabilityData(state: ResolvedState): Pick<SchemaVentila
 
 	return {
 		test_pressure: testPressure,
-		test_result: airTightnessTestResult
+		test_result: airTightnessTestResult,
 	};
 }
 

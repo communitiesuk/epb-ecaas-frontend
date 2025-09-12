@@ -34,7 +34,7 @@ const saveForm = (fields: InternalDoorData) => {
 					uValue: fields.uValue,
 					thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 				},
-				complete: true
+				complete: true,
 			};
 		} else if (fields.typeOfInternalDoor === AdjacentSpaceType.heatedSpace) {
 			door = {
@@ -42,7 +42,7 @@ const saveForm = (fields: InternalDoorData) => {
 					...commonFields,
 					typeOfInternalDoor: fields.typeOfInternalDoor,
 				},
-				complete: true
+				complete: true,
 			};
 		} else {
 			throw new Error("Invalid type of door");
@@ -64,7 +64,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

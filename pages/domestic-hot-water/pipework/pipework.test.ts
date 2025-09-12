@@ -23,7 +23,7 @@ describe("Pipeworks", () => {
 			hotWaterCylinder: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
 			location: "internal",
 		}, 
-		complete: true
+		complete: true,
 	};
 
 	const pipework2: EcaasForm<Partial<SecondaryPipeworkData>> = {
@@ -31,9 +31,9 @@ describe("Pipeworks", () => {
 			name: "Pipework Kitchen",
 			length: 3,
 			location: "internal",
-			internalDiameter: 9
+			internalDiameter: 9,
 		},
-		complete: true
+		complete: true,
 	};
 
 	afterEach(() => {
@@ -46,10 +46,10 @@ describe("Pipeworks", () => {
 				domesticHotWater: {
 					pipework: {
 						primaryPipework: {
-							data: [pipework1]
-						}
-					}
-				}
+							data: [pipework1],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Pipework);
@@ -67,10 +67,10 @@ describe("Pipeworks", () => {
 				domesticHotWater: {
 					pipework: {
 						primaryPipework: {
-							data: [pipework1, pipework2]
-						}
-					}
-				}
+							data: [pipework1, pipework2],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Pipework);
@@ -92,10 +92,10 @@ describe("Pipeworks", () => {
 				domesticHotWater: {
 					pipework: {
 						secondaryPipework: {
-							data: [pipework1]
-						}
-					}
-				}
+							data: [pipework1],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Pipework);
@@ -113,10 +113,10 @@ describe("Pipeworks", () => {
 				domesticHotWater: {
 					pipework: {
 						secondaryPipework: {
-							data: [pipework1, pipework2]
-						}
-					}
-				}
+							data: [pipework1, pipework2],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Pipework);
@@ -150,8 +150,8 @@ describe("Pipeworks", () => {
 						secondaryPipework: { data: [pipework2] },
 					},
 					waterHeating:{
-						hotWaterCylinder: { data: [{ name: "Cylinder 1", id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36" }] }
-					}
+						hotWaterCylinder: { data: [{ name: "Cylinder 1", id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36" }] },
+					},
 				},
 					
 			});
@@ -181,7 +181,7 @@ describe("Pipeworks", () => {
 	
 			it("marks pipework section as complete when button is clicked", async () => {
 				expect(
-					screen.getByRole("button", { name: "Mark section as complete" })
+					screen.getByRole("button", { name: "Mark section as complete" }),
 				).not.toBeNull();
 				const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
 				expect(completedStatusElement?.style.display).toBe("none");
@@ -193,7 +193,7 @@ describe("Pipeworks", () => {
 				expect(primaryPipework?.complete).toBe(true);
 				expect(secondaryPipework?.complete).toBe(true);
 				expect(
-					screen.queryByRole("button", { name: "Mark section as complete" })
+					screen.queryByRole("button", { name: "Mark section as complete" }),
 				).toBeNull();
 				expect(completedStatusElement?.style.display).not.toBe("none");
 	
@@ -213,7 +213,7 @@ describe("Pipeworks", () => {
 					await user.click(screen.getByTestId(pipeworkItem!.testId));
 					expect(store.domesticHotWater.pipework[typedKey]?.complete).toBe(false);
 					expect(
-						screen.getByRole("button", { name: "Mark section as complete" })
+						screen.getByRole("button", { name: "Mark section as complete" }),
 					).not.toBeNull();
 				}
 			});
@@ -231,7 +231,7 @@ describe("Pipeworks", () => {
 					await user.click(screen.getByTestId(pipeworkItem!.testId));
 					expect(store.domesticHotWater.pipework[typedKey]?.complete).toBe(false);
 					expect(
-						screen.getByRole("button", { name: "Mark section as complete" })
+						screen.getByRole("button", { name: "Mark section as complete" }),
 					).not.toBeNull();
 				}
 			});
@@ -258,7 +258,7 @@ describe("Pipeworks", () => {
 	
 					await renderSuspended(Pipework);
 					expect(
-						screen.getByRole("button", { name: "Mark section as complete" })
+						screen.getByRole("button", { name: "Mark section as complete" }),
 					).not.toBeNull();
 				}
 			});

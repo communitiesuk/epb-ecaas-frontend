@@ -64,9 +64,9 @@ describe("General details", () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
-						data: state
-					}
-				}
+						data: state,
+					},
+				},
 			});
 	
 			await renderSuspended(GeneralDetails);
@@ -129,9 +129,9 @@ describe("General details", () => {
 			store.$patch({
 				dwellingDetails: {
 					generalSpecifications: {
-						data: stateWithFlat
-					}
-				}
+						data: stateWithFlat,
+					},
+				},
 			});
 
 			await renderSuspended(GeneralDetails);

@@ -14,7 +14,7 @@ const saveForm = (fields: HeatNetworkData) => {
 
 		const heatNetworkItem: HeatNetworkData = {
 			id: uuidv4(),
-			name: fields.name
+			name: fields.name,
 		};
 
 		saveToList(heatNetworkItem, heatNetwork);

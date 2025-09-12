@@ -29,7 +29,7 @@ function handleDuplicate(applianceType: ApplianceType, index: number) {
 		store.$patch((state) => {
 			const newAppliance = {
 				...appliance,
-				name: `${appliance.name} (${duplicates.length})`
+				name: `${appliance.name} (${duplicates.length})`,
 			};
 
 			state.infiltrationAndVentilation.combustionAppliances[applianceType].data.push(newAppliance);
@@ -46,9 +46,9 @@ function handleComplete() {
 				open_gas_flue_balancer: { complete: true },
 				open_gas_kitchen_stove: { complete: true },
 				open_gas_fire: { complete: true },
-				closed_fire: { complete: true }
-			}
-		}
+				closed_fire: { complete: true },
+			},
+		},
 	});
 
 	navigateTo("/infiltration-and-ventilation");

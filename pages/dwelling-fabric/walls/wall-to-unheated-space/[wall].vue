@@ -20,7 +20,7 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
-			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace
+			thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 		};
 
 		if (!dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace) {

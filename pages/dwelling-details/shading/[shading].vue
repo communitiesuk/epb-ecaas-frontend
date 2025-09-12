@@ -26,9 +26,9 @@ const saveForm = (fields: ShadingData) => {
 				endAngle: fields.endAngle,
 				objectType: fields.objectType,
 				height: fields.height,
-				distance: fields.distance
+				distance: fields.distance,
 			},
-			complete: true
+			complete: true,
 		};
 		shading.complete = false;
 	});
@@ -44,7 +44,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingDetails.shading.data[index] = newData;
 		state.dwellingDetails.shading.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

@@ -20,7 +20,7 @@ describe("wall to unheated space", () => {
 		massDistributionClass: "E",
 		pitchOption: "90",
 		pitch: 90,
-		thermalResistanceOfAdjacentUnheatedSpace: 1
+		thermalResistanceOfAdjacentUnheatedSpace: 1,
 	};
 
 	afterEach(() => {
@@ -52,16 +52,16 @@ describe("wall to unheated space", () => {
 			dwellingFabric: {
 				dwellingSpaceWalls: {
 					dwellingSpaceWallToUnheatedSpace: {
-						data: [state]
-					}
-				}
-			}
+						data: [state],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(WallToUnheatedSpace, {
 			route: {
-				params: { wall: "0" }
-			}
+				params: { wall: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Wall to unheated space 1");

@@ -24,10 +24,10 @@ const mechanicalVentilationSummary: SummarySection = {
 			...(x.data.typeOfMechanicalVentilationOptions == "MVHR" ? {
 				"MVHR location": displayCamelToSentenceCase(x.data.mvhrLocation),
 				"MVHR efficiency": x.data.mvhrEfficiency,
-			} : {})
+			} : {}),
 		};
 	}) || [],
-	editUrl: getUrl("mechanicalVentilation")
+	editUrl: getUrl("mechanicalVentilation"),
 };
 
 const ductworkData = store.infiltrationAndVentilation.ductwork.data;
@@ -49,10 +49,10 @@ const ductworkSummary: SummarySection = {
 			"Length of ductwork": `${x.data.lengthOfDuctwork} ${metre.suffix}`,
 			"Insulation thickness": `${x.data.insulationThickness} ${millimetre.suffix}`,
 			"Thermal conductivity of ductwork insulation": `${x.data.thermalInsulationConductivityOfDuctwork} ${wattsPerMeterKelvin.suffix}`,
-			"Surface reflectivity": x.data.surfaceReflectivity ? "Reflective" : "Not reflective"
+			"Surface reflectivity": x.data.surfaceReflectivity ? "Reflective" : "Not reflective",
 		};
 	}) || [],
-	editUrl: getUrl("ductwork")
+	editUrl: getUrl("ductwork"),
 };
 
 const ventData = store.infiltrationAndVentilation.vents.data;
@@ -68,10 +68,10 @@ const ventSummary: SummarySection = {
 			"Vent opening ratio": x.data.openingRatio,
 			"Mid height of zone": `${x.data.midHeightOfZone} ${metre.suffix}`,
 			"Orientation": `${x.data.orientation} ${degrees.suffix}`,
-			"Pitch": `${x.data.pitch} ${degrees.suffix}`
+			"Pitch": `${x.data.pitch} ${degrees.suffix}`,
 		};
 	}),
-	editUrl: getUrl("vents")
+	editUrl: getUrl("vents"),
 };
 
 const ventilationData = store.infiltrationAndVentilation.naturalVentilation.data;
@@ -83,9 +83,9 @@ const ventilationSummary: SummarySection = {
 		"Ventilation zone height": `${ventilationData.ventilationZoneHeight} ${metre.suffix}`,
 		"Dwelling envelope area": `${ventilationData.dwellingEnvelopeArea} ${metresSquare.suffix}`,
 		"Elevational height of dwelling at its base": `${ventilationData.dwellingElevationalLevelAtBase} ${metre.suffix}`,
-		"Cross ventilation possible": displayBoolean(ventilationData.crossVentilationPossible)
+		"Cross ventilation possible": displayBoolean(ventilationData.crossVentilationPossible),
 	},
-	editUrl: getUrl("naturalVentilation")
+	editUrl: getUrl("naturalVentilation"),
 };
 
 const airPermeabilityData = store.infiltrationAndVentilation.airPermeability.data;
@@ -95,9 +95,9 @@ const airPermeabilitySummary: SummarySection = {
 	label: "Air permeability",
 	data: {
 		"Test pressure": `${airPermeabilityData.testPressure} ${pascal.suffix}`,
-		"Air tightness test result": `${airPermeabilityData.airTightnessTestResult} ${cubicMetrePerHourPerSquareMetre.suffix}`
+		"Air tightness test result": `${airPermeabilityData.airTightnessTestResult} ${cubicMetrePerHourPerSquareMetre.suffix}`,
 	},
-	editUrl: getUrl("airPermeability")
+	editUrl: getUrl("airPermeability"),
 };
 
 // const { combustionAppliances } = store.infiltrationAndVentilation;

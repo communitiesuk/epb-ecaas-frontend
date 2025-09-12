@@ -16,16 +16,16 @@ describe("dwelling details mapper", () => {
 			storeysInDwelling: 3,
 			storeyOfFlat: 1,
 			numOfBedrooms: 2,
-			coolingRequired: false
+			coolingRequired: false,
 		};
 
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
 					complete: true,
-					data: state
-				}
-			}
+					data: state,
+				},
+			},
 		});
 
 		// Act
@@ -46,16 +46,16 @@ describe("dwelling details mapper", () => {
 			altitude: 30,
 			typeOfExposure: "Normal",
 			terrainType: "OpenField",
-			noiseNuisance: true
+			noiseNuisance: true,
 		};
 
 		store.$patch({
 			dwellingDetails: {
 				externalFactors: {
 					complete: true,
-					data: state
-				}
-			}
+					data: state,
+				},
+			},
 		});
 
 		// Act
@@ -76,7 +76,7 @@ describe("dwelling details mapper", () => {
 			endAngle: 25,
 			objectType: "obstacle",
 			height: 3,
-			distance: 2
+			distance: 2,
 		};
 
 		store.$patch({
@@ -85,10 +85,10 @@ describe("dwelling details mapper", () => {
 					complete: true,
 					data: [{
 						data: state,
-						complete: true
-					}]
-				}
-			}
+						complete: true,
+					}],
+				},
+			},
 		});
 
 		// Act
@@ -97,7 +97,7 @@ describe("dwelling details mapper", () => {
 		const expectedShading: SchemaShadingObject = {
 			type: state.objectType,
 			height: state.height,
-			distance: state.distance
+			distance: state.distance,
 		};
 
 		const shadingSegments = fhsInputData.ExternalConditions?.shading_segments;

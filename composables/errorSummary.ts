@@ -15,7 +15,7 @@ export function useErrorSummary() {
 		validationErrors.forEach(messages => {
 			const errors = messages.map(message => ({
 				id: message.meta.i18nArgs![0].node.props.id,
-				text: message.value?.toString()
+				text: message.value?.toString(),
 			}));
 
 			errorMessages.value = errorMessages.value.concat(errors);

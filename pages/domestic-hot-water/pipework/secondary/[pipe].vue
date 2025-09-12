@@ -26,7 +26,7 @@ const saveForm = (fields: SecondaryPipeworkData) => {
 				length: fields.length,
 				internalDiameter: fields.internalDiameter,
 			},
-			complete: true
+			complete: true,
 		};
 		secondaryPipework.complete = false;
 	});

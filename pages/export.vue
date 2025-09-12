@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const title = "Export data";
 
 const model = ref<{ fileName?: string }>({
-	fileName: undefined
+	fileName: undefined,
 });
 
 const downloadUrl = ref<string | undefined>();

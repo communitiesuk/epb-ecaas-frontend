@@ -14,12 +14,12 @@ const saveForm = (fields: HotWaterHeatPumpData) => {
 		const index = getStoreIndex(heatPump.data);
 
 		const heatPumpItem: HotWaterHeatPumpData = {
-			name: fields.name
+			name: fields.name,
 		};
 
 		heatPump.data[index] = {
 			data: heatPumpItem,
-			complete: true
+			complete: true,
 		};
 
 		heatPump.complete = false;
@@ -36,7 +36,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.domesticHotWater.waterHeating.heatPump.data[index] = newData;
 		state.domesticHotWater.waterHeating.heatPump.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

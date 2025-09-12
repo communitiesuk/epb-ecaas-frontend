@@ -11,7 +11,7 @@ const {
 	node: { name },
 	label,
 	help,
-	attrs: { placeholder }
+	attrs: { placeholder },
 } = props.context;
 
 const { mounted } = useMounted();

@@ -54,8 +54,8 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 				area: dwellingSpaceZoneParameters.area,
 				volume: dwellingSpaceZoneParameters.volume,
 				temp_setpnt_init: 20, // temporary dummy - this field is removed in subsequent schemas
-			} as Partial<SchemaZoneInput>
-		}
+			} as Partial<SchemaZoneInput>,
+		},
 	} as Pick<FhsInputSchema, "HeatingControlType" | "Zone">;
 }
 
@@ -68,22 +68,22 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 			...(numberOfIncandescentBulbs >= 1 ? { incandescent: {
 				count: numberOfIncandescentBulbs,
 				power: 60,
-				efficacy: 14
+				efficacy: 14,
 			} } : {}),
 			...(numberOfLEDBulbs >= 1 ? { led: {
 				count: numberOfLEDBulbs,
 				power: 6,
-				efficacy: 120
-			} } : {})
-		}
+				efficacy: 120,
+			} } : {}),
+		},
 	};
 
 	return {
 		Zone: {
 			[defaultZoneName]: {
-				Lighting: lightingData
-			} as Partial<SchemaZoneInput>
-		}
+				Lighting: lightingData,
+			} as Partial<SchemaZoneInput>,
+		},
 	} as Pick<FhsInputSchema, "HeatingControlType" | "Zone">;
 }
 
@@ -104,7 +104,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 			return [{
 				type: data.edgeInsulationType,
 				width: edgeInsulationWidthInMetres,
-				edge_thermal_resistance: data.edgeInsulationThermalResistance
+				edge_thermal_resistance: data.edgeInsulationThermalResistance,
 			}];
 		}
 
@@ -112,7 +112,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 			return [{
 				type: data.edgeInsulationType,
 				depth: edgeInsulationWidthInMetres,
-				edge_thermal_resistance: data.edgeInsulationThermalResistance
+				edge_thermal_resistance: data.edgeInsulationThermalResistance,
 			}];
 		}
 	}
@@ -234,7 +234,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 			areal_heat_capacity: x.data.kappaValue,
 			mass_distribution_class: x.data.massDistributionClass,
 			pitch: 180,
-			u_value: defaultUValue
+			u_value: defaultUValue,
 		};
 		const nameWithSuffix = suffixName(x.data.name, floorSuffix);
 
@@ -271,7 +271,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 			mass_distribution_class: x.data.massDistributionClass,
 			pitch: x.data.pitch,
 			orientation360: x.data.orientation,
-			is_external_door: false
+			is_external_door: false,
 		} };
 	}) || [];
 
@@ -283,10 +283,10 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					{},
 					...groundFloorData,
 					...internalFloorData,
-					...exposedFloorData
-				)
-			} as Partial<SchemaZoneInput>
-		}
+					...exposedFloorData,
+				),
+			} as Partial<SchemaZoneInput>,
+		},
 	} as Pick<FhsInputSchema, "GroundFloorArea" | "Zone">;
 }
 
@@ -309,7 +309,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
-			is_external_door: false
+			is_external_door: false,
 		} };
 	}) || [];
 
@@ -322,7 +322,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			area: x.surfaceAreaOfElement,
 			u_value: defaultUValue,
 			areal_heat_capacity: x.kappaValue,
-			mass_distribution_class: x.massDistributionClass
+			mass_distribution_class: x.massDistributionClass,
 		} };
 	}) || [];
 
@@ -349,7 +349,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			u_value: x.uValue,
 			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: x.massDistributionClass,
-			thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace
+			thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
 		} };
 	}) || [];
 
@@ -361,10 +361,10 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 					...externalWallData,
 					...internalWallData,
 					...partyWallData,
-					...wallToUnheatedSpaceData
-				)
-			} as Partial<SchemaZoneInput>
-		}
+					...wallToUnheatedSpaceData,
+				),
+			} as Partial<SchemaZoneInput>,
+		},
 	} as Pick<FhsInputSchema, "Zone">;
 }
 
@@ -389,13 +389,13 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
-				u_value: x.uValue
+				u_value: x.uValue,
 			};
 		} else {
 			ceiling = {
 				...commonFields,
 				type: "BuildingElementAdjacentConditionedSpace",
-				u_value: defaultUValue
+				u_value: defaultUValue,
 			};
 		};
 
@@ -418,7 +418,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
 			is_external_door: false,
-			is_unheated_pitched_roof: x.typeOfRoof === "pitchedInsulatedAtCeiling"
+			is_unheated_pitched_roof: x.typeOfRoof === "pitchedInsulatedAtCeiling",
 		} };
 	});
 
@@ -428,10 +428,10 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 				BuildingElement: Object.assign(
 					{},
 					...ceilingData,
-					...roofData
-				)
-			} as Partial<SchemaZoneInput>
-		}
+					...roofData,
+				),
+			} as Partial<SchemaZoneInput>,
+		},
 	} as Pick<FhsInputSchema, "Zone">;
 }
 
@@ -455,13 +455,13 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 				u_value: x.uValue,
-				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace
+				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
 			};
 		} else {
 			internalDoor = {
 				...commonFields,
 				type: "BuildingElementAdjacentConditionedSpace",
-				u_value: defaultUValue // TODO: double check this is correct behaviour
+				u_value: defaultUValue, // TODO: double check this is correct behaviour
 			};
 		};
 
@@ -482,12 +482,12 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			g_value: x.solarTransmittance,
 			u_value: x.uValue,
 			window_part_list: [
-				{ mid_height_air_flow_path: x.midHeightOpenablePart1 }
+				{ mid_height_air_flow_path: x.midHeightOpenablePart1 },
 			],
 			frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
 			max_window_open_area: x.maximumOpenableArea,
 			free_area_height: x.heightOpenableArea,
-			shading: []
+			shading: [],
 		} as const satisfies SchemaBuildingElement;
 
 		return {
@@ -510,7 +510,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			u_value: x.uValue,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
-			is_external_door: true
+			is_external_door: true,
 		} };
 	});
 
@@ -521,10 +521,10 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 					{},
 					...internalDoorData,
 					...externalGlazedDoorData,
-					...externalUnglazedDoorData
-				)
-			} as Partial<SchemaZoneInput>
-		}
+					...externalUnglazedDoorData,
+				),
+			} as Partial<SchemaZoneInput>,
+		},
 	} as Pick<FhsInputSchema, "Zone">;
 }
 
@@ -535,14 +535,14 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 	function mapWindowPartList(data: WindowData): SchemaWindowPart[] {
 		if (data.numberOpenableParts === "1") {
 			return [
-				{ mid_height_air_flow_path: data.midHeightOpenablePart1 }
+				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
 			];
 		}
 
 		if (data.numberOpenableParts === "2") {
 			return [
 				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart2 }
+				{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
 			];
 		}
 
@@ -550,7 +550,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			return [
 				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
 				{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart3 }
+				{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
 			];
 		}
 
@@ -559,7 +559,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				{ mid_height_air_flow_path: data.midHeightOpenablePart1 },
 				{ mid_height_air_flow_path: data.midHeightOpenablePart2 },
 				{ mid_height_air_flow_path: data.midHeightOpenablePart3 },
-				{ mid_height_air_flow_path: data.midHeightOpenablePart4 }
+				{ mid_height_air_flow_path: data.midHeightOpenablePart4 },
 			];
 		}
 
@@ -612,16 +612,16 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			max_window_open_area: x.data.numberOpenableParts === "0" ? 0 : x.data.maximumOpenableArea,
 			free_area_height: x.data.numberOpenableParts === "0" ? 0 : x.data.heightOpenableArea,
 			window_part_list: mapWindowPartList(x.data),
-			shading: [...overhang, ...sideFinLeft, ...sideFinRight]
+			shading: [...overhang, ...sideFinLeft, ...sideFinRight],
 		} };
 	});
 
 	return {
 		Zone: {
 			[defaultZoneName]: {
-				BuildingElement: Object.assign({}, ...windowData)
-			} as Partial<SchemaZoneInput>
-		}
+				BuildingElement: Object.assign({}, ...windowData),
+			} as Partial<SchemaZoneInput>,
+		},
 	} as Pick<FhsInputSchema, "Zone">;
 }
 
@@ -636,7 +636,7 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 			type: "ThermalBridgeLinear",
 			junction_type: x.typeOfThermalBridge.toUpperCase(),
 			linear_thermal_transmittance: x.linearThermalTransmittance,
-			length: x.length
+			length: x.length,
 		} };
 	});
 
@@ -645,7 +645,7 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 
 		return { [nameWithSuffix]: {
 			type: "ThermalBridgePoint",
-			heat_transfer_coeff: x.heatTransferCoefficient
+			heat_transfer_coeff: x.heatTransferCoefficient,
 		} };
 	});
 
@@ -654,9 +654,9 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 			[defaultZoneName]: {
 				ThermalBridging: Object.assign({},
 					...linearThermalBridgesData,
-					...pointThermalBridgesData
-				)
-			} as Partial<SchemaZoneInput>
-		}
+					...pointThermalBridgesData,
+				),
+			} as Partial<SchemaZoneInput>,
+		},
 	} as Pick<FhsInputSchema, "Zone">;
 }

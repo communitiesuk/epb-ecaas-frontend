@@ -45,16 +45,16 @@ describe("open gas kitchen stove", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_kitchen_stove: {
-						data: [openGasKitchenStove]
-					}
-				}
-			}
+						data: [openGasKitchenStove],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(OpenGasKitchenStove, {
 			route: {
-				params: { combustion: "0" }
-			}
+				params: { combustion: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Open gas kitchen stove 1");

@@ -29,7 +29,7 @@ const calculate = async () => {
 
 		// nix the stored lastResult before sending a request
 		store.$patch({
-			lastResult: undefined
+			lastResult: undefined,
 		});
 
 		const response = await $fetch<FhsComplianceResponseIncludingErrors>("/api/check-compliance", {

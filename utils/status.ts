@@ -13,7 +13,7 @@ import type { Page } from "~/data/pages/pages.types";
  */
 export function getSection(
 	pageId: string,
-	section: object
+	section: object,
 ): object | undefined {
 	if (typeof section !== "object") {
 		return undefined;

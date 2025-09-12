@@ -25,7 +25,7 @@ const pvSummary: SummarySection = {
 			"Inverter peak power AC": `${x.inverterPeakPowerAC} ${kilowatt.suffix}`,
 			"Inverter peak power DC": `${x.inverterPeakPowerDC} ${kilowatt.suffix}`,
 			"Inverter is inside": displayBoolean(x.inverterIsInside),
-			"Inverter type": displaySnakeToSentenceCase(x.inverterType)
+			"Inverter type": displaySnakeToSentenceCase(x.inverterType),
 		};
 	}),
 	editUrl: "/pv-and-batteries",
@@ -45,7 +45,7 @@ const batterySummary: SummarySection = {
 			"Grid charging possible": displayBoolean(x.gridChargingPossible),
 			"Maximum charge rate": `${x.maximumChargeRate} ${kilowatt.suffix}`,
 			"Minimum charge rate": `${x.minimumChargeRate} ${kilowatt.suffix}`,
-			"Maximum discharge rate": `${x.maximumDischargeRate} ${kilowatt.suffix}`
+			"Maximum discharge rate": `${x.maximumDischargeRate} ${kilowatt.suffix}`,
 		};
 	}),
 	editUrl: "/pv-and-batteries",

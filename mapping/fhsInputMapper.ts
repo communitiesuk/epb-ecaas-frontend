@@ -27,7 +27,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const defaultTariffData: Pick<SchemaEnergySupply, "threshold_charges" | "threshold_prices" | "tariff"> = {
 		threshold_charges: [0.8, 0.8, 0.7, 0.4, 0.0, 0.0, 0.0, 0.2, 0.5, 0.7, 0.8, 0.8],
 		threshold_prices: [20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0],
-		tariff: "Variable Time of Day Tariff"
+		tariff: "Variable Time of Day Tariff",
 	};
 	const heatingSystemsData = {
 		SpaceHeatSystem,
@@ -35,9 +35,9 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 			[defaultElectricityEnergySupplyName]: {
 				...EnergySupply[defaultElectricityEnergySupplyName],
 				...electricBatteries,
-				...(Object.values(electricBatteries).length > 0 ? defaultTariffData : {})
-			}
-		}
+				...(Object.values(electricBatteries).length > 0 ? defaultTariffData : {}),
+			},
+		},
 	};
 
 	const control: Pick<FhsInputSchema, "Control"> = { Control: {} };
@@ -49,16 +49,16 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 			"mains water": {
 				start_day: 0,
 				temperatures: [3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
-				time_series_step: 1
-			}
-		}
+				time_series_step: 1,
+			},
+		},
 	};
 	const defaultSimulationTime: Pick<FhsInputSchema, "SimulationTime"> = {
 		SimulationTime: {
 			start: 0,
 			end: 8,
-			step: 1
-		}
+			step: 1,
+		},
 	};
 	// Below uses default values until heat pump is set up to come from PCDB
 	const { HotWaterSource } = domesticHotWaterData;
@@ -69,7 +69,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	// TODO: correct this at point other heat sources are being added
 	const heatSourceWetData: Pick<FhsInputSchema, "HeatSourceWet"> = {
 		"HeatSourceWet": heatPumps.length === 0 ? {
-			[heatPumpName]: defaultHeatSourceWetDetails
+			[heatPumpName]: defaultHeatSourceWetDetails,
 		} : objectFromEntries(heatPumps.map(heatPump => {
 			const heatPumpWithProductReference: SchemaHeatSourceWetHeatPumpWithProductReference = {
 				product_reference: heatPump.data.productReference,
@@ -78,9 +78,9 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 			};
 			return  [
 				heatPump.data.name,
-				heatPumpWithProductReference
+				heatPumpWithProductReference,
 			] as const;
-		}))
+		})),
 	};
 
 	const fhsInput = merge.all([

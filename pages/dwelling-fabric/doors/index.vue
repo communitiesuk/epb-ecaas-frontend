@@ -41,8 +41,8 @@ function handleDuplicate<T extends DoorData>(doorType: DoorType, index: number) 
 				complete: door.complete,
 				data: {
 					...door.data,
-					name: `${name} (${duplicates.length})`
-				}
+					name: `${name} (${duplicates.length})`,
+				},
 			} as T;
 
 			state.dwellingFabric.dwellingSpaceDoors[doorType].data.push(newItem);
@@ -57,9 +57,9 @@ function handleComplete() {
 			dwellingSpaceDoors: {
 				dwellingSpaceExternalGlazedDoor: { complete: true },
 				dwellingSpaceExternalUnglazedDoor: { complete: true },
-				dwellingSpaceInternalDoor: { complete: true }
-			}
-		}
+				dwellingSpaceInternalDoor: { complete: true },
+			},
+		},
 	});
 
 	navigateTo("/dwelling-fabric");

@@ -28,14 +28,14 @@ const state: DwellingDetailSummary = {
 		endAngle: 90,
 		objectType: "obstacle",
 		height: 1,
-		distance: 4
+		distance: 4,
 	}],
 	externalFactors: {
 		altitude: 3,
 		typeOfExposure: "Shielded",
 		terrainType: "Suburban",
-		noiseNuisance: false
-	}
+		noiseNuisance: false,
+	},
 };
 
 describe("Dwelling details summary", () => {
@@ -57,9 +57,9 @@ describe("Dwelling details summary", () => {
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
-					data: state.generalDetails
-				}
-			}
+					data: state.generalDetails,
+				},
+			},
 		});
 
 		await renderSuspended(Summary);
@@ -68,7 +68,7 @@ describe("Dwelling details summary", () => {
 			"Type of dwelling": "House",
 			"Number of storeys in building": "2",
 			"Number of bedrooms": "3",
-			"Cooling required": "No"
+			"Cooling required": "No",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -82,9 +82,9 @@ describe("Dwelling details summary", () => {
 		store.$patch({
 			dwellingDetails: {
 				externalFactors: {
-					data: state.externalFactors
-				}
-			}
+					data: state.externalFactors,
+				},
+			},
 		});
 
 		await renderSuspended(Summary);
@@ -93,7 +93,7 @@ describe("Dwelling details summary", () => {
 			"Altitude": `3 ${metre.suffix}`,
 			"Type of exposure": "Shielded",
 			"Terrain type": "Suburban",
-			"Noise nuisance": "No"
+			"Noise nuisance": "No",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

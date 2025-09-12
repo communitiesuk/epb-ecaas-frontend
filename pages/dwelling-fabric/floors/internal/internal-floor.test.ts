@@ -23,7 +23,7 @@ describe("internal floor", () => {
 	const internalFloorWithUnheatedSpace: InternalFloorData = {
 		...internalFloor,
 		typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
-		thermalResistanceOfAdjacentUnheatedSpace: 0
+		thermalResistanceOfAdjacentUnheatedSpace: 0,
 	};
 
 	afterEach(() => {
@@ -41,8 +41,8 @@ describe("internal floor", () => {
 		test("data is saved to store state and marked as complete when form is valid", async () => {
 			await renderSuspended(InternalFloor, {
 				route: {
-					params: { floor: "create" }
-				}
+					params: { floor: "create" },
+				},
 			});	
 	
 			await user.click(screen.getByTestId("typeOfInternalFloor_heatedSpace"));
@@ -60,16 +60,16 @@ describe("internal floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data: [{ data: internalFloor }]
-						}
-					}
-				}
+							data: [{ data: internalFloor }],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(InternalFloor, {
 				route: {
-					params: { floor: "0" }
-				}
+					params: { floor: "0" },
+				},
 			});
 	
 			expect((await screen.findByTestId("typeOfInternalFloor_heatedSpace")).hasAttribute("checked")).toBe(true);
@@ -96,8 +96,8 @@ describe("internal floor", () => {
 		test("data is saved to store state and marked as complete when form is valid", async () => {
 			await renderSuspended(InternalFloor, {
 				route: {
-					params: { floor: "create" }
-				}
+					params: { floor: "create" },
+				},
 			});	
 			await user.click(screen.getByTestId("typeOfInternalFloor_unheatedSpace"));
 			await populateValidForm();
@@ -116,16 +116,16 @@ describe("internal floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data: [{ data: internalFloorWithUnheatedSpace }]
-						}
-					}
-				}
+							data: [{ data: internalFloorWithUnheatedSpace }],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(InternalFloor, {
 				route: {
-					params: { floor: "0" }
-				}
+					params: { floor: "0" },
+				},
 			});
 	
 			expect((await screen.findByTestId("typeOfInternalFloor_unheatedSpace")).hasAttribute("checked")).toBe(true);
@@ -176,16 +176,16 @@ describe("internal floor", () => {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
 							data: [{ data: internalFloor, complete: true }],
-							complete: true
-						}
-					}
-				}
+							complete: true,
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(InternalFloor, {
 				route: {
-					params: { floor: "0" }
-				}
+					params: { floor: "0" },
+				},
 			});
 			
 			// Act
@@ -200,8 +200,8 @@ describe("internal floor", () => {
 		test("new form data is automatically saved to store with given name", async () => {
 			await renderSuspended(InternalFloor, {
 				route: {
-					params: { floor: "create" }
-				}
+					params: { floor: "create" },
+				},
 			});
 				
 			await user.click(screen.getByTestId("typeOfInternalFloor_heatedSpace"));
@@ -221,8 +221,8 @@ describe("internal floor", () => {
 		test("new form data is automatically saved to store with default name", async () => {
 			await renderSuspended(InternalFloor, {
 				route: {
-					params: { floor: "create" }
-				}
+					params: { floor: "create" },
+				},
 			});
 			
 			await user.click(screen.getByTestId("typeOfInternalFloor_heatedSpace"));
@@ -239,16 +239,16 @@ describe("internal floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data: [{ data: internalFloorWithUnheatedSpace }]
-						}
-					}
-				}
+							data: [{ data: internalFloorWithUnheatedSpace }],
+						},
+					},
+				},
 			});
 				
 			await renderSuspended(InternalFloor, {
 				route: {
-					params: { floor: 0 }
-				}
+					params: { floor: 0 },
+				},
 			});
 	
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor;
@@ -271,16 +271,16 @@ describe("internal floor", () => {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
 							data: [{ data: internalFloor, complete: true }],
-							complete: true
-						}
-					}
-				}
+							complete: true,
+						},
+					},
+				},
 			});
 		
 			await renderSuspended(InternalFloor, {
 				route: {
-					params: { floor: "0" }
-				}
+					params: { floor: "0" },
+				},
 			});
 				
 			// Act

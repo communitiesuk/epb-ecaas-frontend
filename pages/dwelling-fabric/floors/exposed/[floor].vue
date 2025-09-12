@@ -22,7 +22,7 @@ const saveForm = (fields: ExposedFloorData) => {
 			solarAbsorption: fields.solarAbsorption,
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
-			massDistributionClass: fields.massDistributionClass
+			massDistributionClass: fields.massDistributionClass,
 		};
 		
 		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceExposedFloor.data);
@@ -43,7 +43,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

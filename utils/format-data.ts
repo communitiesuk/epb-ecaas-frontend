@@ -2,7 +2,7 @@ export default formatData;
 
 function formatData(
 	value: string | number | boolean | undefined,
-	capitaliseFirstLetter: boolean
+	capitaliseFirstLetter: boolean,
 ) {
 	if (value === undefined) {
 		return "";

@@ -4,11 +4,11 @@ const title = "Energy supply";
 const store = useEcaasStore();
 
 const model = ref({
-	...store.heatingSystems.energySupply.data
+	...store.heatingSystems.energySupply.data,
 });
 
 const fuelTypeOptions = {
-	electricity: "Electricity"
+	electricity: "Electricity",
 } as const satisfies Record<"electricity", Capitalize<"electricity">>;
 fuelTypeOptions;
 
@@ -21,9 +21,9 @@ const saveForm = (fields: EnergySupplyData) => {
 					exported: fields.exported,
 					co2PerKwh: fields.co2PerKwh,
 					co2PerKwhIncludingOutOfScope: fields.co2PerKwhIncludingOutOfScope,
-					kwhPerKwhDelivered: fields.kwhPerKwhDelivered
+					kwhPerKwhDelivered: fields.kwhPerKwhDelivered,
 				},
-				complete: true
+				complete: true,
 			},
 		},
 	});
@@ -37,7 +37,7 @@ watch(model, async (newData: EnergySupplyData, initialData: EnergySupplyData) =>
 		if (initialData[key]  !== newData[key]) {
 			store.$patch((state) => {
 				state.heatingSystems.energySupply.data = {
-					...newData
+					...newData,
 				};
 			});
 			store.heatingSystems.energySupply.complete = false;

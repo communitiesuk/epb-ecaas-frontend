@@ -9,7 +9,7 @@ const model: Ref<ImmersionHeaterData> = ref(immersionHeaterData!);
 const heaterPositionOptions: Record<ImmersionHeaterPosition, Capitalize<ImmersionHeaterPosition>> = {
 	top: "Top",
 	middle: "Middle",
-	bottom: "Bottom"
+	bottom: "Bottom",
 };
 
 const saveForm = (fields: ImmersionHeaterData) => {
@@ -20,7 +20,7 @@ const saveForm = (fields: ImmersionHeaterData) => {
 			name: fields.name,
 			ratedPower: fields.ratedPower,
 			heaterPosition: fields.heaterPosition,
-			thermostatPosition: fields.thermostatPosition
+			thermostatPosition: fields.thermostatPosition,
 		};
 
 		saveToList(immersionHeaterItem, immersionHeater);

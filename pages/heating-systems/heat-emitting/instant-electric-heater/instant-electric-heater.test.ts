@@ -16,16 +16,16 @@ describe("instantElectricHeater", () => {
 		data: {
 			name: "Instant electric heater 1",
 			ratedPower: 3,
-			convectionFractionInstant: 0.2
-		}
+			convectionFractionInstant: 0.2,
+		},
 	};
 
 	const instantElectricHeater2: EcaasForm<InstantElectricStorageData> = {
 		data: {
 			name: "Instant electric heater 2",
 			ratedPower: 14,
-			convectionFractionInstant: 1
-		}
+			convectionFractionInstant: 1,
+		},
 	};
 
 	afterEach(() => {
@@ -54,7 +54,7 @@ describe("instantElectricHeater", () => {
 
 		expect(data[0]).toEqual({
 			...instantElectricHeater,
-			complete: true
+			complete: true,
 		});
 	});
 
@@ -76,17 +76,17 @@ describe("instantElectricHeater", () => {
 		});
 
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("name"))).value
+			((await screen.findByTestId<HTMLInputElement>("name"))).value,
 		).toBe("Instant electric heater 1");
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("ratedPower"))).value
+			((await screen.findByTestId<HTMLInputElement>("ratedPower"))).value,
 		).toBe("3");
 		expect(
 			(
 				(await screen.findByTestId<HTMLInputElement>(
-					"convectionFractionInstant"
+					"convectionFractionInstant",
 				))
-			).value
+			).value,
 		).toBe("0.2");
 	});
 
@@ -98,7 +98,7 @@ describe("instantElectricHeater", () => {
 		expect(await screen.findByTestId("name_error")).toBeDefined();
 		expect(await screen.findByTestId("ratedPower_error")).toBeDefined();
 		expect(
-			await screen.findByTestId("convectionFractionInstant_error")
+			await screen.findByTestId("convectionFractionInstant_error"),
 		).toBeDefined();
 	});
 
@@ -108,7 +108,7 @@ describe("instantElectricHeater", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(
-			await screen.findByTestId("instantElectricHeaterErrorSummary")
+			await screen.findByTestId("instantElectricHeaterErrorSummary"),
 		).toBeDefined();
 	});
 
@@ -117,8 +117,8 @@ describe("instantElectricHeater", () => {
 			heatingSystems: {
 				heatEmitting: {
 					instantElectricHeater: {
-						data: [instantElectricHeater]
-					}		
+						data: [instantElectricHeater],
+					},		
 				},
 			},
 		});
@@ -176,8 +176,8 @@ describe("instantElectricHeater", () => {
 			heatingSystems: {
 				heatEmitting: {
 					instantElectricHeater: {
-						data: [instantElectricHeater, instantElectricHeater2]
-					}		
+						data: [instantElectricHeater, instantElectricHeater2],
+					},		
 				},
 			},
 		});

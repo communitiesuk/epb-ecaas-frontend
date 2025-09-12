@@ -35,7 +35,7 @@ const ductTypes = ["intake", "supply", "extract", "exhaust"] as const satisfies 
 const flueGasExhaustSituations = [
 	"into_room",
 	"into_separate_duct",
-	"into_mech_vent"
+	"into_mech_vent",
 ] as const satisfies SchemaFlueGasExhaustSituation[];
 const fuelTypes = [
 	"LPG_bottled",
@@ -45,7 +45,7 @@ const fuelTypes = [
 	"electricity",
 	"energy_from_environment",
 	"mains_gas",
-	"unmet_demand"
+	"unmet_demand",
 ] as const satisfies SchemaFuelType[];
 const heatPumpBackupControlTypes = ["None", "Substitute", "TopUp"] as const satisfies SchemaHeatPumpBackupControlType[];
 const heatPumpSinkTypes = ["Air", "Glycol25", "Water"] as const satisfies SchemaHeatPumpSinkType[];
@@ -65,7 +65,7 @@ const photovoltaicVentilationStrategies = [
 	"unventilated",
 	"moderately_ventilated",
 	"strongly_or_forced_ventilated",
-	"rear_surface_free"
+	"rear_surface_free",
 ] as const satisfies SchemaPhotovoltaicVentilationStrategy[];
 const shadingObjectTypes = ["obstacle", "overhang"] as const satisfies SchemaShadingObjectType[];
 const terrainClasses = ["OpenWater", "OpenField", "Suburban", "Urban"] as const satisfies SchemaTerrainClass[];
@@ -78,7 +78,7 @@ const windShieldLocations = ["Sheltered", "Average", "Exposed"] as const satisfi
 const wwhrsTypes = [
 	"WWHRS_InstantaneousSystemA",
 	"WWHRS_InstantaneousSystemB",
-	"WWHRS_InstantaneousSystemC"
+	"WWHRS_InstantaneousSystemC",
 ] as const satisfies WwhrsType[];
 
 export const batteryLocationZod = zodForTypeOptions(ensureAllUnion<SchemaBatteryLocation, (typeof batteryLocations)>(batteryLocations));

@@ -26,7 +26,7 @@ describe("mechanical ventilation form", () => {
 		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 2",
 		typeOfMechanicalVentilationOptions: "Intermittent MEV",
-		airFlowRate: unitValue(14, litrePerSecond)
+		airFlowRate: unitValue(14, litrePerSecond),
 	};
 
 	mockNuxtImport("navigateTo", () => {
@@ -42,13 +42,13 @@ describe("mechanical ventilation form", () => {
 
 		await renderSuspended(MechanicalVentilationForm, {
 			route: {
-				params: { mechanical: "create" }
-			}
+				params: { mechanical: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Mechanical name 1");
 		await user.click(
-			screen.getByTestId("typeOfMechanicalVentilationOptions_MVHR")
+			screen.getByTestId("typeOfMechanicalVentilationOptions_MVHR"),
 		);
 		await user.type(screen.getByTestId("airFlowRate"), "12");
 		await user.click(screen.getByTestId("mvhrLocation_inside"));
@@ -59,7 +59,7 @@ describe("mechanical ventilation form", () => {
 		const { data } = store.infiltrationAndVentilation.mechanicalVentilation;
 		expect(data[0]?.data).toEqual(mechanicalVentilation1);
 		expect(navigateToMock).toHaveBeenCalledWith(
-			"/infiltration-and-ventilation/mechanical-ventilation"
+			"/infiltration-and-ventilation/mechanical-ventilation",
 		);
 	});
 
@@ -68,13 +68,13 @@ describe("mechanical ventilation form", () => {
 
 		await renderSuspended(MechanicalVentilationForm, {
 			route: {
-				params: { mechanical: "create" }
-			}
+				params: { mechanical: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Mechanical name 2");
 		await user.click(
-			screen.getByTestId("typeOfMechanicalVentilationOptions_Intermittent_MEV")
+			screen.getByTestId("typeOfMechanicalVentilationOptions_Intermittent_MEV"),
 		);
 		await user.type(screen.getByTestId("airFlowRate"), "14");
 
@@ -84,7 +84,7 @@ describe("mechanical ventilation form", () => {
 
 		expect(data[0]?.data).toEqual(mechanicalVentilation2);
 		expect(navigateToMock).toHaveBeenCalledWith(
-			"/infiltration-and-ventilation/mechanical-ventilation"
+			"/infiltration-and-ventilation/mechanical-ventilation",
 		);
 	});
 
@@ -93,9 +93,9 @@ describe("mechanical ventilation form", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [{
-						data: mechanicalVentilation1
+						data: mechanicalVentilation1,
 					}, {
-						data: mechanicalVentilation2
+						data: mechanicalVentilation2,
 					}],
 				},
 			},
@@ -124,7 +124,7 @@ describe("mechanical ventilation form", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [{
-						data: mechanicalVentilation1
+						data: mechanicalVentilation1,
 					}],
 				},
 			},
@@ -137,24 +137,24 @@ describe("mechanical ventilation form", () => {
 		});
 
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("name"))).value
+			((await screen.findByTestId<HTMLInputElement>("name"))).value,
 		).toBe("Mechanical name 1");
 		expect(
 			(
 				(await screen.findByTestId<HTMLInputElement>(
-					"typeOfMechanicalVentilationOptions_MVHR"
+					"typeOfMechanicalVentilationOptions_MVHR",
 				))
-			).checked
+			).checked,
 		).toBe(true);
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("airFlowRate"))).value
+			((await screen.findByTestId<HTMLInputElement>("airFlowRate"))).value,
 		).toBe("12");
 		expect(
 			((await screen.findByTestId<HTMLInputElement>("mvhrLocation_inside")))
-				.checked
+				.checked,
 		).toBe(true);
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("mvhrEfficiency"))).value
+			((await screen.findByTestId<HTMLInputElement>("mvhrEfficiency"))).value,
 		).toBe("0.2");
    
 	});
@@ -178,7 +178,7 @@ describe("mechanical ventilation form", () => {
 		];
 
 		await user.click(
-			screen.getByTestId("typeOfMechanicalVentilationOptions_MVHR")
+			screen.getByTestId("typeOfMechanicalVentilationOptions_MVHR"),
 		);
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -194,7 +194,7 @@ describe("mechanical ventilation form", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(
-			await screen.findByTestId("mechanicalVentilationErrorSummary")
+			await screen.findByTestId("mechanicalVentilationErrorSummary"),
 		).toBeDefined();
 	});
 });

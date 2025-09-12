@@ -19,7 +19,7 @@ describe("wwhrs", () => {
 		type: "WWHRS_InstantaneousSystemA",
 		flowRate: 100,
 		efficiency: 50,
-		proportionOfUse: 1
+		proportionOfUse: 1,
 	};
 
 	const wwhrs2: Partial<WwhrsData> = {
@@ -29,7 +29,7 @@ describe("wwhrs", () => {
 
 	const wwhrs3: Partial<WwhrsData> = {
 		...wwhrs1,
-		name: "WWHRS 3"
+		name: "WWHRS 3",
 	};
 
 	afterEach(() => {
@@ -40,9 +40,9 @@ describe("wwhrs", () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
-					data: [wwhrs1]
-				}
-			}
+					data: [wwhrs1],
+				},
+			},
 		});
 
 		await renderSuspended(Wwhrs);
@@ -58,9 +58,9 @@ describe("wwhrs", () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
-					data:[wwhrs1, wwhrs2, wwhrs3]
-				}
-			}
+					data:[wwhrs1, wwhrs2, wwhrs3],
+				},
+			},
 		});
 
 		await renderSuspended(Wwhrs);
@@ -78,9 +78,9 @@ describe("wwhrs", () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
-					data: [wwhrs1, wwhrs2]
-				}
-			}
+					data: [wwhrs1, wwhrs2],
+				},
+			},
 		});
 
 		await renderSuspended(Wwhrs);

@@ -42,8 +42,8 @@ function handleDuplicate<T extends PvAndBatteryData>(pvAndBatteryType: PvAndBatt
 				complete: item.complete,
 				data: {
 					...item.data,
-					name: `${name} (${duplicates.length})`
-				}
+					name: `${name} (${duplicates.length})`,
+				},
 			} as T;
 
 			state.pvAndBatteries[pvAndBatteryType].data.push(newItem);
@@ -55,8 +55,8 @@ function handleComplete() {
 	store.$patch({
 		pvAndBatteries: {
 			pvSystems: { complete: true },
-			electricBattery: { complete: true }
-		}
+			electricBattery: { complete: true },
+		},
 	});
 
 	navigateTo("/");

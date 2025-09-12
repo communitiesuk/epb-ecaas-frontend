@@ -27,41 +27,41 @@ describe("thermal bridges", () => {
 			name: "Linear 1",
 			typeOfThermalBridge: "e1",
 			linearThermalTransmittance: 1,
-			length: 2
-		}
+			length: 2,
+		},
 	};
 
 	const linear2: EcaasForm<LinearThermalBridgeData> = {
 		data: {
 			...linear1.data,
-			name: "Linear 2"
-		}
+			name: "Linear 2",
+		},
 	};
 
 	const linear3: EcaasForm<LinearThermalBridgeData> = {
 		data: {
 			...linear1.data,
-			name: "Linear 3"
-		}
+			name: "Linear 3",
+		},
 	};
 
 	const point1: EcaasForm<PointThermalBridgeData> = {
 		data: {
 			name: "Point 1",
-			heatTransferCoefficient: 1
-		}
+			heatTransferCoefficient: 1,
+		},
 	};
 
 	const point2: EcaasForm<PointThermalBridgeData> = {
 		data: {
 			...point1.data,
-			name: "Point 2" }
+			name: "Point 2" },
 	};
 
 	const point3: EcaasForm<PointThermalBridgeData> = {
 		data: {
 			...point1.data,
-			name: "Point 3" }
+			name: "Point 3" },
 	};
 
 	describe("linear thermal bridges", () => {
@@ -71,10 +71,10 @@ describe("thermal bridges", () => {
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
 						dwellingSpaceLinearThermalBridges: {
-							data:[linear1]
-						}
-					}
-				}
+							data:[linear1],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(ThermalBridges);
@@ -91,10 +91,10 @@ describe("thermal bridges", () => {
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
 						dwellingSpaceLinearThermalBridges: {
-							data:[linear1, linear2, linear3]
-						}
-					}
-				}
+							data:[linear1, linear2, linear3],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(ThermalBridges);
@@ -112,10 +112,10 @@ describe("thermal bridges", () => {
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
 						dwellingSpaceLinearThermalBridges: {
-							data:[linear1, linear2]
-						}
-					}
-				}
+							data:[linear1, linear2],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(ThermalBridges);
@@ -140,10 +140,10 @@ describe("thermal bridges", () => {
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
 						dwellingSpacePointThermalBridges: {
-							data:[point1]
-						}
-					}
-				}
+							data:[point1],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(ThermalBridges);
@@ -160,10 +160,10 @@ describe("thermal bridges", () => {
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
 						dwellingSpacePointThermalBridges: {
-							data:[point1, point2, point3]
-						}
-					}
-				}
+							data:[point1, point2, point3],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(ThermalBridges);
@@ -181,10 +181,10 @@ describe("thermal bridges", () => {
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
 						dwellingSpacePointThermalBridges: {
-							data:[point1, point2]
-						}
-					}
-				}
+							data:[point1, point2],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(ThermalBridges);
@@ -235,14 +235,14 @@ describe("thermal bridges", () => {
 					key: "dwellingSpaceLinearThermalBridges",
 					testId: `linearThermalBridges_${action}_0`,
 					form: LinearThermalBridgeForm,
-					params: "linear"
+					params: "linear",
 				},
 				{
 					key: "dwellingSpacePointThermalBridges",
 					testId: `pointThermalBridges_${action}_0`,
 					form: PointThermalBridgeForm,
-					params: "point"
-				}
+					params: "point",
+				},
 			];
 		};
 	type ThermalBridgingType = keyof typeof store.dwellingFabric.dwellingSpaceThermalBridging;
@@ -298,8 +298,8 @@ describe("thermal bridges", () => {
 			const bridgeData = bridges.find((b) =>b.key === typedKey);
 			await renderSuspended(bridgeData!.form, {
 				route: {
-					params: { bridging: "0" }
-				}
+					params: { bridging: "0" },
+				},
 			});
 
 			await user.click(screen.getByTestId("saveAndComplete"));
@@ -315,10 +315,10 @@ describe("thermal bridges", () => {
 			dwellingFabric: {
 				dwellingSpaceThermalBridging: {
 					dwellingSpaceLinearThermalBridges: {
-						data: [{ data: { linearThermalTransmittance: 2 }, complete: false }]
+						data: [{ data: { linearThermalTransmittance: 2 }, complete: false }],
 					},
-				}
-			}
+				},
+			},
 		});
 
 		await renderSuspended(ThermalBridges);

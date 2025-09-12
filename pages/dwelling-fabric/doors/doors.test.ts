@@ -35,8 +35,8 @@ describe("doors", () => {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: "I"
-		}
+			massDistributionClass: "I",
+		},
 	};
 
 	const externalUnglazed2: EcaasForm<ExternalUnglazedDoorData> = {
@@ -52,7 +52,7 @@ describe("doors", () => {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 100,
-			massDistributionClass: "I" }
+			massDistributionClass: "I" },
 	};
 
 	const externalUnglazed3: EcaasForm<ExternalUnglazedDoorData> = {
@@ -69,8 +69,8 @@ describe("doors", () => {
 					solarAbsorption: 0.1,
 					uValue: 1,
 					kappaValue: 100,
-					massDistributionClass: "I"
-				}
+					massDistributionClass: "I",
+				},
 	};
 
 	const externalGlazed1: EcaasForm<ExternalGlazedDoorData> = {
@@ -89,7 +89,7 @@ describe("doors", () => {
 			midHeightOpenablePart1: 2,
 			heightOpenableArea: 1,
 			maximumOpenableArea: 1,
-		}
+		},
 	};
 
 	const externalGlazed2: EcaasForm<ExternalGlazedDoorData> = {
@@ -109,7 +109,7 @@ describe("doors", () => {
 					midHeightOpenablePart1: 2,
 					heightOpenableArea: 1,
 					maximumOpenableArea: 1,
-				}
+				},
 	};
 
 	const externalGlazed3: EcaasForm<ExternalGlazedDoorData> = {
@@ -129,7 +129,7 @@ describe("doors", () => {
 					midHeightOpenablePart1: 2,
 					heightOpenableArea: 1,
 					maximumOpenableArea: 1,
-				}
+				},
 	};
 	
 	const internal1: EcaasForm<InternalDoorData> = {
@@ -140,8 +140,8 @@ describe("doors", () => {
 			kappaValue: 100,
 			massDistributionClass: "I",
 			pitchOption: "90",
-			pitch: 90
-		}
+			pitch: 90,
+		},
 	};
 
 	const internal2: EcaasForm<InternalDoorData> = {
@@ -152,8 +152,8 @@ describe("doors", () => {
 			kappaValue: 100,
 			massDistributionClass: "I",
 			pitchOption: "90",
-			pitch: 90
-		}
+			pitch: 90,
+		},
 	};
 
 	const internal3: EcaasForm<InternalDoorData> = {
@@ -164,8 +164,8 @@ describe("doors", () => {
 			kappaValue: 100,
 			massDistributionClass: "I",
 			pitchOption: "90",
-			pitch: 90
-		}
+			pitch: 90,
+		},
 	};
 	
 	describe("external unglazed doors", () => {
@@ -175,10 +175,10 @@ describe("doors", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalUnglazedDoor: {
-							data:[externalUnglazed1]
-						}
-					}
-				}
+							data:[externalUnglazed1],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Doors);
@@ -195,10 +195,10 @@ describe("doors", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalUnglazedDoor: {
-							data:[externalUnglazed1, externalUnglazed2, externalUnglazed3]
-						}
-					}
-				}
+							data:[externalUnglazed1, externalUnglazed2, externalUnglazed3],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Doors);
@@ -216,10 +216,10 @@ describe("doors", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalUnglazedDoor: {
-							data:[externalUnglazed1, externalUnglazed2]
-						}
-					}
-				}
+							data:[externalUnglazed1, externalUnglazed2],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Doors);
@@ -244,10 +244,10 @@ describe("doors", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data:[externalGlazed1]
-						}
-					}
-				}
+							data:[externalGlazed1],
+						},
+					},
+				},
 			});
 			
 			await renderSuspended(Doors);
@@ -264,10 +264,10 @@ describe("doors", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data:[externalGlazed1, externalGlazed2, externalGlazed3]
-						}
-					}
-				}
+							data:[externalGlazed1, externalGlazed2, externalGlazed3],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Doors);
@@ -286,10 +286,10 @@ describe("doors", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data:[externalGlazed1, externalGlazed2]
-						}
-					}
-				}
+							data:[externalGlazed1, externalGlazed2],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Doors);
@@ -314,10 +314,10 @@ describe("doors", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceInternalDoor: {
-							data:[internal1]
-						}
-					}
-				}
+							data:[internal1],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Doors);
@@ -334,10 +334,10 @@ describe("doors", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceInternalDoor: {
-							data:[internal1, internal2, internal3]
-						}
-					}
-				}
+							data:[internal1, internal2, internal3],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Doors);
@@ -354,10 +354,10 @@ describe("doors", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceInternalDoor: {
-							data:[internal1, internal2]
-						}
-					}
-				}
+							data:[internal1, internal2],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Doors);
@@ -385,7 +385,7 @@ describe("doors", () => {
 						dwellingSpaceExternalGlazedDoor: { data: [{ ...externalGlazed1, complete: true }] },
 						dwellingSpaceInternalDoor: { data: [{ ...internal1, complete: true }] },
 					},
-				}
+				},
 			});
 		};
 		beforeEach(async () =>{
@@ -402,18 +402,18 @@ describe("doors", () => {
 				{
 					key: "dwellingSpaceExternalUnglazedDoor",
 					testId: `externalUnglazed_${action}_0`,
-					form: UnglazedDoorForm
+					form: UnglazedDoorForm,
 				},
 				{
 					key: "dwellingSpaceExternalGlazedDoor",
 					testId: `externalGlazed_${action}_0`,
-					form: glazedDoorForm
+					form: glazedDoorForm,
 				},
 				{
 					key: "dwellingSpaceInternalDoor",
 					testId: `internal_${action}_0`,
-					form: internalDoorForm
-				}
+					form: internalDoorForm,
+				},
 			];
 			return doors;
 		};
@@ -500,8 +500,8 @@ describe("doors", () => {
 
 				await renderSuspended(doorData?.form, {
 					route: {
-						params: { door: "0" }
-					}
+						params: { door: "0" },
+					},
 				});
 
 				await user.click(screen.getByTestId("saveAndComplete"));
@@ -517,10 +517,10 @@ describe("doors", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data: [{ data: { height: 2 }, complete: false }]
+							data: [{ data: { height: 2 }, complete: false }],
 						},
-					}
-				}
+					},
+				},
 			});
 
 			await renderSuspended(Doors);

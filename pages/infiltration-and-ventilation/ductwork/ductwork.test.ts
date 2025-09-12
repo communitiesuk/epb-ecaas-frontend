@@ -64,9 +64,9 @@ describe("ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
-					data: [{ data: ductwork1 }]
-				}
-			} 
+					data: [{ data: ductwork1 }],
+				},
+			}, 
 		});
 		
 		await renderSuspended(DuctworkOverview);
@@ -83,10 +83,10 @@ describe("ductwork", async () => {
 					data: [
 						{ data: ductwork1 },
 						{ data: ductwork2 },
-						{ data: ductwork3 }
-					]
-				}
-			}
+						{ data: ductwork3 },
+					],
+				},
+			},
 		});
 		await renderSuspended(DuctworkOverview);
 		await user.click(screen.getByTestId("ductwork_remove_1"));
@@ -101,10 +101,10 @@ describe("ductwork", async () => {
 				ductwork: {
 					data: [
 						{ data: ductwork1 },
-						{ data: ductwork2 }
-					]
-				}
-			}
+						{ data: ductwork2 },
+					],
+				},
+			},
 		});
 		await renderSuspended(DuctworkOverview);
 		await user.click(screen.getByTestId("ductwork_duplicate_0"));
@@ -126,13 +126,13 @@ describe("ductwork", async () => {
 						{
 							data: {
 								name: "Ductwork 1",
-								ductType: "intake"
+								ductType: "intake",
 							},
 							complete: false,
-						}
-					]
-				}
-			}
+						},
+					],
+				},
+			},
 		});
 
 		await renderSuspended(DuctworkOverview);
@@ -164,7 +164,7 @@ describe("ductwork", async () => {
 				ductwork: {
 					data: [
 						{ data: ductwork1, complete: true },
-						{ data: ductwork2, complete: true }
+						{ data: ductwork2, complete: true },
 					],
 				},
 			},
@@ -184,7 +184,7 @@ describe("ductwork", async () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				ductwork: {
-					data: [{ data: ductwork1, complete: true }]
+					data: [{ data: ductwork1, complete: true }],
 				},
 			},
 		});
@@ -238,10 +238,10 @@ describe("ductwork", async () => {
 			infiltrationAndVentilation: {
 				ductwork: {
 					data: [{
-						data: { name: "Ductwork 1" }
-					}]
-				}
-			}
+						data: { name: "Ductwork 1" },
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(DuctworkOverview);
@@ -255,10 +255,10 @@ describe("ductwork", async () => {
 				ductwork: {
 					data: [{
 						data: ductwork1,
-						complete: true
-					}]
-				}
-			}
+						complete: true,
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(DuctworkOverview);

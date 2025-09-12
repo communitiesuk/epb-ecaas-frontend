@@ -20,7 +20,7 @@ const heatGenerators = [
 	boiler.data.map(x => [x.id, x.name] as [string, string]),
 	heatBattery.data.map(x => [x.id, x.name] as [string, string]),
 	heatNetwork.data.map(x => [x.id, x.name] as [string, string]),
-	heatInterfaceUnit.data.map(x => [x.id, x.name] as [string, string])
+	heatInterfaceUnit.data.map(x => [x.id, x.name] as [string, string]),
 ].flat();
 </script>
 

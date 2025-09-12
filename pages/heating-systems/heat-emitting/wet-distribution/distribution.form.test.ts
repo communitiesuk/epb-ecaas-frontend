@@ -13,7 +13,7 @@ mockNuxtImport("navigateTo", () => {
 const heatPump: HeatPumpData = {
 	id: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
 	name: "Heat pump 1",
-	productReference: "HEATPUMP-MEDIUM"
+	productReference: "HEATPUMP-MEDIUM",
 };
 
 const wetDistribution1: WetDistributionData = {
@@ -42,7 +42,7 @@ const wetDistribution2: WetDistributionData = {
 const populateValidForm = async () => {
 	await user.type(screen.getByTestId("name"), "Wet distribution 1");
 	await user.click(
-		screen.getByTestId("heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r")
+		screen.getByTestId("heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r"),
 	);
 	await user.type(screen.getByTestId("thermalMass"), "2");
 	await user.type(screen.getByTestId("designTempDiffAcrossEmitters"), "0.4");
@@ -65,10 +65,10 @@ describe("Wet distribution", () => {
 	it("should have the correct headings", async () => {
 		await renderSuspended(WetDistribution);
 		expect(
-			screen.getByRole("heading", { name: "Wet distribution" })
+			screen.getByRole("heading", { name: "Wet distribution" }),
 		).toBeDefined();
 		expect(
-			screen.getByRole("heading", { name: "Eco design controller" })
+			screen.getByRole("heading", { name: "Eco design controller" }),
 		).toBeDefined();
 	});
 
@@ -78,7 +78,7 @@ describe("Wet distribution", () => {
 		expect(screen.getByText("Heat source")).toBeDefined();
 		expect(screen.getByText("Thermal mass")).toBeDefined();
 		expect(
-			screen.getByText("Design temperature difference across the emitters")
+			screen.getByText("Design temperature difference across the emitters"),
 		).toBeDefined();
 		expect(screen.getByText("Design flow temperature")).toBeDefined();
 		expect(screen.getByText("Design flow rate")).toBeDefined();
@@ -154,7 +154,7 @@ describe("Wet distribution", () => {
 		await user.click(screen.getByRole("button"));
 
 		expect(
-			await screen.findByTestId("wetDistributionErrorSummary")
+			await screen.findByTestId("wetDistributionErrorSummary"),
 		).toBeDefined();
 	});
 
@@ -241,48 +241,48 @@ describe("Wet distribution", () => {
 			},
 		});
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("name"))).value
+			((await screen.findByTestId<HTMLInputElement>("name"))).value,
 		).toBe("Wet distribution 1");
 		expect(
 			(
 				(await screen.findByTestId<HTMLInputElement>(
-					"heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r"
+					"heatSource_7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
 				))
-			).checked
+			).checked,
 		).toBe(true);
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("thermalMass"))).value
+			((await screen.findByTestId<HTMLInputElement>("thermalMass"))).value,
 		).toBe("2");
 		expect(
 			(
 				(await screen.findByTestId<HTMLInputElement>(
-					"designTempDiffAcrossEmitters"
+					"designTempDiffAcrossEmitters",
 				))
-			).value
+			).value,
 		).toBe("0.4");
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("designFlowTemp"))).value
+			((await screen.findByTestId<HTMLInputElement>("designFlowTemp"))).value,
 		).toBe("32");
 		expect(
 			(
 				(await screen.findByTestId<HTMLInputElement>(
-					"typeOfSpaceHeater_radiator"
+					"typeOfSpaceHeater_radiator",
 				))
-			).checked
+			).checked,
 		).toBe(true);
 		expect(
 			((await screen.findByTestId<HTMLInputElement>("convectionFractionWet")))
-				.value
+				.value,
 		).toBe("0.2");
 		expect(
 			(
 				(await screen.findByTestId<HTMLSelectElement>(
-					"ecoDesignControllerClass"
+					"ecoDesignControllerClass",
 				))
-			).value
+			).value,
 		).toBe("1");
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("minimumFlowTemp"))).value
+			((await screen.findByTestId<HTMLInputElement>("minimumFlowTemp"))).value,
 		).toBe("20");
 	});
 
@@ -293,7 +293,7 @@ describe("Wet distribution", () => {
 		});
 		expect(guidance).toBeDefined();
 		expect(guidance.getAttribute("href")).toBe(
-			"/guidance/eco-design-control-guidance"
+			"/guidance/eco-design-control-guidance",
 		);
 	});
 
@@ -311,7 +311,7 @@ describe("Wet distribution", () => {
 		await populateValidForm();
 		await user.click(screen.getByRole("button"));
 		expect(navigateToMock).toHaveBeenCalledWith(
-			"/heating-systems/heat-emitting"
+			"/heating-systems/heat-emitting",
 		);
 	});
 });
@@ -326,8 +326,8 @@ describe("partially saving data", () => {
 	it("creates a new wet distribution automatically with given name", async () => {
 		await renderSuspended(WetDistribution, {
 			route: {
-				params: { distribution: "create" }
-			}
+				params: { distribution: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "New wet distribution");
@@ -341,8 +341,8 @@ describe("partially saving data", () => {
 	it("creates a new wet distribution automatically with default name after other data is entered", async () => {
 		await renderSuspended(WetDistribution, {
 			route: {
-				params: { distribution: "create" }
-			}
+				params: { distribution: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("thermalMass"), "0.5");
@@ -359,17 +359,17 @@ describe("partially saving data", () => {
 				heatEmitting: {
 					wetDistribution: {
 						data: [
-							wetDistribution1
-						]
-					}	
+							wetDistribution1,
+						],
+					},	
 				},
 			},
 		});
 
 		await renderSuspended(WetDistribution, {
 			route: {
-				params: { distribution: "0" }
-			}
+				params: { distribution: "0" },
+			},
 		});
 
 		await user.clear(screen.getByTestId("name"));
@@ -395,17 +395,17 @@ describe("partially saving data", () => {
 					wetDistribution: {
 						data: [
 							wetDistribution1,
-							wetDistribution2
-						]
-					}	
+							wetDistribution2,
+						],
+					},	
 				},
 			},
 		});
 
 		await renderSuspended(WetDistribution, {
 			route: {
-				params: { distribution: "1" }
-			}
+				params: { distribution: "1" },
+			},
 		});
 
 		await user.clear(screen.getByTestId("name"));

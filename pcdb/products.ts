@@ -65,7 +65,7 @@ const AirSourceHeatPump = BaseProduct.extend({
 		heatingCapacity: z.number(),
 		coefficientOfPerformance: z.number(),
 		degradationCoefficient: z.number(),
-	}))
+	})),
 });
 
 export const Products = z.map(z.string(), z.discriminatedUnion("technologyType", [

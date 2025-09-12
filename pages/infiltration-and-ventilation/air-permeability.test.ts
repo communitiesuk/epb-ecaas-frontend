@@ -19,7 +19,7 @@ describe("Air permeability", () => {
 
 	const state: AirPermeabilityData = {
 		testPressure: 1,
-		airTightnessTestResult: 1
+		airTightnessTestResult: 1,
 	};
 
 	const populateValidForm = async () => {
@@ -55,9 +55,9 @@ describe("Air permeability", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				airPermeability: {
-					data: state
-				}
-			}
+					data: state,
+				},
+			},
 		});
 
 		await renderSuspended(AirPermeability);

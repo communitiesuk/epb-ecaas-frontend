@@ -19,14 +19,14 @@ describe("Energy supply", () => {
 
 	const energySupplyWithElectricity: EnergySupplyData = {
 		fuelType: ["electricity"],
-		exported: true
+		exported: true,
 	};
 
 	const _energySupplyWithCustom: EnergySupplyData = {
 		fuelType: ["custom"],
 		co2PerKwh: 1,
 		co2PerKwhIncludingOutOfScope: 1,
-		kwhPerKwhDelivered: 1
+		kwhPerKwhDelivered: 1,
 	};
 
 	describe("when fuel type is electricity", () => {
@@ -46,9 +46,9 @@ describe("Energy supply", () => {
 			store.$patch({
 				heatingSystems: {
 					energySupply: {
-						data: energySupplyWithElectricity
-					}
-				}
+						data: energySupplyWithElectricity,
+					},
+				},
 			});
 	
 			await renderSuspended(EnergySupply);

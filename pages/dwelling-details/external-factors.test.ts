@@ -13,7 +13,7 @@ const state: ExternalFactorsData = {
 	altitude: 3,
 	typeOfExposure: "Shielded",
 	terrainType: "Suburban",
-	noiseNuisance: false
+	noiseNuisance: false,
 };
 
 describe("External factors", () => {
@@ -56,9 +56,9 @@ describe("External factors", () => {
 		store.$patch({
 			dwellingDetails: {
 				externalFactors: {
-					data: state
-				}
-			}
+					data: state,
+				},
+			},
 		});
 
 		await renderSuspended(ExternalFactors);

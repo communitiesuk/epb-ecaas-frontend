@@ -21,13 +21,13 @@ describe("heatPump", () => {
 	const largeHeatPump: HeatPumpData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 		name: "Heat pump 1",
-		productReference: "HEATPUMP-LARGE"
+		productReference: "HEATPUMP-LARGE",
 	};
 
 	const smallHeatPump: HeatPumpData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c11",
 		name: "Heat pump 2",
-		productReference: "HEATPUMP-SMALL"
+		productReference: "HEATPUMP-SMALL",
 	};
 
 	afterEach(() => {
@@ -63,17 +63,17 @@ describe("heatPump", () => {
 				heatGeneration: {
 					heatPump: {
 						data: [{
-							data: largeHeatPump
-						}]
-					}
-				}
-			}
+							data: largeHeatPump,
+						}],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(HeatPump, {
 			route: {
-				params: { "pump": "0" }
-			}
+				params: { "pump": "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat pump 1");
@@ -85,17 +85,17 @@ describe("heatPump", () => {
 				heatGeneration: {
 					heatPump: {
 						data: [{
-							data: largeHeatPump
-						}]
-					}
-				}
-			}
+							data: largeHeatPump,
+						}],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(HeatPump, {
 			route: {
-				params: { "pump": "0" }
-			}
+				params: { "pump": "0" },
+			},
 		});
 
 		await user.clear(screen.getByTestId("name"));
@@ -140,8 +140,8 @@ describe("heatPump", () => {
 		it("creates a new heat pump automatically with given name", async () => {
 			await renderSuspended(HeatPump, {
 				route: {
-					params: { pump: "create" }
-				}
+					params: { pump: "create" },
+				},
 			});
 
 			await user.type(screen.getByTestId("name"), "New heat pump");
@@ -155,8 +155,8 @@ describe("heatPump", () => {
 		it("creates a new heat pump automatically with default name after other data is entered", async () => {
 			await renderSuspended(HeatPump, {
 				route: {
-					params: { pump: "create" }
-				}
+					params: { pump: "create" },
+				},
 			});
 
 			await user.click(screen.getByTestId("productReference_HEATPUMP-LARGE"));
@@ -173,17 +173,17 @@ describe("heatPump", () => {
 					heatGeneration: {
 						heatPump: {
 							data: [{
-								data: largeHeatPump
-							}]
-						}	
+								data: largeHeatPump,
+							}],
+						},	
 					},
 				},
 			});
 
 			await renderSuspended(HeatPump, {
 				route: {
-					params: { pump: "0" }
-				}
+					params: { pump: "0" },
+				},
 			});
 
 			await user.clear(screen.getByTestId("name"));
@@ -203,17 +203,17 @@ describe("heatPump", () => {
 						heatPump: {
 							data: [
 								{ data: smallHeatPump },
-								{ data: largeHeatPump }
-							]
-						}	
+								{ data: largeHeatPump },
+							],
+						},	
 					},
 				},
 			});
 
 			await renderSuspended(HeatPump, {
 				route: {
-					params: { pump: "1" }
-				}
+					params: { pump: "1" },
+				},
 			});
 
 			await user.clear(screen.getByTestId("name"));

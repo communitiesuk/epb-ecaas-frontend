@@ -68,8 +68,8 @@ describe("zone parameters", () => {
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceZoneParameters: { data: state }
-			}
+				dwellingSpaceZoneParameters: { data: state },
+			},
 		});
 
 		await renderSuspended(ZoneParameters);
@@ -117,10 +117,10 @@ describe("Partially saving data", () => {
 		await user.tab();
 
 		expect(
-			store.dwellingFabric.dwellingSpaceZoneParameters.data.area
+			store.dwellingFabric.dwellingSpaceZoneParameters.data.area,
 		).toBe(11);
 		expect(
-			store.dwellingFabric.dwellingSpaceZoneParameters.data.volume
+			store.dwellingFabric.dwellingSpaceZoneParameters.data.volume,
 		).toBeUndefined();
 	});
 });

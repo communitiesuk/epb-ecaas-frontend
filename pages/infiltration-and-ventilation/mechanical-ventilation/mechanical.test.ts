@@ -99,7 +99,7 @@ describe("mechanical ventilation overview", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [{
-						data: mechanicalVentilation1
+						data: mechanicalVentilation1,
 					}],
 				},
 			},
@@ -121,14 +121,14 @@ describe("mechanical ventilation overview", () => {
 					data: [
 						{ data: mechanicalVentilation1 },
 						{ data: mechanicalVentilation2 },
-						{ data: mechanicalVentilation3 }
+						{ data: mechanicalVentilation3 },
 					],
 				},
 			},
 		});
 		await renderSuspended(MechanicalVentilationOverview);
 		expect(
-			screen.getAllByTestId("mechanicalVentilation_items")
+			screen.getAllByTestId("mechanicalVentilation_items"),
 		).toBeDefined();
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_1"));
 		expect(screen.queryByTestId("mechanicalVentilation_1")).toBeNull();
@@ -149,9 +149,9 @@ describe("mechanical ventilation overview", () => {
 					data: [
 						{ data: ductwork1 },
 						{ data: ductwork2 },
-						{ data: ductwork3 }
-					]
-				}
+						{ data: ductwork3 },
+					],
+				},
 			},
 		});
 		await renderSuspended(MechanicalVentilationOverview);
@@ -163,8 +163,8 @@ describe("mechanical ventilation overview", () => {
 
 		await renderSuspended(InfiltrationAndVentilationTaskPage,{
 			route: {
-				path: "/infiltration-and-ventilation"
-			}
+				path: "/infiltration-and-ventilation",
+			},
 		});
 		expect(screen.queryByText("MVHR ductwork")).toBeNull();
 	});
@@ -175,7 +175,7 @@ describe("mechanical ventilation overview", () => {
 				mechanicalVentilation: {
 					data: [
 						{ data: mechanicalVentilation1 },
-						{ data: mechanicalVentilation2 }
+						{ data: mechanicalVentilation2 },
 					],
 				},
 			},
@@ -184,20 +184,20 @@ describe("mechanical ventilation overview", () => {
 
 		await renderSuspended(MechanicalVentilationOverview);
 		await userEvent.click(
-			screen.getByTestId("mechanicalVentilation_duplicate_0")
+			screen.getByTestId("mechanicalVentilation_duplicate_0"),
 		);
 		await userEvent.click(
-			screen.getByTestId("mechanicalVentilation_duplicate_0")
+			screen.getByTestId("mechanicalVentilation_duplicate_0"),
 		);
 		await userEvent.click(
-			screen.getByTestId("mechanicalVentilation_duplicate_2")
+			screen.getByTestId("mechanicalVentilation_duplicate_2"),
 		);
 		await userEvent.click(
-			screen.getByTestId("mechanicalVentilation_duplicate_2")
+			screen.getByTestId("mechanicalVentilation_duplicate_2"),
 		);
 
 		expect(screen.queryAllByTestId("mechanicalVentilation_item").length).toBe(
-			6
+			6,
 		);
 		expect(screen.getByText("Mechanical name 1")).toBeDefined();
 		expect(screen.getByText("Mechanical name 1 (1)")).toBeDefined();
@@ -211,14 +211,14 @@ describe("mechanical ventilation overview", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilation1 }
+						{ data: mechanicalVentilation1 },
 					],
 				},
 			},
 		});
 		await renderSuspended(MechanicalVentilationOverview);
 		await userEvent.click(
-			screen.getByTestId("mechanicalVentilation_duplicate_0")
+			screen.getByTestId("mechanicalVentilation_duplicate_0"),
 		);
 		expect(store.infiltrationAndVentilation.mechanicalVentilation.data[0]?.data.id).not.toBe(store.infiltrationAndVentilation.mechanicalVentilation.data[1]?.data.id);
 	});
@@ -234,7 +234,7 @@ describe("mechanical ventilation overview", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilation1 }
+						{ data: mechanicalVentilation1 },
 					],
 				},
 			},
@@ -270,7 +270,7 @@ describe("mechanical ventilation overview", () => {
 				mechanicalVentilation: {
 					data: [
 						{ data: mechanicalVentilation1, complete: true },
-						{ data: mechanicalVentilation2, complete: true }
+						{ data: mechanicalVentilation2, complete: true },
 					],
 				},
 			},
@@ -292,10 +292,10 @@ describe("mechanical ventilation overview", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilation1, complete: true }
-					]
-				}
-			}
+						{ data: mechanicalVentilation1, complete: true },
+					],
+				},
+			},
 		});
 			
 		await renderSuspended(MechanicalVentilationOverview);
@@ -313,10 +313,10 @@ describe("mechanical ventilation overview", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilation1 }
-					]
-				}
-			}
+						{ data: mechanicalVentilation1 },
+					],
+				},
+			},
 		});
 			
 		await renderSuspended(MechanicalVentilationOverview);
@@ -324,8 +324,8 @@ describe("mechanical ventilation overview", () => {
 			
 		await renderSuspended(MechanicalVentilationForm, {
 			route: {
-				params: { mechanical: "0" }
-			}
+				params: { mechanical: "0" },
+			},
 		});
 		
 		await user.click(screen.getByTestId("saveAndComplete")); 

@@ -95,7 +95,7 @@ export default defineNuxtConfig({
 		"@nuxtjs/robots",
 		"nuxt-security",
 		"@sentry/nuxt/module",
-		"nuxt-gtag"
+		"nuxt-gtag",
 	],
 
 	plugins: [
@@ -114,8 +114,8 @@ export default defineNuxtConfig({
 		redisPassword: "",
 		redisUsername: "",
 		public: {
-			environment: process.env.NUXT_PUBLIC_ENVIRONMENT
-		}
+			environment: process.env.NUXT_PUBLIC_ENVIRONMENT,
+		},
 	},
 
 	nitro: process.env.BUILD_FOR_AWS_LAMBDA
@@ -162,11 +162,11 @@ export default defineNuxtConfig({
 			strictTransportSecurity: process.env.BUILD_FOR_AWS_LAMBDA ? {
 				// TODO: Increase gradually (TBC), eventually with maxAge: 63072000 and preload: true
 				maxAge: 604800, // 1 week
-				includeSubdomains: true
+				includeSubdomains: true,
 			} : false,
 			xFrameOptions: false,
-			xXSSProtection: false
-		}
+			xXSSProtection: false,
+		},
 	},
 
 	sentry: {
@@ -174,11 +174,11 @@ export default defineNuxtConfig({
 			org: "energy-performance-of-buildings",
 			project: "ecaas",
 			authToken: process.env.SENTRY_AUTH_TOKEN,
-		}
+		},
 	},
 
 	sourcemap: {
-		client: "hidden"
+		client: "hidden",
 	},
 
 	gtag: {
@@ -187,8 +187,8 @@ export default defineNuxtConfig({
 				ad_user_data: "denied",
 				ad_personalization: "denied",
 				ad_storage: "denied",
-				analytics_storage: "denied"
-			}]
-		]
-	}
+				analytics_storage: "denied",
+			}],
+		],
+	},
 });

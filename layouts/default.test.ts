@@ -25,10 +25,10 @@ describe("nav bar with ductwork", () => {
 			infiltrationAndVentilation:{
 				mechanicalVentilation: {
 					data: [{
-						data: mechanicalVentilation1
-					}]
-				}
-			}
+						data: mechanicalVentilation1,
+					}],
+				},
+			},
 		});
 		await renderSuspended(DefaultPage);
 		expect(screen.getByText("MVHR ductwork"));

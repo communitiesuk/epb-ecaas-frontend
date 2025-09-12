@@ -24,7 +24,7 @@ const saveForm = (fields: ElectricShowerData) => {
 				name: fields.name,
 				ratedPower: fields.ratedPower,
 			},
-			complete: true
+			complete: true,
 		};
 
 		electricShower.complete = false;

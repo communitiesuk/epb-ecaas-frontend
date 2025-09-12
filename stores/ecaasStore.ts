@@ -12,7 +12,7 @@ export function getInitialState(): EcaasState {
 		dwellingDetails: {
 			generalSpecifications: { data: {} },
 			shading: { data: [] },
-			externalFactors: { data: {} }
+			externalFactors: { data: {} },
 		},
 		infiltrationAndVentilation: {
 			mechanicalVentilation: { data: [] },
@@ -27,7 +27,7 @@ export function getInitialState(): EcaasState {
 				closed_fire: { data: [] },
 			},
 			naturalVentilation: { data: {} },
-			airPermeability: { data: {} }
+			airPermeability: { data: {} },
 		},
 		domesticHotWater: {
 			waterHeating: {
@@ -39,19 +39,19 @@ export function getInitialState(): EcaasState {
 				combiBoiler: { data: [] },
 				heatBattery: { data: [] },
 				smartHotWaterTank: { data: [] },
-				heatInterfaceUnit: { data: [] }
+				heatInterfaceUnit: { data: [] },
 			},
 			hotWaterOutlets: {
 				mixedShower: { data: [] },
 				electricShower: { data: [] },
 				bath: { data: [] },
-				otherOutlets: { data: [] }
+				otherOutlets: { data: [] },
 			},
 			pipework: {
 				primaryPipework: { data: [] },
-				secondaryPipework: { data: [] }
+				secondaryPipework: { data: [] },
 			},
-			wwhrs: { data: [] }
+			wwhrs: { data: [] },
 		},
 		dwellingFabric: {
 			dwellingSpaceFloors: {
@@ -67,7 +67,7 @@ export function getInitialState(): EcaasState {
 			},
 			dwellingSpaceCeilingsAndRoofs: {
 				dwellingSpaceCeilings: { data: [] },
-				dwellingSpaceRoofs: { data: [] }
+				dwellingSpaceRoofs: { data: [] },
 			},
 			dwellingSpaceDoors: {
 				dwellingSpaceExternalUnglazedDoor: { data: [] },
@@ -77,10 +77,10 @@ export function getInitialState(): EcaasState {
 			dwellingSpaceWindows: { data: [] },
 			dwellingSpaceThermalBridging: {
 				dwellingSpaceLinearThermalBridges: { data: [] },
-				dwellingSpacePointThermalBridges: { data: [] }
+				dwellingSpacePointThermalBridges: { data: [] },
 			}, 
 			dwellingSpaceZoneParameters: { data: {} },
-			dwellingSpaceLighting: { data: {} }
+			dwellingSpaceLighting: { data: {} },
 		},
 		heatingSystems: {
 			heatGeneration: {
@@ -100,10 +100,10 @@ export function getInitialState(): EcaasState {
 		},
 		pvAndBatteries: {
 			pvSystems: { data: [] },
-			electricBattery: { data: [] }
+			electricBattery: { data: [] },
 		},
 		cooling: {
-			airConditioning: { data: [] }
+			airConditioning: { data: [] },
 		},
 	};
 	return store as EcaasState;
@@ -114,7 +114,7 @@ export const useEcaasStore = defineStore("ecaas", {
 	getters: {
 		getStatus: (state) => {
 			const stateEntries = Object.entries(state).filter(
-				(e) => e[0] in getInitialState()
+				(e) => e[0] in getInitialState(),
 			);
 
 			return (page: Page): GovTagProps => {
@@ -157,11 +157,11 @@ export const useEcaasStore = defineStore("ecaas", {
 		},
 		clearState() {
 			this.$reset();
-		}
+		},
 	},
 	persist: {
 		storage: piniaPluginPersistedstate.localStorage(),
-	}
+	},
 });
 
 export type NulledForms<T> = { [P in keyof T]: T[P] extends EcaasForm<infer U> ? EcaasForm<U | EmptyObject> : NulledForms<T[P]> };
@@ -177,7 +177,7 @@ export function extractPitch(form: UsesPitchComponent): number {
 
 export function hasCompleteState(state: EcaasState): boolean {
 	const stateEntries = Object.entries(state).filter(
-		(e) => e[0] in getInitialState()
+		(e) => e[0] in getInitialState(),
 	);
 	// go over section pages and check they are all complete
 	const sectionPages = pagesData.filter(page => page.type === PageType.Section);

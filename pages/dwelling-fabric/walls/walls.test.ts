@@ -34,7 +34,7 @@ describe("walls", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: "I"
+		massDistributionClass: "I",
 		
 	};
 
@@ -54,7 +54,7 @@ describe("walls", () => {
 		kappaValue: 100,
 		massDistributionClass: "I",
 		pitchOption: "custom",
-		pitch: 3
+		pitch: 3,
 	};
 	
 	const internal2: InternalWallData = {
@@ -75,7 +75,7 @@ describe("walls", () => {
 		massDistributionClass: "E",
 		pitchOption: "90",
 		pitch: 90,
-		thermalResistanceOfAdjacentUnheatedSpace: 1
+		thermalResistanceOfAdjacentUnheatedSpace: 1,
 		
 	};
 	
@@ -96,7 +96,7 @@ describe("walls", () => {
 		surfaceArea: 10,
 		uValue: 0.01,
 		kappaValue: 100,
-		massDistributionClass: "I"
+		massDistributionClass: "I",
 	};
 
 	const party2: PartyWallData = {
@@ -116,10 +116,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceExternalWall: {
-							data:[external1]
-						}
-					}
-				}
+							data:[external1],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Walls);
@@ -136,10 +136,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceExternalWall: {
-							data:[external1, external2, external3]
-						}
-					}
-				}
+							data:[external1, external2, external3],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Walls);
@@ -158,10 +158,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceExternalWall: {
-							data:[external1, external2]
-						}
-					}
-				}
+							data:[external1, external2],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Walls);
@@ -187,10 +187,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceInternalWall: {
-							data:[internal1]
-						}
-					}
-				}
+							data:[internal1],
+						},
+					},
+				},
 			});
 	  
 			await renderSuspended(Walls);
@@ -207,10 +207,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceInternalWall: {
-							data:[internal1, internal2, internal3]
-						}
-					}
-				}
+							data:[internal1, internal2, internal3],
+						},
+					},
+				},
 			});
 	  
 			await renderSuspended(Walls);
@@ -229,10 +229,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceInternalWall: {
-							data:[internal1, internal2]
-						}
-					}
-				}
+							data:[internal1, internal2],
+						},
+					},
+				},
 			});
 	  
 			await renderSuspended(Walls);
@@ -258,10 +258,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceWallToUnheatedSpace: {
-							data:[toUnheatedSpace1]
-						}
-					}
-				}
+							data:[toUnheatedSpace1],
+						},
+					},
+				},
 			});
 	  
 			await renderSuspended(Walls);
@@ -278,10 +278,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceWallToUnheatedSpace: {
-							data:[toUnheatedSpace1, toUnheatedSpace2, toUnheatedSpace3]
-						}
-					}
-				}
+							data:[toUnheatedSpace1, toUnheatedSpace2, toUnheatedSpace3],
+						},
+					},
+				},
 			});
 	  
 			await renderSuspended(Walls);
@@ -299,10 +299,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceWallToUnheatedSpace: {
-							data:[toUnheatedSpace1, toUnheatedSpace2]
-						}
-					}
-				}
+							data:[toUnheatedSpace1, toUnheatedSpace2],
+						},
+					},
+				},
 			});
 	  
 			await renderSuspended(Walls);
@@ -327,10 +327,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpacePartyWall: {
-							data:[party1]
-						}
-					}
-				}
+							data:[party1],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Walls);
@@ -347,10 +347,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpacePartyWall: {
-							data:[party1, party2, party3]
-						}
-					}
-				}
+							data:[party1, party2, party3],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Walls);
@@ -369,10 +369,10 @@ describe("walls", () => {
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpacePartyWall: {
-							data:[party1, party2]
-						}
-					}
-				}
+							data:[party1, party2],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Walls);
@@ -399,7 +399,7 @@ describe("walls", () => {
 						dwellingSpacePartyWall: { data: [party1] },
 						dwellingSpaceWallToUnheatedSpace: { data: [toUnheatedSpace1] },
 					},
-				}
+				},
 			});
 		};
 	
@@ -417,23 +417,23 @@ describe("walls", () => {
 				{
 					key: "dwellingSpaceExternalWall",
 					testId: `external_${action}_0`,
-					form: ExternalWallForm
+					form: ExternalWallForm,
 				},
 				{
 					key: "dwellingSpaceInternalWall",
 					testId: `internal_${action}_0`,
-					form: InternalWallForm
+					form: InternalWallForm,
 				},
 				{
 					key: "dwellingSpacePartyWall",
 					testId: `party_${action}_0`,
-					form: PartyWallForm
+					form: PartyWallForm,
 				},
 				{
 					key: "dwellingSpaceWallToUnheatedSpace",
 					testId: `toHeatedSpace_${action}_0`,
-					form: WallToUnheatedForm
-				}
+					form: WallToUnheatedForm,
+				},
 			];
 		};
 	
@@ -450,7 +450,7 @@ describe("walls", () => {
 				dwellingSpaceExternalWall,
 				dwellingSpaceInternalWall,
 				dwellingSpacePartyWall,
-				dwellingSpaceWallToUnheatedSpace
+				dwellingSpaceWallToUnheatedSpace,
 			} = store.dwellingFabric.dwellingSpaceWalls;
 	
 			expect(dwellingSpaceExternalWall?.complete).toBe(true);
@@ -512,7 +512,7 @@ describe("walls", () => {
 				const item = wallData.find(x => x.key === typedKey)!;
 	
 				await renderSuspended(item.form, {
-					route: { params: { wall: "0" } }
+					route: { params: { wall: "0" } },
 				});
 	
 				await user.click(screen.getByRole("button", { name: "Save and continue" }));

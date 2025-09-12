@@ -25,12 +25,12 @@ describe("open fireplace", () => {
 
 	const openFireplace2: CombustionApplianceData = {
 		...openFireplace1,
-		name: "Open fireplace 2"
+		name: "Open fireplace 2",
 	};
 
 	const openFireplace3: CombustionApplianceData = {
 		...openFireplace1,
-		name: "Open fireplace 3"
+		name: "Open fireplace 3",
 	};
 
 	afterEach(() => {
@@ -42,10 +42,10 @@ describe("open fireplace", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_fireplace: {
-						data: [openFireplace1]
-					}
-				}
-			}
+						data: [openFireplace1],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -62,10 +62,10 @@ describe("open fireplace", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_fireplace: {
-						data: [openFireplace1, openFireplace2, openFireplace3]
-					}
-				}
-			}
+						data: [openFireplace1, openFireplace2, openFireplace3],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -84,10 +84,10 @@ describe("open fireplace", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_fireplace: {
-						data: [openFireplace1, openFireplace2]
-					}
-				}
-			}
+						data: [openFireplace1, openFireplace2],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -113,17 +113,17 @@ describe("closed fireplace with fan", () => {
 		name: "Closed fireplace with fan 1",
 		airSupplyToAppliance: "room_air",
 		exhaustMethodFromAppliance: "into_separate_duct",
-		typeOfFuel: "wood"
+		typeOfFuel: "wood",
 	};
 
 	const closedFireplaceWithFan2: CombustionApplianceData = {
 		...closedFireplaceWithFan1,
-		name: "Closed fireplace with fan 2"
+		name: "Closed fireplace with fan 2",
 	};
 
 	const closedFireplaceWithFan3: CombustionApplianceData = {
 		...closedFireplaceWithFan1,
-		name: "Closed fireplace with fan 3"
+		name: "Closed fireplace with fan 3",
 	};
 
 	afterEach(() => {
@@ -135,10 +135,10 @@ describe("closed fireplace with fan", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					closed_with_fan: {
-						data: [closedFireplaceWithFan1]
-					}
-				}
-			}
+						data: [closedFireplaceWithFan1],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -155,10 +155,10 @@ describe("closed fireplace with fan", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					closed_with_fan: {
-						data: [closedFireplaceWithFan1, closedFireplaceWithFan2, closedFireplaceWithFan3]
-					}
-				}
-			}
+						data: [closedFireplaceWithFan1, closedFireplaceWithFan2, closedFireplaceWithFan3],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -177,10 +177,10 @@ describe("closed fireplace with fan", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					closed_with_fan: {
-						data: [closedFireplaceWithFan1, closedFireplaceWithFan2]
-					}
-				}
-			}
+						data: [closedFireplaceWithFan1, closedFireplaceWithFan2],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -211,12 +211,12 @@ describe("open gas flue balancer", () => {
 
 	const openGasFlueBalancer2: CombustionApplianceData = {
 		...openGasFlueBalancer1,
-		name: "Open gas flue balancer 2"
+		name: "Open gas flue balancer 2",
 	};
 
 	const openGasFlueBalancer3: CombustionApplianceData = {
 		...openGasFlueBalancer1,
-		name: "Open gas flue balancer 3"
+		name: "Open gas flue balancer 3",
 	};
 
 	afterEach(() => {
@@ -228,10 +228,10 @@ describe("open gas flue balancer", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_flue_balancer: {
-						data: [openGasFlueBalancer1]
-					}
-				}
-			}
+						data: [openGasFlueBalancer1],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -248,10 +248,10 @@ describe("open gas flue balancer", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_flue_balancer: {
-						data: [openGasFlueBalancer1, openGasFlueBalancer2, openGasFlueBalancer3]
-					}
-				}
-			}
+						data: [openGasFlueBalancer1, openGasFlueBalancer2, openGasFlueBalancer3],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -270,10 +270,10 @@ describe("open gas flue balancer", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_flue_balancer: {
-						data: [openGasFlueBalancer1, openGasFlueBalancer2]
-					}
-				}
-			}
+						data: [openGasFlueBalancer1, openGasFlueBalancer2],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -304,12 +304,12 @@ describe("open gas kitchen stove", () => {
 
 	const openGasKitchenStove2: CombustionApplianceData = {
 		...openGasKitchenStove1,
-		name: "Open gas kitchen stove 2"
+		name: "Open gas kitchen stove 2",
 	};
 
 	const openGasKitchenStove3: CombustionApplianceData = {
 		...openGasKitchenStove1,
-		name: "Open gas kitchen stove 3"
+		name: "Open gas kitchen stove 3",
 	};
 
 	afterEach(() => {
@@ -321,10 +321,10 @@ describe("open gas kitchen stove", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_kitchen_stove: {
-						data: [openGasKitchenStove1]
-					}
-				}
-			}
+						data: [openGasKitchenStove1],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -341,10 +341,10 @@ describe("open gas kitchen stove", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_kitchen_stove: {
-						data: [openGasKitchenStove1, openGasKitchenStove2, openGasKitchenStove3]
-					}
-				}
-			}
+						data: [openGasKitchenStove1, openGasKitchenStove2, openGasKitchenStove3],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -363,10 +363,10 @@ describe("open gas kitchen stove", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_kitchen_stove: {
-						data: [openGasKitchenStove1, openGasKitchenStove2]
-					}
-				}
-			}
+						data: [openGasKitchenStove1, openGasKitchenStove2],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -397,12 +397,12 @@ describe("open gas fire", () => {
 
 	const openGasFire2: CombustionApplianceData = {
 		...openGasFire1,
-		name: "Open gas fire 2"
+		name: "Open gas fire 2",
 	};
 
 	const openGasFire3: CombustionApplianceData = {
 		...openGasFire1,
-		name: "Open gas fire 3"
+		name: "Open gas fire 3",
 	};
 
 	afterEach(() => {
@@ -414,10 +414,10 @@ describe("open gas fire", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_fire: {
-						data: [openGasFire1]
-					}
-				}
-			}
+						data: [openGasFire1],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -434,10 +434,10 @@ describe("open gas fire", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_fire: {
-						data: [openGasFire1, openGasFire2, openGasFire3]
-					}
-				}
-			}
+						data: [openGasFire1, openGasFire2, openGasFire3],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -456,10 +456,10 @@ describe("open gas fire", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_fire: {
-						data: [openGasFire1, openGasFire2]
-					}
-				}
-			}
+						data: [openGasFire1, openGasFire2],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -490,12 +490,12 @@ describe("closed fire", () => {
 
 	const closedFire2: CombustionApplianceData = {
 		...closedFire1,
-		name: "Closed fire 2"
+		name: "Closed fire 2",
 	};
 
 	const closedFire3: CombustionApplianceData = {
 		...closedFire1,
-		name: "Closed fire 3"
+		name: "Closed fire 3",
 	};
 
 	afterEach(() => {
@@ -507,10 +507,10 @@ describe("closed fire", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					closed_fire: {
-						data: [closedFire1]
-					}
-				}
-			}
+						data: [closedFire1],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -527,10 +527,10 @@ describe("closed fire", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					closed_fire: {
-						data: [closedFire1, closedFire2, closedFire3]
-					}
-				}
-			}
+						data: [closedFire1, closedFire2, closedFire3],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -549,10 +549,10 @@ describe("closed fire", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					closed_fire: {
-						data: [closedFire1, closedFire2]
-					}
-				}
-			}
+						data: [closedFire1, closedFire2],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(CombustionAppliances);
@@ -586,7 +586,7 @@ describe("mark section as complete", () => {
 		name: "Closed fireplace with fan 1",
 		airSupplyToAppliance: "room_air",
 		exhaustMethodFromAppliance: "into_separate_duct",
-		typeOfFuel: "wood"
+		typeOfFuel: "wood",
 	};
 	const openGasFlueBalancer1: CombustionApplianceData = {
 		name: "Open gas flue balancer 1",
@@ -627,8 +627,8 @@ describe("mark section as complete", () => {
 					open_gas_kitchen_stove: { data: [openGasKitchenStove1] },
 					open_gas_fire: { data: [openGasFire1] },
 					closed_fire: { data: [closedFire1] },
-				}
-			}
+				},
+			},
 		});
 	};
 
@@ -644,7 +644,7 @@ describe("mark section as complete", () => {
 			{ key: "open_gas_flue_balancer", testId: `openGasFlueBalancer_${action}_0`, form: OpenGasFlueBalancerForm },
 			{ key: "open_gas_kitchen_stove", testId: `openGasKitchenStove_${action}_0`, form: OpenGasKitchenStoveForm },
 			{ key: "open_gas_fire", testId: `openGasFire_${action}_0`, form: OpenGasFireForm },
-			{ key: "closed_fire", testId: `closedFire_${action}_0`, form: ClosedFireForm }
+			{ key: "closed_fire", testId: `closedFire_${action}_0`, form: ClosedFireForm },
 		];
 	};
 
@@ -713,8 +713,8 @@ describe("mark section as complete", () => {
 
 			await renderSuspended(item?.form, {
 				route: {
-					params: { combustion: "0" }
-				}
+					params: { combustion: "0" },
+				},
 			});
 
 			await user.click(screen.getByRole("button", { name: "Save and continue" }));

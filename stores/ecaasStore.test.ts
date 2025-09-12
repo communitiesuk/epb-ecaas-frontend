@@ -29,9 +29,9 @@ describe("Ecaas Store", () => {
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
-					complete: true
-				}
-			}
+					complete: true,
+				},
+			},
 		});
 
 		const page = pagesData.find(p => p.id === "dwellingDetails");
@@ -46,10 +46,10 @@ describe("Ecaas Store", () => {
 			dwellingDetails: {
 				generalSpecifications: {
 					data: {
-						typeOfDwelling: "house"
-					}
-				}
-			}
+						typeOfDwelling: "house",
+					},
+				},
+			},
 		});
 
 		const page = pagesData.find(p => p.id === "dwellingDetails");
@@ -65,15 +65,15 @@ describe("Ecaas Store", () => {
 				dwellingSpaceFloors: {
 					dwellingSpaceExposedFloor: { complete: true },
 					dwellingSpaceInternalFloor: { complete: true },
-					dwellingSpaceGroundFloor: { complete: true }
+					dwellingSpaceGroundFloor: { complete: true },
 				},
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: { complete: false },
 					dwellingSpaceInternalWall: { complete: false },
 					dwellingSpaceWallToUnheatedSpace: { complete: false },
-					dwellingSpacePartyWall: { complete: false }
-				}
-			}
+					dwellingSpacePartyWall: { complete: false },
+				},
+			},
 		});
 
 		const page = pagesData.find(p => p.id === "dwellingFabric");
@@ -87,15 +87,15 @@ describe("Ecaas Store", () => {
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
-					complete: true
+					complete: true,
 				},
 				shading: {
-					complete: true
+					complete: true,
 				},
 				externalFactors: {
-					complete: true
-				}
-			}
+					complete: true,
+				},
+			},
 		});
 
 		const page = pagesData.find(p => p.id === "dwellingDetails");
@@ -111,31 +111,31 @@ describe("Ecaas Store", () => {
 				dwellingSpaceFloors: {
 					dwellingSpaceExposedFloor: { complete: true },
 					dwellingSpaceInternalFloor: { complete: true },
-					dwellingSpaceGroundFloor: { complete: true }
+					dwellingSpaceGroundFloor: { complete: true },
 				},
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: { complete: true },
 					dwellingSpaceInternalWall: { complete: true },
 					dwellingSpaceWallToUnheatedSpace: { complete: true },
-					dwellingSpacePartyWall: { complete: true }
+					dwellingSpacePartyWall: { complete: true },
 				},
 				dwellingSpaceCeilingsAndRoofs: {
 					dwellingSpaceCeilings: { complete: true },
-					dwellingSpaceRoofs: { complete: true }
+					dwellingSpaceRoofs: { complete: true },
 				},
 				dwellingSpaceDoors: {
 					dwellingSpaceExternalUnglazedDoor: { complete: true },
 					dwellingSpaceExternalGlazedDoor: { complete: true },
-					dwellingSpaceInternalDoor: { complete: true }
+					dwellingSpaceInternalDoor: { complete: true },
 				},
 				dwellingSpaceWindows: { complete: true },
 				dwellingSpaceThermalBridging: {
 					dwellingSpaceLinearThermalBridges: { complete: true },
-					dwellingSpacePointThermalBridges: { complete: true }
+					dwellingSpacePointThermalBridges: { complete: true },
 				}, 
 				dwellingSpaceZoneParameters: { complete: true },
-				dwellingSpaceLighting: { complete: true }
-			}
+				dwellingSpaceLighting: { complete: true },
+			},
 		});
 
 		const page = pagesData.find(p => p.id === "dwellingFabric");
@@ -158,10 +158,10 @@ describe("Ecaas Store", () => {
 			dwellingDetails: {
 				generalSpecifications: {
 					data: {
-						typeOfDwelling: "house"
-					}
-				}
-			}
+						typeOfDwelling: "house",
+					},
+				},
+			},
 		});
 
 		const page = pagesData.find(p => p.id === "generalSpecifications");
@@ -175,9 +175,9 @@ describe("Ecaas Store", () => {
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
-					complete: true
-				}
-			}
+					complete: true,
+				},
+			},
 		});
 
 		const page = pagesData.find(p => p.id === "generalSpecifications");
@@ -192,16 +192,16 @@ describe("Ecaas Store", () => {
 			dwellingFabric: {
 				dwellingSpaceFloors: {
 					dwellingSpaceGroundFloor: {
-						complete: true
+						complete: true,
 					},
 					dwellingSpaceExposedFloor: {
-						complete: true
+						complete: true,
 					},
 					dwellingSpaceInternalFloor: {
-						complete: true
-					}
-				}
-			}
+						complete: true,
+					},
+				},
+			},
 		});
 
 		const page = pagesData.find(p => p.id === "dwellingSpaceFloors");
@@ -258,17 +258,17 @@ describe("Ecaas Store", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilation1 }
+						{ data: mechanicalVentilation1 },
 					],
-					complete: true
+					complete: true,
 				},
 				ductwork: {
 					data: [
-						{ data: ductwork1 }
+						{ data: ductwork1 },
 					],
-					complete: true
-				}
-			}
+					complete: true,
+				},
+			},
 		});
 		await renderSuspended(MechanicalOverview);
 
@@ -288,18 +288,18 @@ describe("Ecaas Store", () => {
 				mechanicalVentilation: {
 					data: [
 						{ data: mechanicalVentilation1 },
-						{ data: mechanicalVentilation2 }
+						{ data: mechanicalVentilation2 },
 					],
-					complete: true
+					complete: true,
 				},
 				ductwork: {
 					data: [
 						{ data: ductwork1 },
-						{ data: ductwork2 }
+						{ data: ductwork2 },
 					],
-					complete: true 
-				}
-			}
+					complete: true, 
+				},
+			},
 		});
 
 		const page = pagesData.find(p => p.id === "ductwork");
@@ -314,17 +314,17 @@ describe("Ecaas Store", () => {
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [
-						{ data: mechanicalVentilation1 }
+						{ data: mechanicalVentilation1 },
 					],
-					complete: true
+					complete: true,
 				},
 				ductwork: {
 					data: [
-						{ data: ductwork1 }
+						{ data: ductwork1 },
 					],
-					complete: true
-				}
-			}
+					complete: true,
+				},
+			},
 		});
 
 		const page = pagesData.find(p => p.id === "ductwork");
@@ -394,15 +394,15 @@ describe("hasCompleteState function", () => {
 		store.$patch({
 			dwellingDetails: {
 				generalSpecifications: {
-					complete: true
+					complete: true,
 				},
 				externalFactors: {
-					complete: true
+					complete: true,
 				},
 				shading: {
-					complete: true
-				}
-			}
+					complete: true,
+				},
+			},
 		});
 
 		const result = hasCompleteState(store);

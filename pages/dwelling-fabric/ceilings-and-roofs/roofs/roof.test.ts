@@ -25,8 +25,8 @@ describe("roof", () => {
 			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: "I"
-		}
+			massDistributionClass: "I",
+		},
 	};
 
 	afterEach(() => {
@@ -67,16 +67,16 @@ describe("roof", () => {
 			dwellingFabric: {
 				dwellingSpaceCeilingsAndRoofs: {
 					dwellingSpaceRoofs: {
-						data: [roof]
-					}
-				}
-			}
+						data: [roof],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(Roof, {
 			route: {
-				params: { roof: "0" }
-			}
+				params: { roof: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Roof 1");
@@ -206,16 +206,16 @@ describe("roof", () => {
 				dwellingSpaceCeilingsAndRoofs: {
 					dwellingSpaceRoofs: {
 						data: [{ ...roof, complete: true }],
-						complete: true
-					}
-				}
-			}
+						complete: true,
+					},
+				},
+			},
 		});
 
 		await renderSuspended(Roof, {
 			route: {
-				params: { roof: "0" }
-			}
+				params: { roof: "0" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Roof");

@@ -25,7 +25,7 @@ describe("floors", () => {
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		thicknessOfWalls: 0.3,
-		typeOfGroundFloor: "Slab_no_edge_insulation"
+		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
 
 	const ground2: GroundFloorData = {
@@ -39,7 +39,7 @@ describe("floors", () => {
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		thicknessOfWalls: 0.4,
-		typeOfGroundFloor: "Slab_no_edge_insulation"
+		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
 
 	const ground3: GroundFloorData = {
@@ -53,7 +53,7 @@ describe("floors", () => {
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		thicknessOfWalls: 0.5,
-		typeOfGroundFloor: "Slab_no_edge_insulation"
+		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
 	
 	const internal1: InternalFloorData = {
@@ -91,7 +91,7 @@ describe("floors", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: "I"
+		massDistributionClass: "I",
 	};
 
 	const exposed2: ExposedFloorData = {
@@ -105,7 +105,7 @@ describe("floors", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: "I"
+		massDistributionClass: "I",
 	};
 
 	const exposed3: ExposedFloorData = {
@@ -119,7 +119,7 @@ describe("floors", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,
-		massDistributionClass: "I"
+		massDistributionClass: "I",
 	};
 	
 	afterEach(() => {
@@ -133,10 +133,10 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data:[{ data: ground1 }, { data: ground2 }, { data: ground3 }]
-						}
-					}
-				}
+							data:[{ data: ground1 }, { data: ground2 }, { data: ground3 }],
+						},
+					},
+				},
 			});
 			await renderSuspended(Floors);
 
@@ -156,10 +156,10 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data:[{ data: ground1 }, { data: ground2 }]
-						}
-					}
-				}
+							data:[{ data: ground1 }, { data: ground2 }],
+						},
+					},
+				},
 			});
 			await renderSuspended(Floors);
 
@@ -203,7 +203,7 @@ describe("floors", () => {
 						dwellingSpaceGroundFloor: {
 							data: [{
 								data: ground1,
-								complete: true
+								complete: true,
 							}],
 						},
 					},
@@ -225,10 +225,10 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data:[{ data: internal1 }, { data: internal2 }, { data: internal3 }]
-						}
-					}
-				}
+							data:[{ data: internal1 }, { data: internal2 }, { data: internal3 }],
+						},
+					},
+				},
 			});
 			await renderSuspended(Floors);
 
@@ -249,10 +249,10 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceInternalFloor: {
-							data:[{ data: internal1 }, { data: internal2 }]
-						}
-					}
-				}
+							data:[{ data: internal1 }, { data: internal2 }],
+						},
+					},
+				},
 			});
 			await renderSuspended(Floors);
 
@@ -315,10 +315,10 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceExposedFloor: {
-							data:[{ data: exposed1 }, { data: exposed2 }, { data: exposed3 }]
-						}
-					}
-				}
+							data:[{ data: exposed1 }, { data: exposed2 }, { data: exposed3 }],
+						},
+					},
+				},
 			});
 			await renderSuspended(Floors);
 			
@@ -338,10 +338,10 @@ describe("floors", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceExposedFloor: {
-							data:[{ data: exposed1 }, { data: exposed2 }]
-						}
-					}
-				}
+							data:[{ data: exposed1 }, { data: exposed2 }],
+						},
+					},
+				},
 			});
 			await renderSuspended(Floors);
 
@@ -365,7 +365,7 @@ describe("floors", () => {
 					dwellingSpaceFloors: {
 						dwellingSpaceExposedFloor: {
 							data: [{
-								data: exposed1
+								data: exposed1,
 							}],
 						},
 					},
@@ -387,7 +387,7 @@ describe("floors", () => {
 						dwellingSpaceExposedFloor: {
 							data: [{
 								data: exposed1,
-								complete: true
+								complete: true,
 							}],
 						},
 					},
@@ -411,7 +411,7 @@ describe("floors", () => {
 						dwellingSpaceInternalFloor: { data: [{ data: internal1, complete: true }] },
 						dwellingSpaceExposedFloor: { data: [{ data: exposed1, complete: true }] },
 					},
-				}
+				},
 			});
 		};
 
@@ -424,7 +424,7 @@ describe("floors", () => {
 						dwellingSpaceInternalFloor: { data: [{ data: internal1, complete: false }] },
 						dwellingSpaceExposedFloor: { data: [{ data: exposed1, complete: false }] },
 					},
-				}
+				},
 			});
 
 			// Act

@@ -11,7 +11,7 @@ const saveForm = (fields: SmartHotWaterTankData) => {
 		const { smartHotWaterTank } = state.domesticHotWater.waterHeating;
 
 		const smartHotWaterTankItem: SmartHotWaterTankData = {
-			name: fields.name
+			name: fields.name,
 		};
 		smartHotWaterTank.complete = false;
 		saveToList(smartHotWaterTankItem, smartHotWaterTank);

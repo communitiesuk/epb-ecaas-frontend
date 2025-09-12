@@ -30,8 +30,8 @@ describe("ceilings and roofs", () => {
 			kappaValue: 100,
 			massDistributionClass: "I",
 			pitchOption: "custom",
-			pitch: 180
-		}
+			pitch: 180,
+		},
 	};
 
 	const ceiling2: EcaasForm<CeilingData> = {
@@ -46,7 +46,7 @@ describe("ceilings and roofs", () => {
 			name
 			:
 		"Ceiling 3",
-		}
+		},
 	};
 
 	const roof1: EcaasForm<RoofData> = {
@@ -62,22 +62,22 @@ describe("ceilings and roofs", () => {
 			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: "I"
-		}
+			massDistributionClass: "I",
+		},
 	};
 
 	const roof2: EcaasForm<RoofData> = {
 		data: {
 			...roof1.data,
 			name: "Roof 2",
-		}
+		},
 	};
 
 	const roof3: EcaasForm<RoofData> = {
 		data: {
 			...roof1.data,
 			name: "Roof 3",
-		}
+		},
 	};
 
 	describe("ceilings", () => {
@@ -87,10 +87,10 @@ describe("ceilings and roofs", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data:[ceiling1]
-						}
-					}
-				}
+							data:[ceiling1],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(CeilingsAndRoofs);
@@ -107,10 +107,10 @@ describe("ceilings and roofs", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data:[ceiling1, ceiling2, ceiling3]
-						}
-					}
-				}
+							data:[ceiling1, ceiling2, ceiling3],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(CeilingsAndRoofs);
@@ -129,10 +129,10 @@ describe("ceilings and roofs", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data:[ceiling1, ceiling2]
-						}
-					}
-				}
+							data:[ceiling1, ceiling2],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(CeilingsAndRoofs);
@@ -157,10 +157,10 @@ describe("ceilings and roofs", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceRoofs: {
-							data:[roof1]
-						}
-					}
-				}
+							data:[roof1],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(CeilingsAndRoofs);
@@ -177,10 +177,10 @@ describe("ceilings and roofs", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceRoofs: {
-							data:[roof1, roof2, roof3]
-						}
-					}
-				}
+							data:[roof1, roof2, roof3],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(CeilingsAndRoofs);
@@ -199,10 +199,10 @@ describe("ceilings and roofs", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceRoofs: {
-							data:[roof1, roof2]
-						}
-					}
-				}
+							data:[roof1, roof2],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(CeilingsAndRoofs);
@@ -232,8 +232,8 @@ describe("ceilings and roofs", () => {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: { data: [{ ...ceiling1, complete: true }] },
 						dwellingSpaceRoofs: { data: [{ ...roof1, complete: true }] },
-					}
-				}
+					},
+				},
 			});
 		};
 	
@@ -249,7 +249,7 @@ describe("ceilings and roofs", () => {
 			params: string,
 		}[]> => ([
 			{ key: "dwellingSpaceCeilings", testId: `ceilings_${action}_0`, form: CeilingForm, params: "ceiling" },
-			{ key: "dwellingSpaceRoofs", testId: `roofs_${action}_0`, form: RoofForm, params: "roof" }
+			{ key: "dwellingSpaceRoofs", testId: `roofs_${action}_0`, form: RoofForm, params: "roof" },
 		]);
 	
 		type CeilingsAndRoofsType = keyof typeof store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
@@ -317,7 +317,7 @@ describe("ceilings and roofs", () => {
 	
 				const ceilingAndRoofItem = data.find(d => d.key === typedKey);
 				await renderSuspended(ceilingAndRoofItem?.form, {
-					route: { params: { [ceilingAndRoofItem!.params]: "0" } }
+					route: { params: { [ceilingAndRoofItem!.params]: "0" } },
 				});
 				await user.click(screen.getByTestId("saveAndComplete"));
 	
@@ -332,10 +332,10 @@ describe("ceilings and roofs", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data: [{ data: { name: "Ceiling", surfaceArea: 20 }, complete: false }]
+							data: [{ data: { name: "Ceiling", surfaceArea: 20 }, complete: false }],
 						},
-					}
-				}
+					},
+				},
 			});
 
 			await renderSuspended(CeilingsAndRoofs);

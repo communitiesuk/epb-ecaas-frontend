@@ -1,7 +1,7 @@
 import { clearLastExportDate } from "~/utils/exportDate";
 
 vi.mock("#app", () => ({
-	useCookie: vi.fn().mockReturnValue({ value: "2025-08-20T12:00:00Z" })
+	useCookie: vi.fn().mockReturnValue({ value: "2025-08-20T12:00:00Z" }),
 }));
 
 it("clears last export date cookie", () => {

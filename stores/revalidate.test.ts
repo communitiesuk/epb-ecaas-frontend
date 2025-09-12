@@ -9,17 +9,17 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 				"typeOfDwelling": "house",
 				"storeysInDwelling": 3,
 				"numOfBedrooms": 3,
-				"coolingRequired": false
+				"coolingRequired": false,
 			},
-			"complete": true
+			"complete": true,
 		},
 		"shading": {
-			"data": []
+			"data": [],
 		},
 		"externalFactors": {
-			"data": {} as ExternalFactorsData
-		}
-	}
+			"data": {} as ExternalFactorsData,
+		},
+	},
 };
 
 const simpleCaseOneFieldOutOfRange = immutable.set(simpleCaseOnlyOneForm, "dwellingDetails.generalSpecifications.data.storeysInDwelling", 666); // max storeysInDwelling should be 250
@@ -41,7 +41,7 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 				"solarAbsorption": 0.9,
 				"uValue": 5,
 				"kappaValue": 110000,
-				"massDistributionClass": "E"
+				"massDistributionClass": "E",
 			},
 			{
 				"name": "Wall 2",
@@ -55,11 +55,11 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 				"solarAbsorption": 0.7,
 				"uValue": 6,
 				"kappaValue": 175000,
-				"massDistributionClass": "I"
-			}
+				"massDistributionClass": "I",
+			},
 		],
-		"complete": true
-	}
+		"complete": true,
+	},
 };
 
 const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSpaceExternalWall.data.1.solarAbsorption");
@@ -75,56 +75,56 @@ const twoHeatPumps: Pick<EcaasState, "heatingSystems"> = {
 						"data": {
 							"id": "1049a8a3-e520-4058-8f18-fdfbf2dde19a",
 							"name": "Heat pump 1",
-							"productReference": "HEATPUMP-SMALL"
+							"productReference": "HEATPUMP-SMALL",
 						},
-						"complete": true
+						"complete": true,
 					},
 					{
 						"data": {
 							"id": "2fa843a1-b774-42f8-b3ca-1f5f5a8a576a",
 							"name": "Heat pump 2",
-							"productReference": "HEATPUMP-LARGE"
+							"productReference": "HEATPUMP-LARGE",
 						},
-						"complete": true
-					}
+						"complete": true,
+					},
 				],
-				"complete": true
+				"complete": true,
 			},
 			"boiler": {
 				"data": [],
-				"complete": true
+				"complete": true,
 			},
 			"heatBattery": {
 				"data": [],
-				"complete": true
+				"complete": true,
 			},
 			"heatNetwork": {
 				"data": [],
-				"complete": true
+				"complete": true,
 			},
 			"heatInterfaceUnit": {
 				"data": [],
-				"complete": true
-			}
+				"complete": true,
+			},
 		},
 		"energySupply": {
-			"data": {} as EnergySupplyData
+			"data": {} as EnergySupplyData,
 		},
 		"heatEmitting": {
 			"wetDistribution": {
-				"data": []
+				"data": [],
 			},
 			"instantElectricHeater": {
-				"data": []
+				"data": [],
 			},
 			"electricStorageHeater": {
-				"data": []
+				"data": [],
 			},
 			"warmAirHeatPump": {
-				"data": []
-			}
-		}
-	}
+				"data": [],
+			},
+		},
+	},
 };
 
 const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, "heatingSystems.heatGeneration.heatPump.data.1.data.productReference");
@@ -156,24 +156,24 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		{
 			"dwellingFabric": {
 				"dwellingSpaceWalls": twoCompleteValidWalls,
-			}
+			},
 		},
 		false,
 		undefined,
-		0
+		0,
 	],
 	[
 		"case where there are two walls already marked complete but one is missing a field",
 		{
 			"dwellingFabric": {
 				"dwellingSpaceWalls": twoWallsOneMissingField,
-			}
+			},
 		},
 		true,
 		{
 			"dwellingFabric": {
 				"dwellingSpaceWalls": immutable.set(twoWallsOneMissingField, "dwellingSpaceExternalWall.complete", false),
-			}
+			},
 		},
 		1,
 	],
@@ -182,13 +182,13 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		{
 			"dwellingFabric": {
 				"dwellingSpaceWalls": twoWallsOneMissingFieldOneInvalidValue,
-			}
+			},
 		},
 		true,
 		{
 			"dwellingFabric": {
 				"dwellingSpaceWalls": immutable.set(twoWallsOneMissingFieldOneInvalidValue, "dwellingSpaceExternalWall.complete", false),
-			}
+			},
 		},
 		2,
 	],
@@ -205,7 +205,7 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		true,
 		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, "heatingSystems.heatGeneration.heatPump.data.1.complete", false), "heatingSystems.heatGeneration.heatPump.complete", false),
 		1,
-	]
+	],
 ];
 
 describe("revalidate ECaaS states", () => {

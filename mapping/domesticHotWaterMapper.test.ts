@@ -30,7 +30,7 @@ describe("domestic hot water mapper", () => {
 					hotWaterCylinder: {
 						data: [hotWaterCylinder],
 						complete: true,
-					}
+					},
 				},
 				hotWaterOutlets: {
 					mixedShower: {
@@ -48,7 +48,7 @@ describe("domestic hot water mapper", () => {
 					otherOutlets: {
 						data: [],
 						complete: true,
-					}
+					},
 				},
 				pipework: {
 					primaryPipework: {
@@ -58,7 +58,7 @@ describe("domestic hot water mapper", () => {
 					secondaryPipework: {
 						data: [],
 						complete: true,
-					}
+					},
 				},
 			},
 			heatingSystems: {
@@ -68,10 +68,10 @@ describe("domestic hot water mapper", () => {
 							data: { name: heatPumpName, id: heatPumpName },
 							complete: true,
 						}],
-						complete: true
-					}
-				}
-			}
+						complete: true,
+					},
+				},
+			},
 		});
 
 		// Acts
@@ -90,14 +90,14 @@ describe("domestic hot water mapper", () => {
 							thermostat_position: 0.33,
 							Controlmin: defaultControlMinName,
 							Controlmax: defaultControlMaxName,
-						}
+						},
 					},
 					daily_losses: 3,
 					volume: 100,
 					type: "StorageTank",
 					init_temp: 20.0,
-				}
-			}
+				},
+			},
 		};
 
 		// Assert
@@ -127,8 +127,8 @@ describe("domestic hot water mapper", () => {
 				insulationThickness: 40,
 				surfaceReflectivity: false,
 				pipeContents: "water",
-				hotWaterCylinder: hotWaterCylinder.id
-			}
+				hotWaterCylinder: hotWaterCylinder.id,
+			},
 		};
 
 		const pipework: Pipework = {
@@ -149,7 +149,7 @@ describe("domestic hot water mapper", () => {
 					hotWaterCylinder: {
 						data: [hotWaterCylinder],
 						complete: true,
-					}
+					},
 				},
 				hotWaterOutlets: {
 					mixedShower: {
@@ -167,8 +167,8 @@ describe("domestic hot water mapper", () => {
 					otherOutlets: {
 						data: [],
 						complete: true,
-					}
-				}
+					},
+				},
 			},
 			heatingSystems: {
 				heatGeneration: {
@@ -178,9 +178,9 @@ describe("domestic hot water mapper", () => {
 							complete: true,
 						}],
 						complete: true,
-					}
-				}
-			}
+					},
+				},
+			},
 		});
 
 		// Acts
@@ -200,7 +200,7 @@ describe("domestic hot water mapper", () => {
 							thermostat_position: 0.33,
 							Controlmax: defaultControlMaxName,
 							Controlmin: defaultControlMinName,
-						}
+						},
 					},
 					daily_losses: 3,
 					volume: 200,
@@ -214,7 +214,7 @@ describe("domestic hot water mapper", () => {
 							insulation_thermal_conductivity: 0.040,
 							insulation_thickness_mm: 40,
 							surface_reflectivity: false,
-							pipe_contents: "water"
+							pipe_contents: "water",
 						},
 						{
 							location: "internal",
@@ -224,12 +224,12 @@ describe("domestic hot water mapper", () => {
 							insulation_thermal_conductivity: 0.040,
 							insulation_thickness_mm: 40,
 							surface_reflectivity: false,
-							pipe_contents: "water"
+							pipe_contents: "water",
 						},
 					],
 					init_temp: 20.0,
-				}
-			}
+				},
+			},
 		};
 
 		// Assert
@@ -242,8 +242,8 @@ describe("domestic hot water mapper", () => {
 			data: {
 				id: "shower1",
 				name: "shower1",
-				flowRate: 3
-			}
+				flowRate: 3,
+			},
 		};
 
 		const electricShower: EcaasForm<ElectricShowerData> = {
@@ -251,7 +251,7 @@ describe("domestic hot water mapper", () => {
 				id: "shower2",
 				name: "shower2",
 				ratedPower: 10,
-			}
+			},
 		};
 
 		const bath: EcaasForm<BathData> = {
@@ -260,7 +260,7 @@ describe("domestic hot water mapper", () => {
 				name: "bath1",
 				size: 70,
 				flowRate: 1,
-			}
+			},
 		};
 
 		const other: EcaasForm<OtherHotWaterOutletData> = {
@@ -269,7 +269,7 @@ describe("domestic hot water mapper", () => {
 				id: "other1",
 				name: "other1",
 				flowRate: 4,
-			}
+			},
 		};
 
 		store.$patch({
@@ -290,21 +290,21 @@ describe("domestic hot water mapper", () => {
 					otherOutlets: {
 						data: [other],
 						complete: true,
-					}
+					},
 				},
 				pipework: {
 					secondaryPipework: {
 						data: [],
 						complete: true,
-					}
+					},
 				},
 				waterHeating: {
 					hotWaterCylinder: {
 						data: [],
 						complete: true,
-					}
-				}
-			}
+					},
+				},
+			},
 		});
 
 		// Acts
@@ -323,24 +323,24 @@ describe("domestic hot water mapper", () => {
 						type: "InstantElecShower",
 						rated_power: 10,
 						ColdWaterSource: "mains water",
-						EnergySupply: "mains elec"
-					}
+						EnergySupply: "mains elec",
+					},
 				},
 				Bath: {
 					"bath1": {
 						ColdWaterSource: "mains water",
 						flowrate: 1,
 						size: 70,
-					}
+					},
 				},
 				Other: {
 					"other1": {
 						ColdWaterSource: "mains water",
 						flowrate: 4,
-					}
+					},
 				},
-				Distribution: []
-			}
+				Distribution: [],
+			},
 		};
 		
 		expect(result["HotWaterDemand"]).toEqual(expectedResult["HotWaterDemand"]);
@@ -350,7 +350,7 @@ describe("domestic hot water mapper", () => {
 		// Arrange
 		const pipework: Pipework = {
 			primaryPipework: {
-				data: []
+				data: [],
 			},
 			secondaryPipework: {
 				data: [{
@@ -358,17 +358,17 @@ describe("domestic hot water mapper", () => {
 						name: "secondaryPipework1",
 						length: 111, 
 						location: "internal",
-						internalDiameter: 6
-					}
+						internalDiameter: 6,
+					},
 				}],
 				complete: true,
-			}
+			},
 		};
 
 		store.$patch({
 			domesticHotWater: {
-				pipework
-			}
+				pipework,
+			},
 		});
 
 		// Acts
@@ -376,7 +376,7 @@ describe("domestic hot water mapper", () => {
 		const expectedResult: SchemaHotWaterDemand["Distribution"] = [{
 			internal_diameter_mm: 6,
 			length: 111,
-			location: "internal"
+			location: "internal",
 		}];
 
 		// Assert

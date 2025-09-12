@@ -4,7 +4,7 @@ import { PageType  } from "~/data/pages/pages.types";
 import type { Page } from "~/data/pages/pages.types";
 
 const parentPages: Array<Page> = pagesData.filter(
-	(page) => page.type === PageType.Section
+	(page) => page.type === PageType.Section,
 );
 
 const openStates = ref(Array(parentPages.length).fill(true));

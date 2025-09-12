@@ -9,7 +9,7 @@ const { saveToList } = useForm();
 
 const wetDistributionData = useItemToEdit(
 	"distribution",
-	store.heatingSystems.heatEmitting.wetDistribution.data
+	store.heatingSystems.heatEmitting.wetDistribution.data,
 );
 const model: Ref<WetDistributionData> = ref({
 	...wetDistributionData,
@@ -50,7 +50,7 @@ const saveForm = (fields: WetDistributionData) => {
 			ecoDesignControllerClass: fields.ecoDesignControllerClass,
 			minimumFlowTemp: fields.minimumFlowTemp,
 			minOutdoorTemp: 0,
-			maxOutdoorTemp: 15
+			maxOutdoorTemp: 15,
 		};
 
 		let item: WetDistributionData;
@@ -109,7 +109,7 @@ watch(model, async (newData: WetDistributionData, initialData: WetDistributionDa
 		store.$patch(state => {
 			state.heatingSystems.heatEmitting.wetDistribution.data.push({
 				...newData,
-				name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
+				name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName),
 			});
 		});
 
@@ -121,7 +121,7 @@ watch(model, async (newData: WetDistributionData, initialData: WetDistributionDa
 
 		state.heatingSystems.heatEmitting.wetDistribution.data[index] = {
 			...newData,
-			name: newData.name ?? state.heatingSystems.heatEmitting.wetDistribution.data[index]?.name
+			name: newData.name ?? state.heatingSystems.heatEmitting.wetDistribution.data[index]?.name,
 			
 		};
 

@@ -25,7 +25,7 @@ const saveForm = (fields: HotWaterCylinderData) => {
 			name: fields.name,
 			heatSource: fields.heatSource,
 			storageCylinderVolume: fields.storageCylinderVolume,
-			dailyEnergyLoss: fields.dailyEnergyLoss
+			dailyEnergyLoss: fields.dailyEnergyLoss,
 		};
 
 		saveToList(hotWaterCylinderItem, hotWaterCylinder);

@@ -21,9 +21,9 @@ const saveForm = (fields: BathData) => {
 				id,
 				name: fields.name,
 				size: fields.size,
-				flowRate: fields.flowRate
+				flowRate: fields.flowRate,
 			},
-			complete: true
+			complete: true,
 		};
 
 		bath.complete = false;

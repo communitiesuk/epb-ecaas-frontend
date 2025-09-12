@@ -11,7 +11,7 @@ const saveForm = (fields: ElectricStorageHeaterData) => {
 		const { electricStorageHeater } = state.heatingSystems.heatEmitting;
 
 		const item: ElectricStorageHeaterData = {
-			name: fields.name
+			name: fields.name,
 		};
 
 		saveToList(item, electricStorageHeater);

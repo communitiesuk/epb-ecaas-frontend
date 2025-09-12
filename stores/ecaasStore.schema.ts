@@ -51,7 +51,7 @@ const baseGeneralDetails = z.object({
 
 const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [
 	baseGeneralDetails.extend({ typeOfDwelling: z.literal("flat"), storeyOfFlat: z.number().min(-50).max(199) }),
-	baseGeneralDetails.extend({ typeOfDwelling: z.literal("house") })
+	baseGeneralDetails.extend({ typeOfDwelling: z.literal("house") }),
 ]);
 
 export type GeneralDetailsData = z.infer<typeof generalDetailsDataZod>;
@@ -100,7 +100,7 @@ export interface FloorsData {
 
 export enum AdjacentSpaceType {
 	heatedSpace = "heatedSpace",
-	unheatedSpace = "unheatedSpace"
+	unheatedSpace = "unheatedSpace",
 }
 
 const baseInternalFloorData = named.extend({
@@ -116,9 +116,9 @@ const internalFloorDataZod = z.discriminatedUnion(
 			thermalResistanceOfAdjacentUnheatedSpace,
 		}),
 		baseInternalFloorData.extend({ 
-			typeOfInternalFloor: z.literal(AdjacentSpaceType.heatedSpace)
+			typeOfInternalFloor: z.literal(AdjacentSpaceType.heatedSpace),
 		}),
-	]
+	],
 );
 
 export type InternalFloorData = z.infer<typeof internalFloorDataZod>;
@@ -183,7 +183,7 @@ const groundFloorDataZod = z.discriminatedUnion(
 			depthOfBasementFloorBelowGround: z.number(),
 			heightOfBasementWallsAboveGround: z.number(),
 		}),
-	]
+	],
 );
 
 export type GroundFloorData = z.infer<typeof groundFloorDataZod>;
@@ -273,7 +273,7 @@ const ceilingDataZod = z.discriminatedUnion(
 			thermalResistanceOfAdjacentUnheatedSpace,
 			uValue,
 		}),
-	]
+	],
 );
 
 export type CeilingData = z.infer<typeof ceilingDataZod>;
@@ -365,7 +365,7 @@ const internalDoorDataZod = z.discriminatedUnion(
 			uValue,
 			thermalResistanceOfAdjacentUnheatedSpace,
 		}),
-	]
+	],
 );
 
 export type InternalDoorData = z.infer<typeof internalDoorDataZod>;
@@ -405,7 +405,7 @@ const baseWindowPlusOpenableParts = z.discriminatedUnion(
 			numberOpenableParts: z.literal("4"),
 			...fourPartFields,
 		}),
-	]
+	],
 );
 
 const overhangFields = z.union([
@@ -451,7 +451,7 @@ const curtainsOrBlindsFields = z.union([
 	}),
 	z.object({
 		curtainsOrBlinds: z.literal(false),
-	})
+	}),
 ]);
 
 export const windowDataZod = z.intersection(
@@ -463,7 +463,7 @@ export const windowDataZod = z.intersection(
 			z.intersection(
 				sideFinLeftFields,
 				curtainsOrBlindsFields,
-			)
+			),
 		),
 	),
 );
@@ -689,7 +689,7 @@ const mechanicalVentilationDataZod = z.discriminatedUnion(
 			mvhrLocation: mvhrLocationZod,
 			mvhrEfficiency: fraction,
 		}),
-	]
+	],
 );
 
 export type MechanicalVentilationData = z.infer<typeof mechanicalVentilationDataZod>;
@@ -715,7 +715,7 @@ const ductworkDataZod = z.discriminatedUnion(
 			ductworkCrossSectionalShape: z.literal("rectangular"),
 			ductPerimeter: z.number().min(0).max(1000),
 		}),
-	]
+	],
 );
 
 export type DuctworkData = z.infer<typeof ductworkDataZod>;
@@ -854,7 +854,7 @@ const wetDistributionDataZod = z.discriminatedUnion(
 			equivalentThermalMass: z.number(),
 			systemPerformanceFactor: z.number(),
 		}),
-	]
+	],
 );
 
 export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;

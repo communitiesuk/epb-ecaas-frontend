@@ -57,17 +57,17 @@ describe("PV system", () => {
 			// leftDistance: 7,
 			// rightDepth: 2,
 			// rightDistance: 10,
-		}
+		},
 	};
 
 	const pvSystem2: EcaasForm<PvSystemData> = {
-		data: { ...pvSystem.data, name: "PV 2" }
+		data: { ...pvSystem.data, name: "PV 2" },
 	};
 
 	it("should have a heading", async () => {
 		await renderSuspended(PVScreen);
 		expect(
-			screen.getByRole("heading", { name: "PV (photovoltaic) system" })
+			screen.getByRole("heading", { name: "PV (photovoltaic) system" }),
 		).toBeDefined();
 	});
 
@@ -145,8 +145,8 @@ describe("PV system", () => {
 		it("creates a new pv system automatically with given name", async () => {
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { system: "create" }
-				}
+					params: { system: "create" },
+				},
 			});
 
 			await user.type(screen.getByTestId("name"), "New pv system");
@@ -161,8 +161,8 @@ describe("PV system", () => {
 		it("creates a new pv system automatically with default name after other data is entered", async () => {
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { system: "create" }
-				}
+					params: { system: "create" },
+				},
 			});
 
 			await user.type(screen.getByTestId("elevationalHeight"), "7");
@@ -179,15 +179,15 @@ describe("PV system", () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
-						data: [pvSystem, pvSystem2]
+						data: [pvSystem, pvSystem2],
 					},
 				},
 			});
 
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { system: "1" }
-				}
+					params: { system: "1" },
+				},
 			});
 
 			await user.clear(screen.getByTestId("name"));
@@ -209,15 +209,15 @@ describe("PV system", () => {
 				pvAndBatteries: {
 					pvSystems: {
 						data: [{ ...pvSystem, complete: true }],
-						complete: true
-					}
-				}
+						complete: true,
+					},
+				},
 			});
 
 			await renderSuspended(PVScreen, {
 				route: {
-					params: { system: "0" }
-				}
+					params: { system: "0" },
+				},
 			});
 
 			await user.type(screen.getByTestId("name"), "PV system");

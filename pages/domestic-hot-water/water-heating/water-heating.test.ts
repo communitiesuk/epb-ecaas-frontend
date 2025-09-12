@@ -22,7 +22,7 @@ const cylinder: HotWaterCylinderData = {
 	heatSource: "test-heat-pump",
 	storageCylinderVolume: unitValue(150, litre),
 	dailyEnergyLoss: 73,
-	name: "Hot water cylinder 1"
+	name: "Hot water cylinder 1",
 };
 
 const populateValidForm = async () => {
@@ -42,13 +42,13 @@ beforeEach(() => {
 					data: [{
 						data: {
 							id: "test-heat-pump",
-							name: "Test Heat Pump"
-						}
+							name: "Test Heat Pump",
+						},
 					}],
-					complete: true
+					complete: true,
 				},
-			}
-		}
+			},
+		},
 	});
 });
 
@@ -80,10 +80,10 @@ describe("water heating (hot water cylinder)", () => {
 				waterHeating: {
 					hotWaterCylinder: {
 						data: [cylinder],
-						complete: true
-					}
-				}
-			}
+						complete: true,
+					},
+				},
+			},
 		});
 
 		await renderSuspended(WaterHeating);
@@ -159,18 +159,18 @@ describe("Partially saving data", () => {
 		await user.click(screen.getByTestId("waterHeaterType_hotWaterCylinder"));
 		await user.type(screen.getByTestId("name"), cylinder.name);
 		await user.click(
-			screen.getByTestId("heatSource_test-heat-pump")
+			screen.getByTestId("heatSource_test-heat-pump"),
 		);
 		await user.tab();
 	
 		expect(
-			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.name
+			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.name,
 		).toBe("Hot water cylinder 1");
 		expect(
-			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.heatSource
+			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.heatSource,
 		).toBe("test-heat-pump");
 		expect(
-			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.id
+			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.id,
 		).toBe("test-id");
 	});
 	test("partial form data automatically saved to store with default name if no name has been added", async () => {
@@ -192,10 +192,10 @@ describe("Partially saving data", () => {
 				waterHeating: {
 					hotWaterCylinder: {
 						data: [cylinder],
-						complete: true
-					}
-				}
-			}
+						complete: true,
+					},
+				},
+			},
 		});
 		await renderSuspended(WaterHeating);
 		

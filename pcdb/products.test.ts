@@ -5,7 +5,7 @@ describe("products file passes defined schema", () => {
 		expect(
 			() => {
 				Products.parse(products);
-			}
+			},
 		).not.toThrowError();
 	});
 });

@@ -9,7 +9,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const pvSystemData = useItemToEdit(
 	"system",
-	store.pvAndBatteries.pvSystems.data
+	store.pvAndBatteries.pvSystems.data,
 );
 const model: Ref<PvSystemData | undefined> = ref(pvSystemData?.data);
 
@@ -53,7 +53,7 @@ const saveForm = (fields: PvSystemData) => {
 				rightDepth: fields.rightDepth,
 				rightDistance: fields.rightDistance,
 			},
-			complete: true
+			complete: true,
 		};
 		pvSystems.complete = false;
 	});
@@ -72,7 +72,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.pvAndBatteries.pvSystems.data[index] = newData;
 		state.pvAndBatteries.pvSystems.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

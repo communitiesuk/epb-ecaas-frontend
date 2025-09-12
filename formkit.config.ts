@@ -77,39 +77,39 @@ export default defineFormKitConfig(() => {
 		inputs: {
 			govRadios: {
 				type: "input",
-				component: FormKitRadios
+				component: FormKitRadios,
 			},
 			govButton: {
 				type: "input",
-				component: FormKitButton
+				component: FormKitButton,
 			},
 			govDropdown: {
 				type: "input",
-				component: FormKitDropdown
+				component: FormKitDropdown,
 			},
 			govInputFloat: {
 				type: "input",
-				component: FormKitInputFloat
+				component: FormKitInputFloat,
 			},
 			govInputInt: {
 				type: "input",
-				component: FormKitInputInt
+				component: FormKitInputInt,
 			},
 			govInputWithSuffix: {
 				type: "input",
-				component: FormKitInputWithSuffix
+				component: FormKitInputWithSuffix,
 			},
 			govInputWithUnit: {
 				type: "input",
-				component: FormKitInputWithUnit
+				component: FormKitInputWithUnit,
 			},
 			govCheckboxes: {
 				type: "input",
-				component: FormKitCheckboxes
+				component: FormKitCheckboxes,
 			},
 			govInputText: {
 				type: "input",
-				component: FormKitInputText
+				component: FormKitInputText,
 			},
 			govInputTextWithSuffix: {
 				type: "input",
@@ -117,12 +117,12 @@ export default defineFormKitConfig(() => {
 			},
 			govStoredList: {
 				type: "input",
-				component: FormKitStoredList
+				component: FormKitStoredList,
 			},
 			govBoolean: {
 				type: "input",
-				component: FormKitBoolean
-			}
-		}
+				component: FormKitBoolean,
+			},
+		},
 	};
 });

@@ -16,7 +16,7 @@ describe("immersion heater", () => {
 		name: "Immersion heater",
 		ratedPower: 10,
 		heaterPosition: "top",
-		thermostatPosition: "top"
+		thermostatPosition: "top",
 	};
 
 	afterEach(() => {
@@ -47,16 +47,16 @@ describe("immersion heater", () => {
 			domesticHotWater: {
 				waterHeating: {
 					immersionHeater: {
-						data: [immersionHeater]
-					}
-				}
-			}
+						data: [immersionHeater],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(ImmersionHeater, {
 			route: {
-				params: { "immersionHeater": "0" }
-			}
+				params: { "immersionHeater": "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Immersion heater");

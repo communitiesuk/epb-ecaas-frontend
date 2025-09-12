@@ -14,7 +14,7 @@ const saveForm = (fields: HeatInterfaceUnitData) => {
 
 		const heatInterfaceUnitItem: HeatInterfaceUnitData = {
 			id: uuidv4(),
-			name: fields.name
+			name: fields.name,
 		};
 
 		saveToList(heatInterfaceUnitItem, heatInterfaceUnit);

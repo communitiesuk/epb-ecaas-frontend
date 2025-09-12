@@ -21,7 +21,7 @@ const generalDetailsSummary: SummarySection = {
 		"Number of bedrooms": generalDetailsData.numOfBedrooms,
 		"Cooling required": displayBoolean(generalDetailsData.coolingRequired),
 	},
-	editUrl: getUrl("generalSpecifications")
+	editUrl: getUrl("generalSpecifications"),
 };
 
 const shadingSummary: SummarySection = {
@@ -34,10 +34,10 @@ const shadingSummary: SummarySection = {
 			"Shading end angle": `${s.data.endAngle} ${degrees.suffix}`,
 			"Shading type": s.data.objectType ? displayCamelToSentenceCase(s.data.objectType) : undefined,
 			"Height": `${s.data.height} ${metre.suffix}`,
-			"Distance": `${s.data.distance} ${metre.suffix}`
+			"Distance": `${s.data.distance} ${metre.suffix}`,
 		};
 	}) || [],
-	editUrl: getUrl("shading")
+	editUrl: getUrl("shading"),
 };
 
 const externalFactorsSummary: SummarySection = {
@@ -47,15 +47,15 @@ const externalFactorsSummary: SummarySection = {
 		"Altitude": externalFactors.altitude ? `${externalFactors.altitude} ${metre.suffix}` : undefined,
 		"Type of exposure": externalFactors.typeOfExposure,
 		"Terrain type": externalFactors.terrainType ? displayCamelToSentenceCase(externalFactors.terrainType) : undefined,
-		"Noise nuisance": displayBoolean(externalFactors.noiseNuisance)
+		"Noise nuisance": displayBoolean(externalFactors.noiseNuisance),
 	},
-	editUrl: getUrl("externalFactors")
+	editUrl: getUrl("externalFactors"),
 };
 
 const summarySections: SummarySection[] = [
 	generalDetailsSummary,
 	externalFactorsSummary,
-	shadingSummary
+	shadingSummary,
 ];
 </script>
 

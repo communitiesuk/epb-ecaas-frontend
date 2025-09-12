@@ -18,15 +18,15 @@ const expectedHouseInput: FhsInputSchema = {
 		"mains water": {
 			start_day: 0,
 			temperatures: [3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
-			time_series_step: 1
-		}
+			time_series_step: 1,
+		},
 	},
 	Control: {},
 	EnergySupply: {
 		["mains elec"]: {
 			fuel: "electricity",
 			is_export_capable: true,
-		}
+		},
 	},
 	Events: noEvents,
 	ExternalConditions: {
@@ -41,22 +41,22 @@ const expectedHouseInput: FhsInputSchema = {
 				{
 					distance: 1,
 					height: 2,
-					type: "obstacle"
-				}
+					type: "obstacle",
+				},
 			] },
 			{ number: 8, start360: 70, end360: 80, shading: [
 				{
 					distance: 1,
 					height: 2,
-					type: "obstacle"
-				}
+					type: "obstacle",
+				},
 			] },
 			{ number: 9, start360: 80, end360: 90, shading: [
 				{
 					distance: 1,
 					height: 2,
-					type: "obstacle"
-				}
+					type: "obstacle",
+				},
 			] },
 			{ number: 10, start360: 90, end360: 100 },
 			{ number: 11, start360: 100, end360: 110 },
@@ -84,8 +84,8 @@ const expectedHouseInput: FhsInputSchema = {
 			{ number: 33, start360: 320, end360: 330 },
 			{ number: 34, start360: 330, end360: 340 },
 			{ number: 35, start360: 340, end360: 350 },
-			{ number: 36, start360: 350, end360: 360 }
-		]
+			{ number: 36, start360: 350, end360: 360 },
+		],
 	},
 	General: {
 		build_type: "house",
@@ -102,7 +102,7 @@ const expectedHouseInput: FhsInputSchema = {
 		},
 		Bath: {},
 		Distribution: [],
-		Other: {}
+		Other: {},
 	},
 	HotWaterSource: {
 		"hw cylinder": {
@@ -122,8 +122,8 @@ const expectedHouseInput: FhsInputSchema = {
 			daily_losses: 34,
 			volume: 200,
 			type: "StorageTank",
-			init_temp: 20.0
-		}
+			init_temp: 20.0,
+		},
 	},
 	InfiltrationVentilation: {
 		CombustionAppliances: {},
@@ -131,7 +131,7 @@ const expectedHouseInput: FhsInputSchema = {
 			ventilation_zone_height: 8,
 			env_area: 320,
 			test_pressure: 40,
-			test_result: 4
+			test_result: 4,
 		},
 		MechanicalVentilation: {
 			"kitchen exhaust fan": {
@@ -143,7 +143,7 @@ const expectedHouseInput: FhsInputSchema = {
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
 				SFP: 1.5,
-			}
+			},
 		},
 		Vents: {
 			"only vent": {
@@ -151,8 +151,8 @@ const expectedHouseInput: FhsInputSchema = {
 				mid_height_air_flow_path: 1.9,
 				orientation360: 90,
 				pitch: 180,
-				pressure_difference_ref: 20
-			}
+				pressure_difference_ref: 20,
+			},
 		},
 		ach_max_static_calcs: 2,
 		altitude: 100,
@@ -165,7 +165,7 @@ const expectedHouseInput: FhsInputSchema = {
 		Control_VentAdjustMin: null,
 		Control_VentAdjustMax: null,
 		Control_WindowAdjust: null,
-		ach_min_static_calcs: null
+		ach_min_static_calcs: null,
 	},
 	InternalGains: {},
 	NumberOfBedrooms: 7,
@@ -175,7 +175,7 @@ const expectedHouseInput: FhsInputSchema = {
 	SimulationTime: {
 		start: 0,
 		end: 8,
-		step: 1
+		step: 1,
 	},
 	// SpaceCoolSystem: {
 	// 	"some-aircon-unit-name": {
@@ -200,21 +200,21 @@ const expectedHouseInput: FhsInputSchema = {
 				ecodesign_control_class: 8,
 				max_outdoor_temp: 34,
 				min_flow_temp: 21,
-				min_outdoor_temp: 20
+				min_outdoor_temp: 20,
 			},
 			emitters: [
 				{
 					c: 9,
 					frac_convective: 4,
 					n: 3,
-					wet_emitter_type: "radiator"
+					wet_emitter_type: "radiator",
 				},
 				{
 					c: 9,
 					frac_convective: 4,
 					n: 3,
-					wet_emitter_type: "radiator"
-				}
+					wet_emitter_type: "radiator",
+				},
 			],
 			temp_diff_emit_dsgn: 31,
 			thermal_mass: 0.14,
@@ -226,13 +226,13 @@ const expectedHouseInput: FhsInputSchema = {
 			max_flow_rate: null,
 			temp_setback: null,
 			variable_flow: false,
-		}
+		},
 	},
 	GroundFloorArea: 40,
 	HeatSourceWet: { "some-heat-pump-name": {
 		EnergySupply: defaultElectricityEnergySupplyName,
 		type: "HeatPump",
-		product_reference: "HEATPUMP-LARGE"
+		product_reference: "HEATPUMP-LARGE",
 	} },
 	Zone: {
 		[defaultZoneName]: {
@@ -249,8 +249,8 @@ const expectedHouseInput: FhsInputSchema = {
 					psi_wall_floor_junc: 1,
 					thickness_walls: 0.08,
 					floor_type: "Slab_no_edge_insulation",
-					pitch: 0
-				}
+					pitch: 0,
+				},
 			},
 			Lighting: {
 				efficacy: 56.0,
@@ -258,9 +258,9 @@ const expectedHouseInput: FhsInputSchema = {
 					led: {
 						count: 6,
 						power: 6,
-						efficacy: 120
-					}
-				}
+						efficacy: 120,
+					},
+				},
 			},
 			SpaceHeatControl: "livingroom",
 			SpaceHeatSystem: ["some-wet-distribution"],
@@ -268,9 +268,9 @@ const expectedHouseInput: FhsInputSchema = {
 			area: 100,
 			volume: 300,
 			temp_setpnt_init: 20.0, // TODO find out what this should be
-		}
+		},
 	},
-	temp_internal_air_static_calcs: 20.0 // dummy value - this goes away in later schemas
+	temp_internal_air_static_calcs: 20.0, // dummy value - this goes away in later schemas
 };
 
 const expectedFlatInput: FhsInputSchema = {
@@ -278,8 +278,8 @@ const expectedFlatInput: FhsInputSchema = {
 		"mains water": {
 			start_day: 0,
 			temperatures: [3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
-			time_series_step: 1
-		}
+			time_series_step: 1,
+		},
 	},
 	Control: {},
 	EnergySupply: {
@@ -325,7 +325,7 @@ const expectedFlatInput: FhsInputSchema = {
 				20,
 				20,
 			],
-		}
+		},
 	},
 	Events: noEvents,
 	ExternalConditions: {
@@ -334,34 +334,34 @@ const expectedFlatInput: FhsInputSchema = {
 				{
 					distance: 0.5,
 					height: 1,
-					type: "obstacle"
-				}
+					type: "obstacle",
+				},
 			] },
 			{ number: 2, start360: 10, end360: 20, shading: [
 				{
 					distance: 2,
 					height: 5,
-					type: "overhang"
+					type: "overhang",
 				},
 				{
 					distance: 0.5,
 					height: 1,
-					type: "obstacle"
+					type: "obstacle",
 				},
 			] },
 			{ number: 3, start360: 20, end360: 30, shading: [
 				{
 					distance: 2,
 					height: 5,
-					type: "overhang"
-				}
+					type: "overhang",
+				},
 			] },
 			{ number: 4, start360: 30, end360: 40, shading: [
 				{
 					distance: 2,
 					height: 5,
-					type: "overhang"
-				}
+					type: "overhang",
+				},
 			] },
 			{ number: 5, start360: 40, end360: 50 },
 			{ number: 6, start360: 50, end360: 60 },
@@ -394,13 +394,13 @@ const expectedFlatInput: FhsInputSchema = {
 			{ number: 33, start360: 320, end360: 330 },
 			{ number: 34, start360: 330, end360: 340 },
 			{ number: 35, start360: 340, end360: 350 },
-			{ number: 36, start360: 350, end360: 360 }
-		]
+			{ number: 36, start360: 350, end360: 360 },
+		],
 	},
 	General: {
 		build_type: "flat",
 		storeys_in_building: 6,
-		storey_of_dwelling: 3
+		storey_of_dwelling: 3,
 	},
 	HeatingControlType: "SeparateTempControl",
 	HotWaterDemand: {
@@ -419,8 +419,8 @@ const expectedFlatInput: FhsInputSchema = {
 				ColdWaterSource: "mains water",
 				rated_power: 20,
 				EnergySupply: "mains elec",
-				type: "InstantElecShower"
-			}
+				type: "InstantElecShower",
+			},
 		},
 		Bath: {
 			"small bath name": {
@@ -437,19 +437,19 @@ const expectedFlatInput: FhsInputSchema = {
 				ColdWaterSource: "mains water",
 				size: 400,
 				flowrate: 14,
-			}
+			},
 		},
 		Distribution: [
 			{
 				length: 5,
 				internal_diameter_mm: 14,
-				location: "internal"
+				location: "internal",
 			},
 			{
 				length: 15,
 				internal_diameter_mm: 20,
-				location: "external"
-			}
+				location: "external",
+			},
 		],
 		Other: {
 			"kitchen sink name": {
@@ -464,7 +464,7 @@ const expectedFlatInput: FhsInputSchema = {
 				ColdWaterSource: "mains water",
 				flowrate: 6.4,
 			},
-		}
+		},
 	},
 	HotWaterSource: {
 		"hw cylinder": {
@@ -492,7 +492,7 @@ const expectedFlatInput: FhsInputSchema = {
 				insulation_thermal_conductivity: 0.035,
 				surface_reflectivity: true,
 				pipe_contents: "water",
-				location: "internal"
+				location: "internal",
 			},
 			{
 				internal_diameter_mm: 28,
@@ -502,10 +502,10 @@ const expectedFlatInput: FhsInputSchema = {
 				insulation_thermal_conductivity: 0.040,
 				surface_reflectivity: false,
 				pipe_contents: "glycol25",
-				location: "external"
+				location: "external",
 			}],
-			init_temp: 20.0
-		}
+			init_temp: 20.0,
+		},
 	},
 	InfiltrationVentilation: {
 		CombustionAppliances: {},
@@ -513,7 +513,7 @@ const expectedFlatInput: FhsInputSchema = {
 			ventilation_zone_height: 1,
 			env_area: 5,
 			test_pressure: 20,
-			test_result: 10
+			test_result: 10,
 		},
 		MechanicalVentilation: {
 			"mvhr vent 1 name": {
@@ -560,7 +560,7 @@ const expectedFlatInput: FhsInputSchema = {
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
 				SFP: 1.5,
-			}
+			},
 		},
 		Vents: {
 			"only vent": {
@@ -568,8 +568,8 @@ const expectedFlatInput: FhsInputSchema = {
 				mid_height_air_flow_path: 1.9,
 				orientation360: 90,
 				pitch: 180,
-				pressure_difference_ref: 20
-			}
+				pressure_difference_ref: 20,
+			},
 		},
 		ach_max_static_calcs: 2,
 		altitude: 30,
@@ -582,7 +582,7 @@ const expectedFlatInput: FhsInputSchema = {
 		Control_VentAdjustMin: null,
 		Control_VentAdjustMax: null,
 		Control_WindowAdjust: null,
-		ach_min_static_calcs: null
+		ach_min_static_calcs: null,
 	},
 	InternalGains: {},
 	NumberOfBedrooms: 2,
@@ -601,15 +601,15 @@ const expectedFlatInput: FhsInputSchema = {
 			inverter_is_inside: true,
 			inverter_type: "optimised_inverter",
 			type: "PhotovoltaicSystem",
-			shading: []
-		}
+			shading: [],
+		},
 	},
 	PartGcompliance: true,
 	PartO_active_cooling_required: true,
 	SimulationTime: {
 		start: 0,
 		end: 8,
-		step: 1
+		step: 1,
 	},
 	// SpaceCoolSystem: {},
 	SpaceHeatSystem: {
@@ -620,7 +620,7 @@ const expectedFlatInput: FhsInputSchema = {
 			EnergySupply: "mains elec",
 			Control: defaultControlName,
 			advanced_start: null,
-			temp_setback: null
+			temp_setback: null,
 		},
 		"instant elec heater 2": {
 			rated_power: 13,
@@ -629,15 +629,15 @@ const expectedFlatInput: FhsInputSchema = {
 			EnergySupply: "mains elec",
 			Control: defaultControlName,
 			advanced_start: null,
-			temp_setback: null
-		}
+			temp_setback: null,
+		},
 	},
 	GroundFloorArea: 38,
 	HeatSourceWet: {
 		"heat pump 1 name": {
 			EnergySupply: defaultElectricityEnergySupplyName,
 			type: "HeatPump",
-			product_reference: "HEATPUMP-SMALL"
+			product_reference: "HEATPUMP-SMALL",
 		},
 	},
 	Zone: {
@@ -655,7 +655,7 @@ const expectedFlatInput: FhsInputSchema = {
 					edge_insulation: [{
 						edge_thermal_resistance: 2.4,
 						type: "horizontal",
-						width: 0.32
+						width: 0.32,
 					}],
 					psi_wall_floor_junc: 0.4,
 					thickness_walls: 0.05,
@@ -685,7 +685,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "IE",
 					thermal_resistance_unconditioned_space: 1,
 					pitch: 180,
-					u_value: 0.01
+					u_value: 0.01,
 				},
 				"internal floor 2 (floor)": {
 					type: "BuildingElementAdjacentConditionedSpace",
@@ -707,7 +707,7 @@ const expectedFlatInput: FhsInputSchema = {
 					orientation360: 0,
 					u_value: 0.1,
 					type: "BuildingElementOpaque",
-					is_external_door: false
+					is_external_door: false,
 				},
 				"party wall 1 (wall)": {
 					area: 15,
@@ -715,7 +715,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "E",
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
-					u_value: 1
+					u_value: 1,
 				},
 				"external wall 1 (wall)": {
 					type: "BuildingElementOpaque",
@@ -729,7 +729,7 @@ const expectedFlatInput: FhsInputSchema = {
 					solar_absorption_coeff: 0.2,
 					u_value: 1,
 					width: 3,
-					pitch: 90
+					pitch: 90,
 				},
 				"internal wall 1 (wall)": {
 					area: 15,
@@ -769,7 +769,7 @@ const expectedFlatInput: FhsInputSchema = {
 					width: 1,
 					window_part_list: [{
 						mid_height_air_flow_path: 2,
-					}]
+					}],
 				},
 				"wall to garage (wall)": {
 					area: 20,
@@ -795,7 +795,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "IE",
 					pitch: 45,
 					thermal_resistance_unconditioned_space: 3.4,
-					u_value: 2.2
+					u_value: 2.2,
 				},
 				"roof 1 (roof)": {
 					pitch: 20,
@@ -810,7 +810,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "I",
 					type: "BuildingElementOpaque",
 					is_external_door: false,
-					is_unheated_pitched_roof: false
+					is_unheated_pitched_roof: false,
 				},
 				"bathroom door (door)": {
 					area: 1.4,
@@ -843,25 +843,25 @@ const expectedFlatInput: FhsInputSchema = {
 					max_window_open_area: 1,
 					free_area_height: 1,
 					window_part_list: [{
-						mid_height_air_flow_path: 1
+						mid_height_air_flow_path: 1,
 					}],
 					shading: [
 						{
 							type: "overhang",
 							depth: 0.5,
-							distance: 0.5
+							distance: 0.5,
 						},
 						{
 							type: "sidefinleft",
 							depth: 0.25,
-							distance: 1
+							distance: 1,
 						},
 						{
 							type: "sidefinright",
 							depth: 0.25,
-							distance: 1
-						}]
-				}
+							distance: 1,
+						}],
+				},
 			},
 			SpaceHeatControl: "livingroom",
 			SpaceHeatSystem: ["instant elec heater 1", "instant elec heater 2"],
@@ -870,19 +870,19 @@ const expectedFlatInput: FhsInputSchema = {
 					junction_type: "E3: SILL",
 					length: 1.2,
 					linear_thermal_transmittance: 0.03,
-					type: "ThermalBridgeLinear"
+					type: "ThermalBridgeLinear",
 				},
 				"point thermal bridge 1 (bridge)": {
 					heat_transfer_coeff: 0.045,
-					type: "ThermalBridgePoint"
+					type: "ThermalBridgePoint",
 				},
 				"point thermal bridge 2 (bridge)": {
 					heat_transfer_coeff: 0.035,
-					type: "ThermalBridgePoint"
+					type: "ThermalBridgePoint",
 				},
 				"point thermal bridge 3 (bridge)": {
 					heat_transfer_coeff: 0.067,
-					type: "ThermalBridgePoint"
+					type: "ThermalBridgePoint",
 				},
 			},
 			Lighting: {
@@ -891,21 +891,21 @@ const expectedFlatInput: FhsInputSchema = {
 					incandescent: {
 						count: 2,
 						power: 60,
-						efficacy: 14
+						efficacy: 14,
 					},
 					led: {
 						count: 5,
 						power: 6,
-						efficacy: 120
-					}
-				}
+						efficacy: 120,
+					},
+				},
 			},
 			area: 16,
 			volume: 550,
-			temp_setpnt_init: 20.0 // TODO find out what this should be
-		}
+			temp_setpnt_init: 20.0, // TODO find out what this should be
+		},
 	},
-	temp_internal_air_static_calcs: 20.0 // dummy value - this goes away in later schemas
+	temp_internal_air_static_calcs: 20.0, // dummy value - this goes away in later schemas
 };
 
 // custom vitest matcher so we can get more useful JSON validation errors
@@ -914,9 +914,9 @@ expect.extend({
 		const errors = validator.errors?.map(({ message }) => message).join("; ");
 		return {
 			message: () => isValid ? "" : `JSON validation errors: ${ errors }`,
-			pass: isValid		
+			pass: isValid,		
 		};
-	}
+	},
 });
 
 describe("FHS input mapper", () => {
@@ -934,7 +934,7 @@ describe("FHS input mapper", () => {
 					storeysInDwelling: 2,
 					numOfBedrooms: 7,
 					coolingRequired: false,
-				}
+				},
 			},
 			shading: {
 				...baseForm,
@@ -945,9 +945,9 @@ describe("FHS input mapper", () => {
 						endAngle: 90,
 						objectType: "obstacle",
 						height: 2,
-						distance: 1
-					}
-				}]
+						distance: 1,
+					},
+				}],
 			},
 			externalFactors: {
 				...baseForm,
@@ -956,7 +956,7 @@ describe("FHS input mapper", () => {
 					typeOfExposure: "Shielded",
 					terrainType: "Suburban",
 					noiseNuisance: false,
-				}
+				},
 			},
 		};
 
@@ -969,11 +969,11 @@ describe("FHS input mapper", () => {
 						name: "kitchen exhaust fan",
 						typeOfMechanicalVentilationOptions: "Intermittent MEV",
 						airFlowRate: 55,
-					}
-				}]
+					},
+				}],
 			},
 			ductwork: {
-				...baseForm // skipping ductwork as our mechanical ventilation isn't an MVHR
+				...baseForm, // skipping ductwork as our mechanical ventilation isn't an MVHR
 			},
 			vents: {
 				...baseForm,
@@ -985,9 +985,9 @@ describe("FHS input mapper", () => {
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						orientation: 90,
-						pitch: 180
-					}
-				}]
+						pitch: 180,
+					},
+				}],
 			},
 			combustionAppliances: {
 				"open_fireplace": {
@@ -1007,7 +1007,7 @@ describe("FHS input mapper", () => {
 				},
 				"closed_fire": {
 					...baseForm,
-				}
+				},
 			},
 			// skipping combustion appliances they have been removed for summer
 			naturalVentilation: {
@@ -1018,14 +1018,14 @@ describe("FHS input mapper", () => {
 					dwellingElevationalLevelAtBase: 3,
 					crossVentilationPossible: false,
 					maxRequiredAirChangeRate: 2.1,
-				}
+				},
 			},
 			airPermeability: {
 				...baseForm,
 				data: {
 					testPressure: 40,
 					airTightnessTestResult: 4,
-				}
+				},
 			},
 		};
 		
@@ -1040,14 +1040,14 @@ describe("FHS input mapper", () => {
 					// 	name: "some-aircon-unit-name",
 					// }],
 					// spaceHeatControlSystemForThisZone: []
-				}
+				},
 			},
 			dwellingSpaceLighting: {
 				...baseForm,
 				data: {
 					numberOfLEDBulbs: 6,
 					numberOfIncandescentBulbs: 0,
-				}
+				},
 			},
 			dwellingSpaceFloors: {
 				dwellingSpaceGroundFloor: {
@@ -1065,15 +1065,15 @@ describe("FHS input mapper", () => {
 							psiOfWallJunction: 1,
 							thicknessOfWalls: 80,
 							typeOfGroundFloor: "Slab_no_edge_insulation",
-						}
-					}]
+						},
+					}],
 				},
 				dwellingSpaceInternalFloor: {
 					...baseForm,
 				},
 				dwellingSpaceExposedFloor: {
 					...baseForm,
-				}
+				},
 			},
 			dwellingSpaceWalls: {
 				dwellingSpaceExternalWall: {
@@ -1087,7 +1087,7 @@ describe("FHS input mapper", () => {
 				},
 				dwellingSpaceWallToUnheatedSpace: {
 					...baseForm,
-				}
+				},
 			},
 			dwellingSpaceCeilingsAndRoofs: {
 				dwellingSpaceCeilings: {
@@ -1095,7 +1095,7 @@ describe("FHS input mapper", () => {
 				},
 				dwellingSpaceRoofs: {
 					...baseForm,
-				}
+				},
 			},
 			dwellingSpaceDoors: {
 				dwellingSpaceExternalUnglazedDoor: {
@@ -1106,7 +1106,7 @@ describe("FHS input mapper", () => {
 				},
 				dwellingSpaceInternalDoor: {
 					...baseForm,
-				}
+				},
 			},
 			dwellingSpaceWindows: {
 				...baseForm,
@@ -1117,8 +1117,8 @@ describe("FHS input mapper", () => {
 				},
 				dwellingSpacePointThermalBridges: {
 					...baseForm,
-				}
-			}
+				},
+			},
 		};
 
 		const heatingSystems: HeatingSystems = {
@@ -1129,9 +1129,9 @@ describe("FHS input mapper", () => {
 						data: {
 							id: "some-heat-pump-id",
 							name: "some-heat-pump-name",
-							productReference: "HEATPUMP-LARGE"
+							productReference: "HEATPUMP-LARGE",
 						},
-					}]
+					}],
 				},
 				boiler: {
 					...baseForm,
@@ -1144,14 +1144,14 @@ describe("FHS input mapper", () => {
 				},
 				heatNetwork: {
 					...baseForm,
-				}
+				},
 			},
 			energySupply: {
 				...baseForm,
 				data: {
 					fuelType: ["electricity"],
 					exported: true,
-				}
+				},
 			},
 			heatEmitting: {
 				wetDistribution: {
@@ -1171,8 +1171,8 @@ describe("FHS input mapper", () => {
 						typeOfSpaceHeater: "radiator",
 						numberOfRadiators: 2,
 						exponent: 3,
-						constant: 9
-					}]
+						constant: 9,
+					}],
 				},
 				instantElectricHeater: {
 					...baseForm,
@@ -1182,8 +1182,8 @@ describe("FHS input mapper", () => {
 				},
 				warmAirHeatPump: {
 					...baseForm,
-				}
-			}
+				},
+			},
 		};
 
 		const domesticHotWater: DomesticHotWater = {
@@ -1195,8 +1195,8 @@ describe("FHS input mapper", () => {
 						name: "hw cylinder",
 						heatSource: "some-heat-pump-id",
 						storageCylinderVolume: 200,
-						dailyEnergyLoss: 34
-					}]
+						dailyEnergyLoss: 34,
+					}],
 				},
 				immersionHeater: {
 					...baseForm,
@@ -1230,9 +1230,9 @@ describe("FHS input mapper", () => {
 						data: {
 							id: "some-mixer-shower-id",
 							name: "some-mixer-shower-name",
-							flowRate: 14
-						}
-					}]
+							flowRate: 14,
+						},
+					}],
 				},
 				electricShower: {
 					...baseForm,
@@ -1242,7 +1242,7 @@ describe("FHS input mapper", () => {
 				},
 				otherOutlets: {
 					...baseForm,
-				}
+				},
 			},
 			pipework: {
 				primaryPipework: {
@@ -1250,11 +1250,11 @@ describe("FHS input mapper", () => {
 				},
 				secondaryPipework: {
 					...baseForm,
-				}
+				},
 			},
 			wwhrs: {
 				...baseForm,
-			}
+			},
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
@@ -1263,7 +1263,7 @@ describe("FHS input mapper", () => {
 			},
 			electricBattery: {
 				...baseForm,
-			}
+			},
 		};
 
 		const cooling: Cooling = {
@@ -1273,9 +1273,9 @@ describe("FHS input mapper", () => {
 					name: "some-aircon-unit-name",
 					coolingCapacity: 60,
 					seasonalEnergyEfficiencyRatio: 4,
-					convectionFraction: 0.2
-				}]
-			}
+					convectionFraction: 0.2,
+				}],
+			},
 		};
 
 		store.$state = {
@@ -1309,7 +1309,7 @@ describe("FHS input mapper", () => {
 					storeyOfFlat: 3,
 					numOfBedrooms: 2,
 					coolingRequired: true,
-				}
+				},
 			},
 			shading: {
 				...baseForm,
@@ -1320,8 +1320,8 @@ describe("FHS input mapper", () => {
 						endAngle: 40,
 						objectType: "overhang",
 						height: 5,
-						distance: 2
-					}
+						distance: 2,
+					},
 				},
 				{
 					data: {
@@ -1330,9 +1330,9 @@ describe("FHS input mapper", () => {
 						endAngle: 12,
 						objectType: "obstacle",
 						height: 1,
-						distance: 0.5
-					}
-				}]
+						distance: 0.5,
+					},
+				}],
 			},
 			externalFactors: {
 				...baseForm,
@@ -1341,7 +1341,7 @@ describe("FHS input mapper", () => {
 					typeOfExposure: "Normal",
 					terrainType: "OpenField",
 					noiseNuisance: true,
-				}
+				},
 			},
 		};
 
@@ -1355,8 +1355,8 @@ describe("FHS input mapper", () => {
 						typeOfMechanicalVentilationOptions: "MVHR",
 						airFlowRate: 17,
 						mvhrLocation: "inside",
-						mvhrEfficiency: 1
-					}
+						mvhrEfficiency: 1,
+					},
 				},
 				{
 					data: {
@@ -1365,8 +1365,8 @@ describe("FHS input mapper", () => {
 						typeOfMechanicalVentilationOptions: "MVHR",
 						airFlowRate: 3,
 						mvhrLocation: "outside",
-						mvhrEfficiency: 0
-					}
+						mvhrEfficiency: 0,
+					},
 				},
 				{
 					data: {
@@ -1374,8 +1374,8 @@ describe("FHS input mapper", () => {
 						name: "centralised MEV name",
 						typeOfMechanicalVentilationOptions: "Centralised continuous MEV",
 						airFlowRate: 8,
-					}
-				}]
+					},
+				}],
 			},
 			ductwork: {
 				...baseForm,
@@ -1390,9 +1390,9 @@ describe("FHS input mapper", () => {
 						insulationThickness: 5,
 						lengthOfDuctwork: 4,
 						thermalInsulationConductivityOfDuctwork: 1,
-						surfaceReflectivity: true
-					}
-				}]
+						surfaceReflectivity: true,
+					},
+				}],
 			},
 			vents: {
 				...baseForm,
@@ -1404,9 +1404,9 @@ describe("FHS input mapper", () => {
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
 						orientation: 90,
-						pitch: 180
-					}
-				}]
+						pitch: 180,
+					},
+				}],
 			},
 			combustionAppliances: {
 				"open_fireplace": {
@@ -1426,7 +1426,7 @@ describe("FHS input mapper", () => {
 				},
 				"closed_fire": {
 					...baseForm,
-				}
+				},
 			},
 			naturalVentilation: {
 				...baseForm,
@@ -1436,14 +1436,14 @@ describe("FHS input mapper", () => {
 					dwellingElevationalLevelAtBase: 1,
 					crossVentilationPossible: true,
 					maxRequiredAirChangeRate: 2,
-				}
+				},
 			},
 			airPermeability: {
 				...baseForm,
 				data: {
 					testPressure: 20,
 					airTightnessTestResult: 10,
-				}
+				},
 			},
 		};
 		
@@ -1456,14 +1456,14 @@ describe("FHS input mapper", () => {
 					// spaceHeatingSystemForThisZone: "instant elec heater 1",
 					// spaceCoolingSystemForThisZone: [],
 					// spaceHeatControlSystemForThisZone: []
-				}
+				},
 			},
 			dwellingSpaceLighting: {
 				...baseForm,
 				data: {
 					numberOfLEDBulbs: 5,
 					numberOfIncandescentBulbs: 2,
-				}
+				},
 			},
 			dwellingSpaceFloors: {
 				dwellingSpaceGroundFloor: {
@@ -1484,8 +1484,8 @@ describe("FHS input mapper", () => {
 								typeOfGroundFloor: "Slab_edge_insulation",
 								edgeInsulationType: "horizontal",
 								edgeInsulationWidth: unitValue(32, centimetre),
-								edgeInsulationThermalResistance: 2.4
-							}
+								edgeInsulationThermalResistance: 2.4,
+							},
 						},
 						{
 							data: {
@@ -1502,9 +1502,9 @@ describe("FHS input mapper", () => {
 								thicknessOfWalls: 40,
 								depthOfBasementFloorBelowGround: 2,
 								thermalResistanceOfBasementWalls: 3,
-							}
-						}
-					]
+							},
+						},
+					],
 				},
 				dwellingSpaceInternalFloor: {
 					...baseForm,
@@ -1523,9 +1523,9 @@ describe("FHS input mapper", () => {
 							surfaceAreaOfElement: 4,
 							kappaValue: 110000,
 							massDistributionClass: "M",
-						}
-						}
-					]
+						},
+						},
+					],
 				},
 				dwellingSpaceExposedFloor: {
 					...baseForm,
@@ -1541,8 +1541,8 @@ describe("FHS input mapper", () => {
 						pitch: 180,
 						orientation: 0,
 						uValue: 0.1,
-					} }]
-				}
+					} }],
+				},
 			},
 			dwellingSpaceWalls: {
 				dwellingSpacePartyWall: {
@@ -1554,8 +1554,8 @@ describe("FHS input mapper", () => {
 						surfaceArea: 15,
 						uValue: 1,
 						kappaValue: 50000,
-						massDistributionClass: "E"
-					}]
+						massDistributionClass: "E",
+					}],
 				},
 				dwellingSpaceExternalWall: {
 					...baseForm,
@@ -1571,8 +1571,8 @@ describe("FHS input mapper", () => {
 						solarAbsorption: 0.2,
 						uValue: 1, 
 						kappaValue: 75000,
-						massDistributionClass: "D"
-					}]
+						massDistributionClass: "D",
+					}],
 				},
 				dwellingSpaceInternalWall: {
 					...baseForm,
@@ -1596,8 +1596,8 @@ describe("FHS input mapper", () => {
 						arealHeatCapacity: 50000,
 						massDistributionClass: "D",
 						thermalResistanceOfAdjacentUnheatedSpace: 2.5,
-					}]
-				}
+					}],
+				},
 			},
 			dwellingSpaceCeilingsAndRoofs: {
 				dwellingSpaceCeilings: {
@@ -1609,8 +1609,8 @@ describe("FHS input mapper", () => {
 							surfaceArea: 16,
 							kappaValue: 75000,
 							massDistributionClass: "I",
-							pitchOption: "0"
-						}
+							pitchOption: "0",
+						},
 					},
 					{
 						data: {
@@ -1622,10 +1622,10 @@ describe("FHS input mapper", () => {
 							pitch: 45,
 							pitchOption: "custom",
 							thermalResistanceOfAdjacentUnheatedSpace: 3.4,
-							uValue: 2.2
-						}
-					}
-					]
+							uValue: 2.2,
+						},
+					},
+					],
 				},
 				dwellingSpaceRoofs: {
 					...baseForm,
@@ -1642,10 +1642,10 @@ describe("FHS input mapper", () => {
 							solarAbsorptionCoefficient: 0.63,
 							uValue: 0.1,
 							kappaValue: 19300,
-							massDistributionClass: "I"
-						}
-					}]
-				}
+							massDistributionClass: "I",
+						},
+					}],
+				},
 			},
 			dwellingSpaceDoors: {
 				dwellingSpaceExternalUnglazedDoor: {
@@ -1664,9 +1664,9 @@ describe("FHS input mapper", () => {
 									solarAbsorption: 0.2,
 									uValue: 1,
 									kappaValue: 75000,
-									massDistributionClass: "I"
-								}
-					}]
+									massDistributionClass: "I",
+								},
+					}],
 				},
 				dwellingSpaceExternalGlazedDoor: {
 					...baseForm,
@@ -1687,8 +1687,8 @@ describe("FHS input mapper", () => {
 									maximumOpenableArea: 3,
 									heightOpenableArea: 3,
 									midHeightOpenablePart1: 2,
-								}
-					}]
+								},
+					}],
 				},
 				dwellingSpaceInternalDoor: {
 					...baseForm,
@@ -1701,7 +1701,7 @@ describe("FHS input mapper", () => {
 							massDistributionClass: "IE",
 							pitchOption: "90",
 							pitch: 90,
-						}
+						},
 					},
 					{
 						data: {
@@ -1713,10 +1713,10 @@ describe("FHS input mapper", () => {
 							pitchOption: "90",
 							pitch: 90,
 							uValue: 1,
-							thermalResistanceOfAdjacentUnheatedSpace: 2.5
-						}
-					}]
-				}
+							thermalResistanceOfAdjacentUnheatedSpace: 2.5,
+						},
+					}],
+				},
 			},
 			dwellingSpaceWindows: {
 				...baseForm,
@@ -1749,8 +1749,8 @@ describe("FHS input mapper", () => {
 						heightOpenableArea: 1,
 						curtainsControlObject: "auto_motorised",
 					},
-					complete: true
-				}]
+					complete: true,
+				}],
 			},
 			dwellingSpaceThermalBridging: {
 				dwellingSpaceLinearThermalBridges: {
@@ -1760,32 +1760,32 @@ describe("FHS input mapper", () => {
 							name: "linear thermal bridge",
 							typeOfThermalBridge: "E3: Sill",
 							linearThermalTransmittance: 0.03,
-							length: 1.2
-						}
-					}]
+							length: 1.2,
+						},
+					}],
 				},
 				dwellingSpacePointThermalBridges: {
 					...baseForm,
 					data: [{
 						data: {
 							name: "point thermal bridge 1",
-							heatTransferCoefficient: 0.045
-						}
+							heatTransferCoefficient: 0.045,
+						},
 					},
 					{
 						data: {
 							name: "point thermal bridge 2",
-							heatTransferCoefficient: 0.035
-						}
+							heatTransferCoefficient: 0.035,
+						},
 					},
 					{
 						data: {
 							name: "point thermal bridge 3",
-							heatTransferCoefficient: 0.067
-						}
-					}]
-				}
-			}
+							heatTransferCoefficient: 0.067,
+						},
+					}],
+				},
+			},
 		};
 
 		const heatingSystems: HeatingSystems = {
@@ -1796,9 +1796,9 @@ describe("FHS input mapper", () => {
 						data: {
 							id: "heat pump 1 id",
 							name: "heat pump 1 name",
-							productReference: "HEATPUMP-SMALL"
-						}
-					}]
+							productReference: "HEATPUMP-SMALL",
+						},
+					}],
 				},
 				boiler: {
 					...baseForm,
@@ -1811,14 +1811,14 @@ describe("FHS input mapper", () => {
 				},
 				heatNetwork: {
 					...baseForm,
-				}
+				},
 			},
 			energySupply: {
 				...baseForm,
 				data: {
 					fuelType: ["electricity"],
 					exported: false,
-				}
+				},
 			},
 			heatEmitting: {
 				wetDistribution: {
@@ -1830,24 +1830,24 @@ describe("FHS input mapper", () => {
 						data: {
 							name: "instant elec heater 1",
 							ratedPower: 10,
-							convectionFractionInstant: 1
-						}
+							convectionFractionInstant: 1,
+						},
 					},
 					{
 						data: {
 							name: "instant elec heater 2",
 							ratedPower: 13,
-							convectionFractionInstant: 0.8
-						}
-					}]
+							convectionFractionInstant: 0.8,
+						},
+					}],
 				},
 				electricStorageHeater: {
 					...baseForm,
 				},
 				warmAirHeatPump: {
 					...baseForm,
-				}
-			}
+				},
+			},
 		};
 
 		const domesticHotWater: DomesticHotWater = {
@@ -1859,8 +1859,8 @@ describe("FHS input mapper", () => {
 						name: "hw cylinder 1 name",
 						heatSource: "heat pump 1 id",
 						storageCylinderVolume: 80,
-						dailyEnergyLoss: 10
-					}]
+						dailyEnergyLoss: 10,
+					}],
 				},
 				immersionHeater: {
 					...baseForm,
@@ -1895,17 +1895,17 @@ describe("FHS input mapper", () => {
 							data: {
 								id: "mixer shower 1 id",
 								name: "mixer shower 1 name",
-								flowRate: 19
-							}
+								flowRate: 19,
+							},
 						},
 						{
 							data: {
 								id: "mixer shower 2 id",
 								name: "mixer shower 2 name",
-								flowRate: 28
-							}
-						}
-					]
+								flowRate: 28,
+							},
+						},
+					],
 				},
 				electricShower: {
 					...baseForm,
@@ -1914,10 +1914,10 @@ describe("FHS input mapper", () => {
 							data: {
 								id: "electric shower 1 id",
 								name: "electric shower 1 name",
-								ratedPower: 20
-							}
-						}
-					]
+								ratedPower: 20,
+							},
+						},
+					],
 				},
 				bath: {
 					...baseForm,
@@ -1927,26 +1927,26 @@ describe("FHS input mapper", () => {
 								name: "small bath name",
 								id: "small bath id",
 								size: 80,
-								flowRate: 8
-							}
+								flowRate: 8,
+							},
 						},
 						{
 							data: {
 								name: "medium bath name",
 								id: "medium bath id",
 								size: 180,
-								flowRate: 8
-							}
+								flowRate: 8,
+							},
 						},
 						{
 							data: {
 								name: "large bath name",
 								id: "large bath id",
 								size: 400,
-								flowRate: 14
-							}
-						}
-					]
+								flowRate: 14,
+							},
+						},
+					],
 				},
 				otherOutlets: {
 					...baseForm,
@@ -1955,25 +1955,25 @@ describe("FHS input mapper", () => {
 							data: {
 								id: "kitchen sink id",
 								name: "kitchen sink name",
-								flowRate: 7.4
-							}
+								flowRate: 7.4,
+							},
 						},
 						{
 							data: {
 								id: "bathroom basin id",
 								name: "bathroom basin name",
-								flowRate: 6.4
-							}
+								flowRate: 6.4,
+							},
 						},
 						{
 							data: {
 								id: "cloakroom basin id",
 								name: "cloakroom basin name",
-								flowRate: 6.4
-							}
-						}
-					]
-				}
+								flowRate: 6.4,
+							},
+						},
+					],
+				},
 			},
 			pipework: {
 				primaryPipework: {
@@ -1989,8 +1989,8 @@ describe("FHS input mapper", () => {
 							surfaceReflectivity: true,
 							pipeContents: "water",
 							hotWaterCylinder: "hw cylinder 1 id",
-							location: "internal"
-						}
+							location: "internal",
+						},
 					},
 					{
 						data: {
@@ -2003,9 +2003,9 @@ describe("FHS input mapper", () => {
 							surfaceReflectivity: false,
 							pipeContents: "glycol25",
 							hotWaterCylinder: "hw cylinder 1 id",
-							location: "external"
-						}
-					}]
+							location: "external",
+						},
+					}],
 				},
 				secondaryPipework: {
 					...baseForm,
@@ -2014,22 +2014,22 @@ describe("FHS input mapper", () => {
 							name: "secondary pipework",
 							length: 5,
 							location: "internal",
-							internalDiameter: 14
-						}
+							internalDiameter: 14,
+						},
 					},
 					{
 						data: {
 							name: "external secondary pipework",
 							length: 15,
 							location: "external",
-							internalDiameter: 20
-						}
-					}]
-				}
+							internalDiameter: 20,
+						},
+					}],
+				},
 			},
 			wwhrs: {
 				...baseForm,
-			}
+			},
 		};
 
 		const pvAndBatteries: PvAndBatteries = {
@@ -2048,9 +2048,9 @@ describe("FHS input mapper", () => {
 						inverterPeakPowerAC: 3,
 						inverterPeakPowerDC: 3.8,
 						inverterIsInside: true,
-						inverterType: "optimised_inverter"
-					}
-				}]
+						inverterType: "optimised_inverter",
+					},
+				}],
 			},
 			electricBattery: {
 				...baseForm,
@@ -2066,15 +2066,15 @@ describe("FHS input mapper", () => {
 								maximumChargeRate: 90,
 								minimumChargeRate: 80,
 								maximumDischargeRate: 20,
-							}
-				}]
-			}
+							},
+				}],
+			},
 		};
 
 		const cooling: Cooling = {
 			airConditioning: {
 				...baseForm,
-			}
+			},
 		};
 
 		store.$state = {

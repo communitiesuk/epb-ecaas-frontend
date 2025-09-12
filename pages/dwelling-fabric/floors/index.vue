@@ -33,8 +33,8 @@ function handleDuplicate<T extends FloorData>(floorType: FloorType, index: numbe
 				complete: floorToDuplicate.complete,
 				data: {
 					...floorToDuplicate.data,
-					name: `${floorToDuplicate.data.name} (${numberOfFloorsWithSameName})`
-				}
+					name: `${floorToDuplicate.data.name} (${numberOfFloorsWithSameName})`,
+				},
 			} as T);
 			state.dwellingFabric.dwellingSpaceFloors[floorType].complete = false;
 		});
@@ -47,9 +47,9 @@ function handleComplete() {
 			dwellingSpaceFloors: {
 				dwellingSpaceExposedFloor: { complete: true },
 				dwellingSpaceGroundFloor: { complete: true },
-				dwellingSpaceInternalFloor: { complete: true }
-			}
-		}
+				dwellingSpaceInternalFloor: { complete: true },
+			},
+		},
 	});
 
 	navigateTo("/dwelling-fabric");

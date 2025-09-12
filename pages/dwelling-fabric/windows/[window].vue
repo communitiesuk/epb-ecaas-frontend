@@ -170,7 +170,7 @@ const saveForm = (fields: WindowData) => {
 
 		dwellingSpaceWindows.data[index] = {
 			data: newWindowValue,
-			complete: true
+			complete: true,
 		};
 
 		dwellingSpaceWindows.complete = false;
@@ -188,7 +188,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceWindows.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWindows.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

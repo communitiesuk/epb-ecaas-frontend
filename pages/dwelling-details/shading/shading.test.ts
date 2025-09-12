@@ -22,22 +22,22 @@ describe("shading", () => {
 			endAngle: 20,
 			objectType: "obstacle",
 			height: 3,
-			distance: 2
-		}
+			distance: 2,
+		},
 	};
 
 	const shading2: EcaasForm<ShadingData> = {
 		data: {
 			...shading1.data,
-			name: "Apple Tree"
-		}
+			name: "Apple Tree",
+		},
 	};
 
 	const shading3: EcaasForm<ShadingData> = {
 		data: {
 			...shading1.data,
-			name: "Cherry Tree out front"
-		}
+			name: "Cherry Tree out front",
+		},
 	};
 
 	afterEach(() => {
@@ -48,9 +48,9 @@ describe("shading", () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
-					data: [shading1]
-				}
-			}
+					data: [shading1],
+				},
+			},
 		});
 
 		await renderSuspended(Shading);
@@ -67,9 +67,9 @@ describe("shading", () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
-					data: [shading1, shading2]
-				}
-			}
+					data: [shading1, shading2],
+				},
+			},
 		});
 
 		await renderSuspended(Shading);
@@ -84,9 +84,9 @@ describe("shading", () => {
 		store.$patch({
 			dwellingDetails: {
 				shading: {
-					data: [shading1, shading3]
-				}
-			}
+					data: [shading1, shading3],
+				},
+			},
 		});
 
 		await renderSuspended(Shading);
@@ -112,13 +112,13 @@ describe("shading", () => {
 						{
 							data: {
 								name: "Shading 1",
-								startAngle: 10
+								startAngle: 10,
 							},
 							complete: false,
-						}
-					]
-				}
-			}
+						},
+					],
+				},
+			},
 		});
 
 		await renderSuspended(Shading);
@@ -152,13 +152,13 @@ describe("shading", () => {
 				shading: {
 					data: [{
 						data: { ...shading1.data },
-						complete: true
+						complete: true,
 					}, {
 						data: { ...shading2.data },
-						complete: true
-					}]
-				}
-			}
+						complete: true,
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(Shading);
@@ -178,10 +178,10 @@ describe("shading", () => {
 				shading: {
 					data: [{
 						data: { ...shading1.data },
-						complete: true
-					}]
-				}
-			}
+						complete: true,
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(Shading);
@@ -200,11 +200,11 @@ describe("shading", () => {
 				shading: {
 					data: [{
 						data: { ...shading1.data },
-						complete: true
+						complete: true,
 					}],
-					complete: true
-				}
-			}
+					complete: true,
+				},
+			},
 		});
 
 		await renderSuspended(Shading);
@@ -212,8 +212,8 @@ describe("shading", () => {
 
 		await renderSuspended(ShadingForm, {
 			route: {
-				params: { shading: "0" }
-			}
+				params: { shading: "0" },
+			},
 		});
 		
 		await user.clear(screen.getByTestId("name"));
@@ -233,10 +233,10 @@ describe("shading", () => {
 			dwellingDetails: {
 				shading: {
 					data: [{
-						data: { name: "Shading 1" }
-					}]
-				}
-			}
+						data: { name: "Shading 1" },
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(Shading);
@@ -250,10 +250,10 @@ describe("shading", () => {
 				shading: {
 					data: [{
 						...shading1,
-						complete: true
-					}]
-				}
-			}
+						complete: true,
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(Shading);

@@ -11,7 +11,7 @@ const saveForm = (fields: CombiBoilerData) => {
 		const { combiBoiler } = state.domesticHotWater.waterHeating;
 
 		const combiBoilerItem: CombiBoilerData = {
-			name: fields.name
+			name: fields.name,
 		};
 		combiBoiler.complete = false;
 		saveToList(combiBoilerItem, combiBoiler);

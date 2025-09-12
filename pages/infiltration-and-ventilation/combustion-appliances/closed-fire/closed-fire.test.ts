@@ -45,16 +45,16 @@ describe("closed fire", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					closed_fire: {
-						data: [closedFire]
-					}
-				}
-			}
+						data: [closedFire],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(ClosedFire, {
 			route: {
-				params: { combustion: "0" }
-			}
+				params: { combustion: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Closed fire 1");

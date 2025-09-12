@@ -48,13 +48,13 @@ function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingT
 					complete: emitter.complete,
 					data: {
 						...emitter.data,
-						name: `${name} (${duplicates.length})`
-					}
+						name: `${name} (${duplicates.length})`,
+					},
 				} as T;
 			} else {
 				newItem = {
 					...emitter,
-					name: `${name} (${duplicates.length})`
+					name: `${name} (${duplicates.length})`,
 				} as T;
 			}
 
@@ -70,9 +70,9 @@ function handleComplete() {
 				wetDistribution: { complete: true },
 				instantElectricHeater: { complete: true },
 				electricStorageHeater: { complete: true },
-				warmAirHeatPump: { complete: true }
-			}
-		}
+				warmAirHeatPump: { complete: true },
+			},
+		},
 	});
 
 	navigateTo("/heating-systems");

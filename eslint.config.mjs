@@ -10,6 +10,7 @@ export default withNuxt(
 		},
 		rules: {
 			'@stylistic/semi': 'error',
+			'@stylistic/comma-dangle': ['error', 'always-multiline'],
 			'@stylistic/indent': ['error', 'tab'],
 			'@stylistic/object-curly-spacing': ["error", "always"],
 			'@stylistic/quotes': ['error', 'double', { avoidEscape: true, allowTemplateLiterals: 'always' }],

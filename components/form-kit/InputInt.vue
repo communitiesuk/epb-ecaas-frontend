@@ -10,7 +10,7 @@ const {
 	id,
 	node: { name },
 	label,
-	help
+	help,
 } = props.context;
 
 const { mounted } = useMounted();

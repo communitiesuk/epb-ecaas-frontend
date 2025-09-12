@@ -25,113 +25,113 @@ const response: CorrectedFhsComplianceResponse = {
 	"energy_demand": {
 		"space_heating": {
 			"actual": 21.545418711857963,
-			"notional": 27.655403116069365
+			"notional": 27.655403116069365,
 		},
 		"space_cooling": {
 			"actual": -0.8672527008665998,
-			"notional": -0.604182757837868
-		}
+			"notional": -0.604182757837868,
+		},
 	},
 	"delivered_energy_use": {
 		"total": {
 			"actual": 66.82234849664779,
-			"notional": 86.90402332303697
+			"notional": 86.90402332303697,
 		},
 		"by_system": {
 			"mechvent1": {
 				"actual": 0.0021738164635221333,
-				"notional": 0.0
+				"notional": 0.0,
 			},
 			"total": {
 				"actual": 66.82234849664779,
-				"notional": 86.90402332303697
+				"notional": 86.90402332303697,
 			},
 			"topup": {
 				"actual": 1.1864616645959027,
-				"notional": 1.1864616645959027
+				"notional": 1.1864616645959027,
 			},
 			"Microwave": {
 				"actual": 0.021470588235292194,
-				"notional": 0.021470588235292194
+				"notional": 0.021470588235292194,
 			},
 			"Kettle": {
 				"actual": 0.021470588235292194,
-				"notional": 0.021470588235292194
+				"notional": 0.021470588235292194,
 			},
 			"Fridge": {
 				"actual": 0.37598039215697415,
-				"notional": 0.37598039215697415
+				"notional": 0.37598039215697415,
 			},
 			"Clothes_washing": {
 				"actual": 0.34007717596649306,
-				"notional": 0.34007717596649306
+				"notional": 0.34007717596649306,
 			},
 			"Oven": {
 				"actual": 0.04627750620680959,
-				"notional": 0.04627750620680959
+				"notional": 0.04627750620680959,
 			},
 			"Fridge-Freezer": {
 				"actual": 0.6735294117647721,
-				"notional": 0.6735294117647721
+				"notional": 0.6735294117647721,
 			},
 			"Otherdevices": {
 				"actual": 4.159288191049666,
-				"notional": 4.159288191049666
+				"notional": 4.159288191049666,
 			},
 			"lighting": {
 				"actual": 1.3248655610462836,
-				"notional": 1.3248655610462836
+				"notional": 1.3248655610462836,
 			},
 			"immersion": {
 				"actual": 18.151406859389198,
-				"notional": 0.0
+				"notional": 0.0,
 			},
 			"main 1": {
 				"actual": 36.37241650360668,
-				"notional": 0.0
+				"notional": 0.0,
 			},
 			"main 2": {
 				"actual": 3.845069356944748,
-				"notional": 0.0
+				"notional": 0.0,
 			},
 			"cooling system 1": {
 				"actual": 0.05314508342515957,
-				"notional": 0.05060423433949979
+				"notional": 0.05060423433949979,
 			},
 			"cooling system 2": {
 				"actual": 0.22724520932570036,
-				"notional": 0.13534340344728563
+				"notional": 0.13534340344728563,
 			},
 			"Hobs": {
 				"actual": 0.021470588235292194,
-				"notional": 0.021470588235292194
-			}
-		}
+				"notional": 0.021470588235292194,
+			},
+		},
 	},
 	"energy_use_by_fuel": {
 		"total": {
 			"actual": 27263.5181866323,
-			"notional": 35456.841515799075
+			"notional": 35456.841515799075,
 		},
 		"_energy_from_environment": {
 			"actual": 0.0,
-			"notional": 20613.187522596498
+			"notional": 20613.187522596498,
 		},
 		"mains elec": {
 			"actual": 27254.7581866323,
-			"notional": 14834.893993202577
+			"notional": 14834.893993202577,
 		},
 		"mains gas": {
 			"actual": 8.759999999999215,
-			"notional": 8.759999999999215
-		}
-	}
+			"notional": 8.759999999999215,
+		},
+	},
 };
 
 const errors: CorrectedJsonApiError[] = [
 	{
-		detail: "Something very specific happened, incorrectly."
-	}
+		detail: "Something very specific happened, incorrectly.",
+	},
 ];
 
 describe("show good response in result tabs", () => {
@@ -184,7 +184,7 @@ describe("show good response in result tabs", () => {
 			"21.55",
 			"27.66",
 			"-0.87",
-			"-0.60"
+			"-0.60",
 		];
 
 		expectedFigures.forEach(text => expect(tableTextContent).toContain(text));

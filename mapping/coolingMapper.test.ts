@@ -22,9 +22,9 @@ describe("cooling mapper", () => {
 			cooling: {
 				airConditioning: {
 					data: [airConditioning],
-					complete: true
-				}
-			}
+					complete: true,
+				},
+			},
 		});
 
 		// Acts
@@ -41,7 +41,7 @@ describe("cooling mapper", () => {
 				advanced_start: null,
 				temp_setback: null,
 				Control: defaultControlName,
-			}
+			},
 		};
 
 		expect(result).toEqual(expectedResult);
@@ -68,8 +68,8 @@ describe("cooling mapper", () => {
 				airConditioning: {
 					data: [airConditioner1, airConditioner2],
 					complete: true,
-				}
-			}
+				},
+			},
 		});
 
 		// Acts

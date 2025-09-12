@@ -25,8 +25,8 @@ describe("external unglazed door", () => {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: "I"
-		}
+			massDistributionClass: "I",
+		},
 	};
 
 	afterEach(() => {
@@ -36,8 +36,8 @@ describe("external unglazed door", () => {
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(ExternalUnglazedDoor, {
 			route: {
-				params: { externalUnglazed: "create" }
-			}
+				params: { externalUnglazed: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "External unglazed door 1");
@@ -74,16 +74,16 @@ describe("external unglazed door", () => {
 			dwellingFabric: {
 				dwellingSpaceDoors: {
 					dwellingSpaceExternalUnglazedDoor: {
-						data: [state]
-					}
-				}
-			}
+						data: [state],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(ExternalUnglazedDoor, {
 			route: {
-				params: { door: "0" }
-			}
+				params: { door: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External unglazed door 1");
@@ -139,8 +139,8 @@ describe("external unglazed door", () => {
 		it("creates a new door automatically with given name", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "create" }
-				}
+					params: { externalUnglazed: "create" },
+				},
 			});
 
 			await user.type(screen.getByTestId("name"), "New door");
@@ -155,8 +155,8 @@ describe("external unglazed door", () => {
 		it("creates a new door automatically with default name after other data is entered", async () => {
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "create" }
-				}
+					params: { externalUnglazed: "create" },
+				},
 			});
 
 			await user.type(screen.getByTestId("elevationalHeight"), "7");
@@ -174,16 +174,16 @@ describe("external unglazed door", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalUnglazedDoor: {
-							data: [state, state]
-						}
-					}
-				}
+							data: [state, state],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "1" }
-				}
+					params: { externalUnglazed: "1" },
+				},
 			});
 
 			await user.clear(screen.getByTestId("name"));
@@ -204,16 +204,16 @@ describe("external unglazed door", () => {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalUnglazedDoor: {
 							data: [{ ...state, complete: true }],
-							complete: true
-						}
-					}
-				}
+							complete: true,
+						},
+					},
+				},
 			});
 
 			await renderSuspended(ExternalUnglazedDoor, {
 				route: {
-					params: { externalUnglazed: "0" }
-				}
+					params: { externalUnglazed: "0" },
+				},
 			});
 
 			await user.type(screen.getByTestId("name"), "Door");

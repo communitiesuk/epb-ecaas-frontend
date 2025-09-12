@@ -14,7 +14,7 @@ const populateValidForm = async () => {
 	await user.type(screen.getByTestId("name"), "Ductwork 1");
 	await user.click(screen.getByTestId("mvhrUnit_5124f2fe-f15b-4a56-ba5a-1a7751ac506f"));
 	await user.click(
-		screen.getByTestId("ductworkCrossSectionalShape_circular")
+		screen.getByTestId("ductworkCrossSectionalShape_circular"),
 	);
 	await user.click(screen.getByTestId("ductType_intake"));
 	await user.type(screen.getByTestId("internalDiameterOfDuctwork"), "300");
@@ -23,7 +23,7 @@ const populateValidForm = async () => {
 	await user.type(screen.getByTestId("lengthOfDuctwork"), "100");
 	await user.type(
 		screen.getByTestId("thermalInsulationConductivityOfDuctwork"),
-		"10"
+		"10",
 	);
 	await user.click(screen.getByTestId("surfaceReflectivity_yes"));
 };
@@ -32,7 +32,7 @@ const populateValidFormWithRectangularShape = async () => {
 	await user.type(screen.getByTestId("name"), "Ductwork 1");
 	await user.click(screen.getByTestId("mvhrUnit_5124f2fe-f15b-4a56-ba5a-1a7751ac506f"));
 	await user.click(
-		screen.getByTestId("ductworkCrossSectionalShape_rectangular")
+		screen.getByTestId("ductworkCrossSectionalShape_rectangular"),
 	);
 	await user.click(screen.getByTestId("ductType_intake"));
 	await user.type(screen.getByTestId("ductPerimeter"), "200");
@@ -40,7 +40,7 @@ const populateValidFormWithRectangularShape = async () => {
 	await user.type(screen.getByTestId("lengthOfDuctwork"), "100");
 	await user.type(
 		screen.getByTestId("thermalInsulationConductivityOfDuctwork"),
-		"10"
+		"10",
 	);
 	await user.click(screen.getByTestId("surfaceReflectivity_yes"));
 };
@@ -56,18 +56,18 @@ describe("ductwork form", async () => {
 						data: {
 							name: "MVHR_1",
 							id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-							typeOfMechanicalVentilationOptions: "MVHR"
-						}
+							typeOfMechanicalVentilationOptions: "MVHR",
+						},
 					},
 					{
 						data: {
 							name: "MVHR_2",
 							id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
-							typeOfMechanicalVentilationOptions: "MVHR"
-						}
-					}]
-				}
-			}
+							typeOfMechanicalVentilationOptions: "MVHR",
+						},
+					}],
+				},
+			},
 		});
 	};
 
@@ -103,19 +103,19 @@ describe("ductwork form", async () => {
 	it("should have the correct heading", async () => {
 		await renderSuspended(Ductwork, {
 			route: {
-				params: { ductwork: "create" }
-			}
+				params: { ductwork: "create" },
+			},
 		});
 		expect(
-			screen.getByRole("heading", { name: "MVHR ductwork" })
+			screen.getByRole("heading", { name: "MVHR ductwork" }),
 		).toBeDefined();
 	});
 
 	it("should have the following inputs", async () => {
 		await renderSuspended(Ductwork, {
 			route: {
-				params: { ductwork: "create" }
-			}
+				params: { ductwork: "create" },
+			},
 		});
 
 		const form = within(document.getElementsByTagName("form")[0]!);
@@ -132,7 +132,7 @@ describe("ductwork form", async () => {
 		expect(form.getByText("Insulation thickness")).toBeDefined();
 		expect(form.getByText("Length of ductwork")).toBeDefined();
 		expect(
-			form.getByText("Thermal conductivity of ductwork insulation")
+			form.getByText("Thermal conductivity of ductwork insulation"),
 		).toBeDefined();
 		expect(form.getByText("Surface reflectivity")).toBeDefined();
 	});
@@ -142,8 +142,8 @@ describe("ductwork form", async () => {
 
 		await renderSuspended(Ductwork, {
 			route: {
-				params: { ductwork: "create" }
-			}
+				params: { ductwork: "create" },
+			},
 		});
 
 		expect(screen.getByText("MVHR_1")).toBeDefined();
@@ -153,8 +153,8 @@ describe("ductwork form", async () => {
 	it("should show relevant inputs for circular duct shape", async() => {
 		await renderSuspended(Ductwork, {
 			route: {
-				params: { ductwork: "create" }
-			}
+				params: { ductwork: "create" },
+			},
 		});
 
 		await user.click(screen.getByTestId("ductworkCrossSectionalShape_circular"));
@@ -167,8 +167,8 @@ describe("ductwork form", async () => {
 	it("should show relevant inputs for rectangular duct shape", async() => {
 		await renderSuspended(Ductwork, {
 			route: {
-				params: { ductwork: "create" }
-			}
+				params: { ductwork: "create" },
+			},
 		});
 
 		await user.click(screen.getByTestId("ductworkCrossSectionalShape_rectangular"));
@@ -183,8 +183,8 @@ describe("ductwork form", async () => {
 
 		await renderSuspended(Ductwork, {
 			route: {
-				params: { ductwork: "create" }
-			}
+				params: { ductwork: "create" },
+			},
 		});
 
 		await populateValidForm();
@@ -199,8 +199,8 @@ describe("ductwork form", async () => {
 
 		await renderSuspended(Ductwork, {
 			route: {
-				params: { ductwork: "create" }
-			}
+				params: { ductwork: "create" },
+			},
 		});
 
 		await populateValidFormWithRectangularShape();
@@ -226,57 +226,57 @@ describe("ductwork form", async () => {
 			},
 		});
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("name"))).value
+			((await screen.findByTestId<HTMLInputElement>("name"))).value,
 		).toBe("Ductwork 1");
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("mvhrUnit_5124f2fe-f15b-4a56-ba5a-1a7751ac506f"))).checked
+			((await screen.findByTestId<HTMLInputElement>("mvhrUnit_5124f2fe-f15b-4a56-ba5a-1a7751ac506f"))).checked,
 		).toBe(true);
 
 		expect(
 			(
 				(await screen.findByTestId<HTMLInputElement>(
-					"ductworkCrossSectionalShape_circular"
+					"ductworkCrossSectionalShape_circular",
 				))
-			).checked
+			).checked,
 		).toBe(true);
 		expect(
 			((await screen.findByTestId<HTMLInputElement>("ductType_intake")))
-				.checked
+				.checked,
 		).toBe(true);
 		expect(
 			(
 				(await screen.findByTestId<HTMLInputElement>(
-					"internalDiameterOfDuctwork"
+					"internalDiameterOfDuctwork",
 				))
-			).value
+			).value,
 		).toBe("300");
 		expect(
 			(
 				(await screen.findByTestId<HTMLInputElement>(
-					"externalDiameterOfDuctwork"
+					"externalDiameterOfDuctwork",
 				))
-			).value
+			).value,
 		).toBe("1000");
 		expect(
 			((await screen.findByTestId<HTMLInputElement>("insulationThickness")))
-				.value
+				.value,
 		).toBe("100");
 		expect(
-			((await screen.findByTestId<HTMLInputElement>("lengthOfDuctwork"))).value
+			((await screen.findByTestId<HTMLInputElement>("lengthOfDuctwork"))).value,
 		).toBe("100");
 		expect(
 			(
 				(await screen.findByTestId<HTMLInputElement>(
-					"thermalInsulationConductivityOfDuctwork"
+					"thermalInsulationConductivityOfDuctwork",
 				))
-			).value
+			).value,
 		).toBe("10");
 		expect(
 			(
 				(await screen.findByTestId<HTMLInputElement>(
-					"surfaceReflectivity_yes"
+					"surfaceReflectivity_yes",
 				))
-			).checked
+			).checked,
 		).toBe(true);
 	});
   
@@ -284,8 +284,8 @@ describe("ductwork form", async () => {
 		addStoreData();
 		await renderSuspended(Ductwork, {
 			route: {
-				params: { ductwork: "create" }
-			}
+				params: { ductwork: "create" },
+			},
 		});
 
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -307,14 +307,14 @@ describe("ductwork form", async () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Ductwork, {
 			route: {
-				params: { ductwork: "create" }
-			}
+				params: { ductwork: "create" },
+			},
 		});
   
 		await user.click(screen.getByTestId("saveAndComplete"));
   
 		expect(
-			await screen.findByTestId("ductworkErrorSummary")
+			await screen.findByTestId("ductworkErrorSummary"),
 		).toBeDefined();
 	});
 
@@ -323,10 +323,10 @@ describe("ductwork form", async () => {
 			infiltrationAndVentilation: {
 				ductwork: {
 					data: [{
-						data: { ...ductwork1 }
-					}]
-				}
-			}
+						data: { ...ductwork1 },
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(Ductwork, {

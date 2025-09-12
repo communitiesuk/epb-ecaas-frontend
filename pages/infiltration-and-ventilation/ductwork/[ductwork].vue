@@ -8,7 +8,7 @@ const { getStoreIndex, autoSaveElementForm } = useForm();
 
 const ductwork = useItemToEdit(
 	"ductwork",
-	store.infiltrationAndVentilation.ductwork.data
+	store.infiltrationAndVentilation.ductwork.data,
 );
 
 const model: Ref<DuctworkData | undefined> = ref(ductwork?.data);
@@ -64,7 +64,7 @@ const saveForm = (fields: DuctworkData) => {
 
 		ductwork.data[index] = {
 			data: ductworkItem,
-			complete: true
+			complete: true,
 		};
 
 		ductwork.complete = false;
@@ -81,7 +81,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.infiltrationAndVentilation.ductwork.data[index] = newData;
 		state.infiltrationAndVentilation.ductwork.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

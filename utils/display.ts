@@ -126,7 +126,7 @@ const applianceKeys: ApplianceKey[] = [
 	"Kettle",
 	"Microwave",
 	"Otherdevices",
-	"Oven"
+	"Oven",
 ];
 
 function isApplianceKey(value: string): value is ApplianceKey {
@@ -142,7 +142,7 @@ export const arealHeatCapacityOptions = {
 	"75000": "Light",
 	"110000": "Medium",
 	"175000": "Heavy",
-	"250000": "Very heavy"
+	"250000": "Very heavy",
 };
 
 export type ArealHeatCapacityValue = keyof typeof arealHeatCapacityOptions extends infer K
@@ -164,7 +164,7 @@ type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCas
 export function adjacentSpaceTypeOptions<T extends string>(element: T): Record<AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>> {
 	return objectFromEntries(Object.values(AdjacentSpaceType).map(key => [
 		key,
-		displayAdjacentSpaceType(key, element)!
+		displayAdjacentSpaceType(key, element)!,
 	] as const satisfies [AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>]));
 }
 

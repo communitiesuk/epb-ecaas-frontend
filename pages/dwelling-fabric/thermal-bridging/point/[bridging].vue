@@ -16,9 +16,9 @@ const saveForm = (fields: PointThermalBridgeData) => {
 		dwellingSpacePointThermalBridges.data[index] = {
 			data: {
 				name: fields.name,
-				heatTransferCoefficient: fields.heatTransferCoefficient
+				heatTransferCoefficient: fields.heatTransferCoefficient,
 			},
-			complete: true
+			complete: true,
 		};
 
 		dwellingSpacePointThermalBridges.complete = false;

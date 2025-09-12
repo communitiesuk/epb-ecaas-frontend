@@ -16,7 +16,7 @@ describe("infiltration ventilation mapper", () => {
 			airFlowRate: unitValue(30, litrePerSecond),
 			mvhrLocation: "inside",
 			mvhrEfficiency: 1,
-		}
+		},
 	}];
 
 	const store = useEcaasStore();
@@ -35,19 +35,19 @@ describe("infiltration ventilation mapper", () => {
 				},
 				naturalVentilation: {
 					...baseForm,
-					data: {}
+					data: {},
 				},
 				airPermeability: {
 					...baseForm,
 					data: {
 						testPressure: 5.0,
 						airTightnessTestResult: 2.2,
-					}
+					},
 				},
 				vents: {
 					...baseForm,
-				}
-			}
+				},
+			},
 		});
     
 		// Act
@@ -87,35 +87,35 @@ describe("infiltration ventilation mapper", () => {
 				thermalInsulationConductivityOfDuctwork: 0.023,
 				insulationThickness: 100,
 				surfaceReflectivity: false,
-				ductType: "extract"
-			}
+				ductType: "extract",
+			},
 		}];
 
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					...baseForm,
-					data: mechVentMvhr
+					data: mechVentMvhr,
 				},
 				ductwork: {
 					...baseForm,
-					data: ductwork
+					data: ductwork,
 				},
 				naturalVentilation: {
 					...baseForm,
-					data: {}
+					data: {},
 				},
 				airPermeability: {
 					...baseForm,
 					data: {
 						testPressure: 5.0,
 						airTightnessTestResult: 2.2,
-					}
+					},
 				},
 				vents: {
 					...baseForm,
-				}
-			}
+				},
+			},
 		});
     
 		// Act
@@ -157,8 +157,8 @@ describe("infiltration ventilation mapper", () => {
 				},
 				vents: {
 					...baseForm,
-				}
-			}
+				},
+			},
 		});
     
 		// Act
@@ -179,8 +179,8 @@ describe("infiltration ventilation mapper", () => {
 				id: "bathroom exhaust fan",
 				name: "bathroom exhaust fan",
 				typeOfMechanicalVentilationOptions: "Intermittent MEV",
-				airFlowRate: unitValue(40, litrePerSecond)
-			}
+				airFlowRate: unitValue(40, litrePerSecond),
+			},
 		}];
 
 		store.$patch({
@@ -188,8 +188,8 @@ describe("infiltration ventilation mapper", () => {
 				mechanicalVentilation: {
 					...baseForm,
 					data: mechVent,
-				}				
-			}
+				},				
+			},
 		});
 
 		// Act
@@ -221,8 +221,8 @@ describe("infiltration ventilation mapper", () => {
 				openingRatio: 0.6,
 				midHeightOfZone: 1.5,
 				orientation: 180,
-				pitch: 45
-			}
+				pitch: 45,
+			},
 		}];
 
 		store.$patch({
@@ -230,8 +230,8 @@ describe("infiltration ventilation mapper", () => {
 				vents: {
 					...baseForm,
 					data: ventData,
-				}				
-			}
+				},				
+			},
 		});
 
 		// Act
@@ -261,8 +261,8 @@ describe("infiltration ventilation mapper", () => {
 				naturalVentilation: {
 					...baseForm,
 					data: ventilationData,
-				}
-			}
+				},
+			},
 		});
 
 		// Act
@@ -288,8 +288,8 @@ describe("infiltration ventilation mapper", () => {
 				airPermeability: {
 					...baseForm,
 					data: airPermeabilityData,
-				}
-			}
+				},
+			},
 		});
 
 		// Act
@@ -306,7 +306,7 @@ describe("infiltration ventilation mapper", () => {
 			name: "Gas Boiler",
 			airSupplyToAppliance: "room_air",
 			exhaustMethodFromAppliance: "into_mech_vent",
-			typeOfFuel: "gas"
+			typeOfFuel: "gas",
 		}];
 
 		store.$patch({
@@ -315,9 +315,9 @@ describe("infiltration ventilation mapper", () => {
 					open_gas_fire: {
 						...baseForm,
 						data: combustionAppliances,
-					}
-				}
-			}
+					},
+				},
+			},
 		});
 
 		// Act

@@ -23,15 +23,15 @@ describe("cooling", () => {
 		name: "Air conditioner 1",
 		coolingCapacity: 1,
 		seasonalEnergyEfficiencyRatio:1,
-		convectionFraction:1
+		convectionFraction:1,
 	};
 
 	const airConditioning2: Partial<AirConditioningData> = {
-		name: "Air conditioner 2"
+		name: "Air conditioner 2",
 	};
 
 	const airConditioning3: Partial<AirConditioningData> = {
-		name: "Air conditioner 3"
+		name: "Air conditioner 3",
 	};
 
 	describe("cooling", () => {
@@ -40,9 +40,9 @@ describe("cooling", () => {
 			store.$patch({
 				cooling: {
 					airConditioning: {
-						data: [airConditioning1]
-					}
-				}
+						data: [airConditioning1],
+					},
+				},
 			});
 	
 			await renderSuspended(Cooling);
@@ -58,9 +58,9 @@ describe("cooling", () => {
 			store.$patch({
 				cooling: {
 					airConditioning: {
-						data:[airConditioning1, airConditioning2, airConditioning3]
-					}
-				}
+						data:[airConditioning1, airConditioning2, airConditioning3],
+					},
+				},
 			});
 	
 			await renderSuspended(Cooling);
@@ -77,9 +77,9 @@ describe("cooling", () => {
 			store.$patch({
 				cooling: {
 					airConditioning: {
-						data:[airConditioning1, airConditioning2]
-					}
-				}
+						data:[airConditioning1, airConditioning2],
+					},
+				},
 			});
 	
 			await renderSuspended(Cooling);

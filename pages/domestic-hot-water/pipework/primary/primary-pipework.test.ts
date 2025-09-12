@@ -23,8 +23,8 @@ const pipework1: EcaasForm<PrimaryPipeworkData> = {
 		surfaceReflectivity: true,
 		pipeContents: "water",
 		hotWaterCylinder: hotWaterCylinderId,
-		location: "internal"
-	}
+		location: "internal",
+	},
 };
 
 const pipework2: EcaasForm<PrimaryPipeworkData> = {
@@ -38,8 +38,8 @@ const pipework2: EcaasForm<PrimaryPipeworkData> = {
 		surfaceReflectivity: true,
 		pipeContents: "water",
 		hotWaterCylinder: hotWaterCylinderId,
-		location: "internal"
-	}
+		location: "internal",
+	},
 };
 
 const store = useEcaasStore();
@@ -59,11 +59,11 @@ const addHotWaterCylinder = () => {
 						name: "Hot water cylinder 1",
 						storageCylinderVolume: 5,
 						dailyEnergyLoss: 1,
-						heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30"
-					}]
-				}
-			}
-		}
+						heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+					}],
+				},
+			},
+		},
 	});
 };
 
@@ -109,16 +109,16 @@ describe("Primary pipework form", () => {
 			domesticHotWater: {
 				pipework: {
 					primaryPipework: {
-						data: [pipework1]
-					}
-				}
-			}
+						data: [pipework1],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(PipeworkForm, {
 			route: {
-				params: { pipe: "0" }
-			}
+				params: { pipe: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Pipework Kitchen Sink");
@@ -140,10 +140,10 @@ describe("Primary pipework form", () => {
 			domesticHotWater: {
 				pipework: {
 					primaryPipework: {
-						data: [pipework1]
-					}
-				}
-			}
+						data: [pipework1],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(WaterHeatingForm); 
@@ -153,8 +153,8 @@ describe("Primary pipework form", () => {
 		
 		await renderSuspended(PipeworkForm, {
 			route: {
-				params: { pipe: "0" }
-			}
+				params: { pipe: "0" },
+			},
 		});
 		expect((await screen.findByTestId(`hotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute("checked")).toBe(true);
 	});	
@@ -180,8 +180,8 @@ describe("Primary pipework form", () => {
 
 		await renderSuspended(PipeworkForm, {
 			route: {
-				params: { pipe: "create" }
-			}
+				params: { pipe: "create" },
+			},
 		});
 
 		await(user.click(screen.getByTestId("saveAndComplete")));
@@ -302,10 +302,10 @@ describe("partially saving data", () => {
 			domesticHotWater: {
 				pipework: {
 					primaryPipework: {
-						data: [pipework1, pipework2]
-					}
-				}
-			}
+						data: [pipework1, pipework2],
+					},
+				},
+			},
 		});    
 		await renderSuspended(PipeworkForm, {
 			route: {

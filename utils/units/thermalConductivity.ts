@@ -3,7 +3,7 @@ export enum ThermalConductivityUnitName {
 	WATTS_PER_METER_KELVIN = "watts per meter-Kelvin",
 	WATTS_PER_SQUARE_METER_KELVIN = "watts per sqare meter-Kelvin",
 	SQUARE_METER_KELVIN_PER_WATT = "square meter-Kelvin per watt",
-	KILOWATT_HOUR_PER_KELVIN = "kilowatt hour per kelvin"
+	KILOWATT_HOUR_PER_KELVIN = "kilowatt hour per kelvin",
 }
 
 enum ThermalConductivitySuffix {
@@ -11,7 +11,7 @@ enum ThermalConductivitySuffix {
 	WATTS_PER_METER_KELVIN = "W/(m·K)",
 	WATTS_PER_SQUARE_METER_KELVIN = "W/(m²·K)",
 	SQUARE_METER_KELVIN_PER_WATT = "(m²·K)/W",
-	KILOWATT_HOUR_PER_KELVIN = "kWh/K"
+	KILOWATT_HOUR_PER_KELVIN = "kWh/K",
 }
 
 export class ThermalConductivityUnit {

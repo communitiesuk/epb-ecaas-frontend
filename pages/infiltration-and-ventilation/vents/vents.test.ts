@@ -21,17 +21,17 @@ describe("vents", () => {
 		openingRatio: 1,
 		midHeightOfZone: 1,
 		orientation: 0,
-		pitch: 0
+		pitch: 0,
 	};
 
 	const vent2: VentData = {
 		...vent1,
-		name: "Vent 2"
+		name: "Vent 2",
 	};
 
 	const vent3: VentData = {
 		...vent1,
-		name: "Vent 3"
+		name: "Vent 3",
 	};
 
 	afterEach(() => {
@@ -42,9 +42,9 @@ describe("vents", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [{ data: vent1 }]
-				}
-			}
+					data: [{ data: vent1 }],
+				},
+			},
 		});
 
 		await renderSuspended(Vents);
@@ -63,10 +63,10 @@ describe("vents", () => {
 					data: [
 						{ data: vent1 },
 						{ data: vent2 },
-						{ data: vent3 }
-					]
-				}
-			}
+						{ data: vent3 },
+					],
+				},
+			},
 		});
 
 		await renderSuspended(Vents);
@@ -86,10 +86,10 @@ describe("vents", () => {
 				vents: {
 					data: [
 						{ data: vent1 },
-						{ data: vent2 }
-					]
-				}
-			}
+						{ data: vent2 },
+					],
+				},
+			},
 		});
 
 		await renderSuspended(Vents);
@@ -113,9 +113,9 @@ describe("vents", () => {
 					data: [{
 						data: { name: "Vent 1" },
 						complete: false,
-					}]
-				}
-			}
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(Vents);
@@ -147,8 +147,8 @@ describe("vents", () => {
 				vents: {
 					data: [
 						{ data: vent1, complete: true },
-						{ data: vent2, complete: true }
-					]
+						{ data: vent2, complete: true },
+					],
 				},
 			},
 		});
@@ -221,10 +221,10 @@ describe("vents", () => {
 			infiltrationAndVentilation: {
 				vents: {
 					data: [{
-						data: { name: "Vent 1" }
-					}]
-				}
-			}
+						data: { name: "Vent 1" },
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(Vents);
@@ -238,10 +238,10 @@ describe("vents", () => {
 				vents: {
 					data: [{
 						data: vent1,
-						complete: true
-					}]
-				}
-			}
+						complete: true,
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(Vents);

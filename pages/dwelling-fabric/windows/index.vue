@@ -15,9 +15,9 @@ function handleRemove(index: number) {
 			dwellingFabric: {
 				dwellingSpaceWindows: {
 					data:  windows.length ? windows : [],
-					complete: false
-				}
-			}
+					complete: false,
+				},
+			},
 		});
 	}
 }
@@ -41,8 +41,8 @@ function handleDuplicate(index: number) {
 				complete: window.complete,
 				data: {
 					...window.data,
-					name: `${name} (${duplicates.length})`
-				}
+					name: `${name} (${duplicates.length})`,
+				},
 			};
 
 			state.dwellingFabric.dwellingSpaceWindows.data.push(newItem);
@@ -55,9 +55,9 @@ function handleComplete() {
 	store.$patch({
 		dwellingFabric: {
 			dwellingSpaceWindows: {
-				complete: true
-			}
-		}
+				complete: true,
+			},
+		},
 	});
 	navigateTo("/dwelling-fabric");
 

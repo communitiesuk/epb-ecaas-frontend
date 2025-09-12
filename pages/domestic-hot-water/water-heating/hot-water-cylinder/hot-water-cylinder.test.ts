@@ -39,12 +39,12 @@ describe("hot water cylinder", () => {
 						data: [{
 							data: {
 								id: heatPumpId,
-								name: "Heat pump"
-							}
-						}]
-					}
-				}
-			}
+								name: "Heat pump",
+							},
+						}],
+					},
+				},
+			},
 		});
 	};
 
@@ -75,17 +75,17 @@ describe("hot water cylinder", () => {
 			domesticHotWater: {
 				waterHeating: {
 					hotWaterCylinder: {
-						data: [hotWaterCylinder]
-					}
-				}
-			}
+						data: [hotWaterCylinder],
+					},
+				},
+			},
 		});
 
 		addStoreData();
 		await renderSuspended(HotWaterCylinder, {
 			route: {
-				params: { "hotWaterCylinder": "0" }
-			}
+				params: { "hotWaterCylinder": "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Hot water cylinder 1");

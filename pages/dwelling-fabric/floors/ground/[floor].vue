@@ -30,7 +30,7 @@ const typeOfGroundFloorOptions: Record<reducedGroundFloorOptions, SnakeToSentenc
 const windShieldingFactorOptions: Record<SchemaWindShieldLocation, SnakeToSentenceCase<SchemaWindShieldLocation>> = {
 	Sheltered: "Sheltered",
 	Average: "Average",
-	Exposed: "Exposed"
+	Exposed: "Exposed",
 };
 
 const saveForm = (fields: GroundFloorData) => {
@@ -48,7 +48,7 @@ const saveForm = (fields: GroundFloorData) => {
 			massDistributionClass: fields.massDistributionClass,
 			perimeter: fields.perimeter,
 			psiOfWallJunction: fields.psiOfWallJunction,
-			thicknessOfWalls: fields.thicknessOfWalls
+			thicknessOfWalls: fields.thicknessOfWalls,
 		};
 
 		let floorData: GroundFloorData;
@@ -129,7 +129,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

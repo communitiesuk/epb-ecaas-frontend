@@ -23,11 +23,11 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 					...(fuelType === "custom" ? { factor: {
 						"Emissions Factor kgCO2e/kWh": co2PerKwh!,
 						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": co2PerKwhIncludingOutOfScope!,
-						"Primary Energy Factor kWh/kWh delivered": kwhPerKwhDelivered!
+						"Primary Energy Factor kWh/kWh delivered": kwhPerKwhDelivered!,
 					} } : {}),
-				}
-			])) : [])
-		}
+				},
+			])) : []),
+		},
 	};
 }
 
@@ -42,7 +42,7 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 		const distributionDetails: SchemaSpaceHeatSystemDetails = {
 			HeatSource: {
 				name: heatSourceName,
-				temp_flow_limit_upper: 65 // we've defaulted this field on our heat pump until it comes from PCDB
+				temp_flow_limit_upper: 65, // we've defaulted this field on our heat pump until it comes from PCDB
 			},
 			design_flow_temp: designFlowTemp,
 			design_flow_rate: designFlowRate,
@@ -52,15 +52,15 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 					frac_convective: convectionFractionWet,
 					c: distribution.constant,
 					n: distribution.exponent,
-				})
+				}),
 			} : {
 				emitters: [{
 					wet_emitter_type: typeOfSpaceHeater,
 					emitter_floor_area: distribution.emitterFloorArea,
 					frac_convective: convectionFractionWet,
 					equivalent_specific_thermal_mass: distribution.equivalentThermalMass,
-					system_performance_factor: distribution.systemPerformanceFactor
-				}]
+					system_performance_factor: distribution.systemPerformanceFactor,
+				}],
 			}),
 			ecodesign_controller: {
 				ecodesign_control_class: unionStringAsInt(ecoDesignControllerClass),
@@ -83,7 +83,7 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 		};
 		return [
 			name,
-			distributionDetails
+			distributionDetails,
 		] as const;
 	});
 
@@ -98,13 +98,13 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			advanced_start: null,
 			temp_setback: null,
 			Control: defaultControlName,
-		}
+		},
 	]);
 
 	// NB. electric storage heaters and warm air heat pumps yet to be mapped here (PCDB dependent)
 
 	return {
-		SpaceHeatSystem: objectFromEntries([...wetDistributionEntries, ...instantElectricHeaterEntries])
+		SpaceHeatSystem: objectFromEntries([...wetDistributionEntries, ...instantElectricHeaterEntries]),
 	};
 }
 

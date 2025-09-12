@@ -18,17 +18,17 @@ const mixerShower: EcaasForm<MixedShowerData> = {
 	data: {
 		id: "4a93532e-a370-4015-9778-854661bf1627",
 		name: "Mixer shower 1",
-		flowRate: 10
+		flowRate: 10,
 	},
-	complete: true
+	complete: true,
 };
 const mixerShower2: EcaasForm<MixedShowerData> = {
 	data: {
 		id: "4a93532e-a370-4015-9778-854661bf1123",
 		name: "Mixer shower 2",
-		flowRate: 11
+		flowRate: 11,
 	},
-	complete: true
+	complete: true,
 };
 afterEach(() => {
 	store.$reset();
@@ -46,8 +46,8 @@ describe("mixer shower", () => {
 
 		await renderSuspended(MixerShower, {
 			route: {
-				params: { "shower": "create" }
-			}
+				params: { "shower": "create" },
+			},
 		});
 
 		await populateValidForm();
@@ -63,16 +63,16 @@ describe("mixer shower", () => {
 			domesticHotWater: {
 				hotWaterOutlets: {
 					mixedShower: {
-						data: [mixerShower]
-					}
-				}
-			}
+						data: [mixerShower],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(MixerShower, {
 			route: {
-				params: { "shower": "0" }
-			}
+				params: { "shower": "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Mixer shower 1");
@@ -101,8 +101,8 @@ describe("mixer shower", () => {
 	test("save progress button href is correct", async () => {
 		await renderSuspended(MixerShower, {
 			route: {
-				params: { shower: "create" }
-			}
+				params: { shower: "create" },
+			},
 		});
 
 		await populateValidForm();
@@ -126,8 +126,8 @@ describe("Partially saving data", () => {
 	test("form data is automatically saved to store", async () => {
 		await renderSuspended(MixerShower, {
 			route: {
-				params: { shower: "create" }
-			}
+				params: { shower: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Mixer shower 1");
@@ -142,8 +142,8 @@ describe("Partially saving data", () => {
 	test("partial form data is saved with default name when name is missing", async () => {
 		await renderSuspended(MixerShower, {
 			route: {
-				params: { shower: "create" }
-			}
+				params: { shower: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("flowRate"), "9");
@@ -156,8 +156,8 @@ describe("Partially saving data", () => {
 	test("creates a new mixed shower entry when only name is entered", async () => {
 		await renderSuspended(MixerShower, {
 			route: {
-				params: { shower: "create" }
-			}
+				params: { shower: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Mixer shower 1");
@@ -174,16 +174,16 @@ describe("Partially saving data", () => {
 			domesticHotWater: {
 				hotWaterOutlets: {
 					mixedShower: {
-						data: [mixerShower]
-					}
-				}
-			}
+						data: [mixerShower],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(MixerShower, {
 			route: {
-				params: { "shower": "0" }
-			}
+				params: { "shower": "0" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Mixer shower 1");
@@ -226,16 +226,16 @@ describe("Partially saving data", () => {
 			domesticHotWater: {
 				hotWaterOutlets: {
 					mixedShower: {
-						data: [mixerShower, mixerShower2]
-					}
-				}
-			}
+						data: [mixerShower, mixerShower2],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(MixerShower, {
 			route: {
-				params: { shower: "1" }
-			}
+				params: { shower: "1" },
+			},
 		});
 
 		await user.clear(screen.getByTestId("name"));

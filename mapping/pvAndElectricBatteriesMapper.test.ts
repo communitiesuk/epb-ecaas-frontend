@@ -52,8 +52,8 @@ describe("PV and electric batteries mapper", () => {
 				pvSystems: {
 					...baseForm,
 					data: [pvSystem1, pvSystem2],
-				}
-			}
+				},
+			},
 		});
 
 		// Act
@@ -94,7 +94,7 @@ describe("PV and electric batteries mapper", () => {
 					ventilation_strategy: "rear_surface_free",
 					width: 15,
 				},
-			}
+			},
 		};
 
 		expect(result).toEqual(expectedResult);
@@ -114,16 +114,16 @@ describe("PV and electric batteries mapper", () => {
 						maximumChargeRate: 6.2,
 						minimumChargeRate: 4.5,
 						maximumDischargeRate: 2.3,
-					}
+					},
 		};
 
 		store.$patch({
 			pvAndBatteries: {
 				electricBattery: {
 					data: [battery],
-					complete: true
-				}
-			}
+					complete: true,
+				},
+			},
 		});
 
 		// Act
@@ -139,7 +139,7 @@ describe("PV and electric batteries mapper", () => {
 				grid_charging_possible: false,
 				maximum_charge_rate_one_way_trip: 6.2,
 				maximum_discharge_rate_one_way_trip: 2.3,
-				minimum_charge_rate_one_way_trip: 4.5
+				minimum_charge_rate_one_way_trip: 4.5,
 			},
 			// "ElectricBattery1": {
 			// 	battery_age: 0,

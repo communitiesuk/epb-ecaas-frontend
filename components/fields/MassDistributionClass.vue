@@ -12,23 +12,23 @@ defineProps<{
 const options: Record<MassDistributionClass, RadioOption> = {
 	I: {
 		label: "Mass concentrated on internal side",
-		hint: "Construction with external thermal insulation (main mass component near inside surface), or equivalent"
+		hint: "Construction with external thermal insulation (main mass component near inside surface), or equivalent",
 	},
 	E: {
 		label: "Mass concentrated on external side",
-		hint: "Construction with internal thermal insulation (main mass component near outside surface), or equivalent"
+		hint: "Construction with internal thermal insulation (main mass component near outside surface), or equivalent",
 	},
 	IE: {
 		label: "Mass divided over internal and external side",
-		hint: "Construction with thermal insulation in between two main mass components, or equivalent"
+		hint: "Construction with thermal insulation in between two main mass components, or equivalent",
 	},
 	D: {
 		label: "Mass equally distributed",
-		hint: "Uninsulated construction (e.g. solid or hollow bricks, heavy or lightweight concrete, or lightweight construction with negligible mass (e.g. steel sandwich panel), or equivalent"
+		hint: "Uninsulated construction (e.g. solid or hollow bricks, heavy or lightweight concrete, or lightweight construction with negligible mass (e.g. steel sandwich panel), or equivalent",
 	},
 	M: {
 		label: "Mass concentrated inside",
-		hint: "Construction with both internal and external insulation (main mass component concentrated near centre of construction), or equivalent"
+		hint: "Construction with both internal and external insulation (main mass component concentrated near centre of construction), or equivalent",
 	},
 };
 

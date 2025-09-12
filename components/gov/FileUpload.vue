@@ -35,7 +35,7 @@ const {
 	accept = undefined,
 	hint = undefined,
 	errorMessage = undefined,
-	change = undefined
+	change = undefined,
 } = defineProps<FileUploadProps>();
 
 const el = useTemplateRef("el");

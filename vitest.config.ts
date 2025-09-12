@@ -6,5 +6,5 @@ export default defineVitestConfig({
 		globals: true,
 		silent: true,
 		exclude: ["**/node_modules/**", "e2e-tests/**"],
-	}
+	},
 });

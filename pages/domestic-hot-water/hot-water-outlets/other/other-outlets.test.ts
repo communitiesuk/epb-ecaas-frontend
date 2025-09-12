@@ -18,18 +18,18 @@ const outlet: EcaasForm<OtherHotWaterOutletData> = {
 	data: {
 		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
 		name: "Basin tap 1",
-		flowRate: 10
+		flowRate: 10,
 	},
-	complete: true
+	complete: true,
 };
 
 const outlet2: EcaasForm<OtherHotWaterOutletData> = {
 	data: {
 		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8123",
 		name: "Basin tap 2",
-		flowRate: 11
+		flowRate: 11,
 	},
-	complete: true
+	complete: true,
 };
 
 afterEach(() => {
@@ -48,8 +48,8 @@ describe("other outlets", () => {
 
 		await renderSuspended(OtherOutlet, {
 			route: {
-				params: { outlet: "create" }
-			}
+				params: { outlet: "create" },
+			},
 		});
 
 		await populateValidForm();
@@ -66,16 +66,16 @@ describe("other outlets", () => {
 			domesticHotWater: {
 				hotWaterOutlets: {
 					otherOutlets: {
-						data: [outlet]
-					}
-				}
-			}
+						data: [outlet],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(OtherOutlet, {
 			route: {
-				params: { outlet: "0" }
-			}
+				params: { outlet: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Basin tap 1");
@@ -105,8 +105,8 @@ describe("other outlets", () => {
 	
 		await renderSuspended(OtherOutlet, {
 			route: {
-				params: { outlet: "create" }
-			}
+				params: { outlet: "create" },
+			},
 		});
 	
 		await populateValidForm();
@@ -130,8 +130,8 @@ describe("Partially saving data", () => {
 	
 		await renderSuspended(OtherOutlet, {
 			route: {
-				params: { outlet: "create" }
-			}
+				params: { outlet: "create" },
+			},
 		});
 	
 		await user.type(screen.getByTestId("name"), "Other outlet 1");
@@ -146,8 +146,8 @@ describe("Partially saving data", () => {
 	test("partial form data automatically saved to store with default name if no name has been added", async () => {
 		await renderSuspended(OtherOutlet, {
 			route: {
-				params: { outlet: "create" }
-			}
+				params: { outlet: "create" },
+			},
 		});
 	
 		await user.type(screen.getByTestId("flowRate"), "17");
@@ -204,8 +204,8 @@ describe("Partially saving data", () => {
 	test("creates a new 'other' item automatically when a user adds only the name value", async () => {
 		await renderSuspended(OtherOutlet, {
 			route: {
-				params: { outlet: "create" }
-			}
+				params: { outlet: "create" },
+			},
 		});
 	
 		await user.type(screen.getByTestId("name"), "Other outlet 1");
@@ -227,10 +227,10 @@ describe("Partially saving data", () => {
 			domesticHotWater: {
 				hotWaterOutlets: {
 					otherOutlets: {
-						data: [outlet, outlet2]
-					}
-				}
-			}
+						data: [outlet, outlet2],
+					},
+				},
+			},
 		});    
 		await renderSuspended(OtherOutlet, {
 			route: {

@@ -15,8 +15,8 @@ describe("point thermal bridges", () => {
 	const state: EcaasForm<PointThermalBridgeData> = {
 		data: {
 			name: "Point 1",
-			heatTransferCoefficient: 1
-		}
+			heatTransferCoefficient: 1,
+		},
 	};
 
 	afterEach(() => {
@@ -48,16 +48,16 @@ describe("point thermal bridges", () => {
 			dwellingFabric: {
 				dwellingSpaceThermalBridging: {
 					dwellingSpacePointThermalBridges: {
-						data: [state]
-					}
-				}
-			}
+						data: [state],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(PointBridging, {
 			route: {
-				params: { bridging: "0" }
-			}
+				params: { bridging: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Point 1");
@@ -103,8 +103,8 @@ describe("point thermal bridges", () => {
 		it("creates a new thermal point bridge automatically with given name", async () => {
 			await renderSuspended(PointBridging, {
 				route: {
-					params: { point: "create" }
-				}
+					params: { point: "create" },
+				},
 			});
 
 			await user.type(screen.getByTestId("name"), "New point bridge");
@@ -118,8 +118,8 @@ describe("point thermal bridges", () => {
 		it("creates a new thermal point bridge automatically with default name after other data is entered", async () => {
 			await renderSuspended(PointBridging, {
 				route: {
-					params: { point: "create" }
-				}
+					params: { point: "create" },
+				},
 			});
 
 			await user.type(screen.getByTestId("heatTransferCoefficient"), "2");
@@ -135,16 +135,16 @@ describe("point thermal bridges", () => {
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
 						dwellingSpacePointThermalBridges: {
-							data: [state]
-						}
-					}
-				}
+							data: [state],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(PointBridging, {
 				route: {
-					params: { point: "0" }
-				}
+					params: { point: "0" },
+				},
 			});
 
 			await user.clear(screen.getByTestId("name"));
@@ -165,16 +165,16 @@ describe("point thermal bridges", () => {
 					dwellingSpaceThermalBridging: {
 						dwellingSpacePointThermalBridges: {
 							data: [{ ...state, complete: true }],
-							complete: true
-						}
-					}
-				}
+							complete: true,
+						},
+					},
+				},
 			});
 
 			await renderSuspended(PointBridging, {
 				route: {
-					params: { point: "0" }
-				}
+					params: { point: "0" },
+				},
 			});
 
 			await user.type(screen.getByTestId("name"), "Point bridge");

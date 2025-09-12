@@ -72,5 +72,5 @@ export function externalConditions(shading: SchemaShadingSegment[]): SchemaExter
 export const noEvents: SchemaWaterHeatingEvents = {
 	Bath: null,
 	Shower: null,
-	Other: null
+	Other: null,
 };

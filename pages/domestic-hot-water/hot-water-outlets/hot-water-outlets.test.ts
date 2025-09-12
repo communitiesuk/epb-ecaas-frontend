@@ -172,10 +172,10 @@ describe("hot water outlets", () => {
 			const populatedList = screen.getByTestId("electricShower_items");
 
 			expect(
-				within(populatedList).getByText("Electric shower 1")
+				within(populatedList).getByText("Electric shower 1"),
 			).toBeDefined();
 			expect(
-				within(populatedList).getByText("Electric shower 3")
+				within(populatedList).getByText("Electric shower 3"),
 			).toBeDefined();
 			expect(within(populatedList).queryByText("Electric shower 2")).toBeNull();
 		});
@@ -498,7 +498,7 @@ describe("hot water outlets", () => {
     it("marks hot water outlets section as complete when button is clicked", async () => {
       
     	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted"
+    		"completeSectionCompleted",
     	);
 		
     	expect(completedStatusElement?.style.display).toBe("none");
@@ -514,7 +514,7 @@ describe("hot water outlets", () => {
     	expect(otherOutlets?.complete).toBe(true);
 
     	const markAsCompleteButton = screen.queryByTestId(
-    		"completeSectionButton"
+    		"completeSectionButton",
     	);
 
     	expect(markAsCompleteButton?.style.display).toBe("none");
@@ -527,23 +527,23 @@ describe("hot water outlets", () => {
     	const outlets = await getHotWaterOutletsData("remove");
 
     	for (const [key] of Object.entries(
-    		store.domesticHotWater.hotWaterOutlets
+    		store.domesticHotWater.hotWaterOutlets,
     	)) {
     		const typedKey = key as HotWaterOutletsType;
 
     		await user.click(screen.getByTestId("completeSectionButton"));
     		expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(
-    			true
+    			true,
     		);
 
     		const outletData = outlets.find((e) => e.key === typedKey);
     		await user.click(screen.getByTestId(outletData!.testId));
     		expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(
-    			false
+    			false,
     		);
         
     		const markAsCompleteButton = screen.queryByTestId(
-    			"completeSectionButton"
+    			"completeSectionButton",
     		);
     		expect(markAsCompleteButton?.style.display).not.toBe("none");
     	}
@@ -553,22 +553,22 @@ describe("hot water outlets", () => {
     	const outlets = await getHotWaterOutletsData("duplicate");
 
     	for (const [key] of Object.entries(
-    		store.domesticHotWater.hotWaterOutlets
+    		store.domesticHotWater.hotWaterOutlets,
     	)) {
     		const typedKey = key as HotWaterOutletsType;
 
     		await user.click(screen.getByTestId("completeSectionButton"));
     		expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(
-    			true
+    			true,
     		);
 
     		const outletData = outlets.find((e) => e.key === typedKey);
     		await user.click(screen.getByTestId(outletData!.testId));
     		expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(
-    			false
+    			false,
     		);
     		const markAsCompleteButton = screen.queryByTestId(
-    			"completeSectionButton"
+    			"completeSectionButton",
     		);
     		expect(markAsCompleteButton?.style.display).not.toBe("none");
     	}
@@ -576,14 +576,14 @@ describe("hot water outlets", () => {
 
     it("marks as not complete after saving a new hot water outlet item", async () => {
     	for (const [key] of Object.entries(
-    		store.domesticHotWater.hotWaterOutlets
+    		store.domesticHotWater.hotWaterOutlets,
     	)) {
     		const outlets = await getHotWaterOutletsData("");
     		const typedKey = key as HotWaterOutletsType;
 
     		await user.click(screen.getByTestId("completeSectionButton"));
     		expect(store.domesticHotWater.hotWaterOutlets[typedKey]?.complete).toBe(
-    			true
+    			true,
     		);
 
     		const outletData = outlets.find((e) => e.key === typedKey);
@@ -595,12 +595,12 @@ describe("hot water outlets", () => {
     		});
     		await user.click(screen.getByTestId("saveAndComplete"));
     		expect(store.domesticHotWater.hotWaterOutlets[typedKey].complete).toBe(
-    			false
+    			false,
     		);
 
     		await renderSuspended(HotWaterOutlets);
     		const markAsCompleteButton = screen.queryByTestId(
-    			"completeSectionButton"
+    			"completeSectionButton",
     		);
     		expect(markAsCompleteButton?.style.display).not.toBe("none");
     	}

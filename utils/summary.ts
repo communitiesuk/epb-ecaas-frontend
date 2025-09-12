@@ -4,7 +4,7 @@ export function getTabItems(sections: SummarySection[]) {
 	return sections.map(x => {
 		return {
 			id: x.id,
-			label: x.label
+			label: x.label,
 		};
 	});
 };

@@ -7,19 +7,19 @@ const store = useEcaasStore();
 const { autoSaveForm } = useForm();
 
 const model = ref({
-	...store.dwellingDetails.externalFactors.data
+	...store.dwellingDetails.externalFactors.data,
 });
 
 const typeOfExposureOptions: Record<SchemaVentilationShieldClass, SnakeToSentenceCase<SchemaVentilationShieldClass>> = {
 	Open: "Open",
 	Normal: "Normal",
-	Shielded: "Shielded"
+	Shielded: "Shielded",
 };
 const terrainTypeOptions: Record<SchemaTerrainClass, PascalToSentenceCase<SchemaTerrainClass>> = {
 	OpenWater: "Open water",
 	OpenField: "Open field",
 	Suburban: "Suburban",
-	Urban: "Urban"
+	Urban: "Urban",
 };
 
 const saveForm = (fields: typeof model.value) => {
@@ -30,7 +30,7 @@ const saveForm = (fields: typeof model.value) => {
 					altitude: fields.altitude,
 					typeOfExposure: fields.typeOfExposure,
 					terrainType: fields.terrainType,
-					noiseNuisance: fields.noiseNuisance
+					noiseNuisance: fields.noiseNuisance,
 				},
 				complete: true,
 			},

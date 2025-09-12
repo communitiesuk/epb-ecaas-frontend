@@ -45,16 +45,16 @@ describe("open gas flue balancer", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					open_gas_flue_balancer: {
-						data: [openGasFlueBalancer]
-					}
-				}
-			}
+						data: [openGasFlueBalancer],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(OpenGasFlueBalancer, {
 			route: {
-				params: { combustion: "0" }
-			}
+				params: { combustion: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Open gas flue balancer 1");

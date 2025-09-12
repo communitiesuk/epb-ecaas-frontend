@@ -21,9 +21,9 @@ const saveForm = (fields: VentData) => {
 				openingRatio: 1,
 				midHeightOfZone: fields.midHeightOfZone,
 				orientation: fields.orientation,
-				pitch: fields.pitch
+				pitch: fields.pitch,
 			},
-			complete: true
+			complete: true,
 		};
 
 		vents.complete = false;
@@ -40,7 +40,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.infiltrationAndVentilation.vents.data[index] = newData;
 		state.infiltrationAndVentilation.vents.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

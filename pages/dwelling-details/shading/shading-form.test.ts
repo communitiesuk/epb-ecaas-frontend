@@ -15,12 +15,12 @@ describe("shading form", () => {
 		endAngle: 20,
 		objectType: "obstacle",
 		height: 3,
-		distance: 2
+		distance: 2,
 	};
 
 	const shading2: ShadingData = {
 		...shading1,
-		name: "Small Tree"
+		name: "Small Tree",
 	};
 
 	mockNuxtImport("navigateTo", () => {
@@ -34,8 +34,8 @@ describe("shading form", () => {
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(ShadingForm, {
 			route: {
-				params: { shading: "create" }
-			}
+				params: { shading: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Big Tree");
@@ -51,7 +51,7 @@ describe("shading form", () => {
 
 		expect(data[0]).toEqual({
 			data: shading1,
-			complete: true
+			complete: true,
 		});
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-details/shading");
 	});
@@ -61,18 +61,18 @@ describe("shading form", () => {
 			dwellingDetails: {
 				shading: {
 					data: [{
-						data: { ...shading1 }
+						data: { ...shading1 },
 					}, {
-						data: { ...shading2 }
-					}]
-				}
-			} }
+						data: { ...shading2 },
+					}],
+				},
+			} },
 		);
 
 		await renderSuspended(ShadingForm, {
 			route: {
-				params: { shading: "1" }
-			}
+				params: { shading: "1" },
+			},
 		});
 
 		await user.clear(screen.getByTestId("name"));
@@ -90,18 +90,18 @@ describe("shading form", () => {
 			dwellingDetails: {
 				shading: {
 					data: [{
-						data: { ...shading1 }
+						data: { ...shading1 },
 					}, {
-						data: { ...shading2 }
-					}]
-				}
-			} }
+						data: { ...shading2 },
+					}],
+				},
+			} },
 		);
 
 		await renderSuspended(ShadingForm, {
 			route: {
-				params: { shading: "0" }
-			}
+				params: { shading: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Big Tree");
@@ -113,8 +113,8 @@ describe("shading form", () => {
 
 		await renderSuspended(ShadingForm, {
 			route: {
-				params: { shading: "1" }
-			}
+				params: { shading: "1" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Small Tree");
@@ -123,8 +123,8 @@ describe("shading form", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(ShadingForm, {
 			route: {
-				params: { shading: "create" }
-			}
+				params: { shading: "create" },
+			},
 		});
 
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -150,10 +150,10 @@ describe("shading form", () => {
 			dwellingDetails: {
 				shading: {
 					data: [{
-						data: { ...shading1 }
-					}]
-				}
-			}
+						data: { ...shading1 },
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(ShadingForm, {

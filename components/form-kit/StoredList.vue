@@ -15,7 +15,7 @@ const {
 	id,
 	label,
 	help,
-	attrs: { link, options }
+	attrs: { link, options },
 } = props.context;
 
 </script>

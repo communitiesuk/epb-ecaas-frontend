@@ -33,7 +33,7 @@ describe("windowData Zod schema", () => {
 		expect(
 			() => {
 				windowDataZod.parse(windowFormData);
-			}
+			},
 		).not.toThrowError();
 	});
 
@@ -69,7 +69,7 @@ describe("windowData Zod schema", () => {
 		expect(
 			() => {
 				windowDataZod.parse(windowFormData);
-			}
+			},
 		).toThrowError();
 	});
 
@@ -105,7 +105,7 @@ describe("windowData Zod schema", () => {
 		expect(
 			() => {
 				windowDataZod.parse(windowFormData);
-			}
+			},
 		).toThrowError();
 	});
 });

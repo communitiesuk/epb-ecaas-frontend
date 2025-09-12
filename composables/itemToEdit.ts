@@ -15,7 +15,7 @@ export function useItemToEdit<T>(indexRouteParam: string, list?: Array<T>): T | 
 		if (!item && import.meta.client) {
 			throw createError({
 				statusCode: 404,
-				statusMessage: `Page not found: ${route.path}`
+				statusMessage: `Page not found: ${route.path}`,
 			});
 		}
 

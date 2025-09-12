@@ -21,18 +21,18 @@ const pipework1: EcaasForm<SecondaryPipeworkData> = {
 		name: "Pipework Kitchen Sink",
 		length: 3,
 		location: "internal",
-		internalDiameter: 9
+		internalDiameter: 9,
 	}, 
-	complete: true
+	complete: true,
 };
 const pipework2: EcaasForm<SecondaryPipeworkData> = {
 	data: {
 		name: "Pipework Kitchen Sink 2",
 		length: 1,
 		location: "internal",
-		internalDiameter: 4
+		internalDiameter: 4,
 	},
-	complete: true
+	complete: true,
 
 };
 describe("Secondary pipework form", () => {
@@ -48,9 +48,9 @@ describe("Secondary pipework form", () => {
 			name: "Pipework Kitchen Sink",
 			length: 3,
 			location: "internal",
-			internalDiameter: 9
+			internalDiameter: 9,
 		}, 
-		complete: true
+		complete: true,
 	};
 
 	test("data is saved to store state when form is valid", async () => {
@@ -81,16 +81,16 @@ describe("Secondary pipework form", () => {
 			domesticHotWater: {
 				pipework: {
 					secondaryPipework: {
-						data: [pipework1]
-					}
-				}
-			}
+						data: [pipework1],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(PipeworkForm, {
 			route: {
-				params: { pipe: "0" }
-			}
+				params: { pipe: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Pipework Kitchen Sink");
@@ -204,10 +204,10 @@ describe("partially saving data", () => {
 			domesticHotWater: {
 				pipework: {
 					secondaryPipework: {
-						data: [pipework1, pipework2]
-					}
-				}
-			}
+						data: [pipework1, pipework2],
+					},
+				},
+			},
 		});    
 		await renderSuspended(PipeworkForm, {
 			route: {

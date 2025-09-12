@@ -3,7 +3,7 @@ import type { SchemaHeatSourceWetDetails } from "~/schema/aliases";
 export const immersionHeaterPositionValues: Record<ImmersionHeaterPosition, number> = {
 	top: 1.0,
 	middle: 0.5,
-	bottom: 0
+	bottom: 0,
 };
 
 export const defaultZoneName: string = "dwellingspace";
@@ -37,7 +37,7 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			eahp_mixed_ext_air_ratio: null,
 			temp_outlet: 34,
 			temp_source: 0,
-			temp_test: -7
+			temp_test: -7,
 		},
 		{
 			air_flow_rate: null,
@@ -48,7 +48,7 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			design_flow_temp: 35,
 			temp_outlet: 30,
 			temp_source: 0,
-			temp_test: 2
+			temp_test: 2,
 		},
 		{
 			air_flow_rate: null,
@@ -59,7 +59,7 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			design_flow_temp: 35,
 			temp_outlet: 27,
 			temp_source: 0,
-			temp_test: 7
+			temp_test: 7,
 		},
 		{
 			air_flow_rate: null,
@@ -70,7 +70,7 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			design_flow_temp: 35,
 			temp_outlet: 24,
 			temp_source: 0,
-			temp_test: 12
+			temp_test: 12,
 		},
 		{
 			air_flow_rate: null,
@@ -81,8 +81,8 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			design_flow_temp: 35,
 			temp_outlet: 34,
 			temp_source: 0,
-			temp_test: -7
-		}
+			temp_test: -7,
+		},
 	],
 	time_constant_onoff_operation: 140,
 	time_delay_backup: 2,

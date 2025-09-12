@@ -56,19 +56,19 @@ describe("heat generation", () => {
 		const heatPump1: HeatPumpData = {
 			id: uuidv4(),
 			name: "Heat pump 1",
-			productReference: "HEATPUMP-LARGE"
+			productReference: "HEATPUMP-LARGE",
 		};
 
 		const heatPump2: HeatPumpData = {
 			...heatPump1,
 			name: "Heat pump 2",
-			productReference: "HEATPUMP-MEDIUM"
+			productReference: "HEATPUMP-MEDIUM",
 		};
 
 		const heatPump3: HeatPumpData = {
 			...heatPump1,
 			name: "Heat pump 3",
-			productReference: "HEATPUMP-SMALL"
+			productReference: "HEATPUMP-SMALL",
 		};
 
 		afterEach(() => {
@@ -80,10 +80,10 @@ describe("heat generation", () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [{ data: heatPump1 }]
-						}
-					}
-				}
+							data: [{ data: heatPump1 }],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(HeatGeneration);
@@ -98,10 +98,10 @@ describe("heat generation", () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data:[{ data: heatPump1 }, { data: heatPump2 }, { data: heatPump3 }]
-						}
-					}
-				}
+							data:[{ data: heatPump1 }, { data: heatPump2 }, { data: heatPump3 }],
+						},
+					},
+				},
 			});
 			await renderSuspended(HeatGeneration);
 			await user.click(await screen.findByTestId("heatPump_remove_1"));
@@ -118,7 +118,7 @@ describe("heat generation", () => {
 					heatGeneration: {
 						heatPump: {
 							data: [{
-								data: heatPump1
+								data: heatPump1,
 							}],
 						},
 					},
@@ -137,7 +137,7 @@ describe("heat generation", () => {
 						heatPump: {
 							data: [{
 								data: heatPump1,
-								complete: true
+								complete: true,
 							}],
 						},
 					},
@@ -200,13 +200,13 @@ describe("heat generation", () => {
 							data: [{
 								data: {	
 									name: "Heat pump 1",
-									productReference: "HEATPUMP-LARGE"
+									productReference: "HEATPUMP-LARGE",
 								},
 								complete: false,
-							}]
+							}],
 						},
-					}
-				}
+					},
+				},
 			});
 		
 			await renderSuspended(HeatGeneration);

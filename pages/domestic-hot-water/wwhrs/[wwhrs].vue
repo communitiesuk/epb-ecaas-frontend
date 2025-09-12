@@ -16,13 +16,13 @@ const hotWaterOutlets = [
 	bath.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	electricShower.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	mixedShower.data.map(x => [x.data.id, x.data.name] as [string, string]),
-	otherOutlets.data.map(x => [x.data.id, x.data.name] as [string, string])
+	otherOutlets.data.map(x => [x.data.id, x.data.name] as [string, string]),
 ].flat();
 
 const wwhrsTypeOptions: Record<WwhrsType, string> = {
 	WWHRS_InstantaneousSystemA: "System A",
 	WWHRS_InstantaneousSystemB: "System B",
-	WWHRS_InstantaneousSystemC: "System C"
+	WWHRS_InstantaneousSystemC: "System C",
 };
 
 const saveForm = (fields: WwhrsData) => {
@@ -35,7 +35,7 @@ const saveForm = (fields: WwhrsData) => {
 			type: fields.type,
 			flowRate: fields.flowRate,
 			efficiency: fields.efficiency,
-			proportionOfUse: fields.proportionOfUse
+			proportionOfUse: fields.proportionOfUse,
 		};
 
 		saveToList(item, wwhrs);

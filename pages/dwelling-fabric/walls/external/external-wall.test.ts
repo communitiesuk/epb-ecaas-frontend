@@ -24,7 +24,7 @@ describe("external wall", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: "I"
+		massDistributionClass: "I",
 	};
 
 	afterEach(() => {
@@ -59,16 +59,16 @@ describe("external wall", () => {
 			dwellingFabric: {
 				dwellingSpaceWalls: {
 					dwellingSpaceExternalWall: {
-						data: [state]
-					}
-				}
-			}
+						data: [state],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(ExternalWall, {
 			route: {
-				params: { wall: "0" }
-			}
+				params: { wall: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External wall 1");

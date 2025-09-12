@@ -33,9 +33,9 @@ describe("windows", () => {
 			midHeight: 1,
 			numberOpenableParts: "0",
 			openingToFrameRatio: 0.2,
-			curtainsOrBlinds: false
+			curtainsOrBlinds: false,
 		}, 
-		complete: true
+		complete: true,
 	};
 
 	const window2: EcaasForm<WindowData> = {
@@ -43,7 +43,7 @@ describe("windows", () => {
 			...window1.data,
 			name: "Window 2",
 		},
-		complete: true
+		complete: true,
 	};
 
 	const window3: EcaasForm<WindowData> = {
@@ -51,7 +51,7 @@ describe("windows", () => {
 			...window1.data,
 			name: "Window 3",
 		},
-		complete: true
+		complete: true,
 	};
 
 
@@ -59,9 +59,9 @@ describe("windows", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data: [window1]
-				}
-			}
+					data: [window1],
+				},
+			},
 		});
 
 		await renderSuspended(Windows);
@@ -77,9 +77,9 @@ describe("windows", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data: [window1, window2, window3]
-				}
-			}
+					data: [window1, window2, window3],
+				},
+			},
 		});
 
 		await renderSuspended(Windows);
@@ -97,9 +97,9 @@ describe("windows", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data: [window1, window2]
-				}
-			}
+					data: [window1, window2],
+				},
+			},
 		});
 
 		await renderSuspended(Windows);
@@ -120,9 +120,9 @@ describe("windows", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data: [{ data: { ...window1.data }, complete: false }]
-				}
-			}
+					data: [{ data: { ...window1.data }, complete: false }],
+				},
+			},
 		});
 
 		await renderSuspended(Windows);
@@ -220,7 +220,7 @@ describe("windows", () => {
 			dwellingFabric: {
 				dwellingSpaceWindows: {
 					data: [window1],
-					complete: true
+					complete: true,
 				}, 
 			},
 		});
@@ -239,7 +239,7 @@ describe("windows", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data: [{ data: { ...window1.data }, complete: false }]
+					data: [{ data: { ...window1.data }, complete: false }],
 					
 				},
 			},
@@ -254,7 +254,7 @@ describe("windows", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data: [window1]
+					data: [window1],
 					
 				},
 			},
