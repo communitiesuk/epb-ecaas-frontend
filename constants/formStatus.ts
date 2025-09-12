@@ -9,16 +9,16 @@ export interface FormStatus {
 const formStatus: FormStatus = {
 	notStarted: {
 		text: "Not started",
-		color: "grey"
+		color: "grey",
 	},
 	inProgress: {
 		text: "In progress",
-		color: "yellow"
+		color: "yellow",
 	},
 	complete: {
 		text: "Complete",
-		color: "green"
-	}
+		color: "green",
+	},
 };
 
 export default formStatus;

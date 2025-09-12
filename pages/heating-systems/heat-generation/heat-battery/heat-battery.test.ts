@@ -17,7 +17,7 @@ describe("heatBattery", () => {
 
 	const heatBattery: HeatBatteryData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-		name: "Heat battery 1"
+		name: "Heat battery 1",
 	};
 
 	afterEach(() => {
@@ -47,16 +47,16 @@ describe("heatBattery", () => {
 			heatingSystems: {
 				heatGeneration: {
 					heatBattery: {
-						data: [heatBattery]
-					}
-				}
-			}
+						data: [heatBattery],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(HeatBattery, {
 			route: {
-				params: { "battery": "0" }
-			}
+				params: { "battery": "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat battery 1");

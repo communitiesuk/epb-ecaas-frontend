@@ -26,8 +26,8 @@ const pagesData = [
 		title: "Outputs",
 		url: "/outputs",
 		type: PageType.Outputs,
-		parentId: "taskList"
-	}
+		parentId: "taskList",
+	},
 ] as const satisfies Array<Page>;
 
 // above uses as const so we can export static PageId string union type here

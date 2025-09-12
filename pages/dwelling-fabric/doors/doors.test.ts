@@ -202,13 +202,13 @@ describe("doors", () => {
 			const populatedList = screen.getByTestId("externalUnglazed_items");
 
 			expect(
-				within(populatedList).getByText("external unglazed 1 name")
+				within(populatedList).getByText("external unglazed 1 name"),
 			).toBeDefined();
 			expect(
-				within(populatedList).getByText("external unglazed 3 name")
+				within(populatedList).getByText("external unglazed 3 name"),
 			).toBeDefined();
 			expect(
-				within(populatedList).queryByText("external unglazed 2 name")
+				within(populatedList).queryByText("external unglazed 2 name"),
 			).toBeNull();
 		});
 		test("door is duplicated when duplicate link is clicked", async () => {
@@ -233,10 +233,10 @@ describe("doors", () => {
 			expect(screen.getByText("external unglazed 1 name (1)")).toBeDefined();
 			expect(screen.getByText("external unglazed 1 name (2)")).toBeDefined();
 			expect(
-				screen.getByText("external unglazed 1 name (1) (1)")
+				screen.getByText("external unglazed 1 name (1) (1)"),
 			).toBeDefined();
 			expect(
-				screen.getByText("external unglazed 1 name (1) (2)")
+				screen.getByText("external unglazed 1 name (1) (2)"),
 			).toBeDefined();
 		});
 	});
@@ -279,13 +279,13 @@ describe("doors", () => {
 			const populatedList = screen.getByTestId("externalGlazed_items");
 
 			expect(
-				within(populatedList).getByText("externalGlazed1 name")
+				within(populatedList).getByText("externalGlazed1 name"),
 			).toBeDefined();
 			expect(
-				within(populatedList).getByText("externalGlazed3 name")
+				within(populatedList).getByText("externalGlazed3 name"),
 			).toBeDefined();
 			expect(
-				within(populatedList).queryByText("externalGlazed2 name")
+				within(populatedList).queryByText("externalGlazed2 name"),
 			).toBeNull();
 		});
 
@@ -433,10 +433,10 @@ describe("doors", () => {
 
     it("marks doors as complete when mark section as complete button is clicked", async () => {
     	expect(
-    		screen.getByRole("button", { name: "Mark section as complete" })
+    		screen.getByRole("button", { name: "Mark section as complete" }),
     	).not.toBeNull();
     	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted"
+    		"completeSectionCompleted",
     	);
     	expect(completedStatusElement?.style.display).toBe("none");
 
@@ -452,7 +452,7 @@ describe("doors", () => {
     	expect(dwellingSpaceExternalUnglazedDoor.complete).toBe(true);
     	expect(dwellingSpaceInternalDoor.complete).toBe(true);
     	expect(
-    		screen.queryByRole("button", { name: "Mark section as complete" })
+    		screen.queryByRole("button", { name: "Mark section as complete" }),
     	).toBeNull();
     	expect(completedStatusElement?.style.display).not.toBe("none");
 
@@ -468,17 +468,17 @@ describe("doors", () => {
 
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(
-    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
     		).toBe(true);
 
     		const doorData = doorsData.find((x) => x.key === typedKey);
 
     		await user.click(screen.getByTestId(doorData!.testId));
     		expect(
-    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
     		).toBe(false);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -492,17 +492,17 @@ describe("doors", () => {
 
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(
-    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
     		).toBe(true);
 
     		const doorData = doorsData.find((x) => x.key === typedKey);
 
     		await user.click(screen.getByTestId(doorData!.testId));
     		expect(
-    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
     		).toBe(false);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -516,7 +516,7 @@ describe("doors", () => {
     		const typedKey = key as DoorType;
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(store.dwellingFabric.dwellingSpaceDoors[typedKey].complete).toBe(
-    			true
+    			true,
     		);
 
     		const doorData = doorsData.find((x) => x.key === typedKey);
@@ -530,11 +530,11 @@ describe("doors", () => {
     		await user.click(screen.getByTestId("saveAndComplete"));
 
     		expect(
-    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
     		).toBe(false);
     		await renderSuspended(Doors);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -571,7 +571,7 @@ describe("doors", () => {
     	await renderSuspended(Doors);
 
     	expect(screen.getByTestId("externalGlazed_status_0").textContent).toBe(
-    		formStatus.inProgress.text
+    		formStatus.inProgress.text,
     	);
     });
 	});

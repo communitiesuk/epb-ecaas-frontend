@@ -133,11 +133,11 @@ describe("shading", () => {
 		await renderSuspended(Shading);
 
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 
 		const completedStatusElement = screen.queryByTestId(
-			"completeSectionCompleted"
+			"completeSectionCompleted",
 		);
 		expect(completedStatusElement?.style.display).toBe("none");
 
@@ -147,7 +147,7 @@ describe("shading", () => {
 
 		expect(complete).toBe(true);
 		expect(
-			screen.queryByRole("button", { name: "Mark section as complete" })
+			screen.queryByRole("button", { name: "Mark section as complete" }),
 		).toBeNull();
 		expect(completedStatusElement?.style.display).not.toBe("none");
 
@@ -180,7 +180,7 @@ describe("shading", () => {
 		await user.click(screen.getByTestId("shading_remove_0"));
 		expect(store.dwellingDetails.shading.complete).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
 
@@ -205,7 +205,7 @@ describe("shading", () => {
 		await user.click(screen.getByTestId("shading_duplicate_0"));
 		expect(store.dwellingDetails.shading.complete).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
 
@@ -243,7 +243,7 @@ describe("shading", () => {
 
 		await renderSuspended(Shading);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
 
@@ -263,7 +263,7 @@ describe("shading", () => {
 		await renderSuspended(Shading);
 
 		expect(screen.getByTestId("shading_status_0").textContent).toBe(
-			formStatus.inProgress.text
+			formStatus.inProgress.text,
 		);
 	});
 
@@ -284,7 +284,7 @@ describe("shading", () => {
 		await renderSuspended(Shading);
 
 		expect(screen.getByTestId("shading_status_0").textContent).toBe(
-			formStatus.complete.text
+			formStatus.complete.text,
 		);
 	});
 });

@@ -40,7 +40,7 @@ const saveForm = (fields: PrimaryPipeworkData) => {
 				hotWaterCylinder: fields.hotWaterCylinder,
 				location: fields.location,
 			},
-			complete: true
+			complete: true,
 		};
 		primaryPipework.complete = false;
 	});

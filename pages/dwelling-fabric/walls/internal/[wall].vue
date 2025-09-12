@@ -18,7 +18,7 @@ const saveForm = (fields: InternalWallData) => {
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === "90" ? 90 : fields.pitch
+			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 		};
 
 		if (!dwellingSpaceWalls.dwellingSpaceInternalWall) {

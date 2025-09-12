@@ -23,9 +23,9 @@ describe("cooling mapper", () => {
 			cooling: {
 				airConditioning: {
 					data: [airConditioning],
-					complete: true
-				}
-			}
+					complete: true,
+				},
+			},
 		});
 
 		// Acts
@@ -39,7 +39,7 @@ describe("cooling mapper", () => {
 				frac_convective: 1,
 				efficiency: 1,
 				type: SpaceCoolSystemType.AirConditioning,
-			}
+			},
 		};
 
 		expect(result).toEqual(expectedResult);
@@ -66,8 +66,8 @@ describe("cooling mapper", () => {
 				airConditioning: {
 					data: [airConditioner1, airConditioner2],
 					complete: true,
-				}
-			}
+				},
+			},
 		});
 
 		// Acts

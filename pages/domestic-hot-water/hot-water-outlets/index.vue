@@ -41,8 +41,8 @@ function handleDuplicate<T extends HotWaterOutletData>(outletType: HotWaterOutle
 				complete: outlet.complete,
 				data: {
 					...outlet.data,
-					name: `${name} (${duplicates.length})`
-				}
+					name: `${name} (${duplicates.length})`,
+				},
 			} as T;
 
 			state.domesticHotWater.hotWaterOutlets[outletType].data.push(newItem);
@@ -58,9 +58,9 @@ function handleComplete() {
 				mixedShower: { complete: true },
 				electricShower: { complete: true },
 				bath: { complete: true },
-				otherOutlets: { complete: true }
-			}
-		}
+				otherOutlets: { complete: true },
+			},
+		},
 	});
 	navigateTo("/domestic-hot-water");
 }

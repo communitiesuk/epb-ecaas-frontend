@@ -22,7 +22,7 @@ const saveForm = (fields: ElectricBatteryData) => {
 				gridChargingPossible: fields.gridChargingPossible,
 				maximumChargeRate: fields.maximumChargeRate,
 				minimumChargeRate: fields.minimumChargeRate,
-				maximumDischargeRate: fields.maximumDischargeRate
+				maximumDischargeRate: fields.maximumDischargeRate,
 			},
 			complete: true,
 		};

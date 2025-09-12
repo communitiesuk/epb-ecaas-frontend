@@ -17,8 +17,8 @@ describe("linear thermal bridges", () => {
 			name: "E1: Steel lintel with perforated steel base plate",
 			typeOfThermalBridge: "e1",
 			linearThermalTransmittance: 1,
-			length: 2
-		}
+			length: 2,
+		},
 	};
 
 	afterEach(() => {
@@ -52,16 +52,16 @@ describe("linear thermal bridges", () => {
 			dwellingFabric: {
 				dwellingSpaceThermalBridging: {
 					dwellingSpaceLinearThermalBridges: {
-						data: [state]
-					}
-				}
-			}
+						data: [state],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(LinearBridging, {
 			route: {
-				params: { bridging: "0" }
-			}
+				params: { bridging: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLSelectElement>("typeOfThermalBridge")).value).toBe("e1");
@@ -109,8 +109,8 @@ describe("linear thermal bridges", () => {
 		it("creates a new thermal linear bridge automatically with name derived from selected type", async () => {
 			await renderSuspended(LinearBridging, {
 				route: {
-					params: { linear: "create" }
-				}
+					params: { linear: "create" },
+				},
 			});
 
 			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "e1");
@@ -124,8 +124,8 @@ describe("linear thermal bridges", () => {
 		it("creates a new thermal linear bridge automatically with default name after other data is entered", async () => {
 			await renderSuspended(LinearBridging, {
 				route: {
-					params: { linear: "create" }
-				}
+					params: { linear: "create" },
+				},
 			});
 
 			await user.type(screen.getByTestId("linearThermalTransmittance"), "5");
@@ -142,16 +142,16 @@ describe("linear thermal bridges", () => {
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
 						dwellingSpaceLinearThermalBridges: {
-							data: [state, state]
-						}
-					}
-				}
+							data: [state, state],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(LinearBridging, {
 				route: {
-					params: { linear: "1" }
-				}
+					params: { linear: "1" },
+				},
 			});
 
 			await user.clear(screen.getByTestId("length"));
@@ -173,16 +173,16 @@ describe("linear thermal bridges", () => {
 					dwellingSpaceThermalBridging: {
 						dwellingSpaceLinearThermalBridges: {
 							data: [{ ...state, complete: true }],
-							complete: true
-						}
-					}
-				}
+							complete: true,
+						},
+					},
+				},
 			});
 
 			await renderSuspended(LinearBridging, {
 				route: {
-					params: { linear: "0" }
-				}
+					params: { linear: "0" },
+				},
 			});
 
 			await user.type(screen.getByTestId("length"), "10");

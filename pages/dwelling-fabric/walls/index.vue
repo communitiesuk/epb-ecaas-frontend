@@ -29,7 +29,7 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 		store.$patch((state) => {
 			const newWall = {
 				...wall, 
-				name: `${wall.name} (${duplicates.length})`
+				name: `${wall.name} (${duplicates.length})`,
 			} as T;
 
 			state.dwellingFabric.dwellingSpaceWalls[wallType].data.push(newWall);
@@ -45,9 +45,9 @@ function handleComplete() {
 				dwellingSpaceExternalWall: { complete: true },
 				dwellingSpaceInternalWall: { complete: true },
 				dwellingSpacePartyWall: { complete: true },
-				dwellingSpaceWallToUnheatedSpace: { complete: true }
-			}
-		}
+				dwellingSpaceWallToUnheatedSpace: { complete: true },
+			},
+		},
 	});
 
 	navigateTo("/dwelling-fabric");

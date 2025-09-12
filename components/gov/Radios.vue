@@ -21,7 +21,7 @@ const {
 	showErrorState,
 	showErrorMessage,
 	help = undefined,
-	ariaDescribedBy = undefined
+	ariaDescribedBy = undefined,
 } = defineProps<RadiosProps>();
 
 const { mounted } = useMounted();

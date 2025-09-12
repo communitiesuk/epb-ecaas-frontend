@@ -1,13 +1,13 @@
 export enum PowerUnitName {
 	KILOWATT_HOUR = "kilowatt-hour",
 	KILOWATT = "kilowatt",
-	KILOWATT_PEAK = "kilowatt peak"
+	KILOWATT_PEAK = "kilowatt peak",
 }
 
 enum PowerSuffix {
 	KILOWATT_HOUR = "kWh",
 	KILOWATT = "kW",
-	KILOWATT_PEAK = "kWp"
+	KILOWATT_PEAK = "kWp",
 }
 
 export class PowerUnit {

@@ -41,7 +41,7 @@ export function useForm() {
 	 */
 	const autoSaveForm = <T extends object>(
 		model: Ref<T>,
-		onPatch: (state: EcaasState, newData: EcaasForm<T>) => void
+		onPatch: (state: EcaasState, newData: EcaasForm<T>) => void,
 	) => {
 		watch(model, async (newData: T, initialData: T) => {
 			if (!hasChangedFields(newData, initialData)) {
@@ -51,7 +51,7 @@ export function useForm() {
 			store.$patch((state) => {
 				onPatch(state, {
 					data: newData,
-					complete: false
+					complete: false,
 				});
 			});
 		});
@@ -74,7 +74,7 @@ export function useForm() {
 		storeData,
 		defaultName,
 		onPatchCreate,
-		onPatchUpdate
+		onPatchUpdate,
 	}: AutoSaveElementFormOptions<T>) => {
 		watch(model, async (newData: T | undefined, initialData: T | undefined) => {
 			const routeParam = route.params[Object.keys(route.params)[0]!];
@@ -101,7 +101,7 @@ export function useForm() {
 			
 				store.$patch(state => {
 					const elementData: EcaasForm<T> = {
-						data: { ...newData, name }
+						data: { ...newData, name },
 					};
 
 					onPatchCreate(state, elementData);
@@ -127,7 +127,7 @@ export function useForm() {
 				}
 
 				const elementData: EcaasForm<T> = {
-					data: { ...newData, name }
+					data: { ...newData, name },
 				};
 
 				onPatchUpdate(state, elementData, index);

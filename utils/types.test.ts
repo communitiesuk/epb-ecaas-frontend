@@ -2,7 +2,7 @@ describe("SnakeToSentenceCase", () => {
 	it("should convert snake_case to Sentence Case", () => {
 		enum SnakeCase {
 			SNAKE_CASE_EXAMPLE = "snake_case_example",
-			ANOTHER_EXAMPLE = "another_example"
+			ANOTHER_EXAMPLE = "another_example",
 		}
 		type Result = SnakeToSentenceCase<SnakeCase>;
 

@@ -28,15 +28,15 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 				name,
 				{
 					...mechanicalVentData,
-					...(mechanicalVentData.vent_type === VentType.MVHR ? { ductwork: mapMvhrDuctworkData(name, state) } : {})
-				}
+					...(mechanicalVentData.vent_type === VentType.MVHR ? { ductwork: mapMvhrDuctworkData(name, state) } : {}),
+				},
 			];
 		})),
-		Vents: mapVentsData(state)
+		Vents: mapVentsData(state),
 	};
 
 	return {
-		InfiltrationVentilation: infiltrationVentiliation
+		InfiltrationVentilation: infiltrationVentiliation,
 	} as Pick<FhsInputSchema, "InfiltrationVentilation">;
 }
 
@@ -61,7 +61,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 			measured_air_flow_rate: 37,
 			measured_fan_power: 12.26,
 			// (TODO: REMOVE COMMENT WHEN USING HEM 0.37) more recent schema is more explicit about logic for SFP field, but following implements what is currently implicit logic: for following vent types, provide SFP (with a canned value), otherwise don't
-			...(arrayIncludes([VentType.Decentralised_continuous_MEV, VentType.Intermittent_MEV], x.data.typeOfMechanicalVentilationOptions) ? { SFP: 1.5 } : {})
+			...(arrayIncludes([VentType.Decentralised_continuous_MEV, VentType.Intermittent_MEV], x.data.typeOfMechanicalVentilationOptions) ? { SFP: 1.5 } : {}),
 		};
 
 		return [key, val];
@@ -85,7 +85,7 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 			...(x.data.ductworkCrossSectionalShape === DuctShape.circular ? { internal_diameter_mm: x.data.internalDiameterOfDuctwork, external_diameter_mm: x.data.externalDiameterOfDuctwork } : {}),
 			...(x.data.ductworkCrossSectionalShape === DuctShape.rectangular ? { duct_perimeter_mm: x.data.ductPerimeter } : {}),
 			length: x.data.lengthOfDuctwork,
-			reflective: x.data.surfaceReflectivity
+			reflective: x.data.surfaceReflectivity,
 		};
 		return val;
 	});
@@ -99,7 +99,7 @@ export function mapVentsData(state: ResolvedState) {
 			mid_height_air_flow_path: x.data.midHeightOfZone,
 			orientation360: x.data.orientation,
 			pitch: x.data.pitch,
-			pressure_difference_ref: 20 // stock value
+			pressure_difference_ref: 20, // stock value
 		};
 
 		return [key, val];
@@ -115,7 +115,7 @@ export function mapVentilationData(state: ResolvedState): { dwellingElevationalL
 		dwellingElevationalLevelAtBase,
 		dwellingHeight,
 		dwellingEnvelopeArea,
-		crossVentilationPossible
+		crossVentilationPossible,
 	};
 }
 
@@ -124,7 +124,7 @@ export function mapAirPermeabilityData(state: ResolvedState): Pick<SchemaVentila
 
 	return {
 		test_pressure: testPressure,
-		test_result: airTightnessTestResult
+		test_result: airTightnessTestResult,
 	};
 }
 

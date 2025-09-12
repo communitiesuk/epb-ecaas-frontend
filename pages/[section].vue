@@ -6,7 +6,7 @@ if (!page) {
 
 	throw createError({
 		statusCode: 404,
-		statusMessage: `Page not found: ${route.path}`
+		statusMessage: `Page not found: ${route.path}`,
 	});
 }
 

@@ -11,7 +11,7 @@ const model: Ref<RoofData | undefined> = ref(roofData?.data);
 const roofTypeOptions: Record<Exclude<RoofType, "unheatedPitched">, string> = {
 	flat: "Flat roof",
 	pitchedInsulatedAtRoof: "Pitched roof insulated at roof or rafter",
-	pitchedInsulatedAtCeiling: "Pitched roof insulated at ceiling or joist"
+	pitchedInsulatedAtCeiling: "Pitched roof insulated at ceiling or joist",
 };
 
 const saveForm = (fields: RoofData) => {
@@ -33,9 +33,9 @@ const saveForm = (fields: RoofData) => {
 				solarAbsorptionCoefficient: fields.solarAbsorptionCoefficient,
 				uValue: fields.uValue,
 				kappaValue: fields.kappaValue,
-				massDistributionClass: fields.massDistributionClass
+				massDistributionClass: fields.massDistributionClass,
 			},
-			complete: true
+			complete: true,
 		};
 		dwellingSpaceRoofs.complete = false;
 	});

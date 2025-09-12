@@ -19,16 +19,16 @@ const bath: EcaasForm<BathData> = {
 		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
 		name: "Bath 1",
 		size: 170,
-		flowRate: 10
-	}
+		flowRate: 10,
+	},
 };
 const bath2: EcaasForm<BathData> = {
 	data: {
 		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8123",
 		name: "Bath 2",
 		size: 180,
-		flowRate: 11
-	}
+		flowRate: 11,
+	},
 };
 
 afterEach(() => {
@@ -48,8 +48,8 @@ describe("bath", () => {
 
 		await renderSuspended(Bath, {
 			route: {
-				params: { bath: "create" }
-			}
+				params: { bath: "create" },
+			},
 		});
 
 		await populateValidForm();
@@ -65,16 +65,16 @@ describe("bath", () => {
 			domesticHotWater: {
 				hotWaterOutlets: {
 					bath: {
-						data: [bath]
-					}
-				}
-			}
+						data: [bath],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(Bath, {
 			route: {
-				params: { "bath": "0" }
-			}
+				params: { "bath": "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Bath 1");
@@ -103,8 +103,8 @@ describe("bath", () => {
 
 		await renderSuspended(Bath, {
 			route: {
-				params: { bath: "create" }
-			}
+				params: { bath: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Bath 1");
@@ -119,8 +119,8 @@ describe("bath", () => {
 	test("partial form data automatically saved to store with default name if no name has been added", async () => {
 		await renderSuspended(Bath, {
 			route: {
-				params: { bath: "create" }
-			}
+				params: { bath: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("size"), "170");
@@ -180,8 +180,8 @@ describe("bath", () => {
 
 		await renderSuspended(Bath, {
 			route: {
-				params: { bath: "create" }
-			}
+				params: { bath: "create" },
+			},
 		});
 
 		await populateValidForm();
@@ -192,8 +192,8 @@ describe("bath", () => {
 	test("creates a new bath automatically when a user adds only the name value", async () => {
 		await renderSuspended(Bath, {
 			route: {
-				params: { bath: "create" }
-			}
+				params: { bath: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Bath 1");
@@ -215,10 +215,10 @@ describe("bath", () => {
 			domesticHotWater: {
 				hotWaterOutlets: {
 					bath: {
-						data: [bath, bath2]
-					}
-				}
-			}
+						data: [bath, bath2],
+					},
+				},
+			},
 		});    
 		await renderSuspended(Bath, {
 			route: {
@@ -257,8 +257,8 @@ describe("Partially saving data", () => {
 
 		await renderSuspended(Bath, {
 			route: {
-				params: { bath: "create" }
-			}
+				params: { bath: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Bath 1");
@@ -273,8 +273,8 @@ describe("Partially saving data", () => {
 	test("partial form data automatically saved to store with default name if no name has been added", async () => {
 		await renderSuspended(Bath, {
 			route: {
-				params: { bath: "create" }
-			}
+				params: { bath: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("size"), "170");
@@ -332,8 +332,8 @@ describe("Partially saving data", () => {
 	test("creates a new bath automatically when a user adds only the name value", async () => {
 		await renderSuspended(Bath, {
 			route: {
-				params: { bath: "create" }
-			}
+				params: { bath: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Bath 1");
@@ -355,10 +355,10 @@ describe("Partially saving data", () => {
 			domesticHotWater: {
 				hotWaterOutlets: {
 					bath: {
-						data: [bath, bath2]
-					}
-				}
-			}
+						data: [bath, bath2],
+					},
+				},
+			},
 		});    
 		await renderSuspended(Bath, {
 			route: {

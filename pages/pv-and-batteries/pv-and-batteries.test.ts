@@ -235,7 +235,7 @@ describe("pv systems and electric battery", () => {
 			await addElectricBatteryToStore();
 
 			expect(
-				screen.getByRole("button", { name: "Mark section as complete" })
+				screen.getByRole("button", { name: "Mark section as complete" }),
 			).not.toBeNull();
 			const completeStatus = screen.queryByTestId("completeSectionCompleted");
 			expect(completeStatus?.style.display).toBe("none");
@@ -246,7 +246,7 @@ describe("pv systems and electric battery", () => {
 			expect(store.pvAndBatteries.electricBattery?.complete).toBe(true);
 
 			expect(
-				screen.queryByRole("button", { name: "Mark section as complete" })
+				screen.queryByRole("button", { name: "Mark section as complete" }),
 			).toBeNull();
 			expect(completeStatus?.style.display).not.toBe("none");
 
@@ -255,7 +255,7 @@ describe("pv systems and electric battery", () => {
 
 		it("marks section as complete when just batteries have been added", async () => {
 			expect(
-				screen.getByRole("button", { name: "Mark section as complete" })
+				screen.getByRole("button", { name: "Mark section as complete" }),
 			).not.toBeNull();
 			const completeStatus = screen.queryByTestId("completeSectionCompleted");
 			expect(completeStatus?.style.display).toBe("none");
@@ -266,7 +266,7 @@ describe("pv systems and electric battery", () => {
 			expect(store.pvAndBatteries.electricBattery?.complete).toBe(true);
 
 			expect(
-				screen.queryByRole("button", { name: "Mark section as complete" })
+				screen.queryByRole("button", { name: "Mark section as complete" }),
 			).toBeNull();
 			expect(completeStatus?.style.display).not.toBe("none");
 
@@ -275,7 +275,7 @@ describe("pv systems and electric battery", () => {
 
 		it("marks section as complete when nothing has been added", async () => {
 			expect(
-				screen.getByRole("button", { name: "Mark section as complete" })
+				screen.getByRole("button", { name: "Mark section as complete" }),
 			).not.toBeNull();
 			const completeStatus = screen.queryByTestId("completeSectionCompleted");
 			expect(completeStatus?.style.display).toBe("none");
@@ -286,7 +286,7 @@ describe("pv systems and electric battery", () => {
 			expect(store.pvAndBatteries.electricBattery?.complete).toBe(true);
 
 			expect(
-				screen.queryByRole("button", { name: "Mark section as complete" })
+				screen.queryByRole("button", { name: "Mark section as complete" }),
 			).toBeNull();
 			expect(completeStatus?.style.display).not.toBe("none");
 
@@ -304,7 +304,7 @@ describe("pv systems and electric battery", () => {
 			await user.click(screen.getByTestId(items.testId));
 			expect(store.pvAndBatteries.pvSystems.complete).toBe(false);
 			expect(
-				screen.getByRole("button", { name: "Mark section as complete" })
+				screen.getByRole("button", { name: "Mark section as complete" }),
 			).not.toBeNull();
 		});
 
@@ -319,7 +319,7 @@ describe("pv systems and electric battery", () => {
 			await user.click(screen.getByTestId(items.testId));
 			expect(store.pvAndBatteries.electricBattery.complete).toBe(false);
 			expect(
-				screen.getByRole("button", { name: "Mark section as complete" })
+				screen.getByRole("button", { name: "Mark section as complete" }),
 			).not.toBeNull();
 		});
 
@@ -334,7 +334,7 @@ describe("pv systems and electric battery", () => {
 			await user.click(screen.getByTestId(items.testId));
 			expect(store.pvAndBatteries.pvSystems.complete).toBe(false);
 			expect(
-				screen.getByRole("button", { name: "Mark section as complete" })
+				screen.getByRole("button", { name: "Mark section as complete" }),
 			).not.toBeNull();
 		});
 
@@ -355,7 +355,7 @@ describe("pv systems and electric battery", () => {
 
 			await renderSuspended(PvAndBatteries);
 			expect(
-				screen.getByRole("button", { name: "Mark section as complete" })
+				screen.getByRole("button", { name: "Mark section as complete" }),
 			).not.toBeNull();
 		});
 
@@ -376,7 +376,7 @@ describe("pv systems and electric battery", () => {
 
 			await renderSuspended(PvAndBatteries);
 			expect(
-				screen.getByRole("button", { name: "Mark section as complete" })
+				screen.getByRole("button", { name: "Mark section as complete" }),
 			).not.toBeNull();
 		});
 
@@ -408,7 +408,7 @@ describe("pv systems and electric battery", () => {
 			await renderSuspended(PvAndBatteries);
 
 			expect(screen.getByTestId("pvSystems_status_0").textContent).toBe(
-				formStatus.inProgress.text
+				formStatus.inProgress.text,
 			);
 		});
 	});

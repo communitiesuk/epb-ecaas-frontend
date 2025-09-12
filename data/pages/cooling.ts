@@ -7,29 +7,29 @@ const coolingPages: Array<Page> = [
 		title: "Cooling",
 		url: "/cooling",
 		type: PageType.Section,
-		parentId: "taskList"
+		parentId: "taskList",
 	},
 	{
 		id: "airConditioning",
 		title: "Air conditioning",
 		url: "/cooling/air-conditioning/create",
 		type: PageType.Task,
-		parentId: "cooling"
+		parentId: "cooling",
 	},
 	{
 		id: "airConditioningEdit",
 		title: "Air conditioning",
 		url: "/cooling/air-conditioning/:airConditioning",
 		type: PageType.Task,
-		parentId: "cooling"
+		parentId: "cooling",
 	},
 	{
 		id: "coolingSummary",
 		title: "Summary",
 		url: "/cooling/summary",
 		type: PageType.Summary,
-		parentId: "cooling"
-	}
+		parentId: "cooling",
+	},
 ];
 
 export default coolingPages;

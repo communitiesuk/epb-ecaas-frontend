@@ -14,13 +14,13 @@ export default defineEventHandler(async event => {
 			clientSecret,
 			userPoolId: process.env.COGNITO_USER_POOL_ID,
 			region: process.env.AWS_DEFAULT_REGION,
-			scope: ["openid"]
+			scope: ["openid"],
 		},
 		async onSuccess(event: H3Event, { user }: { user: { id: unknown } }) {
 			await setUserSession(event, {
 				user: {
-					id: user.id
-				}
+					id: user.id,
+				},
 			});
 
 			return sendRedirect(event, "/");
@@ -30,8 +30,8 @@ export default defineEventHandler(async event => {
 
 			throw createError({
 				statusCode: 401,
-				statusMessage: "Authentication error"
+				statusMessage: "Authentication error",
 			});
-		}
+		},
 	})(event);
 });

@@ -34,7 +34,7 @@ const options: FormKitOptionsProp[] = [{
 	e22: "E22: Basement floor",
 	e23: "E23: Balcony within or between dwellings, balcony support penetrates wall insulation",
 	e24: "E24: Eaves (insulation at ceiling level - inverted)",
-	e25: "E25: Staggered party wall between dwellings"
+	e25: "E25: Staggered party wall between dwellings",
 },{
 	p1: "P1: Party wall - Ground floor",
 	p2: "P2: Party wall - Intermediate floor within a dwelling",
@@ -55,7 +55,7 @@ const options: FormKitOptionsProp[] = [{
 	r8: "R8: Roof to wall (rafter)",
 	r9: "R9: Roof to wall (flat ceiling)",
 	r10: "R10: All other roof or room-in-roof junctions",
-	r11: "R11: Upstands or kerbs of rooflights"
+	r11: "R11: Upstands or kerbs of rooflights",
 }];
 
 function getName(fields: LinearThermalBridgeData) {
@@ -76,9 +76,9 @@ const saveForm = (fields: LinearThermalBridgeData) => {
 				name,
 				typeOfThermalBridge: fields.typeOfThermalBridge,
 				linearThermalTransmittance: fields.linearThermalTransmittance,
-				length: fields.length
+				length: fields.length,
 			},
-			complete: true
+			complete: true,
 		};
 		dwellingSpaceLinearThermalBridges.complete = false;
 	});
@@ -95,8 +95,8 @@ autoSaveElementForm({
 			...newData,
 			data: {
 				...newData.data,
-				...(getName(newData.data) ? { name: getName(newData.data) } : {})
-			}
+				...(getName(newData.data) ? { name: getName(newData.data) } : {}),
+			},
 		});
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
 	},
@@ -105,11 +105,11 @@ autoSaveElementForm({
 			...newData,
 			data: {
 				...newData.data,
-				...(getName(newData.data) ? { name: getName(newData.data) } : {})
-			}
+				...(getName(newData.data) ? { name: getName(newData.data) } : {}),
+			},
 		};
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

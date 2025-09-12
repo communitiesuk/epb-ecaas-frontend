@@ -19,17 +19,17 @@ const electricShower: EcaasForm<ElectricShowerData> = {
 	data: {
 		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
 		name: "Electric shower 1",
-		ratedPower: 10
+		ratedPower: 10,
 	},
-	complete: true
+	complete: true,
 };
 const electricShower2: EcaasForm<ElectricShowerData> = {
 	data: {
 		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8123",
 		name: "Electric shower 2",
-		ratedPower: 11
+		ratedPower: 11,
 	},
-	complete: true
+	complete: true,
 };
 
 afterEach(() => {
@@ -48,8 +48,8 @@ describe("electric shower", () => {
 
 		await renderSuspended(ElectricShower, {
 			route: {
-				params: { shower: "create" }
-			}
+				params: { shower: "create" },
+			},
 		});
 
 		await populateValidForm();
@@ -65,16 +65,16 @@ describe("electric shower", () => {
 			domesticHotWater: {
 				hotWaterOutlets: {
 					electricShower: {
-						data: [electricShower]
-					}
-				}
-			}
+						data: [electricShower],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(ElectricShower, {
 			route: {
-				params: { "shower": "0" }
-			}
+				params: { "shower": "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Electric shower 1");
@@ -104,8 +104,8 @@ describe("electric shower", () => {
 
 		await renderSuspended(ElectricShower, {
 			route: {
-				params: { shower: "create" }
-			}
+				params: { shower: "create" },
+			},
 		});
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveProgress"));
@@ -128,8 +128,8 @@ describe("Partially saving data", () => {
 
 		await renderSuspended(ElectricShower, {
 			route: {
-				params: { shower: "create" }
-			}
+				params: { shower: "create" },
+			},
 		});
 		await user.type(screen.getByTestId("name"), "Electric shower 1");
 		await user.type(screen.getByTestId("ratedPower"), "17");
@@ -143,8 +143,8 @@ describe("Partially saving data", () => {
 	test("partial form data automatically saved to store with default name if no name has been added", async () => {
 		await renderSuspended(ElectricShower, {
 			route: {
-				params: { shower: "create" }
-			}
+				params: { shower: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("ratedPower"), "17");
@@ -201,8 +201,8 @@ describe("Partially saving data", () => {
 	test("creates a new electric shower automatically when a user adds only the name value", async () => {
 		await renderSuspended(ElectricShower, {
 			route: {
-				params: { shower: "create" }
-			}
+				params: { shower: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Electric shower 1");
@@ -224,15 +224,15 @@ describe("Partially saving data", () => {
 			domesticHotWater: {
 				hotWaterOutlets: {
 					electricShower: {
-						data: [electricShower, electricShower2]
-					}
-				}
-			}
+						data: [electricShower, electricShower2],
+					},
+				},
+			},
 		});    
 		await renderSuspended(ElectricShower, {
 			route: {
-				params: { shower: "1" }
-			}
+				params: { shower: "1" },
+			},
 		});
 					
 		await user.clear(screen.getByTestId("name"));

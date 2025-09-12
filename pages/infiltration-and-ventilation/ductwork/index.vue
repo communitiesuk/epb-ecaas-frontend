@@ -25,15 +25,15 @@ function handleDuplicate(index: number) {
 	const ductwork = data[index];
 	if (ductwork) {
 		const duplicates = data.filter((x) =>
-			x.data.name.match(duplicateNamePattern(ductwork.data.name))
+			x.data.name.match(duplicateNamePattern(ductwork.data.name)),
 		);
 		store.$patch((state) => {
 			state.infiltrationAndVentilation.ductwork.data?.push({
 				...ductwork,
 				data: {
 					...ductwork.data,
-					name: `${ductwork.data.name} (${duplicates.length})`
-				}
+					name: `${ductwork.data.name} (${duplicates.length})`,
+				},
 			});
 		});
 		store.infiltrationAndVentilation.ductwork.complete = false;
@@ -44,8 +44,8 @@ function handleComplete() {
 	if(checkMvhrHasDuctwork()){
 		store.$patch({
 			infiltrationAndVentilation: {
-				ductwork: { complete: true }
-			}
+				ductwork: { complete: true },
+			},
 		});
 		navigateTo("/infiltration-and-ventilation");		
 	}

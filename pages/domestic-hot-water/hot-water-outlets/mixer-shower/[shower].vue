@@ -21,7 +21,7 @@ const saveForm = (fields: MixedShowerData) => {
 				name: fields.name,
 				flowRate: fields.flowRate,
 			},
-			complete: true
+			complete: true,
 		};
 
 		mixedShower.complete = false;

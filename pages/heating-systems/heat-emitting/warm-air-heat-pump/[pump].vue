@@ -11,7 +11,7 @@ const saveForm = (fields: WarmAirHeatPumpData) => {
 		const { warmAirHeatPump } = state.heatingSystems.heatEmitting;
 
 		const item: WarmAirHeatPumpData = {
-			name: fields.name
+			name: fields.name,
 		};
 
 		saveToList(item, warmAirHeatPump);

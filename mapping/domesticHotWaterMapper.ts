@@ -16,11 +16,11 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 			Shower: showers,
 			Bath: baths,
 			Other: others,
-			Distribution: distribution
+			Distribution: distribution,
 		},
 		HotWaterSource: {
 			"hw cylinder": hotWaterSources[0]!, // FHS input schema currently only allows for one hot water cylinder while the frontend allows users to add multiple
-		}
+		},
 	};
 }
 
@@ -42,7 +42,7 @@ function mapShowersData(state: ResolvedState) {
 			type: "InstantElecShower",
 			ColdWaterSource: ColdWaterSourceType.mains_water,
 			rated_power: x.data.ratedPower,
-			EnergySupply: defaultElectricityEnergySupplyName
+			EnergySupply: defaultElectricityEnergySupplyName,
 		};
 
 		return [key, val];
@@ -57,7 +57,7 @@ function mapBathsData(state: ResolvedState) {
 		const val: SchemaBathDetails = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
 			flowrate: x.data.flowRate,
-			size: x.data.size
+			size: x.data.size,
 		};
 
 		return [key, val];
@@ -85,7 +85,7 @@ export function mapDistributionData(state: ResolvedState) {
 		return {
 			length: x.data.length,
 			location: x.data.location,
-			internal_diameter_mm: x.data.internalDiameter
+			internal_diameter_mm: x.data.internalDiameter,
 		};
 	});
 }
@@ -103,7 +103,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				insulation_thermal_conductivity: x.data.thermalConductivity,
 				insulation_thickness_mm: x.data.insulationThickness,
 				surface_reflectivity: x.data.surfaceReflectivity,
-				pipe_contents: x.data.pipeContents
+				pipe_contents: x.data.pipeContents,
 			};
 		});
 
@@ -128,8 +128,8 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 					heater_position: 0.1,
 					type: "HeatSourceWet",
 					temp_flow_limit_upper: 65,
-					thermostat_position: 0.33
-				}
+					thermostat_position: 0.33,
+				},
 			},
 			...(primaryPipeworkEntries.length !== 0 ? { primary_pipework: primaryPipeworkEntries } : {}),
 		};

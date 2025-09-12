@@ -27,7 +27,7 @@ function handleDuplicate(index: number) {
 		store.$patch((state) => {
 			const newItem = {
 				...item,
-				name: `${item.name} (${duplicates.length})`
+				name: `${item.name} (${duplicates.length})`,
 			};
 
 			state.domesticHotWater.wwhrs.data.push(newItem);
@@ -38,8 +38,8 @@ function handleDuplicate(index: number) {
 function handleComplete() {
 	store.$patch({
 		domesticHotWater: {
-			wwhrs: { complete: true }
-		}
+			wwhrs: { complete: true },
+		},
 	});
 		
 	navigateTo("/domestic-hot-water");		

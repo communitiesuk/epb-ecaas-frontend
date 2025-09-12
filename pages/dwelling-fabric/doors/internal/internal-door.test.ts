@@ -21,8 +21,8 @@ describe("internal door", () => {
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: "90",
-			pitch: 90
-		}
+			pitch: 90,
+		},
 	};
 
 	const internalDoorWithUnheatedSpace: EcaasForm<InternalDoorData> = {
@@ -30,8 +30,8 @@ describe("internal door", () => {
 			...internalDoor.data,
 			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 			uValue: 0.1,
-			thermalResistanceOfAdjacentUnheatedSpace: 0
-		}
+			thermalResistanceOfAdjacentUnheatedSpace: 0,
+		},
 	};
 
 	afterEach(() => {
@@ -50,8 +50,8 @@ describe("internal door", () => {
 		it("data is saved to store state when form is valid", async () => {
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "create" }
-				}
+					params: { internalDoor: "create" },
+				},
 			});
 	
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
@@ -68,16 +68,16 @@ describe("internal door", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceInternalDoor: {
-							data: [internalDoor]
-						}
-					}
-				}
+							data: [internalDoor],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { door: "0" }
-				}
+					params: { door: "0" },
+				},
 			});
 	
 			expect((await screen.findByTestId("typeOfInternalDoor_heatedSpace")).hasAttribute("checked")).toBe(true);
@@ -106,8 +106,8 @@ describe("internal door", () => {
 		it("data is saved to store state when form is valid", async () => {
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "create" }
-				}
+					params: { internalDoor: "create" },
+				},
 			});
 	
 			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
@@ -127,16 +127,16 @@ describe("internal door", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceInternalDoor: {
-							data: [internalDoorWithUnheatedSpace]
-						}
-					}
-				}
+							data: [internalDoorWithUnheatedSpace],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { door: "0" }
-				}
+					params: { door: "0" },
+				},
 			});
 	
 			expect((await screen.findByTestId("typeOfInternalDoor_unheatedSpace")).hasAttribute("checked")).toBe(true);
@@ -183,8 +183,8 @@ describe("internal door", () => {
 	it("saves custom pitch when custom pitch option is selected", async () => {
 		await renderSuspended(InternalDoor, {
 			route: {
-				params: { internalDoor: "create" }
-			}
+				params: { internalDoor: "create" },
+			},
 		});
 
 		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
@@ -223,8 +223,8 @@ describe("internal door", () => {
 		it("creates a new door automatically with given name", async () => {
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "create" }
-				}
+					params: { internalDoor: "create" },
+				},
 			});
 
 			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
@@ -240,8 +240,8 @@ describe("internal door", () => {
 		it("creates a new door automatically with default name after other data is entered", async () => {
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "create" }
-				}
+					params: { internalDoor: "create" },
+				},
 			});
 
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
@@ -259,16 +259,16 @@ describe("internal door", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceInternalDoor: {
-							data: [internalDoor, internalDoor]
-						}
-					}
-				}
+							data: [internalDoor, internalDoor],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "1" }
-				}
+					params: { internalDoor: "1" },
+				},
 			});
 
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
@@ -290,16 +290,16 @@ describe("internal door", () => {
 					dwellingSpaceDoors: {
 						dwellingSpaceInternalDoor: {
 							data: [{ ...internalDoor, complete: true }],
-							complete: true
-						}
-					}
-				}
+							complete: true,
+						},
+					},
+				},
 			});
 
 			await renderSuspended(InternalDoor, {
 				route: {
-					params: { internalDoor: "0" }
-				}
+					params: { internalDoor: "0" },
+				},
 			});
 
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));

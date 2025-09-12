@@ -32,7 +32,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				heightOpenableArea: fields.height,
 				midHeightOpenablePart1: fields.midHeight,
 			},
-			complete: true
+			complete: true,
 		};
 		dwellingSpaceExternalGlazedDoor.complete = false;
 	});
@@ -50,7 +50,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

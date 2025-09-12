@@ -12,11 +12,11 @@ import { co2PerKilowattHour } from "~/utils/units/emissions";
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (
 	section: string,
-	expectedSectionData: expectedData
+	expectedSectionData: expectedData,
 ) => {
 	for (const [key, value] of Object.entries(expectedSectionData)) {
 		const lineResult = screen.queryByTestId(
-			`summary-${section}-${hyphenate(key)}`
+			`summary-${section}-${hyphenate(key)}`,
 		);
 		expect(lineResult!.querySelector("dt")?.textContent).toBe(key);
 		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
@@ -32,7 +32,7 @@ describe("Heating systems summary page", () => {
 		it("displays energy supply tab", async () => {
 			await renderSuspended(HeatingSystemsSummary);
 			expect(
-				screen.getByRole("link", { name: "Energy supply" })
+				screen.getByRole("link", { name: "Energy supply" }),
 			).not.toBeNull();
 		});
 
@@ -50,7 +50,7 @@ describe("Heating systems summary page", () => {
 					energySupply: {
 						data: {
 							fuelType: [FuelType.electricity],
-							exported: false
+							exported: false,
 						},
 					},
 				},
@@ -99,7 +99,7 @@ describe("Heating systems summary page", () => {
 							co2PerKwh: 1,
 							co2PerKwhIncludingOutOfScope: 2,
 							kwhPerKwhDelivered: 3,
-							exported: true
+							exported: true,
 						},
 					},
 				},
@@ -111,7 +111,7 @@ describe("Heating systems summary page", () => {
 				"CO2 per kWh": `1 ${co2PerKilowattHour.suffix}`,
 				"CO2 per kWh (including out of scope)": `2 ${co2PerKilowattHour.suffix}`,
 				"kWh per kWh delivered": "3",
-				"Exported": "Yes"
+				"Exported": "Yes",
 			});
 		});
     
@@ -121,7 +121,7 @@ describe("Heating systems summary page", () => {
 				name: "Edit",
 			});
 			expect(new URL(editLink.href).pathname).toBe(
-				"/heating-systems/energy-supply"
+				"/heating-systems/energy-supply",
 			);
 		});
 	});
@@ -130,7 +130,7 @@ describe("Heating systems summary page", () => {
 		const heatPump: HeatPumpData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 			name: "Heat pump 1",
-			productReference: "HEATPUMP-LARGE"
+			productReference: "HEATPUMP-LARGE",
 		};
 		const boiler: BoilerData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
@@ -157,7 +157,7 @@ describe("Heating systems summary page", () => {
 				name: "Add heat generators",
 			});
 			expect(new URL(addHeatGenerationLink.href).pathname).toBe(
-				getUrl("heatGeneration")
+				getUrl("heatGeneration"),
 			);
 		});
 
@@ -168,7 +168,7 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [{ data:heatPump }]
+							data: [{ data:heatPump }],
 						},
 						boiler: {
 							data: [boiler],
@@ -202,7 +202,7 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [{ data: heatPump }]
+							data: [{ data: heatPump }],
 						},
 					},
 				},
@@ -311,11 +311,11 @@ describe("Heating systems summary page", () => {
 				const heatGenerationSection = screen.getByTestId(key);
 
 				const editLink: HTMLAnchorElement = within(heatGenerationSection).getByText(
-					"Edit"
+					"Edit",
 				);
 				expect(editLink).not.toBeNull();
 				expect(new URL(editLink.href).pathname).toBe(
-					"/heating-systems/heat-generation"
+					"/heating-systems/heat-generation",
 				);
 			}
 		});
@@ -325,7 +325,7 @@ describe("Heating systems summary page", () => {
 		const heatPump: HeatPumpData = {
 			id: "7184f2fe-a78f-4a56-ba5a-1a7751ac507r",
 			name: "Heat pump 1",
-			productReference: "HEATPUMP-LARGE"
+			productReference: "HEATPUMP-LARGE",
 		};
 
 		const wetDistribution1: WetDistributionData = {
@@ -368,8 +368,8 @@ describe("Heating systems summary page", () => {
 			data: {
 				name: "Instant electric heater 1",
 				ratedPower: 3,
-				convectionFractionInstant: 0.2
-			}
+				convectionFractionInstant: 0.2,
+			},
 		};
 		const electricStorageHeater: ElectricStorageHeaterData = {
 			name: "Electric storage heater 1",
@@ -386,7 +386,7 @@ describe("Heating systems summary page", () => {
 				name: "Add heat emitters",
 			});
 			expect(new URL(addHeatEmittingLink.href).pathname).toBe(
-				getUrl("heatEmitting")
+				getUrl("heatEmitting"),
 			);
 		});
 		it("displays tabs only for the heat emitting types that have data", async () => {
@@ -417,16 +417,16 @@ describe("Heating systems summary page", () => {
 			});
 			await renderSuspended(HeatingSystemsSummary);
 			expect(
-				screen.getByRole("link", { name: "Wet distribution" })
+				screen.getByRole("link", { name: "Wet distribution" }),
 			).not.toBeNull();
 			expect(
-				screen.getByRole("link", { name: "Instant electric heater" })
+				screen.getByRole("link", { name: "Instant electric heater" }),
 			).not.toBeNull();
 			expect(
-				screen.getByRole("link", { name: "Electric storage heater" })
+				screen.getByRole("link", { name: "Electric storage heater" }),
 			).not.toBeNull();
 			expect(
-				screen.getByRole("link", { name: "Warm air heat pump" })
+				screen.getByRole("link", { name: "Warm air heat pump" }),
 			).not.toBeNull();
 		});
 
@@ -555,7 +555,7 @@ describe("Heating systems summary page", () => {
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection(
 				"instantElectricHeater",
-				expectedInstantElectricHeaterData
+				expectedInstantElectricHeaterData,
 			);
 		});
 
@@ -574,12 +574,12 @@ describe("Heating systems summary page", () => {
 
 			await renderSuspended(HeatingSystemsSummary);
 			const lineResult = await screen.findByTestId(
-				"summary-electricStorageHeater-name"
+				"summary-electricStorageHeater-name",
 			);
 
 			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
 			expect(lineResult.querySelector("dd")?.textContent).toBe(
-				"Electric storage heater 1"
+				"Electric storage heater 1",
 			);
 		});
 		it("displays the correct data for the warm air heat pump section", async () => {
@@ -597,12 +597,12 @@ describe("Heating systems summary page", () => {
 
 			await renderSuspended(HeatingSystemsSummary);
 			const lineResult = await screen.findByTestId(
-				"summary-warmAirHeatPump-name"
+				"summary-warmAirHeatPump-name",
 			);
 
 			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
 			expect(lineResult.querySelector("dd")?.textContent).toBe(
-				"Warm air heat pump 1"
+				"Warm air heat pump 1",
 			);
 		});
 
@@ -637,11 +637,11 @@ describe("Heating systems summary page", () => {
 				const heatEmittingSection = screen.getByTestId(key);
 
 				const editLink: HTMLAnchorElement = within(heatEmittingSection).getByText(
-					"Edit"
+					"Edit",
 				);
 				expect(editLink).not.toBeNull();
 				expect(new URL(editLink.href).pathname).toBe(
-					"/heating-systems/heat-emitting"
+					"/heating-systems/heat-emitting",
 				);
 			}
 		});

@@ -10,13 +10,13 @@ const mocks = vi.hoisted(() => {
 	return {
 		hasCompleteState: vi.fn(),
 		mapFhsInputData: vi.fn(),
-		$fetch: vi.fn()
+		$fetch: vi.fn(),
 	};
 });
 
 vi.mock("~/mapping/fhsInputMapper", () => {
 	return {
-		mapFhsInputData: mocks.mapFhsInputData
+		mapFhsInputData: mocks.mapFhsInputData,
 	};
 });
 
@@ -64,8 +64,8 @@ describe("Homepage", () => {
 					hem_version: "",
 					hem_version_date: "",
 					fhs_version: "",
-					fhs_version_date: ""
-				}
+					fhs_version_date: "",
+				},
 			});
 		}));
 

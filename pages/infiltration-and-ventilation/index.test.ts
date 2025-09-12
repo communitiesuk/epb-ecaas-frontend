@@ -28,8 +28,8 @@ describe("the ventilation task page", async ()=>{
 	it("should find the header", async ()=> {
 		await renderSuspended(InfiltrationAndVentilationTaskPage, {
 			route: {
-				path: "/infiltration-and-ventilation"
-			}
+				path: "/infiltration-and-ventilation",
+			},
 		});
 		expect(screen.getByRole("heading", { name: "Infiltration and ventilation" }));
 	});
@@ -37,8 +37,8 @@ describe("the ventilation task page", async ()=>{
 	it("should find a list item", async ()=> {
 		await renderSuspended(InfiltrationAndVentilationTaskPage, {
 			route: {
-				path: "/infiltration-and-ventilation"
-			}
+				path: "/infiltration-and-ventilation",
+			},
 		});
 		expect(screen.getByText("Mechanical ventilation")).toBeDefined();
 	});
@@ -46,8 +46,8 @@ describe("the ventilation task page", async ()=>{
 	it("does not show ductwork", async ()=> {
 		await renderSuspended(InfiltrationAndVentilationTaskPage, {
 			route: {
-				path: "/infiltration-and-ventilation"
-			}
+				path: "/infiltration-and-ventilation",
+			},
 		});
 		expect(screen.queryByText("MVHR ductwork")).toBeNull();
 	});
@@ -57,15 +57,15 @@ describe("the ventilation task page", async ()=>{
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [{
-						data: mechanicalVentilation1
+						data: mechanicalVentilation1,
 					}],
-				}
+				},
 			},
 		});
 		await renderSuspended(InfiltrationAndVentilationTaskPage, {
 			route: {
-				path: "/infiltration-and-ventilation"
-			}
+				path: "/infiltration-and-ventilation",
+			},
 		});
 		expect(screen.getByText("MVHR ductwork")).toBeDefined();
 	});

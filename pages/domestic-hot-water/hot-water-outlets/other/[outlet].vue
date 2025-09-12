@@ -21,7 +21,7 @@ const saveForm = (fields: OtherHotWaterOutletData) => {
 				name: fields.name,
 				flowRate: fields.flowRate,
 			},
-			complete: true
+			complete: true,
 		};
 		otherOutlets.complete = false;
 	});

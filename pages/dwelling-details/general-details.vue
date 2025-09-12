@@ -8,7 +8,7 @@ const store = useEcaasStore();
 const { autoSaveForm } = useForm();
 
 const model = ref({
-	...store.dwellingDetails.generalSpecifications.data
+	...store.dwellingDetails.generalSpecifications.data,
 });
 
 const typeOfDwellingOptions: Record<BuildType, SnakeToSentenceCase<BuildType>> = {

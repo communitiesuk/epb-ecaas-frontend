@@ -11,7 +11,7 @@ const saveForm = (fields: WaterHeatingHeatInterfaceUnitData) => {
 		const { heatInterfaceUnit } = state.domesticHotWater.waterHeating;
 
 		const heatInterfaceUnitItem: WaterHeatingHeatInterfaceUnitData = {
-			name: fields.name
+			name: fields.name,
 		};
 		heatInterfaceUnit.complete = false;
 		saveToList(heatInterfaceUnitItem, heatInterfaceUnit);

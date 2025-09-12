@@ -16,7 +16,7 @@ if (typeof hotWaterCylinderData?.storageCylinderVolume === "number") {
 }
 
 const waterHeaterTypeOptions = {
-	hotWaterCylinder: "Hot water cylinder"
+	hotWaterCylinder: "Hot water cylinder",
 };
 
 type WaterHeaterType = keyof typeof waterHeaterTypeOptions | null;
@@ -24,7 +24,7 @@ type WaterHeaterType = keyof typeof waterHeaterTypeOptions | null;
 
 const model: Ref<HotWaterCylinderData & { waterHeaterType: WaterHeaterType[] }> = ref({
 	...hotWaterCylinderData!,
-	waterHeaterType: hotWaterCylinderData ? ["hotWaterCylinder"] : []
+	waterHeaterType: hotWaterCylinderData ? ["hotWaterCylinder"] : [],
 });
 
 autoSaveForm(model, (state, newData) => {
@@ -46,44 +46,44 @@ const saveForm = (fields: typeof model.value) => {
 						storageCylinderVolume: fields.storageCylinderVolume,
 						dailyEnergyLoss: fields.dailyEnergyLoss,
 					}],
-					complete: true
+					complete: true,
 				},
 				// the below fields are currently set to empty and marked as complete
 				// in future versions they will be supported
 				immersionHeater: {
 					data: [],
-					complete: true
+					complete: true,
 				},
 				solarThermal: {
 					data: [],
-					complete: true
+					complete: true,
 				},
 				pointOfUse: {
 					data: [],
-					complete: true
+					complete: true,
 				},
 				heatPump: {
 					data: [],
-					complete: true
+					complete: true,
 				},
 				combiBoiler: {
 					data: [],
-					complete: true
+					complete: true,
 				},
 				heatBattery: {
 					data: [],
-					complete: true
+					complete: true,
 				},
 				smartHotWaterTank: {
 					data: [],
-					complete: true
+					complete: true,
 				},
 				heatInterfaceUnit: {
 					data: [],
-					complete: true
-				}
-			}
-		}
+					complete: true,
+				},
+			},
+		},
 	});
 
 	navigateTo("/domestic-hot-water");

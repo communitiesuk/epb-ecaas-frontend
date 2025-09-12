@@ -17,9 +17,9 @@ const saveForm = (fields: typeof model.value) => {
 			dwellingSpaceLighting: {
 				data: {
 					numberOfLEDBulbs: fields.numberOfLEDBulbs,
-					numberOfIncandescentBulbs: fields.numberOfIncandescentBulbs
+					numberOfIncandescentBulbs: fields.numberOfIncandescentBulbs,
 				},
-				complete: true
+				complete: true,
 			},
 		},
 	});

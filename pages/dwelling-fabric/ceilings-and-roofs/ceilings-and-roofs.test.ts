@@ -239,7 +239,7 @@ describe("ceilings and roofs", () => {
 		});
 
 		const getCeilingsAndRoofsData = async (
-			action: string
+			action: string,
 		): Promise<
 			{
 				key: keyof CeilingsAndRoofsData;
@@ -267,10 +267,10 @@ describe("ceilings and roofs", () => {
 
     it("marks ceilings and roofs as complete when mark section as complete button is clicked", async () => {
     	expect(
-    		screen.getByRole("button", { name: "Mark section as complete" })
+    		screen.getByRole("button", { name: "Mark section as complete" }),
     	).not.toBeNull();
     	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted"
+    		"completeSectionCompleted",
     	);
     	expect(completedStatusElement?.style.display).toBe("none");
 
@@ -283,7 +283,7 @@ describe("ceilings and roofs", () => {
     	expect(dwellingSpaceRoofs?.complete).toBe(true);
 
     	expect(
-    		screen.queryByRole("button", { name: "Mark section as complete" })
+    		screen.queryByRole("button", { name: "Mark section as complete" }),
     	).toBeNull();
     	expect(completedStatusElement?.style.display).not.toBe("none");
 
@@ -294,23 +294,23 @@ describe("ceilings and roofs", () => {
     	const data = await getCeilingsAndRoofsData("remove");
 
     	for (const [key] of Object.entries(
-    		store.dwellingFabric.dwellingSpaceCeilingsAndRoofs
+    		store.dwellingFabric.dwellingSpaceCeilingsAndRoofs,
     	)) {
     		const typedKey = key as CeilingsAndRoofsType;
 
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
     		).toBe(true);
 
     		const formData = data.find((d) => d.key === typedKey);
     		await user.click(screen.getByTestId(formData!.testId));
 
     		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
     		).toBe(false);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -319,23 +319,23 @@ describe("ceilings and roofs", () => {
     	const data = await getCeilingsAndRoofsData("duplicate");
 
     	for (const [key] of Object.entries(
-    		store.dwellingFabric.dwellingSpaceCeilingsAndRoofs
+    		store.dwellingFabric.dwellingSpaceCeilingsAndRoofs,
     	)) {
     		const typedKey = key as CeilingsAndRoofsType;
 
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
     		).toBe(true);
 
     		const formData = data.find((d) => d.key === typedKey);
     		await user.click(screen.getByTestId(formData!.testId));
 
     		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
     		).toBe(false);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -344,13 +344,13 @@ describe("ceilings and roofs", () => {
     	const data = await getCeilingsAndRoofsData("");
 
     	for (const [key] of Object.entries(
-    		store.dwellingFabric.dwellingSpaceCeilingsAndRoofs
+    		store.dwellingFabric.dwellingSpaceCeilingsAndRoofs,
     	)) {
     		const typedKey = key as CeilingsAndRoofsType;
 
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
     		).toBe(true);
 
     		const ceilingAndRoofItem = data.find((d) => d.key === typedKey);
@@ -360,11 +360,11 @@ describe("ceilings and roofs", () => {
     		await user.click(screen.getByTestId("saveAndComplete"));
 
     		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
     		).toBe(false);
     		await renderSuspended(CeilingsAndRoofs);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -403,7 +403,7 @@ describe("ceilings and roofs", () => {
     	await renderSuspended(CeilingsAndRoofs);
 
     	expect(screen.getByTestId("ceilings_status_0").textContent).toBe(
-    		formStatus.inProgress.text
+    		formStatus.inProgress.text,
     	);
     });
 	});

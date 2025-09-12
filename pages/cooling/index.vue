@@ -26,7 +26,7 @@ function handleDuplicate(index: number) {
 		store.$patch((state) => {
 			const newItem = {
 				...item,
-				name: `${item.name} (${duplicates.length})`
+				name: `${item.name} (${duplicates.length})`,
 			};
 
 			state.cooling.airConditioning.data.push(newItem);
@@ -38,8 +38,8 @@ function handleDuplicate(index: number) {
 function handleComplete() {
 	store.$patch({
 		cooling: {
-			airConditioning: { complete: true }
-		}
+			airConditioning: { complete: true },
+		},
 	});
 		
 	navigateTo("/");		

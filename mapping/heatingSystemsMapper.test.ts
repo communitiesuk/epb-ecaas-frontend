@@ -26,8 +26,8 @@ describe("heating systems mapper", () => {
 				energySupply: {
 					...baseForm,
 					data: energySupplyData,
-				}
-			}
+				},
+			},
 		});
 
 		// Act
@@ -38,7 +38,7 @@ describe("heating systems mapper", () => {
 			EnergySupply: {
 				mains_gas: {
 					fuel: FuelType.mains_gas,
-				}
+				},
 			},
 		};
 
@@ -49,7 +49,7 @@ describe("heating systems mapper", () => {
 		// Arrange
 		const energySupplyData: EnergySupplyData = {
 			fuelType: [FuelType.mains_gas, FuelType.electricity],
-			exported: true
+			exported: true,
 		};
 
 		store.$patch({
@@ -57,8 +57,8 @@ describe("heating systems mapper", () => {
 				energySupply: {
 					...baseForm,
 					data: energySupplyData,
-				}
-			}
+				},
+			},
 		});
 
 		// Act
@@ -72,8 +72,8 @@ describe("heating systems mapper", () => {
 				},
 				"mains elec": {
 					fuel: FuelType.electricity,
-					is_export_capable: true
-				}
+					is_export_capable: true,
+				},
 			},
 		};
 
@@ -95,8 +95,8 @@ describe("heating systems mapper", () => {
 				energySupply: {
 					...baseForm,
 					data: energySupplyData,
-				}
-			}
+				},
+			},
 		});
 
 		// Act
@@ -107,7 +107,7 @@ describe("heating systems mapper", () => {
 			EnergySupply: {
 				"mains elec": {
 					fuel: FuelType.electricity,
-					is_export_capable: true
+					is_export_capable: true,
 				},
 				custom: {
 					fuel: FuelType.custom,
@@ -115,11 +115,11 @@ describe("heating systems mapper", () => {
 						"Emissions Factor kgCO2e/kWh": 3.2,
 						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": 4.8,
 						"Primary Energy Factor kWh/kWh delivered": 1.0,
-					}
+					},
 				},
 				mains_gas: {
 					fuel: FuelType.mains_gas,
-				}
+				},
 			},
 		};
 
@@ -131,7 +131,7 @@ describe("heating systems mapper", () => {
 		const heatPump: HeatPumpData = {
 			id: "some-heat-pump-id",
 			name: "Acme heat pump",
-			productReference: "HEATPUMP-LARGE"
+			productReference: "HEATPUMP-LARGE",
 		};
 
 		const heatEmitting: HeatEmitting = {
@@ -154,12 +154,12 @@ describe("heating systems mapper", () => {
 						exponent: 1.3,
 						constant: 0.08,
 						numberOfRadiators: 2,
-					}
-				]
+					},
+				],
 			},
 			instantElectricHeater: { ...baseForm },
 			electricStorageHeater: { ...baseForm },
-			warmAirHeatPump: { ...baseForm }
+			warmAirHeatPump: { ...baseForm },
 		};
 
 		store.$patch({
@@ -170,11 +170,11 @@ describe("heating systems mapper", () => {
 						data: [{
 							...baseForm,
 							data: heatPump,
-						}]
-					}
+						}],
+					},
 				},
-				heatEmitting
-			}
+				heatEmitting,
+			},
 		});
 
 		// Act
@@ -210,9 +210,9 @@ describe("heating systems mapper", () => {
 					temp_diff_emit_dsgn: 4,
 					thermal_mass: 400,
 					type: "WetDistribution",
-					Zone: defaultZoneName
-				}
-			}
+					Zone: defaultZoneName,
+				},
+			},
 		};
 
 		expect(result).toEqual(expectedResult);
@@ -223,7 +223,7 @@ describe("heating systems mapper", () => {
 		const heatPump: HeatPumpData = {
 			id: "some-heat-pump-id",
 			name: "Acme heat pump",
-			productReference: "HEATPUMP-SMALL"
+			productReference: "HEATPUMP-SMALL",
 		};
 
 		const heatEmitting: HeatEmitting = {
@@ -246,12 +246,12 @@ describe("heating systems mapper", () => {
 						equivalentThermalMass: 80,
 						systemPerformanceFactor: 5,
 						convectionFractionWet: 0.7,
-					}
-				]
+					},
+				],
 			},
 			instantElectricHeater: { ...baseForm },
 			electricStorageHeater: { ...baseForm },
-			warmAirHeatPump: { ...baseForm }
+			warmAirHeatPump: { ...baseForm },
 		};
 
 		store.$patch({
@@ -261,12 +261,12 @@ describe("heating systems mapper", () => {
 						...baseForm,
 						data: [{
 							...baseForm,
-							data: heatPump
-						}]
-					}
+							data: heatPump,
+						}],
+					},
 				},
 				heatEmitting,
-			}
+			},
 		});
 
 		// Act
@@ -298,9 +298,9 @@ describe("heating systems mapper", () => {
 					temp_diff_emit_dsgn: 4,
 					thermal_mass: 400,
 					type: "WetDistribution",
-					Zone: defaultZoneName
-				}
-			}
+					Zone: defaultZoneName,
+				},
+			},
 		};
 
 		expect(result).toEqual(expectedResult);
@@ -317,19 +317,19 @@ describe("heating systems mapper", () => {
 						data: {
 							name: "Acme instant electric heater",
 							ratedPower: 100,
-							convectionFractionInstant: 0.8
-						}
-					}
-				]
+							convectionFractionInstant: 0.8,
+						},
+					},
+				],
 			},
 			electricStorageHeater: { ...baseForm },
-			warmAirHeatPump: { ...baseForm }
+			warmAirHeatPump: { ...baseForm },
 		};
 
 		store.$patch({
 			heatingSystems: {
-				heatEmitting
-			}
+				heatEmitting,
+			},
 		});
 
 		// Act
@@ -344,8 +344,8 @@ describe("heating systems mapper", () => {
 					frac_convective: 0.8,
 					EnergySupply: "mains elec",
 
-				}
-			}
+				},
+			},
 		};
 		expect(result).toEqual(expectedResult);
 	});

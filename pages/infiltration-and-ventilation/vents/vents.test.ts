@@ -122,11 +122,11 @@ describe("vents", () => {
 	it("marks vents as complete when mark section as complete button is clicked", async () => {
 		await renderSuspended(Vents);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 
 		const completedStatusElement = screen.queryByTestId(
-			"completeSectionCompleted"
+			"completeSectionCompleted",
 		);
 		expect(completedStatusElement?.style.display).toBe("none");
 
@@ -136,12 +136,12 @@ describe("vents", () => {
 
 		expect(complete).toBe(true);
 		expect(
-			screen.queryByRole("button", { name: "Mark section as complete" })
+			screen.queryByRole("button", { name: "Mark section as complete" }),
 		).toBeNull();
 		expect(completedStatusElement?.style.display).not.toBe("none");
 
 		expect(navigateToMock).toHaveBeenCalledWith(
-			"/infiltration-and-ventilation"
+			"/infiltration-and-ventilation",
 		);
 	});
 
@@ -165,7 +165,7 @@ describe("vents", () => {
 		await user.click(screen.getByTestId("vents_remove_0"));
 		expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
 
@@ -186,7 +186,7 @@ describe("vents", () => {
 		await user.click(screen.getByTestId("vents_duplicate_0"));
 		expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
 
@@ -215,7 +215,7 @@ describe("vents", () => {
 
 		await renderSuspended(Vents);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
 
@@ -226,7 +226,7 @@ describe("vents", () => {
 			name: "Return to infiltration and ventilation",
 		});
 		expect(returnToOverviewButton.getAttribute("href")).toBe(
-			"/infiltration-and-ventilation"
+			"/infiltration-and-ventilation",
 		);
 	});
 
@@ -246,7 +246,7 @@ describe("vents", () => {
 		await renderSuspended(Vents);
 
 		expect(screen.getByTestId("vents_status_0").textContent).toBe(
-			formStatus.inProgress.text
+			formStatus.inProgress.text,
 		);
 	});
 
@@ -267,7 +267,7 @@ describe("vents", () => {
 		await renderSuspended(Vents);
 
 		expect(screen.getByTestId("vents_status_0").textContent).toBe(
-			formStatus.complete.text
+			formStatus.complete.text,
 		);
 	});
 });

@@ -3,7 +3,7 @@ export enum PressureUnitName {
 }
 
 enum PressureSuffix {
-	PASCAL = "Pa"
+	PASCAL = "Pa",
 }
 
 export class PressureUnit {

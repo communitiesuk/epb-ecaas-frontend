@@ -8,7 +8,7 @@ defineProps<{
 
 const options: Record<CombustionAirSupplySituation, SnakeToSentenceCase<CombustionAirSupplySituation>> = {
 	room_air: "Room air",
-	outside: "Outside"
+	outside: "Outside",
 };
 
 </script>

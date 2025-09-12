@@ -8,7 +8,7 @@ export function mapCoolingData(state: ResolvedState): Partial<FhsInputSchema> {
 	const spaceCoolSystems = mapSpaceCoolSystems(state);
     
 	return { 
-		SpaceCoolSystem: spaceCoolSystems
+		SpaceCoolSystem: spaceCoolSystems,
 	};
 }
 

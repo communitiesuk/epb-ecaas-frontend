@@ -126,18 +126,18 @@ describe("windows", () => {
 
 		await renderSuspended(Windows);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
 
 	test("marks windows as complete when mark section as complete button is clicked", async () => {
 		await renderSuspended(Windows);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 
 		const completedStatusElement = screen.queryByTestId(
-			"completeSectionCompleted"
+			"completeSectionCompleted",
 		);
 		expect(completedStatusElement?.style.display).toBe("none");
 
@@ -147,7 +147,7 @@ describe("windows", () => {
 
 		expect(complete).toBe(true);
 		expect(
-			screen.queryByRole("button", { name: "Mark section as complete" })
+			screen.queryByRole("button", { name: "Mark section as complete" }),
 		).toBeNull();
 		expect(completedStatusElement?.style.display).not.toBe("none");
 
@@ -172,7 +172,7 @@ describe("windows", () => {
 
 		expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
 
@@ -194,7 +194,7 @@ describe("windows", () => {
 
 		expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
 
@@ -224,7 +224,7 @@ describe("windows", () => {
 
 		await renderSuspended(Windows);
 		expect(
-			screen.getByRole("button", { name: "Mark section as complete" })
+			screen.getByRole("button", { name: "Mark section as complete" }),
 		).not.toBeNull();
 	});
 
@@ -260,7 +260,7 @@ describe("windows", () => {
 		await renderSuspended(Windows);
 
 		expect(screen.getByTestId("windows_status_0").textContent).toBe(
-			formStatus.inProgress.text
+			formStatus.inProgress.text,
 		);
 	});
 
@@ -276,7 +276,7 @@ describe("windows", () => {
 		await renderSuspended(Windows);
 
 		expect(screen.getByTestId("windows_status_0").textContent).toBe(
-			formStatus.complete.text
+			formStatus.complete.text,
 		);
 	});
 
@@ -287,7 +287,7 @@ describe("windows", () => {
 			name: "Return to dwelling fabric",
 		});
 		expect(returnToOverviewButton.getAttribute("href")).toBe(
-			"/dwelling-fabric"
+			"/dwelling-fabric",
 		);
 	});
 });

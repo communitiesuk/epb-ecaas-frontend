@@ -8,7 +8,7 @@ interface LogoProps {
 const {
 	ariaLabelText = undefined,
 	classes = undefined,
-	useLogotype = true
+	useLogotype = true,
 } = defineProps<LogoProps>();
 
 const svgWidth = computed(() => {

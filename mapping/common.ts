@@ -2,14 +2,14 @@ import {
 	HeatPumpBackupControlType,
 	HeatPumpSinkType,
 	HeatPumpSourceType,
-	TestLetter
+	TestLetter,
 } from "~/schema/api-schema.types";
 import type { SchemaHeatSourceWetDetails } from "~/schema/api-schema.types";
 
 export const immersionHeaterPositionValues: Record<ImmersionHeaterPosition, number> = {
 	top: 1.0,
 	middle: 0.5,
-	bottom: 0
+	bottom: 0,
 };
 
 export const defaultZoneName: string = "dwellingspace";
@@ -41,7 +41,7 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			design_flow_temp: 35,
 			temp_outlet: 34,
 			temp_source: 0,
-			temp_test: -7
+			temp_test: -7,
 		},
 		{
 			test_letter: TestLetter.B,
@@ -51,7 +51,7 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			design_flow_temp: 35,
 			temp_outlet: 30,
 			temp_source: 0,
-			temp_test: 2
+			temp_test: 2,
 		},
 		{
 			test_letter: TestLetter.C,
@@ -61,7 +61,7 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			design_flow_temp: 35,
 			temp_outlet: 27,
 			temp_source: 0,
-			temp_test: 7
+			temp_test: 7,
 		},
 		{
 			test_letter: TestLetter.D,
@@ -71,7 +71,7 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			design_flow_temp: 35,
 			temp_outlet: 24,
 			temp_source: 0,
-			temp_test: 12
+			temp_test: 12,
 		},
 		{
 			test_letter: TestLetter.F,
@@ -81,10 +81,10 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			design_flow_temp: 35,
 			temp_outlet: 34,
 			temp_source: 0,
-			temp_test: -7
-		}
+			temp_test: -7,
+		},
 	],
 	time_constant_onoff_operation: 140,
 	time_delay_backup: 2,
-	var_flow_temp_ctrl_during_test: true
+	var_flow_temp_ctrl_during_test: true,
 };

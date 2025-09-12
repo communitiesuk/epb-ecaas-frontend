@@ -30,7 +30,7 @@ const saveForm = (fields: HeatPumpData) => {
 				name: fields.name,
 				productReference: fields.productReference,
 			},
-			complete: true
+			complete: true,
 		};
 
 		heatPump.data[index] = heatPumpItem;
@@ -58,8 +58,8 @@ watch(model, async (newData: HeatPumpData | undefined, initialData: HeatPumpData
 			state.heatingSystems.heatGeneration.heatPump.data.push({
 				data: {
 					...newData,
-					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
-				}
+					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName),
+				},
 			});
 		});
 
@@ -72,8 +72,8 @@ watch(model, async (newData: HeatPumpData | undefined, initialData: HeatPumpData
 		state.heatingSystems.heatGeneration.heatPump.data[index] = {
 			data: {
 				...newData,
-				name: newData.name ?? state.heatingSystems.heatGeneration.heatPump.data[index]?.data.name
-			}
+				name: newData.name ?? state.heatingSystems.heatGeneration.heatPump.data[index]?.data.name,
+			},
 		};
 
 		state.heatingSystems.heatGeneration.heatPump.complete = false;

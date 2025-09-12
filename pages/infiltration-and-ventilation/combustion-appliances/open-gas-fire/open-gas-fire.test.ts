@@ -46,16 +46,16 @@ describe("open gas fire", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					[CombustionApplianceType.open_gas_fire]: {
-						data: [openGasFire]
-					}
-				}
-			}
+						data: [openGasFire],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(OpenGasFire, {
 			route: {
-				params: { combustion: "0" }
-			}
+				params: { combustion: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Open gas fire 1");

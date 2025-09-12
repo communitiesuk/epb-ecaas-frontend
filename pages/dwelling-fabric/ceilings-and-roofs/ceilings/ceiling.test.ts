@@ -21,7 +21,7 @@ describe("ceiling", () => {
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: "0",
-			pitch: 0 }
+			pitch: 0 },
 	};
 
 	const ceilingUnheatedSpace: EcaasForm<CeilingData> = {
@@ -29,8 +29,8 @@ describe("ceiling", () => {
 			...ceiling.data,
 			type: AdjacentSpaceType.unheatedSpace,
 			uValue: 1,
-			thermalResistanceOfAdjacentUnheatedSpace: 0
-		}
+			thermalResistanceOfAdjacentUnheatedSpace: 0,
+		},
 	};
 
 	afterEach(() => {
@@ -72,16 +72,16 @@ describe("ceiling", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data: [ceiling]
-						}
-					}
-				}
+							data: [ceiling],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Ceiling, {
 				route: {
-					params: { ceiling: "0" }
-				}
+					params: { ceiling: "0" },
+				},
 			});
 	
 			expect((await screen.findByTestId("type_heatedSpace")).hasAttribute("checked")).toBe(true);
@@ -130,16 +130,16 @@ describe("ceiling", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data: [ceilingUnheatedSpace]
-						}
-					}
-				}
+							data: [ceilingUnheatedSpace],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(Ceiling, {
 				route: {
-					params: { ceiling: "0" }
-				}
+					params: { ceiling: "0" },
+				},
 			});
 
 			expect((await screen.findByTestId("type_unheatedSpace")).hasAttribute("checked")).toBe(true);
@@ -225,8 +225,8 @@ describe("ceiling", () => {
 		it("creates a new ceiling automatically with given name", async () => {
 			await renderSuspended(Ceiling, {
 				route: {
-					params: { ceiling: "create" }
-				}
+					params: { ceiling: "create" },
+				},
 			});
 
 			await user.click(screen.getByTestId("type_heatedSpace"));
@@ -243,8 +243,8 @@ describe("ceiling", () => {
 		it("creates a new ceiling automatically with default name after other data is entered", async () => {
 			await renderSuspended(Ceiling, {
 				route: {
-					params: { ceiling: "create" }
-				}
+					params: { ceiling: "create" },
+				},
 			});
 
 			await user.click(screen.getByTestId("type_unheatedSpace"));
@@ -264,16 +264,16 @@ describe("ceiling", () => {
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
-							data: [ceiling, ceilingUnheatedSpace]
-						}
-					}
-				}
+							data: [ceiling, ceilingUnheatedSpace],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(Ceiling, {
 				route: {
-					params: { ceiling: "1" }
-				}
+					params: { ceiling: "1" },
+				},
 			});
 
 			await user.clear(screen.getByTestId("name"));
@@ -294,16 +294,16 @@ describe("ceiling", () => {
 					dwellingSpaceCeilingsAndRoofs: {
 						dwellingSpaceCeilings: {
 							data: [{ ...ceiling, complete: true }],
-							complete: true
-						}
-					}
-				}
+							complete: true,
+						},
+					},
+				},
 			});
 
 			await renderSuspended(Ceiling, {
 				route: {
-					params: { ceiling: "0" }
-				}
+					params: { ceiling: "0" },
+				},
 			});
 
 			await user.type(screen.getByTestId("name"), "Ceiling");

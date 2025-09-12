@@ -68,10 +68,10 @@ describe("cooling", () => {
 			const populatedList = screen.getByTestId("airConditioning_items");
 
 			expect(
-				within(populatedList).getByText("Air conditioner 1")
+				within(populatedList).getByText("Air conditioner 1"),
 			).toBeDefined();
 			expect(
-				within(populatedList).getByText("Air conditioner 3")
+				within(populatedList).getByText("Air conditioner 3"),
 			).toBeDefined();
 			expect(within(populatedList).queryByText("Air conditioner 2")).toBeNull();
 		});
@@ -111,7 +111,7 @@ describe("cooling", () => {
 			expect(store.cooling.airConditioning.complete).toBe(true);
 
 			const completedStatusElement = screen.queryByTestId(
-				"completeSectionCompleted"
+				"completeSectionCompleted",
 			);
 			expect(completedStatusElement?.style.display).not.toBe("none");
 

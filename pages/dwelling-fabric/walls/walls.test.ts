@@ -282,13 +282,13 @@ describe("walls", () => {
 			const populatedList = screen.getByTestId("toHeatedSpace_items");
 
 			expect(
-				within(populatedList).getByText("Wall to heated space 1")
+				within(populatedList).getByText("Wall to heated space 1"),
 			).toBeDefined();
 			expect(
-				within(populatedList).getByText("Wall to heated space 3")
+				within(populatedList).getByText("Wall to heated space 3"),
 			).toBeDefined();
 			expect(
-				within(populatedList).queryByText("Wall to heated space 2")
+				within(populatedList).queryByText("Wall to heated space 2"),
 			).toBeNull();
 		});
 
@@ -405,7 +405,7 @@ describe("walls", () => {
 		});
 
 		const getWallData = async (
-			action: string
+			action: string,
 		): Promise<
 			{
 				key: keyof WallsData;
@@ -441,10 +441,10 @@ describe("walls", () => {
 
     it("marks walls as complete when mark section as complete button is clicked", async () => {
     	expect(
-    		screen.getByRole("button", { name: "Mark section as complete" })
+    		screen.getByRole("button", { name: "Mark section as complete" }),
     	).not.toBeNull();
     	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted"
+    		"completeSectionCompleted",
     	);
     	expect(completedStatusElement?.style.display).toBe("none");
 
@@ -462,7 +462,7 @@ describe("walls", () => {
     	expect(dwellingSpacePartyWall?.complete).toBe(true);
     	expect(dwellingSpaceWallToUnheatedSpace?.complete).toBe(true);
     	expect(
-    		screen.queryByRole("button", { name: "Mark section as complete" })
+    		screen.queryByRole("button", { name: "Mark section as complete" }),
     	).toBeNull();
     	expect(completedStatusElement?.style.display).not.toBe("none");
 
@@ -478,17 +478,17 @@ describe("walls", () => {
 
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
     		).toBe(true);
 
     		const item = wallData.find((x) => x.key === typedKey)!;
     		await user.click(screen.getByTestId(item.testId));
 
     		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
     		).toBe(false);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -502,17 +502,17 @@ describe("walls", () => {
 
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
     		).toBe(true);
 
     		const item = wallData.find((x) => x.key === typedKey)!;
     		await user.click(screen.getByTestId(item.testId));
 
     		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
     		).toBe(false);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -526,7 +526,7 @@ describe("walls", () => {
 
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
     		).toBe(true);
 
     		const item = wallData.find((x) => x.key === typedKey)!;
@@ -536,15 +536,15 @@ describe("walls", () => {
     		});
 
     		await user.click(
-    			screen.getByRole("button", { name: "Save and continue" })
+    			screen.getByRole("button", { name: "Save and continue" }),
     		);
 
     		expect(
-    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceWalls[typedKey]?.complete,
     		).toBe(false);
     		await renderSuspended(Walls);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });

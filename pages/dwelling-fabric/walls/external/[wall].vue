@@ -24,7 +24,7 @@ const saveForm = (fields: ExternalWallData) => {
 			solarAbsorption: fields.solarAbsorption,
 			uValue: fields.uValue,
 			kappaValue: fields.kappaValue,
-			massDistributionClass: fields.massDistributionClass
+			massDistributionClass: fields.massDistributionClass,
 		};
 
 		if (!dwellingSpaceWalls.dwellingSpaceExternalWall) {

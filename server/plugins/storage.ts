@@ -11,7 +11,7 @@ export default defineNitroPlugin(() => {
 			host: useRuntimeConfig().redisEndpoint,
 			password: useRuntimeConfig().redisPassword,
 			username: useRuntimeConfig().redisUsername,
-			tls: {}
+			tls: {},
 		});
 		storage.mount("cache", driver);
 	}

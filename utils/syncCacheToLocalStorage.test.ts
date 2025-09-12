@@ -6,7 +6,7 @@ describe("syncCacheToLocalStorage", () => {
 
 	function mockFetchResponse(mockResponse: cacheData | undefined) {
 		return (global.$fetch = vi.fn(() =>
-			Promise.resolve(mockResponse)
+			Promise.resolve(mockResponse),
 		) as unknown as typeof global.$fetch);
 	}
 
@@ -41,7 +41,7 @@ describe("syncCacheToLocalStorage", () => {
 		await syncCacheToLocalStorage();
 		expect(setItemSpy).toHaveBeenCalledWith(
 			"ecaas",
-			JSON.stringify(mockResponse)
+			JSON.stringify(mockResponse),
 		);
 		expect(localStorage.ecaas).toEqual(JSON.stringify(mockResponse));
 	});

@@ -37,7 +37,7 @@ describe("Domestic hot water summary", () => {
 			name: "Immersion heater",
 			ratedPower: 10,
 			heaterPosition: "top",
-			thermostatPosition: "top"
+			thermostatPosition: "top",
 		};
 
 		const pointOfUse: PointOfUseData = {
@@ -51,8 +51,8 @@ describe("Domestic hot water summary", () => {
 				domesticHotWater: {
 					waterHeating: {
 						hotWaterCylinder: {
-							data: [hotWaterCylinder]
-						}
+							data: [hotWaterCylinder],
+						},
 					},
 				},
 				heatingSystems: {
@@ -61,12 +61,12 @@ describe("Domestic hot water summary", () => {
 							data: [{
 								data: {
 									id: heatPumpId,
-									name: "Heat pump"
-								}
-							}]
-						}
-					}
-				}
+									name: "Heat pump",
+								},
+							}],
+						},
+					},
+				},
 			});
 		};
 
@@ -117,10 +117,10 @@ describe("Domestic hot water summary", () => {
 				domesticHotWater: {
 					waterHeating: {
 						immersionHeater: {
-							data: [immersionHeater]
-						}
-					}
-				}
+							data: [immersionHeater],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(Summary);
@@ -144,10 +144,10 @@ describe("Domestic hot water summary", () => {
 				domesticHotWater: {
 					waterHeating: {
 						pointOfUse: {
-							data: [pointOfUse]
-						}
-					}
-				}
+							data: [pointOfUse],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(Summary);
@@ -155,7 +155,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Point of use",
 				"Setpoint temperature": `25 ${celsius.suffix}`,
-				"Heater efficiency": "0.5"
+				"Heater efficiency": "0.5",
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -171,16 +171,16 @@ describe("Domestic hot water summary", () => {
 			data: {
 				id: "4a93532e-a370-4015-9778-854661bf1627",
 				name: "Mixer shower 1",
-				flowRate: 10
-			}
+				flowRate: 10,
+			},
 		};
 
 		const electricShower: EcaasForm<ElectricShowerData> = {
 			data: {
 				id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
 				name: "Electric shower 1",
-				ratedPower: 10
-			}
+				ratedPower: 10,
+			},
 		};
 
 		const bathData: EcaasForm<BathData> = {
@@ -188,16 +188,16 @@ describe("Domestic hot water summary", () => {
 				id: "d3883380-885b-48fd-9425-9f9fac7587fb",
 				name: "Bath 1",
 				size: 170,
-				flowRate: 10
-			}
+				flowRate: 10,
+			},
 		};
 
 		const otherOutletsData: EcaasForm<OtherHotWaterOutletData> = {
 			data: {
 				id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
 				name: "Basin tap 1",
-				flowRate: 10
-			}
+				flowRate: 10,
+			},
 		};
 
 		it("should contain the correct tabs for hot water outlets", async () => {
@@ -214,17 +214,17 @@ describe("Domestic hot water summary", () => {
 				domesticHotWater: {
 					hotWaterOutlets: {
 						mixedShower: {
-							data: [mixedShower]
-						}
-					}
-				}
+							data: [mixedShower],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
 				"Name": "Mixer shower 1",
-				"Flow rate": `10 ${litrePerHour.suffix}`
+				"Flow rate": `10 ${litrePerHour.suffix}`,
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -239,17 +239,17 @@ describe("Domestic hot water summary", () => {
 				domesticHotWater: {
 					hotWaterOutlets: {
 						electricShower: {
-							data: [electricShower]
-						}
-					}
-				}
+							data: [electricShower],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
 				"Name": "Electric shower 1",
-				"Rated power": `10 ${kilowatt.suffix}`
+				"Rated power": `10 ${kilowatt.suffix}`,
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -264,10 +264,10 @@ describe("Domestic hot water summary", () => {
 				domesticHotWater: {
 					hotWaterOutlets: {
 						bath: {
-							data: [bathData]
-						}
-					}
-				}
+							data: [bathData],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(Summary);
@@ -275,7 +275,7 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Bath 1",
 				"Size": `170 ${litre.suffix}`,
-				"Flow rate": `10 ${litrePerMinute.suffix}`
+				"Flow rate": `10 ${litrePerMinute.suffix}`,
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -290,17 +290,17 @@ describe("Domestic hot water summary", () => {
 				domesticHotWater: {
 					hotWaterOutlets: {
 						otherOutlets: {
-							data: [otherOutletsData]
-						}
-					}
-				}
+							data: [otherOutletsData],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
 				"Name": "Basin tap 1",
-				"Flow rate": `10 ${litrePerMinute.suffix}`
+				"Flow rate": `10 ${litrePerMinute.suffix}`,
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -325,8 +325,8 @@ describe("Domestic hot water summary", () => {
 				surfaceReflectivity: true,
 				pipeContents: WaterPipeContentsType.water,
 				hotWaterCylinder: hotWaterCylinderId,
-				location: WaterPipeworkLocation.internal
-			}
+				location: WaterPipeworkLocation.internal,
+			},
 		};
 
 		const secondaryPipework: EcaasForm<Partial<SecondaryPipeworkData>> = {
@@ -334,8 +334,8 @@ describe("Domestic hot water summary", () => {
 				name: "Pipework Kitchen Sink Secondary",
 				length: 3,
 				location: WaterPipeworkLocation.internal,
-				internalDiameter: 9
-			}
+				internalDiameter: 9,
+			},
 		};
 
 		it("should contain the correct tabs for pipework details", async () => {
@@ -350,19 +350,19 @@ describe("Domestic hot water summary", () => {
 				domesticHotWater: {
 					pipework: {
 						primaryPipework: {
-							data: [primaryPipework]
-						}
+							data: [primaryPipework],
+						},
 					},
 					waterHeating: {
 						hotWaterCylinder: {
 							data: [{
 								id: hotWaterCylinderId,
 								name: "Hot water cylinder 1",
-								storageCylinderVolume: unitValue(100, litre)
-							}]
-						}
-					}
-				}
+								storageCylinderVolume: unitValue(100, litre),
+							}],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(Summary);
@@ -393,10 +393,10 @@ describe("Domestic hot water summary", () => {
 				domesticHotWater: {
 					pipework: {
 						secondaryPipework: {
-							data: [secondaryPipework]
-						}
-					}
-				}
+							data: [secondaryPipework],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(Summary);
@@ -405,7 +405,7 @@ describe("Domestic hot water summary", () => {
 				"Name": "Pipework Kitchen Sink Secondary",
 				"Length": `3 ${metre.suffix}`,
 				"Location": "Internal",
-				"Internal diameter": `9 ${millimetre.suffix}`
+				"Internal diameter": `9 ${millimetre.suffix}`,
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {

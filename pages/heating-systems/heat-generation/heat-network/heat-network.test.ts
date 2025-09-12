@@ -17,7 +17,7 @@ describe("heatNetwork", () => {
 
 	const heatNetwork: HeatNetworkData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-		name: "Heat network 1"
+		name: "Heat network 1",
 	};
 
 	afterEach(() => {
@@ -47,16 +47,16 @@ describe("heatNetwork", () => {
 			heatingSystems: {
 				heatGeneration: {
 					heatNetwork: {
-						data: [heatNetwork]
-					}
-				}
-			}
+						data: [heatNetwork],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(HeatNetwork, {
 			route: {
-				params: { "network": "0" }
-			}
+				params: { "network": "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat network 1");

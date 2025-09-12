@@ -3,7 +3,7 @@ export enum AngleUnitName {
 }
 
 enum AngleSuffix {
-	DEGREES = "°"
+	DEGREES = "°",
 }
 
 export class AngleUnit {

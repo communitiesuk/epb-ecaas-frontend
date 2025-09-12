@@ -16,7 +16,7 @@ const {
 	node: { name },
 	attrs: { options },
 	label,
-	help
+	help,
 } = props.context;
 
 function handleInput(e: Event) {

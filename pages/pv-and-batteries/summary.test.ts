@@ -28,13 +28,13 @@ describe("PV and electric batteries summary page", () => {
 				inverterPeakPowerAC: 2.4,
 				inverterIsInside: false,
 				inverterType: InverterType.optimised_inverter,
-			}
+			},
 		};
 		
 		it("displays the pv systems tab", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
 			expect(
-				screen.getByRole("link", { name: "PV systems" })
+				screen.getByRole("link", { name: "PV systems" }),
 			).not.toBeNull();
 		});
 
@@ -48,7 +48,7 @@ describe("PV and electric batteries summary page", () => {
 			});
 
 			expect(new URL(addPVSystemsLink.href).pathname).toBe(
-				getUrl("pvAndBatteries")
+				getUrl("pvAndBatteries"),
 			);
 		});
 
@@ -57,8 +57,8 @@ describe("PV and electric batteries summary page", () => {
 			store.$patch({
 				pvAndBatteries: {
 					pvSystems: {
-						data: [pvSystem]
-					}
+						data: [pvSystem],
+					},
 				},
 			});
 
@@ -99,13 +99,13 @@ describe("PV and electric batteries summary page", () => {
 				maximumChargeRate: 6.2,
 				minimumChargeRate: 4.5,
 				maximumDischargeRate: 2.3,
-			}
+			},
 		};
 		
 		it("displays the battery tab", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
 			expect(
-				screen.getByRole("link", { name: "Electric battery" })
+				screen.getByRole("link", { name: "Electric battery" }),
 			).not.toBeNull();
 		});
 
@@ -119,7 +119,7 @@ describe("PV and electric batteries summary page", () => {
 			});
 
 			expect(new URL(addPVSystemsLink.href).pathname).toBe(
-				getUrl("pvAndBatteries")
+				getUrl("pvAndBatteries"),
 			);
 		});
 
@@ -128,8 +128,8 @@ describe("PV and electric batteries summary page", () => {
 			store.$patch({
 				pvAndBatteries: {
 					electricBattery: {
-						data: [battery]
-					}
+						data: [battery],
+					},
 				},
 			});
 

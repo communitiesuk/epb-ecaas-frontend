@@ -42,9 +42,9 @@ const floorsData: FloorsData = {
 				perimeter: 0,
 				psiOfWallJunction: 0,
 				thicknessOfWalls: 0.3,
-				typeOfGroundFloor: FloorType.Slab_no_edge_insulation
-			}
-		}]
+				typeOfGroundFloor: FloorType.Slab_no_edge_insulation,
+			},
+		}],
 	},
 	dwellingSpaceInternalFloor: {
 		data: [{ 
@@ -54,8 +54,8 @@ const floorsData: FloorsData = {
 				surfaceAreaOfElement: 5,
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,
-			}
-		}]
+			},
+		}],
 	},
 	dwellingSpaceExposedFloor: {
 		data: [{ data: {
@@ -69,9 +69,9 @@ const floorsData: FloorsData = {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I
-		} }]
-	}
+			massDistributionClass: MassDistributionClass.I,
+		} }],
+	},
 };
 
 const wallsData: WallsData = {
@@ -88,8 +88,8 @@ const wallsData: WallsData = {
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I
-		}]
+			massDistributionClass: MassDistributionClass.I,
+		}],
 	},
 	dwellingSpaceInternalWall: {
 		data: [{
@@ -98,8 +98,8 @@ const wallsData: WallsData = {
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: "custom",
-			pitch: 0
-		}]
+			pitch: 0,
+		}],
 	},
 	dwellingSpaceWallToUnheatedSpace: {
 		data: [{
@@ -110,8 +110,8 @@ const wallsData: WallsData = {
 			massDistributionClass: MassDistributionClass.E,
 			pitchOption: "90",
 			pitch: 90,
-			thermalResistanceOfAdjacentUnheatedSpace: 1
-		}]
+			thermalResistanceOfAdjacentUnheatedSpace: 1,
+		}],
 	},
 	dwellingSpacePartyWall: {
 		data: [{
@@ -121,9 +121,9 @@ const wallsData: WallsData = {
 			surfaceArea: 10,
 			uValue: 1,
 			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I
-		}]
-	}
+			massDistributionClass: MassDistributionClass.I,
+		}],
+	},
 };
 
 const ceilingsAndRoofsData: CeilingsAndRoofsData = {
@@ -136,9 +136,9 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,
 				pitchOption: "custom",
-				pitch: 180
-			}
-		}]
+				pitch: 180,
+			},
+		}],
 	},
 	dwellingSpaceRoofs: {
 		data: [{
@@ -155,10 +155,10 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 				solarAbsorptionCoefficient: 0.5,
 				uValue: 1,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I
-			}
-		}]
-	}
+				massDistributionClass: MassDistributionClass.I,
+			},
+		}],
+	},
 };
 
 const doorsData: DoorsData = {
@@ -177,9 +177,9 @@ const doorsData: DoorsData = {
 						solarAbsorption: 0.1,
 						uValue: 1,
 						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.I
-					}
-		}]
+						massDistributionClass: MassDistributionClass.I,
+					},
+		}],
 	},
 	dwellingSpaceExternalGlazedDoor: {
 		data: [{
@@ -196,9 +196,9 @@ const doorsData: DoorsData = {
 				elevationalHeight: 1,
 				midHeight: 1,
 				numberOpenableParts: "0",
-				openingToFrameRatio: 0.2
-			}
-		}]
+				openingToFrameRatio: 0.2,
+			},
+		}],
 	},
 	dwellingSpaceInternalDoor: {
 		data: [{
@@ -209,10 +209,10 @@ const doorsData: DoorsData = {
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,
 				pitchOption: "90",
-				pitch: 90
-			}
-		}]
-	}
+				pitch: 90,
+			},
+		}],
+	},
 };
 
 const windowData: EcaasForm<WindowData> = {
@@ -241,7 +241,7 @@ const windowData: EcaasForm<WindowData> = {
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
 
-	}
+	},
 };
 
 const thermalBridgingData: ThermalBridgingData = {
@@ -251,18 +251,18 @@ const thermalBridgingData: ThermalBridgingData = {
 				name: "E1: Steel lintel with perforated steel base plate",
 				typeOfThermalBridge: "e1",
 				linearThermalTransmittance: 1,
-				length: 2
-			}
-		}]
+				length: 2,
+			},
+		}],
 	},
 	dwellingSpacePointThermalBridges: {
 		data: [{
 			data: {
 				name: "Point 1",
-				heatTransferCoefficient: 1
-			}
-		}]
-	}
+				heatTransferCoefficient: 1,
+			},
+		}],
+	},
 };
 
 describe("Living space fabric summary", () => {
@@ -283,9 +283,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceZoneParameters: {
-						data: zoneParametersData
-					}
-				}
+						data: zoneParametersData,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -315,16 +315,16 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceLighting: {
-						data: lightingData
-					}
-				}
+						data: lightingData,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
 				"Number of LED bulbs": "8",
-				"Number of incandescent bulbs": "3"
+				"Number of incandescent bulbs": "3",
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -348,9 +348,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
-						dwellingSpaceGroundFloor: floorsData.dwellingSpaceGroundFloor
-					}
-				}
+						dwellingSpaceGroundFloor: floorsData.dwellingSpaceGroundFloor,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -366,7 +366,7 @@ describe("Living space fabric summary", () => {
 				"Perimeter": `0 ${metre.suffix}`,
 				"Psi of wall junction": `0 ${wattsPerMeterKelvin.suffix}`,
 				"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
-				"Type of ground floor": "Slab no edge insulation"
+				"Type of ground floor": "Slab no edge insulation",
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -380,9 +380,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
-						dwellingSpaceInternalFloor: floorsData.dwellingSpaceInternalFloor
-					}
-				}
+						dwellingSpaceInternalFloor: floorsData.dwellingSpaceInternalFloor,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -406,9 +406,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceFloors: {
-						dwellingSpaceExposedFloor: floorsData.dwellingSpaceExposedFloor
-					}
-				}
+						dwellingSpaceExposedFloor: floorsData.dwellingSpaceExposedFloor,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -422,7 +422,7 @@ describe("Living space fabric summary", () => {
 				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal"
+				"Mass distribution class": "Internal",
 			};
 			
 	
@@ -448,9 +448,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
-						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall
-					}
-				}
+						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+					},
+				},
 			});
 
 			await renderSuspended(Summary);
@@ -466,7 +466,7 @@ describe("Living space fabric summary", () => {
 				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal"
+				"Mass distribution class": "Internal",
 			};
 			
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -480,9 +480,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
-						dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall
-					}
-				}
+						dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -492,7 +492,7 @@ describe("Living space fabric summary", () => {
 				"Net surface area of element": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
-				"Pitch": `0 ${degrees.suffix}`
+				"Pitch": `0 ${degrees.suffix}`,
 			};
 			
 	
@@ -507,9 +507,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
-						dwellingSpaceWallToUnheatedSpace: wallsData.dwellingSpaceWallToUnheatedSpace
-					}
-				}
+						dwellingSpaceWallToUnheatedSpace: wallsData.dwellingSpaceWallToUnheatedSpace,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -521,7 +521,7 @@ describe("Living space fabric summary", () => {
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "External",
 				"Pitch": `90 ${degrees.suffix}`,
-				"Thermal resistance of adjacent unheated space": `1 ${squareMeterKelvinPerWatt.suffix}`
+				"Thermal resistance of adjacent unheated space": `1 ${squareMeterKelvinPerWatt.suffix}`,
 			};
 			
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -535,9 +535,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
-						dwellingSpacePartyWall: wallsData.dwellingSpacePartyWall
-					}
-				}
+						dwellingSpacePartyWall: wallsData.dwellingSpacePartyWall,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -548,7 +548,7 @@ describe("Living space fabric summary", () => {
 				"Net surface area": `10 ${metresSquare.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal"
+				"Mass distribution class": "Internal",
 			};
 			
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -571,9 +571,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceCeilings: ceilingsAndRoofsData.dwellingSpaceCeilings
-					}
-				}
+						dwellingSpaceCeilings: ceilingsAndRoofsData.dwellingSpaceCeilings,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -584,7 +584,7 @@ describe("Living space fabric summary", () => {
 				"Net surface area": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
-				"Pitch": `180 ${degrees.suffix}`
+				"Pitch": `180 ${degrees.suffix}`,
 			};
 			
 	
@@ -599,9 +599,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
-						dwellingSpaceRoofs: ceilingsAndRoofsData.dwellingSpaceRoofs
-					}
-				}
+						dwellingSpaceRoofs: ceilingsAndRoofsData.dwellingSpaceRoofs,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -617,7 +617,7 @@ describe("Living space fabric summary", () => {
 				"Solar absorption coefficient": "0.5",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal"
+				"Mass distribution class": "Internal",
 			};
 			
 
@@ -642,9 +642,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
-						dwellingSpaceExternalUnglazedDoor: doorsData.dwellingSpaceExternalUnglazedDoor
-					}
-				}
+						dwellingSpaceExternalUnglazedDoor: doorsData.dwellingSpaceExternalUnglazedDoor,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -660,7 +660,7 @@ describe("Living space fabric summary", () => {
 				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
-				"Mass distribution class": "Internal"
+				"Mass distribution class": "Internal",
 			};
 			
 	
@@ -675,9 +675,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
-						dwellingSpaceExternalGlazedDoor: doorsData.dwellingSpaceExternalGlazedDoor
-					}
-				}
+						dwellingSpaceExternalGlazedDoor: doorsData.dwellingSpaceExternalGlazedDoor,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -692,7 +692,7 @@ describe("Living space fabric summary", () => {
 				"Pitch": `90 ${degrees.suffix}`,
 				"Transmittance of solar energy": "0.1",
 				"Elevational height of building element at its base": `1 ${metre.suffix}`,
-				"Mid height": `1 ${metre.suffix}`
+				"Mid height": `1 ${metre.suffix}`,
 			};
 			
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -706,9 +706,9 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
-						dwellingSpaceInternalDoor: doorsData.dwellingSpaceInternalDoor
-					}
-				}
+						dwellingSpaceInternalDoor: doorsData.dwellingSpaceInternalDoor,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -719,7 +719,7 @@ describe("Living space fabric summary", () => {
 				"Net surface area of element": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
-				"Pitch": `90 ${degrees.suffix}`
+				"Pitch": `90 ${degrees.suffix}`,
 			};
 			
 	
@@ -743,9 +743,9 @@ describe("Living space fabric summary", () => {
 				dwellingFabric: {
 					dwellingSpaceWindows: {
 						data: [windowData],
-						complete: true
-					}
-				}
+						complete: true,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
@@ -769,7 +769,7 @@ describe("Living space fabric summary", () => {
 				"Side fin left distance from glass": `100 ${millimetre.suffix}`,
 				"Type": "Blinds",
 				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
-				"Solar transmittance reduction": "0.1"
+				"Solar transmittance reduction": "0.1",
 			};
 			
 	
@@ -793,16 +793,16 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
-						dwellingSpaceLinearThermalBridges: thermalBridgingData.dwellingSpaceLinearThermalBridges
-					}
-				}
+						dwellingSpaceLinearThermalBridges: thermalBridgingData.dwellingSpaceLinearThermalBridges,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
 			const expectedResult = {
 				"Type of thermal bridge": "E1",
 				"Linear thermal transmittance": `1 ${wattsPerMeterKelvin.suffix}`,
-				"Length of thermal bridge": `2 ${metre.suffix}`
+				"Length of thermal bridge": `2 ${metre.suffix}`,
 			};
 			
 	
@@ -817,16 +817,16 @@ describe("Living space fabric summary", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
-						dwellingSpacePointThermalBridges: thermalBridgingData.dwellingSpacePointThermalBridges
-					}
-				}
+						dwellingSpacePointThermalBridges: thermalBridgingData.dwellingSpacePointThermalBridges,
+					},
+				},
 			});
 	
 			await renderSuspended(Summary);
 	
 			const expectedResult = {
 				"Name": "Point 1",
-				"Heat transfer coefficient": `1 ${wattsPerKelvin.suffix}`
+				"Heat transfer coefficient": `1 ${wattsPerKelvin.suffix}`,
 			};
 	
 			for (const [key, value] of Object.entries(expectedResult)) {

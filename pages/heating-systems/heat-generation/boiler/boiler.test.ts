@@ -17,7 +17,7 @@ describe("boiler", () => {
 
 	const boiler: BoilerData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-		name: "boiler 1"
+		name: "boiler 1",
 	};
 
 	afterEach(() => {
@@ -47,16 +47,16 @@ describe("boiler", () => {
 			heatingSystems: {
 				heatGeneration: {
 					boiler: {
-						data: [boiler]
-					}
-				}
-			}
+						data: [boiler],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(Boiler, {
 			route: {
-				params: { "boiler": "0" }
-			}
+				params: { "boiler": "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("boiler 1");

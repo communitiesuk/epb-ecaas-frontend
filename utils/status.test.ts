@@ -10,7 +10,7 @@ describe("getSectionStatus util function" , () => {
 
 		const expected: GovTagProps = {
 			text: "Not started",
-			color: "grey"
+			color: "grey",
 		};
 		expect(actual).toStrictEqual(expected);
 	});
@@ -33,7 +33,7 @@ describe("getSectionStatus util function" , () => {
 
 		const expected: GovTagProps = {
 			text: "In progress",
-			color: "yellow"
+			color: "yellow",
 		};
 		expect(actual).toStrictEqual(expected);
 	});
@@ -46,7 +46,7 @@ describe("getSectionStatus util function" , () => {
 
 		const expected: GovTagProps = {
 			text: "Complete",
-			color: "green"
+			color: "green",
 		};
 		expect(actual).toStrictEqual(expected);
 	});
@@ -58,7 +58,7 @@ describe("getSectionStatus util function" , () => {
 
 		const expected: GovTagProps = {
 			text: "Complete",
-			color: "green"
+			color: "green",
 		};
 		expect(actual).toStrictEqual(expected);
 	});

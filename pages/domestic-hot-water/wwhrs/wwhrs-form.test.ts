@@ -22,7 +22,7 @@ describe("wwhrs form", () => {
 		type: WwhrsType.WWHRS_InstantaneousSystemA,
 		flowRate: 10,
 		efficiency: 10,
-		proportionOfUse: 0.5
+		proportionOfUse: 0.5,
 	};
 
 	const addStoreData = () => {
@@ -33,12 +33,12 @@ describe("wwhrs form", () => {
 						data: [{
 							data: {
 								id: mixedShowerId,
-								name: "Mixer shower 1"
-							}
-						}]
-					}
-				}
-			} }
+								name: "Mixer shower 1",
+							},
+						}],
+					},
+				},
+			} },
 		);
 	};
 
@@ -72,16 +72,16 @@ describe("wwhrs form", () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
-					data: [state]
-				}
-			} }
+					data: [state],
+				},
+			} },
 		);
 
 		addStoreData();
 		await renderSuspended(WwhrsForm, {
 			route: {
-				params: { wwhrs: "0" }
-			}
+				params: { wwhrs: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("WWHRS 1");

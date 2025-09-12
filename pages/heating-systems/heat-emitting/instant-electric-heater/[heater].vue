@@ -20,7 +20,7 @@ const saveForm = (fields: InstantElectricStorageData) => {
 				ratedPower: fields.ratedPower,
 				convectionFractionInstant: fields.convectionFractionInstant,
 			},
-			complete: true
+			complete: true,
 		};
 
 		instantElectricHeater.data[index] = instantElectricHeaterItem;
@@ -49,8 +49,8 @@ watch(model, async (newData: InstantElectricStorageData | undefined, initialData
 			state.heatingSystems.heatEmitting.instantElectricHeater.data.push({
 				data: {
 					...newData,
-					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName)
-				}
+					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName),
+				},
 			});
 		});
 
@@ -63,8 +63,8 @@ watch(model, async (newData: InstantElectricStorageData | undefined, initialData
 		state.heatingSystems.heatEmitting.instantElectricHeater.data[index] = {
 			data: {
 				...newData,
-				name: newData.name ?? state.heatingSystems.heatEmitting.instantElectricHeater.data[index]?.data.name
-			}
+				name: newData.name ?? state.heatingSystems.heatEmitting.instantElectricHeater.data[index]?.data.name,
+			},
 		};
 
 		state.heatingSystems.heatEmitting.instantElectricHeater.complete = false;

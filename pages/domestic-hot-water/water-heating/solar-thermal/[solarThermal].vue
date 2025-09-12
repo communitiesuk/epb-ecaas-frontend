@@ -11,7 +11,7 @@ const saveForm = (fields: SolarThermalData) => {
 		const { solarThermal } = state.domesticHotWater.waterHeating;
 
 		const solarThermalItem: SolarThermalData = {
-			name: fields.name
+			name: fields.name,
 		};
 		solarThermal.complete = false;
 		saveToList(solarThermalItem, solarThermal);

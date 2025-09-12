@@ -46,16 +46,16 @@ describe("closed fireplace with fan", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					[CombustionApplianceType.closed_with_fan]: {
-						data: [closedFireplace]
-					}
-				}
-			}
+						data: [closedFireplace],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(ClosedFireplaceWithFan, {
 			route: {
-				params: { combustion: "0" }
-			}
+				params: { combustion: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Closed fireplace");

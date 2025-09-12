@@ -31,7 +31,7 @@ describe("external glazed door", () => {
 					heightOpenableArea: 14,
 					maximumOpenableArea: 13,
 					midHeightOpenablePart1: 11,
-				}
+				},
 	};
 
 	afterEach(() => {
@@ -41,8 +41,8 @@ describe("external glazed door", () => {
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(ExternalGlazedDoor, {
 			route: {
-				params: { externalGlazed: "create" }
-			}
+				params: { externalGlazed: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "External glazed door 1");
@@ -80,16 +80,16 @@ describe("external glazed door", () => {
 			dwellingFabric: {
 				dwellingSpaceDoors: {
 					dwellingSpaceExternalGlazedDoor: {
-						data: [state]
-					}
-				}
-			}
+						data: [state],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(ExternalGlazedDoor, {
 			route: {
-				params: { door: "0" }
-			}
+				params: { door: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External glazed door 1");
@@ -142,8 +142,8 @@ describe("external glazed door", () => {
 		it("creates a new door automatically with given name", async () => {
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
-					params: { externalGlazed: "create" }
-				}
+					params: { externalGlazed: "create" },
+				},
 			});
 
 			await user.type(screen.getByTestId("name"), "New door");
@@ -158,8 +158,8 @@ describe("external glazed door", () => {
 		it("creates a new door automatically with default name after other data is entered", async () => {
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
-					params: { externalGlazed: "create" }
-				}
+					params: { externalGlazed: "create" },
+				},
 			});
 
 			await user.type(screen.getByTestId("elevationalHeight"), "7");
@@ -177,16 +177,16 @@ describe("external glazed door", () => {
 				dwellingFabric: {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
-							data: [state, state]
-						}
-					}
-				}
+							data: [state, state],
+						},
+					},
+				},
 			});
 
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
-					params: { externalGlazed: "1" }
-				}
+					params: { externalGlazed: "1" },
+				},
 			});
 
 			await user.clear(screen.getByTestId("name"));
@@ -207,16 +207,16 @@ describe("external glazed door", () => {
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: {
 							data: [{ ...state, complete: true }],
-							complete: true
-						}
-					}
-				}
+							complete: true,
+						},
+					},
+				},
 			});
 
 			await renderSuspended(ExternalGlazedDoor, {
 				route: {
-					params: { externalGlazed: "0" }
-				}
+					params: { externalGlazed: "0" },
+				},
 			});
 
 			await user.type(screen.getByTestId("name"), "Door");

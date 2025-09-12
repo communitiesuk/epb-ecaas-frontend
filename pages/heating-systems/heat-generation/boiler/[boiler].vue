@@ -14,7 +14,7 @@ const saveForm = (fields: BoilerData) => {
 
 		const boilerItem: BoilerData = {
 			id: uuidv4(),
-			name: fields.name
+			name: fields.name,
 		};
 
 		saveToList(boilerItem, boiler);

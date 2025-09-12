@@ -6,12 +6,12 @@ describe("Show error state", () => {
 			messages: {
 				rule_required: {
 					value: "Field is required.",
-					visible: true
-				}
+					visible: true,
+				},
 			},
 			state: {
-				invalid: true
-			}
+				invalid: true,
+			},
 		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
@@ -24,16 +24,16 @@ describe("Show error state", () => {
 			messages: {
 				rule_required: {
 					value: "Field is required.",
-					visible: false
+					visible: false,
 				},
 				rule_length: {
 					value: "Invalid length.",
-					visible: true
-				}
+					visible: true,
+				},
 			},
 			state: {
-				invalid: true
-			}
+				invalid: true,
+			},
 		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
@@ -46,12 +46,12 @@ describe("Show error state", () => {
 			messages: {
 				rule_required: {
 					value: "Field is required.",
-					visible: false
-				}
+					visible: false,
+				},
 			},
 			state: {
-				invalid: true
-			}
+				invalid: true,
+			},
 		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
@@ -63,8 +63,8 @@ describe("Show error state", () => {
 		const context = {
 			messages: {},
 			state: {
-				invalid: true
-			}
+				invalid: true,
+			},
 		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
@@ -77,12 +77,12 @@ describe("Show error state", () => {
 			messages: {
 				rule_required: {
 					value: "Field is required.",
-					visible: false
-				}
+					visible: false,
+				},
 			},
 			state: {
-				invalid: true
-			}
+				invalid: true,
+			},
 		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
@@ -94,8 +94,8 @@ describe("Show error state", () => {
 		const context = {
 			messages: {},
 			state: {
-				invalid: false
-			}
+				invalid: false,
+			},
 		} as unknown as FormKitFrameworkContext;
 
 		const result = showErrorState(context);
@@ -110,9 +110,9 @@ describe("Get error message", () => {
 			messages: {
 				rule_required: {
 					value: "Field is required.",
-					visible: true
-				}
-			}
+					visible: true,
+				},
+			},
 		} as unknown as FormKitFrameworkContext;
 
 		const result = getErrorMessage(context);
@@ -122,7 +122,7 @@ describe("Get error message", () => {
 
 	it("returns undefined when context has no error messages", () => {
 		const context = {
-			messages: {}
+			messages: {},
 		} as unknown as FormKitFrameworkContext;
 
 		const result = getErrorMessage(context);
@@ -135,13 +135,13 @@ describe("Get error message", () => {
 			messages: {
 				rule_required: {
 					value: "Field is required.",
-					visible: false
+					visible: false,
 				},
 				rule_length: {
 					value: "Invalid length.",
-					visible: true
-				}
-			}
+					visible: true,
+				},
+			},
 		} as unknown as FormKitFrameworkContext;
 
 		const result = getErrorMessage(context);
@@ -152,7 +152,7 @@ describe("Get error message", () => {
 
 describe("Is integer", () => {
 	const makeNode = (value: string | number | null | undefined): FormKitNode => ({
-		value
+		value,
 	} as unknown as FormKitNode);
 
 	it("returns true for integer numbers", () => {

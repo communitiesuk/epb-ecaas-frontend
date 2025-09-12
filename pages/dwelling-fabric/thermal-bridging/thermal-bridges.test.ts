@@ -121,20 +121,20 @@ describe("thermal bridges", () => {
 
 			await renderSuspended(ThermalBridges);
 			await userEvent.click(
-				screen.getByTestId("linearThermalBridges_duplicate_0")
+				screen.getByTestId("linearThermalBridges_duplicate_0"),
 			);
 			await userEvent.click(
-				screen.getByTestId("linearThermalBridges_duplicate_0")
+				screen.getByTestId("linearThermalBridges_duplicate_0"),
 			);
 			await userEvent.click(
-				screen.getByTestId("linearThermalBridges_duplicate_2")
+				screen.getByTestId("linearThermalBridges_duplicate_2"),
 			);
 			await userEvent.click(
-				screen.getByTestId("linearThermalBridges_duplicate_2")
+				screen.getByTestId("linearThermalBridges_duplicate_2"),
 			);
 
 			expect(screen.queryAllByTestId("linearThermalBridges_item").length).toBe(
-				6
+				6,
 			);
 			expect(screen.getByText("Linear 1")).toBeDefined();
 			expect(screen.getByText("Linear 1 (1)")).toBeDefined();
@@ -199,20 +199,20 @@ describe("thermal bridges", () => {
 
 			await renderSuspended(ThermalBridges);
 			await userEvent.click(
-				screen.getByTestId("pointThermalBridges_duplicate_0")
+				screen.getByTestId("pointThermalBridges_duplicate_0"),
 			);
 			await userEvent.click(
-				screen.getByTestId("pointThermalBridges_duplicate_0")
+				screen.getByTestId("pointThermalBridges_duplicate_0"),
 			);
 			await userEvent.click(
-				screen.getByTestId("pointThermalBridges_duplicate_2")
+				screen.getByTestId("pointThermalBridges_duplicate_2"),
 			);
 			await userEvent.click(
-				screen.getByTestId("pointThermalBridges_duplicate_2")
+				screen.getByTestId("pointThermalBridges_duplicate_2"),
 			);
 
 			expect(screen.queryAllByTestId("pointThermalBridges_item").length).toBe(
-				6
+				6,
 			);
 			expect(screen.getByText("Point 1")).toBeDefined();
 			expect(screen.getByText("Point 1 (1)")).toBeDefined();
@@ -248,7 +248,7 @@ describe("thermal bridges", () => {
 		});
 
 		const getBridgeData = async (
-			action: string
+			action: string,
 		): Promise<
 			{
 				key: keyof ThermalBridgingData;
@@ -282,10 +282,10 @@ describe("thermal bridges", () => {
 
     it("marks thermal bridging section as complete when button is clicked", async () => {
     	expect(
-    		screen.getByRole("button", { name: "Mark section as complete" })
+    		screen.getByRole("button", { name: "Mark section as complete" }),
     	).not.toBeNull();
     	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted"
+    		"completeSectionCompleted",
     	);
     	expect(completedStatusElement?.style.display).toBe("none");
 
@@ -297,7 +297,7 @@ describe("thermal bridges", () => {
     	}
 
     	expect(
-    		screen.queryByRole("button", { name: "Mark section as complete" })
+    		screen.queryByRole("button", { name: "Mark section as complete" }),
     	).toBeNull();
     	expect(completedStatusElement?.style.display).not.toBe("none");
     	expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
@@ -307,23 +307,23 @@ describe("thermal bridges", () => {
     	const bridges = await getBridgeData("remove");
 
     	for (const [key] of Object.entries(
-    		store.dwellingFabric.dwellingSpaceThermalBridging
+    		store.dwellingFabric.dwellingSpaceThermalBridging,
     	)) {
     		const typedKey = key as ThermalBridgingType;
 
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(
-    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete,
     		).toBe(true);
 
     		const bridgeData = bridges.find((b) => b.key === typedKey);
     		await user.click(screen.getByTestId(bridgeData!.testId));
     		expect(
-    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete,
     		).toBe(false);
 
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -332,13 +332,13 @@ describe("thermal bridges", () => {
     	const bridges = await getBridgeData("");
 
     	for (const [key] of Object.entries(
-    		store.dwellingFabric.dwellingSpaceThermalBridging
+    		store.dwellingFabric.dwellingSpaceThermalBridging,
     	)) {
     		const typedKey = key as ThermalBridgingType;
 
     		await user.click(screen.getByTestId("markAsCompleteButton"));
     		expect(
-    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete,
     		).toBe(true);
 
     		const bridgeData = bridges.find((b) => b.key === typedKey);
@@ -350,12 +350,12 @@ describe("thermal bridges", () => {
 
     		await user.click(screen.getByTestId("saveAndComplete"));
     		expect(
-    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete
+    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete,
     		).toBe(false);
 
     		await renderSuspended(ThermalBridges);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -394,7 +394,7 @@ describe("thermal bridges", () => {
     	await renderSuspended(ThermalBridges);
 
     	expect(
-    		screen.getByTestId("pointThermalBridges_status_0").textContent
+    		screen.getByTestId("pointThermalBridges_status_0").textContent,
     	).toBe(formStatus.inProgress.text);
     });
 	});

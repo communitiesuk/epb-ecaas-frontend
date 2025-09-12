@@ -24,7 +24,7 @@ describe("exposed floor", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I
+		massDistributionClass: MassDistributionClass.I,
 	};
 
 	afterEach(() => {
@@ -34,8 +34,8 @@ describe("exposed floor", () => {
 	test("data is saved to store state and marked as complete when form is valid", async () => {
 		await renderSuspended(ExposedFloor, {
 			route: {
-				params: { floor: "create" }
-			}
+				params: { floor: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Exposed Floor 1");
@@ -61,16 +61,16 @@ describe("exposed floor", () => {
 			dwellingFabric: {
 				dwellingSpaceFloors: {
 					dwellingSpaceExposedFloor: {
-						data: [{ data: exposedFloor }]
-					}
-				}
-			}
+						data: [{ data: exposedFloor }],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(ExposedFloor, {
 			route: {
-				params: { floor: "0" }
-			}
+				params: { floor: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Exposed Floor 1");
@@ -87,8 +87,8 @@ describe("exposed floor", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(ExposedFloor, {
 			route: {
-				params: { floor: "create" }
-			}
+				params: { floor: "create" },
+			},
 		});
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -106,8 +106,8 @@ describe("exposed floor", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(ExposedFloor, {
 			route: {
-				params: { floor: "create" }
-			}
+				params: { floor: "create" },
+			},
 		});
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -141,16 +141,16 @@ describe("exposed floor", () => {
 				dwellingSpaceFloors: {
 					dwellingSpaceExposedFloor: {
 						data: [{ data: exposedFloor, complete: true }],
-						complete: true
-					}
-				}
-			}
+						complete: true,
+					},
+				},
+			},
 		});
 		
 		await renderSuspended(ExposedFloor, {
 			route: {
-				params: { floor: "0" }
-			}
+				params: { floor: "0" },
+			},
 		});
 				
 		// Act
@@ -164,8 +164,8 @@ describe("exposed floor", () => {
 		test("new form data is automatically saved to store with given name", async () => {
 			await renderSuspended(ExposedFloor, {
 				route: {
-					params: { floor: "create" }
-				}
+					params: { floor: "create" },
+				},
 			});
 					
 			await user.type(screen.getByTestId("name"), "Exposed floor 1");
@@ -182,8 +182,8 @@ describe("exposed floor", () => {
 		test("new form data is automatically saved to store with default name", async () => {
 			await renderSuspended(ExposedFloor, {
 				route: {
-					params: { floor: "create" }
-				}
+					params: { floor: "create" },
+				},
 			});
 				
 			await user.type(screen.getByTestId("length"), "0.5");
@@ -201,16 +201,16 @@ describe("exposed floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceExposedFloor: {
-							data: [{ data: exposedFloor }]
-						}
-					}
-				}
+							data: [{ data: exposedFloor }],
+						},
+					},
+				},
 			});
 					
 			await renderSuspended(ExposedFloor, {
 				route: {
-					params: { floor: 0 }
-				}
+					params: { floor: 0 },
+				},
 			});
 		
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor;
@@ -234,16 +234,16 @@ describe("exposed floor", () => {
 					dwellingSpaceFloors: {
 						dwellingSpaceExposedFloor: {
 							data: [{ data: exposedFloor, complete: true }],
-							complete: true
-						}
-					}
-				}
+							complete: true,
+						},
+					},
+				},
 			});
 				
 			await renderSuspended(ExposedFloor, {
 				route: {
-					params: { floor: "0" }
-				}
+					params: { floor: "0" },
+				},
 			});
 						
 			// Act

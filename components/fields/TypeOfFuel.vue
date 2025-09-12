@@ -10,7 +10,7 @@ const options: Record<CombustionFuelType, SnakeToSentenceCase<CombustionFuelType
 	wood: "Wood",
 	oil: "Oil",
 	gas: "Gas",
-	coal: "Coal"
+	coal: "Coal",
 };
 </script>
 

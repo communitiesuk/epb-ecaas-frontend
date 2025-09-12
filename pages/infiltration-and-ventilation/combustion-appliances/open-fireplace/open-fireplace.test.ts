@@ -46,16 +46,16 @@ describe("open fireplace", () => {
 			infiltrationAndVentilation: {
 				combustionAppliances: {
 					[CombustionApplianceType.open_fireplace]: {
-						data: [openFireplace]
-					}
-				}
-			}
+						data: [openFireplace],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(OpenFireplace, {
 			route: {
-				params: { combustion: "0" }
-			}
+				params: { combustion: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Open fireplace 1");

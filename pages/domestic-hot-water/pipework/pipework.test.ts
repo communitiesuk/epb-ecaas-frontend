@@ -189,10 +189,10 @@ describe("Pipeworks", () => {
 
     it("marks pipework section as complete when button is clicked", async () => {
     	expect(
-    		screen.getByRole("button", { name: "Mark section as complete" })
+    		screen.getByRole("button", { name: "Mark section as complete" }),
     	).not.toBeNull();
     	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted"
+    		"completeSectionCompleted",
     	);
     	expect(completedStatusElement?.style.display).toBe("none");
 
@@ -204,7 +204,7 @@ describe("Pipeworks", () => {
     	expect(primaryPipework?.complete).toBe(true);
     	expect(secondaryPipework?.complete).toBe(true);
     	expect(
-    		screen.queryByRole("button", { name: "Mark section as complete" })
+    		screen.queryByRole("button", { name: "Mark section as complete" }),
     	).toBeNull();
     	expect(completedStatusElement?.style.display).not.toBe("none");
 
@@ -224,7 +224,7 @@ describe("Pipeworks", () => {
     		await user.click(screen.getByTestId(pipeworkItem!.testId));
     		expect(store.domesticHotWater.pipework[typedKey]?.complete).toBe(false);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -242,7 +242,7 @@ describe("Pipeworks", () => {
     		await user.click(screen.getByTestId(pipeworkItem!.testId));
     		expect(store.domesticHotWater.pipework[typedKey]?.complete).toBe(false);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });
@@ -269,7 +269,7 @@ describe("Pipeworks", () => {
 
     		await renderSuspended(Pipework);
     		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" })
+    			screen.getByRole("button", { name: "Mark section as complete" }),
     		).not.toBeNull();
     	}
     });

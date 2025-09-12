@@ -11,15 +11,15 @@ const ecaasApi = {
 		return await $fetch<TokenResponse>(`${process.env.ECAAS_AUTH_API_URL}/oauth2/token`, {
 			method: "POST",
 			headers: {
-				"Content-Type": "application/x-www-form-urlencoded"
+				"Content-Type": "application/x-www-form-urlencoded",
 			},
 			body: new URLSearchParams({
 				"grant_type": "client_credentials",
 				"scope": "ecaas-api/home-energy-model",
 				"client_id": clientId,
-				"client_secret": clientSecret
+				"client_secret": clientSecret,
 			}),
-			ignoreResponseError: true
+			ignoreResponseError: true,
 		});
 	},
 
@@ -28,8 +28,8 @@ const ecaasApi = {
 		const uri = `${process.env.ECAAS_API_URL}${ApiPaths.ApiMetadata}`;
 		const response = await fetch(uri, {
 			headers: {
-				"Authorization": `Bearer ${accessToken}`
-			}
+				"Authorization": `Bearer ${accessToken}`,
+			},
 		});
 
 		return await response.json() as ApiInfoResponse;
@@ -51,10 +51,10 @@ const ecaasApi = {
 		const response = await $fetch<FhsComplianceResponseIncludingErrors>(uri, {
 			method: "POST",
 			headers: {
-				"Authorization": `Bearer ${accessToken}`
+				"Authorization": `Bearer ${accessToken}`,
 			},
 			body: JSON.stringify(data),
-			ignoreResponseError: true
+			ignoreResponseError: true,
 		});
 
 		if ("errors" in response) {
@@ -64,7 +64,7 @@ const ecaasApi = {
 		};
 
 		return response;
-	}
+	},
 };
 
 function reportErrors(requestData: object, responseErrors: CorrectedJsonApiError[] | string, errorMessage: string): void {
@@ -90,7 +90,7 @@ function responseForValidationErrors(errors: ErrorObject[], data: object): Promi
 	return Promise.resolve(
 		{
 			errors: errorPart,
-		}
+		},
 	);
 }
 

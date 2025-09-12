@@ -26,7 +26,7 @@ describe("ground floor", () => {
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		thicknessOfWalls: 0.8,
-		typeOfGroundFloor: FloorType.Slab_no_edge_insulation
+		typeOfGroundFloor: FloorType.Slab_no_edge_insulation,
 	};
 
 	const groundFloorWithEdgeInsulation: GroundFloorData = {
@@ -34,7 +34,7 @@ describe("ground floor", () => {
 		typeOfGroundFloor: FloorType.Slab_edge_insulation,
 		edgeInsulationType: "horizontal",
 		edgeInsulationWidth: unitValue(0, centimetre),
-		edgeInsulationThermalResistance: 0
+		edgeInsulationThermalResistance: 0,
 	};
 
 	const groundFloorWithSuspendedFloor: GroundFloorData = {
@@ -44,7 +44,7 @@ describe("ground floor", () => {
 		underfloorSpaceThermalResistance: 0,
 		thermalTransmittanceOfWallsAboveGround: 0,
 		ventilationOpeningsArea: 0,
-		windShieldingFactor: WindShieldLocation.Exposed
+		windShieldingFactor: WindShieldLocation.Exposed,
 	};
 
 	afterEach(() => {
@@ -68,8 +68,8 @@ describe("ground floor", () => {
 		test("data is saved to store state and marked as complete when form is valid", async () => {
 			await renderSuspended(GroundFloor, {
 				route: {
-					params: { floor: "create" }
-				}
+					params: { floor: "create" },
+				},
 			});
 
 			await populateValidForm();
@@ -85,16 +85,16 @@ describe("ground floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data: [{ data: groundFloor }]
-						}
-					}
-				}
+							data: [{ data: groundFloor }],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(GroundFloor, {
 				route: {
-					params: { floor: "0" }
-				}
+					params: { floor: "0" },
+				},
 			});
 	
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Ground 1");
@@ -131,8 +131,8 @@ describe("ground floor", () => {
 		test("data is saved to store state and marked as complete when form is valid", async () => {
 			await renderSuspended(GroundFloor, {
 				route: {
-					params: { floor: "create" }
-				}
+					params: { floor: "create" },
+				},
 			});
 			await populateValidForm();
 			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_edge_insulation"));
@@ -152,16 +152,16 @@ describe("ground floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data: [{ data: groundFloorWithEdgeInsulation }]
-						}
-					}
-				}
+							data: [{ data: groundFloorWithEdgeInsulation }],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(GroundFloor, {
 				route: {
-					params: { floor: "0" }
-				}
+					params: { floor: "0" },
+				},
 			});
 	
 			expect((await screen.findByTestId("typeOfGroundFloor_Slab_edge_insulation")).hasAttribute("checked")).toBe(true);
@@ -186,8 +186,8 @@ describe("ground floor", () => {
 		test("data is saved to store state and marked as complete when form is valid", async () => {
 			await renderSuspended(GroundFloor, {
 				route: {
-					params: { floor: "create" }
-				}
+					params: { floor: "create" },
+				},
 			});	
 
 			await populateValidForm();
@@ -211,16 +211,16 @@ describe("ground floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data: [{ data: groundFloorWithSuspendedFloor }]
-						}
-					}
-				}
+							data: [{ data: groundFloorWithSuspendedFloor }],
+						},
+					},
+				},
 			});
 	
 			await renderSuspended(GroundFloor, {
 				route: {
-					params: { floor: "0" }
-				}
+					params: { floor: "0" },
+				},
 			});
 	
 			expect((await screen.findByTestId("typeOfGroundFloor_Suspended_floor")).hasAttribute("checked")).toBe(true);
@@ -254,16 +254,16 @@ describe("ground floor", () => {
 				dwellingSpaceFloors: {
 					dwellingSpaceGroundFloor: {
 						data: [{ data: groundFloorWithSuspendedFloor, complete: true }],
-						complete: true
-					}
-				}
-			}
+						complete: true,
+					},
+				},
+			},
 		});
 
 		await renderSuspended(GroundFloor, {
 			route: {
-				params: { floor: "0" }
-			}
+				params: { floor: "0" },
+			},
 		});
 		
 		// Act
@@ -277,8 +277,8 @@ describe("ground floor", () => {
 		test("new form data is automatically saved to store with given name", async () => {
 			await renderSuspended(GroundFloor, {
 				route: {
-					params: { floor: "create" }
-				}
+					params: { floor: "create" },
+				},
 			});
 			
 			await user.type(screen.getByTestId("name"), "Ground floor");
@@ -299,8 +299,8 @@ describe("ground floor", () => {
 		test("new form data is automatically saved to store with default name", async () => {
 			await renderSuspended(GroundFloor, {
 				route: {
-					params: { floor: "create" }
-				}
+					params: { floor: "create" },
+				},
 			});
 			
 			await user.type(screen.getByTestId("surfaceArea"), "170");
@@ -316,16 +316,16 @@ describe("ground floor", () => {
 				dwellingFabric: {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
-							data: [{ data: groundFloorWithSuspendedFloor }]
-						}
-					}
-				}
+							data: [{ data: groundFloorWithSuspendedFloor }],
+						},
+					},
+				},
 			});
 			
 			await renderSuspended(GroundFloor, {
 				route: {
-					params: { floor: 0 }
-				}
+					params: { floor: 0 },
+				},
 			});
 
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
@@ -350,16 +350,16 @@ describe("ground floor", () => {
 					dwellingSpaceFloors: {
 						dwellingSpaceGroundFloor: {
 							data: [{ data: groundFloorWithSuspendedFloor, complete: true }],
-							complete: true
-						}
-					}
-				}
+							complete: true,
+						},
+					},
+				},
 			});
 
 			await renderSuspended(GroundFloor, {
 				route: {
-					params: { floor: "0" }
-				}
+					params: { floor: "0" },
+				},
 			});
 		
 			// Act

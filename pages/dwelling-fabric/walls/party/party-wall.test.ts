@@ -20,7 +20,7 @@ describe("party wall", () => {
 		surfaceArea: 10,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I
+		massDistributionClass: MassDistributionClass.I,
 	};
 
 	afterEach(() => {
@@ -50,16 +50,16 @@ describe("party wall", () => {
 			dwellingFabric: {
 				dwellingSpaceWalls: {
 					dwellingSpacePartyWall: {
-						data: [state]
-					}
-				}
-			}
+						data: [state],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(PartyWall, {
 			route: {
-				params: { wall: "0" }
-			}
+				params: { wall: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Party wall 1");

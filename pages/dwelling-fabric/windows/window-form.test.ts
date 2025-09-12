@@ -40,7 +40,7 @@ const window1: EcaasForm<WindowData> = {
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
 	} as WindowData,
-	complete: true
+	complete: true,
 };
 
 const window2: EcaasForm<WindowData>  = {
@@ -56,8 +56,8 @@ describe ("window", () => {
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(Window, {
 			route: {
-				params: { window: "create" }
-			}
+				params: { window: "create" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Window 1");
@@ -97,15 +97,15 @@ describe ("window", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data: [window1]
-				}
-			}
+					data: [window1],
+				},
+			},
 		});
 
 		await renderSuspended(Window, {
 			route: {
-				params: { window: "0" }
-			}
+				params: { window: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Window 1");
@@ -267,15 +267,15 @@ describe("Partially saving data", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data: [window1]
-				}
-			}
+					data: [window1],
+				},
+			},
 		});
 
 		await renderSuspended(Window, {
 			route: {
-				params: { window: "0" }
-			}
+				params: { window: "0" },
+			},
 		});
 
 		await user.type(screen.getByTestId("name"), "Window 1");
@@ -335,9 +335,9 @@ describe("Partially saving data", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data: [window1, window2]
-				}
-			}
+					data: [window1, window2],
+				},
+			},
 		});
   
 		await renderSuspended(Window, {

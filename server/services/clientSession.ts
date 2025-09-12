@@ -34,7 +34,7 @@ const clientSession = () => {
 		// Store access token and expiry in session
 		const sessionData: ClientSession = {
 			accessToken: tokenResponse.access_token,
-			expires: dayjs().add(tokenResponse.expires_in, "second").toDate().getTime()
+			expires: dayjs().add(tokenResponse.expires_in, "second").toDate().getTime(),
 		};
 
 		await useStorage().setItem("client_session", sessionData);

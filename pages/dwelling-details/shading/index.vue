@@ -14,9 +14,9 @@ function handleRemove(index: number) {
 		dwellingDetails: {
 			shading: {
 				data,
-				complete: false
-			}
-		}
+				complete: false,
+			},
+		},
 	});
 }
 
@@ -31,8 +31,8 @@ function handleDuplicate(index: number) {
 				complete: shading.complete,
 				data: {
 					...shading.data,
-					name: `${shading.data.name} (${duplicates.length})`
-				}
+					name: `${shading.data.name} (${duplicates.length})`,
+				},
 			});
 
 			state.dwellingDetails.shading.complete = false;
@@ -44,8 +44,8 @@ function handleDuplicate(index: number) {
 function handleComplete() {
 	store.$patch({
 		dwellingDetails: {
-			shading: { complete: true }
-		}
+			shading: { complete: true },
+		},
 	});
 		
 	navigateTo("/dwelling-details");		

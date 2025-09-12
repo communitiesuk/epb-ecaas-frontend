@@ -3,7 +3,7 @@ export enum TemperatureUnitName {
 }
 
 enum TemperatureSuffix {
-	CELSIUS = "°C"
+	CELSIUS = "°C",
 }
 
 export class TemperatureUnit {

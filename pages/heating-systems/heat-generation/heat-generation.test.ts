@@ -127,7 +127,7 @@ describe("heat generation", () => {
 
 			expect(screen.getAllByTestId("heatPump_items")).toBeDefined();
 			await user.click(
-				await screen.findByTestId(firstActionTestId("heatPump", "remove"))
+				await screen.findByTestId(firstActionTestId("heatPump", "remove")),
 			);
 			expect(screen.queryByTestId("heatPump_items")).toBeNull();
 		});
@@ -173,7 +173,7 @@ describe("heat generation", () => {
 			await renderSuspended(HeatGeneration);
 
 			expect(screen.getByTestId("heatPump_status_0").textContent).toBe(
-				formStatus.inProgress.text
+				formStatus.inProgress.text,
 			);
 		});
 
@@ -196,7 +196,7 @@ describe("heat generation", () => {
 			await renderSuspended(HeatGeneration);
 
 			expect(screen.getByTestId("heatPump_status_0").textContent).toBe(
-				formStatus.complete.text
+				formStatus.complete.text,
 			);
 		});
 	});
@@ -222,10 +222,10 @@ describe("heat generation", () => {
 
 		it("shows the 'mark as complete' button initially", async () => {
 			expect(
-				screen.getByTestId("markAsCompleteButton")?.style.display
+				screen.getByTestId("markAsCompleteButton")?.style.display,
 			).not.toBe("none");
 			expect(
-				screen.getByTestId("completeSectionCompleted")?.style.display
+				screen.getByTestId("completeSectionCompleted")?.style.display,
 			).toBe("none");
 		});
 
@@ -233,10 +233,10 @@ describe("heat generation", () => {
 			await user.click(await screen.findByTestId("markAsCompleteButton"));
 
 			expect(screen.getByTestId("markAsCompleteButton")?.style.display).toBe(
-				"none"
+				"none",
 			);
 			expect(
-				screen.getByTestId("completeSectionCompleted")?.style.display
+				screen.getByTestId("completeSectionCompleted")?.style.display,
 			).not.toBe("none");
 			expect(navigateToMock).toHaveBeenCalledWith("/heating-systems");
 		});
@@ -301,7 +301,7 @@ describe("heat generation", () => {
 		it("marks heat pump section as not complete if a heat pump is removed after marking complete", async () => {
 			await user.click(await screen.findByTestId("markAsCompleteButton"));
 			await user.click(
-				await screen.findByTestId(firstActionTestId("heatPump", "remove"))
+				await screen.findByTestId(firstActionTestId("heatPump", "remove")),
 			);
 
 			// const heatGenerators = store.heatingSystems.heatGeneration;
@@ -312,7 +312,7 @@ describe("heat generation", () => {
 			// }
 
 			expect(store.heatingSystems.heatGeneration["heatPump"]?.complete).toBe(
-				false
+				false,
 			);
 			expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
 		});
@@ -332,7 +332,7 @@ describe("heat generation", () => {
 
 			await renderSuspended(HeatGeneration);
 			expect(
-				screen.getByRole("button", { name: "Mark section as complete" })
+				screen.getByRole("button", { name: "Mark section as complete" }),
 			).not.toBeNull();
 		});
 	});

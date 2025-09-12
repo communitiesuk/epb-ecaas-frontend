@@ -19,7 +19,7 @@ describe("internal wall", () => {
 		kappaValue: 50000,
 		massDistributionClass: MassDistributionClass.I,
 		pitchOption: "90",
-		pitch: 90
+		pitch: 90,
 	};
 
 	afterEach(() => {
@@ -50,16 +50,16 @@ describe("internal wall", () => {
 			dwellingFabric: {
 				dwellingSpaceWalls: {
 					dwellingSpaceInternalWall: {
-						data: [internalWall]
-					}
-				}
-			}
+						data: [internalWall],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(InternalWall, {
 			route: {
-				params: { wall: "0" }
-			}
+				params: { wall: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Internal 1");

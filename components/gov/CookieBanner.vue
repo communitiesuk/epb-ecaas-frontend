@@ -12,7 +12,7 @@ const handleAccept = () => {
 	cookieConsent.value = CookieConsent.Accepted;
 
 	gtag("consent", "update", {
-		analytics_storage: "granted"
+		analytics_storage: "granted",
 	});
 };
 
@@ -20,7 +20,7 @@ const handleReject = () => {
 	cookieConsent.value = CookieConsent.Rejected;
 
 	gtag("consent", "update", {
-		analytics_storage: "denied"
+		analytics_storage: "denied",
 	});
 };
 

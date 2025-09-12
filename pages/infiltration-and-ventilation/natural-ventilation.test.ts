@@ -22,7 +22,7 @@ describe("Ventilation", () => {
 		dwellingEnvelopeArea: 5,
 		dwellingElevationalLevelAtBase: 1,
 		crossVentilationPossible: true,
-		maxRequiredAirChangeRate: 2
+		maxRequiredAirChangeRate: 2,
 	};
 
 	const populateValidForm = async () => {
@@ -62,9 +62,9 @@ describe("Ventilation", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				naturalVentilation: {
-					data: state
-				}
-			}
+					data: state,
+				},
+			},
 		});
 
 		await renderSuspended(Ventilation);

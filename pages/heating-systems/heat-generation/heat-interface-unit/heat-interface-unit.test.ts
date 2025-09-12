@@ -17,7 +17,7 @@ describe("heatInterfaceUnit", () => {
 
 	const heatInterfaceUnit: HeatInterfaceUnitData = {
 		id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-		name: "Heat interface unit 1"
+		name: "Heat interface unit 1",
 	};
 
 	afterEach(() => {
@@ -47,16 +47,16 @@ describe("heatInterfaceUnit", () => {
 			heatingSystems: {
 				heatGeneration: {
 					heatInterfaceUnit: {
-						data: [heatInterfaceUnit]
-					}
-				}
-			}
+						data: [heatInterfaceUnit],
+					},
+				},
+			},
 		});
 
 		await renderSuspended(HeatInterfaceUnit, {
 			route: {
-				params: { "interface": "0" }
-			}
+				params: { "interface": "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Heat interface unit 1");

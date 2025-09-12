@@ -41,8 +41,8 @@ function handleDuplicate<T extends ThermalBridgingData>(thermalBridgingType: The
 				complete: item.complete,
 				data: {
 					...item.data,
-					name: `${name} (${duplicates.length})`
-				}
+					name: `${name} (${duplicates.length})`,
+				},
 			} as T;
 
 			state.dwellingFabric.dwellingSpaceThermalBridging[thermalBridgingType].data.push(newItem);
@@ -56,9 +56,9 @@ function handleComplete() {
 		dwellingFabric: {
 			dwellingSpaceThermalBridging: {
 				dwellingSpaceLinearThermalBridges: { complete: true },
-				dwellingSpacePointThermalBridges: { complete: true }
-			}
-		}
+				dwellingSpacePointThermalBridges: { complete: true },
+			},
+		},
 	});
 
 	navigateTo("/dwelling-fabric");

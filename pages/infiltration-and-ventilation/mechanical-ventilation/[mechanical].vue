@@ -30,7 +30,7 @@ const ventTypeOptions: Record<Exclude<VentType, "PIV">, string> = {
 
 const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation>> = {
 	inside: "Inside",
-	outside: "Outside"
+	outside: "Outside",
 };
 
 const saveForm = (fields: MechanicalVentilationData) => {
@@ -62,7 +62,7 @@ const saveForm = (fields: MechanicalVentilationData) => {
 
 		mechanicalVentilation.data[index] = {
 			data: mechanicalVentilationItem,
-			complete: true
+			complete: true,
 		};
 
 		mechanicalVentilation.complete = false;
@@ -83,7 +83,7 @@ autoSaveElementForm({
 		newData.data.id ??= id;
 		state.infiltrationAndVentilation.mechanicalVentilation.data[index] = newData;
 		state.infiltrationAndVentilation.mechanicalVentilation.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

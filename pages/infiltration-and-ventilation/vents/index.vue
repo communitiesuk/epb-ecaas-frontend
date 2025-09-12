@@ -14,9 +14,9 @@ function handleRemove(index: number) {
 		infiltrationAndVentilation: {
 			vents: {
 				data,
-				complete: false
-			}
-		}
+				complete: false,
+			},
+		},
 	});
 }
 
@@ -30,8 +30,8 @@ function handleDuplicate(index: number) {
 			state.infiltrationAndVentilation.vents.data.push({
 				data: {
 					...vent.data,
-					name: `${vent.data.name} (${duplicates.length})`
-				}
+					name: `${vent.data.name} (${duplicates.length})`,
+				},
 			});
 		});
 		store.infiltrationAndVentilation.vents.complete = false;
@@ -40,8 +40,8 @@ function handleDuplicate(index: number) {
 function handleComplete() {
 	store.$patch({
 		infiltrationAndVentilation: {
-			vents: { complete: true }
-		}
+			vents: { complete: true },
+		},
 	});
 		
 	navigateTo("/infiltration-and-ventilation");		

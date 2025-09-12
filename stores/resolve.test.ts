@@ -18,7 +18,7 @@ describe("resolveState", () => {
 	it("should resolve a simple state with complete EcaasForm", () => {
 		const state = {
 			simpleForm: { complete: true, data: { value: "test" } },
-			incompleteForm: { complete: false, data: {} }
+			incompleteForm: { complete: false, data: {} },
 		};
 
 		const resolved = resolveState(state);
@@ -32,9 +32,9 @@ describe("resolveState", () => {
 			nestedForm: {
 				level1: {
 					level2: { complete: true, data: { value: "nested" } },
-					incompleteForm: { complete: false, data: {} }
-				}
-			}
+					incompleteForm: { complete: false, data: {} },
+				},
+			},
 		};
 
 		const resolved = resolveState(state);
@@ -48,8 +48,8 @@ describe("resolveState", () => {
 			mixedForm: {
 				completeForm: { complete: true, data: { value: "complete" } },
 				incompleteForm: { complete: false, data: {} },
-				regularValue: 42
-			}
+				regularValue: 42,
+			},
 		};
 
 		const resolved = resolveState(state);

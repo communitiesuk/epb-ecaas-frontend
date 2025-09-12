@@ -24,7 +24,7 @@ describe("vent", () => {
 		openingRatio: 1,
 		midHeightOfZone: 1,
 		orientation: 0,
-		pitch: 0
+		pitch: 0,
 	};
 
 	const populateValidForm = async () => {
@@ -40,8 +40,8 @@ describe("vent", () => {
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(Vent, {
 			route: {
-				params: { vent: "create" }
-			}
+				params: { vent: "create" },
+			},
 		});
 		
 		await populateValidForm();
@@ -56,15 +56,15 @@ describe("vent", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [{ data: state }]
-				}
-			}
+					data: [{ data: state }],
+				},
+			},
 		});
 
 		await renderSuspended(Vent, {
 			route: {
-				params: { vent: "0" }
-			}
+				params: { vent: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Vent 1");
@@ -101,10 +101,10 @@ describe("vent", () => {
 			infiltrationAndVentilation: {
 				vents: {
 					data: [{
-						data: { ...state }
-					}]
-				}
-			}
+						data: { ...state },
+					}],
+				},
+			},
 		});
 
 		await renderSuspended(Vent, {

@@ -34,7 +34,7 @@ const saveForm = (fields: CeilingData) => {
 					uValue: fields.uValue,
 					thermalResistanceOfAdjacentUnheatedSpace: fields.thermalResistanceOfAdjacentUnheatedSpace,
 				},
-				complete: true
+				complete: true,
 			};
 		} else if (fields.type === "heatedSpace") {
 			ceiling = {
@@ -42,7 +42,7 @@ const saveForm = (fields: CeilingData) => {
 					...commonFields,
 					type: fields.type,
 				},
-				complete: true
+				complete: true,
 			};
 		} else {
 			throw new Error("Invalid ceiling type");

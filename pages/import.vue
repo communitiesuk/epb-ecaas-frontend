@@ -50,12 +50,12 @@ const doImport = (_event: Event) => {
 		store.$patch({
 			...getInitialState(),
 			...fileState!,
-			lastResult: undefined
+			lastResult: undefined,
 		});
 
 		importedFile.value = {
 			name: file.value!.name,
-			datetime: dayjs()
+			datetime: dayjs(),
 		};
 
 		clearLastExportDate();

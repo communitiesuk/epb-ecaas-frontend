@@ -21,7 +21,7 @@ describe("Air conditioning", () => {
 		name: "Air conditioner 1",
 		coolingCapacity: 10,
 		seasonalEnergyEfficiencyRatio: 10,
-		convectionFraction: 1
+		convectionFraction: 1,
 	};
 
 	const populateValidForm = async () => {
@@ -47,15 +47,15 @@ describe("Air conditioning", () => {
 		store.$patch({
 			cooling: {
 				airConditioning: {
-					data: [state]
-				}
-			}
+					data: [state],
+				},
+			},
 		});
 
 		await renderSuspended(AirConditioning, {
 			route: {
-				params: { airConditioning: "0" }
-			}
+				params: { airConditioning: "0" },
+			},
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Air conditioner 1");

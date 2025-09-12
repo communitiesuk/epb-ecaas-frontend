@@ -26,15 +26,15 @@ describe("clear data page", () => {
 			area: 10,
 			volume: 10,
 			spaceCoolingSystemForThisZone: [],
-			spaceHeatControlSystemForThisZone: []
+			spaceHeatControlSystemForThisZone: [],
 		};
 
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceZoneParameters: {
 					data: state,
-					complete: true
-				}
+					complete: true,
+				},
 			},
 		});
 

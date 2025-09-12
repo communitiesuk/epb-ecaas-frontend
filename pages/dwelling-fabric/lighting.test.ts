@@ -41,8 +41,8 @@ describe("lighting", () => {
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceLighting: { data: state }
-			}
+				dwellingSpaceLighting: { data: state },
+			},
 		});
 
 		await renderSuspended(Lighting);
@@ -89,10 +89,10 @@ describe("Partially saving data", () => {
 		await user.tab();
 
 		expect(
-			store.dwellingFabric.dwellingSpaceLighting.data.numberOfLEDBulbs
+			store.dwellingFabric.dwellingSpaceLighting.data.numberOfLEDBulbs,
 		).toBe(9);
 		expect(
-			store.dwellingFabric.dwellingSpaceLighting.data.numberOfIncandescentBulbs
+			store.dwellingFabric.dwellingSpaceLighting.data.numberOfIncandescentBulbs,
 		).toBeUndefined();
 	});
 });

@@ -14,7 +14,7 @@ const saveForm = (fields: HeatBatteryData) => {
 
 		const heatBatteryItem: HeatBatteryData = {
 			id: uuidv4(),
-			name: fields.name
+			name: fields.name,
 		};
 
 		saveToList(heatBatteryItem, heatBattery);

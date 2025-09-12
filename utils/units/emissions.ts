@@ -3,7 +3,7 @@ export enum EmissionUnitName {
 }
 
 enum EmissionSuffix {
-	CO2_PER_KILOWATT_HOUR = "kgCO2e/kWh"
+	CO2_PER_KILOWATT_HOUR = "kgCO2e/kWh",
 }
 
 export class EmissionUnit {

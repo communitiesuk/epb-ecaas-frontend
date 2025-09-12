@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { autoSaveForm } = useForm();
 
 const model = ref({
-	...store.infiltrationAndVentilation.airPermeability.data
+	...store.infiltrationAndVentilation.airPermeability.data,
 });
 
 const saveForm = (fields: AirPermeabilityData) => {
@@ -15,9 +15,9 @@ const saveForm = (fields: AirPermeabilityData) => {
 			airPermeability: {
 				data: {
 					testPressure: fields.testPressure,
-					airTightnessTestResult: fields.airTightnessTestResult
+					airTightnessTestResult: fields.airTightnessTestResult,
 				},
-				complete: true
+				complete: true,
 			},
 		},
 	});

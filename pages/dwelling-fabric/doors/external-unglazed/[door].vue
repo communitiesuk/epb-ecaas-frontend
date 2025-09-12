@@ -26,9 +26,9 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 				solarAbsorption: fields.solarAbsorption,
 				uValue: fields.uValue,
 				kappaValue: fields.kappaValue,
-				massDistributionClass: fields.massDistributionClass
+				massDistributionClass: fields.massDistributionClass,
 			},
-			complete: true
+			complete: true,
 		};
 		dwellingSpaceExternalUnglazedDoor.complete = false;
 	});
@@ -46,7 +46,7 @@ autoSaveElementForm({
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

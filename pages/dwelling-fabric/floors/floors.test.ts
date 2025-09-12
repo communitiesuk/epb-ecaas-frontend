@@ -195,7 +195,7 @@ describe("floors", () => {
 
 			// Assert
 			expect(screen.getByTestId("ground_status_0").textContent).toBe(
-				formStatus.inProgress.text
+				formStatus.inProgress.text,
 			);
 		});
 
@@ -221,7 +221,7 @@ describe("floors", () => {
 
 			// Assert
 			expect(screen.getByTestId("ground_status_0").textContent).toBe(
-				formStatus.complete.text
+				formStatus.complete.text,
 			);
 		});
 	});
@@ -250,10 +250,10 @@ describe("floors", () => {
 			// Assert
 			const internalFloors = screen.getByTestId("internal_items");
 			expect(
-				within(internalFloors).getByText("Internal floor 1")
+				within(internalFloors).getByText("Internal floor 1"),
 			).toBeDefined();
 			expect(
-				within(internalFloors).getByText("Internal floor 3")
+				within(internalFloors).getByText("Internal floor 3"),
 			).toBeDefined();
 			expect(within(internalFloors).queryByText("internal2 name")).toBeNull();
 		});
@@ -301,7 +301,7 @@ describe("floors", () => {
 
 			// Assert
 			expect(screen.getByTestId("internal_status_0").textContent).toBe(
-				formStatus.inProgress.text
+				formStatus.inProgress.text,
 			);
 		});
 
@@ -322,7 +322,7 @@ describe("floors", () => {
 
 			// Assert
 			expect(screen.getByTestId("internal_status_0").textContent).toBe(
-				formStatus.complete.text
+				formStatus.complete.text,
 			);
 		});
 	});
@@ -402,7 +402,7 @@ describe("floors", () => {
 
 			// Assert
 			expect(screen.getByTestId("exposed_status_0").textContent).toBe(
-				formStatus.inProgress.text
+				formStatus.inProgress.text,
 			);
 		});
 
@@ -428,7 +428,7 @@ describe("floors", () => {
 
 			// Assert
 			expect(screen.getByTestId("exposed_status_0").textContent).toBe(
-				formStatus.complete.text
+				formStatus.complete.text,
 			);
 		});
 	});

@@ -10,7 +10,7 @@ export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsIn
 			...mapPvSystemData(state),
 			...mapPvDiverterData(state),
 		},
-		mapElectricBatteryData(state)
+		mapElectricBatteryData(state),
 	];
 }
 
@@ -36,7 +36,7 @@ export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, "OnS
 					shading: [] as SchemaWindowShadingObject[], // not included yet
 					type: "PhotovoltaicSystem",
 					ventilation_strategy: ventilationStrategy,
-				}
+				},
 			] as const;
 		})),
 	};
@@ -55,8 +55,8 @@ export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery
 					grid_charging_possible: electricBattery.gridChargingPossible,
 					maximum_charge_rate_one_way_trip: electricBattery.maximumChargeRate,
 					maximum_discharge_rate_one_way_trip: electricBattery.maximumDischargeRate,
-					minimum_charge_rate_one_way_trip: electricBattery.minimumChargeRate
-				}
+					minimum_charge_rate_one_way_trip: electricBattery.minimumChargeRate,
+				},
 		};
 	}
 	return {}; 

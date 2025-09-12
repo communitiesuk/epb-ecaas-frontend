@@ -29,8 +29,8 @@ function handleComplete() {
 				heatBattery: { complete: true },
 				heatNetwork: { complete: true },
 				heatInterfaceUnit: { complete: true },
-			}
-		}
+			},
+		},
 	});
 
 	navigateTo("/heating-systems");

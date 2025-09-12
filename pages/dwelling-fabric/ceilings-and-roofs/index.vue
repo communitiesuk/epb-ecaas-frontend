@@ -41,8 +41,8 @@ function handleDuplicate<T extends CeilingAndRoofData>(ceilingAndRoofType: Ceili
 				complete: item.complete,
 				data: {
 					...item.data,
-					name: `${name} (${duplicates.length})`
-				}
+					name: `${name} (${duplicates.length})`,
+				},
 			} as T;
 
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].data.push(newItem);
@@ -56,9 +56,9 @@ function handleComplete() {
 		dwellingFabric: {
 			dwellingSpaceCeilingsAndRoofs: {
 				dwellingSpaceCeilings: { complete: true },
-				dwellingSpaceRoofs: { complete: true }
-			}
-		}
+				dwellingSpaceRoofs: { complete: true },
+			},
+		},
 	});
 
 	navigateTo("/dwelling-fabric");
