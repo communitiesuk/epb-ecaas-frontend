@@ -138,24 +138,26 @@ describe("heating systems mapper", () => {
 			wetDistribution: {
 				...baseForm,
 				data: [
-					{
-						name: "Radiators",
-						heatSource: "some-heat-pump-id",
-						thermalMass: 400,
-						designTempDiffAcrossEmitters: 4,
-						designFlowTemp: 35,
-						designFlowRate: 4,
-						ecoDesignControllerClass: "2",
-						minimumFlowTemp: 30,
-						minOutdoorTemp: -5,
-						maxOutdoorTemp: 32,
-						typeOfSpaceHeater: "radiator",
-						convectionFractionWet: 0.7,
-						exponent: 1.3,
-						constant: 0.08,
-						numberOfRadiators: 2,
-					},
-				],
+					{ 
+						data: {
+							name: "Radiators",
+							heatSource: "some-heat-pump-id",
+							thermalMass: 400,
+							designTempDiffAcrossEmitters: 4,
+							designFlowTemp: 35,
+							designFlowRate: 4,
+							ecoDesignControllerClass: "2",
+							minimumFlowTemp: 30,
+							minOutdoorTemp: -5,
+							maxOutdoorTemp: 32,
+							typeOfSpaceHeater: "radiator",
+							convectionFractionWet: 0.7,
+							exponent: 1.3,
+							constant: 0.08,
+							numberOfRadiators: 2,
+						}
+					}
+				]
 			},
 			instantElectricHeater: { ...baseForm },
 			electricStorageHeater: { ...baseForm },
@@ -230,24 +232,26 @@ describe("heating systems mapper", () => {
 			wetDistribution: {
 				...baseForm,
 				data: [
-					{
-						name: "Under floor heating",
-						heatSource: "some-heat-pump-id",
-						thermalMass: 400,
-						designTempDiffAcrossEmitters: 4,
-						designFlowTemp: 35,
-						designFlowRate: 4,
-						ecoDesignControllerClass: "2",
-						minimumFlowTemp: 30,
-						minOutdoorTemp: -5,
-						maxOutdoorTemp: 32,
-						typeOfSpaceHeater: "ufh",
-						emitterFloorArea: 1.5,
-						equivalentThermalMass: 80,
-						systemPerformanceFactor: 5,
-						convectionFractionWet: 0.7,
-					},
-				],
+					{ 
+						data: {
+							name: "Under floor heating",
+							heatSource: "some-heat-pump-id",
+							thermalMass: 400,
+							designTempDiffAcrossEmitters: 4,
+							designFlowTemp: 35,
+							designFlowRate: 4,
+							ecoDesignControllerClass: "2",
+							minimumFlowTemp: 30,
+							minOutdoorTemp: -5,
+							maxOutdoorTemp: 32,
+							typeOfSpaceHeater: "ufh",
+							emitterFloorArea: 1.5,
+							equivalentThermalMass: 80,
+							systemPerformanceFactor: 5,
+							convectionFractionWet: 0.7,
+						}
+					}
+				]
 			},
 			instantElectricHeater: { ...baseForm },
 			electricStorageHeater: { ...baseForm },

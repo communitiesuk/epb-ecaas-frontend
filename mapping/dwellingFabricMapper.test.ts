@@ -40,7 +40,7 @@ describe("dwelling fabric mapper", () => {
 				heatEmitting: {
 					wetDistribution: {
 						data: [{
-							name: "radiator 1",
+							data: { name: "radiator 1" }
 						}],
 						complete: true,
 					},

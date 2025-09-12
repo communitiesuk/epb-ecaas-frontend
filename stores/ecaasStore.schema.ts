@@ -829,7 +829,7 @@ const energySupplyDataZod = z.object({
 export type EnergySupplyData = z.infer<typeof energySupplyDataZod>;
 
 export type HeatEmitting = AssertFormKeysArePageIds<{
-	wetDistribution: EcaasForm<WetDistributionData[]>;
+	wetDistribution: EcaasForm<EcaasForm<WetDistributionData>[]>;
 	instantElectricHeater: EcaasForm<EcaasForm<InstantElectricStorageData>[]>;
 	electricStorageHeater: EcaasForm<ElectricStorageHeaterData[]>;
 	warmAirHeatPump: EcaasForm<WarmAirHeatPumpData[]>;

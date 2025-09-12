@@ -15,13 +15,22 @@ describe("heat emitting", () => {
 		const user = userEvent.setup();
 
 		const wetDistribution1 = {
-			name: "Wet Distribution 1",
+			data: {
+				name: "Wet Distribution 1",
+			},
+			complete: false,
 		};
 		const wetDistribution2 = {
-			name: "Wet Distribution 2",
+			data: {
+				name: "Wet Distribution 2",
+			},
+			complete: false,
 		};
 		const wetDistribution3 = {
-			name: "Wet Distribution 3",
+			data: {
+				name: "Wet Distribution 3",
+			},
+			complete: false,
 		};
 		afterEach(() => {
 			store.$reset();
@@ -405,24 +414,28 @@ describe("heat emitting", () => {
 		const user = userEvent.setup();
 
 		const navigateToMock = vi.hoisted(() => vi.fn());
-		mockNuxtImport("navigateTo", () => navigateToMock);
-
-		const wetDistribution1: WetDistributionData = {
-			name: "Wet distribution 1",
-			heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-			thermalMass: 2,
-			designTempDiffAcrossEmitters: 0.4,
-			designFlowTemp: 32,
-			designFlowRate: 4,
-			typeOfSpaceHeater: "radiator",
-			exponent: 1.3,
-			constant: 0.08,
-			convectionFractionWet: 0.2,
-			ecoDesignControllerClass: "1",
-			minimumFlowTemp: 20,
-			minOutdoorTemp: 0,
-			maxOutdoorTemp: 15,
-			numberOfRadiators: 1,
+		mockNuxtImport("navigateTo", () => {
+			return navigateToMock;
+		});
+		const wetDistribution1: EcaasForm<WetDistributionData> = {
+			data: {
+				name: "Wet distribution 1",
+				heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+				thermalMass: 2,
+				designTempDiffAcrossEmitters: 0.4,
+				designFlowTemp: 32,
+				designFlowRate: 4,
+				typeOfSpaceHeater: "radiator",
+				exponent: 1.3,
+				constant: 0.08,
+				convectionFractionWet: 0.2,
+				ecoDesignControllerClass: "1",
+				minimumFlowTemp: 20,
+				minOutdoorTemp: 0,
+				maxOutdoorTemp: 15,
+				numberOfRadiators: 1,
+			},
+			complete: true,
 		};
 
 		const instantElectricHeater1 = {
@@ -433,18 +446,29 @@ describe("heat emitting", () => {
 			},
 			complete: true,
 		};
-
-		const heatEmittersSections = {
-			wetDistribution: {
-				id: "distribution",
-				form: WetDistributionForm,
-			},
-			instantElectricHeater: {
-				id: "heater",
-				form: InstantElectricHeaterForm,
-			},
-			// electricStorageHeater: { id: "storage", form: ElectricStorageHeaterForm },
-			// warmAirHeatPump: { id: "pump", form: WarmAirHeatPumpForm },
+		const addHeatEmittingDataToStore = async () => {
+			store.$patch({
+				heatingSystems: {
+					heatEmitting: {
+						wetDistribution: { data: [ wetDistribution1 ] },
+						instantElectricHeater: { data: [ instantElectricHeater1] },
+						// electricStorageHeater: { data: [{ name: "storage 1" }] },
+						// warmAirHeatPump: { data: [{ name: "warm air 1" }] },
+					},
+					heatGeneration: {
+						heatPump: {
+							data: [
+								{
+									data: {
+										id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+										name: "Heat pump 1",
+									},
+								},
+							],
+						},
+					},
+				},
+			});
 		};
 
 type HeatEmittingPicked = Pick<

@@ -1153,22 +1153,24 @@ describe("FHS input mapper", () => {
 				wetDistribution: {
 					...baseForm,
 					data: [{
-						name: "some-wet-distribution",
-						heatSource: "some-heat-pump-id",
-						thermalMass: 0.14,
-						designTempDiffAcrossEmitters: 31,
-						designFlowTemp: 12,
-						designFlowRate: 4,
-						ecoDesignControllerClass: "8",
-						minimumFlowTemp: 21,
-						minOutdoorTemp: 20,
-						maxOutdoorTemp: 34,
-						convectionFractionWet: 4,
-						typeOfSpaceHeater: "radiator",
-						numberOfRadiators: 2,
-						exponent: 3,
-						constant: 9,
-					}],
+						data: {
+							name: "some-wet-distribution",
+							heatSource: "some-heat-pump-id",
+							thermalMass: 0.14,
+							designTempDiffAcrossEmitters: 31,
+							designFlowTemp: 12,
+							designFlowRate: 4,
+							ecoDesignControllerClass: "8",
+							minimumFlowTemp: 21,
+							minOutdoorTemp: 20,
+							maxOutdoorTemp: 34,
+							convectionFractionWet: 4,
+							typeOfSpaceHeater: "radiator",
+							numberOfRadiators: 2,
+							exponent: 3,
+							constant: 9
+						}
+					}]
 				},
 				instantElectricHeater: {
 					...baseForm,

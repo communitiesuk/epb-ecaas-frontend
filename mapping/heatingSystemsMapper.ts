@@ -37,7 +37,7 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, "SpaceHeatSystem"> {
 	const wetDistributions = state.heatingSystems.heatEmitting.wetDistribution;
 	const wetDistributionEntries = wetDistributions.map((distribution) => {
-		const { name, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, designFlowRate, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution;
+		const { name, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, designFlowRate, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution.data;
 		const heatSourceName = state.heatingSystems.heatGeneration.heatPump.find(pump => pump.data.id === heatSource)!.data.name; // TODO: adapt this to work for all heat generators (not just heat pumps) once they are added
 
 		const distributionDetails: SchemaSpaceHeatSystemDetails = {
@@ -48,20 +48,20 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			design_flow_temp: designFlowTemp,
 			design_flow_rate: designFlowRate,
 			...(typeOfSpaceHeater === "radiator" ? {
-				emitters: Array(distribution.numberOfRadiators).fill({
+				emitters: Array(distribution.data.numberOfRadiators).fill({
 					wet_emitter_type: typeOfSpaceHeater,
 					frac_convective: convectionFractionWet,
-					c: distribution.constant,
-					n: distribution.exponent,
-				}),
+					c: distribution.data.constant,
+					n: distribution.data.exponent,
+				})
 			} : {
 				emitters: [{
 					wet_emitter_type: typeOfSpaceHeater,
-					emitter_floor_area: distribution.emitterFloorArea,
+					emitter_floor_area: distribution.data.emitterFloorArea,
 					frac_convective: convectionFractionWet,
-					equivalent_specific_thermal_mass: distribution.equivalentThermalMass,
-					system_performance_factor: distribution.systemPerformanceFactor,
-				}],
+					equivalent_specific_thermal_mass: distribution.data.equivalentThermalMass,
+					system_performance_factor: distribution.data.systemPerformanceFactor
+				}]
 			}),
 			ecodesign_controller: {
 				ecodesign_control_class: parseInt(ecoDesignControllerClass),
