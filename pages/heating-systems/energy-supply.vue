@@ -10,7 +10,6 @@ const model = ref({
 const fuelTypeOptions = {
 	electricity: "Electricity",
 } as const satisfies Record<"electricity", Capitalize<"electricity">>;
-fuelTypeOptions;
 
 const saveForm = (fields: EnergySupplyData) => {
 	store.$patch({

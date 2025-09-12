@@ -1,6 +1,5 @@
 import type { ValidateFunction } from "ajv/dist/2020";
 import { ajv } from "../schema/validator";
-import { externalConditions, noEvents } from "~/schema/aliases";
 import { mapFhsInputData } from "./fhsInputMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
