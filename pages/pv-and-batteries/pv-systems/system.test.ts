@@ -126,7 +126,7 @@ describe("PV system", () => {
 		expect(data[0]).toEqual({ ...pvSystem, complete: true });
 	});
 
-	it("navigates to pv and batteries page when valid form is completed", async ()=> {
+	it("navigates to pv and batteries page when valid form is completed", async () => {
 		await renderSuspended(PVScreen);
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));

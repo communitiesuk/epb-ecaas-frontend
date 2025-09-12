@@ -149,7 +149,7 @@ describe("Infiltration and ventilation summary", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data:[
+					data: [
 						{ data: mechanicalVentilationData },
 					],
 				},
@@ -189,7 +189,7 @@ describe("Infiltration and ventilation summary", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data:[
+					data: [
 						{ data: mechanicalVentilationData },
 					],
 				},

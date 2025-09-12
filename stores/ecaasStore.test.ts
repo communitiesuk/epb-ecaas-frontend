@@ -12,7 +12,7 @@ describe("Ecaas Store", () => {
 	beforeEach(() => {
 		setActivePinia(createPinia());
 	});
-	afterEach(()=> {
+	afterEach(() => {
 		store.$reset();
 	});
 

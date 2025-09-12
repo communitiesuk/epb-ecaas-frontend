@@ -14,7 +14,7 @@ function handleRemove(index: number) {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
-					data:  windows.length ? windows : [],
+					data: windows.length ? windows : [],
 					complete: false,
 				},
 			},

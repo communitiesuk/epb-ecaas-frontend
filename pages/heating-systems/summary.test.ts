@@ -167,7 +167,7 @@ describe("Heating systems summary page", () => {
 				heatingSystems: {
 					heatGeneration: {
 						heatPump: {
-							data: [{ data:heatPump }],
+							data: [{ data: heatPump }],
 						},
 						boiler: {
 							data: [boiler],

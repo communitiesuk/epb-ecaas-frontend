@@ -140,7 +140,7 @@ describe("PV and electric batteries summary page", () => {
 				"Battery age": "2 years",
 				"Charge efficiency": "0.7",
 				Location: "Inside",
-				"Grid charging possible" : "No",
+				"Grid charging possible": "No",
 				"Maximum charge rate": `6.2 ${kilowatt.suffix}`,
 				"Minimum charge rate": `4.5 ${kilowatt.suffix}`,
 				"Maximum discharge rate": `2.3 ${kilowatt.suffix}`,

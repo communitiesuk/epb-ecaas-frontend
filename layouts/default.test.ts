@@ -22,7 +22,7 @@ describe("nav bar with ductwork", () => {
 
 	it("should show the mvhr ductwork link when mechanical ventilations of type mvhr have been added", async () => {
 		store.$patch({
-			infiltrationAndVentilation:{
+			infiltrationAndVentilation: {
 				mechanicalVentilation: {
 					data: [{
 						data: mechanicalVentilation1,
