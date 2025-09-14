@@ -77,6 +77,8 @@ autoSaveElementForm({
 	defaultName: "Mechanical ventilation",
 	onPatchCreate: (state, newData) => {
 		newData.data.id ??= id;
+		state.infiltrationAndVentilation.mechanicalVentilation.complete = false;
+
 		state.infiltrationAndVentilation.mechanicalVentilation.data.push(newData);
 	},
 	onPatchUpdate: (state, newData, index) => {

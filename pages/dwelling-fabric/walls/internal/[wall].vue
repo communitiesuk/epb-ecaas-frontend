@@ -37,6 +37,7 @@ autoSaveElementForm({
 	defaultName: "Internal wall",
 	onPatchCreate: (state, newData) => {
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.data.push(newData);
+		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.complete = false;
 	},
 	onPatchUpdate: (state, newData, index) => {
 		const { pitchOption, pitch } = newData.data;

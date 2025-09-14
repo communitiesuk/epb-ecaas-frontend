@@ -37,7 +37,9 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace,
 	defaultName: "Wall to unheated space",
-	onPatchCreate: (state, newData) => state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data.push(newData),
+	onPatchCreate: (state, newData) => {state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data.push(newData);
+		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.complete = false;
+	},
 	onPatchUpdate: (state, newData, index) => {
 		const { pitchOption, pitch } = newData.data;
 
