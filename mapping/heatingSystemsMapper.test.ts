@@ -139,6 +139,7 @@ describe("heating systems mapper", () => {
 				...baseForm,
 				data: [
 					{ 
+						...baseForm,
 						data: {
 							name: "Radiators",
 							heatSource: "some-heat-pump-id",
@@ -233,6 +234,7 @@ describe("heating systems mapper", () => {
 				...baseForm,
 				data: [
 					{ 
+						...baseForm,
 						data: {
 							name: "Under floor heating",
 							heatSource: "some-heat-pump-id",
@@ -318,6 +320,7 @@ describe("heating systems mapper", () => {
 				...baseForm,
 				data: [
 					{
+						...baseForm,
 						data: {
 							name: "Acme instant electric heater",
 							ratedPower: 100,

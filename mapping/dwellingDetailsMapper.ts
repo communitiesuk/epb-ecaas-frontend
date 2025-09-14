@@ -65,8 +65,8 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 	}
 
 	shading.forEach(s => {
-		const startSegments = segments.filter(x => x.start360 < s.data.endAngle);
-		const endSegments = segments.filter(x => x.end360 > s.data.startAngle);
+		const startSegments = segments.filter(x => x.start360 < s.endAngle);
+		const endSegments = segments.filter(x => x.end360 > s.startAngle);
 		const matchingSegments = startSegments.filter(x => endSegments.includes(x));
 
 		segments.forEach(x => {
@@ -74,9 +74,9 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 				x.shading ??= [];
 
 				x.shading.push({
-					type: s.data.objectType,
-					distance: s.data.distance,
-					height: s.data.height,
+					type: s.objectType,
+					distance: s.distance,
+					height: s.height,
 				});
 			}
 		});

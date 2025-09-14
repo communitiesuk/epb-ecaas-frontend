@@ -37,8 +37,8 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, "SpaceHeatSystem"> {
 	const wetDistributions = state.heatingSystems.heatEmitting.wetDistribution;
 	const wetDistributionEntries = wetDistributions.map((distribution) => {
-		const { name, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, designFlowRate, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution.data;
-		const heatSourceName = state.heatingSystems.heatGeneration.heatPump.find(pump => pump.data.id === heatSource)!.data.name; // TODO: adapt this to work for all heat generators (not just heat pumps) once they are added
+		const { name, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, designFlowRate, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution;
+		const heatSourceName = state.heatingSystems.heatGeneration.heatPump.find(pump => pump.id === heatSource)!.name; // TODO: adapt this to work for all heat generators (not just heat pumps) once they are added
 
 		const distributionDetails: SchemaSpaceHeatSystemDetails = {
 			HeatSource: {
@@ -48,19 +48,19 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			design_flow_temp: designFlowTemp,
 			design_flow_rate: designFlowRate,
 			...(typeOfSpaceHeater === "radiator" ? {
-				emitters: Array(distribution.data.numberOfRadiators).fill({
+				emitters: Array(distribution.numberOfRadiators).fill({
 					wet_emitter_type: typeOfSpaceHeater,
 					frac_convective: convectionFractionWet,
-					c: distribution.data.constant,
-					n: distribution.data.exponent,
+					c: distribution.constant,
+					n: distribution.exponent,
 				}),
 			} : {
 				emitters: [{
 					wet_emitter_type: typeOfSpaceHeater,
-					emitter_floor_area: distribution.data.emitterFloorArea,
+					emitter_floor_area: distribution.emitterFloorArea,
 					frac_convective: convectionFractionWet,
-					equivalent_specific_thermal_mass: distribution.data.equivalentThermalMass,
-					system_performance_factor: distribution.data.systemPerformanceFactor,
+					equivalent_specific_thermal_mass: distribution.equivalentThermalMass,
+					system_performance_factor: distribution.systemPerformanceFactor,
 				}],
 			}),
 			ecodesign_controller: {
@@ -82,12 +82,12 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 
 	const instantElectricHeaters = state.heatingSystems.heatEmitting.instantElectricHeater;
 	const instantElectricHeaterEntries = instantElectricHeaters.map((heater): [string, SchemaSpaceHeatSystemDetails] => [
-		heater.data.name,
+		heater.name,
 		{
 			type: "InstantElecHeater",
 			EnergySupply: defaultElectricityEnergySupplyName,
-			rated_power: heater.data.ratedPower,
-			frac_convective: heater.data.convectionFractionInstant,
+			rated_power: heater.ratedPower,
+			frac_convective: heater.convectionFractionInstant,
 		},
 	]);
 

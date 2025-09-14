@@ -26,22 +26,22 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 
 function mapShowersData(state: ResolvedState) {
 	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.mixedShower.map((x):[string, SchemaShower] => {
-		const key = x.data.name;
+		const key = x.name;
 		const val: SchemaShower = {
 			type: "MixerShower",
 			ColdWaterSource: ColdWaterSourceType.mains_water,
-			flowrate: x.data.flowRate,
+			flowrate: x.flowRate,
 		};
 
 		return [key, val];
 	});
 
 	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.electricShower.map((x):[string, SchemaShower] => {
-		const key = x.data.name;
+		const key = x.name;
 		const val: SchemaShower = {
 			type: "InstantElecShower",
 			ColdWaterSource: ColdWaterSourceType.mains_water,
-			rated_power: x.data.ratedPower,
+			rated_power: x.ratedPower,
 			EnergySupply: defaultElectricityEnergySupplyName,
 		};
 
@@ -53,11 +53,11 @@ function mapShowersData(state: ResolvedState) {
 
 function mapBathsData(state: ResolvedState) {
 	const bathEntries = state.domesticHotWater.hotWaterOutlets.bath.map((x):[string, SchemaBathDetails] => {
-		const key = x.data.name;
+		const key = x.name;
 		const val: SchemaBathDetails = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
-			flowrate: x.data.flowRate,
-			size: x.data.size,
+			flowrate: x.flowRate,
+			size: x.size,
 		};
 
 		return [key, val];
@@ -68,10 +68,10 @@ function mapBathsData(state: ResolvedState) {
 
 function mapOthersData(state: ResolvedState) {
 	const otherEntries = state.domesticHotWater.hotWaterOutlets.otherOutlets.map((x):[string, SchemaOtherWaterUseDetails] => {
-		const key = x.data.name;
+		const key = x.name;
 		const val: SchemaOtherWaterUseDetails = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
-			flowrate: x.data.flowRate,
+			flowrate: x.flowRate,
 		};
 
 		return [key, val];
@@ -83,27 +83,27 @@ function mapOthersData(state: ResolvedState) {
 export function mapDistributionData(state: ResolvedState) {
 	return state.domesticHotWater.pipework.secondaryPipework.map((x): SchemaWaterPipeworkSimple => {
 		return {
-			length: x.data.length,
-			location: x.data.location,
-			internal_diameter_mm: x.data.internalDiameter,
+			length: x.length,
+			location: x.location,
+			internal_diameter_mm: x.internalDiameter,
 		};
 	});
 }
 
 export function mapHotWaterSourcesData(state: ResolvedState) {
 	return state.domesticHotWater.waterHeating.hotWaterCylinder.map((x): SchemaHotWaterSourceDetails => {
-		const referencedHeatPump = state.heatingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.data.id === x.heatSource);
-		const heatPumpName = referencedHeatPump ? referencedHeatPump.data.name : "Heat pump";
-		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.filter(pipework => pipework.data.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
+		const referencedHeatPump = state.heatingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.id === x.heatSource);
+		const heatPumpName = referencedHeatPump ? referencedHeatPump.name : "Heat pump";
+		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
 			return {
-				location: x.data.location,
-				internal_diameter_mm: x.data.internalDiameter,
-				external_diameter_mm: x.data.externalDiameter,
-				length: x.data.length,
-				insulation_thermal_conductivity: x.data.thermalConductivity,
-				insulation_thickness_mm: x.data.insulationThickness,
-				surface_reflectivity: x.data.surfaceReflectivity,
-				pipe_contents: x.data.pipeContents,
+				location: x.location,
+				internal_diameter_mm: x.internalDiameter,
+				external_diameter_mm: x.externalDiameter,
+				length: x.length,
+				insulation_thermal_conductivity: x.thermalConductivity,
+				insulation_thickness_mm: x.insulationThickness,
+				surface_reflectivity: x.surfaceReflectivity,
+				pipe_contents: x.pipeContents,
 			};
 		});
 

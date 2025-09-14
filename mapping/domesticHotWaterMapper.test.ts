@@ -5,6 +5,11 @@ import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
 import { unitValue } from "~/utils/units/types";
 
+const baseForm = {
+	data: [],
+	complete: true,
+};
+
 describe("domestic hot water mapper", () => {
 	const store = useEcaasStore();
 
@@ -114,6 +119,7 @@ describe("domestic hot water mapper", () => {
 		};
 
 		const primaryPipework: EcaasForm<PrimaryPipeworkData> = {
+			...baseForm,
 			data: {
 				name: "primaryPipework1",
 				location: WaterPipeworkLocation.internal,
@@ -233,6 +239,7 @@ describe("domestic hot water mapper", () => {
 	it("maps hot water outlets input state to FHS input request", () => {
 		// Arrange
 		const mixedShower: EcaasForm<MixedShowerData> = {
+			...baseForm,
 			data: {
 				id: "shower1",
 				name: "shower1",
@@ -241,6 +248,7 @@ describe("domestic hot water mapper", () => {
 		};
 
 		const electricShower: EcaasForm<ElectricShowerData> = {
+			...baseForm,
 			data: {
 				id: "shower2",
 				name: "shower2",
@@ -249,6 +257,7 @@ describe("domestic hot water mapper", () => {
 		};
 
 		const bath: EcaasForm<BathData> = {
+			...baseForm,
 			data: {
 				id: "bath1",
 				name: "bath1",
@@ -258,6 +267,7 @@ describe("domestic hot water mapper", () => {
 		};
 
 		const other: EcaasForm<OtherHotWaterOutletData> = {
+			...baseForm,
 			data: {
 
 				id: "other1",
@@ -347,7 +357,9 @@ describe("domestic hot water mapper", () => {
 				data: [],
 			},
 			secondaryPipework: {
+				...baseForm,
 				data: [{
+					...baseForm,
 					data: {
 						name: "secondaryPipework1",
 						length: 111, 
@@ -355,7 +367,6 @@ describe("domestic hot water mapper", () => {
 						internalDiameter: 6,
 					},
 				}],
-				complete: true,
 			},
 		};
 

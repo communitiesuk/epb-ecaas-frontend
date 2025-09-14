@@ -66,4 +66,100 @@ describe("resolveState", () => {
     
 		expect(resolved).toEqual({});
 	});
+
+	it("should resolve lists of forms", () => {
+		const state = {
+			listOfForms: {
+				data: [
+					{
+						data: {
+							name: "Acme",
+							size: 20,
+						},
+						complete: true,
+					},
+					{
+						data: {
+							name: "Cyberdyne",
+							size: 30,
+						},
+						complete: true,
+					},
+					{
+						data: {
+							name: "Tyrell",
+							size: 40,
+						},
+						complete: true,
+					},
+				],
+				complete: true,
+			},
+		};
+
+		const expectedResolvedState = {
+			listOfForms: [
+				{
+					name: "Acme",
+					size: 20,
+				},
+				{
+					name: "Cyberdyne",
+					size: 30,
+				},
+				{
+					name: "Tyrell",
+					size: 40,
+				},
+			],
+		};
+
+		expect(resolveState(state)).toStrictEqual(expectedResolvedState);
+	});
+
+	it("should resolve lists of part-incomplete forms", () => {
+		const state = {
+			listOfForms: {
+				data: [
+					{
+						data: {
+							name: "Acme",
+							size: 20,
+						},
+						complete: true,
+					},
+					{
+						data: {
+							name: "Cyberdyne",
+							size: 30,
+						},
+						complete: false,
+					},
+					{
+						data: {
+							name: "Tyrell",
+							size: 40,
+						},
+						complete: true,
+					},
+				],
+				complete: true,
+			},
+		};
+
+		const expectedResolvedState = {
+			listOfForms: [
+				{
+					name: "Acme",
+					size: 20,
+				},
+				{
+					name: "Tyrell",
+					size: 40,
+				},
+			],
+		};
+
+		expect(resolveState(state)).toStrictEqual(expectedResolvedState);
+	});
 });

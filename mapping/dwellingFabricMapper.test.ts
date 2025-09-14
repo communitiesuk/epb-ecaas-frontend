@@ -18,6 +18,11 @@ type BuildingElementAdjacentConditionedSpace = Extract<SchemaBuildingElement, { 
 type BuildingElementAdjacentUnconditionedSpaceSimple = Extract<SchemaBuildingElement, { type: "BuildingElementAdjacentUnconditionedSpace_Simple" }>;
 type BuildingElementTransparent = Extract<SchemaBuildingElement, { type: "BuildingElementTransparent" }>;
 
+const baseForm = {
+	data: [],
+	complete: true,
+};
+
 describe("dwelling fabric mapper", () => {
 	const store = useEcaasStore();
 
@@ -39,18 +44,20 @@ describe("dwelling fabric mapper", () => {
 			heatingSystems: {
 				heatEmitting: {
 					wetDistribution: {
+						...baseForm,
 						data: [{
+							...baseForm,
 							data: { name: "radiator 1" },
 						}],
-						complete: true,
 					},
 					instantElectricHeater: {
+						...baseForm,
 						data: [{
+							...baseForm,
 							data: {
 								name: "ieh 1",
 							},
 						}],
-						complete: true,
 					},
 				},
 			},
@@ -176,15 +183,18 @@ describe("dwelling fabric mapper", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceFloors: {
-					dwellingSpaceGroundFloor: { data: [
-						{ data: groundFloor },
-						{ data: groundFloorWithEdgeInsulation },
-						{ data: groundFloorWithSuspendedFloor },
-						{ data: groundFloorWithHeatedBasement },
-						{ data: groundFloorWithUnheatedBasement },			
-					], complete: true },
-					dwellingSpaceInternalFloor: { data: [{ data: internalFloor }], complete: true },
-					dwellingSpaceExposedFloor: { data: [{ data: exposedFloor }], complete: true },
+					dwellingSpaceGroundFloor: {
+						...baseForm,
+						data: [
+							{ ...baseForm, data: groundFloor },
+							{ ...baseForm, data: groundFloorWithEdgeInsulation },
+							{ ...baseForm, data: groundFloorWithSuspendedFloor },
+							{ ...baseForm, data: groundFloorWithHeatedBasement },
+							{ ...baseForm, data: groundFloorWithUnheatedBasement },			
+						],
+					},
+					dwellingSpaceInternalFloor: { ...baseForm, data: [{ ...baseForm, data: internalFloor }] },
+					dwellingSpaceExposedFloor: { ...baseForm, data: [{ ...baseForm, data: exposedFloor }] },
 				},
 			},
 		});
@@ -297,6 +307,7 @@ describe("dwelling fabric mapper", () => {
 	it("maps wall input state to FHS input request", () => {
 		// Arrange
 		const externalWall: EcaasForm<ExternalWallData> = {
+			...baseForm,
 			data: {
 				name: "External wall 1",
 				pitchOption: "90",
@@ -314,6 +325,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const internalWall: EcaasForm<InternalWallData> = {
+			...baseForm,
 			data: {
 				name: "Internal 1",
 				surfaceAreaOfElement: 5,
@@ -325,6 +337,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const partyWall: EcaasForm<PartyWallData> = {
+			...baseForm,
 			data: {
 				name: "Party wall 1",
 				pitchOption: "90",
@@ -337,6 +350,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const wallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData> = {
+			...baseForm,
 			data: {
 				name: "Wall to unheated space 1",
 				surfaceAreaOfElement: 500,
@@ -354,10 +368,10 @@ describe("dwelling fabric mapper", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWalls: {
-					dwellingSpaceExternalWall: { data: [externalWall], complete: true },
-					dwellingSpaceInternalWall: { data: [internalWall], complete: true },
-					dwellingSpacePartyWall: { data: [partyWall], complete: true },
-					dwellingSpaceWallToUnheatedSpace: { data: [wallToUnheatedSpace], complete: true },
+					dwellingSpaceExternalWall: { ...baseForm, data: [externalWall] },
+					dwellingSpaceInternalWall: { ...baseForm, data: [internalWall] },
+					dwellingSpacePartyWall: { ...baseForm, data: [partyWall] },
+					dwellingSpaceWallToUnheatedSpace: { ...baseForm, data: [wallToUnheatedSpace] },
 				},
 			},
 		});
@@ -458,8 +472,8 @@ describe("dwelling fabric mapper", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceCeilings: { data: [{ data: ceiling }], complete: true },
-					dwellingSpaceRoofs: { data: [{ data: roof }], complete: true },
+					dwellingSpaceCeilings: { ...baseForm, data: [{ ...baseForm, data: ceiling }] },
+					dwellingSpaceRoofs: { ...baseForm, data: [{ ...baseForm, data: roof }] },
 				},
 			},
 		});
@@ -555,9 +569,9 @@ describe("dwelling fabric mapper", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceDoors: {
-					dwellingSpaceInternalDoor: { data: [{ data: internalDoor }], complete: true },
-					dwellingSpaceExternalGlazedDoor: { data: [{ data: externalGlazedDoor }], complete: true },
-					dwellingSpaceExternalUnglazedDoor: { data: [{ data: externalUnglazedDoor }], complete: true },
+					dwellingSpaceInternalDoor: { ...baseForm, data: [{ ...baseForm, data: internalDoor }] },
+					dwellingSpaceExternalGlazedDoor: { ...baseForm, data: [{ ...baseForm, data: externalGlazedDoor }] },
+					dwellingSpaceExternalUnglazedDoor: { ...baseForm, data: [{ ...baseForm, data: externalUnglazedDoor }] },
 				},
 			},
 		});
@@ -726,8 +740,8 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const dwellingSpaceThermalBridging: ThermalBridgingData = {
-			dwellingSpaceLinearThermalBridges: { data: [{ data: linearThermalBridge }], complete: true },
-			dwellingSpacePointThermalBridges: { data: [{ data: pointThermalBridge }], complete: true },
+			dwellingSpaceLinearThermalBridges: { ...baseForm, data: [{ ...baseForm, data: linearThermalBridge }] },
+			dwellingSpacePointThermalBridges: { ...baseForm, data: [{ ...baseForm, data: pointThermalBridge }] },
 		};
 
 		const bridgeSuffix = " (bridge)";

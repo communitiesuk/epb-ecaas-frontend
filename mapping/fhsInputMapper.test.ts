@@ -935,6 +935,7 @@ describe("FHS input mapper", () => {
 			shading: {
 				...baseForm,
 				data: [{
+					...baseForm,
 					data: {
 						name: "Tree",
 						startAngle: 60,
@@ -960,6 +961,7 @@ describe("FHS input mapper", () => {
 			mechanicalVentilation: {
 				...baseForm,
 				data: [{
+					...baseForm,
 					data: {
 						id: "kitchen exhaust fan",
 						name: "kitchen exhaust fan",
@@ -974,6 +976,7 @@ describe("FHS input mapper", () => {
 			vents: {
 				...baseForm,
 				data: [{
+					...baseForm,
 					data: {
 						name: "only vent",
 						typeOfVent: "airBrick",
@@ -1049,6 +1052,7 @@ describe("FHS input mapper", () => {
 				dwellingSpaceGroundFloor: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "ground-floor",
 							surfaceArea: 40,
@@ -1122,6 +1126,7 @@ describe("FHS input mapper", () => {
 				heatPump: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							id: "some-heat-pump-id",
 							name: "some-heat-pump-name",
@@ -1153,6 +1158,7 @@ describe("FHS input mapper", () => {
 				wetDistribution: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "some-wet-distribution",
 							heatSource: "some-heat-pump-id",
@@ -1225,6 +1231,7 @@ describe("FHS input mapper", () => {
 				mixedShower: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							id: "some-mixer-shower-id",
 							name: "some-mixer-shower-name",
@@ -1312,6 +1319,7 @@ describe("FHS input mapper", () => {
 			shading: {
 				...baseForm,
 				data: [{
+					...baseForm,
 					data: {
 						name: "tree house",
 						startAngle: 10,
@@ -1322,6 +1330,7 @@ describe("FHS input mapper", () => {
 					},
 				},
 				{
+					...baseForm,
 					data: {
 						name: "obstacle",
 						startAngle: 1,
@@ -1347,6 +1356,7 @@ describe("FHS input mapper", () => {
 			mechanicalVentilation: {
 				...baseForm,
 				data: [{
+					...baseForm,
 					data: {
 						id: "mvhr vent 1 id",
 						name: "mvhr vent 1 name",
@@ -1357,6 +1367,7 @@ describe("FHS input mapper", () => {
 					},
 				},
 				{
+					...baseForm,
 					data: {
 						id: "mvhr vent 2 id",
 						name: "mvhr vent 2 name",
@@ -1367,6 +1378,7 @@ describe("FHS input mapper", () => {
 					},
 				},
 				{
+					...baseForm,
 					data: {
 						id: "centralised MEV id",
 						name: "centralised MEV name",
@@ -1378,6 +1390,7 @@ describe("FHS input mapper", () => {
 			ductwork: {
 				...baseForm,
 				data: [{
+					...baseForm,
 					data: {
 						name: "ductwork 1",
 						mvhrUnit: "mvhr vent 1 name",
@@ -1395,6 +1408,7 @@ describe("FHS input mapper", () => {
 			vents: {
 				...baseForm,
 				data: [{
+					...baseForm,
 					data: {
 						name: "only vent",
 						typeOfVent: "airBrick",
@@ -1468,6 +1482,7 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [
 						{
+							...baseForm,
 							data: {
 								name: "ground floor 1",
 								surfaceArea: 12,
@@ -1486,6 +1501,7 @@ describe("FHS input mapper", () => {
 							},
 						},
 						{
+							...baseForm,
 							data: {
 								name: "ground floor 2",
 								surfaceArea: 26,
@@ -1507,45 +1523,54 @@ describe("FHS input mapper", () => {
 				dwellingSpaceInternalFloor: {
 					...baseForm,
 					data: [
-						{ data: {
-							name: "internal floor 1",
-							typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
-							surfaceAreaOfElement: 6,
-							kappaValue: 50000,
-							massDistributionClass: MassDistributionClass.IE,
-							thermalResistanceOfAdjacentUnheatedSpace: 1,
-						} },
-						{ data: {
-							name: "internal floor 2",
-							typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
-							surfaceAreaOfElement: 4,
-							kappaValue: 110000,
-							massDistributionClass: MassDistributionClass.M,
+						{
+							...baseForm,
+							data: {
+								name: "internal floor 1",
+								typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
+								surfaceAreaOfElement: 6,
+								kappaValue: 50000,
+								massDistributionClass: MassDistributionClass.IE,
+								thermalResistanceOfAdjacentUnheatedSpace: 1,
+							},
 						},
+						{
+							...baseForm,
+							data: {
+								name: "internal floor 2",
+								typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
+								surfaceAreaOfElement: 4,
+								kappaValue: 110000,
+								massDistributionClass: MassDistributionClass.M,
+							},
 						},
 					],
 				},
 				dwellingSpaceExposedFloor: {
 					...baseForm,
-					data: [{ data: {
-						name: "exposed floor 1",
-						length: 5,
-						width: 2,
-						elevationalHeight: 1,
-						surfaceArea: 10,
-						solarAbsorption: 0.4,
-						kappaValue: 110000,
-						massDistributionClass: MassDistributionClass.D,
-						pitch: 180,
-						orientation: 0,
-						uValue: 0.1,
-					} }],
+					data: [{
+						...baseForm,
+						data: {
+							name: "exposed floor 1",
+							length: 5,
+							width: 2,
+							elevationalHeight: 1,
+							surfaceArea: 10,
+							solarAbsorption: 0.4,
+							kappaValue: 110000,
+							massDistributionClass: MassDistributionClass.D,
+							pitch: 180,
+							orientation: 0,
+							uValue: 0.1,
+						},
+					}],
 				},
 			},
 			dwellingSpaceWalls: {
 				dwellingSpacePartyWall: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "party wall 1",
 							pitchOption: "90",
@@ -1559,26 +1584,30 @@ describe("FHS input mapper", () => {
 				},
 				dwellingSpaceExternalWall: {
 					...baseForm,
-					data: [{
-						data: {
-							name: "external wall 1",
-							pitchOption: "90",
-							pitch: 45,
-							orientation: 30,
-							height: 2.6,
-							length: 3,
-							elevationalHeight: 1,
-							surfaceArea: 20,
-							solarAbsorption: 0.2,
-							uValue: 1, 
-							kappaValue: 75000,
-							massDistributionClass: MassDistributionClass.D,
+					data: [
+						{
+							...baseForm,
+							data: {
+								name: "external wall 1",
+								pitchOption: "90",
+								pitch: 45,
+								orientation: 30,
+								height: 2.6,
+								length: 3,
+								elevationalHeight: 1,
+								surfaceArea: 20,
+								solarAbsorption: 0.2,
+								uValue: 1, 
+								kappaValue: 75000,
+								massDistributionClass: MassDistributionClass.D,
+							},
 						},
-					}],
+					],
 				},
 				dwellingSpaceInternalWall: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "internal wall 1",
 							pitchOption: "90",
@@ -1592,6 +1621,7 @@ describe("FHS input mapper", () => {
 				dwellingSpaceWallToUnheatedSpace: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "wall to garage",
 							pitchOption: "custom",
@@ -1609,6 +1639,7 @@ describe("FHS input mapper", () => {
 				dwellingSpaceCeilings: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "ceiling to heated space",
 							type: AdjacentSpaceType.heatedSpace,
@@ -1619,6 +1650,7 @@ describe("FHS input mapper", () => {
 						},
 					},
 					{
+						...baseForm,
 						data: {
 							name: "ceiling to unheated space",
 							type: AdjacentSpaceType.unheatedSpace,
@@ -1636,6 +1668,7 @@ describe("FHS input mapper", () => {
 				dwellingSpaceRoofs: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "roof 1",
 							typeOfRoof: "flat",
@@ -1657,47 +1690,48 @@ describe("FHS input mapper", () => {
 				dwellingSpaceExternalUnglazedDoor: {
 					...baseForm,
 					data: [{
-						data:
-								{
-									name: "front door",
-									pitchOption: "90",
-									pitch: 90,
-									orientation: 30,
-									height: 2.6,
-									width: 1.2,
-									elevationalHeight: 1,
-									surfaceArea: 20,
-									solarAbsorption: 0.2,
-									uValue: 1,
-									kappaValue: 75000,
-									massDistributionClass: MassDistributionClass.I,
-								},
+						...baseForm,
+						data: {
+							name: "front door",
+							pitchOption: "90",
+							pitch: 90,
+							orientation: 30,
+							height: 2.6,
+							width: 1.2,
+							elevationalHeight: 1,
+							surfaceArea: 20,
+							solarAbsorption: 0.2,
+							uValue: 1,
+							kappaValue: 75000,
+							massDistributionClass: MassDistributionClass.I,
+						},
 					}],
 				},
 				dwellingSpaceExternalGlazedDoor: {
 					...baseForm,
 					data: [{
-						data:
-								{
-									name: "external glazed door",
-									surfaceArea: 3,
-									height: 3,
-									width: 1,
-									uValue: 0.8,
-									pitchOption: "90",
-									pitch: 90,
-									orientation: 20,
-									solarTransmittance: 0.5,
-									elevationalHeight: 0.2,
-									midHeight: 1.5,
-									openingToFrameRatio: 0.7,
-									numberOpenableParts: "0",
-								},
+						...baseForm,
+						data: {
+							name: "external glazed door",
+							surfaceArea: 3,
+							height: 3,
+							width: 1,
+							uValue: 0.8,
+							pitchOption: "90",
+							pitch: 90,
+							orientation: 20,
+							solarTransmittance: 0.5,
+							elevationalHeight: 0.2,
+							midHeight: 1.5,
+							openingToFrameRatio: 0.7,
+							numberOpenableParts: "0",
+						},
 					}],
 				},
 				dwellingSpaceInternalDoor: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 							name: "bathroom door",
@@ -1709,6 +1743,7 @@ describe("FHS input mapper", () => {
 						},
 					},
 					{
+						...baseForm,
 						data: {
 							typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 							name: "door to garage",
@@ -1726,6 +1761,7 @@ describe("FHS input mapper", () => {
 			dwellingSpaceWindows: {
 				...baseForm,
 				data: [{
+					...baseForm,
 					data: {
 						name: "bedroom window",
 						orientation: 90,
@@ -1755,13 +1791,13 @@ describe("FHS input mapper", () => {
 						heightOpenableArea: 1,
 						curtainsControlObject: WindowTreatmentControl.auto_motorised,
 					},
-					complete: true,
 				}],
 			},
 			dwellingSpaceThermalBridging: {
 				dwellingSpaceLinearThermalBridges: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "linear thermal bridge",
 							typeOfThermalBridge: "E3: Sill",
@@ -1773,18 +1809,21 @@ describe("FHS input mapper", () => {
 				dwellingSpacePointThermalBridges: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "point thermal bridge 1",
 							heatTransferCoefficient: 0.045,
 						},
 					},
 					{
+						...baseForm,
 						data: {
 							name: "point thermal bridge 2",
 							heatTransferCoefficient: 0.035,
 						},
 					},
 					{
+						...baseForm,
 						data: {
 							name: "point thermal bridge 3",
 							heatTransferCoefficient: 0.067,
@@ -1799,6 +1838,7 @@ describe("FHS input mapper", () => {
 				heatPump: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							id: "heat pump 1 id",
 							name: "heat pump 1 name",
@@ -1833,6 +1873,7 @@ describe("FHS input mapper", () => {
 				instantElectricHeater: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "instant elec heater 1",
 							ratedPower: 10,
@@ -1840,6 +1881,7 @@ describe("FHS input mapper", () => {
 						},
 					},
 					{
+						...baseForm,
 						data: {
 							name: "instant elec heater 2",
 							ratedPower: 13,
@@ -1898,6 +1940,7 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [
 						{
+							...baseForm,
 							data: {
 								id: "mixer shower 1 id",
 								name: "mixer shower 1 name",
@@ -1905,6 +1948,7 @@ describe("FHS input mapper", () => {
 							},
 						},
 						{
+							...baseForm,
 							data: {
 								id: "mixer shower 2 id",
 								name: "mixer shower 2 name",
@@ -1917,6 +1961,7 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [
 						{
+							...baseForm,
 							data: {
 								id: "electric shower 1 id",
 								name: "electric shower 1 name",
@@ -1929,6 +1974,7 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [
 						{
+							...baseForm,
 							data: {
 								name: "small bath name",
 								id: "small bath id",
@@ -1937,6 +1983,7 @@ describe("FHS input mapper", () => {
 							},
 						},
 						{
+							...baseForm,
 							data: {
 								name: "medium bath name",
 								id: "medium bath id",
@@ -1945,6 +1992,7 @@ describe("FHS input mapper", () => {
 							},
 						},
 						{
+							...baseForm,
 							data: {
 								name: "large bath name",
 								id: "large bath id",
@@ -1958,6 +2006,7 @@ describe("FHS input mapper", () => {
 					...baseForm,
 					data: [
 						{
+							...baseForm,
 							data: {
 								id: "kitchen sink id",
 								name: "kitchen sink name",
@@ -1965,6 +2014,7 @@ describe("FHS input mapper", () => {
 							},
 						},
 						{
+							...baseForm,
 							data: {
 								id: "bathroom basin id",
 								name: "bathroom basin name",
@@ -1972,6 +2022,7 @@ describe("FHS input mapper", () => {
 							},
 						},
 						{
+							...baseForm,
 							data: {
 								id: "cloakroom basin id",
 								name: "cloakroom basin name",
@@ -1985,6 +2036,7 @@ describe("FHS input mapper", () => {
 				primaryPipework: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "pipework 1",
 							internalDiameter: 15,
@@ -1999,6 +2051,7 @@ describe("FHS input mapper", () => {
 						},
 					},
 					{
+						...baseForm,
 						data: {
 							name: "external pipework",
 							internalDiameter: 28,
@@ -2016,6 +2069,7 @@ describe("FHS input mapper", () => {
 				secondaryPipework: {
 					...baseForm,
 					data: [{
+						...baseForm,
 						data: {
 							name: "secondary pipework",
 							length: 5,
@@ -2024,6 +2078,7 @@ describe("FHS input mapper", () => {
 						},
 					},
 					{
+						...baseForm,
 						data: {
 							name: "external secondary pipework",
 							length: 15,
@@ -2042,6 +2097,7 @@ describe("FHS input mapper", () => {
 			pvSystems: {
 				...baseForm,
 				data: [{
+					...baseForm,
 					data: {
 						name: "pv system 1",
 						peakPower: 2,
@@ -2061,18 +2117,18 @@ describe("FHS input mapper", () => {
 			electricBattery: {
 				...baseForm,
 				data: [{
-					data:
-							{
-								name: "electric battery 1",
-								capacity: 12,
-								batteryAge: 0,
-								chargeEfficiency: 1,
-								location: BatteryLocation.inside,
-								gridChargingPossible: true,
-								maximumChargeRate: 90,
-								minimumChargeRate: 80,
-								maximumDischargeRate: 20,
-							},
+					...baseForm,
+					data: {
+						name: "electric battery 1",
+						capacity: 12,
+						batteryAge: 0,
+						chargeEfficiency: 1,
+						location: BatteryLocation.inside,
+						gridChargingPossible: true,
+						maximumChargeRate: 90,
+						minimumChargeRate: 80,
+						maximumDischargeRate: 20,
+					},
 				}],
 			},
 		};
