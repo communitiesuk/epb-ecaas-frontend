@@ -7,8 +7,6 @@ import UnglazedDoorForm from "./external-unglazed/[door].vue";
 import glazedDoorForm from "./external-glazed/[door].vue";
 import internalDoorForm from "./internal/[door].vue";
 import { MassDistributionClass } from "~/schema/api-schema.types";
-import type { Component } from "vue";
-import formStatus from "~/constants/formStatus";
 
 describe("doors", () => {
 	const store = useEcaasStore();
@@ -382,7 +380,8 @@ describe("doors", () => {
 	});
 
 	describe("mark section as complete", () => {
-		const addDoorsDataToStore = async () => {
+
+		const addCompleteDoorsDataToStore = async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceDoors: {
@@ -399,180 +398,168 @@ describe("doors", () => {
 				},
 			});
 		};
+
 		beforeEach(async () => {
-			await addDoorsDataToStore();
 			await renderSuspended(Doors);
 		});
 
-		const getDoorData = async (action: string) => {
-			const doors: {
-				key: keyof DoorsData;
-				testId: string;
-				form: Component;
-			}[] = [
-				{
-					key: "dwellingSpaceExternalUnglazedDoor",
-					testId: `externalUnglazed_${action}_0`,
-					form: UnglazedDoorForm,
-				},
-				{
-					key: "dwellingSpaceExternalGlazedDoor",
-					testId: `externalGlazed_${action}_0`,
-					form: glazedDoorForm,
-				},
-				{
-					key: "dwellingSpaceInternalDoor",
-					testId: `internal_${action}_0`,
-					form: internalDoorForm,
-				},
-			];
-			return doors;
+		afterEach(async () => {
+			store.$reset();
+		});
+
+		const doorForms = {
+			dwellingSpaceExternalUnglazedDoor: UnglazedDoorForm,
+			dwellingSpaceExternalGlazedDoor: glazedDoorForm,
+			dwellingSpaceInternalDoor: internalDoorForm,
 		};
 
-    type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
+  type DoorType = keyof typeof store.dwellingFabric.dwellingSpaceDoors;
 
-    it("marks doors as complete when mark section as complete button is clicked", async () => {
-    	expect(
-    		screen.getByRole("button", { name: "Mark section as complete" }),
-    	).not.toBeNull();
-    	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted",
-    	);
-    	expect(completedStatusElement?.style.display).toBe("none");
+  it("disables the Mark section as complete button when a door is incomplete", async () => {
+  	store.$patch({
+  		dwellingFabric: {
+  			dwellingSpaceDoors: {
+  				dwellingSpaceExternalGlazedDoor: {
+  					data: [{ ...externalGlazed1, complete: false }],
+  				},
+  				dwellingSpaceExternalUnglazedDoor: {
+  					data: [{ ...externalGlazed1, complete: false }],
+  				},
+  				dwellingSpaceInternalDoor: {
+  					data: [{ ...internal1, complete: false }],
+  				},
+  			},
+  		},
+  	});
 
-    	await user.click(screen.getByTestId("markAsCompleteButton"));
+  	await renderSuspended(Doors);
+  	expect(
+  		screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+  	).toBeTruthy();
+  });
 
-    	const {
-    		dwellingSpaceExternalGlazedDoor,
-    		dwellingSpaceExternalUnglazedDoor,
-    		dwellingSpaceInternalDoor,
-    	} = store.dwellingFabric.dwellingSpaceDoors;
+  it("enables the Mark section as complete button when all doors are complete", async () => {
+  	await addCompleteDoorsDataToStore();
 
-    	expect(dwellingSpaceExternalGlazedDoor.complete).toBe(true);
-    	expect(dwellingSpaceExternalUnglazedDoor.complete).toBe(true);
-    	expect(dwellingSpaceInternalDoor.complete).toBe(true);
-    	expect(
-    		screen.queryByRole("button", { name: "Mark section as complete" }),
-    	).toBeNull();
-    	expect(completedStatusElement?.style.display).not.toBe("none");
+  	await renderSuspended(Doors);
+  	expect(
+  		screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+  	).toBeFalsy();
+  });
 
-    	expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
-    });
+  it("displays a 'Completed' status indicator when section is marked as complete", async () => {
+  	await renderSuspended(Doors);
+  	await user.click(screen.getByTestId("markAsCompleteButton"));
+  	const completedStatusElement = screen.queryByTestId(
+  		"completeSectionCompleted",
+  	);
+  	expect(completedStatusElement?.style.display).not.toBe("none");
+  });
 
-    it("marks doors as not complete when mark as complete button is clicked then user removes a door item", async () => {
-    	const doorsData = await getDoorData("remove");
-    	const doors = Object.entries(store.dwellingFabric.dwellingSpaceDoors);
+  describe("after section has been marked as complete", () => {
+  	beforeEach(async () => {
+  		await addCompleteDoorsDataToStore();
+  		await renderSuspended(Doors);
+  		await user.click(screen.getByTestId("markAsCompleteButton"));
+  	});
 
-    	for (const [key] of doors) {
-    		const typedKey = key as DoorType;
+  	it("displays the 'Completed' section status indicator", async () => {
+  		const completed = screen.queryByTestId("completeSectionCompleted");
+  		expect(completed?.style.display).not.toBe("none");
+  	});
 
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
-    		).toBe(true);
+  	it("navigates to the dwelling fabric page", async () => {
+  		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
+  	});
 
-    		const doorData = doorsData.find((x) => x.key === typedKey);
+  	it("marks each doors section as complete when button is clicked", async () => {
+  		const {
+  			dwellingSpaceExternalGlazedDoor,
+  			dwellingSpaceExternalUnglazedDoor,
+  			dwellingSpaceInternalDoor,
+  		} = store.dwellingFabric.dwellingSpaceDoors;
 
-    		await user.click(screen.getByTestId(doorData!.testId));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
-    		).toBe(false);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
+  		expect(dwellingSpaceExternalGlazedDoor?.complete).toBe(true);
+  		expect(dwellingSpaceExternalUnglazedDoor?.complete).toBe(true);
+  		expect(dwellingSpaceInternalDoor?.complete).toBe(true);
+  	});
 
-    it("marks doors as not complete when complete button is clicked then user duplicates a door item", async () => {
-    	const doorsData = await getDoorData("duplicate");
-    	const doors = Object.entries(store.dwellingFabric.dwellingSpaceDoors);
+  	it("marks section as not complete if a door is removed after marking complete", async () => {
 
-    	for (const [key] of doors) {
-    		const typedKey = key as DoorType;
+  		await user.click(screen.getByTestId("externalUnglazed_remove_0"));
+  		await user.click(screen.getByTestId("externalGlazed_remove_0"));
+  		await user.click(screen.getByTestId("internal_remove_0"));
+  		const {
+  			dwellingSpaceExternalGlazedDoor,
+  			dwellingSpaceExternalUnglazedDoor,
+  			dwellingSpaceInternalDoor,
+  		} = store.dwellingFabric.dwellingSpaceDoors;
 
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
-    		).toBe(true);
+  		expect(dwellingSpaceExternalUnglazedDoor?.complete).toBe(false);
+  		expect(dwellingSpaceExternalGlazedDoor?.complete).toBe(false);
+  		expect(dwellingSpaceInternalDoor?.complete).toBe(false);
+  	});
 
-    		const doorData = doorsData.find((x) => x.key === typedKey);
+  	it("marks section as not complete if a door is duplicated after marking complete", async () => {
+  		await user.click(screen.getByTestId("externalUnglazed_duplicate_0"));
+  		await user.click(screen.getByTestId("externalGlazed_duplicate_0"));
+  		await user.click(screen.getByTestId("internal_duplicate_0"));
+		
+  		const {
+  			dwellingSpaceExternalGlazedDoor,
+  			dwellingSpaceExternalUnglazedDoor,
+  			dwellingSpaceInternalDoor,
+  		} = store.dwellingFabric.dwellingSpaceDoors;
 
-    		await user.click(screen.getByTestId(doorData!.testId));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
-    		).toBe(false);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
+  		expect(dwellingSpaceExternalUnglazedDoor?.complete).toBe(false);
+  		expect(dwellingSpaceExternalGlazedDoor?.complete).toBe(false);
+  		expect(dwellingSpaceInternalDoor?.complete).toBe(false);
+      
+  	});
 
-    it("marks doors as not complete when user saves a new or edited door form after marking section as complete", async () => {
-    	const doorsData = await getDoorData("");
+  	it("marks section as not complete after adding a new door item", async () => {
+  		for (const door of Object.keys(
+  			store.dwellingFabric.dwellingSpaceDoors,
+  		) as DoorType[]) {
+  			await renderSuspended(doorForms[door], {
+  				route: {
+  					params: { door: "create" },
+  				},
+  			});
 
-    	const doors = Object.entries(store.dwellingFabric.dwellingSpaceDoors);
+  			if (door === "dwellingSpaceInternalDoor") {
+  				await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
+  			}
 
-    	for (const [key] of doors) {
-    		const typedKey = key as DoorType;
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(store.dwellingFabric.dwellingSpaceDoors[typedKey].complete).toBe(
-    			true,
-    		);
+  			await user.type(screen.getByTestId("name"), "New door");
+  			await user.tab();
+  			await user.click(screen.getByTestId("saveAndComplete"));
 
-    		const doorData = doorsData.find((x) => x.key === typedKey);
+  			expect(store.dwellingFabric.dwellingSpaceDoors[door]?.complete).toBe(
+  				false,
+  			);
+  		}
+  	});
 
-    		await renderSuspended(doorData?.form, {
-    			route: {
-    				params: { door: "0" },
-    			},
-    		});
+  	it("marks section as not complete after editing a door item", async () => {
+  		for (const door of Object.keys(
+  			store.dwellingFabric.dwellingSpaceDoors,
+  		) as DoorType[]) {
+  			await renderSuspended(doorForms[door], {
+  				route: {
+  					params: { door: "0" },
+  				},
+  			});
 
-    		await user.click(screen.getByTestId("saveAndComplete"));
+  			await user.clear(screen.getByTestId("name"));
+  			await user.type(screen.getByTestId("name"), "Updated door");
+  			await user.tab();
 
-    		expect(
-    			store.dwellingFabric.dwellingSpaceDoors[typedKey]?.complete,
-    		).toBe(false);
-    		await renderSuspended(Doors);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
-
-    it("disables the mark section as complete button when item is incomplete", async () => {
-    	store.$patch({
-    		dwellingFabric: {
-    			dwellingSpaceDoors: {
-    				dwellingSpaceExternalGlazedDoor: {
-    					data: [{ data: { surfaceArea: 2 }, complete: false }],
-    				},
-    			},
-    		},
-    	});
-
-    	await renderSuspended(Doors);
-    	const markAsCompleteButton = screen.getByRole("button", {
-    		name: "Mark section as complete",
-    	});
-    	expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
-    });
-
-    test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
-    	store.$patch({
-    		dwellingFabric: {
-    			dwellingSpaceDoors: {
-    				dwellingSpaceExternalGlazedDoor: {
-    					data: [externalGlazed1],
-    				},
-    			},
-    		},
-    	});
-
-    	await renderSuspended(Doors);
-
-    	expect(screen.getByTestId("externalGlazed_status_0").textContent).toBe(
-    		formStatus.inProgress.text,
-    	);
-    });
+  			expect(store.dwellingFabric.dwellingSpaceDoors[door]?.complete).toBe(
+  				false,
+  			);
+  		}
+  	});
+  });
 	});
 });

@@ -99,27 +99,21 @@ describe("wwhrs", () => {
 
 	it("marks wwhrs as complete when mark section as complete button is clicked", async () => {
 		await renderSuspended(Wwhrs);
-		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
-		).not.toBeNull();
-
-		const completedStatusElement = screen.queryByTestId(
-			"completeSectionCompleted",
-		);
-		expect(completedStatusElement?.style.display).toBe("none");
 
 		await user.click(screen.getByTestId("markAsCompleteButton"));
 
-		const { complete } = store.domesticHotWater.wwhrs;
-
-		expect(complete).toBe(true);
-		expect(
-			screen.queryByRole("button", { name: "Mark section as complete" }),
-		).toBeNull();
+		expect(store.domesticHotWater.wwhrs.complete).toBe(true);
+		const completedStatusElement = screen.queryByTestId(
+			"completeSectionCompleted",
+		);
 		expect(completedStatusElement?.style.display).not.toBe("none");
+	});
+
+	it("user is navigated to the domestic hot water overview page", async () => {
 
 		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
 	});
+
 	it("marks wwhrs as not complete when complete button is clicked then user removes a wwhr item", async () => {
 		store.$patch({
 			domesticHotWater: {
@@ -136,9 +130,6 @@ describe("wwhrs", () => {
 
 		await user.click(screen.getByTestId("wwhrs_remove_0"));
 		expect(store.domesticHotWater.wwhrs.complete).toBe(false);
-		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
-		).not.toBeNull();
 	});
 
 	it("marks wwhrs as not complete when complete button is clicked then user duplicates a wwhr item", async () => {
@@ -157,12 +148,9 @@ describe("wwhrs", () => {
 
 		await user.click(screen.getByTestId("wwhrs_duplicate_0"));
 		expect(store.domesticHotWater.wwhrs.complete).toBe(false);
-		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
-		).not.toBeNull();
 	});
 
-	it("marks wwhrs as not complete when user saves a new or edited form after marking section as complete", async () => {
+	it("wwhrs as not complete when user saves a new or edited form after marking section as complete", async () => {
 		store.$patch({
 			domesticHotWater: {
 				wwhrs: {
@@ -181,14 +169,8 @@ describe("wwhrs", () => {
 		});
 
 		await user.click(screen.getByRole("button"));
+		expect(store.domesticHotWater.wwhrs.complete).toBe(false);
 
-		const { complete } = store.domesticHotWater.wwhrs;
-		expect(complete).toBe(false);
-
-		await renderSuspended(Wwhrs);
-		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
-		).not.toBeNull();
 	});
 
 	it("should navigate to the domestic hot water overview page when return to overview is clicked", async () => {

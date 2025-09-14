@@ -405,9 +405,8 @@ describe("heat emitting", () => {
 		const user = userEvent.setup();
 
 		const navigateToMock = vi.hoisted(() => vi.fn());
-		mockNuxtImport("navigateTo", () => {
-			return navigateToMock;
-		});
+		mockNuxtImport("navigateTo", () => navigateToMock);
+
 		const wetDistribution1: WetDistributionData = {
 			name: "Wet distribution 1",
 			heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30",
@@ -425,6 +424,7 @@ describe("heat emitting", () => {
 			maxOutdoorTemp: 15,
 			numberOfRadiators: 1,
 		};
+
 		const instantElectricHeater1 = {
 			data: {
 				name: "Instant Electric Heater 1",
@@ -433,204 +433,133 @@ describe("heat emitting", () => {
 			},
 			complete: true,
 		};
-		const addHeatEmittingDataToStore = async () => {
-			store.$patch({
-				heatingSystems: {
-					heatEmitting: {
-						wetDistribution: { data: [wetDistribution1] },
-						instantElectricHeater: { data: [instantElectricHeater1] },
-						// electricStorageHeater: { data: [{ name: "storage 1" }] },
-						// warmAirHeatPump: { data: [{ name: "warm air 1" }] },
-					},
-					heatGeneration: {
-						heatPump: {
-							data: [
-								{
-									data: {
-										id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-										name: "Heat pump 1",
-									},
-								},
-							],
-						},
-					},
-				},
-			});
+
+		const heatEmittersSections = {
+			wetDistribution: {
+				id: "distribution",
+				form: WetDistributionForm,
+			},
+			instantElectricHeater: {
+				id: "heater",
+				form: InstantElectricHeaterForm,
+			},
+			// electricStorageHeater: { id: "storage", form: ElectricStorageHeaterForm },
+			// warmAirHeatPump: { id: "pump", form: WarmAirHeatPumpForm },
 		};
 
-		beforeEach(async () => {
-			await addHeatEmittingDataToStore();
-			await renderSuspended(HeatEmitting);
-		});
+type HeatEmittingPicked = Pick<
+  typeof store.heatingSystems.heatEmitting,
+  "wetDistribution" | "instantElectricHeater"
+>;
+type HeatEmittingType = keyof HeatEmittingPicked;
 
-		const getEmittersData = async (action: string) => {
-			return [
-				{
-					key: "wetDistribution",
-					testId: `wetDistribution_${action}_0`,
-					form: WetDistributionForm,
-					params: "distribution",
-				},
-				{
-					key: "instantElectricHeater",
-					testId: `instantElectricHeater_${action}_0`,
-					form: InstantElectricHeaterForm,
-					params: "heater",
-				},
-				// {
-				// 	key: "electricStorageHeater",
-				// 	testId: `electricStorageHeater_${action}_0`,
-				// 	form: ElectricStorageHeaterForm,
-				// 	params: "heater"
-				// },
-				// {
-				// 	key: "warmAirHeatPump",
-				// 	testId: `warmAirHeatPump_${action}_0`,
-				// 	form: WarmAirHeatPumpForm,
-				// 	params: "pump"
-				// },
-			];
-		};
-
-    type HeatEmittingType = keyof typeof store.heatingSystems.heatEmitting;
-
-    it("disables the mark section as complete button when emitter is incomplete", async () => {
-    	store.$patch({
-    		heatingSystems: {
-    			heatEmitting: {
-    				instantElectricHeater: {
-    					data: [
-    						{
-    							data: {
-    								name: "Instant Electric Heater 1",
-    								ratedPower: 30,
-    							},
-    							complete: false,
-    						},
-    					],
-    				},
-    			},
-    		},
-    	});
-
-    	await renderSuspended(HeatEmitting);
-    	const markAsCompleteButton = screen.getByRole("button", {
-    		name: "Mark section as complete",
-    	});
-    	expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
-    });
-
-    it("marks heat emitting section as complete when button is clicked", async () => {
-    	expect(
-    		screen.getByRole("button", { name: "Mark section as complete" }),
-    	).not.toBeNull();
-    	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted",
-    	);
-    	expect(completedStatusElement?.style.display).toBe("none");
-
-    	await user.click(screen.getByTestId("markAsCompleteButton"));
-
-    	const {
-    		wetDistribution,
-    		instantElectricHeater,
-    		electricStorageHeater,
-    		warmAirHeatPump,
-    	} = store.heatingSystems.heatEmitting;
-
-    	expect(wetDistribution?.complete).toBe(true);
-    	expect(instantElectricHeater?.complete).toBe(true);
-    	expect(electricStorageHeater?.complete).toBe(true);
-    	expect(warmAirHeatPump?.complete).toBe(true);
-    	expect(
-    		screen.queryByRole("button", { name: "Mark section as complete" }),
-    	).toBeNull();
-    	expect(completedStatusElement?.style.display).not.toBe("none");
-
-    	expect(navigateToMock).toHaveBeenCalledWith("/heating-systems");
-    });
-
-    it("marks as not complete if an item is removed after marking complete", async () => {
-    	const emitters = await getEmittersData("remove");
-
-    	for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
-    		const typedKey = key as HeatEmittingType;
-
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
-    			true,
-    		);
-
-    		const emitterData = emitters.find((e) => e.key === typedKey);
-    		if (!emitterData) {
-    			continue;
-    		}
-    		await user.click(screen.getByTestId(emitterData.testId));
-    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
-    			false,
-    		);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
-
-    it("marks as not complete if an item is duplicated after marking complete", async () => {
-    	const emitters = await getEmittersData("duplicate");
-
-    	for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
-    		const typedKey = key as HeatEmittingType;
-
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
-    			true,
-    		);
-
-    		const emitterData = emitters.find((e) => e.key === typedKey);
-    		if (!emitterData) {
-    			continue;
-    		}
-    		await user.click(screen.getByTestId(emitterData.testId));
-    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
-    			false,
-    		);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
-
-    it("marks as not complete after saving a new or edited emitter item", async () => {
-    	for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
-    		const emitters = await getEmittersData("");
-    		const typedKey = key as HeatEmittingType;
-
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(store.heatingSystems.heatEmitting[typedKey]?.complete).toBe(
-    			true,
-    		);
-
-    		const emitterData = emitters.find((e) => e.key === typedKey);
-    		if (!emitterData) {
-    			continue;
-    		}
-    		const params: string = emitterData.params;
-    		await renderSuspended(emitterData?.form, {
-    			route: {
-    				params: { [params]: "0" },
-    			},
-    		});
-    		await user.click(screen.getByTestId("saveAndComplete"));
-
-    		expect(store.heatingSystems.heatEmitting[typedKey].complete).toBe(
-    			false,
-    		);
-
-    		await renderSuspended(HeatEmitting);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
+const addHeatEmittingDataToStore = async () => {
+	store.$patch({
+		heatingSystems: {
+			heatEmitting: {
+				wetDistribution: { data: [wetDistribution1] },
+				instantElectricHeater: { data: [instantElectricHeater1] },
+			},
+		},
 	});
+};
+
+beforeEach(async () => {
+	await addHeatEmittingDataToStore();
+	await renderSuspended(HeatEmitting);
+});
+
+afterEach(() => {
+	store.$reset();
+});
+
+it("disables the Mark section as complete button when an emitter is incomplete", async () => {
+	store.$patch({
+		heatingSystems: {
+			heatEmitting: {
+				instantElectricHeater: { data: [{ ...instantElectricHeater1, complete: false }] },
+			},
+		},
+	});
+
+	await renderSuspended(HeatEmitting);
+	expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
+});
+
+it("enables the Mark section as complete button when all emitters are complete", async () => {
+	await addHeatEmittingDataToStore();
+	await renderSuspended(HeatEmitting);
+	expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
+});
+
+describe("after section has been marked as complete", () => {
+	beforeEach(async () => {
+		await addHeatEmittingDataToStore();
+		await renderSuspended(HeatEmitting);
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+	});
+
+	it("displays 'Completed' section status indicator", async () => {
+		const completed = screen.queryByTestId("completeSectionCompleted");
+		expect(completed?.style.display).not.toBe("none");
+	});
+
+	it("navigates to the heating systems page", async () => {
+		expect(navigateToMock).toHaveBeenCalledWith("/heating-systems");
+	});
+
+	it("marks all heat emitters as complete", async () => {
+		const { wetDistribution, instantElectricHeater } = store.heatingSystems.heatEmitting;
+		expect(wetDistribution?.complete).toBe(true);
+		expect(instantElectricHeater?.complete).toBe(true);
+	});
+
+	it("marks heat emitters as not complete if an item is removed", async () => {
+		await user.click(screen.getByTestId("wetDistribution_remove_0"));
+		await user.click(screen.getByTestId("instantElectricHeater_remove_0"));
+
+		const { wetDistribution, instantElectricHeater } = store.heatingSystems.heatEmitting;
+		expect(wetDistribution?.complete).toBe(false);
+		expect(instantElectricHeater?.complete).toBe(false);
+		expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
+	});
+
+	it("marks heat emitters as not complete if an item is duplicated", async () => {
+		await user.click(screen.getByTestId("wetDistribution_duplicate_0"));
+		await user.click(screen.getByTestId("instantElectricHeater_duplicate_0"));
+
+		const { wetDistribution, instantElectricHeater } = store.heatingSystems.heatEmitting;
+		expect(wetDistribution?.complete).toBe(false);
+		expect(instantElectricHeater?.complete).toBe(false);
+		expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
+	});
+
+	it("marks heat emitters as not complete after adding a new emitter", async () => {
+		const heatEmittersKeys: HeatEmittingType[] = ["wetDistribution", "instantElectricHeater"];
+     
+		for (const heatEmittersType of heatEmittersKeys ) {
+			await renderSuspended(heatEmittersSections[heatEmittersType].form, { route: { params: { [heatEmittersSections[heatEmittersType].id]: "create" } } });
+			await user.type(screen.getByTestId("name"), "New emitter");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(store.heatingSystems.heatEmitting[heatEmittersType]?.complete).toBe(false);
+		}
+	});
+
+	it("marks heat emitters as not complete after editing an existing emitter", async () => {
+		const heatEmittersKeys: HeatEmittingType[] = ["wetDistribution", "instantElectricHeater"];
+
+		for (const heatEmittersType of heatEmittersKeys ) {
+			await renderSuspended(heatEmittersSections[heatEmittersType].form, { route: { params: { [heatEmittersSections[heatEmittersType].id]: "0" } } });
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), "Updated emitter");
+			await user.tab();
+
+			expect(store.heatingSystems.heatEmitting[heatEmittersType]?.complete).toBe(false);
+		}
+	});
+});
+	});
+
 });

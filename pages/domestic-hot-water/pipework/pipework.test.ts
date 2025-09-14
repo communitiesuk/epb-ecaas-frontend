@@ -144,7 +144,8 @@ describe("Pipeworks", () => {
 			return navigateToMock;
 		});
 
-		beforeEach(async () => {
+	
+		const addCompletePipeworkDataToStore = async () => {
 			store.$patch({
 				domesticHotWater: {
 					pipework: {
@@ -163,7 +164,14 @@ describe("Pipeworks", () => {
 					},
 				},
 			});
+		};
+
+		beforeEach(async () => {
 			await renderSuspended(Pipework);
+		});
+
+		afterEach(async () => {
+			store.$reset();
 		});
 
 		const pipeworkForms = {
@@ -173,107 +181,131 @@ describe("Pipeworks", () => {
 
     type PipeworkType = keyof typeof store.domesticHotWater.pipework;
 
-    it("marks pipework section as complete when button is clicked", async () => {
+    it("disables the Mark section as complete button when window element is incomplete", async () => {
+    	store.$patch({
+    		domesticHotWater: {
+    			pipework: {
+    				primaryPipework: { data: [{ ...pipework1, complete: false }] },
+    				secondaryPipework: { data: [{ ...pipework2, complete: false }] },
+    			},
+    			waterHeating: {
+    				hotWaterCylinder: {
+    					data: [
+    						{
+    							name: "Cylinder 1",
+    							id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
+    						},
+    					],
+    				},
+    			},
+    		},
+    	});
+
+    	await renderSuspended(Pipework);
+    	expect(
+    		screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+    	).toBeTruthy();
+    });
+
+    it("enables the Mark section as complete button when all window items are complete", async () => {
+    	addCompletePipeworkDataToStore();
+
+    	await renderSuspended(Pipework);
+    	expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
+
+    });
+
+    it("displays a 'Completed' status indicator when section is marked as complete", async () => {
+    	await renderSuspended(Pipework);
+    	await user.click(screen.getByTestId("markAsCompleteButton"));
     	const completedStatusElement = screen.queryByTestId(
     		"completeSectionCompleted",
     	);
-    	expect(completedStatusElement?.style.display).toBe("none");
+    	expect(completedStatusElement?.style.display).not.toBe("none");
+    });
 
-    	await user.click(screen.getByTestId("markAsCompleteButton"));
+    describe("after section has been marked as complete", () => {
 
-    	const { primaryPipework, secondaryPipework } =
+    	beforeEach(async () => {
+    		await addCompletePipeworkDataToStore();
+    		await renderSuspended(Pipework);
+    		await user.click( screen.getByTestId("markAsCompleteButton"));
+    	});
+
+    	it("displays the 'Completed' section status indicator", async () => {
+    		const completed = screen.queryByTestId("completeSectionCompleted");
+    		expect(completed?.style.display).not.toBe("none");
+    	});
+
+    	it("navigates to the domestic hot water page", async () => {
+
+    		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
+    	});
+		
+    	it("marks each pipework section as complete", async () => {
+
+    		const { primaryPipework, secondaryPipework } =
         store.domesticHotWater.pipework;
 
-    	expect(primaryPipework?.complete).toBe(true);
-    	expect(secondaryPipework?.complete).toBe(true);
-    	expect(
-    		screen.queryByTestId("markAsCompleteButton")?.style.display).toBe("none");
-    	expect(completedStatusElement?.style.display).not.toBe("none");
+    		expect(primaryPipework?.complete).toBe(true);
+    		expect(secondaryPipework?.complete).toBe(true);
+    	});
 
-    	expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
-    });
-
-    it("marks section as not complete if an item is removed after marking complete", async () => {
+    	it("marks a pipwork section as not complete if an item is removed", async () => {
+  
+    		await user.click(screen.getByTestId("primaryPipework_remove_0"));
+    		await user.click(screen.getByTestId("secondaryPipework_remove_0"));
+    		const { primaryPipework, secondaryPipework } =
+			store.domesticHotWater.pipework;
+		
+    		expect(primaryPipework?.complete).toBe(false);
+    		expect(secondaryPipework?.complete).toBe(false);
     
-    	for (const pipework of Object.keys(store.domesticHotWater.pipework) as PipeworkType[]) {
+    	});
 
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(store.domesticHotWater.pipework[pipework]?.complete).toBe(true);
+    	it("marks a pipwork section as not complete if an item is duplicated", async () => {
+    		await user.click(screen.getByTestId("primaryPipework_duplicate_0"));
+    		await user.click(screen.getByTestId("secondaryPipework_duplicate_0"));
+			
+    		const { primaryPipework, secondaryPipework } =
+			store.domesticHotWater.pipework;
+		
+    		expect(primaryPipework?.complete).toBe(false);
+    		expect(secondaryPipework?.complete).toBe(false);
+    	});
 
-    		await user.click(screen.getByTestId(`${pipework}_remove_0`));
-    		expect(store.domesticHotWater.pipework[pipework]?.complete).toBe(false);
-    		expect(
-    			screen.queryByTestId("markAsCompleteButton")?.style.display,
-    		).not.toBe("none");
-    	}
-    });
+    	it("marks a pipwork section as not complete after adding a new pipework item", async () => {
+    		for (const pipeworkType of Object.keys(store.domesticHotWater.pipework) as PipeworkType[]) {
 
-    it("marks section as not complete if an item is duplicated after marking complete", async () => {
+    			await renderSuspended(pipeworkForms[pipeworkType], {
+    				route: {
+    					params: { pipe: "create" },
+    				},
+    			});
 
-    	for (const pipework of Object.keys(store.domesticHotWater.pipework) as PipeworkType[]) {
+    			await user.type(screen.getByTestId("name"), "New pipework");
+    			await user.tab();
+    			await user.click(screen.getByTestId("saveAndComplete"));
+    			expect(store.domesticHotWater.pipework[pipeworkType].complete).toBe(false);;
+    		}
+    	});
 
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(store.domesticHotWater.pipework[pipework]?.complete).toBe(true);
+    	it("marks a pipwork section as not complete after editing a pipework item", async () => {
+    		for (const pipeworkType of Object.keys(store.domesticHotWater.pipework) as PipeworkType[]) {
 
-    		await user.click(screen.getByTestId(`${pipework}_duplicate_0`));
-    		expect(store.domesticHotWater.pipework[pipework]?.complete).toBe(false);
-    		expect(
-    			screen.queryByTestId("markAsCompleteButton")?.style.display,
-    		).not.toBe("none");
-    	}
-    });
+    			await renderSuspended(pipeworkForms[pipeworkType], {
+    				route: {
+    					params: { pipe: "0" },
+    				},
+    			});
 
-    it("marks section as not complete after adding a new pipework item", async () => {
-    	for (const pipework of Object.keys(store.domesticHotWater.pipework) as PipeworkType[]) {
+    			await user.clear(screen.getByTestId("name"));
+    			await user.type(screen.getByTestId("name"), "Updated pipework");
+    			await user.tab();
 
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(store.domesticHotWater.pipework[pipework]?.complete).toBe(true);
-
-    		await renderSuspended(pipeworkForms[pipework], {
-    			route: {
-    				params: { pipe: "create" },
-    			},
-    		});
-
-    		await user.type(screen.getByTestId("name"), "New pipework");
-    		await user.tab();
-
-    		await user.click(screen.getByTestId("saveAndComplete"));
-
-    		expect(store.domesticHotWater.pipework[pipework].complete).toBe(false);
-
-    		await renderSuspended(Pipework);
-    		expect(screen.queryByTestId(
-    			"markAsCompleteButton",
-    		)?.style.display).not.toBe("none");
-    	}
-    });
-
-    it("marks section as not complete after editing a pipework item", async () => {
-    	for (const pipework of Object.keys(store.domesticHotWater.pipework) as PipeworkType[]) {
-
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(store.domesticHotWater.pipework[pipework]?.complete).toBe(true);
-
-    		await renderSuspended(pipeworkForms[pipework], {
-    			route: {
-    				params: { pipe: "0" },
-    			},
-    		});
-
-    		await user.clear(screen.getByTestId("name"));
-    		await user.type(screen.getByTestId("name"), "Updated pipework");
-    		await user.tab();
-
-    		await user.click(screen.getByTestId("saveAndComplete"));
-
-    		expect(store.domesticHotWater.pipework[pipework].complete).toBe(false);
-
-    		await renderSuspended(Pipework);
-    		expect(screen.queryByTestId(
-    			"markAsCompleteButton",
-    		)?.style.display).not.toBe("none");
-    	}
+    			expect(store.domesticHotWater.pipework[pipeworkType].complete).toBe(false);
+    		}
+    	});
     });
 	});
 });

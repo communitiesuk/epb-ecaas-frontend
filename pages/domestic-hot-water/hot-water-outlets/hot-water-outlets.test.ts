@@ -398,7 +398,7 @@ describe("hot water outlets", () => {
 			expect(screen.getByText("Basin tap 1 (2)")).toBeDefined();
 			expect(screen.getByText("Basin tap 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("Basin tap 1 (1) (2)")).toBeDefined();
-		});
+		});	
 	});
 
 	describe("mark section as complete", () => {
@@ -446,7 +446,7 @@ describe("hot water outlets", () => {
 			complete: true,
 		};
 
-		beforeEach(async () => {
+		const addCompleteOutletsDataToStore = async () => {
 			store.$patch({
 				domesticHotWater: {
 					hotWaterOutlets: {
@@ -457,6 +457,9 @@ describe("hot water outlets", () => {
 					},
 				},
 			});
+		};
+
+		beforeEach(async () => {
 			await renderSuspended(HotWaterOutlets);
 		});
 
@@ -473,130 +476,150 @@ describe("hot water outlets", () => {
 
     type HotWaterOutletsType =
       keyof typeof store.domesticHotWater.hotWaterOutlets;
+			
+    it("disables the Mark section as complete button when window element is incomplete", async () => {
+    	store.$patch({
+    		domesticHotWater: {
+    			hotWaterOutlets: {
+    				mixedShower: { data: [{ ...mixedShower1, complete: false }] },
+    				electricShower: { data: [{ ...electricShower1, complete: false }] },
+    				bath: { data: [{ ...bath1, complete: false }] },
+    				otherOutlets: {
+    					data: [{ ...otherHotWaterOutlet1, complete: false }],
+    				},
+    			},
+    		},
+    	});
 
+    	await renderSuspended(HotWaterOutlets);
+    	expect(
+    		screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+    	).toBeTruthy();
+    });
 
-    it("marks hot water outlets section as complete when button is clicked", async () => {
+    it("enables the Mark section as complete button when all window items are complete", async () => {
+    	addCompleteOutletsDataToStore();
+
+    	await renderSuspended(HotWaterOutlets);
+    	expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
+
+    });
+
+    it("displays a 'Completed' status indicator when section is marked as complete", async () => {
+    	await renderSuspended(HotWaterOutlets);
+    	await user.click(screen.getByTestId("markAsCompleteButton"));
     	const completedStatusElement = screen.queryByTestId(
     		"completeSectionCompleted",
     	);
+    	expect(completedStatusElement?.style.display).not.toBe("none");
+    });
 
-    	expect(completedStatusElement?.style.display).toBe("none");
+    describe("after section has been marked as complete", () => {
+    	beforeEach(async () => {
+    		await addCompleteOutletsDataToStore();
+    		await renderSuspended(HotWaterOutlets);
+    		await user.click( screen.getByTestId("markAsCompleteButton"));
+    	});
 
-    	await user.click(screen.getByTestId("markAsCompleteButton"));
+    	it("displays the 'Completed' section status indicator", async () => {
+    		const completed = screen.queryByTestId("completeSectionCompleted");
+    		expect(completed?.style.display).not.toBe("none");
+    	});
 
-    	const { mixedShower, electricShower, bath, otherOutlets } =
+    	it("navigates to the domestic hot water page", async () => {
+    		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
+    	});
+			
+    	it("marks hot water outlets section as complete when button is clicked", async () => {
+ 
+    		const { mixedShower, electricShower, bath, otherOutlets } =
         store.domesticHotWater.hotWaterOutlets;
 
-    	expect(mixedShower?.complete).toBe(true);
-    	expect(electricShower?.complete).toBe(true);
-    	expect(bath?.complete).toBe(true);
-    	expect(otherOutlets?.complete).toBe(true);
+    		expect(mixedShower?.complete).toBe(true);
+    		expect(electricShower?.complete).toBe(true);
+    		expect(bath?.complete).toBe(true);
+    		expect(otherOutlets?.complete).toBe(true);
 
-    	expect(
-    		screen.queryByTestId("markAsCompleteButton")?.style.display).toBe("none");
-    	expect(completedStatusElement?.style.display).not.toBe("none");
+    		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
+    	});
 
-    	expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water");
-    });
+    	it("marks section as not complete if an item is removed after marking complete", async () => {
 
-    it("marks section as not complete if an item is removed after marking complete", async () => {
+    		for (const hotWaterOutlet of Object.keys(
+    			store.domesticHotWater.hotWaterOutlets,
+    		) as HotWaterOutletsType[]) {
 
-    	for (const hotWaterOutlet of Object.keys(
-    		store.domesticHotWater.hotWaterOutlets,
-    	) as HotWaterOutletsType[]) {
+    			const { hotWaterOutlets } = store.domesticHotWater;
 
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(
-    			store.domesticHotWater.hotWaterOutlets[hotWaterOutlet]?.complete,
-    		).toBe(true);
+    			expect(hotWaterOutlets[hotWaterOutlet]?.complete,
+    			).toBe(true);
 
-    		await user.click(screen.getByTestId(`${hotWaterOutlet}_remove_0`));
+    			await user.click(screen.getByTestId(`${hotWaterOutlet}_remove_0`));
+    			expect(hotWaterOutlets[hotWaterOutlet]?.complete,
+    			).toBe(false);
+    		}
+    	});
 
-    		expect(
-    			store.domesticHotWater.hotWaterOutlets[hotWaterOutlet]?.complete,
-    		).toBe(false);
-    		expect(
-    			screen.queryByTestId("markAsCompleteButton")?.style.display,
-    		).not.toBe("none");
-    	}
-    });
+    	it("marks section as not complete if an item is duplicated after marking complete", async () => {
 
-    it("marks section as not complete if an item is duplicated after marking complete", async () => {
+    		for (const hotWaterOutlet of Object.keys(
+    			store.domesticHotWater.hotWaterOutlets,
+    		) as HotWaterOutletsType[]) {
 
-    	for (const hotWaterOutlet of Object.keys(
-    		store.domesticHotWater.hotWaterOutlets,
-    	) as HotWaterOutletsType[]) {
+    			const { hotWaterOutlets } = store.domesticHotWater;
 
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(store.domesticHotWater.hotWaterOutlets[hotWaterOutlet]?.complete).toBe(
-    			true,
-    		);
-    		await user.click(screen.getByTestId(`${hotWaterOutlet}_duplicate_0`));
+    			await user.click(screen.getByTestId("markAsCompleteButton"));
+    			expect(hotWaterOutlets[hotWaterOutlet]?.complete).toBe(
+    				true,
+    			);
+    			await user.click(screen.getByTestId(`${hotWaterOutlet}_duplicate_0`));
 
-    		expect(store.domesticHotWater.hotWaterOutlets[hotWaterOutlet]?.complete).toBe(
-    			false,
-    		);
+    			expect(hotWaterOutlets[hotWaterOutlet]?.complete).toBe(
+    				false,
+    			);
+    		}
+    	});
 
-    		expect(screen.queryByTestId(
-    			"markAsCompleteButton",
-    		)?.style.display).not.toBe("none");
-    	}
-    });
+    	it("marks section as not complete after adding a new hot water outlet item", async () => {
+    		for (const hotWaterOutlet of Object.keys(
+    			store.domesticHotWater.hotWaterOutlets,
+    		) as HotWaterOutletsType[]) {
 
-    it("marks section as not complete after adding a new hot water outlet item", async () => {
-    	for (const hotWaterOutlet of Object.keys(
-    		store.domesticHotWater.hotWaterOutlets,
-    	) as HotWaterOutletsType[]) {
+    			await renderSuspended( outletForms[hotWaterOutlet], {
+    				route: {
+    					params: { hotWaterOutlet: "create" },
+    				},
+    			});
+    			await user.type(screen.getByTestId("name"), "outlet");
+    			await user.tab();
+    			await user.click(screen.getByTestId("saveProgress"));
 
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
+    			expect(store.domesticHotWater.hotWaterOutlets[hotWaterOutlet].complete).toBe(
+    				false,
+    			);
+    		}
+    	});
 
-    		await renderSuspended( outletForms[hotWaterOutlet], {
-    			route: {
-    				params: { hotWaterOutlet: "create" },
-    			},
-    		});
-    		await user.type(screen.getByTestId("name"), "outlet");
-    		await user.tab();
-    		await user.click(screen.getByTestId("saveProgress"));
+    	it("marks section as not complete after editing a hot water outlet item", async () => {
+    		for (const hotWaterOutlet of Object.keys(
+    			store.domesticHotWater.hotWaterOutlets,
+    		) as HotWaterOutletsType[]) {
 
-    		expect(store.domesticHotWater.hotWaterOutlets[hotWaterOutlet].complete).toBe(
-    			false,
-    		);
-
-    		await renderSuspended(HotWaterOutlets);
-   
-    		expect(screen.queryByTestId(
-    			"markAsCompleteButton",
-    		)?.style.display).not.toBe("none");
-    	}
-    });
-
-    it("marks section as not complete after editing a hot water outlet item", async () => {
-    	for (const hotWaterOutlet of Object.keys(
-    		store.domesticHotWater.hotWaterOutlets,
-    	) as HotWaterOutletsType[]) {
-
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-
-    		await renderSuspended( outletForms[hotWaterOutlet], {
-    			route: {
-    				params: { hotWaterOutlet: "0" },
-    			},
-    		});
+    			await renderSuspended( outletForms[hotWaterOutlet], {
+    				route: {
+    					params: { hotWaterOutlet: "0" },
+    				},
+    			});
 				
-    		await user.clear(screen.getByTestId("name"));
-    		await user.type(screen.getByTestId("name"), "Updated outlet");
-    		await user.tab();
+    			await user.clear(screen.getByTestId("name"));
+    			await user.type(screen.getByTestId("name"), "Updated outlet");
+    			await user.tab();
 
-    		expect(store.domesticHotWater.hotWaterOutlets[hotWaterOutlet].complete).toBe(
-    			false,
-    		);
-    		await renderSuspended(HotWaterOutlets);
-   
-    		expect(screen.queryByTestId(
-    			"markAsCompleteButton",
-    		)?.style.display).not.toBe("none");
-    	}
+    			expect(store.domesticHotWater.hotWaterOutlets[hotWaterOutlet].complete).toBe(
+    				false,
+    			);
+    		}
+    	});
     });
 	});
 });
