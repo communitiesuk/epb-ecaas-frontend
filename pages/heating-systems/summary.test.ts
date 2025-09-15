@@ -345,7 +345,7 @@ describe("Heating systems summary page", () => {
 				minOutdoorTemp: 0,
 				maxOutdoorTemp: 15,
 				numberOfRadiators: 1,
-			}
+			},
 		};
 
 		const wetDistribution2: EcaasForm<WetDistributionData> = {
@@ -365,7 +365,7 @@ describe("Heating systems summary page", () => {
 				minimumFlowTemp: 20,
 				minOutdoorTemp: 0,
 				maxOutdoorTemp: 15,
-			}
+			},
 		};
 
 		const instantElectricHeater: EcaasForm<InstantElectricStorageData> = {

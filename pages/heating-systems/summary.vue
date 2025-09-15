@@ -124,7 +124,7 @@ const wetDistributionSummary: SummarySection = {
 		const wetDistributionData: Record<string, string | number | undefined> = {
 			Name: wetDistribution.data.name,
 			"Heat source": heatGenerationData.find(
-				(x) => x.id === wetDistribution.data.heatSource
+				(x) => x.id === wetDistribution.data.heatSource,
 			)?.name,
 			"Thermal mass": `${wetDistribution.data.thermalMass} ${kilowattHourPerKelvin.suffix}`,
 			"Design temperature difference across the emitters":
@@ -135,7 +135,7 @@ const wetDistributionSummary: SummarySection = {
 				? "Radiators"
 				: "Underfloor heating",
 			"Number of radiators": wetDistribution.data.typeOfSpaceHeater === "radiator" ?
-				wetDistribution.data.numberOfRadiators : undefined
+				wetDistribution.data.numberOfRadiators : undefined,
 		};
 		if (
 			wetDistribution.data.typeOfSpaceHeater === "radiator" &&

@@ -53,15 +53,15 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 					frac_convective: convectionFractionWet,
 					c: distribution.data.constant,
 					n: distribution.data.exponent,
-				})
+				}),
 			} : {
 				emitters: [{
 					wet_emitter_type: typeOfSpaceHeater,
 					emitter_floor_area: distribution.data.emitterFloorArea,
 					frac_convective: convectionFractionWet,
 					equivalent_specific_thermal_mass: distribution.data.equivalentThermalMass,
-					system_performance_factor: distribution.data.systemPerformanceFactor
-				}]
+					system_performance_factor: distribution.data.systemPerformanceFactor,
+				}],
 			}),
 			ecodesign_controller: {
 				ecodesign_control_class: parseInt(ecoDesignControllerClass),

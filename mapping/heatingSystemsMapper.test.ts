@@ -155,9 +155,9 @@ describe("heating systems mapper", () => {
 							exponent: 1.3,
 							constant: 0.08,
 							numberOfRadiators: 2,
-						}
-					}
-				]
+						},
+					},
+				],
 			},
 			instantElectricHeater: { ...baseForm },
 			electricStorageHeater: { ...baseForm },
@@ -249,9 +249,9 @@ describe("heating systems mapper", () => {
 							equivalentThermalMass: 80,
 							systemPerformanceFactor: 5,
 							convectionFractionWet: 0.7,
-						}
-					}
-				]
+						},
+					},
+				],
 			},
 			instantElectricHeater: { ...baseForm },
 			electricStorageHeater: { ...baseForm },

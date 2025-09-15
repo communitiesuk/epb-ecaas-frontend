@@ -1168,9 +1168,9 @@ describe("FHS input mapper", () => {
 							typeOfSpaceHeater: "radiator",
 							numberOfRadiators: 2,
 							exponent: 3,
-							constant: 9
-						}
-					}]
+							constant: 9,
+						},
+					}],
 				},
 				instantElectricHeater: {
 					...baseForm,
