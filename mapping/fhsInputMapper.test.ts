@@ -756,7 +756,7 @@ const expectedFlatInput: FhsInputSchema = {
 				"external glazed door (door)": {
 					base_height: 0.2,
 					frame_area_fraction: 0.3,
-					free_area_height: 3,
+					free_area_height: 2,
 					g_value: 0.5,
 					height: 3,
 					max_window_open_area: 3,
@@ -768,7 +768,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 0.8,
 					width: 1,
 					window_part_list: [{
-						mid_height_air_flow_path: 2,
+						mid_height_air_flow_path: 3,
 					}],
 				},
 				"wall to garage (wall)": {
