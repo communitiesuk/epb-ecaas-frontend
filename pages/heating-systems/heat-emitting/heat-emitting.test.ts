@@ -471,22 +471,36 @@ describe("heat emitting", () => {
 			});
 		};
 
+		const heatEmittersSections = {
+			wetDistribution: {
+				id: "distribution",
+				form: WetDistributionForm,
+			},
+			instantElectricHeater: {
+				id: "heater",
+				form: InstantElectricHeaterForm,
+			},
+			// electricStorageHeater: { id: "storage", form: ElectricStorageHeaterForm },
+			// warmAirHeatPump: { id: "pump", form: WarmAirHeatPumpForm },
+		};
+
+		
 type HeatEmittingPicked = Pick<
   typeof store.heatingSystems.heatEmitting,
   "wetDistribution" | "instantElectricHeater"
 >;
 type HeatEmittingType = keyof HeatEmittingPicked;
 
-const addHeatEmittingDataToStore = async () => {
-	store.$patch({
-		heatingSystems: {
-			heatEmitting: {
-				wetDistribution: { data: [wetDistribution1] },
-				instantElectricHeater: { data: [instantElectricHeater1] },
-			},
-		},
-	});
-};
+// const addHeatEmittingDataToStore = async () => {
+// 	store.$patch({
+// 		heatingSystems: {
+// 			heatEmitting: {
+// 				wetDistribution: { data: [wetDistribution1] },
+// 				instantElectricHeater: { data: [instantElectricHeater1] },
+// 			},
+// 		},
+// 	});
+// };
 
 beforeEach(async () => {
 	await addHeatEmittingDataToStore();

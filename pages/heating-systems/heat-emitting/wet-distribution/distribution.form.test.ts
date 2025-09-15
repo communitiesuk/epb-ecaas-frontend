@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen, waitFor } from "@testing-library/vue";
+import { screen  } from "@testing-library/vue";
 import WetDistribution from "./[distribution].vue";
 
 const user = userEvent.setup();
@@ -48,11 +48,12 @@ const populateValidForm = async () => {
 	await user.type(screen.getByTestId("designTempDiffAcrossEmitters"), "0.4");
 	await user.type(screen.getByTestId("designFlowTemp"), "32");
 	await user.type(screen.getByTestId("designFlowRate"), "5");
-	// await user.click(screen.getByTestId("typeOfSpaceHeater_radiator"));
+	await user.click(screen.getByTestId("typeOfSpaceHeater_radiator"));
 	await user.type(screen.getByTestId("numberOfRadiators"), "1");
 	await user.type(screen.getByTestId("convectionFractionWet"), "0.2");
 	await user.selectOptions(screen.getByTestId("ecoDesignControllerClass"), "1");
 	await user.type(screen.getByTestId("minimumFlowTemp"), "20");
+	await user.tab();
 };
 
 describe("Wet distribution", () => {
@@ -129,7 +130,7 @@ describe("Wet distribution", () => {
 			"designTempDiffAcrossEmitters_error",
 			"designFlowTemp_error",
 			"designFlowRate_error",
-			// "typeOfSpaceHeater_error",
+			"typeOfSpaceHeater_error",
 			"ecoDesignControllerClass_error",
 			"minimumFlowTemp_error",
 		];
@@ -169,16 +170,16 @@ describe("Wet distribution", () => {
 			},
 		});
 
-		await renderSuspended(WetDistribution);
+		await renderSuspended(WetDistribution, {
+			route: {
+				params: { distribution: "create" },
+			},
+		});
 		await populateValidForm();
-
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		await waitFor(() => {
-			const { data } =
-        store.heatingSystems.heatEmitting.wetDistribution;
-			expect(data[0]!.data).toEqual(wetDistribution1);
-		});
+		const { data } = store.heatingSystems.heatEmitting.wetDistribution;
+		expect(data[0]!.data).toEqual(wetDistribution1);
 	});
 
 	// it("should save data to store when form is valid and type of space heater is under floor heating (UFH)", async () => {

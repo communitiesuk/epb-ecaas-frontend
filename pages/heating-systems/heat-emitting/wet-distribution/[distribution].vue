@@ -7,7 +7,7 @@ const title = "Wet distribution";
 const store = useEcaasStore();
 const route = useRoute();
 
-const { autoSaveElementForm, getStoreIndex } = useForm();
+const { autoSaveElementForm } = useForm();
 
 const wetDistributionData = useItemToEdit(
 	"distribution",
@@ -43,7 +43,9 @@ const saveForm = (fields: WetDistributionData) => {
 
 	store.$patch((state) => {
 		const { wetDistribution } = state.heatingSystems.heatEmitting;
-		const index = getStoreIndex(wetDistribution.data);
+		const storeData = store.heatingSystems.heatEmitting.wetDistribution.data;
+
+		const index = route.params.distribution === "create" ? storeData.length - 1 : Number(route.params.distribution);
 
 		const commonFields = {
 			name: fields.name,
@@ -88,8 +90,8 @@ const saveForm = (fields: WetDistributionData) => {
 
 		wetDistribution.data[index] = {
 			data: item,
-			complete: true
-		}
+			complete: true,
+		};
 
 		wetDistribution.complete = false;
 	});
@@ -104,14 +106,15 @@ autoSaveElementForm({
 	onPatchCreate: (state, newData) => {
 		// we only support radiators
 		newData.data.typeOfSpaceHeater = "radiator";
-		state.heatingSystems.heatEmitting.wetDistribution.data.push(newData)
+		state.heatingSystems.heatEmitting.wetDistribution.data.push(newData);
+		state.heatingSystems.heatEmitting.wetDistribution.complete = false;
 	},
 	onPatchUpdate: (state, newData, index) => {
 		// we only support radiators
 		newData.data.typeOfSpaceHeater = "radiator";
 		state.heatingSystems.heatEmitting.wetDistribution.data[index] = newData;
 		state.heatingSystems.heatEmitting.wetDistribution.complete = false;
-	}
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
