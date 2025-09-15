@@ -41,7 +41,7 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 
 	const spaceHeatingSystemNames = [
 		state.heatingSystems.heatEmitting.wetDistribution.map(x => x.name),
-		state.heatingSystems.heatEmitting.instantElectricHeater.map(x => x.data.name),
+		state.heatingSystems.heatEmitting.instantElectricHeater.map(x => x.name),
 	].flat();
 
 	return {
@@ -117,7 +117,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 		}
 	}
 
-	const groundFloorData: { [key: string]: BuildingElementGround }[] = dwellingSpaceGroundFloor.map(({ data: x }) => {
+	const groundFloorData: { [key: string]: BuildingElementGround }[] = dwellingSpaceGroundFloor.map(x => {
 		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
 		let groundFloor: BuildingElementGround;
@@ -225,26 +225,26 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				throw new Error(`Unexpected ground floor type: ${(x as { typeOfGroundFloor: string }).typeOfGroundFloor}`);
 		}
 
-		return { [nameWithSuffix] : groundFloor };
+		return { [nameWithSuffix]: groundFloor };
 	});
 
 	const internalFloorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceInternalFloor?.map(x => {
 		const commonFields = {
-			area: x.data.surfaceAreaOfElement,
-			areal_heat_capacity: x.data.kappaValue,
-			mass_distribution_class: x.data.massDistributionClass,
+			area: x.surfaceAreaOfElement,
+			areal_heat_capacity: x.kappaValue,
+			mass_distribution_class: x.massDistributionClass,
 			pitch: 180,
 			u_value: defaultUValue,
 		};
-		const nameWithSuffix = suffixName(x.data.name, floorSuffix);
+		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
 		let internalFloor: SchemaBuildingElement;
 
-		if (x.data.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace) {
+		if (x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace) {
 			internalFloor = {
 				...commonFields,
 				type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-				thermal_resistance_unconditioned_space: x.data.thermalResistanceOfAdjacentUnheatedSpace,
+				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
 			};
 		} else {
 			internalFloor = {
@@ -257,26 +257,26 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 	}) || [];
 
 	const exposedFloorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExposedFloor.map(x => {
-		const nameWithSuffix = suffixName(x.data.name, floorSuffix);
+		const nameWithSuffix = suffixName(x.name, floorSuffix);
 
 		return { [nameWithSuffix]: {
 			type: "BuildingElementOpaque",
-			height: x.data.length,
-			width: x.data.width,
-			base_height: x.data.elevationalHeight,
-			area: x.data.surfaceArea,
-			solar_absorption_coeff: x.data.solarAbsorption,
-			u_value: x.data.uValue,
-			areal_heat_capacity: x.data.kappaValue,
-			mass_distribution_class: x.data.massDistributionClass,
-			pitch: x.data.pitch,
-			orientation360: x.data.orientation,
+			height: x.length,
+			width: x.width,
+			base_height: x.elevationalHeight,
+			area: x.surfaceArea,
+			solar_absorption_coeff: x.solarAbsorption,
+			u_value: x.uValue,
+			areal_heat_capacity: x.kappaValue,
+			mass_distribution_class: x.massDistributionClass,
+			pitch: x.pitch,
+			orientation360: x.orientation,
 			is_external_door: false,
 		} };
 	}) || [];
 
 	return {
-		GroundFloorArea: dwellingSpaceGroundFloor.reduce((sum, floor) => sum + floor.data.surfaceArea, 0),
+		GroundFloorArea: dwellingSpaceGroundFloor.reduce((sum, floor) => sum + floor.surfaceArea, 0),
 		Zone: {
 			[defaultZoneName]: {
 				BuildingElement: Object.assign(
@@ -373,7 +373,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 	const ceilingSuffix = "ceiling";
 	const roofSuffix = "roof";
 
-	const ceilingData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceCeilings.map(({ data: x }) => {
+	const ceilingData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceCeilings.map((x) => {
 		const commonFields = {
 			pitch: extractPitch(x),
 			area: x.surfaceArea,
@@ -402,7 +402,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 		return { [nameWithSuffix]: ceiling };
 	});
 
-	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map(({ data: x }) => {
+	const roofData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceRoofs.map((x) => {
 		const nameWithSuffix = suffixName(x.name, roofSuffix);
 
 		return { [nameWithSuffix]: {
@@ -439,7 +439,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const doorSuffix = "door";
 
-	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map(({ data: x }) => {
+	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
 		const commonFields = {
 			pitch: extractPitch(x),
 			area: x.surfaceArea,
@@ -468,7 +468,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		return { [nameWithSuffix]: internalDoor };
 	});
 
-	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map(({ data: x }) => {
+	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map((x) => {
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
 		const glazedDoor = {
@@ -495,7 +495,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		};
 	});
 
-	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map(({ data: x }) => {
+	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map((x) => {
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 		
 		return { [nameWithSuffix]: {
@@ -567,7 +567,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 	}
 
 	const windowData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceWindows.map(x => {
-		const nameWithSuffix = suffixName(x.data.name, windowSuffix);
+		const nameWithSuffix = suffixName(x.name, windowSuffix);
 
 		function inMetres(length: Length | number ): number {
 			if (typeof length === "number") {
@@ -577,41 +577,41 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			}
 		}
 
-		const hasOverhang = "overhangDepth" in x.data && "overhangDistance" in x.data && x.data.overhangDepth && x.data.overhangDistance;
+		const hasOverhang = "overhangDepth" in x && "overhangDistance" in x && x.overhangDepth && x.overhangDistance;
 		const overhang = hasOverhang ? [{
 			type: "overhang" as const,
-			depth: inMetres(x.data.overhangDepth!),
-			distance: inMetres(x.data.overhangDistance!),
+			depth: inMetres(x.overhangDepth),
+			distance: inMetres(x.overhangDistance),
 		}] : [];
 
-		const hasSideFinLeft = "sideFinLeftDepth" in x.data && "sideFinLeftDistance" in x.data && x.data.sideFinLeftDepth && x.data.sideFinLeftDistance;
+		const hasSideFinLeft = "sideFinLeftDepth" in x && "sideFinLeftDistance" in x && x.sideFinLeftDepth && x.sideFinLeftDistance;
 		const sideFinLeft = hasSideFinLeft ? [{
 			type: "sidefinleft" as const,
-			depth: inMetres(x.data.sideFinLeftDepth!),
-			distance: inMetres(x.data.sideFinLeftDistance!),
+			depth: inMetres(x.sideFinLeftDepth),
+			distance: inMetres(x.sideFinLeftDistance),
 		}] : [];
 
-		const hasSideFinRight = "sideFinRightDepth" in x.data && "sideFinRightDistance" in x.data && x.data.sideFinRightDepth && x.data.sideFinRightDistance;
+		const hasSideFinRight = "sideFinRightDepth" in x && "sideFinRightDistance" in x && x.sideFinRightDepth && x.sideFinRightDistance;
 		const sideFinRight = hasSideFinRight ? [{
 			type: "sidefinright" as const,
-			depth: inMetres(x.data.sideFinRightDepth!),
-			distance: inMetres(x.data.sideFinRightDistance!),
+			depth: inMetres(x.sideFinRightDepth),
+			distance: inMetres(x.sideFinRightDistance),
 		}] : [];
 
 		return { [nameWithSuffix]: {
 			type: "BuildingElementTransparent",
-			pitch: extractPitch(x.data),
-			orientation360: x.data.orientation,
-			height: x.data.height,
-			width: x.data.width,
-			base_height: x.data.elevationalHeight,
-			u_value: x.data.uValue,
-			g_value: x.data.solarTransmittance,
-			mid_height: x.data.midHeight,
-			frame_area_fraction: x.data.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.data.openingToFrameRatio),
-			max_window_open_area: x.data.numberOpenableParts === "0" ? 0 : x.data.maximumOpenableArea,
-			free_area_height: x.data.numberOpenableParts === "0" ? 0 : x.data.heightOpenableArea,
-			window_part_list: mapWindowPartList(x.data),
+			pitch: extractPitch(x),
+			orientation360: x.orientation,
+			height: x.height,
+			width: x.width,
+			base_height: x.elevationalHeight,
+			u_value: x.uValue,
+			g_value: x.solarTransmittance,
+			mid_height: x.midHeight,
+			frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
+			max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
+			free_area_height: x.numberOpenableParts === "0" ? 0 : x.heightOpenableArea,
+			window_part_list: mapWindowPartList(x),
 			shading: [...overhang, ...sideFinLeft, ...sideFinRight],
 		} };
 	});
@@ -629,7 +629,7 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 	const { dwellingSpaceLinearThermalBridges, dwellingSpacePointThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
 	const bridgeSuffix = "bridge";
 
-	const linearThermalBridgesData: Record<string, SchemaThermalBridgingLinearFhs>[] = dwellingSpaceLinearThermalBridges.map(({ data: x }) => {
+	const linearThermalBridgesData: Record<string, SchemaThermalBridgingLinearFhs>[] = dwellingSpaceLinearThermalBridges.map(x => {
 		const nameWithSuffix = suffixName(x.name, bridgeSuffix);
 
 		return { [nameWithSuffix]: {
@@ -640,7 +640,7 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 		} };
 	});
 
-	const pointThermalBridgesData: Record<string, SchemaThermalBridgingPoint>[] = dwellingSpacePointThermalBridges.map(({ data: x }) => {
+	const pointThermalBridgesData: Record<string, SchemaThermalBridgingPoint>[] = dwellingSpacePointThermalBridges.map(x => {
 		const nameWithSuffix = suffixName(x.name, bridgeSuffix);
 
 		return { [nameWithSuffix]: {

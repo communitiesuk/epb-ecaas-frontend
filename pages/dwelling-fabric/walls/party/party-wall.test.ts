@@ -27,7 +27,11 @@ describe("party wall", () => {
 	});
 
 	test("data is saved to store state when form is valid", async () => {
-		await renderSuspended(PartyWall);
+		await renderSuspended(PartyWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
 
 		await user.type(screen.getByTestId("name"), "Party wall 1");
 		await user.click(screen.getByTestId("pitchOption_90"));
@@ -36,11 +40,11 @@ describe("party wall", () => {
 		await user.click(screen.getByTestId("kappaValue_50000"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data = [] } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall || {};
 		
-		expect(data[0]).toEqual(state);
+		expect(data[0]?.data).toEqual(state);
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/walls");
 	});
 
@@ -49,7 +53,7 @@ describe("party wall", () => {
 			dwellingFabric: {
 				dwellingSpaceWalls: {
 					dwellingSpacePartyWall: {
-						data: [state],
+						data: [{ data: state }],
 					},
 				},
 			},
@@ -72,7 +76,7 @@ describe("party wall", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(PartyWall);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
@@ -86,7 +90,7 @@ describe("party wall", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(PartyWall);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("partyWallErrorSummary"))).toBeDefined();
 	});
@@ -95,8 +99,57 @@ describe("party wall", () => {
 		await renderSuspended(PartyWall);
     
 		await user.click(screen.getByTestId("pitchOption_custom"));
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
     
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
+	});
+
+	test("updated form data is automatically saved to store", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpacePartyWall: {
+						data: [{
+							data: { ...state },
+						}],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(PartyWall, {
+			route: {
+				params: { wall: "0" },
+			},
+		});
+	
+		await user.clear(screen.getByTestId("name"));
+		await user.tab();
+		await user.clear(screen.getByTestId("surfaceArea"));
+
+		await user.type(screen.getByTestId("name"), "Party wall 2");
+		await user.type(screen.getByTestId("surfaceArea"), "15");
+		await user.tab();
+
+		const { data } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall;
+
+		expect(data[0]?.data.name).toBe("Party wall 2");
+		expect(data[0]?.data.surfaceArea).toBe(15);
+	});
+	
+	test("partial form data is saved automatically with default name to store", async () => {
+		await renderSuspended(PartyWall, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
+		
+		await user.type(screen.getByTestId("surfaceArea"), "10");
+		await user.tab();
+
+		const { data } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall;
+
+		expect(data[0]?.data.name).toBe("Party wall");
+		expect(data[0]?.data.surfaceArea).toBe(10);
 	});
 });

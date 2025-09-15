@@ -105,127 +105,6 @@ describe("vents", () => {
 		expect(screen.getByText("Vent 1 (1) (2)")).toBeDefined();
 	});
 
-	it("disables the mark section as complete button when shading element is incomplete", async () => {
-		store.$patch({
-			infiltrationAndVentilation: {
-				vents: {
-					data: [
-						{
-							data: { name: "Vent 1" },
-							complete: false,
-						},
-					],
-				},
-			},
-		});
-
-		await renderSuspended(Vents);
-		const markAsCompleteButton = screen.getByRole("button", {
-			name: "Mark section as complete",
-		});
-		expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
-	});
-
-	it("marks vents as complete when mark section as complete button is clicked", async () => {
-		await renderSuspended(Vents);
-		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
-		).not.toBeNull();
-
-		const completedStatusElement = screen.queryByTestId(
-			"completeSectionCompleted",
-		);
-		expect(completedStatusElement?.style.display).toBe("none");
-
-		await user.click(screen.getByTestId("markAsCompleteButton"));
-
-		const { complete } = store.infiltrationAndVentilation.vents;
-
-		expect(complete).toBe(true);
-		expect(
-			screen.queryByRole("button", { name: "Mark section as complete" }),
-		).toBeNull();
-		expect(completedStatusElement?.style.display).not.toBe("none");
-
-		expect(navigateToMock).toHaveBeenCalledWith(
-			"/infiltration-and-ventilation",
-		);
-	});
-
-	it("marks vents as not complete when complete button is clicked then user removes a vent item", async () => {
-		store.$patch({
-			infiltrationAndVentilation: {
-				vents: {
-					data: [
-						{ data: vent1, complete: true },
-						{ data: vent2, complete: true },
-					],
-				},
-			},
-		});
-
-		await renderSuspended(Vents);
-
-		await user.click(screen.getByTestId("markAsCompleteButton"));
-		expect(store.infiltrationAndVentilation.vents.complete).toBe(true);
-
-		await user.click(screen.getByTestId("vents_remove_0"));
-		expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
-		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
-		).not.toBeNull();
-	});
-
-	it("marks vents as not complete when complete button is clicked then user duplicates a vent item", async () => {
-		store.$patch({
-			infiltrationAndVentilation: {
-				vents: {
-					data: [{ data: vent1, complete: true }],
-				},
-			},
-		});
-
-		await renderSuspended(Vents);
-
-		await user.click(screen.getByTestId("markAsCompleteButton"));
-		expect(store.infiltrationAndVentilation.vents.complete).toBe(true);
-
-		await user.click(screen.getByTestId("vents_duplicate_0"));
-		expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
-		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
-		).not.toBeNull();
-	});
-
-	it("marks vents as not complete when user saves a new or edited form after marking section as complete", async () => {
-		store.$patch({
-			infiltrationAndVentilation: {
-				vents: {
-					data: [{ data: vent1 }],
-				},
-			},
-		});
-
-		await renderSuspended(Vents);
-		await user.click(screen.getByTestId("markAsCompleteButton"));
-
-		await renderSuspended(VentsForm, {
-			route: {
-				params: { vent: "0" },
-			},
-		});
-
-		await user.click(screen.getByTestId("saveAndComplete"));
-
-		const { complete } = store.infiltrationAndVentilation.vents;
-		expect(complete).toBe(false);
-
-		await renderSuspended(Vents);
-		expect(
-			screen.getByRole("button", { name: "Mark section as complete" }),
-		).not.toBeNull();
-	});
-
 	it("should navigate to the infiltration and ventilation overview page when return to overview is clicked", async () => {
 		await renderSuspended(Vents);
 
@@ -277,4 +156,114 @@ describe("vents", () => {
 			formStatus.complete.text,
 		);
 	});
+	describe("mark section as complete", () => {
+		const addCompleteVentsToStore = async () => {
+			store.$patch({
+				infiltrationAndVentilation: {
+					vents: {
+						data: [
+							{ data: vent1, complete: true },
+							{ data: vent2, complete: true },
+						],
+					},
+				},
+			});
+		};
+
+		beforeEach(async () => {
+			await renderSuspended(Vents);
+		});
+
+		afterEach(() => {
+			store.$reset();
+		});
+
+		it("disables the Mark section as complete button when a vent item is incomplete", async () => {
+			store.$patch({
+				infiltrationAndVentilation: {
+					vents: {
+						data: [{ data: vent1, complete: false }],
+					},
+				},
+			});
+
+			await renderSuspended(Vents);
+			expect(
+				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+			).toBeTruthy();
+		});
+
+		it("enables the Mark section as complete button when all vent items are complete", async () => {
+			await addCompleteVentsToStore();
+			await renderSuspended(Vents);
+
+			expect(
+				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+			).toBeFalsy();
+		});
+
+		describe("after section has been marked as complete", () => {
+			beforeEach(async () => {
+				await addCompleteVentsToStore();
+				await renderSuspended(Vents);
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+			});
+
+			it("displays the 'Completed' section status indicator", async () => {
+				const completed = screen.queryByTestId("completeSectionCompleted");
+				expect(completed?.style.display).not.toBe("none");
+			});
+
+			it("navigates to the infiltration and ventilation page", async () => {
+				expect(navigateToMock).toHaveBeenCalledWith(
+					"/infiltration-and-ventilation",
+				);
+			});
+
+			it("marks vents as complete when section is marked", async () => {
+				expect(store.infiltrationAndVentilation.vents.complete).toBe(true);
+
+			});
+
+			it("marks vents as not complete if an item is removed", async () => {
+				await user.click(screen.getByTestId("vents_remove_0"));
+
+				expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
+
+			});
+
+			it("marks vents as not complete if an item is duplicated", async () => {
+
+				await user.click(screen.getByTestId("vents_duplicate_0"));
+
+				expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
+
+			});
+
+			it("vent is not complete after user adds a new ventilation item", async () => {
+				await renderSuspended(VentsForm, {
+					route: { params: { vent: "create" } },
+				});
+
+				await user.type(screen.getByTestId("name"), "New vent");
+				await user.tab();
+
+				expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
+			});
+
+			it("vent is not complete after user edits an existing ventilation item", async () => {
+				await renderSuspended(VentsForm, {
+					route: { params: { vent: "0" } },
+				});
+
+				await user.clear(screen.getByTestId("name"));
+				await user.type(screen.getByTestId("name"), "Updated vent");
+				await user.tab();
+
+				expect(store.infiltrationAndVentilation.vents.complete).toBe(false);
+
+			});
+		});
+	});
+
 });

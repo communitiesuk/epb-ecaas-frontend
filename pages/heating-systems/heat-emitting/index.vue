@@ -7,7 +7,7 @@ const title = "Heat emitting";
 const store = useEcaasStore();
 
 type HeatEmittingType = keyof typeof store.heatingSystems.heatEmitting;
-type HeatEmittingData = ElectricStorageHeaterData & EcaasForm<InstantElectricStorageData> & WetDistributionData & WarmAirHeatPumpData;
+type HeatEmittingData = ElectricStorageHeaterData & EcaasForm<InstantElectricStorageData> & EcaasForm<WetDistributionData> & WarmAirHeatPumpData;
 
 function handleRemove(emittingType: HeatEmittingType, index: number) {
 	const emitters = store.heatingSystems.heatEmitting[emittingType]?.data;
@@ -104,7 +104,7 @@ function hasIncompleteEntries() {
 	<CustomList
 		id="wetDistribution" title="Wet distribution" 
 		:form-url="`${page?.url!}/wet-distribution`"
-		:items="store.heatingSystems.heatEmitting.wetDistribution.data.map(x => x.name)"
+		:items="store.heatingSystems.heatEmitting.wetDistribution.data.map(x => x.data.name)"
 		@remove="(index: number) => handleRemove('wetDistribution', index)"
 		@duplicate="(index: number) => handleDuplicate('wetDistribution', index)" />
 

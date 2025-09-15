@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen, waitFor } from "@testing-library/vue";
+import { screen } from "@testing-library/vue";
 import WallToUnheatedSpace from "./[wall].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -28,7 +28,11 @@ describe("wall to unheated space", () => {
 	});	
 
 	test("data is saved to store state when form is valid", async () => {
-		await renderSuspended(WallToUnheatedSpace);
+		await renderSuspended(WallToUnheatedSpace, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
 
 		await user.type(screen.getByTestId("name"), "Wall to unheated space 1");
 		await user.type(screen.getByTestId("surfaceAreaOfElement"), "500");
@@ -37,14 +41,13 @@ describe("wall to unheated space", () => {
 		await user.click(screen.getByTestId("massDistributionClass_E"));
 		await user.click(screen.getByTestId("pitchOption_90"));
 		await user.type(screen.getByTestId("thermalResistanceOfAdjacentUnheatedSpace"), "1");
+		await user.tab();
 
-		await user.click(screen.getByRole("button"));
-		await waitFor(() => {
-			const { data = [] } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace || {};
-			expect(data[0]).toEqual(state);
-			expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/walls");
-		
-		});
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const { data = [] } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace || {};
+		expect(data[0]?.data).toEqual(state);
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/walls");
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
@@ -52,7 +55,7 @@ describe("wall to unheated space", () => {
 			dwellingFabric: {
 				dwellingSpaceWalls: {
 					dwellingSpaceWallToUnheatedSpace: {
-						data: [state],
+						data: [{ data: state }],
 					},
 				},
 			},
@@ -75,9 +78,13 @@ describe("wall to unheated space", () => {
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
-		await renderSuspended(WallToUnheatedSpace);
+		await renderSuspended(WallToUnheatedSpace, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
 	
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 	
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceAreaOfElement_error"))).toBeDefined();
@@ -86,24 +93,79 @@ describe("wall to unheated space", () => {
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
 		expect((await screen.findByTestId("thermalResistanceOfAdjacentUnheatedSpace_error"))).toBeDefined();
-	
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
-		await renderSuspended(WallToUnheatedSpace);
+		await renderSuspended(WallToUnheatedSpace, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
 		
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 		
 		expect((await screen.findByTestId("wallToUnheatedSpaceErrorSummary"))).toBeDefined();
 	});
 
 
-	test("requires pitch when custom pitch option is selected", async () => {
-		await renderSuspended(WallToUnheatedSpace);
+	it("requires pitch when custom pitch option is selected", async () => {
+		await renderSuspended(WallToUnheatedSpace, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
 				
 		await user.click(screen.getByTestId("pitchOption_custom"));
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 				
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
+	});
+
+	test("updated form data is automatically saved to store", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceWallToUnheatedSpace: {
+						data: [{
+							data: { ...state },
+						}],
+					},
+				},
+			},
+		});
+
+		await renderSuspended(WallToUnheatedSpace, {
+			route: {
+				params: { wall: "0" },
+			},
+		});
+	
+		await user.clear(screen.getByTestId("name"));
+		await user.clear(screen.getByTestId("surfaceAreaOfElement"));
+
+		await user.type(screen.getByTestId("name"), "Wall to unheated space 2");
+		await user.type(screen.getByTestId("surfaceAreaOfElement"), "10");
+		await user.tab();
+
+		const { data } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace;
+
+		expect(data[0]?.data.name).toBe("Wall to unheated space 2");
+		expect(data[0]?.data.surfaceAreaOfElement).toBe(10);
+	});
+	
+	test("partial form data is saved automatically with default name to store", async () => {
+		await renderSuspended(WallToUnheatedSpace, {
+			route: {
+				params: { wall: "create" },
+			},
+		});
+		
+		await user.type(screen.getByTestId("surfaceAreaOfElement"), "10");
+		await user.tab();
+
+		const { data } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace;
+
+		expect(data[0]?.data.name).toBe("Wall to unheated space");
+		expect(data[0]?.data.surfaceAreaOfElement).toBe(10);
 	});
 });

@@ -6,7 +6,6 @@ import RoofForm from "./roofs/[roof].vue";
 
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
-import type { Component } from "vue";
 import formStatus from "~/constants/formStatus";
 
 describe("ceilings and roofs", () => {
@@ -145,6 +144,40 @@ describe("ceilings and roofs", () => {
 			expect(screen.getByText("Ceiling 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("Ceiling 1 (1) (2)")).toBeDefined();
 		});
+		test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceCeilings: {
+							data: [ceiling1],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(CeilingsAndRoofs);
+
+			expect(screen.getByTestId("ceilings_status_0").textContent).toBe(
+				formStatus.inProgress.text,
+			);
+		});
+		test("a complete indicator is shown when an entry is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceCeilings: {
+							data: [{ ...ceiling1, complete: true }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(CeilingsAndRoofs);
+
+			expect(screen.getByTestId("ceilings_status_0").textContent).toBe(
+				formStatus.complete.text,
+			);
+		});
 	});
 
 	describe("roofs", () => {
@@ -213,15 +246,44 @@ describe("ceilings and roofs", () => {
 			expect(screen.getByText("Roof 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("Roof 1 (1) (2)")).toBeDefined();
 		});
+		test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceRoofs: {
+							data: [roof1],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(CeilingsAndRoofs);
+
+			expect(screen.getByTestId("roofs_status_0").textContent).toBe(
+				formStatus.inProgress.text,
+			);
+		});
+		test("a complete indicator is shown when an entry is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceRoofs: {
+							data: [{ ...roof1, complete: true }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(CeilingsAndRoofs);
+
+			expect(screen.getByTestId("roofs_status_0").textContent).toBe(
+				formStatus.complete.text,
+			);
+		});
 	});
 
 	describe("mark section as complete", () => {
-		const store = useEcaasStore();
-		const user = userEvent.setup();
-
-		mockNuxtImport("navigateTo", () => navigateToMock);
-
-		const addCeilingsAndRoofsDataToStore = async () => {
+		const addCompleteCeilingsAndDoorsDataToStore = async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -231,179 +293,167 @@ describe("ceilings and roofs", () => {
 				},
 			});
 		};
-
 		beforeEach(async () => {
-			await addCeilingsAndRoofsDataToStore();
 			await renderSuspended(CeilingsAndRoofs);
 		});
 
-		const getCeilingsAndRoofsData = async (
-			action: string,
-		): Promise<
-			{
-				key: keyof CeilingsAndRoofsData;
-				testId: string;
-				form: Component;
-				params: string;
-			}[]
-		> => [
-			{
-				key: "dwellingSpaceCeilings",
-				testId: `ceilings_${action}_0`,
-				form: CeilingForm,
-				params: "ceiling",
-			},
-			{
-				key: "dwellingSpaceRoofs",
-				testId: `roofs_${action}_0`,
-				form: RoofForm,
-				params: "roof",
-			},
-		];
+		afterEach(() => {
+			store.$reset();
+		});
 
-    type CeilingsAndRoofsType =
-      keyof typeof store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
-    it("marks ceilings and roofs as complete when mark section as complete button is clicked", async () => {
-    	expect(
-    		screen.getByRole("button", { name: "Mark section as complete" }),
-    	).not.toBeNull();
-    	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted",
-    	);
-    	expect(completedStatusElement?.style.display).toBe("none");
+		it("disables the Mark section as complete button when a door is incomplete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceCeilings: { data: [{ ...ceiling1, complete: false }] },
+						dwellingSpaceRoofs: { data: [{ ...roof1, complete: false }] },
+					},
+				},
+			});
+			await renderSuspended(CeilingsAndRoofs);
 
-    	await user.click(screen.getByTestId("markAsCompleteButton"));
+			expect(
+				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+			).toBeTruthy();
+		});
 
-    	const { dwellingSpaceCeilings, dwellingSpaceRoofs } =
-        store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		it("enables the Mark section as complete button when all doors are complete", async () => {
+			await addCompleteCeilingsAndDoorsDataToStore();
 
-    	expect(dwellingSpaceCeilings?.complete).toBe(true);
-    	expect(dwellingSpaceRoofs?.complete).toBe(true);
+			await renderSuspended(CeilingsAndRoofs);
+			expect(
+				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+			).toBeFalsy();
+		});
 
-    	expect(
-    		screen.queryByRole("button", { name: "Mark section as complete" }),
-    	).toBeNull();
-    	expect(completedStatusElement?.style.display).not.toBe("none");
+	
+		describe("after section has been marked as complete", () => {
+			beforeEach(async () => {
+				await addCompleteCeilingsAndDoorsDataToStore();
+				await renderSuspended(CeilingsAndRoofs);
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+			});
+	
+			it("displays the 'Completed' section status indicator", async () => {
+				const completed = screen.queryByTestId("completeSectionCompleted");
+				expect(completed?.style.display).not.toBe("none");
+			});
+	
+			it("navigates to the dwelling fabric page", async () => {
+				expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
+			});
 
-    	expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
-    });
+			it("marks each ceiling and roofs section as complete when button is clicked", async () => {
+				const {
+					dwellingSpaceCeilings,      
+					dwellingSpaceRoofs,
+				} = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
-    it("marks section as not complete when item is removed after marking complete", async () => {
-    	const data = await getCeilingsAndRoofsData("remove");
+				expect(dwellingSpaceCeilings?.complete).toBe(true);
+				expect(dwellingSpaceRoofs?.complete).toBe(true);
+			});
 
-    	for (const [key] of Object.entries(
-    		store.dwellingFabric.dwellingSpaceCeilingsAndRoofs,
-    	)) {
-    		const typedKey = key as CeilingsAndRoofsType;
+			it("marks corresponding ceiling and roofs section as not complete if an item is removed", async () => {
 
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
-    		).toBe(true);
+				await user.click(screen.getByTestId("ceilings_remove_0"));
+				await user.click(screen.getByTestId("roofs_remove_0"));
 
-    		const formData = data.find((d) => d.key === typedKey);
-    		await user.click(screen.getByTestId(formData!.testId));
+				const {
+					dwellingSpaceCeilings,      
+					dwellingSpaceRoofs,
+				} = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
-    		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
-    		).toBe(false);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
+				expect(dwellingSpaceCeilings?.complete).toBe(false);
+				expect(dwellingSpaceRoofs?.complete).toBe(false);
+			});
 
-    it("marks section as not complete when item is duplicated after marking complete", async () => {
-    	const data = await getCeilingsAndRoofsData("duplicate");
+			it("marks corresponding ceiling and roofs section as not complete if an item is duplicated", async () => {
+		
+				await user.click(screen.getByTestId("ceilings_duplicate_0"));
+				await user.click(screen.getByTestId("roofs_duplicate_0"));
 
-    	for (const [key] of Object.entries(
-    		store.dwellingFabric.dwellingSpaceCeilingsAndRoofs,
-    	)) {
-    		const typedKey = key as CeilingsAndRoofsType;
+				const {
+					dwellingSpaceCeilings,      
+					dwellingSpaceRoofs,
+				} = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
-    		).toBe(true);
+				expect(dwellingSpaceCeilings?.complete).toBe(false);
+				expect(dwellingSpaceRoofs?.complete).toBe(false);
+      
+			});
 
-    		const formData = data.find((d) => d.key === typedKey);
-    		await user.click(screen.getByTestId(formData!.testId));
+			it("marks section as not complete after adding a new ceiling", async () => {
+    		
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+  
+				await renderSuspended(CeilingForm, {
+					route: { params: { "ceiling": "create" } },
+				});
+				await user.click(screen.getByTestId("type_heatedSpace"));
+				await user.type(screen.getByTestId("name"), "New ceiling");
+				await user.tab();
+				await user.click(screen.getByTestId("saveAndComplete"));
 
-    		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
-    		).toBe(false);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
+				expect(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings?.complete).toBe(false);
 
-    it("marks section as not complete after saving a new or edited item", async () => {
-    	const data = await getCeilingsAndRoofsData("");
+				expect(
+					screen.queryByTestId("markAsCompleteButton")?.style.display,
+				).not.toBe("none");
+			});
 
-    	for (const [key] of Object.entries(
-    		store.dwellingFabric.dwellingSpaceCeilingsAndRoofs,
-    	)) {
-    		const typedKey = key as CeilingsAndRoofsType;
+			it("marks section as not complete after adding a new roof", async () => {
 
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
-    		).toBe(true);
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+  
+				await renderSuspended(RoofForm, {
+					route: { params: { "roof": "create" } },
+				});
 
-    		const ceilingAndRoofItem = data.find((d) => d.key === typedKey);
-    		await renderSuspended(ceilingAndRoofItem?.form, {
-    			route: { params: { [ceilingAndRoofItem!.params]: "0" } },
-    		});
-    		await user.click(screen.getByTestId("saveAndComplete"));
+				await user.type(screen.getByTestId("name"), "New roof");
+				await user.tab();
+				await user.click(screen.getByTestId("saveAndComplete"));
 
-    		expect(
-    			store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[typedKey]?.complete,
-    		).toBe(false);
-    		await renderSuspended(CeilingsAndRoofs);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
+				expect(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.complete).toBe(false);
+				expect(
+					screen.queryByTestId("markAsCompleteButton")?.style.display,
+				).not.toBe("none");
+			});
 
-    it("disables the mark section as complete button when item is incomplete", async () => {
-    	store.$patch({
-    		dwellingFabric: {
-    			dwellingSpaceCeilingsAndRoofs: {
-    				dwellingSpaceCeilings: {
-    					data: [
-    						{ data: { name: "Ceiling", surfaceArea: 20 }, complete: false },
-    					],
-    				},
-    			},
-    		},
-    	});
+			it("marks section as not complete after editing a new ceiling item", async () => {
 
-    	await renderSuspended(CeilingsAndRoofs);
-    	const markAsCompleteButton = screen.getByRole("button", {
-    		name: "Mark section as complete",
-    	});
-    	expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
-    });
+				await user.click(screen.getByTestId("markAsCompleteButton"));
 
-    test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
-    	store.$patch({
-    		dwellingFabric: {
-    			dwellingSpaceCeilingsAndRoofs: {
-    				dwellingSpaceCeilings: {
-    					data: [ceiling1],
-    				},
-    			},
-    		},
-    	});
+				await renderSuspended(CeilingForm, {
+					route: { params: { "ceiling": "0" } },
+				});
+				
+				await user.clear(screen.getByTestId("name"));
+				await user.type(screen.getByTestId("name"), "Updated ceiling item");
+				await user.tab();
 
-    	await renderSuspended(CeilingsAndRoofs);
+				expect(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings?.complete).toBe(false);
+				expect(
+					screen.queryByTestId("markAsCompleteButton")?.style.display,
+				).not.toBe("none");
+			});
 
-    	expect(screen.getByTestId("ceilings_status_0").textContent).toBe(
-    		formStatus.inProgress.text,
-    	);
-    });
+			it("marks section as not complete after editing a new roof item", async () => {
+
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+
+				await renderSuspended(RoofForm, {
+					route: { params: { "roof": "0" } },
+				});
+				await user.clear(screen.getByTestId("name"));
+				await user.type(screen.getByTestId("name"), "Updated ceiling item");
+				await user.tab();
+
+				expect(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.complete).toBe(false);
+				expect(
+					screen.queryByTestId("markAsCompleteButton")?.style.display,
+				).not.toBe("none");
+			});
+		});
 	});
 });

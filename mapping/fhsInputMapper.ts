@@ -72,12 +72,12 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 			[heatPumpName]: defaultHeatSourceWetDetails,
 		} : objectFromEntries(heatPumps.map(heatPump => {
 			const heatPumpWithProductReference: SchemaHeatSourceWetHeatPumpWithProductReference = {
-				product_reference: heatPump.data.productReference,
+				product_reference: heatPump.productReference,
 				type: "HeatPump",
 				EnergySupply: defaultElectricityEnergySupplyName,
 			};
 			return  [
-				heatPump.data.name,
+				heatPump.name,
 				heatPumpWithProductReference,
 			] as const;
 		})),

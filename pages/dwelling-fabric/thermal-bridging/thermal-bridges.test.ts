@@ -6,7 +6,6 @@ import PointThermalBridgeForm from "./point/[bridging].vue";
 
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
-import type { Component } from "vue";
 import formStatus from "~/constants/formStatus";
 
 describe("thermal bridges", () => {
@@ -67,7 +66,7 @@ describe("thermal bridges", () => {
 	};
 
 	describe("linear thermal bridges", () => {
-		test("linear thermal bridge is removed when remove link is clicked", async () => {
+		it("linear thermal bridge is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -108,7 +107,7 @@ describe("thermal bridges", () => {
 			expect(within(populatedList).queryByText("Linear 2")).toBeNull();
 		});
 
-		test("linear thermal bridge is duplicated when duplicate link is clicked", async () => {
+		it("linear thermal bridge is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -145,7 +144,7 @@ describe("thermal bridges", () => {
 	});
 
 	describe("point thermal bridges", () => {
-		test("point thermal bridge is removed when remove link is clicked", async () => {
+		it("point thermal bridge is removed when remove link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -186,7 +185,7 @@ describe("thermal bridges", () => {
 			expect(within(populatedList).queryByText("Point 2")).toBeNull();
 		});
 
-		test("point thermal bridge is duplicated when duplicate link is clicked", async () => {
+		it("point thermal bridge is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
@@ -220,182 +219,179 @@ describe("thermal bridges", () => {
 			expect(screen.getByText("Point 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("Point 1 (1) (2)")).toBeDefined();
 		});
+		it("an in-progress indicator is shown when an entry is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceThermalBridging: {
+						dwellingSpacePointThermalBridges: {
+							data: [point1],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(ThermalBridges);
+
+			expect(
+				screen.getByTestId("pointThermalBridges_status_0").textContent,
+			).toBe(formStatus.inProgress.text);
+		});
 	});
 
 	describe("mark section as complete", () => {
 		const store = useEcaasStore();
 		const user = userEvent.setup();
 
+		const navigateToMock = vi.hoisted(() => vi.fn());
 		mockNuxtImport("navigateTo", () => navigateToMock);
 
 		const addThermalBridgingDataToStore = async () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceThermalBridging: {
-						dwellingSpaceLinearThermalBridges: {
-							data: [{ ...linear1, complete: true }],
-						},
-						dwellingSpacePointThermalBridges: {
-							data: [{ ...point1, complete: true }],
-						},
+						dwellingSpaceLinearThermalBridges: { data: [{ ...linear1, complete: true }] },
+						dwellingSpacePointThermalBridges: { data: [{ ...point1, complete: true }] },
 					},
 				},
 			});
 		};
+
 		beforeEach(async () => {
-			await addThermalBridgingDataToStore();
 			await renderSuspended(ThermalBridges);
 		});
 
-		const getBridgeData = async (
-			action: string,
-		): Promise<
-			{
-				key: keyof ThermalBridgingData;
-				testId: string;
-				form: Component;
-				params: "linear" | "point";
-			}[]
-		> => {
-			return [
-				{
-					key: "dwellingSpaceLinearThermalBridges",
-					testId: `linearThermalBridges_${action}_0`,
-					form: LinearThermalBridgeForm,
-					params: "linear",
+		afterEach(() => {
+			store.$reset();
+		});
+
+		it("disables the Mark section as complete button when a thermal bridge is incomplete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceThermalBridging: {
+						dwellingSpaceLinearThermalBridges: { data: [{ ...linear1, complete: false }] },
+						dwellingSpacePointThermalBridges: { data: [{ ...point1, complete: false }] },
+					},
 				},
-				{
-					key: "dwellingSpacePointThermalBridges",
-					testId: `pointThermalBridges_${action}_0`,
-					form: PointThermalBridgeForm,
-					params: "point",
+			});
+
+			await renderSuspended(ThermalBridges);
+
+			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
+		});
+
+		it("enables the Mark section as complete button when all thermal bridges are complete", async () => {
+			await addThermalBridgingDataToStore();
+
+			await renderSuspended(ThermalBridges);
+			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
+		});
+
+		describe("after section has been marked as complete", () => {
+			beforeEach(async () => {
+				await addThermalBridgingDataToStore();
+				await renderSuspended(ThermalBridges);
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+			});
+
+			it("displays the 'Completed' section status indicator", async () => {
+				const completed = screen.queryByTestId("completeSectionCompleted");
+				expect(completed?.style.display).not.toBe("none");
+			});
+
+			it("navigates to the dwelling fabric page", async () => {
+				expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
+			});
+
+			it("marks each thermal bridging section as complete when button is clicked", async () => {
+				const { dwellingSpaceLinearThermalBridges, dwellingSpacePointThermalBridges } =
+        store.dwellingFabric.dwellingSpaceThermalBridging;
+
+				expect(dwellingSpaceLinearThermalBridges?.complete).toBe(true);
+				expect(dwellingSpacePointThermalBridges?.complete).toBe(true);
+			});
+
+			it("marks corresponding thermal bridging section as not complete if an item is removed", async () => {
+				await user.click(screen.getByTestId("linearThermalBridges_remove_0"));
+				await user.click(screen.getByTestId("pointThermalBridges_remove_0"));
+
+				const { dwellingSpaceLinearThermalBridges, dwellingSpacePointThermalBridges } =
+        store.dwellingFabric.dwellingSpaceThermalBridging;
+
+				expect(dwellingSpaceLinearThermalBridges?.complete).toBe(false);
+				expect(dwellingSpacePointThermalBridges?.complete).toBe(false);
+			});
+
+			it("marks corresponding thermal bridging section as not complete if an item is duplicated", async () => {
+				await user.click(screen.getByTestId("linearThermalBridges_duplicate_0"));
+				await user.click(screen.getByTestId("pointThermalBridges_duplicate_0"));
+
+				const { dwellingSpaceLinearThermalBridges, dwellingSpacePointThermalBridges } =
+        store.dwellingFabric.dwellingSpaceThermalBridging;
+
+				expect(dwellingSpaceLinearThermalBridges?.complete).toBe(false);
+				expect(dwellingSpacePointThermalBridges?.complete).toBe(false);
+			});
+		});
+
+		it("marks correspondiing section as not complete after adding a new linear thermal bridge item", async () => {
+
+			await renderSuspended(LinearThermalBridgeForm, {
+				route: {
+					params: { linear: "create" },
 				},
-			];
-		};
-    type ThermalBridgingType =
-      keyof typeof store.dwellingFabric.dwellingSpaceThermalBridging;
+			});
+			await user.type(screen.getByTestId("length"), "13");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(
+				store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete,
+			).toBe(false);
+		});
 
-    beforeEach(async () => {
-    	await addThermalBridgingDataToStore();
-    	await renderSuspended(ThermalBridges);
-    });
+		it("marks correspondiing section as not complete after editing a linear thermal bridge item", async () => {
 
-    it("marks thermal bridging section as complete when button is clicked", async () => {
-    	expect(
-    		screen.getByRole("button", { name: "Mark section as complete" }),
-    	).not.toBeNull();
-    	const completedStatusElement = screen.queryByTestId(
-    		"completeSectionCompleted",
-    	);
-    	expect(completedStatusElement?.style.display).toBe("none");
+			await renderSuspended(LinearThermalBridgeForm, {
+				route: {
+					params: { linear: "0" },
+				},
+			});
 
-    	await user.click(screen.getByTestId("markAsCompleteButton"));
+			await user.clear(screen.getByTestId("length"));
+			await user.type(screen.getByTestId("length"), "13");
+			await user.tab();
+			expect(
+				store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges?.complete,
+			).toBe(false);
+		});
+		it("marks correspondiing section as not complete after adding a new point thermal bridge item", async () => {
 
-    	const thermal = store.dwellingFabric.dwellingSpaceThermalBridging;
-    	for (const key in thermal) {
-    		expect(thermal[key as ThermalBridgingType]?.complete).toBe(true);
-    	}
+			await renderSuspended(PointThermalBridgeForm, {
+				route: {
+					params: { point: "create" },
+				},
+			});
+			await user.type(screen.getByTestId("name"), "New bridge");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+			expect(
+				store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.complete,
+			).toBe(false);
+		});
 
-    	expect(
-    		screen.queryByRole("button", { name: "Mark section as complete" }),
-    	).toBeNull();
-    	expect(completedStatusElement?.style.display).not.toBe("none");
-    	expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
-    });
+		it("marks correspondiing section as not complete after editing a point thermal bridge item", async () => {
 
-    it("marks as not complete if an item is removed after marking complete", async () => {
-    	const bridges = await getBridgeData("remove");
+			await renderSuspended(PointThermalBridgeForm, {
+				route: {
+					params: { point: "0" },
+				},
+			});
 
-    	for (const [key] of Object.entries(
-    		store.dwellingFabric.dwellingSpaceThermalBridging,
-    	)) {
-    		const typedKey = key as ThermalBridgingType;
-
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete,
-    		).toBe(true);
-
-    		const bridgeData = bridges.find((b) => b.key === typedKey);
-    		await user.click(screen.getByTestId(bridgeData!.testId));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete,
-    		).toBe(false);
-
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
-
-    it("marks as not complete after saving a new or edited thermal bridge item", async () => {
-    	const bridges = await getBridgeData("");
-
-    	for (const [key] of Object.entries(
-    		store.dwellingFabric.dwellingSpaceThermalBridging,
-    	)) {
-    		const typedKey = key as ThermalBridgingType;
-
-    		await user.click(screen.getByTestId("markAsCompleteButton"));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete,
-    		).toBe(true);
-
-    		const bridgeData = bridges.find((b) => b.key === typedKey);
-    		await renderSuspended(bridgeData!.form, {
-    			route: {
-    				params: { bridging: "0" },
-    			},
-    		});
-
-    		await user.click(screen.getByTestId("saveAndComplete"));
-    		expect(
-    			store.dwellingFabric.dwellingSpaceThermalBridging[typedKey]?.complete,
-    		).toBe(false);
-
-    		await renderSuspended(ThermalBridges);
-    		expect(
-    			screen.getByRole("button", { name: "Mark section as complete" }),
-    		).not.toBeNull();
-    	}
-    });
-
-    it("disables the mark section as complete button when item is incomplete", async () => {
-    	store.$patch({
-    		dwellingFabric: {
-    			dwellingSpaceThermalBridging: {
-    				dwellingSpaceLinearThermalBridges: {
-    					data: [
-    						{ data: { linearThermalTransmittance: 2 }, complete: false },
-    					],
-    				},
-    			},
-    		},
-    	});
-
-    	await renderSuspended(ThermalBridges);
-    	const markAsCompleteButton = screen.getByRole("button", {
-    		name: "Mark section as complete",
-    	});
-    	expect(markAsCompleteButton.hasAttribute("disabled")).toBeTruthy();
-    });
-
-    test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
-    	store.$patch({
-    		dwellingFabric: {
-    			dwellingSpaceThermalBridging: {
-    				dwellingSpacePointThermalBridges: {
-    					data: [point1],
-    				},
-    			},
-    		},
-    	});
-
-    	await renderSuspended(ThermalBridges);
-
-    	expect(
-    		screen.getByTestId("pointThermalBridges_status_0").textContent,
-    	).toBe(formStatus.inProgress.text);
-    });
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), "Updated bridge");
+			await user.tab();
+			expect(
+				store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges?.complete,
+			).toBe(false);
+		});
 	});
 });

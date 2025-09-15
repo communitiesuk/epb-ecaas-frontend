@@ -48,8 +48,7 @@ const exposedFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceE
 const groundFloorSummary: SummarySection = {
 	id: "dwellingSpaceGroundFloors",
 	label: "Ground floor",
-	data: groundFloorData.map(x => {
-
+	data: groundFloorData.filter(x => !!x.data).map(x => {
 		const edgeInsulationWidth = x.data.typeOfGroundFloor === "Slab_edge_insulation" ? (typeof x.data.edgeInsulationWidth === "number" ? x.data.edgeInsulationWidth : x.data.edgeInsulationWidth.amount) : undefined;
 		
 		return {
@@ -132,17 +131,17 @@ const externalWallSummary: SummarySection = {
 	label: "External wall",
 	data: externalWallData?.map(x => {
 		return {
-			"Name": x.name,
-			"Pitch": `${x.pitch} ${degrees.suffix}`,
-			"Orientation": `${x.orientation} ${degrees.suffix}`,
-			"Height": `${x.height} ${metre.suffix}`,
-			"Length": `${x.length} ${metre.suffix}`,
-			"Elevational height of building element at its base": `${x.elevationalHeight} ${metre.suffix}`,
-			"Net surface area": `${x.surfaceArea} ${metresSquare.suffix}`,
-			"Solar absorption coefficient": x.solarAbsorption,
-			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
-			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Name": x.data.name,
+			"Pitch": `${x.data.pitch} ${degrees.suffix}`,
+			"Orientation": `${x.data.orientation} ${degrees.suffix}`,
+			"Height": `${x.data.height} ${metre.suffix}`,
+			"Length": `${x.data.length} ${metre.suffix}`,
+			"Elevational height of building element at its base": `${x.data.elevationalHeight} ${metre.suffix}`,
+			"Net surface area": `${x.data.surfaceArea} ${metresSquare.suffix}`,
+			"Solar absorption coefficient": x.data.solarAbsorption,
+			"U-value": `${x.data.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
+			"Areal heat capacity": displayArealHeatCapacity(x.data.kappaValue as ArealHeatCapacityValue),
+			"Mass distribution class": displayMassDistributionClass(x.data.massDistributionClass),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceWalls"),
@@ -153,11 +152,11 @@ const internalWallSummary: SummarySection = {
 	label: "Internal wall",
 	data: internalWallData?.map(x => {
 		return {
-			"Name": x.name,
-			"Pitch": `${x.pitch} ${degrees.suffix}`,
-			"Net surface area of element": `${x.surfaceAreaOfElement} ${metresSquare.suffix}`,
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
-			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Name": x.data.name,
+			"Pitch": `${x.data.pitch} ${degrees.suffix}`,
+			"Net surface area of element": `${x.data.surfaceAreaOfElement} ${metresSquare.suffix}`,
+			"Areal heat capacity": displayArealHeatCapacity(x.data.kappaValue as ArealHeatCapacityValue),
+			"Mass distribution class": displayMassDistributionClass(x.data.massDistributionClass),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceWalls"),
@@ -168,13 +167,13 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 	label: "Wall to unheated space",
 	data: wallToUnheatedSpaceData?.map(x => {
 		return {
-			"Name": x.name,
-			"Pitch": `${x.pitch} ${degrees.suffix}`,
-			"Net surface area of element": `${x.surfaceAreaOfElement} ${metresSquare.suffix}`,
-			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
-			"Areal heat capacity": displayArealHeatCapacity(x.arealHeatCapacity as ArealHeatCapacityValue),
-			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			"Thermal resistance of adjacent unheated space": `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}`,
+			"Name": x.data.name,
+			"Pitch": `${x.data.pitch} ${degrees.suffix}`,
+			"Net surface area of element": `${x.data.surfaceAreaOfElement} ${metresSquare.suffix}`,
+			"U-value": `${x.data.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
+			"Areal heat capacity": displayArealHeatCapacity(x.data.arealHeatCapacity as ArealHeatCapacityValue),
+			"Mass distribution class": displayMassDistributionClass(x.data.massDistributionClass),
+			"Thermal resistance of adjacent unheated space": `${x.data.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}`,
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceWalls"),
@@ -185,12 +184,12 @@ const partyWallSummary: SummarySection = {
 	label: "Party wall",
 	data: partyWallData?.map(x => {
 		return {
-			"Name": x.name,
-			"Pitch": `${x.pitch} ${degrees.suffix}`,
-			"Net surface area": `${x.surfaceArea} ${metresSquare.suffix}`,
-			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
-			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Name": x.data?.name,
+			"Pitch": `${x.data.pitch} ${degrees.suffix}`,
+			"Net surface area": `${x.data.surfaceArea} ${metresSquare.suffix}`,
+			"U-value": `${x.data.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
+			"Areal heat capacity": displayArealHeatCapacity(x.data.kappaValue as ArealHeatCapacityValue),
+			"Mass distribution class": displayMassDistributionClass(x.data.massDistributionClass),
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceWalls"),
@@ -227,7 +226,7 @@ const ceilingSummary: SummarySection = {
 const roofSummary: SummarySection = {
 	id: "dwellingSpaceRoofs",
 	label: "Roof",
-	data: roofData.map(({ data: x }) => {
+	data: roofData.filter(x => !!x.data).map(({ data: x }) => {
 		return {
 			"Name": x.name,
 			"Type of roof": displayCamelToSentenceCase(x.typeOfRoof),

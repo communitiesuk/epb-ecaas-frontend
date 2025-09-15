@@ -37,7 +37,7 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 	const wetDistributions = state.heatingSystems.heatEmitting.wetDistribution;
 	const wetDistributionEntries = wetDistributions.map((distribution) => {
 		const { name, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, designFlowRate, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution;
-		const heatSourceName = state.heatingSystems.heatGeneration.heatPump.find(pump => pump.data.id === heatSource)!.data.name; // TODO: adapt this to work for all heat generators (not just heat pumps) once they are added
+		const heatSourceName = state.heatingSystems.heatGeneration.heatPump.find(pump => pump.id === heatSource)!.name; // TODO: adapt this to work for all heat generators (not just heat pumps) once they are added
 
 		const distributionDetails: SchemaSpaceHeatSystemDetails = {
 			HeatSource: {
@@ -89,12 +89,12 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 
 	const instantElectricHeaters = state.heatingSystems.heatEmitting.instantElectricHeater;
 	const instantElectricHeaterEntries = instantElectricHeaters.map((heater): [string, SchemaSpaceHeatSystemDetails] => [
-		heater.data.name,
+		heater.name,
 		{
 			type: "InstantElecHeater",
 			EnergySupply: defaultElectricityEnergySupplyName,
-			rated_power: heater.data.ratedPower,
-			frac_convective: heater.data.convectionFractionInstant,
+			rated_power: heater.ratedPower,
+			frac_convective: heater.convectionFractionInstant,
 			advanced_start: null,
 			temp_setback: null,
 			Control: defaultControlName,

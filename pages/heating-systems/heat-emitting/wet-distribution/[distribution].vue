@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import type { FormKitOptionsProp } from "@formkit/inputs";
 import { isInteger } from "~/utils/validation";
+import { getUrl } from "#imports";
+
 const title = "Wet distribution";
 const store = useEcaasStore();
 const route = useRoute();
 
-const { saveToList } = useForm();
+const { autoSaveElementForm } = useForm();
 
 const wetDistributionData = useItemToEdit(
 	"distribution",
 	store.heatingSystems.heatEmitting.wetDistribution.data,
 );
 const model: Ref<WetDistributionData> = ref({
-	...wetDistributionData,
-	typeOfSpaceHeater: "radiator",
+	...wetDistributionData?.data,
 } as WetDistributionData);
 
 const options: FormKitOptionsProp[] = [
@@ -36,8 +37,15 @@ const typeOfSpaceHeaterOptions: Record<"radiator", string> = {
 };
 
 const saveForm = (fields: WetDistributionData) => {
+
+	// we only support radiators right now
+	fields.typeOfSpaceHeater = "radiator";
+
 	store.$patch((state) => {
 		const { wetDistribution } = state.heatingSystems.heatEmitting;
+		const storeData = store.heatingSystems.heatEmitting.wetDistribution.data;
+
+		const index = route.params.distribution === "create" ? storeData.length - 1 : Number(route.params.distribution);
 
 		const commonFields = {
 			name: fields.name,
@@ -80,53 +88,33 @@ const saveForm = (fields: WetDistributionData) => {
 				throw new Error("Unsupported type of space heater");
 		};
 
-		wetDistribution.complete = false;
-		saveToList(item, wetDistribution);
+		wetDistribution.data[index] = {
+			data: item,
+			complete: true,
+		};
 
+		wetDistribution.complete = false;
 	});
 
 	navigateTo("/heating-systems/heat-emitting");
 };
 
-watch(model, async (newData: WetDistributionData, initialData: WetDistributionData) => {
-	const storeData = store.heatingSystems.heatEmitting.wetDistribution.data;
-
-	if (initialData === undefined || newData === undefined) {
-		return;
-	}
-
-	const defaultName = "Wet distribution";
-	const duplicates = storeData.filter(x => x.name.match(duplicateNamePattern(defaultName)));
-
-	// filtering out typeOfSpaceHeater for now as it is always checked, would need to change this in future when there are more than one option to choose from
-	const { typeOfSpaceHeater, ...rest } = initialData;
-	const { typeOfSpaceHeater: newTypeOfSpaceHeater, ...newDataRest } = newData;
-
-	const isFirstEdit = Object.values(rest).every(x => x === undefined) &&
-		Object.values(newDataRest).some(x => x !== undefined);
-
-	if (route.params.distribution === "create" && isFirstEdit) {
-		store.$patch(state => {
-			state.heatingSystems.heatEmitting.wetDistribution.data.push({
-				...newData,
-				name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName),
-			});
-		});
-
-		return;
-	}
-
-	store.$patch((state) => {
-		const index = route.params.distribution === "create" ? storeData.length - 1 : Number(route.params.distribution);
-
-		state.heatingSystems.heatEmitting.wetDistribution.data[index] = {
-			...newData,
-			name: newData.name ?? state.heatingSystems.heatEmitting.wetDistribution.data[index]?.name,
-			
-		};
-
+autoSaveElementForm({
+	model,
+	storeData: store.heatingSystems.heatEmitting.wetDistribution,
+	defaultName: "Wet distribution",
+	onPatchCreate: (state, newData) => {
+		// we only support radiators
+		newData.data.typeOfSpaceHeater = "radiator";
+		state.heatingSystems.heatEmitting.wetDistribution.data.push(newData);
 		state.heatingSystems.heatEmitting.wetDistribution.complete = false;
-	});
+	},
+	onPatchUpdate: (state, newData, index) => {
+		// we only support radiators
+		newData.data.typeOfSpaceHeater = "radiator";
+		state.heatingSystems.heatEmitting.wetDistribution.data[index] = newData;
+		state.heatingSystems.heatEmitting.wetDistribution.complete = false;
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -350,6 +338,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" test-id="saveAndComplete" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('heatEmitting')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

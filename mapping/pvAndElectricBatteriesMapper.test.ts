@@ -30,7 +30,9 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerDC: 60,
 				inverterIsInside: false,
 				inverterType: "string_inverter",
-			} };
+			},
+			complete: true,
+		};
 
 		const pvSystem2: EcaasForm<PvSystemData> = {
 			data: {
@@ -45,7 +47,10 @@ describe("PV and electric batteries mapper", () => {
 				inverterPeakPowerAC: 96,
 				inverterPeakPowerDC: 120,
 				inverterIsInside: false,
-				inverterType: "optimised_inverter" } };
+				inverterType: "optimised_inverter",
+			},
+			complete: true,
+		};
 
 		store.$patch({
 			pvAndBatteries: {
@@ -103,18 +108,18 @@ describe("PV and electric batteries mapper", () => {
 	it("maps electric batteries to the correct form for FHS input", () => {
 		// Arrange
 		const battery: EcaasForm<ElectricBatteryData> = {
-			data:
-					{
-						name: "Acme Model II",
-						capacity: 10,
-						batteryAge: 2,
-						chargeEfficiency: 0.7,
-						location: "inside",
-						gridChargingPossible: false,
-						maximumChargeRate: 6.2,
-						minimumChargeRate: 4.5,
-						maximumDischargeRate: 2.3,
-					},
+			data: {
+				name: "Acme Model II",
+				capacity: 10,
+				batteryAge: 2,
+				chargeEfficiency: 0.7,
+				location: "inside",
+				gridChargingPossible: false,
+				maximumChargeRate: 6.2,
+				minimumChargeRate: 4.5,
+				maximumDischargeRate: 2.3,
+			},
+			complete: true,
 		};
 
 		store.$patch({

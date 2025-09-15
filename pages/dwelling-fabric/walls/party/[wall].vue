@@ -1,36 +1,49 @@
 <script setup lang="ts">
-import { standardPitchOptions } from "#imports";
+import { standardPitchOptions, getUrl } from "#imports";
 
 const title = "Party wall";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data);
-const model: Ref<PartyWallData> = ref(wallData!);
+const model: Ref<PartyWallData | undefined> = ref(wallData?.data);
 
 const saveForm = (fields: PartyWallData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWalls } = state.dwellingFabric;
+		const index = getStoreIndex(dwellingSpaceWalls.dwellingSpacePartyWall.data);
 
-		const wall: PartyWallData = {
-			name: fields.name,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
-			surfaceArea: fields.surfaceArea,
-			uValue: fields.uValue,
-			kappaValue: fields.kappaValue,
-			massDistributionClass: fields.massDistributionClass,
+		dwellingSpaceWalls.dwellingSpacePartyWall.data[index] = {
+			data: {
+				name: fields.name,
+				pitchOption: fields.pitchOption,
+				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
+				surfaceArea: fields.surfaceArea,
+				uValue: fields.uValue,
+				kappaValue: fields.kappaValue,
+				massDistributionClass: fields.massDistributionClass,
+			},
+			complete: true,
 		};
 
-		if (!dwellingSpaceWalls.dwellingSpacePartyWall) {
-			dwellingSpaceWalls.dwellingSpacePartyWall = { data: [] };
-		}
 		dwellingSpaceWalls.dwellingSpacePartyWall.complete = false;
-		saveToList(wall, dwellingSpaceWalls.dwellingSpacePartyWall);
 	});
 
 	navigateTo("/dwelling-fabric/walls");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall,
+	defaultName: "Party wall",
+	onPatchCreate: (state, newData) => {state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data.push(newData);
+		state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.complete = false;
+	},
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.complete = false;
+	},
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -60,7 +73,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<FieldsPitch
-			:pitch-option="model.pitchOption"
+			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
 		/>
 		<FormKit
@@ -89,9 +102,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('dwellingSpaceWalls')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

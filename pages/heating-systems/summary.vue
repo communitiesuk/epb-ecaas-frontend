@@ -121,41 +121,41 @@ const wetDistributionSummary: SummarySection = {
 	label: "Wet distribution",
 	data: wetDistributions.map((wetDistribution) => {
 		const wetDistributionData: Record<string, string | number | undefined> = {
-			Name: wetDistribution.name,
+			Name: wetDistribution.data.name,
 			"Heat source": heatGenerationData.find(
-				(x) => x.id === wetDistribution.heatSource,
+				(x) => x.id === wetDistribution.data.heatSource,
 			)?.name,
-			"Thermal mass": `${wetDistribution.thermalMass} ${kilowattHourPerKelvin.suffix}`,
+			"Thermal mass": `${wetDistribution.data.thermalMass} ${kilowattHourPerKelvin.suffix}`,
 			"Design temperature difference across the emitters":
-				`${wetDistribution.designTempDiffAcrossEmitters} ${celsius.suffix}`,
-			"Design flow temperature": `${wetDistribution.designFlowTemp} ${celsius.suffix}`,
-			"Design flow rate": `${wetDistribution.designFlowRate} ${litrePerMinute.suffix}`,
-			"Type of space heater": wetDistribution.typeOfSpaceHeater === "radiator"
+				`${wetDistribution.data.designTempDiffAcrossEmitters} ${celsius.suffix}`,
+			"Design flow temperature": `${wetDistribution.data.designFlowTemp} ${celsius.suffix}`,
+			"Design flow rate": `${wetDistribution.data.designFlowRate} ${litrePerMinute.suffix}`,
+			"Type of space heater": wetDistribution.data.typeOfSpaceHeater === "radiator"
 				? "Radiators"
 				: "Underfloor heating",
-			"Number of radiators": wetDistribution.typeOfSpaceHeater === "radiator" ?
-				wetDistribution.numberOfRadiators : undefined,
+			"Number of radiators": wetDistribution.data.typeOfSpaceHeater === "radiator" ?
+				wetDistribution.data.numberOfRadiators : undefined,
 		};
 		if (
-			wetDistribution.typeOfSpaceHeater === "radiator" &&
-			wetDistribution.convectionFractionWet !== undefined
+			wetDistribution.data.typeOfSpaceHeater === "radiator" &&
+			wetDistribution.data.convectionFractionWet !== undefined
 		) {
 			wetDistributionData["Convection fraction"] =
-				wetDistribution.convectionFractionWet;
+				wetDistribution.data.convectionFractionWet;
 		}
 
 		if (
-			wetDistribution.typeOfSpaceHeater === "ufh" &&
-			wetDistribution.emitterFloorArea !== undefined
+			wetDistribution.data.typeOfSpaceHeater === "ufh" &&
+			wetDistribution.data.emitterFloorArea !== undefined
 		) {
 			wetDistributionData["Emitter floor area"] =
-				`${wetDistribution.emitterFloorArea} ${metresSquare.suffix}`;
+				`${wetDistribution.data.emitterFloorArea} ${metresSquare.suffix}`;
 		}
 
 		wetDistributionData["Eco design controller class"] =
-			wetDistribution.ecoDesignControllerClass;
+			wetDistribution.data.ecoDesignControllerClass;
 		wetDistributionData["Minimum flow temperature"] =
-			`${wetDistribution.minimumFlowTemp} ${celsius.suffix}`;
+			`${wetDistribution.data.minimumFlowTemp} ${celsius.suffix}`;
 
 		return wetDistributionData;
 	}) || [],

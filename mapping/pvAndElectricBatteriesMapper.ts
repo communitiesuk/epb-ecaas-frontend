@@ -17,7 +17,7 @@ export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsIn
 export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, "OnSiteGeneration"> {
 	return {
 		OnSiteGeneration: objectFromEntries(state.pvAndBatteries.pvSystems.map((system) => {
-			const { name, elevationalHeight, lengthOfPV, widthOfPV, inverterIsInside, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = system.data;
+			const { name, elevationalHeight, lengthOfPV, widthOfPV, inverterIsInside, inverterPeakPowerAC, inverterPeakPowerDC, inverterType, orientation, peakPower, pitch, ventilationStrategy } = system;
 
 			return [
 				name,
@@ -43,7 +43,7 @@ export function mapPvSystemData(state: ResolvedState): Pick<FhsInputSchema, "OnS
 }
 
 export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery": SchemaElectricBattery } | EmptyObject {
-	const electricBattery = state.pvAndBatteries.electricBattery[0]?.data;
+	const electricBattery = state.pvAndBatteries.electricBattery[0];
 	if (electricBattery) {
 		return {
 			"ElectricBattery":

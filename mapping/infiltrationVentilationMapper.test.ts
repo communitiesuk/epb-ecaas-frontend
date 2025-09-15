@@ -9,6 +9,7 @@ const baseForm = {
 
 describe("infiltration ventilation mapper", () => {
 	const mechVentMvhr: EcaasForm<MechanicalVentilationData>[] = [{
+		...baseForm,
 		data: {
 			id: "bathroom exhaust fan",
 			name: "bathroom exhaust fan",
@@ -35,7 +36,13 @@ describe("infiltration ventilation mapper", () => {
 				},
 				naturalVentilation: {
 					...baseForm,
-					data: {},
+					data: {
+						ventilationZoneHeight: 20,
+						dwellingEnvelopeArea: 20,
+						dwellingElevationalLevelAtBase: 0,
+						crossVentilationPossible: false,
+						maxRequiredAirChangeRate: 5,
+					},
 				},
 				airPermeability: {
 					...baseForm,
@@ -77,6 +84,7 @@ describe("infiltration ventilation mapper", () => {
 		// Arrange
 		
 		const ductwork: EcaasForm<DuctworkData>[] = [{
+			...baseForm,
 			data: {
 				name: "ductwork 1",
 				mvhrUnit: "bathroom exhaust fan",
@@ -175,6 +183,7 @@ describe("infiltration ventilation mapper", () => {
 	it("maps mechanical ventilation of type intermittent MEV input state to FHS input request", () => {
 		// Arrange
 		const mechVent: EcaasForm<MechanicalVentilationData>[] = [{
+			...baseForm,
 			data: {
 				id: "bathroom exhaust fan",
 				name: "bathroom exhaust fan",
@@ -214,6 +223,7 @@ describe("infiltration ventilation mapper", () => {
 
 		// Arrange
 		const ventData: EcaasForm<VentData>[] = [{
+			...baseForm,
 			data: {
 				name: ventName,
 				typeOfVent: "airBrick",

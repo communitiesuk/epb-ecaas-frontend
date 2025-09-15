@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen, waitFor } from "@testing-library/vue";
+import { screen  } from "@testing-library/vue";
 import WetDistribution from "./[distribution].vue";
 
 const user = userEvent.setup();
@@ -48,11 +48,12 @@ const populateValidForm = async () => {
 	await user.type(screen.getByTestId("designTempDiffAcrossEmitters"), "0.4");
 	await user.type(screen.getByTestId("designFlowTemp"), "32");
 	await user.type(screen.getByTestId("designFlowRate"), "5");
-	// await user.click(screen.getByTestId("typeOfSpaceHeater_radiator"));
+	await user.click(screen.getByTestId("typeOfSpaceHeater_radiator"));
 	await user.type(screen.getByTestId("numberOfRadiators"), "1");
 	await user.type(screen.getByTestId("convectionFractionWet"), "0.2");
 	await user.selectOptions(screen.getByTestId("ecoDesignControllerClass"), "1");
 	await user.type(screen.getByTestId("minimumFlowTemp"), "20");
+	await user.tab();
 };
 
 describe("Wet distribution", () => {
@@ -120,7 +121,7 @@ describe("Wet distribution", () => {
 
 	it("should show an error message for each empty input field when user tries to submit the form", async () => {
 		await renderSuspended(WetDistribution);
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const initialErrorIds: string[] = [
 			"name_error",
@@ -129,7 +130,7 @@ describe("Wet distribution", () => {
 			"designTempDiffAcrossEmitters_error",
 			"designFlowTemp_error",
 			"designFlowRate_error",
-			// "typeOfSpaceHeater_error",
+			"typeOfSpaceHeater_error",
 			"ecoDesignControllerClass_error",
 			"minimumFlowTemp_error",
 		];
@@ -138,7 +139,7 @@ describe("Wet distribution", () => {
 			expect(screen.getByTestId(error)).toBeDefined();
 		}
 		await user.click(screen.getByRole("radio", { name: "Radiators" }));
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 		expect(screen.getByTestId("convectionFractionWet_error")).toBeDefined();
 
 		// await user.click(
@@ -151,7 +152,7 @@ describe("Wet distribution", () => {
 	it("should show error summary when an invalid form in submitted", async () => {
 		await renderSuspended(WetDistribution);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(
 			await screen.findByTestId("wetDistributionErrorSummary"),
@@ -169,16 +170,16 @@ describe("Wet distribution", () => {
 			},
 		});
 
-		await renderSuspended(WetDistribution);
-		await populateValidForm();
-
-		await user.click(screen.getByRole("button"));
-
-		await waitFor(() => {
-			const { data } =
-        store.heatingSystems.heatEmitting.wetDistribution;
-			expect(data[0]).toEqual(wetDistribution1);
+		await renderSuspended(WetDistribution, {
+			route: {
+				params: { distribution: "create" },
+			},
 		});
+		await populateValidForm();
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const { data } = store.heatingSystems.heatEmitting.wetDistribution;
+		expect(data[0]!.data).toEqual(wetDistribution1);
 	});
 
 	// it("should save data to store when form is valid and type of space heater is under floor heating (UFH)", async () => {
@@ -230,7 +231,7 @@ describe("Wet distribution", () => {
 				},
 				heatEmitting: {
 					wetDistribution: {
-						data: [wetDistribution1],
+						data: [{ data: wetDistribution1 }],
 					},
 				},
 			},
@@ -309,7 +310,7 @@ describe("Wet distribution", () => {
 		});
 		await renderSuspended(WetDistribution);
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 		expect(navigateToMock).toHaveBeenCalledWith(
 			"/heating-systems/heat-emitting",
 		);
@@ -334,8 +335,8 @@ describe("partially saving data", () => {
 		await user.tab();
 
 		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!;
-		expect(actual.name).toBe("New wet distribution");
-		expect(actual.designFlowRate).toBeUndefined();
+		expect(actual.data.name).toBe("New wet distribution");
+		expect(actual.data.designFlowRate).toBeUndefined();
 	});
 
 	it("creates a new wet distribution automatically with default name after other data is entered", async () => {
@@ -349,8 +350,8 @@ describe("partially saving data", () => {
 		await user.tab();
 
 		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!;
-		expect(actual.name).toBe("Wet distribution");
-		expect(actual.thermalMass).toBe(0.5);
+		expect(actual.data.name).toBe("Wet distribution");
+		expect(actual.data.thermalMass).toBe(0.5);
 	});
 
 	it("saves updated form data to store automatically", async () => {
@@ -359,7 +360,7 @@ describe("partially saving data", () => {
 				heatEmitting: {
 					wetDistribution: {
 						data: [
-							wetDistribution1,
+							{ data: wetDistribution1 },
 						],
 					},	
 				},
@@ -381,7 +382,7 @@ describe("partially saving data", () => {
 
 		await user.tab();
 
-		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!;
+		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!.data;
 		expect(actual.name).toBe("Updated wet distribution");
 		expect(actual.thermalMass).toBe(1);
 		expect(actual.designFlowTemp).toBe(30);
@@ -394,10 +395,10 @@ describe("partially saving data", () => {
 				heatEmitting: {
 					wetDistribution: {
 						data: [
-							wetDistribution1,
-							wetDistribution2,
+							{ data: wetDistribution1 },
+							{ data: wetDistribution2 },
 						],
-					},	
+					},
 				},
 			},
 		});
@@ -413,7 +414,7 @@ describe("partially saving data", () => {
 		await user.selectOptions(screen.getByTestId("ecoDesignControllerClass"), "1");
 		await user.tab();
 
-		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[1]!;
+		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[1]!.data;
 		expect(actual.name).toBe("Updated wet distribution");
 		expect(actual.ecoDesignControllerClass).toBe("1");
 	});

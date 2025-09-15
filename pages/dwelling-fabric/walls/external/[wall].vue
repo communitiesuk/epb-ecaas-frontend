@@ -1,41 +1,55 @@
 <script setup lang="ts">
-import { standardPitchOptions } from "#imports";
+import { standardPitchOptions, getUrl } from "#imports";
 
 const title = "External wall";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data);
-const model: Ref<ExternalWallData> = ref(wallData!);
+const model: Ref<ExternalWallData | undefined> = ref(wallData?.data);
 
 const saveForm = (fields: ExternalWallData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWalls } = state.dwellingFabric;
+		const index = getStoreIndex(dwellingSpaceWalls.dwellingSpaceExternalWall.data);
 
-		const wall: ExternalWallData = {
-			name: fields.name,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
-			orientation: fields.orientation,
-			height: fields.height,
-			length: fields.length,
-			elevationalHeight: fields.elevationalHeight,
-			surfaceArea: fields.surfaceArea,
-			solarAbsorption: fields.solarAbsorption,
-			uValue: fields.uValue,
-			kappaValue: fields.kappaValue,
-			massDistributionClass: fields.massDistributionClass,
+		dwellingSpaceWalls.dwellingSpaceExternalWall.data[index] = {
+			data: {
+				name: fields.name,
+				pitchOption: fields.pitchOption,
+				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
+				orientation: fields.orientation,
+				height: fields.height,
+				length: fields.length,
+				elevationalHeight: fields.elevationalHeight,
+				surfaceArea: fields.surfaceArea,
+				solarAbsorption: fields.solarAbsorption,
+				uValue: fields.uValue,
+				kappaValue: fields.kappaValue,
+				massDistributionClass: fields.massDistributionClass,
+			},
+			complete: true,
 		};
 
-		if (!dwellingSpaceWalls.dwellingSpaceExternalWall) {
-			dwellingSpaceWalls.dwellingSpaceExternalWall = { data: [] };
-		}
 		dwellingSpaceWalls.dwellingSpaceExternalWall.complete = false;
-		saveToList(wall, dwellingSpaceWalls.dwellingSpaceExternalWall);
 	});
 
 	navigateTo("/dwelling-fabric/walls");
 };
+
+autoSaveElementForm({
+	model,
+	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall,
+	defaultName: "External wall",
+	onPatchCreate: (state, newData) => {
+		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data.push(newData);
+		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.complete = false;
+	},
+	onPatchUpdate: (state, newData, index) => {
+		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[index] = newData;
+		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.complete = false;
+	},
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -65,7 +79,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<FieldsPitch
-			:pitch-option="model.pitchOption"
+			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
 		/>
 		<FormKit
@@ -120,9 +134,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
-		<FormKit
-			type="govButton"
-			label="Save and continue"
-		/>
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('dwellingSpaceWalls')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
