@@ -104,7 +104,11 @@ function hasIncompleteEntries() {
 	<CustomList
 		id="wetDistribution" title="Wet distribution" 
 		:form-url="`${page?.url!}/wet-distribution`"
-		:items="store.heatingSystems.heatEmitting.wetDistribution.data.map(x => x.data.name)"
+		:items="store.heatingSystems.heatEmitting.wetDistribution.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="(index: number) => handleRemove('wetDistribution', index)"
 		@duplicate="(index: number) => handleDuplicate('wetDistribution', index)" />
 
