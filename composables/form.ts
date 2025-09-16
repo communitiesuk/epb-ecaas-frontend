@@ -114,7 +114,8 @@ export function useForm() {
 				// (after that, routeParam is no longer "create")
 				route.params[Object.keys(route.params)[0]!] = index.toString();
 
-				const editItemPath = route.fullPath.replace("create", index.toString()); 
+				// change the url to reflect this
+				const editItemPath = route.fullPath.replace("create", index.toString());
 				history.replaceState({}, "", editItemPath);
 			}
 

@@ -90,17 +90,6 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
 	defaultName: "Linear thermal bridge",
-	onPatchCreate: (state, newData) => {
-		// TODO remove this function
-		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data.push({
-			...newData,
-			data: {
-				...newData.data,
-				...(getName(newData.data) ? { name: getName(newData.data) } : {}),
-			},
-		});
-		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
-	},
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = {
 			...newData,
