@@ -25,13 +25,36 @@ export function useForm() {
 	};
 
 	/**
-	 * Return the index of the item or the index of the last item if the route param is 'create'
+	 * Return the index of the item or the index of the next item if the route param is 'create'
 	 * @param data Array of EcaasForm objects
 	 * @returns Index
 	 */
 	const getStoreIndex = <T>(data: EcaasForm<T>[]): number => {
 		const routeParam = route.params[Object.keys(route.params)[0]!];
-		return routeParam === "create" ? data.length - 1 : Number(routeParam);
+		return routeParam === "create" ? data.length : Number(routeParam);
+	};
+
+	/**
+	 * Return the name of this item or generates a unique default name
+	 * @returns Name
+	 */
+	const getOrGenerateName = <T extends object>(data: EcaasForm<T>[], storeElementData: T | undefined, newData: T, defaultName: string): string => {
+		const duplicates = data.filter(x => {
+			if ("name" in x.data && typeof x.data.name === "string") {
+				return x.data.name.match(duplicateNamePattern(defaultName));
+			}
+			return false;
+		});
+		let name = (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
+
+		if ("name" in newData && typeof newData.name === "string") {
+			name = newData.name.trim() || name;
+		}
+		else if (storeElementData && "name" in storeElementData && typeof storeElementData.name === "string") {
+			name = storeElementData.name.trim() || name;
+		}
+
+		return name;
 	};
 
 	/**
@@ -78,53 +101,25 @@ export function useForm() {
 	}: AutoSaveElementFormOptions<T>) => {
 		watch(model, async (newData: T | undefined, initialData: T | undefined) => {
 			const routeParam = route.params[Object.keys(route.params)[0]!];
-
 			if (initialData === undefined || newData === undefined || routeParam === undefined) {
 				return;
 			}
 
-			const duplicates = storeData.data.filter(x => {
-				if ("name" in x.data && typeof x.data.name === "string") {
-					return x.data.name.match(duplicateNamePattern(defaultName));
-				}
-				
-				return false;
-			});
-
-			const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-				Object.values(newData).some(x => x !== undefined);
-				
-			if (routeParam === "create" && isFirstEdit) {
-			
-				const name = "name" in newData && typeof newData.name === "string" && newData.name.trim() ||
-					(duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
-			
-				store.$patch(state => {
-					const elementData: EcaasForm<T> = {
-						data: { ...newData, name },
-					};
-
-					onPatchCreate(state, elementData);
-				});
-
+			if (!hasChangedFields(newData, initialData)) {
 				return;
+			}
+			
+			const index = getStoreIndex(storeData.data);
+			if (routeParam === "create") {
+				// we're about to save, so set the route parameter to the new index
+				// we only expect this to trigger on the first change 
+				// (after that, routeParam is no longer "create")
+				route.params[Object.keys(route.params)[0]!] = index.toString();
 			}
 
 			store.$patch((state) => {
-				if (!hasChangedFields(newData, initialData)) {
-					return;
-				}
-
-				const index = getStoreIndex(storeData.data);
 				const storeElementData = storeData.data[index]?.data;
-				let name: string = defaultName;
-
-				if ("name" in newData && typeof newData.name === "string") {
-					name = newData.name.trim() || defaultName;
-				}
-				else if (storeElementData && "name" in storeElementData && typeof storeElementData.name === "string") {
-					name = storeElementData.name.trim() || defaultName;
-				}
+				const name = getOrGenerateName(storeData.data, storeElementData, newData, defaultName);
 
 				const elementData: EcaasForm<T> = {
 					data: { ...newData, name },
