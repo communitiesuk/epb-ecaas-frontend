@@ -97,9 +97,7 @@ export function useForm() {
 			}
 
 			store.$patch((state) => {
-				const storeElementData = storeData.data[index]?.data;
-				const name = getOrGenerateName(storeElementData, newData, defaultName);
-
+				const name = getName(newData, defaultName);
 				const elementData: EcaasForm<T> = {
 					data: { ...newData, name },
 				};
@@ -127,17 +125,11 @@ export function useForm() {
 	 * Return the name of this item or default name
 	 * @returns Name
 	 */
-export const getOrGenerateName = <T extends object>(storedItem: T | undefined, updatedItem: T, defaultName: string): string => {
-	
-	let name = defaultName;
+export const getName = <T extends object>(updatedItem: T, defaultName: string): string => {
 
 	if ("name" in updatedItem && typeof updatedItem.name === "string") {
-		name = updatedItem.name.trim() || name;
-	}
-	else if (storedItem && "name" in storedItem && typeof storedItem.name === "string") {
-		name = storedItem.name.trim() || name;
+		return updatedItem.name.trim() || defaultName;
 	}
 
-	return name;
+	return defaultName;
 };
-
