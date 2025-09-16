@@ -4,6 +4,8 @@ const title = "Instant electric heater";
 const store = useEcaasStore();
 const route = useRoute();
 
+const { autoSaveElementForm } = useForm();
+
 const instantElectricHeaterData = useItemToEdit("heater", store.heatingSystems.heatEmitting.instantElectricHeater.data);
 const model: Ref<InstantElectricStorageData | undefined> = ref(instantElectricHeaterData?.data);
 
@@ -30,45 +32,18 @@ const saveForm = (fields: InstantElectricStorageData) => {
 	navigateTo("/heating-systems/heat-emitting");
 };
 
-watch(model, async (newData: InstantElectricStorageData | undefined, initialData: InstantElectricStorageData | undefined) => {
-	const storeData = store.heatingSystems.heatEmitting.instantElectricHeater.data;
-
-	if (initialData === undefined || newData === undefined) {
-		return;
-	}
-
-	const defaultName = "Instant electric heater";
-	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
-
-	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-		Object.values(newData).some(x => x !== undefined);
-
-	if (route.params.heater === "create" && isFirstEdit) {
-
-		store.$patch(state => {
-			state.heatingSystems.heatEmitting.instantElectricHeater.data.push({
-				data: {
-					...newData,
-					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName),
-				},
-			});
-		});
-
-		return;
-	}
-
-	store.$patch((state) => {
-		const index = route.params.heater === "create" ? storeData.length - 1 : Number(route.params.heater);
-
-		state.heatingSystems.heatEmitting.instantElectricHeater.data[index] = {
-			data: {
-				...newData,
-				name: newData.name ?? state.heatingSystems.heatEmitting.instantElectricHeater.data[index]?.data.name,
-			},
-		};
-
+autoSaveElementForm({
+	model,
+	storeData: store.heatingSystems.heatEmitting.instantElectricHeater,
+	defaultName: "Instant electric heater",
+	onPatchCreate: (state, newData) => {
+		state.heatingSystems.heatEmitting.instantElectricHeater.data.push(newData);
 		state.heatingSystems.heatEmitting.instantElectricHeater.complete = false;
-	});
+	},
+	onPatchUpdate: (state, newData, index) => {
+		state.heatingSystems.heatEmitting.instantElectricHeater.data[index] = newData;
+		state.heatingSystems.heatEmitting.instantElectricHeater.complete = false;
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
