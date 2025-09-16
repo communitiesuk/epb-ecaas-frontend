@@ -84,7 +84,7 @@ export function useForm() {
 		model: Ref<T | undefined>;
 		storeData: EcaasForm<EcaasForm<T>[]>;
 		defaultName: string;
-		onPatchUpdate: (state: EcaasState, newData: EcaasForm<T>, index: number) => void;
+		onPatch: (state: EcaasState, newData: EcaasForm<T>, index: number) => void;
 	}
 
 	/**
@@ -95,7 +95,7 @@ export function useForm() {
 		model,
 		storeData,
 		defaultName,
-		onPatchUpdate,
+		onPatch,
 	}: AutoSaveElementFormOptions<T>) => {
 		watch(model, async (newData: T | undefined, initialData: T | undefined) => {
 			const routeParam = route.params[Object.keys(route.params)[0]!];
@@ -127,7 +127,7 @@ export function useForm() {
 					data: { ...newData, name },
 				};
 
-				onPatchUpdate(state, elementData, index);
+				onPatch(state, elementData, index);
 			});
 		});
 	};

@@ -40,7 +40,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingDetails.shading,
 	defaultName: "Shading",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.dwellingDetails.shading.data[index] = newData;
 		state.dwellingDetails.shading.complete = false;
 	},

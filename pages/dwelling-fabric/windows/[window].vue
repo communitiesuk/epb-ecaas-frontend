@@ -183,7 +183,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceWindows,
 	defaultName: "Window",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceWindows.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWindows.complete = false;
 	},

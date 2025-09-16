@@ -36,7 +36,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.domesticHotWater.hotWaterOutlets.bath,
 	defaultName: "Bath",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
 		state.domesticHotWater.hotWaterOutlets.bath.data[index] = newData;
 		state.domesticHotWater.hotWaterOutlets.bath.complete = false;

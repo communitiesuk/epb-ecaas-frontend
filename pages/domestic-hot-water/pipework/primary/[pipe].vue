@@ -53,7 +53,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.domesticHotWater.pipework.primaryPipework,
 	defaultName: "Primary pipework",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.domesticHotWater.pipework.primaryPipework.data[index] = newData;
 		state.domesticHotWater.pipework.primaryPipework.complete = false;
 	} });

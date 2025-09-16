@@ -32,7 +32,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.domesticHotWater.waterHeating.heatPump,
 	defaultName: "Heat pump",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.domesticHotWater.waterHeating.heatPump.data[index] = newData;
 		state.domesticHotWater.waterHeating.heatPump.complete = false;
 	},

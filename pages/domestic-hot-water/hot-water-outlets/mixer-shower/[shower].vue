@@ -34,7 +34,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.domesticHotWater.hotWaterOutlets.mixedShower,
 	defaultName: "Mixer shower",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
 		state.domesticHotWater.hotWaterOutlets.mixedShower.data[index] = newData;
 		state.domesticHotWater.hotWaterOutlets.mixedShower.complete = false;

@@ -36,7 +36,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor,
 	defaultName: "Exposed floor",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
 	},

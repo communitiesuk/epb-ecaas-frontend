@@ -78,7 +78,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.infiltrationAndVentilation.ductwork,
 	defaultName: "Ductwork",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.infiltrationAndVentilation.ductwork.data[index] = newData;
 		state.infiltrationAndVentilation.ductwork.complete = false;
 	},

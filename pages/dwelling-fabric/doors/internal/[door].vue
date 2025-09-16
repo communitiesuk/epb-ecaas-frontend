@@ -57,7 +57,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor,
 	defaultName: "Internal door",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
 	},

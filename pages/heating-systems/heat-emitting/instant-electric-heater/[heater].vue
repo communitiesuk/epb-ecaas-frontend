@@ -36,7 +36,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.heatingSystems.heatEmitting.instantElectricHeater,
 	defaultName: "Instant electric heater",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.heatingSystems.heatEmitting.instantElectricHeater.data[index] = newData;
 		state.heatingSystems.heatEmitting.instantElectricHeater.complete = false;
 	},

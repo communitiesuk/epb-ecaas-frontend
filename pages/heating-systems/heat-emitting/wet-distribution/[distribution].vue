@@ -103,7 +103,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.heatingSystems.heatEmitting.wetDistribution,
 	defaultName: "Wet distribution",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		// we only support radiators
 		newData.data.typeOfSpaceHeater = "radiator";
 		state.heatingSystems.heatEmitting.wetDistribution.data[index] = newData;

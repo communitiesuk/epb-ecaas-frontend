@@ -64,7 +64,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.pvAndBatteries.pvSystems,
 	defaultName: "PV system",
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.pvAndBatteries.pvSystems.data[index] = newData;
 		state.pvAndBatteries.pvSystems.complete = false;
 	},
