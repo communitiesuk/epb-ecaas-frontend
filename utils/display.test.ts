@@ -1,5 +1,5 @@
 import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass } from "~/schema/api-schema.types";
-import { show } from "./display";
+import { show, dim } from "./display";
 
 describe("Show function to make showable value", () => {
 	it("renders a string as-is", () => {
@@ -17,6 +17,21 @@ describe("Show function to make showable value", () => {
 
 	it("renders undefined as a hyphen", () => {
 		expect(show(undefined)).toBe("-");
+	});
+});
+
+describe("unit function to show an amount with units", () => {
+	it("renders an empty value if undefined passed", () => {
+		expect(dim(undefined, "centimetres")).toEqual("-");
+	});
+
+	it("renders an amount in meters with correct suffix if metres unit is given", () => {
+		expect(dim(30, "metres")).toEqual("30 m");
+	});
+
+	it.skip("renders an amount in degrees using correct suffix if degrees given", () => {
+		// @ts-expect-error "skipped for now - degrees not yet a known unit"
+		expect(dim(45, "degrees")).toEqual("30");
 	});
 });
 

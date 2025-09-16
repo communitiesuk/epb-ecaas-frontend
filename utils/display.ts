@@ -1,12 +1,25 @@
 import { objectFromEntries } from "ts-extras";
 import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass, WwhrsType } from "../schema/api-schema.types";
 import type { DisplayProduct } from "~/pcdb/products";
+import type { UnitForName, UnitName } from "./units/types";
+import { asUnit } from "./units/units";
 
 const emptyValueRendering = "-";
 
 /** Turns a value into something that can be shown on e.g. a summary page */
 export function show(value: string | number | undefined | null): string {
 	return value != null ? value.toString() : emptyValueRendering;
+}
+
+/** Renders a unit with correct visual suffix, falling back to "-" for undefined */
+export function dim(amount: undefined, unit: UnitName): typeof emptyValueRendering;
+export function dim<T extends number, U extends UnitName>(amount: T, unit: U): `${T} ${UnitForName<U>["suffix"]}`;
+export function dim(amount: number | undefined, unit: UnitName) {
+	if (typeof amount === "undefined") {
+		return emptyValueRendering;
+	}
+
+	return `${amount} ${asUnit(unit).suffix}`;
 }
 
 /** render function for rendering a value that could be undefined/null, where we want display logic only if a value is set */
