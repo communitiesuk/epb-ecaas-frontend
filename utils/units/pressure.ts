@@ -1,25 +1,6 @@
-export enum PressureUnitName {
-	PASCAL = "pascal",
-}
+import type { UnitForDimension } from "./types";
+import { asUnit } from "./units";
 
-enum PressureSuffix {
-	PASCAL = "Pa",
-}
+export type PressureUnit = UnitForDimension<"pressure">;
 
-export class PressureUnit {
-	name: PressureUnitName;
-	suffix: PressureSuffix;
-
-	constructor(name: PressureUnitName) {
-		this.name = name;
-		this.suffix = this.getSuffix();
-	}
-
-	private getSuffix() {
-		switch (this.name) {
-			case PressureUnitName.PASCAL: return PressureSuffix.PASCAL;
-		}
-	}
-}
-
-export const pascal = new PressureUnit(PressureUnitName.PASCAL);
+export const pascal = asUnit("pascal");

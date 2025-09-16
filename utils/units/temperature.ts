@@ -1,25 +1,6 @@
-export enum TemperatureUnitName {
-	CELSIUS = "celsius",
-}
+import type { UnitForDimension } from "./types";
+import { asUnit } from "./units";
 
-enum TemperatureSuffix {
-	CELSIUS = "°C",
-}
+export type TemperatureUnit = UnitForDimension<"temperature">;
 
-export class TemperatureUnit {
-	name: TemperatureUnitName;
-	suffix: TemperatureSuffix;
-
-	constructor(name: TemperatureUnitName) {
-		this.name = name;
-		this.suffix = this.getSuffix();
-	}
-
-	private getSuffix() {
-		switch (this.name) {
-			case TemperatureUnitName.CELSIUS: return TemperatureSuffix.CELSIUS;
-		}
-	}
-}
-
-export const celsius = new TemperatureUnit(TemperatureUnitName.CELSIUS);
+export const celsius = asUnit("celsius");
