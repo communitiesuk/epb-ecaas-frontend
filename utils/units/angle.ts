@@ -1,25 +1,6 @@
-export enum AngleUnitName {
-	DEGREES = "degrees",
-}
+import type { UnitForDimension } from "./types";
+import { asUnit } from "./units";
 
-enum AngleSuffix {
-	DEGREES = "°",
-}
+export const degrees = asUnit("degrees");
 
-export class AngleUnit {
-	name: AngleUnitName;
-	suffix: AngleSuffix;
-
-	constructor(name: AngleUnitName) {
-		this.name = name;
-		this.suffix = this.getSuffix();
-	}
-
-	private getSuffix() {
-		switch (this.name) {
-			case AngleUnitName.DEGREES: return AngleSuffix.DEGREES;
-		}
-	}
-}
-
-export const degrees = new AngleUnit(AngleUnitName.DEGREES);
+export type AngleUnit = UnitForDimension<"angle">;

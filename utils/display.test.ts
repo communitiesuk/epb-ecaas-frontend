@@ -25,13 +25,12 @@ describe("unit function to show an amount with units", () => {
 		expect(dim(undefined, "centimetres")).toEqual("-");
 	});
 
-	it("renders an amount in meters with correct suffix if metres unit is given", () => {
+	it("renders an amount in metres with correct suffix if metres unit is given", () => {
 		expect(dim(30, "metres")).toEqual("30 m");
 	});
 
-	it.skip("renders an amount in degrees using correct suffix if degrees given", () => {
-		// @ts-expect-error "skipped for now - degrees not yet a known unit"
-		expect(dim(45, "degrees")).toEqual("30");
+	it("renders an amount in degrees using correct suffix if degrees given", () => {
+		expect(dim(45, "degrees")).toEqual("45 °");
 	});
 });
 
