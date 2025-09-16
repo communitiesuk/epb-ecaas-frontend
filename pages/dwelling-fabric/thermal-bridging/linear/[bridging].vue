@@ -92,7 +92,6 @@ autoSaveElementForm({
 	defaultName: "Linear thermal bridge",
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = {
-			...newData,
 			data: {
 				...newData.data,
 				...(getName(newData.data) ? { name: getName(newData.data) } : {}),
