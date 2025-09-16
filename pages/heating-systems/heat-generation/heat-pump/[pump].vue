@@ -8,6 +8,8 @@ const title = "Heat pump";
 const store = useEcaasStore();
 const route = useRoute();
 
+const { autoSaveElementForm } = useForm();
+
 const heatPumpData = useItemToEdit("pump", store.heatingSystems.heatGeneration.heatPump.data);
 const model: Ref<HeatPumpData | undefined> = ref(heatPumpData?.data);
 
@@ -40,44 +42,18 @@ const saveForm = (fields: HeatPumpData) => {
 	navigateTo("/heating-systems/heat-generation");
 };
 
-watch(model, async (newData: HeatPumpData | undefined, initialData: HeatPumpData | undefined) => {
-	const storeData = store.heatingSystems.heatGeneration.heatPump.data;
-
-	if (initialData === undefined || newData === undefined) {
-		return;
-	}
-
-	const defaultName = "Heat pump";
-	const duplicates = storeData.filter(x => x.data.name.match(duplicateNamePattern(defaultName)));
-
-	const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-		Object.values(newData).some(x => x !== undefined);
-
-	if (route.params.pump === "create" && isFirstEdit) {
-		store.$patch(state => {
-			state.heatingSystems.heatGeneration.heatPump.data.push({
-				data: {
-					...newData,
-					name: newData.name || (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName),
-				},
-			});
-		});
-
-		return;
-	}
-
-	store.$patch((state) => {
-		const index = route.params.pump === "create" ? storeData.length - 1 : Number(route.params.pump);
-
-		state.heatingSystems.heatGeneration.heatPump.data[index] = {
-			data: {
-				...newData,
-				name: newData.name ?? state.heatingSystems.heatGeneration.heatPump.data[index]?.data.name,
-			},
-		};
-
+autoSaveElementForm({
+	model,
+	storeData: store.heatingSystems.heatGeneration.heatPump,
+	defaultName: "Heat pump",
+	onPatchCreate: (state, newData) => {
+		state.heatingSystems.heatGeneration.heatPump.data.push(newData);
 		state.heatingSystems.heatGeneration.heatPump.complete = false;
-	});
+	},
+	onPatchUpdate: (state, newData, index) => {
+		state.heatingSystems.heatGeneration.heatPump.data[index] = newData;
+		state.heatingSystems.heatGeneration.heatPump.complete = false;
+	},
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();

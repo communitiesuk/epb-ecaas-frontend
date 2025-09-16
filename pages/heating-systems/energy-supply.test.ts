@@ -35,7 +35,7 @@ describe("Energy supply", () => {
 	
 			await user.click(screen.getByTestId("fuelType_electricity"));
 			await user.click(screen.getByTestId("exported_yes"));
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			const { data } = store.heatingSystems.energySupply;
 			
@@ -61,7 +61,7 @@ describe("Energy supply", () => {
 			await renderSuspended(EnergySupply);
 	
 			await user.click(screen.getByTestId("fuelType_electricity"));
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			expect((await screen.findByTestId("exported_error"))).toBeDefined();
 		});
