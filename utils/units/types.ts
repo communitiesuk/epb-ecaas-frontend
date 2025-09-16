@@ -17,9 +17,12 @@ export type UnitValue = {
 	unit: UnitName
 };
 
-export function unitValue<T extends Unit>(amount: number, unit: T): Dimension<T["name"]> {
+export function unitValue<T extends Unit>(amount: number, unit: T): Dimension<T["name"]>;
+export function unitValue<T extends UnitName>(amount: number, unit: T): Dimension<T>;
+export function unitValue(amount: number, unit: Unit | UnitName) {
+	const unitName = typeof unit !== "string" ? unit.name : unit;
 	return {
 		amount,
-		unit: unit.name,
+		unit: unitName,
 	};
 }
