@@ -36,9 +36,6 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall,
 	defaultName: "Party wall",
-	onPatchCreate: (state, newData) => {state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data.push(newData);
-		state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.complete = false;
-	},
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.complete = false;

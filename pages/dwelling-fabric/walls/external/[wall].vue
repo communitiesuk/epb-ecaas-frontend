@@ -41,10 +41,6 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall,
 	defaultName: "External wall",
-	onPatchCreate: (state, newData) => {
-		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data.push(newData);
-		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.complete = false;
-	},
 	onPatchUpdate: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.complete = false;

@@ -36,10 +36,6 @@ autoSaveElementForm({
 	model,
 	storeData: store.infiltrationAndVentilation.vents,
 	defaultName: "Vent",
-	onPatchCreate: (state, newData) => {state.infiltrationAndVentilation.vents.data.push(newData);
-		state.infiltrationAndVentilation.vents.complete = false;
-	},
-	
 	onPatchUpdate: (state, newData, index) => {
 		state.infiltrationAndVentilation.vents.data[index] = newData;
 		state.infiltrationAndVentilation.vents.complete = false;

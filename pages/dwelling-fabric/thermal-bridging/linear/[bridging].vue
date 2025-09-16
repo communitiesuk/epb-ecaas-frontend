@@ -91,6 +91,7 @@ autoSaveElementForm({
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
 	defaultName: "Linear thermal bridge",
 	onPatchCreate: (state, newData) => {
+		// TODO remove this function
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data.push({
 			...newData,
 			data: {
