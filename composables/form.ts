@@ -35,29 +35,6 @@ export function useForm() {
 	};
 
 	/**
-	 * Return the name of this item or generates a unique default name
-	 * @returns Name
-	 */
-	const getOrGenerateName = <T extends object>(data: EcaasForm<T>[], storeElementData: T | undefined, newData: T, defaultName: string): string => {
-		const duplicates = data.filter(x => {
-			if ("name" in x.data && typeof x.data.name === "string") {
-				return x.data.name.match(duplicateNamePattern(defaultName));
-			}
-			return false;
-		});
-		let name = (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
-
-		if ("name" in newData && typeof newData.name === "string") {
-			name = newData.name.trim() || name;
-		}
-		else if (storeElementData && "name" in storeElementData && typeof storeElementData.name === "string") {
-			name = storeElementData.name.trim() || name;
-		}
-
-		return name;
-	};
-
-	/**
 	 * Watches for changes on a form model and calls onPatch with new data
 	 * @param model Form model
 	 * @param onPatch Callback with new data
@@ -145,3 +122,31 @@ export function useForm() {
 
 	return { saveToList, getStoreIndex, autoSaveForm, autoSaveElementForm };
 }
+
+/**
+	 * Return the name of this item or generates a unique default name
+	 * @returns Name
+	 */
+export const getOrGenerateName = <T extends object>(allItems: EcaasForm<T>[], storedItem: T | undefined, updatedItem: T, defaultName: string): string => {
+	
+	const duplicates = allItems.filter(x => {
+		if ("name" in x.data && typeof x.data.name === "string") {
+			const result = x.data.name.match(duplicateNamePattern(defaultName)); 
+			console.log({ result });
+			return x.data.name.match(duplicateNamePattern(defaultName));
+		}
+		return false;
+	});
+	
+	let name = (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
+
+	if ("name" in updatedItem && typeof updatedItem.name === "string") {
+		name = updatedItem.name.trim() || name;
+	}
+	else if (storedItem && "name" in storedItem && typeof storedItem.name === "string") {
+		name = storedItem.name.trim() || name;
+	}
+
+	return name;
+};
+
