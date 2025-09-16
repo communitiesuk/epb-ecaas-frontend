@@ -1,4 +1,4 @@
-import type { EcaasFormList, PartialExceptName } from "~/stores/ecaasStore.schema";
+import type { EcaasForm, EcaasFormList, PartialExceptName } from "~/stores/ecaasStore.schema";
 
 export function useForm() {
 	const route = useRoute();
@@ -34,6 +34,32 @@ export function useForm() {
 	const getStoreIndex = <T>(data: EcaasForm<T>[]): number => {
 		const routeParam = route.params[Object.keys(route.params)[0]!];
 		return routeParam === "create" ? data.length : Number(routeParam);
+<<<<<<< HEAD
+=======
+	};
+
+	/**
+	 * Return the name of this item or generates a unique default name
+	 * @returns Name
+	 */
+	const getOrGenerateName = <T extends object>(data: EcaasForm<T>[], storeElementData: T | undefined, newData: T, defaultName: string): string => {
+		const duplicates = data.filter(x => {
+			if ("name" in x.data && typeof x.data.name === "string") {
+				return x.data.name.match(duplicateNamePattern(defaultName));
+			}
+			return false;
+		});
+		let name = (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
+
+		if ("name" in newData && typeof newData.name === "string") {
+			name = newData.name.trim() || name;
+		}
+		else if (storeElementData && "name" in storeElementData && typeof storeElementData.name === "string") {
+			name = storeElementData.name.trim() || name;
+		}
+
+		return name;
+>>>>>>> 15cc6a47 (EC-936 simplify autosave to have only patch)
 	};
 
 	/**
@@ -86,7 +112,7 @@ export function useForm() {
 				return;
 			}
 			
-			const index = getStoreIndex(storeData.data);
+			const index = getStoreIndex(storeData.data as EcaasForm<T>[]);
 			if (routeParam === "create") {
 				// we're about to save, so set the route parameter to the new index
 				// we only expect this to trigger on the first change 
