@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { centimetre, type Length } from "~/utils/units/length";
 import { FloorType, WindShieldLocation } from "~/schema/api-schema.types";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
-
 
 const title = "Ground floor";
 const store = useEcaasStore();

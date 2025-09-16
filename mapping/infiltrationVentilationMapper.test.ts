@@ -1,7 +1,7 @@
 import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType } from "~/schema/api-schema.types";
 import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
 import { litrePerSecond } from "~/utils/units/flowRate";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 
 const baseForm = {
 	data: [],

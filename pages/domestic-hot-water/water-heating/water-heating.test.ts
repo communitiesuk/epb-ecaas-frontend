@@ -4,7 +4,7 @@ import { screen } from "@testing-library/vue";
 import WaterHeating from "./index.vue";
 import type { HotWaterCylinderData } from "~/stores/ecaasStore.schema";
 import { litre } from "~/utils/units/volume";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 import { v4 as uuidv4 } from "uuid";
 
 vi.mock("uuid");

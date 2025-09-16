@@ -8,7 +8,7 @@ import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 import { litrePerHour, litrePerMinute } from "~/utils/units/flowRate";
 import { kilowatt, kilowattHour } from "~/utils/units/power";
 import { celsius } from "~/utils/units/temperature";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {

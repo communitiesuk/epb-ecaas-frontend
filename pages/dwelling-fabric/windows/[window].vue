@@ -2,9 +2,8 @@
 import { standardPitchOptions, type WindowData } from "#imports";
 import { millimetre } from "~/utils/units/length";
 import { WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
-
 
 const title = "Window";
 const store = useEcaasStore();

@@ -3,7 +3,7 @@ import type { SchemaHotWaterDemand } from "~/schema/api-schema.types";
 import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 
 const baseForm = {
 	data: [],
