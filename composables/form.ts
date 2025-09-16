@@ -98,7 +98,7 @@ export function useForm() {
 
 			store.$patch((state) => {
 				const storeElementData = storeData.data[index]?.data;
-				const name = getOrGenerateName(storeData.data, storeElementData, newData, defaultName);
+				const name = getOrGenerateName(storeElementData, newData, defaultName);
 
 				const elementData: EcaasForm<T> = {
 					data: { ...newData, name },
@@ -124,21 +124,12 @@ export function useForm() {
 }
 
 /**
-	 * Return the name of this item or generates a unique default name
+	 * Return the name of this item or default name
 	 * @returns Name
 	 */
-export const getOrGenerateName = <T extends object>(allItems: EcaasForm<T>[], storedItem: T | undefined, updatedItem: T, defaultName: string): string => {
+export const getOrGenerateName = <T extends object>(storedItem: T | undefined, updatedItem: T, defaultName: string): string => {
 	
-	const duplicates = allItems.filter(x => {
-		if ("name" in x.data && typeof x.data.name === "string") {
-			const result = x.data.name.match(duplicateNamePattern(defaultName)); 
-			console.log({ result });
-			return x.data.name.match(duplicateNamePattern(defaultName));
-		}
-		return false;
-	});
-	
-	let name = (duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
+	let name = defaultName;
 
 	if ("name" in updatedItem && typeof updatedItem.name === "string") {
 		name = updatedItem.name.trim() || name;
