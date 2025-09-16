@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { getUrl } from "#imports";
 import { FuelType } from "~/schema/api-schema.types";
 
 const title = "Energy supply";
 const store = useEcaasStore();
+const { autoSaveForm } = useForm();
 
 const model = ref({
 	...store.heatingSystems.energySupply.data,
@@ -31,18 +33,8 @@ const saveForm = (fields: EnergySupplyData) => {
 	navigateTo("/heating-systems");
 };
 
-watch(model, async (newData: EnergySupplyData, initialData: EnergySupplyData) => {
-
-	for (const key of Object.keys(initialData) as (keyof typeof initialData)[]) {
-		if (initialData[key]  !== newData[key]) {
-			store.$patch((state) => {
-				state.heatingSystems.energySupply.data = {
-					...newData,
-				};
-			});
-			store.heatingSystems.energySupply.complete = false;
-		}
-	}
+autoSaveForm(model, (state, newData) => {
+	state.heatingSystems.energySupply = newData;
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -112,6 +104,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			/>
 		</ClientOnly>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<GovButton :href="getUrl('heatingSystems')" secondary>Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>
