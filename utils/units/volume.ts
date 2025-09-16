@@ -1,10 +1,10 @@
 import type { Dimension, UnitForDimension } from "./types";
-import { unit } from "./units";
+import { asUnit } from "./units";
 
 export type VolumeUnit = UnitForDimension<"volume">;
 
-export const litre = unit("litres");
-export const cubicMetre = unit("cubic metres");
+export const litre = asUnit("litres");
+export const cubicMetre = asUnit("cubic metres");
 
 export type Volume = Dimension<VolumeUnit["name"]>;
 

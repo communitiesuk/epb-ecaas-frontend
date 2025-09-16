@@ -1,11 +1,11 @@
 import type { Dimension } from "./types";
-import { unit } from "./units";
+import { asUnit } from "./units";
 
-export const cubicMetresPerHour = unit("cubic metres per hour");
-export const cubicMetrePerHourPerSquareMetre = unit("cubic metres per hour per square metre");
-export const litrePerSecond = unit("litres per second");
-export const litrePerMinute = unit("litres per minute");
-export const litrePerHour = unit("litres per hour");
+export const cubicMetresPerHour = asUnit("cubic metres per hour");
+export const cubicMetrePerHourPerSquareMetre = asUnit("cubic metres per hour per square metre");
+export const litrePerSecond = asUnit("litres per second");
+export const litrePerMinute = asUnit("litres per minute");
+export const litrePerHour = asUnit("litres per hour");
 
 export const _flowRateUnits = [cubicMetresPerHour, litrePerSecond, litrePerMinute, litrePerHour];
 
