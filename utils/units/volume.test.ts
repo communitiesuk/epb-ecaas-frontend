@@ -1,4 +1,4 @@
-import { unitValue } from "./types";
+import { unitValue } from "./units";
 import { litre, cubicMetre, asLitres } from "./volume";
 
 describe("VolumeUnit", () => {

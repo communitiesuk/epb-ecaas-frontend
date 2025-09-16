@@ -4,7 +4,7 @@ import { screen } from "@testing-library/vue";
 import Window from "./[window].vue";
 import { WindowTreatmentType } from "~/schema/api-schema.types";
 import { millimetre } from "~/utils/units/length";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {

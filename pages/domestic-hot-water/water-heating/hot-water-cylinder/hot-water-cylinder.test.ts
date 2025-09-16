@@ -4,7 +4,7 @@ import { screen } from "@testing-library/vue";
 import HotWaterCylinder from "./[hotWaterCylinder].vue";
 import { v4 as uuidv4 } from "uuid";
 import { litre } from "~/utils/units/volume";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {

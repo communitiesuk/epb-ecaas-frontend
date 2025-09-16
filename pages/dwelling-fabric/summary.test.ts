@@ -8,7 +8,7 @@ import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPer
 import { degrees } from "~/utils/units/angle";
 import { metresSquare } from "~/utils/units/area";
 import { cubicMetre } from "~/utils/units/volume";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {

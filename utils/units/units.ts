@@ -1,4 +1,4 @@
-import type { UnitForName, UnitName } from "./types";
+import type { Dimension, Unit, UnitForName, UnitName } from "./types";
 
 export const units = [
 	{
@@ -67,4 +67,14 @@ export const units = [
 
 export function asUnit<T extends UnitName>(name: T): UnitForName<T> {
 	return units.find((unit): unit is UnitForName<T> => unit.name === name)!;
+}
+
+export function unitValue<T extends Unit>(amount: number, unit: T): Dimension<T["name"]>;
+export function unitValue<T extends UnitName>(amount: number, unit: T): Dimension<T>;
+export function unitValue(amount: number, unit: Unit | UnitName) {
+	const unitName = typeof unit !== "string" ? unit.name : unit;
+	return {
+		amount,
+		unit: unitName,
+	};
 }

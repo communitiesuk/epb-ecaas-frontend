@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { litre, type Volume } from "~/utils/units/volume";
 import type { HotWaterCylinderData } from "~/stores/ecaasStore.schema";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 
 const title = "Hot water cylinder";
 const store = useEcaasStore();

@@ -1,5 +1,5 @@
 import { metre, centimetre, millimetre, asMetres } from "./length";
-import { unitValue } from "./types";
+import { unitValue } from "./units";
 
 describe("LengthUnit", () => {
 	test("suffix for metre is m", () => {

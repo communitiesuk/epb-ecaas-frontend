@@ -1,6 +1,6 @@
 import { litrePerSecond } from "./flowRate";
 import { metre } from "./length";
-import { unitValue } from "./types";
+import { unitValue } from "./units";
 import { zodUnit } from "./zod";
 
 describe("zodUnit", () => {
