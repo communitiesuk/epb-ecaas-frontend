@@ -65,6 +65,6 @@ export const units = [
 	},
 ] as const;
 
-export function unit<T extends UnitName>(name: T): UnitForName<T> {
+export function asUnit<T extends UnitName>(name: T): UnitForName<T> {
 	return units.find((unit): unit is UnitForName<T> => unit.name === name)!;
 }
