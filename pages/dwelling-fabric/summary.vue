@@ -6,7 +6,6 @@ import { degrees } from "~/utils/units/angle";
 import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from "~/utils/units/thermalConductivity";
 import { centimetre, metre, millimetre } from "~/utils/units/length";
 import { cubicMetre } from "~/utils/units/volume";
-import { r } from "~/utils/display";
 
 const title = "Dwelling fabric summary";
 const store = useEcaasStore();
@@ -261,8 +260,7 @@ const unglazedDoorSummary: SummarySection = {
 	data: unglazedDoorData.map(({ data: x }) => {
 		return {
 			"Name": x.name,
-			// "Pitch": `${x.pitch} ${degrees.suffix}`,
-			"Pitch": r(x.pitch, v => `${v} ${degrees.suffix}`),
+			"Pitch": dim(x.pitch, "degrees"),
 			"Orientation": `${x.orientation} ${degrees.suffix}`,
 			"Height": `${x.height} ${metre.suffix}`,
 			"Width": `${x.width} ${metre.suffix}`,
