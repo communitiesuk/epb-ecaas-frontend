@@ -2,9 +2,8 @@
 import { standardPitchOptions, type WindowData } from "#imports";
 import { millimetre } from "~/utils/units/length";
 import type { SchemaWindowTreatmentControl, SchemaWindowTreatmentType } from "~/schema/api-schema.types";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
-
 
 const title = "Window";
 const store = useEcaasStore();
@@ -37,7 +36,7 @@ if (window && "sideFinLeftDistance" in window) {
 	window.sideFinLeftDistance = typeof window.sideFinLeftDistance === "number" ? unitValue(window.sideFinLeftDistance, millimetre) : window.sideFinLeftDistance;
 };
 
-const model: Ref<WindowData | undefined > = ref(window?.data);
+const model = ref(window?.data);
 
 const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSentenceCase<SchemaWindowTreatmentType>> = {
 	curtains: "Curtains",
@@ -178,7 +177,7 @@ const saveForm = (fields: WindowData) => {
 	navigateTo("/dwelling-fabric/windows");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<WindowData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceWindows,
 	defaultName: "Window",
@@ -417,7 +416,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required"
 			/>
 			<FormKit
-				v-if="model && model.treatmentType === 'curtains'"
+				v-if="model && 'treatmentType' in model && model.treatmentType === 'curtains'"
 				id="curtainsControlObject"
 				type="govRadios"
 				:options="curtainsControlObjectOptions"

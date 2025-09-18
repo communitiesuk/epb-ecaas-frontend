@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { VentType } from "~/schema/aliases";
 import type { SchemaMvhrLocation } from "~/schema/api-schema.types";
 import { litrePerSecond } from "~/utils/units/flowRate";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
 
 const title = "Mechanical ventilation";
@@ -18,7 +18,7 @@ if (typeof mechanicalVentilation?.data.airFlowRate === "number") {
 	mechanicalVentilation.data.airFlowRate = unitValue(mechanicalVentilation.data.airFlowRate, litrePerSecond);
 }
 
-const model: Ref<MechanicalVentilationData | undefined> = ref(mechanicalVentilation?.data);
+const model = ref(mechanicalVentilation?.data);
 
 const ventTypeOptions: Record<VentType, string> = {
 	MVHR: "MVHR (Mechanical Ventilation with Heat recovery)",
@@ -70,7 +70,7 @@ const saveForm = (fields: MechanicalVentilationData) => {
 	navigateTo("/infiltration-and-ventilation/mechanical-ventilation");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<MechanicalVentilationData>({
 	model,
 	storeData: store.infiltrationAndVentilation.mechanicalVentilation,
 	defaultName: "Mechanical ventilation",

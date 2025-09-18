@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { mapFhsInputData  } from "~/mapping/fhsInputMapper";
-import type { ResolvedState } from "~/mapping/fhsInputMapper";
 import type { FhsComplianceResponseIncludingErrors } from "~/server/server.types";
 import { hasCompleteState } from "~/stores/ecaasStore";
 
@@ -23,7 +22,7 @@ const calculate = async () => {
 	let calculateError: CorrectedJsonApiError[] | boolean | undefined;
 
 	try {
-		const inputPayload = mapFhsInputData(resolveState(store) as ResolvedState);
+		const inputPayload = mapFhsInputData(resolveState(store.$state));
 
 		console.log(JSON.stringify(inputPayload));
 

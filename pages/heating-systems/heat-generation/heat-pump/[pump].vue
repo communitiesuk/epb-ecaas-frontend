@@ -2,7 +2,7 @@
 import { objectFromEntries } from "ts-extras";
 import { v4 as uuidv4 } from "uuid";
 import { displayProduct } from "~/utils/display";
-import { getUrl } from "#imports";
+import { getUrl, type HeatPumpData } from "#imports";
 
 const title = "Heat pump";
 const store = useEcaasStore();
@@ -11,7 +11,7 @@ const route = useRoute();
 const { autoSaveElementForm } = useForm();
 
 const heatPumpData = useItemToEdit("pump", store.heatingSystems.heatGeneration.heatPump.data);
-const model: Ref<HeatPumpData | undefined> = ref(heatPumpData?.data);
+const model = ref(heatPumpData?.data);
 
 const { data: heatPumps } = await useFetch("/api/products", { query: { category: "heatPump" } });
 
@@ -42,7 +42,7 @@ const saveForm = (fields: HeatPumpData) => {
 	navigateTo("/heating-systems/heat-generation");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<HeatPumpData>({
 	model,
 	storeData: store.heatingSystems.heatGeneration.heatPump,
 	defaultName: "Heat pump",

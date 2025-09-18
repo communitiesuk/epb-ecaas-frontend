@@ -7,7 +7,7 @@ import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapT
 import { defaultZoneName } from "./common";
 import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.schema";
 import { centimetre, millimetre } from "../utils/units/length";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 
 type BuildingElementOpaque = SchemaBuildingElementOpaqueFhs;
 type BuildingElementAdjacentConditionedSpace = SchemaBuildingElementAdjacentConditionedSpace;
@@ -16,7 +16,7 @@ type BuildingElementTransparent = SchemaBuildingElementTransparentFhs;
 
 const baseForm = {
 	data: [],
-	complete: true,
+	complete: true as const,
 };
 
 describe("dwelling fabric mapper", () => {

@@ -1,33 +1,10 @@
-export enum PowerUnitName {
-	KILOWATT_HOUR = "kilowatt-hour",
-	KILOWATT = "kilowatt",
-	KILOWATT_PEAK = "kilowatt peak",
-}
+import type { UnitForDimension } from "./types";
+import { asUnit } from "./units";
 
-enum PowerSuffix {
-	KILOWATT_HOUR = "kWh",
-	KILOWATT = "kW",
-	KILOWATT_PEAK = "kWp",
-}
+export type PowerUnit = UnitForDimension<"power">;
 
-export class PowerUnit {
-	name: PowerUnitName;
-	suffix: PowerSuffix;
+export const kilowattHour = asUnit("kilowatt-hour");
 
-	constructor(name: PowerUnitName) {
-		this.name = name;
-		this.suffix = this.getSuffix();
-	}
+export const kilowatt = asUnit("kilowatt");
 
-	private getSuffix() {
-		switch (this.name) {
-			case PowerUnitName.KILOWATT_HOUR: return PowerSuffix.KILOWATT_HOUR;
-			case PowerUnitName.KILOWATT: return PowerSuffix.KILOWATT;
-			case PowerUnitName.KILOWATT_PEAK: return PowerSuffix.KILOWATT_PEAK;
-		}
-	}
-}
-
-export const kilowattHour = new PowerUnit(PowerUnitName.KILOWATT_HOUR);
-export const kilowatt = new PowerUnit(PowerUnitName.KILOWATT);
-export const kilowattPeak = new PowerUnit(PowerUnitName.KILOWATT_PEAK);
+export const kilowattPeak = asUnit("kilowatt peak");

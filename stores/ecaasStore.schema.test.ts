@@ -1,4 +1,4 @@
-import { windowDataZod } from "./ecaasStore.schema";
+import { windowDataZod, type EcaasForm, type EcaasFormList } from "./ecaasStore.schema";
 
 describe("windowData Zod schema", () => {
 	it("correctly validates a valid window shape with one openable part", () => {
@@ -107,5 +107,55 @@ describe("windowData Zod schema", () => {
 				windowDataZod.parse(windowFormData);
 			},
 		).toThrowError();
+	});
+});
+
+describe("ECaaS form types", () => {
+	test("check an EcaasFormList is assignable to EcaasForm", () => {
+		expectTypeOf<EcaasFormList<unknown>>().toExtend<EcaasForm<unknown>>();
+	});
+
+	type DuckType = {
+		beakSize: number,
+		quackVolume: number,
+		feet: "webbed"
+	};
+
+	test("check an EcaasForm with no second generic parameter declares incomplete data partial", () => {
+		type ExpectedDuckTypeForm = {
+			data: {
+				beakSize: number;
+				quackVolume: number;
+				feet: "webbed";
+			};
+			complete: true;
+		} | {
+			data: {
+				beakSize?: number | undefined;
+				quackVolume?: number | undefined;
+				feet?: "webbed" | undefined;
+			};
+			complete?: false;
+		};
+		expectTypeOf<EcaasForm<DuckType>>().toExtend<ExpectedDuckTypeForm>();
+	});
+
+	test("check an EcaasForm with second generic parameter set to some keys declares incomplete data partial except for those keys", () => {
+		type ExpectedDuckTypeFormWithBeakSizeRequired = {
+			data: {
+				beakSize: number;
+				quackVolume: number;
+				feet: "webbed";
+			};
+			complete: true;
+		} | {
+			data: {
+				beakSize: number;
+				quackVolume?: number;
+				feet?: "webbed";
+			};
+			complete?: false;
+		};
+		expectTypeOf<EcaasForm<DuckType, "beakSize">>().branded.toEqualTypeOf<ExpectedDuckTypeFormWithBeakSizeRequired>();
 	});
 });

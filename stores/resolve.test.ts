@@ -1,4 +1,4 @@
-import { resolveState  } from "./resolve";
+import { _private, resolveState  } from "./resolve";
 import type { Resolved } from "./resolve";
 
 describe("Resolved Type", () => {
@@ -21,7 +21,7 @@ describe("resolveState", () => {
 			incompleteForm: { complete: false, data: {} },
 		};
 
-		const resolved = resolveState(state);
+		const resolved = _private.resolveStateTree(state);
     
 		expect(resolved.simpleForm).toEqual({ value: "test" });
 		expect(resolved.incompleteForm).toBeUndefined();
@@ -37,7 +37,7 @@ describe("resolveState", () => {
 			},
 		};
 
-		const resolved = resolveState(state);
+		const resolved = _private.resolveStateTree(state);
     
 		expect(resolved.nestedForm.level1.level2).toEqual({ value: "nested" });
 		expect(resolved.nestedForm.level1.incompleteForm).toBeUndefined();
@@ -52,7 +52,7 @@ describe("resolveState", () => {
 			},
 		};
 
-		const resolved = resolveState(state);
+		const resolved = _private.resolveStateTree(state);
     
 		expect(resolved.mixedForm.completeForm).toEqual({ value: "complete" });
 		expect(resolved.mixedForm.incompleteForm).toBeUndefined();
@@ -62,7 +62,7 @@ describe("resolveState", () => {
 	it("should handle empty state", () => {
 		const state = {};
 
-		const resolved = resolveState(state);
+		const resolved = resolveState(state as EcaasState);
     
 		expect(resolved).toEqual({});
 	});
@@ -114,7 +114,7 @@ describe("resolveState", () => {
 			],
 		};
 
-		expect(resolveState(state)).toStrictEqual(expectedResolvedState);
+		expect(_private.resolveStateTree(state)).toStrictEqual(expectedResolvedState);
 	});
 
 	it("should resolve lists of part-incomplete forms", () => {
@@ -160,6 +160,6 @@ describe("resolveState", () => {
 			],
 		};
 
-		expect(resolveState(state)).toStrictEqual(expectedResolvedState);
+		expect(_private.resolveStateTree(state)).toStrictEqual(expectedResolvedState);
 	});
 });

@@ -1,8 +1,17 @@
-import { isEcaasForm, type EcaasForm } from "./ecaasStore.schema";
+import type { ResolvedState } from "~/mapping/fhsInputMapper";
+import { isEcaasForm, type EcaasForm, type EcaasFormList, type EcaasState } from "./ecaasStore.schema";
 
-export type Resolved<T> = { readonly [P in keyof T]: T[P] extends EcaasForm<infer U> ? (U extends Array<EcaasForm<infer V>> ? V[] : U) : Resolved<T[P]> } & {};
+export type Resolved<T> = {
+	readonly [P in keyof T]: T[P] extends EcaasFormList<infer U>
+		? (U & { complete: true })[] : T[P] extends EcaasForm<infer V>
+			? V : Resolved<T[P]>
+};
 
-export function resolveState<T extends object>(state: T): Resolved<T> {
+export function resolveState(state: EcaasState): ResolvedState {
+	return resolveStateTree(state);
+}
+
+function resolveStateTree<T extends object>(state: T): Resolved<T> {
 	const resolvedState: Partial<Resolved<T>> = {};
 
 	for (const key in state) {
@@ -32,7 +41,7 @@ export function resolveState<T extends object>(state: T): Resolved<T> {
 				}
 			}
 		} else if (typeof value === "object" && value !== null) {
-			resolvedState[key] = resolveState(value) as Resolved<T>[typeof key];
+			resolvedState[key] = resolveStateTree(value) as Resolved<T>[typeof key];
 		} else {
 			resolvedState[key] = value as Resolved<T>[typeof key];
 		}
@@ -40,3 +49,7 @@ export function resolveState<T extends object>(state: T): Resolved<T> {
 
 	return resolvedState as Resolved<T>;
 }
+
+export const _private = {
+	resolveStateTree,
+};

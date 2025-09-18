@@ -7,7 +7,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const shadingData = useItemToEdit("shading", store.dwellingDetails.shading.data);
-const model: Ref<ShadingData | undefined> = ref(shadingData?.data);
+const model = ref(shadingData?.data);
 
 const objectTypeOptions: Record<SchemaShadingObjectType, Capitalize<SchemaShadingObjectType>> = {
 	obstacle: "Obstacle",
@@ -36,7 +36,7 @@ const saveForm = (fields: ShadingData) => {
 	navigateTo("/dwelling-details/shading");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<ShadingData>({
 	model,
 	storeData: store.dwellingDetails.shading,
 	defaultName: "Shading",

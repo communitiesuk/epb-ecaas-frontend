@@ -34,10 +34,20 @@ export type EcaasState = AssertEachKeyIsPageId<{
 	lastResult?: ComplianceResult;
 };
 
-export interface EcaasForm<T> {
-	complete?: boolean;
-	data: T;
-}
+export type PartialExceptName<T extends { name: string }> = Pick<T, "name"> & Partial<Omit<T, "name">>;
+
+export type EcaasForm<T, AlwaysRequired = ""> = {
+	complete?: false,
+	data: [AlwaysRequired] extends [keyof T] ? Pick<T, AlwaysRequired> & Partial<Omit<T, AlwaysRequired>> : T,
+} | {
+	complete: true,
+	data: T
+};
+
+export type EcaasFormList<T> = {
+	complete?: boolean,
+	data: EcaasForm<T, "name">[]
+};
 
 export function isEcaasForm(value: unknown): value is EcaasForm<unknown> {
 	return typeof value === "object" && value !== null && "data" in value && Object.keys(value).length <= 2;
@@ -77,7 +87,7 @@ export type ExternalFactorsData = z.infer<typeof externalFactorsDataZod>;
 
 export type DwellingDetails = AssertFormKeysArePageIds<{
 	generalSpecifications: EcaasForm<GeneralDetailsData>;
-	shading: EcaasForm<EcaasForm<ShadingData>[]>;
+	shading: EcaasFormList<ShadingData>;
 	externalFactors: EcaasForm<ExternalFactorsData>;
 }>;
 
@@ -87,15 +97,15 @@ export interface DwellingFabric {
 	dwellingSpaceWalls: WallsData;
 	dwellingSpaceCeilingsAndRoofs: CeilingsAndRoofsData;
 	dwellingSpaceDoors: DoorsData;
-	dwellingSpaceWindows: EcaasForm<EcaasForm<WindowData>[]>;
+	dwellingSpaceWindows: EcaasFormList<WindowData>;
 	dwellingSpaceThermalBridging: ThermalBridgingData;
 	dwellingSpaceLighting: EcaasForm<DwellingSpaceLightingData>;
 }
 
 export interface FloorsData {
-	dwellingSpaceGroundFloor: EcaasForm<EcaasForm<GroundFloorData>[]>,
-	dwellingSpaceInternalFloor: EcaasForm<EcaasForm<InternalFloorData>[]>,
-	dwellingSpaceExposedFloor: EcaasForm<EcaasForm<ExposedFloorData>[]>
+	dwellingSpaceGroundFloor: EcaasFormList<GroundFloorData>,
+	dwellingSpaceInternalFloor: EcaasFormList<InternalFloorData>,
+	dwellingSpaceExposedFloor: EcaasFormList<ExposedFloorData>
 }
 
 export enum AdjacentSpaceType {
@@ -251,8 +261,8 @@ const partyWallDataZod = named.extend({
 export type PartyWallData = z.infer<typeof partyWallDataZod>;
 
 export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
-	dwellingSpaceCeilings: EcaasForm<EcaasForm<CeilingData>[]>;
-	dwellingSpaceRoofs: EcaasForm<EcaasForm<RoofData>[]>;
+	dwellingSpaceCeilings: EcaasFormList<CeilingData>;
+	dwellingSpaceRoofs: EcaasFormList<RoofData>;
 }>;
 
 const baseCeilingData = named.extend({
@@ -300,9 +310,9 @@ const roofDataZod = named.extend({
 export type RoofData = z.infer<typeof roofDataZod>;
 
 export type DoorsData = AssertFormKeysArePageIds<{
-	dwellingSpaceExternalUnglazedDoor: EcaasForm<EcaasForm<ExternalUnglazedDoorData>[]>;
-	dwellingSpaceExternalGlazedDoor: EcaasForm<EcaasForm<ExternalGlazedDoorData>[]>;
-	dwellingSpaceInternalDoor: EcaasForm<EcaasForm<InternalDoorData>[]>;
+	dwellingSpaceExternalUnglazedDoor: EcaasFormList<ExternalUnglazedDoorData>;
+	dwellingSpaceExternalGlazedDoor: EcaasFormList<ExternalGlazedDoorData>;
+	dwellingSpaceInternalDoor: EcaasFormList<InternalDoorData>;
 }>;
 
 const externalUnglazedDoorDataZod = named.extend({
@@ -471,8 +481,8 @@ export const windowDataZod = z.intersection(
 export type WindowData = z.infer<typeof windowDataZod>;
 
 export type ThermalBridgingData = AssertFormKeysArePageIds<{
-	dwellingSpaceLinearThermalBridges: EcaasForm<EcaasForm<LinearThermalBridgeData>[]>;
-	dwellingSpacePointThermalBridges: EcaasForm<EcaasForm<PointThermalBridgeData>[]>;
+	dwellingSpaceLinearThermalBridges: EcaasFormList<LinearThermalBridgeData>;
+	dwellingSpacePointThermalBridges: EcaasFormList<PointThermalBridgeData>;
 }>;
 
 const linearThermalBridgeDataZod = named.extend({
@@ -529,7 +539,7 @@ export type WaterHeating = AssertFormKeysArePageIds<{
 	immersionHeater: EcaasForm<ImmersionHeaterData[]>;
 	solarThermal: EcaasForm<SolarThermalData[]>;
 	pointOfUse: EcaasForm<PointOfUseData[]>;
-	heatPump: EcaasForm<EcaasForm<HotWaterHeatPumpData>[]>;
+	heatPump: EcaasFormList<HotWaterHeatPumpData>;
 	combiBoiler: EcaasForm<CombiBoilerData[]>;
 	heatBattery: EcaasForm<WaterHeatingHeatBatteryData[]>;
 	smartHotWaterTank: EcaasForm<SmartHotWaterTankData[]>;
@@ -588,10 +598,10 @@ const waterHeatingHeatInterfaceUnitDataZod = named;
 export type WaterHeatingHeatInterfaceUnitData = z.infer<typeof waterHeatingHeatInterfaceUnitDataZod>;
 
 export type HotWaterOutlets = AssertFormKeysArePageIds<{
-	mixedShower: EcaasForm<EcaasForm<MixedShowerData>[]>;
-	electricShower: EcaasForm<EcaasForm<ElectricShowerData>[]>;
-	bath: EcaasForm<EcaasForm<BathData>[]>;
-	otherOutlets: EcaasForm<EcaasForm<OtherHotWaterOutletData>[]>;
+	mixedShower: EcaasFormList<MixedShowerData>;
+	electricShower: EcaasFormList<ElectricShowerData>;
+	bath: EcaasFormList<BathData>;
+	otherOutlets: EcaasFormList<OtherHotWaterOutletData>;
 }>;
 
 const mixedShowerDataZod = namedWithId.extend({
@@ -620,8 +630,8 @@ const otherHotWaterOutletDataZod = namedWithId.extend({
 export type OtherHotWaterOutletData = z.infer<typeof otherHotWaterOutletDataZod>;
 
 export type Pipework = AssertFormKeysArePageIds<{
-	primaryPipework: EcaasForm<EcaasForm<PrimaryPipeworkData>[]>;
-	secondaryPipework: EcaasForm<EcaasForm<SecondaryPipeworkData>[]>;
+	primaryPipework: EcaasFormList<PrimaryPipeworkData>;
+	secondaryPipework: EcaasFormList<SecondaryPipeworkData>;
 }>;
 
 const primaryPipeworkDataZod = z.object({
@@ -660,9 +670,9 @@ const wwhrsDataZod = z.object({
 export type WwhrsData = z.infer<typeof wwhrsDataZod>;
 
 export type InfiltrationAndVentilation = AssertFormKeysArePageIds<{
-	mechanicalVentilation: EcaasForm<EcaasForm<MechanicalVentilationData>[]>;
-	ductwork: EcaasForm<EcaasForm<DuctworkData>[]>;
-	vents: EcaasForm<EcaasForm<VentData>[]>;
+	mechanicalVentilation: EcaasFormList<MechanicalVentilationData>;
+	ductwork: EcaasFormList<DuctworkData>;
+	vents: EcaasFormList<VentData>;
 	combustionAppliances: CombustionAppliancesData;
 	naturalVentilation: EcaasForm<VentilationData>;
 	airPermeability: EcaasForm<AirPermeabilityData>;
@@ -766,7 +776,7 @@ export type HeatingSystems = AssertEachKeyIsPageId<{
 }>;
 
 export type HeatGeneration = AssertFormKeysArePageIds<{
-	heatPump: EcaasForm<EcaasForm<HeatPumpData>[]>;
+	heatPump: EcaasFormList<HeatPumpData>;
 	boiler: EcaasForm<BoilerData[]>;
 	heatBattery: EcaasForm<HeatBatteryData[]>;
 	heatNetwork: EcaasForm<HeatNetworkData[]>;
@@ -806,8 +816,8 @@ const energySupplyDataZod = z.object({
 export type EnergySupplyData = z.infer<typeof energySupplyDataZod>;
 
 export type HeatEmitting = AssertFormKeysArePageIds<{
-	wetDistribution: EcaasForm<EcaasForm<WetDistributionData>[]>;
-	instantElectricHeater: EcaasForm<EcaasForm<InstantElectricStorageData>[]>;
+	wetDistribution: EcaasFormList<WetDistributionData>;
+	instantElectricHeater: EcaasFormList<InstantElectricStorageData>;
 	electricStorageHeater: EcaasForm<ElectricStorageHeaterData[]>;
 	warmAirHeatPump: EcaasForm<WarmAirHeatPumpData[]>;
 }>;
@@ -860,8 +870,8 @@ const wetDistributionDataZod = z.discriminatedUnion(
 export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;
 
 export type PvAndBatteries = AssertFormKeysArePageIds<{
-	pvSystems: EcaasForm<EcaasForm<PvSystemData>[]>;
-	electricBattery: EcaasForm<EcaasForm<ElectricBatteryData>[]>;
+	pvSystems: EcaasFormList<PvSystemData>;
+	electricBattery: EcaasFormList<ElectricBatteryData>;
 }>;
 
 const pvSystemDataZod = z.object({

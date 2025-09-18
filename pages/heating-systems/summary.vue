@@ -133,7 +133,7 @@ const wetDistributionSummary: SummarySection = {
 			"Type of space heater": wetDistribution.data.typeOfSpaceHeater === "radiator"
 				? "Radiators"
 				: "Underfloor heating",
-			"Number of radiators": wetDistribution.data.typeOfSpaceHeater === "radiator" ?
+			"Number of radiators": "numberOfRadiators" in wetDistribution.data ?
 				wetDistribution.data.numberOfRadiators : undefined,
 		};
 		if (
@@ -145,7 +145,7 @@ const wetDistributionSummary: SummarySection = {
 		}
 
 		if (
-			wetDistribution.data.typeOfSpaceHeater === "ufh" &&
+			"emitterFloorArea" in wetDistribution.data &&
 			wetDistribution.data.emitterFloorArea !== undefined
 		) {
 			wetDistributionData["Emitter floor area"] =

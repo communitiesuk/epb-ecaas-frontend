@@ -16,10 +16,3 @@ export type UnitValue = {
 	amount: number,
 	unit: UnitName
 };
-
-export function unitValue<T extends Unit>(amount: number, unit: T): Dimension<T["name"]> {
-	return {
-		amount,
-		unit: unit.name,
-	};
-}

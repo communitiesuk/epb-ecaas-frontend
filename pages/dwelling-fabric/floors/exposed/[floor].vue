@@ -5,7 +5,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
-const model: Ref<ExposedFloorData | undefined> = ref(floorData?.data);
+const model = ref(floorData?.data);
 
 const saveForm = (fields: ExposedFloorData) => {	
 	store.$patch((state) => {
@@ -32,7 +32,7 @@ const saveForm = (fields: ExposedFloorData) => {
 	navigateTo("/dwelling-fabric/floors");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<ExposedFloorData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor,
 	defaultName: "Exposed floor",

@@ -1,3 +1,50 @@
+import { show, dim } from "./display";
+
+describe("Show function to make showable value", () => {
+	it("renders a string as-is", () => {
+		const str = "Acme";
+		expect(show(str)).toEqual(str);
+	});
+
+	it("renders a number as a string", () => {
+		expect(show(4.2)).toBe("4.2");
+	});
+
+	it("renders null as a hyphen", () => {
+		expect(show(null)).toBe("-");
+	});
+
+	it("renders undefined as a hyphen", () => {
+		expect(show(undefined)).toBe("-");
+	});
+});
+
+describe("dim function to show an amount with units", () => {
+	it("renders an empty value if undefined passed", () => {
+		expect(dim(undefined, "centimetres")).toEqual("-");
+	});
+
+	it("renders an amount in metres with correct suffix if metres unit is given", () => {
+		expect(dim(30, "metres")).toEqual("30 m");
+	});
+
+	it("renders an amount in degrees using correct suffix if degrees given", () => {
+		expect(dim(45, "degrees")).toEqual("45 °");
+	});
+
+	it("renders a unitless amount without showing suffixed value", () => {
+		expect(dim(45)).toEqual("45");
+	});
+
+	it("renders a unitless amount passed as undefined as empty value", () => {
+		expect(dim(undefined)).toEqual("-");
+	});
+
+	it("renders a unit object", () => {
+		expect(dim(unitValue(60, "degrees"))).toEqual("60 °");
+	});
+});
+
 describe("Show boolean in display", () => {
 	it("should return Yes when value is true", () => {
 		const result = displayBoolean(true);

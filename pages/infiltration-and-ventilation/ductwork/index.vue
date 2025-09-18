@@ -34,7 +34,7 @@ function handleDuplicate(index: number) {
 					...ductwork.data,
 					name: `${ductwork.data.name} (${duplicates.length})`,
 				},
-			});
+			} as EcaasForm<DuctworkData>);
 		});
 		store.infiltrationAndVentilation.ductwork.complete = false;
 	}

@@ -21,7 +21,7 @@ function handleDuplicate(index: number) {
 	const item = data?.[index];
     
 	if (item) {
-		const duplicates = data.filter(f => f.name.match(duplicateNamePattern(item.name)));
+		const duplicates = data.filter(f => f && f.name.match(duplicateNamePattern(item.name)));
 
 		store.$patch((state) => {
 			const newItem = {
@@ -58,7 +58,7 @@ function handleComplete() {
 		id="airConditioning"
 		title="Air conditioning"
 		:form-url="`${page?.url!}/air-conditioning`"
-		:items="store.cooling.airConditioning.data.map(x => x.name)"
+		:items="store.cooling.airConditioning.data.flatMap(x => x ? [x.name] : [])"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>

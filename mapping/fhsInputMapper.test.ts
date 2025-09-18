@@ -5,12 +5,12 @@ import type { FhsInputSchema } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
 import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { centimetre } from "../utils/units/length";
-import { unitValue } from "~/utils/units/types";
+import { unitValue } from "~/utils/units";
 import { noEvents } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
-	complete: true,
+	complete: true as const,
 };
 
 const expectedHouseInput: FhsInputSchema = {
@@ -1366,7 +1366,7 @@ describe("FHS input mapper", () => {
 						name: "mvhr vent 1 name",
 						typeOfMechanicalVentilationOptions: "MVHR",
 						airFlowRate: 17,
-						mvhrLocation: "inside",
+						mvhrLocation: "inside" as const,
 						mvhrEfficiency: 1,
 					},
 				},
@@ -1377,7 +1377,7 @@ describe("FHS input mapper", () => {
 						name: "mvhr vent 2 name",
 						typeOfMechanicalVentilationOptions: "MVHR",
 						airFlowRate: 3,
-						mvhrLocation: "outside",
+						mvhrLocation: "outside" as const,
 						mvhrEfficiency: 0,
 					},
 				},
@@ -1399,7 +1399,7 @@ describe("FHS input mapper", () => {
 						name: "ductwork 1",
 						mvhrUnit: "mvhr vent 1 name",
 						ductType: "supply",
-						ductworkCrossSectionalShape: "circular",
+						ductworkCrossSectionalShape: "circular" as const,
 						internalDiameterOfDuctwork: 50,
 						externalDiameterOfDuctwork: 55,
 						insulationThickness: 5,
@@ -1498,8 +1498,8 @@ describe("FHS input mapper", () => {
 								perimeter: 40,
 								psiOfWallJunction: 0.4,
 								thicknessOfWalls: 50,
-								typeOfGroundFloor: "Slab_edge_insulation",
-								edgeInsulationType: "horizontal",
+								typeOfGroundFloor: "Slab_edge_insulation" as const,
+								edgeInsulationType: "horizontal" as const,
 								edgeInsulationWidth: unitValue(32, centimetre),
 								edgeInsulationThermalResistance: 2.4,
 							},
@@ -1786,14 +1786,14 @@ describe("FHS input mapper", () => {
 						sideFinLeftDepth: 0.25,
 						sideFinLeftDistance: 1,
 						curtainsOrBlinds: true,
-						treatmentType: "curtains",
+						treatmentType: "curtains" as const,
 						thermalResistivityIncrease: 1,
 						solarTransmittanceReduction: 0.1,
 						midHeightOpenablePart1: 1,
 						openingToFrameRatio: 0.8,
 						maximumOpenableArea: 1,
 						heightOpenableArea: 1,
-						curtainsControlObject: "auto_motorised",
+						curtainsControlObject: "auto_motorised" as const,
 					},
 				}],
 			},

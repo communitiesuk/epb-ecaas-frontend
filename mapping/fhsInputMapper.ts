@@ -10,8 +10,9 @@ import { mapPvAndElectricBatteriesData } from "./pvAndElectricBatteriesMapper";
 import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from "~/mapping/common";
 import { objectFromEntries } from "ts-extras";
+import type { SimplifyDeep } from "type-fest";
 
-export type ResolvedState = Resolved<EcaasState>;
+export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 
 export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const dwellingDetailsData = mapDwellingDetailsData(state);

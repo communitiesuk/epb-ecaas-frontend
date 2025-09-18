@@ -1,11 +1,11 @@
 import type { Dimension, UnitForDimension } from "./types";
-import { unit } from "./units";
+import { asUnit } from "./units";
 
 export type LengthUnit = UnitForDimension<"length">;
 
-export const metre = unit("metres");
-export const centimetre = unit("centimetres");
-export const millimetre = unit("millimetres");
+export const metre = asUnit("metres");
+export const centimetre = asUnit("centimetres");
+export const millimetre = asUnit("millimetres");
 
 export type Length = Dimension<LengthUnit["name"]>;
 

@@ -4,7 +4,7 @@ import { defaultControlName, defaultZoneName } from "./common";
 
 const baseForm = {
 	data: [],
-	complete: true,
+	complete: true as const,
 };
 
 describe("heating systems mapper", () => {

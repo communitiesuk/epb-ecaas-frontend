@@ -747,7 +747,7 @@ describe("mark section as complete", () => {
   	});
 
   	it("marks combustion appliances as not complete when user removes an item after completion", async () => {
-  		for (const key of objectKeys(store.infiltrationAndVentilation.combustionAppliances) as applianceType[]) {
+  		for (const key of objectKeys(store.infiltrationAndVentilation.combustionAppliances)) {
 
   			await user.click(screen.getByTestId("markAsCompleteButton"));
   			expect(

@@ -7,7 +7,7 @@ const title = "Secondary pipework";
 const store = useEcaasStore();
 
 const pipeworkData = useItemToEdit("pipe", store.domesticHotWater.pipework.secondaryPipework.data);
-const model: Ref<SecondaryPipeworkData | undefined > = ref(pipeworkData?.data);
+const model = ref(pipeworkData?.data);
 
 const locationOptions: Record<SchemaWaterPipeworkLocation, SnakeToSentenceCase<SchemaWaterPipeworkLocation>> = {
 	internal: "Internal",
@@ -34,7 +34,7 @@ const saveForm = (fields: SecondaryPipeworkData) => {
 	navigateTo("/domestic-hot-water/pipework");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<SecondaryPipeworkData>({
 	model,
 	storeData: store.domesticHotWater.pipework.secondaryPipework,
 	defaultName: "Secondary pipework",

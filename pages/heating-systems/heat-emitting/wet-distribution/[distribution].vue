@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormKitOptionsProp } from "@formkit/inputs";
 import { isInteger } from "~/utils/validation";
-import { getUrl } from "#imports";
+import { getUrl, type WetDistributionData } from "#imports";
 
 const title = "Wet distribution";
 const store = useEcaasStore();
@@ -99,7 +99,7 @@ const saveForm = (fields: WetDistributionData) => {
 	navigateTo("/heating-systems/heat-emitting");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<WetDistributionData>({
 	model,
 	storeData: store.heatingSystems.heatEmitting.wetDistribution,
 	defaultName: "Wet distribution",

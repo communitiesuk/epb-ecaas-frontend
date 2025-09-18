@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { SchemaDuctShape, SchemaDuctType } from "~/schema/api-schema.types";
+import type { DuctworkData, EcaasForm } from "#imports";
 import { getUrl } from "#imports";
 
 const title = "MVHR ductwork";
@@ -11,7 +12,7 @@ const ductwork = useItemToEdit(
 	store.infiltrationAndVentilation.ductwork.data,
 );
 
-const model: Ref<DuctworkData | undefined> = ref(ductwork?.data);
+const model = ref(ductwork?.data);
 store.infiltrationAndVentilation.ductwork.complete = false;
 
 const ductworkCrossSectionalShapeOptions: Record<SchemaDuctShape, SnakeToSentenceCase<SchemaDuctShape>> = {
@@ -28,7 +29,7 @@ const ductTypeOptions: Record<SchemaDuctType, SnakeToSentenceCase<SchemaDuctType
 const saveForm = (fields: DuctworkData) => {
 	store.$patch((state) => {
 		const { ductwork } = state.infiltrationAndVentilation;
-		const index = getStoreIndex(ductwork.data);
+		const index = getStoreIndex(ductwork.data as EcaasForm<DuctworkData>[]);
 
 		const commonFields = {
 			name: fields.name,
@@ -73,7 +74,7 @@ const saveForm = (fields: DuctworkData) => {
 	navigateTo("/infiltration-and-ventilation/ductwork");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<DuctworkData>({
 	model,
 	storeData: store.infiltrationAndVentilation.ductwork,
 	defaultName: "Ductwork",
@@ -120,7 +121,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 		<FormKit
 			id="mvhrUnit" type="govRadios" :options="new
-				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === 'MVHR').map((x)=> [x.data.id, x.data.name]))"
+				Map(store.infiltrationAndVentilation.mechanicalVentilation.data.filter(x => x.data.typeOfMechanicalVentilationOptions === 'MVHR').map((x)=> [x.data.id!, x.data.name]))"
 			label="MVHR unit" 
 			name="mvhrUnit" 
 			help="Select the MVHR unit that this ductwork is attached to"

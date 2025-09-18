@@ -8,7 +8,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 
 const electricShowerData = useItemToEdit("shower", store.domesticHotWater.hotWaterOutlets.electricShower.data);
-const model: Ref<ElectricShowerData | undefined> = ref(electricShowerData?.data);
+const model = ref(electricShowerData?.data);
 const id = electricShowerData?.data.id ?? uuidv4();
 
 
@@ -33,7 +33,7 @@ const saveForm = (fields: ElectricShowerData) => {
 	navigateTo("/domestic-hot-water/hot-water-outlets");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<ElectricShowerData>({
 	model,
 	storeData: store.domesticHotWater.hotWaterOutlets.electricShower,
 	defaultName: "Electric shower",

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
+import type { BathData } from "#imports";
 import { getUrl  } from "#imports";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
@@ -7,7 +8,7 @@ const title = "Bath";
 const store = useEcaasStore();
 
 const bathData = useItemToEdit("bath", store.domesticHotWater.hotWaterOutlets.bath.data);
-const model: Ref<BathData | undefined> = ref(bathData?.data);
+const model = ref(bathData?.data);
 const id = bathData?.data.id ?? uuidv4();
 
 const saveForm = (fields: BathData) => {
@@ -32,7 +33,7 @@ const saveForm = (fields: BathData) => {
 	navigateTo("/domestic-hot-water/hot-water-outlets");
 };
 
-autoSaveElementForm({
+autoSaveElementForm<BathData>({
 	model,
 	storeData: store.domesticHotWater.hotWaterOutlets.bath,
 	defaultName: "Bath",
