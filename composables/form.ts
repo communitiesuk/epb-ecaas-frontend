@@ -102,8 +102,6 @@ export function useForm() {
 				const name = getName(newData, defaultName);
 				const dataToPatch: PartialExceptName<T> = { ...newData, name };
 
-				const dataToPatch: PartialExceptName<T> = { ...newData, name };
-
 				const elementData: EcaasForm<T> = {
 					data: dataToPatch as T,
 				};
