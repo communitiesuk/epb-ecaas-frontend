@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { centimetre, type Length } from "~/utils/units/length";
+import { centimetre, millimetre, type Length } from "~/utils/units/length";
 import { FloorType, WindShieldLocation } from "~/schema/api-schema.types";
 import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
@@ -266,11 +266,11 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Edge insulation height or width"
 				help="This is the coverage distance of edge insulation rather than the thickness of the insulation"
 				type="govInputWithUnit"
-				:unit="centimetre"
+				:unit="millimetre"
 				:validation-rules="{ withinMinAndMax }"
 				validation="required | withinMinAndMax:0,10000"
 				:validation-messages="{
-					withinMinAndMax: `Edge insulation width must be at least 0 and no more than 10,000 ${centimetre.name}.`,
+					withinMinAndMax: `Edge insulation width must be at least 0 and no more than 100,000 ${millimetre.name}.`,
 				}"
 			>
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
@@ -286,12 +286,12 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 							<tr class="govuk-table__row">
 								<td class="govuk-table__cell">Vertical</td>
 								<td class="govuk-table__cell">This is the height of the vertical edge insulation strips used around the perimeter of the floor.</td>
-								<td class="govuk-table__cell">10 - 15cm</td>
+								<td class="govuk-table__cell">100 - 150mm</td>
 							</tr>
 							<tr class="govuk-table__row">
 								<td class="govuk-table__cell">Horizontal</td>
 								<td class="govuk-table__cell">This is the width or extension of the insulation from the edge of the slab.</td>
-								<td class="govuk-table__cell">60 - 120cm</td>
+								<td class="govuk-table__cell">600 - 1,200mm</td>
 							</tr>
 						</tbody>
 					</table>

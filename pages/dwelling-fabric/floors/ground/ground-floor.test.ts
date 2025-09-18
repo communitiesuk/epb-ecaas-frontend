@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import GroundFloor from "./[floor].vue";
 import { FloorType, MassDistributionClass, WindShieldLocation } from "~/schema/api-schema.types";
-import { centimetre } from "~/utils/units/length";
+import { centimetre, millimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -33,7 +33,7 @@ describe("ground floor", () => {
 		...groundFloor,
 		typeOfGroundFloor: FloorType.Slab_edge_insulation,
 		edgeInsulationType: "horizontal",
-		edgeInsulationWidth: unitValue(0, centimetre),
+		edgeInsulationWidth: unitValue(0, millimetre),
 		edgeInsulationThermalResistance: 0,
 	};
 
