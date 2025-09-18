@@ -57,9 +57,9 @@ describe("Show boolean in display", () => {
 		expect(result).toBe("No");
 	});
 
-	it("should return undefined when value is undefined", () => {
+	it("should return a hyphen when value is undefined", () => {
 		const result = displayBoolean(undefined);
-		expect(result).toBe(undefined);
+		expect(result).toBe("-");
 	});
 });
 
