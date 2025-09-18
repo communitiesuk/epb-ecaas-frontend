@@ -40,6 +40,10 @@ describe("dim function to show an amount with units", () => {
 	it("renders a unitless amount passed as undefined as empty value", () => {
 		expect(dim(undefined)).toEqual("-");
 	});
+
+	it("renders a unit object", () => {
+		expect(dim(unitValue(60, "degrees"))).toEqual("60 °");
+	});
 });
 
 describe("Show boolean in display", () => {

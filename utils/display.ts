@@ -1,7 +1,7 @@
 import { objectFromEntries } from "ts-extras";
 import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass, WwhrsType } from "../schema/api-schema.types";
 import type { DisplayProduct } from "~/pcdb/products";
-import type { UnitName } from "./units/types";
+import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 
 const emptyValueRendering = "-";
@@ -12,7 +12,12 @@ export function show(value: string | number | undefined | null): string {
 }
 
 /** Renders a unit with correct visual suffix, falling back to "-" for undefined */
-export function dim(amount: number | undefined, unit?: UnitName): string {
+export function dim(amount: UnitValue | number | undefined, unit?: UnitName): string {
+	if (typeof amount === "object") {
+		const { amount: num, unit: unitName } = amount;
+		
+		return renderDimensionedValue(num, unitName);
+	}	
 	if (typeof amount === "undefined") {
 		return emptyValueRendering;
 	}
@@ -20,7 +25,11 @@ export function dim(amount: number | undefined, unit?: UnitName): string {
 		return amount.toString();
 	}
 
-	return `${amount} ${asUnit(unit).suffix}`;
+	return renderDimensionedValue(amount, unit);
+}
+
+function renderDimensionedValue<T extends number, U extends UnitName>(amount: T, unit: U): `${T} ${UnitForName<U>["suffix"]}` {
+	return `${amount} ${asUnit(unit).suffix}` as `${T} ${UnitForName<U>["suffix"]}`;
 }
 
 export function displayBoolean(value: boolean | undefined): BooleanDisplay | undefined {
