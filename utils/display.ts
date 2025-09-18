@@ -12,9 +12,12 @@ export function show(value: string | number | undefined | null): string {
 }
 
 /** Renders a unit with correct visual suffix, falling back to "-" for undefined */
-export function dim(amount: number | undefined, unit: UnitName): string {
+export function dim(amount: number | undefined, unit?: UnitName): string {
 	if (typeof amount === "undefined") {
 		return emptyValueRendering;
+	}
+	if (typeof unit === "undefined") {
+		return amount.toString();
 	}
 
 	return `${amount} ${asUnit(unit).suffix}`;
