@@ -30,12 +30,12 @@ const shadingSummary: SummarySection = {
 	label: "Shading",
 	data: shadingData.map(s => {
 		return {
-			"Name": s.data.name,
-			"Shading start angle": `${s.data.startAngle} ${degrees.suffix}`,
-			"Shading end angle": `${s.data.endAngle} ${degrees.suffix}`,
-			"Shading type": s.data.objectType ? displayCamelToSentenceCase(s.data.objectType) : undefined,
-			"Height": `${s.data.height} ${metre.suffix}`,
-			"Distance": `${s.data.distance} ${metre.suffix}`,
+			"Name": show(s.data.name),
+			"Shading start angle": dim(s.data.startAngle, degrees.name),
+			"Shading end angle": dim(s.data.endAngle, degrees.name),
+			"Shading type": displayCamelToSentenceCase(show(s.data.objectType)),
+			"Height": dim(s.data.height, metre.name),
+			"Distance": dim(s.data.distance, metre.name),
 		};
 	}) || [],
 	editUrl: getUrl("shading"),
@@ -45,9 +45,9 @@ const externalFactorsSummary: SummarySection = {
 	id: "externalFactors",
 	label: "External factors",
 	data: {
-		"Altitude": externalFactors.altitude ? `${externalFactors.altitude} ${metre.suffix}` : undefined,
-		"Type of exposure": externalFactors.typeOfExposure,
-		"Terrain type": externalFactors.terrainType ? displayCamelToSentenceCase(externalFactors.terrainType) : undefined,
+		"Altitude": dim(externalFactors.altitude, metre.name),
+		"Type of exposure": show(externalFactors.typeOfExposure),
+		"Terrain type": displayCamelToSentenceCase(show(externalFactors.terrainType)),
 		"Noise nuisance": displayBoolean(externalFactors.noiseNuisance),
 	},
 	editUrl: getUrl("externalFactors"),
