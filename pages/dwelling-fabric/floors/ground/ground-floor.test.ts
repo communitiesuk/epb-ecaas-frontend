@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import GroundFloor from "./[floor].vue";
 import { FloorType, MassDistributionClass, WindShieldLocation } from "~/schema/api-schema.types";
-import { centimetre, millimetre } from "~/utils/units/length";
+import { millimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());

@@ -42,7 +42,7 @@ export function displayBoolean(value: boolean | undefined): BooleanDisplay | typ
 
 type BooleanDisplay = "Yes" | "No";
 
-export function displayMassDistributionClass(value: MassDistributionClass | undefined): MassDistributionClassDisplay | undefined {
+export function displayMassDistributionClass(value: MassDistributionClass | undefined): MassDistributionClassDisplay | typeof emptyValueRendering {
 	switch (value) {
 		case MassDistributionClass.I:
 			return "Internal";
@@ -55,7 +55,7 @@ export function displayMassDistributionClass(value: MassDistributionClass | unde
 		case MassDistributionClass.M:
 			return "Inside";
 		default:
-			return undefined;
+			return emptyValueRendering;
 	}
 }
 
@@ -163,9 +163,9 @@ export type ArealHeatCapacityValue = keyof typeof arealHeatCapacityOptions exten
 		: never
 	: never;
 
-export function displayArealHeatCapacity(value: ArealHeatCapacityValue | undefined): string | undefined {
+export function displayArealHeatCapacity(value: ArealHeatCapacityValue | undefined): string {
 	if (typeof value === "undefined") {
-		return undefined;
+		return emptyValueRendering;
 	}
 
 	return arealHeatCapacityOptions[value] ?? ("" + value);
