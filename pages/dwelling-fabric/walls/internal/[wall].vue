@@ -35,11 +35,7 @@ autoSaveElementForm({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall,
 	defaultName: "Internal wall",
-	onPatchCreate: (state, newData) => {
-		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.data.push(newData);
-		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.complete = false;
-	},
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		const { pitchOption, pitch } = newData.data;
 
 		newData.data.pitch = pitchOption === "90" ? 90 : pitch;

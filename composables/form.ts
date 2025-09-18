@@ -1,4 +1,4 @@
-import type { EcaasFormList, PartialExceptName } from "~/stores/ecaasStore.schema";
+import type { EcaasForm, EcaasFormList, PartialExceptName } from "~/stores/ecaasStore.schema";
 
 export function useForm() {
 	const route = useRoute();
@@ -27,13 +27,13 @@ export function useForm() {
 	};
 
 	/**
-	 * Return the index of the item or the index of the last item if the route param is 'create'
+	 * Return the index of the item or the index of the next item if the route param is 'create'
 	 * @param data Array of EcaasForm objects
 	 * @returns Index
 	 */
 	const getStoreIndex = <T>(data: EcaasForm<T>[]): number => {
 		const routeParam = route.params[Object.keys(route.params)[0]!];
-		return routeParam === "create" ? data.length - 1 : Number(routeParam);
+		return routeParam === "create" ? data.length : Number(routeParam);
 	};
 
 	/**
@@ -63,8 +63,7 @@ export function useForm() {
 		model: Ref<PartialExceptName<T> | undefined>;
 		storeData: EcaasFormList<T>;
 		defaultName: string;
-		onPatchCreate: (state: EcaasState, newData: EcaasForm<T>) => void;
-		onPatchUpdate: (state: EcaasState, newData: EcaasForm<T>, index: number) => void;
+		onPatch: (state: EcaasState, newData: EcaasForm<T>, index: number) => void;
 	}
 
 	/**
@@ -75,60 +74,33 @@ export function useForm() {
 		model,
 		storeData,
 		defaultName,
-		onPatchCreate,
-		onPatchUpdate,
+		onPatch,
 	}: AutoSaveElementFormOptions<T>) => {
 		watch(model, async (newData: PartialExceptName<T> | undefined, initialData: PartialExceptName<T> | undefined) => {
 			const routeParam = route.params[Object.keys(route.params)[0]!];
-
 			if (initialData === undefined || newData === undefined || routeParam === undefined) {
 				return;
 			}
 
-			const duplicates = storeData.data.filter(x => {
-				if (x && "name" in x.data && typeof x.data.name === "string") {
-					return x.data.name.match(duplicateNamePattern(defaultName));
-				}
-				
-				return false;
-			});
-
-			const isFirstEdit = Object.values(initialData).every(x => x === undefined) &&
-				Object.values(newData).some(x => x !== undefined);
-				
-			if (routeParam === "create" && isFirstEdit) {
-			
-				const name = "name" in newData && typeof newData.name === "string" && newData.name.trim() ||
-					(duplicates.length ? `${defaultName} (${duplicates.length})` : defaultName);
-
-				const dataToPatch: PartialExceptName<T> = { ...newData, name };
-			
-				store.$patch(state => {
-					const elementData: EcaasForm<T, "name"> = {
-						data: dataToPatch as T,
-					};
-
-					onPatchCreate(state, elementData as EcaasForm<T>);
-				});
-
+			if (!hasChangedFields(newData, initialData)) {
 				return;
+			}
+			
+			const index = getStoreIndex(storeData.data as EcaasForm<T>[]);
+			if (routeParam === "create") {
+				// we're about to save, so set the route parameter to the new index
+				// we only expect this to trigger on the first change 
+				// (after that, routeParam is no longer "create")
+				route.params[Object.keys(route.params)[0]!] = index.toString();
+
+				// change the url to reflect this
+				const editItemPath = route.fullPath.replace("create", index.toString());
+				history.replaceState({}, "", editItemPath);
 			}
 
 			store.$patch((state) => {
-				if (!hasChangedFields(newData, initialData)) {
-					return;
-				}
-
-				const index = getStoreIndex(storeData.data as EcaasForm<T>[]);
-				const storeElementData = storeData.data[index]?.data;
-				let name: string = defaultName;
-
-				if ("name" in newData && typeof newData.name === "string") {
-					name = newData.name.trim() || defaultName;
-				}
-				else if (storeElementData && "name" in storeElementData && typeof storeElementData.name === "string") {
-					name = storeElementData.name.trim() || defaultName;
-				}
+				const name = getName(newData, defaultName);
+				const dataToPatch: PartialExceptName<T> = { ...newData, name };
 
 				const dataToPatch: PartialExceptName<T> = { ...newData, name };
 
@@ -136,7 +108,7 @@ export function useForm() {
 					data: dataToPatch as T,
 				};
 
-				onPatchUpdate(state, elementData, index);
+				onPatch(state, elementData, index);
 			});
 		});
 	};
@@ -154,3 +126,16 @@ export function useForm() {
 
 	return { saveToList, getStoreIndex, autoSaveForm, autoSaveElementForm };
 }
+
+/**
+	 * Return the name of this item or default name
+	 * @returns Name
+	 */
+export const getName = <T extends object>(updatedItem: T, defaultName: string): string => {
+
+	if ("name" in updatedItem && typeof updatedItem.name === "string") {
+		return updatedItem.name.trim() || defaultName;
+	}
+
+	return defaultName;
+};

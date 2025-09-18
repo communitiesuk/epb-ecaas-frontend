@@ -46,11 +46,7 @@ autoSaveElementForm<HeatPumpData>({
 	model,
 	storeData: store.heatingSystems.heatGeneration.heatPump,
 	defaultName: "Heat pump",
-	onPatchCreate: (state, newData) => {
-		state.heatingSystems.heatGeneration.heatPump.data.push(newData);
-		state.heatingSystems.heatGeneration.heatPump.complete = false;
-	},
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.heatingSystems.heatGeneration.heatPump.data[index] = newData;
 		state.heatingSystems.heatGeneration.heatPump.complete = false;
 	},

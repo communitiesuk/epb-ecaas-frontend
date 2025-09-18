@@ -31,11 +31,7 @@ autoSaveElementForm<PointThermalBridgeData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges,
 	defaultName: "Point thermal bridge",
-	onPatchCreate: (state, newData) => {
-		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data.push(newData);
-		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.complete = false;
-	},
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpacePointThermalBridges.complete = false;
 	},

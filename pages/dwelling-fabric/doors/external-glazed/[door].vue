@@ -43,11 +43,7 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor,
 	defaultName: "External glazed door",
-	onPatchCreate: (state, newData) => {
-		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data.push(newData);
-		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.complete = false;
-	},
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.complete = false;
 	},
