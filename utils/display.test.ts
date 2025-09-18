@@ -20,7 +20,7 @@ describe("Show function to make showable value", () => {
 	});
 });
 
-describe("unit function to show an amount with units", () => {
+describe("dim function to show an amount with units", () => {
 	it("renders an empty value if undefined passed", () => {
 		expect(dim(undefined, "centimetres")).toEqual("-");
 	});
@@ -31,6 +31,14 @@ describe("unit function to show an amount with units", () => {
 
 	it("renders an amount in degrees using correct suffix if degrees given", () => {
 		expect(dim(45, "degrees")).toEqual("45 °");
+	});
+
+	it("renders a unitless amount without showing suffixed value", () => {
+		expect(dim(45)).toEqual("45");
+	});
+
+	it("renders a unitless amount passed as undefined as empty value", () => {
+		expect(dim(undefined)).toEqual("-");
 	});
 });
 
