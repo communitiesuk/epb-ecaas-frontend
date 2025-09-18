@@ -32,9 +32,9 @@ function renderDimensionedValue<T extends number, U extends UnitName>(amount: T,
 	return `${amount} ${asUnit(unit).suffix}` as `${T} ${UnitForName<U>["suffix"]}`;
 }
 
-export function displayBoolean(value: boolean | undefined): BooleanDisplay | undefined {
+export function displayBoolean(value: boolean | undefined): BooleanDisplay | typeof emptyValueRendering {
 	if (typeof value === "undefined") {
-		return undefined;
+		return emptyValueRendering;
 	}
   
 	return value ? "Yes" : "No";
