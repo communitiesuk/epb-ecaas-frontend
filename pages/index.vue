@@ -5,6 +5,7 @@ import { lastExportDateCookieName } from "~/utils/exportDate";
 const title = "(Testing) Check Part L building compliance";
 	
 const page = usePage();
+const store = useEcaasStore();
 const { createTaskList } = useTaskList();
 const taskList = createTaskList(page);
 const calculateError = ref<CorrectedJsonApiError[] | boolean | undefined>();
@@ -32,6 +33,7 @@ const firstError = computed(() => {
 	return null;
 });
 
+store.revalidate();
 </script>
 
 <template>
