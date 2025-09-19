@@ -52,6 +52,7 @@ store.revalidate();
 				<p v-if="firstError?.id" class="govuk-body">Error ID: {{ firstError.id }}</p>
 			</GovErrorSummary>
 		</div>
+		<NotificationsBanner />
 		<h1 class="govuk-heading-l">{{ title }}</h1>
 		<GovTaskList :items="taskList" />
 		<p v-if="exportDate" class="govuk-body last-export govuk-!-margin-top-5">This calculation was exported on the {{ exportDate.format('DD/MM/YYYY') }} at {{ exportDate.format('HH:mm') }}.</p>
