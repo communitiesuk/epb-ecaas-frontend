@@ -193,5 +193,28 @@ describe("linear thermal bridges", () => {
 			expect(linearBridging.data[0]!.complete).not.toBe(true);
 			expect(linearBridging.complete).not.toBe(true);
 		});
+
+		it("updates the name to the default name once the user unselects the type of thermal bridge", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceThermalBridging: {
+						dwellingSpaceLinearThermalBridges: {
+							data: [{ ...state }],
+						},
+					},
+				},
+			});
+			
+			await renderSuspended(LinearBridging, {
+				route: {
+					params: { linear: "0" },
+				},
+			});
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "");
+			await user.tab();
+
+			const linearBridging = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges;
+			expect(linearBridging.data[0]!.data.name).toBe("Linear thermal bridge");
+		});
 	});
 });

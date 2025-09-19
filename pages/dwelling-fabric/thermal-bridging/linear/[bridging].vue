@@ -9,6 +9,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const thermalBridgeData = useItemToEdit("bridging", store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data);
 const model = ref(thermalBridgeData?.data);
 
+const defaultName = "Linear thermal bridge";
 const options: FormKitOptionsProp[] = [{
 	e1: "E1: Steel lintel with perforated steel base plate",
 	e2: "E2: Other lintels (including other steel lintels)",
@@ -61,7 +62,7 @@ const options: FormKitOptionsProp[] = [{
 function getName(fields: LinearThermalBridgeData) {
 	const option = options.find(o => Object.keys(o).includes(fields.typeOfThermalBridge));
 	const entry = option ? Object.entries(option).find(o => o[0] === fields.typeOfThermalBridge) : undefined;
-	return entry?.[1];
+	return entry?.[1] || defaultName;
 }
 
 const saveForm = (fields: LinearThermalBridgeData) => {
@@ -89,23 +90,12 @@ const saveForm = (fields: LinearThermalBridgeData) => {
 autoSaveElementForm<LinearThermalBridgeData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
-	defaultName: "Linear thermal bridge",
-	onPatchCreate: (state, newData) => {
-		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data.push({
-			...newData,
-			data: {
-				...newData.data,
-				...(getName(newData.data) ? { name: getName(newData.data) } : {}),
-			},
-		});
-		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
-	},
-	onPatchUpdate: (state, newData, index) => {
+	defaultName,
+	onPatch: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = {
-			...newData,
 			data: {
 				...newData.data,
-				...(getName(newData.data) ? { name: getName(newData.data) } : {}),
+				name: getName(newData.data),
 			},
 		};
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;

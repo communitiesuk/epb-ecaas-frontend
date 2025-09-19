@@ -21,8 +21,8 @@ const zoneParametersSummary: SummarySection = {
 	id: "dwellingSpaceZoneParameters",
 	label: "Zone parameters",
 	data: {
-		"Area": zoneParametersData.area ? `${zoneParametersData.area} ${metresSquare.suffix}` : undefined,
-		"Volume": zoneParametersData.volume ? `${zoneParametersData.volume} ${cubicMetre.suffix}` : undefined,
+		"Area": dim(zoneParametersData.area, metresSquare.name),
+		"Volume": dim(zoneParametersData.volume, cubicMetre.name),
 		// "Heat emitting system for this zone": zoneParametersData.spaceHeatingSystemForThisZone,
 		// "Heating control type": zoneParametersData.heatingControlType
 	},
@@ -35,8 +35,8 @@ const lightingSummary: SummarySection = {
 	id: "dwellingSpaceLighting",
 	label: "Lighting",
 	data: {
-		"Number of LED bulbs": lightingData.numberOfLEDBulbs,
-		"Number of incandescent bulbs": lightingData.numberOfIncandescentBulbs,
+		"Number of LED bulbs": show(lightingData.numberOfLEDBulbs),
+		"Number of incandescent bulbs": show(lightingData.numberOfIncandescentBulbs),
 	},
 	editUrl: getUrl("dwellingSpaceLighting"),
 };
@@ -52,16 +52,16 @@ const groundFloorSummary: SummarySection = {
 		const edgeInsulationWidth = "edgeInsulationWidth" in x.data ? (typeof x.data.edgeInsulationWidth === "number" ? x.data.edgeInsulationWidth : x.data.edgeInsulationWidth?.amount) : undefined;
 		
 		return {
-			"Name": x.data.name,
-			"Net surface area of this element": `${x.data.surfaceArea} ${metresSquare.suffix}`,
-			"Pitch": `${x.data.pitch} ${degrees.suffix}`,
-			"U-value": `${x.data.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
-			"Thermal resistance": `${x.data.thermalResistance} ${squareMeterKelvinPerWatt.suffix}`,
+			"Name": show(x.data.name),
+			"Net surface area of this element": dim(x.data.surfaceArea, metresSquare.name),
+			"Pitch": dim(x.data.pitch, degrees.name),
+			"U-value": dim(x.data.uValue, wattsPerSquareMeterKelvin.name),
+			"Thermal resistance": dim(x.data.thermalResistance, squareMeterKelvinPerWatt.name),
 			"Areal heat capacity": displayArealHeatCapacity(x.data.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.data.massDistributionClass),
-			"Perimeter": `${x.data.perimeter} ${metre.suffix}`,
-			"Psi of wall junction": `${x.data.psiOfWallJunction} ${wattsPerMeterKelvin.suffix}`,
-			"Thickness of walls at the edge of the floor": `${x.data.thicknessOfWalls} ${millimetre.suffix}`,
+			"Perimeter": dim(x.data.perimeter, metre.name),
+			"Psi of wall junction": dim(x.data.psiOfWallJunction, wattsPerMeterKelvin.name),
+			"Thickness of walls at the edge of the floor": dim(x.data.thicknessOfWalls, millimetre.name),
 			"Type of ground floor": displaySnakeToSentenceCase(show(x.data.typeOfGroundFloor)),
 			"Edge insulation type": "edgeInsulationType" in x.data ? displayCamelToSentenceCase(show(x.data.edgeInsulationType)) : undefined,
 			"Edge insulation width": edgeInsulationWidth ? `${edgeInsulationWidth} ${centimetre.suffix}` : undefined,

@@ -158,6 +158,15 @@ export const useEcaasStore = defineStore("ecaas", {
 		clearState() {
 			this.$reset();
 		},
+		revalidate() {
+			const { newState: newValidatedState } = revalidateState(this.$state as EcaasState);
+
+			this.$patch({
+				...getInitialState(),
+				...newValidatedState,
+				lastResult: undefined,
+			});
+		},
 	},
 	persist: {
 		storage: piniaPluginPersistedstate.localStorage(),

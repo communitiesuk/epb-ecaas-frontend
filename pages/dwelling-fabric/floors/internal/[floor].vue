@@ -51,11 +51,7 @@ autoSaveElementForm<InternalFloorData>({
 	model,
 	storeData: store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor,
 	defaultName: "Internal floor",
-	onPatchCreate: (state, newData) => {
-		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.data.push(newData);
-		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
-	},
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 	},

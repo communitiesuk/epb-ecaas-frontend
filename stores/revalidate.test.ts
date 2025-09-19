@@ -68,6 +68,46 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 	},
 };
 
+const twoLegacyCompleteValidWalls = {
+	"dwellingFabric": {
+		"dwellingSpaceWalls": {
+			"dwellingSpaceExternalWall": {
+				"data": [
+					{
+						"name": "Wall 1",
+						"pitchOption": "90",
+						"pitch": 90,
+						"orientation": 140,
+						"height": 6,
+						"length": 5,
+						"elevationalHeight": 25,
+						"surfaceArea": 40,
+						"solarAbsorption": 0.9,
+						"uValue": 5,
+						"kappaValue": 110000,
+						"massDistributionClass": "E",
+					},
+					{
+						"name": "Wall 2",
+						"pitchOption": "90",
+						"pitch": 90,
+						"orientation": 90,
+						"height": 30,
+						"length": 34,
+						"elevationalHeight": 20,
+						"surfaceArea": 30,
+						"solarAbsorption": 0.7,
+						"uValue": 6,
+						"kappaValue": 175000,
+						"massDistributionClass": "I",
+					},
+				],
+				"complete": true,
+			},
+		},
+	},
+};
+
 const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSpaceExternalWall.data.1.data.solarAbsorption");
 
 const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingField, "dwellingSpaceExternalWall.data.0.massDistributionClass", "X"); // 'X' is invalid for a mass distribution class value
@@ -196,7 +236,7 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 				"dwellingSpaceWalls": immutable.set(twoWallsOneMissingFieldOneInvalidValue, "dwellingSpaceExternalWall.complete", false),
 			},
 		},
-		2,
+		1,
 	],
 	[
 		"case where there are two heat pumps (lists of items each with complete states), all complete and valid",
@@ -211,6 +251,17 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		true,
 		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, "heatingSystems.heatGeneration.heatPump.data.1.complete", false), "heatingSystems.heatGeneration.heatPump.complete", false),
 		1,
+	],
+	[
+		"case where there is a legacy array of form data: data should be wrapped in EcaasForm objects",
+		twoLegacyCompleteValidWalls,
+		false,
+		{
+			"dwellingFabric": {
+				"dwellingSpaceWalls": twoCompleteValidWalls,
+			},
+		},
+		0,
 	],
 ];
 

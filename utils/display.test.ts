@@ -56,9 +56,9 @@ describe("Show boolean in display", () => {
 		expect(result).toBe("No");
 	});
 
-	it("should return undefined when value is undefined", () => {
+	it("should return a hyphen when value is undefined", () => {
 		const result = displayBoolean(undefined);
-		expect(result).toBe(undefined);
+		expect(result).toBe("-");
 	});
 });
 
@@ -88,9 +88,41 @@ describe("Show MassDistributionClass in display", () => {
 		expect(result).toBe("Inside");
 	});
 
-	it("should return undefined when value is undefined", () => {
+	it("should return a hyphen when value is undefined", () => {
 		const result = displayMassDistributionClass(undefined);
-		expect(result).toBe(undefined);
+		expect(result).toBe("-");
+	});
+});
+
+describe("Show ArealHeatCapacity in display", () => {
+	it("should return very light when value is 50000", () => {
+		const result = displayArealHeatCapacity(50000);
+		expect(result).toBe("Very light");
+	});
+
+	it("should return light when value is 75000", () => {
+		const result = displayArealHeatCapacity(75000);
+		expect(result).toBe("Light");
+	});
+
+	it("should return medium when value is 110000", () => {
+		const result = displayArealHeatCapacity(110000);
+		expect(result).toBe("Medium");
+	});
+
+	it("should return heavy when value is 175000", () => {
+		const result = displayArealHeatCapacity(175000);
+		expect(result).toBe("Heavy");
+	});
+
+	it("should return very heavy when value is 250000", () => {
+		const result = displayArealHeatCapacity(250000);
+		expect(result).toBe("Very heavy");
+	});
+
+	it("should return a hyphen when value is undefined", () => {
+		const result = displayArealHeatCapacity(undefined);
+		expect(result).toBe("-");
 	});
 });
 

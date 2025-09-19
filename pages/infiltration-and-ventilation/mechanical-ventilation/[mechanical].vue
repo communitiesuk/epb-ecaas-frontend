@@ -74,13 +74,7 @@ autoSaveElementForm<MechanicalVentilationData>({
 	model,
 	storeData: store.infiltrationAndVentilation.mechanicalVentilation,
 	defaultName: "Mechanical ventilation",
-	onPatchCreate: (state, newData) => {
-		newData.data.id ??= id;
-		state.infiltrationAndVentilation.mechanicalVentilation.complete = false;
-
-		state.infiltrationAndVentilation.mechanicalVentilation.data.push(newData);
-	},
-	onPatchUpdate: (state, newData, index) => {
+	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
 		state.infiltrationAndVentilation.mechanicalVentilation.data[index] = newData;
 		state.infiltrationAndVentilation.mechanicalVentilation.complete = false;

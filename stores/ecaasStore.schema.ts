@@ -50,7 +50,7 @@ export type EcaasFormList<T> = {
 };
 
 export function isEcaasForm(value: unknown): value is EcaasForm<unknown> {
-	return typeof value === "object" && value !== null && "data" in value && Object.keys(value).length <= 2;
+	return typeof value === "object" && value !== null && "data" in value;
 }
 
 const baseGeneralDetails = z.object({
