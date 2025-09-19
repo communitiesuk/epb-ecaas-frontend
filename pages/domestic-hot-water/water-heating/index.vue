@@ -21,7 +21,6 @@ const waterHeaterTypeOptions = {
 
 type WaterHeaterType = keyof typeof waterHeaterTypeOptions | null;
 
-
 const model: Ref<HotWaterCylinderData & { waterHeaterType: WaterHeaterType[] }> = ref({
 	...hotWaterCylinderData!,
 	waterHeaterType: hotWaterCylinderData ? ["hotWaterCylinder"] : [],
@@ -30,7 +29,8 @@ const model: Ref<HotWaterCylinderData & { waterHeaterType: WaterHeaterType[] }> 
 autoSaveForm(model, (state, newData) => {
 	state.domesticHotWater.waterHeating.hotWaterCylinder.data[0] = 
 	{ ...newData.data,	name: newData.data.name?.trim() || "Hot water cylinder", 
-		id: store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.id ?? uuidv4() } ;
+		id: hotWaterCylinderData?.id ?? uuidv4() } ;
+	state.domesticHotWater.waterHeating.hotWaterCylinder.complete = false;
 });
 
 const saveForm = (fields: typeof model.value) => {
