@@ -21,12 +21,15 @@ describe("domestic hot water mapper", () => {
 		// Arrange
 		const heatPumpName = "heat pump";
 
-		const hotWaterCylinder: HotWaterCylinderData = {
-			id: "hot water cylinder",
-			name: "hot water cylinder",
-			heatSource: heatPumpName,
-			storageCylinderVolume: unitValue(100, litre),
-			dailyEnergyLoss: 3,
+		const hotWaterCylinder:EcaasForm<HotWaterCylinderData> = {
+			...baseForm,
+			data: {
+				id: "hot water cylinder",
+				name: "hot water cylinder",
+				heatSource: heatPumpName,
+				storageCylinderVolume: unitValue(100, litre),
+				dailyEnergyLoss: 3,
+			},
 		};
 
 		store.$patch({
@@ -110,12 +113,15 @@ describe("domestic hot water mapper", () => {
 		// Arrange
 		const heatPumpName = "heatPump1";
 		const heatPumpId = "heatPump1Id";
-		const hotWaterCylinder: HotWaterCylinderData = {
-			id: "hotWaterCylinderId",
-			name: "hotWaterCylinderName",
-			heatSource: heatPumpId,
-			storageCylinderVolume: unitValue(200, litre),
-			dailyEnergyLoss: 3,
+		const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
+			...baseForm,
+			data: {
+				id: "hotWaterCylinderId",
+				name: "hotWaterCylinderName",
+				heatSource: heatPumpId,
+				storageCylinderVolume: unitValue(200, litre),
+				dailyEnergyLoss: 3,
+			},
 		};
 
 		const primaryPipework: EcaasForm<PrimaryPipeworkData> = {
@@ -130,7 +136,7 @@ describe("domestic hot water mapper", () => {
 				insulationThickness: 40,
 				surfaceReflectivity: false,
 				pipeContents: WaterPipeContentsType.water,
-				hotWaterCylinder: hotWaterCylinder.id,
+				hotWaterCylinder: hotWaterCylinder.data.id,
 			},
 		};
 

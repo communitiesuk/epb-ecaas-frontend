@@ -28,10 +28,10 @@ const hotWaterCylinderSummary: SummarySection = {
 	label: "Hot Water Cylinder",
 	data: hotWaterCylinderData.map(d => {
 		return {
-			"Name": d && d.name,
-			"Heat source": d && heatGenerationData.find(x => x.id === d.heatSource)?.name,
-			"Storage cylinder volume": d && `${typeof d.storageCylinderVolume === "number" ? d.storageCylinderVolume : d.storageCylinderVolume.amount} ${litre.suffix}`,
-			"Daily energy loss": d && `${d.dailyEnergyLoss} ${kilowattHour.suffix}`,
+			"Name": d && d.data.name,
+			"Heat source": d && heatGenerationData.find(x => x.id === d.data.heatSource)?.name,
+			"Storage cylinder volume": d && `${typeof d.data.storageCylinderVolume === "number" ? d.data.storageCylinderVolume : d.data.storageCylinderVolume!.amount} ${litre.suffix}`,
+			"Daily energy loss": d && `${d.data.dailyEnergyLoss} ${kilowattHour.suffix}`,
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -228,7 +228,7 @@ const primaryPipeworkSummary: SummarySection = {
 			"Thermal conductivity": `${d.data.thermalConductivity} ${wattsPerMeterKelvin.suffix}`,
 			"Surface reflectivity": d.data.surfaceReflectivity ? "Reflective" : "Not reflective",
 			"Pipe contents": displayCamelToSentenceCase(show(d.data.pipeContents)),
-			"Hot water cylinder": hotWaterCylinderData.find(x => x && x.id === d.data.hotWaterCylinder)?.name,
+			"Hot water cylinder": hotWaterCylinderData.find(x => x && x.data.id === d.data.hotWaterCylinder)?.data.name,
 			"Location": displayCamelToSentenceCase(show(d.data.location)),
 		};
 	}) || [],

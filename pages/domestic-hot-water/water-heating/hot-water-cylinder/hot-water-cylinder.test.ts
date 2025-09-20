@@ -19,12 +19,14 @@ describe("hot water cylinder", () => {
 
 	const heatPumpId = "463c94f6-566c-49b2-af27-57e5c68b5c30";
 
-	const hotWaterCylinder: HotWaterCylinderData = {
-		id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
-		name: "Hot water cylinder 1",
-		heatSource: heatPumpId,
-		storageCylinderVolume: unitValue(5, litre),
-		dailyEnergyLoss: 1,
+	const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
+		data: {
+			id: "c84528bb-f805-4f1e-95d3-2bd17384fdbe",
+			name: "Hot water cylinder 1",
+			heatSource: heatPumpId,
+			storageCylinderVolume: unitValue(5, litre),
+			dailyEnergyLoss: 1,
+		},
 	};
 
 	afterEach(() => {
@@ -59,7 +61,7 @@ describe("hot water cylinder", () => {
 	test("data is saved to store state when form is valid", async () => {
 		addStoreData();
 
-		vi.mocked(uuidv4).mockReturnValue(hotWaterCylinder.id as unknown as Buffer);
+		vi.mocked(uuidv4).mockReturnValue(hotWaterCylinder.data.id as unknown as Buffer);
 		await renderSuspended(HotWaterCylinder);
 
 		await populateValidForm();

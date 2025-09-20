@@ -1195,11 +1195,14 @@ describe("FHS input mapper", () => {
 				hotWaterCylinder: {
 					...baseForm,
 					data: [{
-						id: "some-hot-water-cyclinder",
-						name: "hw cylinder",
-						heatSource: "some-heat-pump-id",
-						storageCylinderVolume: 200,
-						dailyEnergyLoss: 34,
+						...baseForm,
+						data: {
+							id: "some-hot-water-cyclinder",
+							name: "hw cylinder",
+							heatSource: "some-heat-pump-id",
+							storageCylinderVolume: 200,
+							dailyEnergyLoss: 34,
+						},
 					}],
 				},
 				immersionHeater: {
@@ -1903,11 +1906,14 @@ describe("FHS input mapper", () => {
 				hotWaterCylinder: {
 					...baseForm,
 					data: [{
-						id: "hw cylinder 1 id",
-						name: "hw cylinder 1 name",
-						heatSource: "heat pump 1 id",
-						storageCylinderVolume: 80,
-						dailyEnergyLoss: 10,
+						...baseForm,
+						data: {
+							id: "hw cylinder 1 id",
+							name: "hw cylinder 1 name",
+							heatSource: "heat pump 1 id",
+							storageCylinderVolume: 80,
+							dailyEnergyLoss: 10,
+						},
 					}],
 				},
 				immersionHeater: {

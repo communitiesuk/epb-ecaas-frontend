@@ -3,7 +3,7 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import PipeworkForm from "./[pipe].vue";
 import WaterHeatingForm from "../../water-heating/index.vue";
-import type { PrimaryPipeworkData } from "~/stores/ecaasStore.schema";
+import type { EcaasForm, HotWaterCylinderData, PrimaryPipeworkData } from "~/stores/ecaasStore.schema";
 import { WaterPipeContentsType, WaterPipeworkLocation } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -50,18 +50,22 @@ afterEach(() => {
 	store.$reset();
 });
 
+const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
+	data: {
+		id: hotWaterCylinderId,
+		name: "Hot water cylinder 1",
+		storageCylinderVolume: 5,
+		dailyEnergyLoss: 1,
+		heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30",
+	},
+};
+
 const addHotWaterCylinder = () => {
 	store.$patch({
 		domesticHotWater: {
 			waterHeating: {
 				hotWaterCylinder: {
-					data: [{
-						id: hotWaterCylinderId,
-						name: "Hot water cylinder 1",
-						storageCylinderVolume: 5,
-						dailyEnergyLoss: 1,
-						heatSource: "463c94f6-566c-49b2-af27-57e5c68b5c30",
-					}],
+					data: [hotWaterCylinder],
 				},
 			},
 		},
@@ -150,7 +154,7 @@ describe("Primary pipework form", () => {
 		await renderSuspended(WaterHeatingForm); 
 		await(user.click(screen.getByTestId("saveAndComplete")));
 
-		expect(store.domesticHotWater.pipework.primaryPipework.data[0]?.data.hotWaterCylinder).toBe(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.id);
+		expect(store.domesticHotWater.pipework.primaryPipework.data[0]?.data.hotWaterCylinder).toBe(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.data.id);
 		
 		await renderSuspended(PipeworkForm, {
 			route: {

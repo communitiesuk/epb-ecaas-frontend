@@ -555,7 +555,7 @@ export interface DomesticHotWater {
 }
 
 export type WaterHeating = AssertFormKeysArePageIds<{
-	hotWaterCylinder: EcaasForm<HotWaterCylinderData[]>;
+	hotWaterCylinder: EcaasFormList<HotWaterCylinderData>;
 	immersionHeater: EcaasForm<ImmersionHeaterData[]>;
 	solarThermal: EcaasForm<SolarThermalData[]>;
 	pointOfUse: EcaasForm<PointOfUseData[]>;
