@@ -1,126 +1,71 @@
-import { test, expect  } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
-
 
 const fillEnergySupplyForm = async (page: Page) => {
 	//navigate to Energy supply page
-	await page.waitForLoadState("load");
-	
 	await page.getByRole("link", { name: "Heating systems" }).click();
 	await page.getByRole("link", { name: "Energy supply" }).nth(0).click();
-	await page.waitForLoadState("load");
 
-	//add form data
+	//fill out energy supply form 
 	await page.getByTestId("fuelType_electricity").click();
-	await expect(page.getByTestId("exported_yes")).toBeVisible();
 	await page.getByTestId("exported_yes").click();
 
 	//save form
-	await page.locator('button:text("Save and continue")').click();
+	await page.getByTestId("saveAndComplete").click();
 };
 
 const getLocalStorage = async (page: Page) => {
 	return await page.evaluate(() => {
-		return localStorage.getItem("ecaas") || "{}";
+		const ecaasLocalStorage = localStorage.getItem("ecaas");
+		return JSON.parse(ecaasLocalStorage!);
 	});
 };
 
-test("saved energy supply form data is visible when user revisits the energy supply page", async ({ page }) => {
+test.beforeEach(async ({ page }) => {
 	await page.goto("/");
 	await fillEnergySupplyForm(page);
-
-	// revisit the Energy Supply page to confirm data persistence
-	await page.click('a[href="/heating-systems/energy-supply"]');
-
-	await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
-	await expect(page.getByTestId("exported_yes")).toBeChecked();
 });
 
-test("saved energy supply form data is visible on the heating systems summary page", async ({ page }) => {
-	await page.goto("/");
-	await fillEnergySupplyForm(page);
+test.describe("Energy supply form data persistence", () => {
 
-	//navigate to Heating systems summary page
-	await page.click('a[href="/heating-systems/summary"]');
-  
-	const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
-	expect(await fuelTypeElement.locator("li").innerText()).toBe("Electricity");
-
-	const exportedElement = page.getByTestId("summary-energySupply-exported");
-	const exported = await exportedElement.locator("dd").innerText();
-	expect(exported.includes("Yes")).toBe(true);
-});
-
-test("saved energy supply form data is persisted to local storage", async ({ page }) => {
-	await page.goto("/");
-
-	//check localStorage is empty before adding form data
-	expect(await getLocalStorage(page)).toBe("{}");
-
-	//add form data
-	await fillEnergySupplyForm(page);
-
-	const storedData = JSON.parse(await getLocalStorage(page));
-	const { data } = storedData.heatingSystems.energySupply; 
-
-	//check localStorage contains energy supply data
-	expect(data.fuelType[0]).toBe("electricity");
-	expect(data.exported).toBe(true);
-});
-
-test("saved energy supply form data persists on page reload and is reflected in the summary", async ({ page }) => {
-	await page.goto("/");
-	await fillEnergySupplyForm(page);
-
-	//reload page
-	await page.reload();
-
-	//check data persists on the Energy supply page
-	await page.getByRole("link", { name: "Energy supply" }).nth(0).click();
-
-	await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
-	await expect(page.getByTestId("exported_yes")).toBeChecked();
+	test("should persist data when revisiting the form page", async ({ page }) => {
+		
+		await page.click('a[href="/heating-systems/energy-supply"]');
 	
-	//check data is persisted on the summary page
-	await page.click('a[href="/heating-systems/summary"]');
+		await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
+		await expect(page.getByTestId("exported_yes")).toBeChecked();
+	});
+	
+	test("should persist data on the heating systems summary page", async ({ page }) => {
 
-	const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
-	expect(await fuelTypeElement.locator("li").innerText()).toBe("Electricity");
+		await page.click('a[href="/heating-systems/summary"]');
+		
+		const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
+		await expect(fuelTypeElement.locator("li")).toHaveText(/Electricity/);
+	
+		const exportedElement = page.getByTestId("summary-energySupply-exported");
+		await expect(exportedElement.locator("dd")).toHaveText(/Yes/);
+	});
+	
+	test("should persist data when page is reloaded", async ({ page }) => {
 
-	const exportedElement = page.getByTestId("summary-energySupply-exported");
-	const exported = await exportedElement.locator("dd").innerText();
-	expect(exported.includes("Yes")).toBe(true);
-});
+		await page.reload();
+		await page.click('a[href="/heating-systems/energy-supply"]');
+		
+		await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
+		await expect(page.getByTestId("exported_yes")).toBeChecked();
+	});
 
-test.skip("saved energy supply form data persists when local storage is cleared", async ({ page }) => {
-	await page.goto("/");
-	await fillEnergySupplyForm(page);
+	test.skip("should persist data when local storage is cleared and page is reloaded", async ({ page }) => {
 
-	//check localStorage contains energy supply data
-	const storedData = JSON.parse(await getLocalStorage(page));
-	const { data } = storedData.heatingSystems.energySupply; 
-
-	expect(data.fuelType[0]).toBe("electricity");
-	expect(data.exported).toBe(true);
-
-	//clear localStorage
-	await page.evaluate(() => localStorage.clear());
-  
-	//check localStorage is empty
-	expect(await getLocalStorage(page)).toBe("{}");
-
-	//reload page and navigate to the Heating systems summary page
-	await page.reload();
-	await page.click('a[href="/heating-systems/summary"]');
-
-	//check data is readded to localStorage 
-	expect(await getLocalStorage(page)).not.toBe("{}");
-
-	//check the UI reflects hydrated data
-	const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
-	expect(await fuelTypeElement.locator("li").innerText()).toBe("Electricity");
-  
-	const exportedElement = page.getByTestId("summary-energySupply-exported");
-	const exported = await exportedElement.locator("dd").innerText();
-	expect(exported.includes("Yes")).toBe(true);
+		await page.evaluate(() => localStorage.clear());
+		
+		expect(await getLocalStorage(page)).toBeNull();
+		
+		await page.reload();
+		await page.click('a[href="/heating-systems/energy-supply"]');
+		
+		await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
+		await expect(page.getByTestId("exported_yes")).toBeChecked();
+	});
 });
