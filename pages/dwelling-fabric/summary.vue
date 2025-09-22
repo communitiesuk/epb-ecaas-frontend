@@ -6,6 +6,7 @@ import { degrees } from "~/utils/units/angle";
 import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from "~/utils/units/thermalConductivity";
 import { metre, millimetre } from "~/utils/units/length";
 import { FloorType } from "~/schema/api-schema.types";
+import { emptyValueRendering } from "#imports";
 
 const title = "Dwelling fabric summary";
 const store = useEcaasStore();
@@ -224,15 +225,19 @@ const ceilingSummary: SummarySection = {
 	id: "dwellingSpaceCeilings",
 	label: "Ceiling",
 	data: ceilingData.map(({ data: x }) => {
+		const isCeilingToUnheatedSpace = x.type === AdjacentSpaceType.unheatedSpace;
+		const uValue = isCeilingToUnheatedSpace ? ("uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering) : undefined;
+		const thermalResistanceOfAdjacentUnheatedSpace = isCeilingToUnheatedSpace ? ("thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering) : undefined;
+
 		return {
 			"Type of ceiling": displayAdjacentSpaceType(x.type, "Ceiling"),
-			"Name": x.name,
-			"Pitch": `${x.pitch} ${degrees.suffix}`,
-			"Net surface area": `${x.surfaceArea} ${metresSquare.suffix}`,
-			"U-value": "uValue" in x ? `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
+			"Name": show(x.name),
+			"Pitch": dim(x.pitch, "degrees"),
+			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"U-value": uValue,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			"Thermal resistance of adjacent unheated space": "thermalResistanceOfAdjacentUnheatedSpace" in x ? `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}` : undefined,
+			"Thermal resistance of adjacent unheated space": thermalResistanceOfAdjacentUnheatedSpace,
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceCeilingsAndRoofs"),

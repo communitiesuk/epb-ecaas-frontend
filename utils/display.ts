@@ -4,7 +4,7 @@ import type { DisplayProduct } from "~/pcdb/products";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 
-const emptyValueRendering = "-";
+export const emptyValueRendering = "-";
 
 /** Turns a value into something that can be shown on e.g. a summary page */
 export function show(value: string | number | undefined | null): string {
