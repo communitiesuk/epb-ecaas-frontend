@@ -140,12 +140,12 @@ npm run schema-ts
 If you've done work in a pair or ensemble why not add your co-author(s) to the commit? This way everyone involved is
 given credit and people know who they can approach for questions about specific commits. To make this easy there is a
 commit template with a list of regular contributors to this code base. You will find it at the root of this
-project: `commit_template.txt`. Each row represents a possible co-author, however everyone is commented out by default (
+project: `commit-template.txt`. Each row represents a possible co-author, however everyone is commented out by default (
 using `#`), and any row that is commented out will not show up in the commit.
 
 #### Editing the template
 
-If your name is not in the `commit_template.txt` yet, edit the file and add a new row with your details, following the
+If your name is not in the `commit-template.txt` yet, edit the file and add a new row with your details, following the
 format `#Co-Authored-By: Name <email>`, e.g. `#Co-Authored-By: Maja <maja@gmail.com>`. The email must match the email
 you use for your GitHub account. To protect your privacy, you can activate and use your noreply GitHub addresses (find
 it in GitHub under Settings > Emails > Keep my email addresses private).
@@ -153,7 +153,7 @@ it in GitHub under Settings > Emails > Keep my email addresses private).
 #### Getting set up
 
 To apply the commit template navigate to the root of the project in a terminal and
-use: `git config commit.template commit_template.txt`. This will edit your local git config for the project and apply
+use: `git config commit.template commit-template.txt`. This will edit your local git config for the project and apply
 the template to every future commit.
 
 #### Using the template (committing with co-authors)
