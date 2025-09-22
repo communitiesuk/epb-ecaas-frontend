@@ -51,16 +51,16 @@ const groundFloorSummary: SummarySection = {
 	label: "Ground floor",
 	data: groundFloorData.map(x => {
 		const isSlabEdgeInsulation = x.data.typeOfGroundFloor === FloorType.Slab_edge_insulation;
-        const edgeInsulationType = isSlabEdgeInsulation ? ("edgeInsulationType" in x.data ? (displayCamelToSentenceCase(show(x.data.edgeInsulationType))) : "-") : undefined;
-		const edgeInsulationWidth = isSlabEdgeInsulation ? ("edgeInsulationWidth" in x.data ? (typeof x.data.edgeInsulationWidth === "number" ? dim(x.data.edgeInsulationWidth, "millimetres") : dim(x.data.edgeInsulationWidth?.amount, "millimetres")) : "-") : undefined;
-		const edgeInsulationThermalResistance = isSlabEdgeInsulation ? ("edgeInsulationThermalResistance" in x.data ? dim(x.data.edgeInsulationThermalResistance, "square metre kelvin per watt") : "-") : undefined;
+		const edgeInsulationType =  "edgeInsulationType" in x.data ? (displayCamelToSentenceCase(show(x.data.edgeInsulationType))) : emptyValueRendering;
+		const edgeInsulationWidth = "edgeInsulationWidth" in x.data ? (typeof x.data.edgeInsulationWidth === "number" ? dim(x.data.edgeInsulationWidth, "millimetres") : dim(x.data.edgeInsulationWidth?.amount, "millimetres")) : emptyValueRendering;
+		const edgeInsulationThermalResistance = "edgeInsulationThermalResistance" in x.data ? dim(x.data.edgeInsulationThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 
 		const isSuspendedFloor = x.data.typeOfGroundFloor === FloorType.Suspended_floor;
-		const heightOfFloorUpperSurface = isSuspendedFloor ? ("heightOfFloorUpperSurface" in x.data ? dim(x.data.heightOfFloorUpperSurface, "millimetres") : "-") : undefined;
-		const underfloorSpaceThermalResistance = isSuspendedFloor ? ("underfloorSpaceThermalResistance" in x.data ? dim(x.data.underfloorSpaceThermalResistance, "square metre kelvin per watt") : "-") : undefined;
-		const thermalTransmittanceOfWallsAboveGround = isSuspendedFloor ? ("thermalTransmittanceOfWallsAboveGround" in x.data ? dim(x.data.thermalTransmittanceOfWallsAboveGround, "watts per square metre kelvin") : "-") : undefined;
-		const ventilationOpeningsArea = isSuspendedFloor ? ("ventilationOpeningsArea" in x.data ? dim(x.data.ventilationOpeningsArea, "millimetres square per metre") : "-") : undefined;
-		const windShieldingFactor = isSuspendedFloor ? ("windShieldingFactor" in x.data ? show(x.data.windShieldingFactor) : "-") : undefined;
+		const heightOfFloorUpperSurface = "heightOfFloorUpperSurface" in x.data ? dim(x.data.heightOfFloorUpperSurface, "millimetres") : emptyValueRendering;
+		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x.data ? dim(x.data.underfloorSpaceThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
+		const thermalTransmittanceOfWallsAboveGround = "thermalTransmittanceOfWallsAboveGround" in x.data ? dim(x.data.thermalTransmittanceOfWallsAboveGround, "watts per square metre kelvin") : emptyValueRendering;
+		const ventilationOpeningsArea = "ventilationOpeningsArea" in x.data ? dim(x.data.ventilationOpeningsArea, "millimetres square per metre") : emptyValueRendering;
+		const windShieldingFactor = "windShieldingFactor" in x.data ? show(x.data.windShieldingFactor) : emptyValueRendering;
 
 		return {
 			"Name": show(x.data.name),
@@ -74,20 +74,14 @@ const groundFloorSummary: SummarySection = {
 			"Psi of wall junction": dim(x.data.psiOfWallJunction, "watts per metre kelvin"),
 			"Thickness of walls at the edge of the floor": dim(x.data.thicknessOfWalls, "millimetres"),
 			"Type of ground floor": displaySnakeToSentenceCase(show(x.data.typeOfGroundFloor)),
-			"Edge insulation type": edgeInsulationType,
-			"Edge insulation width": edgeInsulationWidth,
-			"Edge insulation thermal resistance": edgeInsulationThermalResistance,
-			"Height of the floor upper surface": heightOfFloorUpperSurface,
-			"Thermal resistance of insulation on base of underfloor space": underfloorSpaceThermalResistance,
-			"Thermal transmittance of walls above ground": thermalTransmittanceOfWallsAboveGround,
-			"Area of ventilation openings per perimeter": ventilationOpeningsArea,
-			"Wind shielding factor": windShieldingFactor,
-			
-			// The 4 below do not seem to be in the form
-			// "Depth of basement floor below ground level": "depthOfBasementFloorBelowGround" in x.data ? `${x.data.depthOfBasementFloorBelowGround} ${metre.suffix}` : undefined,
-			// "Thermal resistance of walls of basement": "thermalResistanceOfBasementWalls" in x.data ? `${x.data.thermalResistanceOfBasementWalls} ${squareMeterKelvinPerWatt.suffix}` : undefined,
-			// "Thermal transmittance of floor above basement": "thermalTransmittanceOfFloorAboveBasement" in x.data ? `${x.data.thermalTransmittanceOfFloorAboveBasement} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
-			// "Height of the basement walls above ground level": "heightOfBasementWallsAboveGround" in x.data ? `${x.data.heightOfBasementWallsAboveGround} ${metre.suffix}` : undefined,
+			"Edge insulation type": isSlabEdgeInsulation ? edgeInsulationType : undefined,
+			"Edge insulation width": isSlabEdgeInsulation ? edgeInsulationWidth : undefined,
+			"Edge insulation thermal resistance": isSlabEdgeInsulation ? edgeInsulationThermalResistance : undefined,
+			"Height of the floor upper surface": isSuspendedFloor ? heightOfFloorUpperSurface : undefined,
+			"Thermal resistance of insulation on base of underfloor space": isSuspendedFloor ? underfloorSpaceThermalResistance : undefined,
+			"Thermal transmittance of walls above ground": isSuspendedFloor ? thermalTransmittanceOfWallsAboveGround : undefined,
+			"Area of ventilation openings per perimeter": isSuspendedFloor ? ventilationOpeningsArea : undefined,
+			"Wind shielding factor": isSuspendedFloor ? windShieldingFactor : undefined,
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceFloors"),
@@ -98,7 +92,7 @@ const internalFloorSummary: SummarySection = {
 	label: "Internal floor",
 	data: internalFloorData?.map(x => {
 		const isInternalFloorToUnheatedSpace = x.data.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace;
-		const thermalResistanceOfAdjacentUnheatedSpace = isInternalFloorToUnheatedSpace ? ("thermalResistanceOfAdjacentUnheatedSpace" in x.data ? dim(x.data.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : "-") : undefined
+		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x.data ? dim(x.data.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
 
 		return {
 			"Type of internal floor": displayAdjacentSpaceType(x.data.typeOfInternalFloor, "Internal floor"),
@@ -106,7 +100,7 @@ const internalFloorSummary: SummarySection = {
 			"Net surface area of element": dim(x.data.surfaceAreaOfElement, "metres square"),
 			"Areal heat capacity": displayArealHeatCapacity(x.data.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.data.massDistributionClass),
-			"Thermal resistance of adjacent unheated space": thermalResistanceOfAdjacentUnheatedSpace,
+			"Thermal resistance of adjacent unheated space": isInternalFloorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceFloors"),
@@ -226,18 +220,18 @@ const ceilingSummary: SummarySection = {
 	label: "Ceiling",
 	data: ceilingData.map(({ data: x }) => {
 		const isCeilingToUnheatedSpace = x.type === AdjacentSpaceType.unheatedSpace;
-		const uValue = isCeilingToUnheatedSpace ? ("uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering) : undefined;
-		const thermalResistanceOfAdjacentUnheatedSpace = isCeilingToUnheatedSpace ? ("thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering) : undefined;
+		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
+		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
 
 		return {
 			"Type of ceiling": displayAdjacentSpaceType(x.type, "Ceiling"),
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"U-value": uValue,
+			"U-value": isCeilingToUnheatedSpace ? uValue : undefined,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			"Thermal resistance of adjacent unheated space": thermalResistanceOfAdjacentUnheatedSpace,
+			"Thermal resistance of adjacent unheated space": isCeilingToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceCeilingsAndRoofs"),
