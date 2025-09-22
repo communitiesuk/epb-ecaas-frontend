@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
+import { useBanner } from "#imports";
 import { getInitialState } from "~/stores/ecaasStore";
 import { clearLastExportDate } from "~/utils/exportDate";
 
 const title = "Import data";
 
 const store = useEcaasStore();
+const banner = useBanner();
 
 const file: Ref<File | null> = ref(null);
 const importedFile: Ref<{ name: string; datetime: Dayjs } | null> = ref(null);
@@ -44,7 +46,7 @@ const doImport = (_event: Event) => {
 
 		errorMessage.value = null;
 
-		const { newState: newValidatedState } = revalidateState(fileState);
+		const { newState: newValidatedState, changed: revalidationCausedUpdate } = revalidateState(fileState);
 		fileState = newValidatedState as EcaasState;
 
 		store.$patch({
@@ -59,6 +61,11 @@ const doImport = (_event: Event) => {
 		};
 
 		clearLastExportDate();
+
+		// set banner, and navigate to root
+		banner.value = revalidationCausedUpdate ? "import-caused-update" : "import-complete";
+
+		navigateTo("/");
 	};
 	reader.onerror = () => {
 		errorMessage.value = "Unable to read file";
@@ -90,15 +97,6 @@ const doImport = (_event: Event) => {
 		<div class="govuk-button-group">
 			<GovButton :disabled="!hasFile || undefined" :click="doImport" data-testid="import-button">Import</GovButton>
 			<GovButton href="/" secondary>Return to overview</GovButton>
-		</div>
-	</template>
-	<template v-else>
-		<GovPanel title="Import complete">
-			<p>{{ importedFile.name }}</p>
-			<p class="govuk-!-margin-bottom-0">{{ importedFile.datetime.format('DD/MM/YYYY HH:mm') }}</p>
-		</GovPanel>
-		<div class="govuk-button-group govuk-!-margin-top-7">
-			<GovButton secondary href="/">Return to overview</GovButton>
 		</div>
 	</template>
 </template>

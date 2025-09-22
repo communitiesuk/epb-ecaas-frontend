@@ -171,7 +171,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FormKit
 				id="hotWaterCylinder"
 				type="govRadios"
-				:options="new Map(store.domesticHotWater.waterHeating.hotWaterCylinder.data.map(x => [x.id, x.name]))"
+				:options="new Map(store.domesticHotWater.waterHeating.hotWaterCylinder.data
+					.filter(x => x.data.id !== undefined)
+					.map(x => [x.data.id as string, x.data.name]))"		
 				label="Hot water cylinder"
 				help="Select a hot water cylinder that this pipework is connected to"
 				name="hotWaterCylinder"

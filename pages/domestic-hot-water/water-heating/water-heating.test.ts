@@ -17,20 +17,22 @@ mockNuxtImport("navigateTo", () => {
 const store = useEcaasStore();
 const user = userEvent.setup();
 
-const cylinder: HotWaterCylinderData = {
-	id: "Any Id",
-	heatSource: "test-heat-pump",
-	storageCylinderVolume: unitValue(150, litre),
-	dailyEnergyLoss: 73,
-	name: "Hot water cylinder 1",
+const cylinder: EcaasForm<HotWaterCylinderData> = {
+	data: {
+		id: "Any Id",
+		heatSource: "test-heat-pump",
+		storageCylinderVolume: unitValue(150, litre),
+		dailyEnergyLoss: 73,
+		name: "Hot water cylinder 1",
+	},
 };
 
 const populateValidForm = async () => {
 	await user.click(screen.getByTestId("waterHeaterType_hotWaterCylinder"));
-	await user.type(screen.getByTestId("name"), cylinder.name);
-	await user.click(screen.getByTestId("heatSource_" + cylinder.heatSource));
+	await user.type(screen.getByTestId("name"), cylinder.data.name);
+	await user.click(screen.getByTestId("heatSource_" + cylinder.data.heatSource));
 	await user.type(screen.getByTestId("storageCylinderVolume"), "150");
-	await user.type(screen.getByTestId("dailyEnergyLoss"), cylinder.dailyEnergyLoss.toString());
+	await user.type(screen.getByTestId("dailyEnergyLoss"), cylinder.data.dailyEnergyLoss.toString());
 	await user.tab();
 };
 
@@ -65,13 +67,13 @@ describe("water heating (hot water cylinder)", () => {
 
 		await(user.click(screen.getByTestId("saveAndComplete")));
 
-		const actual = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!;
+		const actual = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.data;
 
 		expect(actual.id).toBe("test-id");
-		expect(actual.heatSource).toEqual(cylinder.heatSource);
-		expect(actual.storageCylinderVolume).toEqual(cylinder.storageCylinderVolume);
-		expect(actual.dailyEnergyLoss).toEqual(cylinder.dailyEnergyLoss);
-		expect(actual.name).toEqual(cylinder.name);
+		expect(actual.heatSource).toEqual(cylinder.data.heatSource);
+		expect(actual.storageCylinderVolume).toEqual(cylinder.data.storageCylinderVolume);
+		expect(actual.dailyEnergyLoss).toEqual(cylinder.data.dailyEnergyLoss);
+		expect(actual.name).toEqual(cylinder.data.name);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
@@ -88,9 +90,9 @@ describe("water heating (hot water cylinder)", () => {
 
 		await renderSuspended(WaterHeating);
 
-		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe(cylinder.name);
+		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe(cylinder.data.name);
 		expect((await screen.findByTestId<HTMLInputElement>("storageCylinderVolume")).value).toBe("150");
-		expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(cylinder.dailyEnergyLoss.toString());
+		expect((await screen.findByTestId<HTMLInputElement>("dailyEnergyLoss")).value).toBe(cylinder.data.dailyEnergyLoss.toString());
 		expect((await screen.findByTestId("heatSource_test-heat-pump")).hasAttribute("checked")).toBe(true);
 	});
 
@@ -157,20 +159,19 @@ describe("Partially saving data", () => {
 
 		await renderSuspended(WaterHeating);
 		await user.click(screen.getByTestId("waterHeaterType_hotWaterCylinder"));
-		await user.type(screen.getByTestId("name"), cylinder.name);
+		await user.type(screen.getByTestId("name"), cylinder.data.name);
 		await user.click(
 			screen.getByTestId("heatSource_test-heat-pump"),
 		);
 		await user.tab();
-	
 		expect(
-			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.name,
+			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.data.name,
 		).toBe("Hot water cylinder 1");
 		expect(
-			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.heatSource,
+			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.data.heatSource,
 		).toBe("test-heat-pump");
 		expect(
-			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.id,
+			store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.data.id,
 		).toBe("test-id");
 	});
 	test("partial form data automatically saved to store with default name if no name has been added", async () => {
@@ -181,7 +182,7 @@ describe("Partially saving data", () => {
 		await user.tab();
 		const { data } = store.domesticHotWater.waterHeating.hotWaterCylinder;
 	
-		expect(data[0]!.name).toBe("Hot water cylinder");
+		expect(data[0]!.data.name).toBe("Hot water cylinder");
 
 	});
 
@@ -199,14 +200,14 @@ describe("Partially saving data", () => {
 		});
 		await renderSuspended(WaterHeating);
 		
-		await user.type(screen.getByTestId("name"), cylinder.name);
+		await user.type(screen.getByTestId("name"), cylinder.data.name);
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
 		await user.click(screen.getByTestId("saveProgress"));
 
 		const { data } = store.domesticHotWater.waterHeating.hotWaterCylinder;
 	
-		expect(data[0]!.name).toBe("Hot water cylinder");
+		expect(data[0]!.data.name).toBe("Hot water cylinder");
 	});
 
 	test("default name is used if name added is whitespace", async () => {
@@ -216,7 +217,7 @@ describe("Partially saving data", () => {
 		await user.type(screen.getByTestId("name"), " ");
 		await user.click(screen.getByTestId("saveProgress"));
 	
-		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.name).toBe("Hot water cylinder");
+		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.data.name).toBe("Hot water cylinder");
 	
 		await renderSuspended(WaterHeating);
 	
@@ -224,6 +225,6 @@ describe("Partially saving data", () => {
 		await user.type(screen.getByTestId("name"), " ");
 		await user.tab();
 			
-		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.name).toBe("Hot water cylinder");
+		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.data.name).toBe("Hot water cylinder");
 	});
 });

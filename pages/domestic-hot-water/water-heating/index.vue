@@ -11,8 +11,11 @@ const { autoSaveForm } = useForm();
 
 const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0];
 
-if (typeof hotWaterCylinderData?.storageCylinderVolume === "number") {
-	hotWaterCylinderData.storageCylinderVolume = unitValue(hotWaterCylinderData.storageCylinderVolume, litre);
+if (typeof hotWaterCylinderData?.data?.storageCylinderVolume === "number") {
+	hotWaterCylinderData.data.storageCylinderVolume = unitValue(
+		hotWaterCylinderData.data.storageCylinderVolume,
+		litre,
+	);
 }
 
 const waterHeaterTypeOptions = {
@@ -21,30 +24,33 @@ const waterHeaterTypeOptions = {
 
 type WaterHeaterType = keyof typeof waterHeaterTypeOptions | null;
 
-
-const model: Ref<HotWaterCylinderData & { waterHeaterType: WaterHeaterType[] }> = ref({
-	...hotWaterCylinderData!,
+const model: Ref<Partial<HotWaterCylinderData> & { waterHeaterType: WaterHeaterType[] }> = ref({
+	...hotWaterCylinderData?.data,
 	waterHeaterType: hotWaterCylinderData ? ["hotWaterCylinder"] : [],
 });
 
+
 autoSaveForm(model, (state, newData) => {
-	state.domesticHotWater.waterHeating.hotWaterCylinder.data[0] = 
-	{ ...newData.data,	name: newData.data.name?.trim() || "Hot water cylinder", 
-		id: store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.id ?? uuidv4() } ;
+	state.domesticHotWater.waterHeating.hotWaterCylinder.data[0] = {
+		data: { ...newData.data,	name: newData.data.name?.trim() || "Hot water cylinder", 
+			id: hotWaterCylinderData?.data.id ?? uuidv4() },
+	} ;
+	state.domesticHotWater.waterHeating.hotWaterCylinder.complete = false;
 });
 
 const saveForm = (fields: typeof model.value) => {
-
 	store.$patch({
 		domesticHotWater: {
 			waterHeating: {
 				hotWaterCylinder: {
 					data: [{
-						id: hotWaterCylinderData ? hotWaterCylinderData.id : uuidv4(), 
-						name: fields.name,
-						heatSource: fields.heatSource,
-						storageCylinderVolume: fields.storageCylinderVolume,
-						dailyEnergyLoss: fields.dailyEnergyLoss,
+						data: {
+							id: hotWaterCylinderData?.data ? hotWaterCylinderData.data.id : uuidv4(), 
+							name: fields.name,
+							heatSource: fields.heatSource,
+							storageCylinderVolume: fields.storageCylinderVolume,
+							dailyEnergyLoss: fields.dailyEnergyLoss,
+						},
 					}],
 					complete: true,
 				},

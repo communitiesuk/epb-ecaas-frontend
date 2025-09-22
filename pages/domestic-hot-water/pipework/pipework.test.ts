@@ -150,11 +150,12 @@ describe("Pipeworks", () => {
 					},
 					waterHeating: {
 						hotWaterCylinder: {
-							data: [
-								{
+							data: [{
+								data: {
 									name: "Cylinder 1",
 									id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
 								},
+							},
 							],
 						},
 					},
@@ -186,11 +187,12 @@ describe("Pipeworks", () => {
     			},
     			waterHeating: {
     				hotWaterCylinder: {
-    					data: [
-    						{
+    					data: [{
+    						data: {
     							name: "Cylinder 1",
     							id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
     						},
+    					},
     					],
     				},
     			},

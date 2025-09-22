@@ -6,35 +6,40 @@ import { unitValue } from "~/utils/units";
 
 const title = "Hot water cylinder";
 const store = useEcaasStore();
-const { saveToList } = useForm();
 
-const hotWaterCylinderData = useItemToEdit("hotWaterCylinder", store.domesticHotWater.waterHeating.hotWaterCylinder.data);
+const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]; // remove [0] index is there are multiple hot water cylinders which can be added
 
-if (typeof hotWaterCylinderData?.storageCylinderVolume === "number") {
-	hotWaterCylinderData.storageCylinderVolume = unitValue(hotWaterCylinderData.storageCylinderVolume, litre);
+if (typeof hotWaterCylinderData?.data?.storageCylinderVolume === "number") {
+	hotWaterCylinderData.data.storageCylinderVolume = unitValue(
+		hotWaterCylinderData.data.storageCylinderVolume,
+		litre,
+	);
 }
 
-const model: Ref<HotWaterCylinderData> = ref(hotWaterCylinderData!);
+const model = ref(hotWaterCylinderData?.data);
 
 const saveForm = (fields: HotWaterCylinderData) => {
-	store.$patch((state) => {
-		const { hotWaterCylinder } = state.domesticHotWater.waterHeating;
-
-		const hotWaterCylinderItem: HotWaterCylinderData = {
-			id: hotWaterCylinderData ? hotWaterCylinderData.id : uuidv4(),
-			name: fields.name,
-			heatSource: fields.heatSource,
-			storageCylinderVolume: fields.storageCylinderVolume,
-			dailyEnergyLoss: fields.dailyEnergyLoss,
-		};
-
-		saveToList(hotWaterCylinderItem, hotWaterCylinder);
-		hotWaterCylinder.complete = false;
+	store.$patch({
+		domesticHotWater: {
+			waterHeating: {
+				hotWaterCylinder: {
+					data: [{
+						data: {
+							id: hotWaterCylinderData?.data ? hotWaterCylinderData.data.id : uuidv4(), 
+							name: fields.name,
+							heatSource: fields.heatSource,
+							storageCylinderVolume: fields.storageCylinderVolume,
+							dailyEnergyLoss: fields.dailyEnergyLoss,
+						},
+					}],
+					complete: true,
+				},
+			},
+		},
 	});
-
 	navigateTo("/domestic-hot-water/water-heating");
 };
-
+			
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 
 const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {

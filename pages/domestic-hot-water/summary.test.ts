@@ -50,7 +50,8 @@ describe("Domestic hot water summary", () => {
 				domesticHotWater: {
 					waterHeating: {
 						hotWaterCylinder: {
-							data: [hotWaterCylinder],
+							data: [{
+								data: hotWaterCylinder }],
 						},
 					},
 				},
@@ -355,9 +356,11 @@ describe("Domestic hot water summary", () => {
 					waterHeating: {
 						hotWaterCylinder: {
 							data: [{
-								id: hotWaterCylinderId,
-								name: "Hot water cylinder 1",
-								storageCylinderVolume: unitValue(100, litre),
+								data: {
+									id: hotWaterCylinderId,
+									name: "Hot water cylinder 1",
+									storageCylinderVolume: unitValue(100, litre),
+								},
 							}],
 						},
 					},
