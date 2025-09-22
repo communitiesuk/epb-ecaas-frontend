@@ -241,19 +241,28 @@ const roofSummary: SummarySection = {
 	id: "dwellingSpaceRoofs",
 	label: "Roof",
 	data: roofData.filter(x => !!x.data).map(({ data: x }) => {
+		const isTypeOfRoofSelected = x.typeOfRoof != undefined; 
+		const isPitchedRoof = x.typeOfRoof === "pitchedInsulatedAtRoof" || x.typeOfRoof === "pitchedInsulatedAtCeiling";
+		
+		const pitch = dim(x.pitch, "degrees");
+		const orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
+		const uValue = dim(x.uValue, "watts per square metre kelvin");
+		const arealHeatCapacity = displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue);
+		const massDistributionClass = displayMassDistributionClass(x.massDistributionClass);
+
 		return {
-			"Name": x.name,
+			"Name": show(x.name),
 			"Type of roof": displayCamelToSentenceCase(show(x.typeOfRoof)),
-			"Pitch": `${x.pitch} ${degrees.suffix}`,
-			"Orientation": x.orientation !== undefined ? `${x.orientation} ${degrees.suffix}` : undefined,
-			"Length": `${x.length} ${metre.suffix}`,
-			"Width": `${x.width} ${metre.suffix}`,
-			"Elevational height of building element at its base": `${x.elevationalHeightOfElement} ${metre.suffix}`,
-			"Net surface area": `${x.surfaceArea} ${metresSquare.suffix}`,
-			"Solar absorption coefficient": x.solarAbsorptionCoefficient,
-			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
-			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
+			"Pitch": isTypeOfRoofSelected ? pitch : undefined,
+			"Orientation": isPitchedRoof ? orientation : undefined,
+			"Length": dim(x.length, "metres"),
+			"Width": dim(x.width, "metres"),
+			"Elevational height of building element at its base": dim(x.elevationalHeightOfElement, "metres"),
+			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"Solar absorption coefficient": dim(x.solarAbsorptionCoefficient),
+			"U-value": isTypeOfRoofSelected ? uValue : undefined,
+			"Areal heat capacity": isTypeOfRoofSelected ? arealHeatCapacity : undefined,
+			"Mass distribution class": isTypeOfRoofSelected ? massDistributionClass : undefined,
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceCeilingsAndRoofs"),
