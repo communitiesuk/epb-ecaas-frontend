@@ -391,9 +391,9 @@ const linearThermalBridgesSummary: SummarySection = {
 	label: "Linear thermal bridges",
 	data: linearThermalBridgesData.map(({ data: x }) => {
 		return {
-			"Type of thermal bridge": displayCamelToSentenceCase(show(x.typeOfThermalBridge)),
-			"Linear thermal transmittance": `${x.linearThermalTransmittance} ${wattsPerMeterKelvin.suffix}`,
-			"Length of thermal bridge": `${x.length} ${metre.suffix}`,
+			"Type of thermal bridge": x.typeOfThermalBridge === "" || x.typeOfThermalBridge === undefined ? show(x.name) : displayCamelToSentenceCase(show(x.typeOfThermalBridge)),
+			"Linear thermal transmittance": dim(x.linearThermalTransmittance, "watts per metre kelvin"),
+			"Length of thermal bridge": dim(x.length, "metres"),
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceThermalBridging"),
@@ -404,8 +404,8 @@ const pointThermalBridgesSummary: SummarySection = {
 	label: "Point thermal bridges",
 	data: pointThermalBridgesData.map(({ data: x }) => {
 		return {
-			"Name": x.name,
-			"Heat transfer coefficient": `${x.heatTransferCoefficient} ${wattsPerKelvin.suffix}`,
+			"Name": show(x.name),
+			"Heat transfer coefficient": dim(x.heatTransferCoefficient, "watts per kelvin"),
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceThermalBridging"),
