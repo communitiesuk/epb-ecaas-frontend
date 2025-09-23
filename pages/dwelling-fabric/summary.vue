@@ -282,15 +282,15 @@ const unglazedDoorSummary: SummarySection = {
 	label: "External unglazed door",
 	data: unglazedDoorData.map(({ data: x }) => {
 		return {
-			"Name": x.name,
+			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
-			"Orientation": `${x.orientation} ${degrees.suffix}`,
-			"Height": `${x.height} ${metre.suffix}`,
-			"Width": `${x.width} ${metre.suffix}`,
-			"Elevational height of building element at its base": `${x.elevationalHeight} ${metre.suffix}`,
-			"Net surface area": `${x.surfaceArea} ${metresSquare.suffix}`,
-			"Solar absorption coefficient": x.solarAbsorption,
-			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
+			"Orientation": dim(x.orientation, "degrees"),
+			"Height": dim(x.height, "metres"),
+			"Width": dim(x.width, "metres"),
+			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
+			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"Solar absorption coefficient": dim(x.solarAbsorption),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue | undefined),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
@@ -303,17 +303,17 @@ const glazedDoorSummary: SummarySection = {
 	label: "External glazed door",
 	data: glazedDoorData.map(({ data: x }) => {
 		return {
-			"Name": x.name,
-			"Pitch": `${x.pitch} ${degrees.suffix}`,
-			"Orientation": `${x.orientation} ${degrees.suffix}`,
-			"Height": `${x.height} ${metre.suffix}`,
-			"Width": `${x.width} ${metre.suffix}`,
-			"Elevational height of building element at its base": `${x.elevationalHeight} ${metre.suffix}`,
-			"Net surface area": `${x.surfaceArea} ${metresSquare.suffix}`,
-			"U-value": `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
-			"Transmittance of solar energy": x.solarTransmittance,
-			"Mid height": `${x.midHeight} ${metre.suffix}`,
-			"Opening to frame ratio": x.numberOpenableParts !== "0" ? x.openingToFrameRatio : undefined,
+			"Name": show(x.name),
+			"Pitch": dim(x.pitch, "degrees"),
+			"Orientation": dim(x.orientation, "degrees"),
+			"Height": dim(x.height, "metres"),
+			"Width": dim(x.width, "metres"),
+			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
+			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Transmittance of solar energy": dim(x.solarTransmittance),
+			"Mid height": dim(x.midHeight, "metres"),
+			"Opening to frame ratio": dim(x.openingToFrameRatio),
 		};
 	}),
 	editUrl: getUrl("dwellingSpaceDoors"),
@@ -323,15 +323,19 @@ const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
 	label: "Internal door",
 	data: internalDoorData?.map(({ data: x }) => {
+		const isInternalDoorToUnheatedSpace = x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace;
+		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
+		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
+
 		return {
 			"Type": displayAdjacentSpaceType(x.typeOfInternalDoor, "Internal door"),
-			"Name": x.name,
-			"Pitch": `${x.pitch} ${degrees.suffix}`,
-			"Net surface area of element": `${x.surfaceArea} ${metresSquare.suffix}`,
-			"U-value": "uValue" in x ? `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
+			"Name": show(x.name),
+			"Pitch": dim(x.pitch, "degrees"),
+			"Net surface area of element": dim(x.surfaceArea, "metres square"),
+			"U-value": isInternalDoorToUnheatedSpace ? uValue : undefined,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
-			"Thermal resistance of adjacent unheated space": "thermalResistanceOfAdjacentUnheatedSpace" in x ? `${x.thermalResistanceOfAdjacentUnheatedSpace} ${squareMeterKelvinPerWatt.suffix}` : undefined,
+			"Thermal resistance of adjacent unheated space": isInternalDoorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceDoors"),
