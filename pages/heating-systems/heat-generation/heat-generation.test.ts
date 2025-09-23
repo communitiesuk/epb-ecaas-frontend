@@ -1,3 +1,4 @@
+import { litre } from "~/utils/units/volume";
 import {
 	mockNuxtImport,
 	registerEndpoint,
@@ -11,10 +12,9 @@ import BoilerForm from "./boiler/[boiler].vue";
 import HeatBatteryForm from "./heat-battery/[battery].vue";
 import HeatNetworkForm from "./heat-network/[network].vue";
 import HeatInterfaceUnitForm from "./heat-interface-unit/[interface].vue";
-
-import { v4 as uuidv4 } from "uuid";
 import { productsInCategory } from "~/server/services/products";
 import formStatus from "~/constants/formStatus";
+
 
 registerEndpoint("/api/products", async () => productsInCategory("heatPump"));
 
@@ -91,19 +91,19 @@ describe("heat generation", () => {
 		const user = userEvent.setup();
 
 		const heatPump1: HeatPumpData = {
-			id: uuidv4(),
+			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a1o",
 			name: "Heat pump 1",
 			productReference: "HEATPUMP-LARGE",
 		};
 
 		const heatPump2: HeatPumpData = {
-			...heatPump1,
+			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a2q",
 			name: "Heat pump 2",
 			productReference: "HEATPUMP-MEDIUM",
 		};
 
 		const heatPump3: HeatPumpData = {
-			...heatPump1,
+			id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a3f",
 			name: "Heat pump 3",
 			productReference: "HEATPUMP-SMALL",
 		};
@@ -153,6 +153,71 @@ describe("heat generation", () => {
 			expect(within(populatedList).getByText("Heat pump 1")).toBeDefined();
 			expect(within(populatedList).getByText("Heat pump 3")).toBeDefined();
 			expect(within(populatedList).queryByText("Heat pump 2")).toBeNull();
+		});
+
+		it("when a heat pump is removed its also removed from store object which references it", async () => {
+
+			const cylinder: HotWaterCylinderData = {
+				id: "Any Id",
+				heatSource: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a2q",
+				storageCylinderVolume: unitValue(150, litre),
+				dailyEnergyLoss: 73,
+				name: "Hot water cylinder 1",
+			};
+			const wetDistribution: WetDistributionData = {
+				name: "Wet distribution 1",
+				heatSource: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a2q",
+				thermalMass: 2,
+				designTempDiffAcrossEmitters: 0.4,
+				designFlowTemp: 32,
+				designFlowRate: 5,
+				typeOfSpaceHeater: "radiator",
+				exponent: 1.3,
+				constant: 0.08,
+				convectionFractionWet: 0.2,
+				ecoDesignControllerClass: "1",
+				minimumFlowTemp: 20,
+				minOutdoorTemp: 0,
+				maxOutdoorTemp: 15,
+				numberOfRadiators: 1,
+
+			};
+			
+			store.$patch({
+				heatingSystems: {
+					heatGeneration: {
+						heatPump: {
+							data: [
+								{ data: heatPump1 },
+								{ data: heatPump2 },
+							],
+						},
+					},
+					heatEmitting: {
+						wetDistribution: {
+							data: [
+								{	data: wetDistribution },
+							],
+						},
+					},
+				},
+				domesticHotWater: {
+					waterHeating: {
+						hotWaterCylinder: {
+							data: [{ data: cylinder }],
+						},
+					},
+				},
+	
+			});
+			await renderSuspended(HeatGeneration);
+			await user.click(await screen.findByTestId("heatPump_remove_1"));
+
+			const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.data;
+			expect(hotWaterCylinderData?.heatSource).toBeUndefined();
+
+			const wetDistributionData = store.heatingSystems.heatEmitting.wetDistribution.data[0]?.data;
+			expect(wetDistributionData?.heatSource).toBeUndefined();
 		});
 
 		it("should display an in-progress indicator when an entry is not marked as complete", async () => {

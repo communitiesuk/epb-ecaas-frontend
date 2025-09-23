@@ -10,6 +10,11 @@ type HeatGenerationType = keyof typeof store.heatingSystems.heatGeneration;
 function handleRemove(outletType: HeatGenerationType, index: number) {
 	const outlets = store.heatingSystems.heatGeneration[outletType]?.data;
 
+	let heatPumpId;
+	if(outletType === "heatPump"){
+		heatPumpId = store.heatingSystems.heatGeneration.heatPump?.data[index]?.data.id;
+	}
+
 	if (outlets) {
 		outlets.splice(index, 1);
 
@@ -17,6 +22,11 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 			state.heatingSystems.heatGeneration[outletType].data = outlets.length ? outlets : [];
 			state.heatingSystems.heatGeneration[outletType].complete = false;
 		});
+
+		if(heatPumpId) {
+			removeHeatSourceReference(store.domesticHotWater.waterHeating.hotWaterCylinder, heatPumpId);
+			removeHeatSourceReference(store.heatingSystems.heatEmitting.wetDistribution, heatPumpId);
+		}
 	}
 } 
 
