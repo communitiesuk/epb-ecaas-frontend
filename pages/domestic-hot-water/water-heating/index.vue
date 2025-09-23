@@ -29,7 +29,7 @@ const model: Ref<Partial<HotWaterCylinderData> & { waterHeaterType: WaterHeaterT
 	waterHeaterType: hotWaterCylinderData ? ["hotWaterCylinder"] : [],
 });
 
-
+// update to autoSaveElementForm if we decide users can add more than 1 hot water cylinder 
 autoSaveForm(model, (state, newData) => {
 	state.domesticHotWater.waterHeating.hotWaterCylinder.data[0] = {
 		data: { ...newData.data,	name: newData.data.name?.trim() || "Hot water cylinder", 
