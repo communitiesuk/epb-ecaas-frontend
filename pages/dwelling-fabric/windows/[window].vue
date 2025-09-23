@@ -183,6 +183,8 @@ autoSaveElementForm<WindowData>({
 	storeData: store.dwellingFabric.dwellingSpaceWindows,
 	defaultName: "Window",
 	onPatch: (state, newData, index) => {
+		const { pitchOption, pitch } = newData.data;
+		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceWindows.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWindows.complete = false;
 	},
