@@ -51,6 +51,7 @@ const saveForm = (fields: typeof model.value) => {
 							storageCylinderVolume: fields.storageCylinderVolume,
 							dailyEnergyLoss: fields.dailyEnergyLoss,
 						},
+						complete: true,
 					}],
 					complete: true,
 				},

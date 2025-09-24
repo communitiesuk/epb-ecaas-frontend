@@ -117,9 +117,7 @@ function revalidateForm(form: EcaasForm<unknown>, path: EcaasFormPath): [true, Z
 	const [changed, errors]: [boolean, ZodError<unknown>[]] = form.data.reduce(([changed, errors], current) => {
 		const validationResult = formSchema.safeParse(current.data);
 
-		if (!validationResult.success) {
-			current.complete = false;
-		}
+		current.complete = validationResult.success;
 		
 		return [!validationResult.success || changed, validationResult.error ? [...errors, validationResult.error] : errors];
 	}, [false as boolean, [] as ZodError<unknown>[]]);
