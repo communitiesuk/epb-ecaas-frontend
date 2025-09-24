@@ -162,8 +162,8 @@ export const arealHeatCapacityOptions = {
 
 export type ArealHeatCapacityValue = keyof typeof arealHeatCapacityOptions extends infer K
 	? K extends string
-	? K extends `${infer N extends number}` ? N : never
-	: never
+		? K extends `${infer N extends number}` ? N : never
+		: never
 	: never;
 
 export function displayArealHeatCapacity(value: ArealHeatCapacityValue | undefined): string {
