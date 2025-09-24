@@ -13,11 +13,14 @@ export function show(value: string | number | undefined | null): string {
 
 /** Renders a unit with correct visual suffix, falling back to "-" for undefined */
 export function dim(amount: UnitValue | number | undefined, unit?: UnitName): string {
+	if (amount as unknown === "") {
+		return emptyValueRendering;
+	}
 	if (typeof amount === "object") {
 		const { amount: num, unit: unitName } = amount;
-		
+
 		return renderDimensionedValue(num, unitName);
-	}	
+	}
 	if (typeof amount === "undefined") {
 		return emptyValueRendering;
 	}
@@ -36,7 +39,7 @@ export function displayBoolean(value: boolean | undefined): BooleanDisplay | typ
 	if (typeof value === "undefined") {
 		return emptyValueRendering;
 	}
-  
+
 	return value ? "Yes" : "No";
 }
 
@@ -159,8 +162,8 @@ export const arealHeatCapacityOptions = {
 
 export type ArealHeatCapacityValue = keyof typeof arealHeatCapacityOptions extends infer K
 	? K extends string
-		? K extends `${infer N extends number}` ? N : never
-		: never
+	? K extends `${infer N extends number}` ? N : never
+	: never
 	: never;
 
 export function displayArealHeatCapacity(value: ArealHeatCapacityValue | undefined): string {
@@ -185,7 +188,7 @@ export function displayAdjacentSpaceType<T extends string>(value: AdjacentSpaceT
 		return undefined;
 	}
 
-	return `${element} to ${ value === "heatedSpace" ? "heated space" : "unheated space" }`;
+	return `${element} to ${value === "heatedSpace" ? "heated space" : "unheated space"}`;
 }
 
 // better type/ function for displaying products once we're dealing with realistic products
