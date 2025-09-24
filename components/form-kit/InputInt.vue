@@ -18,7 +18,6 @@ const { mounted } = useMounted();
 function handleInput(e: Event) {
 	const target = e.target as HTMLInputElement;
 	props.context.node.input(target.value);
-	console.log(props.context)
 }
 
 function handleBlur(e: FocusEvent) {
