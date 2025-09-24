@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getUrl, getTabItems, type ArealHeatCapacityValue } from "#imports";
-import { metresSquare } from "~/utils/units/area";
-import { degrees } from "~/utils/units/angle";
-import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from "~/utils/units/thermalConductivity";
-import { metre, millimetre } from "~/utils/units/length";
 import { FloorType } from "~/schema/api-schema.types";
 import { emptyValueRendering } from "#imports";
 
@@ -352,36 +348,56 @@ const windowData = store.dwellingFabric.dwellingSpaceWindows.data;
 const windowSummary: SummarySection = {
 	id: "dwellingSpaceWindows",
 	label: "Windows",
-	data: windowData.map(x => {
+	data: windowData.map( ({ data: x }) => {
+		const numberOfOpenablePartsIsSelectedAndNonZero = "numberOpenableParts" in x && x.numberOpenableParts != "0";
+		const numberOfOpenablePartsIsTwo = x.numberOpenableParts === "2";
+		const numberOfOpenablePartsIsThree = x.numberOpenableParts === "3";
+		const numberOfOpenablePartsIsFour = x.numberOpenableParts === "4";
+
+		const heightOpenableArea = "heightOpenableArea" in x ? dim(x.heightOpenableArea, "metres") : emptyValueRendering;
+		const maximumOpenableArea = "maximumOpenableArea" in x ? dim(x.maximumOpenableArea, "metres square") : emptyValueRendering;
+		const midHeightOpenablePart1 = "midHeightOpenablePart1" in x ? dim(x.midHeightOpenablePart1, "metres") : emptyValueRendering;
+		const midHeightOpenablePart2 = "midHeightOpenablePart2" in x ? dim(x.midHeightOpenablePart2, "metres") : emptyValueRendering;
+		const midHeightOpenablePart3 = "midHeightOpenablePart3" in x ? dim(x.midHeightOpenablePart3, "metres") : emptyValueRendering;
+		const midHeightOpenablePart4 = "midHeightOpenablePart4" in x ? dim(x.midHeightOpenablePart4, "metres") : emptyValueRendering;
+
+		const treatmentType = "treatmentType" in x ? displayCamelToSentenceCase(show(x.treatmentType)) : emptyValueRendering;
+		const curtainsControlObject = "curtainsControlObject" in x ? displaySnakeToSentenceCase(x.curtainsControlObject!) : emptyValueRendering;
+		const thermalResistivityIncrease = "thermalResistivityIncrease" in x ? dim(x.thermalResistivityIncrease, "watts per square metre kelvin") : emptyValueRendering;
+		const solarTransmittanceReduction = "solarTransmittanceReduction" in x ? show(x.solarTransmittanceReduction) : emptyValueRendering;
+
 		return {
-			"Name": x.data.name,
-			"Pitch": `${x.data.pitch} ${degrees.suffix}`,
-			"Orientation": `${x.data.orientation} ${degrees.suffix}`,
-			"Height": `${x.data.height} ${metre.suffix}`,
-			"Width": `${x.data.width} ${metre.suffix}`,
-			"Elevational height of building element at its base": `${x.data.elevationalHeight} ${metre.suffix}`,
-			"Net surface area": `${x.data.surfaceArea} ${metresSquare.suffix}`,
-			"U-value": `${x.data.uValue} ${wattsPerSquareMeterKelvin.suffix}`,
-			"Transmittance of solar energy": x.data.solarTransmittance,
-			"Mid height": `${x.data.midHeight} ${metre.suffix}`,
-			"Frame to opening ratio": x.data.openingToFrameRatio && x.data.numberOpenableParts !== "0" ? calculateFrameToOpeningRatio(x.data.openingToFrameRatio) : undefined,
-			"Number of openable parts": x.data.numberOpenableParts,
-			"Height of the openable area": "heightOpenableArea" in x.data ? `${x.data.heightOpenableArea} ${metre.suffix}` : undefined,
-			"Maximum openable area": "maximumOpenableArea" in x.data ? `${x.data.maximumOpenableArea} ${metresSquare.suffix}` : undefined,
-			"Mid height of the air flow path for openable part 1": "midHeightOpenablePart1" in x.data ? `${x.data.midHeightOpenablePart1} ${metre.suffix}` : undefined,
-			"Mid height of the air flow path for openable part 2": "midHeightOpenablePart2" in x.data ? `${x.data.midHeightOpenablePart2} ${metre.suffix}` : undefined,
-			"Mid height of the air flow path for openable part 3": "midHeightOpenablePart3" in x.data ? `${x.data.midHeightOpenablePart3} ${metre.suffix}` : undefined,
-			"Mid height of the air flow path for openable part 4": "midHeightOpenablePart4" in x.data ? `${x.data.midHeightOpenablePart4} ${metre.suffix}` : undefined,
-			"Overhang depth": "overhangDepth" in x.data && x.data.overhangDepth ? (typeof x.data.overhangDepth === "number" ? `${x.data.overhangDepth} ${millimetre.suffix}` : `${x.data.overhangDepth.amount} ${millimetre.suffix}`) : undefined,
-			"Overhang distance from glass": "overhangDistance" in x.data && x.data.overhangDistance ? (typeof x.data.overhangDistance === "number" ? `${x.data.overhangDistance} ${millimetre.suffix}` : `${x.data.overhangDistance.amount} ${millimetre.suffix}`): undefined,
-			"Side fin right depth": "sideFinRightDepth" in x.data && x.data.sideFinRightDepth ? (typeof x.data.sideFinRightDepth === "number" ? `${x.data.sideFinRightDepth} ${millimetre.suffix}` : `${x.data.sideFinRightDepth.amount} ${millimetre.suffix}`) : undefined,
-			"Side fin right distance from glass": "sideFinRightDistance" in x.data  && x.data.sideFinRightDistance ? (typeof x.data.sideFinRightDistance === "number" ? `${x.data.sideFinRightDistance} ${millimetre.suffix}` : `${x.data.sideFinRightDistance.amount} ${millimetre.suffix}`) : undefined,
-			"Side fin left depth": "sideFinLeftDepth" in x.data && x.data.sideFinLeftDepth ? (typeof x.data.sideFinLeftDepth === "number" ? `${x.data.sideFinLeftDepth} ${millimetre.suffix}` : `${x.data.sideFinLeftDepth.amount} ${millimetre.suffix}`) : undefined,
-			"Side fin left distance from glass": "sideFinLeftDistance" in x.data && x.data.sideFinLeftDistance ? (typeof x.data.sideFinLeftDistance === "number" ? `${x.data.sideFinLeftDistance} ${millimetre.suffix}` : `${x.data.sideFinLeftDistance.amount} ${millimetre.suffix}`) : undefined,
-			"Type": "treatmentType" in x.data ? displayCamelToSentenceCase(show(x.data.treatmentType)) : undefined,
-			"Curtains control object reference": "curtainsControlObject" in x.data ? displaySnakeToSentenceCase(x.data.curtainsControlObject!) : undefined,
-			"Thermal resistivity increase": "thermalResistivityIncrease" in x.data ? `${x.data.thermalResistivityIncrease} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
-			"Solar transmittance reduction": "solarTransmittanceReduction" in x.data ? x.data.solarTransmittanceReduction : undefined,
+			"Name": show(x.name),
+			"Pitch": dim(x.pitch, "degrees"),
+			"Orientation": dim(x.orientation, "degrees"),
+			"Height": dim(x.height, "metres"),
+			"Width": dim(x.width, "metres"),
+			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
+			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"U-value": dim(x.uValue, "watts per square metre kelvin"),
+			"Transmittance of solar energy": show(x.solarTransmittance),
+			"Mid height": dim(x.midHeight, "metres"),
+			"Frame to opening ratio": show(x.openingToFrameRatio && calculateFrameToOpeningRatio(x.openingToFrameRatio)),
+			"Number of openable parts": show(x.numberOpenableParts),
+			"Height of the openable area": numberOfOpenablePartsIsSelectedAndNonZero ? heightOpenableArea : undefined,
+			"Maximum openable area": numberOfOpenablePartsIsSelectedAndNonZero ? maximumOpenableArea : undefined,
+			"Mid height of the air flow path for openable part 1": numberOfOpenablePartsIsSelectedAndNonZero ? midHeightOpenablePart1 : undefined,
+			"Mid height of the air flow path for openable part 2": numberOfOpenablePartsIsTwo || numberOfOpenablePartsIsThree || numberOfOpenablePartsIsFour ? midHeightOpenablePart2 : undefined,
+			"Mid height of the air flow path for openable part 3": numberOfOpenablePartsIsThree || numberOfOpenablePartsIsFour ? midHeightOpenablePart3 : undefined,
+			"Mid height of the air flow path for openable part 4": numberOfOpenablePartsIsFour ? midHeightOpenablePart4 : undefined,
+			
+			// TO-DO: Implement sibling validation on the 6 window shading fields
+			"Overhang depth": x.overhangDepth ? (typeof x.overhangDepth === "number" ? dim(x.overhangDepth, "millimetres") : dim(x.overhangDepth.amount, "millimetres")) : undefined,
+			"Overhang distance from glass": x.overhangDistance ? (typeof x.overhangDistance === "number" ? dim(x.overhangDistance, "millimetres") : dim(x.overhangDistance.amount, "millimetres")): undefined,
+			"Side fin right depth": x.sideFinRightDepth ? (typeof x.sideFinRightDepth === "number" ? dim(x.sideFinRightDepth, "millimetres") : dim(x.sideFinRightDepth.amount, "millimetres")) : undefined,
+			"Side fin right distance from glass": x.sideFinRightDistance ? (typeof x.sideFinRightDistance === "number" ? dim(x.sideFinRightDistance, "millimetres") : dim(x.sideFinRightDistance.amount, "millimetres")) : undefined,
+			"Side fin left depth": x.sideFinLeftDepth ? (typeof x.sideFinLeftDepth === "number" ? dim(x.sideFinLeftDepth, "millimetres") : dim(x.sideFinLeftDepth.amount, "millimetres")) : undefined,
+			"Side fin left distance from glass": x.sideFinLeftDistance ? (typeof x.sideFinLeftDistance === "number" ? dim(x.sideFinLeftDistance, "millimetres") : dim(x.sideFinLeftDistance.amount, "millimetres")) : undefined,
+			
+			"Type": x.curtainsOrBlinds ? treatmentType : undefined,
+			"Curtains control object reference": "treatmentType" in x && x.treatmentType === "curtains" ? curtainsControlObject : undefined,
+			"Thermal resistivity increase": x.curtainsOrBlinds ? thermalResistivityIncrease : undefined,
+			"Solar transmittance reduction": x.curtainsOrBlinds ? solarTransmittanceReduction : undefined,
 		};
 	}) || [],
 	editUrl: getUrl("dwellingSpaceWindows"),
