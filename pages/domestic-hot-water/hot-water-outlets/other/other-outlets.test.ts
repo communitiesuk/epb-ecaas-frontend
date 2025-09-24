@@ -164,6 +164,8 @@ describe("Partially saving data", () => {
 				params: { outlet: "create" },
 			},
 		});
+
+		await user.type(screen.getByTestId("flowRate"), "10"); // set another value on form in order to count as a partial we want to keep
 		await user.type(screen.getByTestId("name"), "Other outlet 1");
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();

@@ -36,7 +36,7 @@ function handleInput(e: Event) {
 			unit: unit.name,
 		});
 	} else {
-		props.context.node.input("");
+		props.context.node.input(undefined);
 	}
 }
 

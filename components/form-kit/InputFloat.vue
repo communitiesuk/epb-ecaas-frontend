@@ -27,7 +27,7 @@ function handleBlur(e: FocusEvent) {
 	if (value !== "" && !isNaN(Number(value))) {
 		props.context.node.input(Number(value));
 	} else {
-		props.context.node.input(value);
+		props.context.node.input(undefined);
 	}
 
 	props.context.handlers.blur(e);

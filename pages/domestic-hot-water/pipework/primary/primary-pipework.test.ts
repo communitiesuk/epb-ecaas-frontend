@@ -245,6 +245,8 @@ describe("partially saving data", () => {
 				params: { pipe: "create" },
 			},
 		});
+
+		await user.type(screen.getByTestId("internalDiameter"), "10"); // set another value on form in order to count as a partial we want to keep
 		await user.type(screen.getByTestId("name"), "Pipework Kitchen Sink");
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
