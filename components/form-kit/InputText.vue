@@ -48,6 +48,7 @@ function handleBlur(e: FocusEvent) {
 			:placeholder="placeholder as string"
 			@change="handleInput"
 			@blur="handleBlur"
+			v-bind="props.context.attrs"
 		>
 	</div>
 </template>

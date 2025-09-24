@@ -57,6 +57,7 @@ const handleChange = (value: string) => {
 							:checked="mounted ? optionsSelected.includes(key) : false"
 							:data-testid="`${id}_${key}`"
 							@change="handleChange(key)"
+							v-bind="props.context.attrs"
 						>
 						<label class="govuk-label govuk-checkboxes__label" :for="`${id}_${key}`">{{ options[key] }}</label>
 					</div>

@@ -53,6 +53,7 @@ const currentValue = computed(() => {
 		:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 		:handle-input="handleInput"
 		:current-value="currentValue"
+		v-bind="props.context.attrs"
 	>
 		<slot />
 	</GovRadios>

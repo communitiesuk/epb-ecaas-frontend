@@ -46,6 +46,7 @@ const optionsMap = options instanceof Map ? options : new Map(Object.entries(opt
 		:aria-described-by="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 		:handle-input="handleInput"
 		:current-value="props.context._value"
+		v-bind="props.context.attrs"
 	>
 		<slot />
 	</GovRadios>
