@@ -14,11 +14,14 @@ export function show(value: string | number | undefined | null): string {
 
 /** Renders a unit with correct visual suffix, falling back to "-" for undefined */
 export function dim(amount: UnitValue | number | undefined, unit?: UnitName): string {
+	if (amount as unknown === "") {
+		return emptyValueRendering;
+	}
 	if (typeof amount === "object") {
 		const { amount: num, unit: unitName } = amount;
-		
+
 		return renderDimensionedValue(num, unitName);
-	}	
+	}
 	if (typeof amount === "undefined") {
 		return emptyValueRendering;
 	}
@@ -37,7 +40,7 @@ export function displayBoolean(value: boolean | undefined): BooleanDisplay | typ
 	if (typeof value === "undefined") {
 		return emptyValueRendering;
 	}
-  
+
 	return value ? "Yes" : "No";
 }
 
@@ -186,7 +189,7 @@ export function displayAdjacentSpaceType<T extends string>(value: AdjacentSpaceT
 		return undefined;
 	}
 
-	return `${element} to ${ value === "heatedSpace" ? "heated space" : "unheated space" }`;
+	return `${element} to ${value === "heatedSpace" ? "heated space" : "unheated space"}`;
 }
 
 export function displayHeaterPosition(position: ImmersionHeaterPosition | undefined): string {

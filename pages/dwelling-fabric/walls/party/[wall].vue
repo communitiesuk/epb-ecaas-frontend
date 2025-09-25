@@ -37,6 +37,8 @@ autoSaveElementForm({
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall,
 	defaultName: "Party wall",
 	onPatch: (state, newData, index) => {
+		const { pitchOption, pitch } = newData.data;
+		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.complete = false;
 	},

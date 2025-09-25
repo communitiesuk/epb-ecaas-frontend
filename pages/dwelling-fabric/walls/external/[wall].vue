@@ -42,6 +42,8 @@ autoSaveElementForm({
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall,
 	defaultName: "External wall",
 	onPatch: (state, newData, index) => {
+		const { pitchOption, pitch } = newData.data;
+		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.complete = false;
 	},
