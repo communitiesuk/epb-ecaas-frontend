@@ -61,7 +61,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="altitude"
 			suffix-text="m"
 			validation="required | number | min:-150 | max:7200"
-			help="Enter the number of metres the dwelling is above sea level">
+			help="Enter the number of metres the dwelling is above sea level"
+			data-field="InfiltrationVentilation.altitude">
 			<GovDetails summary-text="Help with this input">
 				<p>There are free online tools which can help estimate this.</p>
 			</GovDetails>
@@ -74,7 +75,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Type of exposure"
 			name="typeOfExposure"
 			validation="required"
-			help="This is the level of shielding a dwelling will have against external environmental factors such as wind, noise or outdoor pollutants">
+			help="This is the level of shielding a dwelling will have against external environmental factors such as wind, noise or outdoor pollutants"
+			data-field="InfiltrationVentilation.shield_class">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
@@ -128,7 +130,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Terrain Type"
 			name="terrainType"
 			validation="required"
-			help="This is the type of surrounding landscape once the dwelling has been built">
+			help="This is the type of surrounding landscape once the dwelling has been built"
+			data-field="InfiltrationVentilation.terrain_class">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p>Providing the terrain type helps determine how external conditions, such as wind speed and turbulence, will impact ventilation and airflow around a building.</p>
 				<table class="govuk-table">
@@ -194,6 +197,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="noiseNuisance"
 			validation="required"
 			help="Is there environmental noise from the surrounding area, which can influence whether occupants keep windows closed?"
+			data-field="InfiltrationVentilation.noise_nuisance"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

@@ -42,6 +42,7 @@ function handleInput(e: Event) {
 			:data-testid="id"
 			:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
 			@input="handleInput"
+			v-bind="props.context.attrs"
 		>
 			<option value="">Select</option>
 			<template v-if="Array.isArray(options)">

@@ -68,6 +68,7 @@ function handleBlur(e: FocusEvent) {
 				@input="handleTyping"
 				@change="handleInput"
 				@blur="handleBlur"
+				v-bind="props.context.attrs"
 			>
 			<div class="govuk-input__suffix" aria-hidden="true">{{unit.suffix}}</div>
 		</div>
