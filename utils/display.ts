@@ -3,8 +3,9 @@ import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass, WwhrsType
 import type { DisplayProduct } from "~/pcdb/products";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
+import { immersionHeaterPositionValues } from "~/mapping/common";
 
-const emptyValueRendering = "-";
+export const emptyValueRendering = "-";
 
 /** Turns a value into something that can be shown on e.g. a summary page */
 export function show(value: string | number | undefined | null): string {
@@ -186,6 +187,20 @@ export function displayAdjacentSpaceType<T extends string>(value: AdjacentSpaceT
 	}
 
 	return `${element} to ${ value === "heatedSpace" ? "heated space" : "unheated space" }`;
+}
+
+export function displayHeaterPosition(position: ImmersionHeaterPosition | undefined): string {
+	if (typeof position === "undefined") {
+		return emptyValueRendering;
+	}
+	return `${ displayCamelToSentenceCase(position) } (${ immersionHeaterPositionValues[position] })`;
+}
+
+export function displayReflectivity(reflective: boolean | undefined): string {
+	if (typeof reflective === "undefined") {
+		return emptyValueRendering;
+	}
+	return reflective ? "Reflective" : "Not reflective";
 }
 
 // better type/ function for displaying products once we're dealing with realistic products

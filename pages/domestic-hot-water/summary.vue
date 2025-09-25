@@ -1,14 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl  } from "#imports";
-import type { ImmersionHeaterPosition } from "#imports";
-import { immersionHeaterPositionValues } from "~/mapping/common";
-import { litre } from "~/utils/units/volume";
-import { kilowatt, kilowattHour } from "~/utils/units/power";
-import { celsius } from "~/utils/units/temperature";
-import { litrePerHour, litrePerMinute } from "~/utils/units/flowRate";
-import { metre, millimetre } from "~/utils/units/length";
-import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 
 const title = "Domestic hot water";
 const store = useEcaasStore();
@@ -28,10 +20,10 @@ const hotWaterCylinderSummary: SummarySection = {
 	label: "Hot Water Cylinder",
 	data: hotWaterCylinderData.map(d => {
 		return {
-			"Name": d && d.data.name,
-			"Heat source": d && heatGenerationData.find(x => x.id === d.data.heatSource)?.name,
-			"Storage cylinder volume": d && `${typeof d.data.storageCylinderVolume === "number" ? d.data.storageCylinderVolume : d.data.storageCylinderVolume!.amount} ${litre.suffix}`,
-			"Daily energy loss": d && `${d.data.dailyEnergyLoss} ${kilowattHour.suffix}`,
+			"Name": show(d.data.name),
+			"Heat source": show(heatGenerationData.find(x => x.id === d.data.heatSource)?.name),
+			"Storage cylinder volume": dim(d.data.storageCylinderVolume, "litres"),
+			"Daily energy loss": dim(d.data.dailyEnergyLoss, "kilowatt-hour"),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -43,18 +35,14 @@ const immersionHeaterSummary: SummarySection = {
 	label: "Immersion heater",
 	data: immersionHeaterData.map(d => {
 		return {
-			"Name": d && d.name,
-			"Rated power": d && `${d.ratedPower} ${kilowatt.suffix}`,
-			"Heater position": d && renderHeaterPosition(d.heaterPosition),
-			"Thermostat position": d && renderHeaterPosition(d.thermostatPosition),
+			"Name": show(d.name),
+			"Rated power": dim(d.ratedPower, "kilowatt"),
+			"Heater position": displayHeaterPosition(d.heaterPosition),
+			"Thermostat position": displayHeaterPosition(d.thermostatPosition),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
 };
-
-function renderHeaterPosition(position: ImmersionHeaterPosition): string {
-	return `${ displayCamelToSentenceCase(position) } (${ immersionHeaterPositionValues[position] })`;
-}
 
 const solarThermalData = store.domesticHotWater.waterHeating.solarThermal.data;
 const solarThermalSummary: SummarySection = {
@@ -62,7 +50,7 @@ const solarThermalSummary: SummarySection = {
 	label: "Solar thermal",
 	data: solarThermalData.map(d => {
 		return {
-			"Name": d && d.name,
+			"Name": show(d.name),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -74,9 +62,9 @@ const pointOfUseSummary: SummarySection = {
 	label: "Point of use",
 	data: pointOfUseData.map(d => {
 		return {
-			"Name": d && d.name,
-			"Setpoint temperature": d && `${d.setpointTemperature} ${celsius.suffix}`,
-			"Heater efficiency": d && d.heaterEfficiency,
+			"Name": show(d.name),
+			"Setpoint temperature": dim(d.setpointTemperature, "celsius"),
+			"Heater efficiency": show(d.heaterEfficiency),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -88,7 +76,7 @@ const heatPumpSummary: SummarySection = {
 	label: "Heat pump",
 	data: heatPumpData.map(d => {
 		return {
-			"Name": d.data.name,
+			"Name": show(d.data.name),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -100,7 +88,7 @@ const combiBoilerSummary: SummarySection = {
 	label: "Combi boiler",
 	data: combiBoilerData.map(d => {
 		return {
-			"Name": d && d.name,
+			"Name": show(d.name),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -112,7 +100,7 @@ const heatBatterySummary: SummarySection = {
 	label: "Heat battery",
 	data: heatBatteryData.map(d => {
 		return {
-			"Name": d && d.name,
+			"Name": show(d.name),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -124,7 +112,7 @@ const smartHotWaterTankSummary: SummarySection = {
 	label: "Smart hot water tank",
 	data: smartHotWaterTankData.map(d => {
 		return {
-			"Name": d && d.name,
+			"Name": show(d.name),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -136,7 +124,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 	label: "Heat interface unit",
 	data: heatInterfaceUnitData.map(d => {
 		return {
-			"Name": d && d.name,
+			"Name": show(d.name),
 		};
 	}),
 	editUrl: getUrl("waterHeating"),
@@ -160,8 +148,8 @@ const mixedShowerSummary: SummarySection = {
 	label: "Mixer shower",
 	data: mixedShowerData.map(d => { 
 		return {
-			"Name": d.data.name,
-			"Flow rate": `${d.data.flowRate} ${litrePerHour.suffix}`,
+			"Name": show(d.data.name),
+			"Flow rate": dim(d.data.flowRate, "litres per hour"),
 		};
 	}),
 	editUrl: getUrl("hotWaterOutlets"),
@@ -173,8 +161,8 @@ const electricShowerSummary: SummarySection = {
 	label: "Electric shower",
 	data: electricShowerData.map(d => {   
 		return {
-			"Name": d.data.name,
-			"Rated power": `${d.data.ratedPower} ${kilowatt.suffix}`,
+			"Name": show(d.data.name),
+			"Rated power": dim(d.data.ratedPower, "kilowatt"),
 		};
 	}),
 	editUrl: getUrl("hotWaterOutlets"),
@@ -186,9 +174,9 @@ const bathSummary: SummarySection = {
 	label: "Bath",
 	data: bathData.map(d => {
 		return {
-			"Name": d.data.name,
-			"Size": `${d.data.size} ${litre.suffix}`,
-			"Flow rate": `${d.data.flowRate} ${litrePerMinute.suffix}`,
+			"Name": show(d.data.name),
+			"Size": dim(d.data.size, "litres"),
+			"Flow rate": dim(d.data.flowRate, "litres per minute"),
 		};
 	}),
 	editUrl: getUrl("hotWaterOutlets"),
@@ -200,8 +188,8 @@ const otherOutletsSummary: SummarySection = {
 	label: "Other",
 	data: otherOutletsData.map(d => {
 		return {
-			"Name": d.data.name,
-			"Flow rate": `${d.data.flowRate} ${litrePerMinute.suffix}`,
+			"Name": show(d.data.name),
+			"Flow rate": dim(d.data.flowRate, "litres per minute"),
 		};
 	}),
 	editUrl: getUrl("hotWaterOutlets"),
@@ -220,15 +208,15 @@ const primaryPipeworkSummary: SummarySection = {
 	label: "Primary pipework",
 	data: primaryPipeworkData.map(d => {
 		return {
-			"Name": d.data.name,
-			"Internal diameter": `${d.data.internalDiameter} ${millimetre.suffix}`,
-			"External diameter": `${d.data.externalDiameter} ${millimetre.suffix}`,
-			"Length": `${d.data.length} ${metre.suffix}`,
-			"Insulation thickness": `${d.data.insulationThickness} ${millimetre.suffix}`,
-			"Thermal conductivity": `${d.data.thermalConductivity} ${wattsPerMeterKelvin.suffix}`,
-			"Surface reflectivity": d.data.surfaceReflectivity ? "Reflective" : "Not reflective",
+			"Name": show(d.data.name),
+			"Internal diameter": dim(d.data.internalDiameter, "millimetres"),
+			"External diameter": dim(d.data.externalDiameter, "millimetres"),
+			"Length": dim(d.data.length, "metres"),
+			"Insulation thickness": dim(d.data.insulationThickness, "millimetres"),
+			"Thermal conductivity": dim(d.data.thermalConductivity, "watts per metre kelvin") ,
+			"Surface reflectivity": displayReflectivity(d.data.surfaceReflectivity),
 			"Pipe contents": displayCamelToSentenceCase(show(d.data.pipeContents)),
-			"Hot water cylinder": hotWaterCylinderData.find(x => x && x.data.id === d.data.hotWaterCylinder)?.data.name,
+			"Hot water cylinder": show(hotWaterCylinderData.find(x => x && x.data.id === d.data.hotWaterCylinder)?.data.name),
 			"Location": displayCamelToSentenceCase(show(d.data.location)),
 		};
 	}) || [],
@@ -241,9 +229,9 @@ const secondaryPipeworkSummary: SummarySection = {
 	label: "Secondary pipework",
 	data: secondaryPipeworkData.map(d => {
 		return {
-			"Name": d.data.name,
-			"Internal diameter": `${d.data.internalDiameter} ${millimetre.suffix}`,
-			"Length": `${d.data.length} ${metre.suffix}`,
+			"Name": show(d.data.name),
+			"Internal diameter": dim(d.data.internalDiameter, "millimetres"),
+			"Length": dim(d.data.length, "metres"),
 			"Location": displayCamelToSentenceCase(show(d.data.location)),
 		};
 	}) || [],
