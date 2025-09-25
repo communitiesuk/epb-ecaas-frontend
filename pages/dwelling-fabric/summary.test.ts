@@ -647,6 +647,9 @@ describe("Living space fabric summary", () => {
 		it("should display the correct data for the external unglazed doors section", async () => {
 			store.$patch({
 				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+					},
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalUnglazedDoor: doorsData.dwellingSpaceExternalUnglazedDoor,
 					},
