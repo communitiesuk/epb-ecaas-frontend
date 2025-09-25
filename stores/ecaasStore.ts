@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.schema";
+import type { AssociatedWallRoofCeiling, EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
 import { PageType  } from "~/data/pages/pages.types";
@@ -108,7 +108,7 @@ export function getInitialState(): EcaasState {
 		},
 	};
 	return store as EcaasState;
-}	
+}
 
 export const useEcaasStore = defineStore("ecaas", {
 	state: getInitialState,
@@ -143,6 +143,25 @@ export const useEcaasStore = defineStore("ecaas", {
 
 				return formStatus.notStarted;
 			};
+		},
+		getAssociatedWallRoofCeiling: (state) => {
+			const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
+			const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+			const wallsRoofsCeilings: AssociatedWallRoofCeiling[] = [
+				dwellingSpaceExternalWall.data.map(x => ({
+					id: x.data.id,
+					pitch: extractPitch(x.data),
+					orientation: x.data.orientation,
+				})),
+				dwellingSpaceRoofs.data.map(x => ({
+					id: x.data.id!,
+					pitch: x.data.pitchOption === undefined || x.data.pitchOption === "custom" ? x.data.pitch : Number(x.data.pitchOption),
+					orientation: x.data.orientation!,
+				})),
+			].flat();
+
+			return (id: string) => wallsRoofsCeilings.find(e => e.id === id);
 		},
 	},
 	actions: {

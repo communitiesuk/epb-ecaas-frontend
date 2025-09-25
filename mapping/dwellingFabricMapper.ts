@@ -353,8 +353,23 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 }
 
 export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
+	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
+	const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const doorSuffix = "door";
+
+	const wallsRoofsCeilings = [
+		dwellingSpaceExternalWall?.map(x => ({
+			id: x.id,
+			pitch: extractPitch(x),
+			orientation: x.orientation,
+		})),
+		dwellingSpaceRoofs?.map(x => ({
+			id: x.id,
+			pitch: x.pitchOption === undefined || x.pitchOption === "custom" ? x.pitch : Number(x.pitchOption),
+			orientation: x.orientation!,
+		})),
+	].flat().filter(x => x !== undefined);
 
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
 		const commonFields = {
@@ -422,11 +437,13 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			return [];
 		}
 
+		const associatedWallRoofCeiling = wallsRoofsCeilings.find(e => e.id === x.associatedWallRoofCeilingId)!;
+
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementTransparent",
-				pitch: extractPitch(x),
-				orientation360: x.orientation,
+				pitch: associatedWallRoofCeiling.pitch,
+				orientation360: associatedWallRoofCeiling.orientation,
 				height: x.height,
 				mid_height: x.midHeight,
 				width: x.width,

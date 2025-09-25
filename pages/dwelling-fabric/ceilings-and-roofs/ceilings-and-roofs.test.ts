@@ -50,6 +50,7 @@ describe("ceilings and roofs", () => {
 
 	const roof1: EcaasForm<RoofData> = {
 		data: {
+			id: "10c7f753-9d63-4fc6-97d6-968d7e1ea2ea",
 			name: "Roof 1",
 			typeOfRoof: "flat",
 			pitchOption: "0",
@@ -68,6 +69,7 @@ describe("ceilings and roofs", () => {
 	const roof2: EcaasForm<RoofData> = {
 		data: {
 			...roof1.data,
+			id: "41a6e9c4-1b6d-4e5c-8bdc-950b0292cf52",
 			name: "Roof 2",
 		},
 	};
@@ -75,6 +77,7 @@ describe("ceilings and roofs", () => {
 	const roof3: EcaasForm<RoofData> = {
 		data: {
 			...roof1.data,
+			id: "9f0112b6-6fe0-49fe-9223-ea749db34307",
 			name: "Roof 3",
 		},
 	};

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl, zeroPitchOptions } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Roof";
 const store = useEcaasStore();
@@ -18,9 +19,11 @@ const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		const index = getStoreIndex(dwellingSpaceRoofs.data);
+		const currentId = roofData?.data.id;
 
 		dwellingSpaceRoofs.data[index] = {
 			data: {
+				id: currentId || uuidv4(),
 				name: fields.name,
 				typeOfRoof: fields.typeOfRoof,
 				pitchOption: fields.pitchOption,

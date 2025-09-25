@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getUrl, standardPitchOptions } from "#imports";
+import { getUrl } from "#imports";
 
 const title = "External glazed door";
 const store = useEcaasStore();
@@ -16,13 +16,11 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 		dwellingSpaceExternalGlazedDoor.data[index] = {
 			data: {
 				name: fields.name,
-				orientation: fields.orientation,
+				associatedWallRoofCeilingId: fields.associatedWallRoofCeilingId,
 				surfaceArea: fields.surfaceArea,
 				height: fields.height,
 				width: fields.width,
 				uValue: fields.uValue,
-				pitchOption: fields.pitchOption,
-				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 				solarTransmittance: fields.solarTransmittance,
 				elevationalHeight: fields.elevationalHeight,
 				midHeight: fields.midHeight,
@@ -76,11 +74,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
-		<FieldsPitch
-			:pitch-option="model?.pitchOption"
-			:options="standardPitchOptions()"
+		<FieldsAssociatedWallRoofCeiling
+			id="associatedWallRoofCeilingId"
+			name="associatedWallRoofCeilingId"
+			label="Associated wall, roof or ceiling"
+			help="Select the wall, roof or ceiling that this door is in. It should have the same orientation and pitch as the door."
 		/>
-		<FieldsOrientation />
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"
@@ -158,7 +157,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		</FormKit>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceDoors')" secondary test-id="saveProgress">Save progress</GovButton>
 		</div>
 	</FormKit>

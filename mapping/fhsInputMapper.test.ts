@@ -759,7 +759,7 @@ const expectedFlatInput: FhsInputSchema = {
 					height: 3,
 					max_window_open_area: 0,
 					mid_height: 1.5,
-					orientation360: 20,
+					orientation360: 30,
 					pitch: 90,
 					shading: [],
 					type: "BuildingElementTransparent",
@@ -1308,6 +1308,8 @@ describe("FHS input mapper", () => {
 
 	it("maps input state with a build type of flat to an FHS input request", () => {
 		// Arrange
+		const externalWallId = "c846a753-51ac-43c8-b6a8-823cab609d5e";
+
 		const dwellingDetails: DwellingDetails = {
 			generalSpecifications: {
 				...baseForm,
@@ -1591,6 +1593,7 @@ describe("FHS input mapper", () => {
 						{
 							...baseForm,
 							data: {
+								id: externalWallId,
 								name: "external wall 1",
 								pitchOption: "90",
 								pitch: 45,
@@ -1673,6 +1676,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
+							id: "85343964-1c5f-416b-b4af-0d16c06d3046",
 							name: "roof 1",
 							typeOfRoof: "flat",
 							pitch: 20,
@@ -1716,13 +1720,11 @@ describe("FHS input mapper", () => {
 						...baseForm,
 						data: {
 							name: "external glazed door",
+							associatedWallRoofCeilingId: externalWallId,
 							surfaceArea: 3,
 							height: 3,
 							width: 1,
 							uValue: 0.8,
-							pitchOption: "90",
-							pitch: 90,
-							orientation: 20,
 							solarTransmittance: 0.5,
 							elevationalHeight: 0.2,
 							midHeight: 1.5,

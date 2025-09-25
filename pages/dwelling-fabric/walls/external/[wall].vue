@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { standardPitchOptions, getUrl } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "External wall";
 const store = useEcaasStore();
@@ -12,9 +13,11 @@ const saveForm = (fields: ExternalWallData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWalls } = state.dwellingFabric;
 		const index = getStoreIndex(dwellingSpaceWalls.dwellingSpaceExternalWall.data);
+		const currentId = wallData?.data.id;
 
 		dwellingSpaceWalls.dwellingSpaceExternalWall.data[index] = {
 			data: {
+				id: currentId || uuidv4(),
 				name: fields.name,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,

@@ -279,10 +279,12 @@ const glazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceGlazedDoors",
 	label: "External glazed door",
 	data: glazedDoorData.map(({ data: x }) => {
+		const associatedWallRoofCeiling = store.getAssociatedWallRoofCeiling(x.associatedWallRoofCeilingId!)!;
+
 		return {
 			"Name": x.name,
-			"Pitch": `${x.pitch} ${degrees.suffix}`,
-			"Orientation": `${x.orientation} ${degrees.suffix}`,
+			"Pitch": `${associatedWallRoofCeiling.pitch} ${degrees.suffix}`,
+			"Orientation": `${associatedWallRoofCeiling.orientation} ${degrees.suffix}`,
 			"Height": `${x.height} ${metre.suffix}`,
 			"Width": `${x.width} ${metre.suffix}`,
 			"Elevational height of building element at its base": `${x.elevationalHeight} ${metre.suffix}`,

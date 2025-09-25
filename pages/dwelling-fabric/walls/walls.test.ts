@@ -24,6 +24,7 @@ describe("walls", () => {
 		store.$reset();
 	});
 	const external1: ExternalWallData = {
+		id: "8bb5eda9-3c31-44d0-801b-f130a63b9f6a",
 		name: "External wall 1",
 		pitchOption: "90",
 		pitch: 90,

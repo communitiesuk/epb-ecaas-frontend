@@ -32,6 +32,7 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 		"data": [
 			{
 				"data": {
+					"id": "5c809256-0702-48a5-bce0-7d1617e852fc",
 					"name": "Wall 1",
 					"pitchOption": "90",
 					"pitch": 90,
@@ -49,6 +50,7 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 			},
 			{
 				"data": {
+					"id": "81b62646-eac0-4f1f-8d26-a785a565c751",
 					"name": "Wall 2",
 					"pitchOption": "90",
 					"pitch": 90,
@@ -75,6 +77,7 @@ const twoLegacyCompleteValidWalls = {
 			"dwellingSpaceExternalWall": {
 				"data": [
 					{
+						"id": "5c809256-0702-48a5-bce0-7d1617e852fc",
 						"name": "Wall 1",
 						"pitchOption": "90",
 						"pitch": 90,
@@ -89,6 +92,7 @@ const twoLegacyCompleteValidWalls = {
 						"massDistributionClass": MassDistributionClass.E,
 					},
 					{
+						"id": "81b62646-eac0-4f1f-8d26-a785a565c751",
 						"name": "Wall 2",
 						"pitchOption": "90",
 						"pitch": 90,

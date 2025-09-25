@@ -309,6 +309,7 @@ describe("dwelling fabric mapper", () => {
 		const externalWall: EcaasForm<ExternalWallData> = {
 			...baseForm,
 			data: {
+				id: "a17babcd-e2dc-4ab0-a4ab-99e9946372bc",
 				name: "External wall 1",
 				pitchOption: "90",
 				pitch: 90,
@@ -452,6 +453,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const roof: RoofData = {
+			id: "ade61616-9cdd-4694-a4ee-322862bd5aff",
 			name: "Roof 1",
 			typeOfRoof: "flat",
 			pitchOption: "custom",
@@ -518,6 +520,25 @@ describe("dwelling fabric mapper", () => {
 
 	it("maps door input state to FHS input request", () => {
 		// Arrange
+		const externalWall: EcaasForm<ExternalWallData> = {
+			...baseForm,
+			data: {
+				id: "cbb78615-d2de-482b-a8f1-ce48534aaa05",
+				name: "External wall 1",
+				pitchOption: "90",
+				pitch: 90,
+				orientation: 0,
+				length: 20,
+				height: 0.5,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				solarAbsorption: 0.1,
+				uValue: 1,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+			},
+		};
+
 		const internalDoor: InternalDoorData = {
 			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 			name: "Internal 1",
@@ -532,13 +553,11 @@ describe("dwelling fabric mapper", () => {
 
 		const externalGlazedDoor: ExternalGlazedDoorData = {
 			name: "External glazed door 1",
-			orientation: 1,
+			associatedWallRoofCeilingId: externalWall.data.id,
 			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: "90",
-			pitch: 90,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
@@ -568,6 +587,12 @@ describe("dwelling fabric mapper", () => {
 		 
 		store.$patch({
 			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [externalWall],
+						complete: true,
+					},
+				},
 				dwellingSpaceDoors: {
 					dwellingSpaceInternalDoor: { ...baseForm, data: [{ ...baseForm, data: internalDoor }] },
 					dwellingSpaceExternalGlazedDoor: { ...baseForm, data: [{ ...baseForm, data: externalGlazedDoor }] },
@@ -598,8 +623,8 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedExternalGlazedDoor: BuildingElementTransparent = {
 			type: "BuildingElementTransparent",
-			pitch: expectedInternalDoor.pitch,
-			orientation360: externalGlazedDoor.orientation,
+			pitch: extractPitch(externalWall.data),
+			orientation360: externalWall.data.orientation,
 			height: externalGlazedDoor.height,
 			width: externalGlazedDoor.width,
 			mid_height: externalGlazedDoor.midHeight,

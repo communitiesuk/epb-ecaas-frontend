@@ -74,10 +74,13 @@ const floorsData: FloorsData = {
 	},
 };
 
+const externalWallId = "47689878-2f16-414f-92c1-64b5cee844f6";
+
 const wallsData: WallsData = {
 	dwellingSpaceExternalWall: {
 		data: [{
 			data: {
+				id: externalWallId,
 				name: "External wall 1",
 				pitchOption: "90",
 				pitch: 90,
@@ -172,34 +175,31 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 const doorsData: DoorsData = {
 	dwellingSpaceExternalUnglazedDoor: {
 		data: [{
-			data:
-					{
-						name: "External unglazed door 1",
-						pitchOption: "90",
-						pitch: 90,
-						orientation: 0,
-						height: 0.5,
-						width: 20,
-						elevationalHeight: 20,
-						surfaceArea: 10,
-						solarAbsorption: 0.1,
-						uValue: 1,
-						kappaValue: 50000,
-						massDistributionClass: MassDistributionClass.I,
-					},
+			data: {
+				name: "External unglazed door 1",
+				pitchOption: "90",
+				pitch: 90,
+				orientation: 0,
+				height: 0.5,
+				width: 20,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				solarAbsorption: 0.1,
+				uValue: 1,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+			},
 		}],
 	},
 	dwellingSpaceExternalGlazedDoor: {
 		data: [{
 			data: {
 				name: "External glazed door 1",
-				orientation: 1,
+				associatedWallRoofCeilingId: externalWallId,
 				surfaceArea: 1,
 				height: 1,
 				width: 1,
 				uValue: 1,
-				pitchOption: "90",
-				pitch: 90,
 				solarTransmittance: 0.1,
 				elevationalHeight: 1,
 				midHeight: 1,
@@ -682,6 +682,9 @@ describe("Living space fabric summary", () => {
 		it("should display the correct data for the external glazed doors section", async () => {
 			store.$patch({
 				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+					},
 					dwellingSpaceDoors: {
 						dwellingSpaceExternalGlazedDoor: doorsData.dwellingSpaceExternalGlazedDoor,
 					},
@@ -692,7 +695,7 @@ describe("Living space fabric summary", () => {
 	
 			const expectedResult = {
 				"Name": "External glazed door 1",
-				"Orientation": `1 ${degrees.suffix}`,
+				"Orientation": `0 ${degrees.suffix}`,
 				"Net surface area": `1 ${metresSquare.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,

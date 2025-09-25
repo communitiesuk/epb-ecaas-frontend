@@ -208,7 +208,7 @@ type AngleString = `${"" | "-"}${NonZeroDigit | ""}${NonZeroDigit | ""}${Digit |
 
 export type PitchOption = AngleString | "custom";
 
-const externalWallDataZod = named.extend({
+const externalWallDataZod = namedWithId.extend({
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
 	orientation,
@@ -289,7 +289,7 @@ const roofType = z.enum(["flat", "pitchedInsulatedAtRoof", "pitchedInsulatedAtCe
 
 export type RoofType = z.infer<typeof roofType>;
 
-const roofDataZod = named.extend({
+const roofDataZod = namedWithId.extend({
 	typeOfRoof: roofType,
 	pitchOption: z.optional(zeroPitchOption),
 	pitch: z.number().min(0).lt(180),
@@ -338,13 +338,11 @@ const twoPartFields = { ...onePartFields, midHeightOpenablePart2: z.number().min
 const threePartFields = { ...twoPartFields, midHeightOpenablePart3: z.number().min(0).max(100) };
 const fourPartFields = { ...threePartFields, midHeightOpenablePart4: z.number().min(0).max(100) };
 const baseExternalGlazedDoorData = named.extend({
-	orientation,
+	associatedWallRoofCeilingId: z.guid(),
 	surfaceArea: z.number().min(0.01).max(10000),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	uValue,
-	pitchOption: standardPitchOption,
-	pitch: z.optional(z.number().min(0).lt(180)),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),
 	midHeight: z.number().min(0).max(100),
@@ -982,6 +980,12 @@ export type CorrectedJsonApiError = {
 	source?: SchemaJsonApiOnePointOneErrorSource;
 	meta?: SchemaJsonApiOnePointOneMeta;
 };
+
+export interface AssociatedWallRoofCeiling {
+	id: string;
+	pitch?: number;
+	orientation?: number;
+}
 
 // type that enforces that all keys of wrapped type correspond to a page ID
 type AssertEachKeyIsPageId<T> = { [P in keyof T]: P extends PageId ? T[P] : never };

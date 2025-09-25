@@ -3,17 +3,21 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import ExternalWall from "./[wall].vue";
 import { MassDistributionClass } from "~/schema/api-schema.types";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+vi.mock("uuid");
+
 describe("external wall", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const state: ExternalWallData = {
+		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
 		name: "External wall 1",
 		pitchOption: "90",
 		pitch: 90,
@@ -33,6 +37,8 @@ describe("external wall", () => {
 	});
 
 	test("data is saved to store state when form is valid", async () => {
+		vi.mocked(uuidv4).mockReturnValue(state.id as unknown as Buffer);
+		
 		await renderSuspended(ExternalWall, {
 			route: {
 				params: { wall: "create" },

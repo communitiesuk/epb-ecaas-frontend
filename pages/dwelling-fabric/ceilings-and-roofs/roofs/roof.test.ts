@@ -3,11 +3,14 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Roof from "./[roof].vue";
 import { MassDistributionClass } from "~/schema/api-schema.types";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
+
+vi.mock("uuid");
 
 describe("roof", () => {
 	const store = useEcaasStore();
@@ -15,6 +18,7 @@ describe("roof", () => {
 
 	const roof: EcaasForm<RoofData> = {
 		data: {
+			id: "ec8e8ec6-0fcb-43dc-81e0-9e2e9afb9e20",
 			name: "Roof 1",
 			typeOfRoof: "flat",
 			pitchOption: "0",
@@ -49,6 +53,8 @@ describe("roof", () => {
 	};
 
 	test("data is saved to store state when form is valid", async () => {
+		vi.mocked(uuidv4).mockReturnValue(roof.data.id as unknown as Buffer);
+
 		await renderSuspended(Roof, {
 			route: {
 				params: { roof: "create" },

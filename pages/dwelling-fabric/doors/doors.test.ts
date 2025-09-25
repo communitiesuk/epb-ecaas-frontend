@@ -21,6 +21,22 @@ describe("doors", () => {
 		store.$reset();
 	});
 
+	const externalWall: ExternalWallData = {
+		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+		name: "External wall 1",
+		pitchOption: "90",
+		pitch: 90,
+		orientation: 0,
+		length: 20,
+		height: 0.5,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorption: 0.1,
+		uValue: 1,
+		kappaValue: 50000,
+		massDistributionClass: MassDistributionClass.I,
+	};
+
 	const externalUnglazed1: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 1 name",
@@ -75,13 +91,11 @@ describe("doors", () => {
 	const externalGlazed1: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed1 name",
-			orientation: 1,
+			associatedWallRoofCeilingId: externalWall.id,
 			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: "90",
-			pitch: 90,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
@@ -93,13 +107,11 @@ describe("doors", () => {
 	const externalGlazed2: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed2 name",
-			orientation: 1,
+			associatedWallRoofCeilingId: externalWall.id,
 			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: "90",
-			pitch: 90,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
@@ -111,13 +123,11 @@ describe("doors", () => {
 	const externalGlazed3: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed3 name",
-			orientation: 1,
+			associatedWallRoofCeilingId: externalWall.id,
 			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: "90",
-			pitch: 90,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
