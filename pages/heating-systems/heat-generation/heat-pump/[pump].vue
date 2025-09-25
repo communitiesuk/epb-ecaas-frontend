@@ -19,16 +19,16 @@ const { data: heatPumps } = await useFetch("/api/products", { query: { category:
 heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
 
 const heatPumpOptions = objectFromEntries(heatPumps.value!.map(entity => [entity.reference, displayProduct(entity.product)]));
+const id =  heatPumpData?.data.id ?? uuidv4()
 
 const saveForm = (fields: HeatPumpData) => {
 	store.$patch((state) => {
 		const { heatPump } = state.heatingSystems.heatGeneration;
 		const index = route.params.pump === "create" ? heatPump.data.length - 1 : Number(route.params.pump);
-		const currentId = heatPumpData?.data.id;
 
 		const heatPumpItem: EcaasForm<HeatPumpData> = {
 			data: {
-				id: currentId ? currentId : uuidv4(),
+				id,
 				name: fields.name,
 				productReference: fields.productReference,
 			},
@@ -47,6 +47,7 @@ autoSaveElementForm<HeatPumpData>({
 	storeData: store.heatingSystems.heatGeneration.heatPump,
 	defaultName: "Heat pump",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= id;
 		state.heatingSystems.heatGeneration.heatPump.data[index] = newData;
 		state.heatingSystems.heatGeneration.heatPump.complete = false;
 	},
