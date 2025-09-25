@@ -61,6 +61,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of LED bulbs must be an integer.`,
 			}"
+			data-field="Zone.Lighting.bulbs.count"
 		/>
 		<FormKit
 			id="numberOfIncandescentBulbs"
@@ -73,6 +74,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of incandescent bulbs must be an integer.`,
 			}"
+			data-field="Zone.Lighting.bulbs.count"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
