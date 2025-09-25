@@ -19,7 +19,7 @@ const { data: heatPumps } = await useFetch("/api/products", { query: { category:
 heatPumps.value?.sort((a, b) => -a.reference.localeCompare(b.reference));
 
 const heatPumpOptions = objectFromEntries(heatPumps.value!.map(entity => [entity.reference, displayProduct(entity.product)]));
-const id =  heatPumpData?.data.id ?? uuidv4()
+const id =  heatPumpData?.data.id ?? uuidv4();
 
 const saveForm = (fields: HeatPumpData) => {
 	store.$patch((state) => {

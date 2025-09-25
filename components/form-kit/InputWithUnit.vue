@@ -65,10 +65,10 @@ function handleBlur(e: FocusEvent) {
 				:value="mounted ? props.context._value && props.context._value.amount : ''"
 				:data-testId="id"
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
+				v-bind="props.context.attrs"
 				@input="handleTyping"
 				@change="handleInput"
 				@blur="handleBlur"
-				v-bind="props.context.attrs"
 			>
 			<div class="govuk-input__suffix" aria-hidden="true">{{unit.suffix}}</div>
 		</div>
