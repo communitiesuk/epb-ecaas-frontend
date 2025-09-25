@@ -1,5 +1,5 @@
 import { objectFromEntries } from "ts-extras";
-import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass, WwhrsType } from "../schema/api-schema.types";
+import { ApplianceKey, FlueGasExhaustSituation, FuelType, MassDistributionClass, WwhrsType } from "../schema/api-schema.types";
 import type { DisplayProduct } from "~/pcdb/products";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
@@ -206,6 +206,63 @@ export function displayReflectivity(reflective: boolean | undefined): string {
 	return reflective ? "Reflective" : "Not reflective";
 }
 
+export function displayFuelTypes(fuelTypes: FuelType[] | undefined) {
+	return fuelTypes?.map(type => {
+		return displayFuelType(type);
+	}).join(", ");
+}
+
+export function displayFuelType(fuelType: FuelType): FuelTypeDisplay {
+	switch (fuelType) {
+		case FuelType.LPG_bottled:
+			return "LPG bottled";
+		case FuelType.LPG_bulk:
+			return "LPG bulk";
+		case FuelType.LPG_condition_11F:
+			return "LPG condition 11F";
+		case FuelType.custom:
+			return "Custom";
+		case FuelType.electricity:
+			return "Electricity";
+		case FuelType.energy_from_environment:
+			return "Energy from environment";
+		case FuelType.mains_gas:
+			return "Mains gas";
+		case FuelType.unmet_demand:
+			return "Unmet demand";
+		default:
+			fuelType satisfies never;
+			throw new Error(`Missed a fuel type case: ${fuelType}`);
+	}
+}
+
+export type FuelTypeDisplay = "LPG bottled" | "LPG bulk" | "LPG condition 11F" | "Custom" | "Electricity" | "Energy from environment" | "Mains gas" | "Unmet demand";
+
+export const ecoDesignControllerOptions = {
+	1: "I: On/Off Room Thermostat",
+	2: "II: Weather Compensator (Modulating Heaters)",
+	3: "III: Weather Compensator (On/Off Heaters)",
+	4: "IV: TPI Room Thermostat (On/Off Heaters)",
+	5: "V: Modulating Room Thermostat",
+	6: "VI: Weather Compensator + Room Sensor (Modulating)",
+	7: "VII: Weather Compensator + Room Sensor (On/Off)",
+	8: "VIII: Multi-Sensor Room Control (Modulating)",
+};
+
+export type EcoDesignControllerValue = keyof typeof ecoDesignControllerOptions extends infer K
+	? K extends string
+		? K extends `${infer N extends number}` ? N : never
+		: never
+	: never;
+
+export function displayEcoDesignController(value: EcoDesignControllerValue | undefined): string {
+	if (typeof value === "undefined") {
+		return emptyValueRendering;
+	}
+
+	return ecoDesignControllerOptions[value] ?? ("" + value);
+}
+	
 // better type/ function for displaying products once we're dealing with realistic products
 // export type ProductDisplayString = `${DisplayProduct['brandName']} - ${DisplayProduct['modelName']}`;
 

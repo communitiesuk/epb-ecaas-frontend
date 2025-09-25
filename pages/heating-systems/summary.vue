@@ -1,30 +1,23 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getTabItems, getUrl } from "#imports";
+import { getTabItems, getUrl, type EcoDesignControllerValue } from "#imports";
 import { FuelType } from "~/schema/api-schema.types";
-import { co2PerKilowattHour } from "~/utils/units/emissions";
-import { kilowattHourPerKelvin } from "~/utils/units/thermalConductivity";
-import { celsius } from "~/utils/units/temperature";
-import { litrePerMinute } from "~/utils/units/flowRate";
-import { metresSquare } from "~/utils/units/area";
-import { kilowatt } from "~/utils/units/power";
 const store = useEcaasStore();
 const title = "Heating system summary";
 
 const { fuelType, exported, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered } = store.heatingSystems.energySupply.data;
-
 const energySupplySummary: SummarySection = {
 	id: "energySupply",
 	label: "Energy supply",
 	data: {
-		"Fuel type": fuelType,
+		"Fuel type": displayFuelTypes(fuelType),
 		...(fuelType?.includes(FuelType.electricity) && {
 			Exported: displayBoolean(exported),
 		}),
 		...(fuelType?.includes(FuelType.custom) && {
-			"CO2 per kWh": `${co2PerKwh} ${co2PerKilowattHour.suffix}`,
-			"CO2 per kWh (including out of scope)": `${co2PerKwhIncludingOutOfScope} ${co2PerKilowattHour.suffix}`,
-			"kWh per kWh delivered": kwhPerKwhDelivered,
+			"CO2 per kWh": dim(co2PerKwh, "CO2 per kilowatt-hour"),
+			"CO2 per kWh (including out of scope)": dim(co2PerKwhIncludingOutOfScope, "CO2 per kilowatt-hour"),
+			"kWh per kWh delivered": show(kwhPerKwhDelivered),
 		}),
 	},
 
@@ -39,8 +32,8 @@ const heatPumpSummary: SummarySection = {
 	data:
 		heatPumps.map((pump) => {
 			return {
-				Name: pump.data.name,
-				Product: pump.data.productReference,
+				Name: show(pump.data.name),
+				Product: show(pump.data.productReference),
 			};
 		}) || [],
 	editUrl: heatGenerationUrl,
@@ -52,7 +45,7 @@ const boilerSummary: SummarySection = {
 	label: "Boiler",
 	data: boilers.map((boiler) => {
 		return {
-			Name: boiler.name,
+			Name: show(boiler.name),
 		};
 	}) || [],
 	editUrl: heatGenerationUrl,
@@ -64,7 +57,7 @@ const heatBatterySummary: SummarySection = {
 	label: "Heat battery",
 	data: batteries.map((battery) => {
 		return {
-			Name: battery.name,
+			Name: show(battery.name),
 		};
 	}) || [],
 	editUrl: heatGenerationUrl,
@@ -76,7 +69,7 @@ const heatNetworkSummary: SummarySection = {
 	label: "Heat network",
 	data: networks.map((network) => {
 		return {
-			Name: network.name,
+			Name: show(network.name),
 		};
 	}) || [],
 	editUrl: heatGenerationUrl,
@@ -88,7 +81,7 @@ const heatInterfaceUnitSummary: SummarySection = {
 	label: "Heat interface unit",
 	data: units.map((unit) => {
 		return {
-			Name: unit.name,
+			Name: show(unit.name),
 		};
 	}) || [],
 	editUrl: heatGenerationUrl,
@@ -120,44 +113,28 @@ const wetDistributions = store.heatingSystems.heatEmitting.wetDistribution.data;
 const wetDistributionSummary: SummarySection = {
 	id: "wetDistribution",
 	label: "Wet distribution",
-	data: wetDistributions.map((wetDistribution) => {
+	data: wetDistributions.map(({ data: wetDistribution }) => {
+		const hasRadiators = wetDistribution.typeOfSpaceHeater === "radiator";
+		const numberOfRadiators = "numberOfRadiators" in wetDistribution ? show(wetDistribution.numberOfRadiators) : emptyValueRendering;
 		const wetDistributionData: Record<string, string | number | undefined> = {
-			Name: wetDistribution.data.name,
-			"Heat source": heatGenerationData.find(
-				(x) => x.id === wetDistribution.data.heatSource,
-			)?.name,
-			"Thermal mass": `${wetDistribution.data.thermalMass} ${kilowattHourPerKelvin.suffix}`,
+			Name: show(wetDistribution.name),
+			"Heat source": show(heatGenerationData.find(
+				(x) => x.id === wetDistribution.heatSource,
+			)?.name),
+			"Thermal mass": dim(wetDistribution.thermalMass, "kilowatt hour per kelvin"),
 			"Design temperature difference across the emitters":
-				`${wetDistribution.data.designTempDiffAcrossEmitters} ${celsius.suffix}`,
-			"Design flow temperature": `${wetDistribution.data.designFlowTemp} ${celsius.suffix}`,
-			"Design flow rate": `${wetDistribution.data.designFlowRate} ${litrePerMinute.suffix}`,
-			"Type of space heater": wetDistribution.data.typeOfSpaceHeater === "radiator"
-				? "Radiators"
-				: "Underfloor heating",
-			"Number of radiators": "numberOfRadiators" in wetDistribution.data ?
-				wetDistribution.data.numberOfRadiators : undefined,
+				dim(wetDistribution.designTempDiffAcrossEmitters, "celsius"),
+			"Design flow temperature": dim(wetDistribution.designFlowTemp, "celsius"),
+			"Design flow rate": dim(wetDistribution.designFlowRate, "litres per minute"),
+			"Type of space heater": "typeOfSpaceHeater" in wetDistribution
+				? hasRadiators ? "Radiators" : "Underfloor heating"
+				: emptyValueRendering,
+			...(hasRadiators ? { "Number of radiators": `${numberOfRadiators}` } : {}),
+			"Convection fraction": show(wetDistribution.convectionFractionWet),
+			"Emitter floor area": "emitterFloorArea" in wetDistribution ? dim(wetDistribution.emitterFloorArea, "metres square") : undefined,
+			"Eco design controller class": displayEcoDesignController(wetDistribution.ecoDesignControllerClass as EcoDesignControllerValue),
+			"Minimum flow temperature": dim(wetDistribution.minimumFlowTemp, "celsius"),
 		};
-		if (
-			wetDistribution.data.typeOfSpaceHeater === "radiator" &&
-			wetDistribution.data.convectionFractionWet !== undefined
-		) {
-			wetDistributionData["Convection fraction"] =
-				wetDistribution.data.convectionFractionWet;
-		}
-
-		if (
-			"emitterFloorArea" in wetDistribution.data &&
-			wetDistribution.data.emitterFloorArea !== undefined
-		) {
-			wetDistributionData["Emitter floor area"] =
-				`${wetDistribution.data.emitterFloorArea} ${metresSquare.suffix}`;
-		}
-
-		wetDistributionData["Eco design controller class"] =
-			wetDistribution.data.ecoDesignControllerClass;
-		wetDistributionData["Minimum flow temperature"] =
-			`${wetDistribution.data.minimumFlowTemp} ${celsius.suffix}`;
-
 		return wetDistributionData;
 	}) || [],
 
@@ -171,9 +148,9 @@ const instantElectricHeaterSummary: SummarySection = {
 	label: "Instant electric heater",
 	data: instantHeaters.map((instantHeater) => {
 		return {
-			Name: instantHeater.data.name,
-			"Rated power": `${instantHeater.data.ratedPower} ${kilowatt.suffix}`,
-			"Convection fraction": instantHeater.data.convectionFractionInstant,
+			Name: show(instantHeater.data.name),
+			"Rated power": dim(instantHeater.data.ratedPower, "kilowatt"),
+			"Convection fraction": show(instantHeater.data.convectionFractionInstant),
 		};
 	}) || [],
 	editUrl: heatEmittingUrl,
@@ -186,7 +163,7 @@ const electricStorageHeaterSummary: SummarySection = {
 	label: "Electric storage heater",
 	data: storageHeaters.map((storageHeater) => {
 		return {
-			Name: storageHeater.name,
+			Name: show(storageHeater.name),
 		};
 	}) || [],
 	editUrl: heatEmittingUrl,
@@ -198,7 +175,7 @@ const warmAirHeatPumpSummary: SummarySection = {
 	label: "Warm air heat pump",
 	data: warmAirHeatPumps.map((pump) => {
 		return {
-			Name: pump.name,
+			Name: show(pump.name),
 		};
 	}) || [],
 	editUrl: heatEmittingUrl,
