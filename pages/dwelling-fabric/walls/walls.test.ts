@@ -41,11 +41,13 @@ describe("walls", () => {
 
 	const external2: ExternalWallData = {
 		...external1,
+		id: "eaa950f1-d534-4e06-aeec-22796e79215e",
 		name: "External wall 2",
 	};
 
 	const external3: ExternalWallData = {
 		...external1,
+		id: "116eb859-e576-4ec1-8802-dfc66916e88b",
 		name: "External wall 3",
 	};
 
@@ -175,6 +177,12 @@ describe("walls", () => {
 			await userEvent.click(screen.getByTestId("external_duplicate_2"));
 			await userEvent.click(screen.getByTestId("external_duplicate_2"));
 
+			const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+
+			const ids = dwellingSpaceExternalWall.data.map(x => x.data.id);
+			const duplicateIds = ids.filter((x, i) => ids.indexOf(x) !== i).length;
+
+			expect(duplicateIds).toBe(0);
 			expect(screen.queryAllByTestId("external_item").length).toBe(6);
 			expect(screen.getByText("External wall 1")).toBeDefined();
 			expect(screen.getByText("External wall 1 (1)")).toBeDefined();

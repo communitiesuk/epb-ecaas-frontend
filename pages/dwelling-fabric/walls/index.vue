@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Walls";
 const page = usePage();
@@ -31,7 +32,8 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 		store.$patch((state) => {
 			const newWall = {
 				data: {
-					...wall.data, 
+					...wall.data,
+					id: 'id' in wall.data ? uuidv4() : undefined,
 					name: `${wall.data.name} (${duplicates.length})`,
 				},
 			} as T;
