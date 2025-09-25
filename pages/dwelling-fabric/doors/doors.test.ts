@@ -40,9 +40,7 @@ describe("doors", () => {
 	const externalUnglazed1: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 1 name",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
+			associatedWallRoofCeilingId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -57,9 +55,7 @@ describe("doors", () => {
 	const externalUnglazed2: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 2 name",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
+			associatedWallRoofCeilingId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -74,9 +70,7 @@ describe("doors", () => {
 	const externalUnglazed3: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 3 name",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
+			associatedWallRoofCeilingId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,

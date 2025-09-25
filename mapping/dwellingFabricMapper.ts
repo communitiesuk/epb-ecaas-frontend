@@ -462,11 +462,12 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 
 	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map((x) => {
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
+		const associatedWallRoofCeiling = wallsRoofsCeilings.find(e => e.id === x.associatedWallRoofCeilingId)!;
 		
 		return { [nameWithSuffix]: {
 			type: "BuildingElementOpaque",
-			pitch: extractPitch(x),
-			orientation360: x.orientation,
+			pitch: associatedWallRoofCeiling.pitch,
+			orientation360: associatedWallRoofCeiling.orientation,
 			height: x.height,
 			width: x.width,
 			base_height: x.elevationalHeight,

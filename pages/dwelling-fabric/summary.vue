@@ -258,10 +258,12 @@ const unglazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceUnglazedDoors",
 	label: "External unglazed door",
 	data: unglazedDoorData.map(({ data: x }) => {
+		const associatedWallRoofCeiling = store.getAssociatedWallRoofCeiling(x.associatedWallRoofCeilingId!)!;
+
 		return {
 			"Name": x.name,
-			"Pitch": dim(x.pitch, "degrees"),
-			"Orientation": `${x.orientation} ${degrees.suffix}`,
+			"Pitch": `${associatedWallRoofCeiling.pitch} ${degrees.suffix}`,
+			"Orientation": `${associatedWallRoofCeiling.orientation} ${degrees.suffix}`,
 			"Height": `${x.height} ${metre.suffix}`,
 			"Width": `${x.width} ${metre.suffix}`,
 			"Elevational height of building element at its base": `${x.elevationalHeight} ${metre.suffix}`,

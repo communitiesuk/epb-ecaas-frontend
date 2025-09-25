@@ -48,11 +48,7 @@ describe("external glazed door", () => {
 		},
 	};
 
-	afterEach(() => {
-		store.$reset();
-	});
-
-	test("data is saved to store state when form is valid", async () => {
+	beforeEach(() => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWalls: {
@@ -62,7 +58,13 @@ describe("external glazed door", () => {
 				},
 			},
 		});
+	});
 
+	afterEach(() => {
+		store.$reset();
+	});
+
+	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(ExternalGlazedDoor, {
 			route: {
 				params: { externalGlazed: "create" },
@@ -116,6 +118,7 @@ describe("external glazed door", () => {
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External glazed door 1");
+		expect((await screen.findByTestId(`associatedWallRoofCeilingId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("13");
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("14");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("48");
@@ -131,6 +134,7 @@ describe("external glazed door", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
+		expect((await screen.findByTestId("associatedWallRoofCeilingId_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("width_error"))).toBeDefined();

@@ -177,9 +177,7 @@ const doorsData: DoorsData = {
 		data: [{
 			data: {
 				name: "External unglazed door 1",
-				pitchOption: "90",
-				pitch: 90,
-				orientation: 0,
+				associatedWallRoofCeilingId: externalWallId,
 				height: 0.5,
 				width: 20,
 				elevationalHeight: 20,

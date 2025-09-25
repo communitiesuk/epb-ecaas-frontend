@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
+import { getUrl } from "#imports";
 
 const title = "External unglazed door";
 const store = useEcaasStore();
@@ -16,9 +16,7 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 		dwellingSpaceExternalUnglazedDoor.data[index] = {
 			data: {
 				name: fields.name,
-				pitchOption: fields.pitchOption,
-				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
-				orientation: fields.orientation,
+				associatedWallRoofCeilingId: fields.associatedWallRoofCeilingId,
 				height: fields.height,
 				width: fields.width,
 				elevationalHeight: fields.elevationalHeight,
@@ -72,11 +70,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
-		<FieldsPitch
-			:pitch-option="model?.pitchOption"
-			:options="standardPitchOptions()"
+		<FieldsAssociatedWallRoofCeiling
+			id="associatedWallRoofCeilingId"
+			name="associatedWallRoofCeilingId"
+			label="Associated wall, roof or ceiling"
+			help="Select the wall, roof or ceiling that this door is in. It should have the same orientation and pitch as the door."
 		/>
-		<FieldsOrientation />
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"

@@ -313,9 +313,7 @@ export type DoorsData = AssertFormKeysArePageIds<{
 }>;
 
 const externalUnglazedDoorDataZod = named.extend({
-	pitchOption: standardPitchOption,
-	pitch: z.optional(z.number().min(0).lt(180)),
-	orientation,
+	associatedWallRoofCeilingId: z.guid(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),

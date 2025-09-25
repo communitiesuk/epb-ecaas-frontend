@@ -1700,9 +1700,7 @@ describe("FHS input mapper", () => {
 						...baseForm,
 						data: {
 							name: "front door",
-							pitchOption: "90",
-							pitch: 90,
-							orientation: 30,
+							associatedWallRoofCeilingId: externalWallId,
 							height: 2.6,
 							width: 1.2,
 							elevationalHeight: 1,

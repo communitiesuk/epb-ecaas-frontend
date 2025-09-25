@@ -570,9 +570,7 @@ describe("dwelling fabric mapper", () => {
 
 		const externalUnglazedDoor: ExternalUnglazedDoorData = {
 			name: "External unglazed door 1",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
+			associatedWallRoofCeilingId: externalWall.data.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -645,8 +643,8 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedUnglazedDoor: BuildingElementOpaque = {
 			type: "BuildingElementOpaque",
-			pitch: externalUnglazedDoor.pitch!,
-			orientation360: externalUnglazedDoor.orientation,
+			pitch: externalWall.data.pitch!,
+			orientation360: externalWall.data.orientation,
 			height: externalUnglazedDoor.height,
 			width: externalUnglazedDoor.width,
 			base_height: externalUnglazedDoor.elevationalHeight,
