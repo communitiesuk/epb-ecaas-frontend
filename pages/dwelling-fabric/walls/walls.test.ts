@@ -43,14 +43,12 @@ describe("walls", () => {
 		...external1,
 		id: "eaa950f1-d534-4e06-aeec-22796e79215e",
 		name: "External wall 2",
-		id: "test-id-external-2",
 	};
 
 	const external3: ExternalWallData = {
 		...external1,
 		id: "116eb859-e576-4ec1-8802-dfc66916e88b",
 		name: "External wall 3",
-		id: "test-id-external-3",
 	};
 
 	const internal1: InternalWallData = {
