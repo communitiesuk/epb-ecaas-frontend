@@ -11,7 +11,7 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 	const outlets = store.heatingSystems.heatGeneration[outletType]?.data;
 
 	let heatPumpId;
-	if(outletType === "heatPump"){
+	if (outletType === "heatPump") {
 		heatPumpId = store.heatingSystems.heatGeneration.heatPump?.data[index]?.data.id;
 	}
 
@@ -23,12 +23,12 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 			state.heatingSystems.heatGeneration[outletType].complete = false;
 		});
 
-		if(heatPumpId) {
-			removeHeatSourceReference(store.domesticHotWater.waterHeating.hotWaterCylinder, heatPumpId);
-			removeHeatSourceReference(store.heatingSystems.heatEmitting.wetDistribution, heatPumpId);
+		if (heatPumpId) {
+			removeTaggedItemReference(store.domesticHotWater.waterHeating.hotWaterCylinder, heatPumpId, "heatSource");
+			removeTaggedItemReference(store.heatingSystems.heatEmitting.wetDistribution, heatPumpId, "heatSource");
 		}
 	}
-} 
+}
 
 function handleComplete() {
 	store.$patch({
@@ -46,14 +46,14 @@ function handleComplete() {
 	navigateTo("/heating-systems");
 }
 
-function checkIsComplete(){
+function checkIsComplete() {
 	const generators = store.heatingSystems.heatGeneration;
 	return Object.values(generators).every(generator => generator.complete);
 }
 
 function hasIncompleteEntries() {
 	const heatGenerationTypes = store.heatingSystems.heatGeneration;
-	
+
 	return Object.values(heatGenerationTypes).some(
 		generators => generators.data.some(
 			generator => isEcaasForm(generator) ? !generator.complete : false));
@@ -61,24 +61,19 @@ function hasIncompleteEntries() {
 </script>
 
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<p class="govuk-hint">For now, this service only allows homes to be modelled with a heat pump. In future releases there will be further options.</p>
-	<CustomList
-		id="heatPump"
-		title="Heat pump"
-		:form-url="`${page?.url!}/heat-pump`"
-		:items="store.heatingSystems.heatGeneration.heatPump.data.map(x => ({
-			name: x.data.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))"
-		:show-status="true"
-		@remove="(index: number) => handleRemove('heatPump', index)"
-	/>
+	<p class="govuk-hint">For now, this service only allows homes to be modelled with a heat pump. In future releases
+		there will be further options.</p>
+	<CustomList id="heatPump" title="Heat pump" :form-url="`${page?.url!}/heat-pump`" :items="store.heatingSystems.heatGeneration.heatPump.data.map(x => ({
+		name: x.data.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" @remove="(index: number) => handleRemove('heatPump', index)" />
 	<!--	<CustomList-->
 	<!--		id="boiler"-->
 	<!--		title="Boiler"-->
@@ -108,12 +103,9 @@ function hasIncompleteEntries() {
 	<!--		@remove="(index: number) => handleRemove('heatInterfaceUnit', index)"-->
 	<!--	/>-->
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton
-			href="/heating-systems"
-			secondary
-		>
+		<GovButton href="/heating-systems" secondary>
 			Return to heating systems
 		</GovButton>
-		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete" />
 	</div>
 </template>
