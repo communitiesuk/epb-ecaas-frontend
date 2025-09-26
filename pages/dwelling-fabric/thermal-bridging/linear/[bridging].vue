@@ -127,7 +127,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfThermalBridge"
 			validation="required"
 			:options="options"
-			data-field="Zone.ThermalBridging.junction_type"
+			data-field="Zone.ThermalBridging.*.junction_type"
 		/>
 		<FormKit
 			id="linearThermalTransmittance"
@@ -137,7 +137,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="linearThermalTransmittance"
 			validation="required | number | min:0 | max:2"
 			suffix-text="W/(m·K)"
-			data-field="Zone.ThermalBridging.linear_thermal_transmittance"
+			data-field="Zone.ThermalBridging.*.linear_thermal_transmittance"
 		/>
 		<FormKit
 			id="length"
@@ -146,7 +146,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="length"
 			validation="required | number | min:0 | max:10000"
 			suffix-text="m"
-			data-field="Zone.ThermalBridging.length"
+			data-field="Zone.ThermalBridging.*.length"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
