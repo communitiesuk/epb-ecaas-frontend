@@ -4,13 +4,15 @@ import { millimetre } from "~/utils/units/length";
 import { WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
 import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
+import { v4 as uuidv4 } from "uuid";
+
 
 const title = "Window";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const window = useItemToEdit("window", store.dwellingFabric.dwellingSpaceWindows.data);
-
+const windowId = window?.data.id ?? uuidv4();
 // prepopulate shading data when using old input format
 if (window && "overhangDepth" in window && typeof window.overhangDepth === "number") {
 	window.overhangDepth = unitValue(window.overhangDepth, millimetre);
@@ -59,6 +61,7 @@ const saveForm = (fields: WindowData) => {
 		const index = getStoreIndex(dwellingSpaceWindows.data);
 
 		const commonFields = {
+			id: windowId || uuidv4(),
 			name: fields.name,
 			orientation: fields.orientation,
 			surfaceArea: fields.surfaceArea,
@@ -183,6 +186,7 @@ autoSaveElementForm<WindowData>({
 	storeData: store.dwellingFabric.dwellingSpaceWindows,
 	defaultName: "Window",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= windowId;
 		state.dwellingFabric.dwellingSpaceWindows.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWindows.complete = false;
 	},

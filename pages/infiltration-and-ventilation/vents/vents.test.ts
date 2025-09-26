@@ -17,11 +17,10 @@ describe("vents", () => {
 	const vent1: VentData = {
 		name: "Vent 1",
 		typeOfVent: "trickle",
+		associatedWallRoofWindowId: "0b77e247-53c5-42b8-9dbd-83cbfc8c3f4f",
 		effectiveVentilationArea: 10,
 		openingRatio: 1,
 		midHeightOfZone: 1,
-		orientation: 0,
-		pitch: 0,
 	};
 
 	const vent2: VentData = {

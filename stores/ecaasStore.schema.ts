@@ -1,3 +1,4 @@
+import { standardPitchOption } from './../utils/pitchOptions';
 import type { TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
 import { CombustionAirSupplySituation, FlueGasExhaustSituation, MassDistributionClass, WaterPipeContentsType, OnSiteGenerationVentilationStrategy, BatteryLocation, BuildType, CombustionFuelType, DuctShape, DuctType, FloorType, FuelType, InverterType, MVHRLocation, ShadingObjectType, TerrainClass, VentilationShieldClass, VentType, WaterPipeworkLocation, WindowTreatmentControl, WindowTreatmentType, WindShieldLocation, WwhrsType, type CombustionApplianceType, type SchemaFhsComplianceResponse, type SchemaJsonApiOnePointOneErrorLinks, type SchemaJsonApiOnePointOneErrorSource, type SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
@@ -396,7 +397,7 @@ const internalDoorDataZod = z.discriminatedUnion(
 
 export type InternalDoorData = z.infer<typeof internalDoorDataZod>;
 
-const baseWindowData = named.extend({
+const baseWindowData = namedWithId.extend({
 	orientation,
 	surfaceArea: z.number().min(0.01).max(10000),
 	height: z.number().min(0.001).max(50),
@@ -751,12 +752,11 @@ export type DuctworkData = z.infer<typeof ductworkDataZod>;
 
 const ventDataZod = z.object({
 	name: z.string().trim().min(1),
+	associatedWallRoofWindowId: z.guid(),
 	typeOfVent: z.enum(["trickle", "airBrick"]),
 	effectiveVentilationArea: z.number().min(1).max(999999),
 	openingRatio: z.number(),
 	midHeightOfZone: z.number().min(1).max(60),
-	orientation,
-	pitch: z.number().min(0).lt(180),
 });
 
 export type VentData = z.infer<typeof ventDataZod>;
@@ -956,7 +956,7 @@ export type AirConditioningData = z.infer<typeof airConditioningDataZod>;
 
 export type UsesPitchComponent = {
 	pitch?: number;
-	pitchOption: PitchOption;
+	pitchOption?: PitchOption;
 };
 
 export type ComplianceResult = TaggedUnion<"resultType", {
@@ -979,7 +979,7 @@ export type CorrectedJsonApiError = {
 	meta?: SchemaJsonApiOnePointOneMeta;
 };
 
-export interface AssociatedWallRoofCeiling {
+export interface AssociatedWallRoofCeilingWindow {
 	id: string;
 	pitch?: number;
 	orientation?: number;

@@ -8,7 +8,8 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const ventData = useItemToEdit("vent", store.infiltrationAndVentilation.vents.data);
 const model = ref(ventData?.data);
 
-const saveForm = (fields: VentData) => {
+const saveForm = (fields: VentData & Record<string, string>) => {
+
 	store.$patch((state) => {
 		const { vents } = state.infiltrationAndVentilation;
 		const index = getStoreIndex(vents.data);
@@ -17,11 +18,10 @@ const saveForm = (fields: VentData) => {
 			data: {
 				name: fields.name,
 				typeOfVent: fields.typeOfVent,
+				associatedWallRoofWindowId: fields.associatedWallRoofWindowId,
 				effectiveVentilationArea: fields.effectiveVentilationArea,
 				openingRatio: 1,
 				midHeightOfZone: fields.midHeightOfZone,
-				orientation: fields.orientation,
-				pitch: fields.pitch,
 			},
 			complete: true,
 		};
@@ -78,6 +78,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfVent"
 			validation="required"
 		/>
+		<FieldsAssociatedWallRoofWindow
+			id="associatedWallRoofWindowId"
+			name="associatedWallRoofWindowId"
+			label="Associated wall, roof or window"
+			hint="Select the wall, roof or window that this vent is in. It should have the same orientation and pitch as the vent."
+		/>
 		<FormKit
 			id="effectiveVentilationArea"
 			type="govInputWithSuffix"
@@ -122,8 +128,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="midHeightOfZone"
 			validation="required | number | min:1 | max:60"
 			suffix-text="m"/>
-		<FieldsOrientation help="Enter the orientation of the vent's outside face, measured from true north"/>
-		<FieldsPitch />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

@@ -1,4 +1,4 @@
-import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType } from "~/schema/api-schema.types";
+import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType, MassDistributionClass } from "~/schema/api-schema.types";
 import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
@@ -223,25 +223,50 @@ describe("infiltration ventilation mapper", () => {
 		const ventName = "Acme"; 
 
 		// Arrange
+		const externalWallId = "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421";
+		const externalWall: EcaasForm<ExternalWallData>[] = [{
+			...baseForm,
+			data: {
+				id: externalWallId,
+				name: "External wall 1",
+				pitchOption: "custom",
+				pitch: 45,
+				orientation: 180,
+				length: 20,
+				height: 0.5,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				solarAbsorption: 0.1,
+				uValue: 1,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+			},
+		}];
 		const ventData: EcaasForm<VentData>[] = [{
 			...baseForm,
 			data: {
 				name: ventName,
 				typeOfVent: "airBrick",
+				associatedWallRoofWindowId: externalWallId,
 				effectiveVentilationArea: 100,
 				openingRatio: 0.6,
 				midHeightOfZone: 1.5,
-				orientation: 180,
-				pitch: 45,
 			},
 		}];
-
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
 					...baseForm,
 					data: ventData,
 				},				
+			},
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						...baseForm, 
+						data: externalWall,
+					},
+				},
 			},
 		});
 

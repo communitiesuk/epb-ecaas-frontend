@@ -662,6 +662,7 @@ describe("dwelling fabric mapper", () => {
 	it("maps windows input state to FHS input request", () => {
 		// Arrange
 		const window: WindowData = {
+			id: "test-id-1",
 			name: "Window 1",
 			orientation: 180,
 			surfaceArea: 1,

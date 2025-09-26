@@ -5,17 +5,21 @@ import Window from "./[window].vue";
 import { WindowTreatmentType } from "~/schema/api-schema.types";
 import { millimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units";
+import { v4 as uuidv4 } from "uuid";
+
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
+vi.mock("uuid");
 
 const store = useEcaasStore();
 const user = userEvent.setup();
 
 const window1: EcaasForm<WindowData> = {
 	data: {
+		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 		name: "Window 1",
 		orientation: 1,
 		surfaceArea: 1,
@@ -45,7 +49,7 @@ const window1: EcaasForm<WindowData> = {
 
 const window2: EcaasForm<WindowData>  = {
 	data: {
-		...window1.data, 	name: "Window 2" },
+		...window1.data, 	name: "Window 2", id: "test-id-2" },
 };
 
 afterEach(() => {
@@ -54,6 +58,8 @@ afterEach(() => {
 
 describe ("window", () => {
 	test("data is saved to store state when form is valid", async () => {
+		vi.mocked(uuidv4).mockReturnValue(window1.data.id as unknown as Buffer);
+
 		await renderSuspended(Window, {
 			route: {
 				params: { window: "create" },

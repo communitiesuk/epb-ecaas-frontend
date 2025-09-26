@@ -7,6 +7,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const roofData = useItemToEdit("roof", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
+const roofId = roofData?.data.id ?? uuidv4();
 const model = ref(roofData?.data);
 
 const roofTypeOptions: Record<Exclude<RoofType, "unheatedPitched">, string> = {
@@ -51,6 +52,7 @@ autoSaveElementForm<RoofData>({
 	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs,
 	defaultName: "Roof",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= roofId;
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.complete = false;
 	},

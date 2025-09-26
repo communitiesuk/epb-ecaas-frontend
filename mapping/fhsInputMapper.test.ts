@@ -173,8 +173,8 @@ const expectedHouseInput: FhsInputSchema = {
 			"only vent": {
 				area_cm2: 75,
 				mid_height_air_flow_path: 1.9,
-				orientation360: 90,
-				pitch: 180,
+				orientation360: 30,
+				pitch: 90,
 				pressure_difference_ref: 20,
 			},
 		},
@@ -262,6 +262,20 @@ const expectedHouseInput: FhsInputSchema = {
 					thickness_walls: 0.08,
 					floor_type: FloorType.Slab_no_edge_insulation,
 					pitch: 0,
+				},
+				"external wall 1 (wall)": {
+					type: "BuildingElementOpaque",
+					area: 20,
+					areal_heat_capacity: 75000,
+					base_height: 1,
+					height: 2.6,
+					is_external_door: false,
+					mass_distribution_class: MassDistributionClass.D,
+					orientation360: 30,
+					solar_absorption_coeff: 0.2,
+					u_value: 1,
+					width: 3,
+					pitch: 90,
 				},
 			},
 			Lighting: {
@@ -573,8 +587,8 @@ const expectedFlatInput: FhsInputSchema = {
 			"only vent": {
 				area_cm2: 75,
 				mid_height_air_flow_path: 1.9,
-				orientation360: 90,
-				pitch: 180,
+				orientation360: 30,
+				pitch: 90,
 				pressure_difference_ref: 20,
 			},
 		},
@@ -921,6 +935,7 @@ describe("FHS input mapper", () => {
 	afterEach(() => store.$reset());
 
 	it("maps input state with a build type of house to an FHS input request", () => {
+		const externalWallId = "c846a753-51ac-43c8-b6a8-823cab609d5e";
 		// Arrange
 		const dwellingDetails: DwellingDetails = {
 			generalSpecifications: {
@@ -980,11 +995,10 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						typeOfVent: "airBrick",
+						associatedWallRoofWindowId: externalWallId,						 
 						effectiveVentilationArea: 75,
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
-						orientation: 90,
-						pitch: 180,
 					},
 				}],
 			},
@@ -1078,6 +1092,26 @@ describe("FHS input mapper", () => {
 			dwellingSpaceWalls: {
 				dwellingSpaceExternalWall: {
 					...baseForm,
+					data: [
+						{
+							...baseForm,
+							data: {
+								id: externalWallId,
+								name: "external wall 1",
+								pitchOption: "90",
+								pitch: 45,
+								orientation: 30,
+								height: 2.6,
+								length: 3,
+								elevationalHeight: 1,
+								surfaceArea: 20,
+								solarAbsorption: 0.2,
+								uValue: 1, 
+								kappaValue: 75000,
+								massDistributionClass: MassDistributionClass.D,
+							},
+						},
+					],
 				},
 				dwellingSpaceInternalWall: {
 					...baseForm,
@@ -1417,11 +1451,10 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "only vent",
 						typeOfVent: "airBrick",
+						associatedWallRoofWindowId: externalWallId,
 						effectiveVentilationArea: 75,
 						openingRatio: 0.2,
 						midHeightOfZone: 1.9,
-						orientation: 90,
-						pitch: 180,
 					},
 				}],
 			},
@@ -1766,6 +1799,7 @@ describe("FHS input mapper", () => {
 				data: [{
 					...baseForm,
 					data: {
+						id: "0b77e247-53c5-42b8-9dbd-83cbfc8cffff",
 						name: "bedroom window",
 						orientation: 90,
 						surfaceArea: 4,

@@ -285,8 +285,8 @@ const glazedDoorSummary: SummarySection = {
 
 		return {
 			"Name": x.name,
-			"Pitch": `${associatedWallRoofCeiling.pitch} ${degrees.suffix}`,
-			"Orientation": `${associatedWallRoofCeiling.orientation} ${degrees.suffix}`,
+			"Pitch": associatedWallRoofCeiling.pitch !== undefined? `${associatedWallRoofCeiling.pitch} ${degrees.suffix}` : "-",
+			"Orientation": associatedWallRoofCeiling.orientation !== undefined? `${associatedWallRoofCeiling.orientation} ${degrees.suffix}` : "-",
 			"Height": `${x.height} ${metre.suffix}`,
 			"Width": `${x.width} ${metre.suffix}`,
 			"Elevational height of building element at its base": `${x.elevationalHeight} ${metre.suffix}`,

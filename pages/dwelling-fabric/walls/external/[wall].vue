@@ -7,6 +7,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data);
+const wallId = wallData?.data.id ?? uuidv4();
 const model: Ref<ExternalWallData | undefined> = ref(wallData?.data);
 
 const saveForm = (fields: ExternalWallData) => {
@@ -45,6 +46,7 @@ autoSaveElementForm({
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall,
 	defaultName: "External wall",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= wallId;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.complete = false;
 	},
@@ -60,78 +62,44 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<FormKit
-		v-model="model"
-		type="form"
-		:actions="false"
-		:incomplete-message="false"
-		@submit="saveForm"
-		@submit-invalid="handleInvalidSubmit"
-	>
-		<GovErrorSummary :error-list="errorMessages" test-id="externalWallErrorSummary"/>
-		<FormKit
-			id="name"
-			type="govInputText"
-			label="Name"
-			help="Provide a name for this element so that it can be identified later"
-			name="name"
-			validation="required"
-		/>
-		<FieldsPitch
-			:pitch-option="model?.pitchOption"
-			:options="standardPitchOptions()"
-		/>
-		<FormKit
-			id="orientation"
-			type="govInputWithSuffix"
-			suffix-text="°"
-			label="Orientation"
-			name="orientation"
+	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+		@submit-invalid="handleInvalidSubmit">
+		<GovErrorSummary :error-list="errorMessages" test-id="externalWallErrorSummary" />
+		<FormKit id="name" type="govInputText" label="Name"
+			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
+		<FieldsPitch :pitch-option="model?.pitchOption" :options="standardPitchOptions()" />
+		<FormKit id="orientation" type="govInputWithSuffix" suffix-text="°" label="Orientation" name="orientation"
 			validation="required | number | min:0 | max:360">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<img src="/img/orientation-measurement.png" alt="Orientation measurement">
-				<p class="govuk-hint">To define an object's orientation, measure the angle of its outside face clockwise from true North, accurate to the nearest degree.</p>
-				<p class="govuk-hint">If a wall has multiple orientations (i.e a hexagonal wall) each different orientation needs to be modelled separately</p>
+				<p class="govuk-hint">To define an object's orientation, measure the angle of its outside face clockwise from
+					true North, accurate to the nearest degree.</p>
+				<p class="govuk-hint">If a wall has multiple orientations (i.e a hexagonal wall) each different orientation
+					needs to be modelled separately</p>
 			</GovDetails>
 		</FormKit>
-		
-		<FormKit
-			id="height"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Height"
-			help="Enter the height of the building element"
-			name="height"
-			validation="required | number | min:0.001 | max:50">
+
+		<FormKit id="height" type="govInputWithSuffix" suffix-text="m" label="Height"
+			help="Enter the height of the building element" name="height" validation="required | number | min:0.001 | max:50">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p class="govuk-hint">Enter the height of the wall up to where the insulation stops.</p>
-				<p class="govuk-hint">If you have a non-rectangular wall (for example a gable end) and the insulation spans the entire wall then enter the height of the wall from the base to the very top.</p>
-				<p class="govuk-hint">If you have a non-rectangular wall (for example a gable end) and the insulation does not go all the way to the top, enter the maximum height of the part of the wall that has insulation.</p>
+				<p class="govuk-hint">If you have a non-rectangular wall (for example a gable end) and the insulation spans the
+					entire wall then enter the height of the wall from the base to the very top.</p>
+				<p class="govuk-hint">If you have a non-rectangular wall (for example a gable end) and the insulation does not
+					go all the way to the top, enter the maximum height of the part of the wall that has insulation.</p>
 			</GovDetails>
 		</FormKit>
-		<FormKit
-			id="length"
-			type="govInputWithSuffix"
-			suffix-text="m"
-			label="Length"
-			help="Enter the length of the building element"
-			name="length"
-			validation="required | number | min:0.001 | max:50"
-		/>
+		<FormKit id="length" type="govInputWithSuffix" suffix-text="m" label="Length"
+			help="Enter the length of the building element" name="length"
+			validation="required | number | min:0.001 | max:50" />
 		<FieldsElevationalHeight />
-		<FormKit
-			id="surfaceArea"
-			type="govInputWithSuffix"
-			suffix-text="m²"
-			label="Net surface area"
+		<FormKit id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Net surface area"
 			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
-			name="surfaceArea"
-			validation="required | number | min:0.01 | max:10000"
-		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption"/>
+			name="surfaceArea" validation="required | number | min:0.01 | max:10000" />
+		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption" />
 		<FieldsUValue id="uValue" name="uValue" />
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
+		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
+		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

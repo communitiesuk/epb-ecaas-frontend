@@ -18,6 +18,7 @@ describe("windows", () => {
 	
 	const window1: EcaasForm<WindowData> = {
 		data: {
+			id: "test-id-1",
 			name: "Window 1",
 			orientation: 1,
 			surfaceArea: 1,
@@ -40,6 +41,7 @@ describe("windows", () => {
 		data: {
 			...window1.data,
 			name: "Window 2",
+			id: "test-id-2",
 		},
 		complete: true,
 	};
@@ -48,6 +50,7 @@ describe("windows", () => {
 		data: {
 			...window1.data,
 			name: "Window 3",
+			id: "test-id-3",
 		},
 		complete: true,
 	};

@@ -54,19 +54,19 @@ const ductworkSummary: SummarySection = {
 };
 
 const ventData = store.infiltrationAndVentilation.vents.data;
-
 const ventSummary: SummarySection = {
 	id: "vents",
 	label: "Vents",
 	data: ventData.map(x => {
+		const associatedWallRoofWindow = store.getAssociatedWallRoofWindow(x.data.associatedWallRoofWindowId!);
 		return {
 			"Name": x.data.name,
 			"Type of vent": displayCamelToSentenceCase(show(x.data.typeOfVent)),
 			"Effective ventilation area": `${x.data.effectiveVentilationArea} ${centimetresSquare.suffix}`,
 			"Vent opening ratio": x.data.openingRatio,
 			"Mid height of zone": `${x.data.midHeightOfZone} ${metre.suffix}`,
-			"Orientation": `${x.data.orientation} ${degrees.suffix}`,
-			"Pitch": `${x.data.pitch} ${degrees.suffix}`,
+			"Orientation": associatedWallRoofWindow?.orientation !== undefined ? `${associatedWallRoofWindow?.orientation} ${degrees.suffix}` : "-",
+			"Pitch": associatedWallRoofWindow?.pitch !== undefined ? `${associatedWallRoofWindow?.pitch} ${degrees.suffix}` : "-",
 		};
 	}),
 	editUrl: getUrl("vents"),

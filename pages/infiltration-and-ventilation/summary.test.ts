@@ -3,7 +3,7 @@ import { screen } from "@testing-library/vue";
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { DuctShape, DuctType, MVHRLocation, VentType } from "~/schema/api-schema.types";
+import { DuctShape, DuctType, MassDistributionClass, MVHRLocation, VentType } from "~/schema/api-schema.types";
 import { pascal } from "~/utils/units/pressure";
 import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
 import { centimetresSquare, metresSquare } from "~/utils/units/area";
@@ -35,15 +35,14 @@ const ductworkData: DuctworkData = {
 	thermalInsulationConductivityOfDuctwork: 10,
 	surfaceReflectivity: true,
 };
-
+const roofId = "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc";
 const ventData: VentData = {
 	name: "Vent 1",
 	typeOfVent: "trickle",
+	associatedWallRoofWindowId: roofId,						 
 	effectiveVentilationArea: 10,
 	openingRatio: 1,
 	midHeightOfZone: 1,
-	orientation: 0,
-	pitch: 0,
 };
 
 const ventilationData: VentilationData = {
@@ -210,7 +209,31 @@ describe("Infiltration and ventilation summary", () => {
 	});
 
 	it("should display the correct data for the vents section", async () => {
+
+		const roof1: RoofData = {
+			id: roofId,
+			name: "Roof 1",
+			typeOfRoof: "flat",
+			pitchOption: "0",
+			pitch: 0,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			solarAbsorptionCoefficient: 0.5,
+			uValue: 1,
+			kappaValue: 50000,
+			massDistributionClass: MassDistributionClass.I,
+		};
+
 		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						data: [{ data: roof1 }],
+					},
+				},
+			},
 			infiltrationAndVentilation: {
 				vents: {
 					data: [{ data: ventData }],
@@ -226,7 +249,7 @@ describe("Infiltration and ventilation summary", () => {
 			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
 			"Vent opening ratio": "1",
 			"Mid height of zone": `1 ${metre.suffix}`,
-			"Orientation": `0 ${degrees.suffix}`,
+			"Orientation": "-",
 			"Pitch": `0 ${degrees.suffix}`,
 		};
 

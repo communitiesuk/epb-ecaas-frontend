@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { AssociatedWallRoofCeiling, EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.schema";
+import type { AssociatedWallRoofCeilingWindow, EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
 import { PageType  } from "~/data/pages/pages.types";
@@ -148,7 +148,7 @@ export const useEcaasStore = defineStore("ecaas", {
 			const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
 			const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
-			const wallsRoofsCeilings: AssociatedWallRoofCeiling[] = [
+			const wallsRoofsCeilings: AssociatedWallRoofCeilingWindow[] = [
 				dwellingSpaceExternalWall.data.map(x => ({
 					id: x.data.id,
 					pitch: extractPitch(x.data),
@@ -162,6 +162,33 @@ export const useEcaasStore = defineStore("ecaas", {
 			].flat();
 
 			return (id: string) => wallsRoofsCeilings.find(e => e.id === id);
+		},
+
+		getAssociatedWallRoofWindow: (state) => {
+			const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
+			const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+			const { dwellingSpaceWindows } = state.dwellingFabric;
+
+			const wallsRoofsWindows: AssociatedWallRoofCeilingWindow[] = [ //update type
+				dwellingSpaceExternalWall.data.map(x => ({
+					id: x.data.id,
+					pitch: extractPitch(x.data),
+					orientation: x.data.orientation,
+				})),
+				dwellingSpaceRoofs.data.map(x => ({
+					id: x.data.id!,
+					pitch: x.data.pitchOption === undefined || x.data.pitchOption === "custom" ? x.data.pitch : Number(x.data.pitchOption),
+					orientation: x.data.orientation!,
+				})),
+				dwellingSpaceWindows.data.map(x => (
+					{
+						id: x.data.id!,
+						pitch: extractPitch(x.data),
+						orientation: x.data.orientation,
+					})),
+			].flat();
+
+			return (id: string) => wallsRoofsWindows.find(e => e.id === id);
 		},
 	},
 	actions: {
