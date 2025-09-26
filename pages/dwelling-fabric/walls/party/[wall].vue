@@ -74,6 +74,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
+			data-field="Zone.BuildingElement.*.pitch"
 		/>
 		<FormKit
 			id="surfaceArea"
@@ -83,6 +84,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
+			data-field="Zone.BuildingElement.*.total_area"
 		/>
 		<FormKit
 			id="uValue"
@@ -91,7 +93,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="U-value"
 			help="This is the steady thermal transmittance of the materials that make up the building element"
 			name="uValue"
-			validation="required | number | min:0.01 | max:10">
+			validation="required | number | min:0.01 | max:10"
+			data-field="Zone.BuildingElement.*.u_value">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">
 					For the U-value of party walls, put the actual U-value of the materials of the wall. This helps determine the behaviour of the wall releasing heat back into the room.

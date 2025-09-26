@@ -77,6 +77,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
+			data-field="Zone.BuildingElement.*.pitch"
 		/>
 		<FieldsOrientation />
 		<FormKit

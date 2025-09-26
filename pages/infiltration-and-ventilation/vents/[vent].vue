@@ -123,7 +123,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:1 | max:60"
 			suffix-text="m"/>
 		<FieldsOrientation help="Enter the orientation of the vent's outside face, measured from true north"/>
-		<FieldsPitch />
+		<FieldsPitch data-field="InfiltrationVentilation.Vents.*.pitch" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
