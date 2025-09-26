@@ -155,18 +155,18 @@ describe("heat generation", () => {
 			expect(within(populatedList).queryByText("Heat pump 2")).toBeNull();
 		});
 
-		it("when a heat pump is removed its also removed from store object which references it", async () => {
+		it("when a heat pump is removed it is also removed from any store item which references it", async () => {
 
 			const cylinder: HotWaterCylinderData = {
 				id: "Any Id",
-				heatSource: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a2q",
+				heatSource: heatPump2.id,
 				storageCylinderVolume: unitValue(150, litre),
 				dailyEnergyLoss: 73,
 				name: "Hot water cylinder 1",
 			};
 			const wetDistribution: WetDistributionData = {
 				name: "Wet distribution 1",
-				heatSource: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a2q",
+				heatSource: heatPump2.id,
 				thermalMass: 2,
 				designTempDiffAcrossEmitters: 0.4,
 				designFlowTemp: 32,
