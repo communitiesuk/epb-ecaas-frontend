@@ -104,6 +104,39 @@ describe("windows", () => {
 		expect(within(populatedList).queryByText("Window 2")).toBeNull();
 	});
 
+	test("when a window is removed its also removed from any store item which references it", async () => {
+    const vent1: EcaasForm<VentData> = {
+      data: {
+        name: "Vent 1",
+        typeOfVent: "trickle",
+        associatedWallRoofWindowId: window2.data.id,
+        effectiveVentilationArea: 10,
+        openingRatio: 1,
+        midHeightOfZone: 1,
+      },
+    };
+
+    store.$patch({
+      dwellingFabric: {
+        dwellingSpaceWindows: {
+          data: [window1, window2],
+        },
+      },
+      infiltrationAndVentilation: {
+        vents: {
+          data: [vent1],
+        },
+      },
+    });
+
+    await renderSuspended(Windows);
+
+    await user.click(await screen.findByTestId("windows_remove_1"));
+
+    const vent = store.infiltrationAndVentilation.vents.data[0]?.data;
+    expect(vent?.associatedWallRoofWindowId).toBeUndefined();
+  });
+
 	test("window is duplicated when duplicate link is clicked", async () => {
 
 		await userEvent.click(screen.getByTestId("windows_duplicate_0"));
