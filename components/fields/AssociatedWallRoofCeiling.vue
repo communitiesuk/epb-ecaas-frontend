@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getUrl } from '#imports';
+import { getUrl } from "#imports";
 
 defineProps<{
 	id: string;
@@ -18,7 +18,7 @@ const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoof
 
 const options = [
 	dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
-	dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string])
+	dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string]),
 ].flat().filter(x => x[0] !== undefined);
 </script>
 

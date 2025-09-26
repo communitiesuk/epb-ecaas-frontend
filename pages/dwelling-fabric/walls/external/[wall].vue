@@ -62,13 +62,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+	<FormKit
+		v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="externalWallErrorSummary" />
-		<FormKit id="name" type="govInputText" label="Name"
+		<FormKit
+			id="name" type="govInputText" label="Name"
 			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
 		<FieldsPitch :pitch-option="model?.pitchOption" :options="standardPitchOptions()" />
-		<FormKit id="orientation" type="govInputWithSuffix" suffix-text="°" label="Orientation" name="orientation"
+		<FormKit
+			id="orientation" type="govInputWithSuffix" suffix-text="°" label="Orientation" name="orientation"
 			validation="required | number | min:0 | max:360">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<img src="/img/orientation-measurement.png" alt="Orientation measurement">
@@ -79,7 +82,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 
-		<FormKit id="height" type="govInputWithSuffix" suffix-text="m" label="Height"
+		<FormKit
+			id="height" type="govInputWithSuffix" suffix-text="m" label="Height"
 			help="Enter the height of the building element" name="height" validation="required | number | min:0.001 | max:50">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<p class="govuk-hint">Enter the height of the wall up to where the insulation stops.</p>
@@ -89,11 +93,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					go all the way to the top, enter the maximum height of the part of the wall that has insulation.</p>
 			</GovDetails>
 		</FormKit>
-		<FormKit id="length" type="govInputWithSuffix" suffix-text="m" label="Length"
+		<FormKit
+			id="length" type="govInputWithSuffix" suffix-text="m" label="Length"
 			help="Enter the length of the building element" name="length"
 			validation="required | number | min:0.001 | max:50" />
 		<FieldsElevationalHeight />
-		<FormKit id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Net surface area"
+		<FormKit
+			id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Net surface area"
 			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
 			name="surfaceArea" validation="required | number | min:0.01 | max:10000" />
 		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption" />

@@ -100,7 +100,7 @@ export function mapVentsData(state: ResolvedState) {
 		dwellingSpaceExternalWall?.map(x => ({
 			id: x.id,
 			pitch: extractPitch(x),
-			orientation: x.orientation
+			orientation: x.orientation,
 		})),
 		dwellingSpaceRoofs?.map(x => ({
 			id: x.id,
@@ -110,20 +110,20 @@ export function mapVentsData(state: ResolvedState) {
 		dwellingSpaceWindows?.map(x => ({
 			id: x.id,
 			pitch: extractPitch(x),
-			orientation: x.orientation
-		}))
-	].flat().filter(x => x !== undefined)
+			orientation: x.orientation,
+		})),
+	].flat().filter(x => x !== undefined);
 
 	const entries = state.infiltrationAndVentilation.vents.map((x): [string, SchemaVent] => {
 		const key = x.name;
-		const { associatedWallRoofWindowId } = x
-		const associatedItem = wallsRoofsWindows.find(x => x.id === associatedWallRoofWindowId)!
+		const { associatedWallRoofWindowId } = x;
+		const associatedItem = wallsRoofsWindows.find(x => x.id === associatedWallRoofWindowId)!;
 		
 		const val: SchemaVent = {
 			area_cm2: x.effectiveVentilationArea,
 			mid_height_air_flow_path: x.midHeightOfZone,
 			orientation360: associatedItem.orientation!,
-			pitch: associatedItem!.pitch,
+			pitch: associatedItem.pitch,
 			pressure_difference_ref: 20, // stock value
 		};
 

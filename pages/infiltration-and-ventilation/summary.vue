@@ -58,7 +58,8 @@ const ventSummary: SummarySection = {
 	id: "vents",
 	label: "Vents",
 	data: ventData.map(x => {
-		const associatedWallRoofWindow = store.getAssociatedWallRoofWindow(x.data.associatedWallRoofWindowId!);
+		const associatedWallRoofWindow = store.getAssociatedWallRoofWindow(x.data.associatedWallRoofWindowId!)
+
 		return {
 			"Name": x.data.name,
 			"Type of vent": displayCamelToSentenceCase(show(x.data.typeOfVent)),
