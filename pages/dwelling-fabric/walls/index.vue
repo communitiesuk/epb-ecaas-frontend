@@ -9,11 +9,11 @@ const store = useEcaasStore();
 type WallType = keyof typeof store.dwellingFabric.dwellingSpaceWalls;
 type WallData = EcaasForm<ExternalWallData> & EcaasForm<InternalWallData> & EcaasForm<WallsToUnheatedSpaceData> & EcaasForm<PartyWallData>;
 
-function handleRemove( wallType: WallType, index: number) {
+function handleRemove(wallType: WallType, index: number) {
 	const walls = store.dwellingFabric.dwellingSpaceWalls[wallType]?.data;
 
 	let wallId;
-	if(wallType === "dwellingSpaceExternalWall"){
+	if (wallType === "dwellingSpaceExternalWall") {
 		wallId = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[index]?.data.id;
 	}
 
@@ -25,7 +25,7 @@ function handleRemove( wallType: WallType, index: number) {
 			state.dwellingFabric.dwellingSpaceWalls[wallType].complete = false;
 		});
 		if (wallId) {
-			removeTaggedItemReference(store.infiltrationAndVentilation.vents, wallId, "associatedWallRoofWindowId");
+			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, wallId, "associatedWallRoofWindowId");
 		}
 	}
 }
@@ -36,7 +36,7 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 
 	if (wall) {
 		const duplicates = walls.filter(w => w.data.name.match(duplicateNamePattern(wall.data.name)));
-	
+
 		store.$patch((state) => {
 			const newWall = {
 				data: {
@@ -67,85 +67,52 @@ function handleComplete() {
 	navigateTo("/dwelling-fabric");
 }
 
-function checkIsComplete(){
+function checkIsComplete() {
 	const walls = store.dwellingFabric.dwellingSpaceWalls;
 	return Object.values(walls).every(wall => wall.complete);
 }
 
 function hasIncompleteEntries() {
 	const wallTypes = store.dwellingFabric.dwellingSpaceWalls;
-	
+
 	return Object.values(wallTypes).some(
 		walls => walls.data.some(
 			wall => isEcaasForm(wall) ? !wall.complete : false));
 }
 </script>
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<CustomList
-		id="external"
-		title="External wall"
-		:form-url="`${page?.url!}/external`"
-		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data.map(x => ({
-			name: x.data?.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))"
-		:show-status="true"
-		@remove="(index: number) => handleRemove('dwellingSpaceExternalWall', index)"
-		@duplicate="(index: number) => handleDuplicate('dwellingSpaceExternalWall', index)"
-	/>
-	<CustomList
-		id="internal"
-		title="Internal wall"
-		:form-url="`${page?.url!}/internal`"
-		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data.map(x => ({
-			name: x.data?.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))"
-		:show-status="true"
-		@remove="(index: number) => handleRemove('dwellingSpaceInternalWall', index)"
-		@duplicate="(index: number) => handleDuplicate('dwellingSpaceInternalWall', index)"
-	/>
-	<CustomList
-		id="toHeatedSpace"
-		title="Wall to unheated space"
-		:form-url="`${page?.url!}/wall-to-unheated-space`"
+	<CustomList id="external" title="External wall" :form-url="`${page?.url!}/external`" :items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data.map(x => ({
+		name: x.data?.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceExternalWall', index)"
+		@duplicate="(index: number) => handleDuplicate('dwellingSpaceExternalWall', index)" />
+	<CustomList id="internal" title="Internal wall" :form-url="`${page?.url!}/internal`" :items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data.map(x => ({
+		name: x.data?.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceInternalWall', index)"
+		@duplicate="(index: number) => handleDuplicate('dwellingSpaceInternalWall', index)" />
+	<CustomList id="toHeatedSpace" title="Wall to unheated space" :form-url="`${page?.url!}/wall-to-unheated-space`"
 		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data.map(x => ({
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))"
-		:show-status="true"
-		@remove="(index: number) => handleRemove('dwellingSpaceWallToUnheatedSpace', index)"
-		@duplicate="(index: number) => handleDuplicate('dwellingSpaceWallToUnheatedSpace', index)"
-	/>
-	<CustomList
-		id="party"
-		title="Party wall"
-		:form-url="`${page?.url!}/party`"
-		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data.map(x => ({
-			name: x.data?.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))"
-		:show-status="true"
-		@remove="(index: number) => handleRemove('dwellingSpacePartyWall', index)"
-		@duplicate="(index: number) => handleDuplicate('dwellingSpacePartyWall', index)"
-	/>
+		}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceWallToUnheatedSpace', index)"
+		@duplicate="(index: number) => handleDuplicate('dwellingSpaceWallToUnheatedSpace', index)" />
+	<CustomList id="party" title="Party wall" :form-url="`${page?.url!}/party`" :items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data.map(x => ({
+		name: x.data?.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpacePartyWall', index)"
+		@duplicate="(index: number) => handleDuplicate('dwellingSpacePartyWall', index)" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton
-			href="/dwelling-fabric"
-			secondary
-		>
+		<GovButton href="/dwelling-fabric" secondary>
 			Return to dwelling fabric
 		</GovButton>
-		<CompleteElement
-			:is-complete="checkIsComplete()"
-			:disabled="hasIncompleteEntries()"
-			@completed="handleComplete"
-		/>
+		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete" />
 	</div>
 </template>

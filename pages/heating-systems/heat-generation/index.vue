@@ -24,8 +24,8 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 		});
 
 		if (heatPumpId) {
-			removeTaggedItemReference(store.domesticHotWater.waterHeating.hotWaterCylinder, heatPumpId, "heatSource");
-			removeTaggedItemReference(store.heatingSystems.heatEmitting.wetDistribution, heatPumpId, "heatSource");
+			removeTaggedItemReferences(store.domesticHotWater.waterHeating.hotWaterCylinder, heatPumpId, "heatSource");
+			removeTaggedItemReferences(store.heatingSystems.heatEmitting.wetDistribution, heatPumpId, "heatSource");
 		}
 	}
 }
@@ -70,11 +70,10 @@ function hasIncompleteEntries() {
 	</h1>
 	<p class="govuk-hint">For now, this service only allows homes to be modelled with a heat pump. In future releases
 		there will be further options.</p>
-	<CustomList
-		id="heatPump" title="Heat pump" :form-url="`${page?.url!}/heat-pump`" :items="store.heatingSystems.heatGeneration.heatPump.data.map(x => ({
-			name: x.data.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))" :show-status="true" @remove="(index: number) => handleRemove('heatPump', index)" />
+	<CustomList id="heatPump" title="Heat pump" :form-url="`${page?.url!}/heat-pump`" :items="store.heatingSystems.heatGeneration.heatPump.data.map(x => ({
+		name: x.data.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" @remove="(index: number) => handleRemove('heatPump', index)" />
 	<!--	<CustomList-->
 	<!--		id="boiler"-->
 	<!--		title="Boiler"-->

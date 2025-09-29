@@ -9,9 +9,9 @@ function handleRemove(index: number) {
 	const windows = store.dwellingFabric.dwellingSpaceWindows?.data;
 	const windowId = windows[index]!.data.id;
 
-	if(windows){
+	if (windows) {
 		windows.splice(index, 1);
-		
+
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceWindows: {
@@ -21,8 +21,8 @@ function handleRemove(index: number) {
 			},
 		});
 
-		if(windowId){
-			removeTaggedItemReference(store.infiltrationAndVentilation.vents, windowId, "associatedWallRoofWindowId");
+		if (windowId) {
+			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, windowId, "associatedWallRoofWindowId");
 		}
 	}
 }
@@ -33,8 +33,7 @@ function handleDuplicate(index: number) {
 	let name: string;
 
 	if (window) {
-		const duplicates = windows.filter(w => 
-		{
+		const duplicates = windows.filter(w => {
 			if (isEcaasForm(w) && isEcaasForm(window)) {
 				name = window.data.name;
 				return w.data.name.match(duplicateNamePattern(window.data.name));
@@ -68,7 +67,7 @@ function handleComplete() {
 
 }
 
-function hasIncompleteEntries(){
+function hasIncompleteEntries() {
 
 	const windows = store.dwellingFabric.dwellingSpaceWindows;
 	return windows.data.some(
@@ -78,27 +77,23 @@ function hasIncompleteEntries(){
 </script>
 
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<CustomList
-		id="windows"
-		title="Window"
-		:form-url="page?.url!"
-		:items="store.dwellingFabric.dwellingSpaceWindows.data.map(x =>  ({
-			name: x.data.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress}))"
-		:show-status="true"
-		@remove="handleRemove"
-		@duplicate="handleDuplicate"
-	/>
+	<CustomList id="windows" title="Window" :form-url="page?.url!" :items="store.dwellingFabric.dwellingSpaceWindows.data.map(x => ({
+		name: x.data.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" @remove="handleRemove"
+		@duplicate="handleDuplicate" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-fabric" secondary>
 			Return to dwelling fabric
 		</GovButton>
-		<CompleteElement :is-complete="store.dwellingFabric.dwellingSpaceWindows.complete ?? false" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
+		<CompleteElement :is-complete="store.dwellingFabric.dwellingSpaceWindows.complete ?? false"
+			:disabled="hasIncompleteEntries()" @completed="handleComplete" />
 	</div>
 </template>
