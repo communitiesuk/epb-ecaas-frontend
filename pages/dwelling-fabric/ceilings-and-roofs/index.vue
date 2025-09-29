@@ -49,8 +49,8 @@ function handleDuplicate<T extends CeilingAndRoofData>(ceilingAndRoofType: Ceili
 				data: {
 					...item.data,
 					id: "id" in item.data ? uuidv4() : {},
-					name: `${name} (${duplicates.length})`
-					},
+					name: `${name} (${duplicates.length})`,
+				},
 			} as T;
 			
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].data.push(newItem);
@@ -89,15 +89,17 @@ const hasIncompleteEntries = () =>
 	<p class="govuk-hint">For ceilings next to roofs, both ceiling and roof details should be inputted as one roof
 		element. Where you have a multiple storey dwelling, internal floors should be inputted as floors or ceilings. You do
 		not need to enter both.</p>
-	<CustomList id="ceilings" title="Ceilings" :form-url="`${page?.url!}/ceilings`" :items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data.filter(x => isEcaasForm(x)).map(x => ({
-		name: x.data?.name,
-		status: x.complete ? formStatus.complete : formStatus.inProgress
-	}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceCeilings', index)"
+	<CustomList
+		id="ceilings" title="Ceilings" :form-url="`${page?.url!}/ceilings`" :items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceCeilings', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceCeilings', index)" />
-	<CustomList id="roofs" title="Roofs" :form-url="`${page?.url!}/roofs`" :items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.filter(x => isEcaasForm(x)).map(x => ({
-		name: x.data?.name,
-		status: x.complete ? formStatus.complete : formStatus.inProgress
-	}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceRoofs', index)"
+	<CustomList
+		id="roofs" title="Roofs" :form-url="`${page?.url!}/roofs`" :items="store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceRoofs', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceRoofs', index)" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-fabric" secondary>
