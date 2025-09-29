@@ -164,4 +164,35 @@ describe("vent", () => {
 
 		expect(data[0]?.data.name).toBe("Vent");
 	});
+
+	
+	test("displays a link to the windows/walls and roofs page", async () => {
+		store.$reset();
+
+		await renderSuspended(Vent, {
+			route: {
+				params: { vent: "create" },
+			},
+		});
+
+		const addWallsLink: HTMLAnchorElement = screen.getByRole("link", {
+			name: "Click here to add walls",
+		});
+		const addRoofsLink: HTMLAnchorElement = screen.getByRole("link", {
+			name: "Click here to add roofs",
+		});
+		const addWindowsLink: HTMLAnchorElement = screen.getByRole("link", {
+			name: "Click here to add windows",
+		});
+
+		expect(new URL(addWallsLink.href).pathname).toBe(
+			getUrl("dwellingSpaceWalls"),
+		);
+		expect(new URL(addRoofsLink.href).pathname).toBe(
+			getUrl("dwellingSpaceCeilingsAndRoofs"),
+		);
+		expect(new URL(addWindowsLink.href).pathname).toBe(
+			getUrl("dwellingSpaceWindows"),
+		);
+	});
 });
