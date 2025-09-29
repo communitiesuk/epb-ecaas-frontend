@@ -12,6 +12,11 @@ type WallData = EcaasForm<ExternalWallData> & EcaasForm<InternalWallData> & Ecaa
 function handleRemove( wallType: WallType, index: number) {
 	const walls = store.dwellingFabric.dwellingSpaceWalls[wallType]?.data;
 
+	let wallId;
+	if(wallType === "dwellingSpaceExternalWall"){
+		wallId = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[index]?.data.id;
+	}
+
 	if (walls) {
 		walls.splice(index, 1);
 
@@ -19,6 +24,9 @@ function handleRemove( wallType: WallType, index: number) {
 			state.dwellingFabric.dwellingSpaceWalls[wallType].data = walls.length ? walls : [];
 			state.dwellingFabric.dwellingSpaceWalls[wallType].complete = false;
 		});
+		if (wallId) {
+			removeTaggedItemReference(store.infiltrationAndVentilation.vents, wallId, "associatedWallRoofWindowId");
+		}
 	}
 }
 
@@ -33,7 +41,7 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 			const newWall = {
 				data: {
 					...wall.data,
-					id: 'id' in wall.data ? uuidv4() : undefined,
+					id: "id" in wall.data ? uuidv4() : undefined,
 					name: `${wall.data.name} (${duplicates.length})`,
 				},
 			} as T;

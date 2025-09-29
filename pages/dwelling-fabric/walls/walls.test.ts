@@ -157,6 +157,45 @@ describe("walls", () => {
 			expect(within(populatedList).queryByText("External wall 2")).toBeNull();
 		});
 
+		test("when an external wall is removed its also removed from any store item that references it", async () => {
+			const vent1: EcaasForm<VentData> = {
+				data: {
+					name: "Vent 1",
+					typeOfVent: "trickle",
+					associatedWallRoofWindowId: external2.id,
+					effectiveVentilationArea: 10,
+					openingRatio: 1,
+					midHeightOfZone: 1,
+				},
+			};
+		
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [
+								{ data: external1 },
+								{ data: external2 },
+								{ data: external3 },
+							],
+						},
+					},
+				},
+				infiltrationAndVentilation: {
+					vents: {
+						data: [vent1],
+					},
+				},
+			});
+		
+			await renderSuspended(Walls);
+		
+			await user.click(await screen.findByTestId("external_remove_1"));
+		
+			const vent = store.infiltrationAndVentilation.vents.data[0]?.data;
+			expect(vent?.associatedWallRoofWindowId).toBeUndefined();
+		});
+
 		test("wall is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
