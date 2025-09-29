@@ -6,7 +6,7 @@ import { getUrl } from "#imports";
 
 const title = "MVHR ductwork";
 const store = useEcaasStore();
-const { getStoreIndex, autoSaveElementForm } = useForm();
+const { getStoreIndex, autoSaveElementForm } = useForm()
 
 const ductwork = useItemToEdit(
 	"ductwork",
@@ -255,7 +255,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="insulationThickness"
 			type="govInputWithSuffix"
 			suffix-text="mm"
-			label="	"
+			label="Insulation thickness"
 			help="Enter the thickness of the duct insulation. Typically between 25mm and 50mm."
 			name="insulationThickness"
 			validation="required | number | min:0 | max:100"
