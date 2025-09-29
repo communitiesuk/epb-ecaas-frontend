@@ -13,13 +13,14 @@ const mechanicalVentilationSummary: SummarySection = {
 	label: "Mechanical ventilation",
 	data: mechanicalVentilationData?.map(({ data: x }) => {
 		const isMvhr = x.typeOfMechanicalVentilationOptions === VentType.MVHR;
+		const mvhrLocation = "mvhrLocation" in x ? displayCamelToSentenceCase(show(x.mvhrLocation)) : emptyValueRendering;
+		const mvhrEfficiency = "mvhrEfficiency" in x ? show(x.mvhrEfficiency) : emptyValueRendering;
 		return {
 			"Name": show(x.name),
 			"Type of mechanical ventilation": show(x.typeOfMechanicalVentilationOptions),
 			"Air flow rate": dim(x.airFlowRate, "litres per second"),
-			...(isMvhr ? "mvhrLocation" in x ? { "MVHR location": displayCamelToSentenceCase(x.mvhrLocation) } : { "MVHR location": emptyValueRendering }: {}),
-			...(isMvhr ? "mvhrEfficiency" in x ? { "MVHR efficiency": x.mvhrEfficiency } : { "MVHR efficiency": emptyValueRendering }: {}),
-
+			"MVHR location": isMvhr ? mvhrLocation : undefined,
+			"MVHR efficiency": isMvhr ? mvhrEfficiency : undefined,
 		};
 	}) || [],
 	editUrl: getUrl("mechanicalVentilation"),
