@@ -6,8 +6,7 @@ export const removeTaggedItemReferences = <T extends Record<string, unknown>>(
   const store = useEcaasStore();
 
   storeItems.data.forEach((x, index) => {
-    const data = x.data as Partial<T>;
-    if (data[keyToCheck] === taggedItemId) {
+    if ((x.data as Partial<T>)[keyToCheck] === taggedItemId) {
       store.$patch(() => {
         (storeItems.data[index]!.data as Partial<T>)[keyToCheck] = undefined;
         storeItems.data[index]!.complete = false;
