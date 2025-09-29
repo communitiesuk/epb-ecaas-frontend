@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { v4 as uuidv4 } from "uuid";
+
 import formStatus from "~/constants/formStatus";
 
 const title = "Windows";
@@ -46,6 +48,7 @@ function handleDuplicate(index: number) {
 				data: {
 					...(window.data as WindowData),
 					name: `${name} (${duplicates.length})`,
+					id: uuidv4() 
 				},
 			};
 

@@ -285,6 +285,26 @@ describe("ceilings and roofs", () => {
 			expect(screen.getByText("Roof 1 (1) (1)")).toBeDefined();
 			expect(screen.getByText("Roof 1 (1) (2)")).toBeDefined();
 		});
+
+		test("when a roof is duplicated, the duplicate roof is assigned a new unique id ", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceRoofs: {
+							data: [roof1],
+						},
+					},
+				},
+			});
+			await renderSuspended(CeilingsAndRoofs);
+
+		
+			await userEvent.click(screen.getByTestId("roofs_duplicate_0"));
+		
+			const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data;
+			expect(roofs[0]?.data.id).not.toEqual(roofs[1]?.data.id);
+		});
+		
 		test("an in-progress indicator is shown when an entry is not marked as complete", async () => {
 			store.$patch({
 				dwellingFabric: {

@@ -152,6 +152,22 @@ describe("windows", () => {
 		expect(screen.getByText("Window 1 (1) (2)")).toBeDefined();
 	});
 
+	test("when a window is duplicated, the duplicate window is assigned a new unique id ", async () => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [window1],
+				},
+			},
+		});
+
+		await userEvent.click(screen.getByTestId("windows_duplicate_0"));
+
+		const windows = store.dwellingFabric.dwellingSpaceWindows.data;
+		expect(windows[0]?.data.id).not.toEqual(windows[1]?.data.id);
+
+	});
+
 	test("window should display an 'in-progress' indicator when it is incomplete", async () => {
 		store.$patch({
 			dwellingFabric: {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { isEcaasForm } from "~/stores/ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Ceilings and roofs";
 const page = usePage();
@@ -42,16 +43,16 @@ function handleDuplicate<T extends CeilingAndRoofData>(ceilingAndRoofType: Ceili
 			}
 			return false;
 		});
-
 		store.$patch((state) => {
 			const newItem = {
 				complete: item.complete,
 				data: {
 					...item.data,
-					name: `${name} (${duplicates.length})`,
-				},
+					id: "id" in item.data ? uuidv4() : {},
+					name: `${name} (${duplicates.length})`
+					},
 			} as T;
-
+			
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].data.push(newItem);
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].complete = false;
 		});
