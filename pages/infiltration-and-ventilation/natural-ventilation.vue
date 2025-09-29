@@ -57,6 +57,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="ventilationZoneHeight"
 			validation="required | number | min:1 | max:20"
 			suffix-text="m"
+			data-field="InfiltrationVentilation.Leaks.ventilation_zone_height"
 		/>
 		<FormKit
 			id="dwellingEnvelopeArea"
@@ -66,6 +67,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="dwellingEnvelopeArea"
 			validation="required | number | min:5 | max:72000"
 			suffix-text="m²"
+			data-field="InfiltrationVentilation.Leaks.env_area"
 		><GovDetails summary-text="Help with this input">	
 			<p class="govuk-hint">
 				It includes walls, roofs, floors exposed to the ground or unheated spaces, windows and external doors.
@@ -77,6 +79,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Elevational height of dwelling at its base"
 			help="Enter elevational height of the dwelling above ground datum level"
 			:minmax="{ min: -150, max: 750 }"
+			data-field="InfiltrationVentilation.ventilation_zone_base_height"
 		/>
 		<FormKit
 			id="crossVentilationPossible"
@@ -84,6 +87,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Is cross ventilation possible?"
 			name="crossVentilationPossible"
 			validation="required"
+			data-field="InfiltrationVentilation.cross_vent_possible"
 		>
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>	
 				<p class="govuk-hint">

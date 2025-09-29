@@ -115,6 +115,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Type of mechanical ventilation"
 			name="typeOfMechanicalVentilationOptions"
 			validation="required"
+			data-field="InfiltrationVentilation.MechanicalVentilation.vent_type"
 		/>
 		<FormKit
 			id="airFlowRate"
@@ -124,6 +125,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputWithUnit"
 			:unit="litrePerSecond"
 			validation="required"
+			data-field="InfiltrationVentilation.MechanicalVentilation.design_outdoor_air_flow_rate"
 		>
 			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
@@ -168,6 +170,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Select whether the MVHR unit is located inside or outside the thermal envelope"
 				name="mvhrLocation"
 				validation="required"
+				data-field="InfiltrationVentilation.MechanicalVentilation.mvhr_location"
 			/>
 			<FormKit
 				id="mvhrEfficiency"
@@ -175,7 +178,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="MVHR efficiency"
 				help="Enter the MVHR's heat recovery efficiency, allowing for in-use factor. The value should be between 0 and 1."
 				name="mvhrEfficiency"
-				validation="required | min:0 | max:1">
+				validation="required | min:0 | max:1"
+				data-field="InfiltrationVentilation.MechanicalVentilation.mvhr_efficiency">
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 					<p>The MVHR efficiency is how much heat the system recovers from outgoing air. A typical range is 0.85 to 0.95 for high performance systems.</p>
 				</GovDetails>
