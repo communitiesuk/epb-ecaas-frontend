@@ -7,7 +7,7 @@ const store = useEcaasStore();
 
 function handleRemove(index: number) {
 	const windows = store.dwellingFabric.dwellingSpaceWindows?.data;
-	const windowId = windows[index]!.data.id
+	const windowId = windows[index]!.data.id;
 
 	if(windows){
 		windows.splice(index, 1);
@@ -22,7 +22,7 @@ function handleRemove(index: number) {
 		});
 
 		if(windowId){
-			removeTaggedItemReference(store.infiltrationAndVentilation.vents, windowId, "associatedWallRoofWindowId")
+			removeTaggedItemReference(store.infiltrationAndVentilation.vents, windowId, "associatedWallRoofWindowId");
 		}
 	}
 }
