@@ -71,10 +71,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="size"
 			type="govInputWithSuffix"
-			label="Size"
+			label="	"
 			name="size"
 			validation="required | number | min:0 | max:500"
 			suffix-text="litres"
+			data-field="HotWaterDemand.Bath.*.size"
 		/>
 		<FormKit
 			id="flowRate"
@@ -83,6 +84,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="flowRate"
 			validation="required | number | min:0 | max:15"
 			suffix-text="litres per minute"
+			data-field="HotWaterDemand.Bath.*.flowrate"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
