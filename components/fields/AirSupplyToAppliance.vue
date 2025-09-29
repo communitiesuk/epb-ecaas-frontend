@@ -21,5 +21,6 @@ const options: Record<CombustionAirSupplySituation, SnakeToSentenceCase<Combusti
 		:name="name"
 		validation="required"
 		:options="options"
+		data-field="supply_situation"
 	/>
 </template>
