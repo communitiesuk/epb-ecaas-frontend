@@ -1,0 +1,20 @@
+openapi: "3.1.0"
+info:
+  title: Energy Calculation as a Service
+  version: "0.1.0"
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+paths:
+  /beta/future-homes-standard-compliance:
+    post:
+      operationId: FHSCompliance
+      summary: Check Future Homes Standard (FHS) compliance
+      description: "Check compliance with the Future Homes Standard (FHS) based on the energy performance of a building calculated using the Home Energy Model (HEM)."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: "./fhs_input_latest.schema.json"
