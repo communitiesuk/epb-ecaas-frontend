@@ -61,6 +61,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="For now, this service only allows modelling based on electricity. More options will be available in future releases."
 			:options="fuelTypeOptions"
 			validation="required"
+			data-field="EnergySupply.*.fuel"
 		/>
 		<template v-if="model.fuelType?.includes(FuelType.custom)">
 			<ClientOnly>
@@ -101,6 +102,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Can electricity be exported back to the grid?"
 				name="exported"
 				validation="required"
+				data-field="EnergySupply.*.is_export_capable"
 			/>
 		</ClientOnly>
 		<GovLLMWarning />
