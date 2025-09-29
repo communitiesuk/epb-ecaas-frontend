@@ -11,7 +11,11 @@ type CeilingAndRoofData = EcaasForm<CeilingData> & EcaasForm<RoofData>;
 
 function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 	const items = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType]?.data;
-
+	
+	let roofId;
+	if(ceilingAndRoofType === "dwellingSpaceRoofs"){
+		roofId = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[index]?.data.id;
+	}
 	if (items) {
 		items.splice(index, 1);
 
@@ -19,6 +23,9 @@ function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].data = items.length ? items : [];
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].complete = false;
 		});
+		if (roofId) {
+			removeTaggedItemReference(store.infiltrationAndVentilation.vents, roofId, "associatedWallRoofWindowId");
+		}
 	}
 } 
 

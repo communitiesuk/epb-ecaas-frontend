@@ -226,6 +226,41 @@ describe("ceilings and roofs", () => {
 			expect(within(populatedList).queryByText("Roof 2")).toBeNull();
 		});
 
+		it("when an roof is removed its also removed from any store item that references it", async () => {
+			const vent1: EcaasForm<VentData> = {
+				data: {
+					name: "Vent 1",
+					typeOfVent: "trickle",
+					associatedWallRoofWindowId: roof2.data.id,
+					effectiveVentilationArea: 10,
+					openingRatio: 1,
+					midHeightOfZone: 1,
+				},
+			};
+				
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceRoofs: {
+							data: [roof1, roof2],
+						},
+					},
+				},
+				infiltrationAndVentilation: {
+					vents: {
+						data: [vent1],
+					},
+				},
+			});
+				
+			await renderSuspended(CeilingsAndRoofs);
+				
+			await user.click(await screen.findByTestId("roofs_remove_1"));
+				
+			const vent = store.infiltrationAndVentilation.vents.data[0]?.data;
+			expect(vent?.associatedWallRoofWindowId).toBeUndefined();
+		});
+
 		test("roof is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
