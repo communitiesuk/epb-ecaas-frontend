@@ -3,17 +3,21 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import InternalWall from "./[wall].vue";
 import { MassDistributionClass } from "~/schema/api-schema.types";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+vi.mock("uuid");
+
 describe("internal wall", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const internalWall: InternalWallData = {
+		id: "06cce939-0899-42cc-aa46-0d47c11a6ede",
 		name: "Internal 1",
 		surfaceAreaOfElement: 5,
 		kappaValue: 50000,
@@ -35,6 +39,8 @@ describe("internal wall", () => {
 	};
 	
 	test("data is saved to store state when form is valid", async () => {
+		vi.mocked(uuidv4).mockReturnValue(internalWall.id as unknown as Buffer);
+
 		await renderSuspended(InternalWall, {
 			route: {
 				params: { wall: "create" },

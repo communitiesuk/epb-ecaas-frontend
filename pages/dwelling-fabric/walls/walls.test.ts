@@ -52,6 +52,7 @@ describe("walls", () => {
 	};
 
 	const internal1: InternalWallData = {
+		id: "cb995019-718c-4074-b56c-37826abf1fc5",
 		name: "Internal wall 1",
 		surfaceAreaOfElement: 5,
 		kappaValue: 100,

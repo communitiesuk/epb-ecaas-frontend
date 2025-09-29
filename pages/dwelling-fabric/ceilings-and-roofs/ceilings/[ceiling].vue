@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CeilingData } from "#imports";
 import { getUrl, zeroPitchOptions } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Ceiling";
 const store = useEcaasStore();
@@ -17,6 +18,7 @@ const saveForm = (fields: CeilingData) => {
 		const index = getStoreIndex(dwellingSpaceCeilings.data);
 
 		const commonFields = {
+			id: uuidv4(),
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			kappaValue: fields.kappaValue,

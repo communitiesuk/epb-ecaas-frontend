@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { AdjacentSpaceType, getUrl } from '#imports';
 
-defineProps<{
+const { adjacentSpaceType } = defineProps<{
 	id: string;
 	name: string;
 	label: string;
@@ -9,16 +9,19 @@ defineProps<{
 	validation?: string;
 	validationRules?: Record<string, (node: FormKitNode) => boolean>;
 	validationMessages?: Record<string, string>;
+	adjacentSpaceType: AdjacentSpaceType;
 }>();
 
 const store = useEcaasStore();
 
-const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
 const options = [
-	dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
-	dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	dwellingSpaceInternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	dwellingSpaceCeilings.data
+		.filter(x => x.data.type === adjacentSpaceType)
+		.map(x => [x.data.id, x.data.name] as [string, string])
 ].flat().filter(x => x[0] !== undefined);
 </script>
 
@@ -35,13 +38,13 @@ const options = [
 			:validation-rules="validationRules"
 			:validation-messages="validationMessages">
 			<div v-if="!options.length">
-				<p class="govuk-error-message">No walls or roofs added.</p>
+				<p class="govuk-error-message">No walls or ceilings added.</p>
 				<div class="gov-radios-add-links">
 					<NuxtLink :to="getUrl('dwellingSpaceWalls')" class="govuk-link gov-radios-add-link">
 						Click here to add walls
 					</NuxtLink>
 					<NuxtLink :to="getUrl('dwellingSpaceCeilingsAndRoofs')" class="govuk-link gov-radios-add-link">
-						Click here to add roofs
+						Click here to add ceilings
 					</NuxtLink>
 				</div>
 			</div>

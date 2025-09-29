@@ -75,6 +75,7 @@ const floorsData: FloorsData = {
 };
 
 const externalWallId = "47689878-2f16-414f-92c1-64b5cee844f6";
+const internalWallId = "0b159e36-96ac-4ac9-8d97-57e69af11658";
 
 const wallsData: WallsData = {
 	dwellingSpaceExternalWall: {
@@ -99,6 +100,7 @@ const wallsData: WallsData = {
 	dwellingSpaceInternalWall: {
 		data: [{
 			data: {
+				id: internalWallId,
 				name: "Internal 1",
 				surfaceAreaOfElement: 5,
 				kappaValue: 50000,
@@ -211,11 +213,10 @@ const doorsData: DoorsData = {
 			data: {
 				typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 				name: "Internal 1",
+				associatedHeatedSpaceElementId: internalWallId,
 				surfaceArea: 5,
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,
-				pitchOption: "90",
-				pitch: 90,
 			},
 		}],
 	},
@@ -715,6 +716,9 @@ describe("Living space fabric summary", () => {
 		it("should display the correct data for the internal doors section", async () => {
 			store.$patch({
 				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall,
+					},
 					dwellingSpaceDoors: {
 						dwellingSpaceInternalDoor: doorsData.dwellingSpaceInternalDoor,
 					},
@@ -729,7 +733,7 @@ describe("Living space fabric summary", () => {
 				"Net surface area of element": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
-				"Pitch": `90 ${degrees.suffix}`,
+				"Pitch": `0 ${degrees.suffix}`,
 			};
 			
 	

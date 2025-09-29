@@ -3,11 +3,14 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Ceiling from "./[ceiling].vue";
 import { MassDistributionClass } from "~/schema/api-schema.types";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
+
+vi.mock("uuid");
 
 describe("ceiling", () => {
 	const store = useEcaasStore();
@@ -15,13 +18,15 @@ describe("ceiling", () => {
 
 	const ceiling: EcaasForm<CeilingData> = {
 		data: {
+			id: "099342c5-07c5-4268-b66b-f85dfc5de58f",
 			type: AdjacentSpaceType.heatedSpace,
 			name: "Ceiling 1",
 			surfaceArea: 5,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: "0",
-			pitch: 0 },
+			pitch: 0,
+		},
 	};
 
 	const ceilingUnheatedSpace: EcaasForm<CeilingData> = {
@@ -52,6 +57,8 @@ describe("ceiling", () => {
 	
 	describe("when type of ceiling is heated space", () => {
 		it("data is saved to store state when form is valid", async () => {
+			vi.mocked(uuidv4).mockReturnValue(ceiling.data.id as unknown as Buffer);
+
 			await renderSuspended(Ceiling, {
 				route: {
 					params: { ceiling: "create" },

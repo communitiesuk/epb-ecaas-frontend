@@ -262,8 +262,8 @@ const unglazedDoorSummary: SummarySection = {
 
 		return {
 			"Name": x.name,
-			"Pitch": `${associatedWallRoofCeiling.pitch} ${degrees.suffix}`,
-			"Orientation": `${associatedWallRoofCeiling.orientation} ${degrees.suffix}`,
+			"Pitch": associatedWallRoofCeiling.pitch !== undefined ? `${associatedWallRoofCeiling.pitch} ${degrees.suffix}` : "",
+			"Orientation": associatedWallRoofCeiling.orientation !== undefined ? `${associatedWallRoofCeiling.orientation} ${degrees.suffix}` : undefined,
 			"Height": `${x.height} ${metre.suffix}`,
 			"Width": `${x.width} ${metre.suffix}`,
 			"Elevational height of building element at its base": `${x.elevationalHeight} ${metre.suffix}`,
@@ -304,10 +304,12 @@ const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
 	label: "Internal door",
 	data: internalDoorData?.map(({ data: x }) => {
+		const associatedHeatedSpaceElement = store.getAssociatedHeatedSpaceElement(x.associatedHeatedSpaceElementId!)!;
+
 		return {
 			"Type": displayAdjacentSpaceType(x.typeOfInternalDoor, "Internal door"),
 			"Name": x.name,
-			"Pitch": `${x.pitch} ${degrees.suffix}`,
+			"Pitch": `${associatedHeatedSpaceElement.pitch} ${degrees.suffix}`,
 			"Net surface area of element": `${x.surfaceArea} ${metresSquare.suffix}`,
 			"U-value": "uValue" in x ? `${x.uValue} ${wattsPerSquareMeterKelvin.suffix}` : undefined,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),

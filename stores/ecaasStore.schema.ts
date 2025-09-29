@@ -225,7 +225,7 @@ const externalWallDataZod = namedWithId.extend({
 
 export type ExternalWallData = z.infer<typeof externalWallDataZod>;
 
-const internalWallDataZod = named.extend({
+const internalWallDataZod = namedWithId.extend({
 	surfaceAreaOfElement: z.number().min(0).max(10000),
 	kappaValue: z.number(),
 	massDistributionClass,
@@ -263,7 +263,7 @@ export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
 	dwellingSpaceRoofs: EcaasFormList<RoofData>;
 }>;
 
-const baseCeilingData = named.extend({
+const baseCeilingData = namedWithId.extend({
 	surfaceArea: z.number().min(0).max(10000),
 	kappaValue: z.number(),
 	massDistributionClass,
@@ -375,11 +375,10 @@ const externalGlazedDoorDataZod = z.discriminatedUnion(
 export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorDataZod>;
 
 const baseInternalDoorData = named.extend({
+	associatedHeatedSpaceElementId: z.guid(),
 	surfaceArea: z.number().min(0).max(10000),
 	kappaValue: z.number(),
 	massDistributionClass,
-	pitchOption: standardPitchOption,
-	pitch: z.optional(z.number().min(0).lt(180)),
 });
 const internalDoorDataZod = z.discriminatedUnion(
 	"typeOfInternalDoor",

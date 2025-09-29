@@ -1343,6 +1343,7 @@ describe("FHS input mapper", () => {
 	it("maps input state with a build type of flat to an FHS input request", () => {
 		// Arrange
 		const externalWallId = "c846a753-51ac-43c8-b6a8-823cab609d5e";
+		const internalWallId = "743eb2b5-fc43-46ec-acf3-4d0b6eb173b3";
 
 		const dwellingDetails: DwellingDetails = {
 			generalSpecifications: {
@@ -1648,6 +1649,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
+							id: internalWallId,
 							name: "internal wall 1",
 							pitchOption: "90",
 							pitch: 90,
@@ -1680,6 +1682,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
+							id: "26e6be91-d436-4ccf-a106-feddaf625edb",
 							name: "ceiling to heated space",
 							type: AdjacentSpaceType.heatedSpace,
 							surfaceArea: 16,
@@ -1691,6 +1694,7 @@ describe("FHS input mapper", () => {
 					{
 						...baseForm,
 						data: {
+							id: "1d60a23a-789e-4843-8da4-ab4b90609280",
 							name: "ceiling to unheated space",
 							type: AdjacentSpaceType.unheatedSpace,
 							surfaceArea: 20,
@@ -1771,11 +1775,10 @@ describe("FHS input mapper", () => {
 						data: {
 							typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 							name: "bathroom door",
+							associatedHeatedSpaceElementId: internalWallId,
 							surfaceArea: 1.4,
 							kappaValue: 50000,
 							massDistributionClass: MassDistributionClass.IE,
-							pitchOption: "90",
-							pitch: 90,
 						},
 					},
 					{
@@ -1783,11 +1786,10 @@ describe("FHS input mapper", () => {
 						data: {
 							typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 							name: "door to garage",
+							associatedHeatedSpaceElementId: internalWallId,
 							surfaceArea: 1.4,
 							kappaValue: 50000,
 							massDistributionClass: MassDistributionClass.IE,
-							pitchOption: "90",
-							pitch: 90,
 							uValue: 1,
 							thermalResistanceOfAdjacentUnheatedSpace: 2.5,
 						},

@@ -163,7 +163,6 @@ export const useEcaasStore = defineStore("ecaas", {
 
 			return (id: string) => wallsRoofsCeilings.find(e => e.id === id);
 		},
-
 		getAssociatedWallRoofWindow: (state) => {
 			const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
 			const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
@@ -189,6 +188,23 @@ export const useEcaasStore = defineStore("ecaas", {
 			].flat();
 
 			return (id: string) => wallsRoofsWindows.find(e => e.id === id);
+		},
+		getAssociatedHeatedSpaceElement: (state) => {
+			const { dwellingSpaceInternalWall } = state.dwellingFabric.dwellingSpaceWalls;
+			const { dwellingSpaceCeilings } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+			const heatedSpaceElements: AssociatedWallRoofCeiling[] = [
+				dwellingSpaceInternalWall.data.map(x => ({
+					id: x.data.id,
+					pitch: extractPitch(x.data),
+				})),
+				dwellingSpaceCeilings.data.map(x => ({
+					id: x.data.id!,
+					pitch: extractPitch(x.data),
+				})),
+			].flat();
+
+			return (id: string) => heatedSpaceElements.find(e => e.id === id);
 		},
 	},
 	actions: {

@@ -328,6 +328,7 @@ describe("dwelling fabric mapper", () => {
 		const internalWall: EcaasForm<InternalWallData> = {
 			...baseForm,
 			data: {
+				id: "a51c8dfa-07de-4d5d-a36c-2b72e30fca74",
 				name: "Internal 1",
 				surfaceAreaOfElement: 5,
 				kappaValue: 50000,
@@ -441,6 +442,7 @@ describe("dwelling fabric mapper", () => {
 	it("maps ceiling and roof input state to FHS input request", () => {
 		// Arrange
 		const ceiling: CeilingData = {
+			id: "71360137-9541-4596-973a-26870092753a",
 			type: AdjacentSpaceType.unheatedSpace,
 			name: "Ceiling 1",
 			surfaceArea: 5,
@@ -539,14 +541,26 @@ describe("dwelling fabric mapper", () => {
 			},
 		};
 
+		const internalWall: EcaasForm<InternalWallData> = {
+			...baseForm,
+			data: {
+				id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
+				name: "Internal 1",
+				surfaceAreaOfElement: 5,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+				pitchOption: "90",
+				pitch: 90,
+			},
+		};
+
 		const internalDoor: InternalDoorData = {
 			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 			name: "Internal 1",
+			associatedHeatedSpaceElementId: internalWall.data.id,
 			surfaceArea: 5,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
-			pitchOption: "90",
-			pitch: 90,
 			uValue: 0.001,
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
 		};
@@ -590,6 +604,10 @@ describe("dwelling fabric mapper", () => {
 						data: [externalWall],
 						complete: true,
 					},
+					dwellingSpaceInternalWall: {
+						data: [internalWall],
+						complete: true,
+					},
 				},
 				dwellingSpaceDoors: {
 					dwellingSpaceInternalDoor: { ...baseForm, data: [{ ...baseForm, data: internalDoor }] },
@@ -609,7 +627,7 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedInternalDoor: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-			pitch: internalDoor.pitch!,
+			pitch: extractPitch(internalWall.data),
 			area: internalDoor.surfaceArea,
 			u_value: internalDoor.uValue,
 			areal_heat_capacity: internalDoor.kappaValue,

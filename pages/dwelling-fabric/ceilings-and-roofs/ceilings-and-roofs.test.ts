@@ -24,6 +24,7 @@ describe("ceilings and roofs", () => {
 
 	const ceiling1: EcaasForm<CeilingData> = {
 		data: {
+			id: "bf19cff9-225b-4e38-80d7-a3e1adf5da3f",
 			name: "Ceiling 1",
 			type: AdjacentSpaceType.heatedSpace,
 			surfaceArea: 5,
