@@ -269,215 +269,19 @@
             "type": "object",
             "additionalProperties": {
                 "type": "object",
-                "required": [
-                    "fuel"
-                ],
                 "unevaluatedProperties": false,
-                "properties": {
-                    "fuel": {
-                        "enum": [
-                            "mains_gas",
-                            "electricity",
-                            "lpg_bulk",
-                            "custom",
-                            "wood",
-                            "oil",
-                            "gas",
-                            "coal"
-                        ]
-                    }
-                },
-                "allOf": [
+                "anyOf": [
                     {
-                        "if": {
-                            "properties": {
-                                "fuel": {
-                                    "const": "electricity"
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "priority": {
-                                    "enum": [
-                                        "ElectricBattery",
-                                        "diverter"
-                                    ]
-                                },
-                                "is_export_capable": {
-                                    "type": "boolean"
-                                },
-                                "ElectricBattery": {
-                                    "type": "object",
-                                    "unevaluatedProperties": false,
-                                    "required": [
-                                        "capacity",
-                                        "charge_discharge_efficiency_round_trip",
-                                        "minimum_charge_rate_one_way_trip",
-                                        "maximum_charge_rate_one_way_trip",
-                                        "maximum_discharge_rate_one_way_trip",
-                                        "battery_location",
-                                        "grid_charging_possible"
-                                    ],
-                                    "properties": {
-                                        "capacity": {
-                                            "type": "number",
-                                            "minimum": 0,
-                                            "maximum": 50
-                                        },
-                                        "charge_discharge_efficiency_round_trip": {
-                                            "type": "number",
-                                            "minimum": 0,
-                                            "maximum": 1
-                                        },
-                                        "minimum_charge_rate_one_way_trip": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        },
-                                        "maximum_charge_rate_one_way_trip": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        },
-                                        "maximum_discharge_rate_one_way_trip": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        },
-                                        "battery_location": {
-                                            "enum": [
-                                                "inside",
-                                                "outside"
-                                            ]
-                                        },
-                                        "grid_charging_possible": {
-                                            "type": "boolean"
-                                        }
-                                    }
-                                },
-                                "diverter": {
-                                    "type": "object",
-                                    "unevaluatedProperties": false,
-                                    "required": [
-                                        "HeatSource"
-                                    ],
-                                    "properties": {
-                                        "StorageTank": {
-                                            "type": "string"
-                                        },
-                                        "HeatSource": {
-                                            "type": "string"
-                                        },
-                                        "Controlmax": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            },
-                            "if": {
-                                "required": [
-                                    "ElectricBattery"
-                                ],
-                                "properties": {
-                                    "ElectricBattery": {
-                                        "properties": {
-                                            "grid_charging_possible": {
-                                                "const": true
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "required": [
-                                    "threshold_charges",
-                                    "threshold_prices",
-                                    "tariff"
-                                ],
-                                "properties": {
-                                    "threshold_charges": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "number"
-                                        }
-                                    },
-                                    "threshold_prices": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "number"
-                                        }
-                                    },
-                                    "tariff": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/$defs/EnergySupplyGas"
                     },
                     {
-                        "if": {
-                            "properties": {
-                                "fuel": {
-                                    "const": "custom"
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "factor": {
-                                    "type": "object",
-                                    "unevaluatedProperties": false,
-                                    "required": [
-                                        "Emissions Factor kgCO2e/kWh",
-                                        "Emissions Factor kgCO2e/kWh including out-of-scope emissions",
-                                        "Primary Energy Factor kWh/kWh delivered",
-                                        "is_export_capable"
-                                    ],
-                                    "properties": {
-                                        "Emissions Factor kgCO2e/kWh": {
-                                            "type": "number"
-                                        },
-                                        "Emissions Factor kgCO2e/kWh including out-of-scope emissions": {
-                                            "type": "number"
-                                        },
-                                        "Primary Energy Factor kWh/kWh delivered": {
-                                            "type": "number"
-                                        },
-                                        "is_export_capable": {
-                                            "type": "boolean"
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/$defs/EnergySupplyElectricity"
                     },
                     {
-                        "if": {
-                            "properties": {
-                                "fuel": {
-                                    "enum": [
-                                        "lpg_bulk",
-                                        "wood",
-                                        "oil",
-                                        "coal"
-                                    ]
-                                }
-                            }
-                        },
-                        "then": {
-                            "properties": {
-                                "factor": {
-                                    "type": "object",
-                                    "unevaluatedProperties": false,
-                                    "required": [
-                                        "is_export_capable"
-                                    ],
-                                    "properties": {
-                                        "is_export_capable": {
-                                            "type": "boolean"
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/$defs/EnergySupplyCustom"
+                    },
+                    {
+                        "$ref": "#/$defs/EnergySupplyOther"
                     }
                 ]
             }
@@ -4045,6 +3849,201 @@
             ],
             "title": "MassDistributionClass",
             "type": "string"
+        },
+        "EnergySupplyGas": {
+            "required": [
+                "fuel"
+            ],
+            "properties": {
+                "fuel": {
+                    "enum": [
+                        "mains_gas",
+                        "gas"
+                    ]
+                }
+            }
+        },
+        "EnergySupplyElectricity": {
+            "required": [
+                "fuel"
+            ],
+            "properties": {
+                "fuel": {
+                    "const": "electricity"
+                },
+                "priority": {
+                    "enum": [
+                        "ElectricBattery",
+                        "diverter"
+                    ]
+                },
+                "is_export_capable": {
+                    "type": "boolean"
+                },
+                "ElectricBattery": {
+                    "type": "object",
+                    "unevaluatedProperties": false,
+                    "required": [
+                        "capacity",
+                        "charge_discharge_efficiency_round_trip",
+                        "minimum_charge_rate_one_way_trip",
+                        "maximum_charge_rate_one_way_trip",
+                        "maximum_discharge_rate_one_way_trip",
+                        "battery_location",
+                        "grid_charging_possible"
+                    ],
+                    "properties": {
+                        "capacity": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 50
+                        },
+                        "charge_discharge_efficiency_round_trip": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "minimum_charge_rate_one_way_trip": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "maximum_charge_rate_one_way_trip": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "maximum_discharge_rate_one_way_trip": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "battery_location": {
+                            "enum": [
+                                "inside",
+                                "outside"
+                            ]
+                        },
+                        "grid_charging_possible": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "diverter": {
+                    "type": "object",
+                    "unevaluatedProperties": false,
+                    "required": [
+                        "HeatSource"
+                    ],
+                    "properties": {
+                        "StorageTank": {
+                            "type": "string"
+                        },
+                        "HeatSource": {
+                            "type": "string"
+                        },
+                        "Controlmax": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "if": {
+                    "required": [
+                        "ElectricBattery"
+                    ],
+                    "properties": {
+                        "ElectricBattery": {
+                            "properties": {
+                                "grid_charging_possible": {
+                                    "const": true
+                                }
+                            }
+                        }
+                    }
+                },
+                "then": {
+                    "required": [
+                        "threshold_charges",
+                        "threshold_prices",
+                        "tariff"
+                    ],
+                    "properties": {
+                        "threshold_charges": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "threshold_prices": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        },
+                        "tariff": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "EnergySupplyCustom": {
+            "required": [
+                "fuel"
+            ],
+            "properties": {
+                "fuel": {
+                    "const": "custom"
+                },
+                "factor": {
+                    "type": "object",
+                    "unevaluatedProperties": false,
+                    "required": [
+                        "Emissions Factor kgCO2e/kWh",
+                        "Emissions Factor kgCO2e/kWh including out-of-scope emissions",
+                        "Primary Energy Factor kWh/kWh delivered",
+                        "is_export_capable"
+                    ],
+                    "properties": {
+                        "Emissions Factor kgCO2e/kWh": {
+                            "type": "number"
+                        },
+                        "Emissions Factor kgCO2e/kWh including out-of-scope emissions": {
+                            "type": "number"
+                        },
+                        "Primary Energy Factor kWh/kWh delivered": {
+                            "type": "number"
+                        },
+                        "is_export_capable": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "EnergySupplyOther": {
+            "required": [
+                "fuel"
+            ],
+            "properties": {
+                "fuel": {
+                    "enum": [
+                        "lpg_bulk",
+                        "wood",
+                        "oil",
+                        "coal"
+                    ]
+                },
+                "factor": {
+                    "type": "object",
+                    "unevaluatedProperties": false,
+                    "required": [
+                        "is_export_capable"
+                    ],
+                    "properties": {
+                        "is_export_capable": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
         }
     }
 }

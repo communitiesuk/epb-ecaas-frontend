@@ -28,6 +28,60 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
 	schemas: {
+		EnergySupplyGas: {
+			/** @enum {unknown} */
+			fuel: EnergySupplyGasFuel;
+		};
+		EnergySupplyElectricity: {
+			/** @constant */
+			fuel: "electricity";
+			/** @enum {unknown} */
+			priority?: EnergySupplyElectricityPriority;
+			is_export_capable?: boolean;
+			ElectricBattery?: {
+				capacity: number;
+				charge_discharge_efficiency_round_trip: number;
+				minimum_charge_rate_one_way_trip: number;
+				maximum_charge_rate_one_way_trip: number;
+				maximum_discharge_rate_one_way_trip: number;
+				/** @enum {unknown} */
+				battery_location: EnergySupplyElectricityElectricBatteryBattery_location;
+				grid_charging_possible: boolean;
+			};
+			diverter?: {
+				StorageTank?: string;
+				HeatSource: string;
+				Controlmax?: string;
+			};
+			if?: {
+				ElectricBattery: {
+					/** @constant */
+					grid_charging_possible?: true;
+				};
+			};
+			then?: {
+				threshold_charges: number[];
+				threshold_prices: number[];
+				tariff: string;
+			};
+		};
+		EnergySupplyCustom: {
+			/** @constant */
+			fuel: "custom";
+			factor?: {
+				"Emissions Factor kgCO2e/kWh": number;
+				"Emissions Factor kgCO2e/kWh including out-of-scope emissions": number;
+				"Primary Energy Factor kWh/kWh delivered": number;
+				is_export_capable: boolean;
+			};
+		};
+		EnergySupplyOther: {
+			/** @enum {unknown} */
+			fuel: EnergySupplyOtherFuel;
+			factor?: {
+				is_export_capable: boolean;
+			};
+		};
 		/**
          * MassDistributionClass
          * @enum {string}
@@ -90,10 +144,7 @@ export interface components {
 				"mains water"?: Record<string, never>;
 			} & (unknown | unknown);
 			EnergySupply: {
-				[key: string]: {
-					/** @enum {unknown} */
-					fuel: Fhs_input_latestSchemaEnergySupplyFuel;
-				} & (unknown & unknown & unknown);
+				[key: string]: components["schemas"]["EnergySupplyGas"] | components["schemas"]["EnergySupplyElectricity"] | components["schemas"]["EnergySupplyCustom"] | components["schemas"]["EnergySupplyOther"];
 			};
 			OnSiteGeneration?: {
 				[key: string]: {
@@ -307,6 +358,60 @@ export interface components {
                  * @enum {string}
                  */
 				MassDistributionClass: Fhs_input_latestSchema$defsMassDistributionClass;
+				EnergySupplyGas: {
+					/** @enum {unknown} */
+					fuel: Fhs_input_latestSchema$defsEnergySupplyGasFuel;
+				};
+				EnergySupplyElectricity: {
+					/** @constant */
+					fuel: "electricity";
+					/** @enum {unknown} */
+					priority?: Fhs_input_latestSchema$defsEnergySupplyElectricityPriority;
+					is_export_capable?: boolean;
+					ElectricBattery?: {
+						capacity: number;
+						charge_discharge_efficiency_round_trip: number;
+						minimum_charge_rate_one_way_trip: number;
+						maximum_charge_rate_one_way_trip: number;
+						maximum_discharge_rate_one_way_trip: number;
+						/** @enum {unknown} */
+						battery_location: Fhs_input_latestSchema$defsEnergySupplyElectricityElectricBatteryBattery_location;
+						grid_charging_possible: boolean;
+					};
+					diverter?: {
+						StorageTank?: string;
+						HeatSource: string;
+						Controlmax?: string;
+					};
+					if?: {
+						ElectricBattery: {
+							/** @constant */
+							grid_charging_possible?: true;
+						};
+					};
+					then?: {
+						threshold_charges: number[];
+						threshold_prices: number[];
+						tariff: string;
+					};
+				};
+				EnergySupplyCustom: {
+					/** @constant */
+					fuel: "custom";
+					factor?: {
+						"Emissions Factor kgCO2e/kWh": number;
+						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": number;
+						"Primary Energy Factor kWh/kWh delivered": number;
+						is_export_capable: boolean;
+					};
+				};
+				EnergySupplyOther: {
+					/** @enum {unknown} */
+					fuel: Fhs_input_latestSchema$defsEnergySupplyOtherFuel;
+					factor?: {
+						is_export_capable: boolean;
+					};
+				};
 			};
 		};
 	};
@@ -316,6 +421,10 @@ export interface components {
 	headers: never;
 	pathItems: never;
 }
+export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
+export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
+export type SchemaEnergySupplyCustom = components["schemas"]["EnergySupplyCustom"];
+export type SchemaEnergySupplyOther = components["schemas"]["EnergySupplyOther"];
 export type SchemaMassDistributionClass = components["schemas"]["MassDistributionClass"];
 export type SchemaFhsInputLatestSchema = components["schemas"]["fhs_input_latest.schema"];
 export type $defs = Record<string, never>;
@@ -335,6 +444,24 @@ export interface operations {
 		responses: never;
 	};
 }
+export enum EnergySupplyGasFuel {
+	mains_gas = "mains_gas",
+	gas = "gas",
+}
+export enum EnergySupplyElectricityPriority {
+	ElectricBattery = "ElectricBattery",
+	diverter = "diverter",
+}
+export enum EnergySupplyElectricityElectricBatteryBattery_location {
+	inside = "inside",
+	outside = "outside",
+}
+export enum EnergySupplyOtherFuel {
+	lpg_bulk = "lpg_bulk",
+	wood = "wood",
+	oil = "oil",
+	coal = "coal",
+}
 export enum MassDistributionClass {
 	I_Mass_concentrated_at_internal_side = "I: Mass concentrated at internal side",
 	E_Mass_concentrated_at_external_side = "E: Mass concentrated at external side",
@@ -349,16 +476,6 @@ export enum Fhs_input_latestSchemaHeatingControlType {
 export enum Fhs_input_latestSchemaExternalConditionsShading_segmentsShadingType {
 	obstacle = "obstacle",
 	overhang = "overhang",
-}
-export enum Fhs_input_latestSchemaEnergySupplyFuel {
-	mains_gas = "mains_gas",
-	electricity = "electricity",
-	lpg_bulk = "lpg_bulk",
-	custom = "custom",
-	wood = "wood",
-	oil = "oil",
-	gas = "gas",
-	coal = "coal",
 }
 export enum Fhs_input_latestSchemaOnSiteGenerationType {
 	PhotovoltaicSystem = "PhotovoltaicSystem",
@@ -494,6 +611,24 @@ export enum Fhs_input_latestSchema$defsMassDistributionClass {
 	IE_Mass_divided_over_internal_and_external_side = "IE: Mass divided over internal and external side",
 	D_Mass_equally_distributed = "D: Mass equally distributed",
 	M_Mass_concentrated_inside = "M: Mass concentrated inside",
+}
+export enum Fhs_input_latestSchema$defsEnergySupplyGasFuel {
+	mains_gas = "mains_gas",
+	gas = "gas",
+}
+export enum Fhs_input_latestSchema$defsEnergySupplyElectricityPriority {
+	ElectricBattery = "ElectricBattery",
+	diverter = "diverter",
+}
+export enum Fhs_input_latestSchema$defsEnergySupplyElectricityElectricBatteryBattery_location {
+	inside = "inside",
+	outside = "outside",
+}
+export enum Fhs_input_latestSchema$defsEnergySupplyOtherFuel {
+	lpg_bulk = "lpg_bulk",
+	wood = "wood",
+	oil = "oil",
+	coal = "coal",
 }
 export enum ApiPaths {
 	FHSCompliance = "/beta/future-homes-standard-compliance",
