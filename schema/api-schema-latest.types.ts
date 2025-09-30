@@ -48,6 +48,61 @@ export interface components {
 			/** @constant */
 			grid_charging_possible: false;
 		};
+		HotWaterTankHeatSourceCommon: {
+			/** @enum {unknown} */
+			type: "ImmersionHeater" | "SolarThermalSystem" | "HeatSourceWet" | "HeatPump_HWOnly" | "Boiler";
+			name?: string;
+			Controlmin?: string;
+			Controlmax?: string;
+			heater_position: number;
+			thermostat_position: number;
+		};
+		ImmersionHeater: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+			/** @constant */
+			type: "ImmersionHeater";
+			power: number;
+			EnergySupply: string;
+		};
+		SolarThermalSystem: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+			/** @constant */
+			type: "SolarThermalSystem";
+			/** @enum {unknown} */
+			solar_loc: "OUT" | "NHS" | "HS";
+			area_module: number;
+			modules: number;
+			peak_collector_efficiency: number;
+			incidence_angle_modifier: number;
+			first_order_hlc: number;
+			second_order_hlc: number;
+			collector_mass_flow_rate: number;
+			power_pump: number;
+			power_pump_control: number;
+			EnergySupply: string;
+			tilt: number;
+			orientation: number;
+			solar_loop_piping_hlc: number;
+		};
+		HeatSourceWet: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+			/** @constant */
+			type: "HeatSourceWet";
+			EnergySupply: string;
+			temp_flow_limit_upper?: number;
+		};
+		HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+			/** @constant */
+			type: "HeatPump_HWOnly";
+			EnergySupply: string;
+			power_max: number;
+			tank_volume_declared: number;
+			heat_exchanger_surface_area_declared: number;
+			daily_losses_declared: number;
+			in_use_factor_mismatch: number;
+			test_data: Record<string, never>;
+		};
+		Boiler: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+			/** @constant */
+			type: "Boiler";
+		};
 		HotWaterTankCommon: {
 			/** @enum {unknown} */
 			type: "SmartHotWaterTank" | "StorageTank";
@@ -67,27 +122,10 @@ export interface components {
 				pipe_contents: "air" | "water" | "glycol25";
 			}[];
 			HeatSource: {
-				[key: string]: {
-					/** @enum {unknown} */
-					type: "ImmersionHeater" | "SolarThermalSystem" | "HeatSourceWet" | "HeatPump_HWOnly" | "Boiler";
-					name?: string;
-					Controlmin?: string;
-					Controlmax?: string;
-					heater_position: number;
-					thermostat_position: number;
-				} & (unknown & unknown & unknown & unknown);
+				[key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"] | components["schemas"]["Boiler"];
 			};
-			if?: {
-				HeatSource?: {
-					[key: string]: {
-						/** @constant */
-						type?: "HeatPump_HWOnly";
-					};
-				};
-			};
-			then?: {
-				heat_exchanger_surface_area: number;
-			};
+			/** @description A heat_exchanger_surface_area is required when there is a HeatPump_HWOnly HeatSource */
+			heat_exchanger_surface_area?: number;
 		};
 		EnergySupplyGas: {
 			/** @enum {unknown} */
@@ -511,27 +549,65 @@ export interface components {
 						pipe_contents: "air" | "water" | "glycol25";
 					}[];
 					HeatSource: {
-						[key: string]: {
-							/** @enum {unknown} */
-							type: "ImmersionHeater" | "SolarThermalSystem" | "HeatSourceWet" | "HeatPump_HWOnly" | "Boiler";
-							name?: string;
-							Controlmin?: string;
-							Controlmax?: string;
-							heater_position: number;
-							thermostat_position: number;
-						} & (unknown & unknown & unknown & unknown);
+						[key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWet"] | components["schemas"]["HeatPump_HWOnly"] | components["schemas"]["Boiler"];
 					};
-					if?: {
-						HeatSource?: {
-							[key: string]: {
-								/** @constant */
-								type?: "HeatPump_HWOnly";
-							};
-						};
-					};
-					then?: {
-						heat_exchanger_surface_area: number;
-					};
+					/** @description A heat_exchanger_surface_area is required when there is a HeatPump_HWOnly HeatSource */
+					heat_exchanger_surface_area?: number;
+				};
+				HotWaterTankHeatSourceCommon: {
+					/** @enum {unknown} */
+					type: "ImmersionHeater" | "SolarThermalSystem" | "HeatSourceWet" | "HeatPump_HWOnly" | "Boiler";
+					name?: string;
+					Controlmin?: string;
+					Controlmax?: string;
+					heater_position: number;
+					thermostat_position: number;
+				};
+				ImmersionHeater: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+					/** @constant */
+					type: "ImmersionHeater";
+					power: number;
+					EnergySupply: string;
+				};
+				SolarThermalSystem: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+					/** @constant */
+					type: "SolarThermalSystem";
+					/** @enum {unknown} */
+					solar_loc: "OUT" | "NHS" | "HS";
+					area_module: number;
+					modules: number;
+					peak_collector_efficiency: number;
+					incidence_angle_modifier: number;
+					first_order_hlc: number;
+					second_order_hlc: number;
+					collector_mass_flow_rate: number;
+					power_pump: number;
+					power_pump_control: number;
+					EnergySupply: string;
+					tilt: number;
+					orientation: number;
+					solar_loop_piping_hlc: number;
+				};
+				HeatSourceWet: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+					/** @constant */
+					type: "HeatSourceWet";
+					EnergySupply: string;
+					temp_flow_limit_upper?: number;
+				};
+				HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+					/** @constant */
+					type: "HeatPump_HWOnly";
+					EnergySupply: string;
+					power_max: number;
+					tank_volume_declared: number;
+					heat_exchanger_surface_area_declared: number;
+					daily_losses_declared: number;
+					in_use_factor_mismatch: number;
+					test_data: Record<string, never>;
+				};
+				Boiler: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
+					/** @constant */
+					type: "Boiler";
 				};
 				StorageTank: components["schemas"]["HotWaterTankCommon"] & {
 					/** @constant */
@@ -586,6 +662,12 @@ export interface components {
 export type SchemaElectricBatteryCommon = components["schemas"]["ElectricBatteryCommon"];
 export type SchemaElectricBatteryGridCharging = components["schemas"]["ElectricBatteryGridCharging"];
 export type SchemaElectricBatteryNoGridCharging = components["schemas"]["ElectricBatteryNoGridCharging"];
+export type SchemaHotWaterTankHeatSourceCommon = components["schemas"]["HotWaterTankHeatSourceCommon"];
+export type SchemaImmersionHeater = components["schemas"]["ImmersionHeater"];
+export type SchemaSolarThermalSystem = components["schemas"]["SolarThermalSystem"];
+export type SchemaHeatSourceWet = components["schemas"]["HeatSourceWet"];
+export type SchemaHeatPumpHwOnly = components["schemas"]["HeatPump_HWOnly"];
+export type SchemaBoiler = components["schemas"]["Boiler"];
 export type SchemaHotWaterTankCommon = components["schemas"]["HotWaterTankCommon"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];

@@ -428,7 +428,6 @@
                             "oneOf": [
                                 {
                                     "$ref": "#/$defs/StorageTank"
-
                                 },
                                 {
                                     "$ref": "#/$defs/SmartHotWaterTank"
@@ -3639,287 +3638,309 @@
                 "HeatSource": {
                     "type": "object",
                     "additionalProperties": {
-                        "type": "object",
-                        "unevaluatedProperties": false,
-                        "required": [
-                            "type",
-                            "heater_position",
-                            "thermostat_position"
-                        ],
-                        "properties": {
-                            "type": {
-                                "enum": [
-                                    "ImmersionHeater",
-                                    "SolarThermalSystem",
-                                    "HeatSourceWet",
-                                    "HeatPump_HWOnly",
-                                    "Boiler"
-                                ]
-                            },
-                            "name": {
-                                "type": "string"
-                            },
-                            "Controlmin": {
-                                "type": "string"
-                            },
-                            "Controlmax": {
-                                "type": "string"
-                            },
-                            "heater_position": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 1
-                            },
-                            "thermostat_position": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 1
-                            }
-                        },
-                        "allOf": [
+                        "oneOf": [
                             {
-                                "if": {
-                                    "properties": {
-                                        "type": {
-                                            "const": "HeatPump_HWOnly"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "required": [
-                                        "EnergySupply",
-                                        "power_max",
-                                        "tank_volume_declared",
-                                        "heat_exchanger_surface_area_declared",
-                                        "daily_losses_declared",
-                                        "in_use_factor_mismatch",
-                                        "test_data"
-                                    ],
-                                    "properties": {
-                                        "EnergySupply": {
-                                            "type": "string"
-                                        },
-                                        "power_max": {
-                                            "type": "number"
-                                        },
-                                        "tank_volume_declared": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        },
-                                        "heat_exchanger_surface_area_declared": {
-                                            "type": "number"
-                                        },
-                                        "daily_losses_declared": {
-                                            "type": "number"
-                                        },
-                                        "in_use_factor_mismatch": {
-                                            "type": "number"
-                                        },
-                                        "test_data": {
-                                            "type": "object",
-                                            "unevaluatedProperties": false,
-                                            "patternProperties": {
-                                                "M|L": {
-                                                    "type": "object",
-                                                    "unevaluatedProperties": false,
-                                                    "required": [
-                                                        "cop_dhw",
-                                                        "hw_tapping_prof_daily_total",
-                                                        "energy_input_measured",
-                                                        "power_standby",
-                                                        "hw_vessel_loss_daily"
-                                                    ],
-                                                    "properties": {
-                                                        "cop_dhw": {
-                                                            "type": "number"
-                                                        },
-                                                        "hw_tapping_prof_daily_total": {
-                                                            "type": "number"
-                                                        },
-                                                        "energy_input_measured": {
-                                                            "type": "number"
-                                                        },
-                                                        "power_standby": {
-                                                            "type": "number"
-                                                        },
-                                                        "hw_vessel_loss_daily": {
-                                                            "type": "number"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                "$ref": "#/$defs/ImmersionHeater"
                             },
                             {
-                                "if": {
-                                    "properties": {
-                                        "type": {
-                                            "const": "HeatSourceWet"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "required": [
-                                        "EnergySupply"
-                                    ],
-                                    "properties": {
-                                        "EnergySupply": {
-                                            "type": "string"
-                                        },
-                                        "temp_flow_limit_upper": {
-                                            "type": "number"
-                                        }
-                                    }
-                                }
+                                "$ref": "#/$defs/SolarThermalSystem"
                             },
                             {
-                                "if": {
-                                    "properties": {
-                                        "type": {
-                                            "const": "ImmersionHeater"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "required": [
-                                        "power",
-                                        "EnergySupply"
-                                    ],
-                                    "properties": {
-                                        "power": {
-                                            "type": "number",
-                                            "minimum": 1,
-                                            "maximum": 10
-                                        },
-                                        "EnergySupply": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
+                                "$ref": "#/$defs/HeatSourceWet"
                             },
                             {
-                                "if": {
-                                    "properties": {
-                                        "type": {
-                                            "const": "SolarThermalSystem"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "required": [
-                                        "solar_loc",
-                                        "area_module",
-                                        "modules",
-                                        "peak_collector_efficiency",
-                                        "incidence_angle_modifier",
-                                        "first_order_hlc",
-                                        "second_order_hlc",
-                                        "collector_mass_flow_rate",
-                                        "power_pump",
-                                        "power_pump_control",
-                                        "EnergySupply",
-                                        "tilt",
-                                        "orientation",
-                                        "solar_loop_piping_hlc"
-                                    ],
-                                    "properties": {
-                                        "solar_loc": {
-                                            "enum": [
-                                                "OUT",
-                                                "NHS",
-                                                "HS"
-                                            ]
-                                        },
-                                        "area_module": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        },
-                                        "modules": {
-                                            "type": "integer",
-                                            "minimum": 1
-                                        },
-                                        "peak_collector_efficiency": {
-                                            "type": "number",
-                                            "minimum": 0.1,
-                                            "maximum": 1
-                                        },
-                                        "incidence_angle_modifier": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        },
-                                        "first_order_hlc": {
-                                            "type": "number",
-                                            "minimum": 0,
-                                            "maximum": 100
-                                        },
-                                        "second_order_hlc": {
-                                            "type": "number",
-                                            "minimum": 0,
-                                            "maximum": 10
-                                        },
-                                        "collector_mass_flow_rate": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        },
-                                        "power_pump": {
-                                            "type": "number",
-                                            "minimum": 0,
-                                            "maximum": 2000
-                                        },
-                                        "power_pump_control": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        },
-                                        "EnergySupply": {
-                                            "type": "string"
-                                        },
-                                        "tilt": {
-                                            "type": "number",
-                                            "minimum": 0,
-                                            "maximum": 90
-                                        },
-                                        "orientation": {
-                                            "type": "number",
-                                            "minimum": -180,
-                                            "maximum": 180
-                                        },
-                                        "solar_loop_piping_hlc": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        }
-                                    }
-                                }
+                                "$ref": "#/$defs/HeatPump_HWOnly"
+                            },
+                            {
+                                "$ref": "#/$defs/Boiler"
                             }
                         ]
                     }
                 },
-                "if": {
+                "heat_exchanger_surface_area": {
+                    "type": "number",
+                    "description": "A heat_exchanger_surface_area is required when there is a HeatPump_HWOnly HeatSource"
+                }
+            }
+        },
+        "HotWaterTankHeatSourceCommon": {
+            "type": "object",
+            "unevaluatedProperties": false,
+            "required": [
+                "type",
+                "heater_position",
+                "thermostat_position"
+            ],
+            "properties": {
+                "type": {
+                    "enum": [
+                        "ImmersionHeater",
+                        "SolarThermalSystem",
+                        "HeatSourceWet",
+                        "HeatPump_HWOnly",
+                        "Boiler"
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                },
+                "Controlmin": {
+                    "type": "string"
+                },
+                "Controlmax": {
+                    "type": "string"
+                },
+                "heater_position": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "thermostat_position": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                }
+            }
+        },
+        "ImmersionHeater": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/HotWaterTankHeatSourceCommon"
+                },
+                {
+                    "required": [
+                        "type",
+                        "power",
+                        "EnergySupply"
+                    ],
                     "properties": {
-                        "HeatSource": {
+                        "type": {
+                            "const": "ImmersionHeater"
+                        },
+                        "power": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 10
+                        },
+                        "EnergySupply": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ]
+        },
+        "SolarThermalSystem": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/HotWaterTankHeatSourceCommon"
+                },
+                {
+                    "required": [
+                        "type",
+                        "solar_loc",
+                        "area_module",
+                        "modules",
+                        "peak_collector_efficiency",
+                        "incidence_angle_modifier",
+                        "first_order_hlc",
+                        "second_order_hlc",
+                        "collector_mass_flow_rate",
+                        "power_pump",
+                        "power_pump_control",
+                        "EnergySupply",
+                        "tilt",
+                        "orientation",
+                        "solar_loop_piping_hlc"
+                    ],
+                    "properties": {
+                        "type": {
+                            "const": "SolarThermalSystem"
+                        },
+                        "solar_loc": {
+                            "enum": [
+                                "OUT",
+                                "NHS",
+                                "HS"
+                            ]
+                        },
+                        "area_module": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "modules": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "peak_collector_efficiency": {
+                            "type": "number",
+                            "minimum": 0.1,
+                            "maximum": 1
+                        },
+                        "incidence_angle_modifier": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "first_order_hlc": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 100
+                        },
+                        "second_order_hlc": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 10
+                        },
+                        "collector_mass_flow_rate": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "power_pump": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 2000
+                        },
+                        "power_pump_control": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "EnergySupply": {
+                            "type": "string"
+                        },
+                        "tilt": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 90
+                        },
+                        "orientation": {
+                            "type": "number",
+                            "minimum": -180,
+                            "maximum": 180
+                        },
+                        "solar_loop_piping_hlc": {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    }
+                }
+            ]
+        },
+        "HeatSourceWet": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/HotWaterTankHeatSourceCommon"
+                },
+                {
+                    "required": [
+                        "type",
+                        "EnergySupply"
+                    ],
+                    "properties": {
+                        "type": {
+                            "const": "HeatSourceWet"
+                        },
+                        "EnergySupply": {
+                            "type": "string"
+                        },
+                        "temp_flow_limit_upper": {
+                            "type": "number"
+                        }
+                    }
+                }
+            ]
+        },
+        "HeatPump_HWOnly": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/HotWaterTankHeatSourceCommon"
+                },
+                {
+                    "required": [
+                        "type",
+                        "EnergySupply",
+                        "power_max",
+                        "tank_volume_declared",
+                        "heat_exchanger_surface_area_declared",
+                        "daily_losses_declared",
+                        "in_use_factor_mismatch",
+                        "test_data"
+                    ],
+                    "properties": {
+                        "type": {
+                            "const": "HeatPump_HWOnly"
+                        },
+                        "EnergySupply": {
+                            "type": "string"
+                        },
+                        "power_max": {
+                            "type": "number"
+                        },
+                        "tank_volume_declared": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "heat_exchanger_surface_area_declared": {
+                            "type": "number"
+                        },
+                        "daily_losses_declared": {
+                            "type": "number"
+                        },
+                        "in_use_factor_mismatch": {
+                            "type": "number"
+                        },
+                        "test_data": {
                             "type": "object",
-                            "additionalProperties": {
-                                "properties": {
-                                    "type": {
-                                        "const": "HeatPump_HWOnly"
+                            "unevaluatedProperties": false,
+                            "patternProperties": {
+                                "M|L": {
+                                    "type": "object",
+                                    "unevaluatedProperties": false,
+                                    "required": [
+                                        "cop_dhw",
+                                        "hw_tapping_prof_daily_total",
+                                        "energy_input_measured",
+                                        "power_standby",
+                                        "hw_vessel_loss_daily"
+                                    ],
+                                    "properties": {
+                                        "cop_dhw": {
+                                            "type": "number"
+                                        },
+                                        "hw_tapping_prof_daily_total": {
+                                            "type": "number"
+                                        },
+                                        "energy_input_measured": {
+                                            "type": "number"
+                                        },
+                                        "power_standby": {
+                                            "type": "number"
+                                        },
+                                        "hw_vessel_loss_daily": {
+                                            "type": "number"
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                }
+            ]
+        },
+        "Boiler": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/HotWaterTankHeatSourceCommon"
                 },
-                "then": {
+                {
                     "required": [
-                        "heat_exchanger_surface_area"
+                        "type"
                     ],
                     "properties": {
-                        "heat_exchanger_surface_area": {
-                            "type": "number"
+                        "type": {
+                            "const": "Boiler"
                         }
                     }
                 }
-            }
+            ]
         },
         "StorageTank": {
             "allOf": [
