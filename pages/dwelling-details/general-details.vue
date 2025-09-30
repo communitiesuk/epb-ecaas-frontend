@@ -57,6 +57,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="typeOfDwelling"
 			validation="required"
 			help="Select the broad dwelling classification"
+			data-field="General.build_type"
 		/>
 		<FormKit
 			id="storeysInDwelling"
@@ -69,6 +70,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				isInteger: `Number of storeys in building must be an integer.`,
 			}"
 			help="For houses this is the same as the number of storeys in the dwelling. For flats this is the total number of stories of the whole building the flat is in"
+			data-field="General.storeys_in_building"
 		/>
 		<FormKit
 			v-if="model.typeOfDwelling === 'flat'"
@@ -82,6 +84,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				isInteger: `Storey of flat must be an integer.`,
 			}"
 			help="The vertical position of the flat expressed by the storey it is on. 0 represents the ground floor."
+			data-field="General.storey_of_dwelling"
 		/>
 		<FormKit
 			id="numOfBedrooms"
@@ -94,6 +97,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				isInteger: `Number of bedrooms must be an integer.`,
 			}"
 			help="This affects the dwelling's predicted occupancy"
+			data-field="NumberOfBedrooms"
 		/>
 		<FormKit
 			id="coolingRequired"
@@ -102,6 +106,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="coolingRequired"
 			validation="required"
 			help="This affects the space cooling of the notional dwelling"
+			data-field="General.PartO_active_cooling_required"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

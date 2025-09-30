@@ -42,7 +42,8 @@ const options: Record<MassDistributionClass, RadioOption> = {
 		:label="label ?? 'Mass distribution class'"
 		:help="help ?? 'This is the distribution of mass in the building element'"
 		:name="name ?? 'massDistributionClass'"
-		validation="required">
+		validation="required"
+		data-field="Zone.BuildingElement.*.mass_distribution_class">
 		<GovDetails summary-text="Help with this input">
 			<a href="/guidance/mass-distribution-guidance" target="_blank" class="govuk-link">Guidance on mass distribution (opens in another window)</a>	
 		</GovDetails>

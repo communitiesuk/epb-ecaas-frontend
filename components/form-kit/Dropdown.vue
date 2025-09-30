@@ -41,6 +41,7 @@ function handleInput(e: Event) {
 			:value="mounted ? props.context._value : ''"
 			:data-testid="id"
 			:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
+			v-bind="props.context.attrs"
 			@input="handleInput"
 		>
 			<option value="">Select</option>

@@ -139,6 +139,7 @@ describe("bath", () => {
 			},
 		});
 	
+		await user.type(screen.getByTestId("flowRate"), "10"); // set another value on form in order to count as a partial we want to keep
 		await user.type(screen.getByTestId("name"), "Bath 1");
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
@@ -283,24 +284,6 @@ describe("Partially saving data", () => {
 
 		expect(data[0]!.data.name).toBe("Bath");
 		expect(data[0]!.data.size).toBe(170);
-	});
-
-	test("default name is used if name is added then deleted", async () => {
-
-		await renderSuspended(Bath, {
-			route: {
-				params: { bath: "create" },
-			},
-		});
-	
-		await user.type(screen.getByTestId("name"), "Bath 1");
-		await user.clear(screen.getByTestId("name"));
-		await user.tab();
-		await user.click(screen.getByTestId("saveProgress"));
-		
-		const { data } = store.domesticHotWater.hotWaterOutlets.bath;
-	
-		expect(data[0]!.data.name).toBe("Bath");
 	});
 
 	test("default name is used if name added is whitespace", async () => {

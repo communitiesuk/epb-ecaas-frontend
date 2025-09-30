@@ -48,6 +48,8 @@ autoSaveElementForm<RoofData>({
 	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs,
 	defaultName: "Roof",
 	onPatch: (state, newData, index) => {
+		const { pitchOption, pitch } = newData.data;
+		newData.data.pitch = pitchOption === "0" ? 0 : pitch;
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.complete = false;
 	},
@@ -95,12 +97,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
 			:pitch-option="model?.pitchOption"
 			:options="zeroPitchOptions()"
+			data-field="Zone.BuildingElement.*.pitch"
 		/>
 
 		<template v-if="model?.typeOfRoof === 'pitchedInsulatedAtRoof' || model?.typeOfRoof === 'pitchedInsulatedAtCeiling'">
 			<FieldsPitch
 				label="Pitch of roof"
 				help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
+				data-field="Zone.BuildingElement.*.pitch"
 			/>
 			<FieldsOrientation label="Orientation of roof" />
 			<div v-if="!!model?.orientation" class="govuk-error-summary">

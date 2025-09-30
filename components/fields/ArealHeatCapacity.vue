@@ -19,6 +19,7 @@ defineProps<{
 		validation="required"
 		:options="arealHeatCapacityOptions"
 		value-type="number"
+		data-field="Zone.BuildingElement.*.areal_heat_capacity"
 	>
 		<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 			<table class="govuk-table">

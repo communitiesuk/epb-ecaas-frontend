@@ -58,6 +58,8 @@ autoSaveElementForm<InternalDoorData>({
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor,
 	defaultName: "Internal door",
 	onPatch: (state, newData, index) => {
+		const { pitchOption, pitch } = newData.data;
+		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
 	},
@@ -103,6 +105,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsPitch
 				:pitch-option="model?.pitchOption"
 				:options="standardPitchOptions()"
+				data-field="Zone.BuildingElement.*.pitch"
 			/>
 			<FormKit
 				id="surfaceArea"

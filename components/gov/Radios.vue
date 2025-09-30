@@ -14,6 +14,7 @@ interface RadiosProps {
 	ariaDescribedBy?: string;
 	handleInput: (e: Event) => void;
 	currentValue: string | undefined;
+	attrs: Record<string, unknown>
 }
 
 const {
@@ -22,6 +23,7 @@ const {
 	showErrorMessage,
 	help = undefined,
 	ariaDescribedBy = undefined,
+	attrs,
 } = defineProps<RadiosProps>();
 
 const { mounted } = useMounted();
@@ -58,6 +60,7 @@ const idWithKey = (key: string) => `${id}_${key.replaceAll(/ /g, "_")}`;
 						:checked="mounted ? currentValue == key : false"
 						:data-testid="idWithKey(key)"
 						:aria-describedby="typeof options.get(key) === 'object' ? `${idWithKey(key)}_hint` : ''"
+						v-bind="attrs"
 						@change="handleInput"
 					>
 					<label class="govuk-label govuk-radios__label" :for="idWithKey(key)">

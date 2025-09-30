@@ -36,7 +36,7 @@ function handleInput(e: Event) {
 			unit: unit.name,
 		});
 	} else {
-		props.context.node.input("");
+		props.context.node.input(undefined);
 	}
 }
 
@@ -65,6 +65,7 @@ function handleBlur(e: FocusEvent) {
 				:value="mounted ? props.context._value && props.context._value.amount : ''"
 				:data-testId="id"
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
+				v-bind="props.context.attrs"
 				@input="handleTyping"
 				@change="handleInput"
 				@blur="handleBlur"

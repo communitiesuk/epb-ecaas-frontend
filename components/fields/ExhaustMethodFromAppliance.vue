@@ -22,5 +22,6 @@ const exhaustMethodOptions: Record<SchemaFlueGasExhaustSituation, FlueGasExhaust
 		:name="name"
 		validation="required"
 		:options="exhaustMethodOptions"
+		data-field="InfiltrationVentilation.CombustionAppliances.*.exhaust_situation"
 	/>
 </template>

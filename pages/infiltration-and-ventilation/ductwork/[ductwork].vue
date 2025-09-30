@@ -132,7 +132,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="ductTypeOptions"
 			label="Duct type"
 			name="ductType"
-			validation="required">
+			validation="required"
+			data-field="InfiltrationVentilation.MechanicalVentilation.duct_type">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table ductwork-table">
 					<thead class="govuk-table__head">
@@ -169,6 +170,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Ductwork cross sectional shape"
 			name="ductworkCrossSectionalShape"
 			validation="required"
+			data-field="InfiltrationVentilation.MechanicalVentilation.cross_section_shape	"
 		/>
 		<template v-if="model && model.ductworkCrossSectionalShape === 'circular'">
 			<FormKit
@@ -177,7 +179,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				suffix-text="mm"
 				label="Internal diameter of ductwork"
 				name="internalDiameterOfDuctwork"
-				validation="required | number | min:0 | max:1000">
+				validation="required | number | min:0 | max:1000"
+				data-field="InfiltrationVentilation.MechanicalVentilation.internal_diameter_mm">
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 					<table class="govuk-table">
 						<thead class="govuk-table__head">
@@ -204,7 +207,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				suffix-text="mm"
 				label="External diameter of ductwork"
 				name="externalDiameterOfDuctwork"
-				validation="required | number | min:0 | max:1000">
+				validation="required | number | min:0 | max:1000"
+				data-field="InfiltrationVentilation.MechanicalVentilation.external_diameter_mm">
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 					<table class="govuk-table">
 						<thead class="govuk-table__head">
@@ -243,7 +247,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Length of ductwork"
 			help="Enter the length of the piece of ductwork for this sub-object. Typically between 10m and 30m."
 			name="lengthOfDuctwork"
-			validation="required | number | min:0"/>
+			validation="required | number | min:0"
+			data-field="InfiltrationVentilation.MechanicalVentilation.length"/>
 
 		<FormKit
 			id="insulationThickness"
@@ -252,7 +257,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Insulation thickness"
 			help="Enter the thickness of the duct insulation. Typically between 25mm and 50mm."
 			name="insulationThickness"
-			validation="required | number | min:0 | max:100"/>
+			validation="required | number | min:0 | max:100"
+			data-field="InfiltrationVentilation.MechanicalVentilation.insulation_thickness_mm"/>
 			
 		<FormKit
 			id="thermalInsulationConductivityOfDuctwork"
@@ -261,7 +267,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Thermal conductivity of ductwork insulation"
 			help="Enter the thermal conductivity of the insulation. Typical values are between 0.03 and 0.04."
 			name="thermalInsulationConductivityOfDuctwork"
-			validation="required | number | min:0"/>
+			validation="required | number | min:0"
+			data-field="InfiltrationVentilation.MechanicalVentilation.insulation_thermal_conductivity"/>
 		
 		<FormKit
 			id="surfaceReflectivity"
@@ -272,6 +279,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Select whether the surface is reflective"
 			name="surfaceReflectivity"
 			validation="required"
+			data-field="InfiltrationVentilation.MechanicalVentilation.reflective"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

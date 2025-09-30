@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 const props = defineProps<{
 	id?: string;
 	name?: string;
@@ -6,6 +7,7 @@ const props = defineProps<{
 	pitchOption?: string;
 	options?: Record<string, string>;
 	help?: string;
+	dataField?: string;
 }>();
 
 const helpText = props.help ?? "Enter the tilt angle of the external surface. 0Â° means the external surface is facing up like ceilings, and 180Â° means the external surface is facing down like floors.";
@@ -20,7 +22,8 @@ const helpText = props.help ?? "Enter the tilt angle of the external surface. 0Â
 			:label="label ?? 'Pitch'"
 			:help="helpText"
 			name="pitchOption"
-			validation="required">
+			validation="required"
+			:data-field="dataField">
 			<GovDetails summary-text="Help with this input">
 				<div class="govuk-!-margin-bottom-3">
 					<a href="/guidance/pitch" target="_blank" class="govuk-link">
@@ -37,6 +40,7 @@ const helpText = props.help ?? "Enter the tilt angle of the external surface. 0Â
 			suffix-text="Â°"
 			:name="name ?? 'pitch'"
 			validation="required | number | min:0 | max:180"
+			:data-field="dataField"
 		/>
 	</template>
 	<FormKit
@@ -47,7 +51,8 @@ const helpText = props.help ?? "Enter the tilt angle of the external surface. 0Â
 		:help="helpText"
 		:name="name ?? 'pitch'"
 		validation="required | number | min:0 | max:180"
-		suffix-text="Â°">
+		suffix-text="Â°"
+		:data-field="dataField">
 		<GovDetails summary-text="Help with this input">
 			<a href="/guidance/pitch" target="_blank" class="govuk-link">
 				Guidance on pitch (opens in another window)

@@ -182,6 +182,8 @@ autoSaveElementForm<WindowData>({
 	storeData: store.dwellingFabric.dwellingSpaceWindows,
 	defaultName: "Window",
 	onPatch: (state, newData, index) => {
+		const { pitchOption, pitch } = newData.data;
+		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceWindows.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWindows.complete = false;
 	},
@@ -208,6 +210,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsPitch
 			:pitch-option="model && model.pitchOption"
 			:options="standardPitchOptions()"
+			data-field="Zone.BuildingElement.*.pitch"
 		/>
 		<FieldsOrientation />
 		<FormKit
@@ -396,7 +399,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<h2 class="govuk-heading-l">Curtains and blinds</h2>
 		<FormKit
 			id="curtainsOrBlinds"
-			v-model="model!.curtainsOrBlinds"
 			type="govBoolean"
 			label="Does this window have any curtains or blinds?"
 			name="curtainsOrBlinds"
