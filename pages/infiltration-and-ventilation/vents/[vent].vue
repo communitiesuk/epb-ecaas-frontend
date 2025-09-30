@@ -124,7 +124,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:1 | max:60"
 			suffix-text="m"
 			data-field="InfiltrationVentilation.Vents.mid_height_air_flow_path"
-			/>
+		/>
 		<FieldsOrientation help="Enter the orientation of the vent's outside face, measured from true north"/>
 		<FieldsPitch data-field="InfiltrationVentilation.Vents.*.pitch" />
 		<GovLLMWarning />

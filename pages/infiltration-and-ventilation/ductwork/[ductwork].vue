@@ -6,7 +6,7 @@ import { getUrl } from "#imports";
 
 const title = "MVHR ductwork";
 const store = useEcaasStore();
-const { getStoreIndex, autoSaveElementForm } = useForm()
+const { getStoreIndex, autoSaveElementForm } = useForm();
 
 const ductwork = useItemToEdit(
 	"ductwork",
