@@ -3881,50 +3881,14 @@
                     "type": "boolean"
                 },
                 "ElectricBattery": {
-                    "type": "object",
-                    "unevaluatedProperties": false,
-                    "required": [
-                        "capacity",
-                        "charge_discharge_efficiency_round_trip",
-                        "minimum_charge_rate_one_way_trip",
-                        "maximum_charge_rate_one_way_trip",
-                        "maximum_discharge_rate_one_way_trip",
-                        "battery_location",
-                        "grid_charging_possible"
-                    ],
-                    "properties": {
-                        "capacity": {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 50
+                    "oneOf": [
+                        {
+                            "$ref": "#/$defs/ElectricBatteryGridCharging"
                         },
-                        "charge_discharge_efficiency_round_trip": {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 1
-                        },
-                        "minimum_charge_rate_one_way_trip": {
-                            "type": "number",
-                            "minimum": 0
-                        },
-                        "maximum_charge_rate_one_way_trip": {
-                            "type": "number",
-                            "minimum": 0
-                        },
-                        "maximum_discharge_rate_one_way_trip": {
-                            "type": "number",
-                            "minimum": 0
-                        },
-                        "battery_location": {
-                            "enum": [
-                                "inside",
-                                "outside"
-                            ]
-                        },
-                        "grid_charging_possible": {
-                            "type": "boolean"
+                        {
+                            "$ref": "#/$defs/ElectricBatteryNoGridCharging"
                         }
-                    }
+                    ]
                 },
                 "diverter": {
                     "type": "object",
@@ -3943,28 +3907,66 @@
                             "type": "string"
                         }
                     }
+                }
+            }
+        },
+        "ElectricBatteryCommon": {
+            "required": [
+                "capacity",
+                "charge_discharge_efficiency_round_trip",
+                "minimum_charge_rate_one_way_trip",
+                "maximum_charge_rate_one_way_trip",
+                "maximum_discharge_rate_one_way_trip",
+                "battery_location",
+                "grid_charging_possible"
+            ],
+            "properties": {
+                "capacity": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 50
                 },
-                "if": {
-                    "required": [
-                        "ElectricBattery"
-                    ],
-                    "properties": {
-                        "ElectricBattery": {
-                            "properties": {
-                                "grid_charging_possible": {
-                                    "const": true
-                                }
-                            }
-                        }
-                    }
+                "charge_discharge_efficiency_round_trip": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
                 },
-                "then": {
+                "minimum_charge_rate_one_way_trip": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "maximum_charge_rate_one_way_trip": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "maximum_discharge_rate_one_way_trip": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "battery_location": {
+                    "enum": [
+                        "inside",
+                        "outside"
+                    ]
+                }
+            }
+        },
+        "ElectricBatteryGridCharging": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/ElectricBatteryCommon"
+                },
+                {
                     "required": [
+                        "grid_charging_possible",
                         "threshold_charges",
                         "threshold_prices",
                         "tariff"
                     ],
                     "properties": {
+                        "grid_charging_possible": {
+                            "const": true
+                        },
                         "threshold_charges": {
                             "type": "array",
                             "items": {
@@ -3982,7 +3984,24 @@
                         }
                     }
                 }
-            }
+            ]
+        },
+        "ElectricBatteryNoGridCharging": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/ElectricBatteryCommon"
+                },
+                {
+                    "required": [
+                        "grid_charging_possible"
+                    ],
+                    "properties": {
+                        "grid_charging_possible": {
+                            "const": false
+                        }
+                    }
+                }
+            ]
         },
         "EnergySupplyCustom": {
             "required": [
