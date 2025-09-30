@@ -1,17 +1,18 @@
 export const removeTaggedItemReferences = <T extends Record<string, unknown>>(
-	storeItems: EcaasFormList<T>,
-	taggedItemId: string | undefined,
-	keyToCheck: keyof T,
+  sectionItems: EcaasFormList<T>,
+  idToRemove: string | undefined,
+  keyToCheck: keyof T
 ) => {
-	const store = useEcaasStore();
+  const store = useEcaasStore();
 
-	storeItems.data.forEach((x, index) => {
-		if ((x.data as Partial<T>)[keyToCheck] === taggedItemId) {
-			store.$patch(() => {
-				(storeItems.data[index]!.data as Partial<T>)[keyToCheck] = undefined;
-				storeItems.data[index]!.complete = false;
-				storeItems.complete = false;
-			});
+	for(const item of sectionItems.data){
+  	const idOfTaggedItem = (item.data as Partial<T>)[keyToCheck]
+  	if (idOfTaggedItem === idToRemove) {
+  		store.$patch(() => {
+  			(item.data as Partial<T>)[keyToCheck] = undefined;
+  			item.complete = false;
+  			sectionItems.complete = false;
+  		});
 		}
-	});
+	}
 };
