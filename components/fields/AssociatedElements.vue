@@ -14,15 +14,23 @@ const { adjacentSpaceType } = defineProps<{
 
 const store = useEcaasStore();
 
-const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
-const options = [
+let options = adjacentSpaceType === AdjacentSpaceType.heatedSpace ? [
 	dwellingSpaceInternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	dwellingSpaceCeilings.data
-		.filter(x => x.data.type === adjacentSpaceType)
+		.filter(x => x.data.type === AdjacentSpaceType.heatedSpace)
 		.map(x => [x.data.id, x.data.name] as [string, string])
-].flat().filter(x => x[0] !== undefined);
+] : [
+	dwellingSpaceWallToUnheatedSpace.data.map(x => [x.data.id, x.data.name] as [string, string]),
+	dwellingSpaceCeilings.data
+		.filter(x => x.data.type === AdjacentSpaceType.unheatedSpace)
+		.map(x => [x.data.id, x.data.name] as [string, string]),
+	dwellingSpacePartyWall.data.map(x => [x.data.id, x.data.name] as [string, string])
+];
+
+const flattenedOptions = options.flat().filter(x => x[0] !== undefined);
 </script>
 
 <template>
@@ -30,7 +38,7 @@ const options = [
 		<FormKit
 			:id="id"
 			type="govRadios"
-			:options="new Map(options)"
+			:options="new Map(flattenedOptions)"
 			:label="label"
 			:help="help"
 			:name="name"

@@ -113,6 +113,7 @@ const wallsData: WallsData = {
 	dwellingSpaceWallToUnheatedSpace: {
 		data: [{
 			data: {
+				id: "a6865ced-8495-41c4-a193-4ff08902892a",
 				name: "Wall to unheated space 1",
 				surfaceAreaOfElement: 500,
 				uValue: 10,
@@ -127,6 +128,7 @@ const wallsData: WallsData = {
 	dwellingSpacePartyWall: {
 		data: [{
 			data: {
+				id: "96dcfa21-edec-4318-bbca-7e92b1d7c02c",
 				name: "Party wall 1",
 				pitchOption: "90",
 				pitch: 90,

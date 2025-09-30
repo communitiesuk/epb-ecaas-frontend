@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { standardPitchOptions, getUrl } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Wall to unheated space";
 const store = useEcaasStore();
@@ -15,6 +16,7 @@ const saveForm = (fields: WallsToUnheatedSpaceData) => {
 
 		dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data[index] = {
 			data: {
+				id: uuidv4(),
 				name: fields.name,
 				surfaceAreaOfElement: fields.surfaceAreaOfElement,
 				uValue: fields.uValue,

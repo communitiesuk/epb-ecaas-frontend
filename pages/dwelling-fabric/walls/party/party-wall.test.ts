@@ -3,17 +3,21 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import PartyWall from "./[wall].vue";
 import { MassDistributionClass } from "~/schema/api-schema.types";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+vi.mock("uuid");
+
 describe("party wall", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const state: PartyWallData = {
+		id: "f91505d0-25ff-4a35-8bb6-e78ccd3ddecd",
 		name: "Party wall 1",
 		pitchOption: "90",
 		pitch: 90,
@@ -28,6 +32,8 @@ describe("party wall", () => {
 	});
 
 	test("data is saved to store state when form is valid", async () => {
+		vi.mocked(uuidv4).mockReturnValue(state.id as unknown as Buffer);
+
 		await renderSuspended(PartyWall, {
 			route: {
 				params: { wall: "create" },

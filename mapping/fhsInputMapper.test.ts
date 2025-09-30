@@ -1611,6 +1611,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
+							id: "572f04bb-5db7-4082-b0e1-69dae42cc0d1",
 							name: "party wall 1",
 							pitchOption: "90",
 							pitch: 45,
@@ -1664,6 +1665,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
+							id: "17a405ad-3fc8-41a2-b4b2-6206db6085a9",
 							name: "wall to garage",
 							pitchOption: "custom",
 							pitch: 90,

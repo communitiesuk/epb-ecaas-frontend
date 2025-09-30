@@ -3,17 +3,21 @@ import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import WallToUnheatedSpace from "./[wall].vue";
 import { MassDistributionClass } from "~/schema/api-schema.types";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+vi.mock("uuid");
+
 describe("wall to unheated space", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const state: WallsToUnheatedSpaceData ={
+	const state: WallsToUnheatedSpaceData = {
+		id: "55a95c36-bf0a-40d3-a31d-9e4f86798428",
 		name: "Wall to unheated space 1",
 		surfaceAreaOfElement: 500,
 		uValue: 10,
@@ -29,6 +33,8 @@ describe("wall to unheated space", () => {
 	});	
 
 	test("data is saved to store state when form is valid", async () => {
+		vi.mocked(uuidv4).mockReturnValue(state.id as unknown as Buffer);
+		
 		await renderSuspended(WallToUnheatedSpace, {
 			route: {
 				params: { wall: "create" },

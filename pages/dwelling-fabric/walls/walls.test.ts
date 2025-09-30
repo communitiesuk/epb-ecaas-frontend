@@ -72,6 +72,7 @@ describe("walls", () => {
 	};
 
 	const toUnheatedSpace1: WallsToUnheatedSpaceData = {
+		id: "7da5aa7a-f24a-40f7-a5a3-97ea4d6f31d7",
 		name: "Wall to heated space 1",
 		surfaceAreaOfElement: 500,
 		uValue: 10,
@@ -93,6 +94,7 @@ describe("walls", () => {
 	};
 
 	const party1: PartyWallData = {
+		id: "974e8749-f465-4f43-a38a-3d0b97060a64",
 		name: "Party wall 1",
 		pitchOption: "90",
 		pitch: 90,

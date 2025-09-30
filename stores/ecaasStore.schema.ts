@@ -235,7 +235,7 @@ const internalWallDataZod = namedWithId.extend({
 
 export type InternalWallData = z.infer<typeof internalWallDataZod>;
 
-const wallsToUnheatedSpaceDataZod = named.extend({
+const wallsToUnheatedSpaceDataZod = namedWithId.extend({
 	surfaceAreaOfElement: z.number().min(0).max(10000),
 	uValue,
 	arealHeatCapacity: z.number(),
@@ -247,7 +247,7 @@ const wallsToUnheatedSpaceDataZod = named.extend({
 
 export type WallsToUnheatedSpaceData = z.infer<typeof wallsToUnheatedSpaceDataZod>;
 
-const partyWallDataZod = named.extend({
+const partyWallDataZod = namedWithId.extend({
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
 	surfaceArea: z.number().min(0.01).max(10000),

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { standardPitchOptions, getUrl } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Party wall";
 const store = useEcaasStore();
@@ -15,6 +16,7 @@ const saveForm = (fields: PartyWallData) => {
 
 		dwellingSpaceWalls.dwellingSpacePartyWall.data[index] = {
 			data: {
+				id: uuidv4(),
 				name: fields.name,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,

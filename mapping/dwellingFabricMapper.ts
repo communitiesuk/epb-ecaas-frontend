@@ -353,8 +353,8 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 }
 
 export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
-	const { dwellingSpaceExternalWall, dwellingSpaceInternalWall } = state.dwellingFabric.dwellingSpaceWalls;
-	const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+	const { dwellingSpaceExternalWall, dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace } = state.dwellingFabric.dwellingSpaceWalls;
+	const { dwellingSpaceRoofs, dwellingSpaceCeilings } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const doorSuffix = "door";
 
@@ -371,15 +371,27 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		})),
 	].flat().filter(x => x !== undefined);
 
-	const heatedSpaceElements = [
-		dwellingSpaceInternalWall.map(x => ({
+	const internalDoorElements = [
+		dwellingSpaceInternalWall?.map(x => ({
+			id: x.id,
+			pitch: extractPitch(x),
+		})),
+		dwellingSpaceCeilings?.map(x => ({
+			id: x.id,
+			pitch: extractPitch(x),
+		})),
+		dwellingSpacePartyWall?.map(x => ({
+			id: x.id,
+			pitch: extractPitch(x),
+		})),
+		dwellingSpaceWallToUnheatedSpace?.map(x => ({
 			id: x.id,
 			pitch: extractPitch(x),
 		})),
 	].flat();
 
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
-		const associatedHeatedSpaceElement = heatedSpaceElements.find(e => e.id === x.associatedHeatedSpaceElementId)!;
+		const associatedHeatedSpaceElement = internalDoorElements.find(e => e.id === x.associatedHeatedSpaceElementId)!;
 
 		const commonFields = {
 			pitch: associatedHeatedSpaceElement.pitch,

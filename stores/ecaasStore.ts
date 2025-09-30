@@ -190,16 +190,24 @@ export const useEcaasStore = defineStore("ecaas", {
 			return (id: string) => wallsRoofsWindows.find(e => e.id === id);
 		},
 		getAssociatedHeatedSpaceElement: (state) => {
-			const { dwellingSpaceInternalWall } = state.dwellingFabric.dwellingSpaceWalls;
+			const { dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace } = state.dwellingFabric.dwellingSpaceWalls;
 			const { dwellingSpaceCeilings } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
-			const heatedSpaceElements: AssociatedWallRoofCeiling[] = [
+			const heatedSpaceElements: AssociatedWallRoofCeilingWindow[] = [
 				dwellingSpaceInternalWall.data.map(x => ({
 					id: x.data.id,
 					pitch: extractPitch(x.data),
 				})),
 				dwellingSpaceCeilings.data.map(x => ({
 					id: x.data.id!,
+					pitch: extractPitch(x.data),
+				})),
+				dwellingSpacePartyWall.data.map(x => ({
+					id: x.data.id,
+					pitch: extractPitch(x.data),
+				})),
+				dwellingSpaceWallToUnheatedSpace.data.map(x => ({
+					id: x.data.id,
 					pitch: extractPitch(x.data),
 				})),
 			].flat();

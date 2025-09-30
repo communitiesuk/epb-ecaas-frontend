@@ -341,6 +341,7 @@ describe("dwelling fabric mapper", () => {
 		const partyWall: EcaasForm<PartyWallData> = {
 			...baseForm,
 			data: {
+				id: "9a6b8c45-08b1-4bb1-b454-340fd7267696",
 				name: "Party wall 1",
 				pitchOption: "90",
 				pitch: 90,
@@ -354,6 +355,7 @@ describe("dwelling fabric mapper", () => {
 		const wallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData> = {
 			...baseForm,
 			data: {
+				id: "e527893a-480b-42d6-abe4-585e09d9c219",
 				name: "Wall to unheated space 1",
 				surfaceAreaOfElement: 500,
 				uValue: 10,
