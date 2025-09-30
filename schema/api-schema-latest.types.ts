@@ -48,6 +48,47 @@ export interface components {
 			/** @constant */
 			grid_charging_possible: false;
 		};
+		HotWaterTankCommon: {
+			/** @enum {unknown} */
+			type: HotWaterTankCommonType;
+			volume: number;
+			init_temp?: number;
+			daily_losses: number;
+			primary_pipework?: {
+				/** @enum {unknown} */
+				location: HotWaterTankCommonPrimary_pipeworkLocation;
+				internal_diameter_mm: number;
+				external_diameter_mm: number;
+				length: number;
+				insulation_thermal_conductivity: number;
+				insulation_thickness_mm: number;
+				surface_reflectivity: boolean;
+				/** @enum {unknown} */
+				pipe_contents: HotWaterTankCommonPrimary_pipeworkPipe_contents;
+			}[];
+			HeatSource: {
+				[key: string]: {
+					/** @enum {unknown} */
+					type: HotWaterTankCommonHeatSourceType;
+					name?: string;
+					Controlmin?: string;
+					Controlmax?: string;
+					heater_position: number;
+					thermostat_position: number;
+				} & (unknown & unknown & unknown & unknown);
+			};
+			if?: {
+				HeatSource?: {
+					[key: string]: {
+						/** @constant */
+						type?: "HeatPump_HWOnly";
+					};
+				};
+			};
+			then?: {
+				heat_exchanger_surface_area: number;
+			};
+		};
 		EnergySupplyGas: {
 			/** @enum {unknown} */
 			fuel: EnergySupplyGasFuel;
@@ -81,6 +122,47 @@ export interface components {
 			factor?: {
 				is_export_capable: boolean;
 			};
+		};
+		StorageTank: components["schemas"]["HotWaterTankCommon"] & {
+			/** @constant */
+			type: "StorageTank";
+		};
+		SmartHotWaterTank: components["schemas"]["HotWaterTankCommon"] & {
+			/** @constant */
+			type?: "SmartHotWaterTank";
+			EnergySupply_pump: string;
+			max_flow_rate_pump_l_per_min: number;
+			power_pump_kW: number;
+			temp_setpnt_max: string;
+			temp_usable: number;
+		};
+		PointOfUse: {
+			/** @constant */
+			type: "PointOfUse";
+			efficiency: number;
+			EnergySupply: string;
+		};
+		CombiBoiler: {
+			/** @constant */
+			type: "CombiBoiler";
+			HeatSourceWet: string;
+			Control: string;
+			/** @enum {unknown} */
+			separate_DHW_tests: CombiBoilerSeparate_DHW_tests;
+			rejected_energy_1: number;
+			rejected_factor_3: number;
+			storage_loss_factor_2: number;
+			daily_HW_usage: number;
+		};
+		HeatBattery: {
+			/** @constant */
+			type: "HeatBattery";
+			HeatSourceWet: string;
+			/**
+             * Setpoint Temp
+             * @description Temperature setpoint for the heat battery hot water output (unit: ˚C)
+             */
+			setpoint_temp: number;
 		};
 		/**
          * MassDistributionClass
@@ -176,10 +258,8 @@ export interface components {
 			HotWaterSource: {
 				"hw cylinder"?: {
 					/** @enum {unknown} */
-					type?: Fhs_input_latestSchemaHotWaterSourceHwCylinderType;
-					/** @enum {unknown} */
 					ColdWaterSource?: Fhs_input_latestSchemaHotWaterSourceHwCylinderColdWaterSource;
-				} & (unknown & unknown & unknown & unknown & unknown);
+				} & (components["schemas"]["StorageTank"] | components["schemas"]["SmartHotWaterTank"] | components["schemas"]["PointOfUse"] | components["schemas"]["CombiBoiler"] | components["schemas"]["HeatBattery"]);
 			};
 			HeatSourceWet?: {
 				[key: string]: {
@@ -412,6 +492,88 @@ export interface components {
 						is_export_capable: boolean;
 					};
 				};
+				HotWaterTankCommon: {
+					/** @enum {unknown} */
+					type: Fhs_input_latestSchema$defsHotWaterTankCommonType;
+					volume: number;
+					init_temp?: number;
+					daily_losses: number;
+					primary_pipework?: {
+						/** @enum {unknown} */
+						location: Fhs_input_latestSchema$defsHotWaterTankCommonPrimary_pipeworkLocation;
+						internal_diameter_mm: number;
+						external_diameter_mm: number;
+						length: number;
+						insulation_thermal_conductivity: number;
+						insulation_thickness_mm: number;
+						surface_reflectivity: boolean;
+						/** @enum {unknown} */
+						pipe_contents: Fhs_input_latestSchema$defsHotWaterTankCommonPrimary_pipeworkPipe_contents;
+					}[];
+					HeatSource: {
+						[key: string]: {
+							/** @enum {unknown} */
+							type: Fhs_input_latestSchema$defsHotWaterTankCommonHeatSourceType;
+							name?: string;
+							Controlmin?: string;
+							Controlmax?: string;
+							heater_position: number;
+							thermostat_position: number;
+						} & (unknown & unknown & unknown & unknown);
+					};
+					if?: {
+						HeatSource?: {
+							[key: string]: {
+								/** @constant */
+								type?: "HeatPump_HWOnly";
+							};
+						};
+					};
+					then?: {
+						heat_exchanger_surface_area: number;
+					};
+				};
+				StorageTank: components["schemas"]["HotWaterTankCommon"] & {
+					/** @constant */
+					type: "StorageTank";
+				};
+				SmartHotWaterTank: components["schemas"]["HotWaterTankCommon"] & {
+					/** @constant */
+					type?: "SmartHotWaterTank";
+					EnergySupply_pump: string;
+					max_flow_rate_pump_l_per_min: number;
+					power_pump_kW: number;
+					temp_setpnt_max: string;
+					temp_usable: number;
+				};
+				PointOfUse: {
+					/** @constant */
+					type: "PointOfUse";
+					efficiency: number;
+					EnergySupply: string;
+				};
+				CombiBoiler: {
+					/** @constant */
+					type: "CombiBoiler";
+					HeatSourceWet: string;
+					Control: string;
+					/** @enum {unknown} */
+					separate_DHW_tests: Fhs_input_latestSchema$defsCombiBoilerSeparate_DHW_tests;
+					rejected_energy_1: number;
+					rejected_factor_3: number;
+					storage_loss_factor_2: number;
+					daily_HW_usage: number;
+				};
+				HeatBattery: {
+					/** @constant */
+					type: "HeatBattery";
+					HeatSourceWet: string;
+					/**
+                     * Setpoint Temp
+                     * @description Temperature setpoint for the heat battery hot water output (unit: ˚C)
+                     */
+					setpoint_temp: number;
+				};
 			};
 		};
 	};
@@ -424,10 +586,16 @@ export interface components {
 export type SchemaElectricBatteryCommon = components["schemas"]["ElectricBatteryCommon"];
 export type SchemaElectricBatteryGridCharging = components["schemas"]["ElectricBatteryGridCharging"];
 export type SchemaElectricBatteryNoGridCharging = components["schemas"]["ElectricBatteryNoGridCharging"];
+export type SchemaHotWaterTankCommon = components["schemas"]["HotWaterTankCommon"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
 export type SchemaEnergySupplyCustom = components["schemas"]["EnergySupplyCustom"];
 export type SchemaEnergySupplyOther = components["schemas"]["EnergySupplyOther"];
+export type SchemaStorageTank = components["schemas"]["StorageTank"];
+export type SchemaSmartHotWaterTank = components["schemas"]["SmartHotWaterTank"];
+export type SchemaPointOfUse = components["schemas"]["PointOfUse"];
+export type SchemaCombiBoiler = components["schemas"]["CombiBoiler"];
+export type SchemaHeatBattery = components["schemas"]["HeatBattery"];
 export type SchemaMassDistributionClass = components["schemas"]["MassDistributionClass"];
 export type SchemaFhsInputLatestSchema = components["schemas"]["fhs_input_latest.schema"];
 export type $defs = Record<string, never>;
@@ -451,6 +619,26 @@ export enum ElectricBatteryCommonBattery_location {
 	inside = "inside",
 	outside = "outside",
 }
+export enum HotWaterTankCommonType {
+	SmartHotWaterTank = "SmartHotWaterTank",
+	StorageTank = "StorageTank",
+}
+export enum HotWaterTankCommonPrimary_pipeworkLocation {
+	internal = "internal",
+	external = "external",
+}
+export enum HotWaterTankCommonPrimary_pipeworkPipe_contents {
+	air = "air",
+	water = "water",
+	glycol25 = "glycol25",
+}
+export enum HotWaterTankCommonHeatSourceType {
+	ImmersionHeater = "ImmersionHeater",
+	SolarThermalSystem = "SolarThermalSystem",
+	HeatSourceWet = "HeatSourceWet",
+	HeatPump_HWOnly = "HeatPump_HWOnly",
+	Boiler = "Boiler",
+}
 export enum EnergySupplyGasFuel {
 	mains_gas = "mains_gas",
 	gas = "gas",
@@ -464,6 +652,12 @@ export enum EnergySupplyOtherFuel {
 	wood = "wood",
 	oil = "oil",
 	coal = "coal",
+}
+export enum CombiBoilerSeparate_DHW_tests {
+	M_L = "M&L",
+	M_S = "M&S",
+	M_only = "M only",
+	no_additional_tests = "no additional tests",
 }
 export enum MassDistributionClass {
 	I_Mass_concentrated_at_internal_side = "I: Mass concentrated at internal side",
@@ -499,14 +693,6 @@ export enum Fhs_input_latestSchemaOnSiteGenerationShadingType {
 export enum Fhs_input_latestSchemaOnSiteGenerationInverter_type {
 	string_inverter = "string_inverter",
 	optimised_inverter = "optimised_inverter",
-}
-export enum Fhs_input_latestSchemaHotWaterSourceHwCylinderType {
-	StorageTank = "StorageTank",
-	SmartHotWaterTank = "SmartHotWaterTank",
-	CombiBoiler = "CombiBoiler",
-	PointOfUse = "PointOfUse",
-	HIU = "HIU",
-	HeatBattery = "HeatBattery",
 }
 export enum Fhs_input_latestSchemaHotWaterSourceHwCylinderColdWaterSource {
 	header_tank = "header tank",
@@ -632,6 +818,32 @@ export enum Fhs_input_latestSchema$defsEnergySupplyOtherFuel {
 	wood = "wood",
 	oil = "oil",
 	coal = "coal",
+}
+export enum Fhs_input_latestSchema$defsHotWaterTankCommonType {
+	SmartHotWaterTank = "SmartHotWaterTank",
+	StorageTank = "StorageTank",
+}
+export enum Fhs_input_latestSchema$defsHotWaterTankCommonPrimary_pipeworkLocation {
+	internal = "internal",
+	external = "external",
+}
+export enum Fhs_input_latestSchema$defsHotWaterTankCommonPrimary_pipeworkPipe_contents {
+	air = "air",
+	water = "water",
+	glycol25 = "glycol25",
+}
+export enum Fhs_input_latestSchema$defsHotWaterTankCommonHeatSourceType {
+	ImmersionHeater = "ImmersionHeater",
+	SolarThermalSystem = "SolarThermalSystem",
+	HeatSourceWet = "HeatSourceWet",
+	HeatPump_HWOnly = "HeatPump_HWOnly",
+	Boiler = "Boiler",
+}
+export enum Fhs_input_latestSchema$defsCombiBoilerSeparate_DHW_tests {
+	M_L = "M&L",
+	M_S = "M&S",
+	M_only = "M only",
+	no_additional_tests = "no additional tests",
 }
 export enum ApiPaths {
 	FHSCompliance = "/beta/future-homes-standard-compliance",
