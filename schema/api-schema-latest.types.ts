@@ -242,6 +242,39 @@ export interface components {
 			max_outdoor_temp: number;
 			min_flow_temp: number;
 		};
+		MechVentCommon: {
+			/** @enum {unknown} */
+			sup_air_flw_ctrl: "ODA" | "LOAD";
+			/** @enum {unknown} */
+			sup_air_temp_ctrl: "NO_CTRL" | "CONST" | "ODA_COMP" | "LOAD_COMP";
+			design_zone_cooling_covered_by_mech_vent?: number;
+			design_zone_heating_covered_by_mech_vent?: number;
+			EnergySupply: string;
+			design_outdoor_air_flow_rate: number;
+			/**
+             * Sfp In Use Factor
+             * @description Adjustment factor to be applied to SFP to account for e.g. type of ducting. Typical range 1 - 2.5
+             * @default 1
+             */
+			SFP_in_use_factor?: number;
+		};
+		MechVentMEVCommon: {
+			/** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+			mid_height_air_flow_path: number;
+			/** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+			orientation360: number;
+			/** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+			pitch: number;
+		} | {
+			position_exhaust: {
+				/** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+				mid_height_air_flow_path?: number;
+				/** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+				orientation360?: number;
+				/** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+				pitch?: number;
+			};
+		};
 		EnergySupplyGas: {
 			/** @enum {unknown} */
 			fuel: "mains_gas" | "gas";
@@ -500,6 +533,61 @@ export interface components {
 			};
 			Control?: string;
 		};
+		MechVentMVHR: components["schemas"]["MechVentCommon"] & {
+			/** @constant */
+			vent_type: "MVHR";
+			mvhr_eff: number;
+			/** @enum {unknown} */
+			mvhr_location: "inside" | "outside";
+			ductwork: {
+				/** @enum {unknown} */
+				cross_section_shape: "circular" | "rectangular";
+				internal_diameter_mm: number;
+				external_diameter_mm: number;
+				length: number;
+				insulation_thermal_conductivity: number;
+				insulation_thickness_mm: number;
+				reflective: boolean;
+				/** @enum {unknown} */
+				duct_type: "supply" | "extract" | "intake" | "exhaust";
+			}[];
+			position_intake: {
+				/** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+				mid_height_air_flow_path?: number;
+				/** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+				orientation360?: number;
+				/** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+				pitch?: number;
+			};
+			position_exhaust: {
+				/** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+				mid_height_air_flow_path?: number;
+				/** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+				orientation360?: number;
+				/** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+				pitch?: number;
+			};
+			measured_fan_power: number;
+			measured_air_flow_rate: number;
+		};
+		MechVentDecentralisedContinuousMEV: components["schemas"]["MechVentCommon"] & components["schemas"]["MechVentMEVCommon"] & {
+			/** @constant */
+			vent_type: "Decentralised continuous MEV";
+			/** @description Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s) */
+			SFP: number;
+		};
+		MechVentIntermittentMEV: components["schemas"]["MechVentCommon"] & components["schemas"]["MechVentMEVCommon"] & {
+			/** @constant */
+			vent_type: "Intermittent MEV";
+			/** @description Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s) */
+			SFP: number;
+		};
+		MechVentCentralisedContinuousMEV: components["schemas"]["MechVentCommon"] & components["schemas"]["MechVentMEVCommon"] & {
+			/** @constant */
+			vent_type: "Centralised continuous MEV";
+			measured_fan_power: number;
+			measured_air_flow_rate: number;
+		};
 		/**
          * MassDistributionClass
          * @enum {string}
@@ -699,24 +787,7 @@ export interface components {
 					env_area: number;
 				};
 				MechanicalVentilation?: {
-					[key: string]: {
-						/** @enum {unknown} */
-						sup_air_flw_ctrl: "ODA" | "LOAD";
-						/** @enum {unknown} */
-						sup_air_temp_ctrl: "NO_CTRL" | "CONST" | "ODA_COMP" | "LOAD_COMP";
-						design_zone_cooling_covered_by_mech_vent?: number;
-						design_zone_heating_covered_by_mech_vent?: number;
-						/** @enum {unknown} */
-						vent_type: "Decentralised continuous MEV" | "Centralised continuous MEV" | "MVHR" | "Intermittent MEV";
-						EnergySupply: string;
-						design_outdoor_air_flow_rate: number;
-						/**
-                         * Sfp In Use Factor
-                         * @description Adjustment factor to be applied to SFP to account for e.g. type of ducting. Typical range 1 - 2.5
-                         * @default 1
-                         */
-						SFP_in_use_factor?: number;
-					} & (unknown & unknown & unknown);
+					[key: string]: components["schemas"]["MechVentMVHR"] | components["schemas"]["MechVentDecentralisedContinuousMEV"] | components["schemas"]["MechVentIntermittentMEV"] | components["schemas"]["MechVentCentralisedContinuousMEV"];
 				};
 				PDUs?: Record<string, never>;
 				Cowls?: Record<string, never>;
@@ -1239,6 +1310,94 @@ export interface components {
 					max_outdoor_temp: number;
 					min_flow_temp: number;
 				};
+				MechVentCommon: {
+					/** @enum {unknown} */
+					sup_air_flw_ctrl: "ODA" | "LOAD";
+					/** @enum {unknown} */
+					sup_air_temp_ctrl: "NO_CTRL" | "CONST" | "ODA_COMP" | "LOAD_COMP";
+					design_zone_cooling_covered_by_mech_vent?: number;
+					design_zone_heating_covered_by_mech_vent?: number;
+					EnergySupply: string;
+					design_outdoor_air_flow_rate: number;
+					/**
+                     * Sfp In Use Factor
+                     * @description Adjustment factor to be applied to SFP to account for e.g. type of ducting. Typical range 1 - 2.5
+                     * @default 1
+                     */
+					SFP_in_use_factor?: number;
+				};
+				MechVentMVHR: components["schemas"]["MechVentCommon"] & {
+					/** @constant */
+					vent_type: "MVHR";
+					mvhr_eff: number;
+					/** @enum {unknown} */
+					mvhr_location: "inside" | "outside";
+					ductwork: {
+						/** @enum {unknown} */
+						cross_section_shape: "circular" | "rectangular";
+						internal_diameter_mm: number;
+						external_diameter_mm: number;
+						length: number;
+						insulation_thermal_conductivity: number;
+						insulation_thickness_mm: number;
+						reflective: boolean;
+						/** @enum {unknown} */
+						duct_type: "supply" | "extract" | "intake" | "exhaust";
+					}[];
+					position_intake: {
+						/** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+						mid_height_air_flow_path?: number;
+						/** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+						orientation360?: number;
+						/** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+						pitch?: number;
+					};
+					position_exhaust: {
+						/** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+						mid_height_air_flow_path?: number;
+						/** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+						orientation360?: number;
+						/** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+						pitch?: number;
+					};
+					measured_fan_power: number;
+					measured_air_flow_rate: number;
+				};
+				MechVentMEVCommon: {
+					/** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+					mid_height_air_flow_path: number;
+					/** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+					orientation360: number;
+					/** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+					pitch: number;
+				} | {
+					position_exhaust: {
+						/** @description Mid height of air flow path relative to ventilation zone (unit: m) */
+						mid_height_air_flow_path?: number;
+						/** @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚) */
+						orientation360?: number;
+						/** @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚) */
+						pitch?: number;
+					};
+				};
+				MechVentDecentralisedContinuousMEV: components["schemas"]["MechVentCommon"] & components["schemas"]["MechVentMEVCommon"] & {
+					/** @constant */
+					vent_type: "Decentralised continuous MEV";
+					/** @description Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s) */
+					SFP: number;
+				};
+				MechVentIntermittentMEV: components["schemas"]["MechVentCommon"] & components["schemas"]["MechVentMEVCommon"] & {
+					/** @constant */
+					vent_type: "Intermittent MEV";
+					/** @description Specific fan power, assumed inclusive of any in use factors unless SFP_in_use_factor also provided (unit: W/l/s) */
+					SFP: number;
+				};
+				MechVentCentralisedContinuousMEV: components["schemas"]["MechVentCommon"] & components["schemas"]["MechVentMEVCommon"] & {
+					/** @constant */
+					vent_type: "Centralised continuous MEV";
+					measured_fan_power: number;
+					measured_air_flow_rate: number;
+				};
 			};
 		};
 	};
@@ -1267,6 +1426,8 @@ export type SchemaUfh = components["schemas"]["Ufh"];
 export type SchemaFancoil = components["schemas"]["Fancoil"];
 export type SchemaEcoDesignControllerNoWeatherCompensator = components["schemas"]["EcoDesignControllerNoWeatherCompensator"];
 export type SchemaEcoDesignControllerWeatherCompensator = components["schemas"]["EcoDesignControllerWeatherCompensator"];
+export type SchemaMechVentCommon = components["schemas"]["MechVentCommon"];
+export type SchemaMechVentMevCommon = components["schemas"]["MechVentMEVCommon"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
 export type SchemaEnergySupplyCustom = components["schemas"]["EnergySupplyCustom"];
@@ -1286,6 +1447,10 @@ export type SchemaElecStorageHeater = components["schemas"]["ElecStorageHeater"]
 export type SchemaInstantElecHeater = components["schemas"]["InstantElecHeater"];
 export type SchemaWetDistribution = components["schemas"]["WetDistribution"];
 export type SchemaWarmAir = components["schemas"]["WarmAir"];
+export type SchemaMechVentMvhr = components["schemas"]["MechVentMVHR"];
+export type SchemaMechVentDecentralisedContinuousMev = components["schemas"]["MechVentDecentralisedContinuousMEV"];
+export type SchemaMechVentIntermittentMev = components["schemas"]["MechVentIntermittentMEV"];
+export type SchemaMechVentCentralisedContinuousMev = components["schemas"]["MechVentCentralisedContinuousMEV"];
 export type SchemaMassDistributionClass = components["schemas"]["MassDistributionClass"];
 export type SchemaFhsInputLatestSchema = components["schemas"]["fhs_input_latest.schema"];
 export type $defs = Record<string, never>;
