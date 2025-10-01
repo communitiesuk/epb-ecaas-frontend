@@ -54,11 +54,16 @@ const ductworkSummary: SummarySection = {
 };
 
 const ventData = store.infiltrationAndVentilation.vents.data;
+const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+const { dwellingSpaceWindows } = store.dwellingFabric;
 const ventSummary: SummarySection = {
 	id: "vents",
 	label: "Vents",
 	data: ventData.map(x => {
-		const associatedWallRoofWindow = store.getAssociatedWallRoofWindow(x.data.associatedWallRoofWindowId!);
+
+		const taggedItems = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceWindows]);
+		const taggedItem = taggedItems(x.data.associatedWallRoofWindowId!);
 
 		return {
 			"Name": x.data.name,
@@ -66,8 +71,8 @@ const ventSummary: SummarySection = {
 			"Effective ventilation area": `${x.data.effectiveVentilationArea} ${centimetresSquare.suffix}`,
 			"Vent opening ratio": x.data.openingRatio,
 			"Mid height of zone": `${x.data.midHeightOfZone} ${metre.suffix}`,
-			"Orientation": associatedWallRoofWindow?.orientation !== undefined ? `${associatedWallRoofWindow?.orientation} ${degrees.suffix}` : "-",
-			"Pitch": associatedWallRoofWindow?.pitch !== undefined ? `${associatedWallRoofWindow?.pitch} ${degrees.suffix}` : "-",
+			"Orientation": "orientation" in taggedItem! ? `${taggedItem?.orientation} ${degrees.suffix}` : "-", // update with login in main when item has no orientation - this will apply to other summary pages which tag roofs
+			"Pitch": taggedItem?.pitch !== undefined ? `${taggedItem?.pitch} ${degrees.suffix}` : "-",  
 		};
 	}),
 	editUrl: getUrl("vents"),
@@ -143,7 +148,7 @@ const summarySections: SummarySection[] = [
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
-				
+
 		<SummaryTab :summary="mechanicalVentilationSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No mechanical ventilation added</h2>

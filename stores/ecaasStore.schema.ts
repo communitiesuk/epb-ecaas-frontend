@@ -978,7 +978,7 @@ export type CorrectedJsonApiError = {
 	meta?: SchemaJsonApiOnePointOneMeta;
 };
 
-export interface AssociatedWallRoofCeilingWindow {
+export interface TaggedItemValues {
 	id: string;
 	pitch?: number;
 	orientation?: number;

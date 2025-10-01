@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import type { AssociatedWallRoofCeilingWindow, EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
 import { PageType  } from "~/data/pages/pages.types";
@@ -144,76 +143,16 @@ export const useEcaasStore = defineStore("ecaas", {
 				return formStatus.notStarted;
 			};
 		},
-		getAssociatedWallRoofCeiling: (state) => {
-			const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
-			const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+		getTaggedItem: () =>
+			<T extends Record<string, unknown>>(sections: EcaasFormList<Partial<T>>[]) => {
+				let items = [];
 
-			const wallsRoofsCeilings: AssociatedWallRoofCeilingWindow[] = [
-				dwellingSpaceExternalWall.data.map(x => ({
-					id: x.data.id,
-					pitch: extractPitch(x.data),
-					orientation: x.data.orientation,
-				})),
-				dwellingSpaceRoofs.data.map(x => ({
-					id: x.data.id!,
-					pitch: x.data.pitchOption === undefined || x.data.pitchOption === "custom" ? x.data.pitch : Number(x.data.pitchOption),
-					orientation: x.data.orientation!,
-				})),
-			].flat();
-
-			return (id: string) => wallsRoofsCeilings.find(e => e.id === id);
-		},
-		getAssociatedWallRoofWindow: (state) => {
-			const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
-			const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-			const { dwellingSpaceWindows } = state.dwellingFabric;
-
-			const wallsRoofsWindows: AssociatedWallRoofCeilingWindow[] = [ //update type
-				dwellingSpaceExternalWall.data.map(x => ({
-					id: x.data.id,
-					pitch: extractPitch(x.data),
-					orientation: x.data.orientation,
-				})),
-				dwellingSpaceRoofs.data.map(x => ({
-					id: x.data.id!,
-					pitch: x.data.pitchOption === undefined || x.data.pitchOption === "custom" ? x.data.pitch : Number(x.data.pitchOption),
-					orientation: x.data.orientation!,
-				})),
-				dwellingSpaceWindows.data.map(x => (
-					{
-						id: x.data.id!,
-						pitch: extractPitch(x.data),
-						orientation: x.data.orientation,
-					})),
-			].flat();
-
-			return (id: string) => wallsRoofsWindows.find(e => e.id === id);
-		},
-		getAssociatedHeatedSpaceElement: (state) => {
-			const { dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace } = state.dwellingFabric.dwellingSpaceWalls;
-			const { dwellingSpaceCeilings } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-
-			const heatedSpaceElements: AssociatedWallRoofCeilingWindow[] = [
-				dwellingSpaceInternalWall.data.map(x => ({
-					id: x.data.id,
-					pitch: extractPitch(x.data),
-				})),
-				dwellingSpaceCeilings.data.map(x => ({
-					id: x.data.id!,
-					pitch: extractPitch(x.data),
-				})),
-				dwellingSpacePartyWall.data.map(x => ({
-					id: x.data.id,
-					pitch: extractPitch(x.data),
-				})),
-				dwellingSpaceWallToUnheatedSpace.data.map(x => ({
-					id: x.data.id,
-					pitch: extractPitch(x.data),
-				})),
-			].flat();
-
-			return (id: string) => heatedSpaceElements.find(e => e.id === id);
-		},
+				for (const section of sections) {
+					items.push(extractSectionItems(section));
+				}
+				items = items.flat();
+				return (id: string) => items.find((item) => item.id === id);
+			},
 	},
 	actions: {
 		async postEcaasState (){
