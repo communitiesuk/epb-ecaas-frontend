@@ -3966,6 +3966,7 @@
                 },
                 {
                     "required": [
+                        "type",
                         "EnergySupply_pump",
                         "max_flow_rate_pump_l_per_min",
                         "power_pump_kW",

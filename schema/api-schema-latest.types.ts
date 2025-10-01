@@ -167,7 +167,7 @@ export interface components {
 		};
 		SmartHotWaterTank: components["schemas"]["HotWaterTankCommon"] & {
 			/** @constant */
-			type?: "SmartHotWaterTank";
+			type: "SmartHotWaterTank";
 			EnergySupply_pump: string;
 			max_flow_rate_pump_l_per_min: number;
 			power_pump_kW: number;
@@ -615,7 +615,7 @@ export interface components {
 				};
 				SmartHotWaterTank: components["schemas"]["HotWaterTankCommon"] & {
 					/** @constant */
-					type?: "SmartHotWaterTank";
+					type: "SmartHotWaterTank";
 					EnergySupply_pump: string;
 					max_flow_rate_pump_l_per_min: number;
 					power_pump_kW: number;
