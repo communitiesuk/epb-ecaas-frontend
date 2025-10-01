@@ -228,6 +228,20 @@ export interface components {
 				fan_power_W: number[];
 			};
 		};
+		EcoDesignControllerNoWeatherCompensator: {
+			/** @enum {unknown} */
+			ecodesign_control_class: 1 | 4 | 5 | 8;
+			min_outdoor_temp?: number;
+			max_outdoor_temp?: number;
+			min_flow_temp?: number;
+		};
+		EcoDesignControllerWeatherCompensator: {
+			/** @enum {unknown} */
+			ecodesign_control_class: 2 | 3 | 6 | 7;
+			min_outdoor_temp: number;
+			max_outdoor_temp: number;
+			min_flow_temp: number;
+		};
 		EnergySupplyGas: {
 			/** @enum {unknown} */
 			fuel: "mains_gas" | "gas";
@@ -435,19 +449,13 @@ export interface components {
 				frac_convective: number;
 			} & (components["schemas"]["Radiator"] | components["schemas"]["Ufh"] | components["schemas"]["Fancoil"]))[];
 			temp_diff_emit_dsgn: number;
-			variable_flow: boolean;
 			bypass_percentage_recirculated?: number;
 			HeatSource: {
 				name: string;
 				temp_flow_limit_upper?: number;
 			};
 			Control?: string;
-			ecodesign_controller: {
-				ecodesign_control_class: number;
-				min_outdoor_temp?: number;
-				max_outdoor_temp?: number;
-				min_flow_temp?: number;
-			};
+			ecodesign_controller: components["schemas"]["EcoDesignControllerNoWeatherCompensator"] | components["schemas"]["EcoDesignControllerWeatherCompensator"];
 			design_flow_temp: number;
 			Zone: string;
 			pipework: {
@@ -469,7 +477,18 @@ export interface components {
 				pipe_contents?: "water" | "glycol25";
 				surface_reflectivity?: boolean;
 			}[];
-		} & (unknown & unknown & unknown);
+			/** @description thermal_mass is required when the emitters include radiators */
+			thermal_mass?: number;
+		} & ({
+			/** @constant */
+			variable_flow: true;
+			min_flow_rate: number;
+			max_flow_rate: number;
+		} | {
+			/** @constant */
+			variable_flow: false;
+			design_flow_rate: number;
+		});
 		WarmAir: {
 			/** @constant */
 			type: "WarmAir";
@@ -1125,19 +1144,13 @@ export interface components {
 						frac_convective: number;
 					} & (components["schemas"]["Radiator"] | components["schemas"]["Ufh"] | components["schemas"]["Fancoil"]))[];
 					temp_diff_emit_dsgn: number;
-					variable_flow: boolean;
 					bypass_percentage_recirculated?: number;
 					HeatSource: {
 						name: string;
 						temp_flow_limit_upper?: number;
 					};
 					Control?: string;
-					ecodesign_controller: {
-						ecodesign_control_class: number;
-						min_outdoor_temp?: number;
-						max_outdoor_temp?: number;
-						min_flow_temp?: number;
-					};
+					ecodesign_controller: components["schemas"]["EcoDesignControllerNoWeatherCompensator"] | components["schemas"]["EcoDesignControllerWeatherCompensator"];
 					design_flow_temp: number;
 					Zone: string;
 					pipework: {
@@ -1159,7 +1172,18 @@ export interface components {
 						pipe_contents?: "water" | "glycol25";
 						surface_reflectivity?: boolean;
 					}[];
-				} & (unknown & unknown & unknown);
+					/** @description thermal_mass is required when the emitters include radiators */
+					thermal_mass?: number;
+				} & ({
+					/** @constant */
+					variable_flow: true;
+					min_flow_rate: number;
+					max_flow_rate: number;
+				} | {
+					/** @constant */
+					variable_flow: false;
+					design_flow_rate: number;
+				});
 				WarmAir: {
 					/** @constant */
 					type: "WarmAir";
@@ -1196,6 +1220,20 @@ export interface components {
 						fan_power_W: number[];
 					};
 				};
+				EcoDesignControllerNoWeatherCompensator: {
+					/** @enum {unknown} */
+					ecodesign_control_class: 1 | 4 | 5 | 8;
+					min_outdoor_temp?: number;
+					max_outdoor_temp?: number;
+					min_flow_temp?: number;
+				};
+				EcoDesignControllerWeatherCompensator: {
+					/** @enum {unknown} */
+					ecodesign_control_class: 2 | 3 | 6 | 7;
+					min_outdoor_temp: number;
+					max_outdoor_temp: number;
+					min_flow_temp: number;
+				};
 			};
 		};
 	};
@@ -1222,6 +1260,8 @@ export type SchemaShowerCommon = components["schemas"]["ShowerCommon"];
 export type SchemaRadiator = components["schemas"]["Radiator"];
 export type SchemaUfh = components["schemas"]["Ufh"];
 export type SchemaFancoil = components["schemas"]["Fancoil"];
+export type SchemaEcoDesignControllerNoWeatherCompensator = components["schemas"]["EcoDesignControllerNoWeatherCompensator"];
+export type SchemaEcoDesignControllerWeatherCompensator = components["schemas"]["EcoDesignControllerWeatherCompensator"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
 export type SchemaEnergySupplyCustom = components["schemas"]["EnergySupplyCustom"];

@@ -3700,7 +3700,6 @@
                 "type",
                 "emitters",
                 "temp_diff_emit_dsgn",
-                "variable_flow",
                 "HeatSource",
                 "ecodesign_controller",
                 "design_flow_temp",
@@ -3744,9 +3743,6 @@
                     "type": "number",
                     "maximum": 70
                 },
-                "variable_flow": {
-                    "type": "boolean"
-                },
                 "bypass_percentage_recirculated": {
                     "type": "number",
                     "minimum": 0,
@@ -3771,33 +3767,14 @@
                     "type": "string"
                 },
                 "ecodesign_controller": {
-                    "type": "object",
-                    "unevaluatedProperties": false,
-                    "required": [
-                        "ecodesign_control_class"
-                    ],
-                    "properties": {
-                        "ecodesign_control_class": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 8
+                    "oneOf": [
+                        {
+                            "$ref": "#/$defs/EcoDesignControllerNoWeatherCompensator"
                         },
-                        "min_outdoor_temp": {
-                            "type": "integer",
-                            "minimum": -60,
-                            "maximum": 30
-                        },
-                        "max_outdoor_temp": {
-                            "type": "integer",
-                            "minimum": 10,
-                            "maximum": 50
-                        },
-                        "min_flow_temp": {
-                            "type": "integer",
-                            "minimum": 20,
-                            "maximum": 120
+                        {
+                            "$ref": "#/$defs/EcoDesignControllerWeatherCompensator"
                         }
-                    }
+                    ]
                 },
                 "design_flow_temp": {
                     "type": "integer",
@@ -3855,107 +3832,42 @@
                             }
                         }
                     }
+                },
+                "thermal_mass": {
+                    "type": "number",
+                    "description": "thermal_mass is required when the emitters include radiators"
                 }
             },
-            "allOf": [
+            "oneOf": [
                 {
-                    "if": {
-                        "oneOf": [
-                            {
-                                "properties": {
-                                    "ecodesign_control_class": {
-                                        "const": 2
-                                    }
-                                }
-                            },
-                            {
-                                "properties": {
-                                    "ecodesign_control_class": {
-                                        "const": 3
-                                    }
-                                }
-                            },
-                            {
-                                "properties": {
-                                    "ecodesign_control_class": {
-                                        "const": 6
-                                    }
-                                }
-                            },
-                            {
-                                "properties": {
-                                    "ecodesign_control_class": {
-                                        "const": 7
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    "then": {
-                        "required": [
-                            "min_outdoor_temp",
-                            "max_outdoor_temp",
-                            "min_flow_temp"
-                        ]
-                    }
-                },
-                {
-                    "if": {
-                        "properties": {
-                            "variable_flow": {
-                                "const": true
-                            }
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "min_flow_rate",
-                            "max_flow_rate"
-                        ],
-                        "properties": {
-                            "min_flow_rate": {
-                                "type": "number"
-                            },
-                            "max_flow_rate": {
-                                "type": "number"
-                            }
-                        }
-                    },
-                    "else": {
-                        "required": [
-                            "design_flow_rate"
-                        ],
-                        "properties": {
-                            "design_flow_rate": {
-                                "type": "number"
-                            }
+                    "required": [
+                        "variable_flow",
+                        "min_flow_rate",
+                        "max_flow_rate"
+                    ],
+                    "properties": {
+                        "variable_flow": {
+                            "const": true
+                        },
+                        "min_flow_rate": {
+                            "type": "number"
+                        },
+                        "max_flow_rate": {
+                            "type": "number"
                         }
                     }
                 },
                 {
-                    "if": {
-                        "properties": {
-                            "emitters": {
-                                "type": "array",
-                                "contains": {
-                                    "type": "object",
-                                    "properties": {
-                                        "wet_emitter_type": {
-                                            "const": "radiator"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "thermal_mass"
-                        ],
-                        "properties": {
-                            "thermal_mass": {
-                                "type": "number"
-                            }
+                    "required": [
+                        "variable_flow",
+                        "design_flow_rate"
+                    ],
+                    "properties": {
+                        "variable_flow": {
+                            "const": false
+                        },
+                        "design_flow_rate": {
+                            "type": "number"
                         }
                     }
                 }
@@ -4101,6 +4013,73 @@
                             }
                         }
                     }
+                }
+            }
+        },
+        "EcoDesignControllerNoWeatherCompensator": {
+            "type": "object",
+            "unevaluatedProperties": false,
+            "required": [
+                "ecodesign_control_class"
+            ],
+            "properties": {
+                "ecodesign_control_class": {
+                    "enum": [
+                        1,
+                        4,
+                        5,
+                        8
+                    ]
+                },
+                "min_outdoor_temp": {
+                    "type": "integer",
+                    "minimum": -60,
+                    "maximum": 30
+                },
+                "max_outdoor_temp": {
+                    "type": "integer",
+                    "minimum": 10,
+                    "maximum": 50
+                },
+                "min_flow_temp": {
+                    "type": "integer",
+                    "minimum": 20,
+                    "maximum": 120
+                }
+            }
+        },
+        "EcoDesignControllerWeatherCompensator": {
+            "type": "object",
+            "unevaluatedProperties": false,
+            "required": [
+                "ecodesign_control_class",
+                "min_outdoor_temp",
+                "max_outdoor_temp",
+                "min_flow_temp"
+            ],
+            "properties": {
+                "ecodesign_control_class": {
+                    "enum": [
+                        2,
+                        3,
+                        6,
+                        7
+                    ]
+                },
+                "min_outdoor_temp": {
+                    "type": "integer",
+                    "minimum": -60,
+                    "maximum": 30
+                },
+                "max_outdoor_temp": {
+                    "type": "integer",
+                    "minimum": 10,
+                    "maximum": 50
+                },
+                "min_flow_temp": {
+                    "type": "integer",
+                    "minimum": 20,
+                    "maximum": 120
                 }
             }
         }
