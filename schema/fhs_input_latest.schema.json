@@ -633,601 +633,18 @@
             "additionalProperties": {
                 "type": "object",
                 "unevaluatedProperties": false,
-                "required": [
-                    "type"
-                ],
-                "properties": {
-                    "type": {
-                        "enum": [
-                            "ElecStorageHeater",
-                            "InstantElecHeater",
-                            "WetDistribution",
-                            "WarmAir"
-                        ]
-                    }
-                },
-                "allOf": [
+                "oneOf": [
                     {
-                        "if": {
-                            "properties": {
-                                "type": {
-                                    "const": "ElecStorageHeater"
-                                }
-                            }
-                        },
-                        "then": {
-                            "required": [
-                                "pwr_in",
-                                "rated_power_instant",
-                                "storage_capacity",
-                                "air_flow_type",
-                                "frac_convective",
-                                "n_units",
-                                "EnergySupply",
-                                "ControlCharger",
-                                "Zone",
-                                "ESH_min_output",
-                                "ESH_max_output",
-                                "state_of_charge_init"
-                            ],
-                            "properties": {
-                                "pwr_in": {
-                                    "type": "number",
-                                    "minimum": 0.1,
-                                    "maximum": 70
-                                },
-                                "rated_power_instant": {
-                                    "type": "number",
-                                    "minimum": 0.1,
-                                    "maximum": 70
-                                },
-                                "storage_capacity": {
-                                    "type": "number",
-                                    "minimum": 0
-                                },
-                                "air_flow_type": {
-                                    "enum": [
-                                        "fan-assisted",
-                                        "damper-only"
-                                    ]
-                                },
-                                "frac_convective": {
-                                    "type": "number",
-                                    "minimum": 0
-                                },
-                                "n_units": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 100
-                                },
-                                "EnergySupply": {
-                                    "type": "string"
-                                },
-                                "Control": {
-                                    "type": "string"
-                                },
-                                "ControlCharger": {
-                                    "type": "string"
-                                },
-                                "Zone": {
-                                    "type": "string"
-                                },
-                                "ESH_min_output": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "number"
-                                        }
-                                    }
-                                },
-                                "ESH_max_output": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "number"
-                                        }
-                                    }
-                                },
-                                "state_of_charge_init": {
-                                    "description": "State of charge at initialisation of dry core heat storage (ratio)",
-                                    "maximum": 1.0,
-                                    "minimum": 0.0,
-                                    "title": "State Of Charge Init",
-                                    "type": "number"
-                                }
-                            },
-                            "if": {
-                                "properties": {
-                                    "air_flow_type": {
-                                        "const": "fan-assisted"
-                                    }
-                                }
-                            },
-                            "then": {
-                                "required": [
-                                    "fan_pwr"
-                                ],
-                                "properties": {
-                                    "fan_pwr": {
-                                        "type": "number",
-                                        "minimum": 0
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/$defs/ElecStorageHeater"
                     },
                     {
-                        "if": {
-                            "properties": {
-                                "type": {
-                                    "const": "InstantElecHeater"
-                                }
-                            }
-                        },
-                        "then": {
-                            "required": [
-                                "rated_power",
-                                "convective_type",
-                                "EnergySupply"
-                            ],
-                            "properties": {
-                                "rated_power": {
-                                    "type": "number",
-                                    "minimum": 0.1,
-                                    "maximum": 70
-                                },
-                                "convective_type": {
-                                    "enum": [
-                                        "Air heating (convectors, fan coils etc.)",
-                                        "Free heating surface (radiators, radiant panels etc.)",
-                                        "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves",
-                                        "Wall heating, radiant ceiling panels, accumulation stoves",
-                                        "Ceiling heating, radiant ceiling electric heating"
-                                    ]
-                                },
-                                "EnergySupply": {
-                                    "type": "string"
-                                },
-                                "Control": {
-                                    "type": "string"
-                                }
-                            }
-                        }
+                        "$ref": "#/$defs/InstantElecHeater"
                     },
                     {
-                        "if": {
-                            "properties": {
-                                "type": {
-                                    "const": "WetDistribution"
-                                }
-                            }
-                        },
-                        "then": {
-                            "required": [
-                                "emitters",
-                                "temp_diff_emit_dsgn",
-                                "variable_flow",
-                                "HeatSource",
-                                "ecodesign_controller",
-                                "design_flow_temp",
-                                "Zone",
-                                "pipework"
-                            ],
-                            "properties": {
-                                "EnergySupply": {
-                                    "type": "string"
-                                },
-                                "emitters": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object",
-                                        "unevaluatedProperties": false,
-                                        "required": [
-                                            "wet_emitter_type",
-                                            "frac_convective"
-                                        ],
-                                        "properties": {
-                                            "wet_emitter_type": {
-                                                "enum": [
-                                                    "radiator",
-                                                    "ufh",
-                                                    "fancoil"
-                                                ]
-                                            },
-                                            "frac_convective": {
-                                                "type": "number"
-                                            }
-                                        },
-                                        "allOf": [
-                                            {
-                                                "if": {
-                                                    "properties": {
-                                                        "wet_emitter_type": {
-                                                            "const": "radiator"
-                                                        }
-                                                    }
-                                                },
-                                                "then": {
-                                                    "required": [
-                                                        "c",
-                                                        "n"
-                                                    ],
-                                                    "properties": {
-                                                        "c": {
-                                                            "type": "number",
-                                                            "minimum": 0,
-                                                            "maximum": 2
-                                                        },
-                                                        "n": {
-                                                            "type": "number",
-                                                            "minimum": 0,
-                                                            "maximum": 2
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "if": {
-                                                    "properties": {
-                                                        "wet_emitter_type": {
-                                                            "const": "ufh"
-                                                        }
-                                                    }
-                                                },
-                                                "then": {
-                                                    "required": [
-                                                        "equivalent_specific_thermal_mass",
-                                                        "system_performance_factor",
-                                                        "emitter_floor_area"
-                                                    ],
-                                                    "properties": {
-                                                        "equivalent_specific_thermal_mass": {
-                                                            "type": "number",
-                                                            "minimum": 0
-                                                        },
-                                                        "system_performance_factor": {
-                                                            "type": "number",
-                                                            "minimum": 0
-                                                        },
-                                                        "emitter_floor_area": {
-                                                            "type": "number",
-                                                            "minimum": 0
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "if": {
-                                                    "properties": {
-                                                        "wet_emitter_type": {
-                                                            "const": "fancoil"
-                                                        }
-                                                    }
-                                                },
-                                                "then": {
-                                                    "required": [
-                                                        "n_units",
-                                                        "fancoil_test_data"
-                                                    ],
-                                                    "properties": {
-                                                        "n_units": {
-                                                            "type": "integer",
-                                                            "minimum": 1
-                                                        },
-                                                        "fancoil_test_data": {
-                                                            "type": "object",
-                                                            "unevaluatedProperties": false,
-                                                            "required": [
-                                                                "fan_speed_data",
-                                                                "fan_power_W"
-                                                            ],
-                                                            "properties": {
-                                                                "fan_speed_data": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "type": "object",
-                                                                        "unevaluatedProperties": false,
-                                                                        "required": [
-                                                                            "temperature_diff",
-                                                                            "power_output"
-                                                                        ],
-                                                                        "properties": {
-                                                                            "temperature_diff": {
-                                                                                "type": "number"
-                                                                            },
-                                                                            "power_output": {
-                                                                                "type": "array",
-                                                                                "items": {
-                                                                                    "type": "number",
-                                                                                    "minimum": 0
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                },
-                                                                "fan_power_W": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "type": "number",
-                                                                        "minimum": 0
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                "temp_diff_emit_dsgn": {
-                                    "type": "number",
-                                    "maximum": 70
-                                },
-                                "variable_flow": {
-                                    "type": "boolean"
-                                },
-                                "bypass_percentage_recirculated": {
-                                    "type": "number",
-                                    "minimum": 0,
-                                    "maximum": 1
-                                },
-                                "HeatSource": {
-                                    "type": "object",
-                                    "unevaluatedProperties": false,
-                                    "required": [
-                                        "name"
-                                    ],
-                                    "properties": {
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "temp_flow_limit_upper": {
-                                            "type": "number"
-                                        }
-                                    }
-                                },
-                                "Control": {
-                                    "type": "string"
-                                },
-                                "ecodesign_controller": {
-                                    "type": "object",
-                                    "unevaluatedProperties": false,
-                                    "required": [
-                                        "ecodesign_control_class"
-                                    ],
-                                    "properties": {
-                                        "ecodesign_control_class": {
-                                            "type": "integer",
-                                            "minimum": 1,
-                                            "maximum": 8
-                                        },
-                                        "min_outdoor_temp": {
-                                            "type": "integer",
-                                            "minimum": -60,
-                                            "maximum": 30
-                                        },
-                                        "max_outdoor_temp": {
-                                            "type": "integer",
-                                            "minimum": 10,
-                                            "maximum": 50
-                                        },
-                                        "min_flow_temp": {
-                                            "type": "integer",
-                                            "minimum": 20,
-                                            "maximum": 120
-                                        }
-                                    }
-                                },
-                                "design_flow_temp": {
-                                    "type": "integer",
-                                    "minimum": 20,
-                                    "maximum": 120
-                                },
-                                "Zone": {
-                                    "type": "string"
-                                },
-                                "pipework": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object",
-                                        "additionalProperties": false,
-                                        "properties": {
-                                            "external_diameter_mm": {
-                                                "type": "number",
-                                                "exclusiveMinimum": 0
-                                            },
-                                            "insulation_thermal_conductivity": {
-                                                "type": "number",
-                                                "exclusiveMinimum": 0,
-                                                "description": "Thermal conductivity of the insulation (unit: W / m K)"
-                                            },
-                                            "insulation_thickness_mm": {
-                                                "type": "number",
-                                                "minimum": 0
-                                            },
-                                            "internal_diameter_mm": {
-                                                "type": "number",
-                                                "exclusiveMinimum": 0
-                                            },
-                                            "length": {
-                                                "type": "number",
-                                                "minimum": 0
-                                            },
-                                            "location": {
-                                                "type": "string",
-                                                "enum": [
-                                                    "internal",
-                                                    "external"
-                                                ],
-                                                "description": "Location of the pipework (internal or external)"
-                                            },
-                                            "pipe_contents": {
-                                                "type": "string",
-                                                "enum": [
-                                                    "water",
-                                                    "glycol25"
-                                                ],
-                                                "description": "Contents of the pipework (water or glycol25)"
-                                            },
-                                            "surface_reflectivity": {
-                                                "type": "boolean"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "allOf": [
-                                {
-                                    "if": {
-                                        "oneOf": [
-                                            {
-                                                "properties": {
-                                                    "ecodesign_control_class": {
-                                                        "const": 2
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "properties": {
-                                                    "ecodesign_control_class": {
-                                                        "const": 3
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "properties": {
-                                                    "ecodesign_control_class": {
-                                                        "const": 6
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "properties": {
-                                                    "ecodesign_control_class": {
-                                                        "const": 7
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    "then": {
-                                        "required": [
-                                            "min_outdoor_temp",
-                                            "max_outdoor_temp",
-                                            "min_flow_temp"
-                                        ]
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "variable_flow": {
-                                                "const": true
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "required": [
-                                            "min_flow_rate",
-                                            "max_flow_rate"
-                                        ],
-                                        "properties": {
-                                            "min_flow_rate": {
-                                                "type": "number"
-                                            },
-                                            "max_flow_rate": {
-                                                "type": "number"
-                                            }
-                                        }
-                                    },
-                                    "else": {
-                                        "required": [
-                                            "design_flow_rate"
-                                        ],
-                                        "properties": {
-                                            "design_flow_rate": {
-                                                "type": "number"
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    "if": {
-                                        "properties": {
-                                            "emitters": {
-                                                "type": "array",
-                                                "contains": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "wet_emitter_type": {
-                                                            "const": "radiator"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "required": [
-                                            "thermal_mass"
-                                        ],
-                                        "properties": {
-                                            "thermal_mass": {
-                                                "type": "number"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
+                        "$ref": "#/$defs/WetDistribution"
                     },
                     {
-                        "if": {
-                            "properties": {
-                                "type": {
-                                    "const": "WarmAir"
-                                }
-                            }
-                        },
-                        "then": {
-                            "required": [
-                                "temp_diff_emit_dsgn",
-                                "frac_convective",
-                                "HeatSource"
-                            ],
-                            "properties": {
-                                "temp_diff_emit_dsgn": {
-                                    "type": "number",
-                                    "maximum": 70
-                                },
-                                "frac_convective": {
-                                    "type": "number",
-                                    "minimum": 0.1,
-                                    "maximum": 1
-                                },
-                                "HeatSource": {
-                                    "type": "object",
-                                    "unevaluatedProperties": false,
-                                    "required": [
-                                        "name"
-                                    ],
-                                    "properties": {
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "temp_flow_limit_upper": {
-                                            "type": "number"
-                                        }
-                                    }
-                                },
-                                "Control": {
-                                    "type": "string"
-                                }
-                            }
-                        }
+                        "$ref": "#/$defs/WarmAir"
                     }
                 ]
             }
@@ -4136,6 +3553,568 @@
                     }
                 }
             ]
+        },
+        "ElecStorageHeater": {
+            "required": [
+                "type",
+                "pwr_in",
+                "rated_power_instant",
+                "storage_capacity",
+                "air_flow_type",
+                "frac_convective",
+                "n_units",
+                "EnergySupply",
+                "ControlCharger",
+                "Zone",
+                "ESH_min_output",
+                "ESH_max_output",
+                "state_of_charge_init"
+            ],
+            "properties": {
+                "type": {
+                    "const": "ElecStorageHeater"
+                },
+                "pwr_in": {
+                    "type": "number",
+                    "minimum": 0.1,
+                    "maximum": 70
+                },
+                "rated_power_instant": {
+                    "type": "number",
+                    "minimum": 0.1,
+                    "maximum": 70
+                },
+                "storage_capacity": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "air_flow_type": {
+                    "enum": [
+                        "fan-assisted",
+                        "damper-only"
+                    ]
+                },
+                "frac_convective": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "n_units": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "EnergySupply": {
+                    "type": "string"
+                },
+                "Control": {
+                    "type": "string"
+                },
+                "ControlCharger": {
+                    "type": "string"
+                },
+                "Zone": {
+                    "type": "string"
+                },
+                "ESH_min_output": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "ESH_max_output": {
+                    "type": "array",
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "state_of_charge_init": {
+                    "description": "State of charge at initialisation of dry core heat storage (ratio)",
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "title": "State Of Charge Init",
+                    "type": "number"
+                }
+            },
+            "if": {
+                "properties": {
+                    "air_flow_type": {
+                        "const": "fan-assisted"
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "fan_pwr"
+                ],
+                "properties": {
+                    "fan_pwr": {
+                        "type": "number",
+                        "minimum": 0
+                    }
+                }
+            }
+        },
+        "InstantElecHeater": {
+            "required": [
+                "type",
+                "rated_power",
+                "convective_type",
+                "EnergySupply"
+            ],
+            "properties": {
+                "type": {
+                    "const": "InstantElecHeater"
+                },
+                "rated_power": {
+                    "type": "number",
+                    "minimum": 0.1,
+                    "maximum": 70
+                },
+                "convective_type": {
+                    "enum": [
+                        "Air heating (convectors, fan coils etc.)",
+                        "Free heating surface (radiators, radiant panels etc.)",
+                        "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves",
+                        "Wall heating, radiant ceiling panels, accumulation stoves",
+                        "Ceiling heating, radiant ceiling electric heating"
+                    ]
+                },
+                "EnergySupply": {
+                    "type": "string"
+                },
+                "Control": {
+                    "type": "string"
+                }
+            }
+        },
+        "WetDistribution": {
+            "required": [
+                "type",
+                "emitters",
+                "temp_diff_emit_dsgn",
+                "variable_flow",
+                "HeatSource",
+                "ecodesign_controller",
+                "design_flow_temp",
+                "Zone",
+                "pipework"
+            ],
+            "properties": {
+                "type": {
+                    "const": "WetDistribution"
+                },
+                "EnergySupply": {
+                    "type": "string"
+                },
+                "emitters": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "unevaluatedProperties": false,
+                        "required": [
+                            "wet_emitter_type",
+                            "frac_convective"
+                        ],
+                        "properties": {
+                            "wet_emitter_type": {
+                                "enum": [
+                                    "radiator",
+                                    "ufh",
+                                    "fancoil"
+                                ]
+                            },
+                            "frac_convective": {
+                                "type": "number"
+                            }
+                        },
+                        "allOf": [
+                            {
+                                "if": {
+                                    "properties": {
+                                        "wet_emitter_type": {
+                                            "const": "radiator"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "c",
+                                        "n"
+                                    ],
+                                    "properties": {
+                                        "c": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2
+                                        },
+                                        "n": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 2
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "wet_emitter_type": {
+                                            "const": "ufh"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "equivalent_specific_thermal_mass",
+                                        "system_performance_factor",
+                                        "emitter_floor_area"
+                                    ],
+                                    "properties": {
+                                        "equivalent_specific_thermal_mass": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "system_performance_factor": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        },
+                                        "emitter_floor_area": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "if": {
+                                    "properties": {
+                                        "wet_emitter_type": {
+                                            "const": "fancoil"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "n_units",
+                                        "fancoil_test_data"
+                                    ],
+                                    "properties": {
+                                        "n_units": {
+                                            "type": "integer",
+                                            "minimum": 1
+                                        },
+                                        "fancoil_test_data": {
+                                            "type": "object",
+                                            "unevaluatedProperties": false,
+                                            "required": [
+                                                "fan_speed_data",
+                                                "fan_power_W"
+                                            ],
+                                            "properties": {
+                                                "fan_speed_data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "unevaluatedProperties": false,
+                                                        "required": [
+                                                            "temperature_diff",
+                                                            "power_output"
+                                                        ],
+                                                        "properties": {
+                                                            "temperature_diff": {
+                                                                "type": "number"
+                                                            },
+                                                            "power_output": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "number",
+                                                                    "minimum": 0
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "fan_power_W": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "temp_diff_emit_dsgn": {
+                    "type": "number",
+                    "maximum": 70
+                },
+                "variable_flow": {
+                    "type": "boolean"
+                },
+                "bypass_percentage_recirculated": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "HeatSource": {
+                    "type": "object",
+                    "unevaluatedProperties": false,
+                    "required": [
+                        "name"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "temp_flow_limit_upper": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "Control": {
+                    "type": "string"
+                },
+                "ecodesign_controller": {
+                    "type": "object",
+                    "unevaluatedProperties": false,
+                    "required": [
+                        "ecodesign_control_class"
+                    ],
+                    "properties": {
+                        "ecodesign_control_class": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 8
+                        },
+                        "min_outdoor_temp": {
+                            "type": "integer",
+                            "minimum": -60,
+                            "maximum": 30
+                        },
+                        "max_outdoor_temp": {
+                            "type": "integer",
+                            "minimum": 10,
+                            "maximum": 50
+                        },
+                        "min_flow_temp": {
+                            "type": "integer",
+                            "minimum": 20,
+                            "maximum": 120
+                        }
+                    }
+                },
+                "design_flow_temp": {
+                    "type": "integer",
+                    "minimum": 20,
+                    "maximum": 120
+                },
+                "Zone": {
+                    "type": "string"
+                },
+                "pipework": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "external_diameter_mm": {
+                                "type": "number",
+                                "exclusiveMinimum": 0
+                            },
+                            "insulation_thermal_conductivity": {
+                                "type": "number",
+                                "exclusiveMinimum": 0,
+                                "description": "Thermal conductivity of the insulation (unit: W / m K)"
+                            },
+                            "insulation_thickness_mm": {
+                                "type": "number",
+                                "minimum": 0
+                            },
+                            "internal_diameter_mm": {
+                                "type": "number",
+                                "exclusiveMinimum": 0
+                            },
+                            "length": {
+                                "type": "number",
+                                "minimum": 0
+                            },
+                            "location": {
+                                "type": "string",
+                                "enum": [
+                                    "internal",
+                                    "external"
+                                ],
+                                "description": "Location of the pipework (internal or external)"
+                            },
+                            "pipe_contents": {
+                                "type": "string",
+                                "enum": [
+                                    "water",
+                                    "glycol25"
+                                ],
+                                "description": "Contents of the pipework (water or glycol25)"
+                            },
+                            "surface_reflectivity": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "oneOf": [
+                            {
+                                "properties": {
+                                    "ecodesign_control_class": {
+                                        "const": 2
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "ecodesign_control_class": {
+                                        "const": 3
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "ecodesign_control_class": {
+                                        "const": 6
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "ecodesign_control_class": {
+                                        "const": 7
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "then": {
+                        "required": [
+                            "min_outdoor_temp",
+                            "max_outdoor_temp",
+                            "min_flow_temp"
+                        ]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "variable_flow": {
+                                "const": true
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "min_flow_rate",
+                            "max_flow_rate"
+                        ],
+                        "properties": {
+                            "min_flow_rate": {
+                                "type": "number"
+                            },
+                            "max_flow_rate": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    "else": {
+                        "required": [
+                            "design_flow_rate"
+                        ],
+                        "properties": {
+                            "design_flow_rate": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "emitters": {
+                                "type": "array",
+                                "contains": {
+                                    "type": "object",
+                                    "properties": {
+                                        "wet_emitter_type": {
+                                            "const": "radiator"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "thermal_mass"
+                        ],
+                        "properties": {
+                            "thermal_mass": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "WarmAir": {
+            "required": [
+                "type",
+                "temp_diff_emit_dsgn",
+                "frac_convective",
+                "HeatSource"
+            ],
+            "properties": {
+                "type": {
+                    "const": "WarmAir"
+                },
+                "temp_diff_emit_dsgn": {
+                    "type": "number",
+                    "maximum": 70
+                },
+                "frac_convective": {
+                    "type": "number",
+                    "minimum": 0.1,
+                    "maximum": 1
+                },
+                "HeatSource": {
+                    "type": "object",
+                    "unevaluatedProperties": false,
+                    "required": [
+                        "name"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "temp_flow_limit_upper": {
+                            "type": "number"
+                        }
+                    }
+                },
+                "Control": {
+                    "type": "string"
+                }
+            }
         }
     }
 }

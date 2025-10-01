@@ -366,6 +366,93 @@ export interface components {
 			rated_power: number;
 			EnergySupply: string;
 		};
+		ElecStorageHeater: {
+			/** @constant */
+			type: "ElecStorageHeater";
+			pwr_in: number;
+			rated_power_instant: number;
+			storage_capacity: number;
+			/** @enum {unknown} */
+			air_flow_type: "fan-assisted" | "damper-only";
+			frac_convective: number;
+			n_units: number;
+			EnergySupply: string;
+			Control?: string;
+			ControlCharger: string;
+			Zone: string;
+			ESH_min_output: number[][];
+			ESH_max_output: number[][];
+			/**
+             * State Of Charge Init
+             * @description State of charge at initialisation of dry core heat storage (ratio)
+             */
+			state_of_charge_init: number;
+		};
+		InstantElecHeater: {
+			/** @constant */
+			type: "InstantElecHeater";
+			rated_power: number;
+			/** @enum {unknown} */
+			convective_type: "Air heating (convectors, fan coils etc.)" | "Free heating surface (radiators, radiant panels etc.)" | "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves" | "Wall heating, radiant ceiling panels, accumulation stoves" | "Ceiling heating, radiant ceiling electric heating";
+			EnergySupply: string;
+			Control?: string;
+		};
+		WetDistribution: {
+			/** @constant */
+			type: "WetDistribution";
+			EnergySupply?: string;
+			emitters: ({
+				/** @enum {unknown} */
+				wet_emitter_type: "radiator" | "ufh" | "fancoil";
+				frac_convective: number;
+			} & (unknown & unknown & unknown))[];
+			temp_diff_emit_dsgn: number;
+			variable_flow: boolean;
+			bypass_percentage_recirculated?: number;
+			HeatSource: {
+				name: string;
+				temp_flow_limit_upper?: number;
+			};
+			Control?: string;
+			ecodesign_controller: {
+				ecodesign_control_class: number;
+				min_outdoor_temp?: number;
+				max_outdoor_temp?: number;
+				min_flow_temp?: number;
+			};
+			design_flow_temp: number;
+			Zone: string;
+			pipework: {
+				external_diameter_mm?: number;
+				/** @description Thermal conductivity of the insulation (unit: W / m K) */
+				insulation_thermal_conductivity?: number;
+				insulation_thickness_mm?: number;
+				internal_diameter_mm?: number;
+				length?: number;
+				/**
+                 * @description Location of the pipework (internal or external)
+                 * @enum {string}
+                 */
+				location?: "internal" | "external";
+				/**
+                 * @description Contents of the pipework (water or glycol25)
+                 * @enum {string}
+                 */
+				pipe_contents?: "water" | "glycol25";
+				surface_reflectivity?: boolean;
+			}[];
+		} & (unknown & unknown & unknown);
+		WarmAir: {
+			/** @constant */
+			type: "WarmAir";
+			temp_diff_emit_dsgn: number;
+			frac_convective: number;
+			HeatSource: {
+				name: string;
+				temp_flow_limit_upper?: number;
+			};
+			Control?: string;
+		};
 		/**
          * MassDistributionClass
          * @enum {string}
@@ -514,10 +601,7 @@ export interface components {
 				};
 			};
 			SpaceHeatSystem: {
-				[key: string]: {
-					/** @enum {unknown} */
-					type: "ElecStorageHeater" | "InstantElecHeater" | "WetDistribution" | "WarmAir";
-				} & (unknown & unknown & unknown & unknown);
+				[key: string]: components["schemas"]["ElecStorageHeater"] | components["schemas"]["InstantElecHeater"] | components["schemas"]["WetDistribution"] | components["schemas"]["WarmAir"];
 			};
 			SpaceCoolSystem?: {
 				[key: string]: {
@@ -969,6 +1053,93 @@ export interface components {
 					rated_power: number;
 					EnergySupply: string;
 				};
+				ElecStorageHeater: {
+					/** @constant */
+					type: "ElecStorageHeater";
+					pwr_in: number;
+					rated_power_instant: number;
+					storage_capacity: number;
+					/** @enum {unknown} */
+					air_flow_type: "fan-assisted" | "damper-only";
+					frac_convective: number;
+					n_units: number;
+					EnergySupply: string;
+					Control?: string;
+					ControlCharger: string;
+					Zone: string;
+					ESH_min_output: number[][];
+					ESH_max_output: number[][];
+					/**
+                     * State Of Charge Init
+                     * @description State of charge at initialisation of dry core heat storage (ratio)
+                     */
+					state_of_charge_init: number;
+				};
+				InstantElecHeater: {
+					/** @constant */
+					type: "InstantElecHeater";
+					rated_power: number;
+					/** @enum {unknown} */
+					convective_type: "Air heating (convectors, fan coils etc.)" | "Free heating surface (radiators, radiant panels etc.)" | "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves" | "Wall heating, radiant ceiling panels, accumulation stoves" | "Ceiling heating, radiant ceiling electric heating";
+					EnergySupply: string;
+					Control?: string;
+				};
+				WetDistribution: {
+					/** @constant */
+					type: "WetDistribution";
+					EnergySupply?: string;
+					emitters: ({
+						/** @enum {unknown} */
+						wet_emitter_type: "radiator" | "ufh" | "fancoil";
+						frac_convective: number;
+					} & (unknown & unknown & unknown))[];
+					temp_diff_emit_dsgn: number;
+					variable_flow: boolean;
+					bypass_percentage_recirculated?: number;
+					HeatSource: {
+						name: string;
+						temp_flow_limit_upper?: number;
+					};
+					Control?: string;
+					ecodesign_controller: {
+						ecodesign_control_class: number;
+						min_outdoor_temp?: number;
+						max_outdoor_temp?: number;
+						min_flow_temp?: number;
+					};
+					design_flow_temp: number;
+					Zone: string;
+					pipework: {
+						external_diameter_mm?: number;
+						/** @description Thermal conductivity of the insulation (unit: W / m K) */
+						insulation_thermal_conductivity?: number;
+						insulation_thickness_mm?: number;
+						internal_diameter_mm?: number;
+						length?: number;
+						/**
+                         * @description Location of the pipework (internal or external)
+                         * @enum {string}
+                         */
+						location?: "internal" | "external";
+						/**
+                         * @description Contents of the pipework (water or glycol25)
+                         * @enum {string}
+                         */
+						pipe_contents?: "water" | "glycol25";
+						surface_reflectivity?: boolean;
+					}[];
+				} & (unknown & unknown & unknown);
+				WarmAir: {
+					/** @constant */
+					type: "WarmAir";
+					temp_diff_emit_dsgn: number;
+					frac_convective: number;
+					HeatSource: {
+						name: string;
+						temp_flow_limit_upper?: number;
+					};
+					Control?: string;
+				};
 			};
 		};
 	};
@@ -1007,6 +1178,10 @@ export type SchemaHeatSourceWetHeatBattery = components["schemas"]["HeatSourceWe
 export type SchemaHeatSourceWetHiu = components["schemas"]["HeatSourceWetHIU"];
 export type SchemaMixerShower = components["schemas"]["MixerShower"];
 export type SchemaInstantElecShower = components["schemas"]["InstantElecShower"];
+export type SchemaElecStorageHeater = components["schemas"]["ElecStorageHeater"];
+export type SchemaInstantElecHeater = components["schemas"]["InstantElecHeater"];
+export type SchemaWetDistribution = components["schemas"]["WetDistribution"];
+export type SchemaWarmAir = components["schemas"]["WarmAir"];
 export type SchemaMassDistributionClass = components["schemas"]["MassDistributionClass"];
 export type SchemaFhsInputLatestSchema = components["schemas"]["fhs_input_latest.schema"];
 export type $defs = Record<string, never>;
