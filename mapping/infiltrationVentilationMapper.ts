@@ -5,6 +5,7 @@ import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { asCubicMetresPerHour } from "~/utils/units/flowRate";
+import { getAssociatedItem } from "~/utils/associatedItems";
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilationPossible } = mapVentilationData(state);
@@ -92,38 +93,19 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 }
 
 export function mapVentsData(state: ResolvedState) {
+	const { dwellingSpaceWindows } = state.dwellingFabric;
 	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
 	const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-	const { dwellingSpaceWindows } = state.dwellingFabric;
-
-	const wallsRoofsWindows = [
-		dwellingSpaceExternalWall?.map(x => ({
-			id: x.id,
-			pitch: extractPitch(x),
-			orientation: x.orientation,
-		})),
-		dwellingSpaceRoofs?.map(x => ({
-			id: x.id,
-			pitch: x.pitchOption === undefined || x.pitchOption === "custom" ? x.pitch : Number(x.pitchOption),
-			orientation: x.orientation,
-		})),
-		dwellingSpaceWindows?.map(x => ({
-			id: x.id,
-			pitch: extractPitch(x),
-			orientation: x.orientation,
-		})),
-	].flat().filter(x => x !== undefined);
 
 	const entries = state.infiltrationAndVentilation.vents.map((x): [string, SchemaVent] => {
 		const key = x.name;
-		const { associatedWallRoofWindowId } = x;
-		const associatedItem = wallsRoofsWindows.find(x => x.id === associatedWallRoofWindowId)!;
-		
+		const taggedItem = getAssociatedItem([dwellingSpaceWindows, dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedWallRoofWindowId)!;
+
 		const val: SchemaVent = {
 			area_cm2: x.effectiveVentilationArea,
 			mid_height_air_flow_path: x.midHeightOfZone,
-			orientation360: associatedItem.orientation!,
-			pitch: associatedItem.pitch,
+			orientation360: taggedItem.orientation!,
+			pitch: extractPitch(taggedItem),
 			pressure_difference_ref: 20, // stock value
 		};
 

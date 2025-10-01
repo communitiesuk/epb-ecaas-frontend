@@ -227,13 +227,11 @@ const doorsData: DoorsData = {
 const windowData: WindowData = {
 	id: "test-id-1",
 	name: "Window 1",
-	orientation: 1,
+	taggedItem: externalWallId,
 	surfaceArea: 1,
 	height: 1,
 	width: 1,
 	uValue: 1,
-	pitchOption: "90",
-	pitch: 90,
 	solarTransmittance: 0.1,
 	elevationalHeight: 1,
 	midHeight: 1,
@@ -757,6 +755,9 @@ describe("Living space fabric summary", () => {
 		it("should display the correct data for the windows section", async () => {
 			store.$patch({
 				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+					},
 					dwellingSpaceWindows: {
 						data: [{ data: windowData }], 
 					},
@@ -766,7 +767,7 @@ describe("Living space fabric summary", () => {
 			await renderSuspended(Summary);
 			const expectedResult = {
 				"Name": "Window 1",
-				"Orientation": `1 ${degrees.suffix}`,
+				"Orientation": `0 ${degrees.suffix}`,
 				"Net surface area": `1 ${metresSquare.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,

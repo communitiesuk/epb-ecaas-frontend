@@ -2,11 +2,10 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Window from "./[window].vue";
-import { WindowTreatmentType } from "~/schema/api-schema.types";
+import { MassDistributionClass, WindowTreatmentType } from "~/schema/api-schema.types";
 import { millimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units";
 import { v4 as uuidv4 } from "uuid";
-
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -17,17 +16,31 @@ vi.mock("uuid");
 const store = useEcaasStore();
 const user = userEvent.setup();
 
+const externalWall: ExternalWallData = {
+	id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+	name: "External wall 1",
+	pitchOption: "90",
+	pitch: 90,
+	orientation: 0,
+	length: 20,
+	height: 0.5,
+	elevationalHeight: 20,
+	surfaceArea: 10,
+	solarAbsorption: 0.1,
+	uValue: 1,
+	kappaValue: 50000,
+	massDistributionClass: MassDistributionClass.I,
+};
+
 const window1: EcaasForm<WindowData> = {
 	data: {
 		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 		name: "Window 1",
-		orientation: 1,
+		taggedItem: externalWall.id,
 		surfaceArea: 1,
 		height: 1,
 		width: 1,
 		uValue: 1,
-		pitchOption: "90",
-		pitch: 90,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
@@ -43,7 +56,7 @@ const window1: EcaasForm<WindowData> = {
 		treatmentType: WindowTreatmentType.blinds,
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
-	} as WindowData,
+	},
 	complete: true,
 };
 
@@ -52,11 +65,23 @@ const window2: EcaasForm<WindowData>  = {
 		...window1.data, 	name: "Window 2", id: "test-id-2" },
 };
 
-afterEach(() => {
-	store.$reset();
-});
-
 describe ("window", () => {
+	beforeEach(() => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall, complete: true }],
+					},
+				},
+			},
+		});
+	});
+
+	afterEach(() => {
+		store.$reset();
+	});
+
 	test("data is saved to store state when form is valid", async () => {
 		vi.mocked(uuidv4).mockReturnValue(window1.data.id as unknown as Buffer);
 
@@ -67,12 +92,11 @@ describe ("window", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), "Window 1");
-		await user.type(screen.getByTestId("orientation"), "1");
+		await user.click(screen.getByTestId(`taggedItem_${externalWall.id}`));
 		await user.type(screen.getByTestId("surfaceArea"), "1");
 		await user.type(screen.getByTestId("height"), "1");
 		await user.type(screen.getByTestId("width"), "1"); 
 		await user.type(screen.getByTestId("uValue"), "1");
-		await user.click(screen.getByTestId("pitchOption_90"));
 		await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 		await user.type(screen.getByTestId("elevationalHeight"), "1");
 		await user.type(screen.getByTestId("midHeight"), "1");
@@ -91,7 +115,6 @@ describe ("window", () => {
 		await user.tab();
 
 		await(user.click(screen.getByTestId("saveAndComplete")));
-
 
 		const { data } = store.dwellingFabric.dwellingSpaceWindows;
 		
@@ -115,12 +138,11 @@ describe ("window", () => {
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Window 1");
-		expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("1");
+		expect((await screen.findByTestId(`taggedItem_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
-		expect((await screen.findByTestId("pitchOption_90")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("1");
@@ -142,12 +164,11 @@ describe ("window", () => {
 		await(user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
-		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
+		expect((await screen.findByTestId("taggedItem_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("width_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
-		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
 		expect((await screen.findByTestId("solarTransmittance_error"))).toBeDefined();
 		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("midHeight_error"))).toBeDefined();
@@ -170,15 +191,6 @@ describe ("window", () => {
 		await(user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("windowErrorSummary"))).toBeDefined();
-	});
-
-	test("requires pitch when custom pitch option is selected", async () => {
-		await renderSuspended(Window);
-    
-		await user.click(screen.getByTestId("pitchOption_custom"));
-		await(user.click(screen.getByTestId("saveAndComplete")));
-
-		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
 	test("requires further data when four openable parts option is selected", async () => {
@@ -237,6 +249,10 @@ describe ("window", () => {
 });
 
 describe("Partially saving data", () => {
+	afterEach(() => {
+		store.$reset();
+	});
+
 	test("form data is automatically saved to store", async () => {
 		await renderSuspended(Window, {
 			route: {
@@ -245,13 +261,11 @@ describe("Partially saving data", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), "Window 1");
-		await user.type(screen.getByTestId("orientation"), "1");
 		await user.tab();
 
 		const { data } = store.dwellingFabric.dwellingSpaceWindows;
 
 		expect(data[0]!.data.name).toBe("Window 1");
-		expect(data[0]!.data.orientation).toBe(1);
 	});
 
 	test("partial form data automatically saved to store with default name if no name has been added", async () => {
@@ -260,13 +274,12 @@ describe("Partially saving data", () => {
 				params: { window: "create" },
 			},
 		});
-		await user.type(screen.getByTestId("orientation"), "1");
+		await user.type(screen.getByTestId("height"), "3");
 		await user.tab();
 
 		const { data } = store.dwellingFabric.dwellingSpaceWindows;
 
 		expect(data[0]!.data.name).toBe("Window");
-		expect(data[0]!.data.orientation).toBe(1);
 	});
 
 	test("default name is used if name is added then deleted", async () => {
@@ -331,7 +344,7 @@ describe("Partially saving data", () => {
 		const { data } = store.dwellingFabric.dwellingSpaceWindows;
 
 		expect(data[0]!.data.name).toBe("window 1");
-		expect(data[0]!.data.orientation).toBeUndefined();
+		expect(data[0]!.data.height).toBeUndefined();
 	});
 
 	test("updated form data is automatically saved to the correct store object when there are multiple windows added", async () => {
@@ -353,14 +366,14 @@ describe("Partially saving data", () => {
 		});
 		
 		await user.clear(screen.getByTestId("name"));
-		await user.clear(screen.getByTestId("orientation"));
+		await user.clear(screen.getByTestId("height"));
 		
 		await user.type(screen.getByTestId("name"), "Updated Window 2");
-		await user.type(screen.getByTestId("orientation"), "15");
+		await user.type(screen.getByTestId("height"), "2");
 		await user.tab();
 		const { data } = store.dwellingFabric.dwellingSpaceWindows;
 
 		expect(data[1]?.data.name).toBe("Updated Window 2");
-		expect(data[1]?.data.orientation).toBe(15);
+		expect(data[1]?.data.height).toBe(2);
 	});
 });

@@ -5,6 +5,7 @@ import merge from "deepmerge";
 import { defaultZoneName } from "./common";
 import type { Length } from "../utils/units/length";
 import  { asMetres } from "../utils/units/length";
+import { getAssociatedItem } from "~/utils/associatedItems";
 
 function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
 	// note - use parseFloat and toFixed to avoid JS precision issues
@@ -353,48 +354,16 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 }
 
 export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
-	const { dwellingSpaceExternalWall, dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace } = state.dwellingFabric.dwellingSpaceWalls;
-	const { dwellingSpaceRoofs, dwellingSpaceCeilings } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
+	const { dwellingSpaceInternalWall, dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
+	const { dwellingSpaceCeilings, dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	const doorSuffix = "door";
 
-	const wallsAndRoofs = [
-		dwellingSpaceExternalWall?.map(x => ({
-			id: x.id,
-			pitch: extractPitch(x),
-			orientation: x.orientation,
-		})),
-		dwellingSpaceRoofs?.map(x => ({
-			id: x.id,
-			pitch: x.pitchOption === undefined || x.pitchOption === "custom" ? x.pitch : Number(x.pitchOption),
-			orientation: x.orientation!,
-		})),
-	].flat().filter(x => x !== undefined);
-
-	const internalDoorElements = [
-		dwellingSpaceInternalWall?.map(x => ({
-			id: x.id,
-			pitch: extractPitch(x),
-		})),
-		dwellingSpaceCeilings?.map(x => ({
-			id: x.id,
-			pitch: extractPitch(x),
-		})),
-		dwellingSpacePartyWall?.map(x => ({
-			id: x.id,
-			pitch: extractPitch(x),
-		})),
-		dwellingSpaceWallToUnheatedSpace?.map(x => ({
-			id: x.id,
-			pitch: extractPitch(x),
-		})),
-	].flat();
-
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
-		const associatedHeatedSpaceElement = internalDoorElements.find(e => e.id === x.associatedHeatedSpaceElementId)!;
+		const associatedHeatedSpaceElement = getAssociatedItem([dwellingSpaceInternalWall, dwellingSpaceCeilings], x.associatedHeatedSpaceElementId)!;
 
 		const commonFields = {
-			pitch: associatedHeatedSpaceElement.pitch,
+			pitch: extractPitch(associatedHeatedSpaceElement),
 			area: x.surfaceArea,
 			areal_heat_capacity: x.kappaValue,
 			mass_distribution_class: x.massDistributionClass,
@@ -459,13 +428,13 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			return [];
 		}
 
-		const associatedWallRoof = wallsAndRoofs.find(e => e.id === x.associatedWallRoofCeilingId)!;
+		const associatedWallRoof = getAssociatedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedWallRoofCeilingId)!;
 
 		return {
 			[nameWithSuffix]: {
 				type: "BuildingElementTransparent",
-				pitch: associatedWallRoof.pitch,
-				orientation360: associatedWallRoof.orientation,
+				pitch: extractPitch(associatedWallRoof),
+				orientation360: associatedWallRoof.orientation!,
 				height: x.height,
 				mid_height: x.midHeight,
 				width: x.width,
@@ -484,12 +453,12 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 
 	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map((x) => {
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
-		const associatedWallRoofCeiling = wallsAndRoofs.find(e => e.id === x.associatedWallRoofCeilingId)!;
+		const associatedWallRoofCeiling = getAssociatedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedWallRoofCeilingId)!;
 		
 		return { [nameWithSuffix]: {
 			type: "BuildingElementOpaque",
-			pitch: associatedWallRoofCeiling.pitch,
-			orientation360: associatedWallRoofCeiling.orientation,
+			pitch: extractPitch(associatedWallRoofCeiling),
+			orientation360: associatedWallRoofCeiling.orientation!,
 			height: x.height,
 			width: x.width,
 			base_height: x.elevationalHeight,
@@ -518,6 +487,8 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 
 export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> {
 	const { dwellingSpaceWindows } = state.dwellingFabric;
+	const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
+	const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	const windowSuffix = "window";
 
 	function mapWindowPartList(data: WindowData): SchemaWindowPart[] {
@@ -586,10 +557,12 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			distance: inMetres(x.sideFinRightDistance),
 		}] : [];
 
+		const associatedElement = getAssociatedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.taggedItem)!;
+
 		return { [nameWithSuffix]: {
 			type: "BuildingElementTransparent",
-			pitch: extractPitch(x),
-			orientation360: x.orientation,
+			pitch: extractPitch(associatedElement),
+			orientation360: associatedElement!.orientation!,
 			height: x.height,
 			width: x.width,
 			base_height: x.elevationalHeight,

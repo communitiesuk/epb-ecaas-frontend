@@ -188,7 +188,7 @@ export type NulledForms<T> = { [P in keyof T]: T[P] extends EcaasForm<infer U> ?
 /** Function to wrap a form that uses the Pitch component (which writes to pitch and pitchOption fields) and extract the pitch number value */
 export function extractPitch(form: UsesPitchComponent): number {
 	const { pitch, pitchOption } = form;
-	if (pitchOption === "custom") {
+	if (pitchOption === "custom" || pitch !== undefined) {
 		return pitch!;
 	}
 	return Number(pitchOption);

@@ -681,16 +681,33 @@ describe("dwelling fabric mapper", () => {
 
 	it("maps windows input state to FHS input request", () => {
 		// Arrange
+		const externalWall: EcaasForm<ExternalWallData> = {
+			...baseForm,
+			data: {
+				id: "cbb78615-d2de-482b-a8f1-ce48534aaa05",
+				name: "External wall 1",
+				pitchOption: "90",
+				pitch: 90,
+				orientation: 0,
+				length: 20,
+				height: 0.5,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				solarAbsorption: 0.1,
+				uValue: 1,
+				kappaValue: 50000,
+				massDistributionClass: MassDistributionClass.I,
+			},
+		};
+
 		const window: WindowData = {
 			id: "test-id-1",
 			name: "Window 1",
-			orientation: 180,
+			taggedItem: externalWall.data.id,
 			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: "90",
-			pitch: 90,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
@@ -715,6 +732,12 @@ describe("dwelling fabric mapper", () => {
 
 		store.$patch({
 			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [externalWall],
+						complete: true,
+					},
+				},
 				dwellingSpaceWindows: { 
 					data: [{
 						data: window, 
@@ -733,8 +756,8 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedWindow: BuildingElementTransparent = {
 			type: "BuildingElementTransparent",
-			pitch: window.pitch!,
-			orientation360: window.orientation,
+			pitch: externalWall.data.pitch!,
+			orientation360: externalWall.data.orientation,
 			height: window.height,
 			width: window.width,
 			base_height: window.elevationalHeight,

@@ -343,10 +343,13 @@ const windowSummary: SummarySection = {
 	id: "dwellingSpaceWindows",
 	label: "Windows",
 	data: windowData.map(x => {
+		const taggedItems = store.getAssociatedItems([dwellingSpaceExternalWall, dwellingSpaceRoofs]);
+		const taggedItem = taggedItems(x.data.taggedItem!);
+
 		return {
 			"Name": x.data.name,
-			"Pitch": `${x.data.pitch} ${degrees.suffix}`,
-			"Orientation": `${x.data.orientation} ${degrees.suffix}`,
+			"Pitch": taggedItem?.pitch !== undefined ? `${taggedItem?.pitch} ${degrees.suffix}` : "",
+			"Orientation": taggedItem?.orientation !== undefined ? `${taggedItem?.orientation} ${degrees.suffix}` : "",
 			"Height": `${x.data.height} ${metre.suffix}`,
 			"Width": `${x.data.width} ${metre.suffix}`,
 			"Elevational height of building element at its base": `${x.data.elevationalHeight} ${metre.suffix}`,

@@ -397,13 +397,11 @@ const internalDoorDataZod = z.discriminatedUnion(
 export type InternalDoorData = z.infer<typeof internalDoorDataZod>;
 
 const baseWindowData = namedWithId.extend({
-	orientation,
+	taggedItem: z.guid(),
 	surfaceArea: z.number().min(0.01).max(10000),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	uValue,
-	pitchOption: standardPitchOption,
-	pitch: z.optional(z.number().min(0).lt(180)),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),
 	midHeight: z.number().min(0).max(100),

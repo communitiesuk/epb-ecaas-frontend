@@ -5,6 +5,7 @@ import WindowsForm from "./[window].vue";
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
 import formStatus from "~/constants/formStatus";
+import { MassDistributionClass } from "~/schema/api-schema.types";
 
 describe("windows", () => {
 	const store = useEcaasStore();
@@ -15,18 +16,31 @@ describe("windows", () => {
 		return navigateToMock;
 	});
 
-	
+	const externalWall: ExternalWallData = {
+		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+		name: "External wall 1",
+		pitchOption: "90",
+		pitch: 90,
+		orientation: 0,
+		length: 20,
+		height: 0.5,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorption: 0.1,
+		uValue: 1,
+		kappaValue: 50000,
+		massDistributionClass: MassDistributionClass.I,
+	};
+
 	const window1: EcaasForm<WindowData> = {
 		data: {
 			id: "test-id-1",
 			name: "Window 1",
-			orientation: 1,
+			taggedItem: externalWall.id,
 			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: "90",
-			pitch: 90,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,

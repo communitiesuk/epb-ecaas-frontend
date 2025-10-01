@@ -11,3 +11,16 @@ export const extractSectionItems = <T extends Record<string, unknown>>(
 		} as AssociatedItemValues;
 	});
 };
+
+export const extractResolvedSectionItems = <T extends Record<string, unknown>>(
+	section: T[],
+): AssociatedItemValues[] => {
+	return section?.map((x) => {
+
+		return {
+			id: x.id!,
+			pitch: x.pitchOption === undefined ? x.pitch : extractPitch(x),
+			...("orientation" in x && { orientation: x.orientation }),
+		} as AssociatedItemValues;
+	}) ?? [];
+};
