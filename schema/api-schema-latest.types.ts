@@ -57,12 +57,14 @@ export interface components {
 			heater_position: number;
 			thermostat_position: number;
 		};
+		/** @description A possible heat source for a hot water tank */
 		ImmersionHeater: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
 			/** @constant */
 			type: "ImmersionHeater";
 			power: number;
 			EnergySupply: string;
 		};
+		/** @description A possible heat source for a hot water tank */
 		SolarThermalSystem: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
 			/** @constant */
 			type: "SolarThermalSystem";
@@ -82,12 +84,14 @@ export interface components {
 			orientation: number;
 			solar_loop_piping_hlc: number;
 		};
+		/** @description A possible heat source for a hot water tank */
 		HeatSourceWet: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
 			/** @constant */
 			type: "HeatSourceWet";
 			EnergySupply: string;
 			temp_flow_limit_upper?: number;
 		};
+		/** @description A possible heat source for a hot water tank */
 		HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
 			/** @constant */
 			type: "HeatPump_HWOnly";
@@ -99,6 +103,7 @@ export interface components {
 			in_use_factor_mismatch: number;
 			test_data: Record<string, never>;
 		};
+		/** @description A possible heat source for a hot water tank */
 		Boiler: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
 			/** @constant */
 			type: "Boiler";
@@ -168,10 +173,12 @@ export interface components {
 				is_export_capable: boolean;
 			};
 		};
+		/** @description A possible hot water source */
 		StorageTank: components["schemas"]["HotWaterTankCommon"] & {
 			/** @constant */
 			type: "StorageTank";
 		};
+		/** @description A possible hot water source */
 		SmartHotWaterTank: components["schemas"]["HotWaterTankCommon"] & {
 			/** @constant */
 			type: "SmartHotWaterTank";
@@ -181,12 +188,14 @@ export interface components {
 			temp_setpnt_max: string;
 			temp_usable: number;
 		};
+		/** @description A possible hot water source */
 		PointOfUse: {
 			/** @constant */
 			type: "PointOfUse";
 			efficiency: number;
 			EnergySupply: string;
 		};
+		/** @description A possible hot water source */
 		CombiBoiler: {
 			/** @constant */
 			type: "CombiBoiler";
@@ -199,6 +208,7 @@ export interface components {
 			storage_loss_factor_2: number;
 			daily_HW_usage: number;
 		};
+		/** @description A possible hot water source */
 		HeatBattery: {
 			/** @constant */
 			type: "HeatBattery";
@@ -637,12 +647,14 @@ export interface components {
 					heater_position: number;
 					thermostat_position: number;
 				};
+				/** @description A possible heat source for a hot water tank */
 				ImmersionHeater: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
 					/** @constant */
 					type: "ImmersionHeater";
 					power: number;
 					EnergySupply: string;
 				};
+				/** @description A possible heat source for a hot water tank */
 				SolarThermalSystem: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
 					/** @constant */
 					type: "SolarThermalSystem";
@@ -662,12 +674,14 @@ export interface components {
 					orientation: number;
 					solar_loop_piping_hlc: number;
 				};
+				/** @description A possible heat source for a hot water tank */
 				HeatSourceWet: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
 					/** @constant */
 					type: "HeatSourceWet";
 					EnergySupply: string;
 					temp_flow_limit_upper?: number;
 				};
+				/** @description A possible heat source for a hot water tank */
 				HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
 					/** @constant */
 					type: "HeatPump_HWOnly";
@@ -679,14 +693,17 @@ export interface components {
 					in_use_factor_mismatch: number;
 					test_data: Record<string, never>;
 				};
+				/** @description A possible heat source for a hot water tank */
 				Boiler: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
 					/** @constant */
 					type: "Boiler";
 				};
+				/** @description A possible hot water source */
 				StorageTank: components["schemas"]["HotWaterTankCommon"] & {
 					/** @constant */
 					type: "StorageTank";
 				};
+				/** @description A possible hot water source */
 				SmartHotWaterTank: components["schemas"]["HotWaterTankCommon"] & {
 					/** @constant */
 					type: "SmartHotWaterTank";
@@ -696,12 +713,14 @@ export interface components {
 					temp_setpnt_max: string;
 					temp_usable: number;
 				};
+				/** @description A possible hot water source */
 				PointOfUse: {
 					/** @constant */
 					type: "PointOfUse";
 					efficiency: number;
 					EnergySupply: string;
 				};
+				/** @description A possible hot water source */
 				CombiBoiler: {
 					/** @constant */
 					type: "CombiBoiler";
@@ -714,6 +733,7 @@ export interface components {
 					storage_loss_factor_2: number;
 					daily_HW_usage: number;
 				};
+				/** @description A possible hot water source */
 				HeatBattery: {
 					/** @constant */
 					type: "HeatBattery";

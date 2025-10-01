@@ -3170,6 +3170,7 @@
             }
         },
         "ImmersionHeater": {
+            "description": "A possible heat source for a hot water tank",
             "allOf": [
                 {
                     "$ref": "#/$defs/HotWaterTankHeatSourceCommon"
@@ -3197,6 +3198,7 @@
             ]
         },
         "SolarThermalSystem": {
+            "description": "A possible heat source for a hot water tank",
             "allOf": [
                 {
                     "$ref": "#/$defs/HotWaterTankHeatSourceCommon"
@@ -3292,6 +3294,7 @@
             ]
         },
         "HeatSourceWet": {
+            "description": "A possible heat source for a hot water tank",
             "allOf": [
                 {
                     "$ref": "#/$defs/HotWaterTankHeatSourceCommon"
@@ -3316,6 +3319,7 @@
             ]
         },
         "HeatPump_HWOnly": {
+            "description": "A possible heat source for a hot water tank",
             "allOf": [
                 {
                     "$ref": "#/$defs/HotWaterTankHeatSourceCommon"
@@ -3393,6 +3397,7 @@
             ]
         },
         "Boiler": {
+            "description": "A possible heat source for a hot water tank",
             "allOf": [
                 {
                     "$ref": "#/$defs/HotWaterTankHeatSourceCommon"
@@ -3410,6 +3415,7 @@
             ]
         },
         "StorageTank": {
+            "description": "A possible hot water source",
             "allOf": [
                 {
                     "$ref": "#/$defs/HotWaterTankCommon"
@@ -3427,6 +3433,7 @@
             ]
         },
         "SmartHotWaterTank": {
+            "description": "A possible hot water source",
             "allOf": [
                 {
                     "$ref": "#/$defs/HotWaterTankCommon"
@@ -3464,6 +3471,7 @@
             ]
         },
         "PointOfUse": {
+            "description": "A possible hot water source",
             "required": [
                 "type",
                 "efficiency",
@@ -3484,6 +3492,7 @@
             }
         },
         "CombiBoiler": {
+            "description": "A possible hot water source",
             "required": [
                 "type",
                 "HeatSourceWet",
@@ -3535,6 +3544,7 @@
             }
         },
         "HeatBattery": {
+            "description": "A possible hot water source",
             "required": [
                 "type",
                 "HeatSourceWet",
