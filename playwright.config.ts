@@ -4,13 +4,6 @@ import { defineConfig, devices } from "@playwright/test";
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-import dotenv from "dotenv";
-import path from "path";
-
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -72,27 +65,24 @@ export default defineConfig({
 				dependencies: ["setup"],
 			},
 		]
-		: [
-			{ name: "setup", testMatch: /.*\.setup\.ts/ },
-			{
-				name: "chromium",
-				use: {
-					...devices["Desktop Chrome"],
-					// Use prepared auth state.
-					storageState: "playwright/.auth/user.json",
-				},
-				dependencies: ["setup"],
-			},
-			{
-				name: "firefox",
-				use: {
-					...devices["Desktop Firefox"],
-					// Use prepared auth state.
-					storageState: "playwright/.auth/user.json",
-				},
-				dependencies: ["setup"],
-			},
-		],
+	  : [
+        { name: "setup", testMatch: /.*\.setup\.ts/ },
+
+        {
+          name: "chromium",
+          use: {
+            ...devices["Desktop Chrome"],
+          },
+          dependencies: ["setup"],
+        },
+        {
+          name: "firefox",
+          use: {
+            ...devices["Desktop Firefox"],
+          },
+          dependencies: ["setup"],
+        },
+      ],
 
 	/* Test against mobile viewports. */
 	// {
