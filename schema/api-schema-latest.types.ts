@@ -372,8 +372,6 @@ export interface components {
 			pwr_in: number;
 			rated_power_instant: number;
 			storage_capacity: number;
-			/** @enum {unknown} */
-			air_flow_type: "fan-assisted" | "damper-only";
 			frac_convective: number;
 			n_units: number;
 			EnergySupply: string;
@@ -387,7 +385,14 @@ export interface components {
              * @description State of charge at initialisation of dry core heat storage (ratio)
              */
 			state_of_charge_init: number;
-		};
+		} & ({
+			/** @constant */
+			air_flow_type: "fan-assisted";
+			fan_pwr: number;
+		} | {
+			/** @constant */
+			air_flow_type: "damper-only";
+		});
 		InstantElecHeater: {
 			/** @constant */
 			type: "InstantElecHeater";
@@ -1059,8 +1064,6 @@ export interface components {
 					pwr_in: number;
 					rated_power_instant: number;
 					storage_capacity: number;
-					/** @enum {unknown} */
-					air_flow_type: "fan-assisted" | "damper-only";
 					frac_convective: number;
 					n_units: number;
 					EnergySupply: string;
@@ -1074,7 +1077,14 @@ export interface components {
                      * @description State of charge at initialisation of dry core heat storage (ratio)
                      */
 					state_of_charge_init: number;
-				};
+				} & ({
+					/** @constant */
+					air_flow_type: "fan-assisted";
+					fan_pwr: number;
+				} | {
+					/** @constant */
+					air_flow_type: "damper-only";
+				});
 				InstantElecHeater: {
 					/** @constant */
 					type: "InstantElecHeater";

@@ -3560,7 +3560,6 @@
                 "pwr_in",
                 "rated_power_instant",
                 "storage_capacity",
-                "air_flow_type",
                 "frac_convective",
                 "n_units",
                 "EnergySupply",
@@ -3587,12 +3586,6 @@
                 "storage_capacity": {
                     "type": "number",
                     "minimum": 0
-                },
-                "air_flow_type": {
-                    "enum": [
-                        "fan-assisted",
-                        "damper-only"
-                    ]
                 },
                 "frac_convective": {
                     "type": "number",
@@ -3641,24 +3634,33 @@
                     "type": "number"
                 }
             },
-            "if": {
-                "properties": {
-                    "air_flow_type": {
-                        "const": "fan-assisted"
+            "oneOf": [
+                {
+                    "required": [
+                        "air_flow_type",
+                        "fan_pwr"
+                    ],
+                    "properties": {
+                        "air_flow_type": {
+                            "const": "fan-assisted"
+                        },
+                        "fan_pwr": {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    }
+                },
+                {
+                    "required": [
+                        "air_flow_type"
+                    ],
+                    "properties": {
+                        "air_flow_type": {
+                            "const": "damper-only"
+                        }
                     }
                 }
-            },
-            "then": {
-                "required": [
-                    "fan_pwr"
-                ],
-                "properties": {
-                    "fan_pwr": {
-                        "type": "number",
-                        "minimum": 0
-                    }
-                }
-            }
+            ]
         },
         "InstantElecHeater": {
             "required": [
