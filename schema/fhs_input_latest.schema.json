@@ -448,20 +448,23 @@
             }
         },
         "HeatSourceWet": {
-            "oneOf": [
-                {
-                    "$ref": "#/$defs/HeatSourceWetHeatPump"
-                },
-                {
-                    "$ref": "#/$defs/HeatSourceWetBoiler"
-                },
-                {
-                    "$ref": "#/$defs/HeatSourceWetHeatBattery"
-                },
-                {
-                    "$ref": "#/$defs/HeatSourceWetHIU"
-                }
-            ]
+            "type": "object",
+            "additionalProperties": {
+                "oneOf": [
+                    {
+                        "$ref": "#/$defs/HeatSourceWetHeatPump"
+                    },
+                    {
+                        "$ref": "#/$defs/HeatSourceWetBoiler"
+                    },
+                    {
+                        "$ref": "#/$defs/HeatSourceWetHeatBattery"
+                    },
+                    {
+                        "$ref": "#/$defs/HeatSourceWetHIU"
+                    }
+                ]
+            }
         },
         "HotWaterDemand": {
             "type": "object",
@@ -3567,25 +3570,22 @@
         },
         "HeatSourceWetCommon": {
             "type": "object",
-            "additionalProperties": {
-                "type": "object",
-                "unevaluatedProperties": false,
-                "required": [
-                    "type",
-                    "EnergySupply"
-                ],
-                "properties": {
-                    "type": {
-                        "enum": [
-                            "HeatPump",
-                            "Boiler",
-                            "HIU",
-                            "HeatBattery"
-                        ]
-                    },
-                    "EnergySupply": {
-                        "type": "string"
-                    }
+            "unevaluatedProperties": false,
+            "required": [
+                "type",
+                "EnergySupply"
+            ],
+            "properties": {
+                "type": {
+                    "enum": [
+                        "HeatPump",
+                        "Boiler",
+                        "HIU",
+                        "HeatBattery"
+                    ]
+                },
+                "EnergySupply": {
+                    "type": "string"
                 }
             }
         },
@@ -3865,231 +3865,219 @@
                     "$ref": "#/$defs/HeatSourceWetCommon"
                 },
                 {
-                    "required": [
-                        "type",
-                        "battery_type"
-                    ],
-                    "properties": {
-                        "type": {
-                            "const": "HeatBattery"
-                        },
-                        "battery_type": {
-                            "type": "string",
-                            "enum": [
-                                "dry_core",
-                                "pcm"
-                            ]
-                        }
-                    },
-                    "allOf": [
+                    "oneOf": [
                         {
-                            "if": {
-                                "properties": {
-                                    "battery_type": {
-                                        "const": "pcm"
-                                    }
-                                }
-                            },
-                            "then": {
-                                "required": [
-                                    "electricity_circ_pump",
-                                    "electricity_standby",
-                                    "rated_charge_power",
-                                    "max_rated_losses",
-                                    "ControlCharge",
-                                    "number_of_units",
-                                    "simultaneous_charging_and_discharging",
-                                    "heat_storage_zone_material_kJ_per_K_above_Phase_transition",
-                                    "heat_storage_zone_material_kJ_per_K_below_Phase_transition",
-                                    "heat_storage_zone_material_kJ_per_K_during_Phase_transition",
-                                    "phase_transition_temperature_upper",
-                                    "phase_transition_temperature_lower",
-                                    "max_temperature",
-                                    "velocity_in_HEX_tube_at_1_l_per_min_m_per_s",
-                                    "capillary_diameter_m",
-                                    "A",
-                                    "B",
-                                    "heat_exchanger_surface_area_m2",
-                                    "flow_rate_l_per_min",
-                                    "temp_init"
-                                ],
-                                "properties": {
-                                    "electricity_circ_pump": {
-                                        "type": "number",
-                                        "minimum": 0.001,
-                                        "maximum": 1
-                                    },
-                                    "electricity_standby": {
-                                        "type": "number",
-                                        "minimum": 0,
-                                        "maximum": 0.1
-                                    },
-                                    "rated_charge_power": {
-                                        "type": "number",
-                                        "minimum": 0
-                                    },
-                                    "max_rated_losses": {
-                                        "type": "number",
-                                        "minimum": 0
-                                    },
-                                    "ControlCharge": {
-                                        "type": "string"
-                                    },
-                                    "number_of_units": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                    },
-                                    "simultaneous_charging_and_discharging": {
-                                        "type": "boolean"
-                                    },
-                                    "heat_storage_zone_material_kJ_per_K_above_Phase_transition": {
-                                        "type": "number",
-                                        "minimum": 0
-                                    },
-                                    "heat_storage_zone_material_kJ_per_K_below_Phase_transition": {
-                                        "type": "number",
-                                        "minimum": 0
-                                    },
-                                    "heat_storage_zone_material_kJ_per_K_during_Phase_transition": {
-                                        "type": "number",
-                                        "minimum": 0
-                                    },
-                                    "phase_transition_temperature_upper": {
-                                        "type": "number"
-                                    },
-                                    "phase_transition_temperature_lower": {
-                                        "type": "number"
-                                    },
-                                    "velocity_in_HEX_tube_at_1_l_per_min_m_per_s": {
-                                        "type": "number",
-                                        "minimum": 0
-                                    },
-                                    "A": {
-                                        "type": "number"
-                                    },
-                                    "B": {
-                                        "type": "number"
-                                    },
-                                    "heat_exchanger_surface_area_m2": {
-                                        "type": "number"
-                                    },
-                                    "capillary_diameter_m": {
-                                        "type": "number"
-                                    },
-                                    "max_temperature": {
-                                        "type": "number"
-                                    },
-                                    "flow_rate_l_per_min": {
-                                        "type": "number",
-                                        "minimum": 0
-                                    },
-                                    "temp_init": {
-                                        "description": "Initial temperature of the PCM heat battery at the start of simulation (unit: \u02daC)",
-                                        "minimum": -273.15,
-                                        "title": "Temp Init",
-                                        "type": "number"
-                                    }
-                                }
-                            }
+                            "$ref": "#/$defs/PCMBattery"
                         },
                         {
-                            "if": {
-                                "properties": {
-                                    "battery_type": {
-                                        "const": "dry_core"
-                                    }
-                                }
-                            },
-                            "then": {
-                                "required": [
-                                    "ControlCharge",
-                                    "EnergySupply",
-                                    "electricity_circ_pump",
-                                    "electricity_standby",
-                                    "pwr_in",
-                                    "rated_power_instant",
-                                    "heat_storage_capacity",
-                                    "number_of_units",
-                                    "dry_core_min_output",
-                                    "dry_core_max_output",
-                                    "fan_pwr",
-                                    "setpoint_temp_water",
-                                    "state_of_charge_init"
-                                ],
-                                "properties": {
-                                    "electricity_circ_pump": {
-                                        "type": "number"
-                                    },
-                                    "electricity_standby": {
-                                        "type": "number"
-                                    },
-                                    "pwr_in": {
-                                        "type": "number",
-                                        "description": "Charging power (kW)"
-                                    },
-                                    "rated_power_instant": {
-                                        "type": "number",
-                                        "description": "Rated instantaneous power output (kW)"
-                                    },
-                                    "heat_storage_capacity": {
-                                        "type": "number",
-                                        "description": "Heat storage capacity (kWh)"
-                                    },
-                                    "ControlCharge": {
-                                        "type": "string"
-                                    },
-                                    "EnergySupply": {
-                                        "type": "string"
-                                    },
-                                    "number_of_units": {
-                                        "type": "integer",
-                                        "minimum": 1
-                                    },
-                                    "dry_core_min_output": {
-                                        "type": "array",
-                                        "items": {
-                                            "items": {
-                                                "type": "number"
-                                            },
-                                            "maxItems": 2,
-                                            "minItems": 2,
-                                            "type": "array"
-                                        },
-                                        "description": "Lookup table for minimum output based on charge level"
-                                    },
-                                    "dry_core_max_output": {
-                                        "type": "array",
-                                        "items": {
-                                            "items": {
-                                                "type": "number"
-                                            },
-                                            "maxItems": 2,
-                                            "minItems": 2,
-                                            "type": "array"
-                                        },
-                                        "description": "Lookup table for maximum output based on charge level"
-                                    },
-                                    "fan_pwr": {
-                                        "type": "number",
-                                        "description": "Fan power (W)"
-                                    },
-                                    "setpoint_temp_water": {
-                                        "type": "number",
-                                        "description": "Water setpoint temperature (\u00b0C)"
-                                    },
-                                    "state_of_charge_init": {
-                                        "description": "State of charge at initialisation of dry core heat storage (ratio)",
-                                        "maximum": 1.0,
-                                        "minimum": 0.0,
-                                        "title": "State Of Charge Init",
-                                        "type": "number"
-                                    }
-                                }
-                            }
+                            "$ref": "#/$defs/DryCoreBattery"
                         }
                     ]
                 }
             ]
+        },
+        "PCMBattery": {
+            "required": [
+                "type",
+                "battery_type",
+                "electricity_circ_pump",
+                "electricity_standby",
+                "rated_charge_power",
+                "max_rated_losses",
+                "ControlCharge",
+                "number_of_units",
+                "simultaneous_charging_and_discharging",
+                "heat_storage_zone_material_kJ_per_K_above_Phase_transition",
+                "heat_storage_zone_material_kJ_per_K_below_Phase_transition",
+                "heat_storage_zone_material_kJ_per_K_during_Phase_transition",
+                "phase_transition_temperature_upper",
+                "phase_transition_temperature_lower",
+                "max_temperature",
+                "velocity_in_HEX_tube_at_1_l_per_min_m_per_s",
+                "capillary_diameter_m",
+                "A",
+                "B",
+                "heat_exchanger_surface_area_m2",
+                "flow_rate_l_per_min",
+                "temp_init"
+            ],
+            "properties": {
+                "type": {
+                    "const": "HeatBattery"
+                },
+                "battery_type": {
+                    "const": "pcm"
+                },
+                "electricity_circ_pump": {
+                    "type": "number",
+                    "minimum": 0.001,
+                    "maximum": 1
+                },
+                "electricity_standby": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 0.1
+                },
+                "rated_charge_power": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "max_rated_losses": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "ControlCharge": {
+                    "type": "string"
+                },
+                "number_of_units": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "simultaneous_charging_and_discharging": {
+                    "type": "boolean"
+                },
+                "heat_storage_zone_material_kJ_per_K_above_Phase_transition": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "heat_storage_zone_material_kJ_per_K_below_Phase_transition": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "heat_storage_zone_material_kJ_per_K_during_Phase_transition": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "phase_transition_temperature_upper": {
+                    "type": "number"
+                },
+                "phase_transition_temperature_lower": {
+                    "type": "number"
+                },
+                "velocity_in_HEX_tube_at_1_l_per_min_m_per_s": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "A": {
+                    "type": "number"
+                },
+                "B": {
+                    "type": "number"
+                },
+                "heat_exchanger_surface_area_m2": {
+                    "type": "number"
+                },
+                "capillary_diameter_m": {
+                    "type": "number"
+                },
+                "max_temperature": {
+                    "type": "number"
+                },
+                "flow_rate_l_per_min": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "temp_init": {
+                    "description": "Initial temperature of the PCM heat battery at the start of simulation (unit: \u02daC)",
+                    "minimum": -273.15,
+                    "title": "Temp Init",
+                    "type": "number"
+                }
+            }
+        },
+        "DryCoreBattery": {
+            "required": [
+                "type",
+                "battery_type",
+                "ControlCharge",
+                "EnergySupply",
+                "electricity_circ_pump",
+                "electricity_standby",
+                "pwr_in",
+                "rated_power_instant",
+                "heat_storage_capacity",
+                "number_of_units",
+                "dry_core_min_output",
+                "dry_core_max_output",
+                "fan_pwr",
+                "setpoint_temp_water",
+                "state_of_charge_init"
+            ],
+            "properties": {
+                "type": {
+                    "const": "HeatBattery"
+                },
+                "battery_type": {
+                    "const": "dry_core"
+                },
+                "electricity_circ_pump": {
+                    "type": "number"
+                },
+                "electricity_standby": {
+                    "type": "number"
+                },
+                "pwr_in": {
+                    "type": "number",
+                    "description": "Charging power (kW)"
+                },
+                "rated_power_instant": {
+                    "type": "number",
+                    "description": "Rated instantaneous power output (kW)"
+                },
+                "heat_storage_capacity": {
+                    "type": "number",
+                    "description": "Heat storage capacity (kWh)"
+                },
+                "ControlCharge": {
+                    "type": "string"
+                },
+                "EnergySupply": {
+                    "type": "string"
+                },
+                "number_of_units": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "dry_core_min_output": {
+                    "type": "array",
+                    "items": {
+                        "items": {
+                            "type": "number"
+                        },
+                        "maxItems": 2,
+                        "minItems": 2,
+                        "type": "array"
+                    },
+                    "description": "Lookup table for minimum output based on charge level"
+                },
+                "dry_core_max_output": {
+                    "type": "array",
+                    "items": {
+                        "items": {
+                            "type": "number"
+                        },
+                        "maxItems": 2,
+                        "minItems": 2,
+                        "type": "array"
+                    },
+                    "description": "Lookup table for maximum output based on charge level"
+                },
+                "fan_pwr": {
+                    "type": "number",
+                    "description": "Fan power (W)"
+                },
+                "setpoint_temp_water": {
+                    "type": "number",
+                    "description": "Water setpoint temperature (\u00b0C)"
+                },
+                "state_of_charge_init": {
+                    "description": "State of charge at initialisation of dry core heat storage (ratio)",
+                    "maximum": 1.0,
+                    "minimum": 0.0,
+                    "title": "State Of Charge Init",
+                    "type": "number"
+                }
+            }
         },
         "HeatSourceWetHIU": {
             "description": "A possible wet heat source",

@@ -133,11 +133,69 @@ export interface components {
 			heat_exchanger_surface_area?: number;
 		};
 		HeatSourceWetCommon: {
-			[key: string]: {
-				/** @enum {unknown} */
-				type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
-				EnergySupply: string;
-			};
+			/** @enum {unknown} */
+			type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
+			EnergySupply: string;
+		};
+		PCMBattery: {
+			/** @constant */
+			type: "HeatBattery";
+			/** @constant */
+			battery_type: "pcm";
+			electricity_circ_pump: number;
+			electricity_standby: number;
+			rated_charge_power: number;
+			max_rated_losses: number;
+			ControlCharge: string;
+			number_of_units: number;
+			simultaneous_charging_and_discharging: boolean;
+			heat_storage_zone_material_kJ_per_K_above_Phase_transition: number;
+			heat_storage_zone_material_kJ_per_K_below_Phase_transition: number;
+			heat_storage_zone_material_kJ_per_K_during_Phase_transition: number;
+			phase_transition_temperature_upper: number;
+			phase_transition_temperature_lower: number;
+			velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
+			A: number;
+			B: number;
+			heat_exchanger_surface_area_m2: number;
+			capillary_diameter_m: number;
+			max_temperature: number;
+			flow_rate_l_per_min: number;
+			/**
+             * Temp Init
+             * @description Initial temperature of the PCM heat battery at the start of simulation (unit: ˚C)
+             */
+			temp_init: number;
+		};
+		DryCoreBattery: {
+			/** @constant */
+			type: "HeatBattery";
+			/** @constant */
+			battery_type: "dry_core";
+			electricity_circ_pump: number;
+			electricity_standby: number;
+			/** @description Charging power (kW) */
+			pwr_in: number;
+			/** @description Rated instantaneous power output (kW) */
+			rated_power_instant: number;
+			/** @description Heat storage capacity (kWh) */
+			heat_storage_capacity: number;
+			ControlCharge: string;
+			EnergySupply: string;
+			number_of_units: number;
+			/** @description Lookup table for minimum output based on charge level */
+			dry_core_min_output: number[][];
+			/** @description Lookup table for maximum output based on charge level */
+			dry_core_max_output: number[][];
+			/** @description Fan power (W) */
+			fan_pwr: number;
+			/** @description Water setpoint temperature (°C) */
+			setpoint_temp_water: number;
+			/**
+             * State Of Charge Init
+             * @description State of charge at initialisation of dry core heat storage (ratio)
+             */
+			state_of_charge_init: number;
 		};
 		EnergySupplyGas: {
 			/** @enum {unknown} */
@@ -278,12 +336,7 @@ export interface components {
 			electricity_standby: number;
 		};
 		/** @description A possible wet heat source */
-		HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & ({
-			/** @constant */
-			type: "HeatBattery";
-			/** @enum {string} */
-			battery_type: "dry_core" | "pcm";
-		} & (unknown & unknown));
+		HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & (components["schemas"]["PCMBattery"] | components["schemas"]["DryCoreBattery"]);
 		/** @description A possible wet heat source */
 		HeatSourceWetHIU: components["schemas"]["HeatSourceWetCommon"] & {
 			/** @constant */
@@ -389,7 +442,9 @@ export interface components {
 					ColdWaterSource?: "header tank" | "mains water";
 				} & (components["schemas"]["StorageTank"] | components["schemas"]["SmartHotWaterTank"] | components["schemas"]["PointOfUse"] | components["schemas"]["CombiBoiler"] | components["schemas"]["HeatBattery"]);
 			};
-			HeatSourceWet?: components["schemas"]["HeatSourceWetHeatPump"] | components["schemas"]["HeatSourceWetBoiler"] | components["schemas"]["HeatSourceWetHeatBattery"] | components["schemas"]["HeatSourceWetHIU"];
+			HeatSourceWet?: {
+				[key: string]: components["schemas"]["HeatSourceWetHeatPump"] | components["schemas"]["HeatSourceWetBoiler"] | components["schemas"]["HeatSourceWetHeatBattery"] | components["schemas"]["HeatSourceWetHIU"];
+			};
 			HotWaterDemand?: {
 				Shower?: {
 					[key: string]: {
@@ -745,11 +800,9 @@ export interface components {
 					setpoint_temp: number;
 				};
 				HeatSourceWetCommon: {
-					[key: string]: {
-						/** @enum {unknown} */
-						type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
-						EnergySupply: string;
-					};
+					/** @enum {unknown} */
+					type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
+					EnergySupply: string;
 				};
 				/** @description A possible wet heat source */
 				HeatSourceWetHeatPump: components["schemas"]["HeatSourceWetCommon"] & {
@@ -810,12 +863,67 @@ export interface components {
 					electricity_standby: number;
 				};
 				/** @description A possible wet heat source */
-				HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & ({
+				HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & (components["schemas"]["PCMBattery"] | components["schemas"]["DryCoreBattery"]);
+				PCMBattery: {
 					/** @constant */
 					type: "HeatBattery";
-					/** @enum {string} */
-					battery_type: "dry_core" | "pcm";
-				} & (unknown & unknown));
+					/** @constant */
+					battery_type: "pcm";
+					electricity_circ_pump: number;
+					electricity_standby: number;
+					rated_charge_power: number;
+					max_rated_losses: number;
+					ControlCharge: string;
+					number_of_units: number;
+					simultaneous_charging_and_discharging: boolean;
+					heat_storage_zone_material_kJ_per_K_above_Phase_transition: number;
+					heat_storage_zone_material_kJ_per_K_below_Phase_transition: number;
+					heat_storage_zone_material_kJ_per_K_during_Phase_transition: number;
+					phase_transition_temperature_upper: number;
+					phase_transition_temperature_lower: number;
+					velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
+					A: number;
+					B: number;
+					heat_exchanger_surface_area_m2: number;
+					capillary_diameter_m: number;
+					max_temperature: number;
+					flow_rate_l_per_min: number;
+					/**
+                     * Temp Init
+                     * @description Initial temperature of the PCM heat battery at the start of simulation (unit: ˚C)
+                     */
+					temp_init: number;
+				};
+				DryCoreBattery: {
+					/** @constant */
+					type: "HeatBattery";
+					/** @constant */
+					battery_type: "dry_core";
+					electricity_circ_pump: number;
+					electricity_standby: number;
+					/** @description Charging power (kW) */
+					pwr_in: number;
+					/** @description Rated instantaneous power output (kW) */
+					rated_power_instant: number;
+					/** @description Heat storage capacity (kWh) */
+					heat_storage_capacity: number;
+					ControlCharge: string;
+					EnergySupply: string;
+					number_of_units: number;
+					/** @description Lookup table for minimum output based on charge level */
+					dry_core_min_output: number[][];
+					/** @description Lookup table for maximum output based on charge level */
+					dry_core_max_output: number[][];
+					/** @description Fan power (W) */
+					fan_pwr: number;
+					/** @description Water setpoint temperature (°C) */
+					setpoint_temp_water: number;
+					/**
+                     * State Of Charge Init
+                     * @description State of charge at initialisation of dry core heat storage (ratio)
+                     */
+					state_of_charge_init: number;
+				};
 				/** @description A possible wet heat source */
 				HeatSourceWetHIU: components["schemas"]["HeatSourceWetCommon"] & {
 					/** @constant */
@@ -844,6 +952,8 @@ export type SchemaHeatPumpHwOnly = components["schemas"]["HeatPump_HWOnly"];
 export type SchemaBoiler = components["schemas"]["Boiler"];
 export type SchemaHotWaterTankCommon = components["schemas"]["HotWaterTankCommon"];
 export type SchemaHeatSourceWetCommon = components["schemas"]["HeatSourceWetCommon"];
+export type SchemaPcmBattery = components["schemas"]["PCMBattery"];
+export type SchemaDryCoreBattery = components["schemas"]["DryCoreBattery"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
 export type SchemaEnergySupplyCustom = components["schemas"]["EnergySupplyCustom"];
