@@ -696,41 +696,43 @@
             "type": "object",
             "unevaluatedProperties": false,
             "required": [
-                "storeys_in_building",
-                "build_type"
+                "storeys_in_building"
             ],
             "properties": {
                 "storeys_in_building": {
                     "type": "integer",
                     "minimum": 1,
                     "maximum": 250
+                }
+            },
+            "oneOf": [
+                {
+                    "required": [
+                        "build_type",
+                        "storey_of_dwelling"
+                    ],
+                    "properties": {
+                        "build_type": {
+                            "const": "flat"
+                        },
+                        "storey_of_dwelling": {
+                            "type": "integer",
+                            "minimum": -50,
+                            "maximum": 199
+                        }
+                    }
                 },
-                "build_type": {
-                    "enum": [
-                        "flat",
-                        "house"
-                    ]
-                }
-            },
-            "if": {
-                "properties": {
-                    "build_type": {
-                        "const": "flat"
+                {
+                    "required": [
+                        "build_type"
+                    ],
+                    "properties": {
+                        "build_type": {
+                            "const": "house"
+                        }
                     }
                 }
-            },
-            "then": {
-                "required": [
-                    "storey_of_dwelling"
-                ],
-                "properties": {
-                    "storey_of_dwelling": {
-                        "type": "integer",
-                        "minimum": -50,
-                        "maximum": 199
-                    }
-                }
-            }
+            ]
         },
         "InfiltrationVentilation": {
             "type": "object",

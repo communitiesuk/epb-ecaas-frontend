@@ -664,9 +664,14 @@ export interface components {
 			};
 			General: {
 				storeys_in_building: number;
-				/** @enum {unknown} */
-				build_type: "flat" | "house";
-			};
+			} & ({
+				/** @constant */
+				build_type: "flat";
+				storey_of_dwelling: number;
+			} | {
+				/** @constant */
+				build_type: "house";
+			});
 			InfiltrationVentilation: {
 				cross_vent_possible: boolean;
 				/** @enum {unknown} */
