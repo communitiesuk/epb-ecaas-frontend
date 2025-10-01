@@ -262,8 +262,8 @@ const unglazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceUnglazedDoors",
 	label: "External unglazed door",
 	data: unglazedDoorData.map(({ data: x }) => {
-		const taggedItems = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs]);
-		const taggedItem = taggedItems(x.associatedWallRoofCeilingId!);
+		const items = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs]);
+		const taggedItem = items(x.associatedWallRoofCeilingId!);
 
 		return {
 			"Name": x.name,
@@ -286,8 +286,8 @@ const glazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceGlazedDoors",
 	label: "External glazed door",
 	data: glazedDoorData.map(({ data: x }) => {
-		const taggedItems = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs]);
-		const taggedItem = taggedItems(x.associatedWallRoofCeilingId!);
+		const items = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs]);
+		const taggedItem = items(x.associatedWallRoofCeilingId!);
 
 		return {
 			"Name": x.name,
@@ -314,8 +314,8 @@ const internalDoorSummary: SummarySection = {
 	label: "Internal door",
 	data: internalDoorData?.map(({ data: x }) => {
 
-		const taggedItems = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceCeilings]);
-		const taggedItem = taggedItems(x.associatedHeatedSpaceElementId!);
+		const items = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceCeilings]);
+		const taggedItem = items(x.associatedHeatedSpaceElementId!);
 
 		return {
 			"Type": displayAdjacentSpaceType(x.typeOfInternalDoor, "Internal door"),

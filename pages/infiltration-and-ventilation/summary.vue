@@ -62,8 +62,8 @@ const ventSummary: SummarySection = {
 	label: "Vents",
 	data: ventData.map(x => {
 
-		const taggedItems = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceWindows]);
-		const taggedItem = taggedItems(x.data.associatedWallRoofWindowId!);
+		const items = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceWindows]);
+		const taggedItem = items(x.data.associatedWallRoofWindowId!);
 
 		return {
 			"Name": x.data.name,
