@@ -978,7 +978,7 @@ export type CorrectedJsonApiError = {
 	meta?: SchemaJsonApiOnePointOneMeta;
 };
 
-export interface TaggedItemValues {
+export interface AssociatedItemValues {
 	id: string;
 	pitch?: number;
 	orientation?: number;

@@ -143,7 +143,7 @@ export const useEcaasStore = defineStore("ecaas", {
 				return formStatus.notStarted;
 			};
 		},
-		getTaggedItem: () =>
+		getAssociatedItems: () =>
 			<T extends Record<string, unknown>>(sections: EcaasFormList<Partial<T>>[]) => {
 				let items = [];
 
