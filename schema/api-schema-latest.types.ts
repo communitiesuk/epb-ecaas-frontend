@@ -197,6 +197,12 @@ export interface components {
              */
 			state_of_charge_init: number;
 		};
+		ShowerCommon: {
+			/** @enum {unknown} */
+			type: "MixerShower" | "InstantElecShower";
+			/** @enum {unknown} */
+			ColdWaterSource: "header tank" | "mains water";
+		};
 		EnergySupplyGas: {
 			/** @enum {unknown} */
 			fuel: "mains_gas" | "gas";
@@ -345,6 +351,21 @@ export interface components {
 			power_max: number;
 			building_level_distribution_losses: number;
 		};
+		MixerShower: components["schemas"]["ShowerCommon"] & {
+			/** @constant */
+			type: "MixerShower";
+			flowrate: number;
+			HotWaterSource?: string;
+			WWHRS?: string;
+			/** @enum {unknown} */
+			WWHRS_configuration?: "A" | "B" | "C";
+		};
+		InstantElecShower: components["schemas"]["ShowerCommon"] & {
+			/** @constant */
+			type: "InstantElecShower";
+			rated_power: number;
+			EnergySupply: string;
+		};
 		/**
          * MassDistributionClass
          * @enum {string}
@@ -447,12 +468,7 @@ export interface components {
 			};
 			HotWaterDemand?: {
 				Shower?: {
-					[key: string]: {
-						/** @enum {unknown} */
-						type: "MixerShower" | "InstantElecShower";
-						/** @enum {unknown} */
-						ColdWaterSource: "header tank" | "mains water";
-					};
+					[key: string]: components["schemas"]["MixerShower"] | components["schemas"]["InstantElecShower"];
 				};
 				Bath?: {
 					[key: string]: {
@@ -932,6 +948,27 @@ export interface components {
 					power_max: number;
 					building_level_distribution_losses: number;
 				};
+				ShowerCommon: {
+					/** @enum {unknown} */
+					type: "MixerShower" | "InstantElecShower";
+					/** @enum {unknown} */
+					ColdWaterSource: "header tank" | "mains water";
+				};
+				MixerShower: components["schemas"]["ShowerCommon"] & {
+					/** @constant */
+					type: "MixerShower";
+					flowrate: number;
+					HotWaterSource?: string;
+					WWHRS?: string;
+					/** @enum {unknown} */
+					WWHRS_configuration?: "A" | "B" | "C";
+				};
+				InstantElecShower: components["schemas"]["ShowerCommon"] & {
+					/** @constant */
+					type: "InstantElecShower";
+					rated_power: number;
+					EnergySupply: string;
+				};
 			};
 		};
 	};
@@ -954,6 +991,7 @@ export type SchemaHotWaterTankCommon = components["schemas"]["HotWaterTankCommon
 export type SchemaHeatSourceWetCommon = components["schemas"]["HeatSourceWetCommon"];
 export type SchemaPcmBattery = components["schemas"]["PCMBattery"];
 export type SchemaDryCoreBattery = components["schemas"]["DryCoreBattery"];
+export type SchemaShowerCommon = components["schemas"]["ShowerCommon"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
 export type SchemaEnergySupplyCustom = components["schemas"]["EnergySupplyCustom"];
@@ -967,6 +1005,8 @@ export type SchemaHeatSourceWetHeatPump = components["schemas"]["HeatSourceWetHe
 export type SchemaHeatSourceWetBoiler = components["schemas"]["HeatSourceWetBoiler"];
 export type SchemaHeatSourceWetHeatBattery = components["schemas"]["HeatSourceWetHeatBattery"];
 export type SchemaHeatSourceWetHiu = components["schemas"]["HeatSourceWetHIU"];
+export type SchemaMixerShower = components["schemas"]["MixerShower"];
+export type SchemaInstantElecShower = components["schemas"]["InstantElecShower"];
 export type SchemaMassDistributionClass = components["schemas"]["MassDistributionClass"];
 export type SchemaFhsInputLatestSchema = components["schemas"]["fhs_input_latest.schema"];
 export type $defs = Record<string, never>;

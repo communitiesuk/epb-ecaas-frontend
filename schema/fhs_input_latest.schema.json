@@ -473,74 +473,14 @@
                 "Shower": {
                     "type": "object",
                     "additionalProperties": {
-                        "type": "object",
-                        "unevaluatedProperties": false,
-                        "required": [
-                            "type",
-                            "ColdWaterSource"
-                        ],
-                        "properties": {
-                            "type": {
-                                "enum": [
-                                    "MixerShower",
-                                    "InstantElecShower"
-                                ]
+                        "oneOf": [
+                            {
+                                "$ref": "#/$defs/MixerShower"
                             },
-                            "ColdWaterSource": {
-                                "enum": [
-                                    "header tank",
-                                    "mains water"
-                                ]
+                            {
+                                "$ref": "#/$defs/InstantElecShower"
                             }
-                        },
-                        "if": {
-                            "properties": {
-                                "type": {
-                                    "const": "MixerShower"
-                                }
-                            }
-                        },
-                        "then": {
-                            "required": [
-                                "flowrate"
-                            ],
-                            "properties": {
-                                "flowrate": {
-                                    "type": "number",
-                                    "minimum": 0,
-                                    "maximum": 15
-                                },
-                                "HotWaterSource": {
-                                    "type": "string"
-                                },
-                                "WWHRS": {
-                                    "type": "string"
-                                },
-                                "WWHRS_configuration": {
-                                    "enum": [
-                                        "A",
-                                        "B",
-                                        "C"
-                                    ]
-                                }
-                            }
-                        },
-                        "else": {
-                            "required": [
-                                "rated_power",
-                                "EnergySupply"
-                            ],
-                            "properties": {
-                                "rated_power": {
-                                    "type": "number",
-                                    "minimum": 0,
-                                    "maximum": 30
-                                },
-                                "EnergySupply": {
-                                    "type": "string"
-                                }
-                            }
-                        }
+                        ]
                     }
                 },
                 "Bath": {
@@ -4107,6 +4047,91 @@
                         "building_level_distribution_losses": {
                             "type": "number",
                             "minimum": 0
+                        }
+                    }
+                }
+            ]
+        },
+        "ShowerCommon": {
+            "type": "object",
+            "unevaluatedProperties": false,
+            "required": [
+                "type",
+                "ColdWaterSource"
+            ],
+            "properties": {
+                "type": {
+                    "enum": [
+                        "MixerShower",
+                        "InstantElecShower"
+                    ]
+                },
+                "ColdWaterSource": {
+                    "enum": [
+                        "header tank",
+                        "mains water"
+                    ]
+                }
+            }
+        },
+        "MixerShower": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/ShowerCommon"
+                },
+                {
+                    "required": [
+                        "type",
+                        "flowrate"
+                    ],
+                    "properties": {
+                        "type": {
+                            "const": "MixerShower"
+                        },
+                        "flowrate": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 15
+                        },
+                        "HotWaterSource": {
+                            "type": "string"
+                        },
+                        "WWHRS": {
+                            "type": "string"
+                        },
+                        "WWHRS_configuration": {
+                            "enum": [
+                                "A",
+                                "B",
+                                "C"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "InstantElecShower": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/ShowerCommon"
+                },
+                {
+                    "required": [
+                        "type",
+                        "rated_power",
+                        "EnergySupply"
+                    ],
+                    "properties": {
+                        "type": {
+                            "const": "InstantElecShower"
+                        },
+                        "rated_power": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 30
+                        },
+                        "EnergySupply": {
+                            "type": "string"
                         }
                     }
                 }
