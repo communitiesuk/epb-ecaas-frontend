@@ -3720,139 +3720,22 @@
                         "type": "object",
                         "unevaluatedProperties": false,
                         "required": [
-                            "wet_emitter_type",
                             "frac_convective"
                         ],
                         "properties": {
-                            "wet_emitter_type": {
-                                "enum": [
-                                    "radiator",
-                                    "ufh",
-                                    "fancoil"
-                                ]
-                            },
                             "frac_convective": {
                                 "type": "number"
                             }
                         },
-                        "allOf": [
+                        "oneOf": [
                             {
-                                "if": {
-                                    "properties": {
-                                        "wet_emitter_type": {
-                                            "const": "radiator"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "required": [
-                                        "c",
-                                        "n"
-                                    ],
-                                    "properties": {
-                                        "c": {
-                                            "type": "number",
-                                            "minimum": 0,
-                                            "maximum": 2
-                                        },
-                                        "n": {
-                                            "type": "number",
-                                            "minimum": 0,
-                                            "maximum": 2
-                                        }
-                                    }
-                                }
+                                "$ref": "#/$defs/Radiator"
                             },
                             {
-                                "if": {
-                                    "properties": {
-                                        "wet_emitter_type": {
-                                            "const": "ufh"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "required": [
-                                        "equivalent_specific_thermal_mass",
-                                        "system_performance_factor",
-                                        "emitter_floor_area"
-                                    ],
-                                    "properties": {
-                                        "equivalent_specific_thermal_mass": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        },
-                                        "system_performance_factor": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        },
-                                        "emitter_floor_area": {
-                                            "type": "number",
-                                            "minimum": 0
-                                        }
-                                    }
-                                }
+                                "$ref": "#/$defs/Ufh"
                             },
                             {
-                                "if": {
-                                    "properties": {
-                                        "wet_emitter_type": {
-                                            "const": "fancoil"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "required": [
-                                        "n_units",
-                                        "fancoil_test_data"
-                                    ],
-                                    "properties": {
-                                        "n_units": {
-                                            "type": "integer",
-                                            "minimum": 1
-                                        },
-                                        "fancoil_test_data": {
-                                            "type": "object",
-                                            "unevaluatedProperties": false,
-                                            "required": [
-                                                "fan_speed_data",
-                                                "fan_power_W"
-                                            ],
-                                            "properties": {
-                                                "fan_speed_data": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "unevaluatedProperties": false,
-                                                        "required": [
-                                                            "temperature_diff",
-                                                            "power_output"
-                                                        ],
-                                                        "properties": {
-                                                            "temperature_diff": {
-                                                                "type": "number"
-                                                            },
-                                                            "power_output": {
-                                                                "type": "array",
-                                                                "items": {
-                                                                    "type": "number",
-                                                                    "minimum": 0
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                "fan_power_W": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "number",
-                                                        "minimum": 0
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                "$ref": "#/$defs/Fancoil"
                             }
                         ]
                     }
@@ -4115,6 +3998,109 @@
                 },
                 "Control": {
                     "type": "string"
+                }
+            }
+        },
+        "Radiator": {
+            "required": [
+                "wet_emitter_type",
+                "c",
+                "n"
+            ],
+            "properties": {
+                "wet_emitter_type": {
+                    "const": "radiator"
+                },
+                "c": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 2
+                },
+                "n": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 2
+                }
+            }
+        },
+        "Ufh": {
+            "required": [
+                "wet_emitter_type",
+                "equivalent_specific_thermal_mass",
+                "system_performance_factor",
+                "emitter_floor_area"
+            ],
+            "properties": {
+                "wet_emitter_type": {
+                    "const": "ufh"
+                },
+                "equivalent_specific_thermal_mass": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "system_performance_factor": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "emitter_floor_area": {
+                    "type": "number",
+                    "minimum": 0
+                }
+            }
+        },
+        "Fancoil": {
+            "required": [
+                "wet_emitter_type",
+                "n_units",
+                "fancoil_test_data"
+            ],
+            "properties": {
+                "wet_emitter_type": {
+                    "const": "fancoil"
+                },
+                "n_units": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "fancoil_test_data": {
+                    "type": "object",
+                    "unevaluatedProperties": false,
+                    "required": [
+                        "fan_speed_data",
+                        "fan_power_W"
+                    ],
+                    "properties": {
+                        "fan_speed_data": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "unevaluatedProperties": false,
+                                "required": [
+                                    "temperature_diff",
+                                    "power_output"
+                                ],
+                                "properties": {
+                                    "temperature_diff": {
+                                        "type": "number"
+                                    },
+                                    "power_output": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number",
+                                            "minimum": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "fan_power_W": {
+                            "type": "array",
+                            "items": {
+                                "type": "number",
+                                "minimum": 0
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -203,6 +203,31 @@ export interface components {
 			/** @enum {unknown} */
 			ColdWaterSource: "header tank" | "mains water";
 		};
+		Radiator: {
+			/** @constant */
+			wet_emitter_type: "radiator";
+			c: number;
+			n: number;
+		};
+		Ufh: {
+			/** @constant */
+			wet_emitter_type: "ufh";
+			equivalent_specific_thermal_mass: number;
+			system_performance_factor: number;
+			emitter_floor_area: number;
+		};
+		Fancoil: {
+			/** @constant */
+			wet_emitter_type: "fancoil";
+			n_units: number;
+			fancoil_test_data: {
+				fan_speed_data: {
+					temperature_diff: number;
+					power_output: number[];
+				}[];
+				fan_power_W: number[];
+			};
+		};
 		EnergySupplyGas: {
 			/** @enum {unknown} */
 			fuel: "mains_gas" | "gas";
@@ -407,10 +432,8 @@ export interface components {
 			type: "WetDistribution";
 			EnergySupply?: string;
 			emitters: ({
-				/** @enum {unknown} */
-				wet_emitter_type: "radiator" | "ufh" | "fancoil";
 				frac_convective: number;
-			} & (unknown & unknown & unknown))[];
+			} & (components["schemas"]["Radiator"] | components["schemas"]["Ufh"] | components["schemas"]["Fancoil"]))[];
 			temp_diff_emit_dsgn: number;
 			variable_flow: boolean;
 			bypass_percentage_recirculated?: number;
@@ -1099,10 +1122,8 @@ export interface components {
 					type: "WetDistribution";
 					EnergySupply?: string;
 					emitters: ({
-						/** @enum {unknown} */
-						wet_emitter_type: "radiator" | "ufh" | "fancoil";
 						frac_convective: number;
-					} & (unknown & unknown & unknown))[];
+					} & (components["schemas"]["Radiator"] | components["schemas"]["Ufh"] | components["schemas"]["Fancoil"]))[];
 					temp_diff_emit_dsgn: number;
 					variable_flow: boolean;
 					bypass_percentage_recirculated?: number;
@@ -1150,6 +1171,31 @@ export interface components {
 					};
 					Control?: string;
 				};
+				Radiator: {
+					/** @constant */
+					wet_emitter_type: "radiator";
+					c: number;
+					n: number;
+				};
+				Ufh: {
+					/** @constant */
+					wet_emitter_type: "ufh";
+					equivalent_specific_thermal_mass: number;
+					system_performance_factor: number;
+					emitter_floor_area: number;
+				};
+				Fancoil: {
+					/** @constant */
+					wet_emitter_type: "fancoil";
+					n_units: number;
+					fancoil_test_data: {
+						fan_speed_data: {
+							temperature_diff: number;
+							power_output: number[];
+						}[];
+						fan_power_W: number[];
+					};
+				};
 			};
 		};
 	};
@@ -1173,6 +1219,9 @@ export type SchemaHeatSourceWetCommon = components["schemas"]["HeatSourceWetComm
 export type SchemaPcmBattery = components["schemas"]["PCMBattery"];
 export type SchemaDryCoreBattery = components["schemas"]["DryCoreBattery"];
 export type SchemaShowerCommon = components["schemas"]["ShowerCommon"];
+export type SchemaRadiator = components["schemas"]["Radiator"];
+export type SchemaUfh = components["schemas"]["Ufh"];
+export type SchemaFancoil = components["schemas"]["Fancoil"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
 export type SchemaEnergySupplyCustom = components["schemas"]["EnergySupplyCustom"];
