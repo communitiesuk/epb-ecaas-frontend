@@ -127,6 +127,13 @@ export interface components {
 			/** @description A heat_exchanger_surface_area is required when there is a HeatPump_HWOnly HeatSource */
 			heat_exchanger_surface_area?: number;
 		};
+		HeatSourceWetCommon: {
+			[key: string]: {
+				/** @enum {unknown} */
+				type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
+				EnergySupply: string;
+			};
+		};
 		EnergySupplyGas: {
 			/** @enum {unknown} */
 			fuel: "mains_gas" | "gas";
@@ -201,6 +208,79 @@ export interface components {
              * @description Temperature setpoint for the heat battery hot water output (unit: ˚C)
              */
 			setpoint_temp: number;
+		};
+		/** @description A possible wet heat source */
+		HeatSourceWetHeatPump: components["schemas"]["HeatSourceWetCommon"] & {
+			/** @constant */
+			type: "HeatPump";
+			/** @enum {unknown} */
+			source_type: "Ground" | "OutsideAir" | "ExhaustAirMEV" | "ExhaustAirMVHR" | "ExhaustAirMixed" | "WaterGround" | "WaterSurface";
+			/** @enum {unknown} */
+			sink_type: "Air" | "Water";
+			/** @enum {unknown} */
+			backup_ctrl_type: "None" | "TopUp" | "Substitute";
+			modulating_control: boolean;
+			min_modulation_rate_35: number;
+			min_modulation_rate_55: number;
+			temp_return_feed_max: number;
+			temp_lower_operating_limit: number;
+			min_temp_diff_flow_return_for_hp_to_operate: number;
+			var_flow_temp_ctrl_during_test: boolean;
+			power_heating_circ_pump?: number;
+			power_source_circ_pump: number;
+			power_standby: number;
+			power_crankcase_heater: number;
+			power_off: number;
+			power_max_backup: number;
+			BufferTank?: {
+				daily_losses: number;
+				pump_fixed_flow_rate: number;
+				pump_power_at_flow_rate: number;
+				volume: number;
+			};
+			time_delay_backup: number;
+			power_heating_warm_air_fan?: number;
+			time_constant_onoff_operation: number;
+			test_data_EN14825: {
+				/** @enum {unknown} */
+				test_letter: "A" | "B" | "C" | "D" | "F";
+				capacity: number;
+				cop: number;
+				design_flow_temp: number;
+				temp_outlet: number;
+				temp_source: number;
+				temp_test: number;
+			}[];
+		};
+		/** @description A possible wet heat source */
+		HeatSourceWetBoiler: components["schemas"]["HeatSourceWetCommon"] & {
+			/** @constant */
+			type: "Boiler";
+			rated_power: number;
+			efficiency_full_load: number;
+			efficiency_partload?: number;
+			/** @enum {unknown} */
+			boiler_location: "internal" | "external";
+			modulation_load: number;
+			electricity_circ_pump: number;
+			electricity_part_load: number;
+			electricity_full_load: number;
+			electricity_standby: number;
+		};
+		/** @description A possible wet heat source */
+		HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & ({
+			/** @constant */
+			type: "HeatBattery";
+			/** @enum {string} */
+			battery_type: "dry_core" | "pcm";
+		} & (unknown & unknown));
+		/** @description A possible wet heat source */
+		HeatSourceWetHIU: components["schemas"]["HeatSourceWetCommon"] & {
+			/** @constant */
+			type: "HIU";
+			HIU_daily_loss: number;
+			power_max: number;
+			building_level_distribution_losses: number;
 		};
 		/**
          * MassDistributionClass
@@ -299,13 +379,7 @@ export interface components {
 					ColdWaterSource?: "header tank" | "mains water";
 				} & (components["schemas"]["StorageTank"] | components["schemas"]["SmartHotWaterTank"] | components["schemas"]["PointOfUse"] | components["schemas"]["CombiBoiler"] | components["schemas"]["HeatBattery"]);
 			};
-			HeatSourceWet?: {
-				[key: string]: {
-					/** @enum {unknown} */
-					type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
-					EnergySupply: string;
-				} & (unknown & unknown & unknown & unknown);
-			};
+			HeatSourceWet?: components["schemas"]["HeatSourceWetHeatPump"] | components["schemas"]["HeatSourceWetBoiler"] | components["schemas"]["HeatSourceWetHeatBattery"] | components["schemas"]["HeatSourceWetHIU"];
 			HotWaterDemand?: {
 				Shower?: {
 					[key: string]: {
@@ -650,6 +724,86 @@ export interface components {
                      */
 					setpoint_temp: number;
 				};
+				HeatSourceWetCommon: {
+					[key: string]: {
+						/** @enum {unknown} */
+						type: "HeatPump" | "Boiler" | "HIU" | "HeatBattery";
+						EnergySupply: string;
+					};
+				};
+				/** @description A possible wet heat source */
+				HeatSourceWetHeatPump: components["schemas"]["HeatSourceWetCommon"] & {
+					/** @constant */
+					type: "HeatPump";
+					/** @enum {unknown} */
+					source_type: "Ground" | "OutsideAir" | "ExhaustAirMEV" | "ExhaustAirMVHR" | "ExhaustAirMixed" | "WaterGround" | "WaterSurface";
+					/** @enum {unknown} */
+					sink_type: "Air" | "Water";
+					/** @enum {unknown} */
+					backup_ctrl_type: "None" | "TopUp" | "Substitute";
+					modulating_control: boolean;
+					min_modulation_rate_35: number;
+					min_modulation_rate_55: number;
+					temp_return_feed_max: number;
+					temp_lower_operating_limit: number;
+					min_temp_diff_flow_return_for_hp_to_operate: number;
+					var_flow_temp_ctrl_during_test: boolean;
+					power_heating_circ_pump?: number;
+					power_source_circ_pump: number;
+					power_standby: number;
+					power_crankcase_heater: number;
+					power_off: number;
+					power_max_backup: number;
+					BufferTank?: {
+						daily_losses: number;
+						pump_fixed_flow_rate: number;
+						pump_power_at_flow_rate: number;
+						volume: number;
+					};
+					time_delay_backup: number;
+					power_heating_warm_air_fan?: number;
+					time_constant_onoff_operation: number;
+					test_data_EN14825: {
+						/** @enum {unknown} */
+						test_letter: "A" | "B" | "C" | "D" | "F";
+						capacity: number;
+						cop: number;
+						design_flow_temp: number;
+						temp_outlet: number;
+						temp_source: number;
+						temp_test: number;
+					}[];
+				};
+				/** @description A possible wet heat source */
+				HeatSourceWetBoiler: components["schemas"]["HeatSourceWetCommon"] & {
+					/** @constant */
+					type: "Boiler";
+					rated_power: number;
+					efficiency_full_load: number;
+					efficiency_partload?: number;
+					/** @enum {unknown} */
+					boiler_location: "internal" | "external";
+					modulation_load: number;
+					electricity_circ_pump: number;
+					electricity_part_load: number;
+					electricity_full_load: number;
+					electricity_standby: number;
+				};
+				/** @description A possible wet heat source */
+				HeatSourceWetHeatBattery: components["schemas"]["HeatSourceWetCommon"] & ({
+					/** @constant */
+					type: "HeatBattery";
+					/** @enum {string} */
+					battery_type: "dry_core" | "pcm";
+				} & (unknown & unknown));
+				/** @description A possible wet heat source */
+				HeatSourceWetHIU: components["schemas"]["HeatSourceWetCommon"] & {
+					/** @constant */
+					type: "HIU";
+					HIU_daily_loss: number;
+					power_max: number;
+					building_level_distribution_losses: number;
+				};
 			};
 		};
 	};
@@ -669,6 +823,7 @@ export type SchemaHeatSourceWet = components["schemas"]["HeatSourceWet"];
 export type SchemaHeatPumpHwOnly = components["schemas"]["HeatPump_HWOnly"];
 export type SchemaBoiler = components["schemas"]["Boiler"];
 export type SchemaHotWaterTankCommon = components["schemas"]["HotWaterTankCommon"];
+export type SchemaHeatSourceWetCommon = components["schemas"]["HeatSourceWetCommon"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
 export type SchemaEnergySupplyCustom = components["schemas"]["EnergySupplyCustom"];
@@ -678,6 +833,10 @@ export type SchemaSmartHotWaterTank = components["schemas"]["SmartHotWaterTank"]
 export type SchemaPointOfUse = components["schemas"]["PointOfUse"];
 export type SchemaCombiBoiler = components["schemas"]["CombiBoiler"];
 export type SchemaHeatBattery = components["schemas"]["HeatBattery"];
+export type SchemaHeatSourceWetHeatPump = components["schemas"]["HeatSourceWetHeatPump"];
+export type SchemaHeatSourceWetBoiler = components["schemas"]["HeatSourceWetBoiler"];
+export type SchemaHeatSourceWetHeatBattery = components["schemas"]["HeatSourceWetHeatBattery"];
+export type SchemaHeatSourceWetHiu = components["schemas"]["HeatSourceWetHIU"];
 export type SchemaMassDistributionClass = components["schemas"]["MassDistributionClass"];
 export type SchemaFhsInputLatestSchema = components["schemas"]["fhs_input_latest.schema"];
 export type $defs = Record<string, never>;
