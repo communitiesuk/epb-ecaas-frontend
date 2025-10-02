@@ -773,6 +773,7 @@ export interface components {
 			NumberOfHabitableRooms: number;
 			/** @enum {unknown} */
 			HeatingControlType: "SeparateTempControl" | "SeparateTimeAndTempControl";
+			/** @description Potentially incomplete: SimulationTime properties were inferred from example input files */
 			SimulationTime: {
 				end: number;
 				start: number;
@@ -820,10 +821,10 @@ export interface components {
 				Otherdevices?: components["schemas"]["ApplianceValue"];
 			};
 			ColdWaterSource: {
-				/** @description header tank properties have been inferred from example input files */
+				/** @description Potentially incomplete - header tank properties were inferred from example input files */
 				"header tank": components["schemas"]["ColdWaterSourceCommon"];
 			} | {
-				/** @description mains water properties have been inferred from example input files */
+				/** @description Potentially incomplete - mains water properties were inferred from example input files */
 				"mains water": components["schemas"]["ColdWaterSourceCommon"];
 			};
 			EnergySupply: {
@@ -855,6 +856,7 @@ export interface components {
 					inverter_type: "string_inverter" | "optimised_inverter";
 				};
 			};
+			/** @description Incomplete: Control has not been defined */
 			Control: Record<string, never>;
 			HotWaterSource: {
 				"hw cylinder"?: {
@@ -886,6 +888,7 @@ export interface components {
 					};
 				};
 			};
+			/** @description Incomplete: Events has not been defined */
 			Events: Record<string, never>;
 			WWHRS?: {
 				[key: string]: {
@@ -966,7 +969,9 @@ export interface components {
 				MechanicalVentilation?: {
 					[key: string]: components["schemas"]["MechVentMVHR"] | components["schemas"]["MechVentDecentralisedContinuousMEV"] | components["schemas"]["MechVentIntermittentMEV"] | components["schemas"]["MechVentCentralisedContinuousMEV"];
 				};
+				/** @description Incomplete: PDUs has not been defined */
 				PDUs?: Record<string, never>;
+				/** @description Incomplete: Cowls has not been defined */
 				Cowls?: Record<string, never>;
 				CombustionAppliances: {
 					[key: string]: {

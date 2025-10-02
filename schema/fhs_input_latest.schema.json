@@ -63,6 +63,7 @@
             ]
         },
         "SimulationTime": {
+            "description": "Potentially incomplete: SimulationTime properties were inferred from example input files",
             "type": "object",
             "additionalProperties": false,
             "required": [
@@ -271,7 +272,7 @@
                     "properties": {
                         "header tank": {
                             "type": "object",
-                            "description": "header tank properties have been inferred from example input files",
+                            "description": "Potentially incomplete - header tank properties were inferred from example input files",
                             "$ref": "#/$defs/ColdWaterSourceCommon"
                         }
                     }
@@ -283,7 +284,7 @@
                     "properties": {
                         "mains water": {
                             "type": "object",
-                            "description": "mains water properties have been inferred from example input files",
+                            "description": "Potentially incomplete - mains water properties were inferred from example input files",
                             "$ref": "#/$defs/ColdWaterSourceCommon"
                         }
                     }
@@ -429,7 +430,8 @@
             }
         },
         "Control": {
-            "type": "object"
+            "type": "object",
+            "description": "Incomplete: Control has not been defined"
         },
         "HotWaterSource": {
             "type": "object",
@@ -564,7 +566,8 @@
             }
         },
         "Events": {
-            "type": "object"
+            "type": "object",
+            "description": "Incomplete: Events has not been defined"
         },
         "WWHRS": {
             "type": "object",
@@ -900,10 +903,12 @@
                     }
                 },
                 "PDUs": {
-                    "type": "object"
+                    "type": "object",
+                    "description": "Incomplete: PDUs has not been defined"
                 },
                 "Cowls": {
-                    "type": "object"
+                    "type": "object",
+                    "description": "Incomplete: Cowls has not been defined"
                 },
                 "CombustionAppliances": {
                     "type": "object",
