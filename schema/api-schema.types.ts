@@ -28,6 +28,18 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        EnergySupplyElectricityCommon: {
+            /** @constant */
+            fuel: "electricity";
+            /** @enum {unknown} */
+            priority?: "ElectricBattery" | "diverter";
+            is_export_capable?: boolean;
+            diverter?: {
+                StorageTank?: string;
+                HeatSource: string;
+                Controlmax?: string;
+            };
+        };
         ElectricBatteryCommon: {
             capacity: number;
             charge_discharge_efficiency_round_trip: number;
@@ -37,16 +49,20 @@ export interface components {
             /** @enum {unknown} */
             battery_location: "inside" | "outside";
         };
-        ElectricBatteryGridCharging: components["schemas"]["ElectricBatteryCommon"] & {
-            /** @constant */
-            grid_charging_possible: true;
+        ElectricBatteryNoGridCharging: {
+            ElectricBattery: components["schemas"]["ElectricBatteryCommon"] & {
+                /** @constant */
+                grid_charging_possible: false;
+            };
+        };
+        ElectricBatteryGridCharging: {
+            ElectricBattery: components["schemas"]["ElectricBatteryCommon"] & {
+                /** @constant */
+                grid_charging_possible: true;
+            };
             threshold_charges: number[];
             threshold_prices: number[];
             tariff: string;
-        };
-        ElectricBatteryNoGridCharging: components["schemas"]["ElectricBatteryCommon"] & {
-            /** @constant */
-            grid_charging_possible: false;
         };
         HotWaterTankHeatSourceCommon: {
             /** @enum {unknown} */
@@ -355,19 +371,7 @@ export interface components {
             /** @enum {unknown} */
             fuel: "mains_gas" | "gas";
         };
-        EnergySupplyElectricity: {
-            /** @constant */
-            fuel: "electricity";
-            /** @enum {unknown} */
-            priority?: "ElectricBattery" | "diverter";
-            is_export_capable?: boolean;
-            ElectricBattery?: components["schemas"]["ElectricBatteryGridCharging"] | components["schemas"]["ElectricBatteryNoGridCharging"];
-            diverter?: {
-                StorageTank?: string;
-                HeatSource: string;
-                Controlmax?: string;
-            };
-        };
+        EnergySupplyElectricity: components["schemas"]["EnergySupplyElectricityCommon"] | (components["schemas"]["EnergySupplyElectricityCommon"] & components["schemas"]["ElectricBatteryNoGridCharging"]) | (components["schemas"]["EnergySupplyElectricityCommon"] & components["schemas"]["ElectricBatteryGridCharging"]);
         EnergySupplyCustom: {
             /** @constant */
             fuel: "custom";
@@ -1047,19 +1051,7 @@ export interface components {
                     /** @enum {unknown} */
                     fuel: "mains_gas" | "gas";
                 };
-                EnergySupplyElectricity: {
-                    /** @constant */
-                    fuel: "electricity";
-                    /** @enum {unknown} */
-                    priority?: "ElectricBattery" | "diverter";
-                    is_export_capable?: boolean;
-                    ElectricBattery?: components["schemas"]["ElectricBatteryGridCharging"] | components["schemas"]["ElectricBatteryNoGridCharging"];
-                    diverter?: {
-                        StorageTank?: string;
-                        HeatSource: string;
-                        Controlmax?: string;
-                    };
-                };
+                EnergySupplyElectricity: components["schemas"]["EnergySupplyElectricityCommon"] | (components["schemas"]["EnergySupplyElectricityCommon"] & components["schemas"]["ElectricBatteryNoGridCharging"]) | (components["schemas"]["EnergySupplyElectricityCommon"] & components["schemas"]["ElectricBatteryGridCharging"]);
                 ElectricBatteryCommon: {
                     capacity: number;
                     charge_discharge_efficiency_round_trip: number;
@@ -1069,16 +1061,32 @@ export interface components {
                     /** @enum {unknown} */
                     battery_location: "inside" | "outside";
                 };
-                ElectricBatteryGridCharging: components["schemas"]["ElectricBatteryCommon"] & {
-                    /** @constant */
-                    grid_charging_possible: true;
+                ElectricBatteryNoGridCharging: {
+                    ElectricBattery: components["schemas"]["ElectricBatteryCommon"] & {
+                        /** @constant */
+                        grid_charging_possible: false;
+                    };
+                };
+                ElectricBatteryGridCharging: {
+                    ElectricBattery: components["schemas"]["ElectricBatteryCommon"] & {
+                        /** @constant */
+                        grid_charging_possible: true;
+                    };
                     threshold_charges: number[];
                     threshold_prices: number[];
                     tariff: string;
                 };
-                ElectricBatteryNoGridCharging: components["schemas"]["ElectricBatteryCommon"] & {
+                EnergySupplyElectricityCommon: {
                     /** @constant */
-                    grid_charging_possible: false;
+                    fuel: "electricity";
+                    /** @enum {unknown} */
+                    priority?: "ElectricBattery" | "diverter";
+                    is_export_capable?: boolean;
+                    diverter?: {
+                        StorageTank?: string;
+                        HeatSource: string;
+                        Controlmax?: string;
+                    };
                 };
                 EnergySupplyCustom: {
                     /** @constant */
@@ -1758,9 +1766,10 @@ export interface components {
     headers: never;
     pathItems: never;
 }
+export type SchemaEnergySupplyElectricityCommon = components['schemas']['EnergySupplyElectricityCommon'];
 export type SchemaElectricBatteryCommon = components['schemas']['ElectricBatteryCommon'];
-export type SchemaElectricBatteryGridCharging = components['schemas']['ElectricBatteryGridCharging'];
 export type SchemaElectricBatteryNoGridCharging = components['schemas']['ElectricBatteryNoGridCharging'];
+export type SchemaElectricBatteryGridCharging = components['schemas']['ElectricBatteryGridCharging'];
 export type SchemaHotWaterTankHeatSourceCommon = components['schemas']['HotWaterTankHeatSourceCommon'];
 export type SchemaImmersionHeater = components['schemas']['ImmersionHeater'];
 export type SchemaSolarThermalSystem = components['schemas']['SolarThermalSystem'];

@@ -1242,51 +1242,31 @@
             }
         },
         "EnergySupplyElectricity": {
-            "required": [
-                "fuel"
-            ],
-            "properties": {
-                "fuel": {
-                    "const": "electricity"
+            "oneOf": [
+                {
+                    "$ref": "#/$defs/EnergySupplyElectricityCommon"
                 },
-                "priority": {
-                    "enum": [
-                        "ElectricBattery",
-                        "diverter"
-                    ]
-                },
-                "is_export_capable": {
-                    "type": "boolean"
-                },
-                "ElectricBattery": {
-                    "oneOf": [
+                {
+                    "allOf": [
                         {
-                            "$ref": "#/$defs/ElectricBatteryGridCharging"
+                            "$ref": "#/$defs/EnergySupplyElectricityCommon"
                         },
                         {
                             "$ref": "#/$defs/ElectricBatteryNoGridCharging"
                         }
                     ]
                 },
-                "diverter": {
-                    "type": "object",
-                    "unevaluatedProperties": false,
-                    "required": [
-                        "HeatSource"
-                    ],
-                    "properties": {
-                        "StorageTank": {
-                            "type": "string"
+                {
+                    "allOf": [
+                        {
+                            "$ref": "#/$defs/EnergySupplyElectricityCommon"
                         },
-                        "HeatSource": {
-                            "type": "string"
-                        },
-                        "Controlmax": {
-                            "type": "string"
+                        {
+                            "$ref": "#/$defs/ElectricBatteryGridCharging"
                         }
-                    }
+                    ]
                 }
-            }
+            ]
         },
         "ElectricBatteryCommon": {
             "required": [
@@ -1295,8 +1275,7 @@
                 "minimum_charge_rate_one_way_trip",
                 "maximum_charge_rate_one_way_trip",
                 "maximum_discharge_rate_one_way_trip",
-                "battery_location",
-                "grid_charging_possible"
+                "battery_location"
             ],
             "properties": {
                 "capacity": {
@@ -1329,57 +1308,110 @@
                 }
             }
         },
+        "ElectricBatteryNoGridCharging": {
+            "required": [
+                "ElectricBattery"
+            ],
+            "properties": {
+                "ElectricBattery": {
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/$defs/ElectricBatteryCommon"
+                        },
+                        {
+                            "required": [
+                                "grid_charging_possible"
+                            ],
+                            "properties": {
+                                "grid_charging_possible": {
+                                    "const": false
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
         "ElectricBatteryGridCharging": {
-            "allOf": [
-                {
-                    "$ref": "#/$defs/ElectricBatteryCommon"
+            "required": [
+                "ElectricBattery",
+                "threshold_charges",
+                "threshold_prices",
+                "tariff"
+            ],
+            "properties": {
+                "ElectricBattery": {
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/$defs/ElectricBatteryCommon"
+                        },
+                        {
+                            "required": [
+                                "grid_charging_possible"
+                            ],
+                            "properties": {
+                                "grid_charging_possible": {
+                                    "const": true
+                                }
+                            }
+                        }
+                    ]
                 },
-                {
+                "threshold_charges": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "threshold_prices": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "tariff": {
+                    "type": "string"
+                }
+            }
+        },
+        "EnergySupplyElectricityCommon": {
+            "required": [
+                "fuel"
+            ],
+            "properties": {
+                "fuel": {
+                    "const": "electricity"
+                },
+                "priority": {
+                    "enum": [
+                        "ElectricBattery",
+                        "diverter"
+                    ]
+                },
+                "is_export_capable": {
+                    "type": "boolean"
+                },
+                "diverter": {
+                    "type": "object",
+                    "unevaluatedProperties": false,
                     "required": [
-                        "grid_charging_possible",
-                        "threshold_charges",
-                        "threshold_prices",
-                        "tariff"
+                        "HeatSource"
                     ],
                     "properties": {
-                        "grid_charging_possible": {
-                            "const": true
+                        "StorageTank": {
+                            "type": "string"
                         },
-                        "threshold_charges": {
-                            "type": "array",
-                            "items": {
-                                "type": "number"
-                            }
+                        "HeatSource": {
+                            "type": "string"
                         },
-                        "threshold_prices": {
-                            "type": "array",
-                            "items": {
-                                "type": "number"
-                            }
-                        },
-                        "tariff": {
+                        "Controlmax": {
                             "type": "string"
                         }
                     }
                 }
-            ]
-        },
-        "ElectricBatteryNoGridCharging": {
-            "allOf": [
-                {
-                    "$ref": "#/$defs/ElectricBatteryCommon"
-                },
-                {
-                    "required": [
-                        "grid_charging_possible"
-                    ],
-                    "properties": {
-                        "grid_charging_possible": {
-                            "const": false
-                        }
-                    }
-                }
-            ]
+            }
         },
         "EnergySupplyCustom": {
             "required": [
