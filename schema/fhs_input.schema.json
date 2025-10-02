@@ -2571,20 +2571,11 @@
                 }
             ]
         },
-        "ShowerCommon": {
-            "type": "object",
-            "unevaluatedProperties": false,
+        "ColdWaterSource": {
             "required": [
-                "type",
                 "ColdWaterSource"
             ],
             "properties": {
-                "type": {
-                    "enum": [
-                        "MixerShower",
-                        "InstantElecShower"
-                    ]
-                },
                 "ColdWaterSource": {
                     "enum": [
                         "header tank",
@@ -2594,9 +2585,10 @@
             }
         },
         "MixerShower": {
+            "unevaluatedProperties": false,
             "allOf": [
                 {
-                    "$ref": "#/$defs/ShowerCommon"
+                    "$ref": "#/$defs/ColdWaterSource"
                 },
                 {
                     "required": [
@@ -2632,7 +2624,7 @@
         "InstantElecShower": {
             "allOf": [
                 {
-                    "$ref": "#/$defs/ShowerCommon"
+                    "$ref": "#/$defs/ColdWaterSource"
                 },
                 {
                     "required": [

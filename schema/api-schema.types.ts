@@ -223,9 +223,7 @@ export interface components {
              */
             state_of_charge_init: number;
         };
-        ShowerCommon: {
-            /** @enum {unknown} */
-            type: "MixerShower" | "InstantElecShower";
+        ColdWaterSource: {
             /** @enum {unknown} */
             ColdWaterSource: "header tank" | "mains water";
         };
@@ -503,7 +501,7 @@ export interface components {
             power_max: number;
             building_level_distribution_losses: number;
         };
-        MixerShower: components["schemas"]["ShowerCommon"] & {
+        MixerShower: components["schemas"]["ColdWaterSource"] & {
             /** @constant */
             type: "MixerShower";
             flowrate: number;
@@ -512,7 +510,7 @@ export interface components {
             /** @enum {unknown} */
             WWHRS_configuration?: "A" | "B" | "C";
         };
-        InstantElecShower: components["schemas"]["ShowerCommon"] & {
+        InstantElecShower: components["schemas"]["ColdWaterSource"] & {
             /** @constant */
             type: "InstantElecShower";
             rated_power: number;
@@ -1378,13 +1376,11 @@ export interface components {
                     power_max: number;
                     building_level_distribution_losses: number;
                 };
-                ShowerCommon: {
-                    /** @enum {unknown} */
-                    type: "MixerShower" | "InstantElecShower";
+                ColdWaterSource: {
                     /** @enum {unknown} */
                     ColdWaterSource: "header tank" | "mains water";
                 };
-                MixerShower: components["schemas"]["ShowerCommon"] & {
+                MixerShower: components["schemas"]["ColdWaterSource"] & {
                     /** @constant */
                     type: "MixerShower";
                     flowrate: number;
@@ -1393,7 +1389,7 @@ export interface components {
                     /** @enum {unknown} */
                     WWHRS_configuration?: "A" | "B" | "C";
                 };
-                InstantElecShower: components["schemas"]["ShowerCommon"] & {
+                InstantElecShower: components["schemas"]["ColdWaterSource"] & {
                     /** @constant */
                     type: "InstantElecShower";
                     rated_power: number;
@@ -1781,7 +1777,7 @@ export type SchemaHotWaterTankCommon = components['schemas']['HotWaterTankCommon
 export type SchemaHeatSourceWetCommon = components['schemas']['HeatSourceWetCommon'];
 export type SchemaPcmBattery = components['schemas']['PCMBattery'];
 export type SchemaDryCoreBattery = components['schemas']['DryCoreBattery'];
-export type SchemaShowerCommon = components['schemas']['ShowerCommon'];
+export type SchemaColdWaterSource = components['schemas']['ColdWaterSource'];
 export type SchemaRadiator = components['schemas']['Radiator'];
 export type SchemaUfh = components['schemas']['Ufh'];
 export type SchemaFancoil = components['schemas']['Fancoil'];
