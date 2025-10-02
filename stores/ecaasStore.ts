@@ -143,15 +143,31 @@ export const useEcaasStore = defineStore("ecaas", {
 				return formStatus.notStarted;
 			};
 		},
-		getAssociatedItems: () =>
-			<T extends Record<string, unknown>>(sections: EcaasFormList<Partial<T>>[]) => {
-				let items: AssociatedItemValues[][] = [];
+		getTaggedItem () {
+			return <T extends Record<string, unknown>>(sections: EcaasFormList<Partial<T>>[], id: string | undefined) :AssociatedItemValues | undefined => {
+
+				const items: AssociatedItemValues[][] = [];
+				const topLevelSections = sections.filter(s => s.data !== undefined && s.data.some(x => !("taggedItem" in x.data)));
 
 				for (const section of sections) {
+					const nestedTaggedItems = section.data.filter(hasTaggedItem);
+
+					if (nestedTaggedItems.length) {
+						for (const nestedTaggedItem of nestedTaggedItems) { 
+
+							const taggedItem = this.getTaggedItem(topLevelSections, nestedTaggedItem.data.taggedItem);
+
+							if (taggedItem) {
+								return taggedItem;
+							}
+						}
+						continue;
+					}
 					items.push(extractSectionItems(section));
 				}
-				return (id: string) => items.flat().find((item) => item.id === id);
-			},
+				return items.flat().find((item) => item.id === id);
+			};
+		},
 	},
 	actions: {
 		async postEcaasState (){

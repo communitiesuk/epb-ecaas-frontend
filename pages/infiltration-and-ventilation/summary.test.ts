@@ -35,11 +35,26 @@ const ductworkData: DuctworkData = {
 	thermalInsulationConductivityOfDuctwork: 10,
 	surfaceReflectivity: true,
 };
-const roofId = "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc";
+
+const externalWall: ExternalWallData = {
+	id: "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc",
+	name: "External wall 1",
+	pitchOption: "90",
+	pitch: 90,
+	orientation: 0,
+	length: 20,
+	height: 0.5,
+	elevationalHeight: 20,
+	surfaceArea: 10,
+	solarAbsorption: 0.1,
+	uValue: 1,
+	kappaValue: 50000,
+	massDistributionClass: MassDistributionClass.I,
+};
 const ventData: VentData = {
 	name: "Vent 1",
 	typeOfVent: "trickle",
-	associatedWallRoofWindowId: roofId,						 
+	associatedWallRoofWindowId: externalWall.id,						 
 	effectiveVentilationArea: 10,
 	openingRatio: 1,
 	midHeightOfZone: 1,
@@ -210,27 +225,11 @@ describe("Infiltration and ventilation summary", () => {
 
 	it("should display the correct data for the vents section", async () => {
 
-		const roof1: RoofData = {
-			id: roofId,
-			name: "Roof 1",
-			typeOfRoof: "flat",
-			pitchOption: "0",
-			pitch: 0,
-			length: 1,
-			width: 1,
-			elevationalHeightOfElement: 2,
-			surfaceArea: 1,
-			solarAbsorptionCoefficient: 0.5,
-			uValue: 1,
-			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
-		};
-
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceCeilingsAndRoofs: {
-					dwellingSpaceRoofs: {
-						data: [{ data: roof1 }],
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
 					},
 				},
 			},
@@ -249,8 +248,64 @@ describe("Infiltration and ventilation summary", () => {
 			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
 			"Vent opening ratio": "1",
 			"Mid height of zone": `1 ${metre.suffix}`,
-			"Orientation": "-",
-			"Pitch": `0 ${degrees.suffix}`,
+			"Orientation": `0 ${degrees.suffix}`,
+			"Pitch": `90 ${degrees.suffix}`,
+		};
+
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-vents-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
+
+	it("displays the correct data for the vents section when tagged with an item which is tagged with another item", async () => { 
+
+		const externalWall: Partial<ExternalWallData> = {
+			id: "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc",
+			name: "External wall 1",
+			pitchOption: "custom",
+			pitch: 66,
+			orientation: 77,
+		};
+		
+		const window1: Partial<WindowData> = {
+			id: "0b77e247-53c5-42b8-9dbd-83cbfc8ffffff",
+			name: "Window 1",
+			taggedItem: externalWall.id,
+		};
+
+		const ventData: Partial<VentData> = {
+			name: "Vent 1",
+			typeOfVent: "trickle",
+			associatedWallRoofWindowId: window1.id,						 
+		};
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWindows: {
+					data: [{ data: window1 }],
+				}, 
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall }],
+					},
+				},
+			},
+			infiltrationAndVentilation: {
+				vents: {
+					data: [{ data: ventData }],
+				},
+			},
+		});
+
+		await renderSuspended(Summary);
+
+		const expectedResult = {
+			"Name": "Vent 1",
+			"Type of vent": "Trickle",
+			"Orientation": `77 ${degrees.suffix}`,
+			"Pitch": `66 ${degrees.suffix}`,
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

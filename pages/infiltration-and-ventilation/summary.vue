@@ -62,8 +62,7 @@ const ventSummary: SummarySection = {
 	label: "Vents",
 	data: ventData.map(x => {
 
-		const items = store.getAssociatedItems([dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceWindows]);
-		const taggedItem = items(x.data.associatedWallRoofWindowId!);
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceWindows], x.data.associatedWallRoofWindowId);
 
 		return {
 			"Name": x.data.name,
@@ -71,8 +70,8 @@ const ventSummary: SummarySection = {
 			"Effective ventilation area": `${x.data.effectiveVentilationArea} ${centimetresSquare.suffix}`,
 			"Vent opening ratio": x.data.openingRatio,
 			"Mid height of zone": `${x.data.midHeightOfZone} ${metre.suffix}`,
-			"Orientation": "orientation" in taggedItem! ? `${taggedItem?.orientation} ${degrees.suffix}` : "-", // update with login in main when item has no orientation - this will apply to other summary pages which tag roofs
-			"Pitch": taggedItem?.pitch !== undefined ? `${taggedItem?.pitch} ${degrees.suffix}` : "-",  
+			"Orientation": "orientation" in taggedItem! ? `${taggedItem?.orientation} ${degrees.suffix}` : "-", // update with logic in main when item has no orientation - this will apply to other summary pages which tag roofs
+			"Pitch": taggedItem?.pitch !== undefined ? `${taggedItem?.pitch} ${degrees.suffix}` : "-",
 		};
 	}),
 	editUrl: getUrl("vents"),
