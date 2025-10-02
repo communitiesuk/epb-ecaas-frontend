@@ -275,6 +275,19 @@ export interface components {
 				pitch?: number;
 			};
 		};
+		/**
+         * MassDistributionClass
+         * @enum {string}
+         */
+		MassDistributionClass: "I: Mass concentrated at internal side" | "E: Mass concentrated at external side" | "IE: Mass divided over internal and external side" | "D: Mass equally distributed" | "M: Mass concentrated inside";
+		BuildingElementAdjacentCommon: {
+			pitch: number;
+			/** @enum {unknown} */
+			areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
+			mass_distribution_class: components["schemas"]["MassDistributionClass"];
+			area: number;
+			is_party_wall?: boolean;
+		};
 		EnergySupplyGas: {
 			/** @enum {unknown} */
 			fuel: "mains_gas" | "gas";
@@ -588,11 +601,80 @@ export interface components {
 			measured_fan_power: number;
 			measured_air_flow_rate: number;
 		};
-		/**
-         * MassDistributionClass
-         * @enum {string}
-         */
-		MassDistributionClass: "I: Mass concentrated at internal side" | "E: Mass concentrated at external side" | "IE: Mass divided over internal and external side" | "D: Mass equally distributed" | "M: Mass concentrated inside";
+		BuildingElementAdjacentConditionedSpace: components["schemas"]["BuildingElementAdjacentCommon"] & {
+			/** @constant */
+			type: "BuildingElementAdjacentConditionedSpace";
+		};
+		BuildingElementAdjacentUnconditionedSpace_Simple: components["schemas"]["BuildingElementAdjacentCommon"] & {
+			/** @constant */
+			type: "BuildingElementAdjacentUnconditionedSpace_Simple";
+			thermal_resistance_unconditioned_space: number;
+		};
+		BuildingElementGround: {
+			/** @constant */
+			type: "BuildingElementGround";
+			total_area: number;
+			/** @enum {unknown} */
+			floor_type: "Slab_no_edge_insulation" | "Slab_edge_insulation" | "Suspended_floor" | "Heated_basement" | "Unheated_basement";
+			thickness_walls: number;
+			perimeter: number;
+			psi_wall_floor_junc: number;
+			thermal_resistance_floor_construction: number;
+			/** @enum {unknown} */
+			areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
+			mass_distribution_class: components["schemas"]["MassDistributionClass"];
+			area: number;
+		} & (unknown & unknown & unknown & unknown);
+		BuildingElementOpaque: {
+			/** @constant */
+			type: "BuildingElementOpaque";
+			pitch: number;
+			is_unheated_pitched_roof?: boolean;
+			is_external_door?: boolean;
+			/** @enum {unknown} */
+			colour: "Light" | "Intermediate" | "Dark";
+			/** @enum {unknown} */
+			areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
+			mass_distribution_class: components["schemas"]["MassDistributionClass"];
+			orientation360: number;
+			base_height: number;
+			height: number;
+			width: number;
+			area: number;
+			is_party_wall?: boolean;
+		} & (unknown & unknown);
+		BuildingElementTransparent: {
+			/** @constant */
+			type: "BuildingElementTransparent";
+			pitch: number;
+			frame_area_fraction: number;
+			g_value: number;
+			free_area_height?: number;
+			mid_height: number;
+			max_window_open_area: number;
+			security_risk: boolean;
+			window_part_list: {
+				mid_height_air_flow_path: number;
+			}[];
+			shading: {
+				/** @enum {unknown} */
+				type: "overhang" | "sidefinleft" | "sidefinright";
+				depth: number;
+				distance: number;
+			}[];
+			treatment?: {
+				/** @enum {unknown} */
+				type: "curtains" | "blinds";
+				/** @enum {unknown} */
+				controls: "auto_motorised" | "manual";
+				delta_r: number;
+				trans_red: number;
+			}[];
+			orientation360: number;
+			base_height: number;
+			height: number;
+			width: number;
+		};
 		"fhs_input_latest.schema": {
 			PartGcompliance: boolean;
 			PartO_active_cooling_required?: boolean;
@@ -831,11 +913,12 @@ export interface components {
 					};
 					BuildingElement: {
 						[key: string]: ({
-							/** @enum {unknown} */
-							type: "BuildingElementAdjacentConditionedSpace" | "BuildingElementAdjacentUnconditionedSpace_Simple" | "BuildingElementGround" | "BuildingElementOpaque" | "BuildingElementTransparent";
-							thermal_resistance_construction?: number;
+							thermal_resistance_construction: number;
 							u_value?: number;
-						} & (unknown & unknown & unknown & unknown & unknown)) | unknown | unknown;
+						} | {
+							thermal_resistance_construction?: number;
+							u_value: number;
+						}) & (components["schemas"]["BuildingElementAdjacentConditionedSpace"] | components["schemas"]["BuildingElementAdjacentUnconditionedSpace_Simple"] | components["schemas"]["BuildingElementGround"] | components["schemas"]["BuildingElementOpaque"] | components["schemas"]["BuildingElementTransparent"]);
 					};
 					ThermalBridging: {
 						[key: string]: {
@@ -1411,6 +1494,88 @@ export interface components {
 					measured_fan_power: number;
 					measured_air_flow_rate: number;
 				};
+				BuildingElementAdjacentCommon: {
+					pitch: number;
+					/** @enum {unknown} */
+					areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
+					mass_distribution_class: components["schemas"]["MassDistributionClass"];
+					area: number;
+					is_party_wall?: boolean;
+				};
+				BuildingElementAdjacentConditionedSpace: components["schemas"]["BuildingElementAdjacentCommon"] & {
+					/** @constant */
+					type: "BuildingElementAdjacentConditionedSpace";
+				};
+				BuildingElementAdjacentUnconditionedSpace_Simple: components["schemas"]["BuildingElementAdjacentCommon"] & {
+					/** @constant */
+					type: "BuildingElementAdjacentUnconditionedSpace_Simple";
+					thermal_resistance_unconditioned_space: number;
+				};
+				BuildingElementGround: {
+					/** @constant */
+					type: "BuildingElementGround";
+					total_area: number;
+					/** @enum {unknown} */
+					floor_type: "Slab_no_edge_insulation" | "Slab_edge_insulation" | "Suspended_floor" | "Heated_basement" | "Unheated_basement";
+					thickness_walls: number;
+					perimeter: number;
+					psi_wall_floor_junc: number;
+					thermal_resistance_floor_construction: number;
+					/** @enum {unknown} */
+					areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
+					mass_distribution_class: components["schemas"]["MassDistributionClass"];
+					area: number;
+				} & (unknown & unknown & unknown & unknown);
+				BuildingElementOpaque: {
+					/** @constant */
+					type: "BuildingElementOpaque";
+					pitch: number;
+					is_unheated_pitched_roof?: boolean;
+					is_external_door?: boolean;
+					/** @enum {unknown} */
+					colour: "Light" | "Intermediate" | "Dark";
+					/** @enum {unknown} */
+					areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
+					mass_distribution_class: components["schemas"]["MassDistributionClass"];
+					orientation360: number;
+					base_height: number;
+					height: number;
+					width: number;
+					area: number;
+					is_party_wall?: boolean;
+				} & (unknown & unknown);
+				BuildingElementTransparent: {
+					/** @constant */
+					type: "BuildingElementTransparent";
+					pitch: number;
+					frame_area_fraction: number;
+					g_value: number;
+					free_area_height?: number;
+					mid_height: number;
+					max_window_open_area: number;
+					security_risk: boolean;
+					window_part_list: {
+						mid_height_air_flow_path: number;
+					}[];
+					shading: {
+						/** @enum {unknown} */
+						type: "overhang" | "sidefinleft" | "sidefinright";
+						depth: number;
+						distance: number;
+					}[];
+					treatment?: {
+						/** @enum {unknown} */
+						type: "curtains" | "blinds";
+						/** @enum {unknown} */
+						controls: "auto_motorised" | "manual";
+						delta_r: number;
+						trans_red: number;
+					}[];
+					orientation360: number;
+					base_height: number;
+					height: number;
+					width: number;
+				};
 			};
 		};
 	};
@@ -1441,6 +1606,8 @@ export type SchemaEcoDesignControllerNoWeatherCompensator = components["schemas"
 export type SchemaEcoDesignControllerWeatherCompensator = components["schemas"]["EcoDesignControllerWeatherCompensator"];
 export type SchemaMechVentCommon = components["schemas"]["MechVentCommon"];
 export type SchemaMechVentMevCommon = components["schemas"]["MechVentMEVCommon"];
+export type SchemaMassDistributionClass = components["schemas"]["MassDistributionClass"];
+export type SchemaBuildingElementAdjacentCommon = components["schemas"]["BuildingElementAdjacentCommon"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
 export type SchemaEnergySupplyCustom = components["schemas"]["EnergySupplyCustom"];
@@ -1464,7 +1631,11 @@ export type SchemaMechVentMvhr = components["schemas"]["MechVentMVHR"];
 export type SchemaMechVentDecentralisedContinuousMev = components["schemas"]["MechVentDecentralisedContinuousMEV"];
 export type SchemaMechVentIntermittentMev = components["schemas"]["MechVentIntermittentMEV"];
 export type SchemaMechVentCentralisedContinuousMev = components["schemas"]["MechVentCentralisedContinuousMEV"];
-export type SchemaMassDistributionClass = components["schemas"]["MassDistributionClass"];
+export type SchemaBuildingElementAdjacentConditionedSpace = components["schemas"]["BuildingElementAdjacentConditionedSpace"];
+export type SchemaBuildingElementAdjacentUnconditionedSpaceSimple = components["schemas"]["BuildingElementAdjacentUnconditionedSpace_Simple"];
+export type SchemaBuildingElementGround = components["schemas"]["BuildingElementGround"];
+export type SchemaBuildingElementOpaque = components["schemas"]["BuildingElementOpaque"];
+export type SchemaBuildingElementTransparent = components["schemas"]["BuildingElementTransparent"];
 export type SchemaFhsInputLatestSchema = components["schemas"]["fhs_input_latest.schema"];
 export type $defs = Record<string, never>;
 export interface operations {

@@ -1047,633 +1047,57 @@
                         "additionalProperties": {
                             "type": "object",
                             "unevaluatedProperties": false,
-                            "properties": {
-                                "type": {
-                                    "enum": [
-                                        "BuildingElementAdjacentConditionedSpace",
-                                        "BuildingElementAdjacentUnconditionedSpace_Simple",
-                                        "BuildingElementGround",
-                                        "BuildingElementOpaque",
-                                        "BuildingElementTransparent"
-                                    ]
-                                },
-                                "thermal_resistance_construction": {
-                                    "type": "number",
-                                    "minimum": 0.01,
-                                    "maximum": 50
-                                },
-                                "u_value": {
-                                    "type": "number",
-                                    "minimum": 0.01,
-                                    "maximum": 10
-                                }
-                            },
                             "anyOf": [
                                 {
                                     "required": [
                                         "thermal_resistance_construction"
-                                    ]
+                                    ],
+                                    "properties": {
+                                        "thermal_resistance_construction": {
+                                            "type": "number",
+                                            "minimum": 0.01,
+                                            "maximum": 50
+                                        },
+                                        "u_value": {
+                                            "type": "number",
+                                            "minimum": 0.01,
+                                            "maximum": 10
+                                        }
+                                    }
                                 },
                                 {
                                     "required": [
                                         "u_value"
-                                    ]
+                                    ],
+                                    "properties": {
+                                        "thermal_resistance_construction": {
+                                            "type": "number",
+                                            "minimum": 0.01,
+                                            "maximum": 50
+                                        },
+                                        "u_value": {
+                                            "type": "number",
+                                            "minimum": 0.01,
+                                            "maximum": 10
+                                        }
+                                    }
                                 }
                             ],
-                            "required": [
-                                "type"
-                            ],
-                            "allOf": [
+                            "oneOf": [
                                 {
-                                    "if": {
-                                        "anyOf": [
-                                            {
-                                                "properties": {
-                                                    "type": {
-                                                        "const": "BuildingElementAdjacentConditionedSpace"
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "properties": {
-                                                    "type": {
-                                                        "const": "BuildingElementAdjacentUnconditionedSpace_Simple"
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    "then": {
-                                        "required": [
-                                            "area",
-                                            "areal_heat_capacity",
-                                            "mass_distribution_class",
-                                            "pitch"
-                                        ],
-                                        "properties": {
-                                            "pitch": {
-                                                "type": "integer",
-                                                "minimum": 0,
-                                                "maximum": 180
-                                            },
-                                            "areal_heat_capacity": {
-                                                "enum": [
-                                                    "Very light",
-                                                    "Light",
-                                                    "Medium",
-                                                    "Heavy",
-                                                    "Very heavy"
-                                                ]
-                                            },
-                                            "mass_distribution_class": {
-                                                "$ref": "#/$defs/MassDistributionClass"
-                                            },
-                                            "area": {
-                                                "type": "number",
-                                                "minimum": 0.01,
-                                                "maximum": 10000
-                                            },
-                                            "is_party_wall": {
-                                                "type": "boolean"
-                                            }
-                                        }
-                                    }
+                                    "$ref": "#/$defs/BuildingElementAdjacentConditionedSpace"
                                 },
                                 {
-                                    "if": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "BuildingElementAdjacentUnconditionedSpace_Simple"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "required": [
-                                            "thermal_resistance_unconditioned_space"
-                                        ],
-                                        "properties": {
-                                            "thermal_resistance_unconditioned_space": {
-                                                "type": "number",
-                                                "minimum": 0,
-                                                "maximum": 3
-                                            }
-                                        }
-                                    }
+                                    "$ref": "#/$defs/BuildingElementAdjacentUnconditionedSpace_Simple"
                                 },
                                 {
-                                    "if": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "BuildingElementGround"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "required": [
-                                            "u_value",
-                                            "total_area",
-                                            "floor_type",
-                                            "thickness_walls",
-                                            "perimeter",
-                                            "psi_wall_floor_junc",
-                                            "thermal_resistance_floor_construction",
-                                            "areal_heat_capacity",
-                                            "mass_distribution_class",
-                                            "area"
-                                        ],
-                                        "properties": {
-                                            "total_area": {
-                                                "type": "number",
-                                                "minimum": 5
-                                            },
-                                            "floor_type": {
-                                                "enum": [
-                                                    "Slab_no_edge_insulation",
-                                                    "Slab_edge_insulation",
-                                                    "Suspended_floor",
-                                                    "Heated_basement",
-                                                    "Unheated_basement"
-                                                ]
-                                            },
-                                            "thickness_walls": {
-                                                "type": "number",
-                                                "minimum": 0,
-                                                "maximum": 100
-                                            },
-                                            "perimeter": {
-                                                "type": "number",
-                                                "minimum": 0,
-                                                "maximum": 1000
-                                            },
-                                            "psi_wall_floor_junc": {
-                                                "type": "number",
-                                                "minimum": 0,
-                                                "maximum": 2
-                                            },
-                                            "thermal_resistance_floor_construction": {
-                                                "type": "number",
-                                                "minimum": 0.000001,
-                                                "maximum": 50
-                                            },
-                                            "areal_heat_capacity": {
-                                                "enum": [
-                                                    "Very light",
-                                                    "Light",
-                                                    "Medium",
-                                                    "Heavy",
-                                                    "Very heavy"
-                                                ]
-                                            },
-                                            "mass_distribution_class": {
-                                                "$ref": "#/$defs/MassDistributionClass"
-                                            },
-                                            "area": {
-                                                "type": "number",
-                                                "minimum": 5,
-                                                "maximum": 10000
-                                            }
-                                        },
-                                        "allOf": [
-                                            {
-                                                "if": {
-                                                    "properties": {
-                                                        "floor_type": {
-                                                            "const": "Slab_edge_insulation"
-                                                        }
-                                                    }
-                                                },
-                                                "then": {
-                                                    "required": [
-                                                        "edge_insulation"
-                                                    ],
-                                                    "properties": {
-                                                        "edge_insulation": {
-                                                            "type": "object",
-                                                            "unevaluatedProperties": false,
-                                                            "required": [
-                                                                "type",
-                                                                "width",
-                                                                "edge_thermal_resistance"
-                                                            ],
-                                                            "properties": {
-                                                                "type": {
-                                                                    "enum": [
-                                                                        "horizontal",
-                                                                        "vertical"
-                                                                    ]
-                                                                },
-                                                                "width": {
-                                                                    "type": "number"
-                                                                },
-                                                                "edge_thermal_resistance": {
-                                                                    "type": "number"
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "if": {
-                                                    "properties": {
-                                                        "floor_type": {
-                                                            "const": "Suspended_floor"
-                                                        }
-                                                    }
-                                                },
-                                                "then": {
-                                                    "required": [
-                                                        "height_upper_surface",
-                                                        "thermal_transm_walls",
-                                                        "shield_fact_location",
-                                                        "thickness_walls",
-                                                        "thermal_resist_insul"
-                                                    ],
-                                                    "properties": {
-                                                        "height_upper_surface": {
-                                                            "type": "number",
-                                                            "minimum": 0,
-                                                            "maximum": 100
-                                                        },
-                                                        "thermal_transm_walls": {
-                                                            "type": "number",
-                                                            "minimum": 0,
-                                                            "maximum": 100
-                                                        },
-                                                        "area_per_perimeter_vent": {
-                                                            "type": "number"
-                                                        },
-                                                        "shield_fact_location": {
-                                                            "enum": [
-                                                                "Sheltered",
-                                                                "Average",
-                                                                "Exposed"
-                                                            ]
-                                                        },
-                                                        "thickness_walls": {
-                                                            "type": "number",
-                                                            "minimum": 0,
-                                                            "maximum": 100
-                                                        },
-                                                        "thermal_resist_insul": {
-                                                            "type": "number",
-                                                            "minimum": 0,
-                                                            "maximum": 100
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "if": {
-                                                    "anyOf": [
-                                                        {
-                                                            "properties": {
-                                                                "floor_type": {
-                                                                    "const": "Heated_basement"
-                                                                }
-                                                            }
-                                                        },
-                                                        {
-                                                            "properties": {
-                                                                "floor_type": {
-                                                                    "const": "Unheated_basement"
-                                                                }
-                                                            }
-                                                        }
-                                                    ]
-                                                },
-                                                "then": {
-                                                    "required": [
-                                                        "thickness_walls",
-                                                        "depth_basement_floor",
-                                                        "thermal_resist_walls_base"
-                                                    ],
-                                                    "properties": {
-                                                        "thickness_walls": {
-                                                            "type": "number",
-                                                            "minimum": 0,
-                                                            "maximum": 100
-                                                        },
-                                                        "depth_basement_floor": {
-                                                            "type": "number"
-                                                        },
-                                                        "thermal_resist_walls_base": {
-                                                            "type": "number"
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "if": {
-                                                    "properties": {
-                                                        "floor_type": {
-                                                            "const": "Unheated_basement"
-                                                        }
-                                                    }
-                                                },
-                                                "then": {
-                                                    "required": [
-                                                        "thermal_transm_envi_base",
-                                                        "thermal_transm_walls",
-                                                        "height_basement_walls"
-                                                    ],
-                                                    "properties": {
-                                                        "thermal_transm_envi_base": {
-                                                            "type": "number"
-                                                        },
-                                                        "thermal_transm_walls": {
-                                                            "type": "number"
-                                                        },
-                                                        "height_basement_walls": {
-                                                            "type": "number"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
+                                    "$ref": "#/$defs/BuildingElementGround"
                                 },
                                 {
-                                    "if": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "BuildingElementOpaque"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "required": [
-                                            "colour",
-                                            "areal_heat_capacity",
-                                            "mass_distribution_class",
-                                            "orientation360",
-                                            "base_height",
-                                            "height",
-                                            "width",
-                                            "area",
-                                            "pitch"
-                                        ],
-                                        "properties": {
-                                            "pitch": {
-                                                "type": "integer",
-                                                "minimum": 0,
-                                                "maximum": 180
-                                            },
-                                            "is_unheated_pitched_roof": {
-                                                "type": "boolean"
-                                            },
-                                            "is_external_door": {
-                                                "type": "boolean"
-                                            },
-                                            "colour": {
-                                                "enum": [
-                                                    "Light",
-                                                    "Intermediate",
-                                                    "Dark"
-                                                ]
-                                            },
-                                            "areal_heat_capacity": {
-                                                "enum": [
-                                                    "Very light",
-                                                    "Light",
-                                                    "Medium",
-                                                    "Heavy",
-                                                    "Very heavy"
-                                                ]
-                                            },
-                                            "mass_distribution_class": {
-                                                "$ref": "#/$defs/MassDistributionClass"
-                                            },
-                                            "orientation360": {
-                                                "type": "integer",
-                                                "minimum": 0,
-                                                "maximum": 360
-                                            },
-                                            "base_height": {
-                                                "type": "number",
-                                                "minimum": 0,
-                                                "maximum": 500
-                                            },
-                                            "height": {
-                                                "type": "number",
-                                                "minimum": 0.001,
-                                                "maximum": 50
-                                            },
-                                            "width": {
-                                                "type": "number",
-                                                "minimum": 0.001,
-                                                "maximum": 100
-                                            },
-                                            "area": {
-                                                "type": "number",
-                                                "minimum": 0.01,
-                                                "maximum": 10000
-                                            },
-                                            "is_party_wall": {
-                                                "type": "boolean"
-                                            }
-                                        },
-                                        "allOf": [
-                                            {
-                                                "if": {
-                                                    "type": "object",
-                                                    "unevaluatedProperties": false,
-                                                    "properties": {
-                                                        "pitch": {
-                                                            "type": "number",
-                                                            "minimum": 60,
-                                                            "maximum": 120
-                                                        }
-                                                    }
-                                                },
-                                                "then": {
-                                                    "required": [
-                                                        "is_external_door"
-                                                    ]
-                                                }
-                                            },
-                                            {
-                                                "if": {
-                                                    "type": "object",
-                                                    "unevaluatedProperties": false,
-                                                    "properties": {
-                                                        "pitch": {
-                                                            "type": "number",
-                                                            "maximum": 60
-                                                        }
-                                                    }
-                                                },
-                                                "then": {
-                                                    "required": [
-                                                        "is_unheated_pitched_roof"
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
+                                    "$ref": "#/$defs/BuildingElementOpaque"
                                 },
                                 {
-                                    "if": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "BuildingElementTransparent"
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "required": [
-                                            "frame_area_fraction",
-                                            "g_value",
-                                            "mid_height",
-                                            "max_window_open_area",
-                                            "security_risk",
-                                            "window_part_list",
-                                            "shading",
-                                            "orientation360",
-                                            "base_height",
-                                            "height",
-                                            "width",
-                                            "pitch"
-                                        ],
-                                        "properties": {
-                                            "pitch": {
-                                                "type": "integer",
-                                                "minimum": 0,
-                                                "maximum": 180
-                                            },
-                                            "frame_area_fraction": {
-                                                "type": "number",
-                                                "minimum": 0,
-                                                "maximum": 1
-                                            },
-                                            "g_value": {
-                                                "type": "number",
-                                                "minimum": 0,
-                                                "maximum": 1
-                                            },
-                                            "free_area_height": {
-                                                "type": "number",
-                                                "minimum": 0,
-                                                "maximum": 100
-                                            },
-                                            "mid_height": {
-                                                "type": "number",
-                                                "minimum": 0,
-                                                "maximum": 100
-                                            },
-                                            "max_window_open_area": {
-                                                "type": "number",
-                                                "minimum": 0,
-                                                "maximum": 100
-                                            },
-                                            "security_risk": {
-                                                "type": "boolean"
-                                            },
-                                            "window_part_list": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "object",
-                                                    "unevaluatedProperties": false,
-                                                    "required": [
-                                                        "mid_height_air_flow_path"
-                                                    ],
-                                                    "properties": {
-                                                        "mid_height_air_flow_path": {
-                                                            "type": "number",
-                                                            "minimum": 0,
-                                                            "maximum": 100
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "shading": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "object",
-                                                    "unevaluatedProperties": false,
-                                                    "required": [
-                                                        "type",
-                                                        "depth",
-                                                        "distance"
-                                                    ],
-                                                    "properties": {
-                                                        "type": {
-                                                            "enum": [
-                                                                "overhang",
-                                                                "sidefinleft",
-                                                                "sidefinright"
-                                                            ]
-                                                        },
-                                                        "depth": {
-                                                            "type": "number",
-                                                            "minimum": 0
-                                                        },
-                                                        "distance": {
-                                                            "type": "number",
-                                                            "minimum": 0
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "treatment": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "object",
-                                                    "unevaluatedProperties": false,
-                                                    "required": [
-                                                        "type",
-                                                        "controls",
-                                                        "delta_r",
-                                                        "trans_red"
-                                                    ],
-                                                    "properties": {
-                                                        "type": {
-                                                            "enum": [
-                                                                "curtains",
-                                                                "blinds"
-                                                            ]
-                                                        },
-                                                        "controls": {
-                                                            "enum": [
-                                                                "auto_motorised",
-                                                                "manual"
-                                                            ]
-                                                        },
-                                                        "delta_r": {
-                                                            "type": "number",
-                                                            "minimum": 0,
-                                                            "maximum": 100
-                                                        },
-                                                        "trans_red": {
-                                                            "type": "number",
-                                                            "minimum": 0,
-                                                            "maximum": 1
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            "orientation360": {
-                                                "type": "integer",
-                                                "minimum": 0,
-                                                "maximum": 360
-                                            },
-                                            "base_height": {
-                                                "type": "number",
-                                                "minimum": 0,
-                                                "maximum": 500
-                                            },
-                                            "height": {
-                                                "type": "number",
-                                                "minimum": 0.001,
-                                                "maximum": 50
-                                            },
-                                            "width": {
-                                                "type": "number",
-                                                "minimum": 0.001,
-                                                "maximum": 100
-                                            }
-                                        }
-                                    }
+                                    "$ref": "#/$defs/BuildingElementTransparent"
                                 }
                             ]
                         }
@@ -4087,6 +3511,581 @@
                     }
                 }
             ]
+        },
+        "BuildingElementAdjacentCommon": {
+            "required": [
+                "area",
+                "areal_heat_capacity",
+                "mass_distribution_class",
+                "pitch"
+            ],
+            "properties": {
+                "pitch": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 180
+                },
+                "areal_heat_capacity": {
+                    "enum": [
+                        "Very light",
+                        "Light",
+                        "Medium",
+                        "Heavy",
+                        "Very heavy"
+                    ]
+                },
+                "mass_distribution_class": {
+                    "$ref": "#/$defs/MassDistributionClass"
+                },
+                "area": {
+                    "type": "number",
+                    "minimum": 0.01,
+                    "maximum": 10000
+                },
+                "is_party_wall": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "BuildingElementAdjacentConditionedSpace": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/BuildingElementAdjacentCommon"
+                },
+                {
+                    "required": [
+                        "type"
+                    ],
+                    "properties": {
+                        "type": {
+                            "const": "BuildingElementAdjacentConditionedSpace"
+                        }
+                    }
+                }
+            ]
+        },
+        "BuildingElementAdjacentUnconditionedSpace_Simple": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/BuildingElementAdjacentCommon"
+                },
+                {
+                    "required": [
+                        "type",
+                        "thermal_resistance_unconditioned_space"
+                    ],
+                    "properties": {
+                        "type": {
+                            "const": "BuildingElementAdjacentUnconditionedSpace_Simple"
+                        },
+                        "thermal_resistance_unconditioned_space": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 3
+                        }
+                    }
+                }
+            ]
+        },
+        "BuildingElementGround": {
+            "required": [
+                "type",
+                "u_value",
+                "total_area",
+                "floor_type",
+                "thickness_walls",
+                "perimeter",
+                "psi_wall_floor_junc",
+                "thermal_resistance_floor_construction",
+                "areal_heat_capacity",
+                "mass_distribution_class",
+                "area"
+            ],
+            "properties": {
+                "type": {
+                    "const": "BuildingElementGround"
+                },
+                "total_area": {
+                    "type": "number",
+                    "minimum": 5
+                },
+                "floor_type": {
+                    "enum": [
+                        "Slab_no_edge_insulation",
+                        "Slab_edge_insulation",
+                        "Suspended_floor",
+                        "Heated_basement",
+                        "Unheated_basement"
+                    ]
+                },
+                "thickness_walls": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "perimeter": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                },
+                "psi_wall_floor_junc": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 2
+                },
+                "thermal_resistance_floor_construction": {
+                    "type": "number",
+                    "minimum": 0.000001,
+                    "maximum": 50
+                },
+                "areal_heat_capacity": {
+                    "enum": [
+                        "Very light",
+                        "Light",
+                        "Medium",
+                        "Heavy",
+                        "Very heavy"
+                    ]
+                },
+                "mass_distribution_class": {
+                    "$ref": "#/$defs/MassDistributionClass"
+                },
+                "area": {
+                    "type": "number",
+                    "minimum": 5,
+                    "maximum": 10000
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "floor_type": {
+                                "const": "Slab_edge_insulation"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "edge_insulation"
+                        ],
+                        "properties": {
+                            "edge_insulation": {
+                                "type": "object",
+                                "unevaluatedProperties": false,
+                                "required": [
+                                    "type",
+                                    "width",
+                                    "edge_thermal_resistance"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "horizontal",
+                                            "vertical"
+                                        ]
+                                    },
+                                    "width": {
+                                        "type": "number"
+                                    },
+                                    "edge_thermal_resistance": {
+                                        "type": "number"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "floor_type": {
+                                "const": "Suspended_floor"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "height_upper_surface",
+                            "thermal_transm_walls",
+                            "shield_fact_location",
+                            "thickness_walls",
+                            "thermal_resist_insul"
+                        ],
+                        "properties": {
+                            "height_upper_surface": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100
+                            },
+                            "thermal_transm_walls": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100
+                            },
+                            "area_per_perimeter_vent": {
+                                "type": "number"
+                            },
+                            "shield_fact_location": {
+                                "enum": [
+                                    "Sheltered",
+                                    "Average",
+                                    "Exposed"
+                                ]
+                            },
+                            "thickness_walls": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100
+                            },
+                            "thermal_resist_insul": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "anyOf": [
+                            {
+                                "properties": {
+                                    "floor_type": {
+                                        "const": "Heated_basement"
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "floor_type": {
+                                        "const": "Unheated_basement"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "then": {
+                        "required": [
+                            "thickness_walls",
+                            "depth_basement_floor",
+                            "thermal_resist_walls_base"
+                        ],
+                        "properties": {
+                            "thickness_walls": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100
+                            },
+                            "depth_basement_floor": {
+                                "type": "number"
+                            },
+                            "thermal_resist_walls_base": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "floor_type": {
+                                "const": "Unheated_basement"
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "thermal_transm_envi_base",
+                            "thermal_transm_walls",
+                            "height_basement_walls"
+                        ],
+                        "properties": {
+                            "thermal_transm_envi_base": {
+                                "type": "number"
+                            },
+                            "thermal_transm_walls": {
+                                "type": "number"
+                            },
+                            "height_basement_walls": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "BuildingElementOpaque": {
+            "required": [
+                "type",
+                "colour",
+                "areal_heat_capacity",
+                "mass_distribution_class",
+                "orientation360",
+                "base_height",
+                "height",
+                "width",
+                "area",
+                "pitch"
+            ],
+            "properties": {
+                "type": {
+                    "const": "BuildingElementOpaque"
+                },
+                "pitch": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 180
+                },
+                "is_unheated_pitched_roof": {
+                    "type": "boolean"
+                },
+                "is_external_door": {
+                    "type": "boolean"
+                },
+                "colour": {
+                    "enum": [
+                        "Light",
+                        "Intermediate",
+                        "Dark"
+                    ]
+                },
+                "areal_heat_capacity": {
+                    "enum": [
+                        "Very light",
+                        "Light",
+                        "Medium",
+                        "Heavy",
+                        "Very heavy"
+                    ]
+                },
+                "mass_distribution_class": {
+                    "$ref": "#/$defs/MassDistributionClass"
+                },
+                "orientation360": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 360
+                },
+                "base_height": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 500
+                },
+                "height": {
+                    "type": "number",
+                    "minimum": 0.001,
+                    "maximum": 50
+                },
+                "width": {
+                    "type": "number",
+                    "minimum": 0.001,
+                    "maximum": 100
+                },
+                "area": {
+                    "type": "number",
+                    "minimum": 0.01,
+                    "maximum": 10000
+                },
+                "is_party_wall": {
+                    "type": "boolean"
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "type": "object",
+                        "unevaluatedProperties": false,
+                        "properties": {
+                            "pitch": {
+                                "type": "number",
+                                "minimum": 60,
+                                "maximum": 120
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "is_external_door"
+                        ]
+                    }
+                },
+                {
+                    "if": {
+                        "type": "object",
+                        "unevaluatedProperties": false,
+                        "properties": {
+                            "pitch": {
+                                "type": "number",
+                                "maximum": 60
+                            }
+                        }
+                    },
+                    "then": {
+                        "required": [
+                            "is_unheated_pitched_roof"
+                        ]
+                    }
+                }
+            ]
+        },
+        "BuildingElementTransparent": {
+            "required": [
+                "type",
+                "frame_area_fraction",
+                "g_value",
+                "mid_height",
+                "max_window_open_area",
+                "security_risk",
+                "window_part_list",
+                "shading",
+                "orientation360",
+                "base_height",
+                "height",
+                "width",
+                "pitch"
+            ],
+            "properties": {
+                "type": {
+                    "const": "BuildingElementTransparent"
+                },
+                "pitch": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 180
+                },
+                "frame_area_fraction": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "g_value": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "free_area_height": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "mid_height": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "max_window_open_area": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "security_risk": {
+                    "type": "boolean"
+                },
+                "window_part_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "unevaluatedProperties": false,
+                        "required": [
+                            "mid_height_air_flow_path"
+                        ],
+                        "properties": {
+                            "mid_height_air_flow_path": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100
+                            }
+                        }
+                    }
+                },
+                "shading": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "unevaluatedProperties": false,
+                        "required": [
+                            "type",
+                            "depth",
+                            "distance"
+                        ],
+                        "properties": {
+                            "type": {
+                                "enum": [
+                                    "overhang",
+                                    "sidefinleft",
+                                    "sidefinright"
+                                ]
+                            },
+                            "depth": {
+                                "type": "number",
+                                "minimum": 0
+                            },
+                            "distance": {
+                                "type": "number",
+                                "minimum": 0
+                            }
+                        }
+                    }
+                },
+                "treatment": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "unevaluatedProperties": false,
+                        "required": [
+                            "type",
+                            "controls",
+                            "delta_r",
+                            "trans_red"
+                        ],
+                        "properties": {
+                            "type": {
+                                "enum": [
+                                    "curtains",
+                                    "blinds"
+                                ]
+                            },
+                            "controls": {
+                                "enum": [
+                                    "auto_motorised",
+                                    "manual"
+                                ]
+                            },
+                            "delta_r": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 100
+                            },
+                            "trans_red": {
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                            }
+                        }
+                    }
+                },
+                "orientation360": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 360
+                },
+                "base_height": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 500
+                },
+                "height": {
+                    "type": "number",
+                    "minimum": 0.001,
+                    "maximum": 50
+                },
+                "width": {
+                    "type": "number",
+                    "minimum": 0.001,
+                    "maximum": 100
+                }
+            }
         }
     }
 }
