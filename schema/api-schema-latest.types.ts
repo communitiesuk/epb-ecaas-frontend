@@ -288,6 +288,47 @@ export interface components {
 			area: number;
 			is_party_wall?: boolean;
 		};
+		SlabNoEdgeInsulation: {
+			/** @constant */
+			floor_type: "Slab_no_edge_insulation";
+		};
+		SlabEdgeInsulation: {
+			/** @constant */
+			floor_type: "Slab_edge_insulation";
+			edge_insulation: {
+				/** @enum {unknown} */
+				type: "horizontal" | "vertical";
+				width: number;
+				edge_thermal_resistance: number;
+			};
+		};
+		SuspendedFloor: {
+			/** @constant */
+			floor_type: "Suspended_floor";
+			height_upper_surface: number;
+			thermal_transm_walls: number;
+			area_per_perimeter_vent?: number;
+			/** @enum {unknown} */
+			shield_fact_location: "Sheltered" | "Average" | "Exposed";
+			thickness_walls: number;
+			thermal_resist_insul: number;
+		};
+		BasementCommon: {
+			thickness_walls: number;
+			depth_basement_floor: number;
+			thermal_resist_walls_base: number;
+		};
+		HeatedBasement: components["schemas"]["BasementCommon"] & {
+			/** @constant */
+			floor_type: "Heated_basement";
+		};
+		UnheatedBasement: components["schemas"]["BasementCommon"] & {
+			/** @constant */
+			floor_type: "Unheated_basement";
+			thermal_transm_envi_base: number;
+			thermal_transm_walls: number;
+			height_basement_walls: number;
+		};
 		EnergySupplyGas: {
 			/** @enum {unknown} */
 			fuel: "mains_gas" | "gas";
@@ -614,8 +655,6 @@ export interface components {
 			/** @constant */
 			type: "BuildingElementGround";
 			total_area: number;
-			/** @enum {unknown} */
-			floor_type: "Slab_no_edge_insulation" | "Slab_edge_insulation" | "Suspended_floor" | "Heated_basement" | "Unheated_basement";
 			thickness_walls: number;
 			perimeter: number;
 			psi_wall_floor_junc: number;
@@ -624,7 +663,7 @@ export interface components {
 			areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
 			mass_distribution_class: components["schemas"]["MassDistributionClass"];
 			area: number;
-		} & (unknown & unknown & unknown & unknown);
+		} & (components["schemas"]["SlabNoEdgeInsulation"] | components["schemas"]["SlabEdgeInsulation"] | components["schemas"]["SuspendedFloor"] | components["schemas"]["HeatedBasement"] | components["schemas"]["UnheatedBasement"]);
 		BuildingElementOpaque: {
 			/** @constant */
 			type: "BuildingElementOpaque";
@@ -1515,8 +1554,6 @@ export interface components {
 					/** @constant */
 					type: "BuildingElementGround";
 					total_area: number;
-					/** @enum {unknown} */
-					floor_type: "Slab_no_edge_insulation" | "Slab_edge_insulation" | "Suspended_floor" | "Heated_basement" | "Unheated_basement";
 					thickness_walls: number;
 					perimeter: number;
 					psi_wall_floor_junc: number;
@@ -1525,7 +1562,48 @@ export interface components {
 					areal_heat_capacity: "Very light" | "Light" | "Medium" | "Heavy" | "Very heavy";
 					mass_distribution_class: components["schemas"]["MassDistributionClass"];
 					area: number;
-				} & (unknown & unknown & unknown & unknown);
+				} & (components["schemas"]["SlabNoEdgeInsulation"] | components["schemas"]["SlabEdgeInsulation"] | components["schemas"]["SuspendedFloor"] | components["schemas"]["HeatedBasement"] | components["schemas"]["UnheatedBasement"]);
+				SlabNoEdgeInsulation: {
+					/** @constant */
+					floor_type: "Slab_no_edge_insulation";
+				};
+				SlabEdgeInsulation: {
+					/** @constant */
+					floor_type: "Slab_edge_insulation";
+					edge_insulation: {
+						/** @enum {unknown} */
+						type: "horizontal" | "vertical";
+						width: number;
+						edge_thermal_resistance: number;
+					};
+				};
+				SuspendedFloor: {
+					/** @constant */
+					floor_type: "Suspended_floor";
+					height_upper_surface: number;
+					thermal_transm_walls: number;
+					area_per_perimeter_vent?: number;
+					/** @enum {unknown} */
+					shield_fact_location: "Sheltered" | "Average" | "Exposed";
+					thickness_walls: number;
+					thermal_resist_insul: number;
+				};
+				BasementCommon: {
+					thickness_walls: number;
+					depth_basement_floor: number;
+					thermal_resist_walls_base: number;
+				};
+				HeatedBasement: components["schemas"]["BasementCommon"] & {
+					/** @constant */
+					floor_type: "Heated_basement";
+				};
+				UnheatedBasement: components["schemas"]["BasementCommon"] & {
+					/** @constant */
+					floor_type: "Unheated_basement";
+					thermal_transm_envi_base: number;
+					thermal_transm_walls: number;
+					height_basement_walls: number;
+				};
 				BuildingElementOpaque: {
 					/** @constant */
 					type: "BuildingElementOpaque";
@@ -1608,6 +1686,12 @@ export type SchemaMechVentCommon = components["schemas"]["MechVentCommon"];
 export type SchemaMechVentMevCommon = components["schemas"]["MechVentMEVCommon"];
 export type SchemaMassDistributionClass = components["schemas"]["MassDistributionClass"];
 export type SchemaBuildingElementAdjacentCommon = components["schemas"]["BuildingElementAdjacentCommon"];
+export type SchemaSlabNoEdgeInsulation = components["schemas"]["SlabNoEdgeInsulation"];
+export type SchemaSlabEdgeInsulation = components["schemas"]["SlabEdgeInsulation"];
+export type SchemaSuspendedFloor = components["schemas"]["SuspendedFloor"];
+export type SchemaBasementCommon = components["schemas"]["BasementCommon"];
+export type SchemaHeatedBasement = components["schemas"]["HeatedBasement"];
+export type SchemaUnheatedBasement = components["schemas"]["UnheatedBasement"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
 export type SchemaEnergySupplyCustom = components["schemas"]["EnergySupplyCustom"];

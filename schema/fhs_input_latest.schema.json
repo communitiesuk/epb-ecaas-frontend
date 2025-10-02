@@ -3592,7 +3592,6 @@
                 "type",
                 "u_value",
                 "total_area",
-                "floor_type",
                 "thickness_walls",
                 "perimeter",
                 "psi_wall_floor_junc",
@@ -3608,15 +3607,6 @@
                 "total_area": {
                     "type": "number",
                     "minimum": 5
-                },
-                "floor_type": {
-                    "enum": [
-                        "Slab_no_edge_insulation",
-                        "Slab_edge_insulation",
-                        "Suspended_floor",
-                        "Heated_basement",
-                        "Unheated_basement"
-                    ]
                 },
                 "thickness_walls": {
                     "type": "number",
@@ -3656,160 +3646,174 @@
                     "maximum": 10000
                 }
             },
+            "oneOf": [
+                {
+                    "$ref": "#/$defs/SlabNoEdgeInsulation"
+                },
+                {
+                    "$ref": "#/$defs/SlabEdgeInsulation"
+                },
+                {
+                    "$ref": "#/$defs/SuspendedFloor"
+                },
+                {
+                    "$ref": "#/$defs/HeatedBasement"
+                },
+                {
+                    "$ref": "#/$defs/UnheatedBasement"
+                }
+            ]
+        },
+        "SlabNoEdgeInsulation": {
+            "required": [
+                "floor_type"
+            ],
+            "properties": {
+                "floor_type": {
+                    "const": "Slab_no_edge_insulation"
+                }
+            }
+        },
+        "SlabEdgeInsulation": {
+            "required": [
+                "floor_type",
+                "edge_insulation"
+            ],
+            "properties": {
+                "floor_type": {
+                    "const": "Slab_edge_insulation"
+                },
+                "edge_insulation": {
+                    "type": "object",
+                    "unevaluatedProperties": false,
+                    "required": [
+                        "type",
+                        "width",
+                        "edge_thermal_resistance"
+                    ],
+                    "properties": {
+                        "type": {
+                            "enum": [
+                                "horizontal",
+                                "vertical"
+                            ]
+                        },
+                        "width": {
+                            "type": "number"
+                        },
+                        "edge_thermal_resistance": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        },
+        "SuspendedFloor": {
+            "required": [
+                "floor_type",
+                "height_upper_surface",
+                "thermal_transm_walls",
+                "shield_fact_location",
+                "thickness_walls",
+                "thermal_resist_insul"
+            ],
+            "properties": {
+                "floor_type": {
+                    "const": "Suspended_floor"
+                },
+                "height_upper_surface": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "thermal_transm_walls": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "area_per_perimeter_vent": {
+                    "type": "number"
+                },
+                "shield_fact_location": {
+                    "enum": [
+                        "Sheltered",
+                        "Average",
+                        "Exposed"
+                    ]
+                },
+                "thickness_walls": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "thermal_resist_insul": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                }
+            }
+        },
+        "BasementCommon": {
+            "required": [
+                "thickness_walls",
+                "depth_basement_floor",
+                "thermal_resist_walls_base"
+            ],
+            "properties": {
+                "thickness_walls": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "depth_basement_floor": {
+                    "type": "number"
+                },
+                "thermal_resist_walls_base": {
+                    "type": "number"
+                }
+            }
+        },
+        "HeatedBasement": {
             "allOf": [
                 {
-                    "if": {
-                        "properties": {
-                            "floor_type": {
-                                "const": "Slab_edge_insulation"
-                            }
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "edge_insulation"
-                        ],
-                        "properties": {
-                            "edge_insulation": {
-                                "type": "object",
-                                "unevaluatedProperties": false,
-                                "required": [
-                                    "type",
-                                    "width",
-                                    "edge_thermal_resistance"
-                                ],
-                                "properties": {
-                                    "type": {
-                                        "enum": [
-                                            "horizontal",
-                                            "vertical"
-                                        ]
-                                    },
-                                    "width": {
-                                        "type": "number"
-                                    },
-                                    "edge_thermal_resistance": {
-                                        "type": "number"
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    "$ref": "#/$defs/BasementCommon"
                 },
                 {
-                    "if": {
-                        "properties": {
-                            "floor_type": {
-                                "const": "Suspended_floor"
-                            }
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "height_upper_surface",
-                            "thermal_transm_walls",
-                            "shield_fact_location",
-                            "thickness_walls",
-                            "thermal_resist_insul"
-                        ],
-                        "properties": {
-                            "height_upper_surface": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 100
-                            },
-                            "thermal_transm_walls": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 100
-                            },
-                            "area_per_perimeter_vent": {
-                                "type": "number"
-                            },
-                            "shield_fact_location": {
-                                "enum": [
-                                    "Sheltered",
-                                    "Average",
-                                    "Exposed"
-                                ]
-                            },
-                            "thickness_walls": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 100
-                            },
-                            "thermal_resist_insul": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 100
-                            }
+                    "required": [
+                        "floor_type"
+                    ],
+                    "properties": {
+                        "floor_type": {
+                            "const": "Heated_basement"
                         }
                     }
+                }
+            ]
+        },
+        "UnheatedBasement": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/BasementCommon"
                 },
                 {
-                    "if": {
-                        "anyOf": [
-                            {
-                                "properties": {
-                                    "floor_type": {
-                                        "const": "Heated_basement"
-                                    }
-                                }
-                            },
-                            {
-                                "properties": {
-                                    "floor_type": {
-                                        "const": "Unheated_basement"
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    "then": {
-                        "required": [
-                            "thickness_walls",
-                            "depth_basement_floor",
-                            "thermal_resist_walls_base"
-                        ],
-                        "properties": {
-                            "thickness_walls": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 100
-                            },
-                            "depth_basement_floor": {
-                                "type": "number"
-                            },
-                            "thermal_resist_walls_base": {
-                                "type": "number"
-                            }
-                        }
-                    }
-                },
-                {
-                    "if": {
-                        "properties": {
-                            "floor_type": {
-                                "const": "Unheated_basement"
-                            }
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "thermal_transm_envi_base",
-                            "thermal_transm_walls",
-                            "height_basement_walls"
-                        ],
-                        "properties": {
-                            "thermal_transm_envi_base": {
-                                "type": "number"
-                            },
-                            "thermal_transm_walls": {
-                                "type": "number"
-                            },
-                            "height_basement_walls": {
-                                "type": "number"
-                            }
+                    "required": [
+                        "floor_type",
+                        "thermal_transm_envi_base",
+                        "thermal_transm_walls",
+                        "height_basement_walls"
+                    ],
+                    "properties": {
+                        "floor_type": {
+                            "const": "Unheated_basement"
+                        },
+                        "thermal_transm_envi_base": {
+                            "type": "number"
+                        },
+                        "thermal_transm_walls": {
+                            "type": "number"
+                        },
+                        "height_basement_walls": {
+                            "type": "number"
                         }
                     }
                 }
