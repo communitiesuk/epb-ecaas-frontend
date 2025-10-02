@@ -1,7 +1,8 @@
-import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType, MassDistributionClass } from "~/schema/api-schema.types";
+import { VentType, SupplyAirFlowRateControlType, MVHRLocation, SupplyAirTemperatureControlType, DuctShape, DuctType, FlueGasExhaustSituation, CombustionFuelType, CombustionAirSupplySituation, CombustionApplianceType, MassDistributionClass, WindowTreatmentType } from "~/schema/api-schema.types";
 import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
+import { millimetre } from "~/utils/units/length";
 
 const baseForm = {
 	data: [],
@@ -242,12 +243,41 @@ describe("infiltration ventilation mapper", () => {
 				massDistributionClass: MassDistributionClass.I,
 			},
 		}];
+
+		const window: WindowData = {
+			id: "test-id-1",
+			name: "Window 1",
+			taggedItem: externalWallId,
+			surfaceArea: 1,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			numberOpenableParts: "1",
+			overhangDepth: unitValue(1000, millimetre),
+			overhangDistance: unitValue(1000, millimetre),
+			sideFinRightDepth: unitValue(1000, millimetre),
+			sideFinRightDistance: unitValue(1000, millimetre),
+			sideFinLeftDepth: unitValue(1000, millimetre),
+			sideFinLeftDistance: unitValue(1000, millimetre),
+			curtainsOrBlinds: true,
+			treatmentType: WindowTreatmentType.blinds,
+			thermalResistivityIncrease: 1,
+			solarTransmittanceReduction: 0.1,
+			midHeightOpenablePart1: 1,
+			openingToFrameRatio: 0.3,
+			maximumOpenableArea: 1,
+			heightOpenableArea: 1,
+		};
+
 		const ventData: EcaasForm<VentData>[] = [{
 			...baseForm,
 			data: {
 				name: ventName,
 				typeOfVent: "airBrick",
-				associatedWallRoofWindowId: externalWallId,
+				associatedWallRoofWindowId: window.id,
 				effectiveVentilationArea: 100,
 				openingRatio: 0.6,
 				midHeightOfZone: 1.5,
@@ -266,6 +296,13 @@ describe("infiltration ventilation mapper", () => {
 						...baseForm, 
 						data: externalWall,
 					},
+				},
+				dwellingSpaceWindows: {
+					data: [{
+						data: window,
+						complete: true,
+					}],
+					complete: true,
 				},
 			},
 		});
