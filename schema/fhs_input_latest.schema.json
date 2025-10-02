@@ -3842,10 +3842,12 @@
                     "maximum": 180
                 },
                 "is_unheated_pitched_roof": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "is_unheated_pitched_roof is required when the pitch is up to 60"
                 },
                 "is_external_door": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "is_external_door is required when the pitch is between 60 - 120"
                 },
                 "colour": {
                     "enum": [
@@ -3894,44 +3896,7 @@
                 "is_party_wall": {
                     "type": "boolean"
                 }
-            },
-            "allOf": [
-                {
-                    "if": {
-                        "type": "object",
-                        "unevaluatedProperties": false,
-                        "properties": {
-                            "pitch": {
-                                "type": "number",
-                                "minimum": 60,
-                                "maximum": 120
-                            }
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "is_external_door"
-                        ]
-                    }
-                },
-                {
-                    "if": {
-                        "type": "object",
-                        "unevaluatedProperties": false,
-                        "properties": {
-                            "pitch": {
-                                "type": "number",
-                                "maximum": 60
-                            }
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "is_unheated_pitched_roof"
-                        ]
-                    }
-                }
-            ]
+            }
         },
         "BuildingElementTransparent": {
             "required": [

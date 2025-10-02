@@ -668,7 +668,9 @@ export interface components {
 			/** @constant */
 			type: "BuildingElementOpaque";
 			pitch: number;
+			/** @description is_unheated_pitched_roof is required when the pitch is up to 60 */
 			is_unheated_pitched_roof?: boolean;
+			/** @description is_external_door is required when the pitch is between 60 - 120 */
 			is_external_door?: boolean;
 			/** @enum {unknown} */
 			colour: "Light" | "Intermediate" | "Dark";
@@ -681,7 +683,7 @@ export interface components {
 			width: number;
 			area: number;
 			is_party_wall?: boolean;
-		} & (unknown & unknown);
+		};
 		BuildingElementTransparent: {
 			/** @constant */
 			type: "BuildingElementTransparent";
@@ -1608,7 +1610,9 @@ export interface components {
 					/** @constant */
 					type: "BuildingElementOpaque";
 					pitch: number;
+					/** @description is_unheated_pitched_roof is required when the pitch is up to 60 */
 					is_unheated_pitched_roof?: boolean;
+					/** @description is_external_door is required when the pitch is between 60 - 120 */
 					is_external_door?: boolean;
 					/** @enum {unknown} */
 					colour: "Light" | "Intermediate" | "Dark";
@@ -1621,7 +1625,7 @@ export interface components {
 					width: number;
 					area: number;
 					is_party_wall?: boolean;
-				} & (unknown & unknown);
+				};
 				BuildingElementTransparent: {
 					/** @constant */
 					type: "BuildingElementTransparent";
