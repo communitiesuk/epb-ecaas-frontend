@@ -63,7 +63,24 @@
             ]
         },
         "SimulationTime": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "end",
+                "start",
+                "step"
+            ],
+            "properties": {
+                "end": {
+                    "type": "number"
+                },
+                "start": {
+                    "type": "number"
+                },
+                "step": {
+                    "type": "number"
+                }
+            }
         },
         "ExternalConditions": {
             "type": "object",

@@ -773,7 +773,11 @@ export interface components {
 			NumberOfHabitableRooms: number;
 			/** @enum {unknown} */
 			HeatingControlType: "SeparateTempControl" | "SeparateTimeAndTempControl";
-			SimulationTime: Record<string, never>;
+			SimulationTime: {
+				end: number;
+				start: number;
+				step: number;
+			};
 			ExternalConditions: {
 				air_temperatures?: number[];
 				wind_speeds?: number[];
