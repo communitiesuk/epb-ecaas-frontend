@@ -135,8 +135,6 @@ export interface components {
             type: "Boiler";
         };
         HotWaterTankCommon: {
-            /** @enum {unknown} */
-            type: "SmartHotWaterTank" | "StorageTank";
             volume: number;
             init_temp?: number;
             daily_losses: number;
@@ -1104,8 +1102,6 @@ export interface components {
                     };
                 };
                 HotWaterTankCommon: {
-                    /** @enum {unknown} */
-                    type: "SmartHotWaterTank" | "StorageTank";
                     volume: number;
                     init_temp?: number;
                     daily_losses: number;

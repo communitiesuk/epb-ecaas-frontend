@@ -440,35 +440,29 @@
                 "hw cylinder": {
                     "type": "object",
                     "unevaluatedProperties": false,
-                    "allOf": [
+                    "properties": {
+                        "ColdWaterSource": {
+                            "enum": [
+                                "header tank",
+                                "mains water"
+                            ]
+                        }
+                    },
+                    "oneOf": [
                         {
-                            "properties": {
-                                "ColdWaterSource": {
-                                    "enum": [
-                                        "header tank",
-                                        "mains water"
-                                    ]
-                                }
-                            }
+                            "$ref": "#/$defs/StorageTank"
                         },
                         {
-                            "oneOf": [
-                                {
-                                    "$ref": "#/$defs/StorageTank"
-                                },
-                                {
-                                    "$ref": "#/$defs/SmartHotWaterTank"
-                                },
-                                {
-                                    "$ref": "#/$defs/PointOfUse"
-                                },
-                                {
-                                    "$ref": "#/$defs/CombiBoiler"
-                                },
-                                {
-                                    "$ref": "#/$defs/HeatBattery"
-                                }
-                            ]
+                            "$ref": "#/$defs/SmartHotWaterTank"
+                        },
+                        {
+                            "$ref": "#/$defs/PointOfUse"
+                        },
+                        {
+                            "$ref": "#/$defs/CombiBoiler"
+                        },
+                        {
+                            "$ref": "#/$defs/HeatBattery"
                         }
                     ]
                 }
@@ -1476,18 +1470,11 @@
         },
         "HotWaterTankCommon": {
             "required": [
-                "type",
                 "volume",
                 "daily_losses",
                 "HeatSource"
             ],
             "properties": {
-                "type": {
-                    "enum": [
-                        "SmartHotWaterTank",
-                        "StorageTank"
-                    ]
-                },
                 "volume": {
                     "type": "number",
                     "minimum": 1,
