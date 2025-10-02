@@ -782,9 +782,10 @@ export interface components {
 			};
 			Appliances: Record<string, never>;
 			ColdWaterSource: {
-				"header tank"?: Record<string, never>;
-				"mains water"?: Record<string, never>;
-			} & (unknown | unknown);
+				"header tank": Record<string, never>;
+			} | {
+				"mains water": Record<string, never>;
+			};
 			EnergySupply: {
 				[key: string]: components["schemas"]["EnergySupplyGas"] | components["schemas"]["EnergySupplyElectricity"] | components["schemas"]["EnergySupplyCustom"] | components["schemas"]["EnergySupplyOther"];
 			};

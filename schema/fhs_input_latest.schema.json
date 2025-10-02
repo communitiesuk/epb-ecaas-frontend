@@ -244,24 +244,27 @@
         "ColdWaterSource": {
             "type": "object",
             "unevaluatedProperties": false,
-            "properties": {
-                "header tank": {
-                    "type": "object"
-                },
-                "mains water": {
-                    "type": "object"
-                }
-            },
             "oneOf": [
                 {
                     "required": [
                         "header tank"
-                    ]
+                    ],
+                    "properties": {
+                        "header tank": {
+                            "type": "object"
+                        }
+        
+                    }
                 },
                 {
                     "required": [
                         "mains water"
-                    ]
+                    ],
+                    "properties": {
+                        "mains water": {
+                            "type": "object"
+                        }
+                    }
                 }
             ]
         },
