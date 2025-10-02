@@ -17,4 +17,4 @@ paths:
           application/json:
             schema:
               type: object
-              $ref: "./fhs_input_latest.schema.json"
+              $ref: "./fhs_input.schema.json"
