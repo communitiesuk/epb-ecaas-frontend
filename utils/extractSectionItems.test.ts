@@ -119,4 +119,23 @@ describe("extractSectionItems", () => {
 			{ id: "roof1-id", pitch: undefined, orientation: undefined },
 		]);
 	});
+
+	test("when there is no section data", () => {
+
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceRoofs: {
+						data: [],
+					},
+				},
+			},
+		});
+		const { dwellingSpaceRoofs } =
+      store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+		const actual = extractSectionItems(dwellingSpaceRoofs);
+
+		expect(actual).toEqual([]);
+	});
 });

@@ -9,7 +9,7 @@ export const extractSectionItems = <T extends Record<string, unknown>>(
 			pitch: item.pitchOption === undefined ? item.pitch : extractPitch(item),
 			...("orientation" in item && { orientation: item.orientation }),
 		} as AssociatedItemValues;
-	});
+	}) ?? [];
 };
 
 export const extractResolvedSectionItems = <T extends Record<string, unknown>>(
