@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type WindowData } from "#imports";
+import type { WindowData } from "#imports";
 import { millimetre } from "~/utils/units/length";
 import { WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
 import { unitValue } from "~/utils/units";

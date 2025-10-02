@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AdjacentSpaceType, getUrl } from '#imports';
+import { AdjacentSpaceType, getUrl } from "#imports";
 
 const { adjacentSpaceType } = defineProps<{
 	id: string;
@@ -17,17 +17,17 @@ const store = useEcaasStore();
 const { dwellingSpaceInternalWall, dwellingSpacePartyWall, dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 
-let options = adjacentSpaceType === AdjacentSpaceType.heatedSpace ? [
+const options = adjacentSpaceType === AdjacentSpaceType.heatedSpace ? [
 	dwellingSpaceInternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	dwellingSpaceCeilings.data
 		.filter(x => x.data.type === AdjacentSpaceType.heatedSpace)
-		.map(x => [x.data.id, x.data.name] as [string, string])
+		.map(x => [x.data.id, x.data.name] as [string, string]),
 ] : [
 	dwellingSpaceWallToUnheatedSpace.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	dwellingSpaceCeilings.data
 		.filter(x => x.data.type === AdjacentSpaceType.unheatedSpace)
 		.map(x => [x.data.id, x.data.name] as [string, string]),
-	dwellingSpacePartyWall.data.map(x => [x.data.id, x.data.name] as [string, string])
+	dwellingSpacePartyWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
 ];
 
 const flattenedOptions = options.flat().filter(x => x[0] !== undefined);

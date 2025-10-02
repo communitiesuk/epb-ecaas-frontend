@@ -562,7 +562,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 		return { [nameWithSuffix]: {
 			type: "BuildingElementTransparent",
 			pitch: extractPitch(associatedElement),
-			orientation360: associatedElement!.orientation!,
+			orientation360: associatedElement.orientation!,
 			height: x.height,
 			width: x.width,
 			base_height: x.elevationalHeight,
