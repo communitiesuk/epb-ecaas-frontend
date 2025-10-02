@@ -207,37 +207,39 @@
         "Appliances": {
             "type": "object",
             "unevaluatedProperties": false,
-            "propertyNames": {
-                "enum": [
-                    "Oven",
-                    "Hobs",
-                    "Kettle",
-                    "Microwave",
-                    "Dishwasher",
-                    "Clothes_washing",
-                    "Clothes_drying",
-                    "Fridge",
-                    "Freezer",
-                    "Fridge-Freezer",
-                    "Otherdevices"
-                ]
-            },
-            "patternProperties": {
-                "unevaluatedProperties": false,
-                "Oven|Hobs|Kettle|Microwave|Fridge-Freezer": {
-                    "type": "string",
-                    "enum": [
-                        "Not Installed",
-                        "Default"
-                    ],
-                    "default": "Default"
+            "properties": {
+                "Oven": {
+                    "$ref": "#/$defs/ApplianceValueDefault"
                 },
-                "Dishwasher|Clothes_washing|Clothes_drying|Fridge|Freezer|Otherdevices": {
-                    "type": "string",
-                    "enum": [
-                        "Not Installed",
-                        "Default"
-                    ]
+                "Hobs": {
+                    "$ref": "#/$defs/ApplianceValueDefault"
+                },
+                "Kettle": {
+                    "$ref": "#/$defs/ApplianceValueDefault"
+                },
+                "Microwave": {
+                    "$ref": "#/$defs/ApplianceValueDefault"
+                },
+                "Fridge-Freezer": {
+                    "$ref": "#/$defs/ApplianceValueDefault"
+                },
+                "Dishwasher": {
+                    "$ref": "#/$defs/ApplianceValue"
+                },
+                "Clothes_washing": {
+                    "$ref": "#/$defs/ApplianceValue"
+                },
+                "Clothes_drying": {
+                    "$ref": "#/$defs/ApplianceValue"
+                },
+                "Fridge": {
+                    "$ref": "#/$defs/ApplianceValue"
+                },
+                "Freezer": {
+                    "$ref": "#/$defs/ApplianceValue"
+                },
+                "Otherdevices": {
+                    "$ref": "#/$defs/ApplianceValue"
                 }
             }
         },
@@ -1167,6 +1169,21 @@
             ],
             "title": "MassDistributionClass",
             "type": "string"
+        },
+        "ApplianceValueDefault": {
+            "type": "string",
+            "enum": [
+                "Not Installed",
+                "Default"
+            ],
+            "default": "Default"
+        },
+        "ApplianceValue": {
+            "type": "string",
+            "enum": [
+                "Not Installed",
+                "Default"
+            ]
         },
         "ColdWaterSourceCommon": {
             "required": [

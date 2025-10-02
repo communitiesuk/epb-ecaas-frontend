@@ -339,6 +339,13 @@ export interface components {
 			thermal_transm_walls: number;
 			height_basement_walls: number;
 		};
+		/**
+         * @default Default
+         * @enum {string}
+         */
+		ApplianceValueDefault: "Not Installed" | "Default";
+		/** @enum {string} */
+		ApplianceValue: "Not Installed" | "Default";
 		ColdWaterSourceCommon: {
 			start_day: number;
 			temperatures: number[];
@@ -795,7 +802,19 @@ export interface components {
 					}[];
 				}[];
 			};
-			Appliances: Record<string, never>;
+			Appliances: {
+				Oven?: components["schemas"]["ApplianceValueDefault"];
+				Hobs?: components["schemas"]["ApplianceValueDefault"];
+				Kettle?: components["schemas"]["ApplianceValueDefault"];
+				Microwave?: components["schemas"]["ApplianceValueDefault"];
+				"Fridge-Freezer"?: components["schemas"]["ApplianceValueDefault"];
+				Dishwasher?: components["schemas"]["ApplianceValue"];
+				Clothes_washing?: components["schemas"]["ApplianceValue"];
+				Clothes_drying?: components["schemas"]["ApplianceValue"];
+				Fridge?: components["schemas"]["ApplianceValue"];
+				Freezer?: components["schemas"]["ApplianceValue"];
+				Otherdevices?: components["schemas"]["ApplianceValue"];
+			};
 			ColdWaterSource: {
 				/** @description header tank properties have been inferred from example input files */
 				"header tank": components["schemas"]["ColdWaterSourceCommon"];
@@ -1003,6 +1022,13 @@ export interface components {
                  * @enum {string}
                  */
 				MassDistributionClass: "I: Mass concentrated at internal side" | "E: Mass concentrated at external side" | "IE: Mass divided over internal and external side" | "D: Mass equally distributed" | "M: Mass concentrated inside";
+				/**
+                 * @default Default
+                 * @enum {string}
+                 */
+				ApplianceValueDefault: "Not Installed" | "Default";
+				/** @enum {string} */
+				ApplianceValue: "Not Installed" | "Default";
 				ColdWaterSourceCommon: {
 					start_day: number;
 					temperatures: number[];
@@ -1753,6 +1779,8 @@ export type SchemaSuspendedFloor = components["schemas"]["SuspendedFloor"];
 export type SchemaBasementCommon = components["schemas"]["BasementCommon"];
 export type SchemaHeatedBasement = components["schemas"]["HeatedBasement"];
 export type SchemaUnheatedBasement = components["schemas"]["UnheatedBasement"];
+export type SchemaApplianceValueDefault = components["schemas"]["ApplianceValueDefault"];
+export type SchemaApplianceValue = components["schemas"]["ApplianceValue"];
 export type SchemaColdWaterSourceCommon = components["schemas"]["ColdWaterSourceCommon"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
