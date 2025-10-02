@@ -716,6 +716,19 @@ export interface components {
 			height: number;
 			width: number;
 		};
+		ThermalBridgeLinear: {
+			/** @constant */
+			type: "ThermalBridgeLinear";
+			linear_thermal_transmittance: number;
+			length: number;
+			/** @enum {unknown} */
+			junction_type: "E1" | "E2" | "E3" | "E4" | "E5" | "E6" | "E7" | "E8" | "E9" | "E10" | "E11" | "E12" | "E13" | "E14" | "E15" | "E16" | "E17" | "E18" | "E19" | "E20" | "E21" | "E22" | "E23" | "E24" | "E25" | "P1" | "P2" | "P3" | "P4" | "P5" | "P6" | "P7" | "P8" | "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9" | "R10" | "R11";
+		};
+		ThermalBridgePoint: {
+			/** @constant */
+			type: "ThermalBridgePoint";
+			heat_transfer_coeff: number;
+		};
 		"fhs_input_latest.schema": {
 			PartGcompliance: boolean;
 			PartO_active_cooling_required?: boolean;
@@ -962,10 +975,7 @@ export interface components {
 						}) & (components["schemas"]["BuildingElementAdjacentConditionedSpace"] | components["schemas"]["BuildingElementAdjacentUnconditionedSpace_Simple"] | components["schemas"]["BuildingElementGround"] | components["schemas"]["BuildingElementOpaque"] | components["schemas"]["BuildingElementTransparent"]);
 					};
 					ThermalBridging: {
-						[key: string]: {
-							/** @enum {unknown} */
-							type: "ThermalBridgeLinear" | "ThermalBridgePoint";
-						} & (unknown & unknown);
+						[key: string]: components["schemas"]["ThermalBridgeLinear"] | components["schemas"]["ThermalBridgePoint"];
 					} | number;
 				};
 			};
@@ -1658,6 +1668,19 @@ export interface components {
 					height: number;
 					width: number;
 				};
+				ThermalBridgeLinear: {
+					/** @constant */
+					type: "ThermalBridgeLinear";
+					linear_thermal_transmittance: number;
+					length: number;
+					/** @enum {unknown} */
+					junction_type: "E1" | "E2" | "E3" | "E4" | "E5" | "E6" | "E7" | "E8" | "E9" | "E10" | "E11" | "E12" | "E13" | "E14" | "E15" | "E16" | "E17" | "E18" | "E19" | "E20" | "E21" | "E22" | "E23" | "E24" | "E25" | "P1" | "P2" | "P3" | "P4" | "P5" | "P6" | "P7" | "P8" | "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9" | "R10" | "R11";
+				};
+				ThermalBridgePoint: {
+					/** @constant */
+					type: "ThermalBridgePoint";
+					heat_transfer_coeff: number;
+				};
 			};
 		};
 	};
@@ -1724,6 +1747,8 @@ export type SchemaBuildingElementAdjacentUnconditionedSpaceSimple = components["
 export type SchemaBuildingElementGround = components["schemas"]["BuildingElementGround"];
 export type SchemaBuildingElementOpaque = components["schemas"]["BuildingElementOpaque"];
 export type SchemaBuildingElementTransparent = components["schemas"]["BuildingElementTransparent"];
+export type SchemaThermalBridgeLinear = components["schemas"]["ThermalBridgeLinear"];
+export type SchemaThermalBridgePoint = components["schemas"]["ThermalBridgePoint"];
 export type SchemaFhsInputLatestSchema = components["schemas"]["fhs_input_latest.schema"];
 export type $defs = Record<string, never>;
 export interface operations {
