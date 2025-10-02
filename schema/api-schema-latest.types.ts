@@ -329,6 +329,11 @@ export interface components {
 			thermal_transm_walls: number;
 			height_basement_walls: number;
 		};
+		ColdWaterSourceCommon: {
+			start_day: number;
+			temperatures: number[];
+			time_series_step: number;
+		};
 		EnergySupplyGas: {
 			/** @enum {unknown} */
 			fuel: "mains_gas" | "gas";
@@ -782,9 +787,11 @@ export interface components {
 			};
 			Appliances: Record<string, never>;
 			ColdWaterSource: {
-				"header tank": Record<string, never>;
+				/** @description header tank properties have been inferred from example input files */
+				"header tank": components["schemas"]["ColdWaterSourceCommon"];
 			} | {
-				"mains water": Record<string, never>;
+				/** @description mains water properties have been inferred from example input files */
+				"mains water": components["schemas"]["ColdWaterSourceCommon"];
 			};
 			EnergySupply: {
 				[key: string]: components["schemas"]["EnergySupplyGas"] | components["schemas"]["EnergySupplyElectricity"] | components["schemas"]["EnergySupplyCustom"] | components["schemas"]["EnergySupplyOther"];
@@ -986,6 +993,11 @@ export interface components {
                  * @enum {string}
                  */
 				MassDistributionClass: "I: Mass concentrated at internal side" | "E: Mass concentrated at external side" | "IE: Mass divided over internal and external side" | "D: Mass equally distributed" | "M: Mass concentrated inside";
+				ColdWaterSourceCommon: {
+					start_day: number;
+					temperatures: number[];
+					time_series_step: number;
+				};
 				EnergySupplyGas: {
 					/** @enum {unknown} */
 					fuel: "mains_gas" | "gas";
@@ -1720,6 +1732,7 @@ export type SchemaSuspendedFloor = components["schemas"]["SuspendedFloor"];
 export type SchemaBasementCommon = components["schemas"]["BasementCommon"];
 export type SchemaHeatedBasement = components["schemas"]["HeatedBasement"];
 export type SchemaUnheatedBasement = components["schemas"]["UnheatedBasement"];
+export type SchemaColdWaterSourceCommon = components["schemas"]["ColdWaterSourceCommon"];
 export type SchemaEnergySupplyGas = components["schemas"]["EnergySupplyGas"];
 export type SchemaEnergySupplyElectricity = components["schemas"]["EnergySupplyElectricity"];
 export type SchemaEnergySupplyCustom = components["schemas"]["EnergySupplyCustom"];

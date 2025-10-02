@@ -251,9 +251,10 @@
                     ],
                     "properties": {
                         "header tank": {
-                            "type": "object"
+                            "type": "object",
+                            "description": "header tank properties have been inferred from example input files",
+                            "$ref": "#/$defs/ColdWaterSourceCommon"
                         }
-        
                     }
                 },
                 {
@@ -262,7 +263,9 @@
                     ],
                     "properties": {
                         "mains water": {
-                            "type": "object"
+                            "type": "object",
+                            "description": "mains water properties have been inferred from example input files",
+                            "$ref": "#/$defs/ColdWaterSourceCommon"
                         }
                     }
                 }
@@ -1164,6 +1167,27 @@
             ],
             "title": "MassDistributionClass",
             "type": "string"
+        },
+        "ColdWaterSourceCommon": {
+            "required": [
+                "start_day",
+                "temperatures",
+                "time_series_step"
+            ],
+            "properties": {
+                "start_day": {
+                    "type": "integer"
+                },
+                "temperatures": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                },
+                "time_series_step": {
+                    "type": "integer"
+                }
+            }
         },
         "EnergySupplyGas": {
             "required": [
