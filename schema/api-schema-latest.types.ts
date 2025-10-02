@@ -91,6 +91,13 @@ export interface components {
 			EnergySupply: string;
 			temp_flow_limit_upper?: number;
 		};
+		HeatPump_HWOnlyTestData: {
+			cop_dhw: number;
+			hw_tapping_prof_daily_total: number;
+			energy_input_measured: number;
+			power_standby: number;
+			hw_vessel_loss_daily: number;
+		};
 		/** @description A possible heat source for a hot water tank */
 		HeatPump_HWOnly: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
 			/** @constant */
@@ -101,7 +108,10 @@ export interface components {
 			heat_exchanger_surface_area_declared: number;
 			daily_losses_declared: number;
 			in_use_factor_mismatch: number;
-			test_data: Record<string, never>;
+			test_data: {
+				M?: components["schemas"]["HeatPump_HWOnlyTestData"];
+				L?: components["schemas"]["HeatPump_HWOnlyTestData"];
+			};
 		};
 		/** @description A possible heat source for a hot water tank */
 		Boiler: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
@@ -1129,7 +1139,17 @@ export interface components {
 					heat_exchanger_surface_area_declared: number;
 					daily_losses_declared: number;
 					in_use_factor_mismatch: number;
-					test_data: Record<string, never>;
+					test_data: {
+						M?: components["schemas"]["HeatPump_HWOnlyTestData"];
+						L?: components["schemas"]["HeatPump_HWOnlyTestData"];
+					};
+				};
+				HeatPump_HWOnlyTestData: {
+					cop_dhw: number;
+					hw_tapping_prof_daily_total: number;
+					energy_input_measured: number;
+					power_standby: number;
+					hw_vessel_loss_daily: number;
 				};
 				/** @description A possible heat source for a hot water tank */
 				Boiler: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
@@ -1710,6 +1730,7 @@ export type SchemaHotWaterTankHeatSourceCommon = components["schemas"]["HotWater
 export type SchemaImmersionHeater = components["schemas"]["ImmersionHeater"];
 export type SchemaSolarThermalSystem = components["schemas"]["SolarThermalSystem"];
 export type SchemaHeatSourceWet = components["schemas"]["HeatSourceWet"];
+export type SchemaHeatPumpHwOnlyTestData = components["schemas"]["HeatPump_HWOnlyTestData"];
 export type SchemaHeatPumpHwOnly = components["schemas"]["HeatPump_HWOnly"];
 export type SchemaBoiler = components["schemas"]["Boiler"];
 export type SchemaHotWaterTankCommon = components["schemas"]["HotWaterTankCommon"];

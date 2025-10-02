@@ -1746,40 +1746,46 @@
                         "test_data": {
                             "type": "object",
                             "unevaluatedProperties": false,
-                            "patternProperties": {
-                                "M|L": {
-                                    "type": "object",
-                                    "unevaluatedProperties": false,
-                                    "required": [
-                                        "cop_dhw",
-                                        "hw_tapping_prof_daily_total",
-                                        "energy_input_measured",
-                                        "power_standby",
-                                        "hw_vessel_loss_daily"
-                                    ],
-                                    "properties": {
-                                        "cop_dhw": {
-                                            "type": "number"
-                                        },
-                                        "hw_tapping_prof_daily_total": {
-                                            "type": "number"
-                                        },
-                                        "energy_input_measured": {
-                                            "type": "number"
-                                        },
-                                        "power_standby": {
-                                            "type": "number"
-                                        },
-                                        "hw_vessel_loss_daily": {
-                                            "type": "number"
-                                        }
-                                    }
+                            "properties": {
+                                "M": {
+                                    "$ref": "#/$defs/HeatPump_HWOnlyTestData"
+                                },
+                                "L": {
+                                    "$ref": "#/$defs/HeatPump_HWOnlyTestData"
                                 }
                             }
                         }
                     }
                 }
             ]
+        },
+        "HeatPump_HWOnlyTestData": {
+            "type": "object",
+            "unevaluatedProperties": false,
+            "required": [
+                "cop_dhw",
+                "hw_tapping_prof_daily_total",
+                "energy_input_measured",
+                "power_standby",
+                "hw_vessel_loss_daily"
+            ],
+            "properties": {
+                "cop_dhw": {
+                    "type": "number"
+                },
+                "hw_tapping_prof_daily_total": {
+                    "type": "number"
+                },
+                "energy_input_measured": {
+                    "type": "number"
+                },
+                "power_standby": {
+                    "type": "number"
+                },
+                "hw_vessel_loss_daily": {
+                    "type": "number"
+                }
+            }
         },
         "Boiler": {
             "description": "A possible heat source for a hot water tank",
