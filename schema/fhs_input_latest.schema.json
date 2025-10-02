@@ -904,82 +904,57 @@
                                     "into_separate_duct",
                                     "into_mech_vent"
                                 ]
-                            },
-                            "fuel_type": {
-                                "enum": [
-                                    "wood",
-                                    "gas",
-                                    "oil",
-                                    "coal"
-                                ]
                             }
                         },
-                        "allOf": [
+                        "oneOf": [
                             {
-                                "if": {
-                                    "properties": {
-                                        "fuel_type": {
-                                            "const": "wood"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "appliance_type": {
-                                            "enum": [
-                                                "open_fireplace"
-                                            ]
-                                        }
+                                "required": [
+                                    "fuel_type"
+                                ],
+                                "properties": {
+                                    "fuel_type": {
+                                        "const": "wood"
+                                    },
+                                    "appliance_type": {
+                                        "enum": [
+                                            "open_fireplace"
+                                        ]
                                     }
                                 }
                             },
                             {
-                                "if": {
-                                    "properties": {
-                                        "fuel_type": {
-                                            "const": "gas"
-                                        }
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "appliance_type": {
-                                            "enum": [
-                                                "closed_with_fan",
-                                                "open_gas_flue_balancer",
-                                                "open_gas_kitchen_stove",
-                                                "open_gas_fire"
-                                            ]
-                                        }
+                                "required": [
+                                    "fuel_type"
+                                ],
+                                "properties": {
+                                    "fuel_type": {
+                                        "const": "gas"
+                                    },
+                                    "appliance_type": {
+                                        "enum": [
+                                            "closed_with_fan",
+                                            "open_gas_flue_balancer",
+                                            "open_gas_kitchen_stove",
+                                            "open_gas_fire"
+                                        ]
                                     }
                                 }
                             },
                             {
-                                "if": {
-                                    "anyOf": [
-                                        {
-                                            "properties": {
-                                                "fuel_type": {
-                                                    "const": "oil"
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "properties": {
-                                                "fuel_type": {
-                                                    "const": "coal"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                },
-                                "then": {
-                                    "properties": {
-                                        "appliance_type": {
-                                            "enum": [
-                                                "closed_fire"
-                                            ]
-                                        }
+                                "required": [
+                                    "fuel_type"
+                                ],
+                                "properties": {
+                                    "fuel_type": {
+                                        "enum": [
+                                            "oil",
+                                            "coal"
+                                        ]
+                                    },
+                                    "appliance_type": {
+                                        "enum": [
+                                            "closed_fire"
+                                        ]
                                     }
                                 }
                             }

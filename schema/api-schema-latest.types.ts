@@ -797,9 +797,22 @@ export interface components {
 						supply_situation: "room_air" | "outside";
 						/** @enum {unknown} */
 						exhaust_situation: "into_room" | "into_separate_duct" | "into_mech_vent";
+					} & ({
+						/** @constant */
+						fuel_type: "wood";
 						/** @enum {unknown} */
-						fuel_type: "wood" | "gas" | "oil" | "coal";
-					} & (unknown & unknown & unknown);
+						appliance_type?: "open_fireplace";
+					} | {
+						/** @constant */
+						fuel_type: "gas";
+						/** @enum {unknown} */
+						appliance_type?: "closed_with_fan" | "open_gas_flue_balancer" | "open_gas_kitchen_stove" | "open_gas_fire";
+					} | {
+						/** @enum {unknown} */
+						fuel_type: "oil" | "coal";
+						/** @enum {unknown} */
+						appliance_type?: "closed_fire";
+					});
 				};
 			};
 			Zone: {
