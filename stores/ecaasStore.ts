@@ -145,13 +145,12 @@ export const useEcaasStore = defineStore("ecaas", {
 		},
 		getAssociatedItems: () =>
 			<T extends Record<string, unknown>>(sections: EcaasFormList<Partial<T>>[]) => {
-				let items = [];
+				let items: AssociatedItemValues[][] = [];
 
 				for (const section of sections) {
 					items.push(extractSectionItems(section));
 				}
-				items = items.flat();
-				return (id: string) => items.find((item) => item.id === id);
+				return (id: string) => items.flat().find((item) => item.id === id);
 			},
 	},
 	actions: {
