@@ -418,4 +418,157 @@ describe("hasCompleteState function", () => {
 
 		expect(result).toBe(false);
 	});
+
+	describe("getTaggedItem getter function", () => {
+
+		const externalWall: Partial<ExternalWallData> = {
+			id: "ex-wall-id",
+			name: "External wall 1",
+			pitchOption: "custom",
+			pitch: 66,
+			orientation: 77,
+		};
+
+		const ventData: Partial<VentData> = {
+			name: "Vent 1",
+			associatedWallRoofWindowId: externalWall.id,
+		};
+
+		const window: Partial<WindowData> = {
+			id: "window-id",
+			name: "Window 1",
+			taggedItem: externalWall.id,
+		};
+
+		test("when given an id of a tagged item and sections that contain only top level tagged items", () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall }],
+						},
+					},
+				},
+				infiltrationAndVentilation: {
+					vents: {
+						data: [{ data: ventData }],
+					},
+				},
+			});
+
+			const { dwellingSpaceExternalWall } =
+        store.dwellingFabric.dwellingSpaceWalls;
+
+			const actual = store.getTaggedItem(
+				[dwellingSpaceExternalWall],
+				ventData.associatedWallRoofWindowId,
+			);
+			const expected = { id: "ex-wall-id", orientation: 77, pitch: 66 };
+			expect(actual).toEqual(expected);
+		});
+
+		test("when given an id of a tagged item and sections that contain top level tagged items and nested tagged items", () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWindows: {
+						data: [{ data: window }],
+					},
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall }],
+						},
+					},
+				},
+				infiltrationAndVentilation: {
+					vents: {
+						data: [{ data: ventData }],
+					},
+				},
+			});
+
+			const { dwellingSpaceExternalWall } =
+        store.dwellingFabric.dwellingSpaceWalls;
+			const { dwellingSpaceWindows } = store.dwellingFabric;
+
+			const actual = store.getTaggedItem(
+				[dwellingSpaceExternalWall, dwellingSpaceWindows],
+				ventData.associatedWallRoofWindowId,
+			);
+			const expected = { id: "ex-wall-id", orientation: 77, pitch: 66 };
+			expect(actual).toEqual(expected);
+		});
+
+		test("when given an id of a nested tagged item", () => {
+			const ventData: Partial<VentData> = {
+				name: "Vent 1",
+				associatedWallRoofWindowId: window.id,
+			};
+
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWindows: {
+						data: [{ data: window }],
+					},
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall }],
+						},
+					},
+				},
+				infiltrationAndVentilation: {
+					vents: {
+						data: [{ data: ventData }],
+					},
+				},
+			});
+
+			const { dwellingSpaceExternalWall } =
+        store.dwellingFabric.dwellingSpaceWalls;
+			const { dwellingSpaceRoofs } =
+        store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+			const { dwellingSpaceWindows } = store.dwellingFabric;
+
+			const actual = store.getTaggedItem(
+				[dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceWindows],
+				ventData.associatedWallRoofWindowId,
+			);
+			const expected = { id: "ex-wall-id", orientation: 77, pitch: 66 };
+			expect(actual).toEqual(expected);
+		});
+		test("when given an id of a nested tagged item", () => {
+			const ventData: Partial<VentData> = {
+				name: "Vent 1",
+				associatedWallRoofWindowId: window.id,
+			};
+  
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWindows: {
+						data: [{ data: window }],
+					},
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [],
+						},
+					},
+				},
+				infiltrationAndVentilation: {
+					vents: {
+						data: [{ data: ventData }],
+					},
+				},
+			});
+
+			const { dwellingSpaceExternalWall } =
+        store.dwellingFabric.dwellingSpaceWalls;
+			const { dwellingSpaceWindows } = store.dwellingFabric;
+
+			const actual = store.getTaggedItem(
+				[dwellingSpaceWindows,dwellingSpaceExternalWall ],
+				ventData.associatedWallRoofWindowId,
+			);
+    
+			expect(actual).toEqual(undefined);
+		});
+	});
 });

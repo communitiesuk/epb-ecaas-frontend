@@ -52,10 +52,6 @@ export function isEcaasForm(value: unknown): value is EcaasForm<unknown> {
 	return typeof value === "object" && value !== null && "data" in value;
 }
 
-export function hasTaggedItem<T>(item: EcaasForm<T, "name">): item is EcaasForm<T, "name"> & { data: T & { taggedItem: string } }{
-	return typeof item.data === "object" && "taggedItem" in item.data!;
-}
-
 const baseGeneralDetails = z.object({
 	storeysInDwelling: z.int().min(1).max(250),
 	numOfBedrooms: z.int().min(1),
