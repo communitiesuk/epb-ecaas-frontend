@@ -1,4 +1,4 @@
-import { PageType  } from "./pages.types";
+import { PageType } from "./pages.types";
 import type { Page } from "./pages.types";
 
 const heatingSystemsPages = [
@@ -92,6 +92,27 @@ const heatingSystemsPages = [
 		url: "/heating-systems/heat-emitting/warm-air-heat-pump/:pump",
 		type: PageType.Task,
 		parentId: "heatEmitting",
+	},
+	{
+		id: "cooling",
+		title: "Cooling",
+		url: "/heating-systems/cooling",
+		type: PageType.TaskGroup,
+		parentId: "heatingSystems",
+	},
+	{
+		id: "airConditioning",
+		title: "Air conditioning",
+		url: "/heating-systems/cooling/air-conditioning/create",
+		type: PageType.Task,
+		parentId: "cooling",
+	},
+	{
+		id: "airConditioningEdit",
+		title: "Air conditioning",
+		url: "/heating-systems/cooling/air-conditioning/:airConditioning",
+		type: PageType.Task,
+		parentId: "cooling",
 	},
 	{
 		id: "heatingSystemsSummary",
