@@ -422,8 +422,8 @@ describe("hasCompleteState function", () => {
 	describe("getTaggedItem getter function", () => {
 
 		beforeEach(() => {
-			store.$reset()
-		})
+			store.$reset();
+		});
 
 		const externalWall1: Partial<ExternalWallData> = {
 			id: "ex-wall-id",
@@ -473,9 +473,9 @@ describe("hasCompleteState function", () => {
 				},
 			});
 
-			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall
-			const idOfTaggedWall = vent1.associatedWallRoofWindowId
-			const actual = store.getTaggedItem([topLevelTaggedWalls], idOfTaggedWall)
+			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+			const idOfTaggedWall = vent1.associatedWallRoofWindowId;
+			const actual = store.getTaggedItem([topLevelTaggedWalls], idOfTaggedWall);
 		
 			const expected =  { id: externalWall1.id, orientation: externalWall1.orientation, pitch: externalWall1.pitch };
 			expect(actual).toEqual(expected);
@@ -497,14 +497,14 @@ describe("hasCompleteState function", () => {
 				},
 				infiltrationAndVentilation: {
 					vents: {
-						data: [{ data: vent1 }, { data: vent2}],
+						data: [{ data: vent1 }, { data: vent2 }],
 					},
 				},
 			});
 			
-			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall
-			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows
-			const idOfTaggedWall = vent2.associatedWallRoofWindowId
+			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
+			const idOfTaggedWall = vent2.associatedWallRoofWindowId;
 			
 			
 			const actual = store.getTaggedItem([topLevelTaggedWalls, nestedTaggedWindows], idOfTaggedWall);
@@ -531,10 +531,10 @@ describe("hasCompleteState function", () => {
 				},
 			});
 
-			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall
-			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows
-			const idOfTaggedWall = vent1.associatedWallRoofWindowId
-			const actual = store.getTaggedItem([topLevelTaggedWalls, nestedTaggedWindows], idOfTaggedWall)
+			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
+			const idOfTaggedWall = vent1.associatedWallRoofWindowId;
+			const actual = store.getTaggedItem([topLevelTaggedWalls, nestedTaggedWindows], idOfTaggedWall);
 		
 			const expected =  { id: externalWall1.id, orientation: externalWall1.orientation, pitch: externalWall1.pitch };
 			expect(actual).toEqual(expected);
@@ -559,9 +559,9 @@ describe("hasCompleteState function", () => {
 				},
 			});
 
-			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall
-			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows
-			const idOfTaggedWall = vent1.associatedWallRoofWindowId
+			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows;
+			const idOfTaggedWall = vent1.associatedWallRoofWindowId;
 
 			const actual = store.getTaggedItem([topLevelTaggedWalls,nestedTaggedWindows], idOfTaggedWall);
     
