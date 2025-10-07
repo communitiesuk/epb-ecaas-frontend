@@ -1,25 +1,55 @@
+type EcaasSectionWithTagging =
+	| WindowData 
+	| ExternalWallData 
+	| InternalWallData 
+	| RoofData
+	| CeilingData;
 
-export const getAssociatedItem = <T extends Array<Record<string, unknown>>>(sections: T[], id: string): AssociatedItemValues | undefined => {
+export const getAssociatedItem = (
+	sections: EcaasSectionWithTagging[][],
+	id: string,
+): AssociatedItemValues | undefined => {
+
+	const topLevelTaggedItem = getResolvedTopLevelTaggedItem(sections, id);
+	if (topLevelTaggedItem) return topLevelTaggedItem;
+
+	const nestedTaggedItem = getResolvedNestedTaggedItem(sections, id);
+	if (nestedTaggedItem && "taggedItem" in nestedTaggedItem) {
+		return getAssociatedItem(sections, nestedTaggedItem.taggedItem);
+	}
+};
+
+export const extractResolvedSectionItems = <T extends Record<string, unknown>>(
+	section: T[],
+): AssociatedItemValues[] => {
+	return section?.map((x) => {
+
+		return {
+			id: x.id!,
+			pitch: x.pitchOption === undefined ? x.pitch : extractPitch(x),
+			...("orientation" in x && { orientation: x.orientation }),
+		} as AssociatedItemValues;
+	}) ?? [];
+};
+
+export const getResolvedTopLevelTaggedItem = (sections: EcaasSectionWithTagging[][], id: string | undefined) :AssociatedItemValues | undefined  => {
 	const items: AssociatedItemValues[][] = [];
-	const topLevelSections = sections?.filter(s => s !== undefined && s.some(x => !("taggedItem" in x)));
-
-	for (const section of sections) {
-		const nestedTaggedItems = section?.filter(x => "taggedItem" in x) ?? [];
-
-		if (nestedTaggedItems.length) {
-			for (const nestedTaggedItem of nestedTaggedItems) {
-				const taggedItem = getAssociatedItem(topLevelSections, nestedTaggedItem.taggedItem as string);
-
-				if (taggedItem) {
-					return taggedItem;
-				}
-			}
-
-			continue;
-		}
-
+	const sectionsWithoutNestedTaggedItems =  sections?.filter(s => s !== undefined && s.some(x => !("taggedItem" in x)));
+  
+	for(const section of sectionsWithoutNestedTaggedItems){
 		items.push(extractResolvedSectionItems(section));
 	}
+	const taggedItem = items.flat().find((item) => item.id === id);
+	return taggedItem;
+};
 
-	return items.flat().find((item) => item.id === id);
+export const getResolvedNestedTaggedItem = (sections: EcaasSectionWithTagging[][], id: string | undefined)  => {
+	const sectionsWithNestedTaggedItems = sections.filter(s => s !== undefined && s.some(x => "taggedItem" in x));
+	for(const section of sectionsWithNestedTaggedItems){
+		const taggedItem = section.find(x => "id" in x && x.id === id);
+    
+		if(taggedItem){
+			return taggedItem;
+		}
+	}
 };
