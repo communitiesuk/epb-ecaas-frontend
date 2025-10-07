@@ -41,7 +41,7 @@ test.describe("Energy supply form data persistence", () => {
 		await page.click('a[href="/heating-systems/summary"]');
 		
 		const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
-		await expect(fuelTypeElement.locator("li")).toHaveText(/Electricity/);
+		await expect(fuelTypeElement.locator("dd")).toHaveText(/Electricity/);
 	
 		const exportedElement = page.getByTestId("summary-energySupply-exported");
 		await expect(exportedElement.locator("dd")).toHaveText(/Yes/);

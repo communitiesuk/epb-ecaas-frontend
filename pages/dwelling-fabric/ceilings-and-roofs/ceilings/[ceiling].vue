@@ -63,6 +63,8 @@ autoSaveElementForm<CeilingData>({
 	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings,
 	defaultName: "Ceiling",
 	onPatch: (state, newData, index) => {
+		const { pitchOption, pitch } = newData.data;
+		newData.data.pitch = pitchOption === "0" ? 0 : pitch;
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.complete = false;
 	},
@@ -109,6 +111,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FieldsPitch
 				:pitch-option="model?.pitchOption"
 				:options="zeroPitchOptions()"
+				data-field="Zone.BuildingElement.*.pitch"
 			/>
 			<FormKit
 				id="surfaceArea"

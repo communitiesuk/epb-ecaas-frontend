@@ -22,5 +22,6 @@ const options: Record<CombustionFuelType, SnakeToSentenceCase<CombustionFuelType
 		:name="name"
 		validation="required"
 		:options="options"
+		data-field="InfiltrationVentilation.CombustionAppliances.*.fuel_type"
 	/>
 </template>

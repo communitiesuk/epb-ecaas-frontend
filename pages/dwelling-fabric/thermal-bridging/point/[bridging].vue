@@ -69,6 +69,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="heatTransferCoefficient"
 			validation="required | number"
 			suffix-text="W/K"
+			data-field="Zone.ThermalBridging.*.heat_transfer_coeff"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

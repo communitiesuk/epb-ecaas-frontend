@@ -8,7 +8,7 @@ if (process.env.NUXT_PUBLIC_ENVIRONMENT) {
 	dotenv.config();
 	Sentry.init({
 		dsn: process.env.SENTRY_DSN,
-		environment: process.env.NUXT_PUBLIC_ENVIRONMENT,
+		environment: process.env.NUXT_PUBLIC_ENVIRONMENT ?? "development",
 		debug: false,
 	});
 }

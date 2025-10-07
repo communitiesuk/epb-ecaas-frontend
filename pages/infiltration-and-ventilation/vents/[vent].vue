@@ -91,7 +91,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the actual area through which air can flow, accounting for obstructions like grilles or mesh"
 			name="effectiveVentilationArea"
 			validation="required | number | min:1 | max:999999"
-			suffix-text="cm²">
+			suffix-text="cm²"
+			data-field="InfiltrationVentilation.Vents.area_cm2">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">
@@ -127,7 +128,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the mid height of the zone that the vent serves. Typically between 1.2m and 1.8m."
 			name="midHeightOfZone"
 			validation="required | number | min:1 | max:60"
-			suffix-text="m"/>
+			suffix-text="m"
+			data-field="InfiltrationVentilation.Vents.mid_height_air_flow_path"
+		/>
+		<FieldsOrientation help="Enter the orientation of the vent's outside face, measured from true north"/>
+		<FieldsPitch data-field="InfiltrationVentilation.Vents.*.pitch" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

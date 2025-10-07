@@ -470,7 +470,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<h2 class="govuk-heading-l">Curtains and blinds</h2>
 		<FormKit
 			id="curtainsOrBlinds"
-			v-model="model!.curtainsOrBlinds"
 			type="govBoolean"
 			label="Does this window have any curtains or blinds?"
 			name="curtainsOrBlinds"

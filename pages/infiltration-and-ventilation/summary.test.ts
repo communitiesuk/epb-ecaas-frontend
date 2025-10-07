@@ -124,7 +124,7 @@ describe("Infiltration and ventilation summary", () => {
 
 	it("should contain the correct tabs for infiltration and ventilation", async () => {
 		await renderSuspended(Summary);
-	
+
 		expect(screen.getByRole("link", { name: "Mechanical ventilation" }));
 		expect(screen.getByRole("link", { name: "Ductwork" }));
 		expect(screen.getByRole("link", { name: "Vents" }));
@@ -152,7 +152,7 @@ describe("Infiltration and ventilation summary", () => {
 			"MVHR location": "Inside",
 			"MVHR efficiency": "0.2",
 		};
-		
+
 
 		for (const [key, value] of Object.entries(expectedResult)) {
 			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
@@ -181,8 +181,8 @@ describe("Infiltration and ventilation summary", () => {
 		const expectedResult = {
 			"Name": "Ducktwork 1",
 			"MVHR unit": "Mechanical name 1",
-			"Ductwork cross sectional shape": "Circular",
 			"Duct type": "Intake",
+			"Ductwork cross sectional shape": "Circular",
 			"Internal diameter of ductwork": `300 ${millimetre.suffix}`,
 			"External diameter of ductwork": `1000 ${millimetre.suffix}`,
 			"Length of ductwork": `100 ${metre.suffix}`,
@@ -191,7 +191,7 @@ describe("Infiltration and ventilation summary", () => {
 			"Surface reflectivity": "Reflective",
 		};
 
-		for(const [key, value] of Object.entries(expectedResult)){
+		for (const [key, value] of Object.entries(expectedResult)) {
 
 			const lineResult = (await screen.findByTestId(`summary-ductwork-${hyphenate(key)}`));
 
@@ -216,7 +216,7 @@ describe("Infiltration and ventilation summary", () => {
 				},
 			},
 		});
-    
+
 		await renderSuspended(MechanicalVentilationOverview);
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
 		await renderSuspended(Summary);
@@ -246,7 +246,6 @@ describe("Infiltration and ventilation summary", () => {
 			"Name": "Vent 1",
 			"Type of vent": "Trickle",
 			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
-			"Vent opening ratio": "1",
 			"Mid height of zone": `1 ${metre.suffix}`,
 			"Orientation": `0 ${degrees.suffix}`,
 			"Pitch": `90 ${degrees.suffix}`,
@@ -375,9 +374,9 @@ describe("Infiltration and ventilation summary", () => {
 	// 				}
 	// 			}
 	// 		});
-	
+
 	// 		await renderSuspended(Summary);
-	
+
 	// 		const expectedResult = {
 	// 			"Type": "Open fireplace",
 	// 			"Name": "Open fireplace 1",
@@ -386,7 +385,7 @@ describe("Infiltration and ventilation summary", () => {
 	// 			"Type of fuel": "Coal"
 
 	// 		};
-	
+
 	// 		for (const [key, value] of Object.entries(expectedResult)) {
 	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -404,9 +403,9 @@ describe("Infiltration and ventilation summary", () => {
 	// 				}
 	// 			}
 	// 		});
-	
+
 	// 		await renderSuspended(Summary);
-	
+
 	// 		const expectedResult = {
 	// 			"Type": "Closed fireplace with fan",
 	// 			"Name": "Closed fireplace",
@@ -415,7 +414,7 @@ describe("Infiltration and ventilation summary", () => {
 	// 			"Type of fuel": "Wood"
 
 	// 		};
-	
+
 	// 		for (const [key, value] of Object.entries(expectedResult)) {
 	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -433,9 +432,9 @@ describe("Infiltration and ventilation summary", () => {
 	// 				}
 	// 			}
 	// 		});
-	
+
 	// 		await renderSuspended(Summary);
-	
+
 	// 		const expectedResult = {
 	// 			"Type": "Open gas flue balancer",
 	// 			"Name": "Open gas flue balancer 1",
@@ -444,7 +443,7 @@ describe("Infiltration and ventilation summary", () => {
 	// 			"Type of fuel": "Gas"
 
 	// 		};
-	
+
 	// 		for (const [key, value] of Object.entries(expectedResult)) {
 	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -462,9 +461,9 @@ describe("Infiltration and ventilation summary", () => {
 	// 				}
 	// 			}
 	// 		});
-	
+
 	// 		await renderSuspended(Summary);
-	
+
 	// 		const expectedResult = {
 	// 			"Type": "Open gas kitchen stove",
 	// 			"Name": "Open gas kitchen stove 1",
@@ -472,7 +471,7 @@ describe("Infiltration and ventilation summary", () => {
 	// 			"Exhaust method from appliance": "Into room",
 	// 			"Type of fuel": "Oil"
 	// 		};
-	
+
 	// 		for (const [key, value] of Object.entries(expectedResult)) {
 	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -490,9 +489,9 @@ describe("Infiltration and ventilation summary", () => {
 	// 				}
 	// 			}
 	// 		});
-	
+
 	// 		await renderSuspended(Summary);
-	
+
 	// 		const expectedResult = {
 	// 			"Type": "Open gas fire",
 	// 			"Name": "Open gas fire 1",
@@ -500,8 +499,8 @@ describe("Infiltration and ventilation summary", () => {
 	// 			"Exhaust method from appliance": "Into mechanical vent",
 	// 			"Type of fuel": "Oil"
 	// 		};
-			
-	
+
+
 	// 		for (const [key, value] of Object.entries(expectedResult)) {
 	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -519,9 +518,9 @@ describe("Infiltration and ventilation summary", () => {
 	// 				}
 	// 			}
 	// 		});
-	
+
 	// 		await renderSuspended(Summary);
-	
+
 	// 		const expectedResult = {
 	// 			"Type": "Closed fire",
 	// 			"Name": "Closed fire 1",
@@ -529,8 +528,8 @@ describe("Infiltration and ventilation summary", () => {
 	// 			"Exhaust method from appliance": "Into mechanical vent",
 	// 			"Type of fuel": "Coal"
 	// 		};
-			
-	
+
+
 	// 		for (const [key, value] of Object.entries(expectedResult)) {
 	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
 	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);

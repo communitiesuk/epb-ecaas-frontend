@@ -87,6 +87,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="startAngle"
 			validation="required | number | min:0 | max:360"
 			suffix-text="°"
+			data-field="ExternalConditions.shading_segments.*.start360"
 		/>
 		<FormKit
 			id="endAngle"
@@ -96,6 +97,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="endAngle"
 			validation="required | number | min:0 | max:360"
 			suffix-text="°"
+			data-field="ExternalConditions.shading_segments.*.end360"
 		/>
 		<FormKit
 			id="objectType"
@@ -104,7 +106,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Select the type of object causing the shading"
 			name="objectType"
 			:options="objectTypeOptions"
-			validation="required">
+			validation="required"
+			data-field="ExternalConditions.shading_segments.*.shading.*.type">
 			<GovDetails summary-text="Help with this input">
 				<ul class="govuk-list govuk-list--bullet">
 					<li>An obstacle (for example, a tree or building) ends at a certain height above ground level.</li>
@@ -121,6 +124,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="height"
 			validation="required | number"
 			help="Enter the height of the object causing the shading"
+			data-field="ExternalConditions.shading_segments.*.shading.*.height"
 		/>
 		<FormKit
 			id="distance"
@@ -128,8 +132,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Distance"
 			suffix-text="m"
 			name="distance"
-			validation="required | number"
+			validation="required | number | min:0.1"
 			help="Enter the distance from the dwelling to the shading object"
+			data-field="ExternalConditions.shading_segments.*.shading.*.distance"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

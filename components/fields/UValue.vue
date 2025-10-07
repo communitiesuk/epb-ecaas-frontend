@@ -16,5 +16,6 @@ defineProps<{
 		:help="help ?? 'This is the steady thermal transmittance of the building element'"
 		:name="name ?? 'uValue'"
 		validation="required | number | min:0.01 | max:10"
+		data-field="Zone.BuildingElement.*.u_value"
 	/>
 </template>
