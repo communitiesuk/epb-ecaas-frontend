@@ -86,6 +86,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="internalDiameter"
 			validation="required | number"
 			suffix-text="mm"
+			data-field="HotWaterSource['hw cylinder'].pipework.*.internal_diameter_mm"
 		/>
 		<FormKit
 			id="externalDiameter"
@@ -95,6 +96,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="externalDiameter"
 			validation="required | number"
 			suffix-text="mm"
+			data-field="HotWaterSource['hw cylinder'].pipework.*.external_diameter_mm"
 		/>
 		<FormKit
 			id="length"
@@ -104,6 +106,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="length"
 			validation="required | number | min:0 | max:200"
 			suffix-text="m"
+			data-field="HotWaterSource['hw cylinder'].pipework.*.length"
 		/>
 		<FormKit
 			id="insulationThickness"
@@ -113,6 +116,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="insulationThickness"
 			validation="required | number"
 			suffix-text="mm"
+			data-field="HotWaterSource['hw cylinder'].pipework.*.insulation_thickness_mm"
 		/>
 		<FormKit
 			id="thermalConductivity"
@@ -122,6 +126,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="thermalConductivity"
 			validation="required | number"
 			suffix-text="W/(m·K)"
+			data-field="HotWaterSource['hw cylinder'].pipework.*.insulation_thermal_conductivity"
 		>
 			<GovDetails class="summary-text" :summary-text="`Help with this input`" classes="govuk-!-margin-bottom-4" possibly-llm-placeholder>
 				<table class="govuk-table">
@@ -157,6 +162,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Specify whether the coating is reflective"
 			name="surfaceReflectivity"
 			validation="required"
+			data-field="HotWaterSource['hw cylinder'].pipework.*.surface_reflectivity"
 		/>
 		<FormKit
 			id="pipeContents"
@@ -166,6 +172,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Specify what is distributed through the pipe"
 			name="pipeContents"
 			validation="required"
+			data-field="HotWaterSource['hw cylinder'].pipework.*.pipe_contents"
 		/>
 		<ClientOnly>
 			<FormKit
@@ -194,6 +201,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Specify the location of the pipework"
 			name="location"
 			validation="required"
+			data-field="HotWaterSource['hw cylinder'].pipework.*.location"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

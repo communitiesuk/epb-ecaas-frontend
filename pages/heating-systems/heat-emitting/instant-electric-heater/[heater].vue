@@ -74,6 +74,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="ratedPower"
 			validation="required | number | min:0 | max:70"
 			suffix-text="kW"
+			data-field="SpaceHeatSystem.*.rated_power"
 		/>
 		<FormKit
 			id="convectionFractionInstant"
@@ -81,7 +82,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Convection fraction for heating"
 			help="Specify the portion of heat transferred through convection (0 to 1), where 1 means all heat is convective"
 			name="convectionFractionInstant"
-			validation="required | number | min:0.01 | max:1">
+			validation="required | number | min:0.01 | max:1"
+			data-field="SpaceHeatSystem.*.emitters.*.frac_convective">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">

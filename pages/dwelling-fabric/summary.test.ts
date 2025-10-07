@@ -46,7 +46,7 @@ const floorsData: FloorsData = {
 		}],
 	},
 	dwellingSpaceInternalFloor: {
-		data: [{ 
+		data: [{
 			data: {
 				typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 				name: "Internal 1",
@@ -150,11 +150,10 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 	dwellingSpaceRoofs: {
 		data: [{
 			data: {
-				name: "Roof 1",
+				name: "Flat roof",
 				typeOfRoof: "flat",
 				pitchOption: "custom",
 				pitch: 180,
-				orientation: 0,
 				length: 1,
 				width: 1,
 				elevationalHeightOfElement: 2,
@@ -164,7 +163,25 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 				kappaValue: 50000,
 				massDistributionClass: "I",
 			},
-		}],
+		},
+		{
+			data: {
+				name: "Pitched roof",
+				typeOfRoof: "pitchedInsulatedAtRoof",
+				pitchOption: "custom",
+				pitch: 180,
+				orientation: 30,
+				length: 1,
+				width: 1,
+				elevationalHeightOfElement: 2,
+				surfaceArea: 1,
+				solarAbsorptionCoefficient: 0.5,
+				uValue: 1,
+				kappaValue: 50000,
+				massDistributionClass: "I",
+			},
+		},
+		],
 	},
 };
 
@@ -282,7 +299,7 @@ describe("Living space fabric summary", () => {
 	describe("Living space zone parameters", () => {
 		it("should contain the correct tabs for dwelling space zone parameters", async () => {
 			await renderSuspended(Summary);
-	  
+
 			expect(screen.getByRole("link", { name: "Zone parameters" }));
 		});
 
@@ -294,15 +311,15 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Area": `10 ${metresSquare.suffix}`,
 				"Volume": `10 ${cubicMetre.suffix}`,
 				// "Heat emitting system for this zone": "Elec heater",
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceZoneParameters-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -314,7 +331,7 @@ describe("Living space fabric summary", () => {
 	describe("Living space lighting", () => {
 		it("should contain the correct tabs for dwelling space lighting", async () => {
 			await renderSuspended(Summary);
-	  
+
 			expect(screen.getByRole("link", { name: "Lighting" }));
 		});
 
@@ -326,14 +343,14 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Number of LED bulbs": "8",
 				"Number of incandescent bulbs": "3",
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceLighting-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -345,12 +362,12 @@ describe("Living space fabric summary", () => {
 	describe("Living space floors", () => {
 		it("should contain the correct tabs for dwelling space floors", async () => {
 			await renderSuspended(Summary);
-	  
+
 			expect(screen.getByRole("link", { name: "Ground floor" }));
 			expect(screen.getByRole("link", { name: "Internal floor" }));
 			expect(screen.getByRole("link", { name: "Exposed floor" }));
 		});
-	
+
 		it("should display the correct data for the ground floor section", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -359,9 +376,9 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Ground 1",
 				"Net surface area of this element": `5 ${metresSquare.suffix}`,
@@ -375,7 +392,7 @@ describe("Living space fabric summary", () => {
 				"Thickness of walls at the edge of the floor": `0.3 ${millimetre.suffix}`,
 				"Type of ground floor": "Slab no edge insulation",
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGroundFloors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -391,9 +408,9 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Type of internal floor": "Internal floor to heated space",
 				"Name": "Internal 1",
@@ -401,7 +418,7 @@ describe("Living space fabric summary", () => {
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 			};
-			
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceInternalFloors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -417,9 +434,9 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Exposed Floor 1",
 				"Length": `0.5 ${metre.suffix}`,
@@ -431,8 +448,8 @@ describe("Living space fabric summary", () => {
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 			};
-			
-	
+
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceExposedFloors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -444,13 +461,13 @@ describe("Living space fabric summary", () => {
 	describe("Living space walls", () => {
 		it("should contain the correct tabs for dwelling space walls", async () => {
 			await renderSuspended(Summary);
-	  
+
 			expect(screen.getByRole("link", { name: "External wall" }));
 			expect(screen.getByRole("link", { name: "Internal wall" }));
 			expect(screen.getByRole("link", { name: "Wall to unheated space" }));
 			expect(screen.getByRole("link", { name: "Party wall" }));
 		});
-	
+
 		it("should display the correct data for the external wall section", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -461,7 +478,7 @@ describe("Living space fabric summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "External wall 1",
 				"Pitch": `90 ${degrees.suffix}`,
@@ -475,7 +492,7 @@ describe("Living space fabric summary", () => {
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 			};
-			
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceExternalWalls-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -491,9 +508,9 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Internal 1",
 				"Net surface area of element": `5 ${metresSquare.suffix}`,
@@ -501,8 +518,8 @@ describe("Living space fabric summary", () => {
 				"Mass distribution class": "Internal",
 				"Pitch": `0 ${degrees.suffix}`,
 			};
-			
-	
+
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceInternalWalls-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -518,9 +535,9 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Wall to unheated space 1",
 				"Net surface area of element": `500 ${metresSquare.suffix}`,
@@ -530,7 +547,7 @@ describe("Living space fabric summary", () => {
 				"Pitch": `90 ${degrees.suffix}`,
 				"Thermal resistance of adjacent unheated space": `1 ${squareMeterKelvinPerWatt.suffix}`,
 			};
-			
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceUnheatedSpaceWalls-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -546,9 +563,9 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Party wall 1",
 				"Pitch": `90 ${degrees.suffix}`,
@@ -557,7 +574,7 @@ describe("Living space fabric summary", () => {
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 			};
-			
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpacePartyWalls-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -569,11 +586,11 @@ describe("Living space fabric summary", () => {
 	describe("dwelling space ceilings and roofs", () => {
 		it("should contain the correct tabs for dwelling space walls", async () => {
 			await renderSuspended(Summary);
-	  
+
 			expect(screen.getByRole("link", { name: "Ceiling" }));
 			expect(screen.getByRole("link", { name: "Roof" }));
 		});
-	
+
 		it("should display the correct data for the ceilings section", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -582,9 +599,9 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Type of ceiling": "Ceiling to heated space",
 				"Name": "Ceiling 1",
@@ -593,8 +610,8 @@ describe("Living space fabric summary", () => {
 				"Mass distribution class": "Internal",
 				"Pitch": `180 ${degrees.suffix}`,
 			};
-			
-	
+
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceCeilings-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -610,13 +627,12 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-			const expectedResult = {
-				"Name": "Roof 1",
+			const expectedFlatRoof = {
+				"Name": "Flat roof",
 				"Type of roof": "Flat",
 				"Pitch": `180 ${degrees.suffix}`,
-				"Orientation": `0 ${degrees.suffix}`,
 				"Length": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"Elevational height of building element at its base": `2 ${metre.suffix}`,
@@ -626,12 +642,32 @@ describe("Living space fabric summary", () => {
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 			};
-			
 
-			for (const [key, value] of Object.entries(expectedResult)) {
+			for (const [key, value] of Object.entries(expectedFlatRoof)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceRoofs-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+
+			const expectedPitchedRoof = {
+				"Name": "Pitched roof",
+				"Type of roof": "Pitched insulated at roof",
+				"Pitch": `180 ${degrees.suffix}`,
+				"Orientation": `30 ${degrees.suffix}`,
+				"Length": `1 ${metre.suffix}`,
+				"Width": `1 ${metre.suffix}`,
+				"Elevational height of building element at its base": `2 ${metre.suffix}`,
+				"Net surface area": `1 ${metresSquare.suffix}`,
+				"Solar absorption coefficient": "0.5",
+				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
+				"Areal heat capacity": "Very light",
+				"Mass distribution class": "Internal",
+			};
+
+			for (const [key, value] of Object.entries(expectedPitchedRoof)) {
+				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceRoofs-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.lastElementChild?.textContent).toBe(value);
 			}
 		});
 	});
@@ -639,12 +675,12 @@ describe("Living space fabric summary", () => {
 	describe("dwelling space doors", () => {
 		it("should contain the correct tabs for dwelling space doors", async () => {
 			await renderSuspended(Summary);
-	  
+
 			expect(screen.getByRole("link", { name: "External unglazed door" }));
 			expect(screen.getByRole("link", { name: "External glazed door" }));
 			expect(screen.getByRole("link", { name: "Internal door" }));
 		});
-	
+
 		it("should display the correct data for the external unglazed doors section", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -653,9 +689,9 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "External unglazed door 1",
 				"Pitch": `90 ${degrees.suffix}`,
@@ -669,8 +705,8 @@ describe("Living space fabric summary", () => {
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 			};
-			
-	
+
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceUnglazedDoors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -686,9 +722,9 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "External glazed door 1",
 				"Orientation": `1 ${degrees.suffix}`,
@@ -700,7 +736,7 @@ describe("Living space fabric summary", () => {
 				"Elevational height of building element at its base": `1 ${metre.suffix}`,
 				"Mid height": `1 ${metre.suffix}`,
 			};
-			
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceGlazedDoors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -716,9 +752,9 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Type": "Internal door to heated space",
 				"Name": "Internal 1",
@@ -727,8 +763,8 @@ describe("Living space fabric summary", () => {
 				"Mass distribution class": "Internal",
 				"Pitch": `90 ${degrees.suffix}`,
 			};
-			
-	
+
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceInternalDoors-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -740,10 +776,10 @@ describe("Living space fabric summary", () => {
 	describe("dwelling space windows", () => {
 		it("should contain the correct tabs for dwelling space windows", async () => {
 			await renderSuspended(Summary);
-	  
+
 			expect(screen.getByRole("link", { name: "Windows" }));
 		});
-	
+
 		it("should display the correct data for the windows section", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -753,7 +789,7 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
 			const expectedResult = {
 				"Name": "Window 1",
@@ -776,8 +812,8 @@ describe("Living space fabric summary", () => {
 				"Thermal resistivity increase": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Solar transmittance reduction": "0.1",
 			};
-			
-	
+
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceWindows-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -789,11 +825,11 @@ describe("Living space fabric summary", () => {
 	describe("dwelling space thermal bridges", () => {
 		it("should contain the correct tabs for dwelling space thermal bridges", async () => {
 			await renderSuspended(Summary);
-	  
+
 			expect(screen.getByRole("link", { name: "Linear thermal bridges" }));
 			expect(screen.getByRole("link", { name: "Point thermal bridges" }));
 		});
-	
+
 		it("should display the correct data for the linear thermal bridges section", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -802,15 +838,15 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
 			const expectedResult = {
 				"Type of thermal bridge": "E1",
 				"Linear thermal transmittance": `1 ${wattsPerMeterKelvin.suffix}`,
 				"Length of thermal bridge": `2 ${metre.suffix}`,
 			};
-			
-	
+
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpaceLinearThermalBridging-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -826,14 +862,14 @@ describe("Living space fabric summary", () => {
 					},
 				},
 			});
-	
+
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Point 1",
 				"Heat transfer coefficient": `1 ${wattsPerKelvin.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-dwellingSpacePointThermalBridging-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);

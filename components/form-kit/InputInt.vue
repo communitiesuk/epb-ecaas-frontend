@@ -3,7 +3,7 @@ import type { FormKitFrameworkContext } from "@formkit/core";
 import { showErrorState, getErrorMessage } from "#imports";
 
 const props = defineProps<{
-	context: FormKitFrameworkContext
+	context: FormKitFrameworkContext,
 }>();
 
 const {
@@ -27,7 +27,7 @@ function handleBlur(e: FocusEvent) {
 	if (value !== "" && Number.isInteger(Number(value))) {
 		props.context.node.input(Number(value));
 	} else {
-		props.context.node.input(value);
+		props.context.node.input(undefined);
 	}
 
 	props.context.handlers.blur(e);
@@ -55,6 +55,7 @@ function handleBlur(e: FocusEvent) {
 				:value="mounted ? props.context._value : ''"
 				:data-testid="id"
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
+				v-bind="props.context.attrs"
 				@input="handleInput"
 				@blur="handleBlur"
 			>

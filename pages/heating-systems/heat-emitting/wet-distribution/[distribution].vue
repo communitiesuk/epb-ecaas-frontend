@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { FormKitOptionsProp } from "@formkit/inputs";
 import { isInteger } from "~/utils/validation";
 import { getUrl, type WetDistributionData } from "#imports";
+import { ecoDesignControllerOptions } from "#imports";
 
 const title = "Wet distribution";
 const store = useEcaasStore();
@@ -16,19 +16,6 @@ const wetDistributionData = useItemToEdit(
 const model: Ref<WetDistributionData> = ref({
 	...wetDistributionData?.data,
 } as WetDistributionData);
-
-const options: FormKitOptionsProp[] = [
-	{
-		1: "I: On/Off Room Thermostat",
-		2: "II: Weather Compensator (Modulating Heaters)",
-		3: "III: Weather Compensator (On/Off Heaters)",
-		4: "IV: TPI Room Thermostat (On/Off Heaters)",
-		5: "V: Modulating Room Thermostat",
-		6: "VI: Weather Compensator + Room Sensor (Modulating)",
-		7: "VII: Weather Compensator + Room Sensor (On/Off)",
-		8: "VIII: Multi-Sensor Room Control (Modulating)",
-	},
-];
 
 const typeOfSpaceHeaterOptions: Record<"radiator", string> = {
 	radiator: "Radiators",
@@ -144,6 +131,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="heatSource"
 			label="Heat source"
 			help="Select the relevant heat source that has been added previously"
+			data-field="SpaceHeatSystem.*.HeatSource"
 		/>
 		<FormKit
 			id="thermalMass"
@@ -153,6 +141,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number"
 			suffix-text="kWh/K"
 			help="Enter the thermal mass of the entire wet distribution system including pipework. Typically between 0.1 and 0.5 kWh/K."
+			data-field="SpaceHeatSystem.*.thermal_mass"
 		/>
 			
 		<FormKit
@@ -270,6 +259,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required | number"
 				help="The emitter floor area for an underfloor heating (UFH) system refers to the actual heated floor area that emits heat into the room. It is different from the total floor area because some areas may not have UFH installed (e.g. under kitchen units, bathtubs, or built-in furniture)."
 				suffix-text="m²"
+				data-field="SpaceHeatSystem.*.emitter_floor_area"
 			/>
 		</template>
 
@@ -280,8 +270,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Eco design controller class"
 			name="ecoDesignControllerClass"
 			validation="required"
-			:options="options"
-			
+			:options="ecoDesignControllerOptions"
+			data-field="SpaceHeatSystem.*.ecodesign_controller"
 		>
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-body">

@@ -71,6 +71,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
 			:options="standardPitchOptions()"
+			data-field="Zone.BuildingElement.*.pitch"
 		/>
 		<FormKit
 			id="surfaceAreaOfElement"
@@ -79,7 +80,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Net area of the opaque building element. The area of all windows or doors should be subtracted before entry."
 			name="surfaceAreaOfElement"
 			validation="required | number | min:0 | max:10000"
-			suffix-text="m²">
+			suffix-text="m²"
+			data-field="Zone.BuildingElement.*.area">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">The net surface area should only be for one side of the wall, not both.</p>
 			</GovDetails>

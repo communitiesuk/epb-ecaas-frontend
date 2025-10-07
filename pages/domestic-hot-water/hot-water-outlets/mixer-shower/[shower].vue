@@ -71,6 +71,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="flowRate"
 			validation="required | number | min:8 | max:15"
 			suffix-text="litres per minute"
+			data-field="HotWaterDemand.Shower.*.flowrate"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

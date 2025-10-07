@@ -106,7 +106,7 @@ describe("Heating systems summary page", () => {
 
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection("energySupply", {
-				"Fuel type": "CustomElectricity",
+				"Fuel type": "Custom, Electricity",
 				"CO2 per kWh": `1 ${co2PerKilowattHour.suffix}`,
 				"CO2 per kWh (including out of scope)": `2 ${co2PerKilowattHour.suffix}`,
 				"kWh per kWh delivered": "3",
@@ -460,7 +460,7 @@ describe("Heating systems summary page", () => {
 				"Design flow rate": `5 ${litrePerMinute.suffix}`,
 				"Type of space heater": "Radiators",
 				"Convection fraction": "0.2",
-				"Eco design controller class": "1",
+				"Eco design controller class": "I: On/Off Room Thermostat",
 				"Minimum flow temperature": `20 ${celsius.suffix}`,
 			};
 			await renderSuspended(HeatingSystemsSummary);
@@ -494,7 +494,7 @@ describe("Heating systems summary page", () => {
 				"Design flow rate": `5 ${litrePerMinute.suffix}`,
 				"Type of space heater": "Underfloor heating",
 				"Emitter floor area": `5 ${metresSquare.suffix}`,
-				"Eco design controller class": "1",
+				"Eco design controller class": "I: On/Off Room Thermostat",
 				"Minimum flow temperature": `20 ${celsius.suffix}`,
 			};
 
@@ -529,7 +529,7 @@ describe("Heating systems summary page", () => {
 				"Design flow rate": `5 ${litrePerMinute.suffix}`,
 				"Type of space heater": "Radiators",
 				"Convection fraction": "0.2",
-				"Eco design controller class": "1",
+				"Eco design controller class": "I: On/Off Room Thermostat",
 				"Minimum flow temperature": `20 ${celsius.suffix}`,
 			};
 

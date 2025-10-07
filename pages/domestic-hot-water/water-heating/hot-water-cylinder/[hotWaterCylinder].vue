@@ -87,6 +87,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			:validation-messages="{
 				withinMinAndMax: `Storage cylinder volume must be at least 0 and no more than 200,000 ${litre.name}.`,
 			}"
+			data-field="HotWaterSource['hw cylinder'].volume"
 		/>
 		<FormKit
 			id="dailyEnergyLoss"
@@ -96,6 +97,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			name="dailyEnergyLoss"
 			validation="required | number | min:0 | max:200"
 			suffix-text="kWh"
+			data-field="HotWaterSource['hw cylinder'].daily_losses"
 		/>
 		<GovLLMWarning />
 		<FormKit type="govButton" label="Save and continue" />

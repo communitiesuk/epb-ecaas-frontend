@@ -1,11 +1,12 @@
 import { objectFromEntries } from "ts-extras";
-import type { SchemaFlueGasExhaustSituation } from "../schema/api-schema.types";
+import type { SchemaFlueGasExhaustSituation, SchemaFuelType } from "../schema/api-schema.types";
 import type { DisplayProduct } from "~/pcdb/products";
 import type { ApplianceKey, MassDistributionClass, WwhrsType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
+import { immersionHeaterPositionValues } from "~/mapping/common";
 
-const emptyValueRendering = "-";
+export const emptyValueRendering = "-";
 
 /** Turns a value into something that can be shown on e.g. a summary page */
 export function show(value: string | number | undefined | null): string {
@@ -14,11 +15,14 @@ export function show(value: string | number | undefined | null): string {
 
 /** Renders a unit with correct visual suffix, falling back to "-" for undefined */
 export function dim(amount: UnitValue | number | undefined, unit?: UnitName): string {
+	if (amount as unknown === "") {
+		return emptyValueRendering;
+	}
 	if (typeof amount === "object") {
 		const { amount: num, unit: unitName } = amount;
-		
+
 		return renderDimensionedValue(num, unitName);
-	}	
+	}
 	if (typeof amount === "undefined") {
 		return emptyValueRendering;
 	}
@@ -37,7 +41,7 @@ export function displayBoolean(value: boolean | undefined): BooleanDisplay | typ
 	if (typeof value === "undefined") {
 		return emptyValueRendering;
 	}
-  
+
 	return value ? "Yes" : "No";
 }
 
@@ -203,9 +207,80 @@ export function displayAdjacentSpaceType<T extends string>(value: AdjacentSpaceT
 		return undefined;
 	}
 
-	return `${element} to ${ value === "heatedSpace" ? "heated space" : "unheated space" }`;
+	return `${element} to ${value === "heatedSpace" ? "heated space" : "unheated space"}`;
 }
 
+export function displayHeaterPosition(position: ImmersionHeaterPosition | undefined): string {
+	if (typeof position === "undefined") {
+		return emptyValueRendering;
+	}
+	return `${ displayCamelToSentenceCase(position) } (${ immersionHeaterPositionValues[position] })`;
+}
+
+export function displayReflectivity(reflective: boolean | undefined): string {
+	if (typeof reflective === "undefined") {
+		return emptyValueRendering;
+	}
+	return reflective ? "Reflective" : "Not reflective";
+}
+
+export function displayFuelTypes(fuelTypes: SchemaFuelType[] | undefined) {
+	return fuelTypes?.map(type => {
+		return displayFuelType(type);
+	}).join(", ");
+}
+
+export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
+	switch (fuelType) {
+		case "LPG_bottled":
+			return "LPG bottled";
+		case "LPG_bulk":
+			return "LPG bulk";
+		case "LPG_condition_11F":
+			return "LPG condition 11F";
+		case "custom":
+			return "Custom";
+		case "electricity":
+			return "Electricity";
+		case "energy_from_environment":
+			return "Energy from environment";
+		case "mains_gas":
+			return "Mains gas";
+		case "unmet_demand":
+			return "Unmet demand";
+		default:
+			fuelType satisfies never;
+			throw new Error(`Missed a fuel type case: ${fuelType}`);
+	}
+}
+
+export type FuelTypeDisplay = "LPG bottled" | "LPG bulk" | "LPG condition 11F" | "Custom" | "Electricity" | "Energy from environment" | "Mains gas" | "Unmet demand";
+
+export const ecoDesignControllerOptions = {
+	1: "I: On/Off Room Thermostat",
+	2: "II: Weather Compensator (Modulating Heaters)",
+	3: "III: Weather Compensator (On/Off Heaters)",
+	4: "IV: TPI Room Thermostat (On/Off Heaters)",
+	5: "V: Modulating Room Thermostat",
+	6: "VI: Weather Compensator + Room Sensor (Modulating)",
+	7: "VII: Weather Compensator + Room Sensor (On/Off)",
+	8: "VIII: Multi-Sensor Room Control (Modulating)",
+};
+
+export type EcoDesignControllerValue = keyof typeof ecoDesignControllerOptions extends infer K
+	? K extends string
+		? K extends `${infer N extends number}` ? N : never
+		: never
+	: never;
+
+export function displayEcoDesignController(value: EcoDesignControllerValue | undefined): string {
+	if (typeof value === "undefined") {
+		return emptyValueRendering;
+	}
+
+	return ecoDesignControllerOptions[value] ?? ("" + value);
+}
+	
 // better type/ function for displaying products once we're dealing with realistic products
 // export type ProductDisplayString = `${DisplayProduct['brandName']} - ${DisplayProduct['modelName']}`;
 

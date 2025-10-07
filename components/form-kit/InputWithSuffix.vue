@@ -28,7 +28,7 @@ function handleBlur(e: FocusEvent) {
 	if (value !== "" && !isNaN(Number(value))) {
 		props.context.node.input(Number(value));
 	} else {
-		props.context.node.input(value);
+		props.context.node.input(undefined);
 	}
 
 	props.context.handlers.blur(e);
@@ -56,6 +56,7 @@ function handleBlur(e: FocusEvent) {
 				:value="mounted ? props.context._value : ''"
 				:data-testId="id"
 				:aria-describedby="props.context.state.invalid ? `${id}_error` : help ? `${id}_hint` : ''"
+				v-bind="props.context.attrs"
 				@change="handleInput"
 				@blur="handleBlur"
 			>
