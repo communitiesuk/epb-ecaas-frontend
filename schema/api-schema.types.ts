@@ -765,12 +765,8 @@ export interface components {
             NumberOfHabitableRooms: number;
             /** @enum {unknown} */
             HeatingControlType: "SeparateTempControl" | "SeparateTimeAndTempControl";
-            /** @description Potentially incomplete: SimulationTime properties were inferred from example input files */
-            SimulationTime: {
-                end: number;
-                start: number;
-                step: number;
-            };
+            /** @description Potentially incomplete */
+            SimulationTime: Record<string, never>;
             ExternalConditions: {
                 air_temperatures?: number[];
                 wind_speeds?: number[];
@@ -848,7 +844,7 @@ export interface components {
                     inverter_type: "string_inverter" | "optimised_inverter";
                 };
             };
-            /** @description Incomplete: Control has not been defined */
+            /** @description Potentially incomplete */
             Control: Record<string, never>;
             HotWaterSource: {
                 "hw cylinder"?: {
@@ -880,7 +876,7 @@ export interface components {
                     };
                 };
             };
-            /** @description Incomplete: Events has not been defined */
+            /** @description Potentially incomplete */
             Events: Record<string, never>;
             WWHRS?: {
                 [key: string]: {
@@ -961,9 +957,9 @@ export interface components {
                 MechanicalVentilation?: {
                     [key: string]: components["schemas"]["MechVentMVHR"] | components["schemas"]["MechVentDecentralisedContinuousMEV"] | components["schemas"]["MechVentIntermittentMEV"] | components["schemas"]["MechVentCentralisedContinuousMEV"];
                 };
-                /** @description Incomplete: PDUs has not been defined */
+                /** @description Potentially incomplete */
                 PDUs?: Record<string, never>;
-                /** @description Incomplete: Cowls has not been defined */
+                /** @description Potentially incomplete */
                 Cowls?: Record<string, never>;
                 CombustionAppliances: {
                     [key: string]: {

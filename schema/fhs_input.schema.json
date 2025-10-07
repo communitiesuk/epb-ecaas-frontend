@@ -63,25 +63,8 @@
             ]
         },
         "SimulationTime": {
-            "description": "Potentially incomplete: SimulationTime properties were inferred from example input files",
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-                "end",
-                "start",
-                "step"
-            ],
-            "properties": {
-                "end": {
-                    "type": "number"
-                },
-                "start": {
-                    "type": "number"
-                },
-                "step": {
-                    "type": "number"
-                }
-            }
+            "description": "Potentially incomplete",
+            "type": "object"
         },
         "ExternalConditions": {
             "type": "object",
@@ -431,7 +414,7 @@
         },
         "Control": {
             "type": "object",
-            "description": "Incomplete: Control has not been defined"
+            "description": "Potentially incomplete"
         },
         "HotWaterSource": {
             "type": "object",
@@ -563,7 +546,7 @@
         },
         "Events": {
             "type": "object",
-            "description": "Incomplete: Events has not been defined"
+            "description": "Potentially incomplete"
         },
         "WWHRS": {
             "type": "object",
@@ -900,11 +883,11 @@
                 },
                 "PDUs": {
                     "type": "object",
-                    "description": "Incomplete: PDUs has not been defined"
+                    "description": "Potentially incomplete"
                 },
                 "Cowls": {
                     "type": "object",
-                    "description": "Incomplete: Cowls has not been defined"
+                    "description": "Potentially incomplete"
                 },
                 "CombustionAppliances": {
                     "type": "object",
