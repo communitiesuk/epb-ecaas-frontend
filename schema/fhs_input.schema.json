@@ -471,6 +471,8 @@
         "HeatSourceWet": {
             "type": "object",
             "additionalProperties": {
+                "type": "object",
+                "unevaluatedProperties": false,
                 "oneOf": [
                     {
                         "$ref": "#/$defs/HeatSourceWetHeatPump"
@@ -1516,6 +1518,8 @@
                 "HeatSource": {
                     "type": "object",
                     "additionalProperties": {
+                        "type": "object",
+                        "unevaluatedProperties": false,
                         "oneOf": [
                             {
                                 "$ref": "#/$defs/ImmersionHeater"
@@ -1542,8 +1546,6 @@
             }
         },
         "HotWaterTankHeatSourceCommon": {
-            "type": "object",
-            "unevaluatedProperties": false,
             "required": [
                 "type",
                 "heater_position",
@@ -1983,8 +1985,6 @@
             }
         },
         "HeatSourceWetCommon": {
-            "type": "object",
-            "unevaluatedProperties": false,
             "required": [
                 "type",
                 "EnergySupply"
