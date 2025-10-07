@@ -421,7 +421,11 @@ describe("hasCompleteState function", () => {
 
 	describe("getTaggedItem getter function", () => {
 
-		const externalWall: Partial<ExternalWallData> = {
+		beforeEach(() => {
+			store.$reset()
+		})
+
+		const externalWall1: Partial<ExternalWallData> = {
 			id: "ex-wall-id",
 			name: "External wall 1",
 			pitchOption: "custom",
@@ -429,45 +433,55 @@ describe("hasCompleteState function", () => {
 			orientation: 77,
 		};
 
-		const ventData: Partial<VentData> = {
+		const externalWall2: Partial<ExternalWallData> = {
+			id: "ex-wall-id-2",
+			name: "External wall 2",
+			pitchOption: "custom",
+			pitch: 11,
+			orientation: 0,
+		};
+		
+		const vent1: Partial<VentData> = {
 			name: "Vent 1",
-			associatedWallRoofWindowId: externalWall.id,
+			associatedWallRoofWindowId: externalWall1.id,
+		};
+
+		const vent2: Partial<VentData> = {
+			name: "Vent 2",
+			associatedWallRoofWindowId: externalWall2.id,
 		};
 
 		const window: Partial<WindowData> = {
 			id: "window-id",
 			name: "Window 1",
-			taggedItem: externalWall.id,
+			taggedItem: externalWall1.id,
 		};
 
-		test("when given an id of a tagged item and sections that contain only top level tagged items", () => {
+		test("returns the correct values for a directly tagged top-level item", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
 						dwellingSpaceExternalWall: {
-							data: [{ data: externalWall }],
+							data: [{ data: externalWall1 }],
 						},
 					},
 				},
 				infiltrationAndVentilation: {
 					vents: {
-						data: [{ data: ventData }],
+						data: [{ data: vent1 }],
 					},
 				},
 			});
 
-			const { dwellingSpaceExternalWall } =
-        store.dwellingFabric.dwellingSpaceWalls;
-
-			const actual = store.getTaggedItem(
-				[dwellingSpaceExternalWall],
-				ventData.associatedWallRoofWindowId,
-			);
-			const expected = { id: "ex-wall-id", orientation: 77, pitch: 66 };
+			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall
+			const idOfTaggedWall = vent1.associatedWallRoofWindowId
+			const actual = store.getTaggedItem([topLevelTaggedWalls], idOfTaggedWall)
+		
+			const expected =  { id: externalWall1.id, orientation: externalWall1.orientation, pitch: externalWall1.pitch };
 			expect(actual).toEqual(expected);
 		});
 
-		test("when given an id of a tagged item and sections that contain top level tagged items and nested tagged items", () => {
+		test("resolves a nested item that references a top-level tagged item", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWindows: {
@@ -475,34 +489,27 @@ describe("hasCompleteState function", () => {
 					},
 					dwellingSpaceWalls: {
 						dwellingSpaceExternalWall: {
-							data: [{ data: externalWall }],
+							data: [{ data: externalWall1 }],
 						},
 					},
 				},
 				infiltrationAndVentilation: {
 					vents: {
-						data: [{ data: ventData }],
+						data: [{ data: vent1 }],
 					},
 				},
 			});
 
-			const { dwellingSpaceExternalWall } =
-        store.dwellingFabric.dwellingSpaceWalls;
-			const { dwellingSpaceWindows } = store.dwellingFabric;
-
-			const actual = store.getTaggedItem(
-				[dwellingSpaceExternalWall, dwellingSpaceWindows],
-				ventData.associatedWallRoofWindowId,
-			);
-			const expected = { id: "ex-wall-id", orientation: 77, pitch: 66 };
+			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall
+			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows
+			const idOfTaggedWall = vent1.associatedWallRoofWindowId
+			const actual = store.getTaggedItem([topLevelTaggedWalls, nestedTaggedWindows], idOfTaggedWall)
+		
+			const expected =  { id: externalWall1.id, orientation: externalWall1.orientation, pitch: externalWall1.pitch };
 			expect(actual).toEqual(expected);
 		});
 
-		test("when given an id of a nested item that has been tagged with an item", () => {
-			const ventData: Partial<VentData> = {
-				name: "Vent 1",
-				associatedWallRoofWindowId: window.id,
-			};
+		test("returns the correct top-level item even when multiple tagged and nested items exist", () => {
 
 			store.$patch({
 				dwellingFabric: {
@@ -511,37 +518,28 @@ describe("hasCompleteState function", () => {
 					},
 					dwellingSpaceWalls: {
 						dwellingSpaceExternalWall: {
-							data: [{ data: externalWall }],
+							data: [{ data: externalWall1 }, { data: externalWall2 }],
 						},
 					},
 				},
 				infiltrationAndVentilation: {
 					vents: {
-						data: [{ data: ventData }],
+						data: [{ data: vent1 }, { data: vent2}],
 					},
 				},
 			});
 
-			const { dwellingSpaceExternalWall } =
-        store.dwellingFabric.dwellingSpaceWalls;
-			const { dwellingSpaceRoofs } =
-        store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-			const { dwellingSpaceWindows } = store.dwellingFabric;
+			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall
+			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows
+			const idOfTaggedWall = vent2.associatedWallRoofWindowId
 
-			const actual = store.getTaggedItem(
-				[dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceWindows],
-				ventData.associatedWallRoofWindowId,
-			);
-			const expected = { id: "ex-wall-id", orientation: 77, pitch: 66 };
+
+			const actual = store.getTaggedItem([topLevelTaggedWalls, nestedTaggedWindows], idOfTaggedWall);
+			const expected = { id: externalWall2.id, orientation: externalWall2.orientation, pitch: externalWall2.pitch };
 			expect(actual).toEqual(expected);
 		});
 		
-		test("when given an id of nested tagged item that has not been tagged with an item", () => {
-			const ventData: Partial<VentData> = {
-				name: "Vent 1",
-				associatedWallRoofWindowId: window.id,
-			};
-  
+		test("returns undefined when a nested item references a non-existent tagged item", () => {
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWindows: {
@@ -555,19 +553,16 @@ describe("hasCompleteState function", () => {
 				},
 				infiltrationAndVentilation: {
 					vents: {
-						data: [{ data: ventData }],
+						data: [{ data: vent1 }],
 					},
 				},
 			});
 
-			const { dwellingSpaceExternalWall } =
-        store.dwellingFabric.dwellingSpaceWalls;
-			const { dwellingSpaceWindows } = store.dwellingFabric;
+			const topLevelTaggedWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall
+			const nestedTaggedWindows = store.dwellingFabric.dwellingSpaceWindows
+			const idOfTaggedWall = vent1.associatedWallRoofWindowId
 
-			const actual = store.getTaggedItem(
-				[dwellingSpaceWindows,dwellingSpaceExternalWall ],
-				ventData.associatedWallRoofWindowId,
-			);
+			const actual = store.getTaggedItem([topLevelTaggedWalls,nestedTaggedWindows], idOfTaggedWall);
     
 			expect(actual).toEqual(undefined);
 		});
