@@ -1,5 +1,5 @@
-import type { TaggedUnion } from "type-fest";
-import type { components, SchemaBath, SchemaBuildingElementAdjacentConditionedSpace, SchemaBuildingElementAdjacentUnconditionedSpaceSimple, SchemaBuildingElementGroundHeatedBasement, SchemaBuildingElementGroundSlabEdgeInsulation, SchemaBuildingElementGroundSlabNoEdgeInsulation, SchemaBuildingElementGroundSuspendedFloor, SchemaBuildingElementGroundUnheatedBasement, SchemaBuildingElementOpaqueFhs, SchemaBuildingElementTransparentFhs, SchemaCombustionFuelType, SchemaExternalConditionsInputFhs, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaHotWaterSourceCombiBoiler, SchemaHotWaterSourceHeatBattery, SchemaHotWaterSourceHui, SchemaHotWaterSourcePointOfUse, SchemaHotWaterSourceSmartHotWaterTankFhs, SchemaInfiltrationVentilationFhs, SchemaMassDistributionClass, SchemaMechanicalVentilationFhs, SchemaMvhrLocation, SchemaOtherWaterUse, SchemaShadingSegmentFhs, SchemaShowerInstantElectric, SchemaShowerMixer, SchemaSpaceCoolSystemFhs, SchemaSpaceHeatSystemElectricStorageHeater, SchemaSpaceHeatSystemInstantElectricHeaterFhs, SchemaSpaceHeatSystemWarmAirFhs, SchemaSpaceHeatSystemWetDistributionFhs, SchemaWaterHeatingEvents, SchemaZoneFhs, SchemaWasteWaterHeatRecoverySystemType, SchemaMechVentType, SchemaPhotovoltaicVentilationStrategy, SchemaWindowShadingType, SchemaBuildingElementGround, SchemaStorageTank  } from "./api-schema.types";
+import type { Simplify, TaggedUnion } from "type-fest";
+import type { components, SchemaBuildingElementAdjacentConditionedSpace, SchemaBuildingElementAdjacentUnconditionedSpaceSimple, SchemaBuildingElementGroundHeatedBasement, SchemaBuildingElementGroundSlabEdgeInsulation, SchemaBuildingElementGroundSlabNoEdgeInsulation, SchemaBuildingElementGroundSuspendedFloor, SchemaBuildingElementGroundUnheatedBasement, SchemaBuildingElementOpaqueFhs, SchemaBuildingElementTransparentFhs, SchemaCombustionFuelType, SchemaExternalConditionsInputFhs, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBattery, SchemaHeatSourceWetHeatPump, SchemaHeatSourceWetHiu, SchemaHotWaterSourceCombiBoiler, SchemaHotWaterSourceHeatBattery, SchemaHotWaterSourceHui, SchemaHotWaterSourcePointOfUse, SchemaHotWaterSourceSmartHotWaterTankFhs, SchemaInfiltrationVentilationFhs, SchemaMassDistributionClass, SchemaMechanicalVentilationFhs, SchemaMvhrLocation, SchemaOtherWaterUse, SchemaShadingSegmentFhs, SchemaShowerInstantElectric, SchemaShowerMixer, SchemaSpaceCoolSystemFhs, SchemaSpaceHeatSystemElectricStorageHeater, SchemaSpaceHeatSystemInstantElectricHeaterFhs, SchemaSpaceHeatSystemWarmAirFhs, SchemaSpaceHeatSystemWetDistributionFhs, SchemaWaterHeatingEvents, SchemaZoneFhs, SchemaWasteWaterHeatRecoverySystemType, SchemaMechVentType, SchemaPhotovoltaicVentilationStrategy, SchemaWindowShadingType, SchemaBuildingElementGround, SchemaStorageTank   } from "./api-schema.types";
 
 // Some aliases to names in the API schema generated types, sometimes for more graceful backwards compatibility
 // as different names get used in the upstream schemas
@@ -18,7 +18,6 @@ export type SchemaShower = TaggedUnion<"type", {
 	MixerShower: SchemaShowerMixer,
 	InstantElecShower: SchemaShowerInstantElectric,
 }>;
-export type SchemaBathDetails = SchemaBath;
 export type SchemaOtherWaterUseDetails = SchemaOtherWaterUse;
 export type SchemaHotWaterSourceDetails = TaggedUnion<"type", {
 	StorageTank: SchemaStorageTank,
@@ -31,8 +30,8 @@ export type SchemaHotWaterSourceDetails = TaggedUnion<"type", {
 export type MassDistributionClass = SchemaMassDistributionClass;
 export type CombustionFuelType = SchemaCombustionFuelType;
 export type MVHRLocation = SchemaMvhrLocation;
-export type ApplianceKey = keyof components["schemas"]["Appliances"];
-export type FloorType = SchemaBuildingElementGround[string]["floor_type"];
+export type ApplianceKey = keyof components["schemas"]["fhs_input.schema"]["Appliances"];
+export type FloorType = SchemaBuildingElementGround["floor_type"];
 // work round apparent bug in type generation
 export type BuildingElementGround = TaggedUnion<"floor_type", {
 	Slab_no_edge_insulation: SchemaBuildingElementGroundSlabNoEdgeInsulation,
@@ -74,3 +73,7 @@ export const noEvents: SchemaWaterHeatingEvents = {
 	Shower: null,
 	Other: null,
 };
+type InfiltrationVentilation = components["schemas"]["fhs_input.schema"]["InfiltrationVentilation"];
+export type SchemaCombustionAirSupplySituation = InfiltrationVentilation["CombustionAppliances"][string]["supply_situation"];
+type HotWaterDemand = Simplify<Required<components["schemas"]["fhs_input.schema"]["HotWaterDemand"]>>;
+export type SchemaBathDetails = Exclude<HotWaterDemand, undefined>["Bath"][string];
