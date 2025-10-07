@@ -273,7 +273,7 @@
                         "header tank": {
                             "type": "object",
                             "description": "Potentially incomplete - header tank properties were inferred from example input files",
-                            "$ref": "#/$defs/ColdWaterSourceCommon"
+                            "$ref": "#/$defs/HeaderTankOrMainsWater"
                         }
                     }
                 },
@@ -285,7 +285,7 @@
                         "mains water": {
                             "type": "object",
                             "description": "Potentially incomplete - mains water properties were inferred from example input files",
-                            "$ref": "#/$defs/ColdWaterSourceCommon"
+                            "$ref": "#/$defs/HeaderTankOrMainsWater"
                         }
                     }
                 }
@@ -1203,7 +1203,7 @@
                 "Default"
             ]
         },
-        "ColdWaterSourceCommon": {
+        "HeaderTankOrMainsWater": {
             "required": [
                 "start_day",
                 "temperatures",

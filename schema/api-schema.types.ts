@@ -332,7 +332,7 @@ export interface components {
         ApplianceValueDefault: "Not Installed" | "Default";
         /** @enum {string} */
         ApplianceValue: "Not Installed" | "Default";
-        ColdWaterSourceCommon: {
+        HeaderTankOrMainsWater: {
             start_day: number;
             temperatures: number[];
             time_series_step: number;
@@ -814,10 +814,10 @@ export interface components {
             };
             ColdWaterSource: {
                 /** @description Potentially incomplete - header tank properties were inferred from example input files */
-                "header tank": components["schemas"]["ColdWaterSourceCommon"];
+                "header tank": components["schemas"]["HeaderTankOrMainsWater"];
             } | {
                 /** @description Potentially incomplete - mains water properties were inferred from example input files */
-                "mains water": components["schemas"]["ColdWaterSourceCommon"];
+                "mains water": components["schemas"]["HeaderTankOrMainsWater"];
             };
             EnergySupply: {
                 [key: string]: components["schemas"]["EnergySupplyGas"] | components["schemas"]["EnergySupplyElectricity"] | components["schemas"]["EnergySupplyCustom"] | components["schemas"]["EnergySupplyOther"];
@@ -1030,7 +1030,7 @@ export interface components {
                 ApplianceValueDefault: "Not Installed" | "Default";
                 /** @enum {string} */
                 ApplianceValue: "Not Installed" | "Default";
-                ColdWaterSourceCommon: {
+                HeaderTankOrMainsWater: {
                     start_day: number;
                     temperatures: number[];
                     time_series_step: number;
@@ -1784,7 +1784,7 @@ export type SchemaHeatedBasement = components['schemas']['HeatedBasement'];
 export type SchemaUnheatedBasement = components['schemas']['UnheatedBasement'];
 export type SchemaApplianceValueDefault = components['schemas']['ApplianceValueDefault'];
 export type SchemaApplianceValue = components['schemas']['ApplianceValue'];
-export type SchemaColdWaterSourceCommon = components['schemas']['ColdWaterSourceCommon'];
+export type SchemaHeaderTankOrMainsWater = components['schemas']['HeaderTankOrMainsWater'];
 export type SchemaEnergySupplyGas = components['schemas']['EnergySupplyGas'];
 export type SchemaEnergySupplyElectricity = components['schemas']['EnergySupplyElectricity'];
 export type SchemaEnergySupplyCustom = components['schemas']['EnergySupplyCustom'];
