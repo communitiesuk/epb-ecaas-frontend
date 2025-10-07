@@ -498,7 +498,7 @@ describe("hasCompleteState function", () => {
 			expect(actual).toEqual(expected);
 		});
 
-		test("when given an id of a nested tagged item", () => {
+		test("when given an id of a nested item that has been tagged with an item", () => {
 			const ventData: Partial<VentData> = {
 				name: "Vent 1",
 				associatedWallRoofWindowId: window.id,
@@ -535,7 +535,8 @@ describe("hasCompleteState function", () => {
 			const expected = { id: "ex-wall-id", orientation: 77, pitch: 66 };
 			expect(actual).toEqual(expected);
 		});
-		test("when given an id of a nested tagged item", () => {
+		
+		test("when given an id of nested tagged item that has not been tagged with an item", () => {
 			const ventData: Partial<VentData> = {
 				name: "Vent 1",
 				associatedWallRoofWindowId: window.id,
