@@ -95,7 +95,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FormKit
 				id="surfaceAreaOfElement"
 				type="govInputWithSuffix"
-				label="Net surface area of the floor"
+				label="Gross surface area of the floor"
 				name="surfaceAreaOfElement"
 				validation="required | number | min:0 | max:10000"
 				suffix-text="m²"

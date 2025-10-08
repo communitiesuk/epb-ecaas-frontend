@@ -92,8 +92,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="surfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
-			label="Net surface area"
-			help="Enter the net area of the building element"
+			label="Gross surface area of the floor"
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 		/>

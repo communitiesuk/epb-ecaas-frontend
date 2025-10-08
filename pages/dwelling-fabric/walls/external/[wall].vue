@@ -99,8 +99,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.001 | max:50" />
 		<FieldsElevationalHeight />
 		<FormKit
-			id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Net surface area"
-			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
+			id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Gross surface area"
+			help="Enter the gross area of the building element"
 			name="surfaceArea" validation="required | number | min:0.01 | max:10000" />
 		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption" />
 		<FieldsUValue id="uValue" name="uValue" />

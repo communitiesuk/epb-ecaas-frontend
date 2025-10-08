@@ -60,7 +60,7 @@ const groundFloorSummary: SummarySection = {
 
 		return {
 			"Name": show(x.name),
-			"Net surface area of this element": dim(x.surfaceArea, "metres square"),
+			"Gross surface area of the floor": dim(x.surfaceArea, "metres square"),
 			"Pitch": dim(x.pitch, "degrees"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
@@ -93,7 +93,7 @@ const internalFloorSummary: SummarySection = {
 		return {
 			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, "Internal floor"),
 			"Name": show(x.name),
-			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
+			"Gross surface area of the floor": dim(x.surfaceAreaOfElement, "metres square"),
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalFloorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
@@ -111,7 +111,7 @@ const exposedFloorSummary: SummarySection = {
 			"Length": dim(x.length, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"Gross surface area of the floor": dim(x.surfaceArea, "metres square"),
 			"Solar absorption coefficient": dim(x.solarAbsorption),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
@@ -143,7 +143,7 @@ const externalWallSummary: SummarySection = {
 			"Height": dim(x.height, "metres"),
 			"Length": dim(x.length, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"Gross surface area": dim(x.surfaceArea, "metres square"),
 			"Solar absorption coefficient": dim(x.solarAbsorption),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
@@ -160,7 +160,7 @@ const internalWallSummary: SummarySection = {
 		return {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
-			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
+			"Gross surface area": dim(x.surfaceAreaOfElement, "metres square"),
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
@@ -175,7 +175,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 		return {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
-			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
+			"Gross surface area": dim(x.surfaceAreaOfElement, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": displayArealHeatCapacity(x.arealHeatCapacity as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
@@ -192,7 +192,7 @@ const partyWallSummary: SummarySection = {
 		return {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
-			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"Gross surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
@@ -223,7 +223,7 @@ const ceilingSummary: SummarySection = {
 			"Type of ceiling": displayAdjacentSpaceType(x.type, "Ceiling"),
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
-			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"Gross surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": isCeilingToUnheatedSpace ? uValue : undefined,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
@@ -254,7 +254,7 @@ const roofSummary: SummarySection = {
 			"Length": dim(x.length, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeightOfElement, "metres"),
-			"Net surface area": dim(x.surfaceArea, "metres square"),
+			"Gross surface area of ceiling": dim(x.surfaceArea, "metres square"),
 			"Solar absorption coefficient": dim(x.solarAbsorptionCoefficient),
 			"U-value": isTypeOfRoofSelected ? uValue : undefined,
 			"Areal heat capacity": isTypeOfRoofSelected ? arealHeatCapacity : undefined,

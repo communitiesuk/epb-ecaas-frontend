@@ -142,8 +142,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="surfaceArea"
 			type="govInputWithSuffix"
-			label="Net surface area of ceiling"
-			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
+			label="Gross surface area of ceiling"
+			help="Enter the gross area of the building element"
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 			suffix-text="m²"

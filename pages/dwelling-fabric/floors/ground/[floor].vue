@@ -157,7 +157,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			id="surfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
-			label="Net surface area of this element"
+			label="Gross surface area of the floor"
 			help="Enter the total surface area of the entire building element in the dwelling"
 			name="surfaceArea"
 			validation="required | number | min:1"

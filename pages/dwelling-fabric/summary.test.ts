@@ -381,7 +381,7 @@ describe("Living space fabric summary", () => {
 
 			const expectedResult = {
 				"Name": "Ground 1",
-				"Net surface area of this element": `5 ${metresSquare.suffix}`,
+				"Gross surface area of the floor": `5 ${metresSquare.suffix}`,
 				"Pitch": `0 ${degrees.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
@@ -414,7 +414,7 @@ describe("Living space fabric summary", () => {
 			const expectedResult = {
 				"Type of internal floor": "Internal floor to heated space",
 				"Name": "Internal 1",
-				"Net surface area of element": `5 ${metresSquare.suffix}`,
+				"Gross surface area of the floor": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 			};
@@ -442,7 +442,7 @@ describe("Living space fabric summary", () => {
 				"Length": `0.5 ${metre.suffix}`,
 				"Width": `20 ${metre.suffix}`,
 				"Elevational height of building element at its base": `20 ${metre.suffix}`,
-				"Net surface area": `10 ${metresSquare.suffix}`,
+				"Gross surface area of the floor": `10 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
@@ -486,7 +486,7 @@ describe("Living space fabric summary", () => {
 				"Height": `0.5 ${metre.suffix}`,
 				"Length": `20 ${metre.suffix}`,
 				"Elevational height of building element at its base": `20 ${metre.suffix}`,
-				"Net surface area": `10 ${metresSquare.suffix}`,
+				"Gross surface area": `10 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
@@ -513,7 +513,7 @@ describe("Living space fabric summary", () => {
 
 			const expectedResult = {
 				"Name": "Internal 1",
-				"Net surface area of element": `5 ${metresSquare.suffix}`,
+				"Gross surface area": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 				"Pitch": `0 ${degrees.suffix}`,
@@ -540,7 +540,7 @@ describe("Living space fabric summary", () => {
 
 			const expectedResult = {
 				"Name": "Wall to unheated space 1",
-				"Net surface area of element": `500 ${metresSquare.suffix}`,
+				"Gross surface area": `500 ${metresSquare.suffix}`,
 				"U-value": `10 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "External",
@@ -569,7 +569,7 @@ describe("Living space fabric summary", () => {
 			const expectedResult = {
 				"Name": "Party wall 1",
 				"Pitch": `90 ${degrees.suffix}`,
-				"Net surface area": `10 ${metresSquare.suffix}`,
+				"Gross surface area": `10 ${metresSquare.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
@@ -605,7 +605,7 @@ describe("Living space fabric summary", () => {
 			const expectedResult = {
 				"Type of ceiling": "Ceiling to heated space",
 				"Name": "Ceiling 1",
-				"Net surface area": `5 ${metresSquare.suffix}`,
+				"Gross surface area": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
 				"Pitch": `180 ${degrees.suffix}`,
@@ -636,7 +636,7 @@ describe("Living space fabric summary", () => {
 				"Length": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"Elevational height of building element at its base": `2 ${metre.suffix}`,
-				"Net surface area": `1 ${metresSquare.suffix}`,
+				"Gross surface area of ceiling": `1 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.5",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
@@ -657,7 +657,7 @@ describe("Living space fabric summary", () => {
 				"Length": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"Elevational height of building element at its base": `2 ${metre.suffix}`,
-				"Net surface area": `1 ${metresSquare.suffix}`,
+				"Gross surface area of ceiling": `1 ${metresSquare.suffix}`,
 				"Solar absorption coefficient": "0.5",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
