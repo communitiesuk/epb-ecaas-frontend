@@ -30,7 +30,7 @@ const options = adjacentSpaceType === AdjacentSpaceType.heatedSpace ? [
 	dwellingSpacePartyWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
 ];
 
-const flattenedOptions = options.flat().filter(x => x[0] !== undefined);
+const flattenedOptions = options.flat().filter(x => x[0]);
 </script>
 
 <template>
