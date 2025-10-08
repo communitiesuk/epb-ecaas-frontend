@@ -26,7 +26,7 @@ function handleRemove(wallType: WallType, index: number) {
 		});
 		if (wallId) {
 			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, wallId, "associatedWallRoofWindowId");
-		  removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceWindows, wallId, "taggedItem" )
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceWindows, wallId, "taggedItem" );
 		}
 	}
 }

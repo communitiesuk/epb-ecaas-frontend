@@ -163,15 +163,15 @@ describe("walls", () => {
 
 		test("when an external wall is removed its also removed from any store item that references it", async () => {
 			const vent1: VentData = {
-					name: "Vent 1",
-					typeOfVent: "trickle",
-					associatedWallRoofWindowId: external2.id,
-					effectiveVentilationArea: 10,
-					openingRatio: 1,
-					midHeightOfZone: 1,
+				name: "Vent 1",
+				typeOfVent: "trickle",
+				associatedWallRoofWindowId: external2.id,
+				effectiveVentilationArea: 10,
+				openingRatio: 1,
+				midHeightOfZone: 1,
 			};
 
-		const window1: WindowData = {
+			const window1: WindowData = {
 				id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 				name: "Window 1",
 				taggedItem: external2.id,
@@ -194,7 +194,7 @@ describe("walls", () => {
 				treatmentType: WindowTreatmentType.blinds,
 				thermalResistivityIncrease: 1,
 				solarTransmittanceReduction: 0.1,
-		};
+			};
 
 			store.$patch({
 				dwellingFabric: {
@@ -208,12 +208,12 @@ describe("walls", () => {
 						},
 					},
 					dwellingSpaceWindows: {
-						data: [{ data: window1, complete: true }]
-					}
+						data: [{ data: window1, complete: true }],
+					},
 				},
 				infiltrationAndVentilation: {
 					vents: {
-						data: [{ data: vent1, complete: true}],
+						data: [{ data: vent1, complete: true }],
 					},
 				},
 			});
@@ -224,11 +224,11 @@ describe("walls", () => {
 		
 			const vent = store.infiltrationAndVentilation.vents.data[0];
 			expect(vent?.data.associatedWallRoofWindowId).toBeUndefined();
-			expect(vent?.complete).toBe(false)
+			expect(vent?.complete).toBe(false);
 
-			const window = store.dwellingFabric.dwellingSpaceWindows.data[0]
-			expect(window?.data.taggedItem).toBeUndefined()
-			expect(window?.complete).toBe(false)
+			const window = store.dwellingFabric.dwellingSpaceWindows.data[0];
+			expect(window?.data.taggedItem).toBeUndefined();
+			expect(window?.complete).toBe(false);
 		});
 
 		test("wall is duplicated when duplicate link is clicked", async () => {
