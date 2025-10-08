@@ -217,7 +217,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="taggedItem"
 			name="taggedItem"
 			label="Associated wall, roof or ceiling"
-			help="Select the wall, roof or ceiling that this door is in. It should have the same orientation and pitch as the door."
+			help="Select the wall, roof or ceiling that this window is in. It should have the same orientation and pitch as the window."
 		/>
 		<FormKit
 			id="height"
