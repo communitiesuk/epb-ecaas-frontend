@@ -5,11 +5,12 @@ import ExternalWallForm from "./external/[wall].vue";
 import InternalWallForm from "./internal/[wall].vue";
 import PartyWallForm from "./party/[wall].vue";
 import WallToUnheatedForm from "./wall-to-unheated-space/[wall].vue";
-import { MassDistributionClass } from "~/schema/api-schema.types";
+import { MassDistributionClass, WindowTreatmentType } from "~/schema/api-schema.types";
 
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
 import formStatus from "~/constants/formStatus";
+import { millimetre } from "~/utils/units/length";
 
 describe("walls", () => {
 	const store = useEcaasStore();
@@ -161,17 +162,40 @@ describe("walls", () => {
 		});
 
 		test("when an external wall is removed its also removed from any store item that references it", async () => {
-			const vent1: EcaasForm<VentData> = {
-				data: {
+			const vent1: VentData = {
 					name: "Vent 1",
 					typeOfVent: "trickle",
 					associatedWallRoofWindowId: external2.id,
 					effectiveVentilationArea: 10,
 					openingRatio: 1,
 					midHeightOfZone: 1,
-				},
 			};
-		
+
+		const window1: WindowData = {
+				id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
+				name: "Window 1",
+				taggedItem: external2.id,
+				surfaceArea: 1,
+				height: 1,
+				width: 1,
+				uValue: 1,
+				solarTransmittance: 0.1,
+				elevationalHeight: 1,
+				midHeight: 1,
+				openingToFrameRatio: 0.8,
+				numberOpenableParts: "0",
+				overhangDepth: unitValue(60, millimetre),
+				overhangDistance: unitValue(60, millimetre),
+				sideFinRightDepth: unitValue(60, millimetre),
+				sideFinRightDistance: unitValue(60, millimetre),
+				sideFinLeftDepth: unitValue(60, millimetre),
+				sideFinLeftDistance: unitValue(60, millimetre),
+				curtainsOrBlinds: true,
+				treatmentType: WindowTreatmentType.blinds,
+				thermalResistivityIncrease: 1,
+				solarTransmittanceReduction: 0.1,
+		};
+
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceWalls: {
@@ -183,10 +207,13 @@ describe("walls", () => {
 							],
 						},
 					},
+					dwellingSpaceWindows: {
+						data: [{ data: window1, complete: true }]
+					}
 				},
 				infiltrationAndVentilation: {
 					vents: {
-						data: [vent1],
+						data: [{ data: vent1, complete: true}],
 					},
 				},
 			});
@@ -195,8 +222,13 @@ describe("walls", () => {
 		
 			await user.click(await screen.findByTestId("external_remove_1"));
 		
-			const vent = store.infiltrationAndVentilation.vents.data[0]?.data;
-			expect(vent?.associatedWallRoofWindowId).toBeUndefined();
+			const vent = store.infiltrationAndVentilation.vents.data[0];
+			expect(vent?.data.associatedWallRoofWindowId).toBeUndefined();
+			expect(vent?.complete).toBe(false)
+
+			const window = store.dwellingFabric.dwellingSpaceWindows.data[0]
+			expect(window?.data.taggedItem).toBeUndefined()
+			expect(window?.complete).toBe(false)
 		});
 
 		test("wall is duplicated when duplicate link is clicked", async () => {
