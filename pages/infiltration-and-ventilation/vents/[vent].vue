@@ -82,7 +82,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="associatedWallRoofWindowId"
 			name="associatedWallRoofWindowId"
 			label="Associated wall, roof or window"
-			hint="Select the wall, roof or window that this vent is in. It should have the same orientation and pitch as the vent."
+			help="Select the wall, roof or window that this vent is in. It should have the same orientation and pitch as the vent."
 		/>
 		<FormKit
 			id="effectiveVentilationArea"
