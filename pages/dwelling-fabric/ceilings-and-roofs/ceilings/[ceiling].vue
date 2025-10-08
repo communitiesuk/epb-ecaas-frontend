@@ -8,6 +8,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const ceilingData = useItemToEdit("ceiling", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
+const ceilingId = ceilingData?.data.id ?? uuidv4();
 const model = ref(ceilingData?.data);
 
 const typeOfCeilingOptions = adjacentSpaceTypeOptions("Ceiling");
@@ -16,9 +17,10 @@ const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceCeilings } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		const index = getStoreIndex(dwellingSpaceCeilings.data);
+		const currentId = ceilingData?.data.id;
 
 		const commonFields = {
-			id: uuidv4(),
+			id: currentId || uuidv4(),
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			kappaValue: fields.kappaValue,
@@ -63,6 +65,7 @@ autoSaveElementForm<CeilingData>({
 	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings,
 	defaultName: "Ceiling",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= ceilingId;
 		const { pitchOption, pitch } = newData.data;
 		newData.data.pitch = pitchOption === "0" ? 0 : pitch;
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[index] = newData;

@@ -7,16 +7,19 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data);
+const wallId = wallData?.data.id ?? uuidv4();
 const model: Ref<InternalWallData | undefined> = ref(wallData?.data);
 
 const saveForm = (fields: InternalWallData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWalls } = state.dwellingFabric;
 		const index = getStoreIndex(dwellingSpaceWalls.dwellingSpaceExternalWall.data);
+		const currentId = wallData?.data.id;
+
 
 		dwellingSpaceWalls.dwellingSpaceInternalWall.data[index] = {
 			data: {
-				id: uuidv4(),
+				id: currentId || uuidv4(),
 				name: fields.name,
 				surfaceAreaOfElement: fields.surfaceAreaOfElement,
 				kappaValue: fields.kappaValue,
@@ -38,8 +41,8 @@ autoSaveElementForm({
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall,
 	defaultName: "Internal wall",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= wallId;
 		const { pitchOption, pitch } = newData.data;
-
 		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.complete = false;
