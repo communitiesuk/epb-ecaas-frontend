@@ -285,8 +285,8 @@ const unglazedDoorSummary: SummarySection = {
 
 		return {
 			"Name": show(x.name),
-			"Pitch": dim(x.pitch, "degrees"),
-			"Orientation": dim(x.orientation, "degrees"),
+			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
+			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
@@ -308,8 +308,8 @@ const glazedDoorSummary: SummarySection = {
 
 		return {
 			"Name": show(x.name),
-			"Pitch": dim(x.pitch, "degrees"),
-			"Orientation": dim(x.orientation, "degrees"),
+			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
+			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
@@ -330,6 +330,8 @@ const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
 	label: "Internal door",
 	data: internalDoorData?.map(({ data: x }) => {
+		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceCeilings], x.associatedHeatedSpaceElementId);
+
 		const isInternalDoorToUnheatedSpace = x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace;
 		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
 		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
@@ -337,7 +339,7 @@ const internalDoorSummary: SummarySection = {
 		return {
 			"Type": displayAdjacentSpaceType(x.typeOfInternalDoor, "Internal door"),
 			"Name": show(x.name),
-			"Pitch": dim(x.pitch, "degrees"),
+			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
 			"Net surface area of element": dim(x.surfaceArea, "metres square"),
 			"U-value": isInternalDoorToUnheatedSpace ? uValue : undefined,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
@@ -360,6 +362,9 @@ const windowSummary: SummarySection = {
 	id: "dwellingSpaceWindows",
 	label: "Windows",
 	data: windowData.map( ({ data: x }) => {
+
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceCeilings], x.taggedItem);
+
 		const numberOfOpenableParts =  parseInt(x.numberOpenableParts ?? "0");
 
 		const heightOpenableArea = "heightOpenableArea" in x ? dim(x.heightOpenableArea, "metres") : emptyValueRendering;
@@ -376,8 +381,8 @@ const windowSummary: SummarySection = {
 
 		return {
 			"Name": show(x.name),
-			"Pitch": dim(x.pitch, "degrees"),
-			"Orientation": dim(x.orientation, "degrees"),
+			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
+			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),

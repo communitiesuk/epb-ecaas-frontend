@@ -131,8 +131,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m"
 			data-field="InfiltrationVentilation.Vents.mid_height_air_flow_path"
 		/>
-		<FieldsOrientation help="Enter the orientation of the vent's outside face, measured from true north"/>
-		<FieldsPitch data-field="InfiltrationVentilation.Vents.*.pitch" />
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

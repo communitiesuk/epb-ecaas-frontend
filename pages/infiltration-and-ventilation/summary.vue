@@ -65,13 +65,16 @@ const ventSummary: SummarySection = {
 	id: "vents",
 	label: "Vents",
 	data: ventData.map(({ data: x }) => {
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceWindows], x.associatedWallRoofWindowId);
+    
+
 		return {
 			"Name": x.name,
 			"Type of vent": displayCamelToSentenceCase(show(x.typeOfVent)),
 			"Effective ventilation area": dim(x.effectiveVentilationArea, "centimetres square"),
 			"Mid height of zone": dim(x.midHeightOfZone, "metres"),
-			"Orientation": dim(x.orientation, "degrees"),
-			"Pitch": dim(x.pitch, "degrees"),
+			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
+			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
 		};
 	}),
 	editUrl: getUrl("vents"),
