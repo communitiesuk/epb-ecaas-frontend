@@ -1,4 +1,4 @@
-import { SpaceCoolSystemType  } from "~/schema/api-schema.types";
+import { SpaceCoolSystemType } from "~/schema/api-schema.types";
 import type { SchemaSpaceCoolSystemDetails } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
@@ -6,14 +6,14 @@ import { defaultElectricityEnergySupplyName } from "./common";
 
 export function mapCoolingData(state: ResolvedState): Partial<FhsInputSchema> {
 	const spaceCoolSystems = mapSpaceCoolSystems(state);
-    
-	return { 
+
+	return {
 		SpaceCoolSystem: spaceCoolSystems,
 	};
 }
 
 export function mapSpaceCoolSystems(state: ResolvedState) {
-	const spaceCoolSystems = state.cooling.airConditioning.map((x):[string, SchemaSpaceCoolSystemDetails] => {
+	const spaceCoolSystems = state.heatingSystems.cooling.airConditioning.map((x): [string, SchemaSpaceCoolSystemDetails] => {
 		const key = x.name;
 		const val: SchemaSpaceCoolSystemDetails = {
 			EnergySupply: defaultElectricityEnergySupplyName,

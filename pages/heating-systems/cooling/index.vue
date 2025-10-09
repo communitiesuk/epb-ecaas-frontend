@@ -6,20 +6,20 @@ const page = usePage();
 const store = useEcaasStore();
 
 function handleRemove(index: number) {
-	const { data } = store.cooling.airConditioning;
+	const { data } = store.heatingSystems.cooling.airConditioning;
 
 	if (data) {
 		data.splice(index, 1);
 
 		store.$patch((state) => {
-			state.cooling.airConditioning.data = data.length ? data : [];
-			state.cooling.airConditioning.complete = false;
+			state.heatingSystems.cooling.airConditioning.data = data.length ? data : [];
+			state.heatingSystems.cooling.airConditioning.complete = false;
 		});
 	}
 }
 
 function handleDuplicate(index: number) {
-	const { data } = store.cooling.airConditioning;
+	const { data } = store.heatingSystems.cooling.airConditioning;
 	const item = data?.[index];
     
 	if (item) {
@@ -31,16 +31,18 @@ function handleDuplicate(index: number) {
 				name: `${item.data.name} (${duplicates.length})`,
 			};
 
-			state.cooling.airConditioning.data.push(newItem);
-			state.cooling.airConditioning.complete = false;
+			state.heatingSystems.cooling.airConditioning.data.push(newItem);
+			state.heatingSystems.cooling.airConditioning.complete = false;
 		});
 	}
 }
 
 function handleComplete() {
 	store.$patch({
-		cooling: {
-			airConditioning: { complete: true },
+		heatingSystems: {
+			cooling: {
+				airConditioning: { complete: true },
+			},
 		},
 	});
 		
@@ -60,7 +62,7 @@ function handleComplete() {
 		id="airConditioning"
 		title="Air conditioning"
 		:form-url="`${page?.url!}/air-conditioning`"
-		:items="store.cooling.airConditioning.data?.map(x => ({
+		:items="store.heatingSystems.cooling.airConditioning.data?.map(x => ({
 			name: x.data.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
@@ -73,8 +75,8 @@ function handleComplete() {
 			Return to heating systems
 		</GovButton>
 		<CompleteElement
-			:is-complete="store.cooling.airConditioning?.complete ?? false"
-			:disabled="store.cooling.airConditioning.data.some(s => !s.complete)"
+			:is-complete="store.heatingSystems.cooling.airConditioning?.complete ?? false"
+			:disabled="store.heatingSystems.cooling.airConditioning.data.some(s => !s.complete)"
 			@completed="handleComplete"/>
 	</div>
 </template>

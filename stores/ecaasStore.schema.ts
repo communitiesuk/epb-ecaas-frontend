@@ -28,7 +28,6 @@ export type EcaasState = AssertEachKeyIsPageId<{
 	heatingSystems: HeatingSystems;
 	pvAndBatteries: PvAndBatteries;
 }> & {
-	cooling: Cooling; // cooling doesn't have a corresponding page yet
 	lastResult?: ComplianceResult;
 };
 
@@ -796,6 +795,7 @@ export type HeatingSystems = AssertEachKeyIsPageId<{
 	heatGeneration: HeatGeneration,
 	energySupply: EcaasForm<EnergySupplyData>;
 	heatEmitting: HeatEmitting;
+	cooling: Cooling
 }>;
 
 export type HeatGeneration = AssertFormKeysArePageIds<{
@@ -1069,7 +1069,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"heatingSystems/heatEmitting/instantElectricHeater": instantElectricStorageDataZod,
 	"heatingSystems/heatEmitting/electricStorageHeater": electricStorageHeaterDataZod,
 	"heatingSystems/heatEmitting/warmAirHeatPump": warmAirHeatPumpDataZod,
+	"heatingSystems/cooling/airConditioning": airConditioningDataZod,
 	"pvAndBatteries/pvSystems": pvSystemDataZod,
 	"pvAndBatteries/electricBattery": electricBatteryDataZod,
-	"cooling/airConditioning": airConditioningDataZod,
 };

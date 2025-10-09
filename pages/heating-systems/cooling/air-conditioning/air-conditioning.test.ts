@@ -42,16 +42,18 @@ describe("Air conditioning", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.cooling.airConditioning;
+		const { data } = store.heatingSystems.cooling.airConditioning;
 
 		expect(data[0]?.data).toEqual(state);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
-			cooling: {
-				airConditioning: {
-					data: [{ data: state }],
+			heatingSystems: {
+				cooling: {
+					airConditioning: {
+						data: [{ data: state }],
+					},
 				},
 			},
 		});

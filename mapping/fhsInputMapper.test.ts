@@ -26,7 +26,7 @@ import {
 	WindowTreatmentControl,
 	WindowTreatmentType,
 } from "~/schema/api-schema.types";
-import {  mapFhsInputData } from "./fhsInputMapper";
+import { mapFhsInputData } from "./fhsInputMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { resolveState } from "~/stores/resolve";
 import { defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
@@ -62,27 +62,33 @@ const expectedHouseInput: FhsInputSchema = {
 			{ number: 4, start360: 30, end360: 40 },
 			{ number: 5, start360: 40, end360: 50 },
 			{ number: 6, start360: 50, end360: 60 },
-			{ number: 7, start360: 60, end360: 70, shading: [
-				{
-					distance: 1,
-					height: 2,
-					type: ShadingObjectType.obstacle,
-				},
-			] },
-			{ number: 8, start360: 70, end360: 80, shading: [
-				{
-					distance: 1,
-					height: 2,
-					type: ShadingObjectType.obstacle,
-				},
-			] },
-			{ number: 9, start360: 80, end360: 90, shading: [
-				{
-					distance: 1,
-					height: 2,
-					type: ShadingObjectType.obstacle,
-				},
-			] },
+			{
+				number: 7, start360: 60, end360: 70, shading: [
+					{
+						distance: 1,
+						height: 2,
+						type: ShadingObjectType.obstacle,
+					},
+				],
+			},
+			{
+				number: 8, start360: 70, end360: 80, shading: [
+					{
+						distance: 1,
+						height: 2,
+						type: ShadingObjectType.obstacle,
+					},
+				],
+			},
+			{
+				number: 9, start360: 80, end360: 90, shading: [
+					{
+						distance: 1,
+						height: 2,
+						type: ShadingObjectType.obstacle,
+					},
+				],
+			},
 			{ number: 10, start360: 90, end360: 100 },
 			{ number: 11, start360: 100, end360: 110 },
 			{ number: 12, start360: 110, end360: 120 },
@@ -241,11 +247,13 @@ const expectedHouseInput: FhsInputSchema = {
 		},
 	},
 	GroundFloorArea: 40,
-	HeatSourceWet: { "some-heat-pump-name": {
-		EnergySupply: defaultElectricityEnergySupplyName,
-		type: "HeatPump",
-		product_reference: "HEATPUMP-LARGE",
-	} },
+	HeatSourceWet: {
+		"some-heat-pump-name": {
+			EnergySupply: defaultElectricityEnergySupplyName,
+			type: "HeatPump",
+			product_reference: "HEATPUMP-LARGE",
+		},
+	},
 	Zone: {
 		[defaultZoneName]: {
 			BuildingElement: {
@@ -341,39 +349,47 @@ const expectedFlatInput: FhsInputSchema = {
 	Events: {},
 	ExternalConditions: {
 		shading_segments: [
-			{ number: 1, start360: 0, end360: 10, shading: [
-				{
-					distance: 0.5,
-					height: 1,
-					type: ShadingObjectType.obstacle,
-				},
-			] },
-			{ number: 2, start360: 10, end360: 20, shading: [
-				{
-					distance: 2,
-					height: 5,
-					type: ShadingObjectType.overhang,
-				},
-				{
-					distance: 0.5,
-					height: 1,
-					type: ShadingObjectType.obstacle,
-				},
-			] },
-			{ number: 3, start360: 20, end360: 30, shading: [
-				{
-					distance: 2,
-					height: 5,
-					type: ShadingObjectType.overhang,
-				},
-			] },
-			{ number: 4, start360: 30, end360: 40, shading: [
-				{
-					distance: 2,
-					height: 5,
-					type: ShadingObjectType.overhang,
-				},
-			] },
+			{
+				number: 1, start360: 0, end360: 10, shading: [
+					{
+						distance: 0.5,
+						height: 1,
+						type: ShadingObjectType.obstacle,
+					},
+				],
+			},
+			{
+				number: 2, start360: 10, end360: 20, shading: [
+					{
+						distance: 2,
+						height: 5,
+						type: ShadingObjectType.overhang,
+					},
+					{
+						distance: 0.5,
+						height: 1,
+						type: ShadingObjectType.obstacle,
+					},
+				],
+			},
+			{
+				number: 3, start360: 20, end360: 30, shading: [
+					{
+						distance: 2,
+						height: 5,
+						type: ShadingObjectType.overhang,
+					},
+				],
+			},
+			{
+				number: 4, start360: 30, end360: 40, shading: [
+					{
+						distance: 2,
+						height: 5,
+						type: ShadingObjectType.overhang,
+					},
+				],
+			},
 			{ number: 5, start360: 40, end360: 50 },
 			{ number: 6, start360: 50, end360: 60 },
 			{ number: 7, start360: 60, end360: 70 },
@@ -686,7 +702,7 @@ const expectedFlatInput: FhsInputSchema = {
 				},
 				"internal floor 2 (floor)": {
 					type: "BuildingElementAdjacentConditionedSpace",
-					area: 4, 
+					area: 4,
 					u_value: 0.01,
 					areal_heat_capacity: 110000,
 					mass_distribution_class: MassDistributionClass.M,
@@ -783,7 +799,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: MassDistributionClass.I,
 					pitch: 0,
 					u_value: 0.01,
-				},	
+				},
 				"ceiling to unheated space (ceiling)": {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					area: 20,
@@ -909,8 +925,8 @@ expect.extend({
 	toPassJsonSchema(isValid: boolean, validator: ValidateFunction<unknown>) {
 		const errors = validator.errors?.map(({ message }) => message).join("; ");
 		return {
-			message: () => isValid ? "" : `JSON validation errors: ${ errors }`,
-			pass: isValid,		
+			message: () => isValid ? "" : `JSON validation errors: ${errors}`,
+			pass: isValid,
 		};
 	},
 });
@@ -1027,7 +1043,7 @@ describe("FHS input mapper", () => {
 				},
 			},
 		};
-		
+
 		const dwellingFabric: DwellingFabric = {
 			dwellingSpaceZoneParameters: {
 				...baseForm,
@@ -1188,6 +1204,19 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 			},
+			cooling: {
+				airConditioning: {
+					...baseForm,
+					data: [{
+						data: {
+							name: "some-aircon-unit-name",
+							coolingCapacity: 60,
+							seasonalEnergyEfficiencyRatio: 4,
+							convectionFraction: 0.2,
+						},
+					}],
+				},
+			},
 		};
 
 		const domesticHotWater: DomesticHotWater = {
@@ -1274,18 +1303,6 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const cooling: Cooling = {
-			airConditioning: {
-				...baseForm,
-				data: [{ data: {
-					name: "some-aircon-unit-name",
-					coolingCapacity: 60,
-					seasonalEnergyEfficiencyRatio: 4,
-					convectionFraction: 0.2,
-				} }],
-			},
-		};
-
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
@@ -1293,7 +1310,6 @@ describe("FHS input mapper", () => {
 			infiltrationAndVentilation,
 			heatingSystems,
 			pvAndBatteries,
-			cooling,
 		};
 
 		const expectedResult: FhsInputSchema = expectedHouseInput;
@@ -1303,7 +1319,7 @@ describe("FHS input mapper", () => {
 
 		// Assert
 		expect(fhsInputData).toBeDefined();
-		expect(fhsInputData).toEqual(expectedResult);   
+		expect(fhsInputData).toEqual(expectedResult);
 	});
 
 	it("maps input state with a build type of flat to an FHS input request", () => {
@@ -1461,7 +1477,7 @@ describe("FHS input mapper", () => {
 				},
 			},
 		};
-		
+
 		const dwellingFabric: DwellingFabric = {
 			dwellingSpaceZoneParameters: {
 				...baseForm,
@@ -1600,7 +1616,7 @@ describe("FHS input mapper", () => {
 								elevationalHeight: 1,
 								surfaceArea: 20,
 								solarAbsorption: 0.2,
-								uValue: 1, 
+								uValue: 1,
 								kappaValue: 75000,
 								massDistributionClass: MassDistributionClass.D,
 							},
@@ -1630,7 +1646,7 @@ describe("FHS input mapper", () => {
 							pitchOption: "custom",
 							pitch: 90,
 							surfaceAreaOfElement: 20,
-							uValue: 1, 
+							uValue: 1,
 							arealHeatCapacity: 50000,
 							massDistributionClass: MassDistributionClass.D,
 							thermalResistanceOfAdjacentUnheatedSpace: 2.5,
@@ -1778,7 +1794,7 @@ describe("FHS input mapper", () => {
 						elevationalHeight: 1,
 						midHeight: 2,
 						numberOpenableParts: "1",
-						overhangDepth: 0.5 ,
+						overhangDepth: 0.5,
 						overhangDistance: 0.5,
 						sideFinRightDepth: 0.25,
 						sideFinRightDistance: 1,
@@ -1896,6 +1912,11 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 				warmAirHeatPump: {
+					...baseForm,
+				},
+			},
+			cooling: {
+				airConditioning: {
 					...baseForm,
 				},
 			},
@@ -2139,12 +2160,6 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const cooling: Cooling = {
-			airConditioning: {
-				...baseForm,
-			},
-		};
-
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
@@ -2152,7 +2167,6 @@ describe("FHS input mapper", () => {
 			infiltrationAndVentilation,
 			heatingSystems,
 			pvAndBatteries,
-			cooling,
 		};
 
 		const expectedResult: FhsInputSchema = expectedFlatInput;
@@ -2162,7 +2176,7 @@ describe("FHS input mapper", () => {
 
 		// Assert
 		expect(fhsInputData).toBeDefined();
-		expect(fhsInputData).toEqual(expectedResult);   
+		expect(fhsInputData).toEqual(expectedResult);
 	});
 
 	test("the expected results pass against the current FHS input schema", () => {
