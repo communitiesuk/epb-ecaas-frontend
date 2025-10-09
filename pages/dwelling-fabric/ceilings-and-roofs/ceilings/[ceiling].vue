@@ -124,6 +124,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Enter the gross area of the building element"
 				name="surfaceArea"
 				validation="required | number | min:0 | max:10000"
+				data-field="Zone.BuildingElement.*.area"
 			/>
 			<FieldsUValue
 				v-if="model.type !== 'heatedSpace'"
@@ -142,6 +143,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the effective thermal resistance of the unheated space"
 			name="thermalResistanceOfAdjacentUnheatedSpace"
 			validation="required | number | min:0 | max:3"
+			data-field="Zone.BuildingElement.*.thermal_resistance_unconditioned_space"
 		>
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">

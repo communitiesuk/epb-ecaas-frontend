@@ -90,7 +90,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the gross area of the building element"
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
-			data-field="Zone.BuildingElement.*.total_area"
+			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FormKit
 			id="uValue"
