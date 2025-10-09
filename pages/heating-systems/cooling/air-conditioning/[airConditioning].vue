@@ -1,28 +1,43 @@
 <script setup lang="ts">
+import { getUrl } from "#imports";
+
 const title = "Air conditioning";
 const store = useEcaasStore();
-const { saveToList } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const airConditioningData = useItemToEdit("airConditioning", store.cooling.airConditioning.data);
-const model: Ref<AirConditioningData> = ref(airConditioningData!);
+const airConditioningData = useItemToEdit("airConditioning", store.cooling.airConditioning?.data);
+const model = ref(airConditioningData?.data);
 
 const saveForm = (fields: AirConditioningData) => {
 	store.$patch((state) => {
 		const { airConditioning } = state.cooling;
+		const index = getStoreIndex(airConditioning.data);
 
-		const airConditioningItem: AirConditioningData = {
-			name: fields.name,
-			coolingCapacity: fields.coolingCapacity,
-			seasonalEnergyEfficiencyRatio: fields.seasonalEnergyEfficiencyRatio,
-			convectionFraction: fields.convectionFraction,
+		airConditioning.data[index] = {
+			data: {
+				name: fields.name,
+				coolingCapacity: fields.coolingCapacity,
+				seasonalEnergyEfficiencyRatio: fields.seasonalEnergyEfficiencyRatio,
+				convectionFraction: fields.convectionFraction,
+			},
+			complete: true,
 		};
-
-		saveToList(airConditioningItem, airConditioning);
 		store.cooling.airConditioning.complete = false;
-	});
+	},
+	);
 
-	navigateTo("/cooling");
+	navigateTo("/heating-systems/cooling");
 };
+
+autoSaveElementForm<AirConditioningData>({
+	model,
+	storeData: store.cooling.airConditioning,
+	defaultName: "Air conditioning",
+	onPatch: (state, newData, index) => {
+		state.cooling.airConditioning.data[index] = newData;
+		state.cooling.airConditioning.complete = false;
+	},
+});
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -76,6 +91,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | between:0,1"
 		/>
 		<GovLLMWarning />
-		<FormKit type="govButton" label="Save and continue" />
+		<div class="govuk-button-group">
+			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
+			<GovButton :href="getUrl('cooling')" secondary test-id="saveProgress">Save progress</GovButton>
+		</div>
 	</FormKit>
 </template>

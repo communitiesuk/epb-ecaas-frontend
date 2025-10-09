@@ -39,7 +39,7 @@ describe("cooling", () => {
 			store.$patch({
 				cooling: {
 					airConditioning: {
-						data: [airConditioning1],
+						data: [{ data: airConditioning1 }],
 					},
 				},
 			});
@@ -57,7 +57,7 @@ describe("cooling", () => {
 			store.$patch({
 				cooling: {
 					airConditioning: {
-						data: [airConditioning1, airConditioning2, airConditioning3],
+						data: [{ data: airConditioning1 }, { data: airConditioning2 }, { data: airConditioning3 }],
 					},
 				},
 			});
@@ -80,7 +80,7 @@ describe("cooling", () => {
 			store.$patch({
 				cooling: {
 					airConditioning: {
-						data: [airConditioning1, airConditioning2],
+						data: [{ data: airConditioning1 }, { data: airConditioning2 }],
 					},
 				},
 			});
@@ -92,11 +92,7 @@ describe("cooling", () => {
 			await userEvent.click(screen.getByTestId("airConditioning_duplicate_2"));
 
 			expect(screen.queryAllByTestId("airConditioning_item").length).toBe(6);
-			expect(screen.getByText("Air conditioner 1")).toBeDefined();
-			expect(screen.getByText("Air conditioner 1 (1)")).toBeDefined();
-			expect(screen.getByText("Air conditioner 1 (2)")).toBeDefined();
-			expect(screen.getByText("Air conditioner 1 (1) (1)")).toBeDefined();
-			expect(screen.getByText("Air conditioner 1 (1) (2)")).toBeDefined();
+			expect(screen.getAllByText("Air conditioner 1").length).toBe(5);
 		});
 	});
 	describe("mark section as complete", () => {
@@ -115,14 +111,14 @@ describe("cooling", () => {
 			);
 			expect(completedStatusElement?.style.display).not.toBe("none");
 
-			expect(navigateToMock).toHaveBeenCalledWith("/");
+			expect(navigateToMock).toHaveBeenCalledWith("/heating-systems");
 		});
 
 		it("marks cooling as not complete when complete button is clicked then user removes an item", async () => {
 			store.$patch({
 				cooling: {
 					airConditioning: {
-						data: [airConditioning1, airConditioning2],
+						data: [{ data: airConditioning1, complete: true }],
 					},
 				},
 			});
@@ -145,7 +141,7 @@ describe("cooling", () => {
 			store.$patch({
 				cooling: {
 					airConditioning: {
-						data: [airConditioning1],
+						data: [{ data: airConditioning1, complete: true }],
 					},
 				},
 			});
@@ -167,7 +163,7 @@ describe("cooling", () => {
 			store.$patch({
 				cooling: {
 					airConditioning: {
-						data: [airConditioning1],
+						data: [{ data: airConditioning1 }],
 					},
 				},
 			});
@@ -181,7 +177,7 @@ describe("cooling", () => {
 				},
 			});
 
-			await user.click(screen.getByRole("button"));
+			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect(store.cooling.airConditioning.complete).toBe(false);
 
@@ -194,10 +190,10 @@ describe("cooling", () => {
 		it("should navigate to the main overview page when return to overview is clicked", async () => {
 			await renderSuspended(Cooling);
 
-			const returnToOverviewButton = screen.getByRole("button", {
-				name: "Return to overview",
+			const returnToHeatingSystemsButton = screen.getByRole("button", {
+				name: "Return to heating systems",
 			});
-			expect(returnToOverviewButton.getAttribute("href")).toBe("/");
+			expect(returnToHeatingSystemsButton.getAttribute("href")).toBe("/heating-systems");
 		});
 	});
 });

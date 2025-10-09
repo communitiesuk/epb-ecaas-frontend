@@ -21,7 +21,7 @@ describe("cooling mapper", () => {
 		store.$patch({
 			cooling: {
 				airConditioning: {
-					data: [airConditioning],
+					data: [{ data: airConditioning, complete: true }],
 					complete: true,
 				},
 			},
@@ -66,7 +66,7 @@ describe("cooling mapper", () => {
 		store.$patch({
 			cooling: {
 				airConditioning: {
-					data: [airConditioner1, airConditioner2],
+					data: [{ data: airConditioner1, complete: true }, { data: airConditioner2, complete: true }],
 					complete: true,
 				},
 			},
