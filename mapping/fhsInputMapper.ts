@@ -1,5 +1,4 @@
 import type { StripDefs } from "./mapping.types";
-import { noEvents } from "~/schema/aliases";
 import type { SchemaEnergySupply, SchemaFhsInputSchema, SchemaHeatSourceWetHeatPumpWithProductReference, SchemaStorageTank } from "~/schema/api-schema.types";
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
@@ -42,7 +41,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	};
 
 	const control: Pick<FhsInputSchema, "Control"> = { Control: {} };
-	const events: Pick<FhsInputSchema, "Events"> = { Events: noEvents };
+	const events: Pick<FhsInputSchema, "Events"> = { Events: {} };
 	const internalGains: Pick<FhsInputSchema, "InternalGains"> = { InternalGains: {} };
 	
 	const defaultColdWaterSource: Pick<FhsInputSchema, "ColdWaterSource"> = { 

@@ -6,7 +6,6 @@ import { resolveState } from "~/stores/resolve";
 import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { centimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
-import { noEvents } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -28,7 +27,7 @@ const expectedHouseInput: FhsInputSchema = {
 			is_export_capable: true,
 		},
 	},
-	Events: noEvents,
+	Events: {},
 	ExternalConditions: {
 		shading_segments: [
 			{ number: 1, start360: 0, end360: 10 },
@@ -327,7 +326,7 @@ const expectedFlatInput: FhsInputSchema = {
 			],
 		},
 	},
-	Events: noEvents,
+	Events: {},
 	ExternalConditions: {
 		shading_segments: [
 			{ number: 1, start360: 0, end360: 10, shading: [
