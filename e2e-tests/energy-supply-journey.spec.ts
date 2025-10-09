@@ -29,29 +29,29 @@ test.beforeEach(async ({ page }) => {
 test.describe("Energy supply form data persistence", () => {
 
 	test("should persist data when revisiting the form page", async ({ page }) => {
-		
-		await page.click('a[href="/heating-systems/energy-supply"]');
-	
+
+		await page.click('a[href="/heating-and-cooling-systems/energy-supply"]');
+
 		await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
 		await expect(page.getByTestId("exported_yes")).toBeChecked();
 	});
-	
+
 	test("should persist data on the heating systems summary page", async ({ page }) => {
 
-		await page.click('a[href="/heating-systems/summary"]');
-		
+		await page.click('a[href="/heating-and-cooling-systems/summary"]');
+
 		const fuelTypeElement = page.getByTestId("summary-energySupply-fuel-type");
 		await expect(fuelTypeElement.locator("dd")).toHaveText(/Electricity/);
-	
+
 		const exportedElement = page.getByTestId("summary-energySupply-exported");
 		await expect(exportedElement.locator("dd")).toHaveText(/Yes/);
 	});
-	
+
 	test("should persist data when page is reloaded", async ({ page }) => {
 
 		await page.reload();
-		await page.click('a[href="/heating-systems/energy-supply"]');
-		
+		await page.click('a[href="/heating-and-cooling-systems/energy-supply"]');
+
 		await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
 		await expect(page.getByTestId("exported_yes")).toBeChecked();
 	});
@@ -59,12 +59,12 @@ test.describe("Energy supply form data persistence", () => {
 	test.skip("should persist data when local storage is cleared and page is reloaded", async ({ page }) => {
 
 		await page.evaluate(() => localStorage.clear());
-		
+
 		expect(await getLocalStorage(page)).toBeNull();
-		
+
 		await page.reload();
-		await page.click('a[href="/heating-systems/energy-supply"]');
-		
+		await page.click('a[href="/heating-and-cooling-systems/energy-supply"]');
+
 		await expect(page.getByTestId("fuelType_electricity")).toBeChecked();
 		await expect(page.getByTestId("exported_yes")).toBeChecked();
 	});
