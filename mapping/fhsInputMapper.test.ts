@@ -36,27 +36,33 @@ const expectedHouseInput: FhsInputSchema = {
 			{ start360: 30, end360: 40 },
 			{ start360: 40, end360: 50 },
 			{ start360: 50, end360: 60 },
-			{ start360: 60, end360: 70, shading: [
-				{
-					distance: 1,
-					height: 2,
-					type: "obstacle",
-				},
-			] },
-			{ start360: 70, end360: 80, shading: [
-				{
-					distance: 1,
-					height: 2,
-					type: "obstacle",
-				},
-			] },
-			{ start360: 80, end360: 90, shading: [
-				{
-					distance: 1,
-					height: 2,
-					type: "obstacle",
-				},
-			] },
+			{
+				start360: 60, end360: 70, shading: [
+					{
+						distance: 1,
+						height: 2,
+						type: "obstacle",
+					},
+				]
+			},
+			{
+				start360: 70, end360: 80, shading: [
+					{
+						distance: 1,
+						height: 2,
+						type: "obstacle",
+					},
+				]
+			},
+			{
+				start360: 80, end360: 90, shading: [
+					{
+						distance: 1,
+						height: 2,
+						type: "obstacle",
+					},
+				]
+			},
 			{ start360: 90, end360: 100 },
 			{ start360: 100, end360: 110 },
 			{ start360: 110, end360: 120 },
@@ -225,11 +231,13 @@ const expectedHouseInput: FhsInputSchema = {
 		},
 	},
 	GroundFloorArea: 40,
-	HeatSourceWet: { "some-heat-pump-name": {
-		EnergySupply: defaultElectricityEnergySupplyName,
-		type: "HeatPump",
-		product_reference: "HEATPUMP-LARGE",
-	} },
+	HeatSourceWet: {
+		"some-heat-pump-name": {
+			EnergySupply: defaultElectricityEnergySupplyName,
+			type: "HeatPump",
+			product_reference: "HEATPUMP-LARGE",
+		},
+	},
 	Zone: {
 		[defaultZoneName]: {
 			BuildingElement: {
@@ -325,39 +333,47 @@ const expectedFlatInput: FhsInputSchema = {
 	Events: {},
 	ExternalConditions: {
 		shading_segments: [
-			{ start360: 0, end360: 10, shading: [
-				{
-					distance: 0.5,
-					height: 1,
-					type: "obstacle",
-				},
-			] },
-			{ start360: 10, end360: 20, shading: [
-				{
-					distance: 2,
-					height: 5,
-					type: "overhang",
-				},
-				{
-					distance: 0.5,
-					height: 1,
-					type: "obstacle",
-				},
-			] },
-			{ start360: 20, end360: 30, shading: [
-				{
-					distance: 2,
-					height: 5,
-					type: "overhang",
-				},
-			] },
-			{ start360: 30, end360: 40, shading: [
-				{
-					distance: 2,
-					height: 5,
-					type: "overhang",
-				},
-			] },
+			{
+				start360: 0, end360: 10, shading: [
+					{
+						distance: 0.5,
+						height: 1,
+						type: "obstacle",
+					},
+				]
+			},
+			{
+				start360: 10, end360: 20, shading: [
+					{
+						distance: 2,
+						height: 5,
+						type: "overhang",
+					},
+					{
+						distance: 0.5,
+						height: 1,
+						type: "obstacle",
+					},
+				]
+			},
+			{
+				start360: 20, end360: 30, shading: [
+					{
+						distance: 2,
+						height: 5,
+						type: "overhang",
+					},
+				]
+			},
+			{
+				start360: 30, end360: 40, shading: [
+					{
+						distance: 2,
+						height: 5,
+						type: "overhang",
+					},
+				]
+			},
 			{ start360: 40, end360: 50 },
 			{ start360: 50, end360: 60 },
 			{ start360: 60, end360: 70 },
@@ -667,7 +683,7 @@ const expectedFlatInput: FhsInputSchema = {
 				},
 				"internal floor 2 (floor)": {
 					type: "BuildingElementAdjacentConditionedSpace",
-					area: 4, 
+					area: 4,
 					u_value: 0.01,
 					areal_heat_capacity: "Medium",
 					mass_distribution_class: "M",
@@ -765,7 +781,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mass_distribution_class: "I: Mass concentrated at internal side",
 					pitch: 0,
 					u_value: 0.01,
-				},	
+				},
 				"ceiling to unheated space (ceiling)": {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					area: 20,
@@ -891,8 +907,8 @@ expect.extend({
 	toPassJsonSchema(isValid: boolean, validator: ValidateFunction<unknown>) {
 		const errors = validator.errors?.map(({ message }) => message).join("; ");
 		return {
-			message: () => isValid ? "" : `JSON validation errors: ${ errors }`,
-			pass: isValid,		
+			message: () => isValid ? "" : `JSON validation errors: ${errors}`,
+			pass: isValid,
 		};
 	},
 });
@@ -1009,7 +1025,7 @@ describe("FHS input mapper", () => {
 				},
 			},
 		};
-		
+
 		const dwellingFabric: DwellingFabric = {
 			dwellingSpaceZoneParameters: {
 				...baseForm,
@@ -1170,6 +1186,19 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 			},
+			cooling: {
+				airConditioning: {
+					...baseForm,
+					data: [{
+						data: {
+							name: "some-aircon-unit-name",
+							coolingCapacity: 60,
+							seasonalEnergyEfficiencyRatio: 4,
+							convectionFraction: 0.2,
+						},
+					}],
+				},
+			},
 		};
 
 		const domesticHotWater: DomesticHotWater = {
@@ -1256,18 +1285,6 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const cooling: Cooling = {
-			airConditioning: {
-				...baseForm,
-				data: [{ data: {
-					name: "some-aircon-unit-name",
-					coolingCapacity: 60,
-					seasonalEnergyEfficiencyRatio: 4,
-					convectionFraction: 0.2,
-				} }],
-			},
-		};
-
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
@@ -1275,7 +1292,6 @@ describe("FHS input mapper", () => {
 			infiltrationAndVentilation,
 			heatingSystems,
 			pvAndBatteries,
-			cooling,
 		};
 
 		const expectedResult: FhsInputSchema = expectedHouseInput;
@@ -1285,7 +1301,7 @@ describe("FHS input mapper", () => {
 
 		// Assert
 		expect(fhsInputData).toBeDefined();
-		expect(fhsInputData).toEqual(expectedResult);   
+		expect(fhsInputData).toEqual(expectedResult);
 	});
 
 	it("maps input state with a build type of flat to an FHS input request", () => {
@@ -1443,7 +1459,7 @@ describe("FHS input mapper", () => {
 				},
 			},
 		};
-		
+
 		const dwellingFabric: DwellingFabric = {
 			dwellingSpaceZoneParameters: {
 				...baseForm,
@@ -1582,7 +1598,7 @@ describe("FHS input mapper", () => {
 								elevationalHeight: 1,
 								surfaceArea: 20,
 								solarAbsorption: 0.2,
-								uValue: 1, 
+								uValue: 1,
 								arealHeatCapacity: "Light",
 								massDistributionClass: "D",
 							},
@@ -1612,7 +1628,7 @@ describe("FHS input mapper", () => {
 							pitchOption: "custom",
 							pitch: 90,
 							surfaceAreaOfElement: 20,
-							uValue: 1, 
+							uValue: 1,
 							arealHeatCapacity: "Very light",
 							massDistributionClass: "D",
 							thermalResistanceOfAdjacentUnheatedSpace: 2.5,
@@ -1760,7 +1776,7 @@ describe("FHS input mapper", () => {
 						elevationalHeight: 1,
 						midHeight: 2,
 						numberOpenableParts: "1",
-						overhangDepth: 0.5 ,
+						overhangDepth: 0.5,
 						overhangDistance: 0.5,
 						sideFinRightDepth: 0.25,
 						sideFinRightDistance: 1,
@@ -1878,6 +1894,11 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 				warmAirHeatPump: {
+					...baseForm,
+				},
+			},
+			cooling: {
+				airConditioning: {
 					...baseForm,
 				},
 			},
@@ -2120,12 +2141,6 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const cooling: Cooling = {
-			airConditioning: {
-				...baseForm,
-			},
-		};
-
 		store.$state = {
 			dwellingDetails,
 			domesticHotWater,
@@ -2133,7 +2148,6 @@ describe("FHS input mapper", () => {
 			infiltrationAndVentilation,
 			heatingSystems,
 			pvAndBatteries,
-			cooling,
 		};
 
 		const expectedResult: FhsInputSchema = expectedFlatInput;
@@ -2143,7 +2157,7 @@ describe("FHS input mapper", () => {
 
 		// Assert
 		expect(fhsInputData).toBeDefined();
-		expect(fhsInputData).toEqual(expectedResult);   
+		expect(fhsInputData).toEqual(expectedResult);
 	});
 
 	test("the expected results pass against the current FHS input schema", () => {

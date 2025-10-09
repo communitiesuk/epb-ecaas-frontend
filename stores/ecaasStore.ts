@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import type { EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
-import { PageType  } from "~/data/pages/pages.types";
+import { PageType } from "~/data/pages/pages.types";
 import type { Page } from "~/data/pages/pages.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
@@ -78,7 +78,7 @@ export function getInitialState(): EcaasState {
 			dwellingSpaceThermalBridging: {
 				dwellingSpaceLinearThermalBridges: { data: [] },
 				dwellingSpacePointThermalBridges: { data: [] },
-			}, 
+			},
 			dwellingSpaceZoneParameters: { data: {} },
 			dwellingSpaceLighting: { data: {} },
 		},
@@ -97,17 +97,17 @@ export function getInitialState(): EcaasState {
 				electricStorageHeater: { data: [] },
 				warmAirHeatPump: { data: [] },
 			},
+			cooling: {
+				airConditioning: { data: [] },
+			},
 		},
 		pvAndBatteries: {
 			pvSystems: { data: [] },
 			electricBattery: { data: [] },
 		},
-		cooling: {
-			airConditioning: { data: [] },
-		},
 	};
 	return store as EcaasState;
-}	
+}
 
 export const useEcaasStore = defineStore("ecaas", {
 	state: getInitialState,
@@ -122,8 +122,8 @@ export const useEcaasStore = defineStore("ecaas", {
 
 				if (section) {
 					const entry = Object.entries(section).find((x) => x[0] === page.id)!;
-					
-					if(page.id === "ductwork"){
+
+					if (page.id === "ductwork") {
 						return getDuctworkStatus(entry[1]);
 					}
 
@@ -145,7 +145,7 @@ export const useEcaasStore = defineStore("ecaas", {
 		},
 	},
 	actions: {
-		async postEcaasState (){
+		async postEcaasState() {
 			try {
 				await $fetch("/api/setState", {
 					method: "POST",

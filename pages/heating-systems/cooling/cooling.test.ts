@@ -37,9 +37,11 @@ describe("cooling", () => {
 	describe("cooling", () => {
 		it("air conditioning is removed when remove link is clicked", async () => {
 			store.$patch({
-				cooling: {
-					airConditioning: {
-						data: [{ data: airConditioning1 }],
+				heatingSystems: {
+					cooling: {
+						airConditioning: {
+							data: [{ data: airConditioning1 }],
+						},
 					},
 				},
 			});
@@ -55,9 +57,11 @@ describe("cooling", () => {
 
 		it("should only remove the air conditioning object that is clicked", async () => {
 			store.$patch({
-				cooling: {
-					airConditioning: {
-						data: [{ data: airConditioning1 }, { data: airConditioning2 }, { data: airConditioning3 }],
+				heatingSystems: {
+					cooling: {
+						airConditioning: {
+							data: [{ data: airConditioning1 }, { data: airConditioning2 }, { data: airConditioning3 }],
+						},
 					},
 				},
 			});
@@ -78,9 +82,11 @@ describe("cooling", () => {
 
 		it("air conditioning is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
-				cooling: {
-					airConditioning: {
-						data: [{ data: airConditioning1 }, { data: airConditioning2 }],
+				heatingSystems: {
+					cooling: {
+						airConditioning: {
+							data: [{ data: airConditioning1 }, { data: airConditioning2 }],
+						},
 					},
 				},
 			});
@@ -104,7 +110,7 @@ describe("cooling", () => {
 
 			await user.click(screen.getByTestId("markAsCompleteButton"));
 
-			expect(store.cooling.airConditioning.complete).toBe(true);
+			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(true);
 
 			const completedStatusElement = screen.queryByTestId(
 				"completeSectionCompleted",
@@ -116,9 +122,11 @@ describe("cooling", () => {
 
 		it("marks cooling as not complete when complete button is clicked then user removes an item", async () => {
 			store.$patch({
-				cooling: {
-					airConditioning: {
-						data: [{ data: airConditioning1, complete: true }],
+				heatingSystems: {
+					cooling: {
+						airConditioning: {
+							data: [{ data: airConditioning1, complete: true }],
+						},
 					},
 				},
 			});
@@ -126,11 +134,11 @@ describe("cooling", () => {
 			await renderSuspended(Cooling);
 			await user.click(screen.getByTestId("markAsCompleteButton"));
 
-			expect(store.cooling.airConditioning.complete).toBe(true);
+			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(true);
 
 			await user.click(screen.getByTestId("airConditioning_remove_0"));
 
-			expect(store.cooling.airConditioning.complete).toBe(false);
+			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(false);
 
 			const markAsCompleteButton = screen.getByTestId("markAsCompleteButton");
 			expect(markAsCompleteButton?.style.display).not.toBe("none");
@@ -139,9 +147,11 @@ describe("cooling", () => {
 
 		it("marks cooling as not complete when complete button is clicked then user duplicates an item", async () => {
 			store.$patch({
-				cooling: {
-					airConditioning: {
-						data: [{ data: airConditioning1, complete: true }],
+				heatingSystems: {
+					cooling: {
+						airConditioning: {
+							data: [{ data: airConditioning1, complete: true }],
+						},
 					},
 				},
 			});
@@ -149,11 +159,11 @@ describe("cooling", () => {
 			await renderSuspended(Cooling);
 			await user.click(screen.getByTestId("markAsCompleteButton"));
 
-			expect(store.cooling.airConditioning.complete).toBe(true);
+			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(true);
 
 			await user.click(screen.getByTestId("airConditioning_duplicate_0"));
 
-			expect(store.cooling.airConditioning.complete).toBe(false);
+			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(false);
 			const markAsCompleteButton = screen.getByTestId("markAsCompleteButton");
 			expect(markAsCompleteButton?.style.display).not.toBe("none");
 			expect(markAsCompleteButton.hasAttribute("disabled")).toBeFalsy();
@@ -161,9 +171,11 @@ describe("cooling", () => {
 
 		it("marks cooling as not complete when user saves a new or edited form after marking section as complete", async () => {
 			store.$patch({
-				cooling: {
-					airConditioning: {
-						data: [{ data: airConditioning1 }],
+				heatingSystems: {
+					cooling: {
+						airConditioning: {
+							data: [{ data: airConditioning1 }],
+						},
 					},
 				},
 			});
@@ -179,7 +191,7 @@ describe("cooling", () => {
 
 			await user.click(screen.getByTestId("saveAndComplete"));
 
-			expect(store.cooling.airConditioning.complete).toBe(false);
+			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(false);
 
 			await renderSuspended(Cooling);
 			const markAsCompleteButton = screen.getByTestId("markAsCompleteButton");
