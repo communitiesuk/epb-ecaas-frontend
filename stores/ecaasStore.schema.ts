@@ -71,7 +71,7 @@ const shadingDataZod = named.extend({
 	endAngle: z.number().min(0).lt(360),
 	objectType: shadingObjectTypeZod,
 	height: z.number(),
-	distance: z.number(),
+	distance: z.number().positive(),
 });
 
 export type ShadingData = z.infer<typeof shadingDataZod>;

@@ -30,6 +30,7 @@ if (props.minmax) {
 		:help="help ?? 'Enter the distance between the ground and the lowest edge of the element'"
 		:name="field ?? 'elevationalHeight'"
 		:validation="`required | number | min:${ min ?? 0 } | max:${ max ?? 500 }`"
+		data-field="Zone.BuildingElement.*.base_height"
 	>
 		<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 			<table class="govuk-table">

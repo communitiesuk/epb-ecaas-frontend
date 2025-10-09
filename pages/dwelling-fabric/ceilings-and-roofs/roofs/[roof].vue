@@ -106,7 +106,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
 				data-field="Zone.BuildingElement.*.pitch"
 			/>
-			<FieldsOrientation label="Orientation of roof" />
+			<FieldsOrientation label="Orientation of roof"
+				dataField="Zone.BuildingElement.*.orientation"
+			/>
 			<div v-if="!!model?.orientation" class="govuk-error-summary">
 				<div role="alert" class="govuk-hint govuk-!-margin-bottom-0">
 					If the pitched roof has multiple orientations (e.g., a gable or hip roof), each orientation must be modelled as a separate roof element.
@@ -122,6 +124,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="length"
 			validation="required | number | min:0.001 | max:50"
 			suffix-text="m"
+			data-field="Zone.BuildingElement.*.height"
 		/>
 		<FormKit
 			id="width"
@@ -144,6 +147,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 			suffix-text="m²"
+			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsSolarAbsorptionCoefficient
 			id="solarAbsorptionCoefficient"

@@ -167,6 +167,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			help="Enter the total surface area of the entire building element in the dwelling"
 			name="surfaceArea"
 			validation="required | number | min:1"
+			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsUValue id="uValue" name="uValue" />
 		<FormKit
@@ -176,7 +177,8 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			label="Thermal resistance"
 			help="Enter the thermal resistance of all layers in the floor construction"
 			name="thermalResistance"
-			validation="required | number | min:0.00001 | max:50">
+			validation="required | number | min:0.00001 | max:50"
+			data-field="Zone.BuildingElement.*.thermal_resistance_floor_construction">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
 			</GovDetails>
@@ -190,7 +192,8 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			label="Perimeter"
 			help="Enter the length of the exposed perimeter of the floor"
 			name="perimeter"
-			validation="required | number | min:0 | max:1000">
+			validation="required | number | min:0 | max:1000"
+			data-field="Zone.BuildingElement.*.perimeter">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">The exposed perimeter of the floor is where heat loss may occur, usually at the base of the external walls where they meet the ground floor.</p>
 			</GovDetails>
@@ -203,6 +206,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			help="This is the linear thermal transmittance of the junction between the floor and the walls"
 			name="psiOfWallJunction"
 			validation="required | number | min:0 | max:2"
+			data-field="Zone.BuildingElement.*.psi_wall_floor_junc"
 		/>
 		<FormKit
 			id="thicknessOfWalls"
@@ -211,7 +215,8 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			label="Thickness of walls at the edge of the floor"
 			help="Enter the width or physical depth of the ground floor walls that are in contact with or directly relevant to the ground floor. Typically between 30mm to 80mm."
 			name="thicknessOfWalls"
-			validation="required | number">
+			validation="required | number"
+			data-field="Zone.BuildingElement.*.thickness_walls">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">This is usually measured from the inside surface to the outside surface.</p>
 			</GovDetails>
@@ -224,6 +229,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			help="The type of ground floor affects the additional inputs needed"
 			name="typeOfGroundFloor"
 			validation="required"
+			data-field="Zone.BuildingElement.*.floor_type"
 		/>
 
 		<template v-if="model?.typeOfGroundFloor === 'Slab_edge_insulation'">
@@ -237,7 +243,8 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Edge insulation type"
 				name="edgeInsulationType"
 				help="Select the type of edge insulation"
-				validation="required">
+				validation="required"
+				data-field="Zone.BuildingElement.*.edge_insulation.*.type">
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 					<table class="govuk-table">
 						<thead class="govuk-table__head">
@@ -278,6 +285,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				:validation-messages="{
 					withinMinAndMax: `Edge insulation width must be at least 0 and no more than 100,000 ${millimetre.name}.`,
 				}"
+				data-field="Zone.BuildingElement.*.edge_insulation.*.width"
 			>
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 					<table class="govuk-table">
@@ -310,6 +318,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Edge insulation thermal resistance "
 				name="edgeInsulationThermalResistance"
 				validation="required"
+				data-field="Zone.BuildingElement.*.edge_insulation.*.edge_thermal_resistance"
 			/>
 		</template>
 
@@ -321,7 +330,8 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Height of the floor upper surface"
 				help="Enter the height of the top surface of the ground floor above the external ground level. Typically between 15mm and 60mm."
 				name="heightOfFloorUpperSurface"
-				validation="required | number | min:0 | max:100000"/>
+				validation="required | number | min:0 | max:100000"
+				data-field="Zone.BuildingElement.*.height_upper_surface"/>
 			<FormKit
 				id="underfloorSpaceThermalResistance"
 				type="govInputWithSuffix"
@@ -329,7 +339,9 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Thermal resistance of insulation on base of underfloor space"
 				help="Enter the thermal resistance or R-value of the insulation installed at the base of the underfloor space. Typically between 0.5 and 2.5 (m²·K)/W"
 				name="underfloorSpaceThermalResistance"
-				validation="required | number"/>
+				validation="required | number"
+				data-field="Zone.BuildingElement.*.thermal_resist_insul"
+				/>
 			<FormKit
 				id="thermalTransmittanceOfWallsAboveGround"
 				type="govInputWithSuffix"
@@ -337,7 +349,8 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Thermal transmittance of walls above ground"
 				help="Enter the thermal transmittance (or U-value) of the external walls above ground level. Typically between 0.13 and 0.25 W(m²·K)"
 				name="thermalTransmittanceOfWallsAboveGround"
-				validation="required | number"/>
+				validation="required | number"
+				data-field="Zone.BuildingElement.*.thermal_transm_walls"/>
 			<FormKit
 				id="ventilationOpeningsArea"
 				type="govInputWithSuffix"
@@ -357,7 +370,8 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Wind shielding factor"
 				name="windShieldingFactor"
 				help="This refers to how much the external wind conditions impact the airflow and heat loss through the void beneath the suspended floor"
-				validation="required">
+				validation="required"
+				data-field="Zone.BuildingElement.*.shield_fact_location">
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 					<table class="govuk-table">
 						<thead class="ovuk-table__head">
@@ -416,6 +430,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Depth of basement floor below ground level"
 				name="depthOfBasementFloorBelowGround"
 				validation="required | number"
+				data-field="Zone.BuildingElement.*.depth_basement_floor"
 			/>
 			<FormKit
 				id="thermalResistanceOfBasementWalls"
@@ -424,6 +439,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Thermal resistance of walls of basement"
 				name="thermalResistanceOfBasementWalls"
 				validation="required | number"
+				data-field="Zone.BuildingElement.*.thermal_resist_walls_base"
 			/>
 		</template>
 
@@ -460,6 +476,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Depth of basement floor below ground level"
 				name="depthOfBasementFloorBelowGround"
 				validation="required | number"
+				data-field="Zone.BuildingElement.*.depth_basement_floor"
 			/>
 			<FormKit
 				id="heightOfBasementWallsAboveGround"
@@ -468,6 +485,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				label="Height of the basement walls above ground level"
 				name="heightOfBasementWallsAboveGround"
 				validation="required | number"
+				data-field="Zone.BuildingElement.*.height_basement_walls"
 			/>
 		</template>
 		<GovLLMWarning />
