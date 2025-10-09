@@ -132,7 +132,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Distance"
 			suffix-text="m"
 			name="distance"
-			validation="required | number | min:0.1"
+			validation="required | number | min:0.001"
 			help="Enter the distance from the dwelling to the shading object"
 			data-field="ExternalConditions.shading_segments.*.shading.*.distance"
 		/>
