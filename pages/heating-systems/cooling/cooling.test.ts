@@ -98,7 +98,12 @@ describe("cooling", () => {
 			await userEvent.click(screen.getByTestId("airConditioning_duplicate_2"));
 
 			expect(screen.queryAllByTestId("airConditioning_item").length).toBe(6);
-			expect(screen.getAllByText("Air conditioner 1").length).toBe(5);
+			expect(screen.getByText("Air conditioner 1")).toBeDefined();
+			expect(screen.getByText("Air conditioner 1 (1)")).toBeDefined();
+			expect(screen.getByText("Air conditioner 1 (2)")).toBeDefined();
+			expect(screen.getByText("Air conditioner 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Air conditioner 1 (1) (2)")).toBeDefined();
+
 		});
 	});
 	describe("mark section as complete", () => {
