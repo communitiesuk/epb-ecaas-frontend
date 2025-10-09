@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import formStatus from "~/constants/formStatus";
+
 const title = "Cooling";
 const page = usePage();
 const store = useEcaasStore();
@@ -21,12 +23,12 @@ function handleDuplicate(index: number) {
 	const item = data?.[index];
     
 	if (item) {
-		const duplicates = data.filter(f => f && f.name.match(duplicateNamePattern(item.name)));
+		const duplicates = data.filter(f => f && f.data.name.match(duplicateNamePattern(item.data.name)));
 
 		store.$patch((state) => {
 			const newItem = {
 				...item,
-				name: `${item.name} (${duplicates.length})`,
+				name: `${item.data.name} (${duplicates.length})`,
 			};
 
 			state.cooling.airConditioning.data.push(newItem);
@@ -42,7 +44,7 @@ function handleComplete() {
 		},
 	});
 		
-	navigateTo("/");		
+	navigateTo("/heating-systems");		
 }
 
 </script>
@@ -58,14 +60,21 @@ function handleComplete() {
 		id="airConditioning"
 		title="Air conditioning"
 		:form-url="`${page?.url!}/air-conditioning`"
-		:items="store.cooling.airConditioning.data.flatMap(x => x ? [x.name] : [])"
+		:items="store.cooling.airConditioning.data?.map(x => ({
+			name: x.data.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
 		@remove="handleRemove"
 		@duplicate="handleDuplicate"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
-		<GovButton href="/" secondary>
-			Return to overview
+		<GovButton href="/heating-systems" secondary>
+			Return to heating systems
 		</GovButton>
-		<CompleteElement :is-complete="store.cooling.airConditioning?.complete ?? false" @completed="handleComplete"/>
+		<CompleteElement
+			:is-complete="store.cooling.airConditioning?.complete ?? false"
+			:disabled="store.cooling.airConditioning.data.some(s => !s.complete)"
+			@completed="handleComplete"/>
 	</div>
 </template>

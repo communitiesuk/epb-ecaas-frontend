@@ -123,7 +123,7 @@ const internalFloorDataZod = z.discriminatedUnion(
 			typeOfInternalFloor: z.literal(AdjacentSpaceType.unheatedSpace),
 			thermalResistanceOfAdjacentUnheatedSpace,
 		}),
-		baseInternalFloorData.extend({ 
+		baseInternalFloorData.extend({
 			typeOfInternalFloor: z.literal(AdjacentSpaceType.heatedSpace),
 		}),
 	],
@@ -946,7 +946,7 @@ const _pvDiverterDataZod = named.and(z.union([
 export type PvDiverterData = z.infer<typeof _pvDiverterDataZod>;
 
 export interface Cooling {
-	airConditioning: EcaasForm<AirConditioningData[]>;
+	airConditioning: EcaasFormList<AirConditioningData>;
 }
 
 const airConditioningDataZod = z.object({

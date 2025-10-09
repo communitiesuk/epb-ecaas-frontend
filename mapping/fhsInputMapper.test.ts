@@ -1277,12 +1277,12 @@ describe("FHS input mapper", () => {
 		const cooling: Cooling = {
 			airConditioning: {
 				...baseForm,
-				data: [{
+				data: [{ data: {
 					name: "some-aircon-unit-name",
 					coolingCapacity: 60,
 					seasonalEnergyEfficiencyRatio: 4,
 					convectionFraction: 0.2,
-				}],
+				} }],
 			},
 		};
 

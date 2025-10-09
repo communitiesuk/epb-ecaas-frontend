@@ -33,21 +33,25 @@ describe("Air conditioning", () => {
 	};
 
 	test("data is saved to store state when form is valid", async () => {
-		await renderSuspended(AirConditioning);
+		await renderSuspended(AirConditioning, {
+			route: {
+				params: { airConditioning: "create" },
+			},
+		});
 
 		await populateValidForm();
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		const { data } = store.cooling.airConditioning;
-		
-		expect(data[0]).toEqual(state);
+
+		expect(data[0]?.data).toEqual(state);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
 			cooling: {
 				airConditioning: {
-					data: [state],
+					data: [{ data: state }],
 				},
 			},
 		});
@@ -63,11 +67,11 @@ describe("Air conditioning", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("seasonalEnergyEfficiencyRatio")).value).toBe("10");
 		expect((await screen.findByTestId<HTMLInputElement>("convectionFraction")).value).toBe("1");
 	});
-		
+
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(AirConditioning);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("coolingCapacity_error"))).toBeDefined();
@@ -78,7 +82,7 @@ describe("Air conditioning", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(AirConditioning);
 
-		await user.click(screen.getByRole("button"));
+		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("airConditioningErrorSummary"))).toBeDefined();
 	});
