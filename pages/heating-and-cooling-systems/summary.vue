@@ -187,6 +187,28 @@ const heatEmittingSummary: SummarySection[] = [
 	electricStorageHeaterSummary,
 	warmAirHeatPumpSummary,
 ].filter((x) => x.data.length);
+
+const coolingUrl = "/heating-and-cooling-systems/cooling";
+
+const airConditionings = store.heatingSystems.cooling.airConditioning.data;
+const airConditioningSummary: SummarySection = {
+	id: "airConditioning",
+	label: "Air conditioning",
+	data: airConditionings.map((airConditioning) => {
+		return {
+			"Name": show(airConditioning.data.name),
+			"Cooling capacity": dim(airConditioning.data.coolingCapacity, "kilowatt"),
+			"Seasonal energy efficiency ratio": show(airConditioning.data.seasonalEnergyEfficiencyRatio),
+			"Convection fraction": show(airConditioning.data.convectionFraction),
+		};
+	}) || [],
+	editUrl: coolingUrl,
+};
+
+const coolingSummary: SummarySection[] = [
+	airConditioningSummary,
+].filter((x) => x.data.length);
+
 </script>
 <template>
 	<Head>
@@ -225,5 +247,16 @@ const heatEmittingSummary: SummarySection[] = [
 			:selected="tabProps.currentItem?.id === 'electricStorageHeater'" />
 		<SummaryTab :summary="warmAirHeatPumpSummary" :selected="tabProps.currentItem?.id === 'warmAirHeatPump'" />
 	</GovTabs>
+
+	<GovTabs v-slot="tabProps" :items="getTabItems(coolingSummary)">
+		<TabPanel id="cooling" :selected="!tabProps.currentItem">
+			<h2 class="govuk-heading-m">No cooling added</h2>
+			<NuxtLink class="govuk-link" :to="getUrl('cooling')">
+				Add cooling
+			</NuxtLink>
+		</TabPanel>
+		<SummaryTab :summary="airConditioningSummary" :selected="tabProps.currentItem?.id === 'airConditioning'" />
+	</GovTabs>
+
 	<GovButton href="/">Return to overview</GovButton>
 </template>
