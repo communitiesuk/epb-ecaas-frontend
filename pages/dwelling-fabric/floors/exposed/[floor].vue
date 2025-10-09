@@ -77,6 +77,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the length of the building element"
 			name="length"
 			validation="required | number | min:0.001 | max:50"
+			data-field="Zone.BuildingElement.*.height"
 		/>
 		<FormKit
 			id="width"
@@ -86,6 +87,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the width of the building element"
 			name="width"
 			validation="required | number | min:0.001 | max:50"
+			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />
 		<FormKit
@@ -95,6 +97,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Gross surface area of the floor"
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
+			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption" additional-text="The solar absorption coefficient of a material in an exposed floor directly affects heat loss because it dictates how much solar radiation is absorbed and converted into heat within the floor material. A higher solar absorption coefficient means more solar energy is absorbed, potentially increasing the floor's temperature and, consequently, the amount of heat lost to the surrounding environment."/>
 		<FieldsUValue id="uValue" name="uValue" />
@@ -102,7 +105,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
-			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
+			<FormKit type="govButton" label="Save an mark as complete" test-id="saveAndComplete" :ignore="true" />
 			<GovButton :href="getUrl('dwellingSpaceFloors')" test-id="saveProgress" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>
