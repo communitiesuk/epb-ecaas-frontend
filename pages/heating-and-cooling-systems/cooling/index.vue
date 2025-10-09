@@ -27,9 +27,9 @@ function handleDuplicate(index: number) {
 
 		store.$patch((state) => {
 			const newItem = {
-				data: {...item.data, name: `${item.data.name} (${duplicates.length})`},
-				complete: item.complete
-			} as EcaasForm<AirConditioningData>
+				data: { ...item.data, name: `${item.data.name} (${duplicates.length})` },
+				complete: item.complete,
+			} as EcaasForm<AirConditioningData>;
 
 			state.heatingSystems.cooling.airConditioning.data.push(newItem);
 			state.heatingSystems.cooling.airConditioning.complete = false;

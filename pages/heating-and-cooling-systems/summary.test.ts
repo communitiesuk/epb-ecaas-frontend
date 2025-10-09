@@ -22,6 +22,11 @@ const verifyDataInSection = async (
 	}
 };
 describe("Heating systems summary page", () => {
+	const store = useEcaasStore();
+	beforeEach(() => {
+		store.$reset();
+	});
+
 	it("displays the correct title", async () => {
 		await renderSuspended(HeatingSystemsSummary);
 		expect(screen.getByRole("heading", { name: "Heating system summary" }));
@@ -42,7 +47,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct fields when electricity is selected", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -63,7 +67,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct fields when custom is selected", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -88,7 +91,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays all conditional fields when both electricity and custom are selected", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -161,7 +163,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays tabs only for the heat generation types that have data", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -195,7 +196,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct data for the heat pump section", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -213,7 +213,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct data for the boiler section", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -230,7 +229,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct data for the heat battery section", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -248,7 +246,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct data for the heat network section", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -265,7 +262,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct data for the heat interface unit section", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -282,7 +278,6 @@ describe("Heating systems summary page", () => {
 
 		});
 		it("displays an edit link on each section that navigates to the heat generation overview page when clicked", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -393,7 +388,6 @@ describe("Heating systems summary page", () => {
 			);
 		});
 		it("displays tabs only for the heat emitting types that have data", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -434,7 +428,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct data for the wet distribution section when type of space heater is Radiators", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -452,7 +445,7 @@ describe("Heating systems summary page", () => {
 			});
 
 			const expectedWetDistributionData = {
-				Name: "Wet distribution 1",
+				"Name": "Wet distribution 1",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": `2 ${kilowattHourPerKelvin.suffix}`,
 				"Design temperature difference across the emitters": `0.4 ${celsius.suffix}`,
@@ -468,7 +461,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct data for the wet distribution section when type of space heater is Underfloor heating", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -486,7 +478,7 @@ describe("Heating systems summary page", () => {
 			});
 
 			const expectedWetDistributionData = {
-				Name: "Wet distribution 2",
+				"Name": "Wet distribution 2",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": `2 ${kilowattHourPerKelvin.suffix}`,
 				"Design temperature difference across the emitters": `0.4 ${celsius.suffix}`,
@@ -503,7 +495,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct data for the wet distribution section", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -521,7 +512,7 @@ describe("Heating systems summary page", () => {
 			});
 
 			const expectedWetDistributionData = {
-				Name: "Wet distribution 1",
+				"Name": "Wet distribution 1",
 				"Heat source": "Heat pump 1",
 				"Thermal mass": `2 ${kilowattHourPerKelvin.suffix}`,
 				"Design temperature difference across the emitters": `0.4 ${celsius.suffix}`,
@@ -538,7 +529,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct data for the instant electric heater section", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -563,7 +553,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays the correct data for the electric storage heater section", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -586,7 +575,6 @@ describe("Heating systems summary page", () => {
 			);
 		});
 		it("displays the correct data for the warm air heat pump section", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -610,7 +598,6 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays an edit link on each section that navigates to the heat emitting overview page when clicked", async () => {
-			const store = useEcaasStore();
 
 			store.$patch({
 				heatingSystems: {
@@ -645,6 +632,78 @@ describe("Heating systems summary page", () => {
 				expect(editLink).not.toBeNull();
 				expect(new URL(editLink.href).pathname).toBe(
 					"/heating-and-cooling-systems/heat-emitting",
+				);
+			}
+		});
+	});
+
+	describe("Cooling section", () => {
+
+		const airConditioning1: EcaasForm<AirConditioningData> = {
+			data: {
+				name: "Air conditioning 1",
+				coolingCapacity: 1,
+				seasonalEnergyEfficiencyRatio: 1,
+				convectionFraction: 1,
+			},
+		};
+
+		it("displays 'No cooling added' and link to cooling overview page when no data exists", async () => {
+			await renderSuspended(HeatingSystemsSummary);
+
+			expect(screen.getByText("No cooling added")).not.toBeNull();
+			const addHeatEmittingLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add cooling",
+			});
+			expect(new URL(addHeatEmittingLink.href).pathname).toBe(
+				getUrl("cooling"),
+			);
+		});
+
+		it("displays the correct data for the air conditioning section when data exists", async () => {
+
+			store.$patch({
+				heatingSystems: {
+					cooling: {
+						airConditioning: {
+							data: [airConditioning1],
+						},
+					},
+				},
+			});
+			await renderSuspended(HeatingSystemsSummary);
+
+			const expectedAirConditioningData = {
+				"Name": "Air conditioning 1",
+				"Cooling capacity": `1 ${kilowatt.suffix}`,
+				"Seasonal energy efficiency ratio": "1",
+				"Convection fraction": "1",
+			};
+			await renderSuspended(HeatingSystemsSummary);
+			await verifyDataInSection("airConditioning", expectedAirConditioningData);
+		});
+
+		it("displays an edit link on each section that navigates to the cooling overview page when clicked", async () => {
+
+			store.$patch({
+				heatingSystems: {
+					cooling: {
+						airConditioning: {
+							data: [airConditioning1],
+						},
+					},
+				},
+			});
+			await renderSuspended(HeatingSystemsSummary);
+			for (const [key] of Object.entries(store.heatingSystems.cooling)) {
+				const coolingSection = screen.getByTestId(key);
+
+				const editLink: HTMLAnchorElement = within(coolingSection).getByText(
+					"Edit",
+				);
+				expect(editLink).not.toBeNull();
+				expect(new URL(editLink.href).pathname).toBe(
+					"/heating-and-cooling-systems/cooling",
 				);
 			}
 		});
