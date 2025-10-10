@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { centimetre, millimetre, type Length } from "~/utils/units/length";
-import type { SchemaWindShieldLocation } from "~/schema/api-schema.types";
+import type { SchemaWindShieldLocation } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
 

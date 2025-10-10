@@ -661,7 +661,6 @@ export type SecondaryPipeworkData = z.infer<typeof secondaryPipeworkDataZod>;
 const wwhrsDataZod = z.object({
 	name: z.string().trim().min(1),
 	outlet: z.string(),
-	type: wwhrsTypeZod,
 	flowRate: z.number().min(0.1).max(500),
 	efficiency: percentage,
 	proportionOfUse: fraction,

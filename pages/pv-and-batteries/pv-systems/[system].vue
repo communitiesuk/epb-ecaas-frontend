@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SchemaInverterType } from "~/schema/api-schema.types";
+import type { SchemaInverterType } from "~/schema/aliases";
 import type { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
 import { getUrl } from "#imports";
 

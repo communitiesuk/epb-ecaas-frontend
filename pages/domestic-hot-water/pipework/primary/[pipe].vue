@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getUrl  } from "#imports";
 import type { SnakeToSentenceCase } from "#imports";
-import type { SchemaWaterPipeContentsType, SchemaWaterPipeworkLocation } from "~/schema/api-schema.types";
+import type { SchemaWaterPipeContentsType, SchemaWaterPipeworkLocation } from "~/schema/aliases";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const title = "Primary pipework";

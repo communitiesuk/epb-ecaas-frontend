@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SchemaBatteryLocation } from "~/schema/api-schema.types";
+import type { SchemaBatteryLocation } from "~/schema/aliases";
 import { getUrl } from "~/utils/page";
 
 const title = "Electric battery";

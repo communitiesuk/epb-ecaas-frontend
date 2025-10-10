@@ -19,12 +19,6 @@ const hotWaterOutlets = [
 	otherOutlets.data.map(x => [x.data.id, x.data.name] as [string, string]),
 ].flat();
 
-const wwhrsTypeOptions: Record<WwhrsType, string> = {
-	WWHRS_InstantaneousSystemA: "System A",
-	WWHRS_InstantaneousSystemB: "System B",
-	WWHRS_InstantaneousSystemC: "System C",
-};
-
 const saveForm = (fields: WwhrsData) => {
 	store.$patch((state) => {
 		const { wwhrs } = state.domesticHotWater;
@@ -82,28 +76,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 					Click here to add an outlet
 				</NuxtLink>
 			</div>
-		</FormKit>
-		<FormKit
-			id="type"
-			type="govRadios"
-			:options="wwhrsTypeOptions"
-			label="Type"
-			name="type"
-			validation="required">
-			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-				<p class="govuk-hint">
-					<strong>System A:</strong><br>
-					Output of the heat exchanger is fed to both the shower and the combi boiler or hot water system
-				</p>
-				<p class="govuk-hint">
-					<strong>System B:</strong><br>
-					Output of the heat exchanger is fed to the shower only
-				</p>
-				<p class="govuk-hint">
-					<strong>System C:</strong><br>
-					Output of the heat exchanger is fed to the combi boiler of hot water system but not to the shower
-				</p>
-			</GovDetails>
 		</FormKit>
 		<FormKit
 			id="flowRate"

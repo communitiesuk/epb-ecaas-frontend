@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { standardPitchOptions, type WindowData } from "#imports";
 import { millimetre } from "~/utils/units/length";
-import type { SchemaWindowTreatmentControl, SchemaWindowTreatmentType } from "~/schema/api-schema.types";
+import type { SchemaWindowTreatmentControl, SchemaWindowTreatmentType } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
 

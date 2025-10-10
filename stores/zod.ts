@@ -103,4 +103,3 @@ export const waterPipeworkLocationZod = zodForTypeOptions(ensureAllUnion<SchemaW
 export const windowTreatmentControlZod = zodForTypeOptions(ensureAllUnion<SchemaWindowTreatmentControl, (typeof windowTreatmentControls)>(windowTreatmentControls));
 export const windowTreatmentTypeZod = zodForTypeOptions(ensureAllUnion<SchemaWindowTreatmentType, (typeof windowTreatmentTypes)>(windowTreatmentTypes));
 export const windShieldLocationZod = zodForTypeOptions(ensureAllUnion<SchemaWindShieldLocation, (typeof windShieldLocations)>(windShieldLocations));
-export const wwhrsTypeZod = zodForTypeOptions(ensureAllUnion<WwhrsType, (typeof wwhrsTypes)>(wwhrsTypes));

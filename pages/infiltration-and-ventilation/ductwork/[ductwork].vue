@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SchemaDuctShape, SchemaDuctType } from "~/schema/api-schema.types";
+import type { SchemaDuctShape, SchemaDuctType } from "~/schema/aliases";
 import type { DuctworkData, EcaasForm } from "#imports";
 import { getUrl } from "#imports";
 
