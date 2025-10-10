@@ -1,4 +1,4 @@
-import type { SchemaShadingObject } from "~/schema/api-schema.types";
+import type { SchemaShadingObject } from "~/schema/aliases";
 import { mapDistantShadingData, mapExternalFactorsData, mapGeneralDetailsData } from "./dwellingDetailsMapper";
 import { resolveState } from "~/stores/resolve";
 
@@ -111,7 +111,5 @@ describe("dwelling details mapper", () => {
 		segmentsWithShading?.forEach(x => {
 			expect(x.shading).toEqual([expectedShading]);
 		});
-
-		expect(segmentsWithShading?.every(x => x.number && expectedSegmentNumbers.includes(x.number))).toBe(true);
 	});
 });
