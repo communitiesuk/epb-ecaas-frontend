@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get information about the ECaaS API */
+        get: operations["ApiMetadata"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/beta/future-homes-standard-compliance": {
         parameters: {
             query?: never;
@@ -28,6 +45,140 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        FhsComplianceResponse: {
+            /** @description The calculated DER (Dwelling Emission Rate) of the building. Unit: kgCO₂e/m².yr. */
+            dwelling_emission_rate: number;
+            /** @description The determined TER (Target Emission Rate) used for the calculation for this building. Unit: kgCO₂e/m².yr. */
+            target_emission_rate: number;
+            /** @description Whether this calculation determines that the building with the provided properties complies with the Future Homes Standard for emission rate. */
+            emission_rate_compliant: boolean;
+            /** @description The calculated DPER (Dwelling Primary Energy Rate) of the building. Unit: kWh/m².yr. */
+            dwelling_primary_energy_rate: number;
+            /** @description The determined TPER (Target Primary Energy Rate) used for the calculation for this building. Unit: kWh/m².yr. */
+            target_primary_energy_rate: number;
+            /** @description Whether the calculated Dwelling Primary Energy Rate is compliant with FHS. */
+            primary_energy_rate_compliant: boolean;
+            /** @description The calculated DFEE (Dwelling Fabric Energy Efficiency) of the building. Unit: kWh/m².yr. */
+            dwelling_fabric_energy_efficiency: number;
+            /** @description The determined TPEE (Target Fabric Energy Efficiency) of the building. Unit: kWh/m².yr. */
+            target_fabric_energy_efficiency: number;
+            /** @description Whether the calculated Dwelling Fabric Energy Efficiency is compliant with FHS. */
+            fabric_energy_efficiency_compliant: boolean;
+            energy_demand: components["schemas"]["FhsEnergyDemand"];
+            delivered_energy_use: components["schemas"]["FhsDeliveredEnergyUse"];
+            energy_use_by_fuel: Record<string, never>;
+        };
+        FhsDeliveredEnergyUse: {
+            total: components["schemas"]["FhsEnergyPerformanceValue"];
+            by_system: Record<string, never>;
+        };
+        FhsEnergyDemand: {
+            space_heating: components["schemas"]["FhsEnergyPerformanceValue"];
+            space_cooling: components["schemas"]["FhsEnergyPerformanceValue"];
+        };
+        FhsEnergyPerformanceValue: {
+            /** @description The actual measured energy performance for a particular metric. Unit: kWh/m².yr. */
+            actual: number;
+            /** @description The notional energy performance for a particular metric. Unit: kWh/m².yr. */
+            notional: number;
+        };
+        FhsErrorResponseBody: {
+            errors: components["schemas"]["JsonApiOnePointOneErrors"];
+            meta: components["schemas"]["FhsMeta"];
+        };
+        FhsErrorResponseBodyNoMeta: {
+            errors: components["schemas"]["JsonApiOnePointOneErrors"];
+        };
+        FhsMeta: {
+            /**
+             * @description An identifier representing which version of HEM (the specification) was used, or available to be used, in this calculation.
+             * @example 0.32
+             */
+            hem_version: string;
+            /**
+             * Format: date
+             * @description The date when the version of the HEM specification being used was published. Format: YYYY-MM-DD.
+             * @example 2025-02-15
+             */
+            hem_version_date: string;
+            /**
+             * @description An identifier representing which version of FHS (Future Homes Standard) (the specification) was used, or available to be used, in this calculation.
+             * @example 0.23
+             */
+            fhs_version: string;
+            /**
+             * Format: date
+             * @description The date when the version of the FHS specification being used was published. Format: YYYY-MM-DD.
+             * @example 2025-02-15
+             */
+            fhs_version_date: string;
+            /**
+             * @description A unique identifier, usually a SHA, for the version of the HEM software library being used for this calculation.
+             * @example 521c68bd9c715f82205d7d1afd7b88d038839d26
+             */
+            software_version?: string;
+            /**
+             * @description A unique identifier for the request made against this ECaaS service. This can be referenced when e.g. raising support queries.
+             * @example b6e02d18-f919-490e-bd1b-40d85d8ac456
+             */
+            ecaas_request_id?: string;
+        };
+        /** @description @member name may contain any valid JSON value. */
+        JsonApiOnePointOneAtMemberName: Record<string, never>;
+        /** @description A JSON API error object. At least of the properties must be set. */
+        JsonApiOnePointOneError: {
+            /** @description A unique identifier for this particular occurrence of the problem. */
+            id?: string;
+            links?: components["schemas"]["JsonApiOnePointOneErrorLinks"];
+            /** @description The HTTP status code applicable to this problem, expressed as a string value. */
+            status?: string;
+            /** @description An application-specific error code, expressed as a string value. */
+            code?: string;
+            /** @description A short, human-readable summary of the problem. It **SHOULD NOT** change from occurrence to occurrence of the problem, except for purposes of localization. */
+            title?: string;
+            /** @description A human-readable explanation specific to this occurrence of the problem. */
+            detail?: string;
+            source?: components["schemas"]["JsonApiOnePointOneErrorSource"];
+            meta?: components["schemas"]["JsonApiOnePointOneMeta"];
+        };
+        /** @description The error links object **MAY** contain the following members: about. */
+        JsonApiOnePointOneErrorLinks: {
+            about?: components["schemas"]["JsonApiOnePointOneLink"];
+            type?: components["schemas"]["JsonApiOnePointOneLink"];
+        };
+        JsonApiOnePointOneErrorSource: {
+            /** @description A JSON Pointer [RFC6901] to the associated entity in the request document [e.g. "/data" for a primary data object, or "/data/attributes/title" for a specific attribute]. */
+            pointer?: string;
+            /** @description A string indicating which query parameter caused the error. */
+            parameter?: string;
+            /** @description A string indicating the name of a single request header which caused the error. */
+            header?: string;
+        };
+        JsonApiOnePointOneErrors: components["schemas"]["JsonApiOnePointOneError"][];
+        /** @description A link **MUST** be represented as either: a string containing the link's URL or a link object. */
+        JsonApiOnePointOneLink: components["schemas"]["JsonApiOnePointOneLinkUrl"] | components["schemas"]["JsonApiOnePointOneLinkObject"];
+        JsonApiOnePointOneLinkObject: {
+            href: components["schemas"]["JsonApiOnePointOneLinkUrl"];
+            meta?: components["schemas"]["JsonApiOnePointOneMeta"];
+            rel?: string;
+            title?: string;
+            type?: string;
+            hreflang?: string;
+            describedby?: components["schemas"]["JsonApiOnePointOneLink"];
+        };
+        /**
+         * Format: uri
+         * @description A string containing the link's URL.
+         */
+        JsonApiOnePointOneLinkUrl: string;
+        /** @description Member name may contain any valid JSON value. */
+        JsonApiOnePointOneMemberName: Record<string, never>;
+        /** @description A valid string value for a JSON API member name. */
+        JsonApiOnePointOneMemberNameString: string;
+        /** @description Nonstandard meta-information that can not be represented as an attribute or relationship. */
+        JsonApiOnePointOneMeta: components["schemas"]["JsonApiOnePointOneMemberName"] | components["schemas"]["JsonApiOnePointOneAtMemberName"];
+        /** @enum {string} */
+        Versions: "0.1.0";
         ElectricBattery: {
             capacity: number;
             charge_discharge_efficiency_round_trip: number;
@@ -1750,6 +1901,25 @@ export interface components {
     headers: never;
     pathItems: never;
 }
+export type SchemaFhsComplianceResponse = components['schemas']['FhsComplianceResponse'];
+export type SchemaFhsDeliveredEnergyUse = components['schemas']['FhsDeliveredEnergyUse'];
+export type SchemaFhsEnergyDemand = components['schemas']['FhsEnergyDemand'];
+export type SchemaFhsEnergyPerformanceValue = components['schemas']['FhsEnergyPerformanceValue'];
+export type SchemaFhsErrorResponseBody = components['schemas']['FhsErrorResponseBody'];
+export type SchemaFhsErrorResponseBodyNoMeta = components['schemas']['FhsErrorResponseBodyNoMeta'];
+export type SchemaFhsMeta = components['schemas']['FhsMeta'];
+export type SchemaJsonApiOnePointOneAtMemberName = components['schemas']['JsonApiOnePointOneAtMemberName'];
+export type SchemaJsonApiOnePointOneError = components['schemas']['JsonApiOnePointOneError'];
+export type SchemaJsonApiOnePointOneErrorLinks = components['schemas']['JsonApiOnePointOneErrorLinks'];
+export type SchemaJsonApiOnePointOneErrorSource = components['schemas']['JsonApiOnePointOneErrorSource'];
+export type SchemaJsonApiOnePointOneErrors = components['schemas']['JsonApiOnePointOneErrors'];
+export type SchemaJsonApiOnePointOneLink = components['schemas']['JsonApiOnePointOneLink'];
+export type SchemaJsonApiOnePointOneLinkObject = components['schemas']['JsonApiOnePointOneLinkObject'];
+export type SchemaJsonApiOnePointOneLinkUrl = components['schemas']['JsonApiOnePointOneLinkUrl'];
+export type SchemaJsonApiOnePointOneMemberName = components['schemas']['JsonApiOnePointOneMemberName'];
+export type SchemaJsonApiOnePointOneMemberNameString = components['schemas']['JsonApiOnePointOneMemberNameString'];
+export type SchemaJsonApiOnePointOneMeta = components['schemas']['JsonApiOnePointOneMeta'];
+export type SchemaVersions = components['schemas']['Versions'];
 export type SchemaElectricBattery = components['schemas']['ElectricBattery'];
 export type SchemaHotWaterTankHeatSourceCommon = components['schemas']['HotWaterTankHeatSourceCommon'];
 export type SchemaImmersionHeater = components['schemas']['ImmersionHeater'];
@@ -1814,6 +1984,24 @@ export type SchemaThermalBridgePoint = components['schemas']['ThermalBridgePoint
 export type SchemaFhsInputSchema = components['schemas']['fhs_input.schema'];
 export type $defs = Record<string, never>;
 export interface operations {
+    ApiMetadata: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     FHSCompliance: {
         parameters: {
             query?: never;
@@ -1826,9 +2014,59 @@ export interface operations {
                 "application/json": components["schemas"]["fhs_input.schema"];
             };
         };
-        responses: never;
+        responses: {
+            /** @description A summary of a successful HEM calculation to determine compliance with the Future Homes Standard (FHS). */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/vnd.api+json": {
+                        data: components["schemas"]["FhsComplianceResponse"];
+                        meta: components["schemas"]["FhsMeta"];
+                    };
+                };
+            };
+            /** @description An error denoting that the request could not be processed by the calculator. */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/vnd.api+json": components["schemas"]["FhsErrorResponseBody"];
+                };
+            };
+            /** @description An error denoting that an error happened at some stage in the ECaaS engine when processing the request. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/vnd.api+json": components["schemas"]["FhsErrorResponseBody"];
+                };
+            };
+            /** @description An error denoting that the request has exercised an area of the HEM engine that has not yet been implemented in the MHCLG project. */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/vnd.api+json": components["schemas"]["FhsErrorResponseBody"];
+                };
+            };
+            /** @description An error denoting that a calculation in the ECaaS engine took too long, and the API timed out awaiting a response. */
+            504: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/vnd.api+json": components["schemas"]["FhsErrorResponseBodyNoMeta"];
+                };
+            };
+        };
     };
 }
 export enum ApiPaths {
+    ApiMetadata = "/",
     FHSCompliance = "/beta/future-homes-standard-compliance"
 }

@@ -1,20 +1,324 @@
-openapi: "3.1.0"
+openapi: 3.1.0
 info:
   title: Energy Calculation as a Service
-  version: "0.1.0"
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
+  version: 0.1.0
+tags: []
 paths:
+  /:
+    get:
+      operationId: ApiMetadata
+      summary: Get information about the ECaaS API
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
   /beta/future-homes-standard-compliance:
     post:
       operationId: FHSCompliance
       summary: Check Future Homes Standard (FHS) compliance
-      description: "Check compliance with the Future Homes Standard (FHS) based on the energy performance of a building calculated using the Home Energy Model (HEM)."
+      description: Check compliance with the Future Homes Standard (FHS) based on the energy performance of a building calculated using the Home Energy Model (HEM).
+      parameters: []
+      responses:
+        '200':
+          description: A summary of a successful HEM calculation to determine compliance with the Future Homes Standard (FHS).
+          content:
+            application/vnd.api+json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - meta
+                properties:
+                  data:
+                    $ref: '#/components/schemas/FhsComplianceResponse'
+                  meta:
+                    $ref: '#/components/schemas/FhsMeta'
+        '422':
+          description: An error denoting that the request could not be processed by the calculator.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/FhsErrorResponseBody'
+        '500':
+          description: An error denoting that an error happened at some stage in the ECaaS engine when processing the request.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/FhsErrorResponseBody'
+        '501':
+          description: An error denoting that the request has exercised an area of the HEM engine that has not yet been implemented in the MHCLG project.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/FhsErrorResponseBody'
+        '504':
+          description: An error denoting that a calculation in the ECaaS engine took too long, and the API timed out awaiting a response.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/FhsErrorResponseBodyNoMeta'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              $ref: "./fhs_input.schema.json"
+              $ref: ./fhs_input.schema.json
+components:
+  schemas:
+    FhsComplianceResponse:
+      type: object
+      required:
+        - dwelling_emission_rate
+        - target_emission_rate
+        - emission_rate_compliant
+        - dwelling_primary_energy_rate
+        - target_primary_energy_rate
+        - primary_energy_rate_compliant
+        - dwelling_fabric_energy_efficiency
+        - target_fabric_energy_efficiency
+        - fabric_energy_efficiency_compliant
+        - energy_demand
+        - delivered_energy_use
+        - energy_use_by_fuel
+      properties:
+        dwelling_emission_rate:
+          type: number
+          description: 'The calculated DER (Dwelling Emission Rate) of the building. Unit: kgCO₂e/m².yr.'
+        target_emission_rate:
+          type: number
+          description: 'The determined TER (Target Emission Rate) used for the calculation for this building. Unit: kgCO₂e/m².yr.'
+        emission_rate_compliant:
+          type: boolean
+          description: Whether this calculation determines that the building with the provided properties complies with the Future Homes Standard for emission rate.
+        dwelling_primary_energy_rate:
+          type: number
+          description: 'The calculated DPER (Dwelling Primary Energy Rate) of the building. Unit: kWh/m².yr.'
+        target_primary_energy_rate:
+          type: number
+          description: 'The determined TPER (Target Primary Energy Rate) used for the calculation for this building. Unit: kWh/m².yr.'
+        primary_energy_rate_compliant:
+          type: boolean
+          description: Whether the calculated Dwelling Primary Energy Rate is compliant with FHS.
+        dwelling_fabric_energy_efficiency:
+          type: number
+          description: 'The calculated DFEE (Dwelling Fabric Energy Efficiency) of the building. Unit: kWh/m².yr.'
+        target_fabric_energy_efficiency:
+          type: number
+          description: 'The determined TPEE (Target Fabric Energy Efficiency) of the building. Unit: kWh/m².yr.'
+        fabric_energy_efficiency_compliant:
+          type: boolean
+          description: Whether the calculated Dwelling Fabric Energy Efficiency is compliant with FHS.
+        energy_demand:
+          $ref: '#/components/schemas/FhsEnergyDemand'
+        delivered_energy_use:
+          $ref: '#/components/schemas/FhsDeliveredEnergyUse'
+        energy_use_by_fuel:
+          type: object
+          unevaluatedProperties:
+            $ref: '#/components/schemas/FhsEnergyPerformanceValue'
+    FhsDeliveredEnergyUse:
+      type: object
+      required:
+        - total
+        - by_system
+      properties:
+        total:
+          $ref: '#/components/schemas/FhsEnergyPerformanceValue'
+        by_system:
+          type: object
+          unevaluatedProperties:
+            $ref: '#/components/schemas/FhsEnergyPerformanceValue'
+    FhsEnergyDemand:
+      type: object
+      required:
+        - space_heating
+        - space_cooling
+      properties:
+        space_heating:
+          $ref: '#/components/schemas/FhsEnergyPerformanceValue'
+        space_cooling:
+          $ref: '#/components/schemas/FhsEnergyPerformanceValue'
+    FhsEnergyPerformanceValue:
+      type: object
+      required:
+        - actual
+        - notional
+      properties:
+        actual:
+          type: number
+          description: 'The actual measured energy performance for a particular metric. Unit: kWh/m².yr.'
+        notional:
+          type: number
+          description: 'The notional energy performance for a particular metric. Unit: kWh/m².yr.'
+    FhsErrorResponseBody:
+      type: object
+      required:
+        - errors
+        - meta
+      properties:
+        errors:
+          $ref: '#/components/schemas/JsonApiOnePointOneErrors'
+        meta:
+          $ref: '#/components/schemas/FhsMeta'
+    FhsErrorResponseBodyNoMeta:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          $ref: '#/components/schemas/JsonApiOnePointOneErrors'
+    FhsMeta:
+      type: object
+      required:
+        - hem_version
+        - hem_version_date
+        - fhs_version
+        - fhs_version_date
+      properties:
+        hem_version:
+          type: string
+          description: An identifier representing which version of HEM (the specification) was used, or available to be used, in this calculation.
+          examples:
+            - '0.32'
+        hem_version_date:
+          type: string
+          format: date
+          description: 'The date when the version of the HEM specification being used was published. Format: YYYY-MM-DD.'
+          examples:
+            - '2025-02-15'
+        fhs_version:
+          type: string
+          description: An identifier representing which version of FHS (Future Homes Standard) (the specification) was used, or available to be used, in this calculation.
+          examples:
+            - '0.23'
+        fhs_version_date:
+          type: string
+          format: date
+          description: 'The date when the version of the FHS specification being used was published. Format: YYYY-MM-DD.'
+          examples:
+            - '2025-02-15'
+        software_version:
+          type: string
+          description: A unique identifier, usually a SHA, for the version of the HEM software library being used for this calculation.
+          examples:
+            - 521c68bd9c715f82205d7d1afd7b88d038839d26
+        ecaas_request_id:
+          type: string
+          description: A unique identifier for the request made against this ECaaS service. This can be referenced when e.g. raising support queries.
+          examples:
+            - b6e02d18-f919-490e-bd1b-40d85d8ac456
+    JsonApiOnePointOneAtMemberName:
+      type: object
+      allOf:
+        - type: object
+          unevaluatedProperties:
+            $ref: '#/components/schemas/JsonApiOnePointOneMemberNameString'
+      description: '@member name may contain any valid JSON value.'
+    JsonApiOnePointOneError:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier for this particular occurrence of the problem.
+        links:
+          $ref: '#/components/schemas/JsonApiOnePointOneErrorLinks'
+        status:
+          type: string
+          description: The HTTP status code applicable to this problem, expressed as a string value.
+        code:
+          type: string
+          description: An application-specific error code, expressed as a string value.
+        title:
+          type: string
+          description: A short, human-readable summary of the problem. It **SHOULD NOT** change from occurrence to occurrence of the problem, except for purposes of localization.
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+        source:
+          $ref: '#/components/schemas/JsonApiOnePointOneErrorSource'
+        meta:
+          $ref: '#/components/schemas/JsonApiOnePointOneMeta'
+      description: A JSON API error object. At least of the properties must be set.
+    JsonApiOnePointOneErrorLinks:
+      type: object
+      properties:
+        about:
+          $ref: '#/components/schemas/JsonApiOnePointOneLink'
+        type:
+          $ref: '#/components/schemas/JsonApiOnePointOneLink'
+      description: 'The error links object **MAY** contain the following members: about.'
+    JsonApiOnePointOneErrorSource:
+      type: object
+      properties:
+        pointer:
+          type: string
+          pattern: ^(?:\\/(?:[^~/]|~0|~1)*)*$
+          description: A JSON Pointer [RFC6901] to the associated entity in the request document [e.g. "/data" for a primary data object, or "/data/attributes/title" for a specific attribute].
+        parameter:
+          type: string
+          description: A string indicating which query parameter caused the error.
+        header:
+          type: string
+          description: A string indicating the name of a single request header which caused the error.
+    JsonApiOnePointOneErrors:
+      type: array
+      items:
+        $ref: '#/components/schemas/JsonApiOnePointOneError'
+      uniqueItems: true
+    JsonApiOnePointOneLink:
+      oneOf:
+        - $ref: '#/components/schemas/JsonApiOnePointOneLinkUrl'
+        - $ref: '#/components/schemas/JsonApiOnePointOneLinkObject'
+      description: "A link **MUST** be represented as either: a string containing the link's URL or a link object."
+    JsonApiOnePointOneLinkObject:
+      type: object
+      required:
+        - href
+      properties:
+        href:
+          $ref: '#/components/schemas/JsonApiOnePointOneLinkUrl'
+        meta:
+          $ref: '#/components/schemas/JsonApiOnePointOneMeta'
+        rel:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        hreflang:
+          type: string
+        describedby:
+          $ref: '#/components/schemas/JsonApiOnePointOneLink'
+    JsonApiOnePointOneLinkUrl:
+      type: string
+      format: uri
+      pattern: ^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?
+      description: A string containing the link's URL.
+    JsonApiOnePointOneMemberName:
+      type: object
+      allOf:
+        - type: object
+          unevaluatedProperties:
+            $ref: '#/components/schemas/JsonApiOnePointOneMemberNameString'
+      description: Member name may contain any valid JSON value.
+    JsonApiOnePointOneMemberNameString:
+      type: string
+      minLength: 1
+      pattern: ^[a-zA-Z0-9]{1}(?:[-\w]*[a-zA-Z0-9])?$
+      description: A valid string value for a JSON API member name.
+    JsonApiOnePointOneMeta:
+      anyOf:
+        - $ref: '#/components/schemas/JsonApiOnePointOneMemberName'
+        - $ref: '#/components/schemas/JsonApiOnePointOneAtMemberName'
+      description: Nonstandard meta-information that can not be represented as an attribute or relationship.
+    Versions:
+      type: string
+      enum:
+        - 0.1.0
+servers:
+  - url: https://api.building-energy-calculator-integration.communities.gov.uk
+    description: Integration environment API instance
+    variables: {}
