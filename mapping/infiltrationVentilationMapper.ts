@@ -98,7 +98,6 @@ export function mapVentsData(state: ResolvedState) {
 			mid_height_air_flow_path: x.midHeightOfZone,
 			orientation360: x.orientation,
 			pitch: x.pitch,
-			pressure_difference_ref: 20, // stock value
 		};
 
 		return [key, val];

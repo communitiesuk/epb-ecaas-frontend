@@ -251,7 +251,6 @@ describe("infiltration ventilation mapper", () => {
 		const vent = fhsInputData[ventName];
 		expect(vent?.area_cm2).toBe(100);
 		expect(vent?.mid_height_air_flow_path).toBe(1.5);
-		expect(vent?.pressure_difference_ref).toBe(20);
 		expect(vent?.orientation360).toBe(180);
 		expect(vent?.pitch).toBe(45);
 	});
