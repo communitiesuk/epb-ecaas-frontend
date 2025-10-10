@@ -6,6 +6,7 @@ import { resolveState } from "~/stores/resolve";
 import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { centimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
+import type { SchemaBuildingElement } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -630,7 +631,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 5,
 					thermal_resistance_floor_construction: 2,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: "E",
+					mass_distribution_class: "E: Mass concentrated at external side",
 					perimeter: 40,
 					edge_insulation: [{
 						edge_thermal_resistance: 2.4,
@@ -650,7 +651,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 5,
 					thermal_resistance_floor_construction: 2,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: "D",
+					mass_distribution_class: "D: Mass equally distributed",
 					perimeter: 21,
 					thermal_resist_walls_base: 3,
 					psi_wall_floor_junc: 0.8,
@@ -662,7 +663,7 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					area: 6,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: "IE",
+					mass_distribution_class: "IE: Mass divided over internal and external side",
 					thermal_resistance_unconditioned_space: 1,
 					pitch: 180,
 					u_value: 0.01,
@@ -682,7 +683,7 @@ const expectedFlatInput: FhsInputSchema = {
 					area: 10,
 					solar_absorption_coeff: 0.4,
 					areal_heat_capacity: 110000,
-					mass_distribution_class: "D",
+					mass_distribution_class: "D: Mass equally distributed",
 					pitch: 180,
 					orientation360: 0,
 					u_value: 0.1,
@@ -692,7 +693,7 @@ const expectedFlatInput: FhsInputSchema = {
 				"party wall 1 (wall)": {
 					area: 15,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: "E",
+					mass_distribution_class: "E: Mass concentrated at external side",
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 1,
@@ -704,7 +705,7 @@ const expectedFlatInput: FhsInputSchema = {
 					base_height: 1,
 					height: 2.6,
 					is_external_door: false,
-					mass_distribution_class: "D",
+					mass_distribution_class: "D: Mass equally distributed",
 					orientation360: 30,
 					solar_absorption_coeff: 0.2,
 					u_value: 1,
@@ -714,7 +715,7 @@ const expectedFlatInput: FhsInputSchema = {
 				"internal wall 1 (wall)": {
 					area: 15,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: "I",
+					mass_distribution_class: "I: Mass concentrated at internal side",
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 0.01,
@@ -725,7 +726,7 @@ const expectedFlatInput: FhsInputSchema = {
 					base_height: 1,
 					height: 2.6,
 					is_external_door: true,
-					mass_distribution_class: "I",
+					mass_distribution_class: "I: Mass concentrated at internal side",
 					orientation360: 30,
 					pitch: 90,
 					solar_absorption_coeff: 0.2,
@@ -754,7 +755,7 @@ const expectedFlatInput: FhsInputSchema = {
 				"wall to garage (wall)": {
 					area: 20,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: "D",
+					mass_distribution_class: "D: Mass equally distributed",
 					pitch: 90,
 					thermal_resistance_unconditioned_space: 2.5,
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -764,7 +765,7 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementAdjacentConditionedSpace",
 					area: 16,
 					areal_heat_capacity: 75000,
-					mass_distribution_class: "I",
+					mass_distribution_class: "I: Mass concentrated at internal side",
 					pitch: 0,
 					u_value: 0.01,
 				},	
@@ -772,7 +773,7 @@ const expectedFlatInput: FhsInputSchema = {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 					area: 20,
 					areal_heat_capacity: 60000,
-					mass_distribution_class: "IE",
+					mass_distribution_class: "IE: Mass divided over internal and external side",
 					pitch: 45,
 					thermal_resistance_unconditioned_space: 3.4,
 					u_value: 2.2,
@@ -787,7 +788,7 @@ const expectedFlatInput: FhsInputSchema = {
 					solar_absorption_coeff: 0.63,
 					u_value: 0.1,
 					areal_heat_capacity: 19300,
-					mass_distribution_class: "I",
+					mass_distribution_class: "I: Mass concentrated at internal side",
 					type: "BuildingElementOpaque",
 					is_external_door: false,
 					is_unheated_pitched_roof: false,
@@ -795,7 +796,7 @@ const expectedFlatInput: FhsInputSchema = {
 				"bathroom door (door)": {
 					area: 1.4,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: "IE",
+					mass_distribution_class: "IE: Mass divided over internal and external side",
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 0.01,
@@ -803,7 +804,7 @@ const expectedFlatInput: FhsInputSchema = {
 				"door to garage (door)": {
 					area: 1.4,
 					areal_heat_capacity: 50000,
-					mass_distribution_class: "IE",
+					mass_distribution_class: "IE: Mass divided over internal and external side",
 					pitch: 90,
 					thermal_resistance_unconditioned_space: 2.5,
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
