@@ -90,6 +90,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the proportion of the system's sensible cooling output that is delivered through air movement as opposed to radiant cooling. Typically this is 1 as all cooling is by convection."
 			validation="required | number | between:0,1"
 		/>
+		<FieldsEnergySupplies
+			id="energySupplies"
+			name="energySupplies"
+			label="Energy source"
+			help="Select the relevant energy supply that has been added previously"
+		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
