@@ -213,13 +213,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="standardPitchOptions()"
 			data-field="Zone.BuildingElement.*.pitch"
 		/>
-		<FieldsOrientation />
+		<FieldsOrientation dataField="Zone.BuildingElement.*.orientation" />
 		<FormKit
 			id="height" type="govInputWithSuffix" suffix-text="m" label="Height"
-			help="Enter the height of the building element" name="height" validation="required | number | min:0.001 | max:50" />
+			help="Enter the height of the building element" name="height" validation="required | number | min:0.001 | max:50"
+			data-field="Zone.BuildingElement.*.height" />
 		<FormKit
 			id="width" type="govInputWithSuffix" suffix-text="m" label="Width" help="Enter the width of the building element"
-			name="width" validation="required | number | min:0.001 | max:50" />
+			name="width" validation="required | number | min:0.001 | max:50"
+			data-field="Zone.BuildingElement.*.width" />
 		<FieldsElevationalHeight />
 		<FormKit
 			id="surfaceArea" type="govInputWithSuffix" suffix-text="m²" label="Net surface area of element"
@@ -229,15 +231,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="solarTransmittance" type="govInputFloat" label="Transmittance of solar energy "
 			help="Enter the total solar energy transmittance, or G value, of the transparent part of the window. It should be a decimal between 0 and 1."
-			name="solarTransmittance" validation="required | number | min:0.01 | max:1" />
+			name="solarTransmittance" validation="required | number | min:0.01 | max:1"
+			data-field="Zone.BuildingElement.*.g_value" />
 		<FormKit
 			id="midHeight" type="govInputWithSuffix" suffix-text="m" label="Mid height"
 			help="Enter the height from the ground to the midpoint of the window" name="midHeight"
-			validation="required | number | min:0 | max:100" />
+			validation="required | number | min:0 | max:100"
+			data-field="Zone.BuildingElement.*.mid_height" />
 		<FormKit
 			id="openingToFrameRatio" type="govInputFloat" label="Opening to frame ratio"
 			help="Enter the proportion of the window taken up by the total opening area compared to the frame"
-			name="openingToFrameRatio" validation="required | number | min:0 | max:1">
+			name="openingToFrameRatio" validation="required | number | min:0 | max:1"
+			data-field="Zone.BuildingElement.*.frame_area_fraction">
 			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">
 					<thead class="govuk-table__head">

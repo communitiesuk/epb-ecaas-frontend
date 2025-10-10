@@ -84,7 +84,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the net area of the building element. The area of all windows or doors should be subtracted before entry."
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
-			data-field="Zone.BuildingElement.*.total_area"
+			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FormKit
 			id="uValue"
