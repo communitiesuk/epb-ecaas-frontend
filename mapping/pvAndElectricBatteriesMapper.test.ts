@@ -111,7 +111,6 @@ describe("PV and electric batteries mapper", () => {
 			data: {
 				name: "Acme Model II",
 				capacity: 10,
-				batteryAge: 2,
 				chargeEfficiency: 0.7,
 				location: "inside",
 				gridChargingPossible: false,
@@ -137,7 +136,6 @@ describe("PV and electric batteries mapper", () => {
 		// Assert
 		const expectedResult: Record<string, SchemaElectricBattery> = {
 			"ElectricBattery": {
-				battery_age: 2,
 				battery_location: "inside",
 				capacity: 10,
 				charge_discharge_efficiency_round_trip: 0.7,

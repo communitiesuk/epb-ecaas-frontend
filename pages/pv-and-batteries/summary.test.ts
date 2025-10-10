@@ -91,7 +91,6 @@ describe("PV and electric batteries summary page", () => {
 			data: {
 				name: "Acme Model II",
 				capacity: 10,
-				batteryAge: 2,
 				chargeEfficiency: 0.7,
 				location: "inside",
 				gridChargingPossible: false,
@@ -137,7 +136,6 @@ describe("PV and electric batteries summary page", () => {
 			const expectedResult = {
 				Name: "Acme Model II",
 				Capacity: `10 ${kilowattHour.suffix}`,
-				"Battery age": "2 years",
 				"Charge efficiency": "0.7",
 				Location: "Inside",
 				"Grid charging possible": "No",

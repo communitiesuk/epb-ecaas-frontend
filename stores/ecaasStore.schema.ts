@@ -903,7 +903,6 @@ export type PvSystemData = z.infer<typeof pvSystemDataZod>;
 const electricBatteryDataZod = z.object({
 	name: z.string().trim().min(1),
 	capacity: z.number().min(0).max(50),
-	batteryAge: z.number().min(0).max(100),
 	chargeEfficiency: fraction,
 	location: batteryLocationZod,
 	gridChargingPossible: z.boolean(),

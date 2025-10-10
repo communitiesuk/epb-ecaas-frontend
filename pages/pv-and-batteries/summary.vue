@@ -36,7 +36,6 @@ const batterySummary: SummarySection = {
 		return {
 			"Name": x.name,
 			"Capacity": dim(x.capacity, "kilowatt-hour"),
-			"Battery age": x.batteryAge ? `${show(x.batteryAge)} years` : show(x.batteryAge),
 			"Charge efficiency": show(x.chargeEfficiency),
 			"Location": displayCamelToSentenceCase(show(x.location)),
 			"Grid charging possible": displayBoolean(x.gridChargingPossible),

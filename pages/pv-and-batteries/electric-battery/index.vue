@@ -16,7 +16,6 @@ const saveForm = (fields: ElectricBatteryData) => {
 			data: {
 				name: fields.name,
 				capacity: fields.capacity,
-				batteryAge: fields.batteryAge,
 				chargeEfficiency: fields.chargeEfficiency,
 				location: fields.location,
 				gridChargingPossible: fields.gridChargingPossible,
@@ -120,15 +119,6 @@ const chargeRateMaxGreaterThanMin = (node: FormKitNode) => {
 			name="capacity"
 			validation="required | number | min:0 | max:50"
 			suffix-text="kWh"
-		/>
-		<FormKit
-			id="batteryAge"
-			type="govInputWithSuffix"
-			label="Battery age"
-			help="Enter the starting age of the battery in years"
-			name="batteryAge"
-			validation="required | number | min:0 | max:100"
-			suffix-text="years"
 		/>
 		<FormKit
 			id="chargeEfficiency"

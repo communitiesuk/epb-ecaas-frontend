@@ -49,7 +49,6 @@ export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery
 		return {
 			"ElectricBattery":
 				{
-					battery_age: electricBattery.batteryAge,
 					battery_location: electricBattery.location,
 					capacity: electricBattery.capacity,
 					charge_discharge_efficiency_round_trip: electricBattery.chargeEfficiency,

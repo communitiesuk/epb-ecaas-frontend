@@ -2112,7 +2112,6 @@ describe("FHS input mapper", () => {
 					data: {
 						name: "electric battery 1",
 						capacity: 12,
-						batteryAge: 0,
 						chargeEfficiency: 1,
 						location: "inside",
 						gridChargingPossible: true,

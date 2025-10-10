@@ -67,7 +67,6 @@ describe("pv systems and electric battery", () => {
 			name: "Electric Battery 1",
 			capacity: 2,
 			chargeEfficiency: 0.8,
-			batteryAge: 0,
 			minimumChargeRate: 0.001,
 			maximumChargeRate: 1.5,
 			maximumDischargeRate: 1.25,
