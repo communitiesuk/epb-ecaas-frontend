@@ -77,3 +77,4 @@ export type SchemaCombustionAppliance = SchemaInfiltrationVentilation["Combustio
 export type SchemaMechanicalVentilationDuctwork = SchemaDefs["MechVentMVHR"]["ductwork"][number];
 export type SchemaVent = FhsSchema["InfiltrationVentilation"]["Vents"][string];
 export type SchemaVentilationLeaks = FhsSchema["InfiltrationVentilation"]["Leaks"];
+export type SchemaLeaksTestPressure = SchemaVentilationLeaks["test_pressure"];

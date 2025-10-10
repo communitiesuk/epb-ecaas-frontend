@@ -94,7 +94,7 @@ const airPermeabilitySummary: SummarySection = {
 	id: "airPermeability",
 	label: "Air permeability",
 	data: {
-		"Test pressure": dim(airPermeabilityData.testPressure, "pascal"),
+		"Test pressure": show(airPermeabilityData.testPressure),
 		"Air tightness test result": dim(airPermeabilityData.airTightnessTestResult, "cubic metres per hour per square metre"),
 	},
 	editUrl: getUrl("airPermeability"),

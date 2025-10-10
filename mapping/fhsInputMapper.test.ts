@@ -6,7 +6,6 @@ import { resolveState } from "~/stores/resolve";
 import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { centimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
-import type { SchemaBuildingElement } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -1005,7 +1004,7 @@ describe("FHS input mapper", () => {
 			airPermeability: {
 				...baseForm,
 				data: {
-					testPressure: 40,
+					testPressure: "Standard",
 					airTightnessTestResult: 4,
 				},
 			},
@@ -1439,7 +1438,7 @@ describe("FHS input mapper", () => {
 			airPermeability: {
 				...baseForm,
 				data: {
-					testPressure: 20,
+					testPressure: "Pulse test only",
 					airTightnessTestResult: 10,
 				},
 			},

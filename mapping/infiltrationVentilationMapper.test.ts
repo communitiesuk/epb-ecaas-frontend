@@ -47,7 +47,7 @@ describe("infiltration ventilation mapper", () => {
 				airPermeability: {
 					...baseForm,
 					data: {
-						testPressure: 5.0,
+						testPressure: "Pulse test only",
 						airTightnessTestResult: 2.2,
 					},
 				},
@@ -116,7 +116,7 @@ describe("infiltration ventilation mapper", () => {
 				airPermeability: {
 					...baseForm,
 					data: {
-						testPressure: 5.0,
+						testPressure: "Pulse test only",
 						airTightnessTestResult: 2.2,
 					},
 				},
@@ -155,7 +155,7 @@ describe("infiltration ventilation mapper", () => {
 				airPermeability: {
 					...baseForm,
 					data: {
-						testPressure: 5.0,
+						testPressure: "Pulse test only",
 						airTightnessTestResult: 2.2,
 					},
 				},
@@ -288,7 +288,7 @@ describe("infiltration ventilation mapper", () => {
 	it("maps air permeability data to extract needed fields", async () => {
 		// Arrange
 		const airPermeabilityData: AirPermeabilityData = {
-			testPressure: 50,
+			testPressure: "Standard",
 			airTightnessTestResult: 5,
 		};
 
@@ -305,7 +305,7 @@ describe("infiltration ventilation mapper", () => {
 		const fhsInputData = mapAirPermeabilityData(resolveState(store.$state));
 
 		// Assert
-		expect(fhsInputData.test_pressure).toBe(50);
+		expect(fhsInputData.test_pressure).toBe("Standard");
 		expect(fhsInputData.test_result).toBe(5);
 	});
 

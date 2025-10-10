@@ -53,7 +53,7 @@ const ventilationData: VentilationData = {
 };
 
 const airPermeabilityData: AirPermeabilityData = {
-	testPressure: 1,
+	testPressure: "Standard",
 	airTightnessTestResult: 1,
 };
 
@@ -271,7 +271,7 @@ describe("Infiltration and ventilation summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Test pressure": `1 ${pascal.suffix}`,
+			"Test pressure": "Standard",
 			"Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`,
 		};
 

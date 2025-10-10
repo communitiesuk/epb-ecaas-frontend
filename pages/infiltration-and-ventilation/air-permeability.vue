@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
+import type { SchemaLeaksTestPressure } from "~/schema/aliases";
 
 const title = "Air permeability";
 const store = useEcaasStore();
@@ -8,6 +9,11 @@ const { autoSaveForm } = useForm();
 const model = ref({
 	...store.infiltrationAndVentilation.airPermeability.data,
 });
+
+const testPressureOptions = {
+	"Standard": "Standard",
+	"Pulse test only": "Pulse test only",
+} as const satisfies Record<SchemaLeaksTestPressure, SchemaLeaksTestPressure>;
 
 const saveForm = (fields: AirPermeabilityData) => {
 	store.$patch({
@@ -48,34 +54,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovErrorSummary :error-list="errorMessages" test-id="airPermeabilityErrorSummary"/>
 		<FormKit
 			id="testPressure"
-			type="govInputWithSuffix"
+			type="govRadios"
+			:options="testPressureOptions"
 			label="Test pressure"
-			help="Enter the reference pressure difference from the pressure test"
+			help="Enter the type of pressure test"
 			name="testPressure"
-			validation="required | number | min:0 | max:500"
-			suffix-text="Pa"
-		>
-			<GovDetails summary-text="Help with this input">
-				<table class="govuk-table">
-					<thead class="govuk-table__head">
-						<tr class="govuk-table__row">
-							<th scope="col" class="govuk-table__header govuk-!-width-one-half">Type of test</th>
-							<th scope="col" class="govuk-table__header">Test pressure</th>
-						</tr>
-					</thead>
-					<tbody class="govuk-table__body">
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table__header">Blower door</th>
-							<td class="govuk-table__cell">50 Pa</td>
-						</tr>
-						<tr class="govuk-table__row">
-							<th scope="row" class="govuk-table__header">Pulse</th>
-							<td class="govuk-table__cell">4 Pa</td>
-						</tr>
-					</tbody>
-				</table>
-			</GovDetails>
-		</FormKit>
+			validation="required"
+		/>
 		<FormKit
 			id="airTightnessTestResult"
 			type="govInputWithSuffix"
