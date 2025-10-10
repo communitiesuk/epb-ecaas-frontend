@@ -73,13 +73,8 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			type: "WetDistribution",
 			Zone: defaultZoneName,
 			Control: defaultControlName,
-			EnergySupply: null,
-			advanced_start: null,
-			bypass_percentage_recirculated: null,
 			variable_flow: false,
-			min_flow_rate: null,
-			max_flow_rate: null,
-			temp_setback: null,
+			pipework: [], // TODO: does pipework need to be added?
 		};
 		return [
 			name,
