@@ -29,7 +29,7 @@ describe("Air conditioning", () => {
 	const energySupplyState: EnergySupplyData = {
 		fuelType: [FuelType.electricity],
 		exported: true,
-	}
+	};
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Air conditioner 1");
@@ -44,8 +44,8 @@ describe("Air conditioning", () => {
 		store.$patch({
 			heatingSystems: {
 				energySupply: {
-					data: energySupplyState
-				}
+					data: energySupplyState,
+				},
 			},
 		});
 
@@ -73,8 +73,8 @@ describe("Air conditioning", () => {
 					},
 				},
 				energySupply: {
-					data: energySupplyState
-				}
+					data: energySupplyState,
+				},
 			},
 		});
 

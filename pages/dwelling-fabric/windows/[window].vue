@@ -213,7 +213,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="standardPitchOptions()"
 			data-field="Zone.BuildingElement.*.pitch"
 		/>
-		<FieldsOrientation dataField="Zone.BuildingElement.*.orientation" />
+		<FieldsOrientation data-field="Zone.BuildingElement.*.orientation" />
 		<FormKit
 			id="height" type="govInputWithSuffix" suffix-text="m" label="Height"
 			help="Enter the height of the building element" name="height" validation="required | number | min:0.001 | max:50"

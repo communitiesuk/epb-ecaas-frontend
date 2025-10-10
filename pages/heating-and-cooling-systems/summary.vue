@@ -200,7 +200,7 @@ const airConditioningSummary: SummarySection = {
 			"Cooling capacity": dim(airConditioning.data.coolingCapacity, "kilowatt"),
 			"Seasonal energy efficiency ratio": show(airConditioning.data.seasonalEnergyEfficiencyRatio),
 			"Convection fraction": show(airConditioning.data.convectionFraction),
-			"Energy source": sentenceCase(show(airConditioning.data.energySupply))
+			"Energy source": sentenceCase(show(airConditioning.data.energySupply)),
 		};
 	}) || [],
 	editUrl: coolingUrl,
