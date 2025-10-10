@@ -6,11 +6,6 @@ import { emptyValueRendering } from "#imports";
 const title = "Dwelling fabric summary";
 const store = useEcaasStore();
 
-function calculateFrameToOpeningRatio(openingToFrameRatio: number): number {
-	// note - use parseFloat and toFixed to avoid JS precision issues
-	return parseFloat((1 - openingToFrameRatio).toFixed(10));
-}
-
 const zoneParametersData = store.dwellingFabric.dwellingSpaceZoneParameters.data;
 
 const zoneParametersSummary: SummarySection = {
@@ -371,7 +366,7 @@ const windowSummary: SummarySection = {
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Transmittance of solar energy": show(x.solarTransmittance),
 			"Mid height": dim(x.midHeight, "metres"),
-			"Frame to opening ratio": show(x.openingToFrameRatio && calculateFrameToOpeningRatio(x.openingToFrameRatio)),
+			"Opening to frame ratio": show(x.openingToFrameRatio),
 			"Number of openable parts": show(x.numberOpenableParts),
 			"Height of the openable area": numberOfOpenableParts >= 1 ? heightOpenableArea : undefined,
 			"Maximum openable area": numberOfOpenableParts >= 1 ? maximumOpenableArea : undefined,
