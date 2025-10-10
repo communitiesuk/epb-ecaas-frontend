@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
-import { FuelType } from "./../../schema/api-schema.types"
+import { FuelType } from "./../../schema/api-schema.types";
 
 defineProps<{
 	id: string;
@@ -20,7 +20,7 @@ const { fuelType } = store.heatingSystems.energySupply.data;
 const energySupplies = fuelType !== undefined ? [
 	fuelType.map(x => {
 		return x ? [FuelType[x], sentenceCase(x)] as [string, string] : undefined;
-	})
+	}),
 ].flat().filter(x => typeof x !== "undefined") : [];
 
 </script>
@@ -37,7 +37,7 @@ const energySupplies = fuelType !== undefined ? [
 			:validation="validation ?? 'required'"
 			:validation-rules="validationRules"
 			:validation-messages="validationMessages"
-			>
+		>
 			<div v-if="!energySupplies.length"
 			>
 				<p class="govuk-error-message">No energy supplies added.</p>
