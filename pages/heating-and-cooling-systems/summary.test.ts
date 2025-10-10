@@ -645,6 +645,7 @@ describe("Heating systems summary page", () => {
 				coolingCapacity: 1,
 				seasonalEnergyEfficiencyRatio: 1,
 				convectionFraction: 1,
+				energySupply: FuelType.electricity,
 			},
 		};
 
@@ -678,6 +679,7 @@ describe("Heating systems summary page", () => {
 				"Cooling capacity": `1 ${kilowatt.suffix}`,
 				"Seasonal energy efficiency ratio": "1",
 				"Convection fraction": "1",
+				"Energy source": "Electricity"
 			};
 			await renderSuspended(HeatingSystemsSummary);
 			await verifyDataInSection("airConditioning", expectedAirConditioningData);

@@ -5,6 +5,7 @@ import AirConditioningForm from "./air-conditioning/[airConditioning].vue";
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
 import type { AirConditioningData } from "~/stores/ecaasStore.schema";
+import { FuelType } from "~/schema/api-schema.types";
 
 describe("cooling", () => {
 	const store = useEcaasStore();
@@ -24,6 +25,7 @@ describe("cooling", () => {
 		coolingCapacity: 1,
 		seasonalEnergyEfficiencyRatio: 1,
 		convectionFraction: 1,
+		energySupply: FuelType.electricity,
 	};
 
 	const airConditioning2: Partial<AirConditioningData> = {
@@ -179,7 +181,8 @@ describe("cooling", () => {
 				heatingSystems: {
 					cooling: {
 						airConditioning: {
-							data: [{ data: airConditioning1 }],
+							data: [{ data: airConditioning1, complete: true }],
+							complete: true,
 						},
 					},
 				},

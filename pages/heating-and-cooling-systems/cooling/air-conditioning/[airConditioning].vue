@@ -19,6 +19,7 @@ const saveForm = (fields: AirConditioningData) => {
 				coolingCapacity: fields.coolingCapacity,
 				seasonalEnergyEfficiencyRatio: fields.seasonalEnergyEfficiencyRatio,
 				convectionFraction: fields.convectionFraction,
+				energySupply: fields.energySupply,
 			},
 			complete: true,
 		};
@@ -91,8 +92,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | between:0,1"
 		/>
 		<FieldsEnergySupplies
-			id="energySupplies"
-			name="energySupplies"
+			id="energySupply"
+			name="energySupply"
 			label="Energy source"
 			help="Select the relevant energy supply that has been added previously"
 		/>
