@@ -15,16 +15,16 @@ defineProps<{
 
 const store = useEcaasStore();
 
-const { fuelType } = store.heatingSystems.energySupply.data;
+const { fuelType } = store.heatingSystems.energySupply.data; 
 
-const energySupplies = [
+const energySupplies = fuelType !== undefined ? [
 	fuelType.map(x => {
 		if (x) {
 			const name = `${x.charAt(0).toUpperCase() + x.slice(1)}`
 			return [FuelType[x], name] as [string, string];
 		} else return undefined;
 	})
-].flat().filter(x => typeof x !== "undefined");
+].flat().filter(x => typeof x !== "undefined") : [];
 
 </script>
 
