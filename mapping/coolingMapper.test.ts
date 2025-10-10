@@ -1,4 +1,4 @@
-import { SpaceCoolSystemType } from "~/schema/api-schema.types";
+import { FuelType, SpaceCoolSystemType } from "~/schema/api-schema.types";
 import type { SchemaSpaceCoolSystemDetails } from "~/schema/api-schema.types";
 import { mapSpaceCoolSystems } from "./coolingMapper";
 
@@ -17,6 +17,7 @@ describe("cooling mapper", () => {
 			coolingCapacity: 4,
 			seasonalEnergyEfficiencyRatio: 1,
 			convectionFraction: 1,
+			energySupply: FuelType.electricity,
 		};
 
 		store.$patch({
@@ -54,6 +55,7 @@ describe("cooling mapper", () => {
 			coolingCapacity: 1,
 			seasonalEnergyEfficiencyRatio: 2,
 			convectionFraction: 3,
+			energySupply: FuelType.electricity,
 		};
 
 		const airConditioner2: AirConditioningData = {
@@ -61,6 +63,7 @@ describe("cooling mapper", () => {
 			coolingCapacity: 7,
 			seasonalEnergyEfficiencyRatio: 6,
 			convectionFraction: 5,
+			energySupply: FuelType.electricity,
 		};
 
 		store.$patch({
