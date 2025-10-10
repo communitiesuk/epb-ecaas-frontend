@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
-import type { WwhrsType } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
 
 const title = "Waste water heat recovery system";
@@ -26,7 +25,6 @@ const saveForm = (fields: WwhrsData) => {
 		const item: WwhrsData = {
 			name: fields.name,
 			outlet: fields.outlet,
-			type: fields.type,
 			flowRate: fields.flowRate,
 			efficiency: fields.efficiency,
 			proportionOfUse: fields.proportionOfUse,

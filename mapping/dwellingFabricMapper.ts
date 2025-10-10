@@ -1,5 +1,4 @@
-import type { BuildingElementGround, SchemaBuildingElement, SchemaZoneInput } from "~/schema/aliases";
-import type { SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart } from "~/schema/api-schema.types";
+import type { BuildingElementGround, SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from "deepmerge";
 import { defaultZoneName } from "./common";
@@ -63,7 +62,6 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 	const { dwellingSpaceLighting: { numberOfIncandescentBulbs, numberOfLEDBulbs } } = state.dwellingFabric;
 
 	const lightingData: SchemaLighting = {
-		efficacy: 56.0,
 		bulbs: {
 			...(numberOfIncandescentBulbs >= 1 ? { incandescent: {
 				count: numberOfIncandescentBulbs,
@@ -131,7 +129,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
 					areal_heat_capacity: x.kappaValue,
-					mass_distribution_class: x.massDistributionClass,
+					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
 					thickness_walls: x.thicknessOfWalls / 1000,
@@ -149,7 +147,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
 					areal_heat_capacity: x.kappaValue,
-					mass_distribution_class: x.massDistributionClass,
+					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
 					thickness_walls: x.thicknessOfWalls / 1000,
@@ -166,7 +164,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
 					areal_heat_capacity: x.kappaValue,
-					mass_distribution_class: x.massDistributionClass,
+					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
 					thickness_walls: x.thicknessOfWalls / 1000,
@@ -188,7 +186,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
 					areal_heat_capacity: x.kappaValue,
-					mass_distribution_class: x.massDistributionClass,
+					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
 					thickness_walls: x.thicknessOfWalls / 1000,
@@ -207,7 +205,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
 					areal_heat_capacity: x.kappaValue,
-					mass_distribution_class: x.massDistributionClass,
+					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
 					thickness_walls: x.thicknessOfWalls / 1000,

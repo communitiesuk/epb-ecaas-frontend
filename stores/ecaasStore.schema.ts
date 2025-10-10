@@ -1,11 +1,11 @@
 import type { TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
-import type { SchemaCombustionApplianceType, SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta, SchemaMechVentType } from "~/schema/api-schema.types";
+import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
+import type { SchemaCombustionApplianceType, FloorType, SchemaMechVentType, MassDistributionClass } from "~/schema/aliases";
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { batteryLocationZod, combustionAirSupplySituationZod, combustionFuelTypeZod, ductShapeZod, flueGasExhaustSituationZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, wwhrsTypeZod, zodLiteralFromUnionType } from "./zod";
-import type { FloorType } from "~/schema/aliases";
+import { batteryLocationZod, combustionAirSupplySituationZod, combustionFuelTypeZod, ductShapeZod, flueGasExhaustSituationZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 
 const fraction = z.number().min(0).max(1);
 const percentage = z.number().min(0).max(100);
@@ -15,6 +15,10 @@ const named = z.object({
 const namedWithId = named.extend({
 	id: z.uuidv4().readonly(),
 });
+
+// local simpler MassDistributionClass containing e.g. "M" instead of "M: Mass concentrated inside"
+type Prefixes<T extends string> = T extends `${infer Prefix}:${string}` ? Prefix : never;
+export type ConciseMassDistributionClass = Prefixes<MassDistributionClass>;
 
 // some standard field definitions
 const orientation = z.number().min(0).lt(360);

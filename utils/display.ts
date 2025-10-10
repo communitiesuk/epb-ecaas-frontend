@@ -1,7 +1,6 @@
 import { objectFromEntries } from "ts-extras";
-import type { SchemaFlueGasExhaustSituation, SchemaFuelType } from "../schema/api-schema.types";
 import type { DisplayProduct } from "~/pcdb/products";
-import type { ApplianceKey, MassDistributionClass, WwhrsType } from "~/schema/aliases";
+import type { ApplianceKey, SchemaFlueGasExhaustSituation, SchemaFuelType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -47,7 +46,7 @@ export function displayBoolean(value: boolean | undefined): BooleanDisplay | typ
 
 type BooleanDisplay = "Yes" | "No";
 
-export function displayMassDistributionClass(value: MassDistributionClass | undefined): MassDistributionClassDisplay | typeof emptyValueRendering {
+export function displayMassDistributionClass(value: ConciseMassDistributionClass | undefined): MassDistributionClassDisplay | typeof emptyValueRendering {
 	switch (value) {
 		case "I":
 			return "Internal";
@@ -131,22 +130,6 @@ export function displayCamelToSentenceCase(value: string): string {
 	const replaced = inserted.replace(/((?<=\s)[A-Z](?=[a-z]))/g, x => x.toLowerCase());
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1);
 }
-
-export function displayWwhrsType(value: WwhrsType): WwhrsTypeDisplay {
-	switch (value) {
-		case "WWHRS_InstantaneousSystemA":
-			return "A";
-		case "WWHRS_InstantaneousSystemB":
-			return "B";
-		case "WWHRS_InstantaneousSystemC":
-			return "C";
-		default:
-			value satisfies never;
-			throw new Error(`Missed a Wwhrs type case: ${value}`);
-	}
-}
-
-export type WwhrsTypeDisplay = "A" | "B" | "C";
 
 // NB. this list is written out to be available at runtime, and could drift from all upstream values over time
 const applianceKeys: ApplianceKey[] = [
@@ -232,29 +215,29 @@ export function displayFuelTypes(fuelTypes: SchemaFuelType[] | undefined) {
 
 export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
 	switch (fuelType) {
-		case "LPG_bottled":
-			return "LPG bottled";
-		case "LPG_bulk":
+		case "gas":
+			return "Bottled gas";
+		case "lpg_bulk":
 			return "LPG bulk";
-		case "LPG_condition_11F":
-			return "LPG condition 11F";
 		case "custom":
 			return "Custom";
 		case "electricity":
 			return "Electricity";
-		case "energy_from_environment":
-			return "Energy from environment";
 		case "mains_gas":
 			return "Mains gas";
-		case "unmet_demand":
-			return "Unmet demand";
+		case "wood":
+			return "Wood";
+		case "coal":
+			return "Coal";
+		case "oil":
+			return "Oil";
 		default:
 			fuelType satisfies never;
 			throw new Error(`Missed a fuel type case: ${fuelType}`);
 	}
 }
 
-export type FuelTypeDisplay = "LPG bottled" | "LPG bulk" | "LPG condition 11F" | "Custom" | "Electricity" | "Energy from environment" | "Mains gas" | "Unmet demand";
+export type FuelTypeDisplay = "Bottled gas" | "LPG bulk" | "Custom" | "Electricity" | "Mains gas" | "Wood" | "Coal" | "Oil";
 
 export const ecoDesignControllerOptions = {
 	1: "I: On/Off Room Thermostat",
