@@ -8,7 +8,6 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 	const showers = mapShowersData(state);
 	const baths = mapBathsData(state);
 	const others = mapOthersData(state);
-	const distribution = mapDistributionData(state);
 	const hotWaterSources = mapHotWaterSourcesData(state);
 
 	return {
@@ -16,7 +15,6 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 			Shower: showers,
 			Bath: baths,
 			Other: others,
-			Distribution: distribution,
 		},
 		HotWaterSource: {
 			"hw cylinder": hotWaterSources[0]!, // FHS input schema currently only allows for one hot water cylinder while the frontend allows users to add multiple
@@ -78,16 +76,6 @@ function mapOthersData(state: ResolvedState) {
 	});
 
 	return Object.fromEntries(otherEntries);
-}
-
-export function mapDistributionData(state: ResolvedState) {
-	return state.domesticHotWater.pipework.secondaryPipework.map((x): SchemaWaterPipeworkSimple => {
-		return {
-			length: x.length,
-			location: x.location,
-			internal_diameter_mm: x.internalDiameter,
-		};
-	});
 }
 
 export function mapHotWaterSourcesData(state: ResolvedState) {

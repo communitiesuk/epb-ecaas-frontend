@@ -1,10 +1,9 @@
 import { objectEntries, objectFromEntries } from "ts-extras";
-import type { SchemaCombustionAppliance, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { asCubicMetresPerHour } from "~/utils/units/flowRate";
-import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation } from "~/schema/aliases";
+import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaCombustionAppliance, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/aliases";
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilationPossible } = mapVentilationData(state);
@@ -34,7 +33,6 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 		Control_VentAdjustMin: null,
 		Control_VentAdjustMax: null,
 		Control_WindowAdjust: null,
-		ach_min_static_calcs: null,
 	};
 
 	return {

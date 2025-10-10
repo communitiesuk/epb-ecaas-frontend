@@ -1,5 +1,4 @@
-import type { SchemaHotWaterDemand } from "~/schema/api-schema.types";
-import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
+import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
 import { unitValue } from "~/utils/units";
@@ -345,7 +344,6 @@ describe("domestic hot water mapper", () => {
 				Bath: {
 					"bath1": {
 						ColdWaterSource: "mains water",
-						flowrate: 1,
 						size: 70,
 					},
 				},
@@ -355,48 +353,9 @@ describe("domestic hot water mapper", () => {
 						flowrate: 4,
 					},
 				},
-				Distribution: [],
 			},
 		};
 		
 		expect(result["HotWaterDemand"]).toEqual(expectedResult["HotWaterDemand"]);
-	});
-
-	it("maps secondary pipework input state to FHS input request", () => {
-		// Arrange
-		const pipework: Pipework = {
-			primaryPipework: {
-				data: [],
-			},
-			secondaryPipework: {
-				...baseForm,
-				data: [{
-					...baseForm,
-					data: {
-						name: "secondaryPipework1",
-						length: 111, 
-						location: "internal",
-						internalDiameter: 6,
-					},
-				}],
-			},
-		};
-
-		store.$patch({
-			domesticHotWater: {
-				pipework,
-			},
-		});
-
-		// Acts
-		const result = mapDistributionData(resolveState(store.$state));
-		const expectedResult: SchemaHotWaterDemand["Distribution"] = [{
-			internal_diameter_mm: 6,
-			length: 111,
-			location: "internal",
-		}];
-
-		// Assert
-		expect(result).toEqual(expectedResult);
 	});
 });

@@ -7,9 +7,9 @@ import type { components, SchemaHeatSourceWetBoiler, SchemaHeatSourceWetHeatBatt
 type FhsSchema = components["schemas"]["fhs_input.schema"];
 type SchemaDefs = FhsSchema["$defs"];
 export type SchemaInfiltrationVentilation = FhsSchema["InfiltrationVentilation"];
-export type SchemaMechanicalVentilation = Exclude<SchemaInfiltrationVentilation["MechanicalVentilation"], undefined>;
+export type SchemaMechanicalVentilation = Exclude<SchemaInfiltrationVentilation["MechanicalVentilation"], undefined>[string];
 export type WwhrsType = Exclude<FhsSchema["WWHRS"], undefined>[string]["type"];
-export type VentType = SchemaMechanicalVentilation[string]["vent_type"];
+export type VentType = SchemaMechanicalVentilation["vent_type"];
 type OnSiteGeneration = Exclude<FhsSchema["OnSiteGeneration"], undefined>;
 export type OnSiteGenerationVentilationStrategy = OnSiteGeneration[string]["ventilation_strategy"];
 export type SchemaSpaceHeatSystemDetails = Exclude<FhsSchema["SpaceHeatSystem"], undefined>[string];
@@ -24,6 +24,8 @@ export type FloorType = SchemaBuildingElementGround["floor_type"];
 // work round apparent bug in type generation
 export type BuildingElementGround = components["schemas"]["BuildingElementGround"];
 export type SchemaBuildingElement = FhsSchema["Zone"][string]["BuildingElement"];
+type BuildingElementType = SchemaBuildingElement[string]["type"];
+export type BuildingElementOfType<T extends BuildingElementType> = Extract<SchemaBuildingElement[string], { type: T }>;
 export type SchemaHeatSourceWetDetails = SchemaHeatSourceWetBoiler | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
 // utility function to make shading into valid external conditions
 type SchemaExternalConditionsInputFhs = FhsSchema["ExternalConditions"];
@@ -69,3 +71,8 @@ export type SchemaWindowPart = SchemaDefs["BuildingElementTransparent"]["window_
 export type SchemaLighting = FhsSchema["Zone"][string]["Lighting"];
 export type SchemaThermalBridgingLinearFhs = SchemaDefs["ThermalBridgeLinear"]; 
 export type SchemaThermalBridgingPoint = SchemaDefs["ThermalBridgePoint"];
+export type SchemaEdgeInsulationHorizontal = Simplify<SchemaDefs["SlabEdgeInsulation"]["edge_insulation"] & { type: "horizontal" }>;
+export type SchemaCombustionAppliance = SchemaInfiltrationVentilation["CombustionAppliances"][string];
+export type SchemaMechanicalVentilationDuctwork = SchemaDefs["MechVentMVHR"]["ductwork"][number];
+export type SchemaVent = FhsSchema["InfiltrationVentilation"]["Vents"][string];
+export type SchemaVentilationLeaks = FhsSchema["InfiltrationVentilation"]["Leaks"];
