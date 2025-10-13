@@ -20,7 +20,7 @@ describe("ground floor", () => {
 		pitch: 180,
 		uValue: 1,
 		thermalResistance: 1,
-		kappaValue: 50000,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
@@ -72,7 +72,7 @@ describe("ground floor", () => {
 		await user.type(screen.getByTestId("surfaceArea"), "5");
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.type(screen.getByTestId("thermalResistance"), "1");
-		await user.click(screen.getByTestId("kappaValue_50000"));
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.type(screen.getByTestId("perimeter"), "0");
 		await user.type(screen.getByTestId("psiOfWallJunction"), "0");
@@ -117,7 +117,7 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
 			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("1");
-			expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("perimeter")).value).toBe("0");
 			expect((await screen.findByTestId<HTMLInputElement>("psiOfWallJunction")).value).toBe("0");
@@ -134,7 +134,7 @@ describe("ground floor", () => {
 			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
-			expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
+			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 			expect((await screen.findByTestId("perimeter_error"))).toBeDefined();
 			expect((await screen.findByTestId("psiOfWallJunction_error"))).toBeDefined();
@@ -299,7 +299,7 @@ describe("ground floor", () => {
 			
 			await user.type(screen.getByTestId("name"), "Ground floor");
 			await user.type(screen.getByTestId("uValue"), "1");
-			await user.click(screen.getByTestId("kappaValue_50000"));
+			await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 			await user.click(screen.getByTestId("massDistributionClass_I"));
 			await user.click(screen.getByTestId("typeOfGroundFloor_Slab_no_edge_insulation"));
 			await user.tab();
@@ -307,7 +307,7 @@ describe("ground floor", () => {
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 			expect(data[0]!.data.name).toBe("Ground floor");
 			expect(data[0]!.data.uValue).toBe(1);
-			expect(data[0]!.data.kappaValue).toBe(50000);
+			expect(data[0]!.data.arealHeatCapacity).toBe("Very light");
 			expect(data[0]!.data.massDistributionClass).toBe("I");
 			expect(data[0]!.data.typeOfGroundFloor).toBe("Slab_no_edge_insulation");
 		});

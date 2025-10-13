@@ -5,7 +5,7 @@ import type { SchemaCombustionApplianceType, FloorType, SchemaMechVentType, Mass
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { batteryLocationZod, combustionAirSupplySituationZod, combustionFuelTypeZod, ductShapeZod, flueGasExhaustSituationZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, combustionAirSupplySituationZod, combustionFuelTypeZod, ductShapeZod, flueGasExhaustSituationZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 
 const fraction = z.number().min(0).max(1);
 const percentage = z.number().min(0).max(100);
@@ -119,7 +119,7 @@ export enum AdjacentSpaceType {
 
 const baseInternalFloorData = named.extend({
 	surfaceAreaOfElement: z.number(),
-	kappaValue: z.number(),
+	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
 const internalFloorDataZod = z.discriminatedUnion(
@@ -146,7 +146,7 @@ const exposedFloorDataZod = named.extend({
 	surfaceArea: z.number().min(0.01).max(10000),
 	solarAbsorption: z.number(),
 	uValue,
-	kappaValue: z.number(),
+	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
 
@@ -157,7 +157,7 @@ const baseGroundFloorData = named.extend({
 	pitch: z.number(),
 	uValue,
 	thermalResistance: z.number().min(0.00001).max(50),
-	kappaValue: z.number(),
+	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	perimeter: z.number().min(0).max(1000),
 	psiOfWallJunction: z.number().min(0).max(2),
@@ -225,7 +225,7 @@ const externalWallDataZod = named.extend({
 	surfaceArea: z.number().min(0.01).max(10000),
 	solarAbsorption: z.number(),
 	uValue,
-	kappaValue: z.number(),
+	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
 
@@ -233,7 +233,7 @@ export type ExternalWallData = z.infer<typeof externalWallDataZod>;
 
 const internalWallDataZod = named.extend({
 	surfaceAreaOfElement: z.number().min(0).max(10000),
-	kappaValue: z.number(),
+	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
@@ -244,7 +244,7 @@ export type InternalWallData = z.infer<typeof internalWallDataZod>;
 const wallsToUnheatedSpaceDataZod = named.extend({
 	surfaceAreaOfElement: z.number().min(0).max(10000),
 	uValue,
-	arealHeatCapacity: z.number(),
+	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
@@ -258,7 +258,7 @@ const partyWallDataZod = named.extend({
 	pitch: z.optional(z.number().min(0).lt(180)),
 	surfaceArea: z.number().min(0.01).max(10000),
 	uValue,
-	kappaValue: z.number(),
+	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
 
@@ -271,7 +271,7 @@ export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
 
 const baseCeilingData = named.extend({
 	surfaceArea: z.number().min(0).max(10000),
-	kappaValue: z.number(),
+	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	pitchOption: zeroPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
@@ -307,7 +307,7 @@ const roofDataZod = named.extend({
 	surfaceArea: z.number().min(0.01).max(10000),
 	solarAbsorptionCoefficient: z.number().min(0.01).max(1),
 	uValue,
-	kappaValue: z.number(),
+	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
 
@@ -329,7 +329,7 @@ const externalUnglazedDoorDataZod = named.extend({
 	surfaceArea: z.number().min(0.01).max(10000),
 	solarAbsorption: z.number().min(0.01).max(1),
 	uValue,
-	kappaValue: z.number(),
+	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 });
 
@@ -363,7 +363,7 @@ export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorDataZod>;
 
 const baseInternalDoorData = named.extend({
 	surfaceArea: z.number().min(0).max(10000),
-	kappaValue: z.number(),
+	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),

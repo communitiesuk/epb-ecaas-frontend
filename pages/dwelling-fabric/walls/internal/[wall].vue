@@ -17,7 +17,7 @@ const saveForm = (fields: InternalWallData) => {
 			data: {
 				name: fields.name,
 				surfaceAreaOfElement: fields.surfaceAreaOfElement,
-				kappaValue: fields.kappaValue,
+				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
@@ -86,7 +86,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<p class="govuk-hint">The net surface area should only be for one side of the wall, not both.</p>
 			</GovDetails>
 		</FormKit>
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

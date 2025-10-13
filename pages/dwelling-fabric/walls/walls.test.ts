@@ -33,7 +33,7 @@ describe("walls", () => {
 		surfaceArea: 10,
 		solarAbsorption: 0.1,
 		uValue: 1,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -50,7 +50,7 @@ describe("walls", () => {
 	const internal1: InternalWallData = {
 		name: "Internal wall 1",
 		surfaceAreaOfElement: 5,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		pitchOption: "custom",
 		pitch: 3,
@@ -70,7 +70,7 @@ describe("walls", () => {
 		name: "Wall to heated space 1",
 		surfaceAreaOfElement: 500,
 		uValue: 10,
-		arealHeatCapacity: 110000,
+		arealHeatCapacity: "Medium",
 		massDistributionClass: "E",
 		pitchOption: "90",
 		pitch: 90,
@@ -93,7 +93,7 @@ describe("walls", () => {
 		pitch: 90,
 		surfaceArea: 10,
 		uValue: 0.01,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 

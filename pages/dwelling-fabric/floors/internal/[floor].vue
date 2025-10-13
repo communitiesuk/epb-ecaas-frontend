@@ -18,7 +18,7 @@ const saveForm = (fields: InternalFloorData) => {
 		const commonFields = {
 			name: fields.name,
 			surfaceAreaOfElement: fields.surfaceAreaOfElement,
-			kappaValue: fields.kappaValue,
+			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 		};
 
@@ -101,7 +101,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				suffix-text="m²"
 				data-field="Zone.BuildingElement.*.area"
 			/>
-			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
 		<FormKit

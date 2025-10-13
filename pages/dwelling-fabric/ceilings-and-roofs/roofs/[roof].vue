@@ -32,7 +32,7 @@ const saveForm = (fields: RoofData) => {
 				surfaceArea: fields.surfaceArea,
 				solarAbsorptionCoefficient: fields.solarAbsorptionCoefficient,
 				uValue: fields.uValue,
-				kappaValue: fields.kappaValue,
+				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 			},
 			complete: true,
@@ -161,8 +161,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="This is the steady thermal transmittance of the roof and ceiling"
 			/>
 			<FieldsArealHeatCapacity
-				id="kappaValue"
-				name="kappaValue"
+				id="arealHeatCapacity"
+				name="arealHeatCapacity"
 				help="This is the sum of the heat capacities of all the construction layers in the roof and ceiling; also known as effective areal heat capacity or kappa value"
 			/>
 			<FieldsMassDistributionClass help="This is the distribution of mass in the roof and ceiling" />
@@ -174,8 +174,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="This is the steady thermal transmittance of the entire roof, including the unheated loft space"
 			/>
 			<FieldsArealHeatCapacity
-				id="kappaValue"
-				name="kappaValue"
+				id="arealHeatCapacity"
+				name="arealHeatCapacity"
 				help="This is the sum of the heat capacities of all the construction layers in the roof, loft space and ceiling; also known as effective areal heat capacity or kappa value"
 			/>
 			<FieldsMassDistributionClass help="This is the distribution of mass in the roof, loft space and ceiling" />

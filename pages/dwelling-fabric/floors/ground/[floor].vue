@@ -2,7 +2,7 @@
 import { centimetre, millimetre, type Length } from "~/utils/units/length";
 import type { SchemaWindShieldLocation } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
-import { getUrl } from "#imports";
+import { getUrl, type GroundFloorData } from "#imports";
 
 const title = "Ground floor";
 const store = useEcaasStore();
@@ -44,7 +44,7 @@ const saveForm = (fields: GroundFloorData) => {
 			pitch: 180,
 			uValue: fields.uValue,
 			thermalResistance: fields.thermalResistance,
-			kappaValue: fields.kappaValue,
+			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			perimeter: fields.perimeter,
 			psiOfWallJunction: fields.psiOfWallJunction,
@@ -183,7 +183,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
 			</GovDetails>
 		</FormKit>
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
 			id="perimeter"

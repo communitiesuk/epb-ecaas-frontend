@@ -128,7 +128,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					total_area: x.surfaceArea,
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
-					areal_heat_capacity: x.kappaValue,
+					areal_heat_capacity: x.arealHeatCapacity,
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
@@ -146,7 +146,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					total_area: x.surfaceArea,
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
-					areal_heat_capacity: x.kappaValue,
+					areal_heat_capacity: x.arealHeatCapacity,
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
@@ -163,7 +163,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					total_area: x.surfaceArea,
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
-					areal_heat_capacity: x.kappaValue,
+					areal_heat_capacity: x.arealHeatCapacity,
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
@@ -185,7 +185,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					total_area: x.surfaceArea,
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
-					areal_heat_capacity: x.kappaValue,
+					areal_heat_capacity: x.arealHeatCapacity,
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
@@ -204,7 +204,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					total_area: x.surfaceArea,
 					u_value: x.uValue,
 					thermal_resistance_floor_construction: x.thermalResistance,
-					areal_heat_capacity: x.kappaValue,
+					areal_heat_capacity: x.arealHeatCapacity,
 					mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 					perimeter: x.perimeter,
 					psi_wall_floor_junc: x.psiOfWallJunction,
@@ -229,7 +229,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 	const internalFloorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceInternalFloor?.map(x => {
 		const commonFields = {
 			area: x.surfaceAreaOfElement,
-			areal_heat_capacity: x.kappaValue,
+			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: x.massDistributionClass,
 			pitch: 180,
 			u_value: defaultUValue,
@@ -265,7 +265,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 			area: x.surfaceArea,
 			solar_absorption_coeff: x.solarAbsorption,
 			u_value: x.uValue,
-			areal_heat_capacity: x.kappaValue,
+			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: x.massDistributionClass,
 			pitch: x.pitch,
 			orientation360: x.orientation,
@@ -305,7 +305,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			area: x.surfaceArea,
 			solar_absorption_coeff: x.solarAbsorption,
 			u_value: x.uValue,
-			areal_heat_capacity: x.kappaValue,
+			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: x.massDistributionClass,
 			is_external_door: false,
 		} };
@@ -319,7 +319,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			pitch: extractPitch(x),
 			area: x.surfaceAreaOfElement,
 			u_value: defaultUValue,
-			areal_heat_capacity: x.kappaValue,
+			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: x.massDistributionClass,
 		} };
 	}) || [];
@@ -332,7 +332,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			pitch: extractPitch(x),
 			area: x.surfaceArea,
 			u_value: x.uValue,
-			areal_heat_capacity: x.kappaValue,
+			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: x.massDistributionClass,
 		} };
 	}) || [];
@@ -375,7 +375,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 		const commonFields = {
 			pitch: extractPitch(x),
 			area: x.surfaceArea,
-			areal_heat_capacity: x.kappaValue,
+			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: x.massDistributionClass,
 		};
 		const nameWithSuffix = suffixName(x.name, ceilingSuffix);
@@ -413,7 +413,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 			area: x.surfaceArea,
 			solar_absorption_coeff: x.solarAbsorptionCoefficient,
 			u_value: x.uValue,
-			areal_heat_capacity: x.kappaValue,
+			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: x.massDistributionClass,
 			is_external_door: false,
 			is_unheated_pitched_roof: x.typeOfRoof === "pitchedInsulatedAtCeiling",
@@ -441,7 +441,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 		const commonFields = {
 			pitch: extractPitch(x),
 			area: x.surfaceArea,
-			areal_heat_capacity: x.kappaValue,
+			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: x.massDistributionClass,
 		};
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
@@ -506,7 +506,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			area: x.surfaceArea,
 			solar_absorption_coeff: x.solarAbsorption,
 			u_value: x.uValue,
-			areal_heat_capacity: x.kappaValue,
+			areal_heat_capacity: x.arealHeatCapacity,
 			mass_distribution_class: x.massDistributionClass,
 			is_external_door: true,
 		} };

@@ -20,7 +20,7 @@ describe("floors", () => {
 		pitch: 0,
 		uValue: 1,
 		thermalResistance: 1,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
@@ -34,7 +34,7 @@ describe("floors", () => {
 		pitch: 0,
 		uValue: 1,
 		thermalResistance: 1,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
@@ -48,7 +48,7 @@ describe("floors", () => {
 		pitch: 0,
 		uValue: 1,
 		thermalResistance: 1,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
@@ -60,7 +60,7 @@ describe("floors", () => {
 		typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 		name: "Internal floor 1",
 		surfaceAreaOfElement: 5,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -68,7 +68,7 @@ describe("floors", () => {
 		typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 		name: "Internal floor 2",
 		surfaceAreaOfElement: 5,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -76,7 +76,7 @@ describe("floors", () => {
 		typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 		name: "Internal floor 3",
 		surfaceAreaOfElement: 5,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -90,7 +90,7 @@ describe("floors", () => {
 		surfaceArea: 10,
 		solarAbsorption: 0.1,
 		uValue: 1,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -104,7 +104,7 @@ describe("floors", () => {
 		surfaceArea: 10,
 		solarAbsorption: 0.1,
 		uValue: 1,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -118,7 +118,7 @@ describe("floors", () => {
 		surfaceArea: 10,
 		solarAbsorption: 0.1,
 		uValue: 1,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 

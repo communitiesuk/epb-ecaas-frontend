@@ -17,7 +17,7 @@ describe("internal door", () => {
 			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 1",
 			surfaceArea: 5,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			pitchOption: "90",
 			pitch: 90,
@@ -40,7 +40,7 @@ describe("internal door", () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Internal 1");
 		await user.type(screen.getByTestId("surfaceArea"), "5");
-		await user.click(screen.getByTestId("kappaValue_50000"));
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.click(screen.getByTestId("pitchOption_90"));
 	};
@@ -82,7 +82,7 @@ describe("internal door", () => {
 			expect((await screen.findByTestId("typeOfInternalDoor_heatedSpace")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Internal 1");
 			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
-			expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("pitchOption_90")).hasAttribute("checked")).toBe(true);
 		});
@@ -95,7 +95,7 @@ describe("internal door", () => {
 
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
 			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
-			expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
+			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 			expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
 		});
@@ -233,7 +233,7 @@ describe("internal door", () => {
 			const actualDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]!;
 			expect(actualDoor.data.name).toBe("New door");
 			expect(actualDoor.data.surfaceArea).toBeUndefined();
-			expect(actualDoor.data.kappaValue).toBeUndefined();
+			expect(actualDoor.data.arealHeatCapacity).toBeUndefined();
 		});
 
 		it("creates a new door automatically with default name after other data is entered", async () => {
@@ -249,7 +249,7 @@ describe("internal door", () => {
 
 			const actualDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]!;
 			expect(actualDoor.data.name).toBe("Internal door");
-			expect(actualDoor.data.kappaValue).toBeUndefined();
+			expect(actualDoor.data.arealHeatCapacity).toBeUndefined();
 			expect(actualDoor.data.surfaceArea).toBe(7);
 		});
 

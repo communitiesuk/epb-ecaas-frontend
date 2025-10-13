@@ -154,28 +154,6 @@ export function displayDeliveryEnergyUseKey(key: string | ApplianceKey): string 
 	return (isApplianceKey(key)) ? displayApplianceKey(key) : key;
 }
 
-export const arealHeatCapacityOptions = {
-	"50000": "Very light",
-	"75000": "Light",
-	"110000": "Medium",
-	"175000": "Heavy",
-	"250000": "Very heavy",
-};
-
-export type ArealHeatCapacityValue = keyof typeof arealHeatCapacityOptions extends infer K
-	? K extends string
-		? K extends `${infer N extends number}` ? N : never
-		: never
-	: never;
-
-export function displayArealHeatCapacity(value: ArealHeatCapacityValue | undefined): string {
-	if (typeof value === "undefined") {
-		return emptyValueRendering;
-	}
-
-	return arealHeatCapacityOptions[value] ?? ("" + value);
-}
-
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
 
 export function adjacentSpaceTypeOptions<T extends string>(element: T): Record<AdjacentSpaceType, AdjacentSpaceTypeDisplay<T>> {

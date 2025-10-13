@@ -106,7 +106,7 @@ describe("dwelling fabric mapper", () => {
 			pitch: 180,
 			uValue: 1,
 			thermalResistance: 1,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			perimeter: 0,
 			psiOfWallJunction: 0,
@@ -157,7 +157,7 @@ describe("dwelling fabric mapper", () => {
 			typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
 		};
@@ -172,7 +172,7 @@ describe("dwelling fabric mapper", () => {
 			surfaceArea: 10,
 			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		};
 
@@ -219,7 +219,7 @@ describe("dwelling fabric mapper", () => {
 			pitch: groundFloor.pitch,
 			u_value: groundFloor.uValue,
 			thermal_resistance_floor_construction: groundFloor.thermalResistance,
-			areal_heat_capacity: groundFloor.kappaValue,
+			areal_heat_capacity: groundFloor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(groundFloor.massDistributionClass),
 			perimeter: groundFloor.perimeter,
 			psi_wall_floor_junc: groundFloor.psiOfWallJunction,
@@ -276,7 +276,7 @@ describe("dwelling fabric mapper", () => {
 			area: internalFloor.surfaceAreaOfElement,
 			pitch: 180,
 			u_value: 0.01,
-			areal_heat_capacity: internalFloor.kappaValue,
+			areal_heat_capacity: internalFloor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalFloor.massDistributionClass),
 			thermal_resistance_unconditioned_space: internalFloor.thermalResistanceOfAdjacentUnheatedSpace,
 		};
@@ -292,7 +292,7 @@ describe("dwelling fabric mapper", () => {
 			solar_absorption_coeff: exposedFloor.solarAbsorption,
 			pitch: exposedFloor.pitch,
 			u_value: exposedFloor.uValue,
-			areal_heat_capacity: exposedFloor.kappaValue,
+			areal_heat_capacity: exposedFloor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(exposedFloor.massDistributionClass),
 			orientation360: exposedFloor.orientation,
 			is_external_door: false,
@@ -316,7 +316,7 @@ describe("dwelling fabric mapper", () => {
 				surfaceArea: 10,
 				solarAbsorption: 0.1,
 				uValue: 1,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 			},
 		};
@@ -326,7 +326,7 @@ describe("dwelling fabric mapper", () => {
 			data: {
 				name: "Internal 1",
 				surfaceAreaOfElement: 5,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				pitchOption: "90",
 				pitch: 90,
@@ -341,7 +341,7 @@ describe("dwelling fabric mapper", () => {
 				pitch: 90,
 				surfaceArea: 10,
 				uValue: 1,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 			},
 		};
@@ -352,7 +352,7 @@ describe("dwelling fabric mapper", () => {
 				name: "Wall to unheated space 1",
 				surfaceAreaOfElement: 500,
 				uValue: 10,
-				arealHeatCapacity: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "E",
 				pitchOption: "90",
 				pitch: 90,
@@ -392,7 +392,7 @@ describe("dwelling fabric mapper", () => {
 			area: externalWall.data.surfaceArea,
 			solar_absorption_coeff: externalWall.data.solarAbsorption,
 			u_value: externalWall.data.uValue,
-			areal_heat_capacity: externalWall.data.kappaValue,
+			areal_heat_capacity: externalWall.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(externalWall.data.massDistributionClass),
 			is_external_door: false,
 		};
@@ -404,7 +404,7 @@ describe("dwelling fabric mapper", () => {
 			pitch: internalWall.data.pitch!,
 			area: internalWall.data.surfaceAreaOfElement,
 			u_value: 0.01,
-			areal_heat_capacity: internalWall.data.kappaValue,
+			areal_heat_capacity: internalWall.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalWall.data.massDistributionClass),
 		};
 
@@ -415,7 +415,7 @@ describe("dwelling fabric mapper", () => {
 			pitch: partyWall.data.pitch!,
 			area: partyWall.data.surfaceArea,
 			u_value: partyWall.data.uValue,
-			areal_heat_capacity: partyWall.data.kappaValue,
+			areal_heat_capacity: partyWall.data.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(partyWall.data.massDistributionClass),
 		};
 
@@ -441,7 +441,7 @@ describe("dwelling fabric mapper", () => {
 			name: "Ceiling 1",
 			surfaceArea: 5,
 			uValue: 1,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			pitchOption: "0",
 			pitch: 0,
@@ -459,7 +459,7 @@ describe("dwelling fabric mapper", () => {
 			surfaceArea: 1,
 			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		};
 
@@ -487,7 +487,7 @@ describe("dwelling fabric mapper", () => {
 			pitch: extractPitch(ceiling),
 			area: ceiling.surfaceArea,
 			u_value: ceiling.uValue,
-			areal_heat_capacity: ceiling.kappaValue,
+			areal_heat_capacity: ceiling.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(ceiling.massDistributionClass),
 			thermal_resistance_unconditioned_space: ceiling.thermalResistanceOfAdjacentUnheatedSpace,
 		};
@@ -504,7 +504,7 @@ describe("dwelling fabric mapper", () => {
 			area: roof.surfaceArea,
 			solar_absorption_coeff: roof.solarAbsorptionCoefficient,
 			u_value: roof.uValue,
-			areal_heat_capacity: roof.kappaValue,
+			areal_heat_capacity: roof.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(roof.massDistributionClass),
 			is_external_door: false,
 			is_unheated_pitched_roof: false,
@@ -519,7 +519,7 @@ describe("dwelling fabric mapper", () => {
 			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 			name: "Internal 1",
 			surfaceArea: 5,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			pitchOption: "90",
 			pitch: 90,
@@ -555,7 +555,7 @@ describe("dwelling fabric mapper", () => {
 			surfaceArea: 10,
 			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		};
 
@@ -584,7 +584,7 @@ describe("dwelling fabric mapper", () => {
 			pitch: internalDoor.pitch!,
 			area: internalDoor.surfaceArea,
 			u_value: internalDoor.uValue,
-			areal_heat_capacity: internalDoor.kappaValue,
+			areal_heat_capacity: internalDoor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(internalDoor.massDistributionClass),
 			thermal_resistance_unconditioned_space: internalDoor.thermalResistanceOfAdjacentUnheatedSpace,
 		};
@@ -622,7 +622,7 @@ describe("dwelling fabric mapper", () => {
 			area: externalUnglazedDoor.surfaceArea,
 			solar_absorption_coeff: externalUnglazedDoor.solarAbsorption,
 			u_value: externalUnglazedDoor.uValue,
-			areal_heat_capacity: externalUnglazedDoor.kappaValue,
+			areal_heat_capacity: externalUnglazedDoor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(externalUnglazedDoor.massDistributionClass),
 			is_external_door: true,
 		};

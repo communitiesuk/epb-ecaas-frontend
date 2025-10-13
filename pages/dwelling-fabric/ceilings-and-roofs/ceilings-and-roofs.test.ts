@@ -26,7 +26,7 @@ describe("ceilings and roofs", () => {
 			name: "Ceiling 1",
 			type: AdjacentSpaceType.heatedSpace,
 			surfaceArea: 5,
-			kappaValue: 100,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			pitchOption: "custom",
 			pitch: 180,
@@ -59,7 +59,7 @@ describe("ceilings and roofs", () => {
 			surfaceArea: 1,
 			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		},
 	};

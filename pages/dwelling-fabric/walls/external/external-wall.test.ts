@@ -23,7 +23,7 @@ describe("external wall", () => {
 		surfaceArea: 10,
 		solarAbsorption: 0.1,
 		uValue: 1,
-		kappaValue: 50000,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -47,7 +47,7 @@ describe("external wall", () => {
 		await user.type(screen.getByTestId("surfaceArea"), "10");
 		await user.type(screen.getByTestId("solarAbsorption"), "0.1");
 		await user.type(screen.getByTestId("uValue"), "1");
-		await user.click(screen.getByTestId("kappaValue_50000"));
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -84,7 +84,7 @@ describe("external wall", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("10");
 		expect((await screen.findByTestId<HTMLInputElement>("solarAbsorption")).value).toBe("0.1");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
-		expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 	});
 		
@@ -102,7 +102,7 @@ describe("external wall", () => {
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("solarAbsorption_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
-		expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
+		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 
 	});

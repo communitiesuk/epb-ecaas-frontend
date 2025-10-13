@@ -19,7 +19,7 @@ const saveForm = (fields: CeilingData) => {
 		const commonFields = {
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
-			kappaValue: fields.kappaValue,
+			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === "0" ? 0 : fields.pitch,
@@ -126,7 +126,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				id="uValue"
 				name="uValue"
 			/>
-			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
 		<FormKit
