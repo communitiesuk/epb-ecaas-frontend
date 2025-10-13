@@ -6,23 +6,23 @@ const page = usePage();
 const title = "Heat emitting";
 const store = useEcaasStore();
 
-type HeatEmittingType = keyof typeof store.heatingSystems.heatEmitting;
+type HeatEmittingType = keyof typeof store.heatingAndCoolingSystems.heatEmitting;
 type HeatEmittingData = ElectricStorageHeaterData & EcaasForm<InstantElectricStorageData> & EcaasForm<WetDistributionData> & WarmAirHeatPumpData;
 
 function handleRemove(emittingType: HeatEmittingType, index: number) {
-	const emitters = store.heatingSystems.heatEmitting[emittingType]?.data;
+	const emitters = store.heatingAndCoolingSystems.heatEmitting[emittingType]?.data;
 	if (emitters) {
 		emitters.splice(index, 1);
 
 		store.$patch((state) => {
-			state.heatingSystems.heatEmitting[emittingType].data = emitters.length ? emitters : [];
-			state.heatingSystems.heatEmitting[emittingType].complete = false;
+			state.heatingAndCoolingSystems.heatEmitting[emittingType].data = emitters.length ? emitters : [];
+			state.heatingAndCoolingSystems.heatEmitting[emittingType].complete = false;
 		});
 	}
 }
 
 function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingType, index: number) {
-	const emitters = store.heatingSystems.heatEmitting[emittingType]?.data;
+	const emitters = store.heatingAndCoolingSystems.heatEmitting[emittingType]?.data;
 	const emitter = emitters?.[index];
 	let name: string;
 
@@ -58,14 +58,14 @@ function handleDuplicate<T extends HeatEmittingData>(emittingType: HeatEmittingT
 				} as T;
 			}
 
-			state.heatingSystems.heatEmitting[emittingType].data.push(newItem);
-			state.heatingSystems.heatEmitting[emittingType].complete = false;
+			state.heatingAndCoolingSystems.heatEmitting[emittingType].data.push(newItem);
+			state.heatingAndCoolingSystems.heatEmitting[emittingType].complete = false;
 		});
 	}
 }
 function handleComplete() {
 	store.$patch({
-		heatingSystems: {
+		heatingAndCoolingSystems: {
 			heatEmitting: {
 				wetDistribution: { complete: true },
 				instantElectricHeater: { complete: true },
@@ -79,12 +79,12 @@ function handleComplete() {
 }
 
 function checkIsComplete(){
-	const emitters = store.heatingSystems.heatEmitting;
+	const emitters = store.heatingAndCoolingSystems.heatEmitting;
 	return Object.values(emitters).every(emitter => emitter.complete);
 }
 
 function hasIncompleteEntries() {
-	const emitterTypes = store.heatingSystems.heatEmitting;
+	const emitterTypes = store.heatingAndCoolingSystems.heatEmitting;
 	
 	return Object.values(emitterTypes).some(
 		emitters => emitters.data.some(
@@ -104,7 +104,7 @@ function hasIncompleteEntries() {
 	<CustomList
 		id="wetDistribution" title="Wet distribution" 
 		:form-url="`${page?.url!}/wet-distribution`"
-		:items="store.heatingSystems.heatEmitting.wetDistribution.data.filter(x => isEcaasForm(x)).map(x => ({
+		:items="store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data.filter(x => isEcaasForm(x)).map(x => ({
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
@@ -115,7 +115,7 @@ function hasIncompleteEntries() {
 	<CustomList
 		id="instantElectricHeater" title="Instant electric heater"
 		:form-url="`${page?.url!}/instant-electric-heater`"
-		:items="store.heatingSystems.heatEmitting.instantElectricHeater.data.filter(x => isEcaasForm(x)).map(x => ({
+		:items="store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data.filter(x => isEcaasForm(x)).map(x => ({
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
@@ -127,7 +127,7 @@ function hasIncompleteEntries() {
 		v-if="false"
 		id="electricStorageHeater" title="Electric storage heater"
 		:form-url="`${page?.url!}/electric-storage-heater`"
-		:items="store.heatingSystems.heatEmitting.electricStorageHeater.data.map(x => x.name)"
+		:items="store.heatingAndCoolingSystems.heatEmitting.electricStorageHeater.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('electricStorageHeater', index)"
 		@duplicate="(index: number) => handleDuplicate('electricStorageHeater', index)" />
 
@@ -135,7 +135,7 @@ function hasIncompleteEntries() {
 		v-if="false"
 		id="warmAirHeatPump" title="Warm air heat pump" 
 		:form-url="`${page?.url!}/warm-air-heat-pump`"
-		:items="store.heatingSystems.heatEmitting.warmAirHeatPump.data.map(x => x.name)"
+		:items="store.heatingAndCoolingSystems.heatEmitting.warmAirHeatPump.data.map(x => x.name)"
 		@remove="(index: number) => handleRemove('warmAirHeatPump', index)"
 		@duplicate="(index: number) => handleDuplicate('warmAirHeatPump', index)" />
 	<div class="govuk-button-group govuk-!-margin-top-6">

@@ -1,4 +1,4 @@
-import { mapEnergySupplyData, mapHeatEmittingData } from "./heatingSystemsMapper";
+import { mapEnergySupplyData, mapHeatEmittingData } from "./heatingAndCoolingSystemsMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { defaultControlName, defaultZoneName } from "./common";
 
@@ -21,7 +21,7 @@ describe("heating systems mapper", () => {
 		};
 
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				energySupply: {
 					...baseForm,
 					data: energySupplyData,
@@ -53,7 +53,7 @@ describe("heating systems mapper", () => {
 		};
 
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				energySupply: {
 					...baseForm,
 					data: energySupplyData,
@@ -78,7 +78,7 @@ describe("heating systems mapper", () => {
 			},
 		};
 
-		expect(result).toEqual(expectedResult); 
+		expect(result).toEqual(expectedResult);
 	});
 
 	it("maps energy supplies that include electricity and custom fuel types", () => {
@@ -92,7 +92,7 @@ describe("heating systems mapper", () => {
 		};
 
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				energySupply: {
 					...baseForm,
 					data: energySupplyData,
@@ -141,7 +141,7 @@ describe("heating systems mapper", () => {
 			wetDistribution: {
 				...baseForm,
 				data: [
-					{ 
+					{
 						...baseForm,
 						data: {
 							name: "Radiators",
@@ -169,7 +169,7 @@ describe("heating systems mapper", () => {
 		};
 
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						...baseForm,
@@ -244,7 +244,7 @@ describe("heating systems mapper", () => {
 			wetDistribution: {
 				...baseForm,
 				data: [
-					{ 
+					{
 						...baseForm,
 						data: {
 							name: "Under floor heating",
@@ -272,7 +272,7 @@ describe("heating systems mapper", () => {
 		};
 
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						...baseForm,
@@ -353,7 +353,7 @@ describe("heating systems mapper", () => {
 		};
 
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatEmitting,
 			},
 		});

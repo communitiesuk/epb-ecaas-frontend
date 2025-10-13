@@ -3,7 +3,7 @@ import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { SchemaSpaceHeatSystemDetails } from "~/schema/aliases";
 import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
-export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply" | "SpaceHeatSystem"> {
+export function mapheatingAndCoolingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply" | "SpaceHeatSystem"> {
 	return {
 		...mapEnergySupplyData(state),
 		...mapHeatEmittingData(state),
@@ -11,8 +11,8 @@ export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema
 }
 
 export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply"> {
-	const { fuelType, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered, exported } = state.heatingSystems.energySupply;
-	
+	const { fuelType, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered, exported } = state.heatingAndCoolingSystems.energySupply;
+
 	return {
 		EnergySupply: {
 			...objectFromEntries(fuelType ? fuelType.map((fuelType) => ([
@@ -20,11 +20,13 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 				{
 					fuel: fuelType,
 					is_export_capable: fuelType === "electricity" ? exported ?? false : false,
-					...(fuelType === "custom" ? { factor: {
-						"Emissions Factor kgCO2e/kWh": co2PerKwh!,
-						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": co2PerKwhIncludingOutOfScope!,
-						"Primary Energy Factor kWh/kWh delivered": kwhPerKwhDelivered!,
-					} } : {}),
+					...(fuelType === "custom" ? {
+						factor: {
+							"Emissions Factor kgCO2e/kWh": co2PerKwh!,
+							"Emissions Factor kgCO2e/kWh including out-of-scope emissions": co2PerKwhIncludingOutOfScope!,
+							"Primary Energy Factor kWh/kWh delivered": kwhPerKwhDelivered!,
+						}
+					} : {}),
 				},
 			])) : []),
 		},
@@ -34,10 +36,10 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 // TODO need a mapHeatGenerationData function here, though this specifies products in the PCDB, heat pumps initially
 
 export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, "SpaceHeatSystem"> {
-	const wetDistributions = state.heatingSystems.heatEmitting.wetDistribution;
+	const wetDistributions = state.heatingAndCoolingSystems.heatEmitting.wetDistribution;
 	const wetDistributionEntries = wetDistributions.map((distribution) => {
 		const { name, heatSource, thermalMass, designTempDiffAcrossEmitters, designFlowTemp, designFlowRate, ecoDesignControllerClass, minimumFlowTemp, minOutdoorTemp, maxOutdoorTemp, typeOfSpaceHeater, convectionFractionWet } = distribution;
-		const heatSourceName = state.heatingSystems.heatGeneration.heatPump.find(pump => pump.id === heatSource)!.name; // TODO: adapt this to work for all heat generators (not just heat pumps) once they are added
+		const heatSourceName = state.heatingAndCoolingSystems.heatGeneration.heatPump.find(pump => pump.id === heatSource)!.name; // TODO: adapt this to work for all heat generators (not just heat pumps) once they are added
 
 		const distributionDetails: SchemaSpaceHeatSystemDetails = {
 			HeatSource: {
@@ -82,7 +84,7 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 		] as const;
 	});
 
-	const instantElectricHeaters = state.heatingSystems.heatEmitting.instantElectricHeater;
+	const instantElectricHeaters = state.heatingAndCoolingSystems.heatEmitting.instantElectricHeater;
 	const instantElectricHeaterEntries = instantElectricHeaters.map((heater): [string, SchemaSpaceHeatSystemDetails] => [
 		heater.name,
 		{

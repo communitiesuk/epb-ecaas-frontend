@@ -1,9 +1,9 @@
 import { PageType } from "./pages.types";
 import type { Page } from "./pages.types";
 
-const heatingSystemsPages = [
+const heatingAndCoolingSystemsPages = [
 	{
-		id: "heatingSystems",
+		id: "heatingAndCoolingSystems",
 		title: "Heating and cooling systems",
 		url: "/heating-and-cooling-systems",
 		type: PageType.Section,
@@ -14,14 +14,14 @@ const heatingSystemsPages = [
 		title: "Energy supply",
 		url: "/heating-and-cooling-systems/energy-supply",
 		type: PageType.Task,
-		parentId: "heatingSystems",
+		parentId: "heatingAndCoolingSystems",
 	},
 	{
 		id: "heatGeneration",
 		title: "Heat generation",
 		url: "/heating-and-cooling-systems/heat-generation",
 		type: PageType.TaskGroup,
-		parentId: "heatingSystems",
+		parentId: "heatingAndCoolingSystems",
 	},
 	{
 		id: "heatPump",
@@ -63,7 +63,7 @@ const heatingSystemsPages = [
 		title: "Heat emitting",
 		url: "/heating-and-cooling-systems/heat-emitting",
 		type: PageType.TaskGroup,
-		parentId: "heatingSystems",
+		parentId: "heatingAndCoolingSystems",
 	},
 	{
 		id: "wetDistribution",
@@ -98,7 +98,7 @@ const heatingSystemsPages = [
 		title: "Cooling",
 		url: "/heating-and-cooling-systems/cooling",
 		type: PageType.TaskGroup,
-		parentId: "heatingSystems",
+		parentId: "heatingAndCoolingSystems",
 	},
 	{
 		id: "airConditioning",
@@ -115,12 +115,12 @@ const heatingSystemsPages = [
 		parentId: "cooling",
 	},
 	{
-		id: "heatingSystemsSummary",
+		id: "heatingAndCoolingSystemsSummary",
 		title: "Summary",
 		url: "/heating-and-cooling-systems/summary",
 		type: PageType.Summary,
-		parentId: "heatingSystems",
+		parentId: "heatingAndCoolingSystems",
 	},
 ] as const satisfies Array<Page>;
 
-export default heatingSystemsPages;
+export default heatingAndCoolingSystemsPages;

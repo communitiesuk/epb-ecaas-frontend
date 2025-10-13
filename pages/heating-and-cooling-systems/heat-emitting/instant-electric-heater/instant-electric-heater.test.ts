@@ -50,7 +50,7 @@ describe("instantElectricHeater", () => {
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.heatingSystems.heatEmitting.instantElectricHeater;
+		const { data } = store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater;
 
 		expect(data[0]).toEqual({
 			...instantElectricHeater,
@@ -60,7 +60,7 @@ describe("instantElectricHeater", () => {
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatEmitting: {
 					instantElectricHeater: {
 						data: [instantElectricHeater],
@@ -114,11 +114,11 @@ describe("instantElectricHeater", () => {
 
 	test("updated form data is automatically saved to store", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatEmitting: {
 					instantElectricHeater: {
 						data: [instantElectricHeater],
-					},		
+					},
 				},
 			},
 		});
@@ -128,7 +128,7 @@ describe("instantElectricHeater", () => {
 				params: { heater: "0" },
 			},
 		});
-		
+
 		await user.clear(screen.getByTestId("name"));
 		await user.clear(screen.getByTestId("ratedPower"));
 
@@ -136,24 +136,24 @@ describe("instantElectricHeater", () => {
 		await user.type(screen.getByTestId("ratedPower"), "5");
 		await user.tab();
 
-		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.name).toBe("Updated Instant electric heater 1");
-		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.ratedPower).toBe(5);
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.name).toBe("Updated Instant electric heater 1");
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.ratedPower).toBe(5);
 	});
-	
+
 	test("partial form data is saved automatically with default name to store when adding new heater", async () => {
 		await renderSuspended(InstantElectricHeater, {
 			route: {
 				params: { heater: "create" },
 			},
 		});
-		
+
 		await user.type(screen.getByTestId("ratedPower"), "5");
 		await user.type(screen.getByTestId("convectionFractionInstant"), "1");
 		await user.tab();
 
-		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.name).toBe("Instant electric heater");
-		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.ratedPower).toBe(5);
-		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.convectionFractionInstant).toBe(1);
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.name).toBe("Instant electric heater");
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.ratedPower).toBe(5);
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.convectionFractionInstant).toBe(1);
 	});
 
 	test("creates a new heater automatically with given name", async () => {
@@ -162,22 +162,22 @@ describe("instantElectricHeater", () => {
 				params: { heater: "create" },
 			},
 		});
-		
+
 		await user.type(screen.getByTestId("name"), "Heater 1");
 		await user.tab();
 
-		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.name).toBe("Heater 1");
-		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.ratedPower).toBeUndefined();
-		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[0]?.data.convectionFractionInstant).toBeUndefined();
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.name).toBe("Heater 1");
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.ratedPower).toBeUndefined();
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.convectionFractionInstant).toBeUndefined();
 	});
 
 	test("updated form data is automatically saved to the correct store object when there are multiple instant electric heaters added", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatEmitting: {
 					instantElectricHeater: {
 						data: [instantElectricHeater, instantElectricHeater2],
-					},		
+					},
 				},
 			},
 		});
@@ -187,7 +187,7 @@ describe("instantElectricHeater", () => {
 				params: { heater: "1" },
 			},
 		});
-			
+
 		await user.clear(screen.getByTestId("name"));
 		await user.clear(screen.getByTestId("ratedPower"));
 
@@ -195,7 +195,7 @@ describe("instantElectricHeater", () => {
 		await user.type(screen.getByTestId("ratedPower"), "1");
 		await user.tab();
 
-		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[1]?.data.name).toBe("Updated Instant electric heater 2");
-		expect(store.heatingSystems.heatEmitting.instantElectricHeater.data[1]?.data.ratedPower).toBe(1);
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[1]?.data.name).toBe("Updated Instant electric heater 2");
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[1]?.data.ratedPower).toBe(1);
 	});
 });

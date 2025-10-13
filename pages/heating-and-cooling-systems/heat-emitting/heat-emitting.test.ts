@@ -38,7 +38,7 @@ describe("heat emitting", () => {
 
 		it("should remove wet distribution when remove link is clicked", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						wetDistribution: {
 							data: [wetDistribution1],
@@ -55,7 +55,7 @@ describe("heat emitting", () => {
 
 		it("should only remove the wet distribution that is clicked if there are multiple wet distributions", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						wetDistribution: {
 							data: [wetDistribution1, wetDistribution2, wetDistribution3],
@@ -73,7 +73,7 @@ describe("heat emitting", () => {
 
 		it("should duplicate the correct wet distribution when duplicate link is clicked", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						wetDistribution: {
 							data: [wetDistribution1, wetDistribution2],
@@ -118,7 +118,7 @@ describe("heat emitting", () => {
 
 		it("should remove instant electric heater when remove link is clicked", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						instantElectricHeater: {
 							data: [instantElectricHeater1],
@@ -137,7 +137,7 @@ describe("heat emitting", () => {
 
 		it("should only remove the instant electric heater that is clicked if there are multiple instant electric heaters", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						instantElectricHeater: {
 							data: [
@@ -159,7 +159,7 @@ describe("heat emitting", () => {
 
 		it("should duplicate the correct instant electric heater when duplicate link is clicked", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						instantElectricHeater: {
 							data: [instantElectricHeater1, instantElectricHeater2],
@@ -197,7 +197,7 @@ describe("heat emitting", () => {
 
 		it("should display an in-progress indicator when an entry is not marked as complete", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						instantElectricHeater: {
 							data: [
@@ -221,7 +221,7 @@ describe("heat emitting", () => {
 
 		it("should display a complete indicator when an entry is marked as complete", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						instantElectricHeater: {
 							data: [
@@ -266,7 +266,7 @@ describe("heat emitting", () => {
 
 	// 	it("should remove electric storage heater when remove link is clicked", async () => {
 	// 		store.$patch({
-	// 			heatingSystems: {
+	// 			heatingAndCoolingSystems: {
 	// 				heatEmitting: {
 	// 					electricStorageHeater: {
 	// 						data: [storageHeater1],
@@ -285,7 +285,7 @@ describe("heat emitting", () => {
 
 	// 	it("should only remove the heater thats is clicked if there are multiple heaters", async () => {
 	// 		store.$patch({
-	// 			heatingSystems: {
+	// 			heatingAndCoolingSystems: {
 	// 				heatEmitting: {
 	// 					electricStorageHeater: {
 	// 						data: [storageHeater1, storageHeater2, storageHeater3],
@@ -302,7 +302,7 @@ describe("heat emitting", () => {
 	// 	});
 	// 	it("should duplicate the correct heater when duplicate link is clicked", async () => {
 	// 		store.$patch({
-	// 			heatingSystems: {
+	// 			heatingAndCoolingSystems: {
 	// 				heatEmitting: {
 	// 					electricStorageHeater: {
 	// 						data: [storageHeater1, storageHeater2],
@@ -352,7 +352,7 @@ describe("heat emitting", () => {
 	// 	});
 	// 	it("should remove warm air heat pump when remove link is clicked", async () => {
 	// 		store.$patch({
-	// 			heatingSystems: {
+	// 			heatingAndCoolingSystems: {
 	// 				heatEmitting: {
 	// 					warmAirHeatPump: {
 	// 						data: [warmAirHeatPump1],
@@ -369,7 +369,7 @@ describe("heat emitting", () => {
 
 	// 	it("should only remove the heat pump that is clicked if there are multiple heat pumps", async () => {
 	// 		store.$patch({
-	// 			heatingSystems: {
+	// 			heatingAndCoolingSystems: {
 	// 				heatEmitting: {
 	// 					warmAirHeatPump: {
 	// 						data: [warmAirHeatPump1, warmAirHeatPump2, warmAirHeatPump3],
@@ -387,7 +387,7 @@ describe("heat emitting", () => {
 
 	// 	it("should duplicate the correct heat pump when duplicate link is clicked", async () => {
 	// 		store.$patch({
-	// 			heatingSystems: {
+	// 			heatingAndCoolingSystems: {
 	// 				heatEmitting: {
 	// 					warmAirHeatPump: {
 	// 						data: [warmAirHeatPump1, warmAirHeatPump2],
@@ -448,7 +448,7 @@ describe("heat emitting", () => {
 		};
 		const addHeatEmittingDataToStore = async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						wetDistribution: { data: [wetDistribution1] },
 						instantElectricHeater: { data: [instantElectricHeater1] },
@@ -486,14 +486,14 @@ describe("heat emitting", () => {
 
 
 		type HeatEmittingPicked = Pick<
-			typeof store.heatingSystems.heatEmitting,
+			typeof store.heatingAndCoolingSystems.heatEmitting,
 			"wetDistribution" | "instantElectricHeater"
 		>;
 		type HeatEmittingType = keyof HeatEmittingPicked;
 
 		// const addHeatEmittingDataToStore = async () => {
 		// 	store.$patch({
-		// 		heatingSystems: {
+		// 		heatingAndCoolingSystems: {
 		// 			heatEmitting: {
 		// 				wetDistribution: { data: [wetDistribution1] },
 		// 				instantElectricHeater: { data: [instantElectricHeater1] },
@@ -513,7 +513,7 @@ describe("heat emitting", () => {
 
 		it("disables the Mark section as complete button when an emitter is incomplete", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						instantElectricHeater: { data: [{ ...instantElectricHeater1, complete: false }] },
 					},
@@ -547,7 +547,7 @@ describe("heat emitting", () => {
 			});
 
 			it("marks all heat emitters as complete", async () => {
-				const { wetDistribution, instantElectricHeater } = store.heatingSystems.heatEmitting;
+				const { wetDistribution, instantElectricHeater } = store.heatingAndCoolingSystems.heatEmitting;
 				expect(wetDistribution?.complete).toBe(true);
 				expect(instantElectricHeater?.complete).toBe(true);
 			});
@@ -556,7 +556,7 @@ describe("heat emitting", () => {
 				await user.click(screen.getByTestId("wetDistribution_remove_0"));
 				await user.click(screen.getByTestId("instantElectricHeater_remove_0"));
 
-				const { wetDistribution, instantElectricHeater } = store.heatingSystems.heatEmitting;
+				const { wetDistribution, instantElectricHeater } = store.heatingAndCoolingSystems.heatEmitting;
 				expect(wetDistribution?.complete).toBe(false);
 				expect(instantElectricHeater?.complete).toBe(false);
 				expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
@@ -566,7 +566,7 @@ describe("heat emitting", () => {
 				await user.click(screen.getByTestId("wetDistribution_duplicate_0"));
 				await user.click(screen.getByTestId("instantElectricHeater_duplicate_0"));
 
-				const { wetDistribution, instantElectricHeater } = store.heatingSystems.heatEmitting;
+				const { wetDistribution, instantElectricHeater } = store.heatingAndCoolingSystems.heatEmitting;
 				expect(wetDistribution?.complete).toBe(false);
 				expect(instantElectricHeater?.complete).toBe(false);
 				expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
@@ -581,7 +581,7 @@ describe("heat emitting", () => {
 					await user.tab();
 					await user.click(screen.getByTestId("saveAndComplete"));
 
-					expect(store.heatingSystems.heatEmitting[heatEmittersType]?.complete).toBe(false);
+					expect(store.heatingAndCoolingSystems.heatEmitting[heatEmittersType]?.complete).toBe(false);
 				}
 			});
 
@@ -594,7 +594,7 @@ describe("heat emitting", () => {
 					await user.type(screen.getByTestId("name"), "Updated emitter");
 					await user.tab();
 
-					expect(store.heatingSystems.heatEmitting[heatEmittersType]?.complete).toBe(false);
+					expect(store.heatingAndCoolingSystems.heatEmitting[heatEmittersType]?.complete).toBe(false);
 				}
 			});
 		});

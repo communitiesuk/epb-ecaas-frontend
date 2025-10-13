@@ -5,12 +5,12 @@ const title = "Air conditioning";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const airConditioningData = useItemToEdit("airConditioning", store.heatingSystems.cooling.airConditioning?.data);
+const airConditioningData = useItemToEdit("airConditioning", store.heatingAndCoolingSystems.cooling.airConditioning?.data);
 const model = ref(airConditioningData?.data);
 
 const saveForm = (fields: AirConditioningData) => {
 	store.$patch((state) => {
-		const { airConditioning } = state.heatingSystems.cooling;
+		const { airConditioning } = state.heatingAndCoolingSystems.cooling;
 		const index = getStoreIndex(airConditioning.data);
 
 		airConditioning.data[index] = {
@@ -23,7 +23,7 @@ const saveForm = (fields: AirConditioningData) => {
 			},
 			complete: true,
 		};
-		store.heatingSystems.cooling.airConditioning.complete = false;
+		store.heatingAndCoolingSystems.cooling.airConditioning.complete = false;
 	},
 	);
 
@@ -32,11 +32,11 @@ const saveForm = (fields: AirConditioningData) => {
 
 autoSaveElementForm<AirConditioningData>({
 	model,
-	storeData: store.heatingSystems.cooling.airConditioning,
+	storeData: store.heatingAndCoolingSystems.cooling.airConditioning,
 	defaultName: "Air conditioning",
 	onPatch: (state, newData, index) => {
-		state.heatingSystems.cooling.airConditioning.data[index] = newData;
-		state.heatingSystems.cooling.airConditioning.complete = false;
+		state.heatingAndCoolingSystems.cooling.airConditioning.data[index] = newData;
+		state.heatingAndCoolingSystems.cooling.airConditioning.complete = false;
 	},
 });
 

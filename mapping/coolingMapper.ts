@@ -12,7 +12,7 @@ export function mapCoolingData(state: ResolvedState): Partial<FhsInputSchema> {
 }
 
 export function mapSpaceCoolSystems(state: ResolvedState) {
-	const spaceCoolSystems = state.heatingSystems.cooling.airConditioning.map((x): [string, SchemaSpaceCoolSystemDetails] => {
+	const spaceCoolSystems = state.heatingAndCoolingSystems.cooling.airConditioning.map((x): [string, SchemaSpaceCoolSystemDetails] => {
 		const key = x.name;
 		const val: SchemaSpaceCoolSystemDetails = {
 			Control: defaultControlName,

@@ -106,7 +106,7 @@ describe("Wet distribution", () => {
 
 	it("should list the Heat sources perviously added", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [{ data: heatPump }],
@@ -161,7 +161,7 @@ describe("Wet distribution", () => {
 
 	it("should save data to store when form is valid and type of space heater is radiators", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [{ data: heatPump }],
@@ -178,13 +178,13 @@ describe("Wet distribution", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.heatingSystems.heatEmitting.wetDistribution;
+		const { data } = store.heatingAndCoolingSystems.heatEmitting.wetDistribution;
 		expect(data[0]!.data).toEqual(wetDistribution1);
 	});
 
 	// it("should save data to store when form is valid and type of space heater is under floor heating (UFH)", async () => {
 	// 	store.$patch({
-	// 		heatingSystems: {
+	// 		heatingAndCoolingSystems: {
 	// 			heatGeneration: {
 	// 				heatPump: {
 	// 					data: [heatPump],
@@ -216,14 +216,14 @@ describe("Wet distribution", () => {
 
 	// 	await waitFor(() => {
 	// 		const { data } =
-	//     store.heatingSystems.heatEmitting.wetDistribution;
+	//     store.heatingAndCoolingSystems.heatEmitting.wetDistribution;
 	// 		expect(data[0]).toEqual(wetDistribution2);
 	// 	});
 	// });
 
 	it("should populate form when exists in store", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [{ data: heatPump }],
@@ -300,7 +300,7 @@ describe("Wet distribution", () => {
 
 	it("should navigate to the heat emitting page when form is saved", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [{ data: heatPump }],
@@ -334,7 +334,7 @@ describe("partially saving data", () => {
 		await user.type(screen.getByTestId("name"), "New wet distribution");
 		await user.tab();
 
-		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!;
+		const actual = store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data[0]!;
 		expect(actual.data.name).toBe("New wet distribution");
 		expect(actual.data.designFlowRate).toBeUndefined();
 	});
@@ -349,14 +349,14 @@ describe("partially saving data", () => {
 		await user.type(screen.getByTestId("thermalMass"), "0.5");
 		await user.tab();
 
-		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!;
+		const actual = store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data[0]!;
 		expect(actual.data.name).toBe("Wet distribution");
 		expect(actual.data.thermalMass).toBe(0.5);
 	});
 
 	it("saves updated form data to store automatically", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatEmitting: {
 					wetDistribution: {
 						data: [
@@ -382,7 +382,7 @@ describe("partially saving data", () => {
 
 		await user.tab();
 
-		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[0]!.data;
+		const actual = store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data[0]!.data;
 		expect(actual.name).toBe("Updated wet distribution");
 		expect(actual.thermalMass).toBe(1);
 		expect(actual.designFlowTemp).toBe(30);
@@ -391,7 +391,7 @@ describe("partially saving data", () => {
 
 	it("saves updated form data to correct store object automatically", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatEmitting: {
 					wetDistribution: {
 						data: [
@@ -414,7 +414,7 @@ describe("partially saving data", () => {
 		await user.selectOptions(screen.getByTestId("ecoDesignControllerClass"), "1");
 		await user.tab();
 
-		const actual = store.heatingSystems.heatEmitting.wetDistribution.data[1]!.data;
+		const actual = store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data[1]!.data;
 		expect(actual.name).toBe("Updated wet distribution");
 		expect(actual.ecoDesignControllerClass).toBe("1");
 	});

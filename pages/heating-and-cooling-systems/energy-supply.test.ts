@@ -32,37 +32,37 @@ describe("Energy supply", () => {
 	describe("when fuel type is electricity", () => {
 		test("data is saved to store state when form is valid", async () => {
 			await renderSuspended(EnergySupply);
-	
+
 			await user.click(screen.getByTestId("fuelType_electricity"));
 			await user.click(screen.getByTestId("exported_yes"));
 			await user.click(screen.getByTestId("saveAndComplete"));
-	
-			const { data } = store.heatingSystems.energySupply;
-			
+
+			const { data } = store.heatingAndCoolingSystems.energySupply;
+
 			expect(data).toEqual(energySupplyWithElectricity);
 		});
-	
+
 		test("form is prepopulated when data exists in state", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					energySupply: {
 						data: energySupplyWithElectricity,
 					},
 				},
 			});
-	
+
 			await renderSuspended(EnergySupply);
-			
+
 			expect((await screen.findByTestId("fuelType_electricity")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("exported_yes")).hasAttribute("checked")).toBe(true);
 		});
-			
+
 		test("required error messages are displayed when empty form is submitted", async () => {
 			await renderSuspended(EnergySupply);
-	
+
 			await user.click(screen.getByTestId("fuelType_electricity"));
 			await user.click(screen.getByTestId("saveAndComplete"));
-	
+
 			expect((await screen.findByTestId("exported_error"))).toBeDefined();
 		});
 	});
@@ -70,41 +70,41 @@ describe("Energy supply", () => {
 	// describe('when fuel type is custom', () => {
 	// 	test('data is saved to store state when form is valid', async () => {
 	// 		await renderSuspended(EnergySupply);
-	
+
 	// 		await user.click(screen.getByTestId('fuelType_custom'));
 	// 		await user.type(screen.getByTestId('co2PerKwh'), '1');
 	// 		await user.type(screen.getByTestId('co2PerKwhIncludingOutOfScope'), '1');
 	// 		await user.type(screen.getByTestId('kwhPerKwhDelivered'), '1');
 	// 		await user.click(screen.getByRole('button'));
-	
-	// 		const { data } = store.heatingSystems.energySupply;
-			
+
+	// 		const { data } = store.heatingAndCoolingSystems.energySupply;
+
 	// 		expect(data).toEqual(energySupplyWithCustom);
 	// 	});
-	
+
 	// 	test('form is prepopulated when data exists in state', async () => {
 	// 		store.$patch({
-	// 			heatingSystems: {
+	// 			heatingAndCoolingSystems: {
 	// 				energySupply: {
 	// 					data: energySupplyWithCustom
 	// 				}
 	// 			}
 	// 		});
-	
+
 	// 		await renderSuspended(EnergySupply);
-			
+
 	// 		expect((await screen.findByTestId('fuelType_custom')).hasAttribute('checked')).toBe(true);
 	// 		expect((await screen.findByTestId<HTMLInputElement>('co2PerKwh')).value).toBe('1');
 	// 		expect((await screen.findByTestId<HTMLInputElement>('co2PerKwhIncludingOutOfScope')).value).toBe('1');
 	// 		expect((await screen.findByTestId<HTMLInputElement>('kwhPerKwhDelivered')).value).toBe('1');
 	// 	});
-			
+
 	// 	test('required error messages are displayed when empty form is submitted', async () => {
 	// 		await renderSuspended(EnergySupply);
-	
+
 	// 		await user.click(screen.getByTestId('fuelType_custom'));
 	// 		await user.click(screen.getByRole('button'));
-	
+
 	// 		expect((await screen.findByTestId('co2PerKwh_error'))).toBeDefined();
 	// 		expect((await screen.findByTestId('co2PerKwhIncludingOutOfScope_error'))).toBeDefined();
 	// 		expect((await screen.findByTestId('kwhPerKwhDelivered_error'))).toBeDefined();
@@ -118,7 +118,7 @@ describe("saving form updates", () => {
 		const user = userEvent.setup();
 
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				energySupply: {
 					data: { fuelType: ["electricity"], exported: true },
 				},
@@ -127,6 +127,6 @@ describe("saving form updates", () => {
 
 		await renderSuspended(EnergySupply);
 		await user.click(screen.getByTestId("exported_no"));
-		expect(store.heatingSystems.energySupply.data.exported).toBe(false);
+		expect(store.heatingAndCoolingSystems.energySupply.data.exported).toBe(false);
 	});
 });

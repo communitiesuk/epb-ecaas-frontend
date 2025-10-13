@@ -5,12 +5,12 @@ const title = "Heat interface unit";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const heatInterfaceUnitData = useItemToEdit("interface", store.heatingSystems.heatGeneration.heatInterfaceUnit.data);
+const heatInterfaceUnitData = useItemToEdit("interface", store.heatingAndCoolingSystems.heatGeneration.heatInterfaceUnit.data);
 const model: Ref<HeatInterfaceUnitData> = ref(heatInterfaceUnitData!);
 
 const saveForm = (fields: HeatInterfaceUnitData) => {
 	store.$patch((state) => {
-		const { heatInterfaceUnit } = state.heatingSystems.heatGeneration;
+		const { heatInterfaceUnit } = state.heatingAndCoolingSystems.heatGeneration;
 
 		const heatInterfaceUnitItem: HeatInterfaceUnitData = {
 			id: uuidv4(),

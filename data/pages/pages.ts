@@ -1,8 +1,8 @@
-import { PageType  } from "./pages.types";
+import { PageType } from "./pages.types";
 import type { Page } from "./pages.types";
 import domesticHotWaterPages from "./domesticHotWater";
 import dwellingDetailsPages from "./dwellingDetails";
-import heatingSystemsPages from "./heatingSystems";
+import heatingAndCoolingSystemsPages from "./heatingAndCoolingSystems";
 import infiltrationAndVentilationPages from "./infiltrationAndVentilation";
 import dwellingFabricPages from "./dwellingFabric";
 import pvAndBatteriesPages from "./pvAndBatteries";
@@ -17,7 +17,7 @@ const pagesData = [
 	...dwellingDetailsPages,
 	...dwellingFabricPages,
 	...infiltrationAndVentilationPages,
-	...heatingSystemsPages,
+	...heatingAndCoolingSystemsPages,
 	// ...restOfDwellingPages,
 	...domesticHotWaterPages,
 	...pvAndBatteriesPages,

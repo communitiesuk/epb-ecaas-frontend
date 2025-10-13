@@ -31,7 +31,7 @@ export type EcaasState = AssertEachKeyIsPageId<{
 	domesticHotWater: DomesticHotWater;
 	dwellingFabric: DwellingFabric;
 	infiltrationAndVentilation: InfiltrationAndVentilation;
-	heatingSystems: HeatingSystems;
+	heatingAndCoolingSystems: heatingAndCoolingSystems;
 	pvAndBatteries: PvAndBatteries;
 }> & {
 	lastResult?: ComplianceResult;
@@ -771,7 +771,7 @@ const airPermeabilityDataZod = z.object({
 
 export type AirPermeabilityData = z.infer<typeof airPermeabilityDataZod>;
 
-export type HeatingSystems = AssertEachKeyIsPageId<{
+export type heatingAndCoolingSystems = AssertEachKeyIsPageId<{
 	heatGeneration: HeatGeneration,
 	energySupply: EcaasForm<EnergySupplyData>;
 	heatEmitting: HeatEmitting;
@@ -1039,17 +1039,17 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"infiltrationAndVentilation/combustionAppliances/open_gas_kitchen_stove": combustionApplianceDataZod,
 	"infiltrationAndVentilation/naturalVentilation": ventilationDataZod,
 	"infiltrationAndVentilation/airPermeability": airPermeabilityDataZod,
-	"heatingSystems/heatGeneration/boiler": boilerDataZod,
-	"heatingSystems/heatGeneration/heatBattery": heatBatteryDataZod,
-	"heatingSystems/heatGeneration/heatInterfaceUnit": heatInterfaceUnitDataZod,
-	"heatingSystems/heatGeneration/heatNetwork": heatNetworkDataZod,
-	"heatingSystems/heatGeneration/heatPump": heatPumpDataZod,
-	"heatingSystems/energySupply": energySupplyDataZod,
-	"heatingSystems/heatEmitting/wetDistribution": wetDistributionDataZod,
-	"heatingSystems/heatEmitting/instantElectricHeater": instantElectricStorageDataZod,
-	"heatingSystems/heatEmitting/electricStorageHeater": electricStorageHeaterDataZod,
-	"heatingSystems/heatEmitting/warmAirHeatPump": warmAirHeatPumpDataZod,
-	"heatingSystems/cooling/airConditioning": airConditioningDataZod,
+	"heatingAndCoolingSystems/heatGeneration/boiler": boilerDataZod,
+	"heatingAndCoolingSystems/heatGeneration/heatBattery": heatBatteryDataZod,
+	"heatingAndCoolingSystems/heatGeneration/heatInterfaceUnit": heatInterfaceUnitDataZod,
+	"heatingAndCoolingSystems/heatGeneration/heatNetwork": heatNetworkDataZod,
+	"heatingAndCoolingSystems/heatGeneration/heatPump": heatPumpDataZod,
+	"heatingAndCoolingSystems/energySupply": energySupplyDataZod,
+	"heatingAndCoolingSystems/heatEmitting/wetDistribution": wetDistributionDataZod,
+	"heatingAndCoolingSystems/heatEmitting/instantElectricHeater": instantElectricStorageDataZod,
+	"heatingAndCoolingSystems/heatEmitting/electricStorageHeater": electricStorageHeaterDataZod,
+	"heatingAndCoolingSystems/heatEmitting/warmAirHeatPump": warmAirHeatPumpDataZod,
+	"heatingAndCoolingSystems/cooling/airConditioning": airConditioningDataZod,
 	"pvAndBatteries/pvSystems": pvSystemDataZod,
 	"pvAndBatteries/electricBattery": electricBatteryDataZod,
 };

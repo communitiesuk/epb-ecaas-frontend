@@ -5,12 +5,12 @@ const title = "Heat network";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const heatNetworkData = useItemToEdit("network", store.heatingSystems.heatGeneration.heatNetwork.data);
+const heatNetworkData = useItemToEdit("network", store.heatingAndCoolingSystems.heatGeneration.heatNetwork.data);
 const model: Ref<HeatNetworkData> = ref(heatNetworkData!);
 
 const saveForm = (fields: HeatNetworkData) => {
 	store.$patch((state) => {
-		const { heatNetwork } = state.heatingSystems.heatGeneration;
+		const { heatNetwork } = state.heatingAndCoolingSystems.heatGeneration;
 
 		const heatNetworkItem: HeatNetworkData = {
 			id: uuidv4(),

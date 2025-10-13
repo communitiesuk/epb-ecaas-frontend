@@ -5,12 +5,12 @@ const title = "Heat battery";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const heatBatteryData = useItemToEdit("battery", store.heatingSystems.heatGeneration.heatBattery.data);
+const heatBatteryData = useItemToEdit("battery", store.heatingAndCoolingSystems.heatGeneration.heatBattery.data);
 const model: Ref<HeatBatteryData> = ref(heatBatteryData!);
 
 const saveForm = (fields: HeatBatteryData) => {
 	store.$patch((state) => {
-		const { heatBattery } = state.heatingSystems.heatGeneration;
+		const { heatBattery } = state.heatingAndCoolingSystems.heatGeneration;
 
 		const heatBatteryItem: HeatBatteryData = {
 			id: uuidv4(),

@@ -112,8 +112,8 @@ const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSp
 
 const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingField, "dwellingSpaceExternalWall.data.0.massDistributionClass", "X"); // 'X' is invalid for a mass distribution class value
 
-const twoHeatPumps: Pick<EcaasState, "heatingSystems"> = {
-	"heatingSystems": {
+const twoHeatPumps: Pick<EcaasState, "heatingAndCoolingSystems"> = {
+	"heatingAndCoolingSystems": {
 		"heatGeneration": {
 			"heatPump": {
 				"data": [
@@ -176,7 +176,7 @@ const twoHeatPumps: Pick<EcaasState, "heatingSystems"> = {
 	},
 };
 
-const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, "heatingSystems.heatGeneration.heatPump.data.1.data.productReference");
+const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, "heatingAndCoolingSystems.heatGeneration.heatPump.data.1.data.productReference");
 
 const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> | undefined, number][] = [
 	[
@@ -252,7 +252,7 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		"case where there are two heat pumps but one has missing field: individual heat pump and whole section should be marked invalid",
 		twoHeatPumpsOneWithMissingFields,
 		true,
-		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, "heatingSystems.heatGeneration.heatPump.data.1.complete", false), "heatingSystems.heatGeneration.heatPump.complete", false),
+		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, "heatingAndCoolingSystems.heatGeneration.heatPump.data.1.complete", false), "heatingAndCoolingSystems.heatGeneration.heatPump.complete", false),
 		1,
 	],
 	[

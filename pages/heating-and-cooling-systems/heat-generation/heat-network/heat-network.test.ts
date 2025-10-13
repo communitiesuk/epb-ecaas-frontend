@@ -37,14 +37,14 @@ describe("heatNetwork", () => {
 		await populateValidForm();
 		await user.click(screen.getByRole("button"));
 
-		const { data } = store.heatingSystems.heatGeneration.heatNetwork;
+		const { data } = store.heatingAndCoolingSystems.heatGeneration.heatNetwork;
 
 		expect(data[0]).toEqual(heatNetwork);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatNetwork: {
 						data: [heatNetwork],
