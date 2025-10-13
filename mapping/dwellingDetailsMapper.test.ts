@@ -32,9 +32,9 @@ describe("dwelling details mapper", () => {
 		const fhsInputData = mapGeneralDetailsData(resolveState(store.$state));
 
 		// Assert
-		expect(fhsInputData.General?.build_type).toBe(state.typeOfDwelling);
-		expect(fhsInputData.General?.storeys_in_building).toBe(state.storeysInDwelling);
-		expect(fhsInputData.General?.storey_of_dwelling).toBe(state.storeyOfFlat);
+		expect(fhsInputData.General.build_type).toBe(state.typeOfDwelling);
+		expect(fhsInputData.General.storeys_in_building).toBe(state.storeysInDwelling);
+		expect(fhsInputData.General.build_type === "flat" ? fhsInputData.General.storey_of_dwelling : undefined).toBe(state.storeyOfFlat);
 		expect(fhsInputData.NumberOfBedrooms).toBe(state.numOfBedrooms);
 		expect(fhsInputData.PartGcompliance).toBe(true);
 		expect(fhsInputData.PartO_active_cooling_required).toBe(false);

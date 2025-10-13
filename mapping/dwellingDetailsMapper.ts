@@ -17,11 +17,17 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 	const { generalSpecifications: generalDetails } = state.dwellingDetails;
 	
 	return {
-		General: {
-			build_type: generalDetails.typeOfDwelling,
-			storeys_in_building: generalDetails.storeysInDwelling,
-			...(generalDetails.typeOfDwelling === "flat" ? { storey_of_dwelling: generalDetails.storeyOfFlat } : {}),
-		},
+		General:
+			generalDetails.typeOfDwelling === "flat"
+				? {
+					build_type: "flat",
+					storeys_in_building: generalDetails.storeysInDwelling,
+					storey_of_dwelling: generalDetails.storeyOfFlat,
+				}
+				: {
+					build_type: "house",
+					storeys_in_building: generalDetails.storeysInDwelling,
+				},
 		NumberOfBedrooms: generalDetails.numOfBedrooms,
 		PartGcompliance: true,
 		PartO_active_cooling_required: generalDetails.coolingRequired,
