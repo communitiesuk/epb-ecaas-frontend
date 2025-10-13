@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getUrl, getTabItems, type ArealHeatCapacityValue } from "#imports";
+import { getUrl, getTabItems } from "#imports";
 import { emptyValueRendering } from "#imports";
 
 const title = "Dwelling fabric summary";
