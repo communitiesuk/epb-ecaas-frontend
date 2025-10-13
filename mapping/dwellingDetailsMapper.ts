@@ -53,15 +53,10 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 	const range = 10;
 	const max = 360;
 	const segmentCount = max / range;
-	const segments: SchemaShadingSegment[] = [];
-
-	for (let index = 0; index < segmentCount; index++) {
-		segments.push({
-			number: index + 1,
-			start360: index * range,
-			end360: (index * range) + range,
-		});
-	}
+	const segments: SchemaShadingSegment[] = [...Array(segmentCount).keys()].map(index => ({
+		start360: index * range,
+		end360: (index * range) + range,
+	}));
 
 	shading.forEach(s => {
 		const startSegments = segments.filter(x => x.start360 != null && x.start360 < s.endAngle);
