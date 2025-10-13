@@ -42,7 +42,7 @@ describe("Air conditioning", () => {
 
 	test("data is saved to store state when form is valid", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				energySupply: {
 					data: energySupplyState,
 				},
@@ -59,14 +59,14 @@ describe("Air conditioning", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.heatingSystems.cooling.airConditioning;
+		const { data } = store.heatingAndCoolingSystems.cooling.airConditioning;
 
 		expect(data[0]?.data).toEqual(state);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				cooling: {
 					airConditioning: {
 						data: [{ data: state }],

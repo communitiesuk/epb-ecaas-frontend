@@ -1,4 +1,4 @@
-import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation  } from "~/schema/api-schema.types";
+import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation } from "~/schema/api-schema.types";
 import type { SchemaHotWaterDemand } from "~/schema/api-schema.types";
 import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
@@ -21,7 +21,7 @@ describe("domestic hot water mapper", () => {
 		// Arrange
 		const heatPumpName = "heat pump";
 
-		const hotWaterCylinder:EcaasForm<HotWaterCylinderData> = {
+		const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
 			...baseForm,
 			data: {
 				id: "hot water cylinder",
@@ -69,7 +69,7 @@ describe("domestic hot water mapper", () => {
 					},
 				},
 			},
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [{
@@ -179,7 +179,7 @@ describe("domestic hot water mapper", () => {
 					},
 				},
 			},
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [{
@@ -319,7 +319,7 @@ describe("domestic hot water mapper", () => {
 
 		// Acts
 		const result = mapDomesticHotWaterData(resolveState(store.$state));
-		
+
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, "HotWaterDemand"> = {
 			HotWaterDemand: {
@@ -352,7 +352,7 @@ describe("domestic hot water mapper", () => {
 				Distribution: [],
 			},
 		};
-		
+
 		expect(result["HotWaterDemand"]).toEqual(expectedResult["HotWaterDemand"]);
 	});
 
@@ -368,7 +368,7 @@ describe("domestic hot water mapper", () => {
 					...baseForm,
 					data: {
 						name: "secondaryPipework1",
-						length: 111, 
+						length: 111,
 						location: WaterPipeworkLocation.internal,
 						internalDiameter: 6,
 					},

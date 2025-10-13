@@ -1,10 +1,10 @@
 import type { StripDefs } from "./mapping.types";
-import { ColdWaterSourceType   } from "~/schema/api-schema.types";
+import { ColdWaterSourceType } from "~/schema/api-schema.types";
 import type { SchemaEnergySupplyDetails, SchemaFhsInputSchema, SchemaStorageTank } from "~/schema/api-schema.types";
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
-import { mapHeatingSystemsData } from "./heatingSystemsMapper";
+import { mapheatingAndCoolingSystemsData } from "./heatingAndCoolingSystemsMapper";
 import { mapLivingSpaceFabricData as mapDwellingFabricData } from "./dwellingFabricMapper";
 import { mapPvAndElectricBatteriesData } from "./pvAndElectricBatteriesMapper";
 import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
@@ -22,7 +22,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	// const coolingData = mapCoolingData(state);
 
 	const [pvData, electricBatteries] = mapPvAndElectricBatteriesData(state);
-	const { EnergySupply, SpaceHeatSystem } = mapHeatingSystemsData(state);
+	const { EnergySupply, SpaceHeatSystem } = mapheatingAndCoolingSystemsData(state);
 
 	// specify the electricity tariff with other needed data points with default values as used in example FHS files in case it is needed (TODO: should it be necessary to pass in a tariff here?)
 	const defaultTariffData: Pick<SchemaEnergySupplyDetails, "threshold_charges" | "threshold_prices" | "tariff"> = {
@@ -30,7 +30,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		threshold_prices: [20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0],
 		tariff: "Variable Time of Day Tariff",
 	};
-	const heatingSystemsData = {
+	const heatingAndCoolingSystemsData = {
 		SpaceHeatSystem,
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {
@@ -44,8 +44,8 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const control: Pick<FhsInputSchema, "Control"> = { Control: {} };
 	const events: Pick<FhsInputSchema, "Events"> = { Events: {} };
 	const internalGains: Pick<FhsInputSchema, "InternalGains"> = { InternalGains: {} };
-	
-	const defaultColdWaterSource: Pick<FhsInputSchema, "ColdWaterSource"> = { 
+
+	const defaultColdWaterSource: Pick<FhsInputSchema, "ColdWaterSource"> = {
 		ColdWaterSource: {
 			[ColdWaterSourceType.mains_water]: {
 				start_day: 0,
@@ -64,7 +64,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	// Below uses default values until heat pump is set up to come from PCDB
 	const { HotWaterSource } = domesticHotWaterData;
 	const heatPumpName: string = Object.keys((HotWaterSource!["hw cylinder"] as SchemaStorageTank).HeatSource)[0]!;
-	const heatPumps = state.heatingSystems.heatGeneration.heatPump;
+	const heatPumps = state.heatingAndCoolingSystems.heatGeneration.heatPump;
 
 	// use the picked heat pump if one is picked, otherwise fall back to the default
 	// TODO: correct this at point other heat sources are being added
@@ -86,7 +86,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		infiltrationVentilationData,
 		dwellingFabricData,
 		heatSourceWetData,
-		heatingSystemsData,
+		heatingAndCoolingSystemsData,
 		domesticHotWaterData,
 		pvData,
 		// coolingData,

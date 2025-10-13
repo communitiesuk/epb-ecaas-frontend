@@ -1137,7 +1137,7 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const heatingSystems: HeatingSystems = {
+		const heatingAndCoolingSystems: heatingAndCoolingSystems = {
 			heatGeneration: {
 				heatPump: {
 					...baseForm,
@@ -1308,7 +1308,7 @@ describe("FHS input mapper", () => {
 			domesticHotWater,
 			dwellingFabric,
 			infiltrationAndVentilation,
-			heatingSystems,
+			heatingAndCoolingSystems,
 			pvAndBatteries,
 		};
 
@@ -1852,7 +1852,7 @@ describe("FHS input mapper", () => {
 			},
 		};
 
-		const heatingSystems: HeatingSystems = {
+		const heatingAndCoolingSystems: heatingAndCoolingSystems = {
 			heatGeneration: {
 				heatPump: {
 					...baseForm,
@@ -2165,7 +2165,7 @@ describe("FHS input mapper", () => {
 			domesticHotWater,
 			dwellingFabric,
 			infiltrationAndVentilation,
-			heatingSystems,
+			heatingAndCoolingSystems,
 			pvAndBatteries,
 		};
 

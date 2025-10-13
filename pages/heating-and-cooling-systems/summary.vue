@@ -5,7 +5,7 @@ import { FuelType } from "~/schema/api-schema.types";
 const store = useEcaasStore();
 const title = "Heating system summary";
 
-const { fuelType, exported, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered } = store.heatingSystems.energySupply.data;
+const { fuelType, exported, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered } = store.heatingAndCoolingSystems.energySupply.data;
 const energySupplySummary: SummarySection = {
 	id: "energySupply",
 	label: "Energy supply",
@@ -25,7 +25,7 @@ const energySupplySummary: SummarySection = {
 };
 
 const heatGenerationUrl = "/heating-and-cooling-systems/heat-generation";
-const heatPumps = store.heatingSystems.heatGeneration.heatPump.data;
+const heatPumps = store.heatingAndCoolingSystems.heatGeneration.heatPump.data;
 const heatPumpSummary: SummarySection = {
 	id: "heatPump",
 	label: "Heat pump",
@@ -39,7 +39,7 @@ const heatPumpSummary: SummarySection = {
 	editUrl: heatGenerationUrl,
 };
 
-const boilers = store.heatingSystems.heatGeneration.boiler.data;
+const boilers = store.heatingAndCoolingSystems.heatGeneration.boiler.data;
 const boilerSummary: SummarySection = {
 	id: "boiler",
 	label: "Boiler",
@@ -51,7 +51,7 @@ const boilerSummary: SummarySection = {
 	editUrl: heatGenerationUrl,
 };
 
-const batteries = store.heatingSystems.heatGeneration.heatBattery.data;
+const batteries = store.heatingAndCoolingSystems.heatGeneration.heatBattery.data;
 const heatBatterySummary: SummarySection = {
 	id: "heatBattery",
 	label: "Heat battery",
@@ -63,7 +63,7 @@ const heatBatterySummary: SummarySection = {
 	editUrl: heatGenerationUrl,
 };
 
-const networks = store.heatingSystems.heatGeneration.heatNetwork.data;
+const networks = store.heatingAndCoolingSystems.heatGeneration.heatNetwork.data;
 const heatNetworkSummary: SummarySection = {
 	id: "heatNetwork",
 	label: "Heat network",
@@ -75,7 +75,7 @@ const heatNetworkSummary: SummarySection = {
 	editUrl: heatGenerationUrl,
 };
 
-const units = store.heatingSystems.heatGeneration.heatInterfaceUnit.data;
+const units = store.heatingAndCoolingSystems.heatGeneration.heatInterfaceUnit.data;
 const heatInterfaceUnitSummary: SummarySection = {
 	id: "heatInterfaceUnit",
 	label: "Heat interface unit",
@@ -96,7 +96,7 @@ const heatGenerationSummary: SummarySection[] = [
 ].filter((x) => x.data.length);
 
 const { heatPump } =
-	store.heatingSystems.heatGeneration;
+	store.heatingAndCoolingSystems.heatGeneration;
 const heatGenerationData = [
 	heatPump.data,
 	// boiler.data,
@@ -109,7 +109,7 @@ const heatGenerationData = [
 
 const heatEmittingUrl = "/heating-and-cooling-systems/heat-emitting";
 
-const wetDistributions = store.heatingSystems.heatEmitting.wetDistribution.data;
+const wetDistributions = store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data;
 const wetDistributionSummary: SummarySection = {
 	id: "wetDistribution",
 	label: "Wet distribution",
@@ -142,7 +142,7 @@ const wetDistributionSummary: SummarySection = {
 };
 
 const instantHeaters =
-	store.heatingSystems.heatEmitting.instantElectricHeater.data;
+	store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data;
 const instantElectricHeaterSummary: SummarySection = {
 	id: "instantElectricHeater",
 	label: "Instant electric heater",
@@ -157,7 +157,7 @@ const instantElectricHeaterSummary: SummarySection = {
 };
 
 const storageHeaters =
-	store.heatingSystems.heatEmitting.electricStorageHeater.data;
+	store.heatingAndCoolingSystems.heatEmitting.electricStorageHeater.data;
 const electricStorageHeaterSummary: SummarySection = {
 	id: "electricStorageHeater",
 	label: "Electric storage heater",
@@ -169,7 +169,7 @@ const electricStorageHeaterSummary: SummarySection = {
 	editUrl: heatEmittingUrl,
 };
 
-const warmAirHeatPumps = store.heatingSystems.heatEmitting.warmAirHeatPump.data;
+const warmAirHeatPumps = store.heatingAndCoolingSystems.heatEmitting.warmAirHeatPump.data;
 const warmAirHeatPumpSummary: SummarySection = {
 	id: "warmAirHeatPump",
 	label: "Warm air heat pump",
@@ -190,7 +190,7 @@ const heatEmittingSummary: SummarySection[] = [
 
 const coolingUrl = "/heating-and-cooling-systems/cooling";
 
-const airConditionings = store.heatingSystems.cooling.airConditioning.data;
+const airConditionings = store.heatingAndCoolingSystems.cooling.airConditioning.data;
 const airConditioningSummary: SummarySection = {
 	id: "airConditioning",
 	label: "Air conditioning",

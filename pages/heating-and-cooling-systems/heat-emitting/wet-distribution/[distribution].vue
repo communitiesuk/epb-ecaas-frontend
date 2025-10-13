@@ -11,7 +11,7 @@ const { autoSaveElementForm } = useForm();
 
 const wetDistributionData = useItemToEdit(
 	"distribution",
-	store.heatingSystems.heatEmitting.wetDistribution.data,
+	store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data,
 );
 const model: Ref<WetDistributionData> = ref({
 	...wetDistributionData?.data,
@@ -29,8 +29,8 @@ const saveForm = (fields: WetDistributionData) => {
 	fields.typeOfSpaceHeater = "radiator";
 
 	store.$patch((state) => {
-		const { wetDistribution } = state.heatingSystems.heatEmitting;
-		const storeData = store.heatingSystems.heatEmitting.wetDistribution.data;
+		const { wetDistribution } = state.heatingAndCoolingSystems.heatEmitting;
+		const storeData = store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data;
 
 		const index = route.params.distribution === "create" ? storeData.length - 1 : Number(route.params.distribution);
 
@@ -88,13 +88,13 @@ const saveForm = (fields: WetDistributionData) => {
 
 autoSaveElementForm<WetDistributionData>({
 	model,
-	storeData: store.heatingSystems.heatEmitting.wetDistribution,
+	storeData: store.heatingAndCoolingSystems.heatEmitting.wetDistribution,
 	defaultName: "Wet distribution",
 	onPatch: (state, newData, index) => {
 		// we only support radiators
 		newData.data.typeOfSpaceHeater = "radiator";
-		state.heatingSystems.heatEmitting.wetDistribution.data[index] = newData;
-		state.heatingSystems.heatEmitting.wetDistribution.complete = false;
+		state.heatingAndCoolingSystems.heatEmitting.wetDistribution.data[index] = newData;
+		state.heatingAndCoolingSystems.heatEmitting.wetDistribution.complete = false;
 	},
 });
 

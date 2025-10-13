@@ -6,13 +6,13 @@ const route = useRoute();
 
 const { autoSaveElementForm } = useForm();
 
-const instantElectricHeaterData = useItemToEdit("heater", store.heatingSystems.heatEmitting.instantElectricHeater.data);
+const instantElectricHeaterData = useItemToEdit("heater", store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data);
 const model = ref(instantElectricHeaterData?.data);
 
 const saveForm = (fields: InstantElectricStorageData) => {
 	store.$patch((state) => {
-		const { instantElectricHeater } = state.heatingSystems.heatEmitting;
-		const storeData = store.heatingSystems.heatEmitting.instantElectricHeater.data;
+		const { instantElectricHeater } = state.heatingAndCoolingSystems.heatEmitting;
+		const storeData = store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data;
 
 		const index = route.params.heater === "create" ? storeData.length - 1 : Number(route.params.heater);
 
@@ -34,11 +34,11 @@ const saveForm = (fields: InstantElectricStorageData) => {
 
 autoSaveElementForm<InstantElectricStorageData>({
 	model,
-	storeData: store.heatingSystems.heatEmitting.instantElectricHeater,
+	storeData: store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater,
 	defaultName: "Instant electric heater",
 	onPatch: (state, newData, index) => {
-		state.heatingSystems.heatEmitting.instantElectricHeater.data[index] = newData;
-		state.heatingSystems.heatEmitting.instantElectricHeater.complete = false;
+		state.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[index] = newData;
+		state.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.complete = false;
 	},
 });
 

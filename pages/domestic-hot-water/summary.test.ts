@@ -52,11 +52,12 @@ describe("Domestic hot water summary", () => {
 					waterHeating: {
 						hotWaterCylinder: {
 							data: [{
-								data: hotWaterCylinder }],
+								data: hotWaterCylinder,
+							}],
 						},
 					},
 				},
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [{
@@ -74,7 +75,7 @@ describe("Domestic hot water summary", () => {
 		it("should contain the correct tabs for water heating when data is present", async () => {
 			addHotWaterCylinderData();
 			await renderSuspended(Summary);
-	  
+
 			expect(screen.queryByRole("link", { name: "Hot water cylinder" })).toBeDefined();
 			expect(screen.queryByRole("link", { name: "Immersion heater" })).toBeNull();
 			expect(screen.queryByRole("link", { name: "Solar thermal" })).toBeNull();
@@ -98,14 +99,14 @@ describe("Domestic hot water summary", () => {
 		it("should display the correct data for the hot water cylinder section", async () => {
 			addHotWaterCylinderData();
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Hot water cylinder 1",
 				"Heat source": "Heat pump",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
 				"Daily energy loss": `1 ${kilowattHour.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-hotWaterCylinder-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -125,14 +126,14 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Immersion heater",
 				"Rated power": `10 ${kilowatt.suffix}`,
 				"Heater position": "Top (1)",
 				"Thermostat position": "Top (1)",
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-immersionHeater-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -152,13 +153,13 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Point of use",
 				"Setpoint temperature": `25 ${celsius.suffix}`,
 				"Heater efficiency": "0.5",
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-pointOfUse-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -203,7 +204,7 @@ describe("Domestic hot water summary", () => {
 
 		it("should contain the correct tabs for hot water outlets", async () => {
 			await renderSuspended(Summary);
-	  
+
 			expect(screen.getByRole("link", { name: "Mixer shower" })).toBeDefined();
 			expect(screen.getByRole("link", { name: "Electric shower" })).toBeDefined();
 			expect(screen.getByRole("link", { name: "Bath" })).toBeDefined();
@@ -222,12 +223,12 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Mixer shower 1",
 				"Flow rate": `10 ${litrePerHour.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-mixedShower-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -247,12 +248,12 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Electric shower 1",
 				"Rated power": `10 ${kilowatt.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-electricShower-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -272,13 +273,13 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Bath 1",
 				"Size": `170 ${litre.suffix}`,
 				"Flow rate": `10 ${litrePerMinute.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-bath-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -298,12 +299,12 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Basin tap 1",
 				"Flow rate": `10 ${litrePerMinute.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-otherOutlets-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -341,11 +342,11 @@ describe("Domestic hot water summary", () => {
 
 		it("should contain the correct tabs for pipework details", async () => {
 			await renderSuspended(Summary);
-	  
+
 			expect(screen.getByRole("link", { name: "Primary pipework" })).toBeDefined();
 			expect(screen.getByRole("link", { name: "Secondary pipework" })).toBeDefined();
 		});
-	
+
 		it("should display the correct data for the primary pipework section", async () => {
 			store.$patch({
 				domesticHotWater: {
@@ -369,7 +370,7 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Pipework Kitchen Sink Primary",
 				"Internal diameter": `10 ${millimetre.suffix}`,
@@ -382,7 +383,7 @@ describe("Domestic hot water summary", () => {
 				"Hot water cylinder": "Hot water cylinder 1",
 				"Location": "Internal",
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-primaryPipework-${hyphenate(key)}`));
 
@@ -403,14 +404,14 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Pipework Kitchen Sink Secondary",
 				"Length": `3 ${metre.suffix}`,
 				"Location": "Internal",
 				"Internal diameter": `9 ${millimetre.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-secondaryPipework-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);

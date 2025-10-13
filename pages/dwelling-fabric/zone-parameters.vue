@@ -18,8 +18,8 @@ const model = ref({
 // };
 
 // const spaceHeatingSystemOptions = [
-// 	store.heatingSystems.heatEmitting.wetDistribution.data.map(x => [x.name, x.name] as [string, string]),
-// 	store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => [x.name, x.name] as [string, string]),
+// 	store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data.map(x => [x.name, x.name] as [string, string]),
+// 	store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data.map(x => [x.name, x.name] as [string, string]),
 // ].flat();
 
 const saveForm = (fields: typeof model.value) => {
@@ -108,7 +108,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<!--			name="spaceHeatingSystemForThisZone"-->
 		<!--			help="Select a heat emitting system that has already been added to the calculation. You can only add one heat emitting system for each zone."-->
 		<!--			:options="new Map(spaceHeatingSystemOptions)"-->
-		<!--			:link="getUrl('heatingSystems')"-->
+		<!--			:link="getUrl('heatingAndCoolingSystems')"-->
 		<!--			validation="required">-->
 		<!--			<div v-if="!spaceHeatingSystemOptions.length">-->
 		<!--				<p class="govuk-error-message">No heat emitting systems added.</p>-->

@@ -52,14 +52,14 @@ describe("heatPump", () => {
 		await populateValidForm();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.heatingSystems.heatGeneration.heatPump;
+		const { data } = store.heatingAndCoolingSystems.heatGeneration.heatPump;
 
 		expect(data[0]?.data).toEqual(largeHeatPump);
 	});
 
 	test("form is prepopulated when data exists in state", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [{
@@ -81,7 +81,7 @@ describe("heatPump", () => {
 
 	test("heat pump is updated when data with id exists in store", async () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [{
@@ -104,7 +104,7 @@ describe("heatPump", () => {
 		await user.tab();
 		await user.click(screen.getByTestId("saveAndComplete"));
 
-		const { data } = store.heatingSystems.heatGeneration.heatPump;
+		const { data } = store.heatingAndCoolingSystems.heatGeneration.heatPump;
 
 		expect(data[0]!.data.id).toBe(largeHeatPump.id);
 		expect(data[0]!.data.name).toBe("Heat pump 2");
@@ -147,7 +147,7 @@ describe("heatPump", () => {
 			await user.type(screen.getByTestId("name"), "New heat pump");
 			await user.tab();
 
-			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[0]!;
+			const actualHeatPump = store.heatingAndCoolingSystems.heatGeneration.heatPump.data[0]!;
 			expect(actualHeatPump.data.name).toBe("New heat pump");
 			expect(actualHeatPump.data.productReference).toBeUndefined();
 		});
@@ -162,14 +162,14 @@ describe("heatPump", () => {
 			await user.click(screen.getByTestId("productReference_HEATPUMP-LARGE"));
 			await user.tab();
 
-			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[0]!;
+			const actualHeatPump = store.heatingAndCoolingSystems.heatGeneration.heatPump.data[0]!;
 			expect(actualHeatPump.data.name).toBe("Heat pump");
 			expect(actualHeatPump.data.productReference).toBe("HEATPUMP-LARGE");
 		});
 
 		it("saves updated form data to store automatically", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [{
@@ -191,14 +191,14 @@ describe("heatPump", () => {
 			await user.click(screen.getByTestId("productReference_HEATPUMP-SMALL"));
 			await user.tab();
 
-			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[0]!;
+			const actualHeatPump = store.heatingAndCoolingSystems.heatGeneration.heatPump.data[0]!;
 			expect(actualHeatPump.data.name).toBe("Updated heat pump");
 			expect(actualHeatPump.data.productReference).toBe("HEATPUMP-SMALL");
 		});
 
 		it("saves updated form data to correct store object automatically", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [
@@ -221,7 +221,7 @@ describe("heatPump", () => {
 			await user.click(screen.getByTestId("productReference_HEATPUMP-MEDIUM"));
 			await user.tab();
 
-			const actualHeatPump = store.heatingSystems.heatGeneration.heatPump.data[1]!;
+			const actualHeatPump = store.heatingAndCoolingSystems.heatGeneration.heatPump.data[1]!;
 			expect(actualHeatPump.data.name).toBe("Updated heat pump");
 			expect(actualHeatPump.data.productReference).toBe("HEATPUMP-MEDIUM");
 		});

@@ -5,34 +5,34 @@ const title = "Heat generation";
 const page = usePage();
 const store = useEcaasStore();
 
-type HeatGenerationType = keyof typeof store.heatingSystems.heatGeneration;
+type HeatGenerationType = keyof typeof store.heatingAndCoolingSystems.heatGeneration;
 
 function handleRemove(outletType: HeatGenerationType, index: number) {
-	const outlets = store.heatingSystems.heatGeneration[outletType]?.data;
+	const outlets = store.heatingAndCoolingSystems.heatGeneration[outletType]?.data;
 
 	let heatPumpId;
 	if(outletType === "heatPump"){
-		heatPumpId = store.heatingSystems.heatGeneration.heatPump?.data[index]?.data.id;
+		heatPumpId = store.heatingAndCoolingSystems.heatGeneration.heatPump?.data[index]?.data.id;
 	}
 
 	if (outlets) {
 		outlets.splice(index, 1);
 
 		store.$patch((state) => {
-			state.heatingSystems.heatGeneration[outletType].data = outlets.length ? outlets : [];
-			state.heatingSystems.heatGeneration[outletType].complete = false;
+			state.heatingAndCoolingSystems.heatGeneration[outletType].data = outlets.length ? outlets : [];
+			state.heatingAndCoolingSystems.heatGeneration[outletType].complete = false;
 		});
 
 		if(heatPumpId) {
 			removeHeatSourceReference(store.domesticHotWater.waterHeating.hotWaterCylinder, heatPumpId);
-			removeHeatSourceReference(store.heatingSystems.heatEmitting.wetDistribution, heatPumpId);
+			removeHeatSourceReference(store.heatingAndCoolingSystems.heatEmitting.wetDistribution, heatPumpId);
 		}
 	}
 } 
 
 function handleComplete() {
 	store.$patch({
-		heatingSystems: {
+		heatingAndCoolingSystems: {
 			heatGeneration: {
 				heatPump: { complete: true },
 				boiler: { complete: true },
@@ -47,12 +47,12 @@ function handleComplete() {
 }
 
 function checkIsComplete(){
-	const generators = store.heatingSystems.heatGeneration;
+	const generators = store.heatingAndCoolingSystems.heatGeneration;
 	return Object.values(generators).every(generator => generator.complete);
 }
 
 function hasIncompleteEntries() {
-	const heatGenerationTypes = store.heatingSystems.heatGeneration;
+	const heatGenerationTypes = store.heatingAndCoolingSystems.heatGeneration;
 	
 	return Object.values(heatGenerationTypes).some(
 		generators => generators.data.some(
@@ -72,7 +72,7 @@ function hasIncompleteEntries() {
 		id="heatPump"
 		title="Heat pump"
 		:form-url="`${page?.url!}/heat-pump`"
-		:items="store.heatingSystems.heatGeneration.heatPump.data.map(x => ({
+		:items="store.heatingAndCoolingSystems.heatGeneration.heatPump.data.map(x => ({
 			name: x.data.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))"
@@ -83,28 +83,28 @@ function hasIncompleteEntries() {
 	<!--		id="boiler"-->
 	<!--		title="Boiler"-->
 	<!--		:form-url="`${page?.url!}/boiler`"-->
-	<!--		:items="store.heatingSystems.heatGeneration.boiler.data.map(x => x.name)"-->
+	<!--		:items="store.heatingAndCoolingSystems.heatGeneration.boiler.data.map(x => x.name)"-->
 	<!--		@remove="(index: number) => handleRemove('boiler', index)"-->
 	<!--	/>-->
 	<!--	<CustomList-->
 	<!--		id="heatBattery"-->
 	<!--		title="Heat battery"-->
 	<!--		:form-url="`${page?.url!}/heat-battery`"-->
-	<!--		:items="store.heatingSystems.heatGeneration.heatBattery.data.map(x => x.name)"-->
+	<!--		:items="store.heatingAndCoolingSystems.heatGeneration.heatBattery.data.map(x => x.name)"-->
 	<!--		@remove="(index: number) => handleRemove('heatBattery', index)"-->
 	<!--	/>-->
 	<!--	<CustomList-->
 	<!--		id="heatNetwork"-->
 	<!--		title="Heat network"-->
 	<!--		:form-url="`${page?.url!}/heat-network`"-->
-	<!--		:items="store.heatingSystems.heatGeneration.heatNetwork.data.map(x => x.name)"-->
+	<!--		:items="store.heatingAndCoolingSystems.heatGeneration.heatNetwork.data.map(x => x.name)"-->
 	<!--		@remove="(index: number) => handleRemove('heatNetwork', index)"-->
 	<!--	/>-->
 	<!--	<CustomList-->
 	<!--		id="heatInterfaceUnit"-->
 	<!--		title="Heat interface unit"-->
 	<!--		:form-url="`${page?.url!}/heat-interface-unit`"-->
-	<!--		:items="store.heatingSystems.heatGeneration.heatInterfaceUnit.data.map(x => x.name)"-->
+	<!--		:items="store.heatingAndCoolingSystems.heatGeneration.heatInterfaceUnit.data.map(x => x.name)"-->
 	<!--		@remove="(index: number) => handleRemove('heatInterfaceUnit', index)"-->
 	<!--	/>-->
 	<div class="govuk-button-group govuk-!-margin-top-6">

@@ -7,7 +7,7 @@ const store = useEcaasStore();
 const { autoSaveForm } = useForm();
 
 const model = ref({
-	...store.heatingSystems.energySupply.data,
+	...store.heatingAndCoolingSystems.energySupply.data,
 });
 
 const fuelTypeOptions: Record<FuelType.electricity, Capitalize<FuelType.electricity>> = {
@@ -16,7 +16,7 @@ const fuelTypeOptions: Record<FuelType.electricity, Capitalize<FuelType.electric
 
 const saveForm = (fields: EnergySupplyData) => {
 	store.$patch({
-		heatingSystems: {
+		heatingAndCoolingSystems: {
 			energySupply: {
 				data: {
 					fuelType: fields.fuelType,
@@ -34,7 +34,7 @@ const saveForm = (fields: EnergySupplyData) => {
 };
 
 autoSaveForm(model, (state, newData) => {
-	state.heatingSystems.energySupply = newData;
+	state.heatingAndCoolingSystems.energySupply = newData;
 });
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
@@ -108,7 +108,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />
-			<GovButton :href="getUrl('heatingSystems')" secondary>Save progress</GovButton>
+			<GovButton :href="getUrl('heatingAndCoolingSystems')" secondary>Save progress</GovButton>
 		</div>
 	</FormKit>
 </template>

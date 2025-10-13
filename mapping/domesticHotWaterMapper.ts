@@ -25,7 +25,7 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 }
 
 function mapShowersData(state: ResolvedState) {
-	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.mixedShower.map((x):[string, SchemaShower] => {
+	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.mixedShower.map((x): [string, SchemaShower] => {
 		const key = x.name;
 		const val: SchemaShower = {
 			type: "MixerShower",
@@ -36,7 +36,7 @@ function mapShowersData(state: ResolvedState) {
 		return [key, val];
 	});
 
-	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.electricShower.map((x):[string, SchemaShower] => {
+	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.electricShower.map((x): [string, SchemaShower] => {
 		const key = x.name;
 		const val: SchemaShower = {
 			type: "InstantElecShower",
@@ -52,7 +52,7 @@ function mapShowersData(state: ResolvedState) {
 }
 
 function mapBathsData(state: ResolvedState) {
-	const bathEntries = state.domesticHotWater.hotWaterOutlets.bath.map((x):[string, SchemaBathDetails] => {
+	const bathEntries = state.domesticHotWater.hotWaterOutlets.bath.map((x): [string, SchemaBathDetails] => {
 		const key = x.name;
 		const val: SchemaBathDetails = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
@@ -67,7 +67,7 @@ function mapBathsData(state: ResolvedState) {
 }
 
 function mapOthersData(state: ResolvedState) {
-	const otherEntries = state.domesticHotWater.hotWaterOutlets.otherOutlets.map((x):[string, SchemaOtherWaterUseDetails] => {
+	const otherEntries = state.domesticHotWater.hotWaterOutlets.otherOutlets.map((x): [string, SchemaOtherWaterUseDetails] => {
 		const key = x.name;
 		const val: SchemaOtherWaterUseDetails = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
@@ -92,7 +92,7 @@ export function mapDistributionData(state: ResolvedState) {
 
 export function mapHotWaterSourcesData(state: ResolvedState) {
 	return state.domesticHotWater.waterHeating.hotWaterCylinder.map((x): SchemaHotWaterSourceDetails => {
-		const referencedHeatPump = state.heatingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.id === x.heatSource);
+		const referencedHeatPump = state.heatingAndCoolingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.id === x.heatSource);
 		const heatPumpName = referencedHeatPump ? referencedHeatPump.name : "Heat pump";
 		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
 			return {
@@ -111,9 +111,9 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 
 		if (typeof x.storageCylinderVolume === "number") {
 			storageCylinderVolumeInLitres = x.storageCylinderVolume;
-		} else  {
+		} else {
 			storageCylinderVolumeInLitres = asLitres(x.storageCylinderVolume);
-		} 
+		}
 
 		const val: SchemaStorageTank = {
 			ColdWaterSource: ColdWaterSourceType.mains_water,
@@ -124,7 +124,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				// Adding these values as default until heat pump is set up to come from PCDB
 				[heatPumpName]: {
 					name: heatPumpName,
-					EnergySupply: defaultElectricityEnergySupplyName, 
+					EnergySupply: defaultElectricityEnergySupplyName,
 					heater_position: 0.1,
 					type: "HeatSourceWet",
 					temp_flow_limit_upper: 65,
@@ -134,6 +134,6 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 			...(primaryPipeworkEntries.length !== 0 ? { primary_pipework: primaryPipeworkEntries } : {}),
 		};
 
-		return val;		
+		return val;
 	});
 }

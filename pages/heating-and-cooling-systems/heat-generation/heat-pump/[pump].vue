@@ -10,7 +10,7 @@ const route = useRoute();
 
 const { autoSaveElementForm } = useForm();
 
-const heatPumpData = useItemToEdit("pump", store.heatingSystems.heatGeneration.heatPump.data);
+const heatPumpData = useItemToEdit("pump", store.heatingAndCoolingSystems.heatGeneration.heatPump.data);
 const model = ref(heatPumpData?.data);
 
 const { data: heatPumps } = await useFetch("/api/products", { query: { category: "heatPump" } });
@@ -23,7 +23,7 @@ const id =  heatPumpData?.data.id ?? uuidv4();
 
 const saveForm = (fields: HeatPumpData) => {
 	store.$patch((state) => {
-		const { heatPump } = state.heatingSystems.heatGeneration;
+		const { heatPump } = state.heatingAndCoolingSystems.heatGeneration;
 		const index = route.params.pump === "create" ? heatPump.data.length - 1 : Number(route.params.pump);
 
 		const heatPumpItem: EcaasForm<HeatPumpData> = {
@@ -44,12 +44,12 @@ const saveForm = (fields: HeatPumpData) => {
 
 autoSaveElementForm<HeatPumpData>({
 	model,
-	storeData: store.heatingSystems.heatGeneration.heatPump,
+	storeData: store.heatingAndCoolingSystems.heatGeneration.heatPump,
 	defaultName: "Heat pump",
 	onPatch: (state, newData, index) => {
 		newData.data.id ??= id;
-		state.heatingSystems.heatGeneration.heatPump.data[index] = newData;
-		state.heatingSystems.heatGeneration.heatPump.complete = false;
+		state.heatingAndCoolingSystems.heatGeneration.heatPump.data[index] = newData;
+		state.heatingAndCoolingSystems.heatGeneration.heatPump.complete = false;
 	},
 });
 

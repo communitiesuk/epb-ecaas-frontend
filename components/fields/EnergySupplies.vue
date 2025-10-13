@@ -15,7 +15,7 @@ defineProps<{
 
 const store = useEcaasStore();
 
-const { fuelType } = store.heatingSystems.energySupply.data; 
+const { fuelType } = store.heatingAndCoolingSystems.energySupply.data; 
 
 const energySupplies = fuelType !== undefined ? [
 	fuelType.map(x => {

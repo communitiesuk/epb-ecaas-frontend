@@ -23,7 +23,7 @@ mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
-const heatGenerationData = (): Pick<HeatingSystems, "heatGeneration"> => {
+const heatGenerationData = (): Pick<heatingAndCoolingSystems, "heatGeneration"> => {
 	return {
 		heatGeneration: {
 			heatPump: {
@@ -114,7 +114,7 @@ describe("heat generation", () => {
 
 		test("heat pump is removed when remove link is clicked", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [{ data: heatPump1 }],
@@ -134,7 +134,7 @@ describe("heat generation", () => {
 
 		it("only removes the heat pump thats is clicked", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [
@@ -184,7 +184,7 @@ describe("heat generation", () => {
 			};
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [
@@ -216,13 +216,13 @@ describe("heat generation", () => {
 			const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.data;
 			expect(hotWaterCylinderData?.heatSource).toBeUndefined();
 
-			const wetDistributionData = store.heatingSystems.heatEmitting.wetDistribution.data[0]?.data;
+			const wetDistributionData = store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data[0]?.data;
 			expect(wetDistributionData?.heatSource).toBeUndefined();
 		});
 
 		it("should display an in-progress indicator when an entry is not marked as complete", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [
@@ -244,7 +244,7 @@ describe("heat generation", () => {
 
 		it("should display a complete indicator when an entry is marked as complete", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [
@@ -272,7 +272,7 @@ describe("heat generation", () => {
 
 		const addHeatGenerationDataToStore = async () => {
 			store.$patch({
-				heatingSystems: heatGenerationData(),
+				heatingAndCoolingSystems: heatGenerationData(),
 			});
 		};
 
@@ -310,8 +310,8 @@ describe("heat generation", () => {
 			await user.click(await screen.findByTestId("markAsCompleteButton"));
 
 			type HeatGenerationType =
-				keyof typeof store.heatingSystems.heatGeneration;
-			const heatGenerators = store.heatingSystems.heatGeneration;
+				keyof typeof store.heatingAndCoolingSystems.heatGeneration;
+			const heatGenerators = store.heatingAndCoolingSystems.heatGeneration;
 			for (const key in heatGenerators) {
 				expect(heatGenerators[key as HeatGenerationType]?.complete).toBe(true);
 			}
@@ -319,7 +319,7 @@ describe("heat generation", () => {
 
 		it("disables the mark section as complete button when data is incomplete", async () => {
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [
@@ -350,7 +350,7 @@ describe("heat generation", () => {
 
 		const addHeatGenerationDataToStore = async () => {
 			store.$patch({
-				heatingSystems: heatGenerationData(),
+				heatingAndCoolingSystems: heatGenerationData(),
 			});
 		};
 
@@ -369,14 +369,14 @@ describe("heat generation", () => {
 				await screen.findByTestId(firstActionTestId("heatPump", "remove")),
 			);
 
-			// const heatGenerators = store.heatingSystems.heatGeneration;
-			// type HeatGenerationType = keyof typeof store.heatingSystems.heatGeneration;
+			// const heatGenerators = store.heatingAndCoolingSystems.heatGeneration;
+			// type HeatGenerationType = keyof typeof store.heatingAndCoolingSystems.heatGeneration;
 			// for (const heatGenerator in heatGenerators) {
 			// 	await user.click(await screen.findByTestId(firstActionTestId(heatGenerator, "remove")));
 			// 	expect(heatGenerators[heatGenerator as HeatGenerationType]?.complete).toBe(false);
 			// }
 
-			expect(store.heatingSystems.heatGeneration["heatPump"]?.complete).toBe(
+			expect(store.heatingAndCoolingSystems.heatGeneration["heatPump"]?.complete).toBe(
 				false,
 			);
 			expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
@@ -384,7 +384,7 @@ describe("heat generation", () => {
 
 		it("marks heat pump section as not complete after saving an existing heat pump", async () => {
 			await user.click(await screen.findByTestId("markAsCompleteButton"));
-			expect(store.heatingSystems.heatGeneration.heatPump?.complete).toBe(true);
+			expect(store.heatingAndCoolingSystems.heatGeneration.heatPump?.complete).toBe(true);
 
 			const { form, params } = generatorFormAndParams("heatPump") || {};
 			await renderSuspended(form, {
@@ -393,7 +393,7 @@ describe("heat generation", () => {
 				},
 			});
 			await user.click(await screen.findByTestId("saveAndComplete"));
-			expect(store.heatingSystems.heatGeneration.heatPump.complete).toBe(false);
+			expect(store.heatingAndCoolingSystems.heatGeneration.heatPump.complete).toBe(false);
 
 			await renderSuspended(HeatGeneration);
 			expect(

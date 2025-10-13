@@ -1,5 +1,5 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
-import HeatingSystemsSummary from "./summary.vue";
+import heatingAndCoolingSystemsSummary from "./summary.vue";
 import { screen, within } from "@testing-library/vue";
 import { FuelType } from "~/schema/api-schema.types";
 import { kilowatt } from "~/utils/units/power";
@@ -29,20 +29,20 @@ describe("Heating systems summary page", () => {
 	});
 
 	it("displays the correct title", async () => {
-		await renderSuspended(HeatingSystemsSummary);
+		await renderSuspended(heatingAndCoolingSystemsSummary);
 		expect(screen.getByRole("heading", { name: "Heating system summary" }));
 	});
 
 	describe("Energy supply section", () => {
 		it("displays energy supply tab", async () => {
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			expect(
 				screen.getByRole("link", { name: "Energy supply" }),
 			).not.toBeNull();
 		});
 
 		it("displays an empty section if no energy supply data has been added", async () => {
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 
 			await verifyDataInSection("energySupply", { "Fuel type": "" });
 		});
@@ -50,7 +50,7 @@ describe("Heating systems summary page", () => {
 		it("displays the correct fields when electricity is selected", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					energySupply: {
 						data: {
 							fuelType: [FuelType.electricity],
@@ -60,7 +60,7 @@ describe("Heating systems summary page", () => {
 				},
 			});
 
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			await verifyDataInSection("energySupply", {
 				"Fuel type": "Electricity",
 				"Exported": "No",
@@ -70,7 +70,7 @@ describe("Heating systems summary page", () => {
 		it("displays the correct fields when custom is selected", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					energySupply: {
 						data: {
 							fuelType: [FuelType.custom],
@@ -82,7 +82,7 @@ describe("Heating systems summary page", () => {
 				},
 			});
 
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			await verifyDataInSection("energySupply", {
 				"Fuel type": "Custom",
 				"CO2 per kWh": `1 ${co2PerKilowattHour.suffix}`,
@@ -94,7 +94,7 @@ describe("Heating systems summary page", () => {
 		it("displays all conditional fields when both electricity and custom are selected", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					energySupply: {
 						data: {
 							fuelType: [FuelType.custom, FuelType.electricity],
@@ -107,7 +107,7 @@ describe("Heating systems summary page", () => {
 				},
 			});
 
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			await verifyDataInSection("energySupply", {
 				"Fuel type": "Custom, Electricity",
 				"CO2 per kWh": `1 ${co2PerKilowattHour.suffix}`,
@@ -118,7 +118,7 @@ describe("Heating systems summary page", () => {
 		});
 
 		it("displays an edit link that navigates to the energy supply form page when clicked", async () => {
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			const editLink = screen.getByRole<HTMLAnchorElement>("link", {
 				name: "Edit",
 			});
@@ -152,7 +152,7 @@ describe("Heating systems summary page", () => {
 		};
 
 		it("displays 'No heat generators added' and link to heat generation overview page when no data exists", async () => {
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 
 			expect(screen.getByText("No heat generators added")).not.toBeNull();
 			const addHeatGenerationLink: HTMLAnchorElement = screen.getByRole("link", {
@@ -166,7 +166,7 @@ describe("Heating systems summary page", () => {
 		it("displays tabs only for the heat generation types that have data", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [{ data: heatPump }],
@@ -186,7 +186,7 @@ describe("Heating systems summary page", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			expect(screen.getByRole("link", { name: "Heat pump" })).not.toBeNull();
 			// expect(screen.getByRole("link", { name: "Boiler" })).not.toBeNull();
 			// expect(screen.getByRole("link", { name: "Heat battery" })).not.toBeNull();
@@ -199,7 +199,7 @@ describe("Heating systems summary page", () => {
 		it("displays the correct data for the heat pump section", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [{ data: heatPump }],
@@ -207,7 +207,7 @@ describe("Heating systems summary page", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 
 			await verifyDataInSection("heatPump", { "Name": "Heat pump 1" });
 
@@ -216,7 +216,7 @@ describe("Heating systems summary page", () => {
 		it("displays the correct data for the boiler section", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						boiler: {
 							data: [boiler],
@@ -224,7 +224,7 @@ describe("Heating systems summary page", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 
 			await verifyDataInSection("boiler", { "Name": "Boiler 1" });
 		});
@@ -232,7 +232,7 @@ describe("Heating systems summary page", () => {
 		it("displays the correct data for the heat battery section", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatBattery: {
 							data: [heatBattery],
@@ -240,7 +240,7 @@ describe("Heating systems summary page", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 
 			await verifyDataInSection("heatBattery", { "Name": "Heat battery 1" });
 
@@ -249,7 +249,7 @@ describe("Heating systems summary page", () => {
 		it("displays the correct data for the heat network section", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatNetwork: {
 							data: [heatNetwork],
@@ -257,7 +257,7 @@ describe("Heating systems summary page", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 
 			await verifyDataInSection("heatNetwork", { "Name": "Heat network 1" });
 		});
@@ -265,7 +265,7 @@ describe("Heating systems summary page", () => {
 		it("displays the correct data for the heat interface unit section", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatInterfaceUnit: {
 							data: [heatInterfaceUnit],
@@ -273,7 +273,7 @@ describe("Heating systems summary page", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 
 			await verifyDataInSection("heatInterfaceUnit", { "Name": "Heat interface unit 1" });
 
@@ -281,7 +281,7 @@ describe("Heating systems summary page", () => {
 		it("displays an edit link on each section that navigates to the heat generation overview page when clicked", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [{ data: heatPump }],
@@ -301,8 +301,8 @@ describe("Heating systems summary page", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatingSystemsSummary);
-			for (const [key] of Object.entries(store.heatingSystems.heatGeneration)) {
+			await renderSuspended(heatingAndCoolingSystemsSummary);
+			for (const [key] of Object.entries(store.heatingAndCoolingSystems.heatGeneration)) {
 				const heatGenerationSection = screen.getByTestId(key);
 
 				const editLink: HTMLAnchorElement = within(heatGenerationSection).getByText(
@@ -378,7 +378,7 @@ describe("Heating systems summary page", () => {
 		};
 
 		it("displays 'No heat emittors added' and link to heat emitting overview page when no data exists", async () => {
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 
 			expect(screen.getByText("No heat emitters added")).not.toBeNull();
 			const addHeatEmittingLink: HTMLAnchorElement = screen.getByRole("link", {
@@ -391,7 +391,7 @@ describe("Heating systems summary page", () => {
 		it("displays tabs only for the heat emitting types that have data", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						wetDistribution: {
 							data: [wetDistribution1],
@@ -413,7 +413,7 @@ describe("Heating systems summary page", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			expect(
 				screen.getByRole("link", { name: "Wet distribution" }),
 			).not.toBeNull();
@@ -431,7 +431,7 @@ describe("Heating systems summary page", () => {
 		it("displays the correct data for the wet distribution section when type of space heater is Radiators", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						wetDistribution: {
 							data: [wetDistribution1],
@@ -457,14 +457,14 @@ describe("Heating systems summary page", () => {
 				"Eco design controller class": "I: On/Off Room Thermostat",
 				"Minimum flow temperature": `20 ${celsius.suffix}`,
 			};
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
 		});
 
 		it("displays the correct data for the wet distribution section when type of space heater is Underfloor heating", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						wetDistribution: {
 							data: [wetDistribution2],
@@ -491,14 +491,14 @@ describe("Heating systems summary page", () => {
 				"Minimum flow temperature": `20 ${celsius.suffix}`,
 			};
 
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
 		});
 
 		it("displays the correct data for the wet distribution section", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						wetDistribution: {
 							data: [wetDistribution1],
@@ -525,14 +525,14 @@ describe("Heating systems summary page", () => {
 				"Minimum flow temperature": `20 ${celsius.suffix}`,
 			};
 
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
 		});
 
 		it("displays the correct data for the instant electric heater section", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						instantElectricHeater: {
 							data: [instantElectricHeater],
@@ -546,7 +546,7 @@ describe("Heating systems summary page", () => {
 				"Rated power": `3 ${kilowatt.suffix}`,
 				"Convection fraction": "0.2",
 			};
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			await verifyDataInSection(
 				"instantElectricHeater",
 				expectedInstantElectricHeaterData,
@@ -556,7 +556,7 @@ describe("Heating systems summary page", () => {
 		it("displays the correct data for the electric storage heater section", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						electricStorageHeater: {
 							data: [electricStorageHeater],
@@ -565,7 +565,7 @@ describe("Heating systems summary page", () => {
 				},
 			});
 
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			const lineResult = await screen.findByTestId(
 				"summary-electricStorageHeater-name",
 			);
@@ -578,7 +578,7 @@ describe("Heating systems summary page", () => {
 		it("displays the correct data for the warm air heat pump section", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						warmAirHeatPump: {
 							data: [warmAirHeatPump],
@@ -587,7 +587,7 @@ describe("Heating systems summary page", () => {
 				},
 			});
 
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			const lineResult = await screen.findByTestId(
 				"summary-warmAirHeatPump-name",
 			);
@@ -601,7 +601,7 @@ describe("Heating systems summary page", () => {
 		it("displays an edit link on each section that navigates to the heat emitting overview page when clicked", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatEmitting: {
 						wetDistribution: {
 							data: [wetDistribution1],
@@ -623,8 +623,8 @@ describe("Heating systems summary page", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatingSystemsSummary);
-			for (const [key] of Object.entries(store.heatingSystems.heatEmitting)) {
+			await renderSuspended(heatingAndCoolingSystemsSummary);
+			for (const [key] of Object.entries(store.heatingAndCoolingSystems.heatEmitting)) {
 				const heatEmittingSection = screen.getByTestId(key);
 
 				const editLink: HTMLAnchorElement = within(heatEmittingSection).getByText(
@@ -651,7 +651,7 @@ describe("Heating systems summary page", () => {
 		};
 
 		it("displays 'No cooling added' and link to cooling overview page when no data exists", async () => {
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 
 			expect(screen.getByText("No cooling added")).not.toBeNull();
 			const addHeatEmittingLink: HTMLAnchorElement = screen.getByRole("link", {
@@ -665,7 +665,7 @@ describe("Heating systems summary page", () => {
 		it("displays the correct data for the air conditioning section when data exists", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					cooling: {
 						airConditioning: {
 							data: [airConditioning1],
@@ -673,7 +673,7 @@ describe("Heating systems summary page", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 
 			const expectedAirConditioningData = {
 				"Name": "Air conditioning 1",
@@ -682,14 +682,14 @@ describe("Heating systems summary page", () => {
 				"Convection fraction": "1",
 				"Energy source": "Electricity",
 			};
-			await renderSuspended(HeatingSystemsSummary);
+			await renderSuspended(heatingAndCoolingSystemsSummary);
 			await verifyDataInSection("airConditioning", expectedAirConditioningData);
 		});
 
 		it("displays an edit link on each section that navigates to the cooling overview page when clicked", async () => {
 
 			store.$patch({
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					cooling: {
 						airConditioning: {
 							data: [airConditioning1],
@@ -697,8 +697,8 @@ describe("Heating systems summary page", () => {
 					},
 				},
 			});
-			await renderSuspended(HeatingSystemsSummary);
-			for (const [key] of Object.entries(store.heatingSystems.cooling)) {
+			await renderSuspended(heatingAndCoolingSystemsSummary);
+			for (const [key] of Object.entries(store.heatingAndCoolingSystems.cooling)) {
 				const coolingSection = screen.getByTestId(key);
 
 				const editLink: HTMLAnchorElement = within(coolingSection).getByText(

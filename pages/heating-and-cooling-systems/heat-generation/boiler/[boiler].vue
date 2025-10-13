@@ -5,12 +5,12 @@ const title = "Boiler";
 const store = useEcaasStore();
 const { saveToList } = useForm();
 
-const boilerData = useItemToEdit("boiler", store.heatingSystems.heatGeneration.boiler.data);
+const boilerData = useItemToEdit("boiler", store.heatingAndCoolingSystems.heatGeneration.boiler.data);
 const model: Ref<BoilerData> = ref(boilerData!);
 
 const saveForm = (fields: BoilerData) => {
 	store.$patch((state) => {
-		const { boiler } = state.heatingSystems.heatGeneration;
+		const { boiler } = state.heatingAndCoolingSystems.heatGeneration;
 
 		const boilerItem: BoilerData = {
 			id: uuidv4(),
