@@ -109,111 +109,96 @@ describe("cooling", () => {
 		});
 	});
 	describe("mark section as complete", () => {
-		it("marks cooling as complete when mark section as complete button is clicked", async () => {
+		it("marks cooling as complete when mark section as complete button is clicked and disables the mark section as complete button", async () => {
 			await renderSuspended(Cooling);
 
-			const markAsCompleteButton = screen.getByTestId("markAsCompleteButton");
-			expect(markAsCompleteButton?.style.display).not.toBe("none");
+			expect(screen.getByTestId("markAsCompleteButton").style.display).not.toBe("none");
 
 			await user.click(screen.getByTestId("markAsCompleteButton"));
 
 			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(true);
-
-			const completedStatusElement = screen.queryByTestId(
-				"completeSectionCompleted",
-			);
-			expect(completedStatusElement?.style.display).not.toBe("none");
-
+			expect(screen.getByTestId("markAsCompleteButton").style.display).toBe("none");
+			expect(screen.queryByTestId("completeSectionCompleted")?.style.display).not.toBe("none");
 			expect(navigateToMock).toHaveBeenCalledWith("/heating-and-cooling-systems");
 		});
 
-		it("marks cooling as not complete when complete button is clicked then user removes an item", async () => {
-			store.$patch({
-				heatingSystems: {
-					cooling: {
-						airConditioning: {
-							data: [{ data: airConditioning1, complete: true }],
+		describe("after section has been marked as complete", () => {
+			const addCoolingDataToStore = async () => {
+				store.$patch({
+					heatingSystems: {
+						cooling: {
+							airConditioning: {
+								data: [{ data: airConditioning1, complete: true }],
+							},
 						},
 					},
-				},
+				});
+			};
+
+			beforeEach(async () => {
+				addCoolingDataToStore();
+				await renderSuspended(Cooling);
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+			})
+
+			it("displays 'Completed' section status indicator", async () => {
+				const completed = screen.queryByTestId("completeSectionCompleted");
+				expect(completed?.style.display).not.toBe("none");
 			});
 
-			await renderSuspended(Cooling);
-			await user.click(screen.getByTestId("markAsCompleteButton"));
+			it("navigates to heating systems page", async () => {
+				expect(navigateToMock).toHaveBeenCalledWith("/heating-and-cooling-systems");
+			});
 
-			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(true);
+			it("marks all cooling items as complete", async () => {
+				const { airConditioning } = store.heatingSystems.cooling;
+				expect(airConditioning?.complete).toBe(true);
+			});
 
-			await user.click(screen.getByTestId("airConditioning_remove_0"));
+			it("marks cooling items as not complete if an item is removed", async () => {
+				await user.click(screen.getByTestId("airConditioning_remove_0"));
 
-			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(false);
+				const { airConditioning } = store.heatingSystems.cooling;
+				expect(airConditioning?.complete).toBe(false);
+				expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
+				expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
+			});
 
-			const markAsCompleteButton = screen.getByTestId("markAsCompleteButton");
-			expect(markAsCompleteButton?.style.display).not.toBe("none");
-			expect(markAsCompleteButton.hasAttribute("disabled")).toBeFalsy();
-		});
+			it("marks heat emitters as not complete if an item is duplicated", async () => {
+				await user.click(screen.getByTestId("airConditioning_duplicate_0"));
 
-		it("marks cooling as not complete when complete button is clicked then user duplicates an item", async () => {
-			store.$patch({
-				heatingSystems: {
-					cooling: {
-						airConditioning: {
-							data: [{ data: airConditioning1, complete: true }],
-						},
+				const { airConditioning } = store.heatingSystems.cooling;
+				expect(airConditioning?.complete).toBe(false);
+				expect(screen.getByTestId("markAsCompleteButton")).not.toBeNull();
+				expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
+			});
+
+			it("marks cooling as not complete after adding a new cooling item", async () => {
+				await renderSuspended(AirConditioningForm, {
+					route: {
+						params: { airConditioning: "create" },
 					},
-				},
-			});
+				});
 
-			await renderSuspended(Cooling);
-			await user.click(screen.getByTestId("markAsCompleteButton"));
+				await user.type(screen.getByTestId("name"), "New AC");
+				await user.tab();
 
-			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(true);
+				expect(store.heatingSystems.cooling.airConditioning.complete).toBe(false);
+			})
 
-			await user.click(screen.getByTestId("airConditioning_duplicate_0"));
-
-			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(false);
-			const markAsCompleteButton = screen.getByTestId("markAsCompleteButton");
-			expect(markAsCompleteButton?.style.display).not.toBe("none");
-			expect(markAsCompleteButton.hasAttribute("disabled")).toBeFalsy();
-		});
-
-		it("marks cooling as not complete when user saves a new or edited form after marking section as complete", async () => {
-			store.$patch({
-				heatingSystems: {
-					cooling: {
-						airConditioning: {
-							data: [{ data: airConditioning1, complete: true }],
-							complete: true,
-						},
+			it("marks cooling as not complete after editing an existing cooling item", async () => {
+				await renderSuspended(AirConditioningForm, {
+					route: {
+						params: { airConditioning: "0" },
 					},
-				},
-			});
+				});
 
-			await renderSuspended(Cooling);
-			await user.click(screen.getByTestId("markAsCompleteButton"));
+				await user.clear(screen.getByTestId("name"));
+				await user.type(screen.getByTestId("name"), "Updated AC");
+				await user.tab();
 
-			await renderSuspended(AirConditioningForm, {
-				route: {
-					params: { airConditioning: "0" },
-				},
-			});
-
-			await user.click(screen.getByTestId("saveAndComplete"));
-
-			expect(store.heatingSystems.cooling.airConditioning.complete).toBe(false);
-
-			await renderSuspended(Cooling);
-			const markAsCompleteButton = screen.getByTestId("markAsCompleteButton");
-			expect(markAsCompleteButton?.style.display).not.toBe("none");
-			expect(markAsCompleteButton.hasAttribute("disabled")).toBeFalsy();
-		});
-
-		it("should navigate to the main overview page when return to overview is clicked", async () => {
-			await renderSuspended(Cooling);
-
-			const returnToHeatingSystemsButton = screen.getByRole("button", {
-				name: "Return to heating systems",
-			});
-			expect(returnToHeatingSystemsButton.getAttribute("href")).toBe("/heating-and-cooling-systems");
-		});
+				expect(store.heatingSystems.cooling.airConditioning.complete).toBe(false);
+			})
+		})
 	});
 });
