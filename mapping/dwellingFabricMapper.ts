@@ -300,6 +300,7 @@ export function mapWallData(
 	const externalWallData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceExternalWall?.map((x) => {
     	const nameWithSuffix = suffixName(x.name, wallSuffix);
+			// const netSurfaceArea = calculateNetSurfaceArea()
 
     	return {
     		[nameWithSuffix]: {
@@ -309,7 +310,7 @@ export function mapWallData(
     			height: x.height,
     			width: x.length,
     			base_height: x.elevationalHeight,
-    			area: x.surfaceArea,
+    			area: x.grossSurfaceArea,
     			solar_absorption_coeff: x.solarAbsorption,
     			u_value: x.uValue,
     			areal_heat_capacity: x.kappaValue,

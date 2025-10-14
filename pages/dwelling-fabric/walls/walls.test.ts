@@ -33,7 +33,7 @@ describe("walls", () => {
 		height: 0.5,
 		length: 20,
 		elevationalHeight: 20,
-		surfaceArea: 10,
+		grossSurfaceArea: 10,
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 100,

@@ -11,7 +11,7 @@ describe("getResolvedTaggedItem", () => {
 		length: 20,
 		height: 0.5,
 		elevationalHeight: 20,
-		surfaceArea: 10,
+		grossSurfaceArea: 10,
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,

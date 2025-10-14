@@ -26,7 +26,7 @@ const saveForm = (fields: ExternalWallData) => {
 				height: fields.height,
 				length: fields.length,
 				elevationalHeight: fields.elevationalHeight,
-				surfaceArea: fields.surfaceArea,
+				grossSurfaceArea: fields.grossSurfaceArea,
 				solarAbsorption: fields.solarAbsorption,
 				uValue: fields.uValue,
 				kappaValue: fields.kappaValue,
@@ -116,12 +116,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FieldsElevationalHeight />
 		<FormKit
-			id="surfaceArea"
+			id="grossSurfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Gross surface area"
 			help="Enter the gross area of the building element"
-			name="surfaceArea"
+			name="grossSurfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>

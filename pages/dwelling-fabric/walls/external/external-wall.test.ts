@@ -25,7 +25,7 @@ describe("external wall", () => {
 		length: 20,
 		height: 0.5,
 		elevationalHeight: 20,
-		surfaceArea: 10,
+		grossSurfaceArea: 10,
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,
@@ -51,7 +51,7 @@ describe("external wall", () => {
 		await user.type(screen.getByTestId("length"), "20");
 		await user.type(screen.getByTestId("height"), "0.5");
 		await user.type(screen.getByTestId("elevationalHeight"), "20");
-		await user.type(screen.getByTestId("surfaceArea"), "10");
+		await user.type(screen.getByTestId("grossSurfaceArea"), "10");
 		await user.type(screen.getByTestId("solarAbsorption"), "0.1");
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.click(screen.getByTestId("kappaValue_50000"));
@@ -88,7 +88,7 @@ describe("external wall", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("length")).value).toBe("20");
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("0.5");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("20");
-		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("10");
+		expect((await screen.findByTestId<HTMLInputElement>("grossSurfaceArea")).value).toBe("10");
 		expect((await screen.findByTestId<HTMLInputElement>("solarAbsorption")).value).toBe("0.1");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 		expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
@@ -106,7 +106,7 @@ describe("external wall", () => {
 		expect((await screen.findByTestId("length_error"))).toBeDefined();
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
-		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
+		expect((await screen.findByTestId("grossSurfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("solarAbsorption_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();

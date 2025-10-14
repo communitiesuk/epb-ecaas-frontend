@@ -138,7 +138,7 @@ const externalWallSummary: SummarySection = {
 			"Height": dim(x.height, "metres"),
 			"Length": dim(x.length, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"Gross surface area": dim(x.surfaceArea, "metres square"),
+			"Gross surface area": dim(x.grossSurfaceArea, "metres square"),
 			"Solar absorption coefficient": dim(x.solarAbsorption),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
