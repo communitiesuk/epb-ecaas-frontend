@@ -41,9 +41,6 @@ describe("cooling mapper", () => {
 				frac_convective: 1,
 				efficiency: 1,
 				type: "AirConditioning",
-				advanced_start: null,
-				temp_setback: null,
-				Control: defaultControlName,
 			},
 		};
 
@@ -90,9 +87,6 @@ describe("cooling mapper", () => {
 				frac_convective: 3,
 				efficiency: 2,
 				type: "AirConditioning",
-				temp_setback: null,
-				advanced_start: null,
-				Control: defaultControlName,
 			},
 			"airConditioner2": {
 				EnergySupply: "mains elec",
@@ -100,9 +94,6 @@ describe("cooling mapper", () => {
 				frac_convective: 5,
 				efficiency: 6,
 				type: "AirConditioning",
-				temp_setback: null,
-				advanced_start: null,
-				Control: defaultControlName,
 			},
 		};
 
