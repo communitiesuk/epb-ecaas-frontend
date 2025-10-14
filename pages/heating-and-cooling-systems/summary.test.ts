@@ -645,7 +645,7 @@ describe("Heating systems summary page", () => {
 				coolingCapacity: 1,
 				seasonalEnergyEfficiencyRatio: 1,
 				convectionFraction: 1,
-				energySupply: FuelType.electricity,
+				energySupply: "electricity",
 			},
 		};
 

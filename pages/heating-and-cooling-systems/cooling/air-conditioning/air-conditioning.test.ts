@@ -3,7 +3,6 @@ import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import type { AirConditioningData } from "~/stores/ecaasStore.schema";
-import { FuelType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -23,11 +22,11 @@ describe("Air conditioning", () => {
 		coolingCapacity: 10,
 		seasonalEnergyEfficiencyRatio: 10,
 		convectionFraction: 1,
-		energySupply: FuelType.electricity,
+		energySupply: "electricity",
 	};
 
 	const energySupplyState: EnergySupplyData = {
-		fuelType: [FuelType.electricity],
+		fuelType: ["electricity"],
 		exported: true,
 	};
 

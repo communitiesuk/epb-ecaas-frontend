@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
-import { FuelType } from "./../../schema/api-schema.types";
 
 defineProps<{
 	id: string;
@@ -19,7 +18,7 @@ const { fuelType } = store.heatingAndCoolingSystems.energySupply.data;
 
 const energySupplies = fuelType !== undefined ? [
 	fuelType.map(x => {
-		return x ? [FuelType[x], sentenceCase(x)] as [string, string] : undefined;
+		return x ? [x, sentenceCase(x)] as [string, string] : undefined;
 	}),
 ].flat().filter(x => typeof x !== "undefined") : [];
 

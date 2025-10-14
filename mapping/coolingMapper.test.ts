@@ -17,7 +17,7 @@ describe("cooling mapper", () => {
 			coolingCapacity: 4,
 			seasonalEnergyEfficiencyRatio: 1,
 			convectionFraction: 1,
-			energySupply: FuelType.electricity,
+			energySupply: "electricity",
 		};
 
 		store.$patch({
@@ -58,7 +58,7 @@ describe("cooling mapper", () => {
 			coolingCapacity: 1,
 			seasonalEnergyEfficiencyRatio: 2,
 			convectionFraction: 3,
-			energySupply: FuelType.electricity,
+			energySupply: "electricity",
 		};
 
 		const airConditioner2: AirConditioningData = {
@@ -66,7 +66,7 @@ describe("cooling mapper", () => {
 			coolingCapacity: 7,
 			seasonalEnergyEfficiencyRatio: 6,
 			convectionFraction: 5,
-			energySupply: FuelType.electricity,
+			energySupply: "electricity",
 		};
 
 		store.$patch({
