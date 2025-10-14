@@ -149,7 +149,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 			data: {
 				type: AdjacentSpaceType.heatedSpace,
 				name: "Ceiling 1",
-				surfaceArea: 5,
+				grossSurfaceArea: 5,
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,
 				pitchOption: "custom",

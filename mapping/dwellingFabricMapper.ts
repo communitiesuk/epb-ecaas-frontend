@@ -397,7 +397,7 @@ export function mapCeilingAndRoofData(
     dwellingSpaceCeilings.map((x) => {
     	const commonFields = {
     		pitch: extractPitch(x),
-    		area: x.surfaceArea,
+    		area: x.grossSurfaceArea,
     		areal_heat_capacity: x.kappaValue,
     		mass_distribution_class: x.massDistributionClass,
     	};

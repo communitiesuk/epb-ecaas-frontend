@@ -447,7 +447,7 @@ describe("dwelling fabric mapper", () => {
 			id: "71360137-9541-4596-973a-26870092753a",
 			type: AdjacentSpaceType.unheatedSpace,
 			name: "Ceiling 1",
-			surfaceArea: 5,
+			grossSurfaceArea: 5,
 			uValue: 1,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
@@ -494,7 +494,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedCeiling: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 			pitch: extractPitch(ceiling),
-			area: ceiling.surfaceArea,
+			area: ceiling.grossSurfaceArea,
 			u_value: ceiling.uValue,
 			areal_heat_capacity: ceiling.kappaValue,
 			mass_distribution_class: ceiling.massDistributionClass,

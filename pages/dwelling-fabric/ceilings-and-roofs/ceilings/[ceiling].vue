@@ -22,7 +22,7 @@ const saveForm = (fields: CeilingData) => {
 		const commonFields = {
 			id: currentId || uuidv4(),
 			name: fields.name,
-			surfaceArea: fields.surfaceArea,
+			grossSurfaceArea: fields.grossSurfaceArea,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
@@ -117,12 +117,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				data-field="Zone.BuildingElement.*.pitch"
 			/>
 			<FormKit
-				id="surfaceArea"
+				id="grossSurfaceArea"
 				type="govInputWithSuffix"
 				suffix-text="m²"
 				label="Gross surface area"
 				help="Enter the gross area of the building element"
-				name="surfaceArea"
+				name="grossSurfaceArea"
 				validation="required | number | min:0 | max:10000"
 				data-field="Zone.BuildingElement.*.area"
 			/>

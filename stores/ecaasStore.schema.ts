@@ -264,7 +264,7 @@ export type CeilingsAndRoofsData = AssertFormKeysArePageIds<{
 }>;
 
 const baseCeilingData = namedWithId.extend({
-	surfaceArea: z.number().min(0).max(10000),
+	grossSurfaceArea: z.number().min(0).max(10000),
 	kappaValue: z.number(),
 	massDistributionClass,
 	pitchOption: zeroPitchOption,

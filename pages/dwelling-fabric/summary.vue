@@ -218,7 +218,7 @@ const ceilingSummary: SummarySection = {
 			"Type of ceiling": displayAdjacentSpaceType(x.type, "Ceiling"),
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
-			"Gross surface area": dim(x.surfaceArea, "metres square"),
+			"Gross surface area": dim(x.grossSurfaceArea, "metres square"),
 			"U-value": isCeilingToUnheatedSpace ? uValue : undefined,
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),

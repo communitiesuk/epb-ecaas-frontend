@@ -21,7 +21,7 @@ describe("ceiling", () => {
 			id: "099342c5-07c5-4268-b66b-f85dfc5de58f",
 			type: AdjacentSpaceType.heatedSpace,
 			name: "Ceiling 1",
-			surfaceArea: 5,
+			grossSurfaceArea: 5,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: "0",
@@ -44,7 +44,7 @@ describe("ceiling", () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Ceiling 1");
-		await user.type(screen.getByTestId("surfaceArea"), "5");
+		await user.type(screen.getByTestId("grossSurfaceArea"), "5");
 		await user.click(screen.getByTestId("kappaValue_50000"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.click(screen.getByTestId("pitchOption_0"));
@@ -93,7 +93,7 @@ describe("ceiling", () => {
 	
 			expect((await screen.findByTestId("type_heatedSpace")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Ceiling 1");
-			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
+			expect((await screen.findByTestId<HTMLInputElement>("grossSurfaceArea")).value).toBe("5");
 			expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("pitchOption_0")).hasAttribute("checked")).toBe(true);
@@ -106,7 +106,7 @@ describe("ceiling", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
-			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
+			expect((await screen.findByTestId("grossSurfaceArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 			expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
@@ -243,7 +243,7 @@ describe("ceiling", () => {
 			const actualCeiling = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[0]!;
 
 			expect(actualCeiling.data.name).toBe("New ceiling");
-			expect(actualCeiling.data.surfaceArea).toBeUndefined();
+			expect(actualCeiling.data.grossSurfaceArea).toBeUndefined();
 			expect(actualCeiling.data.kappaValue).toBeUndefined();
 		});
 
@@ -262,7 +262,7 @@ describe("ceiling", () => {
 
 			expect(actualCeiling.name).toBe("Ceiling");
 			expect(actualCeiling.thermalResistanceOfAdjacentUnheatedSpace).toBe(0.7);
-			expect(actualCeiling.surfaceArea).toBeUndefined();
+			expect(actualCeiling.grossSurfaceArea).toBeUndefined();
 			expect(actualCeiling.kappaValue).toBeUndefined();
 		});
 
@@ -284,15 +284,15 @@ describe("ceiling", () => {
 			});
 
 			await user.clear(screen.getByTestId("name"));
-			await user.clear(screen.getByTestId("surfaceArea"));
+			await user.clear(screen.getByTestId("grossSurfaceArea"));
 
 			await user.type(screen.getByTestId("name"), "Updated ceiling");
-			await user.type(screen.getByTestId("surfaceArea"), "17");
+			await user.type(screen.getByTestId("grossSurfaceArea"), "17");
 			await user.tab();
 
 			const actualCeiling = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[1]!;
 			expect(actualCeiling.data.name).toBe("Updated ceiling");
-			expect(actualCeiling.data.surfaceArea).toBe(17);
+			expect(actualCeiling.data.grossSurfaceArea).toBe(17);
 		});
 
 		test("ceiling and ceilings section are set as 'not complete' after user edits an item", async () => {

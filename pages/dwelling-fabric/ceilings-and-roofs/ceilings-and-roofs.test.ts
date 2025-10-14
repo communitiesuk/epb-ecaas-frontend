@@ -27,7 +27,7 @@ describe("ceilings and roofs", () => {
 			id: "bf19cff9-225b-4e38-80d7-a3e1adf5da3f",
 			name: "Ceiling 1",
 			type: AdjacentSpaceType.heatedSpace,
-			surfaceArea: 5,
+			grossSurfaceArea: 5,
 			kappaValue: 100,
 			massDistributionClass: MassDistributionClass.I,
 			pitchOption: "custom",
