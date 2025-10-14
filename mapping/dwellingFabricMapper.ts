@@ -168,8 +168,8 @@ export function mapFloorData(
     	return {
     		[nameWithSuffix]: {
     			type: "BuildingElementGround",
-    			area: x.surfaceArea,
-    			total_area: x.surfaceArea,
+    			area: x.grossSurfaceArea,
+    			total_area: x.grossSurfaceArea,
     			u_value: x.uValue,
     			thermal_resistance_floor_construction: x.thermalResistance,
     			areal_heat_capacity: x.kappaValue,
@@ -270,7 +270,7 @@ export function mapFloorData(
 
 	return {
 		GroundFloorArea: dwellingSpaceGroundFloor.reduce(
-			(sum, floor) => sum + floor.surfaceArea,
+			(sum, floor) => sum + floor.grossSurfaceArea,    //changed back to net surface area ?
 			0,
 		),
 		Zone: {

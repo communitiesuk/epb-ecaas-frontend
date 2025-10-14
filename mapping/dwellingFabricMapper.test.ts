@@ -107,7 +107,7 @@ describe("dwelling fabric mapper", () => {
 		// Arrange
 		const groundFloor: GroundFloorData = {
 			name: "Ground 1",
-			surfaceArea: 5,
+			grossSurfaceArea: 5,
 			pitch: 180,
 			uValue: 1,
 			thermalResistance: 1,
@@ -199,7 +199,7 @@ describe("dwelling fabric mapper", () => {
 			},
 		});
 
-		const groundFloorsTotalArea = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.length * groundFloor.surfaceArea;
+		const groundFloorsTotalArea = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.length * groundFloor.grossSurfaceArea;  //this was net surface area before - so it may need to change back to net surface area once calculated 
 		const floorSuffix = " (floor)";
 
 		// Act
@@ -218,8 +218,8 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedGroundFloor: BuildingElementGround = {
 			type: "BuildingElementGround",
-			area: groundFloor.surfaceArea,
-			total_area: groundFloor.surfaceArea,
+			area: groundFloor.grossSurfaceArea,       
+			total_area: groundFloor.grossSurfaceArea,
 			pitch: groundFloor.pitch,
 			u_value: groundFloor.uValue,
 			thermal_resistance_floor_construction: groundFloor.thermalResistance,

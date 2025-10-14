@@ -1069,7 +1069,7 @@ describe("FHS input mapper", () => {
 						...baseForm,
 						data: {
 							name: "ground-floor",
-							surfaceArea: 40,
+							grossSurfaceArea: 40,
 							pitch: 0,
 							uValue: 1,
 							thermalResistance: 1,
@@ -1524,7 +1524,7 @@ describe("FHS input mapper", () => {
 							...baseForm,
 							data: {
 								name: "ground floor 1",
-								surfaceArea: 12,
+								grossSurfaceArea: 12,
 								pitch: 0,
 								uValue: 5,
 								thermalResistance: 2,
@@ -1543,7 +1543,7 @@ describe("FHS input mapper", () => {
 							...baseForm,
 							data: {
 								name: "ground floor 2",
-								surfaceArea: 26,
+								grossSurfaceArea: 26,
 								pitch: 0,
 								uValue: 5,
 								thermalResistance: 2,

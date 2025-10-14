@@ -33,7 +33,7 @@ const floorsData: FloorsData = {
 		data: [{
 			data: {
 				name: "Ground 1",
-				surfaceArea: 5,
+				grossSurfaceArea: 5,
 				pitch: 0,
 				uValue: 1,
 				thermalResistance: 1,

@@ -17,7 +17,7 @@ describe("ground floor", () => {
 
 	const groundFloor: GroundFloorData = {
 		name: "Ground 1",
-		surfaceArea: 5,
+		grossSurfaceArea: 5,
 		pitch: 180,
 		uValue: 1,
 		thermalResistance: 1,
@@ -53,7 +53,7 @@ describe("ground floor", () => {
 
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Ground 1");
-		await user.type(screen.getByTestId("surfaceArea"), "5");
+		await user.type(screen.getByTestId("grossSurfaceArea"), "5");
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.type(screen.getByTestId("thermalResistance"), "1");
 		await user.click(screen.getByTestId("kappaValue_50000"));
@@ -98,7 +98,7 @@ describe("ground floor", () => {
 			});
 	
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Ground 1");
-			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
+			expect((await screen.findByTestId<HTMLInputElement>("grossSurfaceArea")).value).toBe("5");
 			expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("thermalResistance")).value).toBe("1");
 			expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
@@ -115,7 +115,7 @@ describe("ground floor", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
-			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
+			expect((await screen.findByTestId("grossSurfaceArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 			expect((await screen.findByTestId("thermalResistance_error"))).toBeDefined();
 			expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
@@ -303,12 +303,12 @@ describe("ground floor", () => {
 				},
 			});
 			
-			await user.type(screen.getByTestId("surfaceArea"), "170");
+			await user.type(screen.getByTestId("grossSurfaceArea"), "170");
 			await user.tab();
 			
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 			expect(data[0]!.data.name).toBe("Ground floor");
-			expect(data[0]!.data.surfaceArea).toBe(170);
+			expect(data[0]!.data.grossSurfaceArea).toBe(170);
 		});
 
 		test("updated form data is automatically saved to store", async () => {
@@ -331,16 +331,16 @@ describe("ground floor", () => {
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor;
 
 			expect(data[0]!.data.name).toBe("Ground 1");
-			expect(data[0]!.data.surfaceArea).toBe(5);
+			expect(data[0]!.data.grossSurfaceArea).toBe(5);
 
 			await user.clear(screen.getByTestId("name"));
 			await user.type(screen.getByTestId("name"), "Ground floor");
-			await user.clear(screen.getByTestId("surfaceArea"));
-			await user.type(screen.getByTestId("surfaceArea"), "170");
+			await user.clear(screen.getByTestId("grossSurfaceArea"));
+			await user.type(screen.getByTestId("grossSurfaceArea"), "170");
 			await user.tab();
 
 			expect(data[0]!.data.name).toBe("Ground floor");
-			expect(data[0]!.data.surfaceArea).toBe(170);
+			expect(data[0]!.data.grossSurfaceArea).toBe(170);
 		});
 		
 		test("ground floor and ground floor section are set as 'not complete' after user edits a ground floor", async () => {

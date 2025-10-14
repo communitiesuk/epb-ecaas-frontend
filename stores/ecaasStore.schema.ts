@@ -148,7 +148,7 @@ const exposedFloorDataZod = named.extend({
 export type ExposedFloorData = z.infer<typeof exposedFloorDataZod>;
 
 const baseGroundFloorData = named.extend({
-	surfaceArea: z.number().min(1),
+	grossSurfaceArea: z.number().min(1),
 	pitch: z.number(),
 	uValue,
 	thermalResistance: z.number().min(0.00001).max(50),

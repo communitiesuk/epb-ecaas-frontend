@@ -40,7 +40,7 @@ const saveForm = (fields: GroundFloorData) => {
 
 		const commonFields = {
 			name: fields.name,
-			surfaceArea: fields.surfaceArea,
+			grossSurfaceArea: fields.grossSurfaceArea,
 			pitch: 180,
 			uValue: fields.uValue,
 			thermalResistance: fields.thermalResistance,
@@ -154,12 +154,12 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			validation="required"
 		/>
 		<FormKit
-			id="surfaceArea"
+			id="grossSurfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Gross surface area of the floor"
 			help="Enter the total surface area of the entire building element in the dwelling"
-			name="surfaceArea"
+			name="grossSurfaceArea"
 			validation="required | number | min:1"
 			data-field="Zone.BuildingElement.*.area"
 		/>

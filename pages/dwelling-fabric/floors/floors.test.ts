@@ -18,7 +18,7 @@ describe("floors", () => {
 
 	const ground1: GroundFloorData = {
 		name: "Ground floor 1",
-		surfaceArea: 5,
+		grossSurfaceArea: 5,
 		pitch: 0,
 		uValue: 1,
 		thermalResistance: 1,
@@ -32,7 +32,7 @@ describe("floors", () => {
 
 	const ground2: GroundFloorData = {
 		name: "Ground floor 2",
-		surfaceArea: 5,
+		grossSurfaceArea: 5,
 		pitch: 0,
 		uValue: 1,
 		thermalResistance: 1,
@@ -46,7 +46,7 @@ describe("floors", () => {
 
 	const ground3: GroundFloorData = {
 		name: "Ground floor 3",
-		surfaceArea: 5,
+		grossSurfaceArea: 5,
 		pitch: 0,
 		uValue: 1,
 		thermalResistance: 1,

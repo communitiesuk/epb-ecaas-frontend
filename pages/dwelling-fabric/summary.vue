@@ -55,7 +55,7 @@ const groundFloorSummary: SummarySection = {
 
 		return {
 			"Name": show(x.name),
-			"Gross surface area of the floor": dim(x.surfaceArea, "metres square"),
+			"Gross surface area of the floor": dim(x.grossSurfaceArea, "metres square"),
 			"Pitch": dim(x.pitch, "degrees"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
