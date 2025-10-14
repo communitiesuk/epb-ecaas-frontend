@@ -33,7 +33,7 @@ const saveForm = (fields: RoofData) => {
 				length: fields.length,
 				width: fields.width,
 				elevationalHeightOfElement: fields.elevationalHeightOfElement,
-				surfaceArea: fields.surfaceArea,
+				grossSurfaceArea: fields.grossSurfaceArea,
 				solarAbsorptionCoefficient: fields.solarAbsorptionCoefficient,
 				uValue: fields.uValue,
 				kappaValue: fields.kappaValue,
@@ -144,11 +144,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Elevational height of roof at its base"
 		/>
 		<FormKit
-			id="surfaceArea"
+			id="grossSurfaceArea"
 			type="govInputWithSuffix"
 			label="Gross surface area of ceiling"
 			help="Enter the gross area of the building element"
-			name="surfaceArea"
+			name="grossSurfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 			suffix-text="m²"
 			data-field="Zone.BuildingElement.*.area"

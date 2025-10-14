@@ -59,7 +59,7 @@ describe("ceilings and roofs", () => {
 			length: 1,
 			width: 1,
 			elevationalHeightOfElement: 2,
-			surfaceArea: 1,
+			grossSurfaceArea: 1,
 			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 50000,

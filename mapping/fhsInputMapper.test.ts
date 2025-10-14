@@ -1723,7 +1723,7 @@ describe("FHS input mapper", () => {
 							length: 2.5,
 							width: 10,
 							elevationalHeightOfElement: 0,
-							surfaceArea: 25,
+							grossSurfaceArea: 25,
 							solarAbsorptionCoefficient: 0.63,
 							uValue: 0.1,
 							kappaValue: 19300,

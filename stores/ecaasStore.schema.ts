@@ -298,7 +298,7 @@ const roofDataZod = namedWithId.extend({
 	length: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	elevationalHeightOfElement: z.number().min(0).max(500),
-	surfaceArea: z.number().min(0.01).max(10000),
+	grossSurfaceArea: z.number().min(0.01).max(10000),
 	solarAbsorptionCoefficient: z.number().min(0.01).max(1),
 	uValue,
 	kappaValue: z.number(),

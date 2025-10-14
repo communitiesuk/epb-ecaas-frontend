@@ -26,7 +26,7 @@ describe("roof", () => {
 			length: 1,
 			width: 1,
 			elevationalHeightOfElement: 2,
-			surfaceArea: 1,
+			grossSurfaceArea: 1,
 			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
 			kappaValue: 50000,
@@ -45,7 +45,7 @@ describe("roof", () => {
 		await user.type(screen.getByTestId("length"), "1");
 		await user.type(screen.getByTestId("width"), "1");
 		await user.type(screen.getByTestId("elevationalHeightOfElement"), "2");
-		await user.type(screen.getByTestId("surfaceArea"), "1");
+		await user.type(screen.getByTestId("grossSurfaceArea"), "1");
 		await user.type(screen.getByTestId("solarAbsorptionCoefficient"), "0.5");
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.click(screen.getByTestId("kappaValue_50000"));
@@ -92,7 +92,7 @@ describe("roof", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("length")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeightOfElement")).value).toBe("2");
-		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("1");
+		expect((await screen.findByTestId<HTMLInputElement>("grossSurfaceArea")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("solarAbsorptionCoefficient")).value).toBe("0.5");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 		expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
@@ -109,7 +109,7 @@ describe("roof", () => {
 		expect((await screen.findByTestId("length_error"))).toBeDefined();
 		expect((await screen.findByTestId("width_error"))).toBeDefined();
 		expect((await screen.findByTestId("elevationalHeightOfElement_error"))).toBeDefined();
-		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
+		expect((await screen.findByTestId("grossSurfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("solarAbsorptionCoefficient_error"))).toBeDefined();
 	});
 

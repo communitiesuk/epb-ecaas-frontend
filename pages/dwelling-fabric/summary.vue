@@ -249,7 +249,7 @@ const roofSummary: SummarySection = {
 			"Length": dim(x.length, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeightOfElement, "metres"),
-			"Gross surface area of ceiling": dim(x.surfaceArea, "metres square"),
+			"Gross surface area of ceiling": dim(x.grossSurfaceArea, "metres square"),
 			"Solar absorption coefficient": dim(x.solarAbsorptionCoefficient),
 			"U-value": isTypeOfRoofSelected ? uValue : undefined,
 			"Areal heat capacity": isTypeOfRoofSelected ? arealHeatCapacity : undefined,

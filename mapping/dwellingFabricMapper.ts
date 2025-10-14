@@ -436,7 +436,7 @@ export function mapCeilingAndRoofData(
     			height: x.length,
     			width: x.width,
     			base_height: x.elevationalHeightOfElement,
-    			area: x.surfaceArea,
+    			area: x.grossSurfaceArea,
     			solar_absorption_coeff: x.solarAbsorptionCoefficient,
     			u_value: x.uValue,
     			areal_heat_capacity: x.kappaValue,
