@@ -86,8 +86,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="surfaceAreaOfElement"
 			validation="required | number | min:0 | max:10000"
 			suffix-text="m²"
-			data-field="Zone.BuildingElement.*.area">
-		</FormKit>
+			data-field="Zone.BuildingElement.*.area"/>
 		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
