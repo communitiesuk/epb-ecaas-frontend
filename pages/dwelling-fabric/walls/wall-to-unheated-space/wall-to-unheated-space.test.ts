@@ -19,7 +19,7 @@ describe("wall to unheated space", () => {
 	const state: WallsToUnheatedSpaceData = {
 		id: "55a95c36-bf0a-40d3-a31d-9e4f86798428",
 		name: "Wall to unheated space 1",
-		surfaceAreaOfElement: 500,
+		grossSurfaceArea: 500,
 		uValue: 10,
 		arealHeatCapacity: 50000,
 		massDistributionClass: MassDistributionClass.E,
@@ -42,7 +42,7 @@ describe("wall to unheated space", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), "Wall to unheated space 1");
-		await user.type(screen.getByTestId("surfaceAreaOfElement"), "500");
+		await user.type(screen.getByTestId("grossSurfaceArea"), "500");
 		await user.type(screen.getByTestId("uValue"), "10");
 		await user.click(screen.getByTestId("arealHeatCapacity_50000"));
 		await user.click(screen.getByTestId("massDistributionClass_E"));
@@ -75,7 +75,7 @@ describe("wall to unheated space", () => {
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Wall to unheated space 1");
-		expect((await screen.findByTestId<HTMLInputElement>("surfaceAreaOfElement")).value).toBe("500");
+		expect((await screen.findByTestId<HTMLInputElement>("grossSurfaceArea")).value).toBe("500");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("10");
 		expect((await screen.findByTestId("arealHeatCapacity_50000")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_E")).hasAttribute("checked")).toBe(true);
@@ -94,7 +94,7 @@ describe("wall to unheated space", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 	
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
-		expect((await screen.findByTestId("surfaceAreaOfElement_error"))).toBeDefined();
+		expect((await screen.findByTestId("grossSurfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();			
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
@@ -148,16 +148,16 @@ describe("wall to unheated space", () => {
 		});
 	
 		await user.clear(screen.getByTestId("name"));
-		await user.clear(screen.getByTestId("surfaceAreaOfElement"));
+		await user.clear(screen.getByTestId("grossSurfaceArea"));
 
 		await user.type(screen.getByTestId("name"), "Wall to unheated space 2");
-		await user.type(screen.getByTestId("surfaceAreaOfElement"), "10");
+		await user.type(screen.getByTestId("grossSurfaceArea"), "10");
 		await user.tab();
 
 		const { data } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace;
 
 		expect(data[0]?.data.name).toBe("Wall to unheated space 2");
-		expect(data[0]?.data.surfaceAreaOfElement).toBe(10);
+		expect(data[0]?.data.grossSurfaceArea).toBe(10);
 	});
 	
 	test("partial form data is saved automatically with default name to store", async () => {
@@ -167,12 +167,12 @@ describe("wall to unheated space", () => {
 			},
 		});
 		
-		await user.type(screen.getByTestId("surfaceAreaOfElement"), "10");
+		await user.type(screen.getByTestId("grossSurfaceArea"), "10");
 		await user.tab();
 
 		const { data } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace;
 
 		expect(data[0]?.data.name).toBe("Wall to unheated space");
-		expect(data[0]?.data.surfaceAreaOfElement).toBe(10);
+		expect(data[0]?.data.grossSurfaceArea).toBe(10);
 	});
 });

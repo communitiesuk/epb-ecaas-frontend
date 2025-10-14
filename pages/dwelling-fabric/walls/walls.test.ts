@@ -75,7 +75,7 @@ describe("walls", () => {
 	const toUnheatedSpace1: WallsToUnheatedSpaceData = {
 		id: "7da5aa7a-f24a-40f7-a5a3-97ea4d6f31d7",
 		name: "Wall to heated space 1",
-		surfaceAreaOfElement: 500,
+		grossSurfaceArea: 500,
 		uValue: 10,
 		arealHeatCapacity: 110000,
 		massDistributionClass: MassDistributionClass.E,

@@ -26,7 +26,7 @@ describe("internal door", () => {
 	const wallToUnheatedSpace: WallsToUnheatedSpaceData = {
 		id: "55a95c36-bf0a-40d3-a31d-9e4f86798428",
 		name: "Wall to unheated space 1",
-		surfaceAreaOfElement: 500,
+		grossSurfaceArea: 500,
 		uValue: 10,
 		arealHeatCapacity: 50000,
 		massDistributionClass: MassDistributionClass.E,

@@ -236,7 +236,7 @@ const internalWallDataZod = namedWithId.extend({
 export type InternalWallData = z.infer<typeof internalWallDataZod>;
 
 const wallsToUnheatedSpaceDataZod = namedWithId.extend({
-	surfaceAreaOfElement: z.number().min(0).max(10000),
+	grossSurfaceArea: z.number().min(0).max(10000),
 	uValue,
 	arealHeatCapacity: z.number(),
 	massDistributionClass,

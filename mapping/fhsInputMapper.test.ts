@@ -1669,7 +1669,7 @@ describe("FHS input mapper", () => {
 							name: "wall to garage",
 							pitchOption: "custom",
 							pitch: 90,
-							surfaceAreaOfElement: 20,
+							grossSurfaceArea: 20,
 							uValue: 1, 
 							arealHeatCapacity: 50000,
 							massDistributionClass: MassDistributionClass.D,

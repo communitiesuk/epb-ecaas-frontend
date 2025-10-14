@@ -117,7 +117,7 @@ const wallsData: WallsData = {
 			data: {
 				id: "a6865ced-8495-41c4-a193-4ff08902892a",
 				name: "Wall to unheated space 1",
-				surfaceAreaOfElement: 500,
+				grossSurfaceArea: 500,
 				uValue: 10,
 				arealHeatCapacity: 50000,
 				massDistributionClass: MassDistributionClass.E,

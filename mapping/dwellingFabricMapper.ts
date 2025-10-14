@@ -360,7 +360,7 @@ export function mapWallData(
     		[nameWithSuffix]: {
     			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
     			pitch: extractPitch(x),
-    			area: x.surfaceAreaOfElement,
+    			area: x.grossSurfaceArea,
     			u_value: x.uValue,
     			areal_heat_capacity: x.arealHeatCapacity,
     			mass_distribution_class: x.massDistributionClass,

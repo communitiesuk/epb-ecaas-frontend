@@ -357,7 +357,7 @@ describe("dwelling fabric mapper", () => {
 			data: {
 				id: "e527893a-480b-42d6-abe4-585e09d9c219",
 				name: "Wall to unheated space 1",
-				surfaceAreaOfElement: 500,
+				grossSurfaceArea: 500,
 				uValue: 10,
 				arealHeatCapacity: 50000,
 				massDistributionClass: MassDistributionClass.E,
@@ -431,7 +431,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedWallToUnheatedSpace: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
 			pitch: wallToUnheatedSpace.data.pitch!,
-			area: wallToUnheatedSpace.data.surfaceAreaOfElement,
+			area: wallToUnheatedSpace.data.grossSurfaceArea,
 			u_value: wallToUnheatedSpace.data.uValue,
 			areal_heat_capacity: wallToUnheatedSpace.data.arealHeatCapacity,
 			mass_distribution_class: wallToUnheatedSpace.data.massDistributionClass,

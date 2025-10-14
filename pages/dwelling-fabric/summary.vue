@@ -170,7 +170,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 		return {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
-			"Gross surface area": dim(x.surfaceAreaOfElement, "metres square"),
+			"Gross surface area": dim(x.grossSurfaceArea, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": displayArealHeatCapacity(x.arealHeatCapacity as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
