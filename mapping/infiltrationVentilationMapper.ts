@@ -19,7 +19,6 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 		cross_vent_possible: crossVentilationPossible,
 		ventilation_zone_base_height: dwellingElevationalLevelAtBase,
 		ach_max_static_calcs: 2, // suggested default
-		vent_opening_ratio_init: 1, // 1 is open
 		MechanicalVentilation: objectFromEntries(objectEntries(mechanicalVentilation).map(([name, mechanicalVentData]) => {
 			return [
 				name,
