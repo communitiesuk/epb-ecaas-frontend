@@ -24,7 +24,7 @@ beforeEach(() => {
 describe("zone parameters", () => {
 
 	// store.$patch({
-	// 	heatingSystems: {
+	// 	heatingAndCoolingSystems: {
 	// 		heatEmitting: {
 	// 			wetDistribution: {
 	// 				data: [{
@@ -55,7 +55,7 @@ describe("zone parameters", () => {
 		await user.type(screen.getByTestId("volume"), "10");
 		// await user.click(screen.getByTestId('spaceHeatingSystemForThisZone_instant_electric_heater'));
 		await user.tab();
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 
 		const { data, complete } = store.dwellingFabric.dwellingSpaceZoneParameters;
@@ -78,11 +78,11 @@ describe("zone parameters", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("volume")).value).toBe("10");
 		// expect((await screen.findByTestId('spaceHeatingSystemForThisZone_instant_electric_heater')).hasAttribute('checked')).toBe(true);
 	});
-			
+
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect((await screen.findByTestId("area_error"))).toBeDefined();
@@ -93,7 +93,7 @@ describe("zone parameters", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect((await screen.findByTestId("zoneParametersErrorSummary"))).toBeDefined();
@@ -109,7 +109,7 @@ describe("zone parameters", () => {
 });
 
 describe("Partially saving data", () => {
-  
+
 	test("form data is automatically saved to store", async () => {
 		await renderSuspended(ZoneParameters);
 

@@ -5,7 +5,7 @@ import { getTabItems, getUrl  } from "#imports";
 const title = "Domestic hot water";
 const store = useEcaasStore();
 
-const { heatPump } = store.heatingSystems.heatGeneration;
+const { heatPump } = store.heatingAndCoolingSystems.heatGeneration;
 const heatGenerationData = [
 	heatPump.data,
 	// boiler.data,

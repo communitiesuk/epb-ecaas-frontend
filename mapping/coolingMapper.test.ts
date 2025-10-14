@@ -1,3 +1,4 @@
+import { SpaceCoolSystemType } from "~/schema/api-schema.types";
 import type { SchemaSpaceCoolSystemDetails } from "~/schema/aliases";
 import { mapSpaceCoolSystems } from "./coolingMapper";
 import { defaultControlName } from "./common";
@@ -16,13 +17,16 @@ describe("cooling mapper", () => {
 			coolingCapacity: 4,
 			seasonalEnergyEfficiencyRatio: 1,
 			convectionFraction: 1,
+			energySupply: FuelType.electricity,
 		};
 
 		store.$patch({
-			cooling: {
-				airConditioning: {
-					data: [airConditioning],
-					complete: true,
+			heatingAndCoolingSystems: {
+				cooling: {
+					airConditioning: {
+						data: [{ data: airConditioning, complete: true }],
+						complete: true,
+					},
 				},
 			},
 		});
@@ -54,6 +58,7 @@ describe("cooling mapper", () => {
 			coolingCapacity: 1,
 			seasonalEnergyEfficiencyRatio: 2,
 			convectionFraction: 3,
+			energySupply: FuelType.electricity,
 		};
 
 		const airConditioner2: AirConditioningData = {
@@ -61,13 +66,16 @@ describe("cooling mapper", () => {
 			coolingCapacity: 7,
 			seasonalEnergyEfficiencyRatio: 6,
 			convectionFraction: 5,
+			energySupply: FuelType.electricity,
 		};
 
 		store.$patch({
-			cooling: {
-				airConditioning: {
-					data: [airConditioner1, airConditioner2],
-					complete: true,
+			heatingAndCoolingSystems: {
+				cooling: {
+					airConditioning: {
+						data: [{ data: airConditioner1, complete: true }, { data: airConditioner2, complete: true }],
+						complete: true,
+					},
 				},
 			},
 		});

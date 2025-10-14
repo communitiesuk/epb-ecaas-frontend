@@ -36,7 +36,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatEmitting: {
 					wetDistribution: {
 						...baseForm,
@@ -186,7 +186,7 @@ describe("dwelling fabric mapper", () => {
 							{ ...baseForm, data: groundFloorWithEdgeInsulation },
 							{ ...baseForm, data: groundFloorWithSuspendedFloor },
 							{ ...baseForm, data: groundFloorWithHeatedBasement },
-							{ ...baseForm, data: groundFloorWithUnheatedBasement },			
+							{ ...baseForm, data: groundFloorWithUnheatedBasement },
 						],
 					},
 					dwellingSpaceInternalFloor: { ...baseForm, data: [{ ...baseForm, data: internalFloor }] },
@@ -560,7 +560,7 @@ describe("dwelling fabric mapper", () => {
 		};
 
 		const doorSuffix = " (door)";
-		 
+
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceDoors: {
@@ -665,12 +665,12 @@ describe("dwelling fabric mapper", () => {
 
 		store.$patch({
 			dwellingFabric: {
-				dwellingSpaceWindows: { 
+				dwellingSpaceWindows: {
 					data: [{
-						data: window, 
-						complete: true, 
+						data: window,
+						complete: true,
 					}],
-					complete: true, 
+					complete: true,
 				},
 			},
 		});
