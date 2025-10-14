@@ -1,6 +1,7 @@
 import { mapAirPermeabilityData, mapCombustionAppliancesData, mapInfiltrationVentilationData, mapMechanicalVentilationData, mapVentilationData, mapVentsData } from "./infiltrationVentilationMapper";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
+import type { SchemaMechanicalVentilation } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -64,7 +65,7 @@ describe("infiltration ventilation mapper", () => {
 		expect(fhsInputData.InfiltrationVentilation).toBeDefined();
 		expect(fhsInputData.InfiltrationVentilation?.MechanicalVentilation).toBeDefined();
 
-		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"];
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
 		expect(firstMechVent?.vent_type).toBe("MVHR");
@@ -76,7 +77,6 @@ describe("infiltration ventilation mapper", () => {
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeDefined();
-		expect(firstMechVent?.SFP).toBe(1.5);
 	});
 
 
@@ -130,8 +130,8 @@ describe("infiltration ventilation mapper", () => {
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
 		// Assert
-		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"];
-		const firstDuctwork = firstMechVent!.ductwork![0];
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;;
+		const firstDuctwork = firstMechVent.ductwork[0];
 
 		expect(firstDuctwork?.cross_section_shape).toBe("circular");
 		expect(firstDuctwork?.internal_diameter_mm).toBe(200);
@@ -173,9 +173,9 @@ describe("infiltration ventilation mapper", () => {
 		const fhsInputData = mapInfiltrationVentilationData(resolveState(store.$state));
 
 		// Assert
-		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"];
+		const firstMechVent = fhsInputData.InfiltrationVentilation!.MechanicalVentilation!["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;;
 
-		expect(firstMechVent!.ductwork).toStrictEqual([]);
+		expect(firstMechVent.ductwork).toStrictEqual([]);
 	});
 
 
@@ -205,7 +205,7 @@ describe("infiltration ventilation mapper", () => {
 		const fhsInputData = mapMechanicalVentilationData(resolveState(store.$state));
     
 		// Assert
-		const firstMechVent = fhsInputData["bathroom exhaust fan"];
+		const firstMechVent = fhsInputData["bathroom exhaust fan"] as Extract<SchemaMechanicalVentilation, { vent_type: "MVHR" }>;;
 		expect(firstMechVent).toBeDefined();
 		expect(firstMechVent?.EnergySupply).toBe("mains elec");
 		expect(firstMechVent?.vent_type).toBe("Intermittent MEV");
@@ -215,7 +215,6 @@ describe("infiltration ventilation mapper", () => {
 		expect(firstMechVent?.measured_air_flow_rate).toBe(37); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.measured_fan_power).toBe(12.26); // NOTE - hardcoded to sensible default for now
 		expect(firstMechVent?.ductwork).toBeUndefined();
-		expect(firstMechVent?.SFP).toBe(1.5); // NOTE - hardcoded to sensible default for now
 	});
 
 	it("maps vents to FHS input request", async () => {

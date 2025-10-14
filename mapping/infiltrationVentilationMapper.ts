@@ -4,6 +4,7 @@ import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { asCubicMetresPerHour } from "~/utils/units/flowRate";
 import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaCombustionAppliance, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/aliases";
+import type { SchemaMechVentCommon } from "~/schema/api-schema.types";
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilationPossible } = mapVentilationData(state);
@@ -50,17 +51,61 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		}
 		
 		const key = x.name;
-		const val: Omit<SchemaMechanicalVentilation, "ductwork"> = {
-			vent_type: x.typeOfMechanicalVentilationOptions,
-			EnergySupply: defaultElectricityEnergySupplyName,
+
+		const commonFields = {
 			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
 			sup_air_flw_ctrl: "ODA",
 			sup_air_temp_ctrl: "CONST",
-			...(x.typeOfMechanicalVentilationOptions === "MVHR" ? { mvhr_location: x.mvhrLocation, mvhr_eff: x.mvhrEfficiency } : {}),
-			measured_air_flow_rate: 37,
-			measured_fan_power: 12.26,
-			SFP: 1.5, // canned value for now
-		};
+			EnergySupply: defaultElectricityEnergySupplyName,
+		} as const satisfies SchemaMechVentCommon;
+
+		let val: SchemaMechanicalVentilation;
+
+		const ventType = x.typeOfMechanicalVentilationOptions;
+
+		switch (ventType) {
+			case "MVHR":
+				val = {
+					vent_type: "MVHR",
+					...commonFields,
+					mvhr_location: x.mvhrLocation,
+					mvhr_eff: x.mvhrEfficiency,
+					position_exhaust: {},
+					ductwork: [],
+					position_intake: {},
+					measured_air_flow_rate: 37,
+					measured_fan_power: 12.26,
+				};
+				break;
+			case "Centralised continuous MEV":
+				val = {
+					vent_type: "Centralised continuous MEV",
+					...commonFields,
+					measured_air_flow_rate: 37,
+					measured_fan_power: 12.26,
+					position_exhaust: {},
+				};
+				break;
+			case "Intermittent MEV":
+				val = {
+					vent_type: "Intermittent MEV",
+					...commonFields,
+					SFP: 1.5,
+					position_exhaust: {},
+				};
+				break;
+			case "Decentralised continuous MEV":
+				val = {
+					vent_type: "Decentralised continuous MEV",
+					...commonFields,
+					SFP: 1.5,
+					position_exhaust: {},
+				};
+				break;
+			default:
+				ventType satisfies never;
+				throw new Error(`Encountered unexpected vent type: '${ventType}'`);
+		}
 
 		return [key, val];
 	});
