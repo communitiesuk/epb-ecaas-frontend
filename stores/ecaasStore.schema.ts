@@ -138,7 +138,7 @@ const exposedFloorDataZod = named.extend({
 	length: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
-	surfaceArea: z.number().min(0.01).max(10000),
+	grossSurfaceArea: z.number().min(0.01).max(10000),
 	solarAbsorption: z.number(),
 	uValue,
 	kappaValue: z.number(),

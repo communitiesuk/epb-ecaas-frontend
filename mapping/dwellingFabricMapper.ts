@@ -256,7 +256,7 @@ export function mapFloorData(
     			height: x.length,
     			width: x.width,
     			base_height: x.elevationalHeight,
-    			area: x.surfaceArea,
+    			area: x.grossSurfaceArea,
     			solar_absorption_coeff: x.solarAbsorption,
     			u_value: x.uValue,
     			areal_heat_capacity: x.kappaValue,

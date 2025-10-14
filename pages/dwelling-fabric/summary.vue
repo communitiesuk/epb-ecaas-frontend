@@ -106,7 +106,7 @@ const exposedFloorSummary: SummarySection = {
 			"Length": dim(x.length, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"Gross surface area of the floor": dim(x.surfaceArea, "metres square"),
+			"Gross surface area of the floor": dim(x.grossSurfaceArea, "metres square"),
 			"Solar absorption coefficient": dim(x.solarAbsorption),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),

@@ -1594,7 +1594,7 @@ describe("FHS input mapper", () => {
 							length: 5,
 							width: 2,
 							elevationalHeight: 1,
-							surfaceArea: 10,
+							grossSurfaceArea: 10,
 							solarAbsorption: 0.4,
 							kappaValue: 110000,
 							massDistributionClass: MassDistributionClass.D,
