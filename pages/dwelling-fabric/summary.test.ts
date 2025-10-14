@@ -134,7 +134,7 @@ const wallsData: WallsData = {
 				name: "Party wall 1",
 				pitchOption: "90",
 				pitch: 90,
-				surfaceArea: 10,
+				grossSurfaceArea: 10,
 				uValue: 1,
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,

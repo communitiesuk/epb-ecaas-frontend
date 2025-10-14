@@ -1615,7 +1615,7 @@ describe("FHS input mapper", () => {
 							name: "party wall 1",
 							pitchOption: "90",
 							pitch: 45,
-							surfaceArea: 15,
+							grossSurfaceArea: 15,
 							uValue: 1,
 							kappaValue: 50000,
 							massDistributionClass: MassDistributionClass.E,

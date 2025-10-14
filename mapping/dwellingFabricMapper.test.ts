@@ -345,7 +345,7 @@ describe("dwelling fabric mapper", () => {
 				name: "Party wall 1",
 				pitchOption: "90",
 				pitch: 90,
-				surfaceArea: 10,
+				grossSurfaceArea: 10,
 				uValue: 1,
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,
@@ -420,7 +420,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedPartyWall: BuildingElementAdjacentConditionedSpace = {
 			type: "BuildingElementAdjacentConditionedSpace",
 			pitch: partyWall.data.pitch!,
-			area: partyWall.data.surfaceArea,
+			area: partyWall.data.grossSurfaceArea,
 			u_value: partyWall.data.uValue,
 			areal_heat_capacity: partyWall.data.kappaValue,
 			mass_distribution_class: partyWall.data.massDistributionClass,

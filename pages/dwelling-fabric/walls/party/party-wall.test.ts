@@ -21,7 +21,7 @@ describe("party wall", () => {
 		name: "Party wall 1",
 		pitchOption: "90",
 		pitch: 90,
-		surfaceArea: 10,
+		grossSurfaceArea: 10,
 		uValue: 1,
 		kappaValue: 50000,
 		massDistributionClass: MassDistributionClass.I,
@@ -42,7 +42,7 @@ describe("party wall", () => {
 
 		await user.type(screen.getByTestId("name"), "Party wall 1");
 		await user.click(screen.getByTestId("pitchOption_90"));
-		await user.type(screen.getByTestId("surfaceArea"), "10");
+		await user.type(screen.getByTestId("grossSurfaceArea"), "10");
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.click(screen.getByTestId("kappaValue_50000"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
@@ -74,7 +74,7 @@ describe("party wall", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Party wall 1");
 		expect((await screen.findByTestId<HTMLInputElement>("pitchOption_90")).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("10");
+		expect((await screen.findByTestId<HTMLInputElement>("grossSurfaceArea")).value).toBe("10");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 		expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
@@ -87,7 +87,7 @@ describe("party wall", () => {
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
-		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
+		expect((await screen.findByTestId("grossSurfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
@@ -132,16 +132,16 @@ describe("party wall", () => {
 	
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
-		await user.clear(screen.getByTestId("surfaceArea"));
+		await user.clear(screen.getByTestId("grossSurfaceArea"));
 
 		await user.type(screen.getByTestId("name"), "Party wall 2");
-		await user.type(screen.getByTestId("surfaceArea"), "15");
+		await user.type(screen.getByTestId("grossSurfaceArea"), "15");
 		await user.tab();
 
 		const { data } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall;
 
 		expect(data[0]?.data.name).toBe("Party wall 2");
-		expect(data[0]?.data.surfaceArea).toBe(15);
+		expect(data[0]?.data.grossSurfaceArea).toBe(15);
 	});
 	
 	test("partial form data is saved automatically with default name to store", async () => {
@@ -151,12 +151,12 @@ describe("party wall", () => {
 			},
 		});
 		
-		await user.type(screen.getByTestId("surfaceArea"), "10");
+		await user.type(screen.getByTestId("grossSurfaceArea"), "10");
 		await user.tab();
 
 		const { data } = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall;
 
 		expect(data[0]?.data.name).toBe("Party wall");
-		expect(data[0]?.data.surfaceArea).toBe(10);
+		expect(data[0]?.data.grossSurfaceArea).toBe(10);
 	});
 });

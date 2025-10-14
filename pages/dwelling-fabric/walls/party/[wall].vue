@@ -23,7 +23,7 @@ const saveForm = (fields: PartyWallData) => {
 				name: fields.name,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
-				surfaceArea: fields.surfaceArea,
+				grossSurfaceArea: fields.grossSurfaceArea,
 				uValue: fields.uValue,
 				kappaValue: fields.kappaValue,
 				massDistributionClass: fields.massDistributionClass,
@@ -83,12 +83,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.pitch"
 		/>
 		<FormKit
-			id="surfaceArea"
+			id="grossSurfaceArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
 			label="Gross surface area"
 			help="Enter the gross area of the building element"
-			name="surfaceArea"
+			name="grossSurfaceArea"
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>

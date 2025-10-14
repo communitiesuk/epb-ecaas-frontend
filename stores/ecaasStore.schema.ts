@@ -250,7 +250,7 @@ export type WallsToUnheatedSpaceData = z.infer<typeof wallsToUnheatedSpaceDataZo
 const partyWallDataZod = namedWithId.extend({
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
-	surfaceArea: z.number().min(0.01).max(10000),
+	grossSurfaceArea: z.number().min(0.01).max(10000),
 	uValue,
 	kappaValue: z.number(),
 	massDistributionClass,

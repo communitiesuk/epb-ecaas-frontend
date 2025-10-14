@@ -99,7 +99,7 @@ describe("walls", () => {
 		name: "Party wall 1",
 		pitchOption: "90",
 		pitch: 90,
-		surfaceArea: 10,
+		grossSurfaceArea: 10,
 		uValue: 0.01,
 		kappaValue: 100,
 		massDistributionClass: MassDistributionClass.I,
