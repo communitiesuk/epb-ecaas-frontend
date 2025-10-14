@@ -113,7 +113,7 @@ export enum AdjacentSpaceType {
 }
 
 const baseInternalFloorData = named.extend({
-	surfaceAreaOfElement: z.number(),
+	grossSurfaceArea: z.number(),
 	kappaValue: z.number(),
 	massDistributionClass,
 });

@@ -51,7 +51,7 @@ const floorsData: FloorsData = {
 			data: {
 				typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 				name: "Internal 1",
-				surfaceAreaOfElement: 5,
+				grossSurfaceArea: 5,
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,
 			},

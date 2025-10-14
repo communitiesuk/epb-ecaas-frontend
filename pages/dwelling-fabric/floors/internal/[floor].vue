@@ -17,7 +17,7 @@ const saveForm = (fields: InternalFloorData) => {
 
 		const commonFields = {
 			name: fields.name,
-			surfaceAreaOfElement: fields.surfaceAreaOfElement,
+			grossSurfaceArea: fields.grossSurfaceArea,
 			kappaValue: fields.kappaValue,
 			massDistributionClass: fields.massDistributionClass,
 		};
@@ -93,10 +93,10 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				validation="required"
 			/>
 			<FormKit
-				id="surfaceAreaOfElement"
+				id="grossSurfaceArea"
 				type="govInputWithSuffix"
 				label="Gross surface area of the floor"
-				name="surfaceAreaOfElement"
+				name="grossSurfaceArea"
 				validation="required | number | min:0 | max:10000"
 				suffix-text="m²"
 				data-field="Zone.BuildingElement.*.area"

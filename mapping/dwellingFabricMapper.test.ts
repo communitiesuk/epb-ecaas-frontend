@@ -160,7 +160,7 @@ describe("dwelling fabric mapper", () => {
 		const internalFloor: InternalFloorData = {
 			typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
 			name: "Internal 1",
-			surfaceAreaOfElement: 5,
+			grossSurfaceArea: 5,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
@@ -276,7 +276,7 @@ describe("dwelling fabric mapper", () => {
 
 		const expectedInternalFloor: BuildingElementAdjacentUnconditionedSpaceSimple = {
 			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-			area: internalFloor.surfaceAreaOfElement,
+			area: internalFloor.grossSurfaceArea,
 			pitch: 180,
 			u_value: 0.01,
 			areal_heat_capacity: internalFloor.kappaValue,

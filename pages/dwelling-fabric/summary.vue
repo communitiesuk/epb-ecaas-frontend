@@ -88,7 +88,7 @@ const internalFloorSummary: SummarySection = {
 		return {
 			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, "Internal floor"),
 			"Name": show(x.name),
-			"Gross surface area of the floor": dim(x.surfaceAreaOfElement, "metres square"),
+			"Gross surface area of the floor": dim(x.grossSurfaceArea, "metres square"),
 			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalFloorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,

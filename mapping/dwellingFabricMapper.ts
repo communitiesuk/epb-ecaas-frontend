@@ -219,7 +219,7 @@ export function mapFloorData(
 	const internalFloorData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceInternalFloor?.map((x) => {
     	const commonFields = {
-    		area: x.surfaceAreaOfElement,
+    		area: x.grossSurfaceArea,
     		areal_heat_capacity: x.kappaValue,
     		mass_distribution_class: x.massDistributionClass,
     		pitch: 180,

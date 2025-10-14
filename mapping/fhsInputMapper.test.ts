@@ -1567,7 +1567,7 @@ describe("FHS input mapper", () => {
 							data: {
 								name: "internal floor 1",
 								typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
-								surfaceAreaOfElement: 6,
+								grossSurfaceArea: 6,
 								kappaValue: 50000,
 								massDistributionClass: MassDistributionClass.IE,
 								thermalResistanceOfAdjacentUnheatedSpace: 1,
@@ -1578,7 +1578,7 @@ describe("FHS input mapper", () => {
 							data: {
 								name: "internal floor 2",
 								typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
-								surfaceAreaOfElement: 4,
+								grossSurfaceArea: 4,
 								kappaValue: 110000,
 								massDistributionClass: MassDistributionClass.M,
 							},
