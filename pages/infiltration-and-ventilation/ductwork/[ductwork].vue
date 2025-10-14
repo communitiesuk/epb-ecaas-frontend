@@ -41,27 +41,18 @@ const saveForm = (fields: DuctworkData) => {
 			surfaceReflectivity: fields.surfaceReflectivity,
 		};
 
-		let ductworkItem: DuctworkData;
-
-		switch (fields.ductworkCrossSectionalShape) {
-			case "circular":
-				ductworkItem = {
-					...commonFields,
-					ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
-					internalDiameterOfDuctwork: fields.internalDiameterOfDuctwork,
-					externalDiameterOfDuctwork: fields.externalDiameterOfDuctwork,
-				};
-				break;
-			case "rectangular":
-				ductworkItem = {
-					...commonFields,
-					ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
-					ductPerimeter: fields.ductPerimeter,
-				};
-				break;
-			default:
-				throw new Error("Missed a duct shape case");
-		}
+		const ductworkItem: DuctworkData = {
+			name: fields.name,
+			mvhrUnit: fields.mvhrUnit,
+			ductType: fields.ductType,
+			insulationThickness: fields.insulationThickness,
+			lengthOfDuctwork: fields.lengthOfDuctwork,
+			thermalInsulationConductivityOfDuctwork: fields.thermalInsulationConductivityOfDuctwork,
+			surfaceReflectivity: fields.surfaceReflectivity,
+			ductworkCrossSectionalShape: fields.ductworkCrossSectionalShape,
+			internalDiameterOfDuctwork: fields.internalDiameterOfDuctwork,
+			externalDiameterOfDuctwork: fields.externalDiameterOfDuctwork,
+		};
 
 		ductwork.data[index] = {
 			data: ductworkItem,
@@ -172,74 +163,62 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 			data-field="InfiltrationVentilation.MechanicalVentilation.cross_section_shape	"
 		/>
-		<template v-if="model && model.ductworkCrossSectionalShape === 'circular'">
-			<FormKit
-				id="internalDiameterOfDuctwork"
-				type="govInputWithSuffix"
-				suffix-text="mm"
-				label="Internal diameter of ductwork"
-				name="internalDiameterOfDuctwork"
-				validation="required | number | min:0 | max:1000"
-				data-field="InfiltrationVentilation.MechanicalVentilation.internal_diameter_mm">
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-					<table class="govuk-table">
-						<thead class="govuk-table__head">
-							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header">Explanation</th>
-								<th scope="col" class="govuk-table__header">Typical range</th>
-							</tr>
-						</thead>
-						<tbody class="govuk-table__body">
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Inner size of the duct, determining actual airflow capacity</td>
-								<td class="govuk-table__cell">
-									100 - 150mm<br>
-									(varies based on system needs)
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</GovDetails>
-			</FormKit>
-			<FormKit
-				id="externalDiameterOfDuctwork"
-				type="govInputWithSuffix"
-				suffix-text="mm"
-				label="External diameter of ductwork"
-				name="externalDiameterOfDuctwork"
-				validation="required | number | min:0 | max:1000"
-				data-field="InfiltrationVentilation.MechanicalVentilation.external_diameter_mm">
-				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
-					<table class="govuk-table">
-						<thead class="govuk-table__head">
-							<tr class="govuk-table__row">
-								<th scope="col" class="govuk-table__header">Explanation</th>
-								<th scope="col" class="govuk-table__header">Typical range</th>
-							</tr>
-						</thead>
-						<tbody class="govuk-table__body">
-							<tr class="govuk-table__row">
-								<td class="govuk-table__cell">Outer size of the duct, affecting airflow and space requirements</td>
-								<td class="govuk-table__cell">
-									125 - 160<br>
-									(standard domestic systems)
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</GovDetails>
-			</FormKit>
-		</template>
-
 		<FormKit
-			v-if="model && model.ductworkCrossSectionalShape === 'rectangular'"
-			id="ductPerimeter"
+			id="internalDiameterOfDuctwork"
 			type="govInputWithSuffix"
 			suffix-text="mm"
-			label="Perimeter of ductwork"
-			name="ductPerimeter"
+			label="Internal diameter of ductwork"
+			name="internalDiameterOfDuctwork"
 			validation="required | number | min:0 | max:1000"
-		/>
+			data-field="InfiltrationVentilation.MechanicalVentilation.internal_diameter_mm">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Explanation</th>
+							<th scope="col" class="govuk-table__header">Typical range</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Inner size of the duct, determining actual airflow capacity</td>
+							<td class="govuk-table__cell">
+								100 - 150mm<br>
+								(varies based on system needs)
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
+		<FormKit
+			id="externalDiameterOfDuctwork"
+			type="govInputWithSuffix"
+			suffix-text="mm"
+			label="External diameter of ductwork"
+			name="externalDiameterOfDuctwork"
+			validation="required | number | min:0 | max:1000"
+			data-field="InfiltrationVentilation.MechanicalVentilation.external_diameter_mm">
+			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
+				<table class="govuk-table">
+					<thead class="govuk-table__head">
+						<tr class="govuk-table__row">
+							<th scope="col" class="govuk-table__header">Explanation</th>
+							<th scope="col" class="govuk-table__header">Typical range</th>
+						</tr>
+					</thead>
+					<tbody class="govuk-table__body">
+						<tr class="govuk-table__row">
+							<td class="govuk-table__cell">Outer size of the duct, affecting airflow and space requirements</td>
+							<td class="govuk-table__cell">
+								125 - 160<br>
+								(standard domestic systems)
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</GovDetails>
+		</FormKit>
 		<FormKit
 			id="lengthOfDuctwork"
 			type="govInputWithSuffix"

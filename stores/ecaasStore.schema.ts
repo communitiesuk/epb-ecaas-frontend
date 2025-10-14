@@ -706,29 +706,17 @@ const mechanicalVentilationDataZod = z.discriminatedUnion(
 
 export type MechanicalVentilationData = z.infer<typeof mechanicalVentilationDataZod>;
 
-const baseDuctworkData = named.extend({
+const ductworkDataZod = named.extend({
 	mvhrUnit: z.string(),
 	ductworkCrossSectionalShape: ductShapeZod,
 	ductType: ductTypeZod,
+	internalDiameterOfDuctwork: z.number().min(0).max(1000),
+	externalDiameterOfDuctwork: z.number().min(0).max(1000),
 	insulationThickness: z.number().min(0).max(100),
 	lengthOfDuctwork: z.number().min(0),
 	thermalInsulationConductivityOfDuctwork: z.number().min(0),
 	surfaceReflectivity: z.boolean(),
 });
-const ductworkDataZod = z.discriminatedUnion(
-	"ductworkCrossSectionalShape",
-	[
-		baseDuctworkData.extend({
-			ductworkCrossSectionalShape: z.literal("circular"),
-			internalDiameterOfDuctwork: z.number().min(0).max(1000),
-			externalDiameterOfDuctwork: z.number().min(0).max(1000),
-		}),
-		baseDuctworkData.extend({
-			ductworkCrossSectionalShape: z.literal("rectangular"),
-			ductPerimeter: z.number().min(0).max(1000),
-		}),
-	],
-);
 
 export type DuctworkData = z.infer<typeof ductworkDataZod>;
 

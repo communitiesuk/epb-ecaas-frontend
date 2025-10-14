@@ -81,8 +81,8 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 			duct_type: x.ductType,
 			insulation_thermal_conductivity: x.thermalInsulationConductivityOfDuctwork,
 			insulation_thickness_mm: x.insulationThickness,
-			...(x.ductworkCrossSectionalShape === "circular" ? { internal_diameter_mm: x.internalDiameterOfDuctwork, external_diameter_mm: x.externalDiameterOfDuctwork } : {}),
-			...(x.ductworkCrossSectionalShape === "rectangular" ? { duct_perimeter_mm: x.ductPerimeter } : {}),
+			internal_diameter_mm: x.internalDiameterOfDuctwork,
+			external_diameter_mm: x.externalDiameterOfDuctwork,
 			length: x.lengthOfDuctwork,
 			reflective: x.surfaceReflectivity,
 		};
