@@ -328,7 +328,7 @@ export function mapWallData(
     		[nameWithSuffix]: {
     			type: "BuildingElementAdjacentConditionedSpace",
     			pitch: extractPitch(x),
-    			area: x.surfaceAreaOfElement,
+    			area: x.grossSurfaceArea,
     			u_value: defaultUValue,
     			areal_heat_capacity: x.kappaValue,
     			mass_distribution_class: x.massDistributionClass,

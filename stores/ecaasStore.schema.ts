@@ -226,7 +226,7 @@ const externalWallDataZod = namedWithId.extend({
 export type ExternalWallData = z.infer<typeof externalWallDataZod>;
 
 const internalWallDataZod = namedWithId.extend({
-	surfaceAreaOfElement: z.number().min(0).max(10000),
+	grossSurfaceArea: z.number().min(0).max(10000),
 	kappaValue: z.number(),
 	massDistributionClass,
 	pitchOption: standardPitchOption,

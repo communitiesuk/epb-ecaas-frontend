@@ -1654,7 +1654,7 @@ describe("FHS input mapper", () => {
 							name: "internal wall 1",
 							pitchOption: "90",
 							pitch: 90,
-							surfaceAreaOfElement: 15,
+							grossSurfaceArea: 15,
 							kappaValue: 50000,
 							massDistributionClass: MassDistributionClass.I,
 						},

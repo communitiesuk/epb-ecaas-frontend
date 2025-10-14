@@ -330,7 +330,7 @@ describe("dwelling fabric mapper", () => {
 			data: {
 				id: "a51c8dfa-07de-4d5d-a36c-2b72e30fca74",
 				name: "Internal 1",
-				surfaceAreaOfElement: 5,
+				grossSurfaceArea: 5,
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,
 				pitchOption: "90",
@@ -409,7 +409,7 @@ describe("dwelling fabric mapper", () => {
 		const expectedInternalWall: BuildingElementAdjacentConditionedSpace = {
 			type: "BuildingElementAdjacentConditionedSpace",
 			pitch: internalWall.data.pitch!,
-			area: internalWall.data.surfaceAreaOfElement,
+			area: internalWall.data.grossSurfaceArea,
 			u_value: 0.01,
 			areal_heat_capacity: internalWall.data.kappaValue,
 			mass_distribution_class: internalWall.data.massDistributionClass,
@@ -548,7 +548,7 @@ describe("dwelling fabric mapper", () => {
 			data: {
 				id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
 				name: "Internal 1",
-				surfaceAreaOfElement: 5,
+				grossSurfaceArea: 5,
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,
 				pitchOption: "90",

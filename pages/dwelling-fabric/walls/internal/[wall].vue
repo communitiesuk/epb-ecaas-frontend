@@ -21,7 +21,7 @@ const saveForm = (fields: InternalWallData) => {
 			data: {
 				id: currentId || uuidv4(),
 				name: fields.name,
-				surfaceAreaOfElement: fields.surfaceAreaOfElement,
+				grossSurfaceArea: fields.grossSurfaceArea,
 				kappaValue: fields.kappaValue,
 				massDistributionClass: fields.massDistributionClass,
 				pitchOption: fields.pitchOption,
@@ -79,11 +79,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.pitch"
 		/>
 		<FormKit
-			id="surfaceAreaOfElement"
+			id="grossSurfaceArea"
 			type="govInputWithSuffix"
 			label="Gross surface area"
 			help="Enter the gross area of the building element. If the element is not square or rectangular the area might not be equal to width multiplied by height, hence the need to ask for area in addition to width and height."
-			name="surfaceAreaOfElement"
+			name="grossSurfaceArea"
 			validation="required | number | min:0 | max:10000"
 			suffix-text="m²"
 			data-field="Zone.BuildingElement.*.area"/>

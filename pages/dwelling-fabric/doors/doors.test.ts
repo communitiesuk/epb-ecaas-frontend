@@ -40,7 +40,7 @@ describe("doors", () => {
 	const internalWall: InternalWallData = {
 		id: "06cce939-0899-42cc-aa46-0d47c11a6ede",
 		name: "Internal 1",
-		surfaceAreaOfElement: 5,
+		grossSurfaceArea: 5,
 		kappaValue: 50000,
 		massDistributionClass: MassDistributionClass.I,
 		pitchOption: "90",

@@ -104,7 +104,7 @@ const wallsData: WallsData = {
 			data: {
 				id: internalWallId,
 				name: "Internal 1",
-				surfaceAreaOfElement: 5,
+				grossSurfaceArea: 5,
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,
 				pitchOption: "custom",
