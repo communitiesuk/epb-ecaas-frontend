@@ -275,7 +275,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				pitch: x.pitch,
 				orientation360: x.orientation,
 				is_external_door: false,
-			}
+			},
 		};
 	}) || [];
 
@@ -315,7 +315,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: x.massDistributionClass,
 				is_external_door: false,
-			}
+			},
 		};
 	}) || [];
 
@@ -330,7 +330,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				u_value: defaultUValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: x.massDistributionClass,
-			}
+			},
 		};
 	}) || [];
 
@@ -345,7 +345,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: x.massDistributionClass,
-			}
+			},
 		};
 	}) || [];
 
@@ -432,7 +432,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 				mass_distribution_class: x.massDistributionClass,
 				is_external_door: false,
 				is_unheated_pitched_roof: x.typeOfRoof === "pitchedInsulatedAtCeiling",
-			}
+			},
 		};
 	});
 
@@ -526,7 +526,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: x.massDistributionClass,
 				is_external_door: true,
-			}
+			},
 		};
 	});
 
@@ -630,7 +630,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				free_area_height: x.numberOpenableParts === "0" ? 0 : x.heightOpenableArea,
 				window_part_list: mapWindowPartList(x),
 				shading: [...overhang, ...sideFinLeft, ...sideFinRight],
-			}
+			},
 		};
 	});
 

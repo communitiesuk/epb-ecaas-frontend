@@ -1,5 +1,5 @@
 import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower } from "~/schema/aliases";
-import type { SchemaStorageTank, SchemaWaterPipework, SchemaWaterPipeworkSimple } from "~/schema/api-schema.types";
+import type { SchemaStorageTank, SchemaWaterPipework } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultControlMaxName, defaultControlMinName, defaultElectricityEnergySupplyName } from "./common";
 import { asLitres } from "../utils/units/volume";

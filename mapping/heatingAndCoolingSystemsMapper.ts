@@ -25,7 +25,7 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 							"Emissions Factor kgCO2e/kWh": co2PerKwh!,
 							"Emissions Factor kgCO2e/kWh including out-of-scope emissions": co2PerKwhIncludingOutOfScope!,
 							"Primary Energy Factor kWh/kWh delivered": kwhPerKwhDelivered!,
-						}
+						},
 					} : {}),
 				},
 			])) : []),

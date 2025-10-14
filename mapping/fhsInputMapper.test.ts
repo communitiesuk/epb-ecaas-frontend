@@ -43,7 +43,7 @@ const expectedHouseInput: FhsInputSchema = {
 						height: 2,
 						type: "obstacle",
 					},
-				]
+				],
 			},
 			{
 				start360: 70, end360: 80, shading: [
@@ -52,7 +52,7 @@ const expectedHouseInput: FhsInputSchema = {
 						height: 2,
 						type: "obstacle",
 					},
-				]
+				],
 			},
 			{
 				start360: 80, end360: 90, shading: [
@@ -61,7 +61,7 @@ const expectedHouseInput: FhsInputSchema = {
 						height: 2,
 						type: "obstacle",
 					},
-				]
+				],
 			},
 			{ start360: 90, end360: 100 },
 			{ start360: 100, end360: 110 },
@@ -340,7 +340,7 @@ const expectedFlatInput: FhsInputSchema = {
 						height: 1,
 						type: "obstacle",
 					},
-				]
+				],
 			},
 			{
 				start360: 10, end360: 20, shading: [
@@ -354,7 +354,7 @@ const expectedFlatInput: FhsInputSchema = {
 						height: 1,
 						type: "obstacle",
 					},
-				]
+				],
 			},
 			{
 				start360: 20, end360: 30, shading: [
@@ -363,7 +363,7 @@ const expectedFlatInput: FhsInputSchema = {
 						height: 5,
 						type: "overhang",
 					},
-				]
+				],
 			},
 			{
 				start360: 30, end360: 40, shading: [
@@ -372,7 +372,7 @@ const expectedFlatInput: FhsInputSchema = {
 						height: 5,
 						type: "overhang",
 					},
-				]
+				],
 			},
 			{ start360: 40, end360: 50 },
 			{ start360: 50, end360: 60 },

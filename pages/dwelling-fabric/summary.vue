@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getUrl, getTabItems } from "#imports";
-import { emptyValueRendering } from "#imports";
+import { emptyValueRendering, getUrl, getTabItems } from "#imports";
 
 const title = "Dwelling fabric summary";
 const store = useEcaasStore();

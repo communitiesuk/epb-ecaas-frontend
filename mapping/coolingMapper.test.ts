@@ -1,4 +1,3 @@
-import { SpaceCoolSystemType } from "~/schema/api-schema.types";
 import type { SchemaSpaceCoolSystemDetails } from "~/schema/aliases";
 import { mapSpaceCoolSystems } from "./coolingMapper";
 import { defaultControlName } from "./common";

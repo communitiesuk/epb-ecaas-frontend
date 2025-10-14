@@ -3,7 +3,6 @@ import { screen } from "@testing-library/vue";
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { pascal } from "~/utils/units/pressure";
 import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
 import { centimetresSquare, metresSquare } from "~/utils/units/area";
 import { metre, millimetre } from "~/utils/units/length";
