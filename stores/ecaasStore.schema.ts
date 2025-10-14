@@ -314,7 +314,7 @@ export type DoorsData = AssertFormKeysArePageIds<{
 }>;
 
 const externalUnglazedDoorDataZod = named.extend({
-	associatedWallRoofCeilingId: z.guid(),
+	associatedWallRoofId: z.guid(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
@@ -337,7 +337,7 @@ const twoPartFields = { ...onePartFields, midHeightOpenablePart2: z.number().min
 const threePartFields = { ...twoPartFields, midHeightOpenablePart3: z.number().min(0).max(100) };
 const fourPartFields = { ...threePartFields, midHeightOpenablePart4: z.number().min(0).max(100) };
 const baseExternalGlazedDoorData = named.extend({
-	associatedWallRoofCeilingId: z.guid(),
+	associatedWallRoofId: z.guid(),
 	surfaceArea: z.number().min(0.01).max(10000),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),

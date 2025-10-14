@@ -200,7 +200,7 @@ const doorsData: DoorsData = {
 		data: [{
 			data: {
 				name: "External unglazed door 1",
-				associatedWallRoofCeilingId: externalWallId,
+				associatedWallRoofId: externalWallId,
 				height: 0.5,
 				width: 20,
 				elevationalHeight: 20,
@@ -216,7 +216,7 @@ const doorsData: DoorsData = {
 		data: [{
 			data: {
 				name: "External glazed door 1",
-				associatedWallRoofCeilingId: externalWallId,
+				associatedWallRoofId: externalWallId,
 				surfaceArea: 1,
 				height: 1,
 				width: 1,

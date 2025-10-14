@@ -547,7 +547,7 @@ export function mapDoorData(
 
     	const associatedWallRoof = getResolvedTaggedItem(
     		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-    		x.associatedWallRoofCeilingId,
+    		x.associatedWallRoofId,
     	)!;
 
     	return {
@@ -579,16 +579,16 @@ export function mapDoorData(
 	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceExternalUnglazedDoor.map((x) => {
     	const nameWithSuffix = suffixName(x.name, doorSuffix);
-    	const associatedWallRoofCeiling = getResolvedTaggedItem(
+    	const associatedWallRoof = getResolvedTaggedItem(
     		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-    		x.associatedWallRoofCeilingId,
+    		x.associatedWallRoofId,
     	)!;
 
     	return {
     		[nameWithSuffix]: {
     			type: "BuildingElementOpaque",
-    			pitch: extractPitch(associatedWallRoofCeiling),
-    			orientation360: associatedWallRoofCeiling.orientation!,
+    			pitch: extractPitch(associatedWallRoof),
+    			orientation360: associatedWallRoof.orientation!,
     			height: x.height,
     			width: x.width,
     			base_height: x.elevationalHeight,

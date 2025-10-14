@@ -276,7 +276,7 @@ const unglazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceUnglazedDoors",
 	label: "External unglazed door",
 	data: unglazedDoorData.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedWallRoofCeilingId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedWallRoofId);
 
 		return {
 			"Name": show(x.name),
@@ -299,7 +299,7 @@ const glazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceGlazedDoors",
 	label: "External glazed door",
 	data: glazedDoorData.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedWallRoofCeilingId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedWallRoofId);
 
 		return {
 			"Name": show(x.name),

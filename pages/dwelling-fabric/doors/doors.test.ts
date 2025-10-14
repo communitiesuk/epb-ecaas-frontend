@@ -50,7 +50,7 @@ describe("doors", () => {
 	const externalUnglazed1: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 1 name",
-			associatedWallRoofCeilingId: externalWall.id,
+			associatedWallRoofId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -65,7 +65,7 @@ describe("doors", () => {
 	const externalUnglazed2: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 2 name",
-			associatedWallRoofCeilingId: externalWall.id,
+			associatedWallRoofId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -80,7 +80,7 @@ describe("doors", () => {
 	const externalUnglazed3: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 3 name",
-			associatedWallRoofCeilingId: externalWall.id,
+			associatedWallRoofId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -95,7 +95,7 @@ describe("doors", () => {
 	const externalGlazed1: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed1 name",
-			associatedWallRoofCeilingId: externalWall.id,
+			associatedWallRoofId: externalWall.id,
 			surfaceArea: 1,
 			height: 1,
 			width: 1,
@@ -111,7 +111,7 @@ describe("doors", () => {
 	const externalGlazed2: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed2 name",
-			associatedWallRoofCeilingId: externalWall.id,
+			associatedWallRoofId: externalWall.id,
 			surfaceArea: 1,
 			height: 1,
 			width: 1,
@@ -127,7 +127,7 @@ describe("doors", () => {
 	const externalGlazed3: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed3 name",
-			associatedWallRoofCeilingId: externalWall.id,
+			associatedWallRoofId: externalWall.id,
 			surfaceArea: 1,
 			height: 1,
 			width: 1,

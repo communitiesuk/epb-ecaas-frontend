@@ -208,11 +208,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FormKit
 			id="name" type="govInputText" label="Name"
 			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
-		<FieldsAssociatedWallRoofCeiling
+		<FieldsAssociatedWallRoof
 			id="taggedItem"
 			name="taggedItem"
-			label="Associated wall, roof or ceiling"
-			help="Select the wall, roof or ceiling that this window is in. It should have the same orientation and pitch as the window."
+			label="Associated wall or roof"
+			help="Select the wall or roof that this window is in. It should have the same orientation and pitch as the window."
 		/>
 		<FormKit
 			id="height" type="govInputWithSuffix" suffix-text="m" label="Height"

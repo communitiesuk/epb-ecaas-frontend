@@ -569,7 +569,7 @@ describe("dwelling fabric mapper", () => {
 
 		const externalGlazedDoor: ExternalGlazedDoorData = {
 			name: "External glazed door 1",
-			associatedWallRoofCeilingId: externalWall.data.id,
+			associatedWallRoofId: externalWall.data.id,
 			surfaceArea: 1,
 			height: 1,
 			width: 1,
@@ -586,7 +586,7 @@ describe("dwelling fabric mapper", () => {
 
 		const externalUnglazedDoor: ExternalUnglazedDoorData = {
 			name: "External unglazed door 1",
-			associatedWallRoofCeilingId: externalWall.data.id,
+			associatedWallRoofId: externalWall.data.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,

@@ -16,7 +16,7 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 		dwellingSpaceExternalUnglazedDoor.data[index] = {
 			data: {
 				name: fields.name,
-				associatedWallRoofCeilingId: fields.associatedWallRoofCeilingId,
+				associatedWallRoofId: fields.associatedWallRoofId,
 				height: fields.height,
 				width: fields.width,
 				elevationalHeight: fields.elevationalHeight,
@@ -70,11 +70,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
-		<FieldsAssociatedWallRoofCeiling
-			id="associatedWallRoofCeilingId"
-			name="associatedWallRoofCeilingId"
-			label="Associated wall, roof or ceiling"
-			help="Select the wall, roof or ceiling that this door is in. It should have the same orientation and pitch as the door."
+		<FieldsAssociatedWallRoof
+			id="associatedWallRoofId"
+			name="associatedWallRoofId"
+			label="Associated wall or roof"
+			help="Select the wall or roof that this door is in. It should have the same orientation and pitch as the door."
 		/>
 		<FormKit
 			id="height"

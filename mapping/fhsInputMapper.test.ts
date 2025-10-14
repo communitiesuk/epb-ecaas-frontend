@@ -1739,7 +1739,7 @@ describe("FHS input mapper", () => {
 						...baseForm,
 						data: {
 							name: "front door",
-							associatedWallRoofCeilingId: externalWallId,
+							associatedWallRoofId: externalWallId,
 							height: 2.6,
 							width: 1.2,
 							elevationalHeight: 1,
@@ -1757,7 +1757,7 @@ describe("FHS input mapper", () => {
 						...baseForm,
 						data: {
 							name: "external glazed door",
-							associatedWallRoofCeilingId: externalWallId,
+							associatedWallRoofId: externalWallId,
 							surfaceArea: 3,
 							height: 3,
 							width: 1,
