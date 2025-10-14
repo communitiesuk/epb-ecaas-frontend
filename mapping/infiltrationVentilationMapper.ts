@@ -30,9 +30,6 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 			];
 		})),
 		Vents: mapVentsData(state),
-		Control_VentAdjustMin: null,
-		Control_VentAdjustMax: null,
-		Control_WindowAdjust: null,
 	};
 
 	return {
