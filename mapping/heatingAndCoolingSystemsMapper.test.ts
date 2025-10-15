@@ -37,7 +37,6 @@ describe("heating systems mapper", () => {
 			EnergySupply: {
 				mains_gas: {
 					fuel: "mains_gas",
-					is_export_capable: false,
 				},
 			},
 		};
@@ -69,7 +68,6 @@ describe("heating systems mapper", () => {
 			EnergySupply: {
 				mains_gas: {
 					fuel: "mains_gas",
-					is_export_capable: false,
 				},
 				"mains elec": {
 					fuel: "electricity",
@@ -116,12 +114,11 @@ describe("heating systems mapper", () => {
 						"Emissions Factor kgCO2e/kWh": 3.2,
 						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": 4.8,
 						"Primary Energy Factor kWh/kWh delivered": 1.0,
+						is_export_capable: false,
 					},
-					is_export_capable: false,
 				},
 				mains_gas: {
 					fuel: "mains_gas",
-					is_export_capable: false,
 				},
 			},
 		};
