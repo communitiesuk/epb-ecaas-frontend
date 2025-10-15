@@ -550,10 +550,10 @@ describe("dwelling fabric mapper", () => {
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0.1,
 			uValue: 1,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			colour: "Intermediate",
 		};
 
 		const doorSuffix = " (door)";
@@ -605,6 +605,7 @@ describe("dwelling fabric mapper", () => {
 				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
 			],
 			shading: [],
+			security_risk: true,
 		};
 
 		expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
@@ -621,6 +622,7 @@ describe("dwelling fabric mapper", () => {
 			areal_heat_capacity: externalUnglazedDoor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(externalUnglazedDoor.massDistributionClass),
 			is_external_door: true,
+			colour: "Intermediate",
 		};
 
 		expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);
