@@ -330,7 +330,7 @@ describe("heating systems mapper", () => {
 						data: {
 							name: "Acme instant electric heater",
 							ratedPower: 100,
-							convectionFractionInstant: 0.8,
+							convectiveType: "Air heating (convectors, fan coils etc.)",
 						},
 					},
 				],

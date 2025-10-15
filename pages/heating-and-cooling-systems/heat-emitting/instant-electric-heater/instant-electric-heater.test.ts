@@ -16,7 +16,7 @@ describe("instantElectricHeater", () => {
 		data: {
 			name: "Instant electric heater 1",
 			ratedPower: 3,
-			convectionFractionInstant: 0.2,
+			convectiveType: "Air heating (convectors, fan coils etc.)",
 		},
 	};
 
@@ -24,7 +24,7 @@ describe("instantElectricHeater", () => {
 		data: {
 			name: "Instant electric heater 2",
 			ratedPower: 14,
-			convectionFractionInstant: 1,
+			convectiveType: "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves",
 		},
 	};
 
@@ -35,7 +35,7 @@ describe("instantElectricHeater", () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Instant electric heater 1");
 		await user.type(screen.getByTestId("ratedPower"), "3");
-		await user.type(screen.getByTestId("convectionFractionInstant"), "0.2");
+		await user.click(screen.getByTestId("convectiveType_Air_heating_(convectors,_fan_coils_etc.)"));
 		await user.tab();
 	};
 
@@ -84,10 +84,10 @@ describe("instantElectricHeater", () => {
 		expect(
 			(
 				(await screen.findByTestId<HTMLInputElement>(
-					"convectionFractionInstant",
+					"convectiveType_Air_heating_(convectors,_fan_coils_etc.)",
 				))
-			).value,
-		).toBe("0.2");
+			).hasAttribute("checked"),
+		).toBe(true);
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -98,7 +98,7 @@ describe("instantElectricHeater", () => {
 		expect(await screen.findByTestId("name_error")).toBeDefined();
 		expect(await screen.findByTestId("ratedPower_error")).toBeDefined();
 		expect(
-			await screen.findByTestId("convectionFractionInstant_error"),
+			await screen.findByTestId("convectiveType_error"),
 		).toBeDefined();
 	});
 
@@ -148,12 +148,12 @@ describe("instantElectricHeater", () => {
 		});
 
 		await user.type(screen.getByTestId("ratedPower"), "5");
-		await user.type(screen.getByTestId("convectionFractionInstant"), "1");
+		await user.click(screen.getByTestId("convectiveType_Air_heating_(convectors,_fan_coils_etc.)"));
 		await user.tab();
 
 		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.name).toBe("Instant electric heater");
 		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.ratedPower).toBe(5);
-		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.convectionFractionInstant).toBe(1);
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.convectiveType).toBe("Air heating (convectors, fan coils etc.)");
 	});
 
 	test("creates a new heater automatically with given name", async () => {
@@ -168,7 +168,7 @@ describe("instantElectricHeater", () => {
 
 		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.name).toBe("Heater 1");
 		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.ratedPower).toBeUndefined();
-		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.convectionFractionInstant).toBeUndefined();
+		expect(store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data[0]?.data.convectiveType).toBeUndefined();
 	});
 
 	test("updated form data is automatically saved to the correct store object when there are multiple instant electric heaters added", async () => {

@@ -229,7 +229,7 @@ describe("heat emitting", () => {
 									data: {
 										name: "Instant electric heater",
 										ratedPower: 10,
-										convectionFractionInstant: 0.5,
+										convectiveType: "Air heating (convectors, fan coils etc.)",
 									},
 									complete: true,
 								},

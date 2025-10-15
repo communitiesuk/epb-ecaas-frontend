@@ -366,7 +366,7 @@ describe("Heating systems summary page", () => {
 			data: {
 				name: "Instant electric heater 1",
 				ratedPower: 3,
-				convectionFractionInstant: 0.2,
+				convectiveType: "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves",
 			},
 		};
 		const electricStorageHeater: ElectricStorageHeaterData = {
@@ -543,7 +543,7 @@ describe("Heating systems summary page", () => {
 			const expectedInstantElectricHeaterData = {
 				Name: "Instant electric heater 1",
 				"Rated power": `3 ${kilowatt.suffix}`,
-				"Convection fraction": "0.2",
+				"Convective type": "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves",
 			};
 			await renderSuspended(heatingAndCoolingSystemsSummary);
 			await verifyDataInSection(

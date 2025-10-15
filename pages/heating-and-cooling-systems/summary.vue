@@ -149,7 +149,7 @@ const instantElectricHeaterSummary: SummarySection = {
 		return {
 			Name: show(instantHeater.data.name),
 			"Rated power": dim(instantHeater.data.ratedPower, "kilowatt"),
-			"Convection fraction": show(instantHeater.data.convectionFractionInstant),
+			"Convective type": show(instantHeater.data.convectiveType),
 		};
 	}) || [],
 	editUrl: heatEmittingUrl,

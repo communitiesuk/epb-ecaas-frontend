@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
+import type { SchemaConvectiveType } from "~/schema/aliases";
 const title = "Instant electric heater";
 const store = useEcaasStore();
 const route = useRoute();
@@ -8,6 +9,14 @@ const { autoSaveElementForm } = useForm();
 
 const instantElectricHeaterData = useItemToEdit("heater", store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data);
 const model = ref(instantElectricHeaterData?.data);
+
+const convectiveTypeOptions = {
+	"Air heating (convectors, fan coils etc.)": "Air heating (convectors, fan coils etc.)",
+	"Free heating surface (radiators, radiant panels etc.)": "Free heating surface (radiators, radiant panels etc.)",
+	"Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves": "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves",
+	"Wall heating, radiant ceiling panels, accumulation stoves": "Wall heating, radiant ceiling panels, accumulation stoves",
+	"Ceiling heating, radiant ceiling electric heating": "Ceiling heating, radiant ceiling electric heating",
+} as const satisfies Record<SchemaConvectiveType, SchemaConvectiveType>;
 
 const saveForm = (fields: InstantElectricStorageData) => {
 	store.$patch((state) => {
@@ -20,7 +29,7 @@ const saveForm = (fields: InstantElectricStorageData) => {
 			data: {
 				name: fields.name,
 				ratedPower: fields.ratedPower,
-				convectionFractionInstant: fields.convectionFractionInstant,
+				convectiveType: fields.convectiveType,
 			},
 			complete: true,
 		};
@@ -77,13 +86,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="SpaceHeatSystem.*.rated_power"
 		/>
 		<FormKit
-			id="convectionFractionInstant"
-			type="govInputFloat"
-			label="Convection fraction for heating"
-			help="Specify the portion of heat transferred through convection (0 to 1), where 1 means all heat is convective"
-			name="convectionFractionInstant"
-			validation="required | number | min:0.01 | max:1"
-			data-field="SpaceHeatSystem.*.emitters.*.frac_convective">
+			id="convectiveType"
+			type="govRadios"
+			label="Convection type for heating"
+			:options="convectiveTypeOptions"
+			name="convectiveType"
+			validation="required"
+			data-field="SpaceHeatSystem.*.convective_type">
 			<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
 				<table class="govuk-table">
 					<thead class="govuk-table__head">

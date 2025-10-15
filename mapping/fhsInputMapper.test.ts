@@ -593,21 +593,15 @@ const expectedFlatInput: FhsInputSchema = {
 	SpaceHeatSystem: {
 		"instant elec heater 1": {
 			rated_power: 10,
-			frac_convective: 1,
 			type: "InstantElecHeater",
 			EnergySupply: "mains elec",
 			Control: defaultControlName,
-			advanced_start: null,
-			temp_setback: null,
 		},
 		"instant elec heater 2": {
 			rated_power: 13,
-			frac_convective: 0.8,
 			type: "InstantElecHeater",
 			EnergySupply: "mains elec",
 			Control: defaultControlName,
-			advanced_start: null,
-			temp_setback: null,
 		},
 	},
 	GroundFloorArea: 38,

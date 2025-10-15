@@ -86,3 +86,4 @@ export type SchemaSimulationTime = {
 	end: number;
 	step: number;
 };
+export type SchemaConvectiveType = SchemaDefs["InstantElecHeater"]["convective_type"];

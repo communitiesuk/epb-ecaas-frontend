@@ -2,7 +2,7 @@
 
 import type { UnionToTuple } from "type-fest";
 import * as z from "zod";
-import type { CombustionFuelType, SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaCombustionAirSupplySituation, SchemaFlueGasExhaustSituation, SchemaFuelType, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour } from "~/schema/aliases";
+import type { CombustionFuelType, SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaCombustionAirSupplySituation, SchemaFlueGasExhaustSituation, SchemaFuelType, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType } from "~/schema/aliases";
 import type { ConciseMassDistributionClass } from "./ecaasStore.schema";
 
 type NoneEmptyArray = readonly unknown[] & { 0: unknown };
@@ -32,6 +32,11 @@ const batteryLocations = ["inside", "outside"] as const satisfies SchemaBatteryL
 const colours = ["Light", "Intermediate", "Dark"] as const satisfies SchemaColour[];
 const combustionAirSupplySituations = ["outside", "room_air"] as const satisfies SchemaCombustionAirSupplySituation[];
 const combustionFuelTypes = ["wood", "gas", "oil", "coal"] as const satisfies CombustionFuelType[];
+const convectiveTypes = ["Air heating (convectors, fan coils etc.)",
+	"Free heating surface (radiators, radiant panels etc.)",
+	"Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves",
+	"Wall heating, radiant ceiling panels, accumulation stoves",
+	"Ceiling heating, radiant ceiling electric heating"] as const satisfies SchemaConvectiveType[];
 const ductShapes = ["circular", "rectangular"] as const satisfies SchemaDuctShape[];
 const ductTypes = ["intake", "supply", "extract", "exhaust"] as const satisfies SchemaDuctType[];
 const flueGasExhaustSituations = [
@@ -84,6 +89,7 @@ export const batteryLocationZod = zodForTypeOptions(ensureAllUnion<SchemaBattery
 export const colourZod = zodForTypeOptions(ensureAllUnion<SchemaColour, (typeof colours)>(colours));
 export const combustionAirSupplySituationZod = zodForTypeOptions(ensureAllUnion<SchemaCombustionAirSupplySituation, (typeof combustionAirSupplySituations)>(combustionAirSupplySituations));
 export const combustionFuelTypeZod = zodForTypeOptions(ensureAllUnion<CombustionFuelType, (typeof combustionFuelTypes)>(combustionFuelTypes));
+export const convectiveTypeZod = zodForTypeOptions(ensureAllUnion<SchemaConvectiveType, (typeof convectiveTypes)>(convectiveTypes));
 export const ductShapeZod = zodForTypeOptions(ensureAllUnion<SchemaDuctShape, (typeof ductShapes)>(ductShapes));
 export const ductTypeZod = zodForTypeOptions(ensureAllUnion<SchemaDuctType, (typeof ductTypes)>(ductTypes));
 export const flueGasExhaustSituationZod = zodForTypeOptions(ensureAllUnion<SchemaFlueGasExhaustSituation, (typeof flueGasExhaustSituations)>(flueGasExhaustSituations));;
