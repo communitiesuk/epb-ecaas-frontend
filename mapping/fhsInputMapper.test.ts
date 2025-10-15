@@ -1344,6 +1344,7 @@ describe("FHS input mapper", () => {
 		// Arrange
 		const externalWallId = "c846a753-51ac-43c8-b6a8-823cab609d5e";
 		const internalWallId = "743eb2b5-fc43-46ec-acf3-4d0b6eb173b3";
+		const wallToUnheatedSpaceId = "17a405ad-3fc8-41a2-b4b2-6206db6085a9"
 
 		const dwellingDetails: DwellingDetails = {
 			generalSpecifications: {
@@ -1665,7 +1666,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
-							id: "17a405ad-3fc8-41a2-b4b2-6206db6085a9",
+							id: wallToUnheatedSpaceId,
 							name: "wall to garage",
 							pitchOption: "custom",
 							pitch: 90,
@@ -1788,7 +1789,7 @@ describe("FHS input mapper", () => {
 						data: {
 							typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 							name: "door to garage",
-							associatedItemId: internalWallId,
+							associatedItemId: internalWallId, //TODO - this needs updating to 'wallToUnheatedSpaceId' as internal wall cannot be tagged to this item. wallToUnheatedSpaceId has no orientation yet so this change will break tests
 							surfaceArea: 1.4,
 							kappaValue: 50000,
 							massDistributionClass: MassDistributionClass.IE,
