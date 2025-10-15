@@ -165,7 +165,6 @@ const expectedHouseInput: FhsInputSchema = {
 		terrain_class: "Suburban",
 		ventilation_zone_base_height: 3,
 	},
-	InternalGains: {},
 	NumberOfBedrooms: 7,
 	OnSiteGeneration: {},
 	PartGcompliance: true,
@@ -564,7 +563,6 @@ const expectedFlatInput: FhsInputSchema = {
 		terrain_class: "OpenField",
 		ventilation_zone_base_height: 1,
 	},
-	InternalGains: {},
 	NumberOfBedrooms: 2,
 	OnSiteGeneration: {
 		"pv system 1": {

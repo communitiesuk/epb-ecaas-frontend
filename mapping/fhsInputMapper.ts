@@ -43,7 +43,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 
 	const control: Pick<FhsInputSchema, "Control"> = { Control: {} };
 	const events: Pick<FhsInputSchema, "Events"> = { Events: {} };
-	const internalGains: Pick<FhsInputSchema, "InternalGains"> = { InternalGains: {} };
 
 	const defaultColdWaterSource: Pick<FhsInputSchema, "ColdWaterSource"> = {
 		ColdWaterSource: {
@@ -96,7 +95,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		defaultColdWaterSource,
 		control,
 		events,
-		internalGains,
 		defaultSimulationTime,
 		{ temp_internal_air_static_calcs: 20.0 }, // temporary dummy, expected value for this - this field is removed in later schemas
 	]) as FhsInputSchema;
