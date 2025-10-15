@@ -475,7 +475,7 @@ export function mapDoorData(
     dwellingSpaceInternalDoor.map((x) => {
     	const associatedHeatedSpaceElement = getResolvedTaggedItem(
     		[dwellingSpaceInternalWall, dwellingSpaceCeilings],
-    		x.associatedHeatedSpaceElementId,
+    		x.associatedItemId,
     	)!;
 
     	const commonFields = {
@@ -548,7 +548,7 @@ export function mapDoorData(
 
     	const associatedWallRoof = getResolvedTaggedItem(
     		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-    		x.associatedWallRoofId,
+    		x.associatedItemId,
     	)!;
 
     	return {
@@ -582,7 +582,7 @@ export function mapDoorData(
     	const nameWithSuffix = suffixName(x.name, doorSuffix);
     	const associatedWallRoof = getResolvedTaggedItem(
     		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-    		x.associatedWallRoofId,
+    		x.associatedItemId,
     	)!;
 
     	return {

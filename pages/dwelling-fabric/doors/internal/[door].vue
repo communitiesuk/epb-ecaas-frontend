@@ -16,7 +16,7 @@ const saveForm = (fields: InternalDoorData) => {
 		const index = getStoreIndex(dwellingSpaceInternalDoor.data);
 
 		const commonFields = {
-			associatedHeatedSpaceElementId: fields.associatedHeatedSpaceElementId,
+			associatedItemId: fields.associatedItemId,
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
 			kappaValue: fields.kappaValue,
@@ -101,16 +101,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			/>
 			<FieldsAssociatedElements
 				v-if="model.typeOfInternalDoor === AdjacentSpaceType.heatedSpace"
-				id="associatedHeatedSpaceElementId"
-				name="associatedHeatedSpaceElementId"
+				id="associatedItemId"
+				name="associatedItemId"
 				label="Associated wall or ceiling"
 				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
 				:adjacent-space-type="AdjacentSpaceType.heatedSpace"
 			/>
 			<FieldsAssociatedElements
 				v-if="model.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace"
-				id="associatedHeatedSpaceElementId"
-				name="associatedHeatedSpaceElementId"
+				id="associatedItemId"
+				name="associatedItemId"
 				label="Associated wall or ceiling"
 				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
 				:adjacent-space-type="AdjacentSpaceType.unheatedSpace"

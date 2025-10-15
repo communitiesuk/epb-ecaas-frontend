@@ -1739,7 +1739,7 @@ describe("FHS input mapper", () => {
 						...baseForm,
 						data: {
 							name: "front door",
-							associatedWallRoofId: externalWallId,
+							associatedItemId: externalWallId,
 							height: 2.6,
 							width: 1.2,
 							elevationalHeight: 1,
@@ -1757,7 +1757,7 @@ describe("FHS input mapper", () => {
 						...baseForm,
 						data: {
 							name: "external glazed door",
-							associatedWallRoofId: externalWallId,
+							associatedItemId: externalWallId,
 							surfaceArea: 3,
 							height: 3,
 							width: 1,
@@ -1777,7 +1777,7 @@ describe("FHS input mapper", () => {
 						data: {
 							typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 							name: "bathroom door",
-							associatedHeatedSpaceElementId: internalWallId,
+							associatedItemId: internalWallId,
 							surfaceArea: 1.4,
 							kappaValue: 50000,
 							massDistributionClass: MassDistributionClass.IE,
@@ -1788,7 +1788,7 @@ describe("FHS input mapper", () => {
 						data: {
 							typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 							name: "door to garage",
-							associatedHeatedSpaceElementId: internalWallId,
+							associatedItemId: internalWallId,
 							surfaceArea: 1.4,
 							kappaValue: 50000,
 							massDistributionClass: MassDistributionClass.IE,

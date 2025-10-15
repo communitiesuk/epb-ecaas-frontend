@@ -200,7 +200,7 @@ const doorsData: DoorsData = {
 		data: [{
 			data: {
 				name: "External unglazed door 1",
-				associatedWallRoofId: externalWallId,
+				associatedItemId: externalWallId,
 				height: 0.5,
 				width: 20,
 				elevationalHeight: 20,
@@ -216,7 +216,7 @@ const doorsData: DoorsData = {
 		data: [{
 			data: {
 				name: "External glazed door 1",
-				associatedWallRoofId: externalWallId,
+				associatedItemId: externalWallId,
 				surfaceArea: 1,
 				height: 1,
 				width: 1,
@@ -234,7 +234,7 @@ const doorsData: DoorsData = {
 			data: {
 				typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 				name: "Internal 1",
-				associatedHeatedSpaceElementId: internalWallId,
+				associatedItemId: internalWallId,
 				surfaceArea: 5,
 				kappaValue: 50000,
 				massDistributionClass: MassDistributionClass.I,

@@ -39,7 +39,7 @@ describe("internal door", () => {
 		data: {
 			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 1",
-			associatedHeatedSpaceElementId: internalWall.id,
+			associatedItemId: internalWall.id,
 			surfaceArea: 5,
 			kappaValue: 50000,
 			massDistributionClass: MassDistributionClass.I,
@@ -49,7 +49,7 @@ describe("internal door", () => {
 	const internalDoorWithUnheatedSpace: EcaasForm<InternalDoorData> = {
 		data: {
 			...internalDoor.data,
-			associatedHeatedSpaceElementId: wallToUnheatedSpace.id,
+			associatedItemId: wallToUnheatedSpace.id,
 			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
 			uValue: 0.1,
 			thermalResistanceOfAdjacentUnheatedSpace: 0,
@@ -92,7 +92,7 @@ describe("internal door", () => {
 	
 			await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 			await populateValidForm();
-			await user.click(screen.getByTestId(`associatedHeatedSpaceElementId_${internalWall.id}`));
+			await user.click(screen.getByTestId(`associatedItemId_${internalWall.id}`));
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { data } = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor;
@@ -118,7 +118,7 @@ describe("internal door", () => {
 			});
 	
 			expect((await screen.findByTestId("typeOfInternalDoor_heatedSpace")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId(`associatedHeatedSpaceElementId_${internalWall.id}`)).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId(`associatedItemId_${internalWall.id}`)).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Internal 1");
 			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
 			expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
@@ -132,7 +132,7 @@ describe("internal door", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
-			expect((await screen.findByTestId("associatedHeatedSpaceElementId_error"))).toBeDefined();
+			expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
 			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 			expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
@@ -149,7 +149,7 @@ describe("internal door", () => {
 	
 			await user.click(screen.getByTestId("typeOfInternalDoor_unheatedSpace"));
 			await populateValidForm();
-			await user.click(screen.getByTestId(`associatedHeatedSpaceElementId_${wallToUnheatedSpace.id}`));
+			await user.click(screen.getByTestId(`associatedItemId_${wallToUnheatedSpace.id}`));
 			await user.type(screen.getByTestId("uValue"), "0.1");
 			await user.type(screen.getByTestId("thermalResistanceOfAdjacentUnheatedSpace"), "0");
 			await user.tab();
@@ -213,7 +213,7 @@ describe("internal door", () => {
 	
 		await user.click(screen.getByTestId("typeOfInternalDoor_heatedSpace"));
 		await populateValidForm();
-		await user.click(screen.getByTestId(`associatedHeatedSpaceElementId_${internalWall.id}`));
+		await user.click(screen.getByTestId(`associatedItemId_${internalWall.id}`));
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/doors");

@@ -276,7 +276,7 @@ const unglazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceUnglazedDoors",
 	label: "External unglazed door",
 	data: unglazedDoorData.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedWallRoofId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedItemId);
 
 		return {
 			"Name": show(x.name),
@@ -299,7 +299,7 @@ const glazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceGlazedDoors",
 	label: "External glazed door",
 	data: glazedDoorData.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedWallRoofId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedItemId);
 
 		return {
 			"Name": show(x.name),
@@ -325,7 +325,7 @@ const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
 	label: "Internal door",
 	data: internalDoorData?.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceCeilings], x.associatedHeatedSpaceElementId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceCeilings], x.associatedItemId);
 
 		const isInternalDoorToUnheatedSpace = x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace;
 		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
