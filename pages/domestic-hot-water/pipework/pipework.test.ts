@@ -249,7 +249,7 @@ describe("Pipeworks", () => {
     		expect(secondaryPipework?.complete).toBe(true);
     	});
 
-    	it("marks a pipwork section as not complete if an item is removed", async () => {
+    	it("marks a pipework section as not complete if an item is removed", async () => {
   
     		await user.click(screen.getByTestId("primaryPipework_remove_0"));
     		await user.click(screen.getByTestId("secondaryPipework_remove_0"));
@@ -261,7 +261,7 @@ describe("Pipeworks", () => {
     
     	});
 
-    	it("marks a pipwork section as not complete if an item is duplicated", async () => {
+    	it("marks a pipework section as not complete if an item is duplicated", async () => {
     		await user.click(screen.getByTestId("primaryPipework_duplicate_0"));
     		await user.click(screen.getByTestId("secondaryPipework_duplicate_0"));
 			
@@ -272,7 +272,7 @@ describe("Pipeworks", () => {
     		expect(secondaryPipework?.complete).toBe(false);
     	});
 
-    	it("marks a pipwork section as not complete after adding a new pipework item", async () => {
+    	it("marks a pipework section as not complete after adding a new pipework item", async () => {
     		for (const pipeworkType of Object.keys(store.domesticHotWater.pipework) as PipeworkType[]) {
 
     			await renderSuspended(pipeworkForms[pipeworkType], {
@@ -288,7 +288,7 @@ describe("Pipeworks", () => {
     		}
     	});
 
-    	it("marks a pipwork section as not complete after editing a pipework item", async () => {
+    	it("marks a pipework section as not complete after editing a pipework item", async () => {
     		for (const pipeworkType of Object.keys(store.domesticHotWater.pipework) as PipeworkType[]) {
 
     			await renderSuspended(pipeworkForms[pipeworkType], {
