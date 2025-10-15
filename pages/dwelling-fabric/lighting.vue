@@ -16,8 +16,7 @@ const saveForm = (fields: typeof model.value) => {
 		dwellingFabric: {
 			dwellingSpaceLighting: {
 				data: {
-					numberOfLEDBulbs: fields.numberOfLEDBulbs,
-					numberOfIncandescentBulbs: fields.numberOfIncandescentBulbs,
+					numberOfBulbs: fields.numberOfBulbs,
 				},
 				complete: true,
 			},
@@ -51,28 +50,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<h1 class="govuk-heading-l">{{ title }}</h1>
 		<FormKit
-			id="numberOfLEDBulbs"
+			id="numberOfBulbs"
 			type="govInputInt"
-			label="Number of LED bulbs"
-			name="numberOfLEDBulbs"
-			help="Enter the number of LED bulbs in the whole dwelling"
+			label="Number of bulbs"
+			name="numberOfBulbs"
+			help="Enter the number of bulbs in the whole dwelling"
 			:validation-rules="{ isInteger }"
 			validation="required | isInteger"
 			:validation-messages="{
-				isInteger: `Number of LED bulbs must be an integer.`,
-			}"
-			data-field="Zone.Lighting.bulbs.*.count"
-		/>
-		<FormKit
-			id="numberOfIncandescentBulbs"
-			type="govInputInt"
-			label="Number of incandescent bulbs"
-			name="numberOfIncandescentBulbs"
-			help="Enter the number of incandescent bulbs in the whole dwelling"
-			:validation-rules="{ isInteger }"
-			validation="required | isInteger"
-			:validation-messages="{
-				isInteger: `Number of incandescent bulbs must be an integer.`,
+				isInteger: `Number of bulbs must be an integer.`,
 			}"
 			data-field="Zone.Lighting.bulbs.*.count"
 		/>

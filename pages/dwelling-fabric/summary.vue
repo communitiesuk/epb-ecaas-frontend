@@ -25,8 +25,7 @@ const lightingSummary: SummarySection = {
 	id: "dwellingSpaceLighting",
 	label: "Lighting",
 	data: {
-		"Number of LED bulbs": show(lightingData.numberOfLEDBulbs),
-		"Number of incandescent bulbs": show(lightingData.numberOfIncandescentBulbs),
+		"Number of bulbs": show(lightingData.numberOfBulbs),
 	},
 	editUrl: getUrl("dwellingSpaceLighting"),
 };

@@ -1028,8 +1028,7 @@ describe("FHS input mapper", () => {
 			dwellingSpaceLighting: {
 				...baseForm,
 				data: {
-					numberOfLEDBulbs: 6,
-					numberOfIncandescentBulbs: 0,
+					numberOfBulbs: 6,
 				},
 			},
 			dwellingSpaceFloors: {
@@ -1460,8 +1459,7 @@ describe("FHS input mapper", () => {
 			dwellingSpaceLighting: {
 				...baseForm,
 				data: {
-					numberOfLEDBulbs: 5,
-					numberOfIncandescentBulbs: 2,
+					numberOfBulbs: 5,
 				},
 			},
 			dwellingSpaceFloors: {

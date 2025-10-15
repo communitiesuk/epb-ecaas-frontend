@@ -23,8 +23,7 @@ const zoneParametersData: DwellingSpaceZoneParametersData = {
 };
 
 const lightingData: DwellingSpaceLightingData = {
-	numberOfLEDBulbs: 8,
-	numberOfIncandescentBulbs: 3,
+	numberOfBulbs: 8,
 };
 
 const floorsData: FloorsData = {
@@ -347,8 +346,7 @@ describe("Living space fabric summary", () => {
 			await renderSuspended(Summary);
 
 			const expectedResult = {
-				"Number of LED bulbs": "8",
-				"Number of incandescent bulbs": "3",
+				"Number of bulbs": "8",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
