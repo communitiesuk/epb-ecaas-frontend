@@ -878,9 +878,7 @@ const expectedFlatInput: FhsInputSchema = {
 					},
 				},
 			},
-			area: 16,
 			volume: 550,
-			temp_setpnt_init: 20.0, // TODO find out what this should be
 		},
 	},
 	temp_internal_air_static_calcs: 20.0, // dummy value - this goes away in later schemas
