@@ -102,20 +102,24 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 			edgeInsulationWidthInMetres = asMetres(data.edgeInsulationWidth);
 		}
 
-		if (data.edgeInsulationType === "horizontal") {
-			return [{
-				type: data.edgeInsulationType,
-				width: edgeInsulationWidthInMetres,
-				edge_thermal_resistance: data.edgeInsulationThermalResistance,
-			}];
-		}
+		const { edgeInsulationType } = data;
 
-		if (data.edgeInsulationType === "vertical") {
-			return [{
-				type: data.edgeInsulationType,
-				depth: edgeInsulationWidthInMetres,
-				edge_thermal_resistance: data.edgeInsulationThermalResistance,
-			}];
+		switch (edgeInsulationType) {
+			case "horizontal":
+				return {
+					type: "horizontal" as const,
+					width: edgeInsulationWidthInMetres,
+					edge_thermal_resistance: data.edgeInsulationThermalResistance,
+				};
+			case "vertical":
+				return {
+					type: "vertical" as const,
+					width: edgeInsulationWidthInMetres,
+					edge_thermal_resistance: data.edgeInsulationThermalResistance,
+				};
+			default:
+				edgeInsulationType satisfies never;
+				throw new Error(`Unknown edge insulation type '${edgeInsulationType}' encountered`);
 		}
 	}
 
