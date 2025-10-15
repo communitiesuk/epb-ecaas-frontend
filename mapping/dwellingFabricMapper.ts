@@ -297,10 +297,15 @@ export function mapWallData(
 	} = state.dwellingFabric.dwellingSpaceWalls;
 	const wallSuffix = "wall";
 
+	const { dwellingSpaceWindows } = state.dwellingFabric;
+	const { dwellingSpaceExternalGlazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
+	const { dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
+
 	const externalWallData: { [key: string]: SchemaBuildingElement }[] =
+	
     dwellingSpaceExternalWall?.map((x) => {
     	const nameWithSuffix = suffixName(x.name, wallSuffix);
-			// const netSurfaceArea = calculateNetSurfaceArea()
+    	const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceWindows, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor]);
 
     	return {
     		[nameWithSuffix]: {
@@ -310,7 +315,7 @@ export function mapWallData(
     			height: x.height,
     			width: x.length,
     			base_height: x.elevationalHeight,
-    			area: x.grossSurfaceArea,
+    			area: netSurfaceArea || x.grossSurfaceArea,
     			solar_absorption_coeff: x.solarAbsorption,
     			u_value: x.uValue,
     			areal_heat_capacity: x.kappaValue,
