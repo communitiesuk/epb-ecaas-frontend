@@ -326,7 +326,7 @@ export function mapWallData(
 	}) || [];
 	
 	const { dwellingSpaceInternalDoor} = state.dwellingFabric.dwellingSpaceDoors;
-	
+
 	const internalWallData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceInternalWall?.map((x) => {
     	const nameWithSuffix = suffixName(x.name, wallSuffix);
@@ -360,15 +360,17 @@ export function mapWallData(
     	};
     }) || [];
 
+
 	const wallToUnheatedSpaceData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceWallToUnheatedSpace?.map((x) => {
     	const nameWithSuffix = suffixName(x.name, wallSuffix);
+			const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
 
     	return {
     		[nameWithSuffix]: {
     			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
     			pitch: extractPitch(x),
-    			area: x.grossSurfaceArea,
+    			area: netSurfaceArea || x.grossSurfaceArea,
     			u_value: x.uValue,
     			areal_heat_capacity: x.arealHeatCapacity,
     			mass_distribution_class: x.massDistributionClass,
