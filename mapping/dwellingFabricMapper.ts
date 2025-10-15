@@ -646,7 +646,7 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 		return {
 			[nameWithSuffix]: {
 				type: "ThermalBridgeLinear",
-				junction_type: x.typeOfThermalBridge.toUpperCase(),
+				junction_type: x.typeOfThermalBridge,
 				linear_thermal_transmittance: x.linearThermalTransmittance,
 				length: x.length,
 			},

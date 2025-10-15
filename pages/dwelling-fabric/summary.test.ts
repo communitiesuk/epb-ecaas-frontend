@@ -272,7 +272,7 @@ const thermalBridgingData: ThermalBridgingData = {
 		data: [{
 			data: {
 				name: "E1: Steel lintel with perforated steel base plate",
-				typeOfThermalBridge: "e1",
+				typeOfThermalBridge: "E1",
 				linearThermalTransmittance: 1,
 				length: 2,
 			},

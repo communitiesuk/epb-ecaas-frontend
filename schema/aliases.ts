@@ -79,3 +79,4 @@ export type SchemaVent = FhsSchema["InfiltrationVentilation"]["Vents"][string];
 export type SchemaVentilationLeaks = FhsSchema["InfiltrationVentilation"]["Leaks"];
 export type SchemaLeaksTestPressure = SchemaVentilationLeaks["test_pressure"];
 export type SchemaArealHeatCapacity = BuildingElementGround["areal_heat_capacity"];
+export type SchemaThermalBridgeJunctionType = SchemaThermalBridgingLinearFhs["junction_type"];
