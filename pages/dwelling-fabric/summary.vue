@@ -365,6 +365,7 @@ const windowSummary: SummarySection = {
 			"Transmittance of solar energy": show(x.solarTransmittance),
 			"Mid height": dim(x.midHeight, "metres"),
 			"Opening to frame ratio": show(x.openingToFrameRatio),
+			"Security risk": displayBoolean(x.securityRisk),
 			"Number of openable parts": show(x.numberOpenableParts),
 			"Height of the openable area": numberOfOpenableParts >= 1 ? heightOpenableArea : undefined,
 			"Maximum openable area": numberOfOpenableParts >= 1 ? maximumOpenableArea : undefined,

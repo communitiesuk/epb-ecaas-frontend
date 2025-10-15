@@ -22,6 +22,7 @@ const window1: EcaasForm<WindowData> = {
 		uValue: 1,
 		pitchOption: "90",
 		pitch: 90,
+		securityRisk: true,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
@@ -68,6 +69,7 @@ describe ("window", () => {
 		await user.type(screen.getByTestId("elevationalHeight"), "1");
 		await user.type(screen.getByTestId("midHeight"), "1");
 		await user.type(screen.getByTestId("openingToFrameRatio"), "0.8");
+		await user.click(screen.getByTestId("securityRisk_yes"));
 		await user.click(screen.getByTestId("numberOpenableParts_0"));
 		await user.type(screen.getByTestId("overhangDepth"), "60");
 		await user.type(screen.getByTestId("overhangDistance"), "60");
@@ -111,6 +113,7 @@ describe ("window", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 		expect((await screen.findByTestId("pitchOption_90")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId("securityRisk_yes")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("1");
@@ -137,6 +140,7 @@ describe ("window", () => {
 		expect((await screen.findByTestId("width_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
+		expect((await screen.findByTestId("securityRisk_error"))).toBeDefined();
 		expect((await screen.findByTestId("solarTransmittance_error"))).toBeDefined();
 		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("midHeight_error"))).toBeDefined();

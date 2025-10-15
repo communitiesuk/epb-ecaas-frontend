@@ -25,6 +25,7 @@ describe("windows", () => {
 			uValue: 1,
 			pitchOption: "90",
 			pitch: 90,
+			securityRisk: true,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,

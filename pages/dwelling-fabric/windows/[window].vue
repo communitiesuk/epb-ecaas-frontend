@@ -69,6 +69,7 @@ const saveForm = (fields: WindowData) => {
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
+			securityRisk: fields.securityRisk,
 			openingToFrameRatio: fields.openingToFrameRatio,
 			...("overhangDepth" in fields && "overhangDistance" in fields
 				? {
@@ -259,6 +260,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</table>
 			</GovDetails>
 		</FormKit>
+		<FormKit
+			id="securityRisk"
+			name="securityRisk"
+			type="govBoolean"
+			label="Is having this window open a security risk?"
+			hint="For example, would you be able to leave the window open at night?"
+			validation="required"
+			data-field="Zone.BuildingElement.*.security_risk"
+		/>
 		<FormKit
 			id="numberOpenableParts" type="govRadios" :options="{
 				1: '1',

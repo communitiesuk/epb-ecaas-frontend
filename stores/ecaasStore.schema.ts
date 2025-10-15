@@ -391,6 +391,7 @@ const baseWindowData = named.extend({
 	uValue,
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
+	securityRisk: z.boolean(),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),
 	midHeight: z.number().min(0).max(100),

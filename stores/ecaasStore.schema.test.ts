@@ -10,6 +10,7 @@ describe("windowData Zod schema", () => {
 			uValue: 0.1,
 			pitchOption: "90",
 			pitch: 90,
+			securityRisk: true,
 			solarTransmittance: 0.2,
 			elevationalHeight: 1,
 			midHeight: 2,
