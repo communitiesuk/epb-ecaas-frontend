@@ -81,3 +81,8 @@ export type SchemaLeaksTestPressure = SchemaVentilationLeaks["test_pressure"];
 export type SchemaArealHeatCapacity = BuildingElementGround["areal_heat_capacity"];
 export type SchemaThermalBridgeJunctionType = SchemaThermalBridgingLinearFhs["junction_type"];
 export type SchemaColour = SchemaBuildingElementOpaque["colour"];
+export type SchemaSimulationTime = {
+	start: number;
+	end: number;
+	step: number;
+};

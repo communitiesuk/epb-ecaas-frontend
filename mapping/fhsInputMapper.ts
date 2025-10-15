@@ -9,7 +9,8 @@ import { mapPvAndElectricBatteriesData } from "./pvAndElectricBatteriesMapper";
 import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from "~/mapping/common";
 import { objectFromEntries } from "ts-extras";
-import type { SimplifyDeep } from "type-fest";
+import type { Simplify, SimplifyDeep } from "type-fest";
+import type { SchemaSimulationTime } from "~/schema/aliases";
 
 export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 
@@ -105,4 +106,5 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	return fhsInput;
 }
 
-export type FhsInputSchema = StripDefs<SchemaFhsInputSchema>;
+// override the SimulationTime field for now as this is incompletely defined in the schema (NB. it will be removed in a coming version)
+export type FhsInputSchema = Simplify<Omit<StripDefs<SchemaFhsInputSchema>, "SimulationTime"> & { SimulationTime: SchemaSimulationTime }>;

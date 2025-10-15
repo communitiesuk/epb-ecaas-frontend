@@ -6,6 +6,7 @@ import { resolveState } from "~/stores/resolve";
 import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "~/mapping/common";
 import { centimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
+import type { SchemaSimulationTime } from "~/schema/aliases";
 
 const baseForm = {
 	data: [],
@@ -589,7 +590,7 @@ const expectedFlatInput: FhsInputSchema = {
 		start: 0,
 		end: 8,
 		step: 1,
-	},
+	} as SchemaSimulationTime,
 	// SpaceCoolSystem: {},
 	SpaceHeatSystem: {
 		"instant elec heater 1": {
