@@ -730,7 +730,7 @@ const expectedFlatInput: FhsInputSchema = {
 				},
 				"external wall 1 (wall)": {
 					type: "BuildingElementOpaque",
-					area: 11,
+					area: 14,
 					areal_heat_capacity: 75000,
 					base_height: 1,
 					height: 5.5,
@@ -773,8 +773,8 @@ const expectedFlatInput: FhsInputSchema = {
 					height: 3,
 					max_window_open_area: 0,
 					mid_height: 1.5,
-					orientation360: 30,
-					pitch: 90,
+					orientation360: 180,
+					pitch: 20,
 					shading: [],
 					type: "BuildingElementTransparent",
 					u_value: 0.8,
@@ -813,7 +813,7 @@ const expectedFlatInput: FhsInputSchema = {
 					height: 2.5,
 					width: 10,
 					base_height: 0,
-					area: 25,
+					area: 22,
 					solar_absorption_coeff: 0.63,
 					u_value: 0.1,
 					areal_heat_capacity: 19300,
@@ -1345,6 +1345,7 @@ describe("FHS input mapper", () => {
 		const externalWallId = "c846a753-51ac-43c8-b6a8-823cab609d5e";
 		const internalWallId = "743eb2b5-fc43-46ec-acf3-4d0b6eb173b3";
 		const wallToUnheatedSpaceId = "17a405ad-3fc8-41a2-b4b2-6206db6085a9"
+		const roofId = "85343964-1c5f-416b-b4af-0d16c06d3046"
 
 		const dwellingDetails: DwellingDetails = {
 			generalSpecifications: {
@@ -1716,7 +1717,7 @@ describe("FHS input mapper", () => {
 					data: [{
 						...baseForm,
 						data: {
-							id: "85343964-1c5f-416b-b4af-0d16c06d3046",
+							id: roofId,
 							name: "roof 1",
 							typeOfRoof: "flat",
 							pitch: 20,
@@ -1758,7 +1759,7 @@ describe("FHS input mapper", () => {
 						...baseForm,
 						data: {
 							name: "external glazed door",
-							associatedItemId: externalWallId,
+							associatedItemId: roofId,
 							surfaceArea: 3,
 							height: 3,
 							width: 1,

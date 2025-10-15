@@ -439,9 +439,16 @@ export function mapCeilingAndRoofData(
     	return { [nameWithSuffix]: ceiling };
     });
 
+	const { dwellingSpaceWindows } = state.dwellingFabric;
+	const { dwellingSpaceExternalGlazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
+	const { dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
+	
+
 	const roofData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceRoofs.map((x) => {
     	const nameWithSuffix = suffixName(x.name, roofSuffix);
+		const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceWindows, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor]);
+
 
     	return {
     		[nameWithSuffix]: {
@@ -451,7 +458,7 @@ export function mapCeilingAndRoofData(
     			height: x.length,
     			width: x.width,
     			base_height: x.elevationalHeightOfElement,
-    			area: x.grossSurfaceArea,
+    			area: netSurfaceArea || x.grossSurfaceArea,
     			solar_absorption_coeff: x.solarAbsorptionCoefficient,
     			u_value: x.uValue,
     			areal_heat_capacity: x.kappaValue,
