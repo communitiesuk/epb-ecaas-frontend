@@ -404,11 +404,15 @@ export function mapCeilingAndRoofData(
 	const ceilingSuffix = "ceiling";
 	const roofSuffix = "roof";
 
+	const { dwellingSpaceInternalDoor} = state.dwellingFabric.dwellingSpaceDoors;
+
 	const ceilingData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceCeilings.map((x) => {
+			const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
+			
     	const commonFields = {
     		pitch: extractPitch(x),
-    		area: x.grossSurfaceArea,
+    		area: netSurfaceArea || x.grossSurfaceArea,
     		areal_heat_capacity: x.kappaValue,
     		mass_distribution_class: x.massDistributionClass,
     	};
