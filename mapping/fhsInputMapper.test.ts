@@ -134,7 +134,7 @@ const expectedHouseInput: FhsInputSchema = {
 		Leaks: {
 			ventilation_zone_height: 8,
 			env_area: 320,
-			test_pressure: 40,
+			test_pressure: "Standard",
 			test_result: 4,
 		},
 		MechanicalVentilation: {
@@ -144,9 +144,8 @@ const expectedHouseInput: FhsInputSchema = {
 				sup_air_flw_ctrl: "ODA",
 				sup_air_temp_ctrl: "CONST",
 				vent_type: "Intermittent MEV",
-				measured_air_flow_rate: 37,
-				measured_fan_power: 12.26,
 				SFP: 1.5,
+				position_exhaust: {},
 			},
 		},
 		Vents: {
@@ -164,9 +163,6 @@ const expectedHouseInput: FhsInputSchema = {
 		shield_class: "Shielded",
 		terrain_class: "Suburban",
 		ventilation_zone_base_height: 3,
-		Control_VentAdjustMin: null,
-		Control_VentAdjustMax: null,
-		Control_WindowAdjust: null,
 	},
 	InternalGains: {},
 	NumberOfBedrooms: 7,
@@ -220,13 +216,8 @@ const expectedHouseInput: FhsInputSchema = {
 			temp_diff_emit_dsgn: 31,
 			thermal_mass: 0.14,
 			Control: defaultControlName,
-			EnergySupply: null,
-			advanced_start: null,
-			bypass_percentage_recirculated: null,
-			min_flow_rate: null,
-			max_flow_rate: null,
-			temp_setback: null,
 			variable_flow: false,
+			pipework: [],
 		},
 	},
 	GroundFloorArea: 40,
@@ -265,7 +256,6 @@ const expectedHouseInput: FhsInputSchema = {
 					},
 				},
 			},
-			SpaceHeatControl: "livingroom",
 			SpaceHeatSystem: ["some-wet-distribution"],
 			ThermalBridging: {},
 			area: 100,
@@ -507,7 +497,7 @@ const expectedFlatInput: FhsInputSchema = {
 		Leaks: {
 			ventilation_zone_height: 1,
 			env_area: 5,
-			test_pressure: 20,
+			test_pressure: "Pulse test only",
 			test_result: 10,
 		},
 		MechanicalVentilation: {
@@ -531,7 +521,8 @@ const expectedFlatInput: FhsInputSchema = {
 					length: 4,
 					reflective: true,
 				}],
-				SFP: 1.5,
+				position_exhaust: {},
+				position_intake: {},
 			},
 			"mvhr vent 2 name": {
 				EnergySupply: "mains elec",
@@ -544,7 +535,8 @@ const expectedFlatInput: FhsInputSchema = {
 				mvhr_eff: 0,
 				mvhr_location: "outside",
 				ductwork: [],
-				SFP: 1.5,
+				position_exhaust: {},
+				position_intake: {},
 			},
 			"centralised MEV name": {
 				EnergySupply: "mains elec",
@@ -554,7 +546,7 @@ const expectedFlatInput: FhsInputSchema = {
 				vent_type: "Centralised continuous MEV",
 				measured_air_flow_rate: 37,
 				measured_fan_power: 12.26,
-				SFP: 1.5,
+				position_exhaust: {},
 			},
 		},
 		Vents: {
@@ -572,9 +564,6 @@ const expectedFlatInput: FhsInputSchema = {
 		shield_class: "Normal",
 		terrain_class: "OpenField",
 		ventilation_zone_base_height: 1,
-		Control_VentAdjustMin: null,
-		Control_VentAdjustMax: null,
-		Control_WindowAdjust: null,
 	},
 	InternalGains: {},
 	NumberOfBedrooms: 2,
@@ -855,7 +844,6 @@ const expectedFlatInput: FhsInputSchema = {
 						}],
 				},
 			},
-			SpaceHeatControl: "livingroom",
 			SpaceHeatSystem: ["instant elec heater 1", "instant elec heater 2"],
 			ThermalBridging: {
 				"linear thermal bridge (bridge)": {
