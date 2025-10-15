@@ -23,9 +23,9 @@ export type ApplianceKey = keyof components["schemas"]["fhs_input.schema"]["Appl
 export type FloorType = SchemaBuildingElementGround["floor_type"];
 // work round apparent bug in type generation
 export type BuildingElementGround = components["schemas"]["BuildingElementGround"];
-export type SchemaBuildingElement = FhsSchema["Zone"][string]["BuildingElement"];
-type BuildingElementType = SchemaBuildingElement[string]["type"];
-export type BuildingElementOfType<T extends BuildingElementType> = Extract<SchemaBuildingElement[string], { type: T }>;
+export type SchemaBuildingElement = FhsSchema["Zone"][string]["BuildingElement"][string];
+type BuildingElementType = SchemaBuildingElement["type"];
+export type BuildingElementOfType<T extends BuildingElementType> = Extract<SchemaBuildingElement, { type: T }>;
 export type SchemaHeatSourceWetDetails = SchemaHeatSourceWetBoiler | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
 // utility function to make shading into valid external conditions
 type SchemaExternalConditionsInputFhs = FhsSchema["ExternalConditions"];
