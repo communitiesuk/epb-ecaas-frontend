@@ -743,7 +743,7 @@ const expectedFlatInput: FhsInputSchema = {
 					pitch: 90,
 				},
 				"internal wall 1 (wall)": {
-					area: 15,
+					area: 12.2,
 					areal_heat_capacity: 50000,
 					mass_distribution_class: MassDistributionClass.I,
 					pitch: 90,

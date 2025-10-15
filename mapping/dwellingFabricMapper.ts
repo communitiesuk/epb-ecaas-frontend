@@ -300,40 +300,43 @@ export function mapWallData(
 	const { dwellingSpaceWindows } = state.dwellingFabric;
 	const { dwellingSpaceExternalGlazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const { dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
-
+	
 	const externalWallData: { [key: string]: SchemaBuildingElement }[] =
 	
-    dwellingSpaceExternalWall?.map((x) => {
-    	const nameWithSuffix = suffixName(x.name, wallSuffix);
-    	const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceWindows, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor]);
-
-    	return {
-    		[nameWithSuffix]: {
-    			type: "BuildingElementOpaque",
-    			pitch: extractPitch(x),
-    			orientation360: x.orientation,
-    			height: x.height,
-    			width: x.length,
-    			base_height: x.elevationalHeight,
-    			area: netSurfaceArea || x.grossSurfaceArea,
-    			solar_absorption_coeff: x.solarAbsorption,
-    			u_value: x.uValue,
-    			areal_heat_capacity: x.kappaValue,
-    			mass_distribution_class: x.massDistributionClass,
-    			is_external_door: false,
-    		},
-    	};
-    }) || [];
-
+	dwellingSpaceExternalWall?.map((x) => {
+		const nameWithSuffix = suffixName(x.name, wallSuffix);
+		const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceWindows, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor]);
+		
+		return {
+			[nameWithSuffix]: {
+				type: "BuildingElementOpaque",
+				pitch: extractPitch(x),
+				orientation360: x.orientation,
+				height: x.height,
+				width: x.length,
+				base_height: x.elevationalHeight,
+				area: netSurfaceArea || x.grossSurfaceArea,
+				solar_absorption_coeff: x.solarAbsorption,
+				u_value: x.uValue,
+				areal_heat_capacity: x.kappaValue,
+				mass_distribution_class: x.massDistributionClass,
+				is_external_door: false,
+			},
+		};
+	}) || [];
+	
+	const { dwellingSpaceInternalDoor} = state.dwellingFabric.dwellingSpaceDoors;
+	
 	const internalWallData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceInternalWall?.map((x) => {
     	const nameWithSuffix = suffixName(x.name, wallSuffix);
+			const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
 
     	return {
     		[nameWithSuffix]: {
     			type: "BuildingElementAdjacentConditionedSpace",
     			pitch: extractPitch(x),
-    			area: x.grossSurfaceArea,
+    			area: netSurfaceArea || x.grossSurfaceArea,
     			u_value: defaultUValue,
     			areal_heat_capacity: x.kappaValue,
     			mass_distribution_class: x.massDistributionClass,
