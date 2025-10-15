@@ -1,31 +1,92 @@
-// wall - gets gross surface area and runs calculation to get net surface area
-
-import { MassDistributionClass } from "~/schema/api-schema.types";
+import {
+	MassDistributionClass,
+	WindowTreatmentType,
+} from "~/schema/api-schema.types";
+import { millimetre } from "./units/length";
 
 describe("calculateNetSurfaceArea", () => {
-  const store = useEcaasStore()
+	const externalWall: ExternalWallData = {
+		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+		name: "External wall 1",
+		pitchOption: "90",
+		pitch: 90,
+		orientation: 0,
+		length: 10,
+		height: 5,
+		elevationalHeight: 20,
+		grossSurfaceArea: 55,
+		solarAbsorption: 0.1,
+		uValue: 1,
+		kappaValue: 50000,
+		massDistributionClass: MassDistributionClass.I,
+	};
 
-  test("calculates the net surface area of item when it is tagged to one other item", () => {
+	const externalGlazedDoor: ExternalGlazedDoorData = {
+		name: "External glazed door 1",
+		associatedItemId: externalWall.id,
+		surfaceArea: 13,
+		height: 14,
+		width: 48,
+		uValue: 0.45,
+		solarTransmittance: 0.1,
+		elevationalHeight: 14,
+		midHeight: 11,
+		numberOpenableParts: "1",
+		openingToFrameRatio: 0.2,
+		heightOpenableArea: 14,
+		maximumOpenableArea: 13,
+		midHeightOpenablePart1: 11,
+	};
 
-   const externalWall: ExternalWallData = {
-    id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
-    name: "External wall 1",
-    pitchOption: "90",
-    pitch: 90,
-    orientation: 0,
-    length: 10,
-    height: 5,
-    elevationalHeight: 20,
-    grossSurfaceArea: 55,
-    solarAbsorption: 0.1,
-    uValue: 1,
-    kappaValue: 50000,
-    massDistributionClass: MassDistributionClass.I,
-  };
-	
-  const externalGlazedDoor: ExternalGlazedDoorData = {
+	const externalUnglazedDoor = {
+		name: "External unglazed door 1",
+		associatedItemId: externalWall.id,
+		height: 0.5,
+		width: 20,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		solarAbsorption: 0.1,
+		uValue: 1,
+		kappaValue: 50000,
+		massDistributionClass: MassDistributionClass.I,
+	};
+
+	const window: WindowData = {
+		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
+		name: "Window 1",
+		taggedItem: externalWall.id,
+		surfaceArea: 1,
+		height: 1,
+		width: 1,
+		uValue: 1,
+		solarTransmittance: 0.1,
+		elevationalHeight: 1,
+		midHeight: 1,
+		openingToFrameRatio: 0.8,
+		numberOpenableParts: "0",
+		overhangDepth: unitValue(60, millimetre),
+		overhangDistance: unitValue(60, millimetre),
+		sideFinRightDepth: unitValue(60, millimetre),
+		sideFinRightDistance: unitValue(60, millimetre),
+		sideFinLeftDepth: unitValue(60, millimetre),
+		sideFinLeftDistance: unitValue(60, millimetre),
+		curtainsOrBlinds: true,
+		treatmentType: WindowTreatmentType.blinds,
+		thermalResistivityIncrease: 1,
+		solarTransmittanceReduction: 0.1,
+	};
+
+	test("returns undefined when given sections with no data", () => {
+		const itemsWithTags = [[]];
+
+		const actual = calculateNetSurfaceArea(externalWall, itemsWithTags);
+		expect(actual).toBeUndefined();
+	});
+
+	test("calculates net surface area when there are tagged items but none are associated with the main item", () => {
+		const externalGlazedDoor2: ExternalGlazedDoorData = {
 			name: "External glazed door 1",
-			associatedWallRoofId: externalWall.id,
+			associatedItemId: "other-wall-id",
 			surfaceArea: 13,
 			height: 14,
 			width: 48,
@@ -38,13 +99,21 @@ describe("calculateNetSurfaceArea", () => {
 			heightOpenableArea: 14,
 			maximumOpenableArea: 13,
 			midHeightOpenablePart1: 11,
-	};
+		};
+		const itemsWithTags = [[externalGlazedDoor2]];
 
-  const itemsTaggedToWall = [externalGlazedDoor]
+		const actual = calculateNetSurfaceArea(externalWall, itemsWithTags);
+		expect(actual).toBe(55);
+	});
 
-    // const actual = calculateNetSurfaceArea(externalWall, itemsTaggedToWall)
-    // expect(actual).toBe()
-  })
-})
+	test("calculates net surface area when there are tagged items and they are associated with the main item", () => {
+		const itemsWithTags = [
+			[externalGlazedDoor],
+			[externalUnglazedDoor],
+			[window],
+		];
 
-
+		const actual = calculateNetSurfaceArea(externalWall, itemsWithTags);
+		expect(actual).toBe(31);
+	});
+});
