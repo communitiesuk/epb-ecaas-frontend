@@ -18,6 +18,22 @@ export const getResolvedTaggedItem = (
 	}
 };
 
+export const getResolvedTopLevelTaggedItem = (
+	sections: EcaasSectionWithTagging[][],
+	id: string | undefined,
+): AssociatedItemValues | undefined => {
+	const items: AssociatedItemValues[][] = [];
+	const sectionsWithoutNestedTaggedItems = sections?.filter(
+		(s) => s !== undefined && s.some((x) => !("taggedItem" in x)),
+	);
+	
+	for (const section of sectionsWithoutNestedTaggedItems) {
+		items.push(extractResolvedSectionItems(section));
+	}
+	const taggedItem = items.flat().find((item) => item.id === id);
+	return taggedItem;
+};
+
 export const extractResolvedSectionItems = <T extends Record<string, unknown>>(
 	section: T[],
 ): AssociatedItemValues[] => {
@@ -30,22 +46,6 @@ export const extractResolvedSectionItems = <T extends Record<string, unknown>>(
 			} as AssociatedItemValues;
 		}) ?? []
 	);
-};
-
-export const getResolvedTopLevelTaggedItem = (
-	sections: EcaasSectionWithTagging[][],
-	id: string | undefined,
-): AssociatedItemValues | undefined => {
-	const items: AssociatedItemValues[][] = [];
-	const sectionsWithoutNestedTaggedItems = sections?.filter(
-		(s) => s !== undefined && s.some((x) => !("taggedItem" in x)),
-	);
-
-	for (const section of sectionsWithoutNestedTaggedItems) {
-		items.push(extractResolvedSectionItems(section));
-	}
-	const taggedItem = items.flat().find((item) => item.id === id);
-	return taggedItem;
 };
 
 export const getResolvedNestedTaggedItem = (
