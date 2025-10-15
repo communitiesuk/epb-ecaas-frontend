@@ -863,6 +863,7 @@ export type WetDistributionData = z.infer<typeof wetDistributionDataZod>;
 export type PvAndBatteries = AssertFormKeysArePageIds<{
 	pvSystems: EcaasFormList<PvSystemData>;
 	electricBattery: EcaasFormList<ElectricBatteryData>;
+	diverters: EcaasFormList<PvDiverterData>;
 }>;
 
 const pvSystemDataZod = z.object({
@@ -901,16 +902,13 @@ const electricBatteryDataZod = z.object({
 
 export type ElectricBatteryData = z.infer<typeof electricBatteryDataZod>;
 
-const _pvDiverterDataZod = named.and(z.union([
-	z.object({
-		energyDivertedToHeatGeneration: z.string(),
-	}),
-	z.object({
-		energyDivertedToHotWaterCylinder: z.string(),
-	}),
-]));
+const pvDiverterDataZod = z.object({
+	name: z.string().trim().min(1),
+	hotWaterCylinder: z.optional(z.string()),
+	heatSource: z.string(),
+})
 
-export type PvDiverterData = z.infer<typeof _pvDiverterDataZod>;
+export type PvDiverterData = z.infer<typeof pvDiverterDataZod>;
 
 export interface Cooling {
 	airConditioning: EcaasFormList<AirConditioningData>;
@@ -1040,4 +1038,5 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"heatingAndCoolingSystems/cooling/airConditioning": airConditioningDataZod,
 	"pvAndBatteries/pvSystems": pvSystemDataZod,
 	"pvAndBatteries/electricBattery": electricBatteryDataZod,
+	"pvAndBatteries/diverters": pvDiverterDataZod,
 };

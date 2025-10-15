@@ -31,6 +31,13 @@ const pvAndBatteriesPages = [
 		parentId: "pvAndBatteries",
 	},
 	{
+		id: "diverters",
+		title: "Diverters",
+		url: "/pv-and-batteries/diverters",
+		type: PageType.Task,
+		parentId: "pvAndBatteries"
+	},
+	{
 		id: "pvStorageSummary",
 		title: "Summary",
 		url: "/pv-and-batteries/summary",

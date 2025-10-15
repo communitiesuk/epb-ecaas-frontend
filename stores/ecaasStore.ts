@@ -104,6 +104,7 @@ export function getInitialState(): EcaasState {
 		pvAndBatteries: {
 			pvSystems: { data: [] },
 			electricBattery: { data: [] },
+			diverters: { data: [] },
 		},
 	};
 	return store as EcaasState;
