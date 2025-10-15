@@ -265,7 +265,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="securityRisk"
 			type="govBoolean"
 			label="Is having this window open a security risk?"
-			hint="For example, would you be able to leave the window open at night?"
+			help="For example, would you be able to leave the window open at night?"
 			validation="required"
 			data-field="Zone.BuildingElement.*.security_risk"
 		/>
