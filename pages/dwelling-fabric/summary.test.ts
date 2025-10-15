@@ -699,7 +699,6 @@ describe("Living space fabric summary", () => {
 				"Width": `20 ${metre.suffix}`,
 				"Elevational height of building element at its base": `20 ${metre.suffix}`,
 				"Net surface area": `10 ${metresSquare.suffix}`,
-				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
