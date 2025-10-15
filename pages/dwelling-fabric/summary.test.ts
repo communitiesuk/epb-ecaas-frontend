@@ -292,14 +292,14 @@ const thermalBridgingData: ThermalBridgingData = {
 	},
 };
 
-describe("Living space fabric summary", () => {
+describe("Dwelling space fabric summary", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	describe("Living space zone parameters", () => {
+	describe("Dwelling space zone parameters", () => {
 		it("should contain the correct tabs for dwelling space zone parameters", async () => {
 			await renderSuspended(Summary);
 
@@ -331,7 +331,7 @@ describe("Living space fabric summary", () => {
 		});
 	});
 
-	describe("Living space lighting", () => {
+	describe("Dwelling space lighting", () => {
 		it("should contain the correct tabs for dwelling space lighting", async () => {
 			await renderSuspended(Summary);
 
@@ -362,7 +362,7 @@ describe("Living space fabric summary", () => {
 		});
 	});
 
-	describe("Living space floors", () => {
+	describe("Dwelling space floors", () => {
 		it("should contain the correct tabs for dwelling space floors", async () => {
 			await renderSuspended(Summary);
 
@@ -461,7 +461,7 @@ describe("Living space fabric summary", () => {
 		});
 	});
 
-	describe("Living space walls", () => {
+	describe("Dwelling space walls", () => {
 		it("should contain the correct tabs for dwelling space walls", async () => {
 			await renderSuspended(Summary);
 
