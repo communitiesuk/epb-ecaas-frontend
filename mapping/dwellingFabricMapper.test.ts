@@ -617,7 +617,6 @@ describe("dwelling fabric mapper", () => {
 			width: externalUnglazedDoor.width,
 			base_height: externalUnglazedDoor.elevationalHeight,
 			area: externalUnglazedDoor.surfaceArea,
-			solar_absorption_coeff: externalUnglazedDoor.solarAbsorption,
 			u_value: externalUnglazedDoor.uValue,
 			areal_heat_capacity: externalUnglazedDoor.arealHeatCapacity,
 			mass_distribution_class: fullMassDistributionClass(externalUnglazedDoor.massDistributionClass),

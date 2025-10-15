@@ -5,7 +5,7 @@ import type { SchemaCombustionApplianceType, FloorType, SchemaMechVentType, Mass
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { arealHeatCapacityZod, batteryLocationZod, combustionAirSupplySituationZod, combustionFuelTypeZod, ductShapeZod, flueGasExhaustSituationZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
+import { arealHeatCapacityZod, batteryLocationZod, colourZod, combustionAirSupplySituationZod, combustionFuelTypeZod, ductShapeZod, flueGasExhaustSituationZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, testPressureZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, zodLiteralFromUnionType } from "./zod";
 
 const fraction = z.number().min(0).max(1);
 const percentage = z.number().min(0).max(100);
@@ -326,10 +326,10 @@ const externalUnglazedDoorDataZod = named.extend({
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
 	surfaceArea: z.number().min(0.01).max(10000),
-	solarAbsorption: z.number().min(0.01).max(1),
 	uValue,
 	arealHeatCapacity: arealHeatCapacityZod,
 	massDistributionClass,
+	colour: colourZod,
 });
 
 export type ExternalUnglazedDoorData = z.infer<typeof externalUnglazedDoorDataZod>;

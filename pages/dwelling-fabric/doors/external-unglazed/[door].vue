@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { standardPitchOptions, getUrl } from "#imports";
+import type { SchemaColour } from "~/schema/aliases";
 
 const title = "External unglazed door";
 const store = useEcaasStore();
@@ -7,6 +8,12 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor?.data);
 const model = ref(doorData?.data);
+
+const colourOptions = {
+	"Light": "Light",
+	"Intermediate": "Intermediate",
+	"Dark": "Dark",
+} as const satisfies Record<SchemaColour, SchemaColour>;
 
 const saveForm = (fields: ExternalUnglazedDoorData) => {
 	store.$patch((state) => {
@@ -23,10 +30,10 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 				width: fields.width,
 				elevationalHeight: fields.elevationalHeight,
 				surfaceArea: fields.surfaceArea,
-				solarAbsorption: fields.solarAbsorption,
 				uValue: fields.uValue,
 				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
+				colour: fields.colour,
 			},
 			complete: true,
 		};
@@ -111,8 +118,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption"/>
 		<FieldsUValue id="uValue" name="uValue" />
+		<FormKit
+			id="colour"
+			type="govRadios"
+			label="Colour of external surface"
+			name="colour"
+			:options="colourOptions"
+			validation="required"
+			data-field="Zone.BuildingElement.*.colour"
+		/>
 		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />

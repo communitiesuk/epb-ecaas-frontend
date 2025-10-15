@@ -31,10 +31,10 @@ describe("doors", () => {
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0.1,
 			uValue: 1,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			colour: "Dark",
 		},
 	};
 
@@ -48,10 +48,10 @@ describe("doors", () => {
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0.1,
 			uValue: 1,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			colour: "Light",
 		},
 	};
 
@@ -65,10 +65,10 @@ describe("doors", () => {
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0.1,
 			uValue: 1,
 			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			colour: "Intermediate",
 		},
 	};
 

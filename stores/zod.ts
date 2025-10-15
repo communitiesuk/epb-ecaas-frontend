@@ -2,7 +2,7 @@
 
 import type { UnionToTuple } from "type-fest";
 import * as z from "zod";
-import type { CombustionFuelType, SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaCombustionAirSupplySituation, SchemaFlueGasExhaustSituation, SchemaFuelType, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType } from "~/schema/aliases";
+import type { CombustionFuelType, SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaCombustionAirSupplySituation, SchemaFlueGasExhaustSituation, SchemaFuelType, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour } from "~/schema/aliases";
 import type { ConciseMassDistributionClass } from "./ecaasStore.schema";
 
 type NoneEmptyArray = readonly unknown[] & { 0: unknown };
@@ -29,6 +29,7 @@ export function zodLiteralFromUnionType<T, U extends UnionToTuple<T>[number] & s
 
 const arealHeatCapacities = ["Very light", "Light", "Medium", "Heavy", "Very heavy"] as const satisfies SchemaArealHeatCapacity[];
 const batteryLocations = ["inside", "outside"] as const satisfies SchemaBatteryLocation[];
+const colours = ["Light", "Intermediate", "Dark"] as const satisfies SchemaColour[];
 const combustionAirSupplySituations = ["outside", "room_air"] as const satisfies SchemaCombustionAirSupplySituation[];
 const combustionFuelTypes = ["wood", "gas", "oil", "coal"] as const satisfies CombustionFuelType[];
 const ductShapes = ["circular", "rectangular"] as const satisfies SchemaDuctShape[];
@@ -80,6 +81,7 @@ const windShieldLocations = ["Sheltered", "Average", "Exposed"] as const satisfi
 
 export const arealHeatCapacityZod = zodForTypeOptions(ensureAllUnion<SchemaArealHeatCapacity, (typeof arealHeatCapacities)>(arealHeatCapacities));
 export const batteryLocationZod = zodForTypeOptions(ensureAllUnion<SchemaBatteryLocation, (typeof batteryLocations)>(batteryLocations));
+export const colourZod = zodForTypeOptions(ensureAllUnion<SchemaColour, (typeof colours)>(colours));
 export const combustionAirSupplySituationZod = zodForTypeOptions(ensureAllUnion<SchemaCombustionAirSupplySituation, (typeof combustionAirSupplySituations)>(combustionAirSupplySituations));
 export const combustionFuelTypeZod = zodForTypeOptions(ensureAllUnion<CombustionFuelType, (typeof combustionFuelTypes)>(combustionFuelTypes));
 export const ductShapeZod = zodForTypeOptions(ensureAllUnion<SchemaDuctShape, (typeof ductShapes)>(ductShapes));
