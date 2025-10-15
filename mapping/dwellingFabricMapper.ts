@@ -347,12 +347,13 @@ export function mapWallData(
 	const partyWallData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpacePartyWall?.map((x) => {
     	const nameWithSuffix = suffixName(x.name, wallSuffix);
+			const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
 
     	return {
     		[nameWithSuffix]: {
     			type: "BuildingElementAdjacentConditionedSpace",
     			pitch: extractPitch(x),
-    			area: x.grossSurfaceArea,
+    			area: netSurfaceArea || x.grossSurfaceArea,
     			u_value: x.uValue,
     			areal_heat_capacity: x.kappaValue,
     			mass_distribution_class: x.massDistributionClass,
