@@ -6,6 +6,10 @@ import yn from "yn";
 export default defineNuxtConfig({
 	compatibilityDate: "2024-04-03",
 
+	future: {
+		compatibilityVersion: 4,
+	},
+
 	devtools: {
 		enabled:
 			typeof process.env.DISABLE_DEVTOOLS !== "undefined"
