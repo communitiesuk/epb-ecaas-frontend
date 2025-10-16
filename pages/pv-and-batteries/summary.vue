@@ -47,6 +47,20 @@ const batterySummary: SummarySection = {
 	editUrl: "/pv-and-batteries",
 };
 
+const diverters = store.pvAndBatteries.diverters.data;
+const diverterSummary: SummarySection = {
+	id: "diverters",
+	label: "Diverters",
+	data: diverters.map(({ data: x }) => {
+		return {
+			"Name": show(x.name),
+			"Associated hot water cylinder": show(store.domesticHotWater.waterHeating.hotWaterCylinder.data.find(y => y && y.data.id === x.hotWaterCylinder)?.data.name),
+			"Associated heat source": show(store.heatingAndCoolingSystems.heatGeneration.heatPump.data.find((y) => y.data.id === x.heatSource)?.data.name),
+		};
+	}),
+	editUrl: "/pv-and-batteries",
+};
+
 </script>
 <template>
 	<Head>
@@ -69,6 +83,16 @@ const batterySummary: SummarySection = {
 				<h2 class="govuk-heading-m">No electric battery added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
 					Add electric battery
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([diverterSummary])">
+		<SummaryTab :summary="diverterSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No diverter added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
+					Add diverter
 				</NuxtLink>
 			</template>
 		</SummaryTab>

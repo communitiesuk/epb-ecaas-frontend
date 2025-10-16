@@ -37,7 +37,7 @@ describe("PV and electric batteries summary page", () => {
 			).not.toBeNull();
 		});
 
-		it("displays an empty tab state when no pv system data is present", async () => {
+		it("displays an empty tab state when no data is present", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
         
 			expect(screen.getByText("No PV systems added")).not.toBeNull();
@@ -121,7 +121,7 @@ describe("PV and electric batteries summary page", () => {
 			);
 		});
 
-		it("displays the correct data for the pv summary", async () => {
+		it("displays the correct data for the electric battery summary", async () => {
 			const store = useEcaasStore();
 			store.$patch({
 				pvAndBatteries: {
@@ -146,6 +146,100 @@ describe("PV and electric batteries summary page", () => {
 
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-electricBattery-${hyphenate(key)}`));
+				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+			}
+		});
+	});
+
+	describe("Diverters section", () => {
+
+		it("displays the diverter tab", async () => {
+			await renderSuspended(PVAndElectricBatteriesSummary);
+			expect(
+				screen.getByRole("link", { name: "Diverters" }),
+			).not.toBeNull();
+		});
+
+		it("displays an empty tab state when no data is present", async () => {
+			await renderSuspended(PVAndElectricBatteriesSummary);
+
+			expect(screen.getByText("No diverter added")).not.toBeNull();
+
+			const addPVSystemsLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add diverter",
+			});
+
+			expect(new URL(addPVSystemsLink.href).pathname).toBe(
+				getUrl("pvAndBatteries"),
+			);
+		});
+
+		it("displays the correct data for the diverters summary", async () => {
+			const store = useEcaasStore();
+
+			const hotWaterCylinderName = "HWC1";
+			const hotWaterCylinderId = "88ea3f45-6f2a-40e2-9117-0541bd8a97f3";
+			const heatPumpName = "HP1";
+			const heatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb01e";
+
+			const diverter: EcaasForm<PvDiverterData> = {
+				data: {
+					name: "Diverter 1",
+					hotWaterCylinder: hotWaterCylinderId,
+					heatSource: heatPumpId,
+				},
+			};
+
+			store.$patch({
+				heatingAndCoolingSystems: {
+					heatGeneration: {
+						heatPump: {
+							data: [{
+								data: {
+									name: heatPumpName,
+									id: heatPumpId,
+									productReference: "HEATPUMP-SMALL",
+								},
+							}],
+						},
+					},
+				},
+				domesticHotWater: {
+					waterHeating: {
+						hotWaterCylinder: {
+							data: [{
+								data: {
+									name: hotWaterCylinderName,
+									id: hotWaterCylinderId,
+									heatSource: heatPumpId,
+									storageCylinderVolume: {
+										amount: 1,
+										unit: "litres",
+									},
+									dailyEnergyLoss: 1,
+								},
+							}],
+						},
+					},
+				},
+				pvAndBatteries: {
+					diverters: {
+						data: [diverter],
+					},
+				},
+			});
+
+			await renderSuspended(PVAndElectricBatteriesSummary);
+
+			const expectedResult = {
+				"Name": "Diverter 1",
+				"Associated hot water cylinder": hotWaterCylinderName,
+				"Associated heat source": heatPumpName,
+			};
+
+			for (const [key, value] of Object.entries(expectedResult)) {
+				const lineResult = await screen.findByTestId(`summary-diverters-${hyphenate(key)}`);
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 			}
