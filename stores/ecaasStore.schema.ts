@@ -906,7 +906,7 @@ const pvDiverterDataZod = z.object({
 	name: z.string().trim().min(1),
 	hotWaterCylinder: z.optional(z.string()),
 	heatSource: z.string(),
-})
+});
 
 export type PvDiverterData = z.infer<typeof pvDiverterDataZod>;
 

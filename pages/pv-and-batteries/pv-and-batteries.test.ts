@@ -79,9 +79,9 @@ describe("pv systems and electric battery", () => {
 	const diverter1: EcaasForm<PvDiverterData> = {
 		data: {
 			name: "Diverter 1",
-			heatSource: "Heat source 1"
-		}
-	}
+			heatSource: "Heat source 1",
+		},
+	};
 
 	describe("pv systems", () => {
 		test("pv system is removed when remove link is clicked", async () => {
@@ -323,8 +323,8 @@ describe("pv systems and electric battery", () => {
 					if (section === "pvSystems") {
 						await renderSuspended(pvAndBatteryForms[section], {
 							route: {
-								path: '/pv-and-batteries/pv-systems/create'
-							}
+								path: "/pv-and-batteries/pv-systems/create",
+							},
 						});
 					} else {
 						await renderSuspended(pvAndBatteryForms[section]);
