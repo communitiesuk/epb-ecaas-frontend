@@ -44,7 +44,6 @@ describe("calculateNetSurfaceArea", () => {
 		height: 0.5,
 		width: 20,
 		elevationalHeight: 20,
-		surfaceArea: 10,
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,

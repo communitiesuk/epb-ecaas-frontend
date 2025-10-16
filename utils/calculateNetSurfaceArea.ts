@@ -14,7 +14,8 @@ type TaggedEcaasItem =
 
 export const calculateNetSurfaceArea = (
 	mainItem: EcaasItemWithGrossSurfaceArea,
-	sectionsWithTaggedItems: TaggedEcaasItem[][]) : number | undefined => {
+	sectionsWithTaggedItems: TaggedEcaasItem[][],
+): number | undefined => {
 	const grossSurfaceArea = mainItem.grossSurfaceArea;
 	let totalTaggedArea = 0;
 
@@ -28,7 +29,15 @@ export const calculateNetSurfaceArea = (
 				item["associatedItemId" as keyof TaggedEcaasItem] === mainItem.id ||
         item["taggedItem" as keyof TaggedEcaasItem] === mainItem.id
 			) {
-				totalTaggedArea += item.surfaceArea;
+				const keys = Object.keys(item);
+				if (keys.includes("surfaceArea")) {
+					totalTaggedArea += item.surfaceArea;
+				} else {
+					const height = item["height" as keyof TaggedEcaasItem];
+					const width = item["width" as keyof TaggedEcaasItem];
+ 
+					totalTaggedArea += Number(height as string) * Number(width as string);
+				}
 			}
 		}
 		return grossSurfaceArea - totalTaggedArea;
