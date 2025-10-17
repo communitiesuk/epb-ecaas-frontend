@@ -10,6 +10,13 @@ const heatingAndCoolingSystemsPages = [
 		parentId: "taskList",
 	},
 	{
+		id: "general",
+		title: "General",
+		url: "/heating-and-cooling-systems/general",
+		type: PageType.Task,
+		parentId: "heatingAndCoolingSystems",
+	},
+	{
 		id: "energySupply",
 		title: "Energy supply",
 		url: "/heating-and-cooling-systems/energy-supply",

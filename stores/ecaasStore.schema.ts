@@ -760,11 +760,21 @@ const airPermeabilityDataZod = z.object({
 export type AirPermeabilityData = z.infer<typeof airPermeabilityDataZod>;
 
 export type heatingAndCoolingSystems = AssertEachKeyIsPageId<{
+	general: EcaasForm<GeneralHeatingAndCoolingSystems>,
 	heatGeneration: HeatGeneration,
 	energySupply: EcaasForm<EnergySupplyData>;
 	heatEmitting: HeatEmitting;
 	cooling: Cooling
 }>;
+
+const heatingControlType = z.enum(["separateTemperatureControl", "separateTimeAndTemperatureControl"]);
+
+const generalHeatingAndCoolingSystemsDataZod = z.object({
+	heatingControlType,
+	coolingRequired: z.boolean(),
+});
+
+export type GeneralHeatingAndCoolingSystems = z.infer<typeof generalHeatingAndCoolingSystemsDataZod>;
 
 export type HeatGeneration = AssertFormKeysArePageIds<{
 	heatPump: EcaasFormList<HeatPumpData>;
@@ -1025,6 +1035,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"infiltrationAndVentilation/combustionAppliances/open_gas_kitchen_stove": combustionApplianceDataZod,
 	"infiltrationAndVentilation/naturalVentilation": ventilationDataZod,
 	"infiltrationAndVentilation/airPermeability": airPermeabilityDataZod,
+	"heatingAndCoolingSystems/general": generalHeatingAndCoolingSystemsDataZod,
 	"heatingAndCoolingSystems/heatGeneration/boiler": boilerDataZod,
 	"heatingAndCoolingSystems/heatGeneration/heatBattery": heatBatteryDataZod,
 	"heatingAndCoolingSystems/heatGeneration/heatInterfaceUnit": heatInterfaceUnitDataZod,

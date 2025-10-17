@@ -83,6 +83,7 @@ export function getInitialState(): EcaasState {
 			dwellingSpaceLighting: { data: {} },
 		},
 		heatingAndCoolingSystems: {
+			general: { data: {} },
 			heatGeneration: {
 				heatPump: { data: [] },
 				boiler: { data: [] },
