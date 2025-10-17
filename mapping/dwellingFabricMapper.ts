@@ -325,12 +325,12 @@ export function mapWallData(
 		};
 	}) || [];
 	
-	const { dwellingSpaceInternalDoor} = state.dwellingFabric.dwellingSpaceDoors;
+	const { dwellingSpaceInternalDoor } = state.dwellingFabric.dwellingSpaceDoors;
 
 	const internalWallData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceInternalWall?.map((x) => {
     	const nameWithSuffix = suffixName(x.name, wallSuffix);
-			const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
+    	const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
 
     	return {
     		[nameWithSuffix]: {
@@ -347,7 +347,7 @@ export function mapWallData(
 	const partyWallData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpacePartyWall?.map((x) => {
     	const nameWithSuffix = suffixName(x.name, wallSuffix);
-			const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
+    	const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
 
     	return {
     		[nameWithSuffix]: {
@@ -365,7 +365,7 @@ export function mapWallData(
 	const wallToUnheatedSpaceData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceWallToUnheatedSpace?.map((x) => {
     	const nameWithSuffix = suffixName(x.name, wallSuffix);
-			const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
+    	const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
 
     	return {
     		[nameWithSuffix]: {
@@ -404,11 +404,11 @@ export function mapCeilingAndRoofData(
 	const ceilingSuffix = "ceiling";
 	const roofSuffix = "roof";
 
-	const { dwellingSpaceInternalDoor} = state.dwellingFabric.dwellingSpaceDoors;
+	const { dwellingSpaceInternalDoor } = state.dwellingFabric.dwellingSpaceDoors;
 
 	const ceilingData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceCeilings.map((x) => {
-			const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
+    	const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceInternalDoor]);
 			
     	const commonFields = {
     		pitch: extractPitch(x),
@@ -447,7 +447,7 @@ export function mapCeilingAndRoofData(
 	const roofData: { [key: string]: SchemaBuildingElement }[] =
     dwellingSpaceRoofs.map((x) => {
     	const nameWithSuffix = suffixName(x.name, roofSuffix);
-		const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceWindows, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor]);
+    	const netSurfaceArea = calculateNetSurfaceArea(x, [dwellingSpaceWindows, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor]);
 
 
     	return {

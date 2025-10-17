@@ -1344,8 +1344,8 @@ describe("FHS input mapper", () => {
 		// Arrange
 		const externalWallId = "c846a753-51ac-43c8-b6a8-823cab609d5e";
 		const internalWallId = "743eb2b5-fc43-46ec-acf3-4d0b6eb173b3";
-		const wallToUnheatedSpaceId = "17a405ad-3fc8-41a2-b4b2-6206db6085a9"
-		const roofId = "85343964-1c5f-416b-b4af-0d16c06d3046"
+		const wallToUnheatedSpaceId = "17a405ad-3fc8-41a2-b4b2-6206db6085a9";
+		const roofId = "85343964-1c5f-416b-b4af-0d16c06d3046";
 
 		const dwellingDetails: DwellingDetails = {
 			generalSpecifications: {
