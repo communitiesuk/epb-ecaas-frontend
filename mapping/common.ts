@@ -22,25 +22,23 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 	power_off: 0.015,
 	power_source_circ_pump: 0.010,
 	power_standby: 0.015,
+	power_max_backup: 0.1,
 	sink_type: "Water",
 	source_type: "OutsideAir",
 	temp_lower_operating_limit: -5,
 	temp_return_feed_max: 70,
 	test_data_EN14825: [
 		{
-			air_flow_rate: null,
 			test_letter: "A",
 			capacity: 8.4,
 			cop: 4.6,
 			degradation_coeff: 0.90,
 			design_flow_temp: 35,
-			eahp_mixed_ext_air_ratio: null,
 			temp_outlet: 34,
 			temp_source: 0,
 			temp_test: -7,
 		},
 		{
-			air_flow_rate: null,
 			test_letter: "B",
 			capacity: 8.3,
 			cop: 4.9,
@@ -51,7 +49,6 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			temp_test: 2,
 		},
 		{
-			air_flow_rate: null,
 			test_letter: "C",
 			capacity: 8.3,
 			cop: 5.1,
@@ -62,7 +59,6 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			temp_test: 7,
 		},
 		{
-			air_flow_rate: null,
 			test_letter: "D",
 			capacity: 8.2,
 			cop: 5.4,
@@ -73,7 +69,6 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			temp_test: 12,
 		},
 		{
-			air_flow_rate: null,
 			test_letter: "F",
 			capacity: 8.4,
 			cop: 4.6,
@@ -84,7 +79,6 @@ export const defaultHeatSourceWetDetails: SchemaHeatSourceWetDetails = {
 			temp_test: -7,
 		},
 	],
-	time_constant_onoff_operation: 140,
 	time_delay_backup: 2,
 	var_flow_temp_ctrl_during_test: true,
 };

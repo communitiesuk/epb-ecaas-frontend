@@ -1,10 +1,10 @@
 import { objectEntries, objectFromEntries } from "ts-extras";
-import type { SchemaCombustionAppliance, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { asCubicMetresPerHour } from "~/utils/units/flowRate";
-import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation } from "~/schema/aliases";
+import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation, SchemaCombustionAppliance, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/aliases";
+import type { SchemaMechVentCommon } from "~/schema/api-schema.types";
 
 export function mapInfiltrationVentilationData(state: ResolvedState): Partial<FhsInputSchema> {
 	const { dwellingHeight, dwellingEnvelopeArea, dwellingElevationalLevelAtBase, crossVentilationPossible } = mapVentilationData(state);
@@ -31,10 +31,6 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 			];
 		})),
 		Vents: mapVentsData(state),
-		Control_VentAdjustMin: null,
-		Control_VentAdjustMax: null,
-		Control_WindowAdjust: null,
-		ach_min_static_calcs: null,
 	};
 
 	return {
@@ -53,17 +49,56 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		}
 		
 		const key = x.name;
-		const val: Omit<SchemaMechanicalVentilation, "ductwork"> = {
-			vent_type: x.typeOfMechanicalVentilationOptions,
-			EnergySupply: defaultElectricityEnergySupplyName,
+		
+		const commonFields = {
 			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
 			sup_air_flw_ctrl: "ODA",
 			sup_air_temp_ctrl: "CONST",
-			...(x.typeOfMechanicalVentilationOptions === "MVHR" ? { mvhr_location: x.mvhrLocation, mvhr_eff: x.mvhrEfficiency } : {}),
-			measured_air_flow_rate: 37,
-			measured_fan_power: 12.26,
-			SFP: 1.5, // canned value for now
-		};
+			EnergySupply: defaultElectricityEnergySupplyName,
+		} as const satisfies SchemaMechVentCommon;
+
+		let val: SchemaMechanicalVentilation;
+
+		const ventType = x.typeOfMechanicalVentilationOptions;
+
+		switch (ventType) {
+			case "MVHR":
+				val = {
+					vent_type: "MVHR",
+					...commonFields,
+					mvhr_location: x.mvhrLocation,
+					mvhr_eff: x.mvhrEfficiency,
+					ductwork: [],
+					measured_air_flow_rate: 37,
+					measured_fan_power: 12.26,
+				};
+				break;
+			case "Centralised continuous MEV":
+				val = {
+					vent_type: "Centralised continuous MEV",
+					...commonFields,
+					measured_air_flow_rate: 37,
+					measured_fan_power: 12.26,
+				};
+				break;
+			case "Intermittent MEV":
+				val = {
+					vent_type: "Intermittent MEV",
+					...commonFields,
+					SFP: 1.5,
+				};
+				break;
+			case "Decentralised continuous MEV":
+				val = {
+					vent_type: "Decentralised continuous MEV",
+					...commonFields,
+					SFP: 1.5,
+				};
+				break;
+			default:
+				ventType satisfies never;
+				throw new Error(`Encountered unexpected vent type: '${ventType}'`);
+		}
 
 		return [key, val];
 	});
@@ -83,8 +118,8 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 			duct_type: x.ductType,
 			insulation_thermal_conductivity: x.thermalInsulationConductivityOfDuctwork,
 			insulation_thickness_mm: x.insulationThickness,
-			...(x.ductworkCrossSectionalShape === "circular" ? { internal_diameter_mm: x.internalDiameterOfDuctwork, external_diameter_mm: x.externalDiameterOfDuctwork } : {}),
-			...(x.ductworkCrossSectionalShape === "rectangular" ? { duct_perimeter_mm: x.ductPerimeter } : {}),
+			internal_diameter_mm: x.internalDiameterOfDuctwork,
+			external_diameter_mm: x.externalDiameterOfDuctwork,
 			length: x.lengthOfDuctwork,
 			reflective: x.surfaceReflectivity,
 		};
@@ -133,12 +168,44 @@ export function mapCombustionAppliancesData(state: ResolvedState): Record<string
 	const combustionApplianceEntries = objectEntries(state.infiltrationAndVentilation.combustionAppliances).map(([key, value]) => {
 		return value.map<[string, SchemaCombustionAppliance]>((appliance) => {
 			const { name, airSupplyToAppliance, exhaustMethodFromAppliance, typeOfFuel } = appliance;
-			const applianceInput: SchemaCombustionAppliance = {
-				appliance_type: key,
-				exhaust_situation: exhaustMethodFromAppliance,
-				fuel_type: typeOfFuel,
+
+			let applianceInput: SchemaCombustionAppliance;
+
+			const commonFields: Pick<SchemaCombustionAppliance, "supply_situation" | "exhaust_situation"> = {
 				supply_situation: airSupplyToAppliance,
+				exhaust_situation: exhaustMethodFromAppliance,
 			};
+
+			switch (key) {
+				case "closed_fire":
+					applianceInput = {
+						...commonFields,
+						fuel_type: typeOfFuel as "oil" | "coal",
+						appliance_type: key,
+					};
+					break;
+				case "closed_with_fan":
+				case "open_gas_flue_balancer":
+				case "open_gas_kitchen_stove":
+				case "open_gas_fire":
+					applianceInput = {
+						...commonFields,
+						fuel_type: "gas",
+						appliance_type: key,
+					};
+					break;
+				case "open_fireplace":
+					applianceInput = {
+						...commonFields,
+						fuel_type: "wood",
+						appliance_type: key,
+					};
+					break;
+				default:
+					key satisfies never;
+					throw new Error(`Unknown type of combustion appliance "${key}" encountered.`);
+			}
+
 			return [name, applianceInput];
 		});
 	}).flat();

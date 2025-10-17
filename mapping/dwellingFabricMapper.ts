@@ -1,5 +1,4 @@
-import type { BuildingElementGround, SchemaBuildingElement, SchemaZoneInput } from "~/schema/aliases";
-import type { SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart } from "~/schema/api-schema.types";
+import type { BuildingElementGround, SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaEdgeInsulation } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from "deepmerge";
 import { defaultZoneName } from "./common";
@@ -53,7 +52,6 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 				SpaceHeatControl: "livingroom",
 				area: dwellingSpaceZoneParameters.area,
 				volume: dwellingSpaceZoneParameters.volume,
-				temp_setpnt_init: 20, // temporary dummy - this field is removed in subsequent schemas
 			} as Partial<SchemaZoneInput>,
 		},
 	} as Pick<FhsInputSchema, "HeatingControlType" | "Zone">;
@@ -63,7 +61,6 @@ export function mapLightingData(state: ResolvedState): Pick<FhsInputSchema, "Zon
 	const { dwellingSpaceLighting: { numberOfIncandescentBulbs, numberOfLEDBulbs } } = state.dwellingFabric;
 
 	const lightingData: SchemaLighting = {
-		efficacy: 56.0,
 		bulbs: {
 			...(numberOfIncandescentBulbs >= 1 ? { incandescent: {
 				count: numberOfIncandescentBulbs,
@@ -91,7 +88,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor } = state.dwellingFabric.dwellingSpaceFloors;
 	const floorSuffix = "floor";
 
-	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: "Slab_edge_insulation" }>) {
+	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: "Slab_edge_insulation" }>): SchemaEdgeInsulation {
 		let edgeInsulationWidthInMetres: number;
 
 		if (typeof data.edgeInsulationWidth === "number") {
@@ -99,22 +96,14 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 		} else {
 			edgeInsulationWidthInMetres = asMetres(data.edgeInsulationWidth);
 		}
-		
-		if (data.edgeInsulationType === "horizontal") {
-			return [{
-				type: data.edgeInsulationType,
-				width: edgeInsulationWidthInMetres,
-				edge_thermal_resistance: data.edgeInsulationThermalResistance,
-			}];
-		}
 
-		if (data.edgeInsulationType === "vertical") {
-			return [{
-				type: data.edgeInsulationType,
-				depth: edgeInsulationWidthInMetres,
-				edge_thermal_resistance: data.edgeInsulationThermalResistance,
-			}];
-		}
+		const { edgeInsulationType, edgeInsulationThermalResistance } = data;
+
+		return {
+			type: edgeInsulationType,
+			width: edgeInsulationWidthInMetres,
+			edge_thermal_resistance: edgeInsulationThermalResistance,
+		};
 	}
 
 	const groundFloorData: { [key: string]: BuildingElementGround }[] = dwellingSpaceGroundFloor.map(x => {
@@ -486,6 +475,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			],
 			frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
 			max_window_open_area: x.maximumOpenableArea,
+			security_risk: x.securityRisk,
 			free_area_height: x.heightOpenableArea,
 			shading: [],
 		} as const satisfies SchemaBuildingElement;
@@ -608,6 +598,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			u_value: x.uValue,
 			g_value: x.solarTransmittance,
 			mid_height: x.midHeight,
+			security_risk: x.securityRisk,
 			frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 			max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
 			free_area_height: x.numberOpenableParts === "0" ? 0 : x.heightOpenableArea,
@@ -634,7 +625,7 @@ export function mapThermalBridgingData(state: ResolvedState): Pick<FhsInputSchem
 
 		return { [nameWithSuffix]: {
 			type: "ThermalBridgeLinear",
-			junction_type: x.typeOfThermalBridge.toUpperCase(),
+			junction_type: x.typeOfThermalBridge,
 			linear_thermal_transmittance: x.linearThermalTransmittance,
 			length: x.length,
 		} };

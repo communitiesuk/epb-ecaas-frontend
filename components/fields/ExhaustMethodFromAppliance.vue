@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SchemaFlueGasExhaustSituation } from "~/schema/api-schema.types";
+import type { SchemaFlueGasExhaustSituation } from "~/schema/aliases";
 import type { FlueGasExhaustSituationDisplay } from "~/utils/display";
 
 defineProps<{

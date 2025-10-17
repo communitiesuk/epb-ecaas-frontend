@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import type { VentType } from "~/schema/aliases";
-import type { SchemaMvhrLocation } from "~/schema/api-schema.types";
+import type { MVHRLocation } from "~/schema/aliases";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
@@ -27,7 +27,7 @@ const ventTypeOptions: Record<VentType, string> = {
 	["Decentralised continuous MEV"]: "Decentralised continuous MEV (Mechanical Extract Ventilation)",
 };
 
-const mvhrLocationOptions: Record<SchemaMvhrLocation, SnakeToSentenceCase<SchemaMvhrLocation>> = {
+const mvhrLocationOptions: Record<MVHRLocation, SnakeToSentenceCase<MVHRLocation>> = {
 	inside: "Inside",
 	outside: "Outside",
 };

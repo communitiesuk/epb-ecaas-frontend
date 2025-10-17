@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SchemaShadingObjectType } from "~/schema/api-schema.types";
+import type { SchemaShadingObjectType } from "~/schema/aliases";
 import { getUrl, type ShadingData } from "#imports";
 
 const title = "Distant shading";

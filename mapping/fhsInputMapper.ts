@@ -1,6 +1,5 @@
 import type { StripDefs } from "./mapping.types";
-import { noEvents } from "~/schema/aliases";
-import type { SchemaEnergySupply, SchemaFhsInputSchema, SchemaHeatSourceWetHeatPumpWithProductReference, SchemaStorageTank } from "~/schema/api-schema.types";
+import type { SchemaFhsInputSchema, SchemaStorageTank } from "~/schema/api-schema.types";
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
@@ -10,7 +9,8 @@ import { mapPvAndElectricBatteriesData } from "./pvAndElectricBatteriesMapper";
 import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from "~/mapping/common";
 import { objectFromEntries } from "ts-extras";
-import type { SimplifyDeep } from "type-fest";
+import type { Simplify, SimplifyDeep } from "type-fest";
+import type { SchemaElectricityEnergySupply, SchemaSimulationTime, SchemaHeatSourceWetHeatPumpWithProductReference, SchemaAppliances } from "~/schema/aliases";
 
 export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 
@@ -25,7 +25,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const { EnergySupply, SpaceHeatSystem } = mapHeatingSystemsData(state);
 
 	// specify the electricity tariff with other needed data points with default values as used in example FHS files in case it is needed (TODO: should it be necessary to pass in a tariff here?)
-	const defaultTariffData: Pick<SchemaEnergySupply, "threshold_charges" | "threshold_prices" | "tariff"> = {
+	const defaultTariffData: Pick<SchemaElectricityEnergySupply, "threshold_charges" | "threshold_prices" | "tariff"> = {
 		threshold_charges: [0.8, 0.8, 0.7, 0.4, 0.0, 0.0, 0.0, 0.2, 0.5, 0.7, 0.8, 0.8],
 		threshold_prices: [20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0],
 		tariff: "Variable Time of Day Tariff",
@@ -42,8 +42,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	};
 
 	const control: Pick<FhsInputSchema, "Control"> = { Control: {} };
-	const events: Pick<FhsInputSchema, "Events"> = { Events: noEvents };
-	const internalGains: Pick<FhsInputSchema, "InternalGains"> = { InternalGains: {} };
+	const events: Pick<FhsInputSchema, "Events"> = { Events: {} };
 	
 	const defaultColdWaterSource: Pick<FhsInputSchema, "ColdWaterSource"> = { 
 		ColdWaterSource: {
@@ -61,6 +60,9 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 			step: 1,
 		},
 	};
+	const defaultAppliances: Pick<FhsInputSchema, "Appliances"> = {
+		Appliances: {},
+	}; 
 	// Below uses default values until heat pump is set up to come from PCDB
 	const { HotWaterSource } = domesticHotWaterData;
 	const heatPumpName: string = Object.keys((HotWaterSource!["hw cylinder"] as SchemaStorageTank).HeatSource)[0]!;
@@ -92,13 +94,12 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		heatingSystemsData,
 		domesticHotWaterData,
 		pvData,
+		defaultAppliances,
 		// coolingData,
 		defaultColdWaterSource,
 		control,
 		events,
-		internalGains,
 		defaultSimulationTime,
-		{ temp_internal_air_static_calcs: 20.0 }, // temporary dummy, expected value for this - this field is removed in later schemas
 	]) as FhsInputSchema;
 
 	console.log(fhsInput);
@@ -106,4 +107,4 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	return fhsInput;
 }
 
-export type FhsInputSchema = StripDefs<SchemaFhsInputSchema>;
+export type FhsInputSchema = Simplify<Omit<StripDefs<SchemaFhsInputSchema>, "SimulationTime"> & { SimulationTime: SchemaSimulationTime }>;

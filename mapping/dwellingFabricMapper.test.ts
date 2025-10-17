@@ -1,18 +1,17 @@
 import type {
-	SchemaBuildingElementAdjacentConditionedSpace,
-	SchemaBuildingElementAdjacentUnconditionedSpaceSimple, SchemaBuildingElementOpaqueFhs, SchemaBuildingElementTransparentFhs, SchemaEdgeInsulationHorizontal, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint,
-} from "~/schema/api-schema.types";
-import type { BuildingElementGround } from "~/schema/aliases";
+	SchemaEdgeInsulationHorizontal, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, BuildingElementGround, BuildingElementOfType,
+	SchemaLightingBulbs, 
+} from "~/schema/aliases";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.schema";
 import { centimetre, millimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
 
-type BuildingElementOpaque = SchemaBuildingElementOpaqueFhs;
-type BuildingElementAdjacentConditionedSpace = SchemaBuildingElementAdjacentConditionedSpace;
-type BuildingElementAdjacentUnconditionedSpaceSimple = SchemaBuildingElementAdjacentUnconditionedSpaceSimple;
-type BuildingElementTransparent = SchemaBuildingElementTransparentFhs;
+type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
+type BuildingElementAdjacentConditionedSpace = BuildingElementOfType<"BuildingElementAdjacentConditionedSpace">;
+type BuildingElementAdjacentUnconditionedSpaceSimple = BuildingElementOfType<"BuildingElementAdjacentUnconditionedSpace_Simple">;
+type BuildingElementTransparent = BuildingElementOfType<"BuildingElementTransparent">;
 
 const baseForm = {
 	data: [],
@@ -94,9 +93,11 @@ describe("dwelling fabric mapper", () => {
 		// Act
 		const fhsInputData = mapLightingData(resolveState(store.$state));
 
+		const bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs as SchemaLightingBulbs;
+
 		// Assert
-		expect(fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs?.led?.count).toBe(state.numberOfLEDBulbs);
-		expect(fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs?.incandescent).toBeUndefined();
+		expect(bulbs.led?.count).toBe(state.numberOfLEDBulbs);
+		expect(bulbs.incandescent).toBeUndefined();
 	});
 
 	it("maps floor input state to FHS input request", () => {
@@ -236,7 +237,7 @@ describe("dwelling fabric mapper", () => {
 			width: 0.36,
 		};
 
-		expect(groundFloorWithEdgeInsulationElement.edge_insulation![0]).toEqual(expectedEdgeInsulation);
+		expect("edge_insulation" in groundFloorWithEdgeInsulationElement && groundFloorWithEdgeInsulationElement.edge_insulation).toEqual(expectedEdgeInsulation);
 
 		const expectedGroundFloorSuspendedFloor: BuildingElementGround = {
 			...expectedGroundFloor,
@@ -536,6 +537,7 @@ describe("dwelling fabric mapper", () => {
 			uValue: 1,
 			pitchOption: "90",
 			pitch: 90,
+			securityRisk: false,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
@@ -609,6 +611,7 @@ describe("dwelling fabric mapper", () => {
 				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
 			],
 			shading: [],
+			security_risk: false,
 		};
 
 		expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
@@ -660,6 +663,7 @@ describe("dwelling fabric mapper", () => {
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
+			securityRisk: false,
 		};
 
 		const windowSuffix = " (window)";
@@ -693,6 +697,7 @@ describe("dwelling fabric mapper", () => {
 			g_value: window.solarTransmittance,
 			mid_height: window.midHeight,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
+			security_risk: false,
 			max_window_open_area: window.maximumOpenableArea,
 			free_area_height: window.heightOpenableArea,
 			window_part_list: [{
@@ -723,7 +728,7 @@ describe("dwelling fabric mapper", () => {
 		// Arrange
 		const linearThermalBridge: LinearThermalBridgeData = {
 			name: "E1: Steel lintel with perforated steel base plate",
-			typeOfThermalBridge: "e1",
+			typeOfThermalBridge: "E1",
 			linearThermalTransmittance: 1,
 			length: 2,
 		};

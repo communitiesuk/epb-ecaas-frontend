@@ -24,7 +24,7 @@ describe("thermal bridges", () => {
 	const linear1: EcaasForm<LinearThermalBridgeData> = {
 		data: {
 			name: "Linear 1",
-			typeOfThermalBridge: "e1",
+			typeOfThermalBridge: "E1",
 			linearThermalTransmittance: 1,
 			length: 2,
 		},

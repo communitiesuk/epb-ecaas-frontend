@@ -1,4 +1,4 @@
-import type { SchemaHotWaterDemand } from "~/schema/api-schema.types";
+import type { SchemaHotWaterDemand } from "~/schema/aliases";
 import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
@@ -87,14 +87,12 @@ describe("domestic hot water mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "HotWaterSource"> = {
 			HotWaterSource: {
 				"hw cylinder": {
-					ColdWaterSource: "mains water",
 					HeatSource: {
 						[heatPumpName]: {
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
 							type: "HeatSourceWet",
 							name: heatPumpName,
-							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
 							Controlmin: defaultControlMinName,
 							Controlmax: defaultControlMaxName,
@@ -201,14 +199,12 @@ describe("domestic hot water mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "HotWaterSource"> = {
 			HotWaterSource: {
 				"hw cylinder": {
-					ColdWaterSource: "mains water",
 					HeatSource: {
 						[heatPumpName]: {
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
 							type: "HeatSourceWet",
 							name: heatPumpName,
-							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
 							Controlmax: defaultControlMaxName,
 							Controlmin: defaultControlMinName,

@@ -15,7 +15,7 @@ describe("linear thermal bridges", () => {
 	const state: EcaasForm<LinearThermalBridgeData> = {
 		data: {
 			name: "E1: Steel lintel with perforated steel base plate",
-			typeOfThermalBridge: "e1",
+			typeOfThermalBridge: "E1",
 			linearThermalTransmittance: 1,
 			length: 2,
 		},
@@ -26,7 +26,7 @@ describe("linear thermal bridges", () => {
 	});
 
 	const populateValidForm = async () => {
-		await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "e1");
+		await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
 		await user.type(screen.getByTestId("linearThermalTransmittance"), "1");
 		await user.type(screen.getByTestId("length"), "2");
 		await user.tab();
@@ -64,7 +64,7 @@ describe("linear thermal bridges", () => {
 			},
 		});
 
-		expect((await screen.findByTestId<HTMLSelectElement>("typeOfThermalBridge")).value).toBe("e1");
+		expect((await screen.findByTestId<HTMLSelectElement>("typeOfThermalBridge")).value).toBe("E1");
 		expect((await screen.findByTestId<HTMLInputElement>("linearThermalTransmittance")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("length")).value).toBe("2");
 	});
@@ -113,7 +113,7 @@ describe("linear thermal bridges", () => {
 				},
 			});
 
-			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "e1");
+			await user.selectOptions(screen.getByTestId("typeOfThermalBridge"), "E1");
 			await user.tab();
 
 			const actualLinearBridge = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[0]!;

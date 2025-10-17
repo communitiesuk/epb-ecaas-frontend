@@ -1,11 +1,11 @@
 import type { TaggedUnion } from "type-fest";
 import type { PageId } from "~/data/pages/pages";
-import type { SchemaCombustionApplianceType, SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta, SchemaMechVentType } from "~/schema/api-schema.types";
+import type { SchemaFhsComplianceResponse, SchemaJsonApiOnePointOneErrorLinks, SchemaJsonApiOnePointOneErrorSource, SchemaJsonApiOnePointOneMeta } from "~/schema/api-schema.types";
 import * as z from "zod";
 import { zeroPitchOption } from "~/utils/pitchOptions";
 import { zodUnit } from "~/utils/units/zod";
-import { batteryLocationZod, combustionAirSupplySituationZod, combustionFuelTypeZod, ductShapeZod, flueGasExhaustSituationZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, wwhrsTypeZod, zodLiteralFromUnionType } from "./zod";
-import type { FloorType } from "~/schema/aliases";
+import { batteryLocationZod, combustionAirSupplySituationZod, combustionFuelTypeZod, ductShapeZod, flueGasExhaustSituationZod, fuelTypeZod, inverterTypeZod, massDistributionClassZod, mvhrLocationZod, photovoltaicVentilationStrategyZod, shadingObjectTypeZod, terrainClassZod, thermalBridgeJunctionTypeZod, ventilationShieldClassZod, waterPipeContentsTypeZod, waterPipeworkLocationZod, windowTreatmentControlZod, windowTreatmentTypeZod, windShieldLocationZod, wwhrsTypeZod, zodLiteralFromUnionType } from "./zod";
+import type { FloorType, SchemaCombustionApplianceType, SchemaMechVentType } from "~/schema/aliases";
 
 const fraction = z.number().min(0).max(1);
 const percentage = z.number().min(0).max(100);
@@ -346,6 +346,7 @@ const externalGlazedDoorDataZod = named.extend({
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	uValue,
+	securityRisk: z.boolean(),
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
 	solarTransmittance: z.number().min(0.01).max(1),
@@ -388,6 +389,7 @@ const baseWindowData = named.extend({
 	uValue,
 	pitchOption: standardPitchOption,
 	pitch: z.optional(z.number().min(0).lt(180)),
+	securityRisk: z.boolean(),
 	solarTransmittance: z.number().min(0.01).max(1),
 	elevationalHeight: z.number().min(0).max(500),
 	midHeight: z.number().min(0).max(100),
@@ -486,7 +488,7 @@ export type ThermalBridgingData = AssertFormKeysArePageIds<{
 }>;
 
 const linearThermalBridgeDataZod = named.extend({
-	typeOfThermalBridge: z.string(),
+	typeOfThermalBridge: thermalBridgeJunctionTypeZod,
 	linearThermalTransmittance: z.number().min(0).max(2),
 	length: z.number().min(0).max(10000),
 });
@@ -704,29 +706,17 @@ const mechanicalVentilationDataZod = z.discriminatedUnion(
 
 export type MechanicalVentilationData = z.infer<typeof mechanicalVentilationDataZod>;
 
-const baseDuctworkData = named.extend({
+const ductworkDataZod = named.extend({
 	mvhrUnit: z.string(),
 	ductworkCrossSectionalShape: ductShapeZod,
 	ductType: ductTypeZod,
+	internalDiameterOfDuctwork: z.number().min(0).max(1000),
+	externalDiameterOfDuctwork: z.number().min(0).max(1000),
 	insulationThickness: z.number().min(0).max(100),
 	lengthOfDuctwork: z.number().min(0),
 	thermalInsulationConductivityOfDuctwork: z.number().min(0),
 	surfaceReflectivity: z.boolean(),
 });
-const ductworkDataZod = z.discriminatedUnion(
-	"ductworkCrossSectionalShape",
-	[
-		baseDuctworkData.extend({
-			ductworkCrossSectionalShape: z.literal("circular"),
-			internalDiameterOfDuctwork: z.number().min(0).max(1000),
-			externalDiameterOfDuctwork: z.number().min(0).max(1000),
-		}),
-		baseDuctworkData.extend({
-			ductworkCrossSectionalShape: z.literal("rectangular"),
-			ductPerimeter: z.number().min(0).max(1000),
-		}),
-	],
-);
 
 export type DuctworkData = z.infer<typeof ductworkDataZod>;
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MassDistributionClass } from "~/schema/aliases";
+import type { SchemaMassDistributionClass } from "~/schema/aliases";
 import type { RadioOption } from "../form-kit/Radios.vue";
 
 defineProps<{
@@ -9,7 +9,7 @@ defineProps<{
 	help?: string;
 }>();
 
-const options: Record<MassDistributionClass, RadioOption> = {
+const options: Record<SchemaMassDistributionClass, RadioOption> = {
 	I: {
 		label: "Mass concentrated on internal side",
 		hint: "Construction with external thermal insulation (main mass component near inside surface), or equivalent",
