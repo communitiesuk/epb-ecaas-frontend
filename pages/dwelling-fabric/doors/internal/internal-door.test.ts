@@ -17,7 +17,7 @@ describe("internal door", () => {
 		name: "Internal 1",
 		grossSurfaceArea: 5,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 		pitchOption: "90",
 		pitch: 90,
 	};
@@ -28,7 +28,7 @@ describe("internal door", () => {
 		grossSurfaceArea: 500,
 		uValue: 10,
 		arealHeatCapacity: 50000,
-		massDistributionClass: MassDistributionClass.E,
+		massDistributionClass: "E",
 		pitchOption: "90",
 		pitch: 90,
 		thermalResistanceOfAdjacentUnheatedSpace: 1,
@@ -42,8 +42,6 @@ describe("internal door", () => {
 			surfaceArea: 5,
 			kappaValue: 50000,
 			massDistributionClass: "I",
-			pitchOption: "90",
-			pitch: 90,
 		},
 	};
 

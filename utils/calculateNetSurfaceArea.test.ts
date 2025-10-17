@@ -1,7 +1,3 @@
-import {
-	MassDistributionClass,
-	WindowTreatmentType,
-} from "~/schema/api-schema.types";
 import { millimetre } from "./units/length";
 
 describe("calculateNetSurfaceArea", () => {
@@ -18,36 +14,35 @@ describe("calculateNetSurfaceArea", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	};
 
 	const externalGlazedDoor: ExternalGlazedDoorData = {
 		name: "External glazed door 1",
 		associatedItemId: externalWall.id,
-		surfaceArea: 13,
 		height: 6.5,
 		width: 2,
 		uValue: 0.45,
 		solarTransmittance: 0.1,
 		elevationalHeight: 14,
 		midHeight: 11,
-		numberOpenableParts: "1",
 		openingToFrameRatio: 0.2,
 		heightOpenableArea: 14,
 		maximumOpenableArea: 13,
 		midHeightOpenablePart1: 11,
 	};
 
-	const externalUnglazedDoor = {
+	const externalUnglazedDoor: ExternalUnglazedDoorData = {
 		name: "External unglazed door 1",
 		associatedItemId: externalWall.id,
 		height: 0.5,
 		width: 20,
+		surfaceArea: 10,
 		elevationalHeight: 20,
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	};
 
 	const window: WindowData = {
@@ -70,7 +65,7 @@ describe("calculateNetSurfaceArea", () => {
 		sideFinLeftDepth: unitValue(60, millimetre),
 		sideFinLeftDistance: unitValue(60, millimetre),
 		curtainsOrBlinds: true,
-		treatmentType: WindowTreatmentType.blinds,
+		treatmentType: "blinds",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
 	};
@@ -86,14 +81,12 @@ describe("calculateNetSurfaceArea", () => {
 		const externalGlazedDoor2: ExternalGlazedDoorData = {
 			name: "External glazed door 1",
 			associatedItemId: "other-wall-id",
-			surfaceArea: 13,
 			height: 6.5,
 			width: 2,
 			uValue: 0.45,
 			solarTransmittance: 0.1,
 			elevationalHeight: 14,
 			midHeight: 11,
-			numberOpenableParts: "1",
 			openingToFrameRatio: 0.2,
 			heightOpenableArea: 14,
 			maximumOpenableArea: 13,

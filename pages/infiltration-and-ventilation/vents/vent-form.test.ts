@@ -3,7 +3,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import Vent from "./[vent].vue";
 import type { VentData } from "~/stores/ecaasStore.schema";
-import { MassDistributionClass } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -31,7 +30,7 @@ describe("vent", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	};
 		
 	const state: VentData = {

@@ -1620,7 +1620,7 @@ describe("FHS input mapper", () => {
 							id: "572f04bb-5db7-4082-b0e1-69dae42cc0d1",
 							name: "party wall 1",
 							pitchOption: "90",
-							pitch: 45,
+							pitch: 90,
 							grossSurfaceArea: 15,
 							uValue: 1,
 							kappaValue: 50000,

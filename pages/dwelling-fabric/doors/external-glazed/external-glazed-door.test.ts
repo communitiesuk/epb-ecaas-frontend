@@ -71,7 +71,6 @@ describe("external glazed door", () => {
 
 		await user.type(screen.getByTestId("name"), "External glazed door 1");
 		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
-		await user.type(screen.getByTestId("surfaceArea"), "13");
 		await user.type(screen.getByTestId("height"), "14");
 		await user.type(screen.getByTestId("width"), "48");
 		await user.type(screen.getByTestId("maximumOpenableArea"), "13");
@@ -118,7 +117,6 @@ describe("external glazed door", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External glazed door 1");
 		expect((await screen.findByTestId(`associatedItemId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("13");
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("14");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("48");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.45");
@@ -134,7 +132,6 @@ describe("external glazed door", () => {
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
-		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("width_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();

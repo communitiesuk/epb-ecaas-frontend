@@ -734,7 +734,6 @@ describe("Dwelling space fabric summary", () => {
 			const expectedResult = {
 				"Name": "External glazed door 1",
 				"Orientation": `0 ${degrees.suffix}`,
-				"Net surface area": `1 ${metresSquare.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
@@ -806,7 +805,6 @@ describe("Dwelling space fabric summary", () => {
 			const expectedResult = {
 				"Name": "Window 1",
 				"Orientation": `0 ${degrees.suffix}`,
-				"Net surface area": `1 ${metresSquare.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
