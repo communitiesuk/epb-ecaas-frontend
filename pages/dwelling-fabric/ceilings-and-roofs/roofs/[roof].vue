@@ -106,8 +106,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="Enter the tilt angle of the external surface of the roof. 0° means the external surface is facing up like ceilings, and 180° means the external surface is facing down like floors."
 				data-field="Zone.BuildingElement.*.pitch"
 			/>
-			<FieldsOrientation label="Orientation of roof"
-				dataField="Zone.BuildingElement.*.orientation"
+			<FieldsOrientation
+				label="Orientation of roof"
+				data-field="Zone.BuildingElement.*.orientation"
 			/>
 			<div v-if="!!model?.orientation" class="govuk-error-summary">
 				<div role="alert" class="govuk-hint govuk-!-margin-bottom-0">

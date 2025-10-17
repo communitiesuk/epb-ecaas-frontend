@@ -341,7 +341,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				name="underfloorSpaceThermalResistance"
 				validation="required | number"
 				data-field="Zone.BuildingElement.*.thermal_resist_insul"
-				/>
+			/>
 			<FormKit
 				id="thermalTransmittanceOfWallsAboveGround"
 				type="govInputWithSuffix"

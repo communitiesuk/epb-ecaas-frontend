@@ -79,7 +79,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="standardPitchOptions()"
 			data-field="Zone.BuildingElement.*.pitch"
 		/>
-		<FieldsOrientation dataField="Zone.BuildingElement.*.orientation" />
+		<FieldsOrientation data-field="Zone.BuildingElement.*.orientation" />
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"

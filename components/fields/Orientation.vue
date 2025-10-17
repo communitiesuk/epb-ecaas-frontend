@@ -6,6 +6,7 @@ const {
 	help = undefined,
 	detailsCaption = "To define an object's orientation, measure the angle of its outside face clockwise from true North, accurate to the nearest degree.",
 	clearedNonLlm = false,
+	dataField = undefined,
 } = defineProps<{
 	id?: string;
 	name?: string;
