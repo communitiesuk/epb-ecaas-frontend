@@ -4,6 +4,18 @@ import { getTabItems, getUrl } from "#imports";
 const store = useEcaasStore();
 const title = "Heating system summary";
 
+const { heatingControlType, coolingRequired } = store.heatingAndCoolingSystems.general.data;
+const generalSummary: SummarySection = {
+	id: "general",
+	label: "General",
+	data: {
+		"Type of heating control": displayCamelToSentenceCase(show(heatingControlType)),
+		"Cooling required": displayBoolean(coolingRequired),
+	},
+
+	editUrl: "/heating-and-cooling-systems/general",
+};
+
 const { fuelType, exported, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered } = store.heatingAndCoolingSystems.energySupply.data;
 const energySupplySummary: SummarySection = {
 	id: "energySupply",
@@ -215,6 +227,9 @@ const coolingSummary: SummarySection[] = [
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
+	<GovTabs v-slot="tabProps" :items="getTabItems([generalSummary])">
+		<SummaryTab :summary="generalSummary" :selected="tabProps.currentTab === 0" />
+	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems([energySupplySummary])">
 		<SummaryTab :summary="energySupplySummary" :selected="tabProps.currentTab === 0" />
 	</GovTabs>

@@ -21,7 +21,7 @@ const verifyDataInSection = async (
 		expect(lineResult!.querySelector("dd")?.textContent).toBe(value);
 	}
 };
-describe("Heating systems summary page", () => {
+describe("Heating and cooling systems summary page", () => {
 	const store = useEcaasStore();
 	beforeEach(() => {
 		store.$reset();
@@ -30,6 +30,56 @@ describe("Heating systems summary page", () => {
 	it("displays the correct title", async () => {
 		await renderSuspended(heatingAndCoolingSystemsSummary);
 		expect(screen.getByRole("heading", { name: "Heating system summary" }));
+	});
+
+	describe("General section", () => {
+		it("displays general tab", async () => {
+			await renderSuspended(heatingAndCoolingSystemsSummary);
+
+			expect(screen.getByRole("link", { name: "General" })).not.toBeNull();
+		});
+
+		it("displays an empty section if no data has been added", async () => {
+			await renderSuspended(heatingAndCoolingSystemsSummary);
+
+			const expectedSectionData = {
+				"Type of heating control": "-",
+				"Cooling required": "-",
+			}
+
+			await verifyDataInSection("general", expectedSectionData);
+		});
+
+		it("displays the correct data when data has been added", async () => {
+			store.$patch({
+				heatingAndCoolingSystems: {
+					general: {
+						data: {
+							heatingControlType: "separateTemperatureControl",
+							coolingRequired: true,
+						},
+					},
+				},
+			});
+
+			await renderSuspended(heatingAndCoolingSystemsSummary);
+
+			const expectedSectionData = {
+				"Type of heating control": "Separate temperature control",
+				"Cooling required": "Yes",
+			}
+
+			await verifyDataInSection("general", expectedSectionData);
+		});
+
+		it("displays an edit link that navigates to the general form page when clicked", async () => {
+			await renderSuspended(heatingAndCoolingSystemsSummary);
+
+			const generalSection = screen.getByTestId("general");
+			const editLink: HTMLAnchorElement = within(generalSection).getByText("Edit");
+
+			expect(new URL(editLink.href).pathname).toBe("/heating-and-cooling-systems/general");
+		});
 	});
 
 	describe("Energy supply section", () => {
@@ -118,12 +168,11 @@ describe("Heating systems summary page", () => {
 
 		it("displays an edit link that navigates to the energy supply form page when clicked", async () => {
 			await renderSuspended(heatingAndCoolingSystemsSummary);
-			const editLink = screen.getByRole<HTMLAnchorElement>("link", {
-				name: "Edit",
-			});
-			expect(new URL(editLink.href).pathname).toBe(
-				"/heating-and-cooling-systems/energy-supply",
-			);
+
+			const energySupplySection = screen.getByTestId("energySupply");
+			const editLink: HTMLAnchorElement = within(energySupplySection).getByText("Edit");
+
+			expect(new URL(editLink.href).pathname).toBe("/heating-and-cooling-systems/energy-supply");
 		});
 	});
 
