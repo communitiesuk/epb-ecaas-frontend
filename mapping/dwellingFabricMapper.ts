@@ -524,15 +524,15 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	const { dwellingSpaceInternalDoor, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
 	const { dwellingSpaceInternalWall, dwellingSpaceExternalWall } =
     state.dwellingFabric.dwellingSpaceWalls;
-		const { dwellingSpaceCeilings, dwellingSpaceRoofs } =
+	const { dwellingSpaceCeilings, dwellingSpaceRoofs } =
     state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 	const doorSuffix = "door";
 
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
 		const associatedHeatedSpaceElement = getResolvedTaggedItem(
-    		[dwellingSpaceInternalWall, dwellingSpaceCeilings],
-    		x.associatedItemId,
-    	)!;
+			[dwellingSpaceInternalWall, dwellingSpaceCeilings],
+			x.associatedItemId,
+		)!;
 		const commonFields = {
 			pitch: extractPitch(associatedHeatedSpaceElement),
 			area: x.surfaceArea,
@@ -562,10 +562,10 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	});
 
 	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map((x) => {
-			const associatedWallRoof = getResolvedTaggedItem(
-    		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-    		x.associatedItemId,
-    	)!;
+		const associatedWallRoof = getResolvedTaggedItem(
+			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+			x.associatedItemId,
+		)!;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
 		const glazedDoor = {
@@ -593,10 +593,10 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	});
 
 	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map((x) => {
-			const associatedWallRoof = getResolvedTaggedItem(
-    		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-    		x.associatedItemId,
-    	)!;
+		const associatedWallRoof = getResolvedTaggedItem(
+			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+			x.associatedItemId,
+		)!;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 		
 		return { [nameWithSuffix]: {
@@ -680,50 +680,50 @@ export function mapWindowData(
     		}
     	}
 
-		const hasOverhang = "overhangDepth" in x && "overhangDistance" in x && x.overhangDepth && x.overhangDistance;
-		const overhang = hasOverhang ? [{
-			type: "overhang" as const,
-			depth: inMetres(x.overhangDepth),
-			distance: inMetres(x.overhangDistance),
-		}] : [];
+    	const hasOverhang = "overhangDepth" in x && "overhangDistance" in x && x.overhangDepth && x.overhangDistance;
+    	const overhang = hasOverhang ? [{
+    		type: "overhang" as const,
+    		depth: inMetres(x.overhangDepth),
+    		distance: inMetres(x.overhangDistance),
+    	}] : [];
 
-		const hasSideFinLeft = "sideFinLeftDepth" in x && "sideFinLeftDistance" in x && x.sideFinLeftDepth && x.sideFinLeftDistance;
-		const sideFinLeft = hasSideFinLeft ? [{
-			type: "sidefinleft" as const,
-			depth: inMetres(x.sideFinLeftDepth),
-			distance: inMetres(x.sideFinLeftDistance),
-		}] : [];
+    	const hasSideFinLeft = "sideFinLeftDepth" in x && "sideFinLeftDistance" in x && x.sideFinLeftDepth && x.sideFinLeftDistance;
+    	const sideFinLeft = hasSideFinLeft ? [{
+    		type: "sidefinleft" as const,
+    		depth: inMetres(x.sideFinLeftDepth),
+    		distance: inMetres(x.sideFinLeftDistance),
+    	}] : [];
 
-		const hasSideFinRight = "sideFinRightDepth" in x && "sideFinRightDistance" in x && x.sideFinRightDepth && x.sideFinRightDistance;
-		const sideFinRight = hasSideFinRight ? [{
-			type: "sidefinright" as const,
-			depth: inMetres(x.sideFinRightDepth),
-			distance: inMetres(x.sideFinRightDistance),
-		}] : [];
+    	const hasSideFinRight = "sideFinRightDepth" in x && "sideFinRightDistance" in x && x.sideFinRightDepth && x.sideFinRightDistance;
+    	const sideFinRight = hasSideFinRight ? [{
+    		type: "sidefinright" as const,
+    		depth: inMetres(x.sideFinRightDepth),
+    		distance: inMetres(x.sideFinRightDistance),
+    	}] : [];
 			
-		const associatedElement = getResolvedTaggedItem(
+    	const associatedElement = getResolvedTaggedItem(
     		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
     		x.taggedItem,
     	)!;
 			
 
-		return { [nameWithSuffix]: {
-			type: "BuildingElementTransparent",
-			pitch: extractPitch(associatedElement),
-			orientation360: associatedElement.orientation!,
-			height: x.height,
-			width: x.width,
-			base_height: x.elevationalHeight,
-			u_value: x.uValue,
-			g_value: x.solarTransmittance,
-			mid_height: x.midHeight,
-			frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
-			max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
-			free_area_height: x.numberOpenableParts === "0" ? 0 : x.heightOpenableArea,
-			window_part_list: mapWindowPartList(x),
-			shading: [...overhang, ...sideFinLeft, ...sideFinRight],
-		} };
-	});
+    	return { [nameWithSuffix]: {
+    		type: "BuildingElementTransparent",
+    		pitch: extractPitch(associatedElement),
+    		orientation360: associatedElement.orientation!,
+    		height: x.height,
+    		width: x.width,
+    		base_height: x.elevationalHeight,
+    		u_value: x.uValue,
+    		g_value: x.solarTransmittance,
+    		mid_height: x.midHeight,
+    		frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
+    		max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
+    		free_area_height: x.numberOpenableParts === "0" ? 0 : x.heightOpenableArea,
+    		window_part_list: mapWindowPartList(x),
+    		shading: [...overhang, ...sideFinLeft, ...sideFinRight],
+    	} };
+    });
 
 	return {
 		Zone: {

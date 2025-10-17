@@ -1764,7 +1764,7 @@ describe("FHS input mapper", () => {
 						data: {
 							name: "external glazed door",
 							associatedItemId: roofId,
-								height: 3,
+							height: 3,
 							width: 1,
 							uValue: 0.8,
 							solarTransmittance: 0.5,

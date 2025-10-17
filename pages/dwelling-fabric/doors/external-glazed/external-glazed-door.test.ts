@@ -27,7 +27,7 @@ describe("external glazed door", () => {
 		kappaValue: 50000,
 		massDistributionClass: "I",
 	};
-		const doorForState = {
+	const doorForState = {
 		name: "External glazed door 1",
 		associatedItemId: externalWall.id,
 		height: 14,

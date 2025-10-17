@@ -35,7 +35,7 @@ export const calculateNetSurfaceArea = (
 					const height = item["height" as keyof TaggedEcaasItem];
 					const width = item["width" as keyof TaggedEcaasItem];
  
-					totalTaggedArea += Number(height as string) * Number(width as string);
+					totalTaggedArea += Number(height) * Number(width);
 				}
 			}
 		}

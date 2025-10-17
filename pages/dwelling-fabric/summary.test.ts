@@ -69,7 +69,7 @@ const floorsData: FloorsData = {
 				solarAbsorption: 0.1,
 				uValue: 1,
 				kappaValue: 50000,
-			massDistributionClass: "I",
+				massDistributionClass: "I",
 			},
 		}],
 	},
@@ -238,7 +238,7 @@ const doorsData: DoorsData = {
 				surfaceArea: 5,
 				kappaValue: 50000,
 				massDistributionClass: "I",
-				},
+			},
 		}],
 	},
 };
