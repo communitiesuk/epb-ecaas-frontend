@@ -29,8 +29,7 @@ export const calculateNetSurfaceArea = (
 				item["associatedItemId" as keyof TaggedEcaasItem] === mainItem.id ||
         item["taggedItem" as keyof TaggedEcaasItem] === mainItem.id
 			) {
-				const keys = Object.keys(item);
-				if (keys.includes("surfaceArea")) {
+				if ("surfaceArea" in item) {
 					totalTaggedArea += item.surfaceArea;
 				} else {
 					const height = item["height" as keyof TaggedEcaasItem];
