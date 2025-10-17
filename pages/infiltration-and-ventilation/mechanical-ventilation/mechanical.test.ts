@@ -4,12 +4,6 @@ import MechanicalVentilationOverview from "./index.vue";
 import MechanicalVentilationForm from "./[mechanical].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import InfiltrationAndVentilationTaskPage from "../index.vue";
-import {
-	DuctShape,
-	DuctType,
-	MVHRLocation,
-	VentType,
-} from "~/schema/api-schema.types";
 
 describe("mechanical ventilation overview", () => {
 	const store = useEcaasStore();
@@ -23,32 +17,32 @@ describe("mechanical ventilation overview", () => {
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
+		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
 	};
 
 	const mechanicalVentilation2: MechanicalVentilationData = {
 		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 2",
-		typeOfMechanicalVentilationOptions: VentType.Decentralised_continuous_MEV,
+		typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
 		airFlowRate: 14,
 	};
 
 	const mechanicalVentilation3: MechanicalVentilationData = {
 		id: "6380f2fe-a78f-4a56-ba5a-1a7751ac502a",
 		name: "Mechanical name 3",
-		typeOfMechanicalVentilationOptions: VentType.Intermittent_MEV,
+		typeOfMechanicalVentilationOptions: "Intermittent MEV",
 		airFlowRate: 14,
 	};
 
 	const mechanicalVentilation4: MechanicalVentilationData = {
 		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
 		name: "Mechanical name 4",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
+		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
 	};
 
@@ -56,8 +50,8 @@ describe("mechanical ventilation overview", () => {
 	const ductwork1: DuctworkData = {
 		name: "Ductwork 1",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -70,8 +64,8 @@ describe("mechanical ventilation overview", () => {
 	const ductwork2: DuctworkData = {
 		name: "Ductwork 2",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -84,8 +78,8 @@ describe("mechanical ventilation overview", () => {
 	const ductwork3: DuctworkData = {
 		name: "Ductwork 3",
 		mvhrUnit: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -150,7 +144,11 @@ describe("mechanical ventilation overview", () => {
 					],
 				},
 				ductwork: {
-					data: [{ data: ductwork1 }, { data: ductwork2 }, { data: ductwork3 }],
+					data: [
+						{ data: ductwork1 },
+						{ data: ductwork2 },
+						{ data: ductwork3 },
+					],
 				},
 			},
 		});
@@ -212,7 +210,9 @@ describe("mechanical ventilation overview", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [{ data: mechanicalVentilation1 }],
+					data: [
+						{ data: mechanicalVentilation1 },
+					],
 				},
 			},
 		});
@@ -237,7 +237,9 @@ describe("mechanical ventilation overview", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				mechanicalVentilation: {
-					data: [{ data: mechanicalVentilation1 }],
+					data: [
+						{ data: mechanicalVentilation1 },
+					],
 				},
 			},
 		});
@@ -245,6 +247,117 @@ describe("mechanical ventilation overview", () => {
 
 		expect(screen.getByText(warningMessage)).toBeDefined();
 	});
+
+	it("marks mechanical ventilation as complete when mark section as complete button is clicked", async () => {
+		await renderSuspended(MechanicalVentilationOverview);
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
+		const completedStatusElement = screen.queryByTestId(
+			"completeSectionCompleted",
+		);
+		expect(completedStatusElement?.style.display).toBe("none");
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+
+		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
+
+		expect(complete).toBe(true);
+		expect(
+			screen.queryByRole("button", { name: "Mark section as complete" }),
+		).toBeNull();
+		expect(completedStatusElement?.style.display).not.toBe("none");
+
+		expect(navigateToMock).toHaveBeenCalledWith(
+			"/infiltration-and-ventilation",
+		);
+	});
+
+	it("marks shading as not complete when complete button is clicked then user removes a shading item", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: mechanicalVentilation1, complete: true },
+						{ data: mechanicalVentilation2, complete: true },
+					],
+				},
+			},
+		});
+		await renderSuspended(MechanicalVentilationOverview);
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.complete,
+		).toBe(true);
+
+		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.complete,
+		).toBe(false);
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
+	});
+
+	it("marks mechanical ventilation as not complete when complete button is clicked then user duplicates a mechanical ventilation item", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: mechanicalVentilation1, complete: true },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(MechanicalVentilationOverview);
+
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.complete,
+		).toBe(true);
+
+		await user.click(screen.getByTestId("mechanicalVentilation_duplicate_0"));
+		expect(
+			store.infiltrationAndVentilation.mechanicalVentilation.complete,
+		).toBe(false);
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
+	});
+	
+	it("marks mechanical ventilation as not complete when user saves a new or edited form after marking section as complete", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: mechanicalVentilation1 },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(MechanicalVentilationOverview);
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+
+		await renderSuspended(MechanicalVentilationForm, {
+			route: {
+				params: { mechanical: "0" },
+			},
+		});
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const { complete } = store.infiltrationAndVentilation.mechanicalVentilation;
+		expect(complete).toBe(false);
+
+		await renderSuspended(MechanicalVentilationOverview);
+		expect(
+			screen.getByRole("button", { name: "Mark section as complete" }),
+		).not.toBeNull();
+	});
+	
 	it("should navigate to the infiltration and ventilation overview page when return to overview is clicked", async () => {
 		await renderSuspended(MechanicalVentilationOverview);
 

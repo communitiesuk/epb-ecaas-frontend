@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { WindowData } from "#imports";
 import { millimetre } from "~/utils/units/length";
-import { WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
+import type { SchemaWindowTreatmentControl, SchemaWindowTreatmentType } from "~/schema/api-schema.types";
 import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
 import { v4 as uuidv4 } from "uuid";
@@ -40,13 +40,13 @@ if (window && "sideFinLeftDistance" in window) {
 
 const model = ref(window?.data);
 
-const windowTreatmentTypeOptions: Record<WindowTreatmentType, SnakeToSentenceCase<WindowTreatmentType>> = {
+const windowTreatmentTypeOptions: Record<SchemaWindowTreatmentType, SnakeToSentenceCase<SchemaWindowTreatmentType>> = {
 	curtains: "Curtains",
 	blinds: "Blinds",
 };
-const curtainsControlObjectOptions: Record<Exclude<WindowTreatmentControl, "manual_motorised" | "combined_light_blind_HVAC">, string> = {
-	[WindowTreatmentControl.auto_motorised]: "Auto motorised",
-	[WindowTreatmentControl.manual]: "Manual",
+const curtainsControlObjectOptions: Record<Exclude<SchemaWindowTreatmentControl, "manual_motorised" | "combined_light_blind_HVAC">, string> = {
+	auto_motorised: "Auto motorised",
+	manual: "Manual",
 };
 
 const shadingValidation = (siblingField: string) => {
@@ -158,7 +158,7 @@ const saveForm = (fields: WindowData) => {
 				treatmentType: fields.treatmentType,
 				thermalResistivityIncrease: fields.thermalResistivityIncrease,
 				solarTransmittanceReduction: fields.solarTransmittanceReduction,
-				...(fields.treatmentType === WindowTreatmentType.curtains ? { curtainsControlObject: fields.curtainsControlObject } : {}),
+				...(fields.treatmentType === "curtains" ? { curtainsControlObject: fields.curtainsControlObject } : {}),
 			} as WindowData;
 		
 		} else {

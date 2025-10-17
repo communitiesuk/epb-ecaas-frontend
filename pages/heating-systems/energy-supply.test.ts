@@ -3,7 +3,6 @@ import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import type { EnergySupplyData } from "~/stores/ecaasStore.schema";
-import { FuelType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -19,12 +18,12 @@ describe("Energy supply", () => {
 	});
 
 	const energySupplyWithElectricity: EnergySupplyData = {
-		fuelType: [FuelType.electricity],
+		fuelType: ["electricity"],
 		exported: true,
 	};
 
 	const _energySupplyWithCustom: EnergySupplyData = {
-		fuelType: [FuelType.custom],
+		fuelType: ["custom"],
 		co2PerKwh: 1,
 		co2PerKwhIncludingOutOfScope: 1,
 		kwhPerKwhDelivered: 1,
@@ -121,7 +120,7 @@ describe("saving form updates", () => {
 		store.$patch({
 			heatingSystems: {
 				energySupply: {
-					data: { fuelType: [FuelType.electricity], exported: true },
+					data: { fuelType: ["electricity"], exported: true },
 				},
 			},
 		});

@@ -4,8 +4,8 @@ import userEvent from "@testing-library/user-event";
 import { createPinia, setActivePinia } from "pinia";
 import formStatus from "~/constants/formStatus";
 import pagesData from "~/data/pages/pages";
-import  MechanicalOverview  from "~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue";
-import { BuildType, DuctShape, DuctType, MVHRLocation, VentType } from "~/schema/api-schema.types";
+import MechanicalOverview from "~/pages/infiltration-and-ventilation/mechanical-ventilation/index.vue";
+
 const store = useEcaasStore();
 
 describe("Ecaas Store", () => {
@@ -46,7 +46,7 @@ describe("Ecaas Store", () => {
 			dwellingDetails: {
 				generalSpecifications: {
 					data: {
-						typeOfDwelling: BuildType.house,
+						typeOfDwelling: "house",
 					},
 				},
 			},
@@ -158,7 +158,7 @@ describe("Ecaas Store", () => {
 			dwellingDetails: {
 				generalSpecifications: {
 					data: {
-						typeOfDwelling: BuildType.house,
+						typeOfDwelling: "house",
 					},
 				},
 			},
@@ -213,24 +213,24 @@ describe("Ecaas Store", () => {
 	const mechanicalVentilation1: MechanicalVentilationData = {
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
+		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
 	};
 	const mechanicalVentilation2: MechanicalVentilationData = {
 		id: "6746f2fe-f15b-4a56-ba5a-1a7751ac89hh",
 		name: "Mechanical name 2",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
+		mvhrLocation: "inside",
 		mvhrEfficiency: 0.1,
 	};
 	const ductwork1: DuctworkData = {
 		name: "Ductwork 1",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -241,8 +241,8 @@ describe("Ecaas Store", () => {
 	const ductwork2: DuctworkData = {
 		name: "Ductwork 2",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,

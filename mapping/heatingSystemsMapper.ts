@@ -1,8 +1,7 @@
 import { objectFromEntries } from "ts-extras";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
-import { FuelType  } from "~/schema/api-schema.types";
-import type { SchemaSpaceHeatSystemDetails } from "~/schema/api-schema.types";
-import { defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
+import type { SchemaSpaceHeatSystemDetails } from "~/schema/aliases";
+import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
 export function mapHeatingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply" | "SpaceHeatSystem"> {
 	return {
@@ -17,11 +16,11 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 	return {
 		EnergySupply: {
 			...objectFromEntries(fuelType ? fuelType.map((fuelType) => ([
-				fuelType === FuelType.electricity ? defaultElectricityEnergySupplyName : fuelType,
+				fuelType === "electricity" ? defaultElectricityEnergySupplyName : fuelType,
 				{
-					fuel: fuelType as FuelType,
-					...(fuelType === FuelType.electricity ? { is_export_capable: exported } : {}),
-					...(fuelType === FuelType.custom ? { factor: {
+					fuel: fuelType,
+					is_export_capable: fuelType === "electricity" ? exported ?? false : false,
+					...(fuelType === "custom" ? { factor: {
 						"Emissions Factor kgCO2e/kWh": co2PerKwh!,
 						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": co2PerKwhIncludingOutOfScope!,
 						"Primary Energy Factor kWh/kWh delivered": kwhPerKwhDelivered!,
@@ -64,7 +63,7 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 				}],
 			}),
 			ecodesign_controller: {
-				ecodesign_control_class: parseInt(ecoDesignControllerClass),
+				ecodesign_control_class: unionStringAsInt(ecoDesignControllerClass),
 				min_flow_temp: minimumFlowTemp,
 				min_outdoor_temp: minOutdoorTemp,
 				max_outdoor_temp: maxOutdoorTemp,
@@ -73,6 +72,14 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			thermal_mass: thermalMass,
 			type: "WetDistribution",
 			Zone: defaultZoneName,
+			Control: defaultControlName,
+			EnergySupply: null,
+			advanced_start: null,
+			bypass_percentage_recirculated: null,
+			variable_flow: false,
+			min_flow_rate: null,
+			max_flow_rate: null,
+			temp_setback: null,
 		};
 		return [
 			name,
@@ -88,6 +95,9 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 			EnergySupply: defaultElectricityEnergySupplyName,
 			rated_power: heater.ratedPower,
 			frac_convective: heater.convectionFractionInstant,
+			advanced_start: null,
+			temp_setback: null,
+			Control: defaultControlName,
 		},
 	]);
 
@@ -96,4 +106,11 @@ export function mapHeatEmittingData(state: ResolvedState): Pick<FhsInputSchema, 
 	return {
 		SpaceHeatSystem: objectFromEntries([...wetDistributionEntries, ...instantElectricHeaterEntries]),
 	};
+}
+
+type ToNumber<S> = S extends `${infer N extends number}` ? N : never;
+
+/** Utility function to convert a string from a union type into a number in a converted union type */
+function unionStringAsInt<T extends string>(value: T): ToNumber<T> {
+	return parseInt(value) as ToNumber<T>;
 }

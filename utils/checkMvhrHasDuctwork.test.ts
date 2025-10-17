@@ -1,21 +1,20 @@
-import { DuctShape, DuctType, MVHRLocation, VentType } from "~/schema/api-schema.types";
 import { checkMvhrHasDuctwork } from "~/utils/checkMvhrHasDuctwork";
 
 describe("checkMvhrHasDuctwork", () => {
 	const store = useEcaasStore();
 	const mechanicalVentilationData1: MechanicalVentilationData = {
 		name: "Mechanical name 1",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
+		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
 	};
 	const mechanicalVentilationData2: MechanicalVentilationData = {
 		name: "Mechanical name 2",
-		typeOfMechanicalVentilationOptions: VentType.MVHR,
+		typeOfMechanicalVentilationOptions: "MVHR",
 		airFlowRate: 12,
-		mvhrLocation: MVHRLocation.inside,
+		mvhrLocation: "inside",
 		mvhrEfficiency: 0.2,
 		id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506h",
 	};
@@ -23,15 +22,15 @@ describe("checkMvhrHasDuctwork", () => {
 	const mechanicalVentilationData3: MechanicalVentilationData = {
 		id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
 		name: "Mechanical name 3",
-		typeOfMechanicalVentilationOptions: VentType.Decentralised_continuous_MEV,
+		typeOfMechanicalVentilationOptions: "Decentralised continuous MEV",
 		airFlowRate: 14,
 	};
 
 	const ductworkData1: DuctworkData = {
 		name: "Ducktwork 1",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -43,8 +42,8 @@ describe("checkMvhrHasDuctwork", () => {
 	const ductworkData2: DuctworkData = {
 		name: "Ducktwork 2",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506h",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,

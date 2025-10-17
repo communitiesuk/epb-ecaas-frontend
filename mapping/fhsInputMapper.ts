@@ -1,6 +1,6 @@
 import type { StripDefs } from "./mapping.types";
-import { ColdWaterSourceType   } from "~/schema/api-schema.types";
-import type { SchemaEnergySupplyDetails, SchemaFhsInputSchema, SchemaStorageTank } from "~/schema/api-schema.types";
+import { noEvents } from "~/schema/aliases";
+import type { SchemaEnergySupply, SchemaFhsInputSchema, SchemaHeatSourceWetHeatPumpWithProductReference, SchemaStorageTank } from "~/schema/api-schema.types";
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
@@ -25,7 +25,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const { EnergySupply, SpaceHeatSystem } = mapHeatingSystemsData(state);
 
 	// specify the electricity tariff with other needed data points with default values as used in example FHS files in case it is needed (TODO: should it be necessary to pass in a tariff here?)
-	const defaultTariffData: Pick<SchemaEnergySupplyDetails, "threshold_charges" | "threshold_prices" | "tariff"> = {
+	const defaultTariffData: Pick<SchemaEnergySupply, "threshold_charges" | "threshold_prices" | "tariff"> = {
 		threshold_charges: [0.8, 0.8, 0.7, 0.4, 0.0, 0.0, 0.0, 0.2, 0.5, 0.7, 0.8, 0.8],
 		threshold_prices: [20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0, 20.0],
 		tariff: "Variable Time of Day Tariff",
@@ -42,12 +42,12 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	};
 
 	const control: Pick<FhsInputSchema, "Control"> = { Control: {} };
-	const events: Pick<FhsInputSchema, "Events"> = { Events: {} };
+	const events: Pick<FhsInputSchema, "Events"> = { Events: noEvents };
 	const internalGains: Pick<FhsInputSchema, "InternalGains"> = { InternalGains: {} };
 	
 	const defaultColdWaterSource: Pick<FhsInputSchema, "ColdWaterSource"> = { 
 		ColdWaterSource: {
-			[ColdWaterSourceType.mains_water]: {
+			"mains water": {
 				start_day: 0,
 				temperatures: [3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7],
 				time_series_step: 1,
@@ -71,14 +71,17 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const heatSourceWetData: Pick<FhsInputSchema, "HeatSourceWet"> = {
 		"HeatSourceWet": heatPumps.length === 0 ? {
 			[heatPumpName]: defaultHeatSourceWetDetails,
-		} : objectFromEntries(heatPumps.map(heatPump => [
-			heatPump.name,
-			{
+		} : objectFromEntries(heatPumps.map(heatPump => {
+			const heatPumpWithProductReference: SchemaHeatSourceWetHeatPumpWithProductReference = {
 				product_reference: heatPump.productReference,
 				type: "HeatPump",
 				EnergySupply: defaultElectricityEnergySupplyName,
-			},
-		] as const)),
+			};
+			return  [
+				heatPump.name,
+				heatPumpWithProductReference,
+			] as const;
+		})),
 	};
 
 	const fhsInput = merge.all([
@@ -95,6 +98,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		events,
 		internalGains,
 		defaultSimulationTime,
+		{ temp_internal_air_static_calcs: 20.0 }, // temporary dummy, expected value for this - this field is removed in later schemas
 	]) as FhsInputSchema;
 
 	console.log(fhsInput);

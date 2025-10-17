@@ -59,7 +59,11 @@ describe("vents", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [{ data: vent1 }, { data: vent2 }, { data: vent3 }],
+					data: [
+						{ data: vent1 },
+						{ data: vent2 },
+						{ data: vent3 },
+					],
 				},
 			},
 		});
@@ -78,7 +82,10 @@ describe("vents", () => {
 		store.$patch({
 			infiltrationAndVentilation: {
 				vents: {
-					data: [{ data: vent1 }, { data: vent2 }],
+					data: [
+						{ data: vent1 },
+						{ data: vent2 },
+					],
 				},
 			},
 		});

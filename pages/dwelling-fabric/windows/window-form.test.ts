@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Window from "./[window].vue";
-import { MassDistributionClass, WindowTreatmentType } from "~/schema/api-schema.types";
 import { millimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units";
 import { v4 as uuidv4 } from "uuid";
@@ -29,7 +28,7 @@ const externalWall: ExternalWallData = {
 	solarAbsorption: 0.1,
 	uValue: 1,
 	kappaValue: 50000,
-	massDistributionClass: MassDistributionClass.I,
+	massDistributionClass: "I",
 };
 
 const window1: EcaasForm<WindowData> = {
@@ -53,7 +52,7 @@ const window1: EcaasForm<WindowData> = {
 		sideFinLeftDepth: unitValue(60, millimetre),
 		sideFinLeftDistance: unitValue(60, millimetre),
 		curtainsOrBlinds: true,
-		treatmentType: WindowTreatmentType.blinds,
+		treatmentType: "blinds",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
 	},
@@ -173,7 +172,6 @@ describe ("window", () => {
 		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("midHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("numberOpenableParts_error"))).toBeDefined();
-
 		expect((screen.queryByTestId("treatmentType_error"))).toBeNull();
 		expect((screen.queryByTestId("thermalResistivityIncrease_error"))).toBeNull();
 		expect((screen.queryByTestId("solarTransmittanceReduction_error"))).toBeNull();

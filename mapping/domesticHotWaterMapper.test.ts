@@ -1,9 +1,9 @@
-import { ColdWaterSourceType, WaterPipeContentsType, WaterPipeworkLocation  } from "~/schema/api-schema.types";
 import type { SchemaHotWaterDemand } from "~/schema/api-schema.types";
 import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
 import { unitValue } from "~/utils/units";
+import { defaultControlMaxName, defaultControlMinName } from "./common";
 
 const baseForm = {
 	data: [],
@@ -87,7 +87,7 @@ describe("domestic hot water mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "HotWaterSource"> = {
 			HotWaterSource: {
 				"hw cylinder": {
-					ColdWaterSource: ColdWaterSourceType.mains_water,
+					ColdWaterSource: "mains water",
 					HeatSource: {
 						[heatPumpName]: {
 							EnergySupply: "mains elec",
@@ -96,11 +96,14 @@ describe("domestic hot water mapper", () => {
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
+							Controlmin: defaultControlMinName,
+							Controlmax: defaultControlMaxName,
 						},
 					},
 					daily_losses: 3,
 					volume: 100,
 					type: "StorageTank",
+					init_temp: 20.0,
 				},
 			},
 		};
@@ -128,14 +131,14 @@ describe("domestic hot water mapper", () => {
 			...baseForm,
 			data: {
 				name: "primaryPipework1",
-				location: WaterPipeworkLocation.internal,
+				location: "internal",
 				internalDiameter: 24,
 				externalDiameter: 26,
 				length: 10.0,
 				thermalConductivity: 0.040,
 				insulationThickness: 40,
 				surfaceReflectivity: false,
-				pipeContents: WaterPipeContentsType.water,
+				pipeContents: "water",
 				hotWaterCylinder: hotWaterCylinder.data.id,
 			},
 		};
@@ -198,7 +201,7 @@ describe("domestic hot water mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "HotWaterSource"> = {
 			HotWaterSource: {
 				"hw cylinder": {
-					ColdWaterSource: ColdWaterSourceType.mains_water,
+					ColdWaterSource: "mains water",
 					HeatSource: {
 						[heatPumpName]: {
 							EnergySupply: "mains elec",
@@ -207,6 +210,8 @@ describe("domestic hot water mapper", () => {
 							name: heatPumpName,
 							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
+							Controlmax: defaultControlMaxName,
+							Controlmin: defaultControlMinName,
 						},
 					},
 					daily_losses: 3,
@@ -214,26 +219,27 @@ describe("domestic hot water mapper", () => {
 					type: "StorageTank",
 					primary_pipework: [
 						{
-							location: WaterPipeworkLocation.internal,
+							location: "internal",
 							internal_diameter_mm: 24,
 							external_diameter_mm: 26,
 							length: 10.0,
 							insulation_thermal_conductivity: 0.040,
 							insulation_thickness_mm: 40,
 							surface_reflectivity: false,
-							pipe_contents: WaterPipeContentsType.water,
+							pipe_contents: "water",
 						},
 						{
-							location: WaterPipeworkLocation.internal,
+							location: "internal",
 							internal_diameter_mm: 24,
 							external_diameter_mm: 26,
 							length: 10.0,
 							insulation_thermal_conductivity: 0.040,
 							insulation_thickness_mm: 40,
 							surface_reflectivity: false,
-							pipe_contents: WaterPipeContentsType.water,
+							pipe_contents: "water",
 						},
 					],
+					init_temp: 20.0,
 				},
 			},
 		};
@@ -327,25 +333,25 @@ describe("domestic hot water mapper", () => {
 					"shower1": {
 						type: "MixerShower",
 						flowrate: 3,
-						ColdWaterSource: ColdWaterSourceType.mains_water,
+						ColdWaterSource: "mains water",
 					},
 					"shower2": {
 						type: "InstantElecShower",
 						rated_power: 10,
-						ColdWaterSource: ColdWaterSourceType.mains_water,
+						ColdWaterSource: "mains water",
 						EnergySupply: "mains elec",
 					},
 				},
 				Bath: {
 					"bath1": {
-						ColdWaterSource: ColdWaterSourceType.mains_water,
+						ColdWaterSource: "mains water",
 						flowrate: 1,
 						size: 70,
 					},
 				},
 				Other: {
 					"other1": {
-						ColdWaterSource: ColdWaterSourceType.mains_water,
+						ColdWaterSource: "mains water",
 						flowrate: 4,
 					},
 				},
@@ -369,7 +375,7 @@ describe("domestic hot water mapper", () => {
 					data: {
 						name: "secondaryPipework1",
 						length: 111, 
-						location: WaterPipeworkLocation.internal,
+						location: "internal",
 						internalDiameter: 6,
 					},
 				}],
@@ -387,7 +393,7 @@ describe("domestic hot water mapper", () => {
 		const expectedResult: SchemaHotWaterDemand["Distribution"] = [{
 			internal_diameter_mm: 6,
 			length: 111,
-			location: WaterPipeworkLocation.internal,
+			location: "internal",
 		}];
 
 		// Assert

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getUrl, getTabItems, type ArealHeatCapacityValue } from "#imports";
-import { FloorType } from "~/schema/api-schema.types";
 import { emptyValueRendering } from "#imports";
 
 const title = "Dwelling fabric summary";
@@ -41,12 +40,12 @@ const groundFloorSummary: SummarySection = {
 	id: "dwellingSpaceGroundFloors",
 	label: "Ground floor",
 	data: groundFloorData.map( ({ data: x }) => {
-		const isSlabEdgeInsulation = x.typeOfGroundFloor === FloorType.Slab_edge_insulation;
+		const isSlabEdgeInsulation = x.typeOfGroundFloor === "Slab_edge_insulation";
 		const edgeInsulationType =  "edgeInsulationType" in x ? (displayCamelToSentenceCase(show(x.edgeInsulationType))) : emptyValueRendering;
 		const edgeInsulationWidth = "edgeInsulationWidth" in x ? dim(x.edgeInsulationWidth) : emptyValueRendering;
 		const edgeInsulationThermalResistance = "edgeInsulationThermalResistance" in x ? dim(x.edgeInsulationThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 
-		const isSuspendedFloor = x.typeOfGroundFloor === FloorType.Suspended_floor;
+		const isSuspendedFloor = x.typeOfGroundFloor === "Suspended_floor";
 		const heightOfFloorUpperSurface = "heightOfFloorUpperSurface" in x ? dim(x.heightOfFloorUpperSurface, "millimetres") : emptyValueRendering;
 		const underfloorSpaceThermalResistance = "underfloorSpaceThermalResistance" in x ? dim(x.underfloorSpaceThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 		const thermalTransmittanceOfWallsAboveGround = "thermalTransmittanceOfWallsAboveGround" in x ? dim(x.thermalTransmittanceOfWallsAboveGround, "watts per square metre kelvin") : emptyValueRendering;
@@ -308,7 +307,6 @@ const glazedDoorSummary: SummarySection = {
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"Net surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Transmittance of solar energy": dim(x.solarTransmittance),
 			"Mid height": dim(x.midHeight, "metres"),
@@ -381,7 +379,6 @@ const windowSummary: SummarySection = {
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
-			"Net surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Transmittance of solar energy": show(x.solarTransmittance),
 			"Mid height": dim(x.midHeight, "metres"),

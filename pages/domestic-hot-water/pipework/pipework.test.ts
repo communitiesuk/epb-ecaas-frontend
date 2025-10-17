@@ -4,10 +4,6 @@ import { screen } from "@testing-library/vue";
 import Pipework from "./index.vue";
 import PrimaryPipeworkForm from "./primary/[pipe].vue";
 import SecondaryPipeworkForm from "./secondary/[pipe].vue";
-import {
-	WaterPipeContentsType,
-	WaterPipeworkLocation,
-} from "~/schema/api-schema.types";
 
 describe("Pipeworks", () => {
 	const store = useEcaasStore();
@@ -22,10 +18,10 @@ describe("Pipeworks", () => {
 			insulationThickness: 5,
 			thermalConductivity: 0.5,
 			surfaceReflectivity: false,
-			pipeContents: WaterPipeContentsType.water,
+			pipeContents: "water",
 			hotWaterCylinder: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a36",
-			location: WaterPipeworkLocation.internal,
-		},
+			location: "internal",
+		}, 
 		complete: true,
 	};
 
@@ -33,7 +29,7 @@ describe("Pipeworks", () => {
 		data: {
 			name: "Pipework Kitchen",
 			length: 3,
-			location: WaterPipeworkLocation.internal,
+			location: "internal",
 			internalDiameter: 9,
 		},
 		complete: true,
@@ -253,7 +249,7 @@ describe("Pipeworks", () => {
     		expect(secondaryPipework?.complete).toBe(true);
     	});
 
-    	it("marks a pipwork section as not complete if an item is removed", async () => {
+    	it("marks a pipework section as not complete if an item is removed", async () => {
   
     		await user.click(screen.getByTestId("primaryPipework_remove_0"));
     		await user.click(screen.getByTestId("secondaryPipework_remove_0"));
@@ -265,7 +261,7 @@ describe("Pipeworks", () => {
     
     	});
 
-    	it("marks a pipwork section as not complete if an item is duplicated", async () => {
+    	it("marks a pipework section as not complete if an item is duplicated", async () => {
     		await user.click(screen.getByTestId("primaryPipework_duplicate_0"));
     		await user.click(screen.getByTestId("secondaryPipework_duplicate_0"));
 			
@@ -276,7 +272,7 @@ describe("Pipeworks", () => {
     		expect(secondaryPipework?.complete).toBe(false);
     	});
 
-    	it("marks a pipwork section as not complete after adding a new pipework item", async () => {
+    	it("marks a pipework section as not complete after adding a new pipework item", async () => {
     		for (const pipeworkType of Object.keys(store.domesticHotWater.pipework) as PipeworkType[]) {
 
     			await renderSuspended(pipeworkForms[pipeworkType], {
@@ -292,7 +288,7 @@ describe("Pipeworks", () => {
     		}
     	});
 
-    	it("marks a pipwork section as not complete after editing a pipework item", async () => {
+    	it("marks a pipework section as not complete after editing a pipework item", async () => {
     		for (const pipeworkType of Object.keys(store.domesticHotWater.pipework) as PipeworkType[]) {
 
     			await renderSuspended(pipeworkForms[pipeworkType], {

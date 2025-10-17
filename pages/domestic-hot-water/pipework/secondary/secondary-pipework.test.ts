@@ -3,7 +3,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import PipeworkForm from "./[pipe].vue";
 import type { SecondaryPipeworkData } from "~/stores/ecaasStore.schema";
-import { WaterPipeworkLocation } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -21,7 +20,7 @@ const pipework1: EcaasForm<SecondaryPipeworkData> = {
 	data: {
 		name: "Pipework Kitchen Sink",
 		length: 3,
-		location: WaterPipeworkLocation.internal,
+		location: "internal",
 		internalDiameter: 9,
 	}, 
 	complete: true,
@@ -30,13 +29,30 @@ const pipework2: EcaasForm<SecondaryPipeworkData> = {
 	data: {
 		name: "Pipework Kitchen Sink 2",
 		length: 1,
-		location: WaterPipeworkLocation.internal,
+		location: "internal",
 		internalDiameter: 4,
 	},
 	complete: true,
 
 };
 describe("Secondary pipework form", () => {
+	const store = useEcaasStore();
+	const user = userEvent.setup();
+
+	afterEach(() => {
+		store.$reset();
+	});
+	
+	const pipework1: EcaasForm<SecondaryPipeworkData> = {
+		data: {
+			name: "Pipework Kitchen Sink",
+			length: 3,
+			location: "internal",
+			internalDiameter: 9,
+		}, 
+		complete: true,
+	};
+
 	test("data is saved to store state when form is valid", async () => {
 
 		await renderSuspended(PipeworkForm, {

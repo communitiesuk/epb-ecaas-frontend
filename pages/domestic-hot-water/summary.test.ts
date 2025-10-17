@@ -1,7 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
 import { screen } from "@testing-library/vue";
-import { WaterPipeContentsType, WaterPipeworkLocation } from "~/schema/api-schema.types";
 import { litre } from "~/utils/units/volume";
 import { metre, millimetre } from "~/utils/units/length";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
@@ -324,9 +323,9 @@ describe("Domestic hot water summary", () => {
 				insulationThickness: 5,
 				thermalConductivity: 1,
 				surfaceReflectivity: true,
-				pipeContents: WaterPipeContentsType.water,
+				pipeContents: "water",
 				hotWaterCylinder: hotWaterCylinderId,
-				location: WaterPipeworkLocation.internal,
+				location: "internal",
 			},
 		};
 
@@ -334,7 +333,7 @@ describe("Domestic hot water summary", () => {
 			data: {
 				name: "Pipework Kitchen Sink Secondary",
 				length: 3,
-				location: WaterPipeworkLocation.internal,
+				location: "internal",
 				internalDiameter: 9,
 			},
 		};

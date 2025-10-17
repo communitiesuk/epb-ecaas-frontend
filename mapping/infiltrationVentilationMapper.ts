@@ -1,24 +1,11 @@
-import { arrayIncludes, objectEntries, objectFromEntries } from "ts-extras";
-import {
-	DuctShape,
-	SupplyAirFlowRateControlType,
-	SupplyAirTemperatureControlType,
-	VentType,
-} from "~/schema/api-schema.types";
-import type {
-	CombustionApplianceType,
-	SchemaCombustionAppliance,
-	SchemaInfiltrationVentilation,
-	SchemaMechanicalVentilation,
-	SchemaMechanicalVentilationDuctwork,
-	SchemaVent,
-	SchemaVentilationLeaks,
-} from "~/schema/api-schema.types";
+import { objectEntries, objectFromEntries } from "ts-extras";
+import type { SchemaCombustionAppliance, SchemaMechanicalVentilationDuctwork, SchemaVent, SchemaVentilationLeaks } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { InfiltrationFieldsFromDwelling } from "./dwellingDetailsMapper";
 import { defaultElectricityEnergySupplyName } from "./common";
 import { asCubicMetresPerHour } from "~/utils/units/flowRate";
 import { getResolvedTaggedItem } from "~/utils/getResolvedTaggedItem";
+import type { SchemaInfiltrationVentilation, SchemaMechanicalVentilation } from "~/schema/aliases";
 
 export function mapInfiltrationVentilationData(
 	state: ResolvedState,
@@ -31,78 +18,63 @@ export function mapInfiltrationVentilationData(
 	} = mapVentilationData(state);
 	const mechanicalVentilation = mapMechanicalVentilationData(state);
 
-	const infiltrationVentiliation: Omit<
-		SchemaInfiltrationVentilation,
-		InfiltrationFieldsFromDwelling
-	> = {
-		Cowls: {},
-		PDUs: {},
+	const infiltrationVentilation: Omit<SchemaInfiltrationVentilation, InfiltrationFieldsFromDwelling> = {
 		Leaks: {
 			ventilation_zone_height: dwellingHeight,
 			env_area: dwellingEnvelopeArea,
 			...mapAirPermeabilityData(state),
 		},
 		CombustionAppliances: mapCombustionAppliancesData(state),
-		cross_vent_factor: crossVentilationPossible,
+		cross_vent_possible: crossVentilationPossible,
 		ventilation_zone_base_height: dwellingElevationalLevelAtBase,
 		ach_max_static_calcs: 2, // suggested default
 		vent_opening_ratio_init: 1, // 1 is open
-		MechanicalVentilation: objectFromEntries(
-			objectEntries(mechanicalVentilation).map(([name, mechanicalVentData]) => {
-				return [
-					name,
-					{
-						...mechanicalVentData,
-						...(mechanicalVentData.vent_type === VentType.MVHR
-							? { ductwork: mapMvhrDuctworkData(name, state) }
-							: {}),
-					},
-				];
-			}),
-		),
+		MechanicalVentilation: objectFromEntries(objectEntries(mechanicalVentilation).map(([name, mechanicalVentData]) => {
+			return [
+				name,
+				{
+					...mechanicalVentData,
+					...(mechanicalVentData.vent_type === "MVHR" ? { ductwork: mapMvhrDuctworkData(name, state) } : {}),
+				},
+			];
+		})),
 		Vents: mapVentsData(state),
+		Control_VentAdjustMin: null,
+		Control_VentAdjustMax: null,
+		Control_WindowAdjust: null,
+		ach_min_static_calcs: null,
 	};
 
 	return {
-		InfiltrationVentilation: infiltrationVentiliation,
+		InfiltrationVentilation: infiltrationVentilation,
 	} as Pick<FhsInputSchema, "InfiltrationVentilation">;
 }
 
 export function mapMechanicalVentilationData(state: ResolvedState) {
-	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map(
-		(x): [string, SchemaMechanicalVentilation] => {
-			let airFlowRateInCubicMetresPerHour: number;
+	const entries = state.infiltrationAndVentilation.mechanicalVentilation.map((x):[string, SchemaMechanicalVentilation] => {
+		let airFlowRateInCubicMetresPerHour: number;
 
-			if (typeof x.airFlowRate === "number") {
-				airFlowRateInCubicMetresPerHour = x.airFlowRate;
-			} else {
-				airFlowRateInCubicMetresPerHour = asCubicMetresPerHour(x.airFlowRate);
-			}
+		if (typeof x.airFlowRate === "number") {
+			airFlowRateInCubicMetresPerHour = x.airFlowRate;
+		} else {
+			airFlowRateInCubicMetresPerHour = asCubicMetresPerHour(x.airFlowRate);
+		}
+		
+		const key = x.name;
+		const val: Omit<SchemaMechanicalVentilation, "ductwork"> = {
+			vent_type: x.typeOfMechanicalVentilationOptions,
+			EnergySupply: defaultElectricityEnergySupplyName,
+			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
+			sup_air_flw_ctrl: "ODA",
+			sup_air_temp_ctrl: "CONST",
+			...(x.typeOfMechanicalVentilationOptions === "MVHR" ? { mvhr_location: x.mvhrLocation, mvhr_eff: x.mvhrEfficiency } : {}),
+			measured_air_flow_rate: 37,
+			measured_fan_power: 12.26,
+			SFP: 1.5, // canned value for now
+		};
 
-			const key = x.name;
-			const val: Omit<SchemaMechanicalVentilation, "ductwork"> = {
-				vent_type: x.typeOfMechanicalVentilationOptions,
-				EnergySupply: defaultElectricityEnergySupplyName,
-				design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
-				sup_air_flw_ctrl: SupplyAirFlowRateControlType.ODA,
-				sup_air_temp_ctrl: SupplyAirTemperatureControlType.CONST,
-				...(x.typeOfMechanicalVentilationOptions === VentType.MVHR
-					? { mvhr_location: x.mvhrLocation, mvhr_eff: x.mvhrEfficiency }
-					: {}),
-				measured_air_flow_rate: 37,
-				measured_fan_power: 12.26,
-				// (TODO: REMOVE COMMENT WHEN USING HEM 0.37) more recent schema is more explicit about logic for SFP field, but following implements what is currently implicit logic: for following vent types, provide SFP (with a canned value), otherwise don't
-				...(arrayIncludes(
-					[VentType.Decentralised_continuous_MEV, VentType.Intermittent_MEV],
-					x.typeOfMechanicalVentilationOptions,
-				)
-					? { SFP: 1.5 }
-					: {}),
-			};
-
-			return [key, val];
-		},
-	);
+		return [key, val];
+	});
 	return Object.fromEntries(entries);
 }
 
@@ -126,15 +98,8 @@ function mapMvhrDuctworkData(
 			insulation_thermal_conductivity:
         x.thermalInsulationConductivityOfDuctwork,
 			insulation_thickness_mm: x.insulationThickness,
-			...(x.ductworkCrossSectionalShape === DuctShape.circular
-				? {
-					internal_diameter_mm: x.internalDiameterOfDuctwork,
-					external_diameter_mm: x.externalDiameterOfDuctwork,
-				}
-				: {}),
-			...(x.ductworkCrossSectionalShape === DuctShape.rectangular
-				? { duct_perimeter_mm: x.ductPerimeter }
-				: {}),
+			...(x.ductworkCrossSectionalShape === "circular" ? { internal_diameter_mm: x.internalDiameterOfDuctwork, external_diameter_mm: x.externalDiameterOfDuctwork } : {}),
+			...(x.ductworkCrossSectionalShape === "rectangular" ? { duct_perimeter_mm: x.ductPerimeter } : {}),
 			length: x.lengthOfDuctwork,
 			reflective: x.surfaceReflectivity,
 		};
@@ -204,29 +169,18 @@ export function mapAirPermeabilityData(
 	};
 }
 
-export function mapCombustionAppliancesData(
-	state: ResolvedState,
-): Record<string, SchemaCombustionAppliance> {
-	const combustionApplianceEntries = objectEntries(
-		state.infiltrationAndVentilation.combustionAppliances,
-	)
-		.map(([key, value]) => {
-			return value.map<[string, SchemaCombustionAppliance]>((appliance) => {
-				const {
-					name,
-					airSupplyToAppliance,
-					exhaustMethodFromAppliance,
-					typeOfFuel,
-				} = appliance;
-				const applianceInput: SchemaCombustionAppliance = {
-					appliance_type: key as CombustionApplianceType,
-					exhaust_situation: exhaustMethodFromAppliance,
-					fuel_type: typeOfFuel,
-					supply_situation: airSupplyToAppliance,
-				};
-				return [name, applianceInput];
-			});
-		})
-		.flat();
+export function mapCombustionAppliancesData(state: ResolvedState): Record<string, SchemaCombustionAppliance> {
+	const combustionApplianceEntries = objectEntries(state.infiltrationAndVentilation.combustionAppliances).map(([key, value]) => {
+		return value.map<[string, SchemaCombustionAppliance]>((appliance) => {
+			const { name, airSupplyToAppliance, exhaustMethodFromAppliance, typeOfFuel } = appliance;
+			const applianceInput: SchemaCombustionAppliance = {
+				appliance_type: key,
+				exhaust_situation: exhaustMethodFromAppliance,
+				fuel_type: typeOfFuel,
+				supply_situation: airSupplyToAppliance,
+			};
+			return [name, applianceInput];
+		});
+	}).flat();
 	return objectFromEntries(combustionApplianceEntries);
 }

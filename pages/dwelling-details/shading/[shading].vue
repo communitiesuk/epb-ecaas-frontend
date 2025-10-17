@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ShadingObjectType } from "~/schema/api-schema.types";
+import type { SchemaShadingObjectType } from "~/schema/api-schema.types";
 import { getUrl, type ShadingData } from "#imports";
 
 const title = "Distant shading";
@@ -9,7 +9,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const shadingData = useItemToEdit("shading", store.dwellingDetails.shading.data);
 const model = ref(shadingData?.data);
 
-const objectTypeOptions: Record<ShadingObjectType, Capitalize<ShadingObjectType>> = {
+const objectTypeOptions: Record<SchemaShadingObjectType, Capitalize<SchemaShadingObjectType>> = {
 	obstacle: "Obstacle",
 	overhang: "Overhang",
 };

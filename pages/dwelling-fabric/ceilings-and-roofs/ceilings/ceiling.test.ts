@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Ceiling from "./[ceiling].vue";
-import { MassDistributionClass } from "~/schema/api-schema.types";
 import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -23,7 +22,7 @@ describe("ceiling", () => {
 			name: "Ceiling 1",
 			grossSurfaceArea: 5,
 			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
+			massDistributionClass: "I",
 			pitchOption: "0",
 			pitch: 0,
 		},

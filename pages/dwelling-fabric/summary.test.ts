@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
 import { screen } from "@testing-library/vue";
 import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from "~/stores/ecaasStore.schema";
-import { FloorType, MassDistributionClass, WindowTreatmentType } from "~/schema/api-schema.types";
 import { metre, millimetre } from "~/utils/units/length";
 import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from "~/utils/units/thermalConductivity";
 import { degrees } from "~/utils/units/angle";
@@ -38,11 +37,11 @@ const floorsData: FloorsData = {
 				uValue: 1,
 				thermalResistance: 1,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I,
+				massDistributionClass: "I",
 				perimeter: 0,
 				psiOfWallJunction: 0,
 				thicknessOfWalls: 0.3,
-				typeOfGroundFloor: FloorType.Slab_no_edge_insulation,
+				typeOfGroundFloor: "Slab_no_edge_insulation",
 			},
 		}],
 	},
@@ -53,7 +52,7 @@ const floorsData: FloorsData = {
 				name: "Internal 1",
 				grossSurfaceArea: 5,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I,
+				massDistributionClass: "I",
 			},
 		}],
 	},
@@ -70,7 +69,7 @@ const floorsData: FloorsData = {
 				solarAbsorption: 0.1,
 				uValue: 1,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I,
+			massDistributionClass: "I",
 			},
 		}],
 	},
@@ -95,7 +94,7 @@ const wallsData: WallsData = {
 				solarAbsorption: 0.1,
 				uValue: 1,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I,
+				massDistributionClass: "I",
 			},
 		}],
 	},
@@ -106,7 +105,7 @@ const wallsData: WallsData = {
 				name: "Internal 1",
 				grossSurfaceArea: 5,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I,
+				massDistributionClass: "I",
 				pitchOption: "custom",
 				pitch: 0,
 			},
@@ -120,7 +119,7 @@ const wallsData: WallsData = {
 				grossSurfaceArea: 500,
 				uValue: 10,
 				arealHeatCapacity: 50000,
-				massDistributionClass: MassDistributionClass.E,
+				massDistributionClass: "E",
 				pitchOption: "90",
 				pitch: 90,
 				thermalResistanceOfAdjacentUnheatedSpace: 1,
@@ -137,7 +136,7 @@ const wallsData: WallsData = {
 				grossSurfaceArea: 10,
 				uValue: 1,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I,
+				massDistributionClass: "I",
 			},
 		}],
 	},
@@ -151,7 +150,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 				name: "Ceiling 1",
 				grossSurfaceArea: 5,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I,
+				massDistributionClass: "I",
 				pitchOption: "custom",
 				pitch: 180,
 			},
@@ -171,7 +170,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 				solarAbsorptionCoefficient: 0.5,
 				uValue: 1,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I,
+				massDistributionClass: "I",
 			},
 		},
 		{
@@ -188,7 +187,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 				solarAbsorptionCoefficient: 0.5,
 				uValue: 1,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I,
+				massDistributionClass: "I",
 			},
 		},
 		],
@@ -208,7 +207,7 @@ const doorsData: DoorsData = {
 				solarAbsorption: 0.1,
 				uValue: 1,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I,
+				massDistributionClass: "I",
 			},
 		}],
 	},
@@ -217,15 +216,16 @@ const doorsData: DoorsData = {
 			data: {
 				name: "External glazed door 1",
 				associatedItemId: externalWallId,
-				surfaceArea: 1,
 				height: 1,
 				width: 1,
 				uValue: 1,
 				solarTransmittance: 0.1,
 				elevationalHeight: 1,
 				midHeight: 1,
-				numberOpenableParts: "0",
 				openingToFrameRatio: 0.2,
+				maximumOpenableArea: 1,
+				midHeightOpenablePart1: 1,
+				heightOpenableArea: 1,
 			},
 		}],
 	},
@@ -237,8 +237,8 @@ const doorsData: DoorsData = {
 				associatedItemId: internalWallId,
 				surfaceArea: 5,
 				kappaValue: 50000,
-				massDistributionClass: MassDistributionClass.I,
-			},
+				massDistributionClass: "I",
+				},
 		}],
 	},
 };
@@ -263,7 +263,7 @@ const windowData: WindowData = {
 	sideFinLeftDepth: unitValue(100, millimetre),
 	sideFinLeftDistance: unitValue(100, millimetre),
 	curtainsOrBlinds: true,
-	treatmentType: WindowTreatmentType.blinds,
+	treatmentType: "blinds",
 	thermalResistivityIncrease: 1,
 	solarTransmittanceReduction: 0.1,
 };
@@ -289,14 +289,14 @@ const thermalBridgingData: ThermalBridgingData = {
 	},
 };
 
-describe("Living space fabric summary", () => {
+describe("Dwelling space fabric summary", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
 		store.$reset();
 	});
 
-	describe("Living space zone parameters", () => {
+	describe("Dwelling space zone parameters", () => {
 		it("should contain the correct tabs for dwelling space zone parameters", async () => {
 			await renderSuspended(Summary);
 
@@ -328,7 +328,7 @@ describe("Living space fabric summary", () => {
 		});
 	});
 
-	describe("Living space lighting", () => {
+	describe("Dwelling space lighting", () => {
 		it("should contain the correct tabs for dwelling space lighting", async () => {
 			await renderSuspended(Summary);
 
@@ -359,7 +359,7 @@ describe("Living space fabric summary", () => {
 		});
 	});
 
-	describe("Living space floors", () => {
+	describe("Dwelling space floors", () => {
 		it("should contain the correct tabs for dwelling space floors", async () => {
 			await renderSuspended(Summary);
 
@@ -458,7 +458,7 @@ describe("Living space fabric summary", () => {
 		});
 	});
 
-	describe("Living space walls", () => {
+	describe("Dwelling space walls", () => {
 		it("should contain the correct tabs for dwelling space walls", async () => {
 			await renderSuspended(Summary);
 

@@ -1,6 +1,7 @@
 import { objectFromEntries } from "ts-extras";
-import { ApplianceKey, FlueGasExhaustSituation, FuelType, MassDistributionClass, WwhrsType } from "../schema/api-schema.types";
+import type { SchemaFlueGasExhaustSituation, SchemaFuelType } from "../schema/api-schema.types";
 import type { DisplayProduct } from "~/pcdb/products";
+import type { ApplianceKey, MassDistributionClass, WwhrsType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -48,15 +49,15 @@ type BooleanDisplay = "Yes" | "No";
 
 export function displayMassDistributionClass(value: MassDistributionClass | undefined): MassDistributionClassDisplay | typeof emptyValueRendering {
 	switch (value) {
-		case MassDistributionClass.I:
+		case "I":
 			return "Internal";
-		case MassDistributionClass.E:
+		case "E":
 			return "External";
-		case MassDistributionClass.IE:
+		case "IE":
 			return "Divided";
-		case MassDistributionClass.D:
+		case "D":
 			return "Equally";
-		case MassDistributionClass.M:
+		case "M":
 			return "Inside";
 		default:
 			return emptyValueRendering;
@@ -72,13 +73,13 @@ export function sentenceCase(value: string): string {
 
 export type FlueGasExhaustSituationDisplay = "Into separate duct" | "Into room" | "Into mechanical vent";
 
-export function displayFlueGasExhaustSituation(value: FlueGasExhaustSituation): FlueGasExhaustSituationDisplay {
+export function displayFlueGasExhaustSituation(value: SchemaFlueGasExhaustSituation): FlueGasExhaustSituationDisplay {
 	switch (value) {
-		case FlueGasExhaustSituation.into_separate_duct:
+		case "into_separate_duct":
 			return "Into separate duct";
-		case FlueGasExhaustSituation.into_room:
+		case "into_room":
 			return "Into room";
-		case FlueGasExhaustSituation.into_mech_vent:
+		case "into_mech_vent":
 			return "Into mechanical vent";
 		default:
 			value satisfies never;
@@ -90,29 +91,27 @@ export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge freezer" | "Dis
 
 export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
 	switch (value) {
-		case ApplianceKey.Fridge:
+		case "Fridge":
 			return "Fridge";
-		case ApplianceKey.Freezer:
+		case "Freezer":
 			return "Freezer";
-		case ApplianceKey.Fridge_Freezer:
+		case "Fridge-Freezer":
 			return "Fridge freezer";
-		case ApplianceKey.Dishwasher:
+		case "Dishwasher":
 			return "Dishwasher";
-		case ApplianceKey.Oven:
+		case "Oven":
 			return "Oven";
-		case ApplianceKey.Clothes_washing:
+		case "Clothes_washing":
 			return "Washing machine";
-		case ApplianceKey.Clothes_drying:
+		case "Clothes_drying":
 			return "Tumble dryer";
-		case ApplianceKey.Hobs:
+		case "Hobs":
 			return "Hobs";
-		case ApplianceKey.Kettle:
+		case "Kettle":
 			return "Kettle";
-		case ApplianceKey.Microwave:
+		case "Microwave":
 			return "Microwave";
-		case ApplianceKey.lighting:
-			return "Lighting";
-		case ApplianceKey.Otherdevices:
+		case "Otherdevices":
 			return "Other";
 		default:
 			value satisfies never;
@@ -135,11 +134,11 @@ export function displayCamelToSentenceCase(value: string): string {
 
 export function displayWwhrsType(value: WwhrsType): WwhrsTypeDisplay {
 	switch (value) {
-		case WwhrsType.WWHRS_InstantaneousSystemA:
+		case "WWHRS_InstantaneousSystemA":
 			return "A";
-		case WwhrsType.WWHRS_InstantaneousSystemB:
+		case "WWHRS_InstantaneousSystemB":
 			return "B";
-		case WwhrsType.WWHRS_InstantaneousSystemC:
+		case "WWHRS_InstantaneousSystemC":
 			return "C";
 		default:
 			value satisfies never;
@@ -149,8 +148,27 @@ export function displayWwhrsType(value: WwhrsType): WwhrsTypeDisplay {
 
 export type WwhrsTypeDisplay = "A" | "B" | "C";
 
+// NB. this list is written out to be available at runtime, and could drift from all upstream values over time
+const applianceKeys: ApplianceKey[] = [
+	"Clothes_drying",
+	"Clothes_washing",
+	"Dishwasher",
+	"Freezer",
+	"Fridge",
+	"Fridge-Freezer",
+	"Hobs",
+	"Kettle",
+	"Microwave",
+	"Otherdevices",
+	"Oven",
+];
+
+function isApplianceKey(value: string): value is ApplianceKey {
+	return applianceKeys.includes(value as ApplianceKey);
+}
+
 export function displayDeliveryEnergyUseKey(key: string | ApplianceKey): string | ApplianceKeyDisplay {
-	return (Object.values(ApplianceKey).includes(key as ApplianceKey)) ? displayApplianceKey(key as ApplianceKey) : key;
+	return (isApplianceKey(key)) ? displayApplianceKey(key) : key;
 }
 
 export const arealHeatCapacityOptions = {
@@ -206,29 +224,29 @@ export function displayReflectivity(reflective: boolean | undefined): string {
 	return reflective ? "Reflective" : "Not reflective";
 }
 
-export function displayFuelTypes(fuelTypes: FuelType[] | undefined) {
+export function displayFuelTypes(fuelTypes: SchemaFuelType[] | undefined) {
 	return fuelTypes?.map(type => {
 		return displayFuelType(type);
 	}).join(", ");
 }
 
-export function displayFuelType(fuelType: FuelType): FuelTypeDisplay {
+export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
 	switch (fuelType) {
-		case FuelType.LPG_bottled:
+		case "LPG_bottled":
 			return "LPG bottled";
-		case FuelType.LPG_bulk:
+		case "LPG_bulk":
 			return "LPG bulk";
-		case FuelType.LPG_condition_11F:
+		case "LPG_condition_11F":
 			return "LPG condition 11F";
-		case FuelType.custom:
+		case "custom":
 			return "Custom";
-		case FuelType.electricity:
+		case "electricity":
 			return "Electricity";
-		case FuelType.energy_from_environment:
+		case "energy_from_environment":
 			return "Energy from environment";
-		case FuelType.mains_gas:
+		case "mains_gas":
 			return "Mains gas";
-		case FuelType.unmet_demand:
+		case "unmet_demand":
 			return "Unmet demand";
 		default:
 			fuelType satisfies never;

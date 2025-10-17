@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { centimetre, millimetre, type Length } from "~/utils/units/length";
-import { FloorType, WindShieldLocation } from "~/schema/api-schema.types";
+import type { SchemaWindShieldLocation } from "~/schema/api-schema.types";
 import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
 
@@ -18,19 +18,19 @@ if (floorData?.data && "edgeInsulationWidth" in floorData.data && typeof floorDa
 const model = ref(floorData?.data);
 
 // Removed heated and unheated basement options for summer
-type reducedGroundFloorOptions = FloorType.Slab_no_edge_insulation | FloorType.Slab_edge_insulation | FloorType.Suspended_floor;
+type reducedGroundFloorOptions = "Slab_no_edge_insulation" | "Slab_edge_insulation" | "Suspended_floor";
 const typeOfGroundFloorOptions: Record<reducedGroundFloorOptions, SnakeToSentenceCase<reducedGroundFloorOptions>> = {
-	[FloorType.Slab_no_edge_insulation]: "Slab no edge insulation",
-	[FloorType.Slab_edge_insulation]: "Slab edge insulation",
-	[FloorType.Suspended_floor]: "Suspended floor",
-	// [FloorType.Heated_basement]: 'Heated basement',
-	// [FloorType.Unheated_basement]: 'Unheated basement',
+	Slab_no_edge_insulation: "Slab no edge insulation",
+	Slab_edge_insulation: "Slab edge insulation",
+	Suspended_floor: "Suspended floor",
+	// Heated_basement: 'Heated basement',
+	// Unheated_basement: 'Unheated basement',
 };
 
-const windShieldingFactorOptions: Record<WindShieldLocation, SnakeToSentenceCase<WindShieldLocation>> = {
-	[WindShieldLocation.Sheltered]: "Sheltered",
-	[WindShieldLocation.Average]: "Average",
-	[WindShieldLocation.Exposed]: "Exposed",
+const windShieldingFactorOptions: Record<SchemaWindShieldLocation, SnakeToSentenceCase<SchemaWindShieldLocation>> = {
+	Sheltered: "Sheltered",
+	Average: "Average",
+	Exposed: "Exposed",
 };
 
 const saveForm = (fields: GroundFloorData) => {
@@ -54,7 +54,7 @@ const saveForm = (fields: GroundFloorData) => {
 		let floorData: GroundFloorData;
 
 		switch(fields.typeOfGroundFloor) {
-			case FloorType.Slab_edge_insulation:
+			case "Slab_edge_insulation":
 			{				
 				floorData = { 
 					...commonFields,
@@ -65,13 +65,13 @@ const saveForm = (fields: GroundFloorData) => {
 				};
 				break;
 			}
-			case FloorType.Slab_no_edge_insulation:
+			case "Slab_no_edge_insulation":
 				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 				};
 				break;
-			case FloorType.Suspended_floor:
+			case "Suspended_floor":
 				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
@@ -82,7 +82,7 @@ const saveForm = (fields: GroundFloorData) => {
 					windShieldingFactor: fields.windShieldingFactor,
 				};
 				break;
-			case FloorType.Heated_basement:
+			case "Heated_basement":
 				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
@@ -90,19 +90,25 @@ const saveForm = (fields: GroundFloorData) => {
 					thermalResistanceOfBasementWalls: fields.thermalResistanceOfBasementWalls,
 				};
 				break;
-			case FloorType.Unheated_basement:
+			case "Unheated_basement":
 				floorData = {
 					...commonFields,
 					typeOfGroundFloor: fields.typeOfGroundFloor,
 					thermalTransmittanceOfFloorAboveBasement: fields.thermalTransmittanceOfFloorAboveBasement,
 					thermalTransmittanceOfWallsAboveGround: fields.thermalTransmittanceOfWallsAboveGround,
+					thermalResistanceOfBasementWalls: fields.thermalResistanceOfBasementWalls,
 					depthOfBasementFloorBelowGround: fields.depthOfBasementFloorBelowGround,
 					heightOfBasementWallsAboveGround: fields.heightOfBasementWallsAboveGround,
 				};
 				break;
 			default:
 				fields satisfies never;
-				throw new Error(`Did not handle floor type '${ (fields as GroundFloorData).typeOfGroundFloor }'`);
+				throw new Error(`Did not handle floor type '${ (fields as { typeOfGroundFloor: string }).typeOfGroundFloor }'`);
+
+		}
+
+		if (!dwellingSpaceFloors.dwellingSpaceGroundFloor) {
+			dwellingSpaceFloors.dwellingSpaceGroundFloor = { data: [] };
 		}
 		
 		dwellingSpaceFloors.dwellingSpaceGroundFloor.data[index] = { data: floorData, complete: true };
@@ -226,7 +232,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			data-field="Zone.BuildingElement.*.floor_type"
 		/>
 
-		<template v-if="model?.typeOfGroundFloor === FloorType.Slab_edge_insulation">
+		<template v-if="model?.typeOfGroundFloor === 'Slab_edge_insulation'">
 			<FormKit
 				id="edgeInsulationType"
 				type="govRadios"
@@ -316,7 +322,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			/>
 		</template>
 
-		<template v-if="model?.typeOfGroundFloor === FloorType.Suspended_floor">
+		<template v-if="model?.typeOfGroundFloor === 'Suspended_floor'">
 			<FormKit
 				id="heightOfFloorUpperSurface"
 				type="govInputWithSuffix"
@@ -416,7 +422,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			</FormKit>
 		</template>
 
-		<template v-if="model?.typeOfGroundFloor === FloorType.Heated_basement">
+		<template v-if="model?.typeOfGroundFloor === 'Heated_basement'">
 			<FormKit
 				id="depthOfBasementFloorBelowGround"
 				type="govInputWithSuffix"
@@ -437,7 +443,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			/>
 		</template>
 
-		<template v-if="model?.typeOfGroundFloor === FloorType.Unheated_basement">
+		<template v-if="model?.typeOfGroundFloor === 'Unheated_basement'">
 			<FormKit
 				id="thermalTransmittanceOfFloorAboveBasement"
 				type="govInputWithSuffix"
@@ -453,6 +459,14 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				suffix-text="W/(m²·K)"
 				label="Thermal transmittance of walls above ground"
 				name="thermalTransmittanceOfWallsAboveGround"
+				validation="required | number"
+			/>
+			<FormKit
+				id="thermalResistanceOfBasementWalls"
+				type="govInputWithSuffix"
+				suffix-text="(m²·K)/W"
+				label="Thermal resistance of walls of basement"
+				name="thermalResistanceOfBasementWalls"
 				validation="required | number"
 			/>
 			<FormKit

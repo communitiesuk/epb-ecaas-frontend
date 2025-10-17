@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl } from "#imports";
-import { DuctShape, VentType } from "~/schema/api-schema.types";
 
 const title = "Infiltration and ventilation summary";
 const store = useEcaasStore();
@@ -12,7 +11,7 @@ const mechanicalVentilationSummary: SummarySection = {
 	id: "mechanicalVentilation",
 	label: "Mechanical ventilation",
 	data: mechanicalVentilationData?.map(({ data: x }) => {
-		const isMvhr = x.typeOfMechanicalVentilationOptions === VentType.MVHR;
+		const isMvhr = x.typeOfMechanicalVentilationOptions === "MVHR";
 		const mvhrLocation = "mvhrLocation" in x ? displayCamelToSentenceCase(show(x.mvhrLocation)) : emptyValueRendering;
 		const mvhrEfficiency = "mvhrEfficiency" in x ? show(x.mvhrEfficiency) : emptyValueRendering;
 		return {
@@ -33,8 +32,8 @@ const ductworkSummary: SummarySection = {
 	label: "Ductwork",
 	data: ductworkData?.map(({ data: x }) => {
 		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.data.id === x.mvhrUnit);
-		const isCircular = x.ductworkCrossSectionalShape === DuctShape.circular;
-		const isRectangular = x.ductworkCrossSectionalShape === DuctShape.rectangular;
+		const isCircular = x.ductworkCrossSectionalShape === "circular";
+		const isRectangular = x.ductworkCrossSectionalShape === "rectangular";
 
 		const internalDiameterOfDuctwork = "internalDiameterOfDuctwork" in x ? dim(x.internalDiameterOfDuctwork, "millimetres") : emptyValueRendering;
 		const externalDiameterOfDuctwork = "externalDiameterOfDuctwork" in x ? dim(x.externalDiameterOfDuctwork, "millimetres") : emptyValueRendering;

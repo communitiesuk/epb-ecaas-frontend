@@ -1,4 +1,3 @@
-import { WindowTreatmentControl, WindowTreatmentType } from "~/schema/api-schema.types";
 import { windowDataZod, type EcaasForm, type EcaasFormList } from "./ecaasStore.schema";
 
 describe("windowData Zod schema", () => {
@@ -22,14 +21,14 @@ describe("windowData Zod schema", () => {
 			sideFinLeftDepth: 0.25,
 			sideFinLeftDistance: 1,
 			curtainsOrBlinds: true,
-			treatmentType: WindowTreatmentType.curtains,
+			treatmentType: "curtains",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.8,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
-			curtainsControlObject: WindowTreatmentControl.auto_motorised,
+			curtainsControlObject: "auto_motorised",
 		};
 		expect(
 			() => {
@@ -43,7 +42,6 @@ describe("windowData Zod schema", () => {
 			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 			name: "bedroom window",
 			orientation: 90,
-			surfaceArea: 4,
 			height: 2,
 			width: 2,
 			uValue: 0.1,
@@ -60,14 +58,14 @@ describe("windowData Zod schema", () => {
 			sideFinLeftDepth: 0.25,
 			sideFinLeftDistance: 1,
 			curtainsOrBlinds: true,
-			treatmentType: WindowTreatmentType.curtains,
+			treatmentType: "curtains",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.8,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
-			curtainsControlObject: WindowTreatmentControl.auto_motorised,
+			curtainsControlObject: "auto_motorised",
 		};
 		expect(
 			() => {
@@ -97,14 +95,14 @@ describe("windowData Zod schema", () => {
 			sideFinLeftDepth: 0.25,
 			sideFinLeftDistance: 1,
 			curtainsOrBlinds: true,
-			treatmentType: WindowTreatmentType.curtains,
+			treatmentType: "curtains",
 			thermalResistivityIncrease: 1,
 			solarTransmittanceReduction: 0.1,
 			midHeightOpenablePart1: 1,
 			openingToFrameRatio: 0.8,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
-			curtainsControlObject: WindowTreatmentControl.auto_motorised,
+			curtainsControlObject: "auto_motorised",
 		};
 		expect(
 			() => {

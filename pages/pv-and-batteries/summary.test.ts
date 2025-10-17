@@ -1,7 +1,6 @@
 import { renderSuspended } from "@nuxt/test-utils/runtime";
 import { screen } from "@testing-library/vue";
 import PVAndElectricBatteriesSummary from "./summary.vue";
-import { BatteryLocation, InverterType, OnSiteGenerationVentilationStrategy } from "~/schema/api-schema.types";
 import { kilowatt, kilowattHour, kilowattPeak } from "~/utils/units/power";
 import { degrees } from "~/utils/units/angle";
 import { metre } from "~/utils/units/length";
@@ -18,7 +17,7 @@ describe("PV and electric batteries summary page", () => {
 			data: {
 				name: "PV Roof",
 				peakPower: 3.5,
-				ventilationStrategy: OnSiteGenerationVentilationStrategy.moderately_ventilated,
+				ventilationStrategy: "moderately_ventilated",
 				pitch: 30,
 				orientation: 180,
 				elevationalHeight: 10,
@@ -27,7 +26,7 @@ describe("PV and electric batteries summary page", () => {
 				inverterPeakPowerDC: 3.5,
 				inverterPeakPowerAC: 2.4,
 				inverterIsInside: false,
-				inverterType: InverterType.optimised_inverter,
+				inverterType: "optimised_inverter",
 			},
 		};
 		
@@ -94,7 +93,7 @@ describe("PV and electric batteries summary page", () => {
 				capacity: 10,
 				batteryAge: 2,
 				chargeEfficiency: 0.7,
-				location: BatteryLocation.inside,
+				location: "inside",
 				gridChargingPossible: false,
 				maximumChargeRate: 6.2,
 				minimumChargeRate: 4.5,

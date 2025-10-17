@@ -90,23 +90,37 @@ export interface components {
             errors: components["schemas"]["JsonApiOnePointOneErrors"];
         };
         FhsMeta: {
-            /** @description An identifier representing which version of HEM (the specification) was used, or available to be used, in this calculation. */
+            /**
+             * @description An identifier representing which version of HEM (the specification) was used, or available to be used, in this calculation.
+             * @example 0.32
+             */
             hem_version: string;
             /**
              * Format: date
              * @description The date when the version of the HEM specification being used was published. Format: YYYY-MM-DD.
+             * @example 2025-02-15
              */
             hem_version_date: string;
-            /** @description An identifier representing which version of FHS (Future Homes Standard) (the specification) was used, or available to be used, in this calculation. */
+            /**
+             * @description An identifier representing which version of FHS (Future Homes Standard) (the specification) was used, or available to be used, in this calculation.
+             * @example 0.23
+             */
             fhs_version: string;
             /**
              * Format: date
              * @description The date when the version of the FHS specification being used was published. Format: YYYY-MM-DD.
+             * @example 2025-02-15
              */
             fhs_version_date: string;
-            /** @description A unique identifier, usually a SHA, for the version of the HEM software library being used for this calculation. */
+            /**
+             * @description A unique identifier, usually a SHA, for the version of the HEM software library being used for this calculation.
+             * @example 521c68bd9c715f82205d7d1afd7b88d038839d26
+             */
             software_version?: string;
-            /** @description A unique identifier for the request made against this ECaaS service. This can be referenced when e.g. raising support queries. */
+            /**
+             * @description A unique identifier for the request made against this ECaaS service. This can be referenced when e.g. raising support queries.
+             * @example b6e02d18-f919-490e-bd1b-40d85d8ac456
+             */
             ecaas_request_id?: string;
         };
         /** @description @member name may contain any valid JSON value. */
@@ -164,3690 +178,6558 @@ export interface components {
         /** @description Nonstandard meta-information that can not be represented as an attribute or relationship. */
         JsonApiOnePointOneMeta: components["schemas"]["JsonApiOnePointOneMemberName"] | components["schemas"]["JsonApiOnePointOneAtMemberName"];
         /** @enum {string} */
-        Versions: Versions;
-        ApplianceLoadShifting: {
-            Control?: string;
-            /** Format: double */
-            demand_limit_weighted: number;
-            demand_timeseries?: number[] | null;
-            /** Format: double */
-            max_shift_hrs: number;
-            priority?: number | null;
-            /** @constant */
-            weight?: "Tariff";
-            weight_timeseries?: number[] | null;
-        };
-        Appliance: {
-            Energysupply?: string | null;
-            /** Format: double */
-            kWh_per_100cycle?: number | null;
-            /** Format: double */
-            kWh_per_annum?: number | null;
-            /** Format: double */
-            kWh_per_cycle?: number | null;
-            /** Format: double */
-            kg_load?: number | null;
-            loadshifting?: components["schemas"]["ApplianceLoadShifting"] | null;
-            /** Format: double */
-            standard_use?: number | null;
-        };
-        /** @enum {string} */
-        ApplianceReference: ApplianceReference;
-        ApplianceGainsDetailsEvent: {
-            /** Format: double */
+        Versions: "0.1.0";
+        /** LoadShifting */
+        LoadShifting: Record<string, never>;
+        /** ApplianceGainsEvent */
+        ApplianceGainsEvent: {
+            /** Demand W */
             demand_W: number;
-            /** Format: double */
+            /** Duration */
             duration: number;
-            /** Format: double */
+            /** Start */
             start: number;
         };
-        ScheduleRepeaterEntry_for_double: null | number;
-        ScheduleRepeaterValue_for_double: string | components["schemas"]["ScheduleRepeaterEntry_for_double"];
-        ScheduleRepeater_for_double: {
-            /** Format: uint */
+        /** ScheduleRepeaterEntryForDouble */
+        ScheduleRepeaterEntryForDouble: number | null;
+        /** ScheduleRepeaterValueForDouble */
+        ScheduleRepeaterValueForDouble: string | components["schemas"]["ScheduleRepeaterEntryForDouble"];
+        /** ScheduleRepeaterForDouble */
+        ScheduleRepeaterForDouble: {
+            /** Repeat */
             repeat: number;
-            value: components["schemas"]["ScheduleRepeaterValue_for_double"];
+            value: components["schemas"]["ScheduleRepeaterValueForDouble"];
         };
-        ScheduleEntry_for_double: null | number | components["schemas"]["ScheduleRepeater_for_double"] | string;
-        ScheduleReferenceEntry_for_double: components["schemas"]["ScheduleEntry_for_double"][] | components["schemas"]["ScheduleEntry_for_double"];
-        Schedule_for_double: {
-            main: components["schemas"]["ScheduleEntry_for_double"][];
-        } & {
-            [key: string]: components["schemas"]["ScheduleReferenceEntry_for_double"];
+        /** ScheduleEntryForDouble */
+        ScheduleEntryForDouble: number | components["schemas"]["ScheduleRepeaterForDouble"] | string | null;
+        /**
+         * ScheduleForDouble
+         * @description A dictionary of schedule entries where:
+         *     - Keys are user-defined names (e.g., "main", "week", "weekday", "weekend")
+         *     - Values are lists of ScheduleEntryForDouble
+         *     - The "main" entry is required
+         */
+        ScheduleForDouble: {
+            [key: string]: components["schemas"]["ScheduleEntryForDouble"][];
+        };
+        /** ClothesDrying */
+        ClothesDrying: {
+            /** Kwh Per 100Cycle */
+            kWh_per_100cycle: number;
+            /** Kg Load */
+            kg_load: number;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
+        };
+        /** ClothesWashing */
+        ClothesWashing: {
+            /** Kwh Per 100Cycle */
+            kWh_per_100cycle: number;
+            /** Kg Load */
+            kg_load: number;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
+        };
+        /** Dishwasher */
+        Dishwasher: {
+            /** Kwh Per 100Cycle */
+            kWh_per_100cycle: number;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
+        };
+        /** Freezer */
+        Freezer: {
+            /** Kwh Per Annum */
+            kWh_per_annum: number;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
+        };
+        /** Fridge */
+        Fridge: {
+            /** Kwh Per Annum */
+            kWh_per_annum: number;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
+        };
+        /**
+         * EnergySupplyType
+         * @enum {string}
+         */
+        EnergySupplyType: "mains elec" | "mains gas";
+        /** FridgeFreezer */
+        FridgeFreezer: {
+            /** @default null */
+            Energysupply?: components["schemas"]["EnergySupplyType"] | null;
+            /**
+             * Kwh Per Annum
+             * @default null
+             */
+            kWh_per_annum?: number | null;
+            /**
+             * Kwh Per Cycle
+             * @default null
+             */
+            kWh_per_cycle?: number | null;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
+        };
+        /** Hobs */
+        Hobs: {
+            Energysupply: components["schemas"]["EnergySupplyType"];
+            /** Kwh Per Cycle */
+            kWh_per_cycle: number;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
+        };
+        /** Kettle */
+        Kettle: {
+            /** Kwh Per Cycle */
+            kWh_per_cycle: number;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
+        };
+        /** Microwave */
+        Microwave: {
+            /** Kwh Per Cycle */
+            kWh_per_cycle: number;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
+        };
+        /** ApplianceEnergyPerAnnum */
+        ApplianceEnergyPerAnnum: {
+            /** Kwh Per Annum */
+            kWh_per_annum: number;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
+        };
+        /** Oven */
+        Oven: {
+            Energysupply: components["schemas"]["EnergySupplyType"];
+            /** Kwh Per Cycle */
+            kWh_per_cycle: number;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
+        };
+        /**
+         * MassDistributionClass
+         * @enum {string}
+         */
+        MassDistributionClass: "D" | "E" | "I" | "IE" | "M";
+        /** EdgeInsulationHorizontal */
+        EdgeInsulationHorizontal: {
+            /** Edge Thermal Resistance */
+            edge_thermal_resistance: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "horizontal";
+            /** Width */
+            width: number;
+        };
+        /** EdgeInsulationVertical */
+        EdgeInsulationVertical: {
+            /** Depth */
+            depth: number;
+            /** Edge Thermal Resistance */
+            edge_thermal_resistance: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "vertical";
+        };
+        /**
+         * WindShieldLocation
+         * @enum {string}
+         */
+        WindShieldLocation: "Sheltered" | "Average" | "Exposed";
+        /**
+         * BuildingElementGroundHeatedBasement
+         * @description Heated basement - uses init_heated_basement()
+         */
+        BuildingElementGroundHeatedBasement: {
+            /**
+             * Area
+             * @description Area of this building element within the zone (unit: m²)
+             */
+            area: number;
+            /**
+             * Areal Heat Capacity
+             * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
+             */
+            areal_heat_capacity: number;
+            /**
+             * Depth Basement Floor
+             * @description Depth of basement floor below ground level (unit: m)
+             */
+            depth_basement_floor: number;
+            /**
+             * Edge Insulation
+             * @default null
+             */
+            edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            floor_type: "Heated_basement";
+            /**
+             * Height Basement Walls
+             * @description Height of the basement walls above ground level (unit: m)
+             * @default null
+             */
+            height_basement_walls?: number | null;
+            /**
+             * Height Upper Surface
+             * @default null
+             */
+            height_upper_surface?: number | null;
+            mass_distribution_class: components["schemas"]["MassDistributionClass"];
+            /**
+             * Perimeter
+             * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
+             */
+            perimeter: number;
+            /**
+             * Pitch
+             * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+             */
+            pitch: number;
+            /**
+             * Psi Wall Floor Junc
+             * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
+             */
+            psi_wall_floor_junc: number;
+            /**
+             * @description Wind shielding factor
+             * @default null
+             */
+            shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
+            /**
+             * Thermal Resist Walls Base
+             * @description Thermal resistance of walls of the basement (unit: m².K/W)
+             */
+            thermal_resist_walls_base: number;
+            /**
+             * Thermal Resistance Floor Construction
+             * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+             */
+            thermal_resistance_floor_construction: number;
+            /**
+             * Thermal Transm Envi Base
+             * @description Thermal transmittance of floor above basement (unit: W/m².K)
+             * @default null
+             */
+            thermal_transm_envi_base?: number | null;
+            /**
+             * Thermal Transm Walls
+             * @description Thermal transmittance of walls above ground (unit: W/m².K)
+             * @default null
+             */
+            thermal_transm_walls?: number | null;
+            /**
+             * Thickness Walls
+             * @description Thickness of the walls (unit: m)
+             */
+            thickness_walls: number;
+            /**
+             * Total Area
+             * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
+             */
+            total_area: number;
+            /**
+             * Type
+             * @constant
+             */
+            type: "BuildingElementGround";
+            /**
+             * U Value
+             * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
+             */
+            u_value: number;
+        };
+        /**
+         * BuildingElementGroundSlabEdgeInsulation
+         * @description Slab floor with edge insulation - uses init_slab_on_ground_floor_edge_insulated()
+         */
+        BuildingElementGroundSlabEdgeInsulation: {
+            /**
+             * Area
+             * @description Area of this building element within the zone (unit: m²)
+             */
+            area: number;
+            /**
+             * Areal Heat Capacity
+             * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
+             */
+            areal_heat_capacity: number;
+            /**
+             * Edge Insulation
+             * @default null
+             */
+            edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            floor_type: "Slab_edge_insulation";
+            /**
+             * Height Upper Surface
+             * @default null
+             */
+            height_upper_surface?: number | null;
+            mass_distribution_class: components["schemas"]["MassDistributionClass"];
+            /**
+             * Perimeter
+             * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
+             */
+            perimeter: number;
+            /**
+             * Pitch
+             * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+             */
+            pitch: number;
+            /**
+             * Psi Wall Floor Junc
+             * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
+             */
+            psi_wall_floor_junc: number;
+            /**
+             * @description Wind shielding factor
+             * @default null
+             */
+            shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
+            /**
+             * Thermal Resistance Floor Construction
+             * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+             */
+            thermal_resistance_floor_construction: number;
+            /**
+             * Thickness Walls
+             * @description Thickness of the walls (unit: m)
+             */
+            thickness_walls: number;
+            /**
+             * Total Area
+             * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
+             */
+            total_area: number;
+            /**
+             * Type
+             * @constant
+             */
+            type: "BuildingElementGround";
+            /**
+             * U Value
+             * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
+             */
+            u_value: number;
+        };
+        /**
+         * BuildingElementGroundSlabNoEdgeInsulation
+         * @description Slab floor with no edge insulation - uses init_slab_on_ground_floor_uninsulated_or_all_insulation()
+         */
+        BuildingElementGroundSlabNoEdgeInsulation: {
+            /**
+             * Area
+             * @description Area of this building element within the zone (unit: m²)
+             */
+            area: number;
+            /**
+             * Areal Heat Capacity
+             * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
+             */
+            areal_heat_capacity: number;
+            /**
+             * Edge Insulation
+             * @default null
+             */
+            edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            floor_type: "Slab_no_edge_insulation";
+            /**
+             * Height Upper Surface
+             * @default null
+             */
+            height_upper_surface?: number | null;
+            mass_distribution_class: components["schemas"]["MassDistributionClass"];
+            /**
+             * Perimeter
+             * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
+             */
+            perimeter: number;
+            /**
+             * Pitch
+             * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+             */
+            pitch: number;
+            /**
+             * Psi Wall Floor Junc
+             * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
+             */
+            psi_wall_floor_junc: number;
+            /**
+             * @description Wind shielding factor
+             * @default null
+             */
+            shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
+            /**
+             * Thermal Resistance Floor Construction
+             * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+             */
+            thermal_resistance_floor_construction: number;
+            /**
+             * Thickness Walls
+             * @description Thickness of the walls (unit: m)
+             */
+            thickness_walls: number;
+            /**
+             * Total Area
+             * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
+             */
+            total_area: number;
+            /**
+             * Type
+             * @constant
+             */
+            type: "BuildingElementGround";
+            /**
+             * U Value
+             * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
+             */
+            u_value: number;
+        };
+        /**
+         * BuildingElementGroundSuspendedFloor
+         * @description Suspended floor - uses init_suspended_floor()
+         */
+        BuildingElementGroundSuspendedFloor: {
+            /**
+             * Area
+             * @description Area of this building element within the zone (unit: m²)
+             */
+            area: number;
+            /**
+             * Area Per Perimeter Vent
+             * @description Area of ventilation openings per perimeter (unit: m²/m)
+             * @default null
+             */
+            area_per_perimeter_vent?: number | null;
+            /**
+             * Areal Heat Capacity
+             * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
+             */
+            areal_heat_capacity: number;
+            /**
+             * Edge Insulation
+             * @default null
+             */
+            edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            floor_type: "Suspended_floor";
+            /**
+             * Height Upper Surface
+             * @default null
+             */
+            height_upper_surface?: number | null;
+            mass_distribution_class: components["schemas"]["MassDistributionClass"];
+            /**
+             * Perimeter
+             * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
+             */
+            perimeter: number;
+            /**
+             * Pitch
+             * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+             */
+            pitch: number;
+            /**
+             * Psi Wall Floor Junc
+             * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
+             */
+            psi_wall_floor_junc: number;
+            /**
+             * @description Wind shielding factor
+             * @default null
+             */
+            shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
+            /**
+             * Thermal Resist Insul
+             * @description Thermal resistance of insulation on base of underfloor space (unit: m².K/W)
+             * @default null
+             */
+            thermal_resist_insul?: number | null;
+            /**
+             * Thermal Resistance Floor Construction
+             * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+             */
+            thermal_resistance_floor_construction: number;
+            /**
+             * Thermal Transm Walls
+             * @description Thermal transmittance of walls above ground (unit: W/m².K)
+             * @default null
+             */
+            thermal_transm_walls?: number | null;
+            /**
+             * Thickness Walls
+             * @description Thickness of the walls (unit: m)
+             */
+            thickness_walls: number;
+            /**
+             * Total Area
+             * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
+             */
+            total_area: number;
+            /**
+             * Type
+             * @constant
+             */
+            type: "BuildingElementGround";
+            /**
+             * U Value
+             * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
+             */
+            u_value: number;
+        };
+        /**
+         * BuildingElementGroundUnheatedBasement
+         * @description Unheated basement - uses init_unheated_basement()
+         */
+        BuildingElementGroundUnheatedBasement: {
+            /**
+             * Area
+             * @description Area of this building element within the zone (unit: m²)
+             */
+            area: number;
+            /**
+             * Areal Heat Capacity
+             * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
+             */
+            areal_heat_capacity: number;
+            /**
+             * Depth Basement Floor
+             * @description Depth of basement floor below ground level (unit: m)
+             */
+            depth_basement_floor: number;
+            /**
+             * Edge Insulation
+             * @default null
+             */
+            edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            floor_type: "Unheated_basement";
+            /**
+             * Height Basement Walls
+             * @description Height of the basement walls above ground level (unit: m)
+             */
+            height_basement_walls: number;
+            /**
+             * Height Upper Surface
+             * @default null
+             */
+            height_upper_surface?: number | null;
+            mass_distribution_class: components["schemas"]["MassDistributionClass"];
+            /**
+             * Perimeter
+             * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
+             */
+            perimeter: number;
+            /**
+             * Pitch
+             * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+             */
+            pitch: number;
+            /**
+             * Psi Wall Floor Junc
+             * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
+             */
+            psi_wall_floor_junc: number;
+            /**
+             * @description Wind shielding factor
+             * @default null
+             */
+            shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
+            /**
+             * Thermal Resist Walls Base
+             * @description Thermal resistance of walls of the basement (unit: m².K/W)
+             */
+            thermal_resist_walls_base: number;
+            /**
+             * Thermal Resistance Floor Construction
+             * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+             */
+            thermal_resistance_floor_construction: number;
+            /**
+             * Thermal Transm Envi Base
+             * @description Thermal transmittance of floor above basement (unit: W/m².K)
+             */
+            thermal_transm_envi_base: number;
+            /**
+             * Thermal Transm Walls
+             * @description Thermal transmittance of walls above ground (unit: W/m².K)
+             */
+            thermal_transm_walls: number;
+            /**
+             * Thickness Walls
+             * @description Thickness of the walls (unit: m)
+             */
+            thickness_walls: number;
+            /**
+             * Total Area
+             * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
+             */
+            total_area: number;
+            /**
+             * Type
+             * @constant
+             */
+            type: "BuildingElementGround";
+            /**
+             * U Value
+             * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
+             */
+            u_value: number;
+        };
+        /**
+         * WindowShadingType
+         * @enum {string}
+         */
+        WindowShadingType: "overhang" | "sidefinright" | "sidefinleft" | "reveal";
+        /** WindowShadingObject */
+        WindowShadingObject: {
+            /** Depth */
+            depth: number;
+            /** Distance */
+            distance: number;
+            type: components["schemas"]["WindowShadingType"];
+        };
+        /** WindowShadingObstacle */
+        WindowShadingObstacle: {
+            /** Distance */
+            distance: number;
+            /** Height */
+            height: number;
+            /** Transparency */
+            transparency: number;
+            /**
+             * Type
+             * @constant
+             */
+            type: "obstacle";
+        };
+        /**
+         * WindowTreatmentControl
+         * @enum {string}
+         */
+        WindowTreatmentControl: "auto_motorised" | "combined_light_blind_HVAC" | "manual" | "manual_motorised";
+        /**
+         * WindowTreatmentType
+         * @enum {string}
+         */
+        WindowTreatmentType: "blinds" | "curtains";
+        /** WindowTreatment */
+        WindowTreatment: {
+            /**
+             * Control Closing Irrad
+             * @default null
+             */
+            Control_closing_irrad?: string | null;
+            /**
+             * Control Open
+             * @default null
+             */
+            Control_open?: string | null;
+            /**
+             * Control Opening Irrad
+             * @default null
+             */
+            Control_opening_irrad?: string | null;
+            controls: components["schemas"]["WindowTreatmentControl"];
+            /** Delta R */
+            delta_r: number;
+            /**
+             * Is Open
+             * @description This field should be a boolean - any string provided will be ignored and treated as a null.
+             * @default null
+             */
+            is_open?: boolean | null;
+            /**
+             * Opening Delay Hrs
+             * @default null
+             */
+            opening_delay_hrs?: number | null;
+            /** Trans Red */
+            trans_red: number;
+            type: components["schemas"]["WindowTreatmentType"];
+        };
+        /** WindowPart */
+        WindowPart: {
+            /** Mid Height Air Flow Path */
+            mid_height_air_flow_path: number;
+        };
+        /**
+         * CombustionApplianceType
+         * @enum {string}
+         */
+        CombustionApplianceType: "open_fireplace" | "closed_with_fan" | "open_gas_flue_balancer" | "open_gas_kitchen_stove" | "open_gas_fire" | "closed_fire";
+        /**
+         * FlueGasExhaustSituation
+         * @enum {string}
+         */
+        FlueGasExhaustSituation: "into_room" | "into_separate_duct" | "into_mech_vent";
+        /**
+         * CombustionFuelType
+         * @enum {string}
+         */
+        CombustionFuelType: "wood" | "gas" | "oil" | "coal";
+        /**
+         * CombustionAirSupplySituation
+         * @enum {string}
+         */
+        CombustionAirSupplySituation: "room_air" | "outside";
+        /** ChargeLevel */
+        ChargeLevel: number | number[] | components["schemas"]["ScheduleForDouble"];
+        /** ExternalSensorCorrelation */
+        ExternalSensorCorrelation: {
+            /** Max Charge */
+            max_charge: number;
+            /** Temperature */
+            temperature: number;
+        };
+        /** ExternalSensor */
+        ExternalSensor: {
+            /** Correlation */
+            correlation: components["schemas"]["ExternalSensorCorrelation"][];
+        };
+        /**
+         * ControlLogicType
+         * @enum {string}
+         */
+        ControlLogicType: "celect" | "heat_battery" | "hhrsh" | "automatic" | "manual";
+        /** ScheduleRepeaterEntryForBoolean */
+        ScheduleRepeaterEntryForBoolean: boolean | null;
+        /** ScheduleRepeaterValueForBoolean */
+        ScheduleRepeaterValueForBoolean: string | components["schemas"]["ScheduleRepeaterEntryForBoolean"];
+        /** ScheduleRepeaterForBoolean */
+        ScheduleRepeaterForBoolean: {
+            /** Repeat */
+            repeat: number;
+            value: components["schemas"]["ScheduleRepeaterValueForBoolean"];
+        };
+        /** ScheduleEntryForBoolean */
+        ScheduleEntryForBoolean: boolean | components["schemas"]["ScheduleRepeaterForBoolean"] | string | null;
+        /**
+         * ScheduleForBoolean
+         * @description A dictionary of schedule entries where:
+         *     - Keys are user-defined names (e.g., "main", "week", "weekday", "weekend")
+         *     - Values are lists of ScheduleEntryForBoolean
+         *     - The "main" entry is required
+         */
+        ScheduleForBoolean: {
+            [key: string]: components["schemas"]["ScheduleEntryForBoolean"][];
+        };
+        /**
+         * ControlCombinationOperation
+         * @enum {string}
+         */
+        ControlCombinationOperation: "AND" | "OR" | "XOR" | "NOT" | "MAX" | "MIN" | "MEAN";
+        /** ControlCombination */
+        ControlCombination: {
+            /** Controls */
+            controls: string[];
+            operation: components["schemas"]["ControlCombinationOperation"];
+        };
+        /**
+         * ControlCombinations
+         * @description A dictionary of control combinations where:
+         *     - Keys are user-defined names (e.g., "main", "week", "weekday", "weekend")
+         *     - Values conform to the ControlCombination schema
+         *     - The "main" entry is required
+         */
+        ControlCombinations: {
+            [key: string]: components["schemas"]["ControlCombination"];
+        };
+        /**
+         * EcoDesignControllerClass
+         * @enum {integer}
+         */
+        EcoDesignControllerClass: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+        /**
+         * BatteryLocation
+         * @enum {string}
+         */
+        BatteryLocation: "inside" | "outside";
+        /** ElectricBattery */
+        ElectricBattery: {
+            /** Battery Age */
+            battery_age: number;
+            battery_location: components["schemas"]["BatteryLocation"];
+            /** Capacity */
+            capacity: number;
+            /** Charge Discharge Efficiency Round Trip */
+            charge_discharge_efficiency_round_trip: number;
+            /** Grid Charging Possible */
+            grid_charging_possible: boolean;
+            /** Maximum Charge Rate One Way Trip */
+            maximum_charge_rate_one_way_trip: number;
+            /** Maximum Discharge Rate One Way Trip */
+            maximum_discharge_rate_one_way_trip: number;
+            /** Minimum Charge Rate One Way Trip */
+            minimum_charge_rate_one_way_trip: number;
+        };
+        /** EnergyDiverter */
+        EnergyDiverter: {
+            /** Controlmax */
+            Controlmax: string;
+            /** Heatsource */
+            HeatSource: string;
+        };
+        /** CustomEnergySourceFactor */
+        CustomEnergySourceFactor: {
+            /** Emissions Factor Kgco2E/Kwh */
+            "Emissions Factor kgCO2e/kWh": number;
+            /** Emissions Factor Kgco2E/Kwh Including Out-Of-Scope Emissions */
+            "Emissions Factor kgCO2e/kWh including out-of-scope emissions": number;
+            /** Primary Energy Factor Kwh/Kwh Delivered */
+            "Primary Energy Factor kWh/kWh delivered": number;
+        };
+        /**
+         * FuelType
+         * @enum {string}
+         */
+        FuelType: "LPG_bottled" | "LPG_bulk" | "LPG_condition_11F" | "custom" | "electricity" | "energy_from_environment" | "mains_gas" | "unmet_demand";
+        /**
+         * EnergySupplyPriorityEntry
+         * @enum {string}
+         */
+        EnergySupplyPriorityEntry: "ElectricBattery" | "diverter";
+        /**
+         * ShadingObjectType
+         * @enum {string}
+         */
+        ShadingObjectType: "obstacle" | "overhang";
+        /** ShadingObject */
+        ShadingObject: {
+            /** Distance */
+            distance: number;
+            /** Height */
+            height: number;
+            type: components["schemas"]["ShadingObjectType"];
+        };
+        /**
+         * ShadingSegmentFHS
+         * @description FHS-specific version of ShadingSegment with additional field names
+         */
+        ShadingSegmentFHS: {
+            /**
+             * End
+             * @default null
+             */
+            end?: number | null;
+            /**
+             * End360
+             * @default null
+             */
+            end360?: number | null;
+            /**
+             * Number
+             * @default null
+             */
+            number?: number | null;
+            /**
+             * Shading
+             * @default null
+             */
+            shading?: components["schemas"]["ShadingObject"][] | null;
+            /**
+             * Start
+             * @default null
+             */
+            start?: number | null;
+            /**
+             * Start360
+             * @default null
+             */
+            start360?: number | null;
+        };
+        /** FanSpeedData */
+        FanSpeedData: {
+            /** Power Output */
+            power_output: number[];
+            /** Temperature Diff */
+            temperature_diff: number;
         };
         /** @enum {string} */
-        ColdWaterSourceType: ColdWaterSourceType;
-        BathDetails: {
-            ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
+        BuildType: "house" | "flat";
+        /**
+         * HeatSourceLocation
+         * @enum {string}
+         */
+        HeatSourceLocation: "internal" | "external";
+        /** BoilerCostScheduleHybrid */
+        BoilerCostScheduleHybrid: {
+            cost_schedule_boiler: components["schemas"]["ScheduleForDouble"];
+            cost_schedule_hp: components["schemas"]["ScheduleForDouble"];
+            /** Cost Schedule Start Day */
+            cost_schedule_start_day: number;
+            /** Cost Schedule Time Series Step */
+            cost_schedule_time_series_step: number;
+        };
+        /** HeatPumpHotWaterOnlyTestDatum */
+        HeatPumpHotWaterOnlyTestDatum: {
+            /** Cop Dhw */
+            cop_dhw: number;
+            /** Energy Input Measured */
+            energy_input_measured: number;
+            /** Hw Tapping Prof Daily Total */
+            hw_tapping_prof_daily_total: number;
+            /** Hw Vessel Loss Daily */
+            hw_vessel_loss_daily: number;
+            /** Power Standby */
+            power_standby: number;
+        };
+        /** HeatPumpHotWaterTestData */
+        HeatPumpHotWaterTestData: {
+            /** @default null */
+            L?: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"] | null;
+            M: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"];
+        };
+        /**
+         * TestLetter
+         * @enum {string}
+         */
+        TestLetter: "A" | "B" | "C" | "D" | "F";
+        /** HeatPumpBufferTank */
+        HeatPumpBufferTank: {
+            /** Daily Losses */
+            daily_losses: number;
+            /** Pump Fixed Flow Rate */
+            pump_fixed_flow_rate: number;
+            /** Pump Power At Flow Rate */
+            pump_power_at_flow_rate: number;
+            /** Volume */
+            volume: number;
+        };
+        /**
+         * HeatPumpBackupControlType
+         * @enum {string}
+         */
+        HeatPumpBackupControlType: "None" | "TopUp" | "Substitute";
+        /**
+         * HeatPumpBoiler
+         * @description Boiler used as backup for heat pump systems
+         */
+        HeatPumpBoiler: {
+            /** Energysupply */
+            EnergySupply: string;
+            /** Energysupply Aux */
+            EnergySupply_aux: string;
+            boiler_location: components["schemas"]["HeatSourceLocation"];
+            /** @default null */
+            cost_schedule_hybrid?: components["schemas"]["BoilerCostScheduleHybrid"] | null;
+            /** Efficiency Full Load */
+            efficiency_full_load: number;
+            /** Efficiency Part Load */
+            efficiency_part_load: number;
+            /** Electricity Circ Pump */
+            electricity_circ_pump: number;
+            /** Electricity Full Load */
+            electricity_full_load: number;
+            /** Electricity Part Load */
+            electricity_part_load: number;
+            /** Electricity Standby */
+            electricity_standby: number;
+            /** Modulation Load */
+            modulation_load: number;
+            /** Rated Power */
+            rated_power: number;
+        };
+        /**
+         * HeatPumpSinkType
+         * @enum {string}
+         */
+        HeatPumpSinkType: "Water" | "Air" | "Glycol25";
+        /**
+         * HeatPumpSourceType
+         * @enum {string}
+         */
+        HeatPumpSourceType: "Ground" | "OutsideAir" | "ExhaustAirMEV" | "ExhaustAirMVHR" | "ExhaustAirMixed" | "WaterGround" | "WaterSurface" | "HeatNetwork";
+        /** HeatPumpTestDatum */
+        HeatPumpTestDatum: {
             /**
-             * Format: double
+             * Air Flow Rate
+             * @default null
+             */
+            air_flow_rate?: number | null;
+            /** Capacity */
+            capacity: number;
+            /** Cop */
+            cop: number;
+            /** Degradation Coeff */
+            degradation_coeff: number;
+            /** Design Flow Temp */
+            design_flow_temp: number;
+            /**
+             * Eahp Mixed Ext Air Ratio
+             * @default null
+             */
+            eahp_mixed_ext_air_ratio?: number | null;
+            /** Temp Outlet */
+            temp_outlet: number;
+            /** Temp Source */
+            temp_source: number;
+            /** Temp Test */
+            temp_test: number;
+            test_letter: components["schemas"]["TestLetter"];
+        };
+        /** Bath */
+        Bath: {
+            /** Coldwatersource */
+            ColdWaterSource: string;
+            /**
+             * Flowrate
              * @description Tap/outlet flow rate (unit: litre/minute)
              */
             flowrate: number;
             /**
-             * Format: double
+             * Size
              * @description Volume held by bath (unit: litre)
              */
             size: number;
         };
         /**
-         * @description distribution of mass in building element, one of: 'I' - mass concentrated on internal side; 'E':  mass concentrated on external side; 'IE': mass divided over internal and external side; 'D':  mass equally distributed; 'M':  mass concentrated inside
+         * WaterPipeworkLocation
          * @enum {string}
          */
-        MassDistributionClass: MassDistributionClass;
-        WindowShadingObject: {
-            /** Format: double */
-            distance: number;
-            /** Format: double */
-            height: number;
-            /** Format: double */
-            transparency: number;
-            /** @constant */
-            type?: "obstacle";
-        } | {
-            /** Format: double */
-            depth: number;
-            /** Format: double */
-            distance: number;
-            /** @enum {string} */
-            type?: WindowShadingObjectType;
-        };
-        /** @enum {string} */
-        WindowTreatmentControl: WindowTreatmentControl;
-        /** @enum {string} */
-        WindowTreatmentType: WindowTreatmentType;
-        WindowTreatment: {
-            Control_closing_irrad?: string | null;
-            Control_open?: string | null;
-            Control_opening_irrad?: string | null;
-            /** Format: double */
-            closing_irrad?: number | null;
-            controls: components["schemas"]["WindowTreatmentControl"];
-            /** Format: double */
-            delta_r: number;
-            /** @description This field should be a boolean - any string provided will be ignored and treated as a null. */
-            is_open?: boolean | string | null;
-            /** Format: double */
-            opening_delay_hrs?: number | null;
-            /** Format: double */
-            opening_irrad?: number | null;
-            /** Format: double */
-            trans_red: number;
-            type: components["schemas"]["WindowTreatmentType"];
-            waking_hour?: number | null;
-        };
-        WindowPart: {
-            /** Format: double */
-            mid_height_air_flow_path: number;
-        };
-        EdgeInsulation: {
-            /** Format: double */
-            edge_thermal_resistance: number;
-            /** @constant */
-            type: "horizontal";
-            /** Format: double */
-            width: number;
-        } | {
-            /** Format: double */
-            depth: number;
-            /** Format: double */
-            edge_thermal_resistance: number;
-            /** @constant */
-            type: "vertical";
-        };
-        /** @enum {string} */
-        FloorType: FloorType;
-        /** @enum {string} */
-        WindShieldLocation: WindShieldLocation;
-        ColdWaterSourceDetails: {
-            /**
-             * Format: uint32
-             * @description First day of the time series, day of the year, 0 to 365
-             */
-            start_day: number;
-            /** @description List of cold water temperatures, one entry per hour (unit: ˚C) */
-            temperatures: number[];
-            /**
-             * Format: double
-             * @description Timestep of the time series data (unit: hours)
-             */
-            time_series_step: number;
-            type?: string | null;
-        };
-        /** @enum {string} */
-        CombustionApplianceType: CombustionApplianceType;
-        /** @enum {string} */
-        FlueGasExhaustSituation: FlueGasExhaustSituation;
-        /** @enum {string} */
-        CombustionFuelType: CombustionFuelType;
-        /** @enum {string} */
-        CombustionAirSupplySituation: CombustionAirSupplySituation;
-        /** @enum {string} */
-        ControlLogicType: ControlLogicType;
-        ScheduleRepeaterEntry_for_Boolean: null | boolean;
-        ScheduleRepeaterValue_for_Boolean: string | components["schemas"]["ScheduleRepeaterEntry_for_Boolean"];
-        ScheduleRepeater_for_Boolean: {
-            /** Format: uint */
-            repeat: number;
-            value: components["schemas"]["ScheduleRepeaterValue_for_Boolean"];
-        };
-        ScheduleEntry_for_Boolean: null | boolean | components["schemas"]["ScheduleRepeater_for_Boolean"] | string;
-        ScheduleReferenceEntry_for_Boolean: components["schemas"]["ScheduleEntry_for_Boolean"][] | components["schemas"]["ScheduleEntry_for_Boolean"];
-        Schedule_for_Boolean: {
-            main: components["schemas"]["ScheduleEntry_for_Boolean"][];
-        } & {
-            [key: string]: components["schemas"]["ScheduleReferenceEntry_for_Boolean"];
-        };
-        ChargeLevel: number | number[] | components["schemas"]["Schedule_for_double"];
-        ExternalSensorCorrelation: {
-            /** Format: double */
-            max_charge: number;
-            /** Format: double */
-            temperature: number;
-        };
-        ExternalSensor: {
-            correlation: components["schemas"]["ExternalSensorCorrelation"][];
-        };
-        /** @enum {string} */
-        ControlCombinationOperation: ControlCombinationOperation;
-        ControlCombination: {
-            controls: string[];
-            operation: components["schemas"]["ControlCombinationOperation"];
-        };
-        ControlCombinations: {
-            main: components["schemas"]["ControlCombination"];
-        } & {
-            [key: string]: components["schemas"]["ControlCombination"];
-        };
-        ControlDetails: {
-            allow_null?: boolean | null;
-            logic_type?: components["schemas"]["ControlLogicType"] | null;
-            /** @description List of boolean values where true means on, one entry per hour */
-            schedule: components["schemas"]["Schedule_for_Boolean"];
-            /**
-             * Format: uint32
-             * @description First day of the time series, day of the year, 0 to 365
-             */
-            start_day: number;
-            /**
-             * Format: double
-             * @description Timestep of the time series data (unit: hours)
-             */
-            time_series_step: number;
-            /** @constant */
-            type: "OnOffTimeControl";
-        } | {
-            logic_type?: components["schemas"]["ControlLogicType"] | null;
-            /** @description List of cost values (one entry per time_series_step) */
-            schedule: components["schemas"]["Schedule_for_double"];
-            /**
-             * Format: uint32
-             * @description First day of the time series, day of the year, 0 to 365
-             */
-            start_day: number;
-            /**
-             * Format: double
-             * @description Number of 'on' hours to be set per day
-             */
-            time_on_daily?: number | null;
-            /**
-             * Format: double
-             * @description Timestep of the time series data (unit: hours)
-             */
-            time_series_step: number;
-            /** @constant */
-            type: "OnOffCostMinimisingTimeControl";
-        } | {
-            /**
-             * Format: double
-             * @description How long before heating period the system should switch on (unit: hours)
-             */
-            advanced_start?: number | null;
-            /** @description If both min and max limits are set but setpoint is not, whether to default to min (false) or max (true) */
-            default_to_max?: boolean | null;
-            logic_type?: components["schemas"]["ControlLogicType"] | null;
-            /** @description List of temperature values, one entry per hour (unit: ˚C) */
-            schedule: components["schemas"]["Schedule_for_double"];
-            /**
-             * Format: double
-             * @description Maximum setpoint allowed (unit: ˚C)
-             */
-            setpoint_max?: number | null;
-            /**
-             * Format: double
-             * @description Minimum setpoint allowed (unit: ˚C)
-             */
-            setpoint_min?: number | null;
-            /**
-             * Format: uint32
-             * @description First day of the time series, day of the year, 0 to 365
-             */
-            start_day: number;
-            /**
-             * Format: double
-             * @description Timestep of the time series data (unit: hours)
-             */
-            time_series_step: number;
-            /** @constant */
-            type: "SetpointTimeControl";
-        } | {
-            /** @description Proportion of the charge targeted for each day */
-            charge_level?: components["schemas"]["ChargeLevel"] | null;
-            external_sensor?: components["schemas"]["ExternalSensor"] | null;
-            /** Format: double */
-            full_charge_temp_diff?: number | null;
-            logic_type?: components["schemas"]["ControlLogicType"] | null;
-            /** Format: double */
-            min_target_charge_factor?: number | null;
-            /** @description List of boolean values where true means 'on' (one entry per hour) */
-            schedule: components["schemas"]["Schedule_for_Boolean"];
-            /**
-             * Format: uint32
-             * @description First day of the time series, day of the year, 0 to 365
-             */
-            start_day: number;
-            /**
-             * Format: double
-             * @description (Ignored and likely not part of final specification)
-             */
-            target_charge?: number | null;
-            /** Format: double */
-            temp_charge_cut?: number | null;
-            temp_charge_cut_delta?: components["schemas"]["Schedule_for_double"] | null;
-            /**
-             * Format: double
-             * @description Timestep of the time series data (unit: hours)
-             */
-            time_series_step: number;
-            /** @constant */
-            type: "ChargeControl";
-        } | {
-            combination: components["schemas"]["ControlCombinations"];
-            start_day: number;
-            /** Format: double */
-            time_series_step: number;
-            /** @constant */
-            type?: "CombinationTimeControl";
-        };
-        EcoDesignControllerClass: number;
-        /** @enum {string} */
-        BatteryLocation: BatteryLocation;
-        /** @enum {string} */
-        DiverterHeatSourceType: DiverterHeatSourceType;
-        /** @constant */
-        StorageTankType: "hw cylinder";
-        ElectricBattery: {
-            /** Format: double */
-            battery_age: number;
-            battery_location: components["schemas"]["BatteryLocation"];
-            /** Format: double */
-            capacity: number;
-            /** Format: double */
-            charge_discharge_efficiency_round_trip: number;
-            grid_charging_possible: boolean;
-            /** Format: double */
-            maximum_charge_rate_one_way_trip: number;
-            /** Format: double */
-            maximum_discharge_rate_one_way_trip: number;
-            /** Format: double */
-            minimum_charge_rate_one_way_trip: number;
-        };
-        EnergyDiverter: {
-            Controlmax?: string;
-            HeatSource: components["schemas"]["DiverterHeatSourceType"];
-            StorageTank?: components["schemas"]["StorageTankType"] | null;
-        };
-        CustomEnergySourceFactor: {
-            /** Format: double */
-            "Emissions Factor kgCO2e/kWh": number;
-            /** Format: double */
-            "Emissions Factor kgCO2e/kWh including out-of-scope emissions": number;
-            /** Format: double */
-            "Primary Energy Factor kWh/kWh delivered": number;
-        };
-        /** @enum {string} */
-        FuelType: FuelType;
-        /** @enum {string} */
-        SecondarySupplyType: SecondarySupplyType;
-        /** @enum {string} */
-        DaylightSavingsConfig: DaylightSavingsConfig;
-        /** @enum {string} */
-        ShadingObjectType: ShadingObjectType;
-        ShadingObject: {
-            /** Format: double */
-            distance: number;
-            /** Format: double */
-            height: number;
-            type: components["schemas"]["ShadingObjectType"];
-        };
-        ShadingSegment: {
-            /** Format: double */
-            end360: number;
-            /** Format: uint */
-            number: number;
-            shading?: components["schemas"]["ShadingObject"][] | null;
-            /** Format: double */
-            start360: number;
-        };
-        FanSpeedData: {
-            power_output: number[];
-            /** Format: double */
-            temperature_diff: number;
-        };
-        /** @enum {string} */
-        BuildType: BuildType;
-        /** @enum {string} */
-        HeatSourceLocation: HeatSourceLocation;
-        BoilerCostScheduleHybrid: {
-            cost_schedule_boiler: components["schemas"]["Schedule_for_double"];
-            cost_schedule_hp: components["schemas"]["Schedule_for_double"];
-            /** Format: uint32 */
-            cost_schedule_start_day: number;
-            /** Format: double */
-            cost_schedule_time_series_step: number;
-        };
-        HeatPumpHotWaterOnlyTestDatum: {
-            /** Format: double */
-            cop_dhw: number;
-            /** Format: double */
-            energy_input_measured: number;
-            /** Format: double */
-            hw_tapping_prof_daily_total: number;
-            /** Format: double */
-            hw_vessel_loss_daily: number;
-            /** Format: double */
-            power_standby: number;
-        };
-        /** @enum {string} */
-        TestLetter: TestLetter;
-        /** @enum {string} */
-        HeatSourceControlType: HeatSourceControlType;
-        /** @enum {string} */
-        SolarCellLocation: SolarCellLocation;
-        HeatPumpHotWaterTestData: {
-            L?: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"] | null;
-            M: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"];
-        };
-        HeatPumpBufferTank: {
-            /** Format: double */
-            daily_losses: number;
-            /** Format: double */
-            pump_fixed_flow_rate: number;
-            /** Format: double */
-            pump_power_at_flow_rate: number;
-            /** Format: double */
-            volume: number;
-        };
-        /** @enum {string} */
-        HeatPumpBackupControlType: HeatPumpBackupControlType;
-        HeatPumpBoiler: {
-            EnergySupply: string;
-            EnergySupply_aux: string;
-            boiler_location: components["schemas"]["HeatSourceLocation"];
-            cost_schedule_hybrid?: components["schemas"]["BoilerCostScheduleHybrid"] | null;
-            /** Format: double */
-            efficiency_full_load: number;
-            /** Format: double */
-            efficiency_part_load: number;
-            /** Format: double */
-            electricity_circ_pump: number;
-            /** Format: double */
-            electricity_full_load: number;
-            /** Format: double */
-            electricity_part_load: number;
-            /** Format: double */
-            electricity_standby: number;
-            /** Format: double */
-            modulation_load: number;
-            /** Format: double */
-            rated_power: number;
-        };
-        /** @enum {string} */
-        HeatPumpSinkType: HeatPumpSinkType;
-        /** @enum {string} */
-        HeatPumpSourceType: HeatPumpSourceType;
-        HeatPumpTestDatum: {
-            /** Format: double */
-            air_flow_rate?: number | null;
-            /** Format: double */
-            capacity: number;
-            /** Format: double */
-            cop: number;
-            /** Format: double */
-            degradation_coeff: number;
-            /** Format: double */
-            design_flow_temp: number;
-            /** Format: double */
-            eahp_mixed_ext_air_ratio?: number | null;
-            /** Format: double */
-            temp_outlet: number;
-            /** Format: double */
-            temp_source: number;
-            /** Format: double */
-            temp_test: number;
-            test_letter: components["schemas"]["TestLetter"];
-        };
-        Baths: {
-            [key: string]: components["schemas"]["BathDetails"];
-        };
-        /** @enum {string} */
-        WaterPipeworkLocation: WaterPipeworkLocation;
-        /** @enum {string} */
-        WaterPipeContentsType: WaterPipeContentsType;
+        WaterPipeworkLocation: "internal" | "external";
+        /** WaterPipeworkSimple */
         WaterPipeworkSimple: {
-            /** Format: double */
-            external_diameter_mm?: number | null;
-            /** Format: double */
-            insulation_thermal_conductivity?: number | null;
-            /** Format: double */
-            insulation_thickness_mm?: number | null;
-            /** Format: double */
-            internal_diameter_mm?: number | null;
-            /** Format: double */
+            /** Internal Diameter Mm */
+            internal_diameter_mm: number;
+            /** Length */
             length: number;
             location: components["schemas"]["WaterPipeworkLocation"];
-            pipe_contents?: components["schemas"]["WaterPipeContentsType"] | null;
-            surface_reflectivity?: boolean | null;
         };
-        OtherWaterUseDetails: {
-            ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
+        /** OtherWaterUse */
+        OtherWaterUse: {
+            /** Coldwatersource */
+            ColdWaterSource: string;
             /**
-             * Format: double
+             * Flowrate
              * @description Tap/outlet flow rate (unit: litre/minute)
              */
             flowrate: number;
         };
-        OtherWaterUses: {
-            [key: string]: components["schemas"]["OtherWaterUseDetails"];
-        };
-        Shower: {
-            ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-            WWHRS?: string | null;
-            /**
-             * Format: double
-             * @description Tap/outlet flow rate (unit: litre/minute)
-             */
-            flowrate: number;
-            /** @constant */
-            type: "MixerShower";
-        } | {
-            ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
+        /** ShowerInstantElectric */
+        ShowerInstantElectric: {
+            /** Coldwatersource */
+            ColdWaterSource: string;
+            /** Energysupply */
             EnergySupply: string;
-            /** Format: double */
+            /** Rated Power */
             rated_power: number;
-            /** @constant */
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
             type: "InstantElecShower";
         };
-        Showers: {
-            [key: string]: components["schemas"]["Shower"];
+        /** ShowerMixer */
+        ShowerMixer: {
+            /** Coldwatersource */
+            ColdWaterSource: string;
+            /**
+             * Wwhrs
+             * @description Reference to a key in Input.WWHRS
+             * @default null
+             */
+            WWHRS?: string | null;
+            /**
+             * Flowrate
+             * @description Shower flow rate (unit: litre/minute)
+             */
+            flowrate: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "MixerShower";
         };
-        HeatSource: {
-            Control?: components["schemas"]["HeatSourceControlType"] | null;
-            Controlmax?: string | null;
-            Controlmin?: string | null;
+        /**
+         * BoilerHotWaterTest
+         * @enum {string}
+         */
+        BoilerHotWaterTest: "M&L" | "M&S" | "M_only" | "No_additional_tests";
+        /** HotWaterSourceCombiBoiler */
+        HotWaterSourceCombiBoiler: {
+            /** Coldwatersource */
+            ColdWaterSource: string;
+            /** Heatsourcewet */
+            HeatSourceWet: string;
+            /** Daily Hw Usage */
+            daily_HW_usage: number;
+            /**
+             * Rejected Energy 1
+             * @default null
+             */
+            rejected_energy_1?: number | null;
+            /**
+             * Rejected Factor 3
+             * @default null
+             */
+            rejected_factor_3?: number | null;
+            separate_DHW_tests: components["schemas"]["BoilerHotWaterTest"];
+            /** Setpoint Temp */
+            setpoint_temp: number;
+            /**
+             * Storage Loss Factor 2
+             * @default null
+             */
+            storage_loss_factor_2?: number | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "CombiBoiler";
+        };
+        /** HotWaterSourceHUI */
+        HotWaterSourceHUI: {
+            /** Coldwatersource */
+            ColdWaterSource: string;
+            /** Heatsourcewet */
+            HeatSourceWet: string;
+            /**
+             * Setpoint Temp
+             * @default null
+             */
+            setpoint_temp?: number | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "HIU";
+        };
+        /** HotWaterSourceHeatBattery */
+        HotWaterSourceHeatBattery: {
+            /** Coldwatersource */
+            ColdWaterSource: string;
+            /** Heatsourcewet */
+            HeatSourceWet: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "HeatBattery";
+        };
+        /** HotWaterSourcePointOfUse */
+        HotWaterSourcePointOfUse: {
+            /** Coldwatersource */
+            ColdWaterSource: string;
+            /** Energysupply */
             EnergySupply: string;
-            /** Format: double */
-            heater_position: number;
-            /** Format: double */
-            power: number;
-            /** Format: double */
-            thermostat_position?: number;
-            /** @constant */
-            type: "ImmersionHeater";
-        } | {
+            /** Efficiency */
+            efficiency: number;
+            /** Setpoint Temp */
+            setpoint_temp: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "PointOfUse";
+        };
+        /** HeatPumpHotWaterOnly */
+        HeatPumpHotWaterOnly: {
+            /**
+             * Controlmax
+             * @description Reference to a control schedule of maximum temperature setpoints
+             */
             Controlmax: string;
-            EnergySupply: string;
-            /** Format: double */
-            area_module: number;
-            /** Format: double */
-            collector_mass_flow_rate: number;
-            control?: components["schemas"]["HeatSourceControlType"] | null;
-            /** Format: double */
-            first_order_hlc: number;
-            /** Format: double */
-            heater_position: number;
-            /** Format: double */
-            incidence_angle_modifier: number;
-            /** Format: uint */
-            modules: number;
-            /** Format: double */
-            orientation360: number;
-            /** Format: double */
-            peak_collector_efficiency: number;
-            /** Format: double */
-            power_pump: number;
-            /** Format: double */
-            power_pump_control: number;
-            /** Format: double */
-            second_order_hlc: number;
-            sol_loc: components["schemas"]["SolarCellLocation"];
-            /** Format: double */
-            solar_loop_piping_hlc: number;
-            /** Format: double */
-            thermostat_position: number;
-            /** Format: double */
-            tilt: number;
-            /** @constant */
-            type: "SolarThermalSystem";
-        } | {
-            ColdWaterSource?: components["schemas"]["ColdWaterSourceType"] | null;
-            Control?: components["schemas"]["HeatSourceControlType"] | null;
-            Controlmax?: string | null;
-            Controlmin?: string | null;
-            EnergySupply: string;
-            /** Format: double */
-            heater_position: number;
-            name: string;
-            /** Format: double */
-            temp_flow_limit_upper?: number | null;
-            /** Format: double */
-            temp_return?: number | null;
-            /** Format: double */
-            thermostat_position?: number;
-            /** @constant */
-            type: "HeatSourceWet";
-        } | {
-            Control?: components["schemas"]["HeatSourceControlType"] | null;
-            Controlmax: string;
+            /**
+             * Controlmin
+             * @description Reference to a control schedule of minimum temperature setpoints
+             */
             Controlmin: string;
+            /** Energysupply */
             EnergySupply: string;
-            /** Format: double */
+            /** Daily Losses Declared */
             daily_losses_declared: number;
-            /** Format: double */
+            /** Heat Exchanger Surface Area Declared */
             heat_exchanger_surface_area_declared: number;
-            /** Format: double */
+            /** Heater Position */
             heater_position: number;
-            /** Format: double */
+            /** In Use Factor Mismatch */
             in_use_factor_mismatch: number;
-            /** Format: double */
+            /** Power Max */
             power_max: number;
-            /** Format: double */
+            /** Tank Volume Declared */
             tank_volume_declared: number;
             test_data: components["schemas"]["HeatPumpHotWaterTestData"];
-            /** Format: double */
-            thermostat_position: number;
-            /** @constant */
+            /**
+             * Thermostat Position
+             * @description Required for StorageTank but not for SmartHotWaterTank
+             * @default null
+             */
+            thermostat_position?: number | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
             type: "HeatPump_HWOnly";
-            /** Format: double */
+            /** Vol Hw Daily Average */
             vol_hw_daily_average: number;
         };
+        /** HeatSourceWetServiceWaterRegular */
+        HeatSourceWetServiceWaterRegular: {
+            /**
+             * Controlmax
+             * @description Reference to a control schedule of maximum temperature setpoints
+             */
+            Controlmax: string;
+            /**
+             * Controlmin
+             * @description Reference to a control schedule of minimum temperature setpoints
+             */
+            Controlmin: string;
+            /** Energysupply */
+            EnergySupply: string;
+            /** Heater Position */
+            heater_position: number;
+            /** Name */
+            name: string;
+            /**
+             * Temp Flow Limit Upper
+             * @default null
+             */
+            temp_flow_limit_upper?: number | null;
+            /**
+             * Thermostat Position
+             * @description Required for StorageTank but not for SmartHotWaterTank
+             * @default null
+             */
+            thermostat_position?: number | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "HeatSourceWet";
+        };
+        /**
+         * ImmersionHeaterFHS
+         * @description FHS-specific version of ImmersionHeater with additional fields
+         */
+        ImmersionHeaterFHS: {
+            /**
+             * Controlmax
+             * @description Reference to a control schedule of maximum temperature setpoints
+             */
+            Controlmax: string;
+            /**
+             * Controlmin
+             * @description Reference to a control schedule of minimum temperature setpoints
+             */
+            Controlmin: string;
+            /** Energysupply */
+            EnergySupply: string;
+            /** Heater Position */
+            heater_position: number;
+            /** Power */
+            power: number;
+            /**
+             * Temp Setpnt Max
+             * @default null
+             */
+            temp_setpnt_max?: string | null;
+            /**
+             * Thermostat Position
+             * @default null
+             */
+            thermostat_position?: number | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "ImmersionHeater";
+        };
+        /**
+         * SolarCollectorLoopLocation
+         * @description Location of the main part of the solar thermal collector loop piping.
+         *
+         *     This affects the ambient temperature used for heat loss calculations
+         *     in the collector loop piping.
+         * @enum {string}
+         */
+        SolarCollectorLoopLocation: "OUT" | "HS" | "NHS";
+        /** SolarThermalSystem */
+        SolarThermalSystem: {
+            /**
+             * Controlmax
+             * @description Reference to a control schedule of maximum temperature setpoints
+             */
+            Controlmax: string;
+            /** Energysupply */
+            EnergySupply: string;
+            /** Area Module */
+            area_module: number;
+            /** Collector Mass Flow Rate */
+            collector_mass_flow_rate: number;
+            /** First Order Hlc */
+            first_order_hlc: number;
+            /** Heater Position */
+            heater_position: number;
+            /** Incidence Angle Modifier */
+            incidence_angle_modifier: number;
+            /** Modules */
+            modules: number;
+            /**
+             * Orientation360
+             * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
+             */
+            orientation360: number;
+            /** Peak Collector Efficiency */
+            peak_collector_efficiency: number;
+            /** Power Pump */
+            power_pump: number;
+            /** Power Pump Control */
+            power_pump_control: number;
+            /** Second Order Hlc */
+            second_order_hlc: number;
+            sol_loc: components["schemas"]["SolarCollectorLoopLocation"];
+            /** Solar Loop Piping Hlc */
+            solar_loop_piping_hlc: number;
+            /**
+             * Thermostat Position
+             * @description Required for StorageTank but not for SmartHotWaterTank
+             * @default null
+             */
+            thermostat_position?: number | null;
+            /** Tilt */
+            tilt: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "SolarThermalSystem";
+        };
+        /**
+         * WaterPipeContentsType
+         * @enum {string}
+         */
+        WaterPipeContentsType: "water" | "glycol25";
+        /** WaterPipework */
         WaterPipework: {
-            /** Format: double */
+            /** External Diameter Mm */
             external_diameter_mm: number;
-            /** Format: double */
+            /** Insulation Thermal Conductivity */
             insulation_thermal_conductivity: number;
-            /** Format: double */
+            /** Insulation Thickness Mm */
             insulation_thickness_mm: number;
-            /** Format: double */
+            /** Internal Diameter Mm */
             internal_diameter_mm: number;
-            /** Format: double */
+            /** Length */
             length: number;
             location: components["schemas"]["WaterPipeworkLocation"];
             pipe_contents: components["schemas"]["WaterPipeContentsType"];
+            /** Surface Reflectivity */
             surface_reflectivity: boolean;
+        };
+        /**
+         * HotWaterSourceSmartHotWaterTankFHS
+         * @description FHS-specific version using FHS HotWaterHeatSource
+         */
+        HotWaterSourceSmartHotWaterTankFHS: {
+            /** Coldwatersource */
+            ColdWaterSource: string;
+            /** Energysupply Pump */
+            EnergySupply_pump: string;
+            /** Heatsource */
+            HeatSource: {
+                [key: string]: components["schemas"]["ImmersionHeaterFHS"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWetServiceWaterRegular"] | components["schemas"]["HeatPumpHotWaterOnly"];
+            };
+            /** Daily Losses */
+            daily_losses: number;
+            /** Init Temp */
+            init_temp: number;
+            /** Max Flow Rate Pump L Per Min */
+            max_flow_rate_pump_l_per_min: number;
+            /** Power Pump Kw */
+            power_pump_kW: number;
+            /**
+             * Primary Pipework
+             * @default null
+             */
+            primary_pipework?: components["schemas"]["WaterPipework"][] | null;
+            /**
+             * Temp Setpnt Max
+             * @description Reference to a control schedule of maximum state of charge values
+             */
+            temp_setpnt_max: string;
+            /** Temp Usable */
+            temp_usable: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "SmartHotWaterTank";
+            /** Volume */
+            volume: number;
+        };
+        /** ImmersionHeater */
+        ImmersionHeater: {
+            /**
+             * Controlmax
+             * @description Reference to a control schedule of maximum temperature setpoints
+             */
+            Controlmax: string;
+            /**
+             * Controlmin
+             * @description Reference to a control schedule of minimum temperature setpoints
+             */
+            Controlmin: string;
+            /** Energysupply */
+            EnergySupply: string;
+            /** Heater Position */
+            heater_position: number;
+            /** Power */
+            power: number;
+            /**
+             * Thermostat Position
+             * @default null
+             */
+            thermostat_position?: number | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "ImmersionHeater";
         };
         /** StorageTank */
         StorageTank: {
+            /** Coldwatersource */
             ColdWaterSource: string;
-            Control_hold_at_setpnt?: string | null;
+            /** Heatsource */
             HeatSource: {
-                [key: string]: components["schemas"]["HeatSource"];
+                [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWetServiceWaterRegular"] | components["schemas"]["HeatPumpHotWaterOnly"];
             };
             /**
-             * Format: double
+             * Daily Losses
              * @description Measured standby losses due to cylinder insulation at standardised conditions (unit: kWh/24h)
              */
             daily_losses: number;
-            /** Format: double */
-            heat_exchanger_surface_area?: number | null;
-            /** Format: double */
-            init_temp?: number | null;
             /**
-             * Format: double
-             * @description Minimum temperature required for domestic hot water (unit: ˚C)
+             * Heat Exchanger Surface Area
+             * @default null
              */
-            min_temp?: number | null;
+            heat_exchanger_surface_area?: number | null;
+            /** Init Temp */
+            init_temp: number;
+            /**
+             * Primary Pipework
+             * @default null
+             */
             primary_pipework?: components["schemas"]["WaterPipework"][] | null;
             /**
-             * Format: double
-             * @description Setpoint temperature (unit: ˚C)
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
              */
-            setpoint_temp?: number | null;
-            /** @constant */
             type: "StorageTank";
             /**
-             * Format: double
+             * Volume
              * @description Total volume of tank (unit: litre)
              */
             volume: number;
         };
-        HeatSourceWetType: HeatSourceWetType | {
-            Other: string;
-        };
-        /** @enum {string} */
-        BoilerHotWaterTest: BoilerHotWaterTest;
-        HotWaterSourceDetails: components["schemas"]["StorageTank"] | {
-            ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-            Control: components["schemas"]["HeatSourceControlType"];
-            HeatSourceWet: components["schemas"]["HeatSourceWetType"];
-            /** Format: double */
-            daily_HW_usage: number;
-            /** Format: double */
-            fuel_energy_2: number;
-            /** Format: double */
-            rejected_energy_1: number;
-            /** Format: double */
-            rejected_energy_2: number;
-            /** Format: double */
-            rejected_factor_3: number;
-            separate_DHW_tests: components["schemas"]["BoilerHotWaterTest"];
-            /** Format: double */
-            setpoint_temp?: number | null;
-            /** Format: double */
-            storage_loss_factor_2: number;
-            /** @constant */
-            type: "CombiBoiler";
-        } | {
-            ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-            Control?: components["schemas"]["HeatSourceControlType"] | null;
-            HeatSourceWet: components["schemas"]["HeatSourceWetType"];
-            /** Format: double */
-            setpoint_temp?: number | null;
-            /** @constant */
-            type: "HIU";
-        } | {
-            ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-            EnergySupply: string;
-            /** Format: double */
-            efficiency: number;
-            /** Format: double */
-            setpoint_temp?: number | null;
-            /** @constant */
-            type: "PointOfUse";
-        } | {
-            ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-            EnergySupply_pump: string;
-            HeatSource: {
-                [key: string]: components["schemas"]["HeatSource"];
-            };
-            /** Format: double */
-            daily_losses: number;
-            /** Format: double */
-            init_temp: number;
-            /** Format: double */
-            max_flow_rate_pump_l_per_min: number;
-            /** Format: double */
-            power_pump_kW: number;
-            primary_pipework?: components["schemas"]["WaterPipeworkSimple"][];
-            temp_setpnt_max: string;
-            /** Format: double */
-            temp_usable: number;
-            /** @constant */
-            type: "SmartHotWaterTank";
-            /** Format: double */
-            volume: number;
-        } | {
-            ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-            Control: string;
-            HeatSourceWet: string;
-            /** @constant */
-            type: "HeatBattery";
-        };
-        AirTerminalDevice: {
-            /** Format: double */
-            area_cm2: number;
-            /** Format: double */
-            pressure_difference_ref: number;
-        };
+        /** CombustionAppliance */
         CombustionAppliance: {
             appliance_type: components["schemas"]["CombustionApplianceType"];
             exhaust_situation: components["schemas"]["FlueGasExhaustSituation"];
             fuel_type: components["schemas"]["CombustionFuelType"];
             supply_situation: components["schemas"]["CombustionAirSupplySituation"];
         };
+        /** VentilationLeaks */
         VentilationLeaks: {
             /**
-             * Format: double
-             * @description Surface area of facades (unit: m²)
-             */
-            area_facades?: number | null;
-            /**
-             * Format: double
-             * @description Surface area of the roof of the ventilation zone (unit: m²)
-             */
-            area_roof?: number | null;
-            /**
-             * Format: double
+             * Env Area
              * @description Reference area of the envelope airtightness index
              */
             env_area: number;
             /**
-             * Format: double
+             * Test Pressure
              * @description Reference pressure difference (unit: Pa)
              */
             test_pressure: number;
             /**
-             * Format: double
+             * Test Result
              * @description Flow rate through
              */
             test_result: number;
-            /** Format: double */
+            /** Ventilation Zone Height */
             ventilation_zone_height: number;
         };
-        /** @enum {string} */
-        DuctShape: DuctShape;
-        /** @enum {string} */
-        DuctType: DuctType;
+        /**
+         * DuctShape
+         * @enum {string}
+         */
+        DuctShape: "circular" | "rectangular";
+        /**
+         * DuctType
+         * @enum {string}
+         */
+        DuctType: "intake" | "supply" | "extract" | "exhaust";
+        /** MechanicalVentilationDuctwork */
         MechanicalVentilationDuctwork: {
             cross_section_shape: components["schemas"]["DuctShape"];
-            /** Format: double */
+            /**
+             * Duct Perimeter Mm
+             * @default null
+             */
             duct_perimeter_mm?: number | null;
             duct_type: components["schemas"]["DuctType"];
-            /** Format: double */
+            /**
+             * External Diameter Mm
+             * @default null
+             */
             external_diameter_mm?: number | null;
-            /** Format: double */
+            /** Insulation Thermal Conductivity */
             insulation_thermal_conductivity: number;
-            /** Format: double */
+            /** Insulation Thickness Mm */
             insulation_thickness_mm: number;
-            /** Format: double */
+            /**
+             * Internal Diameter Mm
+             * @default null
+             */
             internal_diameter_mm?: number | null;
-            /** Format: double */
+            /** Length */
             length: number;
+            /** Reflective */
             reflective: boolean;
         };
-        /** @enum {string} */
-        MVHRLocation: MVHRLocation;
-        /** @enum {string} */
-        SupplyAirFlowRateControlType: SupplyAirFlowRateControlType;
-        /** @enum {string} */
-        SupplyAirTemperatureControlType: SupplyAirTemperatureControlType;
-        /** @enum {string} */
-        VentType: VentType;
-        MechanicalVentilation: {
+        /**
+         * MVHRLocation
+         * @enum {string}
+         */
+        MVHRLocation: "inside" | "outside";
+        /**
+         * SupplyAirFlowRateControlType
+         * @enum {string}
+         */
+        SupplyAirFlowRateControlType: "ODA";
+        /**
+         * SupplyAirTemperatureControlType
+         * @enum {string}
+         */
+        SupplyAirTemperatureControlType: "CONST" | "NO_CTRL" | "LOAD_COM";
+        /**
+         * MechVentType
+         * @enum {string}
+         */
+        MechVentType: "Intermittent MEV" | "Centralised continuous MEV" | "Decentralised continuous MEV" | "MVHR";
+        /** MechanicalVentilationFHS */
+        MechanicalVentilationFHS: {
+            /**
+             * Control
+             * @default null
+             */
             Control?: string | null;
+            /** Energysupply */
             EnergySupply: string;
             /**
-             * Format: double
+             * Sfp
              * @description Specific fan power, inclusive of any in use factors (unit: W/l/s)
              */
-            SFP?: number | null;
+            SFP: number;
             /**
-             * Format: double
+             * Design Outdoor Air Flow Rate
              * @description (unit: m³/hour)
              */
             design_outdoor_air_flow_rate: number;
-            /** Format: double */
-            design_zone_cooling_covered_by_mech_vent?: number | null;
-            /** Format: double */
-            design_zone_heating_covered_by_mech_vent?: number | null;
+            /**
+             * Ductwork
+             * @default null
+             */
             ductwork?: components["schemas"]["MechanicalVentilationDuctwork"][] | null;
-            /** Format: double */
+            /**
+             * Measured Air Flow Rate
+             * @default null
+             */
             measured_air_flow_rate?: number | null;
-            /** Format: double */
+            /**
+             * Measured Fan Power
+             * @default null
+             */
             measured_fan_power?: number | null;
             /**
-             * Format: double
+             * Mvhr Eff
              * @description MVHR efficiency
+             * @default null
              */
             mvhr_eff?: number | null;
+            /** @default null */
             mvhr_location?: components["schemas"]["MVHRLocation"] | null;
             sup_air_flw_ctrl: components["schemas"]["SupplyAirFlowRateControlType"];
             sup_air_temp_ctrl: components["schemas"]["SupplyAirTemperatureControlType"];
-            vent_sys_op?: string | null;
-            vent_type: components["schemas"]["VentType"];
+            vent_type: components["schemas"]["MechVentType"];
         };
+        /** Vent */
         Vent: {
-            /** Format: double */
+            /** Area Cm2 */
             area_cm2: number;
-            /** Format: double */
+            /** Mid Height Air Flow Path */
             mid_height_air_flow_path: number;
-            /** Format: double */
+            /**
+             * Orientation360
+             * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
+             */
             orientation360: number;
-            /** Format: double */
+            /**
+             * Pitch
+             * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+             */
             pitch: number;
             /**
-             * Format: double
+             * Pressure Difference Ref
              * @description Reference pressure difference for an air terminal device (unit: Pa)
              */
             pressure_difference_ref: number;
         };
-        /** @enum {string} */
-        VentilationShieldClass: VentilationShieldClass;
-        /** @enum {string} */
-        TerrainClass: TerrainClass;
+        /**
+         * VentilationShieldClass
+         * @enum {string}
+         */
+        VentilationShieldClass: "Open" | "Normal" | "Shielded";
+        /**
+         * TerrainClass
+         * @enum {string}
+         */
+        TerrainClass: "OpenWater" | "OpenField" | "Suburban" | "Urban";
+        /** InternalGainsDetails */
         InternalGainsDetails: {
-            schedule: components["schemas"]["Schedule_for_double"];
-            /** Format: uint32 */
+            schedule: components["schemas"]["ScheduleForDouble"];
+            /** Start Day */
             start_day: number;
-            /** Format: double */
+            /** Time Series Step */
             time_series_step: number;
         };
-        /** @enum {string} */
-        InverterType: InverterType;
-        /** @enum {string} */
-        OnSiteGenerationVentilationStrategy: OnSiteGenerationVentilationStrategy;
-        /** @enum {string} */
-        ApplianceKey: ApplianceKey;
+        /** LightingBulbs */
+        LightingBulbs: {
+            /**
+             * Count
+             * @description The number of bulbs present.
+             */
+            count: number;
+            /**
+             * Efficacy
+             * @default null
+             */
+            efficacy?: number | null;
+            /** Power */
+            power: number;
+        };
+        /**
+         * InverterType
+         * @enum {string}
+         */
+        InverterType: "optimised_inverter" | "string_inverter";
+        /**
+         * PhotovoltaicVentilationStrategy
+         * @enum {string}
+         */
+        PhotovoltaicVentilationStrategy: "unventilated" | "moderately_ventilated" | "strongly_or_forced_ventilated" | "rear_surface_free";
+        /** SmartApplianceBattery */
         SmartApplianceBattery: {
+            /** Battery State Of Charge */
             battery_state_of_charge: {
                 [key: string]: number[];
             };
+            /** Energy Into Battery From Generation */
             energy_into_battery_from_generation: {
                 [key: string]: number[];
             };
+            /** Energy Into Battery From Grid */
             energy_into_battery_from_grid: {
                 [key: string]: number[];
             };
+            /** Energy Out Of Battery */
             energy_out_of_battery: {
                 [key: string]: number[];
             };
         };
-        /** @enum {string} */
-        SpaceCoolSystemType: SpaceCoolSystemType;
+        /**
+         * AirFlowType
+         * @enum {string}
+         */
+        AirFlowType: "fan-assisted" | "damper-only";
+        /** SpaceHeatSystemHeatSource */
         SpaceHeatSystemHeatSource: {
+            /** Name */
             name: string;
-            /** Format: double */
+            /**
+             * Temp Flow Limit Upper
+             * @default null
+             */
             temp_flow_limit_upper?: number | null;
         };
+        /** EcoDesignController */
         EcoDesignController: {
             ecodesign_control_class: components["schemas"]["EcoDesignControllerClass"];
-            /** Format: double */
+            /**
+             * Max Outdoor Temp
+             * @default null
+             */
             max_outdoor_temp?: number | null;
-            /** Format: double */
+            /**
+             * Min Flow Temp
+             * @default null
+             */
             min_flow_temp?: number | null;
-            /** Format: double */
+            /**
+             * Min Outdoor Temp
+             * @default null
+             */
             min_outdoor_temp?: number | null;
         };
+        /** FancoilTestData */
         FancoilTestData: {
+            /** Fan Power W */
             fan_power_W: number[];
+            /** Fan Speed Data */
             fan_speed_data: components["schemas"]["FanSpeedData"][];
         };
-        WetEmitter: {
-            /** Format: double */
-            c: number;
-            /** Format: double */
-            frac_convective: number;
-            /** Format: double */
-            n: number;
-            /** @constant */
-            wet_emitter_type: "radiator";
-        } | {
-            /** Format: double */
-            emitter_floor_area: number;
-            /** Format: double */
-            equivalent_specific_thermal_mass: number;
-            /** Format: double */
-            frac_convective: number;
-            /** Format: double */
-            system_performance_factor: number;
-            /** @constant */
-            wet_emitter_type?: "ufh";
-        } | {
+        /** WetEmitterFanCoil */
+        WetEmitterFanCoil: {
             fancoil_test_data: components["schemas"]["FancoilTestData"];
-            /** Format: double */
+            /** Frac Convective */
             frac_convective: number;
-            n_units: number;
-            /** @constant */
-            wet_emitter_type?: "fancoil";
+            /**
+             * N Units
+             * @default 1
+             */
+            n_units?: number | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            wet_emitter_type: "fancoil";
         };
-        ThermalBridgingDetails: {
-            junction_type?: string | null;
-            /** Format: double */
-            length: number;
-            /** Format: double */
-            linear_thermal_transmittance: number;
-            /** @constant */
-            type: "ThermalBridgeLinear";
-        } | {
-            /** Format: double */
-            heat_transfer_coeff: number;
-            /** @constant */
-            type: "ThermalBridgePoint";
+        /** WetEmitterRadiator */
+        WetEmitterRadiator: {
+            /** C */
+            c: number;
+            /** Frac Convective */
+            frac_convective: number;
+            /** N */
+            n: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            wet_emitter_type: "radiator";
         };
-        /** @enum {string} */
-        WwhrsType: WwhrsType;
+        /** WetEmitterUFH */
+        WetEmitterUFH: {
+            /** Emitter Floor Area */
+            emitter_floor_area: number;
+            /** Equivalent Specific Thermal Mass */
+            equivalent_specific_thermal_mass: number;
+            /** Frac Convective */
+            frac_convective: number;
+            /** System Performance Factor */
+            system_performance_factor: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            wet_emitter_type: "ufh";
+        };
+        /**
+         * WasteWaterHeatRecoverySystemType
+         * @enum {string}
+         */
+        WasteWaterHeatRecoverySystemType: "WWHRS_InstantaneousSystemA" | "WWHRS_InstantaneousSystemB" | "WWHRS_InstantaneousSystemC";
+        /** WaterHeatingEvent */
         WaterHeatingEvent: {
-            /** Format: double */
+            /**
+             * Duration
+             * @default null
+             */
             duration?: number | null;
-            /** Format: double */
+            /** Start */
             start: number;
-            /** Format: double */
+            /** Temperature */
             temperature: number;
-            /** Format: double */
+            /**
+             * Volume
+             * @default null
+             */
             volume?: number | null;
         };
-        BuildingElement: {
-            /**
-             * Format: double
-             * @description Net area of the opaque building element (i.e. minus any windows / doors / etc.) (unit: m²)
-             */
+        /** BuildingElementAdjacentConditionedSpace */
+        BuildingElementAdjacentConditionedSpace: {
+            /** Area */
             area: number;
             /**
-             * Format: double
-             * @description Areal heat capacity (unit: J/m².K)
-             */
-            areal_heat_capacity: number;
-            /**
-             * Format: double
-             * @description The distance between the ground and the lowest edge of the element (unit: m)
-             */
-            base_height: number;
-            /** Format: double */
-            h_ce?: number | null;
-            /** Format: double */
-            h_ci?: number | null;
-            /** Format: double */
-            h_re?: number | null;
-            /** Format: double */
-            h_ri?: number | null;
-            /**
-             * Format: double
-             * @description The height of the building element (unit: m)
-             */
-            height: number;
-            is_external_door?: boolean | null;
-            is_unheated_pitched_roof?: boolean | null;
-            mass_distribution_class: components["schemas"]["MassDistributionClass"];
-            /**
-             * Format: double
-             * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
-             */
-            orientation360: number;
-            /**
-             * Format: double
-             * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
-             */
-            pitch: number;
-            /**
-             * Format: double
-             * @description Solar absorption coefficient at the external surface (dimensionless)
-             */
-            solar_absorption_coeff: number;
-            /**
-             * Format: double
-             * @description Thermal resistance (unit: m².K/W)
-             */
-            thermal_resistance_construction?: number | null;
-            /** @constant */
-            type: "BuildingElementOpaque";
-            /** Format: double */
-            u_value?: number | null;
-            /**
-             * Format: double
-             * @description The width of the building element (unit: m)
-             */
-            width: number;
-        } | {
-            Control_WindowOpenable?: string | null;
-            /** Format: double */
-            area?: number | null;
-            /**
-             * Format: double
-             * @description The distance between the ground and the lowest edge of the element (unit: m)
-             */
-            base_height: number;
-            /**
-             * Format: double
-             * @description The frame area fraction of window, ratio of the projected frame area to the overall projected area of the glazed element of the window
-             */
-            frame_area_fraction: number;
-            /** Format: double */
-            free_area_height?: number | null;
-            /**
-             * Format: double
-             * @description Total solar energy transmittance of the transparent part of the window
-             */
-            g_value: number;
-            /**
-             * Format: double
-             * @description The height of the building element (unit: m)
-             */
-            height: number;
-            /** Format: double */
-            max_window_open_area?: number | null;
-            /** Format: double */
-            mid_height?: number | null;
-            /**
-             * Format: double
-             * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
-             */
-            orientation360: number;
-            /**
-             * Format: double
-             * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
-             */
-            pitch: number;
-            security_risk?: boolean | null;
-            shading: components["schemas"]["WindowShadingObject"][];
-            /**
-             * Format: double
-             * @description Thermal resistance (unit: m².K/W)
-             */
-            thermal_resistance_construction?: number | null;
-            treatment?: components["schemas"]["WindowTreatment"][] | null;
-            /** @constant */
-            type: "BuildingElementTransparent";
-            /** Format: double */
-            u_value?: number | null;
-            /**
-             * Format: double
-             * @description The width of the building element (unit: m)
-             */
-            width: number;
-            window_part_list?: components["schemas"]["WindowPart"][] | null;
-        } | {
-            /**
-             * Format: double
-             * @description Area of this building element within the zone (unit: m²)
-             */
-            area: number;
-            /**
-             * Format: double
-             * @description Area of ventilation openings per perimeter (unit: m²/m)
-             */
-            area_per_perimeter_vent?: number | null;
-            /**
-             * Format: double
-             * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
-             */
-            areal_heat_capacity: number;
-            /**
-             * Format: double
-             * @description Depth of basement floor below ground level (unit: m)
-             */
-            depth_basement_floor?: number | null;
-            edge_insulation?: components["schemas"]["EdgeInsulation"][] | null;
-            floor_type: components["schemas"]["FloorType"];
-            /**
-             * Format: double
-             * @description Height of the basement walls above ground level (unit: m)
-             */
-            height_basement_walls?: number | null;
-            /** Format: double */
-            height_upper_surface?: number | null;
-            mass_distribution_class: components["schemas"]["MassDistributionClass"];
-            /**
-             * Format: double
-             * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
-             */
-            perimeter: number;
-            /**
-             * Format: double
-             * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
-             */
-            pitch: number;
-            /**
-             * Format: double
-             * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
-             */
-            psi_wall_floor_junc: number;
-            /** @description Wind shielding factor */
-            shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
-            /**
-             * Format: double
-             * @description Thermal resistance of insulation on base of underfloor space (unit: m².K/W)
-             */
-            thermal_resist_insul?: number | null;
-            /**
-             * Format: double
-             * @description Thermal resistance of walls of the basement (unit: m².K/W)
-             */
-            thermal_resist_walls_base?: number | null;
-            /**
-             * Format: double
-             * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
-             */
-            thermal_resistance_floor_construction: number;
-            /**
-             * Format: double
-             * @description Thermal transmittance of floor above basement (unit: W/m².K)
-             */
-            thermal_transm_envi_base?: number | null;
-            /**
-             * Format: double
-             * @description Thermal transmittance of walls above ground (unit: W/m².K)
-             */
-            thermal_transm_walls?: number | null;
-            /**
-             * Format: double
-             * @description Thickness of the walls (unit: m)
-             */
-            thickness_walls: number;
-            /**
-             * Format: double
-             * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
-             */
-            total_area: number;
-            /** @constant */
-            type: "BuildingElementGround";
-            /**
-             * Format: double
-             * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
-             */
-            u_value: number;
-        } | {
-            /** Format: double */
-            area: number;
-            /**
-             * Format: double
+             * Areal Heat Capacity
              * @description Areal heat capacity (unit: J/m².K)
              */
             areal_heat_capacity: number;
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
             /**
-             * Format: double
+             * Pitch
              * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
              */
             pitch: number;
             /**
-             * Format: double
+             * Thermal Resistance Construction
              * @description Thermal resistance (unit: m².K/W)
+             * @default null
              */
             thermal_resistance_construction?: number | null;
-            /** @constant */
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
             type: "BuildingElementAdjacentConditionedSpace";
-            /** Format: double */
-            u_value?: number | null;
-        } | {
             /**
-             * Format: double
+             * U Value
+             * @default null
+             */
+            u_value?: number | null;
+        };
+        /** BuildingElementAdjacentUnconditionedSpace_Simple */
+        BuildingElementAdjacentUnconditionedSpace_Simple: {
+            /**
+             * Area
              * @description Area of this building element (unit: m²)
              */
             area: number;
             /**
-             * Format: double
+             * Areal Heat Capacity
              * @description Areal heat capacity (unit: J/m2.K)
              */
             areal_heat_capacity: number;
             mass_distribution_class: components["schemas"]["MassDistributionClass"];
             /**
-             * Format: double
+             * Pitch
              * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
              */
             pitch: number;
             /**
-             * Format: double
+             * Thermal Resistance Construction
              * @description Thermal resistance (unit: m2.K/W)
+             * @default null
              */
             thermal_resistance_construction?: number | null;
             /**
-             * Format: double
+             * Thermal Resistance Unconditioned Space
              * @description Effective thermal resistance of unheated space (unit: m².K/W)
              */
             thermal_resistance_unconditioned_space: number;
-            /** @constant */
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
             type: "BuildingElementAdjacentUnconditionedSpace_Simple";
-            /** Format: double */
+            /**
+             * U Value
+             * @default null
+             */
             u_value?: number | null;
         };
-        ZoneLightingBulbs: {
+        /** BuildingElementGround */
+        BuildingElementGround: {
             /**
-             * Format: int32
-             * @description The number of bulbs present.
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
              */
-            count: number;
-            /** Format: double */
-            efficacy: number;
-            /** Format: double */
-            power: number;
+            type: "BuildingElementGround";
+        } & {
+            [key: string]: components["schemas"]["BuildingElementGroundSlabNoEdgeInsulation"] | components["schemas"]["BuildingElementGroundSlabEdgeInsulation"] | components["schemas"]["BuildingElementGroundSuspendedFloor"] | components["schemas"]["BuildingElementGroundHeatedBasement"] | components["schemas"]["BuildingElementGroundUnheatedBasement"];
         };
-        ZoneLighting: {
-            bulbs?: {
-                [key: string]: components["schemas"]["ZoneLightingBulbs"];
-            };
-            /** Format: double */
-            efficacy: number;
-        };
-        /** @enum {string} */
-        SpaceHeatControlType: SpaceHeatControlType;
-        ThermalBridging: {
-            [key: string]: components["schemas"]["ThermalBridgingDetails"];
-        } | number;
-        /** @enum {string} */
-        ZoneTemperatureControlBasis: ZoneTemperatureControlBasis;
-        ApplianceGainsDetails: {
-            EnergySupply: string;
-            /** @description List of appliance usage events */
-            Events?: components["schemas"]["ApplianceGainsDetailsEvent"][] | null;
+        /**
+         * BuildingElementOpaqueFHS
+         * @description FHS-specific version of BuildingElementOpaque with additional fields
+         */
+        BuildingElementOpaqueFHS: {
             /**
-             * Format: double
+             * Area
+             * @description Net area of the opaque building element (i.e. minus any windows / doors / etc.) (unit: m²)
+             */
+            area: number;
+            /**
+             * Areal Heat Capacity
+             * @description Areal heat capacity (unit: J/m².K)
+             */
+            areal_heat_capacity: number;
+            /**
+             * Base Height
+             * @description The distance between the ground and the lowest edge of the element (unit: m)
+             */
+            base_height: number;
+            /**
+             * Height
+             * @description The height of the building element (unit: m)
+             */
+            height: number;
+            /**
+             * Is External Door
+             * @default null
+             */
+            is_external_door?: boolean | null;
+            /**
+             * Is Unheated Pitched Roof
+             * @default null
+             */
+            is_unheated_pitched_roof?: boolean | null;
+            /** @description Mass distribution class of the building element, one of: evenly distributed (D); concentrated on external side (E); concentrated on internal side (I); concentrated on internal and external sides (IE); concentrated in middle (M). */
+            mass_distribution_class: components["schemas"]["MassDistributionClass"];
+            /**
+             * Orientation360
+             * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
+             */
+            orientation360: number;
+            /**
+             * Pitch
+             * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+             */
+            pitch: number;
+            /**
+             * Solar Absorption Coeff
+             * @description Solar absorption coefficient at the external surface (dimensionless)
+             */
+            solar_absorption_coeff: number;
+            /**
+             * Thermal Resistance Construction
+             * @description Thermal resistance (unit: m².K/W)
+             * @default null
+             */
+            thermal_resistance_construction?: number | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "BuildingElementOpaque";
+            /**
+             * U Value
+             * @default null
+             */
+            u_value?: number | null;
+            /**
+             * Width
+             * @description The width of the building element (unit: m)
+             */
+            width: number;
+        };
+        /**
+         * BuildingElementTransparentFHS
+         * @description FHS-specific version of BuildingElementTransparent with additional fields
+         */
+        BuildingElementTransparentFHS: {
+            /**
+             * Control Windowopenable
+             * @default null
+             */
+            Control_WindowOpenable?: string | null;
+            /**
+             * Base Height
+             * @description The distance between the ground and the lowest edge of the element (unit: m)
+             */
+            base_height: number;
+            /**
+             * Frame Area Fraction
+             * @description The frame area fraction of window, ratio of the projected frame area to the overall projected area of the glazed element of the window
+             */
+            frame_area_fraction: number;
+            /** Free Area Height */
+            free_area_height: number;
+            /**
+             * G Value
+             * @description Total solar energy transmittance of the transparent part of the window
+             */
+            g_value: number;
+            /**
+             * Height
+             * @description The height of the building element (unit: m)
+             */
+            height: number;
+            /** Max Window Open Area */
+            max_window_open_area: number;
+            /** Mid Height */
+            mid_height: number;
+            /**
+             * Orientation360
+             * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
+             */
+            orientation360: number;
+            /**
+             * Pitch
+             * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+             */
+            pitch: number;
+            /**
+             * Security Risk
+             * @default null
+             */
+            security_risk?: boolean | null;
+            /** Shading */
+            shading: (components["schemas"]["WindowShadingObject"] | components["schemas"]["WindowShadingObstacle"])[];
+            /**
+             * Thermal Resistance Construction
+             * @description Thermal resistance (unit: m².K/W)
+             * @default null
+             */
+            thermal_resistance_construction?: number | null;
+            /**
+             * Treatment
+             * @default null
+             */
+            treatment?: components["schemas"]["WindowTreatment"][] | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "BuildingElementTransparent";
+            /**
+             * U Value
+             * @default null
+             */
+            u_value?: number | null;
+            /**
+             * Width
+             * @description The width of the building element (unit: m)
+             */
+            width: number;
+            /** Window Part List */
+            window_part_list: components["schemas"]["WindowPart"][];
+        };
+        /** Lighting */
+        Lighting: {
+            /**
+             * Bulbs
+             * @default null
+             */
+            bulbs?: {
+                [key: string]: components["schemas"]["LightingBulbs"];
+            } | null;
+            /**
+             * Efficacy
+             * @default null
+             */
+            efficacy?: number | null;
+        };
+        /**
+         * SpaceHeatControlType
+         * @enum {string}
+         */
+        SpaceHeatControlType: "livingroom" | "restofdwelling";
+        /**
+         * ThermalBridgingLinearFHS
+         * @description FHS-specific version of ThermalBridgingLinear with additional fields
+         */
+        ThermalBridgingLinearFHS: {
+            /**
+             * Junction Type
+             * @default null
+             */
+            junction_type?: string | null;
+            /** Length */
+            length: number;
+            /** Linear Thermal Transmittance */
+            linear_thermal_transmittance: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "ThermalBridgeLinear";
+        };
+        /** ThermalBridgingPoint */
+        ThermalBridgingPoint: {
+            /** Heat Transfer Coeff */
+            heat_transfer_coeff: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "ThermalBridgePoint";
+        };
+        /**
+         * ZoneTemperatureControlBasis
+         * @enum {string}
+         */
+        ZoneTemperatureControlBasis: "air" | "operative";
+        /** ApplianceGainsFHS */
+        ApplianceGainsFHS: {
+            /** Energysupply */
+            EnergySupply: string;
+            /**
+             * Events
+             * @description List of appliance usage events
+             * @default null
+             */
+            Events?: components["schemas"]["ApplianceGainsEvent"][] | null;
+            /**
+             * Standby
              * @description Appliance power consumption when not in use (unit: W)
+             * @default null
              */
             Standby?: number | null;
             /**
-             * Format: double
+             * Gains Fraction
              * @description Proportion of appliance demand turned into heat gains (no unit)
              */
             gains_fraction: number;
-            loadshifting?: components["schemas"]["ApplianceLoadShifting"] | null;
-            priority?: number | null;
-            schedule?: components["schemas"]["Schedule_for_double"] | null;
+            /** @default null */
+            loadshifting?: components["schemas"]["LoadShifting"] | null;
             /**
-             * Format: uint32
+             * Priority
+             * @default null
+             */
+            priority?: number | null;
+            /** @default null */
+            schedule?: components["schemas"]["ScheduleForDouble"] | null;
+            /**
+             * Start Day
              * @description First day of the time series, day of the year, 0 to 365
              */
             start_day: number;
             /**
-             * Format: double
+             * Time Series Step
              * @description Timestep of the time series data (unit: hours)
              */
             time_series_step: number;
+            /**
+             * Type
+             * @default null
+             */
             type?: string | null;
         };
-        ApplianceEntry: components["schemas"]["Appliance"] | components["schemas"]["ApplianceReference"];
-        ColdWaterSourceInput: {
-            "header tank"?: components["schemas"]["ColdWaterSourceDetails"] | null;
-            "mains water"?: components["schemas"]["ColdWaterSourceDetails"] | null;
-        };
-        Control: {
-            [key: string]: components["schemas"]["ControlDetails"];
-        };
-        EnergySupplyDetails: {
-            ElectricBattery?: components["schemas"]["ElectricBattery"] | null;
-            diverter?: components["schemas"]["EnergyDiverter"] | null;
-            factor?: components["schemas"]["CustomEnergySourceFactor"] | null;
-            fuel: components["schemas"]["FuelType"];
-            /** @description Denotes that this energy supply can export its surplus supply */
-            is_export_capable?: boolean | null;
-            priority?: components["schemas"]["SecondarySupplyType"][] | null;
-            tariff?: string | null;
-            threshold_charges?: number[] | null;
-            threshold_prices?: number[] | null;
-        };
-        WaterHeatingEvents: {
-            [key: string]: {
-                [key: string]: components["schemas"]["WaterHeatingEvent"][];
-            };
-        };
-        ExternalConditionsInput: {
-            /** @description List of external air temperatures, one entry per hour (unit: ˚C) */
-            air_temperatures?: number[] | null;
-            /** @description How daylight savings are handled in the climate data */
-            daylight_savings?: components["schemas"]["DaylightSavingsConfig"] | null;
-            /** @description List of diffuse horizontal radiation values, one entry per hour (unit: W/m²) */
-            diffuse_horizontal_radiation?: number[] | null;
-            /** @description A flag to indicate whether direct beam radiation from climate data needs to be converted from horizontal to normal incidence; if normal direct beam radiation values are provided then no conversion is needed */
-            direct_beam_conversion_needed?: boolean | null;
-            /** @description List of direct beam radiation values, one entry per hour (unit: W/m²) */
-            direct_beam_radiation?: number[] | null;
+        /**
+         * Appliances
+         * @description The keys of this object match with the ApplianceKey enum.
+         *     Each appliance type is determined by its key.
+         *     "Lighting" is not included in the FHS applianced mapping.
+         */
+        Appliances: {
             /**
-             * Format: uint32
-             * @description Last day of the time series, day of the year, 0 to 365
+             * Clothes Drying
+             * @default Not Installed
              */
-            end_day?: number | null;
-            /** @description (Not used) */
-            ground_temperatures?: number[] | null;
+            Clothes_drying?: components["schemas"]["ClothesDrying"] | ("Default" | "Not Installed");
             /**
-             * Format: uint32
-             * @description Day of the week for January 1st, Monday to Sunday, 1 to 7
+             * Clothes Washing
+             * @default Not Installed
              */
-            january_first?: number | null;
+            Clothes_washing?: components["schemas"]["ClothesWashing"] | ("Default" | "Not Installed");
             /**
-             * Format: double
-             * @description Latitude of weather station, angle from south (unit: ˚)
+             * Dishwasher
+             * @default Not Installed
              */
-            latitude?: number | null;
-            /** @description Whether climate data includes a leap day */
-            leap_day_included?: boolean | null;
+            Dishwasher?: components["schemas"]["Dishwasher"] | ("Default" | "Not Installed");
             /**
-             * Format: double
-             * @description Longitude of weather station, easterly +ve westerly -ve (unit: ˚)
+             * Freezer
+             * @default Not Installed
              */
-            longitude?: number | null;
-            /** @description Data splitting the ground plane into segments (8-36) and giving height and distance to shading objects surrounding the building */
-            shading_segments?: components["schemas"]["ShadingSegment"][];
-            /** @description List of ground reflectivity values, 0 to 1, one entry per hour */
-            solar_reflectivity_of_ground?: number[] | null;
+            Freezer?: components["schemas"]["Freezer"] | ("Default" | "Not Installed");
             /**
-             * Format: uint32
+             * Fridge
+             * @default Not Installed
+             */
+            Fridge?: components["schemas"]["Fridge"] | ("Default" | "Not Installed");
+            /**
+             * Fridge-Freezer
+             * @default Not Installed
+             */
+            "Fridge-Freezer"?: components["schemas"]["FridgeFreezer"] | ("Default" | "Not Installed");
+            /**
+             * Hobs
+             * @default Not Installed
+             */
+            Hobs?: components["schemas"]["Hobs"] | ("Default" | "Not Installed");
+            /**
+             * Kettle
+             * @default Not Installed
+             */
+            Kettle?: components["schemas"]["Kettle"] | ("Default" | "Not Installed");
+            /**
+             * Microwave
+             * @default Not Installed
+             */
+            Microwave?: components["schemas"]["Microwave"] | ("Default" | "Not Installed");
+            /**
+             * Otherdevices
+             * @default Not Installed
+             */
+            Otherdevices?: components["schemas"]["ApplianceEnergyPerAnnum"] | ("Default" | "Not Installed");
+            /**
+             * Oven
+             * @default Not Installed
+             */
+            Oven?: components["schemas"]["Oven"] | ("Default" | "Not Installed");
+        };
+        /** ColdWaterSource */
+        ColdWaterSource: {
+            /**
+             * Start Day
              * @description First day of the time series, day of the year, 0 to 365
              */
-            start_day?: number | null;
+            start_day: number;
             /**
-             * Format: double
+             * Temperatures
+             * @description List of cold water temperatures, one entry per hour (unit: ˚C)
+             */
+            temperatures: number[];
+            /**
+             * Time Series Step
              * @description Timestep of the time series data (unit: hours)
              */
-            time_series_step?: number | null;
+            time_series_step: number;
+        };
+        /** ControlChargeTarget */
+        ControlChargeTarget: {
             /**
-             * Format: uint32
-             * @description Timezone of weather station, -12 to 12
+             * @description Proportion of the charge targeted for each day
+             * @default null
              */
-            timezone?: number | null;
-            /** @description List of wind directions in degrees where North=0, East=90, South=180, West=270. Values range: 0 to 360. Wind direction is reported by the direction from which it originates, e.g. a southernly (180 degree) wind blows from the south to the north. (unit: ˚) */
+            charge_level?: components["schemas"]["ChargeLevel"] | null;
+            /** @default null */
+            external_sensor?: components["schemas"]["ExternalSensor"] | null;
+            /** @default null */
+            logic_type?: components["schemas"]["ControlLogicType"] | null;
+            /** @description List of boolean values where true means 'on' (one entry per hour) */
+            schedule: components["schemas"]["ScheduleForBoolean"];
+            /**
+             * Start Day
+             * @description First day of the time series, day of the year, 0 to 365
+             */
+            start_day: number;
+            /**
+             * Temp Charge Cut
+             * @default null
+             */
+            temp_charge_cut?: number | null;
+            /** @default null */
+            temp_charge_cut_delta?: components["schemas"]["ScheduleForDouble"] | null;
+            /**
+             * Time Series Step
+             * @description Timestep of the time series data (unit: hours)
+             */
+            time_series_step: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "ChargeControl";
+        };
+        /** ControlCombinationTime */
+        ControlCombinationTime: {
+            combination: components["schemas"]["ControlCombinations"];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "CombinationTimeControl";
+        };
+        /** ControlOnOffCostMinimising */
+        ControlOnOffCostMinimising: {
+            /** @description List of cost values (one entry per time_series_step) */
+            schedule: components["schemas"]["ScheduleForDouble"];
+            /**
+             * Start Day
+             * @description First day of the time series, day of the year, 0 to 365
+             */
+            start_day: number;
+            /**
+             * Time On Daily
+             * @description Number of 'on' hours to be set per day
+             */
+            time_on_daily: number;
+            /**
+             * Time Series Step
+             * @description Timestep of the time series data (unit: hours)
+             */
+            time_series_step: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "OnOffCostMinimisingTimeControl";
+        };
+        /** ControlOnOffTimer */
+        ControlOnOffTimer: {
+            /**
+             * Allow Null
+             * @default null
+             */
+            allow_null?: boolean | null;
+            /** @description List of boolean values where true means on, one entry per hour */
+            schedule: components["schemas"]["ScheduleForBoolean"];
+            /**
+             * Start Day
+             * @description First day of the time series, day of the year, 0 to 365
+             */
+            start_day: number;
+            /**
+             * Time Series Step
+             * @description Timestep of the time series data (unit: hours)
+             */
+            time_series_step: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "OnOffTimeControl";
+        };
+        /** ControlSetpointTimer */
+        ControlSetpointTimer: {
+            /**
+             * Advanced Start
+             * @description How long before heating period the system should switch on (unit: hours)
+             * @default null
+             */
+            advanced_start?: number | null;
+            /**
+             * Default To Max
+             * @description If both min and max limits are set but setpoint is not, whether to default to min (false) or max (true)
+             * @default null
+             */
+            default_to_max?: boolean | null;
+            /** @description list of float values (one entry per hour) */
+            schedule: components["schemas"]["ScheduleForDouble"];
+            /**
+             * Setpoint Max
+             * @description Maximum setpoint allowed
+             * @default null
+             */
+            setpoint_max?: number | null;
+            /**
+             * Setpoint Min
+             * @description Minimum setpoint allowed
+             * @default null
+             */
+            setpoint_min?: number | null;
+            /**
+             * Start Day
+             * @description First day of the time series, day of the year, 0 to 365
+             */
+            start_day: number;
+            /**
+             * Time Series Step
+             * @description Timestep of the time series data (unit: hours)
+             */
+            time_series_step: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "SetpointTimeControl";
+        };
+        /** EnergySupply */
+        EnergySupply: {
+            /** @default null */
+            ElectricBattery?: components["schemas"]["ElectricBattery"] | null;
+            /** @default null */
+            diverter?: components["schemas"]["EnergyDiverter"] | null;
+            /** @default null */
+            factor?: components["schemas"]["CustomEnergySourceFactor"] | null;
+            fuel: components["schemas"]["FuelType"];
+            /**
+             * Is Export Capable
+             * @description Denotes that this energy supply can export its surplus supply
+             */
+            is_export_capable: boolean;
+            /**
+             * Priority
+             * @default null
+             */
+            priority?: components["schemas"]["EnergySupplyPriorityEntry"][] | null;
+            /**
+             * Tariff
+             * @default null
+             */
+            tariff?: string | null;
+            /**
+             * Threshold Charges
+             * @default null
+             */
+            threshold_charges?: number[] | null;
+            /**
+             * Threshold Prices
+             * @default null
+             */
+            threshold_prices?: number[] | null;
+        };
+        /** WaterHeatingEvents */
+        WaterHeatingEvents: {
+            /**
+             * Bath
+             * @default null
+             */
+            Bath?: {
+                [key: string]: components["schemas"]["WaterHeatingEvent"][];
+            } | null;
+            /**
+             * Other
+             * @default null
+             */
+            Other?: {
+                [key: string]: components["schemas"]["WaterHeatingEvent"][];
+            } | null;
+            /**
+             * Shower
+             * @default null
+             */
+            Shower?: {
+                [key: string]: components["schemas"]["WaterHeatingEvent"][];
+            } | null;
+        };
+        /**
+         * ExternalConditionsInputFHS
+         * @description FHS-specific version of ExternalConditionsInput
+         */
+        ExternalConditionsInputFHS: {
+            /**
+             * Air Temperatures
+             * @description List of external air temperatures, one entry per hour (unit: ˚C)
+             * @default null
+             */
+            air_temperatures?: number[] | null;
+            /**
+             * Diffuse Horizontal Radiation
+             * @description List of diffuse horizontal radiation values, one entry per hour (unit: W/m²)
+             * @default null
+             */
+            diffuse_horizontal_radiation?: number[] | null;
+            /**
+             * Direct Beam Conversion Needed
+             * @description A flag to indicate whether direct beam radiation from climate data needs to be converted from horizontal to normal incidence; if normal direct beam radiation values are provided then no conversion is needed
+             * @default null
+             */
+            direct_beam_conversion_needed?: boolean | null;
+            /**
+             * Direct Beam Radiation
+             * @description List of direct beam radiation values, one entry per hour (unit: W/m²)
+             * @default null
+             */
+            direct_beam_radiation?: number[] | null;
+            /**
+             * Latitude
+             * @description Latitude of weather station, angle from south (unit: ˚)
+             * @default null
+             */
+            latitude?: number | null;
+            /**
+             * Longitude
+             * @description Longitude of weather station, easterly +ve westerly -ve (unit: ˚)
+             * @default null
+             */
+            longitude?: number | null;
+            /**
+             * Shading Segments
+             * @description Data splitting the ground plane into segments (8-36) and giving height and distance to shading objects surrounding the building
+             * @default null
+             */
+            shading_segments?: components["schemas"]["ShadingSegmentFHS"][] | null;
+            /**
+             * Solar Reflectivity Of Ground
+             * @description List of ground reflectivity values, 0 to 1, one entry per hour
+             * @default null
+             */
+            solar_reflectivity_of_ground?: number[] | null;
+            /**
+             * Wind Directions
+             * @description List of wind directions in degrees where North=0, East=90, South=180, West=270. Values range: 0 to 360. Wind direction is reported by the direction from which it originates, e.g. a southerly (180 degree) wind blows from the south to the north. (unit: ˚)
+             * @default null
+             */
             wind_directions?: number[] | null;
-            /** @description List of wind speeds, one entry per hour (unit: m/s) */
+            /**
+             * Wind Speeds
+             * @description List of wind speeds, one entry per hour (unit: m/s)
+             * @default null
+             */
             wind_speeds?: number[] | null;
         };
         General: {
             build_type: components["schemas"]["BuildType"];
-            /** Format: uint */
+            /** Format: int32 */
             storey_of_dwelling?: number | null;
-            /** Format: uint */
+            /** Format: int32 */
             storeys_in_building: number;
         };
-        HeatSourceWetDetails: {
+        /** HeatSourceWetHeatPump */
+        HeatSourceWetHeatPump: {
+            /** @default null */
             BufferTank?: components["schemas"]["HeatPumpBufferTank"] | null;
+            /** Energysupply */
             EnergySupply: string;
+            /**
+             * Energysupply Heat Network
+             * @default null
+             */
             EnergySupply_heat_network?: string | null;
+            /**
+             * Mechanicalventilation
+             * @default null
+             */
             MechanicalVentilation?: string | null;
             backup_ctrl_type: components["schemas"]["HeatPumpBackupControlType"];
+            /** @default null */
             boiler?: components["schemas"]["HeatPumpBoiler"] | null;
-            /** Format: double */
+            /**
+             * Eahp Mixed Max Temp
+             * @default null
+             */
             eahp_mixed_max_temp?: number | null;
-            /** Format: double */
+            /**
+             * Eahp Mixed Min Temp
+             * @default null
+             */
             eahp_mixed_min_temp?: number | null;
-            /** Format: double */
+            /**
+             * Min Modulation Rate 20
+             * @default null
+             */
             min_modulation_rate_20?: number | null;
-            /** Format: double */
+            /**
+             * Min Modulation Rate 35
+             * @default null
+             */
             min_modulation_rate_35?: number | null;
-            /** Format: double */
+            /**
+             * Min Modulation Rate 55
+             * @default null
+             */
             min_modulation_rate_55?: number | null;
-            /** Format: double */
+            /** Min Temp Diff Flow Return For Hp To Operate */
             min_temp_diff_flow_return_for_hp_to_operate: number;
+            /** Modulating Control */
             modulating_control: boolean;
-            /** Format: double */
+            /** Power Crankcase Heater */
             power_crankcase_heater: number;
-            /** Format: double */
-            power_heating_circ_pump: number;
-            /** Format: double */
+            /**
+             * Power Heating Circ Pump
+             * @default null
+             */
+            power_heating_circ_pump?: number | null;
+            /**
+             * Power Heating Warm Air Fan
+             * @default null
+             */
             power_heating_warm_air_fan?: number | null;
-            /** Format: double */
+            /**
+             * Power Max Backup
+             * @default null
+             */
             power_max_backup?: number | null;
-            /** Format: double */
+            /** Power Off */
             power_off: number;
-            /** Format: double */
+            /** Power Source Circ Pump */
             power_source_circ_pump: number;
-            /** Format: double */
+            /** Power Standby */
             power_standby: number;
             sink_type: components["schemas"]["HeatPumpSinkType"];
             source_type: components["schemas"]["HeatPumpSourceType"];
-            /** Format: double */
+            /**
+             * Temp Distribution Heat Network
+             * @default null
+             */
             temp_distribution_heat_network?: number | null;
-            /** Format: double */
+            /** Temp Lower Operating Limit */
             temp_lower_operating_limit: number;
-            /** Format: double */
-            temp_return_feed_max: number;
+            /**
+             * Temp Return Feed Max
+             * @default null
+             */
+            temp_return_feed_max?: number | null;
+            /** Test Data En14825 */
             test_data_EN14825: components["schemas"]["HeatPumpTestDatum"][];
-            /** Format: double */
+            /** Time Constant Onoff Operation */
             time_constant_onoff_operation: number;
-            /** Format: double */
-            time_delay_backup: number;
-            /** @constant */
+            /**
+             * Time Delay Backup
+             * @default null
+             */
+            time_delay_backup?: number | null;
+            /**
+             * Type
+             * @constant
+             */
             type: "HeatPump";
+            /** Var Flow Temp Ctrl During Test */
             var_flow_temp_ctrl_during_test: boolean;
-        } | {
+        };
+        /** HeatSourceWetHeatPumpWithProductReference */
+        HeatSourceWetHeatPumpWithProductReference: {
+            /** @default null */
             BufferTank?: components["schemas"]["HeatPumpBufferTank"] | null;
+            /** Energysupply */
             EnergySupply: string;
+            /**
+             * Energysupply Heat Network
+             * @default null
+             */
             EnergySupply_heat_network?: string | null;
+            /**
+             * Mechanicalventilation
+             * @default null
+             */
             MechanicalVentilation?: string | null;
+            /** @default null */
             boiler?: components["schemas"]["HeatPumpBoiler"] | null;
-            /** Format: double */
+            /**
+             * Eahp Mixed Max Temp
+             * @default null
+             */
             eahp_mixed_max_temp?: number | null;
-            /** Format: double */
+            /**
+             * Eahp Mixed Min Temp
+             * @default null
+             */
             eahp_mixed_min_temp?: number | null;
-            /** Format: double */
+            /**
+             * Min Modulation Rate 20
+             * @default null
+             */
             min_modulation_rate_20?: number | null;
-            /** Format: double */
+            /**
+             * Min Modulation Rate 35
+             * @default null
+             */
             min_modulation_rate_35?: number | null;
-            /** Format: double */
+            /**
+             * Min Modulation Rate 55
+             * @default null
+             */
             min_modulation_rate_55?: number | null;
             /**
              * Reference to the product in the HEM database
              * @description A unique reference to a product held within the HEM database (PCDB)
              */
             product_reference: string;
-            /** Format: double */
+            /**
+             * Temp Distribution Heat Network
+             * @default null
+             */
             temp_distribution_heat_network?: number | null;
-            /** @constant */
+            /**
+             * Type
+             * @constant
+             */
             type: "HeatPump";
-        } | {
+        };
+        /**
+         * HeatSourceWetBoiler
+         * @description Standalone boiler heat source
+         */
+        HeatSourceWetBoiler: {
+            /** Energysupply */
             EnergySupply: string;
+            /** Energysupply Aux */
             EnergySupply_aux: string;
             boiler_location: components["schemas"]["HeatSourceLocation"];
-            /** Format: double */
+            /** Efficiency Full Load */
             efficiency_full_load: number;
-            /** Format: double */
+            /** Efficiency Part Load */
             efficiency_part_load: number;
-            /** Format: double */
+            /** Electricity Circ Pump */
             electricity_circ_pump: number;
-            /** Format: double */
+            /** Electricity Full Load */
             electricity_full_load: number;
-            /** Format: double */
+            /** Electricity Part Load */
             electricity_part_load: number;
-            /** Format: double */
+            /** Electricity Standby */
             electricity_standby: number;
-            /** Format: double */
+            /** Modulation Load */
             modulation_load: number;
-            /** Format: double */
+            /** Rated Power */
             rated_power: number;
-            /** @constant */
+            /**
+             * Type
+             * @constant
+             */
             type: "Boiler";
-        } | {
-            /** Format: double */
+        };
+        /** HeatSourceWetHeatBattery */
+        HeatSourceWetHeatBattery: {
+            /** A */
             A: number;
-            /** Format: double */
+            /** B */
             B: number;
+            /** Controlcharge */
             ControlCharge: string;
+            /** Energysupply */
             EnergySupply: string;
-            /** Format: double */
+            /** Capillary Diameter M */
             capillary_diameter_m: number;
-            /** Format: double */
+            /** Electricity Circ Pump */
             electricity_circ_pump: number;
-            /** Format: double */
+            /** Electricity Standby */
             electricity_standby: number;
+            /** Flow Rate L Per Min */
             flow_rate_l_per_min: number;
-            heat_battery_location?: components["schemas"]["HeatSourceLocation"];
-            /** Format: double */
+            /** Heat Exchanger Surface Area M2 */
             heat_exchanger_surface_area_m2: number;
-            /** Format: double */
+            /** Heat Storage Zone Material Kj Per K Above Phase Transition */
             heat_storage_zone_material_kJ_per_K_above_Phase_transition: number;
-            /** Format: double */
+            /** Heat Storage Zone Material Kj Per K Below Phase Transition */
             heat_storage_zone_material_kJ_per_K_below_Phase_transition: number;
-            /** Format: double */
+            /** Heat Storage Zone Material Kj Per K During Phase Transition */
             heat_storage_zone_material_kJ_per_K_during_Phase_transition: number;
-            /** Format: double */
+            /** Max Rated Losses */
             max_rated_losses: number;
-            /** Format: double */
+            /** Max Temperature */
             max_temperature: number;
-            /** Format: uint */
+            /** Number Of Units */
             number_of_units: number;
-            /** Format: double */
+            /** Phase Transition Temperature Lower */
             phase_transition_temperature_lower: number;
-            /** Format: double */
+            /** Phase Transition Temperature Upper */
             phase_transition_temperature_upper: number;
-            /** Format: double */
+            /** Rated Charge Power */
             rated_charge_power: number;
+            /** Simultaneous Charging And Discharging */
             simultaneous_charging_and_discharging: boolean;
-            /** @constant */
+            /**
+             * Type
+             * @constant
+             */
             type: "HeatBattery";
-            /** Format: double */
+            /** Velocity In Hex Tube At 1 L Per Min M Per S */
             velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
-        } | {
+        };
+        /** HeatSourceWetHIU */
+        HeatSourceWetHIU: {
+            /** Energysupply */
             EnergySupply: string;
-            /** Format: double */
+            /** Hiu Daily Loss */
             HIU_daily_loss: number;
-            /** Format: double */
+            /** Building Level Distribution Losses */
             building_level_distribution_losses: number;
-            /** Format: double */
+            /** Power Max */
             power_max: number;
-            /** @constant */
+            /**
+             * Type
+             * @constant
+             */
             type: "HIU";
         };
-        /** @enum {string} */
-        HeatingControlType: HeatingControlType;
+        /**
+         * HeatingControlType
+         * @enum {string}
+         */
+        HeatingControlType: "SeparateTimeAndTempControl" | "SeparateTempControl";
+        /** HotWaterDemand */
         HotWaterDemand: {
-            Bath?: components["schemas"]["Baths"] | null;
-            Distribution?: components["schemas"]["WaterPipeworkSimple"][] | null;
-            Other?: components["schemas"]["OtherWaterUses"] | null;
-            Shower?: components["schemas"]["Showers"] | null;
-        };
-        HotWaterSource: {
-            "hw cylinder": components["schemas"]["HotWaterSourceDetails"];
-        };
-        InfiltrationVentilation: {
-            AirTerminalDevices?: {
-                [key: string]: components["schemas"]["AirTerminalDevice"];
+            /**
+             * Bath
+             * @default null
+             */
+            Bath?: {
+                [key: string]: components["schemas"]["Bath"];
             } | null;
-            CombustionAppliances: {
+            /**
+             * Distribution
+             * @default null
+             */
+            Distribution?: components["schemas"]["WaterPipeworkSimple"][] | null;
+            /**
+             * Other
+             * @default null
+             */
+            Other?: {
+                [key: string]: components["schemas"]["OtherWaterUse"];
+            } | null;
+            /**
+             * Shower
+             * @default null
+             */
+            Shower?: {
+                [key: string]: components["schemas"]["ShowerMixer"] | components["schemas"]["ShowerInstantElectric"];
+            } | null;
+        };
+        /** HotWaterSourceFHS */
+        HotWaterSourceFHS: {
+            /** Hw Cylinder */
+            "hw cylinder": components["schemas"]["StorageTank"] | components["schemas"]["HotWaterSourceCombiBoiler"] | components["schemas"]["HotWaterSourceHUI"] | components["schemas"]["HotWaterSourcePointOfUse"] | components["schemas"]["HotWaterSourceSmartHotWaterTankFHS"] | components["schemas"]["HotWaterSourceHeatBattery"];
+        };
+        /** InfiltrationVentilationFHS */
+        InfiltrationVentilationFHS: {
+            /** Combustionappliances */
+            CombustionAppliances?: {
                 [key: string]: components["schemas"]["CombustionAppliance"];
-            };
+            } | null;
+            /**
+             * Control Ventadjustmax
+             * @default null
+             */
             Control_VentAdjustMax?: string | null;
+            /**
+             * Control Ventadjustmin
+             * @default null
+             */
             Control_VentAdjustMin?: string | null;
+            /**
+             * Control Windowadjust
+             * @default null
+             */
             Control_WindowAdjust?: string | null;
-            Cowls: {
-                [key: string]: null;
-            };
             Leaks: components["schemas"]["VentilationLeaks"];
+            /**
+             * Mechanicalventilation
+             * @default null
+             */
             MechanicalVentilation?: {
-                [key: string]: components["schemas"]["MechanicalVentilation"];
-            };
-            PDUs: {
-                [key: string]: null;
-            };
+                [key: string]: components["schemas"]["MechanicalVentilationFHS"];
+            } | null;
+            /** Vents */
             Vents: {
                 [key: string]: components["schemas"]["Vent"];
             };
-            /** Format: double */
+            /**
+             * Ach Max Static Calcs
+             * @default null
+             */
             ach_max_static_calcs?: number | null;
-            /** Format: double */
+            /**
+             * Ach Min Static Calcs
+             * @default null
+             */
             ach_min_static_calcs?: number | null;
-            /** Format: double */
+            /** Altitude */
             altitude: number;
-            cross_vent_factor: boolean;
+            /** Cross Vent Possible */
+            cross_vent_possible: boolean;
+            /**
+             * Noise Nuisance
+             * @default null
+             */
             noise_nuisance?: boolean | null;
             shield_class: components["schemas"]["VentilationShieldClass"];
             terrain_class: components["schemas"]["TerrainClass"];
-            /** Format: double */
+            /**
+             * Vent Opening Ratio Init
+             * @default null
+             */
             vent_opening_ratio_init?: number | null;
             /**
-             * Format: double
+             * Ventilation Zone Base Height
              * @description Base height of the ventilation zone relative to ground (m)
              */
             ventilation_zone_base_height: number;
         };
+        /**
+         * InternalGains
+         * @description A dictionary of internal gains entries where:
+         *     - Keys are user-defined names (e.g., "ColdWaterLosses", "EvaporativeLosses", "metabolic gains", etc.)
+         *     - Values conform to the InternalGainsDetails schema
+         *     - No specific entries are required - all entries are optional and user-defined
+         */
         InternalGains: {
-            ColdWaterLosses?: components["schemas"]["InternalGainsDetails"] | null;
-            EvaporativeLosses?: components["schemas"]["InternalGainsDetails"] | null;
-            "metabolic gains"?: components["schemas"]["InternalGainsDetails"] | null;
-            other?: components["schemas"]["InternalGainsDetails"] | null;
-            "total internal gains"?: components["schemas"]["InternalGainsDetails"] | null;
-            total_internal_gains?: components["schemas"]["InternalGainsDetails"] | null;
+            [key: string]: components["schemas"]["InternalGainsDetails"];
         };
-        OnSiteGenerationDetails: {
+        /** PhotovoltaicSystem */
+        PhotovoltaicSystem: {
+            /** Energysupply */
             EnergySupply: string;
             /**
-             * Format: double
-             * @description The distance between the ground and the lowest edge of the PV panel (unit: m)
+             * Base Height
+             * @description The distance between the ground and the lowest edge of the PV array (unit: m)
              */
             base_height: number;
             /**
-             * Format: double
-             * @description Height of the PV panel (unit: m)
+             * Height
+             * @description Height of the PV array (unit: m)
              */
             height: number;
-            /** @description Whether the inverter is considered inside the building */
-            inverter_is_inside: boolean;
             /**
-             * Format: double
-             * @description Peak power; represents the peak electrical power input to the inverter (unit: kW)
+             * Inverter Is Inside
+             * @description Whether the inverter is considered inside the building
              */
-            inverter_peak_power?: number | null;
-            /** Format: double */
-            inverter_peak_power_ac?: number | null;
-            /** Format: double */
-            inverter_peak_power_dc?: number | null;
-            inverter_type?: components["schemas"]["InverterType"] | null;
+            inverter_is_inside: boolean;
+            /** Inverter Peak Power Ac */
+            inverter_peak_power_ac: number;
+            /** Inverter Peak Power Dc */
+            inverter_peak_power_dc: number;
+            inverter_type: components["schemas"]["InverterType"];
             /**
-             * Format: double
-             * @description Orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
+             * Orientation360
+             * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
              */
             orientation360: number;
             /**
-             * Format: double
-             * @description Peak power; represents the electrical power of a photovoltaic system with a given area and a for a solar irradiance of 1 kW/m² on this surface (at 25 degrees) (unit: kW)
+             * Peak Power
+             * @description Peak power; represents the electrical power of a photovoltaic system with a given area for a solar irradiance of 1 kW/m² on this surface (at 25 degrees) (unit: kW)
              */
             peak_power: number;
             /**
-             * Format: double
+             * Pitch
              * @description The tilt angle (inclination) of the PV panel from horizontal, measured upwards facing, 0 to 90 (unit: ˚)
              */
             pitch: number;
-            shading: components["schemas"]["WindowShadingObject"][];
-            /** @constant */
-            type: "PhotovoltaicSystem";
-            ventilation_strategy: components["schemas"]["OnSiteGenerationVentilationStrategy"];
+            /** Shading */
+            shading: (components["schemas"]["WindowShadingObject"] | components["schemas"]["WindowShadingObstacle"])[];
             /**
-             * Format: double
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "PhotovoltaicSystem";
+            ventilation_strategy: components["schemas"]["PhotovoltaicVentilationStrategy"];
+            /**
+             * Width
              * @description Width of the PV panel (unit: m)
              */
             width: number;
         };
+        /** SimulationTime */
         SimulationTime: {
-            /** Format: double */
+            /** End */
             end: number;
-            /** Format: double */
+            /** Start */
             start: number;
-            /** Format: double */
+            /** Step */
             step: number;
         };
-        SmartApplianceControlDetails: {
-            Appliances: components["schemas"]["ApplianceKey"][];
+        /** SmartApplianceControl */
+        SmartApplianceControl: {
+            /** Appliances */
+            Appliances: string[];
             battery24hr: components["schemas"]["SmartApplianceBattery"];
+            /** Non Appliance Demand 24Hr */
             non_appliance_demand_24hr: {
                 [key: string]: number[];
             };
+            /** Power Timeseries */
             power_timeseries: {
                 [key: string]: number[];
             };
-            /** Format: double */
+            /** Time Series Step */
             time_series_step: number;
         };
-        SpaceCoolSystemDetails: {
-            Control?: string | null;
+        /**
+         * SpaceCoolSystemFHS
+         * @description FHS-specific version of SpaceCoolSystem with additional fields
+         */
+        SpaceCoolSystemFHS: {
+            /** Control */
+            Control: string;
+            /** Energysupply */
             EnergySupply: string;
-            advanced_start?: number;
             /**
-             * Format: double
+             * Advanced Start
+             * @default null
+             */
+            advanced_start?: number | null;
+            /**
+             * Cooling Capacity
              * @description Maximum cooling capacity of the system (unit: kW)
              */
             cooling_capacity: number;
-            /** Format: double */
+            /** Efficiency */
             efficiency: number;
             /**
-             * Format: double
+             * Frac Convective
              * @description Convective fraction for cooling
              */
             frac_convective: number;
-            /** Format: double */
+            /**
+             * Temp Setback
+             * @default null
+             */
             temp_setback?: number | null;
-            type: components["schemas"]["SpaceCoolSystemType"];
+            /**
+             * Type
+             * @constant
+             */
+            type: "AirConditioning";
         };
-        SpaceHeatSystemDetails: {
-            Control?: string | null;
-            EnergySupply: string;
-            HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
-            Zone?: string | null;
-            /** Format: double */
-            advanced_start?: number | null;
-            /**
-             * Format: double
-             * @description Convective fraction for heating
-             */
-            frac_convective: number;
-            /**
-             * Format: double
-             * @description (unit: kW)
-             */
-            rated_power: number;
-            /** Format: double */
-            temp_setback?: number | null;
-            /** @constant */
-            type: "InstantElecHeater";
-        } | {
-            Control?: string | null;
+        /** SpaceHeatSystemElectricStorageHeater */
+        SpaceHeatSystemElectricStorageHeater: {
+            /** Control */
+            Control: string;
+            /** Controlcharger */
             ControlCharger: string;
+            /** Esh Max Output */
             ESH_max_output: number[][];
+            /** Esh Min Output */
             ESH_min_output: number[][];
+            /** Energysupply */
             EnergySupply: string;
-            HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
-            /** @description The zone where the unit(s) is/are installed */
-            Zone: string;
-            /** Format: double */
-            advanced_start?: number | null;
-            /** @enum {string} */
-            air_flow_type: SpaceHeatSystemDetailsAir_flow_type;
             /**
-             * Format: double
+             * Zone
+             * @description The zone where the unit(s) is/are installed
+             */
+            Zone: string;
+            /**
+             * Advanced Start
+             * @default null
+             */
+            advanced_start?: number | null;
+            air_flow_type: components["schemas"]["AirFlowType"];
+            /**
+             * Fan Pwr
              * @description Fan power (unit: W)
              */
             fan_pwr: number;
             /**
-             * Format: double
+             * Frac Convective
              * @description Convective fraction for heating
              */
             frac_convective: number;
-            /** Format: uint32 */
+            /** N Units */
             n_units: number;
-            /** Format: double */
+            /** Pwr In */
             pwr_in: number;
             /**
-             * Format: double
+             * Rated Power Instant
              * @description (instant backup) (unit: kW)
              */
             rated_power_instant: number;
-            /** Format: double */
+            /** Storage Capacity */
             storage_capacity: number;
-            /** Format: double */
+            /**
+             * Temp Setback
+             * @default null
+             */
             temp_setback?: number | null;
-            /** @constant */
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
             type: "ElecStorageHeater";
-        } | {
-            Control?: string | null;
-            EnergySupply?: string | null;
-            HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
-            Zone: string;
-            /** Format: double */
+        };
+        /**
+         * SpaceHeatSystemInstantElectricHeaterFHS
+         * @description FHS-specific version of SpaceHeatSystemInstantElectricHeater with additional fields
+         */
+        SpaceHeatSystemInstantElectricHeaterFHS: {
+            /** Control */
+            Control: string;
+            /** Energysupply */
+            EnergySupply: string;
+            /**
+             * Advanced Start
+             * @default null
+             */
             advanced_start?: number | null;
-            /** Format: double */
-            bypass_percentage_recirculated?: number | null;
-            /** Format: double */
-            design_flow_rate?: number | null;
-            /** Format: int32 */
-            design_flow_temp: number;
-            ecodesign_controller: components["schemas"]["EcoDesignController"];
-            emitters?: components["schemas"]["WetEmitter"][];
-            /** Format: double */
-            frac_convective?: number;
-            /** Format: double */
-            max_flow_rate?: number | null;
-            /** Format: double */
-            min_flow_rate?: number | null;
-            /** Format: double */
-            n?: number;
-            /** Format: double */
-            temp_diff_emit_dsgn: number;
-            /** Format: double */
-            temp_setback?: number | null;
-            /** Format: double */
-            thermal_mass?: number | null;
-            /** @constant */
-            type: "WetDistribution";
-            variable_flow?: boolean | null;
-            wet_emitter_type?: string | null;
-        } | {
-            Control?: string | null;
-            HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
-            /** Format: double */
-            advanced_start?: number | null;
-            /** Format: double */
+            /**
+             * Frac Convective
+             * @description Convective fraction for heating
+             */
             frac_convective: number;
-            /** Format: double */
-            temp_diff_emit_dsgn: number;
-            /** Format: double */
+            /**
+             * Rated Power
+             * @description (unit: kW)
+             */
+            rated_power: number;
+            /**
+             * Temp Setback
+             * @default null
+             */
             temp_setback?: number | null;
-            /** @constant */
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "InstantElecHeater";
+        };
+        /**
+         * SpaceHeatSystemWarmAirFHS
+         * @description FHS-specific version of SpaceHeatSystemWarmAir with additional fields
+         */
+        SpaceHeatSystemWarmAirFHS: {
+            /** Control */
+            Control: string;
+            HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
+            /**
+             * Advanced Start
+             * @default null
+             */
+            advanced_start?: number | null;
+            /** Frac Convective */
+            frac_convective: number;
+            /**
+             * Temp Setback
+             * @default null
+             */
+            temp_setback?: number | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
             type: "WarmAir";
         };
-        Tariff: {
-            schedule: components["schemas"]["Schedule_for_double"];
+        /**
+         * SpaceHeatSystemWetDistributionFHS
+         * @description FHS-specific version of SpaceHeatSystemWetDistribution with additional fields
+         */
+        SpaceHeatSystemWetDistributionFHS: {
+            /** Control */
+            Control: string;
+            /**
+             * Energysupply
+             * @default null
+             */
+            EnergySupply?: string | null;
+            HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
+            /** Zone */
+            Zone: string;
+            /**
+             * Advanced Start
+             * @default null
+             */
+            advanced_start?: number | null;
+            /**
+             * Bypass Percentage Recirculated
+             * @default null
+             */
+            bypass_percentage_recirculated?: number | null;
+            /**
+             * Design Flow Rate
+             * @default null
+             */
+            design_flow_rate?: number | null;
+            /** Design Flow Temp */
+            design_flow_temp: number;
+            ecodesign_controller: components["schemas"]["EcoDesignController"];
+            /** Emitters */
+            emitters: (components["schemas"]["WetEmitterRadiator"] | components["schemas"]["WetEmitterUFH"] | components["schemas"]["WetEmitterFanCoil"])[];
+            /**
+             * Max Flow Rate
+             * @default null
+             */
+            max_flow_rate?: number | null;
+            /**
+             * Min Flow Rate
+             * @default null
+             */
+            min_flow_rate?: number | null;
+            /** Temp Diff Emit Dsgn */
+            temp_diff_emit_dsgn: number;
+            /**
+             * Temp Setback
+             * @default null
+             */
+            temp_setback?: number | null;
+            /**
+             * Thermal Mass
+             * @default null
+             */
+            thermal_mass?: number | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "WetDistribution";
+            /** Variable Flow */
+            variable_flow: boolean;
         };
-        WasteWaterHeatRecoveryDetails: {
-            ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
+        /** Tariff */
+        Tariff: Record<string, never>;
+        /** WasteWaterHeatRecoverySystem */
+        WasteWaterHeatRecoverySystem: {
+            /** Coldwatersource */
+            ColdWaterSource: string;
+            /** Efficiencies */
             efficiencies: number[];
-            /** Format: double */
-            electrical_consumption?: number | null;
+            /** Flow Rates */
             flow_rates: number[];
-            type: components["schemas"]["WwhrsType"];
-            /** Format: double */
+            type: components["schemas"]["WasteWaterHeatRecoverySystemType"];
+            /** Utilisation Factor */
             utilisation_factor: number;
         };
-        /** @enum {string} */
-        WaterHeatingSchedule: WaterHeatingSchedule;
-        WindowOpeningForCooling: {
-            /** Format: double */
-            equivalent_area: number;
-        };
-        ZoneInput: {
+        /**
+         * WaterHeatingSchedule
+         * @enum {string}
+         */
+        WaterHeatingSchedule: "AllDay" | "HeatingHours";
+        /** ZoneFHS */
+        ZoneFHS: {
+            /** Buildingelement */
             BuildingElement: {
-                [key: string]: components["schemas"]["BuildingElement"];
+                [key: string]: components["schemas"]["BuildingElementOpaqueFHS"] | components["schemas"]["BuildingElementTransparentFHS"] | (components["schemas"]["BuildingElementGroundSlabNoEdgeInsulation"] | components["schemas"]["BuildingElementGroundSlabEdgeInsulation"] | components["schemas"]["BuildingElementGroundSuspendedFloor"] | components["schemas"]["BuildingElementGroundHeatedBasement"] | components["schemas"]["BuildingElementGroundUnheatedBasement"]) | components["schemas"]["BuildingElementAdjacentConditionedSpace"] | components["schemas"]["BuildingElementAdjacentUnconditionedSpace_Simple"];
             };
-            Control_WindowOpening?: components["schemas"]["HeatSourceControlType"] | null;
-            Lighting?: components["schemas"]["ZoneLighting"] | null;
-            SpaceCoolSystem?: string | string[] | null;
-            SpaceHeatControl?: components["schemas"]["SpaceHeatControlType"] | null;
-            SpaceHeatSystem?: string | string[] | null;
-            ThermalBridging: components["schemas"]["ThermalBridging"];
+            /** @default null */
+            Lighting?: components["schemas"]["Lighting"] | null;
             /**
-             * Format: double
+             * Spacecoolsystem
+             * @default null
+             */
+            SpaceCoolSystem?: string | string[] | null;
+            /** @default null */
+            SpaceHeatControl?: components["schemas"]["SpaceHeatControlType"] | null;
+            /**
+             * Spaceheatsystem
+             * @default null
+             */
+            SpaceHeatSystem?: string | string[] | null;
+            /** Thermalbridging */
+            ThermalBridging: number | {
+                [key: string]: components["schemas"]["ThermalBridgingLinearFHS"] | components["schemas"]["ThermalBridgingPoint"];
+            };
+            /**
+             * Area
              * @description Useful floor area of the zone (unit: m²)
              */
             area: number;
+            /** @default null */
             temp_setpnt_basis?: components["schemas"]["ZoneTemperatureControlBasis"] | null;
-            /** Format: double */
-            temp_setpnt_cool?: number | null;
-            /** Format: double */
-            temp_setpnt_heat?: number | null;
             /**
-             * Format: double
+             * Temp Setpnt Init
              * @description Setpoint temperature to use during initialisation (unit: ˚C)
              */
-            temp_setpnt_init?: number | null;
-            /** Format: double */
+            temp_setpnt_init: number;
+            /** Volume */
             volume: number;
         };
-        /** Input */
+        /**
+         * InputFHS
+         * @description Version of the HEM inputs for the FHS wrapper.
+         */
         "fhs_input.schema": {
+            /**
+             * Appliancegains
+             * @default null
+             */
             ApplianceGains?: {
-                [key: string]: components["schemas"]["ApplianceGainsDetails"];
-            };
-            Appliances?: {
-                [key: string]: components["schemas"]["ApplianceEntry"];
+                [key: string]: components["schemas"]["ApplianceGainsFHS"];
             } | null;
-            ColdWaterSource: components["schemas"]["ColdWaterSourceInput"];
-            Control: components["schemas"]["Control"];
+            /** @default null */
+            Appliances?: components["schemas"]["Appliances"] | null;
+            /**
+             * Coldwatersource
+             * @description Requires specific keys for FHS wrapper
+             */
+            ColdWaterSource: {
+                [key: string]: components["schemas"]["ColdWaterSource"];
+            };
+            /** Control */
+            Control: {
+                [key: string]: components["schemas"]["ControlOnOffTimer"] | components["schemas"]["ControlOnOffCostMinimising"] | components["schemas"]["ControlSetpointTimer"] | components["schemas"]["ControlChargeTarget"] | components["schemas"]["ControlCombinationTime"];
+            } | null;
+            /** Energysupply */
             EnergySupply: {
-                [key: string]: components["schemas"]["EnergySupplyDetails"];
+                [key: string]: components["schemas"]["EnergySupply"];
             };
             Events: components["schemas"]["WaterHeatingEvents"];
-            ExternalConditions: components["schemas"]["ExternalConditionsInput"];
-            General: components["schemas"]["General"];
+            ExternalConditions: components["schemas"]["ExternalConditionsInputFHS"];
+            /** @default null */
+            General?: components["schemas"]["General"] | null;
             /**
-             * Format: double
+             * Groundfloorarea
              * @description For a house, the area of the ground floor (unit: m²)
+             * @default null
              */
             GroundFloorArea?: number | null;
+            /**
+             * Heatsourcewet
+             * @default null
+             */
             HeatSourceWet?: {
-                [key: string]: components["schemas"]["HeatSourceWetDetails"];
+                [key: string]: components["schemas"]["HeatSourceWetHeatPump"] | components["schemas"]["HeatSourceWetHeatPumpWithProductReference"] | components["schemas"]["HeatSourceWetBoiler"] | components["schemas"]["HeatSourceWetHeatBattery"] | components["schemas"]["HeatSourceWetHIU"];
             } | null;
+            /** @default null */
             HeatingControlType?: components["schemas"]["HeatingControlType"] | null;
             HotWaterDemand: components["schemas"]["HotWaterDemand"];
-            HotWaterSource: components["schemas"]["HotWaterSource"];
-            InfiltrationVentilation: components["schemas"]["InfiltrationVentilation"];
+            HotWaterSource: components["schemas"]["HotWaterSourceFHS"];
+            InfiltrationVentilation: components["schemas"]["InfiltrationVentilationFHS"];
             InternalGains: components["schemas"]["InternalGains"];
-            /** Format: uint */
+            /**
+             * Numberofbedrooms
+             * @default null
+             */
             NumberOfBedrooms?: number | null;
-            /** Format: uint */
+            /**
+             * Numberofwetrooms
+             * @default null
+             */
             NumberOfWetRooms?: number | null;
+            /**
+             * Onsitegeneration
+             * @default null
+             */
             OnSiteGeneration?: {
-                [key: string]: components["schemas"]["OnSiteGenerationDetails"];
+                [key: string]: components["schemas"]["PhotovoltaicSystem"];
             } | null;
+            /**
+             * Partgcompliance
+             * @default null
+             */
             PartGcompliance?: boolean | null;
+            /**
+             * Parto Active Cooling Required
+             * @default null
+             */
             PartO_active_cooling_required?: boolean | null;
+            /**
+             * Preheatedwatersource
+             * @default null
+             */
             PreHeatedWaterSource?: {
                 [key: string]: components["schemas"]["StorageTank"];
             } | null;
             SimulationTime: components["schemas"]["SimulationTime"];
+            /**
+             * Smartappliancecontrols
+             * @default null
+             */
             SmartApplianceControls?: {
-                [key: string]: components["schemas"]["SmartApplianceControlDetails"];
-            };
+                [key: string]: components["schemas"]["SmartApplianceControl"];
+            } | null;
+            /**
+             * Spacecoolsystem
+             * @default null
+             */
             SpaceCoolSystem?: {
-                [key: string]: components["schemas"]["SpaceCoolSystemDetails"];
+                [key: string]: components["schemas"]["SpaceCoolSystemFHS"];
             } | null;
+            /**
+             * Spaceheatsystem
+             * @default null
+             */
             SpaceHeatSystem?: {
-                [key: string]: components["schemas"]["SpaceHeatSystemDetails"];
+                [key: string]: components["schemas"]["SpaceHeatSystemInstantElectricHeaterFHS"] | components["schemas"]["SpaceHeatSystemElectricStorageHeater"] | components["schemas"]["SpaceHeatSystemWetDistributionFHS"] | components["schemas"]["SpaceHeatSystemWarmAirFHS"];
             } | null;
+            /** @default null */
             Tariff?: components["schemas"]["Tariff"] | null;
-            WWHRS?: {
-                [key: string]: components["schemas"]["WasteWaterHeatRecoveryDetails"];
+            /**
+             * Thermalbridginglinear
+             * @default null
+             */
+            ThermalBridgingLinear?: {
+                [key: string]: components["schemas"]["ThermalBridgingLinearFHS"];
             } | null;
+            /**
+             * Wwhrs
+             * @default null
+             */
+            WWHRS?: {
+                [key: string]: components["schemas"]["WasteWaterHeatRecoverySystem"];
+            } | null;
+            /** @default null */
             WaterHeatSchedDefault?: components["schemas"]["WaterHeatingSchedule"] | null;
-            Window_Opening_For_Cooling?: components["schemas"]["WindowOpeningForCooling"] | null;
+            /** Zone */
             Zone: {
-                [key: string]: components["schemas"]["ZoneInput"];
+                [key: string]: components["schemas"]["ZoneFHS"];
             };
-            /** Format: double */
-            temp_internal_air_static_calcs?: number | null;
+            /** Temp Internal Air Static Calcs */
+            temp_internal_air_static_calcs: number;
             $defs: {
-                AirTerminalDevice: {
-                    /** Format: double */
-                    area_cm2: number;
-                    /** Format: double */
-                    pressure_difference_ref: number;
+                /**
+                 * AirFlowType
+                 * @enum {string}
+                 */
+                AirFlowType: "fan-assisted" | "damper-only";
+                /** ApplianceEnergyPerAnnum */
+                ApplianceEnergyPerAnnum: {
+                    /** Kwh Per Annum */
+                    kWh_per_annum: number;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
-                Appliance: {
-                    Energysupply?: string | null;
-                    /** Format: double */
-                    kWh_per_100cycle?: number | null;
-                    /** Format: double */
-                    kWh_per_annum?: number | null;
-                    /** Format: double */
-                    kWh_per_cycle?: number | null;
-                    /** Format: double */
-                    kg_load?: number | null;
-                    loadshifting?: components["schemas"]["ApplianceLoadShifting"] | null;
-                    /** Format: double */
-                    standard_use?: number | null;
+                /** ApplianceGainsEvent */
+                ApplianceGainsEvent: {
+                    /** Demand W */
+                    demand_W: number;
+                    /** Duration */
+                    duration: number;
+                    /** Start */
+                    start: number;
                 };
-                ApplianceEntry: components["schemas"]["Appliance"] | components["schemas"]["ApplianceReference"];
-                ApplianceGainsDetails: {
+                /** ApplianceGainsFHS */
+                ApplianceGainsFHS: {
+                    /** Energysupply */
                     EnergySupply: string;
-                    /** @description List of appliance usage events */
-                    Events?: components["schemas"]["ApplianceGainsDetailsEvent"][] | null;
                     /**
-                     * Format: double
+                     * Events
+                     * @description List of appliance usage events
+                     * @default null
+                     */
+                    Events?: components["schemas"]["ApplianceGainsEvent"][] | null;
+                    /**
+                     * Standby
                      * @description Appliance power consumption when not in use (unit: W)
+                     * @default null
                      */
                     Standby?: number | null;
                     /**
-                     * Format: double
+                     * Gains Fraction
                      * @description Proportion of appliance demand turned into heat gains (no unit)
                      */
                     gains_fraction: number;
-                    loadshifting?: components["schemas"]["ApplianceLoadShifting"] | null;
-                    priority?: number | null;
-                    schedule?: components["schemas"]["Schedule_for_double"] | null;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                     /**
-                     * Format: uint32
+                     * Priority
+                     * @default null
+                     */
+                    priority?: number | null;
+                    /** @default null */
+                    schedule?: components["schemas"]["ScheduleForDouble"] | null;
+                    /**
+                     * Start Day
                      * @description First day of the time series, day of the year, 0 to 365
                      */
                     start_day: number;
                     /**
-                     * Format: double
+                     * Time Series Step
                      * @description Timestep of the time series data (unit: hours)
                      */
                     time_series_step: number;
+                    /**
+                     * Type
+                     * @default null
+                     */
                     type?: string | null;
                 };
-                ApplianceGainsDetailsEvent: {
-                    /** Format: double */
-                    demand_W: number;
-                    /** Format: double */
-                    duration: number;
-                    /** Format: double */
-                    start: number;
-                };
-                /** @enum {string} */
-                ApplianceKey: Fhs_inputSchema$defsApplianceKey;
-                ApplianceLoadShifting: {
-                    Control?: string;
-                    /** Format: double */
-                    demand_limit_weighted: number;
-                    demand_timeseries?: number[] | null;
-                    /** Format: double */
-                    max_shift_hrs: number;
-                    priority?: number | null;
-                    /** @constant */
-                    weight?: "Tariff";
-                    weight_timeseries?: number[] | null;
-                };
-                /** @enum {string} */
-                ApplianceReference: Fhs_inputSchema$defsApplianceReference;
-                BathDetails: {
-                    ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
+                /**
+                 * Appliances
+                 * @description The keys of this object match with the ApplianceKey enum.
+                 *     Each appliance type is determined by its key.
+                 *     "Lighting" is not included in the FHS applianced mapping.
+                 */
+                Appliances: {
                     /**
-                     * Format: double
+                     * Clothes Drying
+                     * @default Not Installed
+                     */
+                    Clothes_drying?: components["schemas"]["ClothesDrying"] | ("Default" | "Not Installed");
+                    /**
+                     * Clothes Washing
+                     * @default Not Installed
+                     */
+                    Clothes_washing?: components["schemas"]["ClothesWashing"] | ("Default" | "Not Installed");
+                    /**
+                     * Dishwasher
+                     * @default Not Installed
+                     */
+                    Dishwasher?: components["schemas"]["Dishwasher"] | ("Default" | "Not Installed");
+                    /**
+                     * Freezer
+                     * @default Not Installed
+                     */
+                    Freezer?: components["schemas"]["Freezer"] | ("Default" | "Not Installed");
+                    /**
+                     * Fridge
+                     * @default Not Installed
+                     */
+                    Fridge?: components["schemas"]["Fridge"] | ("Default" | "Not Installed");
+                    /**
+                     * Fridge-Freezer
+                     * @default Not Installed
+                     */
+                    "Fridge-Freezer"?: components["schemas"]["FridgeFreezer"] | ("Default" | "Not Installed");
+                    /**
+                     * Hobs
+                     * @default Not Installed
+                     */
+                    Hobs?: components["schemas"]["Hobs"] | ("Default" | "Not Installed");
+                    /**
+                     * Kettle
+                     * @default Not Installed
+                     */
+                    Kettle?: components["schemas"]["Kettle"] | ("Default" | "Not Installed");
+                    /**
+                     * Microwave
+                     * @default Not Installed
+                     */
+                    Microwave?: components["schemas"]["Microwave"] | ("Default" | "Not Installed");
+                    /**
+                     * Otherdevices
+                     * @default Not Installed
+                     */
+                    Otherdevices?: components["schemas"]["ApplianceEnergyPerAnnum"] | ("Default" | "Not Installed");
+                    /**
+                     * Oven
+                     * @default Not Installed
+                     */
+                    Oven?: components["schemas"]["Oven"] | ("Default" | "Not Installed");
+                };
+                /** Bath */
+                Bath: {
+                    /** Coldwatersource */
+                    ColdWaterSource: string;
+                    /**
+                     * Flowrate
                      * @description Tap/outlet flow rate (unit: litre/minute)
                      */
                     flowrate: number;
                     /**
-                     * Format: double
+                     * Size
                      * @description Volume held by bath (unit: litre)
                      */
                     size: number;
                 };
-                Baths: {
-                    [key: string]: components["schemas"]["BathDetails"];
-                };
-                /** @enum {string} */
-                BatteryLocation: Fhs_inputSchema$defsBatteryLocation;
+                /**
+                 * BatteryLocation
+                 * @enum {string}
+                 */
+                BatteryLocation: "inside" | "outside";
+                /** BoilerCostScheduleHybrid */
                 BoilerCostScheduleHybrid: {
-                    cost_schedule_boiler: components["schemas"]["Schedule_for_double"];
-                    cost_schedule_hp: components["schemas"]["Schedule_for_double"];
-                    /** Format: uint32 */
+                    cost_schedule_boiler: components["schemas"]["ScheduleForDouble"];
+                    cost_schedule_hp: components["schemas"]["ScheduleForDouble"];
+                    /** Cost Schedule Start Day */
                     cost_schedule_start_day: number;
-                    /** Format: double */
+                    /** Cost Schedule Time Series Step */
                     cost_schedule_time_series_step: number;
                 };
+                /**
+                 * BoilerHotWaterTest
+                 * @enum {string}
+                 */
+                BoilerHotWaterTest: "M&L" | "M&S" | "M_only" | "No_additional_tests";
                 /** @enum {string} */
-                BoilerHotWaterTest: Fhs_inputSchema$defsBoilerHotWaterTest;
-                /** @enum {string} */
-                BuildType: Fhs_inputSchema$defsBuildType;
-                BuildingElement: {
-                    /**
-                     * Format: double
-                     * @description Net area of the opaque building element (i.e. minus any windows / doors / etc.) (unit: m²)
-                     */
+                BuildType: "house" | "flat";
+                /** BuildingElementAdjacentConditionedSpace */
+                BuildingElementAdjacentConditionedSpace: {
+                    /** Area */
                     area: number;
                     /**
-                     * Format: double
-                     * @description Areal heat capacity (unit: J/m².K)
-                     */
-                    areal_heat_capacity: number;
-                    /**
-                     * Format: double
-                     * @description The distance between the ground and the lowest edge of the element (unit: m)
-                     */
-                    base_height: number;
-                    /** Format: double */
-                    h_ce?: number | null;
-                    /** Format: double */
-                    h_ci?: number | null;
-                    /** Format: double */
-                    h_re?: number | null;
-                    /** Format: double */
-                    h_ri?: number | null;
-                    /**
-                     * Format: double
-                     * @description The height of the building element (unit: m)
-                     */
-                    height: number;
-                    is_external_door?: boolean | null;
-                    is_unheated_pitched_roof?: boolean | null;
-                    mass_distribution_class: components["schemas"]["MassDistributionClass"];
-                    /**
-                     * Format: double
-                     * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
-                     */
-                    orientation360: number;
-                    /**
-                     * Format: double
-                     * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
-                     */
-                    pitch: number;
-                    /**
-                     * Format: double
-                     * @description Solar absorption coefficient at the external surface (dimensionless)
-                     */
-                    solar_absorption_coeff: number;
-                    /**
-                     * Format: double
-                     * @description Thermal resistance (unit: m².K/W)
-                     */
-                    thermal_resistance_construction?: number | null;
-                    /** @constant */
-                    type: "BuildingElementOpaque";
-                    /** Format: double */
-                    u_value?: number | null;
-                    /**
-                     * Format: double
-                     * @description The width of the building element (unit: m)
-                     */
-                    width: number;
-                } | {
-                    Control_WindowOpenable?: string | null;
-                    /** Format: double */
-                    area?: number | null;
-                    /**
-                     * Format: double
-                     * @description The distance between the ground and the lowest edge of the element (unit: m)
-                     */
-                    base_height: number;
-                    /**
-                     * Format: double
-                     * @description The frame area fraction of window, ratio of the projected frame area to the overall projected area of the glazed element of the window
-                     */
-                    frame_area_fraction: number;
-                    /** Format: double */
-                    free_area_height?: number | null;
-                    /**
-                     * Format: double
-                     * @description Total solar energy transmittance of the transparent part of the window
-                     */
-                    g_value: number;
-                    /**
-                     * Format: double
-                     * @description The height of the building element (unit: m)
-                     */
-                    height: number;
-                    /** Format: double */
-                    max_window_open_area?: number | null;
-                    /** Format: double */
-                    mid_height?: number | null;
-                    /**
-                     * Format: double
-                     * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
-                     */
-                    orientation360: number;
-                    /**
-                     * Format: double
-                     * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
-                     */
-                    pitch: number;
-                    security_risk?: boolean | null;
-                    shading: components["schemas"]["WindowShadingObject"][];
-                    /**
-                     * Format: double
-                     * @description Thermal resistance (unit: m².K/W)
-                     */
-                    thermal_resistance_construction?: number | null;
-                    treatment?: components["schemas"]["WindowTreatment"][] | null;
-                    /** @constant */
-                    type: "BuildingElementTransparent";
-                    /** Format: double */
-                    u_value?: number | null;
-                    /**
-                     * Format: double
-                     * @description The width of the building element (unit: m)
-                     */
-                    width: number;
-                    window_part_list?: components["schemas"]["WindowPart"][] | null;
-                } | {
-                    /**
-                     * Format: double
-                     * @description Area of this building element within the zone (unit: m²)
-                     */
-                    area: number;
-                    /**
-                     * Format: double
-                     * @description Area of ventilation openings per perimeter (unit: m²/m)
-                     */
-                    area_per_perimeter_vent?: number | null;
-                    /**
-                     * Format: double
-                     * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
-                     */
-                    areal_heat_capacity: number;
-                    /**
-                     * Format: double
-                     * @description Depth of basement floor below ground level (unit: m)
-                     */
-                    depth_basement_floor?: number | null;
-                    edge_insulation?: components["schemas"]["EdgeInsulation"][] | null;
-                    floor_type: components["schemas"]["FloorType"];
-                    /**
-                     * Format: double
-                     * @description Height of the basement walls above ground level (unit: m)
-                     */
-                    height_basement_walls?: number | null;
-                    /** Format: double */
-                    height_upper_surface?: number | null;
-                    mass_distribution_class: components["schemas"]["MassDistributionClass"];
-                    /**
-                     * Format: double
-                     * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
-                     */
-                    perimeter: number;
-                    /**
-                     * Format: double
-                     * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
-                     */
-                    pitch: number;
-                    /**
-                     * Format: double
-                     * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
-                     */
-                    psi_wall_floor_junc: number;
-                    /** @description Wind shielding factor */
-                    shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
-                    /**
-                     * Format: double
-                     * @description Thermal resistance of insulation on base of underfloor space (unit: m².K/W)
-                     */
-                    thermal_resist_insul?: number | null;
-                    /**
-                     * Format: double
-                     * @description Thermal resistance of walls of the basement (unit: m².K/W)
-                     */
-                    thermal_resist_walls_base?: number | null;
-                    /**
-                     * Format: double
-                     * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
-                     */
-                    thermal_resistance_floor_construction: number;
-                    /**
-                     * Format: double
-                     * @description Thermal transmittance of floor above basement (unit: W/m².K)
-                     */
-                    thermal_transm_envi_base?: number | null;
-                    /**
-                     * Format: double
-                     * @description Thermal transmittance of walls above ground (unit: W/m².K)
-                     */
-                    thermal_transm_walls?: number | null;
-                    /**
-                     * Format: double
-                     * @description Thickness of the walls (unit: m)
-                     */
-                    thickness_walls: number;
-                    /**
-                     * Format: double
-                     * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
-                     */
-                    total_area: number;
-                    /** @constant */
-                    type: "BuildingElementGround";
-                    /**
-                     * Format: double
-                     * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
-                     */
-                    u_value: number;
-                } | {
-                    /** Format: double */
-                    area: number;
-                    /**
-                     * Format: double
+                     * Areal Heat Capacity
                      * @description Areal heat capacity (unit: J/m².K)
                      */
                     areal_heat_capacity: number;
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
                     /**
-                     * Format: double
+                     * Pitch
                      * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
                      */
                     pitch: number;
                     /**
-                     * Format: double
+                     * Thermal Resistance Construction
                      * @description Thermal resistance (unit: m².K/W)
+                     * @default null
                      */
                     thermal_resistance_construction?: number | null;
-                    /** @constant */
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
                     type: "BuildingElementAdjacentConditionedSpace";
-                    /** Format: double */
-                    u_value?: number | null;
-                } | {
                     /**
-                     * Format: double
+                     * U Value
+                     * @default null
+                     */
+                    u_value?: number | null;
+                };
+                /** BuildingElementAdjacentUnconditionedSpace_Simple */
+                BuildingElementAdjacentUnconditionedSpace_Simple: {
+                    /**
+                     * Area
                      * @description Area of this building element (unit: m²)
                      */
                     area: number;
                     /**
-                     * Format: double
+                     * Areal Heat Capacity
                      * @description Areal heat capacity (unit: J/m2.K)
                      */
                     areal_heat_capacity: number;
                     mass_distribution_class: components["schemas"]["MassDistributionClass"];
                     /**
-                     * Format: double
+                     * Pitch
                      * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
                      */
                     pitch: number;
                     /**
-                     * Format: double
+                     * Thermal Resistance Construction
                      * @description Thermal resistance (unit: m2.K/W)
+                     * @default null
                      */
                     thermal_resistance_construction?: number | null;
                     /**
-                     * Format: double
+                     * Thermal Resistance Unconditioned Space
                      * @description Effective thermal resistance of unheated space (unit: m².K/W)
                      */
                     thermal_resistance_unconditioned_space: number;
-                    /** @constant */
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
                     type: "BuildingElementAdjacentUnconditionedSpace_Simple";
-                    /** Format: double */
+                    /**
+                     * U Value
+                     * @default null
+                     */
                     u_value?: number | null;
                 };
-                ChargeLevel: number | number[] | components["schemas"]["Schedule_for_double"];
-                ColdWaterSourceDetails: {
+                /** BuildingElementGround */
+                BuildingElementGround: {
                     /**
-                     * Format: uint32
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "BuildingElementGround";
+                } & {
+                    [key: string]: components["schemas"]["BuildingElementGroundSlabNoEdgeInsulation"] | components["schemas"]["BuildingElementGroundSlabEdgeInsulation"] | components["schemas"]["BuildingElementGroundSuspendedFloor"] | components["schemas"]["BuildingElementGroundHeatedBasement"] | components["schemas"]["BuildingElementGroundUnheatedBasement"];
+                };
+                /**
+                 * BuildingElementGroundHeatedBasement
+                 * @description Heated basement - uses init_heated_basement()
+                 */
+                BuildingElementGroundHeatedBasement: {
+                    /**
+                     * Area
+                     * @description Area of this building element within the zone (unit: m²)
+                     */
+                    area: number;
+                    /**
+                     * Areal Heat Capacity
+                     * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
+                     */
+                    areal_heat_capacity: number;
+                    /**
+                     * Depth Basement Floor
+                     * @description Depth of basement floor below ground level (unit: m)
+                     */
+                    depth_basement_floor: number;
+                    /**
+                     * Edge Insulation
+                     * @default null
+                     */
+                    edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    floor_type: "Heated_basement";
+                    /**
+                     * Height Basement Walls
+                     * @description Height of the basement walls above ground level (unit: m)
+                     * @default null
+                     */
+                    height_basement_walls?: number | null;
+                    /**
+                     * Height Upper Surface
+                     * @default null
+                     */
+                    height_upper_surface?: number | null;
+                    mass_distribution_class: components["schemas"]["MassDistributionClass"];
+                    /**
+                     * Perimeter
+                     * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
+                     */
+                    perimeter: number;
+                    /**
+                     * Pitch
+                     * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+                     */
+                    pitch: number;
+                    /**
+                     * Psi Wall Floor Junc
+                     * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
+                     */
+                    psi_wall_floor_junc: number;
+                    /**
+                     * @description Wind shielding factor
+                     * @default null
+                     */
+                    shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
+                    /**
+                     * Thermal Resist Walls Base
+                     * @description Thermal resistance of walls of the basement (unit: m².K/W)
+                     */
+                    thermal_resist_walls_base: number;
+                    /**
+                     * Thermal Resistance Floor Construction
+                     * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+                     */
+                    thermal_resistance_floor_construction: number;
+                    /**
+                     * Thermal Transm Envi Base
+                     * @description Thermal transmittance of floor above basement (unit: W/m².K)
+                     * @default null
+                     */
+                    thermal_transm_envi_base?: number | null;
+                    /**
+                     * Thermal Transm Walls
+                     * @description Thermal transmittance of walls above ground (unit: W/m².K)
+                     * @default null
+                     */
+                    thermal_transm_walls?: number | null;
+                    /**
+                     * Thickness Walls
+                     * @description Thickness of the walls (unit: m)
+                     */
+                    thickness_walls: number;
+                    /**
+                     * Total Area
+                     * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
+                     */
+                    total_area: number;
+                    /**
+                     * Type
+                     * @constant
+                     */
+                    type: "BuildingElementGround";
+                    /**
+                     * U Value
+                     * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
+                     */
+                    u_value: number;
+                };
+                /**
+                 * BuildingElementGroundSlabEdgeInsulation
+                 * @description Slab floor with edge insulation - uses init_slab_on_ground_floor_edge_insulated()
+                 */
+                BuildingElementGroundSlabEdgeInsulation: {
+                    /**
+                     * Area
+                     * @description Area of this building element within the zone (unit: m²)
+                     */
+                    area: number;
+                    /**
+                     * Areal Heat Capacity
+                     * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
+                     */
+                    areal_heat_capacity: number;
+                    /**
+                     * Edge Insulation
+                     * @default null
+                     */
+                    edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    floor_type: "Slab_edge_insulation";
+                    /**
+                     * Height Upper Surface
+                     * @default null
+                     */
+                    height_upper_surface?: number | null;
+                    mass_distribution_class: components["schemas"]["MassDistributionClass"];
+                    /**
+                     * Perimeter
+                     * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
+                     */
+                    perimeter: number;
+                    /**
+                     * Pitch
+                     * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+                     */
+                    pitch: number;
+                    /**
+                     * Psi Wall Floor Junc
+                     * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
+                     */
+                    psi_wall_floor_junc: number;
+                    /**
+                     * @description Wind shielding factor
+                     * @default null
+                     */
+                    shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
+                    /**
+                     * Thermal Resistance Floor Construction
+                     * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+                     */
+                    thermal_resistance_floor_construction: number;
+                    /**
+                     * Thickness Walls
+                     * @description Thickness of the walls (unit: m)
+                     */
+                    thickness_walls: number;
+                    /**
+                     * Total Area
+                     * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
+                     */
+                    total_area: number;
+                    /**
+                     * Type
+                     * @constant
+                     */
+                    type: "BuildingElementGround";
+                    /**
+                     * U Value
+                     * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
+                     */
+                    u_value: number;
+                };
+                /**
+                 * BuildingElementGroundSlabNoEdgeInsulation
+                 * @description Slab floor with no edge insulation - uses init_slab_on_ground_floor_uninsulated_or_all_insulation()
+                 */
+                BuildingElementGroundSlabNoEdgeInsulation: {
+                    /**
+                     * Area
+                     * @description Area of this building element within the zone (unit: m²)
+                     */
+                    area: number;
+                    /**
+                     * Areal Heat Capacity
+                     * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
+                     */
+                    areal_heat_capacity: number;
+                    /**
+                     * Edge Insulation
+                     * @default null
+                     */
+                    edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    floor_type: "Slab_no_edge_insulation";
+                    /**
+                     * Height Upper Surface
+                     * @default null
+                     */
+                    height_upper_surface?: number | null;
+                    mass_distribution_class: components["schemas"]["MassDistributionClass"];
+                    /**
+                     * Perimeter
+                     * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
+                     */
+                    perimeter: number;
+                    /**
+                     * Pitch
+                     * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+                     */
+                    pitch: number;
+                    /**
+                     * Psi Wall Floor Junc
+                     * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
+                     */
+                    psi_wall_floor_junc: number;
+                    /**
+                     * @description Wind shielding factor
+                     * @default null
+                     */
+                    shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
+                    /**
+                     * Thermal Resistance Floor Construction
+                     * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+                     */
+                    thermal_resistance_floor_construction: number;
+                    /**
+                     * Thickness Walls
+                     * @description Thickness of the walls (unit: m)
+                     */
+                    thickness_walls: number;
+                    /**
+                     * Total Area
+                     * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
+                     */
+                    total_area: number;
+                    /**
+                     * Type
+                     * @constant
+                     */
+                    type: "BuildingElementGround";
+                    /**
+                     * U Value
+                     * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
+                     */
+                    u_value: number;
+                };
+                /**
+                 * BuildingElementGroundSuspendedFloor
+                 * @description Suspended floor - uses init_suspended_floor()
+                 */
+                BuildingElementGroundSuspendedFloor: {
+                    /**
+                     * Area
+                     * @description Area of this building element within the zone (unit: m²)
+                     */
+                    area: number;
+                    /**
+                     * Area Per Perimeter Vent
+                     * @description Area of ventilation openings per perimeter (unit: m²/m)
+                     * @default null
+                     */
+                    area_per_perimeter_vent?: number | null;
+                    /**
+                     * Areal Heat Capacity
+                     * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
+                     */
+                    areal_heat_capacity: number;
+                    /**
+                     * Edge Insulation
+                     * @default null
+                     */
+                    edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    floor_type: "Suspended_floor";
+                    /**
+                     * Height Upper Surface
+                     * @default null
+                     */
+                    height_upper_surface?: number | null;
+                    mass_distribution_class: components["schemas"]["MassDistributionClass"];
+                    /**
+                     * Perimeter
+                     * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
+                     */
+                    perimeter: number;
+                    /**
+                     * Pitch
+                     * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+                     */
+                    pitch: number;
+                    /**
+                     * Psi Wall Floor Junc
+                     * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
+                     */
+                    psi_wall_floor_junc: number;
+                    /**
+                     * @description Wind shielding factor
+                     * @default null
+                     */
+                    shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
+                    /**
+                     * Thermal Resist Insul
+                     * @description Thermal resistance of insulation on base of underfloor space (unit: m².K/W)
+                     * @default null
+                     */
+                    thermal_resist_insul?: number | null;
+                    /**
+                     * Thermal Resistance Floor Construction
+                     * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+                     */
+                    thermal_resistance_floor_construction: number;
+                    /**
+                     * Thermal Transm Walls
+                     * @description Thermal transmittance of walls above ground (unit: W/m².K)
+                     * @default null
+                     */
+                    thermal_transm_walls?: number | null;
+                    /**
+                     * Thickness Walls
+                     * @description Thickness of the walls (unit: m)
+                     */
+                    thickness_walls: number;
+                    /**
+                     * Total Area
+                     * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
+                     */
+                    total_area: number;
+                    /**
+                     * Type
+                     * @constant
+                     */
+                    type: "BuildingElementGround";
+                    /**
+                     * U Value
+                     * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
+                     */
+                    u_value: number;
+                };
+                /**
+                 * BuildingElementGroundUnheatedBasement
+                 * @description Unheated basement - uses init_unheated_basement()
+                 */
+                BuildingElementGroundUnheatedBasement: {
+                    /**
+                     * Area
+                     * @description Area of this building element within the zone (unit: m²)
+                     */
+                    area: number;
+                    /**
+                     * Areal Heat Capacity
+                     * @description Areal heat capacity of the ground floor element (unit: J/m2.K)
+                     */
+                    areal_heat_capacity: number;
+                    /**
+                     * Depth Basement Floor
+                     * @description Depth of basement floor below ground level (unit: m)
+                     */
+                    depth_basement_floor: number;
+                    /**
+                     * Edge Insulation
+                     * @default null
+                     */
+                    edge_insulation?: (components["schemas"]["EdgeInsulationHorizontal"] | components["schemas"]["EdgeInsulationVertical"])[] | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    floor_type: "Unheated_basement";
+                    /**
+                     * Height Basement Walls
+                     * @description Height of the basement walls above ground level (unit: m)
+                     */
+                    height_basement_walls: number;
+                    /**
+                     * Height Upper Surface
+                     * @default null
+                     */
+                    height_upper_surface?: number | null;
+                    mass_distribution_class: components["schemas"]["MassDistributionClass"];
+                    /**
+                     * Perimeter
+                     * @description Perimeter of the floor; calculated for the entire ground floor, even if it is distributed among several zones (unit: m)
+                     */
+                    perimeter: number;
+                    /**
+                     * Pitch
+                     * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+                     */
+                    pitch: number;
+                    /**
+                     * Psi Wall Floor Junc
+                     * @description Linear thermal transmittance of the junction between the floor and the walls (unit: W/m.K)
+                     */
+                    psi_wall_floor_junc: number;
+                    /**
+                     * @description Wind shielding factor
+                     * @default null
+                     */
+                    shield_fact_location?: components["schemas"]["WindShieldLocation"] | null;
+                    /**
+                     * Thermal Resist Walls Base
+                     * @description Thermal resistance of walls of the basement (unit: m².K/W)
+                     */
+                    thermal_resist_walls_base: number;
+                    /**
+                     * Thermal Resistance Floor Construction
+                     * @description Total thermal resistance of all layers in the floor construction (unit: m².K/W)
+                     */
+                    thermal_resistance_floor_construction: number;
+                    /**
+                     * Thermal Transm Envi Base
+                     * @description Thermal transmittance of floor above basement (unit: W/m².K)
+                     */
+                    thermal_transm_envi_base: number;
+                    /**
+                     * Thermal Transm Walls
+                     * @description Thermal transmittance of walls above ground (unit: W/m².K)
+                     */
+                    thermal_transm_walls: number;
+                    /**
+                     * Thickness Walls
+                     * @description Thickness of the walls (unit: m)
+                     */
+                    thickness_walls: number;
+                    /**
+                     * Total Area
+                     * @description Total area of the building element across entire dwelling; if the Floor is divided among several zones, this is the total area across all zones (unit: m²)
+                     */
+                    total_area: number;
+                    /**
+                     * Type
+                     * @constant
+                     */
+                    type: "BuildingElementGround";
+                    /**
+                     * U Value
+                     * @description Steady-state thermal transmittance of floor, including the effect of the ground (calculated for the entire ground floor, even if it is distributed among several zones) (unit: W/m2.K)
+                     */
+                    u_value: number;
+                };
+                /**
+                 * BuildingElementOpaqueFHS
+                 * @description FHS-specific version of BuildingElementOpaque with additional fields
+                 */
+                BuildingElementOpaqueFHS: {
+                    /**
+                     * Area
+                     * @description Net area of the opaque building element (i.e. minus any windows / doors / etc.) (unit: m²)
+                     */
+                    area: number;
+                    /**
+                     * Areal Heat Capacity
+                     * @description Areal heat capacity (unit: J/m².K)
+                     */
+                    areal_heat_capacity: number;
+                    /**
+                     * Base Height
+                     * @description The distance between the ground and the lowest edge of the element (unit: m)
+                     */
+                    base_height: number;
+                    /**
+                     * Height
+                     * @description The height of the building element (unit: m)
+                     */
+                    height: number;
+                    /**
+                     * Is External Door
+                     * @default null
+                     */
+                    is_external_door?: boolean | null;
+                    /**
+                     * Is Unheated Pitched Roof
+                     * @default null
+                     */
+                    is_unheated_pitched_roof?: boolean | null;
+                    /** @description Mass distribution class of the building element, one of: evenly distributed (D); concentrated on external side (E); concentrated on internal side (I); concentrated on internal and external sides (IE); concentrated in middle (M). */
+                    mass_distribution_class: components["schemas"]["MassDistributionClass"];
+                    /**
+                     * Orientation360
+                     * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
+                     */
+                    orientation360: number;
+                    /**
+                     * Pitch
+                     * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+                     */
+                    pitch: number;
+                    /**
+                     * Solar Absorption Coeff
+                     * @description Solar absorption coefficient at the external surface (dimensionless)
+                     */
+                    solar_absorption_coeff: number;
+                    /**
+                     * Thermal Resistance Construction
+                     * @description Thermal resistance (unit: m².K/W)
+                     * @default null
+                     */
+                    thermal_resistance_construction?: number | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "BuildingElementOpaque";
+                    /**
+                     * U Value
+                     * @default null
+                     */
+                    u_value?: number | null;
+                    /**
+                     * Width
+                     * @description The width of the building element (unit: m)
+                     */
+                    width: number;
+                };
+                /**
+                 * BuildingElementTransparentFHS
+                 * @description FHS-specific version of BuildingElementTransparent with additional fields
+                 */
+                BuildingElementTransparentFHS: {
+                    /**
+                     * Control Windowopenable
+                     * @default null
+                     */
+                    Control_WindowOpenable?: string | null;
+                    /**
+                     * Base Height
+                     * @description The distance between the ground and the lowest edge of the element (unit: m)
+                     */
+                    base_height: number;
+                    /**
+                     * Frame Area Fraction
+                     * @description The frame area fraction of window, ratio of the projected frame area to the overall projected area of the glazed element of the window
+                     */
+                    frame_area_fraction: number;
+                    /** Free Area Height */
+                    free_area_height: number;
+                    /**
+                     * G Value
+                     * @description Total solar energy transmittance of the transparent part of the window
+                     */
+                    g_value: number;
+                    /**
+                     * Height
+                     * @description The height of the building element (unit: m)
+                     */
+                    height: number;
+                    /** Max Window Open Area */
+                    max_window_open_area: number;
+                    /** Mid Height */
+                    mid_height: number;
+                    /**
+                     * Orientation360
+                     * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
+                     */
+                    orientation360: number;
+                    /**
+                     * Pitch
+                     * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+                     */
+                    pitch: number;
+                    /**
+                     * Security Risk
+                     * @default null
+                     */
+                    security_risk?: boolean | null;
+                    /** Shading */
+                    shading: (components["schemas"]["WindowShadingObject"] | components["schemas"]["WindowShadingObstacle"])[];
+                    /**
+                     * Thermal Resistance Construction
+                     * @description Thermal resistance (unit: m².K/W)
+                     * @default null
+                     */
+                    thermal_resistance_construction?: number | null;
+                    /**
+                     * Treatment
+                     * @default null
+                     */
+                    treatment?: components["schemas"]["WindowTreatment"][] | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "BuildingElementTransparent";
+                    /**
+                     * U Value
+                     * @default null
+                     */
+                    u_value?: number | null;
+                    /**
+                     * Width
+                     * @description The width of the building element (unit: m)
+                     */
+                    width: number;
+                    /** Window Part List */
+                    window_part_list: components["schemas"]["WindowPart"][];
+                };
+                /** ChargeLevel */
+                ChargeLevel: number | number[] | components["schemas"]["ScheduleForDouble"];
+                /** ClothesDrying */
+                ClothesDrying: {
+                    /** Kwh Per 100Cycle */
+                    kWh_per_100cycle: number;
+                    /** Kg Load */
+                    kg_load: number;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
+                };
+                /** ClothesWashing */
+                ClothesWashing: {
+                    /** Kwh Per 100Cycle */
+                    kWh_per_100cycle: number;
+                    /** Kg Load */
+                    kg_load: number;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
+                };
+                /** ColdWaterSource */
+                ColdWaterSource: {
+                    /**
+                     * Start Day
                      * @description First day of the time series, day of the year, 0 to 365
                      */
                     start_day: number;
-                    /** @description List of cold water temperatures, one entry per hour (unit: ˚C) */
+                    /**
+                     * Temperatures
+                     * @description List of cold water temperatures, one entry per hour (unit: ˚C)
+                     */
                     temperatures: number[];
                     /**
-                     * Format: double
+                     * Time Series Step
                      * @description Timestep of the time series data (unit: hours)
                      */
                     time_series_step: number;
-                    type?: string | null;
                 };
-                ColdWaterSourceInput: {
-                    "header tank"?: components["schemas"]["ColdWaterSourceDetails"] | null;
-                    "mains water"?: components["schemas"]["ColdWaterSourceDetails"] | null;
-                };
-                /** @enum {string} */
-                ColdWaterSourceType: Fhs_inputSchema$defsColdWaterSourceType;
-                /** @enum {string} */
-                CombustionAirSupplySituation: Fhs_inputSchema$defsCombustionAirSupplySituation;
+                /**
+                 * CombustionAirSupplySituation
+                 * @enum {string}
+                 */
+                CombustionAirSupplySituation: "room_air" | "outside";
+                /** CombustionAppliance */
                 CombustionAppliance: {
                     appliance_type: components["schemas"]["CombustionApplianceType"];
                     exhaust_situation: components["schemas"]["FlueGasExhaustSituation"];
                     fuel_type: components["schemas"]["CombustionFuelType"];
                     supply_situation: components["schemas"]["CombustionAirSupplySituation"];
                 };
-                /** @enum {string} */
-                CombustionApplianceType: Fhs_inputSchema$defsCombustionApplianceType;
-                /** @enum {string} */
-                CombustionFuelType: Fhs_inputSchema$defsCombustionFuelType;
-                Control: {
-                    [key: string]: components["schemas"]["ControlDetails"];
+                /**
+                 * CombustionApplianceType
+                 * @enum {string}
+                 */
+                CombustionApplianceType: "open_fireplace" | "closed_with_fan" | "open_gas_flue_balancer" | "open_gas_kitchen_stove" | "open_gas_fire" | "closed_fire";
+                /**
+                 * CombustionFuelType
+                 * @enum {string}
+                 */
+                CombustionFuelType: "wood" | "gas" | "oil" | "coal";
+                /** ControlChargeTarget */
+                ControlChargeTarget: {
+                    /**
+                     * @description Proportion of the charge targeted for each day
+                     * @default null
+                     */
+                    charge_level?: components["schemas"]["ChargeLevel"] | null;
+                    /** @default null */
+                    external_sensor?: components["schemas"]["ExternalSensor"] | null;
+                    /** @default null */
+                    logic_type?: components["schemas"]["ControlLogicType"] | null;
+                    /** @description List of boolean values where true means 'on' (one entry per hour) */
+                    schedule: components["schemas"]["ScheduleForBoolean"];
+                    /**
+                     * Start Day
+                     * @description First day of the time series, day of the year, 0 to 365
+                     */
+                    start_day: number;
+                    /**
+                     * Temp Charge Cut
+                     * @default null
+                     */
+                    temp_charge_cut?: number | null;
+                    /** @default null */
+                    temp_charge_cut_delta?: components["schemas"]["ScheduleForDouble"] | null;
+                    /**
+                     * Time Series Step
+                     * @description Timestep of the time series data (unit: hours)
+                     */
+                    time_series_step: number;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "ChargeControl";
                 };
+                /** ControlCombination */
                 ControlCombination: {
+                    /** Controls */
                     controls: string[];
                     operation: components["schemas"]["ControlCombinationOperation"];
                 };
-                /** @enum {string} */
-                ControlCombinationOperation: Fhs_inputSchema$defsControlCombinationOperation;
+                /**
+                 * ControlCombinationOperation
+                 * @enum {string}
+                 */
+                ControlCombinationOperation: "AND" | "OR" | "XOR" | "NOT" | "MAX" | "MIN" | "MEAN";
+                /** ControlCombinationTime */
+                ControlCombinationTime: {
+                    combination: components["schemas"]["ControlCombinations"];
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "CombinationTimeControl";
+                };
+                /**
+                 * ControlCombinations
+                 * @description A dictionary of control combinations where:
+                 *     - Keys are user-defined names (e.g., "main", "week", "weekday", "weekend")
+                 *     - Values conform to the ControlCombination schema
+                 *     - The "main" entry is required
+                 */
                 ControlCombinations: {
-                    main: components["schemas"]["ControlCombination"];
-                } & {
                     [key: string]: components["schemas"]["ControlCombination"];
                 };
-                ControlDetails: {
-                    allow_null?: boolean | null;
-                    logic_type?: components["schemas"]["ControlLogicType"] | null;
-                    /** @description List of boolean values where true means on, one entry per hour */
-                    schedule: components["schemas"]["Schedule_for_Boolean"];
-                    /**
-                     * Format: uint32
-                     * @description First day of the time series, day of the year, 0 to 365
-                     */
-                    start_day: number;
-                    /**
-                     * Format: double
-                     * @description Timestep of the time series data (unit: hours)
-                     */
-                    time_series_step: number;
-                    /** @constant */
-                    type: "OnOffTimeControl";
-                } | {
-                    logic_type?: components["schemas"]["ControlLogicType"] | null;
+                /**
+                 * ControlLogicType
+                 * @enum {string}
+                 */
+                ControlLogicType: "celect" | "heat_battery" | "hhrsh" | "automatic" | "manual";
+                /** ControlOnOffCostMinimising */
+                ControlOnOffCostMinimising: {
                     /** @description List of cost values (one entry per time_series_step) */
-                    schedule: components["schemas"]["Schedule_for_double"];
+                    schedule: components["schemas"]["ScheduleForDouble"];
                     /**
-                     * Format: uint32
+                     * Start Day
                      * @description First day of the time series, day of the year, 0 to 365
                      */
                     start_day: number;
                     /**
-                     * Format: double
+                     * Time On Daily
                      * @description Number of 'on' hours to be set per day
                      */
-                    time_on_daily?: number | null;
+                    time_on_daily: number;
                     /**
-                     * Format: double
+                     * Time Series Step
                      * @description Timestep of the time series data (unit: hours)
                      */
                     time_series_step: number;
-                    /** @constant */
-                    type: "OnOffCostMinimisingTimeControl";
-                } | {
                     /**
-                     * Format: double
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "OnOffCostMinimisingTimeControl";
+                };
+                /** ControlOnOffTimer */
+                ControlOnOffTimer: {
+                    /**
+                     * Allow Null
+                     * @default null
+                     */
+                    allow_null?: boolean | null;
+                    /** @description List of boolean values where true means on, one entry per hour */
+                    schedule: components["schemas"]["ScheduleForBoolean"];
+                    /**
+                     * Start Day
+                     * @description First day of the time series, day of the year, 0 to 365
+                     */
+                    start_day: number;
+                    /**
+                     * Time Series Step
+                     * @description Timestep of the time series data (unit: hours)
+                     */
+                    time_series_step: number;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "OnOffTimeControl";
+                };
+                /** ControlSetpointTimer */
+                ControlSetpointTimer: {
+                    /**
+                     * Advanced Start
                      * @description How long before heating period the system should switch on (unit: hours)
+                     * @default null
                      */
                     advanced_start?: number | null;
-                    /** @description If both min and max limits are set but setpoint is not, whether to default to min (false) or max (true) */
-                    default_to_max?: boolean | null;
-                    logic_type?: components["schemas"]["ControlLogicType"] | null;
-                    /** @description List of temperature values, one entry per hour (unit: ˚C) */
-                    schedule: components["schemas"]["Schedule_for_double"];
                     /**
-                     * Format: double
-                     * @description Maximum setpoint allowed (unit: ˚C)
+                     * Default To Max
+                     * @description If both min and max limits are set but setpoint is not, whether to default to min (false) or max (true)
+                     * @default null
+                     */
+                    default_to_max?: boolean | null;
+                    /** @description list of float values (one entry per hour) */
+                    schedule: components["schemas"]["ScheduleForDouble"];
+                    /**
+                     * Setpoint Max
+                     * @description Maximum setpoint allowed
+                     * @default null
                      */
                     setpoint_max?: number | null;
                     /**
-                     * Format: double
-                     * @description Minimum setpoint allowed (unit: ˚C)
+                     * Setpoint Min
+                     * @description Minimum setpoint allowed
+                     * @default null
                      */
                     setpoint_min?: number | null;
                     /**
-                     * Format: uint32
+                     * Start Day
                      * @description First day of the time series, day of the year, 0 to 365
                      */
                     start_day: number;
                     /**
-                     * Format: double
+                     * Time Series Step
                      * @description Timestep of the time series data (unit: hours)
                      */
                     time_series_step: number;
-                    /** @constant */
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
                     type: "SetpointTimeControl";
-                } | {
-                    /** @description Proportion of the charge targeted for each day */
-                    charge_level?: components["schemas"]["ChargeLevel"] | null;
-                    external_sensor?: components["schemas"]["ExternalSensor"] | null;
-                    /** Format: double */
-                    full_charge_temp_diff?: number | null;
-                    logic_type?: components["schemas"]["ControlLogicType"] | null;
-                    /** Format: double */
-                    min_target_charge_factor?: number | null;
-                    /** @description List of boolean values where true means 'on' (one entry per hour) */
-                    schedule: components["schemas"]["Schedule_for_Boolean"];
-                    /**
-                     * Format: uint32
-                     * @description First day of the time series, day of the year, 0 to 365
-                     */
-                    start_day: number;
-                    /**
-                     * Format: double
-                     * @description (Ignored and likely not part of final specification)
-                     */
-                    target_charge?: number | null;
-                    /** Format: double */
-                    temp_charge_cut?: number | null;
-                    temp_charge_cut_delta?: components["schemas"]["Schedule_for_double"] | null;
-                    /**
-                     * Format: double
-                     * @description Timestep of the time series data (unit: hours)
-                     */
-                    time_series_step: number;
-                    /** @constant */
-                    type: "ChargeControl";
-                } | {
-                    combination: components["schemas"]["ControlCombinations"];
-                    start_day: number;
-                    /** Format: double */
-                    time_series_step: number;
-                    /** @constant */
-                    type?: "CombinationTimeControl";
                 };
-                /** @enum {string} */
-                ControlLogicType: Fhs_inputSchema$defsControlLogicType;
+                /** CustomEnergySourceFactor */
                 CustomEnergySourceFactor: {
-                    /** Format: double */
+                    /** Emissions Factor Kgco2E/Kwh */
                     "Emissions Factor kgCO2e/kWh": number;
-                    /** Format: double */
+                    /** Emissions Factor Kgco2E/Kwh Including Out-Of-Scope Emissions */
                     "Emissions Factor kgCO2e/kWh including out-of-scope emissions": number;
-                    /** Format: double */
+                    /** Primary Energy Factor Kwh/Kwh Delivered */
                     "Primary Energy Factor kWh/kWh delivered": number;
                 };
-                /** @enum {string} */
-                DaylightSavingsConfig: Fhs_inputSchema$defsDaylightSavingsConfig;
-                /** @enum {string} */
-                DiverterHeatSourceType: Fhs_inputSchema$defsDiverterHeatSourceType;
-                /** @enum {string} */
-                DuctShape: Fhs_inputSchema$defsDuctShape;
-                /** @enum {string} */
-                DuctType: Fhs_inputSchema$defsDuctType;
+                /** Dishwasher */
+                Dishwasher: {
+                    /** Kwh Per 100Cycle */
+                    kWh_per_100cycle: number;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
+                };
+                /**
+                 * DuctShape
+                 * @enum {string}
+                 */
+                DuctShape: "circular" | "rectangular";
+                /**
+                 * DuctType
+                 * @enum {string}
+                 */
+                DuctType: "intake" | "supply" | "extract" | "exhaust";
+                /** EcoDesignController */
                 EcoDesignController: {
                     ecodesign_control_class: components["schemas"]["EcoDesignControllerClass"];
-                    /** Format: double */
+                    /**
+                     * Max Outdoor Temp
+                     * @default null
+                     */
                     max_outdoor_temp?: number | null;
-                    /** Format: double */
+                    /**
+                     * Min Flow Temp
+                     * @default null
+                     */
                     min_flow_temp?: number | null;
-                    /** Format: double */
+                    /**
+                     * Min Outdoor Temp
+                     * @default null
+                     */
                     min_outdoor_temp?: number | null;
                 };
-                EcoDesignControllerClass: number;
-                EdgeInsulation: {
-                    /** Format: double */
+                /**
+                 * EcoDesignControllerClass
+                 * @enum {integer}
+                 */
+                EcoDesignControllerClass: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+                /** EdgeInsulationHorizontal */
+                EdgeInsulationHorizontal: {
+                    /** Edge Thermal Resistance */
                     edge_thermal_resistance: number;
-                    /** @constant */
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
                     type: "horizontal";
-                    /** Format: double */
+                    /** Width */
                     width: number;
-                } | {
-                    /** Format: double */
+                };
+                /** EdgeInsulationVertical */
+                EdgeInsulationVertical: {
+                    /** Depth */
                     depth: number;
-                    /** Format: double */
+                    /** Edge Thermal Resistance */
                     edge_thermal_resistance: number;
-                    /** @constant */
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
                     type: "vertical";
                 };
+                /** ElectricBattery */
                 ElectricBattery: {
-                    /** Format: double */
+                    /** Battery Age */
                     battery_age: number;
                     battery_location: components["schemas"]["BatteryLocation"];
-                    /** Format: double */
+                    /** Capacity */
                     capacity: number;
-                    /** Format: double */
+                    /** Charge Discharge Efficiency Round Trip */
                     charge_discharge_efficiency_round_trip: number;
+                    /** Grid Charging Possible */
                     grid_charging_possible: boolean;
-                    /** Format: double */
+                    /** Maximum Charge Rate One Way Trip */
                     maximum_charge_rate_one_way_trip: number;
-                    /** Format: double */
+                    /** Maximum Discharge Rate One Way Trip */
                     maximum_discharge_rate_one_way_trip: number;
-                    /** Format: double */
+                    /** Minimum Charge Rate One Way Trip */
                     minimum_charge_rate_one_way_trip: number;
                 };
+                /** EnergyDiverter */
                 EnergyDiverter: {
-                    Controlmax?: string;
-                    HeatSource: components["schemas"]["DiverterHeatSourceType"];
-                    StorageTank?: components["schemas"]["StorageTankType"] | null;
+                    /** Controlmax */
+                    Controlmax: string;
+                    /** Heatsource */
+                    HeatSource: string;
                 };
-                EnergySupplyDetails: {
+                /** EnergySupply */
+                EnergySupply: {
+                    /** @default null */
                     ElectricBattery?: components["schemas"]["ElectricBattery"] | null;
+                    /** @default null */
                     diverter?: components["schemas"]["EnergyDiverter"] | null;
+                    /** @default null */
                     factor?: components["schemas"]["CustomEnergySourceFactor"] | null;
                     fuel: components["schemas"]["FuelType"];
-                    /** @description Denotes that this energy supply can export its surplus supply */
-                    is_export_capable?: boolean | null;
-                    priority?: components["schemas"]["SecondarySupplyType"][] | null;
+                    /**
+                     * Is Export Capable
+                     * @description Denotes that this energy supply can export its surplus supply
+                     */
+                    is_export_capable: boolean;
+                    /**
+                     * Priority
+                     * @default null
+                     */
+                    priority?: components["schemas"]["EnergySupplyPriorityEntry"][] | null;
+                    /**
+                     * Tariff
+                     * @default null
+                     */
                     tariff?: string | null;
+                    /**
+                     * Threshold Charges
+                     * @default null
+                     */
                     threshold_charges?: number[] | null;
+                    /**
+                     * Threshold Prices
+                     * @default null
+                     */
                     threshold_prices?: number[] | null;
                 };
-                ExternalConditionsInput: {
-                    /** @description List of external air temperatures, one entry per hour (unit: ˚C) */
+                /**
+                 * EnergySupplyPriorityEntry
+                 * @enum {string}
+                 */
+                EnergySupplyPriorityEntry: "ElectricBattery" | "diverter";
+                /**
+                 * EnergySupplyType
+                 * @enum {string}
+                 */
+                EnergySupplyType: "mains elec" | "mains gas";
+                /**
+                 * ExternalConditionsInputFHS
+                 * @description FHS-specific version of ExternalConditionsInput
+                 */
+                ExternalConditionsInputFHS: {
+                    /**
+                     * Air Temperatures
+                     * @description List of external air temperatures, one entry per hour (unit: ˚C)
+                     * @default null
+                     */
                     air_temperatures?: number[] | null;
-                    /** @description How daylight savings are handled in the climate data */
-                    daylight_savings?: components["schemas"]["DaylightSavingsConfig"] | null;
-                    /** @description List of diffuse horizontal radiation values, one entry per hour (unit: W/m²) */
+                    /**
+                     * Diffuse Horizontal Radiation
+                     * @description List of diffuse horizontal radiation values, one entry per hour (unit: W/m²)
+                     * @default null
+                     */
                     diffuse_horizontal_radiation?: number[] | null;
-                    /** @description A flag to indicate whether direct beam radiation from climate data needs to be converted from horizontal to normal incidence; if normal direct beam radiation values are provided then no conversion is needed */
+                    /**
+                     * Direct Beam Conversion Needed
+                     * @description A flag to indicate whether direct beam radiation from climate data needs to be converted from horizontal to normal incidence; if normal direct beam radiation values are provided then no conversion is needed
+                     * @default null
+                     */
                     direct_beam_conversion_needed?: boolean | null;
-                    /** @description List of direct beam radiation values, one entry per hour (unit: W/m²) */
+                    /**
+                     * Direct Beam Radiation
+                     * @description List of direct beam radiation values, one entry per hour (unit: W/m²)
+                     * @default null
+                     */
                     direct_beam_radiation?: number[] | null;
                     /**
-                     * Format: uint32
-                     * @description Last day of the time series, day of the year, 0 to 365
-                     */
-                    end_day?: number | null;
-                    /** @description (Not used) */
-                    ground_temperatures?: number[] | null;
-                    /**
-                     * Format: uint32
-                     * @description Day of the week for January 1st, Monday to Sunday, 1 to 7
-                     */
-                    january_first?: number | null;
-                    /**
-                     * Format: double
+                     * Latitude
                      * @description Latitude of weather station, angle from south (unit: ˚)
+                     * @default null
                      */
                     latitude?: number | null;
-                    /** @description Whether climate data includes a leap day */
-                    leap_day_included?: boolean | null;
                     /**
-                     * Format: double
+                     * Longitude
                      * @description Longitude of weather station, easterly +ve westerly -ve (unit: ˚)
+                     * @default null
                      */
                     longitude?: number | null;
-                    /** @description Data splitting the ground plane into segments (8-36) and giving height and distance to shading objects surrounding the building */
-                    shading_segments?: components["schemas"]["ShadingSegment"][];
-                    /** @description List of ground reflectivity values, 0 to 1, one entry per hour */
+                    /**
+                     * Shading Segments
+                     * @description Data splitting the ground plane into segments (8-36) and giving height and distance to shading objects surrounding the building
+                     * @default null
+                     */
+                    shading_segments?: components["schemas"]["ShadingSegmentFHS"][] | null;
+                    /**
+                     * Solar Reflectivity Of Ground
+                     * @description List of ground reflectivity values, 0 to 1, one entry per hour
+                     * @default null
+                     */
                     solar_reflectivity_of_ground?: number[] | null;
                     /**
-                     * Format: uint32
-                     * @description First day of the time series, day of the year, 0 to 365
+                     * Wind Directions
+                     * @description List of wind directions in degrees where North=0, East=90, South=180, West=270. Values range: 0 to 360. Wind direction is reported by the direction from which it originates, e.g. a southerly (180 degree) wind blows from the south to the north. (unit: ˚)
+                     * @default null
                      */
-                    start_day?: number | null;
-                    /**
-                     * Format: double
-                     * @description Timestep of the time series data (unit: hours)
-                     */
-                    time_series_step?: number | null;
-                    /**
-                     * Format: uint32
-                     * @description Timezone of weather station, -12 to 12
-                     */
-                    timezone?: number | null;
-                    /** @description List of wind directions in degrees where North=0, East=90, South=180, West=270. Values range: 0 to 360. Wind direction is reported by the direction from which it originates, e.g. a southernly (180 degree) wind blows from the south to the north. (unit: ˚) */
                     wind_directions?: number[] | null;
-                    /** @description List of wind speeds, one entry per hour (unit: m/s) */
+                    /**
+                     * Wind Speeds
+                     * @description List of wind speeds, one entry per hour (unit: m/s)
+                     * @default null
+                     */
                     wind_speeds?: number[] | null;
                 };
+                /** ExternalSensor */
                 ExternalSensor: {
+                    /** Correlation */
                     correlation: components["schemas"]["ExternalSensorCorrelation"][];
                 };
+                /** ExternalSensorCorrelation */
                 ExternalSensorCorrelation: {
-                    /** Format: double */
+                    /** Max Charge */
                     max_charge: number;
-                    /** Format: double */
+                    /** Temperature */
                     temperature: number;
                 };
+                /** FanSpeedData */
                 FanSpeedData: {
+                    /** Power Output */
                     power_output: number[];
-                    /** Format: double */
+                    /** Temperature Diff */
                     temperature_diff: number;
                 };
+                /** FancoilTestData */
                 FancoilTestData: {
+                    /** Fan Power W */
                     fan_power_W: number[];
+                    /** Fan Speed Data */
                     fan_speed_data: components["schemas"]["FanSpeedData"][];
                 };
-                /** @enum {string} */
-                FloorType: Fhs_inputSchema$defsFloorType;
-                /** @enum {string} */
-                FlueGasExhaustSituation: Fhs_inputSchema$defsFlueGasExhaustSituation;
-                /** @enum {string} */
-                FuelType: Fhs_inputSchema$defsFuelType;
+                /**
+                 * FlueGasExhaustSituation
+                 * @enum {string}
+                 */
+                FlueGasExhaustSituation: "into_room" | "into_separate_duct" | "into_mech_vent";
+                /** Freezer */
+                Freezer: {
+                    /** Kwh Per Annum */
+                    kWh_per_annum: number;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
+                };
+                /** Fridge */
+                Fridge: {
+                    /** Kwh Per Annum */
+                    kWh_per_annum: number;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
+                };
+                /** FridgeFreezer */
+                FridgeFreezer: {
+                    /** @default null */
+                    Energysupply?: components["schemas"]["EnergySupplyType"] | null;
+                    /**
+                     * Kwh Per Annum
+                     * @default null
+                     */
+                    kWh_per_annum?: number | null;
+                    /**
+                     * Kwh Per Cycle
+                     * @default null
+                     */
+                    kWh_per_cycle?: number | null;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
+                };
+                /**
+                 * FuelType
+                 * @enum {string}
+                 */
+                FuelType: "LPG_bottled" | "LPG_bulk" | "LPG_condition_11F" | "custom" | "electricity" | "energy_from_environment" | "mains_gas" | "unmet_demand";
                 General: {
                     build_type: components["schemas"]["BuildType"];
-                    /** Format: uint */
+                    /** Format: int32 */
                     storey_of_dwelling?: number | null;
-                    /** Format: uint */
+                    /** Format: int32 */
                     storeys_in_building: number;
                 };
-                /** @enum {string} */
-                HeatPumpBackupControlType: Fhs_inputSchema$defsHeatPumpBackupControlType;
+                /**
+                 * HeatPumpBackupControlType
+                 * @enum {string}
+                 */
+                HeatPumpBackupControlType: "None" | "TopUp" | "Substitute";
+                /**
+                 * HeatPumpBoiler
+                 * @description Boiler used as backup for heat pump systems
+                 */
                 HeatPumpBoiler: {
+                    /** Energysupply */
                     EnergySupply: string;
+                    /** Energysupply Aux */
                     EnergySupply_aux: string;
                     boiler_location: components["schemas"]["HeatSourceLocation"];
+                    /** @default null */
                     cost_schedule_hybrid?: components["schemas"]["BoilerCostScheduleHybrid"] | null;
-                    /** Format: double */
+                    /** Efficiency Full Load */
                     efficiency_full_load: number;
-                    /** Format: double */
+                    /** Efficiency Part Load */
                     efficiency_part_load: number;
-                    /** Format: double */
+                    /** Electricity Circ Pump */
                     electricity_circ_pump: number;
-                    /** Format: double */
+                    /** Electricity Full Load */
                     electricity_full_load: number;
-                    /** Format: double */
+                    /** Electricity Part Load */
                     electricity_part_load: number;
-                    /** Format: double */
+                    /** Electricity Standby */
                     electricity_standby: number;
-                    /** Format: double */
+                    /** Modulation Load */
                     modulation_load: number;
-                    /** Format: double */
+                    /** Rated Power */
                     rated_power: number;
                 };
+                /** HeatPumpBufferTank */
                 HeatPumpBufferTank: {
-                    /** Format: double */
+                    /** Daily Losses */
                     daily_losses: number;
-                    /** Format: double */
+                    /** Pump Fixed Flow Rate */
                     pump_fixed_flow_rate: number;
-                    /** Format: double */
+                    /** Pump Power At Flow Rate */
                     pump_power_at_flow_rate: number;
-                    /** Format: double */
+                    /** Volume */
                     volume: number;
                 };
+                /** HeatPumpHotWaterOnly */
+                HeatPumpHotWaterOnly: {
+                    /**
+                     * Controlmax
+                     * @description Reference to a control schedule of maximum temperature setpoints
+                     */
+                    Controlmax: string;
+                    /**
+                     * Controlmin
+                     * @description Reference to a control schedule of minimum temperature setpoints
+                     */
+                    Controlmin: string;
+                    /** Energysupply */
+                    EnergySupply: string;
+                    /** Daily Losses Declared */
+                    daily_losses_declared: number;
+                    /** Heat Exchanger Surface Area Declared */
+                    heat_exchanger_surface_area_declared: number;
+                    /** Heater Position */
+                    heater_position: number;
+                    /** In Use Factor Mismatch */
+                    in_use_factor_mismatch: number;
+                    /** Power Max */
+                    power_max: number;
+                    /** Tank Volume Declared */
+                    tank_volume_declared: number;
+                    test_data: components["schemas"]["HeatPumpHotWaterTestData"];
+                    /**
+                     * Thermostat Position
+                     * @description Required for StorageTank but not for SmartHotWaterTank
+                     * @default null
+                     */
+                    thermostat_position?: number | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "HeatPump_HWOnly";
+                    /** Vol Hw Daily Average */
+                    vol_hw_daily_average: number;
+                };
+                /** HeatPumpHotWaterOnlyTestDatum */
                 HeatPumpHotWaterOnlyTestDatum: {
-                    /** Format: double */
+                    /** Cop Dhw */
                     cop_dhw: number;
-                    /** Format: double */
+                    /** Energy Input Measured */
                     energy_input_measured: number;
-                    /** Format: double */
+                    /** Hw Tapping Prof Daily Total */
                     hw_tapping_prof_daily_total: number;
-                    /** Format: double */
+                    /** Hw Vessel Loss Daily */
                     hw_vessel_loss_daily: number;
-                    /** Format: double */
+                    /** Power Standby */
                     power_standby: number;
                 };
+                /** HeatPumpHotWaterTestData */
                 HeatPumpHotWaterTestData: {
+                    /** @default null */
                     L?: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"] | null;
                     M: components["schemas"]["HeatPumpHotWaterOnlyTestDatum"];
                 };
-                /** @enum {string} */
-                HeatPumpSinkType: Fhs_inputSchema$defsHeatPumpSinkType;
-                /** @enum {string} */
-                HeatPumpSourceType: Fhs_inputSchema$defsHeatPumpSourceType;
+                /**
+                 * HeatPumpSinkType
+                 * @enum {string}
+                 */
+                HeatPumpSinkType: "Water" | "Air" | "Glycol25";
+                /**
+                 * HeatPumpSourceType
+                 * @enum {string}
+                 */
+                HeatPumpSourceType: "Ground" | "OutsideAir" | "ExhaustAirMEV" | "ExhaustAirMVHR" | "ExhaustAirMixed" | "WaterGround" | "WaterSurface" | "HeatNetwork";
+                /** HeatPumpTestDatum */
                 HeatPumpTestDatum: {
-                    /** Format: double */
+                    /**
+                     * Air Flow Rate
+                     * @default null
+                     */
                     air_flow_rate?: number | null;
-                    /** Format: double */
+                    /** Capacity */
                     capacity: number;
-                    /** Format: double */
+                    /** Cop */
                     cop: number;
-                    /** Format: double */
+                    /** Degradation Coeff */
                     degradation_coeff: number;
-                    /** Format: double */
+                    /** Design Flow Temp */
                     design_flow_temp: number;
-                    /** Format: double */
+                    /**
+                     * Eahp Mixed Ext Air Ratio
+                     * @default null
+                     */
                     eahp_mixed_ext_air_ratio?: number | null;
-                    /** Format: double */
+                    /** Temp Outlet */
                     temp_outlet: number;
-                    /** Format: double */
+                    /** Temp Source */
                     temp_source: number;
-                    /** Format: double */
+                    /** Temp Test */
                     temp_test: number;
                     test_letter: components["schemas"]["TestLetter"];
                 };
-                HeatSource: {
-                    Control?: components["schemas"]["HeatSourceControlType"] | null;
-                    Controlmax?: string | null;
-                    Controlmin?: string | null;
+                /**
+                 * HeatSourceLocation
+                 * @enum {string}
+                 */
+                HeatSourceLocation: "internal" | "external";
+                /**
+                 * HeatSourceWetBoiler
+                 * @description Standalone boiler heat source
+                 */
+                HeatSourceWetBoiler: {
+                    /** Energysupply */
                     EnergySupply: string;
-                    /** Format: double */
-                    heater_position: number;
-                    /** Format: double */
-                    power: number;
-                    /** Format: double */
-                    thermostat_position?: number;
-                    /** @constant */
-                    type: "ImmersionHeater";
-                } | {
-                    Controlmax: string;
-                    EnergySupply: string;
-                    /** Format: double */
-                    area_module: number;
-                    /** Format: double */
-                    collector_mass_flow_rate: number;
-                    control?: components["schemas"]["HeatSourceControlType"] | null;
-                    /** Format: double */
-                    first_order_hlc: number;
-                    /** Format: double */
-                    heater_position: number;
-                    /** Format: double */
-                    incidence_angle_modifier: number;
-                    /** Format: uint */
-                    modules: number;
-                    /** Format: double */
-                    orientation360: number;
-                    /** Format: double */
-                    peak_collector_efficiency: number;
-                    /** Format: double */
-                    power_pump: number;
-                    /** Format: double */
-                    power_pump_control: number;
-                    /** Format: double */
-                    second_order_hlc: number;
-                    sol_loc: components["schemas"]["SolarCellLocation"];
-                    /** Format: double */
-                    solar_loop_piping_hlc: number;
-                    /** Format: double */
-                    thermostat_position: number;
-                    /** Format: double */
-                    tilt: number;
-                    /** @constant */
-                    type: "SolarThermalSystem";
-                } | {
-                    ColdWaterSource?: components["schemas"]["ColdWaterSourceType"] | null;
-                    Control?: components["schemas"]["HeatSourceControlType"] | null;
-                    Controlmax?: string | null;
-                    Controlmin?: string | null;
-                    EnergySupply: string;
-                    /** Format: double */
-                    heater_position: number;
-                    name: string;
-                    /** Format: double */
-                    temp_flow_limit_upper?: number | null;
-                    /** Format: double */
-                    temp_return?: number | null;
-                    /** Format: double */
-                    thermostat_position?: number;
-                    /** @constant */
-                    type: "HeatSourceWet";
-                } | {
-                    Control?: components["schemas"]["HeatSourceControlType"] | null;
-                    Controlmax: string;
-                    Controlmin: string;
-                    EnergySupply: string;
-                    /** Format: double */
-                    daily_losses_declared: number;
-                    /** Format: double */
-                    heat_exchanger_surface_area_declared: number;
-                    /** Format: double */
-                    heater_position: number;
-                    /** Format: double */
-                    in_use_factor_mismatch: number;
-                    /** Format: double */
-                    power_max: number;
-                    /** Format: double */
-                    tank_volume_declared: number;
-                    test_data: components["schemas"]["HeatPumpHotWaterTestData"];
-                    /** Format: double */
-                    thermostat_position: number;
-                    /** @constant */
-                    type: "HeatPump_HWOnly";
-                    /** Format: double */
-                    vol_hw_daily_average: number;
+                    /** Energysupply Aux */
+                    EnergySupply_aux: string;
+                    boiler_location: components["schemas"]["HeatSourceLocation"];
+                    /** Efficiency Full Load */
+                    efficiency_full_load: number;
+                    /** Efficiency Part Load */
+                    efficiency_part_load: number;
+                    /** Electricity Circ Pump */
+                    electricity_circ_pump: number;
+                    /** Electricity Full Load */
+                    electricity_full_load: number;
+                    /** Electricity Part Load */
+                    electricity_part_load: number;
+                    /** Electricity Standby */
+                    electricity_standby: number;
+                    /** Modulation Load */
+                    modulation_load: number;
+                    /** Rated Power */
+                    rated_power: number;
+                    /**
+                     * Type
+                     * @constant
+                     */
+                    type: "Boiler";
                 };
-                /** @enum {string} */
-                HeatSourceControlType: Fhs_inputSchema$defsHeatSourceControlType;
-                /** @enum {string} */
-                HeatSourceLocation: Fhs_inputSchema$defsHeatSourceLocation;
-                HeatSourceWetDetails: {
-                    BufferTank?: components["schemas"]["HeatPumpBufferTank"] | null;
+                /** HeatSourceWetHIU */
+                HeatSourceWetHIU: {
+                    /** Energysupply */
                     EnergySupply: string;
+                    /** Hiu Daily Loss */
+                    HIU_daily_loss: number;
+                    /** Building Level Distribution Losses */
+                    building_level_distribution_losses: number;
+                    /** Power Max */
+                    power_max: number;
+                    /**
+                     * Type
+                     * @constant
+                     */
+                    type: "HIU";
+                };
+                /** HeatSourceWetHeatBattery */
+                HeatSourceWetHeatBattery: {
+                    /** A */
+                    A: number;
+                    /** B */
+                    B: number;
+                    /** Controlcharge */
+                    ControlCharge: string;
+                    /** Energysupply */
+                    EnergySupply: string;
+                    /** Capillary Diameter M */
+                    capillary_diameter_m: number;
+                    /** Electricity Circ Pump */
+                    electricity_circ_pump: number;
+                    /** Electricity Standby */
+                    electricity_standby: number;
+                    /** Flow Rate L Per Min */
+                    flow_rate_l_per_min: number;
+                    /** Heat Exchanger Surface Area M2 */
+                    heat_exchanger_surface_area_m2: number;
+                    /** Heat Storage Zone Material Kj Per K Above Phase Transition */
+                    heat_storage_zone_material_kJ_per_K_above_Phase_transition: number;
+                    /** Heat Storage Zone Material Kj Per K Below Phase Transition */
+                    heat_storage_zone_material_kJ_per_K_below_Phase_transition: number;
+                    /** Heat Storage Zone Material Kj Per K During Phase Transition */
+                    heat_storage_zone_material_kJ_per_K_during_Phase_transition: number;
+                    /** Max Rated Losses */
+                    max_rated_losses: number;
+                    /** Max Temperature */
+                    max_temperature: number;
+                    /** Number Of Units */
+                    number_of_units: number;
+                    /** Phase Transition Temperature Lower */
+                    phase_transition_temperature_lower: number;
+                    /** Phase Transition Temperature Upper */
+                    phase_transition_temperature_upper: number;
+                    /** Rated Charge Power */
+                    rated_charge_power: number;
+                    /** Simultaneous Charging And Discharging */
+                    simultaneous_charging_and_discharging: boolean;
+                    /**
+                     * Type
+                     * @constant
+                     */
+                    type: "HeatBattery";
+                    /** Velocity In Hex Tube At 1 L Per Min M Per S */
+                    velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
+                };
+                /** HeatSourceWetHeatPump */
+                HeatSourceWetHeatPump: {
+                    /** @default null */
+                    BufferTank?: components["schemas"]["HeatPumpBufferTank"] | null;
+                    /** Energysupply */
+                    EnergySupply: string;
+                    /**
+                     * Energysupply Heat Network
+                     * @default null
+                     */
                     EnergySupply_heat_network?: string | null;
+                    /**
+                     * Mechanicalventilation
+                     * @default null
+                     */
                     MechanicalVentilation?: string | null;
                     backup_ctrl_type: components["schemas"]["HeatPumpBackupControlType"];
+                    /** @default null */
                     boiler?: components["schemas"]["HeatPumpBoiler"] | null;
-                    /** Format: double */
+                    /**
+                     * Eahp Mixed Max Temp
+                     * @default null
+                     */
                     eahp_mixed_max_temp?: number | null;
-                    /** Format: double */
+                    /**
+                     * Eahp Mixed Min Temp
+                     * @default null
+                     */
                     eahp_mixed_min_temp?: number | null;
-                    /** Format: double */
+                    /**
+                     * Min Modulation Rate 20
+                     * @default null
+                     */
                     min_modulation_rate_20?: number | null;
-                    /** Format: double */
+                    /**
+                     * Min Modulation Rate 35
+                     * @default null
+                     */
                     min_modulation_rate_35?: number | null;
-                    /** Format: double */
+                    /**
+                     * Min Modulation Rate 55
+                     * @default null
+                     */
                     min_modulation_rate_55?: number | null;
-                    /** Format: double */
+                    /** Min Temp Diff Flow Return For Hp To Operate */
                     min_temp_diff_flow_return_for_hp_to_operate: number;
+                    /** Modulating Control */
                     modulating_control: boolean;
-                    /** Format: double */
+                    /** Power Crankcase Heater */
                     power_crankcase_heater: number;
-                    /** Format: double */
-                    power_heating_circ_pump: number;
-                    /** Format: double */
+                    /**
+                     * Power Heating Circ Pump
+                     * @default null
+                     */
+                    power_heating_circ_pump?: number | null;
+                    /**
+                     * Power Heating Warm Air Fan
+                     * @default null
+                     */
                     power_heating_warm_air_fan?: number | null;
-                    /** Format: double */
+                    /**
+                     * Power Max Backup
+                     * @default null
+                     */
                     power_max_backup?: number | null;
-                    /** Format: double */
+                    /** Power Off */
                     power_off: number;
-                    /** Format: double */
+                    /** Power Source Circ Pump */
                     power_source_circ_pump: number;
-                    /** Format: double */
+                    /** Power Standby */
                     power_standby: number;
                     sink_type: components["schemas"]["HeatPumpSinkType"];
                     source_type: components["schemas"]["HeatPumpSourceType"];
-                    /** Format: double */
+                    /**
+                     * Temp Distribution Heat Network
+                     * @default null
+                     */
                     temp_distribution_heat_network?: number | null;
-                    /** Format: double */
+                    /** Temp Lower Operating Limit */
                     temp_lower_operating_limit: number;
-                    /** Format: double */
-                    temp_return_feed_max: number;
+                    /**
+                     * Temp Return Feed Max
+                     * @default null
+                     */
+                    temp_return_feed_max?: number | null;
+                    /** Test Data En14825 */
                     test_data_EN14825: components["schemas"]["HeatPumpTestDatum"][];
-                    /** Format: double */
+                    /** Time Constant Onoff Operation */
                     time_constant_onoff_operation: number;
-                    /** Format: double */
-                    time_delay_backup: number;
-                    /** @constant */
+                    /**
+                     * Time Delay Backup
+                     * @default null
+                     */
+                    time_delay_backup?: number | null;
+                    /**
+                     * Type
+                     * @constant
+                     */
                     type: "HeatPump";
+                    /** Var Flow Temp Ctrl During Test */
                     var_flow_temp_ctrl_during_test: boolean;
-                } | {
+                };
+                /** HeatSourceWetHeatPumpWithProductReference */
+                HeatSourceWetHeatPumpWithProductReference: {
+                    /** @default null */
                     BufferTank?: components["schemas"]["HeatPumpBufferTank"] | null;
+                    /** Energysupply */
                     EnergySupply: string;
+                    /**
+                     * Energysupply Heat Network
+                     * @default null
+                     */
                     EnergySupply_heat_network?: string | null;
+                    /**
+                     * Mechanicalventilation
+                     * @default null
+                     */
                     MechanicalVentilation?: string | null;
+                    /** @default null */
                     boiler?: components["schemas"]["HeatPumpBoiler"] | null;
-                    /** Format: double */
+                    /**
+                     * Eahp Mixed Max Temp
+                     * @default null
+                     */
                     eahp_mixed_max_temp?: number | null;
-                    /** Format: double */
+                    /**
+                     * Eahp Mixed Min Temp
+                     * @default null
+                     */
                     eahp_mixed_min_temp?: number | null;
-                    /** Format: double */
+                    /**
+                     * Min Modulation Rate 20
+                     * @default null
+                     */
                     min_modulation_rate_20?: number | null;
-                    /** Format: double */
+                    /**
+                     * Min Modulation Rate 35
+                     * @default null
+                     */
                     min_modulation_rate_35?: number | null;
-                    /** Format: double */
+                    /**
+                     * Min Modulation Rate 55
+                     * @default null
+                     */
                     min_modulation_rate_55?: number | null;
                     /**
                      * Reference to the product in the HEM database
                      * @description A unique reference to a product held within the HEM database (PCDB)
                      */
                     product_reference: string;
-                    /** Format: double */
+                    /**
+                     * Temp Distribution Heat Network
+                     * @default null
+                     */
                     temp_distribution_heat_network?: number | null;
-                    /** @constant */
+                    /**
+                     * Type
+                     * @constant
+                     */
                     type: "HeatPump";
-                } | {
-                    EnergySupply: string;
-                    EnergySupply_aux: string;
-                    boiler_location: components["schemas"]["HeatSourceLocation"];
-                    /** Format: double */
-                    efficiency_full_load: number;
-                    /** Format: double */
-                    efficiency_part_load: number;
-                    /** Format: double */
-                    electricity_circ_pump: number;
-                    /** Format: double */
-                    electricity_full_load: number;
-                    /** Format: double */
-                    electricity_part_load: number;
-                    /** Format: double */
-                    electricity_standby: number;
-                    /** Format: double */
-                    modulation_load: number;
-                    /** Format: double */
-                    rated_power: number;
-                    /** @constant */
-                    type: "Boiler";
-                } | {
-                    /** Format: double */
-                    A: number;
-                    /** Format: double */
-                    B: number;
-                    ControlCharge: string;
-                    EnergySupply: string;
-                    /** Format: double */
-                    capillary_diameter_m: number;
-                    /** Format: double */
-                    electricity_circ_pump: number;
-                    /** Format: double */
-                    electricity_standby: number;
-                    flow_rate_l_per_min: number;
-                    heat_battery_location?: components["schemas"]["HeatSourceLocation"];
-                    /** Format: double */
-                    heat_exchanger_surface_area_m2: number;
-                    /** Format: double */
-                    heat_storage_zone_material_kJ_per_K_above_Phase_transition: number;
-                    /** Format: double */
-                    heat_storage_zone_material_kJ_per_K_below_Phase_transition: number;
-                    /** Format: double */
-                    heat_storage_zone_material_kJ_per_K_during_Phase_transition: number;
-                    /** Format: double */
-                    max_rated_losses: number;
-                    /** Format: double */
-                    max_temperature: number;
-                    /** Format: uint */
-                    number_of_units: number;
-                    /** Format: double */
-                    phase_transition_temperature_lower: number;
-                    /** Format: double */
-                    phase_transition_temperature_upper: number;
-                    /** Format: double */
-                    rated_charge_power: number;
-                    simultaneous_charging_and_discharging: boolean;
-                    /** @constant */
-                    type: "HeatBattery";
-                    /** Format: double */
-                    velocity_in_HEX_tube_at_1_l_per_min_m_per_s: number;
-                } | {
-                    EnergySupply: string;
-                    /** Format: double */
-                    HIU_daily_loss: number;
-                    /** Format: double */
-                    building_level_distribution_losses: number;
-                    /** Format: double */
-                    power_max: number;
-                    /** @constant */
-                    type: "HIU";
                 };
-                HeatSourceWetType: Fhs_inputSchema$defsHeatSourceWetType | {
-                    Other: string;
+                /** HeatSourceWetServiceWaterRegular */
+                HeatSourceWetServiceWaterRegular: {
+                    /**
+                     * Controlmax
+                     * @description Reference to a control schedule of maximum temperature setpoints
+                     */
+                    Controlmax: string;
+                    /**
+                     * Controlmin
+                     * @description Reference to a control schedule of minimum temperature setpoints
+                     */
+                    Controlmin: string;
+                    /** Energysupply */
+                    EnergySupply: string;
+                    /** Heater Position */
+                    heater_position: number;
+                    /** Name */
+                    name: string;
+                    /**
+                     * Temp Flow Limit Upper
+                     * @default null
+                     */
+                    temp_flow_limit_upper?: number | null;
+                    /**
+                     * Thermostat Position
+                     * @description Required for StorageTank but not for SmartHotWaterTank
+                     * @default null
+                     */
+                    thermostat_position?: number | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "HeatSourceWet";
                 };
-                /** @enum {string} */
-                HeatingControlType: Fhs_inputSchema$defsHeatingControlType;
+                /**
+                 * HeatingControlType
+                 * @enum {string}
+                 */
+                HeatingControlType: "SeparateTimeAndTempControl" | "SeparateTempControl";
+                /** Hobs */
+                Hobs: {
+                    Energysupply: components["schemas"]["EnergySupplyType"];
+                    /** Kwh Per Cycle */
+                    kWh_per_cycle: number;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
+                };
+                /** HotWaterDemand */
                 HotWaterDemand: {
-                    Bath?: components["schemas"]["Baths"] | null;
+                    /**
+                     * Bath
+                     * @default null
+                     */
+                    Bath?: {
+                        [key: string]: components["schemas"]["Bath"];
+                    } | null;
+                    /**
+                     * Distribution
+                     * @default null
+                     */
                     Distribution?: components["schemas"]["WaterPipeworkSimple"][] | null;
-                    Other?: components["schemas"]["OtherWaterUses"] | null;
-                    Shower?: components["schemas"]["Showers"] | null;
+                    /**
+                     * Other
+                     * @default null
+                     */
+                    Other?: {
+                        [key: string]: components["schemas"]["OtherWaterUse"];
+                    } | null;
+                    /**
+                     * Shower
+                     * @default null
+                     */
+                    Shower?: {
+                        [key: string]: components["schemas"]["ShowerMixer"] | components["schemas"]["ShowerInstantElectric"];
+                    } | null;
                 };
-                HotWaterSource: {
-                    "hw cylinder": components["schemas"]["HotWaterSourceDetails"];
-                };
-                HotWaterSourceDetails: components["schemas"]["StorageTank"] | {
-                    ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-                    Control: components["schemas"]["HeatSourceControlType"];
-                    HeatSourceWet: components["schemas"]["HeatSourceWetType"];
-                    /** Format: double */
-                    daily_HW_usage: number;
-                    /** Format: double */
-                    fuel_energy_2: number;
-                    /** Format: double */
-                    rejected_energy_1: number;
-                    /** Format: double */
-                    rejected_energy_2: number;
-                    /** Format: double */
-                    rejected_factor_3: number;
-                    separate_DHW_tests: components["schemas"]["BoilerHotWaterTest"];
-                    /** Format: double */
-                    setpoint_temp?: number | null;
-                    /** Format: double */
-                    storage_loss_factor_2: number;
-                    /** @constant */
-                    type: "CombiBoiler";
-                } | {
-                    ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-                    Control?: components["schemas"]["HeatSourceControlType"] | null;
-                    HeatSourceWet: components["schemas"]["HeatSourceWetType"];
-                    /** Format: double */
-                    setpoint_temp?: number | null;
-                    /** @constant */
-                    type: "HIU";
-                } | {
-                    ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-                    EnergySupply: string;
-                    /** Format: double */
-                    efficiency: number;
-                    /** Format: double */
-                    setpoint_temp?: number | null;
-                    /** @constant */
-                    type: "PointOfUse";
-                } | {
-                    ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-                    EnergySupply_pump: string;
-                    HeatSource: {
-                        [key: string]: components["schemas"]["HeatSource"];
-                    };
-                    /** Format: double */
-                    daily_losses: number;
-                    /** Format: double */
-                    init_temp: number;
-                    /** Format: double */
-                    max_flow_rate_pump_l_per_min: number;
-                    /** Format: double */
-                    power_pump_kW: number;
-                    primary_pipework?: components["schemas"]["WaterPipeworkSimple"][];
-                    temp_setpnt_max: string;
-                    /** Format: double */
-                    temp_usable: number;
-                    /** @constant */
-                    type: "SmartHotWaterTank";
-                    /** Format: double */
-                    volume: number;
-                } | {
-                    ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-                    Control: string;
+                /** HotWaterSourceCombiBoiler */
+                HotWaterSourceCombiBoiler: {
+                    /** Coldwatersource */
+                    ColdWaterSource: string;
+                    /** Heatsourcewet */
                     HeatSourceWet: string;
-                    /** @constant */
+                    /** Daily Hw Usage */
+                    daily_HW_usage: number;
+                    /**
+                     * Rejected Energy 1
+                     * @default null
+                     */
+                    rejected_energy_1?: number | null;
+                    /**
+                     * Rejected Factor 3
+                     * @default null
+                     */
+                    rejected_factor_3?: number | null;
+                    separate_DHW_tests: components["schemas"]["BoilerHotWaterTest"];
+                    /** Setpoint Temp */
+                    setpoint_temp: number;
+                    /**
+                     * Storage Loss Factor 2
+                     * @default null
+                     */
+                    storage_loss_factor_2?: number | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "CombiBoiler";
+                };
+                /** HotWaterSourceFHS */
+                HotWaterSourceFHS: {
+                    /** Hw Cylinder */
+                    "hw cylinder": components["schemas"]["StorageTank"] | components["schemas"]["HotWaterSourceCombiBoiler"] | components["schemas"]["HotWaterSourceHUI"] | components["schemas"]["HotWaterSourcePointOfUse"] | components["schemas"]["HotWaterSourceSmartHotWaterTankFHS"] | components["schemas"]["HotWaterSourceHeatBattery"];
+                };
+                /** HotWaterSourceHUI */
+                HotWaterSourceHUI: {
+                    /** Coldwatersource */
+                    ColdWaterSource: string;
+                    /** Heatsourcewet */
+                    HeatSourceWet: string;
+                    /**
+                     * Setpoint Temp
+                     * @default null
+                     */
+                    setpoint_temp?: number | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "HIU";
+                };
+                /** HotWaterSourceHeatBattery */
+                HotWaterSourceHeatBattery: {
+                    /** Coldwatersource */
+                    ColdWaterSource: string;
+                    /** Heatsourcewet */
+                    HeatSourceWet: string;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
                     type: "HeatBattery";
                 };
-                InfiltrationVentilation: {
-                    AirTerminalDevices?: {
-                        [key: string]: components["schemas"]["AirTerminalDevice"];
-                    } | null;
-                    CombustionAppliances: {
+                /** HotWaterSourcePointOfUse */
+                HotWaterSourcePointOfUse: {
+                    /** Coldwatersource */
+                    ColdWaterSource: string;
+                    /** Energysupply */
+                    EnergySupply: string;
+                    /** Efficiency */
+                    efficiency: number;
+                    /** Setpoint Temp */
+                    setpoint_temp: number;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "PointOfUse";
+                };
+                /**
+                 * HotWaterSourceSmartHotWaterTankFHS
+                 * @description FHS-specific version using FHS HotWaterHeatSource
+                 */
+                HotWaterSourceSmartHotWaterTankFHS: {
+                    /** Coldwatersource */
+                    ColdWaterSource: string;
+                    /** Energysupply Pump */
+                    EnergySupply_pump: string;
+                    /** Heatsource */
+                    HeatSource: {
+                        [key: string]: components["schemas"]["ImmersionHeaterFHS"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWetServiceWaterRegular"] | components["schemas"]["HeatPumpHotWaterOnly"];
+                    };
+                    /** Daily Losses */
+                    daily_losses: number;
+                    /** Init Temp */
+                    init_temp: number;
+                    /** Max Flow Rate Pump L Per Min */
+                    max_flow_rate_pump_l_per_min: number;
+                    /** Power Pump Kw */
+                    power_pump_kW: number;
+                    /**
+                     * Primary Pipework
+                     * @default null
+                     */
+                    primary_pipework?: components["schemas"]["WaterPipework"][] | null;
+                    /**
+                     * Temp Setpnt Max
+                     * @description Reference to a control schedule of maximum state of charge values
+                     */
+                    temp_setpnt_max: string;
+                    /** Temp Usable */
+                    temp_usable: number;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "SmartHotWaterTank";
+                    /** Volume */
+                    volume: number;
+                };
+                /** ImmersionHeater */
+                ImmersionHeater: {
+                    /**
+                     * Controlmax
+                     * @description Reference to a control schedule of maximum temperature setpoints
+                     */
+                    Controlmax: string;
+                    /**
+                     * Controlmin
+                     * @description Reference to a control schedule of minimum temperature setpoints
+                     */
+                    Controlmin: string;
+                    /** Energysupply */
+                    EnergySupply: string;
+                    /** Heater Position */
+                    heater_position: number;
+                    /** Power */
+                    power: number;
+                    /**
+                     * Thermostat Position
+                     * @default null
+                     */
+                    thermostat_position?: number | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "ImmersionHeater";
+                };
+                /**
+                 * ImmersionHeaterFHS
+                 * @description FHS-specific version of ImmersionHeater with additional fields
+                 */
+                ImmersionHeaterFHS: {
+                    /**
+                     * Controlmax
+                     * @description Reference to a control schedule of maximum temperature setpoints
+                     */
+                    Controlmax: string;
+                    /**
+                     * Controlmin
+                     * @description Reference to a control schedule of minimum temperature setpoints
+                     */
+                    Controlmin: string;
+                    /** Energysupply */
+                    EnergySupply: string;
+                    /** Heater Position */
+                    heater_position: number;
+                    /** Power */
+                    power: number;
+                    /**
+                     * Temp Setpnt Max
+                     * @default null
+                     */
+                    temp_setpnt_max?: string | null;
+                    /**
+                     * Thermostat Position
+                     * @default null
+                     */
+                    thermostat_position?: number | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "ImmersionHeater";
+                };
+                /** InfiltrationVentilationFHS */
+                InfiltrationVentilationFHS: {
+                    /** Combustionappliances */
+                    CombustionAppliances?: {
                         [key: string]: components["schemas"]["CombustionAppliance"];
-                    };
+                    } | null;
+                    /**
+                     * Control Ventadjustmax
+                     * @default null
+                     */
                     Control_VentAdjustMax?: string | null;
+                    /**
+                     * Control Ventadjustmin
+                     * @default null
+                     */
                     Control_VentAdjustMin?: string | null;
+                    /**
+                     * Control Windowadjust
+                     * @default null
+                     */
                     Control_WindowAdjust?: string | null;
-                    Cowls: {
-                        [key: string]: null;
-                    };
                     Leaks: components["schemas"]["VentilationLeaks"];
+                    /**
+                     * Mechanicalventilation
+                     * @default null
+                     */
                     MechanicalVentilation?: {
-                        [key: string]: components["schemas"]["MechanicalVentilation"];
-                    };
-                    PDUs: {
-                        [key: string]: null;
-                    };
+                        [key: string]: components["schemas"]["MechanicalVentilationFHS"];
+                    } | null;
+                    /** Vents */
                     Vents: {
                         [key: string]: components["schemas"]["Vent"];
                     };
-                    /** Format: double */
+                    /**
+                     * Ach Max Static Calcs
+                     * @default null
+                     */
                     ach_max_static_calcs?: number | null;
-                    /** Format: double */
+                    /**
+                     * Ach Min Static Calcs
+                     * @default null
+                     */
                     ach_min_static_calcs?: number | null;
-                    /** Format: double */
+                    /** Altitude */
                     altitude: number;
-                    cross_vent_factor: boolean;
+                    /** Cross Vent Possible */
+                    cross_vent_possible: boolean;
+                    /**
+                     * Noise Nuisance
+                     * @default null
+                     */
                     noise_nuisance?: boolean | null;
                     shield_class: components["schemas"]["VentilationShieldClass"];
                     terrain_class: components["schemas"]["TerrainClass"];
-                    /** Format: double */
+                    /**
+                     * Vent Opening Ratio Init
+                     * @default null
+                     */
                     vent_opening_ratio_init?: number | null;
                     /**
-                     * Format: double
+                     * Ventilation Zone Base Height
                      * @description Base height of the ventilation zone relative to ground (m)
                      */
                     ventilation_zone_base_height: number;
                 };
+                /**
+                 * InternalGains
+                 * @description A dictionary of internal gains entries where:
+                 *     - Keys are user-defined names (e.g., "ColdWaterLosses", "EvaporativeLosses", "metabolic gains", etc.)
+                 *     - Values conform to the InternalGainsDetails schema
+                 *     - No specific entries are required - all entries are optional and user-defined
+                 */
                 InternalGains: {
-                    ColdWaterLosses?: components["schemas"]["InternalGainsDetails"] | null;
-                    EvaporativeLosses?: components["schemas"]["InternalGainsDetails"] | null;
-                    "metabolic gains"?: components["schemas"]["InternalGainsDetails"] | null;
-                    other?: components["schemas"]["InternalGainsDetails"] | null;
-                    "total internal gains"?: components["schemas"]["InternalGainsDetails"] | null;
-                    total_internal_gains?: components["schemas"]["InternalGainsDetails"] | null;
+                    [key: string]: components["schemas"]["InternalGainsDetails"];
                 };
+                /** InternalGainsDetails */
                 InternalGainsDetails: {
-                    schedule: components["schemas"]["Schedule_for_double"];
-                    /** Format: uint32 */
+                    schedule: components["schemas"]["ScheduleForDouble"];
+                    /** Start Day */
                     start_day: number;
-                    /** Format: double */
+                    /** Time Series Step */
                     time_series_step: number;
                 };
-                /** @enum {string} */
-                InverterType: Fhs_inputSchema$defsInverterType;
-                /** @enum {string} */
-                MVHRLocation: Fhs_inputSchema$defsMVHRLocation;
                 /**
-                 * @description distribution of mass in building element, one of: 'I' - mass concentrated on internal side; 'E':  mass concentrated on external side; 'IE': mass divided over internal and external side; 'D':  mass equally distributed; 'M':  mass concentrated inside
+                 * InverterType
                  * @enum {string}
                  */
-                MassDistributionClass: Fhs_inputSchema$defsMassDistributionClass;
-                MechanicalVentilation: {
+                InverterType: "optimised_inverter" | "string_inverter";
+                /** Kettle */
+                Kettle: {
+                    /** Kwh Per Cycle */
+                    kWh_per_cycle: number;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
+                };
+                /** Lighting */
+                Lighting: {
+                    /**
+                     * Bulbs
+                     * @default null
+                     */
+                    bulbs?: {
+                        [key: string]: components["schemas"]["LightingBulbs"];
+                    } | null;
+                    /**
+                     * Efficacy
+                     * @default null
+                     */
+                    efficacy?: number | null;
+                };
+                /** LightingBulbs */
+                LightingBulbs: {
+                    /**
+                     * Count
+                     * @description The number of bulbs present.
+                     */
+                    count: number;
+                    /**
+                     * Efficacy
+                     * @default null
+                     */
+                    efficacy?: number | null;
+                    /** Power */
+                    power: number;
+                };
+                /** LoadShifting */
+                LoadShifting: Record<string, never>;
+                /**
+                 * MVHRLocation
+                 * @enum {string}
+                 */
+                MVHRLocation: "inside" | "outside";
+                /**
+                 * MassDistributionClass
+                 * @enum {string}
+                 */
+                MassDistributionClass: "D" | "E" | "I" | "IE" | "M";
+                /**
+                 * MechVentType
+                 * @enum {string}
+                 */
+                MechVentType: "Intermittent MEV" | "Centralised continuous MEV" | "Decentralised continuous MEV" | "MVHR";
+                /** MechanicalVentilationDuctwork */
+                MechanicalVentilationDuctwork: {
+                    cross_section_shape: components["schemas"]["DuctShape"];
+                    /**
+                     * Duct Perimeter Mm
+                     * @default null
+                     */
+                    duct_perimeter_mm?: number | null;
+                    duct_type: components["schemas"]["DuctType"];
+                    /**
+                     * External Diameter Mm
+                     * @default null
+                     */
+                    external_diameter_mm?: number | null;
+                    /** Insulation Thermal Conductivity */
+                    insulation_thermal_conductivity: number;
+                    /** Insulation Thickness Mm */
+                    insulation_thickness_mm: number;
+                    /**
+                     * Internal Diameter Mm
+                     * @default null
+                     */
+                    internal_diameter_mm?: number | null;
+                    /** Length */
+                    length: number;
+                    /** Reflective */
+                    reflective: boolean;
+                };
+                /** MechanicalVentilationFHS */
+                MechanicalVentilationFHS: {
+                    /**
+                     * Control
+                     * @default null
+                     */
                     Control?: string | null;
+                    /** Energysupply */
                     EnergySupply: string;
                     /**
-                     * Format: double
+                     * Sfp
                      * @description Specific fan power, inclusive of any in use factors (unit: W/l/s)
                      */
-                    SFP?: number | null;
+                    SFP: number;
                     /**
-                     * Format: double
+                     * Design Outdoor Air Flow Rate
                      * @description (unit: m³/hour)
                      */
                     design_outdoor_air_flow_rate: number;
-                    /** Format: double */
-                    design_zone_cooling_covered_by_mech_vent?: number | null;
-                    /** Format: double */
-                    design_zone_heating_covered_by_mech_vent?: number | null;
+                    /**
+                     * Ductwork
+                     * @default null
+                     */
                     ductwork?: components["schemas"]["MechanicalVentilationDuctwork"][] | null;
-                    /** Format: double */
+                    /**
+                     * Measured Air Flow Rate
+                     * @default null
+                     */
                     measured_air_flow_rate?: number | null;
-                    /** Format: double */
+                    /**
+                     * Measured Fan Power
+                     * @default null
+                     */
                     measured_fan_power?: number | null;
                     /**
-                     * Format: double
+                     * Mvhr Eff
                      * @description MVHR efficiency
+                     * @default null
                      */
                     mvhr_eff?: number | null;
+                    /** @default null */
                     mvhr_location?: components["schemas"]["MVHRLocation"] | null;
                     sup_air_flw_ctrl: components["schemas"]["SupplyAirFlowRateControlType"];
                     sup_air_temp_ctrl: components["schemas"]["SupplyAirTemperatureControlType"];
-                    vent_sys_op?: string | null;
-                    vent_type: components["schemas"]["VentType"];
+                    vent_type: components["schemas"]["MechVentType"];
                 };
-                MechanicalVentilationDuctwork: {
-                    cross_section_shape: components["schemas"]["DuctShape"];
-                    /** Format: double */
-                    duct_perimeter_mm?: number | null;
-                    duct_type: components["schemas"]["DuctType"];
-                    /** Format: double */
-                    external_diameter_mm?: number | null;
-                    /** Format: double */
-                    insulation_thermal_conductivity: number;
-                    /** Format: double */
-                    insulation_thickness_mm: number;
-                    /** Format: double */
-                    internal_diameter_mm?: number | null;
-                    /** Format: double */
-                    length: number;
-                    reflective: boolean;
+                /** Microwave */
+                Microwave: {
+                    /** Kwh Per Cycle */
+                    kWh_per_cycle: number;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
                 };
-                OnSiteGenerationDetails: {
+                /** OtherWaterUse */
+                OtherWaterUse: {
+                    /** Coldwatersource */
+                    ColdWaterSource: string;
+                    /**
+                     * Flowrate
+                     * @description Tap/outlet flow rate (unit: litre/minute)
+                     */
+                    flowrate: number;
+                };
+                /** Oven */
+                Oven: {
+                    Energysupply: components["schemas"]["EnergySupplyType"];
+                    /** Kwh Per Cycle */
+                    kWh_per_cycle: number;
+                    /** @default null */
+                    loadshifting?: components["schemas"]["LoadShifting"] | null;
+                };
+                /** PhotovoltaicSystem */
+                PhotovoltaicSystem: {
+                    /** Energysupply */
                     EnergySupply: string;
                     /**
-                     * Format: double
-                     * @description The distance between the ground and the lowest edge of the PV panel (unit: m)
+                     * Base Height
+                     * @description The distance between the ground and the lowest edge of the PV array (unit: m)
                      */
                     base_height: number;
                     /**
-                     * Format: double
-                     * @description Height of the PV panel (unit: m)
+                     * Height
+                     * @description Height of the PV array (unit: m)
                      */
                     height: number;
-                    /** @description Whether the inverter is considered inside the building */
-                    inverter_is_inside: boolean;
                     /**
-                     * Format: double
-                     * @description Peak power; represents the peak electrical power input to the inverter (unit: kW)
+                     * Inverter Is Inside
+                     * @description Whether the inverter is considered inside the building
                      */
-                    inverter_peak_power?: number | null;
-                    /** Format: double */
-                    inverter_peak_power_ac?: number | null;
-                    /** Format: double */
-                    inverter_peak_power_dc?: number | null;
-                    inverter_type?: components["schemas"]["InverterType"] | null;
+                    inverter_is_inside: boolean;
+                    /** Inverter Peak Power Ac */
+                    inverter_peak_power_ac: number;
+                    /** Inverter Peak Power Dc */
+                    inverter_peak_power_dc: number;
+                    inverter_type: components["schemas"]["InverterType"];
                     /**
-                     * Format: double
-                     * @description Orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
+                     * Orientation360
+                     * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
                      */
                     orientation360: number;
                     /**
-                     * Format: double
-                     * @description Peak power; represents the electrical power of a photovoltaic system with a given area and a for a solar irradiance of 1 kW/m² on this surface (at 25 degrees) (unit: kW)
+                     * Peak Power
+                     * @description Peak power; represents the electrical power of a photovoltaic system with a given area for a solar irradiance of 1 kW/m² on this surface (at 25 degrees) (unit: kW)
                      */
                     peak_power: number;
                     /**
-                     * Format: double
+                     * Pitch
                      * @description The tilt angle (inclination) of the PV panel from horizontal, measured upwards facing, 0 to 90 (unit: ˚)
                      */
                     pitch: number;
-                    shading: components["schemas"]["WindowShadingObject"][];
-                    /** @constant */
-                    type: "PhotovoltaicSystem";
-                    ventilation_strategy: components["schemas"]["OnSiteGenerationVentilationStrategy"];
+                    /** Shading */
+                    shading: (components["schemas"]["WindowShadingObject"] | components["schemas"]["WindowShadingObstacle"])[];
                     /**
-                     * Format: double
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "PhotovoltaicSystem";
+                    ventilation_strategy: components["schemas"]["PhotovoltaicVentilationStrategy"];
+                    /**
+                     * Width
                      * @description Width of the PV panel (unit: m)
                      */
                     width: number;
                 };
-                /** @enum {string} */
-                OnSiteGenerationVentilationStrategy: Fhs_inputSchema$defsOnSiteGenerationVentilationStrategy;
-                OtherWaterUseDetails: {
-                    ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-                    /**
-                     * Format: double
-                     * @description Tap/outlet flow rate (unit: litre/minute)
-                     */
-                    flowrate: number;
+                /**
+                 * PhotovoltaicVentilationStrategy
+                 * @enum {string}
+                 */
+                PhotovoltaicVentilationStrategy: "unventilated" | "moderately_ventilated" | "strongly_or_forced_ventilated" | "rear_surface_free";
+                /** ScheduleEntryForBoolean */
+                ScheduleEntryForBoolean: boolean | components["schemas"]["ScheduleRepeaterForBoolean"] | string | null;
+                /** ScheduleEntryForDouble */
+                ScheduleEntryForDouble: number | components["schemas"]["ScheduleRepeaterForDouble"] | string | null;
+                /**
+                 * ScheduleForBoolean
+                 * @description A dictionary of schedule entries where:
+                 *     - Keys are user-defined names (e.g., "main", "week", "weekday", "weekend")
+                 *     - Values are lists of ScheduleEntryForBoolean
+                 *     - The "main" entry is required
+                 */
+                ScheduleForBoolean: {
+                    [key: string]: components["schemas"]["ScheduleEntryForBoolean"][];
                 };
-                OtherWaterUses: {
-                    [key: string]: components["schemas"]["OtherWaterUseDetails"];
+                /**
+                 * ScheduleForDouble
+                 * @description A dictionary of schedule entries where:
+                 *     - Keys are user-defined names (e.g., "main", "week", "weekday", "weekend")
+                 *     - Values are lists of ScheduleEntryForDouble
+                 *     - The "main" entry is required
+                 */
+                ScheduleForDouble: {
+                    [key: string]: components["schemas"]["ScheduleEntryForDouble"][];
                 };
-                ScheduleEntry_for_Boolean: null | boolean | components["schemas"]["ScheduleRepeater_for_Boolean"] | string;
-                ScheduleEntry_for_double: null | number | components["schemas"]["ScheduleRepeater_for_double"] | string;
-                ScheduleReferenceEntry_for_Boolean: components["schemas"]["ScheduleEntry_for_Boolean"][] | components["schemas"]["ScheduleEntry_for_Boolean"];
-                ScheduleReferenceEntry_for_double: components["schemas"]["ScheduleEntry_for_double"][] | components["schemas"]["ScheduleEntry_for_double"];
-                ScheduleRepeaterEntry_for_Boolean: null | boolean;
-                ScheduleRepeaterEntry_for_double: null | number;
-                ScheduleRepeaterValue_for_Boolean: string | components["schemas"]["ScheduleRepeaterEntry_for_Boolean"];
-                ScheduleRepeaterValue_for_double: string | components["schemas"]["ScheduleRepeaterEntry_for_double"];
-                ScheduleRepeater_for_Boolean: {
-                    /** Format: uint */
+                /** ScheduleRepeaterEntryForBoolean */
+                ScheduleRepeaterEntryForBoolean: boolean | null;
+                /** ScheduleRepeaterEntryForDouble */
+                ScheduleRepeaterEntryForDouble: number | null;
+                /** ScheduleRepeaterForBoolean */
+                ScheduleRepeaterForBoolean: {
+                    /** Repeat */
                     repeat: number;
-                    value: components["schemas"]["ScheduleRepeaterValue_for_Boolean"];
+                    value: components["schemas"]["ScheduleRepeaterValueForBoolean"];
                 };
-                ScheduleRepeater_for_double: {
-                    /** Format: uint */
+                /** ScheduleRepeaterForDouble */
+                ScheduleRepeaterForDouble: {
+                    /** Repeat */
                     repeat: number;
-                    value: components["schemas"]["ScheduleRepeaterValue_for_double"];
+                    value: components["schemas"]["ScheduleRepeaterValueForDouble"];
                 };
-                Schedule_for_Boolean: {
-                    main: components["schemas"]["ScheduleEntry_for_Boolean"][];
-                } & {
-                    [key: string]: components["schemas"]["ScheduleReferenceEntry_for_Boolean"];
-                };
-                Schedule_for_double: {
-                    main: components["schemas"]["ScheduleEntry_for_double"][];
-                } & {
-                    [key: string]: components["schemas"]["ScheduleReferenceEntry_for_double"];
-                };
-                /** @enum {string} */
-                SecondarySupplyType: Fhs_inputSchema$defsSecondarySupplyType;
+                /** ScheduleRepeaterValueForBoolean */
+                ScheduleRepeaterValueForBoolean: string | components["schemas"]["ScheduleRepeaterEntryForBoolean"];
+                /** ScheduleRepeaterValueForDouble */
+                ScheduleRepeaterValueForDouble: string | components["schemas"]["ScheduleRepeaterEntryForDouble"];
+                /** ShadingObject */
                 ShadingObject: {
-                    /** Format: double */
+                    /** Distance */
                     distance: number;
-                    /** Format: double */
+                    /** Height */
                     height: number;
                     type: components["schemas"]["ShadingObjectType"];
                 };
-                /** @enum {string} */
-                ShadingObjectType: Fhs_inputSchema$defsShadingObjectType;
-                ShadingSegment: {
-                    /** Format: double */
-                    end360: number;
-                    /** Format: uint */
-                    number: number;
-                    shading?: components["schemas"]["ShadingObject"][] | null;
-                    /** Format: double */
-                    start360: number;
-                };
-                Shower: {
-                    ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
-                    WWHRS?: string | null;
+                /**
+                 * ShadingObjectType
+                 * @enum {string}
+                 */
+                ShadingObjectType: "obstacle" | "overhang";
+                /**
+                 * ShadingSegmentFHS
+                 * @description FHS-specific version of ShadingSegment with additional field names
+                 */
+                ShadingSegmentFHS: {
                     /**
-                     * Format: double
-                     * @description Tap/outlet flow rate (unit: litre/minute)
+                     * End
+                     * @default null
                      */
-                    flowrate: number;
-                    /** @constant */
-                    type: "MixerShower";
-                } | {
-                    ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
+                    end?: number | null;
+                    /**
+                     * End360
+                     * @default null
+                     */
+                    end360?: number | null;
+                    /**
+                     * Number
+                     * @default null
+                     */
+                    number?: number | null;
+                    /**
+                     * Shading
+                     * @default null
+                     */
+                    shading?: components["schemas"]["ShadingObject"][] | null;
+                    /**
+                     * Start
+                     * @default null
+                     */
+                    start?: number | null;
+                    /**
+                     * Start360
+                     * @default null
+                     */
+                    start360?: number | null;
+                };
+                /** ShowerInstantElectric */
+                ShowerInstantElectric: {
+                    /** Coldwatersource */
+                    ColdWaterSource: string;
+                    /** Energysupply */
                     EnergySupply: string;
-                    /** Format: double */
+                    /** Rated Power */
                     rated_power: number;
-                    /** @constant */
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
                     type: "InstantElecShower";
                 };
-                Showers: {
-                    [key: string]: components["schemas"]["Shower"];
+                /** ShowerMixer */
+                ShowerMixer: {
+                    /** Coldwatersource */
+                    ColdWaterSource: string;
+                    /**
+                     * Wwhrs
+                     * @description Reference to a key in Input.WWHRS
+                     * @default null
+                     */
+                    WWHRS?: string | null;
+                    /**
+                     * Flowrate
+                     * @description Shower flow rate (unit: litre/minute)
+                     */
+                    flowrate: number;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "MixerShower";
                 };
+                /** SimulationTime */
                 SimulationTime: {
-                    /** Format: double */
+                    /** End */
                     end: number;
-                    /** Format: double */
+                    /** Start */
                     start: number;
-                    /** Format: double */
+                    /** Step */
                     step: number;
                 };
+                /** SmartApplianceBattery */
                 SmartApplianceBattery: {
+                    /** Battery State Of Charge */
                     battery_state_of_charge: {
                         [key: string]: number[];
                     };
+                    /** Energy Into Battery From Generation */
                     energy_into_battery_from_generation: {
                         [key: string]: number[];
                     };
+                    /** Energy Into Battery From Grid */
                     energy_into_battery_from_grid: {
                         [key: string]: number[];
                     };
+                    /** Energy Out Of Battery */
                     energy_out_of_battery: {
                         [key: string]: number[];
                     };
                 };
-                SmartApplianceControlDetails: {
-                    Appliances: components["schemas"]["ApplianceKey"][];
+                /** SmartApplianceControl */
+                SmartApplianceControl: {
+                    /** Appliances */
+                    Appliances: string[];
                     battery24hr: components["schemas"]["SmartApplianceBattery"];
+                    /** Non Appliance Demand 24Hr */
                     non_appliance_demand_24hr: {
                         [key: string]: number[];
                     };
+                    /** Power Timeseries */
                     power_timeseries: {
                         [key: string]: number[];
                     };
-                    /** Format: double */
+                    /** Time Series Step */
                     time_series_step: number;
                 };
-                /** @enum {string} */
-                SolarCellLocation: Fhs_inputSchema$defsSolarCellLocation;
-                SpaceCoolSystemDetails: {
-                    Control?: string | null;
-                    EnergySupply: string;
-                    advanced_start?: number;
+                /**
+                 * SolarCollectorLoopLocation
+                 * @description Location of the main part of the solar thermal collector loop piping.
+                 *
+                 *     This affects the ambient temperature used for heat loss calculations
+                 *     in the collector loop piping.
+                 * @enum {string}
+                 */
+                SolarCollectorLoopLocation: "OUT" | "HS" | "NHS";
+                /** SolarThermalSystem */
+                SolarThermalSystem: {
                     /**
-                     * Format: double
+                     * Controlmax
+                     * @description Reference to a control schedule of maximum temperature setpoints
+                     */
+                    Controlmax: string;
+                    /** Energysupply */
+                    EnergySupply: string;
+                    /** Area Module */
+                    area_module: number;
+                    /** Collector Mass Flow Rate */
+                    collector_mass_flow_rate: number;
+                    /** First Order Hlc */
+                    first_order_hlc: number;
+                    /** Heater Position */
+                    heater_position: number;
+                    /** Incidence Angle Modifier */
+                    incidence_angle_modifier: number;
+                    /** Modules */
+                    modules: number;
+                    /**
+                     * Orientation360
+                     * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
+                     */
+                    orientation360: number;
+                    /** Peak Collector Efficiency */
+                    peak_collector_efficiency: number;
+                    /** Power Pump */
+                    power_pump: number;
+                    /** Power Pump Control */
+                    power_pump_control: number;
+                    /** Second Order Hlc */
+                    second_order_hlc: number;
+                    sol_loc: components["schemas"]["SolarCollectorLoopLocation"];
+                    /** Solar Loop Piping Hlc */
+                    solar_loop_piping_hlc: number;
+                    /**
+                     * Thermostat Position
+                     * @description Required for StorageTank but not for SmartHotWaterTank
+                     * @default null
+                     */
+                    thermostat_position?: number | null;
+                    /** Tilt */
+                    tilt: number;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "SolarThermalSystem";
+                };
+                /**
+                 * SpaceCoolSystemFHS
+                 * @description FHS-specific version of SpaceCoolSystem with additional fields
+                 */
+                SpaceCoolSystemFHS: {
+                    /** Control */
+                    Control: string;
+                    /** Energysupply */
+                    EnergySupply: string;
+                    /**
+                     * Advanced Start
+                     * @default null
+                     */
+                    advanced_start?: number | null;
+                    /**
+                     * Cooling Capacity
                      * @description Maximum cooling capacity of the system (unit: kW)
                      */
                     cooling_capacity: number;
-                    /** Format: double */
+                    /** Efficiency */
                     efficiency: number;
                     /**
-                     * Format: double
+                     * Frac Convective
                      * @description Convective fraction for cooling
                      */
                     frac_convective: number;
-                    /** Format: double */
+                    /**
+                     * Temp Setback
+                     * @default null
+                     */
                     temp_setback?: number | null;
-                    type: components["schemas"]["SpaceCoolSystemType"];
+                    /**
+                     * Type
+                     * @constant
+                     */
+                    type: "AirConditioning";
                 };
-                /** @enum {string} */
-                SpaceCoolSystemType: Fhs_inputSchema$defsSpaceCoolSystemType;
-                /** @enum {string} */
-                SpaceHeatControlType: Fhs_inputSchema$defsSpaceHeatControlType;
-                SpaceHeatSystemDetails: {
-                    Control?: string | null;
-                    EnergySupply: string;
-                    HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
-                    Zone?: string | null;
-                    /** Format: double */
-                    advanced_start?: number | null;
-                    /**
-                     * Format: double
-                     * @description Convective fraction for heating
-                     */
-                    frac_convective: number;
-                    /**
-                     * Format: double
-                     * @description (unit: kW)
-                     */
-                    rated_power: number;
-                    /** Format: double */
-                    temp_setback?: number | null;
-                    /** @constant */
-                    type: "InstantElecHeater";
-                } | {
-                    Control?: string | null;
+                /**
+                 * SpaceHeatControlType
+                 * @enum {string}
+                 */
+                SpaceHeatControlType: "livingroom" | "restofdwelling";
+                /** SpaceHeatSystemElectricStorageHeater */
+                SpaceHeatSystemElectricStorageHeater: {
+                    /** Control */
+                    Control: string;
+                    /** Controlcharger */
                     ControlCharger: string;
+                    /** Esh Max Output */
                     ESH_max_output: number[][];
+                    /** Esh Min Output */
                     ESH_min_output: number[][];
+                    /** Energysupply */
                     EnergySupply: string;
-                    HeatSource?: components["schemas"]["SpaceHeatSystemHeatSource"] | null;
-                    /** @description The zone where the unit(s) is/are installed */
-                    Zone: string;
-                    /** Format: double */
-                    advanced_start?: number | null;
-                    /** @enum {string} */
-                    air_flow_type: Fhs_inputSchema$defsSpaceHeatSystemDetailsAir_flow_type;
                     /**
-                     * Format: double
+                     * Zone
+                     * @description The zone where the unit(s) is/are installed
+                     */
+                    Zone: string;
+                    /**
+                     * Advanced Start
+                     * @default null
+                     */
+                    advanced_start?: number | null;
+                    air_flow_type: components["schemas"]["AirFlowType"];
+                    /**
+                     * Fan Pwr
                      * @description Fan power (unit: W)
                      */
                     fan_pwr: number;
                     /**
-                     * Format: double
+                     * Frac Convective
                      * @description Convective fraction for heating
                      */
                     frac_convective: number;
-                    /** Format: uint32 */
+                    /** N Units */
                     n_units: number;
-                    /** Format: double */
+                    /** Pwr In */
                     pwr_in: number;
                     /**
-                     * Format: double
+                     * Rated Power Instant
                      * @description (instant backup) (unit: kW)
                      */
                     rated_power_instant: number;
-                    /** Format: double */
+                    /** Storage Capacity */
                     storage_capacity: number;
-                    /** Format: double */
+                    /**
+                     * Temp Setback
+                     * @default null
+                     */
                     temp_setback?: number | null;
-                    /** @constant */
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
                     type: "ElecStorageHeater";
-                } | {
-                    Control?: string | null;
-                    EnergySupply?: string | null;
-                    HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
-                    Zone: string;
-                    /** Format: double */
+                };
+                /** SpaceHeatSystemHeatSource */
+                SpaceHeatSystemHeatSource: {
+                    /** Name */
+                    name: string;
+                    /**
+                     * Temp Flow Limit Upper
+                     * @default null
+                     */
+                    temp_flow_limit_upper?: number | null;
+                };
+                /**
+                 * SpaceHeatSystemInstantElectricHeaterFHS
+                 * @description FHS-specific version of SpaceHeatSystemInstantElectricHeater with additional fields
+                 */
+                SpaceHeatSystemInstantElectricHeaterFHS: {
+                    /** Control */
+                    Control: string;
+                    /** Energysupply */
+                    EnergySupply: string;
+                    /**
+                     * Advanced Start
+                     * @default null
+                     */
                     advanced_start?: number | null;
-                    /** Format: double */
-                    bypass_percentage_recirculated?: number | null;
-                    /** Format: double */
-                    design_flow_rate?: number | null;
-                    /** Format: int32 */
-                    design_flow_temp: number;
-                    ecodesign_controller: components["schemas"]["EcoDesignController"];
-                    emitters?: components["schemas"]["WetEmitter"][];
-                    /** Format: double */
-                    frac_convective?: number;
-                    /** Format: double */
-                    max_flow_rate?: number | null;
-                    /** Format: double */
-                    min_flow_rate?: number | null;
-                    /** Format: double */
-                    n?: number;
-                    /** Format: double */
-                    temp_diff_emit_dsgn: number;
-                    /** Format: double */
-                    temp_setback?: number | null;
-                    /** Format: double */
-                    thermal_mass?: number | null;
-                    /** @constant */
-                    type: "WetDistribution";
-                    variable_flow?: boolean | null;
-                    wet_emitter_type?: string | null;
-                } | {
-                    Control?: string | null;
-                    HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
-                    /** Format: double */
-                    advanced_start?: number | null;
-                    /** Format: double */
+                    /**
+                     * Frac Convective
+                     * @description Convective fraction for heating
+                     */
                     frac_convective: number;
-                    /** Format: double */
-                    temp_diff_emit_dsgn: number;
-                    /** Format: double */
+                    /**
+                     * Rated Power
+                     * @description (unit: kW)
+                     */
+                    rated_power: number;
+                    /**
+                     * Temp Setback
+                     * @default null
+                     */
                     temp_setback?: number | null;
-                    /** @constant */
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "InstantElecHeater";
+                };
+                /**
+                 * SpaceHeatSystemWarmAirFHS
+                 * @description FHS-specific version of SpaceHeatSystemWarmAir with additional fields
+                 */
+                SpaceHeatSystemWarmAirFHS: {
+                    /** Control */
+                    Control: string;
+                    HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
+                    /**
+                     * Advanced Start
+                     * @default null
+                     */
+                    advanced_start?: number | null;
+                    /** Frac Convective */
+                    frac_convective: number;
+                    /**
+                     * Temp Setback
+                     * @default null
+                     */
+                    temp_setback?: number | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
                     type: "WarmAir";
                 };
-                SpaceHeatSystemHeatSource: {
-                    name: string;
-                    /** Format: double */
-                    temp_flow_limit_upper?: number | null;
+                /**
+                 * SpaceHeatSystemWetDistributionFHS
+                 * @description FHS-specific version of SpaceHeatSystemWetDistribution with additional fields
+                 */
+                SpaceHeatSystemWetDistributionFHS: {
+                    /** Control */
+                    Control: string;
+                    /**
+                     * Energysupply
+                     * @default null
+                     */
+                    EnergySupply?: string | null;
+                    HeatSource: components["schemas"]["SpaceHeatSystemHeatSource"];
+                    /** Zone */
+                    Zone: string;
+                    /**
+                     * Advanced Start
+                     * @default null
+                     */
+                    advanced_start?: number | null;
+                    /**
+                     * Bypass Percentage Recirculated
+                     * @default null
+                     */
+                    bypass_percentage_recirculated?: number | null;
+                    /**
+                     * Design Flow Rate
+                     * @default null
+                     */
+                    design_flow_rate?: number | null;
+                    /** Design Flow Temp */
+                    design_flow_temp: number;
+                    ecodesign_controller: components["schemas"]["EcoDesignController"];
+                    /** Emitters */
+                    emitters: (components["schemas"]["WetEmitterRadiator"] | components["schemas"]["WetEmitterUFH"] | components["schemas"]["WetEmitterFanCoil"])[];
+                    /**
+                     * Max Flow Rate
+                     * @default null
+                     */
+                    max_flow_rate?: number | null;
+                    /**
+                     * Min Flow Rate
+                     * @default null
+                     */
+                    min_flow_rate?: number | null;
+                    /** Temp Diff Emit Dsgn */
+                    temp_diff_emit_dsgn: number;
+                    /**
+                     * Temp Setback
+                     * @default null
+                     */
+                    temp_setback?: number | null;
+                    /**
+                     * Thermal Mass
+                     * @default null
+                     */
+                    thermal_mass?: number | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    type: "WetDistribution";
+                    /** Variable Flow */
+                    variable_flow: boolean;
                 };
                 /** StorageTank */
                 StorageTank: {
+                    /** Coldwatersource */
                     ColdWaterSource: string;
-                    Control_hold_at_setpnt?: string | null;
+                    /** Heatsource */
                     HeatSource: {
-                        [key: string]: components["schemas"]["HeatSource"];
+                        [key: string]: components["schemas"]["ImmersionHeater"] | components["schemas"]["SolarThermalSystem"] | components["schemas"]["HeatSourceWetServiceWaterRegular"] | components["schemas"]["HeatPumpHotWaterOnly"];
                     };
                     /**
-                     * Format: double
+                     * Daily Losses
                      * @description Measured standby losses due to cylinder insulation at standardised conditions (unit: kWh/24h)
                      */
                     daily_losses: number;
-                    /** Format: double */
-                    heat_exchanger_surface_area?: number | null;
-                    /** Format: double */
-                    init_temp?: number | null;
                     /**
-                     * Format: double
-                     * @description Minimum temperature required for domestic hot water (unit: ˚C)
+                     * Heat Exchanger Surface Area
+                     * @default null
                      */
-                    min_temp?: number | null;
+                    heat_exchanger_surface_area?: number | null;
+                    /** Init Temp */
+                    init_temp: number;
+                    /**
+                     * Primary Pipework
+                     * @default null
+                     */
                     primary_pipework?: components["schemas"]["WaterPipework"][] | null;
                     /**
-                     * Format: double
-                     * @description Setpoint temperature (unit: ˚C)
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
                      */
-                    setpoint_temp?: number | null;
-                    /** @constant */
                     type: "StorageTank";
                     /**
-                     * Format: double
+                     * Volume
                      * @description Total volume of tank (unit: litre)
                      */
                     volume: number;
                 };
-                /** @constant */
-                StorageTankType: "hw cylinder";
-                /** @enum {string} */
-                SupplyAirFlowRateControlType: Fhs_inputSchema$defsSupplyAirFlowRateControlType;
-                /** @enum {string} */
-                SupplyAirTemperatureControlType: Fhs_inputSchema$defsSupplyAirTemperatureControlType;
-                Tariff: {
-                    schedule: components["schemas"]["Schedule_for_double"];
-                };
-                /** @enum {string} */
-                TerrainClass: Fhs_inputSchema$defsTerrainClass;
-                /** @enum {string} */
-                TestLetter: Fhs_inputSchema$defsTestLetter;
-                ThermalBridging: {
-                    [key: string]: components["schemas"]["ThermalBridgingDetails"];
-                } | number;
-                ThermalBridgingDetails: {
+                /**
+                 * SupplyAirFlowRateControlType
+                 * @enum {string}
+                 */
+                SupplyAirFlowRateControlType: "ODA";
+                /**
+                 * SupplyAirTemperatureControlType
+                 * @enum {string}
+                 */
+                SupplyAirTemperatureControlType: "CONST" | "NO_CTRL" | "LOAD_COM";
+                /** Tariff */
+                Tariff: Record<string, never>;
+                /**
+                 * TerrainClass
+                 * @enum {string}
+                 */
+                TerrainClass: "OpenWater" | "OpenField" | "Suburban" | "Urban";
+                /**
+                 * TestLetter
+                 * @enum {string}
+                 */
+                TestLetter: "A" | "B" | "C" | "D" | "F";
+                /**
+                 * ThermalBridgingLinearFHS
+                 * @description FHS-specific version of ThermalBridgingLinear with additional fields
+                 */
+                ThermalBridgingLinearFHS: {
+                    /**
+                     * Junction Type
+                     * @default null
+                     */
                     junction_type?: string | null;
-                    /** Format: double */
+                    /** Length */
                     length: number;
-                    /** Format: double */
+                    /** Linear Thermal Transmittance */
                     linear_thermal_transmittance: number;
-                    /** @constant */
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
                     type: "ThermalBridgeLinear";
-                } | {
-                    /** Format: double */
+                };
+                /** ThermalBridgingPoint */
+                ThermalBridgingPoint: {
+                    /** Heat Transfer Coeff */
                     heat_transfer_coeff: number;
-                    /** @constant */
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
                     type: "ThermalBridgePoint";
                 };
+                /** Vent */
                 Vent: {
-                    /** Format: double */
+                    /** Area Cm2 */
                     area_cm2: number;
-                    /** Format: double */
+                    /** Mid Height Air Flow Path */
                     mid_height_air_flow_path: number;
-                    /** Format: double */
+                    /**
+                     * Orientation360
+                     * @description The orientation angle of the inclined surface, expressed as the geographical azimuth angle of the horizontal projection of the inclined surface normal, 0 to 360 (unit: ˚)
+                     */
                     orientation360: number;
-                    /** Format: double */
+                    /**
+                     * Pitch
+                     * @description Tilt angle of the surface from horizontal, between 0 and 180, where 0 means the external surface is facing up, 90 means the external surface is vertical and 180 means the external surface is facing down (unit: ˚)
+                     */
                     pitch: number;
                     /**
-                     * Format: double
+                     * Pressure Difference Ref
                      * @description Reference pressure difference for an air terminal device (unit: Pa)
                      */
                     pressure_difference_ref: number;
                 };
-                /** @enum {string} */
-                VentType: Fhs_inputSchema$defsVentType;
+                /** VentilationLeaks */
                 VentilationLeaks: {
                     /**
-                     * Format: double
-                     * @description Surface area of facades (unit: m²)
-                     */
-                    area_facades?: number | null;
-                    /**
-                     * Format: double
-                     * @description Surface area of the roof of the ventilation zone (unit: m²)
-                     */
-                    area_roof?: number | null;
-                    /**
-                     * Format: double
+                     * Env Area
                      * @description Reference area of the envelope airtightness index
                      */
                     env_area: number;
                     /**
-                     * Format: double
+                     * Test Pressure
                      * @description Reference pressure difference (unit: Pa)
                      */
                     test_pressure: number;
                     /**
-                     * Format: double
+                     * Test Result
                      * @description Flow rate through
                      */
                     test_result: number;
-                    /** Format: double */
+                    /** Ventilation Zone Height */
                     ventilation_zone_height: number;
                 };
-                /** @enum {string} */
-                VentilationShieldClass: Fhs_inputSchema$defsVentilationShieldClass;
-                WasteWaterHeatRecoveryDetails: {
-                    ColdWaterSource: components["schemas"]["ColdWaterSourceType"];
+                /**
+                 * VentilationShieldClass
+                 * @enum {string}
+                 */
+                VentilationShieldClass: "Open" | "Normal" | "Shielded";
+                /** WasteWaterHeatRecoverySystem */
+                WasteWaterHeatRecoverySystem: {
+                    /** Coldwatersource */
+                    ColdWaterSource: string;
+                    /** Efficiencies */
                     efficiencies: number[];
-                    /** Format: double */
-                    electrical_consumption?: number | null;
+                    /** Flow Rates */
                     flow_rates: number[];
-                    type: components["schemas"]["WwhrsType"];
-                    /** Format: double */
+                    type: components["schemas"]["WasteWaterHeatRecoverySystemType"];
+                    /** Utilisation Factor */
                     utilisation_factor: number;
                 };
+                /**
+                 * WasteWaterHeatRecoverySystemType
+                 * @enum {string}
+                 */
+                WasteWaterHeatRecoverySystemType: "WWHRS_InstantaneousSystemA" | "WWHRS_InstantaneousSystemB" | "WWHRS_InstantaneousSystemC";
+                /** WaterHeatingEvent */
                 WaterHeatingEvent: {
-                    /** Format: double */
+                    /**
+                     * Duration
+                     * @default null
+                     */
                     duration?: number | null;
-                    /** Format: double */
+                    /** Start */
                     start: number;
-                    /** Format: double */
+                    /** Temperature */
                     temperature: number;
-                    /** Format: double */
+                    /**
+                     * Volume
+                     * @default null
+                     */
                     volume?: number | null;
                 };
+                /** WaterHeatingEvents */
                 WaterHeatingEvents: {
-                    [key: string]: {
+                    /**
+                     * Bath
+                     * @default null
+                     */
+                    Bath?: {
                         [key: string]: components["schemas"]["WaterHeatingEvent"][];
-                    };
+                    } | null;
+                    /**
+                     * Other
+                     * @default null
+                     */
+                    Other?: {
+                        [key: string]: components["schemas"]["WaterHeatingEvent"][];
+                    } | null;
+                    /**
+                     * Shower
+                     * @default null
+                     */
+                    Shower?: {
+                        [key: string]: components["schemas"]["WaterHeatingEvent"][];
+                    } | null;
                 };
-                /** @enum {string} */
-                WaterHeatingSchedule: Fhs_inputSchema$defsWaterHeatingSchedule;
-                /** @enum {string} */
-                WaterPipeContentsType: Fhs_inputSchema$defsWaterPipeContentsType;
+                /**
+                 * WaterHeatingSchedule
+                 * @enum {string}
+                 */
+                WaterHeatingSchedule: "AllDay" | "HeatingHours";
+                /**
+                 * WaterPipeContentsType
+                 * @enum {string}
+                 */
+                WaterPipeContentsType: "water" | "glycol25";
+                /** WaterPipework */
                 WaterPipework: {
-                    /** Format: double */
+                    /** External Diameter Mm */
                     external_diameter_mm: number;
-                    /** Format: double */
+                    /** Insulation Thermal Conductivity */
                     insulation_thermal_conductivity: number;
-                    /** Format: double */
+                    /** Insulation Thickness Mm */
                     insulation_thickness_mm: number;
-                    /** Format: double */
+                    /** Internal Diameter Mm */
                     internal_diameter_mm: number;
-                    /** Format: double */
+                    /** Length */
                     length: number;
                     location: components["schemas"]["WaterPipeworkLocation"];
                     pipe_contents: components["schemas"]["WaterPipeContentsType"];
+                    /** Surface Reflectivity */
                     surface_reflectivity: boolean;
                 };
-                /** @enum {string} */
-                WaterPipeworkLocation: Fhs_inputSchema$defsWaterPipeworkLocation;
+                /**
+                 * WaterPipeworkLocation
+                 * @enum {string}
+                 */
+                WaterPipeworkLocation: "internal" | "external";
+                /** WaterPipeworkSimple */
                 WaterPipeworkSimple: {
-                    /** Format: double */
-                    external_diameter_mm?: number | null;
-                    /** Format: double */
-                    insulation_thermal_conductivity?: number | null;
-                    /** Format: double */
-                    insulation_thickness_mm?: number | null;
-                    /** Format: double */
-                    internal_diameter_mm?: number | null;
-                    /** Format: double */
+                    /** Internal Diameter Mm */
+                    internal_diameter_mm: number;
+                    /** Length */
                     length: number;
                     location: components["schemas"]["WaterPipeworkLocation"];
-                    pipe_contents?: components["schemas"]["WaterPipeContentsType"] | null;
-                    surface_reflectivity?: boolean | null;
                 };
-                WetEmitter: {
-                    /** Format: double */
-                    c: number;
-                    /** Format: double */
-                    frac_convective: number;
-                    /** Format: double */
-                    n: number;
-                    /** @constant */
-                    wet_emitter_type: "radiator";
-                } | {
-                    /** Format: double */
-                    emitter_floor_area: number;
-                    /** Format: double */
-                    equivalent_specific_thermal_mass: number;
-                    /** Format: double */
-                    frac_convective: number;
-                    /** Format: double */
-                    system_performance_factor: number;
-                    /** @constant */
-                    wet_emitter_type?: "ufh";
-                } | {
+                /** WetEmitterFanCoil */
+                WetEmitterFanCoil: {
                     fancoil_test_data: components["schemas"]["FancoilTestData"];
-                    /** Format: double */
+                    /** Frac Convective */
                     frac_convective: number;
-                    n_units: number;
-                    /** @constant */
-                    wet_emitter_type?: "fancoil";
+                    /**
+                     * N Units
+                     * @default 1
+                     */
+                    n_units?: number | null;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    wet_emitter_type: "fancoil";
                 };
-                /** @enum {string} */
-                WindShieldLocation: Fhs_inputSchema$defsWindShieldLocation;
-                WindowOpeningForCooling: {
-                    /** Format: double */
-                    equivalent_area: number;
+                /** WetEmitterRadiator */
+                WetEmitterRadiator: {
+                    /** C */
+                    c: number;
+                    /** Frac Convective */
+                    frac_convective: number;
+                    /** N */
+                    n: number;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    wet_emitter_type: "radiator";
                 };
+                /** WetEmitterUFH */
+                WetEmitterUFH: {
+                    /** Emitter Floor Area */
+                    emitter_floor_area: number;
+                    /** Equivalent Specific Thermal Mass */
+                    equivalent_specific_thermal_mass: number;
+                    /** Frac Convective */
+                    frac_convective: number;
+                    /** System Performance Factor */
+                    system_performance_factor: number;
+                    /**
+                     * @description discriminator enum property added by openapi-typescript
+                     * @enum {string}
+                     */
+                    wet_emitter_type: "ufh";
+                };
+                /**
+                 * WindShieldLocation
+                 * @enum {string}
+                 */
+                WindShieldLocation: "Sheltered" | "Average" | "Exposed";
+                /** WindowPart */
                 WindowPart: {
-                    /** Format: double */
+                    /** Mid Height Air Flow Path */
                     mid_height_air_flow_path: number;
                 };
+                /** WindowShadingObject */
                 WindowShadingObject: {
-                    /** Format: double */
-                    distance: number;
-                    /** Format: double */
-                    height: number;
-                    /** Format: double */
-                    transparency: number;
-                    /** @constant */
-                    type?: "obstacle";
-                } | {
-                    /** Format: double */
+                    /** Depth */
                     depth: number;
-                    /** Format: double */
+                    /** Distance */
                     distance: number;
-                    /** @enum {string} */
-                    type?: Fhs_inputSchema$defsWindowShadingObjectType;
+                    type: components["schemas"]["WindowShadingType"];
                 };
+                /** WindowShadingObstacle */
+                WindowShadingObstacle: {
+                    /** Distance */
+                    distance: number;
+                    /** Height */
+                    height: number;
+                    /** Transparency */
+                    transparency: number;
+                    /**
+                     * Type
+                     * @constant
+                     */
+                    type: "obstacle";
+                };
+                /**
+                 * WindowShadingType
+                 * @enum {string}
+                 */
+                WindowShadingType: "overhang" | "sidefinright" | "sidefinleft" | "reveal";
+                /** WindowTreatment */
                 WindowTreatment: {
+                    /**
+                     * Control Closing Irrad
+                     * @default null
+                     */
                     Control_closing_irrad?: string | null;
+                    /**
+                     * Control Open
+                     * @default null
+                     */
                     Control_open?: string | null;
+                    /**
+                     * Control Opening Irrad
+                     * @default null
+                     */
                     Control_opening_irrad?: string | null;
-                    /** Format: double */
-                    closing_irrad?: number | null;
                     controls: components["schemas"]["WindowTreatmentControl"];
-                    /** Format: double */
+                    /** Delta R */
                     delta_r: number;
-                    /** @description This field should be a boolean - any string provided will be ignored and treated as a null. */
-                    is_open?: boolean | string | null;
-                    /** Format: double */
+                    /**
+                     * Is Open
+                     * @description This field should be a boolean - any string provided will be ignored and treated as a null.
+                     * @default null
+                     */
+                    is_open?: boolean | null;
+                    /**
+                     * Opening Delay Hrs
+                     * @default null
+                     */
                     opening_delay_hrs?: number | null;
-                    /** Format: double */
-                    opening_irrad?: number | null;
-                    /** Format: double */
+                    /** Trans Red */
                     trans_red: number;
                     type: components["schemas"]["WindowTreatmentType"];
-                    waking_hour?: number | null;
                 };
-                /** @enum {string} */
-                WindowTreatmentControl: Fhs_inputSchema$defsWindowTreatmentControl;
-                /** @enum {string} */
-                WindowTreatmentType: Fhs_inputSchema$defsWindowTreatmentType;
-                /** @enum {string} */
-                WwhrsType: Fhs_inputSchema$defsWwhrsType;
-                ZoneInput: {
+                /**
+                 * WindowTreatmentControl
+                 * @enum {string}
+                 */
+                WindowTreatmentControl: "auto_motorised" | "combined_light_blind_HVAC" | "manual" | "manual_motorised";
+                /**
+                 * WindowTreatmentType
+                 * @enum {string}
+                 */
+                WindowTreatmentType: "blinds" | "curtains";
+                /** ZoneFHS */
+                ZoneFHS: {
+                    /** Buildingelement */
                     BuildingElement: {
-                        [key: string]: components["schemas"]["BuildingElement"];
+                        [key: string]: components["schemas"]["BuildingElementOpaqueFHS"] | components["schemas"]["BuildingElementTransparentFHS"] | (components["schemas"]["BuildingElementGroundSlabNoEdgeInsulation"] | components["schemas"]["BuildingElementGroundSlabEdgeInsulation"] | components["schemas"]["BuildingElementGroundSuspendedFloor"] | components["schemas"]["BuildingElementGroundHeatedBasement"] | components["schemas"]["BuildingElementGroundUnheatedBasement"]) | components["schemas"]["BuildingElementAdjacentConditionedSpace"] | components["schemas"]["BuildingElementAdjacentUnconditionedSpace_Simple"];
                     };
-                    Control_WindowOpening?: components["schemas"]["HeatSourceControlType"] | null;
-                    Lighting?: components["schemas"]["ZoneLighting"] | null;
-                    SpaceCoolSystem?: string | string[] | null;
-                    SpaceHeatControl?: components["schemas"]["SpaceHeatControlType"] | null;
-                    SpaceHeatSystem?: string | string[] | null;
-                    ThermalBridging: components["schemas"]["ThermalBridging"];
+                    /** @default null */
+                    Lighting?: components["schemas"]["Lighting"] | null;
                     /**
-                     * Format: double
+                     * Spacecoolsystem
+                     * @default null
+                     */
+                    SpaceCoolSystem?: string | string[] | null;
+                    /** @default null */
+                    SpaceHeatControl?: components["schemas"]["SpaceHeatControlType"] | null;
+                    /**
+                     * Spaceheatsystem
+                     * @default null
+                     */
+                    SpaceHeatSystem?: string | string[] | null;
+                    /** Thermalbridging */
+                    ThermalBridging: number | {
+                        [key: string]: components["schemas"]["ThermalBridgingLinearFHS"] | components["schemas"]["ThermalBridgingPoint"];
+                    };
+                    /**
+                     * Area
                      * @description Useful floor area of the zone (unit: m²)
                      */
                     area: number;
+                    /** @default null */
                     temp_setpnt_basis?: components["schemas"]["ZoneTemperatureControlBasis"] | null;
-                    /** Format: double */
-                    temp_setpnt_cool?: number | null;
-                    /** Format: double */
-                    temp_setpnt_heat?: number | null;
                     /**
-                     * Format: double
+                     * Temp Setpnt Init
                      * @description Setpoint temperature to use during initialisation (unit: ˚C)
                      */
-                    temp_setpnt_init?: number | null;
-                    /** Format: double */
+                    temp_setpnt_init: number;
+                    /** Volume */
                     volume: number;
                 };
-                ZoneLighting: {
-                    bulbs?: {
-                        [key: string]: components["schemas"]["ZoneLightingBulbs"];
-                    };
-                    /** Format: double */
-                    efficacy: number;
-                };
-                ZoneLightingBulbs: {
-                    /**
-                     * Format: int32
-                     * @description The number of bulbs present.
-                     */
-                    count: number;
-                    /** Format: double */
-                    efficacy: number;
-                    /** Format: double */
-                    power: number;
-                };
-                /** @enum {string} */
-                ZoneTemperatureControlBasis: Fhs_inputSchema$defsZoneTemperatureControlBasis;
+                /**
+                 * ZoneTemperatureControlBasis
+                 * @enum {string}
+                 */
+                ZoneTemperatureControlBasis: "air" | "operative";
             };
         };
     };
@@ -3876,89 +6758,101 @@ export type SchemaJsonApiOnePointOneMemberName = components['schemas']['JsonApiO
 export type SchemaJsonApiOnePointOneMemberNameString = components['schemas']['JsonApiOnePointOneMemberNameString'];
 export type SchemaJsonApiOnePointOneMeta = components['schemas']['JsonApiOnePointOneMeta'];
 export type SchemaVersions = components['schemas']['Versions'];
-export type SchemaApplianceLoadShifting = components['schemas']['ApplianceLoadShifting'];
-export type SchemaAppliance = components['schemas']['Appliance'];
-export type SchemaApplianceReference = components['schemas']['ApplianceReference'];
-export type SchemaApplianceGainsDetailsEvent = components['schemas']['ApplianceGainsDetailsEvent'];
-export type SchemaScheduleRepeaterEntryForDouble = components['schemas']['ScheduleRepeaterEntry_for_double'];
-export type SchemaScheduleRepeaterValueForDouble = components['schemas']['ScheduleRepeaterValue_for_double'];
-export type SchemaScheduleRepeaterForDouble = components['schemas']['ScheduleRepeater_for_double'];
-export type SchemaScheduleEntryForDouble = components['schemas']['ScheduleEntry_for_double'];
-export type SchemaScheduleReferenceEntryForDouble = components['schemas']['ScheduleReferenceEntry_for_double'];
-export type SchemaScheduleForDouble = components['schemas']['Schedule_for_double'];
-export type SchemaColdWaterSourceType = components['schemas']['ColdWaterSourceType'];
-export type SchemaBathDetails = components['schemas']['BathDetails'];
+export type SchemaLoadShifting = components['schemas']['LoadShifting'];
+export type SchemaApplianceGainsEvent = components['schemas']['ApplianceGainsEvent'];
+export type SchemaScheduleRepeaterEntryForDouble = components['schemas']['ScheduleRepeaterEntryForDouble'];
+export type SchemaScheduleRepeaterValueForDouble = components['schemas']['ScheduleRepeaterValueForDouble'];
+export type SchemaScheduleRepeaterForDouble = components['schemas']['ScheduleRepeaterForDouble'];
+export type SchemaScheduleEntryForDouble = components['schemas']['ScheduleEntryForDouble'];
+export type SchemaScheduleForDouble = components['schemas']['ScheduleForDouble'];
+export type SchemaClothesDrying = components['schemas']['ClothesDrying'];
+export type SchemaClothesWashing = components['schemas']['ClothesWashing'];
+export type SchemaDishwasher = components['schemas']['Dishwasher'];
+export type SchemaFreezer = components['schemas']['Freezer'];
+export type SchemaFridge = components['schemas']['Fridge'];
+export type SchemaEnergySupplyType = components['schemas']['EnergySupplyType'];
+export type SchemaFridgeFreezer = components['schemas']['FridgeFreezer'];
+export type SchemaHobs = components['schemas']['Hobs'];
+export type SchemaKettle = components['schemas']['Kettle'];
+export type SchemaMicrowave = components['schemas']['Microwave'];
+export type SchemaApplianceEnergyPerAnnum = components['schemas']['ApplianceEnergyPerAnnum'];
+export type SchemaOven = components['schemas']['Oven'];
 export type SchemaMassDistributionClass = components['schemas']['MassDistributionClass'];
+export type SchemaEdgeInsulationHorizontal = components['schemas']['EdgeInsulationHorizontal'];
+export type SchemaEdgeInsulationVertical = components['schemas']['EdgeInsulationVertical'];
+export type SchemaWindShieldLocation = components['schemas']['WindShieldLocation'];
+export type SchemaBuildingElementGroundHeatedBasement = components['schemas']['BuildingElementGroundHeatedBasement'];
+export type SchemaBuildingElementGroundSlabEdgeInsulation = components['schemas']['BuildingElementGroundSlabEdgeInsulation'];
+export type SchemaBuildingElementGroundSlabNoEdgeInsulation = components['schemas']['BuildingElementGroundSlabNoEdgeInsulation'];
+export type SchemaBuildingElementGroundSuspendedFloor = components['schemas']['BuildingElementGroundSuspendedFloor'];
+export type SchemaBuildingElementGroundUnheatedBasement = components['schemas']['BuildingElementGroundUnheatedBasement'];
+export type SchemaWindowShadingType = components['schemas']['WindowShadingType'];
 export type SchemaWindowShadingObject = components['schemas']['WindowShadingObject'];
+export type SchemaWindowShadingObstacle = components['schemas']['WindowShadingObstacle'];
 export type SchemaWindowTreatmentControl = components['schemas']['WindowTreatmentControl'];
 export type SchemaWindowTreatmentType = components['schemas']['WindowTreatmentType'];
 export type SchemaWindowTreatment = components['schemas']['WindowTreatment'];
 export type SchemaWindowPart = components['schemas']['WindowPart'];
-export type SchemaEdgeInsulation = components['schemas']['EdgeInsulation'];
-export type SchemaFloorType = components['schemas']['FloorType'];
-export type SchemaWindShieldLocation = components['schemas']['WindShieldLocation'];
-export type SchemaColdWaterSourceDetails = components['schemas']['ColdWaterSourceDetails'];
 export type SchemaCombustionApplianceType = components['schemas']['CombustionApplianceType'];
 export type SchemaFlueGasExhaustSituation = components['schemas']['FlueGasExhaustSituation'];
 export type SchemaCombustionFuelType = components['schemas']['CombustionFuelType'];
 export type SchemaCombustionAirSupplySituation = components['schemas']['CombustionAirSupplySituation'];
-export type SchemaControlLogicType = components['schemas']['ControlLogicType'];
-export type SchemaScheduleRepeaterEntryForBoolean = components['schemas']['ScheduleRepeaterEntry_for_Boolean'];
-export type SchemaScheduleRepeaterValueForBoolean = components['schemas']['ScheduleRepeaterValue_for_Boolean'];
-export type SchemaScheduleRepeaterForBoolean = components['schemas']['ScheduleRepeater_for_Boolean'];
-export type SchemaScheduleEntryForBoolean = components['schemas']['ScheduleEntry_for_Boolean'];
-export type SchemaScheduleReferenceEntryForBoolean = components['schemas']['ScheduleReferenceEntry_for_Boolean'];
-export type SchemaScheduleForBoolean = components['schemas']['Schedule_for_Boolean'];
 export type SchemaChargeLevel = components['schemas']['ChargeLevel'];
 export type SchemaExternalSensorCorrelation = components['schemas']['ExternalSensorCorrelation'];
 export type SchemaExternalSensor = components['schemas']['ExternalSensor'];
+export type SchemaControlLogicType = components['schemas']['ControlLogicType'];
+export type SchemaScheduleRepeaterEntryForBoolean = components['schemas']['ScheduleRepeaterEntryForBoolean'];
+export type SchemaScheduleRepeaterValueForBoolean = components['schemas']['ScheduleRepeaterValueForBoolean'];
+export type SchemaScheduleRepeaterForBoolean = components['schemas']['ScheduleRepeaterForBoolean'];
+export type SchemaScheduleEntryForBoolean = components['schemas']['ScheduleEntryForBoolean'];
+export type SchemaScheduleForBoolean = components['schemas']['ScheduleForBoolean'];
 export type SchemaControlCombinationOperation = components['schemas']['ControlCombinationOperation'];
 export type SchemaControlCombination = components['schemas']['ControlCombination'];
 export type SchemaControlCombinations = components['schemas']['ControlCombinations'];
-export type SchemaControlDetails = components['schemas']['ControlDetails'];
 export type SchemaEcoDesignControllerClass = components['schemas']['EcoDesignControllerClass'];
 export type SchemaBatteryLocation = components['schemas']['BatteryLocation'];
-export type SchemaDiverterHeatSourceType = components['schemas']['DiverterHeatSourceType'];
-export type SchemaStorageTankType = components['schemas']['StorageTankType'];
 export type SchemaElectricBattery = components['schemas']['ElectricBattery'];
 export type SchemaEnergyDiverter = components['schemas']['EnergyDiverter'];
 export type SchemaCustomEnergySourceFactor = components['schemas']['CustomEnergySourceFactor'];
 export type SchemaFuelType = components['schemas']['FuelType'];
-export type SchemaSecondarySupplyType = components['schemas']['SecondarySupplyType'];
-export type SchemaDaylightSavingsConfig = components['schemas']['DaylightSavingsConfig'];
+export type SchemaEnergySupplyPriorityEntry = components['schemas']['EnergySupplyPriorityEntry'];
 export type SchemaShadingObjectType = components['schemas']['ShadingObjectType'];
 export type SchemaShadingObject = components['schemas']['ShadingObject'];
-export type SchemaShadingSegment = components['schemas']['ShadingSegment'];
+export type SchemaShadingSegmentFhs = components['schemas']['ShadingSegmentFHS'];
 export type SchemaFanSpeedData = components['schemas']['FanSpeedData'];
 export type SchemaBuildType = components['schemas']['BuildType'];
 export type SchemaHeatSourceLocation = components['schemas']['HeatSourceLocation'];
 export type SchemaBoilerCostScheduleHybrid = components['schemas']['BoilerCostScheduleHybrid'];
 export type SchemaHeatPumpHotWaterOnlyTestDatum = components['schemas']['HeatPumpHotWaterOnlyTestDatum'];
-export type SchemaTestLetter = components['schemas']['TestLetter'];
-export type SchemaHeatSourceControlType = components['schemas']['HeatSourceControlType'];
-export type SchemaSolarCellLocation = components['schemas']['SolarCellLocation'];
 export type SchemaHeatPumpHotWaterTestData = components['schemas']['HeatPumpHotWaterTestData'];
+export type SchemaTestLetter = components['schemas']['TestLetter'];
 export type SchemaHeatPumpBufferTank = components['schemas']['HeatPumpBufferTank'];
 export type SchemaHeatPumpBackupControlType = components['schemas']['HeatPumpBackupControlType'];
 export type SchemaHeatPumpBoiler = components['schemas']['HeatPumpBoiler'];
 export type SchemaHeatPumpSinkType = components['schemas']['HeatPumpSinkType'];
 export type SchemaHeatPumpSourceType = components['schemas']['HeatPumpSourceType'];
 export type SchemaHeatPumpTestDatum = components['schemas']['HeatPumpTestDatum'];
-export type SchemaBaths = components['schemas']['Baths'];
+export type SchemaBath = components['schemas']['Bath'];
 export type SchemaWaterPipeworkLocation = components['schemas']['WaterPipeworkLocation'];
-export type SchemaWaterPipeContentsType = components['schemas']['WaterPipeContentsType'];
 export type SchemaWaterPipeworkSimple = components['schemas']['WaterPipeworkSimple'];
-export type SchemaOtherWaterUseDetails = components['schemas']['OtherWaterUseDetails'];
-export type SchemaOtherWaterUses = components['schemas']['OtherWaterUses'];
-export type SchemaShower = components['schemas']['Shower'];
-export type SchemaShowers = components['schemas']['Showers'];
-export type SchemaHeatSource = components['schemas']['HeatSource'];
-export type SchemaWaterPipework = components['schemas']['WaterPipework'];
-export type SchemaStorageTank = components['schemas']['StorageTank'];
-export type SchemaHeatSourceWetType = components['schemas']['HeatSourceWetType'];
+export type SchemaOtherWaterUse = components['schemas']['OtherWaterUse'];
+export type SchemaShowerInstantElectric = components['schemas']['ShowerInstantElectric'];
+export type SchemaShowerMixer = components['schemas']['ShowerMixer'];
 export type SchemaBoilerHotWaterTest = components['schemas']['BoilerHotWaterTest'];
-export type SchemaHotWaterSourceDetails = components['schemas']['HotWaterSourceDetails'];
-export type SchemaAirTerminalDevice = components['schemas']['AirTerminalDevice'];
+export type SchemaHotWaterSourceCombiBoiler = components['schemas']['HotWaterSourceCombiBoiler'];
+export type SchemaHotWaterSourceHui = components['schemas']['HotWaterSourceHUI'];
+export type SchemaHotWaterSourceHeatBattery = components['schemas']['HotWaterSourceHeatBattery'];
+export type SchemaHotWaterSourcePointOfUse = components['schemas']['HotWaterSourcePointOfUse'];
+export type SchemaHeatPumpHotWaterOnly = components['schemas']['HeatPumpHotWaterOnly'];
+export type SchemaHeatSourceWetServiceWaterRegular = components['schemas']['HeatSourceWetServiceWaterRegular'];
+export type SchemaImmersionHeaterFhs = components['schemas']['ImmersionHeaterFHS'];
+export type SchemaSolarCollectorLoopLocation = components['schemas']['SolarCollectorLoopLocation'];
+export type SchemaSolarThermalSystem = components['schemas']['SolarThermalSystem'];
+export type SchemaWaterPipeContentsType = components['schemas']['WaterPipeContentsType'];
+export type SchemaWaterPipework = components['schemas']['WaterPipework'];
+export type SchemaHotWaterSourceSmartHotWaterTankFhs = components['schemas']['HotWaterSourceSmartHotWaterTankFHS'];
+export type SchemaImmersionHeater = components['schemas']['ImmersionHeater'];
+export type SchemaStorageTank = components['schemas']['StorageTank'];
 export type SchemaCombustionAppliance = components['schemas']['CombustionAppliance'];
 export type SchemaVentilationLeaks = components['schemas']['VentilationLeaks'];
 export type SchemaDuctShape = components['schemas']['DuctShape'];
@@ -3967,54 +6861,69 @@ export type SchemaMechanicalVentilationDuctwork = components['schemas']['Mechani
 export type SchemaMvhrLocation = components['schemas']['MVHRLocation'];
 export type SchemaSupplyAirFlowRateControlType = components['schemas']['SupplyAirFlowRateControlType'];
 export type SchemaSupplyAirTemperatureControlType = components['schemas']['SupplyAirTemperatureControlType'];
-export type SchemaVentType = components['schemas']['VentType'];
-export type SchemaMechanicalVentilation = components['schemas']['MechanicalVentilation'];
+export type SchemaMechVentType = components['schemas']['MechVentType'];
+export type SchemaMechanicalVentilationFhs = components['schemas']['MechanicalVentilationFHS'];
 export type SchemaVent = components['schemas']['Vent'];
 export type SchemaVentilationShieldClass = components['schemas']['VentilationShieldClass'];
 export type SchemaTerrainClass = components['schemas']['TerrainClass'];
 export type SchemaInternalGainsDetails = components['schemas']['InternalGainsDetails'];
+export type SchemaLightingBulbs = components['schemas']['LightingBulbs'];
 export type SchemaInverterType = components['schemas']['InverterType'];
-export type SchemaOnSiteGenerationVentilationStrategy = components['schemas']['OnSiteGenerationVentilationStrategy'];
-export type SchemaApplianceKey = components['schemas']['ApplianceKey'];
+export type SchemaPhotovoltaicVentilationStrategy = components['schemas']['PhotovoltaicVentilationStrategy'];
 export type SchemaSmartApplianceBattery = components['schemas']['SmartApplianceBattery'];
-export type SchemaSpaceCoolSystemType = components['schemas']['SpaceCoolSystemType'];
+export type SchemaAirFlowType = components['schemas']['AirFlowType'];
 export type SchemaSpaceHeatSystemHeatSource = components['schemas']['SpaceHeatSystemHeatSource'];
 export type SchemaEcoDesignController = components['schemas']['EcoDesignController'];
 export type SchemaFancoilTestData = components['schemas']['FancoilTestData'];
-export type SchemaWetEmitter = components['schemas']['WetEmitter'];
-export type SchemaThermalBridgingDetails = components['schemas']['ThermalBridgingDetails'];
-export type SchemaWwhrsType = components['schemas']['WwhrsType'];
+export type SchemaWetEmitterFanCoil = components['schemas']['WetEmitterFanCoil'];
+export type SchemaWetEmitterRadiator = components['schemas']['WetEmitterRadiator'];
+export type SchemaWetEmitterUfh = components['schemas']['WetEmitterUFH'];
+export type SchemaWasteWaterHeatRecoverySystemType = components['schemas']['WasteWaterHeatRecoverySystemType'];
 export type SchemaWaterHeatingEvent = components['schemas']['WaterHeatingEvent'];
-export type SchemaBuildingElement = components['schemas']['BuildingElement'];
-export type SchemaZoneLightingBulbs = components['schemas']['ZoneLightingBulbs'];
-export type SchemaZoneLighting = components['schemas']['ZoneLighting'];
+export type SchemaBuildingElementAdjacentConditionedSpace = components['schemas']['BuildingElementAdjacentConditionedSpace'];
+export type SchemaBuildingElementAdjacentUnconditionedSpaceSimple = components['schemas']['BuildingElementAdjacentUnconditionedSpace_Simple'];
+export type SchemaBuildingElementGround = components['schemas']['BuildingElementGround'];
+export type SchemaBuildingElementOpaqueFhs = components['schemas']['BuildingElementOpaqueFHS'];
+export type SchemaBuildingElementTransparentFhs = components['schemas']['BuildingElementTransparentFHS'];
+export type SchemaLighting = components['schemas']['Lighting'];
 export type SchemaSpaceHeatControlType = components['schemas']['SpaceHeatControlType'];
-export type SchemaThermalBridging = components['schemas']['ThermalBridging'];
+export type SchemaThermalBridgingLinearFhs = components['schemas']['ThermalBridgingLinearFHS'];
+export type SchemaThermalBridgingPoint = components['schemas']['ThermalBridgingPoint'];
 export type SchemaZoneTemperatureControlBasis = components['schemas']['ZoneTemperatureControlBasis'];
-export type SchemaApplianceGainsDetails = components['schemas']['ApplianceGainsDetails'];
-export type SchemaApplianceEntry = components['schemas']['ApplianceEntry'];
-export type SchemaColdWaterSourceInput = components['schemas']['ColdWaterSourceInput'];
-export type SchemaControl = components['schemas']['Control'];
-export type SchemaEnergySupplyDetails = components['schemas']['EnergySupplyDetails'];
+export type SchemaApplianceGainsFhs = components['schemas']['ApplianceGainsFHS'];
+export type SchemaAppliances = components['schemas']['Appliances'];
+export type SchemaColdWaterSource = components['schemas']['ColdWaterSource'];
+export type SchemaControlChargeTarget = components['schemas']['ControlChargeTarget'];
+export type SchemaControlCombinationTime = components['schemas']['ControlCombinationTime'];
+export type SchemaControlOnOffCostMinimising = components['schemas']['ControlOnOffCostMinimising'];
+export type SchemaControlOnOffTimer = components['schemas']['ControlOnOffTimer'];
+export type SchemaControlSetpointTimer = components['schemas']['ControlSetpointTimer'];
+export type SchemaEnergySupply = components['schemas']['EnergySupply'];
 export type SchemaWaterHeatingEvents = components['schemas']['WaterHeatingEvents'];
-export type SchemaExternalConditionsInput = components['schemas']['ExternalConditionsInput'];
+export type SchemaExternalConditionsInputFhs = components['schemas']['ExternalConditionsInputFHS'];
 export type SchemaGeneral = components['schemas']['General'];
-export type SchemaHeatSourceWetDetails = components['schemas']['HeatSourceWetDetails'];
+export type SchemaHeatSourceWetHeatPump = components['schemas']['HeatSourceWetHeatPump'];
+export type SchemaHeatSourceWetHeatPumpWithProductReference = components['schemas']['HeatSourceWetHeatPumpWithProductReference'];
+export type SchemaHeatSourceWetBoiler = components['schemas']['HeatSourceWetBoiler'];
+export type SchemaHeatSourceWetHeatBattery = components['schemas']['HeatSourceWetHeatBattery'];
+export type SchemaHeatSourceWetHiu = components['schemas']['HeatSourceWetHIU'];
 export type SchemaHeatingControlType = components['schemas']['HeatingControlType'];
 export type SchemaHotWaterDemand = components['schemas']['HotWaterDemand'];
-export type SchemaHotWaterSource = components['schemas']['HotWaterSource'];
-export type SchemaInfiltrationVentilation = components['schemas']['InfiltrationVentilation'];
+export type SchemaHotWaterSourceFhs = components['schemas']['HotWaterSourceFHS'];
+export type SchemaInfiltrationVentilationFhs = components['schemas']['InfiltrationVentilationFHS'];
 export type SchemaInternalGains = components['schemas']['InternalGains'];
-export type SchemaOnSiteGenerationDetails = components['schemas']['OnSiteGenerationDetails'];
+export type SchemaPhotovoltaicSystem = components['schemas']['PhotovoltaicSystem'];
 export type SchemaSimulationTime = components['schemas']['SimulationTime'];
-export type SchemaSmartApplianceControlDetails = components['schemas']['SmartApplianceControlDetails'];
-export type SchemaSpaceCoolSystemDetails = components['schemas']['SpaceCoolSystemDetails'];
-export type SchemaSpaceHeatSystemDetails = components['schemas']['SpaceHeatSystemDetails'];
+export type SchemaSmartApplianceControl = components['schemas']['SmartApplianceControl'];
+export type SchemaSpaceCoolSystemFhs = components['schemas']['SpaceCoolSystemFHS'];
+export type SchemaSpaceHeatSystemElectricStorageHeater = components['schemas']['SpaceHeatSystemElectricStorageHeater'];
+export type SchemaSpaceHeatSystemInstantElectricHeaterFhs = components['schemas']['SpaceHeatSystemInstantElectricHeaterFHS'];
+export type SchemaSpaceHeatSystemWarmAirFhs = components['schemas']['SpaceHeatSystemWarmAirFHS'];
+export type SchemaSpaceHeatSystemWetDistributionFhs = components['schemas']['SpaceHeatSystemWetDistributionFHS'];
 export type SchemaTariff = components['schemas']['Tariff'];
-export type SchemaWasteWaterHeatRecoveryDetails = components['schemas']['WasteWaterHeatRecoveryDetails'];
+export type SchemaWasteWaterHeatRecoverySystem = components['schemas']['WasteWaterHeatRecoverySystem'];
 export type SchemaWaterHeatingSchedule = components['schemas']['WaterHeatingSchedule'];
-export type SchemaWindowOpeningForCooling = components['schemas']['WindowOpeningForCooling'];
-export type SchemaZoneInput = components['schemas']['ZoneInput'];
+export type SchemaZoneFhs = components['schemas']['ZoneFHS'];
 export type SchemaFhsInputSchema = components['schemas']['fhs_input.schema'];
 export type $defs = Record<string, never>;
 export interface operations {
@@ -4099,555 +7008,6 @@ export interface operations {
             };
         };
     };
-}
-export enum Versions {
-    Value0_1_0 = "0.1.0"
-}
-export enum ApplianceReference {
-    Default = "Default",
-    Not_Installed = "Not Installed"
-}
-export enum ColdWaterSourceType {
-    mains_water = "mains water",
-    header_tank = "header tank"
-}
-export enum MassDistributionClass {
-    D = "D",
-    E = "E",
-    I = "I",
-    IE = "IE",
-    M = "M"
-}
-export enum WindowShadingObjectType {
-    overhang = "overhang",
-    sidefinright = "sidefinright",
-    sidefinleft = "sidefinleft",
-    reveal = "reveal"
-}
-export enum WindowTreatmentControl {
-    auto_motorised = "auto_motorised",
-    combined_light_blind_HVAC = "combined_light_blind_HVAC",
-    manual = "manual",
-    manual_motorised = "manual_motorised"
-}
-export enum WindowTreatmentType {
-    blinds = "blinds",
-    curtains = "curtains"
-}
-export enum FloorType {
-    Slab_no_edge_insulation = "Slab_no_edge_insulation",
-    Slab_edge_insulation = "Slab_edge_insulation",
-    Suspended_floor = "Suspended_floor",
-    Heated_basement = "Heated_basement",
-    Unheated_basement = "Unheated_basement"
-}
-export enum WindShieldLocation {
-    Sheltered = "Sheltered",
-    Average = "Average",
-    Exposed = "Exposed"
-}
-export enum CombustionApplianceType {
-    open_fireplace = "open_fireplace",
-    closed_with_fan = "closed_with_fan",
-    open_gas_flue_balancer = "open_gas_flue_balancer",
-    open_gas_kitchen_stove = "open_gas_kitchen_stove",
-    open_gas_fire = "open_gas_fire",
-    closed_fire = "closed_fire"
-}
-export enum FlueGasExhaustSituation {
-    into_room = "into_room",
-    into_separate_duct = "into_separate_duct",
-    into_mech_vent = "into_mech_vent"
-}
-export enum CombustionFuelType {
-    wood = "wood",
-    gas = "gas",
-    oil = "oil",
-    coal = "coal"
-}
-export enum CombustionAirSupplySituation {
-    room_air = "room_air",
-    outside = "outside"
-}
-export enum ControlLogicType {
-    celect = "celect",
-    heat_battery = "heat_battery",
-    hhrsh = "hhrsh",
-    Automatic = "Automatic",
-    Manual = "Manual"
-}
-export enum ControlCombinationOperation {
-    AND = "AND",
-    OR = "OR",
-    XOR = "XOR",
-    NOT = "NOT",
-    MAX = "MAX",
-    MIN = "MIN",
-    MEAN = "MEAN"
-}
-export enum BatteryLocation {
-    inside = "inside",
-    outside = "outside"
-}
-export enum DiverterHeatSourceType {
-    immersion = "immersion"
-}
-export enum FuelType {
-    LPG_bottled = "LPG_bottled",
-    LPG_bulk = "LPG_bulk",
-    LPG_condition_11F = "LPG_condition_11F",
-    custom = "custom",
-    electricity = "electricity",
-    energy_from_environment = "energy_from_environment",
-    mains_gas = "mains_gas",
-    unmet_demand = "unmet_demand"
-}
-export enum SecondarySupplyType {
-    ElectricBattery = "ElectricBattery",
-    diverter = "diverter"
-}
-export enum DaylightSavingsConfig {
-    applicable_and_taken_into_account = "applicable and taken into account",
-    applicable_but_not_taken_into_account = "applicable but not taken into account",
-    not_applicable = "not applicable"
-}
-export enum ShadingObjectType {
-    obstacle = "obstacle",
-    overhang = "overhang"
-}
-export enum BuildType {
-    house = "house",
-    flat = "flat"
-}
-export enum HeatSourceLocation {
-    internal = "internal",
-    external = "external"
-}
-export enum TestLetter {
-    A = "A",
-    B = "B",
-    C = "C",
-    D = "D",
-    F = "F",
-    F2 = "F2"
-}
-export enum HeatSourceControlType {
-    hw_timer = "hw timer",
-    window_opening = "window opening",
-    WindowOpening_LivingRoom = "WindowOpening_LivingRoom",
-    WindowOpening_RestOfDwelling = "WindowOpening_RestOfDwelling",
-    always_off = "always off"
-}
-export enum SolarCellLocation {
-    OUT = "OUT",
-    HS = "HS",
-    NHS = "NHS"
-}
-export enum HeatPumpBackupControlType {
-    None = "None",
-    TopUp = "TopUp",
-    Substitute = "Substitute"
-}
-export enum HeatPumpSinkType {
-    Water = "Water",
-    Air = "Air",
-    Glycol25 = "Glycol25"
-}
-export enum HeatPumpSourceType {
-    Ground = "Ground",
-    OutsideAir = "OutsideAir",
-    ExhaustAirMEV = "ExhaustAirMEV",
-    ExhaustAirMVHR = "ExhaustAirMVHR",
-    ExhaustAirMixed = "ExhaustAirMixed",
-    WaterGround = "WaterGround",
-    WaterSurface = "WaterSurface",
-    HeatNetwork = "HeatNetwork"
-}
-export enum WaterPipeworkLocation {
-    internal = "internal",
-    external = "external"
-}
-export enum WaterPipeContentsType {
-    water = "water",
-    air = "air",
-    glycol25 = "glycol25"
-}
-export enum HeatSourceWetType {
-    boiler = "boiler",
-    HeatNetwork = "HeatNetwork",
-    hp = "hp"
-}
-export enum BoilerHotWaterTest {
-    M_L = "M&L",
-    M_S = "M&S",
-    M_only = "M_only",
-    No_additional_tests = "No_additional_tests"
-}
-export enum DuctShape {
-    circular = "circular",
-    rectangular = "rectangular"
-}
-export enum DuctType {
-    intake = "intake",
-    supply = "supply",
-    extract = "extract",
-    exhaust = "exhaust"
-}
-export enum MVHRLocation {
-    inside = "inside",
-    outside = "outside"
-}
-export enum SupplyAirFlowRateControlType {
-    ODA = "ODA",
-    LOAD = "LOAD"
-}
-export enum SupplyAirTemperatureControlType {
-    CONST = "CONST",
-    NO_CTRL = "NO_CTRL",
-    LOAD_COM = "LOAD_COM"
-}
-export enum VentType {
-    Intermittent_MEV = "Intermittent MEV",
-    Centralised_continuous_MEV = "Centralised continuous MEV",
-    Decentralised_continuous_MEV = "Decentralised continuous MEV",
-    MVHR = "MVHR",
-    PIV = "PIV"
-}
-export enum VentilationShieldClass {
-    Open = "Open",
-    Normal = "Normal",
-    Shielded = "Shielded"
-}
-export enum TerrainClass {
-    OpenWater = "OpenWater",
-    OpenField = "OpenField",
-    Suburban = "Suburban",
-    Urban = "Urban"
-}
-export enum InverterType {
-    optimised_inverter = "optimised_inverter",
-    string_inverter = "string_inverter"
-}
-export enum OnSiteGenerationVentilationStrategy {
-    unventilated = "unventilated",
-    moderately_ventilated = "moderately_ventilated",
-    strongly_or_forced_ventilated = "strongly_or_forced_ventilated",
-    rear_surface_free = "rear_surface_free"
-}
-export enum ApplianceKey {
-    Clothes_drying = "Clothes_drying",
-    Clothes_washing = "Clothes_washing",
-    Dishwasher = "Dishwasher",
-    Fridge = "Fridge",
-    Fridge_Freezer = "Fridge-Freezer",
-    Freezer = "Freezer",
-    Hobs = "Hobs",
-    Kettle = "Kettle",
-    Microwave = "Microwave",
-    Otherdevices = "Otherdevices",
-    Oven = "Oven",
-    lighting = "lighting"
-}
-export enum SpaceCoolSystemType {
-    AirConditioning = "AirConditioning"
-}
-export enum WwhrsType {
-    WWHRS_InstantaneousSystemA = "WWHRS_InstantaneousSystemA",
-    WWHRS_InstantaneousSystemB = "WWHRS_InstantaneousSystemB",
-    WWHRS_InstantaneousSystemC = "WWHRS_InstantaneousSystemC"
-}
-export enum SpaceHeatControlType {
-    livingroom = "livingroom",
-    restofdwelling = "restofdwelling"
-}
-export enum ZoneTemperatureControlBasis {
-    air = "air",
-    operative = "operative"
-}
-export enum HeatingControlType {
-    SeparateTimeAndTempControl = "SeparateTimeAndTempControl",
-    SeparateTempControl = "SeparateTempControl"
-}
-export enum SpaceHeatSystemDetailsAir_flow_type {
-    fan_assisted = "fan-assisted",
-    damper_only = "damper-only"
-}
-export enum WaterHeatingSchedule {
-    AllDay = "AllDay",
-    HeatingHours = "HeatingHours"
-}
-export enum Fhs_inputSchema$defsApplianceKey {
-    Clothes_drying = "Clothes_drying",
-    Clothes_washing = "Clothes_washing",
-    Dishwasher = "Dishwasher",
-    Fridge = "Fridge",
-    Fridge_Freezer = "Fridge-Freezer",
-    Freezer = "Freezer",
-    Hobs = "Hobs",
-    Kettle = "Kettle",
-    Microwave = "Microwave",
-    Otherdevices = "Otherdevices",
-    Oven = "Oven",
-    lighting = "lighting"
-}
-export enum Fhs_inputSchema$defsApplianceReference {
-    Default = "Default",
-    Not_Installed = "Not Installed"
-}
-export enum Fhs_inputSchema$defsBatteryLocation {
-    inside = "inside",
-    outside = "outside"
-}
-export enum Fhs_inputSchema$defsBoilerHotWaterTest {
-    M_L = "M&L",
-    M_S = "M&S",
-    M_only = "M_only",
-    No_additional_tests = "No_additional_tests"
-}
-export enum Fhs_inputSchema$defsBuildType {
-    house = "house",
-    flat = "flat"
-}
-export enum Fhs_inputSchema$defsColdWaterSourceType {
-    mains_water = "mains water",
-    header_tank = "header tank"
-}
-export enum Fhs_inputSchema$defsCombustionAirSupplySituation {
-    room_air = "room_air",
-    outside = "outside"
-}
-export enum Fhs_inputSchema$defsCombustionApplianceType {
-    open_fireplace = "open_fireplace",
-    closed_with_fan = "closed_with_fan",
-    open_gas_flue_balancer = "open_gas_flue_balancer",
-    open_gas_kitchen_stove = "open_gas_kitchen_stove",
-    open_gas_fire = "open_gas_fire",
-    closed_fire = "closed_fire"
-}
-export enum Fhs_inputSchema$defsCombustionFuelType {
-    wood = "wood",
-    gas = "gas",
-    oil = "oil",
-    coal = "coal"
-}
-export enum Fhs_inputSchema$defsControlCombinationOperation {
-    AND = "AND",
-    OR = "OR",
-    XOR = "XOR",
-    NOT = "NOT",
-    MAX = "MAX",
-    MIN = "MIN",
-    MEAN = "MEAN"
-}
-export enum Fhs_inputSchema$defsControlLogicType {
-    celect = "celect",
-    heat_battery = "heat_battery",
-    hhrsh = "hhrsh",
-    Automatic = "Automatic",
-    Manual = "Manual"
-}
-export enum Fhs_inputSchema$defsDaylightSavingsConfig {
-    applicable_and_taken_into_account = "applicable and taken into account",
-    applicable_but_not_taken_into_account = "applicable but not taken into account",
-    not_applicable = "not applicable"
-}
-export enum Fhs_inputSchema$defsDiverterHeatSourceType {
-    immersion = "immersion"
-}
-export enum Fhs_inputSchema$defsDuctShape {
-    circular = "circular",
-    rectangular = "rectangular"
-}
-export enum Fhs_inputSchema$defsDuctType {
-    intake = "intake",
-    supply = "supply",
-    extract = "extract",
-    exhaust = "exhaust"
-}
-export enum Fhs_inputSchema$defsFloorType {
-    Slab_no_edge_insulation = "Slab_no_edge_insulation",
-    Slab_edge_insulation = "Slab_edge_insulation",
-    Suspended_floor = "Suspended_floor",
-    Heated_basement = "Heated_basement",
-    Unheated_basement = "Unheated_basement"
-}
-export enum Fhs_inputSchema$defsFlueGasExhaustSituation {
-    into_room = "into_room",
-    into_separate_duct = "into_separate_duct",
-    into_mech_vent = "into_mech_vent"
-}
-export enum Fhs_inputSchema$defsFuelType {
-    LPG_bottled = "LPG_bottled",
-    LPG_bulk = "LPG_bulk",
-    LPG_condition_11F = "LPG_condition_11F",
-    custom = "custom",
-    electricity = "electricity",
-    energy_from_environment = "energy_from_environment",
-    mains_gas = "mains_gas",
-    unmet_demand = "unmet_demand"
-}
-export enum Fhs_inputSchema$defsHeatPumpBackupControlType {
-    None = "None",
-    TopUp = "TopUp",
-    Substitute = "Substitute"
-}
-export enum Fhs_inputSchema$defsHeatPumpSinkType {
-    Water = "Water",
-    Air = "Air",
-    Glycol25 = "Glycol25"
-}
-export enum Fhs_inputSchema$defsHeatPumpSourceType {
-    Ground = "Ground",
-    OutsideAir = "OutsideAir",
-    ExhaustAirMEV = "ExhaustAirMEV",
-    ExhaustAirMVHR = "ExhaustAirMVHR",
-    ExhaustAirMixed = "ExhaustAirMixed",
-    WaterGround = "WaterGround",
-    WaterSurface = "WaterSurface",
-    HeatNetwork = "HeatNetwork"
-}
-export enum Fhs_inputSchema$defsHeatSourceControlType {
-    hw_timer = "hw timer",
-    window_opening = "window opening",
-    WindowOpening_LivingRoom = "WindowOpening_LivingRoom",
-    WindowOpening_RestOfDwelling = "WindowOpening_RestOfDwelling",
-    always_off = "always off"
-}
-export enum Fhs_inputSchema$defsHeatSourceLocation {
-    internal = "internal",
-    external = "external"
-}
-export enum Fhs_inputSchema$defsHeatSourceWetType {
-    boiler = "boiler",
-    HeatNetwork = "HeatNetwork",
-    hp = "hp"
-}
-export enum Fhs_inputSchema$defsHeatingControlType {
-    SeparateTimeAndTempControl = "SeparateTimeAndTempControl",
-    SeparateTempControl = "SeparateTempControl"
-}
-export enum Fhs_inputSchema$defsInverterType {
-    optimised_inverter = "optimised_inverter",
-    string_inverter = "string_inverter"
-}
-export enum Fhs_inputSchema$defsMVHRLocation {
-    inside = "inside",
-    outside = "outside"
-}
-export enum Fhs_inputSchema$defsMassDistributionClass {
-    D = "D",
-    E = "E",
-    I = "I",
-    IE = "IE",
-    M = "M"
-}
-export enum Fhs_inputSchema$defsOnSiteGenerationVentilationStrategy {
-    unventilated = "unventilated",
-    moderately_ventilated = "moderately_ventilated",
-    strongly_or_forced_ventilated = "strongly_or_forced_ventilated",
-    rear_surface_free = "rear_surface_free"
-}
-export enum Fhs_inputSchema$defsSecondarySupplyType {
-    ElectricBattery = "ElectricBattery",
-    diverter = "diverter"
-}
-export enum Fhs_inputSchema$defsShadingObjectType {
-    obstacle = "obstacle",
-    overhang = "overhang"
-}
-export enum Fhs_inputSchema$defsSolarCellLocation {
-    OUT = "OUT",
-    HS = "HS",
-    NHS = "NHS"
-}
-export enum Fhs_inputSchema$defsSpaceCoolSystemType {
-    AirConditioning = "AirConditioning"
-}
-export enum Fhs_inputSchema$defsSpaceHeatControlType {
-    livingroom = "livingroom",
-    restofdwelling = "restofdwelling"
-}
-export enum Fhs_inputSchema$defsSpaceHeatSystemDetailsAir_flow_type {
-    fan_assisted = "fan-assisted",
-    damper_only = "damper-only"
-}
-export enum Fhs_inputSchema$defsSupplyAirFlowRateControlType {
-    ODA = "ODA",
-    LOAD = "LOAD"
-}
-export enum Fhs_inputSchema$defsSupplyAirTemperatureControlType {
-    CONST = "CONST",
-    NO_CTRL = "NO_CTRL",
-    LOAD_COM = "LOAD_COM"
-}
-export enum Fhs_inputSchema$defsTerrainClass {
-    OpenWater = "OpenWater",
-    OpenField = "OpenField",
-    Suburban = "Suburban",
-    Urban = "Urban"
-}
-export enum Fhs_inputSchema$defsTestLetter {
-    A = "A",
-    B = "B",
-    C = "C",
-    D = "D",
-    F = "F",
-    F2 = "F2"
-}
-export enum Fhs_inputSchema$defsVentType {
-    Intermittent_MEV = "Intermittent MEV",
-    Centralised_continuous_MEV = "Centralised continuous MEV",
-    Decentralised_continuous_MEV = "Decentralised continuous MEV",
-    MVHR = "MVHR",
-    PIV = "PIV"
-}
-export enum Fhs_inputSchema$defsVentilationShieldClass {
-    Open = "Open",
-    Normal = "Normal",
-    Shielded = "Shielded"
-}
-export enum Fhs_inputSchema$defsWaterHeatingSchedule {
-    AllDay = "AllDay",
-    HeatingHours = "HeatingHours"
-}
-export enum Fhs_inputSchema$defsWaterPipeContentsType {
-    water = "water",
-    air = "air",
-    glycol25 = "glycol25"
-}
-export enum Fhs_inputSchema$defsWaterPipeworkLocation {
-    internal = "internal",
-    external = "external"
-}
-export enum Fhs_inputSchema$defsWindShieldLocation {
-    Sheltered = "Sheltered",
-    Average = "Average",
-    Exposed = "Exposed"
-}
-export enum Fhs_inputSchema$defsWindowShadingObjectType {
-    overhang = "overhang",
-    sidefinright = "sidefinright",
-    sidefinleft = "sidefinleft",
-    reveal = "reveal"
-}
-export enum Fhs_inputSchema$defsWindowTreatmentControl {
-    auto_motorised = "auto_motorised",
-    combined_light_blind_HVAC = "combined_light_blind_HVAC",
-    manual = "manual",
-    manual_motorised = "manual_motorised"
-}
-export enum Fhs_inputSchema$defsWindowTreatmentType {
-    blinds = "blinds",
-    curtains = "curtains"
-}
-export enum Fhs_inputSchema$defsWwhrsType {
-    WWHRS_InstantaneousSystemA = "WWHRS_InstantaneousSystemA",
-    WWHRS_InstantaneousSystemB = "WWHRS_InstantaneousSystemB",
-    WWHRS_InstantaneousSystemC = "WWHRS_InstantaneousSystemC"
-}
-export enum Fhs_inputSchema$defsZoneTemperatureControlBasis {
-    air = "air",
-    operative = "operative"
 }
 export enum ApiPaths {
     ApiMetadata = "/",

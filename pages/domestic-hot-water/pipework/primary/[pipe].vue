@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getUrl  } from "#imports";
 import type { SnakeToSentenceCase } from "#imports";
-import type { WaterPipeContentsType, WaterPipeworkLocation } from "~/schema/api-schema.types";
+import type { SchemaWaterPipeContentsType, SchemaWaterPipeworkLocation } from "~/schema/api-schema.types";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const title = "Primary pipework";
@@ -10,13 +10,12 @@ const store = useEcaasStore();
 const pipeworkData = useItemToEdit("pipe", store.domesticHotWater.pipework.primaryPipework.data);
 const model = ref(pipeworkData?.data);
 
-const pipeContentsOptions: Record<WaterPipeContentsType, string> = {
+const pipeContentsOptions: Record<SchemaWaterPipeContentsType, string> = {
 	water: "Water",
-	air: "Air",
 	glycol25: "Glycol 25",
 };
 
-const locationOptions: Record<WaterPipeworkLocation, SnakeToSentenceCase<WaterPipeworkLocation>> = {
+const locationOptions: Record<SchemaWaterPipeworkLocation, SnakeToSentenceCase<SchemaWaterPipeworkLocation>> = {
 	internal: "Internal",
 	external: "External",
 };

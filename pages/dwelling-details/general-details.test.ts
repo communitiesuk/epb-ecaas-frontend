@@ -3,7 +3,6 @@ import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
 import type { GeneralDetailsData } from "~/stores/ecaasStore.schema";
-import { BuildType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -11,14 +10,14 @@ mockNuxtImport("navigateTo", () => {
 });
 
 const state: GeneralDetailsData = {
-	typeOfDwelling: BuildType.house,
+	typeOfDwelling: "house",
 	storeysInDwelling: 2,
 	numOfBedrooms: 3,
 	coolingRequired: false,
 };
 
 const stateWithFlat: GeneralDetailsData = {
-	typeOfDwelling: BuildType.flat,
+	typeOfDwelling: "flat",
 	storeysInDwelling: 7,
 	storeyOfFlat: 3,
 	numOfBedrooms: 3,
@@ -57,7 +56,7 @@ describe("General details", () => {
 			await user.click(screen.getByTestId("typeOfDwelling_house"));
 			await user.type(screen.getByTestId("storeysInDwelling"), "2");
 	
-			expect(store.dwellingDetails.generalSpecifications.data.typeOfDwelling).toBe(BuildType.house);
+			expect(store.dwellingDetails.generalSpecifications.data.typeOfDwelling).toBe("house");
 			expect(store.dwellingDetails.generalSpecifications.data.storeysInDwelling).toBe("2");
 		});
 

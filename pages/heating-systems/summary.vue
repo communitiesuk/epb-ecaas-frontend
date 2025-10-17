@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getTabItems, getUrl, type EcoDesignControllerValue } from "#imports";
-import { FuelType } from "~/schema/api-schema.types";
+import { getTabItems, getUrl } from "#imports";
 const store = useEcaasStore();
 const title = "Heating system summary";
 
@@ -11,10 +10,10 @@ const energySupplySummary: SummarySection = {
 	label: "Energy supply",
 	data: {
 		"Fuel type": displayFuelTypes(fuelType),
-		...(fuelType?.includes(FuelType.electricity) && {
+		...(fuelType?.includes("electricity") && {
 			Exported: displayBoolean(exported),
 		}),
-		...(fuelType?.includes(FuelType.custom) && {
+		...(fuelType?.includes("custom") && {
 			"CO2 per kWh": dim(co2PerKwh, "CO2 per kilowatt-hour"),
 			"CO2 per kWh (including out of scope)": dim(co2PerKwhIncludingOutOfScope, "CO2 per kilowatt-hour"),
 			"kWh per kWh delivered": show(kwhPerKwhDelivered),
