@@ -3,9 +3,9 @@ import { standardPitchOptions, getUrl, type ExternalWallData } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 
 const store = useEcaasStore();
-const windows = store.dwellingFabric.dwellingSpaceWindows
-const glazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor
-const unglazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor
+const windows = store.dwellingFabric.dwellingSpaceWindows;
+const glazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor;
+const unglazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor;
 
 const title = "External wall";
 const { autoSaveElementForm, getStoreIndex } = useForm();
@@ -56,19 +56,19 @@ autoSaveElementForm({
 	},
 });
 
-const taggedItemsList = [windows, glazedDoors, unglazedDoors] 
+const taggedItemsList = [windows, glazedDoors, unglazedDoors]; 
 
 const isGrossSurfaceAreaValid = (node: FormKitNode) => {
 	const parent = node.at("$parent");
 	if (parent && parent.value) {
-		const { id, grossSurfaceArea } = parent.value as ExternalWallData
-		if (!grossSurfaceArea) return true
+		const { id, grossSurfaceArea } = parent.value as ExternalWallData;
+		if (!grossSurfaceArea) return true;
 		
-		const totalTaggedArea = calculateTotalTaggedArea(id, taggedItemsList)
+		const totalTaggedArea = calculateTotalTaggedArea(id, taggedItemsList);
 
-		return isTotalTaggedAreaLessThanGross(grossSurfaceArea, totalTaggedArea!)
+		return isTotalTaggedAreaLessThanGross(grossSurfaceArea, totalTaggedArea!);
 	}
-}
+};
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>

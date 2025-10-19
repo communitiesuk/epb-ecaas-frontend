@@ -5,9 +5,9 @@ const title = "External glazed door";
 const store = useEcaasStore();
 const externalWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
 const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs;
-const windows = store.dwellingFabric.dwellingSpaceWindows
-const glazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor
-const unglazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor
+const windows = store.dwellingFabric.dwellingSpaceWindows;
+const glazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor;
+const unglazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor;
 
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
@@ -51,28 +51,28 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 	},
 });
 
-const tagItemsList = [externalWalls, roofs]
-const taggedItemsList = [windows, glazedDoors, unglazedDoors]
+const tagItemsList = [externalWalls, roofs];
+const taggedItemsList = [windows, glazedDoors, unglazedDoors];
 
 const isTagValid = async (node: FormKitNode) => {
 	const parent = node.at("$parent");
 	if (parent && parent.value) {
-		const { height, width, associatedItemId } = parent.value as ExternalGlazedDoorData
+		const { height, width, associatedItemId } = parent.value as ExternalGlazedDoorData;
 
-		if (!associatedItemId || !height || !width) return true
-		const areaOfDoor = height * width
-		const tagItem = getTagItem(associatedItemId, tagItemsList)
+		if (!associatedItemId || !height || !width) return true;
+		const areaOfDoor = height * width;
+		const tagItem = getTagItem(associatedItemId, tagItemsList);
 
 		if (tagItem) {
-			const { id, grossSurfaceArea } = tagItem!.data
-			if (!grossSurfaceArea) return true
+			const { id, grossSurfaceArea } = tagItem.data;
+			if (!grossSurfaceArea) return true;
 
-			const totalTaggedArea = calculateTotalTaggedArea(id!, taggedItemsList)
+			const totalTaggedArea = calculateTotalTaggedArea(id!, taggedItemsList);
 			
-			return isTotalTaggedAreaLessThanGross(grossSurfaceArea, totalTaggedArea!, areaOfDoor)
+			return isTotalTaggedAreaLessThanGross(grossSurfaceArea, totalTaggedArea!, areaOfDoor);
 		}
 	}
-}
+};
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
