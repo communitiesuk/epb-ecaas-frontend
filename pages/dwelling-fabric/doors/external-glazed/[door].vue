@@ -3,9 +3,15 @@ import { getUrl } from "#imports";
 
 const title = "External glazed door";
 const store = useEcaasStore();
+const externalWalls = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall;
+const roofs = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs;
+const windows = store.dwellingFabric.dwellingSpaceWindows
+const glazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor
+const unglazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor
+
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor?.data);
+const doorData = useItemToEdit("door", glazedDoors.data);
 const model = ref(doorData?.data);
 
 const saveForm = (fields: ExternalGlazedDoorData) => {
@@ -44,6 +50,29 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.complete = false;
 	},
 });
+
+const tagItemsList = [externalWalls, roofs]
+const taggedItemsList = [windows, glazedDoors, unglazedDoors]
+
+const isTagValid = async (node: FormKitNode) => {
+	const parent = node.at("$parent");
+	if (parent && parent.value) {
+		const { height, width, associatedItemId } = parent.value as ExternalGlazedDoorData
+
+		if (!associatedItemId || !height || !width) return true
+		const areaOfDoor = height * width
+		const tagItem = getTagItem(associatedItemId, tagItemsList)
+
+		if (tagItem) {
+			const { id, grossSurfaceArea } = tagItem!.data
+			if (!grossSurfaceArea) return true
+
+			const totalTaggedArea = calculateTotalTaggedArea(id!, taggedItemsList)
+			
+			return isTotalTaggedAreaLessThanGross(grossSurfaceArea, totalTaggedArea!, areaOfDoor)
+		}
+	}
+}
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -85,7 +114,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Height"
 			help="Enter the height of the building element"
 			name="height"
-			validation="required | number | min:0.001 | max:50"
+			:validation-rules="{ isTagValid }"
+			validation="required | number | min:0.001 | max:50 | isTagValid"
+			:validation-messages="{isTagValid: `The gross surface area of associated item cannot be less than the combined area of items its tagged to.`}"
 			data-field="Zone.BuildingElement.*.height"
 		/>
 		<FormKit
@@ -95,7 +126,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Width"
 			help="Enter the width of the building element"
 			name="width"
-			validation="required | number | min:0.001 | max:50"
+			:validation-rules="{ isTagValid }"
+			validation="required | number | min:0.001 | max:50 | isTagValid"
+			:validation-messages="{isTagValid: `The gross surface area of associated item cannot be less than the combined area of items its tagged to.`}"
 			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />

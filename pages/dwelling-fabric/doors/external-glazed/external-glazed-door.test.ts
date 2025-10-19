@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
-import { screen } from "@testing-library/vue";
+import { screen, waitFor } from "@testing-library/vue";
 import ExternalGlazedDoor from "./[door].vue";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -27,17 +27,18 @@ describe("external glazed door", () => {
 		kappaValue: 50000,
 		massDistributionClass: "I",
 	};
+
 	const doorForState = {
 		name: "External glazed door 1",
 		associatedItemId: externalWall.id,
-		height: 14,
-		width: 48,
+		height: 2,
+		width: 1,
 		uValue: 0.45,
 		solarTransmittance: 0.1,
 		elevationalHeight: 14,
 		midHeight: 11,
 		openingToFrameRatio: 0.2,
-		heightOpenableArea: 14,
+		heightOpenableArea: 2,
 		maximumOpenableArea: 13,
 		midHeightOpenablePart1: 11,
 	} as const satisfies ExternalGlazedDoorData;
@@ -71,8 +72,8 @@ describe("external glazed door", () => {
 
 		await user.type(screen.getByTestId("name"), "External glazed door 1");
 		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
-		await user.type(screen.getByTestId("height"), "14");
-		await user.type(screen.getByTestId("width"), "48");
+		await user.type(screen.getByTestId("height"), "2");
+		await user.type(screen.getByTestId("width"), "1");
 		await user.type(screen.getByTestId("maximumOpenableArea"), "13");
 		await user.type(screen.getByTestId("uValue"), "0.45");
 		await user.type(screen.getByTestId("solarTransmittance"), "0.1");
@@ -108,7 +109,7 @@ describe("external glazed door", () => {
 				},
 			},
 		});
-
+		 
 		await renderSuspended(ExternalGlazedDoor, {
 			route: {
 				params: { door: "0" },
@@ -117,8 +118,8 @@ describe("external glazed door", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External glazed door 1");
 		expect((await screen.findByTestId(`associatedItemId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("14");
-		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("48");
+		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("2");
+		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.45");
 		expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("14");
@@ -139,7 +140,7 @@ describe("external glazed door", () => {
 		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("midHeight_error"))).toBeDefined();
 	});
-
+	
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(ExternalGlazedDoor);
 
@@ -237,4 +238,164 @@ describe("external glazed door", () => {
 			expect(externalGlazedDoors.complete).not.toBe(true);
 		});
 	});
-});
+
+	describe("door is tagged with an associated wall/roof", () => {
+			
+		test("when the associated item's gross surface area has not been added", async () => {
+			
+			const externalWall2: Partial<ExternalWallData> = {
+				id: "80fd1ffe-a83a-4d95-bd2c-66666666666",
+				name: "External wall 2",
+			};
+			
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall2, complete: false }],
+						},
+					},
+				},
+			});
+			
+			await renderSuspended(ExternalGlazedDoor);
+			
+			await user.type(screen.getByTestId("name"), "External glazed door 1");
+			await user.click(screen.getByTestId(`associatedItemId_${externalWall2.id}`));
+			await user.type(screen.getByTestId("height"), "20");
+			await user.type(screen.getByTestId("width"), "5");
+			await user.tab();
+			
+			await user.click(screen.getByTestId("saveAndComplete"));
+			
+			const errorSummary = await screen.findByTestId("externalGlazedDoorErrorSummary")
+			
+			expect(errorSummary.textContent.includes("The gross surface area of associated item cannot be less than the combined area of items its tagged to.")).toBe(false)
+		});
+		
+		test("when the door's height has not been added", async () => {
+			
+			await renderSuspended(ExternalGlazedDoor);
+			
+			await user.type(screen.getByTestId("name"), "External glazed door 1");
+			await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
+			await user.type(screen.getByTestId("width"), "20");
+			await user.tab();
+			
+			await user.click(screen.getByTestId("saveAndComplete"));
+			
+			const errorSummary = await screen.findByTestId("externalGlazedDoorErrorSummary")
+			
+			expect(errorSummary.textContent.includes("The gross surface area of associated item cannot be less than the combined area of items its tagged to.")).toBe(false)
+		});
+
+		test("when the door's width has not been added", async () => {
+			
+			await renderSuspended(ExternalGlazedDoor);
+			
+			await user.type(screen.getByTestId("name"), "External glazed door 1");
+			await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
+			await user.type(screen.getByTestId("height"), "40");
+			await user.tab();
+			
+			await user.click(screen.getByTestId("saveAndComplete"));
+			
+			const errorSummary = await screen.findByTestId("externalGlazedDoorErrorSummary")
+			
+			expect(errorSummary.textContent.includes("The gross surface area of associated item cannot be less than the combined area of items its tagged to.")).toBe(false)
+		});
+		
+		test("when the area of the door is less than the gross surface area of the associated item", async () => {
+			
+			await renderSuspended(ExternalGlazedDoor);
+	
+			await user.type(screen.getByTestId("name"), "External glazed door 1");
+			await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
+			await user.type(screen.getByTestId("height"), "2");
+			await user.type(screen.getByTestId("width"), "2");
+			await user.tab();
+	
+			await user.click(screen.getByTestId("saveAndComplete"));
+			
+			const errorSummary = await screen.findByTestId("externalGlazedDoorErrorSummary")
+
+			expect(errorSummary.textContent.includes("The gross surface area of associated item cannot be less than the combined area of items its tagged to.")).toBe(false)
+	});
+
+	test("when the area of the door is equal to the gross surface area of the associated item", async () => {
+		
+		await renderSuspended(ExternalGlazedDoor);
+
+
+		await user.type(screen.getByTestId("name"), "External glazed door 1");
+		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
+		await user.type(screen.getByTestId("height"), "2");
+		await user.type(screen.getByTestId("width"), "5");
+		await user.tab();
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const errorSummary = await screen.findByTestId("externalGlazedDoorErrorSummary")
+
+		expect(errorSummary.textContent.includes("The gross surface area of associated item cannot be less than the combined area of items its tagged to.")).toBe(true)
+	});
+
+	test("when the area of the door is more than the gross surface area of associated item", async () => {
+		
+		await renderSuspended(ExternalGlazedDoor);
+
+		await user.type(screen.getByTestId("name"), "External glazed door 1");
+		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
+		await user.type(screen.getByTestId("height"), "20");
+		await user.type(screen.getByTestId("width"), "5");
+		await user.tab();
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const errorSummary = await screen.findByTestId("externalGlazedDoorErrorSummary")
+
+		expect(errorSummary.textContent.includes("The gross surface area of associated item cannot be less than the combined area of items its tagged to.")).toBe(true)
+	});
+
+	test("when the area of the door combined with the area of other tagged items, is more than or equal to the gross surface area of the associated item", async () => {
+		
+		const glazedDoor2 = {
+			name: "External glazed door 2",
+			associatedItemId: externalWall.id,
+			height: 3,
+			width: 2,
+			uValue: 0.45,
+			solarTransmittance: 0.1,
+			elevationalHeight: 14,
+			midHeight: 11,
+			openingToFrameRatio: 0.2,
+			heightOpenableArea: 14,
+			maximumOpenableArea: 13,
+			midHeightOpenablePart1: 11,
+		} 
+		store.$patch({
+					dwellingFabric: {
+						dwellingSpaceDoors: {
+							dwellingSpaceExternalGlazedDoor: {
+								data: [{ data: glazedDoor2, complete: true }],
+							},
+						},
+					},
+				});
+
+		await renderSuspended(ExternalGlazedDoor);
+
+		await user.type(screen.getByTestId("name"), "External glazed door 1");
+		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
+		await user.type(screen.getByTestId("height"), "2");
+		await user.type(screen.getByTestId("width"), "2");
+		await user.tab();
+
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const errorSummary = await screen.findByTestId("externalGlazedDoorErrorSummary")
+
+		expect(errorSummary.textContent.includes("The gross surface area of associated item cannot be less than the combined area of items its tagged to.")).toBe(true)
+		});
+	});
+})

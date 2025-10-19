@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
+import { standardPitchOptions, getUrl, type ExternalWallData } from "#imports";
 import { v4 as uuidv4 } from "uuid";
 
-const title = "External wall";
 const store = useEcaasStore();
+const windows = store.dwellingFabric.dwellingSpaceWindows
+const glazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor
+const unglazedDoors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor
+
+const title = "External wall";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data);
@@ -51,6 +55,20 @@ autoSaveElementForm({
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.complete = false;
 	},
 });
+
+const taggedItemsList = [windows, glazedDoors, unglazedDoors] 
+
+const isGrossSurfaceAreaValid = (node: FormKitNode) => {
+	const parent = node.at("$parent");
+	if (parent && parent.value) {
+		const { id, grossSurfaceArea } = parent.value as ExternalWallData
+		if (!grossSurfaceArea) return true
+		
+		const totalTaggedArea = calculateTotalTaggedArea(id, taggedItemsList)
+
+		return isTotalTaggedAreaLessThanGross(grossSurfaceArea, totalTaggedArea!)
+	}
+}
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -122,7 +140,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Gross surface area"
 			help="Enter the gross area of the building element"
 			name="grossSurfaceArea"
-			validation="required | number | min:0.01 | max:10000"
+			:validation-rules="{ isGrossSurfaceAreaValid }"
+			validation="required | number | min:0.01 | max:10000 | isGrossSurfaceAreaValid"
 			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption"/>
