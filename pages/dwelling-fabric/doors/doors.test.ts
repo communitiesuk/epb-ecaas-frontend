@@ -96,7 +96,6 @@ describe("doors", () => {
 		data: {
 			name: "externalGlazed1 name",
 			associatedWallRoofCeilingId: externalWall.id,
-			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,
@@ -114,7 +113,6 @@ describe("doors", () => {
 		data: {
 			name: "externalGlazed2 name",
 			associatedWallRoofCeilingId: externalWall.id,
-			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,
@@ -132,7 +130,6 @@ describe("doors", () => {
 		data: {
 			name: "externalGlazed3 name",
 			associatedWallRoofCeilingId: externalWall.id,
-			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,

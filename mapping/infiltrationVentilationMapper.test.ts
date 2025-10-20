@@ -247,7 +247,6 @@ describe("infiltration ventilation mapper", () => {
 			id: "test-id-1",
 			name: "Window 1",
 			taggedItem: externalWallId,
-			surfaceArea: 1,
 			height: 1,
 			width: 1,
 			uValue: 1,

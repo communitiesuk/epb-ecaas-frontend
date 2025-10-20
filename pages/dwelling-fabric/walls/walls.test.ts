@@ -174,7 +174,6 @@ describe("walls", () => {
 				id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 				name: "Window 1",
 				taggedItem: external2.id,
-				surfaceArea: 1,
 				height: 1,
 				width: 1,
 				uValue: 1,

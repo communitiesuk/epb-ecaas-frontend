@@ -17,7 +17,6 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 			data: {
 				name: fields.name,
 				associatedWallRoofCeilingId: fields.associatedWallRoofCeilingId,
-				surfaceArea: fields.surfaceArea,
 				height: fields.height,
 				width: fields.width,
 				uValue: fields.uValue,

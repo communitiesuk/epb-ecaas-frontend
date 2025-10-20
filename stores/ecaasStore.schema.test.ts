@@ -6,7 +6,6 @@ describe("windowData Zod schema", () => {
 			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 			name: "bedroom window",
 			taggedItem: "c9ec4b19-5ed9-4d13-8d88-1f284294ac43",
-			surfaceArea: 4,
 			height: 2,
 			width: 2,
 			uValue: 0.1,
