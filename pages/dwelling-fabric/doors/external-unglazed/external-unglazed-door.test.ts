@@ -25,7 +25,7 @@ describe("external unglazed door", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	};
 
 	const state: EcaasForm<ExternalUnglazedDoorData> = {
