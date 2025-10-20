@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import ExternalGlazedDoor from "./[door].vue";
-import { MassDistributionClass } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -26,7 +25,7 @@ describe("external glazed door", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	}
 	
 	const doorForState = {
@@ -34,7 +33,6 @@ describe("external glazed door", () => {
 		associatedWallRoofCeilingId: externalWall.id,
 		height: 14,
 		width: 48,
-		surfaceArea: 13,
 		uValue: 0.45,
 		solarTransmittance: 0.1,
 		elevationalHeight: 14,
@@ -74,7 +72,6 @@ describe("external glazed door", () => {
 
 		await user.type(screen.getByTestId("name"), "External glazed door 1");
 		await user.click(screen.getByTestId(`associatedWallRoofCeilingId_${externalWall.id}`));
-		await user.type(screen.getByTestId("surfaceArea"), "13");
 		await user.type(screen.getByTestId("height"), "14");
 		await user.type(screen.getByTestId("width"), "48");
 		await user.type(screen.getByTestId("maximumOpenableArea"), "13");
@@ -121,7 +118,6 @@ describe("external glazed door", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External glazed door 1");
 		expect((await screen.findByTestId(`associatedWallRoofCeilingId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("13");
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("14");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("48");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.45");
@@ -137,7 +133,6 @@ describe("external glazed door", () => {
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("associatedWallRoofCeilingId_error"))).toBeDefined();
-		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("width_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();

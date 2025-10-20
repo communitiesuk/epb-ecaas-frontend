@@ -36,7 +36,6 @@ const window1: EcaasForm<WindowData> = {
 		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 		name: "Window 1",
 		taggedItem: externalWall.id,
-		surfaceArea: 1,
 		height: 1,
 		width: 1,
 		uValue: 1,
@@ -92,7 +91,6 @@ describe ("window", () => {
 
 		await user.type(screen.getByTestId("name"), "Window 1");
 		await user.click(screen.getByTestId(`taggedItem_${externalWall.id}`));
-		await user.type(screen.getByTestId("surfaceArea"), "1");
 		await user.type(screen.getByTestId("height"), "1");
 		await user.type(screen.getByTestId("width"), "1"); 
 		await user.type(screen.getByTestId("uValue"), "1");
@@ -138,7 +136,6 @@ describe ("window", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Window 1");
 		expect((await screen.findByTestId(`taggedItem_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
@@ -164,7 +161,6 @@ describe ("window", () => {
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("taggedItem_error"))).toBeDefined();
-		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("width_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();

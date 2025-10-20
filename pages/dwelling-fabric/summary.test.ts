@@ -214,7 +214,6 @@ const doorsData: DoorsData = {
 			data: {
 				name: "External glazed door 1",
 				associatedWallRoofCeilingId: externalWallId,
-				surfaceArea: 1,
 				height: 1,
 				width: 1,
 				uValue: 1,
@@ -246,7 +245,6 @@ const windowData: WindowData = {
 	id: "test-id-1",
 	name: "Window 1",
 	taggedItem: externalWallId,
-	surfaceArea: 1,
 	height: 1,
 	width: 1,
 	uValue: 1,
@@ -733,7 +731,6 @@ describe("Dwelling space fabric summary", () => {
 			const expectedResult = {
 				"Name": "External glazed door 1",
 				"Orientation": `0 ${degrees.suffix}`,
-				"Net surface area": `1 ${metresSquare.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
@@ -805,7 +802,6 @@ describe("Dwelling space fabric summary", () => {
 			const expectedResult = {
 				"Name": "Window 1",
 				"Orientation": `0 ${degrees.suffix}`,
-				"Net surface area": `1 ${metresSquare.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,

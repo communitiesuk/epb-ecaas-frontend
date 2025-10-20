@@ -342,7 +342,6 @@ const fourPartFields = { ...threePartFields, midHeightOpenablePart4: z.number().
 
 const externalGlazedDoorDataZod = named.extend({
 	associatedWallRoofCeilingId: z.guid(),
-	surfaceArea: z.number().min(0.01).max(10000),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	uValue,
@@ -379,7 +378,6 @@ export type InternalDoorData = z.infer<typeof internalDoorDataZod>;
 
 const baseWindowData = namedWithId.extend({
 	taggedItem: z.guid(),
-	surfaceArea: z.number().min(0.01).max(10000),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	uValue,

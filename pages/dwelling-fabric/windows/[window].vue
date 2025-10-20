@@ -64,7 +64,6 @@ const saveForm = (fields: WindowData) => {
 			id: windowId || uuidv4(),
 			name: fields.name,
 			taggedItem: fields.taggedItem,
-			surfaceArea: fields.surfaceArea,
 			height: fields.height,
 			width: fields.width,
 			uValue: fields.uValue,
@@ -240,15 +239,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.width" />
 		/>
 		<FieldsElevationalHeight />
-		<FormKit
-			id="surfaceArea"
-			type="govInputWithSuffix" 
-			uffix-text="m²"
-			label="Net surface area of element"
-			help="Enter the net area of the building element"
-			name="surfaceArea"
-			validation="required | number | min:0.01 | max:10000"
-		/>
+
 		<FieldsUValue
 			id="uValue"
 			name="uValue"

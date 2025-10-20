@@ -1,5 +1,3 @@
-import { MassDistributionClass } from "~/schema/api-schema.types";
-
 describe("getResolvedTaggedItem", () => {
 
 	const externalWall1: ExternalWallData = {
@@ -15,7 +13,7 @@ describe("getResolvedTaggedItem", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	};
 
 	const externalWall2: ExternalWallData = {
@@ -46,7 +44,6 @@ describe("getResolvedTaggedItem", () => {
 		id: "window-id",
 		name: "Window 1",
 		taggedItem: externalWall1.id,
-		surfaceArea: 1,
 		height: 1,
 		width: 1,
 		uValue: 1,
