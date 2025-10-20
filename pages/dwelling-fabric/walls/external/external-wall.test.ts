@@ -178,4 +178,122 @@ describe("external wall", () => {
 		expect(data[0]?.data.name).toBe("External wall");
 		expect(data[0]?.data.height).toBe(3);
 	});
+
+	describe("a wall is tagged to an item", () => {
+    test("when the wall's gross surface area has not been added", async () => {
+      const externalWall1: Partial<ExternalWallData> = {
+        id: "80fd1ffe-a83a-4d95-bd2c-66666666666",
+        name: "External wall 1",
+      };
+
+      store.$patch({
+        dwellingFabric: {
+          dwellingSpaceWalls: {
+            dwellingSpaceExternalWall: {
+              data: [{ data: externalWall1, complete: false }],
+            },
+          },
+        },
+      });
+
+      await renderSuspended(ExternalWall);
+
+      await user.type(screen.getByTestId("name"), "External wall 1");
+      await user.tab();
+
+      await user.click(screen.getByTestId("saveAndComplete"));
+
+      const errorSummary = await screen.findByTestId(
+        "externalWallErrorSummary"
+      );
+
+      expect(errorSummary.textContent.includes("The gross surface area cannot be less than the combined area of items its tagged to.")).toBe(
+        false
+      );
+    });
+
+  	test("when the wall's gross surface area is less than the total area of completed items it's tagged to", async () => {
+      
+			const externalGlazed1: ExternalGlazedDoorData = {
+        name: "externalGlazed1 name",
+        associatedItemId: state.id,
+        height: 3,
+        width: 2,
+        uValue: 1,
+        solarTransmittance: 0.1,
+        elevationalHeight: 1,
+        midHeight: 1,
+        openingToFrameRatio: 0.2,
+        midHeightOpenablePart1: 2,
+        heightOpenableArea: 1,
+        maximumOpenableArea: 1,
+      };
+
+      const externalGlazed2: ExternalGlazedDoorData = {
+        name: "externalGlazed2 name",
+        associatedItemId: state.id,
+        height: 1,
+        width: 1,
+        uValue: 1,
+        solarTransmittance: 0.1,
+        elevationalHeight: 1,
+        midHeight: 1,
+        openingToFrameRatio: 0.2,
+        midHeightOpenablePart1: 2,
+        heightOpenableArea: 1,
+        maximumOpenableArea: 1,
+      };
+
+      const unglazedDoor: ExternalUnglazedDoorData = {
+        name: "External unglazed door 1",
+        associatedItemId: state.id,
+        height: 2,
+        width: 1,
+        elevationalHeight: 20,
+        surfaceArea: 9,
+        solarAbsorption: 0.1,
+        uValue: 1,
+        kappaValue: 50000,
+        massDistributionClass: "I",
+      };
+			
+
+      store.$patch({
+        dwellingFabric: {
+					 dwellingSpaceWalls: {
+            dwellingSpaceExternalWall: {
+              data: [{ data: state, complete: false }],
+            },
+          },
+	        dwellingSpaceDoors: {
+            dwellingSpaceExternalGlazedDoor: {
+              data: [
+                { data: externalGlazed1, complete: true },
+                { data: externalGlazed2, complete: false },
+              ],
+            },
+          dwellingSpaceExternalUnglazedDoor: {
+              data: [{ data: unglazedDoor, complete: true }],
+            },
+          },
+        },
+      });
+
+		await renderSuspended(ExternalWall, {
+			route: {
+				params: { wall: "0" },
+			},
+		});
+
+      await user.click(screen.getByTestId("saveAndComplete"));
+
+      const errorSummary = await screen.findByTestId(
+        "externalWallErrorSummary"
+      );
+
+      expect(errorSummary.textContent.includes("The gross surface area cannot be less than the combined area of items its tagged to.")).toBe(
+        true
+      );
+    });
+  });
 });
