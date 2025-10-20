@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import GroundFloor from "./[floor].vue";
-import { FloorType, MassDistributionClass, WindShieldLocation } from "~/schema/api-schema.types";
 import { millimetre } from "~/utils/units/length";
 import { unitValue } from "~/utils/units";
 
@@ -22,16 +21,16 @@ describe("ground floor", () => {
 		uValue: 1,
 		thermalResistance: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
 		thicknessOfWalls: 0.8,
-		typeOfGroundFloor: FloorType.Slab_no_edge_insulation,
+		typeOfGroundFloor: "Slab_no_edge_insulation",
 	};
 
 	const groundFloorWithEdgeInsulation: GroundFloorData = {
 		...groundFloor,
-		typeOfGroundFloor: FloorType.Slab_edge_insulation,
+		typeOfGroundFloor: "Slab_edge_insulation",
 		edgeInsulationType: "horizontal",
 		edgeInsulationWidth: unitValue(0, millimetre),
 		edgeInsulationThermalResistance: 0,
@@ -39,13 +38,30 @@ describe("ground floor", () => {
 
 	const groundFloorWithSuspendedFloor: GroundFloorData = {
 		...groundFloor,
-		typeOfGroundFloor: FloorType.Suspended_floor,
+		typeOfGroundFloor: "Suspended_floor",
 		heightOfFloorUpperSurface: 0,
 		underfloorSpaceThermalResistance: 0,
 		thermalTransmittanceOfWallsAboveGround: 0,
 		ventilationOpeningsArea: 0,
-		windShieldingFactor: WindShieldLocation.Exposed,
+		windShieldingFactor: "Exposed",
 	};
+
+	// const groundFloorWithHeatedBasement: GroundFloorData = {
+	// 	...groundFloor,
+	// 	typeOfGroundFloor: "Heated_basement",
+	// 	depthOfBasementFloorBelowGround: 0,
+	// 	thermalResistanceOfBasementWalls: 0
+	// };
+	//
+	// const groundFloorWithUnheatedBasement: GroundFloorData = {
+	// 	...groundFloor,
+	// 	typeOfGroundFloor: "Unheated_basement",
+	// 	thermalTransmittanceOfFloorAboveBasement: 0,
+	// 	thermalTransmittanceOfWallsAboveGround: 0,
+	//  thermalResistanceOfBasementWalls: 0,
+	// 	depthOfBasementFloorBelowGround: 0,
+	// 	heightOfBasementWallsAboveGround: 0
+	// };
 
 	afterEach(() => {
 		store.$reset();

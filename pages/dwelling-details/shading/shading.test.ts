@@ -4,7 +4,6 @@ import { within } from "@testing-library/dom";
 import Shading from "./index.vue";
 import ShadingForm from "./[shading].vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
-import { ShadingObjectType } from "~/schema/api-schema.types";
 import formStatus from "~/constants/formStatus";
 
 describe("shading", () => {
@@ -20,7 +19,7 @@ describe("shading", () => {
 			name: "Cherry Tree",
 			startAngle: 10,
 			endAngle: 20,
-			objectType: ShadingObjectType.obstacle,
+			objectType: "obstacle",
 			height: 3,
 			distance: 2,
 		},

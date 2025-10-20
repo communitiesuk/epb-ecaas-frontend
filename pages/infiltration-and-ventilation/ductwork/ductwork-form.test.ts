@@ -3,7 +3,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Ductwork from "./[ductwork].vue";
 import userEvent from "@testing-library/user-event";
 import { within } from "@testing-library/dom";
-import { DuctShape, DuctType, VentType } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -57,14 +56,14 @@ describe("ductwork form", async () => {
 						data: {
 							name: "MVHR_1",
 							id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-							typeOfMechanicalVentilationOptions: VentType.MVHR,
+							typeOfMechanicalVentilationOptions: "MVHR",
 						},
 					},
 					{
 						data: {
 							name: "MVHR_2",
 							id: "7184f2fe-a78f-4a56-ba5a-1a7751ac506d",
-							typeOfMechanicalVentilationOptions: VentType.MVHR,
+							typeOfMechanicalVentilationOptions: "MVHR",
 						},
 					}],
 				},
@@ -75,8 +74,8 @@ describe("ductwork form", async () => {
 	const ductwork1: DuctworkData = {
 		name: "Ductwork 1",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-		ductworkCrossSectionalShape: DuctShape.circular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "circular",
+		ductType: "intake",
 		internalDiameterOfDuctwork: 300,
 		externalDiameterOfDuctwork: 1000,
 		insulationThickness: 100,
@@ -88,8 +87,8 @@ describe("ductwork form", async () => {
 	const ductwork2: DuctworkData = {
 		name: "Ductwork 1",
 		mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506f",
-		ductworkCrossSectionalShape: DuctShape.rectangular,
-		ductType: DuctType.intake,
+		ductworkCrossSectionalShape: "rectangular",
+		ductType: "intake",
 		ductPerimeter: 200,
 		insulationThickness: 100,
 		lengthOfDuctwork: 100,
@@ -345,7 +344,7 @@ describe("ductwork form", async () => {
 		const { data } = store.infiltrationAndVentilation.ductwork;
 
 		expect(data[0]?.data.name).toBe("New ductwork");
-		expect(data[0]?.data.ductType).toBe(DuctType.extract);
+		expect(data[0]?.data.ductType).toBe("extract");
 	});
 	
 	test("partial form data is saved automatically with default name to store when adding new heater", async () => {
@@ -361,6 +360,6 @@ describe("ductwork form", async () => {
 		const { data } = store.infiltrationAndVentilation.ductwork;
 
 		expect(data[0]?.data.name).toBe("Ductwork");
-		expect(data[0]?.data.ductType).toBe(DuctType.intake);
+		expect(data[0]?.data.ductType).toBe("intake");
 	});
 });

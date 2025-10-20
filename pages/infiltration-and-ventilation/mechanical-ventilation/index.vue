@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { VentType } from "~/schema/api-schema.types";
 import formStatus from "~/constants/formStatus";
 
 const page = usePage();
@@ -55,8 +54,9 @@ function handleDuplicate(index: number) {
 		});
 	}
 }
+
 const mvhrArray = store.infiltrationAndVentilation.mechanicalVentilation.data?.filter(
-	x => x.data.typeOfMechanicalVentilationOptions === VentType.MVHR);
+	x => x.data.typeOfMechanicalVentilationOptions === "MVHR");
 
 function handleComplete() {
 	store.$patch({

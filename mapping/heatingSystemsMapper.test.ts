@@ -1,7 +1,6 @@
-import { FuelType } from "~/schema/api-schema.types";
 import { mapEnergySupplyData, mapHeatEmittingData } from "./heatingSystemsMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { defaultZoneName } from "./common";
+import { defaultControlName, defaultZoneName } from "./common";
 
 const baseForm = {
 	data: [],
@@ -18,7 +17,7 @@ describe("heating systems mapper", () => {
 	it("maps energy supplies that include gas only", () => {
 		// Arrange
 		const energySupplyData: EnergySupplyData = {
-			fuelType: [FuelType.mains_gas],
+			fuelType: ["mains_gas"],
 		};
 
 		store.$patch({
@@ -37,7 +36,8 @@ describe("heating systems mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
 				mains_gas: {
-					fuel: FuelType.mains_gas,
+					fuel: "mains_gas",
+					is_export_capable: false,
 				},
 			},
 		};
@@ -48,7 +48,7 @@ describe("heating systems mapper", () => {
 	it("maps energy supplies that include exported electricity", () => {
 		// Arrange
 		const energySupplyData: EnergySupplyData = {
-			fuelType: [FuelType.mains_gas, FuelType.electricity],
+			fuelType: ["mains_gas", "electricity"],
 			exported: true,
 		};
 
@@ -68,10 +68,11 @@ describe("heating systems mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
 				mains_gas: {
-					fuel: FuelType.mains_gas,
+					fuel: "mains_gas",
+					is_export_capable: false,
 				},
 				"mains elec": {
-					fuel: FuelType.electricity,
+					fuel: "electricity",
 					is_export_capable: true,
 				},
 			},
@@ -83,7 +84,7 @@ describe("heating systems mapper", () => {
 	it("maps energy supplies that include electricity and custom fuel types", () => {
 		// Arrange
 		const energySupplyData: EnergySupplyData = {
-			fuelType: [FuelType.electricity, FuelType.custom, FuelType.mains_gas],
+			fuelType: ["electricity", "custom", "mains_gas"],
 			exported: true,
 			co2PerKwh: 3.2,
 			co2PerKwhIncludingOutOfScope: 4.8,
@@ -106,19 +107,21 @@ describe("heating systems mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
 				"mains elec": {
-					fuel: FuelType.electricity,
+					fuel: "electricity",
 					is_export_capable: true,
 				},
 				custom: {
-					fuel: FuelType.custom,
+					fuel: "custom",
 					factor: {
 						"Emissions Factor kgCO2e/kWh": 3.2,
 						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": 4.8,
 						"Primary Energy Factor kWh/kWh delivered": 1.0,
 					},
+					is_export_capable: false,
 				},
 				mains_gas: {
-					fuel: FuelType.mains_gas,
+					fuel: "mains_gas",
+					is_export_capable: false,
 				},
 			},
 		};
@@ -214,6 +217,14 @@ describe("heating systems mapper", () => {
 					thermal_mass: 400,
 					type: "WetDistribution",
 					Zone: defaultZoneName,
+					Control: defaultControlName,
+					advanced_start: null,
+					bypass_percentage_recirculated: null,
+					variable_flow: false,
+					EnergySupply: null,
+					min_flow_rate: null,
+					max_flow_rate: null,
+					temp_setback: null,
 				},
 			},
 		};
@@ -305,6 +316,14 @@ describe("heating systems mapper", () => {
 					thermal_mass: 400,
 					type: "WetDistribution",
 					Zone: defaultZoneName,
+					Control: defaultControlName,
+					advanced_start: null,
+					EnergySupply: null,
+					bypass_percentage_recirculated: null,
+					max_flow_rate: null,
+					min_flow_rate: null,
+					temp_setback: null,
+					variable_flow: false,
 				},
 			},
 		};
@@ -350,7 +369,9 @@ describe("heating systems mapper", () => {
 					rated_power: 100,
 					frac_convective: 0.8,
 					EnergySupply: "mains elec",
-
+					advanced_start: null,
+					temp_setback: null,
+					Control: defaultControlName,
 				},
 			},
 		};

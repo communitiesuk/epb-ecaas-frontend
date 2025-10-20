@@ -6,6 +6,7 @@ const {
 	help = undefined,
 	detailsCaption = "To define an object's orientation, measure the angle of its outside face clockwise from true North, accurate to the nearest degree.",
 	clearedNonLlm = false,
+	dataField = undefined,
 } = defineProps<{
 	id?: string;
 	name?: string;
@@ -13,6 +14,7 @@ const {
 	help?: string;
 	detailsCaption?: string;
 	clearedNonLlm?: boolean;
+	dataField?: string;
 }>();
 </script>
 
@@ -24,7 +26,8 @@ const {
 		:label="label ?? 'Orientation'"
 		:name="name ?? 'orientation'"
 		:help=help
-		validation="required | number | min:0 | max:360">
+		validation="required | number | min:0 | max:360"
+		:data-field="dataField">
 		<GovDetails summary-text="Help with this input" :possibly-llm-placeholder="!clearedNonLlm">
 			<img src="/img/orientation-measurement.png" alt="Orientation measurement">
 			<p class="govuk-hint">{{ detailsCaption }}</p>

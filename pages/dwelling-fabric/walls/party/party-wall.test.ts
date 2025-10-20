@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import PartyWall from "./[wall].vue";
-import { MassDistributionClass } from "~/schema/api-schema.types";
 import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -24,7 +23,7 @@ describe("party wall", () => {
 		surfaceArea: 10,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	};
 
 	afterEach(() => {

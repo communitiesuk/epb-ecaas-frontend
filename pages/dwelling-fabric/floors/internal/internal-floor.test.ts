@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import InternalFloor from "./[floor].vue";
-import { MassDistributionClass } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -18,7 +17,7 @@ describe("internal floor", () => {
 		name: "Internal 1",
 		surfaceAreaOfElement: 5,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	};
 
 	const internalFloorWithUnheatedSpace: InternalFloorData = {

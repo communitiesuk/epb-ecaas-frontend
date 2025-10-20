@@ -76,6 +76,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Associated wall, roof or ceiling"
 			help="Select the wall, roof or ceiling that this door is in. It should have the same orientation and pitch as the door."
 		/>
+		<FieldsOrientation data-field="Zone.BuildingElement.*.orientation" />
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"
@@ -84,6 +85,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the length of the building element"
 			name="height"
 			validation="required | number | min:0.001 | max:50"
+			data-field="Zone.BuildingElement.*.height"
 		/>
 		<FormKit
 			id="width"
@@ -93,6 +95,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the width of the building element"
 			name="width"
 			validation="required | number | min:0.001 | max:50"
+			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />
 		<FormKit
@@ -103,6 +106,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the net area of the building element. The area of all windows should be subtracted before entry."
 			name="surfaceArea"
 			validation="required | number | min:0.01 | max:10000"
+			data-field="Zone.BuildingElement.*.area"
 		/>
 		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption"/>
 		<FieldsUValue id="uValue" name="uValue" />

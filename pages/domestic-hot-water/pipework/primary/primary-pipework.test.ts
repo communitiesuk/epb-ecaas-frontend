@@ -4,7 +4,6 @@ import { userEvent } from "@testing-library/user-event";
 import PipeworkForm from "./[pipe].vue";
 import WaterHeatingForm from "../../water-heating/index.vue";
 import type { EcaasForm, HotWaterCylinderData, PrimaryPipeworkData } from "~/stores/ecaasStore.schema";
-import { WaterPipeContentsType, WaterPipeworkLocation } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -22,9 +21,9 @@ const pipework1: EcaasForm<PrimaryPipeworkData> = {
 		insulationThickness: 5,
 		thermalConductivity: 1,
 		surfaceReflectivity: true,
-		pipeContents: WaterPipeContentsType.water,
+		pipeContents: "water",
 		hotWaterCylinder: hotWaterCylinderId,
-		location: WaterPipeworkLocation.internal,
+		location: "internal",
 	},
 };
 
@@ -37,9 +36,9 @@ const pipework2: EcaasForm<PrimaryPipeworkData> = {
 		insulationThickness: 4,
 		thermalConductivity: 1,
 		surfaceReflectivity: true,
-		pipeContents: WaterPipeContentsType.water,
+		pipeContents: "water",
 		hotWaterCylinder: hotWaterCylinderId,
-		location: WaterPipeworkLocation.internal,
+		location: "internal",
 	},
 };
 

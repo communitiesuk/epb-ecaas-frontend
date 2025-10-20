@@ -25,8 +25,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				elevationalHeight: fields.elevationalHeight,
 				midHeight: fields.midHeight,
 				openingToFrameRatio: fields.openingToFrameRatio,
-				numberOpenableParts: "1",
-				maximumOpenableArea: fields.surfaceArea,
+				maximumOpenableArea: fields.maximumOpenableArea,
 				heightOpenableArea: fields.height,
 				midHeightOpenablePart1: fields.midHeight,
 			},
@@ -88,6 +87,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the height of the building element"
 			name="height"
 			validation="required | number | min:0.001 | max:50"
+			data-field="Zone.BuildingElement.*.height"
 		/>
 		<FormKit
 			id="width"
@@ -97,16 +97,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the width of the building element"
 			name="width"
 			validation="required | number | min:0.001 | max:50"
+			data-field="Zone.BuildingElement.*.width"
 		/>
 		<FieldsElevationalHeight />
 		<FormKit
-			id="surfaceArea"
+			id="maximumOpenableArea"
 			type="govInputWithSuffix"
 			suffix-text="m²"
-			label="Net surface area of element"
-			help="Enter the net area of the building element. The area of all windows should be subtracted before entry."
-			name="surfaceArea"
+			label="Maximum openable area of door"
+			help="TODO - provide an area of the door for now, though we may be able to calculate this from width and height"
+			name="maximumOpenableArea"
 			validation="required | number | min:0.01 | max:10000"
+			data-field="Zone.BuildingElement.*.max_window_open_area"
 		/>
 		<FieldsUValue id="uValue" name="uValue" />
 		<FormKit
@@ -116,6 +118,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the total solar energy transmittance or G value, or the transparent part of the window. It should be a decimal between 0 and 1."
 			name="solarTransmittance"
 			validation="required | number | min:0.01 | max:1"
+			data-field="Zone.BuildingElement.*.g_value"
 		/>
 		<FormKit
 			id="midHeight"
@@ -125,6 +128,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the height from the ground to the midpoint of the window"
 			name="midHeight"
 			validation="required | number | min:0 | max:100"
+			data-field="Zone.BuildingElement.*.mid_height"
 		/>
 		<FormKit
 			id="openingToFrameRatio"
@@ -133,6 +137,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Enter the proportion of the door taken up by the window"
 			name="openingToFrameRatio"
 			validation="required | number | min:0 | max:1"
+			data-field="Zone.BuildingElement.*.frame_area_fraction"
 		>
 			<GovDetails summary-text="Help with this input">
 				<table class="govuk-table">

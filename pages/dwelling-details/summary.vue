@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { getTabItems, getUrl } from "#imports";
-import { BuildType } from "~/schema/api-schema.types";
 import { degrees } from "~/utils/units/angle";
 import { metre } from "~/utils/units/length";
 
@@ -18,8 +17,8 @@ const generalDetailsSummary: SummarySection = {
 	data: {
 		"Type of dwelling": displayCamelToSentenceCase(show(generalDetailsData.typeOfDwelling)),
 		"Number of storeys in building": dim(generalDetailsData.storeysInDwelling),
-		...(generalDetailsData.typeOfDwelling === BuildType.flat ? { "Storey of flat": dim(generalDetailsData.storeyOfFlat) } : {}),
-		"Number of bedrooms": dim(generalDetailsData.numOfBedrooms),
+		...(generalDetailsData.typeOfDwelling === "flat" ? { "Storey of flat": dim(generalDetailsData.storeyOfFlat) } : {}),
+		"Number of bedrooms": show(generalDetailsData.numOfBedrooms),
 		"Cooling required": displayBoolean(generalDetailsData.coolingRequired),
 	},
 	editUrl: getUrl("generalSpecifications"),

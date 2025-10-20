@@ -1,4 +1,3 @@
-import { ApplianceKey, FlueGasExhaustSituation, MassDistributionClass } from "~/schema/api-schema.types";
 import { show, dim } from "./display";
 
 describe("Show function to make showable value", () => {
@@ -65,27 +64,27 @@ describe("Show boolean in display", () => {
 
 describe("Show MassDistributionClass in display", () => {
 	it("should return Internal when value is I", () => {
-		const result = displayMassDistributionClass(MassDistributionClass.I);
+		const result = displayMassDistributionClass("I");
 		expect(result).toBe("Internal");
 	});
 
 	it("should return External when value is E", () => {
-		const result = displayMassDistributionClass(MassDistributionClass.E);
+		const result = displayMassDistributionClass("E");
 		expect(result).toBe("External");
 	});
 
 	it("should return Divided when value is IE", () => {
-		const result = displayMassDistributionClass(MassDistributionClass.IE);
+		const result = displayMassDistributionClass("IE");
 		expect(result).toBe("Divided");
 	});
 
 	it("should return Equally when value is D", () => {
-		const result = displayMassDistributionClass(MassDistributionClass.D);
+		const result = displayMassDistributionClass("D");
 		expect(result).toBe("Equally");
 	});
 
 	it("should return Inside when value is M", () => {
-		const result = displayMassDistributionClass(MassDistributionClass.M);
+		const result = displayMassDistributionClass("M");
 		expect(result).toBe("Inside");
 	});
 
@@ -151,17 +150,17 @@ describe("Show string in sentence case", () => {
 
 describe("Show flue gas exhaust situation in display", () => {
 	it('should display correct representiation of flue gas exhasut situation "into room"', () => {
-		const result = displayFlueGasExhaustSituation(FlueGasExhaustSituation.into_room);
+		const result = displayFlueGasExhaustSituation("into_room");
 		expect(result).toBe("Into room");
 	});
 
 	it('should display correct representiation of flue gas exhasut situation "into mechanical vent"', () => {
-		const result = displayFlueGasExhaustSituation(FlueGasExhaustSituation.into_mech_vent);
+		const result = displayFlueGasExhaustSituation("into_mech_vent");
 		expect(result).toBe("Into mechanical vent");
 	});
 
 	it('should display correct representiation of flue gas exhasut situation "into separate duct"', () => {
-		const result = displayFlueGasExhaustSituation(FlueGasExhaustSituation.into_separate_duct);
+		const result = displayFlueGasExhaustSituation("into_separate_duct");
 		expect(result).toBe("Into separate duct");
 	});
 });
@@ -185,7 +184,7 @@ describe("displaySnakeToSentenceCase", () => {
 
 describe("displayDeliveryEnergyUseKey", () => {
 	it("should convert an appliance key to the correct display value", () => {
-		expect(displayDeliveryEnergyUseKey(ApplianceKey.Clothes_washing)).toBe("Washing machine");
+		expect(displayDeliveryEnergyUseKey("Clothes_washing")).toBe("Washing machine");
 	});
 
 	it("should pass anything else through verbatim", () => {

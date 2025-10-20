@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ShadingObjectType } from "~/schema/api-schema.types";
+import type { SchemaShadingObjectType } from "~/schema/api-schema.types";
 import { getUrl, type ShadingData } from "#imports";
 
 const title = "Distant shading";
@@ -9,7 +9,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const shadingData = useItemToEdit("shading", store.dwellingDetails.shading.data);
 const model = ref(shadingData?.data);
 
-const objectTypeOptions: Record<ShadingObjectType, Capitalize<ShadingObjectType>> = {
+const objectTypeOptions: Record<SchemaShadingObjectType, Capitalize<SchemaShadingObjectType>> = {
 	obstacle: "Obstacle",
 	overhang: "Overhang",
 };
@@ -132,7 +132,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Distance"
 			suffix-text="m"
 			name="distance"
-			validation="required | number | min:0.1"
+			validation="required | number | min:0.001"
 			help="Enter the distance from the dwelling to the shading object"
 			data-field="ExternalConditions.shading_segments.*.shading.*.distance"
 		/>

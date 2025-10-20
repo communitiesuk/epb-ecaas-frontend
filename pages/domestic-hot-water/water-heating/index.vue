@@ -45,7 +45,7 @@ const saveForm = (fields: typeof model.value) => {
 				hotWaterCylinder: {
 					data: [{
 						data: {
-							id: hotWaterCylinderData?.data ? hotWaterCylinderData.data.id : uuidv4(), 
+							id: hotWaterCylinderData?.data ? hotWaterCylinderData.data.id ?? uuidv4() : uuidv4(), 
 							name: fields.name,
 							heatSource: fields.heatSource,
 							storageCylinderVolume: fields.storageCylinderVolume,

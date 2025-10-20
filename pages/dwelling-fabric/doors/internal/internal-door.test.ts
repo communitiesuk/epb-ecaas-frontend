@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import InternalDoor from "./[door].vue";
-import { MassDistributionClass } from "~/schema/api-schema.types";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -18,7 +17,7 @@ describe("internal door", () => {
 		name: "Internal 1",
 		surfaceAreaOfElement: 5,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 		pitchOption: "90",
 		pitch: 90,
 	};
@@ -29,7 +28,7 @@ describe("internal door", () => {
 		surfaceAreaOfElement: 500,
 		uValue: 10,
 		arealHeatCapacity: 50000,
-		massDistributionClass: MassDistributionClass.E,
+		massDistributionClass: "I",
 		pitchOption: "90",
 		pitch: 90,
 		thermalResistanceOfAdjacentUnheatedSpace: 1,
@@ -42,7 +41,7 @@ describe("internal door", () => {
 			associatedHeatedSpaceElementId: internalWall.id,
 			surfaceArea: 5,
 			kappaValue: 50000,
-			massDistributionClass: MassDistributionClass.I,
+			massDistributionClass: "I",
 		},
 	};
 

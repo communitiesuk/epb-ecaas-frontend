@@ -1,4 +1,3 @@
-import { BuildType, ShadingObjectType, TerrainClass, VentilationShieldClass  } from "~/schema/api-schema.types";
 import type { SchemaShadingObject } from "~/schema/api-schema.types";
 import { mapDistantShadingData, mapExternalFactorsData, mapGeneralDetailsData } from "./dwellingDetailsMapper";
 import { resolveState } from "~/stores/resolve";
@@ -13,7 +12,7 @@ describe("dwelling details mapper", () => {
 	it("maps general details input state to FHS input request", () => {
 		// Arrange
 		const state: GeneralDetailsData = {
-			typeOfDwelling: BuildType.flat,
+			typeOfDwelling: "flat",
 			storeysInDwelling: 3,
 			storeyOfFlat: 1,
 			numOfBedrooms: 2,
@@ -33,9 +32,9 @@ describe("dwelling details mapper", () => {
 		const fhsInputData = mapGeneralDetailsData(resolveState(store.$state));
 
 		// Assert
-		expect(fhsInputData.General.build_type).toBe(state.typeOfDwelling);
-		expect(fhsInputData.General.storeys_in_building).toBe(state.storeysInDwelling);
-		expect(fhsInputData.General.storey_of_dwelling).toBe(state.storeyOfFlat);
+		expect(fhsInputData.General?.build_type).toBe(state.typeOfDwelling);
+		expect(fhsInputData.General?.storeys_in_building).toBe(state.storeysInDwelling);
+		expect(fhsInputData.General?.storey_of_dwelling).toBe(state.storeyOfFlat);
 		expect(fhsInputData.NumberOfBedrooms).toBe(state.numOfBedrooms);
 		expect(fhsInputData.PartGcompliance).toBe(true);
 		expect(fhsInputData.PartO_active_cooling_required).toBe(false);
@@ -45,8 +44,8 @@ describe("dwelling details mapper", () => {
 		// Arrange
 		const state: ExternalFactorsData = {
 			altitude: 30,
-			typeOfExposure: VentilationShieldClass.Normal,
-			terrainType: TerrainClass.OpenField,
+			typeOfExposure: "Normal",
+			terrainType: "OpenField",
 			noiseNuisance: true,
 		};
 
@@ -75,7 +74,7 @@ describe("dwelling details mapper", () => {
 			name: "Big Tree",
 			startAngle: 5,
 			endAngle: 25,
-			objectType: ShadingObjectType.obstacle,
+			objectType: "obstacle",
 			height: 3,
 			distance: 2,
 		};
@@ -113,6 +112,6 @@ describe("dwelling details mapper", () => {
 			expect(x.shading).toEqual([expectedShading]);
 		});
 
-		expect(segmentsWithShading?.every(x => expectedSegmentNumbers.includes(x.number))).toBe(true);
+		expect(segmentsWithShading?.every(x => x.number && expectedSegmentNumbers.includes(x.number))).toBe(true);
 	});
 });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MassDistributionClass } from "~/schema/api-schema.types";
+import type { MassDistributionClass } from "~/schema/aliases";
 import type { RadioOption } from "../form-kit/Radios.vue";
 
 defineProps<{
@@ -10,23 +10,23 @@ defineProps<{
 }>();
 
 const options: Record<MassDistributionClass, RadioOption> = {
-	[MassDistributionClass.I]: {
+	I: {
 		label: "Mass concentrated on internal side",
 		hint: "Construction with external thermal insulation (main mass component near inside surface), or equivalent",
 	},
-	[MassDistributionClass.E]: {
+	E: {
 		label: "Mass concentrated on external side",
 		hint: "Construction with internal thermal insulation (main mass component near outside surface), or equivalent",
 	},
-	[MassDistributionClass.IE]: {
+	IE: {
 		label: "Mass divided over internal and external side",
 		hint: "Construction with thermal insulation in between two main mass components, or equivalent",
 	},
-	[MassDistributionClass.D]: {
+	D: {
 		label: "Mass equally distributed",
 		hint: "Uninsulated construction (e.g. solid or hollow bricks, heavy or lightweight concrete, or lightweight construction with negligible mass (e.g. steel sandwich panel), or equivalent",
 	},
-	[MassDistributionClass.M]: {
+	M: {
 		label: "Mass concentrated inside",
 		hint: "Construction with both internal and external insulation (main mass component concentrated near centre of construction), or equivalent",
 	},

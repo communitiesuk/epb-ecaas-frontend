@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BuildType } from "~/schema/api-schema.types";
+import type { SchemaBuildType } from "~/schema/api-schema.types";
 import { isInteger } from "~/utils/validation";
 import { getUrl } from "#imports";
 
@@ -11,7 +11,7 @@ const model = ref({
 	...store.dwellingDetails.generalSpecifications.data,
 });
 
-const typeOfDwellingOptions: Record<BuildType, SnakeToSentenceCase<BuildType>> = {
+const typeOfDwellingOptions: Record<SchemaBuildType, SnakeToSentenceCase<SchemaBuildType>> = {
 	house: "House",
 	flat: "Flat",
 };
@@ -23,7 +23,7 @@ const saveForm = (fields: typeof model.value) => {
 				data: {
 					typeOfDwelling: fields.typeOfDwelling,
 					storeysInDwelling: fields.storeysInDwelling,
-					storeyOfFlat: fields.typeOfDwelling === BuildType.flat ? fields.storeyOfFlat : undefined,
+					storeyOfFlat: fields.typeOfDwelling === "flat" ? fields.storeyOfFlat : undefined,
 					numOfBedrooms: fields.numOfBedrooms,
 					coolingRequired: fields.coolingRequired,
 				},

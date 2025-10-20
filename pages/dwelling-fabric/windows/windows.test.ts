@@ -5,7 +5,6 @@ import WindowsForm from "./[window].vue";
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
 import formStatus from "~/constants/formStatus";
-import { MassDistributionClass } from "~/schema/api-schema.types";
 
 describe("windows", () => {
 	const store = useEcaasStore();
@@ -29,7 +28,7 @@ describe("windows", () => {
 		solarAbsorption: 0.1,
 		uValue: 1,
 		kappaValue: 50000,
-		massDistributionClass: MassDistributionClass.I,
+		massDistributionClass: "I",
 	};
 
 	const window1: EcaasForm<WindowData> = {
