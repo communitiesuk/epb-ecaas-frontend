@@ -45,7 +45,7 @@ describe("Heating and cooling systems summary page", () => {
 			const expectedSectionData = {
 				"Type of heating control": "-",
 				"Cooling required": "-",
-			}
+			};
 
 			await verifyDataInSection("general", expectedSectionData);
 		});
@@ -67,7 +67,7 @@ describe("Heating and cooling systems summary page", () => {
 			const expectedSectionData = {
 				"Type of heating control": "Separate temperature control",
 				"Cooling required": "Yes",
-			}
+			};
 
 			await verifyDataInSection("general", expectedSectionData);
 		});
