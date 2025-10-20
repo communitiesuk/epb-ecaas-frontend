@@ -60,7 +60,7 @@ function handleComplete() {
 	</h1>
 	<CustomList
 		id="airConditioning"
-		title="Air conditioning"
+		title="Air conditioning systems"
 		:form-url="`${page?.url!}/air-conditioning`"
 		:items="store.heatingAndCoolingSystems.cooling.airConditioning.data?.map(x => ({
 			name: x.data.name,

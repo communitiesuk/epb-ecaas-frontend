@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
 
-const title = "Air conditioning";
+const title = "Air conditioning system";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
@@ -33,7 +33,7 @@ const saveForm = (fields: AirConditioningData) => {
 autoSaveElementForm<AirConditioningData>({
 	model,
 	storeData: store.heatingAndCoolingSystems.cooling.airConditioning,
-	defaultName: "Air conditioning",
+	defaultName: "Air conditioning system",
 	onPatch: (state, newData, index) => {
 		state.heatingAndCoolingSystems.cooling.airConditioning.data[index] = newData;
 		state.heatingAndCoolingSystems.cooling.airConditioning.complete = false;

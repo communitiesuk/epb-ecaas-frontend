@@ -204,7 +204,7 @@ const coolingUrl = "/heating-and-cooling-systems/cooling";
 const airConditionings = store.heatingAndCoolingSystems.cooling.airConditioning.data;
 const airConditioningSummary: SummarySection = {
 	id: "airConditioning",
-	label: "Air conditioning",
+	label: "Air conditioning systems",
 	data: airConditionings.map((airConditioning) => {
 		return {
 			"Name": show(airConditioning.data.name),

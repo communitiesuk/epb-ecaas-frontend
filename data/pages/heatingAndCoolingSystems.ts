@@ -109,14 +109,14 @@ const heatingAndCoolingSystemsPages = [
 	},
 	{
 		id: "airConditioning",
-		title: "Air conditioning",
+		title: "Air conditioning system",
 		url: "/heating-and-cooling-systems/cooling/air-conditioning/create",
 		type: PageType.Task,
 		parentId: "cooling",
 	},
 	{
 		id: "airConditioningEdit",
-		title: "Air conditioning",
+		title: "Air conditioning system",
 		url: "/heating-and-cooling-systems/cooling/air-conditioning/:airConditioning",
 		type: PageType.Task,
 		parentId: "cooling",
