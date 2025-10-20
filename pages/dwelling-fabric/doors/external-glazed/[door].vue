@@ -13,6 +13,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const doorData = useItemToEdit("door", glazedDoors.data);
 const model = ref(doorData?.data);
+const index = getStoreIndex(glazedDoors.data);
 
 const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
@@ -52,13 +53,17 @@ autoSaveElementForm<ExternalGlazedDoorData>({
 });
 
 const tagItemsList = [externalWalls, roofs];
+if( Number(index) > -1){
+	glazedDoors.data.splice(index, 1)
+}
+
 const taggedItemsList = [windows, glazedDoors, unglazedDoors];
 
 const isTagValid = async (node: FormKitNode) => {
 	const parent = node.at("$parent");
 	if (parent && parent.value) {
 		const { height, width, associatedItemId } = parent.value as ExternalGlazedDoorData;
-
+		
 		if (!associatedItemId || !height || !width) return true;
 		const areaOfDoor = height * width;
 		const tagItem = getTagItem(associatedItemId, tagItemsList);
@@ -68,7 +73,7 @@ const isTagValid = async (node: FormKitNode) => {
 			if (!grossSurfaceArea) return true;
 
 			const totalTaggedArea = calculateTotalTaggedArea(id!, taggedItemsList);
-			
+
 			return isTotalTaggedAreaLessThanGross(grossSurfaceArea, totalTaggedArea!, areaOfDoor);
 		}
 	}

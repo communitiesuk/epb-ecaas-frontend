@@ -241,38 +241,6 @@ describe("external glazed door", () => {
 
 	describe("door is tagged with an associated wall/roof", () => {
 			
-		test("when the associated item's gross surface area has not been added", async () => {
-			
-			const externalWall2: Partial<ExternalWallData> = {
-				id: "80fd1ffe-a83a-4d95-bd2c-66666666666",
-				name: "External wall 2",
-			};
-			
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWalls: {
-						dwellingSpaceExternalWall: {
-							data: [{ data: externalWall2, complete: false }],
-						},
-					},
-				},
-			});
-			
-			await renderSuspended(ExternalGlazedDoor);
-			
-			await user.type(screen.getByTestId("name"), "External glazed door 1");
-			await user.click(screen.getByTestId(`associatedItemId_${externalWall2.id}`));
-			await user.type(screen.getByTestId("height"), "20");
-			await user.type(screen.getByTestId("width"), "5");
-			await user.tab();
-			
-			await user.click(screen.getByTestId("saveAndComplete"));
-			
-			const errorSummary = await screen.findByTestId("externalGlazedDoorErrorSummary");
-			
-			expect(errorSummary.textContent.includes("The gross surface area of associated item cannot be less than the combined area of items its tagged to.")).toBe(false);
-		});
-		
 		test("when the door's height has not been added", async () => {
 			
 			await renderSuspended(ExternalGlazedDoor);
@@ -296,6 +264,38 @@ describe("external glazed door", () => {
 			await user.type(screen.getByTestId("name"), "External glazed door 1");
 			await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
 			await user.type(screen.getByTestId("height"), "40");
+			await user.tab();
+			
+			await user.click(screen.getByTestId("saveAndComplete"));
+			
+			const errorSummary = await screen.findByTestId("externalGlazedDoorErrorSummary");
+			
+			expect(errorSummary.textContent.includes("The gross surface area of associated item cannot be less than the combined area of items its tagged to.")).toBe(false);
+		});
+		
+		test("when the associated item's gross surface area has not been added", async () => {
+			
+			const externalWall2: Partial<ExternalWallData> = {
+				id: "80fd1ffe-a83a-4d95-bd2c-66666666666",
+				name: "External wall 2",
+			};
+			
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: externalWall2, complete: false }],
+						},
+					},
+				},
+			});
+			
+			await renderSuspended(ExternalGlazedDoor);
+			
+			await user.type(screen.getByTestId("name"), "External glazed door 1");
+			await user.click(screen.getByTestId(`associatedItemId_${externalWall2.id}`));
+			await user.type(screen.getByTestId("height"), "20");
+			await user.type(screen.getByTestId("width"), "5");
 			await user.tab();
 			
 			await user.click(screen.getByTestId("saveAndComplete"));
@@ -340,7 +340,7 @@ describe("external glazed door", () => {
 			expect(errorSummary.textContent.includes("The gross surface area of associated item cannot be less than the combined area of items its tagged to.")).toBe(true);
 		});
 
-		test("when the area of the door is more than the gross surface area of associated item", async () => {
+		test("when the area of the door is more than the gross surface area of the associated item", async () => {
 		
 			await renderSuspended(ExternalGlazedDoor);
 
@@ -396,6 +396,43 @@ describe("external glazed door", () => {
 			const errorSummary = await screen.findByTestId("externalGlazedDoorErrorSummary");
 
 			expect(errorSummary.textContent.includes("The gross surface area of associated item cannot be less than the combined area of items its tagged to.")).toBe(true);
+		});
+
+		test("when the door already exists in the store its area is not counted twice", async () => {
+		
+			const glazedDoor3 = {
+				name: "External glazed door 3",
+				associatedItemId: externalWall.id,
+				height: 3,
+				width: 3,
+				uValue: 0.45,
+				solarTransmittance: 0.1,
+				elevationalHeight: 14,
+				midHeight: 11,
+				openingToFrameRatio: 0.2,
+				heightOpenableArea: 14,
+				maximumOpenableArea: 13,
+				midHeightOpenablePart1: 11,
+			}; 
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [{ data: glazedDoor3, complete: true }],
+						},
+					},
+				},
+			});
+
+			await renderSuspended(ExternalGlazedDoor, {
+					route: {
+						params: { door: "0" },
+					},
+				});
+
+			await user.click(screen.getByTestId("saveAndComplete"));
+
+			expect(screen.queryByTestId("externalGlazedDoorErrorSummary")).toBeNull();
 		});
 	});
 });
