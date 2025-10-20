@@ -727,7 +727,7 @@ const expectedFlatInput: FhsInputSchema = {
 					area: 15,
 					areal_heat_capacity: 50000,
 					mass_distribution_class: "E",
-					pitch: 90,
+					pitch: 45,
 					type: "BuildingElementAdjacentConditionedSpace",
 					u_value: 1,
 				},
@@ -1617,7 +1617,7 @@ describe("FHS input mapper", () => {
 						data: {
 							id: "572f04bb-5db7-4082-b0e1-69dae42cc0d1",
 							name: "party wall 1",
-							pitchOption: "90",
+							pitchOption: "custom",
 							pitch: 45,
 							surfaceArea: 15,
 							uValue: 1,
@@ -1762,7 +1762,6 @@ describe("FHS input mapper", () => {
 						data: {
 							name: "external glazed door",
 							associatedWallRoofCeilingId: externalWallId,
-							surfaceArea: 3,
 							height: 3,
 							width: 1,
 							uValue: 0.8,
@@ -1812,7 +1811,6 @@ describe("FHS input mapper", () => {
 						id: "0b77e247-53c5-42b8-9dbd-83cbfc8cffff",
 						name: "bedroom window",
 						taggedItem: externalWallId,
-						surfaceArea: 4,
 						height: 2,
 						width: 2,
 						uValue: 0.1,
