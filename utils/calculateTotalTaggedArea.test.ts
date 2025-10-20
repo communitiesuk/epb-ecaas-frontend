@@ -1,4 +1,5 @@
 import { calculateTotalTaggedArea } from "./calculateTotalTaggedArea";
+import { millimetre } from "./units/length";
 
 describe("calculateTotalTaggedArea", () => {
 	const externalWall1: EcaasForm<ExternalWallData> = {
@@ -77,7 +78,7 @@ describe("calculateTotalTaggedArea", () => {
 			height: 0.5,
 			width: 1,
 			elevationalHeight: 20,
-			surfaceArea: 1,
+			surfaceArea: 2,
 			solarAbsorption: 0.1,
 			uValue: 1,
 			kappaValue: 50000,
@@ -161,7 +162,7 @@ describe("calculateTotalTaggedArea", () => {
 			[unglazedDoors, glazedDoors],
 		);
 
-		expect(actual).toBe(4);
+		expect(actual).toBe(5);
 	});
 
 	test("when total net surface area is more than the gross surface area", () => {
@@ -184,10 +185,10 @@ describe("calculateTotalTaggedArea", () => {
 			[unglazedDoors, glazedDoors],
 		);
 
-		expect(actual).toBe(25);
+		expect(actual).toBe(26);
 	});
 
-	test("only checks sections items that are complete", () => {
+	test("only checks section items that are complete", () => {
 		store.$patch({
 			dwellingFabric: {
 				dwellingSpaceDoors: {
