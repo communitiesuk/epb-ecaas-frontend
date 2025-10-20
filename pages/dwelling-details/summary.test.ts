@@ -19,8 +19,14 @@ const state: DwellingDetailSummary = {
 	generalDetails: {
 		typeOfDwelling: "house",
 		storeysInDwelling: 2,
+		buildingLength: 10,
+		buildingWidth: 5,
 		numOfBedrooms: 3,
-		coolingRequired: false,
+		numOfUtilityRooms: 2,
+		numOfBathrooms: 1,
+		numOfWCs: 1,
+		numOfHabitableRooms: 4,
+		numOfRoomsWithTappingPoints: 2,
 	},
 	shading: [{
 		name: "Shading 1",
@@ -47,7 +53,7 @@ describe("Dwelling details summary", () => {
 
 	it("should contain the correct tabs for dwelling details", async () => {
 		await renderSuspended(Summary);
-  
+
 		expect(screen.getByRole("link", { name: "General details" }));
 		expect(screen.getByRole("link", { name: "Shading" }));
 
@@ -67,8 +73,14 @@ describe("Dwelling details summary", () => {
 		const expectedResult = {
 			"Type of dwelling": "House",
 			"Number of storeys in building": "2",
+			"Building length": "10",
+			"Building width": "5",
 			"Number of bedrooms": "3",
-			"Cooling required": "No",
+			"Number of utility rooms": "2",
+			"Number of bathrooms": "1",
+			"Number of WCs": "1",
+			"Number of habitable rooms": "4",
+			"Total number of rooms with tapping points": "2",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

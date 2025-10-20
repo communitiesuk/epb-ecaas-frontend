@@ -16,10 +16,16 @@ const generalDetailsSummary: SummarySection = {
 	label: "General details",
 	data: {
 		"Type of dwelling": displayCamelToSentenceCase(show(generalDetailsData.typeOfDwelling)),
-		"Number of storeys in building": dim(generalDetailsData.storeysInDwelling),
 		...(generalDetailsData.typeOfDwelling === "flat" ? { "Storey of flat": dim(generalDetailsData.storeyOfFlat) } : {}),
+		"Number of storeys in building": dim(generalDetailsData.storeysInDwelling),
+		"Building length": show(generalDetailsData.buildingLength),
+		"Building width": show(generalDetailsData.buildingWidth),
 		"Number of bedrooms": show(generalDetailsData.numOfBedrooms),
-		"Cooling required": displayBoolean(generalDetailsData.coolingRequired),
+		"Number of utility rooms": show(generalDetailsData.numOfUtilityRooms),
+		"Number of bathrooms": show(generalDetailsData.numOfBathrooms),
+		"Number of WCs": show(generalDetailsData.numOfWCs),
+		"Number of habitable rooms": show(generalDetailsData.numOfHabitableRooms),
+		"Total number of rooms with tapping points": show(generalDetailsData.numOfRoomsWithTappingPoints),
 	},
 	editUrl: getUrl("generalSpecifications"),
 };
