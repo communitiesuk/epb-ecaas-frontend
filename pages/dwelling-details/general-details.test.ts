@@ -12,16 +12,28 @@ mockNuxtImport("navigateTo", () => {
 const state: GeneralDetailsData = {
 	typeOfDwelling: "house",
 	storeysInDwelling: 2,
+	buildingLength: 10,
+	buildingWidth: 5,
 	numOfBedrooms: 3,
-	coolingRequired: false,
+	numOfUtilityRooms: 2,
+	numOfBathrooms: 1,
+	numOfWCs: 1,
+	numOfHabitableRooms: 4,
+	numOfRoomsWithTappingPoints: 2,
 };
 
 const stateWithFlat: GeneralDetailsData = {
 	typeOfDwelling: "flat",
-	storeysInDwelling: 7,
-	storeyOfFlat: 3,
+	storeyOfFlat: 1,
+	storeysInDwelling: 2,
+	buildingLength: 10,
+	buildingWidth: 5,
 	numOfBedrooms: 3,
-	coolingRequired: false,
+	numOfUtilityRooms: 2,
+	numOfBathrooms: 1,
+	numOfWCs: 1,
+	numOfHabitableRooms: 4,
+	numOfRoomsWithTappingPoints: 2,
 };
 
 describe("General details", () => {
@@ -39,8 +51,15 @@ describe("General details", () => {
 	
 			await user.click(screen.getByTestId("typeOfDwelling_house"));
 			await user.type(screen.getByTestId("storeysInDwelling"), "2");
+			await user.type(screen.getByTestId("buildingLength"), "10");
+			await user.type(screen.getByTestId("buildingWidth"), "5");
 			await user.type(screen.getByTestId("numOfBedrooms"), "3");
-			await user.click(screen.getByTestId("coolingRequired_no"));
+			await user.type(screen.getByTestId("numOfUtilityRooms"), "2");
+			await user.type(screen.getByTestId("numOfBathrooms"), "1");
+			await user.type(screen.getByTestId("numOfWCs"), "1");
+			await user.type(screen.getByTestId("numOfHabitableRooms"), "4");
+			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
+			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
 			const { data, complete } = store.dwellingDetails.generalSpecifications;
@@ -72,10 +91,16 @@ describe("General details", () => {
 			await renderSuspended(GeneralDetails);
 			
 			expect((await screen.findByTestId("typeOfDwelling_house")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("storeysInDwelling")).value).toBe("2");
 			expect((await screen.queryByTestId("storeyOfFlat") as HTMLInputElement)).toBe(null);
+			expect((await screen.findByTestId<HTMLInputElement>("storeysInDwelling")).value).toBe("2");
+			expect((await screen.findByTestId<HTMLInputElement>("buildingLength")).value).toBe("10");
+			expect((await screen.findByTestId<HTMLInputElement>("buildingWidth")).value).toBe("5");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfBedrooms")).value).toBe("3");
-			expect((await screen.findByTestId("coolingRequired_no")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("numOfUtilityRooms")).value).toBe("2");
+			expect((await screen.findByTestId<HTMLInputElement>("numOfBathrooms")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("numOfWCs")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
+			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
 		});
 			
 		test("required error messages are displayed when empty form is submitted", async () => {
@@ -87,9 +112,14 @@ describe("General details", () => {
 
 			expect((await screen.findByTestId("typeOfDwelling_error"))).toBeDefined();
 			expect((await screen.findByTestId("storeysInDwelling_error"))).toBeDefined();
+			expect((await screen.findByTestId("buildingLength_error"))).toBeDefined();
+			expect((await screen.findByTestId("buildingWidth_error"))).toBeDefined();
 			expect((await screen.findByTestId("numOfBedrooms_error"))).toBeDefined();
-			expect((await screen.findByTestId("coolingRequired_error"))).toBeDefined();
-
+			expect((await screen.findByTestId("numOfUtilityRooms_error"))).toBeDefined();
+			expect((await screen.findByTestId("numOfBathrooms_error"))).toBeDefined();
+			expect((await screen.findByTestId("numOfWCs_error"))).toBeDefined();
+			expect((await screen.findByTestId("numOfHabitableRooms_error"))).toBeDefined();
+			expect((await screen.findByTestId("numOfRoomsWithTappingPoints_error"))).toBeDefined();
 			expect(screen.queryByTestId("storeyOfFlat_error")).toBe(null);
 		});
 
@@ -112,10 +142,17 @@ describe("General details", () => {
 			await renderSuspended(GeneralDetails);
 
 			await user.click(screen.getByTestId("typeOfDwelling_flat"));
-			await user.type(screen.getByTestId("storeysInDwelling"), "7");
-			await user.type(screen.getByTestId("storeyOfFlat"), "3");
+			await user.type(screen.getByTestId("storeyOfFlat"), "1");
+			await user.type(screen.getByTestId("storeysInDwelling"), "2");
+			await user.type(screen.getByTestId("buildingLength"), "10");
+			await user.type(screen.getByTestId("buildingWidth"), "5");
 			await user.type(screen.getByTestId("numOfBedrooms"), "3");
-			await user.click(screen.getByTestId("coolingRequired_no"));
+			await user.type(screen.getByTestId("numOfUtilityRooms"), "2");
+			await user.type(screen.getByTestId("numOfBathrooms"), "1");
+			await user.type(screen.getByTestId("numOfWCs"), "1");
+			await user.type(screen.getByTestId("numOfHabitableRooms"), "4");
+			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
+			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			const { data, complete } = store.dwellingDetails.generalSpecifications;
@@ -137,10 +174,16 @@ describe("General details", () => {
 			await renderSuspended(GeneralDetails);
 			
 			expect((await screen.findByTestId("typeOfDwelling_flat")).hasAttribute("checked")).toBe(true);
-			expect((await screen.findByTestId<HTMLInputElement>("storeysInDwelling")).value).toBe("7");
-			expect((await screen.findByTestId<HTMLInputElement>("storeyOfFlat")).value).toBe("3");
+			expect((await screen.findByTestId<HTMLInputElement>("storeyOfFlat")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("storeysInDwelling")).value).toBe("2");
+			expect((await screen.findByTestId<HTMLInputElement>("buildingLength")).value).toBe("10");
+			expect((await screen.findByTestId<HTMLInputElement>("buildingWidth")).value).toBe("5");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfBedrooms")).value).toBe("3");
-			expect((await screen.findByTestId("coolingRequired_no")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId<HTMLInputElement>("numOfUtilityRooms")).value).toBe("2");
+			expect((await screen.findByTestId<HTMLInputElement>("numOfBathrooms")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("numOfWCs")).value).toBe("1");
+			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
+			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
 		});
 
 		test("required error messages are displayed when empty form is submitted", async () => {

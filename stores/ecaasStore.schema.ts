@@ -58,8 +58,14 @@ export function isEcaasForm(value: unknown): value is EcaasForm<unknown> {
 
 const baseGeneralDetails = z.object({
 	storeysInDwelling: z.int().min(1).max(250),
+	buildingLength: z.number().positive(),
+	buildingWidth: z.number().positive(),
 	numOfBedrooms: z.int().min(1),
-	coolingRequired: z.boolean(),
+	numOfUtilityRooms: z.int(),
+	numOfBathrooms: z.int().min(1),
+	numOfWCs: z.int(),
+	numOfHabitableRooms: z.int().min(1),
+	numOfRoomsWithTappingPoints: z.int().min(1),
 });
 
 const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [
