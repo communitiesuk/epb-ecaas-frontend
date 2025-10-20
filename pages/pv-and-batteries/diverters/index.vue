@@ -88,6 +88,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
+		<FieldsHeatGenerators
+			id="heatSource"
+			name="heatSource"
+			label="Associated heat source"
+			help="Select the heat source that this diverter is attached to"
+			data-field="SpaceHeatSystem.*.HeatSource"
+		/>
 		<ClientOnly>
 			<FormKit
 				id="hotWaterCylinder"
@@ -107,13 +114,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</div>
 			</FormKit>
 		</ClientOnly>
-		<FieldsHeatGenerators
-			id="heatSource"
-			name="heatSource"
-			label="Associated heat source"
-			help="Select the heat source that this diverter is attached to"
-			data-field="SpaceHeatSystem.*.HeatSource"
-		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
