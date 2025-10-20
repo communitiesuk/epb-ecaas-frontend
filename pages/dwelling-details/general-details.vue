@@ -76,7 +76,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Storey of flat must be an integer.`,
 			}"
-			help="The vertical position of the flat expressed by the storey it is on. 0 represents the ground floor."
+			help="If the flat is over multiple storeys, enter the storey of the lowest habitable area"
 			data-field="General.storey_of_dwelling"
 		/>
 		<FormKit
@@ -89,7 +89,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of storeys in building must be an integer.`,
 			}"
-			help="For houses this is the same as the number of storeys in the dwelling. For flats this is the total number of stories of the whole building the flat is in"
 			data-field="General.storeys_in_building"
 		/>
 		<FormKit
@@ -187,7 +186,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:validation-messages="{
 				isInteger: `Number of rooms with tapping points must be an integer.`,
 			}"
-			help="This could be a room with any tapping point. For example a sink, bath or shower"
+			help="This could be a room with any tapping point. For example a sink, bath or shower."
 			data-field="NumberOfTappedRooms"
 		/>
 		<GovLLMWarning />
