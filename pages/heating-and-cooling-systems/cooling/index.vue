@@ -72,7 +72,7 @@ function handleComplete() {
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/heating-and-cooling-systems" secondary>
-			Return to heating systems
+			Return to heating and cooling systems
 		</GovButton>
 		<CompleteElement
 			:is-complete="store.heatingAndCoolingSystems.cooling.airConditioning?.complete ?? false"

@@ -79,7 +79,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputFloat"
 			label="Seasonal energy efficiency ratio"
 			name="seasonalEnergyEfficiencyRatio"
-			help="A higher seasonal efficiency ratio indicates better energy efficiency across a typical cooling season. Typical ranges are between 4.0 and 7.0."
+			:help="false ? 'A higher seasonal efficiency ratio indicates better energy efficiency across a typical cooling season. Typical ranges are between 4.0 and 7.0.' : undefined"
 			validation="required | number | between:0,25"
 			suffix-text="kW"
 		/>
@@ -88,7 +88,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			type="govInputFloat"
 			label="Convection fraction"
 			name="convectionFraction"
-			help="Enter the proportion of the system's sensible cooling output that is delivered through air movement as opposed to radiant cooling. Typically this is 1 as all cooling is by convection."
+			help="Enter the proportion of cool air the air conditioning unit emits through convection. Typically this is 1 as all cooling is by convection."
 			validation="required | number | between:0,1"
 		/>
 		<FieldsEnergySupplies

@@ -143,7 +143,7 @@ function hasIncompleteEntries() {
 			href="/heating-and-cooling-systems"
 			secondary
 		>
-			Return to heating systems
+		Return to heating and cooling systems
 		</GovButton>
 		<CompleteElement :is-complete="checkIsComplete()" :disabled="hasIncompleteEntries()" @completed="handleComplete"/>
 	</div>
