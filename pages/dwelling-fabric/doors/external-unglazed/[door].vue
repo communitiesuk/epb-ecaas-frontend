@@ -76,7 +76,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Associated wall, roof or ceiling"
 			help="Select the wall, roof or ceiling that this door is in. It should have the same orientation and pitch as the door."
 		/>
-		<FieldsOrientation data-field="Zone.BuildingElement.*.orientation" />
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"
