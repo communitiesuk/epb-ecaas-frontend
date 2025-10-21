@@ -25,8 +25,9 @@ function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 		});
 		if (roofId) {
 			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, roofId, "associatedWallRoofWindowId");
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor, roofId, "associatedWallRoofCeilingId");
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor, roofId, "associatedWallRoofCeilingId");
 			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceWindows, roofId, "taggedItem");
-
 		}
 		if(ceilingId){
 			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, ceilingId, "associatedHeatedSpaceElementId");

@@ -302,7 +302,37 @@ describe("ceilings and roofs", () => {
 				},
 				complete: true,
 			};
-	
+			const externalUnglazed: EcaasForm<ExternalUnglazedDoorData> = {
+		data: {
+			name: "external unglazed name",
+			associatedWallRoofCeilingId: roof1.data.id,
+			height: 0.5,
+			width: 20,
+			elevationalHeight: 20,
+			surfaceArea: 10,
+			solarAbsorption: 0.1,
+			uValue: 1,
+			kappaValue: 100,
+			massDistributionClass: "I",
+		},
+	};
+
+	const externalGlazed: EcaasForm<ExternalGlazedDoorData> = {
+		data: {
+			name: "external glazed name",
+			associatedWallRoofCeilingId: roof1.data.id,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			openingToFrameRatio: 0.2,
+			midHeightOpenablePart1: 2,
+			heightOpenableArea: 1,
+			maximumOpenableArea: 1,
+		},
+	};
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -312,8 +342,17 @@ describe("ceilings and roofs", () => {
 					},
 					dwellingSpaceWindows: {
 						data: [window1]
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceExternalGlazedDoor: {
+							data: [externalGlazed]
+						},
+						dwellingSpaceExternalUnglazedDoor: {
+							data: [externalUnglazed]
+						}
 					}
 				},
+
 				infiltrationAndVentilation: {
 					vents: {
 						data: [vent1],
@@ -330,6 +369,10 @@ describe("ceilings and roofs", () => {
 			expect(vent?.associatedWallRoofWindowId).toBeUndefined();
 			const window = store.dwellingFabric.dwellingSpaceWindows.data[0]?.data;
 			expect(window?.taggedItem).toBeUndefined();
+			const glazedDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[0]?.data;
+			expect(glazedDoor?.associatedWallRoofCeilingId).toBeUndefined();
+			const unglazedDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data[0]?.data;
+			expect(unglazedDoor?.associatedWallRoofCeilingId).toBeUndefined();
 
 		});
 
