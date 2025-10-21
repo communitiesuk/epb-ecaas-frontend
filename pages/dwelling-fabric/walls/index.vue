@@ -12,10 +12,11 @@ type WallData = EcaasForm<ExternalWallData> & EcaasForm<InternalWallData> & Ecaa
 function handleRemove(wallType: WallType, index: number) {
 	const walls = store.dwellingFabric.dwellingSpaceWalls[wallType]?.data;
 
-	let wallId;
-	if (wallType === "dwellingSpaceExternalWall") {
-		wallId = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[index]?.data.id;
-	}
+	let externalWallId = wallType === "dwellingSpaceExternalWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[index]?.data.id;
+	let internalWallId = wallType === "dwellingSpaceInternalWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.data[index]?.data.id;
+	let unheatedSpaceWallId = wallType === "dwellingSpaceWallToUnheatedSpace" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data[index]?.data.id;
+	let partyWallId = wallType === "dwellingSpacePartyWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data[index]?.data.id;
+	
 
 	if (walls) {
 		walls.splice(index, 1);
@@ -24,9 +25,20 @@ function handleRemove(wallType: WallType, index: number) {
 			state.dwellingFabric.dwellingSpaceWalls[wallType].data = walls.length ? walls : [];
 			state.dwellingFabric.dwellingSpaceWalls[wallType].complete = false;
 		});
-		if (wallId) {
-			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, wallId, "associatedWallRoofWindowId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceWindows, wallId, "taggedItem" );
+		if (externalWallId) {
+			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, externalWallId, "associatedWallRoofWindowId");
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor, externalWallId, "associatedWallRoofCeilingId");
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor, externalWallId, "associatedWallRoofCeilingId");
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceWindows, externalWallId, "taggedItem" );
+		}
+		if(internalWallId){
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, internalWallId, "associatedHeatedSpaceElementId");
+		}
+		if(unheatedSpaceWallId) {
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, unheatedSpaceWallId, "associatedHeatedSpaceElementId");
+		}
+		if(partyWallId){
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, partyWallId, "associatedHeatedSpaceElementId");
 		}
 	}
 }

@@ -9,7 +9,6 @@ import WallToUnheatedForm from "./wall-to-unheated-space/[wall].vue";
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
 import formStatus from "~/constants/formStatus";
-import { millimetre } from "~/utils/units/length";
 
 describe("walls", () => {
 	const store = useEcaasStore();
@@ -161,72 +160,71 @@ describe("walls", () => {
 		});
 
 		test("when an external wall is removed its also removed from any store item that references it", async () => {
-			const vent1: VentData = {
+			const vent1: Partial<VentData> = {
 				name: "Vent 1",
-				typeOfVent: "trickle",
-				associatedWallRoofWindowId: external2.id,
-				effectiveVentilationArea: 10,
-				openingRatio: 1,
-				midHeightOfZone: 1,
+				associatedWallRoofWindowId: external1.id,
 			};
 
-			const window1: WindowData = {
+			const window1: Partial<WindowData> = {
 				id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 				name: "Window 1",
-				taggedItem: external2.id,
-				height: 1,
-				width: 1,
-				uValue: 1,
-				solarTransmittance: 0.1,
-				elevationalHeight: 1,
-				midHeight: 1,
-				openingToFrameRatio: 0.8,
-				numberOpenableParts: "0",
-				overhangDepth: unitValue(60, millimetre),
-				overhangDistance: unitValue(60, millimetre),
-				sideFinRightDepth: unitValue(60, millimetre),
-				sideFinRightDistance: unitValue(60, millimetre),
-				sideFinLeftDepth: unitValue(60, millimetre),
-				sideFinLeftDistance: unitValue(60, millimetre),
-				curtainsOrBlinds: true,
-				treatmentType: "blinds",
-				thermalResistivityIncrease: 1,
-				solarTransmittanceReduction: 0.1,
+				taggedItem: external1.id,
 			};
 
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWalls: {
-						dwellingSpaceExternalWall: {
-							data: [
-								{ data: external1 },
-								{ data: external2 },
-								{ data: external3 },
-							],
-						},
-					},
-					dwellingSpaceWindows: {
-						data: [{ data: window1, complete: true }],
-					},
-				},
-				infiltrationAndVentilation: {
-					vents: {
-						data: [{ data: vent1, complete: true }],
-					},
-				},
-			});
-		
-			await renderSuspended(Walls);
-		
-			await user.click(await screen.findByTestId("external_remove_1"));
-		
-			const vent = store.infiltrationAndVentilation.vents.data[0];
-			expect(vent?.data.associatedWallRoofWindowId).toBeUndefined();
-			expect(vent?.complete).toBe(false);
+			const externalUnglazed: Partial<ExternalUnglazedDoorData> = {
+        name: "external unglazed name",
+        associatedWallRoofCeilingId: external1.id,
+      };
 
-			const window = store.dwellingFabric.dwellingSpaceWindows.data[0];
-			expect(window?.data.taggedItem).toBeUndefined();
-			expect(window?.complete).toBe(false);
+      const externalGlazed: Partial<ExternalGlazedDoorData> = {
+        name: "external glazed name",
+        associatedWallRoofCeilingId: external1.id,
+      };
+
+			  store.$patch({
+        dwellingFabric: {
+          dwellingSpaceWalls: {
+            dwellingSpaceExternalWall: {
+              data: [
+                { data: external1 },
+              ],
+            },
+          },
+          dwellingSpaceWindows: {
+            data: [{ data: window1, complete: true }],
+          },
+          dwellingSpaceDoors: {
+            dwellingSpaceExternalGlazedDoor: {
+              data: [{ data: externalGlazed, complete: true }]
+            },
+            dwellingSpaceExternalUnglazedDoor: {
+              data: [{ data: externalUnglazed, complete: true }]
+            }
+          }
+        },
+        infiltrationAndVentilation: {
+          vents: {
+            data: [{ data: vent1, complete: true }],
+          },
+        },
+      });
+    
+      await renderSuspended(Walls);
+    
+      await user.click(await screen.findByTestId("external_remove_0"));
+    
+      const vent = store.infiltrationAndVentilation.vents.data[0];
+      expect(vent?.data.associatedWallRoofWindowId).toBeUndefined();
+      expect(vent?.complete).toBe(false);
+
+      const window = store.dwellingFabric.dwellingSpaceWindows.data[0];
+      expect(window?.data.taggedItem).toBeUndefined();
+      expect(window?.complete).toBe(false);
+
+      const glazedDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data[0]?.data;
+      expect(glazedDoor?.associatedWallRoofCeilingId).toBeUndefined();
+      const unglazedDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data[0]?.data;
+      expect(unglazedDoor?.associatedWallRoofCeilingId).toBeUndefined();
 		});
 
 		test("wall is duplicated when duplicate link is clicked", async () => {
@@ -347,6 +345,38 @@ describe("walls", () => {
 			expect(within(populatedList).queryByText("Internal wall 2")).toBeNull();
 		});
 
+		test("when an internal wall is removed its also removed from any store item that references it", async () => {
+				const doorToHeatedSpace: Partial<InternalDoorData> = {
+						typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+						name: "Internal door to heated",
+						associatedHeatedSpaceElementId: internal1.id,
+				};
+
+			  store.$patch({
+        dwellingFabric: {
+          dwellingSpaceWalls: {
+            dwellingSpaceInternalWall: {
+              data: [
+                { data: internal1 },
+              ],
+            },
+          },
+          dwellingSpaceDoors: {
+            dwellingSpaceInternalDoor: {
+              data: [{ data: doorToHeatedSpace, complete: true }]
+            },
+					}
+				}
+      });
+    
+      await renderSuspended(Walls);
+    
+      await user.click(await screen.findByTestId("internal_remove_0"));
+    
+      const unheatedDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]?.data;
+      expect(unheatedDoor?.associatedHeatedSpaceElementId).toBeUndefined();
+		});
+
 		test("wall is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -465,6 +495,39 @@ describe("walls", () => {
 			).toBeNull();
 		});
 
+		test("when a wall to unheated space is removed its also removed from any store item that references it", async () => {
+				
+			const doorToUnheatedSpace: Partial<InternalDoorData> = {
+						typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+						name: "Internal to unheated",
+						associatedHeatedSpaceElementId: toUnheatedSpace1.id,
+				};
+
+			  store.$patch({
+        dwellingFabric: {
+          dwellingSpaceWalls: {
+            dwellingSpaceWallToUnheatedSpace: {
+              data: [
+                { data: toUnheatedSpace1 },
+              ],
+            },
+          },
+          dwellingSpaceDoors: {
+            dwellingSpaceInternalDoor: {
+              data: [{ data: doorToUnheatedSpace, complete: true }]
+            },
+					}
+				}
+      });
+    
+      await renderSuspended(Walls);
+    
+      await user.click(await screen.findByTestId("toHeatedSpace_remove_0"));
+    
+      const door = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]?.data;
+      expect(door?.associatedHeatedSpaceElementId).toBeUndefined();
+		});
+
 		test("wall is duplicated when duplicate link is clicked", async () => {
 			store.$patch({
 				dwellingFabric: {
@@ -575,6 +638,39 @@ describe("walls", () => {
 			expect(within(populatedList).getByText("Party wall 1")).toBeDefined();
 			expect(within(populatedList).getByText("Party wall 3")).toBeDefined();
 			expect(within(populatedList).queryByText("Party wall 2")).toBeNull();
+		});
+
+   test("when a party wall is removed its also removed from any store item that references it", async () => {
+				
+			const doorToUnheatedSpace: Partial<InternalDoorData> = {
+						typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+						name: "Internal to unheated",
+						associatedHeatedSpaceElementId: party1.id,
+				};
+
+			  store.$patch({
+        dwellingFabric: {
+          dwellingSpaceWalls: {
+            dwellingSpacePartyWall: {
+              data: [
+                { data: party1 },
+              ],
+            },
+          },
+          dwellingSpaceDoors: {
+            dwellingSpaceInternalDoor: {
+              data: [{ data: doorToUnheatedSpace, complete: true }]
+            },
+					}
+				}
+      });
+    
+      await renderSuspended(Walls);
+    
+      await user.click(await screen.findByTestId("party_remove_0"));
+    
+      const door = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]?.data;
+      expect(door?.associatedHeatedSpaceElementId).toBeUndefined();
 		});
 
 		test("wall is duplicated when duplicate link is clicked", async () => {
