@@ -18,8 +18,8 @@ const generalDetailsSummary: SummarySection = {
 		"Type of dwelling": displayCamelToSentenceCase(show(generalDetailsData.typeOfDwelling)),
 		...(generalDetailsData.typeOfDwelling === "flat" ? { "Storey of flat": dim(generalDetailsData.storeyOfFlat) } : {}),
 		"Number of storeys in building": dim(generalDetailsData.storeysInDwelling),
-		"Building length": show(generalDetailsData.buildingLength),
-		"Building width": show(generalDetailsData.buildingWidth),
+		"Building length": dim(generalDetailsData.buildingLength, "metres"),
+		"Building width": dim(generalDetailsData.buildingWidth, "metres"),
 		"Number of bedrooms": show(generalDetailsData.numOfBedrooms),
 		"Number of utility rooms": show(generalDetailsData.numOfUtilityRooms),
 		"Number of bathrooms": show(generalDetailsData.numOfBathrooms),
@@ -57,12 +57,6 @@ const externalFactorsSummary: SummarySection = {
 	},
 	editUrl: getUrl("externalFactors"),
 };
-
-const summarySections: SummarySection[] = [
-	generalDetailsSummary,
-	externalFactorsSummary,
-	shadingSummary,
-];
 </script>
 
 <template>
@@ -71,10 +65,14 @@ const summarySections: SummarySection[] = [
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
+	<GovTabs v-slot="tabProps" :items="getTabItems([generalDetailsSummary])">
 		<SummaryTab :summary="generalDetailsSummary" :selected="tabProps.currentTab === 0"/>
-		<SummaryTab :summary="externalFactorsSummary" :selected="tabProps.currentTab === 1"/>
-		<SummaryTab :summary="shadingSummary" :selected="tabProps.currentTab === 2">
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([externalFactorsSummary])">
+		<SummaryTab :summary="externalFactorsSummary" :selected="tabProps.currentTab === 0"/>
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([shadingSummary])">
+		<SummaryTab :summary="shadingSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No shading added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('shadingCreate')">

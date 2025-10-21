@@ -73,8 +73,8 @@ describe("Dwelling details summary", () => {
 		const expectedResult = {
 			"Type of dwelling": "House",
 			"Number of storeys in building": "2",
-			"Building length": "10",
-			"Building width": "5",
+			"Building length": "10 m",
+			"Building width": "5 m",
 			"Number of bedrooms": "3",
 			"Number of utility rooms": "2",
 			"Number of bathrooms": "1",
