@@ -16,7 +16,7 @@ function handleRemove(wallType: WallType, index: number) {
 	let internalWallId = wallType === "dwellingSpaceInternalWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.data[index]?.data.id;
 	let unheatedSpaceWallId = wallType === "dwellingSpaceWallToUnheatedSpace" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data[index]?.data.id;
 	let partyWallId = wallType === "dwellingSpacePartyWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data[index]?.data.id;
-	
+
 
 	if (walls) {
 		walls.splice(index, 1);
@@ -26,22 +26,22 @@ function handleRemove(wallType: WallType, index: number) {
 			state.dwellingFabric.dwellingSpaceWalls[wallType].complete = false;
 		});
 		if (externalWallId) {
-			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, externalWallId, "associatedWallRoofWindowId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor, externalWallId, "associatedWallRoofCeilingId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor, externalWallId, "associatedWallRoofCeilingId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceWindows, externalWallId, "taggedItem" );
+			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, externalWallId, "associatedItemId");
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor, externalWallId, "associatedItemId");
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor, externalWallId, "associatedItemId");
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceWindows, externalWallId, "taggedItem");
 		}
-		if(internalWallId){
-			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, internalWallId, "associatedWallRoofWindowId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, internalWallId, "associatedHeatedSpaceElementId");
+		if (internalWallId) {
+			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, internalWallId, "associatedItemId");
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, internalWallId, "associatedItemId");
 		}
-		if(unheatedSpaceWallId) {
-			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, unheatedSpaceWallId, "associatedWallRoofWindowId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, unheatedSpaceWallId, "associatedHeatedSpaceElementId");
+		if (unheatedSpaceWallId) {
+			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, unheatedSpaceWallId, "associatedItemId");
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, unheatedSpaceWallId, "associatedItemId");
 		}
-		if(partyWallId){
-			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, partyWallId, "associatedWallRoofWindowId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, partyWallId, "associatedHeatedSpaceElementId");
+		if (partyWallId) {
+			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, partyWallId, "associatedItemId");
+			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, partyWallId, "associatedItemId");
 		}
 	}
 }
@@ -104,30 +104,26 @@ function hasIncompleteEntries() {
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<CustomList
-		id="external" title="External wall" :form-url="`${page?.url!}/external`" :items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data.map(x => ({
-			name: x.data?.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceExternalWall', index)"
+	<CustomList id="external" title="External wall" :form-url="`${page?.url!}/external`" :items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data.map(x => ({
+		name: x.data?.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceExternalWall', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceExternalWall', index)" />
-	<CustomList
-		id="internal" title="Internal wall" :form-url="`${page?.url!}/internal`" :items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data.map(x => ({
-			name: x.data?.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceInternalWall', index)"
+	<CustomList id="internal" title="Internal wall" :form-url="`${page?.url!}/internal`" :items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data.map(x => ({
+		name: x.data?.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceInternalWall', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceInternalWall', index)" />
-	<CustomList
-		id="toHeatedSpace" title="Wall to unheated space" :form-url="`${page?.url!}/wall-to-unheated-space`"
+	<CustomList id="toHeatedSpace" title="Wall to unheated space" :form-url="`${page?.url!}/wall-to-unheated-space`"
 		:items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data.map(x => ({
 			name: x.data?.name,
 			status: x.complete ? formStatus.complete : formStatus.inProgress
 		}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpaceWallToUnheatedSpace', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpaceWallToUnheatedSpace', index)" />
-	<CustomList
-		id="party" title="Party wall" :form-url="`${page?.url!}/party`" :items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data.map(x => ({
-			name: x.data?.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpacePartyWall', index)"
+	<CustomList id="party" title="Party wall" :form-url="`${page?.url!}/party`" :items="store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data.map(x => ({
+		name: x.data?.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" @remove="(index: number) => handleRemove('dwellingSpacePartyWall', index)"
 		@duplicate="(index: number) => handleDuplicate('dwellingSpacePartyWall', index)" />
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton href="/dwelling-fabric" secondary>

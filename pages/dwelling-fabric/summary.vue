@@ -39,9 +39,9 @@ const exposedFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceE
 const groundFloorSummary: SummarySection = {
 	id: "dwellingSpaceGroundFloors",
 	label: "Ground floor",
-	data: groundFloorData.map( ({ data: x }) => {
+	data: groundFloorData.map(({ data: x }) => {
 		const isSlabEdgeInsulation = x.typeOfGroundFloor === "Slab_edge_insulation";
-		const edgeInsulationType =  "edgeInsulationType" in x ? (displayCamelToSentenceCase(show(x.edgeInsulationType))) : emptyValueRendering;
+		const edgeInsulationType = "edgeInsulationType" in x ? (displayCamelToSentenceCase(show(x.edgeInsulationType))) : emptyValueRendering;
 		const edgeInsulationWidth = "edgeInsulationWidth" in x ? dim(x.edgeInsulationWidth) : emptyValueRendering;
 		const edgeInsulationThermalResistance = "edgeInsulationThermalResistance" in x ? dim(x.edgeInsulationThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 
@@ -231,9 +231,9 @@ const roofSummary: SummarySection = {
 	id: "dwellingSpaceRoofs",
 	label: "Roof",
 	data: roofData.filter(x => !!x.data).map(({ data: x }) => {
-		const isTypeOfRoofSelected = x.typeOfRoof != undefined; 
+		const isTypeOfRoofSelected = x.typeOfRoof != undefined;
 		const isPitchedRoof = x.typeOfRoof === "pitchedInsulatedAtRoof" || x.typeOfRoof === "pitchedInsulatedAtCeiling";
-		
+
 		const pitch = dim(x.pitch, "degrees");
 		const orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
 		const uValue = dim(x.uValue, "watts per square metre kelvin");
@@ -275,7 +275,7 @@ const unglazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceUnglazedDoors",
 	label: "External unglazed door",
 	data: unglazedDoorData.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedWallRoofCeilingId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedItemId);
 
 		return {
 			"Name": show(x.name),
@@ -298,7 +298,7 @@ const glazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceGlazedDoors",
 	label: "External glazed door",
 	data: glazedDoorData.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedWallRoofCeilingId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedItemId);
 
 		return {
 			"Name": show(x.name),
@@ -323,7 +323,7 @@ const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
 	label: "Internal door",
 	data: internalDoorData?.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceCeilings], x.associatedHeatedSpaceElementId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceCeilings], x.associatedItemId);
 
 		const isInternalDoorToUnheatedSpace = x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace;
 		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
@@ -354,11 +354,11 @@ const windowData = store.dwellingFabric.dwellingSpaceWindows.data;
 const windowSummary: SummarySection = {
 	id: "dwellingSpaceWindows",
 	label: "Windows",
-	data: windowData.map( ({ data: x }) => {
+	data: windowData.map(({ data: x }) => {
 
 		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceCeilings], x.taggedItem);
 
-		const numberOfOpenableParts =  parseInt(x.numberOpenableParts ?? "0");
+		const numberOfOpenableParts = parseInt(x.numberOpenableParts ?? "0");
 
 		const heightOpenableArea = "heightOpenableArea" in x ? dim(x.heightOpenableArea, "metres") : emptyValueRendering;
 		const maximumOpenableArea = "maximumOpenableArea" in x ? dim(x.maximumOpenableArea, "metres square") : emptyValueRendering;

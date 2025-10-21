@@ -31,7 +31,7 @@ describe("external unglazed door", () => {
 	const state: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "External unglazed door 1",
-			associatedWallRoofCeilingId: externalWall.id,
+			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
@@ -67,7 +67,7 @@ describe("external unglazed door", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), "External unglazed door 1");
-		await user.click(screen.getByTestId(`associatedWallRoofCeilingId_${externalWall.id}`));
+		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
 		await user.type(screen.getByTestId("height"), "0.5");
 		await user.type(screen.getByTestId("width"), "20"); 
 		await user.type(screen.getByTestId("elevationalHeight"), "20");
@@ -113,7 +113,7 @@ describe("external unglazed door", () => {
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External unglazed door 1");
-		expect((await screen.findByTestId(`associatedWallRoofCeilingId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId(`associatedItemId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("0.5");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("20");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("20");
@@ -130,7 +130,7 @@ describe("external unglazed door", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
-		expect((await screen.findByTestId("associatedWallRoofCeilingId_error"))).toBeDefined();
+		expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("width_error"))).toBeDefined();
 		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();

@@ -317,7 +317,7 @@ export type DoorsData = AssertFormKeysArePageIds<{
 }>;
 
 const externalUnglazedDoorDataZod = named.extend({
-	associatedWallRoofCeilingId: z.guid(),
+	associatedItemId: z.guid(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	elevationalHeight: z.number().min(0).max(500),
@@ -341,7 +341,7 @@ const threePartFields = { ...twoPartFields, midHeightOpenablePart3: z.number().m
 const fourPartFields = { ...threePartFields, midHeightOpenablePart4: z.number().min(0).max(100) };
 
 const externalGlazedDoorDataZod = named.extend({
-	associatedWallRoofCeilingId: z.guid(),
+	associatedItemId: z.guid(),
 	height: z.number().min(0.001).max(50),
 	width: z.number().min(0.001).max(50),
 	uValue,
@@ -355,7 +355,7 @@ const externalGlazedDoorDataZod = named.extend({
 export type ExternalGlazedDoorData = z.infer<typeof externalGlazedDoorDataZod>;
 
 const baseInternalDoorData = named.extend({
-	associatedHeatedSpaceElementId: z.guid(),
+	associatedItemId: z.guid(),
 	surfaceArea: z.number().min(0).max(10000),
 	kappaValue: z.number(),
 	massDistributionClass,
@@ -725,7 +725,7 @@ export type DuctworkData = z.infer<typeof ductworkDataZod>;
 
 const ventDataZod = z.object({
 	name: z.string().trim().min(1),
-	associatedWallRoofWindowId: z.guid(),
+	associatedItemId: z.guid(),
 	typeOfVent: z.enum(["trickle", "airBrick"]),
 	effectiveVentilationArea: z.number().min(1).max(999999),
 	openingRatio: z.number(),

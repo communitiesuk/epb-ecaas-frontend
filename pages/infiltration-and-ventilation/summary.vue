@@ -44,7 +44,7 @@ const ductworkSummary: SummarySection = {
 			"MVHR unit": show(mvhr[0]?.data.name),
 			"Duct type": displayCamelToSentenceCase(show(x.ductType)),
 			"Ductwork cross sectional shape": displayCamelToSentenceCase(show(x.ductworkCrossSectionalShape)),
-			"Internal diameter of ductwork": isCircular ? internalDiameterOfDuctwork : undefined, 
+			"Internal diameter of ductwork": isCircular ? internalDiameterOfDuctwork : undefined,
 			"External diameter of ductwork": isCircular ? externalDiameterOfDuctwork : undefined,
 			"Perimeter of ductwork": isRectangular ? ductPerimeter : undefined,
 			"Length of ductwork": dim(x.lengthOfDuctwork, "metres"),
@@ -64,8 +64,8 @@ const ventSummary: SummarySection = {
 	id: "vents",
 	label: "Vents",
 	data: ventData.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceWindows], x.associatedWallRoofWindowId);
-    
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceWindows], x.associatedItemId);
+
 
 		return {
 			"Name": x.name,

@@ -16,7 +16,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 		dwellingSpaceExternalGlazedDoor.data[index] = {
 			data: {
 				name: fields.name,
-				associatedWallRoofCeilingId: fields.associatedWallRoofCeilingId,
+				associatedItemId: fields.associatedItemId,
 				height: fields.height,
 				width: fields.width,
 				uValue: fields.uValue,
@@ -73,8 +73,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required"
 		/>
 		<FieldsAssociatedWallRoofCeiling
-			id="associatedWallRoofCeilingId"
-			name="associatedWallRoofCeilingId"
+			id="associatedItemId"
+			name="associatedItemId"
 			label="Associated wall, roof or ceiling"
 			help="Select the wall, roof or ceiling that this door is in. It should have the same orientation and pitch as the door."
 		/>

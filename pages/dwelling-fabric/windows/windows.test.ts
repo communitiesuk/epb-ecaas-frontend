@@ -7,311 +7,300 @@ import { within } from "@testing-library/dom";
 import formStatus from "~/constants/formStatus";
 
 describe("windows", () => {
-	const store = useEcaasStore();
-	const user = userEvent.setup();
-	const navigateToMock = vi.hoisted(() => vi.fn());
+  const store = useEcaasStore();
+  const user = userEvent.setup();
+  const navigateToMock = vi.hoisted(() => vi.fn());
 
-	mockNuxtImport("navigateTo", () => {
-		return navigateToMock;
-	});
+  mockNuxtImport("navigateTo", () => {
+    return navigateToMock;
+  });
 
-	const externalWall: ExternalWallData = {
-		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
-		name: "External wall 1",
-		pitchOption: "90",
-		pitch: 90,
-		orientation: 0,
-		length: 20,
-		height: 0.5,
-		elevationalHeight: 20,
-		surfaceArea: 10,
-		solarAbsorption: 0.1,
-		uValue: 1,
-		kappaValue: 50000,
-		massDistributionClass: "I",
-	};
+  const externalWall: ExternalWallData = {
+    id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+    name: "External wall 1",
+    pitchOption: "90",
+    pitch: 90,
+    orientation: 0,
+    length: 20,
+    height: 0.5,
+    elevationalHeight: 20,
+    surfaceArea: 10,
+    solarAbsorption: 0.1,
+    uValue: 1,
+    kappaValue: 50000,
+    massDistributionClass: "I",
+  };
 
-	const window1: EcaasForm<WindowData> = {
-		data: {
-			id: "test-id-1",
-			name: "Window 1",
-			taggedItem: externalWall.id,
-			height: 1,
-			width: 1,
-			uValue: 1,
-			solarTransmittance: 0.1,
-			elevationalHeight: 1,
-			midHeight: 1,
-			numberOpenableParts: "0",
-			openingToFrameRatio: 0.2,
-			curtainsOrBlinds: false,
-		},
-		complete: true,
-	};
-	
-	const window2: EcaasForm<WindowData> = {
-		data: {
-			...window1.data,
-			name: "Window 2",
-			id: "test-id-2",
-		},
-		complete: true,
-	};
-	
-	const window3: EcaasForm<WindowData> = {
-		data: {
-			...window1.data,
-			name: "Window 3",
-			id: "test-id-3",
-		},
-		complete: true,
-	};
-	
-	beforeEach(async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceWindows: {
-					data: [window1, window2],
-				}, 
-			},
-		});
-		await renderSuspended(Windows);
-	});
+  const window1: EcaasForm<WindowData> = {
+    data: {
+      id: "test-id-1",
+      name: "Window 1",
+      taggedItem: externalWall.id,
+      height: 1,
+      width: 1,
+      uValue: 1,
+      solarTransmittance: 0.1,
+      elevationalHeight: 1,
+      midHeight: 1,
+      numberOpenableParts: "0",
+      openingToFrameRatio: 0.2,
+      curtainsOrBlinds: false,
+    },
+    complete: true,
+  };
 
-	afterEach(() => {
-		store.$reset();
-	});
+  const window2: EcaasForm<WindowData> = {
+    data: {
+      ...window1.data,
+      name: "Window 2",
+      id: "test-id-2",
+    },
+    complete: true,
+  };
 
+  const window3: EcaasForm<WindowData> = {
+    data: {
+      ...window1.data,
+      name: "Window 3",
+      id: "test-id-3",
+    },
+    complete: true,
+  };
 
-	test("window is removed when remove link is clicked", async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceWindows: {
-					data: [window1],
-				},
-			},
-		});
+  beforeEach(async () => {
+    store.$patch({
+      dwellingFabric: {
+        dwellingSpaceWindows: {
+          data: [window1, window2],
+        },
+      },
+    });
+    await renderSuspended(Windows);
+  });
 
-		expect(screen.getAllByTestId("windows_items")).toBeDefined();
+  afterEach(() => {
+    store.$reset();
+  });
 
-		await user.click(screen.getByTestId("windows_remove_0"));
+  test("window is removed when remove link is clicked", async () => {
+    store.$patch({
+      dwellingFabric: {
+        dwellingSpaceWindows: {
+          data: [window1],
+        },
+      },
+    });
 
-		expect(screen.queryByTestId("windows_items")).toBeNull();
-	});
+    expect(screen.getAllByTestId("windows_items")).toBeDefined();
 
-	test("should only remove the window object thats is clicked", async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceWindows: {
-					data: [window1, window2, window3],
-				},
-			},
-		});
-		await user.click(screen.getByTestId("windows_remove_1"));
+    await user.click(screen.getByTestId("windows_remove_0"));
 
-		const populatedList = screen.getByTestId("windows_items");
+    expect(screen.queryByTestId("windows_items")).toBeNull();
+  });
 
-		expect(within(populatedList).getByText("Window 1")).toBeDefined();
-		expect(within(populatedList).getByText("Window 3")).toBeDefined();
-		expect(within(populatedList).queryByText("Window 2")).toBeNull();
-	});
+  test("should only remove the window object thats is clicked", async () => {
+    store.$patch({
+      dwellingFabric: {
+        dwellingSpaceWindows: {
+          data: [window1, window2, window3],
+        },
+      },
+    });
+    await user.click(screen.getByTestId("windows_remove_1"));
 
-	test("when a window is removed its also removed from any store item that references it", async () => {
-		const vent1: EcaasForm<VentData> = {
-			data: {
-				name: "Vent 1",
-				typeOfVent: "trickle",
-				associatedWallRoofWindowId: window2.data.id,
-				effectiveVentilationArea: 10,
-				openingRatio: 1,
-				midHeightOfZone: 1,
-			},
-		};
+    const populatedList = screen.getByTestId("windows_items");
 
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceWindows: {
-					data: [window1, window2],
-				},
-			},
-			infiltrationAndVentilation: {
-				vents: {
-					data: [vent1],
-				},
-			},
-		});
+    expect(within(populatedList).getByText("Window 1")).toBeDefined();
+    expect(within(populatedList).getByText("Window 3")).toBeDefined();
+    expect(within(populatedList).queryByText("Window 2")).toBeNull();
+  });
 
-		await renderSuspended(Windows);
+  test("when a window is removed its also removed from any store item that references it", async () => {
+    const vent1: EcaasForm<VentData> = {
+      data: {
+        name: "Vent 1",
+        typeOfVent: "trickle",
+        associatedItemId: window2.data.id,
+        effectiveVentilationArea: 10,
+        openingRatio: 1,
+        midHeightOfZone: 1,
+      },
+    };
 
-		await user.click(await screen.findByTestId("windows_remove_1"));
+    store.$patch({
+      dwellingFabric: {
+        dwellingSpaceWindows: {
+          data: [window1, window2],
+        },
+      },
+      infiltrationAndVentilation: {
+        vents: {
+          data: [vent1],
+        },
+      },
+    });
 
-		const vent = store.infiltrationAndVentilation.vents.data[0]?.data;
-		expect(vent?.associatedWallRoofWindowId).toBeUndefined();
-	});
+    await renderSuspended(Windows);
 
-	test("window is duplicated when duplicate link is clicked", async () => {
+    await user.click(await screen.findByTestId("windows_remove_1"));
 
-		await userEvent.click(screen.getByTestId("windows_duplicate_0"));
-		await userEvent.click(screen.getByTestId("windows_duplicate_0"));
-		await userEvent.click(screen.getByTestId("windows_duplicate_2"));
-		await userEvent.click(screen.getByTestId("windows_duplicate_2"));
+    const vent = store.infiltrationAndVentilation.vents.data[0]?.data;
+    expect(vent?.associatedItemId).toBeUndefined();
+  });
 
-		expect(screen.queryAllByTestId("windows_item").length).toBe(6);
-		expect(screen.getByText("Window 1")).toBeDefined();
-		expect(screen.getByText("Window 1 (1)")).toBeDefined();
-		expect(screen.getByText("Window 1 (2)")).toBeDefined();
-		expect(screen.getByText("Window 1 (1) (1)")).toBeDefined();
-		expect(screen.getByText("Window 1 (1) (2)")).toBeDefined();
-	});
+  test("window is duplicated when duplicate link is clicked", async () => {
+    await userEvent.click(screen.getByTestId("windows_duplicate_0"));
+    await userEvent.click(screen.getByTestId("windows_duplicate_0"));
+    await userEvent.click(screen.getByTestId("windows_duplicate_2"));
+    await userEvent.click(screen.getByTestId("windows_duplicate_2"));
 
-	test("when a window is duplicated, the duplicate window is assigned a new unique id ", async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceWindows: {
-					data: [window1],
-				},
-			},
-		});
+    expect(screen.queryAllByTestId("windows_item").length).toBe(6);
+    expect(screen.getByText("Window 1")).toBeDefined();
+    expect(screen.getByText("Window 1 (1)")).toBeDefined();
+    expect(screen.getByText("Window 1 (2)")).toBeDefined();
+    expect(screen.getByText("Window 1 (1) (1)")).toBeDefined();
+    expect(screen.getByText("Window 1 (1) (2)")).toBeDefined();
+  });
 
-		await userEvent.click(screen.getByTestId("windows_duplicate_0"));
+  test("when a window is duplicated, the duplicate window is assigned a new unique id ", async () => {
+    store.$patch({
+      dwellingFabric: {
+        dwellingSpaceWindows: {
+          data: [window1],
+        },
+      },
+    });
 
-		const windows = store.dwellingFabric.dwellingSpaceWindows.data;
-		expect(windows[0]?.data.id).not.toEqual(windows[1]?.data.id);
+    await userEvent.click(screen.getByTestId("windows_duplicate_0"));
 
-	});
+    const windows = store.dwellingFabric.dwellingSpaceWindows.data;
+    expect(windows[0]?.data.id).not.toEqual(windows[1]?.data.id);
+  });
 
-	test("window should display an 'in-progress' indicator when it is incomplete", async () => {
-		store.$patch({
-			dwellingFabric: {
-				dwellingSpaceWindows: {
-					data: [{ data: { ...window1.data }, complete: false }],
-				},
-			},
-		});
+  test("window should display an 'in-progress' indicator when it is incomplete", async () => {
+    store.$patch({
+      dwellingFabric: {
+        dwellingSpaceWindows: {
+          data: [{ data: { ...window1.data }, complete: false }],
+        },
+      },
+    });
 
-		await renderSuspended(Windows);
+    await renderSuspended(Windows);
 
-		expect(screen.getByTestId("windows_status_0").textContent).toBe(
-			formStatus.inProgress.text,
-		);
-	});
+    expect(screen.getByTestId("windows_status_0").textContent).toBe(
+      formStatus.inProgress.text
+    );
+  });
 
-	test("window should display an 'completed' indicator when it is complete", async () => {
+  test("window should display an 'completed' indicator when it is complete", async () => {
+    await renderSuspended(Windows);
 
-		await renderSuspended(Windows);
+    expect(screen.getByTestId("windows_status_0").textContent).toBe(
+      formStatus.complete.text
+    );
+  });
 
-		expect(screen.getByTestId("windows_status_0").textContent).toBe(
-			formStatus.complete.text,
-		);
-	});
+  test("Return to dwelling fabric button navigates to the dwelling fabric overview page", async () => {
+    const returnToOverviewButton = screen.getByRole("button", {
+      name: "Return to dwelling fabric",
+    });
+    expect(returnToOverviewButton.getAttribute("href")).toBe(
+      "/dwelling-fabric"
+    );
+  });
 
-	test("Return to dwelling fabric button navigates to the dwelling fabric overview page", async () => {
+  describe("Mark section as complete", () => {
+    test("disables the Mark section as complete button when window element is incomplete", async () => {
+      store.$patch({
+        dwellingFabric: {
+          dwellingSpaceWindows: {
+            data: [{ data: { ...window1.data }, complete: false }],
+          },
+        },
+      });
 
-		const returnToOverviewButton = screen.getByRole("button", {
-			name: "Return to dwelling fabric",
-		});
-		expect(returnToOverviewButton.getAttribute("href")).toBe(
-			"/dwelling-fabric",
-		);
-	});
+      await renderSuspended(Windows);
+      expect(
+        screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")
+      ).toBeTruthy();
+    });
 
-	describe("Mark section as complete", () => {
+    test("enables the Mark section as complete button when all window items are complete", async () => {
+      store.$patch({
+        dwellingFabric: {
+          dwellingSpaceWindows: {
+            data: [{ data: { ...window1.data }, complete: true }],
+          },
+        },
+      });
 
-		test("disables the Mark section as complete button when window element is incomplete", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWindows: {
-						data: [{ data: { ...window1.data }, complete: false }],
-					},
-				},
-			});
+      await renderSuspended(Windows);
+      expect(
+        screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")
+      ).toBeFalsy();
+    });
 
-			await renderSuspended(Windows);
-			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
-		});
+    test("displays a 'Completed' status indicator when section is marked as complete", async () => {
+      await renderSuspended(Windows);
+      await user.click(screen.getByTestId("markAsCompleteButton"));
+      const completedStatusElement = screen.queryByTestId(
+        "completeSectionCompleted"
+      );
+      expect(completedStatusElement?.style.display).not.toBe("none");
+    });
 
-		test("enables the Mark section as complete button when all window items are complete", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceWindows: {
-						data: [{ data: { ...window1.data }, complete: true }],
-					},
-				},
-			});
+    describe("after section has been marked as complete", () => {
+      beforeEach(async () => {
+        await user.click(screen.getByTestId("markAsCompleteButton"));
+      });
 
-			await renderSuspended(Windows);
-			expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
-		});
+      test("the 'Completed' section status indicator is shown", async () => {
+        const completed = screen.queryByTestId("completeSectionCompleted");
+        expect(completed?.style.display).not.toBe("none");
+      });
 
-		test("displays a 'Completed' status indicator when section is marked as complete", async () => {
+      test("windows section is complete", async () => {
+        expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(true);
+      });
 
-			await renderSuspended(Windows);
-			await user.click(screen.getByTestId("markAsCompleteButton"));
-			const completedStatusElement = screen.queryByTestId(
-				"completeSectionCompleted",
-			);
-			expect(completedStatusElement?.style.display).not.toBe("none");
-		});
+      test("user is navigated to the dwelling fabric overview page", async () => {
+        expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
+      });
 
-	
-		describe("after section has been marked as complete", () => {
+      test("windows is not complete after user removes a window", async () => {
+        await user.click(screen.getByTestId("windows_remove_0"));
+        expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
+      });
 
-			beforeEach(async () => {
-				await user.click(screen.getByTestId("markAsCompleteButton"));
-			});
+      test("windows is not complete after user duplicates a window", async () => {
+        await user.click(screen.getByTestId("windows_duplicate_0"));
+        expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
+      });
 
-			test("the 'Completed' section status indicator is shown", async () => {
-				const completed = screen.queryByTestId("completeSectionCompleted");
-				expect(completed?.style.display).not.toBe("none");
-			});
+      test("windows is not complete after user adds a new window", async () => {
+        await renderSuspended(WindowsForm, {
+          route: {
+            params: { window: "create" },
+          },
+        });
 
-			test("windows section is complete", async () => {
+        await user.type(screen.getByTestId("name"), "New window");
+        await user.tab();
+        expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
+      });
 
-				expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(true);
-			});
-
-			test("user is navigated to the dwelling fabric overview page", async () => {
-
-				expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
-			});
-
-			test("windows is not complete after user removes a window", async () => {
-
-				await user.click(screen.getByTestId("windows_remove_0"));
-				expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
-			});
-
-			test("windows is not complete after user duplicates a window", async () => {
-
-				await user.click(screen.getByTestId("windows_duplicate_0"));
-				expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
-			});
-
-			test("windows is not complete after user adds a new window", async () => {
-
-				await renderSuspended(WindowsForm, {
-					route: {
-						params: { window: "create" },
-					},
-				});
-
-				await user.type(screen.getByTestId("name"), "New window");
-				await user.tab();
-				expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
-			});
-
-			test("window is not complete after user edits a window", async () => {
-
-				await renderSuspended(WindowsForm, {
-					route: {
-						params: { window: "0" },
-					},
-				});
-				await user.clear(screen.getByTestId("name"));
-				await user.type(screen.getByTestId("name"), "Updated window");
-				await user.tab();
-				expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
-			});
-		});
-	});
+      test("window is not complete after user edits a window", async () => {
+        await renderSuspended(WindowsForm, {
+          route: {
+            params: { window: "0" },
+          },
+        });
+        await user.clear(screen.getByTestId("name"));
+        await user.type(screen.getByTestId("name"), "Updated window");
+        await user.tab();
+        expect(store.dwellingFabric.dwellingSpaceWindows.complete).toBe(false);
+      });
+    });
+  });
 });
