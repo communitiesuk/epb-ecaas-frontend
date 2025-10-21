@@ -32,12 +32,15 @@ function handleRemove(wallType: WallType, index: number) {
 			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceWindows, externalWallId, "taggedItem" );
 		}
 		if(internalWallId){
+			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, internalWallId, "associatedWallRoofWindowId");
 			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, internalWallId, "associatedHeatedSpaceElementId");
 		}
 		if(unheatedSpaceWallId) {
+			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, unheatedSpaceWallId, "associatedWallRoofWindowId");
 			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, unheatedSpaceWallId, "associatedHeatedSpaceElementId");
 		}
 		if(partyWallId){
+			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, partyWallId, "associatedWallRoofWindowId");
 			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, partyWallId, "associatedHeatedSpaceElementId");
 		}
 	}

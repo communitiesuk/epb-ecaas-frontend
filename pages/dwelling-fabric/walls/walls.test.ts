@@ -346,11 +346,15 @@ describe("walls", () => {
 		});
 
 		test("when an internal wall is removed its also removed from any store item that references it", async () => {
-				const doorToHeatedSpace: Partial<InternalDoorData> = {
+			const doorToHeatedSpace: Partial<InternalDoorData> = {
 						typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 						name: "Internal door to heated",
 						associatedHeatedSpaceElementId: internal1.id,
 				};
+			const vent1: Partial<VentData> = {
+				name: "Vent 1",
+				associatedWallRoofWindowId: internal1.id,
+			};
 
 			  store.$patch({
         dwellingFabric: {
@@ -366,7 +370,12 @@ describe("walls", () => {
               data: [{ data: doorToHeatedSpace, complete: true }]
             },
 					}
-				}
+				},
+				infiltrationAndVentilation: {
+          vents: {
+            data: [{ data: vent1, complete: true }],
+          },
+        },
       });
     
       await renderSuspended(Walls);
@@ -375,6 +384,9 @@ describe("walls", () => {
     
       const unheatedDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]?.data;
       expect(unheatedDoor?.associatedHeatedSpaceElementId).toBeUndefined();
+			
+			const vent = store.infiltrationAndVentilation.vents.data[0];
+      expect(vent?.data.associatedWallRoofWindowId).toBeUndefined();
 		});
 
 		test("wall is duplicated when duplicate link is clicked", async () => {
@@ -502,6 +514,10 @@ describe("walls", () => {
 						name: "Internal to unheated",
 						associatedHeatedSpaceElementId: toUnheatedSpace1.id,
 				};
+			const vent1: Partial<VentData> = {
+				name: "Vent 1",
+				associatedWallRoofWindowId: toUnheatedSpace1.id,
+			};
 
 			  store.$patch({
         dwellingFabric: {
@@ -517,7 +533,12 @@ describe("walls", () => {
               data: [{ data: doorToUnheatedSpace, complete: true }]
             },
 					}
-				}
+				},   
+				infiltrationAndVentilation: {
+          vents: {
+            data: [{ data: vent1, complete: true }],
+          },
+        },
       });
     
       await renderSuspended(Walls);
@@ -526,6 +547,9 @@ describe("walls", () => {
     
       const door = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]?.data;
       expect(door?.associatedHeatedSpaceElementId).toBeUndefined();
+
+			const vent = store.infiltrationAndVentilation.vents.data[0];
+      expect(vent?.data.associatedWallRoofWindowId).toBeUndefined();
 		});
 
 		test("wall is duplicated when duplicate link is clicked", async () => {
@@ -647,6 +671,11 @@ describe("walls", () => {
 						name: "Internal to unheated",
 						associatedHeatedSpaceElementId: party1.id,
 				};
+			
+			const vent1: Partial<VentData> = {
+				name: "Vent 1",
+				associatedWallRoofWindowId: party1.id,
+			};
 
 			  store.$patch({
         dwellingFabric: {
@@ -662,7 +691,12 @@ describe("walls", () => {
               data: [{ data: doorToUnheatedSpace, complete: true }]
             },
 					}
-				}
+				},
+				infiltrationAndVentilation: {
+          vents: {
+            data: [{ data: vent1, complete: true }],
+          },
+        },
       });
     
       await renderSuspended(Walls);
@@ -671,6 +705,9 @@ describe("walls", () => {
     
       const door = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[0]?.data;
       expect(door?.associatedHeatedSpaceElementId).toBeUndefined();
+
+			const vent = store.infiltrationAndVentilation.vents.data[0];
+      expect(vent?.data.associatedWallRoofWindowId).toBeUndefined();
 		});
 
 		test("wall is duplicated when duplicate link is clicked", async () => {
