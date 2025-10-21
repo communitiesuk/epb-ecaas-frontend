@@ -284,7 +284,25 @@ describe("ceilings and roofs", () => {
 					midHeightOfZone: 1,
 				},
 			};
-				
+			
+			const window1: EcaasForm<WindowData> = {
+				data: {
+					id: "test-id-1",
+					name: "Window 1",
+					taggedItem: roof1.data.id,
+					height: 1,
+					width: 1,
+					uValue: 1,
+					solarTransmittance: 0.1,
+					elevationalHeight: 1,
+					midHeight: 1,
+					numberOpenableParts: "0",
+					openingToFrameRatio: 0.2,
+					curtainsOrBlinds: false,
+				},
+				complete: true,
+			};
+	
 			store.$patch({
 				dwellingFabric: {
 					dwellingSpaceCeilingsAndRoofs: {
@@ -292,6 +310,9 @@ describe("ceilings and roofs", () => {
 							data: [roof1, roof2],
 						},
 					},
+					dwellingSpaceWindows: {
+						data: [window1]
+					}
 				},
 				infiltrationAndVentilation: {
 					vents: {
@@ -303,9 +324,13 @@ describe("ceilings and roofs", () => {
 			await renderSuspended(CeilingsAndRoofs);
 				
 			await user.click(await screen.findByTestId("roofs_remove_1"));
+			await user.click(await screen.findByTestId("roofs_remove_0"));
 				
 			const vent = store.infiltrationAndVentilation.vents.data[0]?.data;
 			expect(vent?.associatedWallRoofWindowId).toBeUndefined();
+			const window = store.dwellingFabric.dwellingSpaceWindows.data[0]?.data;
+			expect(window?.taggedItem).toBeUndefined();
+
 		});
 
 		test("roof is duplicated when duplicate link is clicked", async () => {
