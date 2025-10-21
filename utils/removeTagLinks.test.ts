@@ -1,6 +1,6 @@
 import { litre } from "~/utils/units/volume";
 
-describe("removeTaggedItemReferences", () => {
+describe("removeTagLinks", () => {
 	const store = useEcaasStore();
 	let heatPump1: HeatPumpData;
 	let heatPump2: HeatPumpData;
@@ -62,7 +62,7 @@ describe("removeTaggedItemReferences", () => {
 		});
 		const hotwaterCylinders =
       store.domesticHotWater.waterHeating.hotWaterCylinder;
-		removeTaggedItemReferences(hotwaterCylinders, heatPump1.id, "heatSource");
+		removeTagLinks([hotwaterCylinders], heatPump1.id, "heatSource");
 
 		expect(hotwaterCylinders.data[0]?.data.heatSource).toBeUndefined();
 		expect(hotwaterCylinders.data[0]?.complete).toBe(false);
@@ -89,7 +89,7 @@ describe("removeTaggedItemReferences", () => {
 		});
 		const hotwaterCylinders =
       store.domesticHotWater.waterHeating.hotWaterCylinder;
-		removeTaggedItemReferences(hotwaterCylinders, "random-id", "heatSource");
+		removeTagLinks([hotwaterCylinders], "random-id", "heatSource");
 
 		expect(hotwaterCylinders.data[0]?.data.heatSource).toBe(heatPump1.id);
 		expect(hotwaterCylinders.data[0]?.complete).toBe(true);
@@ -110,7 +110,7 @@ describe("removeTaggedItemReferences", () => {
 		});
 		const hotwaterCylinders =
       store.domesticHotWater.waterHeating.hotWaterCylinder;
-		removeTaggedItemReferences(hotwaterCylinders, undefined, "heatSource");
+		removeTagLinks([hotwaterCylinders], undefined, "heatSource");
 
 		expect(hotwaterCylinders.data[0]?.data.heatSource).toBe(heatPump1.id);
 		expect(hotwaterCylinders.data[0]?.complete).toBe(true);

@@ -24,7 +24,7 @@ function handleRemove(index: number) {
 		});
 
 		if (windowId) {
-			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, windowId, "associatedItemId");
+			removeTagLinks([store.infiltrationAndVentilation.vents], windowId);
 		}
 	}
 }

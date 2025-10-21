@@ -6,6 +6,12 @@ import { v4 as uuidv4 } from "uuid";
 const title = "Ceilings and roofs";
 const page = usePage();
 const store = useEcaasStore();
+const { vents } = store.infiltrationAndVentilation
+const { dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors
+const { dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors
+const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors
+const { dwellingSpaceWindows } = store.dwellingFabric
+
 
 type CeilingAndRoofType = keyof typeof store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 type CeilingAndRoofData = EcaasForm<CeilingData> & EcaasForm<RoofData>;
@@ -24,13 +30,11 @@ function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].complete = false;
 		});
 		if (roofId) {
-			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, roofId, "associatedItemId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor, roofId, "associatedItemId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor, roofId, "associatedItemId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceWindows, roofId, "taggedItem");
+			removeTagLinks([vents, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor], roofId);
+			removeTagLinks([dwellingSpaceWindows], roofId, "taggedItem");
 		}
 		if (ceilingId) {
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, ceilingId, "associatedItemId");
+			removeTagLinks([dwellingSpaceInternalDoor], ceilingId);
 		}
 	}
 }

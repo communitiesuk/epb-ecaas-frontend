@@ -4,6 +4,8 @@ import formStatus from "~/constants/formStatus";
 const title = "Heat generation";
 const page = usePage();
 const store = useEcaasStore();
+const { hotWaterCylinder } = store.domesticHotWater.waterHeating
+const { wetDistribution } = store.heatingSystems.heatEmitting
 
 type HeatGenerationType = keyof typeof store.heatingSystems.heatGeneration;
 
@@ -24,8 +26,7 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 		});
 
 		if (heatPumpId) {
-			removeTaggedItemReferences(store.domesticHotWater.waterHeating.hotWaterCylinder, heatPumpId, "heatSource");
-			removeTaggedItemReferences(store.heatingSystems.heatEmitting.wetDistribution, heatPumpId, "heatSource");
+			removeTagLinks([ hotWaterCylinder, wetDistribution], heatPumpId, "heatSource");
 		}
 	}
 }
@@ -70,11 +71,10 @@ function hasIncompleteEntries() {
 	</h1>
 	<p class="govuk-hint">For now, this service only allows homes to be modelled with a heat pump. In future releases
 		there will be further options.</p>
-	<CustomList
-		id="heatPump" title="Heat pump" :form-url="`${page?.url!}/heat-pump`" :items="store.heatingSystems.heatGeneration.heatPump.data.map(x => ({
-			name: x.data.name,
-			status: x.complete ? formStatus.complete : formStatus.inProgress
-		}))" :show-status="true" @remove="(index: number) => handleRemove('heatPump', index)" />
+	<CustomList id="heatPump" title="Heat pump" :form-url="`${page?.url!}/heat-pump`" :items="store.heatingSystems.heatGeneration.heatPump.data.map(x => ({
+		name: x.data.name,
+		status: x.complete ? formStatus.complete : formStatus.inProgress
+	}))" :show-status="true" @remove="(index: number) => handleRemove('heatPump', index)" />
 	<!--	<CustomList-->
 	<!--		id="boiler"-->
 	<!--		title="Boiler"-->

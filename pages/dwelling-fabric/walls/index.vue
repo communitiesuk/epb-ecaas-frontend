@@ -5,18 +5,24 @@ import { v4 as uuidv4 } from "uuid";
 const title = "Walls";
 const page = usePage();
 const store = useEcaasStore();
+const { vents } = store.infiltrationAndVentilation
+const { dwellingSpaceExternalGlazedDoor } = store.dwellingFabric.dwellingSpaceDoors
+const { dwellingSpaceExternalUnglazedDoor } = store.dwellingFabric.dwellingSpaceDoors
+const { dwellingSpaceInternalDoor } = store.dwellingFabric.dwellingSpaceDoors
 
 type WallType = keyof typeof store.dwellingFabric.dwellingSpaceWalls;
 type WallData = EcaasForm<ExternalWallData> & EcaasForm<InternalWallData> & EcaasForm<WallsToUnheatedSpaceData> & EcaasForm<PartyWallData>;
 
+
+const { dwellingSpaceWindows } = store.dwellingFabric
+
 function handleRemove(wallType: WallType, index: number) {
 	const walls = store.dwellingFabric.dwellingSpaceWalls[wallType]?.data;
 
-	let externalWallId = wallType === "dwellingSpaceExternalWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[index]?.data.id;
-	let internalWallId = wallType === "dwellingSpaceInternalWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.data[index]?.data.id;
-	let unheatedSpaceWallId = wallType === "dwellingSpaceWallToUnheatedSpace" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data[index]?.data.id;
-	let partyWallId = wallType === "dwellingSpacePartyWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data[index]?.data.id;
-
+	const externalWallId = wallType === "dwellingSpaceExternalWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall.data[index]?.data.id;
+	const internalWallId = wallType === "dwellingSpaceInternalWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall.data[index]?.data.id;
+	const unheatedSpaceWallId = wallType === "dwellingSpaceWallToUnheatedSpace" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data[index]?.data.id;
+	const partyWallId = wallType === "dwellingSpacePartyWall" && store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data[index]?.data.id;
 
 	if (walls) {
 		walls.splice(index, 1);
@@ -25,23 +31,19 @@ function handleRemove(wallType: WallType, index: number) {
 			state.dwellingFabric.dwellingSpaceWalls[wallType].data = walls.length ? walls : [];
 			state.dwellingFabric.dwellingSpaceWalls[wallType].complete = false;
 		});
+
 		if (externalWallId) {
-			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, externalWallId, "associatedItemId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor, externalWallId, "associatedItemId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor, externalWallId, "associatedItemId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceWindows, externalWallId, "taggedItem");
+			removeTagLinks([vents, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor], externalWallId)
+			removeTagLinks([dwellingSpaceWindows], externalWallId, "taggedItem")
 		}
 		if (internalWallId) {
-			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, internalWallId, "associatedItemId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, internalWallId, "associatedItemId");
+			removeTagLinks([vents, dwellingSpaceInternalDoor], internalWallId)
 		}
 		if (unheatedSpaceWallId) {
-			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, unheatedSpaceWallId, "associatedItemId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, unheatedSpaceWallId, "associatedItemId");
+			removeTagLinks([vents, dwellingSpaceInternalDoor], unheatedSpaceWallId);
 		}
 		if (partyWallId) {
-			removeTaggedItemReferences(store.infiltrationAndVentilation.vents, partyWallId, "associatedItemId");
-			removeTaggedItemReferences(store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor, partyWallId, "associatedItemId");
+			removeTagLinks([vents, dwellingSpaceInternalDoor], partyWallId);
 		}
 	}
 }
