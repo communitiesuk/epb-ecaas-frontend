@@ -38,6 +38,7 @@ describe("ceilings and roofs", () => {
 		data: {
 			...ceiling1.data,
 			name: "Ceiling 2",
+			id: "bf19cff9-225b-4e38-80d7-a111111111"
 		},
 	};
 
@@ -45,6 +46,7 @@ describe("ceilings and roofs", () => {
 		data: {
 			...ceiling1.data,
 			name: "Ceiling 3",
+			id: "bf19cff9-225b-4e38-80d7-a222222222"
 		},
 	};
 
@@ -122,6 +124,51 @@ describe("ceilings and roofs", () => {
 			expect(within(populatedList).getByText("Ceiling 1")).toBeDefined();
 			expect(within(populatedList).getByText("Ceiling 3")).toBeDefined();
 			expect(within(populatedList).queryByText("Ceiling 2")).toBeNull();
+		});
+
+			it("when an ceiling is removed it's also removed from any store item that references it", async () => {
+		const doorToHeatedSpace: EcaasForm<InternalDoorData> = {
+		data: {
+			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
+			name: "Internal 1",
+			associatedHeatedSpaceElementId: ceiling1.data.id,
+			surfaceArea: 5,
+			kappaValue: 50000,
+			massDistributionClass: "I",
+		},
+	};
+
+	const doorToUnheatedSpace: EcaasForm<InternalDoorData> = {
+		data: {
+			...doorToHeatedSpace.data,
+			associatedHeatedSpaceElementId: ceiling2.data.id,
+			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+			uValue: 0.1,
+			thermalResistanceOfAdjacentUnheatedSpace: 0,
+		},
+	};
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceCeilingsAndRoofs: {
+						dwellingSpaceCeilings: {
+							data: [ceiling1, ceiling2],
+						},
+					},
+					dwellingSpaceDoors: {
+						dwellingSpaceInternalDoor: {
+							data: [doorToHeatedSpace, doorToUnheatedSpace],
+						},
+					},
+				},
+			});
+				
+			await renderSuspended(CeilingsAndRoofs);
+			await user.click(await screen.findByTestId("ceilings_remove_0"));
+				
+			const doors = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data
+			expect(doors[0]?.data.associatedHeatedSpaceElementId).toBeUndefined();
+			expect(doors[1]?.data.associatedHeatedSpaceElementId).toBe(ceiling2.data.id);
+
 		});
 
 		test("ceiling is duplicated when duplicate link is clicked", async () => {
