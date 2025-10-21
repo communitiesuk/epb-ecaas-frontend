@@ -26,7 +26,7 @@ describe("external glazed door", () => {
 		uValue: 1,
 		kappaValue: 50000,
 		massDistributionClass: "I",
-	}
+	};
 	
 	const doorForState = {
 		name: "External glazed door 1",

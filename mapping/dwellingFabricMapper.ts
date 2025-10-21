@@ -445,9 +445,9 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 
 	const internalDoorData: Record<string, SchemaBuildingElement>[] = dwellingSpaceInternalDoor.map((x) => {
 		const associatedHeatedSpaceElement = getResolvedTaggedItem(
-    		[dwellingSpaceInternalWall, dwellingSpaceCeilings],
-    		x.associatedHeatedSpaceElementId,
-    	)!;
+			[dwellingSpaceInternalWall, dwellingSpaceCeilings],
+			x.associatedHeatedSpaceElementId,
+		)!;
 		const commonFields = {
 			pitch: extractPitch(associatedHeatedSpaceElement),
 			area: x.surfaceArea,
@@ -478,9 +478,9 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 
 	const externalGlazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalGlazedDoor.map((x) => {
 		const associatedWallRoof = getResolvedTaggedItem(
-    		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-    		x.associatedWallRoofCeilingId,
-    	)!;
+			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+			x.associatedWallRoofCeilingId,
+		)!;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
 		const glazedDoor = {
@@ -508,10 +508,10 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 	});
 
 	const externalUnglazedDoorData: { [key: string]: SchemaBuildingElement }[] = dwellingSpaceExternalUnglazedDoor.map((x) => {
-			const associatedWallRoof = getResolvedTaggedItem(
-    		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-    		x.associatedWallRoofCeilingId,
-    	)!;
+		const associatedWallRoof = getResolvedTaggedItem(
+			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+			x.associatedWallRoofCeilingId,
+		)!;
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 		
 		return { [nameWithSuffix]: {
@@ -616,10 +616,10 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 			depth: inMetres(x.sideFinRightDepth),
 			distance: inMetres(x.sideFinRightDistance),
 		}] : [];
-			const associatedElement = getResolvedTaggedItem(
-    		[dwellingSpaceExternalWall, dwellingSpaceRoofs],
-    		x.taggedItem,
-    	)!;
+		const associatedElement = getResolvedTaggedItem(
+			[dwellingSpaceExternalWall, dwellingSpaceRoofs],
+			x.taggedItem,
+		)!;
 		return { [nameWithSuffix]: {
 			type: "BuildingElementTransparent",
 			pitch: extractPitch(associatedElement),
