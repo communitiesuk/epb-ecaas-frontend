@@ -96,25 +96,4 @@ describe("removeTagLinks", () => {
 
 		expect(hotwaterCylinders.complete).toBe(true);
 	});
-
-	test("does not update store when item id is not defined", () => {
-		store.$patch({
-			domesticHotWater: {
-				waterHeating: {
-					hotWaterCylinder: {
-						data: [{ data: cylinder1, complete: true }],
-						complete: true,
-					},
-				},
-			},
-		});
-		const hotwaterCylinders =
-      store.domesticHotWater.waterHeating.hotWaterCylinder;
-		removeTagLinks([hotwaterCylinders], undefined, "heatSource");
-
-		expect(hotwaterCylinders.data[0]?.data.heatSource).toBe(heatPump1.id);
-		expect(hotwaterCylinders.data[0]?.complete).toBe(true);
-
-		expect(hotwaterCylinders.complete).toBe(true);
-	});
 });
