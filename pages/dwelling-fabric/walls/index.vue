@@ -33,17 +33,17 @@ function handleRemove(wallType: WallType, index: number) {
 		});
 
 		if (externalWallId) {
-			removeTagLinks([vents, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor], externalWallId)
-			removeTagLinks([dwellingSpaceWindows], externalWallId, "taggedItem")
+			store.removeTaggedAssociations()([vents, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor], externalWallId)
+			store.removeTaggedAssociations()([dwellingSpaceWindows], externalWallId, "taggedItem")
 		}
 		if (internalWallId) {
-			removeTagLinks([vents, dwellingSpaceInternalDoor], internalWallId)
+			store.removeTaggedAssociations()([vents, dwellingSpaceInternalDoor], internalWallId)
 		}
 		if (unheatedSpaceWallId) {
-			removeTagLinks([vents, dwellingSpaceInternalDoor], unheatedSpaceWallId);
+			store.removeTaggedAssociations()([vents, dwellingSpaceInternalDoor], unheatedSpaceWallId);
 		}
 		if (partyWallId) {
-			removeTagLinks([vents, dwellingSpaceInternalDoor], partyWallId);
+			store.removeTaggedAssociations()([vents, dwellingSpaceInternalDoor], partyWallId);
 		}
 	}
 }

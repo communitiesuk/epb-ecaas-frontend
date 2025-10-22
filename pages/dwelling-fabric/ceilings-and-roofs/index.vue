@@ -30,11 +30,11 @@ function handleRemove(ceilingAndRoofType: CeilingAndRoofType, index: number) {
 			state.dwellingFabric.dwellingSpaceCeilingsAndRoofs[ceilingAndRoofType].complete = false;
 		});
 		if (roofId) {
-			removeTagLinks([vents, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor], roofId);
-			removeTagLinks([dwellingSpaceWindows], roofId, "taggedItem");
+			store.removeTaggedAssociations()([vents, dwellingSpaceExternalGlazedDoor, dwellingSpaceExternalUnglazedDoor], roofId);
+			store.removeTaggedAssociations()([dwellingSpaceWindows], roofId, "taggedItem");
 		}
 		if (ceilingId) {
-			removeTagLinks([dwellingSpaceInternalDoor], ceilingId);
+			store.removeTaggedAssociations()([dwellingSpaceInternalDoor], ceilingId);
 		}
 	}
 }

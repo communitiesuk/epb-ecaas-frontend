@@ -26,7 +26,7 @@ function handleRemove(outletType: HeatGenerationType, index: number) {
 		});
 
 		if (heatPumpId) {
-			removeTagLinks([ hotWaterCylinder, wetDistribution], heatPumpId, "heatSource");
+			store.removeTaggedAssociations()([ hotWaterCylinder, wetDistribution], heatPumpId, "heatSource");
 		}
 	}
 }
