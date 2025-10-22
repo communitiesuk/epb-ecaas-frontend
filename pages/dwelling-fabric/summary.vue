@@ -317,13 +317,16 @@ const glazedDoorSummary: SummarySection = {
 };
 
 const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpacePartyWall } = store.dwellingFabric.dwellingSpaceWalls;
 const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
 
 const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
 	label: "Internal door",
 	data: internalDoorData?.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceCeilings], x.associatedItemId);
+		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall, dwellingSpaceCeilings], x.associatedItemId);
 
 		const isInternalDoorToUnheatedSpace = x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace;
 		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
@@ -356,7 +359,7 @@ const windowSummary: SummarySection = {
 	label: "Windows",
 	data: windowData.map(({ data: x }) => {
 
-		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs, dwellingSpaceCeilings], x.taggedItem);
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.taggedItem);
 
 		const numberOfOpenableParts = parseInt(x.numberOpenableParts ?? "0");
 
