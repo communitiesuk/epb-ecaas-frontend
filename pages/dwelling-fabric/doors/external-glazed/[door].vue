@@ -72,11 +72,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="name"
 			validation="required"
 		/>
-		<FieldsAssociatedWallRoofCeiling
+		<FieldsAssociatedWallRoof
 			id="associatedItemId"
 			name="associatedItemId"
-			label="Associated wall, roof or ceiling"
-			help="Select the wall, roof or ceiling that this door is in. It should have the same orientation and pitch as the door."
+			label="Associated wall, roof"
+			help="Select the wall, roof that this door is in. It should have the same orientation and pitch as the door."
 		/>
 		<FormKit
 			id="height"
