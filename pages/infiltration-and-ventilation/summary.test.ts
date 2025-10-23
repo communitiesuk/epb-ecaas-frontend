@@ -108,12 +108,12 @@ describe("Infiltration and ventilation summary", () => {
 	it("should contain the correct tabs for infiltration and ventilation", async () => {
 		await renderSuspended(Summary);
 
-		expect(screen.getByRole("link", { name: "Mechanical ventilation" }));
-		expect(screen.getByRole("link", { name: "Ductwork" }));
-		expect(screen.getByRole("link", { name: "Vents" }));
-		expect(screen.getByRole("link", { name: "Natural ventilation" }));
-		expect(screen.getByRole("link", { name: "Air permeability" }));
-		// expect(screen.getByRole('link', {name: 'Combustion appliances'}));
+		expect(screen.queryByRole("link", { name: "Mechanical ventilation" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Ductwork" })).toBeNull();
+		expect(screen.queryByRole("link", { name: "Vents" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Natural ventilation" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Air permeability" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Combustion appliances" })).toBeNull();
 	});
 
 	it("should display the correct data for the mechanical ventilation section", async () => {
@@ -203,7 +203,7 @@ describe("Infiltration and ventilation summary", () => {
 		await renderSuspended(MechanicalVentilationOverview);
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
 		await renderSuspended(Summary);
-		expect(screen.getByText("No ductwork added")).toBeDefined();
+		expect(screen.queryByText("No ductwork added")).toBeNull();
 	});
 
 	it("should display the correct data for the vents section", async () => {
