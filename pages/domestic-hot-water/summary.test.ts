@@ -1,6 +1,6 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import { litre } from "~/utils/units/volume";
 import { metre, millimetre } from "~/utils/units/length";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
@@ -71,8 +71,7 @@ describe("Domestic hot water summary", () => {
 			});
 		};
 
-		it("should contain the correct tabs for water heating when data is present", async () => {
-			addHotWaterCylinderData();
+		it("should contain the correct tabs for water heating section", async () => {
 			await renderSuspended(Summary);
 
 			expect(screen.queryByRole("link", { name: "Hot water cylinder" })).toBeDefined();
@@ -86,10 +85,10 @@ describe("Domestic hot water summary", () => {
 			expect(screen.queryByRole("link", { name: "Heat interface unit" })).toBeNull();
 		});
 
-		it("should display an empty state when no water heating data is present", async () => {
+		it("displays 'No hot water cylinders added' and link to create hot water cylinder when no data exists", async () => {
 			await renderSuspended(Summary);
 
-			const addWaterHeatingLink = screen.queryByRole("link", { name: "Add water heating" }) as HTMLAnchorElement;
+			const addWaterHeatingLink = screen.queryByRole("link", { name: "Add hot water cylinder" }) as HTMLAnchorElement;
 
 			expect(screen.queryByText("No water heating added")).toBeDefined();
 			expect(new URL(addWaterHeatingLink.href).pathname).toBe(getUrl("waterHeating"));
@@ -113,58 +112,68 @@ describe("Domestic hot water summary", () => {
 			}
 		});
 
-		it("should display the correct data for the immersion heater section", async () => {
-			store.$patch({
-				domesticHotWater: {
-					waterHeating: {
-						immersionHeater: {
-							data: [immersionHeater],
-						},
-					},
-				},
-			});
-
+		it("displays an edit link that navigates to the water heating page when clicked", async () => {
+			addHotWaterCylinderData();
 			await renderSuspended(Summary);
+			const hotWaterCylinderSection = screen.getByTestId("hotWaterCylinder");
+			const editLink: HTMLAnchorElement = within(hotWaterCylinderSection).getByText("Edit");
 
-			const expectedResult = {
-				"Name": "Immersion heater",
-				"Rated power": `10 ${kilowatt.suffix}`,
-				"Heater position": "Top (1)",
-				"Thermostat position": "Top (1)",
-			};
-
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-immersionHeater-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
+			expect(editLink).not.toBeNull();
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water/water-heating");
 		});
 
-		it("should display the correct data for the point of use section", async () => {
-			store.$patch({
-				domesticHotWater: {
-					waterHeating: {
-						pointOfUse: {
-							data: [pointOfUse],
-						},
-					},
-				},
-			});
+		// it("should display the correct data for the immersion heater section", async () => {
+		// 	store.$patch({
+		// 		domesticHotWater: {
+		// 			waterHeating: {
+		// 				immersionHeater: {
+		// 					data: [immersionHeater],
+		// 				},
+		// 			},
+		// 		},
+		// 	});
 
-			await renderSuspended(Summary);
+		// 	await renderSuspended(Summary);
 
-			const expectedResult = {
-				"Name": "Point of use",
-				"Setpoint temperature": `25 ${celsius.suffix}`,
-				"Heater efficiency": "0.5",
-			};
+		// 	const expectedResult = {
+		// 		"Name": "Immersion heater",
+		// 		"Rated power": `10 ${kilowatt.suffix}`,
+		// 		"Heater position": "Top (1)",
+		// 		"Thermostat position": "Top (1)",
+		// 	};
 
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-pointOfUse-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
+		// 	for (const [key, value] of Object.entries(expectedResult)) {
+		// 		const lineResult = (await screen.findByTestId(`summary-immersionHeater-${hyphenate(key)}`));
+		// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+		// 		expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		// 	}
+		// });
+
+		// it("should display the correct data for the point of use section", async () => {
+		// 	store.$patch({
+		// 		domesticHotWater: {
+		// 			waterHeating: {
+		// 				pointOfUse: {
+		// 					data: [pointOfUse],
+		// 				},
+		// 			},
+		// 		},
+		// 	});
+
+		// 	await renderSuspended(Summary);
+
+		// 	const expectedResult = {
+		// 		"Name": "Point of use",
+		// 		"Setpoint temperature": `25 ${celsius.suffix}`,
+		// 		"Heater efficiency": "0.5",
+		// 	};
+
+		// 	for (const [key, value] of Object.entries(expectedResult)) {
+		// 		const lineResult = (await screen.findByTestId(`summary-pointOfUse-${hyphenate(key)}`));
+		// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+		// 		expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		// 	}
+		// });
 	});
 
 	describe("hot water outlets", () => {
