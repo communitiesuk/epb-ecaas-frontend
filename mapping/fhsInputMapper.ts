@@ -10,7 +10,7 @@ import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from "~/mapping/common";
 import { objectFromEntries } from "ts-extras";
 import type { Simplify, SimplifyDeep } from "type-fest";
-import type { SchemaElectricityEnergySupply, SchemaSimulationTime, SchemaHeatSourceWetHeatPumpWithProductReference, SchemaAppliances } from "~/schema/aliases";
+import type { SchemaElectricityEnergySupply, SchemaSimulationTime, SchemaHeatSourceWetHeatPumpWithProductReference } from "~/schema/aliases";
 
 export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 

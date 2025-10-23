@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { SchemaInverterType } from "~/schema/aliases";
-import type { OnSiteGenerationVentilationStrategy } from "~/schema/aliases";
+import type { OnSiteGenerationVentilationStrategy, SchemaInverterType } from "~/schema/aliases";
 import { getUrl } from "#imports";
 
 const title = "PV (photovoltaic) system";

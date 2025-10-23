@@ -32,8 +32,6 @@ const ductworkSummary: SummarySection = {
 	label: "Ductwork",
 	data: ductworkData?.map(({ data: x }) => {
 		const mvhr = store.infiltrationAndVentilation.mechanicalVentilation.data.filter(ventilation => ventilation.data.id === x.mvhrUnit);
-		const isCircular = x.ductworkCrossSectionalShape === "circular";
-		const isRectangular = x.ductworkCrossSectionalShape === "rectangular";
 
 		const internalDiameterOfDuctwork = "internalDiameterOfDuctwork" in x ? dim(x.internalDiameterOfDuctwork, "millimetres") : emptyValueRendering;
 		const externalDiameterOfDuctwork = "externalDiameterOfDuctwork" in x ? dim(x.externalDiameterOfDuctwork, "millimetres") : emptyValueRendering;
@@ -43,8 +41,8 @@ const ductworkSummary: SummarySection = {
 			"MVHR unit": show(mvhr[0]?.data.name),
 			"Duct type": displayCamelToSentenceCase(show(x.ductType)),
 			"Ductwork cross sectional shape": displayCamelToSentenceCase(show(x.ductworkCrossSectionalShape)),
-			"Internal diameter of ductwork": isCircular ? internalDiameterOfDuctwork : undefined, 
-			"External diameter of ductwork": isCircular ? externalDiameterOfDuctwork : undefined,
+			"Internal diameter of ductwork": internalDiameterOfDuctwork, 
+			"External diameter of ductwork": externalDiameterOfDuctwork,
 			"Length of ductwork": dim(x.lengthOfDuctwork, "metres"),
 			"Insulation thickness": dim(x.insulationThickness, "millimetres"),
 			"Thermal conductivity of ductwork insulation": dim(x.thermalInsulationConductivityOfDuctwork, "watts per metre kelvin"),
