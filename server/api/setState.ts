@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
 });
 
 async function setStateOnCache(sessionId: string, body: EcaasState) {
-	return useStorage("cache").setItem(sessionId, body, {
+	return useStorage("dynamo").setItem(sessionId, body, {
 		ttl: 1209600,
 	});
 }
