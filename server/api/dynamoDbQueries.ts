@@ -15,7 +15,7 @@ client.config.credentials({
 });
 const docClient = DynamoDBDocumentClient.from(client);
 
-export async function getSessionData(key: string): Promise<Record<string, unknown> | undefined> {
+export async function getSessionData(key: string): Promise<string | undefined> {
 	const { Item: item } = await docClient.send(
 		new GetCommand({
 			TableName: "sessions",
@@ -23,7 +23,7 @@ export async function getSessionData(key: string): Promise<Record<string, unknow
 		}),
 	);
 
-	return item;
+	return item?.ecaas;
 }
 
 export async function setSessionData(
@@ -42,13 +42,13 @@ export async function setSessionData(
 }
 
 // console.log(
-// 	setItem("123", '{"data":"data"}').then((data) => {
+// 	getSessionData("123", '{"ecaas":"data"}').then((data) => {
 // 		console.log(data);
 // 	}),
 // );
 
 // console.log(
-// 	getItem("123").then((data) => {
+// 	getSessionData("123").then((data) => {
 // 		console.log(data);
 // 	}),
 // );
