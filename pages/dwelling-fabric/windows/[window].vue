@@ -215,8 +215,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<FieldsAssociatedWallRoof
 			id="taggedItem"
 			name="taggedItem"
-			label="Associated wall, roof"
-			help="Select the wall, roof that this window is in. It should have the same orientation and pitch as the window."
+			label="Associated wall or roof"
+			help="Select the wall or roof that this window is in. It should have the same orientation and pitch as the window."
 		/>
 		<FormKit
 			id="height"
@@ -227,7 +227,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="height"
 			validation="required | number | min:0.001 | max:50"
 			data-field="Zone.BuildingElement.*.height" />
-		/>
 		<FormKit
 			id="width"
 			type="govInputWithSuffix"
@@ -237,7 +236,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="width"
 			validation="required | number | min:0.001 | max:50"
 			data-field="Zone.BuildingElement.*.width" />
-		/>
 		<FieldsElevationalHeight />
 
 		<FieldsUValue
