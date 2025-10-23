@@ -30,7 +30,7 @@ export default defineNitroPlugin(() => {
 			// async dispose() {},
 			// async watch(callback) {},
 			};
-		});
+		})({});
 
 		storage.mount("cache", driver);
 	}
