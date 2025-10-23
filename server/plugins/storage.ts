@@ -1,26 +1,26 @@
 import { defineDriver } from "unstorage";
 import {
-	getItem as getSession,
-	setItem as setSession,
+	getSessionData,
+	setSessionData,
 } from "../api/dynamoDbQueries";
 
 export default defineNitroPlugin(() => {
 	const storage = useStorage();
-
+	
 	if (process.env.NODE_ENV === "production") {
-		console.log("building custom driver");
-		const driver = defineDriver(() => {
+		console.log("building custom dynamo DB driver");
+		const driver = defineDriver((options) => {
 			return {
 				name: "dynamoDb-driver",
-				options: {},
+				options,
 				async hasItem(_key, _opts) {
 					return false;
 				},
 				async getItem(key, _opts) {
-					return getSession(key);
+					return getSessionData(key);
 				},
 				async setItem(key, value, _opts) {
-					return setSession(key, value);
+					return setSessionData(key, value);
 				},
 				// async removeItem(key, _opts) {},
 				async getKeys(_base, _opts) {
