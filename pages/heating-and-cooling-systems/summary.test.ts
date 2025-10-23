@@ -333,7 +333,7 @@ describe("Heating and cooling systems summary page", () => {
 			});
 
 			await renderSuspended(heatingAndCoolingSystemsSummary);
-			const supportedHeatGenerationItems = ["heatPump"]
+			const supportedHeatGenerationItems = ["heatPump"];
 			// The original loop cannot be used while non-supported heat generation items exist in ecaasStore.
 			// Until all heat generation items in ecaasStore are supported, use the above list.
 
@@ -541,7 +541,7 @@ describe("Heating and cooling systems summary page", () => {
 			const user = userEvent.setup();
 
 			await renderSuspended(heatingAndCoolingSystemsSummary);
-			const instantElectricHeaterTab = screen.getByRole('link', { name: "Instant electric heater" });
+			const instantElectricHeaterTab = screen.getByRole("link", { name: "Instant electric heater" });
 			await user.click(instantElectricHeaterTab);
 			const instantElectricHeaterSummary = screen.getByTestId("instantElectricHeater");
 
@@ -650,7 +650,7 @@ describe("Heating and cooling systems summary page", () => {
 				},
 			});
 			await renderSuspended(heatingAndCoolingSystemsSummary);
-			const supportedHeatEmittingItems = ["wetDistribution", "instantElectricHeater"]
+			const supportedHeatEmittingItems = ["wetDistribution", "instantElectricHeater"];
 			// The original loop cannot be used while non-supported heat emitting items exist in ecaasStore.
 			// Until all heat emitting items in ecaasStore are supported, use the above list.
 
