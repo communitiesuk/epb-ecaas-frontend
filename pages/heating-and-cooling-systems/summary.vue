@@ -104,7 +104,7 @@ const heatGenerationSummary: SummarySection[] = [
 	// heatBatterySummary,
 	// heatNetworkSummary,
 	// heatInterfaceUnitSummary,
-].filter((x) => x.data.length);
+];
 
 const { heatPump } =
 	store.heatingAndCoolingSystems.heatGeneration;
@@ -195,9 +195,9 @@ const warmAirHeatPumpSummary: SummarySection = {
 const heatEmittingSummary: SummarySection[] = [
 	wetDistributionSummary,
 	instantElectricHeaterSummary,
-	electricStorageHeaterSummary,
-	warmAirHeatPumpSummary,
-].filter((x) => x.data.length);
+	// electricStorageHeaterSummary,
+	// warmAirHeatPumpSummary,
+];
 
 const coolingUrl = "/heating-and-cooling-systems/cooling";
 
@@ -219,7 +219,7 @@ const airConditioningSummary: SummarySection = {
 
 const coolingSummary: SummarySection[] = [
 	airConditioningSummary,
-].filter((x) => x.data.length);
+];
 
 </script>
 <template>
@@ -234,43 +234,58 @@ const coolingSummary: SummarySection[] = [
 		<SummaryTab :summary="energySupplySummary" :selected="tabProps.currentTab === 0" />
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems(heatGenerationSummary)">
-		<TabPanel id="heatGeneration" :selected="!tabProps.currentItem">
-			<h2 class="govuk-heading-m">No heat generators added</h2>
-			<NuxtLink class="govuk-link" :to="getUrl('heatGeneration')">
-				Add heat generators
-			</NuxtLink>
-		</TabPanel>
-		<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentItem?.id === 'heatPump'" />
-		<SummaryTab :summary="boilerSummary" :selected="tabProps.currentItem?.id === 'boiler'" />
-		<SummaryTab :summary="heatBatterySummary" :selected="tabProps.currentItem?.id === 'heatBattery'" />
-		<SummaryTab :summary="heatNetworkSummary" :selected="tabProps.currentItem?.id === 'heatNetwork'" />
-		<SummaryTab :summary="heatInterfaceUnitSummary" :selected="tabProps.currentItem?.id === 'heatInterfaceUnit'" />
+		<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentTab === 0">
+			<template #empty>
+				<h2 class="govuk-heading-m">No heat pumps added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('heatPumpCreate')"> 
+					Add heat pump
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems(heatEmittingSummary)">
-		<TabPanel id="heatEmitting" :selected="!tabProps.currentItem">
-			<h2 class="govuk-heading-m">No heat emitters added</h2>
-			<NuxtLink class="govuk-link" :to="getUrl('heatEmitting')">
-				Add heat emitters
-			</NuxtLink>
-		</TabPanel>
-		<SummaryTab :summary="wetDistributionSummary" :selected="tabProps.currentItem?.id === 'wetDistribution'" />
-		<SummaryTab
-			:summary="instantElectricHeaterSummary"
-			:selected="tabProps.currentItem?.id === 'instantElectricHeater'" />
-		<SummaryTab
-			:summary="electricStorageHeaterSummary"
-			:selected="tabProps.currentItem?.id === 'electricStorageHeater'" />
-		<SummaryTab :summary="warmAirHeatPumpSummary" :selected="tabProps.currentItem?.id === 'warmAirHeatPump'" />
+		<SummaryTab :summary="wetDistributionSummary" :selected="tabProps.currentItem?.id === 'wetDistribution'">
+			<template #empty>
+				<h2 class="govuk-heading-m">No wet distribution added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('wetDistributionCreate')">
+					Add wet distribution
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+		<SummaryTab :summary="instantElectricHeaterSummary" :selected="tabProps.currentItem?.id === 'instantElectricHeater'">
+			<template #empty>
+				<h2 class="govuk-heading-m">No instant electric heaters added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('instantElectricHeaterCreate')">
+					Add instant electric heater
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+		<!-- <SummaryTab :summary="electricStorageHeaterSummary" :selected="tabProps.currentItem?.id === 'electricStorageHeater'">
+			<template #empty>
+				<h2 class="govuk-heading-m">No electric storage heaters added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('heatEmitting')">
+					Add electric storage heater
+				</NuxtLink>
+			</template>
+		</SummaryTab>
+		<SummaryTab :summary="warmAirHeatPumpSummary" :selected="tabProps.currentItem?.id === 'warmAirHeatPump'">
+			<template #empty>
+				<h2 class="govuk-heading-m">No warm air heat pumps added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('heatEmitting')">
+					Add warm air heat pump
+				</NuxtLink>
+			</template>
+		</SummaryTab> -->
 	</GovTabs>
-
 	<GovTabs v-slot="tabProps" :items="getTabItems(coolingSummary)">
-		<TabPanel id="cooling" :selected="!tabProps.currentItem">
-			<h2 class="govuk-heading-m">No cooling added</h2>
-			<NuxtLink class="govuk-link" :to="getUrl('cooling')">
-				Add cooling
-			</NuxtLink>
-		</TabPanel>
-		<SummaryTab :summary="airConditioningSummary" :selected="tabProps.currentItem?.id === 'airConditioning'" />
+		<SummaryTab :summary="airConditioningSummary" :selected="tabProps.currentItem?.id === 'airConditioning'">
+			<template #empty>
+				<h2 class="govuk-heading-m">No air conditioning systems added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('airConditioningCreate')">
+					Add air conditioning system
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 	</GovTabs>
 
 	<GovButton href="/">Return to overview</GovButton>

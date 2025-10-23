@@ -7,6 +7,7 @@ import { celsius } from "~/utils/units/temperature";
 import { litrePerMinute } from "~/utils/units/flowRate";
 import { metresSquare } from "~/utils/units/area";
 import { co2PerKilowattHour } from "~/utils/units/emissions";
+import { userEvent } from "@testing-library/user-event";
 
 type expectedData = { [key: string]: string };
 const verifyDataInSection = async (
@@ -199,41 +200,7 @@ describe("Heating and cooling systems summary page", () => {
 			name: "Heat interface unit 1",
 		};
 
-		it("displays 'No heat generators added' and link to heat generation overview page when no data exists", async () => {
-			await renderSuspended(heatingAndCoolingSystemsSummary);
-
-			expect(screen.getByText("No heat generators added")).not.toBeNull();
-			const addHeatGenerationLink: HTMLAnchorElement = screen.getByRole("link", {
-				name: "Add heat generators",
-			});
-			expect(new URL(addHeatGenerationLink.href).pathname).toBe(
-				getUrl("heatGeneration"),
-			);
-		});
-
-		it("displays tabs only for the heat generation types that have data", async () => {
-
-			store.$patch({
-				heatingAndCoolingSystems: {
-					heatGeneration: {
-						heatPump: {
-							data: [{ data: heatPump }],
-						},
-						boiler: {
-							data: [boiler],
-						},
-						heatBattery: {
-							data: [heatBattery],
-						},
-						heatNetwork: {
-							data: [heatNetwork],
-						},
-						heatInterfaceUnit: {
-							data: [heatInterfaceUnit],
-						},
-					},
-				},
-			});
+		it("should contain the correct tabs for heat generation section", async () => {
 			await renderSuspended(heatingAndCoolingSystemsSummary);
 			expect(screen.getByRole("link", { name: "Heat pump" })).not.toBeNull();
 			// expect(screen.getByRole("link", { name: "Boiler" })).not.toBeNull();
@@ -242,6 +209,20 @@ describe("Heating and cooling systems summary page", () => {
 			// expect(
 			// 	screen.getByRole("link", { name: "Heat interface unit" })
 			// ).not.toBeNull();
+		});
+
+		it("displays 'No heat pumps added' and link to create heat pump when no data exists", async () => {
+			await renderSuspended(heatingAndCoolingSystemsSummary);
+
+			const heatPumpSummary = screen.getByTestId("heatPump");
+
+			expect(within(heatPumpSummary).getByText("No heat pumps added")).not.toBeNull();
+			const addHeatPumpLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add heat pump",
+			});
+			expect(new URL(addHeatPumpLink.href).pathname).toBe(
+				getUrl("heatPumpCreate"),
+			);
 		});
 
 		it("displays the correct data for the heat pump section", async () => {
@@ -257,75 +238,76 @@ describe("Heating and cooling systems summary page", () => {
 			});
 			await renderSuspended(heatingAndCoolingSystemsSummary);
 
-			await verifyDataInSection("heatPump", { "Name": "Heat pump 1" });
+			await verifyDataInSection("heatPump", { "Name": "Heat pump 1", "Product": "HEATPUMP-LARGE" });
 
 		});
 
-		it("displays the correct data for the boiler section", async () => {
+		// it("displays the correct data for the boiler section", async () => {
 
-			store.$patch({
-				heatingAndCoolingSystems: {
-					heatGeneration: {
-						boiler: {
-							data: [boiler],
-						},
-					},
-				},
-			});
-			await renderSuspended(heatingAndCoolingSystemsSummary);
+		// 	store.$patch({
+		// 		heatingAndCoolingSystems: {
+		// 			heatGeneration: {
+		// 				boiler: {
+		// 					data: [boiler],
+		// 				},
+		// 			},
+		// 		},
+		// 	});
+		// 	await renderSuspended(heatingAndCoolingSystemsSummary);
 
-			await verifyDataInSection("boiler", { "Name": "Boiler 1" });
-		});
+		// 	await verifyDataInSection("boiler", { "Name": "Boiler 1" });
+		// });
 
-		it("displays the correct data for the heat battery section", async () => {
+		// it("displays the correct data for the heat battery section", async () => {
 
-			store.$patch({
-				heatingAndCoolingSystems: {
-					heatGeneration: {
-						heatBattery: {
-							data: [heatBattery],
-						},
-					},
-				},
-			});
-			await renderSuspended(heatingAndCoolingSystemsSummary);
+		// 	store.$patch({
+		// 		heatingAndCoolingSystems: {
+		// 			heatGeneration: {
+		// 				heatBattery: {
+		// 					data: [heatBattery],
+		// 				},
+		// 			},
+		// 		},
+		// 	});
+		// 	await renderSuspended(heatingAndCoolingSystemsSummary);
 
-			await verifyDataInSection("heatBattery", { "Name": "Heat battery 1" });
+		// 	await verifyDataInSection("heatBattery", { "Name": "Heat battery 1" });
 
-		});
+		// });
 
-		it("displays the correct data for the heat network section", async () => {
+		// it("displays the correct data for the heat network section", async () => {
 
-			store.$patch({
-				heatingAndCoolingSystems: {
-					heatGeneration: {
-						heatNetwork: {
-							data: [heatNetwork],
-						},
-					},
-				},
-			});
-			await renderSuspended(heatingAndCoolingSystemsSummary);
+		// 	store.$patch({
+		// 		heatingAndCoolingSystems: {
+		// 			heatGeneration: {
+		// 				heatNetwork: {
+		// 					data: [heatNetwork],
+		// 				},
+		// 			},
+		// 		},
+		// 	});
+		// 	await renderSuspended(heatingAndCoolingSystemsSummary);
 
-			await verifyDataInSection("heatNetwork", { "Name": "Heat network 1" });
-		});
+		// 	await verifyDataInSection("heatNetwork", { "Name": "Heat network 1" });
+		// });
 
-		it("displays the correct data for the heat interface unit section", async () => {
+		// it("displays the correct data for the heat interface unit section", async () => {
 
-			store.$patch({
-				heatingAndCoolingSystems: {
-					heatGeneration: {
-						heatInterfaceUnit: {
-							data: [heatInterfaceUnit],
-						},
-					},
-				},
-			});
-			await renderSuspended(heatingAndCoolingSystemsSummary);
+		// 	store.$patch({
+		// 		heatingAndCoolingSystems: {
+		// 			heatGeneration: {
+		// 				heatInterfaceUnit: {
+		// 					data: [heatInterfaceUnit],
+		// 				},
+		// 			},
+		// 		},
+		// 	});
+		// 	await renderSuspended(heatingAndCoolingSystemsSummary);
 
-			await verifyDataInSection("heatInterfaceUnit", { "Name": "Heat interface unit 1" });
+		// 	await verifyDataInSection("heatInterfaceUnit", { "Name": "Heat interface unit 1" });
 
-		});
+		// });
+
 		it("displays an edit link on each section that navigates to the heat generation overview page when clicked", async () => {
 
 			store.$patch({
@@ -334,23 +316,29 @@ describe("Heating and cooling systems summary page", () => {
 						heatPump: {
 							data: [{ data: heatPump }],
 						},
-						boiler: {
-							data: [boiler],
-						},
-						heatBattery: {
-							data: [heatBattery],
-						},
-						heatNetwork: {
-							data: [heatNetwork],
-						},
-						heatInterfaceUnit: {
-							data: [heatInterfaceUnit],
-						},
+						// boiler: {
+						// 	data: [boiler],
+						// },
+						// heatBattery: {
+						// 	data: [heatBattery],
+						// },
+						// heatNetwork: {
+						// 	data: [heatNetwork],
+						// },
+						// heatInterfaceUnit: {
+						// 	data: [heatInterfaceUnit],
+						// },
 					},
 				},
 			});
+
 			await renderSuspended(heatingAndCoolingSystemsSummary);
-			for (const [key] of Object.entries(store.heatingAndCoolingSystems.heatGeneration)) {
+			const supportedHeatGenerationItems = ["heatPump"]
+			// The original loop cannot be used while non-supported heat generation items exist in ecaasStore.
+			// Until all heat generation items in ecaasStore are supported, use the above list.
+
+			// for (const [key] of Object.entries(store.heatingAndCoolingSystems.heatGeneration)) {
+			for (const key of supportedHeatGenerationItems) {
 				const heatGenerationSection = screen.getByTestId(key);
 
 				const editLink: HTMLAnchorElement = within(heatGenerationSection).getByText(
@@ -425,55 +413,27 @@ describe("Heating and cooling systems summary page", () => {
 			name: "Warm air heat pump 1",
 		};
 
-		it("displays 'No heat emittors added' and link to heat emitting overview page when no data exists", async () => {
+		it("should contain the correct tabs for heating emitting section", async () => {
 			await renderSuspended(heatingAndCoolingSystemsSummary);
 
-			expect(screen.getByText("No heat emitters added")).not.toBeNull();
-			const addHeatEmittingLink: HTMLAnchorElement = screen.getByRole("link", {
-				name: "Add heat emitters",
-			});
-			expect(new URL(addHeatEmittingLink.href).pathname).toBe(
-				getUrl("heatEmitting"),
-			);
+			expect(screen.getByRole("link", { name: "Wet distribution" }));
+			expect(screen.getByRole("link", { name: "Instant electric heater" }));
+			// expect(screen.getByRole("link", { name: "Electric storage heater" }));
+			// expect(screen.getByRole("link", { name: "Warm air heat pump" }));
 		});
-		it("displays tabs only for the heat emitting types that have data", async () => {
 
-			store.$patch({
-				heatingAndCoolingSystems: {
-					heatEmitting: {
-						wetDistribution: {
-							data: [wetDistribution1],
-						},
-						instantElectricHeater: {
-							data: [instantElectricHeater],
-						},
-						electricStorageHeater: {
-							data: [electricStorageHeater],
-						},
-						warmAirHeatPump: {
-							data: [warmAirHeatPump],
-						},
-					},
-					heatGeneration: {
-						heatPump: {
-							data: [{ data: heatPump }],
-						},
-					},
-				},
-			});
+		it("displays 'No wet distribution added' and link to create wet distribution when no data exists", async () => {
 			await renderSuspended(heatingAndCoolingSystemsSummary);
-			expect(
-				screen.getByRole("link", { name: "Wet distribution" }),
-			).not.toBeNull();
-			expect(
-				screen.getByRole("link", { name: "Instant electric heater" }),
-			).not.toBeNull();
-			expect(
-				screen.getByRole("link", { name: "Electric storage heater" }),
-			).not.toBeNull();
-			expect(
-				screen.getByRole("link", { name: "Warm air heat pump" }),
-			).not.toBeNull();
+
+			const wetDistributionSummary = screen.getByTestId("wetDistribution");
+
+			expect(within(wetDistributionSummary).getByText("No wet distribution added")).not.toBeNull();
+			const addWetDistributionLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add wet distribution",
+			});
+			expect(new URL(addWetDistributionLink.href).pathname).toBe(
+				getUrl("wetDistributionCreate"),
+			);
 		});
 
 		it("displays the correct data for the wet distribution section when type of space heater is Radiators", async () => {
@@ -577,6 +537,23 @@ describe("Heating and cooling systems summary page", () => {
 			await verifyDataInSection("wetDistribution", expectedWetDistributionData);
 		});
 
+		it("displays 'No instant electric heaters added' and link to create instant electric heater when no data exists", async () => {
+			const user = userEvent.setup();
+
+			await renderSuspended(heatingAndCoolingSystemsSummary);
+			const instantElectricHeaterTab = screen.getByRole('link', { name: "Instant electric heater" });
+			await user.click(instantElectricHeaterTab);
+			const instantElectricHeaterSummary = screen.getByTestId("instantElectricHeater");
+
+			expect(within(instantElectricHeaterSummary).getByText("No instant electric heaters added")).not.toBeNull();
+			const addInstantElectricHeaterLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add instant electric heater",
+			});
+			expect(new URL(addInstantElectricHeaterLink.href).pathname).toBe(
+				getUrl("instantElectricHeaterCreate"),
+			);
+		});
+
 		it("displays the correct data for the instant electric heater section", async () => {
 
 			store.$patch({
@@ -601,50 +578,51 @@ describe("Heating and cooling systems summary page", () => {
 			);
 		});
 
-		it("displays the correct data for the electric storage heater section", async () => {
+		// it("displays the correct data for the electric storage heater section", async () => {
 
-			store.$patch({
-				heatingAndCoolingSystems: {
-					heatEmitting: {
-						electricStorageHeater: {
-							data: [electricStorageHeater],
-						},
-					},
-				},
-			});
+		// 	store.$patch({
+		// 		heatingAndCoolingSystems: {
+		// 			heatEmitting: {
+		// 				electricStorageHeater: {
+		// 					data: [electricStorageHeater],
+		// 				},
+		// 			},
+		// 		},
+		// 	});
 
-			await renderSuspended(heatingAndCoolingSystemsSummary);
-			const lineResult = await screen.findByTestId(
-				"summary-electricStorageHeater-name",
-			);
+		// 	await renderSuspended(heatingAndCoolingSystemsSummary);
+		// 	const lineResult = await screen.findByTestId(
+		// 		"summary-electricStorageHeater-name",
+		// 	);
 
-			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
-			expect(lineResult.querySelector("dd")?.textContent).toBe(
-				"Electric storage heater 1",
-			);
-		});
-		it("displays the correct data for the warm air heat pump section", async () => {
+		// 	expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
+		// 	expect(lineResult.querySelector("dd")?.textContent).toBe(
+		// 		"Electric storage heater 1",
+		// 	);
+		// });
 
-			store.$patch({
-				heatingAndCoolingSystems: {
-					heatEmitting: {
-						warmAirHeatPump: {
-							data: [warmAirHeatPump],
-						},
-					},
-				},
-			});
+		// it("displays the correct data for the warm air heat pump section", async () => {
 
-			await renderSuspended(heatingAndCoolingSystemsSummary);
-			const lineResult = await screen.findByTestId(
-				"summary-warmAirHeatPump-name",
-			);
+		// 	store.$patch({
+		// 		heatingAndCoolingSystems: {
+		// 			heatEmitting: {
+		// 				warmAirHeatPump: {
+		// 					data: [warmAirHeatPump],
+		// 				},
+		// 			},
+		// 		},
+		// 	});
 
-			expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
-			expect(lineResult.querySelector("dd")?.textContent).toBe(
-				"Warm air heat pump 1",
-			);
-		});
+		// 	await renderSuspended(heatingAndCoolingSystemsSummary);
+		// 	const lineResult = await screen.findByTestId(
+		// 		"summary-warmAirHeatPump-name",
+		// 	);
+
+		// 	expect(lineResult.querySelector("dt")?.textContent).toBe("Name");
+		// 	expect(lineResult.querySelector("dd")?.textContent).toBe(
+		// 		"Warm air heat pump 1",
+		// 	);
+		// });
 
 		it("displays an edit link on each section that navigates to the heat emitting overview page when clicked", async () => {
 
@@ -657,12 +635,12 @@ describe("Heating and cooling systems summary page", () => {
 						instantElectricHeater: {
 							data: [instantElectricHeater],
 						},
-						electricStorageHeater: {
-							data: [electricStorageHeater],
-						},
-						warmAirHeatPump: {
-							data: [warmAirHeatPump],
-						},
+						// electricStorageHeater: {
+						// 	data: [electricStorageHeater],
+						// },
+						// warmAirHeatPump: {
+						// 	data: [warmAirHeatPump],
+						// },
 					},
 					heatGeneration: {
 						heatPump: {
@@ -672,7 +650,12 @@ describe("Heating and cooling systems summary page", () => {
 				},
 			});
 			await renderSuspended(heatingAndCoolingSystemsSummary);
-			for (const [key] of Object.entries(store.heatingAndCoolingSystems.heatEmitting)) {
+			const supportedHeatEmittingItems = ["wetDistribution", "instantElectricHeater"]
+			// The original loop cannot be used while non-supported heat emitting items exist in ecaasStore.
+			// Until all heat emitting items in ecaasStore are supported, use the above list.
+
+			// for (const [key] of Object.entries(store.heatingAndCoolingSystems.heatEmitting)) {
+			for (const key of supportedHeatEmittingItems) {
 				const heatEmittingSection = screen.getByTestId(key);
 
 				const editLink: HTMLAnchorElement = within(heatEmittingSection).getByText(
@@ -698,15 +681,21 @@ describe("Heating and cooling systems summary page", () => {
 			},
 		};
 
-		it("displays 'No cooling added' and link to cooling overview page when no data exists", async () => {
+		it("should contain the correct tabs for air conditioning systems", async () => {
 			await renderSuspended(heatingAndCoolingSystemsSummary);
 
-			expect(screen.getByText("No cooling added")).not.toBeNull();
-			const addHeatEmittingLink: HTMLAnchorElement = screen.getByRole("link", {
-				name: "Add cooling",
+			expect(screen.getByRole("link", { name: "Air conditioning systems" }));
+		});
+
+		it("displays 'No air conditioning systems added' and link to create air conditioning item when no data exists", async () => {
+			await renderSuspended(heatingAndCoolingSystemsSummary);
+
+			expect(screen.getByText("No air conditioning systems added")).not.toBeNull();
+			const addAirConditioningLink: HTMLAnchorElement = screen.getByRole("link", {
+				name: "Add air conditioning system",
 			});
-			expect(new URL(addHeatEmittingLink.href).pathname).toBe(
-				getUrl("cooling"),
+			expect(new URL(addAirConditioningLink.href).pathname).toBe(
+				getUrl("airConditioningCreate"),
 			);
 		});
 
