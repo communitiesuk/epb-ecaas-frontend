@@ -299,6 +299,7 @@ describe("ceilings and roofs", () => {
           numberOpenableParts: "0",
           openingToFrameRatio: 0.2,
           curtainsOrBlinds: false,
+          securityRisk: false
         },
         complete: true,
       };
@@ -331,6 +332,7 @@ describe("ceilings and roofs", () => {
           midHeightOpenablePart1: 2,
           heightOpenableArea: 1,
           maximumOpenableArea: 1,
+          securityRisk: false
         },
       };
       store.$patch({
