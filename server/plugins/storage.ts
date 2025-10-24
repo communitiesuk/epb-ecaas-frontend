@@ -15,8 +15,8 @@ export default defineNitroPlugin(() => {
       async getItem(key, _opts) {
         return getSessionData(key);
       },
-      async setItem(key, value, _opts) {
-        return setSessionData(key, value);
+      async setItem(key, value, opts) {
+        return setSessionData(key, value, opts.ttl);
       },
       // async removeItem(key, _opts) {},
       async getKeys(_base, _opts) {
