@@ -32,9 +32,7 @@ describe("PV and electric batteries summary page", () => {
 		
 		it("displays the pv systems tab", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
-			expect(
-				screen.getByRole("link", { name: "PV systems" }),
-			).not.toBeNull();
+			expect(screen.getByRole("link", { name: "PV systems" })).not.toBeNull();
 		});
 
 		it("displays an empty tab state when no data is present", async () => {
@@ -102,15 +100,13 @@ describe("PV and electric batteries summary page", () => {
 		
 		it("displays the battery tab", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
-			expect(
-				screen.getByRole("link", { name: "Electric battery" }),
-			).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Electric batteries" })).not.toBeNull();
 		});
 
 		it("displays an empty tab state when no data is present", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
         
-			expect(screen.getByText("No electric battery added")).not.toBeNull();
+			expect(screen.getByText("No electric batteries added")).not.toBeNull();
             
 			const addPVSystemsLink: HTMLAnchorElement = screen.getByRole("link", {
 				name: "Add electric battery",
@@ -156,15 +152,13 @@ describe("PV and electric batteries summary page", () => {
 
 		it("displays the diverter tab", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
-			expect(
-				screen.getByRole("link", { name: "Diverters" }),
-			).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Diverters" })).not.toBeNull();
 		});
 
 		it("displays an empty tab state when no data is present", async () => {
 			await renderSuspended(PVAndElectricBatteriesSummary);
 
-			expect(screen.getByText("No diverter added")).not.toBeNull();
+			expect(screen.getByText("No diverters added")).not.toBeNull();
 
 			const addPVSystemsLink: HTMLAnchorElement = screen.getByRole("link", {
 				name: "Add diverter",

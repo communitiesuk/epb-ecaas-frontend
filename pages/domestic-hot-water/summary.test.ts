@@ -74,15 +74,15 @@ describe("Domestic hot water summary", () => {
 		it("should contain the correct tabs for water heating section", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.queryByRole("link", { name: "Hot water cylinder" })).toBeDefined();
-			expect(screen.queryByRole("link", { name: "Immersion heater" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Hot water cylinders" })).not.toBeNull();
+			expect(screen.queryByRole("link", { name: "Immersion heaters" })).toBeNull();
 			expect(screen.queryByRole("link", { name: "Solar thermal" })).toBeNull();
 			expect(screen.queryByRole("link", { name: "Point of use" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Heat pump" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Combi boiler" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Heat battery" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Smart hot water tank" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Heat interface unit" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Heat pumps" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Combi boilers" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Heat batteries" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Smart hot water tanks" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Heat interface units" })).toBeNull();
 		});
 
 		it("displays 'No hot water cylinders added' and link to create hot water cylinder when no data exists", async () => {
@@ -213,10 +213,10 @@ describe("Domestic hot water summary", () => {
 		it("should contain the correct tabs for hot water outlets", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Mixer shower" })).toBeDefined();
-			expect(screen.getByRole("link", { name: "Electric shower" })).toBeDefined();
-			expect(screen.getByRole("link", { name: "Bath" })).toBeDefined();
-			expect(screen.getByRole("link", { name: "Other" })).toBeDefined();
+			expect(screen.getByRole("link", { name: "Mixer showers" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Electric showers" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Baths" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Other" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the mixer shower section", async () => {
@@ -351,8 +351,8 @@ describe("Domestic hot water summary", () => {
 		it("should contain the correct tabs for pipework details", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Primary pipework" })).toBeDefined();
-			expect(screen.getByRole("link", { name: "Secondary pipework" })).toBeDefined();
+			expect(screen.getByRole("link", { name: "Primary pipework" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Secondary pipework" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the primary pipework section", async () => {

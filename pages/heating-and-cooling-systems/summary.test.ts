@@ -202,12 +202,12 @@ describe("Heating and cooling systems summary page", () => {
 
 		it("should contain the correct tabs for heat generation section", async () => {
 			await renderSuspended(heatingAndCoolingSystemsSummary);
-			expect(screen.getByRole("link", { name: "Heat pump" })).not.toBeNull();
-			// expect(screen.getByRole("link", { name: "Boiler" })).not.toBeNull();
-			// expect(screen.getByRole("link", { name: "Heat battery" })).not.toBeNull();
-			// expect(screen.getByRole("link", { name: "Heat network" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Heat pumps" })).not.toBeNull();
+			// expect(screen.getByRole("link", { name: "Boilers" })).not.toBeNull();
+			// expect(screen.getByRole("link", { name: "Heat batteries" })).not.toBeNull();
+			// expect(screen.getByRole("link", { name: "Heat networks" })).not.toBeNull();
 			// expect(
-			// 	screen.getByRole("link", { name: "Heat interface unit" })
+			// 	screen.getByRole("link", { name: "Heat interface units" })
 			// ).not.toBeNull();
 		});
 
@@ -416,10 +416,10 @@ describe("Heating and cooling systems summary page", () => {
 		it("should contain the correct tabs for heating emitting section", async () => {
 			await renderSuspended(heatingAndCoolingSystemsSummary);
 
-			expect(screen.getByRole("link", { name: "Wet distribution" }));
-			expect(screen.getByRole("link", { name: "Instant electric heater" }));
-			// expect(screen.getByRole("link", { name: "Electric storage heater" }));
-			// expect(screen.getByRole("link", { name: "Warm air heat pump" }));
+			expect(screen.getByRole("link", { name: "Wet distribution" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Instant electric heaters" })).not.toBeNull();
+			// expect(screen.getByRole("link", { name: "Electric storage heaters" })).not.toBeNull();
+			// expect(screen.getByRole("link", { name: "Warm air heat pumps" })).not.toBeNull();
 		});
 
 		it("displays 'No wet distribution added' and link to create wet distribution when no data exists", async () => {
@@ -541,7 +541,7 @@ describe("Heating and cooling systems summary page", () => {
 			const user = userEvent.setup();
 
 			await renderSuspended(heatingAndCoolingSystemsSummary);
-			const instantElectricHeaterTab = screen.getByRole("link", { name: "Instant electric heater" });
+			const instantElectricHeaterTab = screen.getByRole("link", { name: "Instant electric heaters" });
 			await user.click(instantElectricHeaterTab);
 			const instantElectricHeaterSummary = screen.getByTestId("instantElectricHeater");
 
@@ -684,7 +684,7 @@ describe("Heating and cooling systems summary page", () => {
 		it("should contain the correct tabs for air conditioning systems", async () => {
 			await renderSuspended(heatingAndCoolingSystemsSummary);
 
-			expect(screen.getByRole("link", { name: "Air conditioning systems" }));
+			expect(screen.getByRole("link", { name: "Air conditioning systems" })).not.toBeNull();
 		});
 
 		it("displays 'No air conditioning systems added' and link to create air conditioning item when no data exists", async () => {

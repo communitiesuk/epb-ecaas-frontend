@@ -56,19 +56,21 @@ const floorsData: FloorsData = {
 		}],
 	},
 	dwellingSpaceExposedFloor: {
-		data: [{ data: {
-			name: "Exposed Floor 1",
-			pitch: 0,
-			orientation: 0,
-			length: 0.5,
-			width: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			arealHeatCapacity: "Very light",
-			massDistributionClass: "I",
-		} }],
+		data: [{
+			data: {
+				name: "Exposed Floor 1",
+				pitch: 0,
+				orientation: 0,
+				length: 0.5,
+				width: 20,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				solarAbsorption: 0.1,
+				uValue: 1,
+				arealHeatCapacity: "Very light",
+				massDistributionClass: "I",
+			}
+		}],
 	},
 };
 
@@ -188,20 +190,20 @@ const doorsData: DoorsData = {
 	dwellingSpaceExternalUnglazedDoor: {
 		data: [{
 			data:
-					{
-						name: "External unglazed door 1",
-						pitchOption: "90",
-						pitch: 90,
-						orientation: 0,
-						height: 0.5,
-						width: 20,
-						elevationalHeight: 20,
-						surfaceArea: 10,
-						uValue: 1,
-						arealHeatCapacity: "Very light",
-						massDistributionClass: "I",
-						colour: "Intermediate",
-					},
+			{
+				name: "External unglazed door 1",
+				pitchOption: "90",
+				pitch: 90,
+				orientation: 0,
+				height: 0.5,
+				width: 20,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				uValue: 1,
+				arealHeatCapacity: "Very light",
+				massDistributionClass: "I",
+				colour: "Intermediate",
+			},
 		}],
 	},
 	dwellingSpaceExternalGlazedDoor: {
@@ -362,9 +364,9 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space floors", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Ground floor" }));
-			expect(screen.getByRole("link", { name: "Internal floor" }));
-			expect(screen.getByRole("link", { name: "Exposed floor" }));
+			expect(screen.getByRole("link", { name: "Ground floors" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Internal floors" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Exposed floors" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the ground floor section", async () => {
@@ -461,10 +463,10 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space walls", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "External wall" }));
-			expect(screen.getByRole("link", { name: "Internal wall" }));
-			expect(screen.getByRole("link", { name: "Wall to unheated space" }));
-			expect(screen.getByRole("link", { name: "Party wall" }));
+			expect(screen.getByRole("link", { name: "External walls" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Internal walls" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Walls to unheated spaces" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Party walls" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the external wall section", async () => {
@@ -586,8 +588,8 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space walls", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Ceiling" }));
-			expect(screen.getByRole("link", { name: "Roof" }));
+			expect(screen.getByRole("link", { name: "Ceilings" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Roofs" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the ceilings section", async () => {
@@ -675,9 +677,9 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space doors", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "External unglazed door" }));
-			expect(screen.getByRole("link", { name: "External glazed door" }));
-			expect(screen.getByRole("link", { name: "Internal door" }));
+			expect(screen.getByRole("link", { name: "External unglazed doors" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "External glazed doors" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Internal doors" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the external unglazed doors section", async () => {
@@ -775,7 +777,7 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space windows", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Windows" }));
+			expect(screen.getByRole("link", { name: "Windows" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the windows section", async () => {
@@ -825,8 +827,8 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space thermal bridges", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Linear thermal bridges" }));
-			expect(screen.getByRole("link", { name: "Point thermal bridges" }));
+			expect(screen.getByRole("link", { name: "Linear thermal bridges" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Point thermal bridges" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the linear thermal bridges section", async () => {

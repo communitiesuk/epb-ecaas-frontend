@@ -31,7 +31,7 @@ const pvSummary: SummarySection = {
 const electricBattery = store.pvAndBatteries.electricBattery.data;
 const batterySummary: SummarySection = {
 	id: "electricBattery",
-	label: "Electric battery",
+	label: "Electric batteries",
 	data: electricBattery.map(({ data: x }) => {
 		return {
 			"Name": x.name,
@@ -80,7 +80,7 @@ const diverterSummary: SummarySection = {
 	<GovTabs v-slot="tabProps" :items="getTabItems([batterySummary])">
 		<SummaryTab :summary="batterySummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
-				<h2 class="govuk-heading-m">No electric battery added</h2>
+				<h2 class="govuk-heading-m">No electric batteries added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
 					Add electric battery
 				</NuxtLink>
@@ -90,7 +90,7 @@ const diverterSummary: SummarySection = {
 	<GovTabs v-slot="tabProps" :items="getTabItems([diverterSummary])">
 		<SummaryTab :summary="diverterSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
-				<h2 class="govuk-heading-m">No diverter added</h2>
+				<h2 class="govuk-heading-m">No diverters added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('pvAndBatteries')">
 					Add diverter
 				</NuxtLink>

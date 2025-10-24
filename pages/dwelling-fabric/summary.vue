@@ -36,7 +36,7 @@ const exposedFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceE
 
 const groundFloorSummary: SummarySection = {
 	id: "dwellingSpaceGroundFloors",
-	label: "Ground floor",
+	label: "Ground floors",
 	data: groundFloorData.map( ({ data: x }) => {
 		const isSlabEdgeInsulation = x.typeOfGroundFloor === "Slab_edge_insulation";
 		const edgeInsulationType =  "edgeInsulationType" in x ? (displayCamelToSentenceCase(show(x.edgeInsulationType))) : emptyValueRendering;
@@ -77,7 +77,7 @@ const groundFloorSummary: SummarySection = {
 
 const internalFloorSummary: SummarySection = {
 	id: "dwellingSpaceInternalFloors",
-	label: "Internal floor",
+	label: "Internal floors",
 	data: internalFloorData?.map(({ data: x }) => {
 		const isInternalFloorToUnheatedSpace = x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace;
 		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
@@ -96,7 +96,7 @@ const internalFloorSummary: SummarySection = {
 
 const exposedFloorSummary: SummarySection = {
 	id: "dwellingSpaceExposedFloors",
-	label: "Exposed floor",
+	label: "Exposed floors",
 	data: exposedFloorData?.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
@@ -126,7 +126,7 @@ const partyWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceParty
 
 const externalWallSummary: SummarySection = {
 	id: "dwellingSpaceExternalWalls",
-	label: "External wall",
+	label: "External walls",
 	data: externalWallData?.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
@@ -147,7 +147,7 @@ const externalWallSummary: SummarySection = {
 
 const internalWallSummary: SummarySection = {
 	id: "dwellingSpaceInternalWalls",
-	label: "Internal wall",
+	label: "Internal walls",
 	data: internalWallData?.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
@@ -162,7 +162,7 @@ const internalWallSummary: SummarySection = {
 
 const wallToUnheatedSpaceSummary: SummarySection = {
 	id: "dwellingSpaceUnheatedSpaceWalls",
-	label: "Wall to unheated space",
+	label: "Walls to unheated spaces",
 	data: wallToUnheatedSpaceData?.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
@@ -179,7 +179,7 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 
 const partyWallSummary: SummarySection = {
 	id: "dwellingSpacePartyWalls",
-	label: "Party wall",
+	label: "Party walls",
 	data: partyWallData?.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
@@ -205,7 +205,7 @@ const roofData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpac
 
 const ceilingSummary: SummarySection = {
 	id: "dwellingSpaceCeilings",
-	label: "Ceiling",
+	label: "Ceilings",
 	data: ceilingData.map(({ data: x }) => {
 		const isCeilingToUnheatedSpace = x.type === AdjacentSpaceType.unheatedSpace;
 		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
@@ -227,7 +227,7 @@ const ceilingSummary: SummarySection = {
 
 const roofSummary: SummarySection = {
 	id: "dwellingSpaceRoofs",
-	label: "Roof",
+	label: "Roofs",
 	data: roofData.filter(x => !!x.data).map(({ data: x }) => {
 		const isTypeOfRoofSelected = x.typeOfRoof != undefined; 
 		const isPitchedRoof = x.typeOfRoof === "pitchedInsulatedAtRoof" || x.typeOfRoof === "pitchedInsulatedAtCeiling";
@@ -267,7 +267,7 @@ const internalDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceIn
 
 const unglazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceUnglazedDoors",
-	label: "External unglazed door",
+	label: "External unglazed doors",
 	data: unglazedDoorData.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
@@ -288,7 +288,7 @@ const unglazedDoorSummary: SummarySection = {
 
 const glazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceGlazedDoors",
-	label: "External glazed door",
+	label: "External glazed doors",
 	data: glazedDoorData.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
@@ -308,7 +308,7 @@ const glazedDoorSummary: SummarySection = {
 
 const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
-	label: "Internal door",
+	label: "Internal doors",
 	data: internalDoorData?.map(({ data: x }) => {
 		const isInternalDoorToUnheatedSpace = x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace;
 		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;

@@ -39,7 +39,7 @@ const heatGenerationUrl = "/heating-and-cooling-systems/heat-generation";
 const heatPumps = store.heatingAndCoolingSystems.heatGeneration.heatPump.data;
 const heatPumpSummary: SummarySection = {
 	id: "heatPump",
-	label: "Heat pump",
+	label: "Heat pumps",
 	data:
 		heatPumps.map((pump) => {
 			return {
@@ -53,7 +53,7 @@ const heatPumpSummary: SummarySection = {
 const boilers = store.heatingAndCoolingSystems.heatGeneration.boiler.data;
 const boilerSummary: SummarySection = {
 	id: "boiler",
-	label: "Boiler",
+	label: "Boilers",
 	data: boilers.map((boiler) => {
 		return {
 			Name: show(boiler.name),
@@ -65,7 +65,7 @@ const boilerSummary: SummarySection = {
 const batteries = store.heatingAndCoolingSystems.heatGeneration.heatBattery.data;
 const heatBatterySummary: SummarySection = {
 	id: "heatBattery",
-	label: "Heat battery",
+	label: "Heat batteries",
 	data: batteries.map((battery) => {
 		return {
 			Name: show(battery.name),
@@ -77,7 +77,7 @@ const heatBatterySummary: SummarySection = {
 const networks = store.heatingAndCoolingSystems.heatGeneration.heatNetwork.data;
 const heatNetworkSummary: SummarySection = {
 	id: "heatNetwork",
-	label: "Heat network",
+	label: "Heat networks",
 	data: networks.map((network) => {
 		return {
 			Name: show(network.name),
@@ -89,7 +89,7 @@ const heatNetworkSummary: SummarySection = {
 const units = store.heatingAndCoolingSystems.heatGeneration.heatInterfaceUnit.data;
 const heatInterfaceUnitSummary: SummarySection = {
 	id: "heatInterfaceUnit",
-	label: "Heat interface unit",
+	label: "Heat interface units",
 	data: units.map((unit) => {
 		return {
 			Name: show(unit.name),
@@ -156,7 +156,7 @@ const instantHeaters =
 	store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data;
 const instantElectricHeaterSummary: SummarySection = {
 	id: "instantElectricHeater",
-	label: "Instant electric heater",
+	label: "Instant electric heaters",
 	data: instantHeaters.map((instantHeater) => {
 		return {
 			Name: show(instantHeater.data.name),
@@ -171,7 +171,7 @@ const storageHeaters =
 	store.heatingAndCoolingSystems.heatEmitting.electricStorageHeater.data;
 const electricStorageHeaterSummary: SummarySection = {
 	id: "electricStorageHeater",
-	label: "Electric storage heater",
+	label: "Electric storage heaters",
 	data: storageHeaters.map((storageHeater) => {
 		return {
 			Name: show(storageHeater.name),
@@ -183,7 +183,7 @@ const electricStorageHeaterSummary: SummarySection = {
 const warmAirHeatPumps = store.heatingAndCoolingSystems.heatEmitting.warmAirHeatPump.data;
 const warmAirHeatPumpSummary: SummarySection = {
 	id: "warmAirHeatPump",
-	label: "Warm air heat pump",
+	label: "Warm air heat pumps",
 	data: warmAirHeatPumps.map((pump) => {
 		return {
 			Name: show(pump.name),

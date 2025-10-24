@@ -17,7 +17,7 @@ const heatGenerationData = [
 const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
 const hotWaterCylinderSummary: SummarySection = {
 	id: "hotWaterCylinder",
-	label: "Hot water cylinder",
+	label: "Hot water cylinders",
 	data: hotWaterCylinderData.map(d => {
 		return {
 			"Name": show(d.data.name),
@@ -32,7 +32,7 @@ const hotWaterCylinderSummary: SummarySection = {
 const immersionHeaterData = store.domesticHotWater.waterHeating.immersionHeater.data;
 const immersionHeaterSummary: SummarySection = {
 	id: "immersionHeater",
-	label: "Immersion heater",
+	label: "Immersion heaters",
 	data: immersionHeaterData.map(d => {
 		return {
 			"Name": show(d.name),
@@ -73,7 +73,7 @@ const pointOfUseSummary: SummarySection = {
 const heatPumpData = store.domesticHotWater.waterHeating.heatPump.data;
 const heatPumpSummary: SummarySection = {
 	id: "heatPump",
-	label: "Heat pump",
+	label: "Heat pumps",
 	data: heatPumpData.map(d => {
 		return {
 			"Name": show(d.data.name),
@@ -85,7 +85,7 @@ const heatPumpSummary: SummarySection = {
 const combiBoilerData = store.domesticHotWater.waterHeating.combiBoiler.data;
 const combiBoilerSummary: SummarySection = {
 	id: "combiBoiler",
-	label: "Combi boiler",
+	label: "Combi boilers",
 	data: combiBoilerData.map(d => {
 		return {
 			"Name": show(d.name),
@@ -97,7 +97,7 @@ const combiBoilerSummary: SummarySection = {
 const heatBatteryData = store.domesticHotWater.waterHeating.heatBattery.data;
 const heatBatterySummary: SummarySection = {
 	id: "heatBattery",
-	label: "Heat battery",
+	label: "Heat batteries",
 	data: heatBatteryData.map(d => {
 		return {
 			"Name": show(d.name),
@@ -109,7 +109,7 @@ const heatBatterySummary: SummarySection = {
 const smartHotWaterTankData = store.domesticHotWater.waterHeating.smartHotWaterTank.data;
 const smartHotWaterTankSummary: SummarySection = {
 	id: "smartHotWaterTank",
-	label: "Smart hot water tank",
+	label: "Smart hot water tanks",
 	data: smartHotWaterTankData.map(d => {
 		return {
 			"Name": show(d.name),
@@ -121,7 +121,7 @@ const smartHotWaterTankSummary: SummarySection = {
 const heatInterfaceUnitData = store.domesticHotWater.waterHeating.heatInterfaceUnit.data;
 const heatInterfaceUnitSummary: SummarySection = {
 	id: "heatInterfaceUnit",
-	label: "Heat interface unit",
+	label: "Heat interface units",
 	data: heatInterfaceUnitData.map(d => {
 		return {
 			"Name": show(d.name),
@@ -145,7 +145,7 @@ const waterHeatingSummarySections: SummarySection[] = [
 const mixedShowerData = store.domesticHotWater.hotWaterOutlets.mixedShower.data;
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
-	label: "Mixer shower",
+	label: "Mixer showers",
 	data: mixedShowerData.map(d => { 
 		return {
 			"Name": show(d.data.name),
@@ -158,7 +158,7 @@ const mixedShowerSummary: SummarySection = {
 const electricShowerData = store.domesticHotWater.hotWaterOutlets.electricShower.data;
 const electricShowerSummary: SummarySection = {
 	id: "electricShower",
-	label: "Electric shower",
+	label: "Electric showers",
 	data: electricShowerData.map(d => {   
 		return {
 			"Name": show(d.data.name),
@@ -171,7 +171,7 @@ const electricShowerSummary: SummarySection = {
 const bathData = store.domesticHotWater.hotWaterOutlets.bath.data;
 const bathSummary: SummarySection = {
 	id: "bath",
-	label: "Bath",
+	label: "Baths",
 	data: bathData.map(d => {
 		return {
 			"Name": show(d.data.name),
