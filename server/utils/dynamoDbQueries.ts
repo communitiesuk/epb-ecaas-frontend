@@ -26,18 +26,18 @@ export async function getSessionData(key: string): Promise<string | undefined> {
 }
 
 export async function setSessionData(
-  key: string,
-  value: string,
-  timeToLive: number | undefined
+	key: string,
+	value: string,
+	timeToLive: number | undefined,
 ) {
-  await docClient.send(
-    new PutCommand({
-      TableName: "sessions",
-      Item: {
-        session_id: key,
-        ecaas: value,
-        ...(timeToLive ? { ttl: timeToLive } : {}),
-      },
-    })
-  );
+	await docClient.send(
+		new PutCommand({
+			TableName: "sessions",
+			Item: {
+				session_id: key,
+				ecaas: value,
+				...(timeToLive ? { ttl: timeToLive } : {}),
+			},
+		}),
+	);
 }
