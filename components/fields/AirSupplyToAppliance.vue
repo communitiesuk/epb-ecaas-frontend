@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SchemaCombustionAirSupplySituation } from "~/schema/api-schema.types";
+import type { SchemaCombustionAirSupplySituation } from "~/schema/aliases";
 
 defineProps<{
 	id: string,

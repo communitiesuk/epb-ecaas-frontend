@@ -1,23 +1,8 @@
 import type {
-  SchemaBuildingElementAdjacentConditionedSpace,
-  SchemaBuildingElementAdjacentUnconditionedSpaceSimple,
-  SchemaBuildingElementOpaqueFhs,
-  SchemaBuildingElementTransparentFhs,
-  SchemaEdgeInsulationHorizontal,
-  SchemaThermalBridgingLinearFhs,
-  SchemaThermalBridgingPoint,
-} from "~/schema/api-schema.types";
-import type { BuildingElementGround } from "~/schema/aliases";
-import {
-  mapCeilingAndRoofData,
-  mapDoorData,
-  mapFloorData,
-  mapLightingData,
-  mapThermalBridgingData,
-  mapWallData,
-  mapWindowData,
-  mapZoneParametersData,
-} from "./dwellingFabricMapper";
+	SchemaEdgeInsulationHorizontal, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, BuildingElementGround, BuildingElementOfType,
+	SchemaLightingBulbs, 
+} from "~/schema/aliases";
+import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type {
   DwellingSpaceLightingData,
@@ -26,12 +11,10 @@ import type {
 import { centimetre, millimetre } from "../utils/units/length";
 import { unitValue } from "~/utils/units";
 
-type BuildingElementOpaque = SchemaBuildingElementOpaqueFhs;
-type BuildingElementAdjacentConditionedSpace =
-  SchemaBuildingElementAdjacentConditionedSpace;
-type BuildingElementAdjacentUnconditionedSpaceSimple =
-  SchemaBuildingElementAdjacentUnconditionedSpaceSimple;
-type BuildingElementTransparent = SchemaBuildingElementTransparentFhs;
+type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
+type BuildingElementAdjacentConditionedSpace = BuildingElementOfType<"BuildingElementAdjacentConditionedSpace">;
+type BuildingElementAdjacentUnconditionedSpaceSimple = BuildingElementOfType<"BuildingElementAdjacentUnconditionedSpace_Simple">;
+type BuildingElementTransparent = BuildingElementOfType<"BuildingElementTransparent">;
 
 const baseForm = {
   data: [],
@@ -39,605 +22,512 @@ const baseForm = {
 };
 
 describe("dwelling fabric mapper", () => {
-  const store = useEcaasStore();
+	const store = useEcaasStore();
 
-  afterEach(() => {
-    store.$reset();
-  });
+	afterEach(() => {
+		store.$reset();
+	});
 
-  it("maps zone parameters input state to FHS input request", () => {
-    // Arrange
-    const state: DwellingSpaceZoneParametersData = {
-      area: 10,
-      volume: 10,
-      // spaceHeatingSystemForThisZone: 'main 1',
-      spaceCoolingSystemForThisZone: [],
-      spaceHeatControlSystemForThisZone: [],
-    };
+	it("maps zone parameters input state to FHS input request", () => {
+		// Arrange
+		const state: DwellingSpaceZoneParametersData = {
+			area: 10,
+			volume: 10,
+			// spaceHeatingSystemForThisZone: 'main 1',
+			spaceCoolingSystemForThisZone: [],
+			spaceHeatControlSystemForThisZone: [],
+		};
 
-    store.$patch({
-      heatingSystems: {
-        heatEmitting: {
-          wetDistribution: {
-            ...baseForm,
-            data: [
-              {
-                ...baseForm,
-                data: { name: "radiator 1" },
-              },
-            ],
-          },
-          instantElectricHeater: {
-            ...baseForm,
-            data: [
-              {
-                ...baseForm,
-                data: {
-                  name: "ieh 1",
-                },
-              },
-            ],
-          },
-        },
-      },
-      dwellingFabric: {
-        dwellingSpaceZoneParameters: {
-          data: state,
-          complete: true,
-        },
-      },
-    });
+		store.$patch({
+			heatingSystems: {
+				heatEmitting: {
+					wetDistribution: {
+						...baseForm,
+						data: [{
+							...baseForm,
+							data: { name: "radiator 1" },
+						}],
+					},
+					instantElectricHeater: {
+						...baseForm,
+						data: [{
+							...baseForm,
+							data: {
+								name: "ieh 1",
+							},
+						}],
+					},
+				},
+			},
+			dwellingFabric: {
+				dwellingSpaceZoneParameters: {
+					data: state,
+					complete: true,
+				},
+			},
+		});
 
-    // Act
-    const fhsInputData = mapZoneParametersData(resolveState(store.$state));
+		// Act
+		const fhsInputData = mapZoneParametersData(resolveState(store.$state));
 
-    // Assert
-    expect(fhsInputData.Zone[defaultZoneName]?.area).toBe(state.area);
-    expect(fhsInputData.Zone[defaultZoneName]?.volume).toBe(state.volume);
-    expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toEqual([
-      "radiator 1",
-      "ieh 1",
-    ]);
-    expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatControl).toBe(
-      "livingroom"
-    );
-  });
+		// Assert
+		expect(fhsInputData.Zone[defaultZoneName]?.area).toBe(state.area);
+		expect(fhsInputData.Zone[defaultZoneName]?.volume).toBe(state.volume);
+		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toEqual(["radiator 1", "ieh 1"]);
+		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatControl).toBe("livingroom");
+	});
 
-  it("maps lighting input state to FHS input request", () => {
-    // Arrange
-    const state: DwellingSpaceLightingData = {
-      numberOfLEDBulbs: 5,
-      numberOfIncandescentBulbs: 0,
-    };
+	it("maps lighting input state to FHS input request", () => {
+		// Arrange
+		const state: DwellingSpaceLightingData = {
+			numberOfLEDBulbs: 5,
+			numberOfIncandescentBulbs: 0,
+		};
 
-    store.$patch({
-      dwellingFabric: {
-        dwellingSpaceLighting: {
-          data: state,
-          complete: true,
-        },
-      },
-    });
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceLighting: {
+					data: state,
+					complete: true,
+				},
+			},
+		});
 
-    // Act
-    const fhsInputData = mapLightingData(resolveState(store.$state));
+		// Act
+		const fhsInputData = mapLightingData(resolveState(store.$state));
 
-    // Assert
-    expect(
-      fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs?.led?.count
-    ).toBe(state.numberOfLEDBulbs);
-    expect(
-      fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs?.incandescent
-    ).toBeUndefined();
-  });
+		const bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs as SchemaLightingBulbs;
 
-  it("maps floor input state to FHS input request", () => {
-    // Arrange
-    const groundFloor: GroundFloorData = {
-      name: "Ground 1",
-      surfaceArea: 5,
-      pitch: 180,
-      uValue: 1,
-      thermalResistance: 1,
-      kappaValue: 50000,
-      massDistributionClass: "I",
-      perimeter: 0,
-      psiOfWallJunction: 0,
-      thicknessOfWalls: 30,
-      typeOfGroundFloor: "Slab_no_edge_insulation",
-    };
+		// Assert
+		expect(bulbs.led?.count).toBe(state.numberOfLEDBulbs);
+		expect(bulbs.incandescent).toBeUndefined();
+	});
 
-    const groundFloorWithEdgeInsulation: GroundFloorData = {
-      ...groundFloor,
-      name: "Ground 2",
-      typeOfGroundFloor: "Slab_edge_insulation",
-      edgeInsulationType: "horizontal",
-      edgeInsulationWidth: unitValue(36, centimetre),
-      edgeInsulationThermalResistance: 0,
-    };
+	it("maps floor input state to FHS input request", () => {
+		// Arrange
+		const groundFloor: GroundFloorData = {
+			name: "Ground 1",
+			surfaceArea: 5,
+			pitch: 180,
+			uValue: 1,
+			thermalResistance: 1,
+			kappaValue: 50000,
+			massDistributionClass: "I",
+			perimeter: 0,
+			psiOfWallJunction: 0,
+			thicknessOfWalls: 30,
+			typeOfGroundFloor: "Slab_no_edge_insulation",
+		};
 
-    const groundFloorWithSuspendedFloor: GroundFloorData = {
-      ...groundFloor,
-      name: "Ground 3",
-      typeOfGroundFloor: "Suspended_floor",
-      heightOfFloorUpperSurface: 100,
-      underfloorSpaceThermalResistance: 1,
-      thermalTransmittanceOfWallsAboveGround: 1,
-      ventilationOpeningsArea: 100,
-      windShieldingFactor: "Average",
-    };
+		const groundFloorWithEdgeInsulation: GroundFloorData = {
+			...groundFloor,
+			name: "Ground 2",
+			typeOfGroundFloor: "Slab_edge_insulation",
+			edgeInsulationType: "horizontal",
+			edgeInsulationWidth: unitValue(36, centimetre),
+			edgeInsulationThermalResistance: 0,
+		};
 
-    const groundFloorWithHeatedBasement: GroundFloorData = {
-      ...groundFloor,
-      name: "Ground 4",
-      typeOfGroundFloor: "Heated_basement",
-      depthOfBasementFloorBelowGround: 1,
-      thermalResistanceOfBasementWalls: 1,
-    };
+		const groundFloorWithSuspendedFloor: GroundFloorData = {
+			...groundFloor,
+			name: "Ground 3",
+			typeOfGroundFloor: "Suspended_floor",
+			heightOfFloorUpperSurface: 100,
+			underfloorSpaceThermalResistance: 1,
+			thermalTransmittanceOfWallsAboveGround: 1,
+			ventilationOpeningsArea: 100,
+			windShieldingFactor: "Average",
+		};
 
-    const groundFloorWithUnheatedBasement: GroundFloorData = {
-      ...groundFloor,
-      name: "Ground 5",
-      typeOfGroundFloor: "Unheated_basement",
-      thermalTransmittanceOfFloorAboveBasement: 1,
-      thermalTransmittanceOfWallsAboveGround: 1,
-      depthOfBasementFloorBelowGround: 1,
-      heightOfBasementWallsAboveGround: 1,
-      thermalResistanceOfBasementWalls: 2.5,
-    };
+		const groundFloorWithHeatedBasement: GroundFloorData = {
+			...groundFloor,
+			name: "Ground 4",
+			typeOfGroundFloor: "Heated_basement",
+			depthOfBasementFloorBelowGround: 1,
+			thermalResistanceOfBasementWalls: 1,
+		};
 
-    const internalFloor: InternalFloorData = {
-      typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
-      name: "Internal 1",
-      surfaceAreaOfElement: 5,
-      kappaValue: 50000,
-      massDistributionClass: "I",
-      thermalResistanceOfAdjacentUnheatedSpace: 1,
-    };
+		const groundFloorWithUnheatedBasement: GroundFloorData = {
+			...groundFloor,
+			name: "Ground 5",
+			typeOfGroundFloor: "Unheated_basement",
+			thermalTransmittanceOfFloorAboveBasement: 1,
+			thermalTransmittanceOfWallsAboveGround: 1,
+			depthOfBasementFloorBelowGround: 1,
+			heightOfBasementWallsAboveGround: 1,
+			thermalResistanceOfBasementWalls: 2.5,
+		};
 
-    const exposedFloor: ExposedFloorData = {
-      name: "Exposed Floor 1",
-      pitch: 180,
-      orientation: 0,
-      length: 0.5,
-      width: 20,
-      elevationalHeight: 20,
-      surfaceArea: 10,
-      solarAbsorption: 0.1,
-      uValue: 1,
-      kappaValue: 50000,
-      massDistributionClass: "I",
-    };
+		const internalFloor: InternalFloorData = {
+			typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
+			name: "Internal 1",
+			surfaceAreaOfElement: 5,
+			kappaValue: 50000,
+			massDistributionClass: "I",
+			thermalResistanceOfAdjacentUnheatedSpace: 1,
+		};
 
-    store.$patch({
-      dwellingFabric: {
-        dwellingSpaceFloors: {
-          dwellingSpaceGroundFloor: {
-            ...baseForm,
-            data: [
-              { ...baseForm, data: groundFloor },
-              { ...baseForm, data: groundFloorWithEdgeInsulation },
-              { ...baseForm, data: groundFloorWithSuspendedFloor },
-              { ...baseForm, data: groundFloorWithHeatedBasement },
-              { ...baseForm, data: groundFloorWithUnheatedBasement },
-            ],
-          },
-          dwellingSpaceInternalFloor: {
-            ...baseForm,
-            data: [{ ...baseForm, data: internalFloor }],
-          },
-          dwellingSpaceExposedFloor: {
-            ...baseForm,
-            data: [{ ...baseForm, data: exposedFloor }],
-          },
-        },
-      },
-    });
+		const exposedFloor: ExposedFloorData = {
+			name: "Exposed Floor 1",
+			pitch: 180,
+			orientation: 0,
+			length: 0.5,
+			width: 20,
+			elevationalHeight: 20,
+			surfaceArea: 10,
+			solarAbsorption: 0.1,
+			uValue: 1,
+			kappaValue: 50000,
+			massDistributionClass: "I",
+		};
 
-    const groundFloorsTotalArea =
-      store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data
-        .length * groundFloor.surfaceArea;
-    const floorSuffix = " (floor)";
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceFloors: {
+					dwellingSpaceGroundFloor: {
+						...baseForm,
+						data: [
+							{ ...baseForm, data: groundFloor },
+							{ ...baseForm, data: groundFloorWithEdgeInsulation },
+							{ ...baseForm, data: groundFloorWithSuspendedFloor },
+							{ ...baseForm, data: groundFloorWithHeatedBasement },
+							{ ...baseForm, data: groundFloorWithUnheatedBasement },			
+						],
+					},
+					dwellingSpaceInternalFloor: { ...baseForm, data: [{ ...baseForm, data: internalFloor }] },
+					dwellingSpaceExposedFloor: { ...baseForm, data: [{ ...baseForm, data: exposedFloor }] },
+				},
+			},
+		});
 
-    // Act
-    const fhsInputData = mapFloorData(resolveState(store.$state));
+		const groundFloorsTotalArea = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data.length * groundFloor.surfaceArea;
+		const floorSuffix = " (floor)";
 
-    // Assert
-    const groundFloorElement = fhsInputData.Zone[defaultZoneName]!
-      .BuildingElement[
-      groundFloor.name + floorSuffix
-    ]! as BuildingElementGround;
-    const groundFloorWithEdgeInsulationElement = fhsInputData.Zone[
-      defaultZoneName
-    ]!.BuildingElement[
-      groundFloorWithEdgeInsulation.name + floorSuffix
-    ]! as BuildingElementGround;
-    const groundFloorWithSuspendedFloorElement = fhsInputData.Zone[
-      defaultZoneName
-    ]!.BuildingElement[
-      groundFloorWithSuspendedFloor.name + floorSuffix
-    ]! as BuildingElementGround;
-    const groundFloorWithHeatedBasementElement = fhsInputData.Zone[
-      defaultZoneName
-    ]!.BuildingElement[
-      groundFloorWithHeatedBasement.name + floorSuffix
-    ]! as BuildingElementGround;
-    const groundFloorWithUnheatedBasementElement = fhsInputData.Zone[
-      defaultZoneName
-    ]!.BuildingElement[
-      groundFloorWithUnheatedBasement.name + floorSuffix
-    ]! as BuildingElementGround;
-    const internalFloorElement = fhsInputData.Zone[defaultZoneName]!
-      .BuildingElement[
-      internalFloor.name + floorSuffix
-    ] as BuildingElementAdjacentUnconditionedSpaceSimple;
-    const exposedFloorElement = fhsInputData.Zone[defaultZoneName]!
-      .BuildingElement[
-      exposedFloor.name + floorSuffix
-    ] as BuildingElementOpaque;
+		// Act
+		const fhsInputData = mapFloorData(resolveState(store.$state));
 
-    expect(fhsInputData.GroundFloorArea).toBe(groundFloorsTotalArea);
+		// Assert
+		const groundFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloor.name + floorSuffix]! as BuildingElementGround;
+		const groundFloorWithEdgeInsulationElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithEdgeInsulation.name + floorSuffix]! as BuildingElementGround;
+		const groundFloorWithSuspendedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithSuspendedFloor.name + floorSuffix]! as BuildingElementGround;
+		const groundFloorWithHeatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithHeatedBasement.name + floorSuffix]! as BuildingElementGround;
+		const groundFloorWithUnheatedBasementElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[groundFloorWithUnheatedBasement.name + floorSuffix]! as BuildingElementGround;
+		const internalFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalFloor.name + floorSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const exposedFloorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[exposedFloor.name + floorSuffix] as BuildingElementOpaque;
 
-    const expectedGroundFloor: BuildingElementGround = {
-      type: "BuildingElementGround",
-      area: groundFloor.surfaceArea,
-      total_area: groundFloor.surfaceArea,
-      pitch: groundFloor.pitch,
-      u_value: groundFloor.uValue,
-      thermal_resistance_floor_construction: groundFloor.thermalResistance,
-      areal_heat_capacity: groundFloor.kappaValue,
-      mass_distribution_class: groundFloor.massDistributionClass,
-      perimeter: groundFloor.perimeter,
-      psi_wall_floor_junc: groundFloor.psiOfWallJunction,
-      thickness_walls: groundFloor.thicknessOfWalls / 1000,
-      floor_type: groundFloor.typeOfGroundFloor,
-    };
+		expect(fhsInputData.GroundFloorArea).toBe(groundFloorsTotalArea);
 
-    expect(groundFloorElement).toEqual(expectedGroundFloor);
+		const expectedGroundFloor: BuildingElementGround = {
+			type: "BuildingElementGround",
+			area: groundFloor.surfaceArea,
+			total_area: groundFloor.surfaceArea,
+			pitch: groundFloor.pitch,
+			u_value: groundFloor.uValue,
+			thermal_resistance_floor_construction: groundFloor.thermalResistance,
+			areal_heat_capacity: groundFloor.kappaValue,
+			mass_distribution_class: groundFloor.massDistributionClass,
+			perimeter: groundFloor.perimeter,
+			psi_wall_floor_junc: groundFloor.psiOfWallJunction,
+			thickness_walls: groundFloor.thicknessOfWalls / 1000,
+			floor_type: groundFloor.typeOfGroundFloor,
+		};
 
-    const expectedEdgeInsulation: SchemaEdgeInsulationHorizontal = {
-      type: "horizontal",
-      edge_thermal_resistance:
-        groundFloorWithEdgeInsulation.edgeInsulationThermalResistance,
-      width: 0.36,
-    };
+		expect(groundFloorElement).toEqual(expectedGroundFloor);
 
-    expect(groundFloorWithEdgeInsulationElement.edge_insulation![0]).toEqual(
-      expectedEdgeInsulation
-    );
+		const expectedEdgeInsulation: SchemaEdgeInsulationHorizontal = {
+			type: "horizontal",
+			edge_thermal_resistance: groundFloorWithEdgeInsulation.edgeInsulationThermalResistance,
+			width: 0.36,
+		};
 
-    const expectedGroundFloorSuspendedFloor: BuildingElementGround = {
-      ...expectedGroundFloor,
-      floor_type: groundFloorWithSuspendedFloor.typeOfGroundFloor,
-      height_upper_surface:
-        groundFloorWithSuspendedFloor.heightOfFloorUpperSurface / 1000,
-      thickness_walls: groundFloorWithSuspendedFloor.thicknessOfWalls / 1000,
-      thermal_resist_insul:
-        groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
-      thermal_transm_walls:
-        groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
-      area_per_perimeter_vent:
-        groundFloorWithSuspendedFloor.ventilationOpeningsArea / 1e6,
-      shield_fact_location: groundFloorWithSuspendedFloor.windShieldingFactor,
-    };
+		expect("edge_insulation" in groundFloorWithEdgeInsulationElement && groundFloorWithEdgeInsulationElement.edge_insulation).toEqual(expectedEdgeInsulation);
 
-    expect(groundFloorWithSuspendedFloorElement).toEqual(
-      expectedGroundFloorSuspendedFloor
-    );
+		const expectedGroundFloorSuspendedFloor: BuildingElementGround = {
+			...expectedGroundFloor,
+			floor_type: groundFloorWithSuspendedFloor.typeOfGroundFloor,
+			height_upper_surface: groundFloorWithSuspendedFloor.heightOfFloorUpperSurface / 1000,
+			thickness_walls: groundFloorWithSuspendedFloor.thicknessOfWalls / 1000,
+			thermal_resist_insul: groundFloorWithSuspendedFloor.underfloorSpaceThermalResistance,
+			thermal_transm_walls: groundFloorWithSuspendedFloor.thermalTransmittanceOfWallsAboveGround,
+			area_per_perimeter_vent: groundFloorWithSuspendedFloor.ventilationOpeningsArea / 1e6,
+			shield_fact_location: groundFloorWithSuspendedFloor.windShieldingFactor,
+		};
 
-    const expectedGroundFloorWithHeatedBasement: BuildingElementGround = {
-      ...expectedGroundFloor,
-      floor_type: groundFloorWithHeatedBasement.typeOfGroundFloor,
-      depth_basement_floor:
-        groundFloorWithHeatedBasement.depthOfBasementFloorBelowGround,
-      thermal_resist_walls_base:
-        groundFloorWithHeatedBasement.thermalResistanceOfBasementWalls,
-    };
+		expect(groundFloorWithSuspendedFloorElement).toEqual(expectedGroundFloorSuspendedFloor);
 
-    expect(groundFloorWithHeatedBasementElement).toEqual(
-      expectedGroundFloorWithHeatedBasement
-    );
+		const expectedGroundFloorWithHeatedBasement: BuildingElementGround = {
+			...expectedGroundFloor,
+			floor_type: groundFloorWithHeatedBasement.typeOfGroundFloor,
+			depth_basement_floor: groundFloorWithHeatedBasement.depthOfBasementFloorBelowGround,
+			thermal_resist_walls_base: groundFloorWithHeatedBasement.thermalResistanceOfBasementWalls,
+		};
 
-    const expectedGroundFloorWithUnheatedBasement: BuildingElementGround = {
-      ...expectedGroundFloor,
-      floor_type: groundFloorWithUnheatedBasement.typeOfGroundFloor,
-      thermal_transm_envi_base:
-        groundFloorWithUnheatedBasement.thermalTransmittanceOfFloorAboveBasement,
-      height_basement_walls:
-        groundFloorWithUnheatedBasement.heightOfBasementWallsAboveGround,
-      thermal_transm_walls:
-        groundFloorWithUnheatedBasement.thermalTransmittanceOfWallsAboveGround,
-      depth_basement_floor:
-        groundFloorWithUnheatedBasement.depthOfBasementFloorBelowGround,
-      thermal_resist_walls_base:
-        groundFloorWithUnheatedBasement.thermalResistanceOfBasementWalls,
-    };
+		expect(groundFloorWithHeatedBasementElement).toEqual(expectedGroundFloorWithHeatedBasement);
 
-    expect(groundFloorWithUnheatedBasementElement).toEqual(
-      expectedGroundFloorWithUnheatedBasement
-    );
+		const expectedGroundFloorWithUnheatedBasement: BuildingElementGround = {
+			...expectedGroundFloor,
+			floor_type: groundFloorWithUnheatedBasement.typeOfGroundFloor,
+			thermal_transm_envi_base: groundFloorWithUnheatedBasement.thermalTransmittanceOfFloorAboveBasement,
+			height_basement_walls: groundFloorWithUnheatedBasement.heightOfBasementWallsAboveGround,
+			thermal_transm_walls: groundFloorWithUnheatedBasement.thermalTransmittanceOfWallsAboveGround,
+			depth_basement_floor: groundFloorWithUnheatedBasement.depthOfBasementFloorBelowGround,
+			thermal_resist_walls_base: groundFloorWithUnheatedBasement.thermalResistanceOfBasementWalls,
+		};
 
-    const expectedInternalFloor: BuildingElementAdjacentUnconditionedSpaceSimple =
-      {
-        type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-        area: internalFloor.surfaceAreaOfElement,
-        pitch: 180,
-        u_value: 0.01,
-        areal_heat_capacity: internalFloor.kappaValue,
-        mass_distribution_class: internalFloor.massDistributionClass,
-        thermal_resistance_unconditioned_space:
-          internalFloor.thermalResistanceOfAdjacentUnheatedSpace,
-      };
+		expect(groundFloorWithUnheatedBasementElement).toEqual(expectedGroundFloorWithUnheatedBasement);
 
-    expect(internalFloorElement).toEqual(expectedInternalFloor);
+		const expectedInternalFloor: BuildingElementAdjacentUnconditionedSpaceSimple = {
+			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+			area: internalFloor.surfaceAreaOfElement,
+			pitch: 180,
+			u_value: 0.01,
+			areal_heat_capacity: internalFloor.kappaValue,
+			mass_distribution_class: internalFloor.massDistributionClass,
+			thermal_resistance_unconditioned_space: internalFloor.thermalResistanceOfAdjacentUnheatedSpace,
+		};
 
-    const expectedExposedFloor: BuildingElementOpaque = {
-      type: "BuildingElementOpaque",
-      area: exposedFloor.surfaceArea,
-      height: exposedFloor.length,
-      width: exposedFloor.width,
-      base_height: exposedFloor.elevationalHeight,
-      solar_absorption_coeff: exposedFloor.solarAbsorption,
-      pitch: exposedFloor.pitch,
-      u_value: exposedFloor.uValue,
-      areal_heat_capacity: exposedFloor.kappaValue,
-      mass_distribution_class: exposedFloor.massDistributionClass,
-      orientation360: exposedFloor.orientation,
-      is_external_door: false,
-    };
+		expect(internalFloorElement).toEqual(expectedInternalFloor);
 
-    expect(exposedFloorElement).toEqual(expectedExposedFloor);
-  });
+		const expectedExposedFloor: BuildingElementOpaque = {
+			type: "BuildingElementOpaque",
+			area: exposedFloor.surfaceArea,
+			height: exposedFloor.length,
+			width: exposedFloor.width,
+			base_height: exposedFloor.elevationalHeight,
+			solar_absorption_coeff: exposedFloor.solarAbsorption,
+			pitch: exposedFloor.pitch,
+			u_value: exposedFloor.uValue,
+			areal_heat_capacity: exposedFloor.kappaValue,
+			mass_distribution_class: exposedFloor.massDistributionClass,
+			orientation360: exposedFloor.orientation,
+			is_external_door: false,
+		};
 
-  it("maps wall input state to FHS input request", () => {
-    // Arrange
-    const externalWall: EcaasForm<ExternalWallData> = {
-      ...baseForm,
-      data: {
-        id: "a17babcd-e2dc-4ab0-a4ab-99e9946372bc",
-        name: "External wall 1",
-        pitchOption: "90",
-        pitch: 90,
-        orientation: 0,
-        length: 20,
-        height: 0.5,
-        elevationalHeight: 20,
-        surfaceArea: 10,
-        solarAbsorption: 0.1,
-        uValue: 1,
-        kappaValue: 50000,
-        massDistributionClass: "I",
-      },
-    };
+		expect(exposedFloorElement).toEqual(expectedExposedFloor);
+	});
 
-    const internalWall: EcaasForm<InternalWallData> = {
-      ...baseForm,
-      data: {
-        id: "a51c8dfa-07de-4d5d-a36c-2b72e30fca74",
-        name: "Internal 1",
-        surfaceAreaOfElement: 5,
-        kappaValue: 50000,
-        massDistributionClass: "I",
-        pitchOption: "90",
-        pitch: 90,
-      },
-    };
+	it("maps wall input state to FHS input request", () => {
+		// Arrange
+		const externalWall: EcaasForm<ExternalWallData> = {
+			...baseForm,
+			data: {
+        id: "ex-id",
+				name: "External wall 1",
+				pitchOption: "90",
+				pitch: 90,
+				orientation: 0,
+				length: 20,
+				height: 0.5,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				solarAbsorption: 0.1,
+				uValue: 1,
+				kappaValue: 50000,
+				massDistributionClass: "I",
+			},
+		};
 
-    const partyWall: EcaasForm<PartyWallData> = {
-      ...baseForm,
-      data: {
-        id: "9a6b8c45-08b1-4bb1-b454-340fd7267696",
-        name: "Party wall 1",
-        pitchOption: "90",
-        pitch: 90,
-        surfaceArea: 10,
-        uValue: 1,
-        kappaValue: 50000,
-        massDistributionClass: "I",
-      },
-    };
+		const internalWall: EcaasForm<InternalWallData> = {
+			...baseForm,
+			data: {
+        id: "in-id",
+				name: "Internal 1",
+				surfaceAreaOfElement: 5,
+				kappaValue: 50000,
+				massDistributionClass: "I",
+				pitchOption: "90",
+				pitch: 90,
+			},
+		};
 
-    const wallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData> = {
-      ...baseForm,
-      data: {
-        id: "e527893a-480b-42d6-abe4-585e09d9c219",
-        name: "Wall to unheated space 1",
-        surfaceAreaOfElement: 500,
-        uValue: 10,
-        arealHeatCapacity: 50000,
-        massDistributionClass: "E",
-        pitchOption: "90",
-        pitch: 90,
-        thermalResistanceOfAdjacentUnheatedSpace: 1,
-      },
-    };
+		const partyWall: EcaasForm<PartyWallData> = {
+			...baseForm,
+			data: {
+        id: "party-id",
+				name: "Party wall 1",
+				pitchOption: "90",
+				pitch: 90,
+				surfaceArea: 10,
+				uValue: 1,
+				kappaValue: 50000,
+				massDistributionClass: "I",
+			},
+		};
 
-    const wallSuffix = " (wall)";
+		const wallToUnheatedSpace: EcaasForm<WallsToUnheatedSpaceData> = {
+			...baseForm,
+			data: {
+        id: "unheated-id",
+				name: "Wall to unheated space 1",
+				surfaceAreaOfElement: 500,
+				uValue: 10,
+				arealHeatCapacity: 50000,
+				massDistributionClass: "E",
+				pitchOption: "90",
+				pitch: 90,
+				thermalResistanceOfAdjacentUnheatedSpace: 1,
+			},
+		};
 
-    store.$patch({
-      dwellingFabric: {
-        dwellingSpaceWalls: {
-          dwellingSpaceExternalWall: { ...baseForm, data: [externalWall] },
-          dwellingSpaceInternalWall: { ...baseForm, data: [internalWall] },
-          dwellingSpacePartyWall: { ...baseForm, data: [partyWall] },
-          dwellingSpaceWallToUnheatedSpace: {
-            ...baseForm,
-            data: [wallToUnheatedSpace],
-          },
-        },
-      },
-    });
+		const wallSuffix = " (wall)";
 
-    // Act
-    const fhsInputData = mapWallData(resolveState(store.$state));
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: { ...baseForm, data: [externalWall] },
+					dwellingSpaceInternalWall: { ...baseForm, data: [internalWall] },
+					dwellingSpacePartyWall: { ...baseForm, data: [partyWall] },
+					dwellingSpaceWallToUnheatedSpace: { ...baseForm, data: [wallToUnheatedSpace] },
+				},
+			},
+		});
 
-    // Assert
-    const externalWallElement = fhsInputData.Zone[defaultZoneName]!
-      .BuildingElement[
-      externalWall.data.name + wallSuffix
-    ]! as BuildingElementOpaque;
-    const internalWallElement = fhsInputData.Zone[defaultZoneName]!
-      .BuildingElement[
-      internalWall.data.name + wallSuffix
-    ]! as BuildingElementAdjacentConditionedSpace;
-    const partyWallElement = fhsInputData.Zone[defaultZoneName]!
-      .BuildingElement[
-      partyWall.data.name + wallSuffix
-    ]! as BuildingElementOpaque;
-    const wallToUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!
-      .BuildingElement[
-      wallToUnheatedSpace.data.name + wallSuffix
-    ] as BuildingElementAdjacentUnconditionedSpaceSimple;
+		// Act
+		const fhsInputData = mapWallData(resolveState(store.$state));
 
-    const expectedExternalWall: BuildingElementOpaque = {
-      type: "BuildingElementOpaque",
-      pitch: externalWall.data.pitch!,
-      orientation360: externalWall.data.orientation,
-      height: externalWall.data.height,
-      width: externalWall.data.length,
-      base_height: externalWall.data.elevationalHeight,
-      area: externalWall.data.surfaceArea,
-      solar_absorption_coeff: externalWall.data.solarAbsorption,
-      u_value: externalWall.data.uValue,
-      areal_heat_capacity: externalWall.data.kappaValue,
-      mass_distribution_class: externalWall.data.massDistributionClass,
-      is_external_door: false,
-    };
+		// Assert
+		const externalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalWall.data.name + wallSuffix]! as BuildingElementOpaque;
+		const internalWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalWall.data.name + wallSuffix]! as BuildingElementAdjacentConditionedSpace;
+		const partyWallElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[partyWall.data.name + wallSuffix]! as BuildingElementOpaque;
+		const wallToUnheatedSpaceElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[wallToUnheatedSpace.data.name + wallSuffix] as BuildingElementAdjacentUnconditionedSpaceSimple;
 
-    expect(externalWallElement).toEqual(expectedExternalWall);
+		const expectedExternalWall: BuildingElementOpaque = {
+			type: "BuildingElementOpaque",
+			pitch: externalWall.data.pitch!,
+			orientation360: externalWall.data.orientation,
+			height: externalWall.data.height,
+			width: externalWall.data.length,
+			base_height: externalWall.data.elevationalHeight,
+			area: externalWall.data.surfaceArea,
+			solar_absorption_coeff: externalWall.data.solarAbsorption,
+			u_value: externalWall.data.uValue,
+			areal_heat_capacity: externalWall.data.kappaValue,
+			mass_distribution_class: externalWall.data.massDistributionClass,
+			is_external_door: false,
+		};
 
-    const expectedInternalWall: BuildingElementAdjacentConditionedSpace = {
-      type: "BuildingElementAdjacentConditionedSpace",
-      pitch: internalWall.data.pitch!,
-      area: internalWall.data.surfaceAreaOfElement,
-      u_value: 0.01,
-      areal_heat_capacity: internalWall.data.kappaValue,
-      mass_distribution_class: internalWall.data.massDistributionClass,
-    };
+		expect(externalWallElement).toEqual(expectedExternalWall);
 
-    expect(internalWallElement).toEqual(expectedInternalWall);
+		const expectedInternalWall: BuildingElementAdjacentConditionedSpace = {
+			type: "BuildingElementAdjacentConditionedSpace",
+			pitch: internalWall.data.pitch!,
+			area: internalWall.data.surfaceAreaOfElement,
+			u_value: 0.01,
+			areal_heat_capacity: internalWall.data.kappaValue,
+			mass_distribution_class: internalWall.data.massDistributionClass,
+		};
 
-    const expectedPartyWall: BuildingElementAdjacentConditionedSpace = {
-      type: "BuildingElementAdjacentConditionedSpace",
-      pitch: partyWall.data.pitch!,
-      area: partyWall.data.surfaceArea,
-      u_value: partyWall.data.uValue,
-      areal_heat_capacity: partyWall.data.kappaValue,
-      mass_distribution_class: partyWall.data.massDistributionClass,
-    };
+		expect(internalWallElement).toEqual(expectedInternalWall);
 
-    expect(partyWallElement).toEqual(expectedPartyWall);
+		const expectedPartyWall: BuildingElementAdjacentConditionedSpace = {
+			type: "BuildingElementAdjacentConditionedSpace",
+			pitch: partyWall.data.pitch!,
+			area: partyWall.data.surfaceArea,
+			u_value: partyWall.data.uValue,
+			areal_heat_capacity: partyWall.data.kappaValue,
+			mass_distribution_class: partyWall.data.massDistributionClass,
+		};
 
-    const expectedWallToUnheatedSpace: BuildingElementAdjacentUnconditionedSpaceSimple =
-      {
-        type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-        pitch: wallToUnheatedSpace.data.pitch!,
-        area: wallToUnheatedSpace.data.surfaceAreaOfElement,
-        u_value: wallToUnheatedSpace.data.uValue,
-        areal_heat_capacity: wallToUnheatedSpace.data.arealHeatCapacity,
-        mass_distribution_class: wallToUnheatedSpace.data.massDistributionClass,
-        thermal_resistance_unconditioned_space:
-          wallToUnheatedSpace.data.thermalResistanceOfAdjacentUnheatedSpace,
-      };
+		expect(partyWallElement).toEqual(expectedPartyWall);
 
-    expect(wallToUnheatedSpaceElement).toEqual(expectedWallToUnheatedSpace);
-  });
+		const expectedWallToUnheatedSpace: BuildingElementAdjacentUnconditionedSpaceSimple = {
+			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+			pitch: wallToUnheatedSpace.data.pitch!,
+			area: wallToUnheatedSpace.data.surfaceAreaOfElement,
+			u_value: wallToUnheatedSpace.data.uValue,
+			areal_heat_capacity: wallToUnheatedSpace.data.arealHeatCapacity,
+			mass_distribution_class: wallToUnheatedSpace.data.massDistributionClass,
+			thermal_resistance_unconditioned_space: wallToUnheatedSpace.data.thermalResistanceOfAdjacentUnheatedSpace,
+		};
 
-  it("maps ceiling and roof input state to FHS input request", () => {
-    // Arrange
-    const ceiling: CeilingData = {
-      id: "71360137-9541-4596-973a-26870092753a",
-      type: AdjacentSpaceType.unheatedSpace,
-      name: "Ceiling 1",
-      surfaceArea: 5,
-      uValue: 1,
-      kappaValue: 50000,
-      massDistributionClass: "I",
-      pitchOption: "0",
-      pitch: 0,
-      thermalResistanceOfAdjacentUnheatedSpace: 1,
-    };
+		expect(wallToUnheatedSpaceElement).toEqual(expectedWallToUnheatedSpace);
+	});
 
-    const roof: RoofData = {
-      id: "ade61616-9cdd-4694-a4ee-322862bd5aff",
-      name: "Roof 1",
-      typeOfRoof: "flat",
-      pitchOption: "custom",
-      pitch: 0,
-      length: 1,
-      width: 1,
-      elevationalHeightOfElement: 2,
-      surfaceArea: 1,
-      solarAbsorptionCoefficient: 0.5,
-      uValue: 1,
-      kappaValue: 50000,
-      massDistributionClass: "I",
-    };
+	it("maps ceiling and roof input state to FHS input request", () => {
+		// Arrange
+		const ceiling: CeilingData = {
+      id: "ceiling-id",
+			type: AdjacentSpaceType.unheatedSpace,
+			name: "Ceiling 1",
+			surfaceArea: 5,
+			uValue: 1,
+			kappaValue: 50000,
+			massDistributionClass: "I",
+			pitchOption: "0",
+			pitch: 0,
+			thermalResistanceOfAdjacentUnheatedSpace: 1,
+		};
 
-    const ceilingSuffix = " (ceiling)";
-    const roofSuffix = " (roof)";
+		const roof: RoofData = {
+      id: "roof-id",
+			name: "Roof 1",
+			typeOfRoof: "flat",
+			pitchOption: "custom",
+			pitch: 0,
+			length: 1,
+			width: 1,
+			elevationalHeightOfElement: 2,
+			surfaceArea: 1,
+			solarAbsorptionCoefficient: 0.5,
+			uValue: 1,
+			kappaValue: 50000,
+			massDistributionClass: "I",
+		};
 
-    store.$patch({
-      dwellingFabric: {
-        dwellingSpaceCeilingsAndRoofs: {
-          dwellingSpaceCeilings: {
-            ...baseForm,
-            data: [{ ...baseForm, data: ceiling }],
-          },
-          dwellingSpaceRoofs: {
-            ...baseForm,
-            data: [{ ...baseForm, data: roof }],
-          },
-        },
-      },
-    });
+		const ceilingSuffix = " (ceiling)";
+		const roofSuffix = " (roof)";
 
-    // Act
-    const fhsInputData = mapCeilingAndRoofData(resolveState(store.$state));
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceCeilingsAndRoofs: {
+					dwellingSpaceCeilings: { ...baseForm, data: [{ ...baseForm, data: ceiling }] },
+					dwellingSpaceRoofs: { ...baseForm, data: [{ ...baseForm, data: roof }] },
+				},
+			},
+		});
 
-    // Assert
-    const ceilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[
-      ceiling.name + ceilingSuffix
-    ]! as BuildingElementAdjacentUnconditionedSpaceSimple;
-    const roofElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[
-      roof.name + roofSuffix
-    ]! as BuildingElementOpaque;
+		// Act
+		const fhsInputData = mapCeilingAndRoofData(resolveState(store.$state));
 
-    const expectedCeiling: BuildingElementAdjacentUnconditionedSpaceSimple = {
-      type: "BuildingElementAdjacentUnconditionedSpace_Simple",
-      pitch: extractPitch(ceiling),
-      area: ceiling.surfaceArea,
-      u_value: ceiling.uValue,
-      areal_heat_capacity: ceiling.kappaValue,
-      mass_distribution_class: ceiling.massDistributionClass,
-      thermal_resistance_unconditioned_space:
-        ceiling.thermalResistanceOfAdjacentUnheatedSpace,
-    };
+		// Assert
+		const ceilingElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[ceiling.name + ceilingSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const roofElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[roof.name + roofSuffix]! as BuildingElementOpaque;
 
-    expect(ceilingElement).toEqual(expectedCeiling);
+		const expectedCeiling: BuildingElementAdjacentUnconditionedSpaceSimple = {
+			type: "BuildingElementAdjacentUnconditionedSpace_Simple",
+			pitch: extractPitch(ceiling),
+			area: ceiling.surfaceArea,
+			u_value: ceiling.uValue,
+			areal_heat_capacity: ceiling.kappaValue,
+			mass_distribution_class: ceiling.massDistributionClass,
+			thermal_resistance_unconditioned_space: ceiling.thermalResistanceOfAdjacentUnheatedSpace,
+		};
 
-    const expectedRoof: BuildingElementOpaque = {
-      type: "BuildingElementOpaque",
-      pitch: roof.pitch,
-      orientation360: 0,
-      height: roof.length,
-      width: roof.width,
-      base_height: roof.elevationalHeightOfElement,
-      area: roof.surfaceArea,
-      solar_absorption_coeff: roof.solarAbsorptionCoefficient,
-      u_value: roof.uValue,
-      areal_heat_capacity: roof.kappaValue,
-      mass_distribution_class: roof.massDistributionClass,
-      is_external_door: false,
-      is_unheated_pitched_roof: false,
-    };
+		expect(ceilingElement).toEqual(expectedCeiling);
 
-    expect(roofElement).toEqual(expectedRoof);
-  });
+		const expectedRoof: BuildingElementOpaque = {
+			type: "BuildingElementOpaque",
+			pitch: roof.pitch,
+			orientation360: 0,
+			height: roof.length,
+			width: roof.width,
+			base_height: roof.elevationalHeightOfElement,
+			area: roof.surfaceArea,
+			solar_absorption_coeff: roof.solarAbsorptionCoefficient,
+			u_value: roof.uValue,
+			areal_heat_capacity: roof.kappaValue,
+			mass_distribution_class: roof.massDistributionClass,
+			is_external_door: false,
+			is_unheated_pitched_roof: false,
+		};
 
-  it("maps door input state to FHS input request", () => {
-    // Arrange
-    const externalWall: EcaasForm<ExternalWallData> = {
+		expect(roofElement).toEqual(expectedRoof);
+	});
+
+	it("maps door input state to FHS input request", () => {
+		// Arrange
+		
+		const externalWall: EcaasForm<ExternalWallData> = {
       ...baseForm,
       data: {
         id: "cbb78615-d2de-482b-a8f1-ce48534aaa05",
@@ -655,8 +545,8 @@ describe("dwelling fabric mapper", () => {
         massDistributionClass: "I",
       },
     };
-
-    const internalWall: EcaasForm<InternalWallData> = {
+		
+		const internalWall: EcaasForm<InternalWallData> = {
       ...baseForm,
       data: {
         id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
@@ -669,48 +559,49 @@ describe("dwelling fabric mapper", () => {
       },
     };
 
-    const internalDoor: InternalDoorData = {
-      typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
-      name: "Internal 1",
+		const internalDoor: InternalDoorData = {
+			typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
+			name: "Internal 1",
       associatedItemId: internalWall.data.id,
-      surfaceArea: 5,
-      kappaValue: 50000,
-      massDistributionClass: "I",
-      uValue: 0.001,
-      thermalResistanceOfAdjacentUnheatedSpace: 1,
-    };
+			surfaceArea: 5,
+			kappaValue: 50000,
+			massDistributionClass: "I",
+			uValue: 0.001,
+			thermalResistanceOfAdjacentUnheatedSpace: 1,
+		};
 
-    const externalGlazedDoor: ExternalGlazedDoorData = {
-      name: "External glazed door 1",
-      associatedItemId: externalWall.data.id,
-      height: 1,
-      width: 1,
-      uValue: 1,
-      solarTransmittance: 0.1,
-      elevationalHeight: 1,
-      midHeight: 1,
-      openingToFrameRatio: 0.3,
-      midHeightOpenablePart1: 1,
-      maximumOpenableArea: 1,
-      heightOpenableArea: 1,
-    };
+		const externalGlazedDoor: ExternalGlazedDoorData = {
+			name: "External glazed door 1",
+			associatedItemId: externalWall.data.id,
+			height: 1,
+			width: 1,
+			uValue: 1,
+			securityRisk: false,
+			solarTransmittance: 0.1,
+			elevationalHeight: 1,
+			midHeight: 1,
+			openingToFrameRatio: 0.3,
+			midHeightOpenablePart1: 1,
+			maximumOpenableArea: 1,
+			heightOpenableArea: 1,
+		};
 
-    const externalUnglazedDoor: ExternalUnglazedDoorData = {
-      name: "External unglazed door 1",
-      associatedItemId: externalWall.data.id,
-      height: 0.5,
-      width: 20,
-      elevationalHeight: 20,
-      surfaceArea: 10,
-      solarAbsorption: 0.1,
-      uValue: 1,
-      kappaValue: 50000,
-      massDistributionClass: "I",
-    };
+		const externalUnglazedDoor: ExternalUnglazedDoorData = {
+			name: "External unglazed door 1",
+     	associatedItemId: externalWall.data.id,
+			height: 0.5,
+			width: 20,
+			elevationalHeight: 20,
+			surfaceArea: 10,
+			solarAbsorption: 0.1,
+			uValue: 1,
+			kappaValue: 50000,
+			massDistributionClass: "I",
+		};
 
-    const doorSuffix = " (door)";
-
-    store.$patch({
+		const doorSuffix = " (door)";
+		 
+ store.$patch({
       dwellingFabric: {
         dwellingSpaceWalls: {
           dwellingSpaceExternalWall: {
@@ -739,22 +630,13 @@ describe("dwelling fabric mapper", () => {
       },
     });
 
-    // Act
-    const fhsInputData = mapDoorData(resolveState(store.$state));
+		// Act
+		const fhsInputData = mapDoorData(resolveState(store.$state));
 
-    // Assert
-    const internalDoorElement = fhsInputData.Zone[defaultZoneName]!
-      .BuildingElement[
-      internalDoor.name + doorSuffix
-    ]! as BuildingElementAdjacentUnconditionedSpaceSimple;
-    const externalGlazedDoorElement = fhsInputData.Zone[defaultZoneName]!
-      .BuildingElement[
-      externalGlazedDoor.name + doorSuffix
-    ]! as BuildingElementTransparent;
-    const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!
-      .BuildingElement[
-      externalUnglazedDoor.name + doorSuffix
-    ]! as BuildingElementOpaque;
+		// Assert
+		const internalDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[internalDoor.name + doorSuffix]! as BuildingElementAdjacentUnconditionedSpaceSimple;
+		const externalGlazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalGlazedDoor.name + doorSuffix]! as BuildingElementTransparent;
+		const externalUnglazedDoorElement = fhsInputData.Zone[defaultZoneName]!.BuildingElement[externalUnglazedDoor.name + doorSuffix]! as BuildingElementOpaque;
 
     const expectedInternalDoor: BuildingElementAdjacentUnconditionedSpaceSimple =
       {
@@ -770,7 +652,7 @@ describe("dwelling fabric mapper", () => {
 
     expect(internalDoorElement).toEqual(expectedInternalDoor);
 
-    const expectedExternalGlazedDoor: BuildingElementTransparent = {
+	    const expectedExternalGlazedDoor: BuildingElementTransparent = {
       type: "BuildingElementTransparent",
       pitch: extractPitch(externalWall.data),
       orientation360: externalWall.data.orientation,
@@ -787,6 +669,7 @@ describe("dwelling fabric mapper", () => {
         { mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
       ],
       shading: [],
+			security_risk:false
     };
 
     expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);
@@ -809,7 +692,7 @@ describe("dwelling fabric mapper", () => {
     expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);
   });
 
-  it("maps windows input state to FHS input request", () => {
+it("maps windows input state to FHS input request", () => {
     // Arrange
     const externalWall: EcaasForm<ExternalWallData> = {
       ...baseForm,
@@ -855,6 +738,7 @@ describe("dwelling fabric mapper", () => {
       openingToFrameRatio: 0.3,
       maximumOpenableArea: 1,
       heightOpenableArea: 1,
+			securityRisk: false
     };
 
     const windowSuffix = " (window)";
@@ -898,6 +782,7 @@ describe("dwelling fabric mapper", () => {
       g_value: window.solarTransmittance,
       mid_height: window.midHeight,
       frame_area_fraction: 1 - window.openingToFrameRatio,
+			security_risk: false,
       max_window_open_area: window.maximumOpenableArea,
       free_area_height: window.heightOpenableArea,
       window_part_list: [
@@ -926,70 +811,52 @@ describe("dwelling fabric mapper", () => {
     expect(windowElement).toEqual(expectedWindow);
   });
 
-  it("maps thermal bridging input state to FHS input request", () => {
-    // Arrange
-    const linearThermalBridge: LinearThermalBridgeData = {
-      name: "E1: Steel lintel with perforated steel base plate",
-      typeOfThermalBridge: "e1",
-      linearThermalTransmittance: 1,
-      length: 2,
-    };
+	it("maps thermal bridging input state to FHS input request", () => {
+		// Arrange
+		const linearThermalBridge: LinearThermalBridgeData = {
+			name: "E1: Steel lintel with perforated steel base plate",
+			typeOfThermalBridge: "E1",
+			linearThermalTransmittance: 1,
+			length: 2,
+		};
 
-    const pointThermalBridge: PointThermalBridgeData = {
-      name: "Point 1",
-      heatTransferCoefficient: 1,
-    };
+		const pointThermalBridge: PointThermalBridgeData = {
+			name: "Point 1",
+			heatTransferCoefficient: 1,
+		};
 
-    const dwellingSpaceThermalBridging: ThermalBridgingData = {
-      dwellingSpaceLinearThermalBridges: {
-        ...baseForm,
-        data: [{ ...baseForm, data: linearThermalBridge }],
-      },
-      dwellingSpacePointThermalBridges: {
-        ...baseForm,
-        data: [{ ...baseForm, data: pointThermalBridge }],
-      },
-    };
+		const dwellingSpaceThermalBridging: ThermalBridgingData = {
+			dwellingSpaceLinearThermalBridges: { ...baseForm, data: [{ ...baseForm, data: linearThermalBridge }] },
+			dwellingSpacePointThermalBridges: { ...baseForm, data: [{ ...baseForm, data: pointThermalBridge }] },
+		};
 
-    const bridgeSuffix = " (bridge)";
+		const bridgeSuffix = " (bridge)";
 
-    store.$patch({
-      dwellingFabric: {
-        dwellingSpaceThermalBridging,
-      },
-    });
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceThermalBridging,
+			},
+		});
 
-    // Act
-    const fhsInputData = mapThermalBridgingData(resolveState(store.$state));
+		// Act
+		const fhsInputData = mapThermalBridgingData(resolveState(store.$state));
 
-    // Assert
-    type ThermalBridging = {
-      [key: string]:
-        | SchemaThermalBridgingLinearFhs
-        | SchemaThermalBridgingPoint;
-    };
+		// Assert
+		type ThermalBridging = { [key: string]: SchemaThermalBridgingLinearFhs | SchemaThermalBridgingPoint; };
 
-    const thermalBridging = fhsInputData.Zone[defaultZoneName]!
-      .ThermalBridging as ThermalBridging;
+		const thermalBridging = fhsInputData.Zone[defaultZoneName]!.ThermalBridging as ThermalBridging;
 
-    const linearThermalBridgeElement = thermalBridging[
-      linearThermalBridge.name + bridgeSuffix
-    ]! as SchemaThermalBridgingLinearFhs;
-    const pointThermalBridgeElement = thermalBridging[
-      pointThermalBridge.name + bridgeSuffix
-    ]! as SchemaThermalBridgingPoint;
+		const linearThermalBridgeElement = thermalBridging[linearThermalBridge.name + bridgeSuffix]! as SchemaThermalBridgingLinearFhs;
+		const pointThermalBridgeElement = thermalBridging[pointThermalBridge.name + bridgeSuffix]! as SchemaThermalBridgingPoint;
 
-    const expectedLinearThermalBridge: SchemaThermalBridgingLinearFhs = {
-      type: "ThermalBridgeLinear",
-      junction_type: "E1",
-      linear_thermal_transmittance:
-        linearThermalBridge.linearThermalTransmittance,
-      length: linearThermalBridge.length,
-    };
+		const expectedLinearThermalBridge: SchemaThermalBridgingLinearFhs = {
+			type: "ThermalBridgeLinear",
+			junction_type: "E1",
+			linear_thermal_transmittance: linearThermalBridge.linearThermalTransmittance,
+			length: linearThermalBridge.length,
+		};
 
-    expect(linearThermalBridgeElement).toEqual(expectedLinearThermalBridge);
-    expect(pointThermalBridgeElement.heat_transfer_coeff).toBe(
-      pointThermalBridge.heatTransferCoefficient
-    );
-  });
+		expect(linearThermalBridgeElement).toEqual(expectedLinearThermalBridge);
+		expect(pointThermalBridgeElement.heat_transfer_coeff).toBe(pointThermalBridge.heatTransferCoefficient);
+	});
 });

@@ -1,5 +1,5 @@
-import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower } from "~/schema/aliases";
-import type { SchemaStorageTank, SchemaWaterPipework, SchemaWaterPipeworkSimple } from "~/schema/api-schema.types";
+import type { SchemaBathDetails, SchemaDistribution, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaWaterPipework } from "~/schema/aliases";
+import type { SchemaStorageTank } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultControlMaxName, defaultControlMinName, defaultElectricityEnergySupplyName } from "./common";
 import { asLitres } from "../utils/units/volume";
@@ -81,7 +81,7 @@ function mapOthersData(state: ResolvedState) {
 }
 
 export function mapDistributionData(state: ResolvedState) {
-	return state.domesticHotWater.pipework.secondaryPipework.map((x): SchemaWaterPipeworkSimple => {
+	return state.domesticHotWater.pipework.secondaryPipework.map((x): SchemaDistribution => {
 		return {
 			length: x.length,
 			location: x.location,
@@ -116,7 +116,6 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 		} 
 
 		const val: SchemaStorageTank = {
-			ColdWaterSource: "mains water",
 			daily_losses: x.dailyEnergyLoss,
 			type: "StorageTank",
 			volume: storageCylinderVolumeInLitres,
@@ -127,7 +126,6 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 					EnergySupply: defaultElectricityEnergySupplyName, 
 					heater_position: 0.1,
 					type: "HeatSourceWet",
-					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
 					Controlmax: defaultControlMaxName,
 					Controlmin: defaultControlMinName,

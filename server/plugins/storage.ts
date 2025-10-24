@@ -1,18 +1,32 @@
-import redisDriver from "unstorage/drivers/redis";
+import { defineDriver } from "unstorage";
+import { getSessionData, setSessionData } from "../utils/dynamoDbQueries";
 
 export default defineNitroPlugin(() => {
+  const storage = useStorage();
 
-	const storage = useStorage();
+  console.log("building custom dynamo DB driver");
+  const driver = defineDriver((options) => {
+    return {
+      name: "dynamoDb-driver",
+      options,
+      async hasItem(_key, _opts) {
+        return false;
+      },
+      async getItem(key, _opts) {
+        return getSessionData(key);
+      },
+      async setItem(key, value, _opts) {
+        return setSessionData(key, value);
+      },
+      // async removeItem(key, _opts) {},
+      async getKeys(_base, _opts) {
+        return [];
+      },
+      // async clear(base, _opts) {},
+      // async dispose() {},
+      // async watch(callback) {},
+    };
+  })({});
 
-	if (process.env.NODE_ENV === "production") {
-		const driver = redisDriver({
-			base: "{unstorage}",
-			port: 6379,
-			host: useRuntimeConfig().redisEndpoint,
-			password: useRuntimeConfig().redisPassword,
-			username: useRuntimeConfig().redisUsername,
-			tls: {},
-		});
-		storage.mount("cache", driver);
-	}
+  storage.mount("dynamo", driver);
 });

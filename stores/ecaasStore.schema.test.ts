@@ -28,6 +28,7 @@ describe("windowData Zod schema", () => {
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
 			curtainsControlObject: "auto_motorised",
+			securityRisk: false,
 		};
 		expect(
 			() => {

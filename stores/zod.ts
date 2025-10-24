@@ -2,8 +2,7 @@
 
 import type { UnionToTuple } from "type-fest";
 import * as z from "zod";
-import type { WwhrsType, CombustionFuelType, MassDistributionClass } from "~/schema/aliases";
-import type { SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaCombustionAirSupplySituation, SchemaFlueGasExhaustSituation, SchemaFuelType, SchemaInverterType, SchemaMvhrLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType } from "~/schema/api-schema.types";
+import type { SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaCombustionAirSupplySituation, SchemaFlueGasExhaustSituation, SchemaFuelType, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, WwhrsType, CombustionFuelType, SchemaMassDistributionClass, SchemaThermalBridgeJunctionType } from "~/schema/aliases";
 
 type NoneEmptyArray = readonly unknown[] & { 0: unknown };
 type CompareUnionWithArray<P, Q extends NoneEmptyArray> = Exclude<P, Q[number]> extends never
@@ -38,29 +37,28 @@ const flueGasExhaustSituations = [
 	"into_mech_vent",
 ] as const satisfies SchemaFlueGasExhaustSituation[];
 const fuelTypes = [
-	"LPG_bottled",
-	"LPG_bulk",
-	"LPG_condition_11F",
+	"gas",
 	"custom",
 	"electricity",
-	"energy_from_environment",
 	"mains_gas",
-	"unmet_demand",
+	"lpg_bulk",
+	"wood",
+	"coal",
+	"oil",
 ] as const satisfies SchemaFuelType[];
 const heatPumpBackupControlTypes = ["None", "Substitute", "TopUp"] as const satisfies SchemaHeatPumpBackupControlType[];
-const heatPumpSinkTypes = ["Air", "Glycol25", "Water"] as const satisfies SchemaHeatPumpSinkType[];
+const heatPumpSinkTypes = ["Air", "Water"] as const satisfies SchemaHeatPumpSinkType[];
 const heatPumpSourceTypes = [
 	"ExhaustAirMEV",
 	"ExhaustAirMVHR",
 	"ExhaustAirMixed",
 	"Ground",
-	"HeatNetwork",
 	"OutsideAir",
 	"WaterGround",
 	"WaterSurface"] as const satisfies SchemaHeatPumpSourceType[];
 const inverterTypes = ["optimised_inverter", "string_inverter"] as const satisfies SchemaInverterType[];
-const massDistributionClasses = ["D", "E", "I", "IE", "M"] as const satisfies MassDistributionClass[];
-const mhvrLocations = ["inside", "outside"] as const satisfies SchemaMvhrLocation[];
+const massDistributionClasses = ["D", "E", "I", "IE", "M"] as const satisfies SchemaMassDistributionClass[];
+const mhvrLocations = ["inside", "outside"] as const satisfies MVHRLocation[];
 const photovoltaicVentilationStrategies = [
 	"unventilated",
 	"moderately_ventilated",
@@ -69,10 +67,11 @@ const photovoltaicVentilationStrategies = [
 ] as const satisfies SchemaPhotovoltaicVentilationStrategy[];
 const shadingObjectTypes = ["obstacle", "overhang"] as const satisfies SchemaShadingObjectType[];
 const terrainClasses = ["OpenWater", "OpenField", "Suburban", "Urban"] as const satisfies SchemaTerrainClass[];
+const thermalBridgeJunctionTypes = ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "E10", "E11", "E12", "E13", "E14", "E15", "E16", "E17", "E18", "E19", "E20", "E21", "E22", "E23", "E24", "E25", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11"] as const satisfies SchemaThermalBridgeJunctionType[];
 const ventilationShieldClasses = ["Open", "Normal", "Shielded"] as const satisfies SchemaVentilationShieldClass[];
-const waterPipeContentsTypes = ["water", "glycol25"] as const satisfies SchemaWaterPipeContentsType[];
+const waterPipeContentsTypes = ["water", "glycol25", "air"] as const satisfies SchemaWaterPipeContentsType[];
 const waterPipeworkLocations = ["internal", "external"] as const satisfies SchemaWaterPipeworkLocation[];
-const windowTreatmentControls = ["auto_motorised", "combined_light_blind_HVAC", "manual", "manual_motorised"] as const satisfies SchemaWindowTreatmentControl[];
+const windowTreatmentControls = ["auto_motorised", "manual"] as const satisfies SchemaWindowTreatmentControl[];
 const windowTreatmentTypes = ["blinds", "curtains"] as const satisfies SchemaWindowTreatmentType[];
 const windShieldLocations = ["Sheltered", "Average", "Exposed"] as const satisfies SchemaWindShieldLocation[];
 const wwhrsTypes = [
@@ -92,11 +91,12 @@ export const heatPumpBackupControlTypeZod = zodForTypeOptions(ensureAllUnion<Sch
 export const heatPumpSinkTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatPumpSinkType, (typeof heatPumpSinkTypes)>(heatPumpSinkTypes));
 export const heatPumpSourceTypeZod = zodForTypeOptions(ensureAllUnion<SchemaHeatPumpSourceType, (typeof heatPumpSourceTypes)>(heatPumpSourceTypes));
 export const inverterTypeZod = zodForTypeOptions(ensureAllUnion<SchemaInverterType, (typeof inverterTypes)>(inverterTypes));
-export const massDistributionClassZod = zodForTypeOptions(ensureAllUnion<MassDistributionClass, (typeof massDistributionClasses)>(massDistributionClasses));
-export const mvhrLocationZod = zodForTypeOptions(ensureAllUnion<SchemaMvhrLocation, (typeof mhvrLocations)>(mhvrLocations));
+export const massDistributionClassZod = zodForTypeOptions(ensureAllUnion<SchemaMassDistributionClass, (typeof massDistributionClasses)>(massDistributionClasses));
+export const mvhrLocationZod = zodForTypeOptions(ensureAllUnion<MVHRLocation, (typeof mhvrLocations)>(mhvrLocations));
 export const photovoltaicVentilationStrategyZod = zodForTypeOptions(ensureAllUnion<SchemaPhotovoltaicVentilationStrategy, (typeof photovoltaicVentilationStrategies)>(photovoltaicVentilationStrategies));
 export const shadingObjectTypeZod = zodForTypeOptions(ensureAllUnion<SchemaShadingObjectType, (typeof shadingObjectTypes)>(shadingObjectTypes));
 export const terrainClassZod = zodForTypeOptions(ensureAllUnion<SchemaTerrainClass, (typeof terrainClasses)>(terrainClasses));
+export const thermalBridgeJunctionTypeZod = zodForTypeOptions(ensureAllUnion<SchemaThermalBridgeJunctionType, (typeof thermalBridgeJunctionTypes)>(thermalBridgeJunctionTypes));
 export const ventilationShieldClassZod = zodForTypeOptions(ensureAllUnion<SchemaVentilationShieldClass, (typeof ventilationShieldClasses)>(ventilationShieldClasses));
 export const waterPipeContentsTypeZod = zodForTypeOptions(ensureAllUnion<SchemaWaterPipeContentsType, (typeof waterPipeContentsTypes)>(waterPipeContentsTypes));
 export const waterPipeworkLocationZod = zodForTypeOptions(ensureAllUnion<SchemaWaterPipeworkLocation, (typeof waterPipeworkLocations)>(waterPipeworkLocations));

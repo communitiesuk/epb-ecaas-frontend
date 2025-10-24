@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SchemaWaterPipeworkLocation } from "~/schema/api-schema.types";
+import type { SchemaWaterPipeworkLocation } from "~/schema/aliases";
 import { getUrl  } from "#imports";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 

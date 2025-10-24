@@ -20,6 +20,7 @@ const saveForm = (fields: ExternalGlazedDoorData) => {
 				height: fields.height,
 				width: fields.width,
 				uValue: fields.uValue,
+				securityRisk: fields.securityRisk,
 				solarTransmittance: fields.solarTransmittance,
 				elevationalHeight: fields.elevationalHeight,
 				midHeight: fields.midHeight,
@@ -108,6 +109,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="maximumOpenableArea"
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.max_window_open_area"
+		/>
+		<FormKit
+			id="securityRisk"
+			name="securityRisk"
+			type="govBoolean"
+			label="Is having this door open a security risk?"
+			help="For example, would you be able to leave the door open at night?"
+			validation="required"
+			data-field="Zone.BuildingElement.*.security_risk"
 		/>
 		<FieldsUValue id="uValue" name="uValue" />
 		<FormKit

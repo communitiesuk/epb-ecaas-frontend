@@ -336,13 +336,13 @@ describe("extractPitch", () => {
 describe("postEcaasState", () => {
   const store = useEcaasStore();
 
-  it("should post ecaas state to setState endpoint", async () => {
+  it("should post ecaas state to session endpoint", async () => {
     global.$fetch = vi.fn() as unknown as typeof global.$fetch;
     const fetchSpy = vi.spyOn(global, "$fetch");
     await store.postEcaasState();
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
-    expect(fetchSpy).toHaveBeenCalledWith("/api/setState", {
+    expect(fetchSpy).toHaveBeenCalledWith("/api/session", {
       body: store.$state,
       method: "POST",
     });

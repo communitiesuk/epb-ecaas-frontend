@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { WindowData } from "#imports";
 import { millimetre } from "~/utils/units/length";
-import type { SchemaWindowTreatmentControl, SchemaWindowTreatmentType } from "~/schema/api-schema.types";
+import type { SchemaWindowTreatmentControl, SchemaWindowTreatmentType } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
 import { getUrl } from "#imports";
 import { v4 as uuidv4 } from "uuid";
@@ -70,6 +70,7 @@ const saveForm = (fields: WindowData) => {
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
+			securityRisk: fields.securityRisk,
 			openingToFrameRatio: fields.openingToFrameRatio,
 			...("overhangDepth" in fields && "overhangDistance" in fields
 				? {
@@ -282,6 +283,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</table>
 			</GovDetails>
 		</FormKit>
+		<FormKit
+		id="securityRisk"
+			name="securityRisk"
+			type="govBoolean"
+			label="Is having this window open a security risk?"
+			help="For example, would you be able to leave the window open at night?"
+			validation="required"
+			data-field="Zone.BuildingElement.*.security_risk"
+		/>
 		<FormKit
 			id="numberOpenableParts"
 			type="govRadios"

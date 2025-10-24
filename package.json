@@ -19,6 +19,9 @@
     "ci-e2e-test": "npx playwright test"
   },
   "dependencies": {
+    "@aws-sdk/client-config-service": "^3.914.0",
+    "@aws-sdk/client-dynamodb": "^3.913.0",
+    "@aws-sdk/lib-dynamodb": "^3.913.0",
     "@formkit/nuxt": "^1.6.9",
     "@nuxtjs/robots": "^5.2.10",
     "@pinia/nuxt": "^0.11.1",

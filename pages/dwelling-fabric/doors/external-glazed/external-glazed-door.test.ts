@@ -34,6 +34,7 @@ describe("external glazed door", () => {
 		height: 14,
 		width: 48,
 		uValue: 0.45,
+		securityRisk: false,
 		solarTransmittance: 0.1,
 		elevationalHeight: 14,
 		midHeight: 11,
@@ -76,6 +77,7 @@ describe("external glazed door", () => {
 		await user.type(screen.getByTestId("width"), "48");
 		await user.type(screen.getByTestId("maximumOpenableArea"), "13");
 		await user.type(screen.getByTestId("uValue"), "0.45");
+		await user.click(screen.getByTestId("securityRisk_no"));
 		await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 		await user.type(screen.getByTestId("elevationalHeight"), "14");
 		await user.type(screen.getByTestId("midHeight"), "11");

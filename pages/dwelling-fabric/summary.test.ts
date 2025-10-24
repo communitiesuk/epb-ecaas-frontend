@@ -302,6 +302,7 @@ const windowData: WindowData = {
   treatmentType: "blinds",
   thermalResistivityIncrease: 1,
   solarTransmittanceReduction: 0.1,
+  securityRisk:false
 };
 
 const thermalBridgingData: ThermalBridgingData = {
@@ -310,7 +311,7 @@ const thermalBridgingData: ThermalBridgingData = {
       {
         data: {
           name: "E1: Steel lintel with perforated steel base plate",
-          typeOfThermalBridge: "e1",
+          typeOfThermalBridge: "E1",
           linearThermalTransmittance: 1,
           length: 2,
         },
