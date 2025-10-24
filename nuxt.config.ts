@@ -109,9 +109,10 @@ export default defineNuxtConfig({
 	},
 
 	runtimeConfig: {
-		redisEndpoint: "",
-		redisPassword: "",
-		redisUsername: "",
+		dynamodbRegion: "",
+		dynamodbEndpoint: "",
+		dynamodbAccessKeyId: "",
+		dynamodbSecretAccessKey: "",
 		public: {
 			environment: process.env.NUXT_PUBLIC_ENVIRONMENT,
 		},

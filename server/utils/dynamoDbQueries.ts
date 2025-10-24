@@ -6,12 +6,12 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({
-	region: "fakeRegion",
-	endpoint: "http://localhost:8000",
+	region: process.env.DYNAMODB_REGION ?? useRuntimeConfig().dynamodbRegion,
+	endpoint: process.env.DYNAMODB_ENDPOINT ?? useRuntimeConfig().dynamodbEndpoint,
 });
 client.config.credentials({
-	accessKeyId: "fakeMyKeyId",
-	secretAccessKey: "fakeSecretAccessKey",
+	accessKeyId: process.env.DYNAMODB_ACCESS_KEY_ID ?? useRuntimeConfig().dynamodbEndpoint,
+	secretAccessKey: process.env.DYNAMODB_SECRET_ACCESS_KEY ?? useRuntimeConfig().dynamodbEndpoint,
 });
 const docClient = DynamoDBDocumentClient.from(client);
 
@@ -22,7 +22,6 @@ export async function getSessionData(key: string): Promise<string | undefined> {
 			Key: { session_id: key },
 		}),
 	);
-
 	return item?.ecaas;
 }
 
