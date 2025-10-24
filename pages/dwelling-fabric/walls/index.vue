@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
-import Door from "../doors/external-unglazed/[door].vue";
 
 const title = "Walls";
 const page = usePage();
