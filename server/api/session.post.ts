@@ -14,14 +14,15 @@ export default defineEventHandler(async (event) => {
     useStorage("dynamo").setItem(sessionId, body);
   } else {
     sessionId = uuidv4();
-		const timestamp = Math.floor(Date.now() / 1000) + 14 * 24 * 60 * 60 * 1000;
+		const twoWeeksInSeconds = 14 * 24 * 60 * 60
+		const timeToLive = Math.floor(Date.now() / 1000) + twoWeeksInSeconds;
 
     setCookie(event, "sessionId", sessionId, {
-      maxAge: 60 * 60 * 24 * 14,
+      maxAge: twoWeeksInSeconds,
       httpOnly: true,
     });
 
-    useStorage("dynamo").setItem(sessionId, body, { ttl: timestamp });
+    useStorage("dynamo").setItem(sessionId, body, { ttl: timeToLive });
   }
   event.node.res.end();
 });
