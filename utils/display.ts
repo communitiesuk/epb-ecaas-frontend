@@ -175,7 +175,7 @@ export function displayHeaterPosition(position: ImmersionHeaterPosition | undefi
 	if (typeof position === "undefined") {
 		return emptyValueRendering;
 	}
-	return `${ displayCamelToSentenceCase(position) } (${ immersionHeaterPositionValues[position] })`;
+	return `${displayCamelToSentenceCase(position)} (${immersionHeaterPositionValues[position]})`;
 }
 
 export function displayReflectivity(reflective: boolean | undefined): string {
@@ -186,9 +186,8 @@ export function displayReflectivity(reflective: boolean | undefined): string {
 }
 
 export function displayFuelTypes(fuelTypes: SchemaFuelType[] | undefined) {
-	return fuelTypes?.map(type => {
-		return displayFuelType(type);
-	}).join(", ");
+	if (fuelTypes === undefined) return emptyValueRendering;
+	return fuelTypes.map(type => displayFuelType(type)).join(", ")
 }
 
 export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
@@ -230,8 +229,8 @@ export const ecoDesignControllerOptions = {
 
 export type EcoDesignControllerValue = keyof typeof ecoDesignControllerOptions extends infer K
 	? K extends string
-		? K extends `${infer N extends number}` ? N : never
-		: never
+	? K extends `${infer N extends number}` ? N : never
+	: never
 	: never;
 
 export function displayEcoDesignController(value: EcoDesignControllerValue | undefined): string {
@@ -241,7 +240,7 @@ export function displayEcoDesignController(value: EcoDesignControllerValue | und
 
 	return ecoDesignControllerOptions[value] ?? ("" + value);
 }
-	
+
 // better type/ function for displaying products once we're dealing with realistic products
 // export type ProductDisplayString = `${DisplayProduct['brandName']} - ${DisplayProduct['modelName']}`;
 
