@@ -39,16 +39,3 @@ export async function setSessionData(
 		}),
 	);
 }
-
-// console.log(
-// 	getSessionData("123", '{"ecaas":"data"}').then((data) => {
-// 		console.log(data);
-// 	}),
-// );
-
-// console.log(
-// 	getSessionData("123").then((data) => {
-// 		console.log(data);
-// 	}),
-// );
- 
