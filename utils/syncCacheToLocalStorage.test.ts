@@ -33,7 +33,7 @@ describe("syncCacheToLocalStorage", () => {
 	it("should fetch data from cache if local storage has no ecaas data", async () => {
 		mockFetchResponse(mockResponse);
 		await syncCacheToLocalStorage();
-		expect($fetch).toHaveBeenCalledWith("/api/getState", { method: "GET" });
+		expect($fetch).toHaveBeenCalledWith("/api/session", { method: "GET" });
 	});
 
 	it("should update local storage with cached data if local storage has no ecaas data", async () => {
