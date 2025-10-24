@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import formStatus from "~/constants/formStatus";
+import Door from "../doors/external-unglazed/[door].vue";
 
 const title = "Walls";
 const page = usePage();
@@ -30,6 +31,7 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 	
 		store.$patch((state) => {
 			const newWall = {
+				complete: wall.complete,
 				data: {
 					...wall.data, 
 					name: `${wall.data.name} (${duplicates.length})`,
