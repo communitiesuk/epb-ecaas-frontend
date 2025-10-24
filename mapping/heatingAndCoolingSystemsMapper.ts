@@ -19,12 +19,13 @@ export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, 
 				fuelType === "electricity" ? defaultElectricityEnergySupplyName : fuelType,
 				{
 					fuel: fuelType,
-					is_export_capable: fuelType === "electricity" ? exported ?? false : false,
+					...(fuelType === "electricity" ? { is_export_capable: exported ?? false } : {}),
 					...(fuelType === "custom" ? {
 						factor: {
 							"Emissions Factor kgCO2e/kWh": co2PerKwh!,
 							"Emissions Factor kgCO2e/kWh including out-of-scope emissions": co2PerKwhIncludingOutOfScope!,
 							"Primary Energy Factor kWh/kWh delivered": kwhPerKwhDelivered!,
+							"is_export_capable": exported ?? false,
 						},
 					} : {}),
 				},

@@ -36,7 +36,7 @@ describe("heating systems mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
 			EnergySupply: {
 				mains_gas: {
-					fuel: "mains_gas",
+					fuel: "mains_gas"
 				},
 			},
 		};
@@ -114,7 +114,7 @@ describe("heating systems mapper", () => {
 						"Emissions Factor kgCO2e/kWh": 3.2,
 						"Emissions Factor kgCO2e/kWh including out-of-scope emissions": 4.8,
 						"Primary Energy Factor kWh/kWh delivered": 1.0,
-						is_export_capable: false,
+						is_export_capable: true,
 					},
 				},
 				mains_gas: {
@@ -354,10 +354,8 @@ describe("heating systems mapper", () => {
 				"Acme instant electric heater": {
 					type: "InstantElecHeater",
 					rated_power: 100,
-					frac_convective: 0.8,
+					convective_type: "Air heating (convectors, fan coils etc.)",
 					EnergySupply: "mains elec",
-					advanced_start: null,
-					temp_setback: null,
 					Control: defaultControlName,
 				},
 			},
