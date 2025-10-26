@@ -5,14 +5,19 @@ import {
 	PutCommand,
 } from "@aws-sdk/lib-dynamodb";
 
-const client = new DynamoDBClient({
-	region: process.env.DYNAMODB_REGION ?? useRuntimeConfig().dynamodbRegion,
-	endpoint: process.env.DYNAMODB_ENDPOINT ?? useRuntimeConfig().dynamodbEndpoint,
-});
-client.config.credentials({
-	accessKeyId: process.env.DYNAMODB_ACCESS_KEY_ID ?? useRuntimeConfig().dynamodbEndpoint,
-	secretAccessKey: process.env.DYNAMODB_SECRET_ACCESS_KEY ?? useRuntimeConfig().dynamodbEndpoint,
-});
+const isDevEnv = process.env.NODE_ENV === "development";
+
+const localConfig = {
+	region: "fakeRegion", 
+	endpoint: "http://localhost:8000",
+	credentials: {
+		accessKeyId: "fakeMyKeyId",
+		secretAccessKey: "fakeSecretAccessKey",
+	},
+};
+
+const client = new DynamoDBClient({ ...( isDevEnv ? localConfig : { region: useRuntimeConfig().dynamodbRegion }) });
+
 const docClient = DynamoDBDocumentClient.from(client);
 
 export async function getSessionData(key: string): Promise<string | undefined> {

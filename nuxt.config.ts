@@ -110,9 +110,6 @@ export default defineNuxtConfig({
 
 	runtimeConfig: {
 		dynamodbRegion: "",
-		dynamodbEndpoint: "",
-		dynamodbAccessKeyId: "",
-		dynamodbSecretAccessKey: "",
 		public: {
 			environment: process.env.NUXT_PUBLIC_ENVIRONMENT,
 		},
