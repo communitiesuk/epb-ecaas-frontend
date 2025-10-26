@@ -54,13 +54,12 @@ const ductworkSummary: SummarySection = {
 
 const ventData = store.infiltrationAndVentilation.vents.data;
 const walls = store.dwellingFabric.dwellingSpaceWalls;
-const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 const { dwellingSpaceWindows } = store.dwellingFabric;
 const ventSummary: SummarySection = {
 	id: "vents",
 	label: "Vents",
 	data: ventData.map(({ data: x }) => {
-		const taggedItem = store.getTaggedItem([walls.dwellingSpaceExternalWall, walls.dwellingSpaceInternalWall, walls.dwellingSpacePartyWall, walls.dwellingSpaceWallToUnheatedSpace, dwellingSpaceRoofs, dwellingSpaceWindows], x.associatedItemId);
+		const taggedItem = store.getTaggedItem([walls.dwellingSpaceExternalWall, dwellingSpaceWindows], x.associatedItemId);
 
 		return {
 			"Name": x.name,

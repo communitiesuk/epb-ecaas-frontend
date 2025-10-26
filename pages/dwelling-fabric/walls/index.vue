@@ -37,13 +37,13 @@ function handleRemove(wallType: WallType, index: number) {
 			store.removeTaggedAssociations()([dwellingSpaceWindows], externalWallId, "taggedItem")
 		}
 		if (internalWallId) {
-			store.removeTaggedAssociations()([vents, dwellingSpaceInternalDoor], internalWallId)
+			store.removeTaggedAssociations()([dwellingSpaceInternalDoor], internalWallId)
 		}
 		if (unheatedSpaceWallId) {
-			store.removeTaggedAssociations()([vents, dwellingSpaceInternalDoor], unheatedSpaceWallId);
+			store.removeTaggedAssociations()([dwellingSpaceInternalDoor], unheatedSpaceWallId);
 		}
 		if (partyWallId) {
-			store.removeTaggedAssociations()([vents, dwellingSpaceInternalDoor], partyWallId);
+			store.removeTaggedAssociations()([dwellingSpaceInternalDoor], partyWallId);
 		}
 	}
 }

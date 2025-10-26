@@ -62,8 +62,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			airBrick: 'Air brick'
 		}" label="Type of vent" name="typeOfVent" validation="required" />
 		<FieldsAssociatedWallRoofWindow id="associatedItemId" name="associatedItemId"
-			label="Associated wall, roof or window"
-			help="Select the wall, roof or window that this vent is in. It should have the same orientation and pitch as the vent." />
+			label="Associated wall or window"
+			help="Select the wall or window that this vent is in. It should have the same orientation and pitch as the vent." />
 		<FormKit id="effectiveVentilationArea" type="govInputWithSuffix" label="Effective ventilation area"
 			help="Enter the actual area through which air can flow, accounting for obstructions like grilles or mesh"
 			name="effectiveVentilationArea" validation="required | number | min:1 | max:999999" suffix-text="cm²"

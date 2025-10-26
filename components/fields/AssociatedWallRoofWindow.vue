@@ -17,11 +17,7 @@ const { dwellingSpaceWindows, dwellingSpaceCeilingsAndRoofs, dwellingSpaceWalls 
 
 const options = [
 	dwellingSpaceWindows.data.map(x => [x.data.id, x.data.name] as [string, string]),
-	dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data.map(x => [x.data.id, x.data.name] as [string, string]),
 	dwellingSpaceWalls.dwellingSpaceExternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
-	dwellingSpaceWalls.dwellingSpaceInternalWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
-	dwellingSpaceWalls.dwellingSpacePartyWall.data.map(x => [x.data.id, x.data.name] as [string, string]),
-	dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace.data.map(x => [x.data.id, x.data.name] as [string, string]),
 
 
 ].flat().filter(x => x[0] != undefined );
