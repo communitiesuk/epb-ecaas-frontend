@@ -2139,7 +2139,7 @@ describe("FHS input mapper", () => {
 		expect(fhsInputData).toEqual(expectedResult);   
 	});
 
-	test.skip("the expected results pass against the current FHS input schema", () => {
+	test("the expected results pass against the current FHS input schema", () => {
 		const expectedsToTest = [
 			expectedHouseInput,
 			expectedFlatInput,
