@@ -182,15 +182,15 @@ const expectedHouseInput: FhsInputSchema = {
 		end: 8,
 		step: 1,
 	},
-	// SpaceCoolSystem: {
-	// 	"some-aircon-unit-name": {
-	// 		type: "AirConditioning",
-	// 		EnergySupply: "mains elec",
-	// 		cooling_capacity: 60,
-	// 		efficiency: 4,
-	// 		frac_convective: 0.2
-	// 	}
-	// },
+	SpaceCoolSystem: {
+		"some-aircon-unit-name": {
+			type: "AirConditioning",
+			EnergySupply: "mains elec",
+			cooling_capacity: 60,
+			efficiency: 4,
+			frac_convective: 0.2,
+		},
+	},
 	SpaceHeatSystem: {
 		"some-wet-distribution": {
 			type: "WetDistribution",
@@ -603,7 +603,15 @@ const expectedFlatInput: FhsInputSchema = {
 		end: 8,
 		step: 1,
 	} as SchemaSimulationTime,
-	// SpaceCoolSystem: {},
+	SpaceCoolSystem: {
+		"some-aircon-unit-name": {
+			type: "AirConditioning",
+			EnergySupply: "mains elec",
+			cooling_capacity: 60,
+			efficiency: 4,
+			frac_convective: 0.2,
+		},
+	},
 	SpaceHeatSystem: {
 		"instant elec heater 1": {
 			rated_power: 10,

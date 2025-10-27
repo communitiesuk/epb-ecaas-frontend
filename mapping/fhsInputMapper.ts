@@ -19,10 +19,9 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const infiltrationVentilationData = mapInfiltrationVentilationData(state);
 	const dwellingFabricData = mapDwellingFabricData(state);
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
-	// const coolingData = mapCoolingData(state);
 
 	const [pvData, electricBatteries] = mapPvAndElectricBatteriesData(state);
-	const { EnergySupply, SpaceHeatSystem } = mapheatingAndCoolingSystemsData(state);
+	const { EnergySupply, SpaceHeatSystem, SpaceCoolSystem } = mapheatingAndCoolingSystemsData(state);
 
 	// specify the electricity tariff with other needed data points with default values as used in example FHS files in case it is needed (TODO: should it be necessary to pass in a tariff here?)
 	const defaultTariffData: Pick<SchemaEnergySupplyElectricity, "threshold_charges" | "threshold_prices" | "tariff"> = {
@@ -32,6 +31,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	};
 	const heatingAndCoolingSystemsData = {
 		SpaceHeatSystem,
+		SpaceCoolSystem,
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {
 				...EnergySupply[defaultElectricityEnergySupplyName],
@@ -91,7 +91,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		heatingAndCoolingSystemsData,
 		domesticHotWaterData,
 		pvData,
-		// coolingData,
 		defaultColdWaterSource,
 		control,
 		events,
