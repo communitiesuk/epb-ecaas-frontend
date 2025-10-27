@@ -1,7 +1,6 @@
-import type { SchemaElectricBattery } from "~/schema/api-schema.types";
+import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { mapElectricBatteryData, mapPvDiverterData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
-import { complete } from "happy-dom/lib/PropertySymbol.js";
 
 const baseForm = {
 	data: [],
@@ -184,6 +183,7 @@ describe("PV and electric batteries mapper", () => {
 							},
 							complete: true,
 						}],
+						complete: true,
 					},
 				},
 			},
@@ -203,28 +203,30 @@ describe("PV and electric batteries mapper", () => {
 							},
 							complete: true,
 						}],
+						complete: true,
 					},
 				},
 			},
 			pvAndBatteries: {
-				diverters: { data: [diverter1] }
-			}
+				diverters: {
+					data: [diverter1],
+					complete: true,
+				},
+			},
 		});
 
 		const result = mapPvDiverterData(resolveState(store.$state));
 
-		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
-			EnergySupply: {
-				"Diverter 1": {
-					fuel: "electricity",
-					diverter: {
-						HeatSource: "HP1",
-						StorageTank: "HWC1",
-					},
+		const expectedResult: Record<string, SchemaEnergySupplyElectricity> = {
+			EnergySupplyElectricity: {
+				fuel: "electricity",
+				diverter: {
+					HeatSource: "HP1",
+					StorageTank: "HWC1",
 				},
-			}
+			},
 		};
 
 		expect(result).toEqual(expectedResult);
-	})
+	});
 });

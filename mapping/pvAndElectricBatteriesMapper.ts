@@ -62,19 +62,18 @@ export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery
 	return {};
 }
 
-/* Function unused yet while no diverter data to map. **/
 export function mapPvDiverterData(state: ResolvedState): { "EnergySupplyElectricity": SchemaEnergySupplyElectricity } | EmptyObject {
 	const diverter = state.pvAndBatteries.diverters[0];
-	const heatSource = state.heatingAndCoolingSystems.heatGeneration.heatPump.filter(x => x.id === diverter?.heatSource)[0]?.name!;
+	const heatSource = state.heatingAndCoolingSystems.heatGeneration.heatPump.find(x => x.id === diverter?.heatSource)?.name;
 	const storageTank = state.domesticHotWater.waterHeating.hotWaterCylinder.filter(x => x.id === diverter?.hotWaterCylinder)[0]?.name;
 
 	return {
 		"EnergySupplyElectricity": {
 			fuel: "electricity",
 			diverter: {
-				"HeatSource": heatSource,
+				"HeatSource": heatSource!,
 				"StorageTank": storageTank,
-			}
-		}
-	}
+			},
+		},
+	};
 }
