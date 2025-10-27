@@ -15,6 +15,7 @@ const localConfig = {
 		secretAccessKey: "fakeSecretAccessKey",
 	},
 };
+console.log(useRuntimeConfig().dynamodbRegion, "region")
 
 const client = new DynamoDBClient({ ...( isDevEnv ? localConfig : { region: useRuntimeConfig().dynamodbRegion }) });
 
