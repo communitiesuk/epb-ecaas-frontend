@@ -160,6 +160,7 @@ const expectedHouseInput: FhsInputSchema = {
 		ventilation_zone_base_height: 3,
 	},
 	NumberOfBedrooms: 7,
+	NumberOfWetRooms: 0,
 	OnSiteGeneration: {},
 	PartGcompliance: true,
 	PartO_active_cooling_required: false,
@@ -559,6 +560,7 @@ const expectedFlatInput: FhsInputSchema = {
 		ventilation_zone_base_height: 1,
 	},
 	NumberOfBedrooms: 2,
+	NumberOfWetRooms: 0,
 	OnSiteGeneration: {
 		"pv system 1": {
 			EnergySupply: "mains elec",
