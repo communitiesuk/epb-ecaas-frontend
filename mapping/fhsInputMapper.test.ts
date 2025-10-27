@@ -185,7 +185,7 @@ const expectedHouseInput: FhsInputSchema = {
 				temp_flow_limit_upper: 65,
 			},
 			Zone: defaultZoneName,
-			design_flow_temp: 12,
+			design_flow_temp: 22,
 			design_flow_rate: 4,
 			ecodesign_controller: {
 				ecodesign_control_class: 8,
@@ -195,15 +195,15 @@ const expectedHouseInput: FhsInputSchema = {
 			},
 			emitters: [
 				{
-					c: 9,
+					c: 0.08,
 					frac_convective: 4,
-					n: 3,
+					n: 1.3,
 					wet_emitter_type: "radiator",
 				},
 				{
-					c: 9,
+					c: 0.08,
 					frac_convective: 4,
-					n: 3,
+					n: 1.3,
 					wet_emitter_type: "radiator",
 				},
 			],
@@ -390,12 +390,12 @@ const expectedFlatInput: FhsInputSchema = {
 		Shower: {
 			"mixer shower 1 name": {
 				ColdWaterSource: "mains water",
-				flowrate: 19,
+				flowrate: 14,
 				type: "MixerShower",
 			},
 			"mixer shower 2 name": {
 				ColdWaterSource: "mains water",
-				flowrate: 28,
+				flowrate: 12,
 				type: "MixerShower",
 			},
 			"electric shower 1 name": {
@@ -764,7 +764,7 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: 60000,
 					mass_distribution_class: "IE",
 					pitch: 45,
-					thermal_resistance_unconditioned_space: 3.4,
+					thermal_resistance_unconditioned_space: 2.7,
 					u_value: 2.2,
 				},
 				"roof 1 (roof)": {
@@ -1136,7 +1136,7 @@ describe("FHS input mapper", () => {
 							heatSource: "some-heat-pump-id",
 							thermalMass: 0.14,
 							designTempDiffAcrossEmitters: 31,
-							designFlowTemp: 12,
+							designFlowTemp: 22,
 							designFlowRate: 4,
 							ecoDesignControllerClass: "8",
 							minimumFlowTemp: 21,
@@ -1145,8 +1145,8 @@ describe("FHS input mapper", () => {
 							convectionFractionWet: 4,
 							typeOfSpaceHeater: "radiator",
 							numberOfRadiators: 2,
-							exponent: 3,
-							constant: 9,
+							exponent: 1.3,
+							constant: 0.08,
 						},
 					}],
 				},
@@ -1634,7 +1634,7 @@ describe("FHS input mapper", () => {
 							massDistributionClass: "IE",
 							pitch: 45,
 							pitchOption: "custom",
-							thermalResistanceOfAdjacentUnheatedSpace: 3.4,
+							thermalResistanceOfAdjacentUnheatedSpace: 2.7,
 							uValue: 2.2,
 						},
 					},
@@ -1924,7 +1924,7 @@ describe("FHS input mapper", () => {
 							data: {
 								id: "mixer shower 1 id",
 								name: "mixer shower 1 name",
-								flowRate: 19,
+								flowRate: 14,
 							},
 						},
 						{
@@ -1932,7 +1932,7 @@ describe("FHS input mapper", () => {
 							data: {
 								id: "mixer shower 2 id",
 								name: "mixer shower 2 name",
-								flowRate: 28,
+								flowRate: 12,
 							},
 						},
 					],
