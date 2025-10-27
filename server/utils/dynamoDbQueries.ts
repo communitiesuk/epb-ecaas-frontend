@@ -35,14 +35,18 @@ export async function setSessionData(
 	value: string,
 	timeToLive: number | undefined,
 ) {
-	await docClient.send(
-		new PutCommand({
-			TableName: "sessions",
-			Item: {
+	console.log("calling setitemsession", key, value, timeToLive)
+	const item = {
 				session_id: key,
 				ecaas: value,
 				...(timeToLive ? { ttl: timeToLive } : {}),
-			},
+			}
+	console.log("item", item)
+
+	await docClient.send(
+		new PutCommand({
+			TableName: "sessions",
+			Item: item
 		}),
 	);
 }

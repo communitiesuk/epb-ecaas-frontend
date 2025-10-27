@@ -6,6 +6,7 @@ export default defineNitroPlugin(() => {
 
 	console.log("building custom dynamo DB driver");
 	const driver = defineDriver((options) => {
+		console.log("inside dynamo driver")
 		return {
 			name: "dynamoDb-driver",
 			options,
@@ -16,6 +17,7 @@ export default defineNitroPlugin(() => {
 				return getSessionData(key);
 			},
 			async setItem(key, value, opts) {
+				console.log("calling set item", key, value )
 				return setSessionData(key, value, opts.ttl);
 			},
 			// async removeItem(key, _opts) {},
