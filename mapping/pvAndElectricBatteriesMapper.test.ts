@@ -1,6 +1,7 @@
 import type { SchemaElectricBattery } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { mapElectricBatteryData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
+import { mapElectricBatteryData, mapPvDiverterData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
+import { complete } from "happy-dom/lib/PropertySymbol.js";
 
 const baseForm = {
 	data: [],
@@ -13,7 +14,7 @@ describe("PV and electric batteries mapper", () => {
 	afterEach(() => {
 		store.$reset();
 	});
-    
+
 	it("maps PV systems to the FHS input", () => {
 		// Arrange
 		const pvSystem1: EcaasForm<PvSystemData> = {
@@ -157,4 +158,73 @@ describe("PV and electric batteries mapper", () => {
 		};
 		expect(result).toEqual(expectedResult);
 	});
+
+	it("maps diverters to the correct for for FHS input", () => {
+		const hotWaterCylinderId = "88ea3f45-6f2a-40e2-9117-0541bd8a97f3";
+		const heatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb01e";
+
+		const diverter1: EcaasForm<PvDiverterData> = {
+			data: {
+				name: "Diverter 1",
+				hotWaterCylinder: hotWaterCylinderId,
+				heatSource: heatPumpId,
+			},
+			complete: true,
+		};
+
+		store.$patch({
+			heatingAndCoolingSystems: {
+				heatGeneration: {
+					heatPump: {
+						data: [{
+							data: {
+								name: "HP1",
+								id: heatPumpId,
+								productReference: "HEATPUMP-SMALL",
+							},
+							complete: true,
+						}],
+					},
+				},
+			},
+			domesticHotWater: {
+				waterHeating: {
+					hotWaterCylinder: {
+						data: [{
+							data: {
+								name: "HWC1",
+								id: hotWaterCylinderId,
+								heatSource: heatPumpId,
+								storageCylinderVolume: {
+									amount: 1,
+									unit: "litres",
+								},
+								dailyEnergyLoss: 1,
+							},
+							complete: true,
+						}],
+					},
+				},
+			},
+			pvAndBatteries: {
+				diverters: { data: [diverter1] }
+			}
+		});
+
+		const result = mapPvDiverterData(resolveState(store.$state));
+
+		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
+			EnergySupply: {
+				"Diverter 1": {
+					fuel: "electricity",
+					diverter: {
+						HeatSource: "HP1",
+						StorageTank: "HWC1",
+					},
+				},
+			}
+		};
+
+		expect(result).toEqual(expectedResult);
+	})
 });

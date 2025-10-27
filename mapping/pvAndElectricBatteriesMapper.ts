@@ -1,7 +1,7 @@
 import type { EmptyObject } from "type-fest";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
-import type { SchemaElectricBattery  } from "~/schema/api-schema.types";
+import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import type { SchemaWindowShadingObject } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName } from "./common";
 
@@ -48,21 +48,33 @@ export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery
 	if (electricBattery) {
 		return {
 			"ElectricBattery":
-				{
-					battery_location: electricBattery.location,
-					capacity: electricBattery.capacity,
-					charge_discharge_efficiency_round_trip: electricBattery.chargeEfficiency,
-					grid_charging_possible: electricBattery.gridChargingPossible,
-					maximum_charge_rate_one_way_trip: electricBattery.maximumChargeRate,
-					maximum_discharge_rate_one_way_trip: electricBattery.maximumDischargeRate,
-					minimum_charge_rate_one_way_trip: electricBattery.minimumChargeRate,
-				},
+			{
+				battery_location: electricBattery.location,
+				capacity: electricBattery.capacity,
+				charge_discharge_efficiency_round_trip: electricBattery.chargeEfficiency,
+				grid_charging_possible: electricBattery.gridChargingPossible,
+				maximum_charge_rate_one_way_trip: electricBattery.maximumChargeRate,
+				maximum_discharge_rate_one_way_trip: electricBattery.maximumDischargeRate,
+				minimum_charge_rate_one_way_trip: electricBattery.minimumChargeRate,
+			},
 		};
 	}
-	return {}; 
+	return {};
 }
 
 /* Function unused yet while no diverter data to map. **/
-export function mapPvDiverterData(_state: ResolvedState): EmptyObject {
-	return {};
+export function mapPvDiverterData(state: ResolvedState): { "EnergySupplyElectricity": SchemaEnergySupplyElectricity } | EmptyObject {
+	const diverter = state.pvAndBatteries.diverters[0];
+	const heatSource = state.heatingAndCoolingSystems.heatGeneration.heatPump.filter(x => x.id === diverter?.heatSource)[0]?.name!;
+	const storageTank = state.domesticHotWater.waterHeating.hotWaterCylinder.filter(x => x.id === diverter?.hotWaterCylinder)[0]?.name;
+
+	return {
+		"EnergySupplyElectricity": {
+			fuel: "electricity",
+			diverter: {
+				"HeatSource": heatSource,
+				"StorageTank": storageTank,
+			}
+		}
+	}
 }
