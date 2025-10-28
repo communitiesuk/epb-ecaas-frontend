@@ -661,7 +661,6 @@ describe("dwelling fabric mapper", () => {
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
-			securityRisk: false,
 		};
 
 		const windowSuffix = " (window)";
@@ -696,7 +695,6 @@ describe("dwelling fabric mapper", () => {
 			mid_height: window.midHeight,
 			security_risk: window.securityRisk,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
-			security_risk: false,
 			max_window_open_area: window.maximumOpenableArea,
 			free_area_height: window.heightOpenableArea,
 			window_part_list: [{

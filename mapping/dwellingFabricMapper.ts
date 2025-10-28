@@ -226,7 +226,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 		const commonFields = {
 			area: x.surfaceAreaOfElement,
 			areal_heat_capacity: x.arealHeatCapacity,
-			mass_distribution_class: x.massDistributionClass,
+			mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 			pitch: 180,
 			u_value: defaultUValue,
 		};
@@ -263,7 +263,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				solar_absorption_coeff: x.solarAbsorption,
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
-				mass_distribution_class: x.massDistributionClass,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				pitch: x.pitch,
 				orientation360: x.orientation,
 				is_external_door: false,
@@ -305,7 +305,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				solar_absorption_coeff: x.solarAbsorption,
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
-				mass_distribution_class: x.massDistributionClass,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_external_door: false,
 			},
 		};
@@ -321,7 +321,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				area: x.surfaceAreaOfElement,
 				u_value: defaultUValue,
 				areal_heat_capacity: x.arealHeatCapacity,
-				mass_distribution_class: x.massDistributionClass,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 			},
 		};
 	}) || [];
@@ -336,7 +336,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				area: x.surfaceArea,
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
-				mass_distribution_class: x.massDistributionClass,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 			},
 		};
 	}) || [];
@@ -351,7 +351,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				area: x.surfaceAreaOfElement,
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
-				mass_distribution_class: x.massDistributionClass,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				thermal_resistance_unconditioned_space: x.thermalResistanceOfAdjacentUnheatedSpace,
 			},
 		};
@@ -382,7 +382,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 			pitch: extractPitch(x),
 			area: x.surfaceArea,
 			areal_heat_capacity: x.arealHeatCapacity,
-			mass_distribution_class: x.massDistributionClass,
+			mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 		};
 		const nameWithSuffix = suffixName(x.name, ceilingSuffix);
 
@@ -421,7 +421,7 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 				solar_absorption_coeff: x.solarAbsorptionCoefficient,
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
-				mass_distribution_class: x.massDistributionClass,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_external_door: false,
 				is_unheated_pitched_roof: x.typeOfRoof === "pitchedInsulatedAtCeiling",
 			},
@@ -450,7 +450,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			pitch: extractPitch(x),
 			area: x.surfaceArea,
 			areal_heat_capacity: x.arealHeatCapacity,
-			mass_distribution_class: x.massDistributionClass,
+			mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 		};
 		const nameWithSuffix = suffixName(x.name, doorSuffix);
 
@@ -517,7 +517,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				solar_absorption_coeff: x.solarAbsorption,
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
-				mass_distribution_class: x.massDistributionClass,
+				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_external_door: true,
 			},
 		};
