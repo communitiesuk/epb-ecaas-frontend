@@ -198,6 +198,7 @@ export interface components {
             Controlmax?: string;
             heater_position: number;
             thermostat_position: number;
+            temp_flow_limit_upper?: number;
         };
         /** @description A possible heat source for a hot water tank */
         ImmersionHeater: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
@@ -456,11 +457,15 @@ export interface components {
         StorageTank: components["schemas"]["HotWaterTankCommon"] & {
             /** @constant */
             type: "StorageTank";
+            /** @enum {unknown} */
+            ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible hot water source */
         SmartHotWaterTank: {
             /** @constant */
             type: "SmartHotWaterTank";
+            /** @enum {unknown} */
+            ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible hot water source */
         PointOfUse: {
@@ -468,6 +473,8 @@ export interface components {
             type: "PointOfUse";
             efficiency: number;
             EnergySupply: string;
+            /** @enum {unknown} */
+            ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible hot water source */
         CombiBoiler: {
@@ -481,11 +488,15 @@ export interface components {
             rejected_factor_3: number;
             storage_loss_factor_2: number;
             daily_HW_usage: number;
+            /** @enum {unknown} */
+            ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible hot water source */
         HeatBattery: {
             /** @constant */
             type: "HeatBattery";
+            /** @enum {unknown} */
+            ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible wet heat source */
         HeatSourceWetHeatPump: components["schemas"]["HeatSourceWetCommon"] & ({
@@ -1111,6 +1122,7 @@ export interface components {
                     Controlmax?: string;
                     heater_position: number;
                     thermostat_position: number;
+                    temp_flow_limit_upper?: number;
                 };
                 /** @description A possible heat source for a hot water tank */
                 ImmersionHeater: components["schemas"]["HotWaterTankHeatSourceCommon"] & {
@@ -1176,11 +1188,15 @@ export interface components {
                 StorageTank: components["schemas"]["HotWaterTankCommon"] & {
                     /** @constant */
                     type: "StorageTank";
+                    /** @enum {unknown} */
+                    ColdWaterSource?: "header tank" | "mains water";
                 };
                 /** @description A possible hot water source */
                 SmartHotWaterTank: {
                     /** @constant */
                     type: "SmartHotWaterTank";
+                    /** @enum {unknown} */
+                    ColdWaterSource?: "header tank" | "mains water";
                 };
                 /** @description A possible hot water source */
                 PointOfUse: {
@@ -1188,6 +1204,8 @@ export interface components {
                     type: "PointOfUse";
                     efficiency: number;
                     EnergySupply: string;
+                    /** @enum {unknown} */
+                    ColdWaterSource?: "header tank" | "mains water";
                 };
                 /** @description A possible hot water source */
                 CombiBoiler: {
@@ -1201,11 +1219,15 @@ export interface components {
                     rejected_factor_3: number;
                     storage_loss_factor_2: number;
                     daily_HW_usage: number;
+                    /** @enum {unknown} */
+                    ColdWaterSource?: "header tank" | "mains water";
                 };
                 /** @description A possible hot water source */
                 HeatBattery: {
                     /** @constant */
                     type: "HeatBattery";
+                    /** @enum {unknown} */
+                    ColdWaterSource?: "header tank" | "mains water";
                 };
                 HeatSourceWetCommon: {
                     /** @enum {unknown} */

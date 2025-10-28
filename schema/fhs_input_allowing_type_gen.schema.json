@@ -1492,7 +1492,8 @@
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1
-                }
+                },
+                "temp_flow_limit_upper": {"type": "number"}
             }
         },
         "ImmersionHeater": {
@@ -1754,6 +1755,12 @@
                     "properties": {
                         "type": {
                             "const": "StorageTank"
+                        },
+                        "ColdWaterSource": {
+                            "enum": [
+                                "header tank",
+                                "mains water"
+                            ]
                         }
                     }
                 }
@@ -1767,6 +1774,12 @@
             "properties": {
                 "type": {
                     "const": "SmartHotWaterTank"
+                },
+                "ColdWaterSource": {
+                    "enum": [
+                        "header tank",
+                        "mains water"
+                    ]
                 }
             }
         },
@@ -1788,6 +1801,12 @@
                 },
                 "EnergySupply": {
                     "type": "string"
+                },
+                "ColdWaterSource": {
+                    "enum": [
+                        "header tank",
+                        "mains water"
+                    ]
                 }
             }
         },
@@ -1840,6 +1859,12 @@
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1000
+                },
+                "ColdWaterSource": {
+                    "enum": [
+                        "header tank",
+                        "mains water"
+                    ]
                 }
             }
         },
@@ -1851,6 +1876,12 @@
             "properties": {
                 "type": {
                     "const": "HeatBattery"
+                },
+                "ColdWaterSource": {
+                    "enum": [
+                        "header tank",
+                        "mains water"
+                    ]
                 }
             }
         },
