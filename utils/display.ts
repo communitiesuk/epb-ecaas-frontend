@@ -4,6 +4,7 @@ import type { ApplianceKey, SchemaFlueGasExhaustSituation, SchemaFuelType } from
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
+import type { ConciseMassDistributionClass } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -187,7 +188,7 @@ export function displayReflectivity(reflective: boolean | undefined): string {
 
 export function displayFuelTypes(fuelTypes: SchemaFuelType[] | undefined) {
 	if (fuelTypes === undefined) return emptyValueRendering;
-	return fuelTypes.map(type => displayFuelType(type)).join(", ")
+	return fuelTypes.map(type => displayFuelType(type)).join(", ");
 }
 
 export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
@@ -229,8 +230,8 @@ export const ecoDesignControllerOptions = {
 
 export type EcoDesignControllerValue = keyof typeof ecoDesignControllerOptions extends infer K
 	? K extends string
-	? K extends `${infer N extends number}` ? N : never
-	: never
+		? K extends `${infer N extends number}` ? N : never
+		: never
 	: never;
 
 export function displayEcoDesignController(value: EcoDesignControllerValue | undefined): string {

@@ -14,6 +14,7 @@ const baseForm = {
 };
 
 const expectedHouseInput: FhsInputSchema = {
+	Appliances: {},
 	ColdWaterSource: {
 		"mains water": {
 			start_day: 0,
@@ -111,14 +112,12 @@ const expectedHouseInput: FhsInputSchema = {
 	},
 	HotWaterSource: {
 		"hw cylinder": {
-			ColdWaterSource: "mains water",
 			HeatSource: {
 				["some-heat-pump-name"]: {
 					name: "some-heat-pump-name",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
-					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
 					Controlmin: "min",
 					Controlmax: "max",
@@ -166,6 +165,7 @@ const expectedHouseInput: FhsInputSchema = {
 		ventilation_zone_base_height: 3,
 	},
 	NumberOfBedrooms: 7,
+	NumberOfWetRooms: 0,
 	OnSiteGeneration: {},
 	PartGcompliance: true,
 	PartO_active_cooling_required: false,
@@ -199,7 +199,7 @@ const expectedHouseInput: FhsInputSchema = {
 				temp_flow_limit_upper: 65,
 			},
 			Zone: defaultZoneName,
-			design_flow_temp: 12,
+			design_flow_temp: 22,
 			design_flow_rate: 4,
 			ecodesign_controller: {
 				ecodesign_control_class: 8,
@@ -209,15 +209,15 @@ const expectedHouseInput: FhsInputSchema = {
 			},
 			emitters: [
 				{
-					c: 9,
+					c: 0.08,
 					frac_convective: 4,
-					n: 3,
+					n: 1.3,
 					wet_emitter_type: "radiator",
 				},
 				{
-					c: 9,
+					c: 0.08,
 					frac_convective: 4,
-					n: 3,
+					n: 1.3,
 					wet_emitter_type: "radiator",
 				},
 			],
@@ -255,7 +255,6 @@ const expectedHouseInput: FhsInputSchema = {
 				},
 			},
 			Lighting: {
-				efficacy: 56.0,
 				bulbs: {
 					led: {
 						count: 6,
@@ -269,10 +268,10 @@ const expectedHouseInput: FhsInputSchema = {
 			volume: 300,
 		},
 	},
-	temp_internal_air_static_calcs: 20.0, // dummy value - this goes away in later schemas
 };
 
 const expectedFlatInput: FhsInputSchema = {
+	Appliances: {},
 	ColdWaterSource: {
 		"mains water": {
 			start_day: 0,
@@ -413,12 +412,12 @@ const expectedFlatInput: FhsInputSchema = {
 		Shower: {
 			"mixer shower 1 name": {
 				ColdWaterSource: "mains water",
-				flowrate: 19,
+				flowrate: 14,
 				type: "MixerShower",
 			},
 			"mixer shower 2 name": {
 				ColdWaterSource: "mains water",
-				flowrate: 28,
+				flowrate: 12,
 				type: "MixerShower",
 			},
 			"electric shower 1 name": {
@@ -459,14 +458,12 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	HotWaterSource: {
 		"hw cylinder": {
-			ColdWaterSource: "mains water",
 			HeatSource: {
 				["heat pump 1 name"]: {
 					name: "heat pump 1 name",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
-					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
 					Controlmin: "min",
 					Controlmax: "max",
@@ -572,6 +569,7 @@ const expectedFlatInput: FhsInputSchema = {
 		ventilation_zone_base_height: 1,
 	},
 	NumberOfBedrooms: 2,
+	NumberOfWetRooms: 0,
 	OnSiteGeneration: {
 		"pv system 1": {
 			EnergySupply: "mains elec",
@@ -648,11 +646,11 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: "Very light",
 					mass_distribution_class: "E: Mass concentrated at external side",
 					perimeter: 40,
-					edge_insulation: [{
+					edge_insulation: {
 						edge_thermal_resistance: 2.4,
 						type: "horizontal",
 						width: 0.32,
-					}],
+					},
 					psi_wall_floor_junc: 0.4,
 					thickness_walls: 0.05,
 					floor_type: "Slab_edge_insulation",
@@ -759,6 +757,7 @@ const expectedFlatInput: FhsInputSchema = {
 					mid_height: 1.5,
 					orientation360: 20,
 					pitch: 90,
+					security_risk: false,
 					shading: [],
 					type: "BuildingElementTransparent",
 					u_value: 0.8,
@@ -790,7 +789,7 @@ const expectedFlatInput: FhsInputSchema = {
 					areal_heat_capacity: "Very light",
 					mass_distribution_class: "IE: Mass divided over internal and external side",
 					pitch: 45,
-					thermal_resistance_unconditioned_space: 3.4,
+					thermal_resistance_unconditioned_space: 2.7,
 					u_value: 2.2,
 				},
 				"roof 1 (roof)": {
@@ -834,6 +833,7 @@ const expectedFlatInput: FhsInputSchema = {
 					base_height: 1,
 					u_value: 0.1,
 					g_value: 0.2,
+					security_risk: false,
 					mid_height: 2,
 					frame_area_fraction: 0.2, // inverse openingToFrameRatio (1 - 0.8) 
 					max_window_open_area: 1,
@@ -862,7 +862,7 @@ const expectedFlatInput: FhsInputSchema = {
 			SpaceHeatSystem: ["instant elec heater 1", "instant elec heater 2"],
 			ThermalBridging: {
 				"linear thermal bridge (bridge)": {
-					junction_type: "E3: SILL",
+					junction_type: "E3",
 					length: 1.2,
 					linear_thermal_transmittance: 0.03,
 					type: "ThermalBridgeLinear",
@@ -881,7 +881,6 @@ const expectedFlatInput: FhsInputSchema = {
 				},
 			},
 			Lighting: {
-				efficacy: 56.0,
 				bulbs: {
 					incandescent: {
 						count: 2,
@@ -898,7 +897,6 @@ const expectedFlatInput: FhsInputSchema = {
 			volume: 550,
 		},
 	},
-	temp_internal_air_static_calcs: 20.0, // dummy value - this goes away in later schemas
 };
 
 // custom vitest matcher so we can get more useful JSON validation errors
@@ -1160,7 +1158,7 @@ describe("FHS input mapper", () => {
 							heatSource: "some-heat-pump-id",
 							thermalMass: 0.14,
 							designTempDiffAcrossEmitters: 31,
-							designFlowTemp: 12,
+							designFlowTemp: 22,
 							designFlowRate: 4,
 							ecoDesignControllerClass: "8",
 							minimumFlowTemp: 21,
@@ -1169,8 +1167,8 @@ describe("FHS input mapper", () => {
 							convectionFractionWet: 4,
 							typeOfSpaceHeater: "radiator",
 							numberOfRadiators: 2,
-							exponent: 3,
-							constant: 9,
+							exponent: 1.3,
+							constant: 0.08,
 						},
 					}],
 				},
@@ -1657,7 +1655,7 @@ describe("FHS input mapper", () => {
 							massDistributionClass: "IE",
 							pitch: 45,
 							pitchOption: "custom",
-							thermalResistanceOfAdjacentUnheatedSpace: 3.4,
+							thermalResistanceOfAdjacentUnheatedSpace: 2.7,
 							uValue: 2.2,
 						},
 					},
@@ -1724,6 +1722,7 @@ describe("FHS input mapper", () => {
 							midHeightOpenablePart1: 3,
 							maximumOpenableArea: 3,
 							heightOpenableArea: 2,
+							securityRisk: false,
 						},
 					}],
 				},
@@ -1789,6 +1788,7 @@ describe("FHS input mapper", () => {
 						maximumOpenableArea: 1,
 						heightOpenableArea: 1,
 						curtainsControlObject: "auto_motorised" as const,
+						securityRisk: false,
 					},
 				}],
 			},
@@ -1951,7 +1951,7 @@ describe("FHS input mapper", () => {
 							data: {
 								id: "mixer shower 1 id",
 								name: "mixer shower 1 name",
-								flowRate: 19,
+								flowRate: 14,
 							},
 						},
 						{
@@ -1959,7 +1959,7 @@ describe("FHS input mapper", () => {
 							data: {
 								id: "mixer shower 2 id",
 								name: "mixer shower 2 name",
-								flowRate: 28,
+								flowRate: 12,
 							},
 						},
 					],
@@ -2159,7 +2159,10 @@ describe("FHS input mapper", () => {
 	});
 
 	test("the expected results pass against the current FHS input schema", () => {
-		const expectedsToTest = [expectedHouseInput, expectedFlatInput];
+		const expectedsToTest = [
+			expectedHouseInput,
+			expectedFlatInput,
+		];
 
 		const validate = ajv.getSchema("fhs")!;
 

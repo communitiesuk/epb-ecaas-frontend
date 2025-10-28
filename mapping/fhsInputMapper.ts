@@ -60,6 +60,9 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 			step: 1,
 		},
 	};
+	const defaultAppliances: Pick<FhsInputSchema, "Appliances"> = {
+		Appliances: {},
+	}; 
 	// Below uses default values until heat pump is set up to come from PCDB
 	const { HotWaterSource } = domesticHotWaterData;
 	const heatPumpName: string = Object.keys((HotWaterSource!["hw cylinder"] as SchemaStorageTank).HeatSource)[0]!;
@@ -95,7 +98,6 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		control,
 		events,
 		defaultSimulationTime,
-		{ temp_internal_air_static_calcs: 20.0 }, // temporary dummy, expected value for this - this field is removed in later schemas
 	]) as FhsInputSchema;
 
 	console.log(fhsInput);

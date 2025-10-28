@@ -48,7 +48,6 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		}
 		
 		const key = x.name;
-
 		const commonFields = {
 			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
 			sup_air_flw_ctrl: "ODA",
@@ -171,12 +170,44 @@ export function mapCombustionAppliancesData(state: ResolvedState): Record<string
 	const combustionApplianceEntries = objectEntries(state.infiltrationAndVentilation.combustionAppliances).map(([key, value]) => {
 		return value.map<[string, SchemaCombustionAppliance]>((appliance) => {
 			const { name, airSupplyToAppliance, exhaustMethodFromAppliance, typeOfFuel } = appliance;
-			const applianceInput: SchemaCombustionAppliance = {
-				appliance_type: key,
-				exhaust_situation: exhaustMethodFromAppliance,
-				fuel_type: typeOfFuel,
+
+			let applianceInput: SchemaCombustionAppliance;
+
+			const commonFields: Pick<SchemaCombustionAppliance, "supply_situation" | "exhaust_situation"> = {
 				supply_situation: airSupplyToAppliance,
+				exhaust_situation: exhaustMethodFromAppliance,
 			};
+
+			switch (key) {
+				case "closed_fire":
+					applianceInput = {
+						...commonFields,
+						fuel_type: typeOfFuel as "oil" | "coal",
+						appliance_type: key,
+					};
+					break;
+				case "closed_with_fan":
+				case "open_gas_flue_balancer":
+				case "open_gas_kitchen_stove":
+				case "open_gas_fire":
+					applianceInput = {
+						...commonFields,
+						fuel_type: "gas",
+						appliance_type: key,
+					};
+					break;
+				case "open_fireplace":
+					applianceInput = {
+						...commonFields,
+						fuel_type: "wood",
+						appliance_type: key,
+					};
+					break;
+				default:
+					key satisfies never;
+					throw new Error(`Unknown type of combustion appliance "${key}" encountered.`);
+			}
+
 			return [name, applianceInput];
 		});
 	}).flat();

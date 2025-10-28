@@ -149,7 +149,7 @@ export const useEcaasStore = defineStore("ecaas", {
 	actions: {
 		async postEcaasState() {
 			try {
-				await $fetch("/api/setState", {
+				await $fetch("/api/session", {
 					method: "POST",
 					body: this.$state,
 				});

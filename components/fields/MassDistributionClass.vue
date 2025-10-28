@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ConciseMassDistributionClass } from "~/stores/ecaasStore.schema";
 import type { RadioOption } from "../form-kit/Radios.vue";
 
 defineProps<{

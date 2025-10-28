@@ -104,10 +104,10 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 		}
 
 		const val: SchemaStorageTank = {
-			ColdWaterSource: "mains water",
 			daily_losses: x.dailyEnergyLoss,
 			type: "StorageTank",
 			volume: storageCylinderVolumeInLitres,
+			ColdWaterSource: "mains water", // a cold water source is de facto required here
 			HeatSource: {
 				// Adding these values as default until heat pump is set up to come from PCDB
 				[heatPumpName]: {
@@ -115,10 +115,10 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 					EnergySupply: defaultElectricityEnergySupplyName,
 					heater_position: 0.1,
 					type: "HeatSourceWet",
-					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
 					Controlmax: defaultControlMaxName,
 					Controlmin: defaultControlMinName,
+					temp_flow_limit_upper: 65, // upstream needs a value here at 0.36
 				},
 			},
 			...(primaryPipeworkEntries.length !== 0 ? { primary_pipework: primaryPipeworkEntries } : {}),

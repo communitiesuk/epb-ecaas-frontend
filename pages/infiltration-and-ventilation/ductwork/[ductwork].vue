@@ -31,16 +31,6 @@ const saveForm = (fields: DuctworkData) => {
 		const { ductwork } = state.infiltrationAndVentilation;
 		const index = getStoreIndex(ductwork.data as EcaasForm<DuctworkData>[]);
 
-		const commonFields = {
-			name: fields.name,
-			mvhrUnit: fields.mvhrUnit,
-			ductType: fields.ductType,
-			insulationThickness: fields.insulationThickness,
-			lengthOfDuctwork: fields.lengthOfDuctwork,
-			thermalInsulationConductivityOfDuctwork: fields.thermalInsulationConductivityOfDuctwork,
-			surfaceReflectivity: fields.surfaceReflectivity,
-		};
-
 		const ductworkItem: DuctworkData = {
 			name: fields.name,
 			mvhrUnit: fields.mvhrUnit,

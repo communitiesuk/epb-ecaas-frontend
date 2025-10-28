@@ -13,7 +13,7 @@ export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSc
 	};
 }
 
-export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema, "General" | "NumberOfBedrooms" | "PartGcompliance" | "PartO_active_cooling_required"> {
+export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema, "General" | "NumberOfBedrooms" | "NumberOfWetRooms" | "PartGcompliance" | "PartO_active_cooling_required"> {
 	const { generalSpecifications: generalDetails } = state.dwellingDetails;
 	
 	return {
@@ -29,6 +29,7 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 					storeys_in_building: generalDetails.storeysInDwelling,
 				},
 		NumberOfBedrooms: generalDetails.numOfBedrooms,
+		NumberOfWetRooms: 0, // fhs needs this field set at 0.36
 		PartGcompliance: true,
 		PartO_active_cooling_required: generalDetails.coolingRequired,
 	};

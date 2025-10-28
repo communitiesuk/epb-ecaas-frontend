@@ -52,7 +52,6 @@ export function mapZoneParametersData(state: ResolvedState): Pick<FhsInputSchema
 				SpaceHeatControl: "livingroom",
 				area: dwellingSpaceZoneParameters.area,
 				volume: dwellingSpaceZoneParameters.volume,
-				temp_setpnt_init: 20, // temporary dummy - this field is removed in subsequent schemas
 			} as Partial<SchemaZoneInput>,
 		},
 	} as Pick<FhsInputSchema, "HeatingControlType" | "Zone">;
@@ -82,7 +81,7 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 	const { dwellingSpaceGroundFloor, dwellingSpaceInternalFloor, dwellingSpaceExposedFloor } = state.dwellingFabric.dwellingSpaceFloors;
 	const floorSuffix = "floor";
 
-	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: "Slab_edge_insulation" }>) {
+	function mapEdgeInsulation(data: Extract<GroundFloorData, { typeOfGroundFloor: "Slab_edge_insulation" }>): SchemaEdgeInsulation {
 		let edgeInsulationWidthInMetres: number;
 
 		if (typeof data.edgeInsulationWidth === "number") {
@@ -493,6 +492,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 			],
 			frame_area_fraction: calculateFrameToOpeningRatio(x.openingToFrameRatio),
 			max_window_open_area: x.maximumOpenableArea,
+			security_risk: x.securityRisk,
 			free_area_height: x.heightOpenableArea,
 			shading: [],
 		} as const satisfies SchemaBuildingElement;

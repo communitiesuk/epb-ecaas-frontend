@@ -91,6 +91,8 @@ describe("dwelling fabric mapper", () => {
 		// Act
 		const fhsInputData = mapLightingData(resolveState(store.$state));
 
+		const bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs as SchemaLightingBulbs;
+
 		// Assert
 		expect(fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs?.count).toBe(state.numberOfBulbs);
 	});
@@ -232,7 +234,7 @@ describe("dwelling fabric mapper", () => {
 			width: 0.36,
 		};
 
-		expect(groundFloorWithEdgeInsulationElement.edge_insulation![0]).toEqual(expectedEdgeInsulation);
+		expect("edge_insulation" in groundFloorWithEdgeInsulationElement && groundFloorWithEdgeInsulationElement.edge_insulation).toEqual(expectedEdgeInsulation);
 
 		const expectedGroundFloorSuspendedFloor: BuildingElementGround = {
 			...expectedGroundFloor,
@@ -532,6 +534,7 @@ describe("dwelling fabric mapper", () => {
 			uValue: 1,
 			pitchOption: "90",
 			pitch: 90,
+			securityRisk: false,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
 			midHeight: 1,
@@ -658,6 +661,7 @@ describe("dwelling fabric mapper", () => {
 			openingToFrameRatio: 0.3,
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
+			securityRisk: false,
 		};
 
 		const windowSuffix = " (window)";
@@ -692,6 +696,7 @@ describe("dwelling fabric mapper", () => {
 			mid_height: window.midHeight,
 			security_risk: window.securityRisk,
 			frame_area_fraction: 1 - window.openingToFrameRatio,
+			security_risk: false,
 			max_window_open_area: window.maximumOpenableArea,
 			free_area_height: window.heightOpenableArea,
 			window_part_list: [{

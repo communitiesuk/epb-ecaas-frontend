@@ -26,6 +26,7 @@ const window1: EcaasForm<WindowData> = {
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
+		securityRisk: false,
 		openingToFrameRatio: 0.8,
 		numberOpenableParts: "0",
 		overhangDepth: unitValue(60, millimetre),
@@ -65,6 +66,7 @@ describe ("window", () => {
 		await user.type(screen.getByTestId("width"), "1"); 
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.click(screen.getByTestId("pitchOption_90"));
+		await user.click(screen.getByTestId("securityRisk_no"));
 		await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 		await user.type(screen.getByTestId("elevationalHeight"), "1");
 		await user.type(screen.getByTestId("midHeight"), "1");

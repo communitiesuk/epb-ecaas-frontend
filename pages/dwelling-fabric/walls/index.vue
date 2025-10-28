@@ -30,6 +30,7 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 	
 		store.$patch((state) => {
 			const newWall = {
+				complete: wall.complete,
 				data: {
 					...wall.data, 
 					name: `${wall.data.name} (${duplicates.length})`,

@@ -19,6 +19,9 @@
     "ci-e2e-test": "npx playwright test"
   },
   "dependencies": {
+    "@aws-sdk/client-config-service": "^3.914.0",
+    "@aws-sdk/client-dynamodb": "^3.913.0",
+    "@aws-sdk/lib-dynamodb": "^3.913.0",
     "@formkit/nuxt": "^1.6.9",
     "@nuxtjs/robots": "^5.2.10",
     "@pinia/nuxt": "^0.11.1",
@@ -46,7 +49,7 @@
     "@nuxt/eslint": "^1.0.0",
     "@nuxt/test-utils": "^3.19.2",
     "@pinia/testing": "^1.0.2",
-    "@playwright/test": "^1.54.1",
+    "@playwright/test": "^1.56.1",
     "@stylistic/eslint-plugin": "^3.0.1",
     "@tauri-apps/cli": "^2.2.7",
     "@testing-library/dom": "^10.4.0",

@@ -22,7 +22,7 @@ export const defaultHeatSourceWetDetails = {
 	power_off: 0.015,
 	power_source_circ_pump: 0.010,
 	power_standby: 0.015,
-	power_max_backup: 0,
+	power_max_backup: 0.1,
 	sink_type: "Water",
 	source_type: "OutsideAir",
 	temp_lower_operating_limit: -5,
@@ -74,7 +74,6 @@ export const defaultHeatSourceWetDetails = {
 			temp_test: -7,
 		},
 	],
-	time_constant_onoff_operation: 140,
 	time_delay_backup: 2,
 	var_flow_temp_ctrl_during_test: true,
 } as const satisfies SchemaHeatSourceWetDetails;
