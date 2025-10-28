@@ -106,12 +106,14 @@ const expectedHouseInput: FhsInputSchema = {
 	},
 	HotWaterSource: {
 		"hw cylinder": {
+			ColdWaterSource: "mains water",
 			HeatSource: {
 				["some-heat-pump-name"]: {
 					name: "some-heat-pump-name",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
+					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
 					Controlmin: "min",
 					Controlmax: "max",
@@ -452,12 +454,14 @@ const expectedFlatInput: FhsInputSchema = {
 	},
 	HotWaterSource: {
 		"hw cylinder": {
+			ColdWaterSource: "mains water",
 			HeatSource: {
 				["heat pump 1 name"]: {
 					name: "heat pump 1 name",
 					EnergySupply: "mains elec",
 					heater_position: 0.1,
 					type: "HeatSourceWet",
+					temp_flow_limit_upper: 65,
 					thermostat_position: 0.33,
 					Controlmin: "min",
 					Controlmax: "max",
