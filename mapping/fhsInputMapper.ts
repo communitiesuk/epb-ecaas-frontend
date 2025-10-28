@@ -87,6 +87,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	};
 
 	const fhsInput = merge.all([
+		defaultAppliances,
 		dwellingDetailsData,
 		infiltrationVentilationData,
 		dwellingFabricData,

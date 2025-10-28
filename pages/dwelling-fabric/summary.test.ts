@@ -266,7 +266,6 @@ const windowData: EcaasForm<WindowData> = {
 		treatmentType: "blinds",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
-		securityRisk: false,
 	},
 };
 

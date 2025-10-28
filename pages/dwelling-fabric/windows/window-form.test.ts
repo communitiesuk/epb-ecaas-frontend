@@ -26,7 +26,6 @@ const window1: EcaasForm<WindowData> = {
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
-		securityRisk: false,
 		openingToFrameRatio: 0.8,
 		numberOpenableParts: "0",
 		overhangDepth: unitValue(60, millimetre),

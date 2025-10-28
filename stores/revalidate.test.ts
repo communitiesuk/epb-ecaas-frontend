@@ -9,7 +9,13 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 				"typeOfDwelling": "house",
 				"storeysInDwelling": 3,
 				"numOfBedrooms": 3,
-				"coolingRequired": false,
+				"numOfBathrooms": 1,
+				"numOfWCs": 1,
+				"numOfHabitableRooms": 4,
+				"numOfRoomsWithTappingPoints": 2,
+				"numOfUtilityRooms": 1,
+				"buildingLength": 7,
+				"buildingWidth": 7,
 			},
 			"complete": true,
 		},
@@ -114,6 +120,13 @@ const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingF
 
 const twoHeatPumps: Pick<EcaasState, "heatingAndCoolingSystems"> = {
 	"heatingAndCoolingSystems": {
+		"general": {
+			"data": {
+				"heatingControlType": "separateTemperatureControl",
+				"coolingRequired": false,
+			},
+			"complete": true,
+		},
 		"heatGeneration": {
 			"heatPump": {
 				"data": [

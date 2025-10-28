@@ -32,7 +32,6 @@ describe("windows", () => {
 			numberOpenableParts: "0",
 			openingToFrameRatio: 0.2,
 			curtainsOrBlinds: false,
-			securityRisk: false,
 		},
 		complete: true,
 	};
