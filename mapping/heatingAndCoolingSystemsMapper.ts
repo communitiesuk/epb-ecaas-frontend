@@ -11,6 +11,20 @@ export function mapheatingAndCoolingSystemsData(state: ResolvedState): Pick<FhsI
 	};
 }
 
+const heatingControlOptions: Record<string, "SeparateTempControl" | "SeparateTimeAndTempControl"> = {
+	"separateTemperatureControl": "SeparateTempControl",
+	"separateTimeAndTemperatureControl": "SeparateTimeAndTempControl",
+};
+
+export function mapGeneralData(state: ResolvedState): Pick<FhsInputSchema, "HeatingControlType" | "PartO_active_cooling_required"> {
+	const { heatingControlType, coolingRequired } = state.heatingAndCoolingSystems.general;
+
+	return {
+		HeatingControlType: heatingControlOptions[heatingControlType]!,
+		PartO_active_cooling_required: coolingRequired,
+	};
+}
+
 export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply"> {
 	const { fuelType, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered, exported } = state.heatingAndCoolingSystems.energySupply;
 

@@ -1,4 +1,4 @@
-import { mapEnergySupplyData, mapHeatEmittingData, mapSpaceCoolSystems } from "./heatingAndCoolingSystemsMapper";
+import { mapGeneralData, mapEnergySupplyData, mapHeatEmittingData, mapSpaceCoolSystems } from "./heatingAndCoolingSystemsMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { defaultControlName, defaultZoneName } from "./common";
 
@@ -7,7 +7,40 @@ const baseForm = {
 	complete: true as const,
 };
 
-describe("heating systems mapper", () => {
+describe("general", () => {
+	const store = useEcaasStore();
+
+	afterEach(() => {
+		store.$reset();
+	});
+
+	it("maps general heating", () => {
+		const generalData: GeneralHeatingAndCoolingSystems = {
+			heatingControlType: "separateTemperatureControl",
+			coolingRequired: true,
+		};
+
+		store.$patch({
+			heatingAndCoolingSystems: {
+				general: {
+					...baseForm,
+					data: generalData,
+				},
+			},
+		});
+
+		const result = mapGeneralData(resolveState(store.$state));
+
+		const expectedResult: Pick<FhsInputSchema, "HeatingControlType" | "PartO_active_cooling_required"> = {
+			HeatingControlType: "SeparateTempControl",
+			PartO_active_cooling_required: true,
+		};
+
+		expect(result).toEqual(expectedResult);
+	});
+});
+
+describe("energy supply mapper", () => {
 	const store = useEcaasStore();
 
 	afterEach(() => {
@@ -124,6 +157,14 @@ describe("heating systems mapper", () => {
 		};
 
 		expect(result).toEqual(expectedResult);
+	});
+});
+
+describe("heat emitting mapper", () => {
+	const store = useEcaasStore();
+
+	afterEach(() => {
+		store.$reset();
 	});
 
 	it("maps heat emitters with wet distribution (radiator only)", () => {
