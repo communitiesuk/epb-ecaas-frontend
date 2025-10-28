@@ -5,8 +5,6 @@ import {
 	PutCommand,
 } from "@aws-sdk/lib-dynamodb";
 
-const isDevEnv = process.env.NODE_ENV === "development";
-
 const localConfig = {
 	region: "fakeRegion", 
 	endpoint: "http://localhost:8000",
@@ -16,7 +14,7 @@ const localConfig = {
 	},
 };
 
-const client = new DynamoDBClient({ ...( isDevEnv ? localConfig : {}) });
+const client = new DynamoDBClient(process.env.NODE_ENV === "development" ? localConfig : {});
 
 const docClient = DynamoDBDocumentClient.from(client);
 
