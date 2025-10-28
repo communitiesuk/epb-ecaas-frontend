@@ -31,6 +31,6 @@ export default defineEventHandler(async (event) => {
 });
 
 
-// we may want to do the following to limit the amout of data being sent to the server:
+// we may want to do the following to limit the amount of data being sent to the server:
 // Merge updated partial state with existing state
 // const newState = merge(state!, body)

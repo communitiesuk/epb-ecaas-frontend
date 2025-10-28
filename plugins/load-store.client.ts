@@ -1,3 +1,5 @@
 export default defineNuxtPlugin(async () => {
-	await syncCacheToLocalStorage();
+	if (process.env.NODE_ENV === "production") {
+		await syncCacheToLocalStorage();
+	}
 });
