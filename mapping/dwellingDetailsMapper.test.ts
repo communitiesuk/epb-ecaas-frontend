@@ -15,8 +15,14 @@ describe("dwelling details mapper", () => {
 			typeOfDwelling: "flat",
 			storeysInDwelling: 3,
 			storeyOfFlat: 1,
+			buildingLength: 10,
+			buildingWidth: 20,
 			numOfBedrooms: 2,
-			coolingRequired: false,
+			numOfUtilityRooms: 2,
+			numOfBathrooms: 1,
+			numOfWCs: 1,
+			numOfHabitableRooms: 3,
+			numOfRoomsWithTappingPoints: 2,
 		};
 
 		store.$patch({
@@ -35,9 +41,15 @@ describe("dwelling details mapper", () => {
 		expect(fhsInputData.General.build_type).toBe(state.typeOfDwelling);
 		expect(fhsInputData.General.storeys_in_building).toBe(state.storeysInDwelling);
 		expect(fhsInputData.General.build_type === "flat" ? fhsInputData.General.storey_of_dwelling : undefined).toBe(state.storeyOfFlat);
+		expect(fhsInputData.BuildingLength).toBe(state.buildingLength);
+		expect(fhsInputData.BuildingWidth).toBe(state.buildingWidth);
 		expect(fhsInputData.NumberOfBedrooms).toBe(state.numOfBedrooms);
+		expect(fhsInputData.NumberOfUtilityRooms).toBe(state.numOfUtilityRooms);
+		expect(fhsInputData.NumberOfBathrooms).toBe(state.numOfBathrooms);
+		expect(fhsInputData.NumberOfSanitaryAccommodations).toBe(state.numOfWCs);
+		expect(fhsInputData.NumberOfHabitableRooms).toBe(state.numOfHabitableRooms);
+		expect(fhsInputData.NumberOfTappedRooms).toBe(state.numOfRoomsWithTappingPoints);
 		expect(fhsInputData.PartGcompliance).toBe(true);
-		expect(fhsInputData.PartO_active_cooling_required).toBe(false);
 	});
 
 	it("maps external factors input state to FHS input request", () => {
