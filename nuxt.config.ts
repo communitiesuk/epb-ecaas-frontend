@@ -109,7 +109,6 @@ export default defineNuxtConfig({
 	},
 
 	runtimeConfig: {
-		dynamodbRegion: "",
 		public: {
 			environment: process.env.NUXT_PUBLIC_ENVIRONMENT,
 		},
