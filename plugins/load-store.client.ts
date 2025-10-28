@@ -1,3 +1,3 @@
 export default defineNuxtPlugin(async () => {
-		await syncCacheToLocalStorage();
+	await syncCacheToLocalStorage();
 });
