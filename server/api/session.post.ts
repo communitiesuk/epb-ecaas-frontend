@@ -1,28 +1,37 @@
 import { v4 as uuidv4 } from "uuid";
+import type { EcaasState } from "~/stores/ecaasStore.schema";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event);
-	let sessionId = getCookie(event, "sessionId");
+	const twoWeeksInSeconds = 14 * 24 * 60 * 60;
+	const timeToLive = Math.floor(Date.now() / 1000) + twoWeeksInSeconds;
+  let sessionId = getCookie(event, "sessionId");
+	
+  if (sessionId) {
+    const storedSession = await useStorage("dynamo").getItem<EcaasState>(sessionId);
+   
+		if(storedSession){
+			await useStorage("dynamo").setItem(sessionId, body)
+		} else{
+			await setSessionWithTtl(sessionId, body, timeToLive);
+		}
+ 
+    // we may want to do the following to limit the amout of data being sent to the server:
+     // Merge updated partial state with existing state
+    // const newState = merge(state!, body);
+  } else {
+    sessionId = uuidv4();
 
-	if (sessionId) {
-		// we may want to do the following to limit the amout of data being sent to the server:
-		// const state = await storage.getItem<EcaasState>(sessionId);
+    setCookie(event, "sessionId", sessionId, {
+      maxAge: twoWeeksInSeconds,
+      httpOnly: true,
+    });
 
-		// Merge updated partial state with existing state
-		// const newState = merge(state!, body);
-
-		useStorage("dynamo").setItem(sessionId, body);
-	} else {
-		sessionId = uuidv4();
-		const twoWeeksInSeconds = 14 * 24 * 60 * 60;
-		const timeToLive = Math.floor(Date.now() / 1000) + twoWeeksInSeconds;
-
-		setCookie(event, "sessionId", sessionId, {
-			maxAge: twoWeeksInSeconds,
-			httpOnly: true,
-		});
-
-		useStorage("dynamo").setItem(sessionId, body, { ttl: timeToLive });
-	}
-	event.node.res.end();
+    await setSessionWithTtl(sessionId, body, timeToLive);
+  }
+  event.node.res.end();
 });
+
+async function setSessionWithTtl(sessionId: string, body: EcaasState, timeToLive: number) {
+	await useStorage("dynamo").setItem(sessionId, body, { ttl: timeToLive });
+}
