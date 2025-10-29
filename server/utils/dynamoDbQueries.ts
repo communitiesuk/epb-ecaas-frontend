@@ -3,6 +3,7 @@ import {
 	DynamoDBDocumentClient,
 	GetCommand,
 	PutCommand,
+	UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 
 const localConfig = {
@@ -19,7 +20,7 @@ const client = new DynamoDBClient(process.env.NODE_ENV === "development" ? local
 const docClient = DynamoDBDocumentClient.from(client);
 
 export async function getSessionData(key: string): Promise<string | undefined> {
-	console.log("getSessionData called")
+	console.log("getSessionData called");
 	const { Item: item } = await docClient.send(
 		new GetCommand({
 			TableName: "sessions",
@@ -41,6 +42,22 @@ export async function setSessionData(
 				session_id: key,
 				ecaas: value,
 				...(timeToLive ? { ttl: timeToLive } : {}),
+			},
+		}),
+	);
+}
+
+export async function updateSessionData(
+	key: string,
+	value: string,
+) {
+	await docClient.send(
+		new UpdateCommand({
+			TableName: "sessions",
+			Key: { session_id: key },
+			UpdateExpression: "set ecaas = :ecaas",
+			ExpressionAttributeValues: {
+				":ecaas": value,
 			},
 		}),
 	);
