@@ -1124,6 +1124,13 @@ describe("FHS input mapper", () => {
 		};
 
 		const heatingAndCoolingSystems: heatingAndCoolingSystems = {
+			general: {
+				...baseForm,
+				data: {
+					heatingControlType: "separateTemperatureControl",
+					coolingRequired: true,
+				},
+			},
 			heatGeneration: {
 				heatPump: {
 					...baseForm,
@@ -1285,6 +1292,9 @@ describe("FHS input mapper", () => {
 				...baseForm,
 			},
 			electricBattery: {
+				...baseForm,
+			},
+			diverters: {
 				...baseForm,
 			},
 		};
@@ -1846,6 +1856,13 @@ describe("FHS input mapper", () => {
 		};
 
 		const heatingAndCoolingSystems: heatingAndCoolingSystems = {
+			general: {
+				...baseForm,
+				data: {
+					heatingControlType: "separateTemperatureControl",
+					coolingRequired: false,
+				},
+			},
 			heatGeneration: {
 				heatPump: {
 					...baseForm,
@@ -2149,6 +2166,10 @@ describe("FHS input mapper", () => {
 						maximumDischargeRate: 20,
 					},
 				}],
+			},
+			diverters: {
+				...baseForm,
+				data: [],
 			},
 		};
 
