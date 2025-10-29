@@ -19,6 +19,7 @@ const client = new DynamoDBClient(process.env.NODE_ENV === "development" ? local
 const docClient = DynamoDBDocumentClient.from(client);
 
 export async function getSessionData(key: string): Promise<string | undefined> {
+	console.log("getSessionData called")
 	const { Item: item } = await docClient.send(
 		new GetCommand({
 			TableName: "sessions",
