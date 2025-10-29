@@ -17,7 +17,6 @@ describe("ground floor", () => {
 	const groundFloor: GroundFloorData = {
 		name: "Ground 1",
 		surfaceArea: 5,
-		pitch: 180,
 		uValue: 1,
 		thermalResistance: 1,
 		arealHeatCapacity: "Very light",

@@ -32,7 +32,6 @@ const floorsData: FloorsData = {
 			data: {
 				name: "Ground 1",
 				surfaceArea: 5,
-				pitch: 0,
 				uValue: 1,
 				thermalResistance: 1,
 				arealHeatCapacity: "Very light",
@@ -382,7 +381,6 @@ describe("Dwelling space fabric summary", () => {
 			const expectedResult = {
 				"Name": "Ground 1",
 				"Net surface area of this element": `5 ${metresSquare.suffix}`,
-				"Pitch": `0 ${degrees.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
 				"Areal heat capacity": "Very light",

@@ -53,7 +53,6 @@ const groundFloorSummary: SummarySection = {
 		return {
 			"Name": show(x.name),
 			"Net surface area of this element": dim(x.surfaceArea, "metres square"),
-			"Pitch": dim(x.pitch, "degrees"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
 			"Areal heat capacity": show(x.arealHeatCapacity),

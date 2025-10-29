@@ -1058,7 +1058,6 @@ describe("FHS input mapper", () => {
 						data: {
 							name: "ground-floor",
 							surfaceArea: 40,
-							pitch: 0,
 							uValue: 1,
 							thermalResistance: 1,
 							arealHeatCapacity: "Very light",
@@ -1506,7 +1505,6 @@ describe("FHS input mapper", () => {
 							data: {
 								name: "ground floor 1",
 								surfaceArea: 12,
-								pitch: 0,
 								uValue: 5,
 								thermalResistance: 2,
 								arealHeatCapacity: "Very light",
@@ -1525,7 +1523,6 @@ describe("FHS input mapper", () => {
 							data: {
 								name: "ground floor 2",
 								surfaceArea: 26,
-								pitch: 0,
 								uValue: 5,
 								thermalResistance: 2,
 								arealHeatCapacity: "Very light",

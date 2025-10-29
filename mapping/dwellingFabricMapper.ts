@@ -131,7 +131,6 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					thickness_walls: x.thicknessOfWalls / 1000,
 					floor_type: x.typeOfGroundFloor,
 					edge_insulation: mapEdgeInsulation(x),
-					pitch: x.pitch,
 				};
 				break;
 			}
@@ -148,7 +147,6 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					psi_wall_floor_junc: x.psiOfWallJunction,
 					thickness_walls: x.thicknessOfWalls / 1000,
 					floor_type: x.typeOfGroundFloor,
-					pitch: x.pitch,
 				};
 				break;
 			}
@@ -166,7 +164,6 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					thickness_walls: x.thicknessOfWalls / 1000,
 					floor_type: x.typeOfGroundFloor,
 					height_upper_surface: x.heightOfFloorUpperSurface / 1000,
-					pitch: x.pitch,
 					area_per_perimeter_vent: x.ventilationOpeningsArea / 1e6,
 					shield_fact_location: x.windShieldingFactor,
 					thermal_resist_insul: x.underfloorSpaceThermalResistance,
@@ -187,7 +184,6 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					psi_wall_floor_junc: x.psiOfWallJunction,
 					thickness_walls: x.thicknessOfWalls / 1000,
 					floor_type: x.typeOfGroundFloor,
-					pitch: x.pitch,
 					depth_basement_floor: x.depthOfBasementFloorBelowGround,
 					thermal_resist_walls_base: x.thermalResistanceOfBasementWalls,
 				};
@@ -206,7 +202,6 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 					psi_wall_floor_junc: x.psiOfWallJunction,
 					thickness_walls: x.thicknessOfWalls / 1000,
 					floor_type: x.typeOfGroundFloor,
-					pitch: x.pitch,
 					height_basement_walls: x.heightOfBasementWallsAboveGround,
 					thermal_transm_walls: x.thermalTransmittanceOfWallsAboveGround,
 					thermal_resist_walls_base: x.thermalResistanceOfBasementWalls,
@@ -515,6 +510,7 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				base_height: x.elevationalHeight,
 				area: x.surfaceArea,
 				solar_absorption_coeff: x.solarAbsorption,
+				colour: x.colour,
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
@@ -618,6 +614,7 @@ export function mapWindowData(state: ResolvedState): Pick<FhsInputSchema, "Zone"
 				u_value: x.uValue,
 				g_value: x.solarTransmittance,
 				mid_height: x.midHeight,
+				security_risk: x.securityRisk,
 				frame_area_fraction: x.numberOpenableParts === "0" ? 0 : calculateFrameToOpeningRatio(x.openingToFrameRatio),
 				max_window_open_area: x.numberOpenableParts === "0" ? 0 : x.maximumOpenableArea,
 				free_area_height: x.numberOpenableParts === "0" ? 0 : x.heightOpenableArea,

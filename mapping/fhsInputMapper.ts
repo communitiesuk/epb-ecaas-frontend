@@ -1,5 +1,6 @@
 import type { StripDefs } from "./mapping.types";
-import type { SchemaEnergySupplyElectricity, SchemaFhsInputSchema, SchemaHeatSourceWetHeatPumpWithProductReference, SchemaStorageTank } from "~/schema/api-schema.types";
+import type { SchemaEnergySupplyElectricity, SchemaFhsInputSchema, SchemaStorageTank } from "~/schema/api-schema.types";
+import type { SchemaHeatSourceWetHeatPumpWithProductReference, SchemaSimulationTime } from "~/schema/aliases";
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
@@ -10,7 +11,6 @@ import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import { defaultElectricityEnergySupplyName, defaultHeatSourceWetDetails } from "~/mapping/common";
 import { objectFromEntries } from "ts-extras";
 import type { Simplify, SimplifyDeep } from "type-fest";
-import type { SchemaSimulationTime } from "~/schema/aliases";
 
 export type ResolvedState = SimplifyDeep<Resolved<EcaasState>>;
 

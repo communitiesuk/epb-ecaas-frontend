@@ -41,7 +41,6 @@ const saveForm = (fields: GroundFloorData) => {
 		const commonFields = {
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
-			pitch: 180,
 			uValue: fields.uValue,
 			thermalResistance: fields.thermalResistance,
 			arealHeatCapacity: fields.arealHeatCapacity,

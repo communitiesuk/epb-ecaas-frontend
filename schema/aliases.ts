@@ -21,11 +21,10 @@ export type CombustionFuelType = SchemaInfiltrationVentilation["CombustionApplia
 export type MVHRLocation = SchemaDefs["MechVentMVHR"]["mvhr_location"];
 export type ApplianceKey = keyof components["schemas"]["fhs_input.schema"]["Appliances"];
 export type FloorType = SchemaBuildingElementGround["floor_type"];
-// work round apparent bug in type generation
-export type BuildingElementGround = components["schemas"]["BuildingElementGround"];
 export type SchemaBuildingElement = FhsSchema["Zone"][string]["BuildingElement"][string];
 type BuildingElementType = SchemaBuildingElement["type"];
 export type BuildingElementOfType<T extends BuildingElementType> = Extract<SchemaBuildingElement, { type: T }>;
+export type BuildingElementGround = BuildingElementOfType<"BuildingElementGround">;
 export type SchemaHeatSourceWetDetails = SchemaHeatSourceWetBoiler | SchemaHeatSourceWetHeatBattery | SchemaHeatSourceWetHeatPump | SchemaHeatSourceWetHiu;
 // utility function to make shading into valid external conditions
 type SchemaExternalConditionsInputFhs = FhsSchema["ExternalConditions"];
@@ -65,9 +64,11 @@ export type SchemaMechVentType = VentType;
 export type SchemaFuelType = FhsSchema["EnergySupply"][string]["fuel"];
 export type SchemaPhotovoltaicVentilationStrategy = OnSiteGenerationVentilationStrategy;
 type HeatPump = SchemaDefs["HeatSourceWetHeatPump"];
-export type SchemaHeatPumpBackupControlType = HeatPump["backup_ctrl_type"];
-export type SchemaHeatPumpSinkType = HeatPump["sink_type"];
-export type SchemaHeatPumpSourceType = HeatPump["source_type"];
+export type SchemaHeatSourceWetHeatPumpWithProductReference = Extract<HeatPump, { product_reference: string }>;
+type HeatPumpFull = Exclude<HeatPump, { product_reference: string }>;
+export type SchemaHeatPumpBackupControlType = HeatPumpFull["backup_ctrl_type"];
+export type SchemaHeatPumpSinkType = HeatPumpFull["sink_type"];
+export type SchemaHeatPumpSourceType = HeatPumpFull["source_type"];
 export type SchemaWindowPart = SchemaDefs["BuildingElementTransparent"]["window_part_list"][number];
 export type SchemaLighting = FhsSchema["Zone"][string]["Lighting"];
 export type SchemaThermalBridgingLinearFhs = SchemaDefs["ThermalBridgeLinear"]; 

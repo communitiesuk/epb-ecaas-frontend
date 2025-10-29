@@ -1,6 +1,3 @@
-import type {
-	SchemaBuildingElementAdjacentUnconditionedSpaceSimple, 
-} from "~/schema/api-schema.types";
 import type { BuildingElementGround, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal } from "~/schema/aliases";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
@@ -10,7 +7,7 @@ import { unitValue } from "~/utils/units";
 
 type BuildingElementOpaque = BuildingElementOfType<"BuildingElementOpaque">;
 type BuildingElementAdjacentConditionedSpace = BuildingElementOfType<"BuildingElementAdjacentConditionedSpace">;
-type BuildingElementAdjacentUnconditionedSpaceSimple = SchemaBuildingElementAdjacentUnconditionedSpaceSimple;
+type BuildingElementAdjacentUnconditionedSpaceSimple = BuildingElementOfType<"BuildingElementAdjacentUnconditionedSpace_Simple">;
 type BuildingElementTransparent = BuildingElementOfType<"BuildingElementTransparent">;
 
 const baseForm = {
@@ -102,7 +99,6 @@ describe("dwelling fabric mapper", () => {
 		const groundFloor: GroundFloorData = {
 			name: "Ground 1",
 			surfaceArea: 5,
-			pitch: 180,
 			uValue: 1,
 			thermalResistance: 1,
 			arealHeatCapacity: "Very light",
@@ -215,7 +211,6 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementGround",
 			area: groundFloor.surfaceArea,
 			total_area: groundFloor.surfaceArea,
-			pitch: groundFloor.pitch,
 			u_value: groundFloor.uValue,
 			thermal_resistance_floor_construction: groundFloor.thermalResistance,
 			areal_heat_capacity: groundFloor.arealHeatCapacity,
