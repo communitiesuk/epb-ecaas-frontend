@@ -1,4 +1,4 @@
-import type { BuildingElementGround, SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart } from "~/schema/aliases";
+import type { BuildingElementGround, SchemaBuildingElement, SchemaZoneInput, SchemaLighting, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaWindowPart, SchemaEdgeInsulation } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import merge from "deepmerge";
 import { defaultZoneName } from "./common";
@@ -255,8 +255,8 @@ export function mapFloorData(state: ResolvedState): Pick<FhsInputSchema, "Ground
 				width: x.width,
 				base_height: x.elevationalHeight,
 				area: x.surfaceArea,
-				solar_absorption_coeff: x.solarAbsorption,
 				u_value: x.uValue,
+				colour: x.colour,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				pitch: x.pitch,
@@ -297,7 +297,7 @@ export function mapWallData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				width: x.length,
 				base_height: x.elevationalHeight,
 				area: x.surfaceArea,
-				solar_absorption_coeff: x.solarAbsorption,
+				colour: x.colour,
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
@@ -413,8 +413,8 @@ export function mapCeilingAndRoofData(state: ResolvedState): Pick<FhsInputSchema
 				width: x.width,
 				base_height: x.elevationalHeightOfElement,
 				area: x.surfaceArea,
-				solar_absorption_coeff: x.solarAbsorptionCoefficient,
 				u_value: x.uValue,
+				colour: x.colour,
 				areal_heat_capacity: x.arealHeatCapacity,
 				mass_distribution_class: fullMassDistributionClass(x.massDistributionClass),
 				is_external_door: false,
@@ -509,7 +509,6 @@ export function mapDoorData(state: ResolvedState): Pick<FhsInputSchema, "Zone"> 
 				width: x.width,
 				base_height: x.elevationalHeight,
 				area: x.surfaceArea,
-				solar_absorption_coeff: x.solarAbsorption,
 				colour: x.colour,
 				u_value: x.uValue,
 				areal_heat_capacity: x.arealHeatCapacity,

@@ -31,8 +31,8 @@ describe("walls", () => {
 		length: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorption: 0.1,
 		uValue: 1,
+		colour: "Light",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};

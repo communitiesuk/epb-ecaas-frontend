@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getUrl, zeroPitchOptions } from "#imports";
+import type { SchemaColour } from "~/schema/aliases";
 
 const title = "Roof";
 const store = useEcaasStore();
@@ -13,6 +14,12 @@ const roofTypeOptions: Record<Exclude<RoofType, "unheatedPitched">, string> = {
 	pitchedInsulatedAtRoof: "Pitched roof insulated at roof or rafter",
 	pitchedInsulatedAtCeiling: "Pitched roof insulated at ceiling or joist",
 };
+
+const colourOptions = {
+	"Light": "Light",
+	"Intermediate": "Intermediate",
+	"Dark": "Dark",
+} as const satisfies Record<SchemaColour, SchemaColour>;
 
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
@@ -30,8 +37,8 @@ const saveForm = (fields: RoofData) => {
 				width: fields.width,
 				elevationalHeightOfElement: fields.elevationalHeightOfElement,
 				surfaceArea: fields.surfaceArea,
-				solarAbsorptionCoefficient: fields.solarAbsorptionCoefficient,
 				uValue: fields.uValue,
+				colour: fields.colour,
 				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 			},
@@ -150,10 +157,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m²"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsSolarAbsorptionCoefficient
-			id="solarAbsorptionCoefficient"
-			name="solarAbsorptionCoefficient"
-			label="Solar absorption coefficient of roof"
+		<FormKit
+			id="colour"
+			type="govRadios"
+			label="Colour of external surface"
+			name="colour"
+			:options="colourOptions"
+			validation="required"
+			data-field="Zone.BuildingElement.*.colour"
 		/>
 
 		<template v-if="model?.typeOfRoof === 'flat' || model?.typeOfRoof === 'pitchedInsulatedAtRoof'">

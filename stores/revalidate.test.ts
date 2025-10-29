@@ -45,8 +45,8 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 					"length": 5,
 					"elevationalHeight": 25,
 					"surfaceArea": 40,
-					"solarAbsorption": 0.9,
 					"uValue": 5,
+					"colour": "Light",
 					"arealHeatCapacity": "Medium",
 					"massDistributionClass": "E",
 				},
@@ -62,8 +62,8 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 					"length": 34,
 					"elevationalHeight": 20,
 					"surfaceArea": 30,
-					"solarAbsorption": 0.7,
 					"uValue": 6,
+					"colour": "Intermediate",
 					"arealHeatCapacity": "Heavy",
 					"massDistributionClass": "I",
 				},
@@ -88,7 +88,6 @@ const twoLegacyCompleteValidWalls = {
 						"length": 5,
 						"elevationalHeight": 25,
 						"surfaceArea": 40,
-						"solarAbsorption": 0.9,
 						"uValue": 5,
 						"arealHeatCapacity": "Medium",
 						"massDistributionClass": "E",
@@ -102,7 +101,6 @@ const twoLegacyCompleteValidWalls = {
 						"length": 34,
 						"elevationalHeight": 20,
 						"surfaceArea": 30,
-						"solarAbsorption": 0.7,
 						"uValue": 6,
 						"arealHeatCapacity": "Heavy",
 						"massDistributionClass": "I",
@@ -114,7 +112,7 @@ const twoLegacyCompleteValidWalls = {
 	},
 };
 
-const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSpaceExternalWall.data.1.data.solarAbsorption");
+const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSpaceExternalWall.data.1.data.elevationalHeight");
 
 const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingField, "dwellingSpaceExternalWall.data.0.massDistributionClass", "X"); // 'X' is invalid for a mass distribution class value
 

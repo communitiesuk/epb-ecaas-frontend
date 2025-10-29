@@ -85,8 +85,8 @@ describe("floors", () => {
 		width: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorption: 0.1,
 		uValue: 1,
+		colour: "Light",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
@@ -99,8 +99,8 @@ describe("floors", () => {
 		width: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorption: 0.1,
 		uValue: 1,
+		colour: "Dark",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
@@ -113,8 +113,8 @@ describe("floors", () => {
 		width: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorption: 0.1,
 		uValue: 1,
+		colour: "Intermediate",
 		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
