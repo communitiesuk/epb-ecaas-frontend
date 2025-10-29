@@ -575,7 +575,18 @@ export interface components {
             setpoint_temp: number;
         };
         /** @description A possible wet heat source */
-        HeatSourceWetHeatPump: components["schemas"]["HeatSourceWetCommon"] & {
+        HeatSourceWetHeatPump: components["schemas"]["HeatSourceWetCommon"] & ({
+            /**
+             * Reference to the product in the HEM database
+             * @description A unique reference to a product held within the HEM database (PCDB)
+             */
+            product_reference: string;
+            /**
+             * Type
+             * @constant
+             */
+            type: "HeatPump";
+        } | {
             /** @constant */
             type: "HeatPump";
             /** @enum {unknown} */
@@ -616,7 +627,7 @@ export interface components {
                 temp_source: number;
                 temp_test: number;
             }[];
-        };
+        });
         /** @description A possible wet heat source */
         HeatSourceWetBoiler: components["schemas"]["HeatSourceWetCommon"] & {
             /** @constant */
@@ -1388,7 +1399,18 @@ export interface components {
                     EnergySupply: string;
                 };
                 /** @description A possible wet heat source */
-                HeatSourceWetHeatPump: components["schemas"]["HeatSourceWetCommon"] & {
+                HeatSourceWetHeatPump: components["schemas"]["HeatSourceWetCommon"] & ({
+                    /**
+                     * Reference to the product in the HEM database
+                     * @description A unique reference to a product held within the HEM database (PCDB)
+                     */
+                    product_reference: string;
+                    /**
+                     * Type
+                     * @constant
+                     */
+                    type: "HeatPump";
+                } | {
                     /** @constant */
                     type: "HeatPump";
                     /** @enum {unknown} */
@@ -1429,7 +1451,7 @@ export interface components {
                         temp_source: number;
                         temp_test: number;
                     }[];
-                };
+                });
                 /** @description A possible wet heat source */
                 HeatSourceWetBoiler: components["schemas"]["HeatSourceWetCommon"] & {
                     /** @constant */

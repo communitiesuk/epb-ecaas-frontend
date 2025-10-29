@@ -1993,193 +1993,218 @@
                     "$ref": "#/$defs/HeatSourceWetCommon"
                 },
                 {
-                    "required": [
-                        "type",
-                        "source_type",
-                        "sink_type",
-                        "backup_ctrl_type",
-                        "modulating_control",
-                        "min_modulation_rate_35",
-                        "min_modulation_rate_55",
-                        "temp_return_feed_max",
-                        "temp_lower_operating_limit",
-                        "min_temp_diff_flow_return_for_hp_to_operate",
-                        "var_flow_temp_ctrl_during_test",
-                        "power_source_circ_pump",
-                        "power_standby",
-                        "power_crankcase_heater",
-                        "power_off",
-                        "power_max_backup",
-                        "time_delay_backup",
-                        "test_data_EN14825",
-                        "time_constant_onoff_operation"
-                    ],
-                    "properties": {
-                        "type": {
-                            "const": "HeatPump"
-                        },
-                        "source_type": {
-                            "enum": [
-                                "Ground",
-                                "OutsideAir",
-                                "ExhaustAirMEV",
-                                "ExhaustAirMVHR",
-                                "ExhaustAirMixed",
-                                "WaterGround",
-                                "WaterSurface"
-                            ]
-                        },
-                        "sink_type": {
-                            "enum": [
-                                "Air",
-                                "Water"
-                            ]
-                        },
-                        "backup_ctrl_type": {
-                            "enum": [
-                                "None",
-                                "TopUp",
-                                "Substitute"
-                            ]
-                        },
-                        "modulating_control": {
-                            "type": "boolean"
-                        },
-                        "min_modulation_rate_35": {
-                            "type": "number",
-                            "minimum": 0
-                        },
-                        "min_modulation_rate_55": {
-                            "type": "number",
-                            "minimum": 0
-                        },
-                        "temp_return_feed_max": {
-                            "type": "number",
-                            "minimum": 4,
-                            "maximum": 80
-                        },
-                        "temp_lower_operating_limit": {
-                            "type": "number",
-                            "minimum": -30,
-                            "maximum": 0
-                        },
-                        "min_temp_diff_flow_return_for_hp_to_operate": {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 50
-                        },
-                        "var_flow_temp_ctrl_during_test": {
-                            "type": "boolean"
-                        },
-                        "power_heating_circ_pump": {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 1
-                        },
-                        "power_source_circ_pump": {
-                            "type": "number",
-                            "minimum": 0,
-                            "maximum": 1
-                        },
-                        "power_standby": {
-                            "type": "number",
-                            "minimum": 0
-                        },
-                        "power_crankcase_heater": {
-                            "type": "number",
-                            "minimum": 0
-                        },
-                        "power_off": {
-                            "type": "number",
-                            "minimum": 0
-                        },
-                        "power_max_backup": {
-                            "type": "number",
-                            "minimum": 0
-                        },
-                        "BufferTank": {
-                            "type": "object",
-                            "unevaluatedProperties": false,
+                    "anyOf": [
+                        {
+                            "additionalProperties": false,
                             "properties": {
-                                "daily_losses": {
-                                    "type": "number"
+                                "product_reference": {
+                                    "description": "A unique reference to a product held within the HEM database (PCDB)",
+                                    "title": "Reference to the product in the HEM database",
+                                    "type": "string"
                                 },
-                                "pump_fixed_flow_rate": {
-                                    "type": "number"
-                                },
-                                "pump_power_at_flow_rate": {
-                                    "type": "number"
-                                },
-                                "volume": {
-                                    "type": "number"
+                                "type": {
+                                    "const": "HeatPump",
+                                    "title": "Type",
+                                    "type": "string"
                                 }
                             },
                             "required": [
-                                "daily_losses",
-                                "pump_fixed_flow_rate",
-                                "pump_power_at_flow_rate",
-                                "volume"
-                            ]
+                                "type",
+                                "product_reference"
+                            ],
+                            "title": "HeatSourceWetHeatPumpWithProductReference",
+                            "type": "object"
                         },
-                        "time_delay_backup": {
-                            "type": "number",
-                            "minimum": 0
-                        },
-                        "power_heating_warm_air_fan": {
-                            "type": "number",
-                            "minimum": 0
-                        },
-                        "time_constant_onoff_operation": {
-                            "type": "number"
-                        },
-                        "test_data_EN14825": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "unevaluatedProperties": false,
-                                "required": [
-                                    "test_letter",
-                                    "capacity",
-                                    "cop",
-                                    "design_flow_temp",
-                                    "temp_outlet",
-                                    "temp_source",
-                                    "temp_test"
-                                ],
-                                "properties": {
-                                    "test_letter": {
-                                        "enum": [
-                                            "A",
-                                            "B",
-                                            "C",
-                                            "D",
-                                            "F"
-                                        ]
+                        {
+                            "required": [
+                                "type",
+                                "source_type",
+                                "sink_type",
+                                "backup_ctrl_type",
+                                "modulating_control",
+                                "min_modulation_rate_35",
+                                "min_modulation_rate_55",
+                                "temp_return_feed_max",
+                                "temp_lower_operating_limit",
+                                "min_temp_diff_flow_return_for_hp_to_operate",
+                                "var_flow_temp_ctrl_during_test",
+                                "power_source_circ_pump",
+                                "power_standby",
+                                "power_crankcase_heater",
+                                "power_off",
+                                "power_max_backup",
+                                "time_delay_backup",
+                                "test_data_EN14825",
+                                "time_constant_onoff_operation"
+                            ],
+                            "properties": {
+                                "type": {
+                                    "const": "HeatPump"
+                                },
+                                "source_type": {
+                                    "enum": [
+                                        "Ground",
+                                        "OutsideAir",
+                                        "ExhaustAirMEV",
+                                        "ExhaustAirMVHR",
+                                        "ExhaustAirMixed",
+                                        "WaterGround",
+                                        "WaterSurface"
+                                    ]
+                                },
+                                "sink_type": {
+                                    "enum": [
+                                        "Air",
+                                        "Water"
+                                    ]
+                                },
+                                "backup_ctrl_type": {
+                                    "enum": [
+                                        "None",
+                                        "TopUp",
+                                        "Substitute"
+                                    ]
+                                },
+                                "modulating_control": {
+                                    "type": "boolean"
+                                },
+                                "min_modulation_rate_35": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "min_modulation_rate_55": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "temp_return_feed_max": {
+                                    "type": "number",
+                                    "minimum": 4,
+                                    "maximum": 80
+                                },
+                                "temp_lower_operating_limit": {
+                                    "type": "number",
+                                    "minimum": -30,
+                                    "maximum": 0
+                                },
+                                "min_temp_diff_flow_return_for_hp_to_operate": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 50
+                                },
+                                "var_flow_temp_ctrl_during_test": {
+                                    "type": "boolean"
+                                },
+                                "power_heating_circ_pump": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                },
+                                "power_source_circ_pump": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 1
+                                },
+                                "power_standby": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "power_crankcase_heater": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "power_off": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "power_max_backup": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "BufferTank": {
+                                    "type": "object",
+                                    "unevaluatedProperties": false,
+                                    "properties": {
+                                        "daily_losses": {
+                                            "type": "number"
+                                        },
+                                        "pump_fixed_flow_rate": {
+                                            "type": "number"
+                                        },
+                                        "pump_power_at_flow_rate": {
+                                            "type": "number"
+                                        },
+                                        "volume": {
+                                            "type": "number"
+                                        }
                                     },
-                                    "capacity": {
-                                        "type": "number",
-                                        "minimum": 0
-                                    },
-                                    "cop": {
-                                        "type": "number",
-                                        "minimum": 0
-                                    },
-                                    "design_flow_temp": {
-                                        "type": "number"
-                                    },
-                                    "temp_outlet": {
-                                        "type": "number"
-                                    },
-                                    "temp_source": {
-                                        "type": "number"
-                                    },
-                                    "temp_test": {
-                                        "type": "number"
+                                    "required": [
+                                        "daily_losses",
+                                        "pump_fixed_flow_rate",
+                                        "pump_power_at_flow_rate",
+                                        "volume"
+                                    ]
+                                },
+                                "time_delay_backup": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "power_heating_warm_air_fan": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "time_constant_onoff_operation": {
+                                    "type": "number"
+                                },
+                                "test_data_EN14825": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "unevaluatedProperties": false,
+                                        "required": [
+                                            "test_letter",
+                                            "capacity",
+                                            "cop",
+                                            "design_flow_temp",
+                                            "temp_outlet",
+                                            "temp_source",
+                                            "temp_test"
+                                        ],
+                                        "properties": {
+                                            "test_letter": {
+                                                "enum": [
+                                                    "A",
+                                                    "B",
+                                                    "C",
+                                                    "D",
+                                                    "F"
+                                                ]
+                                            },
+                                            "capacity": {
+                                                "type": "number",
+                                                "minimum": 0
+                                            },
+                                            "cop": {
+                                                "type": "number",
+                                                "minimum": 0
+                                            },
+                                            "design_flow_temp": {
+                                                "type": "number"
+                                            },
+                                            "temp_outlet": {
+                                                "type": "number"
+                                            },
+                                            "temp_source": {
+                                                "type": "number"
+                                            },
+                                            "temp_test": {
+                                                "type": "number"
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
+                    ]
                 }
             ]
         },
