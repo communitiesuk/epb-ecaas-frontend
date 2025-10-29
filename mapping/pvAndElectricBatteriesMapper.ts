@@ -5,13 +5,11 @@ import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/sch
 import type { SchemaWindowShadingObject } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName } from "./common";
 
-export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, "OnSiteGeneration">, { "ElectricBattery": SchemaElectricBattery } | EmptyObject] {
+export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, "OnSiteGeneration">, { "ElectricBattery": SchemaElectricBattery } | EmptyObject, Pick<SchemaEnergySupplyElectricity, "diverter"> | EmptyObject] {
 	return [
-		{
-			...mapPvSystemData(state),
-			...mapPvDiverterData(state),
-		},
+		mapPvSystemData(state),
 		mapElectricBatteryData(state),
+		mapPvDiverterData(state),
 	];
 }
 
@@ -47,8 +45,7 @@ export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery
 	const electricBattery = state.pvAndBatteries.electricBattery[0];
 	if (electricBattery) {
 		return {
-			"ElectricBattery":
-			{
+			"ElectricBattery": {
 				battery_location: electricBattery.location,
 				capacity: electricBattery.capacity,
 				charge_discharge_efficiency_round_trip: electricBattery.chargeEfficiency,
@@ -62,18 +59,20 @@ export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery
 	return {};
 }
 
-export function mapPvDiverterData(state: ResolvedState): { "EnergySupplyElectricity": SchemaEnergySupplyElectricity } | EmptyObject {
+export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupplyElectricity, "diverter"> | EmptyObject {
 	const diverter = state.pvAndBatteries.diverters[0];
+
+	if (!diverter) {
+		return {};
+	}
+
 	const heatSource = state.heatingAndCoolingSystems.heatGeneration.heatPump.find(x => x.id === diverter?.heatSource)?.name;
 	const storageTank = state.domesticHotWater.waterHeating.hotWaterCylinder.filter(x => x.id === diverter?.hotWaterCylinder)[0]?.name;
 
 	return {
-		"EnergySupplyElectricity": {
-			fuel: "electricity",
-			diverter: {
-				"HeatSource": heatSource!,
-				"StorageTank": storageTank,
-			},
+		diverter: {
+			"HeatSource": heatSource!,
+			"StorageTank": storageTank,
 		},
 	};
 }

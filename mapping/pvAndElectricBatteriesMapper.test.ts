@@ -217,13 +217,10 @@ describe("PV and electric batteries mapper", () => {
 
 		const result = mapPvDiverterData(resolveState(store.$state));
 
-		const expectedResult: Record<string, SchemaEnergySupplyElectricity> = {
-			EnergySupplyElectricity: {
-				fuel: "electricity",
-				diverter: {
-					HeatSource: "HP1",
-					StorageTank: "HWC1",
-				},
+		const expectedResult: Pick<SchemaEnergySupplyElectricity, "diverter"> = {
+			diverter: {
+				HeatSource: "HP1",
+				StorageTank: "HWC1",
 			},
 		};
 

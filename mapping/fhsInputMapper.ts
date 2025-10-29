@@ -20,7 +20,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const dwellingFabricData = mapDwellingFabricData(state);
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
 
-	const [pvData, electricBatteries] = mapPvAndElectricBatteriesData(state);
+	const [pvData, electricBatteries, diverter] = mapPvAndElectricBatteriesData(state);
 	const { EnergySupply, SpaceHeatSystem, SpaceCoolSystem } = mapheatingAndCoolingSystemsData(state);
 
 	// specify the electricity tariff with other needed data points with default values as used in example FHS files in case it is needed (TODO: should it be necessary to pass in a tariff here?)
@@ -36,6 +36,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 			[defaultElectricityEnergySupplyName]: {
 				...EnergySupply[defaultElectricityEnergySupplyName],
 				...electricBatteries,
+				...diverter,
 				...(Object.values(electricBatteries).length > 0 ? defaultTariffData : {}),
 			},
 		},
