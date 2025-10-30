@@ -26,6 +26,8 @@ describe("dwelling fabric mapper", () => {
 		// Arrange
 		const state: DwellingSpaceZoneParametersData = {
 			volume: 10,
+			livingRoomArea: 5,
+			restOfDwellingArea: 0,
 			// spaceHeatingSystemForThisZone: 'main 1',
 			spaceCoolingSystemForThisZone: [],
 			spaceHeatControlSystemForThisZone: [],

@@ -10,6 +10,8 @@ mockNuxtImport("navigateTo", () => {
 
 const state: DwellingSpaceZoneParametersData = {
 	volume: 10,
+	livingRoomArea: 15,
+	restOfDwellingArea: 20,
 	// spaceHeatingSystemForThisZone: 'instant electric heater'
 };
 
@@ -51,6 +53,8 @@ describe("zone parameters", () => {
 		await renderSuspended(ZoneParameters);
 
 		await user.type(screen.getByTestId("volume"), "10");
+		await user.type(screen.getByTestId("livingRoomArea"), "15");
+		await user.type(screen.getByTestId("restOfDwellingArea"), "20");
 		// await user.click(screen.getByTestId('spaceHeatingSystemForThisZone_instant_electric_heater'));
 		await user.tab();
 		await (user.click(screen.getByTestId("saveAndComplete")));
@@ -82,6 +86,8 @@ describe("zone parameters", () => {
 		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("volume_error"))).toBeDefined();
+		expect((await screen.findByTestId("livingRoomArea_error"))).toBeDefined();
+		expect((await screen.findByTestId("restOfDwellingArea_error"))).toBeDefined();
 		// expect((await screen.findByTestId('spaceHeatingSystemForThisZone_error'))).toBeDefined();
 	});
 
@@ -89,7 +95,6 @@ describe("zone parameters", () => {
 		await renderSuspended(ZoneParameters);
 
 		await (user.click(screen.getByTestId("saveAndComplete")));
-
 
 		expect((await screen.findByTestId("zoneParametersErrorSummary"))).toBeDefined();
 	});

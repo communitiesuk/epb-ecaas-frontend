@@ -28,6 +28,8 @@ const saveForm = (fields: typeof model.value) => {
 			dwellingSpaceZoneParameters: {
 				data: {
 					volume: fields.volume,
+					livingRoomArea: fields.livingRoomArea,
+					restOfDwellingArea: fields.restOfDwellingArea,
 					spaceHeatingSystemForThisZone: fields.spaceHeatingSystemForThisZone,
 					// heatingControlType: fields.heatingControlType,
 					// spaceCoolingSystemForThisZone: fields.spaceCoolingSystemForThisZone,
@@ -78,8 +80,26 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Volume"
 			name="volume"
 			help="Enter the volume of the whole dwelling"
-			validation="required"
+			validation="required | number | min:0 | max:50000"
 			data-field="Zone.volume"
+		/>
+		<FormKit
+			id="livingRoomArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Floor area of the living zone"
+			name="livingRoomArea"
+			validation="required | number | min:0 | max:10000"
+			data-field="Zone.livingroom_area"
+		/>
+		<FormKit
+			id="restOfDwellingArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Floor area of the rest of dwelling"
+			name="restOfDwellingArea"
+			validation="required | number | min:0 | max:10000"
+			data-field="Zone.restofdwelling_area"
 		/>
 		<!-- <FormKit
 			id="heatingControlType"

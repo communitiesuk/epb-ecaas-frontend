@@ -16,6 +16,8 @@ mockNuxtImport("navigateTo", () => {
 
 const zoneParametersData: DwellingSpaceZoneParametersData = {
 	volume: 10,
+	livingRoomArea: 15,
+	restOfDwellingArea: 20,
 	// spaceHeatingSystemForThisZone: 'elec heater',
 	// spaceCoolingSystemForThisZone: [],
 	// spaceHeatControlSystemForThisZone: []
@@ -312,6 +314,8 @@ describe("Dwelling space fabric summary", () => {
 
 			const expectedResult = {
 				"Volume": `10 ${cubicMetre.suffix}`,
+				"Living zone floor area": dim(15, "metres square"),
+				"Rest of dwelling floor area": dim(20, "metres square"),
 				// "Heat emitting system for this zone": "Elec heater",
 			};
 
