@@ -2177,13 +2177,12 @@ describe("FHS input mapper", () => {
 	test("the expected results pass against the current FHS input schema", () => {
 		const expectedsToTest = [
 			expectedHouseInput,
-			// expectedFlatInput,
+			expectedFlatInput,
 		];
 
 		const validate = ajv.getSchema("fhs")!;
 
 		for (const input of expectedsToTest) {
-			expect(JSON.stringify(input)).toBe(false);
 			expect(validate(input)).toPassJsonSchema(validate);
 		}
 	});
