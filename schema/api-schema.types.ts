@@ -532,6 +532,8 @@ export interface components {
         StorageTank: components["schemas"]["HotWaterTankCommon"] & {
             /** @constant */
             type: "StorageTank";
+            /** @enum {unknown} */
+            ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible hot water source */
         SmartHotWaterTank: components["schemas"]["HotWaterTankCommon"] & {
@@ -542,6 +544,8 @@ export interface components {
             power_pump_kW: number;
             temp_setpnt_max: string;
             temp_usable: number;
+            /** @enum {unknown} */
+            ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible hot water source */
         PointOfUse: {
@@ -549,6 +553,8 @@ export interface components {
             type: "PointOfUse";
             efficiency: number;
             EnergySupply: string;
+            /** @enum {unknown} */
+            ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible hot water source */
         CombiBoiler: {
@@ -562,6 +568,8 @@ export interface components {
             rejected_factor_3: number;
             storage_loss_factor_2: number;
             daily_HW_usage: number;
+            /** @enum {unknown} */
+            ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible hot water source */
         HeatBattery: {
@@ -573,6 +581,8 @@ export interface components {
              * @description Temperature setpoint for the heat battery hot water output (unit: ˚C)
              */
             setpoint_temp: number;
+            /** @enum {unknown} */
+            ColdWaterSource?: "header tank" | "mains water";
         };
         /** @description A possible wet heat source */
         HeatSourceWetHeatPump: components["schemas"]["HeatSourceWetCommon"] & ({
@@ -1351,6 +1361,8 @@ export interface components {
                 StorageTank: components["schemas"]["HotWaterTankCommon"] & {
                     /** @constant */
                     type: "StorageTank";
+                    /** @enum {unknown} */
+                    ColdWaterSource?: "header tank" | "mains water";
                 };
                 /** @description A possible hot water source */
                 SmartHotWaterTank: components["schemas"]["HotWaterTankCommon"] & {
@@ -1361,6 +1373,8 @@ export interface components {
                     power_pump_kW: number;
                     temp_setpnt_max: string;
                     temp_usable: number;
+                    /** @enum {unknown} */
+                    ColdWaterSource?: "header tank" | "mains water";
                 };
                 /** @description A possible hot water source */
                 PointOfUse: {
@@ -1368,6 +1382,8 @@ export interface components {
                     type: "PointOfUse";
                     efficiency: number;
                     EnergySupply: string;
+                    /** @enum {unknown} */
+                    ColdWaterSource?: "header tank" | "mains water";
                 };
                 /** @description A possible hot water source */
                 CombiBoiler: {
@@ -1381,6 +1397,8 @@ export interface components {
                     rejected_factor_3: number;
                     storage_loss_factor_2: number;
                     daily_HW_usage: number;
+                    /** @enum {unknown} */
+                    ColdWaterSource?: "header tank" | "mains water";
                 };
                 /** @description A possible hot water source */
                 HeatBattery: {
@@ -1392,6 +1410,8 @@ export interface components {
                      * @description Temperature setpoint for the heat battery hot water output (unit: ˚C)
                      */
                     setpoint_temp: number;
+                    /** @enum {unknown} */
+                    ColdWaterSource?: "header tank" | "mains water";
                 };
                 HeatSourceWetCommon: {
                     /** @enum {unknown} */

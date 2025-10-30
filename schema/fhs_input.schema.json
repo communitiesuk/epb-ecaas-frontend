@@ -1829,6 +1829,12 @@
                     "properties": {
                         "type": {
                             "const": "StorageTank"
+                        },
+                        "ColdWaterSource": {
+                            "enum": [
+                                "header tank",
+                                "mains water"
+                            ]
                         }
                     }
                 }
@@ -1867,6 +1873,12 @@
                         },
                         "temp_usable": {
                             "type": "number"
+                        },
+                        "ColdWaterSource": {
+                            "enum": [
+                                "header tank",
+                                "mains water"
+                            ]
                         }
                     }
                 }
@@ -1890,6 +1902,12 @@
                 },
                 "EnergySupply": {
                     "type": "string"
+                },
+                "ColdWaterSource": {
+                    "enum": [
+                        "header tank",
+                        "mains water"
+                    ]
                 }
             }
         },
@@ -1942,6 +1960,12 @@
                     "type": "number",
                     "minimum": 0,
                     "maximum": 1000
+                },
+                "ColdWaterSource": {
+                    "enum": [
+                        "header tank",
+                        "mains water"
+                    ]
                 }
             }
         },
@@ -1964,6 +1988,12 @@
                     "minimum": -273.15,
                     "title": "Setpoint Temp",
                     "type": "number"
+                },
+                "ColdWaterSource": {
+                    "enum": [
+                        "header tank",
+                        "mains water"
+                    ]
                 }
             }
         },
