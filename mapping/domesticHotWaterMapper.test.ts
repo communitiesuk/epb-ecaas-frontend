@@ -273,7 +273,6 @@ describe("domestic hot water mapper", () => {
 				id: "bath1",
 				name: "bath1",
 				size: 70,
-				flowRate: 1,
 			},
 		};
 

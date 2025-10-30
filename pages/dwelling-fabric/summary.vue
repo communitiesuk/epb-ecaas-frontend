@@ -11,7 +11,6 @@ const zoneParametersSummary: SummarySection = {
 	id: "dwellingSpaceZoneParameters",
 	label: "Zone parameters",
 	data: {
-		"Area": dim(zoneParametersData.area, "metres square"),
 		"Volume": dim(zoneParametersData.volume, "cubic metres"),
 		// "Heat emitting system for this zone": zoneParametersData.spaceHeatingSystemForThisZone,
 		// "Heating control type": zoneParametersData.heatingControlType

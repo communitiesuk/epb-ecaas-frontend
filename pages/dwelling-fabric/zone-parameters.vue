@@ -27,7 +27,6 @@ const saveForm = (fields: typeof model.value) => {
 		dwellingFabric: {
 			dwellingSpaceZoneParameters: {
 				data: {
-					area: fields.area,
 					volume: fields.volume,
 					spaceHeatingSystemForThisZone: fields.spaceHeatingSystemForThisZone,
 					// heatingControlType: fields.heatingControlType,
@@ -72,15 +71,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<!--				Zone parameters guidance (opens in another window)-->
 		<!--			</a>-->
 		<!--		</p>-->
-		<FormKit
-			id="area"
-			type="govInputWithSuffix"
-			suffix-text="m²"
-			label="Area"
-			name="area"
-			help="Enter the total area of the floors in the dwelling"
-			validation="required"
-		/>
 		<FormKit
 			id="volume"
 			type="govInputWithSuffix"

@@ -176,7 +176,6 @@ const bathSummary: SummarySection = {
 		return {
 			"Name": show(d.data.name),
 			"Size": dim(d.data.size, "litres"),
-			"Flow rate": dim(d.data.flowRate, "litres per minute"),
 		};
 	}),
 	editUrl: getUrl("hotWaterOutlets"),

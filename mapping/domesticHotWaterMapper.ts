@@ -54,7 +54,6 @@ function mapBathsData(state: ResolvedState) {
 		const key = x.name;
 		const val: SchemaBathDetails = {
 			ColdWaterSource: "mains water",
-			flowrate: x.flowRate,
 			size: x.size,
 		};
 

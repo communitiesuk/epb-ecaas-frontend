@@ -27,6 +27,7 @@ export const defaultHeatSourceWetDetails = {
 	source_type: "OutsideAir",
 	temp_lower_operating_limit: -5,
 	temp_return_feed_max: 70,
+	time_constant_onoff_operation: 2, // 2 hours as initial guess
 	test_data_EN14825: [
 		{
 			test_letter: "A",

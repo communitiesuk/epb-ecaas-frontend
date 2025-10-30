@@ -1,4 +1,4 @@
-import type { BuildingElementGround, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal } from "~/schema/aliases";
+import type { BuildingElementGround, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal, SchemaLightingBulbs } from "~/schema/aliases";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type { DwellingSpaceLightingData, DwellingSpaceZoneParametersData } from "~/stores/ecaasStore.schema";
@@ -25,7 +25,6 @@ describe("dwelling fabric mapper", () => {
 	it("maps zone parameters input state to FHS input request", () => {
 		// Arrange
 		const state: DwellingSpaceZoneParametersData = {
-			area: 10,
 			volume: 10,
 			// spaceHeatingSystemForThisZone: 'main 1',
 			spaceCoolingSystemForThisZone: [],
@@ -65,7 +64,6 @@ describe("dwelling fabric mapper", () => {
 		const fhsInputData = mapZoneParametersData(resolveState(store.$state));
 
 		// Assert
-		expect(fhsInputData.Zone[defaultZoneName]?.area).toBe(state.area);
 		expect(fhsInputData.Zone[defaultZoneName]?.volume).toBe(state.volume);
 		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toEqual(["radiator 1", "ieh 1"]);
 	});
@@ -91,7 +89,7 @@ describe("dwelling fabric mapper", () => {
 		const bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs as SchemaLightingBulbs;
 
 		// Assert
-		expect(fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs?.count).toBe(state.numberOfBulbs);
+		expect(bulbs.count).toBe(state.numberOfBulbs);
 	});
 
 	it("maps floor input state to FHS input request", () => {

@@ -513,7 +513,6 @@ const spaceCoolingSystemData = named;
 const spaceHeatControlSystemData = named;
 
 const dwellingSpaceZoneParameterDataZod = z.object({
-	area: z.number().min(0),
 	volume: z.number().min(0),
 	spaceHeatingSystemForThisZone: z.optional(z.string()),
 	spaceCoolingSystemForThisZone: z.optional(z.array(spaceCoolingSystemData)),
@@ -627,7 +626,6 @@ export type ElectricShowerData = z.infer<typeof electricShowerDataZod>;
 
 const bathDataZod = namedWithId.extend({
 	size: z.number().min(0).max(500),
-	flowRate: z.number().min(0).max(15),
 });
 
 export type BathData = z.infer<typeof bathDataZod>;

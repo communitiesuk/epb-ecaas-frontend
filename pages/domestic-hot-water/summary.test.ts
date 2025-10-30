@@ -6,7 +6,6 @@ import { metre, millimetre } from "~/utils/units/length";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 import { litrePerHour, litrePerMinute } from "~/utils/units/flowRate";
 import { kilowatt, kilowattHour } from "~/utils/units/power";
-import { celsius } from "~/utils/units/temperature";
 import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -32,14 +31,14 @@ describe("Domestic hot water summary", () => {
 			dailyEnergyLoss: 1,
 		};
 
-		const immersionHeater: ImmersionHeaterData = {
+		const _immersionHeater: ImmersionHeaterData = {
 			name: "Immersion heater",
 			ratedPower: 10,
 			heaterPosition: "top",
 			thermostatPosition: "top",
 		};
 
-		const pointOfUse: PointOfUseData = {
+		const _pointOfUse: PointOfUseData = {
 			name: "Point of use",
 			setpointTemperature: 25,
 			heaterEfficiency: 0.5,
@@ -198,7 +197,6 @@ describe("Domestic hot water summary", () => {
 				id: "d3883380-885b-48fd-9425-9f9fac7587fb",
 				name: "Bath 1",
 				size: 170,
-				flowRate: 10,
 			},
 		};
 
@@ -285,7 +283,6 @@ describe("Domestic hot water summary", () => {
 			const expectedResult = {
 				"Name": "Bath 1",
 				"Size": `170 ${litre.suffix}`,
-				"Flow rate": `10 ${litrePerMinute.suffix}`,
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {

@@ -1034,7 +1034,6 @@ describe("FHS input mapper", () => {
 			dwellingSpaceZoneParameters: {
 				...baseForm,
 				data: {
-					area: 100,
 					volume: 300,
 					// spaceHeatingSystemForThisZone: "some-wet-distribution",
 					// spaceCoolingSystemForThisZone: [{
@@ -1482,7 +1481,6 @@ describe("FHS input mapper", () => {
 			dwellingSpaceZoneParameters: {
 				...baseForm,
 				data: {
-					area: 16,
 					volume: 550,
 					// spaceHeatingSystemForThisZone: "instant elec heater 1",
 					// spaceCoolingSystemForThisZone: [],
@@ -2012,7 +2010,6 @@ describe("FHS input mapper", () => {
 								name: "small bath name",
 								id: "small bath id",
 								size: 80,
-								flowRate: 8,
 							},
 						},
 						{
@@ -2021,7 +2018,6 @@ describe("FHS input mapper", () => {
 								name: "medium bath name",
 								id: "medium bath id",
 								size: 180,
-								flowRate: 8,
 							},
 						},
 						{
@@ -2030,7 +2026,6 @@ describe("FHS input mapper", () => {
 								name: "large bath name",
 								id: "large bath id",
 								size: 400,
-								flowRate: 14,
 							},
 						},
 					],

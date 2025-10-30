@@ -19,7 +19,6 @@ const bath: EcaasForm<BathData> = {
 		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8a9e",
 		name: "Bath 1",
 		size: 170,
-		flowRate: 10,
 	},
 };
 const bath2: EcaasForm<BathData> = {
@@ -27,7 +26,6 @@ const bath2: EcaasForm<BathData> = {
 		id: "0b77e247-53c5-42b8-9dbd-83cbfc8c8123",
 		name: "Bath 2",
 		size: 180,
-		flowRate: 11,
 	},
 };
 
@@ -38,7 +36,6 @@ afterEach(() => {
 const populateValidForm = async () => {
 	await user.type(screen.getByTestId("name"), "Bath 1");
 	await user.type(screen.getByTestId("size"), "170");
-	await user.type(screen.getByTestId("flowRate"), "10");
 	await user.tab();
 };
 describe("bath", () => {
@@ -79,7 +76,6 @@ describe("bath", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Bath 1");
 		expect((await screen.findByTestId<HTMLInputElement>("size")).value).toBe("170");
-		expect((await screen.findByTestId<HTMLInputElement>("flowRate")).value).toBe("10");
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -89,7 +85,6 @@ describe("bath", () => {
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
 		expect((await screen.findByTestId("size_error"))).toBeDefined();
-		expect((await screen.findByTestId("flowRate_error"))).toBeDefined();
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
@@ -139,7 +134,7 @@ describe("bath", () => {
 			},
 		});
 	
-		await user.type(screen.getByTestId("flowRate"), "10"); // set another value on form in order to count as a partial we want to keep
+		await user.type(screen.getByTestId("size"), "150"); // set another value on form in order to count as a partial we want to keep
 		await user.type(screen.getByTestId("name"), "Bath 1");
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();

@@ -15,7 +15,6 @@ mockNuxtImport("navigateTo", () => {
 });
 
 const zoneParametersData: DwellingSpaceZoneParametersData = {
-	area: 10,
 	volume: 10,
 	// spaceHeatingSystemForThisZone: 'elec heater',
 	// spaceCoolingSystemForThisZone: [],
@@ -312,7 +311,6 @@ describe("Dwelling space fabric summary", () => {
 			await renderSuspended(Summary);
 
 			const expectedResult = {
-				"Area": `10 ${metresSquare.suffix}`,
 				"Volume": `10 ${cubicMetre.suffix}`,
 				// "Heat emitting system for this zone": "Elec heater",
 			};
