@@ -247,7 +247,7 @@ const expectedHouseInput: FhsInputSchema = {
 					u_value: 1,
 					thermal_resistance_floor_construction: 1,
 					areal_heat_capacity: "Very light",
-					mass_distribution_class: "I",
+					mass_distribution_class: "I: Mass concentrated at internal side",
 					perimeter: 100,
 					psi_wall_floor_junc: 1,
 					thickness_walls: 0.08,
@@ -256,22 +256,24 @@ const expectedHouseInput: FhsInputSchema = {
 			},
 			Lighting: {
 				bulbs: {
-					led: {
-						count: 6,
-						power: 6,
-						efficacy: 120,
-					},
+					count: 6,
+					power: 6,
+					efficacy: 120,
 				},
 			},
 			SpaceHeatSystem: ["some-wet-distribution"],
 			ThermalBridging: {},
 			volume: 300,
+			livingroom_area: 50,
+			restofdwelling_area: 40,
 		},
 	},
 };
 
 const expectedFlatInput: FhsInputSchema = {
 	Appliances: {},
+	BuildingLength: 8,
+	BuildingWidth: 8,
 	ColdWaterSource: {
 		"mains water": {
 			start_day: 0,
@@ -655,7 +657,6 @@ const expectedFlatInput: FhsInputSchema = {
 					psi_wall_floor_junc: 0.4,
 					thickness_walls: 0.05,
 					floor_type: "Slab_edge_insulation",
-					pitch: 0,
 				},
 				"ground floor 2 (floor)": {
 					type: "BuildingElementGround",
@@ -671,7 +672,6 @@ const expectedFlatInput: FhsInputSchema = {
 					psi_wall_floor_junc: 0.8,
 					thickness_walls: 0.04,
 					floor_type: "Heated_basement",
-					pitch: 0,
 				},
 				"internal floor 1 (floor)": {
 					type: "BuildingElementAdjacentUnconditionedSpace_Simple",
@@ -687,7 +687,7 @@ const expectedFlatInput: FhsInputSchema = {
 					area: 4,
 					u_value: 0.01,
 					areal_heat_capacity: "Medium",
-					mass_distribution_class: "M",
+					mass_distribution_class: "M: Mass concentrated inside",
 					pitch: 180,
 				},
 				"exposed floor 1 (floor)": {
@@ -695,7 +695,6 @@ const expectedFlatInput: FhsInputSchema = {
 					width: 2,
 					base_height: 1,
 					area: 10,
-					solar_absorption_coeff: 0.4,
 					areal_heat_capacity: "Medium",
 					mass_distribution_class: "D: Mass equally distributed",
 					pitch: 180,
@@ -703,6 +702,7 @@ const expectedFlatInput: FhsInputSchema = {
 					u_value: 0.1,
 					type: "BuildingElementOpaque",
 					is_external_door: false,
+					colour: "Dark",
 				},
 				"party wall 1 (wall)": {
 					area: 15,
@@ -721,10 +721,10 @@ const expectedFlatInput: FhsInputSchema = {
 					is_external_door: false,
 					mass_distribution_class: "D: Mass equally distributed",
 					orientation360: 30,
-					solar_absorption_coeff: 0.2,
 					u_value: 1,
 					width: 3,
 					pitch: 90,
+					colour: "Light",
 				},
 				"internal wall 1 (wall)": {
 					area: 15,
@@ -738,12 +738,12 @@ const expectedFlatInput: FhsInputSchema = {
 					area: 20,
 					areal_heat_capacity: "Light",
 					base_height: 1,
+					colour: "Light",
 					height: 2.6,
 					is_external_door: true,
 					mass_distribution_class: "I: Mass concentrated at internal side",
 					orientation360: 30,
 					pitch: 90,
-					solar_absorption_coeff: 0.2,
 					type: "BuildingElementOpaque",
 					u_value: 1,
 					width: 1.2,
@@ -800,8 +800,8 @@ const expectedFlatInput: FhsInputSchema = {
 					width: 10,
 					base_height: 0,
 					area: 25,
-					solar_absorption_coeff: 0.63,
 					u_value: 0.1,
+					colour: "Intermediate",
 					areal_heat_capacity: "Very light",
 					mass_distribution_class: "I: Mass concentrated at internal side",
 					type: "BuildingElementOpaque",
@@ -883,19 +883,14 @@ const expectedFlatInput: FhsInputSchema = {
 			},
 			Lighting: {
 				bulbs: {
-					incandescent: {
-						count: 2,
-						power: 60,
-						efficacy: 14,
-					},
-					led: {
-						count: 5,
-						power: 6,
-						efficacy: 120,
-					},
+					count: 5,
+					power: 6,
+					efficacy: 120,
 				},
 			},
 			volume: 550,
+			livingroom_area: 50,
+			restofdwelling_area: 0,
 		},
 	},
 };
