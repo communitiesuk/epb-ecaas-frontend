@@ -48,6 +48,7 @@ describe("external wall", () => {
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
+		await user.click(screen.getByTestId("colour_Intermediate"));
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -84,6 +85,7 @@ describe("external wall", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
 		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId("colour_Intermediate")).hasAttribute("checked")).toBe(true);
 	});
 		
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -101,6 +103,7 @@ describe("external wall", () => {
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
 		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
+		expect((await screen.findByTestId("colour_error"))).toBeDefined();
 
 	});
 

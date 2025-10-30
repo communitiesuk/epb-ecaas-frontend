@@ -272,8 +272,8 @@ const expectedHouseInput: FhsInputSchema = {
 
 const expectedFlatInput: FhsInputSchema = {
 	Appliances: {},
-	BuildingLength: 8,
-	BuildingWidth: 8,
+	BuildingLength: 10,
+	BuildingWidth: 20,
 	ColdWaterSource: {
 		"mains water": {
 			start_day: 0,
@@ -592,7 +592,6 @@ const expectedFlatInput: FhsInputSchema = {
 		},
 	},
 	PartGcompliance: true,
-	PartO_active_cooling_required: true,
 	NumberOfBathrooms: 1,
 	NumberOfHabitableRooms: 4,
 	NumberOfSanitaryAccommodations: 1,
@@ -604,15 +603,7 @@ const expectedFlatInput: FhsInputSchema = {
 		end: 8,
 		step: 1,
 	} as SchemaSimulationTime,
-	SpaceCoolSystem: {
-		"some-aircon-unit-name": {
-			type: "AirConditioning",
-			EnergySupply: "mains elec",
-			cooling_capacity: 60,
-			efficiency: 4,
-			frac_convective: 0.2,
-		},
-	},
+	SpaceCoolSystem: {},
 	SpaceHeatSystem: {
 		"instant elec heater 1": {
 			rated_power: 10,
@@ -738,7 +729,7 @@ const expectedFlatInput: FhsInputSchema = {
 					area: 20,
 					areal_heat_capacity: "Light",
 					base_height: 1,
-					colour: "Light",
+					colour: "Intermediate",
 					height: 2.6,
 					is_external_door: true,
 					mass_distribution_class: "I: Mass concentrated at internal side",
@@ -801,7 +792,7 @@ const expectedFlatInput: FhsInputSchema = {
 					base_height: 0,
 					area: 25,
 					u_value: 0.1,
-					colour: "Intermediate",
+					colour: "Dark",
 					areal_heat_capacity: "Very light",
 					mass_distribution_class: "I: Mass concentrated at internal side",
 					type: "BuildingElementOpaque",
@@ -810,7 +801,7 @@ const expectedFlatInput: FhsInputSchema = {
 				},
 				"bathroom door (door)": {
 					area: 1.4,
-					areal_heat_capacity: "Very light",
+					areal_heat_capacity: "Light",
 					mass_distribution_class: "IE: Mass divided over internal and external side",
 					pitch: 90,
 					type: "BuildingElementAdjacentConditionedSpace",
@@ -834,7 +825,7 @@ const expectedFlatInput: FhsInputSchema = {
 					base_height: 1,
 					u_value: 0.1,
 					g_value: 0.2,
-					security_risk: false,
+					security_risk: true,
 					mid_height: 2,
 					frame_area_fraction: 0.2, // inverse openingToFrameRatio (1 - 0.8) 
 					max_window_open_area: 1,
