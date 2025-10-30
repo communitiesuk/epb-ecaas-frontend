@@ -94,7 +94,7 @@ describe("Heating and cooling systems summary page", () => {
 		it("displays an empty section if no energy supply data has been added", async () => {
 			await renderSuspended(heatingAndCoolingSystemsSummary);
 
-			await verifyDataInSection("energySupply", { "Fuel type": "" });
+			await verifyDataInSection("energySupply", { "Fuel type": "-" });
 		});
 
 		it("displays the correct fields when electricity is selected", async () => {
@@ -183,19 +183,19 @@ describe("Heating and cooling systems summary page", () => {
 			name: "Heat pump 1",
 			productReference: "HEATPUMP-LARGE",
 		};
-		const boiler: BoilerData = {
+		const _boiler: BoilerData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 			name: "Boiler 1",
 		};
-		const heatBattery: HeatBatteryData = {
+		const _heatBattery: HeatBatteryData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 			name: "Heat battery 1",
 		};
-		const heatNetwork: HeatNetworkData = {
+		const _heatNetwork: HeatNetworkData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 			name: "Heat network 1",
 		};
-		const heatInterfaceUnit: HeatInterfaceUnitData = {
+		const _heatInterfaceUnit: HeatInterfaceUnitData = {
 			id: "463c94f6-566c-49b2-af27-57e5c68b5c30",
 			name: "Heat interface unit 1",
 		};
@@ -406,10 +406,10 @@ describe("Heating and cooling systems summary page", () => {
 				convectiveType: "Floor heating, low temperature radiant tube heaters, luminous heaters, wood stoves",
 			},
 		};
-		const electricStorageHeater: ElectricStorageHeaterData = {
+		const _electricStorageHeater: ElectricStorageHeaterData = {
 			name: "Electric storage heater 1",
 		};
-		const warmAirHeatPump: WarmAirHeatPumpData = {
+		const _warmAirHeatPump: WarmAirHeatPumpData = {
 			name: "Warm air heat pump 1",
 		};
 

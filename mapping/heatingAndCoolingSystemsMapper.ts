@@ -3,8 +3,9 @@ import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { SchemaSpaceCoolSystemDetails, SchemaSpaceHeatSystemDetails } from "~/schema/aliases";
 import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
-export function mapheatingAndCoolingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply" | "SpaceHeatSystem" | "SpaceCoolSystem"> {
+export function mapHeatingAndCoolingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply" | "SpaceHeatSystem" | "SpaceCoolSystem"> {
 	return {
+		...mapGeneralData(state),
 		...mapEnergySupplyData(state),
 		...mapHeatEmittingData(state),
 		...mapSpaceCoolSystems(state),

@@ -45,6 +45,7 @@ describe("exposed floor", () => {
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
+		await user.click(screen.getByTestId("colour_Dark"));
 
 		await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -123,6 +124,7 @@ describe("exposed floor", () => {
 		await user.type(screen.getByTestId("uValue"), "1");
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
+		await user.click(screen.getByTestId("colour_Dark"));
 		await user.click(screen.getByTestId("saveAndComplete"));
 	
 		// Assert

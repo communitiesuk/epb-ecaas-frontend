@@ -4,7 +4,7 @@ import type { SchemaHeatSourceWetHeatPumpWithProductReference, SchemaSimulationT
 import { mapDwellingDetailsData } from "./dwellingDetailsMapper";
 import merge from "deepmerge";
 import { mapInfiltrationVentilationData } from "./infiltrationVentilationMapper";
-import { mapheatingAndCoolingSystemsData } from "./heatingAndCoolingSystemsMapper";
+import { mapHeatingAndCoolingSystemsData } from "./heatingAndCoolingSystemsMapper";
 import { mapLivingSpaceFabricData as mapDwellingFabricData } from "./dwellingFabricMapper";
 import { mapPvAndElectricBatteriesData } from "./pvAndElectricBatteriesMapper";
 import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
@@ -21,7 +21,8 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 	const domesticHotWaterData = mapDomesticHotWaterData(state);
 
 	const [pvData, electricBatteries, diverter] = mapPvAndElectricBatteriesData(state);
-	const { EnergySupply, SpaceHeatSystem, SpaceCoolSystem } = mapheatingAndCoolingSystemsData(state);
+	const heatingCooling = mapHeatingAndCoolingSystemsData(state);
+	const { EnergySupply } = heatingCooling;
 
 	// specify the electricity tariff with other needed data points with default values as used in example FHS files in case it is needed (TODO: should it be necessary to pass in a tariff here?)
 	const defaultTariffData: Pick<SchemaEnergySupplyElectricity, "threshold_charges" | "threshold_prices" | "tariff"> = {
@@ -30,8 +31,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		tariff: "Variable Time of Day Tariff",
 	};
 	const heatingAndCoolingSystemsData = {
-		SpaceHeatSystem,
-		SpaceCoolSystem,
+		...heatingCooling,
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {
 				...EnergySupply[defaultElectricityEnergySupplyName],

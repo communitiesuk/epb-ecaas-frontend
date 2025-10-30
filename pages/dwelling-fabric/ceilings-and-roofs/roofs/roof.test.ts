@@ -42,6 +42,7 @@ describe("roof", () => {
 		await user.type(screen.getByTestId("elevationalHeightOfElement"), "2");
 		await user.type(screen.getByTestId("surfaceArea"), "1");
 		await user.type(screen.getByTestId("uValue"), "1");
+		await user.click(screen.getByTestId("colour_Light"));
 		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 	};

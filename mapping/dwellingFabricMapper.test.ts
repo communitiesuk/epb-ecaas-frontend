@@ -603,7 +603,7 @@ describe("dwelling fabric mapper", () => {
 				{ mid_height_air_flow_path: externalGlazedDoor.midHeightOpenablePart1 },
 			],
 			shading: [],
-			security_risk: true,
+			security_risk: externalGlazedDoor.securityRisk,
 		};
 
 		expect(externalGlazedDoorElement).toEqual(expectedExternalGlazedDoor);

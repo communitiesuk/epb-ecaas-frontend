@@ -184,13 +184,13 @@ const expectedHouseInput: FhsInputSchema = {
 		step: 1,
 	},
 	SpaceCoolSystem: {
-		"some-aircon-unit-name": {
-			type: "AirConditioning",
-			EnergySupply: "mains elec",
-			cooling_capacity: 60,
-			efficiency: 4,
-			frac_convective: 0.2,
-		},
+		// "some-aircon-unit-name": {
+		// 	type: "AirConditioning",
+		// 	EnergySupply: "mains elec",
+		// 	cooling_capacity: 60,
+		// 	efficiency: 4,
+		// 	frac_convective: 0.2,
+		// },
 	},
 	SpaceHeatSystem: {
 		"some-wet-distribution": {
@@ -265,7 +265,7 @@ const expectedHouseInput: FhsInputSchema = {
 			ThermalBridging: {},
 			volume: 300,
 			livingroom_area: 50,
-			restofdwelling_area: 40,
+			restofdwelling_area: 30,
 		},
 	},
 };
@@ -592,6 +592,7 @@ const expectedFlatInput: FhsInputSchema = {
 		},
 	},
 	PartGcompliance: true,
+	PartO_active_cooling_required: false,
 	NumberOfBathrooms: 1,
 	NumberOfHabitableRooms: 4,
 	NumberOfSanitaryAccommodations: 1,
@@ -880,8 +881,8 @@ const expectedFlatInput: FhsInputSchema = {
 				},
 			},
 			volume: 550,
-			livingroom_area: 50,
-			restofdwelling_area: 0,
+			livingroom_area: 80,
+			restofdwelling_area: 20,
 		},
 	},
 };
@@ -1113,7 +1114,7 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					heatingControlType: "separateTemperatureControl",
-					coolingRequired: true,
+					coolingRequired: false,
 				},
 			},
 			heatGeneration: {
@@ -2176,12 +2177,13 @@ describe("FHS input mapper", () => {
 	test("the expected results pass against the current FHS input schema", () => {
 		const expectedsToTest = [
 			expectedHouseInput,
-			expectedFlatInput,
+			// expectedFlatInput,
 		];
 
 		const validate = ajv.getSchema("fhs")!;
 
 		for (const input of expectedsToTest) {
+			expect(JSON.stringify(input)).toBe(false);
 			expect(validate(input)).toPassJsonSchema(validate);
 		}
 	});

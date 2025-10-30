@@ -91,6 +91,7 @@ const twoLegacyCompleteValidWalls = {
 						"uValue": 5,
 						"arealHeatCapacity": "Medium",
 						"massDistributionClass": "E",
+						"colour": "Light",
 					},
 					{
 						"name": "Wall 2",
@@ -104,6 +105,7 @@ const twoLegacyCompleteValidWalls = {
 						"uValue": 6,
 						"arealHeatCapacity": "Heavy",
 						"massDistributionClass": "I",
+						"colour": "Intermediate",
 					},
 				],
 				"complete": true,
