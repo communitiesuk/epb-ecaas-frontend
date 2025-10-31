@@ -7,7 +7,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
 const model = ref(floorData?.data);
 
-const colourOptions = colourOptionsMap
+const colourOptions = colourOptionsMap;
 
 const saveForm = (fields: ExposedFloorData) => {	
 	store.$patch((state) => {

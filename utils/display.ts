@@ -1,4 +1,3 @@
-import { colourZod } from './../stores/zod';
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct } from "~/pcdb/products";
 import type { ApplianceKey, SchemaColour, SchemaFlueGasExhaustSituation, SchemaFuelType } from "~/schema/aliases";
@@ -269,5 +268,5 @@ export const colourOptionsMap = {
 } as const satisfies Record<SchemaColour, colourDisplay>;
 
 export function displayColour(colour: SchemaColour | undefined): colourDisplay | typeof emptyValueRendering {
-	return colourOptionsMap[colour!] ?? emptyValueRendering
+	return colourOptionsMap[colour!] ?? emptyValueRendering;
 }

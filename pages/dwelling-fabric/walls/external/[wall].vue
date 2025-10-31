@@ -6,7 +6,7 @@ const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data);
 const model: Ref<ExternalWallData | undefined> = ref(wallData?.data);
-const colourOptions = colourOptionsMap
+const colourOptions = colourOptionsMap;
 
 const saveForm = (fields: ExternalWallData) => {
 	store.$patch((state) => {

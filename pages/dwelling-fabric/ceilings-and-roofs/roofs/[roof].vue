@@ -13,7 +13,7 @@ const roofTypeOptions: Record<Exclude<RoofType, "unheatedPitched">, string> = {
 	pitchedInsulatedAtRoof: "Pitched roof insulated at roof or rafter",
 	pitchedInsulatedAtCeiling: "Pitched roof insulated at ceiling or joist",
 };
-const colourOptions = colourOptionsMap
+const colourOptions = colourOptionsMap;
 
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {

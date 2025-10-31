@@ -8,7 +8,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor?.data);
 const model = ref(doorData?.data);
 
-const colourOptions = colourOptionsMap
+const colourOptions = colourOptionsMap;
 
 const saveForm = (fields: ExternalUnglazedDoorData) => {
 	store.$patch((state) => {
