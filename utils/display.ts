@@ -1,6 +1,7 @@
+import { colourZod } from './../stores/zod';
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct } from "~/pcdb/products";
-import type { ApplianceKey, SchemaFlueGasExhaustSituation, SchemaFuelType } from "~/schema/aliases";
+import type { ApplianceKey, SchemaColour, SchemaFlueGasExhaustSituation, SchemaFuelType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -256,4 +257,17 @@ type FirstWord<S extends string> = S extends `${infer Word} ${string}` ? Word : 
 
 export function displayProduct(product: DisplayProduct): ProductDisplayString {
 	return product.modelName.split(" ")[0]!;
+}
+
+
+export type colourDisplay = "Light" | "Medium" | "Dark";
+
+export const colourOptionsMap = {
+	"Light": "Light",
+	"Intermediate": "Medium",
+	"Dark": "Dark",
+} as const satisfies Record<SchemaColour, colourDisplay>;
+
+export function displayColour(colour: SchemaColour | undefined): colourDisplay | typeof emptyValueRendering {
+	return colourOptionsMap[colour!] ?? emptyValueRendering
 }

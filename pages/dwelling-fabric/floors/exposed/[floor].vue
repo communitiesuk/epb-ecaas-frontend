@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { getUrl } from "#imports";
-import type { SchemaColour } from "~/schema/aliases";
 const title = "Exposed floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
@@ -8,11 +7,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
 const model = ref(floorData?.data);
 
-const colourOptions = {
-	"Light": "Light",
-	"Intermediate": "Intermediate",
-	"Dark": "Dark",
-} as const satisfies Record<SchemaColour, SchemaColour>;
+const colourOptions = colourOptionsMap
 
 const saveForm = (fields: ExposedFloorData) => {	
 	store.$patch((state) => {

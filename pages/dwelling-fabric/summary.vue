@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
 import { emptyValueRendering, getUrl, getTabItems } from "#imports";
+import { displayColour } from "~/utils/display";
 
 const title = "Dwelling fabric summary";
 const store = useEcaasStore();
@@ -105,7 +106,7 @@ const exposedFloorSummary: SummarySection = {
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Colour of external surface": show(x.colour),
+			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
@@ -137,7 +138,7 @@ const externalWallSummary: SummarySection = {
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Colour of external surface": show(x.colour),
+			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
@@ -248,7 +249,7 @@ const roofSummary: SummarySection = {
 			"Elevational height of building element at its base": dim(x.elevationalHeightOfElement, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": isTypeOfRoofSelected ? uValue : undefined,
-			"Colour of external surface": show(x.colour),
+			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": isTypeOfRoofSelected ? arealHeatCapacity : undefined,
 			"Mass distribution class": isTypeOfRoofSelected ? massDistributionClass : undefined,
 		};
@@ -278,7 +279,7 @@ const unglazedDoorSummary: SummarySection = {
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Colour of external surface": show(x.colour),
+			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};

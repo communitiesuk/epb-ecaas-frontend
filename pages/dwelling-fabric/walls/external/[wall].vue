@@ -1,19 +1,12 @@
 <script setup lang="ts">
 import { standardPitchOptions, getUrl } from "#imports";
-import type { SchemaColour } from "~/schema/aliases";
 
 const title = "External wall";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
-
 const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data);
 const model: Ref<ExternalWallData | undefined> = ref(wallData?.data);
-
-const colourOptions = {
-	"Light": "Light",
-	"Intermediate": "Intermediate",
-	"Dark": "Dark",
-} as const satisfies Record<SchemaColour, SchemaColour>;
+const colourOptions = colourOptionsMap
 
 const saveForm = (fields: ExternalWallData) => {
 	store.$patch((state) => {

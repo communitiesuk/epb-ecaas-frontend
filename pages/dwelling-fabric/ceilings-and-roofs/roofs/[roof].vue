@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { getUrl, zeroPitchOptions } from "#imports";
-import type { SchemaColour } from "~/schema/aliases";
 
 const title = "Roof";
 const store = useEcaasStore();
@@ -14,12 +13,7 @@ const roofTypeOptions: Record<Exclude<RoofType, "unheatedPitched">, string> = {
 	pitchedInsulatedAtRoof: "Pitched roof insulated at roof or rafter",
 	pitchedInsulatedAtCeiling: "Pitched roof insulated at ceiling or joist",
 };
-
-const colourOptions = {
-	"Light": "Light",
-	"Intermediate": "Intermediate",
-	"Dark": "Dark",
-} as const satisfies Record<SchemaColour, SchemaColour>;
+const colourOptions = colourOptionsMap
 
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
