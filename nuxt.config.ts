@@ -72,16 +72,6 @@ export default defineNuxtConfig({
 				},
 			},
 		},
-		plugins: [
-			viteStaticCopy({
-				targets: [
-					{
-						src: "node_modules/govuk-frontend/dist/govuk/assets/*",
-						dest: "static/assets",
-					},
-				],
-			}),
-		],
 	},
 
 	modules: [
