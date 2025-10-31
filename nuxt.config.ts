@@ -1,5 +1,4 @@
 import type { NuxtPage } from "nuxt/schema";
-import { viteStaticCopy } from "vite-plugin-static-copy";
 import yn from "yn";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
