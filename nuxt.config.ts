@@ -5,6 +5,9 @@ import yn from "yn";
 export default defineNuxtConfig({
 	compatibilityDate: "2024-04-03",
 
+	// This reverts the new Nuxt 4 srcDir default from `app` back to the root directory
+	srcDir: ".",
+
 	devtools: {
 		enabled:
 			typeof process.env.DISABLE_DEVTOOLS !== "undefined"
