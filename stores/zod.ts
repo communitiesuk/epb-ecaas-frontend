@@ -2,7 +2,7 @@
 
 import type { UnionToTuple } from "type-fest";
 import * as z from "zod";
-import type { CombustionFuelType, SchemaWindShieldLocation, SchemaDuctType, SchemaDuctShape, SchemaBatteryLocation, SchemaCombustionAirSupplySituation, SchemaFlueGasExhaustSituation, SchemaFuelType, SchemaInverterType, MVHRLocation, SchemaPhotovoltaicVentilationStrategy, SchemaWaterPipeworkLocation, SchemaWaterPipeContentsType, SchemaWindowTreatmentType, SchemaWindowTreatmentControl, SchemaShadingObjectType, SchemaVentilationShieldClass, SchemaTerrainClass, SchemaHeatPumpBackupControlType, SchemaHeatPumpSinkType, SchemaHeatPumpSourceType, SchemaLeaksTestPressure, SchemaArealHeatCapacity, SchemaThermalBridgeJunctionType, SchemaColour, SchemaConvectiveType } from "~/schema/aliases";
+import { type CombustionFuelType, type SchemaWindShieldLocation, type SchemaDuctType, type SchemaDuctShape, type SchemaBatteryLocation, type SchemaCombustionAirSupplySituation, type SchemaFlueGasExhaustSituation, type SchemaFuelType, type SchemaInverterType, type MVHRLocation, type SchemaPhotovoltaicVentilationStrategy, type SchemaWaterPipeworkLocation, type SchemaWaterPipeContentsType, type SchemaWindowTreatmentType, type SchemaWindowTreatmentControl, type SchemaShadingObjectType, type SchemaVentilationShieldClass, type SchemaTerrainClass, type SchemaHeatPumpBackupControlType, type SchemaHeatPumpSinkType, type SchemaHeatPumpSourceType, type SchemaLeaksTestPressure, type SchemaArealHeatCapacity, type SchemaThermalBridgeJunctionType, type SchemaColour, type SchemaConvectiveType, type SchemaApplianceType } from "~/schema/aliases";
 import type { ConciseMassDistributionClass } from "./ecaasStore.schema";
 
 type NoneEmptyArray = readonly unknown[] & { 0: unknown };
@@ -83,6 +83,7 @@ const waterPipeworkLocations = ["internal", "external"] as const satisfies Schem
 const windowTreatmentControls = ["auto_motorised", "manual"] as const satisfies SchemaWindowTreatmentControl[];
 const windowTreatmentTypes = ["blinds", "curtains"] as const satisfies SchemaWindowTreatmentType[];
 const windShieldLocations = ["Sheltered", "Average", "Exposed"] as const satisfies SchemaWindShieldLocation[];
+const applianceTypes = ["Oven", "Hobs", "Fridge-Freezer", "Dishwasher", "Clothes_washing", "Clothes_drying", "Fridge", "Freezer", "Otherdevices"] as const satisfies SchemaApplianceType[]
 
 export const arealHeatCapacityZod = zodForTypeOptions(ensureAllUnion<SchemaArealHeatCapacity, (typeof arealHeatCapacities)>(arealHeatCapacities));
 export const batteryLocationZod = zodForTypeOptions(ensureAllUnion<SchemaBatteryLocation, (typeof batteryLocations)>(batteryLocations));
@@ -111,3 +112,4 @@ export const waterPipeworkLocationZod = zodForTypeOptions(ensureAllUnion<SchemaW
 export const windowTreatmentControlZod = zodForTypeOptions(ensureAllUnion<SchemaWindowTreatmentControl, (typeof windowTreatmentControls)>(windowTreatmentControls));
 export const windowTreatmentTypeZod = zodForTypeOptions(ensureAllUnion<SchemaWindowTreatmentType, (typeof windowTreatmentTypes)>(windowTreatmentTypes));
 export const windShieldLocationZod = zodForTypeOptions(ensureAllUnion<SchemaWindShieldLocation, (typeof windShieldLocations)>(windShieldLocations));
+export const applianceTypeZod = zodForTypeOptions(ensureAllUnion<SchemaApplianceType, (typeof applianceTypes)>(applianceTypes));

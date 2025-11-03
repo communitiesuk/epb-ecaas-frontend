@@ -944,6 +944,12 @@ describe("FHS input mapper", () => {
 					noiseNuisance: false,
 				},
 			},
+			appliances: {
+				...baseForm,
+				data: {
+					applianceType: []
+				},
+			},
 		};
 
 		const infiltrationAndVentilation: InfiltrationAndVentilation = {
@@ -1355,6 +1361,12 @@ describe("FHS input mapper", () => {
 					typeOfExposure: "Normal",
 					terrainType: "OpenField",
 					noiseNuisance: true,
+				},
+			},
+			appliances: {
+				...baseForm,
+				data: {
+					applianceType: []
 				},
 			},
 		};

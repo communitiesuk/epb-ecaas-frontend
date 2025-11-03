@@ -13,6 +13,7 @@ export function getInitialState(): EcaasState {
 			generalSpecifications: { data: {} },
 			shading: { data: [] },
 			externalFactors: { data: {} },
+			appliances: { data: {}}
 		},
 		infiltrationAndVentilation: {
 			mechanicalVentilation: { data: [] },

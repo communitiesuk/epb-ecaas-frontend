@@ -1,6 +1,6 @@
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct } from "~/pcdb/products";
-import type { ApplianceKey, SchemaColour, SchemaFlueGasExhaustSituation, SchemaFuelType } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaColour, SchemaFlueGasExhaustSituation, SchemaFuelType } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -89,7 +89,7 @@ export function displayFlueGasExhaustSituation(value: SchemaFlueGasExhaustSituat
 
 export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hobs" | "Kettle" | "Microwave" | "Lighting" | "Other";
 
-export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
+export function displayApplianceKey(value: SchemaApplianceType): ApplianceKeyDisplay {
 	switch (value) {
 		case "Fridge":
 			return "Fridge";
@@ -107,10 +107,6 @@ export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
 			return "Tumble dryer";
 		case "Hobs":
 			return "Hobs";
-		case "Kettle":
-			return "Kettle";
-		case "Microwave":
-			return "Microwave";
 		case "Otherdevices":
 			return "Other";
 		default:
@@ -133,7 +129,7 @@ export function displayCamelToSentenceCase(value: string): string {
 }
 
 // NB. this list is written out to be available at runtime, and could drift from all upstream values over time
-const applianceKeys: ApplianceKey[] = [
+const applianceKeys: SchemaApplianceType[] = [
 	"Clothes_drying",
 	"Clothes_washing",
 	"Dishwasher",
@@ -141,17 +137,15 @@ const applianceKeys: ApplianceKey[] = [
 	"Fridge",
 	"Fridge-Freezer",
 	"Hobs",
-	"Kettle",
-	"Microwave",
 	"Otherdevices",
 	"Oven",
 ];
 
-function isApplianceKey(value: string): value is ApplianceKey {
-	return applianceKeys.includes(value as ApplianceKey);
+function isApplianceKey(value: string): value is SchemaApplianceType {
+	return applianceKeys.includes(value as SchemaApplianceType);
 }
 
-export function displayDeliveryEnergyUseKey(key: string | ApplianceKey): string | ApplianceKeyDisplay {
+export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): string | ApplianceKeyDisplay {
 	return (isApplianceKey(key)) ? displayApplianceKey(key) : key;
 }
 

@@ -25,6 +25,9 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 		"externalFactors": {
 			"data": {} as ExternalFactorsData,
 		},
+		"appliances": {
+			"data": {} as AppliancesData
+		}
 	},
 };
 

@@ -94,10 +94,18 @@ const externalFactorsDataZod = z.object({
 
 export type ExternalFactorsData = z.infer<typeof externalFactorsDataZod>;
 
+
+const appliancesDataZod = z.object({
+	applianceType: z.array(applianceTypeZod)
+})
+export type AppliancesData = z.infer<typeof appliancesDataZod>
+
+
 export type DwellingDetails = AssertFormKeysArePageIds<{
 	generalSpecifications: EcaasForm<GeneralDetailsData>;
 	shading: EcaasFormList<ShadingData>;
 	externalFactors: EcaasForm<ExternalFactorsData>;
+	appliances: EcaasForm<AppliancesData>
 }>;
 
 export interface DwellingFabric {
@@ -997,6 +1005,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"dwellingDetails/generalSpecifications": generalDetailsDataZod,
 	"dwellingDetails/externalFactors": externalFactorsDataZod,
 	"dwellingDetails/shading": shadingDataZod,
+	"dwellingDetails/appliances": appliancesDataZod,
 	"domesticHotWater/waterHeating/hotWaterCylinder": hotWaterCylinderDataZod,
 	"domesticHotWater/waterHeating/combiBoiler": combiBoilerDataZod,
 	"domesticHotWater/waterHeating/heatBattery": waterHeatingHeatBatteryDataZod,
