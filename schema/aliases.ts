@@ -89,4 +89,4 @@ export type SchemaSimulationTime = {
 export type SchemaConvectiveType = SchemaDefs["InstantElecHeater"]["convective_type"];
 export type SchemaEdgeInsulation = SchemaDefs["SlabEdgeInsulation"]["edge_insulation"];
 export type SchemaLightingBulbs = FhsSchema["Zone"][string]["Lighting"]["bulbs"];
-export type SchemaApplianceType = Exclude<keyof FhsSchema["Appliances"], "Kettle" | "Microwave">;
+export type SchemaApplianceType = Exclude<keyof FhsSchema["Appliances"], "Kettle" | "Microwave" | "Otherdevices">;

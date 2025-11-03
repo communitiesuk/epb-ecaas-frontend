@@ -16,8 +16,7 @@ const appliances = {
 	Freezer: "Freezer",
 	Dishwasher: "Dishwasher",
 	Clothes_washing: "Washing machine",
-	Clothes_drying: "Tumble dryer",
-	Otherdevices: "Other",
+	Clothes_drying: "Tumble dryer"
 } as const satisfies Record<SchemaApplianceType, ApplianceKeyDisplay >;
 
 const saveForm = (fields: AppliancesData) => {

@@ -100,7 +100,7 @@ export function displayCamelToSentenceCase(value: string): string {
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1);
 }
 
-export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge-freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hob" | "Kettle" | "Microwave" | "Lighting" | "Other";
+export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge-freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hob";
 
 export function displayApplianceKey(value: SchemaApplianceType): ApplianceKeyDisplay {
 	switch (value) {
@@ -120,8 +120,6 @@ export function displayApplianceKey(value: SchemaApplianceType): ApplianceKeyDis
 			return "Tumble dryer";
 		case "Hobs":
 			return "Hob";
-		case "Otherdevices":
-			return "Other";
 		default:
 			value satisfies never;
 			throw new Error(`Missed a appliance key case: ${value}`);
@@ -136,7 +134,6 @@ const applianceKeys: SchemaApplianceType[] = [
 	"Fridge",
 	"Fridge-Freezer",
 	"Hobs",
-	"Otherdevices",
 	"Oven",
 ];
 
