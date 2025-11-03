@@ -97,7 +97,7 @@ describe("Ecaas Store", () => {
 				},
 				appliances: {
 					complete: true,
-				}
+				},
 			},
 		});
 

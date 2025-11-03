@@ -947,7 +947,7 @@ describe("FHS input mapper", () => {
 			appliances: {
 				...baseForm,
 				data: {
-					applianceType: []
+					applianceType: [],
 				},
 			},
 		};
@@ -1366,7 +1366,7 @@ describe("FHS input mapper", () => {
 			appliances: {
 				...baseForm,
 				data: {
-					applianceType: []
+					applianceType: [],
 				},
 			},
 		};

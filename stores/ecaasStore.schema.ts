@@ -96,9 +96,9 @@ export type ExternalFactorsData = z.infer<typeof externalFactorsDataZod>;
 
 
 const appliancesDataZod = z.object({
-	applianceType: z.array(applianceTypeZod)
-})
-export type AppliancesData = z.infer<typeof appliancesDataZod>
+	applianceType: z.array(applianceTypeZod),
+});
+export type AppliancesData = z.infer<typeof appliancesDataZod>;
 
 
 export type DwellingDetails = AssertFormKeysArePageIds<{
