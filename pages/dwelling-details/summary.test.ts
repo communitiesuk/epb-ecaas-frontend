@@ -12,7 +12,8 @@ mockNuxtImport("navigateTo", () => {
 interface DwellingDetailSummary {
 	generalDetails: GeneralDetailsData,
 	shading: ShadingData[],
-	externalFactors: ExternalFactorsData
+	externalFactors: ExternalFactorsData,
+	appliances: AppliancesData
 }
 
 const state: DwellingDetailSummary = {
@@ -42,6 +43,9 @@ const state: DwellingDetailSummary = {
 		terrainType: "Suburban",
 		noiseNuisance: false,
 	},
+	appliances: {
+		applianceType: ["Clothes_drying", "Freezer", "Clothes_washing"]
+	}
 };
 
 describe("Dwelling details summary", () => {
@@ -56,7 +60,8 @@ describe("Dwelling details summary", () => {
 
 		expect(screen.getByRole("link", { name: "General details" }));
 		expect(screen.getByRole("link", { name: "Shading" }));
-
+		expect(screen.getByRole("link", { name: "External factors" }));
+		expect(screen.getByRole("link", { name: "Appliances" }));
 	});
 
 	it("should display the correct data for the general details section", async () => {
@@ -90,11 +95,11 @@ describe("Dwelling details summary", () => {
 		}
 	});
 
-	it("should display the correct data for the external factors section", async () => {
+	it("should display the correct data for the appliances section", async () => {
 		store.$patch({
 			dwellingDetails: {
-				externalFactors: {
-					data: state.externalFactors,
+				appliances: {
+					data: state.appliances,
 				},
 			},
 		});
@@ -102,14 +107,11 @@ describe("Dwelling details summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Altitude": `3 ${metre.suffix}`,
-			"Type of exposure": "Shielded",
-			"Terrain type": "Suburban",
-			"Noise nuisance": "No",
+			"Appliances": "Tumble dryer, Freezer, Washing machine"
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-externalFactors-${hyphenate(key)}`));
+			const lineResult = (await screen.findByTestId(`summary-appliances-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}

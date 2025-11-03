@@ -87,34 +87,6 @@ export function displayFlueGasExhaustSituation(value: SchemaFlueGasExhaustSituat
 	}
 }
 
-export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hobs" | "Kettle" | "Microwave" | "Lighting" | "Other";
-
-export function displayApplianceKey(value: SchemaApplianceType): ApplianceKeyDisplay {
-	switch (value) {
-		case "Fridge":
-			return "Fridge";
-		case "Freezer":
-			return "Freezer";
-		case "Fridge-Freezer":
-			return "Fridge freezer";
-		case "Dishwasher":
-			return "Dishwasher";
-		case "Oven":
-			return "Oven";
-		case "Clothes_washing":
-			return "Washing machine";
-		case "Clothes_drying":
-			return "Tumble dryer";
-		case "Hobs":
-			return "Hobs";
-		case "Otherdevices":
-			return "Other";
-		default:
-			value satisfies never;
-			throw new Error(`Missed a appliance key case: ${value}`);
-	}
-}
-
 export function displaySnakeToSentenceCase(value: string): string {
 	const replaced = value.replaceAll(/_/g, " ");
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1).toLowerCase();
@@ -128,6 +100,33 @@ export function displayCamelToSentenceCase(value: string): string {
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1);
 }
 
+export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge-freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hob" | "Kettle" | "Microwave" | "Lighting" | "Other";
+
+export function displayApplianceKey(value: SchemaApplianceType): ApplianceKeyDisplay {
+	switch (value) {
+		case "Fridge":
+			return "Fridge";
+		case "Freezer":
+			return "Freezer";
+		case "Fridge-Freezer":
+			return "Fridge-freezer";
+		case "Dishwasher":
+			return "Dishwasher";
+		case "Oven":
+			return "Oven";
+		case "Clothes_washing":
+			return "Washing machine";
+		case "Clothes_drying":
+			return "Tumble dryer";
+		case "Hobs":
+			return "Hob";
+		case "Otherdevices":
+			return "Other";
+		default:
+			value satisfies never;
+			throw new Error(`Missed a appliance key case: ${value}`);
+	}
+}
 // NB. this list is written out to be available at runtime, and could drift from all upstream values over time
 const applianceKeys: SchemaApplianceType[] = [
 	"Clothes_drying",
@@ -147,6 +146,11 @@ function isApplianceKey(value: string): value is SchemaApplianceType {
 
 export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): string | ApplianceKeyDisplay {
 	return (isApplianceKey(key)) ? displayApplianceKey(key) : key;
+}
+
+export function displayApplianceType(appliances: SchemaApplianceType[] | undefined) {
+	if(appliances === undefined) return emptyValueRendering;
+	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ")
 }
 
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;

@@ -10,6 +10,7 @@ const store = useEcaasStore();
 const generalDetailsData = store.dwellingDetails.generalSpecifications.data;
 const shadingData = store.dwellingDetails.shading.data;
 const externalFactors = store.dwellingDetails.externalFactors.data;
+const appliancesData = store.dwellingDetails.appliances.data;
 
 const generalDetailsSummary: SummarySection = {
 	id: "generalDetails",
@@ -57,6 +58,15 @@ const externalFactorsSummary: SummarySection = {
 	},
 	editUrl: getUrl("externalFactors"),
 };
+
+const appliancesSummary: SummarySection = {
+	id: "appliances",
+	label: "Appliances",
+	data: {
+		"Appliances": displayApplianceType(appliancesData.applianceType)
+	},
+	editUrl: getUrl("appliances")
+}
 </script>
 
 <template>
@@ -80,6 +90,9 @@ const externalFactorsSummary: SummarySection = {
 				</NuxtLink>
 			</template>
 		</SummaryTab>
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([appliancesSummary])">
+		<SummaryTab :summary="appliancesSummary" :selected="tabProps.currentTab === 0"/>
 	</GovTabs>
 	<GovButton href="/">Return to overview</GovButton>
 	<!-- </NuxtLayout> -->
