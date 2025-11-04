@@ -181,7 +181,6 @@ describe("PV and electric batteries summary page", () => {
 				data: {
 					name: "Diverter 1",
 					hotWaterCylinder: hotWaterCylinderId,
-					heatSource: heatPumpId,
 				},
 			};
 
@@ -229,7 +228,6 @@ describe("PV and electric batteries summary page", () => {
 			const expectedResult = {
 				"Name": "Diverter 1",
 				"Associated hot water cylinder": hotWaterCylinderName,
-				"Associated heat source": heatPumpName,
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {

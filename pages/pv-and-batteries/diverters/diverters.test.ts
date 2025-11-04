@@ -54,14 +54,12 @@ const diverter1: EcaasForm<PvDiverterData> = {
 	data: {
 		name: "Diverter 1",
 		hotWaterCylinder: hotWaterCylinderId,
-		heatSource: heatPumpId,
 	},
 };
 
 const populateValidForm = async () => {
 	await user.type(screen.getByTestId("name"), "Diverter 1");
 	await user.click(screen.getByTestId(`hotWaterCylinder_${hotWaterCylinderId}`));
-	await user.click(screen.getByTestId(`heatSource_${heatPumpId}`));
 	await user.tab();
 };
 
@@ -97,7 +95,6 @@ describe("Diverters", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Diverter 1");
 		expect((await screen.findByTestId<HTMLInputElement>(`hotWaterCylinder_${hotWaterCylinderId}`)).value).toBe(hotWaterCylinderId);
-		expect((await screen.findByTestId<HTMLInputElement>(`heatSource_${heatPumpId}`)).value).toBe(heatPumpId);
 	});
 
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -134,15 +131,7 @@ describe("Diverters", () => {
 
 	});
 
-	it("displays link to add heat source if none exists already", async () => {
-		await renderSuspended(Diverters);
-
-		const link = screen.getByRole("link", { name: "Click here to add a heat generator" });
-
-		expect(link).toBeDefined();
-		expect(link.getAttribute("href")).toBe("/heating-and-cooling-systems/heat-generation");
-	});
-
+	
 	describe("partially saving data", () => {
 		it("creates a new diverter automatically with given name", async () => {
 			await renderSuspended(Diverters);
@@ -153,7 +142,6 @@ describe("Diverters", () => {
 
 			expect(actualDiverter.data.name).toBe("New diverter");
 			expect(actualDiverter.data.hotWaterCylinder).toBeUndefined();
-			expect(actualDiverter.data.heatSource).toBeUndefined();
 		});
 
 		it("creates a new diverter automatically with default name after other data is entered", async () => {
@@ -165,9 +153,7 @@ describe("Diverters", () => {
 			const actualDiverter = store.pvAndBatteries.diverters.data[0]!;
 
 			expect(actualDiverter.data.name).toBe("Diverter");
-			expect(actualDiverter.data.hotWaterCylinder).toBe(hotWaterCylinderId);
-			expect(actualDiverter.data.heatSource).toBeUndefined();
-		});
+			expect(actualDiverter.data.hotWaterCylinder).toBe(hotWaterCylinderId);		});
 
 		it("automatically saves updated from data to store", async () => {
 			addHeatPumpAndHotWaterCylinder();
@@ -177,7 +163,6 @@ describe("Diverters", () => {
 						data: [{
 							data: {
 								name: "New diverter",
-								heatSource: heatPumpId,
 							},
 						}],
 					},

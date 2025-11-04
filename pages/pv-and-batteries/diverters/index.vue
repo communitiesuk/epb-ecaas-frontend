@@ -15,7 +15,6 @@ const saveForm = (fields: PvDiverterData) => {
 			data: {
 				name: fields.name,
 				hotWaterCylinder: fields.hotWaterCylinder,
-				heatSource: fields.heatSource,
 			},
 			complete: true,
 		};
@@ -87,13 +86,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Provide a name for this diverter so it can be identified later"
 			name="name"
 			validation="required"
-		/>
-		<FieldsHeatGenerators
-			id="heatSource"
-			name="heatSource"
-			label="Associated heat source"
-			help="Select the heat source that this diverter is attached to"
-			data-field="SpaceHeatSystem.*.HeatSource"
 		/>
 		<ClientOnly>
 			<FormKit

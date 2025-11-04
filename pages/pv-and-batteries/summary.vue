@@ -54,7 +54,6 @@ const diverterSummary: SummarySection = {
 	data: diverters.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
-			"Associated heat source": show(store.heatingAndCoolingSystems.heatGeneration.heatPump.data.find((y) => y.data.id === x.heatSource)?.data.name),
 			"Associated hot water cylinder": show(store.domesticHotWater.waterHeating.hotWaterCylinder.data.find(y => y && y.data.id === x.hotWaterCylinder)?.data.name),
 		};
 	}),

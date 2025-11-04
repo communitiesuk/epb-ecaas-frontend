@@ -79,7 +79,6 @@ describe("pv systems and electric battery", () => {
 	const diverter1: EcaasForm<PvDiverterData> = {
 		data: {
 			name: "Diverter 1",
-			heatSource: "Heat source 1",
 		},
 	};
 

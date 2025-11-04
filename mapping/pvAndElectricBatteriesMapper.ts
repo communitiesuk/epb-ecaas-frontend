@@ -66,13 +66,14 @@ export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupply
 		return {};
 	}
 
-	const heatSource = state.heatingAndCoolingSystems.heatGeneration.heatPump.find(x => x.id === diverter?.heatSource)?.name;
-	const storageTank = state.domesticHotWater.waterHeating.hotWaterCylinder.filter(x => x.id === diverter?.hotWaterCylinder)[0]?.name;
+	const hotWaterCylinder = state.domesticHotWater.waterHeating.hotWaterCylinder.filter(x => x.id === diverter?.hotWaterCylinder)[0]!;
+	const heatSource = state.heatingAndCoolingSystems.heatGeneration.heatPump.find(x => x.id === hotWaterCylinder.heatSource)!;
+
 
 	return {
 		diverter: {
-			"HeatSource": heatSource!,
-			"StorageTank": storageTank,
+			"HeatSource": heatSource.name,
+			"StorageTank": hotWaterCylinder.name,
 		},
 	};
 }

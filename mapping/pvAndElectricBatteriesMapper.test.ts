@@ -166,11 +166,10 @@ describe("PV and electric batteries mapper", () => {
 			data: {
 				name: "Diverter 1",
 				hotWaterCylinder: hotWaterCylinderId,
-				heatSource: heatPumpId,
 			},
 			complete: true,
 		};
-
+		
 		store.$patch({
 			heatingAndCoolingSystems: {
 				heatGeneration: {
