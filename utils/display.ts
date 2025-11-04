@@ -1,6 +1,6 @@
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct } from "~/pcdb/products";
-import type { SchemaApplianceType, SchemaColour, SchemaFlueGasExhaustSituation, SchemaFuelType } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaColour, SchemaFlueGasExhaustSituation, SchemaFuelType, SchemaLeaksTestPressure } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -147,7 +147,7 @@ export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): 
 
 export function displayApplianceType(appliances: SchemaApplianceType[] | undefined) {
 	if(appliances === undefined) return emptyValueRendering;
-	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ")
+	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ");
 }
 
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
@@ -179,6 +179,17 @@ export function displayReflectivity(reflective: boolean | undefined): string {
 		return emptyValueRendering;
 	}
 	return reflective ? "Reflective" : "Not reflective";
+}
+
+export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressureTest: SchemaLeaksTestPressure) {
+	switch (typeOfInfiltrationPressureTest) {
+		case "Standard":
+			return "Blower door (test pressure is 50Pa)";
+		case "Pulse test only":
+			return "Pulse test (test pressure is 4Pa)";
+		default:
+			return emptyValueRendering;
+	}
 }
 
 export function displayFuelTypes(fuelTypes: SchemaFuelType[] | undefined) {

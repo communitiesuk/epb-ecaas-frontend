@@ -270,7 +270,7 @@ describe("Infiltration and ventilation summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Test pressure": "Standard",
+			"Type of infiltration pressure test": "Blower door (test pressure is 50Pa)",
 			"Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`,
 		};
 

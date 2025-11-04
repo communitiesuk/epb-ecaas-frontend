@@ -11,9 +11,9 @@ const model = ref({
 });
 
 const testPressureOptions = {
-	"Standard": "Standard",
-	"Pulse test only": "Pulse test only",
-} as const satisfies Record<SchemaLeaksTestPressure, SchemaLeaksTestPressure>;
+	"Standard": "Blower door (test pressure is 50Pa)",
+	"Pulse test only": "Pulse test (test pressure is 4Pa)",
+} as const satisfies Record<SchemaLeaksTestPressure, string>;
 
 const saveForm = (fields: AirPermeabilityData) => {
 	store.$patch({
@@ -56,8 +56,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="testPressure"
 			type="govRadios"
 			:options="testPressureOptions"
-			label="Test pressure"
-			help="Enter the type of pressure test"
+			label="Type of infiltration pressure test"
+			help="Select the type of infiltration pressure test conducted"
 			name="testPressure"
 			validation="required"
 		/>
@@ -65,7 +65,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			id="airTightnessTestResult"
 			type="govInputWithSuffix"
 			label="Air tightness test result"
-			help="Enter the amount of air leakage (in m³/h) from an airtightness test at the given reference pressure difference divided by the internal envelope area of the building (in m²)"
+			help="Enter the amount of air leakage from an airtightness test divided by the internal envelope area of the building"
 			name="airTightnessTestResult"
 			validation="required | number"
 			suffix-text="m³/(h·m²)"

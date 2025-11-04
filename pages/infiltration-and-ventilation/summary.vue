@@ -90,7 +90,7 @@ const airPermeabilitySummary: SummarySection = {
 	id: "airPermeability",
 	label: "Air permeability",
 	data: {
-		"Test pressure": show(airPermeabilityData.testPressure),
+		"Type of infiltration pressure test": displayTypeOfInfiltrationPressureTest(airPermeabilityData.testPressure),
 		"Air tightness test result": dim(airPermeabilityData.airTightnessTestResult, "cubic metres per hour per square metre"),
 	},
 	editUrl: getUrl("airPermeability"),
