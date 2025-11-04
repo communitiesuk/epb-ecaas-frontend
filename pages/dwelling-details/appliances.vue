@@ -76,7 +76,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			:options="appliances"
 			:validation-rules="{ isFridgeInChoice }"
 			validation="required | isFridgeInChoice"
-			:validation-messages="{isFridgeInChoice: 'Fridge or Fridge freezer is required.'}"
+			:validation-messages="{isFridgeInChoice: 'Fridge or Fridge-freezer is required.'}"
 		/> 
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" />
