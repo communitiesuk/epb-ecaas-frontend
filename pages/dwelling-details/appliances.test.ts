@@ -81,7 +81,7 @@ describe("Appliances", () => {
 		const errorSummary = await screen.findByTestId("appliancesErrorSummary");
 
 		expect(
-			errorSummary.textContent.includes("Fridge or Fridge freezer is required."),
+			errorSummary.textContent.includes("Fridge or Fridge-freezer is required."),
 		).toBe(true);
 	});
 
