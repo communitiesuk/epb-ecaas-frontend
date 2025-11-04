@@ -1,15 +1,17 @@
-import type { SchemaShadingSegment, SchemaInfiltrationVentilation } from "~/schema/aliases";
+import { applianceKeys } from './../utils/display';
+import type { SchemaShadingSegment, SchemaInfiltrationVentilation, SchemaApplianceType } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
 export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSchema> {
 	const generalDetailsData = mapGeneralDetailsData(state);
 	const externalFactorsData = mapExternalFactorsData(state);
 	const distantShadingData = mapDistantShadingData(state);
-
+	const appliancesData = mapAppliancesData(state) 
 	return {
 		...generalDetailsData,
 		...externalFactorsData,
 		...distantShadingData,
+		...appliancesData
 	};
 }
 
@@ -106,4 +108,31 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 			shading_segments: segments,
 		},
 	};
+}
+
+// export type InfiltrationFieldsFromDwelling = "altitude" | "shield_class" | "terrain_class" | "noise_nuisance";
+
+export function mapAppliancesData(
+  state: ResolvedState
+): Pick<FhsInputSchema, "Appliances"> {
+  function getAppliances() {
+    const chosenAppliances = state.dwellingDetails.appliances.applianceType; 
+    const appliancesMap = {} as Record<
+      SchemaApplianceType,
+      "Default" | "Not Installed"
+    >;
+
+    for (const appliance of applianceKeys) {
+      if (chosenAppliances.includes(appliance)) {
+        appliancesMap[appliance] = "Default";
+      } else {
+        appliancesMap[appliance] = "Not Installed";
+      }
+    }
+		return appliancesMap
+  }
+
+  return {
+    Appliances: getAppliances(),
+  };
 }

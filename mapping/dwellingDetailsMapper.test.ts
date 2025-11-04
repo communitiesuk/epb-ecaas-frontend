@@ -1,5 +1,5 @@
 import type { SchemaShadingObject } from "~/schema/aliases";
-import { mapDistantShadingData, mapExternalFactorsData, mapGeneralDetailsData } from "./dwellingDetailsMapper";
+import { mapAppliancesData, mapDistantShadingData, mapExternalFactorsData, mapGeneralDetailsData } from "./dwellingDetailsMapper";
 import { resolveState } from "~/stores/resolve";
 
 describe("dwelling details mapper", () => {
@@ -123,5 +123,35 @@ describe("dwelling details mapper", () => {
 		segmentsWithShading?.forEach(x => {
 			expect(x.shading).toEqual([expectedShading]);
 		});
+	});
+
+		it("maps appliances input state to FHS input request", () => {
+		// Arrange
+		const state: AppliancesData = {
+			applianceType: ["Oven", "Clothes_drying", "Clothes_washing", "Fridge"]
+		};
+
+		store.$patch({
+			dwellingDetails: {
+				appliances: {
+					complete: true,
+					data: state,
+				},
+			},
+		});
+
+		// Act
+		const fhsInputData = mapAppliancesData(resolveState(store.$state));
+
+		// Assert
+		expect(fhsInputData.Appliances?.Oven).toBe("Default");
+		expect(fhsInputData.Appliances?.Clothes_drying).toBe("Default");
+		expect(fhsInputData.Appliances?.Clothes_washing).toBe("Default");
+		expect(fhsInputData.Appliances?.Fridge).toBe("Default");
+
+		expect(fhsInputData.Appliances?.Hobs).toBe("Not Installed");
+		expect(fhsInputData.Appliances?.["Fridge-Freezer"]).toBe("Not Installed");
+		expect(fhsInputData.Appliances?.Dishwasher).toBe("Not Installed");
+		expect(fhsInputData.Appliances?.Freezer).toBe("Not Installed");
 	});
 });

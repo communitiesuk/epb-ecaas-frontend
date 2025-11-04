@@ -14,7 +14,16 @@ const baseForm = {
 };
 
 const expectedHouseInput: FhsInputSchema = {
-	Appliances: {},
+	Appliances: {
+	"Clothes_drying": "Not Installed",
+	"Clothes_washing": "Not Installed",
+	"Dishwasher": "Not Installed",
+	"Freezer": "Not Installed",
+	"Fridge": "Default",
+	"Fridge-Freezer": "Default",
+	"Hobs": "Default",
+	"Oven": "Not Installed",
+	},
 	ColdWaterSource: {
 		"mains water": {
 			start_day: 0,
@@ -271,7 +280,16 @@ const expectedHouseInput: FhsInputSchema = {
 };
 
 const expectedFlatInput: FhsInputSchema = {
-	Appliances: {},
+	Appliances: {
+	"Clothes_drying": "Default",
+	"Clothes_washing": "Not Installed",
+	"Dishwasher": "Not Installed",
+	"Freezer": "Not Installed",
+	"Fridge": "Not Installed",
+	"Fridge-Freezer": "Default",
+	"Hobs": "Not Installed",
+	"Oven": "Not Installed",
+},
 	BuildingLength: 10,
 	BuildingWidth: 20,
 	ColdWaterSource: {
@@ -947,7 +965,7 @@ describe("FHS input mapper", () => {
 			appliances: {
 				...baseForm,
 				data: {
-					applianceType: [],
+					applianceType: ["Fridge", "Fridge-Freezer", "Hobs"],
 				},
 			},
 		};
@@ -1366,7 +1384,7 @@ describe("FHS input mapper", () => {
 			appliances: {
 				...baseForm,
 				data: {
-					applianceType: [],
+					applianceType: ["Clothes_drying", "Fridge-Freezer"],
 				},
 			},
 		};

@@ -126,7 +126,7 @@ export function displayApplianceKey(value: SchemaApplianceType): ApplianceKeyDis
 	}
 }
 // NB. this list is written out to be available at runtime, and could drift from all upstream values over time
-const applianceKeys: SchemaApplianceType[] = [
+export const applianceKeys: SchemaApplianceType[] = [
 	"Clothes_drying",
 	"Clothes_washing",
 	"Dishwasher",
