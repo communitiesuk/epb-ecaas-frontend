@@ -128,9 +128,13 @@ describe("Diverters", () => {
 
 		expect(link).toBeDefined();
 		expect(link.getAttribute("href")).toBe("/domestic-hot-water/water-heating");
-
 	});
 
+	it("preselects hot water cylinder if there is only one added to store", async () => {
+		addHeatPumpAndHotWaterCylinder();
+		await renderSuspended(Diverters);
+		expect((await screen.findByTestId(`hotWaterCylinder_${hotWaterCylinderId}`)).hasAttribute("checked")).toBe(true);
+	});
 	
 	describe("partially saving data", () => {
 		it("creates a new diverter automatically with given name", async () => {
@@ -141,19 +145,22 @@ describe("Diverters", () => {
 			const actualDiverter = store.pvAndBatteries.diverters.data[0]!;
 
 			expect(actualDiverter.data.name).toBe("New diverter");
-			expect(actualDiverter.data.hotWaterCylinder).toBeUndefined();
+
 		});
+		// re-add the test below if/when more hot water cylinders can be added 
+		// currently hot water cylinder is pre-selected - meaning that a form can only be added if the name is filled out (there is not other data that can be entered)
 
-		it("creates a new diverter automatically with default name after other data is entered", async () => {
-			addHeatPumpAndHotWaterCylinder();
-			await renderSuspended(Diverters);
-			await user.click(screen.getByTestId(`hotWaterCylinder_${hotWaterCylinderId}`));
-			await user.tab();
+		// it("creates a new diverter automatically with default name after other data is entered", async () => {
+		// 	addHeatPumpAndHotWaterCylinder();
+		// 	await renderSuspended(Diverters);
+		// 	await user.click(screen.getByTestId(`hotWaterCylinder_${hotWaterCylinderId}`));
+		// 	await user.tab();
 
-			const actualDiverter = store.pvAndBatteries.diverters.data[0]!;
+		// 	const actualDiverter = store.pvAndBatteries.diverters.data[0]!;
 
-			expect(actualDiverter.data.name).toBe("Diverter");
-			expect(actualDiverter.data.hotWaterCylinder).toBe(hotWaterCylinderId);		});
+		// 	expect(actualDiverter.data.name).toBe("Diverter");
+		// 	expect(actualDiverter.data.hotWaterCylinder).toBe(hotWaterCylinderId);		
+		// });
 
 		it("automatically saves updated from data to store", async () => {
 			addHeatPumpAndHotWaterCylinder();

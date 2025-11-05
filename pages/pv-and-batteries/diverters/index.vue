@@ -7,6 +7,9 @@ const store = useEcaasStore();
 const divertersData = store.pvAndBatteries.diverters.data[0];
 const model = ref(divertersData?.data);
 
+const hotWaterCylinderOptions: [HotWaterCylinderData["id"], HotWaterCylinderData["name"]][] = store.domesticHotWater.waterHeating.hotWaterCylinder.data
+	.filter(x => x.data.id !== undefined).map(x => [x.data.id as string, x.data.name]);
+
 const saveForm = (fields: PvDiverterData) => {
 	store.$patch((state) => {
 		const { diverters } = state.pvAndBatteries;
@@ -91,13 +94,13 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			<FormKit
 				id="hotWaterCylinder"
 				type="govRadios"
-				:options="new Map(store.domesticHotWater.waterHeating.hotWaterCylinder.data
-					.filter(x => x.data.id !== undefined)
-					.map(x => [x.data.id as string, x.data.name]))"		
+				:options="new Map(hotWaterCylinderOptions)"		
 				label="Associated hot water cylinder"
 				help="Select the hot water cylinder that this diverter is attached to"
 				name="hotWaterCylinder"
-				validation="required">
+				validation="required"
+				:value="hotWaterCylinderOptions.length === 1 && hotWaterCylinderOptions[0]![0]" 
+			>
 				<div v-if="!store.domesticHotWater.waterHeating.hotWaterCylinder.data.length">
 					<p class="govuk-error-message">No hot water cylinder added.</p>
 					<NuxtLink :to="getUrl('waterHeating')" class="govuk-link gov-radios-add-link">
