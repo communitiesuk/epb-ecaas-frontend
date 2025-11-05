@@ -1,4 +1,4 @@
-import { applianceKeys } from './../utils/display';
+import { applianceKeys } from "./../utils/display";
 import type { SchemaShadingSegment, SchemaInfiltrationVentilation, SchemaApplianceType } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 
@@ -6,12 +6,12 @@ export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSc
 	const generalDetailsData = mapGeneralDetailsData(state);
 	const externalFactorsData = mapExternalFactorsData(state);
 	const distantShadingData = mapDistantShadingData(state);
-	const appliancesData = mapAppliancesData(state) 
+	const appliancesData = mapAppliancesData(state); 
 	return {
 		...generalDetailsData,
 		...externalFactorsData,
 		...distantShadingData,
-		...appliancesData
+		...appliancesData,
 	};
 }
 
@@ -113,26 +113,26 @@ export function mapDistantShadingData(state: ResolvedState): Pick<FhsInputSchema
 // export type InfiltrationFieldsFromDwelling = "altitude" | "shield_class" | "terrain_class" | "noise_nuisance";
 
 export function mapAppliancesData(
-  state: ResolvedState
+	state: ResolvedState,
 ): Pick<FhsInputSchema, "Appliances"> {
-  function getAppliances() {
-    const chosenAppliances = state.dwellingDetails.appliances.applianceType; 
-    const appliancesMap = {} as Record<
-      SchemaApplianceType,
+	function getAppliances() {
+		const chosenAppliances = state.dwellingDetails.appliances.applianceType; 
+		const appliancesMap = {} as Record<
+			SchemaApplianceType,
       "Default" | "Not Installed"
-    >;
+		>;
 
-    for (const appliance of applianceKeys) {
-      if (chosenAppliances.includes(appliance)) {
-        appliancesMap[appliance] = "Default";
-      } else {
-        appliancesMap[appliance] = "Not Installed";
-      }
-    }
-		return appliancesMap
-  }
+		for (const appliance of applianceKeys) {
+			if (chosenAppliances.includes(appliance)) {
+				appliancesMap[appliance] = "Default";
+			} else {
+				appliancesMap[appliance] = "Not Installed";
+			}
+		}
+		return appliancesMap;
+	}
 
-  return {
-    Appliances: getAppliances(),
-  };
+	return {
+		Appliances: getAppliances(),
+	};
 }

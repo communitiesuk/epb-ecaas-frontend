@@ -125,10 +125,10 @@ describe("dwelling details mapper", () => {
 		});
 	});
 
-		it("maps appliances input state to FHS input request", () => {
+	it("maps appliances input state to FHS input request", () => {
 		// Arrange
 		const state: AppliancesData = {
-			applianceType: ["Oven", "Clothes_drying", "Clothes_washing", "Fridge"]
+			applianceType: ["Oven", "Clothes_drying", "Clothes_washing", "Fridge"],
 		};
 
 		store.$patch({

@@ -63,10 +63,10 @@ const appliancesSummary: SummarySection = {
 	id: "appliances",
 	label: "Appliances",
 	data: {
-		"Appliances": displayApplianceType(appliancesData.applianceType)
+		"Appliances": displayApplianceType(appliancesData.applianceType),
 	},
-	editUrl: getUrl("appliances")
-}
+	editUrl: getUrl("appliances"),
+};
 </script>
 
 <template>

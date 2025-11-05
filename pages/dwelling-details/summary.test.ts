@@ -44,8 +44,8 @@ const state: DwellingDetailSummary = {
 		noiseNuisance: false,
 	},
 	appliances: {
-		applianceType: ["Clothes_drying", "Freezer", "Clothes_washing"]
-	}
+		applianceType: ["Clothes_drying", "Freezer", "Clothes_washing"],
+	},
 };
 
 describe("Dwelling details summary", () => {
@@ -107,7 +107,7 @@ describe("Dwelling details summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Appliances": "Tumble dryer, Freezer, Washing machine"
+			"Appliances": "Tumble dryer, Freezer, Washing machine",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {

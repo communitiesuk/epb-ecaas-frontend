@@ -15,14 +15,14 @@ const baseForm = {
 
 const expectedHouseInput: FhsInputSchema = {
 	Appliances: {
-	"Clothes_drying": "Not Installed",
-	"Clothes_washing": "Not Installed",
-	"Dishwasher": "Not Installed",
-	"Freezer": "Not Installed",
-	"Fridge": "Default",
-	"Fridge-Freezer": "Default",
-	"Hobs": "Default",
-	"Oven": "Not Installed",
+		"Clothes_drying": "Not Installed",
+		"Clothes_washing": "Not Installed",
+		"Dishwasher": "Not Installed",
+		"Freezer": "Not Installed",
+		"Fridge": "Default",
+		"Fridge-Freezer": "Default",
+		"Hobs": "Default",
+		"Oven": "Not Installed",
 	},
 	ColdWaterSource: {
 		"mains water": {
@@ -281,15 +281,15 @@ const expectedHouseInput: FhsInputSchema = {
 
 const expectedFlatInput: FhsInputSchema = {
 	Appliances: {
-	"Clothes_drying": "Default",
-	"Clothes_washing": "Not Installed",
-	"Dishwasher": "Not Installed",
-	"Freezer": "Not Installed",
-	"Fridge": "Not Installed",
-	"Fridge-Freezer": "Default",
-	"Hobs": "Not Installed",
-	"Oven": "Not Installed",
-},
+		"Clothes_drying": "Default",
+		"Clothes_washing": "Not Installed",
+		"Dishwasher": "Not Installed",
+		"Freezer": "Not Installed",
+		"Fridge": "Not Installed",
+		"Fridge-Freezer": "Default",
+		"Hobs": "Not Installed",
+		"Oven": "Not Installed",
+	},
 	BuildingLength: 10,
 	BuildingWidth: 20,
 	ColdWaterSource: {
