@@ -74,6 +74,8 @@ describe("dwelling fabric mapper", () => {
 		// Arrange
 		const state: DwellingSpaceLightingData = {
 			numberOfBulbs: 5,
+			power: 5,
+			efficacy: 120,
 		};
 
 		store.$patch({

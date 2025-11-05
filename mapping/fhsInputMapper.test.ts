@@ -266,7 +266,7 @@ const expectedHouseInput: FhsInputSchema = {
 			Lighting: {
 				bulbs: {
 					count: 6,
-					power: 6,
+					power: 5,
 					efficacy: 120,
 				},
 			},
@@ -894,7 +894,7 @@ const expectedFlatInput: FhsInputSchema = {
 			Lighting: {
 				bulbs: {
 					count: 5,
-					power: 6,
+					power: 5,
 					efficacy: 120,
 				},
 			},
@@ -1059,6 +1059,8 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					numberOfBulbs: 6,
+					power: 5,
+					efficacy: 120,
 				},
 			},
 			dwellingSpaceFloors: {
@@ -1512,6 +1514,8 @@ describe("FHS input mapper", () => {
 				...baseForm,
 				data: {
 					numberOfBulbs: 5,
+					power: 5,
+					efficacy: 120,
 				},
 			},
 			dwellingSpaceFloors: {

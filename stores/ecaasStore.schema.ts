@@ -533,6 +533,8 @@ export type DwellingSpaceZoneParametersData = z.infer<typeof dwellingSpaceZonePa
 
 const dwellingSpaceLightingDataZod = z.object({
 	numberOfBulbs: z.int().min(0),
+	power: z.int().min(0),
+	efficacy: z.int().min(0),
 });
 
 export type DwellingSpaceLightingData = z.infer<typeof dwellingSpaceLightingDataZod>;

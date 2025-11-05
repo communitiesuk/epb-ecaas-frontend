@@ -25,6 +25,8 @@ const zoneParametersData: DwellingSpaceZoneParametersData = {
 
 const lightingData: DwellingSpaceLightingData = {
 	numberOfBulbs: 8,
+	power: 5,
+	efficacy: 120,
 };
 
 const floorsData: FloorsData = {
@@ -347,6 +349,8 @@ describe("Dwelling space fabric summary", () => {
 
 			const expectedResult = {
 				"Number of bulbs": "8",
+				"Power": "5",
+				"Efficacy": "120",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {

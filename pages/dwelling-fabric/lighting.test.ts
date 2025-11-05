@@ -10,6 +10,8 @@ mockNuxtImport("navigateTo", () => {
 
 const state: DwellingSpaceLightingData = {
 	numberOfBulbs: 9,
+	power: 5,
+	efficacy: 120,
 };
 
 const store = useEcaasStore();
@@ -25,6 +27,8 @@ describe("lighting", () => {
 		await renderSuspended(Lighting);
 
 		await user.type(screen.getByTestId("numberOfBulbs"), "9");
+		await user.type(screen.getByTestId("power"), "5");
+		await user.type(screen.getByTestId("efficacy"), "120");
 		await user.tab();
 		await(user.click(screen.getByTestId("saveAndComplete")));
 
@@ -46,6 +50,8 @@ describe("lighting", () => {
 		await renderSuspended(Lighting);
 
 		expect((await screen.findByTestId<HTMLInputElement>("numberOfBulbs")).value).toBe("9");
+		expect((await screen.findByTestId<HTMLInputElement>("power")).value).toBe("5");
+		expect((await screen.findByTestId<HTMLInputElement>("efficacy")).value).toBe("120");
 	});
 			
 	test("required error messages are displayed when empty form is submitted", async () => {
@@ -54,13 +60,14 @@ describe("lighting", () => {
 		await(user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("numberOfBulbs_error"))).toBeDefined();
+		expect((await screen.findByTestId("power_error"))).toBeDefined();
+		expect((await screen.findByTestId("efficacy_error"))).toBeDefined();
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(Lighting);
 
 		await(user.click(screen.getByTestId("saveAndComplete")));
-
 
 		expect((await screen.findByTestId("lightingErrorSummary"))).toBeDefined();
 	});
