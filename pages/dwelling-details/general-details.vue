@@ -203,6 +203,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Select the energy sources that will be present in the dwelling"
 			:options="fuelTypeOptions"
 			validation="required"
+  		:value="['electricity']"
 			data-field="EnergySupply.*.fuel"
 		/>
 		<GovLLMWarning />
