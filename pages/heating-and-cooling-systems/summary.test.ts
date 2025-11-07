@@ -6,7 +6,6 @@ import { kilowattHourPerKelvin } from "~/utils/units/thermalConductivity";
 import { celsius } from "~/utils/units/temperature";
 import { litrePerMinute } from "~/utils/units/flowRate";
 import { metresSquare } from "~/utils/units/area";
-import { co2PerKilowattHour } from "~/utils/units/emissions";
 import { userEvent } from "@testing-library/user-event";
 
 type expectedData = { [key: string]: string };

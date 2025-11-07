@@ -20,7 +20,7 @@ const state: GeneralDetailsData = {
 	numOfWCs: 1,
 	numOfHabitableRooms: 4,
 	numOfRoomsWithTappingPoints: 2,
-	fuelType: ["electricity"]
+	fuelType: ["electricity"],
 };
 
 const stateWithFlat: GeneralDetailsData = {
@@ -35,7 +35,7 @@ const stateWithFlat: GeneralDetailsData = {
 	numOfWCs: 1,
 	numOfHabitableRooms: 4,
 	numOfRoomsWithTappingPoints: 2,
-	fuelType: ["mains_gas"]
+	fuelType: ["mains_gas"],
 };
 
 describe("General details", () => {

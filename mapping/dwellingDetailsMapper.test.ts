@@ -22,7 +22,7 @@ describe("dwelling details mapper", () => {
 		numOfWCs: 1,
 		numOfHabitableRooms: 3,
 		numOfRoomsWithTappingPoints: 2,
-		fuelType:["electricity"]
+		fuelType: ["electricity"],
 	};
 
 	it("maps general details input state to FHS input request", () => {
@@ -86,19 +86,19 @@ describe("dwelling details mapper", () => {
 		// Arrange
 
 		const state: GeneralDetailsData = {
-		typeOfDwelling: "flat",
-		storeysInDwelling: 3,
-		storeyOfFlat: 1,
-		buildingLength: 10,
-		buildingWidth: 20,
-		numOfBedrooms: 2,
-		numOfUtilityRooms: 2,
-		numOfBathrooms: 1,
-		numOfWCs: 1,
-		numOfHabitableRooms: 3,
-		numOfRoomsWithTappingPoints: 2,
-		fuelType:["mains_gas", "lpg_bulk"]
-	};
+			typeOfDwelling: "flat",
+			storeysInDwelling: 3,
+			storeyOfFlat: 1,
+			buildingLength: 10,
+			buildingWidth: 20,
+			numOfBedrooms: 2,
+			numOfUtilityRooms: 2,
+			numOfBathrooms: 1,
+			numOfWCs: 1,
+			numOfHabitableRooms: 3,
+			numOfRoomsWithTappingPoints: 2,
+			fuelType: ["mains_gas", "lpg_bulk"],
+		};
 
 		store.$patch({
 			dwellingDetails: {
@@ -122,7 +122,7 @@ describe("dwelling details mapper", () => {
 					fuel: "lpg_bulk",
 					factor: {
 						is_export_capable: false,
-					}	
+					},	
 				},
 			},
 		};

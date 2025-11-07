@@ -2,7 +2,7 @@ import AirConditioning from "./[airConditioning].vue";
 import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
-import type { AirConditioningData, DwellingDetails, GeneralDetailsData } from "~/stores/ecaasStore.schema";
+import type { AirConditioningData, GeneralDetailsData } from "~/stores/ecaasStore.schema";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -39,13 +39,13 @@ describe("Air conditioning", () => {
 	};
 
 	test("data is saved to store state when form is valid", async () => {
-			store.$patch({
-				dwellingDetails: {
-					generalSpecifications: {
-						data: generalDetailsState,
-					},
+		store.$patch({
+			dwellingDetails: {
+				generalSpecifications: {
+					data: generalDetailsState,
 				},
-			});
+			},
+		});
 
 		await renderSuspended(AirConditioning, {
 			route: {
@@ -72,10 +72,10 @@ describe("Air conditioning", () => {
 				},
 			},
 			dwellingDetails: {
-					generalSpecifications: {
-						data: generalDetailsState,
-					},
+				generalSpecifications: {
+					data: generalDetailsState,
 				},
+			},
 		});
 
 		await renderSuspended(AirConditioning, {

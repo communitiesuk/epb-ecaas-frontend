@@ -18,7 +18,7 @@ const saveForm = (fields: typeof model.value) => {
 				data: {
 					numberOfBulbs: fields.numberOfBulbs,
 					power: fields.power,
-					efficacy: fields.efficacy
+					efficacy: fields.efficacy,
 				},
 				complete: true,
 			},

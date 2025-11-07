@@ -935,7 +935,7 @@ describe("FHS input mapper", () => {
 					numOfWCs: 1,
 					buildingLength: 10,
 					buildingWidth: 20,
-					fuelType: ["electricity"]
+					fuelType: ["electricity"],
 				},
 			},
 			shading: {
@@ -1339,7 +1339,7 @@ describe("FHS input mapper", () => {
 					numOfWCs: 1,
 					buildingLength: 10,
 					buildingWidth: 20,
-					fuelType: ["electricity"]
+					fuelType: ["electricity"],
 				},
 			},
 			shading: {

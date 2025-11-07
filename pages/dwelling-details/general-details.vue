@@ -9,7 +9,7 @@ const { autoSaveForm } = useForm();
 const fuelTypeOptions = {
 	"electricity": "Electricity",
 	"mains_gas": "Mains gas",
-	"lpg_bulk": "LPG (Liquid petroleum gas)"
+	"lpg_bulk": "LPG (Liquid petroleum gas)",
 } as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
 
 
@@ -38,7 +38,7 @@ const saveForm = (fields: typeof model.value) => {
 					numOfWCs: fields.numOfWCs,
 					numOfHabitableRooms: fields.numOfHabitableRooms,
 					numOfRoomsWithTappingPoints: fields.numOfRoomsWithTappingPoints,
-					fuelType: fields.fuelType
+					fuelType: fields.fuelType,
 				},
 				complete: true,
 			},

@@ -29,7 +29,7 @@ const lightingSummary: SummarySection = {
 	data: {
 		"Number of bulbs": show(lightingData.numberOfBulbs),
 		"Power": show(lightingData.power),
-		"Efficacy": show(lightingData.efficacy)
+		"Efficacy": show(lightingData.efficacy),
 	},
 	editUrl: getUrl("dwellingSpaceLighting"),
 };

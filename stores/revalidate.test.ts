@@ -16,7 +16,7 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 				"numOfUtilityRooms": 1,
 				"buildingLength": 7,
 				"buildingWidth": 7,
-				"fuelType": []
+				"fuelType": [],
 			},
 			"complete": true,
 		},

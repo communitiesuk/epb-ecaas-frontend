@@ -2,11 +2,11 @@ import { applianceKeys } from "./../utils/display";
 import type { SchemaShadingSegment, SchemaInfiltrationVentilation, SchemaApplianceType } from "~/schema/aliases";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
-import { defaultElectricityEnergySupplyName } from './common';
+import { defaultElectricityEnergySupplyName } from "./common";
 
 export function mapDwellingDetailsData(state: ResolvedState): Partial<FhsInputSchema> {
 	const generalDetailsData = mapGeneralDetailsData(state);
-	const energySupplyFuelTypeData = mapEnergySupplyFuelTypeData(state)
+	const energySupplyFuelTypeData = mapEnergySupplyFuelTypeData(state);
 	const externalFactorsData = mapExternalFactorsData(state);
 	const distantShadingData = mapDistantShadingData(state);
 	const appliancesData = mapAppliancesData(state); 
@@ -29,7 +29,7 @@ export type GeneralFieldsFromDwelling = "General" |
 	"NumberOfHabitableRooms" |
 	"NumberOfTappedRooms" |
 	"NumberOfWetRooms" |
-	"PartGcompliance"  
+	"PartGcompliance";  
 
 export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema, GeneralFieldsFromDwelling> {
 	const { generalSpecifications: generalDetails } = state.dwellingDetails;
@@ -56,30 +56,30 @@ export function mapGeneralDetailsData(state: ResolvedState): Pick<FhsInputSchema
 		NumberOfTappedRooms: generalDetails.numOfRoomsWithTappingPoints,
 		NumberOfWetRooms: 0, // fhs needs this field set at 0.36
 		PartGcompliance: true,
-  };
+	};
 }
 
 export function mapEnergySupplyFuelTypeData(
-  state: ResolvedState
+	state: ResolvedState,
 ): Pick<FhsInputSchema, "EnergySupply"> {
-  const { fuelType } = state.dwellingDetails.generalSpecifications;
-  return {
-    EnergySupply: {
-      ...objectFromEntries(
-        fuelType
-          ? fuelType.map((fuelType) => [
-              fuelType === "electricity"
-                ? defaultElectricityEnergySupplyName
-                : fuelType,
-              {
-                fuel: fuelType,
-                ...(fuelType === "lpg_bulk" && { factor: { is_export_capable: false }}),
-              },
-            ])
-          : []
-      ),
-    },
-  };
+	const { fuelType } = state.dwellingDetails.generalSpecifications;
+	return {
+		EnergySupply: {
+			...objectFromEntries(
+				fuelType
+					? fuelType.map((fuelType) => [
+						fuelType === "electricity"
+							? defaultElectricityEnergySupplyName
+							: fuelType,
+						{
+							fuel: fuelType,
+							...(fuelType === "lpg_bulk" && { factor: { is_export_capable: false } }),
+						},
+					])
+					: [],
+			),
+		},
+	};
 }
 
 export type InfiltrationFieldsFromDwelling = "altitude" | "shield_class" | "terrain_class" | "noise_nuisance";
