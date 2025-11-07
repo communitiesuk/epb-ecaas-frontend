@@ -16,6 +16,7 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 				"numOfUtilityRooms": 1,
 				"buildingLength": 7,
 				"buildingWidth": 7,
+				"fuelType": []
 			},
 			"complete": true,
 		},
@@ -169,9 +170,9 @@ const twoHeatPumps: Pick<EcaasState, "heatingAndCoolingSystems"> = {
 				"complete": true,
 			},
 		},
-		"energySupply": {
-			"data": {} as EnergySupplyData,
-		},
+		// "energySupply": {
+		// 	"data": {} as EnergySupplyData,
+		// },
 		"heatEmitting": {
 			"wetDistribution": {
 				"data": [],

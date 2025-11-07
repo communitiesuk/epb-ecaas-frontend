@@ -16,25 +16,6 @@ const generalSummary: SummarySection = {
 	editUrl: "/heating-and-cooling-systems/general",
 };
 
-const { fuelType, exported, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered } = store.heatingAndCoolingSystems.energySupply.data;
-const energySupplySummary: SummarySection = {
-	id: "energySupply",
-	label: "Energy supply",
-	data: {
-		"Fuel type": displayFuelTypes(fuelType),
-		...(fuelType?.includes("electricity") && {
-			Exported: displayBoolean(exported),
-		}),
-		...(fuelType?.includes("custom") && {
-			"CO2 per kWh": dim(co2PerKwh, "CO2 per kilowatt-hour"),
-			"CO2 per kWh (including out of scope)": dim(co2PerKwhIncludingOutOfScope, "CO2 per kilowatt-hour"),
-			"kWh per kWh delivered": show(kwhPerKwhDelivered),
-		}),
-	},
-
-	editUrl: "/heating-and-cooling-systems/energy-supply",
-};
-
 const heatGenerationUrl = "/heating-and-cooling-systems/heat-generation";
 const heatPumps = store.heatingAndCoolingSystems.heatGeneration.heatPump.data;
 const heatPumpSummary: SummarySection = {
@@ -229,9 +210,6 @@ const coolingSummary: SummarySection[] = [
 	<h1 class="govuk-heading-l">{{ title }}</h1>
 	<GovTabs v-slot="tabProps" :items="getTabItems([generalSummary])">
 		<SummaryTab :summary="generalSummary" :selected="tabProps.currentTab === 0" />
-	</GovTabs>
-	<GovTabs v-slot="tabProps" :items="getTabItems([energySupplySummary])">
-		<SummaryTab :summary="energySupplySummary" :selected="tabProps.currentTab === 0" />
 	</GovTabs>
 	<GovTabs v-slot="tabProps" :items="getTabItems(heatGenerationSummary)">
 		<SummaryTab :summary="heatPumpSummary" :selected="tabProps.currentTab === 0">

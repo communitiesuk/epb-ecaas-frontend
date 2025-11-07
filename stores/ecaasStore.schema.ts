@@ -66,6 +66,7 @@ const baseGeneralDetails = z.object({
 	numOfWCs: z.int(),
 	numOfHabitableRooms: z.int().min(1),
 	numOfRoomsWithTappingPoints: z.int().min(1),
+	fuelType: z.array(fuelTypeZod),
 });
 
 const generalDetailsDataZod = z.discriminatedUnion("typeOfDwelling", [
@@ -778,7 +779,6 @@ export type AirPermeabilityData = z.infer<typeof airPermeabilityDataZod>;
 export type heatingAndCoolingSystems = AssertEachKeyIsPageId<{
 	general: EcaasForm<GeneralHeatingAndCoolingSystems>,
 	heatGeneration: HeatGeneration,
-	energySupply: EcaasForm<EnergySupplyData>;
 	heatEmitting: HeatEmitting;
 	cooling: Cooling
 }>;
@@ -821,16 +821,6 @@ export type HeatNetworkData = z.infer<typeof heatNetworkDataZod>;
 const heatInterfaceUnitDataZod = namedWithId;
 
 export type HeatInterfaceUnitData = z.infer<typeof heatInterfaceUnitDataZod>;
-
-const energySupplyDataZod = z.object({
-	fuelType: z.array(fuelTypeZod),
-	co2PerKwh: z.optional(z.number()),
-	co2PerKwhIncludingOutOfScope: z.optional(z.number()),
-	kwhPerKwhDelivered: z.optional(z.number()),
-	exported: z.optional(z.boolean()),
-});
-
-export type EnergySupplyData = z.infer<typeof energySupplyDataZod>;
 
 export type HeatEmitting = AssertFormKeysArePageIds<{
 	wetDistribution: EcaasFormList<WetDistributionData>;
@@ -1057,7 +1047,7 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"heatingAndCoolingSystems/heatGeneration/heatInterfaceUnit": heatInterfaceUnitDataZod,
 	"heatingAndCoolingSystems/heatGeneration/heatNetwork": heatNetworkDataZod,
 	"heatingAndCoolingSystems/heatGeneration/heatPump": heatPumpDataZod,
-	"heatingAndCoolingSystems/energySupply": energySupplyDataZod,
+	// "heatingAndCoolingSystems/energySupply": energySupplyDataZod,
 	"heatingAndCoolingSystems/heatEmitting/wetDistribution": wetDistributionDataZod,
 	"heatingAndCoolingSystems/heatEmitting/instantElectricHeater": instantElectricStorageDataZod,
 	"heatingAndCoolingSystems/heatEmitting/electricStorageHeater": electricStorageHeaterDataZod,

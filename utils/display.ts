@@ -199,29 +199,19 @@ export function displayFuelTypes(fuelTypes: SchemaFuelType[] | undefined) {
 
 export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
 	switch (fuelType) {
-		case "gas":
-			return "Bottled gas";
 		case "lpg_bulk":
-			return "LPG bulk";
-		case "custom":
-			return "Custom";
+			return "LPG (Liquid petroleum gas)";
 		case "electricity":
 			return "Electricity";
 		case "mains_gas":
 			return "Mains gas";
-		case "wood":
-			return "Wood";
-		case "coal":
-			return "Coal";
-		case "oil":
-			return "Oil";
 		default:
 			fuelType satisfies never;
 			throw new Error(`Missed a fuel type case: ${fuelType}`);
 	}
 }
 
-export type FuelTypeDisplay = "Bottled gas" | "LPG bulk" | "Custom" | "Electricity" | "Mains gas" | "Wood" | "Coal" | "Oil";
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas)" | "Electricity" | "Mains gas" ;
 
 export const ecoDesignControllerOptions = {
 	1: "I: On/Off Room Thermostat",

@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import type { SchemaBuildType } from "~/schema/aliases";
+import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
 import { getUrl } from "#imports";
 
 const title = "General details";
 const store = useEcaasStore();
 const { autoSaveForm } = useForm();
+const fuelTypeOptions = {
+	"electricity": "Electricity",
+	"mains_gas": "Mains gas",
+	"lpg_bulk": "LPG (Liquid petroleum gas)"
+} as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
+
 
 const model = ref({
 	...store.dwellingDetails.generalSpecifications.data,
@@ -32,6 +38,7 @@ const saveForm = (fields: typeof model.value) => {
 					numOfWCs: fields.numOfWCs,
 					numOfHabitableRooms: fields.numOfHabitableRooms,
 					numOfRoomsWithTappingPoints: fields.numOfRoomsWithTappingPoints,
+					fuelType: fields.fuelType
 				},
 				complete: true,
 			},
@@ -188,6 +195,15 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			}"
 			help="This could be a room with any tapping point. For example a sink, bath or shower."
 			data-field="NumberOfTappedRooms"
+		/>
+		<FormKit
+			id="fuelType"
+			type="govCheckboxes"
+			name="fuelType"
+			label="Select the energy sources that will be present in the dwelling"
+			:options="fuelTypeOptions"
+			validation="required"
+			data-field="EnergySupply.*.fuel"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

@@ -92,7 +92,6 @@ export function getInitialState(): EcaasState {
 				heatNetwork: { data: [] },
 				heatInterfaceUnit: { data: [] },
 			},
-			energySupply: { data: {} },
 			heatEmitting: {
 				wetDistribution: { data: [] },
 				instantElectricHeater: { data: [] },

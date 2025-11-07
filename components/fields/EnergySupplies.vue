@@ -14,10 +14,10 @@ defineProps<{
 
 const store = useEcaasStore();
 
-const { fuelType } = store.heatingAndCoolingSystems.energySupply.data; 
+const { fuelType } = store.dwellingDetails.generalSpecifications.data; 
 
 const energySupplies = fuelType !== undefined ? [
-	fuelType.map(x => {
+	fuelType.map( x => {
 		return x ? [x, sentenceCase(x)] as [string, string] : undefined;
 	}),
 ].flat().filter(x => typeof x !== "undefined") : [];
@@ -40,7 +40,7 @@ const energySupplies = fuelType !== undefined ? [
 			<div v-if="!energySupplies.length"
 			>
 				<p class="govuk-error-message">No energy supplies added.</p>
-				<NuxtLink :to="getUrl('energySupply')" class="govuk-link gov-radios-add-link">
+				<NuxtLink :to="getUrl('generalSpecifications')" class="govuk-link gov-radios-add-link">
 					Click here to add an energy supply
 				</NuxtLink>
 			</div>

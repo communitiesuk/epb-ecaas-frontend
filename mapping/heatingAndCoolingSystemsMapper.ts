@@ -3,10 +3,9 @@ import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import type { SchemaSpaceCoolSystemDetails, SchemaSpaceHeatSystemDetails } from "~/schema/aliases";
 import { defaultControlName, defaultElectricityEnergySupplyName, defaultZoneName } from "./common";
 
-export function mapHeatingAndCoolingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply" | "SpaceHeatSystem" | "SpaceCoolSystem"> {
+export function mapHeatingAndCoolingSystemsData(state: ResolvedState): Pick<FhsInputSchema, "SpaceHeatSystem" | "SpaceCoolSystem"> {
 	return {
 		...mapGeneralData(state),
-		...mapEnergySupplyData(state),
 		...mapHeatEmittingData(state),
 		...mapSpaceCoolSystems(state),
 	};
@@ -23,30 +22,6 @@ export function mapGeneralData(state: ResolvedState): Pick<FhsInputSchema, "Heat
 	return {
 		HeatingControlType: heatingControlOptions[heatingControlType]!,
 		PartO_active_cooling_required: coolingRequired,
-	};
-}
-
-export function mapEnergySupplyData(state: ResolvedState): Pick<FhsInputSchema, "EnergySupply"> {
-	const { fuelType, co2PerKwh, co2PerKwhIncludingOutOfScope, kwhPerKwhDelivered, exported } = state.heatingAndCoolingSystems.energySupply;
-
-	return {
-		EnergySupply: {
-			...objectFromEntries(fuelType ? fuelType.map((fuelType) => ([
-				fuelType === "electricity" ? defaultElectricityEnergySupplyName : fuelType,
-				{
-					fuel: fuelType,
-					...(fuelType === "electricity" ? { is_export_capable: exported ?? false } : {}),
-					...(fuelType === "custom" ? {
-						factor: {
-							"Emissions Factor kgCO2e/kWh": co2PerKwh!,
-							"Emissions Factor kgCO2e/kWh including out-of-scope emissions": co2PerKwhIncludingOutOfScope!,
-							"Primary Energy Factor kWh/kWh delivered": kwhPerKwhDelivered!,
-							"is_export_capable": exported ?? false,
-						},
-					} : {}),
-				},
-			])) : []),
-		},
 	};
 }
 

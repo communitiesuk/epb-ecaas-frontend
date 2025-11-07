@@ -22,7 +22,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 
 	const [pvData, electricBatteries, diverter] = mapPvAndElectricBatteriesData(state);
 	const heatingCooling = mapHeatingAndCoolingSystemsData(state);
-	const { EnergySupply } = heatingCooling;
+	const fuelType = dwellingDetailsData.EnergySupply;
 
 	// specify the electricity tariff with other needed data points with default values as used in example FHS files in case it is needed (TODO: should it be necessary to pass in a tariff here?)
 	const defaultTariffData: Pick<SchemaEnergySupplyElectricity, "threshold_charges" | "threshold_prices" | "tariff"> = {
@@ -34,7 +34,7 @@ export function mapFhsInputData(state: Resolved<EcaasState>): FhsInputSchema {
 		...heatingCooling,
 		EnergySupply: {
 			[defaultElectricityEnergySupplyName]: {
-				...EnergySupply[defaultElectricityEnergySupplyName],
+				...(fuelType && fuelType[defaultElectricityEnergySupplyName]),
 				...electricBatteries,
 				...diverter,
 				...(Object.values(electricBatteries).length > 0 ? defaultTariffData : {}),

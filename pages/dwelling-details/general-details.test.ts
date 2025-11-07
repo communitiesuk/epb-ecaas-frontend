@@ -20,6 +20,7 @@ const state: GeneralDetailsData = {
 	numOfWCs: 1,
 	numOfHabitableRooms: 4,
 	numOfRoomsWithTappingPoints: 2,
+	fuelType: ["electricity"]
 };
 
 const stateWithFlat: GeneralDetailsData = {
@@ -34,6 +35,7 @@ const stateWithFlat: GeneralDetailsData = {
 	numOfWCs: 1,
 	numOfHabitableRooms: 4,
 	numOfRoomsWithTappingPoints: 2,
+	fuelType: ["mains_gas"]
 };
 
 describe("General details", () => {
@@ -59,6 +61,8 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfWCs"), "1");
 			await user.type(screen.getByTestId("numOfHabitableRooms"), "4");
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
+			await user.click(screen.getByTestId("fuelType_electricity"));
+
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 	
@@ -101,6 +105,7 @@ describe("General details", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("numOfWCs")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
+			expect((await screen.findByTestId("fuelType_electricity")).hasAttribute("checked")).toBe(true);
 		});
 			
 		test("required error messages are displayed when empty form is submitted", async () => {
@@ -119,7 +124,8 @@ describe("General details", () => {
 			expect((await screen.findByTestId("numOfBathrooms_error"))).toBeDefined();
 			expect((await screen.findByTestId("numOfWCs_error"))).toBeDefined();
 			expect((await screen.findByTestId("numOfHabitableRooms_error"))).toBeDefined();
-			expect((await screen.findByTestId("numOfRoomsWithTappingPoints_error"))).toBeDefined();
+			expect((await screen.findByTestId("fuelType_error"))).toBeDefined();
+
 			expect(screen.queryByTestId("storeyOfFlat_error")).toBe(null);
 		});
 
@@ -152,6 +158,8 @@ describe("General details", () => {
 			await user.type(screen.getByTestId("numOfWCs"), "1");
 			await user.type(screen.getByTestId("numOfHabitableRooms"), "4");
 			await user.type(screen.getByTestId("numOfRoomsWithTappingPoints"), "2");
+			await user.click(screen.getByTestId("fuelType_mains_gas"));
+
 			await user.tab();
 			await user.click(screen.getByTestId("saveAndComplete"));
 
@@ -184,6 +192,8 @@ describe("General details", () => {
 			expect((await screen.findByTestId<HTMLInputElement>("numOfWCs")).value).toBe("1");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfHabitableRooms")).value).toBe("4");
 			expect((await screen.findByTestId<HTMLInputElement>("numOfRoomsWithTappingPoints")).value).toBe("2");
+			expect((await screen.findByTestId("fuelType_mains_gas")).hasAttribute("checked")).toBe(true);
+	
 		});
 
 		test("required error messages are displayed when empty form is submitted", async () => {
@@ -195,7 +205,7 @@ describe("General details", () => {
 			await user.click(screen.getByTestId("saveAndComplete"));
 
 			expect((await screen.findByTestId("storeyOfFlat_error"))).toBeDefined();
-
+			expect((await screen.findByTestId("fuelType_error"))).toBeDefined();
 		});
 	});
 

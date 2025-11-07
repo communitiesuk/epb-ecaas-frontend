@@ -2,7 +2,7 @@ import AirConditioning from "./[airConditioning].vue";
 import { screen } from "@testing-library/vue";
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import { userEvent } from "@testing-library/user-event";
-import type { AirConditioningData } from "~/stores/ecaasStore.schema";
+import type { AirConditioningData, DwellingDetails, GeneralDetailsData } from "~/stores/ecaasStore.schema";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -25,9 +25,8 @@ describe("Air conditioning", () => {
 		energySupply: "electricity",
 	};
 
-	const energySupplyState: EnergySupplyData = {
+	const generalDetailsState: Partial<GeneralDetailsData> = {
 		fuelType: ["electricity"],
-		exported: true,
 	};
 
 	const populateValidForm = async () => {
@@ -40,13 +39,13 @@ describe("Air conditioning", () => {
 	};
 
 	test("data is saved to store state when form is valid", async () => {
-		store.$patch({
-			heatingAndCoolingSystems: {
-				energySupply: {
-					data: energySupplyState,
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						data: generalDetailsState,
+					},
 				},
-			},
-		});
+			});
 
 		await renderSuspended(AirConditioning, {
 			route: {
@@ -71,10 +70,12 @@ describe("Air conditioning", () => {
 						data: [{ data: state }],
 					},
 				},
-				energySupply: {
-					data: energySupplyState,
-				},
 			},
+			dwellingDetails: {
+					generalSpecifications: {
+						data: generalDetailsState,
+					},
+				},
 		});
 
 		await renderSuspended(AirConditioning, {

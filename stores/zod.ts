@@ -46,13 +46,8 @@ const flueGasExhaustSituations = [
 ] as const satisfies SchemaFlueGasExhaustSituation[];
 const fuelTypes = [
 	"lpg_bulk",
-	"custom",
 	"electricity",
 	"mains_gas",
-	"wood",
-	"gas",
-	"oil",
-	"coal",
 ] as const satisfies SchemaFuelType[];
 const heatPumpBackupControlTypes = ["None", "Substitute", "TopUp"] as const satisfies SchemaHeatPumpBackupControlType[];
 const heatPumpSinkTypes = ["Air", "Water"] as const satisfies SchemaHeatPumpSinkType[];

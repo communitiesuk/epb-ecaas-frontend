@@ -17,13 +17,6 @@ const heatingAndCoolingSystemsPages = [
 		parentId: "heatingAndCoolingSystems",
 	},
 	{
-		id: "energySupply",
-		title: "Energy supply",
-		url: "/heating-and-cooling-systems/energy-supply",
-		type: PageType.Task,
-		parentId: "heatingAndCoolingSystems",
-	},
-	{
 		id: "heatGeneration",
 		title: "Heat generation",
 		url: "/heating-and-cooling-systems/heat-generation",

@@ -35,7 +35,6 @@ const expectedHouseInput: FhsInputSchema = {
 	EnergySupply: {
 		["mains elec"]: {
 			fuel: "electricity",
-			is_export_capable: true,
 		},
 	},
 	Events: {},
@@ -303,7 +302,6 @@ const expectedFlatInput: FhsInputSchema = {
 	EnergySupply: {
 		["mains elec"]: {
 			fuel: "electricity",
-			is_export_capable: false,
 			ElectricBattery: {
 				capacity: 12,
 				charge_discharge_efficiency_round_trip: 1,
@@ -937,6 +935,7 @@ describe("FHS input mapper", () => {
 					numOfWCs: 1,
 					buildingLength: 10,
 					buildingWidth: 20,
+					fuelType: ["electricity"]
 				},
 			},
 			shading: {
@@ -1168,13 +1167,6 @@ describe("FHS input mapper", () => {
 					...baseForm,
 				},
 			},
-			energySupply: {
-				...baseForm,
-				data: {
-					fuelType: ["electricity"],
-					exported: true,
-				},
-			},
 			heatEmitting: {
 				wetDistribution: {
 					...baseForm,
@@ -1347,6 +1339,7 @@ describe("FHS input mapper", () => {
 					numOfWCs: 1,
 					buildingLength: 10,
 					buildingWidth: 20,
+					fuelType: ["electricity"]
 				},
 			},
 			shading: {
@@ -1905,13 +1898,6 @@ describe("FHS input mapper", () => {
 				},
 				heatNetwork: {
 					...baseForm,
-				},
-			},
-			energySupply: {
-				...baseForm,
-				data: {
-					fuelType: ["electricity"],
-					exported: false,
 				},
 			},
 			heatEmitting: {
