@@ -208,5 +208,17 @@ describe("General details", () => {
 		});
 	});
 
+	test("shows an error if 'Electricity is the only energy source' is selected along with another fuel type", async () => {
+		await renderSuspended(GeneralDetails);
+		await user.click(screen.getByTestId("fuelType_elecOnly"));
+		await user.click(screen.getByTestId("fuelType_mains_gas"));
+		await user.click(screen.getByTestId("saveAndComplete"));
+
+		const errorSummary = await screen.findByTestId("generalDetailsErrorSummary");
+
+		expect(
+			errorSummary.textContent.includes("Select Mains gas, LPG (Liquid petroleum gas) or select Electricity is the only energy source"),
+		).toBe(true);
+	})
 });
 
