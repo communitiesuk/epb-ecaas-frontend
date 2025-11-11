@@ -20,7 +20,6 @@ const saveForm = (fields: AirConditioningData) => {
 				coolingCapacity: fields.coolingCapacity,
 				seasonalEnergyEfficiencyRatio: fields.seasonalEnergyEfficiencyRatio,
 				convectionFraction: fields.convectionFraction,
-				energySupply: fields.energySupply,
 			},
 			complete: true,
 		};
@@ -96,12 +95,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			name="convectionFraction"
 			help="Enter the proportion of cool air the air conditioning unit emits through convection. Typically this is 1 as all cooling is by convection."
 			validation="required | number | between:0,1"
-		/>
-		<FieldsEnergySupplies
-			id="energySupply"
-			name="energySupply"
-			label="Energy source"
-			help="Select the relevant energy supply that has been added previously"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

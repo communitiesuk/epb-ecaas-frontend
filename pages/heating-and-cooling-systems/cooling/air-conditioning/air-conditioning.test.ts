@@ -16,18 +16,12 @@ describe("Air conditioning", () => {
 	afterEach(() => {
 		store.$reset();
 	});
-	
-	
-	const generalDetailsState: Partial<GeneralDetailsData> = {
-		fuelType: ["elecOnly"],
-	};
-	
+		
 	const state: AirConditioningData = {
 		name: "Air conditioner 1",
 		coolingCapacity: 10,
 		seasonalEnergyEfficiencyRatio: 10,
 		convectionFraction: 1,
-		energySupply: generalDetailsState.fuelType![0]!,
 	};
 
 	const populateValidForm = async () => {
@@ -35,19 +29,11 @@ describe("Air conditioning", () => {
 		await user.type(screen.getByTestId("coolingCapacity"), "10");
 		await user.type(screen.getByTestId("seasonalEnergyEfficiencyRatio"), "10");
 		await user.type(screen.getByTestId("convectionFraction"), "1");
-		await user.click(screen.getByTestId("energySupply_elecOnly"));
 		await user.tab();
 	};
 
 	test("data is saved to store state when form is valid", async () => {
-		store.$patch({
-			dwellingDetails: {
-				generalSpecifications: {
-					data: generalDetailsState,
-				},
-			},
-		});
-
+		
 		await renderSuspended(AirConditioning, {
 			route: {
 				params: { airConditioning: "create" },
@@ -70,11 +56,6 @@ describe("Air conditioning", () => {
 					airConditioning: {
 						data: [{ data: state }],
 					},
-				},
-			},
-			dwellingDetails: {
-				generalSpecifications: {
-					data: generalDetailsState,
 				},
 			},
 		});

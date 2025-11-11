@@ -934,7 +934,6 @@ const airConditioningDataZod = z.object({
 	coolingCapacity: z.number(),
 	seasonalEnergyEfficiencyRatio: z.number().min(0).max(25),
 	convectionFraction: fraction,
-	energySupply: z.string(),
 });
 
 export type AirConditioningData = z.infer<typeof airConditioningDataZod>;
