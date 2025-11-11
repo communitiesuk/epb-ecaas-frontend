@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { v4 as uuidv4 } from "uuid";
 import type { BathData, ElectricShowerData, MixedShowerData, OtherHotWaterOutletData } from "~/stores/ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 
@@ -36,11 +37,13 @@ function handleDuplicate<T extends HotWaterOutletData>(outletType: HotWaterOutle
 			}
 			return false;
 		});
+
 		store.$patch((state) => {
 			const newItem = {
 				complete: outlet.complete,
 				data: {
 					...outlet.data,
+					id: uuidv4(),
 					name: `${name} (${duplicates.length})`,
 				},
 			} as T;

@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "Vent";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const ventData = useItemToEdit("vent", store.infiltrationAndVentilation.vents.data);
+const ventStoreData = store.infiltrationAndVentilation.vents.data;
+const index = getStoreIndex(ventStoreData);
+const ventData = useItemToEdit("vent", ventStoreData);
 const model = ref(ventData?.data);
 
 const saveForm = (fields: VentData) => {
 	store.$patch((state) => {
 		const { vents } = state.infiltrationAndVentilation;
-		const index = getStoreIndex(vents.data);
 
 		vents.data[index] = {
 			data: {
@@ -65,7 +66,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(ventStoreData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="typeOfVent"

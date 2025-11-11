@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { getUrl, standardPitchOptions } from "#imports";
+import { getUrl, standardPitchOptions, uniqueName } from "#imports";
 
 const title = "External glazed door";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor?.data);
+const externalGlazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor?.data;
+const index = getStoreIndex(externalGlazedDoorData);
+const doorData = useItemToEdit("door", externalGlazedDoorData);
 const model = ref(doorData?.data);
 
 const saveForm = (fields: ExternalGlazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalGlazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
-		const index = getStoreIndex(dwellingSpaceExternalGlazedDoor.data);
 
 		dwellingSpaceExternalGlazedDoor.data[index] = {
 			data: {
@@ -75,7 +76,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(externalGlazedDoorData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"

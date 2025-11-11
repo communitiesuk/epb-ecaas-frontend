@@ -12,3 +12,21 @@ export function getErrorMessage(context: FormKitFrameworkContext): string | unde
 export function isInteger(node: FormKitNode): boolean {
 	return Number.isInteger(Number(node.value));
 }
+
+export function uniqueName<T extends object>(forms: EcaasForm<T>[], opts: { id?: string; index?: number }) {
+	return (node: FormKitNode) => {
+		if (opts.id !== undefined) {
+			return forms
+				.filter(x => "id" in x.data ? x.data.id !== opts.id : false)
+				.every(x => "name" in x.data ? x.data.name !== node.value : false);
+		}
+
+		if (opts.index !== undefined) {
+			return forms
+				.filter((_, i) => i !== opts.index)
+				.every(x => "name" in x.data ? x.data.name !== node.value : false);
+		}
+
+		return true;
+	};
+};

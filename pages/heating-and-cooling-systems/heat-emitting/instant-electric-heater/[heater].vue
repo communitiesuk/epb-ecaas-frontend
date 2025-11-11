@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 import type { SchemaConvectiveType } from "~/schema/aliases";
 const title = "Instant electric heater";
 const store = useEcaasStore();
-const route = useRoute();
 
-const { autoSaveElementForm } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const instantElectricHeaterData = useItemToEdit("heater", store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data);
+const storeData = store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data;
+const index = getStoreIndex(storeData);
+const instantElectricHeaterData = useItemToEdit("heater", storeData);
 const model = ref(instantElectricHeaterData?.data);
 
 const convectiveTypeOptions = {
@@ -21,9 +22,6 @@ const convectiveTypeOptions = {
 const saveForm = (fields: InstantElectricStorageData) => {
 	store.$patch((state) => {
 		const { instantElectricHeater } = state.heatingAndCoolingSystems.heatEmitting;
-		const storeData = store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data;
-
-		const index = route.params.heater === "create" ? storeData.length - 1 : Number(route.params.heater);
 
 		const instantElectricHeaterItem: EcaasForm<InstantElectricStorageData> = {
 			data: {
@@ -73,7 +71,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this instant electric heater so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(storeData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="ratedPower"

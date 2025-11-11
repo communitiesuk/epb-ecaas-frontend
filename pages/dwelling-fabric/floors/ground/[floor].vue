@@ -2,13 +2,15 @@
 import { centimetre, millimetre, type Length } from "~/utils/units/length";
 import type { SchemaWindShieldLocation } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
-import { getUrl, type GroundFloorData } from "#imports";
+import { getUrl, type GroundFloorData, uniqueName } from "#imports";
 
 const title = "Ground floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
+const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
+const index = getStoreIndex(groundFloorData);
+const floorData = useItemToEdit("floor", groundFloorData);
 
 // prepopulate edge insulation width when using old input format
 if (floorData?.data && "edgeInsulationWidth" in floorData.data && typeof floorData.data.edgeInsulationWidth === "number") {
@@ -36,7 +38,6 @@ const windShieldingFactorOptions: Record<SchemaWindShieldLocation, SnakeToSenten
 const saveForm = (fields: GroundFloorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
-		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
 		const commonFields = {
 			name: fields.name,
@@ -156,7 +157,11 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(groundFloorData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="surfaceArea"

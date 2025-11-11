@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { CeilingData } from "#imports";
-import { getUrl, zeroPitchOptions } from "#imports";
+import { getUrl, zeroPitchOptions, uniqueName } from "#imports";
 
 const title = "Ceiling";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const index = getStoreIndex(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
 const ceilingData = useItemToEdit("ceiling", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
 const model = ref(ceilingData?.data);
 
@@ -14,7 +15,6 @@ const typeOfCeilingOptions = adjacentSpaceTypeOptions("Ceiling");
 const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceCeilings } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-		const index = getStoreIndex(dwellingSpaceCeilings.data);
 
 		const commonFields = {
 			name: fields.name,
@@ -104,7 +104,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Name"
 				help="Provide a name for this element so that it can be identified later"
 				name="name"
-				validation="required"
+				:validation-rules="{ uniqueName: uniqueName(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data, { index }) }"
+				validation="required | uniqueName"
+				:validation-messages="{
+					uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				}"
 			/>
 			<FieldsPitch
 				:pitch-option="model?.pitchOption"

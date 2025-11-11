@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "Air conditioning system";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const airConditioningData = useItemToEdit("airConditioning", store.heatingAndCoolingSystems.cooling.airConditioning?.data);
+const airConditioningStoreData = store.heatingAndCoolingSystems.cooling.airConditioning?.data;
+const index = getStoreIndex(airConditioningStoreData);
+const airConditioningData = useItemToEdit("airConditioning", airConditioningStoreData);
 const model = ref(airConditioningData?.data);
 
 const saveForm = (fields: AirConditioningData) => {
 	store.$patch((state) => {
 		const { airConditioning } = state.heatingAndCoolingSystems.cooling;
-		const index = getStoreIndex(airConditioning.data);
 
 		airConditioning.data[index] = {
 			data: {
@@ -23,6 +24,7 @@ const saveForm = (fields: AirConditioningData) => {
 			},
 			complete: true,
 		};
+
 		store.heatingAndCoolingSystems.cooling.airConditioning.complete = false;
 	},
 	);
@@ -63,7 +65,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(airConditioningStoreData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="coolingCapacity"

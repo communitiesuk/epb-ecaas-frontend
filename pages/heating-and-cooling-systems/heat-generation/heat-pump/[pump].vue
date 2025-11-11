@@ -2,15 +2,16 @@
 import { objectFromEntries } from "ts-extras";
 import { v4 as uuidv4 } from "uuid";
 import { displayProduct } from "~/utils/display";
-import { getUrl, type HeatPumpData } from "#imports";
+import { getUrl, type HeatPumpData, uniqueName } from "#imports";
 
 const title = "Heat pump";
 const store = useEcaasStore();
-const route = useRoute();
 
-const { autoSaveElementForm } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const heatPumpData = useItemToEdit("pump", store.heatingAndCoolingSystems.heatGeneration.heatPump.data);
+const heatPumpStoreData = store.heatingAndCoolingSystems.heatGeneration.heatPump.data;
+const index = getStoreIndex(heatPumpStoreData)
+const heatPumpData = useItemToEdit("pump", heatPumpStoreData);
 const model = ref(heatPumpData?.data);
 
 const { data: heatPumps } = await useFetch("/api/products", { query: { category: "heatPump" } });
@@ -24,7 +25,6 @@ const id =  heatPumpData?.data.id ?? uuidv4();
 const saveForm = (fields: HeatPumpData) => {
 	store.$patch((state) => {
 		const { heatPump } = state.heatingAndCoolingSystems.heatGeneration;
-		const index = route.params.pump === "create" ? heatPump.data.length - 1 : Number(route.params.pump);
 
 		const heatPumpItem: EcaasForm<HeatPumpData> = {
 			data: {
@@ -75,7 +75,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this heat pump so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(heatPumpStoreData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="productReference"

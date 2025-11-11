@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
+import { standardPitchOptions, getUrl, uniqueName } from "#imports";
 
 const title = "Internal door";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data);
+const internalDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data;
+const index = getStoreIndex(internalDoorData);
+const doorData = useItemToEdit("door", internalDoorData);
 const model = ref(doorData?.data);
 
 const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
@@ -13,7 +15,6 @@ const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 const saveForm = (fields: InternalDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceInternalDoor } = state.dwellingFabric.dwellingSpaceDoors;
-		const index = getStoreIndex(dwellingSpaceInternalDoor.data);
 
 		const commonFields = {
 			name: fields.name,
@@ -100,7 +101,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Name"
 				help="Provide a name for this element so that it can be identified later"
 				name="name"
-				validation="required"
+				:validation-rules="{ uniqueName: uniqueName(internalDoorData, { index }) }"
+				validation="required | uniqueName"
+				:validation-messages="{
+					uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				}"
 			/>
 			<FieldsPitch
 				:pitch-option="model?.pitchOption"

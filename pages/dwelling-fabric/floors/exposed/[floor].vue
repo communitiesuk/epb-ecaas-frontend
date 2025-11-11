@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 const title = "Exposed floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
+const exposedFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data;
+const index = getStoreIndex(exposedFloorData);
+const floorData = useItemToEdit("floor", exposedFloorData);
 const model = ref(floorData?.data);
 
 const colourOptions = colourOptionsMap;
 
 const saveForm = (fields: ExposedFloorData) => {	
 	store.$patch((state) => {
-		const { dwellingSpaceFloors } = state.dwellingFabric;
+		const { dwellingSpaceExposedFloor } = state.dwellingFabric.dwellingSpaceFloors;
 
 		const floor: ExposedFloorData = {
 			name: fields.name,
@@ -27,9 +29,8 @@ const saveForm = (fields: ExposedFloorData) => {
 			massDistributionClass: fields.massDistributionClass,
 		};
 		
-		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceExposedFloor.data);
-		dwellingSpaceFloors.dwellingSpaceExposedFloor.data[index] =  { data: floor, complete: true };
-		dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
+		dwellingSpaceExposedFloor.data[index] =  { data: floor, complete: true };
+		dwellingSpaceExposedFloor.complete = false;
 	}); 
 	navigateTo("/dwelling-fabric/floors");
 };
@@ -69,7 +70,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(exposedFloorData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="length"

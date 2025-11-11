@@ -3,13 +3,15 @@ import { standardPitchOptions, type WindowData } from "#imports";
 import { millimetre } from "~/utils/units/length";
 import type { SchemaWindowTreatmentControl, SchemaWindowTreatmentType } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "Window";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const window = useItemToEdit("window", store.dwellingFabric.dwellingSpaceWindows.data);
+const windowsData = store.dwellingFabric.dwellingSpaceWindows.data;
+const index = getStoreIndex(windowsData);
+const window = useItemToEdit("window", windowsData);
 
 // prepopulate shading data when using old input format
 if (window && "overhangDepth" in window && typeof window.overhangDepth === "number") {
@@ -54,9 +56,7 @@ const shadingValidation = (siblingField: string) => {
 
 const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
-
 		const { dwellingSpaceWindows } = state.dwellingFabric;
-		const index = getStoreIndex(dwellingSpaceWindows.data);
 
 		const commonFields = {
 			name: fields.name,
@@ -194,7 +194,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
-	
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -206,8 +205,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="windowErrorSummary" />
 		<FormKit
-			id="name" type="govInputText" label="Name"
-			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
+			id="name"
+			type="govInputText"
+			label="Name"
+			help="Provide a name for this element so that it can be identified later"
+			name="name"
+			:validation-rules="{ uniqueName: uniqueName(windowsData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
+		/>
 		<FieldsPitch
 			:pitch-option="model && model.pitchOption"
 			:options="standardPitchOptions()"

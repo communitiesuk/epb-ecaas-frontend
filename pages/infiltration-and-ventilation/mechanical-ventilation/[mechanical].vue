@@ -3,13 +3,14 @@ import { v4 as uuidv4 } from "uuid";
 import type { MVHRLocation, VentType } from "~/schema/aliases";
 import { litrePerSecond } from "~/utils/units/flowRate";
 import { unitValue } from "~/utils/units";
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "Mechanical ventilation";
 const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
-const mechanicalVentilation = useItemToEdit("mechanical", store.infiltrationAndVentilation.mechanicalVentilation.data);
+const mechanicalVentilationStoreData = store.infiltrationAndVentilation.mechanicalVentilation.data;
+const mechanicalVentilation = useItemToEdit("mechanical", mechanicalVentilationStoreData);
 const id = mechanicalVentilation?.data.id ?? uuidv4();
 
 // prepopulate airFlowRate correctly when using old input format
@@ -105,7 +106,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required" />
+			:validation-rules="{ uniqueName: uniqueName(mechanicalVentilationStoreData, { id }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
+		/>
 		<FormKit
 			id="typeOfMechanicalVentilationOptions"
 			type="govRadios"

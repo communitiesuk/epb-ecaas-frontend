@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { AdjacentSpaceType } from "~/stores/ecaasStore.schema";
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "Internal floor";
 const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
-const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data);
+const internalFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor?.data;
+const index = getStoreIndex(internalFloorData);
+const floorData = useItemToEdit("floor", internalFloorData);
 const model = ref(floorData?.data);
 
 const typeOfInternalFloorOptions = adjacentSpaceTypeOptions("Internal floor");
@@ -40,7 +42,6 @@ const saveForm = (fields: InternalFloorData) => {
 			throw new Error("Invalid floor type");
 		}
 		
-		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceInternalFloor.data);
 		dwellingSpaceFloors.dwellingSpaceInternalFloor.data[index] =  { data: floor, complete: true };
 		dwellingSpaceFloors.dwellingSpaceInternalFloor.complete = false;
 	});
@@ -90,7 +91,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Name"
 				help="Provide a name for this element so that it can be identified later"
 				name="name"
-				validation="required"
+				:validation-rules="{ uniqueName: uniqueName(internalFloorData, { index }) }"
+				validation="required | uniqueName"
+				:validation-messages="{
+					uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				}"
 			/>
 			<FormKit
 				id="surfaceAreaOfElement"

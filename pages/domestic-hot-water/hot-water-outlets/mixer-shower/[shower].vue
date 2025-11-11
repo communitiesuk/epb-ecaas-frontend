@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "Mixer shower";
 const store = useEcaasStore();
@@ -9,6 +9,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const mixedShowerData = useItemToEdit("shower", store.domesticHotWater.hotWaterOutlets.mixedShower.data);
 const model = ref(mixedShowerData?.data      );
 const id = mixedShowerData?.data.id || uuidv4();
+
 const saveForm = (fields: MixedShowerData) => {
 	store.$patch((state) => {
 		const { mixedShower } = state.domesticHotWater.hotWaterOutlets;
@@ -62,7 +63,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this shower so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWater.hotWaterOutlets.mixedShower.data, { id }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="flowRate"

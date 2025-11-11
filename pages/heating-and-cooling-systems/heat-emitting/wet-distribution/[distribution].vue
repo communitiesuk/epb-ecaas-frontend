@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { isInteger } from "~/utils/validation";
 import { getUrl, type WetDistributionData } from "#imports";
-import { ecoDesignControllerOptions } from "#imports";
+import { ecoDesignControllerOptions, uniqueName } from "#imports";
 
 const title = "Wet distribution";
 const store = useEcaasStore();
 const route = useRoute();
 
-const { autoSaveElementForm } = useForm();
+const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const wetDistributionStoreData = store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data;
+const index = getStoreIndex(wetDistributionStoreData);
 const wetDistributionData = useItemToEdit(
 	"distribution",
 	store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data,
@@ -31,8 +33,6 @@ const saveForm = (fields: WetDistributionData) => {
 	store.$patch((state) => {
 		const { wetDistribution } = state.heatingAndCoolingSystems.heatEmitting;
 		const storeData = store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data;
-
-		const index = route.params.distribution === "create" ? storeData.length - 1 : Number(route.params.distribution);
 
 		const commonFields = {
 			name: fields.name,
@@ -124,7 +124,12 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required" />
+			:validation-rules="{ uniqueName: uniqueName(wetDistributionStoreData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
+		/>
 
 		<FieldsHeatGenerators
 			id="heatSource"

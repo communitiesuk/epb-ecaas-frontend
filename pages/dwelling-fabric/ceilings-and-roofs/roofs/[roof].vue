@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { getUrl, zeroPitchOptions } from "#imports";
+import { getUrl, zeroPitchOptions, uniqueName } from "#imports";
 
 const title = "Roof";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const index = getStoreIndex(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
 const roofData = useItemToEdit("roof", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
 const model = ref(roofData?.data);
 
@@ -18,7 +19,6 @@ const colourOptions = colourOptionsMap;
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceRoofs } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
-		const index = getStoreIndex(dwellingSpaceRoofs.data);
 
 		dwellingSpaceRoofs.data[index] = {
 			data: {
@@ -79,7 +79,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data, { index }) }"
+				validation="required | uniqueName"
+				:validation-messages="{
+					uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				}"
 		/>
 		<FormKit
 			id="typeOfRoof"
