@@ -4,6 +4,7 @@ import { resolveState } from "~/stores/resolve";
 import type { FhsInputSchema } from "./fhsInputMapper";
 
 describe("dwelling details mapper", () => {
+
 	const store = useEcaasStore();
 
 	afterEach(() => {
@@ -22,7 +23,7 @@ describe("dwelling details mapper", () => {
 		numOfWCs: 1,
 		numOfHabitableRooms: 3,
 		numOfRoomsWithTappingPoints: 2,
-		fuelType: ["electricity"],
+		fuelType: ["mains_gas"],
 	};
 
 	it("maps general details input state to FHS input request", () => {
@@ -55,79 +56,129 @@ describe("dwelling details mapper", () => {
 		expect(fhsInputData.PartGcompliance).toBe(true);
 	});
 
-	it("maps fueltype from general details input state to FHS input request", () => {
-	// Arrange
+	describe("maps fueltype from general details input state to FHS input request", () => {
 
-		store.$patch({
-			dwellingDetails: {
-				generalSpecifications: {
-					complete: true,
-					data: state,
-				},
-			},
-		});
-
-		// Act
-		const fhsInputDataEnergySupply = mapEnergySupplyFuelTypeData(resolveState(store.$state));
-
-		// Assert
-		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
-			EnergySupply: {
-				"mains elec": {
-					fuel: "electricity",
-				},
-			},
-		};
-		
-		expect(fhsInputDataEnergySupply).toEqual(expectedResult);	
-	});
-
-	it("sets is_export_capable to false if fueltype includes LPG", () => {
+		it("hardcodes electricity as a required fueltype, always included in EnergySupply", () => {
 		// Arrange
-
-		const state: GeneralDetailsData = {
-			typeOfDwelling: "flat",
-			storeysInDwelling: 3,
-			storeyOfFlat: 1,
-			buildingLength: 10,
-			buildingWidth: 20,
-			numOfBedrooms: 2,
-			numOfUtilityRooms: 2,
-			numOfBathrooms: 1,
-			numOfWCs: 1,
-			numOfHabitableRooms: 3,
-			numOfRoomsWithTappingPoints: 2,
-			fuelType: ["mains_gas", "lpg_bulk"],
-		};
-
-		store.$patch({
-			dwellingDetails: {
-				generalSpecifications: {
-					complete: true,
-					data: state,
+	
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						complete: true,
+						data: state,
+					},
 				},
-			},
+			});
+	
+			// Act
+			const fhsInputDataEnergySupply = mapEnergySupplyFuelTypeData(resolveState(store.$state));
+	
+			// Assert
+			const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
+				EnergySupply: {
+					"mains elec": {
+						fuel: "electricity",
+					},
+					"mains_gas": {
+						fuel: "mains_gas",
+					},
+				},
+			};
+			
+			expect(fhsInputDataEnergySupply).toEqual(expectedResult);	
 		});
-
-		// Act
-		const fhsInputDataEnergySupply = mapEnergySupplyFuelTypeData(resolveState(store.$state));
-
-		// Assert
-		const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
-			EnergySupply: {
-				mains_gas: {
-					fuel: "mains_gas",
+	
+		it("filters out 'elecOnly' so it does not create a duplicate fuel entry besides hardcoded electricity", () => {
+		// Arrange
+			const state: GeneralDetailsData = {
+				typeOfDwelling: "flat",
+				storeysInDwelling: 3,
+				storeyOfFlat: 1,
+				buildingLength: 10,
+				buildingWidth: 20,
+				numOfBedrooms: 2,
+				numOfUtilityRooms: 2,
+				numOfBathrooms: 1,
+				numOfWCs: 1,
+				numOfHabitableRooms: 3,
+				numOfRoomsWithTappingPoints: 2,
+				fuelType: ["elecOnly"],
+			};
+	
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						complete: true,
+						data: state,
+					},
 				},
-				"lpg_bulk": {
-					fuel: "lpg_bulk",
-					factor: {
-						is_export_capable: false,
-					},	
+			});
+	
+			// Act
+			const fhsInputDataEnergySupply = mapEnergySupplyFuelTypeData(resolveState(store.$state));
+	
+			// Assert
+			const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
+				EnergySupply: {
+					"mains elec": {
+						fuel: "electricity",
+					},
 				},
-			},
-		};
-
-		expect(fhsInputDataEnergySupply).toEqual(expectedResult);
+			};
+			
+			expect(fhsInputDataEnergySupply).toEqual(expectedResult);	
+		});
+	
+		it("sets is_export_capable to false for LPG fueltypes", () => {
+			// Arrange
+	
+			const state: GeneralDetailsData = {
+				typeOfDwelling: "flat",
+				storeysInDwelling: 3,
+				storeyOfFlat: 1,
+				buildingLength: 10,
+				buildingWidth: 20,
+				numOfBedrooms: 2,
+				numOfUtilityRooms: 2,
+				numOfBathrooms: 1,
+				numOfWCs: 1,
+				numOfHabitableRooms: 3,
+				numOfRoomsWithTappingPoints: 2,
+				fuelType: ["mains_gas", "lpg_bulk"],
+			};
+	
+			store.$patch({
+				dwellingDetails: {
+					generalSpecifications: {
+						complete: true,
+						data: state,
+					},
+				},
+			});
+	
+			// Act
+			const fhsInputDataEnergySupply = mapEnergySupplyFuelTypeData(resolveState(store.$state));
+	
+			// Assert
+			const expectedResult: Pick<FhsInputSchema, "EnergySupply"> = {
+				EnergySupply: {
+					"mains elec": {
+						fuel: "electricity",
+					},
+					mains_gas: {
+						fuel: "mains_gas",
+					},
+					"lpg_bulk": {
+						fuel: "lpg_bulk",
+						factor: {
+							is_export_capable: false,
+						},	
+					},
+				},
+			};
+	
+			expect(fhsInputDataEnergySupply).toEqual(expectedResult);
+		});
 	});
 
 	it("maps external factors input state to FHS input request", () => {

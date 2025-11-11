@@ -16,17 +16,18 @@ describe("Air conditioning", () => {
 	afterEach(() => {
 		store.$reset();
 	});
-
+	
+	
+	const generalDetailsState: Partial<GeneralDetailsData> = {
+		fuelType: ["elecOnly"],
+	};
+	
 	const state: AirConditioningData = {
 		name: "Air conditioner 1",
 		coolingCapacity: 10,
 		seasonalEnergyEfficiencyRatio: 10,
 		convectionFraction: 1,
-		energySupply: "electricity",
-	};
-
-	const generalDetailsState: Partial<GeneralDetailsData> = {
-		fuelType: ["electricity"],
+		energySupply: generalDetailsState.fuelType![0]!,
 	};
 
 	const populateValidForm = async () => {
@@ -34,7 +35,7 @@ describe("Air conditioning", () => {
 		await user.type(screen.getByTestId("coolingCapacity"), "10");
 		await user.type(screen.getByTestId("seasonalEnergyEfficiencyRatio"), "10");
 		await user.type(screen.getByTestId("convectionFraction"), "1");
-		await user.click(screen.getByTestId("energySupply_electricity"));
+		await user.click(screen.getByTestId("energySupply_elecOnly"));
 		await user.tab();
 	};
 

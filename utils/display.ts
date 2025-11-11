@@ -1,6 +1,6 @@
 import { objectFromEntries } from "ts-extras";
 import type { DisplayProduct } from "~/pcdb/products";
-import type { SchemaApplianceType, SchemaColour, SchemaFlueGasExhaustSituation, SchemaFuelType, SchemaLeaksTestPressure } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaColour, SchemaFlueGasExhaustSituation, SchemaFuelTypeExtended, SchemaLeaksTestPressure } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
@@ -192,17 +192,17 @@ export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressure
 	}
 }
 
-export function displayFuelTypes(fuelTypes: SchemaFuelType[] | undefined) {
+export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined) {
 	if (fuelTypes === undefined) return emptyValueRendering;
 	return fuelTypes.map(type => displayFuelType(type)).join(", ");
 }
 
-export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
+export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDisplay {
 	switch (fuelType) {
 		case "lpg_bulk":
 			return "LPG (Liquid petroleum gas)";
-		case "electricity":
-			return "Electricity";
+		case "elecOnly":
+			return "Electricity is the only energy source";
 		case "mains_gas":
 			return "Mains gas";
 		default:
@@ -211,7 +211,7 @@ export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
 	}
 }
 
-export type FuelTypeDisplay = "LPG (Liquid petroleum gas)" | "Electricity" | "Mains gas" ;
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas)" | "Electricity is the only energy source" | "Mains gas" ;
 
 export const ecoDesignControllerOptions = {
 	1: "I: On/Off Room Thermostat",

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { SchemaBuildType, SchemaFuelType } from "~/schema/aliases";
 import { isInteger } from "~/utils/validation";
-import { getUrl } from "#imports";
+import { getUrl, type GeneralDetailsData } from "#imports";
+
 
 const title = "General details";
 const store = useEcaasStore();
 const { autoSaveForm } = useForm();
 const fuelTypeOptions = {
-	"electricity": "Electricity",
 	"mains_gas": "Mains gas",
 	"lpg_bulk": "LPG (Liquid petroleum gas)",
 } as const satisfies Record<SchemaFuelType, FuelTypeDisplay>;
@@ -22,7 +22,9 @@ const typeOfDwellingOptions: Record<SchemaBuildType, SnakeToSentenceCase<SchemaB
 	flat: "Flat",
 };
 
+
 const saveForm = (fields: typeof model.value) => {
+
 	store.$patch({
 		dwellingDetails: {
 			generalSpecifications: {
@@ -51,6 +53,20 @@ const saveForm = (fields: typeof model.value) => {
 autoSaveForm<GeneralDetailsData>(model, (state, newData) => {
 	state.dwellingDetails.generalSpecifications = newData;
 });
+
+const areSelectedOptionsValid = (node: FormKitNode) => {
+	
+	const parent = node.at("$parent");
+
+	if (parent && parent.value) {
+		const formValue = parent.value as GeneralDetailsData;
+		const { fuelType } = formValue;
+		if(fuelType.includes("elecOnly") && (fuelType.includes("mains_gas") || fuelType.includes("lpg_bulk")) ){
+			return false;
+		}
+	}
+	return true;
+};
 
 const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
@@ -198,13 +214,16 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		/>
 		<FormKit
 			id="fuelType"
-			type="govCheckboxes"
+			type="govCheckboxesDivided"
 			name="fuelType"
-			label="Select the energy sources that will be present in the dwelling"
+			label="Energy sources"
+			help="Electricity is assumed to be present in the dwellings. Select the other energy sources that will be present in the dwelling, if any."
 			:options="fuelTypeOptions"
-			validation="required"
-  		:value="['electricity']"
+			:validation-rules="{ areSelectedOptionsValid }"
+			validation="required | areSelectedOptionsValid"
+			:validation-messages="{areSelectedOptionsValid: 'Select Mains gas, LPG (Liquid petroleum gas) or select Electricity is the only energy source'}"
 			data-field="EnergySupply.*.fuel"
+			:exclusive-options="{'elecOnly': 'Electricity is the only energy source'}"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
