@@ -1047,7 +1047,6 @@ export const formSchemas: Record<EcaasFormPath, z.ZodType> = {
 	"heatingAndCoolingSystems/heatGeneration/heatInterfaceUnit": heatInterfaceUnitDataZod,
 	"heatingAndCoolingSystems/heatGeneration/heatNetwork": heatNetworkDataZod,
 	"heatingAndCoolingSystems/heatGeneration/heatPump": heatPumpDataZod,
-	// "heatingAndCoolingSystems/energySupply": energySupplyDataZod,
 	"heatingAndCoolingSystems/heatEmitting/wetDistribution": wetDistributionDataZod,
 	"heatingAndCoolingSystems/heatEmitting/instantElectricHeater": instantElectricStorageDataZod,
 	"heatingAndCoolingSystems/heatEmitting/electricStorageHeater": electricStorageHeaterDataZod,
