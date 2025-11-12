@@ -93,7 +93,7 @@ const airPermeabilitySummary: SummarySection = {
 	id: "airPermeability",
 	label: "Air permeability",
 	data: {
-		"Test pressure": dim(airPermeabilityData.testPressure, "pascal"),
+		"Type of infiltration pressure test": displayTypeOfInfiltrationPressureTest(airPermeabilityData.testPressure),
 		"Air tightness test result": dim(airPermeabilityData.airTightnessTestResult, "cubic metres per hour per square metre"),
 	},
 	editUrl: getUrl("airPermeability"),
@@ -127,13 +127,7 @@ const airPermeabilitySummary: SummarySection = {
 // 	editUrl: getUrl('combustionAppliances')
 // };
 
-const summarySections: SummarySection[] = [
-	mechanicalVentilationSummary,
-	ductworkSummary,
-	ventSummary,
-	ventilationSummary,
-	airPermeabilitySummary,
-];
+const numOfMvhrItems = mechanicalVentilationData.filter(x => x.data.typeOfMechanicalVentilationOptions === "MVHR").length;
 </script>
 
 <template>
@@ -142,8 +136,7 @@ const summarySections: SummarySection[] = [
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
-
+	<GovTabs v-slot="tabProps" :items="getTabItems([mechanicalVentilationSummary])">		
 		<SummaryTab :summary="mechanicalVentilationSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No mechanical ventilation added</h2>
@@ -152,17 +145,19 @@ const summarySections: SummarySection[] = [
 				</NuxtLink>
 			</template>
 		</SummaryTab>
-
-		<SummaryTab :summary="ductworkSummary" :selected="tabProps.currentTab === 1">
+	</GovTabs>
+	<GovTabs v-if="numOfMvhrItems > 0" v-slot="tabProps" :items="getTabItems([ductworkSummary])">
+		<SummaryTab :summary="ductworkSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No ductwork added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('ductworkCreate')">
 					Add ductwork
 				</NuxtLink>
 			</template>
-		</SummaryTab>
-
-		<SummaryTab :summary="ventSummary" :selected="tabProps.currentTab === 2">
+		</SummaryTab>	
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([ventSummary])">
+		<SummaryTab :summary="ventSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No vents added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('ventCreate')">
@@ -170,18 +165,22 @@ const summarySections: SummarySection[] = [
 				</NuxtLink>
 			</template>
 		</SummaryTab>
-
-		<SummaryTab :summary="ventilationSummary" :selected="tabProps.currentTab === 3" />
-		<SummaryTab :summary="airPermeabilitySummary" :selected="tabProps.currentTab === 4" />
-
-		<!-- <SummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 5">
-					<template #empty>
-						<h2 class="govuk-heading-m">No combustion appliances added</h2>
-						<NuxtLink class="govuk-link" :to="getUrl('combustionAppliances')">
-							Add combustion appliance
-						</NuxtLink>
-					</template>
-				</SummaryTab> -->
 	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([ventilationSummary])">
+		<SummaryTab :summary="ventilationSummary" :selected="tabProps.currentTab === 0" />
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([airPermeabilitySummary])">
+		<SummaryTab :summary="airPermeabilitySummary" :selected="tabProps.currentTab === 0" />
+	</GovTabs>
+	<!-- <GovTabs v-slot="tabProps" :items="getTabItems([combustionAppliancesSummary])">
+		<SummaryTab :summary="combustionAppliancesSummary" :selected="tabProps.currentTab === 5">
+			<template #empty>
+				<h2 class="govuk-heading-m">No combustion appliances added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('combustionAppliances')">
+					Add combustion appliance
+				</NuxtLink>
+			</template>
+		</SummaryTab> 
+	</GovTabs> -->
 	<GovButton href="/">Return to overview</GovButton>
 </template>

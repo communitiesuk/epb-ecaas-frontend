@@ -215,7 +215,6 @@ describe("hot water outlets", () => {
 				id: uuidv4(),
 				name: "Bath 1",
 				size: 100,
-				flowRate: 10,
 			},
 		};
 
@@ -432,7 +431,6 @@ describe("hot water outlets", () => {
 				id: "4346aa5c-c8c7-41ea-99d4-a3cf5e3d21a35",
 				name: "Bath 1",
 				size: 200,
-				flowRate: 15,
 			},
 			complete: true,
 		};

@@ -9,8 +9,9 @@ mockNuxtImport("navigateTo", () => {
 });
 
 const state: DwellingSpaceZoneParametersData = {
-	area: 10,
 	volume: 10,
+	livingRoomArea: 15,
+	restOfDwellingArea: 20,
 	// spaceHeatingSystemForThisZone: 'instant electric heater'
 };
 
@@ -24,7 +25,7 @@ beforeEach(() => {
 describe("zone parameters", () => {
 
 	// store.$patch({
-	// 	heatingSystems: {
+	// 	heatingAndCoolingSystems: {
 	// 		heatEmitting: {
 	// 			wetDistribution: {
 	// 				data: [{
@@ -51,11 +52,12 @@ describe("zone parameters", () => {
 	test("data is saved to store state when form is valid", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await user.type(screen.getByTestId("area"), "10");
 		await user.type(screen.getByTestId("volume"), "10");
+		await user.type(screen.getByTestId("livingRoomArea"), "15");
+		await user.type(screen.getByTestId("restOfDwellingArea"), "20");
 		// await user.click(screen.getByTestId('spaceHeatingSystemForThisZone_instant_electric_heater'));
 		await user.tab();
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 
 		const { data, complete } = store.dwellingFabric.dwellingSpaceZoneParameters;
@@ -74,34 +76,31 @@ describe("zone parameters", () => {
 
 		await renderSuspended(ZoneParameters);
 
-		expect((await screen.findByTestId<HTMLInputElement>("area")).value).toBe("10");
 		expect((await screen.findByTestId<HTMLInputElement>("volume")).value).toBe("10");
 		// expect((await screen.findByTestId('spaceHeatingSystemForThisZone_instant_electric_heater')).hasAttribute('checked')).toBe(true);
 	});
-			
+
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
-
-		expect((await screen.findByTestId("area_error"))).toBeDefined();
 		expect((await screen.findByTestId("volume_error"))).toBeDefined();
+		expect((await screen.findByTestId("livingRoomArea_error"))).toBeDefined();
+		expect((await screen.findByTestId("restOfDwellingArea_error"))).toBeDefined();
 		// expect((await screen.findByTestId('spaceHeatingSystemForThisZone_error'))).toBeDefined();
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
-
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("zoneParametersErrorSummary"))).toBeDefined();
 	});
 	test("save progress button navigates user to the dwelling fabric overview page", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await user.type(screen.getByTestId("area"), "10");
 		await user.click(screen.getByTestId("saveProgress"));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
@@ -109,18 +108,15 @@ describe("zone parameters", () => {
 });
 
 describe("Partially saving data", () => {
-  
+
 	test("form data is automatically saved to store", async () => {
 		await renderSuspended(ZoneParameters);
 
-		await user.type(screen.getByTestId("area"), "11");
+		await user.type(screen.getByTestId("volume"), "11");
 		await user.tab();
 
 		expect(
-			store.dwellingFabric.dwellingSpaceZoneParameters.data.area,
-		).toBe(11);
-		expect(
 			store.dwellingFabric.dwellingSpaceZoneParameters.data.volume,
-		).toBeUndefined();
+		).toBe(11);
 	});
 });

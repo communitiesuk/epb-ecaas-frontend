@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { standardPitchOptions, getUrl, uniqueName } from "#imports";
 
 const title = "External unglazed door";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor?.data);
+const externalUnglazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor?.data;
+const index = getStoreIndex(externalUnglazedDoorData);
+const doorData = useItemToEdit("door", externalUnglazedDoorData);
 const model = ref(doorData?.data);
+
+const colourOptions = colourOptionsMap;
 
 const saveForm = (fields: ExternalUnglazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
-		const index = getStoreIndex(dwellingSpaceExternalUnglazedDoor.data);
 
 		dwellingSpaceExternalUnglazedDoor.data[index] = {
 			data: {
@@ -21,10 +24,10 @@ const saveForm = (fields: ExternalUnglazedDoorData) => {
 				width: fields.width,
 				elevationalHeight: fields.elevationalHeight,
 				surfaceArea: fields.surfaceArea,
-				solarAbsorption: fields.solarAbsorption,
 				uValue: fields.uValue,
-				kappaValue: fields.kappaValue,
+				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
+				colour: fields.colour,
 			},
 			complete: true,
 		};
@@ -68,7 +71,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(externalUnglazedDoorData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FieldsAssociatedWallRoof
 			id="associatedItemId"
@@ -107,9 +114,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption"/>
 		<FieldsUValue id="uValue" name="uValue" />
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+		<FormKit
+			id="colour"
+			type="govRadios"
+			label="Colour of external surface"
+			name="colour"
+			:options="colourOptions"
+			validation="required"
+			data-field="Zone.BuildingElement.*.colour"
+		/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

@@ -16,7 +16,7 @@ describe("internal floor", () => {
 		typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 		name: "Internal 1",
 		surfaceAreaOfElement: 5,
-		kappaValue: 50000,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -33,7 +33,7 @@ describe("internal floor", () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Internal 1");
 		await user.type(screen.getByTestId("surfaceAreaOfElement"), "5");
-		await user.click(screen.getByTestId("kappaValue_50000"));
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 	};
 	
@@ -75,7 +75,7 @@ describe("internal floor", () => {
 			expect((await screen.findByTestId("typeOfInternalFloor_heatedSpace")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Internal 1");
 			expect((await screen.findByTestId<HTMLInputElement>("surfaceAreaOfElement")).value).toBe("5");
-			expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 		});
 
@@ -87,7 +87,7 @@ describe("internal floor", () => {
 	
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
 			expect((await screen.findByTestId("surfaceAreaOfElement_error"))).toBeDefined();
-			expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
+			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 		});
 	});
@@ -207,14 +207,14 @@ describe("internal floor", () => {
 			await user.click(screen.getByTestId("typeOfInternalFloor_heatedSpace"));
 			await user.type(screen.getByTestId("name"), "Internal floor kitchen");
 			await user.type(screen.getByTestId("surfaceAreaOfElement"), "5");
-			await user.click(screen.getByTestId("kappaValue_50000"));
+			await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 			await user.click(screen.getByTestId("massDistributionClass_I"));
 			await user.tab();
 				
 			const { data } = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceInternalFloor;
 			expect(data[0]!.data.name).toBe("Internal floor kitchen");
 			expect(data[0]!.data.surfaceAreaOfElement).toBe(5);
-			expect(data[0]!.data.kappaValue).toBe(50000);
+			expect(data[0]!.data.arealHeatCapacity).toBe("Very light");
 			expect(data[0]!.data.massDistributionClass).toBe("I");	
 		});
 

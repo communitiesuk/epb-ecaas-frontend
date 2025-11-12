@@ -17,10 +17,9 @@ describe("floors", () => {
 	const ground1: GroundFloorData = {
 		name: "Ground floor 1",
 		surfaceArea: 5,
-		pitch: 0,
 		uValue: 1,
 		thermalResistance: 1,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
@@ -31,10 +30,9 @@ describe("floors", () => {
 	const ground2: GroundFloorData = {
 		name: "Ground floor 2",
 		surfaceArea: 5,
-		pitch: 0,
 		uValue: 1,
 		thermalResistance: 1,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
@@ -45,10 +43,9 @@ describe("floors", () => {
 	const ground3: GroundFloorData = {
 		name: "Ground floor 3",
 		surfaceArea: 5,
-		pitch: 0,
 		uValue: 1,
 		thermalResistance: 1,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 		perimeter: 0,
 		psiOfWallJunction: 0,
@@ -60,7 +57,7 @@ describe("floors", () => {
 		typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 		name: "Internal floor 1",
 		surfaceAreaOfElement: 5,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -68,7 +65,7 @@ describe("floors", () => {
 		typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 		name: "Internal floor 2",
 		surfaceAreaOfElement: 5,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -76,7 +73,7 @@ describe("floors", () => {
 		typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 		name: "Internal floor 3",
 		surfaceAreaOfElement: 5,
-		kappaValue: 100,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -88,9 +85,9 @@ describe("floors", () => {
 		width: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorption: 0.1,
 		uValue: 1,
-		kappaValue: 100,
+		colour: "Light",
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -102,9 +99,9 @@ describe("floors", () => {
 		width: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorption: 0.1,
 		uValue: 1,
-		kappaValue: 100,
+		colour: "Dark",
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -116,9 +113,9 @@ describe("floors", () => {
 		width: 20,
 		elevationalHeight: 20,
 		surfaceArea: 10,
-		solarAbsorption: 0.1,
 		uValue: 1,
-		kappaValue: 100,
+		colour: "Intermediate",
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 

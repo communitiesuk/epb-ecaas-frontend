@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { getUrl, zeroPitchOptions } from "#imports";
 import { v4 as uuidv4 } from "uuid";
+import { getUrl, zeroPitchOptions, uniqueName } from "#imports";
 
 const title = "Roof";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const index = getStoreIndex(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
 const roofData = useItemToEdit("roof", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs?.data);
 const roofId = roofData?.data.id ?? uuidv4();
 const model = ref(roofData?.data);
@@ -15,6 +16,7 @@ const roofTypeOptions: Record<Exclude<RoofType, "unheatedPitched">, string> = {
 	pitchedInsulatedAtRoof: "Pitched roof insulated at roof or rafter",
 	pitchedInsulatedAtCeiling: "Pitched roof insulated at ceiling or joist",
 };
+const colourOptions = colourOptionsMap;
 
 const saveForm = (fields: RoofData) => {
 	store.$patch((state) => {
@@ -34,9 +36,9 @@ const saveForm = (fields: RoofData) => {
 				width: fields.width,
 				elevationalHeightOfElement: fields.elevationalHeightOfElement,
 				surfaceArea: fields.surfaceArea,
-				solarAbsorptionCoefficient: fields.solarAbsorptionCoefficient,
 				uValue: fields.uValue,
-				kappaValue: fields.kappaValue,
+				colour: fields.colour,
+				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 			},
 			complete: true,
@@ -81,7 +83,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceRoofs.data, { index }) }"
+				validation="required | uniqueName"
+				:validation-messages="{
+					uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				}"
 		/>
 		<FormKit
 			id="typeOfRoof"
@@ -153,10 +159,14 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			suffix-text="m²"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsSolarAbsorptionCoefficient
-			id="solarAbsorptionCoefficient"
-			name="solarAbsorptionCoefficient"
-			label="Solar absorption coefficient of roof"
+		<FormKit
+			id="colour"
+			type="govRadios"
+			label="Colour of external surface"
+			name="colour"
+			:options="colourOptions"
+			validation="required"
+			data-field="Zone.BuildingElement.*.colour"
 		/>
 
 		<template v-if="model?.typeOfRoof === 'flat' || model?.typeOfRoof === 'pitchedInsulatedAtRoof'">
@@ -165,8 +175,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="This is the steady thermal transmittance of the roof and ceiling"
 			/>
 			<FieldsArealHeatCapacity
-				id="kappaValue"
-				name="kappaValue"
+				id="arealHeatCapacity"
+				name="arealHeatCapacity"
 				help="This is the sum of the heat capacities of all the construction layers in the roof and ceiling; also known as effective areal heat capacity or kappa value"
 			/>
 			<FieldsMassDistributionClass help="This is the distribution of mass in the roof and ceiling" />
@@ -178,8 +188,8 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				help="This is the steady thermal transmittance of the entire roof, including the unheated loft space"
 			/>
 			<FieldsArealHeatCapacity
-				id="kappaValue"
-				name="kappaValue"
+				id="arealHeatCapacity"
+				name="arealHeatCapacity"
 				help="This is the sum of the heat capacities of all the construction layers in the roof, loft space and ceiling; also known as effective areal heat capacity or kappa value"
 			/>
 			<FieldsMassDistributionClass help="This is the distribution of mass in the roof, loft space and ceiling" />

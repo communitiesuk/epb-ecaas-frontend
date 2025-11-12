@@ -1,12 +1,11 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
-import { screen } from "@testing-library/vue";
+import { screen, within } from "@testing-library/vue";
 import { litre } from "~/utils/units/volume";
 import { metre, millimetre } from "~/utils/units/length";
 import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 import { litrePerHour, litrePerMinute } from "~/utils/units/flowRate";
 import { kilowatt, kilowattHour } from "~/utils/units/power";
-import { celsius } from "~/utils/units/temperature";
 import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
@@ -32,14 +31,14 @@ describe("Domestic hot water summary", () => {
 			dailyEnergyLoss: 1,
 		};
 
-		const immersionHeater: ImmersionHeaterData = {
+		const _immersionHeater: ImmersionHeaterData = {
 			name: "Immersion heater",
 			ratedPower: 10,
 			heaterPosition: "top",
 			thermostatPosition: "top",
 		};
 
-		const pointOfUse: PointOfUseData = {
+		const _pointOfUse: PointOfUseData = {
 			name: "Point of use",
 			setpointTemperature: 25,
 			heaterEfficiency: 0.5,
@@ -51,11 +50,12 @@ describe("Domestic hot water summary", () => {
 					waterHeating: {
 						hotWaterCylinder: {
 							data: [{
-								data: hotWaterCylinder }],
+								data: hotWaterCylinder,
+							}],
 						},
 					},
 				},
-				heatingSystems: {
+				heatingAndCoolingSystems: {
 					heatGeneration: {
 						heatPump: {
 							data: [{
@@ -70,25 +70,24 @@ describe("Domestic hot water summary", () => {
 			});
 		};
 
-		it("should contain the correct tabs for water heating when data is present", async () => {
-			addHotWaterCylinderData();
+		it("should contain the correct tabs for water heating section", async () => {
 			await renderSuspended(Summary);
-	  
-			expect(screen.queryByRole("link", { name: "Hot water cylinder" })).toBeDefined();
-			expect(screen.queryByRole("link", { name: "Immersion heater" })).toBeNull();
+
+			expect(screen.queryByRole("link", { name: "Hot water cylinders" })).not.toBeNull();
+			expect(screen.queryByRole("link", { name: "Immersion heaters" })).toBeNull();
 			expect(screen.queryByRole("link", { name: "Solar thermal" })).toBeNull();
 			expect(screen.queryByRole("link", { name: "Point of use" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Heat pump" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Combi boiler" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Heat battery" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Smart hot water tank" })).toBeNull();
-			expect(screen.queryByRole("link", { name: "Heat interface unit" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Heat pumps" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Combi boilers" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Heat batteries" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Smart hot water tanks" })).toBeNull();
+			expect(screen.queryByRole("link", { name: "Heat interface units" })).toBeNull();
 		});
 
-		it("should display an empty state when no water heating data is present", async () => {
+		it("displays 'No hot water cylinders added' and link to create hot water cylinder when no data exists", async () => {
 			await renderSuspended(Summary);
 
-			const addWaterHeatingLink = screen.queryByRole("link", { name: "Add water heating" }) as HTMLAnchorElement;
+			const addWaterHeatingLink = screen.queryByRole("link", { name: "Add hot water cylinder" }) as HTMLAnchorElement;
 
 			expect(screen.queryByText("No water heating added")).toBeDefined();
 			expect(new URL(addWaterHeatingLink.href).pathname).toBe(getUrl("waterHeating"));
@@ -97,14 +96,14 @@ describe("Domestic hot water summary", () => {
 		it("should display the correct data for the hot water cylinder section", async () => {
 			addHotWaterCylinderData();
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Hot water cylinder 1",
 				"Heat source": "Heat pump",
 				"Storage cylinder volume": `5 ${litre.suffix}`,
 				"Daily energy loss": `1 ${kilowattHour.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-hotWaterCylinder-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -112,58 +111,68 @@ describe("Domestic hot water summary", () => {
 			}
 		});
 
-		it("should display the correct data for the immersion heater section", async () => {
-			store.$patch({
-				domesticHotWater: {
-					waterHeating: {
-						immersionHeater: {
-							data: [immersionHeater],
-						},
-					},
-				},
-			});
-
+		it("displays an edit link that navigates to the water heating page when clicked", async () => {
+			addHotWaterCylinderData();
 			await renderSuspended(Summary);
-	
-			const expectedResult = {
-				"Name": "Immersion heater",
-				"Rated power": `10 ${kilowatt.suffix}`,
-				"Heater position": "Top (1)",
-				"Thermostat position": "Top (1)",
-			};
-	
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-immersionHeater-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
+			const hotWaterCylinderSection = screen.getByTestId("hotWaterCylinder");
+			const editLink: HTMLAnchorElement = within(hotWaterCylinderSection).getByText("Edit");
+
+			expect(editLink).not.toBeNull();
+			expect(new URL(editLink.href).pathname).toBe("/domestic-hot-water/water-heating");
 		});
 
-		it("should display the correct data for the point of use section", async () => {
-			store.$patch({
-				domesticHotWater: {
-					waterHeating: {
-						pointOfUse: {
-							data: [pointOfUse],
-						},
-					},
-				},
-			});
+		// it("should display the correct data for the immersion heater section", async () => {
+		// 	store.$patch({
+		// 		domesticHotWater: {
+		// 			waterHeating: {
+		// 				immersionHeater: {
+		// 					data: [immersionHeater],
+		// 				},
+		// 			},
+		// 		},
+		// 	});
 
-			await renderSuspended(Summary);
-	
-			const expectedResult = {
-				"Name": "Point of use",
-				"Setpoint temperature": `25 ${celsius.suffix}`,
-				"Heater efficiency": "0.5",
-			};
-	
-			for (const [key, value] of Object.entries(expectedResult)) {
-				const lineResult = (await screen.findByTestId(`summary-pointOfUse-${hyphenate(key)}`));
-				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-				expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-			}
-		});
+		// 	await renderSuspended(Summary);
+
+		// 	const expectedResult = {
+		// 		"Name": "Immersion heater",
+		// 		"Rated power": `10 ${kilowatt.suffix}`,
+		// 		"Heater position": "Top (1)",
+		// 		"Thermostat position": "Top (1)",
+		// 	};
+
+		// 	for (const [key, value] of Object.entries(expectedResult)) {
+		// 		const lineResult = (await screen.findByTestId(`summary-immersionHeater-${hyphenate(key)}`));
+		// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+		// 		expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		// 	}
+		// });
+
+		// it("should display the correct data for the point of use section", async () => {
+		// 	store.$patch({
+		// 		domesticHotWater: {
+		// 			waterHeating: {
+		// 				pointOfUse: {
+		// 					data: [pointOfUse],
+		// 				},
+		// 			},
+		// 		},
+		// 	});
+
+		// 	await renderSuspended(Summary);
+
+		// 	const expectedResult = {
+		// 		"Name": "Point of use",
+		// 		"Setpoint temperature": `25 ${celsius.suffix}`,
+		// 		"Heater efficiency": "0.5",
+		// 	};
+
+		// 	for (const [key, value] of Object.entries(expectedResult)) {
+		// 		const lineResult = (await screen.findByTestId(`summary-pointOfUse-${hyphenate(key)}`));
+		// 		expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+		// 		expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		// 	}
+		// });
 	});
 
 	describe("hot water outlets", () => {
@@ -188,7 +197,6 @@ describe("Domestic hot water summary", () => {
 				id: "d3883380-885b-48fd-9425-9f9fac7587fb",
 				name: "Bath 1",
 				size: 170,
-				flowRate: 10,
 			},
 		};
 
@@ -202,11 +210,11 @@ describe("Domestic hot water summary", () => {
 
 		it("should contain the correct tabs for hot water outlets", async () => {
 			await renderSuspended(Summary);
-	  
-			expect(screen.getByRole("link", { name: "Mixer shower" })).toBeDefined();
-			expect(screen.getByRole("link", { name: "Electric shower" })).toBeDefined();
-			expect(screen.getByRole("link", { name: "Bath" })).toBeDefined();
-			expect(screen.getByRole("link", { name: "Other" })).toBeDefined();
+
+			expect(screen.getByRole("link", { name: "Mixer showers" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Electric showers" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Baths" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Other" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the mixer shower section", async () => {
@@ -221,12 +229,12 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Mixer shower 1",
 				"Flow rate": `10 ${litrePerHour.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-mixedShower-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -246,12 +254,12 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Electric shower 1",
 				"Rated power": `10 ${kilowatt.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-electricShower-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -271,13 +279,12 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Bath 1",
 				"Size": `170 ${litre.suffix}`,
-				"Flow rate": `10 ${litrePerMinute.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-bath-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -297,12 +304,12 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Basin tap 1",
 				"Flow rate": `10 ${litrePerMinute.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-otherOutlets-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);
@@ -340,11 +347,11 @@ describe("Domestic hot water summary", () => {
 
 		it("should contain the correct tabs for pipework details", async () => {
 			await renderSuspended(Summary);
-	  
-			expect(screen.getByRole("link", { name: "Primary pipework" })).toBeDefined();
-			expect(screen.getByRole("link", { name: "Secondary pipework" })).toBeDefined();
+
+			expect(screen.getByRole("link", { name: "Primary pipework" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Secondary pipework" })).not.toBeNull();
 		});
-	
+
 		it("should display the correct data for the primary pipework section", async () => {
 			store.$patch({
 				domesticHotWater: {
@@ -368,7 +375,7 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Pipework Kitchen Sink Primary",
 				"Internal diameter": `10 ${millimetre.suffix}`,
@@ -381,7 +388,7 @@ describe("Domestic hot water summary", () => {
 				"Hot water cylinder": "Hot water cylinder 1",
 				"Location": "Internal",
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-primaryPipework-${hyphenate(key)}`));
 
@@ -402,14 +409,14 @@ describe("Domestic hot water summary", () => {
 			});
 
 			await renderSuspended(Summary);
-	
+
 			const expectedResult = {
 				"Name": "Pipework Kitchen Sink Secondary",
 				"Length": `3 ${metre.suffix}`,
 				"Location": "Internal",
 				"Internal diameter": `9 ${millimetre.suffix}`,
 			};
-	
+
 			for (const [key, value] of Object.entries(expectedResult)) {
 				const lineResult = (await screen.findByTestId(`summary-secondaryPipework-${hyphenate(key)}`));
 				expect(lineResult.querySelector("dt")?.textContent).toBe(key);

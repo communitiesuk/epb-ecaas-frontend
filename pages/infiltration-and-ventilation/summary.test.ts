@@ -3,11 +3,7 @@ import { screen } from "@testing-library/vue";
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { pascal } from "~/utils/units/pressure";
-import {
-  cubicMetrePerHourPerSquareMetre,
-  litrePerSecond,
-} from "~/utils/units/flowRate";
+import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
 import { centimetresSquare, metresSquare } from "~/utils/units/area";
 import { metre, millimetre } from "~/utils/units/length";
 import { degrees } from "~/utils/units/angle";
@@ -47,9 +43,9 @@ const externalWall: ExternalWallData = {
   height: 0.5,
   elevationalHeight: 20,
   surfaceArea: 10,
-  solarAbsorption: 0.1,
   uValue: 1,
-  kappaValue: 50000,
+  colour: "Intermediate",
+  arealHeatCapacity: "Very light",
   massDistributionClass: "I",
 };
 const ventData: VentData = {
@@ -70,8 +66,8 @@ const ventilationData: VentilationData = {
 };
 
 const airPermeabilityData: AirPermeabilityData = {
-  testPressure: 1,
-  airTightnessTestResult: 1,
+	testPressure: "Standard",
+	airTightnessTestResult: 1,
 };
 
 // const openFireplaceData: CombustionApplianceData = {
@@ -117,106 +113,114 @@ const airPermeabilityData: AirPermeabilityData = {
 // };
 
 describe("Infiltration and ventilation summary", () => {
-  const store = useEcaasStore();
+	const store = useEcaasStore();
 
-  afterEach(() => {
-    store.$reset();
-  });
+	afterEach(() => {
+		store.$reset();
+	});
 
-  it("should contain the correct tabs for infiltration and ventilation", async () => {
-    await renderSuspended(Summary);
+	it("should contain the correct tabs for infiltration and ventilation", async () => {
+		await renderSuspended(Summary);
 
-    expect(screen.getByRole("link", { name: "Mechanical ventilation" }));
-    expect(screen.getByRole("link", { name: "Ductwork" }));
-    expect(screen.getByRole("link", { name: "Vents" }));
-    expect(screen.getByRole("link", { name: "Natural ventilation" }));
-    expect(screen.getByRole("link", { name: "Air permeability" }));
-    // expect(screen.getByRole('link', {name: 'Combustion appliances'}));
-  });
+		expect(screen.queryByRole("link", { name: "Mechanical ventilation" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Ductwork" })).toBeNull();
+		expect(screen.queryByRole("link", { name: "Vents" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Natural ventilation" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Air permeability" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Combustion appliances" })).toBeNull();
+	});
 
-  it("should display the correct data for the mechanical ventilation section", async () => {
-    store.$patch({
-      infiltrationAndVentilation: {
-        mechanicalVentilation: {
-          data: [{ data: mechanicalVentilationData }],
-        },
-      },
-    });
+	it("should display the correct data for the mechanical ventilation section", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: mechanicalVentilationData },
+					],
+				},
+			},
+		});
 
-    await renderSuspended(Summary);
-    const expectedResult = {
-      Name: "Mechanical name 1",
-      "Type of mechanical ventilation": "MVHR",
-      "Air flow rate": `12 ${litrePerSecond.suffix}`,
-      "MVHR location": "Inside",
-      "MVHR efficiency": "0.2",
-    };
+		await renderSuspended(Summary);
+		const expectedResult = {
+			"Name": "Mechanical name 1",
+			"Type of mechanical ventilation": "MVHR",
+			"Air flow rate": `12 ${litrePerSecond.suffix}`,
+			"MVHR location": "Inside",
+			"MVHR efficiency": "0.2",
+		};
 
-    for (const [key, value] of Object.entries(expectedResult)) {
-      const lineResult = await screen.findByTestId(
-        `summary-mechanicalVentilation-${hyphenate(key)}`
-      );
-      expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-      expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-    }
-  });
 
-  it("should display the correct data for the ductwork section", async () => {
-    store.$patch({
-      infiltrationAndVentilation: {
-        mechanicalVentilation: {
-          data: [{ data: mechanicalVentilationData }],
-        },
-        ductwork: {
-          data: [{ data: ductworkData }],
-        },
-      },
-    });
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-mechanicalVentilation-${hyphenate(key)}`));
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
 
-    await renderSuspended(Summary);
-    const expectedResult = {
-      Name: "Ducktwork 1",
-      "MVHR unit": "Mechanical name 1",
-      "Duct type": "Intake",
-      "Ductwork cross sectional shape": "Circular",
-      "Internal diameter of ductwork": `300 ${millimetre.suffix}`,
-      "External diameter of ductwork": `1000 ${millimetre.suffix}`,
-      "Length of ductwork": `100 ${metre.suffix}`,
-      "Insulation thickness": `100 ${millimetre.suffix}`,
-      "Thermal conductivity of ductwork insulation": `10 ${wattsPerMeterKelvin.suffix}`,
-      "Surface reflectivity": "Reflective",
-    };
+	it("should display the correct data for the ductwork section", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: mechanicalVentilationData },
+					],
+				},
+				ductwork: {
+					data: [
+						{ data: ductworkData },
+					],
+				},
+			},
+		});
 
-    for (const [key, value] of Object.entries(expectedResult)) {
-      const lineResult = await screen.findByTestId(
-        `summary-ductwork-${hyphenate(key)}`
-      );
+		await renderSuspended(Summary);
+		const expectedResult = {
+			"Name": "Ducktwork 1",
+			"MVHR unit": "Mechanical name 1",
+			"Duct type": "Intake",
+			"Ductwork cross sectional shape": "Circular",
+			"Internal diameter of ductwork": `300 ${millimetre.suffix}`,
+			"External diameter of ductwork": `1000 ${millimetre.suffix}`,
+			"Length of ductwork": `100 ${metre.suffix}`,
+			"Insulation thickness": `100 ${millimetre.suffix}`,
+			"Thermal conductivity of ductwork insulation": `10 ${wattsPerMeterKelvin.suffix}`,
+			"Surface reflectivity": "Reflective",
+		};
 
-      expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-      expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-    }
-  });
+		for (const [key, value] of Object.entries(expectedResult)) {
 
-  it("should not display the ductwork section when there are no mechanical ventilations created of type mvhr", async () => {
-    const user = userEvent.setup();
-    store.$patch({
-      infiltrationAndVentilation: {
-        mechanicalVentilation: {
-          data: [{ data: mechanicalVentilationData }],
-        },
-        ductwork: {
-          data: [{ data: ductworkData }],
-        },
-      },
-    });
+			const lineResult = (await screen.findByTestId(`summary-ductwork-${hyphenate(key)}`));
 
-    await renderSuspended(MechanicalVentilationOverview);
-    await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
-    await renderSuspended(Summary);
-    expect(screen.getByText("No ductwork added")).toBeDefined();
-  });
+			expect((lineResult).querySelector("dt")?.textContent).toBe(key);
+			expect((lineResult).querySelector("dd")?.textContent).toBe(value);
+		}
+	});
 
-  it("should display the correct data for the vents section", async () => {
+	it("should not display the ductwork section when there are no mechanical ventilations created of type mvhr", async () => {
+		const user = userEvent.setup();
+		store.$patch({
+			infiltrationAndVentilation: {
+				mechanicalVentilation: {
+					data: [
+						{ data: mechanicalVentilationData },
+					],
+				},
+				ductwork: {
+					data: [
+						{ data: ductworkData },
+					],
+				},
+			},
+		});
+
+		await renderSuspended(MechanicalVentilationOverview);
+		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
+		await renderSuspended(Summary);
+		expect(screen.queryByText("No ductwork added")).toBeNull();
+	});
+
+ it("should display the correct data for the vents section", async () => {
     store.$patch({
       dwellingFabric: {
         dwellingSpaceWalls: {
@@ -309,229 +313,227 @@ describe("Infiltration and ventilation summary", () => {
     }
   });
 
-  it("should display the correct data for the ventilation section", async () => {
-    store.$patch({
-      infiltrationAndVentilation: {
-        naturalVentilation: {
-          data: ventilationData,
-        },
-      },
-    });
+	it("should display the correct data for the ventilation section", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				naturalVentilation: {
+					data: ventilationData,
+				},
+			},
+		});
 
-    await renderSuspended(Summary);
+		await renderSuspended(Summary);
 
-    const expectedResult = {
-      "Ventilation zone height": `1 ${metre.suffix}`,
-      "Dwelling envelope area": `1 ${metresSquare.suffix}`,
-      "Elevational height of dwelling at its base": `1 ${metre.suffix}`,
-      "Cross ventilation possible": "Yes",
-    };
+		const expectedResult = {
+			"Ventilation zone height": `1 ${metre.suffix}`,
+			"Dwelling envelope area": `1 ${metresSquare.suffix}`,
+			"Elevational height of dwelling at its base": `1 ${metre.suffix}`,
+			"Cross ventilation possible": "Yes",
+		};
 
-    for (const [key, value] of Object.entries(expectedResult)) {
-      const lineResult = await screen.findByTestId(
-        `summary-ventilation-${hyphenate(key)}`
-      );
-      expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-      expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-    }
-  });
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-ventilation-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
 
-  it("should display the correct data for the air permeability section", async () => {
-    store.$patch({
-      infiltrationAndVentilation: {
-        airPermeability: {
-          data: airPermeabilityData,
-        },
-      },
-    });
+	it("should display the correct data for the air permeability section", async () => {
+		store.$patch({
+			infiltrationAndVentilation: {
+				airPermeability: {
+					data: airPermeabilityData,
+				},
+			},
+		});
 
-    await renderSuspended(Summary);
+		await renderSuspended(Summary);
 
-    const expectedResult = {
-      "Test pressure": `1 ${pascal.suffix}`,
-      "Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`,
-    };
+		const expectedResult = {
+			"Type of infiltration pressure test": "Blower door (test pressure is 50Pa)",
+			"Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`,
+		};
 
-    for (const [key, value] of Object.entries(expectedResult)) {
-      const lineResult = await screen.findByTestId(
-        `summary-airPermeability-${hyphenate(key)}`
-      );
-      expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-      expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-    }
-  });
+		for (const [key, value] of Object.entries(expectedResult)) {
+			const lineResult = (await screen.findByTestId(`summary-airPermeability-${hyphenate(key)}`));
+			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+		}
+	});
 
-  // describe('Combustion appliances', () => {
+	// describe('Combustion appliances', () => {
 
-  // 	it('should display the correct data for the open fireplace', async () => {
-  // 		store.$patch({
-  // 			infiltrationAndVentilation: {
-  // 				combustionAppliances: {
-  // 					[CombustionApplianceType.open_fireplace]: {
-  // 						data: [openFireplaceData]
-  // 					}
-  // 				}
-  // 			}
-  // 		});
+	// 	it('should display the correct data for the open fireplace', async () => {
+	// 		store.$patch({
+	// 			infiltrationAndVentilation: {
+	// 				combustionAppliances: {
+	// 					[CombustionApplianceType.open_fireplace]: {
+	// 						data: [openFireplaceData]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
 
-  // 		await renderSuspended(Summary);
+	// 		await renderSuspended(Summary);
 
-  // 		const expectedResult = {
-  // 			"Type": "Open fireplace",
-  // 			"Name": "Open fireplace 1",
-  // 			"Air supply to appliance": "Room air",
-  // 			"Exhaust method from appliance": "Into separate duct",
-  // 			"Type of fuel": "Coal"
+	// 		const expectedResult = {
+	// 			"Type": "Open fireplace",
+	// 			"Name": "Open fireplace 1",
+	// 			"Air supply to appliance": "Room air",
+	// 			"Exhaust method from appliance": "Into separate duct",
+	// 			"Type of fuel": "Coal"
 
-  // 		};
+	// 		};
 
-  // 		for (const [key, value] of Object.entries(expectedResult)) {
-  // 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-  // 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-  // 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-  // 		}
-  // 	});
+	// 		for (const [key, value] of Object.entries(expectedResult)) {
+	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
+	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+	// 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+	// 		}
+	// 	});
 
-  // 	it('should display the correct data for closed fireplace with fan', async () => {
-  // 		store.$patch({
-  // 			infiltrationAndVentilation: {
-  // 				combustionAppliances: {
-  // 					[CombustionApplianceType.closed_with_fan]: {
-  // 						data: [closedFireplaceWithFanData]
-  // 					}
-  // 				}
-  // 			}
-  // 		});
+	// 	it('should display the correct data for closed fireplace with fan', async () => {
+	// 		store.$patch({
+	// 			infiltrationAndVentilation: {
+	// 				combustionAppliances: {
+	// 					[CombustionApplianceType.closed_with_fan]: {
+	// 						data: [closedFireplaceWithFanData]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
 
-  // 		await renderSuspended(Summary);
+	// 		await renderSuspended(Summary);
 
-  // 		const expectedResult = {
-  // 			"Type": "Closed fireplace with fan",
-  // 			"Name": "Closed fireplace",
-  // 			"Air supply to appliance": "Room air",
-  // 			"Exhaust method from appliance": "Into separate duct",
-  // 			"Type of fuel": "Wood"
+	// 		const expectedResult = {
+	// 			"Type": "Closed fireplace with fan",
+	// 			"Name": "Closed fireplace",
+	// 			"Air supply to appliance": "Room air",
+	// 			"Exhaust method from appliance": "Into separate duct",
+	// 			"Type of fuel": "Wood"
 
-  // 		};
+	// 		};
 
-  // 		for (const [key, value] of Object.entries(expectedResult)) {
-  // 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-  // 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-  // 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-  // 		}
-  // 	});
+	// 		for (const [key, value] of Object.entries(expectedResult)) {
+	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
+	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+	// 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+	// 		}
+	// 	});
 
-  // 	it('should display the correct data for open gas flue balancer', async () => {
-  // 		store.$patch({
-  // 			infiltrationAndVentilation: {
-  // 				combustionAppliances: {
-  // 					[CombustionApplianceType.open_gas_flue_balancer]: {
-  // 						data: [openGasFlueBalancerData]
-  // 					}
-  // 				}
-  // 			}
-  // 		});
+	// 	it('should display the correct data for open gas flue balancer', async () => {
+	// 		store.$patch({
+	// 			infiltrationAndVentilation: {
+	// 				combustionAppliances: {
+	// 					[CombustionApplianceType.open_gas_flue_balancer]: {
+	// 						data: [openGasFlueBalancerData]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
 
-  // 		await renderSuspended(Summary);
+	// 		await renderSuspended(Summary);
 
-  // 		const expectedResult = {
-  // 			"Type": "Open gas flue balancer",
-  // 			"Name": "Open gas flue balancer 1",
-  // 			"Air supply to appliance": "Outside",
-  // 			"Exhaust method from appliance": "Into room",
-  // 			"Type of fuel": "Gas"
+	// 		const expectedResult = {
+	// 			"Type": "Open gas flue balancer",
+	// 			"Name": "Open gas flue balancer 1",
+	// 			"Air supply to appliance": "Outside",
+	// 			"Exhaust method from appliance": "Into room",
+	// 			"Type of fuel": "Gas"
 
-  // 		};
+	// 		};
 
-  // 		for (const [key, value] of Object.entries(expectedResult)) {
-  // 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-  // 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-  // 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-  // 		}
-  // 	});
+	// 		for (const [key, value] of Object.entries(expectedResult)) {
+	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
+	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+	// 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+	// 		}
+	// 	});
 
-  // 	it('should display the correct data for open gas kitchen stove', async () => {
-  // 		store.$patch({
-  // 			infiltrationAndVentilation: {
-  // 				combustionAppliances: {
-  // 					[CombustionApplianceType.open_gas_kitchen_stove]: {
-  // 						data: [openGasKitchenStoveData]
-  // 					}
-  // 				}
-  // 			}
-  // 		});
+	// 	it('should display the correct data for open gas kitchen stove', async () => {
+	// 		store.$patch({
+	// 			infiltrationAndVentilation: {
+	// 				combustionAppliances: {
+	// 					[CombustionApplianceType.open_gas_kitchen_stove]: {
+	// 						data: [openGasKitchenStoveData]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
 
-  // 		await renderSuspended(Summary);
+	// 		await renderSuspended(Summary);
 
-  // 		const expectedResult = {
-  // 			"Type": "Open gas kitchen stove",
-  // 			"Name": "Open gas kitchen stove 1",
-  // 			"Air supply to appliance": "Outside",
-  // 			"Exhaust method from appliance": "Into room",
-  // 			"Type of fuel": "Oil"
-  // 		};
+	// 		const expectedResult = {
+	// 			"Type": "Open gas kitchen stove",
+	// 			"Name": "Open gas kitchen stove 1",
+	// 			"Air supply to appliance": "Outside",
+	// 			"Exhaust method from appliance": "Into room",
+	// 			"Type of fuel": "Oil"
+	// 		};
 
-  // 		for (const [key, value] of Object.entries(expectedResult)) {
-  // 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-  // 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-  // 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-  // 		}
-  // 	});
+	// 		for (const [key, value] of Object.entries(expectedResult)) {
+	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
+	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+	// 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+	// 		}
+	// 	});
 
-  // 	it('should display the correct data for open gas fire', async () => {
-  // 		store.$patch({
-  // 			infiltrationAndVentilation: {
-  // 				combustionAppliances: {
-  // 					[CombustionApplianceType.open_gas_fire]: {
-  // 						data: [openGasFireData]
-  // 					}
-  // 				}
-  // 			}
-  // 		});
+	// 	it('should display the correct data for open gas fire', async () => {
+	// 		store.$patch({
+	// 			infiltrationAndVentilation: {
+	// 				combustionAppliances: {
+	// 					[CombustionApplianceType.open_gas_fire]: {
+	// 						data: [openGasFireData]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
 
-  // 		await renderSuspended(Summary);
+	// 		await renderSuspended(Summary);
 
-  // 		const expectedResult = {
-  // 			"Type": "Open gas fire",
-  // 			"Name": "Open gas fire 1",
-  // 			"Air supply to appliance": "Outside",
-  // 			"Exhaust method from appliance": "Into mechanical vent",
-  // 			"Type of fuel": "Oil"
-  // 		};
+	// 		const expectedResult = {
+	// 			"Type": "Open gas fire",
+	// 			"Name": "Open gas fire 1",
+	// 			"Air supply to appliance": "Outside",
+	// 			"Exhaust method from appliance": "Into mechanical vent",
+	// 			"Type of fuel": "Oil"
+	// 		};
 
-  // 		for (const [key, value] of Object.entries(expectedResult)) {
-  // 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-  // 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-  // 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-  // 		}
-  // 	});
 
-  // 	it('should display the correct data for closed fire', async () => {
-  // 		store.$patch({
-  // 			infiltrationAndVentilation: {
-  // 				combustionAppliances: {
-  // 					[CombustionApplianceType.closed_fire]: {
-  // 						data: [closedFireData]
-  // 					}
-  // 				}
-  // 			}
-  // 		});
+	// 		for (const [key, value] of Object.entries(expectedResult)) {
+	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
+	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+	// 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+	// 		}
+	// 	});
 
-  // 		await renderSuspended(Summary);
+	// 	it('should display the correct data for closed fire', async () => {
+	// 		store.$patch({
+	// 			infiltrationAndVentilation: {
+	// 				combustionAppliances: {
+	// 					[CombustionApplianceType.closed_fire]: {
+	// 						data: [closedFireData]
+	// 					}
+	// 				}
+	// 			}
+	// 		});
 
-  // 		const expectedResult = {
-  // 			"Type": "Closed fire",
-  // 			"Name": "Closed fire 1",
-  // 			"Air supply to appliance": "Outside",
-  // 			"Exhaust method from appliance": "Into mechanical vent",
-  // 			"Type of fuel": "Coal"
-  // 		};
+	// 		await renderSuspended(Summary);
 
-  // 		for (const [key, value] of Object.entries(expectedResult)) {
-  // 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
-  // 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-  // 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-  // 		}
-  // 	});
-  // });
+	// 		const expectedResult = {
+	// 			"Type": "Closed fire",
+	// 			"Name": "Closed fire 1",
+	// 			"Air supply to appliance": "Outside",
+	// 			"Exhaust method from appliance": "Into mechanical vent",
+	// 			"Type of fuel": "Coal"
+	// 		};
+
+
+	// 		for (const [key, value] of Object.entries(expectedResult)) {
+	// 			const lineResult = (await screen.findByTestId(`summary-combustionAppliances-${hyphenate(key)}`));
+	// 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+	// 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+	// 		}
+	// 	});
+	// });
 });

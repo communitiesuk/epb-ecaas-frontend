@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { SchemaWaterPipeworkLocation } from "~/schema/aliases";
-import { getUrl  } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const title = "Secondary pipework";
 const store = useEcaasStore();
 
+const index = getStoreIndex(store.domesticHotWater.pipework.secondaryPipework.data);
 const pipeworkData = useItemToEdit("pipe", store.domesticHotWater.pipework.secondaryPipework.data);
 const model = ref(pipeworkData?.data);
 
@@ -18,7 +19,6 @@ const saveForm = (fields: SecondaryPipeworkData) => {
 	store.$patch((state) => {
 		const { secondaryPipework } = state.domesticHotWater.pipework;
 
-		const index = getStoreIndex(secondaryPipework.data);
 		secondaryPipework.data[index] = {
 			data: {
 				name: fields.name,
@@ -62,7 +62,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required | length:1,50"
+			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWater.pipework.secondaryPipework.data, { index }) }"
+			validation="required:trim | length:1,50 | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="internalDiameter"

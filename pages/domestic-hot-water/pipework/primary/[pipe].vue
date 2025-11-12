@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getUrl  } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 import type { SnakeToSentenceCase } from "#imports";
 import type { SchemaWaterPipeContentsType, SchemaWaterPipeworkLocation } from "~/schema/aliases";
 const { autoSaveElementForm, getStoreIndex } = useForm();
@@ -7,6 +7,7 @@ const { autoSaveElementForm, getStoreIndex } = useForm();
 const title = "Primary pipework";
 const store = useEcaasStore();
 
+const index = getStoreIndex(store.domesticHotWater.pipework.primaryPipework.data);
 const pipeworkData = useItemToEdit("pipe", store.domesticHotWater.pipework.primaryPipework.data);
 const model = ref(pipeworkData?.data);
 
@@ -23,8 +24,6 @@ const locationOptions: Record<SchemaWaterPipeworkLocation, SnakeToSentenceCase<S
 const saveForm = (fields: PrimaryPipeworkData) => {
 	store.$patch((state) => {
 		const { primaryPipework } = state.domesticHotWater.pipework;
-		
-		const index = getStoreIndex(primaryPipework.data);
 
 		primaryPipework.data[index] = {
 			data: {
@@ -76,7 +75,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required:trim | length:1,50"
+			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWater.pipework.primaryPipework.data, { index }) }"
+			validation="required:trim | length:1,50 | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="internalDiameter"

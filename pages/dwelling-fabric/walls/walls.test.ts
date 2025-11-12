@@ -11,18 +11,18 @@ import { within } from "@testing-library/dom";
 import formStatus from "~/constants/formStatus";
 
 describe("walls", () => {
-  const store = useEcaasStore();
-  const user = userEvent.setup();
-  const navigateToMock = vi.hoisted(() => vi.fn());
+	const store = useEcaasStore();
+	const user = userEvent.setup();
+	const navigateToMock = vi.hoisted(() => vi.fn());
 
-  mockNuxtImport("navigateTo", () => {
-    return navigateToMock;
-  });
+	mockNuxtImport("navigateTo", () => {
+		return navigateToMock;
+	});
 
-  afterEach(() => {
-    store.$reset();
-  });
-  const external1: ExternalWallData = {
+	afterEach(() => {
+		store.$reset();
+	});
+   const external1: ExternalWallData = {
     id: "8bb5eda9-3c31-44d0-801b-f130a63b9f6a",
     name: "External wall 1",
     pitchOption: "90",
@@ -32,9 +32,9 @@ describe("walls", () => {
     length: 20,
     elevationalHeight: 20,
     surfaceArea: 10,
-    solarAbsorption: 0.1,
     uValue: 1,
-    kappaValue: 100,
+		colour: "Intermediate",
+		arealHeatCapacity: "Very light",
     massDistributionClass: "I",
   };
 
@@ -54,7 +54,7 @@ describe("walls", () => {
     id: "cb995019-718c-4074-b56c-37826abf1fc5",
     name: "Internal wall 1",
     surfaceAreaOfElement: 5,
-    kappaValue: 100,
+    arealHeatCapacity: "Very light",
     massDistributionClass: "I",
     pitchOption: "custom",
     pitch: 3,
@@ -75,7 +75,7 @@ describe("walls", () => {
     name: "Wall to heated space 1",
     surfaceAreaOfElement: 500,
     uValue: 10,
-    arealHeatCapacity: 110000,
+    arealHeatCapacity: "Medium",
     massDistributionClass: "E",
     pitchOption: "90",
     pitch: 90,
@@ -99,7 +99,7 @@ describe("walls", () => {
     pitch: 90,
     surfaceArea: 10,
     uValue: 0.01,
-    kappaValue: 100,
+    arealHeatCapacity: "Very light",
     massDistributionClass: "I",
   };
 
@@ -113,51 +113,52 @@ describe("walls", () => {
     name: "Party wall 3",
   };
 
-  describe("External walls", () => {
-    test("external wall is removed when remove link is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceExternalWall: {
-              data: [{ data: external1 }],
-            },
-          },
-        },
-      });
 
-      await renderSuspended(Walls);
+	describe("External walls", () => {
+		test("external wall is removed when remove link is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{ data: external1 }],
+						},
+					},
+				},
+			});
 
-      expect(screen.getAllByTestId("external_items")).toBeDefined();
+			await renderSuspended(Walls);
 
-      await user.click(screen.getByTestId("external_remove_0"));
+			expect(screen.getAllByTestId("external_items")).toBeDefined();
 
-      expect(screen.queryByTestId("external_items")).toBeNull();
-    });
+			await user.click(screen.getByTestId("external_remove_0"));
 
-    it("should only remove the external wall object thats is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceExternalWall: {
-              data: [
-                { data: external1 },
-                { data: external2 },
-                { data: external3 },
-              ],
-            },
-          },
-        },
-      });
+			expect(screen.queryByTestId("external_items")).toBeNull();
+		});
 
-      await renderSuspended(Walls);
-      await user.click(screen.getByTestId("external_remove_1"));
+		it("should only remove the external wall object thats is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [
+								{ data: external1 },
+								{ data: external2 },
+								{ data: external3 },
+							],
+						},
+					},
+				},
+			});
 
-      const populatedList = screen.getByTestId("external_items");
+			await renderSuspended(Walls);
+			await user.click(screen.getByTestId("external_remove_1"));
 
-      expect(within(populatedList).getByText("External wall 1")).toBeDefined();
-      expect(within(populatedList).getByText("External wall 3")).toBeDefined();
-      expect(within(populatedList).queryByText("External wall 2")).toBeNull();
-    });
+			const populatedList = screen.getByTestId("external_items");
+
+			expect(within(populatedList).getByText("External wall 1")).toBeDefined();
+			expect(within(populatedList).getByText("External wall 3")).toBeDefined();
+			expect(within(populatedList).queryByText("External wall 2")).toBeNull();
+		});
 
     test("when an external wall is removed its also removed from any store item that references it", async () => {
       const vent1: Partial<VentData> = {
@@ -229,131 +230,119 @@ describe("walls", () => {
       expect(unglazedDoor?.associatedItemId).toBeUndefined();
     });
 
-    test("wall is duplicated when duplicate link is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceExternalWall: {
-              data: [{ data: external1 }, { data: external2 }],
-            },
-          },
-        },
-      });
+		test("wall is duplicated when duplicate link is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [
+								{ data: external1 },
+								{ data: external2 },
+							],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
-      await userEvent.click(screen.getByTestId("external_duplicate_0"));
-      await userEvent.click(screen.getByTestId("external_duplicate_0"));
-      await userEvent.click(screen.getByTestId("external_duplicate_2"));
-      await userEvent.click(screen.getByTestId("external_duplicate_2"));
+			await renderSuspended(Walls);
+			await userEvent.click(screen.getByTestId("external_duplicate_0"));
+			await userEvent.click(screen.getByTestId("external_duplicate_0"));
+			await userEvent.click(screen.getByTestId("external_duplicate_2"));
+			await userEvent.click(screen.getByTestId("external_duplicate_2"));
 
-      const { dwellingSpaceExternalWall } =
-        store.dwellingFabric.dwellingSpaceWalls;
+			expect(screen.queryAllByTestId("external_item").length).toBe(6);
+			expect(screen.getByText("External wall 1")).toBeDefined();
+			expect(screen.getByText("External wall 1 (1)")).toBeDefined();
+			expect(screen.getByText("External wall 1 (2)")).toBeDefined();
+			expect(screen.getByText("External wall 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("External wall 1 (1) (2)")).toBeDefined();
+		});
 
-      const ids = dwellingSpaceExternalWall.data.map((x) => x.data.id);
-      const duplicateIds = ids.filter((x, i) => ids.indexOf(x) !== i).length;
+		it("should display an in-progress indicator when an external wall is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{
+								data: { name: "External wall 1" },
+							}],
+						},
+					},
+				},
+			});
 
-      expect(duplicateIds).toBe(0);
-      expect(screen.queryAllByTestId("external_item").length).toBe(6);
-      expect(screen.getByText("External wall 1")).toBeDefined();
-      expect(screen.getByText("External wall 1 (1)")).toBeDefined();
-      expect(screen.getByText("External wall 1 (2)")).toBeDefined();
-      expect(screen.getByText("External wall 1 (1) (1)")).toBeDefined();
-      expect(screen.getByText("External wall 1 (1) (2)")).toBeDefined();
-    });
+			await renderSuspended(Walls);
 
-    it("should display an in-progress indicator when an external wall is not marked as complete", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceExternalWall: {
-              data: [
-                {
-                  data: { name: "External wall 1" },
-                },
-              ],
-            },
-          },
-        },
-      });
+			expect(screen.getByTestId("external_status_0").textContent).toBe(formStatus.inProgress.text);
+		});
 
-      await renderSuspended(Walls);
+		it("should display a complete indicator when an external wall is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: {
+							data: [{
+								data: external1,
+								complete: true,
+							}],
+						},
+					},
+				},
+			});
 
-      expect(screen.getByTestId("external_status_0").textContent).toBe(
-        formStatus.inProgress.text
-      );
-    });
+			await renderSuspended(Walls);
 
-    it("should display a complete indicator when an external wall is marked as complete", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceExternalWall: {
-              data: [
-                {
-                  data: external1,
-                  complete: true,
-                },
-              ],
-            },
-          },
-        },
-      });
+			expect(screen.getByTestId("external_status_0").textContent).toBe(formStatus.complete.text);
+		});
+	});
 
-      await renderSuspended(Walls);
+	describe("Internal walls", () => {
+		test("internal wall is removed when remove link is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: {
+							data: [{ data: internal1 }],
+						},
+					},
+				},
+			});
 
-      expect(screen.getByTestId("external_status_0").textContent).toBe(
-        formStatus.complete.text
-      );
-    });
-  });
+			await renderSuspended(Walls);
 
-  describe("Internal walls", () => {
-    test("internal wall is removed when remove link is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceInternalWall: {
-              data: [{ data: internal1 }],
-            },
-          },
-        },
-      });
+			expect(screen.getAllByTestId("internal_items")).toBeDefined();
 
-      await renderSuspended(Walls);
+			await user.click(screen.getByTestId("internal_remove_0"));
 
-      expect(screen.getAllByTestId("internal_items")).toBeDefined();
+			expect(screen.queryByTestId("internal_items")).toBeNull();
+		});
 
-      await user.click(screen.getByTestId("internal_remove_0"));
+		it("should only remove the internal wall object thats is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: {
+							data: [
+								{ data: internal1 },
+								{ data: internal2 },
+								{ data: internal3 },
+							],
+						},
+					},
+				},
+			});
 
-      expect(screen.queryByTestId("internal_items")).toBeNull();
-    });
+			await renderSuspended(Walls);
+			await user.click(screen.getByTestId("internal_remove_1"));
 
-    it("should only remove the internal wall object thats is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceInternalWall: {
-              data: [
-                { data: internal1 },
-                { data: internal2 },
-                { data: internal3 },
-              ],
-            },
-          },
-        },
-      });
+			const populatedList = screen.getByTestId("internal_items");
 
-      await renderSuspended(Walls);
-      await user.click(screen.getByTestId("internal_remove_1"));
+			expect(within(populatedList).getByText("Internal wall 1")).toBeDefined();
+			expect(within(populatedList).getByText("Internal wall 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Internal wall 2")).toBeNull();
+		});
 
-      const populatedList = screen.getByTestId("internal_items");
-
-      expect(within(populatedList).getByText("Internal wall 1")).toBeDefined();
-      expect(within(populatedList).getByText("Internal wall 3")).toBeDefined();
-      expect(within(populatedList).queryByText("Internal wall 2")).toBeNull();
-    });
-
-    test("when an internal wall is removed its also removed from any store item that references it", async () => {
+     test("when an internal wall is removed its also removed from any store item that references it", async () => {
       const doorToHeatedSpace: Partial<InternalDoorData> = {
         typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
         name: "Internal door to heated",
@@ -377,11 +366,6 @@ describe("walls", () => {
             },
           },
         },
-        infiltrationAndVentilation: {
-          vents: {
-            data: [{ data: vent1, complete: true }],
-          },
-        },
       });
 
       await renderSuspended(Walls);
@@ -392,135 +376,127 @@ describe("walls", () => {
         store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor
           .data[0]?.data;
       expect(unheatedDoor?.associatedItemId).toBeUndefined();
-
-      const vent = store.infiltrationAndVentilation.vents.data[0];
-      expect(vent?.data.associatedItemId).toBeUndefined();
     });
 
-    test("wall is duplicated when duplicate link is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceInternalWall: {
-              data: [{ data: internal1 }, { data: internal2 }],
-            },
-          },
-        },
-      });
+		test("wall is duplicated when duplicate link is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: {
+							data: [
+								{ data: internal1 },
+								{ data: internal2 },
+							],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
-      await userEvent.click(screen.getByTestId("internal_duplicate_0"));
-      await userEvent.click(screen.getByTestId("internal_duplicate_0"));
-      await userEvent.click(screen.getByTestId("internal_duplicate_2"));
-      await userEvent.click(screen.getByTestId("internal_duplicate_2"));
+			await renderSuspended(Walls);
+			await userEvent.click(screen.getByTestId("internal_duplicate_0"));
+			await userEvent.click(screen.getByTestId("internal_duplicate_0"));
+			await userEvent.click(screen.getByTestId("internal_duplicate_2"));
+			await userEvent.click(screen.getByTestId("internal_duplicate_2"));
 
-      expect(screen.queryAllByTestId("internal_item").length).toBe(6);
-      expect(screen.getByText("Internal wall 1")).toBeDefined();
-      expect(screen.getByText("Internal wall 1 (1)")).toBeDefined();
-      expect(screen.getByText("Internal wall 1 (2)")).toBeDefined();
-      expect(screen.getByText("Internal wall 1 (1) (1)")).toBeDefined();
-      expect(screen.getByText("Internal wall 1 (1) (2)")).toBeDefined();
-    });
+			expect(screen.queryAllByTestId("internal_item").length).toBe(6);
+			expect(screen.getByText("Internal wall 1")).toBeDefined();
+			expect(screen.getByText("Internal wall 1 (1)")).toBeDefined();
+			expect(screen.getByText("Internal wall 1 (2)")).toBeDefined();
+			expect(screen.getByText("Internal wall 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Internal wall 1 (1) (2)")).toBeDefined();
+		});
 
-    it("should display an in-progress indicator when an internal wall is not marked as complete", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceInternalWall: {
-              data: [
-                {
-                  data: { name: "Internal wall 1" },
-                },
-              ],
-            },
-          },
-        },
-      });
+		it("should display an in-progress indicator when an internal wall is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: {
+							data: [{
+								data: { name: "Internal wall 1" },
+							}],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      expect(screen.getByTestId("internal_status_0").textContent).toBe(
-        formStatus.inProgress.text
-      );
-    });
+			expect(screen.getByTestId("internal_status_0").textContent).toBe(formStatus.inProgress.text);
+		});
 
-    it("should display a complete indicator when an internal wall is marked as complete", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceInternalWall: {
-              data: [
-                {
-                  data: internal1,
-                  complete: true,
-                },
-              ],
-            },
-          },
-        },
-      });
+		it("should display a complete indicator when an internal wall is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceInternalWall: {
+							data: [{
+								data: internal1,
+								complete: true,
+							}],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      expect(screen.getByTestId("internal_status_0").textContent).toBe(
-        formStatus.complete.text
-      );
-    });
-  });
+			expect(screen.getByTestId("internal_status_0").textContent).toBe(formStatus.complete.text);
+		});
+	});
 
-  describe("Wall to unheated space", () => {
-    test("wall-to-heated-space is removed when remove link is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceWallToUnheatedSpace: {
-              data: [{ data: toUnheatedSpace1 }],
-            },
-          },
-        },
-      });
+	describe("Wall to unheated space", () => {
+		test("wall-to-heated-space is removed when remove link is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceWallToUnheatedSpace: {
+							data: [{ data: toUnheatedSpace1 }],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      expect(screen.getAllByTestId("toHeatedSpace_items")).toBeDefined();
+			expect(screen.getAllByTestId("toHeatedSpace_items")).toBeDefined();
 
-      await user.click(screen.getByTestId("toHeatedSpace_remove_0"));
+			await user.click(screen.getByTestId("toHeatedSpace_remove_0"));
 
-      expect(screen.queryByTestId("toHeatedSpace_items")).toBeNull();
-    });
+			expect(screen.queryByTestId("toHeatedSpace_items")).toBeNull();
+		});
 
-    it("should only remove the wall-to-heated-space object thats is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceWallToUnheatedSpace: {
-              data: [
-                { data: toUnheatedSpace1 },
-                { data: toUnheatedSpace2 },
-                { data: toUnheatedSpace3 },
-              ],
-            },
-          },
-        },
-      });
+		it("should only remove the wall-to-heated-space object thats is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceWallToUnheatedSpace: {
+							data: [
+								{ data: toUnheatedSpace1 },
+								{ data: toUnheatedSpace2 },
+								{ data: toUnheatedSpace3 },
+							],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
-      await user.click(screen.getByTestId("toHeatedSpace_remove_1"));
+			await renderSuspended(Walls);
+			await user.click(screen.getByTestId("toHeatedSpace_remove_1"));
 
-      const populatedList = screen.getByTestId("toHeatedSpace_items");
+			const populatedList = screen.getByTestId("toHeatedSpace_items");
 
-      expect(
-        within(populatedList).getByText("Wall to heated space 1")
-      ).toBeDefined();
-      expect(
-        within(populatedList).getByText("Wall to heated space 3")
-      ).toBeDefined();
-      expect(
-        within(populatedList).queryByText("Wall to heated space 2")
-      ).toBeNull();
-    });
+			expect(
+				within(populatedList).getByText("Wall to heated space 1"),
+			).toBeDefined();
+			expect(
+				within(populatedList).getByText("Wall to heated space 3"),
+			).toBeDefined();
+			expect(
+				within(populatedList).queryByText("Wall to heated space 2"),
+			).toBeNull();
+		});
 
-    test("when a wall to unheated space is removed its also removed from any store item that references it", async () => {
+     test("when a wall to unheated space is removed its also removed from any store item that references it", async () => {
       const doorToUnheatedSpace: Partial<InternalDoorData> = {
         typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
         name: "Internal to unheated",
@@ -542,11 +518,6 @@ describe("walls", () => {
             dwellingSpaceInternalDoor: {
               data: [{ data: doorToUnheatedSpace, complete: true }],
             },
-          },
-        },
-        infiltrationAndVentilation: {
-          vents: {
-            data: [{ data: vent1, complete: true }],
           },
         },
       });
@@ -559,125 +530,121 @@ describe("walls", () => {
         store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor
           .data[0]?.data;
       expect(door?.associatedItemId).toBeUndefined();
-
-      const vent = store.infiltrationAndVentilation.vents.data[0];
-      expect(vent?.data.associatedItemId).toBeUndefined();
     });
 
-    test("wall is duplicated when duplicate link is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceWallToUnheatedSpace: {
-              data: [{ data: toUnheatedSpace1 }, { data: toUnheatedSpace2 }],
-            },
-          },
-        },
-      });
+		test("wall is duplicated when duplicate link is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceWallToUnheatedSpace: {
+							data: [
+								{ data: toUnheatedSpace1 },
+								{ data: toUnheatedSpace2 },
+							],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
-      await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_0"));
-      await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_0"));
-      await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_2"));
-      await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_2"));
+			await renderSuspended(Walls);
+			await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_0"));
+			await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_0"));
+			await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_2"));
+			await userEvent.click(screen.getByTestId("toHeatedSpace_duplicate_2"));
 
-      expect(screen.queryAllByTestId("toHeatedSpace_item").length).toBe(6);
-      expect(screen.getByText("Wall to heated space 1")).toBeDefined();
-      expect(screen.getByText("Wall to heated space 1 (1)")).toBeDefined();
-      expect(screen.getByText("Wall to heated space 1 (2)")).toBeDefined();
-      expect(screen.getByText("Wall to heated space 1 (1) (1)")).toBeDefined();
-      expect(screen.getByText("Wall to heated space 1 (1) (2)")).toBeDefined();
-    });
+			expect(screen.queryAllByTestId("toHeatedSpace_item").length).toBe(6);
+			expect(screen.getByText("Wall to heated space 1")).toBeDefined();
+			expect(screen.getByText("Wall to heated space 1 (1)")).toBeDefined();
+			expect(screen.getByText("Wall to heated space 1 (2)")).toBeDefined();
+			expect(screen.getByText("Wall to heated space 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Wall to heated space 1 (1) (2)")).toBeDefined();
+		});
 
-    it("should display an in-progress indicator when a wall to unheated space is not marked as complete", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceWallToUnheatedSpace: {
-              data: [
-                {
-                  data: { name: "Wall to unheated space 1" },
-                },
-              ],
-            },
-          },
-        },
-      });
+		it("should display an in-progress indicator when a wall to unheated space is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceWallToUnheatedSpace: {
+							data: [{
+								data: { name: "Wall to unheated space 1" },
+							}],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      expect(screen.getByTestId("toHeatedSpace_status_0").textContent).toBe(
-        formStatus.inProgress.text
-      );
-    });
+			expect(screen.getByTestId("toHeatedSpace_status_0").textContent).toBe(formStatus.inProgress.text);
+		});
 
-    it("should display a complete indicator when a wall to unheated space is marked as complete", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceWallToUnheatedSpace: {
-              data: [
-                {
-                  data: toUnheatedSpace1,
-                  complete: true,
-                },
-              ],
-            },
-          },
-        },
-      });
+		it("should display a complete indicator when a wall to unheated space is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceWallToUnheatedSpace: {
+							data: [{
+								data: toUnheatedSpace1,
+								complete: true,
+							}],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      expect(screen.getByTestId("toHeatedSpace_status_0").textContent).toBe(
-        formStatus.complete.text
-      );
-    });
-  });
+			expect(screen.getByTestId("toHeatedSpace_status_0").textContent).toBe(formStatus.complete.text);
+		});
+	});
 
-  describe("Party walls", () => {
-    test("party wall is removed when remove link is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpacePartyWall: {
-              data: [{ data: party1 }],
-            },
-          },
-        },
-      });
+	describe("Party walls", () => {
+		test("party wall is removed when remove link is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpacePartyWall: {
+							data: [{ data: party1 }],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      expect(screen.getAllByTestId("party_items")).toBeDefined();
+			expect(screen.getAllByTestId("party_items")).toBeDefined();
 
-      await user.click(screen.getByTestId("party_remove_0"));
+			await user.click(screen.getByTestId("party_remove_0"));
 
-      expect(screen.queryByTestId("party_items")).toBeNull();
-    });
+			expect(screen.queryByTestId("party_items")).toBeNull();
+		});
 
-    it("should only remove the party wall object thats is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpacePartyWall: {
-              data: [{ data: party1 }, { data: party2 }, { data: party3 }],
-            },
-          },
-        },
-      });
+		it("should only remove the party wall object thats is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpacePartyWall: {
+							data: [
+								{ data: party1 },
+								{ data: party2 },
+								{ data: party3 },
+							],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
-      await user.click(screen.getByTestId("party_remove_1"));
+			await renderSuspended(Walls);
+			await user.click(screen.getByTestId("party_remove_1"));
 
-      const populatedList = screen.getByTestId("party_items");
+			const populatedList = screen.getByTestId("party_items");
 
-      expect(within(populatedList).getByText("Party wall 1")).toBeDefined();
-      expect(within(populatedList).getByText("Party wall 3")).toBeDefined();
-      expect(within(populatedList).queryByText("Party wall 2")).toBeNull();
-    });
+			expect(within(populatedList).getByText("Party wall 1")).toBeDefined();
+			expect(within(populatedList).getByText("Party wall 3")).toBeDefined();
+			expect(within(populatedList).queryByText("Party wall 2")).toBeNull();
+		});
 
-    test("when a party wall is removed its also removed from any store item that references it", async () => {
+     test("when a party wall is removed its also removed from any store item that references it", async () => {
       const doorToUnheatedSpace: Partial<InternalDoorData> = {
         typeOfInternalDoor: AdjacentSpaceType.unheatedSpace,
         name: "Internal to unheated",
@@ -700,11 +667,6 @@ describe("walls", () => {
             dwellingSpaceInternalDoor: {
               data: [{ data: doorToUnheatedSpace, complete: true }],
             },
-          },
-        },
-        infiltrationAndVentilation: {
-          vents: {
-            data: [{ data: vent1, complete: true }],
           },
         },
       });
@@ -718,277 +680,247 @@ describe("walls", () => {
           .data[0]?.data;
       expect(door?.associatedItemId).toBeUndefined();
 
-      const vent = store.infiltrationAndVentilation.vents.data[0];
-      expect(vent?.data.associatedItemId).toBeUndefined();
     });
 
-    test("wall is duplicated when duplicate link is clicked", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpacePartyWall: {
-              data: [{ data: party1 }, { data: party2 }],
-            },
-          },
-        },
-      });
+		test("wall is duplicated when duplicate link is clicked", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpacePartyWall: {
+							data: [
+								{ data: party1 },
+								{ data: party2 },
+							],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
-      await userEvent.click(screen.getByTestId("party_duplicate_0"));
-      await userEvent.click(screen.getByTestId("party_duplicate_0"));
-      await userEvent.click(screen.getByTestId("party_duplicate_2"));
-      await userEvent.click(screen.getByTestId("party_duplicate_2"));
+			await renderSuspended(Walls);
+			await userEvent.click(screen.getByTestId("party_duplicate_0"));
+			await userEvent.click(screen.getByTestId("party_duplicate_0"));
+			await userEvent.click(screen.getByTestId("party_duplicate_2"));
+			await userEvent.click(screen.getByTestId("party_duplicate_2"));
 
-      expect(screen.queryAllByTestId("party_item").length).toBe(6);
-      expect(screen.getByText("Party wall 1")).toBeDefined();
-      expect(screen.getByText("Party wall 1 (1)")).toBeDefined();
-      expect(screen.getByText("Party wall 1 (2)")).toBeDefined();
-      expect(screen.getByText("Party wall 1 (1) (1)")).toBeDefined();
-      expect(screen.getByText("Party wall 1 (1) (2)")).toBeDefined();
-    });
+			expect(screen.queryAllByTestId("party_item").length).toBe(6);
+			expect(screen.getByText("Party wall 1")).toBeDefined();
+			expect(screen.getByText("Party wall 1 (1)")).toBeDefined();
+			expect(screen.getByText("Party wall 1 (2)")).toBeDefined();
+			expect(screen.getByText("Party wall 1 (1) (1)")).toBeDefined();
+			expect(screen.getByText("Party wall 1 (1) (2)")).toBeDefined();
+		});
 
-    it("should display an in-progress indicator when a party wall is not marked as complete", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpacePartyWall: {
-              data: [
-                {
-                  data: { name: "Party wall 1" },
-                },
-              ],
-            },
-          },
-        },
-      });
+		it("should display an in-progress indicator when a party wall is not marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpacePartyWall: {
+							data: [{
+								data: { name: "Party wall 1" },
+							}],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      expect(screen.getByTestId("party_status_0").textContent).toBe(
-        formStatus.inProgress.text
-      );
-    });
+			expect(screen.getByTestId("party_status_0").textContent).toBe(formStatus.inProgress.text);
+		});
 
-    it("should display a complete indicator when a party wall is marked as complete", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpacePartyWall: {
-              data: [
-                {
-                  data: party1,
-                  complete: true,
-                },
-              ],
-            },
-          },
-        },
-      });
+		it("should display a complete indicator when a party wall is marked as complete", async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpacePartyWall: {
+							data: [{
+								data: party1,
+								complete: true,
+							}],
+						},
+					},
+				},
+			});
 
-      await renderSuspended(Walls);
+			await renderSuspended(Walls);
 
-      expect(screen.getByTestId("party_status_0").textContent).toBe(
-        formStatus.complete.text
-      );
-    });
-  });
+			expect(screen.getByTestId("party_status_0").textContent).toBe(formStatus.complete.text);
+		});
+	});
+	
+	describe("mark section as complete", () => {
 
-  describe("mark section as complete", () => {
-    const addWallsDataToStore = async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceExternalWall: {
-              data: [{ data: external1, complete: true }],
-            },
-            dwellingSpaceInternalWall: {
-              data: [{ data: internal1, complete: true }],
-            },
-            dwellingSpacePartyWall: {
-              data: [{ data: party1, complete: true }],
-            },
-            dwellingSpaceWallToUnheatedSpace: {
-              data: [{ data: toUnheatedSpace1, complete: true }],
-            },
-          },
-        },
-      });
-    };
+		const addWallsDataToStore = async () => {
+			store.$patch({
+				dwellingFabric: {
+					dwellingSpaceWalls: {
+						dwellingSpaceExternalWall: { data: [{ data: external1, complete: true }] },
+						dwellingSpaceInternalWall: { data: [{ data: internal1, complete: true }] },
+						dwellingSpacePartyWall: { data: [{ data: party1, complete: true }] },
+						dwellingSpaceWallToUnheatedSpace: { data: [{ data: toUnheatedSpace1, complete: true }] },
+					},
+				},
+			});
+		};
 
-    const wallsSections = {
-      dwellingSpaceExternalWall: {
-        id: "external",
-        form: ExternalWallForm,
-      },
-      dwellingSpaceInternalWall: {
-        id: "internal",
-        form: InternalWallForm,
-      },
-      dwellingSpacePartyWall: {
-        id: "party",
-        form: PartyWallForm,
-      },
-      dwellingSpaceWallToUnheatedSpace: {
-        id: "toHeatedSpace",
-        form: WallToUnheatedForm,
-      },
-    };
 
-    type WallType = keyof typeof store.dwellingFabric.dwellingSpaceWalls;
+		const wallsSections = {
+			dwellingSpaceExternalWall: {
+				id: "external",
+				form: ExternalWallForm,
+			},
+			dwellingSpaceInternalWall: {
+				id: "internal",
+				form: InternalWallForm,
+			},
+			dwellingSpacePartyWall: {
+				id: "party",
+				form: PartyWallForm,
+			},
+			dwellingSpaceWallToUnheatedSpace: {
+				id: "toHeatedSpace",
+				form: WallToUnheatedForm,
+			},
+		};
 
-    beforeEach(async () => {
-      await renderSuspended(Walls);
-    });
+type WallType = keyof typeof store.dwellingFabric.dwellingSpaceWalls;
 
-    afterEach(() => {
-      store.$reset();
-    });
 
-    it("disables the Mark section as complete button when a wall is incomplete", async () => {
-      store.$patch({
-        dwellingFabric: {
-          dwellingSpaceWalls: {
-            dwellingSpaceExternalWall: {
-              data: [{ data: external1, complete: false }],
-            },
-            dwellingSpaceInternalWall: {
-              data: [{ data: internal1, complete: false }],
-            },
-            dwellingSpacePartyWall: {
-              data: [{ data: party1, complete: false }],
-            },
-            dwellingSpaceWallToUnheatedSpace: {
-              data: [{ data: toUnheatedSpace1, complete: false }],
-            },
-          },
-        },
-      });
+beforeEach(async () => {
+	await renderSuspended(Walls);
+});
 
-      await renderSuspended(Walls);
+afterEach(() => {
+	store.$reset();
+});
 
-      expect(
-        screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")
-      ).toBeTruthy();
-    });
+it("disables the Mark section as complete button when a wall is incomplete", async () => {
+	store.$patch({
+		dwellingFabric: {
+			dwellingSpaceWalls: {
+				dwellingSpaceExternalWall: { data: [{ data: external1, complete: false }] },
+				dwellingSpaceInternalWall: { data: [{ data: internal1, complete: false }] },
+				dwellingSpacePartyWall: { data: [{ data: party1, complete: false }] },
+				dwellingSpaceWallToUnheatedSpace: { data: [{ data: toUnheatedSpace1, complete: false }] },
+			},
+		},
+	});
 
-    it("enables the Mark section as complete button when all walls are complete", async () => {
-      await addWallsDataToStore();
+	await renderSuspended(Walls);
 
-      await renderSuspended(Walls);
-      expect(
-        screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")
-      ).toBeFalsy();
-    });
+	expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeTruthy();
+});
 
-    it("displays a 'Completed' status indicator when section is marked as complete", async () => {
-      await renderSuspended(Walls);
-      await user.click(screen.getByTestId("markAsCompleteButton"));
-      const completedStatusElement = screen.queryByTestId(
-        "completeSectionCompleted"
-      );
-      expect(completedStatusElement?.style.display).not.toBe("none");
-    });
+it("enables the Mark section as complete button when all walls are complete", async () => {
+	await addWallsDataToStore();
 
-    describe("after section has been marked as complete", () => {
-      beforeEach(async () => {
-        await addWallsDataToStore();
-        await renderSuspended(Walls);
-        await user.click(screen.getByTestId("markAsCompleteButton"));
-      });
+	await renderSuspended(Walls);
+	expect(screen.getByTestId("markAsCompleteButton").hasAttribute("disabled")).toBeFalsy();
+});
 
-      it("displays the 'Completed' section status indicator", async () => {
-        const completed = screen.queryByTestId("completeSectionCompleted");
-        expect(completed?.style.display).not.toBe("none");
-      });
+it("displays a 'Completed' status indicator when section is marked as complete", async () => {
+	await renderSuspended(Walls);
+	await user.click(screen.getByTestId("markAsCompleteButton"));
+	const completedStatusElement = screen.queryByTestId(
+		"completeSectionCompleted",
+	);
+	expect(completedStatusElement?.style.display).not.toBe("none");
+});
+	
+describe("after section has been marked as complete", () => {
+	beforeEach(async () => {
+		await addWallsDataToStore();
+		await renderSuspended(Walls);
+		await user.click(screen.getByTestId("markAsCompleteButton"));
+	});
 
-      it("navigates to the dwelling fabric page", async () => {
-        expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
-      });
+	it("displays the 'Completed' section status indicator", async () => {
+		const completed = screen.queryByTestId("completeSectionCompleted");
+		expect(completed?.style.display).not.toBe("none");
+	});
 
-      it("marks all walls sections as complete when button is clicked", async () => {
-        const {
-          dwellingSpaceExternalWall,
-          dwellingSpaceInternalWall,
-          dwellingSpacePartyWall,
-          dwellingSpaceWallToUnheatedSpace,
-        } = store.dwellingFabric.dwellingSpaceWalls;
+	it("navigates to the dwelling fabric page", async () => {
+		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric");
+	});
 
-        expect(dwellingSpaceExternalWall?.complete).toBe(true);
-        expect(dwellingSpaceInternalWall?.complete).toBe(true);
-        expect(dwellingSpacePartyWall?.complete).toBe(true);
-        expect(dwellingSpaceWallToUnheatedSpace?.complete).toBe(true);
-      });
+	it("marks all walls sections as complete when button is clicked", async () => {
+		const {
+			dwellingSpaceExternalWall,
+			dwellingSpaceInternalWall,
+			dwellingSpacePartyWall,
+			dwellingSpaceWallToUnheatedSpace,
+		} = store.dwellingFabric.dwellingSpaceWalls;
 
-      it("marks walls as not complete if an item is removed", async () => {
-        await user.click(screen.getByTestId("external_remove_0"));
-        await user.click(screen.getByTestId("internal_remove_0"));
-        await user.click(screen.getByTestId("party_remove_0"));
-        await user.click(screen.getByTestId("toHeatedSpace_remove_0"));
+		expect(dwellingSpaceExternalWall?.complete).toBe(true);
+		expect(dwellingSpaceInternalWall?.complete).toBe(true);
+		expect(dwellingSpacePartyWall?.complete).toBe(true);
+		expect(dwellingSpaceWallToUnheatedSpace?.complete).toBe(true);
+	});
 
-        const {
-          dwellingSpaceExternalWall,
-          dwellingSpaceInternalWall,
-          dwellingSpacePartyWall,
-          dwellingSpaceWallToUnheatedSpace,
-        } = store.dwellingFabric.dwellingSpaceWalls;
+	it("marks walls as not complete if an item is removed", async () => {
+		await user.click(screen.getByTestId("external_remove_0"));
+		await user.click(screen.getByTestId("internal_remove_0"));
+		await user.click(screen.getByTestId("party_remove_0"));
+		await user.click(screen.getByTestId("toHeatedSpace_remove_0"));
 
-        expect(dwellingSpaceExternalWall?.complete).toBe(false);
-        expect(dwellingSpaceInternalWall?.complete).toBe(false);
-        expect(dwellingSpacePartyWall?.complete).toBe(false);
-        expect(dwellingSpaceWallToUnheatedSpace?.complete).toBe(false);
-      });
+		const {
+			dwellingSpaceExternalWall,
+			dwellingSpaceInternalWall,
+			dwellingSpacePartyWall,
+			dwellingSpaceWallToUnheatedSpace,
+		} = store.dwellingFabric.dwellingSpaceWalls;
 
-      it("marks walls as not complete if an item is duplicated", async () => {
-        await user.click(screen.getByTestId("external_duplicate_0"));
-        await user.click(screen.getByTestId("internal_duplicate_0"));
-        await user.click(screen.getByTestId("party_duplicate_0"));
-        await user.click(screen.getByTestId("toHeatedSpace_duplicate_0"));
+		expect(dwellingSpaceExternalWall?.complete).toBe(false);
+		expect(dwellingSpaceInternalWall?.complete).toBe(false);
+		expect(dwellingSpacePartyWall?.complete).toBe(false);
+		expect(dwellingSpaceWallToUnheatedSpace?.complete).toBe(false);
+	});
 
-        const {
-          dwellingSpaceExternalWall,
-          dwellingSpaceInternalWall,
-          dwellingSpacePartyWall,
-          dwellingSpaceWallToUnheatedSpace,
-        } = store.dwellingFabric.dwellingSpaceWalls;
+	it("marks walls as not complete if an item is duplicated", async () => {
+		await user.click(screen.getByTestId("external_duplicate_0"));
+		await user.click(screen.getByTestId("internal_duplicate_0"));
+		await user.click(screen.getByTestId("party_duplicate_0"));
+		await user.click(screen.getByTestId("toHeatedSpace_duplicate_0"));
 
-        expect(dwellingSpaceExternalWall?.complete).toBe(false);
-        expect(dwellingSpaceInternalWall?.complete).toBe(false);
-        expect(dwellingSpacePartyWall?.complete).toBe(false);
-        expect(dwellingSpaceWallToUnheatedSpace?.complete).toBe(false);
-      });
+		const {
+			dwellingSpaceExternalWall,
+			dwellingSpaceInternalWall,
+			dwellingSpacePartyWall,
+			dwellingSpaceWallToUnheatedSpace,
+		} = store.dwellingFabric.dwellingSpaceWalls;
 
-      it("marks walls as not complete after adding a new wall", async () => {
-        for (const wallType of Object.keys(
-          store.dwellingFabric.dwellingSpaceWalls
-        ) as WallType[]) {
-          await renderSuspended(wallsSections[wallType].form, {
-            route: { params: { [wallsSections[wallType].id]: "create" } },
-          });
-          await user.type(screen.getByTestId("name"), "New wall");
-          await user.tab();
-          await user.click(screen.getByTestId("saveAndComplete"));
+		expect(dwellingSpaceExternalWall?.complete).toBe(false);
+		expect(dwellingSpaceInternalWall?.complete).toBe(false);
+		expect(dwellingSpacePartyWall?.complete).toBe(false);
+		expect(dwellingSpaceWallToUnheatedSpace?.complete).toBe(false);
+	});
 
-          expect(
-            store.dwellingFabric.dwellingSpaceWalls[wallType]?.complete
-          ).toBe(false);
-        }
-      });
-      it("marks walls as not complete after editing an existing wall", async () => {
-        for (const wallType of Object.keys(
-          store.dwellingFabric.dwellingSpaceWalls
-        ) as WallType[]) {
-          await renderSuspended(wallsSections[wallType].form, {
-            route: { params: { [wallsSections[wallType].id]: "0" } },
-          });
-          await user.clear(screen.getByTestId("name"));
-          await user.type(screen.getByTestId("name"), "New wall");
-          await user.tab();
+	it("marks walls as not complete after adding a new wall", async () => {
+		for (const wallType of Object.keys(store.dwellingFabric.dwellingSpaceWalls) as WallType[]) {
 
-          expect(
-            store.dwellingFabric.dwellingSpaceWalls[wallType]?.complete
-          ).toBe(false);
-        }
-      });
-    });
-  });
+			await renderSuspended(wallsSections[wallType].form, {
+				route: { params: { [wallsSections[wallType].id]: "create" } },
+			});
+			await user.type(screen.getByTestId("name"), "New wall");
+			await user.tab();
+			await user.click(screen.getByTestId("saveAndComplete"));
+	
+			expect(store.dwellingFabric.dwellingSpaceWalls[wallType]?.complete).toBe(false);
+		}
+	});
+	it("marks walls as not complete after editing an existing wall", async () => {
+		for (const wallType of Object.keys(store.dwellingFabric.dwellingSpaceWalls) as WallType[]) {
+
+			await renderSuspended(wallsSections[wallType].form, {
+				route: { params: { [wallsSections[wallType].id]: "0" } },
+			});
+			await user.clear(screen.getByTestId("name"));
+			await user.type(screen.getByTestId("name"), "New wall");
+			await user.tab();
+
+			expect(store.dwellingFabric.dwellingSpaceWalls[wallType]?.complete).toBe(false);
+		}
+	});
+});
+	});
 });

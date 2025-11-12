@@ -1,7 +1,4 @@
-import type {
-	SchemaEdgeInsulationHorizontal, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, BuildingElementGround, BuildingElementOfType,
-	SchemaLightingBulbs, 
-} from "~/schema/aliases";
+import type { BuildingElementGround, BuildingElementOfType, SchemaThermalBridgingLinearFhs, SchemaThermalBridgingPoint, SchemaEdgeInsulationHorizontal, SchemaLightingBulbs } from "~/schema/aliases";
 import { mapCeilingAndRoofData, mapDoorData, mapFloorData, mapLightingData, mapThermalBridgingData, mapWallData, mapWindowData, mapZoneParametersData } from "./dwellingFabricMapper";
 import { defaultZoneName } from "./common";
 import type {
@@ -31,15 +28,16 @@ describe("dwelling fabric mapper", () => {
 	it("maps zone parameters input state to FHS input request", () => {
 		// Arrange
 		const state: DwellingSpaceZoneParametersData = {
-			area: 10,
 			volume: 10,
+			livingRoomArea: 5,
+			restOfDwellingArea: 0,
 			// spaceHeatingSystemForThisZone: 'main 1',
 			spaceCoolingSystemForThisZone: [],
 			spaceHeatControlSystemForThisZone: [],
 		};
 
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatEmitting: {
 					wetDistribution: {
 						...baseForm,
@@ -71,17 +69,16 @@ describe("dwelling fabric mapper", () => {
 		const fhsInputData = mapZoneParametersData(resolveState(store.$state));
 
 		// Assert
-		expect(fhsInputData.Zone[defaultZoneName]?.area).toBe(state.area);
 		expect(fhsInputData.Zone[defaultZoneName]?.volume).toBe(state.volume);
 		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatSystem).toEqual(["radiator 1", "ieh 1"]);
-		expect(fhsInputData.Zone[defaultZoneName]?.SpaceHeatControl).toBe("livingroom");
 	});
 
 	it("maps lighting input state to FHS input request", () => {
 		// Arrange
 		const state: DwellingSpaceLightingData = {
-			numberOfLEDBulbs: 5,
-			numberOfIncandescentBulbs: 0,
+			numberOfBulbs: 5,
+			power: 5,
+			efficacy: 120,
 		};
 
 		store.$patch({
@@ -99,8 +96,7 @@ describe("dwelling fabric mapper", () => {
 		const bulbs = fhsInputData.Zone[defaultZoneName]?.Lighting?.bulbs as SchemaLightingBulbs;
 
 		// Assert
-		expect(bulbs.led?.count).toBe(state.numberOfLEDBulbs);
-		expect(bulbs.incandescent).toBeUndefined();
+		expect(bulbs.count).toBe(state.numberOfBulbs);
 	});
 
 	it("maps floor input state to FHS input request", () => {
@@ -108,10 +104,9 @@ describe("dwelling fabric mapper", () => {
 		const groundFloor: GroundFloorData = {
 			name: "Ground 1",
 			surfaceArea: 5,
-			pitch: 180,
 			uValue: 1,
 			thermalResistance: 1,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			perimeter: 0,
 			psiOfWallJunction: 0,
@@ -162,7 +157,7 @@ describe("dwelling fabric mapper", () => {
 			typeOfInternalFloor: AdjacentSpaceType.unheatedSpace,
 			name: "Internal 1",
 			surfaceAreaOfElement: 5,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
 		};
@@ -175,9 +170,9 @@ describe("dwelling fabric mapper", () => {
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 50000,
+			colour: "Dark",
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		};
 
@@ -191,7 +186,7 @@ describe("dwelling fabric mapper", () => {
 							{ ...baseForm, data: groundFloorWithEdgeInsulation },
 							{ ...baseForm, data: groundFloorWithSuspendedFloor },
 							{ ...baseForm, data: groundFloorWithHeatedBasement },
-							{ ...baseForm, data: groundFloorWithUnheatedBasement },			
+							{ ...baseForm, data: groundFloorWithUnheatedBasement },
 						],
 					},
 					dwellingSpaceInternalFloor: { ...baseForm, data: [{ ...baseForm, data: internalFloor }] },
@@ -221,11 +216,10 @@ describe("dwelling fabric mapper", () => {
 			type: "BuildingElementGround",
 			area: groundFloor.surfaceArea,
 			total_area: groundFloor.surfaceArea,
-			pitch: groundFloor.pitch,
 			u_value: groundFloor.uValue,
 			thermal_resistance_floor_construction: groundFloor.thermalResistance,
-			areal_heat_capacity: groundFloor.kappaValue,
-			mass_distribution_class: groundFloor.massDistributionClass,
+			areal_heat_capacity: groundFloor.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(groundFloor.massDistributionClass),
 			perimeter: groundFloor.perimeter,
 			psi_wall_floor_junc: groundFloor.psiOfWallJunction,
 			thickness_walls: groundFloor.thicknessOfWalls / 1000,
@@ -281,8 +275,8 @@ describe("dwelling fabric mapper", () => {
 			area: internalFloor.surfaceAreaOfElement,
 			pitch: 180,
 			u_value: 0.01,
-			areal_heat_capacity: internalFloor.kappaValue,
-			mass_distribution_class: internalFloor.massDistributionClass,
+			areal_heat_capacity: internalFloor.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(internalFloor.massDistributionClass),
 			thermal_resistance_unconditioned_space: internalFloor.thermalResistanceOfAdjacentUnheatedSpace,
 		};
 
@@ -294,11 +288,11 @@ describe("dwelling fabric mapper", () => {
 			height: exposedFloor.length,
 			width: exposedFloor.width,
 			base_height: exposedFloor.elevationalHeight,
-			solar_absorption_coeff: exposedFloor.solarAbsorption,
 			pitch: exposedFloor.pitch,
 			u_value: exposedFloor.uValue,
-			areal_heat_capacity: exposedFloor.kappaValue,
-			mass_distribution_class: exposedFloor.massDistributionClass,
+			colour: exposedFloor.colour,
+			areal_heat_capacity: exposedFloor.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(exposedFloor.massDistributionClass),
 			orientation360: exposedFloor.orientation,
 			is_external_door: false,
 		};
@@ -320,9 +314,9 @@ describe("dwelling fabric mapper", () => {
 				height: 0.5,
 				elevationalHeight: 20,
 				surfaceArea: 10,
-				solarAbsorption: 0.1,
 				uValue: 1,
-				kappaValue: 50000,
+				colour: "Light",
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 			},
 		};
@@ -333,7 +327,7 @@ describe("dwelling fabric mapper", () => {
         id: "in-id",
 				name: "Internal 1",
 				surfaceAreaOfElement: 5,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				pitchOption: "90",
 				pitch: 90,
@@ -349,7 +343,7 @@ describe("dwelling fabric mapper", () => {
 				pitch: 90,
 				surfaceArea: 10,
 				uValue: 1,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 			},
 		};
@@ -361,7 +355,7 @@ describe("dwelling fabric mapper", () => {
 				name: "Wall to unheated space 1",
 				surfaceAreaOfElement: 500,
 				uValue: 10,
-				arealHeatCapacity: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "E",
 				pitchOption: "90",
 				pitch: 90,
@@ -399,10 +393,10 @@ describe("dwelling fabric mapper", () => {
 			width: externalWall.data.length,
 			base_height: externalWall.data.elevationalHeight,
 			area: externalWall.data.surfaceArea,
-			solar_absorption_coeff: externalWall.data.solarAbsorption,
 			u_value: externalWall.data.uValue,
-			areal_heat_capacity: externalWall.data.kappaValue,
-			mass_distribution_class: externalWall.data.massDistributionClass,
+			colour: externalWall.data.colour,
+			areal_heat_capacity: externalWall.data.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(externalWall.data.massDistributionClass),
 			is_external_door: false,
 		};
 
@@ -413,8 +407,8 @@ describe("dwelling fabric mapper", () => {
 			pitch: internalWall.data.pitch!,
 			area: internalWall.data.surfaceAreaOfElement,
 			u_value: 0.01,
-			areal_heat_capacity: internalWall.data.kappaValue,
-			mass_distribution_class: internalWall.data.massDistributionClass,
+			areal_heat_capacity: internalWall.data.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(internalWall.data.massDistributionClass),
 		};
 
 		expect(internalWallElement).toEqual(expectedInternalWall);
@@ -424,8 +418,8 @@ describe("dwelling fabric mapper", () => {
 			pitch: partyWall.data.pitch!,
 			area: partyWall.data.surfaceArea,
 			u_value: partyWall.data.uValue,
-			areal_heat_capacity: partyWall.data.kappaValue,
-			mass_distribution_class: partyWall.data.massDistributionClass,
+			areal_heat_capacity: partyWall.data.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(partyWall.data.massDistributionClass),
 		};
 
 		expect(partyWallElement).toEqual(expectedPartyWall);
@@ -436,7 +430,7 @@ describe("dwelling fabric mapper", () => {
 			area: wallToUnheatedSpace.data.surfaceAreaOfElement,
 			u_value: wallToUnheatedSpace.data.uValue,
 			areal_heat_capacity: wallToUnheatedSpace.data.arealHeatCapacity,
-			mass_distribution_class: wallToUnheatedSpace.data.massDistributionClass,
+			mass_distribution_class: fullMassDistributionClass(wallToUnheatedSpace.data.massDistributionClass),
 			thermal_resistance_unconditioned_space: wallToUnheatedSpace.data.thermalResistanceOfAdjacentUnheatedSpace,
 		};
 
@@ -451,7 +445,7 @@ describe("dwelling fabric mapper", () => {
 			name: "Ceiling 1",
 			surfaceArea: 5,
 			uValue: 1,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			pitchOption: "0",
 			pitch: 0,
@@ -468,9 +462,9 @@ describe("dwelling fabric mapper", () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
-			kappaValue: 50000,
+			colour: "Dark",
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		};
 
@@ -498,8 +492,8 @@ describe("dwelling fabric mapper", () => {
 			pitch: extractPitch(ceiling),
 			area: ceiling.surfaceArea,
 			u_value: ceiling.uValue,
-			areal_heat_capacity: ceiling.kappaValue,
-			mass_distribution_class: ceiling.massDistributionClass,
+			areal_heat_capacity: ceiling.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(ceiling.massDistributionClass),
 			thermal_resistance_unconditioned_space: ceiling.thermalResistanceOfAdjacentUnheatedSpace,
 		};
 
@@ -513,10 +507,10 @@ describe("dwelling fabric mapper", () => {
 			width: roof.width,
 			base_height: roof.elevationalHeightOfElement,
 			area: roof.surfaceArea,
-			solar_absorption_coeff: roof.solarAbsorptionCoefficient,
 			u_value: roof.uValue,
-			areal_heat_capacity: roof.kappaValue,
-			mass_distribution_class: roof.massDistributionClass,
+			colour: roof.colour,
+			areal_heat_capacity: roof.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(roof.massDistributionClass),
 			is_external_door: false,
 			is_unheated_pitched_roof: false,
 		};
@@ -534,15 +528,15 @@ describe("dwelling fabric mapper", () => {
         name: "External wall 1",
         pitchOption: "90",
         pitch: 90,
-        orientation: 0,
-        length: 20,
-        height: 0.5,
-        elevationalHeight: 20,
-        surfaceArea: 10,
-        solarAbsorption: 0.1,
-        uValue: 1,
-        kappaValue: 50000,
-        massDistributionClass: "I",
+      	orientation: 0,
+				length: 20,
+				height: 0.5,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				uValue: 1,
+				colour: "Light",
+				arealHeatCapacity: "Very light",
+				massDistributionClass: "I",
       },
     };
 		
@@ -552,10 +546,10 @@ describe("dwelling fabric mapper", () => {
         id: "e36223a9-420f-422f-ad3f-ccfcec1455c7",
         name: "Internal 1",
         surfaceAreaOfElement: 5,
-        kappaValue: 50000,
-        massDistributionClass: "I",
-        pitchOption: "90",
-        pitch: 90,
+    		arealHeatCapacity: "Very light",
+				massDistributionClass: "I",
+				pitchOption: "90",
+				pitch: 90,
       },
     };
 
@@ -564,7 +558,7 @@ describe("dwelling fabric mapper", () => {
 			name: "Internal 1",
       associatedItemId: internalWall.data.id,
 			surfaceArea: 5,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			uValue: 0.001,
 			thermalResistanceOfAdjacentUnheatedSpace: 1,
@@ -593,17 +587,17 @@ describe("dwelling fabric mapper", () => {
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			colour: "Intermediate",
 		};
 
 		const doorSuffix = " (door)";
 		 
- store.$patch({
-      dwellingFabric: {
-        dwellingSpaceWalls: {
+		store.$patch({
+			dwellingFabric: {
+				  dwellingSpaceWalls: {
           dwellingSpaceExternalWall: {
             data: [externalWall],
             complete: true,
@@ -613,22 +607,13 @@ describe("dwelling fabric mapper", () => {
             complete: true,
           },
         },
-        dwellingSpaceDoors: {
-          dwellingSpaceInternalDoor: {
-            ...baseForm,
-            data: [{ ...baseForm, data: internalDoor }],
-          },
-          dwellingSpaceExternalGlazedDoor: {
-            ...baseForm,
-            data: [{ ...baseForm, data: externalGlazedDoor }],
-          },
-          dwellingSpaceExternalUnglazedDoor: {
-            ...baseForm,
-            data: [{ ...baseForm, data: externalUnglazedDoor }],
-          },
-        },
-      },
-    });
+				dwellingSpaceDoors: {
+					dwellingSpaceInternalDoor: { ...baseForm, data: [{ ...baseForm, data: internalDoor }] },
+					dwellingSpaceExternalGlazedDoor: { ...baseForm, data: [{ ...baseForm, data: externalGlazedDoor }] },
+					dwellingSpaceExternalUnglazedDoor: { ...baseForm, data: [{ ...baseForm, data: externalUnglazedDoor }] },
+				},
+			},
+		});
 
 		// Act
 		const fhsInputData = mapDoorData(resolveState(store.$state));
@@ -644,11 +629,10 @@ describe("dwelling fabric mapper", () => {
         pitch: extractPitch(internalWall.data),
         area: internalDoor.surfaceArea,
         u_value: internalDoor.uValue,
-        areal_heat_capacity: internalDoor.kappaValue,
-        mass_distribution_class: internalDoor.massDistributionClass,
-        thermal_resistance_unconditioned_space:
-          internalDoor.thermalResistanceOfAdjacentUnheatedSpace,
-      };
+				areal_heat_capacity: internalDoor.arealHeatCapacity,
+				mass_distribution_class: fullMassDistributionClass(internalDoor.massDistributionClass),
+				thermal_resistance_unconditioned_space: internalDoor.thermalResistanceOfAdjacentUnheatedSpace,
+		};
 
     expect(internalDoorElement).toEqual(expectedInternalDoor);
 
@@ -678,16 +662,16 @@ describe("dwelling fabric mapper", () => {
       type: "BuildingElementOpaque",
       pitch: externalWall.data.pitch!,
       orientation360: externalWall.data.orientation,
-      height: externalUnglazedDoor.height,
-      width: externalUnglazedDoor.width,
-      base_height: externalUnglazedDoor.elevationalHeight,
-      area: externalUnglazedDoor.surfaceArea,
-      solar_absorption_coeff: externalUnglazedDoor.solarAbsorption,
-      u_value: externalUnglazedDoor.uValue,
-      areal_heat_capacity: externalUnglazedDoor.kappaValue,
-      mass_distribution_class: externalUnglazedDoor.massDistributionClass,
-      is_external_door: true,
-    };
+			height: externalUnglazedDoor.height,
+			width: externalUnglazedDoor.width,
+			base_height: externalUnglazedDoor.elevationalHeight,
+			area: externalUnglazedDoor.surfaceArea,
+			u_value: externalUnglazedDoor.uValue,
+			areal_heat_capacity: externalUnglazedDoor.arealHeatCapacity,
+			mass_distribution_class: fullMassDistributionClass(externalUnglazedDoor.massDistributionClass),
+			is_external_door: true,
+			colour: "Intermediate",
+		};
 
     expect(externalUnglazedDoorElement).toEqual(expectedUnglazedDoor);
   });
@@ -706,9 +690,9 @@ it("maps windows input state to FHS input request", () => {
         height: 0.5,
         elevationalHeight: 20,
         surfaceArea: 10,
-        solarAbsorption: 0.1,
         uValue: 1,
-        kappaValue: 50000,
+				colour: "Intermediate",
+				arealHeatCapacity: "Very light",
         massDistributionClass: "I",
       },
     };

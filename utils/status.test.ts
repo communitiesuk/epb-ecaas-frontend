@@ -18,7 +18,6 @@ describe("getSectionStatus util function" , () => {
 		const battery: ElectricBatteryData = {
 			name: "Acme Model II",
 			capacity: 10,
-			batteryAge: 2,
 			chargeEfficiency: 0.7,
 			location: "inside",
 			gridChargingPossible: false,

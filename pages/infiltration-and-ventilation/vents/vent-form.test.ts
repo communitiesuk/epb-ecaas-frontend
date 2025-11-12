@@ -27,9 +27,9 @@ describe("vent", () => {
     height: 0.5,
     elevationalHeight: 20,
     surfaceArea: 10,
-    solarAbsorption: 0.1,
     uValue: 1,
-    kappaValue: 50000,
+ 		colour: "Intermediate",
+		arealHeatCapacity: "Very light",
     massDistributionClass: "I",
   };
 
@@ -185,7 +185,7 @@ describe("vent", () => {
     expect(data[0]?.data.name).toBe("Vent");
   });
 
-  test("displays a link to the windows/walls and roofs page", async () => {
+  test("displays a link to the windows and walls page", async () => {
     store.$reset();
 
     await renderSuspended(Vent, {
@@ -197,9 +197,7 @@ describe("vent", () => {
     const addWallsLink: HTMLAnchorElement = screen.getByRole("link", {
       name: "Click here to add walls",
     });
-    const addRoofsLink: HTMLAnchorElement = screen.getByRole("link", {
-      name: "Click here to add roofs",
-    });
+
     const addWindowsLink: HTMLAnchorElement = screen.getByRole("link", {
       name: "Click here to add windows",
     });
@@ -207,9 +205,7 @@ describe("vent", () => {
     expect(new URL(addWallsLink.href).pathname).toBe(
       getUrl("dwellingSpaceWalls")
     );
-    expect(new URL(addRoofsLink.href).pathname).toBe(
-      getUrl("dwellingSpaceCeilingsAndRoofs")
-    );
+    
     expect(new URL(addWindowsLink.href).pathname).toBe(
       getUrl("dwellingSpaceWindows")
     );

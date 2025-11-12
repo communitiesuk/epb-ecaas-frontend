@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { SchemaShadingObjectType } from "~/schema/aliases";
-import { getUrl, type ShadingData } from "#imports";
+import { getUrl, type ShadingData, uniqueName } from "#imports";
 
 const title = "Distant shading";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const index = getStoreIndex(store.dwellingDetails.shading.data);
 const shadingData = useItemToEdit("shading", store.dwellingDetails.shading.data);
 const model = ref(shadingData?.data);
 
@@ -17,7 +18,6 @@ const objectTypeOptions: Record<SchemaShadingObjectType, Capitalize<SchemaShadin
 const saveForm = (fields: ShadingData) => {
 	store.$patch((state) => {
 		const { shading } = state.dwellingDetails;
-		const index = getStoreIndex(shading.data);
 
 		shading.data[index] = {
 			data: {
@@ -77,7 +77,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(store.dwellingDetails.shading.data, { index }) }"
+				validation="required | uniqueName"
+				:validation-messages="{
+					uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				}"
 		/>
 		<FormKit
 			id="startAngle"

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
-import { PageType  } from "~/data/pages/pages.types";
+import { PageType } from "~/data/pages/pages.types";
 import type { Page } from "~/data/pages/pages.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
@@ -12,6 +12,7 @@ export function getInitialState(): EcaasState {
 			generalSpecifications: { data: {} },
 			shading: { data: [] },
 			externalFactors: { data: {} },
+			appliances: { data: {} },
 		},
 		infiltrationAndVentilation: {
 			mechanicalVentilation: { data: [] },
@@ -77,11 +78,12 @@ export function getInitialState(): EcaasState {
 			dwellingSpaceThermalBridging: {
 				dwellingSpaceLinearThermalBridges: { data: [] },
 				dwellingSpacePointThermalBridges: { data: [] },
-			}, 
+			},
 			dwellingSpaceZoneParameters: { data: {} },
 			dwellingSpaceLighting: { data: {} },
 		},
-		heatingSystems: {
+		heatingAndCoolingSystems: {
+			general: { data: {} },
 			heatGeneration: {
 				heatPump: { data: [] },
 				boiler: { data: [] },
@@ -89,20 +91,20 @@ export function getInitialState(): EcaasState {
 				heatNetwork: { data: [] },
 				heatInterfaceUnit: { data: [] },
 			},
-			energySupply: { data: {} },
 			heatEmitting: {
 				wetDistribution: { data: [] },
 				instantElectricHeater: { data: [] },
 				electricStorageHeater: { data: [] },
 				warmAirHeatPump: { data: [] },
 			},
+			cooling: {
+				airConditioning: { data: [] },
+			},
 		},
 		pvAndBatteries: {
 			pvSystems: { data: [] },
 			electricBattery: { data: [] },
-		},
-		cooling: {
-			airConditioning: { data: [] },
+			diverters: { data: [] },
 		},
 	};
 	return store as EcaasState;
@@ -121,8 +123,8 @@ export const useEcaasStore = defineStore("ecaas", {
 
 				if (section) {
 					const entry = Object.entries(section).find((x) => x[0] === page.id)!;
-					
-					if(page.id === "ductwork"){
+
+					if (page.id === "ductwork") {
 						return getDuctworkStatus(entry[1]);
 					}
 
@@ -211,6 +213,7 @@ export type NulledForms<T> = { [P in keyof T]: T[P] extends EcaasForm<infer U> ?
 
 /** Function to wrap a form that uses the Pitch component (which writes to pitch and pitchOption fields) and extract the pitch number value */
 export function extractPitch(form: UsesPitchComponent): number {
+
 	const { pitch, pitchOption } = form;
 	if (pitchOption === "custom" || pitch !== undefined) {
 		return pitch!;

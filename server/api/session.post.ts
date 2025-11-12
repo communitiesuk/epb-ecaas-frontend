@@ -1,40 +1,36 @@
-import type { EcaasState } from "~/stores/ecaasStore.schema";
+import type { H3Event } from "h3";
 import { v4 as uuidv4 } from "uuid";
+import type { EcaasState } from "~/stores/ecaasStore.schema";
 
-export default defineEventHandler(async (event) => {
-	// Read payload from request body
-	const body = await readBody(event);
+const twoWeeksInSeconds = 14 * 24 * 60 * 60;
 
-	// Read session Id from cookie
+async function getSessionId(event: H3Event) {
 	let sessionId = getCookie(event, "sessionId");
-
-	// If session exists, read state from storage
-	if (sessionId) {
-		// const state = await storage.getItem<EcaasState>(sessionId);
-
-		// Merge updated partial state with existing state
-		// const newState = merge(state!, body);
-
-		// Update storage item
-		await setStateOnCache(sessionId, body);
-	} else {
-		// Otherwise create new session Id
+	if (!sessionId) {
 		sessionId = uuidv4();
 
-		// Store session Id in cookie
 		setCookie(event, "sessionId", sessionId, {
-			maxAge: 60 * 60 * 24 * 14,
+			maxAge: twoWeeksInSeconds,
 			httpOnly: true,
 		});
+	}
+	return sessionId;
+}
+export default defineEventHandler(async (event) => {
+	const timeToLive = Math.floor(Date.now() / 1000) + twoWeeksInSeconds;
+	const body = await readBody(event);
+	const sessionId = await getSessionId(event);
+	const storedSession = await useStorage("dynamo").getItem<EcaasState>(sessionId);
 
-		// Save state to storage
-		await setStateOnCache(sessionId, body);
+	if (storedSession) {
+		await useStorage("dynamo").setItem(sessionId, body);
+	} else {
+		await useStorage("dynamo").setItem(sessionId, body, { ttl: timeToLive });
 	}
 	event.node.res.end();
 });
 
-async function setStateOnCache(sessionId: string, body: EcaasState) {
-	return useStorage("dynamo").setItem(sessionId, body, {
-		ttl: 1209600,
-	});
-}
+
+// we may want to do the following to limit the amount of data being sent to the server:
+// Merge updated partial state with existing state
+// const newState = merge(state!, body)

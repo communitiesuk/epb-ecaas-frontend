@@ -209,7 +209,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</table>
 			</GovDetails>
 		</FormKit>
-
 		<FormKit
 			id="lengthOfDuctwork"
 			type="govInputWithSuffix"

@@ -2,13 +2,15 @@
 import { centimetre, millimetre, type Length } from "~/utils/units/length";
 import type { SchemaWindShieldLocation } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
-import { getUrl } from "#imports";
+import { getUrl, type GroundFloorData, uniqueName } from "#imports";
 
 const title = "Ground floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
+const groundFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceGroundFloor.data;
+const index = getStoreIndex(groundFloorData);
+const floorData = useItemToEdit("floor", groundFloorData);
 
 // prepopulate edge insulation width when using old input format
 if (floorData?.data && "edgeInsulationWidth" in floorData.data && typeof floorData.data.edgeInsulationWidth === "number") {
@@ -36,15 +38,13 @@ const windShieldingFactorOptions: Record<SchemaWindShieldLocation, SnakeToSenten
 const saveForm = (fields: GroundFloorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceFloors } = state.dwellingFabric;
-		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceGroundFloor.data);
 
 		const commonFields = {
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
-			pitch: 180,
 			uValue: fields.uValue,
 			thermalResistance: fields.thermalResistance,
-			kappaValue: fields.kappaValue,
+			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			perimeter: fields.perimeter,
 			psiOfWallJunction: fields.psiOfWallJunction,
@@ -157,7 +157,11 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(groundFloorData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="surfaceArea"
@@ -183,7 +187,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				<p class="govuk-hint">Thermal resistance is a property indicating a materials' opposition to heat flow. It is calculated as the thickness of the material divided by its thermal conductivity. Higher thermal resistance reduces heat transfer. The U-Value is the inverse of the total thermal resistance of a building element.</p>
 			</GovDetails>
 		</FormKit>
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<FormKit
 			id="perimeter"

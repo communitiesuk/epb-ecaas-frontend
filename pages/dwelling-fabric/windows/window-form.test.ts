@@ -25,9 +25,9 @@ const externalWall: ExternalWallData = {
 	height: 0.5,
 	elevationalHeight: 20,
 	surfaceArea: 10,
-	solarAbsorption: 0.1,
 	uValue: 1,
-	kappaValue: 50000,
+	colour: "Intermediate",
+	arealHeatCapacity: "Very light",
 	massDistributionClass: "I",
 };
 
@@ -39,10 +39,10 @@ const window1: EcaasForm<WindowData> = {
 		height: 1,
 		width: 1,
 		uValue: 1,
+		securityRisk: true,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
-		securityRisk: false,
 		openingToFrameRatio: 0.8,
 		numberOpenableParts: "0",
 		overhangDepth: unitValue(60, millimetre),
@@ -100,6 +100,7 @@ describe ("window", () => {
 		await user.type(screen.getByTestId("elevationalHeight"), "1");
 		await user.type(screen.getByTestId("midHeight"), "1");
 		await user.type(screen.getByTestId("openingToFrameRatio"), "0.8");
+		await user.click(screen.getByTestId("securityRisk_yes"));
 		await user.click(screen.getByTestId("numberOpenableParts_0"));
 		await user.type(screen.getByTestId("overhangDepth"), "60");
 		await user.type(screen.getByTestId("overhangDistance"), "60");
@@ -141,7 +142,7 @@ describe ("window", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
-		expect((await screen.findByTestId<HTMLInputElement>("securityRisk_no")).value).toBe("no");
+		expect((await screen.findByTestId("securityRisk_yes")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("1");

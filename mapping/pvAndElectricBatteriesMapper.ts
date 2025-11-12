@@ -1,17 +1,15 @@
 import type { EmptyObject } from "type-fest";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { objectFromEntries } from "ts-extras";
-import type { SchemaElectricBattery } from "~/schema/api-schema.types";
+import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import type { SchemaWindowShadingObject } from "~/schema/aliases";
 import { defaultElectricityEnergySupplyName } from "./common";
 
-export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, "OnSiteGeneration">, { "ElectricBattery": SchemaElectricBattery } | EmptyObject] {
+export function mapPvAndElectricBatteriesData(state: ResolvedState): [Pick<FhsInputSchema, "OnSiteGeneration">, { "ElectricBattery": SchemaElectricBattery } | EmptyObject, Pick<SchemaEnergySupplyElectricity, "diverter"> | EmptyObject] {
 	return [
-		{
-			...mapPvSystemData(state),
-			...mapPvDiverterData(state),
-		},
+		mapPvSystemData(state),
 		mapElectricBatteryData(state),
+		mapPvDiverterData(state),
 	];
 }
 
@@ -47,23 +45,35 @@ export function mapElectricBatteryData(state: ResolvedState): { "ElectricBattery
 	const electricBattery = state.pvAndBatteries.electricBattery[0];
 	if (electricBattery) {
 		return {
-			"ElectricBattery":
-				{
-					battery_age: electricBattery.batteryAge,
-					battery_location: electricBattery.location,
-					capacity: electricBattery.capacity,
-					charge_discharge_efficiency_round_trip: electricBattery.chargeEfficiency,
-					grid_charging_possible: electricBattery.gridChargingPossible,
-					maximum_charge_rate_one_way_trip: electricBattery.maximumChargeRate,
-					maximum_discharge_rate_one_way_trip: electricBattery.maximumDischargeRate,
-					minimum_charge_rate_one_way_trip: electricBattery.minimumChargeRate,
-				},
+			"ElectricBattery": {
+				battery_location: electricBattery.location,
+				capacity: electricBattery.capacity,
+				charge_discharge_efficiency_round_trip: electricBattery.chargeEfficiency,
+				grid_charging_possible: electricBattery.gridChargingPossible,
+				maximum_charge_rate_one_way_trip: electricBattery.maximumChargeRate,
+				maximum_discharge_rate_one_way_trip: electricBattery.maximumDischargeRate,
+				minimum_charge_rate_one_way_trip: electricBattery.minimumChargeRate,
+			},
 		};
 	}
-	return {}; 
+	return {};
 }
 
-/* Function unused yet while no diverter data to map. **/
-export function mapPvDiverterData(_state: ResolvedState): EmptyObject {
-	return {};
+export function mapPvDiverterData(state: ResolvedState): Pick<SchemaEnergySupplyElectricity, "diverter"> | EmptyObject {
+	const diverter = state.pvAndBatteries.diverters[0];
+
+	if (!diverter) {
+		return {};
+	}
+
+	const hotWaterCylinder = state.domesticHotWater.waterHeating.hotWaterCylinder.filter(x => x.id === diverter?.hotWaterCylinder)[0]!;
+	const heatSource = state.heatingAndCoolingSystems.heatGeneration.heatPump.find(x => x.id === hotWaterCylinder.heatSource)!;
+
+
+	return {
+		diverter: {
+			"HeatSource": heatSource.name,
+			"StorageTank": hotWaterCylinder.name,
+		},
+	};
 }

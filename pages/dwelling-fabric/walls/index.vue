@@ -57,6 +57,7 @@ function handleDuplicate<T extends WallData>(wallType: WallType, index: number) 
 
 		store.$patch((state) => {
 			const newWall = {
+				complete: wall.complete,
 				data: {
 					...wall.data,
 					id: "id" in wall.data ? uuidv4() : undefined,

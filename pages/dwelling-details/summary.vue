@@ -10,16 +10,24 @@ const store = useEcaasStore();
 const generalDetailsData = store.dwellingDetails.generalSpecifications.data;
 const shadingData = store.dwellingDetails.shading.data;
 const externalFactors = store.dwellingDetails.externalFactors.data;
+const appliancesData = store.dwellingDetails.appliances.data;
 
 const generalDetailsSummary: SummarySection = {
 	id: "generalDetails",
 	label: "General details",
 	data: {
 		"Type of dwelling": displayCamelToSentenceCase(show(generalDetailsData.typeOfDwelling)),
-		"Number of storeys in building": dim(generalDetailsData.storeysInDwelling),
 		...(generalDetailsData.typeOfDwelling === "flat" ? { "Storey of flat": dim(generalDetailsData.storeyOfFlat) } : {}),
+		"Number of storeys in building": dim(generalDetailsData.storeysInDwelling),
+		"Building length": dim(generalDetailsData.buildingLength, "metres"),
+		"Building width": dim(generalDetailsData.buildingWidth, "metres"),
 		"Number of bedrooms": show(generalDetailsData.numOfBedrooms),
-		"Cooling required": displayBoolean(generalDetailsData.coolingRequired),
+		"Number of utility rooms": show(generalDetailsData.numOfUtilityRooms),
+		"Number of bathrooms": show(generalDetailsData.numOfBathrooms),
+		"Number of WCs": show(generalDetailsData.numOfWCs),
+		"Number of habitable rooms": show(generalDetailsData.numOfHabitableRooms),
+		"Total number of rooms with tapping points": show(generalDetailsData.numOfRoomsWithTappingPoints),
+		"Energy sources": displayFuelTypes(generalDetailsData.fuelType),
 	},
 	editUrl: getUrl("generalSpecifications"),
 };
@@ -52,11 +60,14 @@ const externalFactorsSummary: SummarySection = {
 	editUrl: getUrl("externalFactors"),
 };
 
-const summarySections: SummarySection[] = [
-	generalDetailsSummary,
-	externalFactorsSummary,
-	shadingSummary,
-];
+const appliancesSummary: SummarySection = {
+	id: "appliances",
+	label: "Appliances",
+	data: {
+		"Appliances": displayApplianceType(appliancesData.applianceType),
+	},
+	editUrl: getUrl("appliances"),
+};
 </script>
 
 <template>
@@ -65,10 +76,14 @@ const summarySections: SummarySection[] = [
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<GovTabs v-slot="tabProps" :items="getTabItems(summarySections)">
+	<GovTabs v-slot="tabProps" :items="getTabItems([generalDetailsSummary])">
 		<SummaryTab :summary="generalDetailsSummary" :selected="tabProps.currentTab === 0"/>
-		<SummaryTab :summary="externalFactorsSummary" :selected="tabProps.currentTab === 1"/>
-		<SummaryTab :summary="shadingSummary" :selected="tabProps.currentTab === 2">
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([externalFactorsSummary])">
+		<SummaryTab :summary="externalFactorsSummary" :selected="tabProps.currentTab === 0"/>
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([shadingSummary])">
+		<SummaryTab :summary="shadingSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
 				<h2 class="govuk-heading-m">No shading added</h2>
 				<NuxtLink class="govuk-link" :to="getUrl('shadingCreate')">
@@ -76,6 +91,9 @@ const summarySections: SummarySection[] = [
 				</NuxtLink>
 			</template>
 		</SummaryTab>
+	</GovTabs>
+	<GovTabs v-slot="tabProps" :items="getTabItems([appliancesSummary])">
+		<SummaryTab :summary="appliancesSummary" :selected="tabProps.currentTab === 0"/>
 	</GovTabs>
 	<GovButton href="/">Return to overview</GovButton>
 	<!-- </NuxtLayout> -->

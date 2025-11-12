@@ -1,5 +1,4 @@
-import type { SchemaHotWaterDemand } from "~/schema/aliases";
-import { mapDistributionData, mapDomesticHotWaterData } from "./domesticHotWaterMapper";
+import { mapDomesticHotWaterData } from "./domesticHotWaterMapper";
 import type { FhsInputSchema } from "./fhsInputMapper";
 import { litre } from "../utils/units/volume";
 import { unitValue } from "~/utils/units";
@@ -21,7 +20,7 @@ describe("domestic hot water mapper", () => {
 		// Arrange
 		const heatPumpName = "heat pump";
 
-		const hotWaterCylinder:EcaasForm<HotWaterCylinderData> = {
+		const hotWaterCylinder: EcaasForm<HotWaterCylinderData> = {
 			...baseForm,
 			data: {
 				id: "hot water cylinder",
@@ -69,7 +68,7 @@ describe("domestic hot water mapper", () => {
 					},
 				},
 			},
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [{
@@ -87,12 +86,14 @@ describe("domestic hot water mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "HotWaterSource"> = {
 			HotWaterSource: {
 				"hw cylinder": {
+					ColdWaterSource: "mains water",
 					HeatSource: {
 						[heatPumpName]: {
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
 							type: "HeatSourceWet",
 							name: heatPumpName,
+							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
 							Controlmin: defaultControlMinName,
 							Controlmax: defaultControlMaxName,
@@ -180,7 +181,7 @@ describe("domestic hot water mapper", () => {
 					},
 				},
 			},
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [{
@@ -199,12 +200,14 @@ describe("domestic hot water mapper", () => {
 		const expectedResult: Pick<FhsInputSchema, "HotWaterSource"> = {
 			HotWaterSource: {
 				"hw cylinder": {
+					ColdWaterSource: "mains water",
 					HeatSource: {
 						[heatPumpName]: {
 							EnergySupply: "mains elec",
 							heater_position: 0.1,
 							type: "HeatSourceWet",
 							name: heatPumpName,
+							temp_flow_limit_upper: 65,
 							thermostat_position: 0.33,
 							Controlmax: defaultControlMaxName,
 							Controlmin: defaultControlMinName,
@@ -270,7 +273,6 @@ describe("domestic hot water mapper", () => {
 				id: "bath1",
 				name: "bath1",
 				size: 70,
-				flowRate: 1,
 			},
 		};
 
@@ -321,7 +323,7 @@ describe("domestic hot water mapper", () => {
 
 		// Acts
 		const result = mapDomesticHotWaterData(resolveState(store.$state));
-		
+
 		// Assert
 		const expectedResult: Pick<FhsInputSchema, "HotWaterDemand"> = {
 			HotWaterDemand: {
@@ -341,7 +343,6 @@ describe("domestic hot water mapper", () => {
 				Bath: {
 					"bath1": {
 						ColdWaterSource: "mains water",
-						flowrate: 1,
 						size: 70,
 					},
 				},
@@ -351,48 +352,9 @@ describe("domestic hot water mapper", () => {
 						flowrate: 4,
 					},
 				},
-				Distribution: [],
 			},
 		};
-		
+
 		expect(result["HotWaterDemand"]).toEqual(expectedResult["HotWaterDemand"]);
-	});
-
-	it("maps secondary pipework input state to FHS input request", () => {
-		// Arrange
-		const pipework: Pipework = {
-			primaryPipework: {
-				data: [],
-			},
-			secondaryPipework: {
-				...baseForm,
-				data: [{
-					...baseForm,
-					data: {
-						name: "secondaryPipework1",
-						length: 111, 
-						location: "internal",
-						internalDiameter: 6,
-					},
-				}],
-			},
-		};
-
-		store.$patch({
-			domesticHotWater: {
-				pipework,
-			},
-		});
-
-		// Acts
-		const result = mapDistributionData(resolveState(store.$state));
-		const expectedResult: SchemaHotWaterDemand["Distribution"] = [{
-			internal_diameter_mm: 6,
-			length: 111,
-			location: "internal",
-		}];
-
-		// Assert
-		expect(result).toEqual(expectedResult);
 	});
 });

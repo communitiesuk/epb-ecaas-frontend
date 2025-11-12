@@ -9,6 +9,7 @@ describe("windowData Zod schema", () => {
 			height: 2,
 			width: 2,
 			uValue: 0.1,
+			securityRisk: true,
 			solarTransmittance: 0.2,
 			elevationalHeight: 1,
 			midHeight: 2,
@@ -28,7 +29,6 @@ describe("windowData Zod schema", () => {
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
 			curtainsControlObject: "auto_motorised",
-			securityRisk: false,
 		};
 		expect(
 			() => {

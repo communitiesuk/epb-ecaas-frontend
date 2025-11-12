@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
 import { v4 as uuidv4 } from "uuid";
+import { standardPitchOptions, getUrl, uniqueName } from "#imports";
 
 const title = "External wall";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data);
+const externalWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceExternalWall?.data;
+const wallData = useItemToEdit("wall", externalWallData);
 const wallId = wallData?.data.id ?? uuidv4();
+const index = getStoreIndex(externalWallData);
 const model: Ref<ExternalWallData | undefined> = ref(wallData?.data);
+const colourOptions = colourOptionsMap;
 
 const saveForm = (fields: ExternalWallData) => {
 	store.$patch((state) => {
@@ -27,10 +30,10 @@ const saveForm = (fields: ExternalWallData) => {
 				length: fields.length,
 				elevationalHeight: fields.elevationalHeight,
 				surfaceArea: fields.surfaceArea,
-				solarAbsorption: fields.solarAbsorption,
 				uValue: fields.uValue,
-				kappaValue: fields.kappaValue,
+				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
+				colour: fields.colour,
 			},
 			complete: true,
 		};
@@ -67,9 +70,22 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="externalWallErrorSummary" />
 		<FormKit
-			id="name" type="govInputText" label="Name"
-			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
-		<FieldsPitch :pitch-option="model?.pitchOption" :options="standardPitchOptions()" />
+			id="name"
+			type="govInputText"
+			label="Name"
+			help="Provide a name for this element so that it can be identified later"
+			name="name"
+			:validation-rules="{ uniqueName: uniqueName(externalWallData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
+		/>
+		<FieldsPitch
+			:pitch-option="model?.pitchOption"
+			:options="standardPitchOptions()"
+			data-field="Zone.BuildingElement.*.pitch"
+		/>
 		<FormKit
 			id="orientation"
 			type="govInputWithSuffix"
@@ -122,10 +138,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption"/>
 		<FieldsUValue id="uValue" name="uValue" />
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue" />
-		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass" />
+		<FormKit
+			id="colour"
+			type="govRadios"
+			label="Colour of external surface"
+			name="colour"
+			:options="colourOptions"
+			validation="required"
+			data-field="Zone.BuildingElement.*.colour"
+		/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
+		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">
 			<FormKit type="govButton" label="Save and mark as complete" test-id="saveAndComplete" :ignore="true" />

@@ -9,9 +9,9 @@ describe("getResolvedTaggedItem", () => {
     height: 0.5,
     elevationalHeight: 20,
     surfaceArea: 10,
-    solarAbsorption: 0.1,
     uValue: 1,
-    kappaValue: 50000,
+    colour: "Intermediate",
+		arealHeatCapacity: "Very light",
     massDistributionClass: "I",
   };
 

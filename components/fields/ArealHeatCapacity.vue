@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { arealHeatCapacityOptions } from "#imports";
+import type { SchemaArealHeatCapacity } from "~/schema/aliases";
+import type { RadioOption } from "../form-kit/Radios.vue";
+
 
 defineProps<{
 	id: string,
@@ -7,6 +9,30 @@ defineProps<{
 	label?: string;
 	help?: string;
 }>();
+
+const arealHeatCapacityOptions = {
+	"Very light": {
+		label: "Very light",
+		hint: "e.g. Light board of plastic",
+	},
+	"Light": {
+		label: "Light",
+		hint: "e.g. 5-10 cm lightweight brick or concrete",
+	},
+	"Medium": {
+		label: "Medium",
+		hint: "e.g. 10-20 cm lightweight brick or concrete",
+	},
+	"Heavy": {
+		label: "Heavy",
+		hint: "e.g. 7-12 cm solid brick or heavyweight concrete",
+	},
+	"Very heavy": {
+		label: "Very heavy",
+		hint: "e.g. More than 12 cm solid brick or heavyweight concrete",
+	},
+} as const satisfies Record<SchemaArealHeatCapacity, RadioOption & { label: SchemaArealHeatCapacity }>;
+
 </script>
 
 <template>
@@ -18,7 +44,6 @@ defineProps<{
 		:help="help ?? 'This is the sum of the heat capacities of all the construction layers, also known as effective areal heat capacity or kappa value'"
 		validation="required"
 		:options="arealHeatCapacityOptions"
-		value-type="number"
 		data-field="Zone.BuildingElement.*.areal_heat_capacity"
 	>
 		<GovDetails summary-text="Help with this input" possibly-llm-placeholder>

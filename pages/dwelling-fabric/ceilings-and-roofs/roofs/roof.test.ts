@@ -26,9 +26,9 @@ describe("roof", () => {
 			width: 1,
 			elevationalHeightOfElement: 2,
 			surfaceArea: 1,
-			solarAbsorptionCoefficient: 0.5,
 			uValue: 1,
-			kappaValue: 50000,
+			colour: "Light",
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		},
 	};
@@ -45,9 +45,9 @@ describe("roof", () => {
 		await user.type(screen.getByTestId("width"), "1");
 		await user.type(screen.getByTestId("elevationalHeightOfElement"), "2");
 		await user.type(screen.getByTestId("surfaceArea"), "1");
-		await user.type(screen.getByTestId("solarAbsorptionCoefficient"), "0.5");
 		await user.type(screen.getByTestId("uValue"), "1");
-		await user.click(screen.getByTestId("kappaValue_50000"));
+		await user.click(screen.getByTestId("colour_Light"));
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 	};
 
@@ -92,9 +92,8 @@ describe("roof", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("1");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeightOfElement")).value).toBe("2");
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("1");
-		expect((await screen.findByTestId<HTMLInputElement>("solarAbsorptionCoefficient")).value).toBe("0.5");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
-		expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 	});
 
@@ -109,7 +108,6 @@ describe("roof", () => {
 		expect((await screen.findByTestId("width_error"))).toBeDefined();
 		expect((await screen.findByTestId("elevationalHeightOfElement_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
-		expect((await screen.findByTestId("solarAbsorptionCoefficient_error"))).toBeDefined();
 	});
 
 	test("error summary is displayed when an invalid form in submitted", async () => {
@@ -164,7 +162,7 @@ describe("roof", () => {
 		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
-		expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
+		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 	});
 

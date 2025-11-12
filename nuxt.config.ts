@@ -1,10 +1,12 @@
 import type { NuxtPage } from "nuxt/schema";
-import { viteStaticCopy } from "vite-plugin-static-copy";
 import yn from "yn";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	compatibilityDate: "2024-04-03",
+
+	// This reverts the new Nuxt 4 srcDir default from `app` back to the root directory
+	srcDir: ".",
 
 	devtools: {
 		enabled:
@@ -72,16 +74,6 @@ export default defineNuxtConfig({
 				},
 			},
 		},
-		plugins: [
-			viteStaticCopy({
-				targets: [
-					{
-						src: "node_modules/govuk-frontend/dist/govuk/assets/*",
-						dest: "static/assets",
-					},
-				],
-			}),
-		],
 	},
 
 	modules: [
@@ -109,9 +101,6 @@ export default defineNuxtConfig({
 	},
 
 	runtimeConfig: {
-		redisEndpoint: "",
-		redisPassword: "",
-		redisUsername: "",
 		public: {
 			environment: process.env.NUXT_PUBLIC_ENVIRONMENT,
 		},

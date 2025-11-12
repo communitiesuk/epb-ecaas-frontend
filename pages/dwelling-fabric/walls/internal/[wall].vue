@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
 import { v4 as uuidv4 } from "uuid";
+import { standardPitchOptions, getUrl, uniqueName } from "#imports";
 
 const title = "Internal wall";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data);
+const internalWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceInternalWall?.data;
+const wallData = useItemToEdit("wall", internalWallData);
 const wallId = wallData?.data.id ?? uuidv4();
+const index = getStoreIndex(internalWallData);
 const model: Ref<InternalWallData | undefined> = ref(wallData?.data);
 
 const saveForm = (fields: InternalWallData) => {
@@ -22,7 +24,7 @@ const saveForm = (fields: InternalWallData) => {
 				id: currentId || uuidv4(),
 				name: fields.name,
 				surfaceAreaOfElement: fields.surfaceAreaOfElement,
-				kappaValue: fields.kappaValue,
+				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
@@ -71,7 +73,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(internalWallData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
@@ -91,7 +97,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				<p class="govuk-hint">The net surface area should only be for one side of the wall, not both.</p>
 			</GovDetails>
 		</FormKit>
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

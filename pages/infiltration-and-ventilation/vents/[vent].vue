@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "Vent";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const ventData = useItemToEdit("vent", store.infiltrationAndVentilation.vents.data);
+const ventStoreData = store.infiltrationAndVentilation.vents.data;
+const index = getStoreIndex(ventStoreData);
+const ventData = useItemToEdit("vent", ventStoreData);
 const model = ref(ventData?.data);
 
 const saveForm = (fields: VentData & Record<string, string>) => {
 
 	store.$patch((state) => {
 		const { vents } = state.infiltrationAndVentilation;
-		const index = getStoreIndex(vents.data);
 
 		vents.data[index] = {
 			data: {
@@ -54,17 +55,37 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 	<VentsInfo />
 	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
 		@submit-invalid="handleInvalidSubmit">
-		<GovErrorSummary :error-list="errorMessages" test-id="ventErrorSummary" />
-		<FormKit id="name" type="govInputText" label="Name"
-			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
-		<FormKit id="typeOfVent" type="govRadios" :options="{
-			trickle: 'Trickle',
-			airBrick: 'Air brick'
-		}" label="Type of vent" name="typeOfVent" validation="required" />
-		<FieldsAssociatedWallRoofWindow id="associatedItemId" name="associatedItemId"
+		<GovErrorSummary :error-list="errorMessages" test-id="ventErrorSummary"/>
+		<FormKit
+			id="name"
+			type="govInputText"
+			label="Name"
+			help="Provide a name for this element so that it can be identified later"
+			name="name"
+			:validation-rules="{ uniqueName: uniqueName(ventStoreData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
+		/>
+		<FormKit
+			id="typeOfVent"
+			type="govRadios"
+			:options="{
+				trickle: 'Trickle',
+				airBrick: 'Air brick'
+			}"
+			label="Type of vent"
+			name="typeOfVent"
+			validation="required"
+		/>
+		<FieldsAssociatedWallWindow id="associatedItemId" name="associatedItemId"
 			label="Associated wall or window"
 			help="Select the wall or window that this vent is in. It should have the same orientation and pitch as the vent." />
-		<FormKit id="effectiveVentilationArea" type="govInputWithSuffix" label="Effective ventilation area"
+		<FormKit
+			id="effectiveVentilationArea"
+			type="govInputWithSuffix"
+			label="Effective ventilation area"
 			help="Enter the actual area through which air can flow, accounting for obstructions like grilles or mesh"
 			name="effectiveVentilationArea" validation="required | number | min:1 | max:999999" suffix-text="cm²"
 			data-field="InfiltrationVentilation.Vents.area_cm2">

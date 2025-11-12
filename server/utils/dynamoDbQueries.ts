@@ -3,32 +3,37 @@ import {
 	DynamoDBDocumentClient,
 	GetCommand,
 	PutCommand,
+	UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 
-const client = new DynamoDBClient({
-	region: "fakeRegion",
+const localConfig = {
+	region: "fakeRegion", 
 	endpoint: "http://localhost:8000",
-});
-client.config.credentials({
-	accessKeyId: "fakeMyKeyId",
-	secretAccessKey: "fakeSecretAccessKey",
-});
+	credentials: {
+		accessKeyId: "fakeMyKeyId",
+		secretAccessKey: "fakeSecretAccessKey",
+	},
+};
+
+const client = new DynamoDBClient(process.env.NODE_ENV === "development" ? localConfig : {});
+
 const docClient = DynamoDBDocumentClient.from(client);
 
 export async function getSessionData(key: string): Promise<string | undefined> {
+	console.log("getSessionData called");
 	const { Item: item } = await docClient.send(
 		new GetCommand({
 			TableName: "sessions",
 			Key: { session_id: key },
 		}),
 	);
-
 	return item?.ecaas;
 }
 
 export async function setSessionData(
 	key: string,
 	value: string,
+	timeToLive: number | undefined,
 ) {
 	await docClient.send(
 		new PutCommand({
@@ -36,20 +41,24 @@ export async function setSessionData(
 			Item: {
 				session_id: key,
 				ecaas: value,
+				...(timeToLive ? { ttl: timeToLive } : {}),
 			},
 		}),
 	);
 }
 
-// console.log(
-// 	getSessionData("123", '{"ecaas":"data"}').then((data) => {
-// 		console.log(data);
-// 	}),
-// );
-
-// console.log(
-// 	getSessionData("123").then((data) => {
-// 		console.log(data);
-// 	}),
-// );
- 
+export async function updateSessionData(
+	key: string,
+	value: string,
+) {
+	await docClient.send(
+		new UpdateCommand({
+			TableName: "sessions",
+			Key: { session_id: key },
+			UpdateExpression: "set ecaas = :ecaas",
+			ExpressionAttributeValues: {
+				":ecaas": value,
+			},
+		}),
+	);
+}

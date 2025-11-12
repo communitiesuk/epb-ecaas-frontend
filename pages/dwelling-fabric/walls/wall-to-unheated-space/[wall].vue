@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
 import { v4 as uuidv4 } from "uuid";
+import { standardPitchOptions, getUrl, uniqueName } from "#imports";
 
 const title = "Wall to unheated space";
 const store = useEcaasStore();
 const { getStoreIndex, autoSaveElementForm } = useForm();
 
-const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data);
+const wallToUnheatedSpaceData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceWallToUnheatedSpace?.data;
+const wallData = useItemToEdit("wall", wallToUnheatedSpaceData);
 const wallId = wallData?.data.id ?? uuidv4();
+const index = getStoreIndex(wallToUnheatedSpaceData);
 const model: Ref<WallsToUnheatedSpaceData | undefined> = ref(wallData?.data);
 
 const saveForm = (fields: WallsToUnheatedSpaceData) => {
@@ -75,7 +77,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(wallToUnheatedSpaceData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"

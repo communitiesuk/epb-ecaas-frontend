@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v4 as uuidv4 } from "uuid";
 import type { BathData } from "#imports";
-import { getUrl  } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
 const title = "Bath";
@@ -22,7 +22,6 @@ const saveForm = (fields: BathData) => {
 				id,
 				name: fields.name,
 				size: fields.size,
-				flowRate: fields.flowRate,
 			},
 			complete: true,
 		};
@@ -66,7 +65,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this bath so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(store.domesticHotWater.hotWaterOutlets.bath.data, { id }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="size"
@@ -76,15 +79,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max:500"
 			suffix-text="litres"
 			data-field="HotWaterDemand.Bath.*.size"
-		/>
-		<FormKit
-			id="flowRate"
-			type="govInputWithSuffix"
-			label="Flow rate"
-			name="flowRate"
-			validation="required | number | min:0 | max:15"
-			suffix-text="litres per minute"
-			data-field="HotWaterDemand.Bath.*.flowrate"
 		/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

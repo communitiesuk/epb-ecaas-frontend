@@ -90,6 +90,9 @@ describe("Ecaas Store", () => {
         externalFactors: {
           complete: true,
         },
+        appliances: {
+					complete: true,
+				},
       },
     });
 

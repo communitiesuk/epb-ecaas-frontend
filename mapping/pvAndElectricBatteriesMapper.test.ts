@@ -1,6 +1,6 @@
-import type { SchemaElectricBattery } from "~/schema/api-schema.types";
+import type { SchemaElectricBattery, SchemaEnergySupplyElectricity } from "~/schema/api-schema.types";
 import type { FhsInputSchema } from "./fhsInputMapper";
-import { mapElectricBatteryData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
+import { mapElectricBatteryData, mapPvDiverterData, mapPvSystemData } from "./pvAndElectricBatteriesMapper";
 
 const baseForm = {
 	data: [],
@@ -13,7 +13,7 @@ describe("PV and electric batteries mapper", () => {
 	afterEach(() => {
 		store.$reset();
 	});
-    
+
 	it("maps PV systems to the FHS input", () => {
 		// Arrange
 		const pvSystem1: EcaasForm<PvSystemData> = {
@@ -111,7 +111,6 @@ describe("PV and electric batteries mapper", () => {
 			data: {
 				name: "Acme Model II",
 				capacity: 10,
-				batteryAge: 2,
 				chargeEfficiency: 0.7,
 				location: "inside",
 				gridChargingPossible: false,
@@ -137,7 +136,6 @@ describe("PV and electric batteries mapper", () => {
 		// Assert
 		const expectedResult: Record<string, SchemaElectricBattery> = {
 			"ElectricBattery": {
-				battery_age: 2,
 				battery_location: "inside",
 				capacity: 10,
 				charge_discharge_efficiency_round_trip: 0.7,
@@ -157,6 +155,74 @@ describe("PV and electric batteries mapper", () => {
 			// 	minimum_charge_rate_one_way_trip: 4.2
 			// },
 		};
+		expect(result).toEqual(expectedResult);
+	});
+
+	it("maps diverters to the correct for for FHS input", () => {
+		const hotWaterCylinderId = "88ea3f45-6f2a-40e2-9117-0541bd8a97f3";
+		const heatPumpId = "56ddc6ce-7a91-4263-b051-96c7216bb01e";
+
+		const diverter1: EcaasForm<PvDiverterData> = {
+			data: {
+				name: "Diverter 1",
+				hotWaterCylinder: hotWaterCylinderId,
+			},
+			complete: true,
+		};
+		
+		store.$patch({
+			heatingAndCoolingSystems: {
+				heatGeneration: {
+					heatPump: {
+						data: [{
+							data: {
+								name: "HP1",
+								id: heatPumpId,
+								productReference: "HEATPUMP-SMALL",
+							},
+							complete: true,
+						}],
+						complete: true,
+					},
+				},
+			},
+			domesticHotWater: {
+				waterHeating: {
+					hotWaterCylinder: {
+						data: [{
+							data: {
+								name: "HWC1",
+								id: hotWaterCylinderId,
+								heatSource: heatPumpId,
+								storageCylinderVolume: {
+									amount: 1,
+									unit: "litres",
+								},
+								dailyEnergyLoss: 1,
+							},
+							complete: true,
+						}],
+						complete: true,
+					},
+				},
+			},
+			pvAndBatteries: {
+				diverters: {
+					data: [diverter1],
+					complete: true,
+				},
+			},
+		});
+
+		const result = mapPvDiverterData(resolveState(store.$state));
+
+		const expectedResult: Pick<SchemaEnergySupplyElectricity, "diverter"> = {
+			diverter: {
+				HeatSource: "HP1",
+				StorageTank: "HWC1",
+			},
+		};
+
 		expect(result).toEqual(expectedResult);
 	});
 });

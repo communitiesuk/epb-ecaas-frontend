@@ -36,7 +36,7 @@ const populateValidForm = async () => {
 
 beforeEach(() => {
 	store.$patch({
-		heatingSystems: {
+		heatingAndCoolingSystems: {
 			heatGeneration: {
 				heatPump: {
 					data: [{
@@ -61,9 +61,9 @@ describe("water heating (hot water cylinder)", () => {
 	test("data is saved to store state when form is valid", async () => {
 		vi.mocked(uuidv4).mockReturnValue("test-id" as unknown as Buffer);
 		await renderSuspended(WaterHeating);
-		await populateValidForm();	
+		await populateValidForm();
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		const actual = store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]!.data;
 
@@ -97,7 +97,7 @@ describe("water heating (hot water cylinder)", () => {
 	test("required error messages are displayed when empty form is submitted", async () => {
 		await renderSuspended(WaterHeating);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect((await screen.findByTestId("waterHeaterType_error"))).toBeDefined();
@@ -108,7 +108,7 @@ describe("water heating (hot water cylinder)", () => {
 		await renderSuspended(WaterHeating);
 
 		await user.click(screen.getByTestId("waterHeaterType_hotWaterCylinder"));
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 
 		expect((await screen.findByTestId("storageCylinderVolume_error"))).toBeDefined();
@@ -119,16 +119,16 @@ describe("water heating (hot water cylinder)", () => {
 	test("error summary is displayed when an invalid form in submitted", async () => {
 		await renderSuspended(WaterHeating);
 
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect((await screen.findByTestId("waterHeatingErrorSummary"))).toBeDefined();
 	});
 
 	test("completes water heating when valid form is completed", async () => {
 		await renderSuspended(WaterHeating);
-		
+
 		await populateValidForm();
-		await(user.click(screen.getByTestId("saveAndComplete")));
+		await (user.click(screen.getByTestId("saveAndComplete")));
 
 		expect(store.domesticHotWater.waterHeating.combiBoiler.complete).toBeTruthy();
 		expect(store.domesticHotWater.waterHeating.heatBattery.complete).toBeTruthy();
@@ -175,11 +175,11 @@ describe("Partially saving data", () => {
 	test("partial form data automatically saved to store with default name if no name has been added", async () => {
 
 		await renderSuspended(WaterHeating);
-		
+
 		await user.click(screen.getByTestId("waterHeaterType_hotWaterCylinder"));
 		await user.tab();
 		const { data } = store.domesticHotWater.waterHeating.hotWaterCylinder;
-	
+
 		expect(data[0]!.data.name).toBe("Hot water cylinder");
 
 	});
@@ -197,32 +197,32 @@ describe("Partially saving data", () => {
 			},
 		});
 		await renderSuspended(WaterHeating);
-		
+
 		await user.type(screen.getByTestId("name"), cylinder.name);
 		await user.clear(screen.getByTestId("name"));
 		await user.tab();
 		await user.click(screen.getByTestId("saveProgress"));
 
 		const { data } = store.domesticHotWater.waterHeating.hotWaterCylinder;
-	
+
 		expect(data[0]!.data.name).toBe("Hot water cylinder");
 	});
 
 	test("default name is used if name added is whitespace", async () => {
-	
+
 		await renderSuspended(WaterHeating);
-	
+
 		await user.type(screen.getByTestId("name"), " ");
 		await user.click(screen.getByTestId("saveProgress"));
-	
+
 		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.data.name).toBe("Hot water cylinder");
-	
+
 		await renderSuspended(WaterHeating);
-	
+
 		await user.clear(screen.getByTestId("name"));
 		await user.type(screen.getByTestId("name"), " ");
 		await user.tab();
-			
+
 		expect(store.domesticHotWater.waterHeating.hotWaterCylinder.data[0]?.data.name).toBe("Hot water cylinder");
 	});
 });
