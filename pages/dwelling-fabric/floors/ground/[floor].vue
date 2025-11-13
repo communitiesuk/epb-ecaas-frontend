@@ -337,7 +337,7 @@ const withinMinAndMax = (node: FormKitNode, min: number, max: number) => {
 				type="govInputWithSuffix"
 				suffix-text="mm²/m"
 				label="Area of ventilation openings per perimeter"
-				help="Enter the total area of the ventilation openings per metre of external wall perimeter. Typically between 0.1 and 1 mm² of opening per metre of wall."
+				help="Enter the total area of the ventilation openings per metre of external wall perimeter. This needs to be above 1500mm² of opening per metre of wall."
 				name="ventilationOpeningsArea"
 				validation="required | number">
 				<GovDetails summary-text="Help with this input" possibly-llm-placeholder>
