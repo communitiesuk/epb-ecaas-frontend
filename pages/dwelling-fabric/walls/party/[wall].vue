@@ -1,26 +1,32 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
+import { v4 as uuidv4 } from "uuid";
+import { standardPitchOptions, getUrl, uniqueName } from "#imports";
 
 const title = "Party wall";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const wallData = useItemToEdit("wall", store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data);
+const partyWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall?.data
+const wallData = useItemToEdit("wall", partyWallData);
+const wallId = wallData?.data.id ?? uuidv4();
+const index = getStoreIndex(partyWallData);
 const model: Ref<PartyWallData | undefined> = ref(wallData?.data);
 
 const saveForm = (fields: PartyWallData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceWalls } = state.dwellingFabric;
 		const index = getStoreIndex(dwellingSpaceWalls.dwellingSpacePartyWall.data);
+		const currentId = wallData?.data.id;
 
 		dwellingSpaceWalls.dwellingSpacePartyWall.data[index] = {
 			data: {
+				id: currentId || uuidv4(),
 				name: fields.name,
 				pitchOption: fields.pitchOption,
 				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 				surfaceArea: fields.surfaceArea,
 				uValue: fields.uValue,
-				kappaValue: fields.kappaValue,
+				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
 			},
 			complete: true,
@@ -37,6 +43,7 @@ autoSaveElementForm({
 	storeData: store.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall,
 	defaultName: "Party wall",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= wallId;
 		const { pitchOption, pitch } = newData.data;
 		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceWalls.dwellingSpacePartyWall.data[index] = newData;
@@ -69,7 +76,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(partyWallData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FieldsPitch
 			:pitch-option="model?.pitchOption"
@@ -101,7 +112,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				</p>
 			</GovDetails>
 		</FormKit>
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

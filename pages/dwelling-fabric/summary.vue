@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SummarySection } from "~/common.types";
-import { getUrl, getTabItems, type ArealHeatCapacityValue } from "#imports";
-import { emptyValueRendering } from "#imports";
+import { emptyValueRendering, getUrl, getTabItems } from "#imports";
+import { displayColour } from "~/utils/display";
 
 const title = "Dwelling fabric summary";
 const store = useEcaasStore();
@@ -12,8 +12,9 @@ const zoneParametersSummary: SummarySection = {
 	id: "dwellingSpaceZoneParameters",
 	label: "Zone parameters",
 	data: {
-		"Area": dim(zoneParametersData.area, "metres square"),
 		"Volume": dim(zoneParametersData.volume, "cubic metres"),
+		"Living zone floor area": dim(zoneParametersData.livingRoomArea, "metres square"),
+		"Rest of dwelling floor area": dim(zoneParametersData.restOfDwellingArea, "metres square"),
 		// "Heat emitting system for this zone": zoneParametersData.spaceHeatingSystemForThisZone,
 		// "Heating control type": zoneParametersData.heatingControlType
 	},
@@ -26,8 +27,9 @@ const lightingSummary: SummarySection = {
 	id: "dwellingSpaceLighting",
 	label: "Lighting",
 	data: {
-		"Number of LED bulbs": show(lightingData.numberOfLEDBulbs),
-		"Number of incandescent bulbs": show(lightingData.numberOfIncandescentBulbs),
+		"Number of bulbs": show(lightingData.numberOfBulbs),
+		"Power": show(lightingData.power),
+		"Efficacy": show(lightingData.efficacy),
 	},
 	editUrl: getUrl("dwellingSpaceLighting"),
 };
@@ -38,10 +40,10 @@ const exposedFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceE
 
 const groundFloorSummary: SummarySection = {
 	id: "dwellingSpaceGroundFloors",
-	label: "Ground floor",
+	label: "Ground floors",
 	data: groundFloorData.map( ({ data: x }) => {
 		const isSlabEdgeInsulation = x.typeOfGroundFloor === "Slab_edge_insulation";
-		const edgeInsulationType =  "edgeInsulationType" in x ? (displayCamelToSentenceCase(show(x.edgeInsulationType))) : emptyValueRendering;
+		const edgeInsulationType = "edgeInsulationType" in x ? (displayCamelToSentenceCase(show(x.edgeInsulationType))) : emptyValueRendering;
 		const edgeInsulationWidth = "edgeInsulationWidth" in x ? dim(x.edgeInsulationWidth) : emptyValueRendering;
 		const edgeInsulationThermalResistance = "edgeInsulationThermalResistance" in x ? dim(x.edgeInsulationThermalResistance, "square metre kelvin per watt") : emptyValueRendering;
 
@@ -55,10 +57,9 @@ const groundFloorSummary: SummarySection = {
 		return {
 			"Name": show(x.name),
 			"Net surface area of this element": dim(x.surfaceArea, "metres square"),
-			"Pitch": dim(x.pitch, "degrees"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
 			"Thermal resistance": dim(x.thermalResistance, "square metre kelvin per watt"),
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
+			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Perimeter": dim(x.perimeter, "metres"),
 			"Psi of wall junction": dim(x.psiOfWallJunction, "watts per metre kelvin"),
@@ -79,7 +80,7 @@ const groundFloorSummary: SummarySection = {
 
 const internalFloorSummary: SummarySection = {
 	id: "dwellingSpaceInternalFloors",
-	label: "Internal floor",
+	label: "Internal floors",
 	data: internalFloorData?.map(({ data: x }) => {
 		const isInternalFloorToUnheatedSpace = x.typeOfInternalFloor === AdjacentSpaceType.unheatedSpace;
 		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
@@ -88,7 +89,7 @@ const internalFloorSummary: SummarySection = {
 			"Type of internal floor": displayAdjacentSpaceType(x.typeOfInternalFloor, "Internal floor"),
 			"Name": show(x.name),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
+			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalFloorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
 		};
@@ -98,7 +99,7 @@ const internalFloorSummary: SummarySection = {
 
 const exposedFloorSummary: SummarySection = {
 	id: "dwellingSpaceExposedFloors",
-	label: "Exposed floor",
+	label: "Exposed floors",
 	data: exposedFloorData?.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
@@ -106,9 +107,9 @@ const exposedFloorSummary: SummarySection = {
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"Solar absorption coefficient": dim(x.solarAbsorption),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
+			"Colour of external surface": displayColour(x.colour),
+			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
 	}) || [],
@@ -128,7 +129,7 @@ const partyWallData = store.dwellingFabric.dwellingSpaceWalls.dwellingSpaceParty
 
 const externalWallSummary: SummarySection = {
 	id: "dwellingSpaceExternalWalls",
-	label: "External wall",
+	label: "External walls",
 	data: externalWallData?.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
@@ -138,9 +139,9 @@ const externalWallSummary: SummarySection = {
 			"Length": dim(x.length, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"Solar absorption coefficient": dim(x.solarAbsorption),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
+			"Colour of external surface": displayColour(x.colour),
+			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
 	}) || [],
@@ -149,13 +150,13 @@ const externalWallSummary: SummarySection = {
 
 const internalWallSummary: SummarySection = {
 	id: "dwellingSpaceInternalWalls",
-	label: "Internal wall",
+	label: "Internal walls",
 	data: internalWallData?.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
+			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
 	}) || [],
@@ -164,14 +165,14 @@ const internalWallSummary: SummarySection = {
 
 const wallToUnheatedSpaceSummary: SummarySection = {
 	id: "dwellingSpaceUnheatedSpaceWalls",
-	label: "Wall to unheated space",
+	label: "Walls to unheated spaces",
 	data: wallToUnheatedSpaceData?.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area of element": dim(x.surfaceAreaOfElement, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": displayArealHeatCapacity(x.arealHeatCapacity as ArealHeatCapacityValue),
+			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt"),
 		};
@@ -181,14 +182,14 @@ const wallToUnheatedSpaceSummary: SummarySection = {
 
 const partyWallSummary: SummarySection = {
 	id: "dwellingSpacePartyWalls",
-	label: "Party wall",
+	label: "Party walls",
 	data: partyWallData?.map(({ data: x }) => {
 		return {
 			"Name": show(x.name),
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
+			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
 	}) || [],
@@ -207,7 +208,7 @@ const roofData = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpac
 
 const ceilingSummary: SummarySection = {
 	id: "dwellingSpaceCeilings",
-	label: "Ceiling",
+	label: "Ceilings",
 	data: ceilingData.map(({ data: x }) => {
 		const isCeilingToUnheatedSpace = x.type === AdjacentSpaceType.unheatedSpace;
 		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
@@ -219,7 +220,7 @@ const ceilingSummary: SummarySection = {
 			"Pitch": dim(x.pitch, "degrees"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
 			"U-value": isCeilingToUnheatedSpace ? uValue : undefined,
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
+			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isCeilingToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
 		};
@@ -229,15 +230,15 @@ const ceilingSummary: SummarySection = {
 
 const roofSummary: SummarySection = {
 	id: "dwellingSpaceRoofs",
-	label: "Roof",
+	label: "Roofs",
 	data: roofData.filter(x => !!x.data).map(({ data: x }) => {
-		const isTypeOfRoofSelected = x.typeOfRoof != undefined; 
+		const isTypeOfRoofSelected = x.typeOfRoof != undefined;
 		const isPitchedRoof = x.typeOfRoof === "pitchedInsulatedAtRoof" || x.typeOfRoof === "pitchedInsulatedAtCeiling";
-		
+
 		const pitch = dim(x.pitch, "degrees");
 		const orientation = x.orientation !== undefined ? dim(x.orientation, "degrees") : emptyValueRendering;
 		const uValue = dim(x.uValue, "watts per square metre kelvin");
-		const arealHeatCapacity = displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue);
+		const arealHeatCapacity = show(x.arealHeatCapacity);
 		const massDistributionClass = displayMassDistributionClass(x.massDistributionClass);
 
 		return {
@@ -249,8 +250,8 @@ const roofSummary: SummarySection = {
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeightOfElement, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"Solar absorption coefficient": dim(x.solarAbsorptionCoefficient),
 			"U-value": isTypeOfRoofSelected ? uValue : undefined,
+			"Colour of external surface": displayColour(x.colour),
 			"Areal heat capacity": isTypeOfRoofSelected ? arealHeatCapacity : undefined,
 			"Mass distribution class": isTypeOfRoofSelected ? massDistributionClass : undefined,
 		};
@@ -267,21 +268,27 @@ const unglazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceEx
 const glazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalGlazedDoor.data;
 const internalDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data;
 
+const { dwellingSpaceExternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceRoofs } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+
 const unglazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceUnglazedDoors",
-	label: "External unglazed door",
+	label: "External unglazed doors",
 	data: unglazedDoorData.map(({ data: x }) => {
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedItemId);
+
 		return {
 			"Name": show(x.name),
-			"Pitch": dim(x.pitch, "degrees"),
-			"Orientation": dim(x.orientation, "degrees"),
+			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
+			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
 			"Net surface area": dim(x.surfaceArea, "metres square"),
-			"Solar absorption coefficient": dim(x.solarAbsorption),
 			"U-value": dim(x.uValue, "watts per square metre kelvin"),
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue | undefined),
+			"Colour of external surface": displayColour(x.colour),
+			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 		};
 	}),
@@ -290,12 +297,14 @@ const unglazedDoorSummary: SummarySection = {
 
 const glazedDoorSummary: SummarySection = {
 	id: "dwellingSpaceGlazedDoors",
-	label: "External glazed door",
+	label: "External glazed doors",
 	data: glazedDoorData.map(({ data: x }) => {
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.associatedItemId);
+
 		return {
 			"Name": show(x.name),
-			"Pitch": dim(x.pitch, "degrees"),
-			"Orientation": dim(x.orientation, "degrees"),
+			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
+			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
@@ -308,10 +317,18 @@ const glazedDoorSummary: SummarySection = {
 	editUrl: getUrl("dwellingSpaceDoors"),
 };
 
+const { dwellingSpaceInternalWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceWallToUnheatedSpace } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpacePartyWall } = store.dwellingFabric.dwellingSpaceWalls;
+const { dwellingSpaceCeilings } = store.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
+
+
 const internalDoorSummary: SummarySection = {
 	id: "dwellingSpaceInternalDoors",
-	label: "Internal door",
+	label: "Internal doors",
 	data: internalDoorData?.map(({ data: x }) => {
+		const taggedItem = store.getTaggedItem([dwellingSpaceInternalWall, dwellingSpaceWallToUnheatedSpace, dwellingSpacePartyWall, dwellingSpaceCeilings], x.associatedItemId);
+
 		const isInternalDoorToUnheatedSpace = x.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace;
 		const uValue = "uValue" in x ? dim(x.uValue, "watts per square metre kelvin") : emptyValueRendering;
 		const thermalResistanceOfAdjacentUnheatedSpace = "thermalResistanceOfAdjacentUnheatedSpace" in x ? dim(x.thermalResistanceOfAdjacentUnheatedSpace, "square metre kelvin per watt") : emptyValueRendering;
@@ -319,10 +336,10 @@ const internalDoorSummary: SummarySection = {
 		return {
 			"Type": displayAdjacentSpaceType(x.typeOfInternalDoor, "Internal door"),
 			"Name": show(x.name),
-			"Pitch": dim(x.pitch, "degrees"),
+			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
 			"Net surface area of element": dim(x.surfaceArea, "metres square"),
 			"U-value": isInternalDoorToUnheatedSpace ? uValue : undefined,
-			"Areal heat capacity": displayArealHeatCapacity(x.kappaValue as ArealHeatCapacityValue),
+			"Areal heat capacity": show(x.arealHeatCapacity),
 			"Mass distribution class": displayMassDistributionClass(x.massDistributionClass),
 			"Thermal resistance of adjacent unheated space": isInternalDoorToUnheatedSpace ? thermalResistanceOfAdjacentUnheatedSpace : undefined,
 		};
@@ -341,8 +358,11 @@ const windowData = store.dwellingFabric.dwellingSpaceWindows.data;
 const windowSummary: SummarySection = {
 	id: "dwellingSpaceWindows",
 	label: "Windows",
-	data: windowData.map( ({ data: x }) => {
-		const numberOfOpenableParts =  parseInt(x.numberOpenableParts ?? "0");
+	data: windowData.map(({ data: x }) => {
+
+		const taggedItem = store.getTaggedItem([dwellingSpaceExternalWall, dwellingSpaceRoofs], x.taggedItem);
+
+		const numberOfOpenableParts = parseInt(x.numberOpenableParts ?? "0");
 
 		const heightOpenableArea = "heightOpenableArea" in x ? dim(x.heightOpenableArea, "metres") : emptyValueRendering;
 		const maximumOpenableArea = "maximumOpenableArea" in x ? dim(x.maximumOpenableArea, "metres square") : emptyValueRendering;
@@ -358,8 +378,8 @@ const windowSummary: SummarySection = {
 
 		return {
 			"Name": show(x.name),
-			"Pitch": dim(x.pitch, "degrees"),
-			"Orientation": dim(x.orientation, "degrees"),
+			"Pitch": taggedItem && taggedItem?.pitch !== undefined ? dim(taggedItem.pitch, "degrees") : emptyValueRendering,
+			"Orientation": taggedItem && taggedItem?.orientation !== undefined ? dim(taggedItem.orientation, "degrees") : emptyValueRendering,
 			"Height": dim(x.height, "metres"),
 			"Width": dim(x.width, "metres"),
 			"Elevational height of building element at its base": dim(x.elevationalHeight, "metres"),
@@ -367,6 +387,7 @@ const windowSummary: SummarySection = {
 			"Transmittance of solar energy": show(x.solarTransmittance),
 			"Mid height": dim(x.midHeight, "metres"),
 			"Opening to frame ratio": show(x.openingToFrameRatio),
+			"Security risk": displayBoolean(x.securityRisk),
 			"Number of openable parts": show(x.numberOpenableParts),
 			"Height of the openable area": numberOfOpenableParts >= 1 ? heightOpenableArea : undefined,
 			"Maximum openable area": numberOfOpenableParts >= 1 ? maximumOpenableArea : undefined,
@@ -425,6 +446,7 @@ const thermalBridgeSummarySections: SummarySection[] = [
 </script>
 
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>

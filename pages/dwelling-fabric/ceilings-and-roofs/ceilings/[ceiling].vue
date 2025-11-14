@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import type { CeilingData } from "#imports";
-import { getUrl, zeroPitchOptions } from "#imports";
+import { v4 as uuidv4 } from "uuid";
+import { getUrl, zeroPitchOptions, uniqueName } from "#imports";
 
 const title = "Ceiling";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
+const index = getStoreIndex(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
 const ceilingData = useItemToEdit("ceiling", store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data);
+const ceilingId = ceilingData?.data.id ?? uuidv4();
 const model = ref(ceilingData?.data);
 
 const typeOfCeilingOptions = adjacentSpaceTypeOptions("Ceiling");
@@ -15,11 +18,13 @@ const saveForm = (fields: CeilingData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceCeilings } = state.dwellingFabric.dwellingSpaceCeilingsAndRoofs;
 		const index = getStoreIndex(dwellingSpaceCeilings.data);
+		const currentId = ceilingData?.data.id;
 
 		const commonFields = {
+			id: currentId || uuidv4(),
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
-			kappaValue: fields.kappaValue,
+			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 			pitchOption: fields.pitchOption,
 			pitch: fields.pitchOption === "0" ? 0 : fields.pitch,
@@ -61,6 +66,7 @@ autoSaveElementForm<CeilingData>({
 	storeData: store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings,
 	defaultName: "Ceiling",
 	onPatch: (state, newData, index) => {
+		newData.data.id ??= ceilingId;
 		const { pitchOption, pitch } = newData.data;
 		newData.data.pitch = pitchOption === "0" ? 0 : pitch;
 		state.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data[index] = newData;
@@ -104,7 +110,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Name"
 				help="Provide a name for this element so that it can be identified later"
 				name="name"
-				validation="required"
+				:validation-rules="{ uniqueName: uniqueName(store.dwellingFabric.dwellingSpaceCeilingsAndRoofs.dwellingSpaceCeilings.data, { index }) }"
+				validation="required | uniqueName"
+				:validation-messages="{
+					uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				}"
 			/>
 			<FieldsPitch
 				:pitch-option="model?.pitchOption"
@@ -126,7 +136,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				id="uValue"
 				name="uValue"
 			/>
-			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
 		<FormKit

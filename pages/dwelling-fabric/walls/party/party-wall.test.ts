@@ -2,23 +2,27 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import PartyWall from "./[wall].vue";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+vi.mock("uuid");
+
 describe("party wall", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
 	const state: PartyWallData = {
+		id: "f91505d0-25ff-4a35-8bb6-e78ccd3ddecd",
 		name: "Party wall 1",
 		pitchOption: "90",
 		pitch: 90,
 		surfaceArea: 10,
 		uValue: 1,
-		kappaValue: 50000,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "I",
 	};
 
@@ -27,6 +31,8 @@ describe("party wall", () => {
 	});
 
 	test("data is saved to store state when form is valid", async () => {
+		vi.mocked(uuidv4).mockReturnValue(state.id as unknown as Buffer);
+
 		await renderSuspended(PartyWall, {
 			route: {
 				params: { wall: "create" },
@@ -37,7 +43,7 @@ describe("party wall", () => {
 		await user.click(screen.getByTestId("pitchOption_90"));
 		await user.type(screen.getByTestId("surfaceArea"), "10");
 		await user.type(screen.getByTestId("uValue"), "1");
-		await user.click(screen.getByTestId("kappaValue_50000"));
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -69,7 +75,7 @@ describe("party wall", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("pitchOption_90")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("10");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
-		expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 	});
 		
@@ -82,7 +88,7 @@ describe("party wall", () => {
 		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
-		expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
+		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 
 	});

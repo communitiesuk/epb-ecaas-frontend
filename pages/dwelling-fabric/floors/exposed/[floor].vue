@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 const title = "Exposed floor";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const floorData = useItemToEdit("floor", store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data);
+const exposedFloorData = store.dwellingFabric.dwellingSpaceFloors.dwellingSpaceExposedFloor?.data;
+const index = getStoreIndex(exposedFloorData);
+const floorData = useItemToEdit("floor", exposedFloorData);
 const model = ref(floorData?.data);
+
+const colourOptions = colourOptionsMap;
 
 const saveForm = (fields: ExposedFloorData) => {	
 	store.$patch((state) => {
-		const { dwellingSpaceFloors } = state.dwellingFabric;
+		const { dwellingSpaceExposedFloor } = state.dwellingFabric.dwellingSpaceFloors;
 
 		const floor: ExposedFloorData = {
 			name: fields.name,
@@ -19,15 +23,14 @@ const saveForm = (fields: ExposedFloorData) => {
 			width: fields.width,
 			elevationalHeight: fields.elevationalHeight,
 			surfaceArea: fields.surfaceArea,
-			solarAbsorption: fields.solarAbsorption,
 			uValue: fields.uValue,
-			kappaValue: fields.kappaValue,
+			colour: fields.colour,
+			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
 		};
 		
-		const index = getStoreIndex(dwellingSpaceFloors.dwellingSpaceExposedFloor.data);
-		dwellingSpaceFloors.dwellingSpaceExposedFloor.data[index] =  { data: floor, complete: true };
-		dwellingSpaceFloors.dwellingSpaceExposedFloor.complete = false;
+		dwellingSpaceExposedFloor.data[index] =  { data: floor, complete: true };
+		dwellingSpaceExposedFloor.complete = false;
 	}); 
 	navigateTo("/dwelling-fabric/floors");
 };
@@ -67,7 +70,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(exposedFloorData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="length"
@@ -100,9 +107,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption" additional-text="The solar absorption coefficient of a material in an exposed floor directly affects heat loss because it dictates how much solar radiation is absorbed and converted into heat within the floor material. A higher solar absorption coefficient means more solar energy is absorbed, potentially increasing the floor's temperature and, consequently, the amount of heat lost to the surrounding environment."/>
 		<FieldsUValue id="uValue" name="uValue" />
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+		<FormKit
+			id="colour"
+			type="govRadios"
+			label="Colour of external surface"
+			name="colour"
+			:options="colourOptions"
+			validation="required"
+			data-field="Zone.BuildingElement.*.colour"
+		/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

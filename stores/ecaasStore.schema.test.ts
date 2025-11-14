@@ -3,13 +3,13 @@ import { windowDataZod, type EcaasForm, type EcaasFormList } from "./ecaasStore.
 describe("windowData Zod schema", () => {
 	it("correctly validates a valid window shape with one openable part", () => {
 		const windowFormData: WindowData = {
+			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 			name: "bedroom window",
-			orientation: 90,
+			taggedItem: "c9ec4b19-5ed9-4d13-8d88-1f284294ac43",
 			height: 2,
 			width: 2,
 			uValue: 0.1,
-			pitchOption: "90",
-			pitch: 90,
+			securityRisk: true,
 			solarTransmittance: 0.2,
 			elevationalHeight: 1,
 			midHeight: 2,
@@ -29,7 +29,6 @@ describe("windowData Zod schema", () => {
 			maximumOpenableArea: 1,
 			heightOpenableArea: 1,
 			curtainsControlObject: "auto_motorised",
-			securityRisk: false,
 		};
 		expect(
 			() => {
@@ -40,6 +39,7 @@ describe("windowData Zod schema", () => {
 
 	it("correctly does not validate a invalid window shape with four openable parts", () => {
 		const windowFormData = {
+			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 			name: "bedroom window",
 			orientation: 90,
 			height: 2,
@@ -76,6 +76,7 @@ describe("windowData Zod schema", () => {
 
 	it("correctly does not validate a invalid window shape with one openable part and an overhang depth missing", () => {
 		const windowFormData = {
+			id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b321",
 			name: "bedroom window",
 			orientation: 90,
 			surfaceArea: 4,

@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { standardPitchOptions, type WindowData } from "#imports";
+import type { WindowData } from "#imports";
 import { millimetre } from "~/utils/units/length";
 import type { SchemaWindowTreatmentControl, SchemaWindowTreatmentType } from "~/schema/aliases";
 import { unitValue } from "~/utils/units";
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
+import { v4 as uuidv4 } from "uuid";
 
 const title = "Window";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const window = useItemToEdit("window", store.dwellingFabric.dwellingSpaceWindows.data);
+const windowsData = store.dwellingFabric.dwellingSpaceWindows.data;
+const window = useItemToEdit("window", windowsData);
+const windowId = window?.data.id ?? uuidv4();
+const index = getStoreIndex(windowsData);
 
 // prepopulate shading data when using old input format
 if (window && "overhangDepth" in window && typeof window.overhangDepth === "number") {
@@ -54,18 +58,15 @@ const shadingValidation = (siblingField: string) => {
 
 const saveForm = (fields: WindowData) => {
 	store.$patch((state) => {
-
 		const { dwellingSpaceWindows } = state.dwellingFabric;
-		const index = getStoreIndex(dwellingSpaceWindows.data);
 
-		const commonFields = {
+		const commonFields: Partial<WindowData> = {
+			id: windowId || uuidv4(),
 			name: fields.name,
-			orientation: fields.orientation,
+			taggedItem: fields.taggedItem,
 			height: fields.height,
 			width: fields.width,
 			uValue: fields.uValue,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 			solarTransmittance: fields.solarTransmittance,
 			elevationalHeight: fields.elevationalHeight,
 			midHeight: fields.midHeight,
@@ -183,8 +184,7 @@ autoSaveElementForm<WindowData>({
 	storeData: store.dwellingFabric.dwellingSpaceWindows,
 	defaultName: "Window",
 	onPatch: (state, newData, index) => {
-		const { pitchOption, pitch } = newData.data;
-		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
+		newData.data.id ??= windowId;
 		state.dwellingFabric.dwellingSpaceWindows.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceWindows.complete = false;
 	},
@@ -194,7 +194,6 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
-	
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
@@ -206,26 +205,51 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		@submit-invalid="handleInvalidSubmit">
 		<GovErrorSummary :error-list="errorMessages" test-id="windowErrorSummary" />
 		<FormKit
-			id="name" type="govInputText" label="Name"
-			help="Provide a name for this element so that it can be identified later" name="name" validation="required" />
-		<FieldsPitch
-			:pitch-option="model && model.pitchOption"
-			:options="standardPitchOptions()"
-			data-field="Zone.BuildingElement.*.pitch"
+			id="name"
+			type="govInputText"
+			label="Name"
+			help="Provide a name for this element so that it can be identified later"
+			name="name"
+			:validation-rules="{ uniqueName: uniqueName(windowsData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
-		<FieldsOrientation data-field="Zone.BuildingElement.*.orientation" />
+		<FieldsAssociatedWallRoof
+			id="taggedItem"
+			name="taggedItem"
+			label="Associated wall or roof"
+			help="Select the wall or roof that this window is in. It should have the same orientation and pitch as the window."
+		/>
 		<FormKit
-			id="height" type="govInputWithSuffix" suffix-text="m" label="Height"
-			help="Enter the height of the building element" name="height" validation="required | number | min:0.001 | max:50"
+			id="height"
+			type="govInputWithSuffix"
+			suffix-text="m" 
+			label="Height"
+			help="Enter the height of the building element"
+			name="height"
+			validation="required | number | min:0.001 | max:50"
 			data-field="Zone.BuildingElement.*.height" />
 		<FormKit
-			id="width" type="govInputWithSuffix" suffix-text="m" label="Width" help="Enter the width of the building element"
-			name="width" validation="required | number | min:0.001 | max:50"
+			id="width"
+			type="govInputWithSuffix"
+			suffix-text="m"
+			label="Width"
+			help="Enter the width of the building element"
+			name="width"
+			validation="required | number | min:0.001 | max:50"
 			data-field="Zone.BuildingElement.*.width" />
 		<FieldsElevationalHeight />
-		<FieldsUValue id="uValue" name="uValue" />
+
+		<FieldsUValue
+			id="uValue"
+			name="uValue"
+		/>
 		<FormKit
-			id="solarTransmittance" type="govInputFloat" label="Transmittance of solar energy "
+			id="solarTransmittance"
+			type="govInputFloat"
+			label="Transmittance of solar energy "
 			help="Enter the total solar energy transmittance, or G value, of the transparent part of the window. It should be a decimal between 0 and 1."
 			name="solarTransmittance" validation="required | number | min:0.01 | max:1"
 			data-field="Zone.BuildingElement.*.g_value" />
@@ -235,7 +259,9 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0 | max:100"
 			data-field="Zone.BuildingElement.*.mid_height" />
 		<FormKit
-			id="openingToFrameRatio" type="govInputFloat" label="Opening to frame ratio"
+			id="openingToFrameRatio" 
+			type="govInputFloat"
+			label="Opening to frame ratio"
 			help="Enter the proportion of the window taken up by the total opening area compared to the frame"
 			name="openingToFrameRatio" validation="required | number | min:0 | max:1"
 			data-field="Zone.BuildingElement.*.frame_area_fraction">
@@ -261,7 +287,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			</GovDetails>
 		</FormKit>
 		<FormKit
-			id="securityRisk"
+		id="securityRisk"
 			name="securityRisk"
 			type="govBoolean"
 			label="Is having this window open a security risk?"
@@ -270,49 +296,77 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			data-field="Zone.BuildingElement.*.security_risk"
 		/>
 		<FormKit
-			id="numberOpenableParts" type="govRadios" :options="{
+			id="numberOpenableParts"
+			type="govRadios"
+			:options="{
 				1: '1',
 				2: '2',
 				3: '3',
 				4: '4',
 				0: 'None',
-			}" label="Number of openable parts " name="numberOpenableParts" validation="required" />
+			}"
+			label="Number of openable parts"
+			name="numberOpenableParts"
+			validation="required"
+		/>
 		<template v-if="!!model && model.numberOpenableParts && model.numberOpenableParts !== '0'">
 			<FormKit
-				id="heightOpenableArea" type="govInputWithSuffix" suffix-text="m" label="Height of the openable area"
+				id="heightOpenableArea"
+				type="govInputWithSuffix"
+				suffix-text="m"
+				label="Height of the openable area"
 				help="Enter the vertical measurement of the section of the window that can be opened"
-				name="heightOpenableArea" validation="required | number | min:0 | max:100" />
+				name="heightOpenableArea"
+				validation="required | number | min:0 | max:100"
+			/>
 			<FormKit
-				id="maximumOpenableArea" type="govInputWithSuffix" suffix-text="m²" label="Maximum openable area"
-				help="Enter the total area of the gap created when the window is fully open" name="maximumOpenableArea"
-				validation="required | number | min:0 | max:100" />
+				id="maximumOpenableArea"
+				type="govInputWithSuffix"
+				suffix-text="m²"
+				label="Maximum openable area"
+				help="Enter the total area of the gap created when the window is fully open"
+				name="maximumOpenableArea"
+				validation="required | number | min:0 | max:100"
+			/>
 			<FormKit
-				id="midHeightOpenablePart1" type="govInputWithSuffix" suffix-text="m"
+				id="midHeightOpenablePart1"
+				type="govInputWithSuffix"
+				suffix-text="m"
 				label="Mid height of the air flow path for openable part 1 "
 				help="Enter the height from the ground to the midpoint of the openable section of the window"
 				name="midHeightOpenablePart1"
-				validation="required | number | min:0 | max:100" />
+				validation="required | number | min:0 | max:100"
+			/>
 			<template v-if="model.numberOpenableParts !== '1'">
 				<FormKit
-					id="midHeightOpenablePart2" type="govInputWithSuffix" suffix-text="m"
+					id="midHeightOpenablePart2"
+					type="govInputWithSuffix"
+					suffix-text="m"
 					label="Mid height of the air flow path for openable part 2 "
 					help="Enter the height from the ground to the midpoint of the openable section of the window"
 					name="midHeightOpenablePart2"
-					validation="required | number | min:0 | max:100" />
+					validation="required | number | min:0 | max:100"
+				/>
 				<template v-if="model.numberOpenableParts !== '2'">
 					<FormKit
-						id="midHeightOpenablePart3" type="govInputWithSuffix" suffix-text="m"
+						id="midHeightOpenablePart3"
+						type="govInputWithSuffix"
+						suffix-text="m"
 						label="Mid height of the air flow path for openable part 3 "
 						help="Enter the height from the ground to the midpoint of the openable section of the window"
 						name="midHeightOpenablePart3"
-						validation="required | number | min:0 | max:100" />
+						validation="required | number | min:0 | max:100"
+					/>
 					<template v-if="model.numberOpenableParts !== '3'">
 						<FormKit
-							id="midHeightOpenablePart4" type="govInputWithSuffix" suffix-text="m"
+							id="midHeightOpenablePart4"
+							type="govInputWithSuffix"
+							suffix-text="m"
 							label="Mid height of the air flow path for openable part 4 "
 							help="Enter the height from the ground to the midpoint of the openable section of the window"
 							name="midHeightOpenablePart4"
-							validation="required | number | min:0 | max:100" />
+							validation="required | number | min:0 | max:100"
+						/>
 					</template>
 				</template>
 			</template>

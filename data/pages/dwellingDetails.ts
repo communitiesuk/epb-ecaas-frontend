@@ -52,6 +52,13 @@ const dwellingDetailsPages = [
 		parentId: "shading",
 	},
 	{
+		id: "appliances",
+		title: "Appliances",
+		url: "/dwelling-details/appliances",
+		type: PageType.Task,
+		parentId: "dwellingDetails",
+	},
+	{
 		id: "dwellingDetailsSummary",
 		title: "Summary",
 		url: "/dwelling-details/summary",

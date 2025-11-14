@@ -11,6 +11,7 @@ import FormKitInputInt from "./components/form-kit/InputInt.vue";
 import FormKitInputWithSuffix from "./components/form-kit/InputWithSuffix.vue";
 import FormKitInputWithUnit from "./components/form-kit/InputWithUnit.vue";
 import FormKitCheckboxes from "./components/form-kit/Checkboxes.vue";
+import FormKitCheckboxesWithExclusive from "./components/form-kit/CheckboxesWithExclusive.vue";
 import FormKitInputText from "./components/form-kit/InputText.vue";
 import FormKitInputTextWithSuffix from "./components/form-kit/InputTextWithSuffix.vue";
 import { FormKitBoolean } from "#components";
@@ -21,53 +22,59 @@ import type { FlowRateUnit } from "./utils/units/flowRate";
 // Enable TypeScript support for custom inputs
 declare module "@formkit/inputs" {
 	interface FormKitInputProps<Props extends FormKitInputs<Props>> {
-		"govRadios": {
-			type: "govRadios",
-			options: Record<string, string | RadioOption> | Map<string, string>,
-			valueType?: "string" | "number"
-		},
-		"govButton": {
-			type: "govButton"
-		},
-		"govDropdown": {
-			type: "govDropdown",
-			options: FormKitOptionsProp | FormKitOptionsProp[]
-		},
-		"govInputFloat": {
-			type: "GovInputFloat"
-		},
-		"govInputInt": {
-			type: "govInputInt"
-		},
-		"govInputWithSuffix": {
-			type: "govInputWithSuffix",
-			suffixText: string
-		},
-		"govInputWithUnit": {
-			type: "govInputWithUnit",
-			unit: LengthUnit | VolumeUnit | FlowRateUnit,
-		},
-		"govCheckboxes": {
-			type: "govCheckboxes",
-			options: FormKitOptionsProp,
-			help?: string
-		},
-		"govInputText": {
-			type: "govInputText"
-		}, 
-		"govInputTextWithSuffix": {
-			type: "govInputWithSuffix",
-			suffixText: string
-		},
-		"govStoredList": {
-			type: "govStoredList",
-			options: StoredListOption[]
-		},
-		"govBoolean": {
-			type: "govBoolean",
-			trueLabel?: string,
-			falseLabel?: string
-		}
+		govRadios: {
+			type: "govRadios";
+			options: Record<string, string | RadioOption> | Map<string, string>;
+			valueType?: "string" | "number";
+		};
+		govButton: {
+			type: "govButton";
+		};
+		govDropdown: {
+			type: "govDropdown";
+			options: FormKitOptionsProp | FormKitOptionsProp[];
+		};
+		govInputFloat: {
+			type: "GovInputFloat";
+		};
+		govInputInt: {
+			type: "govInputInt";
+		};
+		govInputWithSuffix: {
+			type: "govInputWithSuffix";
+			suffixText: string;
+		};
+		govInputWithUnit: {
+			type: "govInputWithUnit";
+			unit: LengthUnit | VolumeUnit | FlowRateUnit;
+		};
+		govCheckboxes: {
+			type: "govCheckboxes";
+			options: FormKitOptionsProp;
+			help?: string;
+		};
+		govCheckboxesDivided: {
+			type: "govCheckboxesDivided";
+			options: FormKitOptionsProp;
+			extraOption: FormKitOptionsProp;
+			help?: string;
+		};
+		govInputText: {
+			type: "govInputText";
+		};
+		govInputTextWithSuffix: {
+			type: "govInputWithSuffix";
+			suffixText: string;
+		};
+		govStoredList: {
+			type: "govStoredList";
+			options: StoredListOption[];
+		};
+		govBoolean: {
+			type: "govBoolean";
+			trueLabel?: string;
+			falseLabel?: string;
+		};
 	}
 }
 
@@ -106,6 +113,10 @@ export default defineFormKitConfig(() => {
 			govCheckboxes: {
 				type: "input",
 				component: FormKitCheckboxes,
+			},
+			govCheckboxesDivided: {
+				type: "input",
+				component: FormKitCheckboxesWithExclusive,
 			},
 			govInputText: {
 				type: "input",

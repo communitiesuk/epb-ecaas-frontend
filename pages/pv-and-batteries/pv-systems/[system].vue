@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import type { OnSiteGenerationVentilationStrategy, SchemaInverterType } from "~/schema/aliases";
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 
 const title = "PV (photovoltaic) system";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const pvSystemData = useItemToEdit(
-	"system",
-	store.pvAndBatteries.pvSystems.data,
-);
+const pvSystemsStoreData = store.pvAndBatteries.pvSystems.data;
+const index = getStoreIndex(pvSystemsStoreData);
+const pvSystemData = useItemToEdit("system", pvSystemsStoreData);
 const model = ref(pvSystemData?.data);
 
 const shadingSectionDisabled = true;
@@ -29,7 +28,6 @@ const inverterTypeOptions: Record<SchemaInverterType, string> = {
 const saveForm = (fields: PvSystemData) => {
 	store.$patch((state) => {
 		const { pvSystems } = state.pvAndBatteries;
-		const index = getStoreIndex(pvSystems.data);
 
 		pvSystems.data[index] = {
 			data: {
@@ -96,7 +94,11 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name so this PV array can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(pvSystemsStoreData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="peakPower"

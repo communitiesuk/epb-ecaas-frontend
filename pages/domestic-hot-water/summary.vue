@@ -5,7 +5,7 @@ import { getTabItems, getUrl  } from "#imports";
 const title = "Domestic hot water";
 const store = useEcaasStore();
 
-const { heatPump } = store.heatingSystems.heatGeneration;
+const { heatPump } = store.heatingAndCoolingSystems.heatGeneration;
 const heatGenerationData = [
 	heatPump.data,
 	// boiler.data,
@@ -17,7 +17,7 @@ const heatGenerationData = [
 const hotWaterCylinderData = store.domesticHotWater.waterHeating.hotWaterCylinder.data;
 const hotWaterCylinderSummary: SummarySection = {
 	id: "hotWaterCylinder",
-	label: "Hot Water Cylinder",
+	label: "Hot water cylinders",
 	data: hotWaterCylinderData.map(d => {
 		return {
 			"Name": show(d.data.name),
@@ -32,7 +32,7 @@ const hotWaterCylinderSummary: SummarySection = {
 const immersionHeaterData = store.domesticHotWater.waterHeating.immersionHeater.data;
 const immersionHeaterSummary: SummarySection = {
 	id: "immersionHeater",
-	label: "Immersion heater",
+	label: "Immersion heaters",
 	data: immersionHeaterData.map(d => {
 		return {
 			"Name": show(d.name),
@@ -73,7 +73,7 @@ const pointOfUseSummary: SummarySection = {
 const heatPumpData = store.domesticHotWater.waterHeating.heatPump.data;
 const heatPumpSummary: SummarySection = {
 	id: "heatPump",
-	label: "Heat pump",
+	label: "Heat pumps",
 	data: heatPumpData.map(d => {
 		return {
 			"Name": show(d.data.name),
@@ -85,7 +85,7 @@ const heatPumpSummary: SummarySection = {
 const combiBoilerData = store.domesticHotWater.waterHeating.combiBoiler.data;
 const combiBoilerSummary: SummarySection = {
 	id: "combiBoiler",
-	label: "Combi boiler",
+	label: "Combi boilers",
 	data: combiBoilerData.map(d => {
 		return {
 			"Name": show(d.name),
@@ -97,7 +97,7 @@ const combiBoilerSummary: SummarySection = {
 const heatBatteryData = store.domesticHotWater.waterHeating.heatBattery.data;
 const heatBatterySummary: SummarySection = {
 	id: "heatBattery",
-	label: "Heat battery",
+	label: "Heat batteries",
 	data: heatBatteryData.map(d => {
 		return {
 			"Name": show(d.name),
@@ -109,7 +109,7 @@ const heatBatterySummary: SummarySection = {
 const smartHotWaterTankData = store.domesticHotWater.waterHeating.smartHotWaterTank.data;
 const smartHotWaterTankSummary: SummarySection = {
 	id: "smartHotWaterTank",
-	label: "Smart hot water tank",
+	label: "Smart hot water tanks",
 	data: smartHotWaterTankData.map(d => {
 		return {
 			"Name": show(d.name),
@@ -121,7 +121,7 @@ const smartHotWaterTankSummary: SummarySection = {
 const heatInterfaceUnitData = store.domesticHotWater.waterHeating.heatInterfaceUnit.data;
 const heatInterfaceUnitSummary: SummarySection = {
 	id: "heatInterfaceUnit",
-	label: "Heat interface unit",
+	label: "Heat interface units",
 	data: heatInterfaceUnitData.map(d => {
 		return {
 			"Name": show(d.name),
@@ -132,20 +132,20 @@ const heatInterfaceUnitSummary: SummarySection = {
 
 const waterHeatingSummarySections: SummarySection[] = [
 	hotWaterCylinderSummary,
-	immersionHeaterSummary,
-	solarThermalSummary,
-	pointOfUseSummary,
-	heatPumpSummary,
-	combiBoilerSummary,
-	heatBatterySummary,
-	smartHotWaterTankSummary,
-	heatInterfaceUnitSummary,
-].filter(x => x.data.length);
+	// immersionHeaterSummary,
+	// solarThermalSummary,
+	// pointOfUseSummary,
+	// heatPumpSummary,
+	// combiBoilerSummary,
+	// heatBatterySummary,
+	// smartHotWaterTankSummary,
+	// heatInterfaceUnitSummary,
+];
 
 const mixedShowerData = store.domesticHotWater.hotWaterOutlets.mixedShower.data;
 const mixedShowerSummary: SummarySection = {
 	id: "mixedShower",
-	label: "Mixer shower",
+	label: "Mixer showers",
 	data: mixedShowerData.map(d => { 
 		return {
 			"Name": show(d.data.name),
@@ -158,7 +158,7 @@ const mixedShowerSummary: SummarySection = {
 const electricShowerData = store.domesticHotWater.hotWaterOutlets.electricShower.data;
 const electricShowerSummary: SummarySection = {
 	id: "electricShower",
-	label: "Electric shower",
+	label: "Electric showers",
 	data: electricShowerData.map(d => {   
 		return {
 			"Name": show(d.data.name),
@@ -171,12 +171,11 @@ const electricShowerSummary: SummarySection = {
 const bathData = store.domesticHotWater.hotWaterOutlets.bath.data;
 const bathSummary: SummarySection = {
 	id: "bath",
-	label: "Bath",
+	label: "Baths",
 	data: bathData.map(d => {
 		return {
 			"Name": show(d.data.name),
 			"Size": dim(d.data.size, "litres"),
-			"Flow rate": dim(d.data.flowRate, "litres per minute"),
 		};
 	}),
 	editUrl: getUrl("hotWaterOutlets"),
@@ -250,15 +249,13 @@ const pipeworkSummarySections: SummarySection[] = [
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">{{ title }}</h1>
-	<h2 class="govuk-heading-m">Water heating</h2>
-	<GovTabs v-slot="tabProps" :items="getTabItems(waterHeatingSummarySections)">
+	<!-- <GovTabs v-slot="tabProps" :items="getTabItems(waterHeatingSummarySections)">
 		<TabPanel id="waterHeating" :selected="!tabProps.currentItem">
 			<h2 class="govuk-heading-m">No water heating added</h2>
 			<NuxtLink class="govuk-link" :to="getUrl('waterHeating')">
 				Add water heating
 			</NuxtLink>
 		</TabPanel>
-		<SummaryTab :summary="hotWaterCylinderSummary" :selected="tabProps.currentItem?.id === 'hotWaterCylinder'" />
 		<SummaryTab :summary="immersionHeaterSummary" :selected="tabProps.currentItem?.id === 'immersionHeater'" />
 		<SummaryTab :summary="solarThermalSummary" :selected="tabProps.currentItem?.id === 'solarThermal'" />
 		<SummaryTab :summary="pointOfUseSummary" :selected="tabProps.currentItem?.id === 'pointOfUse'" />
@@ -267,8 +264,17 @@ const pipeworkSummarySections: SummarySection[] = [
 		<SummaryTab :summary="heatBatterySummary" :selected="tabProps.currentItem?.id === 'heatBattery'" />
 		<SummaryTab :summary="smartHotWaterTankSummary" :selected="tabProps.currentItem?.id === 'smartHotWaterTank'" />
 		<SummaryTab :summary="heatInterfaceUnitSummary" :selected="tabProps.currentItem?.id === 'heatInterfaceUnit'" />
+	</GovTabs> -->
+	<GovTabs v-slot="tabProps" :items="getTabItems(waterHeatingSummarySections)">
+		<SummaryTab :summary="hotWaterCylinderSummary" :selected="tabProps.currentItem?.id === 'hotWaterCylinder'">
+			<template #empty>
+				<h2 class="govuk-heading-m">No hot water cylinders added</h2>
+				<NuxtLink class="govuk-link" :to="getUrl('waterHeating')"> 
+					Add hot water cylinder
+				</NuxtLink>
+			</template>
+		</SummaryTab>
 	</GovTabs>
-	<h2 class="govuk-heading-m">Hot water outlets</h2>
 	<GovTabs v-slot="tabProps" :items="getTabItems(hotWaterOutletsSummarySections)">
 		<SummaryTab :summary="mixedShowerSummary" :selected="tabProps.currentTab === 0">
 			<template #empty>
@@ -303,7 +309,6 @@ const pipeworkSummarySections: SummarySection[] = [
 			</template>
 		</SummaryTab>
 	</GovTabs>
-	<h2 class="govuk-heading-m">Pipework</h2>
 	<GovTabs v-slot="tabProps" :items="getTabItems(pipeworkSummarySections)">
 		<SummaryTab :summary="primaryPipeworkSummary" :selected="tabProps.currentTab === 0" :edit-url="getUrl('pipework')!">
 			<template #empty>

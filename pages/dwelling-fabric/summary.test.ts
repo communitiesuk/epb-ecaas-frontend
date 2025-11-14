@@ -1,9 +1,23 @@
 import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
 import { screen } from "@testing-library/vue";
-import type { CeilingsAndRoofsData, DoorsData, FloorsData, DwellingSpaceZoneParametersData, ThermalBridgingData, WallsData, WindowData, DwellingSpaceLightingData } from "~/stores/ecaasStore.schema";
+import type {
+  CeilingsAndRoofsData,
+  DoorsData,
+  FloorsData,
+  DwellingSpaceZoneParametersData,
+  ThermalBridgingData,
+  WallsData,
+  WindowData,
+  DwellingSpaceLightingData,
+} from "~/stores/ecaasStore.schema";
 import { metre, millimetre } from "~/utils/units/length";
-import { squareMeterKelvinPerWatt, wattsPerKelvin, wattsPerMeterKelvin, wattsPerSquareMeterKelvin } from "~/utils/units/thermalConductivity";
+import {
+  squareMeterKelvinPerWatt,
+  wattsPerKelvin,
+  wattsPerMeterKelvin,
+  wattsPerSquareMeterKelvin,
+} from "~/utils/units/thermalConductivity";
 import { degrees } from "~/utils/units/angle";
 import { metresSquare } from "~/utils/units/area";
 import { cubicMetre } from "~/utils/units/volume";
@@ -11,20 +25,22 @@ import { unitValue } from "~/utils/units";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
-	return navigateToMock;
+  return navigateToMock;
 });
 
 const zoneParametersData: DwellingSpaceZoneParametersData = {
-	area: 10,
 	volume: 10,
+	livingRoomArea: 15,
+	restOfDwellingArea: 20,
 	// spaceHeatingSystemForThisZone: 'elec heater',
 	// spaceCoolingSystemForThisZone: [],
 	// spaceHeatControlSystemForThisZone: []
 };
 
 const lightingData: DwellingSpaceLightingData = {
-	numberOfLEDBulbs: 8,
-	numberOfIncandescentBulbs: 3,
+	numberOfBulbs: 8,
+	power: 5,
+	efficacy: 120,
 };
 
 const floorsData: FloorsData = {
@@ -33,10 +49,9 @@ const floorsData: FloorsData = {
 			data: {
 				name: "Ground 1",
 				surfaceArea: 5,
-				pitch: 0,
 				uValue: 1,
 				thermalResistance: 1,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				perimeter: 0,
 				psiOfWallJunction: 0,
@@ -51,32 +66,37 @@ const floorsData: FloorsData = {
 				typeOfInternalFloor: AdjacentSpaceType.heatedSpace,
 				name: "Internal 1",
 				surfaceAreaOfElement: 5,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 			},
 		}],
 	},
 	dwellingSpaceExposedFloor: {
-		data: [{ data: {
-			name: "Exposed Floor 1",
-			pitch: 0,
-			orientation: 0,
-			length: 0.5,
-			width: 20,
-			elevationalHeight: 20,
-			surfaceArea: 10,
-			solarAbsorption: 0.1,
-			uValue: 1,
-			kappaValue: 50000,
-			massDistributionClass: "I",
-		} }],
+		data: [{
+			data: {
+				name: "Exposed Floor 1",
+				pitch: 0,
+				orientation: 0,
+				length: 0.5,
+				width: 20,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				uValue: 1,
+				arealHeatCapacity: "Very light",
+				massDistributionClass: "I",
+			},
+		}],
 	},
 };
+
+const externalWallId = "47689878-2f16-414f-92c1-64b5cee844f6";
+const internalWallId = "0b159e36-96ac-4ac9-8d97-57e69af11658";
 
 const wallsData: WallsData = {
 	dwellingSpaceExternalWall: {
 		data: [{
 			data: {
+        id: externalWallId,
 				name: "External wall 1",
 				pitchOption: "90",
 				pitch: 90,
@@ -85,9 +105,9 @@ const wallsData: WallsData = {
 				length: 20,
 				elevationalHeight: 20,
 				surfaceArea: 10,
-				solarAbsorption: 0.1,
 				uValue: 1,
-				kappaValue: 50000,
+				colour: "Dark",
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 			},
 		}],
@@ -95,22 +115,24 @@ const wallsData: WallsData = {
 	dwellingSpaceInternalWall: {
 		data: [{
 			data: {
+        id: internalWallId,
 				name: "Internal 1",
 				surfaceAreaOfElement: 5,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				pitchOption: "custom",
-				pitch: 0,
+				pitch: 10,
 			},
 		}],
 	},
 	dwellingSpaceWallToUnheatedSpace: {
 		data: [{
 			data: {
+        id: "a6865ced-8495-41c4-a193-4ff08902892a",
 				name: "Wall to unheated space 1",
 				surfaceAreaOfElement: 500,
 				uValue: 10,
-				arealHeatCapacity: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "E",
 				pitchOption: "90",
 				pitch: 90,
@@ -121,12 +143,13 @@ const wallsData: WallsData = {
 	dwellingSpacePartyWall: {
 		data: [{
 			data: {
+        id: "96dcfa21-edec-4318-bbca-7e92b1d7c02c",
 				name: "Party wall 1",
 				pitchOption: "90",
 				pitch: 90,
 				surfaceArea: 10,
 				uValue: 1,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 			},
 		}],
@@ -140,7 +163,7 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 				type: AdjacentSpaceType.heatedSpace,
 				name: "Ceiling 1",
 				surfaceArea: 5,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 				pitchOption: "custom",
 				pitch: 180,
@@ -158,9 +181,8 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 				width: 1,
 				elevationalHeightOfElement: 2,
 				surfaceArea: 1,
-				solarAbsorptionCoefficient: 0.5,
 				uValue: 1,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 			},
 		},
@@ -175,9 +197,8 @@ const ceilingsAndRoofsData: CeilingsAndRoofsData = {
 				width: 1,
 				elevationalHeightOfElement: 2,
 				surfaceArea: 1,
-				solarAbsorptionCoefficient: 0.5,
 				uValue: 1,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
 			},
 		},
@@ -189,32 +210,28 @@ const doorsData: DoorsData = {
 	dwellingSpaceExternalUnglazedDoor: {
 		data: [{
 			data:
-					{
-						name: "External unglazed door 1",
-						pitchOption: "90",
-						pitch: 90,
-						orientation: 0,
-						height: 0.5,
-						width: 20,
-						elevationalHeight: 20,
-						surfaceArea: 10,
-						solarAbsorption: 0.1,
-						uValue: 1,
-						kappaValue: 50000,
-						massDistributionClass: "I",
-					},
+			{
+				name: "External unglazed door 1",
+        associatedItemId: externalWallId,
+				height: 0.5,
+				width: 20,
+				elevationalHeight: 20,
+				surfaceArea: 10,
+				uValue: 1,
+				arealHeatCapacity: "Very light",
+				massDistributionClass: "I",
+				colour: "Intermediate",
+			},
 		}],
 	},
 	dwellingSpaceExternalGlazedDoor: {
 		data: [{
 			data: {
 				name: "External glazed door 1",
-				orientation: 1,
+        associatedItemId: externalWallId,
 				height: 1,
 				width: 1,
 				uValue: 1,
-				pitchOption: "90",
-				pitch: 90,
 				solarTransmittance: 0.1,
 				elevationalHeight: 1,
 				midHeight: 1,
@@ -230,11 +247,10 @@ const doorsData: DoorsData = {
 			data: {
 				typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 				name: "Internal 1",
+        associatedItemId: internalWallId,
 				surfaceArea: 5,
-				kappaValue: 50000,
+				arealHeatCapacity: "Very light",
 				massDistributionClass: "I",
-				pitchOption: "90",
-				pitch: 90,
 			},
 		}],
 	},
@@ -242,13 +258,13 @@ const doorsData: DoorsData = {
 
 const windowData: EcaasForm<WindowData> = {
 	data: {
+    id: "test-id-1",
 		name: "Window 1",
-		orientation: 1,
+    taggedItem: externalWallId,
 		height: 1,
 		width: 1,
 		uValue: 1,
-		pitchOption: "90",
-		pitch: 90,
+		securityRisk: true,
 		solarTransmittance: 0.1,
 		elevationalHeight: 1,
 		midHeight: 1,
@@ -264,29 +280,32 @@ const windowData: EcaasForm<WindowData> = {
 		treatmentType: "blinds",
 		thermalResistivityIncrease: 1,
 		solarTransmittanceReduction: 0.1,
-		securityRisk: false,
 	},
 };
 
 const thermalBridgingData: ThermalBridgingData = {
-	dwellingSpaceLinearThermalBridges: {
-		data: [{
-			data: {
-				name: "E1: Steel lintel with perforated steel base plate",
-				typeOfThermalBridge: "E1",
-				linearThermalTransmittance: 1,
-				length: 2,
-			},
-		}],
-	},
-	dwellingSpacePointThermalBridges: {
-		data: [{
-			data: {
-				name: "Point 1",
-				heatTransferCoefficient: 1,
-			},
-		}],
-	},
+  dwellingSpaceLinearThermalBridges: {
+    data: [
+      {
+        data: {
+          name: "E1: Steel lintel with perforated steel base plate",
+          typeOfThermalBridge: "E1",
+          linearThermalTransmittance: 1,
+          length: 2,
+        },
+      },
+    ],
+  },
+  dwellingSpacePointThermalBridges: {
+    data: [
+      {
+        data: {
+          name: "Point 1",
+          heatTransferCoefficient: 1,
+        },
+      },
+    ],
+  },
 };
 
 describe("Dwelling space fabric summary", () => {
@@ -315,8 +334,9 @@ describe("Dwelling space fabric summary", () => {
 			await renderSuspended(Summary);
 
 			const expectedResult = {
-				"Area": `10 ${metresSquare.suffix}`,
 				"Volume": `10 ${cubicMetre.suffix}`,
+				"Living zone floor area": dim(15, "metres square"),
+				"Rest of dwelling floor area": dim(20, "metres square"),
 				// "Heat emitting system for this zone": "Elec heater",
 			};
 
@@ -347,8 +367,9 @@ describe("Dwelling space fabric summary", () => {
 			await renderSuspended(Summary);
 
 			const expectedResult = {
-				"Number of LED bulbs": "8",
-				"Number of incandescent bulbs": "3",
+				"Number of bulbs": "8",
+				"Power": "5",
+				"Efficacy": "120",
 			};
 
 			for (const [key, value] of Object.entries(expectedResult)) {
@@ -363,9 +384,9 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space floors", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Ground floor" }));
-			expect(screen.getByRole("link", { name: "Internal floor" }));
-			expect(screen.getByRole("link", { name: "Exposed floor" }));
+			expect(screen.getByRole("link", { name: "Ground floors" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Internal floors" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Exposed floors" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the ground floor section", async () => {
@@ -382,7 +403,6 @@ describe("Dwelling space fabric summary", () => {
 			const expectedResult = {
 				"Name": "Ground 1",
 				"Net surface area of this element": `5 ${metresSquare.suffix}`,
-				"Pitch": `0 ${degrees.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Thermal resistance": `1 ${squareMeterKelvinPerWatt.suffix}`,
 				"Areal heat capacity": "Very light",
@@ -443,7 +463,6 @@ describe("Dwelling space fabric summary", () => {
 				"Width": `20 ${metre.suffix}`,
 				"Elevational height of building element at its base": `20 ${metre.suffix}`,
 				"Net surface area": `10 ${metresSquare.suffix}`,
-				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
@@ -462,10 +481,10 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space walls", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "External wall" }));
-			expect(screen.getByRole("link", { name: "Internal wall" }));
-			expect(screen.getByRole("link", { name: "Wall to unheated space" }));
-			expect(screen.getByRole("link", { name: "Party wall" }));
+			expect(screen.getByRole("link", { name: "External walls" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Internal walls" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Walls to unheated spaces" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Party walls" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the external wall section", async () => {
@@ -487,7 +506,6 @@ describe("Dwelling space fabric summary", () => {
 				"Length": `20 ${metre.suffix}`,
 				"Elevational height of building element at its base": `20 ${metre.suffix}`,
 				"Net surface area": `10 ${metresSquare.suffix}`,
-				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
@@ -516,7 +534,7 @@ describe("Dwelling space fabric summary", () => {
 				"Net surface area of element": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
-				"Pitch": `0 ${degrees.suffix}`,
+				"Pitch": `10 ${degrees.suffix}`,
 			};
 
 
@@ -587,8 +605,8 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space walls", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Ceiling" }));
-			expect(screen.getByRole("link", { name: "Roof" }));
+			expect(screen.getByRole("link", { name: "Ceilings" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Roofs" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the ceilings section", async () => {
@@ -637,7 +655,6 @@ describe("Dwelling space fabric summary", () => {
 				"Width": `1 ${metre.suffix}`,
 				"Elevational height of building element at its base": `2 ${metre.suffix}`,
 				"Net surface area": `1 ${metresSquare.suffix}`,
-				"Solar absorption coefficient": "0.5",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
@@ -658,7 +675,6 @@ describe("Dwelling space fabric summary", () => {
 				"Width": `1 ${metre.suffix}`,
 				"Elevational height of building element at its base": `2 ${metre.suffix}`,
 				"Net surface area": `1 ${metresSquare.suffix}`,
-				"Solar absorption coefficient": "0.5",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
@@ -676,19 +692,23 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space doors", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "External unglazed door" }));
-			expect(screen.getByRole("link", { name: "External glazed door" }));
-			expect(screen.getByRole("link", { name: "Internal door" }));
+			expect(screen.getByRole("link", { name: "External unglazed doors" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "External glazed doors" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Internal doors" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the external unglazed doors section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceDoors: {
-						dwellingSpaceExternalUnglazedDoor: doorsData.dwellingSpaceExternalUnglazedDoor,
-					},
-				},
-			});
+	      store.$patch({
+        dwellingFabric: {
+          dwellingSpaceWalls: {
+            dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+          },
+          dwellingSpaceDoors: {
+            dwellingSpaceExternalUnglazedDoor:
+              doorsData.dwellingSpaceExternalUnglazedDoor,
+          },
+        },
+      });
 
 			await renderSuspended(Summary);
 
@@ -700,7 +720,6 @@ describe("Dwelling space fabric summary", () => {
 				"Width": `20 ${metre.suffix}`,
 				"Elevational height of building element at its base": `20 ${metre.suffix}`,
 				"Net surface area": `10 ${metresSquare.suffix}`,
-				"Solar absorption coefficient": "0.1",
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
@@ -715,19 +734,23 @@ describe("Dwelling space fabric summary", () => {
 		});
 
 		it("should display the correct data for the external glazed doors section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceDoors: {
-						dwellingSpaceExternalGlazedDoor: doorsData.dwellingSpaceExternalGlazedDoor,
-					},
-				},
-			});
+      store.$patch({
+        dwellingFabric: {
+          dwellingSpaceWalls: {
+            dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+          },
+          dwellingSpaceDoors: {
+            dwellingSpaceExternalGlazedDoor:
+              doorsData.dwellingSpaceExternalGlazedDoor,
+          },
+        },
+      });
 
 			await renderSuspended(Summary);
 
 			const expectedResult = {
 				"Name": "External glazed door 1",
-				"Orientation": `1 ${degrees.suffix}`,
+				"Orientation": `0 ${degrees.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
@@ -745,14 +768,17 @@ describe("Dwelling space fabric summary", () => {
 		});
 
 		it("should display the correct data for the internal doors section", async () => {
-			store.$patch({
-				dwellingFabric: {
-					dwellingSpaceDoors: {
-						dwellingSpaceInternalDoor: doorsData.dwellingSpaceInternalDoor,
-					},
-				},
-			});
-
+      store.$patch({
+        dwellingFabric: {
+          dwellingSpaceWalls: {
+            dwellingSpaceInternalWall: wallsData.dwellingSpaceInternalWall,
+          },
+          dwellingSpaceDoors: {
+            dwellingSpaceInternalDoor: doorsData.dwellingSpaceInternalDoor,
+          },
+        },
+      });
+			
 			await renderSuspended(Summary);
 
 			const expectedResult = {
@@ -761,7 +787,7 @@ describe("Dwelling space fabric summary", () => {
 				"Net surface area of element": `5 ${metresSquare.suffix}`,
 				"Areal heat capacity": "Very light",
 				"Mass distribution class": "Internal",
-				"Pitch": `90 ${degrees.suffix}`,
+				"Pitch": `10 ${degrees.suffix}`,
 			};
 
 
@@ -777,7 +803,7 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space windows", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Windows" }));
+			expect(screen.getByRole("link", { name: "Windows" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the windows section", async () => {
@@ -787,17 +813,21 @@ describe("Dwelling space fabric summary", () => {
 						data: [windowData],
 						complete: true,
 					},
+					 dwellingSpaceWalls: {
+            dwellingSpaceExternalWall: wallsData.dwellingSpaceExternalWall,
+          },
 				},
 			});
 
 			await renderSuspended(Summary);
 			const expectedResult = {
 				"Name": "Window 1",
-				"Orientation": `1 ${degrees.suffix}`,
+				"Orientation": `0 ${degrees.suffix}`,
 				"Height": `1 ${metre.suffix}`,
 				"Width": `1 ${metre.suffix}`,
 				"U-value": `1 ${wattsPerSquareMeterKelvin.suffix}`,
 				"Pitch": `90 ${degrees.suffix}`,
+				"Security risk": "Yes",
 				"Transmittance of solar energy": "0.1",
 				"Elevational height of building element at its base": `1 ${metre.suffix}`,
 				"Mid height": `1 ${metre.suffix}`,
@@ -826,8 +856,8 @@ describe("Dwelling space fabric summary", () => {
 		it("should contain the correct tabs for dwelling space thermal bridges", async () => {
 			await renderSuspended(Summary);
 
-			expect(screen.getByRole("link", { name: "Linear thermal bridges" }));
-			expect(screen.getByRole("link", { name: "Point thermal bridges" }));
+			expect(screen.getByRole("link", { name: "Linear thermal bridges" })).not.toBeNull();
+			expect(screen.getByRole("link", { name: "Point thermal bridges" })).not.toBeNull();
 		});
 
 		it("should display the correct data for the linear thermal bridges section", async () => {

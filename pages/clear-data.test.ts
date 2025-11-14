@@ -23,8 +23,9 @@ describe("clear data page", () => {
 		const user = userEvent.setup();
 
 		const state: DwellingSpaceZoneParametersData = {
-			area: 10,
 			volume: 10,
+			livingRoomArea: 15,
+			restOfDwellingArea: 20,
 			spaceCoolingSystemForThisZone: [],
 			spaceHeatControlSystemForThisZone: [],
 		};

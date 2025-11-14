@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
-import type { EcaasForm, EcaasState, UsesPitchComponent } from "./ecaasStore.schema";
 import formStatus from "~/constants/formStatus";
 import type { GovTagProps } from "~/common.types";
-import { PageType  } from "~/data/pages/pages.types";
+import { PageType } from "~/data/pages/pages.types";
 import type { Page } from "~/data/pages/pages.types";
 import type { EmptyObject } from "type-fest";
 import pagesData from "~/data/pages/pages";
@@ -13,6 +12,7 @@ export function getInitialState(): EcaasState {
 			generalSpecifications: { data: {} },
 			shading: { data: [] },
 			externalFactors: { data: {} },
+			appliances: { data: {} },
 		},
 		infiltrationAndVentilation: {
 			mechanicalVentilation: { data: [] },
@@ -78,11 +78,12 @@ export function getInitialState(): EcaasState {
 			dwellingSpaceThermalBridging: {
 				dwellingSpaceLinearThermalBridges: { data: [] },
 				dwellingSpacePointThermalBridges: { data: [] },
-			}, 
+			},
 			dwellingSpaceZoneParameters: { data: {} },
 			dwellingSpaceLighting: { data: {} },
 		},
-		heatingSystems: {
+		heatingAndCoolingSystems: {
+			general: { data: {} },
 			heatGeneration: {
 				heatPump: { data: [] },
 				boiler: { data: [] },
@@ -90,24 +91,24 @@ export function getInitialState(): EcaasState {
 				heatNetwork: { data: [] },
 				heatInterfaceUnit: { data: [] },
 			},
-			energySupply: { data: {} },
 			heatEmitting: {
 				wetDistribution: { data: [] },
 				instantElectricHeater: { data: [] },
 				electricStorageHeater: { data: [] },
 				warmAirHeatPump: { data: [] },
 			},
+			cooling: {
+				airConditioning: { data: [] },
+			},
 		},
 		pvAndBatteries: {
 			pvSystems: { data: [] },
 			electricBattery: { data: [] },
-		},
-		cooling: {
-			airConditioning: { data: [] },
+			diverters: { data: [] },
 		},
 	};
 	return store as EcaasState;
-}	
+}
 
 export const useEcaasStore = defineStore("ecaas", {
 	state: getInitialState,
@@ -122,8 +123,8 @@ export const useEcaasStore = defineStore("ecaas", {
 
 				if (section) {
 					const entry = Object.entries(section).find((x) => x[0] === page.id)!;
-					
-					if(page.id === "ductwork"){
+
+					if (page.id === "ductwork") {
 						return getDuctworkStatus(entry[1]);
 					}
 
@@ -143,8 +144,43 @@ export const useEcaasStore = defineStore("ecaas", {
 				return formStatus.notStarted;
 			};
 		},
+
+		getTaggedItem() {
+			return <T extends Record<string, unknown>>(
+				sections: EcaasFormList<Partial<T>>[],
+				id: string | undefined,
+			): AssociatedItemValues | undefined => {
+				const topLevelTaggedItem = getTopLevelTaggedItem(sections, id);
+				if (topLevelTaggedItem) return topLevelTaggedItem;
+
+				const nestedTaggedItem = getNestedTaggedItem(sections, id);
+				if (nestedTaggedItem && "taggedItem" in nestedTaggedItem) {
+					return this.getTaggedItem(sections, nestedTaggedItem.taggedItem as string);
+				}
+			};
+		},
 	},
-	actions: {
+	  actions: {
+    removeTaggedAssociations() {
+      return <T extends Record<string, unknown>>(
+        sections: EcaasFormList<T>[],
+        idToRemove: string | undefined,
+        keyToCheck: keyof T = "associatedItemId"
+      ) => {
+        for (const section of sections) {
+          section.data.find((item) => {
+            const idOfTaggedItem = (item.data as Partial<T>)[keyToCheck];
+            if (idOfTaggedItem === idToRemove) {
+              this.$patch(() => {
+                (item.data as Partial<T>)[keyToCheck] = undefined;
+                item.complete = false;
+                section.complete = false;
+              });
+            }
+          });
+        }
+      };
+    },
 		async postEcaasState (){
 			try {
 				await $fetch("/api/session", {
@@ -177,8 +213,9 @@ export type NulledForms<T> = { [P in keyof T]: T[P] extends EcaasForm<infer U> ?
 
 /** Function to wrap a form that uses the Pitch component (which writes to pitch and pitchOption fields) and extract the pitch number value */
 export function extractPitch(form: UsesPitchComponent): number {
+
 	const { pitch, pitchOption } = form;
-	if (pitchOption === "custom") {
+	if (pitchOption === "custom" || pitch !== undefined) {
 		return pitch!;
 	}
 	return Number(pitchOption);

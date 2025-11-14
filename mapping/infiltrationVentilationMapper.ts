@@ -20,7 +20,6 @@ export function mapInfiltrationVentilationData(state: ResolvedState): Partial<Fh
 		cross_vent_possible: crossVentilationPossible,
 		ventilation_zone_base_height: dwellingElevationalLevelAtBase,
 		ach_max_static_calcs: 2, // suggested default
-		vent_opening_ratio_init: 1, // 1 is open
 		MechanicalVentilation: objectFromEntries(objectEntries(mechanicalVentilation).map(([name, mechanicalVentData]) => {
 			return [
 				name,
@@ -49,7 +48,6 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 		}
 		
 		const key = x.name;
-		
 		const commonFields = {
 			design_outdoor_air_flow_rate: airFlowRateInCubicMetresPerHour,
 			sup_air_flw_ctrl: "ODA",
@@ -68,7 +66,9 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					...commonFields,
 					mvhr_location: x.mvhrLocation,
 					mvhr_eff: x.mvhrEfficiency,
+					position_exhaust: {},
 					ductwork: [],
+					position_intake: {},
 					measured_air_flow_rate: 37,
 					measured_fan_power: 12.26,
 				};
@@ -79,6 +79,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					...commonFields,
 					measured_air_flow_rate: 37,
 					measured_fan_power: 12.26,
+					position_exhaust: {},
 				};
 				break;
 			case "Intermittent MEV":
@@ -86,6 +87,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					vent_type: "Intermittent MEV",
 					...commonFields,
 					SFP: 1.5,
+					position_exhaust: {},
 				};
 				break;
 			case "Decentralised continuous MEV":
@@ -93,6 +95,7 @@ export function mapMechanicalVentilationData(state: ResolvedState) {
 					vent_type: "Decentralised continuous MEV",
 					...commonFields,
 					SFP: 1.5,
+					position_exhaust: {},
 				};
 				break;
 			default:
@@ -128,14 +131,21 @@ function mapMvhrDuctworkData(mechanicalVentilationName: string, state: ResolvedS
 }
 
 export function mapVentsData(state: ResolvedState) {
+    const { dwellingSpaceWindows } = state.dwellingFabric;
+  const { dwellingSpaceExternalWall } = state.dwellingFabric.dwellingSpaceWalls;
+
 	const entries = state.infiltrationAndVentilation.vents.map((x): [string, SchemaVent] => {
 		const key = x.name;
+    const taggedItem = getResolvedTaggedItem(
+    [dwellingSpaceWindows, dwellingSpaceExternalWall],
+    x.associatedItemId
+  )!;
+
 		const val: SchemaVent = {
 			area_cm2: x.effectiveVentilationArea,
 			mid_height_air_flow_path: x.midHeightOfZone,
-			orientation360: x.orientation,
-			pitch: x.pitch,
-			pressure_difference_ref: 20, // stock value
+      orientation360: taggedItem.orientation!,
+      pitch: extractPitch(taggedItem),
 		};
 
 		return [key, val];

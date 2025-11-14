@@ -18,7 +18,6 @@ describe("wwhrs form", () => {
 	const state: WwhrsData = {
 		name: "WWHRS 1",
 		outlet: mixedShowerId,
-		type: "WWHRS_InstantaneousSystemA",
 		flowRate: 10,
 		efficiency: 10,
 		proportionOfUse: 0.5,
@@ -44,7 +43,6 @@ describe("wwhrs form", () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "WWHRS 1");
 		await user.click(screen.getByTestId(`outlet_${mixedShowerId}`));
-		await user.click(screen.getByTestId("type_WWHRS_InstantaneousSystemA"));
 		await user.type(screen.getByTestId("flowRate"), "10");
 		await user.type(screen.getByTestId("efficiency"), "10");
 		await user.type(screen.getByTestId("proportionOfUse"), "0.5");
@@ -85,7 +83,6 @@ describe("wwhrs form", () => {
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("WWHRS 1");
 		expect((await screen.findByTestId(`outlet_${mixedShowerId}`)).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId("type_WWHRS_InstantaneousSystemA")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("flowRate")).value).toBe("10");
 		expect((await screen.findByTestId<HTMLInputElement>("efficiency")).value).toBe("10");
 		expect((await screen.findByTestId<HTMLInputElement>("proportionOfUse")).value).toBe("0.5");
@@ -98,7 +95,6 @@ describe("wwhrs form", () => {
 
 		expect(await screen.findByTestId("name_error")).toBeDefined();
 		expect(await screen.findByTestId("outlet_error")).toBeDefined();
-		expect(await screen.findByTestId("type_error")).toBeDefined();
 		expect(await screen.findByTestId("flowRate_error")).toBeDefined();
 		expect(await screen.findByTestId("efficiency_error")).toBeDefined();
 		expect(await screen.findByTestId("proportionOfUse_error")).toBeDefined();

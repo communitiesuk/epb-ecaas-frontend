@@ -15,27 +15,41 @@ describe("windows", () => {
 		return navigateToMock;
 	});
 
-	
-	const window1: EcaasForm<WindowData> = {
-		data: {
-			name: "Window 1",
-			orientation: 1,
-			height: 1,
-			width: 1,
-			uValue: 1,
-			pitchOption: "90",
-			pitch: 90,
-			solarTransmittance: 0.1,
-			elevationalHeight: 1,
-			midHeight: 1,
-			numberOpenableParts: "0",
-			openingToFrameRatio: 0.2,
-			curtainsOrBlinds: false,
-			securityRisk: false,
-		},
-		complete: true,
-	};
-	
+	const externalWall: ExternalWallData = {
+    id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+    name: "External wall 1",
+    pitchOption: "90",
+    pitch: 90,
+    orientation: 0,
+    length: 20,
+    height: 0.5,
+    elevationalHeight: 20,
+    surfaceArea: 10,
+    uValue: 1,
+		colour: "Intermediate",
+		arealHeatCapacity: "Very light",
+    massDistributionClass: "I",
+  };
+
+  const window1: EcaasForm<WindowData> = {
+    data: {
+      id: "test-id-1",
+      name: "Window 1",
+      taggedItem: externalWall.id,
+      height: 1,
+      width: 1,
+      uValue: 1,
+      solarTransmittance: 0.1,
+      elevationalHeight: 1,
+      midHeight: 1,
+      numberOpenableParts: "0",
+      openingToFrameRatio: 0.2,
+      curtainsOrBlinds: false,
+      securityRisk: false,
+    },
+    complete: true,
+  };
+
 	const window2: EcaasForm<WindowData> = {
 		data: {
 			...window1.data,
@@ -100,6 +114,39 @@ describe("windows", () => {
 		expect(within(populatedList).getByText("Window 3")).toBeDefined();
 		expect(within(populatedList).queryByText("Window 2")).toBeNull();
 	});
+
+ test("when a window is removed its also removed from any store item that references it", async () => {
+    const vent1: EcaasForm<VentData> = {
+      data: {
+        name: "Vent 1",
+        typeOfVent: "trickle",
+        associatedItemId: window2.data.id,
+        effectiveVentilationArea: 10,
+        openingRatio: 1,
+        midHeightOfZone: 1,
+      },
+    };
+
+    store.$patch({
+      dwellingFabric: {
+        dwellingSpaceWindows: {
+          data: [window1, window2],
+        },
+      },
+      infiltrationAndVentilation: {
+        vents: {
+          data: [vent1],
+        },
+      },
+    });
+
+    await renderSuspended(Windows);
+
+    await user.click(await screen.findByTestId("windows_remove_1"));
+
+    const vent = store.infiltrationAndVentilation.vents.data[0]?.data;
+    expect(vent?.associatedItemId).toBeUndefined();
+  });
 
 	test("window is duplicated when duplicate link is clicked", async () => {
 

@@ -12,14 +12,28 @@ describe("external glazed door", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
+	const externalWall: ExternalWallData = {
+		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+		name: "External wall 1",
+		pitchOption: "90",
+		pitch: 90,
+		orientation: 0,
+		length: 20,
+		height: 0.5,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		uValue: 1,
+		colour: "Intermediate",
+		arealHeatCapacity: "Very light",
+		massDistributionClass: "I",
+	};
+	
 	const doorForState = {
 		name: "External glazed door 1",
-		orientation: 12,
+		associatedItemId: externalWall.id,
 		height: 14,
 		width: 48,
 		uValue: 0.45,
-		pitchOption: "90",
-		pitch: 90,
 		securityRisk: false,
 		solarTransmittance: 0.1,
 		elevationalHeight: 14,
@@ -34,6 +48,18 @@ describe("external glazed door", () => {
 		data: doorForState,
 	};
 
+	beforeEach(() => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall, complete: true }],
+					},
+				},
+			},
+		});
+	});
+
 	afterEach(() => {
 		store.$reset();
 	});
@@ -46,12 +72,11 @@ describe("external glazed door", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), "External glazed door 1");
-		await user.type(screen.getByTestId("orientation"), "12");
+		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
 		await user.type(screen.getByTestId("height"), "14");
 		await user.type(screen.getByTestId("width"), "48");
 		await user.type(screen.getByTestId("maximumOpenableArea"), "13");
 		await user.type(screen.getByTestId("uValue"), "0.45");
-		await user.click(screen.getByTestId("pitchOption_90"));
 		await user.click(screen.getByTestId("securityRisk_no"));
 		await user.type(screen.getByTestId("solarTransmittance"), "0.1");
 		await user.type(screen.getByTestId("elevationalHeight"), "14");
@@ -94,11 +119,10 @@ describe("external glazed door", () => {
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External glazed door 1");
-		expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("12");
+		expect((await screen.findByTestId(`associatedItemId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("14");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("48");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("0.45");
-		expect((await screen.findByTestId("pitchOption_90")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("solarTransmittance")).value).toBe("0.1");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("14");
 		expect((await screen.findByTestId<HTMLInputElement>("midHeight")).value).toBe("11");
@@ -110,11 +134,10 @@ describe("external glazed door", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
-		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
+		expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("width_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
-		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
 		expect((await screen.findByTestId("solarTransmittance_error"))).toBeDefined();
 		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("midHeight_error"))).toBeDefined();
@@ -126,15 +149,6 @@ describe("external glazed door", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("externalGlazedDoorErrorSummary"))).toBeDefined();
-	});
-
-	it("requires pitch when custom pitch option is selected", async () => {
-		await renderSuspended(ExternalGlazedDoor);
-    
-		await user.click(screen.getByTestId("pitchOption_custom"));
-		await user.click(screen.getByTestId("saveAndComplete"));
-    
-		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
 	describe("partially saving data", () => {

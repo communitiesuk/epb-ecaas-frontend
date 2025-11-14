@@ -1,4 +1,4 @@
-import type { SchemaBathDetails, SchemaDistribution, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaWaterPipework } from "~/schema/aliases";
+import type { SchemaBathDetails, SchemaHotWaterSourceDetails, SchemaOtherWaterUseDetails, SchemaShower, SchemaWaterPipework } from "~/schema/aliases";
 import type { SchemaStorageTank } from "~/schema/api-schema.types";
 import type { FhsInputSchema, ResolvedState } from "./fhsInputMapper";
 import { defaultControlMaxName, defaultControlMinName, defaultElectricityEnergySupplyName } from "./common";
@@ -8,7 +8,6 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 	const showers = mapShowersData(state);
 	const baths = mapBathsData(state);
 	const others = mapOthersData(state);
-	const distribution = mapDistributionData(state);
 	const hotWaterSources = mapHotWaterSourcesData(state);
 
 	return {
@@ -16,7 +15,6 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 			Shower: showers,
 			Bath: baths,
 			Other: others,
-			Distribution: distribution,
 		},
 		HotWaterSource: {
 			"hw cylinder": hotWaterSources[0]!, // FHS input schema currently only allows for one hot water cylinder while the frontend allows users to add multiple
@@ -25,7 +23,7 @@ export function mapDomesticHotWaterData(state: ResolvedState): Partial<FhsInputS
 }
 
 function mapShowersData(state: ResolvedState) {
-	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.mixedShower.map((x):[string, SchemaShower] => {
+	const mixedShowerEntries = state.domesticHotWater.hotWaterOutlets.mixedShower.map((x): [string, SchemaShower] => {
 		const key = x.name;
 		const val: SchemaShower = {
 			type: "MixerShower",
@@ -36,7 +34,7 @@ function mapShowersData(state: ResolvedState) {
 		return [key, val];
 	});
 
-	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.electricShower.map((x):[string, SchemaShower] => {
+	const electricShowerEntries = state.domesticHotWater.hotWaterOutlets.electricShower.map((x): [string, SchemaShower] => {
 		const key = x.name;
 		const val: SchemaShower = {
 			type: "InstantElecShower",
@@ -52,11 +50,10 @@ function mapShowersData(state: ResolvedState) {
 }
 
 function mapBathsData(state: ResolvedState) {
-	const bathEntries = state.domesticHotWater.hotWaterOutlets.bath.map((x):[string, SchemaBathDetails] => {
+	const bathEntries = state.domesticHotWater.hotWaterOutlets.bath.map((x): [string, SchemaBathDetails] => {
 		const key = x.name;
 		const val: SchemaBathDetails = {
 			ColdWaterSource: "mains water",
-			flowrate: x.flowRate,
 			size: x.size,
 		};
 
@@ -67,7 +64,7 @@ function mapBathsData(state: ResolvedState) {
 }
 
 function mapOthersData(state: ResolvedState) {
-	const otherEntries = state.domesticHotWater.hotWaterOutlets.otherOutlets.map((x):[string, SchemaOtherWaterUseDetails] => {
+	const otherEntries = state.domesticHotWater.hotWaterOutlets.otherOutlets.map((x): [string, SchemaOtherWaterUseDetails] => {
 		const key = x.name;
 		const val: SchemaOtherWaterUseDetails = {
 			ColdWaterSource: "mains water",
@@ -80,19 +77,9 @@ function mapOthersData(state: ResolvedState) {
 	return Object.fromEntries(otherEntries);
 }
 
-export function mapDistributionData(state: ResolvedState) {
-	return state.domesticHotWater.pipework.secondaryPipework.map((x): SchemaDistribution => {
-		return {
-			length: x.length,
-			location: x.location,
-			internal_diameter_mm: x.internalDiameter,
-		};
-	});
-}
-
 export function mapHotWaterSourcesData(state: ResolvedState) {
 	return state.domesticHotWater.waterHeating.hotWaterCylinder.map((x): SchemaHotWaterSourceDetails => {
-		const referencedHeatPump = state.heatingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.id === x.heatSource);
+		const referencedHeatPump = state.heatingAndCoolingSystems.heatGeneration.heatPump.find(heat_pump => heat_pump.id === x.heatSource);
 		const heatPumpName = referencedHeatPump ? referencedHeatPump.name : "Heat pump";
 		const primaryPipeworkEntries = state.domesticHotWater.pipework.primaryPipework.filter(pipework => pipework.hotWaterCylinder === x.id).map((x): SchemaWaterPipework => {
 			return {
@@ -111,9 +98,9 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 
 		if (typeof x.storageCylinderVolume === "number") {
 			storageCylinderVolumeInLitres = x.storageCylinderVolume;
-		} else  {
+		} else {
 			storageCylinderVolumeInLitres = asLitres(x.storageCylinderVolume);
-		} 
+		}
 
 		const val: SchemaStorageTank = {
 			daily_losses: x.dailyEnergyLoss,
@@ -124,7 +111,7 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 				// Adding these values as default until heat pump is set up to come from PCDB
 				[heatPumpName]: {
 					name: heatPumpName,
-					EnergySupply: defaultElectricityEnergySupplyName, 
+					EnergySupply: defaultElectricityEnergySupplyName,
 					heater_position: 0.1,
 					type: "HeatSourceWet",
 					thermostat_position: 0.33,
@@ -137,6 +124,6 @@ export function mapHotWaterSourcesData(state: ResolvedState) {
 			init_temp: 20.0, // TODO this is an initial guess; decide on number, if one needs to be passed
 		};
 
-		return val;		
+		return val;
 	});
 }

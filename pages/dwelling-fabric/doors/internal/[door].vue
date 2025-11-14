@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
+import { AdjacentSpaceType, standardPitchOptions, getUrl, uniqueName } from "#imports";
 
 const title = "Internal door";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data);
+const internalDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor?.data;
+const index = getStoreIndex(internalDoorData);
+const doorData = useItemToEdit("door", internalDoorData);
 const model = ref(doorData?.data);
 
 const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
@@ -13,15 +15,13 @@ const typeOfInternalDoorOptions = adjacentSpaceTypeOptions("Internal door");
 const saveForm = (fields: InternalDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceInternalDoor } = state.dwellingFabric.dwellingSpaceDoors;
-		const index = getStoreIndex(dwellingSpaceInternalDoor.data);
 
 		const commonFields = {
+			associatedItemId: fields.associatedItemId,
 			name: fields.name,
 			surfaceArea: fields.surfaceArea,
-			kappaValue: fields.kappaValue,
+			arealHeatCapacity: fields.arealHeatCapacity,
 			massDistributionClass: fields.massDistributionClass,
-			pitchOption: fields.pitchOption,
-			pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
 		};
 
 		let door: EcaasForm<InternalDoorData>;
@@ -58,8 +58,6 @@ autoSaveElementForm<InternalDoorData>({
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor,
 	defaultName: "Internal door",
 	onPatch: (state, newData, index) => {
-		const { pitchOption, pitch } = newData.data;
-		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceInternalDoor.complete = false;
 	},
@@ -69,30 +67,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 </script>
 
 <template>
+
 	<Head>
 		<Title>{{ title }}</Title>
 	</Head>
 	<h1 class="govuk-heading-l">
 		{{ title }}
 	</h1>
-	<FormKit
-		v-model="model"
-		type="form"
-		:actions="false"
-		:incomplete-message="false"
-		@submit="saveForm"
-		@submit-invalid="handleInvalidSubmit"
-	>
-		<GovErrorSummary :error-list="errorMessages" test-id="internalDoorErrorSummary"/>
-		<FormKit
-			id="typeOfInternalDoor"
-			type="govRadios"
-			:options="typeOfInternalDoorOptions"
-			label="Type"
-			help="This affects which inputs are necessary."
-			name="typeOfInternalDoor"
-			validation="required"
-		/>
+	<FormKit v-model="model" type="form" :actions="false" :incomplete-message="false" @submit="saveForm"
+		@submit-invalid="handleInvalidSubmit">
+		<GovErrorSummary :error-list="errorMessages" test-id="internalDoorErrorSummary" />
+		<FormKit id="typeOfInternalDoor" type="govRadios" :options="typeOfInternalDoorOptions" label="Type"
+			help="This affects which inputs are necessary." name="typeOfInternalDoor" validation="required" />
 		<template v-if="!!model?.typeOfInternalDoor">
 			<FormKit
 				id="name"
@@ -100,13 +86,20 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				label="Name"
 				help="Provide a name for this element so that it can be identified later"
 				name="name"
-				validation="required"
+				:validation-rules="{ uniqueName: uniqueName(internalDoorData, { index }) }"
+				validation="required | uniqueName"
+				:validation-messages="{
+					uniqueName: 'An element with this name already exists. Please enter a unique name.'
+				}"
 			/>
-			<FieldsPitch
-				:pitch-option="model?.pitchOption"
-				:options="standardPitchOptions()"
-				data-field="Zone.BuildingElement.*.pitch"
-			/>
+			<FieldsAssociatedElements v-if="model.typeOfInternalDoor === AdjacentSpaceType.heatedSpace" id="associatedItemId"
+				name="associatedItemId" label="Associated wall or ceiling"
+				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
+				:adjacent-space-type="AdjacentSpaceType.heatedSpace" />
+			<FieldsAssociatedElements v-if="model.typeOfInternalDoor === AdjacentSpaceType.unheatedSpace"
+				id="associatedItemId" name="associatedItemId" label="Associated wall or ceiling"
+				help="Select the wall or ceiling that this door is in. It should have the same pitch as the door."
+				:adjacent-space-type="AdjacentSpaceType.unheatedSpace" />
 			<FormKit
 				id="surfaceArea"
 				type="govInputWithSuffix"
@@ -122,23 +115,19 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 				id="uValue"
 				name="uValue"
 			/>
-			<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+			<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 			<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		</template>
-		<FormKit
-			v-if="model?.typeOfInternalDoor === 'unheatedSpace'"
-			id="thermalResistanceOfAdjacentUnheatedSpace"
-			type="govInputWithSuffix"
-			suffix-text="(m²·K)/W"
-			label="Thermal resistance of adjacent unheated space"
+		<FormKit v-if="model?.typeOfInternalDoor === 'unheatedSpace'" id="thermalResistanceOfAdjacentUnheatedSpace"
+			type="govInputWithSuffix" suffix-text="(m²·K)/W" label="Thermal resistance of adjacent unheated space"
 			help="Enter the effective thermal resistance of the unheated space"
-			name="thermalResistanceOfAdjacentUnheatedSpace"
-			validation="required | number | min:0 | max:3"
-			data-field="Zone.BuildingElement.*.thermal_resistance_unconditioned_space"
-		>
+			name="thermalResistanceOfAdjacentUnheatedSpace" validation="required | number | min:0 | max:3"
+			data-field="Zone.BuildingElement.*.thermal_resistance_unconditioned_space">
 			<GovDetails summary-text="Help with this input">
 				<p class="govuk-hint">
-					For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5 (m²·K)/W for when the facing wall is not exposed.
+					For example values please refer to the technical paper S11P-028. The maximum value in this paper is 2.5
+					(m²·K)/W
+					for when the facing wall is not exposed.
 				</p>
 				<p class="govuk-body">
 					<a href="/guidance/unheated-space-guidance" target="_blank" class="govuk-link">

@@ -18,8 +18,8 @@ const model = ref({
 // };
 
 // const spaceHeatingSystemOptions = [
-// 	store.heatingSystems.heatEmitting.wetDistribution.data.map(x => [x.name, x.name] as [string, string]),
-// 	store.heatingSystems.heatEmitting.instantElectricHeater.data.map(x => [x.name, x.name] as [string, string]),
+// 	store.heatingAndCoolingSystems.heatEmitting.wetDistribution.data.map(x => [x.name, x.name] as [string, string]),
+// 	store.heatingAndCoolingSystems.heatEmitting.instantElectricHeater.data.map(x => [x.name, x.name] as [string, string]),
 // ].flat();
 
 const saveForm = (fields: typeof model.value) => {
@@ -27,8 +27,9 @@ const saveForm = (fields: typeof model.value) => {
 		dwellingFabric: {
 			dwellingSpaceZoneParameters: {
 				data: {
-					area: fields.area,
 					volume: fields.volume,
+					livingRoomArea: fields.livingRoomArea,
+					restOfDwellingArea: fields.restOfDwellingArea,
 					spaceHeatingSystemForThisZone: fields.spaceHeatingSystemForThisZone,
 					// heatingControlType: fields.heatingControlType,
 					// spaceCoolingSystemForThisZone: fields.spaceCoolingSystemForThisZone,
@@ -73,23 +74,32 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<!--			</a>-->
 		<!--		</p>-->
 		<FormKit
-			id="area"
-			type="govInputWithSuffix"
-			suffix-text="m²"
-			label="Area"
-			name="area"
-			help="Enter the total area of the floors in the dwelling"
-			validation="required"
-		/>
-		<FormKit
 			id="volume"
 			type="govInputWithSuffix"
 			suffix-text="m³"
 			label="Volume"
 			name="volume"
 			help="Enter the volume of the whole dwelling"
-			validation="required"
+			validation="required | number | min:0 | max:50000"
 			data-field="Zone.volume"
+		/>
+		<FormKit
+			id="livingRoomArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Floor area of the living zone"
+			name="livingRoomArea"
+			validation="required | number | min:0 | max:10000"
+			data-field="Zone.livingroom_area"
+		/>
+		<FormKit
+			id="restOfDwellingArea"
+			type="govInputWithSuffix"
+			suffix-text="m²"
+			label="Floor area of the rest of dwelling"
+			name="restOfDwellingArea"
+			validation="required | number | min:0 | max:10000"
+			data-field="Zone.restofdwelling_area"
 		/>
 		<!-- <FormKit
 			id="heatingControlType"
@@ -108,7 +118,7 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 		<!--			name="spaceHeatingSystemForThisZone"-->
 		<!--			help="Select a heat emitting system that has already been added to the calculation. You can only add one heat emitting system for each zone."-->
 		<!--			:options="new Map(spaceHeatingSystemOptions)"-->
-		<!--			:link="getUrl('heatingSystems')"-->
+		<!--			:link="getUrl('heatingAndCoolingSystems')"-->
 		<!--			validation="required">-->
 		<!--			<div v-if="!spaceHeatingSystemOptions.length">-->
 		<!--				<p class="govuk-error-message">No heat emitting systems added.</p>-->

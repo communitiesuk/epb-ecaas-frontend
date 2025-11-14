@@ -21,7 +21,6 @@ describe("Electric battery", () => {
 		data: {
 			name: "Acme battery mk II",
 			capacity: 40,
-			batteryAge: 12,
 			chargeEfficiency: 0.9,
 			location: "inside",
 			gridChargingPossible: false,
@@ -34,7 +33,6 @@ describe("Electric battery", () => {
 	const fillForm = async () => {
 		await user.type(screen.getByTestId("name"), "Acme battery mk II");
 		await user.type(screen.getByTestId("capacity"), "40");
-		await user.type(screen.getByTestId("batteryAge"), "12");
 		await user.type(screen.getByTestId("chargeEfficiency"), "0.9");
 		await user.click(screen.getByTestId("location_inside"));
 		await user.click(screen.getByTestId("gridChargingPossible_no"));
@@ -86,7 +84,6 @@ describe("Electric battery", () => {
         
 		await user.type(screen.getByTestId("name"), "Acme battery mk II");
 		await user.type(screen.getByTestId("capacity"), "40");
-		await user.type(screen.getByTestId("batteryAge"), "12");
 		await user.type(screen.getByTestId("chargeEfficiency"), "0.9");
 		await user.click(screen.getByTestId("location_inside"));
 		await user.click(screen.getByTestId("gridChargingPossible_no"));
@@ -106,7 +103,6 @@ describe("Electric battery", () => {
         
 		await user.type(screen.getByTestId("name"), "Acme battery mk II");
 		await user.type(screen.getByTestId("capacity"), "40");
-		await user.type(screen.getByTestId("batteryAge"), "12");
 		await user.type(screen.getByTestId("chargeEfficiency"), "2.9");
 		await user.click(screen.getByTestId("location_inside"));
 		await user.click(screen.getByTestId("gridChargingPossible_no"));

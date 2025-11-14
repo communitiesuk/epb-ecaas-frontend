@@ -1,32 +1,33 @@
 <script setup lang="ts">
-import { standardPitchOptions, getUrl } from "#imports";
+import { standardPitchOptions, getUrl, uniqueName } from "#imports";
 
 const title = "External unglazed door";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const doorData = useItemToEdit("door", store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor?.data);
+const externalUnglazedDoorData = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor?.data;
+const index = getStoreIndex(externalUnglazedDoorData);
+const doorData = useItemToEdit("door", externalUnglazedDoorData);
 const model = ref(doorData?.data);
+
+const colourOptions = colourOptionsMap;
 
 const saveForm = (fields: ExternalUnglazedDoorData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceExternalUnglazedDoor } = state.dwellingFabric.dwellingSpaceDoors;
-		const index = getStoreIndex(dwellingSpaceExternalUnglazedDoor.data);
 
 		dwellingSpaceExternalUnglazedDoor.data[index] = {
 			data: {
 				name: fields.name,
-				pitchOption: fields.pitchOption,
-				pitch: fields.pitchOption === "90" ? 90 : fields.pitch,
-				orientation: fields.orientation,
+				associatedItemId: fields.associatedItemId,
 				height: fields.height,
 				width: fields.width,
 				elevationalHeight: fields.elevationalHeight,
 				surfaceArea: fields.surfaceArea,
-				solarAbsorption: fields.solarAbsorption,
 				uValue: fields.uValue,
-				kappaValue: fields.kappaValue,
+				arealHeatCapacity: fields.arealHeatCapacity,
 				massDistributionClass: fields.massDistributionClass,
+				colour: fields.colour,
 			},
 			complete: true,
 		};
@@ -40,8 +41,6 @@ autoSaveElementForm<ExternalUnglazedDoorData>({
 	storeData: store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor,
 	defaultName: "External unglazed door",
 	onPatch: (state, newData, index) => {
-		const { pitchOption, pitch } = newData.data;
-		newData.data.pitch = pitchOption === "90" ? 90 : pitch;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.complete = false;
 	},
@@ -72,14 +71,18 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			label="Name"
 			help="Provide a name for this element so that it can be identified later"
 			name="name"
-			validation="required"
+			:validation-rules="{ uniqueName: uniqueName(externalUnglazedDoorData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
-		<FieldsPitch
-			:pitch-option="model?.pitchOption"
-			:options="standardPitchOptions()"
-			data-field="Zone.BuildingElement.*.pitch"
+		<FieldsAssociatedWallRoof
+			id="associatedItemId"
+			name="associatedItemId"
+			label="Associated wall or roof"
+			help="Select the wall or roof that this door is in. It should have the same orientation and pitch as the door."
 		/>
-		<FieldsOrientation data-field="Zone.BuildingElement.*.orientation" />
 		<FormKit
 			id="height"
 			type="govInputWithSuffix"
@@ -111,9 +114,17 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			validation="required | number | min:0.01 | max:10000"
 			data-field="Zone.BuildingElement.*.area"
 		/>
-		<FieldsSolarAbsorptionCoefficient id="solarAbsorption" name="solarAbsorption"/>
 		<FieldsUValue id="uValue" name="uValue" />
-		<FieldsArealHeatCapacity id="kappaValue" name="kappaValue"/>
+		<FormKit
+			id="colour"
+			type="govRadios"
+			label="Colour of external surface"
+			name="colour"
+			:options="colourOptions"
+			validation="required"
+			data-field="Zone.BuildingElement.*.colour"
+		/>
+		<FieldsArealHeatCapacity id="arealHeatCapacity" name="arealHeatCapacity"/>
 		<FieldsMassDistributionClass id="massDistributionClass" name="massDistributionClass"/>
 		<GovLLMWarning />
 		<div class="govuk-button-group">

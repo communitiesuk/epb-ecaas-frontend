@@ -3,7 +3,6 @@ import { screen } from "@testing-library/vue";
 import Summary from "./summary.vue";
 import MechanicalVentilationOverview from "../infiltration-and-ventilation/mechanical-ventilation/index.vue";
 import userEvent from "@testing-library/user-event";
-import { pascal } from "~/utils/units/pressure";
 import { cubicMetrePerHourPerSquareMetre, litrePerSecond } from "~/utils/units/flowRate";
 import { centimetresSquare, metresSquare } from "~/utils/units/area";
 import { metre, millimetre } from "~/utils/units/length";
@@ -13,47 +12,61 @@ import { wattsPerMeterKelvin } from "~/utils/units/thermalConductivity";
 vi.mock("uuid");
 
 const mechanicalVentilationData: MechanicalVentilationData = {
-	id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
-	name: "Mechanical name 1",
-	typeOfMechanicalVentilationOptions: "MVHR",
-	airFlowRate: 12,
-	mvhrLocation: "inside",
-	mvhrEfficiency: 0.2,
+  id: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
+  name: "Mechanical name 1",
+  typeOfMechanicalVentilationOptions: "MVHR",
+  airFlowRate: 12,
+  mvhrLocation: "inside",
+  mvhrEfficiency: 0.2,
 };
 
 const ductworkData: DuctworkData = {
-	name: "Ducktwork 1",
-	mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
-	ductworkCrossSectionalShape: "circular",
-	ductType: "intake",
-	internalDiameterOfDuctwork: 300,
-	externalDiameterOfDuctwork: 1000,
-	insulationThickness: 100,
-	lengthOfDuctwork: 100,
-	thermalInsulationConductivityOfDuctwork: 10,
-	surfaceReflectivity: true,
+  name: "Ducktwork 1",
+  mvhrUnit: "5124f2fe-f15b-4a56-ba5a-1a7751ac506g",
+  ductworkCrossSectionalShape: "circular",
+  ductType: "intake",
+  internalDiameterOfDuctwork: 300,
+  externalDiameterOfDuctwork: 1000,
+  insulationThickness: 100,
+  lengthOfDuctwork: 100,
+  thermalInsulationConductivityOfDuctwork: 10,
+  surfaceReflectivity: true,
 };
 
+const externalWall: ExternalWallData = {
+  id: "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc",
+  name: "External wall 1",
+  pitchOption: "90",
+  pitch: 90,
+  orientation: 0,
+  length: 20,
+  height: 0.5,
+  elevationalHeight: 20,
+  surfaceArea: 10,
+  uValue: 1,
+  colour: "Intermediate",
+  arealHeatCapacity: "Very light",
+  massDistributionClass: "I",
+};
 const ventData: VentData = {
-	name: "Vent 1",
-	typeOfVent: "trickle",
-	effectiveVentilationArea: 10,
-	openingRatio: 1,
-	midHeightOfZone: 1,
-	orientation: 0,
-	pitch: 0,
+  name: "Vent 1",
+  typeOfVent: "trickle",
+  associatedItemId: externalWall.id,
+  effectiveVentilationArea: 10,
+  openingRatio: 1,
+  midHeightOfZone: 1,
 };
 
 const ventilationData: VentilationData = {
-	dwellingElevationalLevelAtBase: 1,
-	crossVentilationPossible: true,
-	maxRequiredAirChangeRate: 1,
-	ventilationZoneHeight: 1,
-	dwellingEnvelopeArea: 1,
+  dwellingElevationalLevelAtBase: 1,
+  crossVentilationPossible: true,
+  maxRequiredAirChangeRate: 1,
+  ventilationZoneHeight: 1,
+  dwellingEnvelopeArea: 1,
 };
 
 const airPermeabilityData: AirPermeabilityData = {
-	testPressure: 1,
+	testPressure: "Standard",
 	airTightnessTestResult: 1,
 };
 
@@ -109,12 +122,12 @@ describe("Infiltration and ventilation summary", () => {
 	it("should contain the correct tabs for infiltration and ventilation", async () => {
 		await renderSuspended(Summary);
 
-		expect(screen.getByRole("link", { name: "Mechanical ventilation" }));
-		expect(screen.getByRole("link", { name: "Ductwork" }));
-		expect(screen.getByRole("link", { name: "Vents" }));
-		expect(screen.getByRole("link", { name: "Natural ventilation" }));
-		expect(screen.getByRole("link", { name: "Air permeability" }));
-		// expect(screen.getByRole('link', {name: 'Combustion appliances'}));
+		expect(screen.queryByRole("link", { name: "Mechanical ventilation" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Ductwork" })).toBeNull();
+		expect(screen.queryByRole("link", { name: "Vents" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Natural ventilation" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Air permeability" })).toBeDefined();
+		expect(screen.queryByRole("link", { name: "Combustion appliances" })).toBeNull();
 	});
 
 	it("should display the correct data for the mechanical ventilation section", async () => {
@@ -204,35 +217,101 @@ describe("Infiltration and ventilation summary", () => {
 		await renderSuspended(MechanicalVentilationOverview);
 		await user.click(screen.getByTestId("mechanicalVentilation_remove_0"));
 		await renderSuspended(Summary);
-		expect(screen.getByText("No ductwork added")).toBeDefined();
+		expect(screen.queryByText("No ductwork added")).toBeNull();
 	});
 
-	it("should display the correct data for the vents section", async () => {
-		store.$patch({
-			infiltrationAndVentilation: {
-				vents: {
-					data: [{ data: ventData }],
-				},
-			},
-		});
+ it("should display the correct data for the vents section", async () => {
+    store.$patch({
+      dwellingFabric: {
+        dwellingSpaceWalls: {
+          dwellingSpaceExternalWall: {
+            data: [{ data: externalWall }],
+          },
+        },
+      },
+      infiltrationAndVentilation: {
+        vents: {
+          data: [{ data: ventData }],
+        },
+      },
+    });
 
-		await renderSuspended(Summary);
+    await renderSuspended(Summary);
 
-		const expectedResult = {
-			"Name": "Vent 1",
-			"Type of vent": "Trickle",
-			"Effective ventilation area": `10 ${centimetresSquare.suffix}`,
-			"Mid height of zone": `1 ${metre.suffix}`,
-			"Orientation": `0 ${degrees.suffix}`,
-			"Pitch": `0 ${degrees.suffix}`,
-		};
+    const expectedResult = {
+      Name: "Vent 1",
+      "Type of vent": "Trickle",
+      "Effective ventilation area": `10 ${centimetresSquare.suffix}`,
+      "Mid height of zone": `1 ${metre.suffix}`,
+      Orientation: `0 ${degrees.suffix}`,
+      Pitch: `90 ${degrees.suffix}`,
+    };
 
-		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-vents-${hyphenate(key)}`));
-			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
-			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
-		}
-	});
+    for (const [key, value] of Object.entries(expectedResult)) {
+      const lineResult = await screen.findByTestId(
+        `summary-vents-${hyphenate(key)}`
+      );
+      expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+      expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+    }
+  });
+
+  it("displays the correct data for the vents section when tagged with an item which is tagged with another item", async () => {
+    const externalWall: Partial<ExternalWallData> = {
+      id: "0b77e247-53c5-42b8-9dbd-83cbfc8ccccc",
+      name: "External wall 1",
+      pitchOption: "custom",
+      pitch: 66,
+      orientation: 77,
+    };
+
+    const window1: Partial<WindowData> = {
+      id: "0b77e247-53c5-42b8-9dbd-83cbfc8ffffff",
+      name: "Window 1",
+      taggedItem: externalWall.id,
+    };
+
+    const ventData: Partial<VentData> = {
+      name: "Vent 1",
+      typeOfVent: "trickle",
+      associatedItemId: window1.id,
+    };
+
+    store.$patch({
+      dwellingFabric: {
+        dwellingSpaceWindows: {
+          data: [{ data: window1 }],
+        },
+        dwellingSpaceWalls: {
+          dwellingSpaceExternalWall: {
+            data: [{ data: externalWall }],
+          },
+        },
+      },
+      infiltrationAndVentilation: {
+        vents: {
+          data: [{ data: ventData }],
+        },
+      },
+    });
+
+    await renderSuspended(Summary);
+
+    const expectedResult = {
+      Name: "Vent 1",
+      "Type of vent": "Trickle",
+      Orientation: `77 ${degrees.suffix}`,
+      Pitch: `66 ${degrees.suffix}`,
+    };
+
+    for (const [key, value] of Object.entries(expectedResult)) {
+      const lineResult = await screen.findByTestId(
+        `summary-vents-${hyphenate(key)}`
+      );
+      expect(lineResult.querySelector("dt")?.textContent).toBe(key);
+      expect(lineResult.querySelector("dd")?.textContent).toBe(value);
+    }
+  });
 
 	it("should display the correct data for the ventilation section", async () => {
 		store.$patch({
@@ -271,7 +350,7 @@ describe("Infiltration and ventilation summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Test pressure": `1 ${pascal.suffix}`,
+			"Type of infiltration pressure test": "Blower door (test pressure is 50Pa)",
 			"Air tightness test result": `1 ${cubicMetrePerHourPerSquareMetre.suffix}`,
 		};
 

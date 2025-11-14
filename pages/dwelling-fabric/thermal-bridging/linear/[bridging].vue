@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { getUrl } from "#imports";
+import { getUrl, uniqueName } from "#imports";
 import type { SchemaThermalBridgeJunctionType } from "~/schema/aliases";
 
 const title = "Linear thermal bridges";
 const store = useEcaasStore();
 const { autoSaveElementForm, getStoreIndex } = useForm();
 
-const thermalBridgeData = useItemToEdit("bridging", store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data);
+const linearThermalBridgeStoreData = store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data;
+const index = getStoreIndex(linearThermalBridgeStoreData);
+const thermalBridgeData = useItemToEdit("bridging", linearThermalBridgeStoreData);
 const model = ref(thermalBridgeData?.data);
+
+const defaultName = "Linear thermal bridge";
 
 type StartsWith<T extends string, Prefix extends string> = T extends `${Prefix}${string}` ? T : never;
 
-const defaultName = "Linear thermal bridge";
-const options = [{
+const junctionTypeOptions = [{
 	E1: "E1: Steel lintel with perforated steel base plate",
 	E2: "E2: Other lintels (including other steel lintels)",
 	E3: "E3: Sill",
@@ -65,23 +68,14 @@ const options = [{
 	Record<StartsWith<SchemaThermalBridgeJunctionType, "R">, `${SchemaThermalBridgeJunctionType}: ${string}`>,
 ];
 
-function getName(fields: LinearThermalBridgeData) {
-	const option = options.find(o => Object.keys(o).includes(fields.typeOfThermalBridge));
-	const entry = option ? Object.entries(option).find(o => o[0] === fields.typeOfThermalBridge) : undefined;
-	return entry?.[1] || defaultName;
-}
-
 const saveForm = (fields: LinearThermalBridgeData) => {
 	store.$patch((state) => {
 		const { dwellingSpaceLinearThermalBridges } = state.dwellingFabric.dwellingSpaceThermalBridging;
-		const index = getStoreIndex(dwellingSpaceLinearThermalBridges.data);
-
-		const name = getName(fields);
 
 		dwellingSpaceLinearThermalBridges.data[index] = {
 			data: {
-				name,
 				typeOfThermalBridge: fields.typeOfThermalBridge,
+				name: fields.name,
 				linearThermalTransmittance: fields.linearThermalTransmittance,
 				length: fields.length,
 			},
@@ -98,12 +92,7 @@ autoSaveElementForm<LinearThermalBridgeData>({
 	storeData: store.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges,
 	defaultName,
 	onPatch: (state, newData, index) => {
-		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = {
-			data: {
-				...newData.data,
-				name: getName(newData.data),
-			},
-		};
+		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.data[index] = newData;
 		state.dwellingFabric.dwellingSpaceThermalBridging.dwellingSpaceLinearThermalBridges.complete = false;
 	},
 });
@@ -132,8 +121,20 @@ const { handleInvalidSubmit, errorMessages } = useErrorSummary();
 			help="Select the junction type from SAP 10.2 Table R2"
 			name="typeOfThermalBridge"
 			validation="required"
-			:options="options"
+			:options="junctionTypeOptions"
 			data-field="Zone.ThermalBridging.*.junction_type"
+		/>
+		<FormKit
+			id="name"
+			type="govInputText"
+			label="Name"
+			help="Provide a name for this element so that it can be identified later"
+			name="name"
+			:validation-rules="{ uniqueName: uniqueName(linearThermalBridgeStoreData, { index }) }"
+			validation="required | uniqueName"
+			:validation-messages="{
+				uniqueName: 'An element with this name already exists. Please enter a unique name.'
+			}"
 		/>
 		<FormKit
 			id="linearThermalTransmittance"

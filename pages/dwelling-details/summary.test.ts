@@ -2,7 +2,6 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import Summary from "./summary.vue";
 import { screen } from "@testing-library/vue";
 import hyphenate from "../../utils/hyphenate";
-import { metre } from "~/utils/units/length";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
@@ -12,15 +11,23 @@ mockNuxtImport("navigateTo", () => {
 interface DwellingDetailSummary {
 	generalDetails: GeneralDetailsData,
 	shading: ShadingData[],
-	externalFactors: ExternalFactorsData
+	externalFactors: ExternalFactorsData,
+	appliances: AppliancesData
 }
 
 const state: DwellingDetailSummary = {
 	generalDetails: {
 		typeOfDwelling: "house",
 		storeysInDwelling: 2,
+		buildingLength: 10,
+		buildingWidth: 5,
 		numOfBedrooms: 3,
-		coolingRequired: false,
+		numOfUtilityRooms: 2,
+		numOfBathrooms: 1,
+		numOfWCs: 1,
+		numOfHabitableRooms: 4,
+		numOfRoomsWithTappingPoints: 2,
+		fuelType: ["mains_gas", "lpg_bulk"],
 	},
 	shading: [{
 		name: "Shading 1",
@@ -36,6 +43,9 @@ const state: DwellingDetailSummary = {
 		terrainType: "Suburban",
 		noiseNuisance: false,
 	},
+	appliances: {
+		applianceType: ["Clothes_drying", "Freezer", "Clothes_washing"],
+	},
 };
 
 describe("Dwelling details summary", () => {
@@ -47,10 +57,11 @@ describe("Dwelling details summary", () => {
 
 	it("should contain the correct tabs for dwelling details", async () => {
 		await renderSuspended(Summary);
-  
+
 		expect(screen.getByRole("link", { name: "General details" }));
 		expect(screen.getByRole("link", { name: "Shading" }));
-
+		expect(screen.getByRole("link", { name: "External factors" }));
+		expect(screen.getByRole("link", { name: "Appliances" }));
 	});
 
 	it("should display the correct data for the general details section", async () => {
@@ -67,8 +78,15 @@ describe("Dwelling details summary", () => {
 		const expectedResult = {
 			"Type of dwelling": "House",
 			"Number of storeys in building": "2",
+			"Building length": "10 m",
+			"Building width": "5 m",
 			"Number of bedrooms": "3",
-			"Cooling required": "No",
+			"Number of utility rooms": "2",
+			"Number of bathrooms": "1",
+			"Number of WCs": "1",
+			"Number of habitable rooms": "4",
+			"Total number of rooms with tapping points": "2",
+			"Energy sources": "Mains gas, LPG (Liquid petroleum gas)",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
@@ -78,11 +96,11 @@ describe("Dwelling details summary", () => {
 		}
 	});
 
-	it("should display the correct data for the external factors section", async () => {
+	it("should display the correct data for the appliances section", async () => {
 		store.$patch({
 			dwellingDetails: {
-				externalFactors: {
-					data: state.externalFactors,
+				appliances: {
+					data: state.appliances,
 				},
 			},
 		});
@@ -90,14 +108,11 @@ describe("Dwelling details summary", () => {
 		await renderSuspended(Summary);
 
 		const expectedResult = {
-			"Altitude": `3 ${metre.suffix}`,
-			"Type of exposure": "Shielded",
-			"Terrain type": "Suburban",
-			"Noise nuisance": "No",
+			"Appliances": "Tumble dryer, Freezer, Washing machine",
 		};
 
 		for (const [key, value] of Object.entries(expectedResult)) {
-			const lineResult = (await screen.findByTestId(`summary-externalFactors-${hyphenate(key)}`));
+			const lineResult = (await screen.findByTestId(`summary-appliances-${hyphenate(key)}`));
 			expect(lineResult.querySelector("dt")?.textContent).toBe(key);
 			expect(lineResult.querySelector("dd")?.textContent).toBe(value);
 		}

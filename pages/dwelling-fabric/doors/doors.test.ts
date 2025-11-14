@@ -21,66 +21,84 @@ describe("doors", () => {
 		store.$reset();
 	});
 
+  const externalWall: ExternalWallData = {
+    id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+    name: "External wall 1",
+    pitchOption: "90",
+    pitch: 90,
+    orientation: 0,
+    length: 20,
+    height: 0.5,
+    elevationalHeight: 20,
+    surfaceArea: 10,
+    uValue: 1,
+		colour: "Intermediate",
+		arealHeatCapacity: "Very light",
+    massDistributionClass: "I",
+  };
+
+  const internalWall: InternalWallData = {
+    id: "06cce939-0899-42cc-aa46-0d47c11a6ede",
+    name: "Internal 1",
+    surfaceAreaOfElement: 5,
+    arealHeatCapacity: "Very light",
+    massDistributionClass: "I",
+    pitchOption: "90",
+		pitch: 90,
+  };
+
 	const externalUnglazed1: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 1 name",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
+	    associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 100,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			colour: "Dark",
 		},
 	};
 
 	const externalUnglazed2: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 2 name",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
+      associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 100,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			colour: "Light",
 		},
 	};
 
 	const externalUnglazed3: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "external unglazed 3 name",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
+      associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 100,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
+			colour: "Intermediate",
 		},
 	};
 
 	const externalGlazed1: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed1 name",
-			orientation: 1,
+      associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: "90",
-			pitch: 90,
 			securityRisk: false,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
@@ -95,12 +113,10 @@ describe("doors", () => {
 	const externalGlazed2: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed2 name",
-			orientation: 1,
+      associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: "90",
-			pitch: 90,
 			securityRisk: false,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
@@ -115,12 +131,10 @@ describe("doors", () => {
 	const externalGlazed3: EcaasForm<ExternalGlazedDoorData> = {
 		data: {
 			name: "externalGlazed3 name",
-			orientation: 1,
+      associatedItemId: externalWall.id,
 			height: 1,
 			width: 1,
 			uValue: 1,
-			pitchOption: "90",
-			pitch: 90,
 			securityRisk: false,
 			solarTransmittance: 0.1,
 			elevationalHeight: 1,
@@ -136,11 +150,10 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 1",
+      associatedItemId: internalWall.id,
 			surfaceArea: 5,
-			kappaValue: 100,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
-			pitchOption: "90",
-			pitch: 90,
 		},
 	};
 
@@ -148,11 +161,10 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 2",
-			surfaceArea: 5,
-			kappaValue: 100,
+      associatedItemId: internalWall.id,
+      surfaceArea: 5,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
-			pitchOption: "90",
-			pitch: 90,
 		},
 	};
 
@@ -160,11 +172,10 @@ describe("doors", () => {
 		data: {
 			typeOfInternalDoor: AdjacentSpaceType.heatedSpace,
 			name: "Internal 3",
+      associatedItemId: internalWall.id,
 			surfaceArea: 5,
-			kappaValue: 100,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
-			pitchOption: "90",
-			pitch: 90,
 		},
 	};
 

@@ -2,11 +2,14 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import Ceiling from "./[ceiling].vue";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
+
+vi.mock("uuid");
 
 describe("ceiling", () => {
 	const store = useEcaasStore();
@@ -14,13 +17,15 @@ describe("ceiling", () => {
 
 	const ceiling: EcaasForm<CeilingData> = {
 		data: {
+			id: "099342c5-07c5-4268-b66b-f85dfc5de58f",
 			type: AdjacentSpaceType.heatedSpace,
 			name: "Ceiling 1",
 			surfaceArea: 5,
-			kappaValue: 50000,
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 			pitchOption: "0",
-			pitch: 0 },
+			pitch: 0,
+		},
 	};
 
 	const ceilingUnheatedSpace: EcaasForm<CeilingData> = {
@@ -39,7 +44,7 @@ describe("ceiling", () => {
 	const populateValidForm = async () => {
 		await user.type(screen.getByTestId("name"), "Ceiling 1");
 		await user.type(screen.getByTestId("surfaceArea"), "5");
-		await user.click(screen.getByTestId("kappaValue_50000"));
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 		await user.click(screen.getByTestId("pitchOption_0"));
 	};
@@ -51,6 +56,8 @@ describe("ceiling", () => {
 	
 	describe("when type of ceiling is heated space", () => {
 		it("data is saved to store state when form is valid", async () => {
+			vi.mocked(uuidv4).mockReturnValue(ceiling.data.id as unknown as Buffer);
+
 			await renderSuspended(Ceiling, {
 				route: {
 					params: { ceiling: "create" },
@@ -86,7 +93,7 @@ describe("ceiling", () => {
 			expect((await screen.findByTestId("type_heatedSpace")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Ceiling 1");
 			expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("5");
-			expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
+			expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 			expect((await screen.findByTestId("pitchOption_0")).hasAttribute("checked")).toBe(true);
 		});
@@ -99,7 +106,7 @@ describe("ceiling", () => {
 
 			expect((await screen.findByTestId("name_error"))).toBeDefined();
 			expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
-			expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
+			expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 			expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 			expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
 		});
@@ -236,7 +243,7 @@ describe("ceiling", () => {
 
 			expect(actualCeiling.data.name).toBe("New ceiling");
 			expect(actualCeiling.data.surfaceArea).toBeUndefined();
-			expect(actualCeiling.data.kappaValue).toBeUndefined();
+			expect(actualCeiling.data.arealHeatCapacity).toBeUndefined();
 		});
 
 		it("creates a new ceiling automatically with default name after other data is entered", async () => {
@@ -255,7 +262,7 @@ describe("ceiling", () => {
 			expect(actualCeiling.name).toBe("Ceiling");
 			expect(actualCeiling.thermalResistanceOfAdjacentUnheatedSpace).toBe(0.7);
 			expect(actualCeiling.surfaceArea).toBeUndefined();
-			expect(actualCeiling.kappaValue).toBeUndefined();
+			expect(actualCeiling.arealHeatCapacity).toBeUndefined();
 		});
 
 		it("saves updated form data to correct store object automatically", async () => {

@@ -2,21 +2,25 @@ import { mockNuxtImport, renderSuspended } from "@nuxt/test-utils/runtime";
 import userEvent from "@testing-library/user-event";
 import { screen } from "@testing-library/vue";
 import WallToUnheatedSpace from "./[wall].vue";
+import { v4 as uuidv4 } from "uuid";
 
 const navigateToMock = vi.hoisted(() => vi.fn());
 mockNuxtImport("navigateTo", () => {
 	return navigateToMock;
 });
 
+vi.mock("uuid");
+
 describe("wall to unheated space", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
-	const state: WallsToUnheatedSpaceData ={
+	const state: WallsToUnheatedSpaceData = {
+		id: "55a95c36-bf0a-40d3-a31d-9e4f86798428",
 		name: "Wall to unheated space 1",
 		surfaceAreaOfElement: 500,
 		uValue: 10,
-		arealHeatCapacity: 50000,
+		arealHeatCapacity: "Very light",
 		massDistributionClass: "E",
 		pitchOption: "90",
 		pitch: 90,
@@ -28,6 +32,8 @@ describe("wall to unheated space", () => {
 	});	
 
 	test("data is saved to store state when form is valid", async () => {
+		vi.mocked(uuidv4).mockReturnValue(state.id as unknown as Buffer);
+		
 		await renderSuspended(WallToUnheatedSpace, {
 			route: {
 				params: { wall: "create" },
@@ -37,7 +43,7 @@ describe("wall to unheated space", () => {
 		await user.type(screen.getByTestId("name"), "Wall to unheated space 1");
 		await user.type(screen.getByTestId("surfaceAreaOfElement"), "500");
 		await user.type(screen.getByTestId("uValue"), "10");
-		await user.click(screen.getByTestId("arealHeatCapacity_50000"));
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_E"));
 		await user.click(screen.getByTestId("pitchOption_90"));
 		await user.type(screen.getByTestId("thermalResistanceOfAdjacentUnheatedSpace"), "1");
@@ -70,7 +76,7 @@ describe("wall to unheated space", () => {
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("Wall to unheated space 1");
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceAreaOfElement")).value).toBe("500");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("10");
-		expect((await screen.findByTestId("arealHeatCapacity_50000")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_E")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("pitchOption_90")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("thermalResistanceOfAdjacentUnheatedSpace")).value).toBe("1");

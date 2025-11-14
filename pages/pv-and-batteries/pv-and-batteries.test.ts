@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import PvAndBatteries from "./index.vue";
 import PvSystemForm from "./pv-systems/[system].vue";
 import ElectricBatteryForm from "./electric-battery/index.vue";
+import DivertersForm from "./diverters/index.vue";
 import { screen } from "@testing-library/vue";
 import { within } from "@testing-library/dom";
 import formStatus from "~/constants/formStatus";
@@ -67,12 +68,17 @@ describe("pv systems and electric battery", () => {
 			name: "Electric Battery 1",
 			capacity: 2,
 			chargeEfficiency: 0.8,
-			batteryAge: 0,
 			minimumChargeRate: 0.001,
 			maximumChargeRate: 1.5,
 			maximumDischargeRate: 1.25,
 			location: "outside",
 			gridChargingPossible: false,
+		},
+	};
+
+	const diverter1: EcaasForm<PvDiverterData> = {
+		data: {
+			name: "Diverter 1",
 		},
 	};
 
@@ -217,6 +223,7 @@ describe("pv systems and electric battery", () => {
 				pvAndBatteries: {
 					pvSystems: { data: [{ ...pvSystem1, complete: true }] },
 					electricBattery: { data: [{ ...electricBattery, complete: true }] },
+					diverters: { data: [{ ...diverter1, complete: true }] },
 				},
 			});
 		};
@@ -232,110 +239,123 @@ describe("pv systems and electric battery", () => {
 		const pvAndBatteryForms = {
 			pvSystems: PvSystemForm,
 			electricBattery: ElectricBatteryForm,
+			diverters: DivertersForm,
 		};
 
-  type SectionKey = keyof typeof store.pvAndBatteries;
-  
-  it("disables the Mark section as complete button when a section is incomplete", async () => {
-  	store.$patch({
-  		pvAndBatteries: {
-  			pvSystems: { data: [{ ...pvSystem1, complete: false }] },
-  			electricBattery: { data: [{ ...electricBattery, complete: false }] },
-  		},
-  	});
+		type SectionKey = keyof typeof store.pvAndBatteries;
 
-  	await renderSuspended(PvAndBatteries);
-  	expect(
-  		screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
-  	).toBeTruthy();
-  });
+		it("disables the Mark section as complete button when a section is incomplete", async () => {
+			store.$patch({
+				pvAndBatteries: {
+					pvSystems: { data: [{ ...pvSystem1, complete: false }] },
+					electricBattery: { data: [{ ...electricBattery, complete: false }] },
+				},
+			});
 
-  it("enables the Mark section as complete button when all sections are complete", async () => {
-  	await addCompletePvAndBatteryToStore();
-  	await renderSuspended(PvAndBatteries);
+			await renderSuspended(PvAndBatteries);
+			expect(
+				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+			).toBeTruthy();
+		});
 
-  	expect(
-  		screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
-  	).toBeFalsy();
-  });
+		it("enables the Mark section as complete button when all sections are complete", async () => {
+			await addCompletePvAndBatteryToStore();
+			await renderSuspended(PvAndBatteries);
 
-  it("displays a 'Completed' status indicator when section is marked as complete", async () => {
-  	await addCompletePvAndBatteryToStore();
-  	await renderSuspended(PvAndBatteries);
-  	await user.click(screen.getByTestId("markAsCompleteButton"));
+			expect(
+				screen.getByTestId("markAsCompleteButton").hasAttribute("disabled"),
+			).toBeFalsy();
+		});
 
-  	const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
-  	expect(completedStatusElement?.style.display).not.toBe("none");
-  });
+		it("displays a 'Completed' status indicator when section is marked as complete", async () => {
+			await addCompletePvAndBatteryToStore();
+			await renderSuspended(PvAndBatteries);
+			await user.click(screen.getByTestId("markAsCompleteButton"));
 
-  describe("after section has been marked as complete", () => {
-  	beforeEach(async () => {
-  		await addCompletePvAndBatteryToStore();
-  		await renderSuspended(PvAndBatteries);
-  		await user.click(screen.getByTestId("markAsCompleteButton"));
-  	});
+			const completedStatusElement = screen.queryByTestId("completeSectionCompleted");
+			expect(completedStatusElement?.style.display).not.toBe("none");
+		});
 
-  	it("displays the 'Completed' section status indicator", async () => {
-  		const completed = screen.queryByTestId("completeSectionCompleted");
-  		expect(completed?.style.display).not.toBe("none");
-  	});
+		describe("after section has been marked as complete", () => {
+			beforeEach(async () => {
+				await addCompletePvAndBatteryToStore();
+				await renderSuspended(PvAndBatteries);
+				await user.click(screen.getByTestId("markAsCompleteButton"));
+			});
 
-  	it("navigates to the home page", async () => {
-  		expect(navigateToMock).toHaveBeenCalledWith("/");
-  	});
+			it("displays the 'Completed' section status indicator", async () => {
+				const completed = screen.queryByTestId("completeSectionCompleted");
+				expect(completed?.style.display).not.toBe("none");
+			});
 
-  	it("marks each PV and battery section as complete", () => {
-  		const { pvSystems, electricBattery } = store.pvAndBatteries;
-  		expect(pvSystems?.complete).toBe(true);
-  		expect(electricBattery?.complete).toBe(true);
-  	});
+			it("navigates to the home page", async () => {
+				expect(navigateToMock).toHaveBeenCalledWith("/");
+			});
 
-  	it("marks section as not complete if an item is removed", async () => {
-  		await user.click(screen.getByTestId("pvSystems_remove_0"));
-  		await user.click(screen.getByTestId("electricBattery_remove_0"));
+			it("marks each PV and battery section as complete", () => {
+				const { pvSystems, electricBattery } = store.pvAndBatteries;
+				expect(pvSystems?.complete).toBe(true);
+				expect(electricBattery?.complete).toBe(true);
+			});
 
-  		const { pvSystems, electricBattery } = store.pvAndBatteries;
-  		expect(pvSystems?.complete).toBe(false);
-  		expect(electricBattery?.complete).toBe(false);
-  	});
+			it("marks section as not complete if an item is removed", async () => {
+				await user.click(screen.getByTestId("pvSystems_remove_0"));
+				await user.click(screen.getByTestId("electricBattery_remove_0"));
 
-  	it("marks section as not complete if an item is duplicated", async () => {
-  		await user.click(screen.getByTestId("pvSystems_duplicate_0"));
-  		// await user.click(screen.getByTestId("electricBattery_duplicate_0"));
+				const { pvSystems, electricBattery } = store.pvAndBatteries;
+				expect(pvSystems?.complete).toBe(false);
+				expect(electricBattery?.complete).toBe(false);
+			});
 
-  		const { pvSystems } = store.pvAndBatteries;
-  		expect(pvSystems?.complete).toBe(false);
-  		// expect(electricBattery?.complete).toBe(false);
-  	});
+			it("marks section as not complete if an item is duplicated", async () => {
+				await user.click(screen.getByTestId("pvSystems_duplicate_0"));
+				// await user.click(screen.getByTestId("electricBattery_duplicate_0"));
 
-  	it("marks section as not complete after adding a new item", async () => {
-  		for (const section of Object.keys(store.pvAndBatteries) as SectionKey[]) {
-  			await renderSuspended(pvAndBatteryForms[section], {
-  				route: { params: { [section === "pvSystems" ? "system" : "battery"]: "create" } },
-  			});
+				const { pvSystems } = store.pvAndBatteries;
+				expect(pvSystems?.complete).toBe(false);
+				// expect(electricBattery?.complete).toBe(false);
+			});
 
-  			await user.type(screen.getByTestId("name"), "New item");
-  			await user.tab();
-  			await user.click(screen.getByTestId("saveAndComplete"));
+			it("marks section as not complete after adding a new item", async () => {
+				for (const section of Object.keys(store.pvAndBatteries) as SectionKey[]) {
 
-  			expect(store.pvAndBatteries[section]?.complete).toBe(false);
-  		}
-  	});
+					if (section === "pvSystems") {
+						await renderSuspended(pvAndBatteryForms[section], {
+							route: {
+								path: "/pv-and-batteries/pv-systems/create",
+							},
+						});
+					} else {
+						await renderSuspended(pvAndBatteryForms[section]);
+					}
 
-  	it("marks section as not complete after editing an existing item", async () => {
-  		for (const section of Object.keys(store.pvAndBatteries) as SectionKey[]) {
-  			await renderSuspended(pvAndBatteryForms[section], {
-  				route: { params: { [section === "pvSystems" ? "system" : "battery"]: "0" } },
-  			});
+					await user.type(screen.getByTestId("name"), "New item");
+					await user.tab();
+					await user.click(screen.getByTestId("saveAndComplete"));
 
-  			await user.clear(screen.getByTestId("name"));
-  			await user.type(screen.getByTestId("name"), "Updated item");
-  			await user.tab();
+					expect(store.pvAndBatteries[section]?.complete).toBe(false);
+				}
+			});
 
-  			expect(store.pvAndBatteries[section]?.complete).toBe(false);
-  		}
-  	});
-  });
+			it("marks section as not complete after editing an existing item", async () => {
+				for (const section of Object.keys(store.pvAndBatteries) as SectionKey[]) {
+
+					if (section === "pvSystems") {
+						await renderSuspended(pvAndBatteryForms[section], {
+							route: { params: { "system": "0" } },
+						});
+					} else {
+						await renderSuspended(pvAndBatteryForms[section]);
+					}
+
+					await user.clear(screen.getByTestId("name"));
+					await user.type(screen.getByTestId("name"), "Updated item");
+					await user.tab();
+
+					expect(store.pvAndBatteries[section]?.complete).toBe(false);
+				}
+			});
+		});
 	});
 });
 

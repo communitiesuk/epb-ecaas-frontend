@@ -35,7 +35,7 @@ describe("hot water cylinder", () => {
 
 	const addStoreData = () => {
 		store.$patch({
-			heatingSystems: {
+			heatingAndCoolingSystems: {
 				heatGeneration: {
 					heatPump: {
 						data: [{
@@ -120,7 +120,7 @@ describe("hot water cylinder", () => {
 
 		await populateValidForm();
 		await user.click(screen.getByRole("button"));
-		
+
 		expect(navigateToMock).toHaveBeenCalledWith("/domestic-hot-water/water-heating");
 	});
 });

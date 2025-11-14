@@ -12,22 +12,48 @@ describe("external unglazed door", () => {
 	const store = useEcaasStore();
 	const user = userEvent.setup();
 
+	const externalWall: ExternalWallData = {
+		id: "80fd1ffe-a83a-4d95-bd2c-ad8fdc37b421",
+		name: "External wall 1",
+		pitchOption: "90",
+		pitch: 90,
+		orientation: 0,
+		length: 20,
+		height: 0.5,
+		elevationalHeight: 20,
+		surfaceArea: 10,
+		uValue: 1,
+		colour: "Intermediate",
+		arealHeatCapacity: "Very light",
+		massDistributionClass: "I",
+	};
+
 	const state: EcaasForm<ExternalUnglazedDoorData> = {
 		data: {
 			name: "External unglazed door 1",
-			pitchOption: "90",
-			pitch: 90,
-			orientation: 0,
+			associatedItemId: externalWall.id,
 			height: 0.5,
 			width: 20,
 			elevationalHeight: 20,
 			surfaceArea: 10,
-			solarAbsorption: 0.1,
 			uValue: 1,
-			kappaValue: 50000,
+			colour: "Intermediate",
+			arealHeatCapacity: "Very light",
 			massDistributionClass: "I",
 		},
 	};
+
+	beforeEach(() => {
+		store.$patch({
+			dwellingFabric: {
+				dwellingSpaceWalls: {
+					dwellingSpaceExternalWall: {
+						data: [{ data: externalWall, complete: true }],
+					},
+				},
+			},
+		});
+	});
 
 	afterEach(() => {
 		store.$reset();
@@ -41,15 +67,14 @@ describe("external unglazed door", () => {
 		});
 
 		await user.type(screen.getByTestId("name"), "External unglazed door 1");
-		await user.click(screen.getByTestId("pitchOption_90"));
-		await user.type(screen.getByTestId("orientation"), "0");
+		await user.click(screen.getByTestId(`associatedItemId_${externalWall.id}`));
 		await user.type(screen.getByTestId("height"), "0.5");
 		await user.type(screen.getByTestId("width"), "20"); 
 		await user.type(screen.getByTestId("elevationalHeight"), "20");
 		await user.type(screen.getByTestId("surfaceArea"), "10");
-		await user.type(screen.getByTestId("solarAbsorption"), "0.1");
 		await user.type(screen.getByTestId("uValue"), "1");
-		await user.click(screen.getByTestId("kappaValue_50000"));
+		await user.click(screen.getByTestId("colour_Intermediate"));
+		await user.click(screen.getByTestId("arealHeatCapacity_Very_light"));
 		await user.click(screen.getByTestId("massDistributionClass_I"));
 
 		await user.click(screen.getByTestId("saveAndComplete"));
@@ -64,6 +89,7 @@ describe("external unglazed door", () => {
 		await renderSuspended(ExternalUnglazedDoor);
 
 		await user.type(screen.getByTestId("name"), "Test door");
+		await user.tab();
 		await user.click(screen.getByTestId("saveProgress"));
 
 		expect(navigateToMock).toHaveBeenCalledWith("/dwelling-fabric/doors");
@@ -87,15 +113,14 @@ describe("external unglazed door", () => {
 		});
 
 		expect((await screen.findByTestId<HTMLInputElement>("name")).value).toBe("External unglazed door 1");
-		expect((await screen.findByTestId("pitchOption_90")).hasAttribute("checked")).toBe(true);
-		expect((await screen.findByTestId<HTMLInputElement>("orientation")).value).toBe("0");
+		expect((await screen.findByTestId(`associatedItemId_${externalWall.id}`)).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId<HTMLInputElement>("height")).value).toBe("0.5");
 		expect((await screen.findByTestId<HTMLInputElement>("width")).value).toBe("20");
 		expect((await screen.findByTestId<HTMLInputElement>("elevationalHeight")).value).toBe("20");
 		expect((await screen.findByTestId<HTMLInputElement>("surfaceArea")).value).toBe("10");
-		expect((await screen.findByTestId<HTMLInputElement>("solarAbsorption")).value).toBe("0.1");
 		expect((await screen.findByTestId<HTMLInputElement>("uValue")).value).toBe("1");
-		expect((await screen.findByTestId("kappaValue_50000")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId("colour_Intermediate")).hasAttribute("checked")).toBe(true);
+		expect((await screen.findByTestId("arealHeatCapacity_Very_light")).hasAttribute("checked")).toBe(true);
 		expect((await screen.findByTestId("massDistributionClass_I")).hasAttribute("checked")).toBe(true);
 	});
 		
@@ -105,15 +130,14 @@ describe("external unglazed door", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("name_error"))).toBeDefined();
-		expect((await screen.findByTestId("pitchOption_error"))).toBeDefined();
-		expect((await screen.findByTestId("orientation_error"))).toBeDefined();
+		expect((await screen.findByTestId("associatedItemId_error"))).toBeDefined();
 		expect((await screen.findByTestId("height_error"))).toBeDefined();
 		expect((await screen.findByTestId("width_error"))).toBeDefined();
 		expect((await screen.findByTestId("elevationalHeight_error"))).toBeDefined();
 		expect((await screen.findByTestId("surfaceArea_error"))).toBeDefined();
-		expect((await screen.findByTestId("solarAbsorption_error"))).toBeDefined();
 		expect((await screen.findByTestId("uValue_error"))).toBeDefined();
-		expect((await screen.findByTestId("kappaValue_error"))).toBeDefined();
+		expect((await screen.findByTestId("colour_error"))).toBeDefined();
+		expect((await screen.findByTestId("arealHeatCapacity_error"))).toBeDefined();
 		expect((await screen.findByTestId("massDistributionClass_error"))).toBeDefined();
 
 	});
@@ -124,15 +148,6 @@ describe("external unglazed door", () => {
 		await user.click(screen.getByTestId("saveAndComplete"));
 
 		expect((await screen.findByTestId("externalUnglazedDoorErrorSummary"))).toBeDefined();
-	});
-
-	it("requires pitch when custom pitch option is selected", async () => {
-		await renderSuspended(ExternalUnglazedDoor);
-    
-		await user.click(screen.getByTestId("pitchOption_custom"));
-		await user.click(screen.getByTestId("saveAndComplete"));
-    
-		expect((await screen.findByTestId("pitch_error"))).toBeDefined();
 	});
 
 	describe("partially saving data", () => {
@@ -149,7 +164,7 @@ describe("external unglazed door", () => {
 			const actualDoor = store.dwellingFabric.dwellingSpaceDoors.dwellingSpaceExternalUnglazedDoor.data[0]!;
 			expect(actualDoor.data.name).toBe("New door");
 			expect(actualDoor.data.height).toBeUndefined();
-			expect(actualDoor.data.kappaValue).toBeUndefined();
+			expect(actualDoor.data.arealHeatCapacity).toBeUndefined();
 		});
 
 		it("creates a new door automatically with default name after other data is entered", async () => {

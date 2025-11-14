@@ -9,7 +9,14 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 				"typeOfDwelling": "house",
 				"storeysInDwelling": 3,
 				"numOfBedrooms": 3,
-				"coolingRequired": false,
+				"numOfBathrooms": 1,
+				"numOfWCs": 1,
+				"numOfHabitableRooms": 4,
+				"numOfRoomsWithTappingPoints": 2,
+				"numOfUtilityRooms": 1,
+				"buildingLength": 7,
+				"buildingWidth": 7,
+				"fuelType": [],
 			},
 			"complete": true,
 		},
@@ -18,6 +25,9 @@ const simpleCaseOnlyOneForm: Pick<EcaasState, "dwellingDetails"> = {
 		},
 		"externalFactors": {
 			"data": {} as ExternalFactorsData,
+		},
+		"appliances": {
+			"data": {} as AppliancesData,
 		},
 	},
 };
@@ -31,6 +41,7 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 		"data": [
 			{
 				"data": {
+					"id": "5c809256-0702-48a5-bce0-7d1617e852fc",
 					"name": "Wall 1",
 					"pitchOption": "90",
 					"pitch": 90,
@@ -39,15 +50,16 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 					"length": 5,
 					"elevationalHeight": 25,
 					"surfaceArea": 40,
-					"solarAbsorption": 0.9,
 					"uValue": 5,
-					"kappaValue": 110000,
+					"colour": "Light",
+					"arealHeatCapacity": "Medium",
 					"massDistributionClass": "E",
 				},
 				"complete": true,
 			},
 			{
 				"data": {
+					"id": "81b62646-eac0-4f1f-8d26-a785a565c751",
 					"name": "Wall 2",
 					"pitchOption": "90",
 					"pitch": 90,
@@ -56,9 +68,9 @@ const twoCompleteValidWalls: Pick<WallsData, "dwellingSpaceExternalWall"> = {
 					"length": 34,
 					"elevationalHeight": 20,
 					"surfaceArea": 30,
-					"solarAbsorption": 0.7,
 					"uValue": 6,
-					"kappaValue": 175000,
+					"colour": "Intermediate",
+					"arealHeatCapacity": "Heavy",
 					"massDistributionClass": "I",
 				},
 				"complete": true,
@@ -74,6 +86,7 @@ const twoLegacyCompleteValidWalls = {
 			"dwellingSpaceExternalWall": {
 				"data": [
 					{
+						"id": "5c809256-0702-48a5-bce0-7d1617e852fc",
 						"name": "Wall 1",
 						"pitchOption": "90",
 						"pitch": 90,
@@ -82,12 +95,13 @@ const twoLegacyCompleteValidWalls = {
 						"length": 5,
 						"elevationalHeight": 25,
 						"surfaceArea": 40,
-						"solarAbsorption": 0.9,
 						"uValue": 5,
-						"kappaValue": 110000,
+						"arealHeatCapacity": "Medium",
 						"massDistributionClass": "E",
+						"colour": "Light",
 					},
 					{
+						"id": "81b62646-eac0-4f1f-8d26-a785a565c751",
 						"name": "Wall 2",
 						"pitchOption": "90",
 						"pitch": 90,
@@ -96,10 +110,10 @@ const twoLegacyCompleteValidWalls = {
 						"length": 34,
 						"elevationalHeight": 20,
 						"surfaceArea": 30,
-						"solarAbsorption": 0.7,
 						"uValue": 6,
-						"kappaValue": 175000,
+						"arealHeatCapacity": "Heavy",
 						"massDistributionClass": "I",
+						"colour": "Intermediate",
 					},
 				],
 				"complete": true,
@@ -108,12 +122,19 @@ const twoLegacyCompleteValidWalls = {
 	},
 };
 
-const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSpaceExternalWall.data.1.data.solarAbsorption");
+const twoWallsOneMissingField = immutable.del(twoCompleteValidWalls, "dwellingSpaceExternalWall.data.1.data.elevationalHeight");
 
 const twoWallsOneMissingFieldOneInvalidValue = immutable.set(twoWallsOneMissingField, "dwellingSpaceExternalWall.data.0.massDistributionClass", "X"); // 'X' is invalid for a mass distribution class value
 
-const twoHeatPumps: Pick<EcaasState, "heatingSystems"> = {
-	"heatingSystems": {
+const twoHeatPumps: Pick<EcaasState, "heatingAndCoolingSystems"> = {
+	"heatingAndCoolingSystems": {
+		"general": {
+			"data": {
+				"heatingControlType": "separateTemperatureControl",
+				"coolingRequired": false,
+			},
+			"complete": true,
+		},
 		"heatGeneration": {
 			"heatPump": {
 				"data": [
@@ -153,9 +174,9 @@ const twoHeatPumps: Pick<EcaasState, "heatingSystems"> = {
 				"complete": true,
 			},
 		},
-		"energySupply": {
-			"data": {} as EnergySupplyData,
-		},
+		// "energySupply": {
+		// 	"data": {} as EnergySupplyData,
+		// },
 		"heatEmitting": {
 			"wetDistribution": {
 				"data": [],
@@ -170,10 +191,13 @@ const twoHeatPumps: Pick<EcaasState, "heatingSystems"> = {
 				"data": [],
 			},
 		},
+		"cooling": {
+			"airConditioning": { "data": [] },
+		},
 	},
 };
 
-const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, "heatingSystems.heatGeneration.heatPump.data.1.data.productReference");
+const twoHeatPumpsOneWithMissingFields = immutable.del(twoHeatPumps, "heatingAndCoolingSystems.heatGeneration.heatPump.data.1.data.productReference");
 
 const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> | undefined, number][] = [
 	[
@@ -249,7 +273,7 @@ const cases: [string, Record<string, unknown>, boolean, Record<string, unknown> 
 		"case where there are two heat pumps but one has missing field: individual heat pump and whole section should be marked invalid",
 		twoHeatPumpsOneWithMissingFields,
 		true,
-		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, "heatingSystems.heatGeneration.heatPump.data.1.complete", false), "heatingSystems.heatGeneration.heatPump.complete", false),
+		immutable.set(immutable.set(twoHeatPumpsOneWithMissingFields, "heatingAndCoolingSystems.heatGeneration.heatPump.data.1.complete", false), "heatingAndCoolingSystems.heatGeneration.heatPump.complete", false),
 		1,
 	],
 	[

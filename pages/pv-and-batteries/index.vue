@@ -8,7 +8,7 @@ const page = usePage();
 const store = useEcaasStore();
 
 type PvAndBatteryType = keyof typeof store.pvAndBatteries;
-type PvAndBatteryData = EcaasForm<PvSystemData> & EcaasForm<ElectricBatteryData> & PvDiverterData;
+type PvAndBatteryData = EcaasForm<PvSystemData> & EcaasForm<ElectricBatteryData> & EcaasForm<PvDiverterData>;
 
 function handleRemove(pvAndBatteryType: PvAndBatteryType, index: number) {
 	const data = store.pvAndBatteries[pvAndBatteryType]?.data;
@@ -56,6 +56,7 @@ function handleComplete() {
 		pvAndBatteries: {
 			pvSystems: { complete: true },
 			electricBattery: { complete: true },
+			diverters: { complete: true },
 		},
 	});
 
@@ -99,6 +100,18 @@ const hasIncompleteEntries = () =>
 		:show-status="true"
 		:max-number-of-items=1
 		@remove="(index: number) => handleRemove('electricBattery', index)"
+	/>
+	<CustomList
+		id="diverters"
+		title="Diverters"
+		:form-url="`${page?.url!}/diverters`"
+		:items="store.pvAndBatteries.diverters.data.filter(x => isEcaasForm(x)).map(x => ({
+			name: x.data?.name,
+			status: x.complete ? formStatus.complete : formStatus.inProgress
+		}))"
+		:show-status="true"
+		:max-number-of-items=1
+		@remove="(index: number) => handleRemove('diverters', index)"
 	/>
 	<div class="govuk-button-group govuk-!-margin-top-6">
 		<GovButton

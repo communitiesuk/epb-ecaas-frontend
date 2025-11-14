@@ -1,10 +1,10 @@
 import { objectFromEntries } from "ts-extras";
-import type { SchemaFlueGasExhaustSituation, SchemaFuelType } from "../schema/aliases";
 import type { DisplayProduct } from "~/pcdb/products";
-import type { ApplianceKey, SchemaMassDistributionClass, WwhrsType } from "~/schema/aliases";
+import type { SchemaApplianceType, SchemaColour, SchemaFlueGasExhaustSituation, SchemaFuelTypeExtended, SchemaLeaksTestPressure } from "~/schema/aliases";
 import type { UnitForName, UnitName, UnitValue } from "./units/types";
 import { asUnit } from "./units/units";
 import { immersionHeaterPositionValues } from "~/mapping/common";
+import type { ConciseMassDistributionClass } from "~/stores/ecaasStore.schema";
 
 export const emptyValueRendering = "-";
 
@@ -47,7 +47,7 @@ export function displayBoolean(value: boolean | undefined): BooleanDisplay | typ
 
 type BooleanDisplay = "Yes" | "No";
 
-export function displayMassDistributionClass(value: SchemaMassDistributionClass | undefined): MassDistributionClassDisplay | typeof emptyValueRendering {
+export function displayMassDistributionClass(value: ConciseMassDistributionClass | undefined): MassDistributionClassDisplay | typeof emptyValueRendering {
 	switch (value) {
 		case "I":
 			return "Internal";
@@ -87,38 +87,6 @@ export function displayFlueGasExhaustSituation(value: SchemaFlueGasExhaustSituat
 	}
 }
 
-export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hobs" | "Kettle" | "Microwave" | "Lighting" | "Other";
-
-export function displayApplianceKey(value: ApplianceKey): ApplianceKeyDisplay {
-	switch (value) {
-		case "Fridge":
-			return "Fridge";
-		case "Freezer":
-			return "Freezer";
-		case "Fridge-Freezer":
-			return "Fridge freezer";
-		case "Dishwasher":
-			return "Dishwasher";
-		case "Oven":
-			return "Oven";
-		case "Clothes_washing":
-			return "Washing machine";
-		case "Clothes_drying":
-			return "Tumble dryer";
-		case "Hobs":
-			return "Hobs";
-		case "Kettle":
-			return "Kettle";
-		case "Microwave":
-			return "Microwave";
-		case "Otherdevices":
-			return "Other";
-		default:
-			value satisfies never;
-			throw new Error(`Missed a appliance key case: ${value}`);
-	}
-}
-
 export function displaySnakeToSentenceCase(value: string): string {
 	const replaced = value.replaceAll(/_/g, " ");
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1).toLowerCase();
@@ -132,24 +100,33 @@ export function displayCamelToSentenceCase(value: string): string {
 	return replaced.charAt(0).toUpperCase() + replaced.slice(1);
 }
 
-export function displayWwhrsType(value: WwhrsType): WwhrsTypeDisplay {
+export type ApplianceKeyDisplay = "Fridge" | "Freezer" | "Fridge-freezer" | "Dishwasher" | "Oven" | "Washing machine" | "Tumble dryer" | "Hob";
+
+export function displayApplianceKey(value: SchemaApplianceType): ApplianceKeyDisplay {
 	switch (value) {
-		case "WWHRS_InstantaneousSystemA":
-			return "A";
-		case "WWHRS_InstantaneousSystemB":
-			return "B";
-		case "WWHRS_InstantaneousSystemC":
-			return "C";
+		case "Fridge":
+			return "Fridge";
+		case "Freezer":
+			return "Freezer";
+		case "Fridge-Freezer":
+			return "Fridge-freezer";
+		case "Dishwasher":
+			return "Dishwasher";
+		case "Oven":
+			return "Oven";
+		case "Clothes_washing":
+			return "Washing machine";
+		case "Clothes_drying":
+			return "Tumble dryer";
+		case "Hobs":
+			return "Hob";
 		default:
 			value satisfies never;
-			throw new Error(`Missed a Wwhrs type case: ${value}`);
+			throw new Error(`Missed a appliance key case: ${value}`);
 	}
 }
-
-export type WwhrsTypeDisplay = "A" | "B" | "C";
-
 // NB. this list is written out to be available at runtime, and could drift from all upstream values over time
-const applianceKeys: ApplianceKey[] = [
+export const applianceKeys: SchemaApplianceType[] = [
 	"Clothes_drying",
 	"Clothes_washing",
 	"Dishwasher",
@@ -157,40 +134,20 @@ const applianceKeys: ApplianceKey[] = [
 	"Fridge",
 	"Fridge-Freezer",
 	"Hobs",
-	"Kettle",
-	"Microwave",
-	"Otherdevices",
 	"Oven",
 ];
 
-function isApplianceKey(value: string): value is ApplianceKey {
-	return applianceKeys.includes(value as ApplianceKey);
+function isApplianceKey(value: string): value is SchemaApplianceType {
+	return applianceKeys.includes(value as SchemaApplianceType);
 }
 
-export function displayDeliveryEnergyUseKey(key: string | ApplianceKey): string | ApplianceKeyDisplay {
+export function displayDeliveryEnergyUseKey(key: string | SchemaApplianceType): string | ApplianceKeyDisplay {
 	return (isApplianceKey(key)) ? displayApplianceKey(key) : key;
 }
 
-export const arealHeatCapacityOptions = {
-	"50000": "Very light",
-	"75000": "Light",
-	"110000": "Medium",
-	"175000": "Heavy",
-	"250000": "Very heavy",
-};
-
-export type ArealHeatCapacityValue = keyof typeof arealHeatCapacityOptions extends infer K
-	? K extends string
-		? K extends `${infer N extends number}` ? N : never
-		: never
-	: never;
-
-export function displayArealHeatCapacity(value: ArealHeatCapacityValue | undefined): string {
-	if (typeof value === "undefined") {
-		return emptyValueRendering;
-	}
-
-	return arealHeatCapacityOptions[value] ?? ("" + value);
+export function displayApplianceType(appliances: SchemaApplianceType[] | undefined) {
+	if(appliances === undefined) return emptyValueRendering;
+	return appliances.map(appliance => displayApplianceKey(appliance)).join(", ");
 }
 
 type AdjacentSpaceTypeDisplay<T extends string> = `${T} to ${PascalToSentenceCase<AdjacentSpaceType>}`;
@@ -214,7 +171,7 @@ export function displayHeaterPosition(position: ImmersionHeaterPosition | undefi
 	if (typeof position === "undefined") {
 		return emptyValueRendering;
 	}
-	return `${ displayCamelToSentenceCase(position) } (${ immersionHeaterPositionValues[position] })`;
+	return `${displayCamelToSentenceCase(position)} (${immersionHeaterPositionValues[position]})`;
 }
 
 export function displayReflectivity(reflective: boolean | undefined): string {
@@ -224,37 +181,37 @@ export function displayReflectivity(reflective: boolean | undefined): string {
 	return reflective ? "Reflective" : "Not reflective";
 }
 
-export function displayFuelTypes(fuelTypes: SchemaFuelType[] | undefined) {
-	return fuelTypes?.map(type => {
-		return displayFuelType(type);
-	}).join(", ");
+export function displayTypeOfInfiltrationPressureTest(typeOfInfiltrationPressureTest: SchemaLeaksTestPressure) {
+	switch (typeOfInfiltrationPressureTest) {
+		case "Standard":
+			return "Blower door (test pressure is 50Pa)";
+		case "Pulse test only":
+			return "Pulse test (test pressure is 4Pa)";
+		default:
+			return emptyValueRendering;
+	}
 }
 
-export function displayFuelType(fuelType: SchemaFuelType): FuelTypeDisplay {
+export function displayFuelTypes(fuelTypes: SchemaFuelTypeExtended[] | undefined) {
+	if (fuelTypes === undefined) return emptyValueRendering;
+	return fuelTypes.map(type => displayFuelType(type)).join(", ");
+}
+
+export function displayFuelType(fuelType: SchemaFuelTypeExtended): FuelTypeDisplay {
 	switch (fuelType) {
-		case "gas":
-			return "Bottled gas";
 		case "lpg_bulk":
-			return "LPG bulk";
-		case "custom":
-			return "Custom";
-		case "electricity":
-			return "Electricity";
+			return "LPG (Liquid petroleum gas)";
+		case "elecOnly":
+			return "Electricity is the only energy source";
 		case "mains_gas":
 			return "Mains gas";
-		case "wood":
-			return "Wood";
-		case "coal":
-			return "Coal";
-		case "oil":
-			return "Oil";
 		default:
 			fuelType satisfies never;
 			throw new Error(`Missed a fuel type case: ${fuelType}`);
 	}
 }
 
-export type FuelTypeDisplay = "Bottled gas" | "LPG bulk" | "Custom" | "Electricity" | "Mains gas" | "Wood" | "Coal" | "Oil";
+export type FuelTypeDisplay = "LPG (Liquid petroleum gas)" | "Electricity is the only energy source" | "Mains gas" ;
 
 export const ecoDesignControllerOptions = {
 	1: "I: On/Off Room Thermostat",
@@ -280,7 +237,7 @@ export function displayEcoDesignController(value: EcoDesignControllerValue | und
 
 	return ecoDesignControllerOptions[value] ?? ("" + value);
 }
-	
+
 // better type/ function for displaying products once we're dealing with realistic products
 // export type ProductDisplayString = `${DisplayProduct['brandName']} - ${DisplayProduct['modelName']}`;
 
@@ -295,4 +252,17 @@ type FirstWord<S extends string> = S extends `${infer Word} ${string}` ? Word : 
 
 export function displayProduct(product: DisplayProduct): ProductDisplayString {
 	return product.modelName.split(" ")[0]!;
+}
+
+
+export type colourDisplay = "Light" | "Medium" | "Dark";
+
+export const colourOptionsMap = {
+	"Light": "Light",
+	"Intermediate": "Medium",
+	"Dark": "Dark",
+} as const satisfies Record<SchemaColour, colourDisplay>;
+
+export function displayColour(colour: SchemaColour | undefined): colourDisplay | typeof emptyValueRendering {
+	return colourOptionsMap[colour!] ?? emptyValueRendering;
 }
