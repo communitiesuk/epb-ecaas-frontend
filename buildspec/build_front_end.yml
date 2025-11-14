@@ -10,6 +10,9 @@ phases:
     commands:
       - node -v
       - npm -v
+      # move into tmp directory symlinked out, to shorten file paths
+      - ln -s . /tmp/nuxt-app
+      - cd /tmp/nuxt-app
       - npm ci
       - npm run build
       - cd .output/server
