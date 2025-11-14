@@ -7,9 +7,6 @@ export default defineNuxtConfig({
 
 	rootDir: typeof process.env.EXPLICIT_ROOT_DIR !== "undefined" ? process.env.EXPLICIT_ROOT_DIR : undefined,
 
-	// This reverts the new Nuxt 4 srcDir default from `app` back to the root directory
-	srcDir: ".",
-
 	devtools: {
 		enabled:
 			typeof process.env.DISABLE_DEVTOOLS !== "undefined"
