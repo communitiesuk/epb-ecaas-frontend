@@ -5,6 +5,8 @@ import yn from "yn";
 export default defineNuxtConfig({
 	compatibilityDate: "2024-04-03",
 
+	rootDir: typeof process.env.EXPLICIT_ROOT_DIR !== "undefined" ? process.env.EXPLICIT_ROOT_DIR : undefined,
+
 	// This reverts the new Nuxt 4 srcDir default from `app` back to the root directory
 	srcDir: ".",
 

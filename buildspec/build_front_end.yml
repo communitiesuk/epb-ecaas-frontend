@@ -13,6 +13,7 @@ phases:
       # move into tmp directory symlinked out, to shorten file paths
       - ln -s `pwd` /tmp/nuxt-app
       - cd /tmp/nuxt-app
+      - export EXPLICIT_ROOT_DIR="/tmp/nuxt-app"
       - npm ci
       - npm run build
       - cd .output/server
